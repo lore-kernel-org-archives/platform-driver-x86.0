@@ -1,84 +1,48 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/2] platform/x86: intel-vbtn: Remove redundant
- inclusions
-Date: Mon, 05 Feb 2018 18:23:43 +0200
-Message-ID: <1517847823.22495.41.camel@linux.intel.com>
-References: <20180131175407.18301-1-andriy.shevchenko@linux.intel.com>
-         <20180131185051.GC8676@fury>
-         <CAHp75VdFh06kL=4fpoKogyX6K08SyX1zkJOjzmVcGqUWFA+2Ew@mail.gmail.com>
-         <20180131190432.GF8676@fury>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v2] platform/x86: dell-laptop: Allocate buffer on heap
+ rather than globally
+Date: Mon, 5 Feb 2018 16:49:35 +0000
+Message-ID: <9b01161fb81043b79cf9ade8ec348fff@ausx13mpc120.AMER.DELL.COM>
+References: <1517420855-19374-1-git-send-email-mario.limonciello@dell.com>
+ <20180204120922.fds52i22griw2h6e@pali>
+ <CAHp75VcnDKP=kNPh7pU1v_f0+oP64ByKAOmkZzXNUVaXg=wDSg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga04.intel.com ([192.55.52.120]:24776 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1753063AbeBEQXr (ORCPT
+Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:56083 "EHLO
+        esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752986AbeBEQth (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Feb 2018 11:23:47 -0500
-In-Reply-To: <20180131190432.GF8676@fury>
+        Mon, 5 Feb 2018 11:49:37 -0500
+In-Reply-To: <CAHp75VcnDKP=kNPh7pU1v_f0+oP64ByKAOmkZzXNUVaXg=wDSg@mail.gmail.com>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: andy.shevchenko@gmail.com, pali.rohar@gmail.com
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-On Wed, 2018-01-31 at 11:04 -0800, Darren Hart wrote:
-> On Wed, Jan 31, 2018 at 08:59:20PM +0200, Andy Shevchenko wrote:
-> > On Wed, Jan 31, 2018 at 8:50 PM, Darren Hart <dvhart@infradead.org>
-> > wrote:
-> > > On Wed, Jan 31, 2018 at 07:54:06PM +0200, Andy Shevchenko wrote:
-> > > > Some headers are not needed since the driver can be built as
-> > > > module.
-> > > > Remove them.
-> > > 
-> > > Removing init because it's included by module.h, and removing
-> > > acpi_bus.h
-> > > because it's included by acpi.h - but not because it can be built
-> > > as a
-> > > module - right?  Just checking, the wording in the commit msg
-> > > seemed odd
-> > > to me.
-> > 
-> > Correct. I'll rephrase this in place.
-
-
-My gosh, I forgot to do this and can't rebase anymore. Sorry.
-
-> > > These removals seem appropriate to me, but so we have it recorded
-> > > here -
-> > > in general, including headers that you explicitly make use of is
-> > > good
-> > > practice, and not depending on others to include them. But in this
-> > > case,
-> > > the implicit includes are reasonable expectations as they are
-> > > tightly
-> > > coupled with the parent include.
-> > 
-> > There are two classes of headers (at least?):
-> > - let say "user-visible" ones, which drivers usually include like
-> > you
-> > pointed above
-> > - low level ones, which in most cases are not supposed to be
-> > included directly
-> > 
-> > So, for first class I agree with you, and acpi_bus.h in this case
-> > can
-> > be considered as an example of second class.
-> 
-> Agreed, acpi_bus.h is tightly coupled with acpi.h. The practice I've
-> seen from others and want to discourage / avoid is including acpi.h
-> and
-> then deleting ... say...  spinlock.h because somewhere somehow acpi.h
-> also pulls it in. They are not tightly coupled conceptually, so
-> spinlock.h should remain in the include list if the file uses
-> spinlocks
-> directly. I think we're in violent agreement here :-)
-
-It's a problem of header organization I think. AFAIK Plan 9 has an idea
-that each header is independent, and each C module has to include
-headers in appropriate order. (Always trade off between flexibility and
-strict hierarchy).
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
+aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBTdW5kYXksIEZlYnJ1YXJ5
+IDQsIDIwMTggODoyOCBBTQ0KPiBUbzogUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29t
+Pg0KPiBDYzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47
+IERhcnJlbiBIYXJ0DQo+IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz47IExLTUwgPGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3JtLWRyaXZlci14
+ODZAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyXSBwbGF0Zm9ybS94
+ODY6IGRlbGwtbGFwdG9wOiBBbGxvY2F0ZSBidWZmZXIgb24gaGVhcCByYXRoZXINCj4gdGhhbiBn
+bG9iYWxseQ0KPiANCj4gT24gU3VuLCBGZWIgNCwgMjAxOCBhdCAyOjA5IFBNLCBQYWxpIFJvaMOh
+ciA8cGFsaS5yb2hhckBnbWFpbC5jb20+IHdyb3RlOg0KPiA+IE9uIFdlZG5lc2RheSAzMSBKYW51
+YXJ5IDIwMTggMTE6NDc6MzUgTWFyaW8gTGltb25jaWVsbG8gd3JvdGU6DQo+ID4+IFRoZXJlIGlz
+IG5vIGxvbmdlciBhIG5lZWQgZm9yIHRoZSBidWZmZXIgdG8gYmUgZGVmaW5lZCBpbg0KPiA+PiBm
+aXJzdCA0R0IgcGh5c2ljYWwgYWRkcmVzcyBzcGFjZS4NCj4gPj4NCj4gPj4gRnVydGhlcm1vcmUg
+dGhlcmUgbWF5IGJlIHJhY2UgY29uZGl0aW9ucyB3aXRoIG11bHRpcGxlIGRpZmZlcmVudCBmdW5j
+dGlvbnMNCj4gPj4gd29ya2luZyBvbiBhIG1vZHVsZSB3aWRlIGJ1ZmZlciBjYXVzaW5nIGluY29y
+cmVjdCByZXN1bHRzLg0KPiA+Pg0KPiA+PiBGaXhlczogNTQ5YjQ5MzBmMDU3NjU4ZGM1MGQ4MDEw
+ZTY2MjE5MjMzMTE5YTRkOA0KPiANCj4gSGUtaCwgSSBoYWQgdG8gbm90aWNlIHRoaXMgZWFybGll
+ci4uLg0KPiANCj4gPiBPaywgeW91IGNhbiBhZGQgbXk6DQo+ID4gUmV2aWV3ZWQtYnk6IFBhbGkg
+Um9ow6FyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4NCj4gDQo+IFRoYW5rcyBhbmQgc29ycnksIFBh
+bGksIGl0J3MgaW4gZm9yLW5leHQgYWxyZWFkeSwgY2FuJ3QgcmViYXNlLg0KDQpBbmR5LA0KU2lu
+Y2UgaXQncyBhbHJlYWR5IGluIGZvci1uZXh0IGl0J3MgcHJvYmFibHkgdG9vIGxhdGUgdG8gYWRk
+IHRoZSBzdGFibGUgQ0MgdG9vIHJpZ2h0Pw0KDQpTbyB3aGF0J3MgdGhlIHByb3BlciB0aW1lIG5v
+dyB0byBzZW5kIHRoaXMgdG8gQHN0YWJsZT8gIEFuZCBzaG91bGQgSSBqdXN0IGZvcndhcmQgZXhp
+c3RpbmcNCnBhdGNoPw0KDQpUaGFua3MsDQo=
