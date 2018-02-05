@@ -1,21 +1,21 @@
 From: Matthew Thode <mthode@mthode.org>
 Subject: Re: [PATCH] platform/x86: thinkpad_acpi: suppress warning about palm
  detection
-Date: Sun, 4 Feb 2018 22:56:24 -0600
-Message-ID: <20180205045624.t5g2c2o7l3dkokzl@gentoo.org>
+Date: Sun, 4 Feb 2018 23:01:16 -0600
+Message-ID: <20180205050116.isaz6pmgsquzjmqr@mthode.org>
 References: <20180112110445.1876-1-dh.herrmann@gmail.com>
  <CAHp75Vc66ZfRmOoOKJRODpV0mS2aZru=b-r0cr8SKYH=hm+W6Q@mail.gmail.com>
  <CANq1E4RGo091oaG=0owKVfxOV8wR2qQ=nXfXzZsRxg6Q7_C8zw@mail.gmail.com>
  <20180113063309.iryfhufpilas3jnf@mthode.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hax7konvqwaawvau"
+        protocol="application/pgp-signature"; boundary="7fnz55mbyfs4jstu"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from smtp.gentoo.org ([140.211.166.183]:35108 "EHLO smtp.gentoo.org"
+Received: from mx1.mthode.org ([216.82.208.22]:38612 "EHLO mx1.mthode.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752253AbeBEE43 (ORCPT
+        id S1750854AbeBEFBR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 4 Feb 2018 23:56:29 -0500
+        Mon, 5 Feb 2018 00:01:17 -0500
 Content-Disposition: inline
 In-Reply-To: <20180113063309.iryfhufpilas3jnf@mthode.org>
 Sender: platform-driver-x86-owner@vger.kernel.org
@@ -24,7 +24,7 @@ To: David Herrmann <dh.herrmann@gmail.com>
 Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
 
---hax7konvqwaawvau
+--7fnz55mbyfs4jstu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -70,29 +70,31 @@ ser-space
 >=20
 
 Is there anything else I can do here?  I'm not sure any of us have the
-ability to find out what lenovo actually wants this for.
+ability to find out what lenovo actualy wants this for.
+
+Sorry for the double reply, dmarc can be hell.
 
 --=20
-Matthew Thode (prometheanfire)
+Matthew Thode
 
---hax7konvqwaawvau
+--7fnz55mbyfs4jstu
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEExFR3cOKGRpGbcMHPZKN76q4ZpOgFAlp34/cACgkQZKN76q4Z
-pOi9HQ//X/e7XumXEd4wWQ/ivljJdoee2/TopBs94TuJZkQSpHYslhgbDWk+FeKq
-guFgAnA7uMkkNBmmM1Y4fZv95le1EZ1KczUq6j/OOcFUek/NANcg99/MqkdXbHjv
-puXwG9IXkzjBPcnLQFvh+5o0Hy8NYdpibhbp5BXmmfFnF7brANMiqiz7pk7iKqBd
-XQTHRT6tS296XbKlwh5n7mruVSTlacObk04l/UxDZfP5LvVXvaGnlSGJdj+IHqpE
-r+6R+QX/i9SFiNKy+xwztDR83JywfZvALgr7IMoTZSjrWPAwtCDRfRcNGIMbXdvb
-ANLUk1l0wyWaPWLL2ybw61qEY9Wb30vwsOoZ0mXRHhW/NdczBnQfA8HXbtW8LzgN
-F2p6SvaMBY8xErSNrp6Fnj/bejAcSquW7R5gK0M4ENu8uaNP+OmG5mRfOKr3Jogu
-putGiy6HcTavY7h9BFPAkp5YsCuxJ1Xpk+3tqrpU2DKrTR5wM7PAQqN0W6wro58d
-k6hX4/M2LLp6tOKthIjcSyXDDWLv7vZPKB9fFP59XGZWfnHfmaPzfcwbozy5FPzS
-I2/uqm55uPBv+kdEZAxXmPXdwjUoNYoDLViNgfe+YQpqZaJCfjTviOutePIADLV7
-UVhs7GYNbwQEZMNnCPgKCZX8v+UvDFJc8KqN99fZXoSp4zMLSVw=
-=7V0W
+iQIzBAABCgAdFiEExFR3cOKGRpGbcMHPZKN76q4ZpOgFAlp35RsACgkQZKN76q4Z
+pOh0Tw/+PFKElFvPV+ior11CLK4haH+IwI5WirzZiz6t7FFTPGCaT0DXPEEV3YND
+2QoCk4qvk9FwYwZ3h4lamsoQ339dsXeCy/+uD7Z/TBM9KFfX1MhkBV3bPQI/cRkE
+7kqfLd7JcJgwgORAL6eHc0artWNh0WBF2OeeGk7EpFU0MLibsJ7ys7KdXLtu+eig
+IVfrXXjnVx67uE/KrS3GURIT38awoaXcEDDDutevAHVTkQnsoldfKQuSILsUYnS1
+tn2oYsXcYmdcOizX7vc7rSi+aDFagiL+yY4gKcILQ/DHtTnwc8ZvPo1kRDfVw6Rx
+fLnYwX+oVJ/gcuZR2cKLKUemxKbWYzSNRKVcQQI8ad/7KRoHPnviHR/FRF3Wzo5J
+UjkSY2NFD7BAIkAh9hHrEWNGfwPXyCCCOHOvUyBw/nave2lDaGtcVssV5bn2b66u
+GL6nhuw+Z2rT9DUJeGpLOoFtflbw1yNxu7YQJbTWWEfj9DkbxUT49Rgb+EuFuMwV
+oYIDnwgjf4l8FO0f8wWx55EeTNIrSv1lOLjPWPDHXvcpwzA0b7vjbY3oG+lyyvqT
+GcuGNNrOD7dc7F7Ou+2b8OL6z3gDuK+WBfcOQVN7xQ0xq6RWg0tHx99ivrpemmyf
++D/iSKIOVKkHFXaH5xastcoWoVw3ct9pYJD/6BbtEXZ8D2qNUy0=
+=uKZt
 -----END PGP SIGNATURE-----
 
---hax7konvqwaawvau--
+--7fnz55mbyfs4jstu--
