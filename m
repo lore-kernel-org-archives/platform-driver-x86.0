@@ -1,70 +1,58 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] platform/x86: dell-laptop: Allocate buffer on heap
- rather than globally
-Date: Mon, 5 Feb 2018 16:57:33 -0800
-Message-ID: <20180206005733.GA11119@fury>
-References: <1517420855-19374-1-git-send-email-mario.limonciello@dell.com>
- <20180204120922.fds52i22griw2h6e@pali>
- <CAHp75VcnDKP=kNPh7pU1v_f0+oP64ByKAOmkZzXNUVaXg=wDSg@mail.gmail.com>
- <9b01161fb81043b79cf9ade8ec348fff@ausx13mpc120.AMER.DELL.COM>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: dell_wmi: Unknown key on Dell Latitude E6410
+Date: Tue, 6 Feb 2018 01:06:03 +0000
+Message-ID: <d75833c799884f999c6b0f3886269f23@ausx13mpc120.AMER.DELL.COM>
+References: <20180204120449.tyxpngr2bja7eg3a@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:45429 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751837AbeBFA5g (ORCPT
+Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:41041 "EHLO
+        esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1751834AbeBFBGF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Feb 2018 19:57:36 -0500
-Content-Disposition: inline
-In-Reply-To: <9b01161fb81043b79cf9ade8ec348fff@ausx13mpc120.AMER.DELL.COM>
+        Mon, 5 Feb 2018 20:06:05 -0500
+In-Reply-To: <20180204120449.tyxpngr2bja7eg3a@pali>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario.Limonciello@dell.com
-Cc: andy.shevchenko@gmail.com, pali.rohar@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: pali.rohar@gmail.com
+Cc: platform-driver-x86@vger.kernel.org, eric@ericlight.com
 
-On Mon, Feb 05, 2018 at 04:49:35PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
-> > Sent: Sunday, February 4, 2018 8:28 AM
-> > To: Pali Rohár <pali.rohar@gmail.com>
-> > Cc: Limonciello, Mario <Mario_Limonciello@Dell.com>; Darren Hart
-> > <dvhart@infradead.org>; LKML <linux-kernel@vger.kernel.org>; Platform Driver
-> > <platform-driver-x86@vger.kernel.org>
-> > Subject: Re: [PATCH v2] platform/x86: dell-laptop: Allocate buffer on heap rather
-> > than globally
-> > 
-> > On Sun, Feb 4, 2018 at 2:09 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
-> > > On Wednesday 31 January 2018 11:47:35 Mario Limonciello wrote:
-> > >> There is no longer a need for the buffer to be defined in
-> > >> first 4GB physical address space.
-> > >>
-> > >> Furthermore there may be race conditions with multiple different functions
-> > >> working on a module wide buffer causing incorrect results.
-> > >>
-> > >> Fixes: 549b4930f057658dc50d8010e66219233119a4d8
-> > 
-> > He-h, I had to notice this earlier...
-> > 
-> > > Ok, you can add my:
-> > > Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-> > 
-> > Thanks and sorry, Pali, it's in for-next already, can't rebase.
-> 
-> Andy,
-> Since it's already in for-next it's probably too late to add the stable CC too right?
-> 
-> So what's the proper time now to send this to @stable?  And should I just forward existing
-> patch?
-
-As a general rule, Andy and I should be adding Cc stable to most anything that
-includes a Fixes tag that isn't from this review cycle. I've forgotten in the
-past as well - sorry about that. Something we should add some tooling around I
-think, so we don't miss it when checking things in to our review branches.
-
-As to timing. As soon as this is merged to Linus' master, it can go to stable.
-Instructions for doing this are in Documentation/process/stable-kernel-rules.rst
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+RXJpYywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOh
+ciBbbWFpbHRvOnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBTdW5kYXksIEZlYnJ1YXJ5
+IDQsIDIwMTggNjowNSBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNp
+ZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3Jn
+OyBFcmljIExpZ2h0IDxlcmljQGVyaWNsaWdodC5jb20+DQo+IFN1YmplY3Q6IGRlbGxfd21pOiBV
+bmtub3duIGtleSBvbiBEZWxsIExhdGl0dWRlIEU2NDEwDQo+IA0KPiBIaSBNYXJpbyENCj4gDQo+
+IEVyaWMgTGlnaHQgd3JvdGUgbWUgdGhhdCBvbiBoaXMgRGVsbCBMYXRpdHVkZSBFNjQxMCBsYXB0
+b3AsIGRlbGxfd21pDQo+IHByaW50cyBmb2xsb3dpbmcgbWVzc2FnZXMgaW50byBkbWVzZyBhdCBl
+dmVyeSBib290Lg0KPiANCj4gWyAgIDE0LjI1NDI1OF0gZGVsbF93bWk6IFVua25vd24ga2V5IHdp
+dGggdHlwZSAweDAwMTEgYW5kIGNvZGUgMHhmZmQwIHByZXNzZWQNCj4gWyAgIDE0LjI1NDI1OV0g
+ZGVsbF93bWk6IFVua25vd24gV01JIGV2ZW50IHR5cGUgMHgxMg0KPiBbICAgMTQuNDg3OTIyXSBk
+ZWxsX3dtaTogVW5rbm93biBrZXkgd2l0aCB0eXBlIDB4MDAxMSBhbmQgY29kZSAweGZmZDEgcHJl
+c3NlZA0KPiBbICAgMTUuMDE0OTgzXSBkZWxsX3dtaTogVW5rbm93biBrZXkgd2l0aCB0eXBlIDB4
+MDAxMSBhbmQgY29kZSAweDAxZTMgcHJlc3NlZA0KPiANCg0KSXQgYWxtb3N0IHNvdW5kcyB0byBt
+ZSBsaWtlIEIyIHRhYmxlIGlzIG1pc3NpbmcgZW50cmllcy4NCg0KSXMgdGhpcyBhIHJlZ3Jlc3Np
+b24gYWZ0ZXIgYSBCSU9TIHVwZGF0ZT8gIE9yIGl0J3MgYWx3YXlzIGJlZW4gdGhpcyB3YXk/DQoN
+Cj4gU2VlbXMgdGhhdCBpbiBkZWxsX3dtaSB3ZSBhcmUgY29tcGxldGVseSBtaXNzaW5nIHByb2Nl
+c3Npbmcgb2YgV01JDQo+IGV2ZW50cyB3aGljaCBzdGFydHMgd2l0aCAweDAwMTIgYW5kIHRoZW4g
+dGhlcmUgYXJlIHNvbWUgdW5rbm93biBjb2Rlcw0KPiAweGZmZDAgYW5kIDB4ZmZkMS4NCj4gDQo+
+IERvIHlvdSBoYXZlIGFjY2VzcyB0byBkb2N1bWVudGF0aW9uIHdoYXQgYXJlIHRob3NlIGNvZGUg
+YXQgYWxsPyBBbmQgd2hhdA0KPiBpcyBoaWRkZW4gYmVoaW5kIFdNSSBldmVudHMgd2hpY2ggc3Rh
+cnRzIHdpdGggMHgwMDEyPw0KPiANCj4gQWxzbyBFcmljIHdyb3RlIG1lIHRoYXQgcHJlc3Npbmcg
+YnJpZ2h0bmVzcyB1cCBvciBkb3duIGtleSBnZW5lcmF0ZXMNCj4gZm9sbG93aW5nIGV2ZW50czoN
+Cj4gDQo+IEJyaWdodG5lc3MgVXA6DQo+IA0KPiBbIDExMDMuNzE3OTg4XSBkZWxsX3dtaTogVW5r
+bm93biBrZXkgd2l0aCB0eXBlIDB4MDAxMSBhbmQgY29kZSAweGZmYWUgcHJlc3NlZA0KPiBbIDEx
+MDMuNzE3OTkwXSBkZWxsX3dtaTogVW5rbm93biBrZXkgd2l0aCB0eXBlIDB4MDAxMSBhbmQgY29k
+ZSAweGZmODEgcHJlc3NlZA0KPiANCj4gQnJpZ2h0bmVzcyBEb3duOg0KPiANCj4gWyAxMTU3LjA3
+ODY0MV0gZGVsbF93bWk6IFVua25vd24ga2V5IHdpdGggdHlwZSAweDAwMTEgYW5kIGNvZGUgMHhm
+ZmFjIHByZXNzZWQNCj4gWyAxMTU3LjA3ODY0NF0gZGVsbF93bWk6IFVua25vd24ga2V5IHdpdGgg
+dHlwZSAweDAwMTEgYW5kIGNvZGUgMHhmZjgwIHByZXNzZWQNCj4gDQo+IEZvciBtZSBpdCBsb29r
+cyBzdXNwaWNpb3VzIGJlY2F1c2Ugd2h5IHByZXNzaW5nIG9uZSBrZXkgZ2VuZXJhdGVzIHRob3Nl
+DQo+IHR3byAweDAwMTEgZXZlbnRzIGFuZCB3aHkgbmV4dCBvbmUgaXMgZ2VuZXJhdGVkIGFmdGVy
+IDItM3MuLi4NCj4gDQo+IEkgdGhpbmsgdGhlIGJlc3Qgd2F5IGlzIHRvIGRlZmluZSBhbGwgdGhv
+c2UgZXZlbnRzIGluIGRlbGxfd21pIHRvIGJlDQo+IGlnbm9yZWQgKGFzIEkgaGF2ZSBub3QgaGVh
+cmQgdGhhdCBicmlnaHRuZXNzIGRvZXMgbm90IHdvcmspLCBidXQgaXQNCj4gd291bGQgYmUgYSBn
+b29kIGlkZWEgdG8ga25vdyB3ZSBhcmUgZ29pbmcgdG8gaWdub3JlLg0KPiANCj4gLS0NCj4gUGFs
+aSBSb2jDoXINCj4gcGFsaS5yb2hhckBnbWFpbC5jb20NCg==
