@@ -1,48 +1,70 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v2] platform/x86: dell-laptop: Allocate buffer on heap
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] platform/x86: dell-laptop: Allocate buffer on heap
  rather than globally
-Date: Mon, 5 Feb 2018 16:49:35 +0000
-Message-ID: <9b01161fb81043b79cf9ade8ec348fff@ausx13mpc120.AMER.DELL.COM>
+Date: Mon, 5 Feb 2018 16:57:33 -0800
+Message-ID: <20180206005733.GA11119@fury>
 References: <1517420855-19374-1-git-send-email-mario.limonciello@dell.com>
  <20180204120922.fds52i22griw2h6e@pali>
  <CAHp75VcnDKP=kNPh7pU1v_f0+oP64ByKAOmkZzXNUVaXg=wDSg@mail.gmail.com>
+ <9b01161fb81043b79cf9ade8ec348fff@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa4.dell-outbound.iphmx.com ([68.232.149.214]:56083 "EHLO
-        esa4.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752986AbeBEQth (ORCPT
+Received: from bombadil.infradead.org ([65.50.211.133]:45429 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751837AbeBFA5g (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Feb 2018 11:49:37 -0500
-In-Reply-To: <CAHp75VcnDKP=kNPh7pU1v_f0+oP64ByKAOmkZzXNUVaXg=wDSg@mail.gmail.com>
-Content-Language: en-US
+        Mon, 5 Feb 2018 19:57:36 -0500
+Content-Disposition: inline
+In-Reply-To: <9b01161fb81043b79cf9ade8ec348fff@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: andy.shevchenko@gmail.com, pali.rohar@gmail.com
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Mario.Limonciello@dell.com
+Cc: andy.shevchenko@gmail.com, pali.rohar@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
-aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBTdW5kYXksIEZlYnJ1YXJ5
-IDQsIDIwMTggODoyOCBBTQ0KPiBUbzogUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29t
-Pg0KPiBDYzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47
-IERhcnJlbiBIYXJ0DQo+IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz47IExLTUwgPGxpbnV4LWtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3JtLWRyaXZlci14
-ODZAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyXSBwbGF0Zm9ybS94
-ODY6IGRlbGwtbGFwdG9wOiBBbGxvY2F0ZSBidWZmZXIgb24gaGVhcCByYXRoZXINCj4gdGhhbiBn
-bG9iYWxseQ0KPiANCj4gT24gU3VuLCBGZWIgNCwgMjAxOCBhdCAyOjA5IFBNLCBQYWxpIFJvaMOh
-ciA8cGFsaS5yb2hhckBnbWFpbC5jb20+IHdyb3RlOg0KPiA+IE9uIFdlZG5lc2RheSAzMSBKYW51
-YXJ5IDIwMTggMTE6NDc6MzUgTWFyaW8gTGltb25jaWVsbG8gd3JvdGU6DQo+ID4+IFRoZXJlIGlz
-IG5vIGxvbmdlciBhIG5lZWQgZm9yIHRoZSBidWZmZXIgdG8gYmUgZGVmaW5lZCBpbg0KPiA+PiBm
-aXJzdCA0R0IgcGh5c2ljYWwgYWRkcmVzcyBzcGFjZS4NCj4gPj4NCj4gPj4gRnVydGhlcm1vcmUg
-dGhlcmUgbWF5IGJlIHJhY2UgY29uZGl0aW9ucyB3aXRoIG11bHRpcGxlIGRpZmZlcmVudCBmdW5j
-dGlvbnMNCj4gPj4gd29ya2luZyBvbiBhIG1vZHVsZSB3aWRlIGJ1ZmZlciBjYXVzaW5nIGluY29y
-cmVjdCByZXN1bHRzLg0KPiA+Pg0KPiA+PiBGaXhlczogNTQ5YjQ5MzBmMDU3NjU4ZGM1MGQ4MDEw
-ZTY2MjE5MjMzMTE5YTRkOA0KPiANCj4gSGUtaCwgSSBoYWQgdG8gbm90aWNlIHRoaXMgZWFybGll
-ci4uLg0KPiANCj4gPiBPaywgeW91IGNhbiBhZGQgbXk6DQo+ID4gUmV2aWV3ZWQtYnk6IFBhbGkg
-Um9ow6FyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4NCj4gDQo+IFRoYW5rcyBhbmQgc29ycnksIFBh
-bGksIGl0J3MgaW4gZm9yLW5leHQgYWxyZWFkeSwgY2FuJ3QgcmViYXNlLg0KDQpBbmR5LA0KU2lu
-Y2UgaXQncyBhbHJlYWR5IGluIGZvci1uZXh0IGl0J3MgcHJvYmFibHkgdG9vIGxhdGUgdG8gYWRk
-IHRoZSBzdGFibGUgQ0MgdG9vIHJpZ2h0Pw0KDQpTbyB3aGF0J3MgdGhlIHByb3BlciB0aW1lIG5v
-dyB0byBzZW5kIHRoaXMgdG8gQHN0YWJsZT8gIEFuZCBzaG91bGQgSSBqdXN0IGZvcndhcmQgZXhp
-c3RpbmcNCnBhdGNoPw0KDQpUaGFua3MsDQo=
+On Mon, Feb 05, 2018 at 04:49:35PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
+> > Sent: Sunday, February 4, 2018 8:28 AM
+> > To: Pali Rohár <pali.rohar@gmail.com>
+> > Cc: Limonciello, Mario <Mario_Limonciello@Dell.com>; Darren Hart
+> > <dvhart@infradead.org>; LKML <linux-kernel@vger.kernel.org>; Platform Driver
+> > <platform-driver-x86@vger.kernel.org>
+> > Subject: Re: [PATCH v2] platform/x86: dell-laptop: Allocate buffer on heap rather
+> > than globally
+> > 
+> > On Sun, Feb 4, 2018 at 2:09 PM, Pali Rohár <pali.rohar@gmail.com> wrote:
+> > > On Wednesday 31 January 2018 11:47:35 Mario Limonciello wrote:
+> > >> There is no longer a need for the buffer to be defined in
+> > >> first 4GB physical address space.
+> > >>
+> > >> Furthermore there may be race conditions with multiple different functions
+> > >> working on a module wide buffer causing incorrect results.
+> > >>
+> > >> Fixes: 549b4930f057658dc50d8010e66219233119a4d8
+> > 
+> > He-h, I had to notice this earlier...
+> > 
+> > > Ok, you can add my:
+> > > Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+> > 
+> > Thanks and sorry, Pali, it's in for-next already, can't rebase.
+> 
+> Andy,
+> Since it's already in for-next it's probably too late to add the stable CC too right?
+> 
+> So what's the proper time now to send this to @stable?  And should I just forward existing
+> patch?
+
+As a general rule, Andy and I should be adding Cc stable to most anything that
+includes a Fixes tag that isn't from this review cycle. I've forgotten in the
+past as well - sorry about that. Something we should add some tooling around I
+think, so we don't miss it when checking things in to our review branches.
+
+As to timing. As soon as this is merged to Linus' master, it can go to stable.
+Instructions for doing this are in Documentation/process/stable-kernel-rules.rst
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
