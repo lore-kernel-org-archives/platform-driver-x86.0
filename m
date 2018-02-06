@@ -1,58 +1,39 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: dell_wmi: Unknown key on Dell Latitude E6410
-Date: Tue, 6 Feb 2018 01:06:03 +0000
-Message-ID: <d75833c799884f999c6b0f3886269f23@ausx13mpc120.AMER.DELL.COM>
-References: <20180204120449.tyxpngr2bja7eg3a@pali>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH] platform/x86: mlx-platform: Fix an ERR_PTR vs NULL issue
+Date: Tue, 6 Feb 2018 15:45:36 +0300
+Message-ID: <20180206124536.GA9445@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:41041 "EHLO
-        esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1751834AbeBFBGF (ORCPT
+Received: from aserp2130.oracle.com ([141.146.126.79]:58722 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752403AbeBFMqK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Feb 2018 20:06:05 -0500
-In-Reply-To: <20180204120449.tyxpngr2bja7eg3a@pali>
-Content-Language: en-US
+        Tue, 6 Feb 2018 07:46:10 -0500
+Content-Disposition: inline
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: pali.rohar@gmail.com
-Cc: platform-driver-x86@vger.kernel.org, eric@ericlight.com
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 
-RXJpYywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOh
-ciBbbWFpbHRvOnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBTdW5kYXksIEZlYnJ1YXJ5
-IDQsIDIwMTggNjowNSBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNp
-ZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3Jn
-OyBFcmljIExpZ2h0IDxlcmljQGVyaWNsaWdodC5jb20+DQo+IFN1YmplY3Q6IGRlbGxfd21pOiBV
-bmtub3duIGtleSBvbiBEZWxsIExhdGl0dWRlIEU2NDEwDQo+IA0KPiBIaSBNYXJpbyENCj4gDQo+
-IEVyaWMgTGlnaHQgd3JvdGUgbWUgdGhhdCBvbiBoaXMgRGVsbCBMYXRpdHVkZSBFNjQxMCBsYXB0
-b3AsIGRlbGxfd21pDQo+IHByaW50cyBmb2xsb3dpbmcgbWVzc2FnZXMgaW50byBkbWVzZyBhdCBl
-dmVyeSBib290Lg0KPiANCj4gWyAgIDE0LjI1NDI1OF0gZGVsbF93bWk6IFVua25vd24ga2V5IHdp
-dGggdHlwZSAweDAwMTEgYW5kIGNvZGUgMHhmZmQwIHByZXNzZWQNCj4gWyAgIDE0LjI1NDI1OV0g
-ZGVsbF93bWk6IFVua25vd24gV01JIGV2ZW50IHR5cGUgMHgxMg0KPiBbICAgMTQuNDg3OTIyXSBk
-ZWxsX3dtaTogVW5rbm93biBrZXkgd2l0aCB0eXBlIDB4MDAxMSBhbmQgY29kZSAweGZmZDEgcHJl
-c3NlZA0KPiBbICAgMTUuMDE0OTgzXSBkZWxsX3dtaTogVW5rbm93biBrZXkgd2l0aCB0eXBlIDB4
-MDAxMSBhbmQgY29kZSAweDAxZTMgcHJlc3NlZA0KPiANCg0KSXQgYWxtb3N0IHNvdW5kcyB0byBt
-ZSBsaWtlIEIyIHRhYmxlIGlzIG1pc3NpbmcgZW50cmllcy4NCg0KSXMgdGhpcyBhIHJlZ3Jlc3Np
-b24gYWZ0ZXIgYSBCSU9TIHVwZGF0ZT8gIE9yIGl0J3MgYWx3YXlzIGJlZW4gdGhpcyB3YXk/DQoN
-Cj4gU2VlbXMgdGhhdCBpbiBkZWxsX3dtaSB3ZSBhcmUgY29tcGxldGVseSBtaXNzaW5nIHByb2Nl
-c3Npbmcgb2YgV01JDQo+IGV2ZW50cyB3aGljaCBzdGFydHMgd2l0aCAweDAwMTIgYW5kIHRoZW4g
-dGhlcmUgYXJlIHNvbWUgdW5rbm93biBjb2Rlcw0KPiAweGZmZDAgYW5kIDB4ZmZkMS4NCj4gDQo+
-IERvIHlvdSBoYXZlIGFjY2VzcyB0byBkb2N1bWVudGF0aW9uIHdoYXQgYXJlIHRob3NlIGNvZGUg
-YXQgYWxsPyBBbmQgd2hhdA0KPiBpcyBoaWRkZW4gYmVoaW5kIFdNSSBldmVudHMgd2hpY2ggc3Rh
-cnRzIHdpdGggMHgwMDEyPw0KPiANCj4gQWxzbyBFcmljIHdyb3RlIG1lIHRoYXQgcHJlc3Npbmcg
-YnJpZ2h0bmVzcyB1cCBvciBkb3duIGtleSBnZW5lcmF0ZXMNCj4gZm9sbG93aW5nIGV2ZW50czoN
-Cj4gDQo+IEJyaWdodG5lc3MgVXA6DQo+IA0KPiBbIDExMDMuNzE3OTg4XSBkZWxsX3dtaTogVW5r
-bm93biBrZXkgd2l0aCB0eXBlIDB4MDAxMSBhbmQgY29kZSAweGZmYWUgcHJlc3NlZA0KPiBbIDEx
-MDMuNzE3OTkwXSBkZWxsX3dtaTogVW5rbm93biBrZXkgd2l0aCB0eXBlIDB4MDAxMSBhbmQgY29k
-ZSAweGZmODEgcHJlc3NlZA0KPiANCj4gQnJpZ2h0bmVzcyBEb3duOg0KPiANCj4gWyAxMTU3LjA3
-ODY0MV0gZGVsbF93bWk6IFVua25vd24ga2V5IHdpdGggdHlwZSAweDAwMTEgYW5kIGNvZGUgMHhm
-ZmFjIHByZXNzZWQNCj4gWyAxMTU3LjA3ODY0NF0gZGVsbF93bWk6IFVua25vd24ga2V5IHdpdGgg
-dHlwZSAweDAwMTEgYW5kIGNvZGUgMHhmZjgwIHByZXNzZWQNCj4gDQo+IEZvciBtZSBpdCBsb29r
-cyBzdXNwaWNpb3VzIGJlY2F1c2Ugd2h5IHByZXNzaW5nIG9uZSBrZXkgZ2VuZXJhdGVzIHRob3Nl
-DQo+IHR3byAweDAwMTEgZXZlbnRzIGFuZCB3aHkgbmV4dCBvbmUgaXMgZ2VuZXJhdGVkIGFmdGVy
-IDItM3MuLi4NCj4gDQo+IEkgdGhpbmsgdGhlIGJlc3Qgd2F5IGlzIHRvIGRlZmluZSBhbGwgdGhv
-c2UgZXZlbnRzIGluIGRlbGxfd21pIHRvIGJlDQo+IGlnbm9yZWQgKGFzIEkgaGF2ZSBub3QgaGVh
-cmQgdGhhdCBicmlnaHRuZXNzIGRvZXMgbm90IHdvcmspLCBidXQgaXQNCj4gd291bGQgYmUgYSBn
-b29kIGlkZWEgdG8ga25vdyB3ZSBhcmUgZ29pbmcgdG8gaWdub3JlLg0KPiANCj4gLS0NCj4gUGFs
-aSBSb2jDoXINCj4gcGFsaS5yb2hhckBnbWFpbC5jb20NCg==
+devm_ioport_map() returns NULL on error but we accidentally check for
+error pointers instead.
+
+Fixes: c6acad68eb2d ("platform/mellanox: mlxreg-hotplug: Modify to use a regmap interface")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index dfecba4407ac..27de29961f5e 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -522,8 +522,8 @@ static int __init mlxplat_init(void)
+ 
+ 	mlxplat_mlxcpld_regmap_ctx.base = devm_ioport_map(&mlxplat_dev->dev,
+ 			       mlxplat_lpc_resources[1].start, 1);
+-	if (IS_ERR(mlxplat_mlxcpld_regmap_ctx.base)) {
+-		err = PTR_ERR(mlxplat_mlxcpld_regmap_ctx.base);
++	if (!mlxplat_mlxcpld_regmap_ctx.base) {
++		err = -ENOMEM;
+ 		goto fail_platform_mux_register;
+ 	}
+ 
