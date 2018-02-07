@@ -1,223 +1,78 @@
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Subject: Re: [RFC, PATCH v1] platform/x86: intel-vbtn: Convert to pure ACPI driver
-Date: Wed, 07 Feb 2018 10:44:15 +0100
-Message-ID: <2847124.91z6uqVLmE@aspire.rjw.lan>
-References: <20180131182614.19524-1-andriy.shevchenko@linux.intel.com> <20180131213726.GB21498@fury>
+Date: Wed, 07 Feb 2018 10:47:57 +0100
+Message-ID: <4289605.mKSTaFlacu@aspire.rjw.lan>
+References: <20180131182614.19524-1-andriy.shevchenko@linux.intel.com> <CAHp75VeFSuQYu67DdnJDjZDoaLZiPuo7ag7Lz0q6eSCDjayobw@mail.gmail.com> <2235169.mLvk2uMpgf@aspire.rjw.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180131213726.GB21498@fury>
+In-Reply-To: <2235169.mLvk2uMpgf@aspire.rjw.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, platform-driver-x86@vger.kernel.org, AceLan Kao <acelan.kao@canonical.com>, linux-kernel@vger.kernel.org, pali.rohar@gmail.com, Mario Limonciello <mario.limonciello@dell.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "acelan.kao@canonical.com" <acelan.kao@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "pali.rohar@gmail.com" <pali.rohar@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wednesday, January 31, 2018 10:37:26 PM CET Darren Hart wrote:
-> On Wed, Jan 31, 2018 at 08:26:14PM +0200, Andy Shevchenko wrote:
-> > Remove code duplication by converting driver to pure ACPI one.
-> 
-> +Rafael
-> 
-> I don't see any reason *not* to do this, it seems the acpi driver model provides
-> some of the boilerplate stuff we were doing manually before as a platform
-> device. I'm scratching my head wondering why we did this as a platform-driver in
-> the first place now...
-
-We talked about it quite a bit before, I guess it needs to be documented
-somewhere, finally. :-)
-
-If you have a PCI device, you have a struct pci_dev representing it and then
-there may be a "companion" struct acpi_device associated with it.  In that
-case you clearly bind a driver to the struct pci_dev.
-
-This case is really analogous except that the platform bus type is sort of
-"fake" and it doesn't appear to be necessary to use it.
-
-Thanks,
-Rafael
-
-
-> 
+On Wednesday, February 7, 2018 10:31:01 AM CET Rafael J. Wysocki wrote:
+> On Tuesday, February 6, 2018 11:37:54 PM CET Andy Shevchenko wrote:
+> > Yeah, that's fixed in the branch.
 > > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> > - not tested
-> >  drivers/platform/x86/intel-vbtn.c | 93 +++++++++------------------------------
-> >  1 file changed, 22 insertions(+), 71 deletions(-)
+> > P.S. Apologies for top-posting, wrote from phone in order to not waste time
 > > 
-> > diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-> > index b703d6f5b099..7201effdf37a 100644
-> > --- a/drivers/platform/x86/intel-vbtn.c
-> > +++ b/drivers/platform/x86/intel-vbtn.c
-> > @@ -24,6 +24,7 @@ static const struct acpi_device_id intel_vbtn_ids[] = {
-> >  	{"INT33D6", 0},
-> >  	{"", 0},
-> >  };
-> > +MODULE_DEVICE_TABLE(acpi, intel_vbtn_ids);
-> >  
-> >  /* In theory, these are HID usages. */
-> >  static const struct key_entry intel_vbtn_keymap[] = {
-> > @@ -47,9 +48,9 @@ struct intel_vbtn_priv {
-> >  	bool wakeup_mode;
-> >  };
-> >  
-> > -static int intel_vbtn_input_setup(struct platform_device *device)
-> > +static int intel_vbtn_input_setup(struct acpi_device *device)
-> >  {
-> > -	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
-> > +	struct intel_vbtn_priv *priv = acpi_driver_data(device);
-> >  	int ret;
-> >  
-> >  	priv->input_dev = devm_input_allocate_device(&device->dev);
-> > @@ -60,17 +61,15 @@ static int intel_vbtn_input_setup(struct platform_device *device)
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > -	priv->input_dev->dev.parent = &device->dev;
-> >  	priv->input_dev->name = "Intel Virtual Button driver";
-> >  	priv->input_dev->id.bustype = BUS_HOST;
-> >  
-> >  	return input_register_device(priv->input_dev);
-> >  }
-> >  
-> > -static void notify_handler(acpi_handle handle, u32 event, void *context)
-> > +static void notify_handler(struct acpi_device *device, u32 event)
-> >  {
-> > -	struct platform_device *device = context;
-> > -	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
-> > +	struct intel_vbtn_priv *priv = acpi_driver_data(device);
-> >  	unsigned int val = !(event & 1); /* Even=press, Odd=release */
-> >  	const struct key_entry *ke_rel;
-> >  	bool autorelease;
-> > @@ -97,10 +96,10 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
-> >  	dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
-> >  }
-> >  
-> > -static int intel_vbtn_probe(struct platform_device *device)
-> > +static int intel_vbtn_add(struct acpi_device *device)
-> >  {
-> >  	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
-> > -	acpi_handle handle = ACPI_HANDLE(&device->dev);
-> > +	acpi_handle handle = acpi_device_handle(device);
-> >  	struct intel_vbtn_priv *priv;
-> >  	acpi_status status;
-> >  	int err;
-> > @@ -114,11 +113,11 @@ static int intel_vbtn_probe(struct platform_device *device)
-> >  	priv = devm_kzalloc(&device->dev, sizeof(*priv), GFP_KERNEL);
-> >  	if (!priv)
-> >  		return -ENOMEM;
-> > -	dev_set_drvdata(&device->dev, priv);
-> > +	device->driver_data = priv;
-> >  
-> >  	err = intel_vbtn_input_setup(device);
-> >  	if (err) {
-> > -		pr_err("Failed to setup Intel Virtual Button\n");
-> > +		dev_warn(&device->dev, "Failed to setup Intel Virtual Button\n");
-> >  		return err;
-> >  	}
-> >  
-> > @@ -139,33 +138,14 @@ static int intel_vbtn_probe(struct platform_device *device)
-> >  
-> >  	kfree(vgbs_output.pointer);
-> >  
-> > -	status = acpi_install_notify_handler(handle,
-> > -					     ACPI_DEVICE_NOTIFY,
-> > -					     notify_handler,
-> > -					     device);
-> > -	if (ACPI_FAILURE(status))
-> > -		return -EBUSY;
-> > -
-> >  	device_init_wakeup(&device->dev, true);
-> >  	return 0;
-> >  }
-> >  
-> > -static int intel_vbtn_remove(struct platform_device *device)
-> > -{
-> > -	acpi_handle handle = ACPI_HANDLE(&device->dev);
-> > -
-> > -	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY, notify_handler);
-> > -
-> > -	/*
-> > -	 * Even if we failed to shut off the event stream, we can still
-> > -	 * safely detach from the device.
-> > -	 */
-> > -	return 0;
-> > -}
-> > -
-> >  static int intel_vbtn_pm_prepare(struct device *dev)
-> >  {
-> > -	struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
-> > +	struct acpi_device *device = to_acpi_device(dev);
-> > +	struct intel_vbtn_priv *priv = acpi_driver_data(device);
-> >  
-> >  	priv->wakeup_mode = true;
-> >  	return 0;
-> > @@ -173,7 +153,8 @@ static int intel_vbtn_pm_prepare(struct device *dev)
-> >  
-> >  static int intel_vbtn_pm_resume(struct device *dev)
-> >  {
-> > -	struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
-> > +	struct acpi_device *device = to_acpi_device(dev);
-> > +	struct intel_vbtn_priv *priv = acpi_driver_data(device);
-> >  
-> >  	priv->wakeup_mode = false;
-> >  	return 0;
-> > @@ -186,46 +167,16 @@ static const struct dev_pm_ops intel_vbtn_pm_ops = {
-> >  	.thaw = intel_vbtn_pm_resume,
-> >  };
-> >  
-> > -static struct platform_driver intel_vbtn_pl_driver = {
-> > +static struct acpi_driver intel_vbtn_driver = {
-> > +	.name = "intel-vbtn",
-> > +	.class = ACPI_BUTTON_CLASS,
-> > +	.ids = intel_vbtn_ids,
-> > +	.ops = {
-> > +		.add = intel_vbtn_add,
-> > +		.notify = notify_handler,
-> > +	},
-> >  	.driver = {
-> > -		.name = "intel-vbtn",
-> > -		.acpi_match_table = intel_vbtn_ids,
-> >  		.pm = &intel_vbtn_pm_ops,
-> >  	},
-> > -	.probe = intel_vbtn_probe,
-> > -	.remove = intel_vbtn_remove,
-> >  };
-> > -MODULE_DEVICE_TABLE(acpi, intel_vbtn_ids);
-> > -
-> > -static acpi_status __init
-> > -check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
-> > -{
-> > -	const struct acpi_device_id *ids = context;
-> > -	struct acpi_device *dev;
-> > -
-> > -	if (acpi_bus_get_device(handle, &dev) != 0)
-> > -		return AE_OK;
-> > -
-> > -	if (acpi_match_device_ids(dev, ids) == 0)
-> > -		if (acpi_create_platform_device(dev, NULL))
-> > -			dev_info(&dev->dev,
-> > -				 "intel-vbtn: created platform device\n");
-> > -
-> > -	return AE_OK;
-> > -}
-> > -
-> > -static int __init intel_vbtn_init(void)
-> > -{
-> > -	acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
-> > -			    ACPI_UINT32_MAX, check_acpi_dev, NULL,
-> > -			    (void *)intel_vbtn_ids, NULL);
-> > -
-> > -	return platform_driver_register(&intel_vbtn_pl_driver);
-> > -}
-> > -module_init(intel_vbtn_init);
-> > -
-> > -static void __exit intel_vbtn_exit(void)
-> > -{
-> > -	platform_driver_unregister(&intel_vbtn_pl_driver);
-> > -}
-> > -module_exit(intel_vbtn_exit);
-> > +module_acpi_driver(intel_vbtn_driver);
+> > On Tuesday, February 6, 2018, <Mario.Limonciello@dell.com> wrote:
+> > 
+> > > > -----Original Message-----
+> > > > From: platform-driver-x86-owner@vger.kernel.org [mailto:
+> > > platform-driver-x86-
+> > > > owner@vger.kernel.org] On Behalf Of Andy Shevchenko
+> > > > Sent: Monday, February 5, 2018 10:18 AM
+> > > > To: Darren Hart <dvhart@infradead.org>
+> > > > Cc: platform-driver-x86@vger.kernel.org; AceLan Kao
+> > > > <acelan.kao@canonical.com>; linux-kernel@vger.kernel.org;
+> > > > pali.rohar@gmail.com; Limonciello, Mario <Mario_Limonciello@Dell.com>;
+> > > Rafael
+> > > > Wysocki <rjw@rjwysocki.net>
+> > > > Subject: Re: [RFC, PATCH v1] platform/x86: intel-vbtn: Convert to pure
+> > > ACPI driver
+> > > >
+> > > > On Wed, 2018-01-31 at 13:37 -0800, Darren Hart wrote:
+> > > > > On Wed, Jan 31, 2018 at 08:26:14PM +0200, Andy Shevchenko wrote:
+> > > > > > Remove code duplication by converting driver to pure ACPI one.
+> > > > >
+> > > >
+> > > > I have fixed couple issues, but...
+> > > >
+> > > > > +Rafael
+> > > > >
+> > > > > I don't see any reason *not* to do this, it seems the acpi driver
+> > > > > model provides
+> > > > > some of the boilerplate stuff we were doing manually before as a
+> > > > > platform
+> > > > > device. I'm scratching my head wondering why we did this as a
+> > > > > platform-driver in
+> > > > > the first place now...
 > 
+> It looks like I have overlooked this.
 > 
+> Generally speaking, binding drivers to ACPI device objects is a bad idea,
+> because it is sort of what binding drivers to struct device_node in OF would
+> be.  It was an unfortunate design choice for struct acpi_device to be based
+> on struct device in the first place, but undoing it is not worth the effort
+> and pain.
+> 
+> In some instances (PCI, PNP, I2C, SPI etc) there is a device object to bind a
+> driver to already and the corresponding struct acpi_device is the "companion"
+> of it.  In those cases binding a driver to the struct acpi_device itself
+> clearly doesn't make sense.
+> 
+> In the cases like the $subject one it is less clear, but for symmetry and
+> general confusion avoidance it is better to have a struct device representing
+> the "physical" thing *in* *addition* to the struct acpi_device and use the
+> latter as the "companion" of it.  That's why we have the platform device in
+> this particular case.
+> 
+> Please drop this patch, it doesn't go in the right direction IMO.
+
+BTW, please CC patches with ACPI material to linux-acpi.  They are less likely
+to be overlooked by me then and the others on that list may have opinions on
+them too.
