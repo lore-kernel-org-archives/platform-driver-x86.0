@@ -1,45 +1,81 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] platform/mellanox: mlxreg-hotplug: Fix uninitialized variable
-Date: Wed,  7 Feb 2018 10:12:04 +0100
-Message-ID: <1517994724-5931-1-git-send-email-geert@linux-m68k.org>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [RFC, PATCH v1] platform/x86: intel-vbtn: Convert to pure ACPI driver
+Date: Wed, 07 Feb 2018 10:31:01 +0100
+Message-ID: <2235169.mLvk2uMpgf@aspire.rjw.lan>
+References: <20180131182614.19524-1-andriy.shevchenko@linux.intel.com> <c51e36664a6e4df6b641f3c684b0d189@ausx13mpc120.AMER.DELL.COM> <CAHp75VeFSuQYu67DdnJDjZDoaLZiPuo7ag7Lz0q6eSCDjayobw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from cloudserver094114.home.pl ([79.96.170.134]:53525 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753311AbeBGJcn (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Wed, 7 Feb 2018 04:32:43 -0500
+In-Reply-To: <CAHp75VeFSuQYu67DdnJDjZDoaLZiPuo7ag7Lz0q6eSCDjayobw@mail.gmail.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "acelan.kao@canonical.com" <acelan.kao@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "pali.rohar@gmail.com" <pali.rohar@gmail.com>
 
-With gcc-4.1.2:
+On Tuesday, February 6, 2018 11:37:54 PM CET Andy Shevchenko wrote:
+> Yeah, that's fixed in the branch.
+> 
+> P.S. Apologies for top-posting, wrote from phone in order to not waste time
+> 
+> On Tuesday, February 6, 2018, <Mario.Limonciello@dell.com> wrote:
+> 
+> > > -----Original Message-----
+> > > From: platform-driver-x86-owner@vger.kernel.org [mailto:
+> > platform-driver-x86-
+> > > owner@vger.kernel.org] On Behalf Of Andy Shevchenko
+> > > Sent: Monday, February 5, 2018 10:18 AM
+> > > To: Darren Hart <dvhart@infradead.org>
+> > > Cc: platform-driver-x86@vger.kernel.org; AceLan Kao
+> > > <acelan.kao@canonical.com>; linux-kernel@vger.kernel.org;
+> > > pali.rohar@gmail.com; Limonciello, Mario <Mario_Limonciello@Dell.com>;
+> > Rafael
+> > > Wysocki <rjw@rjwysocki.net>
+> > > Subject: Re: [RFC, PATCH v1] platform/x86: intel-vbtn: Convert to pure
+> > ACPI driver
+> > >
+> > > On Wed, 2018-01-31 at 13:37 -0800, Darren Hart wrote:
+> > > > On Wed, Jan 31, 2018 at 08:26:14PM +0200, Andy Shevchenko wrote:
+> > > > > Remove code duplication by converting driver to pure ACPI one.
+> > > >
+> > >
+> > > I have fixed couple issues, but...
+> > >
+> > > > +Rafael
+> > > >
+> > > > I don't see any reason *not* to do this, it seems the acpi driver
+> > > > model provides
+> > > > some of the boilerplate stuff we were doing manually before as a
+> > > > platform
+> > > > device. I'm scratching my head wondering why we did this as a
+> > > > platform-driver in
+> > > > the first place now...
 
-    drivers/platform/mellanox/mlxreg-hotplug.c: In function ‘mlxreg_hotplug_health_work_helper’:
-    drivers/platform/mellanox/mlxreg-hotplug.c:347: warning: ‘ret’ is used uninitialized in this function
+It looks like I have overlooked this.
 
-Indeed, if mlxreg_core_item.count is zero, ret is used uninitialized.
+Generally speaking, binding drivers to ACPI device objects is a bad idea,
+because it is sort of what binding drivers to struct device_node in OF would
+be.  It was an unfortunate design choice for struct acpi_device to be based
+on struct device in the first place, but undoing it is not worth the effort
+and pain.
 
-While this is unlikely to happen (it is set to ARRAY_SIZE(...) in x86
-board files), this is done in another source file, so fix this by
-preinitializing ret to zero.
+In some instances (PCI, PNP, I2C, SPI etc) there is a device object to bind a
+driver to already and the corresponding struct acpi_device is the "companion"
+of it.  In those cases binding a driver to the struct acpi_device itself
+clearly doesn't make sense.
 
-Fixes: c6acad68eb2dbffd ("platform/mellanox: mlxreg-hotplug: Modify to use a regmap interface")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- drivers/platform/mellanox/mlxreg-hotplug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In the cases like the $subject one it is less clear, but for symmetry and
+general confusion avoidance it is better to have a struct device representing
+the "physical" thing *in* *addition* to the struct acpi_device and use the
+latter as the "companion" of it.  That's why we have the platform device in
+this particular case.
 
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index 0dfa1ca0d05b0217..313cf8ad77bf68ce 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -300,7 +300,7 @@ mlxreg_hotplug_health_work_helper(struct mlxreg_hotplug_priv_data *priv,
- {
- 	struct mlxreg_core_data *data = item->data;
- 	u32 regval;
--	int i, ret;
-+	int i, ret = 0;
- 
- 	for (i = 0; i < item->count; i++, data++) {
- 		/* Mask event. */
--- 
-2.7.4
+Please drop this patch, it doesn't go in the right direction IMO.
+
+Thanks,
+Rafael
