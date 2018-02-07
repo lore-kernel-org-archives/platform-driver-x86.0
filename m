@@ -1,31 +1,62 @@
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Subject: Re: [RFC, PATCH v1] platform/x86: intel-vbtn: Convert to pure ACPI driver
-Date: Wed, 07 Feb 2018 23:33:55 +0100
-Message-ID: <6516358.IX2q0Oe07P@aspire.rjw.lan>
-References: <20180131182614.19524-1-andriy.shevchenko@linux.intel.com> <4289605.mKSTaFlacu@aspire.rjw.lan> <20180207095522.qhs2wns4goif76u3@pali>
+Date: Wed, 07 Feb 2018 23:50:11 +0100
+Message-ID: <2040799.1aJPVOsbqr@aspire.rjw.lan>
+References: <20180131182614.19524-1-andriy.shevchenko@linux.intel.com> <8d143fabe24f43de933dc60ce6480d00@ausx13mpc120.AMER.DELL.COM> <1518009532.22495.140.camel@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cloudserver094114.home.pl ([79.96.170.134]:64540 "EHLO
+Received: from cloudserver094114.home.pl ([79.96.170.134]:52007 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750736AbeBGWfi (ORCPT
+        with ESMTP id S1751075AbeBGWvy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Feb 2018 17:35:38 -0500
-In-Reply-To: <20180207095522.qhs2wns4goif76u3@pali>
+        Wed, 7 Feb 2018 17:51:54 -0500
+In-Reply-To: <1518009532.22495.140.camel@linux.intel.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Pali =?ISO-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "acelan.kao@canonical.com" <acelan.kao@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mario.Limonciello@dell.com, pali.rohar@gmail.com, andy.shevchenko@gmail.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, acelan.kao@canonical.com, linux-kernel@vger.kernel.org
 
-On Wednesday, February 7, 2018 10:55:22 AM CET Pali Rohár wrote:
-> On Wednesday 07 February 2018 10:47:57 Rafael J. Wysocki wrote:
-> > BTW, please CC patches with ACPI material to linux-acpi.  They are less likely
-> > to be overlooked by me then and the others on that list may have opinions on
-> > them too.
+On Wednesday, February 7, 2018 2:18:52 PM CET Andy Shevchenko wrote:
+> On Wed, 2018-02-07 at 13:08 +0000, Mario.Limonciello@dell.com wrote:
+> > > -----Original Message-----
+> > > From: Pali Rohár [mailto:pali.rohar@gmail.com]
+> > > Sent: Wednesday, February 7, 2018 3:55 AM
+> > > To: Rafael J. Wysocki <rjw@rjwysocki.net>
+> > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>; Limonciello, Mario
+> > > <Mario_Limonciello@Dell.com>; andriy.shevchenko@linux.intel.com;
+> > > dvhart@infradead.org; platform-driver-x86@vger.kernel.org;
+> > > acelan.kao@canonical.com; linux-kernel@vger.kernel.org
+> > > Subject: Re: [RFC, PATCH v1] platform/x86: intel-vbtn: Convert to
+> > > pure ACPI driver
+> > > 
+> > > On Wednesday 07 February 2018 10:47:57 Rafael J. Wysocki wrote:
+> > > > BTW, please CC patches with ACPI material to linux-acpi.  They are
+> > > > less likely
+> > > > to be overlooked by me then and the others on that list may have
+> > > > opinions on
+> > > > them too.
+> > > 
+> > > Maybe we can update MAINTAINERS file for acpi based platform-x86
+> > > drivers
+> > > to include linux-acpi list? Darren, Andy, any idea?
+> > > 
+> > 
+> > I would also wonder if the intel-vbtn driver should still live in
+> > platform-x86 as it's
+> > now pure ACPI driver with this change Andy proposed.
+> > 
+> > Btw Andy for your v2 with your fixups that were in your review branch
+> > feel free
+> > to add:
+> > Tested-by: Mario Limonciello <mario.limonciello@dell.com>
+> > 
+> > When you resubmit it.
 > 
-> Maybe we can update MAINTAINERS file for acpi based platform-x86 drivers
-> to include linux-acpi list? Darren, Andy, any idea?
+> Mario, Rafael clarifies the matter and NACKed this one (which kinda was
+> expected by me, that's why RFC was in the first place).
+> 
+> I'm going to drop this patch from my queue.
 
-You could, but generally, if you have ACPI material in your patch,
-CCing linux-acpi won't hurt.
+Thanks!
