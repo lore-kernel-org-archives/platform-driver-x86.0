@@ -1,42 +1,28 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [RFC, PATCH v1] platform/x86: intel-vbtn: Convert to pure ACPI
- driver
-Date: Wed, 7 Feb 2018 13:08:08 +0000
-Message-ID: <8d143fabe24f43de933dc60ce6480d00@ausx13mpc120.AMER.DELL.COM>
-References: <20180131182614.19524-1-andriy.shevchenko@linux.intel.com>
- <CAHp75VeFSuQYu67DdnJDjZDoaLZiPuo7ag7Lz0q6eSCDjayobw@mail.gmail.com>
- <2235169.mLvk2uMpgf@aspire.rjw.lan> <4289605.mKSTaFlacu@aspire.rjw.lan>
- <20180207095522.qhs2wns4goif76u3@pali>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/4] seq_file: Introduce DEFINE_SHOW_ATTRIBUTE() helper macro
+Date: Wed, 7 Feb 2018 14:09:51 +0100
+Message-ID: <CACRpkdZDYJUdeWv1OxNoHi34AhWTjcfA8czVNf4qNry2hnz0Bw@mail.gmail.com>
+References: <20180122160546.51611-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180207095522.qhs2wns4goif76u3@pali>
-Content-Language: en-US
+In-Reply-To: <20180122160546.51611-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com, rjw@rjwysocki.net
-Cc: andy.shevchenko@gmail.com, andriy.shevchenko@linux.intel.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, acelan.kao@canonical.com, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Marcel Holtmann <marcel@holtmann.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
-OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBXZWRuZXNkYXksIEZlYnJ1YXJ5IDcsIDIw
-MTggMzo1NSBBTQ0KPiBUbzogUmFmYWVsIEouIFd5c29ja2kgPHJqd0Byand5c29ja2kubmV0Pg0K
-PiBDYzogQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPjsgTGltb25j
-aWVsbG8sIE1hcmlvDQo+IDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IGFuZHJpeS5zaGV2
-Y2hlbmtvQGxpbnV4LmludGVsLmNvbTsNCj4gZHZoYXJ0QGluZnJhZGVhZC5vcmc7IHBsYXRmb3Jt
-LWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOw0KPiBhY2VsYW4ua2FvQGNhbm9uaWNhbC5jb207
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtSRkMsIFBBVENI
-IHYxXSBwbGF0Zm9ybS94ODY6IGludGVsLXZidG46IENvbnZlcnQgdG8gcHVyZSBBQ1BJIGRyaXZl
-cg0KPiANCj4gT24gV2VkbmVzZGF5IDA3IEZlYnJ1YXJ5IDIwMTggMTA6NDc6NTcgUmFmYWVsIEou
-IFd5c29ja2kgd3JvdGU6DQo+ID4gQlRXLCBwbGVhc2UgQ0MgcGF0Y2hlcyB3aXRoIEFDUEkgbWF0
-ZXJpYWwgdG8gbGludXgtYWNwaS4gIFRoZXkgYXJlIGxlc3MgbGlrZWx5DQo+ID4gdG8gYmUgb3Zl
-cmxvb2tlZCBieSBtZSB0aGVuIGFuZCB0aGUgb3RoZXJzIG9uIHRoYXQgbGlzdCBtYXkgaGF2ZSBv
-cGluaW9ucyBvbg0KPiA+IHRoZW0gdG9vLg0KPiANCj4gTWF5YmUgd2UgY2FuIHVwZGF0ZSBNQUlO
-VEFJTkVSUyBmaWxlIGZvciBhY3BpIGJhc2VkIHBsYXRmb3JtLXg4NiBkcml2ZXJzDQo+IHRvIGlu
-Y2x1ZGUgbGludXgtYWNwaSBsaXN0PyBEYXJyZW4sIEFuZHksIGFueSBpZGVhPw0KPiANCg0KSSB3
-b3VsZCBhbHNvIHdvbmRlciBpZiB0aGUgaW50ZWwtdmJ0biBkcml2ZXIgc2hvdWxkIHN0aWxsIGxp
-dmUgaW4gcGxhdGZvcm0teDg2IGFzIGl0J3MNCm5vdyBwdXJlIEFDUEkgZHJpdmVyIHdpdGggdGhp
-cyBjaGFuZ2UgQW5keSBwcm9wb3NlZC4NCg0KQnR3IEFuZHkgZm9yIHlvdXIgdjIgd2l0aCB5b3Vy
-IGZpeHVwcyB0aGF0IHdlcmUgaW4geW91ciByZXZpZXcgYnJhbmNoIGZlZWwgZnJlZQ0KdG8gYWRk
-Og0KVGVzdGVkLWJ5OiBNYXJpbyBMaW1vbmNpZWxsbyA8bWFyaW8ubGltb25jaWVsbG9AZGVsbC5j
-b20+DQoNCldoZW4geW91IHJlc3VibWl0IGl0Lg0K
+On Mon, Jan 22, 2018 at 5:05 PM, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+
+> The DEFINE_SHOW_ATTRIBUTE() helper macro would be useful for current
+> users, which are many of them, and for new comers to decrease code
+> duplication.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Obviously a good idea.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
