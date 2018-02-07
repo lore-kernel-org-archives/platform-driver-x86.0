@@ -1,81 +1,51 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [RFC, PATCH v1] platform/x86: intel-vbtn: Convert to pure ACPI driver
-Date: Wed, 07 Feb 2018 10:31:01 +0100
-Message-ID: <2235169.mLvk2uMpgf@aspire.rjw.lan>
-References: <20180131182614.19524-1-andriy.shevchenko@linux.intel.com> <c51e36664a6e4df6b641f3c684b0d189@ausx13mpc120.AMER.DELL.COM> <CAHp75VeFSuQYu67DdnJDjZDoaLZiPuo7ag7Lz0q6eSCDjayobw@mail.gmail.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: RE: [PATCH] platform/mellanox: mlxreg-hotplug: Fix uninitialized
+ variable
+Date: Wed, 7 Feb 2018 09:39:22 +0000
+Message-ID: <AM4PR05MB3330B66B4D7077DA6EAB882EA2FC0@AM4PR05MB3330.eurprd05.prod.outlook.com>
+References: <1517994724-5931-1-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cloudserver094114.home.pl ([79.96.170.134]:53525 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753311AbeBGJcn (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Feb 2018 04:32:43 -0500
-In-Reply-To: <CAHp75VeFSuQYu67DdnJDjZDoaLZiPuo7ag7Lz0q6eSCDjayobw@mail.gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "acelan.kao@canonical.com" <acelan.kao@canonical.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "pali.rohar@gmail.com" <pali.rohar@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1517994724-5931-1-git-send-email-geert@linux-m68k.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tuesday, February 6, 2018 11:37:54 PM CET Andy Shevchenko wrote:
-> Yeah, that's fixed in the branch.
-> 
-> P.S. Apologies for top-posting, wrote from phone in order to not waste time
-> 
-> On Tuesday, February 6, 2018, <Mario.Limonciello@dell.com> wrote:
-> 
-> > > -----Original Message-----
-> > > From: platform-driver-x86-owner@vger.kernel.org [mailto:
-> > platform-driver-x86-
-> > > owner@vger.kernel.org] On Behalf Of Andy Shevchenko
-> > > Sent: Monday, February 5, 2018 10:18 AM
-> > > To: Darren Hart <dvhart@infradead.org>
-> > > Cc: platform-driver-x86@vger.kernel.org; AceLan Kao
-> > > <acelan.kao@canonical.com>; linux-kernel@vger.kernel.org;
-> > > pali.rohar@gmail.com; Limonciello, Mario <Mario_Limonciello@Dell.com>;
-> > Rafael
-> > > Wysocki <rjw@rjwysocki.net>
-> > > Subject: Re: [RFC, PATCH v1] platform/x86: intel-vbtn: Convert to pure
-> > ACPI driver
-> > >
-> > > On Wed, 2018-01-31 at 13:37 -0800, Darren Hart wrote:
-> > > > On Wed, Jan 31, 2018 at 08:26:14PM +0200, Andy Shevchenko wrote:
-> > > > > Remove code duplication by converting driver to pure ACPI one.
-> > > >
-> > >
-> > > I have fixed couple issues, but...
-> > >
-> > > > +Rafael
-> > > >
-> > > > I don't see any reason *not* to do this, it seems the acpi driver
-> > > > model provides
-> > > > some of the boilerplate stuff we were doing manually before as a
-> > > > platform
-> > > > device. I'm scratching my head wondering why we did this as a
-> > > > platform-driver in
-> > > > the first place now...
-
-It looks like I have overlooked this.
-
-Generally speaking, binding drivers to ACPI device objects is a bad idea,
-because it is sort of what binding drivers to struct device_node in OF would
-be.  It was an unfortunate design choice for struct acpi_device to be based
-on struct device in the first place, but undoing it is not worth the effort
-and pain.
-
-In some instances (PCI, PNP, I2C, SPI etc) there is a device object to bind a
-driver to already and the corresponding struct acpi_device is the "companion"
-of it.  In those cases binding a driver to the struct acpi_device itself
-clearly doesn't make sense.
-
-In the cases like the $subject one it is less clear, but for symmetry and
-general confusion avoidance it is better to have a struct device representing
-the "physical" thing *in* *addition* to the struct acpi_device and use the
-latter as the "companion" of it.  That's why we have the platform device in
-this particular case.
-
-Please drop this patch, it doesn't go in the right direction IMO.
-
-Thanks,
-Rafael
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR2VlcnQgVXl0dGVyaG9l
+dmVuIFttYWlsdG86Z2VlcnRAbGludXgtbTY4ay5vcmddDQo+IFNlbnQ6IFdlZG5lc2RheSwgRmVi
+cnVhcnkgMDcsIDIwMTggMTE6MTIgQU0NCj4gVG86IEFuZHkgU2hldmNoZW5rbyA8YW5keUBpbmZy
+YWRlYWQub3JnPjsgRGFycmVuIEhhcnQNCj4gPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgVmFkaW0g
+UGFzdGVybmFrIDx2YWRpbXBAbWVsbGFub3guY29tPg0KPiBDYzogQXJuZCBCZXJnbWFubiA8YXJu
+ZEBhcm5kYi5kZT47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4
+LW02OGsub3JnPg0KPiBTdWJqZWN0OiBbUEFUQ0hdIHBsYXRmb3JtL21lbGxhbm94OiBtbHhyZWct
+aG90cGx1ZzogRml4IHVuaW5pdGlhbGl6ZWQgdmFyaWFibGUNCj4gDQo+IFdpdGggZ2NjLTQuMS4y
+Og0KPiANCj4gICAgIGRyaXZlcnMvcGxhdGZvcm0vbWVsbGFub3gvbWx4cmVnLWhvdHBsdWcuYzog
+SW4gZnVuY3Rpb24NCj4g4oCYbWx4cmVnX2hvdHBsdWdfaGVhbHRoX3dvcmtfaGVscGVy4oCZOg0K
+PiAgICAgZHJpdmVycy9wbGF0Zm9ybS9tZWxsYW5veC9tbHhyZWctaG90cGx1Zy5jOjM0Nzogd2Fy
+bmluZzog4oCYcmV04oCZIGlzIHVzZWQNCj4gdW5pbml0aWFsaXplZCBpbiB0aGlzIGZ1bmN0aW9u
+DQo+IA0KPiBJbmRlZWQsIGlmIG1seHJlZ19jb3JlX2l0ZW0uY291bnQgaXMgemVybywgcmV0IGlz
+IHVzZWQgdW5pbml0aWFsaXplZC4NCj4gDQo+IFdoaWxlIHRoaXMgaXMgdW5saWtlbHkgdG8gaGFw
+cGVuIChpdCBpcyBzZXQgdG8gQVJSQVlfU0laRSguLi4pIGluIHg4NiBib2FyZCBmaWxlcyksDQo+
+IHRoaXMgaXMgZG9uZSBpbiBhbm90aGVyIHNvdXJjZSBmaWxlLCBzbyBmaXggdGhpcyBieSBwcmVp
+bml0aWFsaXppbmcgcmV0IHRvIHplcm8uDQo+IA0KPiBGaXhlczogYzZhY2FkNjhlYjJkYmZmZCAo
+InBsYXRmb3JtL21lbGxhbm94OiBtbHhyZWctaG90cGx1ZzogTW9kaWZ5IHRvIHVzZSBhDQo+IHJl
+Z21hcCBpbnRlcmZhY2UiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdl
+ZXJ0QGxpbnV4LW02OGsub3JnPg0KDQpBY2tlZC1ieTogVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBA
+bWVsbGFub3guY29tPg0KDQo+IC0tLQ0KPiAgZHJpdmVycy9wbGF0Zm9ybS9tZWxsYW5veC9tbHhy
+ZWctaG90cGx1Zy5jIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAx
+IGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS9tZWxsYW5v
+eC9tbHhyZWctaG90cGx1Zy5jDQo+IGIvZHJpdmVycy9wbGF0Zm9ybS9tZWxsYW5veC9tbHhyZWct
+aG90cGx1Zy5jDQo+IGluZGV4IDBkZmExY2EwZDA1YjAyMTcuLjMxM2NmOGFkNzdiZjY4Y2UgMTAw
+NjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0vbWVsbGFub3gvbWx4cmVnLWhvdHBsdWcuYw0K
+PiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL21lbGxhbm94L21seHJlZy1ob3RwbHVnLmMNCj4gQEAg
+LTMwMCw3ICszMDAsNyBAQCBtbHhyZWdfaG90cGx1Z19oZWFsdGhfd29ya19oZWxwZXIoc3RydWN0
+DQo+IG1seHJlZ19ob3RwbHVnX3ByaXZfZGF0YSAqcHJpdiwgIHsNCj4gIAlzdHJ1Y3QgbWx4cmVn
+X2NvcmVfZGF0YSAqZGF0YSA9IGl0ZW0tPmRhdGE7DQo+ICAJdTMyIHJlZ3ZhbDsNCj4gLQlpbnQg
+aSwgcmV0Ow0KPiArCWludCBpLCByZXQgPSAwOw0KPiANCj4gIAlmb3IgKGkgPSAwOyBpIDwgaXRl
+bS0+Y291bnQ7IGkrKywgZGF0YSsrKSB7DQo+ICAJCS8qIE1hc2sgZXZlbnQuICovDQo+IC0tDQo+
+IDIuNy40DQoNCg==
