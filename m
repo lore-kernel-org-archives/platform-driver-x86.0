@@ -1,60 +1,26 @@
 From: <Mario.Limonciello@dell.com>
 Subject: RE: [RFC, PATCH v1] platform/x86: intel-vbtn: Convert to pure ACPI
  driver
-Date: Tue, 6 Feb 2018 20:33:54 +0000
-Message-ID: <c51e36664a6e4df6b641f3c684b0d189@ausx13mpc120.AMER.DELL.COM>
+Date: Wed, 7 Feb 2018 01:57:12 +0000
+Message-ID: <cb4a91870ca24f2487302de05ce8d7f5@ausx13mpc120.AMER.DELL.COM>
 References: <20180131182614.19524-1-andriy.shevchenko@linux.intel.com>
-         <20180131213726.GB21498@fury>
- <1517847491.22495.36.camel@linux.intel.com>
+ <20180131213726.GB21498@fury> <1517847491.22495.36.camel@linux.intel.com>
+ <c51e36664a6e4df6b641f3c684b0d189@ausx13mpc120.AMER.DELL.COM>
+ <CAHp75VeFSuQYu67DdnJDjZDoaLZiPuo7ag7Lz0q6eSCDjayobw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from esa3.dell-outbound.iphmx.com ([68.232.153.94]:47300 "EHLO
-        esa3.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1752965AbeBFUd6 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Feb 2018 15:33:58 -0500
-In-Reply-To: <1517847491.22495.36.camel@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VeFSuQYu67DdnJDjZDoaLZiPuo7ag7Lz0q6eSCDjayobw@mail.gmail.com>
 Content-Language: en-US
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: andriy.shevchenko@linux.intel.com, dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, acelan.kao@canonical.com, linux-kernel@vger.kernel.org, pali.rohar@gmail.com, rjw@rjwysocki.net
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.shevchenko@gmail.com
+Cc: andriy.shevchenko@linux.intel.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, acelan.kao@canonical.com, linux-kernel@vger.kernel.org, pali.rohar@gmail.com, rjw@rjwysocki.net
+List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
-LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
-bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIEFuZHkgU2hldmNoZW5rbw0KPiBTZW50
-OiBNb25kYXksIEZlYnJ1YXJ5IDUsIDIwMTggMTA6MTggQU0NCj4gVG86IERhcnJlbiBIYXJ0IDxk
-dmhhcnRAaW5mcmFkZWFkLm9yZz4NCj4gQ2M6IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJu
-ZWwub3JnOyBBY2VMYW4gS2FvDQo+IDxhY2VsYW4ua2FvQGNhbm9uaWNhbC5jb20+OyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBwYWxpLnJvaGFyQGdtYWlsLmNvbTsgTGltb25jaWVs
-bG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IFJhZmFlbA0KPiBXeXNvY2tp
-IDxyandAcmp3eXNvY2tpLm5ldD4NCj4gU3ViamVjdDogUmU6IFtSRkMsIFBBVENIIHYxXSBwbGF0
-Zm9ybS94ODY6IGludGVsLXZidG46IENvbnZlcnQgdG8gcHVyZSBBQ1BJIGRyaXZlcg0KPiANCj4g
-T24gV2VkLCAyMDE4LTAxLTMxIGF0IDEzOjM3IC0wODAwLCBEYXJyZW4gSGFydCB3cm90ZToNCj4g
-PiBPbiBXZWQsIEphbiAzMSwgMjAxOCBhdCAwODoyNjoxNFBNICswMjAwLCBBbmR5IFNoZXZjaGVu
-a28gd3JvdGU6DQo+ID4gPiBSZW1vdmUgY29kZSBkdXBsaWNhdGlvbiBieSBjb252ZXJ0aW5nIGRy
-aXZlciB0byBwdXJlIEFDUEkgb25lLg0KPiA+DQo+IA0KPiBJIGhhdmUgZml4ZWQgY291cGxlIGlz
-c3VlcywgYnV0Li4uDQo+IA0KPiA+ICtSYWZhZWwNCj4gPg0KPiA+IEkgZG9uJ3Qgc2VlIGFueSBy
-ZWFzb24gKm5vdCogdG8gZG8gdGhpcywgaXQgc2VlbXMgdGhlIGFjcGkgZHJpdmVyDQo+ID4gbW9k
-ZWwgcHJvdmlkZXMNCj4gPiBzb21lIG9mIHRoZSBib2lsZXJwbGF0ZSBzdHVmZiB3ZSB3ZXJlIGRv
-aW5nIG1hbnVhbGx5IGJlZm9yZSBhcyBhDQo+ID4gcGxhdGZvcm0NCj4gPiBkZXZpY2UuIEknbSBz
-Y3JhdGNoaW5nIG15IGhlYWQgd29uZGVyaW5nIHdoeSB3ZSBkaWQgdGhpcyBhcyBhDQo+ID4gcGxh
-dGZvcm0tZHJpdmVyIGluDQo+ID4gdGhlIGZpcnN0IHBsYWNlIG5vdy4uLg0KPiANCj4gLi4uSSBz
-dGlsbCBrZWVwIGluIG15IHJldmlldyBxdWV1ZSBpbiBhIGhvcGUgdGhhdCBzb21lb25lIGNhbiBh
-Y3R1YWxseQ0KPiB0ZXN0IHRoaXMgb24gcmVhbCBoYXJkd2FyZS4NCj4gDQo+IC0tDQo+IEFuZHkg
-U2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPg0KPiBJbnRlbCBG
-aW5sYW5kIE95DQoNCkFuZHksDQoNCkknbSBwcmV0dHkgc3VyZSBYUFMgOTM2NSBjYW4gdGVzdCB0
-aGlzLiAgSSB3YXMgZ29pbmcgdG8gdHJ5IGJ1dCANCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
-cmcvcGF0Y2gvMTAxOTQ1MDMvIHdhcyBub3QNCmFibGUgdG8gY29tcGlsZSBvbiB0b3Agb2YgcGxh
-dGZvcm0teDg2L2Zvci1uZXh0Lg0KVGhhdCB3YXMgdGhlIG9ubHkgb25lIEkgc2F3IGF0IHBhdGNo
-d29yay4NCg0KZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtdmJ0bi5jOjE3MjoxMTogZXJyb3I6
-IOKAmEFDUElfQlVUVE9OX0NMQVNT4oCZIHVuZGVjbGFyZWQgaGVyZSAobm90IGluIGEgZnVuY3Rp
-b24pDQogIC5jbGFzcyA9IEFDUElfQlVUVE9OX0NMQVNTLA0KICAgICAgICAgICBeDQpkcml2ZXJz
-L3BsYXRmb3JtL3g4Ni9pbnRlbC12YnRuLmM6MTc4OjI6IGVycm9yOiB1bmtub3duIGZpZWxkIOKA
-mGRyaXZlcuKAmSBzcGVjaWZpZWQgaW4gaW5pdGlhbGl6ZXINCiAgLmRyaXZlciA9IHsNCiAgXg0K
-c2NyaXB0cy9NYWtlZmlsZS5idWlsZDozMTY6IHJlY2lwZSBmb3IgdGFyZ2V0ICdkcml2ZXJzL3Bs
-YXRmb3JtL3g4Ni9pbnRlbC12YnRuLm8nIGZhaWxlZA0KbWFrZVs1XTogKioqIFtkcml2ZXJzL3Bs
-YXRmb3JtL3g4Ni9pbnRlbC12YnRuLm9dIEVycm9yIDENCg0KaXMgdGhhdCBkaWZmZXJlbnQgdGhh
-biB0aGUgb25lIGluIHlvdXIgcmV2aWV3IHF1ZXVlPw0KDQpUaGFua3MsDQo=
+PlllYWgsIHRoYXQncyBmaXhlZCBpbiB0aGUgYnJhbmNoLg0KPlAuUy4gQXBvbG9naWVzIGZvciB0
+b3AtcG9zdGluZywgd3JvdGUgZnJvbSBwaG9uZSBpbiBvcmRlciB0byBub3Qgd2FzdGUgdGltZQ0K
+QW5keSwNCg0KSSB0ZXN0ZWQgeW91ciByZXZpZXcgYnJhbmNoIG9uIFhQUyA5MzY1IHdoaWNoIHVz
+ZXMgcG93ZXIgYnV0dG9uIHRocm91Z2ggDQppbnRlbC12YnRuLiAgSSBjb25maXJtZWQgaXQgd29y
+a2VkIHByb3Blcmx5IGJvdGggd2l0aCB1c2FnZSBpbiBPUyBhbmQgZHVyaW5nIFMySS4NCg0KVGhh
+bmtzLA0KDQo=
