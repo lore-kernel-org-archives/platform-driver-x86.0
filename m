@@ -1,77 +1,49 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-laptop: Removed duplicates in DMI whitelist
-Date: Thu, 8 Feb 2018 16:20:34 +0200
-Message-ID: <CAHp75Vcg-GAVrXvqgvr7z+Nr0n7=O7O-PRSfUFcUt=9SdeJ3dQ@mail.gmail.com>
-References: <20180207221226.11345-1-alexander.n.abrosimov@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v13 1/4] battery: Add the battery hooking API
+Date: Thu, 8 Feb 2018 16:18:55 +0100
+Message-ID: <CAJZ5v0jvz2CNRdbTf=yC5g3H4tEJNRGogyradWFYzF9vgkr_Vg@mail.gmail.com>
+References: <20180207145813.icmv6rwemyejhxbk@thinkpad>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f195.google.com ([209.85.220.195]:41587 "EHLO
-        mail-qk0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751094AbeBHOUf (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Feb 2018 09:20:35 -0500
-In-Reply-To: <20180207221226.11345-1-alexander.n.abrosimov@gmail.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Alexander Abrosimov <alexander.n.abrosimov@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20180207145813.icmv6rwemyejhxbk@thinkpad>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Ognjen Galic <smclt30p@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, =?UTF-8?Q?Christoph_B=C3=B6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Feb 8, 2018 at 12:12 AM, Alexander Abrosimov
-<alexander.n.abrosimov@gmail.com> wrote:
-> Fixed a mistake in which several entries were duplicated in the DMI list
-> from the below commit
-> fe486138 platform/x86: dell-laptop: Add 2-in-1 devices to the DMI whitelist
+On Wed, Feb 7, 2018 at 3:58 PM, Ognjen Galic <smclt30p@gmail.com> wrote:
+> This is a patch that implements a generic hooking API for the
+> generic ACPI battery driver.
 >
-
-Pushed to my review and testing queue, thanks!
-
-(Would be material for v4.17 cycle)
-
-> Signed-off-by: Alexander Abrosimov <alexander.n.abrosimov@gmail.com>
-> ---
->  drivers/platform/x86/dell-laptop.c | 18 ------------------
->  1 file changed, 18 deletions(-)
+> With this new generic API, drivers can expose platform specific
+> behaviour via sysfs attributes in /sys/class/power_supply/BATn/
+> in a generic way.
 >
-> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-> index a7b141992cb3..a66a6a6e47b9 100644
-> --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
-> @@ -125,28 +125,10 @@ static const struct dmi_system_id dell_device_table[] __initconst = {
->                         DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
->                         DMI_MATCH(DMI_CHASSIS_TYPE, "32"), /*Detachable*/
->                 },
->         },
->         {
-> -               .matches = {
-> -                       DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -                       DMI_MATCH(DMI_CHASSIS_TYPE, "30"), /*Tablet*/
-> -               },
-> -       },
-> -       {
-> -               .matches = {
-> -                       DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -                       DMI_MATCH(DMI_CHASSIS_TYPE, "31"), /*Convertible*/
-> -               },
-> -       },
-> -       {
-> -               .matches = {
-> -                       DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -                       DMI_MATCH(DMI_CHASSIS_TYPE, "32"), /*Detachable*/
-> -               },
-> -       },
-> -       {
->                 .ident = "Dell Computer Corporation",
->                 .matches = {
->                         DMI_MATCH(DMI_SYS_VENDOR, "Dell Computer Corporation"),
->                         DMI_MATCH(DMI_CHASSIS_TYPE, "8"),
->                 },
-> --
-> 2.13.6
+> A perfect example of the need for this API are Lenovo ThinkPads.
 >
+> Lenovo ThinkPads have a ACPI extension that allows the setting of
+> start and stop charge thresholds in the EC and battery firmware
+> via ACPI. The thinkpad_acpi module can use this API to expose
+> sysfs attributes that it controls inside the ACPI battery driver
+> sysfs tree, under /sys/class/power_supply/BATN/.
+>
+> The file drivers/acpi/battery.h has been moved to
+> include/acpi/battery.h and the includes inside ac.c, sbs.c, and
+> battery.c have been adjusted to reflect that.
+>
+> When drivers hooks into the API, the API calls add_battery() for
+> each battery in the system that passes it a acpi_battery
+> struct. Then, the drivers can use device_create_file() to create
+> new sysfs attributes with that struct and identify the batteries
+> for per-battery attributes.
+>
+> Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
 
+This is a major update and for timing reasons I'd rather not try to
+rush it into 4.16-rc.
 
+If that's not a big issue, I'll queue it up for 4.17.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Rafael
