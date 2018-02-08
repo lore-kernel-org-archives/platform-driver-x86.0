@@ -1,123 +1,57 @@
-From: Paul Menzel <pmenzel+platform-driver-x86@molgen.mpg.de>
-Subject: Re: dell-smbios makes wireless card unusable on Dell XPS 13 9360
-Date: Thu, 8 Feb 2018 07:36:35 +0100
-Message-ID: <9bde344e-b689-c6d9-2ef5-14ff3371f8ec@molgen.mpg.de>
-References: <7a59dd8f-c6a1-e412-931f-629ac5aa2800@molgen.mpg.de>
- <3e2d3a0bb0f8495b8b77d282a371b28c@ausx13mpc120.AMER.DELL.COM>
- <9b358453-915f-0721-1541-6ff793f5e811@molgen.mpg.de>
- <675694ab854f40548d57d7943cb4475f@ausx13mpc120.AMER.DELL.COM>
- <79d26fc7-8e26-ec13-ca52-57bc41d58d40@molgen.mpg.de>
- <7327e792366249329b9892a226f9d5c9@ausx13mpc120.AMER.DELL.COM>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 00/11] Intel SGX Driver
+Date: Thu, 8 Feb 2018 09:46:53 +0100
+Message-ID: <20180208084653.GA4595@amd>
+References: <20171125193132.24321-1-jarkko.sakkinen@linux.intel.com>
+ <CALXu0Uf6qOg4-4aEfepD9hxXsbUtayndNC-nWc_Ymc5psCdEwQ@mail.gmail.com>
+ <20180109142730.ndhxmw6p22kae5fv@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:52782 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1750865AbeBHGgi (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Feb 2018 01:36:38 -0500
-In-Reply-To: <7327e792366249329b9892a226f9d5c9@ausx13mpc120.AMER.DELL.COM>
-Content-Language: de-DE
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, it+platform-driver-x86@molgen.mpg.de, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-
-Dear Mario,
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180109142730.ndhxmw6p22kae5fv@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Cedric Blancher <cedric.blancher@gmail.com>, platform-driver-x86@vger.kernel.org, x86@kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grzegorz Andrejczuk <grzegorz.andrejczuk@intel.com>, Haim Cohen <haim.cohen@intel.com>, Ingo Molnar <mingo@kernel.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Jim Mattson <jmattson@google.com>, Kan Liang <Kan.liang@intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Kyle Huey <me@kylehuey.com>, Len Brown <len.brown@intel.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel>
+List-Id: platform-driver-x86.vger.kernel.org
 
 
-Am 08.02.2018 um 05:57 schrieb Mario.Limonciello@dell.com:
->> -----Original Message-----
->> From: Paul Menzel [mailto:pmenzel+platform-driver-x86@molgen.mpg.de]
->> Sent: Wednesday, February 7, 2018 3:41 AM
->> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
->> Cc: Pali Rohár <pali.rohar@gmail.com>; it+platform-driver-x86@molgen.mpg.de;
->> platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
->> Subject: Re: dell-smbios makes wireless card unusable on Dell XPS 13 9360
+--/9DWx/yDrRhgMJTb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> On 02/06/18 20:51, Mario.Limonciello@dell.com wrote:
->>>> -----Original Message-----
->>>> From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-x86-
->>>> owner@vger.kernel.org] On Behalf Of Paul Menzel
->>>> Sent: Tuesday, February 6, 2018 10:08 AM
->>>> To: Limonciello, Mario <Mario_Limonciello@Dell.com>
->>>> Cc: Pali Rohár <pali.rohar@gmail.com>; it+platform-driver-x86@molgen.mpg.de;
->>>> platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
->>>> Subject: Re: dell-smbios makes wireless card unusable on Dell XPS 13 9360
->>
->>>> On 02/06/18 16:58, Mario.Limonciello@dell.com wrote:
->>>>
->>>>>> -----Original Message-----
->>>>>> From: Paul Menzel [mailto:pmenzel+platform-driver-x86@molgen.mpg.de]
->>>>>> Sent: Tuesday, February 6, 2018 9:50 AM
->>>>>> To: Pali Rohár <pali.rohar@gmail.com>; Limonciello, Mario
->>>>>> <Mario_Limonciello@Dell.com>; it+platform-driver-x86@molgen.mpg.de
->>>>>> Cc: platform-driver-x86@vger.kernel.org; Linux Kernel Mailing List <linux-
->>>>>> kernel@vger.kernel.org>
->>>>>> Subject: dell-smbios makes wireless card unusable on Dell XPS 13 9360
->>>>
->>>>>> Adding `dell-smbios` to `/etc/modules` on the Dell XPS 13 9360, it seems
->>>>>> to badly effect the Wireless LAN device, causing it to be absent or to
->>>>>> not work.
->>>>>>
->>>>>> In one case, the whole system lagged, that means, the log in screen
->>>>>> stayed grayed out for 15 seconds, and the mouse pointer stopped moving
->>>>>> every 20(?) seconds for some seconds.
->>>>>
->>>>> Can you please confirm if you're indicating this is a regression in 4.15?
->>>>> Or was this present in earlier kernels too?
->>>>
->>>> Yes, it happened with Ubuntu’s 4.13 too. My original message had one log
->>>> attached where the Wifi wasn’t visible at all.
->>>
->>> Looking at that log it looks to me that the ath10k firmware crashed, not that
->>> dell-smbios lagging caused the crash.
->>>
->>> [   15.262226] ath10k_pci 0000:3a:00.0: firmware crashed! (uuid a6c40788-b7ad-4f6a-890a-62e62c1f6e5f)
->>> [   15.262233] ath10k_pci 0000:3a:00.0: qca6174 hw3.2 target 0x05030000chip_id 0x00340aff sub 1a56:1535
->>> [   15.262235] ath10k_pci 0000:3a:00.0: kconfig debug 0 debugfs 1 tracing 1 dfs 0 testmode 0
->>> [   15.262645] ath10k_pci 0000:3a:00.0: firmware ver WLAN.RM.4.4-00022-QCARMSWPZ-2 api 6 features wowlan,ignore-otp crc32 4d458559
->>> [   15.262941] ath10k_pci 0000:3a:00.0: board_file api 2 bmi_id N/A crc32 0e26ef70
->>> [   15.262943] ath10k_pci 0000:3a:00.0: htt-ver 0.0 wmi-op 4 htt-op 3 cal otp max-sta 32 raw 0 hwcrypto 1
->>> [   15.274887] ath10k_pci 0000:3a:00.0: failed to get memcpy hi address for firmware address 4: -16
->>> [   15.274900] ath10k_pci 0000:3a:00.0: failed to read firmware dump area: -16
->>> [   15.274909] ath10k_pci 0000:3a:00.0: Copy Engine register dump:
->>>
->>> Do you have a strong correlation with dell-smbios loading and the wireless
->>> firmware crashing?  You're the first account I've heard of this.
->>
->> Yes, the correlation is very strong.
-> 
-> In this situation you've described, can you unload ath10k and reload to recover?
+On Tue 2018-01-09 16:27:30, Jarkko Sakkinen wrote:
+> On Thu, Jan 04, 2018 at 03:17:24PM +0100, Cedric Blancher wrote:
+> > So how does this protect against the MELTDOWN attack (CVE-2017-5754)
+> > and the MELTATOMBOMBA4 worm which uses this exploit?
+> >=20
+> > Ced
+>=20
+> Everything going out of L1 gets encrypted. This is done to defend
+> against peripheral like adversaries and should work also against
+> meltdown.
 
-No, I unloaded ath10k_pci, and that takes a few seconds, and also shows 
-the Linux error messages in the log. Loading it again, there are also 
-Linux error messages, and the wireless does *not* work again.
+Yeah, but useless against spectre and ability to introduce bit flips
+means this is generally useless...
 
->>> Also why are you putting it in /etc/modules rather than letting the udev
->>> rules load from modaliases?  Or did you artificially prevent that in some way?
->>
->> No idea, with Ubuntu 17.10 there are log messages, that the module is
->> not loaded. So I thought adding it to `/etc/modules` will fix it. Should
->> the module smbios-dell be supported out of the box on Ubuntu 17.10?
-> 
-> It's only supposed to load when it's needed by another kernel module such as
-> dell-laptop or dell-wmi.
-> 
-> I suppose the messages you were seeing were related to the backends to
-> dell-smbios (dell-smbios-wmi or dell-smbios-smm) not yet being initialized
-> when a driver had requested to use an SMBIOS method.
-> 
-> If you don't add it to /etc/modules I would expect that you'll find it's actually
-> already loaded by the system when boot has completed.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Yes, it looks like it gets loaded after I removed it from `/etc/modules`.
+--/9DWx/yDrRhgMJTb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Still, that behavior should not happen. Could you reproduce it? Is it 
-actually a ath10k_pci bug, and their maintainers should be added?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iEYEARECAAYFAlp8Dn0ACgkQMOfwapXb+vIc5wCggjj5Yqpg/20rvxoXsoWVBGhD
+Hm8AnRmP5lbu8SNf/Qm+wtDdkd+haUfn
+=INFf
+-----END PGP SIGNATURE-----
 
-Kind regards,
-
-Paul
+--/9DWx/yDrRhgMJTb--
