@@ -1,62 +1,104 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [RFC, PATCH v1] platform/x86: intel-vbtn: Convert to pure ACPI driver
-Date: Wed, 07 Feb 2018 23:50:11 +0100
-Message-ID: <2040799.1aJPVOsbqr@aspire.rjw.lan>
-References: <20180131182614.19524-1-andriy.shevchenko@linux.intel.com> <8d143fabe24f43de933dc60ce6480d00@ausx13mpc120.AMER.DELL.COM> <1518009532.22495.140.camel@linux.intel.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: dell-smbios makes wireless card unusable on Dell XPS 13 9360
+Date: Thu, 8 Feb 2018 04:57:11 +0000
+Message-ID: <7327e792366249329b9892a226f9d5c9@ausx13mpc120.AMER.DELL.COM>
+References: <7a59dd8f-c6a1-e412-931f-629ac5aa2800@molgen.mpg.de>
+ <3e2d3a0bb0f8495b8b77d282a371b28c@ausx13mpc120.AMER.DELL.COM>
+ <9b358453-915f-0721-1541-6ff793f5e811@molgen.mpg.de>
+ <675694ab854f40548d57d7943cb4475f@ausx13mpc120.AMER.DELL.COM>
+ <79d26fc7-8e26-ec13-ca52-57bc41d58d40@molgen.mpg.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from cloudserver094114.home.pl ([79.96.170.134]:52007 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751075AbeBGWvy (ORCPT
+Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:5260 "EHLO
+        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750810AbeBHE5Q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Feb 2018 17:51:54 -0500
-In-Reply-To: <1518009532.22495.140.camel@linux.intel.com>
+        Wed, 7 Feb 2018 23:57:16 -0500
+In-Reply-To: <79d26fc7-8e26-ec13-ca52-57bc41d58d40@molgen.mpg.de>
+Content-Language: en-US
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mario.Limonciello@dell.com, pali.rohar@gmail.com, andy.shevchenko@gmail.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, acelan.kao@canonical.com, linux-kernel@vger.kernel.org
+To: pmenzel+platform-driver-x86@molgen.mpg.de
+Cc: pali.rohar@gmail.com, it+platform-driver-x86@molgen.mpg.de, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wednesday, February 7, 2018 2:18:52 PM CET Andy Shevchenko wrote:
-> On Wed, 2018-02-07 at 13:08 +0000, Mario.Limonciello@dell.com wrote:
-> > > -----Original Message-----
-> > > From: Pali Rohár [mailto:pali.rohar@gmail.com]
-> > > Sent: Wednesday, February 7, 2018 3:55 AM
-> > > To: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>; Limonciello, Mario
-> > > <Mario_Limonciello@Dell.com>; andriy.shevchenko@linux.intel.com;
-> > > dvhart@infradead.org; platform-driver-x86@vger.kernel.org;
-> > > acelan.kao@canonical.com; linux-kernel@vger.kernel.org
-> > > Subject: Re: [RFC, PATCH v1] platform/x86: intel-vbtn: Convert to
-> > > pure ACPI driver
-> > > 
-> > > On Wednesday 07 February 2018 10:47:57 Rafael J. Wysocki wrote:
-> > > > BTW, please CC patches with ACPI material to linux-acpi.  They are
-> > > > less likely
-> > > > to be overlooked by me then and the others on that list may have
-> > > > opinions on
-> > > > them too.
-> > > 
-> > > Maybe we can update MAINTAINERS file for acpi based platform-x86
-> > > drivers
-> > > to include linux-acpi list? Darren, Andy, any idea?
-> > > 
-> > 
-> > I would also wonder if the intel-vbtn driver should still live in
-> > platform-x86 as it's
-> > now pure ACPI driver with this change Andy proposed.
-> > 
-> > Btw Andy for your v2 with your fixups that were in your review branch
-> > feel free
-> > to add:
-> > Tested-by: Mario Limonciello <mario.limonciello@dell.com>
-> > 
-> > When you resubmit it.
-> 
-> Mario, Rafael clarifies the matter and NACKed this one (which kinda was
-> expected by me, that's why RFC was in the first place).
-> 
-> I'm going to drop this patch from my queue.
-
-Thanks!
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYXVsIE1lbnplbCBbbWFpbHRv
+OnBtZW56ZWwrcGxhdGZvcm0tZHJpdmVyLXg4NkBtb2xnZW4ubXBnLmRlXQ0KPiBTZW50OiBXZWRu
+ZXNkYXksIEZlYnJ1YXJ5IDcsIDIwMTggMzo0MSBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlv
+IDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IFBhbGkgUm9ow6FyIDxwYWxpLnJv
+aGFyQGdtYWlsLmNvbT47IGl0K3BsYXRmb3JtLWRyaXZlci14ODZAbW9sZ2VuLm1wZy5kZTsNCj4g
+cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IGRlbGwtc21iaW9zIG1ha2VzIHdpcmVsZXNzIGNhcmQg
+dW51c2FibGUgb24gRGVsbCBYUFMgMTMgOTM2MA0KPiANCj4gRGVhciBNYXJpbywNCj4gDQo+IA0K
+PiBPbiAwMi8wNi8xOCAyMDo1MSwgTWFyaW8uTGltb25jaWVsbG9AZGVsbC5jb20gd3JvdGU6DQo+
+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IHBsYXRmb3JtLWRyaXZl
+ci14ODYtb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86cGxhdGZvcm0tZHJpdmVyLXg4Ni0N
+Cj4gPj4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgUGF1bCBNZW56ZWwNCj4g
+Pj4gU2VudDogVHVlc2RheSwgRmVicnVhcnkgNiwgMjAxOCAxMDowOCBBTQ0KPiA+PiBUbzogTGlt
+b25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gPj4gQ2M6IFBh
+bGkgUm9ow6FyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT47IGl0K3BsYXRmb3JtLWRyaXZlci0NCj4g
+eDg2QG1vbGdlbi5tcGcuZGU7DQo+ID4+IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4+IFN1YmplY3Q6IFJlOiBkZWxs
+LXNtYmlvcyBtYWtlcyB3aXJlbGVzcyBjYXJkIHVudXNhYmxlIG9uIERlbGwgWFBTIDEzIDkzNjAN
+Cj4gDQo+ID4+IE9uIDAyLzA2LzE4IDE2OjU4LCBNYXJpby5MaW1vbmNpZWxsb0BkZWxsLmNvbSB3
+cm90ZToNCj4gPj4NCj4gPj4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+Pj4+IEZy
+b206IFBhdWwgTWVuemVsIFttYWlsdG86cG1lbnplbCtwbGF0Zm9ybS1kcml2ZXIteDg2QG1vbGdl
+bi5tcGcuZGVdDQo+ID4+Pj4gU2VudDogVHVlc2RheSwgRmVicnVhcnkgNiwgMjAxOCA5OjUwIEFN
+DQo+ID4+Pj4gVG86IFBhbGkgUm9ow6FyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT47IExpbW9uY2ll
+bGxvLCBNYXJpbw0KPiA+Pj4+IDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IGl0K3BsYXRm
+b3JtLWRyaXZlci14ODZAbW9sZ2VuLm1wZy5kZQ0KPiA+Pj4+IENjOiBwbGF0Zm9ybS1kcml2ZXIt
+eDg2QHZnZXIua2VybmVsLm9yZzsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgtDQo+
+ID4+Pj4ga2VybmVsQHZnZXIua2VybmVsLm9yZz4NCj4gPj4+PiBTdWJqZWN0OiBkZWxsLXNtYmlv
+cyBtYWtlcyB3aXJlbGVzcyBjYXJkIHVudXNhYmxlIG9uIERlbGwgWFBTIDEzIDkzNjANCj4gPj4N
+Cj4gPj4+PiBBZGRpbmcgYGRlbGwtc21iaW9zYCB0byBgL2V0Yy9tb2R1bGVzYCBvbiB0aGUgRGVs
+bCBYUFMgMTMgOTM2MCwgaXQgc2VlbXMNCj4gPj4+PiB0byBiYWRseSBlZmZlY3QgdGhlIFdpcmVs
+ZXNzIExBTiBkZXZpY2UsIGNhdXNpbmcgaXQgdG8gYmUgYWJzZW50IG9yIHRvDQo+ID4+Pj4gbm90
+IHdvcmsuDQo+ID4+Pj4NCj4gPj4+PiBJbiBvbmUgY2FzZSwgdGhlIHdob2xlIHN5c3RlbSBsYWdn
+ZWQsIHRoYXQgbWVhbnMsIHRoZSBsb2cgaW4gc2NyZWVuDQo+ID4+Pj4gc3RheWVkIGdyYXllZCBv
+dXQgZm9yIDE1IHNlY29uZHMsIGFuZCB0aGUgbW91c2UgcG9pbnRlciBzdG9wcGVkIG1vdmluZw0K
+PiA+Pj4+IGV2ZXJ5IDIwKD8pIHNlY29uZHMgZm9yIHNvbWUgc2Vjb25kcy4NCj4gPj4+DQo+ID4+
+PiBDYW4geW91IHBsZWFzZSBjb25maXJtIGlmIHlvdSdyZSBpbmRpY2F0aW5nIHRoaXMgaXMgYSBy
+ZWdyZXNzaW9uIGluIDQuMTU/DQo+ID4+PiBPciB3YXMgdGhpcyBwcmVzZW50IGluIGVhcmxpZXIg
+a2VybmVscyB0b28/DQo+ID4+DQo+ID4+IFllcywgaXQgaGFwcGVuZWQgd2l0aCBVYnVudHXigJlz
+IDQuMTMgdG9vLiBNeSBvcmlnaW5hbCBtZXNzYWdlIGhhZCBvbmUgbG9nDQo+ID4+IGF0dGFjaGVk
+IHdoZXJlIHRoZSBXaWZpIHdhc27igJl0IHZpc2libGUgYXQgYWxsLg0KPiA+DQo+ID4gTG9va2lu
+ZyBhdCB0aGF0IGxvZyBpdCBsb29rcyB0byBtZSB0aGF0IHRoZSBhdGgxMGsgZmlybXdhcmUgY3Jh
+c2hlZCwgbm90IHRoYXQNCj4gPiBkZWxsLXNtYmlvcyBsYWdnaW5nIGNhdXNlZCB0aGUgY3Jhc2gu
+DQo+ID4NCj4gPiBbICAgMTUuMjYyMjI2XSBhdGgxMGtfcGNpIDAwMDA6M2E6MDAuMDogZmlybXdh
+cmUgY3Jhc2hlZCEgKHV1aWQgYTZjNDA3ODgtYjdhZC0NCj4gNGY2YS04OTBhLTYyZTYyYzFmNmU1
+ZikNCj4gPiBbICAgMTUuMjYyMjMzXSBhdGgxMGtfcGNpIDAwMDA6M2E6MDAuMDogcWNhNjE3NCBo
+dzMuMiB0YXJnZXQgMHgwNTAzMDAwMA0KPiBjaGlwX2lkIDB4MDAzNDBhZmYgc3ViIDFhNTY6MTUz
+NQ0KPiA+IFsgICAxNS4yNjIyMzVdIGF0aDEwa19wY2kgMDAwMDozYTowMC4wOiBrY29uZmlnIGRl
+YnVnIDAgZGVidWdmcyAxIHRyYWNpbmcgMSBkZnMgMA0KPiB0ZXN0bW9kZSAwDQo+ID4gWyAgIDE1
+LjI2MjY0NV0gYXRoMTBrX3BjaSAwMDAwOjNhOjAwLjA6IGZpcm13YXJlIHZlciBXTEFOLlJNLjQu
+NC0wMDAyMi0NCj4gUUNBUk1TV1BaLTIgYXBpIDYgZmVhdHVyZXMgd293bGFuLGlnbm9yZS1vdHAg
+Y3JjMzIgNGQ0NTg1NTkNCj4gPiBbICAgMTUuMjYyOTQxXSBhdGgxMGtfcGNpIDAwMDA6M2E6MDAu
+MDogYm9hcmRfZmlsZSBhcGkgMiBibWlfaWQgTi9BIGNyYzMyDQo+IDBlMjZlZjcwDQo+ID4gWyAg
+IDE1LjI2Mjk0M10gYXRoMTBrX3BjaSAwMDAwOjNhOjAwLjA6IGh0dC12ZXIgMC4wIHdtaS1vcCA0
+IGh0dC1vcCAzIGNhbCBvdHANCj4gbWF4LXN0YSAzMiByYXcgMCBod2NyeXB0byAxDQo+ID4gWyAg
+IDE1LjI3NDg4N10gYXRoMTBrX3BjaSAwMDAwOjNhOjAwLjA6IGZhaWxlZCB0byBnZXQgbWVtY3B5
+IGhpIGFkZHJlc3MgZm9yDQo+IGZpcm13YXJlIGFkZHJlc3MgNDogLTE2DQo+ID4gWyAgIDE1LjI3
+NDkwMF0gYXRoMTBrX3BjaSAwMDAwOjNhOjAwLjA6IGZhaWxlZCB0byByZWFkIGZpcm13YXJlIGR1
+bXAgYXJlYTogLTE2DQo+ID4gWyAgIDE1LjI3NDkwOV0gYXRoMTBrX3BjaSAwMDAwOjNhOjAwLjA6
+IENvcHkgRW5naW5lIHJlZ2lzdGVyIGR1bXA6DQo+ID4NCj4gPiBEbyB5b3UgaGF2ZSBhIHN0cm9u
+ZyBjb3JyZWxhdGlvbiB3aXRoIGRlbGwtc21iaW9zIGxvYWRpbmcgYW5kIHRoZSB3aXJlbGVzcw0K
+PiA+IGZpcm13YXJlIGNyYXNoaW5nPyAgWW91J3JlIHRoZSBmaXJzdCBhY2NvdW50IEkndmUgaGVh
+cmQgb2YgdGhpcy4NCj4gDQo+IFllcywgdGhlIGNvcnJlbGF0aW9uIGlzIHZlcnkgc3Ryb25nLg0K
+DQpJbiB0aGlzIHNpdHVhdGlvbiB5b3UndmUgZGVzY3JpYmVkLCBjYW4geW91IHVubG9hZCBhdGgx
+MGsgYW5kIHJlbG9hZCB0byByZWNvdmVyPw0KDQo+IA0KPiA+IEFsc28gd2h5IGFyZSB5b3UgcHV0
+dGluZyBpdCBpbiAvZXRjL21vZHVsZXMgcmF0aGVyIHRoYW4gbGV0dGluZyB0aGUgdWRldg0KPiA+
+IHJ1bGVzIGxvYWQgZnJvbSBtb2RhbGlhc2VzPyAgT3IgZGlkIHlvdSBhcnRpZmljaWFsbHkgcHJl
+dmVudCB0aGF0IGluIHNvbWUgd2F5Pw0KPiANCj4gTm8gaWRlYSwgd2l0aCBVYnVudHUgMTcuMTAg
+dGhlcmUgYXJlIGxvZyBtZXNzYWdlcywgdGhhdCB0aGUgbW9kdWxlIGlzDQo+IG5vdCBsb2FkZWQu
+IFNvIEkgdGhvdWdodCBhZGRpbmcgaXQgdG8gYC9ldGMvbW9kdWxlc2Agd2lsbCBmaXggaXQuIFNo
+b3VsZA0KPiB0aGUgbW9kdWxlIHNtYmlvcy1kZWxsIGJlIHN1cHBvcnRlZCBvdXQgb2YgdGhlIGJv
+eCBvbiBVYnVudHUgMTcuMTA/DQo+IA0KDQpJdCdzIG9ubHkgc3VwcG9zZWQgdG8gbG9hZCB3aGVu
+IGl0J3MgbmVlZGVkIGJ5IGFub3RoZXIga2VybmVsIG1vZHVsZSBzdWNoIGFzDQpkZWxsLWxhcHRv
+cCBvciBkZWxsLXdtaS4NCg0KSSBzdXBwb3NlIHRoZSBtZXNzYWdlcyB5b3Ugd2VyZSBzZWVpbmcg
+d2VyZSByZWxhdGVkIHRvIHRoZSBiYWNrZW5kcyB0bw0KZGVsbC1zbWJpb3MgKGRlbGwtc21iaW9z
+LXdtaSBvciBkZWxsLXNtYmlvcy1zbW0pIG5vdCB5ZXQgYmVpbmcgaW5pdGlhbGl6ZWQNCndoZW4g
+YSBkcml2ZXIgaGFkIHJlcXVlc3RlZCB0byB1c2UgYW4gU01CSU9TIG1ldGhvZC4NCg0KSWYgeW91
+IGRvbid0IGFkZCBpdCB0byAvZXRjL21vZHVsZXMgSSB3b3VsZCBleHBlY3QgdGhhdCB5b3UnbGwg
+ZmluZCBpdCdzIGFjdHVhbGx5DQphbHJlYWR5IGxvYWRlZCBieSB0aGUgc3lzdGVtIHdoZW4gYm9v
+dCBoYXMgY29tcGxldGVkLg0K
