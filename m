@@ -1,88 +1,132 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-laptop: Removed duplicates in DMI
- whitelist
-Date: Thu, 8 Feb 2018 17:52:33 +0100
-Message-ID: <20180208165233.t5oywk7ikjds6gnk@pali>
-References: <20180207221226.11345-1-alexander.n.abrosimov@gmail.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: dell-smbios makes wireless card unusable on Dell XPS 13 9360
+Date: Thu, 8 Feb 2018 17:44:36 +0000
+Message-ID: <84cc5ba033344288aa614e1244f95516@ausx13mpc120.AMER.DELL.COM>
+References: <7a59dd8f-c6a1-e412-931f-629ac5aa2800@molgen.mpg.de>
+ <3e2d3a0bb0f8495b8b77d282a371b28c@ausx13mpc120.AMER.DELL.COM>
+ <9b358453-915f-0721-1541-6ff793f5e811@molgen.mpg.de>
+ <675694ab854f40548d57d7943cb4475f@ausx13mpc120.AMER.DELL.COM>
+ <79d26fc7-8e26-ec13-ca52-57bc41d58d40@molgen.mpg.de>
+ <7327e792366249329b9892a226f9d5c9@ausx13mpc120.AMER.DELL.COM>
+ <9bde344e-b689-c6d9-2ef5-14ff3371f8ec@molgen.mpg.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="yfhgoliowzcfaozs"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180207221226.11345-1-alexander.n.abrosimov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Abrosimov <alexander.n.abrosimov@gmail.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa1.dell-outbound.iphmx.com ([68.232.153.90]:59035 "EHLO
+        esa1.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752020AbeBHRoj (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 8 Feb 2018 12:44:39 -0500
+In-Reply-To: <9bde344e-b689-c6d9-2ef5-14ff3371f8ec@molgen.mpg.de>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: pmenzel+platform-driver-x86@molgen.mpg.de
+Cc: pali.rohar@gmail.com, it+platform-driver-x86@molgen.mpg.de, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-
---yfhgoliowzcfaozs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thursday 08 February 2018 01:12:26 Alexander Abrosimov wrote:
-> Fixed a mistake in which several entries were duplicated in the DMI list
-> from the below commit
-> fe486138 platform/x86: dell-laptop: Add 2-in-1 devices to the DMI whiteli=
-st
->=20
-> Signed-off-by: Alexander Abrosimov <alexander.n.abrosimov@gmail.com>
-
-Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-
-> ---
->  drivers/platform/x86/dell-laptop.c | 18 ------------------
->  1 file changed, 18 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/de=
-ll-laptop.c
-> index a7b141992cb3..a66a6a6e47b9 100644
-> --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
-> @@ -125,28 +125,10 @@ static const struct dmi_system_id dell_device_table=
-[] __initconst =3D {
->  			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
->  			DMI_MATCH(DMI_CHASSIS_TYPE, "32"), /*Detachable*/
->  		},
->  	},
->  	{
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_CHASSIS_TYPE, "30"), /*Tablet*/
-> -		},
-> -	},
-> -	{
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_CHASSIS_TYPE, "31"), /*Convertible*/
-> -		},
-> -	},
-> -	{
-> -		.matches =3D {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_CHASSIS_TYPE, "32"), /*Detachable*/
-> -		},
-> -	},
-> -	{
->  		.ident =3D "Dell Computer Corporation",
->  		.matches =3D {
->  			DMI_MATCH(DMI_SYS_VENDOR, "Dell Computer Corporation"),
->  			DMI_MATCH(DMI_CHASSIS_TYPE, "8"),
->  		},
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---yfhgoliowzcfaozs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWnyATwAKCRCL8Mk9A+RD
-UlHyAJ4s15C7UhMWXpDNyD7fc6a104FzTQCfVXOt9uiHUEX320ytxzBLD2TxAJs=
-=IEfl
------END PGP SIGNATURE-----
-
---yfhgoliowzcfaozs--
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYXVsIE1lbnplbCBbbWFpbHRv
+OnBtZW56ZWwrcGxhdGZvcm0tZHJpdmVyLXg4NkBtb2xnZW4ubXBnLmRlXQ0KPiBTZW50OiBUaHVy
+c2RheSwgRmVicnVhcnkgOCwgMjAxOCAxMjozNyBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlv
+IDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IFBhbGkgUm9ow6FyIDxwYWxpLnJv
+aGFyQGdtYWlsLmNvbT47IGl0K3BsYXRmb3JtLWRyaXZlci14ODZAbW9sZ2VuLm1wZy5kZTsNCj4g
+cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IGRlbGwtc21iaW9zIG1ha2VzIHdpcmVsZXNzIGNhcmQg
+dW51c2FibGUgb24gRGVsbCBYUFMgMTMgOTM2MA0KPiANCj4gRGVhciBNYXJpbywNCj4gDQo+IA0K
+PiBBbSAwOC4wMi4yMDE4IHVtIDA1OjU3IHNjaHJpZWIgTWFyaW8uTGltb25jaWVsbG9AZGVsbC5j
+b206DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+IEZyb206IFBhdWwgTWVu
+emVsIFttYWlsdG86cG1lbnplbCtwbGF0Zm9ybS1kcml2ZXIteDg2QG1vbGdlbi5tcGcuZGVdDQo+
+ID4+IFNlbnQ6IFdlZG5lc2RheSwgRmVicnVhcnkgNywgMjAxOCAzOjQxIEFNDQo+ID4+IFRvOiBM
+aW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiA+PiBDYzog
+UGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29tPjsgaXQrcGxhdGZvcm0tZHJpdmVyLQ0K
+PiB4ODZAbW9sZ2VuLm1wZy5kZTsNCj4gPj4gcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gPj4gU3ViamVjdDogUmU6IGRl
+bGwtc21iaW9zIG1ha2VzIHdpcmVsZXNzIGNhcmQgdW51c2FibGUgb24gRGVsbCBYUFMgMTMgOTM2
+MA0KPiANCj4gPj4gT24gMDIvMDYvMTggMjA6NTEsIE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29t
+IHdyb3RlOg0KPiA+Pj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+Pj4gRnJvbTog
+cGxhdGZvcm0tZHJpdmVyLXg4Ni1vd25lckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpwbGF0Zm9y
+bS1kcml2ZXItDQo+IHg4Ni0NCj4gPj4+PiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFs
+ZiBPZiBQYXVsIE1lbnplbA0KPiA+Pj4+IFNlbnQ6IFR1ZXNkYXksIEZlYnJ1YXJ5IDYsIDIwMTgg
+MTA6MDggQU0NCj4gPj4+PiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1vbmNpZWxs
+b0BEZWxsLmNvbT4NCj4gPj4+PiBDYzogUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29t
+PjsgaXQrcGxhdGZvcm0tZHJpdmVyLQ0KPiB4ODZAbW9sZ2VuLm1wZy5kZTsNCj4gPj4+PiBwbGF0
+Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZw0KPiA+Pj4+IFN1YmplY3Q6IFJlOiBkZWxsLXNtYmlvcyBtYWtlcyB3aXJlbGVzcyBjYXJk
+IHVudXNhYmxlIG9uIERlbGwgWFBTIDEzIDkzNjANCj4gPj4NCj4gPj4+PiBPbiAwMi8wNi8xOCAx
+Njo1OCwgTWFyaW8uTGltb25jaWVsbG9AZGVsbC5jb20gd3JvdGU6DQo+ID4+Pj4NCj4gPj4+Pj4+
+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+Pj4+PiBGcm9tOiBQYXVsIE1lbnplbCBb
+bWFpbHRvOnBtZW56ZWwrcGxhdGZvcm0tZHJpdmVyLXg4NkBtb2xnZW4ubXBnLmRlXQ0KPiA+Pj4+
+Pj4gU2VudDogVHVlc2RheSwgRmVicnVhcnkgNiwgMjAxOCA5OjUwIEFNDQo+ID4+Pj4+PiBUbzog
+UGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29tPjsgTGltb25jaWVsbG8sIE1hcmlvDQo+
+ID4+Pj4+PiA8TWFyaW9fTGltb25jaWVsbG9ARGVsbC5jb20+OyBpdCtwbGF0Zm9ybS1kcml2ZXIt
+eDg2QG1vbGdlbi5tcGcuZGUNCj4gPj4+Pj4+IENjOiBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIu
+a2VybmVsLm9yZzsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgtDQo+ID4+Pj4+PiBr
+ZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KPiA+Pj4+Pj4gU3ViamVjdDogZGVsbC1zbWJpb3MgbWFr
+ZXMgd2lyZWxlc3MgY2FyZCB1bnVzYWJsZSBvbiBEZWxsIFhQUyAxMyA5MzYwDQo+ID4+Pj4NCj4g
+Pj4+Pj4+IEFkZGluZyBgZGVsbC1zbWJpb3NgIHRvIGAvZXRjL21vZHVsZXNgIG9uIHRoZSBEZWxs
+IFhQUyAxMyA5MzYwLCBpdCBzZWVtcw0KPiA+Pj4+Pj4gdG8gYmFkbHkgZWZmZWN0IHRoZSBXaXJl
+bGVzcyBMQU4gZGV2aWNlLCBjYXVzaW5nIGl0IHRvIGJlIGFic2VudCBvciB0bw0KPiA+Pj4+Pj4g
+bm90IHdvcmsuDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gSW4gb25lIGNhc2UsIHRoZSB3aG9sZSBzeXN0
+ZW0gbGFnZ2VkLCB0aGF0IG1lYW5zLCB0aGUgbG9nIGluIHNjcmVlbg0KPiA+Pj4+Pj4gc3RheWVk
+IGdyYXllZCBvdXQgZm9yIDE1IHNlY29uZHMsIGFuZCB0aGUgbW91c2UgcG9pbnRlciBzdG9wcGVk
+IG1vdmluZw0KPiA+Pj4+Pj4gZXZlcnkgMjAoPykgc2Vjb25kcyBmb3Igc29tZSBzZWNvbmRzLg0K
+PiA+Pj4+Pg0KPiA+Pj4+PiBDYW4geW91IHBsZWFzZSBjb25maXJtIGlmIHlvdSdyZSBpbmRpY2F0
+aW5nIHRoaXMgaXMgYSByZWdyZXNzaW9uIGluIDQuMTU/DQo+ID4+Pj4+IE9yIHdhcyB0aGlzIHBy
+ZXNlbnQgaW4gZWFybGllciBrZXJuZWxzIHRvbz8NCj4gPj4+Pg0KPiA+Pj4+IFllcywgaXQgaGFw
+cGVuZWQgd2l0aCBVYnVudHXigJlzIDQuMTMgdG9vLiBNeSBvcmlnaW5hbCBtZXNzYWdlIGhhZCBv
+bmUgbG9nDQo+ID4+Pj4gYXR0YWNoZWQgd2hlcmUgdGhlIFdpZmkgd2FzbuKAmXQgdmlzaWJsZSBh
+dCBhbGwuDQo+ID4+Pg0KPiA+Pj4gTG9va2luZyBhdCB0aGF0IGxvZyBpdCBsb29rcyB0byBtZSB0
+aGF0IHRoZSBhdGgxMGsgZmlybXdhcmUgY3Jhc2hlZCwgbm90IHRoYXQNCj4gPj4+IGRlbGwtc21i
+aW9zIGxhZ2dpbmcgY2F1c2VkIHRoZSBjcmFzaC4NCj4gPj4+DQo+ID4+PiBbICAgMTUuMjYyMjI2
+XSBhdGgxMGtfcGNpIDAwMDA6M2E6MDAuMDogZmlybXdhcmUgY3Jhc2hlZCEgKHV1aWQgYTZjNDA3
+ODgtDQo+IGI3YWQtNGY2YS04OTBhLTYyZTYyYzFmNmU1ZikNCj4gPj4+IFsgICAxNS4yNjIyMzNd
+IGF0aDEwa19wY2kgMDAwMDozYTowMC4wOiBxY2E2MTc0IGh3My4yIHRhcmdldA0KPiAweDA1MDMw
+MDAwY2hpcF9pZCAweDAwMzQwYWZmIHN1YiAxYTU2OjE1MzUNCj4gPj4+IFsgICAxNS4yNjIyMzVd
+IGF0aDEwa19wY2kgMDAwMDozYTowMC4wOiBrY29uZmlnIGRlYnVnIDAgZGVidWdmcyAxIHRyYWNp
+bmcgMQ0KPiBkZnMgMCB0ZXN0bW9kZSAwDQo+ID4+PiBbICAgMTUuMjYyNjQ1XSBhdGgxMGtfcGNp
+IDAwMDA6M2E6MDAuMDogZmlybXdhcmUgdmVyIFdMQU4uUk0uNC40LTAwMDIyLQ0KPiBRQ0FSTVNX
+UFotMiBhcGkgNiBmZWF0dXJlcyB3b3dsYW4saWdub3JlLW90cCBjcmMzMiA0ZDQ1ODU1OQ0KPiA+
+Pj4gWyAgIDE1LjI2Mjk0MV0gYXRoMTBrX3BjaSAwMDAwOjNhOjAwLjA6IGJvYXJkX2ZpbGUgYXBp
+IDIgYm1pX2lkIE4vQSBjcmMzMg0KPiAwZTI2ZWY3MA0KPiA+Pj4gWyAgIDE1LjI2Mjk0M10gYXRo
+MTBrX3BjaSAwMDAwOjNhOjAwLjA6IGh0dC12ZXIgMC4wIHdtaS1vcCA0IGh0dC1vcCAzIGNhbCBv
+dHANCj4gbWF4LXN0YSAzMiByYXcgMCBod2NyeXB0byAxDQo+ID4+PiBbICAgMTUuMjc0ODg3XSBh
+dGgxMGtfcGNpIDAwMDA6M2E6MDAuMDogZmFpbGVkIHRvIGdldCBtZW1jcHkgaGkgYWRkcmVzcyBm
+b3INCj4gZmlybXdhcmUgYWRkcmVzcyA0OiAtMTYNCj4gPj4+IFsgICAxNS4yNzQ5MDBdIGF0aDEw
+a19wY2kgMDAwMDozYTowMC4wOiBmYWlsZWQgdG8gcmVhZCBmaXJtd2FyZSBkdW1wIGFyZWE6IC0N
+Cj4gMTYNCj4gPj4+IFsgICAxNS4yNzQ5MDldIGF0aDEwa19wY2kgMDAwMDozYTowMC4wOiBDb3B5
+IEVuZ2luZSByZWdpc3RlciBkdW1wOg0KPiA+Pj4NCj4gPj4+IERvIHlvdSBoYXZlIGEgc3Ryb25n
+IGNvcnJlbGF0aW9uIHdpdGggZGVsbC1zbWJpb3MgbG9hZGluZyBhbmQgdGhlIHdpcmVsZXNzDQo+
+ID4+PiBmaXJtd2FyZSBjcmFzaGluZz8gIFlvdSdyZSB0aGUgZmlyc3QgYWNjb3VudCBJJ3ZlIGhl
+YXJkIG9mIHRoaXMuDQo+ID4+DQo+ID4+IFllcywgdGhlIGNvcnJlbGF0aW9uIGlzIHZlcnkgc3Ry
+b25nLg0KPiA+DQo+ID4gSW4gdGhpcyBzaXR1YXRpb24geW91J3ZlIGRlc2NyaWJlZCwgY2FuIHlv
+dSB1bmxvYWQgYXRoMTBrIGFuZCByZWxvYWQgdG8gcmVjb3Zlcj8NCj4gDQo+IE5vLCBJIHVubG9h
+ZGVkIGF0aDEwa19wY2ksIGFuZCB0aGF0IHRha2VzIGEgZmV3IHNlY29uZHMsIGFuZCBhbHNvIHNo
+b3dzDQo+IHRoZSBMaW51eCBlcnJvciBtZXNzYWdlcyBpbiB0aGUgbG9nLiBMb2FkaW5nIGl0IGFn
+YWluLCB0aGVyZSBhcmUgYWxzbw0KPiBMaW51eCBlcnJvciBtZXNzYWdlcywgYW5kIHRoZSB3aXJl
+bGVzcyBkb2VzICpub3QqIHdvcmsgYWdhaW4uDQo+IA0KPiA+Pj4gQWxzbyB3aHkgYXJlIHlvdSBw
+dXR0aW5nIGl0IGluIC9ldGMvbW9kdWxlcyByYXRoZXIgdGhhbiBsZXR0aW5nIHRoZSB1ZGV2DQo+
+ID4+PiBydWxlcyBsb2FkIGZyb20gbW9kYWxpYXNlcz8gIE9yIGRpZCB5b3UgYXJ0aWZpY2lhbGx5
+IHByZXZlbnQgdGhhdCBpbiBzb21lIHdheT8NCj4gPj4NCj4gPj4gTm8gaWRlYSwgd2l0aCBVYnVu
+dHUgMTcuMTAgdGhlcmUgYXJlIGxvZyBtZXNzYWdlcywgdGhhdCB0aGUgbW9kdWxlIGlzDQo+ID4+
+IG5vdCBsb2FkZWQuIFNvIEkgdGhvdWdodCBhZGRpbmcgaXQgdG8gYC9ldGMvbW9kdWxlc2Agd2ls
+bCBmaXggaXQuIFNob3VsZA0KPiA+PiB0aGUgbW9kdWxlIHNtYmlvcy1kZWxsIGJlIHN1cHBvcnRl
+ZCBvdXQgb2YgdGhlIGJveCBvbiBVYnVudHUgMTcuMTA/DQo+ID4NCj4gPiBJdCdzIG9ubHkgc3Vw
+cG9zZWQgdG8gbG9hZCB3aGVuIGl0J3MgbmVlZGVkIGJ5IGFub3RoZXIga2VybmVsIG1vZHVsZSBz
+dWNoIGFzDQo+ID4gZGVsbC1sYXB0b3Agb3IgZGVsbC13bWkuDQo+ID4NCj4gPiBJIHN1cHBvc2Ug
+dGhlIG1lc3NhZ2VzIHlvdSB3ZXJlIHNlZWluZyB3ZXJlIHJlbGF0ZWQgdG8gdGhlIGJhY2tlbmRz
+IHRvDQo+ID4gZGVsbC1zbWJpb3MgKGRlbGwtc21iaW9zLXdtaSBvciBkZWxsLXNtYmlvcy1zbW0p
+IG5vdCB5ZXQgYmVpbmcgaW5pdGlhbGl6ZWQNCj4gPiB3aGVuIGEgZHJpdmVyIGhhZCByZXF1ZXN0
+ZWQgdG8gdXNlIGFuIFNNQklPUyBtZXRob2QuDQo+ID4NCj4gPiBJZiB5b3UgZG9uJ3QgYWRkIGl0
+IHRvIC9ldGMvbW9kdWxlcyBJIHdvdWxkIGV4cGVjdCB0aGF0IHlvdSdsbCBmaW5kIGl0J3MgYWN0
+dWFsbHkNCj4gPiBhbHJlYWR5IGxvYWRlZCBieSB0aGUgc3lzdGVtIHdoZW4gYm9vdCBoYXMgY29t
+cGxldGVkLg0KPiANCj4gWWVzLCBpdCBsb29rcyBsaWtlIGl0IGdldHMgbG9hZGVkIGFmdGVyIEkg
+cmVtb3ZlZCBpdCBmcm9tIGAvZXRjL21vZHVsZXNgLg0KPiANCj4gU3RpbGwsIHRoYXQgYmVoYXZp
+b3Igc2hvdWxkIG5vdCBoYXBwZW4uIENvdWxkIHlvdSByZXByb2R1Y2UgaXQ/IElzIGl0DQo+IGFj
+dHVhbGx5IGEgYXRoMTBrX3BjaSBidWcsIGFuZCB0aGVpciBtYWludGFpbmVycyBzaG91bGQgYmUg
+YWRkZWQ/DQo+IA0KDQpJJ3ZlIHRyaWVkIHVzaW5nIFhQUyA5MzcwIEkgaGF2ZSBvbiBteSBkZXNr
+IHNldmVyYWwgdGltZXMgdXNpbmcgVWJ1bnR1J3MgNC4xMyBhcw0Kd2VsbCBhcyA0LjE1LjIgYnV0
+IGNvdWxkIG5vdCByZXByb2R1Y2UgaXQuDQpJIGFsc28gdHJpZWQgdG8gcHV0IGRlbGwtc21iaW9z
+IGludG8gL2V0Yy9tb2R1bGVzDQpUaGUgWFBTIDkzNzAgaGFzIGFuIGF0aDEwayBzdXBwb3J0ZWQg
+d2lyZWxlc3MgY2hpcC4NCg0KUGVyaGFwcyBzb21lIG90aGVycyBvbiB0aGUgbGlzdCB3aXRoIFhQ
+UyA5MzYwIG9uIGhhbmQgY2FuIGNvbW1lbnQgaWYNCnRoZXkndmUgc2VlbiB0aGlzIGFuZCBjYW4g
+cmVwcm9kdWNlLg0KDQo=
