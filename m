@@ -1,108 +1,80 @@
-From: Jan-Marek Glogowski <glogow@fbihome.de>
-Subject: Re: [PATCH][RfC] Some buttons on the Fujitsu u7[25]7 laptops are not
- working
-Date: Fri, 9 Feb 2018 14:08:37 +0100
-Message-ID: <91505258-9421-29b5-fc3d-b5d641dfd9ee@fbihome.de>
-References: <69f33335-962b-f3be-da8e-2eeff1ae2a49@fbihome.de>
- <20180119234547.GB24590@marvin.atrad.com.au>
- <84b872ec-ba48-6423-cb7b-48f2c3ef30d2@fbihome.de>
- <e69cad3d-067b-5a22-0f4d-0c29691037c7@fbihome.de>
- <20180209113144.GC23589@marvin.atrad.com.au>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v13 4/4] battery: Add the ThinkPad "Not Charging" quirk
+Date: Fri, 9 Feb 2018 14:26:41 +0100
+Message-ID: <20180209132641.6vkwasa4b5pygjkr@earth.universe>
+References: <20180207145936.ockmmkipxtwkdsot@thinkpad>
+ <20180209104530.s5i6lymcpgkqyego@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from ironman.h-da.de ([141.100.10.250]:57931 "EHLO ironman.h-da.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751031AbeBINIk (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Feb 2018 08:08:40 -0500
-In-Reply-To: <20180209113144.GC23589@marvin.atrad.com.au>
-Content-Language: en-GB
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mz7u4sqedrcthzyh"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180209104530.s5i6lymcpgkqyego@khazad-dum.debian.net>
+Sender: linux-pm-owner@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Ognjen Galic <smclt30p@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Am 09.02.2018 um 12:31 schrieb Jonathan Woithe:
-> On Fri, Feb 09, 2018 at 12:02:57PM +0100, Jan-Marek Glogowski wrote:
->> Am 22.01.2018 um 11:16 schrieb Jan-Marek Glogowski:
->>> The main remaining problem is the missing release event for the ECO / KEY_PROG4.
->>> Like all buttons the ACPI events are generated on release.
->>> When releasing the button it, this results in:
->>>
->>> [Mo Jan 22 08:37:09 2018] ACPI: \_SB_.FEXT: fujitsu_laptop: FUNC 0x1000 (args 0x4, 0x0, 0x0) returned 0x320
->>> [Mo Jan 22 08:37:09 2018] ACPI: \_SB_.FEXT: fujitsu_laptop: Flags state     0x00000320
->>> [Mo Jan 22 08:37:09 2018] ACPI: \_SB_.FEXT: fujitsu_laptop: FUNC 0x1002 (args 0x1, 0x0, 0x0) returned 0x40000413
->>> [Mo Jan 22 08:37:09 2018] input input21: Push scancode into ringbuffer [0x413]
->>> [Mo Jan 22 08:37:09 2018] ACPI: \_SB_.FEXT: fujitsu_laptop: FUNC 0x1002 (args 0x1, 0x0, 0x0) returned 0x0
->>> [Mo Jan 22 08:37:09 2018] ACPI: \_SB_.FEXT: fujitsu_laptop: FUNC 0x1000 (args 0x1, 0x0, 0x0) returned 0x0
->>>
->>> I don't know yet how to distinguish between a separate ECO button and the Fn button here.
->>> Have to recheck with the old HW to see, if some support flags are different now. The button is definitely not in the BTNI mask:
->>
->> For the new u757 I get:
->>> [259964.060356] fujitsu_laptop: Flags supported: 0x26020320
->>> [259964.065143] fujitsu_laptop: BTNI: [0x10001]
-The U model has the lid, the "fake ECO button as key" and a POWER button.
 
->> For the old e736 I get:
->>> [ 3030.845786] fujitsu_laptop: Flag supported: 0x6020320
->>> [ 3030.850631] fujitsu_laptop: BTNI: [0x1010001]
-The E model has the same buttons then the U model and an additional RFKILL button
+--mz7u4sqedrcthzyh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> BTNI difference seems to be the change from an RFKILL button to function
->> key, but that is just a guess.  The difference is actually two "button to
->> key" changes, but since ECO still emits a button press event, maybe that's
->> the single bit.
-> 
-> I cannot be sure since I only have a single example of Fujitsu hardware to
-> work with.  It seems entirely feasible that the bit change in BTNI is due to
-> the loss of the RFKILL button as a dedicated button.
-> 
->> And I realized we never use the value from BTNI, except when deciding to
->> register the "fujitsu::kblamps" led, FWIW.
-> 
-> It's useful for that purpose.
-What I meant: the driver doesn't use the value returned by the function. I was hoping to find a way to distinguish the "fake ECO button" key from a real ECO button, so I could send a release immediately after a press event, which is already a release event, just like with the normal function keys.
+Hi,
 
-I have just two different series E and U, so if you have other HW with other buttons, we can eventually decode the value. If the bit was the RFKILL button, then this doesn't help. If it was the ECO button, we can check that.
+On Fri, Feb 09, 2018 at 08:45:30AM -0200, Henrique de Moraes Holschuh wrote:
+> On Wed, 07 Feb 2018, Ognjen Galic wrote:
+> > The EC/ACPI firmware on Lenovo ThinkPads used to report a status
+> > of "Unknown" when the battery is between the charge start and
+> > charge stop thresholds. On Windows, it reports "Not Charging"
+> > so the quirk has been added to also report correctly.
+> >=20
+> > Now the "status" attribute returns "Not Charging" when the
+> > battery on ThinkPads is not physicaly charging.
+> >=20
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
+>=20
+> AFAIK, This behavior goes back to the initial SBS implementation in the
+> IBM era ECs of the Thinkpads...  We've always called it "idle" in the
+> linux-thinkpad community.  The behavior comes from SBS
+> (http://smartbattery.org/specs/), the EC was reporting its status
+> (charging/not charging *THIS* battery) in one bit, and the battery's
+> status (discharging/not discharging *THIS* battery) in a different bit.
+>=20
+> It was rather simple to observe the behavior of those bits in a
+> two-battery system.
+>=20
+> Would that apply to these newer Lenovo models?  If so, you might want to
+> consider using "idle", instead. "not charging" does _not_ imply "neither
+> charging nor discharging", while "idle" does.
 
-Currently I can just press the ECO key once, as its keycode is never removed from the ringbuffer.
-From my POV we already have more buttons then bits in the BTNI value.
+I agree, that "Idle" is a better term than "Not Charging", but
+the power supply property exists with this name since it has
+been introduced. This is exposed to userspace and cannot be
+changed easily.
 
->>> And pressing the brightness-up or -down buttons doesn't change the backlight in KDE5.
->>> Guess I'm facing the "Xorg modeset = no backlight" problem everyone has (since 2016-06): https://bugs.freedesktop.org/show_bug.cgi?id=96572
->>
->> I fixed this for me (4.4 Ubuntu kernel) by using the old CADL patchset
->> backported for 4.4 from Jani Nikular.  The link is just an reference, as I
->> have four patches from the original development:
->> https://lists.freedesktop.org/archives/intel-gfx/2016-August/105351.html
->>
->> Then I need some additional HDA pin quirks for the headset microphone:
->> http://mailman.alsa-project.org/pipermail/alsa-devel/2018-January/131049.html
->>
->> And I'll hopefully get a "rfkill-any" backport into Ubuntu 4.4:
->> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1745130
-> 
-> So where does this leave us with fujitsu-laptop?  I *think* the backlight
-> issue is beyond our control.  Is that your take on the subject?
+-- Sebastian
 
-This is just an information about the Linux state regarding the HW, if somebody wonders.
-Nothing to do there for the fujitsu-laptop driver.
+--mz7u4sqedrcthzyh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I still have two minor nuisances:
-1. the "fake ECO button" key
-2. the wrong /sys/devices/platform/fujitsu-laptop/radios state
+-----BEGIN PGP SIGNATURE-----
 
-fujitsu-laptop/radios is always "killed" for me, regardless of the rfkill state. Have to check, if this is eventually connected to the BIOS / EFI settings, which disables the HW.
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlp9oZEACgkQ2O7X88g7
++prx6g/+MURnUmcOywI7DGgmd2hm6czCCC4rxQK1BRBE2tc9rcpuEDZ9XAeCfUDS
+mkdYDkvz+Ap4GYHZXnZ3CbqsJv5jW/R3w6MVHVDoaN04t8x2BlRlTNQK60nUR5qe
+F9+NGvP8y/4M/yz6jLVhbTsyZP1JTOnZo9EoJik/Uuyx/kI+rzn+o5MrhkUnUB4t
+hxKl7Cd34Vdem/CNkXVIfylVcnDcaze5iQV20FbunDSUj1FEX/iiJAYqgi7ITGzi
+8QBoLzDs/vDaHEOAp7rHToV9AIhB4xbNO602e1oKykEDJa9nwXARNIKcZO1zIRWO
+tY5MqD5CuFNnHdEadfvneXgj0Qe6gQu6ZScgxD0qxXVVEob23h/dRXE+xnCS3ENT
+tVz3A2m++4DSqYgtkco/XcfLAvzYNT1hhuwigOsJ4In6OmsrIF9jvMAUzyrTSKOv
+z8GtKuXk9ltRGABtH+xJ/DcLu0iUOg/R1p76XmF7zMj09ywq6D+WcjuFX7RR1dcf
+T1gKgKmaK2cH50PkHf2VJhULq2kLQ4jHh/JpqJ/cmS95XVr/VhxE3atBalyO9iv5
+7wAtZQa+vgfYbvzpTQYAGOt1LBFtDXHOo8J3BgAAnHd76pGaBHXV9v2CL+FsX0g4
+hPceeoOSASIFNciA3J5fAC4buywd5PEiNP2F1w45vOqbS0P+gUA=
+=WoXc
+-----END PGP SIGNATURE-----
 
-> With the minor changes in place I do not think this patch will cause any
-> regressions for other Fujitsu systems since it is only adding meaning to
-> bits of the flags_supported field, and older system do not have those bits
-> set.  Any comments Michel?
-> 
-> Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
-> 
-> Regards
->   jonathan
+--mz7u4sqedrcthzyh--
