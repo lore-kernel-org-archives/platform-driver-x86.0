@@ -1,52 +1,39 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [patch v1 0/4] mlx-platform: Add support for new Mellanox
- systems, code improvement, fixes for msn21xx system
-Date: Thu, 8 Feb 2018 18:22:39 -0800
-Message-ID: <20180209022239.GB25898@fury>
-References: <1517561148-38587-1-git-send-email-vadimp@mellanox.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v13 3/4] thinkpad_acpi: Add support for battery thresholds
+Date: Fri, 9 Feb 2018 10:22:54 +0100
+Message-ID: <CAJZ5v0hOf1DfQuoqcqb3Xjmw_Y49MGCnY19Xv6Qz88KyT5T+xQ@mail.gmail.com>
+References: <20180207145844.bd567c36juvlkjvz@thinkpad> <20180208220323.cr6j2kcozekwbzo6@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([65.50.211.133]:59925 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752191AbeBICWl (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Feb 2018 21:22:41 -0500
-Content-Disposition: inline
-In-Reply-To: <1517561148-38587-1-git-send-email-vadimp@mellanox.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20180208220323.cr6j2kcozekwbzo6@earth.universe>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Ognjen Galic <smclt30p@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, =?UTF-8?Q?Christoph_B=C3=B6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Feb 02, 2018 at 08:45:44AM +0000, Vadim Pasternak wrote:
-> The patchset:
-> - adds defines for bus numbers, used for system topology description;
-> - fixes definition for power cables for system family msn21xx;
-> - introduces support for new Mellanox systems;
-> 
-> Vadim Pasternak (4):
->   platform/x86: mlx-platform: Use defines for bus assignment
->   platform/x86: mlx-platform: Add define for the negative bus
->   platform/x86: mlx-platform: Fix power cable setting for systems from
->     msn21xx family
+On Thu, Feb 8, 2018 at 11:03 PM, Sebastian Reichel <sre@kernel.org> wrote:
+> Hi,
+>
+> On Wed, Feb 07, 2018 at 03:58:44PM +0100, Ognjen Galic wrote:
+>> 1) Charge start threshold
+>> /sys/class/power_supply/BATN/charge_start_threshold
+>>
+>> Valid values are [0, 99]. A value of 0 turns off the
+>> start threshold wear control.
+>>
+>> 2) Charge stop threshold
+>> /sys/class/power_supply/BATN/charge_stop_threshold
+>>
+>> Valid values are [1, 100]. A value of 100 turns off
+>> the stop threshold wear control. This must be
+>> configured first.
+>
+> This is a new sysfs file, that should be documented.
 
-I've queued 1,2,3 and will try to include these in one final PR to Linus during
-the Merge Window. (Andy, FYI)
+Right, I should have remembered about that, sorry.
 
->   platform/x86: mlx-platform: Add support for new Mellanox systems
-> 
+> Also this looks pretty generic. Just introduce new POWER_SUPPLY_PROP_
+> entries for start/stop charging threshold and use them.
 
-This one needs to be broken up into smaller patches.
-
->  drivers/platform/x86/mlx-platform.c | 345 ++++++++++++++++++++++++++++++++++--
->  1 file changed, 335 insertions(+), 10 deletions(-)
-> 
-> -- 
-> 2.1.4
-> 
-> 
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+What about doing this as a follow-up?
