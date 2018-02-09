@@ -1,98 +1,108 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v13 3/4] thinkpad_acpi: Add support for battery thresholds
-Date: Fri, 9 Feb 2018 13:34:14 +0100
-Message-ID: <20180209123414.xrtmtgmeeezmma5u@earth.universe>
-References: <20180207145844.bd567c36juvlkjvz@thinkpad>
- <20180208220323.cr6j2kcozekwbzo6@earth.universe>
- <CAJZ5v0hOf1DfQuoqcqb3Xjmw_Y49MGCnY19Xv6Qz88KyT5T+xQ@mail.gmail.com>
- <20180209103946.fkolldv6boml3e32@earth.universe>
- <CAJZ5v0h8YW03EpqEVO8LGti9ECo7+Gmm0PdgQViidUCZ=o0AQw@mail.gmail.com>
+From: Jan-Marek Glogowski <glogow@fbihome.de>
+Subject: Re: [PATCH][RfC] Some buttons on the Fujitsu u7[25]7 laptops are not
+ working
+Date: Fri, 9 Feb 2018 14:08:37 +0100
+Message-ID: <91505258-9421-29b5-fc3d-b5d641dfd9ee@fbihome.de>
+References: <69f33335-962b-f3be-da8e-2eeff1ae2a49@fbihome.de>
+ <20180119234547.GB24590@marvin.atrad.com.au>
+ <84b872ec-ba48-6423-cb7b-48f2c3ef30d2@fbihome.de>
+ <e69cad3d-067b-5a22-0f4d-0c29691037c7@fbihome.de>
+ <20180209113144.GC23589@marvin.atrad.com.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fnb6lqmcobuk4f35"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0h8YW03EpqEVO8LGti9ECo7+Gmm0PdgQViidUCZ=o0AQw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>, Ognjen Galic <smclt30p@gmail.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from ironman.h-da.de ([141.100.10.250]:57931 "EHLO ironman.h-da.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1751031AbeBINIk (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 9 Feb 2018 08:08:40 -0500
+In-Reply-To: <20180209113144.GC23589@marvin.atrad.com.au>
+Content-Language: en-GB
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org
 
+Am 09.02.2018 um 12:31 schrieb Jonathan Woithe:
+> On Fri, Feb 09, 2018 at 12:02:57PM +0100, Jan-Marek Glogowski wrote:
+>> Am 22.01.2018 um 11:16 schrieb Jan-Marek Glogowski:
+>>> The main remaining problem is the missing release event for the ECO / KEY_PROG4.
+>>> Like all buttons the ACPI events are generated on release.
+>>> When releasing the button it, this results in:
+>>>
+>>> [Mo Jan 22 08:37:09 2018] ACPI: \_SB_.FEXT: fujitsu_laptop: FUNC 0x1000 (args 0x4, 0x0, 0x0) returned 0x320
+>>> [Mo Jan 22 08:37:09 2018] ACPI: \_SB_.FEXT: fujitsu_laptop: Flags state     0x00000320
+>>> [Mo Jan 22 08:37:09 2018] ACPI: \_SB_.FEXT: fujitsu_laptop: FUNC 0x1002 (args 0x1, 0x0, 0x0) returned 0x40000413
+>>> [Mo Jan 22 08:37:09 2018] input input21: Push scancode into ringbuffer [0x413]
+>>> [Mo Jan 22 08:37:09 2018] ACPI: \_SB_.FEXT: fujitsu_laptop: FUNC 0x1002 (args 0x1, 0x0, 0x0) returned 0x0
+>>> [Mo Jan 22 08:37:09 2018] ACPI: \_SB_.FEXT: fujitsu_laptop: FUNC 0x1000 (args 0x1, 0x0, 0x0) returned 0x0
+>>>
+>>> I don't know yet how to distinguish between a separate ECO button and the Fn button here.
+>>> Have to recheck with the old HW to see, if some support flags are different now. The button is definitely not in the BTNI mask:
+>>
+>> For the new u757 I get:
+>>> [259964.060356] fujitsu_laptop: Flags supported: 0x26020320
+>>> [259964.065143] fujitsu_laptop: BTNI: [0x10001]
+The U model has the lid, the "fake ECO button as key" and a POWER button.
 
---fnb6lqmcobuk4f35
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> For the old e736 I get:
+>>> [ 3030.845786] fujitsu_laptop: Flag supported: 0x6020320
+>>> [ 3030.850631] fujitsu_laptop: BTNI: [0x1010001]
+The E model has the same buttons then the U model and an additional RFKILL button
 
-Hi,
+>> BTNI difference seems to be the change from an RFKILL button to function
+>> key, but that is just a guess.  The difference is actually two "button to
+>> key" changes, but since ECO still emits a button press event, maybe that's
+>> the single bit.
+> 
+> I cannot be sure since I only have a single example of Fujitsu hardware to
+> work with.  It seems entirely feasible that the bit change in BTNI is due to
+> the loss of the RFKILL button as a dedicated button.
+> 
+>> And I realized we never use the value from BTNI, except when deciding to
+>> register the "fujitsu::kblamps" led, FWIW.
+> 
+> It's useful for that purpose.
+What I meant: the driver doesn't use the value returned by the function. I was hoping to find a way to distinguish the "fake ECO button" key from a real ECO button, so I could send a release immediately after a press event, which is already a release event, just like with the normal function keys.
 
-On Fri, Feb 09, 2018 at 11:49:40AM +0100, Rafael J. Wysocki wrote:
-> On Fri, Feb 9, 2018 at 11:39 AM, Sebastian Reichel <sre@kernel.org> wrote:
-> > Hi,
-> >
-> > On Fri, Feb 09, 2018 at 10:22:54AM +0100, Rafael J. Wysocki wrote:
-> >> On Thu, Feb 8, 2018 at 11:03 PM, Sebastian Reichel <sre@kernel.org> wr=
-ote:
-> >> > Hi,
-> >> >
-> >> > On Wed, Feb 07, 2018 at 03:58:44PM +0100, Ognjen Galic wrote:
-> >> >> 1) Charge start threshold
-> >> >> /sys/class/power_supply/BATN/charge_start_threshold
-> >> >>
-> >> >> Valid values are [0, 99]. A value of 0 turns off the
-> >> >> start threshold wear control.
-> >> >>
-> >> >> 2) Charge stop threshold
-> >> >> /sys/class/power_supply/BATN/charge_stop_threshold
-> >> >>
-> >> >> Valid values are [1, 100]. A value of 100 turns off
-> >> >> the stop threshold wear control. This must be
-> >> >> configured first.
-> >> >
-> >> > This is a new sysfs file, that should be documented.
-> >>
-> >> Right, I should have remembered about that, sorry.
-> >>
-> >> > Also this looks pretty generic. Just introduce new POWER_SUPPLY_PROP_
-> >> > entries for start/stop charging threshold and use them.
-> >>
-> >> What about doing this as a follow-up?
-> >
-> > Fine with me.
->=20
-> OK
->=20
-> Actually, I don't see any documentation whatever for ACPI battery and
-> AC power supply properties, so I guess that needs to be added in
-> general and I don't think it would be fair to ask Ognjen to do that in
-> order to get the extension in.
->=20
-> Why don't we pencil this in as work to do?
+I have just two different series E and U, so if you have other HW with other buttons, we can eventually decode the value. If the bit was the RFKILL button, then this doesn't help. If it was the ECO button, we can check that.
 
-The generic ones are documented here:
+Currently I can just press the ECO key once, as its keycode is never removed from the ringbuffer.
+From my POV we already have more buttons then bits in the BTNI value.
 
-Documentation/power/power_supply_class.txt
+>>> And pressing the brightness-up or -down buttons doesn't change the backlight in KDE5.
+>>> Guess I'm facing the "Xorg modeset = no backlight" problem everyone has (since 2016-06): https://bugs.freedesktop.org/show_bug.cgi?id=96572
+>>
+>> I fixed this for me (4.4 Ubuntu kernel) by using the old CADL patchset
+>> backported for 4.4 from Jani Nikular.  The link is just an reference, as I
+>> have four patches from the original development:
+>> https://lists.freedesktop.org/archives/intel-gfx/2016-August/105351.html
+>>
+>> Then I need some additional HDA pin quirks for the headset microphone:
+>> http://mailman.alsa-project.org/pipermail/alsa-devel/2018-January/131049.html
+>>
+>> And I'll hopefully get a "rfkill-any" backport into Ubuntu 4.4:
+>> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1745130
+> 
+> So where does this leave us with fujitsu-laptop?  I *think* the backlight
+> issue is beyond our control.  Is that your take on the subject?
 
--- Sebastian
+This is just an information about the Linux state regarding the HW, if somebody wonders.
+Nothing to do there for the fujitsu-laptop driver.
 
---fnb6lqmcobuk4f35
-Content-Type: application/pgp-signature; name="signature.asc"
+I still have two minor nuisances:
+1. the "fake ECO button" key
+2. the wrong /sys/devices/platform/fujitsu-laptop/radios state
 
------BEGIN PGP SIGNATURE-----
+fujitsu-laptop/radios is always "killed" for me, regardless of the rfkill state. Have to check, if this is eventually connected to the BIOS / EFI settings, which disables the HW.
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlp9lUUACgkQ2O7X88g7
-+ppp6Q/+PCLctWiBeL5daKJvjQ2a8MzTY+L28qamckfx9Tz9+sOWAR/lTCs1e2hU
-SGrIOyFSHRYv8O3OMKLuGhZE42IgckVB8mZEf5A25KyunkdZSFLDdqk0gx8fX2tQ
-tyRFcBNg7jpYQKT7m5C2di5+ulaDTin3QJQBZ8/EY7i1XkKUGPG/LZx6e0vQgvvz
-caRdlPl2EVIIbaF3CvI0Q2tqgK1LUJr4ZBtr5oCa/6JgB9//+o1KSP26yWuYVzGf
-9SGg7LfRy1SqCyeetEUOalR9lc+CAb5hdnM7w4MKQmxtYlY4CvEclLzzzBE5OTcX
-84ZAuFcQzBndfWRL6UewjMNrwppTafcwBzKxy/NuJ4jKF+kAKmj1fbfi+LXA87tV
-2UYT4TpqOKuS7J5UYDJXKA/XiWA7KKqZAB4XdaNQMcw5/yd333hwrlVRpxsLX4hG
-DRn4EI/9Qgxg6S2SdUH6tjNwpWhQM6JTowdNV/sJyKvCB2MnJS4JKCSDB/7Q/qc+
-yR/GlFHghXePouoyBmxYo7bYSAOTRNaMBbNuh7KD2Iek6mHEyUvnz63vdH/GY9gc
-eNOSl/cH1xOFd4KMrAstg03oAaRXpYmecWxlpmcB4WHNZ3wOASlru0Zq+wyF4DSD
-gNXI2SMMenw2u3/QcPLoIbcH6mSq2VPi4tjKXWqIG2gZIl/Vsn4=
-=CMUr
------END PGP SIGNATURE-----
-
---fnb6lqmcobuk4f35--
+> With the minor changes in place I do not think this patch will cause any
+> regressions for other Fujitsu systems since it is only adding meaning to
+> bits of the flags_supported field, and older system do not have those bits
+> set.  Any comments Michel?
+> 
+> Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+> 
+> Regards
+>   jonathan
