@@ -1,79 +1,42 @@
-From: Ognjen =?utf-8?B?R2FsacSH?= <smclt30p@gmail.com>
-Subject: Re: [PATCH v13 3/4] thinkpad_acpi: Add support for battery thresholds
-Date: Sat, 10 Feb 2018 09:48:59 +0100
-Message-ID: <20180210084859.dtpydh5gkvoywoju@thinkpad>
-References: <20180207145844.bd567c36juvlkjvz@thinkpad>
- <20180208220323.cr6j2kcozekwbzo6@earth.universe>
- <CAJZ5v0hOf1DfQuoqcqb3Xjmw_Y49MGCnY19Xv6Qz88KyT5T+xQ@mail.gmail.com>
- <20180209103946.fkolldv6boml3e32@earth.universe>
- <CAJZ5v0h8YW03EpqEVO8LGti9ECo7+Gmm0PdgQViidUCZ=o0AQw@mail.gmail.com>
- <20180209123414.xrtmtgmeeezmma5u@earth.universe>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: Some buttons on the Fujitsu u7[25]7 laptops are not working
+Date: Sat, 10 Feb 2018 22:22:17 +0100
+Message-ID: <20180210212217.GA2070@larwa.localdomain>
+References: <69f33335-962b-f3be-da8e-2eeff1ae2a49@fbihome.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:39995 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1750942AbeBJItE (ORCPT
+Received: from mail-lf0-f51.google.com ([209.85.215.51]:46641 "EHLO
+        mail-lf0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751115AbeBJVWV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 10 Feb 2018 03:49:04 -0500
+        Sat, 10 Feb 2018 16:22:21 -0500
+Received: by mail-lf0-f51.google.com with SMTP id q194so15713227lfe.13
+        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Feb 2018 13:22:20 -0800 (PST)
 Content-Disposition: inline
-In-Reply-To: <20180209123414.xrtmtgmeeezmma5u@earth.universe>
+In-Reply-To: <69f33335-962b-f3be-da8e-2eeff1ae2a49@fbihome.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Sebastian Reichel <sre@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
+To: Jan-Marek Glogowski <glogow@fbihome.de>
+Cc: Jonathan Woithe <jwoithe@just42.net>, platform-driver-x86@vger.kernel.org
 
-On Fri, Feb 09, 2018 at 01:34:14PM +0100, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Fri, Feb 09, 2018 at 11:49:40AM +0100, Rafael J. Wysocki wrote:
-> > On Fri, Feb 9, 2018 at 11:39 AM, Sebastian Reichel <sre@kernel.org> wrote:
-> > > Hi,
-> > >
-> > > On Fri, Feb 09, 2018 at 10:22:54AM +0100, Rafael J. Wysocki wrote:
-> > >> On Thu, Feb 8, 2018 at 11:03 PM, Sebastian Reichel <sre@kernel.org> wrote:
-> > >> > Hi,
-> > >> >
-> > >> > On Wed, Feb 07, 2018 at 03:58:44PM +0100, Ognjen Galic wrote:
-> > >> >> 1) Charge start threshold
-> > >> >> /sys/class/power_supply/BATN/charge_start_threshold
-> > >> >>
-> > >> >> Valid values are [0, 99]. A value of 0 turns off the
-> > >> >> start threshold wear control.
-> > >> >>
-> > >> >> 2) Charge stop threshold
-> > >> >> /sys/class/power_supply/BATN/charge_stop_threshold
-> > >> >>
-> > >> >> Valid values are [1, 100]. A value of 100 turns off
-> > >> >> the stop threshold wear control. This must be
-> > >> >> configured first.
-> > >> >
-> > >> > This is a new sysfs file, that should be documented.
-> > >>
-> > >> Right, I should have remembered about that, sorry.
-> > >>
-> > >> > Also this looks pretty generic. Just introduce new POWER_SUPPLY_PROP_
-> > >> > entries for start/stop charging threshold and use them.
-> > >>
-> > >> What about doing this as a follow-up?
-> > >
-> > > Fine with me.
-> > 
-> > OK
-> > 
-> > Actually, I don't see any documentation whatever for ACPI battery and
-> > AC power supply properties, so I guess that needs to be added in
-> > general and I don't think it would be fair to ask Ognjen to do that in
-> > order to get the extension in.
-> > 
-> > Why don't we pencil this in as work to do?
-> 
-> The generic ones are documented here:
+> I'm still pondering about the microphone mute. Should this be handled like the all the other volume buttons, which seem to work without touching the fujitsu-laptop.c driver? I have no idea how these other buttons are forwarded to the sound drivers.
 
-Do you guys want me to send in another revision of the patch with some
-documentation on the sysfs API?
+They are not forwarded to sound drivers.  Your desktop environment is
+supposed to listen to these input events and apply the requested changes
+to mixer settings.
 
-> 
-> Documentation/power/power_supply_class.txt
-> 
-> -- Sebastian
+> P.P.S. if someone has a good idea how to "route" the touchpad toggle key to the touchpad drivers without involving the userspace via evrouter, that would be nice too.
+
+Like inside the kernel?  Erm, no, please, no.  Userspace is the place to
+do this, same as for brightness hotkeys.  If you ask me, I would just
+prefer the firmware to handle all hotkeys by itself, without even
+notifying the OS, but this is the brave new world we live in and if the
+firmware is only able to produce input events instead of changing
+hardware state, let's at least not make these events trigger some sort
+of inter-module interaction because that way lies madness.
+
+-- 
+Best regards,
+Michał Kępień
