@@ -1,107 +1,63 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [patch v2 1/3] platform/x86: mlx-platform: Add support for new
- msn274x system type
-Date: Fri, 9 Feb 2018 17:36:18 -0800
-Message-ID: <20180210013618.GA15238@fury>
-References: <1518220772-98492-1-git-send-email-vadimp@mellanox.com>
- <1518220772-98492-2-git-send-email-vadimp@mellanox.com>
+From: Ognjen =?utf-8?B?R2FsacSH?= <smclt30p@gmail.com>
+Subject: Re: [PATCH v13 4/4] battery: Add the ThinkPad "Not Charging" quirk
+Date: Sat, 10 Feb 2018 09:47:44 +0100
+Message-ID: <20180210084744.ykzejcr66ae7kflj@thinkpad>
+References: <20180207145936.ockmmkipxtwkdsot@thinkpad>
+ <20180209104530.s5i6lymcpgkqyego@khazad-dum.debian.net>
+ <20180209132641.6vkwasa4b5pygjkr@earth.universe>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f67.google.com ([74.125.82.67]:50376 "EHLO
+        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750909AbeBJIrt (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Sat, 10 Feb 2018 03:47:49 -0500
 Content-Disposition: inline
-In-Reply-To: <1518220772-98492-2-git-send-email-vadimp@mellanox.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jiri@resnulli.us
-List-Id: platform-driver-x86.vger.kernel.org
+In-Reply-To: <20180209132641.6vkwasa4b5pygjkr@earth.universe>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
 
-On Fri, Feb 09, 2018 at 11:59:30PM +0000, Vadim Pasternak wrote:
-> It adds support for new Mellanox system types of basic class msn274x,
-> containing system MSN2740 (32x100GbE Ethernet switch with cost reduction)
-> and its derivatives. These are the Top of the Rack system, equipped with
-> Mellanox Small Form Factor carrier board and switch board with Mellanox
-> Spectrum device, which supports Ethernet switching with 32X100G ports line
-> rate of up to EDR speed.
+On Fri, Feb 09, 2018 at 02:26:41PM +0100, Sebastian Reichel wrote:
+> Hi,
 > 
-> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-
-Hi Vadim,
-
-For timing reasons, I've queued these for review - thanks. A few comments to
-make this more smooth in the future:
-
-> v1->v2
->   Comments pointed out by Darren:
->   - Break the patch into series of patches per system type.
-
-Patch changelogs go below the --- line...
-
-> ---
-
-Here. This makes it so the intermediate patch changelog (Since v1... stuff) is
-dropped automatically from the commit when using git am to apply the patch. As
-these are coming in, I have to apply and then "git rebase -i" to (r)eword each
-one individually to prune out the v1->v2 stuff.
-
-For the official description of this process, please see:
-Documentation/process/submitting-patches.rst
-14) The canonical patch format
-
->  drivers/platform/x86/mlx-platform.c | 124 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 124 insertions(+)
+> On Fri, Feb 09, 2018 at 08:45:30AM -0200, Henrique de Moraes Holschuh wrote:
+> > On Wed, 07 Feb 2018, Ognjen Galic wrote:
+> > > The EC/ACPI firmware on Lenovo ThinkPads used to report a status
+> > > of "Unknown" when the battery is between the charge start and
+> > > charge stop thresholds. On Windows, it reports "Not Charging"
+> > > so the quirk has been added to also report correctly.
+> > > 
+> > > Now the "status" attribute returns "Not Charging" when the
+> > > battery on ThinkPads is not physicaly charging.
+> > > 
+> > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
+> > 
+> > AFAIK, This behavior goes back to the initial SBS implementation in the
+> > IBM era ECs of the Thinkpads...  We've always called it "idle" in the
+> > linux-thinkpad community.  The behavior comes from SBS
+> > (http://smartbattery.org/specs/), the EC was reporting its status
+> > (charging/not charging *THIS* battery) in one bit, and the battery's
+> > status (discharging/not discharging *THIS* battery) in a different bit.
+> > 
+> > It was rather simple to observe the behavior of those bits in a
+> > two-battery system.
+> > 
+> > Would that apply to these newer Lenovo models?  If so, you might want to
+> > consider using "idle", instead. "not charging" does _not_ imply "neither
+> > charging nor discharging", while "idle" does.
 > 
-> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-> index e87fe34..3a13285 100644
-> --- a/drivers/platform/x86/mlx-platform.c
-> +++ b/drivers/platform/x86/mlx-platform.c
-> @@ -94,6 +94,7 @@
->  /* Hotplug devices adapter numbers */
->  #define MLXPLAT_CPLD_NR_NONE			-1
->  #define MLXPLAT_CPLD_PSU_DEFAULT_NR		10
-> +#define MLXPLAT_CPLD_PSU_MSNXXXX_NR		4
->  #define MLXPLAT_CPLD_FAN1_DEFAULT_NR		11
->  #define MLXPLAT_CPLD_FAN2_DEFAULT_NR		12
->  #define MLXPLAT_CPLD_FAN3_DEFAULT_NR		13
-> @@ -335,6 +336,108 @@ struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_msn21xx_data = {
->  	.mask_low = MLXPLAT_CPLD_LOW_AGGR_MASK_LOW,
->  };
->  
-> +/* Platform hotplug msn274x system family data */
-> +static struct mlxreg_core_data mlxplat_mlxcpld_msn274x_psu_items_data[] = {
-> +	{
-> +		.label = "psu1",
-> +		.reg = MLXPLAT_CPLD_LPC_REG_PSU_OFFSET,
-> +		.mask = BIT(0),
-> +		.hpdev.brdinfo = &mlxplat_mlxcpld_psu[0],
-> +		.hpdev.nr = MLXPLAT_CPLD_PSU_MSNXXXX_NR,
-> +	},
-> +	{
-> +		.label = "psu2",
-> +		.reg = MLXPLAT_CPLD_LPC_REG_PSU_OFFSET,
-> +		.mask = BIT(1),
-> +		.hpdev.brdinfo = &mlxplat_mlxcpld_psu[1],
-> +		.hpdev.nr = MLXPLAT_CPLD_PSU_MSNXXXX_NR,
-> +	},
-> +};
-> +
-> +static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_pwr_items_data[] = {
+> I agree, that "Idle" is a better term than "Not Charging", but
+> the power supply property exists with this name since it has
+> been introduced. This is exposed to userspace and cannot be
+> changed easily.
 
-This is OK as is, but in terms of helping articulate what I'm looking for with
-respect to breaking up patches into atomic functional patches, the
-"*default_ng*" structs are something that may have been better off in their own
-patch. Here's why.
+I agree. There is no need to add new definitions to the generic 
+power supply API for "Idle", as basically "Not Charging" can also
+describe that condition. That's what Microsoft Windows does, since XP.
 
-Let's say something turned out to be bad with this (1/3) patch. If I were to
-revert it, I would break everything that was dependent on the
-...default_ng_pwr... struct. The idea is to remove as many interdependencies as
-possible and to make each patch as self contained as possible. This makes them
-easier to review as well as easier to use in a patch-granular way for stable,
-distro, and future mainline debug and maintenance work.
-
-No need to resend, the risk is minimal here and these are highly contained to
-just the one file. Something to apply to future work.
-
-Thanks!
--- 
-Darren Hart
-VMware Open Source Technology Center
+> 
+> -- Sebastian
