@@ -1,41 +1,50 @@
 From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH 7/7] platform/x86: fujitsu-laptop: Clean up constants
-Date: Sun, 11 Feb 2018 22:35:34 +0100
-Message-ID: <20180211213534.GD1124@kmp-mobile.hq.kempniu.pl>
-References: <20180211210727.12130-1-kernel@kempniu.pl>
- <20180211210727.12130-8-kernel@kempniu.pl>
- <628c2c03-c855-ed2a-b175-5238c561548e@infradead.org>
+Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
+ Dell machines
+Date: Sun, 11 Feb 2018 23:03:17 +0100
+Message-ID: <20180211220317.GA833@kmp-mobile.hq.kempniu.pl>
+References: <20180127133209.28995-1-pali.rohar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f66.google.com ([209.85.215.66]:35441 "EHLO
-        mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1753769AbeBKVfh (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 11 Feb 2018 16:35:37 -0500
-Received: by mail-lf0-f66.google.com with SMTP id a204so17947452lfa.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 11 Feb 2018 13:35:37 -0800 (PST)
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <628c2c03-c855-ed2a-b175-5238c561548e@infradead.org>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180127133209.28995-1-pali.rohar@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis.Kletnieks@vt.edu, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-> Hi,
+> Dell platform team told us that some (DMI whitelisted) Dell Latitude
+> machines have ST microelectronics accelerometer at i2c address 0x29.
 > 
-> It looks like this driver needs to #include <linux/bitops.h>
-> for use of BIT() macros.
+> Presence of that ST microelectronics accelerometer is verified by existence
+> of SMO88xx ACPI device which represent that accelerometer. Unfortunately
+> ACPI device does not specify i2c address.
 > 
-> See Documentation/process/submit-checklist.rst:
-> 1) If you use a facility then #include the file that defines/declares
->    that facility.  Don't depend on other header files pulling in ones
->    that you use.
+> This patch registers lis3lv02d device for selected Dell Latitude machines
+> at i2c address 0x29 after detection. And for Dell Vostro V131 machine at
+> i2c address 0x1d which was manually detected.
 > 
-> Some $ARCH may work without it while another one may not.
+> Finally commit a7ae81952cda ("i2c: i801: Allow ACPI SystemIO OpRegion to
+> conflict with PCI BAR") allowed to use i2c-i801 driver on Dell machines so
+> lis3lv02d correctly initialize accelerometer.
+> 
+> Tested on Dell Latitude E6440.
+> 
+> Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+> ---
+> Changes since v1:
+>  * Added Dell Vostro V131 based on Michał Kępień testing
 
-Noted, thanks!
+I tested this patch on a Vostro V131 and it seems to work as expected:
+"lis3lv02d: 8 bits sensor found" is logged during boot, an input device
+gets registered and its axis values seem to be consistent with laptop's
+movements.
+
+Tested-by: Michał Kępień <kernel@kempniu.pl>
+
+I did not review the contents of the patch this time, sorry.
 
 -- 
 Best regards,
