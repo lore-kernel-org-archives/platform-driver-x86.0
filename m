@@ -1,73 +1,49 @@
 From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 6/7] platform/x86: fujitsu-laptop: Define constants for backlight power control
-Date: Sun, 11 Feb 2018 22:07:26 +0100
-Message-ID: <20180211210727.12130-7-kernel@kempniu.pl>
+Subject: [PATCH 4/7] platform/x86: fujitsu-laptop: Clearly distinguish module parameters
+Date: Sun, 11 Feb 2018 22:07:24 +0100
+Message-ID: <20180211210727.12130-5-kernel@kempniu.pl>
 References: <20180211210727.12130-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-lf0-f66.google.com ([209.85.215.66]:44088 "EHLO
-        mail-lf0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932205AbeBKVHp (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 11 Feb 2018 16:07:45 -0500
-Received: by mail-lf0-f66.google.com with SMTP id c188so2015739lfc.11
-        for <platform-driver-x86@vger.kernel.org>; Sun, 11 Feb 2018 13:07:44 -0800 (PST)
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180211210727.12130-1-kernel@kempniu.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-Use named constants instead of integers in call_fext_func() invocations
-related to backlight power control in order to more clearly convey the
-intent of each call.
+In order to improve code clarity, move declarations of variables that
+are module parameters higher up and add a comment.
 
 Signed-off-by: Michał Kępień <kernel@kempniu.pl>
 ---
- drivers/platform/x86/fujitsu-laptop.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/platform/x86/fujitsu-laptop.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-index 17779b8b7f30..0ee03d1fcbc4 100644
+index 94ff7f86fa8f..7888b779d6c5 100644
 --- a/drivers/platform/x86/fujitsu-laptop.c
 +++ b/drivers/platform/x86/fujitsu-laptop.c
-@@ -101,6 +101,11 @@
- #define ECO_LED	0x10000
- #define ECO_LED_ON	0x80000
+@@ -112,6 +112,10 @@
+ #define MAX_HOTKEY_RINGBUFFER_SIZE 100
+ #define RINGBUFFERSIZE 40
  
-+/* FUNC interface - backlight power control */
-+#define BACKLIGHT_POWER	0x4
-+#define BACKLIGHT_OFF	0x3
-+#define BACKLIGHT_ON	0x0
++/* Module parameters */
++static int use_alt_lcd_levels = -1;
++static bool disable_brightness_adjust;
 +
- /* Hotkey details */
- #define KEY1_CODE	0x410	/* codes for the keys in the GIRB register */
- #define KEY2_CODE	0x411
-@@ -257,9 +262,11 @@ static int bl_update_status(struct backlight_device *b)
+ /* Device controlling the backlight and associated keys */
+ struct fujitsu_bl {
+ 	struct input_dev *input;
+@@ -122,8 +126,6 @@ struct fujitsu_bl {
+ };
  
- 	if (fext) {
- 		if (b->props.power == FB_BLANK_POWERDOWN)
--			call_fext_func(fext, FUNC_BACKLIGHT, 0x1, 0x4, 0x3);
-+			call_fext_func(fext, FUNC_BACKLIGHT, 0x1,
-+				       BACKLIGHT_POWER, BACKLIGHT_OFF);
- 		else
--			call_fext_func(fext, FUNC_BACKLIGHT, 0x1, 0x4, 0x0);
-+			call_fext_func(fext, FUNC_BACKLIGHT, 0x1,
-+				       BACKLIGHT_POWER, BACKLIGHT_ON);
- 	}
+ static struct fujitsu_bl *fujitsu_bl;
+-static int use_alt_lcd_levels = -1;
+-static bool disable_brightness_adjust;
  
- 	return set_lcd_level(device, b->props.brightness);
-@@ -818,7 +825,8 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
- 	/* Sync backlight power status */
- 	if (fujitsu_bl && fujitsu_bl->bl_device &&
- 	    acpi_video_get_backlight_type() == acpi_backlight_vendor) {
--		if (call_fext_func(fext, FUNC_BACKLIGHT, 0x2, 0x4, 0x0) == 3)
-+		if (call_fext_func(fext, FUNC_BACKLIGHT, 0x2, BACKLIGHT_POWER,
-+				   0x0) == 3)
- 			fujitsu_bl->bl_device->props.power = FB_BLANK_POWERDOWN;
- 		else
- 			fujitsu_bl->bl_device->props.power = FB_BLANK_UNBLANK;
+ /* Device used to access hotkeys and other features on the laptop */
+ struct fujitsu_laptop {
 -- 
 2.16.1
