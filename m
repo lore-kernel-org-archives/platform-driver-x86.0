@@ -1,72 +1,99 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH][RfC] Some buttons on the Fujitsu u7[25]7 laptops are not
- working
-Date: Sun, 11 Feb 2018 14:57:34 +1030
-Message-ID: <20180211042734.GD12203@marvin.atrad.com.au>
-References: <69f33335-962b-f3be-da8e-2eeff1ae2a49@fbihome.de>
- <20180119234547.GB24590@marvin.atrad.com.au>
- <84b872ec-ba48-6423-cb7b-48f2c3ef30d2@fbihome.de>
- <e69cad3d-067b-5a22-0f4d-0c29691037c7@fbihome.de>
- <20180209113144.GC23589@marvin.atrad.com.au>
- <91505258-9421-29b5-fc3d-b5d641dfd9ee@fbihome.de>
+From: Eric Light <eric@ericlight.com>
+Subject: Re: dell_wmi: Unknown key on Dell Latitude E6410
+Date: Sun, 11 Feb 2018 19:19:21 +1300
+Message-ID: <1518329961.4047166.1266765672.5C33A6A1@webmail.messagingengine.com>
+References: <20180204120449.tyxpngr2bja7eg3a@pali>
+ <d75833c799884f999c6b0f3886269f23@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:33210 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752253AbeBKE1s (ORCPT
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:59123 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752647AbeBKGTW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 10 Feb 2018 23:27:48 -0500
-Content-Disposition: inline
-In-Reply-To: <91505258-9421-29b5-fc3d-b5d641dfd9ee@fbihome.de>
+        Sun, 11 Feb 2018 01:19:22 -0500
+In-Reply-To: <d75833c799884f999c6b0f3886269f23@ausx13mpc120.AMER.DELL.COM>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jan-Marek Glogowski <glogow@fbihome.de>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org
+To: Mario.Limonciello@dell.com, pali.rohar@gmail.com
+Cc: platform-driver-x86@vger.kernel.org
 
-On Fri, Feb 09, 2018 at 02:08:37PM +0100, Jan-Marek Glogowski wrote:
-> Am 09.02.2018 um 12:31 schrieb Jonathan Woithe:
-> >> And I realized we never use the value from BTNI, except when deciding to
-> >> register the "fujitsu::kblamps" led, FWIW.
-> > 
-> > It's useful for that purpose.
->
-> What I meant: the driver doesn't use the value returned by the function. 
-> I was hoping to find a way to distinguish the "fake ECO button" key from a
-> real ECO button, so I could send a release immediately after a press
-> event, which is already a release event, just like with the normal
-> function keys.
+Hi Mario,
 
-Right.  Michel has some ideas about how we might be able get around this in
-the longer term.
+Sorry for the slow reply.=20=20
 
-> I have just two different series E and U, so if you have other HW with
-> other buttons, we can eventually decode the value.  If the bit was the
-> RFKILL button, then this doesn't help.  If it was the ECO button, we can
-> check that.
+I've only recently noticed the error messages, but I've never updated the B=
+IOS on this laptop, so I assume it's always been happening.
 
-I only have an S7020.  All its special function buttons are on Fn+Fx key
-combinations and are therefore handled differently to the panel buttons. 
-The S7020 does have five additional buttons (labelled 1-4, Enter) which can
-be used for a boot PIN, with 1-4 (but not Enter) also seen by ACPI.  The
-practical upshot is that while I can obviously test for regressions on old
-hardware, I can't do any tests related to the function-specific buttons on
-later models because the S7020 doesn't have any of those.  For example, on
-the S7020 there is no "eco" button, and the RFKILL function is handled by a
-physical switch.
+Just checked, I'm running BIOS revision A01 (on a Latitude E6410).  I might=
+ take the time to flash to a reasonably recent version  :)
 
-This all means that the hardware I have will not provide any assistance in
-the decoding of which you speak as far as I can tell.
+E
 
-> I still have two minor nuisances:
-> 1. the "fake ECO button" key
-> 2. the wrong /sys/devices/platform/fujitsu-laptop/radios state
-> 
-> fujitsu-laptop/radios is always "killed" for me, regardless of the rfkill
-> state.  Have to check, if this is eventually connected to the BIOS / EFI
-> settings, which disables the HW.
+--------------------------------------------
+Q: Why is this email five sentences or less?
+A: http://five.sentenc.es
 
-Ok.
-
-Regards
-  jonathan
+On Tue, 6 Feb 2018, at 14:06, Mario.Limonciello@dell.com wrote:
+> Eric,
+>=20
+> > -----Original Message-----
+> > From: Pali Roh=C3=A1r [mailto:pali.rohar@gmail.com]
+> > Sent: Sunday, February 4, 2018 6:05 AM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
+> > Cc: platform-driver-x86@vger.kernel.org; Eric Light <eric@ericlight.com>
+> > Subject: dell_wmi: Unknown key on Dell Latitude E6410
+> >=20
+> > Hi Mario!
+> >=20
+> > Eric Light wrote me that on his Dell Latitude E6410 laptop, dell_wmi
+> > prints following messages into dmesg at every boot.
+> >=20
+> > [   14.254258] dell_wmi: Unknown key with type 0x0011 and code 0xffd0 p=
+ressed
+> > [   14.254259] dell_wmi: Unknown WMI event type 0x12
+> > [   14.487922] dell_wmi: Unknown key with type 0x0011 and code 0xffd1 p=
+ressed
+> > [   15.014983] dell_wmi: Unknown key with type 0x0011 and code 0x01e3 p=
+ressed
+> >=20
+>=20
+> It almost sounds to me like B2 table is missing entries.
+>=20
+> Is this a regression after a BIOS update?  Or it's always been this way?
+>=20
+> > Seems that in dell_wmi we are completely missing processing of WMI
+> > events which starts with 0x0012 and then there are some unknown codes
+> > 0xffd0 and 0xffd1.
+> >=20
+> > Do you have access to documentation what are those code at all? And what
+> > is hidden behind WMI events which starts with 0x0012?
+> >=20
+> > Also Eric wrote me that pressing brightness up or down key generates
+> > following events:
+> >=20
+> > Brightness Up:
+> >=20
+> > [ 1103.717988] dell_wmi: Unknown key with type 0x0011 and code 0xffae p=
+ressed
+> > [ 1103.717990] dell_wmi: Unknown key with type 0x0011 and code 0xff81 p=
+ressed
+> >=20
+> > Brightness Down:
+> >=20
+> > [ 1157.078641] dell_wmi: Unknown key with type 0x0011 and code 0xffac p=
+ressed
+> > [ 1157.078644] dell_wmi: Unknown key with type 0x0011 and code 0xff80 p=
+ressed
+> >=20
+> > For me it looks suspicious because why pressing one key generates those
+> > two 0x0011 events and why next one is generated after 2-3s...
+> >=20
+> > I think the best way is to define all those events in dell_wmi to be
+> > ignored (as I have not heard that brightness does not work), but it
+> > would be a good idea to know we are going to ignore.
+> >=20
+> > --
+> > Pali Roh=C3=A1r
+> > pali.rohar@gmail.com
