@@ -1,313 +1,87 @@
-From: Laszlo Toth <laszlth@gmail.com>
-Subject: [PATCH] platform/x86: dell-laptop: fix kbd_get_state's request value
-Date: Sun, 11 Feb 2018 01:20:10 +0100
-Message-ID: <20180211002010.GA3311@laszlth>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH][RfC] Some buttons on the Fujitsu u7[25]7 laptops are not
+ working
+Date: Sun, 11 Feb 2018 14:38:14 +1030
+Message-ID: <20180211040814.GB12203@marvin.atrad.com.au>
+References: <69f33335-962b-f3be-da8e-2eeff1ae2a49@fbihome.de>
+ <20180119234547.GB24590@marvin.atrad.com.au>
+ <84b872ec-ba48-6423-cb7b-48f2c3ef30d2@fbihome.de>
+ <e69cad3d-067b-5a22-0f4d-0c29691037c7@fbihome.de>
+ <20180209113144.GC23589@marvin.atrad.com.au>
+ <20180210212330.GD2070@larwa.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-wm0-f65.google.com ([74.125.82.65]:36584 "EHLO
-        mail-wm0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752896AbeBKAUO (ORCPT
+Received: from server.atrad.com.au ([150.101.241.2]:33194 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752529AbeBKEIa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 10 Feb 2018 19:20:14 -0500
-Received: by mail-wm0-f65.google.com with SMTP id f3so3764595wmc.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 10 Feb 2018 16:20:13 -0800 (PST)
+        Sat, 10 Feb 2018 23:08:30 -0500
 Content-Disposition: inline
+In-Reply-To: <20180210212330.GD2070@larwa.localdomain>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Jan-Marek Glogowski <glogow@fbihome.de>, platform-driver-x86@vger.kernel.org
 
-Commit 9862b43624a5 ("platform/x86: dell-laptop: Allocate buffer on heap
-rather than globally")
-broke one request, changed it back to the original value.
+Hi Michel
 
-Merged fill_request and send_request as they're used in pairs anyway so
-it's easier to check and harder to change the request values by mistake
-again.
+On Sat, Feb 10, 2018 at 10:23:30PM +0100, Micha?? K??pie?? wrote:
+> > With the minor changes in place I do not think this patch will cause any
+> > regressions for other Fujitsu systems since it is only adding meaning to
+> > bits of the flags_supported field, and older system do not have those bits
+> > set.  Any comments Michel?
+> 
+> While the patch does not seem to break anything, I cannot say I like how
+> we are approaching this.
+> 
+> All Jan-Marek wrote suggests that Fujitsu decided to transition from one
+> way of handling hotkeys to another.  We need to handle both of them.
+> Until we learned about the new U series models, it looked like the
+> touchpad toggle hotkey was an exception to the rule.  Given what we know
+> now, it looks more like a harbinger of further changes.
 
-Tested on a Dell E6540, backlight came back.
+You have raised a good point.
 
-Signed-off-by: Laszlo Toth <laszlth@gmail.com>
----
- drivers/platform/x86/dell-laptop.c | 117 ++++++++++++++++++++-----------------
- 1 file changed, 65 insertions(+), 52 deletions(-)
+> For me, adding support for the new systems in an elegant way would mean:
+> 
+>   - detecting models without dedicated hotkeys and forcing an immediate
+>     release event when a "press" is detected on such models; we can take
+>     a shot at bit 29 being the indicator, the worst that is going to
+>     happen is that we will get double release events on some machines,
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 2a68f59..30e6987 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -321,20 +321,17 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
- 	{ }
- };
- 
--static void dell_fill_request(struct calling_interface_buffer *buffer,
--			       u32 arg0, u32 arg1, u32 arg2, u32 arg3)
-+static int dell_send_request(struct calling_interface_buffer *buffer,
-+			     u16 class, u16 select,
-+			     u32 arg0, u32 arg1, u32 arg2, u32 arg3)
- {
-+	int ret;
-+
- 	memset(buffer, 0, sizeof(struct calling_interface_buffer));
- 	buffer->input[0] = arg0;
- 	buffer->input[1] = arg1;
- 	buffer->input[2] = arg2;
- 	buffer->input[3] = arg3;
--}
--
--static int dell_send_request(struct calling_interface_buffer *buffer,
--			     u16 class, u16 select)
--{
--	int ret;
- 
- 	buffer->cmd_class = class;
- 	buffer->cmd_select = select;
-@@ -474,14 +471,16 @@ static int dell_rfkill_set(void *data, bool blocked)
- 	int status;
- 	int ret;
- 
--	dell_fill_request(&buffer, 0, 0, 0, 0);
--	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
-+	ret = dell_send_request(&buffer,
-+				CLASS_INFO, SELECT_RFKILL,
-+				0, 0, 0, 0);
- 	if (ret)
- 		return ret;
- 	status = buffer.output[1];
- 
--	dell_fill_request(&buffer, 0x2, 0, 0, 0);
--	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
-+	ret = dell_send_request(&buffer,
-+				CLASS_INFO, SELECT_RFKILL,
-+				0x2, 0, 0, 0);
- 	if (ret)
- 		return ret;
- 	hwswitch = buffer.output[1];
-@@ -492,8 +491,9 @@ static int dell_rfkill_set(void *data, bool blocked)
- 	    (status & BIT(0)) && !(status & BIT(16)))
- 		disable = 1;
- 
--	dell_fill_request(&buffer, 1 | (radio<<8) | (disable << 16), 0, 0, 0);
--	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
-+	ret = dell_send_request(&buffer,
-+				CLASS_INFO, SELECT_RFKILL,
-+				1 | (radio << 8) | (disable << 16), 0, 0, 0);
- 	return ret;
- }
- 
-@@ -504,9 +504,9 @@ static void dell_rfkill_update_sw_state(struct rfkill *rfkill, int radio,
- 		/* Has hw-switch, sync sw_state to BIOS */
- 		struct calling_interface_buffer buffer;
- 		int block = rfkill_blocked(rfkill);
--		dell_fill_request(&buffer,
--				   1 | (radio << 8) | (block << 16), 0, 0, 0);
--		dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
-+		dell_send_request(&buffer,
-+				  CLASS_INFO, SELECT_RFKILL,
-+				  1 | (radio << 8) | (block << 16), 0, 0, 0);
- 	} else {
- 		/* No hw-switch, sync BIOS state to sw_state */
- 		rfkill_set_sw_state(rfkill, !!(status & BIT(radio + 16)));
-@@ -528,16 +528,18 @@ static void dell_rfkill_query(struct rfkill *rfkill, void *data)
- 	int status;
- 	int ret;
- 
--	dell_fill_request(&buffer, 0, 0, 0, 0);
--	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
-+	ret = dell_send_request(&buffer,
-+				CLASS_INFO, SELECT_RFKILL,
-+				0, 0, 0, 0);
- 	status = buffer.output[1];
- 
- 	if (ret != 0 || !(status & BIT(0))) {
- 		return;
- 	}
- 
--	dell_fill_request(&buffer, 0, 0x2, 0, 0);
--	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
-+	ret = dell_send_request(&buffer,
-+				CLASS_INFO, SELECT_RFKILL,
-+				0, 0x2, 0, 0);
- 	hwswitch = buffer.output[1];
- 
- 	if (ret != 0)
-@@ -561,14 +563,16 @@ static int dell_debugfs_show(struct seq_file *s, void *data)
- 	int status;
- 	int ret;
- 
--	dell_fill_request(&buffer, 0, 0, 0, 0);
--	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
-+	ret = dell_send_request(&buffer,
-+				CLASS_INFO, SELECT_RFKILL,
-+				0, 0, 0, 0);
- 	if (ret)
- 		return ret;
- 	status = buffer.output[1];
- 
--	dell_fill_request(&buffer, 0, 0x2, 0, 0);
--	hwswitch_ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
-+	hwswitch_ret = dell_send_request(&buffer,
-+					 CLASS_INFO, SELECT_RFKILL,
-+					 0, 0x2, 0, 0);
- 	if (hwswitch_ret)
- 		return hwswitch_ret;
- 	hwswitch_state = buffer.output[1];
-@@ -645,15 +649,17 @@ static void dell_update_rfkill(struct work_struct *ignored)
- 	int status;
- 	int ret;
- 
--	dell_fill_request(&buffer, 0, 0, 0, 0);
--	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
-+	ret = dell_send_request(&buffer,
-+				CLASS_INFO, SELECT_RFKILL,
-+				0, 0, 0, 0);
- 	status = buffer.output[1];
- 
- 	if (ret != 0)
- 		return;
- 
--	dell_fill_request(&buffer, 0, 0x2, 0, 0);
--	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
-+	ret = dell_send_request(&buffer,
-+				CLASS_INFO, SELECT_RFKILL,
-+				0, 0x2, 0, 0);
- 
- 	if (ret == 0 && (status & BIT(0)))
- 		hwswitch = buffer.output[1];
-@@ -730,8 +736,9 @@ static int __init dell_setup_rfkill(void)
- 	if (!force_rfkill && !whitelisted)
- 		return 0;
- 
--	dell_fill_request(&buffer, 0, 0, 0, 0);
--	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
-+	ret = dell_send_request(&buffer,
-+				CLASS_INFO, SELECT_RFKILL,
-+				0, 0, 0, 0);
- 	status = buffer.output[1];
- 
- 	/* dell wireless info smbios call is not supported */
-@@ -893,14 +900,16 @@ static int dell_send_intensity(struct backlight_device *bd)
- 	if (!token)
- 		return -ENODEV;
- 
--	dell_fill_request(&buffer,
--			   token->location, bd->props.brightness, 0, 0);
- 	if (power_supply_is_system_supplied() > 0)
- 		ret = dell_send_request(&buffer,
--					CLASS_TOKEN_WRITE, SELECT_TOKEN_AC);
-+					CLASS_TOKEN_WRITE, SELECT_TOKEN_AC,
-+					token->location, bd->props.brightness,
-+					0, 0);
- 	else
- 		ret = dell_send_request(&buffer,
--					CLASS_TOKEN_WRITE, SELECT_TOKEN_BAT);
-+					CLASS_TOKEN_WRITE, SELECT_TOKEN_BAT,
-+					token->location, bd->props.brightness,
-+					0, 0);
- 
- 	return ret;
- }
-@@ -915,13 +924,14 @@ static int dell_get_intensity(struct backlight_device *bd)
- 	if (!token)
- 		return -ENODEV;
- 
--	dell_fill_request(&buffer, token->location, 0, 0, 0);
- 	if (power_supply_is_system_supplied() > 0)
- 		ret = dell_send_request(&buffer,
--					CLASS_TOKEN_READ, SELECT_TOKEN_AC);
-+					CLASS_TOKEN_READ, SELECT_TOKEN_AC,
-+					token->location, 0, 0, 0);
- 	else
- 		ret = dell_send_request(&buffer,
--					CLASS_TOKEN_READ, SELECT_TOKEN_BAT);
-+					CLASS_TOKEN_READ, SELECT_TOKEN_BAT,
-+					token->location, 0, 0, 0);
- 
- 	if (ret == 0)
- 		ret = buffer.output[1];
-@@ -1194,9 +1204,9 @@ static int kbd_get_info(struct kbd_info *info)
- 	u8 units;
- 	int ret;
- 
--	dell_fill_request(&buffer, 0, 0, 0, 0);
- 	ret = dell_send_request(&buffer,
--				CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT);
-+				CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT,
-+				0, 0, 0, 0);
- 	if (ret)
- 		return ret;
- 
-@@ -1279,9 +1289,9 @@ static int kbd_get_state(struct kbd_state *state)
- 	struct calling_interface_buffer buffer;
- 	int ret;
- 
--	dell_fill_request(&buffer, 0, 0, 0, 0);
- 	ret = dell_send_request(&buffer,
--				CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT);
-+				CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT,
-+				0x1, 0, 0, 0);
- 	if (ret)
- 		return ret;
- 
-@@ -1316,9 +1326,9 @@ static int kbd_set_state(struct kbd_state *state)
- 	input2 |= (state->level & 0xFF) << 16;
- 	input2 |= (state->timeout_value_ac & 0x3F) << 24;
- 	input2 |= (state->timeout_unit_ac & 0x3) << 30;
--	dell_fill_request(&buffer, 0x2, input1, input2, 0);
- 	ret = dell_send_request(&buffer,
--				CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT);
-+				CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT,
-+				0x2, input1, input2, 0);
- 
- 	return ret;
- }
-@@ -1356,8 +1366,9 @@ static int kbd_set_token_bit(u8 bit)
- 	if (!token)
- 		return -EINVAL;
- 
--	dell_fill_request(&buffer, token->location, token->value, 0, 0);
--	ret = dell_send_request(&buffer, CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
-+	ret = dell_send_request(&buffer,
-+				CLASS_TOKEN_WRITE, SELECT_TOKEN_STD,
-+				token->location, token->value, 0, 0);
- 
- 	return ret;
- }
-@@ -1376,8 +1387,9 @@ static int kbd_get_token_bit(u8 bit)
- 	if (!token)
- 		return -EINVAL;
- 
--	dell_fill_request(&buffer, token->location, 0, 0, 0);
--	ret = dell_send_request(&buffer, CLASS_TOKEN_READ, SELECT_TOKEN_STD);
-+	ret = dell_send_request(&buffer,
-+				CLASS_TOKEN_READ, SELECT_TOKEN_STD,
-+				token->location, 0, 0, 0);
- 	val = buffer.output[1];
- 
- 	if (ret)
-@@ -2127,8 +2139,9 @@ int dell_micmute_led_set(int state)
- 	if (!token)
- 		return -ENODEV;
- 
--	dell_fill_request(&buffer, token->location, token->value, 0, 0);
--	dell_send_request(&buffer, CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
-+	dell_send_request(&buffer,
-+			  CLASS_TOKEN_WRITE, SELECT_TOKEN_STD,
-+			  token->location, token->value, 0, 0);
- 
- 	return state;
- }
-@@ -2185,9 +2198,9 @@ static int __init dell_init(void)
- 	if (token) {
- 		struct calling_interface_buffer buffer;
- 
--		dell_fill_request(&buffer, token->location, 0, 0, 0);
- 		ret = dell_send_request(&buffer,
--					CLASS_TOKEN_READ, SELECT_TOKEN_AC);
-+					CLASS_TOKEN_READ, SELECT_TOKEN_AC,
-+					token->location, 0, 0, 0);
- 		if (ret)
- 			max_intensity = buffer.output[3];
- 	}
--- 
-2.7.4
+The effect of a double release depends on the way the key events go on to be
+handled.  If they trigger on key-down there will be no issue.  If they go on
+key-up then each key will get pressed twice for each physical action.  I
+guess time will tell.
+
+>   - keeping GIRB and S000 keymaps separate as these two hotkey handling
+>     methods are completely different: the former utilizes a ring buffer,
+>     the latter relies on setting bits in the return value of a function
+>     and clearing them after they have been "retrieved"; the two keymaps
+>     would then have to be merged into a single sparse keymap upon device
+>     instantiation.
+> 
+> However, it is Jonathan who is the module maintainer and Jan-Marek's
+> patch does not break stuff.  I am thus happy to present my vision after
+> this patch gets merged.
+
+In the interests of making things work for owners of the newer systems in
+the short term I am inclined to say we merge the patch from Jan-Marek, on
+the understanding that the more extensive infrastructure changes will be
+needed in order to handle this in a sane way into the future.  I don't think
+the proposed patch will make it any harder to effect the changes you have in
+mind, will it?
+
+I'm all for elegant solutions, so I would welcome patches working towards
+the broader ideas you outlined above.  Keeping both handling methods
+separate does seem to be a good idea.
+
+> By the way, sorry about being late to the party, but severe lack of
+> spare time pretty much prevents me from following this list.  CC'ing me
+> directly increases the odds of eliciting a response.
+
+No problem - I too am quite busy at the moment so I totally understand.
+
+Regards
+  jonathan
