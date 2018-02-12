@@ -1,38 +1,82 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
- Dell machines
-Date: Mon, 12 Feb 2018 17:25:23 +0200
-Message-ID: <CAHp75Ve6dCgX+ophyh8M2SzVvpMoDSpwYyiNo=QStht=1G8n+Q@mail.gmail.com>
-References: <20180127133209.28995-1-pali.rohar@gmail.com> <20180211220317.GA833@kmp-mobile.hq.kempniu.pl>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: dell_wmi: Unknown key on Dell Latitude E6410
+Date: Mon, 12 Feb 2018 15:26:57 +0000
+Message-ID: <1fcaab1444864df2b194892d4316a1e8@ausx13mpc120.AMER.DELL.COM>
+References: <20180204120449.tyxpngr2bja7eg3a@pali>
+ <d75833c799884f999c6b0f3886269f23@ausx13mpc120.AMER.DELL.COM>
+ <1518329961.4047166.1266765672.5C33A6A1@webmail.messagingengine.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180211220317.GA833@kmp-mobile.hq.kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <Mario_Limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from esa2.dell-outbound.iphmx.com ([68.232.149.220]:36108 "EHLO
+        esa2.dell-outbound.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1752281AbeBLP1A (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Mon, 12 Feb 2018 10:27:00 -0500
+In-Reply-To: <1518329961.4047166.1266765672.5C33A6A1@webmail.messagingengine.com>
+Content-Language: en-US
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: eric@ericlight.com, pali.rohar@gmail.com
+Cc: platform-driver-x86@vger.kernel.org
 
-On Mon, Feb 12, 2018 at 12:03 AM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kemp=
-niu.pl> wrote:
-
->> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->> ---
->> Changes since v1:
->>  * Added Dell Vostro V131 based on Micha=C5=82 K=C4=99pie=C5=84 testing
->
-> I tested this patch on a Vostro V131 and it seems to work as expected:
-> "lis3lv02d: 8 bits sensor found" is logged during boot, an input device
-> gets registered and its axis values seem to be consistent with laptop's
-> movements.
->
-> Tested-by: Micha=C5=82 K=C4=99pie=C5=84 <kernel@kempniu.pl>
-
-Thanks! I'm waiting for Pali to address my concern.
-
-> I did not review the contents of the patch this time, sorry.
-
---=20
-With Best Regards,
-Andy Shevchenko
+RXJpYywNCg0KSXQncyBwb3NzaWJsZSB0aGVyZSBjb3VsZCBoYXZlIGJlZW4gYSBCSU9TIGJ1ZyB3
+aXRoIHRoZSBCMiB0YWJsZSB0aGF0IGhhcyBhbHJlYWR5DQpiZWVuIGZpeGVkLg0KWWVzIHBsZWFz
+ZSBmbGFzaCB0byBzb21ldGhpbmcgY3VycmVudCBhbmQgbGV0IHVzIGtub3cgd2hldGhlciB0aGlz
+IHBlcnNpc3RzLg0KDQpUaGFua3MsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
+RnJvbTogRXJpYyBMaWdodCBbbWFpbHRvOmVyaWNAZXJpY2xpZ2h0LmNvbV0NCj4gU2VudDogU3Vu
+ZGF5LCBGZWJydWFyeSAxMSwgMjAxOCAxMjoxOSBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlv
+IDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT47IHBhbGkucm9oYXJAZ21haWwuY29tDQo+IENj
+OiBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogZGVs
+bF93bWk6IFVua25vd24ga2V5IG9uIERlbGwgTGF0aXR1ZGUgRTY0MTANCj4gDQo+IEhpIE1hcmlv
+LA0KPiANCj4gU29ycnkgZm9yIHRoZSBzbG93IHJlcGx5Lg0KPiANCj4gSSd2ZSBvbmx5IHJlY2Vu
+dGx5IG5vdGljZWQgdGhlIGVycm9yIG1lc3NhZ2VzLCBidXQgSSd2ZSBuZXZlciB1cGRhdGVkIHRo
+ZSBCSU9TIG9uDQo+IHRoaXMgbGFwdG9wLCBzbyBJIGFzc3VtZSBpdCdzIGFsd2F5cyBiZWVuIGhh
+cHBlbmluZy4NCj4gDQo+IEp1c3QgY2hlY2tlZCwgSSdtIHJ1bm5pbmcgQklPUyByZXZpc2lvbiBB
+MDEgKG9uIGEgTGF0aXR1ZGUgRTY0MTApLiAgSSBtaWdodCB0YWtlIHRoZQ0KPiB0aW1lIHRvIGZs
+YXNoIHRvIGEgcmVhc29uYWJseSByZWNlbnQgdmVyc2lvbiAgOikNCj4gDQo+IEUNCj4gDQo+IC0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IFE6IFdoeSBpcyB0
+aGlzIGVtYWlsIGZpdmUgc2VudGVuY2VzIG9yIGxlc3M/DQo+IEE6IGh0dHA6Ly9maXZlLnNlbnRl
+bmMuZXMNCj4gDQo+IE9uIFR1ZSwgNiBGZWIgMjAxOCwgYXQgMTQ6MDYsIE1hcmlvLkxpbW9uY2ll
+bGxvQGRlbGwuY29tIHdyb3RlOg0KPiA+IEVyaWMsDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRvOnBhbGkucm9oYXJA
+Z21haWwuY29tXQ0KPiA+ID4gU2VudDogU3VuZGF5LCBGZWJydWFyeSA0LCAyMDE4IDY6MDUgQU0N
+Cj4gPiA+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8gPE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29t
+Pg0KPiA+ID4gQ2M6IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBFcmljIExp
+Z2h0IDxlcmljQGVyaWNsaWdodC5jb20+DQo+ID4gPiBTdWJqZWN0OiBkZWxsX3dtaTogVW5rbm93
+biBrZXkgb24gRGVsbCBMYXRpdHVkZSBFNjQxMA0KPiA+ID4NCj4gPiA+IEhpIE1hcmlvIQ0KPiA+
+ID4NCj4gPiA+IEVyaWMgTGlnaHQgd3JvdGUgbWUgdGhhdCBvbiBoaXMgRGVsbCBMYXRpdHVkZSBF
+NjQxMCBsYXB0b3AsIGRlbGxfd21pDQo+ID4gPiBwcmludHMgZm9sbG93aW5nIG1lc3NhZ2VzIGlu
+dG8gZG1lc2cgYXQgZXZlcnkgYm9vdC4NCj4gPiA+DQo+ID4gPiBbICAgMTQuMjU0MjU4XSBkZWxs
+X3dtaTogVW5rbm93biBrZXkgd2l0aCB0eXBlIDB4MDAxMSBhbmQgY29kZSAweGZmZDANCj4gcHJl
+c3NlZA0KPiA+ID4gWyAgIDE0LjI1NDI1OV0gZGVsbF93bWk6IFVua25vd24gV01JIGV2ZW50IHR5
+cGUgMHgxMg0KPiA+ID4gWyAgIDE0LjQ4NzkyMl0gZGVsbF93bWk6IFVua25vd24ga2V5IHdpdGgg
+dHlwZSAweDAwMTEgYW5kIGNvZGUgMHhmZmQxDQo+IHByZXNzZWQNCj4gPiA+IFsgICAxNS4wMTQ5
+ODNdIGRlbGxfd21pOiBVbmtub3duIGtleSB3aXRoIHR5cGUgMHgwMDExIGFuZCBjb2RlIDB4MDFl
+Mw0KPiBwcmVzc2VkDQo+ID4gPg0KPiA+DQo+ID4gSXQgYWxtb3N0IHNvdW5kcyB0byBtZSBsaWtl
+IEIyIHRhYmxlIGlzIG1pc3NpbmcgZW50cmllcy4NCj4gPg0KPiA+IElzIHRoaXMgYSByZWdyZXNz
+aW9uIGFmdGVyIGEgQklPUyB1cGRhdGU/ICBPciBpdCdzIGFsd2F5cyBiZWVuIHRoaXMgd2F5Pw0K
+PiA+DQo+ID4gPiBTZWVtcyB0aGF0IGluIGRlbGxfd21pIHdlIGFyZSBjb21wbGV0ZWx5IG1pc3Np
+bmcgcHJvY2Vzc2luZyBvZiBXTUkNCj4gPiA+IGV2ZW50cyB3aGljaCBzdGFydHMgd2l0aCAweDAw
+MTIgYW5kIHRoZW4gdGhlcmUgYXJlIHNvbWUgdW5rbm93biBjb2Rlcw0KPiA+ID4gMHhmZmQwIGFu
+ZCAweGZmZDEuDQo+ID4gPg0KPiA+ID4gRG8geW91IGhhdmUgYWNjZXNzIHRvIGRvY3VtZW50YXRp
+b24gd2hhdCBhcmUgdGhvc2UgY29kZSBhdCBhbGw/IEFuZCB3aGF0DQo+ID4gPiBpcyBoaWRkZW4g
+YmVoaW5kIFdNSSBldmVudHMgd2hpY2ggc3RhcnRzIHdpdGggMHgwMDEyPw0KPiA+ID4NCj4gPiA+
+IEFsc28gRXJpYyB3cm90ZSBtZSB0aGF0IHByZXNzaW5nIGJyaWdodG5lc3MgdXAgb3IgZG93biBr
+ZXkgZ2VuZXJhdGVzDQo+ID4gPiBmb2xsb3dpbmcgZXZlbnRzOg0KPiA+ID4NCj4gPiA+IEJyaWdo
+dG5lc3MgVXA6DQo+ID4gPg0KPiA+ID4gWyAxMTAzLjcxNzk4OF0gZGVsbF93bWk6IFVua25vd24g
+a2V5IHdpdGggdHlwZSAweDAwMTEgYW5kIGNvZGUgMHhmZmFlDQo+IHByZXNzZWQNCj4gPiA+IFsg
+MTEwMy43MTc5OTBdIGRlbGxfd21pOiBVbmtub3duIGtleSB3aXRoIHR5cGUgMHgwMDExIGFuZCBj
+b2RlIDB4ZmY4MQ0KPiBwcmVzc2VkDQo+ID4gPg0KPiA+ID4gQnJpZ2h0bmVzcyBEb3duOg0KPiA+
+ID4NCj4gPiA+IFsgMTE1Ny4wNzg2NDFdIGRlbGxfd21pOiBVbmtub3duIGtleSB3aXRoIHR5cGUg
+MHgwMDExIGFuZCBjb2RlIDB4ZmZhYw0KPiBwcmVzc2VkDQo+ID4gPiBbIDExNTcuMDc4NjQ0XSBk
+ZWxsX3dtaTogVW5rbm93biBrZXkgd2l0aCB0eXBlIDB4MDAxMSBhbmQgY29kZSAweGZmODANCj4g
+cHJlc3NlZA0KPiA+ID4NCj4gPiA+IEZvciBtZSBpdCBsb29rcyBzdXNwaWNpb3VzIGJlY2F1c2Ug
+d2h5IHByZXNzaW5nIG9uZSBrZXkgZ2VuZXJhdGVzIHRob3NlDQo+ID4gPiB0d28gMHgwMDExIGV2
+ZW50cyBhbmQgd2h5IG5leHQgb25lIGlzIGdlbmVyYXRlZCBhZnRlciAyLTNzLi4uDQo+ID4gPg0K
+PiA+ID4gSSB0aGluayB0aGUgYmVzdCB3YXkgaXMgdG8gZGVmaW5lIGFsbCB0aG9zZSBldmVudHMg
+aW4gZGVsbF93bWkgdG8gYmUNCj4gPiA+IGlnbm9yZWQgKGFzIEkgaGF2ZSBub3QgaGVhcmQgdGhh
+dCBicmlnaHRuZXNzIGRvZXMgbm90IHdvcmspLCBidXQgaXQNCj4gPiA+IHdvdWxkIGJlIGEgZ29v
+ZCBpZGVhIHRvIGtub3cgd2UgYXJlIGdvaW5nIHRvIGlnbm9yZS4NCj4gPiA+DQo+ID4gPiAtLQ0K
+PiA+ID4gUGFsaSBSb2jDoXINCj4gPiA+IHBhbGkucm9oYXJAZ21haWwuY29tDQo=
