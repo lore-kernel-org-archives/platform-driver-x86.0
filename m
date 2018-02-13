@@ -1,131 +1,51 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH v1 2/4] platform/x86: mlx-platform: Add differed bus functionality
-Date: Tue, 13 Feb 2018 22:09:34 +0000
-Message-ID: <1518559776-188942-3-git-send-email-vadimp@mellanox.com>
-References: <1518559776-188942-1-git-send-email-vadimp@mellanox.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518559776-188942-1-git-send-email-vadimp@mellanox.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, Vadim Pasternak <vadimp@mellanox.com>
-List-Id: platform-driver-x86.vger.kernel.org
+From: Laszlo Toth <laszlth@gmail.com>
+Subject: [PATCH v3] platform/x86: dell-laptop: fix kbd_get_state's request
+ value
+Date: Tue, 13 Feb 2018 21:43:43 +0100
+Message-ID: <20180213204343.GA6586@laszlth>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-wm0-f67.google.com ([74.125.82.67]:55041 "EHLO
+        mail-wm0-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752344AbeBMUnq (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Tue, 13 Feb 2018 15:43:46 -0500
+Content-Disposition: inline
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, platform-driver-x86@vger.kernel.org
+Cc: stable@vger.kernel.org
 
-Add deferred bus functionality in order to enforce probing flow execution
-order. Driver mlx-platform activates platform driver i2c-mux-reg, which
-creates busses infrastructure, after that it activates mlxreg-hotplug
-driver, which uses these busses, for connecting devices. The possible
-miss-ordering can happened, for example in case the probing routine of
-mlxreg-hotplug is already started execution, while i2c-mux-reg probing
-routine is not completed yet. In such situation the first one could
-attempt to connect device to adapter number, which is not created yet.
-And as a result this connection will fail. In order to ensure the order of
-probing execution on mlxreg-hotplug probe routine will be deferred until
-all the busses is not created by  probe routine of i2c-mux-reg.
-In order to ensure the flow order, mlx-platform driver passes the highest
-bus number to the mlxreg-hotplug platform data, which in their turn could
-wait in the deferred state, until all the necessary buses topology is not
-exist.
+Commit 9862b43624a5 ("platform/x86: dell-laptop: Allocate buffer on heap
+rather than globally")
+broke one request, changed it back to the original value.
 
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Tested on a Dell E6540, backlight came back.
+
+Fixes: 9862b43624a5 ("platform/x86: dell-laptop: Allocate buffer on heap rather than globally")
+Signed-off-by: Laszlo Toth <laszlth@gmail.com>
 ---
- drivers/platform/mellanox/mlxreg-hotplug.c |  7 +++++++
- drivers/platform/x86/mlx-platform.c        | 10 ++++++++++
- include/linux/platform_data/mlxreg.h       |  2 ++
- 3 files changed, 19 insertions(+)
+Changes in v2:
+ - split the fix and the function merge part
+Changes in v3:
+ - added fixes tag
 
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index 313cf8a..fe4910b 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -550,6 +550,7 @@ static int mlxreg_hotplug_probe(struct platform_device *pdev)
- {
- 	struct mlxreg_core_hotplug_platform_data *pdata;
- 	struct mlxreg_hotplug_priv_data *priv;
-+	struct i2c_adapter *deferred_adap;
- 	int err;
+ drivers/platform/x86/dell-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index 2a68f59..a37cff9 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -1279,7 +1279,7 @@ static int kbd_get_state(struct kbd_state *state)
+ 	struct calling_interface_buffer buffer;
+ 	int ret;
  
- 	pdata = dev_get_platdata(&pdev->dev);
-@@ -558,6 +559,12 @@ static int mlxreg_hotplug_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
-+	/* Defer probing if the necessary adapter is not configured yet. */
-+	deferred_adap = i2c_get_adapter(pdata->deferred_nr);
-+	if (!deferred_adap)
-+		return -EPROBE_DEFER;
-+	i2c_put_adapter(deferred_adap);
-+
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 71b452a..67f3c6d 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -697,6 +697,8 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
- 				ARRAY_SIZE(mlxplat_default_channels[i]);
- 	}
- 	mlxplat_hotplug = &mlxplat_mlxcpld_default_data;
-+	mlxplat_hotplug->deferred_nr =
-+		mlxplat_default_channels[i - 1][MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
- 
- 	return 1;
- };
-@@ -711,6 +713,8 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
- 				ARRAY_SIZE(mlxplat_msn21xx_channels);
- 	}
- 	mlxplat_hotplug = &mlxplat_mlxcpld_msn21xx_data;
-+	mlxplat_hotplug->deferred_nr =
-+		mlxplat_msn21xx_channels[MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
- 
- 	return 1;
- };
-@@ -725,6 +729,8 @@ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
- 				ARRAY_SIZE(mlxplat_msn21xx_channels);
- 	}
- 	mlxplat_hotplug = &mlxplat_mlxcpld_msn274x_data;
-+	mlxplat_hotplug->deferred_nr =
-+		mlxplat_msn21xx_channels[MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
- 
- 	return 1;
- };
-@@ -739,6 +745,8 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
- 				ARRAY_SIZE(mlxplat_msn21xx_channels);
- 	}
- 	mlxplat_hotplug = &mlxplat_mlxcpld_msn201x_data;
-+	mlxplat_hotplug->deferred_nr =
-+		mlxplat_default_channels[i - 1][MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
- 
- 	return 1;
- };
-@@ -753,6 +761,8 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
- 				ARRAY_SIZE(mlxplat_msn21xx_channels);
- 	}
- 	mlxplat_hotplug = &mlxplat_mlxcpld_default_ng_data;
-+	mlxplat_hotplug->deferred_nr =
-+		mlxplat_msn21xx_channels[MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
- 
- 	return 1;
- };
-diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
-index fcdc707..2629109 100644
---- a/include/linux/platform_data/mlxreg.h
-+++ b/include/linux/platform_data/mlxreg.h
-@@ -129,6 +129,7 @@ struct mlxreg_core_platform_data {
-  * @mask: top aggregation interrupt common mask;
-  * @cell_low: location of low aggregation interrupt register;
-  * @mask_low: low aggregation interrupt common mask;
-+ * @deferred_nr: I2C adapter number must be exist prior probing execution;
-  */
- struct mlxreg_core_hotplug_platform_data {
- 	struct mlxreg_core_item *items;
-@@ -139,6 +140,7 @@ struct mlxreg_core_hotplug_platform_data {
- 	u32 mask;
- 	u32 cell_low;
- 	u32 mask_low;
-+	int deferred_nr;
- };
- 
- #endif /* __LINUX_PLATFORM_DATA_MLXREG_H */
+-	dell_fill_request(&buffer, 0, 0, 0, 0);
++	dell_fill_request(&buffer, 0x1, 0, 0, 0);
+ 	ret = dell_send_request(&buffer,
+ 				CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT);
+ 	if (ret)
 -- 
-2.1.4
+2.7.4
