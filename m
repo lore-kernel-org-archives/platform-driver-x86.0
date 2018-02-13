@@ -1,50 +1,76 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH v1 1/4] platform/x86: mlx-platform: Use define for the channel numbers
-Date: Tue, 13 Feb 2018 22:09:33 +0000
-Message-ID: <1518559776-188942-2-git-send-email-vadimp@mellanox.com>
+Subject: [PATCH v1 3/4] platform/mellanox: mlxreg-hotplug: Change input for device create routine
+Date: Tue, 13 Feb 2018 22:09:35 +0000
+Message-ID: <1518559776-188942-4-git-send-email-vadimp@mellanox.com>
 References: <1518559776-188942-1-git-send-email-vadimp@mellanox.com>
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:35354 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S965642AbeBMUNR (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Feb 2018 15:13:17 -0500
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1518559776-188942-1-git-send-email-vadimp@mellanox.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, Vadim Pasternak <vadimp@mellanox.com>
+List-Id: platform-driver-x86.vger.kernel.org
 
-Add define for the channels number for mux device, instead of using
-hardcoded value inside the code in order to improve code readability.
+Change the first input parameter in mlxreg_hotplug_device_create to the
+pointer to mlxreg_hotplug private data in order to allow to use the fields
+from the private data structure inside this routine.
 
 Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 ---
- drivers/platform/x86/mlx-platform.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/platform/mellanox/mlxreg-hotplug.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 454e14f..71b452a 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -85,6 +85,9 @@
- #define MLXPLAT_CPLD_FAN_MASK		GENMASK(3, 0)
- #define MLXPLAT_CPLD_FAN_NG_MASK	GENMASK(5, 0)
- 
-+/* Number of channels in group */
-+#define MLXPLAT_CPLD_GRP_CHNL_NUM		8
-+
- /* Start channel numbers */
- #define MLXPLAT_CPLD_CH1			2
- #define MLXPLAT_CPLD_CH2			10
-@@ -124,7 +127,7 @@ static const struct resource mlxplat_lpc_resources[] = {
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index fe4910b..c1e1c4f 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -93,7 +93,7 @@ struct mlxreg_hotplug_priv_data {
+ 	bool after_probe;
  };
  
- /* Platform default channels */
--static const int mlxplat_default_channels[][8] = {
-+static const int mlxplat_default_channels[][MLXPLAT_CPLD_GRP_CHNL_NUM] = {
- 	{
- 		MLXPLAT_CPLD_CH1, MLXPLAT_CPLD_CH1 + 1, MLXPLAT_CPLD_CH1 + 2,
- 		MLXPLAT_CPLD_CH1 + 3, MLXPLAT_CPLD_CH1 + 4, MLXPLAT_CPLD_CH1 +
+-static int mlxreg_hotplug_device_create(struct device *dev,
++static int mlxreg_hotplug_device_create(struct mlxreg_hotplug_priv_data *priv,
+ 					struct mlxreg_core_data *data)
+ {
+ 	/*
+@@ -105,7 +105,7 @@ static int mlxreg_hotplug_device_create(struct device *dev,
+ 
+ 	data->hpdev.adapter = i2c_get_adapter(data->hpdev.nr);
+ 	if (!data->hpdev.adapter) {
+-		dev_err(dev, "Failed to get adapter for bus %d\n",
++		dev_err(priv->dev, "Failed to get adapter for bus %d\n",
+ 			data->hpdev.nr);
+ 		return -EFAULT;
+ 	}
+@@ -113,7 +113,7 @@ static int mlxreg_hotplug_device_create(struct device *dev,
+ 	data->hpdev.client = i2c_new_device(data->hpdev.adapter,
+ 					    data->hpdev.brdinfo);
+ 	if (!data->hpdev.client) {
+-		dev_err(dev, "Failed to create client %s at bus %d at addr 0x%02x\n",
++		dev_err(priv->dev, "Failed to create client %s at bus %d at addr 0x%02x\n",
+ 			data->hpdev.brdinfo->type, data->hpdev.nr,
+ 			data->hpdev.brdinfo->addr);
+ 
+@@ -270,10 +270,10 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
+ 			if (item->inversed)
+ 				mlxreg_hotplug_device_destroy(data);
+ 			else
+-				mlxreg_hotplug_device_create(priv->dev, data);
++				mlxreg_hotplug_device_create(priv, data);
+ 		} else {
+ 			if (item->inversed)
+-				mlxreg_hotplug_device_create(priv->dev, data);
++				mlxreg_hotplug_device_create(priv, data);
+ 			else
+ 				mlxreg_hotplug_device_destroy(data);
+ 		}
+@@ -319,7 +319,7 @@ mlxreg_hotplug_health_work_helper(struct mlxreg_hotplug_priv_data *priv,
+ 		if (regval == MLXREG_HOTPLUG_HEALTH_MASK) {
+ 			if ((data->health_cntr++ == MLXREG_HOTPLUG_RST_CNTR) ||
+ 			    !priv->after_probe) {
+-				mlxreg_hotplug_device_create(priv->dev, data);
++				mlxreg_hotplug_device_create(priv, data);
+ 				data->attached = true;
+ 			}
+ 		} else {
 -- 
 2.1.4
