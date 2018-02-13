@@ -1,93 +1,90 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Support Lifebook U7x7
- hotkeys
-Date: Tue, 13 Feb 2018 21:17:38 +1030
-Message-ID: <20180213104738.GA4379@marvin.atrad.com.au>
-References: <1518437331-25451-1-git-send-email-glogow@fbihome.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
+ Dell machines
+Date: Tue, 13 Feb 2018 16:55:00 +0200
+Message-ID: <CAHp75VfF+qwCXcr3yuayE-Z+UG9wuMOKfGzLhdyPk79daEi9gQ@mail.gmail.com>
+References: <20180127133209.28995-1-pali.rohar@gmail.com> <CAHp75VdWA-0a_FeicHSi_FfWurQ9EvkdW0raqgoRVySTyxDJ0Q@mail.gmail.com>
+ <20180128144509.pobnj7cayc4psgrj@pali> <CAHp75VdU1OMTqLcDuzhQMHuX9rMhjw6p3CkSWaW5Y4kOy8ggqg@mail.gmail.com>
+ <20180131120348.azy25aqvn5wrdkeh@pali> <CAHp75Vf=-RQvCtS684Q5+X=YKmZXgP_1kr0to8BGZX0jQAsuZw@mail.gmail.com>
+ <20180212153012.vffvjmz26ifyxbj5@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:34300 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S933865AbeBMKr5 (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Feb 2018 05:47:57 -0500
-Content-Disposition: inline
-In-Reply-To: <1518437331-25451-1-git-send-email-glogow@fbihome.de>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Jan-Marek Glogowski <glogow@fbihome.de>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180212153012.vffvjmz26ifyxbj5@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>, =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <Mario_Limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Feb 12, 2018 at 01:08:51PM +0100, Jan-Marek Glogowski wrote:
-> Generate input events for hotkeys present in Fujitsu Lifebook
-> U727 and U757 laptops: Fn+F1 (KEY_MICMUTE) and Fn+F5
-> (KEY_RFKILL).
-> 
-> Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
+On Mon, Feb 12, 2018 at 5:30 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
+te:
+> On Wednesday 31 January 2018 14:27:51 Andy Shevchenko wrote:
+>> On Wed, Jan 31, 2018 at 2:03 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> =
+wrote:
+>> > On Sunday 28 January 2018 17:00:35 Andy Shevchenko wrote:
+>> >> On Sun, Jan 28, 2018 at 4:45 PM, Pali Roh=C3=A1r <pali.rohar@gmail.co=
+m> wrote:
+>>
+>> >> > ACPI device name is SMO8800, SMO8810, ... Will that acpi_dev_presen=
+t
+>> >> > function match only prefix and not exact string?
+>> >>
+>> >> OK, fair enough.
+>> >>
+>> >> Do we have more users of such pattern?
+>> >
+>> > I have not seen this ACPI pattern yet, so probably not.
+>>
+>> I see. So, my  one concern is the implicit names of the devices. I
+>> would like rather to see
+>>
+>> ... acpi_device_id ... []=3D {
+>>  {"SMO8800"},
+>>  {"SMO8810"},
+>> ...
+>> {}
+>> };
+>
+> Following table already exists in dell-smo8800.c file:
+>
+> static const struct acpi_device_id smo8800_ids[] =3D {
+>         { "SMO8800", 0 },
+>         { "SMO8801", 0 },
+>         { "SMO8810", 0 },
+>         { "SMO8811", 0 },
+>         { "SMO8820", 0 },
+>         { "SMO8821", 0 },
+>         { "SMO8830", 0 },
+>         { "SMO8831", 0 },
+>         { "", 0 },
+> };
+>
+> MODULE_DEVICE_TABLE(acpi, smo8800_ids);
+>
+> Can we reuse it?
 
-This patch does not cause any known regressions, and as per the original
-discussion I am happy to see this pulled into mainline in order to properly
-support these newer laptops in the short term.  In the meantime, Michel is
-working on a more extensive patch which separates the handling of the two
-different hotkey approaches.  This will give us a neater overall solution
-but the ETA is unknown at this stage.
+>  Maybe moving array smo8800_ids[] into some header file
+> (which one?) and statically inline it?
 
-Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+Bad idea.
 
-Regards
-  jonathan
+> Or having it only in
+> dell-smo8800.c file and exporting its symbol?
 
-> ---
->  drivers/platform/x86/fujitsu-laptop.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 2cfbd3f..4294c64 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -455,7 +455,9 @@ static const struct key_entry keymap_default[] = {
->  	{ KE_KEY, KEY3_CODE, { KEY_PROG3 } },
->  	{ KE_KEY, KEY4_CODE, { KEY_PROG4 } },
->  	{ KE_KEY, KEY5_CODE, { KEY_RFKILL } },
-> +	{ KE_KEY, BIT(5),    { KEY_RFKILL } },
->  	{ KE_KEY, BIT(26),   { KEY_TOUCHPAD_TOGGLE } },
-> +	{ KE_KEY, BIT(29),   { KEY_MICMUTE } },
->  	{ KE_END, 0 }
->  };
->  
-> @@ -899,7 +901,7 @@ static void acpi_fujitsu_laptop_release(struct acpi_device *device)
->  static void acpi_fujitsu_laptop_notify(struct acpi_device *device, u32 event)
->  {
->  	struct fujitsu_laptop *priv = acpi_driver_data(device);
-> -	int scancode, i = 0;
-> +	int scancode, i = 0, ret;
->  	unsigned int irb;
->  
->  	if (event != ACPI_FUJITSU_NOTIFY_CODE1) {
-> @@ -930,9 +932,18 @@ static void acpi_fujitsu_laptop_notify(struct acpi_device *device, u32 event)
->  	 * E736/E746/E756), the touchpad toggle hotkey (Fn+F4) is
->  	 * handled in software; its state is queried using FUNC_FLAGS
->  	 */
-> -	if ((priv->flags_supported & BIT(26)) &&
-> -	    (call_fext_func(device, FUNC_FLAGS, 0x1, 0x0, 0x0) & BIT(26)))
-> -		sparse_keymap_report_event(priv->input, BIT(26), 1, true);
-> +	if (priv->flags_supported & (BIT(5) | BIT(26) | BIT(29))) {
-> +		ret = call_fext_func(device, FUNC_FLAGS, 0x1, 0x0, 0x0);
-> +		if (ret & BIT(5))
-> +			sparse_keymap_report_event(priv->input,
-> +						   BIT(5), 1, true);
-> +		if (ret & BIT(26))
-> +			sparse_keymap_report_event(priv->input,
-> +						   BIT(26), 1, true);
-> +		if (ret & BIT(29))
-> +			sparse_keymap_report_event(priv->input,
-> +						   BIT(29), 1, true);
-> +	}
->  }
->  
->  /* Initialization */
-> -- 
-> 2.1.4
+Even worse.
 
--- 
+> Or is there better idea?
+>
+> For sure I do not want to copy paste this table into another module and
+> maintaining two copies of this list.
+
+The copy is fine. Can you guarantee that those two lists would be
+always the same? I'm not.
+And besides that explicitly over implicitly  is a really good thing. I
+would not like to grep for an ID followed by grepping include line and
+check each files to check if it uses it or not.
+
+--=20
+With Best Regards,
+Andy Shevchenko
