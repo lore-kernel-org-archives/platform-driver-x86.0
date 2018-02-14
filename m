@@ -1,73 +1,74 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3] platform/x86: dell-laptop: fix kbd_get_state's request value
-Date: Wed, 14 Feb 2018 21:44:11 +0200
-Message-ID: <CAHp75VdBP0hooOB=gN6ZVcqm3NyxaDV_rVbL=jwfM_VGak61dw@mail.gmail.com>
-References: <20180213204343.GA6586@laszlth> <20180213212612.u7b26krt47n4zpp6@pali>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: intel_turbo_max_3: Remove restriction for
+ HWP platforms
+Date: Wed, 14 Feb 2018 15:47:49 -0800
+Message-ID: <1518652069.3239.4.camel@linux.intel.com>
+References: <20180212195047.23671-1-srinivas.pandruvada@linux.intel.com>
+         <CAHp75VdUnw0NjcNDKzFp-hZWho4A8RV=9Xthz-foZ6wTaT+Ftg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qt0-f180.google.com ([209.85.216.180]:38722 "EHLO
-        mail-qt0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1162994AbeBNToM (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Feb 2018 14:44:12 -0500
-In-Reply-To: <20180213212612.u7b26krt47n4zpp6@pali>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Laszlo Toth <laszlth@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Stable <stable@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VdUnw0NjcNDKzFp-hZWho4A8RV=9Xthz-foZ6wTaT+Ftg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arjan@linux.intel.com
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Feb 13, 2018 at 11:26 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wr=
-ote:
-> On Tuesday 13 February 2018 21:43:43 Laszlo Toth wrote:
->> Commit 9862b43624a5 ("platform/x86: dell-laptop: Allocate buffer on heap
->> rather than globally")
->> broke one request, changed it back to the original value.
->>
->> Tested on a Dell E6540, backlight came back.
->>
+On Wed, 2018-02-14 at 21:29 +0200, Andy Shevchenko wrote:
+> On Mon, Feb 12, 2018 at 9:50 PM, Srinivas Pandruvada
+> <srinivas.pandruvada@linux.intel.com> wrote:
+> > On systems supporting HWP (Hardware P-States) mode, we expected to
+> > enumerate core priority via ACPI-CPPC tables. Unfortunately
+> > deployment of
+> > TURBO 3.0 didn't use this method to show core priority. So users
+> > are not
+> > able to utilize this feature in HWP mode.
+> > 
+> > So remove the loading restriction of this driver for HWP enabled
+> > systems.
+> > Even if there are some systems, which are providing the core
+> > priority via
+> > ACPI CPPC, this shouldn't cause any conflict as the source of
+> > priority
+> > definition is same.
+> > 
+> 
+> Pushed to my review and testing queue, thanks!
+> 
+> P.S. Should it go to stable?
+I want to avoid stable kernel for now.
 
-Pushed to my review and testing queue, thanks!
+Thanks,
+Srinivas
 
->> Fixes: 9862b43624a5 ("platform/x86: dell-laptop: Allocate buffer on heap=
- rather than globally")
->> Signed-off-by: Laszlo Toth <laszlth@gmail.com>
->> ---
->> Changes in v2:
->>  - split the fix and the function merge part
->> Changes in v3:
->>  - added fixes tag
->>
->>  drivers/platform/x86/dell-laptop.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/d=
-ell-laptop.c
->> index 2a68f59..a37cff9 100644
->> --- a/drivers/platform/x86/dell-laptop.c
->> +++ b/drivers/platform/x86/dell-laptop.c
->> @@ -1279,7 +1279,7 @@ static int kbd_get_state(struct kbd_state *state)
->>       struct calling_interface_buffer buffer;
->>       int ret;
->>
->> -     dell_fill_request(&buffer, 0, 0, 0, 0);
->> +     dell_fill_request(&buffer, 0x1, 0, 0, 0);
->>       ret =3D dell_send_request(&buffer,
->>                               CLASS_KBD_BACKLIGHT, SELECT_KBD_BACKLIGHT)=
-;
->>       if (ret)
->
-> Looks better!
->
-> Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
-
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+> 
+> > Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel
+> > .com>
+> > Reported-and-tested-and-reviewed-by: Arjan van de Ven <arjan@linux.
+> > intel.com>
+> > ---
+> >  drivers/platform/x86/intel_turbo_max_3.c | 3 ---
+> >  1 file changed, 3 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/intel_turbo_max_3.c
+> > b/drivers/platform/x86/intel_turbo_max_3.c
+> > index d4ea01805879..a6d5aa0c3c47 100644
+> > --- a/drivers/platform/x86/intel_turbo_max_3.c
+> > +++ b/drivers/platform/x86/intel_turbo_max_3.c
+> > @@ -138,9 +138,6 @@ static int __init itmt_legacy_init(void)
+> >         if (!id)
+> >                 return -ENODEV;
+> > 
+> > -       if (boot_cpu_has(X86_FEATURE_HWP))
+> > -               return -ENODEV;
+> > -
+> >         ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
+> >                                 "platform/x86/turbo_max_3:online",
+> >                                 itmt_legacy_cpu_online, NULL);
+> > --
+> > 2.13.6
+> > 
+> 
+> 
+> 
