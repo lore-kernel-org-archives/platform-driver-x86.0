@@ -1,316 +1,283 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 09/12] usb: roles: Add Intel XHCI USB role switch driver
-Date: Fri, 16 Feb 2018 11:47:48 +0100
-Message-ID: <20180216104751.8371-10-hdegoede@redhat.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 10/12] usb: typec: driver for Pericom PI3USB30532 Type-C cross switch
+Date: Fri, 16 Feb 2018 11:47:49 +0100
+Message-ID: <20180216104751.8371-11-hdegoede@redhat.com>
 References: <20180216104751.8371-1-hdegoede@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180216104751.8371-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180216104751.8371-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Various Intel SoCs (Cherry Trail, Broxton and others) have an internal USB
-role switch for swiching the OTG USB data lines between the xHCI host
-controller and the dwc3 gadget controller.
+Add a driver for the Pericom PI3USB30532 Type-C cross switch /
+mux chip found on some devices with a Type-C port.
 
-Note on some Cherry Trail systems there is ACPI/AML code listening to
-edge interrupts on the id-pin (through an _AIE ACPI method) and switching
-the role between ROLE_HOST and ROLE_NONE based on the id-pin. Note it does
-not set the role to ROLE_DEVICE, because device-mode is usually not used
-under Windows.
-
-The presence of AML code which modifies the cfg0 reg (on some systems)
-means that we our read/write/modify of cfg0 may race with the AML code
-doing the same to avoid this we take the global ACPI lock while doing
-the read/write/modify.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- MAINTAINERS                                    |   6 +
- drivers/usb/Kconfig                            |   2 +
- drivers/usb/Makefile                           |   2 +
- drivers/usb/roles/Kconfig                      |  14 ++
- drivers/usb/roles/Makefile                     |   1 +
- drivers/usb/roles/intel-xhci-usb-role-switch.c | 201 +++++++++++++++++++++++++
- 6 files changed, 226 insertions(+)
- create mode 100644 drivers/usb/roles/Kconfig
- create mode 100644 drivers/usb/roles/Makefile
- create mode 100644 drivers/usb/roles/intel-xhci-usb-role-switch.c
+Note this is a rewrite of my previous driver which was using the
+drivers/mux framework to use the new drivers/usb/typec/mux framework
+---
+ MAINTAINERS                         |   6 ++
+ drivers/usb/typec/Kconfig           |   2 +
+ drivers/usb/typec/Makefile          |   1 +
+ drivers/usb/typec/mux/Kconfig       |  10 ++
+ drivers/usb/typec/mux/Makefile      |   3 +
+ drivers/usb/typec/mux/pi3usb30532.c | 177 ++++++++++++++++++++++++++++++++++++
+ 6 files changed, 199 insertions(+)
+ create mode 100644 drivers/usb/typec/mux/Kconfig
+ create mode 100644 drivers/usb/typec/mux/Makefile
+ create mode 100644 drivers/usb/typec/mux/pi3usb30532.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 3a6334da07d1..385ef9080287 100644
+index 385ef9080287..ec047e7e3c43 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -14385,6 +14385,12 @@ S:	Maintained
- F:	Documentation/hid/hiddev.txt
- F:	drivers/hid/usbhid/
+@@ -14521,6 +14521,12 @@ F:	drivers/usb/
+ F:	include/linux/usb.h
+ F:	include/linux/usb/
  
-+USB INTEL XHCI ROLE MUX DRIVER
-+M:	Hans de Goede <hdegoede@redhat.com>
-+L:	linux-usb@vger.kernel.org
++USB TYPEC PI3USB30532 MUX DRIVER
++M:	Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++L:	linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 +S:	Maintained
-+F:	drivers/usb/roles/intel-xhci-usb-role-switch.c
++F:	drivers/usb/typec/mux/pi3usb30532.c
 +
- USB ISP116X DRIVER
- M:	Olav Kongas <ok@artecdesign.ee>
- L:	linux-usb@vger.kernel.org
-diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
-index a79198f5f1a6..3f123edba6e8 100644
---- a/drivers/usb/Kconfig
-+++ b/drivers/usb/Kconfig
-@@ -165,6 +165,8 @@ source "drivers/usb/gadget/Kconfig"
+ USB TYPEC SUBSYSTEM
+ M:	Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+ L:	linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
+index a2a0684e7c82..030f88cb0c3f 100644
+--- a/drivers/usb/typec/Kconfig
++++ b/drivers/usb/typec/Kconfig
+@@ -85,4 +85,6 @@ config TYPEC_TPS6598X
+ 	  If you choose to build this driver as a dynamically linked module, the
+ 	  module will be called tps6598x.ko.
  
- source "drivers/usb/typec/Kconfig"
- 
-+source "drivers/usb/roles/Kconfig"
++source "drivers/usb/typec/mux/Kconfig"
 +
- config USB_LED_TRIG
- 	bool "USB LED Triggers"
- 	depends on LEDS_CLASS && LEDS_TRIGGERS
-diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
-index 060643a1b5c8..7d1b8c82b208 100644
---- a/drivers/usb/Makefile
-+++ b/drivers/usb/Makefile
-@@ -65,3 +65,5 @@ obj-$(CONFIG_USB_COMMON)	+= common/
- obj-$(CONFIG_USBIP_CORE)	+= usbip/
- 
- obj-$(CONFIG_TYPEC)		+= typec/
-+
-+obj-$(CONFIG_USB_ROLE_SWITCH)	+= roles/
-diff --git a/drivers/usb/roles/Kconfig b/drivers/usb/roles/Kconfig
+ endif # TYPEC
+diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
+index 56b2e9516ec1..1f599a6c30cc 100644
+--- a/drivers/usb/typec/Makefile
++++ b/drivers/usb/typec/Makefile
+@@ -6,3 +6,4 @@ obj-y				+= fusb302/
+ obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
+ obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
+ obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
++obj-$(CONFIG_TYPEC)		+= mux/
+diff --git a/drivers/usb/typec/mux/Kconfig b/drivers/usb/typec/mux/Kconfig
 new file mode 100644
-index 000000000000..e5c2bfaf8ba5
+index 000000000000..9a954d2b8d8f
 --- /dev/null
-+++ b/drivers/usb/roles/Kconfig
-@@ -0,0 +1,14 @@
-+if USB_ROLE_SWITCH
++++ b/drivers/usb/typec/mux/Kconfig
+@@ -0,0 +1,10 @@
++menu "USB Type-C Multiplexer/DeMultiplexer Switch support"
 +
-+config USB_ROLES_INTEL_XHCI
-+	tristate "Intel XHCI USB Role Switch"
-+	depends on ACPI && X86 && EXTCON
++config TYPEC_MUX_PI3USB30532
++	tristate "Pericom PI3USB30532 Type-C cross switch driver"
++	depends on I2C
 +	help
-+	  Driver for the internal USB role switch for switching the USB data
-+	  lines between the xHCI host controller and the dwc3 gadget controller
-+	  found on various Intel SoCs.
++	  Say Y or M if your system has a Pericom PI3USB30532 Type-C cross
++	  switch / mux chip found on some devices with a Type-C port.
 +
-+	  To compile the driver as a module, choose M here: the module will
-+	  be called intel-xhci-usb-role-switch.
++endmenu
+diff --git a/drivers/usb/typec/mux/Makefile b/drivers/usb/typec/mux/Makefile
+new file mode 100644
+index 000000000000..1332e469b8a0
+--- /dev/null
++++ b/drivers/usb/typec/mux/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
 +
-+endif # USB_ROLE_SWITCH
-diff --git a/drivers/usb/roles/Makefile b/drivers/usb/roles/Makefile
++obj-$(CONFIG_TYPEC_MUX_PI3USB30532)	+= pi3usb30532.o
+diff --git a/drivers/usb/typec/mux/pi3usb30532.c b/drivers/usb/typec/mux/pi3usb30532.c
 new file mode 100644
-index 000000000000..e44b179ba275
+index 000000000000..13ea3e3a783c
 --- /dev/null
-+++ b/drivers/usb/roles/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_USB_ROLES_INTEL_XHCI) += intel-xhci-usb-role-switch.o
-diff --git a/drivers/usb/roles/intel-xhci-usb-role-switch.c b/drivers/usb/roles/intel-xhci-usb-role-switch.c
-new file mode 100644
-index 000000000000..b46c44b0e028
---- /dev/null
-+++ b/drivers/usb/roles/intel-xhci-usb-role-switch.c
-@@ -0,0 +1,201 @@
++++ b/drivers/usb/typec/mux/pi3usb30532.c
+@@ -0,0 +1,177 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Intel XHCI (Cherry Trail, Broxton and others) USB OTG role switch driver
++ * Pericom PI3USB30532 Type-C cross switch / mux driver
 + *
-+ * Copyright (c) 2016-2017 Hans de Goede <hdegoede@redhat.com>
-+ *
-+ * Loosely based on android x86 kernel code which is:
-+ *
-+ * Copyright (C) 2014 Intel Corp.
-+ *
-+ * Author: Wu, Hao
++ * Copyright (c) 2017-2018 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 + */
 +
-+#include <linux/acpi.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
++#include <linux/i2c.h>
 +#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/usb/role.h>
++#include <linux/mutex.h>
++#include <linux/usb/tcpm.h>
++#include <linux/usb/typec_mux.h>
 +
-+/* register definition */
-+#define DUAL_ROLE_CFG0			0x68
-+#define SW_VBUS_VALID			(1 << 24)
-+#define SW_IDPIN_EN			(1 << 21)
-+#define SW_IDPIN			(1 << 20)
++#define PI3USB30532_CONF			0x00
 +
-+#define DUAL_ROLE_CFG1			0x6c
-+#define HOST_MODE			(1 << 29)
++#define PI3USB30532_CONF_OPEN			0x00
++#define PI3USB30532_CONF_SWAP			0x01
++#define PI3USB30532_CONF_4LANE_DP		0x02
++#define PI3USB30532_CONF_USB3			0x04
++#define PI3USB30532_CONF_USB3_AND_2LANE_DP	0x06
 +
-+#define DUAL_ROLE_CFG1_POLL_TIMEOUT	1000
-+
-+#define DRV_NAME			"intel_xhci_usb_sw"
-+
-+struct intel_xhci_usb_data {
-+	struct usb_role_switch *role_sw;
-+	void __iomem *base;
++struct pi3usb30532 {
++	struct i2c_client *client;
++	struct mutex lock; /* protects the cached conf register */
++	struct typec_switch sw;
++	struct typec_mux mux;
++	u8 conf;
 +};
 +
-+struct intel_xhci_acpi_match {
-+	const char *hid;
-+	int hrv;
-+};
-+
-+/*
-+ * ACPI IDs for PMICs which do not support separate data and power role
-+ * detection (USB ACA detection for micro USB OTG), we allow userspace to
-+ * change the role manually on these.
-+ */
-+static const struct intel_xhci_acpi_match allow_userspace_ctrl_ids[] = {
-+	{ "INT33F4",  3 }, /* X-Powers AXP288 PMIC */
-+};
-+
-+static int intel_xhci_usb_set_role(struct device *dev, enum usb_role role)
++static int pi3usb30532_set_conf(struct pi3usb30532 *pi, u8 new_conf)
 +{
-+	struct intel_xhci_usb_data *data = dev_get_drvdata(dev);
-+	unsigned long timeout;
-+	acpi_status status;
-+	u32 glk = -1U;
-+	u32 val;
++	int ret = 0;
 +
-+	/*
-+	 * On many CHT devices ACPI event (_AEI) handlers read / modify /
-+	 * write the cfg0 register, just like we do. Take the ACPI lock
-+	 * to avoid us racing with the AML code.
-+	 */
-+	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
-+	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
-+		dev_err(dev, "Error could not acquire lock\n");
-+		return -EIO;
-+	}
++	if (pi->conf == new_conf)
++		return 0;
 +
-+	/* Set idpin value as requested */
-+	val = readl(data->base + DUAL_ROLE_CFG0);
-+	switch (role) {
-+	case USB_ROLE_NONE:
-+		val |= SW_IDPIN;
-+		val &= ~SW_VBUS_VALID;
-+		break;
-+	case USB_ROLE_HOST:
-+		val &= ~SW_IDPIN;
-+		val &= ~SW_VBUS_VALID;
-+		break;
-+	case USB_ROLE_DEVICE:
-+		val |= SW_IDPIN;
-+		val |= SW_VBUS_VALID;
-+		break;
-+	}
-+	val |= SW_IDPIN_EN;
-+
-+	writel(val, data->base + DUAL_ROLE_CFG0);
-+
-+	acpi_release_global_lock(glk);
-+
-+	/* In most case it takes about 600ms to finish mode switching */
-+	timeout = jiffies + msecs_to_jiffies(DUAL_ROLE_CFG1_POLL_TIMEOUT);
-+
-+	/* Polling on CFG1 register to confirm mode switch.*/
-+	do {
-+		val = readl(data->base + DUAL_ROLE_CFG1);
-+		if (!!(val & HOST_MODE) == (role == USB_ROLE_HOST))
-+			return 0;
-+
-+		/* Interval for polling is set to about 5 - 10 ms */
-+		usleep_range(5000, 10000);
-+	} while (time_before(jiffies, timeout));
-+
-+	dev_warn(dev, "Timeout waiting for role-switch\n");
-+	return -ETIMEDOUT;
-+}
-+
-+static enum usb_role intel_xhci_usb_get_role(struct device *dev)
-+{
-+	struct intel_xhci_usb_data *data = dev_get_drvdata(dev);
-+	enum usb_role role;
-+	u32 val;
-+
-+	val = readl(data->base + DUAL_ROLE_CFG0);
-+
-+	if (!(val & SW_IDPIN))
-+		role = USB_ROLE_HOST;
-+	else if (val & SW_VBUS_VALID)
-+		role = USB_ROLE_DEVICE;
++	ret = i2c_smbus_write_byte_data(pi->client, PI3USB30532_CONF, new_conf);
++	if (ret == 0)
++		pi->conf = new_conf;
 +	else
-+		role = USB_ROLE_NONE;
++		dev_err(&pi->client->dev, "Error writing conf: %d\n", ret);
 +
-+	return role;
++	return ret;
 +}
 +
-+static struct usb_role_switch_desc sw_desc = {
-+	.set = intel_xhci_usb_set_role,
-+	.get = intel_xhci_usb_get_role,
-+};
-+
-+static int intel_xhci_usb_probe(struct platform_device *pdev)
++static int pi3usb30532_sw_set(struct typec_switch *sw,
++			      enum typec_orientation orientation)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct intel_xhci_usb_data *data;
-+	struct resource *res;
-+	resource_size_t size;
-+	int i, ret;
++	struct pi3usb30532 *pi = container_of(sw, struct pi3usb30532, sw);
++	u8 new_conf;
++	int ret;
 +
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
++	mutex_lock(&pi->lock);
++	new_conf = pi->conf;
++
++	switch (orientation) {
++	case TYPEC_ORIENTATION_NONE:
++		new_conf = PI3USB30532_CONF_OPEN;
++		break;
++	case TYPEC_ORIENTATION_NORMAL:
++		new_conf &= ~PI3USB30532_CONF_SWAP;
++		break;
++	case TYPEC_ORIENTATION_REVERSE:
++		new_conf |= PI3USB30532_CONF_SWAP;
++		break;
++	};
++
++	ret = pi3usb30532_set_conf(pi, new_conf);
++	mutex_unlock(&pi->lock);
++
++	return ret;
++}
++
++static int pi3usb30532_mux_set(struct typec_mux *mux, int state)
++{
++	struct pi3usb30532 *pi = container_of(mux, struct pi3usb30532, mux);
++	u8 new_conf;
++	int ret;
++
++	mutex_lock(&pi->lock);
++	new_conf = pi->conf;
++
++	switch (state) {
++	case TYPEC_MUX_NONE:
++		new_conf = PI3USB30532_CONF_OPEN;
++		break;
++	case TYPEC_MUX_USB:
++		new_conf = (new_conf & PI3USB30532_CONF_SWAP) |
++			   PI3USB30532_CONF_USB3;
++		break;
++	case TYPEC_MUX_DP:
++		new_conf = (new_conf & PI3USB30532_CONF_SWAP) |
++			   PI3USB30532_CONF_4LANE_DP;
++		break;
++	case TYPEC_MUX_DOCK:
++		new_conf = (new_conf & PI3USB30532_CONF_SWAP) |
++			   PI3USB30532_CONF_USB3_AND_2LANE_DP;
++		break;
++	};
++
++	ret = pi3usb30532_set_conf(pi, new_conf);
++	mutex_unlock(&pi->lock);
++
++	return ret;
++}
++
++static int pi3usb30532_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct pi3usb30532 *pi;
++	int ret;
++
++	pi = devm_kzalloc(dev, sizeof(*pi), GFP_KERNEL);
++	if (!pi)
 +		return -ENOMEM;
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	size = (res->end + 1) - res->start;
-+	data->base = devm_ioremap_nocache(dev, res->start, size);
-+	if (IS_ERR(data->base)) {
-+		ret = PTR_ERR(data->base);
-+		dev_err(dev, "Error iomaping registers: %d\n", ret);
++	pi->client = client;
++	pi->sw.dev = dev;
++	pi->sw.set = pi3usb30532_sw_set;
++	pi->mux.dev = dev;
++	pi->mux.set = pi3usb30532_mux_set;
++	mutex_init(&pi->lock);
++
++	ret = i2c_smbus_read_byte_data(client, PI3USB30532_CONF);
++	if (ret < 0) {
++		dev_err(dev, "Error reading config register %d\n", ret);
++		return ret;
++	}
++	pi->conf = ret;
++
++	ret = typec_switch_register(&pi->sw);
++	if (ret) {
++		dev_err(dev, "Error registering typec switch: %d\n", ret);
 +		return ret;
 +	}
 +
-+	for (i = 0; i < ARRAY_SIZE(allow_userspace_ctrl_ids); i++)
-+		if (acpi_dev_present(allow_userspace_ctrl_ids[i].hid, "1",
-+				     allow_userspace_ctrl_ids[i].hrv))
-+			sw_desc.allow_userspace_control = true;
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	data->role_sw = usb_role_switch_register(dev, &sw_desc);
-+	if (IS_ERR(data->role_sw)) {
-+		ret = PTR_ERR(data->role_sw);
-+		dev_err(dev, "Error registering role-switch: %d\n", ret);
++	ret = typec_mux_register(&pi->mux);
++	if (ret) {
++		typec_switch_unregister(&pi->sw);
++		dev_err(dev, "Error registering typec mux: %d\n", ret);
 +		return ret;
 +	}
 +
++	i2c_set_clientdata(client, pi);
 +	return 0;
 +}
 +
-+int intel_xhci_usb_remove(struct platform_device *pdev)
++static int pi3usb30532_remove(struct i2c_client *client)
 +{
-+	struct intel_xhci_usb_data *data = platform_get_drvdata(pdev);
++	struct pi3usb30532 *pi = i2c_get_clientdata(client);
 +
-+	usb_role_switch_unregister(data->role_sw);
++	typec_mux_unregister(&pi->mux);
++	typec_switch_unregister(&pi->sw);
 +	return 0;
 +}
 +
-+static const struct platform_device_id intel_xhci_usb_table[] = {
-+	{ .name = DRV_NAME },
-+	{},
++static const struct i2c_device_id pi3usb30532_table[] = {
++	{ "pi3usb30532" },
++	{ }
 +};
-+MODULE_DEVICE_TABLE(platform, intel_xhci_usb_table);
++MODULE_DEVICE_TABLE(i2c, pi3usb30532_table);
 +
-+static struct platform_driver intel_xhci_usb_driver = {
++static struct i2c_driver pi3usb30532_driver = {
 +	.driver = {
-+		.name = DRV_NAME,
++		.name = "pi3usb30532",
 +	},
-+	.id_table = intel_xhci_usb_table,
-+	.probe = intel_xhci_usb_probe,
-+	.remove = intel_xhci_usb_remove,
++	.probe_new	= pi3usb30532_probe,
++	.remove		= pi3usb30532_remove,
++	.id_table	= pi3usb30532_table,
 +};
 +
-+module_platform_driver(intel_xhci_usb_driver);
++module_i2c_driver(pi3usb30532_driver);
 +
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_DESCRIPTION("Intel XHCI USB role switch driver");
++MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
++MODULE_DESCRIPTION("Pericom PI3USB30532 Type-C mux driver");
 +MODULE_LICENSE("GPL");
 -- 
 2.14.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
