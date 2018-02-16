@@ -1,34 +1,43 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1] platform/x86: wmi: Replace kmalloc + sprintf() with kasprintf()
-Date: Fri, 16 Feb 2018 21:30:03 +0200
-Message-ID: <CAHp75VcjpZy75_t6z-9nN8hP=g0qb-skjOU4QtkUZxL7YRFUHQ@mail.gmail.com>
-References: <20180216154024.389-1-andriy.shevchenko@linux.intel.com> <829ccf8330b7418a976205665e0ab4bd@AcuMS.aculab.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 0/7] fujitsu-laptop: Miscellaneous cleanups
+Date: Fri, 16 Feb 2018 11:37:25 -0800
+Message-ID: <20180216193725.GE5786@fury>
+References: <20180211210727.12130-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <829ccf8330b7418a976205665e0ab4bd@AcuMS.aculab.com>
+Content-Disposition: inline
+In-Reply-To: <20180211210727.12130-1-kernel@kempniu.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Laight <David.Laight@aculab.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Feb 16, 2018 at 5:55 PM, David Laight <David.Laight@aculab.com> wrote:
+On Sun, Feb 11, 2018 at 10:07:20PM +0100, Michał Kępień wrote:
+> This is the second of the two patch series I started preparing back in
+> June 2017 [1].  It took me this long to post it purely due to permanent
+> spare time shortage, not because the changes are complicated. 
+> 
+> The patch series contains miscellaneous cleanups which I think are worth
+> getting done before splitting fujitsu-laptop into two separate modules.
+> I am not 100% sure that all the changes in the last patch in this series
+> actually help, so please speak your mind.
+> 
+> This patch series was tested on a Lifebook S7020.  AFAICT it does not
+> conflict with the recent draft patch from Jan-Marek Glogowski and may
+> thus be applied independently.
+> 
+> Finally, please forgive me if it takes me weeks or months to address
+> review comments.  It is also perfectly fine for reviews to take weeks or
+> months ;)
+> 
 
->> kasprintf() does the job of two: kmalloc() and sprintf().
->> Replace two calls with one.
-> ...
->> -             buf = kmalloc(strlen(wdriver->driver.name) + 5, GFP_KERNEL);
->> +             buf = kasprintf(GFP_KERNEL, "wmi/%s", wdriver->driver.name);
-> ...
->
-> Except that kasprintf() has no idea how long a buffer is needed.
+To avoid just having to review everything again in a few months ;-) I've queued
+up patches 1-5. I'll await comments to 6 and a respin of 7 based on feedback.
 
-Hmm...
-
-> It might even do the printf twice just to get the length.
-
-It does exactly that. So what?
+Thanks,
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Darren Hart
+VMware Open Source Technology Center
