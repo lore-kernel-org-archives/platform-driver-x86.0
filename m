@@ -1,23 +1,23 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 Subject: Re: eeepc-wmi loaded on Asus desktop board
-Date: Fri, 16 Feb 2018 18:45:20 +0200
-Message-ID: <CAHp75VfOi=UHc_F-SMeMcqqYY7qF1Cc14Qb7EVvBrBF2wz2+VA@mail.gmail.com>
+Date: Fri, 16 Feb 2018 18:44:53 +0200
+Message-ID: <CAHp75Vc7NO=N_Wb4w9gdip3Pa4zUQw1nipt9iPvK-5_GtcP6Rg@mail.gmail.com>
 References: <63d05833-a0ba-7fff-4514-5234d43a82fe@molgen.mpg.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-qk0-f177.google.com ([209.85.220.177]:32782 "EHLO
-        mail-qk0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1752172AbeBPQpW (ORCPT
+Received: from mail-qt0-f178.google.com ([209.85.216.178]:33576 "EHLO
+        mail-qt0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750897AbeBPQoz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Feb 2018 11:45:22 -0500
+        Fri, 16 Feb 2018 11:44:55 -0500
 In-Reply-To: <63d05833-a0ba-7fff-4514-5234d43a82fe@molgen.mpg.de>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Paul Menzel <pmenzel+linux-platform-driver-x86@molgen.mpg.de>, Darren Hart <dvhart@infradead.org>
+To: Paul Menzel <pmenzel+linux-platform-driver-x86@molgen.mpg.de>
 Cc: Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-+Cc: Darren (for sure)
++Cc: Darren.
 
 On Fri, Feb 16, 2018 at 12:42 AM, Paul Menzel
 <pmenzel+linux-platform-driver-x86@molgen.mpg.de> wrote:
