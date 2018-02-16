@@ -1,53 +1,141 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 07/12] xhci: Add option to get next extended capability in list by passing id = 0
-Date: Fri, 16 Feb 2018 11:47:46 +0100
-Message-ID: <20180216104751.8371-8-hdegoede@redhat.com>
+Subject: [PATCH 05/12] usb: typec: tcpm: Set USB role switch to device mode when configured as such
+Date: Fri, 16 Feb 2018 11:47:44 +0100
+Message-ID: <20180216104751.8371-6-hdegoede@redhat.com>
 References: <20180216104751.8371-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180216104751.8371-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Setting the mux to MUX_NONE and the switch to USB_SWITCH_DISCONNECT when
+the data-role is device is not correct. Plenty of devices support
+operating as USB device through a (separate) USB device controller.
 
-Modify xhci_find_next_ext_cap(base, offset, id) to return the next
-capability offset if 0 is passed for id. Otherwise it will behave as
-previously and return the offset of the next capability with matching id
+We really need 2 different versions of USB_SWITCH_CONNECT,
+USB_SWITCH_CONNECT_HOST and USB_SWITCH_DEVICE. Rather then modifying the
+tcpc_usb_switch enum for this, simply remove it and switch to the
+usb_role enum which provides exactly this, this will save use needing to
+convert betweent the 2 enums when calling an usb-role-switch driver later.
 
-capability id 0 is not used by xhci (reserved)
+Besides switching to the usb_role type, this commit also actually sets the
+mux to TYPEC_MUX_USB and the switch to USB_ROLE_DEVICE instead of setting
+both to none when the data-role is device.
 
-This is useful when we want to loop through all capabilities.
+This commit also makes tcpm_reset_port() call tcpm_mux_set(port,
+TYPEC_MUX_NONE, USB_ROLE_NONE) so that the mux and switch
+do _not_ stay in their last mode after a detach.
 
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/usb/host/xhci-ext-caps.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/usb/typec/tcpm.c | 22 +++++++++++-----------
+ include/linux/usb/tcpm.h |  8 ++------
+ 2 files changed, 13 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-ext-caps.h b/drivers/usb/host/xhci-ext-caps.h
-index bf7316e130d3..631e7cc62604 100644
---- a/drivers/usb/host/xhci-ext-caps.h
-+++ b/drivers/usb/host/xhci-ext-caps.h
-@@ -84,7 +84,8 @@
-  * @base	PCI MMIO registers base address.
-  * @start	address at which to start looking, (0 or HCC_PARAMS to start at
-  *		beginning of list)
-- * @id		Extended capability ID to search for.
-+ * @id		Extended capability ID to search for, or 0 for the next
-+ *		capability
-  *
-  * Returns the offset of the next matching extended capability structure.
-  * Some capabilities can occur several times, e.g., the XHCI_EXT_CAPS_PROTOCOL,
-@@ -110,7 +111,7 @@ static inline int xhci_find_next_ext_cap(void __iomem *base, u32 start, int id)
- 		val = readl(base + offset);
- 		if (val == ~0)
- 			return 0;
--		if (XHCI_EXT_CAPS_ID(val) == id && offset != start)
-+		if (offset != start && (id == 0 || XHCI_EXT_CAPS_ID(val) == id))
- 			return offset;
+diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+index 7cd28b700a7f..00ca2822432f 100644
+--- a/drivers/usb/typec/tcpm.c
++++ b/drivers/usb/typec/tcpm.c
+@@ -618,15 +618,15 @@ void tcpm_pd_transmit_complete(struct tcpm_port *port,
+ EXPORT_SYMBOL_GPL(tcpm_pd_transmit_complete);
  
- 		next = XHCI_EXT_CAPS_NEXT(val);
+ static int tcpm_mux_set(struct tcpm_port *port, enum tcpc_mux_mode mode,
+-			enum tcpc_usb_switch config)
++			enum usb_role usb_role)
+ {
+ 	int ret = 0;
+ 
+-	tcpm_log(port, "Requesting mux mode %d, config %d, polarity %d",
+-		 mode, config, port->polarity);
++	tcpm_log(port, "Requesting mux mode %d, usb-role %d, polarity %d",
++		 mode, usb_role, port->polarity);
+ 
+ 	if (port->tcpc->mux)
+-		ret = port->tcpc->mux->set(port->tcpc->mux, mode, config,
++		ret = port->tcpc->mux->set(port->tcpc->mux, mode, usb_role,
+ 					   port->polarity);
+ 
+ 	return ret;
+@@ -742,14 +742,15 @@ static int tcpm_set_attached_state(struct tcpm_port *port, bool attached)
+ static int tcpm_set_roles(struct tcpm_port *port, bool attached,
+ 			  enum typec_role role, enum typec_data_role data)
+ {
++	enum usb_role usb_role;
+ 	int ret;
+ 
+ 	if (data == TYPEC_HOST)
+-		ret = tcpm_mux_set(port, TYPEC_MUX_USB,
+-				   TCPC_USB_SWITCH_CONNECT);
++		usb_role = USB_ROLE_HOST;
+ 	else
+-		ret = tcpm_mux_set(port, TYPEC_MUX_NONE,
+-				   TCPC_USB_SWITCH_DISCONNECT);
++		usb_role = USB_ROLE_DEVICE;
++
++	ret = tcpm_mux_set(port, TYPEC_MUX_USB, usb_role);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -2096,7 +2097,7 @@ static int tcpm_src_attach(struct tcpm_port *port)
+ out_disable_pd:
+ 	port->tcpc->set_pd_rx(port->tcpc, false);
+ out_disable_mux:
+-	tcpm_mux_set(port, TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT);
++	tcpm_mux_set(port, TYPEC_MUX_NONE, USB_ROLE_NONE);
+ 	return ret;
+ }
+ 
+@@ -2140,6 +2141,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
+ 	tcpm_init_vconn(port);
+ 	tcpm_set_current_limit(port, 0, 0);
+ 	tcpm_set_polarity(port, TYPEC_POLARITY_CC1);
++	tcpm_mux_set(port, TYPEC_MUX_NONE, USB_ROLE_NONE);
+ 	tcpm_set_attached_state(port, false);
+ 	port->try_src_count = 0;
+ 	port->try_snk_count = 0;
+@@ -2190,8 +2192,6 @@ static int tcpm_snk_attach(struct tcpm_port *port)
+ static void tcpm_snk_detach(struct tcpm_port *port)
+ {
+ 	tcpm_detach(port);
+-
+-	/* XXX: (Dis)connect SuperSpeed mux? */
+ }
+ 
+ static int tcpm_acc_attach(struct tcpm_port *port)
+diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
+index ca1c0b57f03f..268721bff2c1 100644
+--- a/include/linux/usb/tcpm.h
++++ b/include/linux/usb/tcpm.h
+@@ -16,6 +16,7 @@
+ #define __LINUX_USB_TCPM_H
+ 
+ #include <linux/bitops.h>
++#include <linux/usb/role.h>
+ #include <linux/usb/typec.h>
+ #include "pd.h"
+ 
+@@ -97,11 +98,6 @@ struct tcpc_config {
+ 	const struct typec_altmode_desc *alt_modes;
+ };
+ 
+-enum tcpc_usb_switch {
+-	TCPC_USB_SWITCH_CONNECT,
+-	TCPC_USB_SWITCH_DISCONNECT,
+-};
+-
+ /* Mux state attributes */
+ #define TCPC_MUX_USB_ENABLED		BIT(0)	/* USB enabled */
+ #define TCPC_MUX_DP_ENABLED		BIT(1)	/* DP enabled */
+@@ -118,7 +114,7 @@ enum tcpc_mux_mode {
+ 
+ struct tcpc_mux_dev {
+ 	int (*set)(struct tcpc_mux_dev *dev, enum tcpc_mux_mode mux_mode,
+-		   enum tcpc_usb_switch usb_config,
++		   enum usb_role usb_role,
+ 		   enum typec_cc_polarity polarity);
+ 	bool dfp_only;
+ 	void *priv_data;
 -- 
 2.14.3
