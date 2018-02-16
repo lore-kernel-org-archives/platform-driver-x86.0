@@ -1,76 +1,54 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 01/12] drivers: base: Unified device connection lookup
-Date: Fri, 16 Feb 2018 13:00:32 +0200
-Message-ID: <CAHp75VcyrUvPzojY1J2cUheuYz6mRCP_VppSx740ELanNaQ+Hw@mail.gmail.com>
-References: <20180216104751.8371-1-hdegoede@redhat.com> <20180216104751.8371-2-hdegoede@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 02/12] usb: typec: Start using ERR_PTR
+Date: Fri, 16 Feb 2018 13:07:24 +0200
+Message-ID: <CAHp75VfRX3sPKS8Fbt-5cRskRg=75XYfnE7UYLO5c37iUvkgWg@mail.gmail.com>
+References: <20180216104751.8371-1-hdegoede@redhat.com> <20180216104751.8371-3-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180216104751.8371-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, USB <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-List-Id: platform-driver-x86.vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qt0-f171.google.com ([209.85.216.171]:42508 "EHLO
+        mail-qt0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S935119AbeBPLH0 (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 16 Feb 2018 06:07:26 -0500
+In-Reply-To: <20180216104751.8371-3-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB <linux-usb@vger.kernel.org>
 
-On Fri, Feb 16, 2018 at 12:47 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> From: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+On Fri, Feb 16, 2018 at 12:47 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 >
-> Several frameworks - clk, gpio, phy, pmw, etc. - maintain
-> lookup tables for describing connections and provide custom
-> API for handling them. This introduces a single generic
-> lookup table and API for the connections.
+> In order to allow the USB Type-C Class driver take care of
+> things like muxes and other possible dependencies for the
+> port drivers, returning ERR_PTR instead of NULL from the
+> registration functions in case of failure.
 >
-> The motivation for this commit is centralizing the
-> connection lookup, but the goal is to ultimately extract the
-> connection descriptions also from firmware by using the
-> fwnode_graph_* functions and other mechanisms that are
-> available.
+> The reason for taking over control of the muxes for example
+> is because handling them in the port drivers would be just
+> boilerplate.
 
-> +void *__device_find_connection(struct device *dev, const char *con_id,
+>  void typec_unregister_altmode(struct typec_altmode *alt)
+>  {
+> -       if (alt)
+> -               device_unregister(&alt->dev);
+> +       device_unregister(&alt->dev);
+>  }
 
-> +                              void *data,
-> +                              void *(*match)(struct devcon *con, int ep,
-> +                                             void *data))
+But it's a pattern to guarantee that unregister type of functions are
+NULL (or ERR_PTR) aware.
 
-Perhaps swap them, since data is dependent parameter to match.
 
-And put match function on one line disregard 80 character limit?
-
-> +/**
-> + * struct devcon - Device Connection Descriptor
-> + * @endpoint: The names of the two devices connected together
-> + * @id: Unique identifier for the connection
-> + */
-> +struct devcon {
-> +       const char              *endpoint[2];
-> +       const char              *id;
-> +       struct list_head        list;
-> +};
-> +
-
-> +void *__device_find_connection(struct device *dev, const char *con_id,
-> +                              void *data,
-> +                              void *(*match)(struct devcon *con, int ep,
-> +                                             void *data));
+>  void typec_unregister_partner(struct typec_partner *partner)
+>  {
+> -       if (partner)
+> -               device_unregister(&partner->dev);
+> +       device_unregister(&partner->dev);
+>  }
 
 Ditto.
-
-> +
-> +struct device *device_find_connection(struct device *dev, const char *con_id);
-> +
-> +#define DEVCON(_ep0, _ep1, _id)                { { _ep0, _ep1 }, _id, }
-
-Please use (struct devcon) here to make it possible to do like
-
-struct devcon foo;
-
-foo = DEVCON(...);
-
 
 -- 
 With Best Regards,
 Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
