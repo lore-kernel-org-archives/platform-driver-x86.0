@@ -1,157 +1,106 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 09/12] usb: roles: Add Intel XHCI USB role switch driver
-Date: Fri, 16 Feb 2018 15:47:04 +0200
-Message-ID: <CAHp75VfnqbSecz4y-ThLRPVjTe6jrBPgwEnGEuxb6AunvNDvvg@mail.gmail.com>
-References: <20180216104751.8371-1-hdegoede@redhat.com> <20180216104751.8371-10-hdegoede@redhat.com>
+Subject: Re: [PATCH 08/12] xhci: Add Intel extended cap / otg phy mux handling
+Date: Fri, 16 Feb 2018 15:53:30 +0200
+Message-ID: <CAHp75VdFXO+r25PPKEvTv61oNSReL9uqbF-ni8Z1YaxAzSze3Q@mail.gmail.com>
+References: <20180216104751.8371-1-hdegoede@redhat.com> <20180216104751.8371-9-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180216104751.8371-10-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from mail-qk0-f179.google.com ([209.85.220.179]:34496 "EHLO
+        mail-qk0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1032862AbeBPNxb (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 16 Feb 2018 08:53:31 -0500
+In-Reply-To: <20180216104751.8371-9-hdegoede@redhat.com>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
 To: Hans de Goede <hdegoede@redhat.com>
 Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB <linux-usb@vger.kernel.org>
-List-Id: platform-driver-x86.vger.kernel.org
 
 On Fri, Feb 16, 2018 at 12:47 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Various Intel SoCs (Cherry Trail, Broxton and others) have an internal USB
-> role switch for swiching the OTG USB data lines between the xHCI host
-> controller and the dwc3 gadget controller.
+> The xHCI controller on various Intel SoCs has an extended cap mmio-range
+> which contains registers to control the muxing to the xHCI (host mode)
+> or the dwc3 (device mode) and vbus-detection for the otg usb-phy.
 >
-> Note on some Cherry Trail systems there is ACPI/AML code listening to
-> edge interrupts on the id-pin (through an _AIE ACPI method) and switching
-> the role between ROLE_HOST and ROLE_NONE based on the id-pin. Note it does
-> not set the role to ROLE_DEVICE, because device-mode is usually not used
-> under Windows.
+> Having a role-sw driver included in the xhci code (under drivers/usb/host)
+> is not desirable. So this commit adds a simple handler for this extended
+> capability, which creates a platform device with the caps mmio region as
+> resource, this allows us to write a separate platform role-sw driver for
+> the role-switch.
 >
-> The presence of AML code which modifies the cfg0 reg (on some systems)
-> means that we our read/write/modify of cfg0 may race with the AML code
-> doing the same to avoid this we take the global ACPI lock while doing
-> the read/write/modify.
+> Note this commit adds a call to the new xhci_ext_cap_init() function
+> to xhci_pci_probe(), it is added here because xhci_ext_cap_init() must
+> be called only once. If in the future we also want to handle ext-caps
+> on non pci xHCI HCDs from xhci_ext_cap_init() a call to it should also
+> be added to other bus probe paths.
 
-> +/* register definition */
-> +#define DUAL_ROLE_CFG0                 0x68
-> +#define SW_VBUS_VALID                  (1 << 24)
-> +#define SW_IDPIN_EN                    (1 << 21)
-> +#define SW_IDPIN                       (1 << 20)
-> +
-> +#define DUAL_ROLE_CFG1                 0x6c
-> +#define HOST_MODE                      (1 << 29)
+SPDX?
 
-Does it make sense to use BIT() macro above?
+> +/*
+> + * XHCI extended capability handling
+> + *
+> + * Copyright (c) 2017 Hans de Goede <hdegoede@redhat.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
 
+> +       pdev = platform_device_alloc("intel_xhci_usb_sw", PLATFORM_DEVID_NONE);
 
-> +struct intel_xhci_acpi_match {
-> +       const char *hid;
-> +       int hrv;
-> +};
+Perhaps,
 
-Consider to unify with struct acpi_ac_bl.
+#define USB_SW_DRV_NAME "..."
 
-> +static const struct intel_xhci_acpi_match allow_userspace_ctrl_ids[] = {
-> +       { "INT33F4",  3 }, /* X-Powers AXP288 PMIC */
-> +};
-> +
-> +static int intel_xhci_usb_set_role(struct device *dev, enum usb_role role)
-> +{
-> +       struct intel_xhci_usb_data *data = dev_get_drvdata(dev);
-> +       unsigned long timeout;
-> +       acpi_status status;
+> +       if (!pdev) {
+> +               xhci_err(xhci, "couldn't allocate intel_xhci_usb_sw pdev\n");
 
-> +       u32 glk = -1U;
+...and re-use it everywhere here.
 
-I prefer to see consistency and moreover less confusing set, like
+pdev -> platform device.
 
-~0U
-
-> +       u32 val;
-> +
-> +       /*
-> +        * On many CHT devices ACPI event (_AEI) handlers read / modify /
-> +        * write the cfg0 register, just like we do. Take the ACPI lock
-> +        * to avoid us racing with the AML code.
-> +        */
-> +       status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
-
-FOREVER?!
-Wouldn't be slightly long under certain circumstances?
-
-> +       if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
-> +               dev_err(dev, "Error could not acquire lock\n");
-> +               return -EIO;
-> +       }
-
-> +       acpi_release_global_lock(glk);
-
-> +       /* Polling on CFG1 register to confirm mode switch.*/
-> +       do {
-> +               val = readl(data->base + DUAL_ROLE_CFG1);
-
-> +               if (!!(val & HOST_MODE) == (role == USB_ROLE_HOST))
-
-I would prefer ^ instead of first ==, but it's up to you.
-
-> +                       return 0;
-> +
-> +               /* Interval for polling is set to about 5 - 10 ms */
-> +               usleep_range(5000, 10000);
-> +       } while (time_before(jiffies, timeout));
-> +
-> +       dev_warn(dev, "Timeout waiting for role-switch\n");
-> +       return -ETIMEDOUT;
-> +}
-
-> +static int intel_xhci_usb_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct intel_xhci_usb_data *data;
-> +       struct resource *res;
-> +       resource_size_t size;
-> +       int i, ret;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-
-> +       size = (res->end + 1) - res->start;
-
-resource_size()
-
-> +       data->base = devm_ioremap_nocache(dev, res->start, size);
-
-So, what's wrong with devm_ioremap_resource() ?
-...which also prints an error message.
-
-> +       if (IS_ERR(data->base)) {
-> +               ret = PTR_ERR(data->base);
-
-> +               dev_err(dev, "Error iomaping registers: %d\n", ret);
-
-At least printing return code is useless. Driver core does this.
-
-> +               return ret;
+> +               return -ENOMEM;
 > +       }
 > +
+> +       res.start = hcd->rsrc_start + cap_offset;
+> +       res.end   = res.start + 0x3ff;
 
-> +       data->role_sw = usb_role_switch_register(dev, &sw_desc);
-> +       if (IS_ERR(data->role_sw)) {
-> +               ret = PTR_ERR(data->role_sw);
+Is this magic always the same? Where its value comes from?
+At least define with comment.
 
-> +               dev_err(dev, "Error registering role-switch: %d\n", ret);
 
-Ditto.
 
-> +               return ret;
+> +int xhci_ext_cap_init(struct xhci_hcd *xhci)
+> +{
+> +       void __iomem *base = &xhci->cap_regs->hc_capbase;
+> +       u32 cap_offset, val;
+> +       int ret;
+> +
+> +       cap_offset = xhci_find_next_ext_cap(base, 0, 0);
+> +
+> +       while (cap_offset) {
+> +               val = readl(base + cap_offset);
+> +
+> +               switch (XHCI_EXT_CAPS_ID(val)) {
+> +               case XHCI_EXT_CAPS_VENDOR_INTEL:
+> +                       if (xhci->quirks & XHCI_INTEL_USB_ROLE_SW) {
+
+> +                               ret = xhci_create_intel_xhci_sw_pdev(
+> +                                                           xhci, cap_offset);
+
+Can we leave xhci on previous line?
+
+> +                               if (ret)
+> +                                       return ret;
+> +                       }
+> +                       break;
+> +               }
+> +               cap_offset = xhci_find_next_ext_cap(base, cap_offset, 0);
 > +       }
 > +
 > +       return 0;
 > +}
 
-> +static const struct platform_device_id intel_xhci_usb_table[] = {
-> +       { .name = DRV_NAME },
-
-> +       {},
-
-No comma, please.
-
-> +};
 
 -- 
 With Best Regards,
