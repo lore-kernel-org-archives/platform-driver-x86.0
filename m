@@ -1,35 +1,120 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 03/12] usb: typec: API for controlling USB Type-C Multiplexers
-Date: Fri, 16 Feb 2018 16:00:32 +0200
-Message-ID: <CAHp75VdaK_LdsNeb5XY0kcA7sqH9G8OyjSLs7WRSftK9Zs98GQ@mail.gmail.com>
-References: <20180216104751.8371-1-hdegoede@redhat.com> <20180216104751.8371-4-hdegoede@redhat.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 04/12] usb: common: Small class for USB role switches
+Date: Fri, 16 Feb 2018 16:07:59 +0200
+Message-ID: <CAHp75VcU1CUN5A9qFw4mDGjdeD+mtSWxx-YwtkaAXkUdcmcwpg@mail.gmail.com>
+References: <20180216104751.8371-1-hdegoede@redhat.com> <20180216104751.8371-5-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180216104751.8371-4-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, USB <linux-usb@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180216104751.8371-5-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, USB <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Feb 16, 2018 at 12:47 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> USB Type-C connectors consist of various muxes and switches
-> that route the pins on the connector to the right locations.
-> The USB Type-C drivers need to be able to control the muxes,
-> as they are the ones that know things like the cable plug
-> orientation, and the current mode that was negotiated with
-> the partner.
+On Fri, Feb 16, 2018 at 12:47 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+
+> USB role switch is a device that can be used to choose the
+> data role for USB connector. With dual-role capable USB
+> controllers, the controller itself will be the switch, but
+> on some platforms the USB host and device controllers are
+> separate IPs and there is a mux between them and the
+> connector. On those platforms the mux driver will need to
+> register the switch.
 >
-> This introduces a small API for registering and controlling
-> cable plug orientation switches, and separate small API for
-> registering and controlling pin multiplexer/demultiplexer
-> switches that are needed with Accessory/Alternate Modes.
+> With USB Type-C connectors, the host-to-device relationship
+> is negotiated over the Configuration Channel (CC). That
+> means the USB Type-C drivers need to be in control of the
+> role switch. The class provides a simple API for the USB
+> Type-C drivers for the control.
+>
+> For other types of USB connectors (mainly microAB) the class
+> provides user space control via sysfs attribute file that
+> can be used to request role swapping from the switch.
 
-> +       sw = __device_find_connection(dev, "typec-switch", NULL,
-> +                                     typec_switch_match);
+> +static int __switch_match(struct device *dev, const void *name)
 
-Perhaps one line? (even if it takes ~83 characters)
+bool?
+
+> +{
+> +       return !strcmp((const char *)name, dev_name(dev));
+> +}
+
+
+> +static ssize_t role_store(struct device *dev, struct device_attribute *attr,
+> +                         const char *buf, size_t size)
+> +{
+> +       struct usb_role_switch *sw = to_role_switch(dev);
+> +       int ret;
+> +
+> +       ret = sysfs_match_string(usb_roles, buf);
+> +       if (ret < 0) {
+> +               bool res;
+> +
+> +               /* Extra check if the user wants to disable the switch */
+> +               ret = kstrtobool(buf, &res);
+> +               if (ret || res)
+> +                       return -EINVAL;
+> +       }
+> +
+
+> +       ret = usb_role_switch_set_role(sw, ret);
+> +       if (!ret)
+> +               ret = size;
+> +
+> +       return ret;
+
+Perhaps
+
+ret = ...
+if (ret)
+ return ret;
+
+return size;
+
+> +}
+
+> +struct usb_role_switch *
+> +usb_role_switch_register(struct device *parent,
+> +                        const struct usb_role_switch_desc *desc)
+> +{
+> +       struct usb_role_switch *sw;
+> +       int ret;
+> +
+> +       if (!desc || !desc->set)
+> +               return ERR_PTR(-EINVAL);
+> +
+> +       sw = kzalloc(sizeof(*sw), GFP_KERNEL);
+> +       if (!sw)
+> +               return ERR_PTR(-ENOMEM);
+
+> +       ret = device_register(&sw->dev);
+> +       if (ret) {
+> +               put_device(&sw->dev);
+
+Memory leak?
+
+> +               return ERR_PTR(ret);
+> +       }
+> +
+> +       /* TODO: Symlinks for the host port and the device controller. */
+> +
+> +       return sw;
+> +}
+
+> +void usb_role_switch_unregister(struct usb_role_switch *sw)
+> +{
+> +       if (sw && !IS_ERR(sw))
+
+!IS_ERR_OR_NULL() ?
+
+> +               device_unregister(&sw->dev);
+> +}
 
 -- 
 With Best Regards,
 Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
