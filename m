@@ -1,60 +1,73 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v1 0/4] platform/x86: mlx-platform: Add bus differed and
- auto detection functionalities
-Date: Thu, 15 Feb 2018 17:32:37 -0800
-Message-ID: <20180216013237.GC5786@fury>
-References: <1518559776-188942-1-git-send-email-vadimp@mellanox.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 00/12] USB Type-C device-connection, mux and switch support
+Date: Fri, 16 Feb 2018 11:47:39 +0100
+Message-ID: <20180216104751.8371-1-hdegoede@redhat.com>
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from bombadil.infradead.org ([198.137.202.133]:36966 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1757167AbeBPBcm (ORCPT
+Received: from mx3-rdu2.redhat.com ([66.187.233.73]:56294 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S933125AbeBPKrz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Feb 2018 20:32:42 -0500
-Content-Disposition: inline
-In-Reply-To: <1518559776-188942-1-git-send-email-vadimp@mellanox.com>
+        Fri, 16 Feb 2018 05:47:55 -0500
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 10:09:32PM +0000, Vadim Pasternak wrote:
-> This patchset:
-> - Adds define for the channels number for mux device.
-> - Adds differed bus functionality.
-> - Changes input for device create routine in mlxreg-hotplug driver.
-> - Adds physical bus number auto detection.
+Hi All,
 
-Hi Vadim,
+Some devices with an USB Type-C connector have a bunch of muxes
+behind that connector which need to be controlled by the kernel (rather
+then having them controlled by firmware as on most devices).
 
-We are now in the RC cycle for 4.16. Do you consider these changes to be
-"fixes" that need to be included in 4.16? It was difficult to tell from
-the commit messages how severe some of the possible issues were.
+Quite a while back I submitted a patch-series to tie together these muxes
+and the Type-C Port Manager (tcpm) code, using the then new drivers/mux
+framework. But the way I used the mux framework went against what it was
+designed for, so in the end that series got nowhere.
 
-I'm concerned about the level of testing seen by the previous patch
-series if we are getting these changes so soon after they were merged.
-Can you comment on why these are being discovered now - and how
-confident are we in the drivers with these changes applied?
+Heikki Krogerus from Intel, who maintains the USB TYPEC subsystem, has
+recently been working on solving the same problem for some boards he is
+doing hardware-enablement for.
 
-> 
-> Vadim Pasternak (4):
->   platform/x86: mlx-platform: Use define for the channel numbers
->   platform/x86: mlx-platform: Add differed bus functionality
->   platform/mellanox: mlxreg-hotplug: Change input for device create
->     routine
->   platform/x86: mlx-platform: Add physical bus number auto detection
-> 
->  drivers/platform/mellanox/mlxreg-hotplug.c | 31 +++++++++-----
->  drivers/platform/x86/mlx-platform.c        | 68 ++++++++++++++++++++++++++++--
->  include/linux/platform_data/mlxreg.h       |  4 ++
->  3 files changed, 90 insertions(+), 13 deletions(-)
-> 
-> -- 
-> 2.1.4
-> 
-> 
+Heikki has come up with a number of infrastructure patches for this.
+The first one is a new device-connection framework. This solves the
+problem of describing non bus device-links on x86 in what in my experience
+with this problematic area is a really nice simple, clean and *generic*
+way. This could for example in the near future also replace the custom
+lookup code in the pwm subsys and the custom pwm_add_table() /
+pwm_remove_table() functions.
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+The other 3 patches add a framework for the different type of Type-C /
+USB "muxes".
+
+Heikki and I have gone through a number of iterations of these patches
+together and we believe these are now ready for merging. Since merging
+infrastructure patches without users is not done and Heikki's own use-case
+for these is not yet ready for merging, the rest of this series consists
+of patches by me to make the Type-C connector found on some Cherry Trail
+devices (finally) be able to actually work as an USB port and not just
+a charge port.
+
+The last patch uses the new usb-role-switch framework to also do proper
+devcie / host switching on CHT devices with a USB micro AB connector.
+This is also a big feature for CHT users, because before this they had
+to do a reboot to get an OTG-host cable recognized (on some devices).
+
+Part of this series is an usb-role-switch driver for the role-switch
+found inside the xhci controller on e.g. CHT devices, this is currently
+implemented as the generic xhci controller instantiating a platform
+child-device for this, since this really is a separate chunk of HW
+which happens to sit in the XHCI mmio space. This approach may not be
+universally liked, given that in this new series the role-switch driver
+is much smaller and does not have any external deps anymore we could
+just integrate it into the xhci code if that is preferred.
+
+About merging this series (once everything is reviewed, etc.), there are
+quite some interdependencies in it esp. a lot of the patches depend on
+the first patch. Luckily patches 1-10 all apply to subsystems which are
+maintained by Greg (most to the USB subsys). Which just leaves patches
+11 and 12 once 1-10 are merged. Greg, can you create an immutable branch
+for the platform/x86 and extcon maintainers to merge once this is done?
+
+Regards,
+
+Hans
