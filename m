@@ -1,35 +1,35 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 10/12] usb: typec: driver for Pericom PI3USB30532 Type-C
- cross switch
-Date: Fri, 16 Feb 2018 15:43:07 +0200
-Message-ID: <20180216134307.GP1480@kuha.fi.intel.com>
+From: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 11/12] platform/x86: intel_cht_int33fe: Add device
+ connections for the Type-C port
+Date: Fri, 16 Feb 2018 15:43:52 +0200
+Message-ID: <20180216134352.GQ1480@kuha.fi.intel.com>
 References: <20180216104751.8371-1-hdegoede@redhat.com>
- <20180216104751.8371-11-hdegoede@redhat.com>
+ <20180216104751.8371-12-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mga07.intel.com ([134.134.136.100]:9787 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1031757AbeBPNnN (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Feb 2018 08:43:13 -0500
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180216104751.8371-11-hdegoede@redhat.com>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+In-Reply-To: <20180216104751.8371-12-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Feb 16, 2018 at 11:47:49AM +0100, Hans de Goede wrote:
-> Add a driver for the Pericom PI3USB30532 Type-C cross switch /
-> mux chip found on some devices with a Type-C port.
+On Fri, Feb 16, 2018 at 11:47:50AM +0100, Hans de Goede wrote:
+> We need to add device-connections for the TYPE-C mux/switch and usb-role
+> code to be able to find the PI3USB30532 Type-C cross-switch and the
+> device/host switch integrated in the CHT SoC.
 > 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
 
 Thanks,
 
 -- 
 heikki
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
