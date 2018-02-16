@@ -1,43 +1,76 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH 0/7] fujitsu-laptop: Miscellaneous cleanups
-Date: Fri, 16 Feb 2018 21:27:47 +1030
-Message-ID: <20180216105747.GC25974@marvin.atrad.com.au>
-References: <20180211210727.12130-1-kernel@kempniu.pl>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 01/12] drivers: base: Unified device connection lookup
+Date: Fri, 16 Feb 2018 13:00:32 +0200
+Message-ID: <CAHp75VcyrUvPzojY1J2cUheuYz6mRCP_VppSx740ELanNaQ+Hw@mail.gmail.com>
+References: <20180216104751.8371-1-hdegoede@redhat.com> <20180216104751.8371-2-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from server.atrad.com.au ([150.101.241.2]:36848 "EHLO
-        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S934609AbeBPK6M (ORCPT
-        <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Feb 2018 05:58:12 -0500
-Content-Disposition: inline
-In-Reply-To: <20180211210727.12130-1-kernel@kempniu.pl>
-Sender: platform-driver-x86-owner@vger.kernel.org
-List-ID: <platform-driver-x86.vger.kernel.org>
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180216104751.8371-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, USB <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Feb 11, 2018 at 10:07:20PM +0100, Micha?? K??pie?? wrote:
-> The patch series contains miscellaneous cleanups which I think are worth
-> getting done before splitting fujitsu-laptop into two separate modules.
-> I am not 100% sure that all the changes in the last patch in this series
-> actually help, so please speak your mind.
+On Fri, Feb 16, 2018 at 12:47 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> From: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>
+> Several frameworks - clk, gpio, phy, pmw, etc. - maintain
+> lookup tables for describing connections and provide custom
+> API for handling them. This introduces a single generic
+> lookup table and API for the connections.
+>
+> The motivation for this commit is centralizing the
+> connection lookup, but the goal is to ultimately extract the
+> connection descriptions also from firmware by using the
+> fwnode_graph_* functions and other mechanisms that are
+> available.
 
-With the relatively minor comments about patch 6 I've posted about
-separately, I'm happy with this patch set.  Collectively these changes
-improve the readability of the code and make its intent clearer.
+> +void *__device_find_connection(struct device *dev, const char *con_id,
 
-> This patch series was tested on a Lifebook S7020.  AFAICT it does not
-> conflict with the recent draft patch from Jan-Marek Glogowski and may
-> thus be applied independently.
+> +                              void *data,
+> +                              void *(*match)(struct devcon *con, int ep,
+> +                                             void *data))
 
-I agree.
+Perhaps swap them, since data is dependent parameter to match.
 
-I'm interested to hear your thoughts in connection with my queries about
-patch 6 before merging.  That aside, I have no issues with this series.
+And put match function on one line disregard 80 character limit?
 
-Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
+> +/**
+> + * struct devcon - Device Connection Descriptor
+> + * @endpoint: The names of the two devices connected together
+> + * @id: Unique identifier for the connection
+> + */
+> +struct devcon {
+> +       const char              *endpoint[2];
+> +       const char              *id;
+> +       struct list_head        list;
+> +};
+> +
 
-Regards
-  jonathan
+> +void *__device_find_connection(struct device *dev, const char *con_id,
+> +                              void *data,
+> +                              void *(*match)(struct devcon *con, int ep,
+> +                                             void *data));
+
+Ditto.
+
+> +
+> +struct device *device_find_connection(struct device *dev, const char *con_id);
+> +
+> +#define DEVCON(_ep0, _ep1, _id)                { { _ep0, _ep1 }, _id, }
+
+Please use (struct devcon) here to make it possible to do like
+
+struct devcon foo;
+
+foo = DEVCON(...);
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
