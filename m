@@ -1,464 +1,63 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 04/12] usb: common: Small class for USB role switches
-Date: Fri, 16 Feb 2018 11:47:43 +0100
-Message-ID: <20180216104751.8371-5-hdegoede@redhat.com>
-References: <20180216104751.8371-1-hdegoede@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180216104751.8371-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-List-Id: platform-driver-x86.vger.kernel.org
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH 6/7] platform/x86: fujitsu-laptop: Define constants for
+ backlight power control
+Date: Fri, 16 Feb 2018 21:20:14 +1030
+Message-ID: <20180216105014.GB25974@marvin.atrad.com.au>
+References: <20180211210727.12130-1-kernel@kempniu.pl>
+ <20180211210727.12130-7-kernel@kempniu.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <platform-driver-x86-owner@vger.kernel.org>
+Received: from server.atrad.com.au ([150.101.241.2]:36842 "EHLO
+        server.atrad.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S933316AbeBPKvA (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Fri, 16 Feb 2018 05:51:00 -0500
+Content-Disposition: inline
+In-Reply-To: <20180211210727.12130-7-kernel@kempniu.pl>
+Sender: platform-driver-x86-owner@vger.kernel.org
+List-ID: <platform-driver-x86.vger.kernel.org>
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+On Sun, Feb 11, 2018 at 10:07:26PM +0100, Micha?? K??pie?? wrote:
+> Use named constants instead of integers in call_fext_func() invocations
+> related to backlight power control in order to more clearly convey the
+> intent of each call.
+> 
+> Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
+> ---
+[cut]
+> +/* FUNC interface - backlight power control */
+> +#define BACKLIGHT_POWER	0x4
+> +#define BACKLIGHT_OFF	0x3
+> +#define BACKLIGHT_ON	0x0
 
-USB role switch is a device that can be used to choose the
-data role for USB connector. With dual-role capable USB
-controllers, the controller itself will be the switch, but
-on some platforms the USB host and device controllers are
-separate IPs and there is a mux between them and the
-connector. On those platforms the mux driver will need to
-register the switch.
+A minor detail: BACKLIGHT_OFF and BACKLIGHT_ON are potential parameter
+values while BACKLIGHT_POWER is essentially a parameter selector.  Should
+the name of BACKLIGHT_POWER reflect this difference?  It could be difficult
+to do without making the resulting identifier a little long.  The best I can
+come up with is BACKLIGHT_PARAM_POWER or (if a saving of one character is
+desired) BACKLIGHT_PARM_POWER.
 
-With USB Type-C connectors, the host-to-device relationship
-is negotiated over the Configuration Channel (CC). That
-means the USB Type-C drivers need to be in control of the
-role switch. The class provides a simple API for the USB
-Type-C drivers for the control.
+[cut]
+> @@ -818,7 +825,8 @@ static int acpi_fujitsu_laptop_add(struct acpi_device *device)
+>  	/* Sync backlight power status */
+>  	if (fujitsu_bl && fujitsu_bl->bl_device &&
+>  	    acpi_video_get_backlight_type() == acpi_backlight_vendor) {
+> -		if (call_fext_func(fext, FUNC_BACKLIGHT, 0x2, 0x4, 0x0) == 3)
+> +		if (call_fext_func(fext, FUNC_BACKLIGHT, 0x2, BACKLIGHT_POWER,
+> +				   0x0) == 3)
+>  			fujitsu_bl->bl_device->props.power = FB_BLANK_POWERDOWN;
+>  		else
+>  			fujitsu_bl->bl_device->props.power = FB_BLANK_UNBLANK;
 
-For other types of USB connectors (mainly microAB) the class
-provides user space control via sysfs attribute file that
-can be used to request role swapping from the switch.
+I'm curious: this fext function call is, I think, returning the current
+backlight power value.  If that's the case, is the value of 3 used in the
+test of the return function conceptually BACKLIGHT_OFF, and if so, should we
+use BACKLIGHT_OFF instead of the numeric constant?  It seems likely given
+that it results in the backlight power property being set to
+FB_BLANK_POWERDOWN.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- Documentation/ABI/testing/sysfs-class-usb_role |  21 ++
- drivers/usb/Kconfig                            |   3 +
- drivers/usb/common/Makefile                    |   1 +
- drivers/usb/common/roles.c                     | 305 +++++++++++++++++++++++++
- include/linux/usb/role.h                       |  51 +++++
- 5 files changed, 381 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-usb_role
- create mode 100644 drivers/usb/common/roles.c
- create mode 100644 include/linux/usb/role.h
-
-diff --git a/Documentation/ABI/testing/sysfs-class-usb_role b/Documentation/ABI/testing/sysfs-class-usb_role
-new file mode 100644
-index 000000000000..3b810a425a52
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-usb_role
-@@ -0,0 +1,21 @@
-+What:		/sys/class/usb_role/
-+Date:		Jan 2018
-+Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
-+Description:
-+		Place in sysfs for USB Role Switches. USB Role Switch is a
-+		device that can select the data role (host or device) for USB
-+		port.
-+
-+What:		/sys/class/usb_role/<switch>/role
-+Date:		Jan 2018
-+Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
-+Description:
-+		The current role of the switch. This attribute can be used for
-+		requesting role swapping with non-USB Type-C ports. With USB
-+		Type-C ports, the ABI defined for USB Type-C connector class
-+		must be used.
-+
-+		Valid values:
-+		- none
-+		- host
-+		- device
-diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
-index f699abab1787..a79198f5f1a6 100644
---- a/drivers/usb/Kconfig
-+++ b/drivers/usb/Kconfig
-@@ -197,4 +197,7 @@ config USB_ULPI_BUS
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called ulpi.
- 
-+config USB_ROLE_SWITCH
-+	tristate
-+
- endif # USB_SUPPORT
-diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
-index 0a7c45e85481..fb4d5ef4165c 100644
---- a/drivers/usb/common/Makefile
-+++ b/drivers/usb/common/Makefile
-@@ -9,3 +9,4 @@ usb-common-$(CONFIG_USB_LED_TRIG) += led.o
- 
- obj-$(CONFIG_USB_OTG_FSM) += usb-otg-fsm.o
- obj-$(CONFIG_USB_ULPI_BUS)	+= ulpi.o
-+obj-$(CONFIG_USB_ROLE_SWITCH)	+= roles.o
-diff --git a/drivers/usb/common/roles.c b/drivers/usb/common/roles.c
-new file mode 100644
-index 000000000000..923e3721d183
---- /dev/null
-+++ b/drivers/usb/common/roles.c
-@@ -0,0 +1,305 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * USB Role Switch Support
-+ *
-+ * Copyright (C) 2018 Intel Corporation
-+ * Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-+ *         Hans de Goede <hdegoede@redhat.com>
-+ */
-+
-+#include <linux/connection.h>
-+#include <linux/usb/role.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/slab.h>
-+
-+static struct class *role_class;
-+
-+struct usb_role_switch {
-+	struct device dev;
-+	struct mutex lock; /* device lock*/
-+	enum usb_role role;
-+
-+	/* From descriptor */
-+	struct device *usb2_port;
-+	struct device *usb3_port;
-+	struct device *udc;
-+	usb_role_switch_set_t set;
-+	usb_role_switch_get_t get;
-+	bool allow_userspace_control;
-+};
-+
-+#define to_role_switch(d)	container_of(d, struct usb_role_switch, dev)
-+
-+/**
-+ * usb_role_switch_set_role - Set USB role for a switch
-+ * @sw: USB role switch
-+ * @role: USB role to be switched to
-+ *
-+ * Set USB role @role for @sw.
-+ */
-+int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
-+{
-+	int ret;
-+
-+	if (!sw || IS_ERR(sw))
-+		return 0;
-+
-+	mutex_lock(&sw->lock);
-+
-+	ret = sw->set(sw->dev.parent, role);
-+	if (!ret)
-+		sw->role = role;
-+
-+	mutex_unlock(&sw->lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
-+
-+/**
-+ * usb_role_switch_get_role - Get the USB role for a switch
-+ * @sw: USB role switch
-+ *
-+ * Depending on the role-switch-driver this function returns either a cached
-+ * value of the last set role, or reads back the actual value from the hardware.
-+ */
-+enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
-+{
-+	enum usb_role role;
-+
-+	if (IS_ERR_OR_NULL(sw))
-+		return USB_ROLE_NONE;
-+
-+	mutex_lock(&sw->lock);
-+
-+	if (sw->get)
-+		role = sw->get(sw->dev.parent);
-+	else
-+		role = sw->role;
-+
-+	mutex_unlock(&sw->lock);
-+
-+	return role;
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_get_role);
-+
-+static int __switch_match(struct device *dev, const void *name)
-+{
-+	return !strcmp((const char *)name, dev_name(dev));
-+}
-+
-+static void *usb_role_switch_match(struct devcon *con, int ep, void *data)
-+{
-+	struct device *dev;
-+
-+	dev = class_find_device(role_class, NULL, con->endpoint[ep],
-+				__switch_match);
-+
-+	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
-+}
-+
-+/**
-+ * usb_role_switch_get - Find USB role switch linked with the caller
-+ * @dev: The caller device
-+ *
-+ * Finds and returns role switch linked with @dev. The reference count for the
-+ * found switch is incremented.
-+ */
-+struct usb_role_switch *usb_role_switch_get(struct device *dev)
-+{
-+	return __device_find_connection(dev, "usb-role-switch", NULL,
-+					usb_role_switch_match);
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_get);
-+
-+/**
-+ * usb_role_switch_put - Release handle to a switch
-+ * @sw: USB Role Switch
-+ *
-+ * Decrement reference count for @sw.
-+ */
-+void usb_role_switch_put(struct usb_role_switch *sw)
-+{
-+	if (!IS_ERR_OR_NULL(sw))
-+		put_device(&sw->dev);
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_put);
-+
-+static umode_t
-+usb_role_switch_is_visible(struct kobject *kobj, struct attribute *attr, int n)
-+{
-+	struct device *dev = container_of(kobj, typeof(*dev), kobj);
-+	struct usb_role_switch *sw = to_role_switch(dev);
-+
-+	if (sw->allow_userspace_control)
-+		return attr->mode;
-+
-+	return 0;
-+}
-+
-+static const char * const usb_roles[] = {
-+	[USB_ROLE_NONE]		= "none",
-+	[USB_ROLE_HOST]		= "host",
-+	[USB_ROLE_DEVICE]	= "device",
-+};
-+
-+static ssize_t
-+role_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct usb_role_switch *sw = to_role_switch(dev);
-+	enum usb_role role = usb_role_switch_get_role(sw);
-+
-+	return sprintf(buf, "%s\n", usb_roles[role]);
-+}
-+
-+static ssize_t role_store(struct device *dev, struct device_attribute *attr,
-+			  const char *buf, size_t size)
-+{
-+	struct usb_role_switch *sw = to_role_switch(dev);
-+	int ret;
-+
-+	ret = sysfs_match_string(usb_roles, buf);
-+	if (ret < 0) {
-+		bool res;
-+
-+		/* Extra check if the user wants to disable the switch */
-+		ret = kstrtobool(buf, &res);
-+		if (ret || res)
-+			return -EINVAL;
-+	}
-+
-+	ret = usb_role_switch_set_role(sw, ret);
-+	if (!ret)
-+		ret = size;
-+
-+	return ret;
-+}
-+static DEVICE_ATTR_RW(role);
-+
-+static struct attribute *usb_role_switch_attrs[] = {
-+	&dev_attr_role.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group usb_role_switch_group = {
-+	.is_visible = usb_role_switch_is_visible,
-+	.attrs = usb_role_switch_attrs,
-+};
-+
-+static const struct attribute_group *usb_role_switch_groups[] = {
-+	&usb_role_switch_group,
-+	NULL,
-+};
-+
-+static int
-+usb_role_switch_uevent(struct device *dev, struct kobj_uevent_env *env)
-+{
-+	int ret;
-+
-+	ret = add_uevent_var(env, "USB_ROLE_SWITCH=%s", dev_name(dev));
-+	if (ret)
-+		dev_err(dev, "failed to add uevent USB_ROLE_SWITCH\n");
-+
-+	return ret;
-+}
-+
-+static void usb_role_switch_release(struct device *dev)
-+{
-+	struct usb_role_switch *sw = to_role_switch(dev);
-+
-+	kfree(sw);
-+}
-+
-+static const struct device_type usb_role_dev_type = {
-+	.name = "usb_role_switch",
-+	.groups = usb_role_switch_groups,
-+	.uevent = usb_role_switch_uevent,
-+	.release = usb_role_switch_release,
-+};
-+
-+/**
-+ * usb_role_switch_register - Register USB Role Switch
-+ * @parent: Parent device for the switch
-+ * @desc: Description of the switch
-+ *
-+ * USB Role Switch is a device capable or choosing the role for USB connector.
-+ * On platforms where the USB controller is dual-role capable, the controller
-+ * driver will need to register the switch. On platforms where the USB host and
-+ * USB device controllers behind the connector are separate, there will be a
-+ * mux, and the driver for that mux will need to register the switch.
-+ *
-+ * Returns handle to a new role switch or ERR_PTR. The content of @desc is
-+ * copied.
-+ */
-+struct usb_role_switch *
-+usb_role_switch_register(struct device *parent,
-+			 const struct usb_role_switch_desc *desc)
-+{
-+	struct usb_role_switch *sw;
-+	int ret;
-+
-+	if (!desc || !desc->set)
-+		return ERR_PTR(-EINVAL);
-+
-+	sw = kzalloc(sizeof(*sw), GFP_KERNEL);
-+	if (!sw)
-+		return ERR_PTR(-ENOMEM);
-+
-+	mutex_init(&sw->lock);
-+
-+	sw->allow_userspace_control = desc->allow_userspace_control;
-+	sw->usb2_port = desc->usb2_port;
-+	sw->usb3_port = desc->usb3_port;
-+	sw->udc = desc->udc;
-+	sw->set = desc->set;
-+	sw->get = desc->get;
-+
-+	sw->dev.parent = parent;
-+	sw->dev.class = role_class;
-+	sw->dev.type = &usb_role_dev_type;
-+	dev_set_name(&sw->dev, "%s-role-switch", dev_name(parent));
-+
-+	ret = device_register(&sw->dev);
-+	if (ret) {
-+		put_device(&sw->dev);
-+		return ERR_PTR(ret);
-+	}
-+
-+	/* TODO: Symlinks for the host port and the device controller. */
-+
-+	return sw;
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_register);
-+
-+/**
-+ * usb_role_switch_unregister - Unregsiter USB Role Switch
-+ * @sw: USB Role Switch
-+ *
-+ * Unregister switch that was registered with usb_role_switch_register().
-+ */
-+void usb_role_switch_unregister(struct usb_role_switch *sw)
-+{
-+	if (sw && !IS_ERR(sw))
-+		device_unregister(&sw->dev);
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_unregister);
-+
-+static int __init usb_roles_init(void)
-+{
-+	role_class = class_create(THIS_MODULE, "usb_role");
-+	return PTR_ERR_OR_ZERO(role_class);
-+}
-+subsys_initcall(usb_roles_init);
-+
-+static void __exit usb_roles_exit(void)
-+{
-+	class_destroy(role_class);
-+}
-+module_exit(usb_roles_exit);
-+
-+MODULE_AUTHOR("Heikki Krogerus <heikki.krogerus@linux.intel.com>");
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("USB Role Class");
-diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-new file mode 100644
-index 000000000000..2ef347bd1fdb
---- /dev/null
-+++ b/include/linux/usb/role.h
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#ifndef __LINUX_USB_ROLE_H
-+#define __LINUX_USB_ROLE_H
-+
-+struct usb_role_switch;
-+
-+enum usb_role {
-+	USB_ROLE_NONE,
-+	USB_ROLE_HOST,
-+	USB_ROLE_DEVICE,
-+};
-+
-+typedef int (*usb_role_switch_set_t)(struct device *dev, enum usb_role role);
-+typedef enum usb_role (*usb_role_switch_get_t)(struct device *dev);
-+
-+/**
-+ * struct usb_role_switch_desc - USB Role Switch Descriptor
-+ * @usb2_port: Optional reference to the host controller port device (USB2)
-+ * @usb3_port: Optional reference to the host controller port device (USB3)
-+ * @udc: Optional reference to the peripheral controller device
-+ * @set: Callback for setting the role
-+ * @get: Callback for getting the role (optional)
-+ * @allow_userspace_control: If true userspace may change the role through sysfs
-+ *
-+ * @usb2_port and @usb3_port will point to the USB host port and @udc to the USB
-+ * device controller behind the USB connector with the role switch. If
-+ * @usb2_port, @usb3_port and @udc are included in the description, the
-+ * reference count for them should be incremented by the caller of
-+ * usb_role_switch_register() before registering the switch.
-+ */
-+struct usb_role_switch_desc {
-+	struct device *usb2_port;
-+	struct device *usb3_port;
-+	struct device *udc;
-+	usb_role_switch_set_t set;
-+	usb_role_switch_get_t get;
-+	bool allow_userspace_control;
-+};
-+
-+int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
-+enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
-+struct usb_role_switch *usb_role_switch_get(struct device *dev);
-+void usb_role_switch_put(struct usb_role_switch *sw);
-+
-+struct usb_role_switch *
-+usb_role_switch_register(struct device *parent,
-+			 const struct usb_role_switch_desc *desc);
-+void usb_role_switch_unregister(struct usb_role_switch *sw);
-+
-+#endif /* __LINUX_USB_ROLE_H */
--- 
-2.14.3
+Regards
+  jonathan
