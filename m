@@ -1,100 +1,52 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [PATCH v1 0/4] platform/x86: mlx-platform: Add bus differed and
- auto detection functionalities
-Date: Sat, 17 Feb 2018 05:08:12 +0000
-Message-ID: <AM4PR05MB33305DC442CCB25AF280F0B5A2CA0@AM4PR05MB3330.eurprd05.prod.outlook.com>
-References: <1518559776-188942-1-git-send-email-vadimp@mellanox.com>
- <20180216013237.GC5786@fury>
+From: Peter FP1 Zhang <zhangfp1@lenovo.com>
+Subject: RE: ThinkPad Yoga 370 thinkpad_acpi unhandled events
+Date: Sat, 17 Feb 2018 13:47:19 +0000
+Message-ID: <FA1DB435B97D5A4192BAE54A4EA542A99ABF1461@CNMAILEX04.lenovo.com>
+References: <PqonyRG1_zESPTDspqzZ2qO65lHbv5E1z8Ekcgrzh0TtbBmlm69BnfUqZIEuSbF-d1z0VeXHPMRRCQenBEMNP2L8NyTqvIui1FwdHnJ6RAc=@protonmail.ch>
+ <ei0r_oTyOQrFrZKDqLMWzJHdipDsPEu8zxZxhnNuNa6L7TMRdZzu43Ldx0mcuOiRI2Ud-Lx746lfMG-9YpGR7vcp1HrsuroruKEWzhrr3dg=@protonmail.ch>
+ <FA1DB435B97D5A4192BAE54A4EA542A99ABEF68F@CNMAILEX04.lenovo.com>
+ <CAHp75VdbmP_a37-7qkacx=k21XzCjki=qFC0_eWk=L952u0Pbw@mail.gmail.com>
+ <20180215182120.vj2evutyvixjzf55@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail-eopbgr50048.outbound.protection.outlook.com ([40.107.5.48]:54689
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1750959AbeBQFIP (ORCPT
+Received: from mail1.bemta8.messagelabs.com ([216.82.243.204]:12739 "EHLO
+        mail1.bemta8.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750975AbeBQNrc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 17 Feb 2018 00:08:15 -0500
-In-Reply-To: <20180216013237.GC5786@fury>
-Content-Language: en-US
+        Sat, 17 Feb 2018 08:47:32 -0500
+In-Reply-To: <20180215182120.vj2evutyvixjzf55@khazad-dum.debian.net>
+Content-Language: zh-CN
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Darren Hart <dvhart@infradead.org>
-Cc: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, Michael Shych <michaelsh@mellanox.com>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Jordan Glover <Golden_Miller83@protonmail.ch>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Christian Kellner <ckellner@redhat.com>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "bberg@redhat.com" <bberg@redhat.com>
 
-
-
-> -----Original Message-----
-> From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Friday, February 16, 2018 3:33 AM
-> To: Vadim Pasternak <vadimp@mellanox.com>
-> Cc: andy.shevchenko@gmail.com; gregkh@linuxfoundation.org; platform-
-> driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; jiri@resnulli.u=
-s;
-> Michael Shych <michaelsh@mellanox.com>
-> Subject: Re: [PATCH v1 0/4] platform/x86: mlx-platform: Add bus differed =
-and
-> auto detection functionalities
->=20
-> On Tue, Feb 13, 2018 at 10:09:32PM +0000, Vadim Pasternak wrote:
-> > This patchset:
-> > - Adds define for the channels number for mux device.
-> > - Adds differed bus functionality.
-> > - Changes input for device create routine in mlxreg-hotplug driver.
-> > - Adds physical bus number auto detection.
->=20
-> Hi Vadim,
-
-Hi Darren,
-
->=20
-> We are now in the RC cycle for 4.16. Do you consider these changes to be
-> "fixes" that need to be included in 4.16? It was difficult to tell from t=
-he commit
-> messages how severe some of the possible issues were.
-
-I actually considered these patches for the next, having in mind that 4.16 =
-is
-already closed.
-
->=20
-> I'm concerned about the level of testing seen by the previous patch serie=
-s if we
-> are getting these changes so soon after they were merged.
-> Can you comment on why these are being discovered now - and how confident
-> are we in the drivers with these changes applied?
-
-These patches has been tested on the all relevant platforms.
-It has been discovered some time ago and it was in my plans to submit these
-patches after the previous series.
-
-Do you think it's better to consider this series as a bug fix, and target i=
-t to
-4.16?
-
-Thanks,
-Vadim.
-
->=20
-> >
-> > Vadim Pasternak (4):
-> >   platform/x86: mlx-platform: Use define for the channel numbers
-> >   platform/x86: mlx-platform: Add differed bus functionality
-> >   platform/mellanox: mlxreg-hotplug: Change input for device create
-> >     routine
-> >   platform/x86: mlx-platform: Add physical bus number auto detection
-> >
-> >  drivers/platform/mellanox/mlxreg-hotplug.c | 31 +++++++++-----
-> >  drivers/platform/x86/mlx-platform.c        | 68
-> ++++++++++++++++++++++++++++--
-> >  include/linux/platform_data/mlxreg.h       |  4 ++
-> >  3 files changed, 90 insertions(+), 13 deletions(-)
-> >
-> > --
-> > 2.1.4
-> >
-> >
->=20
-> --
-> Darren Hart
-> VMware Open Source Technology Center
+VGhhbmsgeW91IEhlbnJpcXVlIQ0KDQpASm9yZGFuLCANCg0KV291bGQgeW91IGxpa2UgdG8gdHJ5
+IHRoZSBwYXRjaCBIZW5yaXF1ZSBtZW50aW9uZWQ/DQoNClRoYW5rcywNCg0KUGV0ZXIgWmhhbmcg
+XCDVxbijxr0sICBQTVANClRoaW5rUGFkICYgVGhpbmtTdGF0aW9uIExpbnV4IFNvbHV0aW9ucw0K
+VGVsOiAoKzg2KSAxODEtMTYxMS04MDA1IHwgTGVub3ZvIFNoYW5naGFpDQoNCkxpbnV4IGZvciBU
+aG9zZSBXaG8gRG8gLSBodHRwOi8vd3d3Lmxlbm92by5jb20vbGludXgNCg0KDQotLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogSGVucmlxdWUgZGUgTW9yYWVzIEhvbHNjaHVoIFttYWls
+dG86aG1oQGhtaC5lbmcuYnJdIA0KU2VudDogRnJpZGF5LCBGZWJydWFyeSAxNiwgMjAxOCAyOjIx
+IEFNDQpUbzogQW5keSBTaGV2Y2hlbmtvDQpDYzogUGV0ZXIgRlAxIFpoYW5nOyBQbGF0Zm9ybSBE
+cml2ZXI7IERhcnJlbiBIYXJ0OyBKb3JkYW4gR2xvdmVyOyBDaHJpc3RpYW4gS2VsbG5lcjsgaWJt
+LWFjcGktZGV2ZWxAbGlzdHMuc291cmNlZm9yZ2UubmV0OyBiYmVyZ0ByZWRoYXQuY29tDQpTdWJq
+ZWN0OiBSZTogVGhpbmtQYWQgWW9nYSAzNzAgdGhpbmtwYWRfYWNwaSB1bmhhbmRsZWQgZXZlbnRz
+DQoNCk9uIFRodSwgMTUgRmViIDIwMTgsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4gKEx1Y2tp
+bHkgZW50aXJlIGRpc2N1c3Npb24gaXMga2VwdCBpbiB0aGlzIG1haWwpDQo+IA0KPiBPbiBUaHUs
+IEZlYiAxLCAyMDE4IGF0IDQ6MDcgQU0sIFBldGVyIEZQMSBaaGFuZyA8emhhbmdmcDFAbGVub3Zv
+LmNvbT4gd3JvdGU6DQo+ID4gRGVhciBhbGwsDQo+ID4NCj4gPiBJIHdhcyB0b2xkIGJ5IG91ciBC
+SU9TL1RoZXJtYWwgdGVhbSB0aGF0IHRoZSB0d28gZXZlbnRzIGFyZSBkZXNpZ25lZCBmb3IgV2lu
+ZG93cyBPUywgZm9yIExpbnV4IHdlIGNhbiBqdXN0IGlnbm9yZSB0aGVtIGRpcmVjdGx5Lg0KDQpU
+aGUgcGF0Y2ggdG8gZG8gdGhhdCBpcyBxdWl0ZSB0cml2aWFsLCB3b3VsZCBhbnlvbmUgbGlrZSB0
+byB0cnkgaGlzL2hlciBoYW5kIGF0IGl0PyAgVGhlcmUgYXJlIGV4YW1wbGVzIGFscmVhZHkgaW4g
+dGhlIHRoaW5rcGFkLWFjcGkgY29kZSBvZiBldmVudHMgd2UgaWdub3JlLi4uDQoNCkFsdGhvdWdo
+IGl0IHdvdWxkIGhhdmUgYmVlbiBuaWNlIHRvIGtub3cgd2hhdCB0aGVzZSBldmVudHMgYWN0dWFs
+bHkgbWVhbiBhbmQgd2hhdCB0aGV5IGhpbnQgdGhlIHdpbmRvd3MgZHJpdmVycyB0byBkbywgc2lu
+Y2Ugd2UgbWlnaHQgaGF2ZSB3YW50ZWQgdG8gbGV2ZXJhZ2UgdGhlbSBpbiBMaW51eCB1c2Vyc3Bh
+Y2UgYXMgd2VsbCA6cA0KDQo+ID4gMHg2MEYwICBIS19USEVSTUFMX1RSQU5TRk9STUFUSU9OX0NI
+QU5HRUQsICBBU0wgbWV0aG9kIGlzIEdUTVMNCj4gPiAweDYwMzIgIEhLX0RZTkFNSUNfVEhFUk1B
+TF9DT05UUk9MX1NFVF9DT01NQU5EX0NPTVBMSUVUSU9OLCAgQVNMIA0KPiA+IG1ldGhvZCBpcyBE
+WVRDDQoNCi0tDQogIEhlbnJpcXVlIEhvbHNjaHVoDQo=
