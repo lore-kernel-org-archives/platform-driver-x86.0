@@ -1,52 +1,46 @@
-From: Peter FP1 Zhang <zhangfp1@lenovo.com>
+From: Jordan Glover <Golden_Miller83@protonmail.ch>
 Subject: RE: ThinkPad Yoga 370 thinkpad_acpi unhandled events
-Date: Sat, 17 Feb 2018 13:47:19 +0000
-Message-ID: <FA1DB435B97D5A4192BAE54A4EA542A99ABF1461@CNMAILEX04.lenovo.com>
+Date: Sat, 17 Feb 2018 12:20:50 -0500
+Message-ID: <TOErBmB8Bvi8T7mVLR7TjR4OyhpC4JdNJ2dt7oT2YuTrJ2CJ8tawwVd2-dU_nBu1_NV85hsgxxpe4QO8cmZ-aMKMIBl8pJoXUotJcSEf4Q8=@protonmail.ch>
 References: <PqonyRG1_zESPTDspqzZ2qO65lHbv5E1z8Ekcgrzh0TtbBmlm69BnfUqZIEuSbF-d1z0VeXHPMRRCQenBEMNP2L8NyTqvIui1FwdHnJ6RAc=@protonmail.ch>
  <ei0r_oTyOQrFrZKDqLMWzJHdipDsPEu8zxZxhnNuNa6L7TMRdZzu43Ldx0mcuOiRI2Ud-Lx746lfMG-9YpGR7vcp1HrsuroruKEWzhrr3dg=@protonmail.ch>
  <FA1DB435B97D5A4192BAE54A4EA542A99ABEF68F@CNMAILEX04.lenovo.com>
  <CAHp75VdbmP_a37-7qkacx=k21XzCjki=qFC0_eWk=L952u0Pbw@mail.gmail.com>
  <20180215182120.vj2evutyvixjzf55@khazad-dum.debian.net>
+ <FA1DB435B97D5A4192BAE54A4EA542A99ABF1461@CNMAILEX04.lenovo.com>
+Reply-To: Jordan Glover <Golden_Miller83@protonmail.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <platform-driver-x86-owner@vger.kernel.org>
-Received: from mail1.bemta8.messagelabs.com ([216.82.243.204]:12739 "EHLO
-        mail1.bemta8.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750975AbeBQNrc (ORCPT
+Received: from mail4.protonmail.ch ([185.70.40.27]:26561 "EHLO
+        mail4.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751021AbeBQRVF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 17 Feb 2018 08:47:32 -0500
-In-Reply-To: <20180215182120.vj2evutyvixjzf55@khazad-dum.debian.net>
-Content-Language: zh-CN
+        Sat, 17 Feb 2018 12:21:05 -0500
+In-Reply-To: <FA1DB435B97D5A4192BAE54A4EA542A99ABF1461@CNMAILEX04.lenovo.com>
 Sender: platform-driver-x86-owner@vger.kernel.org
 List-ID: <platform-driver-x86.vger.kernel.org>
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Jordan Glover <Golden_Miller83@protonmail.ch>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Christian Kellner <ckellner@redhat.com>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "bberg@redhat.com" <bberg@redhat.com>
+To: Peter FP1 Zhang <zhangfp1@lenovo.com>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Andy Shevchenko <andy.shevchenko@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Christian Kellner <ckellner@redhat.com>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "bberg@redhat.com" <bberg@redhat.com>
 
-VGhhbmsgeW91IEhlbnJpcXVlIQ0KDQpASm9yZGFuLCANCg0KV291bGQgeW91IGxpa2UgdG8gdHJ5
-IHRoZSBwYXRjaCBIZW5yaXF1ZSBtZW50aW9uZWQ/DQoNClRoYW5rcywNCg0KUGV0ZXIgWmhhbmcg
-XCDVxbijxr0sICBQTVANClRoaW5rUGFkICYgVGhpbmtTdGF0aW9uIExpbnV4IFNvbHV0aW9ucw0K
-VGVsOiAoKzg2KSAxODEtMTYxMS04MDA1IHwgTGVub3ZvIFNoYW5naGFpDQoNCkxpbnV4IGZvciBU
-aG9zZSBXaG8gRG8gLSBodHRwOi8vd3d3Lmxlbm92by5jb20vbGludXgNCg0KDQotLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogSGVucmlxdWUgZGUgTW9yYWVzIEhvbHNjaHVoIFttYWls
-dG86aG1oQGhtaC5lbmcuYnJdIA0KU2VudDogRnJpZGF5LCBGZWJydWFyeSAxNiwgMjAxOCAyOjIx
-IEFNDQpUbzogQW5keSBTaGV2Y2hlbmtvDQpDYzogUGV0ZXIgRlAxIFpoYW5nOyBQbGF0Zm9ybSBE
-cml2ZXI7IERhcnJlbiBIYXJ0OyBKb3JkYW4gR2xvdmVyOyBDaHJpc3RpYW4gS2VsbG5lcjsgaWJt
-LWFjcGktZGV2ZWxAbGlzdHMuc291cmNlZm9yZ2UubmV0OyBiYmVyZ0ByZWRoYXQuY29tDQpTdWJq
-ZWN0OiBSZTogVGhpbmtQYWQgWW9nYSAzNzAgdGhpbmtwYWRfYWNwaSB1bmhhbmRsZWQgZXZlbnRz
-DQoNCk9uIFRodSwgMTUgRmViIDIwMTgsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4gKEx1Y2tp
-bHkgZW50aXJlIGRpc2N1c3Npb24gaXMga2VwdCBpbiB0aGlzIG1haWwpDQo+IA0KPiBPbiBUaHUs
-IEZlYiAxLCAyMDE4IGF0IDQ6MDcgQU0sIFBldGVyIEZQMSBaaGFuZyA8emhhbmdmcDFAbGVub3Zv
-LmNvbT4gd3JvdGU6DQo+ID4gRGVhciBhbGwsDQo+ID4NCj4gPiBJIHdhcyB0b2xkIGJ5IG91ciBC
-SU9TL1RoZXJtYWwgdGVhbSB0aGF0IHRoZSB0d28gZXZlbnRzIGFyZSBkZXNpZ25lZCBmb3IgV2lu
-ZG93cyBPUywgZm9yIExpbnV4IHdlIGNhbiBqdXN0IGlnbm9yZSB0aGVtIGRpcmVjdGx5Lg0KDQpU
-aGUgcGF0Y2ggdG8gZG8gdGhhdCBpcyBxdWl0ZSB0cml2aWFsLCB3b3VsZCBhbnlvbmUgbGlrZSB0
-byB0cnkgaGlzL2hlciBoYW5kIGF0IGl0PyAgVGhlcmUgYXJlIGV4YW1wbGVzIGFscmVhZHkgaW4g
-dGhlIHRoaW5rcGFkLWFjcGkgY29kZSBvZiBldmVudHMgd2UgaWdub3JlLi4uDQoNCkFsdGhvdWdo
-IGl0IHdvdWxkIGhhdmUgYmVlbiBuaWNlIHRvIGtub3cgd2hhdCB0aGVzZSBldmVudHMgYWN0dWFs
-bHkgbWVhbiBhbmQgd2hhdCB0aGV5IGhpbnQgdGhlIHdpbmRvd3MgZHJpdmVycyB0byBkbywgc2lu
-Y2Ugd2UgbWlnaHQgaGF2ZSB3YW50ZWQgdG8gbGV2ZXJhZ2UgdGhlbSBpbiBMaW51eCB1c2Vyc3Bh
-Y2UgYXMgd2VsbCA6cA0KDQo+ID4gMHg2MEYwICBIS19USEVSTUFMX1RSQU5TRk9STUFUSU9OX0NI
-QU5HRUQsICBBU0wgbWV0aG9kIGlzIEdUTVMNCj4gPiAweDYwMzIgIEhLX0RZTkFNSUNfVEhFUk1B
-TF9DT05UUk9MX1NFVF9DT01NQU5EX0NPTVBMSUVUSU9OLCAgQVNMIA0KPiA+IG1ldGhvZCBpcyBE
-WVRDDQoNCi0tDQogIEhlbnJpcXVlIEhvbHNjaHVoDQo=
+On February 17, 2018 1:47 PM, Peter FP1 Zhang  wrote:
+
+>Thank you Henrique!
+>
+> @Jordan,
+>
+> Would you like to try the patch Henrique mentioned?
+>
+> Thanks,
+>
+> Peter Zhang \ =E5=BC=A0=E7=A6=8F=E5=B9=B3,  PMP
+> ThinkPad & ThinkStation Linux Solutions
+> Tel: (+86) 181-1611-8005 | Lenovo Shanghai
+>
+> Linux for Those Who Do - http://www.lenovo.com/linux
+>
+
+Yes, I can try it when it would be available.
+
+=E2=80=8BJordan
