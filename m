@@ -1,56 +1,154 @@
-From: Ognjen =?utf-8?B?R2FsacSH?= <smclt30p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v13 3/4] thinkpad_acpi: Add support for
- battery thresholds
-Date: Sat, 24 Feb 2018 18:32:17 +0100
-Message-ID: <20180224173217.l62d52qyn2yghk2v@thinkpad>
-References: <20180207145844.bd567c36juvlkjvz@thinkpad>
- <20180208220323.cr6j2kcozekwbzo6@earth.universe>
- <CAJZ5v0hOf1DfQuoqcqb3Xjmw_Y49MGCnY19Xv6Qz88KyT5T+xQ@mail.gmail.com>
- <20180209103946.fkolldv6boml3e32@earth.universe>
- <CAJZ5v0h8YW03EpqEVO8LGti9ECo7+Gmm0PdgQViidUCZ=o0AQw@mail.gmail.com>
- <20180209123414.xrtmtgmeeezmma5u@earth.universe>
- <20180210084859.dtpydh5gkvoywoju@thinkpad>
- <CAHp75Vej+EjOd-fHjM9R45E0M_qttGsEBOQrwp7WdJ16X6qxXQ@mail.gmail.com>
- <CAJZ5v0hdpzW3fqwOaHhV1wc19oLtLNXMGUgV9yMBRuqdn6PpHA@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 05/12] usb: typec: tcpm: Set USB role switch to device
+ mode when configured as such
+Date: Sun, 25 Feb 2018 13:33:23 -0800
+Message-ID: <fda5b338-7472-4429-8752-9bd6debf331c@roeck-us.net>
+References: <20180225152510.10159-1-hdegoede@redhat.com>
+ <20180225152510.10159-6-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hdpzW3fqwOaHhV1wc19oLtLNXMGUgV9yMBRuqdn6PpHA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Robert Moore <robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lv Zheng <lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph-KeW1gJXA36yNJhrcwGid2A@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org, Kevin Locke <kevin-yFOG++GfaLUI8/NkjqMgMw@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180225152510.10159-6-hdegoede@redhat.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gU2F0LCBGZWIgMjQsIDIwMTggYXQgMTA6MDc6MjBBTSArMDEwMCwgUmFmYWVsIEouIFd5c29j
-a2kgd3JvdGU6Cj4gT24gRnJpLCBGZWIgMjMsIDIwMTggYXQgNjoyMSBQTSwgQW5keSBTaGV2Y2hl
-bmtvCj4gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+IHdyb3RlOgo+ID4gT24gU2F0LCBGZWIg
-MTAsIDIwMTggYXQgMTA6NDggQU0sIE9nbmplbiBHYWxpxIcgPHNtY2x0MzBwQGdtYWlsLmNvbT4g
-d3JvdGU6Cj4gPgo+ID4+IERvIHlvdSBndXlzIHdhbnQgbWUgdG8gc2VuZCBpbiBhbm90aGVyIHJl
-dmlzaW9uIG9mIHRoZSBwYXRjaCB3aXRoIHNvbWUKPiA+PiBkb2N1bWVudGF0aW9uIG9uIHRoZSBz
-eXNmcyBBUEk/Cj4gPgo+ID4gSSBub3RpY2VkIEkgZGlkbid0IGFwcGx5IGl0IGJlY2F1c2Ugb2Yg
-c29tZSBwZW5kaW5nIGNoYW5nZXMgZGlzY3Vzc2VkLAo+ID4gcGVyaGFwcyB0aGlzIG9uZSBhYm92
-ZS4KPiA+Cj4gPiBTbywgZGVmaW5pdGVseSBwbGVhc2Ugc2VuZCBhIG5ldyB2ZXJzaW9uIHdoaWNo
-IGFkZHJlc3NlcyBjb21tZW50cy4KPiAKPiBObywgaXQgYWN0dWFsbHkgaGFzIGJlZW4gYXBwbGll
-ZCBhbHJlYWR5LgoKQW5kIGFsc28sIGhvdyBpcyBpdCBhcHBsaWVkIGlmIGl0IGRvZXMgbm90IGFw
-cGx5IHRvIDQuMTYtcmMyIGFueW1vcmU/IApEbyB5b3UgbmVlZCBhIG5ldyByZXZpc2lvbiB0aGF0
-IHNvbHZlcyB0aGUgYXBwbHkgY29uZmxpY3RzPwpEbyB5b3UgbmVlZCBhIG5ldyByZXZpc2lvbiB0
-aGF0IGFkZHJlc3NlcyB0aGUgZG9jdW1lbnRhdGlvbj8KRGlkIHlvdSBhcHBseSBpdCBlYXJsaWVy
-IHRoYW4gNC4xNi1yYzI/IApXaGVuIGRpZCB5b3UgYXBwbHkgaXQ/IApEaWQgeW91IGFwcGx5IGl0
-IGF0IGFsbD8KCj4gCj4gV2hhdCBpcyBuZWVkZWQgaXMgYSBmb2xsb3ctdXAgcGF0Y2gsIGJ1dCBJ
-J2xsIHdyaXRlIG9uIHRoYXQgbGF0ZXIuCj4gCj4gVGhhbmtzLAo+IFJhZmFlbAoKLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tCkNoZWNrIG91dCB0aGUgdmlicmFudCB0ZWNoIGNvbW11bml0eSBvbiBvbmUg
-b2YgdGhlIHdvcmxkJ3MgbW9zdAplbmdhZ2luZyB0ZWNoIHNpdGVzLCBTbGFzaGRvdC5vcmchIGh0
-dHA6Ly9zZG0ubGluay9zbGFzaGRvdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwppYm0tYWNwaS1kZXZlbCBtYWlsaW5nIGxpc3QKaWJtLWFjcGktZGV2ZWxA
-bGlzdHMuc291cmNlZm9yZ2UubmV0Cmh0dHBzOi8vbGlzdHMuc291cmNlZm9yZ2UubmV0L2xpc3Rz
-L2xpc3RpbmZvL2libS1hY3BpLWRldmVsCg==
+On 02/25/2018 07:25 AM, Hans de Goede wrote:
+> Setting the mux to MUX_NONE and the switch to USB_SWITCH_DISCONNECT when
+> the data-role is device is not correct. Plenty of devices support
+> operating as USB device through a (separate) USB device controller.
+> 
+> We really need 2 different versions of USB_SWITCH_CONNECT,
+> USB_SWITCH_CONNECT_HOST and USB_SWITCH_DEVICE. Rather then modifying the
+> tcpc_usb_switch enum for this, simply remove it and switch to the
+> usb_role enum which provides exactly this, this will save use needing to
+> convert betweent the 2 enums when calling an usb-role-switch driver later.
+> 
+> Besides switching to the usb_role type, this commit also actually sets the
+> mux to TYPEC_MUX_USB and the switch to USB_ROLE_DEVICE instead of setting
+> both to none when the data-role is device.
+> 
+> This commit also makes tcpm_reset_port() call tcpm_mux_set(port,
+> TYPEC_MUX_NONE, USB_ROLE_NONE) so that the mux and switch
+> do _not_ stay in their last mode after a detach.
+> 
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+> Changes in v2:
+> -Added Heikki's Reviewed-by
+> ---
+>   drivers/usb/typec/tcpm.c | 22 +++++++++++-----------
+>   include/linux/usb/tcpm.h |  8 ++------
+>   2 files changed, 13 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+> index 7cd28b700a7f..00ca2822432f 100644
+> --- a/drivers/usb/typec/tcpm.c
+> +++ b/drivers/usb/typec/tcpm.c
+> @@ -618,15 +618,15 @@ void tcpm_pd_transmit_complete(struct tcpm_port *port,
+>   EXPORT_SYMBOL_GPL(tcpm_pd_transmit_complete);
+>   
+>   static int tcpm_mux_set(struct tcpm_port *port, enum tcpc_mux_mode mode,
+> -			enum tcpc_usb_switch config)
+> +			enum usb_role usb_role)
+>   {
+>   	int ret = 0;
+>   
+> -	tcpm_log(port, "Requesting mux mode %d, config %d, polarity %d",
+> -		 mode, config, port->polarity);
+> +	tcpm_log(port, "Requesting mux mode %d, usb-role %d, polarity %d",
+> +		 mode, usb_role, port->polarity);
+>   
+>   	if (port->tcpc->mux)
+> -		ret = port->tcpc->mux->set(port->tcpc->mux, mode, config,
+> +		ret = port->tcpc->mux->set(port->tcpc->mux, mode, usb_role,
+>   					   port->polarity);
+>   
+>   	return ret;
+> @@ -742,14 +742,15 @@ static int tcpm_set_attached_state(struct tcpm_port *port, bool attached)
+>   static int tcpm_set_roles(struct tcpm_port *port, bool attached,
+>   			  enum typec_role role, enum typec_data_role data)
+>   {
+> +	enum usb_role usb_role;
+>   	int ret;
+>   
+>   	if (data == TYPEC_HOST)
+> -		ret = tcpm_mux_set(port, TYPEC_MUX_USB,
+> -				   TCPC_USB_SWITCH_CONNECT);
+> +		usb_role = USB_ROLE_HOST;
+>   	else
+> -		ret = tcpm_mux_set(port, TYPEC_MUX_NONE,
+> -				   TCPC_USB_SWITCH_DISCONNECT);
+> +		usb_role = USB_ROLE_DEVICE;
+> +
+> +	ret = tcpm_mux_set(port, TYPEC_MUX_USB, usb_role);
+>   	if (ret < 0)
+>   		return ret;
+>   
+> @@ -2096,7 +2097,7 @@ static int tcpm_src_attach(struct tcpm_port *port)
+>   out_disable_pd:
+>   	port->tcpc->set_pd_rx(port->tcpc, false);
+>   out_disable_mux:
+> -	tcpm_mux_set(port, TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT);
+> +	tcpm_mux_set(port, TYPEC_MUX_NONE, USB_ROLE_NONE);
+>   	return ret;
+>   }
+>   
+> @@ -2140,6 +2141,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
+>   	tcpm_init_vconn(port);
+>   	tcpm_set_current_limit(port, 0, 0);
+>   	tcpm_set_polarity(port, TYPEC_POLARITY_CC1);
+> +	tcpm_mux_set(port, TYPEC_MUX_NONE, USB_ROLE_NONE);
+>   	tcpm_set_attached_state(port, false);
+>   	port->try_src_count = 0;
+>   	port->try_snk_count = 0;
+> @@ -2190,8 +2192,6 @@ static int tcpm_snk_attach(struct tcpm_port *port)
+>   static void tcpm_snk_detach(struct tcpm_port *port)
+>   {
+>   	tcpm_detach(port);
+> -
+> -	/* XXX: (Dis)connect SuperSpeed mux? */
+>   }
+>   
+>   static int tcpm_acc_attach(struct tcpm_port *port)
+> diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
+> index ca1c0b57f03f..268721bff2c1 100644
+> --- a/include/linux/usb/tcpm.h
+> +++ b/include/linux/usb/tcpm.h
+> @@ -16,6 +16,7 @@
+>   #define __LINUX_USB_TCPM_H
+>   
+>   #include <linux/bitops.h>
+> +#include <linux/usb/role.h>
+>   #include <linux/usb/typec.h>
+>   #include "pd.h"
+>   
+> @@ -97,11 +98,6 @@ struct tcpc_config {
+>   	const struct typec_altmode_desc *alt_modes;
+>   };
+>   
+> -enum tcpc_usb_switch {
+> -	TCPC_USB_SWITCH_CONNECT,
+> -	TCPC_USB_SWITCH_DISCONNECT,
+> -};
+> -
+>   /* Mux state attributes */
+>   #define TCPC_MUX_USB_ENABLED		BIT(0)	/* USB enabled */
+>   #define TCPC_MUX_DP_ENABLED		BIT(1)	/* DP enabled */
+> @@ -118,7 +114,7 @@ enum tcpc_mux_mode {
+>   
+>   struct tcpc_mux_dev {
+>   	int (*set)(struct tcpc_mux_dev *dev, enum tcpc_mux_mode mux_mode,
+> -		   enum tcpc_usb_switch usb_config,
+> +		   enum usb_role usb_role,
+>   		   enum typec_cc_polarity polarity);
+>   	bool dfp_only;
+>   	void *priv_data;
+> 
