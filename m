@@ -1,52 +1,59 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v4 01/12] drivers: base: Unified device connection lookup
-Date: Mon, 26 Feb 2018 11:34:43 -0800
-Message-ID: <3a6850c4-7c54-c889-a7d0-347b8df65d31@infradead.org>
-References: <20180226183919.24353-1-hdegoede@redhat.com>
- <20180226183919.24353-2-hdegoede@redhat.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
+ Dell machines
+Date: Mon, 26 Feb 2018 21:32:55 +0100
+Message-ID: <20180226203255.lnnzipipjz5l2itz@ninjato>
+References: <CAHp75VdWA-0a_FeicHSi_FfWurQ9EvkdW0raqgoRVySTyxDJ0Q@mail.gmail.com>
+ <20180128144509.pobnj7cayc4psgrj@pali>
+ <CAHp75VdU1OMTqLcDuzhQMHuX9rMhjw6p3CkSWaW5Y4kOy8ggqg@mail.gmail.com>
+ <20180131120348.azy25aqvn5wrdkeh@pali>
+ <CAHp75Vf=-RQvCtS684Q5+X=YKmZXgP_1kr0to8BGZX0jQAsuZw@mail.gmail.com>
+ <20180212153012.vffvjmz26ifyxbj5@pali>
+ <CAHp75VfF+qwCXcr3yuayE-Z+UG9wuMOKfGzLhdyPk79daEi9gQ@mail.gmail.com>
+ <20180213150004.5d2v7y7wwuure4io@pali>
+ <CAHp75VfxgbFiDxyrqyMRE8s85L1_EzkVvrA1NGYA5_su=5oGVQ@mail.gmail.com>
+ <20180213165023.xmzovx7fd3gdljxw@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zswupbexvwztthqj"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180226183919.24353-2-hdegoede@redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180213165023.xmzovx7fd3gdljxw@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Jean Delvare <jdelvare@suse.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <Mario_Limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 02/26/2018 10:39 AM, Hans de Goede wrote:
-> diff --git a/include/linux/connection.h b/include/linux/connection.h
-> new file mode 100644
-> index 000000000000..0b4430eae53a
-> --- /dev/null
-> +++ b/include/linux/connection.h
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#ifndef _LINUX_CONNECTION_H_
-> +#define _LINUX_CONNECTION_H_
-> +
-> +#include <linux/list.h>
-> +
-> +struct device;
-> +
-> +/**
-> + * struct devcon - Device Connection Descriptor
-> + * @endpoint: The names of the two devices connected together
-> + * @id: Unique identifier for the connection
 
-Hi,
- * @list: <description>
-is missing above.
-
-> + */
-> +struct devcon {
-> +	const char		*endpoint[2];
-> +	const char		*id;
-> +	struct list_head	list;
-> +};
+--zswupbexvwztthqj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
--- 
-~Randy
+> I'm not maintainer of i2c-i801.ko, Jean Delvare & Wolfram Sang are.
+> Therefore instructing future contributors would be up to them.
+
+This is really Jean's realm.
+
+
+--zswupbexvwztthqj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqUbvcACgkQFA3kzBSg
+KbbdcA//TTyCuZh33VimGE+9TaemKkLPnBtK0Igsd48ULTWn076k7Ap/nzVcCaRf
+coMlZXkLbWkAkDmpoJ9t6YvIxXzxrils7QIcizjO4jcXNqgJbSyy1ejSqqRZcuJb
+p/9KcKZtDHY+EsgdO4meJohoRKUHxCp5tQ0p7Drlq+cFyVMYR4vvvh9gTDeTpH2p
+c6qOKQqvww6iY+9lqr0B4nyiJkQHyeDKsKBlUl/ZeGfFUkSTWo/jxNIik/oZecx8
+KLIiNN9FCcpp3j4UJVBBv70Kcrwq/2RkcfNzeqbqxLehI3jKVueIIt/tG9ZkvBvQ
+pbie3C6QTuQrZgEkEGUcz/ipmmeGQ5jhLXksdoT/S74zTdBpeBpDP0GLa16pq9QQ
+yg0oNYB6SIzrtWQmtmz8xOuJ1n/VkVgOjLynEDk07+i8C3CNWEn9XK6ORPwopfb8
+MWkz/mhwzEoqKA4hPCY5Pyu0ha+vhc8xs845tNB2S/1ID6JOFbkHboKJFumrGzZu
+lpbJd0keU3caV9IN4AEx+OT9IP9wJCJlfy+HD0dwziTpGgGBLbncBOFW/LqcfGLp
+mgBrkxg6Dmr8qUS522CA2Mc4JaC75Qk5uzbwFEvz0nM8ASBX7U+J1Utn2BWEMraP
+09VnTc37amGcZ3hX3Q/htQBid+fcV2UKQOo9b01XuCR0G7zIrgU=
+=1eH4
+-----END PGP SIGNATURE-----
+
+--zswupbexvwztthqj--
