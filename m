@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 02/12] usb: typec: Start using ERR_PTR
-Date: Mon, 26 Feb 2018 10:09:15 +0100
-Message-ID: <20180226090925.29436-3-hdegoede@redhat.com>
+Subject: [PATCH v3 04/12] usb: common: Small class for USB role switches
+Date: Mon, 26 Feb 2018 10:09:17 +0100
+Message-ID: <20180226090925.29436-5-hdegoede@redhat.com>
 References: <20180226090925.29436-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180226090925.29436-1-hdegoede@redhat.com>
@@ -12,392 +12,456 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-In order to allow the USB Type-C Class driver take care of
-things like muxes and other possible dependencies for the
-port drivers, returning ERR_PTR instead of NULL from the
-registration functions in case of failure.
+USB role switch is a device that can be used to choose the
+data role for USB connector. With dual-role capable USB
+controllers, the controller itself will be the switch, but
+on some platforms the USB host and device controllers are
+separate IPs and there is a mux between them and the
+connector. On those platforms the mux driver will need to
+register the switch.
 
-The reason for taking over control of the muxes for example
-is because handling them in the port drivers would be just
-boilerplate.
+With USB Type-C connectors, the host-to-device relationship
+is negotiated over the Configuration Channel (CC). That
+means the USB Type-C drivers need to be in control of the
+role switch. The class provides a simple API for the USB
+Type-C drivers for the control.
+
+For other types of USB connectors (mainly microAB) the class
+provides user space control via sysfs attribute file that
+can be used to request role swapping from the switch.
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v3:
--Add Guenter's Reviewed-by
-
 Changes in v2:
--Add IS_ERR_OR_NULL() checks to the unregister functions
+-Minor style fixes from review of v1
 ---
- drivers/usb/typec/tcpm.c      | 16 +++++++++-------
- drivers/usb/typec/tps6598x.c  | 15 ++++++++-------
- drivers/usb/typec/typec.c     | 44 +++++++++++++++++++++----------------------
- drivers/usb/typec/ucsi/ucsi.c | 31 ++++++++++++++++++------------
- 4 files changed, 58 insertions(+), 48 deletions(-)
+ Documentation/ABI/testing/sysfs-class-usb_role |  21 ++
+ drivers/usb/Kconfig                            |   3 +
+ drivers/usb/common/Makefile                    |   1 +
+ drivers/usb/common/roles.c                     | 305 +++++++++++++++++++++++++
+ include/linux/usb/role.h                       |  51 +++++
+ 5 files changed, 381 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-usb_role
+ create mode 100644 drivers/usb/common/roles.c
+ create mode 100644 include/linux/usb/role.h
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index f4d563ee7690..7cd28b700a7f 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -1044,7 +1044,7 @@ static int tcpm_pd_svdm(struct tcpm_port *port, const __le32 *payload, int cnt,
- 		break;
- 	case CMDT_RSP_ACK:
- 		/* silently drop message if we are not connected */
--		if (!port->partner)
-+		if (IS_ERR_OR_NULL(port->partner))
- 			break;
- 
- 		switch (cmd) {
-@@ -3743,8 +3743,8 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 	port->port_type = tcpc->config->type;
- 
- 	port->typec_port = typec_register_port(port->dev, &port->typec_caps);
--	if (!port->typec_port) {
--		err = -ENOMEM;
-+	if (IS_ERR(port->typec_port)) {
-+		err = PTR_ERR(port->typec_port);
- 		goto out_destroy_wq;
- 	}
- 
-@@ -3753,15 +3753,17 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 
- 		i = 0;
- 		while (paltmode->svid && i < ARRAY_SIZE(port->port_altmode)) {
--			port->port_altmode[i] =
--			  typec_port_register_altmode(port->typec_port,
--						      paltmode);
--			if (!port->port_altmode[i]) {
-+			struct typec_altmode *alt;
+diff --git a/Documentation/ABI/testing/sysfs-class-usb_role b/Documentation/ABI/testing/sysfs-class-usb_role
+new file mode 100644
+index 000000000000..3b810a425a52
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-usb_role
+@@ -0,0 +1,21 @@
++What:		/sys/class/usb_role/
++Date:		Jan 2018
++Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
++Description:
++		Place in sysfs for USB Role Switches. USB Role Switch is a
++		device that can select the data role (host or device) for USB
++		port.
 +
-+			alt = typec_port_register_altmode(port->typec_port,
-+							  paltmode);
-+			if (IS_ERR(alt)) {
- 				tcpm_log(port,
- 					 "%s: failed to register port alternate mode 0x%x",
- 					 dev_name(dev), paltmode->svid);
- 				break;
- 			}
-+			port->port_altmode[i] = alt;
- 			i++;
- 			paltmode++;
- 		}
-diff --git a/drivers/usb/typec/tps6598x.c b/drivers/usb/typec/tps6598x.c
-index 2719f5d382f7..37a15c14a6c6 100644
---- a/drivers/usb/typec/tps6598x.c
-+++ b/drivers/usb/typec/tps6598x.c
-@@ -158,15 +158,15 @@ static int tps6598x_connect(struct tps6598x *tps, u32 status)
- 		desc.identity = &tps->partner_identity;
- 	}
- 
--	tps->partner = typec_register_partner(tps->port, &desc);
--	if (!tps->partner)
--		return -ENODEV;
--
- 	typec_set_pwr_opmode(tps->port, mode);
- 	typec_set_pwr_role(tps->port, TPS_STATUS_PORTROLE(status));
- 	typec_set_vconn_role(tps->port, TPS_STATUS_VCONN(status));
- 	typec_set_data_role(tps->port, TPS_STATUS_DATAROLE(status));
- 
-+	tps->partner = typec_register_partner(tps->port, &desc);
-+	if (IS_ERR(tps->partner))
-+		return PTR_ERR(tps->partner);
++What:		/sys/class/usb_role/<switch>/role
++Date:		Jan 2018
++Contact:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
++Description:
++		The current role of the switch. This attribute can be used for
++		requesting role swapping with non-USB Type-C ports. With USB
++		Type-C ports, the ABI defined for USB Type-C connector class
++		must be used.
 +
- 	if (desc.identity)
- 		typec_partner_set_identity(tps->partner);
++		Valid values:
++		- none
++		- host
++		- device
+diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
+index 148f3ee70286..f278958e04ca 100644
+--- a/drivers/usb/Kconfig
++++ b/drivers/usb/Kconfig
+@@ -203,4 +203,7 @@ config USB_ULPI_BUS
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called ulpi.
  
-@@ -175,7 +175,8 @@ static int tps6598x_connect(struct tps6598x *tps, u32 status)
- 
- static void tps6598x_disconnect(struct tps6598x *tps, u32 status)
- {
--	typec_unregister_partner(tps->partner);
-+	if (!IS_ERR(tps->partner))
-+		typec_unregister_partner(tps->partner);
- 	tps->partner = NULL;
- 	typec_set_pwr_opmode(tps->port, TYPEC_PWR_MODE_USB);
- 	typec_set_pwr_role(tps->port, TPS_STATUS_PORTROLE(status));
-@@ -418,8 +419,8 @@ static int tps6598x_probe(struct i2c_client *client)
- 	tps->typec_cap.prefer_role = TYPEC_NO_PREFERRED_ROLE;
- 
- 	tps->port = typec_register_port(&client->dev, &tps->typec_cap);
--	if (!tps->port)
--		return -ENODEV;
-+	if (IS_ERR(tps->port))
-+		return PTR_ERR(tps->port);
- 
- 	if (status & TPS_STATUS_PLUG_PRESENT) {
- 		ret = tps6598x_connect(tps, status);
-diff --git a/drivers/usb/typec/typec.c b/drivers/usb/typec/typec.c
-index 735726ced602..dc28ad868d93 100644
---- a/drivers/usb/typec/typec.c
-+++ b/drivers/usb/typec/typec.c
-@@ -386,7 +386,7 @@ typec_register_altmode(struct device *parent,
- 
- 	alt = kzalloc(sizeof(*alt), GFP_KERNEL);
- 	if (!alt)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	alt->svid = desc->svid;
- 	alt->n_modes = desc->n_modes;
-@@ -402,7 +402,7 @@ typec_register_altmode(struct device *parent,
- 		dev_err(parent, "failed to register alternate mode (%d)\n",
- 			ret);
- 		put_device(&alt->dev);
--		return NULL;
-+		return ERR_PTR(ret);
- 	}
- 
- 	return alt;
-@@ -417,7 +417,7 @@ typec_register_altmode(struct device *parent,
-  */
- void typec_unregister_altmode(struct typec_altmode *alt)
- {
--	if (alt)
-+	if (!IS_ERR_OR_NULL(alt))
- 		device_unregister(&alt->dev);
- }
- EXPORT_SYMBOL_GPL(typec_unregister_altmode);
-@@ -509,7 +509,7 @@ EXPORT_SYMBOL_GPL(typec_partner_register_altmode);
-  *
-  * Registers a device for USB Type-C Partner described in @desc.
-  *
-- * Returns handle to the partner on success or NULL on failure.
-+ * Returns handle to the partner on success or ERR_PTR on failure.
-  */
- struct typec_partner *typec_register_partner(struct typec_port *port,
- 					     struct typec_partner_desc *desc)
-@@ -519,7 +519,7 @@ struct typec_partner *typec_register_partner(struct typec_port *port,
- 
- 	partner = kzalloc(sizeof(*partner), GFP_KERNEL);
- 	if (!partner)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	partner->usb_pd = desc->usb_pd;
- 	partner->accessory = desc->accessory;
-@@ -542,7 +542,7 @@ struct typec_partner *typec_register_partner(struct typec_port *port,
- 	if (ret) {
- 		dev_err(&port->dev, "failed to register partner (%d)\n", ret);
- 		put_device(&partner->dev);
--		return NULL;
-+		return ERR_PTR(ret);
- 	}
- 
- 	return partner;
-@@ -557,7 +557,7 @@ EXPORT_SYMBOL_GPL(typec_register_partner);
-  */
- void typec_unregister_partner(struct typec_partner *partner)
- {
--	if (partner)
-+	if (!IS_ERR_OR_NULL(partner))
- 		device_unregister(&partner->dev);
- }
- EXPORT_SYMBOL_GPL(typec_unregister_partner);
-@@ -587,7 +587,7 @@ static const struct device_type typec_plug_dev_type = {
-  * the plug lists in response to Discover Modes command need to be listed in an
-  * array in @desc.
-  *
-- * Returns handle to the alternate mode on success or NULL on failure.
-+ * Returns handle to the alternate mode on success or ERR_PTR on failure.
-  */
- struct typec_altmode *
- typec_plug_register_altmode(struct typec_plug *plug,
-@@ -606,7 +606,7 @@ EXPORT_SYMBOL_GPL(typec_plug_register_altmode);
-  * Cable Plug represents a plug with electronics in it that can response to USB
-  * Power Delivery SOP Prime or SOP Double Prime packages.
-  *
-- * Returns handle to the cable plug on success or NULL on failure.
-+ * Returns handle to the cable plug on success or ERR_PTR on failure.
-  */
- struct typec_plug *typec_register_plug(struct typec_cable *cable,
- 				       struct typec_plug_desc *desc)
-@@ -617,7 +617,7 @@ struct typec_plug *typec_register_plug(struct typec_cable *cable,
- 
- 	plug = kzalloc(sizeof(*plug), GFP_KERNEL);
- 	if (!plug)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	sprintf(name, "plug%d", desc->index);
- 
-@@ -631,7 +631,7 @@ struct typec_plug *typec_register_plug(struct typec_cable *cable,
- 	if (ret) {
- 		dev_err(&cable->dev, "failed to register plug (%d)\n", ret);
- 		put_device(&plug->dev);
--		return NULL;
-+		return ERR_PTR(ret);
- 	}
- 
- 	return plug;
-@@ -646,7 +646,7 @@ EXPORT_SYMBOL_GPL(typec_register_plug);
-  */
- void typec_unregister_plug(struct typec_plug *plug)
- {
--	if (plug)
-+	if (!IS_ERR_OR_NULL(plug))
- 		device_unregister(&plug->dev);
- }
- EXPORT_SYMBOL_GPL(typec_unregister_plug);
-@@ -724,7 +724,7 @@ EXPORT_SYMBOL_GPL(typec_cable_set_identity);
-  * Registers a device for USB Type-C Cable described in @desc. The cable will be
-  * parent for the optional cable plug devises.
-  *
-- * Returns handle to the cable on success or NULL on failure.
-+ * Returns handle to the cable on success or ERR_PTR on failure.
-  */
- struct typec_cable *typec_register_cable(struct typec_port *port,
- 					 struct typec_cable_desc *desc)
-@@ -734,7 +734,7 @@ struct typec_cable *typec_register_cable(struct typec_port *port,
- 
- 	cable = kzalloc(sizeof(*cable), GFP_KERNEL);
- 	if (!cable)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	cable->type = desc->type;
- 	cable->active = desc->active;
-@@ -757,7 +757,7 @@ struct typec_cable *typec_register_cable(struct typec_port *port,
- 	if (ret) {
- 		dev_err(&port->dev, "failed to register cable (%d)\n", ret);
- 		put_device(&cable->dev);
--		return NULL;
-+		return ERR_PTR(ret);
- 	}
- 
- 	return cable;
-@@ -772,7 +772,7 @@ EXPORT_SYMBOL_GPL(typec_register_cable);
-  */
- void typec_unregister_cable(struct typec_cable *cable)
- {
--	if (cable)
-+	if (!IS_ERR_OR_NULL(cable))
- 		device_unregister(&cable->dev);
- }
- EXPORT_SYMBOL_GPL(typec_unregister_cable);
-@@ -1256,7 +1256,7 @@ EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
-  * This routine is used to register an alternate mode that @port is capable of
-  * supporting.
-  *
-- * Returns handle to the alternate mode on success or NULL on failure.
-+ * Returns handle to the alternate mode on success or ERR_PTR on failure.
-  */
- struct typec_altmode *
- typec_port_register_altmode(struct typec_port *port,
-@@ -1273,7 +1273,7 @@ EXPORT_SYMBOL_GPL(typec_port_register_altmode);
-  *
-  * Registers a device for USB Type-C Port described in @cap.
-  *
-- * Returns handle to the port on success or NULL on failure.
-+ * Returns handle to the port on success or ERR_PTR on failure.
-  */
- struct typec_port *typec_register_port(struct device *parent,
- 				       const struct typec_capability *cap)
-@@ -1285,12 +1285,12 @@ struct typec_port *typec_register_port(struct device *parent,
- 
- 	port = kzalloc(sizeof(*port), GFP_KERNEL);
- 	if (!port)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	id = ida_simple_get(&typec_index_ida, 0, 0, GFP_KERNEL);
- 	if (id < 0) {
- 		kfree(port);
--		return NULL;
-+		return ERR_PTR(id);
- 	}
- 
- 	if (cap->type == TYPEC_PORT_DFP)
-@@ -1326,7 +1326,7 @@ struct typec_port *typec_register_port(struct device *parent,
- 	if (ret) {
- 		dev_err(parent, "failed to register port (%d)\n", ret);
- 		put_device(&port->dev);
--		return NULL;
-+		return ERR_PTR(ret);
- 	}
- 
- 	return port;
-@@ -1341,7 +1341,7 @@ EXPORT_SYMBOL_GPL(typec_register_port);
-  */
- void typec_unregister_port(struct typec_port *port)
- {
--	if (port)
-+	if (!IS_ERR_OR_NULL(port))
- 		device_unregister(&port->dev);
- }
- EXPORT_SYMBOL_GPL(typec_unregister_port);
-diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-index 79046fe66426..69d544cfcd45 100644
---- a/drivers/usb/typec/ucsi/ucsi.c
-+++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -260,38 +260,45 @@ static void ucsi_pwr_opmode_change(struct ucsi_connector *con)
- 
- static int ucsi_register_partner(struct ucsi_connector *con)
- {
--	struct typec_partner_desc partner;
-+	struct typec_partner_desc desc;
-+	struct typec_partner *partner;
- 
- 	if (con->partner)
- 		return 0;
- 
--	memset(&partner, 0, sizeof(partner));
-+	memset(&desc, 0, sizeof(desc));
- 
- 	switch (con->status.partner_type) {
- 	case UCSI_CONSTAT_PARTNER_TYPE_DEBUG:
--		partner.accessory = TYPEC_ACCESSORY_DEBUG;
-+		desc.accessory = TYPEC_ACCESSORY_DEBUG;
- 		break;
- 	case UCSI_CONSTAT_PARTNER_TYPE_AUDIO:
--		partner.accessory = TYPEC_ACCESSORY_AUDIO;
-+		desc.accessory = TYPEC_ACCESSORY_AUDIO;
- 		break;
- 	default:
- 		break;
- 	}
- 
--	partner.usb_pd = con->status.pwr_op_mode == UCSI_CONSTAT_PWR_OPMODE_PD;
-+	desc.usb_pd = con->status.pwr_op_mode == UCSI_CONSTAT_PWR_OPMODE_PD;
- 
--	con->partner = typec_register_partner(con->port, &partner);
--	if (!con->partner) {
--		dev_err(con->ucsi->dev, "con%d: failed to register partner\n",
--			con->num);
--		return -ENODEV;
-+	partner = typec_register_partner(con->port, &desc);
-+	if (IS_ERR(partner)) {
-+		dev_err(con->ucsi->dev,
-+			"con%d: failed to register partner (%ld)\n", con->num,
-+			PTR_ERR(partner));
-+		return PTR_ERR(partner);
- 	}
- 
-+	con->partner = partner;
++config USB_ROLE_SWITCH
++	tristate
 +
- 	return 0;
- }
+ endif # USB_SUPPORT
+diff --git a/drivers/usb/common/Makefile b/drivers/usb/common/Makefile
+index 0a7c45e85481..fb4d5ef4165c 100644
+--- a/drivers/usb/common/Makefile
++++ b/drivers/usb/common/Makefile
+@@ -9,3 +9,4 @@ usb-common-$(CONFIG_USB_LED_TRIG) += led.o
  
- static void ucsi_unregister_partner(struct ucsi_connector *con)
- {
-+	if (!con->partner)
-+		return;
+ obj-$(CONFIG_USB_OTG_FSM) += usb-otg-fsm.o
+ obj-$(CONFIG_USB_ULPI_BUS)	+= ulpi.o
++obj-$(CONFIG_USB_ROLE_SWITCH)	+= roles.o
+diff --git a/drivers/usb/common/roles.c b/drivers/usb/common/roles.c
+new file mode 100644
+index 000000000000..c46b7fb4718d
+--- /dev/null
++++ b/drivers/usb/common/roles.c
+@@ -0,0 +1,305 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * USB Role Switch Support
++ *
++ * Copyright (C) 2018 Intel Corporation
++ * Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
++ *         Hans de Goede <hdegoede@redhat.com>
++ */
 +
- 	typec_unregister_partner(con->partner);
- 	con->partner = NULL;
- }
-@@ -606,8 +613,8 @@ static int ucsi_register_port(struct ucsi *ucsi, int index)
- 
- 	/* Register the connector */
- 	con->port = typec_register_port(ucsi->dev, cap);
--	if (!con->port)
--		return -ENODEV;
-+	if (IS_ERR(con->port))
-+		return PTR_ERR(con->port);
- 
- 	/* Get the status */
- 	UCSI_CMD_GET_CONNECTOR_STATUS(ctrl, con->num);
++#include <linux/connection.h>
++#include <linux/usb/role.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/slab.h>
++
++static struct class *role_class;
++
++struct usb_role_switch {
++	struct device dev;
++	struct mutex lock; /* device lock*/
++	enum usb_role role;
++
++	/* From descriptor */
++	struct device *usb2_port;
++	struct device *usb3_port;
++	struct device *udc;
++	usb_role_switch_set_t set;
++	usb_role_switch_get_t get;
++	bool allow_userspace_control;
++};
++
++#define to_role_switch(d)	container_of(d, struct usb_role_switch, dev)
++
++/**
++ * usb_role_switch_set_role - Set USB role for a switch
++ * @sw: USB role switch
++ * @role: USB role to be switched to
++ *
++ * Set USB role @role for @sw.
++ */
++int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
++{
++	int ret;
++
++	if (!sw || IS_ERR(sw))
++		return 0;
++
++	mutex_lock(&sw->lock);
++
++	ret = sw->set(sw->dev.parent, role);
++	if (!ret)
++		sw->role = role;
++
++	mutex_unlock(&sw->lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(usb_role_switch_set_role);
++
++/**
++ * usb_role_switch_get_role - Get the USB role for a switch
++ * @sw: USB role switch
++ *
++ * Depending on the role-switch-driver this function returns either a cached
++ * value of the last set role, or reads back the actual value from the hardware.
++ */
++enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
++{
++	enum usb_role role;
++
++	if (IS_ERR_OR_NULL(sw))
++		return USB_ROLE_NONE;
++
++	mutex_lock(&sw->lock);
++
++	if (sw->get)
++		role = sw->get(sw->dev.parent);
++	else
++		role = sw->role;
++
++	mutex_unlock(&sw->lock);
++
++	return role;
++}
++EXPORT_SYMBOL_GPL(usb_role_switch_get_role);
++
++static int __switch_match(struct device *dev, const void *name)
++{
++	return !strcmp((const char *)name, dev_name(dev));
++}
++
++static void *usb_role_switch_match(struct devcon *con, int ep, void *data)
++{
++	struct device *dev;
++
++	dev = class_find_device(role_class, NULL, con->endpoint[ep],
++				__switch_match);
++
++	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
++}
++
++/**
++ * usb_role_switch_get - Find USB role switch linked with the caller
++ * @dev: The caller device
++ *
++ * Finds and returns role switch linked with @dev. The reference count for the
++ * found switch is incremented.
++ */
++struct usb_role_switch *usb_role_switch_get(struct device *dev)
++{
++	return __device_find_connection(dev, "usb-role-switch", NULL,
++					usb_role_switch_match);
++}
++EXPORT_SYMBOL_GPL(usb_role_switch_get);
++
++/**
++ * usb_role_switch_put - Release handle to a switch
++ * @sw: USB Role Switch
++ *
++ * Decrement reference count for @sw.
++ */
++void usb_role_switch_put(struct usb_role_switch *sw)
++{
++	if (!IS_ERR_OR_NULL(sw))
++		put_device(&sw->dev);
++}
++EXPORT_SYMBOL_GPL(usb_role_switch_put);
++
++static umode_t
++usb_role_switch_is_visible(struct kobject *kobj, struct attribute *attr, int n)
++{
++	struct device *dev = container_of(kobj, typeof(*dev), kobj);
++	struct usb_role_switch *sw = to_role_switch(dev);
++
++	if (sw->allow_userspace_control)
++		return attr->mode;
++
++	return 0;
++}
++
++static const char * const usb_roles[] = {
++	[USB_ROLE_NONE]		= "none",
++	[USB_ROLE_HOST]		= "host",
++	[USB_ROLE_DEVICE]	= "device",
++};
++
++static ssize_t
++role_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct usb_role_switch *sw = to_role_switch(dev);
++	enum usb_role role = usb_role_switch_get_role(sw);
++
++	return sprintf(buf, "%s\n", usb_roles[role]);
++}
++
++static ssize_t role_store(struct device *dev, struct device_attribute *attr,
++			  const char *buf, size_t size)
++{
++	struct usb_role_switch *sw = to_role_switch(dev);
++	int ret;
++
++	ret = sysfs_match_string(usb_roles, buf);
++	if (ret < 0) {
++		bool res;
++
++		/* Extra check if the user wants to disable the switch */
++		ret = kstrtobool(buf, &res);
++		if (ret || res)
++			return -EINVAL;
++	}
++
++	ret = usb_role_switch_set_role(sw, ret);
++	if (ret)
++		return ret;
++
++	return size;
++}
++static DEVICE_ATTR_RW(role);
++
++static struct attribute *usb_role_switch_attrs[] = {
++	&dev_attr_role.attr,
++	NULL,
++};
++
++static const struct attribute_group usb_role_switch_group = {
++	.is_visible = usb_role_switch_is_visible,
++	.attrs = usb_role_switch_attrs,
++};
++
++static const struct attribute_group *usb_role_switch_groups[] = {
++	&usb_role_switch_group,
++	NULL,
++};
++
++static int
++usb_role_switch_uevent(struct device *dev, struct kobj_uevent_env *env)
++{
++	int ret;
++
++	ret = add_uevent_var(env, "USB_ROLE_SWITCH=%s", dev_name(dev));
++	if (ret)
++		dev_err(dev, "failed to add uevent USB_ROLE_SWITCH\n");
++
++	return ret;
++}
++
++static void usb_role_switch_release(struct device *dev)
++{
++	struct usb_role_switch *sw = to_role_switch(dev);
++
++	kfree(sw);
++}
++
++static const struct device_type usb_role_dev_type = {
++	.name = "usb_role_switch",
++	.groups = usb_role_switch_groups,
++	.uevent = usb_role_switch_uevent,
++	.release = usb_role_switch_release,
++};
++
++/**
++ * usb_role_switch_register - Register USB Role Switch
++ * @parent: Parent device for the switch
++ * @desc: Description of the switch
++ *
++ * USB Role Switch is a device capable or choosing the role for USB connector.
++ * On platforms where the USB controller is dual-role capable, the controller
++ * driver will need to register the switch. On platforms where the USB host and
++ * USB device controllers behind the connector are separate, there will be a
++ * mux, and the driver for that mux will need to register the switch.
++ *
++ * Returns handle to a new role switch or ERR_PTR. The content of @desc is
++ * copied.
++ */
++struct usb_role_switch *
++usb_role_switch_register(struct device *parent,
++			 const struct usb_role_switch_desc *desc)
++{
++	struct usb_role_switch *sw;
++	int ret;
++
++	if (!desc || !desc->set)
++		return ERR_PTR(-EINVAL);
++
++	sw = kzalloc(sizeof(*sw), GFP_KERNEL);
++	if (!sw)
++		return ERR_PTR(-ENOMEM);
++
++	mutex_init(&sw->lock);
++
++	sw->allow_userspace_control = desc->allow_userspace_control;
++	sw->usb2_port = desc->usb2_port;
++	sw->usb3_port = desc->usb3_port;
++	sw->udc = desc->udc;
++	sw->set = desc->set;
++	sw->get = desc->get;
++
++	sw->dev.parent = parent;
++	sw->dev.class = role_class;
++	sw->dev.type = &usb_role_dev_type;
++	dev_set_name(&sw->dev, "%s-role-switch", dev_name(parent));
++
++	ret = device_register(&sw->dev);
++	if (ret) {
++		put_device(&sw->dev);
++		return ERR_PTR(ret);
++	}
++
++	/* TODO: Symlinks for the host port and the device controller. */
++
++	return sw;
++}
++EXPORT_SYMBOL_GPL(usb_role_switch_register);
++
++/**
++ * usb_role_switch_unregister - Unregsiter USB Role Switch
++ * @sw: USB Role Switch
++ *
++ * Unregister switch that was registered with usb_role_switch_register().
++ */
++void usb_role_switch_unregister(struct usb_role_switch *sw)
++{
++	if (sw && !IS_ERR(sw))
++		device_unregister(&sw->dev);
++}
++EXPORT_SYMBOL_GPL(usb_role_switch_unregister);
++
++static int __init usb_roles_init(void)
++{
++	role_class = class_create(THIS_MODULE, "usb_role");
++	return PTR_ERR_OR_ZERO(role_class);
++}
++subsys_initcall(usb_roles_init);
++
++static void __exit usb_roles_exit(void)
++{
++	class_destroy(role_class);
++}
++module_exit(usb_roles_exit);
++
++MODULE_AUTHOR("Heikki Krogerus <heikki.krogerus@linux.intel.com>");
++MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("USB Role Class");
+diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+new file mode 100644
+index 000000000000..2ef347bd1fdb
+--- /dev/null
++++ b/include/linux/usb/role.h
+@@ -0,0 +1,51 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#ifndef __LINUX_USB_ROLE_H
++#define __LINUX_USB_ROLE_H
++
++struct usb_role_switch;
++
++enum usb_role {
++	USB_ROLE_NONE,
++	USB_ROLE_HOST,
++	USB_ROLE_DEVICE,
++};
++
++typedef int (*usb_role_switch_set_t)(struct device *dev, enum usb_role role);
++typedef enum usb_role (*usb_role_switch_get_t)(struct device *dev);
++
++/**
++ * struct usb_role_switch_desc - USB Role Switch Descriptor
++ * @usb2_port: Optional reference to the host controller port device (USB2)
++ * @usb3_port: Optional reference to the host controller port device (USB3)
++ * @udc: Optional reference to the peripheral controller device
++ * @set: Callback for setting the role
++ * @get: Callback for getting the role (optional)
++ * @allow_userspace_control: If true userspace may change the role through sysfs
++ *
++ * @usb2_port and @usb3_port will point to the USB host port and @udc to the USB
++ * device controller behind the USB connector with the role switch. If
++ * @usb2_port, @usb3_port and @udc are included in the description, the
++ * reference count for them should be incremented by the caller of
++ * usb_role_switch_register() before registering the switch.
++ */
++struct usb_role_switch_desc {
++	struct device *usb2_port;
++	struct device *usb3_port;
++	struct device *udc;
++	usb_role_switch_set_t set;
++	usb_role_switch_get_t get;
++	bool allow_userspace_control;
++};
++
++int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
++enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
++struct usb_role_switch *usb_role_switch_get(struct device *dev);
++void usb_role_switch_put(struct usb_role_switch *sw);
++
++struct usb_role_switch *
++usb_role_switch_register(struct device *parent,
++			 const struct usb_role_switch_desc *desc);
++void usb_role_switch_unregister(struct usb_role_switch *sw);
++
++#endif /* __LINUX_USB_ROLE_H */
 -- 
 2.14.3
