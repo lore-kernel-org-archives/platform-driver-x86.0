@@ -1,63 +1,74 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 12/12] extcon: axp288: Set USB role where necessary
-Date: Mon, 26 Feb 2018 09:07:42 +0100
-Message-ID: <478db279-c9c6-7fd2-b275-88789631cbda@redhat.com>
-References: <20180225152510.10159-1-hdegoede@redhat.com>
- <20180225152510.10159-13-hdegoede@redhat.com>
- <2e3c62b0-0d9b-4d30-654b-750055e6f515@infradead.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v3 00/12] USB Type-C device-connection, mux and switch support
+Date: Mon, 26 Feb 2018 10:09:13 +0100
+Message-ID: <20180226090925.29436-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2e3c62b0-0d9b-4d30-654b-750055e6f515@infradead.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+Hi All,
 
-On 25-02-18 19:51, Randy Dunlap wrote:
-> Hi,
-> 
-> On 02/25/2018 07:25 AM, Hans de Goede wrote:
->   
->> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
->> index a7bca4207f44..de15bf55895b 100644
->> --- a/drivers/extcon/Kconfig
->> +++ b/drivers/extcon/Kconfig
->> @@ -30,7 +30,8 @@ config EXTCON_ARIZONA
->>   
->>   config EXTCON_AXP288
->>   	tristate "X-Power AXP288 EXTCON support"
->> -	depends on MFD_AXP20X && USB_PHY
->> +	depends on MFD_AXP20X && USB_SUPPORT && X86
-> 
-> Could that be:
-> 	depends on MFD_AXP20X && USB_SUPPORT && (X86 || COMPILE_TEST)
-> 
-> or is there some reason that it won't even build on other $ARCH?
+Here is version 3 of Heikki's and my USB Type-C device-connection, mux and
+switch support series. Version 2 and 3 bring various small code and style
+fixes based on review (no major changes).
 
-It uses:
+Here is the original cover-letter of v1:
 
-#include <asm/cpu_device_id.h>
-#include <asm/intel-family.h>
+Some devices with an USB Type-C connector have a bunch of muxes
+behind that connector which need to be controlled by the kernel (rather
+then having them controlled by firmware as on most devices).
 
-So it really should only be build on X86, it always was an X86 only
-driver, but it now it really depends on X86.
+Quite a while back I submitted a patch-series to tie together these muxes
+and the Type-C Port Manager (tcpm) code, using the then new drivers/mux
+framework. But the way I used the mux framework went against what it was
+designed for, so in the end that series got nowhere.
 
-Thank you for all the reviews. I will prepare a v3 with all your
-proposed fixes soon(ish).
+Heikki Krogerus from Intel, who maintains the USB TYPEC subsystem, has
+recently been working on solving the same problem for some boards he is
+doing hardware-enablement for.
+
+Heikki has come up with a number of infrastructure patches for this.
+The first one is a new device-connection framework. This solves the
+problem of describing non bus device-links on x86 in what in my experience
+with this problematic area is a really nice simple, clean and *generic*
+way. This could for example in the near future also replace the custom
+lookup code in the pwm subsys and the custom pwm_add_table() /
+pwm_remove_table() functions.
+
+The other 3 patches add a framework for the different type of Type-C /
+USB "muxes".
+
+Heikki and I have gone through a number of iterations of these patches
+together and we believe these are now ready for merging. Since merging
+infrastructure patches without users is not done and Heikki's own use-case
+for these is not yet ready for merging, the rest of this series consists
+of patches by me to make the Type-C connector found on some Cherry Trail
+devices (finally) be able to actually work as an USB port and not just
+a charge port.
+
+The last patch uses the new usb-role-switch framework to also do proper
+devcie / host switching on CHT devices with a USB micro AB connector.
+This is also a big feature for CHT users, because before this they had
+to do a reboot to get an OTG-host cable recognized (on some devices).
+
+Part of this series is an usb-role-switch driver for the role-switch
+found inside the xhci controller on e.g. CHT devices, this is currently
+implemented as the generic xhci controller instantiating a platform
+child-device for this, since this really is a separate chunk of HW
+which happens to sit in the XHCI mmio space. This approach may not be
+universally liked, given that in this new series the role-switch driver
+is much smaller and does not have any external deps anymore we could
+just integrate it into the xhci code if that is preferred.
+
+About merging this series (once everything is reviewed, etc.), there are
+quite some interdependencies in it esp. a lot of the patches depend on
+the first patch. Luckily patches 1-10 all apply to subsystems which are
+maintained by Greg (most to the USB subsys). Which just leaves patches
+11 and 12 once 1-10 are merged. Greg, can you create an immutable branch
+for the platform/x86 and extcon maintainers to merge once this is done?
+
 Regards,
 
 Hans
-
-
->> +	select USB_ROLE_SWITCH
->>   	help
->>   	  Say Y here to enable support for USB peripheral detection
->>   	  and USB MUX switching by X-Power AXP288 PMIC.
-> 
-> thanks,
-> 
