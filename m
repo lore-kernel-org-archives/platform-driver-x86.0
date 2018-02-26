@@ -1,41 +1,74 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v3 09/12] usb: roles: Add Intel xHCI USB role switch
- driver
-Date: Mon, 26 Feb 2018 13:42:11 +0200
-Message-ID: <20180226114211.GA25535@kuha.fi.intel.com>
-References: <20180226090925.29436-1-hdegoede@redhat.com>
- <20180226090925.29436-10-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v4 00/12] USB Type-C device-connection, mux and switch support
+Date: Mon, 26 Feb 2018 19:39:07 +0100
+Message-ID: <20180226183919.24353-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180226090925.29436-10-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Feb 26, 2018 at 10:09:22AM +0100, Hans de Goede wrote:
-> Various Intel SoCs (Cherry Trail, Broxton and others) have an internal USB
-> role switch for swiching the OTG USB data lines between the xHCI host
-> controller and the dwc3 gadget controller.
-> 
-> Note on some Cherry Trail systems there is ACPI/AML code listening to
-> edge interrupts on the id-pin (through an _AIE ACPI method) and switching
-> the role between ROLE_HOST and ROLE_NONE based on the id-pin. Note it does
-> not set the role to ROLE_DEVICE, because device-mode is usually not used
-> under Windows.
-> 
-> The presence of AML code which modifies the cfg0 reg (on some systems)
-> means that our read/write/modify of cfg0 may race with the AML code
-> doing the same to avoid this we take the global ACPI lock while doing
-> the read/write/modify.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Hi All,
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Here is version 4 of Heikki's and my USB Type-C device-connection, mux and
+switch support series. Version 2, 3 and 4 bring various small code and style
+fixes based on review (no major changes).
 
-Thanks Hans!
+Here is the original cover-letter of v1:
 
--- 
-heikki
+Some devices with an USB Type-C connector have a bunch of muxes
+behind that connector which need to be controlled by the kernel (rather
+then having them controlled by firmware as on most devices).
+
+Quite a while back I submitted a patch-series to tie together these muxes
+and the Type-C Port Manager (tcpm) code, using the then new drivers/mux
+framework. But the way I used the mux framework went against what it was
+designed for, so in the end that series got nowhere.
+
+Heikki Krogerus from Intel, who maintains the USB TYPEC subsystem, has
+recently been working on solving the same problem for some boards he is
+doing hardware-enablement for.
+
+Heikki has come up with a number of infrastructure patches for this.
+The first one is a new device-connection framework. This solves the
+problem of describing non bus device-links on x86 in what in my experience
+with this problematic area is a really nice simple, clean and *generic*
+way. This could for example in the near future also replace the custom
+lookup code in the pwm subsys and the custom pwm_add_table() /
+pwm_remove_table() functions.
+
+The other 3 patches add a framework for the different type of Type-C /
+USB "muxes".
+
+Heikki and I have gone through a number of iterations of these patches
+together and we believe these are now ready for merging. Since merging
+infrastructure patches without users is not done and Heikki's own use-case
+for these is not yet ready for merging, the rest of this series consists
+of patches by me to make the Type-C connector found on some Cherry Trail
+devices (finally) be able to actually work as an USB port and not just
+a charge port.
+
+The last patch uses the new usb-role-switch framework to also do proper
+devcie / host switching on CHT devices with a USB micro AB connector.
+This is also a big feature for CHT users, because before this they had
+to do a reboot to get an OTG-host cable recognized (on some devices).
+
+Part of this series is an usb-role-switch driver for the role-switch
+found inside the xhci controller on e.g. CHT devices, this is currently
+implemented as the generic xhci controller instantiating a platform
+child-device for this, since this really is a separate chunk of HW
+which happens to sit in the XHCI mmio space. This approach may not be
+universally liked, given that in this new series the role-switch driver
+is much smaller and does not have any external deps anymore we could
+just integrate it into the xhci code if that is preferred.
+
+About merging this series (once everything is reviewed, etc.), there are
+quite some interdependencies in it esp. a lot of the patches depend on
+the first patch. Luckily patches 1-10 all apply to subsystems which are
+maintained by Greg (most to the USB subsys). Which just leaves patches
+11 and 12 once 1-10 are merged. Greg, can you create an immutable branch
+for the platform/x86 and extcon maintainers to merge once this is done?
+
+Regards,
+
+Hans
