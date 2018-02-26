@@ -1,62 +1,347 @@
-From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v13 3/4] thinkpad_acpi: Add support for
- battery thresholds
-Date: Sun, 25 Feb 2018 10:22:38 +0100
-Message-ID: <CAJZ5v0h1R7Jb97rGmDDMzrkKfSf-bsoxBOjWGtUosnBhTKZ6aw@mail.gmail.com>
-References: <20180207145844.bd567c36juvlkjvz@thinkpad>
- <20180208220323.cr6j2kcozekwbzo6@earth.universe>
- <CAJZ5v0hOf1DfQuoqcqb3Xjmw_Y49MGCnY19Xv6Qz88KyT5T+xQ@mail.gmail.com>
- <20180209103946.fkolldv6boml3e32@earth.universe>
- <CAJZ5v0h8YW03EpqEVO8LGti9ECo7+Gmm0PdgQViidUCZ=o0AQw@mail.gmail.com>
- <20180209123414.xrtmtgmeeezmma5u@earth.universe>
- <20180210084859.dtpydh5gkvoywoju@thinkpad>
- <CAHp75Vej+EjOd-fHjM9R45E0M_qttGsEBOQrwp7WdJ16X6qxXQ@mail.gmail.com>
- <CAJZ5v0hdpzW3fqwOaHhV1wc19oLtLNXMGUgV9yMBRuqdn6PpHA@mail.gmail.com>
- <20180224173217.l62d52qyn2yghk2v@thinkpad>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20180224173217.l62d52qyn2yghk2v@thinkpad>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: =?UTF-8?Q?Ognjen_Gali=C4=87?= <smclt30p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Robert Moore <robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Christoph_B=C3=B6hmwalder?= <christoph-KeW1gJXA36yNJhrcwGid2A@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Locke <kevin-yFOG++GfaLUI8/NkjqMgMw@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v4 12/12] extcon: axp288: Set USB role where necessary
+Date: Mon, 26 Feb 2018 19:39:19 +0100
+Message-ID: <20180226183919.24353-13-hdegoede@redhat.com>
+References: <20180226183919.24353-1-hdegoede@redhat.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180226183919.24353-1-hdegoede@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gU2F0LCBGZWIgMjQsIDIwMTggYXQgNjozMiBQTSwgT2duamVuIEdhbGnEhyA8c21jbHQzMHBA
-Z21haWwuY29tPiB3cm90ZToKPiBPbiBTYXQsIEZlYiAyNCwgMjAxOCBhdCAxMDowNzoyMEFNICsw
-MTAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90ZToKPj4gT24gRnJpLCBGZWIgMjMsIDIwMTggYXQg
-NjoyMSBQTSwgQW5keSBTaGV2Y2hlbmtvCj4+IDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPiB3
-cm90ZToKPj4gPiBPbiBTYXQsIEZlYiAxMCwgMjAxOCBhdCAxMDo0OCBBTSwgT2duamVuIEdhbGnE
-hyA8c21jbHQzMHBAZ21haWwuY29tPiB3cm90ZToKPj4gPgo+PiA+PiBEbyB5b3UgZ3V5cyB3YW50
-IG1lIHRvIHNlbmQgaW4gYW5vdGhlciByZXZpc2lvbiBvZiB0aGUgcGF0Y2ggd2l0aCBzb21lCj4+
-ID4+IGRvY3VtZW50YXRpb24gb24gdGhlIHN5c2ZzIEFQST8KPj4gPgo+PiA+IEkgbm90aWNlZCBJ
-IGRpZG4ndCBhcHBseSBpdCBiZWNhdXNlIG9mIHNvbWUgcGVuZGluZyBjaGFuZ2VzIGRpc2N1c3Nl
-ZCwKPj4gPiBwZXJoYXBzIHRoaXMgb25lIGFib3ZlLgo+PiA+Cj4+ID4gU28sIGRlZmluaXRlbHkg
-cGxlYXNlIHNlbmQgYSBuZXcgdmVyc2lvbiB3aGljaCBhZGRyZXNzZXMgY29tbWVudHMuCj4+Cj4+
-IE5vLCBpdCBhY3R1YWxseSBoYXMgYmVlbiBhcHBsaWVkIGFscmVhZHkuCj4KPiBBbmQgYWxzbywg
-aG93IGlzIGl0IGFwcGxpZWQgaWYgaXQgZG9lcyBub3QgYXBwbHkgdG8gNC4xNi1yYzIgYW55bW9y
-ZT8KPiBEbyB5b3UgbmVlZCBhIG5ldyByZXZpc2lvbiB0aGF0IHNvbHZlcyB0aGUgYXBwbHkgY29u
-ZmxpY3RzPwo+IERvIHlvdSBuZWVkIGEgbmV3IHJldmlzaW9uIHRoYXQgYWRkcmVzc2VzIHRoZSBk
-b2N1bWVudGF0aW9uPwo+IERpZCB5b3UgYXBwbHkgaXQgZWFybGllciB0aGFuIDQuMTYtcmMyPwo+
-IFdoZW4gZGlkIHlvdSBhcHBseSBpdD8KPiBEaWQgeW91IGFwcGx5IGl0IGF0IGFsbD8KClllcywg
-SSBkaWQsIG9uIHRvcCBvZiA0LjE2LXJjMiwgYW5kIEkgbWlnaHQgaGF2ZSByZWJhc2VkIGl0IGEg
-Yml0LgoKUGxlYXNlIHNlZSBsaW51eC1uZXh0IGFuZCBJIHdpbGwgZXhwb3NlIHRoZSBhY3BpLWJh
-dHRlcnkgYnJhbmNoCmNvbnRhaW5pbmcgdGhpcyBzZXJpZXMgbGF0ZXIgdG9kYXkgYW5kIHRvbW9y
-cm93LgoKPj4gV2hhdCBpcyBuZWVkZWQgaXMgYSBmb2xsb3ctdXAgcGF0Y2gsIGJ1dCBJJ2xsIHdy
-aXRlIG9uIHRoYXQgbGF0ZXIuCgpQbGVhc2Ugc2VlIG15IHByZXZpb3VzIG1lc3NhZ2UgaW4gdGhp
-cyB0aHJlYWQgcmVnYXJkaW5nIHRoZSBhYm92ZS4KCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpDaGVj
-ayBvdXQgdGhlIHZpYnJhbnQgdGVjaCBjb21tdW5pdHkgb24gb25lIG9mIHRoZSB3b3JsZCdzIG1v
-c3QKZW5nYWdpbmcgdGVjaCBzaXRlcywgU2xhc2hkb3Qub3JnISBodHRwOi8vc2RtLmxpbmsvc2xh
-c2hkb3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaWJt
-LWFjcGktZGV2ZWwgbWFpbGluZyBsaXN0CmlibS1hY3BpLWRldmVsQGxpc3RzLnNvdXJjZWZvcmdl
-Lm5ldApodHRwczovL2xpc3RzLnNvdXJjZWZvcmdlLm5ldC9saXN0cy9saXN0aW5mby9pYm0tYWNw
-aS1kZXZlbAo=
+The AXP288 BC1.2 charger detection / extcon code may seem like a strange
+place to add code to control the USB role-switch on devices with an AXP288,
+but there are 2 reasons to do this inside the axp288 extcon code:
+
+1) On many devices the USB role is controlled by ACPI AML code, but the AML
+   code only switches between the host and none roles, because of Windows
+   not really using device mode. To make device mode work we need to toggle
+   between the none/device roles based on Vbus presence, and the axp288
+   extcon gets interrupts on Vbus insertion / removal.
+
+2) In order for our BC1.2 charger detection to work properly the role
+   mux must be properly set to device mode before we do the detection.
+
+Also note the Kconfig help-text / obsolete depends on USB_PHY which are
+remnants from older never upstreamed code also controlling the mux from
+the axp288 extcon code.
+
+This commit also adds code to get notifications from the INT3496 extcon
+device, which is used on some devices to notify the kernel about id-pin
+changes instead of them being handled through AML code.
+
+This fixes:
+-Device mode not working on most CHT devices with an AXP288
+-Host mode not working on devices with an INT3496 ACPI device
+-Charger-type misdetection (always SDP) on devices with an INT3496 when the
+ USB role (always) gets initialized as host
+
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v4:
+-Add Andy's Reviewed-by
+
+Changes in v2:
+-Add depends on X86 to Kconfig (the AXP288 PMIC is only used on X86)
+-Use new acpi_dev_get_first_match_name() helper to get the INT3496 device-name
+-Add Heikki's Reviewed-by
+---
+ drivers/extcon/Kconfig         |   3 +-
+ drivers/extcon/extcon-axp288.c | 177 +++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 171 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
+index a7bca4207f44..de15bf55895b 100644
+--- a/drivers/extcon/Kconfig
++++ b/drivers/extcon/Kconfig
+@@ -30,7 +30,8 @@ config EXTCON_ARIZONA
+ 
+ config EXTCON_AXP288
+ 	tristate "X-Power AXP288 EXTCON support"
+-	depends on MFD_AXP20X && USB_PHY
++	depends on MFD_AXP20X && USB_SUPPORT && X86
++	select USB_ROLE_SWITCH
+ 	help
+ 	  Say Y here to enable support for USB peripheral detection
+ 	  and USB MUX switching by X-Power AXP288 PMIC.
+diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp288.c
+index 3ec4c715e240..51e77c7a32c2 100644
+--- a/drivers/extcon/extcon-axp288.c
++++ b/drivers/extcon/extcon-axp288.c
+@@ -1,6 +1,7 @@
+ /*
+  * extcon-axp288.c - X-Power AXP288 PMIC extcon cable detection driver
+  *
++ * Copyright (c) 2017-2018 Hans de Goede <hdegoede@redhat.com>
+  * Copyright (C) 2015 Intel Corporation
+  * Author: Ramakrishna Pallala <ramakrishna.pallala@intel.com>
+  *
+@@ -14,6 +15,8 @@
+  * GNU General Public License for more details.
+  */
+ 
++#include <linux/acpi.h>
++#include <linux/connection.h>
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/io.h>
+@@ -25,6 +28,11 @@
+ #include <linux/extcon-provider.h>
+ #include <linux/regmap.h>
+ #include <linux/mfd/axp20x.h>
++#include <linux/usb/role.h>
++#include <linux/workqueue.h>
++
++#include <asm/cpu_device_id.h>
++#include <asm/intel-family.h>
+ 
+ /* Power source status register */
+ #define PS_STAT_VBUS_TRIGGER		BIT(0)
+@@ -97,9 +105,19 @@ struct axp288_extcon_info {
+ 	struct device *dev;
+ 	struct regmap *regmap;
+ 	struct regmap_irq_chip_data *regmap_irqc;
++	struct usb_role_switch *role_sw;
++	struct work_struct role_work;
+ 	int irq[EXTCON_IRQ_END];
+ 	struct extcon_dev *edev;
++	struct extcon_dev *id_extcon;
++	struct notifier_block id_nb;
+ 	unsigned int previous_cable;
++	bool vbus_attach;
++};
++
++static const struct x86_cpu_id cherry_trail_cpu_ids[] = {
++	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_ATOM_AIRMONT, X86_FEATURE_ANY },
++	{}
+ };
+ 
+ /* Power up/down reason string array */
+@@ -137,20 +155,74 @@ static void axp288_extcon_log_rsi(struct axp288_extcon_info *info)
+ 	regmap_write(info->regmap, AXP288_PS_BOOT_REASON_REG, clear_mask);
+ }
+ 
+-static int axp288_handle_chrg_det_event(struct axp288_extcon_info *info)
++/*
++ * The below code to control the USB role-switch on devices with an AXP288
++ * may seem out of place, but there are 2 reasons why this is the best place
++ * to control the USB role-switch on such devices:
++ * 1) On many devices the USB role is controlled by AML code, but the AML code
++ *    only switches between the host and none roles, because of Windows not
++ *    really using device mode. To make device mode work we need to toggle
++ *    between the none/device roles based on Vbus presence, and this driver
++ *    gets interrupts on Vbus insertion / removal.
++ * 2) In order for our BC1.2 charger detection to work properly the role
++ *    mux must be properly set to device mode before we do the detection.
++ */
++
++/* Returns the id-pin value, note pulled low / false == host-mode */
++static bool axp288_get_id_pin(struct axp288_extcon_info *info)
+ {
+-	int ret, stat, cfg, pwr_stat;
+-	u8 chrg_type;
+-	unsigned int cable = info->previous_cable;
+-	bool vbus_attach = false;
++	enum usb_role role;
++
++	if (info->id_extcon)
++		return extcon_get_state(info->id_extcon, EXTCON_USB_HOST) <= 0;
++
++	/* We cannot access the id-pin, see what mode the AML code has set */
++	role = usb_role_switch_get_role(info->role_sw);
++	return role != USB_ROLE_HOST;
++}
++
++static void axp288_usb_role_work(struct work_struct *work)
++{
++	struct axp288_extcon_info *info =
++		container_of(work, struct axp288_extcon_info, role_work);
++	enum usb_role role;
++	bool id_pin;
++	int ret;
++
++	id_pin = axp288_get_id_pin(info);
++	if (!id_pin)
++		role = USB_ROLE_HOST;
++	else if (info->vbus_attach)
++		role = USB_ROLE_DEVICE;
++	else
++		role = USB_ROLE_NONE;
++
++	ret = usb_role_switch_set_role(info->role_sw, role);
++	if (ret)
++		dev_err(info->dev, "failed to set role: %d\n", ret);
++}
++
++static bool axp288_get_vbus_attach(struct axp288_extcon_info *info)
++{
++	int ret, pwr_stat;
+ 
+ 	ret = regmap_read(info->regmap, AXP288_PS_STAT_REG, &pwr_stat);
+ 	if (ret < 0) {
+ 		dev_err(info->dev, "failed to read vbus status\n");
+-		return ret;
++		return false;
+ 	}
+ 
+-	vbus_attach = (pwr_stat & PS_STAT_VBUS_VALID);
++	return !!(pwr_stat & PS_STAT_VBUS_VALID);
++}
++
++static int axp288_handle_chrg_det_event(struct axp288_extcon_info *info)
++{
++	int ret, stat, cfg;
++	u8 chrg_type;
++	unsigned int cable = info->previous_cable;
++	bool vbus_attach = false;
++
++	vbus_attach = axp288_get_vbus_attach(info);
+ 	if (!vbus_attach)
+ 		goto no_vbus;
+ 
+@@ -201,6 +273,12 @@ static int axp288_handle_chrg_det_event(struct axp288_extcon_info *info)
+ 		info->previous_cable = cable;
+ 	}
+ 
++	if (info->role_sw && info->vbus_attach != vbus_attach) {
++		info->vbus_attach = vbus_attach;
++		/* Setting the role can take a while */
++		queue_work(system_long_wq, &info->role_work);
++	}
++
+ 	return 0;
+ 
+ dev_det_ret:
+@@ -210,6 +288,18 @@ static int axp288_handle_chrg_det_event(struct axp288_extcon_info *info)
+ 	return ret;
+ }
+ 
++static int axp288_extcon_id_evt(struct notifier_block *nb,
++				unsigned long event, void *param)
++{
++	struct axp288_extcon_info *info =
++		container_of(nb, struct axp288_extcon_info, id_nb);
++
++	/* We may not sleep and setting the role can take a while */
++	queue_work(system_long_wq, &info->role_work);
++
++	return NOTIFY_OK;
++}
++
+ static irqreturn_t axp288_extcon_isr(int irq, void *data)
+ {
+ 	struct axp288_extcon_info *info = data;
+@@ -231,10 +321,20 @@ static void axp288_extcon_enable(struct axp288_extcon_info *info)
+ 					BC_GLOBAL_RUN, BC_GLOBAL_RUN);
+ }
+ 
++static void axp288_put_role_sw(void *data)
++{
++	struct axp288_extcon_info *info = data;
++
++	cancel_work_sync(&info->role_work);
++	usb_role_switch_put(info->role_sw);
++}
++
+ static int axp288_extcon_probe(struct platform_device *pdev)
+ {
+ 	struct axp288_extcon_info *info;
+ 	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
++	struct device *dev = &pdev->dev;
++	const char *name;
+ 	int ret, i, pirq;
+ 
+ 	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
+@@ -245,9 +345,33 @@ static int axp288_extcon_probe(struct platform_device *pdev)
+ 	info->regmap = axp20x->regmap;
+ 	info->regmap_irqc = axp20x->regmap_irqc;
+ 	info->previous_cable = EXTCON_NONE;
++	INIT_WORK(&info->role_work, axp288_usb_role_work);
++	info->id_nb.notifier_call = axp288_extcon_id_evt;
+ 
+ 	platform_set_drvdata(pdev, info);
+ 
++	info->role_sw = usb_role_switch_get(dev);
++	if (IS_ERR(info->role_sw))
++		return PTR_ERR(info->role_sw);
++	if (info->role_sw) {
++		ret = devm_add_action_or_reset(dev, axp288_put_role_sw, info);
++		if (ret)
++			return ret;
++
++		name = acpi_dev_get_first_match_name("INT3496", NULL, -1);
++		if (name) {
++			info->id_extcon = extcon_get_extcon_dev(name);
++			if (!info->id_extcon)
++				return -EPROBE_DEFER;
++
++			dev_info(dev, "controlling USB role\n");
++		} else {
++			dev_info(dev, "controlling USB role based on Vbus presence\n");
++		}
++	}
++
++	info->vbus_attach = axp288_get_vbus_attach(info);
++
+ 	axp288_extcon_log_rsi(info);
+ 
+ 	/* Initialize extcon device */
+@@ -289,6 +413,19 @@ static int axp288_extcon_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	if (info->id_extcon) {
++		ret = devm_extcon_register_notifier_all(dev, info->id_extcon,
++							&info->id_nb);
++		if (ret)
++			return ret;
++	}
++
++	/* Make sure the role-sw is set correctly before doing BC detection */
++	if (info->role_sw) {
++		queue_work(system_long_wq, &info->role_work);
++		flush_work(&info->role_work);
++	}
++
+ 	/* Start charger cable type detection */
+ 	axp288_extcon_enable(info);
+ 
+@@ -308,8 +445,32 @@ static struct platform_driver axp288_extcon_driver = {
+ 		.name = "axp288_extcon",
+ 	},
+ };
+-module_platform_driver(axp288_extcon_driver);
++
++static struct devcon axp288_extcon_role_sw_conn = {
++	.endpoint[0] = "axp288_extcon",
++	.endpoint[1] = "intel_xhci_usb_sw-role-switch",
++	.id = "usb-role-switch",
++};
++
++static int __init axp288_extcon_init(void)
++{
++	if (x86_match_cpu(cherry_trail_cpu_ids))
++		add_device_connection(&axp288_extcon_role_sw_conn);
++
++	return platform_driver_register(&axp288_extcon_driver);
++}
++module_init(axp288_extcon_init);
++
++static void __exit axp288_extcon_exit(void)
++{
++	if (x86_match_cpu(cherry_trail_cpu_ids))
++		remove_device_connection(&axp288_extcon_role_sw_conn);
++
++	platform_driver_unregister(&axp288_extcon_driver);
++}
++module_exit(axp288_extcon_exit);
+ 
+ MODULE_AUTHOR("Ramakrishna Pallala <ramakrishna.pallala@intel.com>");
++MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
+ MODULE_DESCRIPTION("X-Powers AXP288 extcon driver");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.14.3
