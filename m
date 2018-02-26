@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 05/12] usb: typec: tcpm: Set USB role switch to device mode when configured as such
-Date: Mon, 26 Feb 2018 10:09:18 +0100
-Message-ID: <20180226090925.29436-6-hdegoede@redhat.com>
+Subject: [PATCH v3 11/12] platform/x86: intel_cht_int33fe: Add device connections for the Type-C port
+Date: Mon, 26 Feb 2018 10:09:24 +0100
+Message-ID: <20180226090925.29436-12-hdegoede@redhat.com>
 References: <20180226090925.29436-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180226090925.29436-1-hdegoede@redhat.com>
@@ -10,140 +10,84 @@ To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, My
 Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Setting the mux to MUX_NONE and the switch to USB_SWITCH_DISCONNECT when
-the data-role is device is not correct. Plenty of devices support
-operating as USB device through a (separate) USB device controller.
+We need to add device-connections for the Type-C mux/switch and usb-role
+code to be able to find the PI3USB30532 Type-C cross-switch and the
+device/host role-switch integrated in the CHT SoC.
 
-We really need 2 different versions of USB_SWITCH_CONNECT,
-USB_SWITCH_CONNECT_HOST and USB_SWITCH_DEVICE. Rather then modifying the
-tcpc_usb_switch enum for this, simply remove it and switch to the
-usb_role enum which provides exactly this, this will save use needing to
-convert betweent the 2 enums when calling an usb-role-switch driver later.
-
-Besides switching to the usb_role type, this commit also actually sets the
-mux to TYPEC_MUX_USB and the switch to USB_ROLE_DEVICE instead of setting
-both to none when the data-role is device.
-
-This commit also makes tcpm_reset_port() call tcpm_mux_set(port,
-TYPEC_MUX_NONE, USB_ROLE_NONE) so that the mux and switch
-do _not_ stay in their last mode after a detach.
-
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v3:
--Add Guenter's Reviewed-by
-
 Changes in v2:
--Added Heikki's Reviewed-by
+-Add Andy's Acked-by
+-Add Heikki's Reviewed-by
 ---
- drivers/usb/typec/tcpm.c | 22 +++++++++++-----------
- include/linux/usb/tcpm.h |  8 ++------
- 2 files changed, 13 insertions(+), 17 deletions(-)
+ drivers/platform/x86/intel_cht_int33fe.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 7cd28b700a7f..00ca2822432f 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -618,15 +618,15 @@ void tcpm_pd_transmit_complete(struct tcpm_port *port,
- EXPORT_SYMBOL_GPL(tcpm_pd_transmit_complete);
+diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+index 380ef7ec094f..a3f8674f14da 100644
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -21,6 +21,7 @@
+  */
  
- static int tcpm_mux_set(struct tcpm_port *port, enum tcpc_mux_mode mode,
--			enum tcpc_usb_switch config)
-+			enum usb_role usb_role)
- {
- 	int ret = 0;
- 
--	tcpm_log(port, "Requesting mux mode %d, config %d, polarity %d",
--		 mode, config, port->polarity);
-+	tcpm_log(port, "Requesting mux mode %d, usb-role %d, polarity %d",
-+		 mode, usb_role, port->polarity);
- 
- 	if (port->tcpc->mux)
--		ret = port->tcpc->mux->set(port->tcpc->mux, mode, config,
-+		ret = port->tcpc->mux->set(port->tcpc->mux, mode, usb_role,
- 					   port->polarity);
- 
- 	return ret;
-@@ -742,14 +742,15 @@ static int tcpm_set_attached_state(struct tcpm_port *port, bool attached)
- static int tcpm_set_roles(struct tcpm_port *port, bool attached,
- 			  enum typec_role role, enum typec_data_role data)
- {
-+	enum usb_role usb_role;
- 	int ret;
- 
- 	if (data == TYPEC_HOST)
--		ret = tcpm_mux_set(port, TYPEC_MUX_USB,
--				   TCPC_USB_SWITCH_CONNECT);
-+		usb_role = USB_ROLE_HOST;
- 	else
--		ret = tcpm_mux_set(port, TYPEC_MUX_NONE,
--				   TCPC_USB_SWITCH_DISCONNECT);
-+		usb_role = USB_ROLE_DEVICE;
-+
-+	ret = tcpm_mux_set(port, TYPEC_MUX_USB, usb_role);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -2096,7 +2097,7 @@ static int tcpm_src_attach(struct tcpm_port *port)
- out_disable_pd:
- 	port->tcpc->set_pd_rx(port->tcpc, false);
- out_disable_mux:
--	tcpm_mux_set(port, TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT);
-+	tcpm_mux_set(port, TYPEC_MUX_NONE, USB_ROLE_NONE);
- 	return ret;
- }
- 
-@@ -2140,6 +2141,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
- 	tcpm_init_vconn(port);
- 	tcpm_set_current_limit(port, 0, 0);
- 	tcpm_set_polarity(port, TYPEC_POLARITY_CC1);
-+	tcpm_mux_set(port, TYPEC_MUX_NONE, USB_ROLE_NONE);
- 	tcpm_set_attached_state(port, false);
- 	port->try_src_count = 0;
- 	port->try_snk_count = 0;
-@@ -2190,8 +2192,6 @@ static int tcpm_snk_attach(struct tcpm_port *port)
- static void tcpm_snk_detach(struct tcpm_port *port)
- {
- 	tcpm_detach(port);
--
--	/* XXX: (Dis)connect SuperSpeed mux? */
- }
- 
- static int tcpm_acc_attach(struct tcpm_port *port)
-diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-index ca1c0b57f03f..268721bff2c1 100644
---- a/include/linux/usb/tcpm.h
-+++ b/include/linux/usb/tcpm.h
-@@ -16,6 +16,7 @@
- #define __LINUX_USB_TCPM_H
- 
- #include <linux/bitops.h>
-+#include <linux/usb/role.h>
- #include <linux/usb/typec.h>
- #include "pd.h"
- 
-@@ -97,11 +98,6 @@ struct tcpc_config {
- 	const struct typec_altmode_desc *alt_modes;
+ #include <linux/acpi.h>
++#include <linux/connection.h>
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+@@ -33,6 +34,8 @@ struct cht_int33fe_data {
+ 	struct i2c_client *max17047;
+ 	struct i2c_client *fusb302;
+ 	struct i2c_client *pi3usb30532;
++	/* Contain a list-head must be per device */
++	struct devcon connections[3];
  };
  
--enum tcpc_usb_switch {
--	TCPC_USB_SWITCH_CONNECT,
--	TCPC_USB_SWITCH_DISCONNECT,
--};
--
- /* Mux state attributes */
- #define TCPC_MUX_USB_ENABLED		BIT(0)	/* USB enabled */
- #define TCPC_MUX_DP_ENABLED		BIT(1)	/* DP enabled */
-@@ -118,7 +114,7 @@ enum tcpc_mux_mode {
+ /*
+@@ -172,6 +175,20 @@ static int cht_int33fe_probe(struct i2c_client *client)
+ 			return -EPROBE_DEFER; /* Wait for i2c-adapter to load */
+ 	}
  
- struct tcpc_mux_dev {
- 	int (*set)(struct tcpc_mux_dev *dev, enum tcpc_mux_mode mux_mode,
--		   enum tcpc_usb_switch usb_config,
-+		   enum usb_role usb_role,
- 		   enum typec_cc_polarity polarity);
- 	bool dfp_only;
- 	void *priv_data;
++	data->connections[0].endpoint[0] = "i2c-fusb302";
++	data->connections[0].endpoint[1] = "i2c-pi3usb30532";
++	data->connections[0].id = "typec-switch";
++	data->connections[1].endpoint[0] = "i2c-fusb302";
++	data->connections[1].endpoint[1] = "i2c-pi3usb30532";
++	data->connections[1].id = "typec-mux";
++	data->connections[2].endpoint[0] = "i2c-fusb302";
++	data->connections[2].endpoint[1] = "intel_xhci_usb_sw-role-switch";
++	data->connections[2].id = "usb-role-switch";
++
++	add_device_connection(&data->connections[0]);
++	add_device_connection(&data->connections[1]);
++	add_device_connection(&data->connections[2]);
++
+ 	memset(&board_info, 0, sizeof(board_info));
+ 	strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
+ 	board_info.dev_name = "fusb302";
+@@ -201,6 +218,10 @@ static int cht_int33fe_probe(struct i2c_client *client)
+ 	if (data->max17047)
+ 		i2c_unregister_device(data->max17047);
+ 
++	remove_device_connection(&data->connections[2]);
++	remove_device_connection(&data->connections[1]);
++	remove_device_connection(&data->connections[0]);
++
+ 	return -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
+ }
+ 
+@@ -213,6 +234,10 @@ static int cht_int33fe_remove(struct i2c_client *i2c)
+ 	if (data->max17047)
+ 		i2c_unregister_device(data->max17047);
+ 
++	remove_device_connection(&data->connections[2]);
++	remove_device_connection(&data->connections[1]);
++	remove_device_connection(&data->connections[0]);
++
+ 	return 0;
+ }
+ 
 -- 
 2.14.3
