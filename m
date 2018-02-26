@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 06/12] usb: typec: tcpm: Use new Type-C switch/mux and usb-role-switch functions
-Date: Mon, 26 Feb 2018 10:09:19 +0100
-Message-ID: <20180226090925.29436-7-hdegoede@redhat.com>
+Subject: [PATCH v3 09/12] usb: roles: Add Intel xHCI USB role switch driver
+Date: Mon, 26 Feb 2018 10:09:22 +0100
+Message-ID: <20180226090925.29436-10-hdegoede@redhat.com>
 References: <20180226090925.29436-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180226090925.29436-1-hdegoede@redhat.com>
@@ -10,202 +10,303 @@ To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, My
 Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Remove the unused (not implemented anywhere) tcpc_mux_dev abstraction
-and replace it with calling the new typec_set_orientation,
-usb_role_switch_set and typec_set_mode functions.
+Various Intel SoCs (Cherry Trail, Broxton and others) have an internal USB
+role switch for swiching the OTG USB data lines between the xHCI host
+controller and the dwc3 gadget controller.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Note on some Cherry Trail systems there is ACPI/AML code listening to
+edge interrupts on the id-pin (through an _AIE ACPI method) and switching
+the role between ROLE_HOST and ROLE_NONE based on the id-pin. Note it does
+not set the role to ROLE_DEVICE, because device-mode is usually not used
+under Windows.
+
+The presence of AML code which modifies the cfg0 reg (on some systems)
+means that our read/write/modify of cfg0 may race with the AML code
+doing the same to avoid this we take the global ACPI lock while doing
+the read/write/modify.
+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v3:
--Add Guenter's Reviewed-by
-
 Changes in v2:
--Added Heikki's Reviewed-by
+-Drop unnecessary depends on EXTCON from Kconfig
+-Use BIT(), resource_size()
+-Various other small style fixes
 ---
- drivers/usb/typec/Kconfig           |  1 +
- drivers/usb/typec/fusb302/fusb302.c |  1 -
- drivers/usb/typec/tcpm.c            | 46 ++++++++++++++++++++++++++++---------
- include/linux/usb/tcpm.h            | 10 --------
- 4 files changed, 36 insertions(+), 22 deletions(-)
+ MAINTAINERS                                    |   6 +
+ drivers/usb/Kconfig                            |   2 +
+ drivers/usb/Makefile                           |   2 +
+ drivers/usb/roles/Kconfig                      |  14 ++
+ drivers/usb/roles/Makefile                     |   1 +
+ drivers/usb/roles/intel-xhci-usb-role-switch.c | 192 +++++++++++++++++++++++++
+ 6 files changed, 217 insertions(+)
+ create mode 100644 drivers/usb/roles/Kconfig
+ create mode 100644 drivers/usb/roles/Makefile
+ create mode 100644 drivers/usb/roles/intel-xhci-usb-role-switch.c
 
-diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
-index bcb2744c5977..a2a0684e7c82 100644
---- a/drivers/usb/typec/Kconfig
-+++ b/drivers/usb/typec/Kconfig
-@@ -48,6 +48,7 @@ if TYPEC
- config TYPEC_TCPM
- 	tristate "USB Type-C Port Controller Manager"
- 	depends on USB
-+	select USB_ROLE_SWITCH
- 	help
- 	  The Type-C Port Controller Manager provides a USB PD and USB Type-C
- 	  state machine for use with Type-C Port Controllers.
-diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
-index dcd8ef085b30..a7b06053a538 100644
---- a/drivers/usb/typec/fusb302/fusb302.c
-+++ b/drivers/usb/typec/fusb302/fusb302.c
-@@ -1249,7 +1249,6 @@ static void init_tcpc_dev(struct tcpc_dev *fusb302_tcpc_dev)
- 	fusb302_tcpc_dev->set_roles = tcpm_set_roles;
- 	fusb302_tcpc_dev->start_drp_toggling = tcpm_start_drp_toggling;
- 	fusb302_tcpc_dev->pd_transmit = tcpm_pd_transmit;
--	fusb302_tcpc_dev->mux = NULL;
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0f66f044f988..523f14b4216d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14394,6 +14394,12 @@ S:	Maintained
+ F:	Documentation/hid/hiddev.txt
+ F:	drivers/hid/usbhid/
  
- static const char * const cc_polarity_name[] = {
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 00ca2822432f..bfcaf6618a1f 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -20,6 +20,7 @@
- #include <linux/usb/pd.h>
- #include <linux/usb/pd_bdo.h>
- #include <linux/usb/pd_vdo.h>
++USB INTEL XHCI ROLE MUX DRIVER
++M:	Hans de Goede <hdegoede@redhat.com>
++L:	linux-usb@vger.kernel.org
++S:	Maintained
++F:	drivers/usb/roles/intel-xhci-usb-role-switch.c
++
+ USB ISP116X DRIVER
+ M:	Olav Kongas <ok@artecdesign.ee>
+ L:	linux-usb@vger.kernel.org
+diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
+index f278958e04ca..75f7fb151f71 100644
+--- a/drivers/usb/Kconfig
++++ b/drivers/usb/Kconfig
+@@ -171,6 +171,8 @@ source "drivers/usb/gadget/Kconfig"
+ 
+ source "drivers/usb/typec/Kconfig"
+ 
++source "drivers/usb/roles/Kconfig"
++
+ config USB_LED_TRIG
+ 	bool "USB LED Triggers"
+ 	depends on LEDS_CLASS && LEDS_TRIGGERS
+diff --git a/drivers/usb/Makefile b/drivers/usb/Makefile
+index 060643a1b5c8..7d1b8c82b208 100644
+--- a/drivers/usb/Makefile
++++ b/drivers/usb/Makefile
+@@ -65,3 +65,5 @@ obj-$(CONFIG_USB_COMMON)	+= common/
+ obj-$(CONFIG_USBIP_CORE)	+= usbip/
+ 
+ obj-$(CONFIG_TYPEC)		+= typec/
++
++obj-$(CONFIG_USB_ROLE_SWITCH)	+= roles/
+diff --git a/drivers/usb/roles/Kconfig b/drivers/usb/roles/Kconfig
+new file mode 100644
+index 000000000000..f5a5e6f79f1b
+--- /dev/null
++++ b/drivers/usb/roles/Kconfig
+@@ -0,0 +1,14 @@
++if USB_ROLE_SWITCH
++
++config USB_ROLES_INTEL_XHCI
++	tristate "Intel XHCI USB Role Switch"
++	depends on ACPI && X86
++	help
++	  Driver for the internal USB role switch for switching the USB data
++	  lines between the xHCI host controller and the dwc3 gadget controller
++	  found on various Intel SoCs.
++
++	  To compile the driver as a module, choose M here: the module will
++	  be called intel-xhci-usb-role-switch.
++
++endif # USB_ROLE_SWITCH
+diff --git a/drivers/usb/roles/Makefile b/drivers/usb/roles/Makefile
+new file mode 100644
+index 000000000000..e44b179ba275
+--- /dev/null
++++ b/drivers/usb/roles/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_USB_ROLES_INTEL_XHCI) += intel-xhci-usb-role-switch.o
+diff --git a/drivers/usb/roles/intel-xhci-usb-role-switch.c b/drivers/usb/roles/intel-xhci-usb-role-switch.c
+new file mode 100644
+index 000000000000..3d7be5eace49
+--- /dev/null
++++ b/drivers/usb/roles/intel-xhci-usb-role-switch.c
+@@ -0,0 +1,192 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Intel XHCI (Cherry Trail, Broxton and others) USB OTG role switch driver
++ *
++ * Copyright (c) 2016-2017 Hans de Goede <hdegoede@redhat.com>
++ *
++ * Loosely based on android x86 kernel code which is:
++ *
++ * Copyright (C) 2014 Intel Corp.
++ *
++ * Author: Wu, Hao
++ */
++
++#include <linux/acpi.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
 +#include <linux/usb/role.h>
- #include <linux/usb/tcpm.h>
- #include <linux/usb/typec.h>
- #include <linux/workqueue.h>
-@@ -176,6 +177,7 @@ struct tcpm_port {
- 	struct typec_port *typec_port;
- 
- 	struct tcpc_dev	*tcpc;
++
++/* register definition */
++#define DUAL_ROLE_CFG0			0x68
++#define SW_VBUS_VALID			BIT(24)
++#define SW_IDPIN_EN			BIT(21)
++#define SW_IDPIN			BIT(20)
++
++#define DUAL_ROLE_CFG1			0x6c
++#define HOST_MODE			BIT(29)
++
++#define DUAL_ROLE_CFG1_POLL_TIMEOUT	1000
++
++#define DRV_NAME			"intel_xhci_usb_sw"
++
++struct intel_xhci_usb_data {
 +	struct usb_role_switch *role_sw;
- 
- 	enum typec_role vconn_role;
- 	enum typec_role pwr_role;
-@@ -618,18 +620,25 @@ void tcpm_pd_transmit_complete(struct tcpm_port *port,
- EXPORT_SYMBOL_GPL(tcpm_pd_transmit_complete);
- 
- static int tcpm_mux_set(struct tcpm_port *port, enum tcpc_mux_mode mode,
--			enum usb_role usb_role)
-+			enum usb_role usb_role,
-+			enum typec_orientation orientation)
- {
--	int ret = 0;
-+	int ret;
- 
--	tcpm_log(port, "Requesting mux mode %d, usb-role %d, polarity %d",
--		 mode, usb_role, port->polarity);
-+	tcpm_log(port, "Requesting mux mode %d, usb-role %d, orientation %d",
-+		 mode, usb_role, orientation);
- 
--	if (port->tcpc->mux)
--		ret = port->tcpc->mux->set(port->tcpc->mux, mode, usb_role,
--					   port->polarity);
-+	ret = typec_set_orientation(port->typec_port, orientation);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	if (port->role_sw) {
-+		ret = usb_role_switch_set_role(port->role_sw, usb_role);
-+		if (ret)
-+			return ret;
++	void __iomem *base;
++};
++
++struct intel_xhci_acpi_match {
++	const char *hid;
++	int hrv;
++};
++
++/*
++ * ACPI IDs for PMICs which do not support separate data and power role
++ * detection (USB ACA detection for micro USB OTG), we allow userspace to
++ * change the role manually on these.
++ */
++static const struct intel_xhci_acpi_match allow_userspace_ctrl_ids[] = {
++	{ "INT33F4",  3 }, /* X-Powers AXP288 PMIC */
++};
++
++static int intel_xhci_usb_set_role(struct device *dev, enum usb_role role)
++{
++	struct intel_xhci_usb_data *data = dev_get_drvdata(dev);
++	unsigned long timeout;
++	acpi_status status;
++	u32 glk, val;
++
++	/*
++	 * On many CHT devices ACPI event (_AEI) handlers read / modify /
++	 * write the cfg0 register, just like we do. Take the ACPI lock
++	 * to avoid us racing with the AML code.
++	 */
++	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
++	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
++		dev_err(dev, "Error could not acquire lock\n");
++		return -EIO;
 +	}
 +
-+	return typec_set_mode(port->typec_port, mode);
- }
- 
- static int tcpm_set_polarity(struct tcpm_port *port,
-@@ -742,15 +751,21 @@ static int tcpm_set_attached_state(struct tcpm_port *port, bool attached)
- static int tcpm_set_roles(struct tcpm_port *port, bool attached,
- 			  enum typec_role role, enum typec_data_role data)
- {
-+	enum typec_orientation orientation;
- 	enum usb_role usb_role;
- 	int ret;
- 
-+	if (port->polarity == TYPEC_POLARITY_CC1)
-+		orientation = TYPEC_ORIENTATION_NORMAL;
++	/* Set idpin value as requested */
++	val = readl(data->base + DUAL_ROLE_CFG0);
++	switch (role) {
++	case USB_ROLE_NONE:
++		val |= SW_IDPIN;
++		val &= ~SW_VBUS_VALID;
++		break;
++	case USB_ROLE_HOST:
++		val &= ~SW_IDPIN;
++		val &= ~SW_VBUS_VALID;
++		break;
++	case USB_ROLE_DEVICE:
++		val |= SW_IDPIN;
++		val |= SW_VBUS_VALID;
++		break;
++	}
++	val |= SW_IDPIN_EN;
++
++	writel(val, data->base + DUAL_ROLE_CFG0);
++
++	acpi_release_global_lock(glk);
++
++	/* In most case it takes about 600ms to finish mode switching */
++	timeout = jiffies + msecs_to_jiffies(DUAL_ROLE_CFG1_POLL_TIMEOUT);
++
++	/* Polling on CFG1 register to confirm mode switch.*/
++	do {
++		val = readl(data->base + DUAL_ROLE_CFG1);
++		if (!!(val & HOST_MODE) == (role == USB_ROLE_HOST))
++			return 0;
++
++		/* Interval for polling is set to about 5 - 10 ms */
++		usleep_range(5000, 10000);
++	} while (time_before(jiffies, timeout));
++
++	dev_warn(dev, "Timeout waiting for role-switch\n");
++	return -ETIMEDOUT;
++}
++
++static enum usb_role intel_xhci_usb_get_role(struct device *dev)
++{
++	struct intel_xhci_usb_data *data = dev_get_drvdata(dev);
++	enum usb_role role;
++	u32 val;
++
++	val = readl(data->base + DUAL_ROLE_CFG0);
++
++	if (!(val & SW_IDPIN))
++		role = USB_ROLE_HOST;
++	else if (val & SW_VBUS_VALID)
++		role = USB_ROLE_DEVICE;
 +	else
-+		orientation = TYPEC_ORIENTATION_REVERSE;
++		role = USB_ROLE_NONE;
 +
- 	if (data == TYPEC_HOST)
- 		usb_role = USB_ROLE_HOST;
- 	else
- 		usb_role = USB_ROLE_DEVICE;
- 
--	ret = tcpm_mux_set(port, TYPEC_MUX_USB, usb_role);
-+	ret = tcpm_mux_set(port, TYPEC_MUX_USB, usb_role, orientation);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -2097,7 +2112,8 @@ static int tcpm_src_attach(struct tcpm_port *port)
- out_disable_pd:
- 	port->tcpc->set_pd_rx(port->tcpc, false);
- out_disable_mux:
--	tcpm_mux_set(port, TYPEC_MUX_NONE, USB_ROLE_NONE);
-+	tcpm_mux_set(port, TYPEC_MUX_NONE, USB_ROLE_NONE,
-+		     TYPEC_ORIENTATION_NONE);
- 	return ret;
- }
- 
-@@ -2141,7 +2157,8 @@ static void tcpm_reset_port(struct tcpm_port *port)
- 	tcpm_init_vconn(port);
- 	tcpm_set_current_limit(port, 0, 0);
- 	tcpm_set_polarity(port, TYPEC_POLARITY_CC1);
--	tcpm_mux_set(port, TYPEC_MUX_NONE, USB_ROLE_NONE);
-+	tcpm_mux_set(port, TYPEC_MUX_NONE, USB_ROLE_NONE,
-+		     TYPEC_ORIENTATION_NONE);
- 	tcpm_set_attached_state(port, false);
- 	port->try_src_count = 0;
- 	port->try_snk_count = 0;
-@@ -3742,6 +3759,12 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 	port->partner_desc.identity = &port->partner_ident;
- 	port->port_type = tcpc->config->type;
- 
-+	port->role_sw = usb_role_switch_get(port->dev);
-+	if (IS_ERR(port->role_sw)) {
-+		err = PTR_ERR(port->role_sw);
-+		goto out_destroy_wq;
-+	}
++	return role;
++}
 +
- 	port->typec_port = typec_register_port(port->dev, &port->typec_caps);
- 	if (IS_ERR(port->typec_port)) {
- 		err = PTR_ERR(port->typec_port);
-@@ -3777,6 +3800,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 	return port;
- 
- out_destroy_wq:
-+	usb_role_switch_put(port->role_sw);
- 	destroy_workqueue(port->wq);
- 	return ERR_PTR(err);
- }
-diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-index 268721bff2c1..fe3508e6e1df 100644
---- a/include/linux/usb/tcpm.h
-+++ b/include/linux/usb/tcpm.h
-@@ -16,7 +16,6 @@
- #define __LINUX_USB_TCPM_H
- 
- #include <linux/bitops.h>
--#include <linux/usb/role.h>
- #include <linux/usb/typec.h>
- #include "pd.h"
- 
-@@ -112,14 +111,6 @@ enum tcpc_mux_mode {
- 			  TCPC_MUX_DP_ENABLED,
- };
- 
--struct tcpc_mux_dev {
--	int (*set)(struct tcpc_mux_dev *dev, enum tcpc_mux_mode mux_mode,
--		   enum usb_role usb_role,
--		   enum typec_cc_polarity polarity);
--	bool dfp_only;
--	void *priv_data;
--};
--
- /**
-  * struct tcpc_dev - Port configuration and callback functions
-  * @config:	Pointer to port configuration
-@@ -171,7 +162,6 @@ struct tcpc_dev {
- 	int (*try_role)(struct tcpc_dev *dev, int role);
- 	int (*pd_transmit)(struct tcpc_dev *dev, enum tcpm_transmit_type type,
- 			   const struct pd_message *msg);
--	struct tcpc_mux_dev *mux;
- };
- 
- struct tcpm_port;
++static struct usb_role_switch_desc sw_desc = {
++	.set = intel_xhci_usb_set_role,
++	.get = intel_xhci_usb_get_role,
++};
++
++static int intel_xhci_usb_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct intel_xhci_usb_data *data;
++	struct resource *res;
++	int i;
++
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	data->base = devm_ioremap_nocache(dev, res->start, resource_size(res));
++	if (IS_ERR(data->base))
++		return PTR_ERR(data->base);
++
++	for (i = 0; i < ARRAY_SIZE(allow_userspace_ctrl_ids); i++)
++		if (acpi_dev_present(allow_userspace_ctrl_ids[i].hid, "1",
++				     allow_userspace_ctrl_ids[i].hrv))
++			sw_desc.allow_userspace_control = true;
++
++	platform_set_drvdata(pdev, data);
++
++	data->role_sw = usb_role_switch_register(dev, &sw_desc);
++	if (IS_ERR(data->role_sw))
++		return PTR_ERR(data->role_sw);
++
++	return 0;
++}
++
++int intel_xhci_usb_remove(struct platform_device *pdev)
++{
++	struct intel_xhci_usb_data *data = platform_get_drvdata(pdev);
++
++	usb_role_switch_unregister(data->role_sw);
++	return 0;
++}
++
++static const struct platform_device_id intel_xhci_usb_table[] = {
++	{ .name = DRV_NAME },
++	{}
++};
++MODULE_DEVICE_TABLE(platform, intel_xhci_usb_table);
++
++static struct platform_driver intel_xhci_usb_driver = {
++	.driver = {
++		.name = DRV_NAME,
++	},
++	.id_table = intel_xhci_usb_table,
++	.probe = intel_xhci_usb_probe,
++	.remove = intel_xhci_usb_remove,
++};
++
++module_platform_driver(intel_xhci_usb_driver);
++
++MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
++MODULE_DESCRIPTION("Intel XHCI USB role switch driver");
++MODULE_LICENSE("GPL");
 -- 
 2.14.3
