@@ -1,36 +1,43 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH 1/3] platform/x86: dell-smbios: Correct some style
- warnings
-Date: Tue, 27 Feb 2018 16:15:04 +0000
-Message-ID: <a7bb6d4240f04d7ba5b1f07a1087ee64@ausx13mpc124.AMER.DELL.COM>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 3/3] platform/x86: dell-smbios: Link all dell-smbios-*
+ modules together
+Date: Tue, 27 Feb 2018 18:16:46 +0200
+Message-ID: <CAHp75VchPrF8ndHck9pzjOOScTS627x9TFLsnr+LWxiwTgck9w@mail.gmail.com>
 References: <1519747014-17561-1-git-send-email-mario.limonciello@dell.com>
- <CAHp75VfS4vif1_S1Z=z2jAZfERmsiqG0h0j5k6zrmjiQwPGekA@mail.gmail.com>
+ <1519747014-17561-3-git-send-email-mario.limonciello@dell.com>
+ <CAHp75VcNWo0Mh8jYU0vV+RRt3ZudKns_ZStcp_7ueebJfwL_nQ@mail.gmail.com> <92c22f39a7df439a9e18cb975eec086e@ausx13mpc124.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfS4vif1_S1Z=z2jAZfERmsiqG0h0j5k6zrmjiQwPGekA@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <92c22f39a7df439a9e18cb975eec086e@ausx13mpc124.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.shevchenko@gmail.com
-Cc: dvhart@infradead.org, pali.rohar@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: Darren Hart <dvhart@infradead.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
-LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
-bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIEFuZHkgU2hldmNoZW5rbw0KPiBTZW50
-OiBUdWVzZGF5LCBGZWJydWFyeSAyNywgMjAxOCAxMDowNCBBTQ0KPiBUbzogTGltb25jaWVsbG8s
-IE1hcmlvIDxNYXJpb19MaW1vbmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IERhcnJlbiBIYXJ0IDxk
-dmhhcnRAaW5mcmFkZWFkLm9yZz47IFBhbGkgUm9ow6FyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT47
-DQo+IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXIg
-PHBsYXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogUmU6
-IFtQQVRDSCAxLzNdIHBsYXRmb3JtL3g4NjogZGVsbC1zbWJpb3M6IENvcnJlY3Qgc29tZSBzdHls
-ZSB3YXJuaW5ncw0KPiANCj4gT24gVHVlLCBGZWIgMjcsIDIwMTggYXQgNTo1NiBQTSwgTWFyaW8g
-TGltb25jaWVsbG8NCj4gPG1hcmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPiB3cm90ZToNCj4gDQo+
-ID4gICAgICAgICAvKiA0IGJ5dGVzIG9mIHRhYmxlIGhlYWRlciwgcGx1cyA3IGJ5dGVzIG9mIERl
-bGwgaGVhZGVyLCBwbHVzIGF0IGxlYXN0DQo+ID4gLSAgICAgICAgICA2IGJ5dGVzIG9mIGVudHJ5
-ICovDQo+ID4gKyAgICAgICAgKiA2IGJ5dGVzIG9mIGVudHJ5DQo+ID4gKyAgICAgICAgKi8NCj4g
-DQo+IEkgd291bGQgcHJlZmVyIG5vdCB0byBtaXggd2l0aCBuZXQgc3R5bGUsIHNpbmNlIHlvdSBh
-cmUgZml4aW5nIHRoaXMsIHBlcmhhcHMNCj4gDQo+IC8qDQo+ICAqIDQgLi4uDQo+ICAqIDYgLi4u
-DQo+ICAqLw0KPiANCj4gPw0KPiANClRoYW5rcywgd2lsbCBhZGp1c3QgYWdhaW4gd2hlbiBJIHJl
-c3VibWl0IHdpdGggY2hhbmdlcyBmb3IgMy8zLg0K
+On Tue, Feb 27, 2018 at 6:13 PM,  <Mario.Limonciello@dell.com> wrote:
+
+>> > --- a/drivers/platform/x86/dell-smbios.h
+>> > +++ b/drivers/platform/x86/dell-smbios.h
+>> > @@ -75,4 +75,10 @@ int dell_laptop_register_notifier(struct notifier_block
+>> *nb);
+>> >  int dell_laptop_unregister_notifier(struct notifier_block *nb);
+>> >  void dell_laptop_call_notifier(unsigned long action, void *data);
+>> >
+>> > +/* for the supported backends */
+>> > +int init_dell_smbios_wmi(void);
+>> > +void exit_dell_smbios_wmi(void);
+>> > +int init_dell_smbios_smm(void);
+>> > +void exit_dell_smbios_smm(void);
+>> > +
+>>
+>> ...here...
+>
+> So do you mean you would rather see inline functions in header
+> file for the #else case then?
+
+At least is sounds as a standard practice to me.
+
+-- 
+With Best Regards,
+Andy Shevchenko
