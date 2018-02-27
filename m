@@ -1,59 +1,52 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
- Dell machines
-Date: Mon, 26 Feb 2018 21:32:55 +0100
-Message-ID: <20180226203255.lnnzipipjz5l2itz@ninjato>
-References: <CAHp75VdWA-0a_FeicHSi_FfWurQ9EvkdW0raqgoRVySTyxDJ0Q@mail.gmail.com>
- <20180128144509.pobnj7cayc4psgrj@pali>
- <CAHp75VdU1OMTqLcDuzhQMHuX9rMhjw6p3CkSWaW5Y4kOy8ggqg@mail.gmail.com>
- <20180131120348.azy25aqvn5wrdkeh@pali>
- <CAHp75Vf=-RQvCtS684Q5+X=YKmZXgP_1kr0to8BGZX0jQAsuZw@mail.gmail.com>
- <20180212153012.vffvjmz26ifyxbj5@pali>
- <CAHp75VfF+qwCXcr3yuayE-Z+UG9wuMOKfGzLhdyPk79daEi9gQ@mail.gmail.com>
- <20180213150004.5d2v7y7wwuure4io@pali>
- <CAHp75VfxgbFiDxyrqyMRE8s85L1_EzkVvrA1NGYA5_su=5oGVQ@mail.gmail.com>
- <20180213165023.xmzovx7fd3gdljxw@pali>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zswupbexvwztthqj"
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH 1/3] platform/x86: dell-smbios: Correct some style warnings
+Date: Tue, 27 Feb 2018 09:56:52 -0600
+Message-ID: <1519747014-17561-1-git-send-email-mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180213165023.xmzovx7fd3gdljxw@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Jean Delvare <jdelvare@suse.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <Mario_Limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: pali.rohar@gmail.com, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
+WARNING: function definition argument 'struct calling_interface_buffer *'
+should also have an identifier name
++       int (*call_fn)(struct calling_interface_buffer *);
 
---zswupbexvwztthqj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+WARNING: Block comments use * on subsequent lines
++       /* 4 bytes of table header, plus 7 bytes of Dell header,
+	plus at least
++          6 bytes of entry */
 
+WARNING: Block comments use a trailing */ on a separate line
++          6 bytes of entry */
 
-> I'm not maintainer of i2c-i801.ko, Jean Delvare & Wolfram Sang are.
-> Therefore instructing future contributors would be up to them.
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ drivers/platform/x86/dell-smbios.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-This is really Jean's realm.
-
-
---zswupbexvwztthqj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqUbvcACgkQFA3kzBSg
-KbbdcA//TTyCuZh33VimGE+9TaemKkLPnBtK0Igsd48ULTWn076k7Ap/nzVcCaRf
-coMlZXkLbWkAkDmpoJ9t6YvIxXzxrils7QIcizjO4jcXNqgJbSyy1ejSqqRZcuJb
-p/9KcKZtDHY+EsgdO4meJohoRKUHxCp5tQ0p7Drlq+cFyVMYR4vvvh9gTDeTpH2p
-c6qOKQqvww6iY+9lqr0B4nyiJkQHyeDKsKBlUl/ZeGfFUkSTWo/jxNIik/oZecx8
-KLIiNN9FCcpp3j4UJVBBv70Kcrwq/2RkcfNzeqbqxLehI3jKVueIIt/tG9ZkvBvQ
-pbie3C6QTuQrZgEkEGUcz/ipmmeGQ5jhLXksdoT/S74zTdBpeBpDP0GLa16pq9QQ
-yg0oNYB6SIzrtWQmtmz8xOuJ1n/VkVgOjLynEDk07+i8C3CNWEn9XK6ORPwopfb8
-MWkz/mhwzEoqKA4hPCY5Pyu0ha+vhc8xs845tNB2S/1ID6JOFbkHboKJFumrGzZu
-lpbJd0keU3caV9IN4AEx+OT9IP9wJCJlfy+HD0dwziTpGgGBLbncBOFW/LqcfGLp
-mgBrkxg6Dmr8qUS522CA2Mc4JaC75Qk5uzbwFEvz0nM8ASBX7U+J1Utn2BWEMraP
-09VnTc37amGcZ3hX3Q/htQBid+fcV2UKQOo9b01XuCR0G7zIrgU=
-=1eH4
------END PGP SIGNATURE-----
-
---zswupbexvwztthqj--
+diff --git a/drivers/platform/x86/dell-smbios.c b/drivers/platform/x86/dell-smbios.c
+index 8541cde..4850658 100644
+--- a/drivers/platform/x86/dell-smbios.c
++++ b/drivers/platform/x86/dell-smbios.c
+@@ -36,7 +36,7 @@ static DEFINE_MUTEX(smbios_mutex);
+ struct smbios_device {
+ 	struct list_head list;
+ 	struct device *device;
+-	int (*call_fn)(struct calling_interface_buffer *);
++	int (*call_fn)(struct calling_interface_buffer *arg);
+ };
+ 
+ struct smbios_call {
+@@ -353,7 +353,8 @@ static void __init parse_da_table(const struct dmi_header *dm)
+ 		container_of(dm, struct calling_interface_structure, header);
+ 
+ 	/* 4 bytes of table header, plus 7 bytes of Dell header, plus at least
+-	   6 bytes of entry */
++	 * 6 bytes of entry
++	 */
+ 
+ 	if (dm->length < 17)
+ 		return;
+-- 
+2.7.4
