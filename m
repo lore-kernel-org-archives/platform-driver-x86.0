@@ -1,92 +1,67 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 3/3] platform/x86: dell-smbios: Link all dell-smbios-*
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v2 3/3] platform/x86: dell-smbios: Link all dell-smbios-*
  modules together
-Date: Tue, 27 Feb 2018 20:02:06 +0200
-Message-ID: <CAHp75VcpkO8=iF=pXhbyaR_kP+kPhmr1AEQM-CwGuL78Z7T1Bg@mail.gmail.com>
-References: <1519753659-3376-1-git-send-email-mario.limonciello@dell.com> <1519753659-3376-3-git-send-email-mario.limonciello@dell.com>
+Date: Tue, 27 Feb 2018 18:03:25 +0000
+Message-ID: <162f864ef8814432a9027ec6d9fcfb58@ausx13mpc124.AMER.DELL.COM>
+References: <1519753659-3376-1-git-send-email-mario.limonciello@dell.com>
+ <1519753659-3376-3-git-send-email-mario.limonciello@dell.com>
+ <CAHp75VcpkO8=iF=pXhbyaR_kP+kPhmr1AEQM-CwGuL78Z7T1Bg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519753659-3376-3-git-send-email-mario.limonciello@dell.com>
+In-Reply-To: <CAHp75VcpkO8=iF=pXhbyaR_kP+kPhmr1AEQM-CwGuL78Z7T1Bg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: Darren Hart <dvhart@infradead.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: andy.shevchenko@gmail.com
+Cc: dvhart@infradead.org, pali.rohar@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Feb 27, 2018 at 7:47 PM, Mario Limonciello
-<mario.limonciello@dell.com> wrote:
-> Some race conditions were raised due to dell-smbios and its backends
-> not being ready by the time that a consumer would call one of the
-> exported methods.
->
-> To avoid this problem, guarantee that all initialization has been
-> done by linking them all together and running init for them all.
->
-> As part of this change the Kconfig needs to be adjusted so that
-> CONFIG_DELL_SMBIOS_SMM and CONFIG_DELL_SMBIOS_WMI are boolean
-> rather than modules.
->
-> CONFIG_DELL_SMBIOS is a visually selectable option again and both
-> CONFIG_DELL_SMBIOS_WMI and CONFIG_DELL_SMBIOS_SMM are optional.
-
-> changes from v1:
->  * Move #ifdefs into dell-smbios.h and use static inline functions
-
-> --- a/drivers/platform/x86/dell-smbios-smm.c
-> +++ b/drivers/platform/x86/dell-smbios-smm.c
-
-> +#ifdef CONFIG_DELL_SMBIOS_SMM
-
-Hmm... It's still here.
-
-Hint: in Makefile you need something like
-
-obj-$(CONFIG_DELL_SMBIOS_SMM) += dell-smbios-smm.o
-
-> +#endif /* CONFIG_DELL_SMBIOS_SMM */
-
-> --- a/drivers/platform/x86/dell-smbios-wmi.c
-> +++ b/drivers/platform/x86/dell-smbios-wmi.c
-
-> +#ifdef CONFIG_DELL_SMBIOS_WMI
-
-Ditto.
-
-> +#endif /* CONFIG_DELL_SMBIOS_WMI */
-
-
-> +#ifdef CONFIG_DELL_SMBIOS_WMI
-> +int init_dell_smbios_wmi(void);
-> +void exit_dell_smbios_wmi(void);
-> +#else /* CONFIG_DELL_SMBIOS_WMI */
-> +static inline int init_dell_smbios_wmi(void)
-> +{
-> +       return -ENODEV;
-> +}
-
-> +static inline void exit_dell_smbios_wmi(void)
-> +{}
-
-One line, please.
-
-> +#endif /* CONFIG_DELL_SMBIOS_WMI */
-> +
-> +#ifdef CONFIG_DELL_SMBIOS_SMM
-> +int init_dell_smbios_smm(void);
-> +void exit_dell_smbios_smm(void);
-> +#else /* CONFIG_DELL_SMBIOS_SMM */
-> +static inline int init_dell_smbios_smm(void)
-> +{
-> +       return -ENODEV;
-> +}
-
-> +static inline void exit_dell_smbios_smm(void)
-> +{}
-
-Ditto.
-
-> +#endif /* CONFIG_DELL_SMBIOS_SMM */
-
--- 
-With Best Regards,
-Andy Shevchenko
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
+aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBGZWJydWFy
+eSAyNywgMjAxOCAxMjowMiBQTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvIDxNYXJpb19MaW1v
+bmNpZWxsb0BEZWxsLmNvbT4NCj4gQ2M6IERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9y
+Zz47IFBhbGkgUm9ow6FyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT47DQo+IExLTUwgPGxpbnV4LWtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZlci0N
+Cj4geDg2QHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAzLzNdIHBs
+YXRmb3JtL3g4NjogZGVsbC1zbWJpb3M6IExpbmsgYWxsIGRlbGwtc21iaW9zLSoNCj4gbW9kdWxl
+cyB0b2dldGhlcg0KPiANCj4gT24gVHVlLCBGZWIgMjcsIDIwMTggYXQgNzo0NyBQTSwgTWFyaW8g
+TGltb25jaWVsbG8NCj4gPG1hcmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPiB3cm90ZToNCj4gPiBT
+b21lIHJhY2UgY29uZGl0aW9ucyB3ZXJlIHJhaXNlZCBkdWUgdG8gZGVsbC1zbWJpb3MgYW5kIGl0
+cyBiYWNrZW5kcw0KPiA+IG5vdCBiZWluZyByZWFkeSBieSB0aGUgdGltZSB0aGF0IGEgY29uc3Vt
+ZXIgd291bGQgY2FsbCBvbmUgb2YgdGhlDQo+ID4gZXhwb3J0ZWQgbWV0aG9kcy4NCj4gPg0KPiA+
+IFRvIGF2b2lkIHRoaXMgcHJvYmxlbSwgZ3VhcmFudGVlIHRoYXQgYWxsIGluaXRpYWxpemF0aW9u
+IGhhcyBiZWVuDQo+ID4gZG9uZSBieSBsaW5raW5nIHRoZW0gYWxsIHRvZ2V0aGVyIGFuZCBydW5u
+aW5nIGluaXQgZm9yIHRoZW0gYWxsLg0KPiA+DQo+ID4gQXMgcGFydCBvZiB0aGlzIGNoYW5nZSB0
+aGUgS2NvbmZpZyBuZWVkcyB0byBiZSBhZGp1c3RlZCBzbyB0aGF0DQo+ID4gQ09ORklHX0RFTExf
+U01CSU9TX1NNTSBhbmQgQ09ORklHX0RFTExfU01CSU9TX1dNSSBhcmUgYm9vbGVhbg0KPiA+IHJh
+dGhlciB0aGFuIG1vZHVsZXMuDQo+ID4NCj4gPiBDT05GSUdfREVMTF9TTUJJT1MgaXMgYSB2aXN1
+YWxseSBzZWxlY3RhYmxlIG9wdGlvbiBhZ2FpbiBhbmQgYm90aA0KPiA+IENPTkZJR19ERUxMX1NN
+QklPU19XTUkgYW5kIENPTkZJR19ERUxMX1NNQklPU19TTU0gYXJlIG9wdGlvbmFsLg0KPiANCj4g
+PiBjaGFuZ2VzIGZyb20gdjE6DQo+ID4gICogTW92ZSAjaWZkZWZzIGludG8gZGVsbC1zbWJpb3Mu
+aCBhbmQgdXNlIHN0YXRpYyBpbmxpbmUgZnVuY3Rpb25zDQo+IA0KPiA+IC0tLSBhL2RyaXZlcnMv
+cGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLXNtbS5jDQo+ID4gKysrIGIvZHJpdmVycy9wbGF0Zm9y
+bS94ODYvZGVsbC1zbWJpb3Mtc21tLmMNCj4gDQo+ID4gKyNpZmRlZiBDT05GSUdfREVMTF9TTUJJ
+T1NfU01NDQo+IA0KPiBIbW0uLi4gSXQncyBzdGlsbCBoZXJlLg0KPiANCj4gSGludDogaW4gTWFr
+ZWZpbGUgeW91IG5lZWQgc29tZXRoaW5nIGxpa2UNCj4gDQo+IG9iai0kKENPTkZJR19ERUxMX1NN
+QklPU19TTU0pICs9IGRlbGwtc21iaW9zLXNtbS5vDQoNClRoYW5rcyBtYWtlcyBzZW5zZS4gIFdp
+bGwgYWRqdXN0IGFnYWluLg0KDQo+IA0KPiA+ICsjZW5kaWYgLyogQ09ORklHX0RFTExfU01CSU9T
+X1NNTSAqLw0KPiANCj4gPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy13
+bWkuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtc21iaW9zLXdtaS5jDQo+
+IA0KPiA+ICsjaWZkZWYgQ09ORklHX0RFTExfU01CSU9TX1dNSQ0KPiANCj4gRGl0dG8uDQo+IA0K
+PiA+ICsjZW5kaWYgLyogQ09ORklHX0RFTExfU01CSU9TX1dNSSAqLw0KPiANCj4gDQo+ID4gKyNp
+ZmRlZiBDT05GSUdfREVMTF9TTUJJT1NfV01JDQo+ID4gK2ludCBpbml0X2RlbGxfc21iaW9zX3dt
+aSh2b2lkKTsNCj4gPiArdm9pZCBleGl0X2RlbGxfc21iaW9zX3dtaSh2b2lkKTsNCj4gPiArI2Vs
+c2UgLyogQ09ORklHX0RFTExfU01CSU9TX1dNSSAqLw0KPiA+ICtzdGF0aWMgaW5saW5lIGludCBp
+bml0X2RlbGxfc21iaW9zX3dtaSh2b2lkKQ0KPiA+ICt7DQo+ID4gKyAgICAgICByZXR1cm4gLUVO
+T0RFVjsNCj4gPiArfQ0KPiANCj4gPiArc3RhdGljIGlubGluZSB2b2lkIGV4aXRfZGVsbF9zbWJp
+b3Nfd21pKHZvaWQpDQo+ID4gK3t9DQo+IA0KPiBPbmUgbGluZSwgcGxlYXNlLg0KPiANCj4gPiAr
+I2VuZGlmIC8qIENPTkZJR19ERUxMX1NNQklPU19XTUkgKi8NCj4gPiArDQo+ID4gKyNpZmRlZiBD
+T05GSUdfREVMTF9TTUJJT1NfU01NDQo+ID4gK2ludCBpbml0X2RlbGxfc21iaW9zX3NtbSh2b2lk
+KTsNCj4gPiArdm9pZCBleGl0X2RlbGxfc21iaW9zX3NtbSh2b2lkKTsNCj4gPiArI2Vsc2UgLyog
+Q09ORklHX0RFTExfU01CSU9TX1NNTSAqLw0KPiA+ICtzdGF0aWMgaW5saW5lIGludCBpbml0X2Rl
+bGxfc21iaW9zX3NtbSh2b2lkKQ0KPiA+ICt7DQo+ID4gKyAgICAgICByZXR1cm4gLUVOT0RFVjsN
+Cj4gPiArfQ0KPiANCj4gPiArc3RhdGljIGlubGluZSB2b2lkIGV4aXRfZGVsbF9zbWJpb3Nfc21t
+KHZvaWQpDQo+ID4gK3t9DQo+IA0KPiBEaXR0by4NCj4gDQo+ID4gKyNlbmRpZiAvKiBDT05GSUdf
+REVMTF9TTUJJT1NfU01NICovDQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJkcywNCj4gQW5k
+eSBTaGV2Y2hlbmtvDQo=
