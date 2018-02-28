@@ -1,39 +1,74 @@
-From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
-Subject: [PATCH 0/7] fujitsu-laptop: Consistent naming of constants
-Date: Tue, 27 Feb 2018 22:15:32 +0100
-Message-ID: <20180227211539.5708-1-kernel@kempniu.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v5 00/12] USB Type-C device-connection, mux and switch support
+Date: Wed, 28 Feb 2018 16:07:37 +0100
+Message-ID: <20180228150749.26831-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patch series is an attempt to organize all the named constants used
-throughout fujitsu-laptop so that their names more clearly convey their
-purpose: a set of prefixes is introduced to "map" constant names to
-call_fext_func() parameters.
+Hi All,
 
-The chosen constant naming patterns are a compromise between readability
-and enabling longer conditional expressions to fit into the 80-character
-line length limit.  Some changes (like those in patches 4/7 and 5/7) may
-be perceived as bikeshedding, so please just think of them as proposals,
-not fixes.
+Here is version 5 of Heikki's and my USB Type-C device-connection, mux and
+switch support series. Versions 2 - 5 bring various small code and style
+fixes based on review (no major changes).
 
-Finally, patch 7/7 again [1] proposes a set of helper functions which
-seem to be making quite a difference in terms of code readability in
-certain places (especially in long conditional expressions).  YMMV,
-though, feel free to disagree.
+Here is the original cover-letter of v1:
 
-This patch series should be applied on top of for-next as it builds on
-the previous patch series I submitted.
+Some devices with an USB Type-C connector have a bunch of muxes
+behind that connector which need to be controlled by the kernel (rather
+then having them controlled by firmware as on most devices).
 
-[1] https://www.spinics.net/lists/platform-driver-x86/msg11633.html
+Quite a while back I submitted a patch-series to tie together these muxes
+and the Type-C Port Manager (tcpm) code, using the then new drivers/mux
+framework. But the way I used the mux framework went against what it was
+designed for, so in the end that series got nowhere.
 
- drivers/platform/x86/fujitsu-laptop.c | 228 +++++++++++++++++++---------------
- 1 file changed, 127 insertions(+), 101 deletions(-)
+Heikki Krogerus from Intel, who maintains the USB TYPEC subsystem, has
+recently been working on solving the same problem for some boards he is
+doing hardware-enablement for.
 
--- 
-2.16.2
+Heikki has come up with a number of infrastructure patches for this.
+The first one is a new device-connection framework. This solves the
+problem of describing non bus device-links on x86 in what in my experience
+with this problematic area is a really nice simple, clean and *generic*
+way. This could for example in the near future also replace the custom
+lookup code in the pwm subsys and the custom pwm_add_table() /
+pwm_remove_table() functions.
+
+The other 3 patches add a framework for the different type of Type-C /
+USB "muxes".
+
+Heikki and I have gone through a number of iterations of these patches
+together and we believe these are now ready for merging. Since merging
+infrastructure patches without users is not done and Heikki's own use-case
+for these is not yet ready for merging, the rest of this series consists
+of patches by me to make the Type-C connector found on some Cherry Trail
+devices (finally) be able to actually work as an USB port and not just
+a charge port.
+
+The last patch uses the new usb-role-switch framework to also do proper
+devcie / host switching on CHT devices with a USB micro AB connector.
+This is also a big feature for CHT users, because before this they had
+to do a reboot to get an OTG-host cable recognized (on some devices).
+
+Part of this series is an usb-role-switch driver for the role-switch
+found inside the xhci controller on e.g. CHT devices, this is currently
+implemented as the generic xhci controller instantiating a platform
+child-device for this, since this really is a separate chunk of HW
+which happens to sit in the XHCI mmio space. This approach may not be
+universally liked, given that in this new series the role-switch driver
+is much smaller and does not have any external deps anymore we could
+just integrate it into the xhci code if that is preferred.
+
+About merging this series (once everything is reviewed, etc.), there are
+quite some interdependencies in it esp. a lot of the patches depend on
+the first patch. Luckily patches 1-10 all apply to subsystems which are
+maintained by Greg (most to the USB subsys). Which just leaves patches
+11 and 12 once 1-10 are merged. Greg, can you create an immutable branch
+for the platform/x86 and extcon maintainers to merge once this is done?
+
+Regards,
+
+Hans
