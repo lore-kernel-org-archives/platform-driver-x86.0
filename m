@@ -1,64 +1,36 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v4 01/12] drivers: base: Unified device connection lookup
-Date: Wed, 28 Feb 2018 16:06:38 +0100
-Message-ID: <5d0084b1-77c1-ae2b-1623-a2e1bf4b0c22@redhat.com>
-References: <20180226183919.24353-1-hdegoede@redhat.com>
- <20180226183919.24353-2-hdegoede@redhat.com>
- <3a6850c4-7c54-c889-a7d0-347b8df65d31@infradead.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v5 08/12] xhci: Add Intel extended cap / otg phy mux
+ handling
+Date: Wed, 28 Feb 2018 17:15:52 +0200
+Message-ID: <20180228151552.GA5335@kuha.fi.intel.com>
+References: <20180228150749.26831-1-hdegoede@redhat.com>
+ <20180228150749.26831-9-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3a6850c4-7c54-c889-a7d0-347b8df65d31@infradead.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180228150749.26831-9-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Wed, Feb 28, 2018 at 04:07:45PM +0100, Hans de Goede wrote:
+> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+> index 96099a245c69..5917e3095e2a 100644
+> --- a/drivers/usb/host/xhci.h
+> +++ b/drivers/usb/host/xhci.h
+> @@ -1825,6 +1825,7 @@ struct xhci_hcd {
+>  /* Reserved. It was XHCI_U2_DISABLE_WAKE */
+>  #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL	(1 << 28)
+>  #define XHCI_HW_LPM_DISABLE	(1 << 29)
+> +#define XHCI_INTEL_USB_ROLE_SW	(1 << 30)
 
-On 26-02-18 20:34, Randy Dunlap wrote:
-> On 02/26/2018 10:39 AM, Hans de Goede wrote:
->> diff --git a/include/linux/connection.h b/include/linux/connection.h
->> new file mode 100644
->> index 000000000000..0b4430eae53a
->> --- /dev/null
->> +++ b/include/linux/connection.h
->> @@ -0,0 +1,33 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#ifndef _LINUX_CONNECTION_H_
->> +#define _LINUX_CONNECTION_H_
->> +
->> +#include <linux/list.h>
->> +
->> +struct device;
->> +
->> +/**
->> + * struct devcon - Device Connection Descriptor
->> + * @endpoint: The names of the two devices connected together
->> + * @id: Unique identifier for the connection
-> 
-> Hi,
->   * @list: <description>
-> is missing above.
-
-Thanks, fixed in v5, which I'm going to send out right
-away since there have been no other remarks for the last 24h.
-
-Regards,
-
-Hans
+Did you rebased these on tope of the latest usb-next? This does not
+apply cleanly on top of linux-next.
 
 
+Thanks,
 
-> 
->> + */
->> +struct devcon {
->> +	const char		*endpoint[2];
->> +	const char		*id;
->> +	struct list_head	list;
->> +};
-> 
-> 
+-- 
+heikki
