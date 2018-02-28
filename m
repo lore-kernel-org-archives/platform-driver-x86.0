@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v5 05/12] usb: typec: tcpm: Set USB role switch to device mode when configured as such
-Date: Wed, 28 Feb 2018 16:07:42 +0100
-Message-ID: <20180228150749.26831-6-hdegoede@redhat.com>
+Subject: [PATCH v5 08/12] xhci: Add Intel extended cap / otg phy mux handling
+Date: Wed, 28 Feb 2018 16:07:45 +0100
+Message-ID: <20180228150749.26831-9-hdegoede@redhat.com>
 References: <20180228150749.26831-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180228150749.26831-1-hdegoede@redhat.com>
@@ -10,144 +10,216 @@ To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, My
 Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Setting the mux to MUX_NONE and the switch to USB_SWITCH_DISCONNECT when
-the data-role is device is not correct. Plenty of devices support
-operating as USB device through a (separate) USB device controller.
+The xHCI controller on various Intel SoCs has an extended cap mmio-range
+which contains registers to control the muxing to the xHCI (host mode)
+or the dwc3 (device mode) and vbus-detection for the otg usb-phy.
 
-We really need 2 different versions of USB_SWITCH_CONNECT,
-USB_SWITCH_CONNECT_HOST and USB_SWITCH_DEVICE. Rather then modifying the
-tcpc_usb_switch enum for this, simply remove it and switch to the
-usb_role enum which provides exactly this, this will save use needing to
-convert betweent the 2 enums when calling an usb-role-switch driver later.
+Having a role-sw driver included in the xHCI code (under drivers/usb/host)
+is not desirable. So this commit adds a simple handler for this extended
+capability, which creates a platform device with the caps mmio region as
+resource, this allows us to write a separate platform role-sw driver for
+the role-switch.
 
-Besides switching to the usb_role type, this commit also actually sets the
-mux to TYPEC_MUX_USB and the switch to USB_ROLE_DEVICE instead of setting
-both to none when the data-role is device.
+Note this commit adds a call to the new xhci_ext_cap_init() function
+to xhci_pci_probe(), it is added here because xhci_ext_cap_init() must
+be called only once. If in the future we also want to handle ext-caps
+on non pci xHCI HCDs from xhci_ext_cap_init() a call to it should also
+be added to other bus probe paths.
 
-This commit also makes tcpm_reset_port() call tcpm_mux_set(port,
-TYPEC_MUX_NONE, USB_ROLE_NONE) so that the mux and switch
-do _not_ stay in their last mode after a detach.
-
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v4:
 -Add Andy's Reviewed-by
 
-Changes in v3:
--Add Guenter's Reviewed-by
-
 Changes in v2:
--Added Heikki's Reviewed-by
----
- drivers/usb/typec/tcpm.c | 22 +++++++++++-----------
- include/linux/usb/tcpm.h |  8 ++------
- 2 files changed, 13 insertions(+), 17 deletions(-)
+-Use SPDX license header
+-Various small style cleanups / changes
+-Add Heikki's Reviewed-by
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 7cd28b700a7f..00ca2822432f 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -618,15 +618,15 @@ void tcpm_pd_transmit_complete(struct tcpm_port *port,
- EXPORT_SYMBOL_GPL(tcpm_pd_transmit_complete);
+Changes from some time ago when this patch was part of another patch-set:
+-Check xHCI controller PCI device-id instead of only checking for the
+ Intel Extended capability ID, as the Extended capability ID is used on
+ other model Intel xHCI controllers too
+-Add a new generic xhci_ext_cap_init() function and handle the new
+ XHCI_INTEL_CHT_USB_MUX quirk there.
+-Stop using Cherry Trail / CHT in various places as other Intel SoCs
+ (e.g. Broxton / Apollo Lake) also have this
+---
+ drivers/usb/host/Makefile        |  2 +-
+ drivers/usb/host/xhci-ext-caps.c | 90 ++++++++++++++++++++++++++++++++++++++++
+ drivers/usb/host/xhci-ext-caps.h |  2 +
+ drivers/usb/host/xhci-pci.c      |  5 +++
+ drivers/usb/host/xhci.h          |  2 +
+ 5 files changed, 100 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/usb/host/xhci-ext-caps.c
+
+diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+index 4ede4ce12366..8a8cffe0b445 100644
+--- a/drivers/usb/host/Makefile
++++ b/drivers/usb/host/Makefile
+@@ -11,7 +11,7 @@ fhci-y += fhci-mem.o fhci-tds.o fhci-sched.o
  
- static int tcpm_mux_set(struct tcpm_port *port, enum tcpc_mux_mode mode,
--			enum tcpc_usb_switch config)
-+			enum usb_role usb_role)
- {
- 	int ret = 0;
+ fhci-$(CONFIG_FHCI_DEBUG) += fhci-dbg.o
  
--	tcpm_log(port, "Requesting mux mode %d, config %d, polarity %d",
--		 mode, config, port->polarity);
-+	tcpm_log(port, "Requesting mux mode %d, usb-role %d, polarity %d",
-+		 mode, usb_role, port->polarity);
+-xhci-hcd-y := xhci.o xhci-mem.o
++xhci-hcd-y := xhci.o xhci-mem.o xhci-ext-caps.o
+ xhci-hcd-y += xhci-ring.o xhci-hub.o xhci-dbg.o
+ xhci-hcd-y += xhci-trace.o
  
- 	if (port->tcpc->mux)
--		ret = port->tcpc->mux->set(port->tcpc->mux, mode, config,
-+		ret = port->tcpc->mux->set(port->tcpc->mux, mode, usb_role,
- 					   port->polarity);
- 
- 	return ret;
-@@ -742,14 +742,15 @@ static int tcpm_set_attached_state(struct tcpm_port *port, bool attached)
- static int tcpm_set_roles(struct tcpm_port *port, bool attached,
- 			  enum typec_role role, enum typec_data_role data)
- {
-+	enum usb_role usb_role;
- 	int ret;
- 
- 	if (data == TYPEC_HOST)
--		ret = tcpm_mux_set(port, TYPEC_MUX_USB,
--				   TCPC_USB_SWITCH_CONNECT);
-+		usb_role = USB_ROLE_HOST;
- 	else
--		ret = tcpm_mux_set(port, TYPEC_MUX_NONE,
--				   TCPC_USB_SWITCH_DISCONNECT);
-+		usb_role = USB_ROLE_DEVICE;
+diff --git a/drivers/usb/host/xhci-ext-caps.c b/drivers/usb/host/xhci-ext-caps.c
+new file mode 100644
+index 000000000000..399113f9fc5c
+--- /dev/null
++++ b/drivers/usb/host/xhci-ext-caps.c
+@@ -0,0 +1,90 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * XHCI extended capability handling
++ *
++ * Copyright (c) 2017 Hans de Goede <hdegoede@redhat.com>
++ */
 +
-+	ret = tcpm_mux_set(port, TYPEC_MUX_USB, usb_role);
- 	if (ret < 0)
- 		return ret;
++#include <linux/platform_device.h>
++#include "xhci.h"
++
++#define USB_SW_DRV_NAME		"intel_xhci_usb_sw"
++#define USB_SW_RESOURCE_SIZE	0x400
++
++static void xhci_intel_unregister_pdev(void *arg)
++{
++	platform_device_unregister(arg);
++}
++
++static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
++{
++	struct usb_hcd *hcd = xhci_to_hcd(xhci);
++	struct device *dev = hcd->self.controller;
++	struct platform_device *pdev;
++	struct resource	res = { 0, };
++	int ret;
++
++	pdev = platform_device_alloc(USB_SW_DRV_NAME, PLATFORM_DEVID_NONE);
++	if (!pdev) {
++		xhci_err(xhci, "couldn't allocate %s platform device\n",
++			 USB_SW_DRV_NAME);
++		return -ENOMEM;
++	}
++
++	res.start = hcd->rsrc_start + cap_offset;
++	res.end	  = res.start + USB_SW_RESOURCE_SIZE - 1;
++	res.name  = USB_SW_DRV_NAME;
++	res.flags = IORESOURCE_MEM;
++
++	ret = platform_device_add_resources(pdev, &res, 1);
++	if (ret) {
++		dev_err(dev, "couldn't add resources to intel_xhci_usb_sw pdev\n");
++		platform_device_put(pdev);
++		return ret;
++	}
++
++	pdev->dev.parent = dev;
++
++	ret = platform_device_add(pdev);
++	if (ret) {
++		dev_err(dev, "couldn't register intel_xhci_usb_sw pdev\n");
++		platform_device_put(pdev);
++		return ret;
++	}
++
++	ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
++	if (ret) {
++		dev_err(dev, "couldn't add unregister action for intel_xhci_usb_sw pdev\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++int xhci_ext_cap_init(struct xhci_hcd *xhci)
++{
++	void __iomem *base = &xhci->cap_regs->hc_capbase;
++	u32 offset, val;
++	int ret;
++
++	offset = xhci_find_next_ext_cap(base, 0, 0);
++
++	while (offset) {
++		val = readl(base + offset);
++
++		switch (XHCI_EXT_CAPS_ID(val)) {
++		case XHCI_EXT_CAPS_VENDOR_INTEL:
++			if (xhci->quirks & XHCI_INTEL_USB_ROLE_SW) {
++				ret = xhci_create_intel_xhci_sw_pdev(xhci,
++								     offset);
++				if (ret)
++					return ret;
++			}
++			break;
++		}
++		offset = xhci_find_next_ext_cap(base, offset, 0);
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(xhci_ext_cap_init);
+diff --git a/drivers/usb/host/xhci-ext-caps.h b/drivers/usb/host/xhci-ext-caps.h
+index 631e7cc62604..268328c20681 100644
+--- a/drivers/usb/host/xhci-ext-caps.h
++++ b/drivers/usb/host/xhci-ext-caps.h
+@@ -39,6 +39,8 @@
+ #define XHCI_EXT_CAPS_ROUTE	5
+ /* IDs 6-9 reserved */
+ #define XHCI_EXT_CAPS_DEBUG	10
++/* Vendor caps */
++#define XHCI_EXT_CAPS_VENDOR_INTEL	192
+ /* USB Legacy Support Capability - section 7.1.1 */
+ #define XHCI_HC_BIOS_OWNED	(1 << 16)
+ #define XHCI_HC_OS_OWNED	(1 << 24)
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index 6c79037876db..4486640d925c 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -164,6 +164,7 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+ 		 pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI) {
+ 		xhci->quirks |= XHCI_SSIC_PORT_UNUSED;
++		xhci->quirks |= XHCI_INTEL_USB_ROLE_SW;
+ 	}
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+ 	    (pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI ||
+@@ -297,6 +298,10 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 		goto dealloc_usb2_hcd;
+ 	}
  
-@@ -2096,7 +2097,7 @@ static int tcpm_src_attach(struct tcpm_port *port)
- out_disable_pd:
- 	port->tcpc->set_pd_rx(port->tcpc, false);
- out_disable_mux:
--	tcpm_mux_set(port, TYPEC_MUX_NONE, TCPC_USB_SWITCH_DISCONNECT);
-+	tcpm_mux_set(port, TYPEC_MUX_NONE, USB_ROLE_NONE);
- 	return ret;
- }
++	retval = xhci_ext_cap_init(xhci);
++	if (retval)
++		goto put_usb3_hcd;
++
+ 	retval = usb_add_hcd(xhci->shared_hcd, dev->irq,
+ 			IRQF_SHARED);
+ 	if (retval)
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 96099a245c69..5917e3095e2a 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1825,6 +1825,7 @@ struct xhci_hcd {
+ /* Reserved. It was XHCI_U2_DISABLE_WAKE */
+ #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL	(1 << 28)
+ #define XHCI_HW_LPM_DISABLE	(1 << 29)
++#define XHCI_INTEL_USB_ROLE_SW	(1 << 30)
  
-@@ -2140,6 +2141,7 @@ static void tcpm_reset_port(struct tcpm_port *port)
- 	tcpm_init_vconn(port);
- 	tcpm_set_current_limit(port, 0, 0);
- 	tcpm_set_polarity(port, TYPEC_POLARITY_CC1);
-+	tcpm_mux_set(port, TYPEC_MUX_NONE, USB_ROLE_NONE);
- 	tcpm_set_attached_state(port, false);
- 	port->try_src_count = 0;
- 	port->try_snk_count = 0;
-@@ -2190,8 +2192,6 @@ static int tcpm_snk_attach(struct tcpm_port *port)
- static void tcpm_snk_detach(struct tcpm_port *port)
- {
- 	tcpm_detach(port);
--
--	/* XXX: (Dis)connect SuperSpeed mux? */
- }
+ 	unsigned int		num_active_eps;
+ 	unsigned int		limit_active_eps;
+@@ -2020,6 +2021,7 @@ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks);
+ void xhci_init_driver(struct hc_driver *drv,
+ 		      const struct xhci_driver_overrides *over);
+ int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id);
++int xhci_ext_cap_init(struct xhci_hcd *xhci);
  
- static int tcpm_acc_attach(struct tcpm_port *port)
-diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-index ca1c0b57f03f..268721bff2c1 100644
---- a/include/linux/usb/tcpm.h
-+++ b/include/linux/usb/tcpm.h
-@@ -16,6 +16,7 @@
- #define __LINUX_USB_TCPM_H
- 
- #include <linux/bitops.h>
-+#include <linux/usb/role.h>
- #include <linux/usb/typec.h>
- #include "pd.h"
- 
-@@ -97,11 +98,6 @@ struct tcpc_config {
- 	const struct typec_altmode_desc *alt_modes;
- };
- 
--enum tcpc_usb_switch {
--	TCPC_USB_SWITCH_CONNECT,
--	TCPC_USB_SWITCH_DISCONNECT,
--};
--
- /* Mux state attributes */
- #define TCPC_MUX_USB_ENABLED		BIT(0)	/* USB enabled */
- #define TCPC_MUX_DP_ENABLED		BIT(1)	/* DP enabled */
-@@ -118,7 +114,7 @@ enum tcpc_mux_mode {
- 
- struct tcpc_mux_dev {
- 	int (*set)(struct tcpc_mux_dev *dev, enum tcpc_mux_mode mux_mode,
--		   enum tcpc_usb_switch usb_config,
-+		   enum usb_role usb_role,
- 		   enum typec_cc_polarity polarity);
- 	bool dfp_only;
- 	void *priv_data;
+ int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup);
+ int xhci_resume(struct xhci_hcd *xhci, bool hibernated);
 -- 
 2.14.3
