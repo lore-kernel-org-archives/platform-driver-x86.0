@@ -1,45 +1,41 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v5 08/12] xhci: Add Intel extended cap / otg phy mux
- handling
-Date: Wed, 28 Feb 2018 16:42:32 +0100
-Message-ID: <070f5ccd-dfeb-1e47-681a-8e116472ef9f@redhat.com>
-References: <20180228150749.26831-1-hdegoede@redhat.com>
- <20180228150749.26831-9-hdegoede@redhat.com>
- <20180228151552.GA5335@kuha.fi.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/7] platform/x86: fujitsu-laptop: Define constants for
+ FUNC operations
+Date: Wed, 28 Feb 2018 18:08:52 +0200
+Message-ID: <CAHp75VdDQ1xAYcXEN04kSug2sgi-G8+7PBEOC8MJSBw7gSCyRQ@mail.gmail.com>
+References: <20180227211539.5708-1-kernel@kempniu.pl> <20180227211539.5708-2-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180228151552.GA5335@kuha.fi.intel.com>
-Content-Language: en-US
+In-Reply-To: <20180227211539.5708-2-kernel@kempniu.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Cc: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Tue, Feb 27, 2018 at 11:15 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kemp=
+niu.pl> wrote:
+> Various functions exposed by the firmware through the FUNC interface
+> tend to use a consistent set of integers for denoting the type of
+> operation to be performed for a specified feature.  Use named constants
+> instead of integers in each call_fext_func() invocation in order to more
+> clearly convey the intent of each call.
+>
+> Note that FUNC_FLAGS is a bit peculiar:
 
-On 28-02-18 16:15, Heikki Krogerus wrote:
-> On Wed, Feb 28, 2018 at 04:07:45PM +0100, Hans de Goede wrote:
->> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
->> index 96099a245c69..5917e3095e2a 100644
->> --- a/drivers/usb/host/xhci.h
->> +++ b/drivers/usb/host/xhci.h
->> @@ -1825,6 +1825,7 @@ struct xhci_hcd {
->>   /* Reserved. It was XHCI_U2_DISABLE_WAKE */
->>   #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL	(1 << 28)
->>   #define XHCI_HW_LPM_DISABLE	(1 << 29)
->> +#define XHCI_INTEL_USB_ROLE_SW	(1 << 30)
-> 
-> Did you rebased these on tope of the latest usb-next?
+> +/* FUNC interface - operations */
+> +#define OP_GET                         BIT(1)
+> +#define OP_GET_CAPS                    0
+> +#define OP_GET_EVENTS                  BIT(0)
+> +#define OP_GET_EXT                     BIT(2)
+> +#define OP_SET                         BIT(0)
+> +#define OP_SET_EXT                     (BIT(2) | BIT(0))
 
-No I did not expect that to be necessary, but I see now that it is.
-I've just done a rebase locally, any other remarks before I send
-out a v6?
+Hmm... this looks unordered a bit.
+And plain 0 doesn't look right in this concept (something like (0 <<
+0) would probably do it).
 
-> This does not
-> apply cleanly on top of linux-next.
-
-Regards,
-
-Hans
+--=20
+With Best Regards,
+Andy Shevchenko
