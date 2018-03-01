@@ -1,47 +1,54 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v5 01/12] drivers: base: Unified device connection lookup
-Date: Thu, 1 Mar 2018 10:45:26 +0100
-Message-ID: <bcf738d9-0bcb-42f8-d706-c2e72a150720@redhat.com>
-References: <20180228150749.26831-1-hdegoede@redhat.com>
- <20180228150749.26831-2-hdegoede@redhat.com>
- <VI1PR0402MB3917DD93F114873CC736117389C60@VI1PR0402MB3917.eurprd04.prod.outlook.com>
- <20180301072825.GC5335@kuha.fi.intel.com>
- <CAHp75Vc4CF_Vn90FdFKwBf7egPNHvEWa=mja8w4SarKaW2KZRw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Joe Perches <joe@perches.com>
+Subject: [PATCH] platform/x86: wmi: Fix misuse of vsprintf extension %pULL
+Date: Thu,  1 Mar 2018 08:08:23 -0800
+Message-ID: <77b9d62ee2600bb01c08c618e67b63c8aaa35f49.1519920316.git.joe@perches.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vc4CF_Vn90FdFKwBf7egPNHvEWa=mja8w4SarKaW2KZRw@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Jun Li <jun.li@nxp.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+%pULL doesn't officially exist but %pUL does.
 
-On 01-03-18 10:32, Andy Shevchenko wrote:
-> On Thu, Mar 1, 2018 at 9:28 AM, Heikki Krogerus
-> <heikki.krogerus@linux.intel.com> wrote:
->> Hi,
->>
->> On Thu, Mar 01, 2018 at 12:56:57AM +0000, Jun Li wrote:
->>>> +struct device *device_find_connection(struct device *dev, const char
->>>> +*con_id) {
->>>> +   return __device_find_connection(dev, con_id, generic_match, NULL); }
->>>
->>> -       return __device_find_connection(dev, con_id, generic_match, NULL);
->>> +       return __device_find_connection(dev, con_id, NULL, generic_match);
->>
->> Good catch!
-> 
-> It seems I proposed to put function first parameter followed by opaque
-> data pointer for it.
-> In that case it would be exactly like now.
+Miscellanea:
 
-Yes, but as mentioned I decided to keep it as is, so this is really a bug,
-will fix for v6.
+o Add missing newlines to a couple logging messages
 
-Regards,
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ drivers/platform/x86/wmi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Hans
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index f90ba83359f5..8e3d0146ff8c 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -936,7 +936,7 @@ static int wmi_dev_probe(struct device *dev)
+ 		wblock->char_dev.mode = 0444;
+ 		ret = misc_register(&wblock->char_dev);
+ 		if (ret) {
+-			dev_warn(dev, "failed to register char dev: %d", ret);
++			dev_warn(dev, "failed to register char dev: %d\n", ret);
+ 			ret = -ENOMEM;
+ 			goto probe_misc_failure;
+ 		}
+@@ -1039,7 +1039,7 @@ static int wmi_create_device(struct device *wmi_bus_dev,
+ 
+ 	if (result) {
+ 		dev_warn(wmi_bus_dev,
+-			 "%s data block query control method not found",
++			 "%s data block query control method not found\n",
+ 			 method);
+ 		return result;
+ 	}
+@@ -1189,7 +1189,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct acpi_device *device)
+ 
+ 		retval = device_add(&wblock->dev.dev);
+ 		if (retval) {
+-			dev_err(wmi_bus_dev, "failed to register %pULL\n",
++			dev_err(wmi_bus_dev, "failed to register %pUL\n",
+ 				wblock->gblock.guid);
+ 			if (debug_event)
+ 				wmi_method_enable(wblock, 0);
+-- 
+2.15.0
