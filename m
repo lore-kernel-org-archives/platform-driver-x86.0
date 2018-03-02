@@ -1,65 +1,76 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 094/115] x86/platform/intel-mid: Revert "Make bt_sfi_data const"
-Date: Fri,  2 Mar 2018 09:51:37 +0100
-Message-ID: <20180302084507.647317868@linuxfoundation.org>
-References: <20180302084503.856536800@linuxfoundation.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20180302084503.856536800@linuxfoundation.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bhumika Goyal <bhumirks@gmail.com>, Darren Hart <dvhart@infradead.org>, Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, julia.lawall@lip6.fr, platform-driver-x86@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Sasha Levin <alexander.levin@verizon.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v6 00/12] USB Type-C device-connection, mux and switch support
+Date: Fri,  2 Mar 2018 11:20:45 +0100
+Message-ID: <20180302102057.8917-1-hdegoede@redhat.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+Hi All,
 
-------------------
+Here is version 6 of Heikki's and my USB Type-C device-connection, mux and
+switch support series. Versions 2 - 5 bring various small code and style
+fixes based on review (no major changes). Version 6 is rebased on top of
+the latest usb-next and brings one small but important code fix in
+the devcon code.
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Here is the original cover-letter of v1:
 
+Some devices with an USB Type-C connector have a bunch of muxes
+behind that connector which need to be controlled by the kernel (rather
+then having them controlled by firmware as on most devices).
 
-[ Upstream commit 9d0513d82f1a8fe17b41f113ac5922fa57dbaf5c ]
+Quite a while back I submitted a patch-series to tie together these muxes
+and the Type-C Port Manager (tcpm) code, using the then new drivers/mux
+framework. But the way I used the mux framework went against what it was
+designed for, so in the end that series got nowhere.
 
-So one of the constification patches unearthed a type casting fragility
-of the underlying code:
+Heikki Krogerus from Intel, who maintains the USB TYPEC subsystem, has
+recently been working on solving the same problem for some boards he is
+doing hardware-enablement for.
 
-  276c87054751 ("x86/platform/intel-mid: Make 'bt_sfi_data' const")
+Heikki has come up with a number of infrastructure patches for this.
+The first one is a new device-connection framework. This solves the
+problem of describing non bus device-links on x86 in what in my experience
+with this problematic area is a really nice simple, clean and *generic*
+way. This could for example in the near future also replace the custom
+lookup code in the pwm subsys and the custom pwm_add_table() /
+pwm_remove_table() functions.
 
-converted the struct to be const while it is also used as a temporary
-container for important data that is used to fill 'parent' and 'name'
-fields in struct platform_device_info.
+The other 3 patches add a framework for the different type of Type-C /
+USB "muxes".
 
-The compiler doesn't notice this due to an explicit type cast that loses
-the const - which fragility will be fixed separately.
+Heikki and I have gone through a number of iterations of these patches
+together and we believe these are now ready for merging. Since merging
+infrastructure patches without users is not done and Heikki's own use-case
+for these is not yet ready for merging, the rest of this series consists
+of patches by me to make the Type-C connector found on some Cherry Trail
+devices (finally) be able to actually work as an USB port and not just
+a charge port.
 
-This type cast turned a seemingly trivial const propagation patch into a
-hard to debug data corruptor and crasher bug.
+The last patch uses the new usb-role-switch framework to also do proper
+devcie / host switching on CHT devices with a USB micro AB connector.
+This is also a big feature for CHT users, because before this they had
+to do a reboot to get an OTG-host cable recognized (on some devices).
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bhumika Goyal <bhumirks@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: julia.lawall@lip6.fr
-Cc: platform-driver-x86@vger.kernel.org
-Link: http://lkml.kernel.org/r/20171228122523.21802-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <alexander.levin@verizon.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/platform/intel-mid/device_libs/platform_bt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Part of this series is an usb-role-switch driver for the role-switch
+found inside the xhci controller on e.g. CHT devices, this is currently
+implemented as the generic xhci controller instantiating a platform
+child-device for this, since this really is a separate chunk of HW
+which happens to sit in the XHCI mmio space. This approach may not be
+universally liked, given that in this new series the role-switch driver
+is much smaller and does not have any external deps anymore we could
+just integrate it into the xhci code if that is preferred.
 
---- a/arch/x86/platform/intel-mid/device_libs/platform_bt.c
-+++ b/arch/x86/platform/intel-mid/device_libs/platform_bt.c
-@@ -60,7 +60,7 @@ static int __init tng_bt_sfi_setup(struc
- 	return 0;
- }
- 
--static const struct bt_sfi_data tng_bt_sfi_data __initdata = {
-+static struct bt_sfi_data tng_bt_sfi_data __initdata = {
- 	.setup	= tng_bt_sfi_setup,
- };
- 
+About merging this series (once everything is reviewed, etc.), there are
+quite some interdependencies in it esp. a lot of the patches depend on
+the first patch. Luckily patches 1-10 all apply to subsystems which are
+maintained by Greg (most to the USB subsys). Which just leaves patches
+11 and 12 once 1-10 are merged. Greg, can you create an immutable branch
+for the platform/x86 and extcon maintainers to merge once this is done?
+
+Regards,
+
+Hans
