@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v6 01/12] drivers: base: Unified device connection lookup
-Date: Fri,  2 Mar 2018 11:20:46 +0100
-Message-ID: <20180302102057.8917-2-hdegoede@redhat.com>
+Subject: [PATCH v6 08/12] xhci: Add Intel extended cap / otg phy mux handling
+Date: Fri,  2 Mar 2018 11:20:53 +0100
+Message-ID: <20180302102057.8917-9-hdegoede@redhat.com>
 References: <20180302102057.8917-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180302102057.8917-1-hdegoede@redhat.com>
@@ -10,296 +10,216 @@ To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, My
 Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+The xHCI controller on various Intel SoCs has an extended cap mmio-range
+which contains registers to control the muxing to the xHCI (host mode)
+or the dwc3 (device mode) and vbus-detection for the otg usb-phy.
 
-Several frameworks - clk, gpio, phy, pmw, etc. - maintain
-lookup tables for describing connections and provide custom
-API for handling them. This introduces a single generic
-lookup table and API for the connections.
+Having a role-sw driver included in the xHCI code (under drivers/usb/host)
+is not desirable. So this commit adds a simple handler for this extended
+capability, which creates a platform device with the caps mmio region as
+resource, this allows us to write a separate platform role-sw driver for
+the role-switch.
 
-The motivation for this commit is centralizing the
-connection lookup, but the goal is to ultimately extract the
-connection descriptions also from firmware by using the
-fwnode_graph_* functions and other mechanisms that are
-available.
+Note this commit adds a call to the new xhci_ext_cap_init() function
+to xhci_pci_probe(), it is added here because xhci_ext_cap_init() must
+be called only once. If in the future we also want to handle ext-caps
+on non pci xHCI HCDs from xhci_ext_cap_init() a call to it should also
+be added to other bus probe paths.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v6:
--Fix data and match arguments being swapped in __device_find_connection()
- call in device_find_connection() (as noticed by Jun Li)
-
-Changes in v5:
--Add missing documentation for @list struct devcon member
-
 Changes in v4:
 -Add Andy's Reviewed-by
 
-Changes in v3:
--Various spelling and gramar fixes in the docs pointed out by Randy Dunlap
-
 Changes in v2:
--Add a (struct devcon) cast to the DEVCON() macro
----
- Documentation/driver-api/device_connection.rst |  43 ++++++++
- drivers/base/Makefile                          |   3 +-
- drivers/base/devcon.c                          | 139 +++++++++++++++++++++++++
- include/linux/connection.h                     |  34 ++++++
- 4 files changed, 218 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/driver-api/device_connection.rst
- create mode 100644 drivers/base/devcon.c
- create mode 100644 include/linux/connection.h
+-Use SPDX license header
+-Various small style cleanups / changes
+-Add Heikki's Reviewed-by
 
-diff --git a/Documentation/driver-api/device_connection.rst b/Documentation/driver-api/device_connection.rst
+Changes from some time ago when this patch was part of another patch-set:
+-Check xHCI controller PCI device-id instead of only checking for the
+ Intel Extended capability ID, as the Extended capability ID is used on
+ other model Intel xHCI controllers too
+-Add a new generic xhci_ext_cap_init() function and handle the new
+ XHCI_INTEL_CHT_USB_MUX quirk there.
+-Stop using Cherry Trail / CHT in various places as other Intel SoCs
+ (e.g. Broxton / Apollo Lake) also have this
+---
+ drivers/usb/host/Makefile        |  2 +-
+ drivers/usb/host/xhci-ext-caps.c | 90 ++++++++++++++++++++++++++++++++++++++++
+ drivers/usb/host/xhci-ext-caps.h |  2 +
+ drivers/usb/host/xhci-pci.c      |  5 +++
+ drivers/usb/host/xhci.h          |  2 +
+ 5 files changed, 100 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/usb/host/xhci-ext-caps.c
+
+diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+index 4ede4ce12366..8a8cffe0b445 100644
+--- a/drivers/usb/host/Makefile
++++ b/drivers/usb/host/Makefile
+@@ -11,7 +11,7 @@ fhci-y += fhci-mem.o fhci-tds.o fhci-sched.o
+ 
+ fhci-$(CONFIG_FHCI_DEBUG) += fhci-dbg.o
+ 
+-xhci-hcd-y := xhci.o xhci-mem.o
++xhci-hcd-y := xhci.o xhci-mem.o xhci-ext-caps.o
+ xhci-hcd-y += xhci-ring.o xhci-hub.o xhci-dbg.o
+ xhci-hcd-y += xhci-trace.o
+ 
+diff --git a/drivers/usb/host/xhci-ext-caps.c b/drivers/usb/host/xhci-ext-caps.c
 new file mode 100644
-index 000000000000..64a3e5e9bb7c
+index 000000000000..399113f9fc5c
 --- /dev/null
-+++ b/Documentation/driver-api/device_connection.rst
-@@ -0,0 +1,43 @@
-+==================
-+Device connections
-+==================
-+
-+Introduction
-+------------
-+
-+Devices often have connections to other devices that are outside of the direct
-+child/parent relationship. A serial or network communication controller, which
-+could be a PCI device, may need to be able to get a reference to its PHY
-+component, which could be attached for example to the I2C bus. Some device
-+drivers need to be able to control the clocks or the GPIOs for their devices,
-+and so on.
-+
-+Device connections are generic descriptions of any type of connection between
-+two separate devices.
-+
-+Device connections alone do not create a dependency between the two devices.
-+They are only descriptions which are not tied to either of the devices directly.
-+A dependency between the two devices exists only if one of the two endpoint
-+devices requests a reference to the other. The descriptions themselves can be
-+defined in firmware (not yet supported) or they can be built-in.
-+
-+Usage
-+-----
-+
-+Device connections should exist before device ``->probe`` callback is called for
-+either endpoint device in the description. If the connections are defined in
-+firmware, this is not a problem. It should be considered if the connection
-+descriptions are "built-in", and need to be added separately.
-+
-+The connection description consists of the names of the two devices with the
-+connection, i.e. the endpoints, and unique identifier for the connection which
-+is needed if there are multiple connections between the two devices.
-+
-+After a description exists, the devices in it can request reference to the other
-+endpoint device, or they can request the description itself.
-+
-+API
-+---
-+
-+.. kernel-doc:: drivers/base/devcon.c
-+   : functions: __device_find_connection device_find_connection add_device_connection remove_device_connection
-diff --git a/drivers/base/Makefile b/drivers/base/Makefile
-index e32a52490051..12a7f64d35a9 100644
---- a/drivers/base/Makefile
-+++ b/drivers/base/Makefile
-@@ -5,7 +5,8 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
- 			   driver.o class.o platform.o \
- 			   cpu.o firmware.o init.o map.o devres.o \
- 			   attribute_container.o transport_class.o \
--			   topology.o container.o property.o cacheinfo.o
-+			   topology.o container.o property.o cacheinfo.o \
-+			   devcon.o
- obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
- obj-$(CONFIG_DMA_CMA) += dma-contiguous.o
- obj-y			+= power/
-diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
-new file mode 100644
-index 000000000000..9f13092fa115
---- /dev/null
-+++ b/drivers/base/devcon.c
-@@ -0,0 +1,139 @@
++++ b/drivers/usb/host/xhci-ext-caps.c
+@@ -0,0 +1,90 @@
 +// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * Device connections
++/*
++ * XHCI extended capability handling
 + *
-+ * Copyright (C) 2018 Intel Corporation
-+ * Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
++ * Copyright (c) 2017 Hans de Goede <hdegoede@redhat.com>
 + */
-+
-+#include <linux/connection.h>
-+#include <linux/device.h>
-+
-+static DEFINE_MUTEX(devcon_lock);
-+static LIST_HEAD(devcon_list);
-+
-+/**
-+ * __device_find_connection - Find physical connection to a device
-+ * @dev: Device with the connection
-+ * @con_id: Identifier for the connection
-+ * @data: Data for the match function
-+ * @match: Function to check and convert the connection description
-+ *
-+ * Find a connection with unique identifier @con_id between @dev and another
-+ * device. @match will be used to convert the connection description to data the
-+ * caller is expecting to be returned.
-+ */
-+void *__device_find_connection(struct device *dev, const char *con_id,
-+			       void *data,
-+			       void *(*match)(struct devcon *con, int ep,
-+					      void *data))
-+{
-+	const char *devname = dev_name(dev);
-+	struct devcon *con;
-+	void *ret = NULL;
-+	int ep;
-+
-+	if (!match)
-+		return NULL;
-+
-+	rcu_read_lock();
-+
-+	list_for_each_entry_rcu(con, &devcon_list, list) {
-+		ep = match_string(con->endpoint, 2, devname);
-+		if (ep < 0)
-+			continue;
-+
-+		if (con_id && strcmp(con->id, con_id))
-+			continue;
-+
-+		ret = match(con, !ep, data);
-+		if (ret)
-+			break;
-+	}
-+
-+	rcu_read_unlock();
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(__device_find_connection);
 +
 +#include <linux/platform_device.h>
-+#include <linux/spi/spi.h>
-+#include <linux/i2c.h>
-+#include <linux/pci.h>
++#include "xhci.h"
 +
-+static struct bus_type *generic_match_buses[] = {
-+	&platform_bus_type,
-+#ifdef CONFIG_PCI
-+	&pci_bus_type,
-+#endif
-+#ifdef CONFIG_I2C
-+	&i2c_bus_type,
-+#endif
-+#ifdef CONFIG_SPI_MASTER
-+	&spi_bus_type,
-+#endif
-+	NULL,
-+};
++#define USB_SW_DRV_NAME		"intel_xhci_usb_sw"
++#define USB_SW_RESOURCE_SIZE	0x400
 +
-+/* This tries to find the device from the most common bus types by name. */
-+static void *generic_match(struct devcon *con, int ep, void *data)
++static void xhci_intel_unregister_pdev(void *arg)
 +{
-+	struct bus_type *bus;
-+	struct device *dev;
++	platform_device_unregister(arg);
++}
 +
-+	for (bus = generic_match_buses[0]; bus; bus++) {
-+		dev = bus_find_device_by_name(bus, NULL, con->endpoint[ep]);
-+		if (dev)
-+			return dev;
++static int xhci_create_intel_xhci_sw_pdev(struct xhci_hcd *xhci, u32 cap_offset)
++{
++	struct usb_hcd *hcd = xhci_to_hcd(xhci);
++	struct device *dev = hcd->self.controller;
++	struct platform_device *pdev;
++	struct resource	res = { 0, };
++	int ret;
++
++	pdev = platform_device_alloc(USB_SW_DRV_NAME, PLATFORM_DEVID_NONE);
++	if (!pdev) {
++		xhci_err(xhci, "couldn't allocate %s platform device\n",
++			 USB_SW_DRV_NAME);
++		return -ENOMEM;
 +	}
 +
-+	/*
-+	 * We only get called if a connection was found, tell the caller to
-+	 * wait for the other device to show up.
-+	 */
-+	return ERR_PTR(-EPROBE_DEFER);
++	res.start = hcd->rsrc_start + cap_offset;
++	res.end	  = res.start + USB_SW_RESOURCE_SIZE - 1;
++	res.name  = USB_SW_DRV_NAME;
++	res.flags = IORESOURCE_MEM;
++
++	ret = platform_device_add_resources(pdev, &res, 1);
++	if (ret) {
++		dev_err(dev, "couldn't add resources to intel_xhci_usb_sw pdev\n");
++		platform_device_put(pdev);
++		return ret;
++	}
++
++	pdev->dev.parent = dev;
++
++	ret = platform_device_add(pdev);
++	if (ret) {
++		dev_err(dev, "couldn't register intel_xhci_usb_sw pdev\n");
++		platform_device_put(pdev);
++		return ret;
++	}
++
++	ret = devm_add_action_or_reset(dev, xhci_intel_unregister_pdev, pdev);
++	if (ret) {
++		dev_err(dev, "couldn't add unregister action for intel_xhci_usb_sw pdev\n");
++		return ret;
++	}
++
++	return 0;
 +}
 +
-+/**
-+ * device_find_connection - Find two devices connected together
-+ * @dev: Device with the connection
-+ * @con_id: Identifier for the connection
-+ *
-+ * Find a connection with unique identifier @con_id between @dev and
-+ * another device. On success returns handle to the device that is connected
-+ * to @dev, with the reference count for the found device incremented. Returns
-+ * NULL if no matching connection was found, or ERR_PTR(-EPROBE_DEFER) when a
-+ * connection was found but the other device has not been enumerated yet.
-+ */
-+struct device *device_find_connection(struct device *dev, const char *con_id)
++int xhci_ext_cap_init(struct xhci_hcd *xhci)
 +{
-+	return __device_find_connection(dev, con_id, NULL, generic_match);
++	void __iomem *base = &xhci->cap_regs->hc_capbase;
++	u32 offset, val;
++	int ret;
++
++	offset = xhci_find_next_ext_cap(base, 0, 0);
++
++	while (offset) {
++		val = readl(base + offset);
++
++		switch (XHCI_EXT_CAPS_ID(val)) {
++		case XHCI_EXT_CAPS_VENDOR_INTEL:
++			if (xhci->quirks & XHCI_INTEL_USB_ROLE_SW) {
++				ret = xhci_create_intel_xhci_sw_pdev(xhci,
++								     offset);
++				if (ret)
++					return ret;
++			}
++			break;
++		}
++		offset = xhci_find_next_ext_cap(base, offset, 0);
++	}
++
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(device_find_connection);
++EXPORT_SYMBOL_GPL(xhci_ext_cap_init);
+diff --git a/drivers/usb/host/xhci-ext-caps.h b/drivers/usb/host/xhci-ext-caps.h
+index 631e7cc62604..268328c20681 100644
+--- a/drivers/usb/host/xhci-ext-caps.h
++++ b/drivers/usb/host/xhci-ext-caps.h
+@@ -39,6 +39,8 @@
+ #define XHCI_EXT_CAPS_ROUTE	5
+ /* IDs 6-9 reserved */
+ #define XHCI_EXT_CAPS_DEBUG	10
++/* Vendor caps */
++#define XHCI_EXT_CAPS_VENDOR_INTEL	192
+ /* USB Legacy Support Capability - section 7.1.1 */
+ #define XHCI_HC_BIOS_OWNED	(1 << 16)
+ #define XHCI_HC_OS_OWNED	(1 << 24)
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index 5262fa571a5d..fe5e3916d46f 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -175,6 +175,7 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+ 		 pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI) {
+ 		xhci->quirks |= XHCI_SSIC_PORT_UNUSED;
++		xhci->quirks |= XHCI_INTEL_USB_ROLE_SW;
+ 	}
+ 	if (pdev->vendor == PCI_VENDOR_ID_INTEL &&
+ 	    (pdev->device == PCI_DEVICE_ID_INTEL_CHERRYVIEW_XHCI ||
+@@ -308,6 +309,10 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 		goto dealloc_usb2_hcd;
+ 	}
+ 
++	retval = xhci_ext_cap_init(xhci);
++	if (retval)
++		goto put_usb3_hcd;
 +
-+/**
-+ * add_device_connection - Register a collection of connection descriptions
-+ * @con: Collection of connection descriptions to be registered
-+ */
-+void add_device_connection(struct devcon *con)
-+{
-+	mutex_lock(&devcon_lock);
-+	list_add_tail_rcu(&con->list, &devcon_list);
-+	mutex_unlock(&devcon_lock);
-+}
-+EXPORT_SYMBOL_GPL(add_device_connection);
-+
-+/**
-+ * remove_device_connections - Unregister collection of connection descriptions
-+ * @con: Collection of connection descriptions to be unregistered
-+ */
-+void remove_device_connection(struct devcon *con)
-+{
-+	mutex_lock(&devcon_lock);
-+	list_del_rcu(&con->list);
-+	mutex_unlock(&devcon_lock);
-+	/* The caller may free the devcon struct immediately afterwards. */
-+	synchronize_rcu();
-+}
-+EXPORT_SYMBOL_GPL(remove_device_connection);
-diff --git a/include/linux/connection.h b/include/linux/connection.h
-new file mode 100644
-index 000000000000..b2af70df5a97
---- /dev/null
-+++ b/include/linux/connection.h
-@@ -0,0 +1,34 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#ifndef _LINUX_CONNECTION_H_
-+#define _LINUX_CONNECTION_H_
-+
-+#include <linux/list.h>
-+
-+struct device;
-+
-+/**
-+ * struct devcon - Device Connection Descriptor
-+ * @endpoint: The names of the two devices connected together
-+ * @id: Unique identifier for the connection
-+ * @list: List head, private for devcon internal use only
-+ */
-+struct devcon {
-+	const char		*endpoint[2];
-+	const char		*id;
-+	struct list_head	list;
-+};
-+
-+void *__device_find_connection(struct device *dev, const char *con_id,
-+			       void *data,
-+			       void *(*match)(struct devcon *con, int ep,
-+					      void *data));
-+
-+struct device *device_find_connection(struct device *dev, const char *con_id);
-+
-+#define DEVCON(_ep0, _ep1, _id)    (struct devcon) { { _ep0, _ep1 }, _id, }
-+
-+void add_device_connection(struct devcon *con);
-+void remove_device_connection(struct devcon *con);
-+
-+#endif /* _LINUX_CONNECTION_H_ */
+ 	retval = usb_add_hcd(xhci->shared_hcd, dev->irq,
+ 			IRQF_SHARED);
+ 	if (retval)
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index e4d7d3d06a75..2845aaf921b9 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1825,6 +1825,7 @@ struct xhci_hcd {
+ #define XHCI_U2_DISABLE_WAKE	(1 << 27)
+ #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL	(1 << 28)
+ #define XHCI_HW_LPM_DISABLE	(1 << 29)
++#define XHCI_INTEL_USB_ROLE_SW	(1 << 30)
+ 
+ 	unsigned int		num_active_eps;
+ 	unsigned int		limit_active_eps;
+@@ -2020,6 +2021,7 @@ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks);
+ void xhci_init_driver(struct hc_driver *drv,
+ 		      const struct xhci_driver_overrides *over);
+ int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id);
++int xhci_ext_cap_init(struct xhci_hcd *xhci);
+ 
+ int xhci_suspend(struct xhci_hcd *xhci, bool do_wakeup);
+ int xhci_resume(struct xhci_hcd *xhci, bool hibernated);
 -- 
 2.14.3
