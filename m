@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v6 10/12] usb: typec: driver for Pericom PI3USB30532 Type-C cross switch
-Date: Fri,  2 Mar 2018 11:20:55 +0100
-Message-ID: <20180302102057.8917-11-hdegoede@redhat.com>
+Subject: [PATCH v6 01/12] drivers: base: Unified device connection lookup
+Date: Fri,  2 Mar 2018 11:20:46 +0100
+Message-ID: <20180302102057.8917-2-hdegoede@redhat.com>
 References: <20180302102057.8917-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180302102057.8917-1-hdegoede@redhat.com>
@@ -10,280 +10,296 @@ To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, My
 Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add a driver for the Pericom PI3USB30532 Type-C cross switch /
-mux chip found on some devices with a Type-C port.
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Several frameworks - clk, gpio, phy, pmw, etc. - maintain
+lookup tables for describing connections and provide custom
+API for handling them. This introduces a single generic
+lookup table and API for the connections.
+
+The motivation for this commit is centralizing the
+connection lookup, but the goal is to ultimately extract the
+connection descriptions also from firmware by using the
+fwnode_graph_* functions and other mechanisms that are
+available.
+
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
+Changes in v6:
+-Fix data and match arguments being swapped in __device_find_connection()
+ call in device_find_connection() (as noticed by Jun Li)
+
+Changes in v5:
+-Add missing documentation for @list struct devcon member
+
 Changes in v4:
 -Add Andy's Reviewed-by
 
+Changes in v3:
+-Various spelling and gramar fixes in the docs pointed out by Randy Dunlap
+
 Changes in v2:
--Cleanup pi3usb30532_set_conf() error handling
--Add Heikki's Reviewed-by
-
-Changes in v1:
--This is a rewrite of my previous driver which was using the
- drivers/mux framework to use the new drivers/usb/typec/mux framework
+-Add a (struct devcon) cast to the DEVCON() macro
 ---
- MAINTAINERS                         |   6 ++
- drivers/usb/typec/Kconfig           |   2 +
- drivers/usb/typec/Makefile          |   1 +
- drivers/usb/typec/mux/Kconfig       |  10 ++
- drivers/usb/typec/mux/Makefile      |   3 +
- drivers/usb/typec/mux/pi3usb30532.c | 178 ++++++++++++++++++++++++++++++++++++
- 6 files changed, 200 insertions(+)
- create mode 100644 drivers/usb/typec/mux/Kconfig
- create mode 100644 drivers/usb/typec/mux/Makefile
- create mode 100644 drivers/usb/typec/mux/pi3usb30532.c
+ Documentation/driver-api/device_connection.rst |  43 ++++++++
+ drivers/base/Makefile                          |   3 +-
+ drivers/base/devcon.c                          | 139 +++++++++++++++++++++++++
+ include/linux/connection.h                     |  34 ++++++
+ 4 files changed, 218 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/driver-api/device_connection.rst
+ create mode 100644 drivers/base/devcon.c
+ create mode 100644 include/linux/connection.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0a18231fde06..08718a86aa83 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14529,6 +14529,12 @@ F:	drivers/usb/
- F:	include/linux/usb.h
- F:	include/linux/usb/
- 
-+USB TYPEC PI3USB30532 MUX DRIVER
-+M:	Hans de Goede <hdegoede@redhat.com>
-+L:	linux-usb@vger.kernel.org
-+S:	Maintained
-+F:	drivers/usb/typec/mux/pi3usb30532.c
-+
- USB TYPEC SUBSYSTEM
- M:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
- L:	linux-usb@vger.kernel.org
-diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
-index a2a0684e7c82..030f88cb0c3f 100644
---- a/drivers/usb/typec/Kconfig
-+++ b/drivers/usb/typec/Kconfig
-@@ -85,4 +85,6 @@ config TYPEC_TPS6598X
- 	  If you choose to build this driver as a dynamically linked module, the
- 	  module will be called tps6598x.ko.
- 
-+source "drivers/usb/typec/mux/Kconfig"
-+
- endif # TYPEC
-diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
-index 56b2e9516ec1..1f599a6c30cc 100644
---- a/drivers/usb/typec/Makefile
-+++ b/drivers/usb/typec/Makefile
-@@ -6,3 +6,4 @@ obj-y				+= fusb302/
- obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
- obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
- obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
-+obj-$(CONFIG_TYPEC)		+= mux/
-diff --git a/drivers/usb/typec/mux/Kconfig b/drivers/usb/typec/mux/Kconfig
+diff --git a/Documentation/driver-api/device_connection.rst b/Documentation/driver-api/device_connection.rst
 new file mode 100644
-index 000000000000..9a954d2b8d8f
+index 000000000000..64a3e5e9bb7c
 --- /dev/null
-+++ b/drivers/usb/typec/mux/Kconfig
-@@ -0,0 +1,10 @@
-+menu "USB Type-C Multiplexer/DeMultiplexer Switch support"
++++ b/Documentation/driver-api/device_connection.rst
+@@ -0,0 +1,43 @@
++==================
++Device connections
++==================
 +
-+config TYPEC_MUX_PI3USB30532
-+	tristate "Pericom PI3USB30532 Type-C cross switch driver"
-+	depends on I2C
-+	help
-+	  Say Y or M if your system has a Pericom PI3USB30532 Type-C cross
-+	  switch / mux chip found on some devices with a Type-C port.
++Introduction
++------------
 +
-+endmenu
-diff --git a/drivers/usb/typec/mux/Makefile b/drivers/usb/typec/mux/Makefile
++Devices often have connections to other devices that are outside of the direct
++child/parent relationship. A serial or network communication controller, which
++could be a PCI device, may need to be able to get a reference to its PHY
++component, which could be attached for example to the I2C bus. Some device
++drivers need to be able to control the clocks or the GPIOs for their devices,
++and so on.
++
++Device connections are generic descriptions of any type of connection between
++two separate devices.
++
++Device connections alone do not create a dependency between the two devices.
++They are only descriptions which are not tied to either of the devices directly.
++A dependency between the two devices exists only if one of the two endpoint
++devices requests a reference to the other. The descriptions themselves can be
++defined in firmware (not yet supported) or they can be built-in.
++
++Usage
++-----
++
++Device connections should exist before device ``->probe`` callback is called for
++either endpoint device in the description. If the connections are defined in
++firmware, this is not a problem. It should be considered if the connection
++descriptions are "built-in", and need to be added separately.
++
++The connection description consists of the names of the two devices with the
++connection, i.e. the endpoints, and unique identifier for the connection which
++is needed if there are multiple connections between the two devices.
++
++After a description exists, the devices in it can request reference to the other
++endpoint device, or they can request the description itself.
++
++API
++---
++
++.. kernel-doc:: drivers/base/devcon.c
++   : functions: __device_find_connection device_find_connection add_device_connection remove_device_connection
+diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+index e32a52490051..12a7f64d35a9 100644
+--- a/drivers/base/Makefile
++++ b/drivers/base/Makefile
+@@ -5,7 +5,8 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
+ 			   driver.o class.o platform.o \
+ 			   cpu.o firmware.o init.o map.o devres.o \
+ 			   attribute_container.o transport_class.o \
+-			   topology.o container.o property.o cacheinfo.o
++			   topology.o container.o property.o cacheinfo.o \
++			   devcon.o
+ obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
+ obj-$(CONFIG_DMA_CMA) += dma-contiguous.o
+ obj-y			+= power/
+diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
 new file mode 100644
-index 000000000000..1332e469b8a0
+index 000000000000..9f13092fa115
 --- /dev/null
-+++ b/drivers/usb/typec/mux/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+obj-$(CONFIG_TYPEC_MUX_PI3USB30532)	+= pi3usb30532.o
-diff --git a/drivers/usb/typec/mux/pi3usb30532.c b/drivers/usb/typec/mux/pi3usb30532.c
-new file mode 100644
-index 000000000000..86cda9f388f3
---- /dev/null
-+++ b/drivers/usb/typec/mux/pi3usb30532.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Pericom PI3USB30532 Type-C cross switch / mux driver
++++ b/drivers/base/devcon.c
+@@ -0,0 +1,139 @@
++// SPDX-License-Identifier: GPL-2.0
++/**
++ * Device connections
 + *
-+ * Copyright (c) 2017-2018 Hans de Goede <hdegoede@redhat.com>
++ * Copyright (C) 2018 Intel Corporation
++ * Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 + */
 +
++#include <linux/connection.h>
++#include <linux/device.h>
++
++static DEFINE_MUTEX(devcon_lock);
++static LIST_HEAD(devcon_list);
++
++/**
++ * __device_find_connection - Find physical connection to a device
++ * @dev: Device with the connection
++ * @con_id: Identifier for the connection
++ * @data: Data for the match function
++ * @match: Function to check and convert the connection description
++ *
++ * Find a connection with unique identifier @con_id between @dev and another
++ * device. @match will be used to convert the connection description to data the
++ * caller is expecting to be returned.
++ */
++void *__device_find_connection(struct device *dev, const char *con_id,
++			       void *data,
++			       void *(*match)(struct devcon *con, int ep,
++					      void *data))
++{
++	const char *devname = dev_name(dev);
++	struct devcon *con;
++	void *ret = NULL;
++	int ep;
++
++	if (!match)
++		return NULL;
++
++	rcu_read_lock();
++
++	list_for_each_entry_rcu(con, &devcon_list, list) {
++		ep = match_string(con->endpoint, 2, devname);
++		if (ep < 0)
++			continue;
++
++		if (con_id && strcmp(con->id, con_id))
++			continue;
++
++		ret = match(con, !ep, data);
++		if (ret)
++			break;
++	}
++
++	rcu_read_unlock();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(__device_find_connection);
++
++#include <linux/platform_device.h>
++#include <linux/spi/spi.h>
 +#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/usb/tcpm.h>
-+#include <linux/usb/typec_mux.h>
++#include <linux/pci.h>
 +
-+#define PI3USB30532_CONF			0x00
-+
-+#define PI3USB30532_CONF_OPEN			0x00
-+#define PI3USB30532_CONF_SWAP			0x01
-+#define PI3USB30532_CONF_4LANE_DP		0x02
-+#define PI3USB30532_CONF_USB3			0x04
-+#define PI3USB30532_CONF_USB3_AND_2LANE_DP	0x06
-+
-+struct pi3usb30532 {
-+	struct i2c_client *client;
-+	struct mutex lock; /* protects the cached conf register */
-+	struct typec_switch sw;
-+	struct typec_mux mux;
-+	u8 conf;
++static struct bus_type *generic_match_buses[] = {
++	&platform_bus_type,
++#ifdef CONFIG_PCI
++	&pci_bus_type,
++#endif
++#ifdef CONFIG_I2C
++	&i2c_bus_type,
++#endif
++#ifdef CONFIG_SPI_MASTER
++	&spi_bus_type,
++#endif
++	NULL,
 +};
 +
-+static int pi3usb30532_set_conf(struct pi3usb30532 *pi, u8 new_conf)
++/* This tries to find the device from the most common bus types by name. */
++static void *generic_match(struct devcon *con, int ep, void *data)
 +{
-+	int ret = 0;
++	struct bus_type *bus;
++	struct device *dev;
 +
-+	if (pi->conf == new_conf)
-+		return 0;
-+
-+	ret = i2c_smbus_write_byte_data(pi->client, PI3USB30532_CONF, new_conf);
-+	if (ret) {
-+		dev_err(&pi->client->dev, "Error writing conf: %d\n", ret);
-+		return ret;
++	for (bus = generic_match_buses[0]; bus; bus++) {
++		dev = bus_find_device_by_name(bus, NULL, con->endpoint[ep]);
++		if (dev)
++			return dev;
 +	}
 +
-+	pi->conf = new_conf;
-+	return 0;
++	/*
++	 * We only get called if a connection was found, tell the caller to
++	 * wait for the other device to show up.
++	 */
++	return ERR_PTR(-EPROBE_DEFER);
 +}
 +
-+static int pi3usb30532_sw_set(struct typec_switch *sw,
-+			      enum typec_orientation orientation)
++/**
++ * device_find_connection - Find two devices connected together
++ * @dev: Device with the connection
++ * @con_id: Identifier for the connection
++ *
++ * Find a connection with unique identifier @con_id between @dev and
++ * another device. On success returns handle to the device that is connected
++ * to @dev, with the reference count for the found device incremented. Returns
++ * NULL if no matching connection was found, or ERR_PTR(-EPROBE_DEFER) when a
++ * connection was found but the other device has not been enumerated yet.
++ */
++struct device *device_find_connection(struct device *dev, const char *con_id)
 +{
-+	struct pi3usb30532 *pi = container_of(sw, struct pi3usb30532, sw);
-+	u8 new_conf;
-+	int ret;
-+
-+	mutex_lock(&pi->lock);
-+	new_conf = pi->conf;
-+
-+	switch (orientation) {
-+	case TYPEC_ORIENTATION_NONE:
-+		new_conf = PI3USB30532_CONF_OPEN;
-+		break;
-+	case TYPEC_ORIENTATION_NORMAL:
-+		new_conf &= ~PI3USB30532_CONF_SWAP;
-+		break;
-+	case TYPEC_ORIENTATION_REVERSE:
-+		new_conf |= PI3USB30532_CONF_SWAP;
-+		break;
-+	};
-+
-+	ret = pi3usb30532_set_conf(pi, new_conf);
-+	mutex_unlock(&pi->lock);
-+
-+	return ret;
++	return __device_find_connection(dev, con_id, NULL, generic_match);
 +}
++EXPORT_SYMBOL_GPL(device_find_connection);
 +
-+static int pi3usb30532_mux_set(struct typec_mux *mux, int state)
++/**
++ * add_device_connection - Register a collection of connection descriptions
++ * @con: Collection of connection descriptions to be registered
++ */
++void add_device_connection(struct devcon *con)
 +{
-+	struct pi3usb30532 *pi = container_of(mux, struct pi3usb30532, mux);
-+	u8 new_conf;
-+	int ret;
-+
-+	mutex_lock(&pi->lock);
-+	new_conf = pi->conf;
-+
-+	switch (state) {
-+	case TYPEC_MUX_NONE:
-+		new_conf = PI3USB30532_CONF_OPEN;
-+		break;
-+	case TYPEC_MUX_USB:
-+		new_conf = (new_conf & PI3USB30532_CONF_SWAP) |
-+			   PI3USB30532_CONF_USB3;
-+		break;
-+	case TYPEC_MUX_DP:
-+		new_conf = (new_conf & PI3USB30532_CONF_SWAP) |
-+			   PI3USB30532_CONF_4LANE_DP;
-+		break;
-+	case TYPEC_MUX_DOCK:
-+		new_conf = (new_conf & PI3USB30532_CONF_SWAP) |
-+			   PI3USB30532_CONF_USB3_AND_2LANE_DP;
-+		break;
-+	};
-+
-+	ret = pi3usb30532_set_conf(pi, new_conf);
-+	mutex_unlock(&pi->lock);
-+
-+	return ret;
++	mutex_lock(&devcon_lock);
++	list_add_tail_rcu(&con->list, &devcon_list);
++	mutex_unlock(&devcon_lock);
 +}
++EXPORT_SYMBOL_GPL(add_device_connection);
 +
-+static int pi3usb30532_probe(struct i2c_client *client)
++/**
++ * remove_device_connections - Unregister collection of connection descriptions
++ * @con: Collection of connection descriptions to be unregistered
++ */
++void remove_device_connection(struct devcon *con)
 +{
-+	struct device *dev = &client->dev;
-+	struct pi3usb30532 *pi;
-+	int ret;
-+
-+	pi = devm_kzalloc(dev, sizeof(*pi), GFP_KERNEL);
-+	if (!pi)
-+		return -ENOMEM;
-+
-+	pi->client = client;
-+	pi->sw.dev = dev;
-+	pi->sw.set = pi3usb30532_sw_set;
-+	pi->mux.dev = dev;
-+	pi->mux.set = pi3usb30532_mux_set;
-+	mutex_init(&pi->lock);
-+
-+	ret = i2c_smbus_read_byte_data(client, PI3USB30532_CONF);
-+	if (ret < 0) {
-+		dev_err(dev, "Error reading config register %d\n", ret);
-+		return ret;
-+	}
-+	pi->conf = ret;
-+
-+	ret = typec_switch_register(&pi->sw);
-+	if (ret) {
-+		dev_err(dev, "Error registering typec switch: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = typec_mux_register(&pi->mux);
-+	if (ret) {
-+		typec_switch_unregister(&pi->sw);
-+		dev_err(dev, "Error registering typec mux: %d\n", ret);
-+		return ret;
-+	}
-+
-+	i2c_set_clientdata(client, pi);
-+	return 0;
++	mutex_lock(&devcon_lock);
++	list_del_rcu(&con->list);
++	mutex_unlock(&devcon_lock);
++	/* The caller may free the devcon struct immediately afterwards. */
++	synchronize_rcu();
 +}
++EXPORT_SYMBOL_GPL(remove_device_connection);
+diff --git a/include/linux/connection.h b/include/linux/connection.h
+new file mode 100644
+index 000000000000..b2af70df5a97
+--- /dev/null
++++ b/include/linux/connection.h
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+static int pi3usb30532_remove(struct i2c_client *client)
-+{
-+	struct pi3usb30532 *pi = i2c_get_clientdata(client);
++#ifndef _LINUX_CONNECTION_H_
++#define _LINUX_CONNECTION_H_
 +
-+	typec_mux_unregister(&pi->mux);
-+	typec_switch_unregister(&pi->sw);
-+	return 0;
-+}
++#include <linux/list.h>
 +
-+static const struct i2c_device_id pi3usb30532_table[] = {
-+	{ "pi3usb30532" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, pi3usb30532_table);
++struct device;
 +
-+static struct i2c_driver pi3usb30532_driver = {
-+	.driver = {
-+		.name = "pi3usb30532",
-+	},
-+	.probe_new	= pi3usb30532_probe,
-+	.remove		= pi3usb30532_remove,
-+	.id_table	= pi3usb30532_table,
++/**
++ * struct devcon - Device Connection Descriptor
++ * @endpoint: The names of the two devices connected together
++ * @id: Unique identifier for the connection
++ * @list: List head, private for devcon internal use only
++ */
++struct devcon {
++	const char		*endpoint[2];
++	const char		*id;
++	struct list_head	list;
 +};
 +
-+module_i2c_driver(pi3usb30532_driver);
++void *__device_find_connection(struct device *dev, const char *con_id,
++			       void *data,
++			       void *(*match)(struct devcon *con, int ep,
++					      void *data));
 +
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_DESCRIPTION("Pericom PI3USB30532 Type-C mux driver");
-+MODULE_LICENSE("GPL");
++struct device *device_find_connection(struct device *dev, const char *con_id);
++
++#define DEVCON(_ep0, _ep1, _id)    (struct devcon) { { _ep0, _ep1 }, _id, }
++
++void add_device_connection(struct devcon *con);
++void remove_device_connection(struct devcon *con);
++
++#endif /* _LINUX_CONNECTION_H_ */
 -- 
 2.14.3
