@@ -1,8 +1,8 @@
 From: Darren Hart <dvhart@infradead.org>
 Subject: Re: [PATCH v3 3/3] platform/x86: dell-smbios: Link all dell-smbios-*
  modules together
-Date: Fri, 2 Mar 2018 16:21:35 -0800
-Message-ID: <20180303002135.GD25613@fury>
+Date: Fri, 2 Mar 2018 16:55:33 -0800
+Message-ID: <20180303005533.GE25613@fury>
 References: <1519755784-2155-1-git-send-email-mario.limonciello@dell.com>
  <1519755784-2155-3-git-send-email-mario.limonciello@dell.com>
 Mime-Version: 1.0
@@ -64,14 +64,7 @@ On Tue, Feb 27, 2018 at 12:23:04PM -0600, Mario Limonciello wrote:
 > -	tristate "Dell SMBIOS calling interface (WMI implementation)"
 > +	bool "Dell SMBIOS driver WMI support"
 
-Would you be happy with using "backend" here and for SMM?
-
-	bool "Dell SMBIOS driver WMI backend"
-
-It makes it obvious what the help text is referring to by "select at
-least one backend".
-
-Happy to just make this change locally, no need to resubmit.
+Oops, the help text still says Y or M for this and SMM - I'll correct locally.
 
 -- 
 Darren Hart
