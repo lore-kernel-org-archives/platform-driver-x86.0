@@ -1,100 +1,92 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
 Subject: Re: [PATCH 1/7] platform/x86: fujitsu-laptop: Define constants for
  FUNC operations
-Date: Tue, 6 Mar 2018 11:37:21 +0200
-Message-ID: <CAHp75VeB6PjacT4V_gsVOYCvJJK2fT3Oi6HONHdqJyCn+CeWNw@mail.gmail.com>
-References: <20180227211539.5708-1-kernel@kempniu.pl> <20180227211539.5708-2-kernel@kempniu.pl>
+Date: Tue, 6 Mar 2018 21:59:20 +0100
+Message-ID: <20180306205920.GA786@kmp-mobile.hq.kempniu.pl>
+References: <20180227211539.5708-1-kernel@kempniu.pl>
+ <20180227211539.5708-2-kernel@kempniu.pl>
  <CAHp75VdDQ1xAYcXEN04kSug2sgi-G8+7PBEOC8MJSBw7gSCyRQ@mail.gmail.com>
- <20180304050813.GA3129@marvin.atrad.com.au> <20180304194426.GA1428@kmp-mobile.hq.kempniu.pl>
+ <20180304050813.GA3129@marvin.atrad.com.au>
+ <20180304194426.GA1428@kmp-mobile.hq.kempniu.pl>
  <20180305231650.GA25693@fury>
+ <CAHp75VeB6PjacT4V_gsVOYCvJJK2fT3Oi6HONHdqJyCn+CeWNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180305231650.GA25693@fury>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeB6PjacT4V_gsVOYCvJJK2fT3Oi6HONHdqJyCn+CeWNw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Mar 6, 2018 at 1:16 AM, Darren Hart <dvhart@infradead.org> wrote:
-> On Sun, Mar 04, 2018 at 08:44:26PM +0100, Micha=C5=82 K=C4=99pie=C5=84 wr=
-ote:
->> > On Wed, Feb 28, 2018 at 06:08:52PM +0200, Andy Shevchenko wrote:
->> > > On Tue, Feb 27, 2018 at 11:15 PM, Micha?? K??pie?? <kernel@kempniu.p=
-l> wrote:
->> > > > Various functions exposed by the firmware through the FUNC interfa=
-ce
->> > > > tend to use a consistent set of integers for denoting the type of
->> > > > operation to be performed for a specified feature.  Use named cons=
-tants
->> > > > instead of integers in each call_fext_func() invocation in order t=
-o more
->> > > > clearly convey the intent of each call.
->> > > >
->> > > > Note that FUNC_FLAGS is a bit peculiar:
->> > >
->> > > > +/* FUNC interface - operations */
->> > > > +#define OP_GET                         BIT(1)
->> > > > +#define OP_GET_CAPS                    0
->> > > > +#define OP_GET_EVENTS                  BIT(0)
->> > > > +#define OP_GET_EXT                     BIT(2)
->> > > > +#define OP_SET                         BIT(0)
->> > > > +#define OP_SET_EXT                     (BIT(2) | BIT(0))
->> > >
->> > > Hmm... this looks unordered a bit.
->> >
->> > It seems to be ordered alphabetically on the identifier.  Andy, is it
->> > preferred to order defines like this based on resolved numeric order?
->>
->> Just to expand on what Jonathan wrote above: if you take a peek at the
->> end result of the patch series, you will notice a pattern: constants in
->> each section are ordered alphabetically by their name.  I wanted all
->> sections to be consistently ordered.  If you would rather have me order
->> things by the bit index, sure, no problem, just please note that the
->> order above is not accidental.
->
-> Hrm. In my experience it is more typical to order by value (bit), that's =
-a
-> little less obvious when using the BIT()|BIT() macros though. So long as =
-it's
-> consistent, I think that's what matters most.
+Andy,
 
-What I'm trying to tell is about consistency of style.
+> What I'm trying to tell is about consistency of style.
 
-So, imagine if we have two bitfields in some register, one with one
-bit and the other with two.
-And for latter one only 3 states are possible (00, 10, 11), so,
+I completely agree with all you wrote, those are all good suggestions.
+But you started your reasoning with:
 
-REG1_FLDA  BIT(0)
-REG1_FLDB_STATE0  0
-REG1_FLDB_STATE2  BIT(2)
-REG1_FLDB_STATE3  BIT(2) | BIT(3) // or 0x6, or (3 << 1)
+> So, imagine if we have two bitfields in some register, one with one
+> bit and the other with two.
 
-Above is not what I would like to see.
+We are not looking at a hardware register here.  Rather, I am trying to
+bring at least _some_ order to an arbitrary set of values that the
+vendor assumed would be fun to scatter around a dozen of firmware
+functions.  Some hardware features are controlled by setting a specific
+bit in the value being passed to a function; in other cases entire
+integers are taken into account; in yet another case *two* bits in a
+value control state.  There is no reason or order to be found here.
 
-The consistent may be one of the following
+In the case of OP_* constants, perhaps the simplest thing to do would be
+to define them as integers, not bitfields.  But that still results in a
+mess:
 
-REG1_FLDA  BIT(0)
-REG1_FLDB_STATE0  (0 << 1)
-REG1_FLDB_STATE2  (2 << 1)
-REG1_FLDB_STATE3  (3 << 1)
+#define OP_GET		0x2
+#define OP_GET_CAPS	0x0
+#define OP_GET_EVENTS	0x1
+#define OP_GET_EXT	0x4
+#define OP_SET		0x1
+#define OP_SET_EXT	0x5
 
-or (implying that in the code _SHIFT is used)
+or:
 
-REG1_FLDA  BIT(0)
-REG1_FLDB_SHIFT  1
-REG1_FLDB_STATE0  0
-REG1_FLDB_STATE2  2
-REG1_FLDB_STATE3  3
+#define OP_GET_CAPS	0x0
+#define OP_GET_EVENTS	0x1
+#define OP_SET		0x1
+#define OP_GET		0x2
+#define OP_GET_EXT	0x4
+#define OP_SET_EXT	0x5
 
-or (perhaps less wanted)
+Even worse, what am I supposed to do with crap like radio LED control,
+where 0x20 (bit 5) is passed in one argument to select the desired
+feature and 0x20 or 0 is passed as another argument to select the
+desired state of that feature?  How do I name and define constants that
+I can subsequently use in call_fext_func() invocations to spare the
+reader the need to learn the hard way that this:
 
-REG1_FLDA  (1 << 0)
-REG1_FLDB_STATE0  (0 << 1)
-REG1_FLDB_STATE2  (2 << 1)
-REG1_FLDB_STATE3  (3 << 1)
+    return call_fext_func(device, FUNC_FLAGS, 0x5, RADIO_LED_ON, 0x0);
 
---=20
-With Best Regards,
-Andy Shevchenko
+is actually supposed to turn the radio LED *off*?
+
+This is the best I could come up with:
+
+#define FEAT_RADIO_LED		BIT(5)
+#define STATE_RADIO_LED_OFF	(0 << 0)
+#define STATE_RADIO_LED_ON	BIT(5)
+
+Yes, it is ugly.  But the resulting call is (IMHO) a lot more clear than
+the original one:
+
+    return fext_flags(device, OP_SET_EXT, FEAT_RADIO_LED, STATE_RADIO_LED_OFF);
+
+All of the above is why I was inclined to just use alphabetic ordering
+for all constants defined in fujitsu-laptop.  This approach brings at
+least _some_ consistency to this mess (which only the vendor is to blame
+for, of course).  If you would rather have me take a different approach,
+I am all ears.
+
+-- 
+Best regards,
+Michał Kępień
