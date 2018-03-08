@@ -1,76 +1,57 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2 2/3] platform/x86: dell-*: Add interface
- for switchable graphics status query
-Date: Thu, 8 Mar 2018 17:38:37 +0100
-Message-ID: <20180308163837.myfmnowz5ogto52w@pali>
-References: <20180308091023.9061-1-kai.heng.feng@canonical.com>
- <20180308091023.9061-2-kai.heng.feng@canonical.com>
+Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
+ Dell machines
+Date: Thu, 8 Mar 2018 23:53:30 +0100
+Message-ID: <20180308225330.5ywfokfhxcl5j3ju@pali>
+References: <20180128144509.pobnj7cayc4psgrj@pali>
+ <CAHp75VdU1OMTqLcDuzhQMHuX9rMhjw6p3CkSWaW5Y4kOy8ggqg@mail.gmail.com>
+ <20180131120348.azy25aqvn5wrdkeh@pali>
+ <CAHp75Vf=-RQvCtS684Q5+X=YKmZXgP_1kr0to8BGZX0jQAsuZw@mail.gmail.com>
+ <20180212153012.vffvjmz26ifyxbj5@pali>
+ <CAHp75VfF+qwCXcr3yuayE-Z+UG9wuMOKfGzLhdyPk79daEi9gQ@mail.gmail.com>
+ <20180213150004.5d2v7y7wwuure4io@pali>
+ <CAHp75VfxgbFiDxyrqyMRE8s85L1_EzkVvrA1NGYA5_su=5oGVQ@mail.gmail.com>
+ <20180213165023.xmzovx7fd3gdljxw@pali>
+ <20180226203255.lnnzipipjz5l2itz@ninjato>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2578405435568653213=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180308091023.9061-2-kai.heng.feng@canonical.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: mjg59@srcf.ucam.org, alsa-devel@alsa-project.org, mario.limonciello@dell.com, linux-kernel@vger.kernel.org, tiwai@suse.com, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, andy@infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="f7vlwlw22eqxxknn"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180226203255.lnnzipipjz5l2itz@ninjato>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <Mario_Limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
 
---===============2578405435568653213==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qk6dsxcavtjhuczj"
-Content-Disposition: inline
-
-
---qk6dsxcavtjhuczj
+--f7vlwlw22eqxxknn
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thursday 08 March 2018 17:10:22 Kai-Heng Feng wrote:
-> +int dell_switchable_gfx_enabled(bool *enabled);
+On Monday 26 February 2018 21:32:55 Wolfram Sang wrote:
+>=20
+> > I'm not maintainer of i2c-i801.ko, Jean Delvare & Wolfram Sang are.
+> > Therefore instructing future contributors would be up to them.
+>=20
+> This is really Jean's realm.
+>=20
 
-What about following API?
-
-bool dell_switchable_gfx_is_enabled(void);
-
-Are you really interested in errors? Then what about?
-
-int dell_switchable_gfx_is_enabled(void);
-
-with e.g.
-  < 0 - error
-  =3D 0 - disabled
-  > 0 - enabled
+Jean, ping.
 
 --=20
 Pali Roh=C3=A1r
 pali.rohar@gmail.com
 
---qk6dsxcavtjhuczj
+--f7vlwlw22eqxxknn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWqFnBgAKCRCL8Mk9A+RD
-Uv37AKDH/cgvznJjDKcmEdMbu1ruHksJogCfV+C3N7NwJFZfaToBx9dNPNj7ze4=
-=lj6p
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWqG+5wAKCRCL8Mk9A+RD
+UnPhAJ9BtPaESXLzOcJ7bG5YFY333//7ewCgp3sL3g/OwpOIX2veQWjUPHyoqHI=
+=hWMx
 -----END PGP SIGNATURE-----
 
---qk6dsxcavtjhuczj--
-
---===============2578405435568653213==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2578405435568653213==--
+--f7vlwlw22eqxxknn--
