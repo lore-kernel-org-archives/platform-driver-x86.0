@@ -1,109 +1,97 @@
-From: Kai Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [alsa-devel] [PATCH v2 3/3] ALSA: hda: Disabled unused audio
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v2 3/3] ALSA: hda: Disabled unused audio
  controller for Dell platforms with Switchable Graphics
-Date: Fri, 9 Mar 2018 16:22:06 +0800
-Message-ID: <30D08909-0674-4D2E-8AF0-332A735FC245@canonical.com>
+Date: Fri, 9 Mar 2018 10:02:23 +0100
+Message-ID: <20180309090223.xb55ltac4pfesdrh@pali>
 References: <20180308091023.9061-1-kai.heng.feng@canonical.com>
  <20180308091023.9061-3-kai.heng.feng@canonical.com>
- <20180308093848.GA24068@wunner.de>
- <1A1B9259-DC5B-4C1A-96BD-7FCACDBFFBB3@canonical.com>
- <20180308113020.GA23073@wunner.de>
-Mime-Version: 1.0 (Mac OS X Mail 11.3 \(3445.6.15\))
-Content-Type: text/plain;
-        charset=us-ascii;
-        delsp=yes;
-        format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180308113020.GA23073@wunner.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukas Wunner <lukas@wunner.de>
-Cc: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, Mario Limonciello <mario.limonciello@dell.com>, tiwai@suse.com, alsa-devel@alsa-project.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20180308091023.9061-3-kai.heng.feng@canonical.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: mjg59@srcf.ucam.org, alsa-devel@alsa-project.org, mario.limonciello@dell.com, linux-kernel@vger.kernel.org, tiwai@suse.com, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, andy@infradead.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-
-
-> On Mar 8, 2018, at 7:30 PM, Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Thu, Mar 08, 2018 at 06:38:45PM +0800, Kai Heng Feng wrote:
->>> On Mar 8, 2018, at 5:38 PM, Lukas Wunner <lukas@wunner.de> wrote:
->>> On Thu, Mar 08, 2018 at 05:10:23PM +0800, Kai-Heng Feng wrote:
->>>> Some Dell platforms (Preicsion 7510/7710/7520/7720) have a BIOS option
->>>> "Switchable Graphics" (SG).
->>>>
->>>> When SG is enabled, we have:
->>>> 00:02.0 VGA compatible controller: Intel Corporation Device 591b (rev  
->>>> 04)
->>>> 00:1f.3 Audio device: Intel Corporation CM238 HD Audio Controller (rev  
->>>> 31)
->>>> 01:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
->>>> [AMD/ATI] Ellesmere [Polaris10]
->>>> 01:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Ellesmere
->>>> [Radeon RX 580]
->>>>
->>>> The Intel Audio outputs all the sound, including HDMI audio. The audio
->>>> controller comes with AMD graphics doesn't get used.
->>>>
->>>> When SG is disabled, we have:
->>>> 00:1f.3 Audio device: Intel Corporation CM238 HD Audio Controller (rev  
->>>> 31)
->>>> 01:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
->>>> [AMD/ATI] Ellesmere [Polaris10]
->>>> 01:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Ellesmere
->>>> [Radeon RX 580]
->>>>
->>>> Now it's a typical discrete-only system. HDMI audio comes from AMD audio
->>>> controller, others from Intel audio controller.
->>>>
->>>> When SG is enabled, the unused AMD audio controller still exposes its
->>>> sysfs, so userspace still opens the control file and stream. If
->>>> userspace tries to output sound through the stream, it hangs when
->>>> runtime suspend kicks in:
->>>> [ 12.796265] snd_hda_intel 0000:01:00.1: Disabling via vga_switcheroo
->>>> [ 12.796367] snd_hda_intel 0000:01:00.1: Cannot lock devices!
->>>
->>> This should be fixed by the following series:
->>> https://lists.freedesktop.org/archives/dri-devel/2018-March/168012.html
->>>
->>> Please verify that by testing the series on the machine in question.
->>> I'm hoping to get those patches in for 4.17.  I suspect that your
->>> patch may not be necessary then.
->>
->> I no longer see the warning message with your patch. Thanks!
->
-> Awesome, thanks for testing!
->
->
->>>> Since the discrete audio controller isn't useful when SG enabled, we
->>>> should just disable the device.
->>>
->>> I don't quite follow, when SG is enabled but hda_intel doesn't bind
->>> to the AMD audio device, how are you going to stream audio to
->>> external displays?  Are external DP/HDMI ports muxed to the integrated
->>> GPU when SG is enabled?
->>
->> Yes. It's a muxed port.
->> The can directly output via integrated Intel GPU when SG is enabled.
->> The discrete audio controller never gets used when SG is enabled.
->
-> Okay, that's a crucial piece of information which I think should be
-> made more explicit in the commit message and probably also in a code
-> comment so that someone reading through hda_intel.c doesn't have to
-> look in the git history to understand what's going on.
->
-> I'd remove the portion of the commit message pertaining to runtime
-> suspend and instead write something like:
->
->     If Switchable Graphics is enabled, external DP/HDMI ports are
->     muxed to the Intel GPU and HDA controller and therefore those
->     on the AMD HDA controller shouldn't be exposed to user space.
-
-I'll add the explanation to both comment and commit log.
-Thanks for all the info.
-
-Kai-Heng
-
->
-> Thanks,
->
-> Lukas
+T24gVGh1cnNkYXkgMDggTWFyY2ggMjAxOCAxNzoxMDoyMyBLYWktSGVuZyBGZW5nIHdyb3RlOgo+
+IFNvbWUgRGVsbCBwbGF0Zm9ybXMgKFByZWljc2lvbiA3NTEwLzc3MTAvNzUyMC83NzIwKSBoYXZl
+IGEgQklPUyBvcHRpb24KPiAiU3dpdGNoYWJsZSBHcmFwaGljcyIgKFNHKS4KPiAKPiBXaGVuIFNH
+IGlzIGVuYWJsZWQsIHdlIGhhdmU6Cj4gMDA6MDIuMCBWR0EgY29tcGF0aWJsZSBjb250cm9sbGVy
+OiBJbnRlbCBDb3Jwb3JhdGlvbiBEZXZpY2UgNTkxYiAocmV2IDA0KQo+IDAwOjFmLjMgQXVkaW8g
+ZGV2aWNlOiBJbnRlbCBDb3Jwb3JhdGlvbiBDTTIzOCBIRCBBdWRpbyBDb250cm9sbGVyIChyZXYg
+MzEpCj4gMDE6MDAuMCBWR0EgY29tcGF0aWJsZSBjb250cm9sbGVyOiBBZHZhbmNlZCBNaWNybyBE
+ZXZpY2VzLCBJbmMuICBbQU1EL0FUSV0gRWxsZXNtZXJlIFtQb2xhcmlzMTBdCj4gMDE6MDAuMSBB
+dWRpbyBkZXZpY2U6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRC9BVEldIEVsbGVz
+bWVyZSBbUmFkZW9uIFJYIDU4MF0KPiAKPiBUaGUgSW50ZWwgQXVkaW8gb3V0cHV0cyBhbGwgdGhl
+IHNvdW5kLCBpbmNsdWRpbmcgSERNSSBhdWRpby4gVGhlIGF1ZGlvCj4gY29udHJvbGxlciBjb21l
+cyB3aXRoIEFNRCBncmFwaGljcyBkb2Vzbid0IGdldCB1c2VkLgo+IAo+IFdoZW4gU0cgaXMgZGlz
+YWJsZWQsIHdlIGhhdmU6Cj4gMDA6MWYuMyBBdWRpbyBkZXZpY2U6IEludGVsIENvcnBvcmF0aW9u
+IENNMjM4IEhEIEF1ZGlvIENvbnRyb2xsZXIgKHJldiAzMSkKPiAwMTowMC4wIFZHQSBjb21wYXRp
+YmxlIGNvbnRyb2xsZXI6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gIFtBTUQvQVRJXSBF
+bGxlc21lcmUgW1BvbGFyaXMxMF0KPiAwMTowMC4xIEF1ZGlvIGRldmljZTogQWR2YW5jZWQgTWlj
+cm8gRGV2aWNlcywgSW5jLiBbQU1EL0FUSV0gRWxsZXNtZXJlIFtSYWRlb24gUlggNTgwXQo+IAo+
+IE5vdyBpdCdzIGEgdHlwaWNhbCBkaXNjcmV0ZS1vbmx5IHN5c3RlbS4gSERNSSBhdWRpbyBjb21l
+cyBmcm9tIEFNRCBhdWRpbwo+IGNvbnRyb2xsZXIsIG90aGVycyBmcm9tIEludGVsIGF1ZGlvIGNv
+bnRyb2xsZXIuCj4gCj4gV2hlbiBTRyBpcyBlbmFibGVkLCB0aGUgdW51c2VkIEFNRCBhdWRpbyBj
+b250cm9sbGVyIHN0aWxsIGV4cG9zZXMgaXRzCj4gc3lzZnMsIHNvIHVzZXJzcGFjZSBzdGlsbCBv
+cGVucyB0aGUgY29udHJvbCBmaWxlIGFuZCBzdHJlYW0uIElmCj4gdXNlcnNwYWNlIHRyaWVzIHRv
+IG91dHB1dCBzb3VuZCB0aHJvdWdoIHRoZSBzdHJlYW0sIGl0IGhhbmdzIHdoZW4KPiBydW50aW1l
+IHN1c3BlbmQga2lja3MgaW46Cj4gWyAxMi43OTYyNjVdIHNuZF9oZGFfaW50ZWwgMDAwMDowMTow
+MC4xOiBEaXNhYmxpbmcgdmlhIHZnYV9zd2l0Y2hlcm9vCj4gWyAxMi43OTYzNjddIHNuZF9oZGFf
+aW50ZWwgMDAwMDowMTowMC4xOiBDYW5ub3QgbG9jayBkZXZpY2VzIQo+IAo+IFNpbmNlIHRoZSBk
+aXNjcmV0ZSBhdWRpbyBjb250cm9sbGVyIGlzbid0IHVzZWZ1bCB3aGVuIFNHIGVuYWJsZWQsIHdl
+Cj4gc2hvdWxkIGp1c3QgZGlzYWJsZSB0aGUgZGV2aWNlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEth
+aS1IZW5nIEZlbmcgPGthaS5oZW5nLmZlbmdAY2Fub25pY2FsLmNvbT4KPiAtLS0KPiB2MjogTWFy
+aW8gc3VnZ2VzdGVkIHRvIHNxdWFzaCB0aGUgSERBIHBhcnQgaW50byB0aGUgc2FtZSBzZXJpZXMu
+Cj4gCj4gIHNvdW5kL3BjaS9oZGEvaGRhX2ludGVsLmMgfCAzNSArKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKQo+IAo+
+IGRpZmYgLS1naXQgYS9zb3VuZC9wY2kvaGRhL2hkYV9pbnRlbC5jIGIvc291bmQvcGNpL2hkYS9o
+ZGFfaW50ZWwuYwo+IGluZGV4IDk2MTQzZGYxOWIyMS4uOGUzZThiODg2MjRhIDEwMDY0NAo+IC0t
+LSBhL3NvdW5kL3BjaS9oZGEvaGRhX2ludGVsLmMKPiArKysgYi9zb3VuZC9wY2kvaGRhL2hkYV9p
+bnRlbC5jCj4gQEAgLTQ5LDYgKzQ5LDcgQEAKPiAgI2luY2x1ZGUgPGxpbnV4L2Nsb2Nrc291cmNl
+Lmg+Cj4gICNpbmNsdWRlIDxsaW51eC90aW1lLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9jb21wbGV0
+aW9uLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9kZWxsLWNvbW1vbi5oPgo+ICAKPiAgI2lmZGVmIENP
+TkZJR19YODYKPiAgLyogZm9yIHNub29wIGNvbnRyb2wgKi8KPiBAQCAtMTYyMCw2ICsxNjIxLDM1
+IEBAIHN0YXRpYyB2b2lkIGNoZWNrX21zaShzdHJ1Y3QgYXp4ICpjaGlwKQo+ICAJfQo+ICB9Cj4g
+IAo+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfREVMTF9MQVBUT1ApCj4gK3N0YXRpYyBib29sIGNo
+ZWNrX2RlbGxfc3dpdGNoYWJsZV9nZngoc3RydWN0IHBjaV9kZXYgKnBkZXYpCj4gK3sKPiArCXN0
+YXRpYyBpbnQgKCpkZWxsX3N3aXRjaGFibGVfZ2Z4X2VuYWJsZWRfZnVuYykoYm9vbCAqKTsKPiAr
+CWJvb2wgZW5hYmxlZDsKPiArCWludCBlcnI7Cj4gKwo+ICsJaWYgKHBkZXYtPnZlbmRvciAhPSBQ
+Q0lfVkVORE9SX0lEX0FUSSB8fAo+ICsJICAgIHBkZXYtPnN1YnN5c3RlbV92ZW5kb3IgIT0gUENJ
+X1ZFTkRPUl9JRF9ERUxMKQo+ICsJCXJldHVybiBmYWxzZTsKCkFyZSB5b3Ugc3VyZSB0aGF0IHlv
+dSB3YW50IHRvIGRvIHRoaXMgY2hlY2sgdW5jb25kaXRpb25hbGx5IG9uIGFsbAptYWNoaW5lcyB3
+aGljaCBoYXZlIGVuYWJsZWQgQ09ORklHX0RFTExfTEFQVE9QPwoKU3VidmVuZG9yIElEX0RFTEwg
+Zm9yIGRlbGwgc3BlY2lmaWMgY29kZSBpcyBub3Qgc3VzcGljaW91cywgYnV0IElEX0FUSQppcy4g
+V2hhdCB3b3VsZCBoYXBwZW4gaWYgQVRJIHZlbmRvciBjaGFuZ2VzIHRvIE5WSURJQSBvciBvdGhl
+ciB3aGljaCBpcwpub3QgcmVsYXRlZCB0byBEZWxsPwoKSW50ZXJlc3RpbmcgcXVlc3Rpb24gd291
+bGQgYmUsIGhvdyBoYW5kbGUgdGhpcyBzaXR1YXRpb24gV2luZG93cz8KCj4gKwlkZWxsX3N3aXRj
+aGFibGVfZ2Z4X2VuYWJsZWRfZnVuYyA9Cj4gKwkJc3ltYm9sX3JlcXVlc3QoZGVsbF9zd2l0Y2hh
+YmxlX2dmeF9lbmFibGVkKTsKPiArCWlmICghZGVsbF9zd2l0Y2hhYmxlX2dmeF9lbmFibGVkX2Z1
+bmMpCj4gKwkJcmV0dXJuIGZhbHNlOwo+ICsKPiArCWVyciA9IGRlbGxfc3dpdGNoYWJsZV9nZnhf
+ZW5hYmxlZF9mdW5jKCZlbmFibGVkKTsKPiArCj4gKwlzeW1ib2xfcHV0KGRlbGxfc3dpdGNoYWJs
+ZV9nZnhfZW5hYmxlZCk7Cj4gKwo+ICsJcmV0dXJuICFlcnIgPyBlbmFibGVkIDogZmFsc2U7Cj4g
+K30KPiArI2Vsc2UKPiArc3RhdGljIGJvb2wgY2hlY2tfZGVsbF9zd2l0Y2hhYmxlX2dmeChzdHJ1
+Y3QgcGNpX2RldiAqcGRldikKPiArewo+ICsJcmV0dXJuIGZhbHNlOwo+ICt9Cj4gKyNlbmRpZgo+
+ICsKPiAgLyogY2hlY2sgdGhlIHNub29wIG1vZGUgYXZhaWxhYmlsaXR5ICovCj4gIHN0YXRpYyB2
+b2lkIGF6eF9jaGVja19zbm9vcF9hdmFpbGFibGUoc3RydWN0IGF6eCAqY2hpcCkKPiAgewo+IEBA
+IC0xNzAyLDYgKzE3MzIsMTEgQEAgc3RhdGljIGludCBhenhfY3JlYXRlKHN0cnVjdCBzbmRfY2Fy
+ZCAqY2FyZCwgc3RydWN0IHBjaV9kZXYgKnBjaSwKPiAgCWlmIChlcnIgPCAwKQo+ICAJCXJldHVy
+biBlcnI7Cj4gIAo+ICsJaWYgKGNoZWNrX2RlbGxfc3dpdGNoYWJsZV9nZngocGNpKSkgewo+ICsJ
+CXBjaV9kaXNhYmxlX2RldmljZShwY2kpOwo+ICsJCXJldHVybiAtRU5PREVWOwo+ICsJfQo+ICsK
+PiAgCWhkYSA9IGt6YWxsb2Moc2l6ZW9mKCpoZGEpLCBHRlBfS0VSTkVMKTsKPiAgCWlmICghaGRh
+KSB7Cj4gIAkJcGNpX2Rpc2FibGVfZGV2aWNlKHBjaSk7CgotLSAKUGFsaSBSb2jDoXIKcGFsaS5y
+b2hhckBnbWFpbC5jb20KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3Jn
+Cmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRl
+dmVsCg==
