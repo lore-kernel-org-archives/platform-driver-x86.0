@@ -1,57 +1,51 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
- Dell machines
-Date: Thu, 8 Mar 2018 23:53:30 +0100
-Message-ID: <20180308225330.5ywfokfhxcl5j3ju@pali>
-References: <20180128144509.pobnj7cayc4psgrj@pali>
- <CAHp75VdU1OMTqLcDuzhQMHuX9rMhjw6p3CkSWaW5Y4kOy8ggqg@mail.gmail.com>
- <20180131120348.azy25aqvn5wrdkeh@pali>
- <CAHp75Vf=-RQvCtS684Q5+X=YKmZXgP_1kr0to8BGZX0jQAsuZw@mail.gmail.com>
- <20180212153012.vffvjmz26ifyxbj5@pali>
- <CAHp75VfF+qwCXcr3yuayE-Z+UG9wuMOKfGzLhdyPk79daEi9gQ@mail.gmail.com>
- <20180213150004.5d2v7y7wwuure4io@pali>
- <CAHp75VfxgbFiDxyrqyMRE8s85L1_EzkVvrA1NGYA5_su=5oGVQ@mail.gmail.com>
- <20180213165023.xmzovx7fd3gdljxw@pali>
- <20180226203255.lnnzipipjz5l2itz@ninjato>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="f7vlwlw22eqxxknn"
+From: Kai Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH v2 2/3] platform/x86: dell-*: Add interface for switchable
+ graphics status query
+Date: Fri, 9 Mar 2018 16:14:03 +0800
+Message-ID: <DC881209-6C71-4B13-BF48-05F1F93E207A@canonical.com>
+References: <20180308091023.9061-1-kai.heng.feng@canonical.com>
+ <20180308091023.9061-2-kai.heng.feng@canonical.com>
+ <20180308163837.myfmnowz5ogto52w@pali>
+Mime-Version: 1.0 (Mac OS X Mail 11.3 \(3445.6.15\))
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180226203255.lnnzipipjz5l2itz@ninjato>
+In-Reply-To: <20180308163837.myfmnowz5ogto52w@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <Mario_Limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: =?utf-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
+Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, Mario Limonciello <mario.limonciello@dell.com>, tiwai@suse.com, platform-driver-x86@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 
---f7vlwlw22eqxxknn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Monday 26 February 2018 21:32:55 Wolfram Sang wrote:
->=20
-> > I'm not maintainer of i2c-i801.ko, Jean Delvare & Wolfram Sang are.
-> > Therefore instructing future contributors would be up to them.
->=20
-> This is really Jean's realm.
->=20
+> On Mar 9, 2018, at 12:38 AM, Pali Rohár <pali.rohar@gmail.com> wrote:
+>
+> On Thursday 08 March 2018 17:10:22 Kai-Heng Feng wrote:
+>> +int dell_switchable_gfx_enabled(bool *enabled);
+>
+> What about following API?
+>
+> bool dell_switchable_gfx_is_enabled(void);
+>
+> Are you really interested in errors? Then what about?
 
-Jean, ping.
+Not really. We can assume it's false when there's any error.
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+I'll update the function in next version, thanks!
 
---f7vlwlw22eqxxknn
-Content-Type: application/pgp-signature; name="signature.asc"
+Kai-Heng
 
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWqG+5wAKCRCL8Mk9A+RD
-UnPhAJ9BtPaESXLzOcJ7bG5YFY333//7ewCgp3sL3g/OwpOIX2veQWjUPHyoqHI=
-=hWMx
------END PGP SIGNATURE-----
-
---f7vlwlw22eqxxknn--
+>
+> int dell_switchable_gfx_is_enabled(void);
+>
+> with e.g.
+>   < 0 - error
+>   = 0 - disabled
+>> 0 - enabled
+>
+> -- 
+> Pali Rohár
+> pali.rohar@gmail.com
