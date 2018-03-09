@@ -1,61 +1,45 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v2 3/3] ALSA: hda: Disabled unused audio controller for
- Dell platforms with Switchable Graphics
-Date: Fri, 9 Mar 2018 09:59:39 +0000
-Message-ID: <09eadabb264f401a88b427744505adf8@ausx13mpc124.AMER.DELL.COM>
-References: <20180308091023.9061-1-kai.heng.feng@canonical.com>
- <20180308091023.9061-3-kai.heng.feng@canonical.com>
- <20180309090223.xb55ltac4pfesdrh@pali>
- <723DA929-C9FA-4F69-8D3A-03D8A75D09A6@canonical.com>
- <014795f5a3014cd3bf55de26f76a5af8@ausx13mpc124.AMER.DELL.COM>
- <20180309094600.m24d3zbzdsmls7aw@pali>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: silead_dmi: Add entry for the Yours Y8W81 tablet
+Date: Fri,  9 Mar 2018 15:03:58 +0100
+Message-ID: <20180309140358.11432-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180309094600.m24d3zbzdsmls7aw@pali>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com
-Cc: kai.heng.feng@canonical.com, mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, tiwai@suse.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiA+IFBhbGkgaXMgeW91ciBjb25jZXJuIHRoYXQgdGhpcyBjb2RlIGZvciBtYXRjaGluZyB2ZW5k
-b3Ivc3Vic3lzdGVtIGlzIHJ1bm5pbmcNCj4gPiBvbiBub24tRGVsbCB0b28/ICBUaGUgb25seSBv
-dGhlciByZWNvbW1lbmRhdGlvbiBJIHRoaW5rIHRoYXQgY2FuIGJlIHRvIHJlc3RyaWN0DQo+ID4g
-dG8gbWF0Y2hpbmcgRGVsbCBPRU0gc3RyaW5ncyBpbiBTTUJJT1MgdGFibGUsIGJ1dCBJIGRvbid0
-IHRoaW5rIHRoYXQncyBhbnkgYmV0dGVyDQo+ID4gdGhhbiB0aGUgbWF0Y2hpbmcgZm9yIFZJRC9T
-U1ZJRC4NCj4gDQo+IE15IGNvbmNlcm4gaXMgYWJvdXQgYWRkaW5nIGEgbmV3IG1hY2hpbmUgc3Bl
-Y2lmaWMgY29kZSBpbnRvIGdlbmVyaWMNCj4gZHJpdmVyLCB3aGljaCBjaGVjayBpcyBkb25lIGp1
-c3QgYnkgUENJIHZlbmRvciBhbmQgc3VidmVuZG9yLg0KPiANCj4gSW4gZnV0dXJlIHRoZXJlIGNh
-biBiZSBuZXcgbW9kZWxzIG9yIG90aGVyIFBDSSBkZXZpY2VzIHdoaWNoIG1hdGNoZXMNCj4gYWJv
-dmUgY29uZGl0aW9uIGV2ZW4gdGhleSB3b3VsZCBub3QgaGF2ZSBhbnkgc3dpdGNoYWJsZSBncmFw
-aGljcywgbm9yDQo+IHRoZXkgd291bGQgbWFudWZhY3R1cmVkIGJ5IERlbGwuDQoNClVoIERlbGwg
-c3Vic3lzdGVtIElEIG1lYW5zIGl0J3MgRGVsbCBubz8NCg0KPiANCj4gQWxzbyBJIGNhbiBpbWFn
-aW5lIHRoYXQgaW4gZnV0dXJlIChvciBtYXliZSBhbHJlYWR5IG5vdz8pIGl0IGlzIHBvc3NpYmxl
-DQo+IHRvIGZpbmQgUENJIGRldmljZSB3aGljaCBwYXNzIGFib3ZlIGNoZWNrcyBhbmQgY29ubmVj
-dCB0aGlzIFBDSSBkZXZpY2UNCj4gaW50byBkZXNrdG9wIC9zZXJ2ZXIgLyBhbnkgbm9uLWxhcHRv
-cCBkZXZpY2UuDQo+IA0KPiBJZiB0aGlzIHN3aXRjaGFibGUgZ3JhcGhpY3Mgc29sdXRpb24gaXMg
-c3BlY2lmaWMgdG8gZGVsbCBsYXB0b3BzLCB0aGVuDQo+IHJhdGhlciBjaGVja2luZyBmb3IgUENJ
-IHZlbmRvci9zdWJ2ZXZlbmRvciBtYWluIGNoZWNrLCB0aGVyZSBzaG91bGQgYmUNCj4gbWFpbiBj
-aGVjayB2aWEgRE1JIHN0cmluZ3MuDQoNClJpZ2h0IG5vdyB0aGlzIGlzIGFmZmVjdGVkIHRvIGJv
-dGggQUlPIGRlc2t0b3AgYW5kIGxhcHRvcHMuDQoNCklJUkMgeW91IHdvbid0IGVuZCB1cCB3aXRo
-IHN3aXRjaGFibGUgZ3JhcGhpY3MgaW4gdHJhZGl0aW9uYWwgZGVza3RvcCB0aGF0IHlvdQ0KY2Fu
-IHJlbW92ZSBQQ0kgY2FyZC4gIElmIHRoaXMgY29kZSB3YXMgcnVuIG9uIGEgdHJhZGl0aW9uYWwg
-ZGVza3RvcCB3aXRoIGEgDQpBTUQgUENJIGNhcmQgdGhhdCBCSU9TIHF1ZXJ5IHJlc3VsdCBzaG91
-bGQgYmUgaW52YWxpZCB0b2tlbiAod2hpY2ggd2lsbCBpbmZlcg0Kc3dpdGNoYWJsZSBvZmYgdG8g
-dGhpcyByb3V0aW5lKS4NCg0KPiANCj4gSGFyZHdhcmUgaXMgY2hhbmdpbmcgcmVsYXRpdmVseSBx
-dWlja2x5IGFuZCB0aGVyZSBpcyBhYnNvbHV0ZWx5IG5vDQo+IGd1YXJhbnRlZSB0aGF0IGUuZy4g
-TlZJRElBIHdvdWxkIG5vdCBzdGFydCBwcm92aWRpbmcgYXVkaW8gY29udHJvbGxlciBpbg0KPiBz
-aW1pbGFyIGxpa2UgQU1EIGFuZCBpdCB3b3VsZCBiZSBwdXQgaW4gdGhvc2UgRGVsbCBtYWNoaW5l
-cy4NCg0KS2FpIEhlbmcgY2FuIGV4cGxhaW4gZXhhY3RseSB3aHkgTlZJRElBIGlzbid0IGFmZmVj
-dGVkLg0KVGhpcyBpcyBwcm9iYWJseSBnb29kIGluZm9ybWF0aW9uIHRvIGluY2x1ZGUgaW4gdGhl
-IGNvbW1pdCBtZXNzYWdlIHRvby4NCg0KPiANCj4gPiA+ID4NCj4gPiA+ID4gSW50ZXJlc3Rpbmcg
-cXVlc3Rpb24gd291bGQgYmUsIGhvdyBoYW5kbGUgdGhpcyBzaXR1YXRpb24gV2luZG93cz8NCj4g
-PiA+DQo+ID4gPiBJIGRvbid0IGtub3cgaG93IHRoaXMgcGxhdGZvcm0gaGFuZGxlcyB0aGlzIG9u
-IFdpbmRvd3MsIEkgZ3Vlc3Mgd2UgbmVlZA0KPiA+ID4gTWFyaW8gdG8gc2hlZCBzb21lIGxpZ2h0
-cyBoZXJlLg0KPiA+DQo+ID4gU29ycnkgSSBkb24ndCBoYXZlIHRoaXMgaW5mb3JtYXRpb24gdG8g
-c2hhcmUuICAgSSBkb24ndCB0aGluayBpdCdzIHRvbyB1c2VmdWwgaGVyZQ0KPiA+IGFueXdheSB0
-aG91Z2ggYmVjYXVzZSBXaW5kb3dzIGRyaXZlciBhcmNoaXRlY3R1cmUgaXMgbXVjaCBkaWZmZXJl
-bnQgaW4gdGhpcw0KPiA+IGFyZWEuDQo+ID4NCj4gPg0KPiANCj4gLS0NCj4gUGFsaSBSb2jDoXIN
-Cj4gcGFsaS5yb2hhckBnbWFpbC5jb20NCg==
+Add an entry with touchscreen info for the Yours Y8W81 8" tablet.
+
+This tablet has the same case and mostly the same internals as the Chuwi
+Vi8. Both seem to be from an ODM called inet-tek. Both are labelled:
+"INET-I86M-REVxx" on the PCB, with the Chuwi Vi8 being REV03 (and having
+an ALC5640 audio codec) and the Yours Y8W81 being REV21 (and having an
+ALC5651 audio codec). The wifi, accelerometer and touchscreen are
+identical on both.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/silead_dmi.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
+index 1091539fa230..452aacabaa8e 100644
+--- a/drivers/platform/x86/silead_dmi.c
++++ b/drivers/platform/x86/silead_dmi.c
+@@ -455,6 +455,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "itWORKS.G.WI71C.JGBMRB"),
+ 		},
+ 	},
++	{
++		/* Yours Y8W81, same case and touchscreen as Chuwi Vi8 */
++		.driver_data = (void *)&chuwi_vi8_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "YOURS"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Y8W81"),
++		},
++	},
+ 	{ },
+ };
+ 
+-- 
+2.14.3
