@@ -1,103 +1,90 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 01/12] drivers: base: Unified device connection lookup
-Date: Fri, 9 Mar 2018 09:53:47 -0800
-Message-ID: <20180309175347.GA12150@kroah.com>
-References: <20180302102057.8917-1-hdegoede@redhat.com>
- <20180302102057.8917-2-hdegoede@redhat.com>
+From: Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH v2 3/3] ALSA: hda: Disabled unused audio
+ controller for Dell platforms with Switchable Graphics
+Date: Sat, 10 Mar 2018 07:50:39 +0100
+Message-ID: <20180310065039.GA6633@wunner.de>
+References: <20180308091023.9061-1-kai.heng.feng@canonical.com>
+ <20180308091023.9061-3-kai.heng.feng@canonical.com>
+ <20180309090223.xb55ltac4pfesdrh@pali>
+ <723DA929-C9FA-4F69-8D3A-03D8A75D09A6@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20180302102057.8917-2-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+In-Reply-To: <723DA929-C9FA-4F69-8D3A-03D8A75D09A6@canonical.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kai Heng Feng <kai.heng.feng@canonical.com>
+Cc: mjg59@srcf.ucam.org, alsa-devel@alsa-project.org, Mario Limonciello <mario.limonciello@dell.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, tiwai@suse.com, platform-driver-x86@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, dvhart@infradead.org, andy@infradead.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Mar 02, 2018 at 11:20:46AM +0100, Hans de Goede wrote:
-> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+On Fri, Mar 09, 2018 at 05:30:15PM +0800, Kai Heng Feng wrote:
+> >On Thursday 08 March 2018 17:10:23 Kai-Heng Feng wrote:
+> >>Some Dell platforms (Preicsion 7510/7710/7520/7720) have a BIOS option
+> >>"Switchable Graphics" (SG).
+> >>
+> >>When SG is enabled, we have:
+> >>00:02.0 VGA compatible controller: Intel Corporation Device 591b (rev 04)
+> >>00:1f.3 Audio device: Intel Corporation CM238 HD Audio Controller (rev 31)
+> >>01:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
+> >>[AMD/ATI] Ellesmere [Polaris10]
+> >>01:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Ellesmere
+> >>[Radeon RX 580]
+> >>
+> >>The Intel Audio outputs all the sound, including HDMI audio. The audio
+> >>controller comes with AMD graphics doesn't get used.
+> >>
+> >>When SG is disabled, we have:
+> >>00:1f.3 Audio device: Intel Corporation CM238 HD Audio Controller (rev 31)
+> >>01:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
+> >>[AMD/ATI] Ellesmere [Polaris10]
+> >>01:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Ellesmere
+> >>[Radeon RX 580]
+> >>
+> >>Now it's a typical discrete-only system. HDMI audio comes from AMD audio
+> >>controller, others from Intel audio controller.
+> >>
+> >>When SG is enabled, the unused AMD audio controller still exposes its
+> >>sysfs, so userspace still opens the control file and stream. If
+> >>userspace tries to output sound through the stream, it hangs when
+> >>runtime suspend kicks in:
+> >>[ 12.796265] snd_hda_intel 0000:01:00.1: Disabling via vga_switcheroo
+> >>[ 12.796367] snd_hda_intel 0000:01:00.1: Cannot lock devices!
+> >>
+> >>Since the discrete audio controller isn't useful when SG enabled, we
+> >>should just disable the device.
 > 
-> Several frameworks - clk, gpio, phy, pmw, etc. - maintain
-> lookup tables for describing connections and provide custom
-> API for handling them. This introduces a single generic
-> lookup table and API for the connections.
-> 
-> The motivation for this commit is centralizing the
-> connection lookup, but the goal is to ultimately extract the
-> connection descriptions also from firmware by using the
-> fwnode_graph_* functions and other mechanisms that are
-> available.
-> 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> The platform does have a NVIDIA variant, but the discrete NVIDIA have a
+> audio controller, hence it doesn't have the issue.
 
-Sorry for the delay, just now reviewing this patch...
+Sorry, I don't quite understand:  The AMD variant *also* has an audio
+controller, so what's the difference?  Or did you mean the Nvidia
+variant *doesn't* have an audio controller?
 
-The content is fine (if not scary for the obvious reason of passing
-around 'struct device' of different bus types, but ok...), but the api
-naming is "rough":
+Pretty much all modern Nvidia GPUs do have an integrated HDA
+controller, however it's possible to hide it by clearing a bit
+at offset 0x488 in the GPU's config space.  Some BIOSes hide
+the HDA if no external display is attached.
 
-> --- /dev/null
-> +++ b/include/linux/connection.h
+I could imagine that the BIOS of the Dell machines in question
+hides the HDA if Switchable Graphics is enabled.  If that is the
+case, be aware that there's an ongoing discussion to always expose
+the HDA controller because the behavior of some BIOSes to only
+expose the HDA when a display is attached causes massive problems
+with Linux' HDA driver:
+https://bugs.freedesktop.org/show_bug.cgi?id=75985
 
-"connection.h" is vague, why not just put this in device.h?
+If we decide to always expose the HDA controller on Nvidia cards,
+you may need to also match for the Nvidia vendor ID here.
 
-> @@ -0,0 +1,34 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#ifndef _LINUX_CONNECTION_H_
-> +#define _LINUX_CONNECTION_H_
-> +
-> +#include <linux/list.h>
-> +
-> +struct device;
-> +
-> +/**
-> + * struct devcon - Device Connection Descriptor
-> + * @endpoint: The names of the two devices connected together
-> + * @id: Unique identifier for the connection
-> + * @list: List head, private for devcon internal use only
-> + */
-> +struct devcon {
+Thanks,
 
-'struct device_connection'?  Spell it out please, people might think
-this is a "developer conference" :)
-
-> +	const char		*endpoint[2];
-> +	const char		*id;
-> +	struct list_head	list;
-> +};
-> +
-> +void *__device_find_connection(struct device *dev, const char *con_id,
-> +			       void *data,
-> +			       void *(*match)(struct devcon *con, int ep,
-> +					      void *data));
-
-Ick, __* functions are usually "no lock needed", but here you are doing
-a lot "more" than the normal device_find_connection() call.  Why not
-make this:
-	device_connection_find_match()?
-
-> +
-> +struct device *device_find_connection(struct device *dev, const char *con_id);
-
-device_connection_find()?
-
-> +
-> +#define DEVCON(_ep0, _ep1, _id)    (struct devcon) { { _ep0, _ep1 }, _id, }
-
-Can you use named identifiers here?
-
-> +
-> +void add_device_connection(struct devcon *con);
-> +void remove_device_connection(struct devcon *con);
-
-device_connection_add() and device_connection_remove()?
-
-I can make the api name changes in an add-on patch.
-
-thanks,
-
-greg k-h
+Lukas
