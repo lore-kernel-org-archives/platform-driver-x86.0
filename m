@@ -1,84 +1,56 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2 3/3] ALSA: hda: Disabled unused audio
- controller for Dell platforms with Switchable Graphics
-Date: Sat, 10 Mar 2018 11:40:33 +0100
-Message-ID: <20180310104033.ndmlwt4evbs6xg5u@pali>
-References: <20180308091023.9061-1-kai.heng.feng@canonical.com>
- <20180308091023.9061-3-kai.heng.feng@canonical.com>
- <20180309090223.xb55ltac4pfesdrh@pali>
- <723DA929-C9FA-4F69-8D3A-03D8A75D09A6@canonical.com>
- <20180310065039.GA6633@wunner.de>
+From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
+Subject: Re: [PATCH 1/7] platform/x86: fujitsu-laptop: Define constants for
+ FUNC operations
+Date: Sat, 10 Mar 2018 21:10:33 +0100
+Message-ID: <20180310201033.GA1173@kmp-mobile.hq.kempniu.pl>
+References: <20180227211539.5708-1-kernel@kempniu.pl>
+ <20180227211539.5708-2-kernel@kempniu.pl>
+ <CAHp75VdDQ1xAYcXEN04kSug2sgi-G8+7PBEOC8MJSBw7gSCyRQ@mail.gmail.com>
+ <20180304050813.GA3129@marvin.atrad.com.au>
+ <20180304194426.GA1428@kmp-mobile.hq.kempniu.pl>
+ <20180305231650.GA25693@fury>
+ <CAHp75VeB6PjacT4V_gsVOYCvJJK2fT3Oi6HONHdqJyCn+CeWNw@mail.gmail.com>
+ <20180306205920.GA786@kmp-mobile.hq.kempniu.pl>
+ <CAHp75VeOO8tBYWuVbm+2pFB0QeCsW7EoGhzPUY_7q+4bYKb4PQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7415710787934514323=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180310065039.GA6633@wunner.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Lukas Wunner <lukas@wunner.de>
-Cc: mjg59@srcf.ucam.org, alsa-devel@alsa-project.org, Mario Limonciello <mario.limonciello@dell.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, tiwai@suse.com, platform-driver-x86@vger.kernel.org, Kai Heng Feng <kai.heng.feng@canonical.com>, dvhart@infradead.org, andy@infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeOO8tBYWuVbm+2pFB0QeCsW7EoGhzPUY_7q+4bYKb4PQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+> > #define OP_GET_CAPS     0x0
+> > #define OP_GET_EVENTS   0x1
+> > #define OP_SET          0x1
+> > #define OP_GET          0x2
+> > #define OP_GET_EXT      0x4
+> > #define OP_SET_EXT      0x5
+> 
+> This one looks pretty much okay (logical pairs IIUC).
 
---===============7415710787934514323==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7lb3d2knnhwyrstn"
-Content-Disposition: inline
+Sadly, no, these are not logical pairs.  But maybe this is a reasonable
+compromise anyway:
 
+  - OP_GET_CAPS seems to be consistent between different functions; it
+    is an operation which returns a bitfield describing given model's
+    "capabilities" in a certain area (LEDs, buttons, etc.),
 
---7lb3d2knnhwyrstn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  - some functions expose only OP_GET_CAPS, OP_SET, and OP_GET,
 
-On Saturday 10 March 2018 07:50:39 Lukas Wunner wrote:
-> Pretty much all modern Nvidia GPUs do have an integrated HDA
-> controller, however it's possible to hide it by clearing a bit
-> at offset 0x488 in the GPU's config space.  Some BIOSes hide
-> the HDA if no external display is attached.
->=20
-> I could imagine that the BIOS of the Dell machines in question
-> hides the HDA if Switchable Graphics is enabled.  If that is the
-> case, be aware that there's an ongoing discussion to always expose
-> the HDA controller because the behavior of some BIOSes to only
-> expose the HDA when a display is attached causes massive problems
-> with Linux' HDA driver:
-> https://bugs.freedesktop.org/show_bug.cgi?id=3D75985
->=20
-> If we decide to always expose the HDA controller on Nvidia cards,
-> you may need to also match for the Nvidia vendor ID here.
+  - some functions expose only OP_GET_CAPS and OP_GET_EVENTS,
 
-This is probably the example of reason why current solution based on
-vendor id is fragile and could be broken in future... if such changes to
-unhide devices are going to be implemented.
+  - some function expose OP_GET_CAPS, OP_GET_EVENTS, OP_GET_EXT and
+    OP_SET_EXT (but not OP_SET or OP_GET, probably because 0x1 is
+    already "taken" by OP_GET_EVENTS).
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
+So, given the above, does this layout look reasonable to you (at least
+somewhat) or would you rather see these constants shuffled around in
+some other way?
 
---7lb3d2knnhwyrstn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWqO2HQAKCRCL8Mk9A+RD
-UnA+AKCMayrsTj+qiYSGDWAb1DTH+TudoQCeOYtBDhTFqf8RbCuyprC4YVm/RVg=
-=CueD
------END PGP SIGNATURE-----
-
---7lb3d2knnhwyrstn--
-
---===============7415710787934514323==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7415710787934514323==--
+-- 
+Best regards,
+Michał Kępień
