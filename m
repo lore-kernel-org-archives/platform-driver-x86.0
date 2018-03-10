@@ -1,56 +1,53 @@
-From: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Subject: Re: [PATCH 1/7] platform/x86: fujitsu-laptop: Define constants for
- FUNC operations
-Date: Sat, 10 Mar 2018 21:10:33 +0100
-Message-ID: <20180310201033.GA1173@kmp-mobile.hq.kempniu.pl>
-References: <20180227211539.5708-1-kernel@kempniu.pl>
- <20180227211539.5708-2-kernel@kempniu.pl>
- <CAHp75VdDQ1xAYcXEN04kSug2sgi-G8+7PBEOC8MJSBw7gSCyRQ@mail.gmail.com>
- <20180304050813.GA3129@marvin.atrad.com.au>
- <20180304194426.GA1428@kmp-mobile.hq.kempniu.pl>
- <20180305231650.GA25693@fury>
- <CAHp75VeB6PjacT4V_gsVOYCvJJK2fT3Oi6HONHdqJyCn+CeWNw@mail.gmail.com>
- <20180306205920.GA786@kmp-mobile.hq.kempniu.pl>
- <CAHp75VeOO8tBYWuVbm+2pFB0QeCsW7EoGhzPUY_7q+4bYKb4PQ@mail.gmail.com>
+From: =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>
+Subject: [PATCH] platform/x86: fujitsu-laptop: Revert UNSUPPORTED_CMD back to an int
+Date: Sat, 10 Mar 2018 21:43:53 +0100
+Message-ID: <20180310204353.9584-1-kernel@kempniu.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeOO8tBYWuVbm+2pFB0QeCsW7EoGhzPUY_7q+4bYKb4PQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Jonathan Woithe <jwoithe@just42.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-> > #define OP_GET_CAPS     0x0
-> > #define OP_GET_EVENTS   0x1
-> > #define OP_SET          0x1
-> > #define OP_GET          0x2
-> > #define OP_GET_EXT      0x4
-> > #define OP_SET_EXT      0x5
-> 
-> This one looks pretty much okay (logical pairs IIUC).
+UNSUPPORTED_CMD was previously 0x80000000 (int), but commit 819cddae7cfa
+("platform/x86: fujitsu-laptop: Clean up constants") changed it into an
+unsigned long due to BIT() being used to define it.  As call_fext_func()
+returns an int, 0x80000000 would get type promoted when compared to an
+unsigned long, which on a 64-bit system would cause it to become
+0xffffffff80000000 due to sign extension.  This causes one logical
+condition in fujitsu-laptop to always be true and another one to always
+be false on 64-bit systems.  Fix this by reverting UNSUPPORTED_CMD back
+to an int.
 
-Sadly, no, these are not logical pairs.  But maybe this is a reasonable
-compromise anyway:
+This patch fixes the following smatch warnings:
 
-  - OP_GET_CAPS seems to be consistent between different functions; it
-    is an operation which returns a bitfield describing given model's
-    "capabilities" in a certain area (LEDs, buttons, etc.),
+drivers/platform/x86/fujitsu-laptop.c:763 acpi_fujitsu_laptop_leds_register() warn: always true condition '(call_fext_func(device, ((1 << (12)) | (1 << (0))), 2, (1 << (16)), 0) != (1 << (31))) => (s32min-s32max != 2147483648)'
+drivers/platform/x86/fujitsu-laptop.c:816 acpi_fujitsu_laptop_add() warn: impossible condition '(priv->flags_supported == (1 << (31))) => (0-2147483647,18446744071562067968-u64max == 2147483648)'
 
-  - some functions expose only OP_GET_CAPS, OP_SET, and OP_GET,
+Fixes: 819cddae7cfa ("platform/x86: fujitsu-laptop: Clean up constants")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Michał Kępień <kernel@kempniu.pl>
+---
+This fixes a bug introduced by a commit queued for 4.17, so it needs to
+be applied on top of for-next.
 
-  - some functions expose only OP_GET_CAPS and OP_GET_EVENTS,
+ drivers/platform/x86/fujitsu-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  - some function expose OP_GET_CAPS, OP_GET_EVENTS, OP_GET_EXT and
-    OP_SET_EXT (but not OP_SET or OP_GET, probably because 0x1 is
-    already "taken" by OP_GET_EVENTS).
-
-So, given the above, does this layout look reasonable to you (at least
-somewhat) or would you rather see these constants shuffled around in
-some other way?
-
+diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+index 13bcdfea5349..6f4a55a53ced 100644
+--- a/drivers/platform/x86/fujitsu-laptop.c
++++ b/drivers/platform/x86/fujitsu-laptop.c
+@@ -85,7 +85,7 @@
+ #define FUNC_BACKLIGHT			(BIT(12) | BIT(2))
+ 
+ /* FUNC interface - responses */
+-#define UNSUPPORTED_CMD			BIT(31)
++#define UNSUPPORTED_CMD			0x80000000
+ 
+ /* FUNC interface - status flags */
+ #define FLAG_RFKILL			BIT(5)
 -- 
-Best regards,
-Michał Kępień
+2.16.2
