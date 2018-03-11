@@ -1,60 +1,62 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: [PATCH] platform/x86: dell_smbios: Resolve dependency error on
- ACPI_WMI
-Date: Sat, 10 Mar 2018 16:28:59 -0800
-Message-ID: <7eb3f317a876a6255aeb0abfd0137894ef8b5166.1520727789.git.dvhart@infradead.org>
+From: Jonathan Woithe <jwoithe@just42.net>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Revert UNSUPPORTED_CMD
+ back to an int
+Date: Sun, 11 Mar 2018 14:40:56 +1030
+Message-ID: <20180311041056.GA5432@gateway.atrad.com.au>
+References: <20180310204353.9584-1-kernel@kempniu.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
+In-Reply-To: <20180310204353.9584-1-kernel@kempniu.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mario Limonciello <mario.limonciello@dell.com>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Micha?? K??pie?? <kernel@kempniu.pl>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Dan Carpenter <dan.carpenter@oracle.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Similarly to DCDBAS for DELL_SMBIOS_SMM, if DELL_SMBIOS_WMI is enabled,
-DELL_SMBIOS becomes dependent on ACPI_WMI. Update the depends line to
-prevent a configuration where DELL_SMBIOS=y and either backend
-dependency =m. Update the comment accordingly.
+On Sat, Mar 10, 2018 at 09:43:53PM +0100, Micha?? K??pie?? wrote:
+> UNSUPPORTED_CMD was previously 0x80000000 (int), but commit 819cddae7cfa
+> ("platform/x86: fujitsu-laptop: Clean up constants") changed it into an
+> unsigned long due to BIT() being used to define it.  As call_fext_func()
+> returns an int, 0x80000000 would get type promoted when compared to an
+> unsigned long, which on a 64-bit system would cause it to become
+> 0xffffffff80000000 due to sign extension.  This causes one logical
+> condition in fujitsu-laptop to always be true and another one to always
+> be false on 64-bit systems.  Fix this by reverting UNSUPPORTED_CMD back
+> to an int.
+> 
+> This patch fixes the following smatch warnings:
+> 
+> drivers/platform/x86/fujitsu-laptop.c:763 acpi_fujitsu_laptop_leds_register() warn: always true condition '(call_fext_func(device, ((1 << (12)) | (1 << (0))), 2, (1 << (16)), 0) != (1 << (31))) => (s32min-s32max != 2147483648)'
+> drivers/platform/x86/fujitsu-laptop.c:816 acpi_fujitsu_laptop_add() warn: impossible condition '(priv->flags_supported == (1 << (31))) => (0-2147483647,18446744071562067968-u64max == 2147483648)'
+> 
+> Fixes: 819cddae7cfa ("platform/x86: fujitsu-laptop: Clean up constants")
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
+> ---
+> This fixes a bug introduced by a commit queued for 4.17, so it needs to
+> be applied on top of for-next.
+> 
+>  drivers/platform/x86/fujitsu-laptop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index 13bcdfea5349..6f4a55a53ced 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -85,7 +85,7 @@
+>  #define FUNC_BACKLIGHT			(BIT(12) | BIT(2))
+>  
+>  /* FUNC interface - responses */
+> -#define UNSUPPORTED_CMD			BIT(31)
+> +#define UNSUPPORTED_CMD			0x80000000
+>  
+>  /* FUNC interface - status flags */
+>  #define FLAG_RFKILL			BIT(5)
 
-Cc: Mario Limonciello <mario.limonciello@dell.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
----
+This looks like a sensible, succinct solution to the regression.
 
-Linus, just a heads up on this. Unlikely you would encounter this in
-your builds, but just in case, I wanted you to know we (0-day) caught it
-and are verifying the fix.
+Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
 
- drivers/platform/x86/Kconfig | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index e55b008..eef5eef 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -106,13 +106,13 @@ config ASUS_LAPTOP
- 	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
- 
- #
--# If the DELL_SMBIOS_SMM feature is enabled, the DELL_SMBIOS driver
--# becomes dependent on the DCDBAS driver. The "depends" line prevents a
--# configuration where DELL_SMBIOS=y while DCDBAS=m.
-+# The DELL_SMBIOS driver depends on ACPI_WMI and/or DCDBAS if those
-+# backends are selected. The "depends" line prevents a configuration
-+# where DELL_SMBIOS=y while either of those dependencies =m.
- #
- config DELL_SMBIOS
- 	tristate "Dell SMBIOS driver"
--	depends on DCDBAS || DCDBAS=n
-+	depends on (DCDBAS || DCDBAS=n) && (ACPI_WMI || ACPI_WMI=n)
- 	---help---
- 	This provides support for the Dell SMBIOS calling interface.
- 	If you have a Dell computer you should enable this option.
--- 
-2.9.3
-
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+Regards
+  jonathan
