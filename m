@@ -1,220 +1,121 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v2 3/3] ALSA: hda: Disabled unused audio
- controller for Dell platforms with Switchable Graphics
-Date: Sun, 11 Mar 2018 15:30:18 +0100
-Message-ID: <20180311143018.u64cldtxuv7divta@pali>
-References: <20180308091023.9061-1-kai.heng.feng@canonical.com>
- <20180308091023.9061-3-kai.heng.feng@canonical.com>
- <20180309090223.xb55ltac4pfesdrh@pali>
- <723DA929-C9FA-4F69-8D3A-03D8A75D09A6@canonical.com>
- <014795f5a3014cd3bf55de26f76a5af8@ausx13mpc124.AMER.DELL.COM>
- <20180309094600.m24d3zbzdsmls7aw@pali>
- <09eadabb264f401a88b427744505adf8@ausx13mpc124.AMER.DELL.COM>
- <20180310103809.5nnwoulua2u64rku@pali>
- <ea9ab148c4bb45b9ae7369020300b74b@ausx13mpc124.AMER.DELL.COM>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v6 01/12] drivers: base: Unified device connection lookup
+Date: Sun, 11 Mar 2018 19:24:18 +0100
+Message-ID: <bddcf7ea-e58c-637a-e546-9978fd2cb540@redhat.com>
+References: <20180302102057.8917-1-hdegoede@redhat.com>
+ <20180302102057.8917-2-hdegoede@redhat.com>
+ <20180309175347.GA12150@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4218736437392629670=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <ea9ab148c4bb45b9ae7369020300b74b@ausx13mpc124.AMER.DELL.COM>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mario.Limonciello@dell.com
-Cc: mjg59@srcf.ucam.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, platform-driver-x86@vger.kernel.org, kai.heng.feng@canonical.com, dvhart@infradead.org, andy@infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180309175347.GA12150@kroah.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+Hi all,
 
---===============4218736437392629670==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gsne4cu2stnnwixf"
-Content-Disposition: inline
-
-
---gsne4cu2stnnwixf
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sunday 11 March 2018 14:03:13 Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver=
--x86-
-> > owner@vger.kernel.org] On Behalf Of Pali Roh=C3=A1r
-> > Sent: Saturday, March 10, 2018 6:38 PM
-> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>
-> > Cc: kai.heng.feng@canonical.com; mjg59@srcf.ucam.org; dvhart@infradead.=
-org;
-> > andy@infradead.org; tiwai@suse.com; platform-driver-x86@vger.kernel.org=
-; linux-
-> > kernel@vger.kernel.org; alsa-devel@alsa-project.org
-> > Subject: Re: [PATCH v2 3/3] ALSA: hda: Disabled unused audio controller=
- for Dell
-> > platforms with Switchable Graphics
-> >=20
-> > On Friday 09 March 2018 09:59:39 Mario.Limonciello@dell.com wrote:
-> > > > > Pali is your concern that this code for matching vendor/subsystem=
- is running
-> > > > > on non-Dell too?  The only other recommendation I think that can =
-be to restrict
-> > > > > to matching Dell OEM strings in SMBIOS table, but I don't think t=
-hat's any better
-> > > > > than the matching for VID/SSVID.
-> > > >
-> > > > My concern is about adding a new machine specific code into generic
-> > > > driver, which check is done just by PCI vendor and subvendor.
-> > > >
-> > > > In future there can be new models or other PCI devices which matches
-> > > > above condition even they would not have any switchable graphics, n=
-or
-> > > > they would manufactured by Dell.
-> > >
-> > > Uh Dell subsystem ID means it's Dell no?
-> >=20
-> > What would prevent you to take PCI device marked with Dell ID and put it
-> > into non-Dell computer? I do not believe that Dell PCI devices are
-> > configured to work only in Dell branded devices and refuse to power up
-> > in others.
->=20
-> I think the missing aspect is that this is only used in AIO and laptop fo=
-rm
-> factors where the discrete graphics is in a non-removable form factor.
-
-Why we are not checking if kernel is running on AIO or laptop form
-factor then? Or it is not possible?
-
-Basically what I see there is that we need to detect if current HW
-platform has switchable graphics and check how is configured AUDIO MUX.
-
-But instead of directly checking hw state of audio MUX, we are trying to
-check something different which could get us information of state of the
-audio mux.
-
-I suspect that we do not have a way how to check audio MUX directly, so
-it needs to be done indirectly -- via some Dell SMBIOS call and some
-other heuristic. This is something which should be specified either in
-comment or in commit message (problem of type: we need X, but check for
-Y).
-
-And if we are doing this check indirectly, we should do the most
-specific test and not more general.
-
-I think that PCI vendor ID check of audio device is more general test
-then checking if kernel is running on Dell laptop (check via DMI). And
-if we can check also if running on AIO or laptop form, then it would be
-more specific test.
-
-> Running with your hypothetical though, what would happen is if it's
-> on a non-Dell machine the PCI check would pass and then the code
-> would not be executed by dell-laptop (since dell-smbios didn't load).
-
-Right.
-
-> If it was on a Dell machine it would load but the BIOS would return
-> either Switchable graphics turned off, or invalid token.
->=20
-> Even though these aren't real for switchable graphics on Dell I don't
-> see a problem with either of these situations if it ever came up.
-
-I see, this solution is working...
-
-=2E.. but, I see there a very bad precedense. What would happen if another
-laptop manufactor comes with similar solution for hybrid graphics. Does
-it mean that hda audio driver would try to call for every one vendor its
-vendor dependent API function (EFI, SMM, WMI, whatever) to check if
-current HW has some switchable graphics and needs special checks?
-
-Those vendor dependent API functions (which Dell SMBIOS is) should be
-really called on vendor hardware.
-
-Otherwise audio drivers would load bunch of the other vendor dependent
-platform modules and all of those modules (except maximally one) just
-return error.
-
-> >=20
-> > If there is Dell ID then it just means that PCI device itself is Dell's.
-> > And not that machine in which that device is plugged is also Dell.
-> >=20
-> > > > Also I can imagine that in future (or maybe already now?) it is pos=
-sible
-> > > > to find PCI device which pass above checks and connect this PCI dev=
-ice
-> > > > into desktop /server / any non-laptop device.
-> > > >
-> > > > If this switchable graphics solution is specific to dell laptops, t=
-hen
-> > > > rather checking for PCI vendor/subvevendor main check, there should=
- be
-> > > > main check via DMI strings.
-> > >
-> > > Right now this is affected to both AIO desktop and laptops.
-> > >
-> > > IIRC you won't end up with switchable graphics in traditional desktop=
- that you
-> > > can remove PCI card.  If this code was run on a traditional desktop w=
-ith a
-> > > AMD PCI card that BIOS query result should be invalid token (which wi=
-ll infer
-> > > switchable off to this routine).
-> > >
-> > > >
-> > > > Hardware is changing relatively quickly and there is absolutely no
-> > > > guarantee that e.g. NVIDIA would not start providing audio controll=
-er in
-> > > > similar like AMD and it would be put in those Dell machines.
-> > >
-> > > Kai Heng can explain exactly why NVIDIA isn't affected.
-> > > This is probably good information to include in the commit message to=
-o.
-> >=20
-> > Yes, extending commit message is a good idea.
-> >=20
-> > But here I'm talking about future, NVIDIA cards could be in future.
-> >=20
-> > I still think that whitelisting devices based on vendor ID by some
-> > measurements at one time is a bad idea. It is fragile which can stop
-> > working in the future.
->=20
-> Compiling a whitelist is a wasted effort because it will have to change
-> Every year for every new platform that has AMD switchable graphics.
-
-I agree, But see that this patch already uses vendor ID whitelisting.
-
-> This heuristic that is selected covers switchable graphics back for the
-> past generations that Canonical has tested and fixed, not just this
-> current one.
->=20
-> If that situation you refer to happens, it will be on new hardware that's
-> not yet enabled by the Linux kernel.  We can cross that bridge when we
-> come to it with either a newly proposed heuristic or some adjustments
-> for whitelist/blacklist.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---gsne4cu2stnnwixf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWqU9eAAKCRCL8Mk9A+RD
-UgDdAJ9sl5bdeT1maV1eeEmiV+V0ASpDEwCfX2AHE0WpoEAjXMtkPOvK9yTiutM=
-=wDLP
------END PGP SIGNATURE-----
-
---gsne4cu2stnnwixf--
-
---===============4218736437392629670==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+On 09-03-18 18:53, Greg Kroah-Hartman wrote:
+> On Fri, Mar 02, 2018 at 11:20:46AM +0100, Hans de Goede wrote:
+>> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>>
+>> Several frameworks - clk, gpio, phy, pmw, etc. - maintain
+>> lookup tables for describing connections and provide custom
+>> API for handling them. This introduces a single generic
+>> lookup table and API for the connections.
+>>
+>> The motivation for this commit is centralizing the
+>> connection lookup, but the goal is to ultimately extract the
+>> connection descriptions also from firmware by using the
+>> fwnode_graph_* functions and other mechanisms that are
+>> available.
+>>
+>> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> Sorry for the delay, just now reviewing this patch...
+> 
+> The content is fine (if not scary for the obvious reason of passing
+> around 'struct device' of different bus types, but ok...), but the api
+> naming is "rough":
 
 
---===============4218736437392629670==--
+Heikki, I think it is best if you answer Greg's remarks. FWIW I'm
+fine with the changes Greg proposes.
+
+I currently have significantly less bandwidth for this due to
+personal circumstances, so if a new version of this patch-set
+is necessary it would be great if you (Heikki) can do a v7.
+
+Regards,
+
+Hans
+
+> 
+>> --- /dev/null
+>> +++ b/include/linux/connection.h
+> 
+> "connection.h" is vague, why not just put this in device.h? >
+>> @@ -0,0 +1,34 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +#ifndef _LINUX_CONNECTION_H_
+>> +#define _LINUX_CONNECTION_H_
+>> +
+>> +#include <linux/list.h>
+>> +
+>> +struct device;
+>> +
+>> +/**
+>> + * struct devcon - Device Connection Descriptor
+>> + * @endpoint: The names of the two devices connected together
+>> + * @id: Unique identifier for the connection
+>> + * @list: List head, private for devcon internal use only
+>> + */
+>> +struct devcon {
+> 
+> 'struct device_connection'?  Spell it out please, people might think
+> this is a "developer conference" :)
+> 
+>> +	const char		*endpoint[2];
+>> +	const char		*id;
+>> +	struct list_head	list;
+>> +};
+>> +
+>> +void *__device_find_connection(struct device *dev, const char *con_id,
+>> +			       void *data,
+>> +			       void *(*match)(struct devcon *con, int ep,
+>> +					      void *data));
+> 
+> Ick, __* functions are usually "no lock needed", but here you are doing
+> a lot "more" than the normal device_find_connection() call.  Why not
+> make this:
+> 	device_connection_find_match()?
+> 
+>> +
+>> +struct device *device_find_connection(struct device *dev, const char *con_id);
+> 
+> device_connection_find()?
+> 
+>> +
+>> +#define DEVCON(_ep0, _ep1, _id)    (struct devcon) { { _ep0, _ep1 }, _id, }
+> 
+> Can you use named identifiers here?
+> 
+>> +
+>> +void add_device_connection(struct devcon *con);
+>> +void remove_device_connection(struct devcon *con);
+> 
+> device_connection_add() and device_connection_remove()?
+> 
+> I can make the api name changes in an add-on patch.
+> 
+> thanks,
+> 
+> greg k-h
+> 
