@@ -1,62 +1,112 @@
-From: Jonathan Woithe <jwoithe@just42.net>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Revert UNSUPPORTED_CMD
- back to an int
-Date: Sun, 11 Mar 2018 14:40:56 +1030
-Message-ID: <20180311041056.GA5432@gateway.atrad.com.au>
-References: <20180310204353.9584-1-kernel@kempniu.pl>
+From: <Mario.Limonciello@dell.com>
+Subject: Re: [PATCH v2 3/3] ALSA: hda: Disabled unused audio
+ controller for Dell platforms with Switchable Graphics
+Date: Sun, 11 Mar 2018 14:03:13 +0000
+Message-ID: <ea9ab148c4bb45b9ae7369020300b74b@ausx13mpc124.AMER.DELL.COM>
+References: <20180308091023.9061-1-kai.heng.feng@canonical.com>
+ <20180308091023.9061-3-kai.heng.feng@canonical.com>
+ <20180309090223.xb55ltac4pfesdrh@pali>
+ <723DA929-C9FA-4F69-8D3A-03D8A75D09A6@canonical.com>
+ <014795f5a3014cd3bf55de26f76a5af8@ausx13mpc124.AMER.DELL.COM>
+ <20180309094600.m24d3zbzdsmls7aw@pali>
+ <09eadabb264f401a88b427744505adf8@ausx13mpc124.AMER.DELL.COM>
+ <20180310103809.5nnwoulua2u64rku@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180310204353.9584-1-kernel@kempniu.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Micha?? K??pie?? <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Dan Carpenter <dan.carpenter@oracle.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180310103809.5nnwoulua2u64rku@pali>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: pali.rohar@gmail.com
+Cc: mjg59@srcf.ucam.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, platform-driver-x86@vger.kernel.org, kai.heng.feng@canonical.com, dvhart@infradead.org, andy@infradead.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Mar 10, 2018 at 09:43:53PM +0100, Micha?? K??pie?? wrote:
-> UNSUPPORTED_CMD was previously 0x80000000 (int), but commit 819cddae7cfa
-> ("platform/x86: fujitsu-laptop: Clean up constants") changed it into an
-> unsigned long due to BIT() being used to define it.  As call_fext_func()
-> returns an int, 0x80000000 would get type promoted when compared to an
-> unsigned long, which on a 64-bit system would cause it to become
-> 0xffffffff80000000 due to sign extension.  This causes one logical
-> condition in fujitsu-laptop to always be true and another one to always
-> be false on 64-bit systems.  Fix this by reverting UNSUPPORTED_CMD back
-> to an int.
-> 
-> This patch fixes the following smatch warnings:
-> 
-> drivers/platform/x86/fujitsu-laptop.c:763 acpi_fujitsu_laptop_leds_register() warn: always true condition '(call_fext_func(device, ((1 << (12)) | (1 << (0))), 2, (1 << (16)), 0) != (1 << (31))) => (s32min-s32max != 2147483648)'
-> drivers/platform/x86/fujitsu-laptop.c:816 acpi_fujitsu_laptop_add() warn: impossible condition '(priv->flags_supported == (1 << (31))) => (0-2147483647,18446744071562067968-u64max == 2147483648)'
-> 
-> Fixes: 819cddae7cfa ("platform/x86: fujitsu-laptop: Clean up constants")
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
-> ---
-> This fixes a bug introduced by a commit queued for 4.17, so it needs to
-> be applied on top of for-next.
-> 
->  drivers/platform/x86/fujitsu-laptop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
-> index 13bcdfea5349..6f4a55a53ced 100644
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -85,7 +85,7 @@
->  #define FUNC_BACKLIGHT			(BIT(12) | BIT(2))
->  
->  /* FUNC interface - responses */
-> -#define UNSUPPORTED_CMD			BIT(31)
-> +#define UNSUPPORTED_CMD			0x80000000
->  
->  /* FUNC interface - status flags */
->  #define FLAG_RFKILL			BIT(5)
-
-This looks like a sensible, succinct solution to the regression.
-
-Reviewed-by: Jonathan Woithe <jwoithe@just42.net>
-
-Regards
-  jonathan
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
+LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
+bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIFBhbGkgUm9ow6FyDQo+IFNlbnQ6IFNh
+dHVyZGF5LCBNYXJjaCAxMCwgMjAxOCA2OjM4IFBNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8g
+PE1hcmlvX0xpbW9uY2llbGxvQERlbGwuY29tPg0KPiBDYzoga2FpLmhlbmcuZmVuZ0BjYW5vbmlj
+YWwuY29tOyBtamc1OUBzcmNmLnVjYW0ub3JnOyBkdmhhcnRAaW5mcmFkZWFkLm9yZzsNCj4gYW5k
+eUBpbmZyYWRlYWQub3JnOyB0aXdhaUBzdXNlLmNvbTsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBhbHNhLWRldmVs
+QGFsc2EtcHJvamVjdC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAzLzNdIEFMU0E6IGhk
+YTogRGlzYWJsZWQgdW51c2VkIGF1ZGlvIGNvbnRyb2xsZXIgZm9yIERlbGwNCj4gcGxhdGZvcm1z
+IHdpdGggU3dpdGNoYWJsZSBHcmFwaGljcw0KPiANCj4gT24gRnJpZGF5IDA5IE1hcmNoIDIwMTgg
+MDk6NTk6MzkgTWFyaW8uTGltb25jaWVsbG9AZGVsbC5jb20gd3JvdGU6DQo+ID4gPiA+IFBhbGkg
+aXMgeW91ciBjb25jZXJuIHRoYXQgdGhpcyBjb2RlIGZvciBtYXRjaGluZyB2ZW5kb3Ivc3Vic3lz
+dGVtIGlzIHJ1bm5pbmcNCj4gPiA+ID4gb24gbm9uLURlbGwgdG9vPyAgVGhlIG9ubHkgb3RoZXIg
+cmVjb21tZW5kYXRpb24gSSB0aGluayB0aGF0IGNhbiBiZSB0byByZXN0cmljdA0KPiA+ID4gPiB0
+byBtYXRjaGluZyBEZWxsIE9FTSBzdHJpbmdzIGluIFNNQklPUyB0YWJsZSwgYnV0IEkgZG9uJ3Qg
+dGhpbmsgdGhhdCdzIGFueSBiZXR0ZXINCj4gPiA+ID4gdGhhbiB0aGUgbWF0Y2hpbmcgZm9yIFZJ
+RC9TU1ZJRC4NCj4gPiA+DQo+ID4gPiBNeSBjb25jZXJuIGlzIGFib3V0IGFkZGluZyBhIG5ldyBt
+YWNoaW5lIHNwZWNpZmljIGNvZGUgaW50byBnZW5lcmljDQo+ID4gPiBkcml2ZXIsIHdoaWNoIGNo
+ZWNrIGlzIGRvbmUganVzdCBieSBQQ0kgdmVuZG9yIGFuZCBzdWJ2ZW5kb3IuDQo+ID4gPg0KPiA+
+ID4gSW4gZnV0dXJlIHRoZXJlIGNhbiBiZSBuZXcgbW9kZWxzIG9yIG90aGVyIFBDSSBkZXZpY2Vz
+IHdoaWNoIG1hdGNoZXMNCj4gPiA+IGFib3ZlIGNvbmRpdGlvbiBldmVuIHRoZXkgd291bGQgbm90
+IGhhdmUgYW55IHN3aXRjaGFibGUgZ3JhcGhpY3MsIG5vcg0KPiA+ID4gdGhleSB3b3VsZCBtYW51
+ZmFjdHVyZWQgYnkgRGVsbC4NCj4gPg0KPiA+IFVoIERlbGwgc3Vic3lzdGVtIElEIG1lYW5zIGl0
+J3MgRGVsbCBubz8NCj4gDQo+IFdoYXQgd291bGQgcHJldmVudCB5b3UgdG8gdGFrZSBQQ0kgZGV2
+aWNlIG1hcmtlZCB3aXRoIERlbGwgSUQgYW5kIHB1dCBpdA0KPiBpbnRvIG5vbi1EZWxsIGNvbXB1
+dGVyPyBJIGRvIG5vdCBiZWxpZXZlIHRoYXQgRGVsbCBQQ0kgZGV2aWNlcyBhcmUNCj4gY29uZmln
+dXJlZCB0byB3b3JrIG9ubHkgaW4gRGVsbCBicmFuZGVkIGRldmljZXMgYW5kIHJlZnVzZSB0byBw
+b3dlciB1cA0KPiBpbiBvdGhlcnMuDQoNCkkgdGhpbmsgdGhlIG1pc3NpbmcgYXNwZWN0IGlzIHRo
+YXQgdGhpcyBpcyBvbmx5IHVzZWQgaW4gQUlPIGFuZCBsYXB0b3AgZm9ybQ0KZmFjdG9ycyB3aGVy
+ZSB0aGUgZGlzY3JldGUgZ3JhcGhpY3MgaXMgaW4gYSBub24tcmVtb3ZhYmxlIGZvcm0gZmFjdG9y
+Lg0KDQpSdW5uaW5nIHdpdGggeW91ciBoeXBvdGhldGljYWwgdGhvdWdoLCB3aGF0IHdvdWxkIGhh
+cHBlbiBpcyBpZiBpdCdzDQpvbiBhIG5vbi1EZWxsIG1hY2hpbmUgdGhlIFBDSSBjaGVjayB3b3Vs
+ZCBwYXNzIGFuZCB0aGVuIHRoZSBjb2RlDQp3b3VsZCBub3QgYmUgZXhlY3V0ZWQgYnkgZGVsbC1s
+YXB0b3AgKHNpbmNlIGRlbGwtc21iaW9zIGRpZG4ndCBsb2FkKS4NCg0KSWYgaXQgd2FzIG9uIGEg
+RGVsbCBtYWNoaW5lIGl0IHdvdWxkIGxvYWQgYnV0IHRoZSBCSU9TIHdvdWxkIHJldHVybg0KZWl0
+aGVyIFN3aXRjaGFibGUgZ3JhcGhpY3MgdHVybmVkIG9mZiwgb3IgaW52YWxpZCB0b2tlbi4NCg0K
+RXZlbiB0aG91Z2ggdGhlc2UgYXJlbid0IHJlYWwgZm9yIHN3aXRjaGFibGUgZ3JhcGhpY3Mgb24g
+RGVsbCBJIGRvbid0DQpzZWUgYSBwcm9ibGVtIHdpdGggZWl0aGVyIG9mIHRoZXNlIHNpdHVhdGlv
+bnMgaWYgaXQgZXZlciBjYW1lIHVwLg0KIA0KPiANCj4gSWYgdGhlcmUgaXMgRGVsbCBJRCB0aGVu
+IGl0IGp1c3QgbWVhbnMgdGhhdCBQQ0kgZGV2aWNlIGl0c2VsZiBpcyBEZWxsJ3MuDQo+IEFuZCBu
+b3QgdGhhdCBtYWNoaW5lIGluIHdoaWNoIHRoYXQgZGV2aWNlIGlzIHBsdWdnZWQgaXMgYWxzbyBE
+ZWxsLg0KPiANCj4gPiA+IEFsc28gSSBjYW4gaW1hZ2luZSB0aGF0IGluIGZ1dHVyZSAob3IgbWF5
+YmUgYWxyZWFkeSBub3c/KSBpdCBpcyBwb3NzaWJsZQ0KPiA+ID4gdG8gZmluZCBQQ0kgZGV2aWNl
+IHdoaWNoIHBhc3MgYWJvdmUgY2hlY2tzIGFuZCBjb25uZWN0IHRoaXMgUENJIGRldmljZQ0KPiA+
+ID4gaW50byBkZXNrdG9wIC9zZXJ2ZXIgLyBhbnkgbm9uLWxhcHRvcCBkZXZpY2UuDQo+ID4gPg0K
+PiA+ID4gSWYgdGhpcyBzd2l0Y2hhYmxlIGdyYXBoaWNzIHNvbHV0aW9uIGlzIHNwZWNpZmljIHRv
+IGRlbGwgbGFwdG9wcywgdGhlbg0KPiA+ID4gcmF0aGVyIGNoZWNraW5nIGZvciBQQ0kgdmVuZG9y
+L3N1YnZldmVuZG9yIG1haW4gY2hlY2ssIHRoZXJlIHNob3VsZCBiZQ0KPiA+ID4gbWFpbiBjaGVj
+ayB2aWEgRE1JIHN0cmluZ3MuDQo+ID4NCj4gPiBSaWdodCBub3cgdGhpcyBpcyBhZmZlY3RlZCB0
+byBib3RoIEFJTyBkZXNrdG9wIGFuZCBsYXB0b3BzLg0KPiA+DQo+ID4gSUlSQyB5b3Ugd29uJ3Qg
+ZW5kIHVwIHdpdGggc3dpdGNoYWJsZSBncmFwaGljcyBpbiB0cmFkaXRpb25hbCBkZXNrdG9wIHRo
+YXQgeW91DQo+ID4gY2FuIHJlbW92ZSBQQ0kgY2FyZC4gIElmIHRoaXMgY29kZSB3YXMgcnVuIG9u
+IGEgdHJhZGl0aW9uYWwgZGVza3RvcCB3aXRoIGENCj4gPiBBTUQgUENJIGNhcmQgdGhhdCBCSU9T
+IHF1ZXJ5IHJlc3VsdCBzaG91bGQgYmUgaW52YWxpZCB0b2tlbiAod2hpY2ggd2lsbCBpbmZlcg0K
+PiA+IHN3aXRjaGFibGUgb2ZmIHRvIHRoaXMgcm91dGluZSkuDQo+ID4NCj4gPiA+DQo+ID4gPiBI
+YXJkd2FyZSBpcyBjaGFuZ2luZyByZWxhdGl2ZWx5IHF1aWNrbHkgYW5kIHRoZXJlIGlzIGFic29s
+dXRlbHkgbm8NCj4gPiA+IGd1YXJhbnRlZSB0aGF0IGUuZy4gTlZJRElBIHdvdWxkIG5vdCBzdGFy
+dCBwcm92aWRpbmcgYXVkaW8gY29udHJvbGxlciBpbg0KPiA+ID4gc2ltaWxhciBsaWtlIEFNRCBh
+bmQgaXQgd291bGQgYmUgcHV0IGluIHRob3NlIERlbGwgbWFjaGluZXMuDQo+ID4NCj4gPiBLYWkg
+SGVuZyBjYW4gZXhwbGFpbiBleGFjdGx5IHdoeSBOVklESUEgaXNuJ3QgYWZmZWN0ZWQuDQo+ID4g
+VGhpcyBpcyBwcm9iYWJseSBnb29kIGluZm9ybWF0aW9uIHRvIGluY2x1ZGUgaW4gdGhlIGNvbW1p
+dCBtZXNzYWdlIHRvby4NCj4gDQo+IFllcywgZXh0ZW5kaW5nIGNvbW1pdCBtZXNzYWdlIGlzIGEg
+Z29vZCBpZGVhLg0KPiANCj4gQnV0IGhlcmUgSSdtIHRhbGtpbmcgYWJvdXQgZnV0dXJlLCBOVklE
+SUEgY2FyZHMgY291bGQgYmUgaW4gZnV0dXJlLg0KPiANCj4gSSBzdGlsbCB0aGluayB0aGF0IHdo
+aXRlbGlzdGluZyBkZXZpY2VzIGJhc2VkIG9uIHZlbmRvciBJRCBieSBzb21lDQo+IG1lYXN1cmVt
+ZW50cyBhdCBvbmUgdGltZSBpcyBhIGJhZCBpZGVhLiBJdCBpcyBmcmFnaWxlIHdoaWNoIGNhbiBz
+dG9wDQo+IHdvcmtpbmcgaW4gdGhlIGZ1dHVyZS4NCg0KQ29tcGlsaW5nIGEgd2hpdGVsaXN0IGlz
+IGEgd2FzdGVkIGVmZm9ydCBiZWNhdXNlIGl0IHdpbGwgaGF2ZSB0byBjaGFuZ2UNCkV2ZXJ5IHll
+YXIgZm9yIGV2ZXJ5IG5ldyBwbGF0Zm9ybSB0aGF0IGhhcyBBTUQgc3dpdGNoYWJsZSBncmFwaGlj
+cy4NCg0KVGhpcyBoZXVyaXN0aWMgdGhhdCBpcyBzZWxlY3RlZCBjb3ZlcnMgc3dpdGNoYWJsZSBn
+cmFwaGljcyBiYWNrIGZvciB0aGUNCnBhc3QgZ2VuZXJhdGlvbnMgdGhhdCBDYW5vbmljYWwgaGFz
+IHRlc3RlZCBhbmQgZml4ZWQsIG5vdCBqdXN0IHRoaXMNCmN1cnJlbnQgb25lLg0KDQpJZiB0aGF0
+IHNpdHVhdGlvbiB5b3UgcmVmZXIgdG8gaGFwcGVucywgaXQgd2lsbCBiZSBvbiBuZXcgaGFyZHdh
+cmUgdGhhdCdzDQpub3QgeWV0IGVuYWJsZWQgYnkgdGhlIExpbnV4IGtlcm5lbC4gIFdlIGNhbiBj
+cm9zcyB0aGF0IGJyaWRnZSB3aGVuIHdlDQpjb21lIHRvIGl0IHdpdGggZWl0aGVyIGEgbmV3bHkg
+cHJvcG9zZWQgaGV1cmlzdGljIG9yIHNvbWUgYWRqdXN0bWVudHMNCmZvciB3aGl0ZWxpc3QvYmxh
+Y2tsaXN0Lg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0
+cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
