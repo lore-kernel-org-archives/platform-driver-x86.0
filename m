@@ -1,53 +1,60 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH] leds: fix wrong dmi_match on PC Engines APU LEDs
-Date: Sat, 10 Mar 2018 22:13:55 +0100
-Message-ID: <b51f1f41-e06e-25e6-30f8-a2b9f7e8ffb8@gmail.com>
-References: <20180305170910.8905-1-ulli.kroll@googlemail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: [PATCH] platform/x86: dell_smbios: Resolve dependency error on
+ ACPI_WMI
+Date: Sat, 10 Mar 2018 16:28:59 -0800
+Message-ID: <7eb3f317a876a6255aeb0abfd0137894ef8b5166.1520727789.git.dvhart@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180305170910.8905-1-ulli.kroll@googlemail.com>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Alan Mizrahi <alan@mizrahi.com.ve>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mario Limonciello <mario.limonciello@dell.com>, Linus Torvalds <torvalds@linux-foundation.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Hans,
+Similarly to DCDBAS for DELL_SMBIOS_SMM, if DELL_SMBIOS_WMI is enabled,
+DELL_SMBIOS becomes dependent on ACPI_WMI. Update the depends line to
+prevent a configuration where DELL_SMBIOS=y and either backend
+dependency =m. Update the comment accordingly.
 
-Thank you for the patch.
+Cc: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+---
 
-On 03/05/2018 06:09 PM, Hans Ulli Kroll wrote:
-> APU has compared to APU2 no DMI_BOARD_NAME.
-> Use DMI_PRODUCT_NAME instead.
+Linus, just a heads up on this. Unlikely you would encounter this in
+your builds, but just in case, I wanted you to know we (0-day) caught it
+and are verifying the fix.
 
-Could we have the commit message more expressive?
+ drivers/platform/x86/Kconfig | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Is it that now this driver doesn't work for APU board?
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index e55b008..eef5eef 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -106,13 +106,13 @@ config ASUS_LAPTOP
+ 	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
+ 
+ #
+-# If the DELL_SMBIOS_SMM feature is enabled, the DELL_SMBIOS driver
+-# becomes dependent on the DCDBAS driver. The "depends" line prevents a
+-# configuration where DELL_SMBIOS=y while DCDBAS=m.
++# The DELL_SMBIOS driver depends on ACPI_WMI and/or DCDBAS if those
++# backends are selected. The "depends" line prevents a configuration
++# where DELL_SMBIOS=y while either of those dependencies =m.
+ #
+ config DELL_SMBIOS
+ 	tristate "Dell SMBIOS driver"
+-	depends on DCDBAS || DCDBAS=n
++	depends on (DCDBAS || DCDBAS=n) && (ACPI_WMI || ACPI_WMI=n)
+ 	---help---
+ 	This provides support for the Dell SMBIOS calling interface.
+ 	If you have a Dell computer you should enable this option.
+-- 
+2.9.3
 
-> Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
-> ---
->  drivers/leds/leds-apu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/leds/leds-apu.c b/drivers/leds/leds-apu.c
-> index 74820aab9497..5bbf5c31413e 100644
-> --- a/drivers/leds/leds-apu.c
-> +++ b/drivers/leds/leds-apu.c
-> @@ -206,7 +206,7 @@ static int __init apu_led_probe(struct platform_device *pdev)
->  
->  	apu_led->pdev = pdev;
->  
-> -	if (dmi_match(DMI_BOARD_NAME, "APU")) {
-> +	if (dmi_match(DMI_PRODUCT_NAME, "APU")) {
->  		apu_led->profile = apu1_led_profile;
->  		apu_led->platform = APU1_LED_PLATFORM;
->  		apu_led->num_led_instances = ARRAY_SIZE(apu1_led_profile);
-> 
-
-If it fails here, then how it is possible that it succeeds
-in the apu_led_init() ?
 
 -- 
-Best regards,
-Jacek Anaszewski
+Darren Hart
+VMware Open Source Technology Center
