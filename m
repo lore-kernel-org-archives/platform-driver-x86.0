@@ -1,121 +1,87 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v6 01/12] drivers: base: Unified device connection lookup
-Date: Sun, 11 Mar 2018 19:24:18 +0100
-Message-ID: <bddcf7ea-e58c-637a-e546-9978fd2cb540@redhat.com>
-References: <20180302102057.8917-1-hdegoede@redhat.com>
- <20180302102057.8917-2-hdegoede@redhat.com>
- <20180309175347.GA12150@kroah.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v2 3/3] ALSA: hda: Disabled unused audio controller for
+ Dell platforms with Switchable Graphics
+Date: Mon, 12 Mar 2018 01:30:28 +0000
+Message-ID: <c49f28560996405fa4173a5a492bf201@ausx13mpc124.AMER.DELL.COM>
+References: <20180308091023.9061-1-kai.heng.feng@canonical.com>
+ <20180308091023.9061-3-kai.heng.feng@canonical.com>
+ <20180309090223.xb55ltac4pfesdrh@pali>
+ <723DA929-C9FA-4F69-8D3A-03D8A75D09A6@canonical.com>
+ <014795f5a3014cd3bf55de26f76a5af8@ausx13mpc124.AMER.DELL.COM>
+ <20180309094600.m24d3zbzdsmls7aw@pali>
+ <09eadabb264f401a88b427744505adf8@ausx13mpc124.AMER.DELL.COM>
+ <20180310103809.5nnwoulua2u64rku@pali>
+ <ea9ab148c4bb45b9ae7369020300b74b@ausx13mpc124.AMER.DELL.COM>
+ <20180311143018.u64cldtxuv7divta@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180309175347.GA12150@kroah.com>
+In-Reply-To: <20180311143018.u64cldtxuv7divta@pali>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: pali.rohar@gmail.com, kai.heng.feng@canonical.com
+Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, tiwai@suse.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi all,
-
-On 09-03-18 18:53, Greg Kroah-Hartman wrote:
-> On Fri, Mar 02, 2018 at 11:20:46AM +0100, Hans de Goede wrote:
->> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->>
->> Several frameworks - clk, gpio, phy, pmw, etc. - maintain
->> lookup tables for describing connections and provide custom
->> API for handling them. This introduces a single generic
->> lookup table and API for the connections.
->>
->> The motivation for this commit is centralizing the
->> connection lookup, but the goal is to ultimately extract the
->> connection descriptions also from firmware by using the
->> fwnode_graph_* functions and other mechanisms that are
->> available.
->>
->> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> Sorry for the delay, just now reviewing this patch...
-> 
-> The content is fine (if not scary for the obvious reason of passing
-> around 'struct device' of different bus types, but ok...), but the api
-> naming is "rough":
-
-
-Heikki, I think it is best if you answer Greg's remarks. FWIW I'm
-fine with the changes Greg proposes.
-
-I currently have significantly less bandwidth for this due to
-personal circumstances, so if a new version of this patch-set
-is necessary it would be great if you (Heikki) can do a v7.
-
-Regards,
-
-Hans
-
-> 
->> --- /dev/null
->> +++ b/include/linux/connection.h
-> 
-> "connection.h" is vague, why not just put this in device.h? >
->> @@ -0,0 +1,34 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#ifndef _LINUX_CONNECTION_H_
->> +#define _LINUX_CONNECTION_H_
->> +
->> +#include <linux/list.h>
->> +
->> +struct device;
->> +
->> +/**
->> + * struct devcon - Device Connection Descriptor
->> + * @endpoint: The names of the two devices connected together
->> + * @id: Unique identifier for the connection
->> + * @list: List head, private for devcon internal use only
->> + */
->> +struct devcon {
-> 
-> 'struct device_connection'?  Spell it out please, people might think
-> this is a "developer conference" :)
-> 
->> +	const char		*endpoint[2];
->> +	const char		*id;
->> +	struct list_head	list;
->> +};
->> +
->> +void *__device_find_connection(struct device *dev, const char *con_id,
->> +			       void *data,
->> +			       void *(*match)(struct devcon *con, int ep,
->> +					      void *data));
-> 
-> Ick, __* functions are usually "no lock needed", but here you are doing
-> a lot "more" than the normal device_find_connection() call.  Why not
-> make this:
-> 	device_connection_find_match()?
-> 
->> +
->> +struct device *device_find_connection(struct device *dev, const char *con_id);
-> 
-> device_connection_find()?
-> 
->> +
->> +#define DEVCON(_ep0, _ep1, _id)    (struct devcon) { { _ep0, _ep1 }, _id, }
-> 
-> Can you use named identifiers here?
-> 
->> +
->> +void add_device_connection(struct devcon *con);
->> +void remove_device_connection(struct devcon *con);
-> 
-> device_connection_add() and device_connection_remove()?
-> 
-> I can make the api name changes in an add-on patch.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+PiA+IEkgdGhpbmsgdGhlIG1pc3NpbmcgYXNwZWN0IGlzIHRoYXQgdGhpcyBpcyBvbmx5IHVzZWQg
+aW4gQUlPIGFuZCBsYXB0b3AgZm9ybQ0KPiA+IGZhY3RvcnMgd2hlcmUgdGhlIGRpc2NyZXRlIGdy
+YXBoaWNzIGlzIGluIGEgbm9uLXJlbW92YWJsZSBmb3JtIGZhY3Rvci4NCj4gDQo+IFdoeSB3ZSBh
+cmUgbm90IGNoZWNraW5nIGlmIGtlcm5lbCBpcyBydW5uaW5nIG9uIEFJTyBvciBsYXB0b3AgZm9y
+bQ0KPiBmYWN0b3IgdGhlbj8gT3IgaXQgaXMgbm90IHBvc3NpYmxlPw0KDQpLYWkgSGVuZywgY2Fu
+IHlvdSBwbGVhc2UgY29uZmlybSBpZiBBSU8gc2V0cyBjaGFzc2lzIHR5cGUgcHJvcGVybHk/DQpJ
+dCBzaG91bGQgYmUgMERoLg0KDQpJZiBzbywgdGhlbiBJIHRoaW5rIGFzIHNlY29uZCBjaGVjayBm
+b3IgY2hhc3NpcyB0eXBlIHNob3VsZCBiZSBwb3NzaWJsZSBmb3INCm5leHQgdmVyc2lvbiBvZiB0
+aGlzIHBhdGNoLg0KDQo+IA0KPiBCYXNpY2FsbHkgd2hhdCBJIHNlZSB0aGVyZSBpcyB0aGF0IHdl
+IG5lZWQgdG8gZGV0ZWN0IGlmIGN1cnJlbnQgSFcNCj4gcGxhdGZvcm0gaGFzIHN3aXRjaGFibGUg
+Z3JhcGhpY3MgYW5kIGNoZWNrIGhvdyBpcyBjb25maWd1cmVkIEFVRElPIE1VWC4NCj4gDQo+IEJ1
+dCBpbnN0ZWFkIG9mIGRpcmVjdGx5IGNoZWNraW5nIGh3IHN0YXRlIG9mIGF1ZGlvIE1VWCwgd2Ug
+YXJlIHRyeWluZyB0bw0KPiBjaGVjayBzb21ldGhpbmcgZGlmZmVyZW50IHdoaWNoIGNvdWxkIGdl
+dCB1cyBpbmZvcm1hdGlvbiBvZiBzdGF0ZSBvZiB0aGUNCj4gYXVkaW8gbXV4Lg0KPiANCj4gSSBz
+dXNwZWN0IHRoYXQgd2UgZG8gbm90IGhhdmUgYSB3YXkgaG93IHRvIGNoZWNrIGF1ZGlvIE1VWCBk
+aXJlY3RseSwgc28NCj4gaXQgbmVlZHMgdG8gYmUgZG9uZSBpbmRpcmVjdGx5IC0tIHZpYSBzb21l
+IERlbGwgU01CSU9TIGNhbGwgYW5kIHNvbWUNCj4gb3RoZXIgaGV1cmlzdGljLiBUaGlzIGlzIHNv
+bWV0aGluZyB3aGljaCBzaG91bGQgYmUgc3BlY2lmaWVkIGVpdGhlciBpbg0KPiBjb21tZW50IG9y
+IGluIGNvbW1pdCBtZXNzYWdlIChwcm9ibGVtIG9mIHR5cGU6IHdlIG5lZWQgWCwgYnV0IGNoZWNr
+IGZvcg0KPiBZKS4NCj4gDQo+IEFuZCBpZiB3ZSBhcmUgZG9pbmcgdGhpcyBjaGVjayBpbmRpcmVj
+dGx5LCB3ZSBzaG91bGQgZG8gdGhlIG1vc3QNCj4gc3BlY2lmaWMgdGVzdCBhbmQgbm90IG1vcmUg
+Z2VuZXJhbC4NCg0KUmlnaHQuDQoNCj4gDQo+IEkgdGhpbmsgdGhhdCBQQ0kgdmVuZG9yIElEIGNo
+ZWNrIG9mIGF1ZGlvIGRldmljZSBpcyBtb3JlIGdlbmVyYWwgdGVzdA0KPiB0aGVuIGNoZWNraW5n
+IGlmIGtlcm5lbCBpcyBydW5uaW5nIG9uIERlbGwgbGFwdG9wIChjaGVjayB2aWEgRE1JKS4gQW5k
+DQo+IGlmIHdlIGNhbiBjaGVjayBhbHNvIGlmIHJ1bm5pbmcgb24gQUlPIG9yIGxhcHRvcCBmb3Jt
+LCB0aGVuIGl0IHdvdWxkIGJlDQo+IG1vcmUgc3BlY2lmaWMgdGVzdC4NCj4gDQo+ID4gUnVubmlu
+ZyB3aXRoIHlvdXIgaHlwb3RoZXRpY2FsIHRob3VnaCwgd2hhdCB3b3VsZCBoYXBwZW4gaXMgaWYg
+aXQncw0KPiA+IG9uIGEgbm9uLURlbGwgbWFjaGluZSB0aGUgUENJIGNoZWNrIHdvdWxkIHBhc3Mg
+YW5kIHRoZW4gdGhlIGNvZGUNCj4gPiB3b3VsZCBub3QgYmUgZXhlY3V0ZWQgYnkgZGVsbC1sYXB0
+b3AgKHNpbmNlIGRlbGwtc21iaW9zIGRpZG4ndCBsb2FkKS4NCj4gDQo+IFJpZ2h0Lg0KPiANCj4g
+PiBJZiBpdCB3YXMgb24gYSBEZWxsIG1hY2hpbmUgaXQgd291bGQgbG9hZCBidXQgdGhlIEJJT1Mg
+d291bGQgcmV0dXJuDQo+ID4gZWl0aGVyIFN3aXRjaGFibGUgZ3JhcGhpY3MgdHVybmVkIG9mZiwg
+b3IgaW52YWxpZCB0b2tlbi4NCj4gPg0KPiA+IEV2ZW4gdGhvdWdoIHRoZXNlIGFyZW4ndCByZWFs
+IGZvciBzd2l0Y2hhYmxlIGdyYXBoaWNzIG9uIERlbGwgSSBkb24ndA0KPiA+IHNlZSBhIHByb2Js
+ZW0gd2l0aCBlaXRoZXIgb2YgdGhlc2Ugc2l0dWF0aW9ucyBpZiBpdCBldmVyIGNhbWUgdXAuDQo+
+IA0KPiBJIHNlZSwgdGhpcyBzb2x1dGlvbiBpcyB3b3JraW5nLi4uDQo+IA0KPiAuLi4gYnV0LCBJ
+IHNlZSB0aGVyZSBhIHZlcnkgYmFkIHByZWNlZGVuc2UuIFdoYXQgd291bGQgaGFwcGVuIGlmIGFu
+b3RoZXINCj4gbGFwdG9wIG1hbnVmYWN0b3IgY29tZXMgd2l0aCBzaW1pbGFyIHNvbHV0aW9uIGZv
+ciBoeWJyaWQgZ3JhcGhpY3MuIERvZXMNCj4gaXQgbWVhbiB0aGF0IGhkYSBhdWRpbyBkcml2ZXIg
+d291bGQgdHJ5IHRvIGNhbGwgZm9yIGV2ZXJ5IG9uZSB2ZW5kb3IgaXRzDQo+IHZlbmRvciBkZXBl
+bmRlbnQgQVBJIGZ1bmN0aW9uIChFRkksIFNNTSwgV01JLCB3aGF0ZXZlcikgdG8gY2hlY2sgaWYN
+Cj4gY3VycmVudCBIVyBoYXMgc29tZSBzd2l0Y2hhYmxlIGdyYXBoaWNzIGFuZCBuZWVkcyBzcGVj
+aWFsIGNoZWNrcz8NCj4gDQo+IFRob3NlIHZlbmRvciBkZXBlbmRlbnQgQVBJIGZ1bmN0aW9ucyAo
+d2hpY2ggRGVsbCBTTUJJT1MgaXMpIHNob3VsZCBiZQ0KPiByZWFsbHkgY2FsbGVkIG9uIHZlbmRv
+ciBoYXJkd2FyZS4NCj4gDQo+IE90aGVyd2lzZSBhdWRpbyBkcml2ZXJzIHdvdWxkIGxvYWQgYnVu
+Y2ggb2YgdGhlIG90aGVyIHZlbmRvciBkZXBlbmRlbnQNCj4gcGxhdGZvcm0gbW9kdWxlcyBhbmQg
+YWxsIG9mIHRob3NlIG1vZHVsZXMgKGV4Y2VwdCBtYXhpbWFsbHkgb25lKSBqdXN0DQo+IHJldHVy
+biBlcnJvci4NCj4gDQoNClN1cmUgdGhlIG1vcmUgc3BlY2lmaWMgdGhlIGNoZWNrIHRoZSBsZXNz
+IHN5bWJvbCByZXF1ZXN0cyBuZWVkZWQgdGhhdA0Kd2lsbCBmYWlsLg0KDQpLYWkgSGVuZywNCg0K
+Q2FuIHlvdSBwbGVhc2UgdXNlIEFsZXggSHVuZydzIE9FTSBzdHJpbmdzIHBhdGNoIGluIHlvdXIg
+c2VyaWVzIHRvIG1hdGNoDQoiRGVsbCBTeXN0ZW0iIGluIE9FTSBzdHJpbmdzIHRvbz8NCg0KQmV0
+d2VlbiBjaGFzc2lzIHR5cGUsIE9FTSBzdHJpbmdzIG1hdGNoLCBhbmQgQU1EIHZlbmRvci9EZWxs
+IHN1YnN5c3RlbQ0KdmVuZG9yIHRoYXQgc2hvdWxkIHNhdGlzZnkgYWxsIG9mIFBhbGkncyBjb25j
+ZXJucyBJIHRoaW5rLg0KDQpJZiBhbnlvbmUgdGhpbmtzIHRoYXQncyB0b28gbXVjaCwgcGxlYXNl
+IHNwZWFrIHVwLg0KDQo+ID4gQ29tcGlsaW5nIGEgd2hpdGVsaXN0IGlzIGEgd2FzdGVkIGVmZm9y
+dCBiZWNhdXNlIGl0IHdpbGwgaGF2ZSB0byBjaGFuZ2UNCj4gPiBFdmVyeSB5ZWFyIGZvciBldmVy
+eSBuZXcgcGxhdGZvcm0gdGhhdCBoYXMgQU1EIHN3aXRjaGFibGUgZ3JhcGhpY3MuDQo+IA0KPiBJ
+IGFncmVlLCBCdXQgc2VlIHRoYXQgdGhpcyBwYXRjaCBhbHJlYWR5IHVzZXMgdmVuZG9yIElEIHdo
+aXRlbGlzdGluZy4NCg0KSSBtZWFuIG1ha2luZyBhIHdoaXRlbGlzdCBvZiBhbGwgaW5kaXZpZHVh
+bCBhZmZlY3RlZCBEZWxsIHBsYXRmb3JtcyB3aWxsIGdyb3cNCmVhY2ggeWVhci4gIEkgd2FudCB0
+byBhdm9pZCB0aGF0IGFwcHJvYWNoLg0K
