@@ -1,63 +1,44 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: Dell Inc. XPS 13 9343/0TM99H fails to boot v4.16-rc5
-Date: Mon, 12 Mar 2018 22:42:01 +0000
-Message-ID: <4cce64d16cab4d499dca9347c1a1f30c@ausx13mpc120.AMER.DELL.COM>
-References: <20180312185357.GA1672@light.dominikbrodowski.net>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: Dell Inc. XPS 13 9343/0TM99H fails to boot v4.16-rc5
+Date: Mon, 12 Mar 2018 16:33:11 -0700
+Message-ID: <20180312233311.GA3848@localhost.localdomain>
+References: <4716007c23abeb0e42015786794539454aff487b.1520886814.git.dvhart@infradead.org>
+ <20180312202319.GA88572@localhost.localdomain>
+ <20180312220751.GA1757@light.dominikbrodowski.net>
+ <CA+55aFzUgk8c2n7GQfcCdYU-Jo86-W_b51gZCLyJahv_ZWMVsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180312185357.GA1672@light.dominikbrodowski.net>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CA+55aFzUgk8c2n7GQfcCdYU-Jo86-W_b51gZCLyJahv_ZWMVsQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux@dominikbrodowski.net, dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>, Mario Limonciello <mario.limonciello@dell.com>, platform-driver-x86@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Mon, Mar 12, 2018 at 03:17:57PM -0700, Linus Torvalds wrote:
+> On Mon, Mar 12, 2018 at 3:07 PM, Dominik Brodowski
+> <linux@dominikbrodowski.net> wrote:
+> >
+> > I'm awfully sorry, but this patch doesn't solve the issue.
+> > CONFIG_ACPI_WMI=y was/is set, but still enabling CONFIG_DELL_SMBIOS_WMI=y
+> > causes a very-early crash of v4.16-rc5. In fact, so early that the normal
+> > boot messages never show up on the screen...
+> 
+> Hmm. My xps13 works fine, but it's the 9350 version so not the same machine.
+> 
+> But it does sound like that commit 25d47027e10 ("platform/x86:
+> dell-smbios: Link all dell-smbios-* modules together") should just be
+> reverted. It has clearly caused a lot more pain than it fixed.
 
+Unfortunately, yes. This will re-instate the race condition it "fixed".
+I'll work with Mario to fix this properly in 4.17, preferably in a way
+that we can apply to stable. Pending an "oops, nevermind, the patch
+works" from Dominik by tomorrow morning, I'll submit the pull request to
+revert dell-smbios changes back to and including 25d47027e10.
 
-> -----Original Message-----
-> From: Dominik Brodowski [mailto:linux@dominikbrodowski.net]
-> Sent: Tuesday, March 13, 2018 2:54 AM
-> To: dvhart@infradead.org; Limonciello, Mario <Mario_Limonciello@Dell.com>
-> Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Dell Inc. XPS 13 9343/0TM99H fails to boot v4.16-rc5
->=20
-> Mario,
->=20
-> unfortunately, my Dell Inc. XPS 13 9343/0TM99H, BIOS A11 12/08/2016 fails=
- to
-> boot v4.16-rc5. More exactly, I could bisect it down to commit 25d47027e1=
-0
-> ("platform/x86: dell-smbios: Link all dell-smbios-* modules together").
-> Usually, I have enabled
->=20
-> CONFIG_SENSORS_DELL_SMM=3Dy
-> CONFIG_DELL_SMBIOS=3Dy
-> CONFIG_DELL_SMBIOS_WMI=3Dy
-> CONFIG_DELL_SMBIOS_SMM=3Dy
-> CONFIG_DELL_LAPTOP=3Dy
-> CONFIG_DELL_WMI=3Dy
-> CONFIG_DELL_WMI_DESCRIPTOR=3Dy
-> # CONFIG_DELL_WMI_AIO is not set
-> # CONFIG_DELL_WMI_LED is not set
-> # CONFIG_DELL_SMO8800 is not set
-> # CONFIG_DELL_RBTN is not set
-> # CONFIG_DELL_RBU is not set
->=20
-> For v4.16-rc5 to work, I need to manually disable DELL_SMBIOS_WMI:
->=20
-> -CONFIG_DELL_SMBIOS_WMI=3Dy
-> +# CONFIG_DELL_SMBIOS_WMI is not set
->=20
-> Any ideas?
->=20
-Dominick,
+Apologies for the noise on this one Linus, it got away from me.
 
-Interesting.  Can you please change CONFIG_DELL_SMBIOS to a module
-and see if that behavior persists?  If it does, can you please blacklist it=
- on
-the kernel command line and try to load it manually and share any
-backtrace?
-
-Thanks,
+-- 
+Darren Hart
+VMware Open Source Technology Center
