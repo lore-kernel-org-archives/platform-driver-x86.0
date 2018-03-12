@@ -1,34 +1,39 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell_smbios: Resolve dependency error on ACPI_WMI
-Date: Mon, 12 Mar 2018 11:23:20 +0200
-Message-ID: <CAHp75VeYDiv3gR77xjmj1QitmtTyNykXXFJtYyEFL95sgo1L9A@mail.gmail.com>
-References: <7eb3f317a876a6255aeb0abfd0137894ef8b5166.1520727789.git.dvhart@infradead.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v6 01/12] drivers: base: Unified device connection lookup
+Date: Mon, 12 Mar 2018 11:24:05 +0200
+Message-ID: <20180312092405.GA30868@kuha.fi.intel.com>
+References: <20180302102057.8917-1-hdegoede@redhat.com>
+ <20180302102057.8917-2-hdegoede@redhat.com>
+ <20180309175347.GA12150@kroah.com>
+ <bddcf7ea-e58c-637a-e546-9978fd2cb540@redhat.com>
+ <20180312081345.GH21904@kuha.fi.intel.com>
+ <212ceba2-2f13-0501-c59e-612b72989cb3@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7eb3f317a876a6255aeb0abfd0137894ef8b5166.1520727789.git.dvhart@infradead.org>
+Content-Disposition: inline
+In-Reply-To: <212ceba2-2f13-0501-c59e-612b72989cb3@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mario Limonciello <mario.limonciello@dell.com>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Mar 11, 2018 at 2:28 AM, Darren Hart <dvhart@infradead.org> wrote:
-> Similarly to DCDBAS for DELL_SMBIOS_SMM, if DELL_SMBIOS_WMI is enabled,
-> DELL_SMBIOS becomes dependent on ACPI_WMI. Update the depends line to
-> prevent a configuration where DELL_SMBIOS=y and either backend
-> dependency =m. Update the comment accordingly.
+On Mon, Mar 12, 2018 at 10:19:34AM +0100, Hans de Goede wrote:
+> > > I currently have significantly less bandwidth for this due to
+> > > personal circumstances, so if a new version of this patch-set
+> > > is necessary it would be great if you (Heikki) can do a v7.
+> > 
+> > Sure thing. I'll prepare the v7.
+> 
+> Great, thank you. Don't forget to squash in the 2 fixes from
+> fengguang.wu@intel.com .
 
-> +# The DELL_SMBIOS driver depends on ACPI_WMI and/or DCDBAS if those
-> +# backends are selected. The "depends" line prevents a configuration
-> +# where DELL_SMBIOS=y while either of those dependencies =m.
->  #
->  config DELL_SMBIOS
->         tristate "Dell SMBIOS driver"
-> -       depends on DCDBAS || DCDBAS=n
-> +       depends on (DCDBAS || DCDBAS=n) && (ACPI_WMI || ACPI_WMI=n)
+Ah, from build-bot!
 
-A nit: Perhaps separate depends on line for those two?
+Good that you reminded, I would not have remembered those :-)
+
+
+Thanks,
 
 -- 
-With Best Regards,
-Andy Shevchenko
+heikki
