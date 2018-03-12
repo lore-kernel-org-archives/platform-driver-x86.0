@@ -1,160 +1,63 @@
-From: Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 3.2 074/104] x86/cpu/intel: Introduce macros for Intel
- family numbers
-Date: Mon, 12 Mar 2018 03:03:34 +0000
-Message-ID: <lsq.1520823814.187680530@decadent.org.uk>
-References: <lsq.1520823814.606620518@decadent.org.uk>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v6 01/12] drivers: base: Unified device connection lookup
+Date: Mon, 12 Mar 2018 10:13:45 +0200
+Message-ID: <20180312081345.GH21904@kuha.fi.intel.com>
+References: <20180302102057.8917-1-hdegoede@redhat.com>
+ <20180302102057.8917-2-hdegoede@redhat.com>
+ <20180309175347.GA12150@kroah.com>
+ <bddcf7ea-e58c-637a-e546-9978fd2cb540@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <lsq.1520823814.606620518@decadent.org.uk>
+In-Reply-To: <bddcf7ea-e58c-637a-e546-9978fd2cb540@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: akpm@linux-foundation.org, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@amacapital.net>, linux-acpi@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, linux-mmc@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Doug Thompson <dougthompson@xmission.com>, Ulf Hansson <ulf.hansson@linaro.org>, platform-driver-x86@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Brian Gerst <brger>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-3.2.101-rc1 review patch.  If anyone has any objections, please let me know.
+On Sun, Mar 11, 2018 at 07:24:18PM +0100, Hans de Goede wrote:
+> Hi all,
+> 
+> On 09-03-18 18:53, Greg Kroah-Hartman wrote:
+> > On Fri, Mar 02, 2018 at 11:20:46AM +0100, Hans de Goede wrote:
+> > > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > 
+> > > Several frameworks - clk, gpio, phy, pmw, etc. - maintain
+> > > lookup tables for describing connections and provide custom
+> > > API for handling them. This introduces a single generic
+> > > lookup table and API for the connections.
+> > > 
+> > > The motivation for this commit is centralizing the
+> > > connection lookup, but the goal is to ultimately extract the
+> > > connection descriptions also from firmware by using the
+> > > fwnode_graph_* functions and other mechanisms that are
+> > > available.
+> > > 
+> > > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > 
+> > Sorry for the delay, just now reviewing this patch...
+> > 
+> > The content is fine (if not scary for the obvious reason of passing
+> > around 'struct device' of different bus types, but ok...), but the api
+> > naming is "rough":
+> 
+> Heikki, I think it is best if you answer Greg's remarks. FWIW I'm
+> fine with the changes Greg proposes.
 
-------------------
+Me too.
 
-From: Dave Hansen <dave@sr71.net>
+> I currently have significantly less bandwidth for this due to
+> personal circumstances, so if a new version of this patch-set
+> is necessary it would be great if you (Heikki) can do a v7.
 
-commit 970442c599b22ccd644ebfe94d1d303bf6f87c05 upstream.
+Sure thing. I'll prepare the v7.
 
-Problem:
 
-We have a boatload of open-coded family-6 model numbers.  Half of
-them have these model numbers in hex and the other half in
-decimal.  This makes grepping for them tons of fun, if you were
-to try.
+Thanks,
 
-Solution:
-
-Consolidate all the magic numbers.  Put all the definitions in
-one header.
-
-The names here are closely derived from the comments describing
-the models from arch/x86/events/intel/core.c.  We could easily
-make them shorter by doing things like s/SANDYBRIDGE/SNB/, but
-they seemed fine even with the longer versions to me.
-
-Do not take any of these names too literally, like "DESKTOP"
-or "MOBILE".  These are all colloquial names and not precise
-descriptions of everywhere a given model will show up.
-
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Dave Hansen <dave@sr71.net>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: Doug Thompson <dougthompson@xmission.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Vishwanath Somayaji <vishwanath.somayaji@intel.com>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: jacob.jun.pan@intel.com
-Cc: linux-acpi@vger.kernel.org
-Cc: linux-edac@vger.kernel.org
-Cc: linux-mmc@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org
-Link: http://lkml.kernel.org/r/20160603001927.F2A7D828@viggo.jf.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- arch/x86/include/asm/intel-family.h | 68 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
- create mode 100644 arch/x86/include/asm/intel-family.h
-
---- /dev/null
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -0,0 +1,68 @@
-+#ifndef _ASM_X86_INTEL_FAMILY_H
-+#define _ASM_X86_INTEL_FAMILY_H
-+
-+/*
-+ * "Big Core" Processors (Branded as Core, Xeon, etc...)
-+ *
-+ * The "_X" parts are generally the EP and EX Xeons, or the
-+ * "Extreme" ones, like Broadwell-E.
-+ *
-+ * Things ending in "2" are usually because we have no better
-+ * name for them.  There's no processor called "WESTMERE2".
-+ */
-+
-+#define INTEL_FAM6_CORE_YONAH		0x0E
-+#define INTEL_FAM6_CORE2_MEROM		0x0F
-+#define INTEL_FAM6_CORE2_MEROM_L	0x16
-+#define INTEL_FAM6_CORE2_PENRYN		0x17
-+#define INTEL_FAM6_CORE2_DUNNINGTON	0x1D
-+
-+#define INTEL_FAM6_NEHALEM		0x1E
-+#define INTEL_FAM6_NEHALEM_EP		0x1A
-+#define INTEL_FAM6_NEHALEM_EX		0x2E
-+#define INTEL_FAM6_WESTMERE		0x25
-+#define INTEL_FAM6_WESTMERE2		0x1F
-+#define INTEL_FAM6_WESTMERE_EP		0x2C
-+#define INTEL_FAM6_WESTMERE_EX		0x2F
-+
-+#define INTEL_FAM6_SANDYBRIDGE		0x2A
-+#define INTEL_FAM6_SANDYBRIDGE_X	0x2D
-+#define INTEL_FAM6_IVYBRIDGE		0x3A
-+#define INTEL_FAM6_IVYBRIDGE_X		0x3E
-+
-+#define INTEL_FAM6_HASWELL_CORE		0x3C
-+#define INTEL_FAM6_HASWELL_X		0x3F
-+#define INTEL_FAM6_HASWELL_ULT		0x45
-+#define INTEL_FAM6_HASWELL_GT3E		0x46
-+
-+#define INTEL_FAM6_BROADWELL_CORE	0x3D
-+#define INTEL_FAM6_BROADWELL_XEON_D	0x56
-+#define INTEL_FAM6_BROADWELL_GT3E	0x47
-+#define INTEL_FAM6_BROADWELL_X		0x4F
-+
-+#define INTEL_FAM6_SKYLAKE_MOBILE	0x4E
-+#define INTEL_FAM6_SKYLAKE_DESKTOP	0x5E
-+#define INTEL_FAM6_SKYLAKE_X		0x55
-+#define INTEL_FAM6_KABYLAKE_MOBILE	0x8E
-+#define INTEL_FAM6_KABYLAKE_DESKTOP	0x9E
-+
-+/* "Small Core" Processors (Atom) */
-+
-+#define INTEL_FAM6_ATOM_PINEVIEW	0x1C
-+#define INTEL_FAM6_ATOM_LINCROFT	0x26
-+#define INTEL_FAM6_ATOM_PENWELL		0x27
-+#define INTEL_FAM6_ATOM_CLOVERVIEW	0x35
-+#define INTEL_FAM6_ATOM_CEDARVIEW	0x36
-+#define INTEL_FAM6_ATOM_SILVERMONT1	0x37 /* BayTrail/BYT / Valleyview */
-+#define INTEL_FAM6_ATOM_SILVERMONT2	0x4D /* Avaton/Rangely */
-+#define INTEL_FAM6_ATOM_AIRMONT		0x4C /* CherryTrail / Braswell */
-+#define INTEL_FAM6_ATOM_MERRIFIELD1	0x4A /* Tangier */
-+#define INTEL_FAM6_ATOM_MERRIFIELD2	0x5A /* Annidale */
-+#define INTEL_FAM6_ATOM_GOLDMONT	0x5C
-+#define INTEL_FAM6_ATOM_DENVERTON	0x5F /* Goldmont Microserver */
-+
-+/* Xeon Phi */
-+
-+#define INTEL_FAM6_XEON_PHI_KNL		0x57 /* Knights Landing */
-+
-+#endif /* _ASM_X86_INTEL_FAMILY_H */
+-- 
+heikki
