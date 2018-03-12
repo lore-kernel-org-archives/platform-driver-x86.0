@@ -1,62 +1,173 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/7] platform/x86: fujitsu-laptop: Define constants for
- FUNC operations
-Date: Mon, 12 Mar 2018 11:27:52 +0200
-Message-ID: <CAHp75Vf693BSDOw4WFDYpo35BmxaHJ8_7EXhQrAZiS_OkLRDTw@mail.gmail.com>
-References: <20180227211539.5708-1-kernel@kempniu.pl> <20180227211539.5708-2-kernel@kempniu.pl>
- <CAHp75VdDQ1xAYcXEN04kSug2sgi-G8+7PBEOC8MJSBw7gSCyRQ@mail.gmail.com>
- <20180304050813.GA3129@marvin.atrad.com.au> <20180304194426.GA1428@kmp-mobile.hq.kempniu.pl>
- <20180305231650.GA25693@fury> <CAHp75VeB6PjacT4V_gsVOYCvJJK2fT3Oi6HONHdqJyCn+CeWNw@mail.gmail.com>
- <20180306205920.GA786@kmp-mobile.hq.kempniu.pl> <CAHp75VeOO8tBYWuVbm+2pFB0QeCsW7EoGhzPUY_7q+4bYKb4PQ@mail.gmail.com>
- <20180310201033.GA1173@kmp-mobile.hq.kempniu.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH v7 00/12] USB Type-C device-connection, mux and switch support
+Date: Mon, 12 Mar 2018 17:34:19 +0300
+Message-ID: <20180312143431.82396-1-heikki.krogerus@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180310201033.GA1173@kmp-mobile.hq.kempniu.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Darren Hart <dvhart@infradead.org>, Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Guenter Roeck <linux@roeck-us.net>, Jun Li <jun.li@nxp.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Mar 10, 2018 at 10:10 PM, Micha=C5=82 K=C4=99pie=C5=84 <kernel@kemp=
-niu.pl> wrote:
->> > #define OP_GET_CAPS     0x0
->> > #define OP_GET_EVENTS   0x1
->> > #define OP_SET          0x1
->> > #define OP_GET          0x2
->> > #define OP_GET_EXT      0x4
->> > #define OP_SET_EXT      0x5
->>
->> This one looks pretty much okay (logical pairs IIUC).
->
-> Sadly, no, these are not logical pairs.  But maybe this is a reasonable
-> compromise anyway:
->
->   - OP_GET_CAPS seems to be consistent between different functions; it
->     is an operation which returns a bitfield describing given model's
->     "capabilities" in a certain area (LEDs, buttons, etc.),
->
->   - some functions expose only OP_GET_CAPS, OP_SET, and OP_GET,
->
->   - some functions expose only OP_GET_CAPS and OP_GET_EVENTS,
->
->   - some function expose OP_GET_CAPS, OP_GET_EVENTS, OP_GET_EXT and
->     OP_SET_EXT (but not OP_SET or OP_GET, probably because 0x1 is
->     already "taken" by OP_GET_EVENTS).
+Hi,
 
-Interesting.
-Does it mean there is no logic between functions on the same platform
-and what they are expose?
+This is version 7 of Hans' and my series introducing support for USB muxes and
+generic device-connections. The api naming for device-connections is now made
+according to proposal from Greg, connection.h is dropped and the prototypes are
+now in device.h. kbuild test robot <fengguang.wu@intel.com> also found stylistic
+problems from patches 9/12 and 10/12 which were fixed. The patch 4/12 ("usb:
+typec: Separate the definitions for data and power roles") was added to the
+series.
 
-May be those sets might be groupped by what kind of functions expose them?
+Check the v6 from here:
+https://lkml.org/lkml/2018/3/2/340
 
-> So, given the above, does this layout look reasonable to you (at least
-> somewhat) or would you rather see these constants shuffled around in
-> some other way?
 
-If no other way is feasible right now, the above is okay to me.
+Here is the cover-letter of v6:
 
---=20
-With Best Regards,
-Andy Shevchenko
+Hi All,
+
+Here is version 6 of Heikki's and my USB Type-C device-connection, mux and
+switch support series. Versions 2 - 5 bring various small code and style
+fixes based on review (no major changes). Version 6 is rebased on top of
+the latest usb-next and brings one small but important code fix in
+the devcon code.
+
+Here is the original cover-letter of v1:
+
+Some devices with an USB Type-C connector have a bunch of muxes
+behind that connector which need to be controlled by the kernel (rather
+then having them controlled by firmware as on most devices).
+
+Quite a while back I submitted a patch-series to tie together these muxes
+and the Type-C Port Manager (tcpm) code, using the then new drivers/mux
+framework. But the way I used the mux framework went against what it was
+designed for, so in the end that series got nowhere.
+
+Heikki Krogerus from Intel, who maintains the USB TYPEC subsystem, has
+recently been working on solving the same problem for some boards he is
+doing hardware-enablement for.
+
+Heikki has come up with a number of infrastructure patches for this.
+The first one is a new device-connection framework. This solves the
+problem of describing non bus device-links on x86 in what in my experience
+with this problematic area is a really nice simple, clean and *generic*
+way. This could for example in the near future also replace the custom
+lookup code in the pwm subsys and the custom pwm_add_table() /
+pwm_remove_table() functions.
+
+The other 3 patches add a framework for the different type of Type-C /
+USB "muxes".
+
+Heikki and I have gone through a number of iterations of these patches
+together and we believe these are now ready for merging. Since merging
+infrastructure patches without users is not done and Heikki's own use-case
+for these is not yet ready for merging, the rest of this series consists
+of patches by me to make the Type-C connector found on some Cherry Trail
+devices (finally) be able to actually work as an USB port and not just
+a charge port.
+
+The last patch uses the new usb-role-switch framework to also do proper
+devcie / host switching on CHT devices with a USB micro AB connector.
+This is also a big feature for CHT users, because before this they had
+to do a reboot to get an OTG-host cable recognized (on some devices).
+
+Part of this series is an usb-role-switch driver for the role-switch
+found inside the xhci controller on e.g. CHT devices, this is currently
+implemented as the generic xhci controller instantiating a platform
+child-device for this, since this really is a separate chunk of HW
+which happens to sit in the XHCI mmio space. This approach may not be
+universally liked, given that in this new series the role-switch driver
+is much smaller and does not have any external deps anymore we could
+just integrate it into the xhci code if that is preferred.
+
+About merging this series (once everything is reviewed, etc.), there are
+quite some interdependencies in it esp. a lot of the patches depend on
+the first patch. Luckily patches 1-10 all apply to subsystems which are
+maintained by Greg (most to the USB subsys). Which just leaves patches
+11 and 12 once 1-10 are merged. Greg, can you create an immutable branch
+for the platform/x86 and extcon maintainers to merge once this is done?
+
+Regards,
+
+Hans
+
+
+Hans de Goede (7):
+  usb: typec: tcpm: Set USB role switch to device mode when configured
+    as such
+  usb: typec: tcpm: Use new Type-C switch/mux and usb-role-switch
+    functions
+  xhci: Add Intel extended cap / otg phy mux handling
+  usb: roles: Add Intel xHCI USB role switch driver
+  usb: typec: driver for Pericom PI3USB30532 Type-C cross switch
+  platform/x86: intel_cht_int33fe: Add device connections for the Type-C
+    port
+  extcon: axp288: Set USB role where necessary
+
+Heikki Krogerus (4):
+  drivers: base: Unified device connection lookup
+  usb: typec: API for controlling USB Type-C Multiplexers
+  usb: common: Small class for USB role switches
+  usb: typec: Separate the definitions for data and power roles
+
+Mathias Nyman (1):
+  xhci: Add option to get next extended capability in list by passing id
+    = 0
+
+ Documentation/ABI/testing/sysfs-class-usb_role |  21 ++
+ Documentation/driver-api/device_connection.rst |  43 ++++
+ Documentation/driver-api/usb/typec.rst         |  73 +++++-
+ MAINTAINERS                                    |  12 +
+ drivers/base/Makefile                          |   3 +-
+ drivers/base/devcon.c                          | 141 ++++++++++++
+ drivers/extcon/Kconfig                         |   3 +-
+ drivers/extcon/extcon-axp288.c                 | 176 +++++++++++++-
+ drivers/platform/x86/intel_cht_int33fe.c       |  24 ++
+ drivers/usb/Kconfig                            |   5 +
+ drivers/usb/Makefile                           |   2 +
+ drivers/usb/common/Makefile                    |   1 +
+ drivers/usb/common/roles.c                     | 305 +++++++++++++++++++++++++
+ drivers/usb/host/Makefile                      |   2 +-
+ drivers/usb/host/xhci-ext-caps.c               |  90 ++++++++
+ drivers/usb/host/xhci-ext-caps.h               |   7 +-
+ drivers/usb/host/xhci-pci.c                    |   5 +
+ drivers/usb/host/xhci.h                        |   2 +
+ drivers/usb/roles/Kconfig                      |  14 ++
+ drivers/usb/roles/Makefile                     |   1 +
+ drivers/usb/roles/intel-xhci-usb-role-switch.c | 192 ++++++++++++++++
+ drivers/usb/typec/Kconfig                      |   3 +
+ drivers/usb/typec/Makefile                     |   2 +
+ drivers/usb/typec/{typec.c => class.c}         | 124 ++++++++--
+ drivers/usb/typec/fusb302/fusb302.c            |   2 +-
+ drivers/usb/typec/mux.c                        | 191 ++++++++++++++++
+ drivers/usb/typec/mux/Kconfig                  |  10 +
+ drivers/usb/typec/mux/Makefile                 |   3 +
+ drivers/usb/typec/mux/pi3usb30532.c            | 178 +++++++++++++++
+ drivers/usb/typec/tcpm.c                       |  63 +++--
+ drivers/usb/typec/tps6598x.c                   |  26 ++-
+ drivers/usb/typec/typec_wcove.c                |   1 +
+ drivers/usb/typec/ucsi/ucsi.c                  |  13 +-
+ include/linux/device.h                         |  22 ++
+ include/linux/usb/role.h                       |  53 +++++
+ include/linux/usb/tcpm.h                       |  15 +-
+ include/linux/usb/typec.h                      |  28 ++-
+ include/linux/usb/typec_mux.h                  |  55 +++++
+ 38 files changed, 1817 insertions(+), 94 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-usb_role
+ create mode 100644 Documentation/driver-api/device_connection.rst
+ create mode 100644 drivers/base/devcon.c
+ create mode 100644 drivers/usb/common/roles.c
+ create mode 100644 drivers/usb/host/xhci-ext-caps.c
+ create mode 100644 drivers/usb/roles/Kconfig
+ create mode 100644 drivers/usb/roles/Makefile
+ create mode 100644 drivers/usb/roles/intel-xhci-usb-role-switch.c
+ rename drivers/usb/typec/{typec.c => class.c} (93%)
+ create mode 100644 drivers/usb/typec/mux.c
+ create mode 100644 drivers/usb/typec/mux/Kconfig
+ create mode 100644 drivers/usb/typec/mux/Makefile
+ create mode 100644 drivers/usb/typec/mux/pi3usb30532.c
+ create mode 100644 include/linux/usb/role.h
+ create mode 100644 include/linux/usb/typec_mux.h
+
+-- 
+2.16.1
