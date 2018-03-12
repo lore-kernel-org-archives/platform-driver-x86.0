@@ -1,87 +1,160 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v2 3/3] ALSA: hda: Disabled unused audio controller for
- Dell platforms with Switchable Graphics
-Date: Mon, 12 Mar 2018 01:30:28 +0000
-Message-ID: <c49f28560996405fa4173a5a492bf201@ausx13mpc124.AMER.DELL.COM>
-References: <20180308091023.9061-1-kai.heng.feng@canonical.com>
- <20180308091023.9061-3-kai.heng.feng@canonical.com>
- <20180309090223.xb55ltac4pfesdrh@pali>
- <723DA929-C9FA-4F69-8D3A-03D8A75D09A6@canonical.com>
- <014795f5a3014cd3bf55de26f76a5af8@ausx13mpc124.AMER.DELL.COM>
- <20180309094600.m24d3zbzdsmls7aw@pali>
- <09eadabb264f401a88b427744505adf8@ausx13mpc124.AMER.DELL.COM>
- <20180310103809.5nnwoulua2u64rku@pali>
- <ea9ab148c4bb45b9ae7369020300b74b@ausx13mpc124.AMER.DELL.COM>
- <20180311143018.u64cldtxuv7divta@pali>
+From: Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 3.16 40/76] x86/cpu/intel: Introduce macros for Intel
+ family numbers
+Date: Mon, 12 Mar 2018 03:06:12 +0000
+Message-ID: <lsq.1520823972.478544665@decadent.org.uk>
+References: <lsq.1520823971.5976735@decadent.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180311143018.u64cldtxuv7divta@pali>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com, kai.heng.feng@canonical.com
-Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, tiwai@suse.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <lsq.1520823971.5976735@decadent.org.uk>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: akpm@linux-foundation.org, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, linux-edac@vger.kernel.org, Tony Luck <tony.luck@intel.com>, Andy Lutomirski <luto@amacapital.net>, Andy Lutomirski <luto@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-acpi@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, Darren Hart <dvhart@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, jacob.jun.pan@intel.com, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, Dave Hansen <dave@sr71.net>, Ka
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiA+IEkgdGhpbmsgdGhlIG1pc3NpbmcgYXNwZWN0IGlzIHRoYXQgdGhpcyBpcyBvbmx5IHVzZWQg
-aW4gQUlPIGFuZCBsYXB0b3AgZm9ybQ0KPiA+IGZhY3RvcnMgd2hlcmUgdGhlIGRpc2NyZXRlIGdy
-YXBoaWNzIGlzIGluIGEgbm9uLXJlbW92YWJsZSBmb3JtIGZhY3Rvci4NCj4gDQo+IFdoeSB3ZSBh
-cmUgbm90IGNoZWNraW5nIGlmIGtlcm5lbCBpcyBydW5uaW5nIG9uIEFJTyBvciBsYXB0b3AgZm9y
-bQ0KPiBmYWN0b3IgdGhlbj8gT3IgaXQgaXMgbm90IHBvc3NpYmxlPw0KDQpLYWkgSGVuZywgY2Fu
-IHlvdSBwbGVhc2UgY29uZmlybSBpZiBBSU8gc2V0cyBjaGFzc2lzIHR5cGUgcHJvcGVybHk/DQpJ
-dCBzaG91bGQgYmUgMERoLg0KDQpJZiBzbywgdGhlbiBJIHRoaW5rIGFzIHNlY29uZCBjaGVjayBm
-b3IgY2hhc3NpcyB0eXBlIHNob3VsZCBiZSBwb3NzaWJsZSBmb3INCm5leHQgdmVyc2lvbiBvZiB0
-aGlzIHBhdGNoLg0KDQo+IA0KPiBCYXNpY2FsbHkgd2hhdCBJIHNlZSB0aGVyZSBpcyB0aGF0IHdl
-IG5lZWQgdG8gZGV0ZWN0IGlmIGN1cnJlbnQgSFcNCj4gcGxhdGZvcm0gaGFzIHN3aXRjaGFibGUg
-Z3JhcGhpY3MgYW5kIGNoZWNrIGhvdyBpcyBjb25maWd1cmVkIEFVRElPIE1VWC4NCj4gDQo+IEJ1
-dCBpbnN0ZWFkIG9mIGRpcmVjdGx5IGNoZWNraW5nIGh3IHN0YXRlIG9mIGF1ZGlvIE1VWCwgd2Ug
-YXJlIHRyeWluZyB0bw0KPiBjaGVjayBzb21ldGhpbmcgZGlmZmVyZW50IHdoaWNoIGNvdWxkIGdl
-dCB1cyBpbmZvcm1hdGlvbiBvZiBzdGF0ZSBvZiB0aGUNCj4gYXVkaW8gbXV4Lg0KPiANCj4gSSBz
-dXNwZWN0IHRoYXQgd2UgZG8gbm90IGhhdmUgYSB3YXkgaG93IHRvIGNoZWNrIGF1ZGlvIE1VWCBk
-aXJlY3RseSwgc28NCj4gaXQgbmVlZHMgdG8gYmUgZG9uZSBpbmRpcmVjdGx5IC0tIHZpYSBzb21l
-IERlbGwgU01CSU9TIGNhbGwgYW5kIHNvbWUNCj4gb3RoZXIgaGV1cmlzdGljLiBUaGlzIGlzIHNv
-bWV0aGluZyB3aGljaCBzaG91bGQgYmUgc3BlY2lmaWVkIGVpdGhlciBpbg0KPiBjb21tZW50IG9y
-IGluIGNvbW1pdCBtZXNzYWdlIChwcm9ibGVtIG9mIHR5cGU6IHdlIG5lZWQgWCwgYnV0IGNoZWNr
-IGZvcg0KPiBZKS4NCj4gDQo+IEFuZCBpZiB3ZSBhcmUgZG9pbmcgdGhpcyBjaGVjayBpbmRpcmVj
-dGx5LCB3ZSBzaG91bGQgZG8gdGhlIG1vc3QNCj4gc3BlY2lmaWMgdGVzdCBhbmQgbm90IG1vcmUg
-Z2VuZXJhbC4NCg0KUmlnaHQuDQoNCj4gDQo+IEkgdGhpbmsgdGhhdCBQQ0kgdmVuZG9yIElEIGNo
-ZWNrIG9mIGF1ZGlvIGRldmljZSBpcyBtb3JlIGdlbmVyYWwgdGVzdA0KPiB0aGVuIGNoZWNraW5n
-IGlmIGtlcm5lbCBpcyBydW5uaW5nIG9uIERlbGwgbGFwdG9wIChjaGVjayB2aWEgRE1JKS4gQW5k
-DQo+IGlmIHdlIGNhbiBjaGVjayBhbHNvIGlmIHJ1bm5pbmcgb24gQUlPIG9yIGxhcHRvcCBmb3Jt
-LCB0aGVuIGl0IHdvdWxkIGJlDQo+IG1vcmUgc3BlY2lmaWMgdGVzdC4NCj4gDQo+ID4gUnVubmlu
-ZyB3aXRoIHlvdXIgaHlwb3RoZXRpY2FsIHRob3VnaCwgd2hhdCB3b3VsZCBoYXBwZW4gaXMgaWYg
-aXQncw0KPiA+IG9uIGEgbm9uLURlbGwgbWFjaGluZSB0aGUgUENJIGNoZWNrIHdvdWxkIHBhc3Mg
-YW5kIHRoZW4gdGhlIGNvZGUNCj4gPiB3b3VsZCBub3QgYmUgZXhlY3V0ZWQgYnkgZGVsbC1sYXB0
-b3AgKHNpbmNlIGRlbGwtc21iaW9zIGRpZG4ndCBsb2FkKS4NCj4gDQo+IFJpZ2h0Lg0KPiANCj4g
-PiBJZiBpdCB3YXMgb24gYSBEZWxsIG1hY2hpbmUgaXQgd291bGQgbG9hZCBidXQgdGhlIEJJT1Mg
-d291bGQgcmV0dXJuDQo+ID4gZWl0aGVyIFN3aXRjaGFibGUgZ3JhcGhpY3MgdHVybmVkIG9mZiwg
-b3IgaW52YWxpZCB0b2tlbi4NCj4gPg0KPiA+IEV2ZW4gdGhvdWdoIHRoZXNlIGFyZW4ndCByZWFs
-IGZvciBzd2l0Y2hhYmxlIGdyYXBoaWNzIG9uIERlbGwgSSBkb24ndA0KPiA+IHNlZSBhIHByb2Js
-ZW0gd2l0aCBlaXRoZXIgb2YgdGhlc2Ugc2l0dWF0aW9ucyBpZiBpdCBldmVyIGNhbWUgdXAuDQo+
-IA0KPiBJIHNlZSwgdGhpcyBzb2x1dGlvbiBpcyB3b3JraW5nLi4uDQo+IA0KPiAuLi4gYnV0LCBJ
-IHNlZSB0aGVyZSBhIHZlcnkgYmFkIHByZWNlZGVuc2UuIFdoYXQgd291bGQgaGFwcGVuIGlmIGFu
-b3RoZXINCj4gbGFwdG9wIG1hbnVmYWN0b3IgY29tZXMgd2l0aCBzaW1pbGFyIHNvbHV0aW9uIGZv
-ciBoeWJyaWQgZ3JhcGhpY3MuIERvZXMNCj4gaXQgbWVhbiB0aGF0IGhkYSBhdWRpbyBkcml2ZXIg
-d291bGQgdHJ5IHRvIGNhbGwgZm9yIGV2ZXJ5IG9uZSB2ZW5kb3IgaXRzDQo+IHZlbmRvciBkZXBl
-bmRlbnQgQVBJIGZ1bmN0aW9uIChFRkksIFNNTSwgV01JLCB3aGF0ZXZlcikgdG8gY2hlY2sgaWYN
-Cj4gY3VycmVudCBIVyBoYXMgc29tZSBzd2l0Y2hhYmxlIGdyYXBoaWNzIGFuZCBuZWVkcyBzcGVj
-aWFsIGNoZWNrcz8NCj4gDQo+IFRob3NlIHZlbmRvciBkZXBlbmRlbnQgQVBJIGZ1bmN0aW9ucyAo
-d2hpY2ggRGVsbCBTTUJJT1MgaXMpIHNob3VsZCBiZQ0KPiByZWFsbHkgY2FsbGVkIG9uIHZlbmRv
-ciBoYXJkd2FyZS4NCj4gDQo+IE90aGVyd2lzZSBhdWRpbyBkcml2ZXJzIHdvdWxkIGxvYWQgYnVu
-Y2ggb2YgdGhlIG90aGVyIHZlbmRvciBkZXBlbmRlbnQNCj4gcGxhdGZvcm0gbW9kdWxlcyBhbmQg
-YWxsIG9mIHRob3NlIG1vZHVsZXMgKGV4Y2VwdCBtYXhpbWFsbHkgb25lKSBqdXN0DQo+IHJldHVy
-biBlcnJvci4NCj4gDQoNClN1cmUgdGhlIG1vcmUgc3BlY2lmaWMgdGhlIGNoZWNrIHRoZSBsZXNz
-IHN5bWJvbCByZXF1ZXN0cyBuZWVkZWQgdGhhdA0Kd2lsbCBmYWlsLg0KDQpLYWkgSGVuZywNCg0K
-Q2FuIHlvdSBwbGVhc2UgdXNlIEFsZXggSHVuZydzIE9FTSBzdHJpbmdzIHBhdGNoIGluIHlvdXIg
-c2VyaWVzIHRvIG1hdGNoDQoiRGVsbCBTeXN0ZW0iIGluIE9FTSBzdHJpbmdzIHRvbz8NCg0KQmV0
-d2VlbiBjaGFzc2lzIHR5cGUsIE9FTSBzdHJpbmdzIG1hdGNoLCBhbmQgQU1EIHZlbmRvci9EZWxs
-IHN1YnN5c3RlbQ0KdmVuZG9yIHRoYXQgc2hvdWxkIHNhdGlzZnkgYWxsIG9mIFBhbGkncyBjb25j
-ZXJucyBJIHRoaW5rLg0KDQpJZiBhbnlvbmUgdGhpbmtzIHRoYXQncyB0b28gbXVjaCwgcGxlYXNl
-IHNwZWFrIHVwLg0KDQo+ID4gQ29tcGlsaW5nIGEgd2hpdGVsaXN0IGlzIGEgd2FzdGVkIGVmZm9y
-dCBiZWNhdXNlIGl0IHdpbGwgaGF2ZSB0byBjaGFuZ2UNCj4gPiBFdmVyeSB5ZWFyIGZvciBldmVy
-eSBuZXcgcGxhdGZvcm0gdGhhdCBoYXMgQU1EIHN3aXRjaGFibGUgZ3JhcGhpY3MuDQo+IA0KPiBJ
-IGFncmVlLCBCdXQgc2VlIHRoYXQgdGhpcyBwYXRjaCBhbHJlYWR5IHVzZXMgdmVuZG9yIElEIHdo
-aXRlbGlzdGluZy4NCg0KSSBtZWFuIG1ha2luZyBhIHdoaXRlbGlzdCBvZiBhbGwgaW5kaXZpZHVh
-bCBhZmZlY3RlZCBEZWxsIHBsYXRmb3JtcyB3aWxsIGdyb3cNCmVhY2ggeWVhci4gIEkgd2FudCB0
-byBhdm9pZCB0aGF0IGFwcHJvYWNoLg0K
+3.16.56-rc1 review patch.  If anyone has any objections, please let me know.
+
+------------------
+
+From: Dave Hansen <dave@sr71.net>
+
+commit 970442c599b22ccd644ebfe94d1d303bf6f87c05 upstream.
+
+Problem:
+
+We have a boatload of open-coded family-6 model numbers.  Half of
+them have these model numbers in hex and the other half in
+decimal.  This makes grepping for them tons of fun, if you were
+to try.
+
+Solution:
+
+Consolidate all the magic numbers.  Put all the definitions in
+one header.
+
+The names here are closely derived from the comments describing
+the models from arch/x86/events/intel/core.c.  We could easily
+make them shorter by doing things like s/SANDYBRIDGE/SNB/, but
+they seemed fine even with the longer versions to me.
+
+Do not take any of these names too literally, like "DESKTOP"
+or "MOBILE".  These are all colloquial names and not precise
+descriptions of everywhere a given model will show up.
+
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Dave Hansen <dave@sr71.net>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: Doug Thompson <dougthompson@xmission.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: jacob.jun.pan@intel.com
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-edac@vger.kernel.org
+Cc: linux-mmc@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org
+Link: http://lkml.kernel.org/r/20160603001927.F2A7D828@viggo.jf.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ arch/x86/include/asm/intel-family.h | 68 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
+ create mode 100644 arch/x86/include/asm/intel-family.h
+
+--- /dev/null
++++ b/arch/x86/include/asm/intel-family.h
+@@ -0,0 +1,68 @@
++#ifndef _ASM_X86_INTEL_FAMILY_H
++#define _ASM_X86_INTEL_FAMILY_H
++
++/*
++ * "Big Core" Processors (Branded as Core, Xeon, etc...)
++ *
++ * The "_X" parts are generally the EP and EX Xeons, or the
++ * "Extreme" ones, like Broadwell-E.
++ *
++ * Things ending in "2" are usually because we have no better
++ * name for them.  There's no processor called "WESTMERE2".
++ */
++
++#define INTEL_FAM6_CORE_YONAH		0x0E
++#define INTEL_FAM6_CORE2_MEROM		0x0F
++#define INTEL_FAM6_CORE2_MEROM_L	0x16
++#define INTEL_FAM6_CORE2_PENRYN		0x17
++#define INTEL_FAM6_CORE2_DUNNINGTON	0x1D
++
++#define INTEL_FAM6_NEHALEM		0x1E
++#define INTEL_FAM6_NEHALEM_EP		0x1A
++#define INTEL_FAM6_NEHALEM_EX		0x2E
++#define INTEL_FAM6_WESTMERE		0x25
++#define INTEL_FAM6_WESTMERE2		0x1F
++#define INTEL_FAM6_WESTMERE_EP		0x2C
++#define INTEL_FAM6_WESTMERE_EX		0x2F
++
++#define INTEL_FAM6_SANDYBRIDGE		0x2A
++#define INTEL_FAM6_SANDYBRIDGE_X	0x2D
++#define INTEL_FAM6_IVYBRIDGE		0x3A
++#define INTEL_FAM6_IVYBRIDGE_X		0x3E
++
++#define INTEL_FAM6_HASWELL_CORE		0x3C
++#define INTEL_FAM6_HASWELL_X		0x3F
++#define INTEL_FAM6_HASWELL_ULT		0x45
++#define INTEL_FAM6_HASWELL_GT3E		0x46
++
++#define INTEL_FAM6_BROADWELL_CORE	0x3D
++#define INTEL_FAM6_BROADWELL_XEON_D	0x56
++#define INTEL_FAM6_BROADWELL_GT3E	0x47
++#define INTEL_FAM6_BROADWELL_X		0x4F
++
++#define INTEL_FAM6_SKYLAKE_MOBILE	0x4E
++#define INTEL_FAM6_SKYLAKE_DESKTOP	0x5E
++#define INTEL_FAM6_SKYLAKE_X		0x55
++#define INTEL_FAM6_KABYLAKE_MOBILE	0x8E
++#define INTEL_FAM6_KABYLAKE_DESKTOP	0x9E
++
++/* "Small Core" Processors (Atom) */
++
++#define INTEL_FAM6_ATOM_PINEVIEW	0x1C
++#define INTEL_FAM6_ATOM_LINCROFT	0x26
++#define INTEL_FAM6_ATOM_PENWELL		0x27
++#define INTEL_FAM6_ATOM_CLOVERVIEW	0x35
++#define INTEL_FAM6_ATOM_CEDARVIEW	0x36
++#define INTEL_FAM6_ATOM_SILVERMONT1	0x37 /* BayTrail/BYT / Valleyview */
++#define INTEL_FAM6_ATOM_SILVERMONT2	0x4D /* Avaton/Rangely */
++#define INTEL_FAM6_ATOM_AIRMONT		0x4C /* CherryTrail / Braswell */
++#define INTEL_FAM6_ATOM_MERRIFIELD1	0x4A /* Tangier */
++#define INTEL_FAM6_ATOM_MERRIFIELD2	0x5A /* Annidale */
++#define INTEL_FAM6_ATOM_GOLDMONT	0x5C
++#define INTEL_FAM6_ATOM_DENVERTON	0x5F /* Goldmont Microserver */
++
++/* Xeon Phi */
++
++#define INTEL_FAM6_XEON_PHI_KNL		0x57 /* Knights Landing */
++
++#endif /* _ASM_X86_INTEL_FAMILY_H */
