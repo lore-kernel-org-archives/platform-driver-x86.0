@@ -1,40 +1,57 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: dell_smbios: Resolve dependency error on
+Subject: [PATCH v2] platform/x86: dell-smbios: Resolve dependency error on
  ACPI_WMI
-Date: Mon, 12 Mar 2018 13:29:39 -0700
-Message-ID: <20180312202939.GB88572@localhost.localdomain>
-References: <7eb3f317a876a6255aeb0abfd0137894ef8b5166.1520727789.git.dvhart@infradead.org>
- <CAHp75VeYDiv3gR77xjmj1QitmtTyNykXXFJtYyEFL95sgo1L9A@mail.gmail.com>
+Date: Mon, 12 Mar 2018 13:36:06 -0700
+Message-ID: <4716007c23abeb0e42015786794539454aff487b.1520886814.git.dvhart@infradead.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75VeYDiv3gR77xjmj1QitmtTyNykXXFJtYyEFL95sgo1L9A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mario Limonciello <mario.limonciello@dell.com>, Linus Torvalds <torvalds@linux-foundation.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, Dominik Brodowski <linux@dominikbrodowski.net>, Mario Limonciello <mario.limonciello@dell.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Mar 12, 2018 at 11:23:20AM +0200, Andy Shevchenko wrote:
-> On Sun, Mar 11, 2018 at 2:28 AM, Darren Hart <dvhart@infradead.org> wrote:
-> > Similarly to DCDBAS for DELL_SMBIOS_SMM, if DELL_SMBIOS_WMI is enabled,
-> > DELL_SMBIOS becomes dependent on ACPI_WMI. Update the depends line to
-> > prevent a configuration where DELL_SMBIOS=y and either backend
-> > dependency =m. Update the comment accordingly.
-> 
-> > +# The DELL_SMBIOS driver depends on ACPI_WMI and/or DCDBAS if those
-> > +# backends are selected. The "depends" line prevents a configuration
-> > +# where DELL_SMBIOS=y while either of those dependencies =m.
-> >  #
-> >  config DELL_SMBIOS
-> >         tristate "Dell SMBIOS driver"
-> > -       depends on DCDBAS || DCDBAS=n
-> > +       depends on (DCDBAS || DCDBAS=n) && (ACPI_WMI || ACPI_WMI=n)
-> 
-> A nit: Perhaps separate depends on line for those two?
+Similarly to DCDBAS for DELL_SMBIOS_SMM, if DELL_SMBIOS_WMI is enabled,
+DELL_SMBIOS becomes dependent on ACPI_WMI. Update the depends lines to
+prevent a configuration where DELL_SMBIOS=y and either backend
+dependency =m. Update the comment accordingly.
 
-Agreed, resending v2, will run through testing, and send to Linus by EOD
-tomorrow.
+Cc: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+---
+Since v1: Split depends line into two per Andy Shevchenko's feedback
+
+ drivers/platform/x86/Kconfig | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index e55b008..1868aab 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -106,13 +106,14 @@ config ASUS_LAPTOP
+ 	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
+ 
+ #
+-# If the DELL_SMBIOS_SMM feature is enabled, the DELL_SMBIOS driver
+-# becomes dependent on the DCDBAS driver. The "depends" line prevents a
+-# configuration where DELL_SMBIOS=y while DCDBAS=m.
++# The DELL_SMBIOS driver depends on ACPI_WMI and/or DCDBAS if those
++# backends are selected. The "depends" line prevents a configuration
++# where DELL_SMBIOS=y while either of those dependencies =m.
+ #
+ config DELL_SMBIOS
+ 	tristate "Dell SMBIOS driver"
+ 	depends on DCDBAS || DCDBAS=n
++	depends on ACPI_WMI || ACPI_WMI=n
+ 	---help---
+ 	This provides support for the Dell SMBIOS calling interface.
+ 	If you have a Dell computer you should enable this option.
+-- 
+2.9.5
+
 
 -- 
 Darren Hart
