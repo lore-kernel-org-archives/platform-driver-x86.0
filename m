@@ -1,69 +1,34 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v6 01/12] drivers: base: Unified device connection lookup
-Date: Mon, 12 Mar 2018 10:19:34 +0100
-Message-ID: <212ceba2-2f13-0501-c59e-612b72989cb3@redhat.com>
-References: <20180302102057.8917-1-hdegoede@redhat.com>
- <20180302102057.8917-2-hdegoede@redhat.com>
- <20180309175347.GA12150@kroah.com>
- <bddcf7ea-e58c-637a-e546-9978fd2cb540@redhat.com>
- <20180312081345.GH21904@kuha.fi.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell_smbios: Resolve dependency error on ACPI_WMI
+Date: Mon, 12 Mar 2018 11:23:20 +0200
+Message-ID: <CAHp75VeYDiv3gR77xjmj1QitmtTyNykXXFJtYyEFL95sgo1L9A@mail.gmail.com>
+References: <7eb3f317a876a6255aeb0abfd0137894ef8b5166.1520727789.git.dvhart@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180312081345.GH21904@kuha.fi.intel.com>
-Content-Language: en-US
+In-Reply-To: <7eb3f317a876a6255aeb0abfd0137894ef8b5166.1520727789.git.dvhart@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Guenter Roeck <linux@roeck-us.net>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mario Limonciello <mario.limonciello@dell.com>, Linus Torvalds <torvalds@linux-foundation.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Sun, Mar 11, 2018 at 2:28 AM, Darren Hart <dvhart@infradead.org> wrote:
+> Similarly to DCDBAS for DELL_SMBIOS_SMM, if DELL_SMBIOS_WMI is enabled,
+> DELL_SMBIOS becomes dependent on ACPI_WMI. Update the depends line to
+> prevent a configuration where DELL_SMBIOS=y and either backend
+> dependency =m. Update the comment accordingly.
 
-On 12-03-18 09:13, Heikki Krogerus wrote:
-> On Sun, Mar 11, 2018 at 07:24:18PM +0100, Hans de Goede wrote:
->> Hi all,
->>
->> On 09-03-18 18:53, Greg Kroah-Hartman wrote:
->>> On Fri, Mar 02, 2018 at 11:20:46AM +0100, Hans de Goede wrote:
->>>> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->>>>
->>>> Several frameworks - clk, gpio, phy, pmw, etc. - maintain
->>>> lookup tables for describing connections and provide custom
->>>> API for handling them. This introduces a single generic
->>>> lookup table and API for the connections.
->>>>
->>>> The motivation for this commit is centralizing the
->>>> connection lookup, but the goal is to ultimately extract the
->>>> connection descriptions also from firmware by using the
->>>> fwnode_graph_* functions and other mechanisms that are
->>>> available.
->>>>
->>>> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>
->>> Sorry for the delay, just now reviewing this patch...
->>>
->>> The content is fine (if not scary for the obvious reason of passing
->>> around 'struct device' of different bus types, but ok...), but the api
->>> naming is "rough":
->>
->> Heikki, I think it is best if you answer Greg's remarks. FWIW I'm
->> fine with the changes Greg proposes.
-> 
-> Me too.
-> 
->> I currently have significantly less bandwidth for this due to
->> personal circumstances, so if a new version of this patch-set
->> is necessary it would be great if you (Heikki) can do a v7.
-> 
-> Sure thing. I'll prepare the v7.
+> +# The DELL_SMBIOS driver depends on ACPI_WMI and/or DCDBAS if those
+> +# backends are selected. The "depends" line prevents a configuration
+> +# where DELL_SMBIOS=y while either of those dependencies =m.
+>  #
+>  config DELL_SMBIOS
+>         tristate "Dell SMBIOS driver"
+> -       depends on DCDBAS || DCDBAS=n
+> +       depends on (DCDBAS || DCDBAS=n) && (ACPI_WMI || ACPI_WMI=n)
 
-Great, thank you. Don't forget to squash in the 2 fixes from
-fengguang.wu@intel.com .
+A nit: Perhaps separate depends on line for those two?
 
-Regards,
-
-Hans
+-- 
+With Best Regards,
+Andy Shevchenko
