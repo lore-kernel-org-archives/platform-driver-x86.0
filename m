@@ -1,7 +1,7 @@
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v7 10/12] usb: typec: driver for Pericom PI3USB30532 Type-C cross switch
-Date: Mon, 12 Mar 2018 17:34:29 +0300
-Message-ID: <20180312143431.82396-11-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v7 11/12] platform/x86: intel_cht_int33fe: Add device connections for the Type-C port
+Date: Mon, 12 Mar 2018 17:34:30 +0300
+Message-ID: <20180312143431.82396-12-heikki.krogerus@linux.intel.com>
 References: <20180312143431.82396-1-heikki.krogerus@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180312143431.82396-1-heikki.krogerus@linux.intel.com>
@@ -12,284 +12,80 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 From: Hans de Goede <hdegoede@redhat.com>
 
-Add a driver for the Pericom PI3USB30532 Type-C cross switch /
-mux chip found on some devices with a Type-C port.
+We need to add device-connections for the Type-C mux/switch and usb-role
+code to be able to find the PI3USB30532 Type-C cross-switch and the
+device/host role-switch integrated in the CHT SoC.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
-Changes in v7:
-- Remove unneeded semicolon
-
 Changes in v4:
--Add Andy's Reviewed-by
+-Replace Andy's Acked-by with his Reviewed-by
 
 Changes in v2:
--Cleanup pi3usb30532_set_conf() error handling
+-Add Andy's Acked-by
 -Add Heikki's Reviewed-by
-
-Changes in v1:
--This is a rewrite of my previous driver which was using the
- drivers/mux framework to use the new drivers/usb/typec/mux framework
 ---
- MAINTAINERS                         |   6 ++
- drivers/usb/typec/Kconfig           |   2 +
- drivers/usb/typec/Makefile          |   1 +
- drivers/usb/typec/mux/Kconfig       |  10 ++
- drivers/usb/typec/mux/Makefile      |   3 +
- drivers/usb/typec/mux/pi3usb30532.c | 178 ++++++++++++++++++++++++++++++++++++
- 6 files changed, 200 insertions(+)
- create mode 100644 drivers/usb/typec/mux/Kconfig
- create mode 100644 drivers/usb/typec/mux/Makefile
- create mode 100644 drivers/usb/typec/mux/pi3usb30532.c
+ drivers/platform/x86/intel_cht_int33fe.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5f1988cddbe8..17b64236719f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14521,6 +14521,12 @@ F:	drivers/usb/
- F:	include/linux/usb.h
- F:	include/linux/usb/
+diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+index 380ef7ec094f..39d4100c60a2 100644
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -33,6 +33,8 @@ struct cht_int33fe_data {
+ 	struct i2c_client *max17047;
+ 	struct i2c_client *fusb302;
+ 	struct i2c_client *pi3usb30532;
++	/* Contain a list-head must be per device */
++	struct device_connection connections[3];
+ };
  
-+USB TYPEC PI3USB30532 MUX DRIVER
-+M:	Hans de Goede <hdegoede@redhat.com>
-+L:	linux-usb@vger.kernel.org
-+S:	Maintained
-+F:	drivers/usb/typec/mux/pi3usb30532.c
-+
- USB TYPEC SUBSYSTEM
- M:	Heikki Krogerus <heikki.krogerus@linux.intel.com>
- L:	linux-usb@vger.kernel.org
-diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
-index a2a0684e7c82..030f88cb0c3f 100644
---- a/drivers/usb/typec/Kconfig
-+++ b/drivers/usb/typec/Kconfig
-@@ -85,4 +85,6 @@ config TYPEC_TPS6598X
- 	  If you choose to build this driver as a dynamically linked module, the
- 	  module will be called tps6598x.ko.
+ /*
+@@ -172,6 +174,20 @@ static int cht_int33fe_probe(struct i2c_client *client)
+ 			return -EPROBE_DEFER; /* Wait for i2c-adapter to load */
+ 	}
  
-+source "drivers/usb/typec/mux/Kconfig"
++	data->connections[0].endpoint[0] = "i2c-fusb302";
++	data->connections[0].endpoint[1] = "i2c-pi3usb30532";
++	data->connections[0].id = "typec-switch";
++	data->connections[1].endpoint[0] = "i2c-fusb302";
++	data->connections[1].endpoint[1] = "i2c-pi3usb30532";
++	data->connections[1].id = "typec-mux";
++	data->connections[2].endpoint[0] = "i2c-fusb302";
++	data->connections[2].endpoint[1] = "intel_xhci_usb_sw-role-switch";
++	data->connections[2].id = "usb-role-switch";
 +
- endif # TYPEC
-diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
-index 56b2e9516ec1..1f599a6c30cc 100644
---- a/drivers/usb/typec/Makefile
-+++ b/drivers/usb/typec/Makefile
-@@ -6,3 +6,4 @@ obj-y				+= fusb302/
- obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
- obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
- obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
-+obj-$(CONFIG_TYPEC)		+= mux/
-diff --git a/drivers/usb/typec/mux/Kconfig b/drivers/usb/typec/mux/Kconfig
-new file mode 100644
-index 000000000000..9a954d2b8d8f
---- /dev/null
-+++ b/drivers/usb/typec/mux/Kconfig
-@@ -0,0 +1,10 @@
-+menu "USB Type-C Multiplexer/DeMultiplexer Switch support"
++	device_connection_add(&data->connections[0]);
++	device_connection_add(&data->connections[1]);
++	device_connection_add(&data->connections[2]);
 +
-+config TYPEC_MUX_PI3USB30532
-+	tristate "Pericom PI3USB30532 Type-C cross switch driver"
-+	depends on I2C
-+	help
-+	  Say Y or M if your system has a Pericom PI3USB30532 Type-C cross
-+	  switch / mux chip found on some devices with a Type-C port.
+ 	memset(&board_info, 0, sizeof(board_info));
+ 	strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
+ 	board_info.dev_name = "fusb302";
+@@ -201,6 +217,10 @@ static int cht_int33fe_probe(struct i2c_client *client)
+ 	if (data->max17047)
+ 		i2c_unregister_device(data->max17047);
+ 
++	device_connection_remove(&data->connections[2]);
++	device_connection_remove(&data->connections[1]);
++	device_connection_remove(&data->connections[0]);
 +
-+endmenu
-diff --git a/drivers/usb/typec/mux/Makefile b/drivers/usb/typec/mux/Makefile
-new file mode 100644
-index 000000000000..1332e469b8a0
---- /dev/null
-+++ b/drivers/usb/typec/mux/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
+ 	return -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
+ }
+ 
+@@ -213,6 +233,10 @@ static int cht_int33fe_remove(struct i2c_client *i2c)
+ 	if (data->max17047)
+ 		i2c_unregister_device(data->max17047);
+ 
++	device_connection_remove(&data->connections[2]);
++	device_connection_remove(&data->connections[1]);
++	device_connection_remove(&data->connections[0]);
 +
-+obj-$(CONFIG_TYPEC_MUX_PI3USB30532)	+= pi3usb30532.o
-diff --git a/drivers/usb/typec/mux/pi3usb30532.c b/drivers/usb/typec/mux/pi3usb30532.c
-new file mode 100644
-index 000000000000..b0e88db60ecf
---- /dev/null
-+++ b/drivers/usb/typec/mux/pi3usb30532.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Pericom PI3USB30532 Type-C cross switch / mux driver
-+ *
-+ * Copyright (c) 2017-2018 Hans de Goede <hdegoede@redhat.com>
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/usb/tcpm.h>
-+#include <linux/usb/typec_mux.h>
-+
-+#define PI3USB30532_CONF			0x00
-+
-+#define PI3USB30532_CONF_OPEN			0x00
-+#define PI3USB30532_CONF_SWAP			0x01
-+#define PI3USB30532_CONF_4LANE_DP		0x02
-+#define PI3USB30532_CONF_USB3			0x04
-+#define PI3USB30532_CONF_USB3_AND_2LANE_DP	0x06
-+
-+struct pi3usb30532 {
-+	struct i2c_client *client;
-+	struct mutex lock; /* protects the cached conf register */
-+	struct typec_switch sw;
-+	struct typec_mux mux;
-+	u8 conf;
-+};
-+
-+static int pi3usb30532_set_conf(struct pi3usb30532 *pi, u8 new_conf)
-+{
-+	int ret = 0;
-+
-+	if (pi->conf == new_conf)
-+		return 0;
-+
-+	ret = i2c_smbus_write_byte_data(pi->client, PI3USB30532_CONF, new_conf);
-+	if (ret) {
-+		dev_err(&pi->client->dev, "Error writing conf: %d\n", ret);
-+		return ret;
-+	}
-+
-+	pi->conf = new_conf;
-+	return 0;
-+}
-+
-+static int pi3usb30532_sw_set(struct typec_switch *sw,
-+			      enum typec_orientation orientation)
-+{
-+	struct pi3usb30532 *pi = container_of(sw, struct pi3usb30532, sw);
-+	u8 new_conf;
-+	int ret;
-+
-+	mutex_lock(&pi->lock);
-+	new_conf = pi->conf;
-+
-+	switch (orientation) {
-+	case TYPEC_ORIENTATION_NONE:
-+		new_conf = PI3USB30532_CONF_OPEN;
-+		break;
-+	case TYPEC_ORIENTATION_NORMAL:
-+		new_conf &= ~PI3USB30532_CONF_SWAP;
-+		break;
-+	case TYPEC_ORIENTATION_REVERSE:
-+		new_conf |= PI3USB30532_CONF_SWAP;
-+		break;
-+	}
-+
-+	ret = pi3usb30532_set_conf(pi, new_conf);
-+	mutex_unlock(&pi->lock);
-+
-+	return ret;
-+}
-+
-+static int pi3usb30532_mux_set(struct typec_mux *mux, int state)
-+{
-+	struct pi3usb30532 *pi = container_of(mux, struct pi3usb30532, mux);
-+	u8 new_conf;
-+	int ret;
-+
-+	mutex_lock(&pi->lock);
-+	new_conf = pi->conf;
-+
-+	switch (state) {
-+	case TYPEC_MUX_NONE:
-+		new_conf = PI3USB30532_CONF_OPEN;
-+		break;
-+	case TYPEC_MUX_USB:
-+		new_conf = (new_conf & PI3USB30532_CONF_SWAP) |
-+			   PI3USB30532_CONF_USB3;
-+		break;
-+	case TYPEC_MUX_DP:
-+		new_conf = (new_conf & PI3USB30532_CONF_SWAP) |
-+			   PI3USB30532_CONF_4LANE_DP;
-+		break;
-+	case TYPEC_MUX_DOCK:
-+		new_conf = (new_conf & PI3USB30532_CONF_SWAP) |
-+			   PI3USB30532_CONF_USB3_AND_2LANE_DP;
-+		break;
-+	}
-+
-+	ret = pi3usb30532_set_conf(pi, new_conf);
-+	mutex_unlock(&pi->lock);
-+
-+	return ret;
-+}
-+
-+static int pi3usb30532_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct pi3usb30532 *pi;
-+	int ret;
-+
-+	pi = devm_kzalloc(dev, sizeof(*pi), GFP_KERNEL);
-+	if (!pi)
-+		return -ENOMEM;
-+
-+	pi->client = client;
-+	pi->sw.dev = dev;
-+	pi->sw.set = pi3usb30532_sw_set;
-+	pi->mux.dev = dev;
-+	pi->mux.set = pi3usb30532_mux_set;
-+	mutex_init(&pi->lock);
-+
-+	ret = i2c_smbus_read_byte_data(client, PI3USB30532_CONF);
-+	if (ret < 0) {
-+		dev_err(dev, "Error reading config register %d\n", ret);
-+		return ret;
-+	}
-+	pi->conf = ret;
-+
-+	ret = typec_switch_register(&pi->sw);
-+	if (ret) {
-+		dev_err(dev, "Error registering typec switch: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = typec_mux_register(&pi->mux);
-+	if (ret) {
-+		typec_switch_unregister(&pi->sw);
-+		dev_err(dev, "Error registering typec mux: %d\n", ret);
-+		return ret;
-+	}
-+
-+	i2c_set_clientdata(client, pi);
-+	return 0;
-+}
-+
-+static int pi3usb30532_remove(struct i2c_client *client)
-+{
-+	struct pi3usb30532 *pi = i2c_get_clientdata(client);
-+
-+	typec_mux_unregister(&pi->mux);
-+	typec_switch_unregister(&pi->sw);
-+	return 0;
-+}
-+
-+static const struct i2c_device_id pi3usb30532_table[] = {
-+	{ "pi3usb30532" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, pi3usb30532_table);
-+
-+static struct i2c_driver pi3usb30532_driver = {
-+	.driver = {
-+		.name = "pi3usb30532",
-+	},
-+	.probe_new	= pi3usb30532_probe,
-+	.remove		= pi3usb30532_remove,
-+	.id_table	= pi3usb30532_table,
-+};
-+
-+module_i2c_driver(pi3usb30532_driver);
-+
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_DESCRIPTION("Pericom PI3USB30532 Type-C mux driver");
-+MODULE_LICENSE("GPL");
+ 	return 0;
+ }
+ 
 -- 
 2.16.1
