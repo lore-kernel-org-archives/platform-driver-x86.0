@@ -1,84 +1,88 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: dell-smbios: fix DCDBAS dependency, better
-Date: Tue, 13 Mar 2018 08:00:46 -0700
-Message-ID: <20180313150046.GB20710@localhost.localdomain>
-References: <20180313114310.1998450-1-arnd@arndb.de>
+Subject: Re: Dell Inc. XPS 13 9343/0TM99H fails to boot v4.16-rc5
+Date: Tue, 13 Mar 2018 14:42:59 -0700
+Message-ID: <20180313214259.GA9260@localhost.localdomain>
+References: <20180313063213.GA20710@localhost.localdomain>
+ <f78e97a8f037461ca7f5a60cb351e1af@ausx13mpc120.AMER.DELL.COM>
+ <20180313064334.GA1743@light.dominikbrodowski.net>
+ <bddaade724054711ba4682f73ec54264@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180313114310.1998450-1-arnd@arndb.de>
+In-Reply-To: <bddaade724054711ba4682f73ec54264@ausx13mpc120.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andy@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mario.Limonciello@dell.com
+Cc: linux@dominikbrodowski.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Mar 13, 2018 at 12:42:57PM +0100, Arnd Bergmann wrote:
-> The rework of the dell laptop modules caused a link error:
+On Tue, Mar 13, 2018 at 07:07:26AM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Dominik Brodowski [mailto:linux@dominikbrodowski.net]
+> > Sent: Tuesday, March 13, 2018 2:44 PM
+> > To: Limonciello, Mario <Mario_Limonciello@Dell.com>; Darren Hart
+> > <dvhart@infradead.org>
+> > Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: Re: Dell Inc. XPS 13 9343/0TM99H fails to boot v4.16-rc5
+> > 
+> > On Tue, Mar 13, 2018 at 06:12:04AM +0000, Mario.Limonciello@dell.com wrote:
+> > > As long as they're ready before dell-laptop's initialization which uses
+> > > late_initcall that should be fine.
+> > >
+> > > Am I correct to presume you're going to propose a patch you can test and
+> > > confirm your hypothesis rather than Darren reverting my patch to bring
+> > > them together?
+> > 
+> > Thanks for the input; a draft patch (which works fine on my system) is
+> > attached below.
+> > 
+> > On Mon, Mar 12, 2018 at 11:32:13PM -0700, Darren Hart wrote:
+> > > There is one other caveat, which you'll find documented in
+> > > dell-laptop.c, namely that dell-laptop needs to init after dell-rbtn
+> > > (I'm starting to appreciate the monolithic thinkpad-acpi driver).
+> > >
+> > > We need things to init in this order (items on the same line have no
+> > > dependency):
+> > >
+> > > 1. DCDBAS, ACPI_WMI
+> > > 2. DELL_SMBIOS, DELL_RBTN
+> > > 3. DELL_LAPTOP, DELL_WMI
+> > >
+> > > Currently:
+> > > subsys_initcall: ACPI_WMI, DELL_SMBIOS
+> > > module_init: DCDBAS, DELL_WMI
+> > > late_initcall: DELL_LAPTOP
+> > >
+> > > From a quick naive glance, it appears as though we might be able to
+> > > address this as follows:
+> > >
+> > > subsys_initcall: DCDBAS, ACPI_WMI
+> > > module_init: DELL_SMBIOS, DELL_RBTN
+> > > late_initcall: DELL_LAPTOP, DELL_WMI
+> > 
+> > Hmmm. I do not yet understand why you propose to
+> > 
+> > a) advance the DCDBAS initialization to subsys_initcall, as only DELL_LAPTOP
+> >    (running as a late_initcall) requires it to be up and running, and
 > 
-> drivers/platform/x86/dell-smbios-smm.o: In function `dell_smbios_smm_call':
-> dell-smbios-smm.c:(.text+0x77): undefined reference to `dcdbas_smi_request'
-> 
-> We already have a fix for that, but this was only a partial solution,
-> since CONFIG_DELL_LAPTOP and CONFIG_DELL_WMI select CONFIG_DELL_SMBIOS
-> regardless of that dependency.
-> 
-> We can either add the same 'DCDBAS || DCDBAS=n' dependency for those two
-> as well, or replace the 'select' with a 'depends on'. The second approach
-> seems cleaner, so I'm picking that here.
+> Actually dell-smbios itself should require this too.  The SMM backend will use
+> it during initialization to determine if WSMT is enabled.  If it's not operational
+> yet then we may get invalid results.
+>
 
-Thanks Arnd,
+Exactly.
 
-This thing has gotten out of hand. We're working on some additional
-fixes related driver loading order when built-in as well. There is a
-similar dependency on ACPI_WMI too.
-
-I have a patch out pending review/testing on that.
-
-We were trying to avoid having SMBIOS being required to be selected in
-order for Dell Laptop to appear in the menu. Similarly for Dell WMI
-Hotkeys.
-
-I'm awaiting some feedback, but at the moment, it is looking like we
-will have to revert the patches you cite below, and try again in 4.17,
-likely with a DELL_EXTRAS menuconfig which allows us to default things
-like DELL_SMBIOS to m and present a more intuitive config menu.
-
+> So considering this I think Darren's proposal is good to move DCDBAS to earlier.
 > 
-> Fixes: 32d7b19bad96 ("platform/x86: dell-smbios: Resolve dependency error on DCDBAS")
-> Fixes: 25d47027e100 ("platform/x86: dell-smbios: Link all dell-smbios-* modules together")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/platform/x86/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > b) delay DELL_WMI to late_initcall, as it can safely be initialized as long
+> >    as ACPI_WMI is ready.
 > 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 28905793b5e5..0aec62bb5c61 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -151,7 +151,7 @@ config DELL_LAPTOP
->  	depends on ACPI_VIDEO || ACPI_VIDEO = n
->  	depends on RFKILL || RFKILL = n
->  	depends on SERIO_I8042
-> -	select DELL_SMBIOS
-> +	depends on DELL_SMBIOS
->  	select POWER_SUPPLY
->  	select LEDS_CLASS
->  	select NEW_LEDS
-> @@ -165,8 +165,8 @@ config DELL_WMI
->  	depends on DMI
->  	depends on INPUT
->  	depends on ACPI_VIDEO || ACPI_VIDEO = n
-> +	depends on DELL_SMBIOS
->  	select DELL_WMI_DESCRIPTOR
-> -	select DELL_SMBIOS
->  	select INPUT_SPARSEKMAP
->  	---help---
->  	  Say Y here if you want to support WMI-based hotkeys on Dell laptops.
-> -- 
-> 2.9.0
-> 
-> 
+> Maybe Darren meant dell-wmi-descriptor not dell-wmi?
+> Otherwise I would agree that part isn't needed.
+
+Like DELL_LAPTOP, DELL_WMI depends on smbios being ready, so needs to
+init after DELL_SMBIOS as well.
 
 -- 
 Darren Hart
