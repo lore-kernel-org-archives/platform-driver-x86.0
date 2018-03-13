@@ -1,115 +1,55 @@
-From: Kai Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH v2 3/3] ALSA: hda: Disabled unused audio controller for
- Dell platforms with Switchable Graphics
-Date: Tue, 13 Mar 2018 16:24:24 +0800
-Message-ID: <87BEDA0C-1821-4D2B-A4AF-FC89A434967B@canonical.com>
-References: <20180308091023.9061-1-kai.heng.feng@canonical.com>
- <20180308091023.9061-3-kai.heng.feng@canonical.com>
- <20180309090223.xb55ltac4pfesdrh@pali>
- <723DA929-C9FA-4F69-8D3A-03D8A75D09A6@canonical.com>
- <20180310065039.GA6633@wunner.de>
-Mime-Version: 1.0 (Mac OS X Mail 11.3 \(3445.6.15\))
-Content-Type: text/plain;
-        charset=us-ascii;
-        delsp=yes;
-        format=flowed
-Content-Transfer-Encoding: 7bit
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] platform/x86: dell-smbios: fix DCDBAS dependency, better
+Date: Tue, 13 Mar 2018 12:42:57 +0100
+Message-ID: <20180313114310.1998450-1-arnd@arndb.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180310065039.GA6633@wunner.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukas Wunner <lukas@wunner.de>
-Cc: =?utf-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, Mario Limonciello <mario.limonciello@dell.com>, tiwai@suse.com, platform-driver-x86@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mario Limonciello <mario.limonciello@dell.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+The rework of the dell laptop modules caused a link error:
 
-> On Mar 10, 2018, at 2:50 PM, Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Fri, Mar 09, 2018 at 05:30:15PM +0800, Kai Heng Feng wrote:
->>> On Thursday 08 March 2018 17:10:23 Kai-Heng Feng wrote:
->>>> Some Dell platforms (Preicsion 7510/7710/7520/7720) have a BIOS option
->>>> "Switchable Graphics" (SG).
->>>>
->>>> When SG is enabled, we have:
->>>> 00:02.0 VGA compatible controller: Intel Corporation Device 591b (rev  
->>>> 04)
->>>> 00:1f.3 Audio device: Intel Corporation CM238 HD Audio Controller (rev  
->>>> 31)
->>>> 01:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
->>>> [AMD/ATI] Ellesmere [Polaris10]
->>>> 01:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Ellesmere
->>>> [Radeon RX 580]
->>>>
->>>> The Intel Audio outputs all the sound, including HDMI audio. The audio
->>>> controller comes with AMD graphics doesn't get used.
->>>>
->>>> When SG is disabled, we have:
->>>> 00:1f.3 Audio device: Intel Corporation CM238 HD Audio Controller (rev  
->>>> 31)
->>>> 01:00.0 VGA compatible controller: Advanced Micro Devices, Inc.
->>>> [AMD/ATI] Ellesmere [Polaris10]
->>>> 01:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Ellesmere
->>>> [Radeon RX 580]
->>>>
->>>> Now it's a typical discrete-only system. HDMI audio comes from AMD audio
->>>> controller, others from Intel audio controller.
->>>>
->>>> When SG is enabled, the unused AMD audio controller still exposes its
->>>> sysfs, so userspace still opens the control file and stream. If
->>>> userspace tries to output sound through the stream, it hangs when
->>>> runtime suspend kicks in:
->>>> [ 12.796265] snd_hda_intel 0000:01:00.1: Disabling via vga_switcheroo
->>>> [ 12.796367] snd_hda_intel 0000:01:00.1: Cannot lock devices!
->>>>
->>>> Since the discrete audio controller isn't useful when SG enabled, we
->>>> should just disable the device.
->>
->> The platform does have a NVIDIA variant, but the discrete NVIDIA have a
->> audio controller, hence it doesn't have the issue.
->
-> Sorry, I don't quite understand:  The AMD variant *also* has an audio
-> controller, so what's the difference?  Or did you mean the Nvidia
-> variant *doesn't* have an audio controller?
+drivers/platform/x86/dell-smbios-smm.o: In function `dell_smbios_smm_call':
+dell-smbios-smm.c:(.text+0x77): undefined reference to `dcdbas_smi_request'
 
-It does, but the audio controller only shows under SG disabled.
+We already have a fix for that, but this was only a partial solution,
+since CONFIG_DELL_LAPTOP and CONFIG_DELL_WMI select CONFIG_DELL_SMBIOS
+regardless of that dependency.
 
->
-> Pretty much all modern Nvidia GPUs do have an integrated HDA
-> controller, however it's possible to hide it by clearing a bit
-> at offset 0x488 in the GPU's config space.  Some BIOSes hide
-> the HDA if no external display is attached.
+We can either add the same 'DCDBAS || DCDBAS=n' dependency for those two
+as well, or replace the 'select' with a 'depends on'. The second approach
+seems cleaner, so I'm picking that here.
 
-This is how the Nvidia variant works:
+Fixes: 32d7b19bad96 ("platform/x86: dell-smbios: Resolve dependency error on DCDBAS")
+Fixes: 25d47027e100 ("platform/x86: dell-smbios: Link all dell-smbios-* modules together")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-When SG is enabled:
-One audio controller, the integrated one.
-All sounds comes from the integrated one, including DP/HDMI.
-
-When SG is disabled:
-Two audio controller.
-The DP/HDMI sounds come from the Nvidia audio controller. Others are from  
-the integrated audio controller.
-
->
-> I could imagine that the BIOS of the Dell machines in question
-> hides the HDA if Switchable Graphics is enabled.  If that is the
-> case, be aware that there's an ongoing discussion to always expose
-> the HDA controller because the behavior of some BIOSes to only
-> expose the HDA when a display is attached causes massive problems
-> with Linux' HDA driver:
-> https://bugs.freedesktop.org/show_bug.cgi?id=75985
-
-The system in the bug doesn't have "Switchable Graphics".
-
-Right now all sounds output are from integrated audio controller on SG  
-enabled machines.
-
->
-> If we decide to always expose the HDA controller on Nvidia cards,
-> you may need to also match for the Nvidia vendor ID here.
-
-Thanks for the info, I'll also put Nvidia vendor ID on next patch version.
-
->
-> Thanks,
->
-> Lukas
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 28905793b5e5..0aec62bb5c61 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -151,7 +151,7 @@ config DELL_LAPTOP
+ 	depends on ACPI_VIDEO || ACPI_VIDEO = n
+ 	depends on RFKILL || RFKILL = n
+ 	depends on SERIO_I8042
+-	select DELL_SMBIOS
++	depends on DELL_SMBIOS
+ 	select POWER_SUPPLY
+ 	select LEDS_CLASS
+ 	select NEW_LEDS
+@@ -165,8 +165,8 @@ config DELL_WMI
+ 	depends on DMI
+ 	depends on INPUT
+ 	depends on ACPI_VIDEO || ACPI_VIDEO = n
++	depends on DELL_SMBIOS
+ 	select DELL_WMI_DESCRIPTOR
+-	select DELL_SMBIOS
+ 	select INPUT_SPARSEKMAP
+ 	---help---
+ 	  Say Y here if you want to support WMI-based hotkeys on Dell laptops.
+-- 
+2.9.0
