@@ -1,7 +1,7 @@
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v8 04/12] usb: typec: Separate the definitions for data and power roles
-Date: Wed, 14 Mar 2018 16:12:07 +0300
-Message-ID: <20180314131215.70833-5-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v8 01/12] drivers: base: Unified device connection lookup
+Date: Wed, 14 Mar 2018 16:12:04 +0300
+Message-ID: <20180314131215.70833-2-heikki.krogerus@linux.intel.com>
 References: <20180314131215.70833-1-heikki.krogerus@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180314131215.70833-1-heikki.krogerus@linux.intel.com>
@@ -10,342 +10,291 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@red
 Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Guenter Roeck <linux@roeck-us.net>, Jun Li <jun.li@nxp.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-USB Type-C specification v1.2 separated the power and data
-roles more clearly. Dual-Role-Data term was introduced, and
-the meaning of DRP was changed from "Dual-Role-Port" to
-"Dual-Role-Power".
+Several frameworks - clk, gpio, phy, pmw, etc. - maintain
+lookup tables for describing connections and provide custom
+API for handling them. This introduces a single generic
+lookup table and API for the connections.
 
-In order to allow the port drivers to describe the
-capabilities of the ports more clearly according to the
-newest specifications, introducing separate definitions for
-the data roles.
+The motivation for this commit is centralizing the
+connection lookup, but the goal is to ultimately extract the
+connection descriptions also from firmware by using the
+fwnode_graph_* functions and other mechanisms that are
+available.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- drivers/usb/typec/class.c           | 56 ++++++++++++++++++++++---------------
- drivers/usb/typec/fusb302/fusb302.c |  1 +
- drivers/usb/typec/tcpm.c            |  9 +++---
- drivers/usb/typec/tps6598x.c        | 26 +++++++++++------
- drivers/usb/typec/typec_wcove.c     |  1 +
- drivers/usb/typec/ucsi/ucsi.c       | 13 +++++++--
- include/linux/usb/tcpm.h            |  1 +
- include/linux/usb/typec.h           | 14 ++++++++--
- 8 files changed, 80 insertions(+), 41 deletions(-)
+Changes in v8:
+- No longer using rcu.
 
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index 2620a694704f..53df10df2f9d 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -282,10 +282,10 @@ typec_altmode_roles_show(struct device *dev, struct device_attribute *attr,
- 	ssize_t ret;
- 
- 	switch (mode->roles) {
--	case TYPEC_PORT_DFP:
-+	case TYPEC_PORT_SRC:
- 		ret = sprintf(buf, "source\n");
- 		break;
--	case TYPEC_PORT_UFP:
-+	case TYPEC_PORT_SNK:
- 		ret = sprintf(buf, "sink\n");
- 		break;
- 	case TYPEC_PORT_DRP:
-@@ -797,14 +797,14 @@ static const char * const typec_data_roles[] = {
- };
- 
- static const char * const typec_port_types[] = {
--	[TYPEC_PORT_DFP] = "source",
--	[TYPEC_PORT_UFP] = "sink",
-+	[TYPEC_PORT_SRC] = "source",
-+	[TYPEC_PORT_SNK] = "sink",
- 	[TYPEC_PORT_DRP] = "dual",
- };
- 
- static const char * const typec_port_types_drp[] = {
--	[TYPEC_PORT_DFP] = "dual [source] sink",
--	[TYPEC_PORT_UFP] = "dual source [sink]",
-+	[TYPEC_PORT_SRC] = "dual [source] sink",
-+	[TYPEC_PORT_SNK] = "dual source [sink]",
- 	[TYPEC_PORT_DRP] = "[dual] source sink",
- };
- 
-@@ -875,9 +875,7 @@ static ssize_t data_role_store(struct device *dev,
- 		return ret;
- 
- 	mutex_lock(&port->port_type_lock);
--	if (port->port_type != TYPEC_PORT_DRP) {
--		dev_dbg(dev, "port type fixed at \"%s\"",
--			     typec_port_types[port->port_type]);
-+	if (port->cap->data != TYPEC_PORT_DRD) {
- 		ret = -EOPNOTSUPP;
- 		goto unlock_and_ret;
- 	}
-@@ -897,7 +895,7 @@ static ssize_t data_role_show(struct device *dev,
- {
- 	struct typec_port *port = to_typec_port(dev);
- 
--	if (port->cap->type == TYPEC_PORT_DRP)
-+	if (port->cap->data == TYPEC_PORT_DRD)
- 		return sprintf(buf, "%s\n", port->data_role == TYPEC_HOST ?
- 			       "[host] device" : "host [device]");
- 
-@@ -1328,7 +1326,6 @@ struct typec_port *typec_register_port(struct device *parent,
- 				       const struct typec_capability *cap)
- {
- 	struct typec_port *port;
--	int role;
- 	int ret;
- 	int id;
- 
-@@ -1354,21 +1351,36 @@ struct typec_port *typec_register_port(struct device *parent,
- 		goto err_mux;
- 	}
- 
--	if (cap->type == TYPEC_PORT_DFP)
--		role = TYPEC_SOURCE;
--	else if (cap->type == TYPEC_PORT_UFP)
--		role = TYPEC_SINK;
--	else
--		role = cap->prefer_role;
--
--	if (role == TYPEC_SOURCE) {
--		port->data_role = TYPEC_HOST;
-+	switch (cap->type) {
-+	case TYPEC_PORT_SRC:
- 		port->pwr_role = TYPEC_SOURCE;
- 		port->vconn_role = TYPEC_SOURCE;
--	} else {
--		port->data_role = TYPEC_DEVICE;
-+		break;
-+	case TYPEC_PORT_SNK:
- 		port->pwr_role = TYPEC_SINK;
- 		port->vconn_role = TYPEC_SINK;
-+		break;
-+	case TYPEC_PORT_DRP:
-+		if (cap->prefer_role != TYPEC_NO_PREFERRED_ROLE)
-+			port->pwr_role = cap->prefer_role;
-+		else
-+			port->pwr_role = TYPEC_SINK;
-+		break;
+Changes in v7:
+- API naming improvements suggested by Greg
+- Prototypes to device.h, also suggested by Greg
+- I removed the DEVCON() macro as it was not used yet and it needs to be
+  rewritten
+
+Changes in v6:
+-Fix data and match arguments being swapped in __device_find_connection()
+ call in device_find_connection() (as noticed by Jun Li)
+
+Changes in v5:
+-Add missing documentation for @list struct devcon member
+
+Changes in v4:
+-Add Andy's Reviewed-by
+
+Changes in v3:
+-Various spelling and gramar fixes in the docs pointed out by Randy Dunlap
+
+Changes in v2:
+-Add a (struct devcon) cast to the DEVCON() macro
+---
+ Documentation/driver-api/device_connection.rst |  43 ++++++++
+ drivers/base/Makefile                          |   3 +-
+ drivers/base/devcon.c                          | 136 +++++++++++++++++++++++++
+ include/linux/device.h                         |  22 ++++
+ 4 files changed, 203 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/driver-api/device_connection.rst
+ create mode 100644 drivers/base/devcon.c
+
+diff --git a/Documentation/driver-api/device_connection.rst b/Documentation/driver-api/device_connection.rst
+new file mode 100644
+index 000000000000..affbc5566ab0
+--- /dev/null
++++ b/Documentation/driver-api/device_connection.rst
+@@ -0,0 +1,43 @@
++==================
++Device connections
++==================
++
++Introduction
++------------
++
++Devices often have connections to other devices that are outside of the direct
++child/parent relationship. A serial or network communication controller, which
++could be a PCI device, may need to be able to get a reference to its PHY
++component, which could be attached for example to the I2C bus. Some device
++drivers need to be able to control the clocks or the GPIOs for their devices,
++and so on.
++
++Device connections are generic descriptions of any type of connection between
++two separate devices.
++
++Device connections alone do not create a dependency between the two devices.
++They are only descriptions which are not tied to either of the devices directly.
++A dependency between the two devices exists only if one of the two endpoint
++devices requests a reference to the other. The descriptions themselves can be
++defined in firmware (not yet supported) or they can be built-in.
++
++Usage
++-----
++
++Device connections should exist before device ``->probe`` callback is called for
++either endpoint device in the description. If the connections are defined in
++firmware, this is not a problem. It should be considered if the connection
++descriptions are "built-in", and need to be added separately.
++
++The connection description consists of the names of the two devices with the
++connection, i.e. the endpoints, and unique identifier for the connection which
++is needed if there are multiple connections between the two devices.
++
++After a description exists, the devices in it can request reference to the other
++endpoint device, or they can request the description itself.
++
++API
++---
++
++.. kernel-doc:: drivers/base/devcon.c
++   : functions: device_connection_find_match device_connection_find device_connection_add device_connection_remove
+diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+index e32a52490051..12a7f64d35a9 100644
+--- a/drivers/base/Makefile
++++ b/drivers/base/Makefile
+@@ -5,7 +5,8 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
+ 			   driver.o class.o platform.o \
+ 			   cpu.o firmware.o init.o map.o devres.o \
+ 			   attribute_container.o transport_class.o \
+-			   topology.o container.o property.o cacheinfo.o
++			   topology.o container.o property.o cacheinfo.o \
++			   devcon.o
+ obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
+ obj-$(CONFIG_DMA_CMA) += dma-contiguous.o
+ obj-y			+= power/
+diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
+new file mode 100644
+index 000000000000..2513961a3712
+--- /dev/null
++++ b/drivers/base/devcon.c
+@@ -0,0 +1,136 @@
++// SPDX-License-Identifier: GPL-2.0
++/**
++ * Device connections
++ *
++ * Copyright (C) 2018 Intel Corporation
++ * Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
++ */
++
++#include <linux/device.h>
++
++static DEFINE_MUTEX(devcon_lock);
++static LIST_HEAD(devcon_list);
++
++/**
++ * device_connection_find_match - Find physical connection to a device
++ * @dev: Device with the connection
++ * @con_id: Identifier for the connection
++ * @data: Data for the match function
++ * @match: Function to check and convert the connection description
++ *
++ * Find a connection with unique identifier @con_id between @dev and another
++ * device. @match will be used to convert the connection description to data the
++ * caller is expecting to be returned.
++ */
++void *device_connection_find_match(struct device *dev, const char *con_id,
++			       void *data,
++			       void *(*match)(struct device_connection *con,
++					      int ep, void *data))
++{
++	const char *devname = dev_name(dev);
++	struct device_connection *con;
++	void *ret = NULL;
++	int ep;
++
++	if (!match)
++		return NULL;
++
++	mutex_lock(&devcon_lock);
++
++	list_for_each_entry_rcu(con, &devcon_list, list) {
++		ep = match_string(con->endpoint, 2, devname);
++		if (ep < 0)
++			continue;
++
++		if (con_id && strcmp(con->id, con_id))
++			continue;
++
++		ret = match(con, !ep, data);
++		if (ret)
++			break;
 +	}
 +
-+	switch (cap->data) {
-+	case TYPEC_PORT_DFP:
-+		port->data_role = TYPEC_HOST;
-+		break;
-+	case TYPEC_PORT_UFP:
-+		port->data_role = TYPEC_DEVICE;
-+		break;
-+	case TYPEC_PORT_DRD:
-+		if (cap->prefer_role == TYPEC_SOURCE)
-+			port->data_role = TYPEC_HOST;
-+		else
-+			port->data_role = TYPEC_DEVICE;
-+		break;
- 	}
- 
- 	port->id = id;
-diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
-index da179aaf789e..f2d98c3c1f30 100644
---- a/drivers/usb/typec/fusb302/fusb302.c
-+++ b/drivers/usb/typec/fusb302/fusb302.c
-@@ -1219,6 +1219,7 @@ static const struct tcpc_config fusb302_tcpc_config = {
- 	.max_snk_mw = 15000,
- 	.operating_snk_mw = 2500,
- 	.type = TYPEC_PORT_DRP,
-+	.data = TYPEC_PORT_DRD,
- 	.default_role = TYPEC_SINK,
- 	.alt_modes = NULL,
- };
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index cd48a99ee913..064b456dcf04 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -348,7 +348,7 @@ static enum tcpm_state tcpm_default_state(struct tcpm_port *port)
- 		else if (port->tcpc->config->default_role == TYPEC_SINK)
- 			return SNK_UNATTACHED;
- 		/* Fall through to return SRC_UNATTACHED */
--	} else if (port->port_type == TYPEC_PORT_UFP) {
-+	} else if (port->port_type == TYPEC_PORT_SNK) {
- 		return SNK_UNATTACHED;
- 	}
- 	return SRC_UNATTACHED;
-@@ -2236,7 +2236,7 @@ static inline enum tcpm_state unattached_state(struct tcpm_port *port)
- 			return SRC_UNATTACHED;
- 		else
- 			return SNK_UNATTACHED;
--	} else if (port->port_type == TYPEC_PORT_DFP) {
-+	} else if (port->port_type == TYPEC_PORT_SRC) {
- 		return SRC_UNATTACHED;
- 	}
- 
-@@ -3526,11 +3526,11 @@ static int tcpm_port_type_set(const struct typec_capability *cap,
- 
- 	if (!port->connected) {
- 		tcpm_set_state(port, PORT_RESET, 0);
--	} else if (type == TYPEC_PORT_UFP) {
-+	} else if (type == TYPEC_PORT_SNK) {
- 		if (!(port->pwr_role == TYPEC_SINK &&
- 		      port->data_role == TYPEC_DEVICE))
- 			tcpm_set_state(port, PORT_RESET, 0);
--	} else if (type == TYPEC_PORT_DFP) {
-+	} else if (type == TYPEC_PORT_SRC) {
- 		if (!(port->pwr_role == TYPEC_SOURCE &&
- 		      port->data_role == TYPEC_HOST))
- 			tcpm_set_state(port, PORT_RESET, 0);
-@@ -3720,6 +3720,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
- 
- 	port->typec_caps.prefer_role = tcpc->config->default_role;
- 	port->typec_caps.type = tcpc->config->type;
-+	port->typec_caps.data = tcpc->config->data;
- 	port->typec_caps.revision = 0x0120;	/* Type-C spec release 1.2 */
- 	port->typec_caps.pd_revision = 0x0200;	/* USB-PD spec release 2.0 */
- 	port->typec_caps.dr_set = tcpm_dr_set;
-diff --git a/drivers/usb/typec/tps6598x.c b/drivers/usb/typec/tps6598x.c
-index 37a15c14a6c6..8b8406867c02 100644
---- a/drivers/usb/typec/tps6598x.c
-+++ b/drivers/usb/typec/tps6598x.c
-@@ -393,31 +393,39 @@ static int tps6598x_probe(struct i2c_client *client)
- 	if (ret < 0)
- 		return ret;
- 
-+	tps->typec_cap.revision = USB_TYPEC_REV_1_2;
-+	tps->typec_cap.pd_revision = 0x200;
-+	tps->typec_cap.prefer_role = TYPEC_NO_PREFERRED_ROLE;
-+	tps->typec_cap.pr_set = tps6598x_pr_set;
-+	tps->typec_cap.dr_set = tps6598x_dr_set;
++	mutex_unlock(&devcon_lock);
 +
- 	switch (TPS_SYSCONF_PORTINFO(conf)) {
- 	case TPS_PORTINFO_SINK_ACCESSORY:
- 	case TPS_PORTINFO_SINK:
--		tps->typec_cap.type = TYPEC_PORT_UFP;
-+		tps->typec_cap.type = TYPEC_PORT_SNK;
-+		tps->typec_cap.data = TYPEC_PORT_UFP;
- 		break;
- 	case TPS_PORTINFO_DRP_UFP_DRD:
- 	case TPS_PORTINFO_DRP_DFP_DRD:
--		tps->typec_cap.dr_set = tps6598x_dr_set;
--		/* fall through */
-+		tps->typec_cap.type = TYPEC_PORT_DRP;
-+		tps->typec_cap.data = TYPEC_PORT_DRD;
-+		break;
- 	case TPS_PORTINFO_DRP_UFP:
-+		tps->typec_cap.type = TYPEC_PORT_DRP;
-+		tps->typec_cap.data = TYPEC_PORT_UFP;
-+		break;
- 	case TPS_PORTINFO_DRP_DFP:
--		tps->typec_cap.pr_set = tps6598x_pr_set;
- 		tps->typec_cap.type = TYPEC_PORT_DRP;
-+		tps->typec_cap.data = TYPEC_PORT_DFP;
- 		break;
- 	case TPS_PORTINFO_SOURCE:
--		tps->typec_cap.type = TYPEC_PORT_DFP;
-+		tps->typec_cap.type = TYPEC_PORT_SRC;
-+		tps->typec_cap.data = TYPEC_PORT_DFP;
- 		break;
- 	default:
- 		return -ENODEV;
- 	}
- 
--	tps->typec_cap.revision = USB_TYPEC_REV_1_2;
--	tps->typec_cap.pd_revision = 0x200;
--	tps->typec_cap.prefer_role = TYPEC_NO_PREFERRED_ROLE;
--
- 	tps->port = typec_register_port(&client->dev, &tps->typec_cap);
- 	if (IS_ERR(tps->port))
- 		return PTR_ERR(tps->port);
-diff --git a/drivers/usb/typec/typec_wcove.c b/drivers/usb/typec/typec_wcove.c
-index 2e990e0d917d..19cca7f1b2c5 100644
---- a/drivers/usb/typec/typec_wcove.c
-+++ b/drivers/usb/typec/typec_wcove.c
-@@ -572,6 +572,7 @@ static struct tcpc_config wcove_typec_config = {
- 	.operating_snk_mw = 15000,
- 
- 	.type = TYPEC_PORT_DRP,
-+	.data = TYPEC_PORT_DRD,
- 	.default_role = TYPEC_SINK,
- };
- 
-diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-index 69d544cfcd45..bf0977fbd100 100644
---- a/drivers/usb/typec/ucsi/ucsi.c
-+++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -592,11 +592,18 @@ static int ucsi_register_port(struct ucsi *ucsi, int index)
- 		return ret;
- 
- 	if (con->cap.op_mode & UCSI_CONCAP_OPMODE_DRP)
--		cap->type = TYPEC_PORT_DRP;
-+		cap->data = TYPEC_PORT_DRD;
- 	else if (con->cap.op_mode & UCSI_CONCAP_OPMODE_DFP)
--		cap->type = TYPEC_PORT_DFP;
-+		cap->data = TYPEC_PORT_DFP;
- 	else if (con->cap.op_mode & UCSI_CONCAP_OPMODE_UFP)
--		cap->type = TYPEC_PORT_UFP;
-+		cap->data = TYPEC_PORT_UFP;
++	return ret;
++}
++EXPORT_SYMBOL_GPL(device_connection_find_match);
 +
-+	if (con->cap.provider && con->cap.consumer)
-+		cap->type = TYPEC_PORT_DRP;
-+	else if (con->cap.provider)
-+		cap->type = TYPEC_PORT_SRC;
-+	else if (con->cap.consumer)
-+		cap->type = TYPEC_PORT_SNK;
- 
- 	cap->revision = ucsi->cap.typec_version;
- 	cap->pd_revision = ucsi->cap.pd_version;
-diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-index ca1c0b57f03f..5a5e1d8c5b65 100644
---- a/include/linux/usb/tcpm.h
-+++ b/include/linux/usb/tcpm.h
-@@ -91,6 +91,7 @@ struct tcpc_config {
- 	unsigned int operating_snk_mw;
- 
- 	enum typec_port_type type;
-+	enum typec_port_data data;
- 	enum typec_role default_role;
- 	bool try_role_hw;	/* try.{src,snk} implemented in hardware */
- 
-diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-index 2408e5c2ed91..672b39bb0adc 100644
---- a/include/linux/usb/typec.h
-+++ b/include/linux/usb/typec.h
-@@ -22,9 +22,15 @@ struct typec_port;
- struct fwnode_handle;
- 
- enum typec_port_type {
-+	TYPEC_PORT_SRC,
-+	TYPEC_PORT_SNK,
-+	TYPEC_PORT_DRP,
++#include <linux/platform_device.h>
++#include <linux/spi/spi.h>
++#include <linux/i2c.h>
++#include <linux/pci.h>
++
++static struct bus_type *generic_match_buses[] = {
++	&platform_bus_type,
++#ifdef CONFIG_PCI
++	&pci_bus_type,
++#endif
++#ifdef CONFIG_I2C
++	&i2c_bus_type,
++#endif
++#ifdef CONFIG_SPI_MASTER
++	&spi_bus_type,
++#endif
++	NULL,
 +};
 +
-+enum typec_port_data {
- 	TYPEC_PORT_DFP,
- 	TYPEC_PORT_UFP,
--	TYPEC_PORT_DRP,
-+	TYPEC_PORT_DRD,
++/* This tries to find the device from the most common bus types by name. */
++static void *generic_match(struct device_connection *con, int ep, void *data)
++{
++	struct bus_type *bus;
++	struct device *dev;
++
++	for (bus = generic_match_buses[0]; bus; bus++) {
++		dev = bus_find_device_by_name(bus, NULL, con->endpoint[ep]);
++		if (dev)
++			return dev;
++	}
++
++	/*
++	 * We only get called if a connection was found, tell the caller to
++	 * wait for the other device to show up.
++	 */
++	return ERR_PTR(-EPROBE_DEFER);
++}
++
++/**
++ * device_connection_find - Find two devices connected together
++ * @dev: Device with the connection
++ * @con_id: Identifier for the connection
++ *
++ * Find a connection with unique identifier @con_id between @dev and
++ * another device. On success returns handle to the device that is connected
++ * to @dev, with the reference count for the found device incremented. Returns
++ * NULL if no matching connection was found, or ERR_PTR(-EPROBE_DEFER) when a
++ * connection was found but the other device has not been enumerated yet.
++ */
++struct device *device_connection_find(struct device *dev, const char *con_id)
++{
++	return device_connection_find_match(dev, con_id, NULL, generic_match);
++}
++EXPORT_SYMBOL_GPL(device_connection_find);
++
++/**
++ * device_connection_add - Register a connection description
++ * @con: The connection description to be registered
++ */
++void device_connection_add(struct device_connection *con)
++{
++	mutex_lock(&devcon_lock);
++	list_add_tail_rcu(&con->list, &devcon_list);
++	mutex_unlock(&devcon_lock);
++}
++EXPORT_SYMBOL_GPL(device_connection_add);
++
++/**
++ * device_connections_remove - Unregister connection description
++ * @con: The connection description to be unregistered
++ */
++void device_connection_remove(struct device_connection *con)
++{
++	mutex_lock(&devcon_lock);
++	list_del_rcu(&con->list);
++	mutex_unlock(&devcon_lock);
++}
++EXPORT_SYMBOL_GPL(device_connection_remove);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index b093405ed525..204ff64279fd 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -729,6 +729,28 @@ struct device_dma_parameters {
+ 	unsigned long segment_boundary_mask;
  };
  
- enum typec_plug_type {
-@@ -186,10 +192,11 @@ struct typec_partner_desc {
- 
- /*
-  * struct typec_capability - USB Type-C Port Capabilities
-- * @role: DFP (Host-only), UFP (Device-only) or DRP (Dual Role)
-+ * @type: Supported power role of the port
-+ * @data: Supported data role of the port
-  * @revision: USB Type-C Specification release. Binary coded decimal
-  * @pd_revision: USB Power Delivery Specification revision if supported
-- * @prefer_role: Initial role preference
-+ * @prefer_role: Initial role preference (DRP ports).
-  * @accessory: Supported Accessory Modes
-  * @sw: Cable plug orientation switch
-  * @mux: Multiplexer switch for Alternate/Accessory Modes
-@@ -205,6 +212,7 @@ struct typec_partner_desc {
-  */
- struct typec_capability {
- 	enum typec_port_type	type;
-+	enum typec_port_data	data;
- 	u16			revision; /* 0120H = "1.2" */
- 	u16			pd_revision; /* 0300H = "3.0" */
- 	int			prefer_role;
++/**
++ * struct device_connection - Device Connection Descriptor
++ * @endpoint: The names of the two devices connected together
++ * @id: Unique identifier for the connection
++ * @list: List head, private, for internal use only
++ */
++struct device_connection {
++	const char		*endpoint[2];
++	const char		*id;
++	struct list_head	list;
++};
++
++void *device_connection_find_match(struct device *dev, const char *con_id,
++				void *data,
++				void *(*match)(struct device_connection *con,
++					       int ep, void *data));
++
++struct device *device_connection_find(struct device *dev, const char *con_id);
++
++void device_connection_add(struct device_connection *con);
++void device_connection_remove(struct device_connection *con);
++
+ /**
+  * enum device_link_state - Device link states.
+  * @DL_STATE_NONE: The presence of the drivers is not being tracked.
 -- 
 2.16.1
