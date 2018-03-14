@@ -1,59 +1,25 @@
-From: Darren Hart <dvhart@infradead.org>
+From: Dominik Brodowski <linux@dominikbrodowski.net>
 Subject: Re: Dell Inc. XPS 13 9343/0TM99H fails to boot v4.16-rc5
-Date: Tue, 13 Mar 2018 20:34:45 -0700
-Message-ID: <20180314033445.GA10337@localhost.localdomain>
-References: <4716007c23abeb0e42015786794539454aff487b.1520886814.git.dvhart@infradead.org>
- <20180312202319.GA88572@localhost.localdomain>
- <20180312220751.GA1757@light.dominikbrodowski.net>
- <CA+55aFzUgk8c2n7GQfcCdYU-Jo86-W_b51gZCLyJahv_ZWMVsQ@mail.gmail.com>
- <20180312233311.GA3848@localhost.localdomain>
+Date: Wed, 14 Mar 2018 07:25:42 +0100
+Message-ID: <20180314062542.GA2248@light.dominikbrodowski.net>
+References: <20180314033445.GA10337@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180312233311.GA3848@localhost.localdomain>
+In-Reply-To: <20180314033445.GA10337@localhost.localdomain>
+ <ca61e2ba279c4bfebb17baa4fc03f13f@ausx13mpc120.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>, Mario Limonciello <mario.limonciello@dell.com>, platform-driver-x86@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mario.Limonciello@dell.com, Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Mar 12, 2018 at 04:33:11PM -0700, Darren Hart wrote:
-> On Mon, Mar 12, 2018 at 03:17:57PM -0700, Linus Torvalds wrote:
-> > On Mon, Mar 12, 2018 at 3:07 PM, Dominik Brodowski
-> > <linux@dominikbrodowski.net> wrote:
-> > >
-> > > I'm awfully sorry, but this patch doesn't solve the issue.
-> > > CONFIG_ACPI_WMI=y was/is set, but still enabling CONFIG_DELL_SMBIOS_WMI=y
-> > > causes a very-early crash of v4.16-rc5. In fact, so early that the normal
-> > > boot messages never show up on the screen...
-> > 
-> > Hmm. My xps13 works fine, but it's the 9350 version so not the same machine.
-> > 
-> > But it does sound like that commit 25d47027e10 ("platform/x86:
-> > dell-smbios: Link all dell-smbios-* modules together") should just be
-> > reverted. It has clearly caused a lot more pain than it fixed.
+On Wed, Mar 14, 2018 at 01:28:54AM +0000, Mario.Limonciello@dell.com wrote:
+> Dominik,
 > 
-> Unfortunately, yes. This will re-instate the race condition it "fixed".
-> I'll work with Mario to fix this properly in 4.17, preferably in a way
-> that we can apply to stable. Pending an "oops, nevermind, the patch
-> works" from Dominik by tomorrow morning, I'll submit the pull request to
-> revert dell-smbios changes back to and including 25d47027e10.
-> 
-> Apologies for the noise on this one Linus, it got away from me.
+> Can you please verify if Darren's patch works for you too?
 
-Hi Linus,
-
-OK, I think we've identified the ordering issues and I have a patch out
-pending testing from Dominik (hopefully tonight). I'd like to hold off
-one more day on reverting if you're OK with that.
-
-At RC5, we're certainly further into the RC cycle than I want to see
-these changes. So if you just want to call it now, I understand and I'll
-send you the revert pull request. If you can give me another day, I
-think we may finally have found the end of this loose string.
+Yes, it does.
 
 Thanks,
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+	Dominik
