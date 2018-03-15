@@ -1,43 +1,50 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: Dell Inc. XPS 13 9343/0TM99H fails to boot v4.16-rc5
-Date: Wed, 14 Mar 2018 11:27:42 -0700
-Message-ID: <20180314182742.GA5367@localhost.localdomain>
-References: <4716007c23abeb0e42015786794539454aff487b.1520886814.git.dvhart@infradead.org>
- <20180312202319.GA88572@localhost.localdomain>
- <20180312220751.GA1757@light.dominikbrodowski.net>
- <CA+55aFzUgk8c2n7GQfcCdYU-Jo86-W_b51gZCLyJahv_ZWMVsQ@mail.gmail.com>
- <20180312233311.GA3848@localhost.localdomain>
- <20180314033445.GA10337@localhost.localdomain>
- <CA+55aFz0xFbJCL9E9LAw6uEFfZSbCZt+ESEdRG+oe5d3hpoYmw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] platform/x86: dell: avoid link error with modular ACPI_SMI
+Date: Thu, 15 Mar 2018 16:39:07 +0100
+Message-ID: <20180315153934.3844276-1-arnd@arndb.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+55aFz0xFbJCL9E9LAw6uEFfZSbCZt+ESEdRG+oe5d3hpoYmw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>, Mario Limonciello <mario.limonciello@dell.com>, platform-driver-x86@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mario Limonciello <mario.limonciello@dell.com>, Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Mar 14, 2018 at 10:23:16AM -0700, Linus Torvalds wrote:
-> On Tue, Mar 13, 2018 at 8:34 PM, Darren Hart <dvhart@infradead.org> wrote:
-> >
-> > At RC5, we're certainly further into the RC cycle than I want to see
-> > these changes. So if you just want to call it now, I understand and I'll
-> > send you the revert pull request. If you can give me another day, I
-> > think we may finally have found the end of this loose string.
-> 
-> Since it works for Dominik, and we understand what went wrong, I'm ok
-> with the fix rather than the revert.
-> 
-> But if somebody else ends up finding another problem later, we really
-> need to revert it all basically immediately. No more time for games.
+The new DELL_LAPTOP dependencies allowed one configuration that should not
+have been possible, with DELL_SMBIOS_WMI built-in, but ACPI_SMI as a
+module:
 
-On it. Branches are pushed and tagged, PR is written. Waiting for a
-couple final validation builds and will send the PR.
+drivers/platform/x86/dell-smbios-wmi.o: In function `run_smbios_call':
+dell-smbios-wmi.c:(.text+0x47): undefined reference to `wmidev_evaluate_method'
+drivers/platform/x86/dell-smbios-wmi.o: In function `dell_smbios_wmi_probe':
+dell-smbios-wmi.c:(.text+0x5d0): undefined reference to `dell_wmi_get_descriptor_valid'
+dell-smbios-wmi.c:(.text+0x60f): undefined reference to `dell_wmi_get_size'
+dell-smbios-wmi.c:(.text+0x61f): undefined reference to `dell_wmi_get_hotfix'
+dell-smbios-wmi.c:(.text+0x644): undefined reference to `set_required_buffer_size'
+drivers/platform/x86/dell-smbios-wmi.o: In function `exit_dell_smbios_wmi':
+dell-smbios-wmi.c:(.text+0x78e): undefined reference to `wmi_driver_unregister'
 
-Thanks,
+This adds an extra dependency to avoid that case.
 
+Fixes: 41e36f2f85af ("platform/x86: dell-smbios: Link all dell-smbios-* modules together")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+I think the plan was to drop the change that caused it. For completeness,
+this patch is the last thing that I needed to make randconfig work
+reliably again.
+---
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 8383806c360f..0cced065e298 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -122,6 +122,7 @@ config DELL_SMBIOS_WMI
+ 	bool "Dell SMBIOS driver WMI backend"
+ 	default y
+ 	depends on ACPI_WMI
++	depends on ACPI_WMI=y || DELL_SMBIOS=m
+ 	select DELL_WMI_DESCRIPTOR
+ 	depends on DELL_SMBIOS
+ 	---help---
 -- 
-Darren Hart
-VMware Open Source Technology Center
+2.9.0
