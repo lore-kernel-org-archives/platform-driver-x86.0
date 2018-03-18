@@ -1,34 +1,91 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: panasonic-laptop: add support to mute and
- hardware optical switch
-Date: Fri, 16 Mar 2018 20:38:40 +0200
-Message-ID: <CAHp75VeU=WxCHW6wL2sgS5Ne3hNpQ5pEUa-u-dOiJ-0+yV5iFg@mail.gmail.com>
-References: <CAPqSeKv0Q+ocBYeonxi5w8XB0vaM27O1hcDm9ZDdXxCt7Py=Pw@mail.gmail.com>
- <20180316110907.GK3523@nataraja>
+From: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Subject: Re: [PATCH] leds: fix wrong dmi_match on PC Engines APU LEDs
+Date: Sun, 18 Mar 2018 15:24:57 +0100 (CET)
+Message-ID: <alpine.LNX.2.00.1803181509330.7595@T420s>
+References: <20180305170910.8905-1-ulli.kroll@googlemail.com> <b51f1f41-e06e-25e6-30f8-a2b9f7e8ffb8@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180316110907.GK3523@nataraja>
+In-Reply-To: <b51f1f41-e06e-25e6-30f8-a2b9f7e8ffb8@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Harald Welte <laforge@gnumonks.org>
-Cc: Kenneth Chan <kenneth.t.chan@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Alan Mizrahi <alan@mizrahi.com.ve>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Mar 16, 2018 at 1:09 PM, Harald Welte <laforge@gnumonks.org> wrote:
-> Hi Kenneth,
->
-> thanks for your fix.  I'm not currently using any Panasonic Laptop devices
-> anymore (After the CF-R series was discontinued), so I'm not able to properly
-> maintain this driver anymore.
->
-> However, your changes look sound to me (aside from that we don't use C++ style
-> comments in kernel source code), hence:
->
-> Acked-by: Harald Welte <laforge@gnumonks.org>
+Hi Jacek
 
-I'm not sure I ever seen the original patch. Patchwork also misses it.
+On Sat, 10 Mar 2018, Jacek Anaszewski wrote:
 
+> Hi Hans,
+> 
+> Thank you for the patch.
+> 
+> On 03/05/2018 06:09 PM, Hans Ulli Kroll wrote:
+> > APU has compared to APU2 no DMI_BOARD_NAME.
+> > Use DMI_PRODUCT_NAME instead.
+> 
+> Could we have the commit message more expressive?
+> 
+> Is it that now this driver doesn't work for APU board?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Yes it doesn't work for my APU board.
+I've already checked the updated driver in -next
+
+As you can see here
+# grep . /sys/class/dmi/id/*
+/sys/class/dmi/id/bios_date:04/05/2014
+/sys/class/dmi/id/bios_vendor:coreboot
+/sys/class/dmi/id/bios_version:SageBios_PCEngines_APU-45
+/sys/class/dmi/id/chassis_type:3
+/sys/class/dmi/id/chassis_vendor:PC Engines
+/sys/class/dmi/id/modalias:dmi:bvncoreboot:bvrSageBios_PCEngines_APU-45:bd04/05/2014:svnPCEngines:pnAPU:pvr1.0:cvnPCEngines:ct3:cvr:
+/sys/class/dmi/id/product_family:None Provided
+/sys/class/dmi/id/product_name:APU
+/sys/class/dmi/id/product_serial:XXXXXXX
+/sys/class/dmi/id/product_version:1.0
+/sys/class/dmi/id/sys_vendor:PC Engines
+/sys/class/dmi/id/uevent:MODALIAS=dmi:bvncoreboot:bvrSageBios_PCEngines_APU-45:bd04/05/2014:svnPCEngines:pnAPU:pvr1.0:cvnPCEngines:ct3:cvr:
+
+there is no board name on APU.
+
+here is the output from my APU2 board
+# grep . /sys/class/dmi/id/*
+/sys/class/dmi/id/bios_date:02/28/2017
+/sys/class/dmi/id/bios_vendor:coreboot
+/sys/class/dmi/id/bios_version:4.0.7
+/sys/class/dmi/id/board_name:APU2
+/sys/class/dmi/id/board_serial:XXXXXXX
+/sys/class/dmi/id/board_vendor:PC Engines
+/sys/class/dmi/id/board_version:1.0
+/sys/class/dmi/id/chassis_type:3
+/sys/class/dmi/id/chassis_vendor:PC Engines
+/sys/class/dmi/id/modalias:dmi:bvncoreboot:bvr4.0.7:bd02/28/2017:svnPCEngines:pnAPU2:pvr1.0:rvnPCEngines:rnAPU2:rvr1.0:cvnPCEngines:ct3:cvr:
+/sys/class/dmi/id/product_name:APU2
+/sys/class/dmi/id/product_serial:XXXXXX
+/sys/class/dmi/id/product_version:1.0
+/sys/class/dmi/id/sys_vendor:PC Engines
+/sys/class/dmi/id/uevent:MODALIAS=dmi:bvncoreboot:bvr4.0.7:bd02/28/2017:svnPCEngines:pnAPU2:pvr1.0:rvnPCEngines:rnAPU2:rvr1.0:cvnPCEngines:ct3:cvr:
+
+As you can see here for APU2 the board_name is set.
+
+> 
+> If it fails here, then how it is possible that it succeeds
+> in the apu_led_init() ?
+> 
+
+in apu_led_init() is a check for product_name for both both boards.
+Ans this succeeds
+
+Thus the fix here
+> -     if (dmi_match(DMI_BOARD_NAME, "APU")) {
+> +     if (dmi_match(DMI_PRODUCT_NAME, "APU")) {
+
+I can rewrite the patch to catch both board_name and product_name for the 
+APU board, and add a better commit log.
+
+They are more recent bios updates for this board, but the are specified as 
+"beta" so I'm afraid of an update. I have no hardware to recover a 
+"damaged" SPI flash chip.
+
+Greetings
+Hans Ulli Kroll
