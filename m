@@ -1,91 +1,96 @@
-From: Hans Ulli Kroll <ulli.kroll@googlemail.com>
-Subject: Re: [PATCH] leds: fix wrong dmi_match on PC Engines APU LEDs
-Date: Sun, 18 Mar 2018 15:24:57 +0100 (CET)
-Message-ID: <alpine.LNX.2.00.1803181509330.7595@T420s>
-References: <20180305170910.8905-1-ulli.kroll@googlemail.com> <b51f1f41-e06e-25e6-30f8-a2b9f7e8ffb8@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v8 01/12] drivers: base: Unified device connection lookup
+Date: Tue, 20 Mar 2018 10:20:04 +0100
+Message-ID: <20180320092004.GA21081@kroah.com>
+References: <20180314131215.70833-1-heikki.krogerus@linux.intel.com>
+ <20180314131215.70833-2-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b51f1f41-e06e-25e6-30f8-a2b9f7e8ffb8@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180314131215.70833-2-heikki.krogerus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Alan Mizrahi <alan@mizrahi.com.ve>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mathias Nyman <mathias.nyman@intel.com>, Guenter Roeck <linux@roeck-us.net>, Jun Li <jun.li@nxp.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Jacek
-
-On Sat, 10 Mar 2018, Jacek Anaszewski wrote:
-
-> Hi Hans,
+On Wed, Mar 14, 2018 at 04:12:04PM +0300, Heikki Krogerus wrote:
+> Several frameworks - clk, gpio, phy, pmw, etc. - maintain
+> lookup tables for describing connections and provide custom
+> API for handling them. This introduces a single generic
+> lookup table and API for the connections.
 > 
-> Thank you for the patch.
+> The motivation for this commit is centralizing the
+> connection lookup, but the goal is to ultimately extract the
+> connection descriptions also from firmware by using the
+> fwnode_graph_* functions and other mechanisms that are
+> available.
 > 
-> On 03/05/2018 06:09 PM, Hans Ulli Kroll wrote:
-> > APU has compared to APU2 no DMI_BOARD_NAME.
-> > Use DMI_PRODUCT_NAME instead.
-> 
-> Could we have the commit message more expressive?
-> 
-> Is it that now this driver doesn't work for APU board?
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+> Changes in v8:
+> - No longer using rcu.
 
-Yes it doesn't work for my APU board.
-I've already checked the updated driver in -next
+Ok, but then:
 
-As you can see here
-# grep . /sys/class/dmi/id/*
-/sys/class/dmi/id/bios_date:04/05/2014
-/sys/class/dmi/id/bios_vendor:coreboot
-/sys/class/dmi/id/bios_version:SageBios_PCEngines_APU-45
-/sys/class/dmi/id/chassis_type:3
-/sys/class/dmi/id/chassis_vendor:PC Engines
-/sys/class/dmi/id/modalias:dmi:bvncoreboot:bvrSageBios_PCEngines_APU-45:bd04/05/2014:svnPCEngines:pnAPU:pvr1.0:cvnPCEngines:ct3:cvr:
-/sys/class/dmi/id/product_family:None Provided
-/sys/class/dmi/id/product_name:APU
-/sys/class/dmi/id/product_serial:XXXXXXX
-/sys/class/dmi/id/product_version:1.0
-/sys/class/dmi/id/sys_vendor:PC Engines
-/sys/class/dmi/id/uevent:MODALIAS=dmi:bvncoreboot:bvrSageBios_PCEngines_APU-45:bd04/05/2014:svnPCEngines:pnAPU:pvr1.0:cvnPCEngines:ct3:cvr:
+> +void *device_connection_find_match(struct device *dev, const char *con_id,
+> +			       void *data,
+> +			       void *(*match)(struct device_connection *con,
+> +					      int ep, void *data))
+> +{
+> +	const char *devname = dev_name(dev);
+> +	struct device_connection *con;
+> +	void *ret = NULL;
+> +	int ep;
+> +
+> +	if (!match)
+> +		return NULL;
+> +
+> +	mutex_lock(&devcon_lock);
+> +
+> +	list_for_each_entry_rcu(con, &devcon_list, list) {
 
-there is no board name on APU.
+_rcu calls everywhere :(
 
-here is the output from my APU2 board
-# grep . /sys/class/dmi/id/*
-/sys/class/dmi/id/bios_date:02/28/2017
-/sys/class/dmi/id/bios_vendor:coreboot
-/sys/class/dmi/id/bios_version:4.0.7
-/sys/class/dmi/id/board_name:APU2
-/sys/class/dmi/id/board_serial:XXXXXXX
-/sys/class/dmi/id/board_vendor:PC Engines
-/sys/class/dmi/id/board_version:1.0
-/sys/class/dmi/id/chassis_type:3
-/sys/class/dmi/id/chassis_vendor:PC Engines
-/sys/class/dmi/id/modalias:dmi:bvncoreboot:bvr4.0.7:bd02/28/2017:svnPCEngines:pnAPU2:pvr1.0:rvnPCEngines:rnAPU2:rvr1.0:cvnPCEngines:ct3:cvr:
-/sys/class/dmi/id/product_name:APU2
-/sys/class/dmi/id/product_serial:XXXXXX
-/sys/class/dmi/id/product_version:1.0
-/sys/class/dmi/id/sys_vendor:PC Engines
-/sys/class/dmi/id/uevent:MODALIAS=dmi:bvncoreboot:bvr4.0.7:bd02/28/2017:svnPCEngines:pnAPU2:pvr1.0:rvnPCEngines:rnAPU2:rvr1.0:cvnPCEngines:ct3:cvr:
+Did you send out the right version of this patch?
 
-As you can see here for APU2 the board_name is set.
+Also, further down you do:
 
-> 
-> If it fails here, then how it is possible that it succeeds
-> in the apu_led_init() ?
-> 
+> +#include <linux/platform_device.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/i2c.h>
+> +#include <linux/pci.h>
 
-in apu_led_init() is a check for product_name for both both boards.
-Ans this succeeds
+Eeek, #include in the middle of a file, not good.
 
-Thus the fix here
-> -     if (dmi_match(DMI_BOARD_NAME, "APU")) {
-> +     if (dmi_match(DMI_PRODUCT_NAME, "APU")) {
+> +
+> +static struct bus_type *generic_match_buses[] = {
+> +	&platform_bus_type,
+> +#ifdef CONFIG_PCI
+> +	&pci_bus_type,
+> +#endif
+> +#ifdef CONFIG_I2C
+> +	&i2c_bus_type,
+> +#endif
+> +#ifdef CONFIG_SPI_MASTER
+> +	&spi_bus_type,
+> +#endif
+> +	NULL,
+> +};
 
-I can rewrite the patch to catch both board_name and product_name for the 
-APU board, and add a better commit log.
+Can't you just declare the above as "extern" variables and not need the
+#include?  Yeah, checkpatch will complain, but it should be fine here as
+we really don't want the full .h files here (or need them.)
 
-They are more recent bios updates for this board, but the are specified as 
-"beta" so I'm afraid of an update. I have no hardware to recover a 
-"damaged" SPI flash chip.
+> +void device_connection_remove(struct device_connection *con)
+> +{
+> +	mutex_lock(&devcon_lock);
+> +	list_del_rcu(&con->list);
 
-Greetings
-Hans Ulli Kroll
+See, rcu?
+
+thanks,
+
+greg k-h
