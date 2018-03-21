@@ -1,52 +1,163 @@
-From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [trivial PATCH V2] treewide: Align function definition open/close
- braces
-Date: Wed, 21 Mar 2018 23:36:49 +0100
-Message-ID: <CAJZ5v0hYKnPVxbbBY-SDjxBY2Pj12WD3nD9zE--+eZpBzZr-NA@mail.gmail.com>
-References: <5ccbbf083e26bddfb4ea4f819ed62347ce266f39.1521669820.git.joe@perches.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v1 2/4] platform/x86: mlx-platform: Add differed bus
+ functionality
+Date: Wed, 21 Mar 2018 15:58:18 -0700
+Message-ID: <20180321225818.GA23931@fury>
+References: <1518559776-188942-1-git-send-email-vadimp@mellanox.com>
+ <1518559776-188942-3-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <5ccbbf083e26bddfb4ea4f819ed62347ce266f39.1521669820.git.joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/amd-gfx>,
- <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/amd-gfx>
-List-Post: <mailto:amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/amd-gfx>,
- <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "amd-gfx" <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: "open list:NETWORKING DRIVERS (WIRELESS)" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, the arch/x86 maintainers <x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xiubo Li <Xiubo.Lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Jeff Layton <jlayton-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "J. Bruce Fields" <bfields-uC3wQj2KruNg9hUCZPvPmw@public.gmane.org>, Adaptec OEM Raid Solutions <aacraid-ugMvIWC9OiRBDgjK7y7TUQ@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David (ChunMing) Zhou" <David1.Zhou-5C7GfCeVMHo@public.gmane.org>, "James E.J. Bottomley" <jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Paul Moore <paul-r2n+y4ga6xFZroRs9YW3xA@public.gmane.org>, "open list:TARGET SUBSYSTEM" <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Darrick J. Wong" <darrick.wong-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Dept-GELinuxNIC
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1518559776-188942-3-git-send-email-vadimp@mellanox.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gV2VkLCBNYXIgMjEsIDIwMTggYXQgMTE6MDkgUE0sIEpvZSBQZXJjaGVzIDxqb2VAcGVyY2hl
-cy5jb20+IHdyb3RlOgo+IFNvbWUgZnVuY3Rpb25zIGRlZmluaXRpb25zIGhhdmUgZWl0aGVyIHRo
-ZSBpbml0aWFsIG9wZW4gYnJhY2UgYW5kL29yCj4gdGhlIGNsb3NpbmcgYnJhY2Ugb3V0c2lkZSBv
-ZiBjb2x1bW4gMS4KPgo+IE1vdmUgdGhvc2UgYnJhY2VzIHRvIGNvbHVtbiAxLgo+Cj4gVGhpcyBh
-bGxvd3MgdmFyaW91cyBmdW5jdGlvbiBhbmFseXplcnMgbGlrZSBnbnUgY29tcGxleGl0eSB0byB3
-b3JrCj4gcHJvcGVybHkgZm9yIHRoZXNlIG1vZGlmaWVkIGZ1bmN0aW9ucy4KPgo+IFNpZ25lZC1v
-ZmYtYnk6IEpvZSBQZXJjaGVzIDxqb2VAcGVyY2hlcy5jb20+Cj4gQWNrZWQtYnk6IEFuZHkgU2hl
-dmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4KPiBBY2tlZC1ieTogUGF1bCBNb29y
-ZSA8cGF1bEBwYXVsLW1vb3JlLmNvbT4KPiBBY2tlZC1ieTogQWxleCBEZXVjaGVyIDxhbGV4YW5k
-ZXIuZGV1Y2hlckBhbWQuY29tPgo+IEFja2VkLWJ5OiBEYXZlIENoaW5uZXIgPGRjaGlubmVyQHJl
-ZGhhdC5jb20+Cj4gUmV2aWV3ZWQtYnk6IERhcnJpY2sgSi4gV29uZyA8ZGFycmljay53b25nQG9y
-YWNsZS5jb20+Cj4gQWNrZWQtYnk6IEFsZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUuYmVsbG9u
-aUBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gQWNrZWQtYnk6IE1hcnRpbiBLLiBQZXRlcnNlbiA8bWFy
-dGluLnBldGVyc2VuQG9yYWNsZS5jb20+Cj4gQWNrZWQtYnk6IFRha2FzaGkgSXdhaSA8dGl3YWlA
-c3VzZS5kZT4KPiBBY2tlZC1ieTogTWF1cm8gQ2FydmFsaG8gQ2hlaGFiIDxtY2hlaGFiQHMtb3Bl
-bnNvdXJjZS5jb20+Cj4gLS0tCj4KPiBnaXQgZGlmZiAtdyBzdGlsbCBzaG93cyBubyBkaWZmZXJl
-bmNlLgo+Cj4gVGhpcyBwYXRjaCB3YXMgc2VudCBidXQgRGVjZW1iZXIgYW5kIG5vdCBhcHBsaWVk
-Lgo+Cj4gQXMgdGhlIHRyaXZpYWwgbWFpbnRhaW5lciBzZWVtcyBub3QgYWN0aXZlLCBpdCdkIGJl
-IG5pY2UgaWYKPiBBbmRyZXcgTW9ydG9uIHBpY2tzIHRoaXMgdXAuCj4KPiBWMjogUmVtb3ZlIGZz
-L3hmcy9saWJ4ZnMveGZzX2FsbG9jLmMgYXMgaXQncyB1cGRhdGVkIGFuZCByZW1lcmdlIHRoZSBy
-ZXN0Cj4KPiAgYXJjaC94ODYvaW5jbHVkZS9hc20vYXRvbWljNjRfMzIuaCAgICAgICAgICAgICAg
-ICAgICB8ICAyICstCj4gIGRyaXZlcnMvYWNwaS9jdXN0b21fbWV0aG9kLmMgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgMiArLQo+ICBkcml2ZXJzL2FjcGkvZmFuLmMgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KCkZvciB0aGUgQUNQSSBjaGFuZ2VzOgoKQWNrZWQt
-Ynk6IFJhZmFlbCBKLiBXeXNvY2tpIDxyYWZhZWwuai53eXNvY2tpQGludGVsLmNvbT4KX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KYW1kLWdmeCBtYWlsaW5n
-IGxpc3QKYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbWQtZ2Z4Cg==
+On Tue, Feb 13, 2018 at 10:09:34PM +0000, Vadim Pasternak wrote:
+> Add deferred bus functionality in order to enforce probing flow execution
+> order. Driver mlx-platform activates platform driver i2c-mux-reg, which
+> creates busses infrastructure, after that it activates mlxreg-hotplug
+> driver, which uses these busses, for connecting devices. The possible
+> miss-ordering can happened, for example in case the probing routine of
+> mlxreg-hotplug is already started execution, while i2c-mux-reg probing
+> routine is not completed yet. In such situation the first one could
+> attempt to connect device to adapter number, which is not created yet.
+> And as a result this connection will fail. In order to ensure the order of
+> probing execution on mlxreg-hotplug probe routine will be deferred until
+> all the busses is not created by  probe routine of i2c-mux-reg.
+> In order to ensure the flow order, mlx-platform driver passes the highest
+> bus number to the mlxreg-hotplug platform data, which in their turn could
+> wait in the deferred state, until all the necessary buses topology is not
+> exist.
+
+Vadim,
+
+I've got part way through a review of this series several times, and keep
+running out of time trying to determine if the solution is appropriate
+for the problem.
+
+The deferred probing waiting for the i2c bus to be available seems like
+something we might be able to handle more elegantly with:
+
+1) request_module() in the platform driver
+2) careful use of init levels (subsys, device, late)
+
+This isn't something I'm well versed in - so I'll reach out here for
+some advice from Greg and the i2c maintainer, Wolfram, and list (added
+to Cc).
+
+Thanks,
+
+
+> 
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> ---
+>  drivers/platform/mellanox/mlxreg-hotplug.c |  7 +++++++
+>  drivers/platform/x86/mlx-platform.c        | 10 ++++++++++
+>  include/linux/platform_data/mlxreg.h       |  2 ++
+>  3 files changed, 19 insertions(+)
+> 
+> diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+> index 313cf8a..fe4910b 100644
+> --- a/drivers/platform/mellanox/mlxreg-hotplug.c
+> +++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+> @@ -550,6 +550,7 @@ static int mlxreg_hotplug_probe(struct platform_device *pdev)
+>  {
+>  	struct mlxreg_core_hotplug_platform_data *pdata;
+>  	struct mlxreg_hotplug_priv_data *priv;
+> +	struct i2c_adapter *deferred_adap;
+>  	int err;
+>  
+>  	pdata = dev_get_platdata(&pdev->dev);
+> @@ -558,6 +559,12 @@ static int mlxreg_hotplug_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> +	/* Defer probing if the necessary adapter is not configured yet. */
+> +	deferred_adap = i2c_get_adapter(pdata->deferred_nr);
+> +	if (!deferred_adap)
+> +		return -EPROBE_DEFER;
+> +	i2c_put_adapter(deferred_adap);
+> +
+>  	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+>  		return -ENOMEM;
+> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+> index 71b452a..67f3c6d 100644
+> --- a/drivers/platform/x86/mlx-platform.c
+> +++ b/drivers/platform/x86/mlx-platform.c
+> @@ -697,6 +697,8 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
+>  				ARRAY_SIZE(mlxplat_default_channels[i]);
+>  	}
+>  	mlxplat_hotplug = &mlxplat_mlxcpld_default_data;
+> +	mlxplat_hotplug->deferred_nr =
+> +		mlxplat_default_channels[i - 1][MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
+>  
+>  	return 1;
+>  };
+> @@ -711,6 +713,8 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
+>  				ARRAY_SIZE(mlxplat_msn21xx_channels);
+>  	}
+>  	mlxplat_hotplug = &mlxplat_mlxcpld_msn21xx_data;
+> +	mlxplat_hotplug->deferred_nr =
+> +		mlxplat_msn21xx_channels[MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
+>  
+>  	return 1;
+>  };
+> @@ -725,6 +729,8 @@ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
+>  				ARRAY_SIZE(mlxplat_msn21xx_channels);
+>  	}
+>  	mlxplat_hotplug = &mlxplat_mlxcpld_msn274x_data;
+> +	mlxplat_hotplug->deferred_nr =
+> +		mlxplat_msn21xx_channels[MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
+>  
+>  	return 1;
+>  };
+> @@ -739,6 +745,8 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
+>  				ARRAY_SIZE(mlxplat_msn21xx_channels);
+>  	}
+>  	mlxplat_hotplug = &mlxplat_mlxcpld_msn201x_data;
+> +	mlxplat_hotplug->deferred_nr =
+> +		mlxplat_default_channels[i - 1][MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
+>  
+>  	return 1;
+>  };
+> @@ -753,6 +761,8 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+>  				ARRAY_SIZE(mlxplat_msn21xx_channels);
+>  	}
+>  	mlxplat_hotplug = &mlxplat_mlxcpld_default_ng_data;
+> +	mlxplat_hotplug->deferred_nr =
+> +		mlxplat_msn21xx_channels[MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
+>  
+>  	return 1;
+>  };
+> diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
+> index fcdc707..2629109 100644
+> --- a/include/linux/platform_data/mlxreg.h
+> +++ b/include/linux/platform_data/mlxreg.h
+> @@ -129,6 +129,7 @@ struct mlxreg_core_platform_data {
+>   * @mask: top aggregation interrupt common mask;
+>   * @cell_low: location of low aggregation interrupt register;
+>   * @mask_low: low aggregation interrupt common mask;
+> + * @deferred_nr: I2C adapter number must be exist prior probing execution;
+>   */
+>  struct mlxreg_core_hotplug_platform_data {
+>  	struct mlxreg_core_item *items;
+> @@ -139,6 +140,7 @@ struct mlxreg_core_hotplug_platform_data {
+>  	u32 mask;
+>  	u32 cell_low;
+>  	u32 mask_low;
+> +	int deferred_nr;
+>  };
+>  
+>  #endif /* __LINUX_PLATFORM_DATA_MLXREG_H */
+> -- 
+> 2.1.4
+> 
+> 
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
