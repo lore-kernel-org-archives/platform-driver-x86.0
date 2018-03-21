@@ -1,54 +1,42 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 0/7] fujitsu-laptop: Consistent naming of constants
-Date: Wed, 21 Mar 2018 16:25:07 -0700
-Message-ID: <20180321232507.GA24138@fury>
-References: <20180227211539.5708-1-kernel@kempniu.pl>
+Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Revert UNSUPPORTED_CMD
+ back to an int
+Date: Wed, 21 Mar 2018 16:30:34 -0700
+Message-ID: <20180321233034.GB24138@fury>
+References: <20180310204353.9584-1-kernel@kempniu.pl>
+ <20180311041056.GA5432@gateway.atrad.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180227211539.5708-1-kernel@kempniu.pl>
+In-Reply-To: <20180311041056.GA5432@gateway.atrad.com.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>
-Cc: Jonathan Woithe <jwoithe@just42.net>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jonathan Woithe <jwoithe@just42.net>
+Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, Dan Carpenter <dan.carpenter@oracle.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Feb 27, 2018 at 10:15:32PM +0100, Michał Kępień wrote:
-> This patch series is an attempt to organize all the named constants used
-> throughout fujitsu-laptop so that their names more clearly convey their
-> purpose: a set of prefixes is introduced to "map" constant names to
-> call_fext_func() parameters.
-> 
-> The chosen constant naming patterns are a compromise between readability
-> and enabling longer conditional expressions to fit into the 80-character
-> line length limit.  Some changes (like those in patches 4/7 and 5/7) may
-> be perceived as bikeshedding, so please just think of them as proposals,
-> not fixes.
-> 
-> Finally, patch 7/7 again [1] proposes a set of helper functions which
-> seem to be making quite a difference in terms of code readability in
-> certain places (especially in long conditional expressions).  YMMV,
-> though, feel free to disagree.
-> 
-> This patch series should be applied on top of for-next as it builds on
-> the previous patch series I submitted.
-> 
-> [1] https://www.spinics.net/lists/platform-driver-x86/msg11633.html
-> 
->  drivers/platform/x86/fujitsu-laptop.c | 228 +++++++++++++++++++---------------
->  1 file changed, 127 insertions(+), 101 deletions(-)
+On Sun, Mar 11, 2018 at 02:40:56PM +1030, Jonathan Woithe wrote:
+> On Sat, Mar 10, 2018 at 09:43:53PM +0100, Micha?? K??pie?? wrote:
+> > UNSUPPORTED_CMD was previously 0x80000000 (int), but commit 819cddae7cfa
+> > ("platform/x86: fujitsu-laptop: Clean up constants") changed it into an
+> > unsigned long due to BIT() being used to define it.  As call_fext_func()
+> > returns an int, 0x80000000 would get type promoted when compared to an
+> > unsigned long, which on a 64-bit system would cause it to become
+> > 0xffffffff80000000 due to sign extension.  This causes one logical
+> > condition in fujitsu-laptop to always be true and another one to always
+> > be false on 64-bit systems.  Fix this by reverting UNSUPPORTED_CMD back
+> > to an int.
+> > 
+> > This patch fixes the following smatch warnings:
+> > 
+> > drivers/platform/x86/fujitsu-laptop.c:763 acpi_fujitsu_laptop_leds_register() warn: always true condition '(call_fext_func(device, ((1 << (12)) | (1 << (0))), 2, (1 << (16)), 0) != (1 << (31))) => (s32min-s32max != 2147483648)'
+> > drivers/platform/x86/fujitsu-laptop.c:816 acpi_fujitsu_laptop_add() warn: impossible condition '(priv->flags_supported == (1 << (31))) => (0-2147483647,18446744071562067968-u64max == 2147483648)'
+> > 
+> > Fixes: 819cddae7cfa ("platform/x86: fujitsu-laptop: Clean up constants")
+> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
 
-What I see here is an agreement on a simple integer listing for patch 1/7 per
-Andy's latest reply. 7/7 appears to address Andy's concerns in 6/7. I agree they
-KEY vs EVENT_HK is a bit of bikeshedding - but I don't have a preference and I
-think overall the code is more readable for this series.
-
-Based on feedback on a couple of the patches, a respin appears to be pending, so
-I'm marking this series as "changes requested" and will await the v2.
-
-Thanks,
-
+Queued up, thank you.
 -- 
 Darren Hart
 VMware Open Source Technology Center
