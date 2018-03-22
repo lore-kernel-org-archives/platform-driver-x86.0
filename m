@@ -1,43 +1,71 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [trivial PATCH V2] treewide: Align function definition
- open/close braces
-Date: Thu, 22 Mar 2018 09:37:20 -0400
-Message-ID: <20180322093720.2254cfbb@gandalf.local.home>
-References: <5ccbbf083e26bddfb4ea4f819ed62347ce266f39.1521669820.git.joe@perches.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v1 2/4] platform/x86: mlx-platform: Add differed bus
+ functionality
+Date: Thu, 22 Mar 2018 15:18:40 -0700
+Message-ID: <20180322221840.GC24138@fury>
+References: <1518559776-188942-1-git-send-email-vadimp@mellanox.com>
+ <1518559776-188942-3-git-send-email-vadimp@mellanox.com>
+ <20180321225818.GA23931@fury>
+ <20180322090451.GA22313@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5ccbbf083e26bddfb4ea4f819ed62347ce266f39.1521669820.git.joe@perches.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Joe Perches <joe@perches.com>
-Cc: linux-wireless@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, x86@kernel.org, Xiubo Li <Xiubo.Lee@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Jeff Layton <jlayton@kernel.org>, Will Deacon <will.deacon@arm.com>, Timur Tabi <timur@tabi.org>, dri-devel@lists.freedesktop.org, Liam Girdwood <lgirdwood@gmail.com>, "J. Bruce Fields" <bfields@fieldses.org>, Adaptec OEM Raid Solutions <aacraid@adaptec.com>, "H. Peter
- Anvin" <hpa@zytor.com>, linux-acpi@vger.kernel.org, linux-rtc@vger.kernel.org, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, Paul Moore <paul@paul-moore.com>, linux-scsi@vger.kernel.org, "Darrick J.
- Wong" <darrick.wong@oracle.com>, Dept-GELinuxNICDev@cavium.com, Mark Fasheh <mark@fasheh.com>, Sathya Prakash <sathya.prakash@broadcom.com>, amd-gfx@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Darren Hart <dvhart@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180322090451.GA22313@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Vadim Pasternak <vadimp@mellanox.com>, andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gV2VkLCAyMSBNYXIgMjAxOCAxNTowOTozMiAtMDcwMApKb2UgUGVyY2hlcyA8am9lQHBlcmNo
-ZXMuY29tPiB3cm90ZToKCj4gZGlmZiAtLWdpdCBhL2tlcm5lbC90cmFjZS90cmFjZV9wcmludGsu
-YyBiL2tlcm5lbC90cmFjZS90cmFjZV9wcmludGsuYwo+IGluZGV4IGFkMWQ2MTY0ZTk0Ni4uNTBm
-NDRiN2IyYjMyIDEwMDY0NAo+IC0tLSBhL2tlcm5lbC90cmFjZS90cmFjZV9wcmludGsuYwo+ICsr
-KyBiL2tlcm5lbC90cmFjZS90cmFjZV9wcmludGsuYwo+IEBAIC0xOTYsNyArMTk2LDcgQEAgc3Ry
-dWN0IG5vdGlmaWVyX2Jsb2NrIG1vZHVsZV90cmFjZV9icHJpbnRrX2Zvcm1hdF9uYiA9IHsKPiAg
-fTsKPiAgCj4gIGludCBfX3RyYWNlX2JwcmludGsodW5zaWduZWQgbG9uZyBpcCwgY29uc3QgY2hh
-ciAqZm10LCAuLi4pCj4gLSB7Cj4gK3sKPiAgCWludCByZXQ7Cj4gIAl2YV9saXN0IGFwOwo+ICAK
-PiBAQCAtMjE0LDcgKzIxNCw3IEBAIGludCBfX3RyYWNlX2JwcmludGsodW5zaWduZWQgbG9uZyBp
-cCwgY29uc3QgY2hhciAqZm10LCAuLi4pCj4gIEVYUE9SVF9TWU1CT0xfR1BMKF9fdHJhY2VfYnBy
-aW50ayk7Cj4gIAo+ICBpbnQgX19mdHJhY2VfdmJwcmludGsodW5zaWduZWQgbG9uZyBpcCwgY29u
-c3QgY2hhciAqZm10LCB2YV9saXN0IGFwKQo+IC0gewo+ICt7Cj4gIAlpZiAodW5saWtlbHkoIWZt
-dCkpCj4gIAkJcmV0dXJuIDA7Cj4gIAoKQWNrZWQtYnk6IFN0ZXZlbiBSb3N0ZWR0IChWTXdhcmUp
-IDxyb3N0ZWR0QGdvb2RtaXMub3JnPgoKLS0gU3RldmUKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, Mar 22, 2018 at 10:04:51AM +0100, Greg Kroah-Hartman wrote:
+> On Wed, Mar 21, 2018 at 03:58:18PM -0700, Darren Hart wrote:
+> > On Tue, Feb 13, 2018 at 10:09:34PM +0000, Vadim Pasternak wrote:
+> > > Add deferred bus functionality in order to enforce probing flow execution
+> > > order. Driver mlx-platform activates platform driver i2c-mux-reg, which
+> > > creates busses infrastructure, after that it activates mlxreg-hotplug
+> > > driver, which uses these busses, for connecting devices. The possible
+> > > miss-ordering can happened, for example in case the probing routine of
+> > > mlxreg-hotplug is already started execution, while i2c-mux-reg probing
+> > > routine is not completed yet. In such situation the first one could
+> > > attempt to connect device to adapter number, which is not created yet.
+> > > And as a result this connection will fail. In order to ensure the order of
+> > > probing execution on mlxreg-hotplug probe routine will be deferred until
+> > > all the busses is not created by  probe routine of i2c-mux-reg.
+> > > In order to ensure the flow order, mlx-platform driver passes the highest
+> > > bus number to the mlxreg-hotplug platform data, which in their turn could
+> > > wait in the deferred state, until all the necessary buses topology is not
+> > > exist.
+> > 
+> > Vadim,
+> > 
+> > I've got part way through a review of this series several times, and keep
+> > running out of time trying to determine if the solution is appropriate
+> > for the problem.
+> > 
+> > The deferred probing waiting for the i2c bus to be available seems like
+> > something we might be able to handle more elegantly with:
+> > 
+> > 1) request_module() in the platform driver
+> > 2) careful use of init levels (subsys, device, late)
+> > 
+> > This isn't something I'm well versed in - so I'll reach out here for
+> > some advice from Greg and the i2c maintainer, Wolfram, and list (added
+> > to Cc).
+> 
+> deferred device probe?
+> 
+
+This patch series adds the following, which I believe is what you're referring
+to Greg? :
+
++       /* Defer probing if the necessary adapter is not configured yet. */
++       deferred_adap = i2c_get_adapter(pdata->deferred_nr);
++       if (!deferred_adap)
++               return -EPROBE_DEFER;
+
+This is the preferred approach? Have the platform driver define the expected
+adapter number, and then defer until that becomes available?
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
