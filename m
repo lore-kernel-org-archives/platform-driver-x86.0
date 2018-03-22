@@ -1,42 +1,53 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: fujitsu-laptop: Revert UNSUPPORTED_CMD
- back to an int
-Date: Wed, 21 Mar 2018 16:30:34 -0700
-Message-ID: <20180321233034.GB24138@fury>
-References: <20180310204353.9584-1-kernel@kempniu.pl>
- <20180311041056.GA5432@gateway.atrad.com.au>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v1 2/4] platform/x86: mlx-platform: Add differed bus
+ functionality
+Date: Thu, 22 Mar 2018 10:04:51 +0100
+Message-ID: <20180322090451.GA22313@kroah.com>
+References: <1518559776-188942-1-git-send-email-vadimp@mellanox.com>
+ <1518559776-188942-3-git-send-email-vadimp@mellanox.com>
+ <20180321225818.GA23931@fury>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180311041056.GA5432@gateway.atrad.com.au>
+In-Reply-To: <20180321225818.GA23931@fury>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: Micha?? K??pie?? <kernel@kempniu.pl>, Andy Shevchenko <andy@infradead.org>, Dan Carpenter <dan.carpenter@oracle.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Vadim Pasternak <vadimp@mellanox.com>, andy.shevchenko@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Mar 11, 2018 at 02:40:56PM +1030, Jonathan Woithe wrote:
-> On Sat, Mar 10, 2018 at 09:43:53PM +0100, Micha?? K??pie?? wrote:
-> > UNSUPPORTED_CMD was previously 0x80000000 (int), but commit 819cddae7cfa
-> > ("platform/x86: fujitsu-laptop: Clean up constants") changed it into an
-> > unsigned long due to BIT() being used to define it.  As call_fext_func()
-> > returns an int, 0x80000000 would get type promoted when compared to an
-> > unsigned long, which on a 64-bit system would cause it to become
-> > 0xffffffff80000000 due to sign extension.  This causes one logical
-> > condition in fujitsu-laptop to always be true and another one to always
-> > be false on 64-bit systems.  Fix this by reverting UNSUPPORTED_CMD back
-> > to an int.
-> > 
-> > This patch fixes the following smatch warnings:
-> > 
-> > drivers/platform/x86/fujitsu-laptop.c:763 acpi_fujitsu_laptop_leds_register() warn: always true condition '(call_fext_func(device, ((1 << (12)) | (1 << (0))), 2, (1 << (16)), 0) != (1 << (31))) => (s32min-s32max != 2147483648)'
-> > drivers/platform/x86/fujitsu-laptop.c:816 acpi_fujitsu_laptop_add() warn: impossible condition '(priv->flags_supported == (1 << (31))) => (0-2147483647,18446744071562067968-u64max == 2147483648)'
-> > 
-> > Fixes: 819cddae7cfa ("platform/x86: fujitsu-laptop: Clean up constants")
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Signed-off-by: Micha?? K??pie?? <kernel@kempniu.pl>
+On Wed, Mar 21, 2018 at 03:58:18PM -0700, Darren Hart wrote:
+> On Tue, Feb 13, 2018 at 10:09:34PM +0000, Vadim Pasternak wrote:
+> > Add deferred bus functionality in order to enforce probing flow execution
+> > order. Driver mlx-platform activates platform driver i2c-mux-reg, which
+> > creates busses infrastructure, after that it activates mlxreg-hotplug
+> > driver, which uses these busses, for connecting devices. The possible
+> > miss-ordering can happened, for example in case the probing routine of
+> > mlxreg-hotplug is already started execution, while i2c-mux-reg probing
+> > routine is not completed yet. In such situation the first one could
+> > attempt to connect device to adapter number, which is not created yet.
+> > And as a result this connection will fail. In order to ensure the order of
+> > probing execution on mlxreg-hotplug probe routine will be deferred until
+> > all the busses is not created by  probe routine of i2c-mux-reg.
+> > In order to ensure the flow order, mlx-platform driver passes the highest
+> > bus number to the mlxreg-hotplug platform data, which in their turn could
+> > wait in the deferred state, until all the necessary buses topology is not
+> > exist.
+> 
+> Vadim,
+> 
+> I've got part way through a review of this series several times, and keep
+> running out of time trying to determine if the solution is appropriate
+> for the problem.
+> 
+> The deferred probing waiting for the i2c bus to be available seems like
+> something we might be able to handle more elegantly with:
+> 
+> 1) request_module() in the platform driver
+> 2) careful use of init levels (subsys, device, late)
+> 
+> This isn't something I'm well versed in - so I'll reach out here for
+> some advice from Greg and the i2c maintainer, Wolfram, and list (added
+> to Cc).
 
-Queued up, thank you.
--- 
-Darren Hart
-VMware Open Source Technology Center
+deferred device probe?
