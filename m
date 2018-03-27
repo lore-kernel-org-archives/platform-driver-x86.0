@@ -1,7 +1,7 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH v1 4/7] platform: mellanox: add new ODM system types to mlx-platform
-Date: Tue, 27 Mar 2018 10:02:04 +0000
-Message-ID: <1522144927-56512-5-git-send-email-vadimp@mellanox.com>
+Subject: [PATCH v1 1/7] platform_data/mlxreg: Document fixes for hotplug device
+Date: Tue, 27 Mar 2018 10:02:01 +0000
+Message-ID: <1522144927-56512-2-git-send-email-vadimp@mellanox.com>
 References: <1522144927-56512-1-git-send-email-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1522144927-56512-1-git-send-email-vadimp@mellanox.com>
@@ -10,57 +10,31 @@ To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, ivecera@redhat.com, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Patch adds new ODM systems, matched according to DMI_BOARD_NAME.
-The supported ODM Ids are: VMOD0001, VMOD0002, VMOD0003, VMOD0004,
-VMOD0005. It doesn't introduce new systems, but allows to
-ODM companies to set DMI_BOARD_VENDOR and DMI_PRODUCT_NAME on
-their own. It assumes that ODM company can't change DMI_BOARD_NAME.
+Remove redunadant description of label in struct mlxreg_hotplug_device.
+
+Change location of access_mode in struct mlxreg_hotplug_device.
 
 Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 ---
- drivers/platform/x86/mlx-platform.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ include/linux/platform_data/mlxreg.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 7a0bd24..912f844 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -844,6 +844,36 @@ static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "SN34"),
- 		},
- 	},
-+	{
-+		.callback = mlxplat_dmi_default_matched,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "VMOD0001"),
-+		},
-+	},
-+	{
-+		.callback = mlxplat_dmi_msn21xx_matched,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "VMOD0002"),
-+		},
-+	},
-+	{
-+		.callback = mlxplat_dmi_msn274x_matched,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "VMOD0003"),
-+		},
-+	},
-+	{
-+		.callback = mlxplat_dmi_msn201x_matched,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "VMOD0004"),
-+		},
-+	},
-+	{
-+		.callback = mlxplat_dmi_qmb7xx_matched,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "VMOD0005"),
-+		},
-+	},
- 	{ }
- };
- 
+diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
+index 2744cff..19f5cb61 100644
+--- a/include/linux/platform_data/mlxreg.h
++++ b/include/linux/platform_data/mlxreg.h
+@@ -58,11 +58,10 @@ struct mlxreg_hotplug_device {
+  * struct mlxreg_core_data - attributes control data:
+  *
+  * @label: attribute label;
+- * @label: attribute register offset;
+  * @reg: attribute register;
+  * @mask: attribute access mask;
+- * @mode: access mode;
+  * @bit: attribute effective bit;
++ * @mode: access mode;
+  * @np - pointer to node platform associated with attribute;
+  * @hpdev - hotplug device data;
+  * @health_cntr: dynamic device health indication counter;
 -- 
 2.1.4
