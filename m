@@ -1,47 +1,60 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH v1 0/7] platform/x86: Mellanox add fixes and new features
-Date: Tue, 27 Mar 2018 10:02:00 +0000
-Message-ID: <1522144927-56512-1-git-send-email-vadimp@mellanox.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: silead_dmi: Add entry for the Yours Y8W81 tablet
+Date: Mon, 2 Apr 2018 17:35:31 +0300
+Message-ID: <CAHp75VcAir59zB_pKjyt8=rRGchokvr_6=YhxBOwxTKWWvqtKg@mail.gmail.com>
+References: <20180309140358.11432-1-hdegoede@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180309140358.11432-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, ivecera@redhat.com, Vadim Pasternak <vadimp@mellanox.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patcheset includes:
+On Fri, Mar 9, 2018 at 4:03 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> Add an entry with touchscreen info for the Yours Y8W81 8" tablet.
+>
+> This tablet has the same case and mostly the same internals as the Chuwi
+> Vi8. Both seem to be from an ODM called inet-tek. Both are labelled:
+> "INET-I86M-REVxx" on the PCB, with the Chuwi Vi8 being REV03 (and having
+> an ALC5640 audio codec) and the Yours Y8W81 being REV21 (and having an
+> ALC5651 audio codec). The wifi, accelerometer and touchscreen are
+> identical on both.
+>
 
-Document fixes for mlxreg-hotplug driver and mlxreg header file.
+Pushed to my review and testing queue, thanks!
 
-Fix for the race condition in mlxreg-hotplug driver.
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/silead_dmi.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
+> index 1091539fa230..452aacabaa8e 100644
+> --- a/drivers/platform/x86/silead_dmi.c
+> +++ b/drivers/platform/x86/silead_dmi.c
+> @@ -455,6 +455,14 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
+>                         DMI_MATCH(DMI_BIOS_VERSION, "itWORKS.G.WI71C.JGBMRB"),
+>                 },
+>         },
+> +       {
+> +               /* Yours Y8W81, same case and touchscreen as Chuwi Vi8 */
+> +               .driver_data = (void *)&chuwi_vi8_data,
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "YOURS"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Y8W81"),
+> +               },
+> +       },
+>         { },
+>  };
+>
+> --
+> 2.14.3
+>
 
-Adding support for ODM system types.
 
-Activation of Mellanox LED driver from mlx-platform.
-
-Introduction of new mlxreg-io driver.
-
-Activation of mlxreg-io driver from mlx-platform.
-
-Vadim Pasternak (7):
-  platform_data/mlxreg: Document fixes for hotplug device
-  platform/mellanox: mlxreg-hotplug: Document fixes for hotplug private
-    data
-  platform/mellanox: mlxreg-hotplug: add extra cycle for hotplug work
-    queue
-  platform: mellanox: add new ODM system types to mlx-platform
-  platform/x86: mlx-platform: Add LED platform driver activation
-  platform/mellanox: Introduce support for Mellanox register access
-    driver
-  platform/x86: mlx-platform: Add mlxreg-io platform driver activation
-
- drivers/platform/mellanox/Kconfig          |  11 +
- drivers/platform/mellanox/Makefile         |   1 +
- drivers/platform/mellanox/mlxreg-hotplug.c |  23 +-
- drivers/platform/mellanox/mlxreg-io.c      | 221 ++++++++++++++
- drivers/platform/x86/mlx-platform.c        | 447 +++++++++++++++++++++++++++++
- include/linux/platform_data/mlxreg.h       |  66 ++++-
- 6 files changed, 765 insertions(+), 4 deletions(-)
- create mode 100644 drivers/platform/mellanox/mlxreg-io.c
 
 -- 
-2.1.4
+With Best Regards,
+Andy Shevchenko
