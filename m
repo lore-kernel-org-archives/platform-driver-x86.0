@@ -1,74 +1,70 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] Add Second Fan Support for Thinkpad P50
-Date: Tue, 3 Apr 2018 11:13:22 +0300
-Message-ID: <CAHp75VcOCCnJ-qXKJXbY=qAQDs+Z-bHcC_UgH=3R+JRQ8WOaLw@mail.gmail.com>
-References: <1522693621-3124-1-git-send-email-agk@godking.net>
+From: Jordan Glover via ibm-acpi-devel <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Subject: Re: ThinkPad Yoga 370 thinkpad_acpi unhandled
+ events
+Date: Tue, 03 Apr 2018 08:04:11 -0400
+Message-ID: <nn6ptvhGK74etzOUiGmpuW6rNFCsoabu9zNzVxanfEx_bM47RjbdyzeThmIsNt4dxhL6-EihK-fiNvYQLB7bjuRBdu4aatirYyAc2HuDXiE=@protonmail.ch>
+References: <PqonyRG1_zESPTDspqzZ2qO65lHbv5E1z8Ekcgrzh0TtbBmlm69BnfUqZIEuSbF-d1z0VeXHPMRRCQenBEMNP2L8NyTqvIui1FwdHnJ6RAc=@protonmail.ch>
+ <ei0r_oTyOQrFrZKDqLMWzJHdipDsPEu8zxZxhnNuNa6L7TMRdZzu43Ldx0mcuOiRI2Ud-Lx746lfMG-9YpGR7vcp1HrsuroruKEWzhrr3dg=@protonmail.ch>
+ <FA1DB435B97D5A4192BAE54A4EA542A99ABEF68F@CNMAILEX04.lenovo.com>
+ <CAHp75VdbmP_a37-7qkacx=k21XzCjki=qFC0_eWk=L952u0Pbw@mail.gmail.com>
+ <20180215182120.vj2evutyvixjzf55@khazad-dum.debian.net>
+ <FA1DB435B97D5A4192BAE54A4EA542A99ABF1461@CNMAILEX04.lenovo.com>
+Reply-To: Jordan Glover <Golden_Miller83-g/b1ySJe57IkP3XJZ0H8fw@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1522693621-3124-1-git-send-email-agk@godking.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Kappner <agk@godking.net>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <FA1DB435B97D5A4192BAE54A4EA542A99ABF1461-bOPtaeQOlBPKZl9SKDgXa6BKnGwkPULj@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Peter FP1 Zhang <zhangfp1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Cc: "bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Christian Kellner <ckellner-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Apr 2, 2018 at 9:27 PM, Alexander Kappner <agk@godking.net> wrote:
-> The Thinkpad P50 has 2 fans. Add the 2FAN quirk so the tpacpi driver
-> properly reports both fan speeds.
-> Because the P50 doesn't report the version of its EC controller, we need to
-> identify it by BIOS version (N1).
-
-I have pushed it with changes discussed to my review and testing queue, thanks!
-
-I'm not sure if you were about to send a new version (no need
-anymore), though for the next time, please be familiar with
-https://elixir.bootlin.com/linux/latest/source/Documentation/process/submitting-patches.rst
-(in particular, section 8).
-
-And additional information, we are using special prefixes for our
-subsystem, i.e.
-"platform/x86: $DRIVER_NAME: ".
-
-> Signed-off-by: Alexander Kappner <agk@godking.net>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index d5eaf3b1..ebdc300 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -8699,16 +8699,24 @@ static const struct attribute_group fan_attr_group = {
->           .ec = TPID(__id1, __id2),             \
->           .quirks = __quirks }
->
-> +#define TPACPI_FAN_QL_BIOS(__id1, __id2, __quirks)     \
-> +       { .vendor = PCI_VENDOR_ID_LENOVO,       \
-> +         .bios = TPID(__id1, __id2),           \
-> +         .ec = TPACPI_MATCH_ANY,               \
-> +         .quirks = __quirks }
-> +
->  static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
->         TPACPI_FAN_QI('1', 'Y', TPACPI_FAN_Q1),
->         TPACPI_FAN_QI('7', '8', TPACPI_FAN_Q1),
->         TPACPI_FAN_QI('7', '6', TPACPI_FAN_Q1),
->         TPACPI_FAN_QI('7', '0', TPACPI_FAN_Q1),
->         TPACPI_FAN_QL('7', 'M', TPACPI_FAN_2FAN),
-> +       TPACPI_FAN_QL_BIOS('N', '1', TPACPI_FAN_2FAN) // Thinkpad P50 has 2 fans
->  };
->
->  #undef TPACPI_FAN_QL
->  #undef TPACPI_FAN_QI
-> +#undef TPACPI_FAN_QL_BIOS
->
->  static int __init fan_init(struct ibm_init_struct *iibm)
->  {
-> --
-> 2.1.4
->
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+T24gRmVicnVhcnkgMTcsIDIwMTggMjo0NyBQTSwgUGV0ZXIgRlAxIFpoYW5nIDx6aGFuZ2ZwMUBs
+ZW5vdm8uY29tPiB3cm90ZToKCj4gVGhhbmsgeW91IEhlbnJpcXVlIQo+IAo+IEBKb3JkYW4sCj4g
+Cj4gV291bGQgeW91IGxpa2UgdG8gdHJ5IHRoZSBwYXRjaCBIZW5yaXF1ZSBtZW50aW9uZWQ/Cj4g
+Cj4gVGhhbmtzLAo+IAo+IFBldGVyIFpoYW5nIFwg5byg56aP5bmzLCBQTVAKPiAKPiBUaGlua1Bh
+ZCAmIFRoaW5rU3RhdGlvbiBMaW51eCBTb2x1dGlvbnMKPiAKPiBUZWw6ICgrODYpIDE4MS0xNjEx
+LTgwMDUgfCBMZW5vdm8gU2hhbmdoYWkKPiAKPiBMaW51eCBmb3IgVGhvc2UgV2hvIERvIC0gaHR0
+cDovL3d3dy5sZW5vdm8uY29tL2xpbnV4Cj4gCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0K
+PiAKPiBGcm9tOiBIZW5yaXF1ZSBkZSBNb3JhZXMgSG9sc2NodWggW21haWx0bzpobWhAaG1oLmVu
+Zy5icl0KPiAKPiBTZW50OiBGcmlkYXksIEZlYnJ1YXJ5IDE2LCAyMDE4IDI6MjEgQU0KPiAKPiBU
+bzogQW5keSBTaGV2Y2hlbmtvCj4gCj4gQ2M6IFBldGVyIEZQMSBaaGFuZzsgUGxhdGZvcm0gRHJp
+dmVyOyBEYXJyZW4gSGFydDsgSm9yZGFuIEdsb3ZlcjsgQ2hyaXN0aWFuIEtlbGxuZXI7IGlibS1h
+Y3BpLWRldmVsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldDsgYmJlcmdAcmVkaGF0LmNvbQo+IAo+IFN1
+YmplY3Q6IFJlOiBUaGlua1BhZCBZb2dhIDM3MCB0aGlua3BhZF9hY3BpIHVuaGFuZGxlZCBldmVu
+dHMKPiAKPiBPbiBUaHUsIDE1IEZlYiAyMDE4LCBBbmR5IFNoZXZjaGVua28gd3JvdGU6Cj4gCj4g
+PiAoTHVja2lseSBlbnRpcmUgZGlzY3Vzc2lvbiBpcyBrZXB0IGluIHRoaXMgbWFpbCkKPiA+IAo+
+ID4gT24gVGh1LCBGZWIgMSwgMjAxOCBhdCA0OjA3IEFNLCBQZXRlciBGUDEgWmhhbmcgemhhbmdm
+cDFAbGVub3ZvLmNvbSB3cm90ZToKPiA+IAo+ID4gPiBEZWFyIGFsbCwKPiA+ID4gCj4gPiA+IEkg
+d2FzIHRvbGQgYnkgb3VyIEJJT1MvVGhlcm1hbCB0ZWFtIHRoYXQgdGhlIHR3byBldmVudHMgYXJl
+IGRlc2lnbmVkIGZvciBXaW5kb3dzIE9TLCBmb3IgTGludXggd2UgY2FuIGp1c3QgaWdub3JlIHRo
+ZW0gZGlyZWN0bHkuCj4gCj4gVGhlIHBhdGNoIHRvIGRvIHRoYXQgaXMgcXVpdGUgdHJpdmlhbCwg
+d291bGQgYW55b25lIGxpa2UgdG8gdHJ5IGhpcy9oZXIgaGFuZCBhdCBpdD8gVGhlcmUgYXJlIGV4
+YW1wbGVzIGFscmVhZHkgaW4gdGhlIHRoaW5rcGFkLWFjcGkgY29kZSBvZiBldmVudHMgd2UgaWdu
+b3JlLi4uCj4gCj4gQWx0aG91Z2ggaXQgd291bGQgaGF2ZSBiZWVuIG5pY2UgdG8ga25vdyB3aGF0
+IHRoZXNlIGV2ZW50cyBhY3R1YWxseSBtZWFuIGFuZCB3aGF0IHRoZXkgaGludCB0aGUgd2luZG93
+cyBkcml2ZXJzIHRvIGRvLCBzaW5jZSB3ZSBtaWdodCBoYXZlIHdhbnRlZCB0byBsZXZlcmFnZSB0
+aGVtIGluIExpbnV4IHVzZXJzcGFjZSBhcyB3ZWxsIDpwCj4gCj4gPiA+IDB4NjBGMCBIS19USEVS
+TUFMX1RSQU5TRk9STUFUSU9OX0NIQU5HRUQsIEFTTCBtZXRob2QgaXMgR1RNUwo+ID4gPiAKPiA+
+ID4gMHg2MDMyIEhLX0RZTkFNSUNfVEhFUk1BTF9DT05UUk9MX1NFVF9DT01NQU5EX0NPTVBMSUVU
+SU9OLCBBU0wKPiA+ID4gCj4gPiA+IG1ldGhvZCBpcyBEWVRDCj4gCj4gLS0KPiAKPiBIZW5yaXF1
+ZSBIb2xzY2h1aAoKCkhpLCBhbnkgc3RhdHVzIHVwZGF0ZSBvbiB0aGlzPwoKQlRXOiBXaGF0J3Mg
+dGhlIG9mZmljaWFsIGdpdCByZXBvIGZvciB0aGlua3BhZCBhY3BpPyBPbmUgbWVudGlvbmVkIGlu
+IE1BSU5UQUlORVJTIGRvZXNuJ3QKc2VlbSBsZWdpdFsxXS4gSXQgd291bGQgYmUgbmljZSBpZiBp
+dCBjYW4gYmUgdXBkYXRlZC4KClsxXSBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGlu
+dXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvdHJlZS9NQUlOVEFJTkVSUz9oPXY0LjE2
+I24xMzcwMQoK4oCLSm9yZGFuCgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KQ2hlY2sgb3V0IHRoZSB2
+aWJyYW50IHRlY2ggY29tbXVuaXR5IG9uIG9uZSBvZiB0aGUgd29ybGQncyBtb3N0CmVuZ2FnaW5n
+IHRlY2ggc2l0ZXMsIFNsYXNoZG90Lm9yZyEgaHR0cDovL3NkbS5saW5rL3NsYXNoZG90Cl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlibS1hY3BpLWRldmVs
+IG1haWxpbmcgbGlzdAppYm0tYWNwaS1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6
+Ly9saXN0cy5zb3VyY2Vmb3JnZS5uZXQvbGlzdHMvbGlzdGluZm8vaWJtLWFjcGktZGV2ZWwK
