@@ -1,83 +1,74 @@
-From: Alexander Kappner <agk@godking.net>
-Subject: Re: [ibm-acpi-devel] [PATCH] Add Second Fan Support for Thinkpad P50
-Date: Mon, 2 Apr 2018 14:45:48 -0700
-Message-ID: <8e50ae03-f7ce-fc88-d441-be559e13e55a@godking.net>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] Add Second Fan Support for Thinkpad P50
+Date: Tue, 3 Apr 2018 11:13:22 +0300
+Message-ID: <CAHp75VcOCCnJ-qXKJXbY=qAQDs+Z-bHcC_UgH=3R+JRQ8WOaLw@mail.gmail.com>
 References: <1522693621-3124-1-git-send-email-agk@godking.net>
- <20180402190837.mlwkviu2syhv6re6@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180402190837.mlwkviu2syhv6re6@khazad-dum.debian.net>
+In-Reply-To: <1522693621-3124-1-git-send-email-agk@godking.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: ibm-acpi@hmh.eng.br, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, dvhart@infradead.org, andy@infradead.org
+To: Alexander Kappner <agk@godking.net>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Yes, I tested this successfully on my P50 (see below). Thanks for Ack'ing. 
+On Mon, Apr 2, 2018 at 9:27 PM, Alexander Kappner <agk@godking.net> wrote:
+> The Thinkpad P50 has 2 fans. Add the 2FAN quirk so the tpacpi driver
+> properly reports both fan speeds.
+> Because the P50 doesn't report the version of its EC controller, we need to
+> identify it by BIOS version (N1).
+
+I have pushed it with changes discussed to my review and testing queue, thanks!
+
+I'm not sure if you were about to send a new version (no need
+anymore), though for the next time, please be familiar with
+https://elixir.bootlin.com/linux/latest/source/Documentation/process/submitting-patches.rst
+(in particular, section 8).
+
+And additional information, we are using special prefixes for our
+subsystem, i.e.
+"platform/x86: $DRIVER_NAME: ".
+
+> Signed-off-by: Alexander Kappner <agk@godking.net>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index d5eaf3b1..ebdc300 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -8699,16 +8699,24 @@ static const struct attribute_group fan_attr_group = {
+>           .ec = TPID(__id1, __id2),             \
+>           .quirks = __quirks }
+>
+> +#define TPACPI_FAN_QL_BIOS(__id1, __id2, __quirks)     \
+> +       { .vendor = PCI_VENDOR_ID_LENOVO,       \
+> +         .bios = TPID(__id1, __id2),           \
+> +         .ec = TPACPI_MATCH_ANY,               \
+> +         .quirks = __quirks }
+> +
+>  static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+>         TPACPI_FAN_QI('1', 'Y', TPACPI_FAN_Q1),
+>         TPACPI_FAN_QI('7', '8', TPACPI_FAN_Q1),
+>         TPACPI_FAN_QI('7', '6', TPACPI_FAN_Q1),
+>         TPACPI_FAN_QI('7', '0', TPACPI_FAN_Q1),
+>         TPACPI_FAN_QL('7', 'M', TPACPI_FAN_2FAN),
+> +       TPACPI_FAN_QL_BIOS('N', '1', TPACPI_FAN_2FAN) // Thinkpad P50 has 2 fans
+>  };
+>
+>  #undef TPACPI_FAN_QL
+>  #undef TPACPI_FAN_QI
+> +#undef TPACPI_FAN_QL_BIOS
+>
+>  static int __init fan_init(struct ibm_init_struct *iibm)
+>  {
+> --
+> 2.1.4
+>
 
 
-ak@REDDOT:~$ sensors
-thinkpad-isa-0000
-Adapter: ISA adapter
-fan1:        3778 RPM
-fan2:        3771 RPM
-...
 
-
-
-On 04/02/2018 01:22 PM, Andy Shevchenko wrote:
-> I would rather name it ..._QB() instead
-> 
-> Better of course to use three letters, though let's leave this when we
-> really have a need.
-Agreed; ideally we'd use a bitmask. 
-
-
-On 04/02/2018 12:08 PM, Henrique de Moraes Holschuh wrote:
-> On Mon, 02 Apr 2018, Alexander Kappner wrote:
->> The Thinkpad P50 has 2 fans. Add the 2FAN quirk so the tpacpi driver
->> properly reports both fan speeds.
->> Because the P50 doesn't report the version of its EC controller, we need to
->> identify it by BIOS version (N1).
->>
->> Signed-off-by: Alexander Kappner <agk@godking.net>
-> 
-> I assume you tested this on real hardware?  If so:
-> 
-> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-> 
->> ---
->>  drivers/platform/x86/thinkpad_acpi.c | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->> index d5eaf3b1..ebdc300 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -8699,16 +8699,24 @@ static const struct attribute_group fan_attr_group = {
->>  	  .ec = TPID(__id1, __id2),		\
->>  	  .quirks = __quirks }
->>  
->> +#define TPACPI_FAN_QL_BIOS(__id1, __id2, __quirks)	\
->> +	{ .vendor = PCI_VENDOR_ID_LENOVO,	\
->> +	  .bios = TPID(__id1, __id2),		\
->> +	  .ec = TPACPI_MATCH_ANY,		\
->> +	  .quirks = __quirks }
->> +
->>  static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
->>  	TPACPI_FAN_QI('1', 'Y', TPACPI_FAN_Q1),
->>  	TPACPI_FAN_QI('7', '8', TPACPI_FAN_Q1),
->>  	TPACPI_FAN_QI('7', '6', TPACPI_FAN_Q1),
->>  	TPACPI_FAN_QI('7', '0', TPACPI_FAN_Q1),
->>  	TPACPI_FAN_QL('7', 'M', TPACPI_FAN_2FAN),
->> +	TPACPI_FAN_QL_BIOS('N', '1', TPACPI_FAN_2FAN) // Thinkpad P50 has 2 fans
->>  };
->>  
->>  #undef TPACPI_FAN_QL
->>  #undef TPACPI_FAN_QI
->> +#undef TPACPI_FAN_QL_BIOS
->>  
->>  static int __init fan_init(struct ibm_init_struct *iibm)
->>  {
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
