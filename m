@@ -1,92 +1,63 @@
-From: "=?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?=" <jprvita@gmail.com>
-Subject: [PATCH] platform/x86: asus-wireless: Fix NULL pointer dereference
-Date: Fri,  6 Apr 2018 22:37:29 -0700
-Message-ID: <20180407053729.5434-1-jprvita@endlessm.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform/x86: asus-wireless: Fix NULL pointer dereference
+Date: Sat, 7 Apr 2018 08:50:06 -0700
+Message-ID: <20180407155006.GA11256@fury>
+References: <20180407053729.5434-1-jprvita@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180407053729.5434-1-jprvita@endlessm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux@endlessm.com, Dun Hum <bitter.taste@gmx.com>, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
+To: =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux@endlessm.com, Dun Hum <bitter.taste@gmx.com>, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-When the module is removed the led workqueue is destroyed in the remove
-callback, before the led device is unregistered from the led subsystem.
+On Fri, Apr 06, 2018 at 10:37:29PM -0700, Jo„o Paulo Rechi Vita wrote:
+> When the module is removed the led workqueue is destroyed in the remove
+> callback, before the led device is unregistered from the led subsystem.
+> 
+> This leads to a NULL pointer derefence when the led device is
+> unregistered automatically later as part of the module removal cleanup.
+> Bellow is the backtrace showing the problem.
+> 
 
-This leads to a NULL pointer derefence when the led device is
-unregistered automatically later as part of the module removal cleanup.
-Bellow is the backtrace showing the problem.
+Thanks Jo„o Paulo,
+...
 
-  BUG: unable to handle kernel NULL pointer dereference at           (null)
-  IP: __queue_work+0x8c/0x410
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP NOPTI
-  Modules linked in: ccm edac_mce_amd kvm_amd kvm irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel pcbc aesni_intel aes_x86_64 joydev crypto_simd asus_nb_wmi glue_helper uvcvideo snd_hda_codec_conexant snd_hda_codec_generic snd_hda_codec_hdmi snd_hda_intel asus_wmi snd_hda_codec cryptd snd_hda_core sparse_keymap videobuf2_vmalloc arc4 videobuf2_memops snd_hwdep input_leds videobuf2_v4l2 ath9k psmouse videobuf2_core videodev ath9k_common snd_pcm ath9k_hw media fam15h_power ath k10temp snd_timer mac80211 i2c_piix4 r8169 mii mac_hid cfg80211 asus_wireless(-) snd soundcore wmi shpchp 8250_dw ip_tables x_tables amdkfd amd_iommu_v2 amdgpu radeon chash i2c_algo_bit drm_kms_helper syscopyarea serio_raw sysfillrect sysimgblt fb_sys_fops ahci ttm libahci drm video
-  CPU: 3 PID: 2177 Comm: rmmod Not tainted 4.15.0-5-generic #6+dev94.b4287e5bem1-Endless
-  Hardware name: ASUSTeK COMPUTER INC. X555DG/X555DG, BIOS 5.011 05/05/2015
-  RIP: 0010:__queue_work+0x8c/0x410
-  RSP: 0018:ffffbe8cc249fcd8 EFLAGS: 00010086
-  RAX: ffff992ac6810800 RBX: 0000000000000000 RCX: 0000000000000008
-  RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff992ac6400e18
-  RBP: ffffbe8cc249fd18 R08: ffff992ac6400db0 R09: 0000000000000000
-  R10: 0000000000000040 R11: ffff992ac6400dd8 R12: 0000000000002000
-  R13: ffff992abd762e00 R14: ffff992abd763e38 R15: 000000000001ebe0
-  FS:  00007f318203e700(0000) GS:ffff992aced80000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000000 CR3: 00000001c720e000 CR4: 00000000001406e0
-  Call Trace:
-   queue_work_on+0x38/0x40
-   led_state_set+0x2c/0x40 [asus_wireless]
-   led_set_brightness_nopm+0x14/0x40
-   led_set_brightness+0x37/0x60
-   led_trigger_set+0xfc/0x1d0
-   led_classdev_unregister+0x32/0xd0
-   devm_led_classdev_release+0x11/0x20
-   release_nodes+0x109/0x1f0
-   devres_release_all+0x3c/0x50
-   device_release_driver_internal+0x16d/0x220
-   driver_detach+0x3f/0x80
-   bus_remove_driver+0x55/0xd0
-   driver_unregister+0x2c/0x40
-   acpi_bus_unregister_driver+0x15/0x20
-   asus_wireless_driver_exit+0x10/0xb7c [asus_wireless]
-   SyS_delete_module+0x1da/0x2b0
-   entry_SYSCALL_64_fastpath+0x24/0x87
-  RIP: 0033:0x7f3181b65fd7
-  RSP: 002b:00007ffe74bcbe18 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-  RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3181b65fd7
-  RDX: 000000000000000a RSI: 0000000000000800 RDI: 0000555ea2559258
-  RBP: 0000555ea25591f0 R08: 00007ffe74bcad91 R09: 000000000000000a
-  R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000003
-  R13: 00007ffe74bcae00 R14: 0000000000000000 R15: 0000555ea25591f0
-  Code: 01 00 00 02 0f 85 7d 01 00 00 48 63 45 d4 48 c7 c6 00 f4 fa 87 49 8b 9d 08 01 00 00 48 03 1c c6 4c 89 f7 e8 87 fb ff ff 48 85 c0 <48> 8b 3b 0f 84 c5 01 00 00 48 39 f8 0f 84 bc 01 00 00 48 89 c7
-  RIP: __queue_work+0x8c/0x410 RSP: ffffbe8cc249fcd8
-  CR2: 0000000000000000
-  ---[ end trace 7aa4f4a232e9c39c ]---
+> Unregistering the led device on the remove callback before destroying the
+> workqueue avoids this problem.
+> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=196097
+> 
+> Reported-by: Dun Hum <bitter.taste@gmx.com>
+> Signed-off-by: Jo„o Paulo Rechi Vita <jprvita@endlessm.com>
+> ---
+>  drivers/platform/x86/asus-wireless.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x86/asus-wireless.c
+> index 343e12547660..ecd715c82de5 100644
+> --- a/drivers/platform/x86/asus-wireless.c
+> +++ b/drivers/platform/x86/asus-wireless.c
+> @@ -181,6 +181,7 @@ static int asus_wireless_remove(struct acpi_device *adev)
+>  {
+>  	struct asus_wireless_data *data = acpi_driver_data(adev);
+>  
+> +	devm_led_classdev_unregister(&adev->dev, &data->led);
+>  	if (data->wq)
+>  		destroy_workqueue(data->wq);
+>  	return 0;
 
-Unregistering the led device on the remove callback before destroying the
-workqueue avoids this problem.
+asus_wireless_add only calls devm_led_classdev_register() iff the workqueue is
+successfully created. It seems like it would make sense to move the
+devm_led_classdev_unregister() call within the 'if (data->wq)' condition block.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=196097
+This should also cc stable.
 
-Reported-by: Dun Hum <bitter.taste@gmx.com>
-Signed-off-by: Jo√£o Paulo Rechi Vita <jprvita@endlessm.com>
----
- drivers/platform/x86/asus-wireless.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks,
 
-diff --git a/drivers/platform/x86/asus-wireless.c b/drivers/platform/x86/asus-wireless.c
-index 343e12547660..ecd715c82de5 100644
---- a/drivers/platform/x86/asus-wireless.c
-+++ b/drivers/platform/x86/asus-wireless.c
-@@ -181,6 +181,7 @@ static int asus_wireless_remove(struct acpi_device *adev)
- {
- 	struct asus_wireless_data *data = acpi_driver_data(adev);
- 
-+	devm_led_classdev_unregister(&adev->dev, &data->led);
- 	if (data->wq)
- 		destroy_workqueue(data->wq);
- 	return 0;
 -- 
-2.16.3
+Darren Hart
+VMware Open Source Technology Center
