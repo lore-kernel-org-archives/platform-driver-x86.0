@@ -1,63 +1,72 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform: x86: intel_scu_ipc: Replace mdelay with
- usleep_range in intel_scu_ipc_i2c_cntrl
-Date: Tue, 10 Apr 2018 18:25:15 +0300
-Message-ID: <CAHp75Vf9_mvXk3B0h4FhC=SOEdxSqW2ZyJVUHuLABrtvpfx5zg@mail.gmail.com>
-References: <1523365076-31461-1-git-send-email-baijiaju1990@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v3 1/3] dell-led: Change dell-led.h to dell-common.h
+Date: Thu, 12 Apr 2018 18:42:37 +0800
+Message-ID: <20180412104239.25584-1-kai.heng.feng@canonical.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1523365076-31461-1-git-send-email-baijiaju1990@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, mario.limonciello@dell.com, tiwai@suse.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 10, 2018 at 3:57 PM, Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
-> intel_scu_ipc_i2c_cntrl() calls mutex_lock(), which indicates
-> this function is not called in atomic context.
->
-> Despite never getting called from atomic context,
-> intel_scu_ipc_i2c_cntrl() calls mdelay to busily wait.
-> This is not necessary and can be replaced with usleep_range to
-> avoid busy waiting.
->
-> This is found by a static analysis tool named DCNS written by myself.
-> And I also manually check it.
+This header will be used for more than just led. Change it to a more
+generic name.
 
-I'm not sure we even need that delay at all.
-Anyway, pushed to my review and testing queue, thanks!
+Cc: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v3: Simplify dell_switchable_gfx_is_enabled() by returning bool instead
+    of error code.
+    Use DMI_DEV_TYPE_OEM_STRING to match Dell System.
 
->
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  drivers/platform/x86/intel_scu_ipc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-> index 2c85f75..75c8fef 100644
-> --- a/drivers/platform/x86/intel_scu_ipc.c
-> +++ b/drivers/platform/x86/intel_scu_ipc.c
-> @@ -584,11 +584,11 @@ int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data)
->         if (cmd == IPC_I2C_READ) {
->                 writel(addr, scu->i2c_base + IPC_I2C_CNTRL_ADDR);
->                 /* Write not getting updated without delay */
-> -               mdelay(1);
-> +               usleep_range(1000, 2000);
->                 *data = readl(scu->i2c_base + I2C_DATA_ADDR);
->         } else if (cmd == IPC_I2C_WRITE) {
->                 writel(*data, scu->i2c_base + I2C_DATA_ADDR);
-> -               mdelay(1);
-> +               usleep_range(1000, 2000);
->                 writel(addr, scu->i2c_base + IPC_I2C_CNTRL_ADDR);
->         } else {
->                 dev_err(scu->dev,
-> --
-> 1.9.1
->
+v2: Mario suggested to squash the HDA part into the same series.
 
+ drivers/platform/x86/dell-laptop.c          | 2 +-
+ include/linux/{dell-led.h => dell-common.h} | 4 ++--
+ sound/pci/hda/dell_wmi_helper.c             | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+ rename include/linux/{dell-led.h => dell-common.h} (61%)
 
-
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index c52c6723374b..8ba820e6c3d0 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -29,7 +29,7 @@
+ #include <linux/mm.h>
+ #include <linux/i8042.h>
+ #include <linux/debugfs.h>
+-#include <linux/dell-led.h>
++#include <linux/dell-common.h>
+ #include <linux/seq_file.h>
+ #include <acpi/video.h>
+ #include "dell-rbtn.h"
+diff --git a/include/linux/dell-led.h b/include/linux/dell-common.h
+similarity index 61%
+rename from include/linux/dell-led.h
+rename to include/linux/dell-common.h
+index 92521471517f..37e4b614dd74 100644
+--- a/include/linux/dell-led.h
++++ b/include/linux/dell-common.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __DELL_LED_H__
+-#define __DELL_LED_H__
++#ifndef __DELL_COMMON_H__
++#define __DELL_COMMON_H__
+ 
+ int dell_micmute_led_set(int on);
+ 
+diff --git a/sound/pci/hda/dell_wmi_helper.c b/sound/pci/hda/dell_wmi_helper.c
+index 1b48a8c19d28..56050cc3c0ee 100644
+--- a/sound/pci/hda/dell_wmi_helper.c
++++ b/sound/pci/hda/dell_wmi_helper.c
+@@ -4,7 +4,7 @@
+  */
+ 
+ #if IS_ENABLED(CONFIG_DELL_LAPTOP)
+-#include <linux/dell-led.h>
++#include <linux/dell-common.h>
+ 
+ enum {
+ 	MICMUTE_LED_ON,
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.0
