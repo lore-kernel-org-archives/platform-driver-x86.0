@@ -1,79 +1,65 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v1 2/7] platform/mellanox: mlxreg-hotplug: Document fixes
- for hotplug private data
-Date: Fri, 13 Apr 2018 09:27:12 -0700
-Message-ID: <20180413162712.GD27560@fury>
+Subject: Re: [PATCH v1 3/7] platform/mellanox: mlxreg-hotplug: add extra
+ cycle for hotplug work queue
+Date: Fri, 13 Apr 2018 09:47:10 -0700
+Message-ID: <20180413164710.GE27560@fury>
 References: <1522144927-56512-1-git-send-email-vadimp@mellanox.com>
- <1522144927-56512-3-git-send-email-vadimp@mellanox.com>
+ <1522144927-56512-4-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1522144927-56512-3-git-send-email-vadimp@mellanox.com>
+In-Reply-To: <1522144927-56512-4-git-send-email-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vadim Pasternak <vadimp@mellanox.com>
 Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, ivecera@redhat.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Mar 27, 2018 at 10:02:02AM +0000, Vadim Pasternak wrote:
-> Add missing description of dev, regmap, dwork_irq, after_probe in struct
-> mlxreg_hotplug_priv_data.
-> 
-> Remove dwork field from the structure mlxreg_hotplug_priv_data itself and
-> for the descriptions, since it is not used.
-> 
+On Tue, Mar 27, 2018 at 10:02:03AM +0000, Vadim Pasternak wrote:
+> It adds missed logic for signal acknowledge, by adding an extra run for
+> work queue in case a signal is received, but no specific signal assertion
+> is detected. Such case theoretically can happen for example in case
+> several units are removed or inserted at the same time. In this situation
+> acknowledge for some signal can be missed at signal top aggreagation
+> status level.
 
-A bit of a nit, but "Document..." implies no functional changes, but you are
-changing the physical structure. This can have negative consequences in some
-cases, even if the removed field is unused.
+Why can they be missed? What does "signal top aggregation status level"
+mean? I'm asking to confirm that we are fixing this at the right place,
+and not just applying a suboptimal bandaid by running the workqueue
+more.
 
-Someone reading through the git history might skip over patches starting with
-"Document..." when looking for change which impacted behavior.
+...
 
-Again, for future submissions.
+> 
+> Fixes: 1f976f6978bf ("platform/x86: Move Mellanox platform hotplug driver to platform/mellanox")
 
-> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-> ---
->  drivers/platform/mellanox/mlxreg-hotplug.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-> index ea9e7f4..b56953a 100644
-> --- a/drivers/platform/mellanox/mlxreg-hotplug.c
-> +++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-> @@ -59,9 +59,11 @@
->  /**
->   * struct mlxreg_hotplug_priv_data - platform private data:
->   * @irq: platform device interrupt number;
-> + * @dev: basic device;
->   * @pdev: platform device;
->   * @plat: platform data;
-> - * @dwork: delayed work template;
-> + * @regmap: register map handle;
-> + * @dwork_irq: delayed work template;
->   * @lock: spin lock;
->   * @hwmon: hwmon device;
->   * @mlxreg_hotplug_attr: sysfs attributes array;
-> @@ -71,6 +73,7 @@
->   * @cell: location of top aggregation interrupt register;
->   * @mask: top aggregation interrupt common mask;
->   * @aggr_cache: last value of aggregation register status;
-> + * @after_probe: flag indication probing completion;
->   */
->  struct mlxreg_hotplug_priv_data {
->  	int irq;
-> @@ -79,7 +82,6 @@ struct mlxreg_hotplug_priv_data {
->  	struct mlxreg_hotplug_platform_data *plat;
->  	struct regmap *regmap;
->  	struct delayed_work dwork_irq;
-> -	struct delayed_work dwork;
->  	spinlock_t lock; /* sync with interrupt */
->  	struct device *hwmon;
->  	struct attribute *mlxreg_hotplug_attr[MLXREG_HOTPLUG_ATTRS_MAX + 1];
-> -- 
-> 2.1.4
-> 
-> 
+You didn't mention above how this commit caused this - how did moving
+the driver create this problem? Does this need to go to stable? I'm
+assuming not as you've called it theoretical - not something you've
+observed in practice?
+
+...
+
+>  static int mlxreg_hotplug_device_create(struct mlxreg_hotplug_priv_data *priv,
+> @@ -410,6 +413,18 @@ static void mlxreg_hotplug_work_handler(struct work_struct *work)
+>  	aggr_asserted = priv->aggr_cache ^ regval;
+>  	priv->aggr_cache = regval;
+>  
+> +	/*
+> +	 * Handler is invoked, but no assertion is detected at top aggregation
+> +	 * status level. Set aggr_asserted to mask value to allow handler extra
+> +	 * run over all relevant signals to recover any missed signal.
+> +	 */
+> +	if (priv->not_asserted == MLXREG_HOTPLUG_NOT_ASSERT) {
+> +		priv->not_asserted = 0;
+> +		aggr_asserted = pdata->mask;
+> +	}
+> +	if (!aggr_asserted)
+
+We seem to check aggr_asserted in several places in this routine now.
+Looks like something we could simplify. If you check it here, can you
+drop the check lower in the routine? Can you remove it from the for loop
+if conditional entirely? Please consider how to simplify.
 
 -- 
 Darren Hart
