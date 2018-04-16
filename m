@@ -1,107 +1,138 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v3 3/3] ALSA: hda: Disabled unused audio
- controller for Dell platforms with Switchable Graphics
-Date: Sun, 15 Apr 2018 21:05:23 +0200
-Message-ID: <20180415190523.GA16129@wunner.de>
-References: <20180412104239.25584-1-kai.heng.feng@canonical.com>
- <20180412104239.25584-3-kai.heng.feng@canonical.com>
- <s5hr2nk8zs5.wl-tiwai@suse.de>
- <20180412105909.tbyfcjm55sb47hiq@pali>
- <93DC0F40-81A5-49C6-A470-0D1B6AA85725@canonical.com>
- <20180414104512.GA27158@wunner.de>
- <20180414104950.ngomyjy5l5cwhb5i@pali>
- <20180414111711.GA4245@wunner.de>
- <20180415171746.futkvgbaoj6quy5z@pali>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v3 1/5] efi: Export boot-services code and data as debugfs-blobs
+Date: Mon, 16 Apr 2018 10:23:17 +0200
+Message-ID: <CAKv+Gu-DZ86y5pmQ+-gQWLHAcs47H-cixCM1pBKmKZXA=+jRmg@mail.gmail.com>
+References: <20180408174014.21908-1-hdegoede@redhat.com> <20180408174014.21908-2-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20180415171746.futkvgbaoj6quy5z@pali>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: mjg59@srcf.ucam.org, alsa-devel@alsa-project.org, mario.limonciello@dell.com, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>, dvhart@infradead.org, andy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180408174014.21908-2-hdegoede@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, Will Deacon <will.deacon@arm.com>, Andy Lutomirski <luto@kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, David Howells <dhowells@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Josh Triplett <josh@joshtriplett.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Martin Fuzzey <mfuzzey@parkeon.com>, Kees
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Apr 15, 2018 at 07:17:46PM +0200, Pali Roh=E1r wrote:
-> On Saturday 14 April 2018 13:17:11 Lukas Wunner wrote:
-> > On Sat, Apr 14, 2018 at 12:49:50PM +0200, Pali Roh=E1r wrote:
-> > > On Saturday 14 April 2018 12:45:12 Lukas Wunner wrote:
-> > > > On Thu, Apr 12, 2018 at 10:15:41PM +0800, Kai-Heng Feng wrote:
-> > > > > Do you have any suggestion to check if it connects to the system =
-via
-> > > > > Thunderbolt?
-> > > > =
+Hallo Hans,
 
-> > > > Just use pci_is_thunderbolt_attached(), introduced by 8531e283bee6,
-> > > > like this:
-> > > > =
+On 8 April 2018 at 19:40, Hans de Goede <hdegoede@redhat.com> wrote:
+> Sometimes it is useful to be able to dump the efi boot-services code and
+> data. This commit adds these as debugfs-blobs to /sys/kernel/debug/efi,
+> but only if efi=debug is passed on the kernel-commandline as this requires
+> not freeing those memory-regions, which costs 20+ MB of RAM.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> -Do not call pr_err on debugfs call failures
+> ---
+>  arch/x86/platform/efi/quirks.c |  4 +++
+>  drivers/firmware/efi/efi.c     | 53 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 57 insertions(+)
+>
+> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> index 5b513ccffde4..0f968c7bcfec 100644
+> --- a/arch/x86/platform/efi/quirks.c
+> +++ b/arch/x86/platform/efi/quirks.c
+> @@ -374,6 +374,10 @@ void __init efi_free_boot_services(void)
+>         int num_entries = 0;
+>         void *new, *new_md;
+>
+> +       /* Keep all regions for /sys/kernel/debug/efi */
+> +       if (efi_enabled(EFI_DBG))
+> +               return;
+> +
+>         for_each_efi_memory_desc(md) {
+>                 unsigned long long start = md->phys_addr;
+>                 unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index cd42f66a7c85..10c896e8b82b 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/kobject.h>
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+> +#include <linux/debugfs.h>
+>  #include <linux/device.h>
+>  #include <linux/efi.h>
+>  #include <linux/of.h>
+> @@ -316,6 +317,55 @@ static __init int efivar_ssdt_load(void)
+>  static inline int efivar_ssdt_load(void) { return 0; }
+>  #endif
+>
+> +#ifdef CONFIG_DEBUG_FS
+> +
+> +#define EFI_DEBUGFS_MAX_BLOBS 32
+> +
+> +static struct debugfs_blob_wrapper debugfs_blob[EFI_DEBUGFS_MAX_BLOBS];
+> +
+> +static void __init efi_debugfs_init(void)
+> +{
+> +       struct dentry *efi_debugfs;
+> +       efi_memory_desc_t *md;
+> +       char name[32];
+> +       int type_count[EFI_BOOT_SERVICES_DATA + 1] = {};
+> +       int i = 0;
+> +
+> +       efi_debugfs = debugfs_create_dir("efi", NULL);
+> +       if (IS_ERR_OR_NULL(efi_debugfs))
+> +               return;
+> +
+> +       for_each_efi_memory_desc(md) {
+> +               switch (md->type) {
+> +               case EFI_BOOT_SERVICES_CODE:
+> +                       snprintf(name, sizeof(name), "boot_services_code%d",
+> +                                type_count[md->type]++);
+> +                       break;
+> +               case EFI_BOOT_SERVICES_DATA:
+> +                       snprintf(name, sizeof(name), "boot_services_data%d",
+> +                                type_count[md->type]++);
+> +                       break;
+> +               default:
+> +                       continue;
+> +               }
+> +
+> +               debugfs_blob[i].size = md->num_pages << EFI_PAGE_SHIFT;
+> +               debugfs_blob[i].data = memremap(md->phys_addr,
+> +                                               debugfs_blob[i].size,
+> +                                               MEMREMAP_WB);
+> +               if (!debugfs_blob[i].data)
+> +                       continue;
+> +
+> +               debugfs_create_blob(name, 0400, efi_debugfs, &debugfs_blob[i]);
+> +               i++;
+> +               if (i == EFI_DEBUGFS_MAX_BLOBS)
+> +                       break;
+> +       }
+> +}
+> +#else
+> +static inline void efi_debugfs_init(void) {}
+> +#endif
+> +
+>  /*
+>   * We register the efi subsystem with the firmware subsystem and the
+>   * efivars subsystem with the efi subsystem, if the system was booted with
+> @@ -360,6 +410,9 @@ static int __init efisubsys_init(void)
+>                 goto err_remove_group;
+>         }
+>
+> +       if (efi_enabled(EFI_DBG))
+> +               efi_debugfs_init();
+> +
 
-> > > > if (check_dell_switchable_gfx(pci) && !pci_is_thunderbolt_attached(=
-pci))
-> > > =
+This doesn't really make any sense on non-x86. The boot services
+regions are released to the kernel for general allocation, and so
+exposing them this way only makes sense if you keep them as you do for
+x86.
 
-> > > And what about PCI-e device attached to ExpressCard slot?
-> > =
+Could you please try to make this call specific to situations where it
+makes sense? I don't mind allocating a new EFI_xxx flag for preserving
+the boot services regions so we could decide to set it for ARM/arm64
+as well in certain cases in the future.
 
-> > I don't know of a bullet-proof way to recognize those.  In theory
-> > one could check if the PCIe port above the GPU is a non-hotplug
-> > root port, but I think there are machines with hotplug capable
-> > root ports with GPUs below them that aren't actually removable.
-> > =
-
-> > However I think ExpressCard-attached GPUs were rare, much less ones
-> > with integrated HDA controller, so in reality that's probably a
-> > non-issue.
-> =
-
-> Hm... maybe another idea: Is it possible to detect which audio pci
-> device belongs to graphics card via vga_switcheroo? Currently, looking
-> at output it is same PCI device as graphic card, just different PCI
-> function.
-
-No, the DRM drivers don't filter ExpressCard-attached GPUs when
-registering with vga_switcheroo.  They do filter Thunderbolt-
-attached GPUs.
-
-The ExpressCard 2.0 spec defines some ACPI stuff that *might* be
-used to recognize root ports that are ExpressCard slots, but I'm
-not sure how reliable that is.  I don't have such a machine and
-have no experience with it.
-
-This is from the MacBookPro8,3 DSDT:
-
-            Device (RP04)
-            {
-                Name (_ADR, 0x001C0003)
-                OperationRegion (A1E0, PCI_Config, 0x19, 0x01)
-                Field (A1E0, ByteAcc, NoLock, Preserve)
-                {
-                    SECB,   8
-                }
-
-                Device (EXCD)
-                {
-                    Name (_ADR, 0x00)
-                    Name (_SUN, 0x01)
-                    Method (_RMV, 0, NotSerialized)
-                    {
-                        Return (0x01)
-                    }
-
-                    Name (_EJD, "\\_SB.PCI0.EHC2.HUBN.PRTN.PRT4")
-                }
-                ...
-            }
-
-Thanks,
-
-Lukas
+>         return 0;
+>
+>  err_remove_group:
+> --
+> 2.17.0
+>
