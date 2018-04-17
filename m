@@ -1,94 +1,43 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v3 3/3] ALSA: hda: Disabled unused audio
- controller for Dell platforms with Switchable Graphics
-Date: Mon, 16 Apr 2018 16:25:12 +0200
-Message-ID: <20180416142512.bwsemgwrncyl5xan@pali>
-References: <20180412104239.25584-1-kai.heng.feng@canonical.com>
- <20180412104239.25584-3-kai.heng.feng@canonical.com>
- <s5hr2nk8zs5.wl-tiwai@suse.de>
- <20180412105909.tbyfcjm55sb47hiq@pali>
- <93DC0F40-81A5-49C6-A470-0D1B6AA85725@canonical.com>
- <20180414104512.GA27158@wunner.de>
- <20180414104950.ngomyjy5l5cwhb5i@pali>
- <20180414111711.GA4245@wunner.de>
- <20180415171746.futkvgbaoj6quy5z@pali>
- <20180415190523.GA16129@wunner.de>
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Subject: Re: [PATCH v3 2/5] efi: Add embedded peripheral firmware support
+Date: Tue, 17 Apr 2018 00:17:38 +0000
+Message-ID: <20180417001738.GN30543@wotan.suse.de>
+References: <20180408174014.21908-1-hdegoede@redhat.com>
+ <20180408174014.21908-3-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180415190523.GA16129@wunner.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Lukas Wunner <lukas@wunner.de>
-Cc: mjg59@srcf.ucam.org, alsa-devel@alsa-project.org, mario.limonciello@dell.com, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>, dvhart@infradead.org, andy@infradead.org
+In-Reply-To: <20180408174014.21908-3-hdegoede@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, Will Deacon <will.deacon@arm.com>, Andy Lutomirski <luto@kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, David Howells <dhowells@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Josh Triplett <josh@joshtriplett.org>, dmitry.torokhov@gmail.com, mfuzzey@parkeon.com, keescook@chromium.org, Kalle
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gU3VuZGF5IDE1IEFwcmlsIDIwMTggMjE6MDU6MjMgTHVrYXMgV3VubmVyIHdyb3RlOgo+IE9u
-IFN1biwgQXByIDE1LCAyMDE4IGF0IDA3OjE3OjQ2UE0gKzAyMDAsIFBhbGkgUm9ow6FyIHdyb3Rl
-Ogo+ID4gT24gU2F0dXJkYXkgMTQgQXByaWwgMjAxOCAxMzoxNzoxMSBMdWthcyBXdW5uZXIgd3Jv
-dGU6Cj4gPiA+IE9uIFNhdCwgQXByIDE0LCAyMDE4IGF0IDEyOjQ5OjUwUE0gKzAyMDAsIFBhbGkg
-Um9ow6FyIHdyb3RlOgo+ID4gPiA+IE9uIFNhdHVyZGF5IDE0IEFwcmlsIDIwMTggMTI6NDU6MTIg
-THVrYXMgV3VubmVyIHdyb3RlOgo+ID4gPiA+ID4gT24gVGh1LCBBcHIgMTIsIDIwMTggYXQgMTA6
-MTU6NDFQTSArMDgwMCwgS2FpLUhlbmcgRmVuZyB3cm90ZToKPiA+ID4gPiA+ID4gRG8geW91IGhh
-dmUgYW55IHN1Z2dlc3Rpb24gdG8gY2hlY2sgaWYgaXQgY29ubmVjdHMgdG8gdGhlIHN5c3RlbSB2
-aWEKPiA+ID4gPiA+ID4gVGh1bmRlcmJvbHQ/Cj4gPiA+ID4gPiAKPiA+ID4gPiA+IEp1c3QgdXNl
-IHBjaV9pc190aHVuZGVyYm9sdF9hdHRhY2hlZCgpLCBpbnRyb2R1Y2VkIGJ5IDg1MzFlMjgzYmVl
-NiwKPiA+ID4gPiA+IGxpa2UgdGhpczoKPiA+ID4gPiA+IAo+ID4gPiA+ID4gaWYgKGNoZWNrX2Rl
-bGxfc3dpdGNoYWJsZV9nZngocGNpKSAmJiAhcGNpX2lzX3RodW5kZXJib2x0X2F0dGFjaGVkKHBj
-aSkpCj4gPiA+ID4gCj4gPiA+ID4gQW5kIHdoYXQgYWJvdXQgUENJLWUgZGV2aWNlIGF0dGFjaGVk
-IHRvIEV4cHJlc3NDYXJkIHNsb3Q/Cj4gPiA+IAo+ID4gPiBJIGRvbid0IGtub3cgb2YgYSBidWxs
-ZXQtcHJvb2Ygd2F5IHRvIHJlY29nbml6ZSB0aG9zZS4gIEluIHRoZW9yeQo+ID4gPiBvbmUgY291
-bGQgY2hlY2sgaWYgdGhlIFBDSWUgcG9ydCBhYm92ZSB0aGUgR1BVIGlzIGEgbm9uLWhvdHBsdWcK
-PiA+ID4gcm9vdCBwb3J0LCBidXQgSSB0aGluayB0aGVyZSBhcmUgbWFjaGluZXMgd2l0aCBob3Rw
-bHVnIGNhcGFibGUKPiA+ID4gcm9vdCBwb3J0cyB3aXRoIEdQVXMgYmVsb3cgdGhlbSB0aGF0IGFy
-ZW4ndCBhY3R1YWxseSByZW1vdmFibGUuCj4gPiA+IAo+ID4gPiBIb3dldmVyIEkgdGhpbmsgRXhw
-cmVzc0NhcmQtYXR0YWNoZWQgR1BVcyB3ZXJlIHJhcmUsIG11Y2ggbGVzcyBvbmVzCj4gPiA+IHdp
-dGggaW50ZWdyYXRlZCBIREEgY29udHJvbGxlciwgc28gaW4gcmVhbGl0eSB0aGF0J3MgcHJvYmFi
-bHkgYQo+ID4gPiBub24taXNzdWUuCj4gPiAKPiA+IEhtLi4uIG1heWJlIGFub3RoZXIgaWRlYTog
-SXMgaXQgcG9zc2libGUgdG8gZGV0ZWN0IHdoaWNoIGF1ZGlvIHBjaQo+ID4gZGV2aWNlIGJlbG9u
-Z3MgdG8gZ3JhcGhpY3MgY2FyZCB2aWEgdmdhX3N3aXRjaGVyb28/IEN1cnJlbnRseSwgbG9va2lu
-Zwo+ID4gYXQgb3V0cHV0IGl0IGlzIHNhbWUgUENJIGRldmljZSBhcyBncmFwaGljIGNhcmQsIGp1
-c3QgZGlmZmVyZW50IFBDSQo+ID4gZnVuY3Rpb24uCj4gCj4gTm8sIHRoZSBEUk0gZHJpdmVycyBk
-b24ndCBmaWx0ZXIgRXhwcmVzc0NhcmQtYXR0YWNoZWQgR1BVcyB3aGVuCj4gcmVnaXN0ZXJpbmcg
-d2l0aCB2Z2Ffc3dpdGNoZXJvby4KCj4gVGhleSBkbyBmaWx0ZXIgVGh1bmRlcmJvbHQtYXR0YWNo
-ZWQgR1BVcy4KClNvIGNoZWNrIHZpYSB2Z2Ffc3dpdGNoZXJvbyBzaG91bGQgYXQgbGVhc3Qgd29y
-ayBmb3IgVGh1bmRlcmJvbHQgR1BVcy4KCj4gVGhlIEV4cHJlc3NDYXJkIDIuMCBzcGVjIGRlZmlu
-ZXMgc29tZSBBQ1BJIHN0dWZmIHRoYXQgKm1pZ2h0KiBiZQo+IHVzZWQgdG8gcmVjb2duaXplIHJv
-b3QgcG9ydHMgdGhhdCBhcmUgRXhwcmVzc0NhcmQgc2xvdHMsIGJ1dCBJJ20KPiBub3Qgc3VyZSBo
-b3cgcmVsaWFibGUgdGhhdCBpcy4KClNvIGZvciBFQyB3ZSBkbyBub3Qga25vdyBvciBoYXZlIHJl
-bGlhYmxlIGRldGVjdGlvbi4KCkkgZG8gbm90IGtub3cgaWYgaXQgaXMgcG9zc2libGUsIGJ1dCBm
-b3IgbWUgaXQgbG9va3MgbGlrZSB0aGF0IGNoZWNrIHZpYQp2Z2Ffc3dpdGNoZXJvbyBzaG91bGQg
-YmUgYmV0dGVyIHRoZW4gYWRkaW5nIGFub3RoZXIgaGV1cmlzdGljIHRvIG90aGVyCmRyaXZlcnMu
-CgpMdWthcywgd2hhdCBkbyB5b3UgdGhpbms/IEFuZCBpdCBpcyBwb3NzaWJsZSB0byB1c2UgdGhp
-cyBjaGVjayBmb3IKZGV0ZWN0aW5nIGF1ZGlvIGRldmljZT8KCkFuZCBvbmNlIHdlIHdvdWxkIGhh
-dmUgZ29vZC9yZWxpYWJsZSBjaGVjayBmb3IgRUMgZGV2aWNlcyB3ZSBjYW4gYWRkIGl0CmludG8g
-dmdhX3N3aXRjaGVyb28gYW5kIGFsbCB1c2VycyBvZiBpdCBjb3VsZCBiZW5lZml0LiBBbnl3YXks
-IEkgdGhpbmsKdGhhdCB2Z2Ffc3dpdGNoZXJvbyBzaG91bGQgZmlsdGVyIGFsc28gRUMgR1BVIGNh
-cmRzIGlmIGl0IGFscmVhZHkKZmlsdGVycyBUaHVuZGVyYm9sdC4KCj4gSSBkb24ndCBoYXZlIHN1
-Y2ggYSBtYWNoaW5lIGFuZCBoYXZlIG5vIGV4cGVyaWVuY2Ugd2l0aCBpdC4KPiAKPiBUaGlzIGlz
-IGZyb20gdGhlIE1hY0Jvb2tQcm84LDMgRFNEVDoKPiAKPiAgICAgICAgICAgICBEZXZpY2UgKFJQ
-MDQpCj4gICAgICAgICAgICAgewo+ICAgICAgICAgICAgICAgICBOYW1lIChfQURSLCAweDAwMUMw
-MDAzKQo+ICAgICAgICAgICAgICAgICBPcGVyYXRpb25SZWdpb24gKEExRTAsIFBDSV9Db25maWcs
-IDB4MTksIDB4MDEpCj4gICAgICAgICAgICAgICAgIEZpZWxkIChBMUUwLCBCeXRlQWNjLCBOb0xv
-Y2ssIFByZXNlcnZlKQo+ICAgICAgICAgICAgICAgICB7Cj4gICAgICAgICAgICAgICAgICAgICBT
-RUNCLCAgIDgKPiAgICAgICAgICAgICAgICAgfQo+IAo+ICAgICAgICAgICAgICAgICBEZXZpY2Ug
-KEVYQ0QpCj4gICAgICAgICAgICAgICAgIHsKPiAgICAgICAgICAgICAgICAgICAgIE5hbWUgKF9B
-RFIsIDB4MDApCj4gICAgICAgICAgICAgICAgICAgICBOYW1lIChfU1VOLCAweDAxKQo+ICAgICAg
-ICAgICAgICAgICAgICAgTWV0aG9kIChfUk1WLCAwLCBOb3RTZXJpYWxpemVkKQo+ICAgICAgICAg
-ICAgICAgICAgICAgewo+ICAgICAgICAgICAgICAgICAgICAgICAgIFJldHVybiAoMHgwMSkKPiAg
-ICAgICAgICAgICAgICAgICAgIH0KPiAKPiAgICAgICAgICAgICAgICAgICAgIE5hbWUgKF9FSkQs
-ICJcXF9TQi5QQ0kwLkVIQzIuSFVCTi5QUlROLlBSVDQiKQo+ICAgICAgICAgICAgICAgICB9Cj4g
-ICAgICAgICAgICAgICAgIC4uLgo+ICAgICAgICAgICAgIH0KPiAKPiBUaGFua3MsCj4gCj4gTHVr
-YXMKCi0tIApQYWxpIFJvaMOhcgpwYWxpLnJvaGFyQGdtYWlsLmNvbQpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApB
-bHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
+On Sun, Apr 08, 2018 at 07:40:11PM +0200, Hans de Goede wrote:
+>  static void firmware_free_data(const struct firmware *fw)
+>  {
+> @@ -576,6 +600,15 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
+>  		goto out;
+>  
+>  	ret = fw_get_filesystem_firmware(device, fw->priv);
+> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+> +	if (ret && device &&
+> +	    device_property_read_bool(device, "efi-embedded-firmware")) {
+> +		ret = fw_get_efi_embedded_fw(device, fw->priv, ret);
+> +		if (ret == 0)
+> +			ret = assign_fw(fw, device, opt_flags | FW_OPT_NOCACHE);
+> +		goto out;
+> +	}
+> +#endif
+
+You mussed what I asked for in terms of adding a new flag, (please work on top
+of Andre's patches as those likely will be merged first, and also have kdocs
+for the flags) and then a new firmware API to wrap the above into a function
+which would only do something if the driver *asked* for it on their firmware
+API call.  Ie, please add a new firmware_request_efi_fw(). Also if you see the
+work I've done to remove the ifdefs over fallback mechanism you'll see it helps
+split code and make it easier to read. We should strive to not add any more
+ifdefery and instead make tehis code read easily.
+
+  Luis
