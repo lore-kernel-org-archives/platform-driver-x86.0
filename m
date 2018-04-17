@@ -1,62 +1,49 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v3 2/5] efi: Add embedded peripheral firmware support
-Date: Tue, 17 Apr 2018 11:19:14 +0200
-Message-ID: <00800dc5-f6de-ab26-4d3e-eb2a47e10709@redhat.com>
-References: <20180408174014.21908-1-hdegoede@redhat.com>
- <20180408174014.21908-3-hdegoede@redhat.com>
- <20180417001738.GN30543@wotan.suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH] platform/x86: dell-smbios: Match on www.dell.com in OEM strings too
+Date: Tue, 17 Apr 2018 14:45:56 -0500
+Message-ID: <1523994356-9598-1-git-send-email-mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180417001738.GN30543@wotan.suse.de>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, Will Deacon <will.deacon@arm.com>, Andy Lutomirski <luto@kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, David Howells <dhowells@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Josh Triplett <josh@joshtriplett.org>, dmitry.torokhov@gmail.com, mfuzzey@parkeon.com, keescook@chromium.org, Kalle Valo <kvalo@codeaurora.org>, Arend
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+Sergey reported that some much older Dell systems don't support
+the OEM string "Dell System" but instead supported www.dell.com
+in OEM strings.
 
-On 17-04-18 02:17, Luis R. Rodriguez wrote:
-> On Sun, Apr 08, 2018 at 07:40:11PM +0200, Hans de Goede wrote:
->>   static void firmware_free_data(const struct firmware *fw)
->>   {
->> @@ -576,6 +600,15 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
->>   		goto out;
->>   
->>   	ret = fw_get_filesystem_firmware(device, fw->priv);
->> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
->> +	if (ret && device &&
->> +	    device_property_read_bool(device, "efi-embedded-firmware")) {
->> +		ret = fw_get_efi_embedded_fw(device, fw->priv, ret);
->> +		if (ret == 0)
->> +			ret = assign_fw(fw, device, opt_flags | FW_OPT_NOCACHE);
->> +		goto out;
->> +	}
->> +#endif
-> 
+Match both of these to indicate that this driver is running on
+a Dell system.
 
-So thinking some more about this, I can put the device_property check
-inside the fw_get_efi_embedded_fw() call, as well as modify opt_flags
-there to or in FW_OPT_NOCACHE on success, then together with the discussed
-changed to drop the #ifdef, the code would look like this:
+Reported-by: Sergey Kubushyn <ksi@koi8.net>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+Tested-by: Sergey Kubushyn <ksi@koi8.net>
+---
+ drivers/platform/x86/dell-smbios-base.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-         ret = fw_get_filesystem_firmware(device, fw->priv);
-	if (ret)
-		fw_get_efi_embedded_fw(device, fw->priv, &opt_flags, ret);
-	if (ret)
-                 if (!(opt_flags & FW_OPT_NO_WARN))
-                         dev_warn(device,
-	...
-
-With just these 2 lines being new:
-
-	if (ret)
-		fw_get_efi_embedded_fw(device, fw->priv, &opt_flags, ret);
-
-So the main.c changes will be nice and clean then.
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x86/dell-smbios-base.c
+index 2485c80..fbd6557 100644
+--- a/drivers/platform/x86/dell-smbios-base.c
++++ b/drivers/platform/x86/dell-smbios-base.c
+@@ -555,11 +555,15 @@ static void free_group(struct platform_device *pdev)
+ 
+ static int __init dell_smbios_init(void)
+ {
+-	const struct dmi_device *valid;
++	const struct dmi_device *valid_dell_system;
++	const struct dmi_device *valid_www;
+ 	int ret, wmi, smm;
+ 
+-	valid = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL);
+-	if (!valid) {
++	valid_dell_system =
++		dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL);
++	valid_www =
++		dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com", NULL);
++	if (!valid_dell_system && !valid_www) {
+ 		pr_err("Unable to run on non-Dell system\n");
+ 		return -ENODEV;
+ 	}
+-- 
+2.7.4
