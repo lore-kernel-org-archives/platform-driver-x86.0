@@ -1,106 +1,135 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH v3 3/3] ALSA: hda: Disabled unused audio controller for
- Dell platforms with Switchable Graphics
-Date: Tue, 17 Apr 2018 09:52:57 +0200
-Message-ID: <20180417075257.zjnju4jyyc3k5fez@pali>
-References: <s5hr2nk8zs5.wl-tiwai@suse.de>
- <20180412105909.tbyfcjm55sb47hiq@pali>
- <93DC0F40-81A5-49C6-A470-0D1B6AA85725@canonical.com>
- <20180414104512.GA27158@wunner.de>
- <20180414104950.ngomyjy5l5cwhb5i@pali>
- <20180414111711.GA4245@wunner.de>
- <20180415171746.futkvgbaoj6quy5z@pali>
- <20180415190523.GA16129@wunner.de>
- <20180416142512.bwsemgwrncyl5xan@pali>
- <20180417023829.GA1533@wunner.de>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v3 2/5] efi: Add embedded peripheral firmware support
+Date: Tue, 17 Apr 2018 10:58:40 +0200
+Message-ID: <aff2d267-e06d-f422-5623-6f6cc25af155@redhat.com>
+References: <20180408174014.21908-1-hdegoede@redhat.com>
+ <20180408174014.21908-3-hdegoede@redhat.com>
+ <20180417001738.GN30543@wotan.suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180417023829.GA1533@wunner.de>
+In-Reply-To: <20180417001738.GN30543@wotan.suse.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, Takashi Iwai <tiwai@suse.de>, mario.limonciello@dell.com, andy@infradead.org, dvhart@infradead.org, mjg59@srcf.ucam.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: "Luis R. Rodriguez" <mcgrof@kernel.org>, Andres Rodriguez <andresx7@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, Will Deacon <will.deacon@arm.com>, Andy Lutomirski <luto@kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, David Howells <dhowells@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Josh Triplett <josh@joshtriplett.org>, dmitry.torokhov@gmail.com, mfuzzey@parkeon.com, keescook@chromium.org, Kalle Valo <kvalo@codeaurora.org>, Arend
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tuesday 17 April 2018 04:38:29 Lukas Wunner wrote:
-> On Mon, Apr 16, 2018 at 04:25:12PM +0200, Pali Rohár wrote:
-> > On Sunday 15 April 2018 21:05:23 Lukas Wunner wrote:
-> > > On Sun, Apr 15, 2018 at 07:17:46PM +0200, Pali Rohár wrote:
-> > > > On Saturday 14 April 2018 13:17:11 Lukas Wunner wrote:
-> > > > > On Sat, Apr 14, 2018 at 12:49:50PM +0200, Pali Rohár wrote:
-> > > > > > On Saturday 14 April 2018 12:45:12 Lukas Wunner wrote:
-> > > > > > > On Thu, Apr 12, 2018 at 10:15:41PM +0800, Kai-Heng Feng wrote:
-> > > > > > > > Do you have any suggestion to check if it connects to the system via
-> > > > > > > > Thunderbolt?
-> > > > > > > 
-> > > > > > > Just use pci_is_thunderbolt_attached(), introduced by 8531e283bee6,
-> > > > > > > like this:
-> > > > > > > 
-> > > > > > > if (check_dell_switchable_gfx(pci) && !pci_is_thunderbolt_attached(pci))
-> > > > > > 
-> > > > > > And what about PCI-e device attached to ExpressCard slot?
-> > > > > 
-> > > > > I don't know of a bullet-proof way to recognize those.
-> > > > 
-> > > > Hm... maybe another idea: Is it possible to detect which audio pci
-> > > > device belongs to graphics card via vga_switcheroo? Currently, looking
-> > > > at output it is same PCI device as graphic card, just different PCI
-> > > > function.
-> > > 
-> > > No, the DRM drivers don't filter ExpressCard-attached GPUs when
-> > > registering with vga_switcheroo.
-> > 
-> > > They do filter Thunderbolt-attached GPUs.
-> > 
-> > So check via vga_switcheroo should at least work for Thunderbolt GPUs.
-> > 
-> > I do not know if it is possible, but for me it looks like that check via
-> > vga_switcheroo should be better then adding another heuristic to other
-> > drivers.
+Hi,
+
+On 17-04-18 02:17, Luis R. Rodriguez wrote:
+> On Sun, Apr 08, 2018 at 07:40:11PM +0200, Hans de Goede wrote:
+>>   static void firmware_free_data(const struct firmware *fw)
+>>   {
+>> @@ -576,6 +600,15 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
+>>   		goto out;
+>>   
+>>   	ret = fw_get_filesystem_firmware(device, fw->priv);
+>> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+>> +	if (ret && device &&
+>> +	    device_property_read_bool(device, "efi-embedded-firmware")) {
+>> +		ret = fw_get_efi_embedded_fw(device, fw->priv, ret);
+>> +		if (ret == 0)
+>> +			ret = assign_fw(fw, device, opt_flags | FW_OPT_NOCACHE);
+>> +		goto out;
+>> +	}
+>> +#endif
 > 
-> It is way simpler and more straightforward if hda_intel.c calls
-> pci_is_thunderbolt_attached() directly, as I've suggested above.
-> 
-> The DRM drivers call that as well and register with vga_switcheroo
-> only if it returns false.  So if hda_intel.c asked vga_switcheroo
-> and got back a negative answer, it would never know whether it's
-> because the DRM driver hasn't finished probing yet, or it's module
-> is blacklisted, or whatever.
+> You mussed what I asked for in terms of adding a new flag, (please work on top
+> of Andre's patches as those likely will be merged first, and also have kdocs
+> for the flags)
 
-Ok, module blacklisting can be a problem.
+Ok I will base my next version on top of Andres' series.
 
-> 
-> > And once we would have good/reliable check for EC devices we can add it
-> > into vga_switcheroo and all users of it could benefit. Anyway, I think
-> > that vga_switcheroo should filter also EC GPU cards if it already
-> > filters Thunderbolt.
-> 
-> vga_switcheroo doesn't do the filtering, the DRM drivers themselves
-> decice whether to register with vga_switcheroo or not.  The motivation
-> is to avoid middle layers and instead provide the DRM drivers with
-> a library of helpers that they may call at their own discretion.
+> and then a new firmware API to wrap the above into a function
+> which would only do something if the driver *asked* for it on their firmware
+> API call.
+> Ie, please add a new firmware_request_efi_fw().
 
-Understood. Driver itself can also do more work, e.g. ask ACPI or do
-some other check to decide whatever to register to vga_switcheroo or
-not.
+As I tried to explain in the changelog the problem with doing this, is that
+this makes it a driver decision, where it really needs to be platform-code driven,
+not driver driven.
 
-But probably, hda_intel should have same logic for disabling device like
-gpu drivers for detection if they are going to register into
-vga_switcheroo or not.
+Take for example the drivers/input/touchscreen/silead.c code that is used on
+a lot of 32 bit ARM platforms too, which don't have EFI at all, so if that
+needs to call request_firmware_efi() then should I add:
 
-Right now this seems to be really complicated and suggested solution
-with pci_is_thunderbolt_attached() looks to be really simple and better
-for now.
+#ifdef CONFIG_X86
+	fw = request_firmware_efi(...);
+#else
+	fw = request_firmware(...);
+#endif
 
-> See this blog post and the links therein for background info:
-> http://blog.ffwll.ch/2016/12/midlayers-once-more-with-feeling.html
-> 
-> Thanks,
-> 
-> Lukas
+? But even on x86 only some devices with a silead touchscreen have EFI
+embedded firmware, so then I would need something like:
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+#ifdef CONFIG_X86
+	if (device_property_get_bool(dev, "some-prop-name"))
+		fw = request_firmware_efi(...);
+	else
+#else
+		fw = request_firmware(...);
+#endif
+
+That is assuming I still want the normal fallback path in the
+case no EFI firmware is available, which I do because then
+something like packagekit may see if the firmware is packaged
+in one of the configured distro repositories.
+
+We already have (x86) platform code in place to attach
+properties (like a board specific firmware filename) to the
+device using device-properties so that drivers like silead.c
+don't get filled / polluted with board/platform specific knowledge,
+which IMHO is the place where the knowledge fallback to
+an EFI embedded firmware copy belongs.
+
+As the further patches in v3 of this series shows, this actually
+works quite nicely, because this also allows bundling the
+EFI-embedded firmware info (prefix, length, crc, name) together
+with the other board specific properties.
+
+TL;DR: using request_firmware_efi() vs request_firmware() is
+a driver decision, but whether EFI firmware fallback should be
+is board/platform specific not driver specific, therefor I
+believe that using a device-property to signal this is better.
+
+
+If you insist on me adding a request_firmware_efi() I can give
+this a shot, but I know that Dmitry (the input maintainer) will
+very much dislike the silead.c changes that implies...
+
+Still a question for lets sat we go that route, what do we
+then do with request_firmware_efi() when CONFIG_EFI is not set ?
+Should it be defined then or not, and if it should be defined
+when CONFIG_EFI is not set what should it do then?
+
+> Also if you see the
+> work I've done to remove the ifdefs over fallback mechanism you'll see it helps
+> split code and make it easier to read. We should strive to not add any more
+> ifdefery and instead make tehis code read easily.
+
+So looking at how the CONFIG_FW_LOADER_USER_HELPER stuff deals
+with this, I should:
+
+1) Move the definition of fw_get_efi_embedded_fw() to a new
+drivers/base/firmware_loader/fallback_efi.c,
+which only gets build if CONFIG_EFI_EMBEDDED_FIRMWARE is set
+
+2) Put the following in fallback.h:
+
+#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+int fw_get_efi_embedded_fw(struct device *dev, struct fw_priv *fw_priv, int ret);
+#else
+static inline int
+fw_get_efi_embedded_fw(struct device *dev, struct fw_priv *fw_priv, int ret)
+{
+	return ret;
+}
+#endif
+
+have I got that right?
+
+Regards,
+
+Hans
