@@ -1,49 +1,43 @@
-From: Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH] platform/x86: dell-smbios: Match on www.dell.com in OEM strings too
-Date: Tue, 17 Apr 2018 14:45:56 -0500
-Message-ID: <1523994356-9598-1-git-send-email-mario.limonciello@dell.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
+ Dell machines
+Date: Wed, 18 Apr 2018 13:46:10 +0200
+Message-ID: <20180418114610.rohdk5mnzv4km4z2@pali>
+References: <CAHp75VdU1OMTqLcDuzhQMHuX9rMhjw6p3CkSWaW5Y4kOy8ggqg@mail.gmail.com>
+ <20180131120348.azy25aqvn5wrdkeh@pali>
+ <CAHp75Vf=-RQvCtS684Q5+X=YKmZXgP_1kr0to8BGZX0jQAsuZw@mail.gmail.com>
+ <20180212153012.vffvjmz26ifyxbj5@pali>
+ <CAHp75VfF+qwCXcr3yuayE-Z+UG9wuMOKfGzLhdyPk79daEi9gQ@mail.gmail.com>
+ <20180213150004.5d2v7y7wwuure4io@pali>
+ <CAHp75VfxgbFiDxyrqyMRE8s85L1_EzkVvrA1NGYA5_su=5oGVQ@mail.gmail.com>
+ <20180213165023.xmzovx7fd3gdljxw@pali>
+ <20180226203255.lnnzipipjz5l2itz@ninjato>
+ <20180308225330.5ywfokfhxcl5j3ju@pali>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180308225330.5ywfokfhxcl5j3ju@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
+To: Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <Mario_Limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Sergey reported that some much older Dell systems don't support
-the OEM string "Dell System" but instead supported www.dell.com
-in OEM strings.
+On Thursday 08 March 2018 23:53:30 Pali Rohár wrote:
+> On Monday 26 February 2018 21:32:55 Wolfram Sang wrote:
+> > 
+> > > I'm not maintainer of i2c-i801.ko, Jean Delvare & Wolfram Sang are.
+> > > Therefore instructing future contributors would be up to them.
+> > 
+> > This is really Jean's realm.
+> > 
+> 
+> Jean, ping.
 
-Match both of these to indicate that this driver is running on
-a Dell system.
+Jean, gently ping again. Waiting for your maintainer response/decision
+on this problem.
 
-Reported-by: Sergey Kubushyn <ksi@koi8.net>
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-Tested-by: Sergey Kubushyn <ksi@koi8.net>
----
- drivers/platform/x86/dell-smbios-base.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x86/dell-smbios-base.c
-index 2485c80..fbd6557 100644
---- a/drivers/platform/x86/dell-smbios-base.c
-+++ b/drivers/platform/x86/dell-smbios-base.c
-@@ -555,11 +555,15 @@ static void free_group(struct platform_device *pdev)
- 
- static int __init dell_smbios_init(void)
- {
--	const struct dmi_device *valid;
-+	const struct dmi_device *valid_dell_system;
-+	const struct dmi_device *valid_www;
- 	int ret, wmi, smm;
- 
--	valid = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL);
--	if (!valid) {
-+	valid_dell_system =
-+		dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL);
-+	valid_www =
-+		dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com", NULL);
-+	if (!valid_dell_system && !valid_www) {
- 		pr_err("Unable to run on non-Dell system\n");
- 		return -ENODEV;
- 	}
 -- 
-2.7.4
+Pali Rohár
+pali.rohar@gmail.com
