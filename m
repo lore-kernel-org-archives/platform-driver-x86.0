@@ -1,41 +1,108 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: linux-next: Tree for Apr 19 (dell smbios SMM)
-Date: Thu, 19 Apr 2018 10:59:32 -0700
-Message-ID: <6aec5528-d6f1-3e05-1ac2-6eddbd0ac64f@infradead.org>
-References: <20180419143545.63c0c639@canb.auug.org.au>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform/x86: dell-smbios: Match on www.dell.com in OEM
+ strings too
+Date: Thu, 19 Apr 2018 16:43:24 -0700
+Message-ID: <20180419234324.GA11546@fury>
+References: <1523994356-9598-1-git-send-email-mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419143545.63c0c639@canb.auug.org.au>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1523994356-9598-1-git-send-email-mario.limonciello@dell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Mario Limonciello <mario.limonciello@dell.com>
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 04/18/18 21:35, Stephen Rothwell wrote:
-> Hi all,
+On Tue, Apr 17, 2018 at 02:45:56PM -0500, Mario Limonciello wrote:
+> Sergey reported that some much older Dell systems don't support
+> the OEM string "Dell System" but instead supported www.dell.com
+> in OEM strings.
 > 
-> Changes since 20180418:
+> Match both of these to indicate that this driver is running on
+> a Dell system.
 > 
+> Reported-by: Sergey Kubushyn <ksi@koi8.net>
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> Tested-by: Sergey Kubushyn <ksi@koi8.net>
+> ---
+>  drivers/platform/x86/dell-smbios-base.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x86/dell-smbios-base.c
+> index 2485c80..fbd6557 100644
+> --- a/drivers/platform/x86/dell-smbios-base.c
+> +++ b/drivers/platform/x86/dell-smbios-base.c
+> @@ -555,11 +555,15 @@ static void free_group(struct platform_device *pdev)
+>  
+>  static int __init dell_smbios_init(void)
+>  {
+> -	const struct dmi_device *valid;
+> +	const struct dmi_device *valid_dell_system;
+> +	const struct dmi_device *valid_www;
+>  	int ret, wmi, smm;
+>  
+> -	valid = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL);
+> -	if (!valid) {
+> +	valid_dell_system =
+> +		dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL);
+> +	valid_www =
+> +		dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com", NULL);
+> +	if (!valid_dell_system && !valid_www) {
+>  		pr_err("Unable to run on non-Dell system\n");
+>  		return -ENODEV;
+>  	}
+
+Hrm, rather than introduce another variable that we don't use and always perform
+both tests, when most of the time we only need to do the first, how about
+something like:
 
 
-I see some patches from about 1 month ago for this, but it was either
-never fixed ... or it's back.
+From 2cb5959dadec769167350a9bcb1d212a02b17af8 Mon Sep 17 00:00:00 2001
+Message-Id: <2cb5959dadec769167350a9bcb1d212a02b17af8.1524181265.git.dvhart@infradead.org>
+From: Mario Limonciello <mario.limonciello@dell.com>
+Date: Tue, 17 Apr 2018 14:45:56 -0500
+Subject: [PATCH] platform/x86: dell-smbios: Match on www.dell.com in OEM
+ strings too
 
+Sergey reported that some much older Dell systems don't support
+the OEM string "Dell System" but instead supported www.dell.com
+in OEM strings.
 
-on x86_64:
+Match both of these to indicate that this driver is running on
+a Dell system.
 
-WARNING: unmet direct dependencies detected for DELL_SMBIOS
-  Depends on [m]: X86 [=y] && X86_PLATFORM_DEVICES [=y] && (DCDBAS [=m] || DCDBAS [=m]=n) && (ACPI_WMI [=n] || ACPI_WMI [=n]=n)
-  Selected by [y]:
-  - DELL_LAPTOP [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && DMI [=y] && BACKLIGHT_CLASS_DEVICE [=y] && (ACPI_VIDEO [=n] || ACPI_VIDEO [=n]=n) && (RFKILL [=n] || RFKILL [=n]=n) && SERIO_I8042 [=y]
+Reported-by: Sergey Kubushyn <ksi@koi8.net>
+Tested-by: Sergey Kubushyn <ksi@koi8.net>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+[dvhart: Simplify DMI logic and eliminate unnecessary variables]
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+---
+ drivers/platform/x86/dell-smbios-base.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-
-drivers/platform/x86/dell-smbios-smm.o: In function `dell_smbios_smm_call':
-dell-smbios-smm.c:(.text+0x7d): undefined reference to `dcdbas_smi_request'
+diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x86/dell-smbios-base.c
+index 33fb2a20458a..9dc282ed5a9e 100644
+--- a/drivers/platform/x86/dell-smbios-base.c
++++ b/drivers/platform/x86/dell-smbios-base.c
+@@ -555,11 +555,10 @@ static void free_group(struct platform_device *pdev)
+ 
+ static int __init dell_smbios_init(void)
+ {
+-	const struct dmi_device *valid;
+ 	int ret, wmi, smm;
+ 
+-	valid = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL);
+-	if (!valid) {
++	if (!dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL) &&
++	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com", NULL)) {
+ 		pr_err("Unable to run on non-Dell system\n");
+ 		return -ENODEV;
+ 	}
+-- 
+2.14.3
 
 
 -- 
-~Randy
+Darren Hart
+VMware Open Source Technology Center
