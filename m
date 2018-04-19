@@ -1,26 +1,35 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] platform/x86: asus-wireless: Fix NULL pointer
- dereference
-Date: Thu, 19 Apr 2018 16:49:51 -0700
-Message-ID: <20180419234951.GB11546@fury>
-References: <CA+A7VXUb-u9=MDRrZxpwGiuFwQAdYCJoxaZHjLPLAcYc6PTEHQ@mail.gmail.com>
- <20180419140434.15131-1-jprvita@endlessm.com>
+Subject: Re: [PATCH 40/61] platform: x86: simplify getting .drvdata
+Date: Thu, 19 Apr 2018 16:56:51 -0700
+Message-ID: <20180419235651.GC11546@fury>
+References: <20180419140641.27926-1-wsa+renesas@sang-engineering.com>
+ <20180419140641.27926-41-wsa+renesas@sang-engineering.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180419140434.15131-1-jprvita@endlessm.com>
-Sender: stable-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux@endlessm.com, Dun Hum <bitter.taste@gmx.com>, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>, stable@vger.kernel.org
+In-Reply-To: <20180419140641.27926-41-wsa+renesas@sang-engineering.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, kernel-janitors@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Apr 19, 2018 at 07:04:34AM -0700, João Paulo Rechi Vita wrote:
-> When the module is removed the led workqueue is destroyed in the remove
-> callback, before the led device is unregistered from the led subsystem.
+On Thu, Apr 19, 2018 at 04:06:10PM +0200, Wolfram Sang wrote:
+> We should get drvdata from struct device directly. Going via
+> platform_device is an unneeded step back and forth.
+> 
 
-Queued up, thanks.
+It is indeed, thanks.
+
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+> ---
+> 
+> Build tested only. buildbot is happy. Please apply individually.
+
+Queued up for testing.
+
+(I'm not sure what you mean by "Please apply individually")
 -- 
 Darren Hart
 VMware Open Source Technology Center
