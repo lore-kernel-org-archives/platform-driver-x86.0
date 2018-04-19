@@ -1,108 +1,26 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: dell-smbios: Match on www.dell.com in OEM
- strings too
-Date: Thu, 19 Apr 2018 16:43:24 -0700
-Message-ID: <20180419234324.GA11546@fury>
-References: <1523994356-9598-1-git-send-email-mario.limonciello@dell.com>
+Subject: Re: [PATCH v2] platform/x86: asus-wireless: Fix NULL pointer
+ dereference
+Date: Thu, 19 Apr 2018 16:49:51 -0700
+Message-ID: <20180419234951.GB11546@fury>
+References: <CA+A7VXUb-u9=MDRrZxpwGiuFwQAdYCJoxaZHjLPLAcYc6PTEHQ@mail.gmail.com>
+ <20180419140434.15131-1-jprvita@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1523994356-9598-1-git-send-email-mario.limonciello@dell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <mario.limonciello@dell.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20180419140434.15131-1-jprvita@endlessm.com>
+Sender: stable-owner@vger.kernel.org
+To: =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux@endlessm.com, Dun Hum <bitter.taste@gmx.com>, =?iso-8859-1?Q?Jo=E3o?= Paulo Rechi Vita <jprvita@endlessm.com>, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 17, 2018 at 02:45:56PM -0500, Mario Limonciello wrote:
-> Sergey reported that some much older Dell systems don't support
-> the OEM string "Dell System" but instead supported www.dell.com
-> in OEM strings.
-> 
-> Match both of these to indicate that this driver is running on
-> a Dell system.
-> 
-> Reported-by: Sergey Kubushyn <ksi@koi8.net>
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> Tested-by: Sergey Kubushyn <ksi@koi8.net>
-> ---
->  drivers/platform/x86/dell-smbios-base.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x86/dell-smbios-base.c
-> index 2485c80..fbd6557 100644
-> --- a/drivers/platform/x86/dell-smbios-base.c
-> +++ b/drivers/platform/x86/dell-smbios-base.c
-> @@ -555,11 +555,15 @@ static void free_group(struct platform_device *pdev)
->  
->  static int __init dell_smbios_init(void)
->  {
-> -	const struct dmi_device *valid;
-> +	const struct dmi_device *valid_dell_system;
-> +	const struct dmi_device *valid_www;
->  	int ret, wmi, smm;
->  
-> -	valid = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL);
-> -	if (!valid) {
-> +	valid_dell_system =
-> +		dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL);
-> +	valid_www =
-> +		dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com", NULL);
-> +	if (!valid_dell_system && !valid_www) {
->  		pr_err("Unable to run on non-Dell system\n");
->  		return -ENODEV;
->  	}
+On Thu, Apr 19, 2018 at 07:04:34AM -0700, João Paulo Rechi Vita wrote:
+> When the module is removed the led workqueue is destroyed in the remove
+> callback, before the led device is unregistered from the led subsystem.
 
-Hrm, rather than introduce another variable that we don't use and always perform
-both tests, when most of the time we only need to do the first, how about
-something like:
-
-
-From 2cb5959dadec769167350a9bcb1d212a02b17af8 Mon Sep 17 00:00:00 2001
-Message-Id: <2cb5959dadec769167350a9bcb1d212a02b17af8.1524181265.git.dvhart@infradead.org>
-From: Mario Limonciello <mario.limonciello@dell.com>
-Date: Tue, 17 Apr 2018 14:45:56 -0500
-Subject: [PATCH] platform/x86: dell-smbios: Match on www.dell.com in OEM
- strings too
-
-Sergey reported that some much older Dell systems don't support
-the OEM string "Dell System" but instead supported www.dell.com
-in OEM strings.
-
-Match both of these to indicate that this driver is running on
-a Dell system.
-
-Reported-by: Sergey Kubushyn <ksi@koi8.net>
-Tested-by: Sergey Kubushyn <ksi@koi8.net>
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-[dvhart: Simplify DMI logic and eliminate unnecessary variables]
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
----
- drivers/platform/x86/dell-smbios-base.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x86/dell-smbios-base.c
-index 33fb2a20458a..9dc282ed5a9e 100644
---- a/drivers/platform/x86/dell-smbios-base.c
-+++ b/drivers/platform/x86/dell-smbios-base.c
-@@ -555,11 +555,10 @@ static void free_group(struct platform_device *pdev)
- 
- static int __init dell_smbios_init(void)
- {
--	const struct dmi_device *valid;
- 	int ret, wmi, smm;
- 
--	valid = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL);
--	if (!valid) {
-+	if (!dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL) &&
-+	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com", NULL)) {
- 		pr_err("Unable to run on non-Dell system\n");
- 		return -ENODEV;
- 	}
--- 
-2.14.3
-
-
+Queued up, thanks.
 -- 
 Darren Hart
 VMware Open Source Technology Center
