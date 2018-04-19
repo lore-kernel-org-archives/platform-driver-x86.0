@@ -1,69 +1,41 @@
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH 40/61] platform: x86: simplify getting .drvdata
-Date: Thu, 19 Apr 2018 16:06:10 +0200
-Message-ID: <20180419140641.27926-41-wsa+renesas@sang-engineering.com>
-References: <20180419140641.27926-1-wsa+renesas@sang-engineering.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: linux-next: Tree for Apr 19 (dell smbios SMM)
+Date: Thu, 19 Apr 2018 10:59:32 -0700
+Message-ID: <6aec5528-d6f1-3e05-1ac2-6eddbd0ac64f@infradead.org>
+References: <20180419143545.63c0c639@canb.auug.org.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419140641.27926-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20180419143545.63c0c639@canb.auug.org.au>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, kernel-janitors@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Linux-Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-We should get drvdata from struct device directly. Going via
-platform_device is an unneeded step back and forth.
+On 04/18/18 21:35, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20180418:
+> 
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
 
-Build tested only. buildbot is happy. Please apply individually.
+I see some patches from about 1 month ago for this, but it was either
+never fixed ... or it's back.
 
- drivers/platform/x86/asus-laptop.c    | 3 +--
- drivers/platform/x86/asus-wmi.c       | 3 +--
- drivers/platform/x86/samsung-laptop.c | 3 +--
- 3 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index c4768be24ba9..700c48ddfa7c 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -1593,8 +1593,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 				    int idx)
- {
- 	struct device *dev = container_of(kobj, struct device, kobj);
--	struct platform_device *pdev = to_platform_device(dev);
--	struct asus_laptop *asus = platform_get_drvdata(pdev);
-+	struct asus_laptop *asus = dev_get_drvdata(dev);
- 	acpi_handle handle = asus->handle;
- 	bool supported;
- 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index a32c5c00e0e7..ef87e78ca772 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1862,8 +1862,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 				    struct attribute *attr, int idx)
- {
- 	struct device *dev = container_of(kobj, struct device, kobj);
--	struct platform_device *pdev = to_platform_device(dev);
--	struct asus_wmi *asus = platform_get_drvdata(pdev);
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
- 	bool ok = true;
- 	int devid = -1;
- 
-diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
-index 03305e0b89ff..7b160ee98115 100644
---- a/drivers/platform/x86/samsung-laptop.c
-+++ b/drivers/platform/x86/samsung-laptop.c
-@@ -1216,8 +1216,7 @@ static umode_t samsung_sysfs_is_visible(struct kobject *kobj,
- 					struct attribute *attr, int idx)
- {
- 	struct device *dev = container_of(kobj, struct device, kobj);
--	struct platform_device *pdev = to_platform_device(dev);
--	struct samsung_laptop *samsung = platform_get_drvdata(pdev);
-+	struct samsung_laptop *samsung = dev_get_drvdata(dev);
- 	bool ok = true;
- 
- 	if (attr == &dev_attr_performance_level.attr)
+on x86_64:
+
+WARNING: unmet direct dependencies detected for DELL_SMBIOS
+  Depends on [m]: X86 [=y] && X86_PLATFORM_DEVICES [=y] && (DCDBAS [=m] || DCDBAS [=m]=n) && (ACPI_WMI [=n] || ACPI_WMI [=n]=n)
+  Selected by [y]:
+  - DELL_LAPTOP [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && DMI [=y] && BACKLIGHT_CLASS_DEVICE [=y] && (ACPI_VIDEO [=n] || ACPI_VIDEO [=n]=n) && (RFKILL [=n] || RFKILL [=n]=n) && SERIO_I8042 [=y]
+
+
+drivers/platform/x86/dell-smbios-smm.o: In function `dell_smbios_smm_call':
+dell-smbios-smm.c:(.text+0x7d): undefined reference to `dcdbas_smi_request'
+
+
 -- 
-2.11.0
+~Randy
