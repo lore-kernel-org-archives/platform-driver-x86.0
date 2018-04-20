@@ -1,70 +1,60 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] platform/x86: Kconfig: Fix dell-laptop dependency chain.
-Date: Fri, 20 Apr 2018 10:53:06 -0700
-Message-ID: <858fbd0a-a387-e9f8-5017-1fff9638dd4d@infradead.org>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86: Kconfig: Fix dell-laptop dependency chain.
+Date: Fri, 20 Apr 2018 17:55:28 +0000
+Message-ID: <d7ec4d23554a4d92a2ed59354483900a@ausx13mpc120.AMER.DELL.COM>
 References: <1524246131-17621-1-git-send-email-mario.limonciello@dell.com>
+ <858fbd0a-a387-e9f8-5017-1fff9638dd4d@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524246131-17621-1-git-send-email-mario.limonciello@dell.com>
+In-Reply-To: <858fbd0a-a387-e9f8-5017-1fff9638dd4d@infradead.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <mario.limonciello@dell.com>, dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: rdunlap@infradead.org, dvhart@infradead.org, andy.shevchenko@gmail.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 04/20/18 10:42, Mario Limonciello wrote:
-> As reported by Randy Dunlap:
->>> WARNING: unmet direct dependencies detected for DELL_SMBIOS
->>>   Depends on [m]: X86 [=y] && X86_PLATFORM_DEVICES [=y]
->>> 	&& (DCDBAS [=m] ||
->>> DCDBAS [=m]=n) && (ACPI_WMI [=n] || ACPI_WMI [=n]=n)
->>>   Selected by [y]:
->>>   - DELL_LAPTOP [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y]
->>> && DMI [=y]
->>> && BACKLIGHT_CLASS_DEVICE [=y] && (ACPI_VIDEO [=n] ||
->>> 	ACPI_VIDEO [=n]=n)
->>> && (RFKILL [=n] || RFKILL [=n]=n) && SERIO_I8042 [=y]
->>>
-> 
-> Right now it's possible to set dell laptop to compile in but this
-> causes dell-smbios to compile in which breaks if dcdbas is a module.
-> 
-> Dell laptop shouldn't select dell-smbios anymore, but depend on it.
-> 
-> Fixes: 32d7b19 (platform/x86: dell-smbios: Resolve dependency error on DCDBAS)
-
-meta-comment: the SHA-1 ID should be the first 12 characters of the commit ID
-according to Documentation/process/submitting-patches.rst.
-
-
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> ---
->  drivers/platform/x86/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 39d06dd..bc309c5 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -154,7 +154,7 @@ config DELL_LAPTOP
->  	depends on ACPI_VIDEO || ACPI_VIDEO = n
->  	depends on RFKILL || RFKILL = n
->  	depends on SERIO_I8042
-> -	select DELL_SMBIOS
-> +	depends on DELL_SMBIOS
->  	select POWER_SUPPLY
->  	select LEDS_CLASS
->  	select NEW_LEDS
-> 
-
-
--- 
-~Randy
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IHBsYXRmb3JtLWRyaXZlci14
+ODYtb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86cGxhdGZvcm0tZHJpdmVyLXg4Ni0NCj4g
+b3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgUmFuZHkgRHVubGFwDQo+IFNlbnQ6
+IEZyaWRheSwgQXByaWwgMjAsIDIwMTggMTI6NTMgUE0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJp
+bzsgZHZoYXJ0QGluZnJhZGVhZC5vcmc7IEFuZHkgU2hldmNoZW5rbw0KPiBDYzogTEtNTDsgcGxh
+dGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0g
+cGxhdGZvcm0veDg2OiBLY29uZmlnOiBGaXggZGVsbC1sYXB0b3AgZGVwZW5kZW5jeSBjaGFpbi4N
+Cj4gDQo+IE9uIDA0LzIwLzE4IDEwOjQyLCBNYXJpbyBMaW1vbmNpZWxsbyB3cm90ZToNCj4gPiBB
+cyByZXBvcnRlZCBieSBSYW5keSBEdW5sYXA6DQo+ID4+PiBXQVJOSU5HOiB1bm1ldCBkaXJlY3Qg
+ZGVwZW5kZW5jaWVzIGRldGVjdGVkIGZvciBERUxMX1NNQklPUw0KPiA+Pj4gICBEZXBlbmRzIG9u
+IFttXTogWDg2IFs9eV0gJiYgWDg2X1BMQVRGT1JNX0RFVklDRVMgWz15XQ0KPiA+Pj4gCSYmIChE
+Q0RCQVMgWz1tXSB8fA0KPiA+Pj4gRENEQkFTIFs9bV09bikgJiYgKEFDUElfV01JIFs9bl0gfHwg
+QUNQSV9XTUkgWz1uXT1uKQ0KPiA+Pj4gICBTZWxlY3RlZCBieSBbeV06DQo+ID4+PiAgIC0gREVM
+TF9MQVBUT1AgWz15XSAmJiBYODYgWz15XSAmJiBYODZfUExBVEZPUk1fREVWSUNFUyBbPXldDQo+
+ID4+PiAmJiBETUkgWz15XQ0KPiA+Pj4gJiYgQkFDS0xJR0hUX0NMQVNTX0RFVklDRSBbPXldICYm
+IChBQ1BJX1ZJREVPIFs9bl0gfHwNCj4gPj4+IAlBQ1BJX1ZJREVPIFs9bl09bikNCj4gPj4+ICYm
+IChSRktJTEwgWz1uXSB8fCBSRktJTEwgWz1uXT1uKSAmJiBTRVJJT19JODA0MiBbPXldDQo+ID4+
+Pg0KPiA+DQo+ID4gUmlnaHQgbm93IGl0J3MgcG9zc2libGUgdG8gc2V0IGRlbGwgbGFwdG9wIHRv
+IGNvbXBpbGUgaW4gYnV0IHRoaXMNCj4gPiBjYXVzZXMgZGVsbC1zbWJpb3MgdG8gY29tcGlsZSBp
+biB3aGljaCBicmVha3MgaWYgZGNkYmFzIGlzIGEgbW9kdWxlLg0KPiA+DQo+ID4gRGVsbCBsYXB0
+b3Agc2hvdWxkbid0IHNlbGVjdCBkZWxsLXNtYmlvcyBhbnltb3JlLCBidXQgZGVwZW5kIG9uIGl0
+Lg0KPiA+DQo+ID4gRml4ZXM6IDMyZDdiMTkgKHBsYXRmb3JtL3g4NjogZGVsbC1zbWJpb3M6IFJl
+c29sdmUgZGVwZW5kZW5jeSBlcnJvciBvbg0KPiBEQ0RCQVMpDQo+IA0KPiBtZXRhLWNvbW1lbnQ6
+IHRoZSBTSEEtMSBJRCBzaG91bGQgYmUgdGhlIGZpcnN0IDEyIGNoYXJhY3RlcnMgb2YgdGhlIGNv
+bW1pdCBJRA0KPiBhY2NvcmRpbmcgdG8gRG9jdW1lbnRhdGlvbi9wcm9jZXNzL3N1Ym1pdHRpbmct
+cGF0Y2hlcy5yc3QuDQoNClRoYW5rcyBmb3IgbGV0dGluZyBtZSwgSSBkaWRuJ3QgcmVhbGl6ZSB0
+aGF0Lg0KDQpEYXJyZW4sIGxldCBtZSBrbm93IGlmIHlvdSB3YW50IG1lIHRvIHJlc3VibWl0IHdp
+dGggdGhpcyBhZGp1c3RtZW50IG9yIGlmIHlvdQ0KY2FuIGFkanVzdCB3aGVuIHlvdSBxdWV1ZSBm
+b3IgdGVzdGluZy4NCg0KPiANCj4gDQo+ID4gUmVwb3J0ZWQtYnk6IFJhbmR5IER1bmxhcCA8cmR1
+bmxhcEBpbmZyYWRlYWQub3JnPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hcmlvIExpbW9uY2llbGxv
+IDxtYXJpby5saW1vbmNpZWxsb0BkZWxsLmNvbT4NCj4gDQo+IFRlc3RlZC1ieTogUmFuZHkgRHVu
+bGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+DQo+IA0KPiBUaGFua3MuDQo+IA0KPiA+IC0tLQ0K
+PiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9LY29uZmlnIHwgMiArLQ0KPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9LY29uZmlnIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvS2Nv
+bmZpZw0KPiA+IGluZGV4IDM5ZDA2ZGQuLmJjMzA5YzUgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVy
+cy9wbGF0Zm9ybS94ODYvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L0tj
+b25maWcNCj4gPiBAQCAtMTU0LDcgKzE1NCw3IEBAIGNvbmZpZyBERUxMX0xBUFRPUA0KPiA+ICAJ
+ZGVwZW5kcyBvbiBBQ1BJX1ZJREVPIHx8IEFDUElfVklERU8gPSBuDQo+ID4gIAlkZXBlbmRzIG9u
+IFJGS0lMTCB8fCBSRktJTEwgPSBuDQo+ID4gIAlkZXBlbmRzIG9uIFNFUklPX0k4MDQyDQo+ID4g
+LQlzZWxlY3QgREVMTF9TTUJJT1MNCj4gPiArCWRlcGVuZHMgb24gREVMTF9TTUJJT1MNCj4gPiAg
+CXNlbGVjdCBQT1dFUl9TVVBQTFkNCj4gPiAgCXNlbGVjdCBMRURTX0NMQVNTDQo+ID4gIAlzZWxl
+Y3QgTkVXX0xFRFMNCj4gPg0KPiANCj4gDQo+IC0tDQo+IH5SYW5keQ0K
