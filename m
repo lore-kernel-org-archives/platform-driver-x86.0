@@ -1,46 +1,54 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3 3/5] platform/x86: Rename silead_dmi to touchscreen_dmi
-Date: Thu, 19 Apr 2018 17:20:30 -0700
-Message-ID: <20180420002030.GD11546@fury>
-References: <20180408174014.21908-1-hdegoede@redhat.com>
- <20180408174014.21908-4-hdegoede@redhat.com>
- <CAHp75Vdx0fJ0mmE1tSZjKEoHbRMubJpA8M1QYg1joKxMdLcVig@mail.gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 40/61] platform: x86: simplify getting .drvdata
+Date: Fri, 20 Apr 2018 09:14:21 +0200
+Message-ID: <20180420071421.ex6gcegotzjdswbg@katana>
+References: <20180419140641.27926-1-wsa+renesas@sang-engineering.com>
+ <20180419140641.27926-41-wsa+renesas@sang-engineering.com>
+ <20180419235651.GC11546@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3khbrrzjm7np76wh"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vdx0fJ0mmE1tSZjKEoHbRMubJpA8M1QYg1joKxMdLcVig@mail.gmail.com>
+In-Reply-To: <20180419235651.GC11546@fury>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, Will Deacon <will.deacon@arm.com>, Andy Lutomirski <luto@kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, David Howells <dhowells@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Josh Triplett <josh@joshtriplett.org>, Dmitry Torokhov <dmitry.torokhov>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, kernel-janitors@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Apr 09, 2018 at 11:07:03AM +0300, Andy Shevchenko wrote:
-> On Sun, Apr 8, 2018 at 8:40 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> > Not only silead touchscreens need some extra info not available in the
-> > ACPI tables to work properly. X86 devices with a Chipone ICN8505 chip also
-> > need some DMI based extra configuration.
-> >
-> > There is no reason to have separate dmi config code per touchscreen
-> > controller vendor. This commit renames silead_dmi to a more generic
-> > touchscreen_dmi name (and Kconfig option) in preparation of adding
-> > info for tablets with an ICN8505 based touchscreen.
-> >
-> > Note there are no functional changes all code changes are limited to
-> > removing references to silead where these are no longer applicable.
-> >
-> 
-> I have no objections from my side, though consider the following:
-> - I would like to be in sync with Darren on this
-> - make oldconfig will be broken after your change for existing users
-> - the usual pattern in kernel that we don't rename drivers; I guess
-> here we are on the safe side b/c this driver is used standalone
-> 
-> Taking above into attention, and assuming it will go via some other tree,
-> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-This driver is all kinds of a special case, so no objection here either. :-)
+--3khbrrzjm7np76wh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+
+> (I'm not sure what you mean by "Please apply individually")
+
+Right, that is not very precise. "Individually" as "per subsystem
+individually". I.e. I don't want to collect tags and push it upstream as
+one huge pull-request.
+
+Thanks!
+
+
+--3khbrrzjm7np76wh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlrZk0kACgkQFA3kzBSg
+KbZT3w//afpRm3RefDNQ2Ysr5+0YF5JxKxGDkxsQbgVVAlWAjt4qsFsM1Y32PcWb
+/uT7lJyE4mNSJie4OFT5X5Hcf9K2wWCO8cOtyDqysNdL7/+eJ/6vvjwjqIwYG6Jh
+eGiq1H7hXI8m3f0xudQFjdKFdMkvQYYWs3VQ2U9wwlOP1AzJqTna7QzNk0hCN7jL
+jyenIY2MsYK059MyE/qgDM0l913/O+3P4mOa5cA4OYGgX84MBc3i4DRrnhnEhLV0
+StzkjAbHQKvVHNip802HC4ML6lDUlrlj3XUutlX78aSKZPs8V6NE3H7GvumcBV7T
+WkH2Jv84jWt+IcF1cwPk5+T6c3rRXvRuRY01LpbsDenbxXPG4dQ0nSqQDvtdyo/e
+6xT2Dk1fQ1PVIOPRyMqUJotg6Fy1+JklLVh8PMXpcEQuLbuy9wBmLFsC88U3AyMi
+tUHbKGfArcITKQmpVacecTI44jff4Eyp77hWOjgujNC92Cj/PT0LPON/vHh6yYyi
+ZcY/Bg6jAxZeHcroJmeVlph0vp6VU3GG7Cx6YJhcGYUWpBBo6HnKQCjOzlaIuvN5
+NMWd5B0ZrjUJ/Awi8AOb0qzI7iyDJtZQ8O60wxPuwfG+4SZXL2KndwsdlZecrxGN
+T5dEJRmA0oq1gSmtpMX3YznXDLwIxz7w3AYiIn2bXFHH/xWeOho=
+=fyhZ
+-----END PGP SIGNATURE-----
+
+--3khbrrzjm7np76wh--
