@@ -1,32 +1,70 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: linux-next: Tree for Apr 19 (dell smbios SMM)
-Date: Fri, 20 Apr 2018 17:42:52 +0000
-Message-ID: <ef8c8d74b23848c19ee7adaca189a99f@ausx13mpc120.AMER.DELL.COM>
-References: <20180419143545.63c0c639@canb.auug.org.au>
- <6aec5528-d6f1-3e05-1ac2-6eddbd0ac64f@infradead.org>
- <43bec7e798f5491284d2c049f835d339@ausx13mpc120.AMER.DELL.COM>
- <de6910be-497c-c3b2-39df-bec37bd79f81@infradead.org>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] platform/x86: Kconfig: Fix dell-laptop dependency chain.
+Date: Fri, 20 Apr 2018 10:53:06 -0700
+Message-ID: <858fbd0a-a387-e9f8-5017-1fff9638dd4d@infradead.org>
+References: <1524246131-17621-1-git-send-email-mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <de6910be-497c-c3b2-39df-bec37bd79f81@infradead.org>
+In-Reply-To: <1524246131-17621-1-git-send-email-mario.limonciello@dell.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: rdunlap@infradead.org, sfr@canb.auug.org.au, linux-next@vger.kernel.org, dvhart@infradead.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Mario Limonciello <mario.limonciello@dell.com>, dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiANCj4gSGksDQo+IEkndmUgYXR0YWNoZWQgaXQgaGVyZS4NCj4gDQo+IHRoYW5rcywNCj4gLS0N
-Cj4gflJhbmR5DQoNClRoYW5rcy4gIERhcnJlbidzIHBhdGNoLiAgSXQgd2FzIHN1cHBvc2VkIHRv
-IGJlIHByZXZlbnRlZCBieSANCjMyZDdiMTliYWQ5Njk1YzRjOTAyNmIwY2ViM2EzODQ1NjFkZGVl
-NzANCihzZWUgY29tbWVudCBpbiBLY29uZmlnKS4NCg0KIyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICANCiMgVGhlIERFTExf
-U01CSU9TIGRyaXZlciBkZXBlbmRzIG9uIEFDUElfV01JIGFuZC9vciBEQ0RCQVMgaWYgdGhvc2Ug
-DQojIGJhY2tlbmRzIGFyZSBzZWxlY3RlZC4gVGhlICJkZXBlbmRzIiBsaW5lIHByZXZlbnRzIGEg
-Y29uZmlndXJhdGlvbg0KIyB3aGVyZSBERUxMX1NNQklPUz15IHdoaWxlIGVpdGhlciBvZiB0aG9z
-ZSBkZXBlbmRlbmNpZXMgPW0uICAgICAgICANCiMgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQoNCkFzIEkgY2FuIHRlbGwg
-aXQncyBnZXR0aW5nIGNhdXNlZCBieSBDT05GSUdfREVMTF9MQVBUT1Agd2hpY2ggaXMNCiAgICAg
-ICAgc2VsZWN0IERFTExfU01CSU9TDQoNCk9LLCB0aGlzIHNob3VsZCBoZWxwOg0KaHR0cHM6Ly9w
-YXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDM1MzM4NS8NCg0K
+On 04/20/18 10:42, Mario Limonciello wrote:
+> As reported by Randy Dunlap:
+>>> WARNING: unmet direct dependencies detected for DELL_SMBIOS
+>>>   Depends on [m]: X86 [=y] && X86_PLATFORM_DEVICES [=y]
+>>> 	&& (DCDBAS [=m] ||
+>>> DCDBAS [=m]=n) && (ACPI_WMI [=n] || ACPI_WMI [=n]=n)
+>>>   Selected by [y]:
+>>>   - DELL_LAPTOP [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y]
+>>> && DMI [=y]
+>>> && BACKLIGHT_CLASS_DEVICE [=y] && (ACPI_VIDEO [=n] ||
+>>> 	ACPI_VIDEO [=n]=n)
+>>> && (RFKILL [=n] || RFKILL [=n]=n) && SERIO_I8042 [=y]
+>>>
+> 
+> Right now it's possible to set dell laptop to compile in but this
+> causes dell-smbios to compile in which breaks if dcdbas is a module.
+> 
+> Dell laptop shouldn't select dell-smbios anymore, but depend on it.
+> 
+> Fixes: 32d7b19 (platform/x86: dell-smbios: Resolve dependency error on DCDBAS)
+
+meta-comment: the SHA-1 ID should be the first 12 characters of the commit ID
+according to Documentation/process/submitting-patches.rst.
+
+
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+>  drivers/platform/x86/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 39d06dd..bc309c5 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -154,7 +154,7 @@ config DELL_LAPTOP
+>  	depends on ACPI_VIDEO || ACPI_VIDEO = n
+>  	depends on RFKILL || RFKILL = n
+>  	depends on SERIO_I8042
+> -	select DELL_SMBIOS
+> +	depends on DELL_SMBIOS
+>  	select POWER_SUPPLY
+>  	select LEDS_CLASS
+>  	select NEW_LEDS
+> 
+
+
+-- 
+~Randy
