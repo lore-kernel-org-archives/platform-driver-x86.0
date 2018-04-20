@@ -1,66 +1,69 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: linux-next: Tree for Apr 19 (dell smbios SMM)
-Date: Fri, 20 Apr 2018 14:29:30 +0000
-Message-ID: <43bec7e798f5491284d2c049f835d339@ausx13mpc120.AMER.DELL.COM>
-References: <20180419143545.63c0c639@canb.auug.org.au>
- <6aec5528-d6f1-3e05-1ac2-6eddbd0ac64f@infradead.org>
+Subject: RE: [PATCH v2] platform/x86: dell-wmi: Ignore new rfkill and fn-lock
+ events
+Date: Fri, 20 Apr 2018 14:30:27 +0000
+Message-ID: <71dccbbb971f44ff8ed329c29e611f57@ausx13mpc120.AMER.DELL.COM>
+References: <20180420072648.5426-1-kai.heng.feng@canonical.com>
+ <20180420072854.bprouoj5poim5rxv@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6aec5528-d6f1-3e05-1ac2-6eddbd0ac64f@infradead.org>
+In-Reply-To: <20180420072854.bprouoj5poim5rxv@pali>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: rdunlap@infradead.org, sfr@canb.auug.org.au, linux-next@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: pali.rohar@gmail.com, kai.heng.feng@canonical.com
+Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-> -----Original Message-----
-> From: Randy Dunlap [mailto:rdunlap@infradead.org]
-> Sent: Thursday, April 19, 2018 1:00 PM
-> To: Stephen Rothwell; Linux-Next Mailing List
-> Cc: Linux Kernel Mailing List; Platform Driver; Limonciello, Mario
-> Subject: Re: linux-next: Tree for Apr 19 (dell smbios SMM)
->=20
-> On 04/18/18 21:35, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20180418:
-> >
->=20
->=20
-> I see some patches from about 1 month ago for this, but it was either
-> never fixed ... or it's back.
->=20
->=20
-> on x86_64:
->=20
-> WARNING: unmet direct dependencies detected for DELL_SMBIOS
->   Depends on [m]: X86 [=3Dy] && X86_PLATFORM_DEVICES [=3Dy] && (DCDBAS [=
-=3Dm] ||
-> DCDBAS [=3Dm]=3Dn) && (ACPI_WMI [=3Dn] || ACPI_WMI [=3Dn]=3Dn)
->   Selected by [y]:
->   - DELL_LAPTOP [=3Dy] && X86 [=3Dy] && X86_PLATFORM_DEVICES [=3Dy] && DM=
-I [=3Dy]
-> && BACKLIGHT_CLASS_DEVICE [=3Dy] && (ACPI_VIDEO [=3Dn] || ACPI_VIDEO [=3D=
-n]=3Dn)
-> && (RFKILL [=3Dn] || RFKILL [=3Dn]=3Dn) && SERIO_I8042 [=3Dy]
->=20
->=20
-> drivers/platform/x86/dell-smbios-smm.o: In function `dell_smbios_smm_call=
-':
-> dell-smbios-smm.c:(.text+0x7d): undefined reference to `dcdbas_smi_reques=
-t'
->=20
->=20
-> --
-> ~Randy
-
-Randy,
-
-Would you mind posting your kernel config somewhere like a pastebin or gith=
-ub gist
-so we can try to easily reproduce with your combination of configure option=
-s?
-
-Thanks,
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGFsaSBSb2jDoXIgW21h
+aWx0bzpwYWxpLnJvaGFyQGdtYWlsLmNvbV0NCj4gU2VudDogRnJpZGF5LCBBcHJpbCAyMCwgMjAx
+OCAyOjI5IEFNDQo+IFRvOiBLYWktSGVuZyBGZW5nDQo+IENjOiBtamc1OUBzcmNmLnVjYW0ub3Jn
+OyBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgYW5keUBpbmZyYWRlYWQub3JnOw0KPiBMaW1vbmNpZWxs
+bywgTWFyaW87IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4g
+a2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyXSBwbGF0Zm9y
+bS94ODY6IGRlbGwtd21pOiBJZ25vcmUgbmV3IHJma2lsbCBhbmQgZm4tbG9jaw0KPiBldmVudHMN
+Cj4gDQo+IE9uIEZyaWRheSAyMCBBcHJpbCAyMDE4IDE1OjI2OjQ4IEthaS1IZW5nIEZlbmcgd3Jv
+dGU6DQo+ID4gVGhlcmUgYXJlIHR3byBuZXcgZXZlbnRzIGdlbmVyYXRlZCBieSBkZWxsLXdtaSwg
+cmZraWxsIGFuZCBmbi1sb2NrLCBmcm9tDQo+ID4gRGVsbCBTeXN0ZW1zLg0KPiA+DQo+ID4gV2hl
+biBGbi1sb2NrIGhvdGtleSBnZXRzIHByZXNzZWQgdG8gc3dpdGNoIHRvIGZ1bmN0aW9uIG1vZGU6
+DQo+ID4gWzg1OTUxLjU5MTU0Ml0gZGVsbF93bWk6IFVua25vd24ga2V5IHdpdGggdHlwZSAweDAw
+MTAgYW5kIGNvZGUgMHhlMDM1DQo+ID4gcHJlc3NlZA0KPiA+IFs4NTk1MS41OTE1NDZdIGRlbGxf
+d21pOiBVbmtub3duIGtleSB3aXRoIHR5cGUgMHgwMDEwIGFuZCBjb2RlIDB4MDAwMA0KPiA+IHBy
+ZXNzZWQNCj4gPg0KPiA+IFdoZW4gRm4tbG9jayBob3RrZXkgZ2V0cyBwcmVzc2VkIHRvIHN3aXRj
+aCB0byBtdWx0aW1lZGlhIG1vZGU6DQo+ID4gWzg1OTU2LjY2NzY4Nl0gZGVsbF93bWk6IFVua25v
+d24ga2V5IHdpdGggdHlwZSAweDAwMTAgYW5kIGNvZGUgMHhlMDM1DQo+ID4gcHJlc3NlZA0KPiA+
+IFs4NTk1Ni42Njc2OTBdIGRlbGxfd21pOiBVbmtub3duIGtleSB3aXRoIHR5cGUgMHgwMDEwIGFu
+ZCBjb2RlIDB4MDAwMQ0KPiA+IHByZXNzZWQNCj4gPg0KPiA+IFdoZW4gcmFkaW8gaG90a2V5IGdl
+dHMgcHJlc3NlZDoNCj4gPiBbODU5NzQuNDMwMjIwXSBkZWxsX3dtaTogVW5rbm93biBrZXkgd2l0
+aCB0eXBlIDB4MDAxMCBhbmQgY29kZSAweGUwMDgNCj4gPiBwcmVzc2VkDQo+ID4NCj4gPiBUaGVz
+ZSBldmVudHMgYXJlIGZvciBub3RpZmljYXRpb24gcHVycG9zZSwgc28gd2UgY2FuIGlnbm9yZSB0
+aGVtLg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBpcyB0ZXN0ZWQgb24gWFBTIDkzNzAuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBLYWktSGVuZyBGZW5nIDxrYWkuaGVuZy5mZW5nQGNhbm9uaWNhbC5j
+b20+DQo+IA0KPiBSZXZpZXdlZC1ieTogUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29t
+Pg0KDQpSZXZpZXdlZC1ieTogTWFyaW8gTGltb25jaWVsbG8gPG1hcmlvLmxpbW9uY2llbGxvQGRl
+bGwuY29tPg0KDQo+IA0KPiA+IC0tLQ0KPiA+IHYyOiBSZW9yZGVyIGFscGhhYmV0aWNhbGx5Lg0K
+PiA+ICAgICBNb3JlIGRldGFpbGVkIGNoYW5nZWxvZy4NCj4gPg0KPiA+ICBkcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9kZWxsLXdtaS5jIHwgMTQgKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5n
+ZWQsIDE0IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9kZWxsLXdtaS5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYw0KPiA+
+IGluZGV4IDhkMTAyMTk1YTM5Mi4uYmE4ZTY3MjVkN2FjIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
+cnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4
+Ni9kZWxsLXdtaS5jDQo+ID4gQEAgLTI2MSw2ICsyNjEsMTIgQEAgc3RhdGljIGNvbnN0IHUxNiBi
+aW9zX3RvX2xpbnV4X2tleWNvZGVbMjU2XSA9IHsNCj4gPiAgICogb3ZlcnJpZGUgdGhlbS4NCj4g
+PiAgICovDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qga2V5X2VudHJ5IGRlbGxfd21pX2tleW1h
+cF90eXBlXzAwMTBbXSA9IHsNCj4gPiArCS8qIEZuLWxvY2sgc3dpdGNoZWQgdG8gZnVuY3Rpb24g
+a2V5cyAqLw0KPiA+ICsJeyBLRV9JR05PUkUsIDB4MCwgeyBLRVlfUkVTRVJWRUQgfSB9LA0KPiA+
+ICsNCj4gPiArCS8qIEZuLWxvY2sgc3dpdGNoZWQgdG8gbXVsdGltZWRpYSBrZXlzICovDQo+ID4g
+Kwl7IEtFX0lHTk9SRSwgMHgxLCB7IEtFWV9SRVNFUlZFRCB9IH0sDQo+ID4gKw0KPiA+ICAJLyog
+TWljIG11dGUgKi8NCj4gPiAgCXsgS0VfS0VZLCAweDE1MCwgeyBLRVlfTUlDTVVURSB9IH0sDQo+
+ID4NCj4gPiBAQCAtMjk2LDYgKzMwMiwxNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGtleV9lbnRy
+eQ0KPiBkZWxsX3dtaV9rZXltYXBfdHlwZV8wMDEwW10gPSB7DQo+ID4gIAl7IEtFX0tFWSwgICAg
+MHg4NTEsIHsgS0VZX1BST0cyIH0gfSwNCj4gPiAgCXsgS0VfS0VZLCAgICAweDg1MiwgeyBLRVlf
+UFJPRzMgfSB9LA0KPiA+DQo+ID4gKwkvKg0KPiA+ICsJICogUmFkaW8gZGlzYWJsZSAobm90aWZ5
+IG9ubHkgLS0gdGhlcmUgaXMgbm8gbW9kZWwgZm9yIHdoaWNoIHRoZQ0KPiA+ICsJICogV01JIGV2
+ZW50IGlzIHN1cHBvc2VkIHRvIHRyaWdnZXIgYW4gYWN0aW9uKS4NCj4gPiArCSAqLw0KPiA+ICsJ
+eyBLRV9JR05PUkUsIDB4ZTAwOCwgeyBLRVlfUkZLSUxMIH0gfSwNCj4gPiArDQo+ID4gKwkvKiBG
+bi1sb2NrICovDQo+ID4gKwl7IEtFX0lHTk9SRSwgMHhlMDM1LCB7IEtFWV9SRVNFUlZFRCB9IH0s
+DQo+ID4gIH07DQo+ID4NCj4gPiAgLyoNCj4gDQo+IC0tDQo+IFBhbGkgUm9ow6FyDQo+IHBhbGku
+cm9oYXJAZ21haWwuY29tDQo=
