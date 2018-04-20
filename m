@@ -1,63 +1,66 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: Kconfig: Fix dell-laptop dependency chain.
-Date: Fri, 20 Apr 2018 14:52:51 -0700
-Message-ID: <20180420215251.GF11546@fury>
-References: <1524246131-17621-1-git-send-email-mario.limonciello@dell.com>
- <858fbd0a-a387-e9f8-5017-1fff9638dd4d@infradead.org>
- <d7ec4d23554a4d92a2ed59354483900a@ausx13mpc120.AMER.DELL.COM>
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Subject: [PATCH 0/7] Enable most media drivers to build on ARM
+Date: Fri, 20 Apr 2018 13:42:46 -0400
+Message-ID: <cover.1524245455.git.mchehab@s-opensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d7ec4d23554a4d92a2ed59354483900a@ausx13mpc120.AMER.DELL.COM>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com
-Cc: rdunlap@infradead.org, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Cc: linux-fbdev@vger.kernel.org, Mans Rullgard <mans@mansr.com>, Sean Young <sean@mess.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Mattia Dongili <malattia@linux.it>, Yong Zhi <yong.zhi@intel.com>, linux-arch@vger.kernel.org, Ladislav Michl <ladis@linux-mips.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Jacob Chen <jacob-chen@iotwrt.com>, Hans Verkuil <hans.verkuil@cisco.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mauro Carvalho Chehab <mchehab@infradead.org>, mjpeg-users@lists.sourceforge.net, Al Viro <viro@zeniv.linux.org.uk>, Devin Heitmueller <dheitmueller@kernellabs.com>, Stephe
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Apr 20, 2018 at 05:55:28PM +0000, Mario.Limonciello@dell.com wrote:
-> 
-> > -----Original Message-----
-> > From: platform-driver-x86-owner@vger.kernel.org [mailto:platform-driver-x86-
-> > owner@vger.kernel.org] On Behalf Of Randy Dunlap
-> > Sent: Friday, April 20, 2018 12:53 PM
-> > To: Limonciello, Mario; dvhart@infradead.org; Andy Shevchenko
-> > Cc: LKML; platform-driver-x86@vger.kernel.org
-> > Subject: Re: [PATCH] platform/x86: Kconfig: Fix dell-laptop dependency chain.
-> > 
-> > On 04/20/18 10:42, Mario Limonciello wrote:
-> > > As reported by Randy Dunlap:
-> > >>> WARNING: unmet direct dependencies detected for DELL_SMBIOS
-> > >>>   Depends on [m]: X86 [=y] && X86_PLATFORM_DEVICES [=y]
-> > >>> 	&& (DCDBAS [=m] ||
-> > >>> DCDBAS [=m]=n) && (ACPI_WMI [=n] || ACPI_WMI [=n]=n)
-> > >>>   Selected by [y]:
-> > >>>   - DELL_LAPTOP [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y]
-> > >>> && DMI [=y]
-> > >>> && BACKLIGHT_CLASS_DEVICE [=y] && (ACPI_VIDEO [=n] ||
-> > >>> 	ACPI_VIDEO [=n]=n)
-> > >>> && (RFKILL [=n] || RFKILL [=n]=n) && SERIO_I8042 [=y]
-> > >>>
-> > >
-> > > Right now it's possible to set dell laptop to compile in but this
-> > > causes dell-smbios to compile in which breaks if dcdbas is a module.
-> > >
-> > > Dell laptop shouldn't select dell-smbios anymore, but depend on it.
-> > >
-> > > Fixes: 32d7b19 (platform/x86: dell-smbios: Resolve dependency error on
-> > DCDBAS)
-> > 
-> > meta-comment: the SHA-1 ID should be the first 12 characters of the commit ID
-> > according to Documentation/process/submitting-patches.rst.
-> 
-> Thanks for letting me, I didn't realize that.
-> 
-> Darren, let me know if you want me to resubmit with this adjustment or if you
-> can adjust when you queue for testing.
-
-
-Will fix locally.
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+UmlnaHQgbm93LCBhbGwgbWVkaWEgZHJpdmVycyBidWlsZCBzdWNjZXNzZnVsbHkgd2l0aCBDT01Q
+SUxFX1RFU1Qgb24geDg2LApvbiBib3RoIGkzODYgYW5kIHg4Nl82NC4gWWV0LCBzZXZlcmFsIGRy
+aXZlcnMgdGhlcmUgZG9uJ3QgYnVpbGQgb24gb3RoZXIKYXJjaHMuCgpJIGRvbid0IG5lZWQgbXlz
+ZWxmIHRvIGJ1aWxkIGFsbCBkcml2ZXJzIG91dHNpZGUgeDg2LCBidXQgb3RoZXJzIGNvdWxkCmZp
+bmQgaXQgdXNlZnVsLiBJdCBhbHNvIHJlbHBzIHNwcmVhZGluZyBDT01QSUxFX1RFU1QgYnVpbGRz
+LCB3aXRoIHNvdW5kcwphIGdvb2QgaWRlYSwgYXMgbW9yZSBkZXZlbG9wZXJzIG1heSBiZSBzZWVp
+bmcgaXNzdWVzIGFuZCBzdWJtaXRpbmcgCnVzIHBhdGNoZXMuCgpTbywgdGhpcyBwYXRjaCBzZXJp
+ZXMgbWFrZXMgbW9zdCBvZiB0aGVtIHRvIGJlIGJ1aWx0IGVsc2V3aGVyZSAodGVzdGVkCm9ubHkg
+d2l0aCBBUk0gd2l0aCBhbGx5ZXNjb25maWcpLiBUaGUgb25seSB0d28gbWVkaWEgZHJpdmVycyB0
+aGF0IGRvbid0IGJ1aWxkIApvbiBzdWNoIGNvbmRpdGlvbnMgYXJlOgoKMSkgbWVkaWEvc3RhZ2lu
+Zy9hdG9taXNwOiBpdCB1c2VzIHNldmVyYWwgQUNQSSBiaXRzIHRoYXQgbm8gb3RoZXIgbWVkaWEK
+ZHJpdmVyIHJlcXVpcmVzIChpbmNsdWRpbmcgSW50ZWwgSVBVMyk7CgoyKSByYWRpby1taXJvcGNt
+MjA6IFRoaXMgZGV2aWNlIGRlcG5kcyBvbiBJU0FfRE1BX0FQSSwgd2l0aCBpcyBhdmFpbGFibGUg
+b25seQpmb3IgYSBmZXcgbm9uLUludGVsIGFyY2hpdGVjdHVyZXMuCgpJbiBvdGhlciB3b3Jkcywg
+dGhlIGZvbGxvd2luZyBzeW1ib2xzIGFyZW4ndCBlbmFibGVkIHdpdGggYWxseWVzY29uZmlnOgoK
+CUlOVEVMX0FUT01JU1AgVklERU9fQVRPTUlTUAoJVklERU9fQVRPTUlTUF9NU1JMSVNUX0hFTFBF
+UiBWSURFT19BVE9NSVNQX01UOU0xMTQKCVZJREVPX0FUT01JU1BfR0MwMzEwICBWSURFT19BVE9N
+SVNQX0dDMjIzNSAKCVZJREVPX0FUT01JU1BfT1YyNzIyIFZJREVPX0FUT01JU1BfT1Y1NjkzCglW
+SURFT19BVE9NSVNQX09WMjY4MCBWSURFT19BVE9NSVNQX0xNMzU1NAoJUkFESU9fTUlST1BDTTIw
+CgpBbGwgcGF0Y2hlcyBpbiB0aGlzIHNlcmllcyBhcmUgYXZhaWxhYmxlIGF0OgoKCWh0dHBzOi8v
+Z2l0LmxpbnV4dHYub3JnL21jaGVoYWIvZXhwZXJpbWVudGFsLmdpdC9sb2cvP2g9Y29tcGlsZV90
+ZXN0X3Y3CgpNYXVybyBDYXJ2YWxobyBDaGVoYWIgKDcpOgogIGFzbS1nZW5lcmljLCBtZWRpYTog
+YWxsb3cgQ09NUElMRV9URVNUIHdpdGggdmlydF90b19idXMKICBtZWRpYTogbWV5ZTogYWxsb3cg
+YnVpbGRpbmcgaXQgd2l0aCBDT01QSUxFX1RFU1Qgb24gbm9uLXg4NgogIG1lZGlhOiByYzogYWxs
+b3cgYnVpbGQgcG5wLWRlcGVuZGVudCBkcml2ZXJzIHdpdGggQ09NUElMRV9URVNUCiAgbWVkaWE6
+IGlwdTM6IGFsbG93IGJ1aWxkaW5nIGl0IHdpdGggQ09NUElMRV9URVNUIG9uIG5vbi14ODYgYXJj
+aHMKICBvbWFwZmI6IG9tYXBmYl9kc3MuaDogYWRkIHN0dWJzIHRvIGJ1aWxkIHdpdGggQ09NUElM
+RV9URVNUICYmIERSTV9PTUFQCiAgbWVkaWE6IG9tYXAyOiBhbGxvdyBidWlsZGluZyBpdCB3aXRo
+IENPTVBJTEVfVEVTVCAmJiBEUk1fT01BUAogIG1lZGlhOiB2aWEtY2FtZXJhOiBhbGxvdyBidWls
+ZCBvbiBub24teDg2IGFyY2hzIHdpdGggQ09NUElMRV9URVNUCgogZHJpdmVycy9tZWRpYS9wY2kv
+aW50ZWwvaXB1My9LY29uZmlnIHwgIDMgKy0KIGRyaXZlcnMvbWVkaWEvcGNpL21leWUvS2NvbmZp
+ZyAgICAgICB8ICAzICstCiBkcml2ZXJzL21lZGlhL3BjaS9zdGEyeDExL0tjb25maWcgICAgfCAg
+NCArLS0KIGRyaXZlcnMvbWVkaWEvcGNpL3pvcmFuL0tjb25maWcgICAgICB8ICAzICstCiBkcml2
+ZXJzL21lZGlhL3BsYXRmb3JtL0tjb25maWcgICAgICAgfCAgMiArLQogZHJpdmVycy9tZWRpYS9w
+bGF0Zm9ybS9vbWFwL0tjb25maWcgIHwgIDMgKy0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdmlh
+LWNhbWVyYS5jICB8IDEwICsrKysrKy0KIGRyaXZlcnMvbWVkaWEvcmMvS2NvbmZpZyAgICAgICAg
+ICAgICB8IDEwICsrKy0tLS0KIGluY2x1ZGUvYXNtLWdlbmVyaWMvaW8uaCAgICAgICAgICAgICB8
+ICAyICstCiBpbmNsdWRlL2xpbnV4L3NvbnktbGFwdG9wLmggICAgICAgICAgfCAgNCArKysKIGlu
+Y2x1ZGUvbGludXgvdmlhLWNvcmUuaCAgICAgICAgICAgICB8IDE3ICsrKysrKysrKysrKwogaW5j
+bHVkZS9saW51eC92aWEtZ3Bpby5oICAgICAgICAgICAgIHwgIDQgKysrCiBpbmNsdWRlL2xpbnV4
+L3ZpYV9pMmMuaCAgICAgICAgICAgICAgfCAgNSArKysrCiBpbmNsdWRlL3ZpZGVvL29tYXBmYl9k
+c3MuaCAgICAgICAgICAgfCA1NCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0K
+IDE0IGZpbGVzIGNoYW5nZWQsIDEwNyBpbnNlcnRpb25zKCspLCAxNyBkZWxldGlvbnMoLSkKCi0t
+IAoyLjE0LjMKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
