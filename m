@@ -1,141 +1,72 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: dell-smbios: Match on www.dell.com in OEM
- strings too
-Date: Fri, 20 Apr 2018 14:39:32 +0000
-Message-ID: <8649d2b7b64741b4beb7b17085aa9d56@ausx13mpc120.AMER.DELL.COM>
-References: <1523994356-9598-1-git-send-email-mario.limonciello@dell.com>
- <20180419234324.GA11546@fury>
+From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Subject: [UNTESTED 3/3] thinkpad-acpi: silence
+ false-positive-prone pr_warn
+Date: Fri, 20 Apr 2018 12:16:29 -0300
+Message-ID: <20180420151629.12993-3-hmh@hmh.eng.br>
+References: <20180420151629.12993-1-hmh@hmh.eng.br>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419234324.GA11546@fury>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org
-Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20180420151629.12993-1-hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+In-Reply-To: <-B_kuLAsoL7HNLV_as9l197VeKXFOu7R-GfEj_oV2TRu40VHMh4SRkEpgaOEMhEqi5-t9Qdk4c8_vMNOXDk_QHuNj-EPKs2afxrL0zTBZxc=@protonmail.ch>
+References: <-B_kuLAsoL7HNLV_as9l197VeKXFOu7R-GfEj_oV2TRu40VHMh4SRkEpgaOEMhEqi5-t9Qdk4c8_vMNOXDk_QHuNj-EPKs2afxrL0zTBZxc=@protonmail.ch>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Christian Kellner <ckellner-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Golden_Miller83-g/b1ySJe57IkP3XJZ0H8fw@public.gmane.org, Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, FP1 Zhang <zhangfp1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+Do not consider unknown HKEY events in the 0x6000 range to be thermal
+warnings.  Instead, handle them as a generic unknown HKEY event, which
+are reported to the kernel log at priority "notice", and do not trigger
+a thermal registers state dump to the log.
+
+Signed-off-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 3d70ef7e8a68..a0e9ce0d85b9 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -4039,8 +4039,6 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+ 				 bool *send_acpi_ev,
+ 				 bool *ignore_acpi_ev)
+ {
+-	bool known = true;
+-
+ 	/* 0x6000-0x6FFF: thermal alarms/notices and keyboard events */
+ 	*send_acpi_ev = true;
+ 	*ignore_acpi_ev = false;
+@@ -4107,13 +4105,12 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+ 		return true;
+ 
+ 	default:
+-		pr_warn("unknown possible thermal alarm or keyboard event received\n");
+-		known = false;
++		/* report simply as unknown, no sensor dump */
++		return false;
+ 	}
+ 
+ 	thermal_dump_all_sensors();
+-
+-	return known;
++	return true;
+ }
+ 
+ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
+-- 
+2.11.0
 
 
-> -----Original Message-----
-> From: Darren Hart [mailto:dvhart@infradead.org]
-> Sent: Thursday, April 19, 2018 6:43 PM
-> To: Limonciello, Mario
-> Cc: Andy Shevchenko; LKML; platform-driver-x86@vger.kernel.org
-> Subject: Re: [PATCH] platform/x86: dell-smbios: Match on www.dell.com in =
-OEM
-> strings too
->=20
-> On Tue, Apr 17, 2018 at 02:45:56PM -0500, Mario Limonciello wrote:
-> > Sergey reported that some much older Dell systems don't support
-> > the OEM string "Dell System" but instead supported www.dell.com
-> > in OEM strings.
-> >
-> > Match both of these to indicate that this driver is running on
-> > a Dell system.
-> >
-> > Reported-by: Sergey Kubushyn <ksi@koi8.net>
-> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> > Tested-by: Sergey Kubushyn <ksi@koi8.net>
-> > ---
-> >  drivers/platform/x86/dell-smbios-base.c | 10 +++++++---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform=
-/x86/dell-
-> smbios-base.c
-> > index 2485c80..fbd6557 100644
-> > --- a/drivers/platform/x86/dell-smbios-base.c
-> > +++ b/drivers/platform/x86/dell-smbios-base.c
-> > @@ -555,11 +555,15 @@ static void free_group(struct platform_device *pd=
-ev)
-> >
-> >  static int __init dell_smbios_init(void)
-> >  {
-> > -	const struct dmi_device *valid;
-> > +	const struct dmi_device *valid_dell_system;
-> > +	const struct dmi_device *valid_www;
-> >  	int ret, wmi, smm;
-> >
-> > -	valid =3D dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System",
-> NULL);
-> > -	if (!valid) {
-> > +	valid_dell_system =3D
-> > +		dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System",
-> NULL);
-> > +	valid_www =3D
-> > +		dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com",
-> NULL);
-> > +	if (!valid_dell_system && !valid_www) {
-> >  		pr_err("Unable to run on non-Dell system\n");
-> >  		return -ENODEV;
-> >  	}
->=20
-> Hrm, rather than introduce another variable that we don't use and always =
-perform
-> both tests, when most of the time we only need to do the first, how about
-> something like:
->=20
-
-Darren,
-
-That looks good to me, thanks!
-
->=20
-> From 2cb5959dadec769167350a9bcb1d212a02b17af8 Mon Sep 17 00:00:00 2001
-> Message-Id:
-> <2cb5959dadec769167350a9bcb1d212a02b17af8.1524181265.git.dvhart@infrad
-> ead.org>
-> From: Mario Limonciello <mario.limonciello@dell.com>
-> Date: Tue, 17 Apr 2018 14:45:56 -0500
-> Subject: [PATCH] platform/x86: dell-smbios: Match on www.dell.com in OEM
->  strings too
->=20
-> Sergey reported that some much older Dell systems don't support
-> the OEM string "Dell System" but instead supported www.dell.com
-> in OEM strings.
->=20
-> Match both of these to indicate that this driver is running on
-> a Dell system.
->=20
-> Reported-by: Sergey Kubushyn <ksi@koi8.net>
-> Tested-by: Sergey Kubushyn <ksi@koi8.net>
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> [dvhart: Simplify DMI logic and eliminate unnecessary variables]
-> Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-> ---
->  drivers/platform/x86/dell-smbios-base.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x=
-86/dell-
-> smbios-base.c
-> index 33fb2a20458a..9dc282ed5a9e 100644
-> --- a/drivers/platform/x86/dell-smbios-base.c
-> +++ b/drivers/platform/x86/dell-smbios-base.c
-> @@ -555,11 +555,10 @@ static void free_group(struct platform_device *pdev=
-)
->=20
->  static int __init dell_smbios_init(void)
->  {
-> -	const struct dmi_device *valid;
->  	int ret, wmi, smm;
->=20
-> -	valid =3D dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System",
-> NULL);
-> -	if (!valid) {
-> +	if (!dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL)
-> &&
-> +	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com",
-> NULL)) {
->  		pr_err("Unable to run on non-Dell system\n");
->  		return -ENODEV;
->  	}
-> --
-> 2.14.3
->=20
->=20
-> --
-> Darren Hart
-> VMware Open Source Technology Center
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, Slashdot.org! http://sdm.link/slashdot
