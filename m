@@ -1,41 +1,51 @@
-From: Antonio Rosario Intilisano <antonio.intilisano@gmail.com>
-Subject: [PATCH] platform/x86: acer-wmi: add another KEY_POWER keycode
-Date: Fri, 20 Apr 2018 23:32:12 +0200
-Message-ID: <20180420213212.30445-1-antonio.intilisano@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform/x86: Kconfig: Fix dell-laptop dependency chain.
+Date: Fri, 20 Apr 2018 14:52:12 -0700
+Message-ID: <20180420215212.GE11546@fury>
+References: <1524246131-17621-1-git-send-email-mario.limonciello@dell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1524246131-17621-1-git-send-email-mario.limonciello@dell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org
-Cc: andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, locutusofborg@debian.org, Antonio Rosario Intilisano <antonio.intilisano@gmail.com>, Chris Chiu <chiu@endlessm.com>, Daniel Drake <drake@endlessm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-    Now that we have informed the firmware that the Power Button driver is
-    active, laptops such as the Acer Swift 3 will generate
-    a WMI key event with code 0x87 when the power button key is
-    pressed. 
-    
-    Add this keycode to the table so that it is converted to an appropriate
-    input event.
+On Fri, Apr 20, 2018 at 12:42:11PM -0500, Mario Limonciello wrote:
+> As reported by Randy Dunlap:
+> >> WARNING: unmet direct dependencies detected for DELL_SMBIOS
+> >>   Depends on [m]: X86 [=y] && X86_PLATFORM_DEVICES [=y]
+> >>	&& (DCDBAS [=m] ||
+> >> DCDBAS [=m]=n) && (ACPI_WMI [=n] || ACPI_WMI [=n]=n)
+> >>   Selected by [y]:
+> >>   - DELL_LAPTOP [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y]
+> >> && DMI [=y]
+> >> && BACKLIGHT_CLASS_DEVICE [=y] && (ACPI_VIDEO [=n] ||
+> >>	ACPI_VIDEO [=n]=n)
+> >> && (RFKILL [=n] || RFKILL [=n]=n) && SERIO_I8042 [=y]
+> >>
+> 
+> Right now it's possible to set dell laptop to compile in but this
+> causes dell-smbios to compile in which breaks if dcdbas is a module.
+> 
+> Dell laptop shouldn't select dell-smbios anymore, but depend on it.
 
-Signed-off-by: Antonio Rosario Intilisano <antonio.intilisano@gmail.com>
-Acked-by: Gianfranco Costamagna <locutusofborg@debian.org>
-Cc: Chris Chiu <chiu@endlessm.com>
-Cc: Daniel Drake <drake@endlessm.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Ugh. Indeed.
 
----
- drivers/platform/x86/acer-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+One of the goals of the previous maelstrom of dell* kconfig depencency
+changes was to make it so DELL_LAPTOP was visible without having to
+toggle DELL_SMBIOS*.  But, having "select DELL_SMBIOS" avoids the
+dependency check causing this failure (I'm surprised and dismayed this
+made it through all the config permutation testing this saw).
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 1be71f956d5c..8952173dd380 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -129,6 +129,7 @@ static const struct key_entry acer_wmi_keymap[] __initconst = { 	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
- 	{KE_KEY, 0x85, {KEY_TOUCHPAD_TOGGLE} },
- 	{KE_KEY, 0x86, {KEY_WLAN} },
-+	{KE_KEY, 0x87, {KEY_POWER} },
- 	{KE_END, 0}
- };
- 
+I'll apply this patch, and I guess it should go to stable, and for the
+next version I think it's time for a new "CONFIG DELL_EXTRAS" which will
+allow us to default DELL_SMBIOS to y and make the menu more consistent.
+
+Thank you for the catch. Grrrrrr :-(
+
 -- 
-2.15.1
+Darren Hart
+VMware Open Source Technology Center
