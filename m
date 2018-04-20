@@ -1,69 +1,141 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v2] platform/x86: dell-wmi: Ignore new rfkill and fn-lock
- events
-Date: Fri, 20 Apr 2018 14:30:27 +0000
-Message-ID: <71dccbbb971f44ff8ed329c29e611f57@ausx13mpc120.AMER.DELL.COM>
-References: <20180420072648.5426-1-kai.heng.feng@canonical.com>
- <20180420072854.bprouoj5poim5rxv@pali>
+Subject: RE: [PATCH] platform/x86: dell-smbios: Match on www.dell.com in OEM
+ strings too
+Date: Fri, 20 Apr 2018 14:39:32 +0000
+Message-ID: <8649d2b7b64741b4beb7b17085aa9d56@ausx13mpc120.AMER.DELL.COM>
+References: <1523994356-9598-1-git-send-email-mario.limonciello@dell.com>
+ <20180419234324.GA11546@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180420072854.bprouoj5poim5rxv@pali>
+In-Reply-To: <20180419234324.GA11546@fury>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com, kai.heng.feng@canonical.com
-Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: dvhart@infradead.org
+Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGFsaSBSb2jDoXIgW21h
-aWx0bzpwYWxpLnJvaGFyQGdtYWlsLmNvbV0NCj4gU2VudDogRnJpZGF5LCBBcHJpbCAyMCwgMjAx
-OCAyOjI5IEFNDQo+IFRvOiBLYWktSGVuZyBGZW5nDQo+IENjOiBtamc1OUBzcmNmLnVjYW0ub3Jn
-OyBkdmhhcnRAaW5mcmFkZWFkLm9yZzsgYW5keUBpbmZyYWRlYWQub3JnOw0KPiBMaW1vbmNpZWxs
-bywgTWFyaW87IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4g
-a2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyXSBwbGF0Zm9y
-bS94ODY6IGRlbGwtd21pOiBJZ25vcmUgbmV3IHJma2lsbCBhbmQgZm4tbG9jaw0KPiBldmVudHMN
-Cj4gDQo+IE9uIEZyaWRheSAyMCBBcHJpbCAyMDE4IDE1OjI2OjQ4IEthaS1IZW5nIEZlbmcgd3Jv
-dGU6DQo+ID4gVGhlcmUgYXJlIHR3byBuZXcgZXZlbnRzIGdlbmVyYXRlZCBieSBkZWxsLXdtaSwg
-cmZraWxsIGFuZCBmbi1sb2NrLCBmcm9tDQo+ID4gRGVsbCBTeXN0ZW1zLg0KPiA+DQo+ID4gV2hl
-biBGbi1sb2NrIGhvdGtleSBnZXRzIHByZXNzZWQgdG8gc3dpdGNoIHRvIGZ1bmN0aW9uIG1vZGU6
-DQo+ID4gWzg1OTUxLjU5MTU0Ml0gZGVsbF93bWk6IFVua25vd24ga2V5IHdpdGggdHlwZSAweDAw
-MTAgYW5kIGNvZGUgMHhlMDM1DQo+ID4gcHJlc3NlZA0KPiA+IFs4NTk1MS41OTE1NDZdIGRlbGxf
-d21pOiBVbmtub3duIGtleSB3aXRoIHR5cGUgMHgwMDEwIGFuZCBjb2RlIDB4MDAwMA0KPiA+IHBy
-ZXNzZWQNCj4gPg0KPiA+IFdoZW4gRm4tbG9jayBob3RrZXkgZ2V0cyBwcmVzc2VkIHRvIHN3aXRj
-aCB0byBtdWx0aW1lZGlhIG1vZGU6DQo+ID4gWzg1OTU2LjY2NzY4Nl0gZGVsbF93bWk6IFVua25v
-d24ga2V5IHdpdGggdHlwZSAweDAwMTAgYW5kIGNvZGUgMHhlMDM1DQo+ID4gcHJlc3NlZA0KPiA+
-IFs4NTk1Ni42Njc2OTBdIGRlbGxfd21pOiBVbmtub3duIGtleSB3aXRoIHR5cGUgMHgwMDEwIGFu
-ZCBjb2RlIDB4MDAwMQ0KPiA+IHByZXNzZWQNCj4gPg0KPiA+IFdoZW4gcmFkaW8gaG90a2V5IGdl
-dHMgcHJlc3NlZDoNCj4gPiBbODU5NzQuNDMwMjIwXSBkZWxsX3dtaTogVW5rbm93biBrZXkgd2l0
-aCB0eXBlIDB4MDAxMCBhbmQgY29kZSAweGUwMDgNCj4gPiBwcmVzc2VkDQo+ID4NCj4gPiBUaGVz
-ZSBldmVudHMgYXJlIGZvciBub3RpZmljYXRpb24gcHVycG9zZSwgc28gd2UgY2FuIGlnbm9yZSB0
-aGVtLg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBpcyB0ZXN0ZWQgb24gWFBTIDkzNzAuDQo+ID4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBLYWktSGVuZyBGZW5nIDxrYWkuaGVuZy5mZW5nQGNhbm9uaWNhbC5j
-b20+DQo+IA0KPiBSZXZpZXdlZC1ieTogUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29t
-Pg0KDQpSZXZpZXdlZC1ieTogTWFyaW8gTGltb25jaWVsbG8gPG1hcmlvLmxpbW9uY2llbGxvQGRl
-bGwuY29tPg0KDQo+IA0KPiA+IC0tLQ0KPiA+IHYyOiBSZW9yZGVyIGFscGhhYmV0aWNhbGx5Lg0K
-PiA+ICAgICBNb3JlIGRldGFpbGVkIGNoYW5nZWxvZy4NCj4gPg0KPiA+ICBkcml2ZXJzL3BsYXRm
-b3JtL3g4Ni9kZWxsLXdtaS5jIHwgMTQgKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDE0IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRm
-b3JtL3g4Ni9kZWxsLXdtaS5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYw0KPiA+
-IGluZGV4IDhkMTAyMTk1YTM5Mi4uYmE4ZTY3MjVkN2FjIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
-cnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4
-Ni9kZWxsLXdtaS5jDQo+ID4gQEAgLTI2MSw2ICsyNjEsMTIgQEAgc3RhdGljIGNvbnN0IHUxNiBi
-aW9zX3RvX2xpbnV4X2tleWNvZGVbMjU2XSA9IHsNCj4gPiAgICogb3ZlcnJpZGUgdGhlbS4NCj4g
-PiAgICovDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qga2V5X2VudHJ5IGRlbGxfd21pX2tleW1h
-cF90eXBlXzAwMTBbXSA9IHsNCj4gPiArCS8qIEZuLWxvY2sgc3dpdGNoZWQgdG8gZnVuY3Rpb24g
-a2V5cyAqLw0KPiA+ICsJeyBLRV9JR05PUkUsIDB4MCwgeyBLRVlfUkVTRVJWRUQgfSB9LA0KPiA+
-ICsNCj4gPiArCS8qIEZuLWxvY2sgc3dpdGNoZWQgdG8gbXVsdGltZWRpYSBrZXlzICovDQo+ID4g
-Kwl7IEtFX0lHTk9SRSwgMHgxLCB7IEtFWV9SRVNFUlZFRCB9IH0sDQo+ID4gKw0KPiA+ICAJLyog
-TWljIG11dGUgKi8NCj4gPiAgCXsgS0VfS0VZLCAweDE1MCwgeyBLRVlfTUlDTVVURSB9IH0sDQo+
-ID4NCj4gPiBAQCAtMjk2LDYgKzMwMiwxNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGtleV9lbnRy
-eQ0KPiBkZWxsX3dtaV9rZXltYXBfdHlwZV8wMDEwW10gPSB7DQo+ID4gIAl7IEtFX0tFWSwgICAg
-MHg4NTEsIHsgS0VZX1BST0cyIH0gfSwNCj4gPiAgCXsgS0VfS0VZLCAgICAweDg1MiwgeyBLRVlf
-UFJPRzMgfSB9LA0KPiA+DQo+ID4gKwkvKg0KPiA+ICsJICogUmFkaW8gZGlzYWJsZSAobm90aWZ5
-IG9ubHkgLS0gdGhlcmUgaXMgbm8gbW9kZWwgZm9yIHdoaWNoIHRoZQ0KPiA+ICsJICogV01JIGV2
-ZW50IGlzIHN1cHBvc2VkIHRvIHRyaWdnZXIgYW4gYWN0aW9uKS4NCj4gPiArCSAqLw0KPiA+ICsJ
-eyBLRV9JR05PUkUsIDB4ZTAwOCwgeyBLRVlfUkZLSUxMIH0gfSwNCj4gPiArDQo+ID4gKwkvKiBG
-bi1sb2NrICovDQo+ID4gKwl7IEtFX0lHTk9SRSwgMHhlMDM1LCB7IEtFWV9SRVNFUlZFRCB9IH0s
-DQo+ID4gIH07DQo+ID4NCj4gPiAgLyoNCj4gDQo+IC0tDQo+IFBhbGkgUm9ow6FyDQo+IHBhbGku
-cm9oYXJAZ21haWwuY29tDQo=
+
+
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Thursday, April 19, 2018 6:43 PM
+> To: Limonciello, Mario
+> Cc: Andy Shevchenko; LKML; platform-driver-x86@vger.kernel.org
+> Subject: Re: [PATCH] platform/x86: dell-smbios: Match on www.dell.com in =
+OEM
+> strings too
+>=20
+> On Tue, Apr 17, 2018 at 02:45:56PM -0500, Mario Limonciello wrote:
+> > Sergey reported that some much older Dell systems don't support
+> > the OEM string "Dell System" but instead supported www.dell.com
+> > in OEM strings.
+> >
+> > Match both of these to indicate that this driver is running on
+> > a Dell system.
+> >
+> > Reported-by: Sergey Kubushyn <ksi@koi8.net>
+> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> > Tested-by: Sergey Kubushyn <ksi@koi8.net>
+> > ---
+> >  drivers/platform/x86/dell-smbios-base.c | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform=
+/x86/dell-
+> smbios-base.c
+> > index 2485c80..fbd6557 100644
+> > --- a/drivers/platform/x86/dell-smbios-base.c
+> > +++ b/drivers/platform/x86/dell-smbios-base.c
+> > @@ -555,11 +555,15 @@ static void free_group(struct platform_device *pd=
+ev)
+> >
+> >  static int __init dell_smbios_init(void)
+> >  {
+> > -	const struct dmi_device *valid;
+> > +	const struct dmi_device *valid_dell_system;
+> > +	const struct dmi_device *valid_www;
+> >  	int ret, wmi, smm;
+> >
+> > -	valid =3D dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System",
+> NULL);
+> > -	if (!valid) {
+> > +	valid_dell_system =3D
+> > +		dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System",
+> NULL);
+> > +	valid_www =3D
+> > +		dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com",
+> NULL);
+> > +	if (!valid_dell_system && !valid_www) {
+> >  		pr_err("Unable to run on non-Dell system\n");
+> >  		return -ENODEV;
+> >  	}
+>=20
+> Hrm, rather than introduce another variable that we don't use and always =
+perform
+> both tests, when most of the time we only need to do the first, how about
+> something like:
+>=20
+
+Darren,
+
+That looks good to me, thanks!
+
+>=20
+> From 2cb5959dadec769167350a9bcb1d212a02b17af8 Mon Sep 17 00:00:00 2001
+> Message-Id:
+> <2cb5959dadec769167350a9bcb1d212a02b17af8.1524181265.git.dvhart@infrad
+> ead.org>
+> From: Mario Limonciello <mario.limonciello@dell.com>
+> Date: Tue, 17 Apr 2018 14:45:56 -0500
+> Subject: [PATCH] platform/x86: dell-smbios: Match on www.dell.com in OEM
+>  strings too
+>=20
+> Sergey reported that some much older Dell systems don't support
+> the OEM string "Dell System" but instead supported www.dell.com
+> in OEM strings.
+>=20
+> Match both of these to indicate that this driver is running on
+> a Dell system.
+>=20
+> Reported-by: Sergey Kubushyn <ksi@koi8.net>
+> Tested-by: Sergey Kubushyn <ksi@koi8.net>
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> [dvhart: Simplify DMI logic and eliminate unnecessary variables]
+> Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+> ---
+>  drivers/platform/x86/dell-smbios-base.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x=
+86/dell-
+> smbios-base.c
+> index 33fb2a20458a..9dc282ed5a9e 100644
+> --- a/drivers/platform/x86/dell-smbios-base.c
+> +++ b/drivers/platform/x86/dell-smbios-base.c
+> @@ -555,11 +555,10 @@ static void free_group(struct platform_device *pdev=
+)
+>=20
+>  static int __init dell_smbios_init(void)
+>  {
+> -	const struct dmi_device *valid;
+>  	int ret, wmi, smm;
+>=20
+> -	valid =3D dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System",
+> NULL);
+> -	if (!valid) {
+> +	if (!dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System", NULL)
+> &&
+> +	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com",
+> NULL)) {
+>  		pr_err("Unable to run on non-Dell system\n");
+>  		return -ENODEV;
+>  	}
+> --
+> 2.14.3
+>=20
+>=20
+> --
+> Darren Hart
+> VMware Open Source Technology Center
