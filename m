@@ -1,28 +1,42 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 1/5] efi: Export boot-services code and data as
- debugfs-blobs
-Date: Mon, 23 Apr 2018 13:55:16 +0200
-Message-ID: <20180423115516.GA7951@kroah.com>
-References: <20180408174014.21908-1-hdegoede@redhat.com>
- <20180408174014.21908-2-hdegoede@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 2/3] platform/x86: dell-*: Add interface
+ for switchable graphics status query
+Date: Mon, 23 Apr 2018 16:43:41 +0300
+Message-ID: <CAHp75VdwtOS_B978JOXqWRnj611jMJyN7BxFr+qu+Ojdf07i2Q@mail.gmail.com>
+References: <20180420094432.13133-1-kai.heng.feng@canonical.com>
+ <20180420094432.13133-2-kai.heng.feng@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180408174014.21908-2-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, Will Deacon <will.deacon@arm.com>, Andy Lutomirski <luto@kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, David Howells <dhowells@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Josh Triplett <josh@joshtriplett.org>, dmitry.torokhov@gmail.com, mfuzzey@parkeon.com, keescook@chromium.org, Kalle Valo <kvalo@codeaurora.org>, Arend Van Spriel <aren>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180420094432.13133-2-kai.heng.feng@canonical.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Mario Limonciello <mario.limonciello@dell.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Apr 08, 2018 at 07:40:10PM +0200, Hans de Goede wrote:
-> Sometimes it is useful to be able to dump the efi boot-services code and
-> data. This commit adds these as debugfs-blobs to /sys/kernel/debug/efi,
-> but only if efi=debug is passed on the kernel-commandline as this requires
-> not freeing those memory-regions, which costs 20+ MB of RAM.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Fri, Apr 20, 2018 at 12:44 PM, Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+> On some Dell platforms, there's a BIOS option "Enable Switchable
+> Graphics". This information is useful if we want to do different things
+> based on this value, e.g. disable unused audio controller that comes
+> with the discrete graphics.
 
-For the debugfs interaction:
+>  int dell_micmute_led_set(int on);
+> +bool dell_switchable_gfx_is_enabled(void);
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I would rather preserve existing API, i.e.
+ - prototype int func(void), where return either state or negative error code.
+ - naming: dell_switchable_gfx_get()
+
+-- 
+With Best Regards,
+Andy Shevchenko
