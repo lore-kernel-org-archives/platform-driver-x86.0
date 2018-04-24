@@ -1,8 +1,8 @@
 From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Subject: [PATCH 2/3] thinkpad-acpi: do not report thermal
- sensor state for tablet mode switch
-Date: Tue, 24 Apr 2018 16:56:04 -0300
-Message-ID: <20180424195605.17526-2-hmh@hmh.eng.br>
+Subject: [PATCH 3/3] thinkpad-acpi: silence
+ false-positive-prone pr_warn
+Date: Tue, 24 Apr 2018 16:56:05 -0300
+Message-ID: <20180424195605.17526-3-hmh@hmh.eng.br>
 References: <CAHp75VciLyh1Y1sws69Hn=vN39suV+HH-JwNLcbeUnZ_dwrc0Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,29 +21,47 @@ To: Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Christian Kellner <ckellner-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Golden_Miller83-g/b1ySJe57IkP3XJZ0H8fw@public.gmane.org, Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, FP1 Zhang <zhangfp1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-We should not do a thermal sensors state dump to the kernel log just
-because the laptop is reporting that it changed into or out of tablet
-mode.
+Do not consider unknown HKEY events in the 0x6000 range to be thermal
+warnings.  Instead, handle them as a generic unknown HKEY event, which
+are reported to the kernel log at priority "notice", and do not trigger
+a thermal registers state dump to the log.
 
 Signed-off-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
 Tested-by: Jordan Glover <Golden_Miller83-g/b1ySJe57IkP3XJZ0H8fw@public.gmane.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/thinkpad_acpi.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index cf25f0121d3b..3d70ef7e8a68 100644
+index 3d70ef7e8a68..a0e9ce0d85b9 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -4098,7 +4098,7 @@ static bool hotkey_notify_6xxx(const u32 hkey,
- 		tpacpi_input_send_tabletsw();
- 		hotkey_tablet_mode_notify_change();
- 		*send_acpi_ev = false;
--		break;
-+		return true;
+@@ -4039,8 +4039,6 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+ 				 bool *send_acpi_ev,
+ 				 bool *ignore_acpi_ev)
+ {
+-	bool known = true;
+-
+ 	/* 0x6000-0x6FFF: thermal alarms/notices and keyboard events */
+ 	*send_acpi_ev = true;
+ 	*ignore_acpi_ev = false;
+@@ -4107,13 +4105,12 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+ 		return true;
  
- 	case TP_HKEY_EV_PALM_DETECTED:
- 	case TP_HKEY_EV_PALM_UNDETECTED:
+ 	default:
+-		pr_warn("unknown possible thermal alarm or keyboard event received\n");
+-		known = false;
++		/* report simply as unknown, no sensor dump */
++		return false;
+ 	}
+ 
+ 	thermal_dump_all_sensors();
+-
+-	return known;
++	return true;
+ }
+ 
+ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
 -- 
 2.11.0
 
