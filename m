@@ -1,65 +1,53 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v3 2/5] efi: Add embedded peripheral firmware support
-Date: Tue, 24 Apr 2018 20:33:54 +0200
-Message-ID: <f410a445-d02b-44d4-6e82-f94724e0031d@redhat.com>
-References: <20180408174014.21908-1-hdegoede@redhat.com>
- <20180408174014.21908-3-hdegoede@redhat.com>
- <20180423211143.GZ14440@wotan.suse.de>
- <71e6a45a-398d-b7a4-dab0-8b9936683226@redhat.com>
- <1524586021.3364.20.camel@linux.vnet.ibm.com>
+From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Subject: [PATCH 2/3] thinkpad-acpi: do not report thermal
+ sensor state for tablet mode switch
+Date: Tue, 24 Apr 2018 16:56:04 -0300
+Message-ID: <20180424195605.17526-2-hmh@hmh.eng.br>
+References: <CAHp75VciLyh1Y1sws69Hn=vN39suV+HH-JwNLcbeUnZ_dwrc0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1524586021.3364.20.camel@linux.vnet.ibm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>, "Luis R. Rodriguez" <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, Will Deacon <will.deacon@arm.com>, Andy Lutomirski <luto@kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, David Howells <dhowells@redhat.com>, Josh Triplett <josh@joshtriplett.org>, dmitry.torokhov@gmail.com, mfuzzey@parkeon.com, Kalle Valo <kvalo@codeaurora.org>, Arend Van Spriel <arend.vanspriel@broadcom.com>, Linus Torvalds <torvalds@lin>
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <CAHp75VciLyh1Y1sws69Hn=vN39suV+HH-JwNLcbeUnZ_dwrc0Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Christian Kellner <ckellner-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Golden_Miller83-g/b1ySJe57IkP3XJZ0H8fw@public.gmane.org, Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, FP1 Zhang <zhangfp1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+We should not do a thermal sensors state dump to the kernel log just
+because the laptop is reporting that it changed into or out of tablet
+mode.
 
-On 24-04-18 18:07, Mimi Zohar wrote:
-> On Tue, 2018-04-24 at 17:09 +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 23-04-18 23:11, Luis R. Rodriguez wrote:
->>> Hans, please see use of READING_FIRMWARE_PREALLOC_BUFFER, we'll need a new ID
->>> and security for this type of request so IMA can reject it if the policy is
->>> configured for it.
->>
->> Hmm, interesting, actually it seems like the whole existence
->> of READING_FIRMWARE_PREALLOC_BUFFER is a mistake, the IMA
->> framework really does not care if we are loading the firmware
->> into memory allocated by the firmware-loader code, or into
->> memory allocated by the device-driver requesting the firmware.
->>
->> As such the current IMA code (from v4.17-rc2) actually does
->> not handle READING_FIRMWARE_PREALLOC_BUFFER at all,
-> 
-> Right, it doesn't yet address READING_FIRMWARE_PREALLOC_BUFFER, but
-> should.
-> 
-> Depending on whether the device requesting the firmware has access to
-> the DMA memory, before the signature verification, will determine how
-> IMA-appraisal addresses READING_FIRMWARE_PREALLOC_BUFFER.
+Signed-off-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Tested-by: Jordan Glover <Golden_Miller83-g/b1ySJe57IkP3XJZ0H8fw@public.gmane.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ah I see. So this probably means that the IMA integration for
-my EFI embedded firmware code should also pass READING_FIRMWARE or
-READING_FIRMWARE_PREALLOC_BUFFER depending on if a pre-allocated
-buffer is used.
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index cf25f0121d3b..3d70ef7e8a68 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -4098,7 +4098,7 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+ 		tpacpi_input_send_tabletsw();
+ 		hotkey_tablet_mode_notify_change();
+ 		*send_acpi_ev = false;
+-		break;
++		return true;
+ 
+ 	case TP_HKEY_EV_PALM_DETECTED:
+ 	case TP_HKEY_EV_PALM_UNDETECTED:
+-- 
+2.11.0
 
-Hmm, the security_kernel_post_read_file() call in
-drivers/base/firmware_loader/fallback.c
 
-Unconditionally passes READING_FIRMWARE, it should probably check
-fw_priv->is_paged_buf and base the id to pass on that.
-
-And yes it is possible AFAICT for the firmware_request_into_buf()
-method to fallback to the userspace helper, this can happen if the
-fw_fallback_config.force_sysfs_fallback flag is set.
-
-Regards,
-
-Hans
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, Slashdot.org! http://sdm.link/slashdot
