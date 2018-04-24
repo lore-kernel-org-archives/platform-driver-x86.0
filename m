@@ -1,23 +1,59 @@
-From: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Subject: Re: [PATCH v3 2/5] efi: Add embedded peripheral firmware support
-Date: Mon, 23 Apr 2018 21:11:43 +0000
-Message-ID: <20180423211143.GZ14440@wotan.suse.de>
-References: <20180408174014.21908-1-hdegoede@redhat.com>
- <20180408174014.21908-3-hdegoede@redhat.com>
+From: Jordan Glover via ibm-acpi-devel <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Subject: Re: ThinkPad Yoga 370 thinkpad_acpi unhandled
+ events
+Date: Tue, 24 Apr 2018 06:16:30 -0400
+Message-ID: <UOMPJk5MgtGjOJGKU3SU10qxnNCTWQ8WsOgGRp-Re4Xu399bCeChHc7h04F6iuW7r2yb-Z9dGaWxRXBPaJW_xUeo6TnV7d0olhz_9BHH8nA=@protonmail.ch>
+References: <ei0r_oTyOQrFrZKDqLMWzJHdipDsPEu8zxZxhnNuNa6L7TMRdZzu43Ldx0mcuOiRI2Ud-Lx746lfMG-9YpGR7vcp1HrsuroruKEWzhrr3dg=@protonmail.ch>
+ <20180215182120.vj2evutyvixjzf55@khazad-dum.debian.net>
+ <FA1DB435B97D5A4192BAE54A4EA542A99ABF1461@CNMAILEX04.lenovo.com>
+ <nn6ptvhGK74etzOUiGmpuW6rNFCsoabu9zNzVxanfEx_bM47RjbdyzeThmIsNt4dxhL6-EihK-fiNvYQLB7bjuRBdu4aatirYyAc2HuDXiE=@protonmail.ch>
+ <FA1DB435B97D5A4192BAE54A4EA542A99AC542CC@CNMAILEX04.lenovo.com>
+ <20180403180210.v5tnefl2cvdvudfi@khazad-dum.debian.net>
+ <20180409025836.ft3atn4goi4ebc4g@khazad-dum.debian.net>
+ <-B_kuLAsoL7HNLV_as9l197VeKXFOu7R-GfEj_oV2TRu40VHMh4SRkEpgaOEMhEqi5-t9Qdk4c8_vMNOXDk_QHuNj-EPKs2afxrL0zTBZxc=@protonmail.ch>
+ <20180420151750.bp4wy3fm6ymniool@khazad-dum.debian.net>
+Reply-To: Jordan Glover <Golden_Miller83-g/b1ySJe57IkP3XJZ0H8fw@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180408174014.21908-3-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "Luis R . Rodriguez" <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, Will Deacon <will.deacon@arm.com>, Andy Lutomirski <luto@kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, David Howells <dhowells@redhat.com>, Josh Triplett <josh@joshtriplett.org>, dmitry.torokhov@gmail.com, mfuzzey@parkeon.com, keescook@chromium.org, Kalle Valo <kvalo@codeaurora.org>, Arend
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20180420151750.bp4wy3fm6ymniool-ZGHd14iZgfaRjzvQDGKj+xxZW9W5cXbT@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Cc: "bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Christian Kellner <ckellner-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter FP1 Zhang <zhangfp1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hans, please see use of READING_FIRMWARE_PREALLOC_BUFFER, we'll need a new ID
-and security for this type of request so IMA can reject it if the policy is
-configured for it.
-
-Please Cc Kees in future patches.
-
-  Luis
+T24gQXByaWwgMjAsIDIwMTggNToxNyBQTSwgSGVucmlxdWUgZGUgTW9yYWVzIEhvbHNjaHVoIDxo
+bWhAaG1oLmVuZy5icj4gd3JvdGU6Cgo+IE9uIEZyaSwgMjAgQXByIDIwMTgsIEpvcmRhbiBHbG92
+ZXIgd3JvdGU6Cj4gCj4gPiBPbiBBcHJpbCA5LCAyMDE4IDQ6NTggQU0sIEhlbnJpcXVlIGRlIE1v
+cmFlcyBIb2xzY2h1aCBobWhAaG1oLmVuZy5iciB3cm90ZToKPiA+IAo+ID4gPiBPbiBUdWUsIDAz
+IEFwciAyMDE4LCBIZW5yaXF1ZSBkZSBNb3JhZXMgSG9sc2NodWggd3JvdGU6Cj4gPiA+IAo+ID4g
+PiA+ID4gV291bGQgeW91IG1pbmQgZ2l2aW5nIHNvbWUgaGludHMgdG8gSm9yZGFuPyBUaGFua3Mu
+Cj4gPiA+ID4gCj4gPiA+ID4gTm90IGEgcHJvYmxlbSwgSSB3aWxsIGVpdGhlciBnaXZlIGhpbnRz
+IG9yIHdyaXRlIHRoZSBwYXRjaCBteXNlbGYgc29vbi4KPiA+ID4gPiAKPiA+ID4gPiBQb2tlIG1l
+IGluIG9uZSB3ZWVrIGlmIEkgZGlkIG5vdCByZXBseSBieSB0aGF0IHRpbWVmcmFtZSwgcGxlYXNl
+Lgo+ID4gPiAKPiA+ID4gUGF0Y2hlcyB3cml0dGVuIChmaXhlZCBvbmUgYnVnIGFuZCBvbmUgYW5u
+b3lhbmNlIHdoaWxlIGF0IGl0KSwgd2lsbCBzZW5kCj4gPiA+IAo+ID4gPiB0aGVtIGxhdGVyIHRo
+aXMgd2VlayBhZnRlciBJIGdldCBzb21lIHRpbWUgdG8gdGVzdC4KPiAKPiBJIGFwb2xvZ2lzZSBm
+b3IgdGhlIGRlbGF5LCBoYWQgc2V2ZXJlIGlzc3VlcyB0byBkZWFsIHdpdGggdGhpcyB3ZWVrIGFu
+ZAo+IAo+IHRoZXkgYXJlIG5vdCBvdmVyIHlldC4KPiAKPiBJIHdpbGwgc2VuZCB0aGUgKHVudGVz
+dGVkKSBwYXRjaGVzLCBwbGVhc2UgdGVzdC4KPiAKPiAKPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLQo+IAo+IEhlbnJpcXVlIEhvbHNjaHVoCgpJIHRlc3RlZCBwYXRjaGVzIG9u
+IHRvcCBvZiBMaW51eCA0LjE3LXJjMS4gVGhlIHdhcm5pbmcgbWVzc2FnZSBpcyBnb25lLCBldmVy
+eXRoaW5nIHdvcmtzIGdvb2QuCgrigItKb3JkYW4KCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpDaGVj
+ayBvdXQgdGhlIHZpYnJhbnQgdGVjaCBjb21tdW5pdHkgb24gb25lIG9mIHRoZSB3b3JsZCdzIG1v
+c3QKZW5nYWdpbmcgdGVjaCBzaXRlcywgU2xhc2hkb3Qub3JnISBodHRwOi8vc2RtLmxpbmsvc2xh
+c2hkb3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaWJt
+LWFjcGktZGV2ZWwgbWFpbGluZyBsaXN0CmlibS1hY3BpLWRldmVsQGxpc3RzLnNvdXJjZWZvcmdl
+Lm5ldApodHRwczovL2xpc3RzLnNvdXJjZWZvcmdlLm5ldC9saXN0cy9saXN0aW5mby9pYm0tYWNw
+aS1kZXZlbAo=
