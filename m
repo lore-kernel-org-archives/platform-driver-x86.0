@@ -1,75 +1,48 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] thinkpad-acpi: silence
- false-positive-prone pr_warn
-Date: Wed, 25 Apr 2018 17:16:53 +0300
-Message-ID: <CAHp75Vfih7TcZL=yDi1ydv8Yd_ULAvmhQC7o_-d5_yxzxWvoFA@mail.gmail.com>
-References: <CAHp75VciLyh1Y1sws69Hn=vN39suV+HH-JwNLcbeUnZ_dwrc0Q@mail.gmail.com>
- <20180424195605.17526-3-hmh@hmh.eng.br>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] apple-gmux: fix gmux_get_client_id()'s return type
+Date: Wed, 25 Apr 2018 17:17:21 +0300
+Message-ID: <CAHp75VcrmckbbkvGZ+B74DQXOkZddQog-D++iEeVVNCrDKUWww@mail.gmail.com>
+References: <20180424131543.2761-1-luc.vanoostenryck@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20180424195605.17526-3-hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Cc: Benjamin Berg <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Christian Kellner <ckellner-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Jordan Glover <Golden_Miller83-g/b1ySJe57IkP3XJZ0H8fw@public.gmane.org>, FP1 Zhang <zhangfp1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180424131543.2761-1-luc.vanoostenryck@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 24, 2018 at 10:56 PM, Henrique de Moraes Holschuh
-<hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org> wrote:
-> Do not consider unknown HKEY events in the 0x6000 range to be thermal
-> warnings.  Instead, handle them as a generic unknown HKEY event, which
-> are reported to the kernel log at priority "notice", and do not trigger
-> a thermal registers state dump to the log.
+On Tue, Apr 24, 2018 at 4:15 PM, Luc Van Oostenryck
+<luc.vanoostenryck@gmail.com> wrote:
+> The method struct vga_switcheroo_handler::get_client_id() is defined
+> as returning an 'enum vga_switcheroo_client_id' but the implementation
+> in this driver, gmux_get_client_id(), returns an 'int'.
+>
+> Fix this by returning 'enum vga_switcheroo_client_id' in this driver too.
 >
 
-All 3 are pushed to my review and testing queue, thanks!
+Pushed to my review and testing queue, thanks!
 
-> Signed-off-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-> Tested-by: Jordan Glover <Golden_Miller83-g/b1ySJe57IkP3XJZ0H8fw@public.gmane.org>
+> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 > ---
->  drivers/platform/x86/thinkpad_acpi.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+>  drivers/platform/x86/apple-gmux.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 3d70ef7e8a68..a0e9ce0d85b9 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -4039,8 +4039,6 @@ static bool hotkey_notify_6xxx(const u32 hkey,
->                                  bool *send_acpi_ev,
->                                  bool *ignore_acpi_ev)
->  {
-> -       bool known = true;
-> -
->         /* 0x6000-0x6FFF: thermal alarms/notices and keyboard events */
->         *send_acpi_ev = true;
->         *ignore_acpi_ev = false;
-> @@ -4107,13 +4105,12 @@ static bool hotkey_notify_6xxx(const u32 hkey,
->                 return true;
->
->         default:
-> -               pr_warn("unknown possible thermal alarm or keyboard event received\n");
-> -               known = false;
-> +               /* report simply as unknown, no sensor dump */
-> +               return false;
->         }
->
->         thermal_dump_all_sensors();
-> -
-> -       return known;
-> +       return true;
+> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+> index 7c4eb86c8..fd2ffebc8 100644
+> --- a/drivers/platform/x86/apple-gmux.c
+> +++ b/drivers/platform/x86/apple-gmux.c
+> @@ -495,7 +495,7 @@ static int gmux_set_power_state(enum vga_switcheroo_client_id id,
+>         return gmux_set_discrete_state(apple_gmux_data, state);
 >  }
 >
->  static void hotkey_notify(struct ibm_struct *ibm, u32 event)
+> -static int gmux_get_client_id(struct pci_dev *pdev)
+> +static enum vga_switcheroo_client_id gmux_get_client_id(struct pci_dev *pdev)
+>  {
+>         /*
+>          * Early Macbook Pros with switchable graphics use nvidia
 > --
-> 2.11.0
+> 2.17.0
 >
 
 
@@ -77,7 +50,3 @@ All 3 are pushed to my review and testing queue, thanks!
 -- 
 With Best Regards,
 Andy Shevchenko
-
-------------------------------------------------------------------------------
-Check out the vibrant tech community on one of the world's most
-engaging tech sites, Slashdot.org! http://sdm.link/slashdot
