@@ -1,76 +1,53 @@
-From: Kai Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH v4 3/3] ALSA: hda: Disabled unused audio
- controller for Dell platforms with Switchable Graphics
-Date: Thu, 26 Apr 2018 15:52:08 +0800
-Message-ID: <A9269F25-2239-4E3C-A3B3-FFDD69A90DD0@canonical.com>
-References: <20180420094432.13133-1-kai.heng.feng@canonical.com>
- <20180420094432.13133-3-kai.heng.feng@canonical.com>
- <s5hbmeew01d.wl-tiwai@suse.de>
- <E5D0F76C-0A83-4D2C-81F7-BD5768C0A7DC@canonical.com>
- <20180423080844.yh6ndicpu6mwy336@pali>
- <FF30493D-012C-41E8-B379-85138E1EDE05@canonical.com>
- <20180424211347.GA18258@wunner.de>
-Mime-Version: 1.0 (Mac OS X Mail 11.3 \(3445.6.18\))
-Content-Type: text/plain; charset="utf-8"; Format="flowed"; DelSp="yes"
+From: Jordan Glover via ibm-acpi-devel <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Subject: Re: ThinkPad Yoga 370 thinkpad_acpi:
+ unknown/reserved multi-mode value
+Date: Thu, 26 Apr 2018 14:43:37 -0400
+Message-ID: <i2KYto3rH7UVQeHHc8IJC49KAkka_M6VtILQEuMtxlGgdX2Y-w_37XRJobRAPn5vg2C6liWQbXSlG_-wVZAI-KNCh0c4eCuFs5tgZb9S-YA=@protonmail.ch>
+References: <20180425112937.zsrxthvjwehcezqe@khazad-dum.debian.net>
+ <1524658940.3938.24.camel@redhat.com>
+ <gIc9JoKNspoNKrS8qo0firQUKDRHW2KhbiAmRxvYakwjc3iY5OPPlnayyEVmLmTDLtVlTY5PxvgvXORfD3N1lFG-J4T-_-v0qKDmSz_ABP0=@protonmail.ch>
+ <1524661720.3938.37.camel@redhat.com>
+Reply-To: Jordan Glover <Golden_Miller83-g/b1ySJe57IkP3XJZ0H8fw@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180424211347.GA18258@wunner.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Lukas Wunner <lukas@wunner.de>
-Cc: mjg59@srcf.ucam.org, alsa-devel@alsa-project.org, Mario Limonciello <mario.limonciello@dell.com>, Takashi Iwai <tiwai@suse.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, =?utf-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, dvhart@infradead.org, andy@infradead.org
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1524661720.3938.37.camel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Benjamin Berg <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Christian Kellner <ckellner-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Peter FP1 Zhang <zhangfp1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Cj4gT24gQXByIDI1LCAyMDE4LCBhdCA1OjEzIEFNLCBMdWthcyBXdW5uZXIgPGx1a2FzQHd1bm5l
-ci5kZT4gd3JvdGU6Cj4KPiBPbiBNb24sIEFwciAyMywgMjAxOCBhdCAwNDoxODozNVBNICswODAw
-LCBLYWkgSGVuZyBGZW5nIHdyb3RlOgo+Pj4gT24gQXByIDIzLCAyMDE4LCBhdCA0OjA4IFBNLCBQ
-YWxpIFJvaMODwqFyIDxwYWxpLnJvaGFyQGdtYWlsLmNvbT4gd3JvdGU6Cj4+PiBPbiBNb25kYXkg
-MjMgQXByaWwgMjAxOCAxNjowNDo1NSBLYWkgSGVuZyBGZW5nIHdyb3RlOgo+Pj4+PiBPbiBBcHIg
-MjAsIDIwMTgsIGF0IDg6MTAgUE0sIFRha2FzaGkgSXdhaSA8dGl3YWlAc3VzZS5kZT4gd3JvdGU6
-Cj4+Pj4+IE9uIEZyaSwgMjAgQXByIDIwMTggMTE6NDQ6MzIgKzAyMDAsIEthaS1IZW5nIEZlbmcg
-d3JvdGU6Cj4+Pj4+PiBOb3cgaXQncyBhIHR5cGljYWwgZGlzY3JldGUtb25seSBzeXN0ZW0uIEhE
-TUkgYXVkaW8gY29tZXMgZnJvbSBBTUQgIAo+Pj4+Pj4gYXVkaW8KPj4+Pj4+IGNvbnRyb2xsZXIs
-IG90aGVycyBmcm9tIEludGVsIGF1ZGlvIGNvbnRyb2xsZXIuCj4+Pj4+Pgo+Pj4+Pj4gV2hlbiBT
-RyBpcyBlbmFibGVkLCB0aGUgdW51c2VkIEFNRCBhdWRpbyBjb250b2xsZXIgc3RpbGwgZXhwb3Nl
-cyBpdHMKPj4+Pj4+IHN5c2ZzLCBzbyB1c2Vyc3BhY2Ugc3RpbGwgb3BlbnMgdGhlIGNvbnRyb2wg
-ZmlsZSBhbmQgc3RyZWFtLiBJZgo+Pj4+Pj4gdXNlcnNwYWNlIHRyaWVzIHRvIG91dHB1dCBzb3Vu
-ZCB0aHJvdWdoIHRoZSBzdHJlYW0sIGl0IGhhbmdzIHRoZSAgCj4+Pj4+PiBzeXN0ZW0uCj4+Pj4+
-Cj4+Pj4+IEhtLCBjb3VsZCB5b3UgZ2l2ZSBtb3JlIGluZm9ybWF0aW9uIGFib3V0IGhvdyBpdCBo
-YW5ncz8KPj4+Pgo+Pj4+IFdlbGwsIEkgc2hvdWxkIHNheSAiaXQgaGFuZ3MgdGhlIHVzZXJzcGFj
-ZSBwcm9jZXNzIiBpbnN0ZWFkLgo+Pj4+Cj4+Pj4gJCBzcGVha2VyLXRlc3QgLXQgd2F2IC1jIDIg
-LUQgaHc6Q0FSRD1IRE1JLERFVj0zCj4+Pj4gLi4uYW5kIGl0IGp1c3Qgc3RvcHBlZC4gQ2FuJ3Qg
-Q3RybCtDIHRvIGJyZWFrIGl0Lgo+Pj4KPj4+IFNvIHVzZXJzcGFjZSBwcm9jZXNzIGNhbm5vdCBi
-ZSBraWxsZWQgYXQgYWxsPyBUaGVuIGl0IGlzIGRpZmZlcmVudCBidWcKPj4+IGluIGtlcm5lbCBh
-bmQgZGlzYWJsaW5nIHBjaSBkZXZpY2UgaXMganVzdCBhIHdvcmthcm91bmQuIE5vdCBhIHJlYWwg
-Zml4Lgo+Pj4KPj4+IEkgd291bGQgcHJvcG9zZSB0byBmaW5kIG91dCB3aGF0IGhhcHBlbiBhbmQg
-d2h5IGl0IGNhbm5vdCBiZSBraWxsZWQKPj4+IChwcm9iYWJseSBpdCBzdHVjayBzb21ld2hlcmUg
-aW4ga2VybmVsKSBhbmQgZml4IGl0IHByb3Blcmx5Lgo+Pgo+PiBUaGF0J3MgYmVjYXVzZSB0aGUg
-YXVkaW8gZGV2aWNlIGdvdCBydW50aW1lIHN1c3BlbmRlZCBieSB0aGUgZ3JhcGhpY3MuCj4+Cj4+
-IEluIHRoaXMgY2FzZSwgaWYgd2UgcmVhbGx5IHdhbnQgdG8gdXNlIHRoZSB0aGUgZGlzY3JldGUg
-YXVkaW8sIHRoZW4gd2UgIAo+PiBhbHNvCj4+IG5lZWQgdG8gd2FrZSB1cCB0aGUgZ3JhcGhpY3Mu
-Cj4+IFRoZSBkaXNjcmV0ZSBhdWRpbyBpcyB0b3RhbGx5IHVzZWxlc3Mgd2hlbiBTRyBpcyBlbmFi
-bGVkLCBzbyBteSBhcHByb2FjaCAgCj4+IGlzCj4+IGp1c3QgdG8gZGlzYWJsZSBpdC4KPgo+IEkg
-ZG9uJ3QgcXVpdGUgZm9sbG93LCB0aGF0IHNob3VsZCBiZSBmaXhlZCBieSBjb21taXQgMDdmNGY5
-N2Q3YjRiCj4gKCJ2Z2Ffc3dpdGNoZXJvbzogVXNlIGRldmljZSBsaW5rIGZvciBIREEgY29udHJv
-bGxlciIpIHdoaWNoIGxhbmRlZAo+IGluIHY0LjE3LXJjMS4KCkxvb2tzIGxpa2UgSSBoaXQgYSBu
-ZXcgYnVnOiB0aGUgZGlzY3JldGUgR0ZYIGFuZCBpdHMgYXVkaW8gY29udHJvbGxlciBuZXZlciAg
-CmVudGVycyB0byBEMy4KVGhlIEdGWCBjYW4gZW50ZXIgdG8gRDMgd2l0aCBteSBwcm9zZWQgcGF0
-Y2guCgo+Cj4gTXkgdW5kZXJzdGFuZGluZyB3YXMgdGhhdCB3aXRoIFNHIGVuYWJsZWQsIHRoZSBl
-eHRlcm5hbCBEUC9IRE1JIHBvcnRzCj4gYXJlIG11eGVkIHRvIHRoZSBJbnRlbCBHUFUsIHNvIGF1
-ZGlvIGNhbiBvbmx5IGJlIHN0cmVhbWVkIHRvIGV4dGVybmFsCj4gZGlzcGxheXMgYnkgdGhlIElu
-dGVsIEhEQSwgbm90IGJ5IHRoZSBIREEgaW50ZWdyYXRlZCBpbnRvIHRoZSBkaXNjcmV0ZQo+IEFN
-RC9OdmlkaWEgR1BVLiAgQXVkaW8gc3RyZWFtZWQgdG8gdGhlIGxhdHRlciB3b3VsZCBlc3NlbnRp
-YWxseSBlbmQgdXAKPiBpbiBhIGJsYWNraG9sZS4gIEFuZCBwcmV2ZW50aW5nIHRoZSB1c2VyIGZy
-b20gc2VlaW5nIHN1Y2ggdXNlbGVzcyBhdWRpbwo+IGRldmljZXMgd2FzIHRoZSBzb2xlIHB1cnBv
-c2Ugb2YgdGhpcyBjb21taXQuICBBbSBJIG1pc3Npbmcgc29tZXRoaW5nPwoKWWVzIHRoaXMgaXMg
-dGhlIGludGVudGlvbi4KCkthaS1IZW5nCgo+Cj4gVGhhbmtzLAo+Cj4gTHVrYXMKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5n
-IGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJv
-amVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
+T24gQXByaWwgMjUsIDIwMTggMzowOCBQTSwgQmVuamFtaW4gQmVyZyA8YmJlcmdAcmVkaGF0LmNv
+bT4gd3JvdGU6Cgo+IEhpLAo+IAo+IE9uIFdlZCwgMjAxOC0wNC0yNSBhdCAwODoyOCAtMDQwMCwg
+Sm9yZGFuIEdsb3ZlciB3cm90ZToKPiAKPiA+IEFmdGVyIHJlYm9vdCBpdCBzdGF5cyB0aGUgc2Ft
+ZSBleGNlcHQgOgo+ID4gCj4gPiB0aGlua3BhZF9hY3BpOiBVbmtub3duL3Jlc2VydmVkIG11bHRp
+IG1vZGUgdmFsdWUgMHgwMDAwIGZvciB0eXBlIDQsCj4gPiAKPiA+IHBsZWFzZSByZXBvcnQgdGhp
+cyB0byBpYm0tYWNwaS1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKPiA+IAo+ID4gd2hpY2gg
+aXMgbWlzc2luZyB0aGVuLgo+IAo+IFRoYXQgc291bmRzIHJlYXNvbmFibGUuIEl0IGp1c3QgbWVh
+bnMgdGhhdCB3ZSBhcmUgbm90IGFibGUgdG8gcmVzb2x2ZQo+IAo+IHRoZSBtdWx0aSBtb2RlIHN0
+YXRlIHJpZ2h0IGF3YXkgYWZ0ZXIgYSBjb2xkIGJvb3QuIFRoYXQgZG9lcyBsZWF2ZSB0aGUKPiAK
+PiBxdWVzdGlvbiB3aGV0aGVyIHdlIHNob3VsZCBiZSBkb2luZyBhbnl0aGluZyBlbHNlIHNvIHRo
+YXQgdGhlIHN0YXRlIGlzCj4gCj4gcmVzb2x2ZWQgY29ycmVjdGx5Lgo+IAo+IEEgcXVpY2sgdGVz
+dCBjb3VsZCBiZSB0byBkbyBhIGNvbGQgYm9vdCB3aXRoIHRoZSBsYXB0b3AgZm9sZGVkIGludG8K
+PiAKPiB0YWJsZXQgbW9kZS4gSSBiZWxpZXZlIGRtZXNnIHdpbGwgYmUgaWRlbnRpY2FsLCBidXQg
+eW91IHNob3VsZCBzZWUKPiAKPiAoZS5nLiB1c2luZyBldmVtdS1kZXNjcmliZSBvbiAiVGhpbmtQ
+YWQgRXh0cmEgQnV0dG9ucyIpIHRoYXQKPiAKPiBTV19UQUJMRVRfTU9ERSBoYXMgdG9nZ2xlZCB0
+byAxIHJhdGhlciB0aGFuIHN0aWxsIGhhdmluZyBhIHN0YXRlIG9mIDAKPiAKPiBmb3IgbGFwdG9w
+IG1vZGUuCj4gCj4gQmVuamFtaW4KCkkgaGF2ZSB0byBhZG1pdCB0aGF0IEkgY2FuJ3QgaGFuZGxl
+IGJvb3RpbmcgYW5kIGNoZWNraW5nIHRoaXMgaW4gdGFibGV0IG1vZGUKKHdpdGhvdXQga2V5Ym9h
+cmQpIHNvIEkgd29uJ3QgY29uZmlybSBpdCwgc29ycnkuCgrigItKb3JkYW4KCi0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLQpDaGVjayBvdXQgdGhlIHZpYnJhbnQgdGVjaCBjb21tdW5pdHkgb24gb25lIG9m
+IHRoZSB3b3JsZCdzIG1vc3QKZW5nYWdpbmcgdGVjaCBzaXRlcywgU2xhc2hkb3Qub3JnISBodHRw
+Oi8vc2RtLmxpbmsvc2xhc2hkb3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KaWJtLWFjcGktZGV2ZWwgbWFpbGluZyBsaXN0CmlibS1hY3BpLWRldmVsQGxp
+c3RzLnNvdXJjZWZvcmdlLm5ldApodHRwczovL2xpc3RzLnNvdXJjZWZvcmdlLm5ldC9saXN0cy9s
+aXN0aW5mby9pYm0tYWNwaS1kZXZlbAo=
