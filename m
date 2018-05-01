@@ -1,92 +1,46 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Dell WMI Hotkeys on Dell Inspiron 15R SE (7520)
-Date: Tue, 1 May 2018 13:00:03 +0200
-Message-ID: <20180501110003.dhsbdvc6cv32lvt7@pali>
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: [PATCH v2] dell-wmi: Set correct keycode for Fn + left arrow hotkey
+Date: Tue,  1 May 2018 13:11:54 +0200
+Message-ID: <20180501111154.9244-1-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="exw4cmo2br4o27ou"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <mario.limonciello@dell.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, qwrd <mistave@countermail.com>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, Henk <henk.vergonet@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+From: Henk <henk.vergonet@gmail.com>
 
---exw4cmo2br4o27ou
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fn + left arrow hotkey combination is used for enabling/disabling automatic
+display brigthness based on integrated ALS sensor. For this purpose there
+is standard linux key KEY_BRIGHTNESS_AUTO so use it instead of KEY_UNKNOWN.
 
-Hello!
+Tested on Dell Lattitude E6500.
 
-Mistave contacted me, because he has Dell Inspiron 15R SE (7520) on
-which are not working 3 hotkeys located in the right upper corner.
+Signed-off-by: Henk Vergonet <henk.vergonet@gmail.com>
+Reviewed-By: Pali Rohár <pali.rohar@gmail.com>
+Reviewed-By: Mario Limonciello <mario.limonciello@dell.com>
+---
+Changes since v1 by Pali
+* Update commit description
+---
+ drivers/platform/x86/dell-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-After debugging we find out that this Dell Inspirion sends following WMI
-event to dell-wmi.c driver:
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-----------------------------------------
-Left WMI key: Windows Mobility Center
-Press:    Key with type 0x0000 and code 0xe026 pressed
-Hold:     -
-Release:  -
-
-Only the press event was observed. It does not repeat when held down.
-
-----------------------------------------
-Middle WMI key: Dell Audio With Preset Switch
-Press:    Key with type 0x0000 and code 0xe02a pressed
-Hold:     Key with type 0x0000 and code 0xe02b pressed
-          (code 0xe02a also repeats continuously)
-Release:  Key with type 0x0000 and code 0xe02c pressed
-
-Code 0xe02a repeats, if button is held down. After about 3 seconds a
-single code 0xe02b entry will also appear. When released before the code
-0xe02b pops up, the code 0xe02c will appear. If released afterwards,
-code 0xe02c does not appear.
-
-----------------------------------------
-Right WMI key: Dell Instant Launch
-Press:    -
-Hold:     Key with type 0x0000 and code 0xe025 pressed
-Release:  Key with type 0x0000 and code 0xe024 pressed
-
-Code 0xe024 only appears, if the button is released within about 3
-seconds. If held down for longer, a single code 0xe025 will appear. If
-released after the code 0xe025 appears, the code 0xe024 will not appear.
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-Such hold and release events in 3sec time period are strange and I'm not
-sure how we should handle them. Any idea?
-
-Also there is another problem. Driver dell-wmi.c ignores 0xe025 events
-because on all other machines it is reported also by PS/2 internal
-keyboard. But seems not on this Dell Inspirion. How to handle this fact?
-Add a new quirk into dell-wmi.c code?
-
-Mario, do you have a documentation or something which can prove above
-observation that keys are really reported via such strange WMI events?
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---exw4cmo2br4o27ou
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWuhIqgAKCRCL8Mk9A+RD
-UuO4AKDHpEp452VtkxjyxV1hFtcgfnQuTACgiyp6eBn22GJSg39v+del43QqoMY=
-=v5Vs
------END PGP SIGNATURE-----
-
---exw4cmo2br4o27ou--
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 8d102195..7c918e37 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -233,7 +233,7 @@ static const u16 bios_to_linux_keycode[256] = {
+ 	[18]	= KEY_PROG1,
+ 	[19]	= KEY_BRIGHTNESSDOWN,
+ 	[20]	= KEY_BRIGHTNESSUP,
+-	[21]	= KEY_UNKNOWN,
++	[21]	= KEY_BRIGHTNESS_AUTO,
+ 	[22]	= KEY_KBDILLUMTOGGLE,
+ 	[23]	= KEY_UNKNOWN,
+ 	[24]	= KEY_SWITCHVIDEOMODE,
+-- 
+2.11.0
