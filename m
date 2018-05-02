@@ -1,66 +1,74 @@
-From: Lukas Wunner <lukas@wunner.de>
-Subject: Re: [alsa-devel] [PATCH v4 3/3] ALSA: hda: Disabled unused audio
- controller for Dell platforms with Switchable Graphics
-Date: Wed, 2 May 2018 09:44:55 +0200
-Message-ID: <20180502074455.GA17650@wunner.de>
-References: <20180420094432.13133-1-kai.heng.feng@canonical.com>
- <20180420094432.13133-3-kai.heng.feng@canonical.com>
- <s5hbmeew01d.wl-tiwai@suse.de>
- <E5D0F76C-0A83-4D2C-81F7-BD5768C0A7DC@canonical.com>
- <20180423080844.yh6ndicpu6mwy336@pali>
- <FF30493D-012C-41E8-B379-85138E1EDE05@canonical.com>
- <20180424211347.GA18258@wunner.de>
- <A9269F25-2239-4E3C-A3B3-FFDD69A90DD0@canonical.com>
+From: "Puma D." <puma.d@web.de>
+Subject: Re: [PATCH] platform/x86: asus-wmi: Add keyboard backlight toggle
+ support
+Date: Wed, 2 May 2018 16:29:25 +0200
+Message-ID: <09b12fe1-3023-5e16-7c80-e73a8c3634fd@web.de>
+References: <20180502060224.44903-1-chiu@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <A9269F25-2239-4E3C-A3B3-FFDD69A90DD0@canonical.com>
+In-Reply-To: <20180502060224.44903-1-chiu@endlessm.com>
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kai Heng Feng <kai.heng.feng@canonical.com>
-Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Takashi Iwai <tiwai@suse.de>, mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, Mario Limonciello <mario.limonciello@dell.com>, alsa-devel@alsa-project.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+To: Chris Chiu <chiu@endlessm.com>, corentin.chary@gmail.com, dvhart@infradead.org, andy@infradead.org
+Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Apr 26, 2018 at 03:52:08PM +0800, Kai Heng Feng wrote:
-> > On Apr 25, 2018, at 5:13 AM, Lukas Wunner <lukas@wunner.de> wrote:
-> > On Mon, Apr 23, 2018 at 04:18:35PM +0800, Kai Heng Feng wrote:
-> > > That's because the audio device got runtime suspended by the graphics.
-> > >
-> > > In this case, if we really want to use the the discrete audio,
-> > > then we also need to wake up the graphics.
-> > > The discrete audio is totally useless when SG is enabled,
-> > > so my approach is just to disable it.
-> >
-> > I don't quite follow, that should be fixed by commit 07f4f97d7b4b
-> > ("vga_switcheroo: Use device link for HDA controller") which landed
-> > in v4.17-rc1.
-> 
-> Looks like I hit a new bug: the discrete GFX and its audio controller
-> never enters to D3.
-> The GFX can enter to D3 with my prosed patch.
+On 02.05.2018 08:02, Chris Chiu wrote:
+> Some Asus laptops like UX550GE has hotkey (Fn+F7) for keyboard
+> backlight toggle. In this UX550GE, the hotkey incremet the level
+> of brightness for each keypress from 1 to 3, and then switch it
+> off when the brightness has been the max. This commit interprets
+> the code 0xc7 generated from hotkey to KEY_KBDILLUMUP to increment
+> the brightness, then pass KEY_KBDILLUMTOGGLE to user space after
+> the brightness max been reached for switching the led off.
+>
+> https://phabricator.endlessm.com/T21390
+>
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> ---
+>   drivers/platform/x86/asus-nb-wmi.c | 1 +
+>   drivers/platform/x86/asus-wmi.c    | 8 ++++++++
+>   2 files changed, 9 insertions(+)
+>
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index 136ff2b..14c502e 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -496,6 +496,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+>   	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
+>   	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
+>   	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
+> +	{ KE_KEY, 0xC7, { KEY_KBDILLUMTOGGLE } },
+>   	{ KE_END, 0},
+>   };
+>   
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 1f6e68f..b64ff90 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -67,6 +67,7 @@ MODULE_LICENSE("GPL");
+>   #define NOTIFY_BRNDOWN_MAX		0x2e
+>   #define NOTIFY_KBD_BRTUP		0xc4
+>   #define NOTIFY_KBD_BRTDWN		0xc5
+> +#define NOTIFY_KBD_BRTTOGGLE		0xc7
+>   
+>   /* WMI Methods */
+>   #define ASUS_WMI_METHODID_SPEC	        0x43455053 /* BIOS SPECification */
+> @@ -1745,6 +1746,13 @@ static void asus_wmi_notify(u32 value, void *context)
+>   		}
+>   	}
+>   
+> +	if (code == NOTIFY_KBD_BRTTOGGLE) {
+> +		if (asus->kbd_led_wk < asus->kbd_led.max_brightness)
+> +			code = NOTIFY_KBD_BRTUP;
+> +		else
+> +			code = NOTIFY_KBD_BRTTOGGLE;
+> +	}
+Did you intend the else branch to be a noop?
 
-Can you find out why?  Does the HDA controller have a codec as child
-device that doesn't runtime suspend, perhaps because it failed to
-initialize correctly?  If a codec device fails to runtime suspend,
-the HDA controller (as parent) and by extension the GPU (via the
-device link) are also kept runtime active.
-
-Do you see anything in dmesg when the AMD HDA controller probes?
-If you look in /sys/bus/pci/devices/0000:01:00.1/power/, does the
-HDA controller have active kids and what is its usage count?
-
-
-> > My understanding was that with SG enabled, the external DP/HDMI ports
-> > are muxed to the Intel GPU, so audio can only be streamed to external
-> > displays by the Intel HDA, not by the HDA integrated into the discrete
-> > AMD/Nvidia GPU.  Audio streamed to the latter would essentially end up
-> > in a blackhole.  And preventing the user from seeing such useless audio
-> > devices was the sole purpose of this commit.  Am I missing something?
-> 
-> Yes this is the intention.
-
-Could you add this information to the commit message then?
-
-Thanks,
-
-Lukas
+> +
+>   	if (is_display_toggle(code) &&
+>   	    asus->driver->quirks->no_display_toggle)
+>   		goto exit;
