@@ -1,68 +1,120 @@
-From: Chris Chiu <chiu@endlessm.com>
-Subject: [PATCH v2] platform/x86: asus-wmi: Add keyboard backlight toggle support
-Date: Thu,  3 May 2018 11:04:38 +0800
-Message-ID: <20180503030438.51150-1-chiu@endlessm.com>
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Subject: Re: [PATCH v3 2/5] efi: Add embedded peripheral firmware support
+Date: Fri, 4 May 2018 00:21:42 +0000
+Message-ID: <20180504002142.GT27853@wotan.suse.de>
+References: <20180408174014.21908-1-hdegoede@redhat.com>
+ <20180408174014.21908-3-hdegoede@redhat.com>
+ <20180423211143.GZ14440@wotan.suse.de>
+ <71e6a45a-398d-b7a4-dab0-8b9936683226@redhat.com>
+ <1524586021.3364.20.camel@linux.vnet.ibm.com>
+ <20180424234219.GX14440@wotan.suse.de>
+ <1524632409.3371.48.camel@linux.vnet.ibm.com>
+ <20180425175557.GY14440@wotan.suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180425175557.GY14440@wotan.suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: corentin.chary@gmail.com, dvhart@infradead.org, andy@infradead.org
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, Chris Chiu <chiu@endlessm.com>, Jian-Hong Pan <jian-hong@endlessm.com>
+To: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc: Mimi Zohar <zohar@linux.vnet.ibm.com>, Stephen Boyd <sboyd@kernel.org>, Vikram Mulukutla <markivx@codeaurora.org>, Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>, Martijn Coenen <maco@android.com>, Todd Kjos <tkjos@android.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, linux-security-module@vger.kernel.org, Chris Wright <chrisw@sous-sol.org>, David Howells <dhowells@redhat.com>, Alan Cox <alan@linux.intel.com>, Kees Cook <keescook@chromium.org>, Hans de Goede <hdegoede@redhat.com>, Andres Rodriguez <andresx7@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some Asus laptops like UX550GE has hotkey (Fn+F7) for keyboard
-backlight toggle. In this UX550GE, the hotkey incremet the level
-of brightness for each keypress from 1 to 3, and then switch it
-off when the brightness has been the max. This commit interprets
-the code 0xc7 generated from hotkey to KEY_KBDILLUMUP to increment
-the brightness, then pass KEY_KBDILLUMTOGGLE to user space after
-the brightness max been reached for switching the led off.
+Android folks, poke below. otherwise we'll have no option but to seriously
+consider Mimi's patch to prevent these calls when IMA appraisal is enforced:
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Tested-by: Jian-Hong Pan <jian-hong@endlessm.com>
----
+http://lkml.kernel.org/r/1525182503-13849-7-git-send-email-zohar@linux.vnet.ibm.com
 
-Notes:
-    v2:
-    - Remove redundant 'else' branch logic
+Please read below....
 
- drivers/platform/x86/asus-nb-wmi.c | 1 +
- drivers/platform/x86/asus-wmi.c    | 5 +++++
- 2 files changed, 6 insertions(+)
+On Wed, Apr 25, 2018 at 05:55:57PM +0000, Luis R. Rodriguez wrote:
+> On Wed, Apr 25, 2018 at 01:00:09AM -0400, Mimi Zohar wrote:
+> > On Tue, 2018-04-24 at 23:42 +0000, Luis R. Rodriguez wrote:
+> > > On Tue, Apr 24, 2018 at 12:07:01PM -0400, Mimi Zohar wrote:
+> > > > On Tue, 2018-04-24 at 17:09 +0200, Hans de Goede wrote:
+> > > If its of any help --
+> > > 
+> > > drivers/soc/qcom/mdt_loader.c is the only driver currently using
+> > > request_firmware_into_buf() however I'll note qcom_mdt_load() is used in many
+> > > other drivers so they are wrappers around request_firmware_into_buf():
+> > > 
+> > > drivers/gpu/drm/msm/adreno/a5xx_gpu.c:   * adreno_request_fw() handles this, but qcom_mdt_load() does
+> > > drivers/gpu/drm/msm/adreno/a5xx_gpu.c:          ret = qcom_mdt_load(dev, fw, fwname, GPU_PAS_ID,
+> > > drivers/gpu/drm/msm/adreno/a5xx_gpu.c:          ret = qcom_mdt_load(dev, fw, newname, GPU_PAS_ID,
+> > > drivers/media/platform/qcom/venus/firmware.c:   ret = qcom_mdt_load(dev, mdt, fwname, VENUS_PAS_ID, mem_va, mem_phys,
+> > > drivers/remoteproc/qcom_adsp_pil.c:     return qcom_mdt_load(adsp->dev, fw, rproc->firmware, adsp->pas_id,
+> > > drivers/remoteproc/qcom_wcnss.c:        return qcom_mdt_load(wcnss->dev, fw, rproc->firmware, WCNSS_PAS_ID,
+> > > 
+> > > > > As such the current IMA code (from v4.17-rc2) actually does
+> > > > > not handle READING_FIRMWARE_PREALLOC_BUFFER at all, 
+> > > > 
+> > > > Right, it doesn't yet address READING_FIRMWARE_PREALLOC_BUFFER, but
+> > > > should.
+> > > > 
+> > > > Depending on whether the device requesting the firmware has access to
+> > > > the DMA memory, before the signature verification, 
+> > > 
+> > > It would seem from the original patch review about READING_FIRMWARE_PREALLOC_BUFFER
+> > > that this is not a DMA buffer.
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 136ff2b4cce5..14c502e18579 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -496,6 +496,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
- 	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
- 	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
- 	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
-+	{ KE_KEY, 0xC7, { KEY_KBDILLUMTOGGLE } },
- 	{ KE_END, 0},
- };
- 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 1f6e68f0b646..4a3ba575c9ce 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -67,6 +67,7 @@ MODULE_LICENSE("GPL");
- #define NOTIFY_BRNDOWN_MAX		0x2e
- #define NOTIFY_KBD_BRTUP		0xc4
- #define NOTIFY_KBD_BRTDWN		0xc5
-+#define NOTIFY_KBD_BRTTOGGLE		0xc7
- 
- /* WMI Methods */
- #define ASUS_WMI_METHODID_SPEC	        0x43455053 /* BIOS SPECification */
-@@ -1745,6 +1746,10 @@ static void asus_wmi_notify(u32 value, void *context)
- 		}
- 	}
- 
-+	if (code == NOTIFY_KBD_BRTTOGGLE)
-+		if (asus->kbd_led_wk < asus->kbd_led.max_brightness)
-+			code = NOTIFY_KBD_BRTUP;
-+
- 	if (is_display_toggle(code) &&
- 	    asus->driver->quirks->no_display_toggle)
- 		goto exit;
--- 
-2.14.1
+To be very clear I believe Stephen implied this was not DMA buffer. Mimi
+asked for READING_FIRMWARE_DMA if it was:
+
+https://patchwork.kernel.org/patch/9074611/
+
+> > The call sequence:
+> > qcom_mdt_load() -> qcom_scm_pas_init_image() -> dma_alloc_coherent()
+> > 
+> > If dma_alloc_coherent() isn't allocating a DMA buffer, then the
+> > function name is misleading/confusing.
+> 
+> Hah, by *definition* the device *and* processor has immediate access
+> to data written *immediately* when dma_alloc_coherent() is used. From
+> Documentation/DMA-API.txt:
+> 
+> -----------------------------------------------------------------------
+> Part Ia - Using large DMA-coherent buffers                                      
+> ------------------------------------------                                      
+>                                                                                 
+> ::                                                                              
+>                                                                                 
+>         void *                                                                  
+>         dma_alloc_coherent(struct device *dev, size_t size,                     
+>                            dma_addr_t *dma_handle, gfp_t flag)                  
+>                                                                                 
+> Consistent memory is memory for which a write by either the device or           
+> the processor can immediately be read by the processor or device                
+> without having to worry about caching effects.  (You may however need           
+> to make sure to flush the processor's write buffers before telling              
+> devices to read that memory.)  
+> ------------------------------------------------------------------------
+> 
+> Is ptr below
+> 
+> 	ret = request_firmware_into_buf(&seg_fw, fw_name, dev,  
+> 					ptr, phdr->p_filesz); 
+> 
+> Also part of the DMA buffer allocated earlier via:
+> 
+>         ret = qcom_scm_pas_init_image(pas_id, fw->data, fw->size);              
+> 
+> Android folks?
+
+Android folks?
+
+> > > The device driver should have access to the buffer pointer with write given
+> > > that with request_firmware_into_buf() the driver is giving full write access to
+> > > the memory pointer so that the firmware API can stuff the firmware it finds
+> > > there.
+> > > 
+> > > Firmware signature verification would be up to the device hardware to do upon
+> > > load *after* request_firmware_into_buf().
+> > 
+> > We're discussing the kernel's signature verification, not the device
+> > hardware's signature verification.  Can the device driver access the
+> > buffer, before IMA-appraisal has verified the firmware's signature?
+> 
+> It will depend on the above question.
+
+  Luis
