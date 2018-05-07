@@ -1,81 +1,184 @@
-From: Martijn Coenen <maco@android.com>
-Subject: Re: [PATCH v3 2/5] efi: Add embedded peripheral firmware support
-Date: Fri, 4 May 2018 12:44:37 -0700
-Message-ID: <CAB0TPYGnCu+anWHBGvkaigxD--8uHQaQJ2c62kegJ7mTqvkmnA@mail.gmail.com>
-References: <20180408174014.21908-1-hdegoede@redhat.com>
- <20180408174014.21908-3-hdegoede@redhat.com>
- <20180423211143.GZ14440@wotan.suse.de>
- <71e6a45a-398d-b7a4-dab0-8b9936683226@redhat.com>
- <1524586021.3364.20.camel@linux.vnet.ibm.com>
- <20180424234219.GX14440@wotan.suse.de>
- <1524632409.3371.48.camel@linux.vnet.ibm.com>
- <20180425175557.GY14440@wotan.suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180425175557.GY14440@wotan.suse.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: dmitry.torokhov@gmail.com, Matt Fleming <matt@codeblueprint.co.uk>, Will Deacon <will.deacon@arm.com>, platform-driver-x86@vger.kernel.org, David Howells <dhowells@redhat.com>, David Brown <david.brown@linaro.org>, Peter Jones <pjones@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>, nbroeking@me.com, x86@kernel.org, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, Ingo Molnar <mingo@redhat.com>, Andy Gross <andy.gross@linaro.org>, Darren Hart <dvhart@infradead.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Arend Van Spriel <arend.vanspriel@broadcom.com>, Todd Kjos <tkjos@android.com>, Kees Cook <keescook@chromium.org>, linux-efi <linux-efi@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Torsten Duwe <duwe@suse.de>, Josh Triplett <josh@joshtriplett.org>, Chris Wright <chrisw@sous-sol.org>, Hans de Goede <hdego>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [PATCH v2 3/7] platform/mellanox: mlxreg-hotplug: add extra cycle for hotplug work queue
+Date: Mon,  7 May 2018 06:48:51 +0000
+Message-ID: <1525675735-125547-1-git-send-email-vadimp@mellanox.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, ivecera@redhat.com, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Apr 25, 2018 at 10:55 AM, Luis R. Rodriguez <mcgrof@kernel.org> wrote:
-> Android became the primary user of CONFIG_FW_LOADER_USER_HELPER_FALLBACK.
->
-> It would be good for us to hear from Android folks if their current use of
-> request_firmware_into_buf() is designed in practice to *never* use the direct
-> filesystem firmware loading interface, and always rely instead on the
-> fallback mechanism.
+Add extra cycle for hotplug work queue to handle the case when a signal is
+It adds missed logic for signal acknowledge, by adding an extra run for
+received, but no specific signal assertion is detected. Such case
+theoretically can happen for example in case several units are removed or
+inserted at the same time. In this situation acknowledge for some signal
+can be missed at signal top aggreagation status level. The extra run will
+allow to handler to acknowledge the missed signal.
 
-It's hard to answer this question for Android in general. As far as I
-can tell the reasons we use CONFIG_FW_LOADER_USER_HELPER(_FALLBACK)
-are:
-1) We have multiple different paths on our devices where firmware can
-be located, and the direct loader only supports one custom path
-2) Most of those paths are not mounted by the time the corresponding
-drivers are loaded, because pretty much all Android kernels today are
-built without module support, and therefore drivers are loaded well
-before the firmware partition is mounted
-3) I think we use _FALLBACK because doing this with uevents is just
-the easiest thing to do; our init code has a firmware helper that
-deals with this and searches the paths that we care about
+The interrupt handling flow performs the next steps:
+(1)
+Enter mlxreg_hotplug_work_handler due to signal assertion.
+Aggregation status register is changed for example from 0xff to 0xfd
+(event signal group related to bit 1).
+(2)
+Mask aggregation interrupts, read aggregation status register and save it
+(0xfd) in aggr_cache, then traverse down to handle signal from groups
+related to the changed bit.
+(3)
+Read and mask group related signal.
+Acknowledge and unmask group related signal (acknowledge should clear
+aggregation status register from 0xfd back to 0xff).
+(4)
+Re-schedule work queue for the immediate execution.
+(5)
+Enter mlxreg_hotplug_work_handler due to re-scheduling.
+Aggregation status is changed from previous 0xfd to 0xff.
+Go over steps (2) - (5) and in case no new signal assertion
+is detected - unmask aggregation interrupts.
 
-2) will change at some point, because Android is moving towards a
-model where device-specific peripheral drivers will be loaded as
-modules, and since those modules would likely come from the same
-partition as the firmware, it's possible that the direct load would
-succeed (depending on whether the custom path is configured there or
-not). But I don't think we can rely on the direct loader even in those
-cases, unless we could configure it with multiple custom paths.
+The possible race could happen in case new signal from the same group is
+asserted after step (3) and prior step (5). In such case aggregation
+status will change back from 0xff to 0xfd and the value read from the
+aggregation status register will be the same as a value saved in
+aggr_cache. As a result the handler will not traverse down and signal
+will stay unhandled.
 
-I have no reason to believe request_firmware_into_buf() is special in
-this regard; drivers that depend on it may have their corresponding
-firmware in different locations, so just depending on the direct
-loader would not be good enough.
+Example of faulty flow:
+The signal routing flow is as following (f.e. for of FANi removing):
+ - FAN status and event registers related bit is changed;
+ -- intermediate aggregation status register is changed;
+ --- top aggregation status register is changed;
+ ---- interrupt routed to CPU and interrupt handler is invoked.
 
->
-> Is ptr below
->
->         ret = request_firmware_into_buf(&seg_fw, fw_name, dev,
->                                         ptr, phdr->p_filesz);
->
-> Also part of the DMA buffer allocated earlier via:
->
->         ret = qcom_scm_pas_init_image(pas_id, fw->data, fw->size);
->
-> Android folks?
+When interrupt handler is invoked it follows the next simple logic (f.e
+FAN3 is removed):
+ (a1) mask top aggregation interrupt mask register;
+ (a2) read top aggregation interrupt status register and test to which
+      underling group belongs a signal (FANs in this case and is changed
+	  from 0xff to 0xfb and 0xfb is saved as a last status value);
+   (b1) mask FANs interrupt mask register;
+   (b2) read FANs status register and test which FAN has been changed
+        FAN3 in this example);
+     (c1) perform relevant action;
+              <--------------- (FAN2 is removed at this point)
+   (b3) clear FANs interrupt event register to acknowledge FAN3 signal;
+   (b4) unmask FANs interrupt mask register
+ (a3) unmask top aggregation interrupt mask register;
 
-I think the Qualcomm folks owning this (Andy, David, Bjorn, already
-cc'd here) are better suited to answer that question.
+ An interrupt handler is invoked, since FAN2 interrupt is not acknowledge.
+ It should set top aggregation interrupt status register bit 6 (0xfb).
+ In step (a2)
+ (a2) read top aggregation interrupt and comparing it with saved value
+      does not show change (same 0xfb) and after (a2) execution jumps to
+	  (a3) and signal leaved unhandled
 
-Thanks,
-Martijn
+The fix will enforce handler to traverse down in case the signal is
+received, but signal assertion is not detected.
+
+Fixes: 07b89c2b2a5e ("platform/x86: Introduce support for Mellanox hotplug driver")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+---
+V1->v2:
+ Comments pointed out by Darren:
+ - Modify commit message;
+ - Remove redundant check of aggr_asserted;
+ - Change bug fix reference from 1f976f6978bf, which just relocated driver
+   to 07b89c2b2a5e, which was initial driver commit.
+---
+ drivers/platform/mellanox/mlxreg-hotplug.c | 48 +++++++++++++++++++-----------
+ 1 file changed, 31 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index b56953a..922913b 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -55,6 +55,7 @@
+ #define MLXREG_HOTPLUG_RST_CNTR		3
+ 
+ #define MLXREG_HOTPLUG_ATTRS_MAX	24
++#define MLXREG_HOTPLUG_NOT_ASSERT	3
+ 
+ /**
+  * struct mlxreg_hotplug_priv_data - platform private data:
+@@ -74,6 +75,7 @@
+  * @mask: top aggregation interrupt common mask;
+  * @aggr_cache: last value of aggregation register status;
+  * @after_probe: flag indication probing completion;
++ * @not_asserted: number of entries in workqueue with no signal assertion;
+  */
+ struct mlxreg_hotplug_priv_data {
+ 	int irq;
+@@ -93,6 +95,7 @@ struct mlxreg_hotplug_priv_data {
+ 	u32 mask;
+ 	u32 aggr_cache;
+ 	bool after_probe;
++	u8 not_asserted;
+ };
+ 
+ static int mlxreg_hotplug_device_create(struct mlxreg_hotplug_priv_data *priv,
+@@ -410,6 +413,18 @@ static void mlxreg_hotplug_work_handler(struct work_struct *work)
+ 	aggr_asserted = priv->aggr_cache ^ regval;
+ 	priv->aggr_cache = regval;
+ 
++	/*
++	 * Handler is invoked, but no assertion is detected at top aggregation
++	 * status level. Set aggr_asserted to mask value to allow handler extra
++	 * run over all relevant signals to recover any missed signal.
++	 */
++	if (priv->not_asserted == MLXREG_HOTPLUG_NOT_ASSERT) {
++		priv->not_asserted = 0;
++		aggr_asserted = pdata->mask;
++	}
++	if (!aggr_asserted)
++		goto unmask_event;
++
+ 	/* Handle topology and health configuration changes. */
+ 	for (i = 0; i < pdata->counter; i++, item++) {
+ 		if (aggr_asserted & item->aggr_mask) {
+@@ -420,27 +435,26 @@ static void mlxreg_hotplug_work_handler(struct work_struct *work)
+ 		}
+ 	}
+ 
+-	if (aggr_asserted) {
+-		spin_lock_irqsave(&priv->lock, flags);
++	spin_lock_irqsave(&priv->lock, flags);
+ 
+-		/*
+-		 * It is possible, that some signals have been inserted, while
+-		 * interrupt has been masked by mlxreg_hotplug_work_handler.
+-		 * In this case such signals will be missed. In order to handle
+-		 * these signals delayed work is canceled and work task
+-		 * re-scheduled for immediate execution. It allows to handle
+-		 * missed signals, if any. In other case work handler just
+-		 * validates that no new signals have been received during
+-		 * masking.
+-		 */
+-		cancel_delayed_work(&priv->dwork_irq);
+-		schedule_delayed_work(&priv->dwork_irq, 0);
++	/*
++	 * It is possible, that some signals have been inserted, while
++	 * interrupt has been masked by mlxreg_hotplug_work_handler. In this
++	 * case such signals will be missed. In order to handle these signals
++	 * delayed work is canceled and work task re-scheduled for immediate
++	 * execution. It allows to handle missed signals, if any. In other case
++	 * work handler just validates that no new signals have been received
++	 * during masking.
++	 */
++	cancel_delayed_work(&priv->dwork_irq);
++	schedule_delayed_work(&priv->dwork_irq, 0);
+ 
+-		spin_unlock_irqrestore(&priv->lock, flags);
++	spin_unlock_irqrestore(&priv->lock, flags);
+ 
+-		return;
+-	}
++	return;
+ 
++unmask_event:
++	priv->not_asserted++;
+ 	/* Unmask aggregation event (no need acknowledge). */
+ 	ret = regmap_write(priv->regmap, pdata->cell +
+ 			   MLXREG_HOTPLUG_AGGR_MASK_OFF, pdata->mask);
+-- 
+2.1.4
