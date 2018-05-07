@@ -1,60 +1,79 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: acer-wmi: add another KEY_POWER keycode
-Date: Mon, 7 May 2018 17:08:38 +0300
-Message-ID: <CAHp75VdQegkRceJ10_QLoHvj++FUOYTnmOD2WAYEDRUG2iL4bQ@mail.gmail.com>
-References: <20180427215021.2120-1-antonio.intilisano@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: Add keyboard backlight toggle support
+Date: Mon, 7 May 2018 17:10:18 +0300
+Message-ID: <CAHp75VfM+1HUi6W986r0iEiuS46TJc8XscO_ce4N-i66EtPLWA@mail.gmail.com>
+References: <20180503030438.51150-1-chiu@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180427215021.2120-1-antonio.intilisano@gmail.com>
+In-Reply-To: <20180503030438.51150-1-chiu@endlessm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Antonio Rosario Intilisano <antonio.intilisano@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Gianfranco Costamagna <locutusofborg@debian.org>, Chris Chiu <chiu@endlessm.com>, Daniel Drake <drake@endlessm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Chris Chiu <chiu@endlessm.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, Jian-Hong Pan <jian-hong@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Apr 28, 2018 at 12:50 AM, Antonio Rosario Intilisano
-<antonio.intilisano@gmail.com> wrote:
->     Now that we have informed the firmware that the Power Button driver is
->     active, laptops such as the Acer Swift 3 will generate
->     a WMI key event with code 0x87 when the power button key is
->     pressed.
+On Thu, May 3, 2018 at 6:04 AM, Chris Chiu <chiu@endlessm.com> wrote:
+> Some Asus laptops like UX550GE has hotkey (Fn+F7) for keyboard
+> backlight toggle. In this UX550GE, the hotkey incremet the level
+> of brightness for each keypress from 1 to 3, and then switch it
+> off when the brightness has been the max. This commit interprets
+> the code 0xc7 generated from hotkey to KEY_KBDILLUMUP to increment
+> the brightness, then pass KEY_KBDILLUMTOGGLE to user space after
+> the brightness max been reached for switching the led off.
 >
->     Add this keycode to the table so that it is converted to an appropriate
->     input event.
 
-I pushed it to my review and testing queue, thanks!
+Pushed to my review and testing queue, thanks!
 
-Though, see below.
-
->
-> Signed-off-by: Antonio Rosario Intilisano <antonio.intilisano@gmail.com>
-> Acked-by: Gianfranco Costamagna <locutusofborg@debian.org>
-> Tested-by: Antonio Rosario Intilisano <antonio.intilisano@gmail.com>
-> Cc: Chris Chiu <chiu@endlessm.com>
-> Cc: Daniel Drake <drake@endlessm.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> Tested-by: Jian-Hong Pan <jian-hong@endlessm.com>
 > ---
->  drivers/platform/x86/acer-wmi.c | 1 +
->  1 file changed, 1 insertion(+)
 >
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 1be71f956d5c..8952173dd380 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -129,6 +129,7 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {     {KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
-
-This is malformed patch. It states 6 lines for context, though only 4
-provided. Please, fix your tools.
-
->         {KE_KEY, 0x85, {KEY_TOUCHPAD_TOGGLE} },
->         {KE_KEY, 0x86, {KEY_WLAN} },
-> +       {KE_KEY, 0x87, {KEY_POWER} },
->         {KE_END, 0}
+> Notes:
+>     v2:
+>     - Remove redundant 'else' branch logic
+>
+>  drivers/platform/x86/asus-nb-wmi.c | 1 +
+>  drivers/platform/x86/asus-wmi.c    | 5 +++++
+>  2 files changed, 6 insertions(+)
+>
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index 136ff2b4cce5..14c502e18579 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -496,6 +496,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+>         { KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
+>         { KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
+>         { KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
+> +       { KE_KEY, 0xC7, { KEY_KBDILLUMTOGGLE } },
+>         { KE_END, 0},
 >  };
 >
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 1f6e68f0b646..4a3ba575c9ce 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -67,6 +67,7 @@ MODULE_LICENSE("GPL");
+>  #define NOTIFY_BRNDOWN_MAX             0x2e
+>  #define NOTIFY_KBD_BRTUP               0xc4
+>  #define NOTIFY_KBD_BRTDWN              0xc5
+> +#define NOTIFY_KBD_BRTTOGGLE           0xc7
+>
+>  /* WMI Methods */
+>  #define ASUS_WMI_METHODID_SPEC         0x43455053 /* BIOS SPECification */
+> @@ -1745,6 +1746,10 @@ static void asus_wmi_notify(u32 value, void *context)
+>                 }
+>         }
+>
+> +       if (code == NOTIFY_KBD_BRTTOGGLE)
+> +               if (asus->kbd_led_wk < asus->kbd_led.max_brightness)
+> +                       code = NOTIFY_KBD_BRTUP;
+> +
+>         if (is_display_toggle(code) &&
+>             asus->driver->quirks->no_display_toggle)
+>                 goto exit;
 > --
-> 2.15.1
+> 2.14.1
 >
 
 
