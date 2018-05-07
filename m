@@ -1,64 +1,52 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] dell-wmi: Set correct keycode for Fn + left arrow hotkey
-Date: Mon, 7 May 2018 17:12:44 +0300
-Message-ID: <CAHp75VdJ23PEY_7MBJ6o7DTj=Pk2no2KBkL_+sqWQry1q_pgYA@mail.gmail.com>
-References: <20180501111154.9244-1-pali.rohar@gmail.com>
+From: Daniel Drake <drake@endlessm.com>
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: Add keyboard backlight toggle support
+Date: Mon, 7 May 2018 08:46:05 -0600
+Message-ID: <CAD8Lp46edWAR2iVti8gGp+L_yy91ij6AHuJh3iuuTLg8oUq47g@mail.gmail.com>
+References: <20180503030438.51150-1-chiu@endlessm.com> <CAHp75VfM+1HUi6W986r0iEiuS46TJc8XscO_ce4N-i66EtPLWA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180501111154.9244-1-pali.rohar@gmail.com>
+In-Reply-To: <CAHp75VfM+1HUi6W986r0iEiuS46TJc8XscO_ce4N-i66EtPLWA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, Henk <henk.vergonet@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Chris Chiu <chiu@endlessm.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, Jian-Hong Pan <jian-hong@endlessm.com>, bberg@redhat.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 1, 2018 at 2:11 PM, Pali Roh=C3=A1r <pali.rohar@gmail.com> wrot=
-e:
-> From: Henk <henk.vergonet@gmail.com>
+Hi Andy,
+
+On Mon, May 7, 2018 at 8:10 AM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Fn + left arrow hotkey combination is used for enabling/disabling automat=
-ic
-> display brigthness based on integrated ALS sensor. For this purpose there
-> is standard linux key KEY_BRIGHTNESS_AUTO so use it instead of KEY_UNKNOW=
-N.
+> On Thu, May 3, 2018 at 6:04 AM, Chris Chiu <chiu@endlessm.com> wrote:
+> > Some Asus laptops like UX550GE has hotkey (Fn+F7) for keyboard
+> > backlight toggle. In this UX550GE, the hotkey incremet the level
+> > of brightness for each keypress from 1 to 3, and then switch it
+> > off when the brightness has been the max. This commit interprets
+> > the code 0xc7 generated from hotkey to KEY_KBDILLUMUP to increment
+> > the brightness, then pass KEY_KBDILLUMTOGGLE to user space after
+> > the brightness max been reached for switching the led off.
+> >
 >
-> Tested on Dell Lattitude E6500.
->
+> Pushed to my review and testing queue, thanks!
 
-Pushed to my review and testing queue, thanks!
+We found that GNOME's handling of the toggle key is somewhat imperfect
+and it will need modifying before we achieve the
+Up-Up-Up-off-Up-Up-Up-off... cycle that we are looking for.
 
+https://gitlab.gnome.org/GNOME/gnome-settings-daemon/issues/41
 
-> Signed-off-by: Henk Vergonet <henk.vergonet@gmail.com>
-> Reviewed-By: Pali Roh=C3=A1r <pali.rohar@gmail.com>
-> Reviewed-By: Mario Limonciello <mario.limonciello@dell.com>
-> ---
-> Changes since v1 by Pali
-> * Update commit description
-> ---
->  drivers/platform/x86/dell-wmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-=
-wmi.c
-> index 8d102195..7c918e37 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -233,7 +233,7 @@ static const u16 bios_to_linux_keycode[256] =3D {
->         [18]    =3D KEY_PROG1,
->         [19]    =3D KEY_BRIGHTNESSDOWN,
->         [20]    =3D KEY_BRIGHTNESSUP,
-> -       [21]    =3D KEY_UNKNOWN,
-> +       [21]    =3D KEY_BRIGHTNESS_AUTO,
->         [22]    =3D KEY_KBDILLUMTOGGLE,
->         [23]    =3D KEY_UNKNOWN,
->         [24]    =3D KEY_SWITCHVIDEOMODE,
-> --
-> 2.11.0
->
+In that discussion an alternative perspective was raised:
 
+Is it right for the kernel to modify the key sent to userspace, when
+it is then relying on the specific userspace action of it changing the
+brightness to the next expected level? (and this userspace behaviour
+is not even working right in the GNOME case)
 
+Instead, would it make sense for the kernel to always report TOGGLE in
+this case, and for GNOME to interpret toggle as simply "cycle through
+all the available brightness levels"?
 
---=20
-With Best Regards,
-Andy Shevchenko
+We'd be interested in your thoughts.
+
+Thanks
+Daniel
