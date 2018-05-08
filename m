@@ -1,52 +1,79 @@
-From: Daniel Drake <drake@endlessm.com>
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: Add keyboard backlight toggle support
-Date: Mon, 7 May 2018 08:46:05 -0600
-Message-ID: <CAD8Lp46edWAR2iVti8gGp+L_yy91ij6AHuJh3iuuTLg8oUq47g@mail.gmail.com>
-References: <20180503030438.51150-1-chiu@endlessm.com> <CAHp75VfM+1HUi6W986r0iEiuS46TJc8XscO_ce4N-i66EtPLWA@mail.gmail.com>
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Subject: Re: [PATCH v3 2/5] efi: Add embedded peripheral firmware support
+Date: Tue, 8 May 2018 15:38:05 +0000
+Message-ID: <20180508153805.GC27853@wotan.suse.de>
+References: <20180408174014.21908-1-hdegoede@redhat.com>
+ <20180408174014.21908-3-hdegoede@redhat.com>
+ <20180423211143.GZ14440@wotan.suse.de>
+ <71e6a45a-398d-b7a4-dab0-8b9936683226@redhat.com>
+ <1524586021.3364.20.camel@linux.vnet.ibm.com>
+ <20180424234219.GX14440@wotan.suse.de>
+ <1524632409.3371.48.camel@linux.vnet.ibm.com>
+ <20180425175557.GY14440@wotan.suse.de>
+ <CAB0TPYGnCu+anWHBGvkaigxD--8uHQaQJ2c62kegJ7mTqvkmnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfM+1HUi6W986r0iEiuS46TJc8XscO_ce4N-i66EtPLWA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAB0TPYGnCu+anWHBGvkaigxD--8uHQaQJ2c62kegJ7mTqvkmnA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Chris Chiu <chiu@endlessm.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, Jian-Hong Pan <jian-hong@endlessm.com>, bberg@redhat.com
+To: Martijn Coenen <maco@android.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Stephen Boyd <sboyd@kernel.org>, Vikram Mulukutla <markivx@codeaurora.org>, Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Andrew Morton <akpm@linux-foundation.org>, linux-security-module@vger.kernel.org, Chris Wright <chrisw@sous-sol.org>, David Howells <dhowells@redhat.com>, Alan Cox <alan@linux.intel.com>, Kees Cook <keescook@chromium.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, H .
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Andy,
-
-On Mon, May 7, 2018 at 8:10 AM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, May 3, 2018 at 6:04 AM, Chris Chiu <chiu@endlessm.com> wrote:
-> > Some Asus laptops like UX550GE has hotkey (Fn+F7) for keyboard
-> > backlight toggle. In this UX550GE, the hotkey incremet the level
-> > of brightness for each keypress from 1 to 3, and then switch it
-> > off when the brightness has been the max. This commit interprets
-> > the code 0xc7 generated from hotkey to KEY_KBDILLUMUP to increment
-> > the brightness, then pass KEY_KBDILLUMTOGGLE to user space after
-> > the brightness max been reached for switching the led off.
+On Fri, May 04, 2018 at 12:44:37PM -0700, Martijn Coenen wrote:
+> On Wed, Apr 25, 2018 at 10:55 AM, Luis R. Rodriguez <mcgrof@kernel.org> wrote:
+> > Android became the primary user of CONFIG_FW_LOADER_USER_HELPER_FALLBACK.
 > >
->
-> Pushed to my review and testing queue, thanks!
+> > It would be good for us to hear from Android folks if their current use of
+> > request_firmware_into_buf() is designed in practice to *never* use the direct
+> > filesystem firmware loading interface, and always rely instead on the
+> > fallback mechanism.
+> 
+> It's hard to answer this question for Android in general. As far as I
+> can tell the reasons we use CONFIG_FW_LOADER_USER_HELPER(_FALLBACK)
+> are:
+> 1) We have multiple different paths on our devices where firmware can
+> be located, and the direct loader only supports one custom path
+> 2) Most of those paths are not mounted by the time the corresponding
+> drivers are loaded, because pretty much all Android kernels today are
+> built without module support, and therefore drivers are loaded well
+> before the firmware partition is mounted
+> 3) I think we use _FALLBACK because doing this with uevents is just
+> the easiest thing to do; our init code has a firmware helper that
+> deals with this and searches the paths that we care about
+> 
+> 2) will change at some point, because Android is moving towards a
+> model where device-specific peripheral drivers will be loaded as
+> modules, and since those modules would likely come from the same
+> partition as the firmware, it's possible that the direct load would
+> succeed (depending on whether the custom path is configured there or
+> not). But I don't think we can rely on the direct loader even in those
+> cases, unless we could configure it with multiple custom paths.
+> 
+> I have no reason to believe request_firmware_into_buf() is special in
+> this regard; drivers that depend on it may have their corresponding
+> firmware in different locations, so just depending on the direct
+> loader would not be good enough.
 
-We found that GNOME's handling of the toggle key is somewhat imperfect
-and it will need modifying before we achieve the
-Up-Up-Up-off-Up-Up-Up-off... cycle that we are looking for.
+Thanks! This is very useful! This provides yet-another justification and use
+case to document for the fallback mechanism. I'll go and extend it.
 
-https://gitlab.gnome.org/GNOME/gnome-settings-daemon/issues/41
+> >
+> > Is ptr below
+> >
+> >         ret = request_firmware_into_buf(&seg_fw, fw_name, dev,
+> >                                         ptr, phdr->p_filesz);
+> >
+> > Also part of the DMA buffer allocated earlier via:
+> >
+> >         ret = qcom_scm_pas_init_image(pas_id, fw->data, fw->size);
+> >
+> > Android folks?
+> 
+> I think the Qualcomm folks owning this (Andy, David, Bjorn, already
+> cc'd here) are better suited to answer that question.
 
-In that discussion an alternative perspective was raised:
+Andy, David, Bjorn?
 
-Is it right for the kernel to modify the key sent to userspace, when
-it is then relying on the specific userspace action of it changing the
-brightness to the next expected level? (and this userspace behaviour
-is not even working right in the GNOME case)
-
-Instead, would it make sense for the kernel to always report TOGGLE in
-this case, and for GNOME to interpret toggle as simply "cycle through
-all the available brightness levels"?
-
-We'd be interested in your thoughts.
-
-Thanks
-Daniel
+  Luis
