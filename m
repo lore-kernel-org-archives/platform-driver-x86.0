@@ -1,92 +1,122 @@
-From: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Subject: Re: [PATCH v3 2/5] efi: Add embedded peripheral firmware support
-Date: Tue, 8 May 2018 16:10:37 +0000
-Message-ID: <20180508161037.GE27853@wotan.suse.de>
-References: <20180408174014.21908-1-hdegoede@redhat.com>
- <20180408174014.21908-3-hdegoede@redhat.com>
- <20180423211143.GZ14440@wotan.suse.de>
- <71e6a45a-398d-b7a4-dab0-8b9936683226@redhat.com>
- <1524586021.3364.20.camel@linux.vnet.ibm.com>
- <20180424234219.GX14440@wotan.suse.de>
- <1524632409.3371.48.camel@linux.vnet.ibm.com>
- <20180425175557.GY14440@wotan.suse.de>
- <CAB0TPYGnCu+anWHBGvkaigxD--8uHQaQJ2c62kegJ7mTqvkmnA@mail.gmail.com>
- <20180508153805.GC27853@wotan.suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20180508153805.GC27853@wotan.suse.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: dmitry.torokhov@gmail.com, Matt Fleming <matt@codeblueprint.co.uk>, Will Deacon <will.deacon@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Howells <dhowells@redhat.com>, David Brown <david.brown@linaro.org>, Peter Jones <pjones@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>, nbroeking@me.com, x86@kernel.org, Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>, Ingo Molnar <mingo@redhat.com>, Andy Gross <andy.gross@linaro.org>, Darren Hart <dvhart@infradead.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Arend Van Spriel <arend.vanspriel@broadcom.com>, Todd Kjos <tkjos@android.com>, Kees Cook <keescook@chromium.org>, linux-efi <linux-efi@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Torsten Duwe <duwe@suse.de>, Josh Triplett <josh@joshtriplett.org>, Chris Wright <chrisw@sous-sol.org>, Hans
+From: Oleg Keri <ezhi99@gmail.com>
+Subject: [PATCH] platform/x86: ideapad-laptop: Add fn-lock setting Some of latest Lenovo ideapad laptops do not have UEFI/BIOS setting for switching fn-lock mode. This commit adds related acpi calls to ideapad platfrom driver. However setting is available via sysfs.
+Date: Wed,  9 May 2018 21:16:50 +0300
+Message-ID: <20180509181650.13687-1-ezhi99@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Oleg Keri <ezhi99@gmail.com>, Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 08, 2018 at 03:38:05PM +0000, Luis R. Rodriguez wrote:
-> On Fri, May 04, 2018 at 12:44:37PM -0700, Martijn Coenen wrote:
-> > On Wed, Apr 25, 2018 at 10:55 AM, Luis R. Rodriguez <mcgrof@kernel.org> wrote:
-> > > Android became the primary user of CONFIG_FW_LOADER_USER_HELPER_FALLBACK.
-> > >
-> > > It would be good for us to hear from Android folks if their current use of
-> > > request_firmware_into_buf() is designed in practice to *never* use the direct
-> > > filesystem firmware loading interface, and always rely instead on the
-> > > fallback mechanism.
-> > 
-> > It's hard to answer this question for Android in general. As far as I
-> > can tell the reasons we use CONFIG_FW_LOADER_USER_HELPER(_FALLBACK)
-> > are:
-> > 1) We have multiple different paths on our devices where firmware can
-> > be located, and the direct loader only supports one custom path
+Signed-off-by: Oleg Keri <ezhi99@gmail.com>
+---
+ drivers/platform/x86/ideapad-laptop.c | 52 +++++++++++++++++++++++++--
+ 1 file changed, 49 insertions(+), 3 deletions(-)
 
-FWIW I'd love to consider patches to address this, if this is something
-you may find a need for in the future to *avoid* the fallback, however
-would like a clean solution.
-
-> > 2) Most of those paths are not mounted by the time the corresponding
-> > drivers are loaded, because pretty much all Android kernels today are
-> > built without module support, and therefore drivers are loaded well
-> > before the firmware partition is mounted
-
-I've given this some more thought and you can address this with initramfs,
-this is how other Linux distributions are addressing this. One way to
-address this automatically is to scrape the drivers built-in or needed early on
-boot in initamfs and if the driver has a MODULE_FIRMWARE() its respective
-firmware is added to initramfs as well.
-
-If you *don't* use initramfs, then yes you can obviously run into issues
-where your firmware may not be accessible if the driver is somehow loaded
-early.
-
-> > 3) I think we use _FALLBACK because doing this with uevents is just
-> > the easiest thing to do; our init code has a firmware helper that
-> > deals with this and searches the paths that we care about
-> > 
-> > 2) will change at some point, because Android is moving towards a
-> > model where device-specific peripheral drivers will be loaded as
-> > modules, and since those modules would likely come from the same
-> > partition as the firmware, it's possible that the direct load would
-> > succeed (depending on whether the custom path is configured there or
-> > not). But I don't think we can rely on the direct loader even in those
-> > cases, unless we could configure it with multiple custom paths.
-
-Using initramfs will help, but because of the custom path needs -- you're
-right, we don't have anything for that yet, its also a bit unclear if
-something nice and clean can be drawn up for it. So perhaps dealing with
-the fallback mechanism is the way to go for this for sure, since we already
-have support for it.
-
-Just keep in mind that the fallback mechanism costs you about ~13436 bytes.
-
-So, if someone comes up with a clean interface for custom paths I'd love
-to consider it to avoid those 13436 bytes.
-
-  Luis
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 535199c9..2f4991fb 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -43,6 +43,7 @@
+ #define IDEAPAD_RFKILL_DEV_NUM	(3)
+ 
+ #define BM_CONSERVATION_BIT (5)
++#define HA_FNLOCK_BIT       (10)
+ 
+ #define CFG_BT_BIT	(16)
+ #define CFG_3G_BIT	(17)
+@@ -59,6 +60,8 @@ static const char *const ideapad_wmi_fnesc_events[] = {
+ enum {
+ 	BMCMD_CONSERVATION_ON = 3,
+ 	BMCMD_CONSERVATION_OFF = 5,
++	HACMD_FNLOCK_ON = 0xe,
++	HACMD_FNLOCK_OFF = 0xf,
+ };
+ 
+ enum {
+@@ -139,11 +142,11 @@ static int method_gbmd(acpi_handle handle, unsigned long *ret)
+ 	return result;
+ }
+ 
+-static int method_sbmc(acpi_handle handle, int cmd)
++static int method_int1(acpi_handle handle, char *method, int cmd)
+ {
+ 	acpi_status status;
+ 
+-	status = acpi_execute_simple_method(handle, "SBMC", cmd);
++	status = acpi_execute_simple_method(handle, method, cmd);
+ 	return ACPI_FAILURE(status) ? -1 : 0;
+ }
+ 
+@@ -487,7 +490,7 @@ static ssize_t conservation_mode_store(struct device *dev,
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = method_sbmc(priv->adev->handle, state ?
++	ret = method_int1(priv->adev->handle, "SBMC", state ?
+ 					      BMCMD_CONSERVATION_ON :
+ 					      BMCMD_CONSERVATION_OFF);
+ 	if (ret < 0)
+@@ -497,11 +500,51 @@ static ssize_t conservation_mode_store(struct device *dev,
+ 
+ static DEVICE_ATTR_RW(conservation_mode);
+ 
++static ssize_t fn_lock_show(struct device *dev,
++			    struct device_attribute *attr,
++			    char *buf)
++{
++	struct ideapad_private *priv = dev_get_drvdata(dev);
++	unsigned long result;
++	int hals;
++	int fail = read_method_int(priv->adev->handle, "HALS", &hals);
++
++	if (fail)
++		return sprintf(buf, "-1\n");
++
++	result = hals;
++	return sprintf(buf, "%u\n", test_bit(HA_FNLOCK_BIT, &result));
++}
++
++static ssize_t fn_lock_store(struct device *dev,
++			     struct device_attribute *attr,
++			     const char *buf, size_t count)
++{
++	struct ideapad_private *priv = dev_get_drvdata(dev);
++	bool state;
++	int ret;
++
++	ret = kstrtobool(buf, &state);
++	if (ret)
++		return ret;
++
++	ret = method_int1(priv->adev->handle, "SALS", state ?
++			  HACMD_FNLOCK_ON :
++			  HACMD_FNLOCK_OFF);
++	if (ret < 0)
++		return -EIO;
++	return count;
++}
++
++static DEVICE_ATTR_RW(fn_lock);
++
++
+ static struct attribute *ideapad_attributes[] = {
+ 	&dev_attr_camera_power.attr,
+ 	&dev_attr_fan_mode.attr,
+ 	&dev_attr_touchpad.attr,
+ 	&dev_attr_conservation_mode.attr,
++	&dev_attr_fn_lock.attr,
+ 	NULL
+ };
+ 
+@@ -522,6 +565,9 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
+ 	} else if (attr == &dev_attr_conservation_mode.attr) {
+ 		supported = acpi_has_method(priv->adev->handle, "GBMD") &&
+ 			    acpi_has_method(priv->adev->handle, "SBMC");
++	} else if (attr == &dev_attr_fn_lock.attr) {
++		supported = acpi_has_method(priv->adev->handle, "HALS") &&
++			acpi_has_method(priv->adev->handle, "SALS");
+ 	} else
+ 		supported = true;
+ 
+-- 
+2.17.0
