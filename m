@@ -1,150 +1,192 @@
-From: Oleg Keri <ezhi99@gmail.com>
-Subject: [PATCH v2] platform/x86: ideapad-laptop: Add fn-lock setting
-Date: Sun, 13 May 2018 19:05:07 +0300
-Message-ID: <20180513160507.9136-1-ezhi99@gmail.com>
-References: <CAHp75VdjYxp7QGYdtY3EXNrLZkgEUvQ8C5XssUeLh=0V6zT1jg@mail.gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdjYxp7QGYdtY3EXNrLZkgEUvQ8C5XssUeLh=0V6zT1jg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Oleg Keri <ezhi99@gmail.com>, Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+From: Christoph =?utf-8?Q?B=C3=B6hmwalder?= <christoph-KeW1gJXA36yNJhrcwGid2A@public.gmane.org>
+Subject: Re: [PATCH 1/3] thinkpad_acpi: add support for
+ inhibit_charge
+Date: Mon, 14 May 2018 11:46:20 +0200
+Message-ID: <20180514094620.wfoom4mwwyqb7qe5@localhost>
+References: <20180513152937.GA5072@thinkpad>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180513152937.GA5072@thinkpad>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Ognjen Galic <smclt30p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Robert Moore <robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Locke <kevin-yFOG++GfaLUI8/NkjqMgMw@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some of latest Lenovo ideapad laptops do not have UEFI/BIOS setting for
-switching fn-lock mode. This commit adds related acpi calls to ideapad
-platform driver. However setting is available via sysfs.
+On Sun, May 13, 2018 at 05:29:37PM +0200, Ognjen Galic wrote:
+> Lenovo ThinkPad systems support the prevention of
+> battery charging via a manual override called Inhibit Charge.
+> 
+> This patch adds support for that attribute and exposes it via the
+> battery ACPI driver in the generic location:
+> 
+> /sys/class/power_supply/BATX/inhibit_charge
+> 
+> Signed-off-by: Ognjen Galic <smclt30p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 66 +++++++++++++++++++++++++++-
+>  1 file changed, 64 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index da1ca485..b8b74889 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -9233,6 +9233,11 @@ static struct ibm_struct mute_led_driver_data = {
+>  #define GET_STOP	"BCSG"
+>  #define SET_STOP	"BCSS"
+>  
+> +#define SET_INHIBIT	"BICS"
+> +#define GET_INHIBIT	"BICG"
+> +
+> +#define INHIBIT_ATTR	"inhibit_charge"
+> +
+>  #define START_ATTR "charge_start_threshold"
+>  #define STOP_ATTR  "charge_stop_threshold"
+>  
+> @@ -9251,6 +9256,7 @@ enum {
+>  	/* This is used in the get/set helpers */
+>  	THRESHOLD_START,
+>  	THRESHOLD_STOP,
+> +	INHIBIT_CHARGE
+>  };
+>  
+>  struct tpacpi_battery_data {
+> @@ -9258,6 +9264,7 @@ struct tpacpi_battery_data {
+>  	int start_support;
+>  	int charge_stop;
+>  	int stop_support;
+> +	int inhibit_support;
+>  };
+>  
+>  struct tpacpi_battery_driver_data {
+> @@ -9315,6 +9322,13 @@ static int tpacpi_battery_get(int what, int battery, int *ret)
+>  		if (*ret == 0)
+>  			*ret = 100;
+>  		return 0;
+> +	case INHIBIT_CHARGE:
+> +		if ACPI_FAILURE(tpacpi_battery_acpi_eval(GET_INHIBIT, ret, battery))
+> +			return -ENODEV;
+> +
+> +		/* The inhibit charge status is in the first bit */
+> +		*ret = *ret & 0x01;
+> +		return 0;
+>  	default:
+>  		pr_crit("wrong parameter: %d", what);
+>  		return -EINVAL;
+> @@ -9343,6 +9357,21 @@ static int tpacpi_battery_set(int what, int battery, int value)
+>  			return -ENODEV;
+>  		}
+>  		return 0;
+> +	case INHIBIT_CHARGE:
+> +		/* When setting inhbitit charge, we set a default vaulue of
 
-Signed-off-by: Oleg Keri <ezhi99@gmail.com>
----
- .../ABI/testing/sysfs-platform-ideapad-laptop | 13 +++++
- drivers/platform/x86/ideapad-laptop.c         | 52 +++++++++++++++++--
- 2 files changed, 62 insertions(+), 3 deletions(-)
+This comment does not adhere to the Linux coding style
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-index 597a2f3d..bc1e712d 100644
---- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-+++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-@@ -25,3 +25,16 @@ Description:
- 		Control touchpad mode.
- 			* 1 -> Switched On
- 			* 0 -> Switched Off
-+
-+What:		/sys/bus/pci/devices/<bdf>/<device>/VPC2004:00/fn_lock
-+Date:		May 2018
-+KernelVersion:	4.17
-+Contact:	"Oleg Keri <ezhi99@gmail.com>"
-+Description:
-+		Control fn-lock mode.
-+			* 1 -> Switched On
-+			* 0 -> Switched Off
-+
-+		For example:
-+		# echo "0" >	\
-+		/sys/bus/pci/devices/0000:00:1f.0/PNP0C09:00/VPC2004:00/fn_lock
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 535199c9..2f4991fb 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -43,6 +43,7 @@
- #define IDEAPAD_RFKILL_DEV_NUM	(3)
- 
- #define BM_CONSERVATION_BIT (5)
-+#define HA_FNLOCK_BIT       (10)
- 
- #define CFG_BT_BIT	(16)
- #define CFG_3G_BIT	(17)
-@@ -59,6 +60,8 @@ static const char *const ideapad_wmi_fnesc_events[] = {
- enum {
- 	BMCMD_CONSERVATION_ON = 3,
- 	BMCMD_CONSERVATION_OFF = 5,
-+	HACMD_FNLOCK_ON = 0xe,
-+	HACMD_FNLOCK_OFF = 0xf,
- };
- 
- enum {
-@@ -139,11 +142,11 @@ static int method_gbmd(acpi_handle handle, unsigned long *ret)
- 	return result;
- }
- 
--static int method_sbmc(acpi_handle handle, int cmd)
-+static int method_int1(acpi_handle handle, char *method, int cmd)
- {
- 	acpi_status status;
- 
--	status = acpi_execute_simple_method(handle, "SBMC", cmd);
-+	status = acpi_execute_simple_method(handle, method, cmd);
- 	return ACPI_FAILURE(status) ? -1 : 0;
- }
- 
-@@ -487,7 +490,7 @@ static ssize_t conservation_mode_store(struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	ret = method_sbmc(priv->adev->handle, state ?
-+	ret = method_int1(priv->adev->handle, "SBMC", state ?
- 					      BMCMD_CONSERVATION_ON :
- 					      BMCMD_CONSERVATION_OFF);
- 	if (ret < 0)
-@@ -497,11 +500,51 @@ static ssize_t conservation_mode_store(struct device *dev,
- 
- static DEVICE_ATTR_RW(conservation_mode);
- 
-+static ssize_t fn_lock_show(struct device *dev,
-+			    struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct ideapad_private *priv = dev_get_drvdata(dev);
-+	unsigned long result;
-+	int hals;
-+	int fail = read_method_int(priv->adev->handle, "HALS", &hals);
-+
-+	if (fail)
-+		return sprintf(buf, "-1\n");
-+
-+	result = hals;
-+	return sprintf(buf, "%u\n", test_bit(HA_FNLOCK_BIT, &result));
-+}
-+
-+static ssize_t fn_lock_store(struct device *dev,
-+			     struct device_attribute *attr,
-+			     const char *buf, size_t count)
-+{
-+	struct ideapad_private *priv = dev_get_drvdata(dev);
-+	bool state;
-+	int ret;
-+
-+	ret = kstrtobool(buf, &state);
-+	if (ret)
-+		return ret;
-+
-+	ret = method_int1(priv->adev->handle, "SALS", state ?
-+			  HACMD_FNLOCK_ON :
-+			  HACMD_FNLOCK_OFF);
-+	if (ret < 0)
-+		return -EIO;
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(fn_lock);
-+
-+
- static struct attribute *ideapad_attributes[] = {
- 	&dev_attr_camera_power.attr,
- 	&dev_attr_fan_mode.attr,
- 	&dev_attr_touchpad.attr,
- 	&dev_attr_conservation_mode.attr,
-+	&dev_attr_fn_lock.attr,
- 	NULL
- };
- 
-@@ -522,6 +565,9 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
- 	} else if (attr == &dev_attr_conservation_mode.attr) {
- 		supported = acpi_has_method(priv->adev->handle, "GBMD") &&
- 			    acpi_has_method(priv->adev->handle, "SBMC");
-+	} else if (attr == &dev_attr_fn_lock.attr) {
-+		supported = acpi_has_method(priv->adev->handle, "HALS") &&
-+			acpi_has_method(priv->adev->handle, "SALS");
- 	} else
- 		supported = true;
- 
--- 
-2.17.0
+> +		 * always breaking on AC detach and the effective time is set to
+> +		 * be permanent.
+> +		 * The battery ID is in bits 4-5, 2 bits and the effective time
+> +		 * is in bits 8-23, 2 bytes. A time of FFFF indicates forever.
+> +		 */
+> +		param = value;
+> +		param |= battery << 4;
+> +		param |= 0xFFFF << 8;
+> +		if ACPI_FAILURE(tpacpi_battery_acpi_eval(SET_INHIBIT, &ret, param)) {
+> +			pr_err("failed to set inhibit charge on %d", battery);
+> +			return -ENODEV;
+> +		}
+> +		return 0;
+>  	default:
+>  		pr_crit("wrong parameter: %d", what);
+>  		return -EINVAL;
+> @@ -9359,6 +9388,8 @@ static int tpacpi_battery_probe(int battery)
+>  	 * 2) Check for support
+>  	 * 3) Get the current stop threshold
+>  	 * 4) Check for support
+> +	 * 5) Check for inhibit charge support
+> +	 * 6) Get the current inhibit charge status
+>  	 */
+>  	if (acpi_has_method(hkey_handle, GET_START)) {
+>  		if ACPI_FAILURE(tpacpi_battery_acpi_eval(GET_START, &ret, battery)) {
+> @@ -9395,10 +9426,16 @@ static int tpacpi_battery_probe(int battery)
+>  			return -ENODEV;
+>  		}
+>  	}
+> -	pr_info("battery %d registered (start %d, stop %d)",
+> +	if (acpi_has_method(hkey_handle, GET_INHIBIT))
+> +		if (!ACPI_FAILURE(tpacpi_battery_acpi_eval(GET_INHIBIT, &ret, battery)))
+> +			/* Support is marked in bit 5 */
+> +			battery_info.batteries[battery].inhibit_support = ret & BIT(5);
+> +
+> +	pr_info("battery %d registered (start %d, stop %d, inhibit: %d)",
+>  			battery,
+>  			battery_info.batteries[battery].charge_start,
+> -			battery_info.batteries[battery].charge_stop);
+> +			battery_info.batteries[battery].charge_stop,
+> +			battery_info.batteries[battery].inhibit_support);
+>  
+>  	return 0;
+>  }
+> @@ -9484,6 +9521,15 @@ static ssize_t tpacpi_battery_store(int what,
+>  		if (tpacpi_battery_set(THRESHOLD_STOP, battery, value))
+>  			return -EINVAL;
+>  		return count;
+> +	case INHIBIT_CHARGE:
+> +		if (!battery_info.batteries[battery].inhibit_support)
+> +			return -ENODEV;
+> +		/* The only valid values are 1 and 0 */
+> +		if (value != 0 && value != 1)
+
+I'm not sure, but maybe `if (value < 2)` is better here?
+
+> +			return -EINVAL;
+> +		if (tpacpi_battery_set(INHIBIT_CHARGE, battery, value))
+> +			return -ENODEV;
+> +		return count;
+>  	default:
+>  		pr_crit("Wrong parameter: %d", what);
+>  		return -EINVAL;
+> @@ -9546,12 +9592,28 @@ static ssize_t charge_stop_threshold_store(struct device *dev,
+>  	return tpacpi_battery_store(THRESHOLD_STOP, dev, buf, count);
+>  }
+>  
+> +static ssize_t inhibit_charge_store(struct device *dev,
+> +				struct device_attribute *attr,
+> +				const char *buf, size_t count)
+> +{
+> +	return tpacpi_battery_store(INHIBIT_CHARGE, dev, buf, count);
+> +}
+> +
+> +static ssize_t inhibit_charge_show(struct device *device,
+> +				struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	return tpacpi_battery_show(INHIBIT_CHARGE, device, buf);
+> +}
+> +
+>  static DEVICE_ATTR_RW(charge_start_threshold);
+>  static DEVICE_ATTR_RW(charge_stop_threshold);
+> +static DEVICE_ATTR_RW(inhibit_charge);
+>  
+>  static struct attribute *tpacpi_battery_attrs[] = {
+>  	&dev_attr_charge_start_threshold.attr,
+>  	&dev_attr_charge_stop_threshold.attr,
+> +	&dev_attr_inhibit_charge.attr,
+>  	NULL,
+>  };
+>  
+> -- 
+> 2.17.0
+> 
+
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, Slashdot.org! http://sdm.link/slashdot
