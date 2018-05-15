@@ -1,78 +1,51 @@
-From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Subject: Re: [PATCH 1/3] thinkpad_acpi: add support for
- inhibit_charge
-Date: Mon, 14 May 2018 12:41:02 -0300
-Message-ID: <20180514154102.h5ptzizvhwqgobiz@khazad-dum.debian.net>
-References: <20180513152937.GA5072@thinkpad>
- <20180514094620.wfoom4mwwyqb7qe5@localhost>
- <20180514113928.dnsxjqov7l6rvorb@khazad-dum.debian.net>
- <20180514134041.GC6417@thinkpad>
+From: Daniel Drake <drake@endlessm.com>
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: Add keyboard backlight toggle support
+Date: Mon, 14 May 2018 18:25:35 -0600
+Message-ID: <CAD8Lp46-q8=t9RoWxLjZkv=EAJAbRvY37-ibUof+oVfZaOE0Kw@mail.gmail.com>
+References: <20180503030438.51150-1-chiu@endlessm.com> <CAHp75VfM+1HUi6W986r0iEiuS46TJc8XscO_ce4N-i66EtPLWA@mail.gmail.com>
+ <CAD8Lp46edWAR2iVti8gGp+L_yy91ij6AHuJh3iuuTLg8oUq47g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180514134041.GC6417@thinkpad>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Ognjen =?utf-8?B?R2FsacSH?= <smclt30p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Robert Moore <robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph-KeW1gJXA36yNJhrcwGid2A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Locke <kevin-yFOG++GfaLUI8/NkjqMgMw@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD8Lp46edWAR2iVti8gGp+L_yy91ij6AHuJh3iuuTLg8oUq47g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Chris Chiu <chiu@endlessm.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, Jian-Hong Pan <jian-hong@endlessm.com>, bberg@redhat.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gTW9uLCAxNCBNYXkgMjAxOCwgT2duamVuIEdhbGnEhyB3cm90ZToKPiBPbiBNb24sIE1heSAx
-NCwgMjAxOCBhdCAwODozOToyOEFNIC0wMzAwLCBIZW5yaXF1ZSBkZSBNb3JhZXMgSG9sc2NodWgg
-d3JvdGU6Cj4gPiBPbiBNb24sIDE0IE1heSAyMDE4LCBDaHJpc3RvcGggQsO2aG13YWxkZXIgd3Jv
-dGU6Cj4gPiA+ID4gKwljYXNlIElOSElCSVRfQ0hBUkdFOgo+ID4gPiA+ICsJCWlmIEFDUElfRkFJ
-TFVSRSh0cGFjcGlfYmF0dGVyeV9hY3BpX2V2YWwoR0VUX0lOSElCSVQsIHJldCwgYmF0dGVyeSkp
-Cj4gPiA+ID4gKwkJCXJldHVybiAtRU5PREVWOwo+ID4gPiA+ICsKPiA+ID4gPiArCQkvKiBUaGUg
-aW5oaWJpdCBjaGFyZ2Ugc3RhdHVzIGlzIGluIHRoZSBmaXJzdCBiaXQgKi8KPiA+ID4gPiArCQkq
-cmV0ID0gKnJldCAmIDB4MDE7Cj4gPiA+ID4gKwkJcmV0dXJuIDA7Cj4gPiAKPiA+IERvIHdlIGtu
-b3cgd2hhdCBpcyBpbiB0aGUgb3RoZXIgYml0cz8gIElmIHNvLCBwbGVhc2UgZG9jdW1lbnQgdGhl
-IEFDUEkKPiA+IG1ldGhvZCB1c2luZyBhIGNvbW1lbnQgc29tZXdoZXJlIGluIHRoZSBkcml2ZXIg
-Y29kZSwgbGlrZSB5b3UgZGlkIGZvcgo+ID4gU0VUX0lOSElCSVQuCj4gCj4gSSBnb3QgdGhlIHNw
-ZWNzIGZvciB0aGUgbWV0aG9kcyBpbiBhIExlbm92byBkb2MgSSB3YXMgdG9sZCBub3QgdG8gc2hh
-cmUKPiBhcm91bmQsIGluY2x1ZGluZyBpbmZvcm1hdGlvbiBpbiBpdC4KCkhtbSwgb2suIFBsZWFz
-ZSBzZW5kIHRvIG1lIGluIHByaXZhdGUgdGhlIGVtYWlsIGFkZHJlc3Mgb2YgdGhlIHBlcnNvbiBJ
-CnNob3VsZCBhc2sgZm9yIHRoZSBkb2N1bWVudGF0aW9uIHNpbmNlIHlvdSBjYW5ub3QgZGlzdHJp
-YnV0ZSB0aGUKZG9jdW1lbnRhdGlvbiBpdHNlbGYuICBUaGlzIGlzbid0IHRoZSBmaXJzdCB0aW1l
-IGl0IGhhcHBlbmVkLgoKVGhlIHVzdWFsIHJ1bGUgSSBmb2xsb3cgaXM6IGRvY3VtZW50IHdoYXQg
-aXMgZWl0aGVyIGFscmVhZHkgYmVpbmcgdXNlZAppbiB0aGUgZHJpdmVyIG9yIHdoaWNoIHZlcnkg
-bGlrZWx5IHdpbCBoYXZlIHRvIGJlIHVzZWQgaW4gdGhlIGRyaXZlci4KVW5yZWxhdGVkIHN0dWZm
-IChlLmcuIGZvciBzb21lIHVucmVsYXRlZCBmdW5jdGlvbmFsaXR5IHRoZSBkcml2ZXIgZG9lcwpu
-b3QgaW1wbGVtZW50KSBkb2Vzbid0IGhhdmUgdG8gYmUgZG9jdW1lbnRlZC4KCkluIHRoaXMgY2Fz
-ZSwgd2UgbmVlZCB0byBhdCBsZWFzdCBrbm93IHdoYXQgYml0cyBuZWVkIHRvIGJlIFJNVywgb3IK
-YWx3YXlzLXplcm8gd2hlbiBjYWxsaW5nIFNFVF8qIG1ldGhvZHMuLi4KCj4gU28gd2hhdCBkbyB5
-b3UgcGVvcGxlIHdhbnQgbWUgdG8gZG8/IFNob3VsZCBJIGZpeCB0aGUgY29tbWVudHMgb3IgbGVh
-dmUKPiBhcy1pcz8KClNpbmNlIHRoZSBzdWJzeXN0ZW0gbWFpbnRhaW5lciBzYWlkIGl0IHNob3Vs
-ZCBiZSBrZXB0IGFzLWlzLCBhbmQgSSBkb24ndAptdWNoIGNhcmUsIHBsZWFzZSBrZWVwIGl0IGFz
-LWlzLiAgSXQgd29uJ3QgbWF0dGVyIGZvciBteSBkcml2ZXIKbWFpbnRhaW5lciBhY2sgOi0pCgo+
-ID4gPiA+ICsJY2FzZSBJTkhJQklUX0NIQVJHRToKPiA+ID4gPiArCQlpZiAoIWJhdHRlcnlfaW5m
-by5iYXR0ZXJpZXNbYmF0dGVyeV0uaW5oaWJpdF9zdXBwb3J0KQo+ID4gPiA+ICsJCQlyZXR1cm4g
-LUVOT0RFVjsKPiA+ID4gPiArCQkvKiBUaGUgb25seSB2YWxpZCB2YWx1ZXMgYXJlIDEgYW5kIDAg
-Ki8KPiA+ID4gPiArCQlpZiAodmFsdWUgIT0gMCAmJiB2YWx1ZSAhPSAxKQo+ID4gPiAKPiA+ID4g
-SSdtIG5vdCBzdXJlLCBidXQgbWF5YmUgYGlmICh2YWx1ZSA8IDIpYCBpcyBiZXR0ZXIgaGVyZT8K
-PiA+IAo+ID4gSW5kZWVkLi4uIHdpdGggYSBjb21tZW50IHRoYXQgc2F5cyAwID0gbWFpbiBiYXR0
-ZXJ5LCAxID0gZXh0cmEvZG9jawo+ID4gYmF0dGVyeSBvciBzb21ldGhpbmcuCj4gCj4gVGhhdCBz
-ZWVtcyBsaWtlIG9iZnVzY2F0aW9uIHRvIG1lLCB0aGlzIHdheSBpdHMgY2xlYXIgdGhhdCBpdCBt
-dXN0IGJlCj4gZWl0aGVyIDEgb3IgMC4gQW5kIGluaGliaXRpbmcgaXMgc2V0IHBlci1iYXR0ZXJ5
-IHNvIDEgaXMgb24gYW5kIG5vdAo+IGJhdHRlcnkgMS4KCkhtbSwgeWVzIEkgZ290IHRoYXQgd3Jv
-bmcuICJiYXR0ZXJ5IiBzaG91bGQgdXNlIDAgPD0gYmF0dGVyeSA8MiBmb3IKY2hlY2tpbmcgKGlm
-IG5lZWRlZCksIGJ1dCB2YWx1ZSBjYW4gb25seSBiZSAwIG9yIDEuCgpJJ2QgcGVyc29uYWxseSBo
-YXZlIHVzZWQgYSBiaXRtYXNrIHRlc3QgZm9yICJ2YWx1ZSIsIGVuc3VyaW5nIGFsbCBvdGhlcgpi
-aXRzIGFyZSB6ZXJvLCB0aG91Z2guICBCdXQgdGhhdCdzIGp1c3QgYSBtYXR0ZXIgb2YgdGFzdGUg
-YW5kIEkgZG9uJ3QKdGhpbmsgYW55IG9mIHRoZSBjaG9pY2VzIChpbmNsdWRpbmcgdGhlIG9uZSB5
-b3UgdXNlZCkgYXJlICJiYWQgdGFzdGUiLApzbyBhbGwgb2YgdGhlbSBhcmUgZmluZSBhcyBmYXIg
-YXMgSSBhbSBjb25jZXJuZWQuCgotLSAKICBIZW5yaXF1ZSBIb2xzY2h1aAoKLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tCkNoZWNrIG91dCB0aGUgdmlicmFudCB0ZWNoIGNvbW11bml0eSBvbiBvbmUgb2Yg
-dGhlIHdvcmxkJ3MgbW9zdAplbmdhZ2luZyB0ZWNoIHNpdGVzLCBTbGFzaGRvdC5vcmchIGh0dHA6
-Ly9zZG0ubGluay9zbGFzaGRvdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwppYm0tYWNwaS1kZXZlbCBtYWlsaW5nIGxpc3QKaWJtLWFjcGktZGV2ZWxAbGlz
-dHMuc291cmNlZm9yZ2UubmV0Cmh0dHBzOi8vbGlzdHMuc291cmNlZm9yZ2UubmV0L2xpc3RzL2xp
-c3RpbmZvL2libS1hY3BpLWRldmVsCg==
+Hi Andy,
+
+On Mon, May 7, 2018 at 8:46 AM, Daniel Drake <drake@endlessm.com> wrote:
+> > > Some Asus laptops like UX550GE has hotkey (Fn+F7) for keyboard
+> > > backlight toggle. In this UX550GE, the hotkey incremet the level
+> > > of brightness for each keypress from 1 to 3, and then switch it
+> > > off when the brightness has been the max. This commit interprets
+> > > the code 0xc7 generated from hotkey to KEY_KBDILLUMUP to increment
+> > > the brightness, then pass KEY_KBDILLUMTOGGLE to user space after
+> > > the brightness max been reached for switching the led off.
+> > >
+> >
+> > Pushed to my review and testing queue, thanks!
+>
+> We found that GNOME's handling of the toggle key is somewhat imperfect
+> and it will need modifying before we achieve the
+> Up-Up-Up-off-Up-Up-Up-off... cycle that we are looking for.
+>
+> https://gitlab.gnome.org/GNOME/gnome-settings-daemon/issues/41
+>
+> In that discussion an alternative perspective was raised:
+>
+> Is it right for the kernel to modify the key sent to userspace, when
+> it is then relying on the specific userspace action of it changing the
+> brightness to the next expected level? (and this userspace behaviour
+> is not even working right in the GNOME case)
+>
+> Instead, would it make sense for the kernel to always report TOGGLE in
+> this case, and for GNOME to interpret toggle as simply "cycle through
+> all the available brightness levels"?
+
+Any comments on this? I am tempted to send a patch to just make this
+key always emit TOGGLE from the kernel given that we have a tentative
+agreement on implementing the brightness cycle within GNOME.
+
+Daniel
