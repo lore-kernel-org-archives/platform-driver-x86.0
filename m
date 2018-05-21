@@ -1,102 +1,47 @@
-From: Benjamin Berg <bberg@redhat.com>
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: Add keyboard backlight
- toggle support
-Date: Tue, 15 May 2018 15:41:18 +0200
-Message-ID: <aa8608844b153359f5e2a7ab876c75eb19969fb7.camel@redhat.com>
-References: <20180503030438.51150-1-chiu@endlessm.com>
-         <CAHp75VfM+1HUi6W986r0iEiuS46TJc8XscO_ce4N-i66EtPLWA@mail.gmail.com>
-         <CAD8Lp46edWAR2iVti8gGp+L_yy91ij6AHuJh3iuuTLg8oUq47g@mail.gmail.com>
-         <CAD8Lp46-q8=t9RoWxLjZkv=EAJAbRvY37-ibUof+oVfZaOE0Kw@mail.gmail.com>
+From: Kevin Locke <kevin-yFOG++GfaLUI8/NkjqMgMw@public.gmane.org>
+Subject: Re: [PATCH 2/3] thinkpad_acpi: add support for
+ force_discharge
+Date: Mon, 21 May 2018 07:31:12 -0600
+Message-ID: <20180521133112.GA4578@kevinolos>
+References: <20180513153000.GA5117@thinkpad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD8Lp46-q8=t9RoWxLjZkv=EAJAbRvY37-ibUof+oVfZaOE0Kw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Drake <drake@endlessm.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Chris Chiu <chiu@endlessm.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, Jian-Hong Pan <jian-hong@endlessm.com>
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180513153000.GA5117@thinkpad>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Ognjen Galic <smclt30p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Robert Moore <robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph-KeW1gJXA36yNJhrcwGid2A@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
-
-Hi Daniel,
-
-I had a quick chat with Bastien about this. The conclusion was that
-reusing the TOGGLE key may be problematic for gnome-settings-daemon.
-And the alternative of a new CYCLE key also has some caveats.
-
-The most straight forward solution is likely to simply handle the
-brightness change in the kernel and not report the key to userspace at
-all. This should work just fine and at least GNOME will show an on
-screen display in response to the brightness change.
-
-Do you think that approach would work well?
-
-Benjamin
-
-
-On Mon, 2018-05-14 at 18:25 -0600, Daniel Drake wrote:
-> Hi Andy,
+On Sun, 2018-05-13 at 17:30 +0200, Ognjen Galic wrote:
+> Lenovo ThinkPad systems have a feature that lets you
+> force the battery to discharge regardless if AC is attached
+> or not.
 > 
-> On Mon, May 7, 2018 at 8:46 AM, Daniel Drake <drake@endlessm.com>
-> wrote:
-> > > > Some Asus laptops like UX550GE has hotkey (Fn+F7) for keyboard
-> > > > backlight toggle. In this UX550GE, the hotkey incremet the
-> > > > level
-> > > > of brightness for each keypress from 1 to 3, and then switch it
-> > > > off when the brightness has been the max. This commit
-> > > > interprets
-> > > > the code 0xc7 generated from hotkey to KEY_KBDILLUMUP to
-> > > > increment
-> > > > the brightness, then pass KEY_KBDILLUMTOGGLE to user space
-> > > > after
-> > > > the brightness max been reached for switching the led off.
-> > > > 
-> > > 
-> > > Pushed to my review and testing queue, thanks!
-> > 
-> > We found that GNOME's handling of the toggle key is somewhat
-> > imperfect
-> > and it will need modifying before we achieve the
-> > Up-Up-Up-off-Up-Up-Up-off... cycle that we are looking for.
-> > 
-> > https://gitlab.gnome.org/GNOME/gnome-settings-daemon/issues/41
-> > 
-> > In that discussion an alternative perspective was raised:
-> > 
-> > Is it right for the kernel to modify the key sent to userspace,
-> > when
-> > it is then relying on the specific userspace action of it changing
-> > the
-> > brightness to the next expected level? (and this userspace
-> > behaviour
-> > is not even working right in the GNOME case)
-> > 
-> > Instead, would it make sense for the kernel to always report TOGGLE
-> > in
-> > this case, and for GNOME to interpret toggle as simply "cycle
-> > through
-> > all the available brightness levels"?
-> 
-> Any comments on this? I am tempted to send a patch to just make this
-> key always emit TOGGLE from the kernel given that we have a tentative
-> agreement on implementing the brightness cycle within GNOME.
-> 
-> Daniel
------BEGIN PGP SIGNATURE-----
+> This patch implements that feature and exposes it via the generic
+> ACPI battery driver.
 
-iQIzBAEBCgAdFiEED2NO4vMS33W8E4AFq6ZWhpmFY3AFAlr6434ACgkQq6ZWhpmF
-Y3D97A/9Hqi/xvHU5jcgtKQ2AH3pN445whjXrnUPpcN3I6zgeo/2kXHxn+DEFzD/
-xsBLRy2hzfvw5HXWsclf8u31TajmP9OOihHTMB+Ng7ZJohIEgwPjIMr/eaHiiLYr
-W9aamm/5DJF5cwYXmiQ46+y+Wbc5ZJbu0wSgiMDY2uEhlph/9J3NGRadb6xEWJX+
-Rrp2te5lqwIvHKv4tF/HOrXev6R77AdpHy+WYrA1IKdG996kFDAZcLErk5EL/J0U
-+p+pkGbul/JHKcwU77L/Sg8daM1GMQfxWKbR9k21Fow27iaJRMn9Vn9s8HEmHJ+5
-S8cBIo71EjNHXO2oDaSzI9Ng1q+Zy7XjHtbK8/MmauQ/3n/z3tt8ZkW4/FumdMkm
-ZZwmS9OxOTc+G9hc3SLkggRF1ygbaCgsZaynyEiBHSq37V0G9WBL6BaDW9P6jEIV
-7aPJN6SEBLqXStBZiwNXn/yr1AC7duhnIvzxYZj/SUdCk18aDS/tGIehGTqTumGV
-2jhyHQek2fp7J0AZH8oOnU9rAIdKtPb3vf5DJuCOD2TtB/yMZDJVj1Uc1g565IPs
-KcVdMdiqTy7m65BAwjJyrFu04GIi02SBFFEsdKGOkAcuPPWpG+4EnUwGpArwxwYv
-SaUnUD4DRvsoyZHeXETsa7ePh9aBZwmNR+AGSoLj8UY+vbh3/dg=
-=szZs
------END PGP SIGNATURE-----
+On a T430 (2342-CTO) I can confirm that both force_discharge and
+inhibit_charge behave as expected, both when the battery is above and
+below charge_start_threshold.  Input validation also works
+as-expected.  The only oddity I noticed is that force_discharge has a
+delay taking effect (<1 sec) transitioning from 0 to 1 (but not 1 to
+0).
+
+Tested-by: Kevin Locke <kevin-yFOG++GfaLUI8/NkjqMgMw@public.gmane.org>
+
+Thanks for working on this!
+Kevin
+
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, Slashdot.org! http://sdm.link/slashdot
