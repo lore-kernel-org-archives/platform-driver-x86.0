@@ -1,49 +1,51 @@
-From: Oleg Keri <ezhi99@gmail.com>
-Subject: [PATCH] platform/x86: ideapad-laptop: Fix rfkill invert
-Date: Thu, 24 May 2018 16:32:31 +0300
-Message-ID: <20180524133231.8433-1-ezhi99@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2 3/7] platform/mellanox: mlxreg-hotplug: add extra
+ cycle for hotplug work queue
+Date: Thu, 24 May 2018 16:52:14 -0700
+Message-ID: <20180524235214.GA10172@fury>
+References: <1525675735-125547-1-git-send-email-vadimp@mellanox.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1525675735-125547-1-git-send-email-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Oleg Keri <ezhi99@gmail.com>, Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, ivecera@redhat.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-There are a lot of reports on the Internet about rfkill lock on
-modern Yoga Ideapad laptops while loading ideapad_laptop platform module.
-This patch offers the fix. Obviously it's impossible for me
-to test this patch on all ideapad laptops, so i've made an module
-parameter init_rfkill_inverted to keep old behavior. Comments are
-welcome.
+On Mon, May 07, 2018 at 06:48:51AM +0000, Vadim Pasternak wrote:
 
-Signed-off-by: Oleg Keri <ezhi99@gmail.com>
----
- drivers/platform/x86/ideapad-laptop.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Hi Vadim,
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 535199c9e6bc..1eeda7bc74a3 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -110,6 +110,10 @@ static bool no_bt_rfkill;
- module_param(no_bt_rfkill, bool, 0444);
- MODULE_PARM_DESC(no_bt_rfkill, "No rfkill for bluetooth.");
- 
-+static bool init_rfkill_inverted;
-+module_param(init_rfkill_inverted, bool, 0444);
-+MODULE_PARM_DESC(init_rfkill_inverted, "Invert rfkill on initialization");
-+
- /*
-  * ACPI Helpers
-  */
-@@ -604,7 +608,9 @@ static int ideapad_register_rfkill(struct ideapad_private *priv, int dev)
- 			 &sw_blocked)) {
- 		rfkill_init_sw_state(priv->rfk[dev], 0);
- 	} else {
--		sw_blocked = !sw_blocked;
-+		/* Do not apply invert for ideapads which haven't hw switch */
-+		if (priv->has_hw_rfkill_switch || init_rfkill_inverted)
-+			sw_blocked = !sw_blocked;
- 		rfkill_init_sw_state(priv->rfk[dev], sw_blocked);
- 	}
- 
+> Add extra cycle for hotplug work queue to handle the case when a signal is
+> It adds missed logic for signal acknowledge, by adding an extra run for
+> received, but no specific signal assertion is detected. Such case
+> theoretically can happen for example in case several units are removed or
+> inserted at the same time. In this situation acknowledge for some signal
+> can be missed at signal top aggreagation status level. The extra run will
+> allow to handler to acknowledge the missed signal.
+> 
+
+...
+
+> 
+> Fixes: 07b89c2b2a5e ("platform/x86: Introduce support for Mellanox hotplug driver")
+
+This sha doesn't exist in mainline, I believe you are referring to:
+
+$ git l | grep "Introduce support for Mellanox hotplug"
+304887041d95 platform/x86: Introduce support for Mellanox hotplug driver
+
+While this was introduced in 4.10. There have been many changes since then, with
+significant changes in the 4.17 cycle. I have not added the stable tag, please
+let me know if you think this should be pushed to stable, and which of the
+intervening patches you'd consider dependencies.
+
+I've fixed the sha in the commit message, and queued for testing.
+
+Thanks,
+
 -- 
-2.17.0
+Darren Hart
+VMware Open Source Technology Center
