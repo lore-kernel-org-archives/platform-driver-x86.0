@@ -1,64 +1,91 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 1/3] platform/x86: silead_dmi: Add touchscreen info for the Jumper EZpad 6 Pro
-Date: Tue, 29 May 2018 13:50:20 +0200
-Message-ID: <20180529115022.12875-1-hdegoede@redhat.com>
+Subject: [PATCH 2/3] platform/x86: silead_dmi: Add info for the PoV mobii TAB-P800W (v2.0)
+Date: Tue, 29 May 2018 13:50:21 +0200
+Message-ID: <20180529115022.12875-2-hdegoede@redhat.com>
+References: <20180529115022.12875-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180529115022.12875-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, zy <574249312@qq.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add touchscreen info for the Jumper EZpad 6 Pro.
+This commit adds the necessary device-properties to make the touchscreen
+on Point of View mobii TAB-P800W (v2.0) tablets work.
 
-Cc: zy <574249312@qq.com>
-Reported-and-tested-by: zy <574249312@qq.com>
+Note that we already have an entry for the Point of View mobii
+TAB-P800W (v2.1), that version uses a different digitizer and different
+firmware, so the v2.0 version needs its own entry.
+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/silead_dmi.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/platform/x86/silead_dmi.c | 39 +++++++++++++++++++++++++++----
+ 1 file changed, 34 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-index 452aacabaa8e..d7a67a53195f 100644
+index d7a67a53195f..ca49deaa2336 100644
 --- a/drivers/platform/x86/silead_dmi.c
 +++ b/drivers/platform/x86/silead_dmi.c
-@@ -53,6 +53,20 @@ static const struct silead_ts_dmi_data jumper_ezpad_mini3_data = {
- 	.properties	= jumper_ezpad_mini3_props,
+@@ -141,7 +141,25 @@ static const struct silead_ts_dmi_data pipo_w2s_data = {
+ 	.properties	= pipo_w2s_props,
  };
  
-+static const struct property_entry jumper_ezpad_6_pro_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl3692-jumper-ezpad-6-pro.fw"),
+-static const struct property_entry pov_mobii_wintab_p800w_props[] = {
++static const struct property_entry pov_mobii_wintab_p800w_v20_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 32),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 16),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1692),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1146),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name",
++			      "gsl3680-pov-mobii-wintab-p800w-v20.fw"),
 +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
 +	PROPERTY_ENTRY_BOOL("silead,home-button"),
 +	{ }
 +};
 +
-+static const struct silead_ts_dmi_data jumper_ezpad_6_pro_data = {
++static const struct silead_ts_dmi_data pov_mobii_wintab_p800w_v20_data = {
 +	.acpi_name	= "MSSL1680:00",
-+	.properties	= jumper_ezpad_6_pro_props,
++	.properties	= pov_mobii_wintab_p800w_v20_props,
 +};
 +
- static const struct property_entry dexp_ursus_7w_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 890),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 630),
-@@ -296,6 +310,17 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
- 			DMI_MATCH(DMI_BIOS_VERSION, "jumperx.T87.KFBNEEA"),
++static const struct property_entry pov_mobii_wintab_p800w_v21_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1800),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+@@ -151,9 +169,9 @@ static const struct property_entry pov_mobii_wintab_p800w_props[] = {
+ 	{ }
+ };
+ 
+-static const struct silead_ts_dmi_data pov_mobii_wintab_p800w_data = {
++static const struct silead_ts_dmi_data pov_mobii_wintab_p800w_v21_data = {
+ 	.acpi_name	= "MSSL1680:00",
+-	.properties	= pov_mobii_wintab_p800w_props,
++	.properties	= pov_mobii_wintab_p800w_v21_props,
+ };
+ 
+ static const struct property_entry itworks_tw891_props[] = {
+@@ -386,8 +404,19 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
  		},
  	},
-+	{
-+		/* Jumper EZpad 6 Pro */
-+		.driver_data = (void *)&jumper_ezpad_6_pro_data,
+ 	{
+-		/* Point of View mobii wintab p800w */
+-		.driver_data = (void *)&pov_mobii_wintab_p800w_data,
++		/* Point of View mobii wintab p800w (v2.0) */
++		.driver_data = (void *)&pov_mobii_wintab_p800w_v20_data,
 +		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Jumper"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "EZpad"),
-+			DMI_MATCH(DMI_BIOS_VERSION, "5.12"),
++			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
++			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
++			DMI_MATCH(DMI_BIOS_VERSION, "3BAIR1014"),
 +			/* Above matches are too generic, add bios-date match */
-+			DMI_MATCH(DMI_BIOS_DATE, "08/18/2017"),
++			DMI_MATCH(DMI_BIOS_DATE, "10/24/2014"),
 +		},
 +	},
- 	{
- 		/* DEXP Ursus 7W */
- 		.driver_data = (void *)&dexp_ursus_7w_data,
++	{
++		/* Point of View mobii wintab p800w (v2.1) */
++		.driver_data = (void *)&pov_mobii_wintab_p800w_v21_data,
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+ 			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
 -- 
 2.17.0
