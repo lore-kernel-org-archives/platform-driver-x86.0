@@ -1,64 +1,71 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 1/3] platform/x86: silead_dmi: Add touchscreen info for the Jumper EZpad 6 Pro
-Date: Wed, 30 May 2018 12:43:39 +0200
-Message-ID: <20180530104341.30069-1-hdegoede@redhat.com>
+Subject: [PATCH v2 3/3] platform/x86: silead_dmi: Add touchscreen info for the Onda V891w tablet
+Date: Wed, 30 May 2018 12:43:41 +0200
+Message-ID: <20180530104341.30069-3-hdegoede@redhat.com>
+References: <20180530104341.30069-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180530104341.30069-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, zy <574249312@qq.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add touchscreen info for the Jumper EZpad 6 Pro.
+Add touchscreen info for the Onda V891w 8.9" windows tablet.
 
-Cc: zy <574249312@qq.com>
-Reported-and-tested-by: zy <574249312@qq.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/silead_dmi.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Changes in v2:
+-Match on exact BIOS version there are a v1 and v3 of the hardware which
+ use different digitizers which need different firmware / settings
+---
+ drivers/platform/x86/silead_dmi.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/drivers/platform/x86/silead_dmi.c b/drivers/platform/x86/silead_dmi.c
-index 452aacabaa8e..d7a67a53195f 100644
+index ca49deaa2336..64716b118c8e 100644
 --- a/drivers/platform/x86/silead_dmi.c
 +++ b/drivers/platform/x86/silead_dmi.c
-@@ -53,6 +53,20 @@ static const struct silead_ts_dmi_data jumper_ezpad_mini3_data = {
- 	.properties	= jumper_ezpad_mini3_props,
+@@ -309,6 +309,23 @@ static const struct silead_ts_dmi_data teclast_x3_plus_data = {
+ 	.properties	= teclast_x3_plus_props,
  };
  
-+static const struct property_entry jumper_ezpad_6_pro_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl3692-jumper-ezpad-6-pro.fw"),
++static const struct property_entry onda_v891w_v1_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 46),
++	PROPERTY_ENTRY_U32("touchscreen-min-y",  8),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1676),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1130),
++	PROPERTY_ENTRY_STRING("firmware-name",
++			      "gsl3680-onda-v891w-v1.fw"),
 +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
 +	PROPERTY_ENTRY_BOOL("silead,home-button"),
 +	{ }
 +};
 +
-+static const struct silead_ts_dmi_data jumper_ezpad_6_pro_data = {
++static const struct silead_ts_dmi_data onda_v891w_v1_data = {
 +	.acpi_name	= "MSSL1680:00",
-+	.properties	= jumper_ezpad_6_pro_props,
++	.properties	= onda_v891w_v1_props,
 +};
 +
- static const struct property_entry dexp_ursus_7w_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 890),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 630),
-@@ -296,6 +310,17 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
- 			DMI_MATCH(DMI_BIOS_VERSION, "jumperx.T87.KFBNEEA"),
+ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 	{
+ 		/* CUBE iwork8 Air */
+@@ -517,6 +534,17 @@ static const struct dmi_system_id silead_ts_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Y8W81"),
  		},
  	},
 +	{
-+		/* Jumper EZpad 6 Pro */
-+		.driver_data = (void *)&jumper_ezpad_6_pro_data,
++		/* ONDA V891w revision P891WBEBV1B00 aka v1 */
++		.driver_data = (void *)&onda_v891w_v1_data,
 +		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Jumper"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "EZpad"),
-+			DMI_MATCH(DMI_BIOS_VERSION, "5.12"),
-+			/* Above matches are too generic, add bios-date match */
-+			DMI_MATCH(DMI_BIOS_DATE, "08/18/2017"),
++			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "ONDA"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONDA Tablet"),
++			DMI_EXACT_MATCH(DMI_BOARD_VERSION, "V001"),
++			/* Exact match, different versions need different fw */
++			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "ONDA.W89EBBN08"),
 +		},
 +	},
- 	{
- 		/* DEXP Ursus 7W */
- 		.driver_data = (void *)&dexp_ursus_7w_data,
+ 	{ },
+ };
+ 
 -- 
 2.17.0
