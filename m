@@ -1,33 +1,48 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: dell-wmi: Ignore new rfkill and fn-lock events
-Date: Thu, 31 May 2018 13:44:58 +0300
-Message-ID: <CAHp75Vf5bhmYRcd-upK6B3cSx8-0pS=EpU0pWnMSmQQ3jg-+4g@mail.gmail.com>
-References: <20180420072648.5426-1-kai.heng.feng@canonical.com>
- <20180420072854.bprouoj5poim5rxv@pali> <71dccbbb971f44ff8ed329c29e611f57@ausx13mpc120.AMER.DELL.COM>
- <F5907425-7B71-48E8-9F24-EC0C02C44E07@canonical.com>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Fix rfkill invert
+Date: Thu, 31 May 2018 15:02:53 +0300
+Message-ID: <CAHp75VdaDmSz5hmfdh6aUu3FDCPisF9K2GaayWOY0NsvUjid7A@mail.gmail.com>
+References: <20180524133231.8433-1-ezhi99@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <F5907425-7B71-48E8-9F24-EC0C02C44E07@canonical.com>
+In-Reply-To: <20180524133231.8433-1-ezhi99@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kai Heng Feng <kai.heng.feng@canonical.com>
-Cc: Mario Limonciello <Mario.Limonciello@dell.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Oleg Keri <ezhi99@gmail.com>
+Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, May 24, 2018 at 10:07 AM, Kai Heng Feng
-<kai.heng.feng@canonical.com> wrote:
-> at 10:30 PM, Mario.Limonciello@dell.com wrote:
+On Thu, May 24, 2018 at 4:32 PM, Oleg Keri <ezhi99@gmail.com> wrote:
+> There are a lot of reports on the Internet about rfkill lock on
+> modern Yoga Ideapad laptops while loading ideapad_laptop platform module.
+> This patch offers the fix. Obviously it's impossible for me
+> to test this patch on all ideapad laptops, so i've made an module
+> parameter init_rfkill_inverted to keep old behavior.
 
->>> Reviewed-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->> Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+> Comments are
+> welcome.
 
-> Looks like this patch does not get included yet.
+So, it should have RFC in the Subject.
 
-Yep. It also is missed in our patchwork or I mistakenly mark it with
-some irrelevant state. Sorry for that.
-Please, resend with all tags applied.
+> +static bool init_rfkill_inverted;
+> +module_param(init_rfkill_inverted, bool, 0444);
+> +MODULE_PARM_DESC(init_rfkill_inverted, "Invert rfkill on initialization");
 
---=20
+Module parameters are subject to not being added anymore (yes, there
+are some significantly rare cases when it makes sense).
+
+> +               /* Do not apply invert for ideapads which haven't hw switch */
+> +               if (priv->has_hw_rfkill_switch || init_rfkill_inverted)
+> +                       sw_blocked = !sw_blocked;
+
+Since this is under else branch of reading value from Embedded
+Controller, we need to understand what and why it returns.
+
+For me a solution rather would be not to read EC value at all in case
+of no hw switch, but I also can't test that on many possible laptops.
+
+Would be good to get a comment from Ike.
+
+-- 
 With Best Regards,
 Andy Shevchenko
