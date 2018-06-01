@@ -1,102 +1,62 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v3 6/7] platform/mellanox: Introduce support for Mellanox
- register access driver
-Date: Fri, 1 Jun 2018 09:52:47 -0700
-Message-ID: <20180601165247.GB3599@localhost.localdomain>
-References: <1527439664-127317-1-git-send-email-vadimp@mellanox.com>
- <20180527151347.GA15487@kroah.com>
- <HE1PR0502MB375324E5F279A2733339365FA26F0@HE1PR0502MB3753.eurprd05.prod.outlook.com>
- <20180527153445.GA11051@kroah.com>
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Subject: Re: [PATCH v3 2/5] efi: Add embedded peripheral firmware support
+Date: Fri, 1 Jun 2018 21:23:46 +0200
+Message-ID: <20180601192346.GQ4511@wotan.suse.de>
+References: <20180408174014.21908-1-hdegoede@redhat.com>
+ <20180408174014.21908-3-hdegoede@redhat.com>
+ <20180423211143.GZ14440@wotan.suse.de>
+ <71e6a45a-398d-b7a4-dab0-8b9936683226@redhat.com>
+ <1524586021.3364.20.camel@linux.vnet.ibm.com>
+ <20180424234219.GX14440@wotan.suse.de>
+ <1524632409.3371.48.camel@linux.vnet.ibm.com>
+ <20180425175557.GY14440@wotan.suse.de>
+ <CAB0TPYGnCu+anWHBGvkaigxD--8uHQaQJ2c62kegJ7mTqvkmnA@mail.gmail.com>
+ <20180508153805.GC27853@wotan.suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180527153445.GA11051@kroah.com>
+In-Reply-To: <20180508153805.GC27853@wotan.suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Vadim Pasternak <vadimp@mellanox.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, Michael Shych <michaelsh@mellanox.com>, "ivecera@redhat.com" <ivecera@redhat.com>
+To: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Cc: Martijn Coenen <maco@android.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Stephen Boyd <sboyd@kernel.org>, Vikram Mulukutla <markivx@codeaurora.org>, Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Andrew Morton <akpm@linux-foundation.org>, linux-security-module@vger.kernel.org, Chris Wright <chrisw@sous-sol.org>, David Howells <dhowells@redhat.com>, Alan Cox <alan@linux.intel.com>, Kees Cook <keescook@chromium.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Greg
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, May 27, 2018 at 05:34:45PM +0200, Greg Kroah-Hartman wrote:
-> On Sun, May 27, 2018 at 03:22:06PM +0000, Vadim Pasternak wrote:
+On Tue, May 08, 2018 at 03:38:05PM +0000, Luis R. Rodriguez wrote:
+> On Fri, May 04, 2018 at 12:44:37PM -0700, Martijn Coenen wrote:
+> > On Wed, Apr 25, 2018 at 10:55 AM, Luis R. Rodriguez <mcgrof@kernel.org> wrote:
+> > > Is ptr below
+> > >
+> > >         ret = request_firmware_into_buf(&seg_fw, fw_name, dev,
+> > >                                         ptr, phdr->p_filesz);
+> > >
+> > > Also part of the DMA buffer allocated earlier via:
+> > >
+> > >         ret = qcom_scm_pas_init_image(pas_id, fw->data, fw->size);
+> > >
+> > > Android folks?
 > > 
-> > 
-> > > -----Original Message-----
-> > > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > > Sent: Sunday, May 27, 2018 6:14 PM
-> > > To: Vadim Pasternak <vadimp@mellanox.com>
-> > > Cc: dvhart@infradead.org; andy.shevchenko@gmail.com; linux-
-> > > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; jiri@resnulli.us;
-> > > Michael Shych <michaelsh@mellanox.com>; ivecera@redhat.com
-> > > Subject: Re: [PATCH v3 6/7] platform/mellanox: Introduce support for Mellanox
-> > > register access driver
-> > > 
-> > > On Sun, May 27, 2018 at 04:47:43PM +0000, Vadim Pasternak wrote:
-> > > > Introduce new Mellanox platform driver to allow access to Mellanox
-> > > > programmable device register space trough sysfs interface.
-> > > > The driver purpose is to provide sysfs interface for user space for
-> > > > the registers essential for system control and monitoring.
-> > > > The sets of registers for sysfs access are supposed to be defined per
-> > > > system type bases and include the registers related to system resets
-> > > > operation, system reset causes monitoring and some kinds of mux selection.
-> > > >
-> > > > Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-> > > > ---
-> > > > v1->v2:
-> > > >  Changed added by Vadim:
-> > > >  - Change ---help--- to help in Kconfig, according to new
-> > > > requirements;
-> > > > v2->v3:
-> > > >  Comments pointed out by Darren:
-> > > >  - Remove conditional assignment per attribute mode type, because mode
-> > > >    will guard against not permitted access.
-> > > >    Verified by Vadim.
-> > > > ---
-> > > >  drivers/platform/mellanox/Kconfig     |  11 ++
-> > > >  drivers/platform/mellanox/Makefile    |   1 +
-> > > >  drivers/platform/mellanox/mlxreg-io.c | 203
-> > > > ++++++++++++++++++++++++++++++++++
-> > > >  3 files changed, 215 insertions(+)
-> > > >  create mode 100644 drivers/platform/mellanox/mlxreg-io.c
-> > > >
-> > > > diff --git a/drivers/platform/mellanox/Kconfig
-> > > > b/drivers/platform/mellanox/Kconfig
-> > > > index 591bccd..ddfae9fc 100644
-> > > > --- a/drivers/platform/mellanox/Kconfig
-> > > > +++ b/drivers/platform/mellanox/Kconfig
-> > > > @@ -23,4 +23,15 @@ config MLXREG_HOTPLUG
-> > > >  	  This driver handles hot-plug events for the power suppliers, power
-> > > >  	  cables and fans on the wide range Mellanox IB and Ethernet systems.
-> > > >
-> > > > +config MLXREG_IO
-> > > > +	tristate "Mellanox platform register access driver support"
-> > > > +	depends on REGMAP
-> > > > +	depends on HWMON
-> > > > +	help
-> > > > +	  This driver allows access to Mellanox programmable device register
-> > > > +	  space trough sysfs interface. The sets of registers for sysfs access
-> > > > +	  are defined per system type bases and includes the registers related
-> > > > +	  to system resets operation, system reset causes monitoring and some
-> > > > +	  kinds of mux selection.
-> > > 
-> > > No Documentation/ABI/ entries for these new sysfs files?  Not good :(
-> > > 
-> > 
-> > Thanks Greg for your comment.
-> > 
-> > Should I call doc file like:
-> > Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> > ?
+> > I think the Qualcomm folks owning this (Andy, David, Bjorn, already
+> > cc'd here) are better suited to answer that question.
 > 
-> What ever matches the naming scheme for the driver, yes.
+> Andy, David, Bjorn?
 
-Vadim, I'm happy to help out with the docs if you like.
+Andy, David, Bjorn?
 
-Will you be able to document this in a static way, or is this likely to change
-significantly from platform to platform? I ask because of the automated
-attribute creation in the code.
+Note: as-is we have no option but to assume this is DMA memory for now.
+We cannot keep IMA's guarantees with the current prealloc firmware API
+buffer, so I've suggested:
 
+a) The prealloc buffer API be expanded to enable the caller to descrbe it
+b) Have the qcom driver say this is DMA
+c) IMA would reject it to ensure it stays true to what it needs to gaurantee
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+d) Future platforms which want to use IMA but want to trust DMA buffers
+   would need to devise a way to describe IMA can trust some of these
+   calls.
+
+I'll leave it up to you guys (Andy, David, Bjorn) to come up with the code for
+d) once and if you guys want to use IMA later.  But since what is pressing here
+is to stay to true to IMA, with a-c IMA would reject such calls for now.
+
+  Luis
