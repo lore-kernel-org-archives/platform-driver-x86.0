@@ -1,34 +1,74 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [RESEND] [PATCH] platform/x86: dell-wmi: Ignore new rfkill and
- fn-lock events
-Date: Sat, 2 Jun 2018 17:09:43 +0300
-Message-ID: <CAHp75Vf0mdpj-QMwRPeH9KV0pxh+xsQU-HPy_TPdhhKA+Vf5pg@mail.gmail.com>
-References: <20180601032322.3768-1-kai.heng.feng@canonical.com>
- <CAHp75VfpgejvwBZhy5UEzOFH8mMUQ+gXO_WTSa3D0Kip1ve8=g@mail.gmail.com> <20180601164706.GA3599@localhost.localdomain>
+From: Benjamin Berg <benjamin@sipsolutions.net>
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: Add keyboard backlight
+ toggle support
+Date: Mon, 04 Jun 2018 11:27:43 +0200
+Message-ID: <2634178c3b1fb2c1174eae0d67419e285e2f7c26.camel@sipsolutions.net>
+References: <20180503030438.51150-1-chiu@endlessm.com>
+         <CAHp75VfM+1HUi6W986r0iEiuS46TJc8XscO_ce4N-i66EtPLWA@mail.gmail.com>
+         <CAD8Lp46edWAR2iVti8gGp+L_yy91ij6AHuJh3iuuTLg8oUq47g@mail.gmail.com>
+         <CAD8Lp46-q8=t9RoWxLjZkv=EAJAbRvY37-ibUof+oVfZaOE0Kw@mail.gmail.com>
+         <aa8608844b153359f5e2a7ab876c75eb19969fb7.camel@redhat.com>
+         <CAHp75Vc4iXX7+VY3dE4ETjLsv=VCFaNwz6nmAUBS_E_dhpK2Aw@mail.gmail.com>
+         <CAB4CAweonk3RseCO2BdAiyc0XjfU6GC+c3W9H3AZkgrJMKbnVQ@mail.gmail.com>
+         <CAD8Lp46Xmk_m5Y4M_oXigOkf=z-3O+5F3QaA3AQvgAT4DbP4ew@mail.gmail.com>
+         <CAB4CAwfEyS0j+q_hM8u-XHU_rEFq3604gjsSw4d_4mhaiz=G-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-55gQeibBvF1gilaf+Ot3"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180601164706.GA3599@localhost.localdomain>
+In-Reply-To: <CAB4CAwfEyS0j+q_hM8u-XHU_rEFq3604gjsSw4d_4mhaiz=G-A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Chris Chiu <chiu@endlessm.com>, Daniel Drake <drake@endlessm.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, Jian-Hong Pan <jian-hong@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 1, 2018 at 7:47 PM, Darren Hart <dvhart@infradead.org> wrote:
-> On Fri, Jun 01, 2018 at 11:20:39AM +0300, Andy Shevchenko wrote:
->> On Fri, Jun 1, 2018 at 6:23 AM, Kai-Heng Feng
->> <kai.heng.feng@canonical.com> wrote:
 
->> Pushed to my review and testing queue, thanks!
->>
->> P.S. There are some patches under Darren's queue, but for some reason
->> didn't processed yet.
->
-> Thanks for getting this one Andy. I'm traveling, but am working through these
-> currently. I'll assume you are handling this one.
+--=-55gQeibBvF1gilaf+Ot3
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Correct.
+Hi,
 
--- 
-With Best Regards,
-Andy Shevchenko
+On Thu, 2018-05-24 at 16:33 +0800, Chris Chiu wrote:
+> I've made my change to set the brightness level directly in the
+> driver, but the
+> OSD doesn't show correctly correspond to the level value. The brightness =
+shows
+> OK in /sys/class/led/xxxx/brighness but the OSD always shows level 0. I t=
+hought
+> GNOME should read the brightness from /sys before showing OSD?
+
+Sorry for the late response.
+
+There is a special mechanism to report that the HW changed the
+brightness. This works using the "brightness_hw_changed" sysfs
+attribute. So you will need to set the LED_BRIGHT_HW_CHANGED flag on
+the LED and then call led_classdev_notify_brightness_hw_changed to make
+it work.
+
+Userspace should correctly show the OSD when this is done.
+
+Benjamin
+--=-55gQeibBvF1gilaf+Ot3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEED2NO4vMS33W8E4AFq6ZWhpmFY3AFAlsVBg8ACgkQq6ZWhpmF
+Y3ANhhAAjloye/ZcS7iPIU/wuwAotBQhxKT8oA2QAJLRkKqfD94pN4+E+1kN8pkv
+kiKBrlBS5dYn8XX+AIP6Gc4dZGn1Y/yrUCgZNnF7+kyp6KYdmqo2ortk/E0MP7fy
+A4+KauxqgbB7VaBkpA78QAj73imaIVHxHsXXiIBDeliMkl/MSuIV3d34MCc5u/rV
+tovljsKyFEWdxKFbOiQ77ga/sJiTuiLUrREUjoLz1ff0EGtDWsD/Q+ZbtzgKV1C5
+AcuzDTx0vxAnDYv3cGjt2MWkAFNAnHKopxORS01ewFVZF/iPfa5UoHszrVtj2cZl
+pSmADzCjQJHyBI5gZ1jgPtjJZhNiZ8F6WKtrlhJe4dZz0lP5DVbdSZgaVyXM/0VB
+9MwLuMenq7QmpRFDpvH/xBAlepzwaZ085TeEPBoKKt++nDfTiXsorfKZE8q1xdGX
+YCPi3zmr5oE+D2ASDuQIxtwa0QVmSZRQWfBEoU4NI/liY5v9RtNTff8Jx9KhocS+
+5b8gRkIRdL/HUc6vqqIJtG3W5rkd3g9ku2Oy1eaApiPrFovMUGwAQDiODiCSKRDj
+fUn1d2BwUi+eXpLdfQtzxBQgN9oVSTqdaku8ChD9fjMm0GKBaHNXeQZGfOvYu4H1
+PL/LI6EmQjLMxMDnnfV9PCR8Fk0fFQXZtOG8TORZKeZRdRUesV8=
+=4f3I
+-----END PGP SIGNATURE-----
+
+--=-55gQeibBvF1gilaf+Ot3--
