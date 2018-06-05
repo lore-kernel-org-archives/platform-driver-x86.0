@@ -1,51 +1,140 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: Add keyboard backlight toggle
- support
-Date: Mon, 4 Jun 2018 18:59:00 -0700
-Message-ID: <20180605015900.GC47042@localhost.localdomain>
-References: <20180503030438.51150-1-chiu@endlessm.com>
- <CAHp75VfM+1HUi6W986r0iEiuS46TJc8XscO_ce4N-i66EtPLWA@mail.gmail.com>
- <CAD8Lp46edWAR2iVti8gGp+L_yy91ij6AHuJh3iuuTLg8oUq47g@mail.gmail.com>
- <CAD8Lp46-q8=t9RoWxLjZkv=EAJAbRvY37-ibUof+oVfZaOE0Kw@mail.gmail.com>
- <aa8608844b153359f5e2a7ab876c75eb19969fb7.camel@redhat.com>
- <CAHp75Vc4iXX7+VY3dE4ETjLsv=VCFaNwz6nmAUBS_E_dhpK2Aw@mail.gmail.com>
- <CAB4CAweonk3RseCO2BdAiyc0XjfU6GC+c3W9H3AZkgrJMKbnVQ@mail.gmail.com>
- <CAD8Lp46Xmk_m5Y4M_oXigOkf=z-3O+5F3QaA3AQvgAT4DbP4ew@mail.gmail.com>
- <CAB4CAwfEyS0j+q_hM8u-XHU_rEFq3604gjsSw4d_4mhaiz=G-A@mail.gmail.com>
- <2634178c3b1fb2c1174eae0d67419e285e2f7c26.camel@sipsolutions.net>
+Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: Call new led hw_changed API
+ on kbd brightness change
+Date: Mon, 4 Jun 2018 19:17:51 -0700
+Message-ID: <20180605021751.GD47042@localhost.localdomain>
+References: <20180604123238.82200-1-chiu@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2634178c3b1fb2c1174eae0d67419e285e2f7c26.camel@sipsolutions.net>
+In-Reply-To: <20180604123238.82200-1-chiu@endlessm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Berg <benjamin@sipsolutions.net>
-Cc: Chris Chiu <chiu@endlessm.com>, Daniel Drake <drake@endlessm.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, Jian-Hong Pan <jian-hong@endlessm.com>
+To: Chris Chiu <chiu@endlessm.com>
+Cc: corentin.chary@gmail.com, andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, hdegoede@redhat.com, linux@endlessm.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jun 04, 2018 at 11:27:43AM +0200, Benjamin Berg wrote:
-> Hi,
+On Mon, Jun 04, 2018 at 08:32:37PM +0800, Chris Chiu wrote:
+> Make asus-wmi notify on hotkey kbd brightness changes, listen for
+> brightness events and update the brightness directly in the driver.
+> For this purpose, bound check on brightness in kbd_led_set must be
+> based on the same data type to prevent illegal value been set.
 > 
-> On Thu, 2018-05-24 at 16:33 +0800, Chris Chiu wrote:
-> > I've made my change to set the brightness level directly in the
-> > driver, but the
-> > OSD doesn't show correctly correspond to the level value. The brightness shows
-> > OK in /sys/class/led/xxxx/brighness but the OSD always shows level 0. I thought
-> > GNOME should read the brightness from /sys before showing OSD?
+> Update the brightness by led_classdev_notify_brightness_hw_changed.
+> This will allow userspace to monitor (poll) for brightness changes
+> on the LED without reporting via input keymapping.
 > 
-> Sorry for the late response.
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> ---
+>  drivers/platform/x86/asus-nb-wmi.c |  2 --
+>  drivers/platform/x86/asus-wmi.c    | 21 +++++++++++++++++++--
+>  2 files changed, 19 insertions(+), 4 deletions(-)
 > 
-> There is a special mechanism to report that the HW changed the
-> brightness. This works using the "brightness_hw_changed" sysfs
-> attribute. So you will need to set the LED_BRIGHT_HW_CHANGED flag on
-> the LED and then call led_classdev_notify_brightness_hw_changed to make
-> it work.
-> 
-> Userspace should correctly show the OSD when this is done.
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index 136ff2b4cce5..7ce80e4bb5a3 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -493,8 +493,6 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+>  	{ KE_KEY, 0xA6, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + TV + HDMI */
+>  	{ KE_KEY, 0xA7, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV + HDMI */
+>  	{ KE_KEY, 0xB5, { KEY_CALC } },
+> -	{ KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
+> -	{ KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
+>  	{ KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
+>  	{ KE_END, 0},
+>  };
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 1f6e68f0b646..b4915b7718c1 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -460,6 +460,7 @@ static void kbd_led_update(struct work_struct *work)
+>  		ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+>  
+>  	asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
+> +	led_classdev_notify_brightness_hw_changed(&asus->kbd_led, asus->kbd_led_wk);
+>  }
+>  
+>  static int kbd_led_read(struct asus_wmi *asus, int *level, int *env)
+> @@ -497,9 +498,9 @@ static void kbd_led_set(struct led_classdev *led_cdev,
+>  
+>  	asus = container_of(led_cdev, struct asus_wmi, kbd_led);
+>  
+> -	if (value > asus->kbd_led.max_brightness)
+> +	if ((int)value > (int)asus->kbd_led.max_brightness)
+>  		value = asus->kbd_led.max_brightness;
+> -	else if (value < 0)
+> +	else if ((int)value < 0)
+>  		value = 0;
+>  
+>  	asus->kbd_led_wk = value;
+> @@ -656,6 +657,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+>  
+>  		asus->kbd_led_wk = led_val;
+>  		asus->kbd_led.name = "asus::kbd_backlight";
+> +		asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
+>  		asus->kbd_led.brightness_set = kbd_led_set;
+>  		asus->kbd_led.brightness_get = kbd_led_get;
+>  		asus->kbd_led.max_brightness = 3;
+> @@ -1700,6 +1702,13 @@ static int is_display_toggle(int code)
+>  	return 0;
+>  }
+>  
+> +static int is_kbd_led_event(int code)
+> +{
+> +	if (code == NOTIFY_KBD_BRTUP || code == NOTIFY_KBD_BRTDWN)
+> +		return 1;
+> +	return 0;
 
-This makes sense. Userspace can't be aware of every platforms sys files,
-so there needs to be a common mechanism. LED_BRIGHT_HW_CHANGED makes
-sense.
+I don't think this is worth breaking out into a separate function. This
+isn't exactly a hot path, but I don't think this makes the code any more
+readable really. The is_display_toggle was comparing 8 values in a
+complex logic statement, so we don't need to follow that for something
+this simple.
+
+> +}
+> +
+>  static void asus_wmi_notify(u32 value, void *context)
+>  {
+>  	struct asus_wmi *asus = context;
+> @@ -1745,6 +1754,14 @@ static void asus_wmi_notify(u32 value, void *context)
+>  		}
+>  	}
+>  
+> +	if (is_kbd_led_event(code)) {
+> +		if (code == NOTIFY_KBD_BRTDWN)
+
+Seems like we could eliminate the extra function and eliminate a level
+of indentation by rewriting this as:
+
+	if (code == NOTIFY_KBD_BRTDWN)
+		kbd_led_set(&asus->kbd_led, asus->kbd_led_wk - 1);
+	else if (code == NOTIFY_KBD_BRTUP)
+		kbd_led_set(&asus->kbd_led, asus->kbd_led_wk + 1);
+	if (code == NOTIFY_KBD_BRTDWN || NOTIFY_KBD_BRTUP)
+		goto exit;
+
+Or, just treat them as separate events:
+
+
+	if (code == NOTIFY_KBD_BRTDWN) {
+		kbd_led_set(&asus->kbd_led, asus->kbd_led_wk - 1);
+		goto exit;
+	}
+
+	if (code == NOTIFY_KBD_BRTUP) {
+		kbd_led_set(&asus->kbd_led, asus->kbd_led_wk + 1);
+		goto exit;
+	}
+
+
+
+>  	if (is_display_toggle(code) &&
+>  	    asus->driver->quirks->no_display_toggle)
+>  		goto exit;
+> -- 
+> 2.11.0
+> 
+> 
 
 -- 
 Darren Hart
