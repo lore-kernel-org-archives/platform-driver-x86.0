@@ -1,120 +1,51 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v4 8/8] Documentation/ABI: Add documentation mlxreg-io
- sysfs interfaces
-Date: Mon, 4 Jun 2018 18:54:44 -0700
-Message-ID: <20180605015444.GB47042@localhost.localdomain>
-References: <1527584347-167548-1-git-send-email-vadimp@mellanox.com>
- <1527584347-167548-3-git-send-email-vadimp@mellanox.com>
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: Add keyboard backlight toggle
+ support
+Date: Mon, 4 Jun 2018 18:59:00 -0700
+Message-ID: <20180605015900.GC47042@localhost.localdomain>
+References: <20180503030438.51150-1-chiu@endlessm.com>
+ <CAHp75VfM+1HUi6W986r0iEiuS46TJc8XscO_ce4N-i66EtPLWA@mail.gmail.com>
+ <CAD8Lp46edWAR2iVti8gGp+L_yy91ij6AHuJh3iuuTLg8oUq47g@mail.gmail.com>
+ <CAD8Lp46-q8=t9RoWxLjZkv=EAJAbRvY37-ibUof+oVfZaOE0Kw@mail.gmail.com>
+ <aa8608844b153359f5e2a7ab876c75eb19969fb7.camel@redhat.com>
+ <CAHp75Vc4iXX7+VY3dE4ETjLsv=VCFaNwz6nmAUBS_E_dhpK2Aw@mail.gmail.com>
+ <CAB4CAweonk3RseCO2BdAiyc0XjfU6GC+c3W9H3AZkgrJMKbnVQ@mail.gmail.com>
+ <CAD8Lp46Xmk_m5Y4M_oXigOkf=z-3O+5F3QaA3AQvgAT4DbP4ew@mail.gmail.com>
+ <CAB4CAwfEyS0j+q_hM8u-XHU_rEFq3604gjsSw4d_4mhaiz=G-A@mail.gmail.com>
+ <2634178c3b1fb2c1174eae0d67419e285e2f7c26.camel@sipsolutions.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1527584347-167548-3-git-send-email-vadimp@mellanox.com>
+In-Reply-To: <2634178c3b1fb2c1174eae0d67419e285e2f7c26.camel@sipsolutions.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, ivecera@redhat.com
+To: Benjamin Berg <benjamin@sipsolutions.net>
+Cc: Chris Chiu <chiu@endlessm.com>, Daniel Drake <drake@endlessm.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, Jian-Hong Pan <jian-hong@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 29, 2018 at 08:59:07AM +0000, Vadim Pasternak wrote:
-> Add documentation for mlxreg-io driver sysfs interfaces for user space
-> access to system's power resets control, reset causes monitoring,
-> programmable devices version reading and devices selection control.
+On Mon, Jun 04, 2018 at 11:27:43AM +0200, Benjamin Berg wrote:
+> Hi,
 > 
-> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-
-Hi Vadim,
-
-You mentioned that these can vary by platform, I presume that means that
-any given platform will present a subset of these attributes - but that
-all possible attributes are documented here. Is that correct?
-
-> ---
-> v4:
->  Comments pointed out by Greg:
->  Add Documentation/ABI/ entries for the new sysfs files.
-> ---
->  Documentation/ABI/stable/sysfs-driver-mlxreg-io | 51 +++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> On Thu, 2018-05-24 at 16:33 +0800, Chris Chiu wrote:
+> > I've made my change to set the brightness level directly in the
+> > driver, but the
+> > OSD doesn't show correctly correspond to the level value. The brightness shows
+> > OK in /sys/class/led/xxxx/brighness but the OSD always shows level 0. I thought
+> > GNOME should read the brightness from /sys before showing OSD?
 > 
-> diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> new file mode 100644
-> index 0000000..fcd659e
-> --- /dev/null
-> +++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> @@ -0,0 +1,51 @@
-> +What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
-> +							cause_aux_pwr_or_ref
-> +							cause_asic_thermal
-> +							cause_hotswap_or_wd
-> +							cause_fw_reset
-> +							cause_long_pb
-> +							cause_main_pwr_fail
-> +							cause_short_pb
-> +							cause_sw_reset
+> Sorry for the late response.
+> 
+> There is a special mechanism to report that the HW changed the
+> brightness. This works using the "brightness_hw_changed" sysfs
+> attribute. So you will need to set the LED_BRIGHT_HW_CHANGED flag on
+> the LED and then call led_classdev_notify_brightness_hw_changed to make
+> it work.
+> 
+> Userspace should correctly show the OSD when this is done.
 
-These property names do not seem to follow any kind of logical pattern
-with respect to abbreviation. Starting with "cause_" made me think they
-were event generators at first... Of course, who wants to be able to
-generate an asic thermal shutdown from sysfs... ;-)
-
-The only thing that might make more sense to *me* would be to replace
-"cause" with "reset". Not required. I'll leave it to you, you may have
-good reason for the names chosen.
-
-> +Date:		May 2018
-> +KernelVersion:	4.18
-> +Contact:	Vadim Pasternak <vadimpmellanox.com>
-> +Description:	These files show the system reset cause, as following: power
-> +		auxiliary outage or power refresh, ASIC thermal shutdown,
-> +		hotswap or watchdog, firmware reset, long press power button,
-> +		short press power button, software reset. Value 1 in file means
-> +		this is reset cause, 0 - otherwise. Only one of the above
-> +		causes could be 1 at the same time, representing only last
-> +		reset cause.
-> +
-> +		The files are read only.
-> +
-> +What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
-> +							cpld1_version
-> +							cpld2_version
-> +Date:		May 2018
-> +KernelVersion:	4.18
-> +Contact:	Vadim Pasternak <vadimpmellanox.com>
-> +Description:	These files show with which CPLD versions have been burned
-> +		on carrier and switch boards.
-> +
-> +		The files are read only.
-> +
-> +What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/select_iio
-> +Date:		May 2018
-> +KernelVersion:	4.18
-> +Contact:	Vadim Pasternak <vadimpmellanox.com>
-> +Description:	This file allows iio devices selection.
-> +
-> +		The file is read/write.
-> +
-
-Some description is appropriate here for what values it accepts and how
-it is intended to be used.
-
-> +What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/psu1_on
-> +		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/psu2_on
-> +		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/pwr_cycle
-> +Date:		May 2018
-> +KernelVersion:	4.18
-> +Contact:	Vadim Pasternak <vadimpmellanox.com>
-> +Description:	These files allow assert system's power cycling and PS units
-> +		on/off switching.
-
-This Description is awkward. Consider:
-
-These files allow asserting system power cycling and switching power
-supply units on and off.
-
-> +		The files are write only.
-
-Please provide usage and resulting behavior.
+This makes sense. Userspace can't be aware of every platforms sys files,
+so there needs to be a common mechanism. LED_BRIGHT_HW_CHANGED makes
+sense.
 
 -- 
 Darren Hart
