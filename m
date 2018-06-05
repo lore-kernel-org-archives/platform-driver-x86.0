@@ -1,60 +1,66 @@
-From: Chris Chiu <chiu@endlessm.com>
+From: Hans de Goede <hdegoede@redhat.com>
 Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: Call new led hw_changed API
  on kbd brightness change
-Date: Tue, 5 Jun 2018 11:18:32 +0800
-Message-ID: <CAB4CAwc-J3+xaXzKKpFc-UMeuCsX8zbs0S7-a82x2LJcD5r7jA@mail.gmail.com>
-References: <20180604123238.82200-1-chiu@endlessm.com> <ea0b7233-da00-ee24-5138-9f49a63e4a5a@redhat.com>
+Date: Tue, 5 Jun 2018 09:35:04 +0200
+Message-ID: <85865f59-18bc-fb41-3a9d-30570647ec8e@redhat.com>
+References: <20180604123238.82200-1-chiu@endlessm.com>
+ <ea0b7233-da00-ee24-5138-9f49a63e4a5a@redhat.com>
  <CAD8Lp45FmOMK3B537sKfnC3STtxwspNdoRVKTyaoDnsJ3EMEtg@mail.gmail.com>
- <bad0e19f-e994-110e-fce9-b614233e66aa@redhat.com> <20180605023124.GE47042@localhost.localdomain>
+ <bad0e19f-e994-110e-fce9-b614233e66aa@redhat.com>
+ <20180605023124.GE47042@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180605023124.GE47042@localhost.localdomain>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Daniel Drake <drake@endlessm.com>, Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Linux Upstreaming Team <linux@endlessm.com>, Bastien Nocera <hadess@hadess.net>, Benjamin Berg <benjamin@sipsolutions.net>
+Cc: Daniel Drake <drake@endlessm.com>, Chris Chiu <chiu@endlessm.com>, Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Linux Upstreaming Team <linux@endlessm.com>, Bastien Nocera <hadess@hadess.net>, Benjamin Berg <benjamin@sipsolutions.net>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jun 5, 2018 at 10:31 AM, Darren Hart <dvhart@infradead.org> wrote:
+Hi,
+
+On 05-06-18 04:31, Darren Hart wrote:
 > On Mon, Jun 04, 2018 at 04:23:04PM +0200, Hans de Goede wrote:
 >> Hi,
 >>
 >> On 04-06-18 15:51, Daniel Drake wrote:
->> > On Mon, Jun 4, 2018 at 7:22 AM, Hans de Goede <hdegoede@redhat.com> wrote:
->> > > Is this really a case of the hardware itself processing the
->> > > keypress and then changing the brightness *itself* ?
->> > >
->> > >  From the "[PATCH 2/2] platform/x86: asus-wmi: Add keyboard backlight
->> > > toggle support" patch I get the impression that the driver is
->> > > modifying the brightness from within the kernel rather then the
->> > > keyboard controller are ACPI embeddec-controller doing it itself.
->> > >
->> > > If that is the case then the right fix is for the driver to stop
->> > > mucking with the brighness itself, it should simply report the
->> > > right keyboard events and export a led interface and then userspace
->> > > will do the right thing (and be able to offer flexible policies
->> > > to the user).
->> >
->> > Before this modification, the driver reports the brightness keypresses
->> > to userspace and then userspace can respond by changing the brightness
->> > level, as you describe.
->> >
->> > You are right in that the hardware doesn't change the brightness
->> > directly itself, which is the normal usage of LED_BRIGHT_HW_CHANGED.
->> >
->> > However this approach was suggested by Benjamin Berg and Bastien
->> > Nocera in the thread: Re: [PATCH v2] platform/x86: asus-wmi: Add
->> > keyboard backlight toggle support
->> > https://marc.info/?l=linux-kernel&m=152639169210655&w=2
->> >
->> > The issue is that we need to support a new "keyboard backlight
->> > brightness cycle" key (in the patch that follows this one) which
->> > doesn't fit into any definitions of keys recognised by the kernel and
->> > likewise there's no userspace code to handle it.
->> >
->> > If preferred we could leave the standard brightness keys behaving as
->> > they are (input events) and make the new special key type directly
->> > handled by the kernel?
+>>> On Mon, Jun 4, 2018 at 7:22 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+>>>> Is this really a case of the hardware itself processing the
+>>>> keypress and then changing the brightness *itself* ?
+>>>>
+>>>>   From the "[PATCH 2/2] platform/x86: asus-wmi: Add keyboard backlight
+>>>> toggle support" patch I get the impression that the driver is
+>>>> modifying the brightness from within the kernel rather then the
+>>>> keyboard controller are ACPI embeddec-controller doing it itself.
+>>>>
+>>>> If that is the case then the right fix is for the driver to stop
+>>>> mucking with the brighness itself, it should simply report the
+>>>> right keyboard events and export a led interface and then userspace
+>>>> will do the right thing (and be able to offer flexible policies
+>>>> to the user).
+>>>
+>>> Before this modification, the driver reports the brightness keypresses
+>>> to userspace and then userspace can respond by changing the brightness
+>>> level, as you describe.
+>>>
+>>> You are right in that the hardware doesn't change the brightness
+>>> directly itself, which is the normal usage of LED_BRIGHT_HW_CHANGED.
+>>>
+>>> However this approach was suggested by Benjamin Berg and Bastien
+>>> Nocera in the thread: Re: [PATCH v2] platform/x86: asus-wmi: Add
+>>> keyboard backlight toggle support
+>>> https://marc.info/?l=linux-kernel&m=152639169210655&w=2
+>>>
+>>> The issue is that we need to support a new "keyboard backlight
+>>> brightness cycle" key (in the patch that follows this one) which
+>>> doesn't fit into any definitions of keys recognised by the kernel and
+>>> likewise there's no userspace code to handle it.
+>>>
+>>> If preferred we could leave the standard brightness keys behaving as
+>>> they are (input events) and make the new special key type directly
+>>> handled by the kernel?
 >>
 >> I'm sorry that Benjamin and Bastien steered you in this direction,
 >> IMHO none of it should be handled in the kernel.
@@ -76,32 +82,46 @@ On Tue, Jun 5, 2018 at 10:31 AM, Darren Hart <dvhart@infradead.org> wrote:
 >> touched for x seconds. This would seriously get in the way of that.
 >>
 >> So sorry, but NACK to this series.
->
+> 
 > So if instead of modifying the LED value, the kernel platform drivers
 > converted the TOGGLE into a cycle even by converting to an UP event
 > based on awareness of the plaform specific max value and the read
 > current value, leaving userspace to act on the TOGGLE/UP events - would
 > that be preferable?
->
+
+I was thinking about doing that as a workaround myself, but I'm not sure
+that is a good idea (because of e.g. races with userspace auto-correcting
+the brightness based on ambient light and/or keyboard activity).
+
+As I see it there are 2 proper solutions to this:
+
+1) Make userspace treat KEY_KBDILLUMTOGGLE as a cycle key, this is
+what the kbd-backlight on most laptops with a single hotkey (*) does
+in cases where this is handled in firmware, rather then left to the
+OS. The handled in firmware is the case which I created the
+led_classdev_notify_brightness_hw_changed() API for. This would be
+my preferred solution and I believe that Benjamin is discussing this
+with Bastien ATM.
+
+2) Add a new KEY_KBDILLUMCYCLE event and send that for the TOGGLE code
+on these laptops.
+
+Regards,
+
+Hans
+
+
+
+*) Rather then separate up / down hotkeys
+
+
+> 
 > Something like:
->
->         if (code == TOGGLE && ledval < ledmax)
->                 code = UP;
->
->         sparse_keymap_report_event(..., code, ...)
->
+> 
+> 	if (code == TOGGLE && ledval < ledmax)
+> 		code = UP;
+> 
+> 	sparse_keymap_report_event(..., code, ...)
+> 
 > }
-> --
-> Darren Hart
-> VMware Open Source Technology Center
-
-That's what I was trying to do in  [PATCH v2] platform/x86: asus-wmi: Add
-keyboard backlight toggle support. However, that brought another problem
-discussed in the thread.
-https://marc.info/?l=linux-kernel&m=152639169210655&w=2
-
-So I moved the brightness change in the driver without passing to userspace.
-Per Hans, seems there're some other concerns and I also wonder if the
-TOGGLE event happens in ASUS HID (asus-hid.c) which also convert and
-pass the keycode to userspace but no TOGGLE key support yet What should
-we do then?
+> 
