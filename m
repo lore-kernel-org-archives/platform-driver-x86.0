@@ -1,122 +1,174 @@
-From: Benjamin Berg <benjamin@sipsolutions.net>
-Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: Call new led hw_changed API
- on kbd brightness change
-Date: Tue, 05 Jun 2018 12:46:46 +0200
-Message-ID: <cfb6ff791a9034f8ade738085475e946b3d7519b.camel@sipsolutions.net>
-References: <20180604123238.82200-1-chiu@endlessm.com>
-         <ea0b7233-da00-ee24-5138-9f49a63e4a5a@redhat.com>
-         <CAD8Lp45FmOMK3B537sKfnC3STtxwspNdoRVKTyaoDnsJ3EMEtg@mail.gmail.com>
-         <bad0e19f-e994-110e-fce9-b614233e66aa@redhat.com>
-         <20180605023124.GE47042@localhost.localdomain>
-         <CAB4CAwc-J3+xaXzKKpFc-UMeuCsX8zbs0S7-a82x2LJcD5r7jA@mail.gmail.com>
-         <38cb3527-8480-bdb9-a5d9-b601bc494a5f@redhat.com>
-         <71df09bc89619aba975147e6b07920f1dfc2f46f.camel@hadess.net>
-         <cd6a5d86-1fdb-2561-1e29-0553be53c41a@redhat.com>
-         <94789b55b88ae5a296e1fca3b0311318e7b507ee.camel@hadess.net>
-         <0443419b-3147-163b-374d-bb8651b08837@redhat.com>
-         (sfid-20180605_123103_271620_F1F8BDCF)
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: RE: [PATCH v4 8/8] Documentation/ABI: Add documentation mlxreg-io
+ sysfs interfaces
+Date: Tue, 5 Jun 2018 11:00:38 +0000
+Message-ID: <HE1PR0502MB3753C857729A06149F5EE35BA2660@HE1PR0502MB3753.eurprd05.prod.outlook.com>
+References: <1527584347-167548-1-git-send-email-vadimp@mellanox.com>
+ <1527584347-167548-3-git-send-email-vadimp@mellanox.com>
+ <20180605015444.GB47042@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-QtbsNiEpvSwUb0UXili9"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0443419b-3147-163b-374d-bb8651b08837@redhat.com> (sfid-20180605_123103_271620_F1F8BDCF)
+In-Reply-To: <20180605015444.GB47042@localhost.localdomain>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Bastien Nocera <hadess@hadess.net>, Chris Chiu <chiu@endlessm.com>, Darren Hart <dvhart@infradead.org>
-Cc: Daniel Drake <drake@endlessm.com>, Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Linux Upstreaming Team <linux@endlessm.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, Michael Shych <michaelsh@mellanox.com>, "ivecera@redhat.com" <ivecera@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
 
---=-QtbsNiEpvSwUb0UXili9
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hey,
-
-On Tue, 2018-06-05 at 12:31 +0200, Hans de Goede wrote:
-> On 05-06-18 12:14, Bastien Nocera wrote:
-> > On Tue, 2018-06-05 at 12:05 +0200, Hans de Goede wrote:
-> > > On 05-06-18 11:58, Bastien Nocera wrote:
-> > > > [SNIP]
-> > >=20
-> > > Ok, so what are you suggestion, do you really want to hardcode
-> > > the cycle behavior in the kernel as these 2 patches are doing,
-> > > without any option to intervene from userspace?
-> > >=20
-> > > As mentioned before in the thread there are several example
-> > > of the kernel deciding to handle key-presses itself, putting
-> > > policy in the kernel and they have all ended poorly (think
-> > > e.g. rfkill, acpi-video dealing with LC brightnesskey presses
-> > > itself).
-> > >=20
-> > > I guess one thing we could do here is code out both solutions,
-> > > have a module option which controls if we:
-> > >=20
-> > > 1) Handle this in the kernel as these patches do
-> > > 2) Or send a new KEY_KBDILLUMCYCLE event
-> > >=20
-> > > Combined with a Kconfig option to select which is the default
-> > > behavior. Then Endless can select 1 for now and then in
-> > > Fedora (which defaults to Wayland now) we could default to
-> > > 2. once all the code for handling 2 is in place.
-> > >=20
-> > > This is ugly (on the kernel side) but it might be the best
-> > > compromise we can do.
-> >=20
-> > I don't really mind which option is used, I'm listing the problems with
-> > the different options. If you don't care about Xorg, then definitely go
-> > for adding a new key. Otherwise, processing it in the kernel is the
-> > least ugly, especially given that the key goes through the same driver
-> > that controls the brightness anyway. There's no crazy cross driver
-> > interaction as there was in the other cases you listed.
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Tuesday, June 05, 2018 4:55 AM
+> To: Vadim Pasternak <vadimp@mellanox.com>
+> Cc: andy.shevchenko@gmail.com; gregkh@linuxfoundation.org; linux-
+> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; jiri@resnull=
+i.us;
+> Michael Shych <michaelsh@mellanox.com>; ivecera@redhat.com
+> Subject: Re: [PATCH v4 8/8] Documentation/ABI: Add documentation mlxreg-i=
+o
+> sysfs interfaces
 >=20
-> Unfortunately not caring about Xorg is not really an option.
+> On Tue, May 29, 2018 at 08:59:07AM +0000, Vadim Pasternak wrote:
+> > Add documentation for mlxreg-io driver sysfs interfaces for user space
+> > access to system's power resets control, reset causes monitoring,
+> > programmable devices version reading and devices selection control.
+> >
+> > Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 >=20
-> Ok, new idea, how about we make g-s-d behavior upon detecting a
-> KEY_KBDILLUMTOGGLE event configurable, if we're on a Mac do a
-> toggle, otherwise do a cycle.
->
-> Or we could do this through hwdb, then we could add a hwdb entry
-> for this laptop setting the udev property to do a cycle instead of
-> a toggle on receiving the keypress.
+> Hi Vadim,
+>=20
+> You mentioned that these can vary by platform, I presume that means that =
+any
+> given platform will present a subset of these attributes - but that all p=
+ossible
+> attributes are documented here. Is that correct?
 
-If we are adding hwdb entries anyway to control the userspace
-interpretation of the TOGGLE key, then we could also add the new CYCLE
-key and explicitly re-map it to TOGGLE. That requires slightly more
-logic in hwdb, but it does mean that we could theoretically just drop
-the workaround if we ever stop caring about Xorg.
+Hi Darren,
 
-> I guess alternatively I could live with hardcoding this in the
-> kernel as these 2 patches do, but that solves it just for *this*
-> laptop, I've a feeling that if we do that we end up with similar
-> code in all laptop vendor drivers under drivers/platform/x86
-> soon.  Which really is the acpi_video.brightness_event thing
-> again, where the kernel would handle brightness key-presses
-> but only if the acpi_video backlight interface was in use
-> and not on models with a vendor specific or native-hardware
-> backlight driver.  Hmm, so writing this, I'm still quite sure
-> the kernel approach is actually a bad idea.
+Thank you for review.
+These are mostly all attributes, that should be exposed.
+I add two extra for the coming version.
 
-Benjamin
---=-QtbsNiEpvSwUb0UXili9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Maybe for the future system it could be slightly extended.
 
------BEGIN PGP SIGNATURE-----
+Also we have writable attribute for BIOS flash boot selection, which
+I am still not sure we want expose.
 
-iQIzBAABCAAdFiEED2NO4vMS33W8E4AFq6ZWhpmFY3AFAlsWahYACgkQq6ZWhpmF
-Y3DsvQ//WIq+C0ldZo05gfwEdsv8hIO/Ih2QBO+tgEXO1QpZ1GIZ3ym+Q758FsxM
-PbtJduBRTyCo8oAKYHr/m3EsQbHrXJ3tS1DpGgUnMwy4zbGGBxHkohccSZYfdazx
-2aP5rpHt6/QWJC5EoJzUpii5/l4lhThXYG9F60Z6m5z6hZ5gPi9BjYyepqmAWKYr
-ZhoNtDbfOupmaCv6SEDomrIz3RpWO4zobUNveG4TAuxwQqhQ7zBqEI8Qdc/4PWqs
-6F/iVQ6VV4N1CkT9H3+6U2fwzVfiNBdIUTWLOi4HBQ6//ozjuIb3xJItEgshVK2B
-VU4GkRhkYj1x1Kg2SpS5tqtw2DaW/YVf8Y8HZMzAjERHP6uc0rSMT4O/LDj4VAKE
-ps6g2dMAr7eK/EpdlwRhH3dzHcuaV2PHlVi7hrnc1G8ckDnb25mSPMIfNCuJ4/6A
-hlpErQrtjzcPhK0o9bCCUjilDZE/2ApThWtBIjXs9XGGn98i2RW5iKhaUrgsgNEb
-zAEp1r/DElvEoF8/fwbZIIuIICtPxo7tEF3yeQVSdO1VfxqJt48wMUM1GFu7LASk
-7ImINXe+o1tRFxL8GhjVRWcn7Tq1yxk8AKXG1R7bk34jkzGEjYAbc3wS+42bcagn
-MUKx2zy7A1EE1d1A8xl7WJ//r+Af13zipCSdddELQImvagfmaCg=
-=KnOm
------END PGP SIGNATURE-----
+Thanks,
+Vadim.
 
---=-QtbsNiEpvSwUb0UXili9--
+>=20
+> > ---
+> > v4:
+> >  Comments pointed out by Greg:
+> >  Add Documentation/ABI/ entries for the new sysfs files.
+> > ---
+> >  Documentation/ABI/stable/sysfs-driver-mlxreg-io | 51
+> > +++++++++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> >  create mode 100644 Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> >
+> > diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> > b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> > new file mode 100644
+> > index 0000000..fcd659e
+> > --- /dev/null
+> > +++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> > @@ -0,0 +1,51 @@
+> > +What:		/sys/devices/platform/mlxplat/mlxreg-
+> io/hwmon/hwmon*/
+> > +
+> 	cause_aux_pwr_or_ref
+> > +							cause_asic_thermal
+> > +
+> 	cause_hotswap_or_wd
+> > +							cause_fw_reset
+> > +							cause_long_pb
+> > +							cause_main_pwr_fail
+> > +							cause_short_pb
+> > +							cause_sw_reset
+>=20
+> These property names do not seem to follow any kind of logical pattern wi=
+th
+> respect to abbreviation. Starting with "cause_" made me think they were e=
+vent
+> generators at first... Of course, who wants to be able to generate an asi=
+c
+> thermal shutdown from sysfs... ;-)
+>=20
+> The only thing that might make more sense to *me* would be to replace
+> "cause" with "reset". Not required. I'll leave it to you, you may have go=
+od
+> reason for the names chosen.
+>=20
+> > +Date:		May 2018
+> > +KernelVersion:	4.18
+> > +Contact:	Vadim Pasternak <vadimpmellanox.com>
+> > +Description:	These files show the system reset cause, as following: po=
+wer
+> > +		auxiliary outage or power refresh, ASIC thermal shutdown,
+> > +		hotswap or watchdog, firmware reset, long press power
+> button,
+> > +		short press power button, software reset. Value 1 in file means
+> > +		this is reset cause, 0 - otherwise. Only one of the above
+> > +		causes could be 1 at the same time, representing only last
+> > +		reset cause.
+> > +
+> > +		The files are read only.
+> > +
+> > +What:		/sys/devices/platform/mlxplat/mlxreg-
+> io/hwmon/hwmon*/
+> > +							cpld1_version
+> > +							cpld2_version
+> > +Date:		May 2018
+> > +KernelVersion:	4.18
+> > +Contact:	Vadim Pasternak <vadimpmellanox.com>
+> > +Description:	These files show with which CPLD versions have been burne=
+d
+> > +		on carrier and switch boards.
+> > +
+> > +		The files are read only.
+> > +
+> > +What:		/sys/devices/platform/mlxplat/mlxreg-
+> io/hwmon/hwmon*/select_iio
+> > +Date:		May 2018
+> > +KernelVersion:	4.18
+> > +Contact:	Vadim Pasternak <vadimpmellanox.com>
+> > +Description:	This file allows iio devices selection.
+> > +
+> > +		The file is read/write.
+> > +
+>=20
+> Some description is appropriate here for what values it accepts and how i=
+t is
+> intended to be used.
+>=20
+> > +What:		/sys/devices/platform/mlxplat/mlxreg-
+> io/hwmon/hwmon*/psu1_on
+> > +		/sys/devices/platform/mlxplat/mlxreg-
+> io/hwmon/hwmon*/psu2_on
+> > +		/sys/devices/platform/mlxplat/mlxreg-
+> io/hwmon/hwmon*/pwr_cycle
+> > +Date:		May 2018
+> > +KernelVersion:	4.18
+> > +Contact:	Vadim Pasternak <vadimpmellanox.com>
+> > +Description:	These files allow assert system's power cycling and PS un=
+its
+> > +		on/off switching.
+>=20
+> This Description is awkward. Consider:
+>=20
+> These files allow asserting system power cycling and switching power supp=
+ly
+> units on and off.
+>=20
+> > +		The files are write only.
+>=20
+> Please provide usage and resulting behavior.
+>=20
+> --
+> Darren Hart
+> VMware Open Source Technology Center
