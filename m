@@ -1,52 +1,63 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v11 03/13] x86, sgx: add SGX definitions to cpufeature
-Date: Fri,  8 Jun 2018 19:09:38 +0200
-Message-ID: <20180608171216.26521-4-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v11 04/13] x86, sgx: add SGX definitions to msr-index.h
+Date: Fri,  8 Jun 2018 19:09:39 +0200
+Message-ID: <20180608171216.26521-5-jarkko.sakkinen@linux.intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Kai Huang <kai.huang@linux.intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, David Woodhouse <dwmw@amazon.co.uk>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Tom Lendacky <thomas.lendacky@amd.com>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, "open list:X86 ARCHITECTURE 32-BIT AND
-        64-BIT" <linux-kernel@vger.kernel.org>
+Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Haim Cohen <haim.cohen@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Tom Lendacky <thomas.lendacky@amd.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, "open list:X86 ARCHITECTURE 32-BIT AND
+        64-BIT" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Kai Huang <kai.huang@linux.intel.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Added X86_FEATURE_SGX and X86_FEATURE_SGX_LC definitions that define the
-bits CPUID level 7 bits for determining whether the CPU supports SGX and
-launch configuration other than the Intel proprietary key. If this the
-case, IA32_SGXLEPUBKEYHASHn MSRs (0 < n < 4) are available for defining
-the root key for enclaves.
+ENCLS and ENCLU are usable if and only if SGX_ENABLE is set and After
+SGX is activated the IA32_SGXLEPUBKEYHASHn MSRs are writable if
+SGX_LC_WR is set and the feature control is locked.
 
-Signed-off-by: Kai Huang <kai.huang@linux.intel.com>
+SGX related bits in IA32_FEATURE_CONTROL cannot be set before SGX is
+activated by the pre-boot firmware. SGX activation is triggered by
+setting bit 0 in the MSR 0x7a. Until SGX is activated, the LE hash MSRs
+are writable to allow pre-boot firmware to lock down the LE root key
+with a non-Intel value.
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Haim Cohen <haim.cohen@intel.com>
 Tested-by: Serge Ayoun <serge.ayoun@intel.com>
 Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- arch/x86/include/asm/cpufeatures.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/include/asm/msr-index.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index fb00a2fca990..54d5269e1b86 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -234,6 +234,7 @@
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
- #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
- #define X86_FEATURE_TSC_ADJUST		( 9*32+ 1) /* TSC adjustment MSR 0x3B */
-+#define X86_FEATURE_SGX			( 9*32+ 2) /* Software Guard Extensions */
- #define X86_FEATURE_BMI1		( 9*32+ 3) /* 1st group bit manipulation extensions */
- #define X86_FEATURE_HLE			( 9*32+ 4) /* Hardware Lock Elision */
- #define X86_FEATURE_AVX2		( 9*32+ 5) /* AVX2 instructions */
-@@ -327,6 +328,7 @@
- #define X86_FEATURE_LA57		(16*32+16) /* 5-level page tables */
- #define X86_FEATURE_RDPID		(16*32+22) /* RDPID instruction */
- #define X86_FEATURE_CLDEMOTE		(16*32+25) /* CLDEMOTE instruction */
-+#define X86_FEATURE_SGX_LC		(16*32+30) /* supports SGX launch configuration */
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index fda2114197b3..a7355fb7344f 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -479,6 +479,8 @@
+ #define FEATURE_CONTROL_LOCKED				(1<<0)
+ #define FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX	(1<<1)
+ #define FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX	(1<<2)
++#define FEATURE_CONTROL_SGX_ENABLE                      (1<<18)
++#define FEATURE_CONTROL_SGX_LE_WR			(1<<17)
+ #define FEATURE_CONTROL_LMCE				(1<<20)
  
- /* AMD-defined CPU features, CPUID level 0x80000007 (EBX), word 17 */
- #define X86_FEATURE_OVERFLOW_RECOV	(17*32+ 0) /* MCA overflow recovery support */
+ #define MSR_IA32_APICBASE		0x0000001b
+@@ -545,6 +547,12 @@
+ #define PACKAGE_THERM_INT_LOW_ENABLE		(1 << 1)
+ #define PACKAGE_THERM_INT_PLN_ENABLE		(1 << 24)
+ 
++/* Intel SGX MSRs */
++#define MSR_IA32_SGXLEPUBKEYHASH0	0x0000008C
++#define MSR_IA32_SGXLEPUBKEYHASH1	0x0000008D
++#define MSR_IA32_SGXLEPUBKEYHASH2	0x0000008E
++#define MSR_IA32_SGXLEPUBKEYHASH3	0x0000008F
++
+ /* Thermal Thresholds Support */
+ #define THERM_INT_THRESHOLD0_ENABLE    (1 << 15)
+ #define THERM_SHIFT_THRESHOLD0        8
 -- 
 2.17.0
