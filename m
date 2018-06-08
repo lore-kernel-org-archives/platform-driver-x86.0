@@ -1,42 +1,102 @@
 From: Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v11 06/13] crypto: aesni: add minimal build option for SGX
- LE
-Date: Fri, 8 Jun 2018 10:27:37 -0700
-Message-ID: <00750c65-27b5-7851-19f5-9a712686dfb2@intel.com>
+Subject: Re: [PATCH v11 07/13] x86, sgx: detect Intel SGX
+Date: Fri, 8 Jun 2018 10:36:14 -0700
+Message-ID: <4fc3b6b0-6e4b-3d5f-4d54-2bf7539c7a17@intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-7-jarkko.sakkinen@linux.intel.com>
+ <20180608171216.26521-8-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180608171216.26521-7-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20180608171216.26521-8-jarkko.sakkinen@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:CRYPTO API" <linux-crypto@vger.kernel.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andi Kleen <ak@linux.intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 06/08/2018 10:09 AM, Jarkko Sakkinen wrote:
-> --- a/arch/x86/crypto/aesni-intel_asm.S
-> +++ b/arch/x86/crypto/aesni-intel_asm.S
-> @@ -45,6 +45,8 @@
->  #define MOVADQ	movaps
->  #define MOVUDQ	movups
->  
-> +#ifndef AESNI_INTEL_MINIMAL
-> +
->  #ifdef __x86_64__
->  
->  # constants in mergeable sections, linker can reorder and merge
-> @@ -133,6 +135,8 @@ ALL_F:      .octa 0xffffffffffffffffffffffffffffffff
->  #define keysize 2*15*16(%arg1)
->  #endif
->  
-> +#endif /* AESNI_INTEL_MINIMAL */
-> +
+> +config INTEL_SGX_CORE
+> +	prompt "Intel SGX core functionality
+> +	depends on X86_64 && CPU_SUP_INTEL
+> +	help
+> +	Intel Software Guard eXtensions (SGX) is a set of CPU instructions
+> +	that allows ring 3 applications to create enclaves; private regions
+> +	of memory that are protected, by hardware, from unauthorized access
+> +	and/or modification.
 
-I'd really prefer that these get moved into a separate file rather than
-a scattered set of #ifdefs.  This just seem fragile to me.
+That semicolon needs to be a colon.  The second half of that sentence is
+not a stand-alone statement.
 
-Can we have a "aesni-intel_asm-minimal.S"?  Or, at least bunch the
-minimal set of things *together*?
+> +	This option enables kernel recognition of SGX, high-level management
+> +	of the Enclave Page Cache (EPC), tracking and writing of SGX Launch
+> +	Enclave Hash MSRs, and allows for virtualization of SGX via KVM. By
+> +	iteslf, this option does not provide SGX support to userspace.
+> +
+> +	For details, see Documentation/x86/intel_sgx.rst
+> +
+> +	If unsure, say N.
+> +
+>  config EFI
+>  	bool "EFI runtime service support"
+>  	depends on ACPI
+> diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
+> new file mode 100644
+> index 000000000000..fa3e6e0eb8af
+> --- /dev/null
+> +++ b/arch/x86/include/asm/sgx.h
+> @@ -0,0 +1,25 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> +// Copyright(c) 2016-18 Intel Corporation.
+> +//
+> +// Authors:
+> +//
+> +// Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> +// Suresh Siddha <suresh.b.siddha@intel.com>
+> +// Sean Christopherson <sean.j.christopherson@intel.com>
+> +
+> +#ifndef _ASM_X86_SGX_H
+> +#define _ASM_X86_SGX_H
+> +
+> +#include <linux/types.h>
+> +
+> +#define SGX_CPUID 0x12
+
+Hey, I just saw 0x12 as a magic, hard-coded number earlier in these
+patches.  It seems cruel to hard-code it, and then also have a #define
+that isn't used.
+
+> +enum sgx_cpuid {
+> +	SGX_CPUID_CAPABILITIES	= 0,
+> +	SGX_CPUID_ATTRIBUTES	= 1,
+> +	SGX_CPUID_EPC_BANKS	= 2,
+> +};
+
+These are cpuid *leaves*, right?  Please make this clear that these are
+hardware-defined values and not some kind of software construct.
+
+> +bool sgx_enabled __ro_after_init = false;
+> +EXPORT_SYMBOL(sgx_enabled);
+> +
+> +static __init bool sgx_is_enabled(void)
+> +{
+> +	unsigned long fc;
+> +
+> +	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+> +		return false;
+
+Not necessary. CPUID does this part for you.
+
+> +	if (!boot_cpu_has(X86_FEATURE_SGX))
+> +		return false;
+> +
+> +	if (!boot_cpu_has(X86_FEATURE_SGX1))
+> +		return false;
+> +
+> +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
+> +	if (!(fc & FEATURE_CONTROL_LOCKED))
+> +		return false;
+> +
+> +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE))
+> +		return false;
+
+Comments, please.  Why would this happen?  What would it mean?
