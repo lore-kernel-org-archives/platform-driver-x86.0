@@ -1,38 +1,40 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
- launch enclave
-Date: Fri, 8 Jun 2018 11:50:14 -0700
-Message-ID: <CALCETrWSDVdrrVbvEbOH06OQcBkGF-M9R5WQkQ0r4qK2oAL3vQ@mail.gmail.com>
-References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com> <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v11 10/13] intel_sgx: driver for Intel Software Guard
+ Extensions
+Date: Fri, 8 Jun 2018 12:35:51 -0700
+Message-ID: <b4403cf7-ddfa-284a-d61f-ad93b895b097@intel.com>
+References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
+ <20180608171216.26521-11-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20180608171216.26521-11-jarkko.sakkinen@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, andy@infradead.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
+Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 8, 2018 at 10:32 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> The Launch Enclave (LE) generates cryptographic launch tokens for user
-> enclaves. A launch token is used by EINIT to check whether the enclave
-> is authorized to launch or not. By having its own launch enclave, Linux
-> has full control of the enclave launch process.
->
-> LE is wrapped into a user space proxy program that reads enclave
-> signatures outputs launch tokens. The kernel-side glue code is
-> implemented by using the user space helper framework.  The IPC between
-> the LE proxy program and kernel is handled with an anonymous inode.
->
-> The commit also adds enclave signing tool that is used by kbuild to
-> measure and sign the launch enclave. CONFIG_INTEL_SGX_SIGNING_KEY points
-> to a PEM-file for the 3072-bit RSA key that is used as the LE public key
-> pair. The default location is:
+> +#define sgx_pr_ratelimited(level, encl, fmt, ...)			\
+> +	pr_ ## level ## _ratelimited("[%d:0x%p] " fmt,			\
+> +				     pid_nr((encl)->tgid),		\
+> +				     (void *)(encl)->base, ##__VA_ARGS__)
+> +
+> +#define sgx_dbg(encl, fmt, ...) \
+> +	sgx_pr_ratelimited(debug, encl, fmt, ##__VA_ARGS__)
+> +#define sgx_info(encl, fmt, ...) \
+> +	sgx_pr_ratelimited(info, encl, fmt, ##__VA_ARGS__)
+> +#define sgx_warn(encl, fmt, ...) \
+> +	sgx_pr_ratelimited(warn, encl, fmt, ##__VA_ARGS__)
+> +#define sgx_err(encl, fmt, ...) \
+> +	sgx_pr_ratelimited(err, encl, fmt, ##__VA_ARGS__)
+> +#define sgx_crit(encl, fmt, ...) \
+> +	sgx_pr_ratelimited(crit, encl, fmt, ##__VA_ARGS__)
 
-It might be nice to use the infrastructure that Alexei added for
-bpfilter (the umh_blob stuff) here, which is slated for merging in
-this merge window.
+I thought the pr_* thingies were to keep everyone from having to do this
+in each driver.  Why did you need this?
 
---Andy
+Can you do any better than a 2,000-line patch?  For instance, could you
+break out the memory management portion into its own part and have that
+reviewed by mm folks?  Or the ioctl()'s by device driver folks?
