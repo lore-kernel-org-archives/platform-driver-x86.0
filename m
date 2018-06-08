@@ -1,95 +1,199 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v11 06/13] crypto: aesni: add minimal build option for SGX LE
-Date: Fri,  8 Jun 2018 19:09:41 +0200
-Message-ID: <20180608171216.26521-7-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v11 07/13] x86, sgx: detect Intel SGX
+Date: Fri,  8 Jun 2018 19:09:42 +0200
+Message-ID: <20180608171216.26521-8-jarkko.sakkinen@linux.intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:CRYPTO API" <linux-crypto@vger.kernel.org>, "open list:X86 ARCHITECTURE 32-BIT AND
-        64-BIT" <linux-kernel@vger.kernel.org>
+Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andi Kleen <ak@linux.intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "open list:X86 ARCHITECTURE 32-BIT AND
+        64-BIT" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Allow building a minimal subset of the low-level AESNI functions by
-defining AESNI_INTEL_MINIMAL.  The SGX Launch Enclave will utilize
-a small number of AESNI functions for creating CMACs when generating
-tokens for userspace enclaves.
+Intel(R) SGX is a set of CPU instructions that can be used by applications
+to set aside private regions of code and data. The code outside the enclave
+is disallowed to access the memory inside the enclave by the CPU access
+control.
 
-Reducing the size of the LE is high priority as EPC space is at a
-premium and initializing/measuring EPC pages is extremely slow, and
-defining only the minimal set of AESNI functions reduces the size of
-the in-kernel LE by over 50%.  Because the LE is a (very) non-standard
-build environment, using linker tricks e.g. --gc-sections to remove
-the unused functions is not an option.
-
-Eliminating the unused AESNI functions also eliminates all usage of
-the retpoline macros, e.g. CALL_NOSPEC, which allows the LE linker
-script to assert that the alternatives and retpoline sections don't
-exist in the final binary.  Because the LE's code cannot be patched,
-i.e. retpoline can't be enabled via alternatives, we want to assert
-that we're not expecting a security feature that can't be enabled.
+This commit adds the check for SGX to arch/x86 and a new config option,
+INTEL_SGX_CORE. Exposes a boolean variable 'sgx_enabled' to query whether
+or not the SGX support is available.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- arch/x86/crypto/aesni-intel_asm.S | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/x86/Kconfig                | 19 ++++++++++++
+ arch/x86/include/asm/sgx.h      | 25 ++++++++++++++++
+ arch/x86/include/asm/sgx_pr.h   | 20 +++++++++++++
+ arch/x86/kernel/cpu/Makefile    |  1 +
+ arch/x86/kernel/cpu/intel_sgx.c | 53 +++++++++++++++++++++++++++++++++
+ 5 files changed, 118 insertions(+)
+ create mode 100644 arch/x86/include/asm/sgx.h
+ create mode 100644 arch/x86/include/asm/sgx_pr.h
+ create mode 100644 arch/x86/kernel/cpu/intel_sgx.c
 
-diff --git a/arch/x86/crypto/aesni-intel_asm.S b/arch/x86/crypto/aesni-intel_asm.S
-index e762ef417562..5a0a487466d5 100644
---- a/arch/x86/crypto/aesni-intel_asm.S
-+++ b/arch/x86/crypto/aesni-intel_asm.S
-@@ -45,6 +45,8 @@
- #define MOVADQ	movaps
- #define MOVUDQ	movups
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index c07f492b871a..42015d5366ef 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1925,6 +1925,25 @@ config X86_INTEL_MEMORY_PROTECTION_KEYS
  
-+#ifndef AESNI_INTEL_MINIMAL
+ 	  If unsure, say y.
+ 
++config INTEL_SGX_CORE
++	prompt "Intel SGX core functionality"
++	def_bool n
++	depends on X86_64 && CPU_SUP_INTEL
++	help
++	Intel Software Guard eXtensions (SGX) is a set of CPU instructions
++	that allows ring 3 applications to create enclaves; private regions
++	of memory that are protected, by hardware, from unauthorized access
++	and/or modification.
 +
- #ifdef __x86_64__
- 
- # constants in mergeable sections, linker can reorder and merge
-@@ -133,6 +135,8 @@ ALL_F:      .octa 0xffffffffffffffffffffffffffffffff
- #define keysize 2*15*16(%arg1)
- #endif
- 
-+#endif /* AESNI_INTEL_MINIMAL */
++	This option enables kernel recognition of SGX, high-level management
++	of the Enclave Page Cache (EPC), tracking and writing of SGX Launch
++	Enclave Hash MSRs, and allows for virtualization of SGX via KVM. By
++	iteslf, this option does not provide SGX support to userspace.
 +
- 
- #define STATE1	%xmm0
- #define STATE2	%xmm4
-@@ -506,6 +510,8 @@ _T_16_\@:
- _return_T_done_\@:
- .endm
- 
-+#ifndef AESNI_INTEL_MINIMAL
++	For details, see Documentation/x86/intel_sgx.rst
 +
- #ifdef __x86_64__
- /* GHASH_MUL MACRO to implement: Data*HashKey mod (128,127,126,121,0)
- *
-@@ -1760,6 +1766,7 @@ ENDPROC(aesni_gcm_finalize)
- 
- #endif
- 
-+#endif /* AESNI_INTEL_MINIMAL */
- 
- .align 4
- _key_expansion_128:
-@@ -2031,6 +2038,8 @@ _aesni_enc1:
- 	ret
- ENDPROC(_aesni_enc1)
- 
-+#ifndef AESNI_INTEL_MINIMAL
++	If unsure, say N.
 +
- /*
-  * _aesni_enc4:	internal ABI
-  * input:
-@@ -2840,3 +2849,5 @@ ENTRY(aesni_xts_crypt8)
- ENDPROC(aesni_xts_crypt8)
- 
- #endif
+ config EFI
+ 	bool "EFI runtime service support"
+ 	depends on ACPI
+diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
+new file mode 100644
+index 000000000000..fa3e6e0eb8af
+--- /dev/null
++++ b/arch/x86/include/asm/sgx.h
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
++// Copyright(c) 2016-18 Intel Corporation.
++//
++// Authors:
++//
++// Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
++// Suresh Siddha <suresh.b.siddha@intel.com>
++// Sean Christopherson <sean.j.christopherson@intel.com>
 +
-+#endif /* AESNI_INTEL_MINIMAL */
++#ifndef _ASM_X86_SGX_H
++#define _ASM_X86_SGX_H
++
++#include <linux/types.h>
++
++#define SGX_CPUID 0x12
++
++enum sgx_cpuid {
++	SGX_CPUID_CAPABILITIES	= 0,
++	SGX_CPUID_ATTRIBUTES	= 1,
++	SGX_CPUID_EPC_BANKS	= 2,
++};
++
++extern bool sgx_enabled;
++
++#endif /* _ASM_X86_SGX_H */
+diff --git a/arch/x86/include/asm/sgx_pr.h b/arch/x86/include/asm/sgx_pr.h
+new file mode 100644
+index 000000000000..876dc44c2ccc
+--- /dev/null
++++ b/arch/x86/include/asm/sgx_pr.h
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
++// Copyright(c) 2016-17 Intel Corporation.
++//
++// Authors:
++//
++// Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
++// Suresh Siddha <suresh.b.siddha@intel.com>
++// Serge Ayoun <serge.ayoun@intel.com>
++// Shay Katz-zamir <shay.katz-zamir@intel.com>
++
++#ifndef _ASM_X86_SGX_PR_H
++#define _ASM_X86_SGX_PR_H
++
++#include <linux/printk.h>
++#include <linux/ratelimit.h>
++
++#undef pr_fmt
++#define pr_fmt(fmt) "intel_sgx: " fmt
++
++#endif /* _ASM_X86_SGX_PR_H */
+diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
+index a66229f51b12..9552ff5b4ec3 100644
+--- a/arch/x86/kernel/cpu/Makefile
++++ b/arch/x86/kernel/cpu/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_CPU_SUP_TRANSMETA_32)	+= transmeta.o
+ obj-$(CONFIG_CPU_SUP_UMC_32)		+= umc.o
+ 
+ obj-$(CONFIG_INTEL_RDT)	+= intel_rdt.o intel_rdt_rdtgroup.o intel_rdt_monitor.o intel_rdt_ctrlmondata.o
++obj-$(CONFIG_INTEL_SGX_CORE)		+= intel_sgx.o
+ 
+ obj-$(CONFIG_X86_MCE)			+= mcheck/
+ obj-$(CONFIG_MTRR)			+= mtrr/
+diff --git a/arch/x86/kernel/cpu/intel_sgx.c b/arch/x86/kernel/cpu/intel_sgx.c
+new file mode 100644
+index 000000000000..db6b315334f4
+--- /dev/null
++++ b/arch/x86/kernel/cpu/intel_sgx.c
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
++// Copyright(c) 2016-17 Intel Corporation.
++//
++// Authors:
++//
++// Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
++// Suresh Siddha <suresh.b.siddha@intel.com>
++// Serge Ayoun <serge.ayoun@intel.com>
++// Shay Katz-zamir <shay.katz-zamir@intel.com>
++// Sean Christopherson <sean.j.christopherson@intel.com>
++
++#include <asm/sgx.h>
++#include <asm/sgx_pr.h>
++#include <linux/freezer.h>
++#include <linux/highmem.h>
++#include <linux/kthread.h>
++#include <linux/ratelimit.h>
++#include <linux/sched/signal.h>
++#include <linux/slab.h>
++
++bool sgx_enabled __ro_after_init = false;
++EXPORT_SYMBOL(sgx_enabled);
++
++static __init bool sgx_is_enabled(void)
++{
++	unsigned long fc;
++
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
++		return false;
++
++	if (!boot_cpu_has(X86_FEATURE_SGX))
++		return false;
++
++	if (!boot_cpu_has(X86_FEATURE_SGX1))
++		return false;
++
++	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
++	if (!(fc & FEATURE_CONTROL_LOCKED))
++		return false;
++
++	if (!(fc & FEATURE_CONTROL_SGX_ENABLE))
++		return false;
++
++	return true;
++}
++
++static __init int sgx_init(void)
++{
++	sgx_enabled = sgx_is_enabled();
++	return 0;
++}
++
++arch_initcall(sgx_init);
 -- 
 2.17.0
