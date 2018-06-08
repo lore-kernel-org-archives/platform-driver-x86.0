@@ -1,292 +1,297 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH resend v2] dcdbas: Add support for WSMT ACPI table
-Date: Fri, 8 Jun 2018 16:08:12 -0700
-Message-ID: <20180608230812.GA111314@localhost.localdomain>
-References: <45b8bde6-aaa8-3f3f-0528-81e5e931751c@gmail.com>
- <bc6846e1-2b6d-dcc2-355c-2699aa1607a2@gmail.com>
- <2f071e184b0040198954421d92dcca45@ausx13mpc120.AMER.DELL.COM>
+Subject: Re: [PATCH v5 6/8] platform/mellanox: Introduce support for Mellanox
+ register access driver
+Date: Fri, 8 Jun 2018 16:59:11 -0700
+Message-ID: <20180608235911.GB111314@localhost.localdomain>
+References: <1528203501-129092-1-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2f071e184b0040198954421d92dcca45@ausx13mpc120.AMER.DELL.COM>
+In-Reply-To: <1528203501-129092-1-git-send-email-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com
-Cc: Douglas.Warzecha@dell.com, andy@infradead.org, Stuart.Hayes@dell.com, Jared.Dominguez@dell.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, stuart.w.hayes@gmail.com
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: andy.shevchenko@gmail.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, ivecera@redhat.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 07, 2018 at 04:07:50PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Stuart Hayes [mailto:stuart.w.hayes@gmail.com]
-> > Sent: Thursday, June 7, 2018 11:00 AM
-> > To: Warzecha, Douglas
-> > Cc: Limonciello, Mario; Dominguez, Jared; linux-kernel@vger.kernel.org; platform-
-> > driver-x86@vger.kernel.org
-> > Subject: [PATCH resend v2] dcdbas: Add support for WSMT ACPI table
-> > 
-> > If the WSMT ACPI table is present and indicates that a fixed communication
-> > buffer should be used, use the firmware-specified buffer instead of
-> > allocating a buffer in memory for communications between the dcdbas driver
-> > and firmare.
-> > 
-> > Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> > Tested-by: Mario Limonciello <mario.limonciello@dell.com>
-> > Acked-by: Doug Warzecha <douglas_warzecha@dell.com>
-> > ---
-> > v2 Bumped driver version to 5.6.0-3.3
-> > 
-> > 
-> >  drivers/firmware/Kconfig  |   2 +-
-> >  drivers/firmware/dcdbas.c | 102
-> > +++++++++++++++++++++++++++++++++++++++++++---
-> >  drivers/firmware/dcdbas.h |  11 +++++
-> >  3 files changed, 109 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> > index b7c748248e53..a2bd6092bfa1 100644
-> > --- a/drivers/firmware/Kconfig
-> > +++ b/drivers/firmware/Kconfig
-> > @@ -125,7 +125,7 @@ config DELL_RBU
-> > 
-> >  config DCDBAS
-> >  	tristate "Dell Systems Management Base Driver"
-> > -	depends on X86
-> > +	depends on X86 && ACPI
-> >  	help
-> >  	  The Dell Systems Management Base Driver provides a sysfs interface
-> >  	  for systems management software to perform System Management
-> > diff --git a/drivers/firmware/dcdbas.c b/drivers/firmware/dcdbas.c
-> > index 0bdea60c65dd..1699cfdcefe4 100644
-> > --- a/drivers/firmware/dcdbas.c
-> > +++ b/drivers/firmware/dcdbas.c
-> > @@ -36,12 +36,13 @@
-> >  #include <linux/string.h>
-> >  #include <linux/types.h>
-> >  #include <linux/mutex.h>
-> > +#include <linux/acpi.h>
-> >  #include <asm/io.h>
-> > 
-> >  #include "dcdbas.h"
-> > 
-> >  #define DRIVER_NAME		"dcdbas"
-> > -#define DRIVER_VERSION		"5.6.0-3.2"
-> > +#define DRIVER_VERSION		"5.6.0-3.3"
-> >  #define DRIVER_DESCRIPTION	"Dell Systems Management Base Driver"
-> > 
-> >  static struct platform_device *dcdbas_pdev;
-> > @@ -49,19 +50,23 @@ static struct platform_device *dcdbas_pdev;
-> >  static u8 *smi_data_buf;
-> >  static dma_addr_t smi_data_buf_handle;
-> >  static unsigned long smi_data_buf_size;
-> > +static unsigned long max_smi_data_buf_size = MAX_SMI_DATA_BUF_SIZE;
-> >  static u32 smi_data_buf_phys_addr;
-> >  static DEFINE_MUTEX(smi_data_lock);
-> > +static u8 *eps_buffer;
-> > 
-> >  static unsigned int host_control_action;
-> >  static unsigned int host_control_smi_type;
-> >  static unsigned int host_control_on_shutdown;
-> > 
-> > +static bool wsmt_enabled;
-> > +
-> >  /**
-> >   * smi_data_buf_free: free SMI data buffer
-> >   */
-> >  static void smi_data_buf_free(void)
-> >  {
-> > -	if (!smi_data_buf)
-> > +	if (!smi_data_buf || wsmt_enabled)
-> >  		return;
-> > 
-> >  	dev_dbg(&dcdbas_pdev->dev, "%s: phys: %x size: %lu\n",
-> > @@ -86,7 +91,7 @@ static int smi_data_buf_realloc(unsigned long size)
-> >  	if (smi_data_buf_size >= size)
-> >  		return 0;
-> > 
-> > -	if (size > MAX_SMI_DATA_BUF_SIZE)
-> > +	if (size > max_smi_data_buf_size)
-> >  		return -EINVAL;
-> > 
-> >  	/* new buffer is needed */
-> > @@ -169,7 +174,7 @@ static ssize_t smi_data_write(struct file *filp, struct kobject
-> > *kobj,
-> >  {
-> >  	ssize_t ret;
-> > 
-> > -	if ((pos + count) > MAX_SMI_DATA_BUF_SIZE)
-> > +	if ((pos + count) > max_smi_data_buf_size)
-> >  		return -EINVAL;
-> > 
-> >  	mutex_lock(&smi_data_lock);
-> > @@ -323,7 +328,8 @@ static ssize_t smi_request_store(struct device *dev,
-> >  		break;
-> >  	case 1:
-> >  		/* Calling Interface SMI */
-> > -		smi_cmd->ebx = (u32) virt_to_phys(smi_cmd->command_buffer);
-> > +		smi_cmd->ebx = smi_data_buf_phys_addr
-> > +				+ offsetof(struct smi_cmd, command_buffer);
-> >  		ret = dcdbas_smi_request(smi_cmd);
-> >  		if (!ret)
-> >  			ret = count;
-> > @@ -482,6 +488,85 @@ static void dcdbas_host_control(void)
-> >  	}
-> >  }
-> > 
-> > +/* WSMT */
-> > +
-> > +static u8 checksum(u8 *buffer, u8 length)
-> > +{
-> > +	u8 sum = 0;
-> > +	u8 *end = buffer + length;
-> > +
-> > +	while (buffer < end)
-> > +		sum = (u8)(sum + *(buffer++));
-> > +	return sum;
-> > +}
-> > +
-> > +static inline struct smm_eps_table *check_eps_table(u8 *addr)
-> > +{
-> > +	struct smm_eps_table *eps = (struct smm_eps_table *)addr;
-> > +
-> > +	if (strncmp(SMM_EPS_SIG, eps->smm_comm_buff_anchor, 4) != 0)
-> > +		return NULL;
-> > +
-> > +	if (checksum(addr, eps->length) != 0)
-> > +		return NULL;
-> > +
-> > +	return eps;
-> > +}
-> > +
-> > +static int dcdbas_check_wsmt(void)
-> > +{
-> > +	struct acpi_table_wsmt *wsmt = NULL;
-> > +	struct smm_eps_table *eps = NULL;
-> > +	u8 *addr;
-> > +
-> > +	acpi_get_table(ACPI_SIG_WSMT, 0, (struct acpi_table_header **)&wsmt);
-> > +	if (!wsmt)
-> > +		return 0;
-> > +
-> > +	/* Check if WSMT ACPI table shows that protection is enabled */
-> > +	if (!(wsmt->protection_flags & ACPI_WSMT_FIXED_COMM_BUFFERS)
-> > +	    || !(wsmt->protection_flags
-> > +		 & ACPI_WSMT_COMM_BUFFER_NESTED_PTR_PROTECTION))
-> > +		return 0;
-> > +
-> > +	/* Scan for EPS (entry point structure) */
-> > +	for (addr = (u8 *)__va(0xf0000);
-> > +	     addr < (u8 *)__va(0x100000 - sizeof(struct smm_eps_table)) && !eps;
-> > +	     addr += 1)
-> > +		eps = check_eps_table(addr);
-> > +
-> > +	if (!eps) {
-> > +		dev_dbg(&dcdbas_pdev->dev, "found WSMT, but no EPS
-> > found\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Get physical address of buffer and map to virtual address.
-> > +	 * Table gives size in 4K pages, regardless of actual system page size.
-> > +	 */
-> > +	if (eps->smm_comm_buff_addr + 8 > U32_MAX) {
-> > +		dev_warn(&dcdbas_pdev->dev, "found WSMT, but EPS buffer
-> > address is above 4GB\n");
-> > +		return -EINVAL;
-> > +	}
-> > +	eps_buffer = (u8 *)memremap(eps->smm_comm_buff_addr,
-> > +				     eps->num_of_4k_pages * 4096,
-> > MEMREMAP_WB);
-> > +	if (!eps_buffer) {
-> > +		dev_warn(&dcdbas_pdev->dev, "found WSMT, but failed to map
-> > EPS buffer\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	/* First 8 bytes of buffer is for semaphore */
-> > +	smi_data_buf_phys_addr = (u32) eps->smm_comm_buff_addr + 8;
-> > +	smi_data_buf = eps_buffer + 8;
-> > +	smi_data_buf_size = (unsigned long) min(eps->num_of_4k_pages * 4096 -
-> > 8,
-> > +			    (u64) ULONG_MAX);
-> > +	max_smi_data_buf_size = smi_data_buf_size;
-> > +	wsmt_enabled = true;
-> > +	dev_info(&dcdbas_pdev->dev,
-> > +		 "WSMT found, using firmware-provided SMI buffer.\n");
-> > +	return 1;
-> > +}
-> > +
-> >  /**
-> >   * dcdbas_reboot_notify: handle reboot notification for host control
-> >   */
-> > @@ -548,6 +633,11 @@ static int dcdbas_probe(struct platform_device *dev)
-> > 
-> >  	dcdbas_pdev = dev;
-> > 
-> > +	/* Check if ACPI WSMT table specifies protected SMI buffer address */
-> > +	error = dcdbas_check_wsmt();
-> > +	if (error < 0)
-> > +		return error;
-> > +
-> >  	/*
-> >  	 * BIOS SMI calls require buffer addresses be in 32-bit address space.
-> >  	 * This is done by setting the DMA mask below.
-> > @@ -635,6 +725,8 @@ static void __exit dcdbas_exit(void)
-> >  	 */
-> >  	if (dcdbas_pdev)
-> >  		smi_data_buf_free();
-> > +	if (eps_buffer)
-> > +		memunmap(eps_buffer);
-> >  	platform_device_unregister(dcdbas_pdev_reg);
-> >  	platform_driver_unregister(&dcdbas_driver);
-> >  }
-> > diff --git a/drivers/firmware/dcdbas.h b/drivers/firmware/dcdbas.h
-> > index ca3cb0a54ab6..7ea5b3e070b9 100644
-> > --- a/drivers/firmware/dcdbas.h
-> > +++ b/drivers/firmware/dcdbas.h
-> > @@ -54,6 +54,8 @@
-> > 
-> >  #define SMI_CMD_MAGIC				(0x534D4931)
-> > 
-> > +#define SMM_EPS_SIG				"$SCB"
-> > +
-> >  #define DCDBAS_DEV_ATTR_RW(_name) \
-> >  	DEVICE_ATTR(_name,0600,_name##_show,_name##_store);
-> > 
-> > @@ -103,5 +105,14 @@ struct apm_cmd {
-> > 
-> >  int dcdbas_smi_request(struct smi_cmd *smi_cmd);
-> > 
-> > +struct smm_eps_table {
-> > +	char smm_comm_buff_anchor[4];
-> > +	u8 length;
-> > +	u8 checksum;
-> > +	u8 version;
-> > +	u64 smm_comm_buff_addr;
-> > +	u64 num_of_4k_pages;
-> > +} __packed;
-> > +
-> >  #endif /* _DCDBAS_H_ */
-> > 
-> > --
-> > 2.14.2
+On Tue, Jun 05, 2018 at 12:58:19PM +0000, Vadim Pasternak wrote:
+> Introduce new Mellanox platform driver to allow access to Mellanox
+> programmable device register space trough sysfs interface.
+> The driver purpose is to provide sysfs interface for user space for the
+> registers essential for system control and monitoring.
+> The sets of registers for sysfs access are supposed to be defined per
+> system type bases and include the registers related to system resets
+> operation, system reset causes monitoring and some kinds of mux selection.
 > 
-> Darren, Andy,
-> 
-> Stuart and I were hoping you guys could bring this through the platform-driver-x86 tree.
-> The logic behind this is that the only consumer for dcdbas in kernel is dell-smbios.
-> 
-> There isn't a subsystem maintainer for someone to pull in dcdbas even though the
-> current maintainer (Doug W) has acked it.
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 
-Apologies for the delay. I'm OK bringing it in in general. I'm reviewing patches
-today and tomorrow to try and close out the backlog. Should have a review by EOD
-tomorrow.
+Hi Vadim,
 
-I've been wondering about drivers/firmware anyway - that is almost by definition
-platform specific and might make more sense as part of the platform drivers,
-especially if it is currently without a maintainer (although akpm will often
-take such things).
+> ---
+> v1->v2:
+>  Change added by Vadim:
+>  - Change ---help--- to help in Kconfig, according to new requirements;
+> v2->v3:
+>  Comments pointed out by Darren:
+>  - Remove conditional assignment per attribute mode type, because mode
+>    will guard against not permitted access.
+>    Verified by Vadim.
+> v4-v5:
+>  Comments pointed out by Darren:
+>  - Add more comments.
+>  - Add validation for the buffer length in attribute store method.
+>  - Remove unnecessary check for input value in attribute store method.
+>  - Change name val to input_value in order to improve code readability.
+>  Changes added by Vadim:
+>  - Extend logic in attribute show and store methods to cover all
+>    configurations.
+> ---
+>  drivers/platform/mellanox/Kconfig     |  11 ++
+>  drivers/platform/mellanox/Makefile    |   1 +
+>  drivers/platform/mellanox/mlxreg-io.c | 227 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 239 insertions(+)
+>  create mode 100644 drivers/platform/mellanox/mlxreg-io.c
+> 
+> diff --git a/drivers/platform/mellanox/Makefile b/drivers/platform/mellanox/Makefile
+> index 7c8385e..57074d9c 100644
+> --- a/drivers/platform/mellanox/Makefile
+> +++ b/drivers/platform/mellanox/Makefile
+...
+> +static ssize_t
+> +mlxreg_io_attr_show(struct device *dev, struct device_attribute *attr,
+> +		    char *buf)
+> +{
+> +	struct mlxreg_io_priv_data *priv = dev_get_drvdata(dev);
+> +	int index = to_sensor_dev_attr(attr)->index;
+> +	struct mlxreg_core_data *data = priv->pdata->data + index;
+> +	u32 regval = 0;
+> +	int ret;
+> +
+> +	ret = regmap_read(priv->pdata->regmap, data->reg, &regval);
+> +	if (ret)
+> +		goto access_error;
+> +
+> +	/*
+> +	 * There are three kinds of attributes: single bit, full register's
+> +	 * bits and bit sequence. For the first kind field mask indicates which
+> +	 * bits are not related and filed bit is set zero. For the second kind
+> +	 * field mask is set to zero and field bit is set with all bits one.
+
+Is it "all bits one" or "all bits representing the length of the
+register set to one" ? e.g. is it always 0xFFFFFFFF or can it be
+0x0000000F for a 4 bit register?
+
+> +	 * For the third kind, filed mask indicates which bits are related and
+> +	 * field bit is set to the first bit number (from 1 to 32) is the bit
+> +	 * sequence.
+> +	 */
+
+This is really useful for review - thank you for adding it. I presume
+all instances of "filed" were intended to be "field" ?
+
+> +	if (!data->bit)
+> +		regval = !!(regval & ~data->mask);
+> +	else if (!data->mask)
+> +		regval &= data->bit;
+
+If this is the second type (the full register).... and data->bit is all
+1s. Why do the &=?  Why test for this at all? Isn't regval already what
+you need?
+
+> +	else
+> +		regval = ror32(regval & data->mask, (data->bit - 1));
+> +
+
+So I think this can be rewritten as:
+
+if (!data->bit)
+	regval = !!(regval & ~data->mask
+else if (data->mask)
+	regval = ror32(regval & data->mask, (data->bit - 1));
+/* Without bit or mask, the entire regval is used as is */
+
+Am I missing something?
+
+> +	return sprintf(buf, "%u\n", regval);
+> +
+> +access_error:
+> +	return ret;
+> +}
+> +
+> +static ssize_t
+> +mlxreg_io_attr_store(struct device *dev, struct device_attribute *attr,
+> +		     const char *buf, size_t len)
+> +{
+> +	struct mlxreg_io_priv_data *priv = dev_get_drvdata(dev);
+> +	int index = to_sensor_dev_attr(attr)->index;
+> +	struct mlxreg_core_data *data = priv->pdata->data + index;
+> +	u32 input_val, regval;
+> +	int ret;
+> +
+> +	if (len > MLXREG_IO_ATT_SIZE)
+> +		return -EINVAL;
+
+The bigger problem would be len < MLXREG_IO_ATT_SIZE right? Because next
+we'll try to read beyond the end of buf. Right?
+
+> +
+> +	ret = kstrtou32(buf, MLXREG_IO_ATT_SIZE, &input_val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Convert buffer to input value. */
+I think this comment describes the previous lines, right?
+
+This line is reading the register into regval...
+
+> +	ret = regmap_read(priv->pdata->regmap, data->reg, &regval);
+> +	if (ret)
+> +		goto access_error;
+> +
+> +	if (!data->bit) {
+> +		/* Single bit, set or clear it according to the input value. */
+> +		regval &= data->mask;
+> +		if (input_val)
+> +			regval |= ~data->mask;
+> +	} else if (!data->mask) {
+> +		/* All bits, clear out of range bits form the input value. */
+
+                                                     from
+
+> +		regval = input_val & data->bit;
+
+Per the comments above - is this step necessary? Is data->bit all 1s? Or
+is this just "all 1s for the length of the register, which is <=32 ? If
+so, that wasn't clear from the above comments.
+
+> +	} else {
+> +		/* Bit sequence: shift to relevant position and mask. */
+> +		input_val = rol32(input_val, data->bit - 1) & data->mask;
+> +		/* Clear relevant bits and set them to new value. */
+> +		regval = (regval & ~data->mask) | input_val;
+> +	}
+
+It seems to me we have a complex register value reading operation here
+which we are now performing in two places. This often leads to errors
+where only one gets updated if there is a bug in the logic. Can we pull
+out the regval reading operation into a static local function?
+
+> +
+> +	ret = regmap_write(priv->pdata->regmap, data->reg, regval);
+> +	if (ret)
+> +		goto access_error;
+> +
+> +	return len;
+> +
+> +access_error:
+> +	dev_err(&priv->pdev->dev, "Bus access error\n");
+> +	return ret;
+> +}
+> +
+> +static struct device_attribute mlxreg_io_devattr_rw = {
+> +	.show	= mlxreg_io_attr_show,
+> +	.store	= mlxreg_io_attr_store,
+> +};
+> +
+> +static int mlxreg_io_attr_init(struct mlxreg_io_priv_data *priv)
+> +{
+> +	int i;
+> +
+> +	priv->group.attrs = devm_kzalloc(&priv->pdev->dev,
+> +					 priv->pdata->counter *
+> +					 sizeof(struct attribute *),
+> +					 GFP_KERNEL);
+> +	if (!priv->group.attrs)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < priv->pdata->counter; i++) {
+> +		priv->mlxreg_io_attr[i] =
+> +				&priv->mlxreg_io_dev_attr[i].dev_attr.attr;
+> +		memcpy(&priv->mlxreg_io_dev_attr[i].dev_attr,
+> +		       &mlxreg_io_devattr_rw, sizeof(struct device_attribute));
+> +
+> +		/* Set attribute name as a label. */
+> +		priv->mlxreg_io_attr[i]->name =
+> +				devm_kasprintf(&priv->pdev->dev, GFP_KERNEL,
+> +					       priv->pdata->data[i].label);
+> +
+> +		if (!priv->mlxreg_io_attr[i]->name) {
+> +			dev_err(&priv->pdev->dev, "Memory allocation failed for sysfs attribute %d.\n",
+> +				i + 1);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		priv->mlxreg_io_dev_attr[i].dev_attr.attr.mode =
+> +						priv->pdata->data[i].mode;
+> +		priv->mlxreg_io_dev_attr[i].dev_attr.attr.name =
+> +					priv->mlxreg_io_attr[i]->name;
+> +		priv->mlxreg_io_dev_attr[i].index = i;
+> +		sysfs_attr_init(&priv->mlxreg_io_dev_attr[i].dev_attr.attr);
+> +	}
+> +
+> +	priv->group.attrs = priv->mlxreg_io_attr;
+> +	priv->groups[0] = &priv->group;
+> +	priv->groups[1] = NULL;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mlxreg_io_probe(struct platform_device *pdev)
+> +{
+> +	struct mlxreg_io_priv_data *priv;
+> +	int err;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->pdata = dev_get_platdata(&pdev->dev);
+> +	if (!priv->pdata) {
+> +		dev_err(&pdev->dev, "Failed to get platform data.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	priv->pdev = pdev;
+> +
+> +	err = mlxreg_io_attr_init(priv);
+> +	if (err) {
+> +		dev_err(&priv->pdev->dev, "Failed to allocate attributes: %d\n",
+> +			err);
+> +		return err;
+> +	}
+> +
+> +	priv->hwmon = devm_hwmon_device_register_with_groups(&pdev->dev,
+> +							     "mlxreg_io",
+> +							      priv,
+> +							      priv->groups);
+> +	if (IS_ERR(priv->hwmon)) {
+> +		dev_err(&pdev->dev, "Failed to register hwmon device %ld\n",
+> +			PTR_ERR(priv->hwmon));
+> +		return PTR_ERR(priv->hwmon);
+> +	}
+> +
+> +	dev_set_drvdata(&pdev->dev, priv);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver mlxreg_io_driver = {
+> +	.driver = {
+> +	    .name = "mlxreg-io",
+> +	},
+> +	.probe = mlxreg_io_probe,
+> +};
+> +
+> +module_platform_driver(mlxreg_io_driver);
+> +
+> +MODULE_AUTHOR("Vadim Pasternak <vadimp@mellanox.com>");
+> +MODULE_DESCRIPTION("Mellanox regmap I/O access driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:mlxreg-io");
+> -- 
+> 2.1.4
+> 
+> 
 
 -- 
 Darren Hart
