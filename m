@@ -1,38 +1,40 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: ThinkPad T480s & LED_MUTE, LED_MICMUTE
-Date: Fri, 8 Jun 2018 13:10:57 +0200
-Message-ID: <20180608111057.4wxpg7m7nm7suf6n@pali>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 0/3] platform/x86: silead_dmi: Sort alphabetically + add 1
+ more model
+Date: Fri, 8 Jun 2018 14:30:40 +0300
+Message-ID: <CAHp75Vfvg=5MGm8a14S1gK-tN6=k71OeZr2JMGhY+pBvgcuzmA@mail.gmail.com>
+References: <20180607203617.11240-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <20180607203617.11240-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi! With up-to-date thinkpad_acpi.ko driver on ThinkPad T480s I'm seeing
-a strange behavior of LEDs which are integrated into mic mute (Fn+F4)
-and mute (Fn+F1) keys.
+On Thu, Jun 7, 2018 at 11:36 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> Hi Darren, Andy,
+>
+> This series is mostly about sorting the silead_dmi.c entries
+> alphabetically to create some order in the chaos.
+>
+> It also adds an entry for 1 more model.
+>
+> Note this series applies on top of the pending
+> "platform/x86: silead_dmi: Add entry for Chuwi Hi8 S806_206 tablet touchscreen"
+> commit / on top of the review-andy branch.
+>
 
-When thinkpad_acpi.ko is not loaded, then mute key is working fine. When
-pressed, it correctly generates KEY_MUTE on AT Translated Set 2 keyboard
-input device and also turn on/of mute led. But when micmute key is
-pressed then, nothing happen. No key event is reported and also led is
-not turned on/off.
+Pushed to my review and testing queue, thanks!
 
-On the other hand, when thinkpad_acpi.ko is loaded, then both buttons
-mute and micmute correctly generates input events; mute via AT keyboard
-and micmute via ThinkPad Extra Buttons. But led is not changed. When
-thinkpad_acpi.ko is loaded it turn off both leds (mute and micmute) and
-leds after pressing any of those buttons, leds are not turned on again.
+> Regards,
+>
+> Hans
+>
 
-When thinkpad_acpi.ko is unloaded, then pressing mute button again start
-switching led on/off.
 
-So it seems that some init sequence of thinkpad_acpi.ko breaks mute led.
-And fini sequence of thinkpad_acpi.ko makes mute led working again.
 
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+With Best Regards,
+Andy Shevchenko
