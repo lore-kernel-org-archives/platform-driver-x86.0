@@ -1,38 +1,106 @@
-From: Jethro Beekman <jethro@fortanix.com>
+From: Dave Hansen <dave.hansen@intel.com>
 Subject: Re: [PATCH v11 09/13] x86, sgx: basic routines for enclave page cache
-Date: Fri, 8 Jun 2018 11:21:48 -0700
-Message-ID: <78982a32-c589-48e2-9a83-fd36903b5588@fortanix.com>
+Date: Fri, 8 Jun 2018 11:24:12 -0700
+Message-ID: <3c1b04d6-6e93-efaa-1890-101b7fd9784c@intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
  <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms000702040404050307070406"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
+Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
+On 06/08/2018 10:09 AM, Jarkko Sakkinen wrote:
+> SGX has a set of data structures to maintain information about the enclaves
+> and their security properties. BIOS reserves a fixed size region of
+> physical memory for these structures by setting Processor Reserved Memory
+> Range Registers (PRMRR). This memory area is called Enclave Page Cache
+> (EPC).
+> 
+> This commit implements the basic routines to allocate and free pages from
+> different EPC banks. There is also a swapper thread ksgxswapd for EPC pages
+> that gets woken up by sgx_alloc_page() when we run below the low watermark.
+> The swapper thread continues swapping pages up until it reaches the high
+> watermark.
 
---------------ms000702040404050307070406
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Yay!  A new memory manager in arch-specific code.
 
-On 2018-06-08 10:09, Jarkko Sakkinen wrote:
+> Each subsystem that uses SGX must provide a set of callbacks for EPC
+> pages that are used to reclaim, block and write an EPC page. Kernel
+> takes the responsibility of maintaining LRU cache for them.
+
+What does a "subsystem that uses SGX" mean?  Do we have one of those
+already?
+
+...
+> +struct sgx_secs {
+> +	uint64_t size;
+> +	uint64_t base;
+> +	uint32_t ssaframesize;
+> +	uint32_t miscselect;
+> +	uint8_t reserved1[SGX_SECS_RESERVED1_SIZE];
+> +	uint64_t attributes;
+> +	uint64_t xfrm;
+> +	uint32_t mrenclave[8];
+> +	uint8_t reserved2[SGX_SECS_RESERVED2_SIZE];
+> +	uint32_t mrsigner[8];
+> +	uint8_t	reserved3[SGX_SECS_RESERVED3_SIZE];
+> +	uint16_t isvvprodid;
+> +	uint16_t isvsvn;
+> +	uint8_t reserved4[SGX_SECS_RESERVED4_SIZE];
+> +};
+
+This is a hardware structure, right?  Doesn't it need to be packed?
+
+> +enum sgx_tcs_flags {
+> +	SGX_TCS_DBGOPTIN	= 0x01, /* cleared on EADD */
+> +};
+> +
+> +#define SGX_TCS_RESERVED_MASK 0xFFFFFFFFFFFFFFFEL
+
+Would it be possible to separate out the SGX software structures from
+SGX hardware?  It's hard to tell them apart.
+
+> +#define SGX_NR_TO_SCAN	16
+> +#define SGX_NR_LOW_PAGES 32
+> +#define SGX_NR_HIGH_PAGES 64
+> +
+>  bool sgx_enabled __ro_after_init = false;
+>  EXPORT_SYMBOL(sgx_enabled);
+> +bool sgx_lc_enabled __ro_after_init;
+> +EXPORT_SYMBOL(sgx_lc_enabled);
+> +atomic_t sgx_nr_free_pages = ATOMIC_INIT(0);
+
+Hmmm, global atomic.  Doesn't sound very scalable.
+
+> +struct sgx_epc_bank sgx_epc_banks[SGX_MAX_EPC_BANKS];
+> +EXPORT_SYMBOL(sgx_epc_banks);
+> +int sgx_nr_epc_banks;
+> +EXPORT_SYMBOL(sgx_nr_epc_banks);
+> +LIST_HEAD(sgx_active_page_list);
+> +EXPORT_SYMBOL(sgx_active_page_list);
+> +DEFINE_SPINLOCK(sgx_active_page_list_lock);
+> +EXPORT_SYMBOL(sgx_active_page_list_lock);
+
+Hmmm, global spinlock protecting a page allocator linked list.  Sounds
+even worse than at atomic.
+
+Why is this OK?
+
+> +static struct task_struct *ksgxswapd_tsk;
+> +static DECLARE_WAIT_QUEUE_HEAD(ksgxswapd_waitq);
+> +
 > +/*
 > + * Writing the LE hash MSRs is extraordinarily expensive, e.g.
 > + * 3-4x slower than normal MSRs, so we use a per-cpu cache to
 > + * track the last known value of the MSRs to avoid unnecessarily
 > + * writing the MSRs with the current value.  Because most Linux
 > + * kernels will use an LE that is signed with a non-Intel key,
-
-I don't think you can predict what most Linux kernels will be doing. I=20
-think not initializing the cache to the CPU's initial value is fine, but =
-
-this particular argument shouldn't appear in the rationale.
-
 > + * i.e. the first EINIT will need to write the MSRs regardless
 > + * of the cache, the cache is intentionally left uninitialized
 > + * during boot as initializing the cache would be pure overhead
@@ -44,88 +112,312 @@ this particular argument shouldn't appear in the rationale.
 > + */
 > +static DEFINE_PER_CPU(u64 [4], sgx_le_pubkey_hash_cache);
 
---=20
-Jethro Beekman | Fortanix
+Justifying the design decisions is great for changelogs, not so great
+for comments.  Also, looking at this, I have no idea what this has to do
+with the "enclave page cache".
 
+> +static void sgx_swap_cluster(void)
+> +{
+> +	struct sgx_epc_page *cluster[SGX_NR_TO_SCAN + 1];
+> +	struct sgx_epc_page *epc_page;
+> +	int i;
+> +	int j;
 
---------------ms000702040404050307070406
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+This is rather free of comments or explanation of what this is doing,
+how it is related to swapping as everyone else knows it
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-CyAwggUyMIIEGqADAgECAhEA8MVmReo60XmFXNF7R8+qGDANBgkqhkiG9w0BAQsFADCBlzEL
-MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
-Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0Eg
-Q2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTcwOTE0MDAw
-MDAwWhcNMTgwOTE0MjM1OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNqZXRocm9AZm9ydGFuaXgu
-Y29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz7i2PMd8+ac44evn+E/vAnvp
-p3rSuGpPBG8a5a7TomxjN1KilgX7juFiY7LZjZZe955hCzCoou+lyNgCCSbZzcKsYuIyydkj
-UBBGIcTSblxCbko21J3yyk0JwAwSoaxlZwKrsbjUTHSl/0E6SBQpybRZsAficbdSRz+s7jG7
-f6DtnikAtTYof+mBxwZC30Gzxh3RQEjA0PwaSP35tXffrplfazeog099eiVWLIDYA/kSaiac
-SgheMK02Wi0Iu0fGZ3Y9QMVaB2r5Bhm+hODvJv/WAjEUuZGwo3K4aR/934W79pq5bXwUReXy
-/5VxE1acjz6rFnCqBJuNgrzDiGF4ywIDAQABo4IB6TCCAeUwHwYDVR0jBBgwFoAUgq9sjPjF
-/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFH990qeqLXTAXNqiGOMUQIhUf9TWMA4GA1UdDwEB
-/wQEAwIFoDAMBgNVHRMBAf8EAjAAMCAGA1UdJQQZMBcGCCsGAQUFBwMEBgsrBgEEAbIxAQMF
-AjARBglghkgBhvhCAQEEBAMCBSAwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAQEwKzApBggr
-BgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2g
-S4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRp
-b25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklo
-dHRwOi8vY3J0LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFu
-ZFNlY3VyZUVtYWlsQ0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5j
-b20wHgYDVR0RBBcwFYETamV0aHJvQGZvcnRhbml4LmNvbTANBgkqhkiG9w0BAQsFAAOCAQEA
-BzIiuD+ggLjwfH5xKn7eotgwkH3V6qCWD21G1++PIxuLjCzRN87rMOZcmrMa2HJkDVz4NZYe
-Er98p40JKNNVabKBI8+aF79Gfl0y3Mojr53ojV+x0wt2U04EmOXONuCHdLgxv5JvReFLXo6h
-bIZQoe4Cwfgj541QPLDzoSuMrMUAcNSjt6o/SIeIu+Udv84ET2YckxiBXDiKUXRfW+GWet3w
-1tUYrUSfwTA7Ho2YUbZu/L4FFRrUXQD6zYrB3f0sStDxWijKsRwLrdzqKVs0hsu42wZcNR/v
-YzWnJQBVuCIpr0I/rTHY4E8w5h0Hz5mPABkNxLfOYKRJ1VUMQSgHGzCCBeYwggPOoAMCAQIC
-EGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNVBAYTAkdCMRswGQYD
-VQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNP
-TU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRpb24gQXV0
-aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYTAkdC
-MRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
-BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
-MIIBCgKCAQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQ
-PTRI5Or1u6zf+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivl
-JTRENf+RKwrB6vcfWlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG
-9qrxpZxyb4o4yNNwTqzaaPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoS
-WY66nJN/VCJv5ym6Q0mdCbDKCMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQAB
-o4IBPDCCATgwHwYDVR0jBBgwFoAUu69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKv
-bIz4xf6WYXzoHz0rcUhexIvAMA4GA1UdDwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEA
-MBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8ERTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9k
-b2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDBxBggrBgEFBQcB
-AQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUFk
-ZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wDQYJ
-KoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2SQgG1NgvNc3fQP7TcePo
-7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs0j8CGpfb+SJA3GaB
-Q+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDMKVmU/PUWNMKS
-TvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+E2pvOUtY
-+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfHM5td
-hYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
-jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJ
-M/1tyZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJU
-mpvVdZ4ognzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTK
-TlL8YXLI8nAbR9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIEODCCBDQCAQEw
-ga0wgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNV
-BAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01P
-RE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA8MVm
-Reo60XmFXNF7R8+qGDANBglghkgBZQMEAgEFAKCCAlswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgwNjA4MTgyMTQ4WjAvBgkqhkiG9w0BCQQxIgQgsJKW
-gpW6nTIFf6zKj2N1pym/W64sYwOGK/pYLQxyQY8wbAYJKoZIhvcNAQkPMV8wXTALBglghkgB
-ZQMEASowCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG
-9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBvgYJKwYBBAGCNxAEMYGwMIGtMIGX
-MQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
-YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJT
-QSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAPDFZkXqOtF5
-hVzRe0fPqhgwgcAGCyqGSIb3DQEJEAILMYGwoIGtMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UE
-CBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01P
-RE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGljYXRp
-b24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAPDFZkXqOtF5hVzRe0fPqhgwDQYJKoZIhvcNAQEB
-BQAEggEAwoVsQXcTTM+Ym94UJ03Soi0Yf6f958yJtvXEW7p+881zGbTz3PrYtQyrDDoirebU
-eiWeT5VXOCu8ADSJ8MJhEtP1YtMm+Tmzgc/IVlBNUX+e/WiPnwjlYh7oAW+gEr/Tmk5OKYJL
-huDULeDB5Gjk3MHAL63F4xsBilS+IL9bGLNOxe4g/ewX1vKGvvWWkZl059QrMEqIstZwX5M+
-rqwO20qsCYGijSSkyjGsYnKTaonHuVwL7ggxwVOZb20ZVt3VeZ4dDY+tz0Fm++gYNSpWDrcS
-Mt7/Hy0kR9MQ9k/ksmU91Zz/rjIEMPkJmBWWbmEoXjBkQcJa0qPDS8Czh8WkQAAAAAAAAA==
---------------ms000702040404050307070406--
+> +	memset(cluster, 0, sizeof(cluster));
+> +
+> +	for (i = 0, j = 0; i < SGX_NR_TO_SCAN; i++) {
+> +		spin_lock(&sgx_active_page_list_lock);
+> +		if (list_empty(&sgx_active_page_list)) {
+> +			spin_unlock(&sgx_active_page_list_lock);
+> +			break;
+> +		}
+> +		epc_page = list_first_entry(&sgx_active_page_list,
+> +					    struct sgx_epc_page, list);
+> +		if (!epc_page->impl->ops->get(epc_page)) {
+> +			list_move_tail(&epc_page->list, &sgx_active_page_list);
+> +			spin_unlock(&sgx_active_page_list_lock);
+> +			continue;
+> +		}
+> +		list_del(&epc_page->list);
+> +		spin_unlock(&sgx_active_page_list_lock);
+>  
+> -static __init bool sgx_is_enabled(void)
+> +		if (epc_page->impl->ops->reclaim(epc_page)) {
+> +			cluster[j++] = epc_page;
+> +		} else {
+> +			spin_lock(&sgx_active_page_list_lock);
+> +			list_add_tail(&epc_page->list, &sgx_active_page_list);
+> +			spin_unlock(&sgx_active_page_list_lock);
+> +			epc_page->impl->ops->put(epc_page);
+> +		}
+> +	}
+> +
+> +	for (i = 0; cluster[i]; i++) {
+> +		epc_page = cluster[i];
+> +		epc_page->impl->ops->block(epc_page);
+> +	}
+> +
+> +	for (i = 0; cluster[i]; i++) {
+> +		epc_page = cluster[i];
+> +		epc_page->impl->ops->write(epc_page);
+> +		epc_page->impl->ops->put(epc_page);
+> +		sgx_free_page(epc_page);
+> +	}
+> +}
+
+This is also gloriously free of any superfluous comments.  Could you fix
+that?
+
+> +/**
+> + * sgx_try_alloc_page - try to allocate an EPC page
+> + * @impl:	implementation for the struct sgx_epc_page
+> + *
+> + * Try to grab a page from the free EPC page list. If there is a free page
+> + * available, it is returned to the caller.
+> + *
+> + * Return:
+> + *   a &struct sgx_epc_page instace,
+> + *   NULL otherwise
+> + */
+> +struct sgx_epc_page *sgx_try_alloc_page(struct sgx_epc_page_impl *impl)
+> +{
+> +	struct sgx_epc_bank *bank;
+> +	struct sgx_epc_page *page = NULL;
+> +	int i;
+> +
+> +	for (i = 0; i < sgx_nr_epc_banks; i++) {
+> +		bank = &sgx_epc_banks[i];
+
+What's a bank?  How many banks does a system have?
+
+> +		down_write(&bank->lock);
+> +
+> +		if (atomic_read(&bank->free_cnt))
+> +			page = bank->pages[atomic_dec_return(&bank->free_cnt)];
+
+Why is a semaphore getting used here?  I don't see any sleeping or
+anything happening under this lock.
+
+> +		up_write(&bank->lock);
+> +
+> +		if (page)
+> +			break;
+> +	}
+> +
+> +	if (page) {
+> +		atomic_dec(&sgx_nr_free_pages);
+> +		page->impl = impl;
+> +	}
+> +
+> +	return page;
+> +}
+> +EXPORT_SYMBOL(sgx_try_alloc_page);
+> +
+> +/**
+> + * sgx_alloc_page - allocate an EPC page
+> + * @flags:	allocation flags
+> + * @impl:	implementation for the struct sgx_epc_page
+> + *
+> + * Try to grab a page from the free EPC page list. If there is a free page
+> + * available, it is returned to the caller. If called with SGX_ALLOC_ATOMIC,
+> + * the function will return immediately if the list is empty. Otherwise, it
+> + * will swap pages up until there is a free page available. Upon returning the
+> + * low watermark is checked and ksgxswapd is waken up if we are below it.
+> + *
+> + * Return:
+> + *   a &struct sgx_epc_page instace,
+> + *   -ENOMEM if all pages are unreclaimable,
+> + *   -EBUSY when called with SGX_ALLOC_ATOMIC and out of free pages
+> + */
+> +struct sgx_epc_page *sgx_alloc_page(struct sgx_epc_page_impl *impl,
+> +				    unsigned int flags)
+> +{
+> +	struct sgx_epc_page *entry;
+> +
+> +	for ( ; ; ) {
+> +		entry = sgx_try_alloc_page(impl);
+> +		if (entry)
+> +			break;
+> +
+> +		if (list_empty(&sgx_active_page_list))
+> +			return ERR_PTR(-ENOMEM);
+
+"active" pages in the VM are allocated/in-use pages.  This doesn't look
+to be using the same terminology.
+
+> +		if (flags & SGX_ALLOC_ATOMIC) {
+> +			entry = ERR_PTR(-EBUSY);
+> +			break;
+> +		}
+> +
+> +		if (signal_pending(current)) {
+> +			entry = ERR_PTR(-ERESTARTSYS);
+> +			break;
+> +		}
+> +
+> +		sgx_swap_cluster();
+> +		schedule();
+
+What's the schedule trying to do?  Is this the equivalent of "direct
+reclaim"?  Why do we need this in addition to the ksgxswapd?
+
+> +	}
+> +
+> +	if (atomic_read(&sgx_nr_free_pages) < SGX_NR_LOW_PAGES)
+> +		wake_up(&ksgxswapd_waitq);
+> +
+> +	return entry;
+> +}
+> +EXPORT_SYMBOL(sgx_alloc_page);
+
+Why aren't these _GPL exports?
+
+> +/**
+> + * sgx_free_page - free an EPC page
+> + *
+> + * @page:	any EPC page
+> + *
+> + * Remove an EPC page and insert it back to the list of free pages.
+> + *
+> + * Return: SGX error code
+> + */
+> +int sgx_free_page(struct sgx_epc_page *page)
+> +{
+> +	struct sgx_epc_bank *bank = SGX_EPC_BANK(page);
+> +	int ret;
+> +
+> +	ret = sgx_eremove(page);
+> +	if (ret) {
+> +		pr_debug("EREMOVE returned %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	down_read(&bank->lock);
+> +	bank->pages[atomic_inc_return(&bank->free_cnt) - 1] = page;
+> +	atomic_inc(&sgx_nr_free_pages);
+> +	up_read(&bank->lock);
+> +
+> +	return 0;
+> +}
+
+bank->lock confuses me.  This seems to be writing to a bank, but only
+needs a read lock.  Why?
+
+> +/**
+> + * sgx_get_page - pin an EPC page
+> + * @page:	an EPC page
+> + *
+> + * Return: a pointer to the pinned EPC page
+> + */
+> +void *sgx_get_page(struct sgx_epc_page *page)
+> +{
+> +	struct sgx_epc_bank *bank = SGX_EPC_BANK(page);
+> +
+> +	if (IS_ENABLED(CONFIG_X86_64))
+> +		return (void *)(bank->va + SGX_EPC_ADDR(page) - bank->pa);
+> +
+> +	return kmap_atomic_pfn(SGX_EPC_PFN(page));
+> +}
+> +EXPORT_SYMBOL(sgx_get_page);
+
+This is odd.  Do you really want to detect 64-bit, or CONFIG_HIGHMEM?
+
+> +struct page *sgx_get_backing(struct file *file, pgoff_t index)
+> +{
+> +	struct inode *inode = file->f_path.dentry->d_inode;
+> +	struct address_space *mapping = inode->i_mapping;
+> +	gfp_t gfpmask = mapping_gfp_mask(mapping);
+> +
+> +	return shmem_read_mapping_page_gfp(mapping, index, gfpmask);
+> +}
+> +EXPORT_SYMBOL(sgx_get_backing);
+
+What does shmem have to do with all this?
+
+> +void sgx_put_backing(struct page *backing_page, bool write)
+> +{
+> +	if (write)
+> +		set_page_dirty(backing_page);
+> +
+> +	put_page(backing_page);
+> +}
+> +EXPORT_SYMBOL(sgx_put_backing);
+
+I'm not a big fan of stuff getting added with no apparent user and no
+explaination of what it is doing.  There's no way for me to assess
+whether this is sane or not.
+
+> +static __init int sgx_page_cache_init(void)
+> +{
+> +	struct task_struct *tsk;
+> +	unsigned long size;
+> +	unsigned int eax;
+> +	unsigned int ebx;
+> +	unsigned int ecx;
+> +	unsigned int edx;
+> +	unsigned long pa;
+> +	int i;
+> +	int ret;
+> +
+> +	for (i = 0; i < SGX_MAX_EPC_BANKS; i++) {
+> +		cpuid_count(SGX_CPUID, i + SGX_CPUID_EPC_BANKS, &eax, &ebx,
+> +			    &ecx, &edx);
+> +		if (!(eax & 0xf))
+> +			break;
+> +
+> +		pa   = ((u64)(ebx & 0xfffff) << 32) + (u64)(eax & 0xfffff000);
+> +		size = ((u64)(edx & 0xfffff) << 32) + (u64)(ecx & 0xfffff000);
+
+Please align these like I did ^
+
+> +		pr_info("EPC bank 0x%lx-0x%lx\n", pa, pa + size);
+> +
+> +		ret = sgx_init_epc_bank(pa, size, i, &sgx_epc_banks[i]);
+> +		if (ret) {
+> +			sgx_page_cache_teardown();
+> +			return ret;
+> +		}
+> +
+> +		sgx_nr_epc_banks++;
+> +	}
+
+This is also rather sparsely commented.
+
+> +static __init bool sgx_is_enabled(bool *lc_enabled)
+>  {
+>  	unsigned long fc;
+>  
+> @@ -41,12 +466,26 @@ static __init bool sgx_is_enabled(void)
+>  	if (!(fc & FEATURE_CONTROL_SGX_ENABLE))
+>  		return false;
+>  
+> +	*lc_enabled = !!(fc & FEATURE_CONTROL_SGX_LE_WR);
+> +
+>  	return true;
+>  }
+
+I'm baffled why lc_enabled is connected to the enclave page cache.
+
+>  static __init int sgx_init(void)
+>  {
+> -	sgx_enabled = sgx_is_enabled();
+> +	bool lc_enabled;
+> +	int ret;
+> +
+> +	if (!sgx_is_enabled(&lc_enabled))
+> +		return 0;
+> +
+> +	ret = sgx_page_cache_init();
+> +	if (ret)
+> +		return ret;
+> +
+> +	sgx_enabled = true;
+> +	sgx_lc_enabled = lc_enabled;
+> +
+>  	return 0;
+>  }
+>  
+> 
