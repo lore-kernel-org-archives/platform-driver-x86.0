@@ -1,38 +1,38 @@
-From: Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v11 11/13] intel_sgx: ptrace() support
-Date: Fri, 8 Jun 2018 11:34:29 -0700
-Message-ID: <91e35b3e-b42d-b3d5-752c-031973e69273@intel.com>
-References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-12-jarkko.sakkinen@linux.intel.com>
+From: Andy Lutomirski <luto@kernel.org>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
+ launch enclave
+Date: Fri, 8 Jun 2018 11:50:14 -0700
+Message-ID: <CALCETrWSDVdrrVbvEbOH06OQcBkGF-M9R5WQkQ0r4qK2oAL3vQ@mail.gmail.com>
+References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com> <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180608171216.26521-12-jarkko.sakkinen@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>, open list <linux-kernel@vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, andy@infradead.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 06/08/2018 10:09 AM, Jarkko Sakkinen wrote:
-> +		ret = sgx_edbgrd(encl, entry, align, data);
-> +		if (ret)
-> +			break;
-> +		if (write) {
-> +			memcpy(data + offset, buf + i, cnt);
-> +			ret = sgx_edbgwr(encl, entry, align, data);
-> +			if (ret)
-> +				break;
-> +		}
-> +		else
-> +			memcpy(buf + i,data + offset, cnt);
-> +	}
+On Fri, Jun 8, 2018 at 10:32 AM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> The Launch Enclave (LE) generates cryptographic launch tokens for user
+> enclaves. A launch token is used by EINIT to check whether the enclave
+> is authorized to launch or not. By having its own launch enclave, Linux
+> has full control of the enclave launch process.
+>
+> LE is wrapped into a user space proxy program that reads enclave
+> signatures outputs launch tokens. The kernel-side glue code is
+> implemented by using the user space helper framework.  The IPC between
+> the LE proxy program and kernel is handled with an anonymous inode.
+>
+> The commit also adds enclave signing tool that is used by kbuild to
+> measure and sign the launch enclave. CONFIG_INTEL_SGX_SIGNING_KEY points
+> to a PEM-file for the 3072-bit RSA key that is used as the LE public key
+> pair. The default location is:
 
-The SGX instructions like "edbgrd" be great to put on a license plat,
-but we can do better in the kernel.  Can you give these reasonable
-english names, please?  sgx_debug_write(), maybe?
+It might be nice to use the infrastructure that Alexei added for
+bpfilter (the umh_blob stuff) here, which is slated for merging in
+this merge window.
 
-Note that we have plenty of incomprehensible instruction names in the
-kernel like "wrpkru", but we do our best to keep them as confined as
-possible and make sure they don't hurt code readability.
+--Andy
