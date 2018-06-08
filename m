@@ -1,102 +1,88 @@
 From: Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v11 07/13] x86, sgx: detect Intel SGX
-Date: Fri, 8 Jun 2018 10:36:14 -0700
-Message-ID: <4fc3b6b0-6e4b-3d5f-4d54-2bf7539c7a17@intel.com>
+Subject: Re: [PATCH v11 08/13] x86, sgx: added ENCLS wrappers
+Date: Fri, 8 Jun 2018 10:43:50 -0700
+Message-ID: <ff75a95a-c1fc-dfb7-ae5e-146278bee2b6@intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-8-jarkko.sakkinen@linux.intel.com>
+ <20180608171216.26521-9-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180608171216.26521-8-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20180608171216.26521-9-jarkko.sakkinen@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andi Kleen <ak@linux.intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
+Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-> +config INTEL_SGX_CORE
-> +	prompt "Intel SGX core functionality
-> +	depends on X86_64 && CPU_SUP_INTEL
-> +	help
-> +	Intel Software Guard eXtensions (SGX) is a set of CPU instructions
-> +	that allows ring 3 applications to create enclaves; private regions
-> +	of memory that are protected, by hardware, from unauthorized access
-> +	and/or modification.
+On 06/08/2018 10:09 AM, Jarkko Sakkinen wrote:
+> This commit adds wrappers for Intel(R) SGX ENCLS opcode functionality.
 
-That semicolon needs to be a colon.  The second half of that sentence is
-not a stand-alone statement.
+What's ENCLS?  I know what an opcode is, but I don't know what "opcode
+functionality" is.  Could you give us more than a single, cryptic
+sentence, please?
 
-> +	This option enables kernel recognition of SGX, high-level management
-> +	of the Enclave Page Cache (EPC), tracking and writing of SGX Launch
-> +	Enclave Hash MSRs, and allows for virtualization of SGX via KVM. By
-> +	iteslf, this option does not provide SGX support to userspace.
-> +
-> +	For details, see Documentation/x86/intel_sgx.rst
-> +
-> +	If unsure, say N.
-> +
->  config EFI
->  	bool "EFI runtime service support"
->  	depends on ACPI
-> diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
-> new file mode 100644
-> index 000000000000..fa3e6e0eb8af
-> --- /dev/null
-> +++ b/arch/x86/include/asm/sgx.h
-> @@ -0,0 +1,25 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> +// Copyright(c) 2016-18 Intel Corporation.
-> +//
-> +// Authors:
-> +//
-> +// Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> +// Suresh Siddha <suresh.b.siddha@intel.com>
-> +// Sean Christopherson <sean.j.christopherson@intel.com>
-> +
-> +#ifndef _ASM_X86_SGX_H
-> +#define _ASM_X86_SGX_H
-> +
-> +#include <linux/types.h>
-> +
-> +#define SGX_CPUID 0x12
-
-Hey, I just saw 0x12 as a magic, hard-coded number earlier in these
-patches.  It seems cruel to hard-code it, and then also have a #define
-that isn't used.
-
-> +enum sgx_cpuid {
-> +	SGX_CPUID_CAPABILITIES	= 0,
-> +	SGX_CPUID_ATTRIBUTES	= 1,
-> +	SGX_CPUID_EPC_BANKS	= 2,
+> +enum sgx_commands {
+> +	ECREATE	= 0x0,
+> +	EADD	= 0x1,
+> +	EINIT	= 0x2,
+> +	EREMOVE	= 0x3,
+> +	EDGBRD	= 0x4,
+> +	EDGBWR	= 0x5,
+> +	EEXTEND	= 0x6,
+> +	ELDU	= 0x8,
+> +	EBLOCK	= 0x9,
+> +	EPA	= 0xA,
+> +	EWB	= 0xB,
+> +	ETRACK	= 0xC,
+> +	EAUG	= 0xD,
+> +	EMODPR	= 0xE,
+> +	EMODT	= 0xF,
 > +};
 
-These are cpuid *leaves*, right?  Please make this clear that these are
-hardware-defined values and not some kind of software construct.
+Again, please differentiate hardware-defined values from
+software-defines ones.  Also, would it hurt to expand the acronyms a
+bit, like:
 
-> +bool sgx_enabled __ro_after_init = false;
-> +EXPORT_SYMBOL(sgx_enabled);
-> +
-> +static __init bool sgx_is_enabled(void)
-> +{
-> +	unsigned long fc;
-> +
-> +	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
-> +		return false;
++	ELDU	= 0x8, /* LoaD Underpants */
 
-Not necessary. CPUID does this part for you.
+> +#define SGX_FN(name, params...)		\
+> +{					\
+> +	void *epc;			\
+> +	int ret;			\
+> +	epc = sgx_get_page(epc_page);	\
+> +	ret = __##name(params);		\
+> +	sgx_put_page(epc);		\
+> +	return ret;			\
+> +}
 
-> +	if (!boot_cpu_has(X86_FEATURE_SGX))
-> +		return false;
-> +
-> +	if (!boot_cpu_has(X86_FEATURE_SGX1))
-> +		return false;
-> +
-> +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
-> +	if (!(fc & FEATURE_CONTROL_LOCKED))
-> +		return false;
-> +
-> +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE))
-> +		return false;
+Have I seen sgx_*_page() yet in this series?  This seems out of order.
 
-Comments, please.  Why would this happen?  What would it mean?
+> +#define BUILD_SGX_FN(fn, name)				\
+> +static inline int fn(struct sgx_epc_page *epc_page)	\
+> +	SGX_FN(name, epc)
+> +BUILD_SGX_FN(sgx_eremove, eremove)
+> +BUILD_SGX_FN(sgx_eblock, eblock)
+> +BUILD_SGX_FN(sgx_etrack, etrack)
+> +BUILD_SGX_FN(sgx_epa, epa)
+> +
+> +static inline int sgx_emodpr(struct sgx_secinfo *secinfo,
+> +			     struct sgx_epc_page *epc_page)
+> +	SGX_FN(emodpr, secinfo, epc)
+> +static inline int sgx_emodt(struct sgx_secinfo *secinfo,
+> +			    struct sgx_epc_page *epc_page)
+> +	SGX_FN(emodt, secinfo, epc)
+
+Wow, that's hideous.
+
+Can't you just do:
+
+BUILD_SGX_FN(__sgx_emopt, foo)
+
+static inline int sgx_emodt(struct sgx_secinfo *secinfo,
+			    struct sgx_epc_page *epc_page)
+{
+	return __sgx_emopt(secinfo, page);
+}
+
+Also, this entire patch seems rather comment-free.  Was that intentional?
