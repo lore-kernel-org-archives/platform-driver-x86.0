@@ -1,153 +1,86 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: Call new led hw_changed API
- on kbd brightness change
-Date: Sat, 9 Jun 2018 13:13:04 +0200
-Message-ID: <8b752582-f5b5-9144-ad33-c8e7ace19942@redhat.com>
-References: <38cb3527-8480-bdb9-a5d9-b601bc494a5f@redhat.com>
- <71df09bc89619aba975147e6b07920f1dfc2f46f.camel@hadess.net>
- <cd6a5d86-1fdb-2561-1e29-0553be53c41a@redhat.com>
- <94789b55b88ae5a296e1fca3b0311318e7b507ee.camel@hadess.net>
- <0443419b-3147-163b-374d-bb8651b08837@redhat.com>
- <cfb6ff791a9034f8ade738085475e946b3d7519b.camel@sipsolutions.net>
- <362131bf-3b6b-58aa-bda6-003f5ffb5e8e@redhat.com>
- <CAB4CAwfZtA8mf4MwJq1AA1wqwJB-HLXuiMmkzkow3NykRsHkSw@mail.gmail.com>
- <33c55842c8d9ce199f0f8ef314dea85fb848b0be.camel@sipsolutions.net>
- <173fdeb2-8129-57eb-fe2e-3ae16eec54b6@redhat.com>
- <20180609003303.GD111314@localhost.localdomain>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH resend v2] dcdbas: Add support for WSMT ACPI table
+Date: Sat, 9 Jun 2018 21:57:19 +0300
+Message-ID: <CAHp75VcA5ZWahraDP69_hBHuqxw6cng93zAa1op5EBYfuCSPwg@mail.gmail.com>
+References: <45b8bde6-aaa8-3f3f-0528-81e5e931751c@gmail.com>
+ <bc6846e1-2b6d-dcc2-355c-2699aa1607a2@gmail.com> <CAHp75Vdmqm+r=Orxs6_dCr18y+EwEQ=s-7UgaZKHuKbtjMcOig@mail.gmail.com>
+ <20180609010420.GA112645@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180609003303.GD111314@localhost.localdomain>
-Content-Language: en-US
+In-Reply-To: <20180609010420.GA112645@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>
-Cc: Benjamin Berg <benjamin@sipsolutions.net>, Chris Chiu <chiu@endlessm.com>, Bastien Nocera <hadess@hadess.net>, Daniel Drake <drake@endlessm.com>, Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Linux Upstreaming Team <linux@endlessm.com>
+Cc: Stuart Hayes <stuart.w.hayes@gmail.com>, Douglas_Warzecha@dell.com, Mario Limonciello <mario.limonciello@dell.com>, Jared_Dominguez@dell.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Sat, Jun 9, 2018 at 4:04 AM, Darren Hart <dvhart@infradead.org> wrote:
+> On Thu, Jun 07, 2018 at 08:11:41PM +0300, Andy Shevchenko wrote:
+>> On Thu, Jun 7, 2018 at 6:59 PM, Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
 
-On 09-06-18 02:33, Darren Hart wrote:
-> On Wed, Jun 06, 2018 at 05:32:52PM +0200, Hans de Goede wrote:
-> 
->>>>>> If we are adding hwdb entries anyway to control the userspace
->>>>>> interpretation of the TOGGLE key, then we could also add the new CYCLE
->>>>>> key and explicitly re-map it to TOGGLE. That requires slightly more
->>>>>> logic in hwdb, but it does mean that we could theoretically just drop
->>>>>> the workaround if we ever stop caring about Xorg.
->>>>>
->>>>> Hmm, interesting proposal, I say go for it :)
->>>>>
->>>>
->>>> So maybe the next stop is that I can follow Darren's suggestion to eliminate
->>>> the is_kbd_led_event() and send a v2 for review?
->>>
->>> I believe the best compromise we have right now is to do what Hans
->>> suggested in an earlier proposal. That is implementing the two separate
->>> behaviours in the kernel
->>>
->>>    1) handle this in the kernel as if the hardware changed it, and
->>>    2) send a new KEY_KBDILLUMCYCLE event [default].
+>> > +static inline struct smm_eps_table *check_eps_table(u8 *addr)
+>> > +{
+>> > +       struct smm_eps_table *eps = (struct smm_eps_table *)addr;
+>> > +
 >>
->> I think you mean or, not and, depending on a module option the
->> code should do either 1) or 2) not both :)
+>> > +       if (strncmp(SMM_EPS_SIG, eps->smm_comm_buff_anchor, 4) != 0)
 >>
->> Darren, Andy could you live with a module option for this?
-> 
-> We are of course strongly opposed to adding module options.
-> 
-> I agree we can't ignore Xorg.
-> 
-> I agree policy in general should not be in the kernel.
-> 
-> I also see many of these drivers as the last mile to getting a platform
-> fully working. If there is a place for one-off fixes, it's in these
-> drivers. I'd love to refactor and use proper abstractions and all that
-> as the patterns make those abstractions clear - but I don't want to
-> delay getting something working waiting for the ideal solution.
-> 
-> So I have two questions I'd like to confirm before saying "OK" to a
-> module option.
-> 
-> 1) Hans I think you said that doing the code conversion from TOGGLE to
-> UP based on the LED value and the max value was racy with userspace.
-> What is the failure mode here? Is it not easily recoverable? And how do
-> I enter it?
+>> I'm not sure about strings operation here.
+>> I would rather do like with other magic constants: introduce hex value
+>> and compare it as unsigned integer.
+>>
+>> Also, it might be a warning, since \0 wasn't ever checked from the
+>> string literal. Though, I'm not sure if it applicable to strncmp()
+>> function (it's for strncpy for sure).
+>
+> I think we're OK here, and we're being consistent with the
+> dell-wmi-descriptor test for "DELL WMI". I don't recall if it was that
+> one or something else, but doing it in HEX ended up being more
+> confusing. The \0 isn't an issue since strncmp will only compare the n
+> (4) bytes.
 
-g-s-d can currently already auto-dim the brightness of the
-kbd backlight when idle (if there are enough brightness levels).
+Yeah, consistency is usually a priority over style. Though in the
+context below I see also magic numbers instead of strings.
+I have no strong opinion here which one is better to follow.
 
-Lets say that the brightness is at its highest setting and the user
-wants to cycle the backlight to off.
+>> Also I've a feeling that 0xf0000 constant is defined already somewhere
+>> under arch/x86/include/asm or evem include/linux.
+>
+> But... is it defined for this purpose? If not, I'd prefer it hardcoded
+> (or with a DEFINE).
 
-But just before the user hits the cycle key, the timeout expires
-and userspace dimms the backlight, now the kernel processes
-the cycle key event, sees it is not max and sends an up, instead
-of the expected toggle.
+OK, I did a research, and the following is the result.
 
-Note we already have this problem on machines where the cycle
-behavior is implemented in the firmware/hardware rather then
-inside the kernel.
+arch/x86/kernel/mpparse.c:636:      smp_scan_config(0xF0000, 0x10000))
+arch/x86/kernel/probe_roms.c:27:        .start  = 0xf0000,
 
-A bigger problem with sending up-up-up-toggle is that g-s-d saves
-the current brightness (max) on the first toggle and restores that
-on the second toggle, so the second up-up-up-toggle sequence we
-end up restoring the max, going from max to max on the toggle.
+arch/x86/pci/irq.c:91: *  Search 0xf0000 -- 0xfffff for the PCI IRQ
+Routing Table.
+arch/x86/pci/irq.c:105: for (addr = (u8 *) __va(0xf0000); addr < (u8
+*) __va(0x100000); addr += 16) {
 
-So the user needs to press toggle twice at max brightness to get
-to off (and then once for the next cycle, then 2 times again for
-the cycle after that, etc.).
+arch/x86/platform/geode/alix.c:34:#define BIOS_SIGNATURE_TINYBIOS
+         0xf0000
+arch/x86/platform/olpc/olpc-xo1-pm.c:36:} ofw_bios_entry = { 0xF0000 +
+PAGE_OFFSET, __KERNEL_CS };
+arch/x86/platform/ts5500/ts5500.c:103:  bios = ioremap(0xf0000, 0x10000);
 
-So I think it is fair to say that sending up-up-up-toggle is not a
-good idea.
+Perhaps it would be a good idea to introduce such constant in the future.
 
-> Do I have to simultaneously modify the software brightness
-> control AND press the keyboard brightness control? How practical is
-> that? If recoverable AND hard to trigger, I think there is value in the
-> very simple 3 level brightness cycle being handled in the kernel.
-> 
-> 2) Why is a module option preferable to a compile time option? It seems
-> to me the policy will be largely distro dependent, and the same kernel
-> needing to support both modes seems likely to be pretty rare.
+Note mpparse.c and irq.c, that's similar purpose of the address range.
 
-Because lets say that we have everything in place in a recent Fedora
-to handle the cycle-key in userspace, so we have a mapping for the
-new event at all levels and g-s-d code to handle it. Then this will
-still only work for GNOME3 and possibly other wayland based desktop
-environments. While some of our users will keep using the X11 based
-XFCE or mate desktop environments.
+>> >  #define SMI_CMD_MAGIC                          (0x534D4931)
+>> >
+>> > +#define SMM_EPS_SIG                            "$SCB"
+>>
+>> Just integer like above and put the sting as a comment.
+>> (Side note: above magic also looks like string)
+>
+> Given the above, I think we can use the more recognizable string - since
+> that is clearly how they think of this label.
 
-So what we actually want is a module option, with a configurable
-default. So that we can make the default send the cycle event in
-a future Fedora, while XFCE / mate users can override the default
-using the module option.
+OK with me!
 
-###
-
-So typing all of the above has made me think about this once more.
-
-Specifically about how most popular brands handle the cycle behavior
-in firmware/hardware already and that userspace already needs to
-deal with this and that sofar this does not seem to be a problem.
-
-Combine this with the ugliness of adding a module option +
-adding a new cycle input event requiring a lot of work at various
-layers to actually work and I think that taking this series as
-is, is not so bad. Esp. since I don't see anyone doing this work
-soon.
-
-This comes down to faking the cycling being done inside the firmware/
-hardware as e.g. Thinkpads and the Dell XPS series actually do,
-so, as said, userspace already needs to deal with this.
-
-If we in the future actually get around to implementing a kbd-illum-cycle
-input event and have userspace support in place we can always add the
-module option then.
-
-TL;DR: lets just go with this series as is for now, we can always
-add a module option to opt-out of handling this in the kernel and
-sending a new cycle input event later.
-
-Regards,
-
-Hans
+-- 
+With Best Regards,
+Andy Shevchenko
