@@ -1,29 +1,153 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: ThinkPad T480s & thinkpad_acpi.ko
-Date: Sat, 9 Jun 2018 00:03:55 -0300
-Message-ID: <20180609030354.n7gcoain34lde73i@khazad-dum.debian.net>
-References: <20180608081204.ztv4yb62szuyfsz6@pali>
- <CAHp75VfFA6ghuSeAAfcbRS47A12BCcQiAmBt_N5ejm8EsP+3yA@mail.gmail.com>
- <20180608102910.24c2l43ffgwxalgq@pali>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: Call new led hw_changed API
+ on kbd brightness change
+Date: Sat, 9 Jun 2018 13:13:04 +0200
+Message-ID: <8b752582-f5b5-9144-ad33-c8e7ace19942@redhat.com>
+References: <38cb3527-8480-bdb9-a5d9-b601bc494a5f@redhat.com>
+ <71df09bc89619aba975147e6b07920f1dfc2f46f.camel@hadess.net>
+ <cd6a5d86-1fdb-2561-1e29-0553be53c41a@redhat.com>
+ <94789b55b88ae5a296e1fca3b0311318e7b507ee.camel@hadess.net>
+ <0443419b-3147-163b-374d-bb8651b08837@redhat.com>
+ <cfb6ff791a9034f8ade738085475e946b3d7519b.camel@sipsolutions.net>
+ <362131bf-3b6b-58aa-bda6-003f5ffb5e8e@redhat.com>
+ <CAB4CAwfZtA8mf4MwJq1AA1wqwJB-HLXuiMmkzkow3NykRsHkSw@mail.gmail.com>
+ <33c55842c8d9ce199f0f8ef314dea85fb848b0be.camel@sipsolutions.net>
+ <173fdeb2-8129-57eb-fe2e-3ae16eec54b6@redhat.com>
+ <20180609003303.GD111314@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180608102910.24c2l43ffgwxalgq@pali>
+In-Reply-To: <20180609003303.GD111314@localhost.localdomain>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Benjamin Berg <benjamin@sipsolutions.net>, Chris Chiu <chiu@endlessm.com>, Bastien Nocera <hadess@hadess.net>, Daniel Drake <drake@endlessm.com>, Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Linux Upstreaming Team <linux@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 08 Jun 2018, Pali Rohár wrote:
-> which has only 4.9 kernel and LEN0268 identifier was added in git commit
-> a3c42a467a254a17236ab817d5c7c6bc054e4f84 for 4.10.
+Hi,
 
-You could always request it to be backported to -stable *if* you
-manually apply it to a 4.9 kernel and test the heck out of it...
+On 09-06-18 02:33, Darren Hart wrote:
+> On Wed, Jun 06, 2018 at 05:32:52PM +0200, Hans de Goede wrote:
+> 
+>>>>>> If we are adding hwdb entries anyway to control the userspace
+>>>>>> interpretation of the TOGGLE key, then we could also add the new CYCLE
+>>>>>> key and explicitly re-map it to TOGGLE. That requires slightly more
+>>>>>> logic in hwdb, but it does mean that we could theoretically just drop
+>>>>>> the workaround if we ever stop caring about Xorg.
+>>>>>
+>>>>> Hmm, interesting proposal, I say go for it :)
+>>>>>
+>>>>
+>>>> So maybe the next stop is that I can follow Darren's suggestion to eliminate
+>>>> the is_kbd_led_event() and send a v2 for review?
+>>>
+>>> I believe the best compromise we have right now is to do what Hans
+>>> suggested in an earlier proposal. That is implementing the two separate
+>>> behaviours in the kernel
+>>>
+>>>    1) handle this in the kernel as if the hardware changed it, and
+>>>    2) send a new KEY_KBDILLUMCYCLE event [default].
+>>
+>> I think you mean or, not and, depending on a module option the
+>> code should do either 1) or 2) not both :)
+>>
+>> Darren, Andy could you live with a module option for this?
+> 
+> We are of course strongly opposed to adding module options.
+> 
+> I agree we can't ignore Xorg.
+> 
+> I agree policy in general should not be in the kernel.
+> 
+> I also see many of these drivers as the last mile to getting a platform
+> fully working. If there is a place for one-off fixes, it's in these
+> drivers. I'd love to refactor and use proper abstractions and all that
+> as the patterns make those abstractions clear - but I don't want to
+> delay getting something working waiting for the ideal solution.
+> 
+> So I have two questions I'd like to confirm before saying "OK" to a
+> module option.
+> 
+> 1) Hans I think you said that doing the code conversion from TOGGLE to
+> UP based on the LED value and the max value was racy with userspace.
+> What is the failure mode here? Is it not easily recoverable? And how do
+> I enter it?
 
-Debian would pick it up from -stable after a while.
+g-s-d can currently already auto-dim the brightness of the
+kbd backlight when idle (if there are enough brightness levels).
 
--- 
-  Henrique Holschuh
+Lets say that the brightness is at its highest setting and the user
+wants to cycle the backlight to off.
+
+But just before the user hits the cycle key, the timeout expires
+and userspace dimms the backlight, now the kernel processes
+the cycle key event, sees it is not max and sends an up, instead
+of the expected toggle.
+
+Note we already have this problem on machines where the cycle
+behavior is implemented in the firmware/hardware rather then
+inside the kernel.
+
+A bigger problem with sending up-up-up-toggle is that g-s-d saves
+the current brightness (max) on the first toggle and restores that
+on the second toggle, so the second up-up-up-toggle sequence we
+end up restoring the max, going from max to max on the toggle.
+
+So the user needs to press toggle twice at max brightness to get
+to off (and then once for the next cycle, then 2 times again for
+the cycle after that, etc.).
+
+So I think it is fair to say that sending up-up-up-toggle is not a
+good idea.
+
+> Do I have to simultaneously modify the software brightness
+> control AND press the keyboard brightness control? How practical is
+> that? If recoverable AND hard to trigger, I think there is value in the
+> very simple 3 level brightness cycle being handled in the kernel.
+> 
+> 2) Why is a module option preferable to a compile time option? It seems
+> to me the policy will be largely distro dependent, and the same kernel
+> needing to support both modes seems likely to be pretty rare.
+
+Because lets say that we have everything in place in a recent Fedora
+to handle the cycle-key in userspace, so we have a mapping for the
+new event at all levels and g-s-d code to handle it. Then this will
+still only work for GNOME3 and possibly other wayland based desktop
+environments. While some of our users will keep using the X11 based
+XFCE or mate desktop environments.
+
+So what we actually want is a module option, with a configurable
+default. So that we can make the default send the cycle event in
+a future Fedora, while XFCE / mate users can override the default
+using the module option.
+
+###
+
+So typing all of the above has made me think about this once more.
+
+Specifically about how most popular brands handle the cycle behavior
+in firmware/hardware already and that userspace already needs to
+deal with this and that sofar this does not seem to be a problem.
+
+Combine this with the ugliness of adding a module option +
+adding a new cycle input event requiring a lot of work at various
+layers to actually work and I think that taking this series as
+is, is not so bad. Esp. since I don't see anyone doing this work
+soon.
+
+This comes down to faking the cycling being done inside the firmware/
+hardware as e.g. Thinkpads and the Dell XPS series actually do,
+so, as said, userspace already needs to deal with this.
+
+If we in the future actually get around to implementing a kbd-illum-cycle
+input event and have userspace support in place we can always add the
+module option then.
+
+TL;DR: lets just go with this series as is for now, we can always
+add a module option to opt-out of handling this in the kernel and
+sending a new cycle input event later.
+
+Regards,
+
+Hans
