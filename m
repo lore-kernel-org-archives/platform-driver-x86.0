@@ -1,70 +1,56 @@
 From: Andy Lutomirski <luto@kernel.org>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 09/13] x86, sgx: basic routines
- for enclave page cache
-Date: Sat, 9 Jun 2018 22:32:21 -0700
-Message-ID: <CALCETrVUGubKSS00aH5JJoc0vNkqLGPqCoaG2br2yn5cxWXz-Q@mail.gmail.com>
-References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com> <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
+ launch enclave
+Date: Sat, 9 Jun 2018 22:39:50 -0700
+Message-ID: <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
+References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com> <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, andy@infradead.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 8, 2018 at 10:22 AM Jarkko Sakkinen
+On Fri, Jun 8, 2018 at 10:32 AM Jarkko Sakkinen
 <jarkko.sakkinen@linux.intel.com> wrote:
 >
-> SGX has a set of data structures to maintain information about the enclaves
-> and their security properties. BIOS reserves a fixed size region of
-> physical memory for these structures by setting Processor Reserved Memory
-> Range Registers (PRMRR). This memory area is called Enclave Page Cache
-> (EPC).
+> The Launch Enclave (LE) generates cryptographic launch tokens for user
+> enclaves. A launch token is used by EINIT to check whether the enclave
+> is authorized to launch or not. By having its own launch enclave, Linux
+> has full control of the enclave launch process.
 >
+> LE is wrapped into a user space proxy program that reads enclave
+> signatures outputs launch tokens. The kernel-side glue code is
+> implemented by using the user space helper framework.  The IPC between
+> the LE proxy program and kernel is handled with an anonymous inode.
+>
+> The commit also adds enclave signing tool that is used by kbuild to
+> measure and sign the launch enclave. CONFIG_INTEL_SGX_SIGNING_KEY points
+> to a PEM-file for the 3072-bit RSA key that is used as the LE public key
+> pair. The default location is:
+>
+>   drivers/platform/x86/intel_sgx/sgx_signing_key.pem
+>
+> If the default key does not exist kbuild will generate a random key and
+> place it to this location. KBUILD_SGX_SIGN_PIN can be used to specify
+> the passphrase for the LE public key.
 
-> +/**
-> + * sgx_einit - EINIT an enclave with the appropriate LE pubkey hash
-> + * @sigstruct:         a pointer to the enclave's sigstruct
-> + * @token:             a pointer to the enclave's EINIT token
-> + * @secs_page:         a pointer to the enclave's SECS EPC page
-> + * @le_pubkey_hash:    the desired LE pubkey hash for EINIT
-> + */
-> +int sgx_einit(struct sgx_sigstruct *sigstruct, struct sgx_einittoken *token,
-> +             struct sgx_epc_page *secs_page, u64 le_pubkey_hash[4])
-> +{
-> +       u64 __percpu *cache;
-> +       void *secs;
-> +       int i, ret;
-> +
-> +       secs = sgx_get_page(secs_page);
-> +
-> +       if (!sgx_lc_enabled) {
+It seems to me that it might be more useful to just commit a key pair
+into the kernel.  As far as I know, there is no security whatsoever
+gained by keeping the private key private, so why not make
+reproducible builds easier by simply fixing the key?
 
-I'm confused.  What does this code path do?  It kind of looks like the
-driver will load and just malfunction if we don't have write access to
-the MSRs.  What is the intended behavior?
-
-> +               ret = __einit(sigstruct, token, secs);
-> +               goto out;
-> +       }
-> +
-> +       cache = per_cpu(sgx_le_pubkey_hash_cache, smp_processor_id());
-> +
-> +       preempt_disable();
-> +       for (i = 0; i < 4; i++) {
-> +               if (le_pubkey_hash[i] == cache[i])
-> +                       continue;
-> +
-> +               wrmsrl(MSR_IA32_SGXLEPUBKEYHASH0 + i, le_pubkey_hash[i]);
-> +               cache[i] = le_pubkey_hash[i];
-> +       }
-> +       ret = __einit(sigstruct, token, secs);
-> +       preempt_enable();
-> +
-> +out:
-> +       sgx_put_page(secs);
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL(sgx_einit);
-> +
+Also, this email is so long that gmail won't let me quote the relevant
+code, but: what is the intended use case for supporting the mode where
+the MSRs are locked but happen to contain the right value?  I could
+see the case for bundling a key with the kernel and literally
+hard-coding the acceptable MSR values (as in literal values in the
+code, not even autogenerated hashes).  The only use case I've thought
+of for the code as it stands is that $VENDOR could publish their LE
+public key and some daft firmware vendor could get it into their head
+that it would be a good idea to lock the MSRs to that value.  This
+would add no security at all, but it would add a considerable about of
+annoyance and loss of value, so I still tend to think that we
+shouldn't support it.
