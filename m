@@ -1,52 +1,99 @@
-From: Chris Chiu <chiu@endlessm.com>
-Subject: [PATCH v2 2/2] platform/x86: asus-wmi: Add keyboard backlight toggle support
-Date: Mon, 11 Jun 2018 15:18:38 +0800
-Message-ID: <20180611071838.47945-2-chiu@endlessm.com>
-References: <20180611071838.47945-1-chiu@endlessm.com>
+From: Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v11 07/13] x86, sgx: detect Intel SGX
+Date: Mon, 11 Jun 2018 07:35:21 -0400
+Message-ID: <20180611113521.GB22164@hmswarspite.think-freely.org>
+References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
+ <20180608171216.26521-8-jarkko.sakkinen@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180611071838.47945-1-chiu@endlessm.com>
+Content-Disposition: inline
+In-Reply-To: <20180608171216.26521-8-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: corentin.chary@gmail.com, dvhart@infradead.org, andy.shevchenko@gmail.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, hdegoede@redhat.com, linux@endlessm.com, Chris Chiu <chiu@endlessm.com>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andi Kleen <ak@linux.intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some ASUS laptops like UX550GE has hotkey (Fn+F7) for keyboard
-backlight toggle which would emit the scan code 0xc7 each keypress.
-On the UX550GE, the max keyboard brightness level is 3 so the
-toggle would not be simply on/off the led but need to be cyclic.
-Per ASUS spec, it should increment the brightness for each keypress,
-then toggle(off) the LED when it already reached the max level.
+On Fri, Jun 08, 2018 at 07:09:42PM +0200, Jarkko Sakkinen wrote:
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
+> 
+> Intel(R) SGX is a set of CPU instructions that can be used by applications
+> to set aside private regions of code and data. The code outside the enclave
+> is disallowed to access the memory inside the enclave by the CPU access
+> control.
+> 
+> This commit adds the check for SGX to arch/x86 and a new config option,
+> INTEL_SGX_CORE. Exposes a boolean variable 'sgx_enabled' to query whether
+> or not the SGX support is available.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  arch/x86/Kconfig                | 19 ++++++++++++
+>  arch/x86/include/asm/sgx.h      | 25 ++++++++++++++++
+>  arch/x86/include/asm/sgx_pr.h   | 20 +++++++++++++
+>  arch/x86/kernel/cpu/Makefile    |  1 +
+>  arch/x86/kernel/cpu/intel_sgx.c | 53 +++++++++++++++++++++++++++++++++
+>  5 files changed, 118 insertions(+)
+>  create mode 100644 arch/x86/include/asm/sgx.h
+>  create mode 100644 arch/x86/include/asm/sgx_pr.h
+>  create mode 100644 arch/x86/kernel/cpu/intel_sgx.c
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index c07f492b871a..42015d5366ef 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -1925,6 +1925,25 @@ config X86_INTEL_MEMORY_PROTECTION_KEYS
+>  
+>  	  If unsure, say y.
+>  
+> +config INTEL_SGX_CORE
+> +	prompt "Intel SGX core functionality"
+> +	def_bool n
+> +	depends on X86_64 && CPU_SUP_INTEL
+> +	help
+> +	Intel Software Guard eXtensions (SGX) is a set of CPU instructions
+> +	that allows ring 3 applications to create enclaves; private regions
+> +	of memory that are protected, by hardware, from unauthorized access
+> +	and/or modification.
+> +
+> +	This option enables kernel recognition of SGX, high-level management
+> +	of the Enclave Page Cache (EPC), tracking and writing of SGX Launch
+> +	Enclave Hash MSRs, and allows for virtualization of SGX via KVM. By
+> +	iteslf, this option does not provide SGX support to userspace.
+> +
+> +	For details, see Documentation/x86/intel_sgx.rst
+> +
+> +	If unsure, say N.
+> +
+>  config EFI
+>  	bool "EFI runtime service support"
+>  	depends on ACPI
+> diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
+> new file mode 100644
+> index 000000000000..fa3e6e0eb8af
+> --- /dev/null
+> +++ b/arch/x86/include/asm/sgx.h
+> @@ -0,0 +1,25 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> +// Copyright(c) 2016-18 Intel Corporation.
+> +//
+> +// Authors:
+> +//
+> +// Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> +// Suresh Siddha <suresh.b.siddha@intel.com>
+> +// Sean Christopherson <sean.j.christopherson@intel.com>
+> +
+> +#ifndef _ASM_X86_SGX_H
+> +#define _ASM_X86_SGX_H
+> +
+> +#include <linux/types.h>
+> +
+> +#define SGX_CPUID 0x12
+> +
+Agree with Dave, this can just be remoed and you can use the feature macro from
+cpuid.h instead
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
----
- drivers/platform/x86/asus-wmi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index a18484f4bae3..bfcafca54a7a 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -67,6 +67,7 @@ MODULE_LICENSE("GPL");
- #define NOTIFY_BRNDOWN_MAX		0x2e
- #define NOTIFY_KBD_BRTUP		0xc4
- #define NOTIFY_KBD_BRTDWN		0xc5
-+#define NOTIFY_KBD_BRTTOGGLE		0xc7
- 
- /* WMI Methods */
- #define ASUS_WMI_METHODID_SPEC	        0x43455053 /* BIOS SPECification */
-@@ -1755,6 +1756,13 @@ static void asus_wmi_notify(u32 value, void *context)
- 		kbd_led_set(&asus->kbd_led, asus->kbd_led_wk - 1);
- 		goto exit;
- 	}
-+	if (code == NOTIFY_KBD_BRTTOGGLE) {
-+		if (asus->kbd_led_wk == asus->kbd_led.max_brightness)
-+			kbd_led_set(&asus->kbd_led, 0);
-+		else
-+			kbd_led_set(&asus->kbd_led, asus->kbd_led_wk + 1);
-+		goto exit;
-+	}
- 
- 	if (is_display_toggle(code) &&
- 	    asus->driver->quirks->no_display_toggle)
--- 
-2.11.0
+Neil
