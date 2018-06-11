@@ -1,77 +1,74 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
- launch enclave
-Date: Sun, 10 Jun 2018 22:17:13 -0700
-Message-ID: <CALCETrVp1ZhrxF5bQDSaZpLucS88tErejj5JC6Jb0fB5etWRbA@mail.gmail.com>
-References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com> <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Chris Chiu <chiu@endlessm.com>
+Subject: [PATCH v2 1/2] platform/x86: asus-wmi: Call led hw_changed API on kbd brightness change
+Date: Mon, 11 Jun 2018 15:18:37 +0800
+Message-ID: <20180611071838.47945-1-chiu@endlessm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lutomirski <luto@kernel.org>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, andy@infradead.org
+To: corentin.chary@gmail.com, dvhart@infradead.org, andy.shevchenko@gmail.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, hdegoede@redhat.com, linux@endlessm.com, Chris Chiu <chiu@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-> On Jun 9, 2018, at 10:39 PM, Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Fri, Jun 8, 2018 at 10:32 AM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
->>
->> The Launch Enclave (LE) generates cryptographic launch tokens for user
->> enclaves. A launch token is used by EINIT to check whether the enclave
->> is authorized to launch or not. By having its own launch enclave, Linux
->> has full control of the enclave launch process.
->>
->> LE is wrapped into a user space proxy program that reads enclave
->> signatures outputs launch tokens. The kernel-side glue code is
->> implemented by using the user space helper framework.  The IPC between
->> the LE proxy program and kernel is handled with an anonymous inode.
->>
->> The commit also adds enclave signing tool that is used by kbuild to
->> measure and sign the launch enclave. CONFIG_INTEL_SGX_SIGNING_KEY points
->> to a PEM-file for the 3072-bit RSA key that is used as the LE public key
->> pair. The default location is:
->>
->>  drivers/platform/x86/intel_sgx/sgx_signing_key.pem
->>
->> If the default key does not exist kbuild will generate a random key and
->> place it to this location. KBUILD_SGX_SIGN_PIN can be used to specify
->> the passphrase for the LE public key.
->
-> It seems to me that it might be more useful to just commit a key pair
-> into the kernel.  As far as I know, there is no security whatsoever
-> gained by keeping the private key private, so why not make
-> reproducible builds easier by simply fixing the key?
+Make asus-wmi notify on hotkey kbd brightness changes, listen for
+brightness events and update the brightness directly in the driver.
+For this purpose, bound check on brightness in kbd_led_set must be
+based on the same data type to prevent illegal value been set.
 
-Having thought about this some more, I think that you should
-completely remove support for specifying a key. Provide a fixed key
-pair, hard code the cache, and call it a day. If you make the key
-configurable, every vendor that has any vendor keys (Debian, Ubuntu,
-Fedora, Red Hat, SuSE, Clear Linux, etc) will see that config option
-and set up their own key pair for no gain whatsoever.  Instead, it'll
-give some illusion of security and it'll slow down operations in a VM
-guest due to swapping out the values of the MSRs.  And, if the code to
-support a locked MSR that just happens to have the right value stays
-in the kernel, then we'll risk having vendors actually ship one
-distro's public key hash, and that will seriously suck.
+Update the brightness by led_classdev_notify_brightness_hw_changed.
+This will allow userspace to monitor (poll) for brightness changes
+on the LED without reporting via input keymapping.
 
-I'm going to try to get this code working tomorrow.  I'll keep you
-posted on how that goes.  Can you point me to the userspace bits (i.e.
-something buildable that will run on a kernel with your patches
-applied)?
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+---
+ drivers/platform/x86/asus-wmi.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
->
-> Also, this email is so long that gmail won't let me quote the relevant
-> code, but: what is the intended use case for supporting the mode where
-> the MSRs are locked but happen to contain the right value?  I could
-> see the case for bundling a key with the kernel and literally
-> hard-coding the acceptable MSR values (as in literal values in the
-> code, not even autogenerated hashes).  The only use case I've thought
-> of for the code as it stands is that $VENDOR could publish their LE
-> public key and some daft firmware vendor could get it into their head
-> that it would be a good idea to lock the MSRs to that value.  This
-> would add no security at all, but it would add a considerable about of
-> annoyance and loss of value, so I still tend to think that we
-> shouldn't support it.
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 1f6e68f0b646..a18484f4bae3 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -460,6 +460,7 @@ static void kbd_led_update(struct work_struct *work)
+ 		ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+ 
+ 	asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
++	led_classdev_notify_brightness_hw_changed(&asus->kbd_led, asus->kbd_led_wk);
+ }
+ 
+ static int kbd_led_read(struct asus_wmi *asus, int *level, int *env)
+@@ -497,9 +498,9 @@ static void kbd_led_set(struct led_classdev *led_cdev,
+ 
+ 	asus = container_of(led_cdev, struct asus_wmi, kbd_led);
+ 
+-	if (value > asus->kbd_led.max_brightness)
++	if ((int)value > (int)asus->kbd_led.max_brightness)
+ 		value = asus->kbd_led.max_brightness;
+-	else if (value < 0)
++	else if ((int)value < 0)
+ 		value = 0;
+ 
+ 	asus->kbd_led_wk = value;
+@@ -656,6 +657,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+ 
+ 		asus->kbd_led_wk = led_val;
+ 		asus->kbd_led.name = "asus::kbd_backlight";
++		asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
+ 		asus->kbd_led.brightness_set = kbd_led_set;
+ 		asus->kbd_led.brightness_get = kbd_led_get;
+ 		asus->kbd_led.max_brightness = 3;
+@@ -1745,6 +1747,15 @@ static void asus_wmi_notify(u32 value, void *context)
+ 		}
+ 	}
+ 
++	if (code == NOTIFY_KBD_BRTUP) {
++		kbd_led_set(&asus->kbd_led, asus->kbd_led_wk + 1);
++		goto exit;
++	}
++	if (code == NOTIFY_KBD_BRTDWN) {
++		kbd_led_set(&asus->kbd_led, asus->kbd_led_wk - 1);
++		goto exit;
++	}
++
+ 	if (is_display_toggle(code) &&
+ 	    asus->driver->quirks->no_display_toggle)
+ 		goto exit;
+-- 
+2.11.0
