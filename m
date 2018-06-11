@@ -1,54 +1,79 @@
 From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v11 11/13] intel_sgx: ptrace() support
-Date: Mon, 11 Jun 2018 08:02:09 -0700
-Message-ID: <1528729329.9779.28.camel@intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 09/13] x86, sgx: basic
+ routines for enclave page cache
+Date: Mon, 11 Jun 2018 08:12:48 -0700
+Message-ID: <1528729968.9779.33.camel@intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
-         <20180608171216.26521-12-jarkko.sakkinen@linux.intel.com>
-         <91e35b3e-b42d-b3d5-752c-031973e69273@intel.com>
+         <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
+         <CALCETrVUGubKSS00aH5JJoc0vNkqLGPqCoaG2br2yn5cxWXz-Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <91e35b3e-b42d-b3d5-752c-031973e69273@intel.com>
+In-Reply-To: <CALCETrVUGubKSS00aH5JJoc0vNkqLGPqCoaG2br2yn5cxWXz-Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Hansen <dave.hansen@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: nhorman@redhat.com, npmccallum@redhat.com, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>, open list <linux-kernel@vger.kernel.org>
+To: Andy Lutomirski <luto@kernel.org>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 2018-06-08 at 11:34 -0700, Dave Hansen wrote:
-> On 06/08/2018 10:09 AM, Jarkko Sakkinen wrote:
+On Sat, 2018-06-09 at 22:32 -0700, Andy Lutomirski wrote:
+> On Fri, Jun 8, 2018 at 10:22 AM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
 > > 
-> > +		ret = sgx_edbgrd(encl, entry, align, data);
-> > +		if (ret)
-> > +			break;
-> > +		if (write) {
-> > +			memcpy(data + offset, buf + i, cnt);
-> > +			ret = sgx_edbgwr(encl, entry, align, data);
-> > +			if (ret)
-> > +				break;
-> > +		}
-> > +		else
-> > +			memcpy(buf + i,data + offset, cnt);
-> > +	}
-> The SGX instructions like "edbgrd" be great to put on a license plat,
-> but we can do better in the kernel.  Can you give these reasonable
-> english names, please?  sgx_debug_write(), maybe?
+> > 
+> > SGX has a set of data structures to maintain information about the enclaves
+> > and their security properties. BIOS reserves a fixed size region of
+> > physical memory for these structures by setting Processor Reserved Memory
+> > Range Registers (PRMRR). This memory area is called Enclave Page Cache
+> > (EPC).
+> > 
+> > 
+> > +/**
+> > + * sgx_einit - EINIT an enclave with the appropriate LE pubkey hash
+> > + * @sigstruct:         a pointer to the enclave's sigstruct
+> > + * @token:             a pointer to the enclave's EINIT token
+> > + * @secs_page:         a pointer to the enclave's SECS EPC page
+> > + * @le_pubkey_hash:    the desired LE pubkey hash for EINIT
+> > + */
+> > +int sgx_einit(struct sgx_sigstruct *sigstruct, struct sgx_einittoken *token,
+> > +             struct sgx_epc_page *secs_page, u64 le_pubkey_hash[4])
+> > +{
+> > +       u64 __percpu *cache;
+> > +       void *secs;
+> > +       int i, ret;
+> > +
+> > +       secs = sgx_get_page(secs_page);
+> > +
+> > +       if (!sgx_lc_enabled) {
+> I'm confused.  What does this code path do?  It kind of looks like the
+> driver will load and just malfunction if we don't have write access to
+> the MSRs.  What is the intended behavior?
 
-IMO the function names for ENCLS leafs are appropriate.  The real
-issue is the lack of documentation of the ENCLS helpers and their
-naming conventions.
+The driver will also allow itself to load if the MSRs are read-only,
+but only if the MSRs' pubkey hash matches that of its launch enclave,
+i.e. the system has been pre-configured for the kernel's LE.  Whether
+or not that is a valid scenario is probably a different discussion.
 
-The sgx_<leaf> functions, e.g. sgx_edbgrd(), are essentially direct
-invocations of the specific leaf, i.e. they are dumb wrappers to
-the lower level leaf functions, e.g. __edbgrd().  The wrappers exist
-primarily to deal with the boilerplate necessary to access a page in
-the EPC.  sgx_<leaf> conveys that the function contains the preamble
-and/or postamble needed to execute its leaf, but otherwise does not
-contain any logic.
-
-Functions with actual logic do have English names, e.g.
-sgx_encl_init(), sgx_encl_add_page(), sgx_encl_modify_pages() etc...
-
-> Note that we have plenty of incomprehensible instruction names in the
-> kernel like "wrpkru", but we do our best to keep them as confined as
-> possible and make sure they don't hurt code readability.
+> > +               ret = __einit(sigstruct, token, secs);
+> > +               goto out;
+> > +       }
+> > +
+> > +       cache = per_cpu(sgx_le_pubkey_hash_cache, smp_processor_id());
+> > +
+> > +       preempt_disable();
+> > +       for (i = 0; i < 4; i++) {
+> > +               if (le_pubkey_hash[i] == cache[i])
+> > +                       continue;
+> > +
+> > +               wrmsrl(MSR_IA32_SGXLEPUBKEYHASH0 + i, le_pubkey_hash[i]);
+> > +               cache[i] = le_pubkey_hash[i];
+> > +       }
+> > +       ret = __einit(sigstruct, token, secs);
+> > +       preempt_enable();
+> > +
+> > +out:
+> > +       sgx_put_page(secs);
+> > +       return ret;
+> > +}
+> > +EXPORT_SYMBOL(sgx_einit);
+> > +
