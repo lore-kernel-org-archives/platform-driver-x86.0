@@ -1,42 +1,77 @@
-From: Ognjen =?utf-8?B?R2FsacSH?= <smclt30p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] thinkpad_acpi: add support for
- force_discharge
-Date: Sun, 10 Jun 2018 09:25:55 +0200
-Message-ID: <20180610072555.GA16179@thinkpad>
-References: <20180513153000.GA5117@thinkpad> <20180521133112.GA4578@kevinolos>
- <20180524113555.wrwpdun64ai4cqwj@khazad-dum.debian.net>
+From: Andy Lutomirski <luto@kernel.org>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
+ launch enclave
+Date: Sun, 10 Jun 2018 22:17:13 -0700
+Message-ID: <CALCETrVp1ZhrxF5bQDSaZpLucS88tErejj5JC6Jb0fB5etWRbA@mail.gmail.com>
+References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
+ <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com> <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180524113555.wrwpdun64ai4cqwj-ZGHd14iZgfaRjzvQDGKj+xxZW9W5cXbT@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Cc: Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Robert Moore <robert.moore-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph =?iso-8859-1?Q?B=F6hmwalder?= <christoph-KeW1gJXA36yNJhrcwGid2A@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org, Kevin Locke <kevin-yFOG++GfaLUI8/NkjqMgMw@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lutomirski <luto@kernel.org>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, andy@infradead.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, May 24, 2018 at 08:35:55AM -0300, Henrique de Moraes Holschuh wrote:
-> On Mon, 21 May 2018, Kevin Locke wrote:
-> > as-expected.  The only oddity I noticed is that force_discharge has a
-> > delay taking effect (<1 sec) transitioning from 0 to 1 (but not 1 to
-> > 0).
-> 
-> The EC can take its sweet time to obey any such requests ;-)
-> 
+> On Jun 9, 2018, at 10:39 PM, Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Fri, Jun 8, 2018 at 10:32 AM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+>>
+>> The Launch Enclave (LE) generates cryptographic launch tokens for user
+>> enclaves. A launch token is used by EINIT to check whether the enclave
+>> is authorized to launch or not. By having its own launch enclave, Linux
+>> has full control of the enclave launch process.
+>>
+>> LE is wrapped into a user space proxy program that reads enclave
+>> signatures outputs launch tokens. The kernel-side glue code is
+>> implemented by using the user space helper framework.  The IPC between
+>> the LE proxy program and kernel is handled with an anonymous inode.
+>>
+>> The commit also adds enclave signing tool that is used by kbuild to
+>> measure and sign the launch enclave. CONFIG_INTEL_SGX_SIGNING_KEY points
+>> to a PEM-file for the 3072-bit RSA key that is used as the LE public key
+>> pair. The default location is:
+>>
+>>  drivers/platform/x86/intel_sgx/sgx_signing_key.pem
+>>
+>> If the default key does not exist kbuild will generate a random key and
+>> place it to this location. KBUILD_SGX_SIGN_PIN can be used to specify
+>> the passphrase for the LE public key.
+>
+> It seems to me that it might be more useful to just commit a key pair
+> into the kernel.  As far as I know, there is no security whatsoever
+> gained by keeping the private key private, so why not make
+> reproducible builds easier by simply fixing the key?
 
-What is the status on this patch? Do I need some revisional work or?
+Having thought about this some more, I think that you should
+completely remove support for specifying a key. Provide a fixed key
+pair, hard code the cache, and call it a day. If you make the key
+configurable, every vendor that has any vendor keys (Debian, Ubuntu,
+Fedora, Red Hat, SuSE, Clear Linux, etc) will see that config option
+and set up their own key pair for no gain whatsoever.  Instead, it'll
+give some illusion of security and it'll slow down operations in a VM
+guest due to swapping out the values of the MSRs.  And, if the code to
+support a locked MSR that just happens to have the right value stays
+in the kernel, then we'll risk having vendors actually ship one
+distro's public key hash, and that will seriously suck.
 
-> -- 
->   Henrique Holschuh
+I'm going to try to get this code working tomorrow.  I'll keep you
+posted on how that goes.  Can you point me to the userspace bits (i.e.
+something buildable that will run on a kernel with your patches
+applied)?
 
-------------------------------------------------------------------------------
-Check out the vibrant tech community on one of the world's most
-engaging tech sites, Slashdot.org! http://sdm.link/slashdot
+>
+> Also, this email is so long that gmail won't let me quote the relevant
+> code, but: what is the intended use case for supporting the mode where
+> the MSRs are locked but happen to contain the right value?  I could
+> see the case for bundling a key with the kernel and literally
+> hard-coding the acceptable MSR values (as in literal values in the
+> code, not even autogenerated hashes).  The only use case I've thought
+> of for the code as it stands is that $VENDOR could publish their LE
+> public key and some daft firmware vendor could get it into their head
+> that it would be a good idea to lock the MSRs to that value.  This
+> would add no security at all, but it would add a considerable about of
+> annoyance and loss of value, so I still tend to think that we
+> shouldn't support it.
