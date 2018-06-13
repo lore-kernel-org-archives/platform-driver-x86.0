@@ -1,83 +1,86 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3] dcdbas: Add support for WSMT ACPI table
-Date: Wed, 13 Jun 2018 11:54:45 +0300
-Message-ID: <CAHp75VcK78jL_7sF+ZGaPpwDED-6Xd+SdH_5WCfSBsVJW2GnDg@mail.gmail.com>
-References: <45b8bde6-aaa8-3f3f-0528-81e5e931751c@gmail.com>
- <bc6846e1-2b6d-dcc2-355c-2699aa1607a2@gmail.com> <CAHp75Vdmqm+r=Orxs6_dCr18y+EwEQ=s-7UgaZKHuKbtjMcOig@mail.gmail.com>
- <20180609010420.GA112645@localhost.localdomain> <CAHp75VcA5ZWahraDP69_hBHuqxw6cng93zAa1op5EBYfuCSPwg@mail.gmail.com>
- <b59027b3-a48e-f168-5f12-c67758c0c2c7@gmail.com>
+From: Chris Chiu <chiu@endlessm.com>
+Subject: Re: [PATCH v2 1/2] platform/x86: asus-wmi: Call led hw_changed API on
+ kbd brightness change
+Date: Wed, 13 Jun 2018 20:14:13 +0800
+Message-ID: <CAB4CAweUHcKY0+dGhoBNd8VqLc=XYbU_a8qpzHX6us4vVBE-KA@mail.gmail.com>
+References: <20180611071838.47945-1-chiu@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b59027b3-a48e-f168-5f12-c67758c0c2c7@gmail.com>
+In-Reply-To: <20180611071838.47945-1-chiu@endlessm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Douglas_Warzecha@dell.com, Mario Limonciello <mario.limonciello@dell.com>, Jared.Dominguez@dell.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Hans de Goede <hdegoede@redhat.com>, Linux Upstreaming Team <linux@endlessm.com>, Chris Chiu <chiu@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 13, 2018 at 4:24 AM, Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
+On Mon, Jun 11, 2018 at 3:18 PM, Chris Chiu <chiu@endlessm.com> wrote:
+> Make asus-wmi notify on hotkey kbd brightness changes, listen for
+> brightness events and update the brightness directly in the driver.
+> For this purpose, bound check on brightness in kbd_led_set must be
+> based on the same data type to prevent illegal value been set.
 >
-> If the WSMT ACPI table is present and indicates that a fixed communication
-> buffer should be used, use the firmware-specified buffer instead of
-> allocating a buffer in memory for communications between the dcdbas driver
-> and firmare.
-
-Thanks for an update. My comments below.
-
-> -       if ((pos + count) > MAX_SMI_DATA_BUF_SIZE)
-> +       if ((pos + count) > max_smi_data_buf_size)
->                 return -EINVAL;
-
-Parens are redundant, but okay, not purpose of the change.
-
-> +               /* Calling Interface SMI
-
-I suppose the style of the comments like
-/*
- * Calling ...
-...
-
-> +                *
-> +                * Provide physical address of command buffer field within
-> +                * the struct smi_cmd... can't use virt_to_phys on smi_cmd
-> +                * because address may be from memremap.
-
-Wait, memremap() might return a virtual address. How we be sure that
-we got still physical address here?
-
-(Also note () when referring to functions)
-
-> +                */
-> +               smi_cmd->ebx = smi_data_buf_phys_addr +
-> +                               offsetof(struct smi_cmd, command_buffer);
-
-Btw, can it be one line (~83 character are okay for my opinion).
-
-> +       acpi_get_table(ACPI_SIG_WSMT, 0, (struct acpi_table_header **)&wsmt);
-> +       if (!wsmt)
-> +               return 0;
+> Update the brightness by led_classdev_notify_brightness_hw_changed.
+> This will allow userspace to monitor (poll) for brightness changes
+> on the LED without reporting via input keymapping.
+>
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 1f6e68f0b646..a18484f4bae3 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -460,6 +460,7 @@ static void kbd_led_update(struct work_struct *work)
+>                 ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+>
+>         asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
+> +       led_classdev_notify_brightness_hw_changed(&asus->kbd_led, asus->kbd_led_wk);
+>  }
+>
+>  static int kbd_led_read(struct asus_wmi *asus, int *level, int *env)
+> @@ -497,9 +498,9 @@ static void kbd_led_set(struct led_classdev *led_cdev,
+>
+>         asus = container_of(led_cdev, struct asus_wmi, kbd_led);
+>
+> -       if (value > asus->kbd_led.max_brightness)
+> +       if ((int)value > (int)asus->kbd_led.max_brightness)
+>                 value = asus->kbd_led.max_brightness;
+> -       else if (value < 0)
+> +       else if ((int)value < 0)
+>                 value = 0;
+>
+>         asus->kbd_led_wk = value;
+> @@ -656,6 +657,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+>
+>                 asus->kbd_led_wk = led_val;
+>                 asus->kbd_led.name = "asus::kbd_backlight";
+> +               asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
+>                 asus->kbd_led.brightness_set = kbd_led_set;
+>                 asus->kbd_led.brightness_get = kbd_led_get;
+>                 asus->kbd_led.max_brightness = 3;
+> @@ -1745,6 +1747,15 @@ static void asus_wmi_notify(u32 value, void *context)
+>                 }
+>         }
+>
+> +       if (code == NOTIFY_KBD_BRTUP) {
+> +               kbd_led_set(&asus->kbd_led, asus->kbd_led_wk + 1);
+> +               goto exit;
+> +       }
+> +       if (code == NOTIFY_KBD_BRTDWN) {
+> +               kbd_led_set(&asus->kbd_led, asus->kbd_led_wk - 1);
+> +               goto exit;
+> +       }
 > +
-> +       /* Check if WSMT ACPI table shows that protection is enabled */
-> +       if (!(wsmt->protection_flags & ACPI_WSMT_FIXED_COMM_BUFFERS)
+>         if (is_display_toggle(code) &&
+>             asus->driver->quirks->no_display_toggle)
+>                 goto exit;
+> --
+> 2.11.0
+>
 
-> +           || !(wsmt->protection_flags
-> +                & ACPI_WSMT_COMM_BUFFER_NESTED_PTR_PROTECTION))
+Gentle ping. Any suggestions? The v2 is based on the last comment from
+Hans, https://lkml.org/lkml/2018/6/5/270. Please let me know if nay. Thanks
 
-Better to indent like
-
-if (... ||
- !(... & ...)
-
-> +               return 0;
-> +
-> +       /* Scan for EPS (entry point structure) */
-> +       for (addr = (u8 *)__va(0xf0000);
-> +            addr < (u8 *)__va(0x100000 - sizeof(struct smm_eps_table));
-
-> +            addr += 1) {
-
-This wasn't commented IIRC and changed. So, why?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Chris
