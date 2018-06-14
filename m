@@ -1,279 +1,247 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4] dcdbas: Add support for WSMT ACPI table
-Date: Thu, 14 Jun 2018 20:26:45 +0300
-Message-ID: <CAHp75VctDOupi9Vk+njzj3U5G8BthwnaNqE=Y8mOhJLviFkYbA@mail.gmail.com>
-References: <45b8bde6-aaa8-3f3f-0528-81e5e931751c@gmail.com>
- <bc6846e1-2b6d-dcc2-355c-2699aa1607a2@gmail.com> <CAHp75Vdmqm+r=Orxs6_dCr18y+EwEQ=s-7UgaZKHuKbtjMcOig@mail.gmail.com>
- <20180609010420.GA112645@localhost.localdomain> <CAHp75VcA5ZWahraDP69_hBHuqxw6cng93zAa1op5EBYfuCSPwg@mail.gmail.com>
- <b59027b3-a48e-f168-5f12-c67758c0c2c7@gmail.com> <3b881313-d96c-0395-05f3-dd612b7e440f@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: "David E. Box" <david.e.box@linux.intel.com>
+Subject: [PATCH V4] platform/x86: intel_pmc_core: Add CNP SLPS0 debug registers
+Date: Thu, 14 Jun 2018 15:13:02 -0700
+Message-ID: <20180614221302.25663-1-david.e.box@linux.intel.com>
+References: <CAHp75Vdxz2h1N_bLQ4wxrYoo-kRAHQK=+36Db0BfK1QR4iwVPw@mail.gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3b881313-d96c-0395-05f3-dd612b7e440f@gmail.com>
+In-Reply-To: <CAHp75Vdxz2h1N_bLQ4wxrYoo-kRAHQK=+36Db0BfK1QR4iwVPw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stuart Hayes <stuart.w.hayes@gmail.com>, Mario Limonciello <mario_limonciello@dell.com>
-Cc: Darren Hart <dvhart@infradead.org>, Douglas_Warzecha@dell.com, Jared.Dominguez@dell.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: rajneesh.bhardwaj@intel.com, vishwanath.somayaji@intel.com, dvhart@infradead.org, andy@infradead.org, kyle.d.pelton@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 14, 2018 at 6:45 PM, Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
->
-> If the WSMT ACPI table is present and indicates that a fixed communication
-> buffer should be used, use the firmware-specified buffer instead of
-> allocating a buffer in memory for communications between the dcdbas driver
-> and firmare.
+From: <david.e.box@intel.com>
 
-Thanks for an update.
+Adds debugfs access to registers in the Cannonlake PCH PMC that are
+useful for debugging #SLP_S0 signal assertion and other low power
+related activities. Device pm states are latched in these registers
+whenever the package enters C10 and can be read from slp_s0_debug_status.
+The pm states may also be latched by writing 1 to slp_s0_debug_latch
+which will immediately capture the current state on the next read of
+slp_s0_debug_status.
 
-I answered to previous thread. The questions / comments are still
-applicable here.
+Signed-off-by: Box, David E <david.e.box@intel.com>
+---
+V4:
+	- rename slp_s0_dbg string to slp_s0_debug for consistency
+	- ADD ISCLK prefix to MAIN_PLL and OC_PLL
+V3:
+	- use null terminator in bit_map array
+	- replaced ternary operator with if/else
+	- Removed space fixes on old code
+V2:
+	- Clear latch bit after use
+	- Pass pmc_dev as parameter
+	- Use DEFINE_SHOW_ATTRIBUTE macro
+ drivers/platform/x86/intel_pmc_core.c | 120 ++++++++++++++++++++++++++++++++++
+ drivers/platform/x86/intel_pmc_core.h |   6 ++
+ 2 files changed, 126 insertions(+)
 
-> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> ---
-> v2 Bumped driver version to 5.6.0-3.3
-> v3 Removed dependency on ACPI in Kconfig
->    Moved the added #include to be in alphabetical order
->    Added comments in smi_request_store()
->    Simplified checksum code
->    Changed loop searching 0xf0000 to be more readable
->    Reworked calculation of remap_size & smi_data_buf_size
-> v4 Fixed comment that starts with "Calling Interface SMI"
->    Fixed formatting of first "if" statement in dcdbas_check_wsmt()
->
->
->  drivers/firmware/dcdbas.c | 118 +++++++++++++++++++++++++++++++++++++++++++---
->  drivers/firmware/dcdbas.h |  10 ++++
->  2 files changed, 122 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/firmware/dcdbas.c b/drivers/firmware/dcdbas.c
-> index 0bdea60c65dd..4cac70d05bfc 100644
-> --- a/drivers/firmware/dcdbas.c
-> +++ b/drivers/firmware/dcdbas.c
-> @@ -21,6 +21,7 @@
->   */
->
->  #include <linux/platform_device.h>
-> +#include <linux/acpi.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/errno.h>
->  #include <linux/cpu.h>
-> @@ -41,7 +42,7 @@
->  #include "dcdbas.h"
->
->  #define DRIVER_NAME            "dcdbas"
-> -#define DRIVER_VERSION         "5.6.0-3.2"
-> +#define DRIVER_VERSION         "5.6.0-3.3"
->  #define DRIVER_DESCRIPTION     "Dell Systems Management Base Driver"
->
->  static struct platform_device *dcdbas_pdev;
-> @@ -49,19 +50,23 @@ static struct platform_device *dcdbas_pdev;
->  static u8 *smi_data_buf;
->  static dma_addr_t smi_data_buf_handle;
->  static unsigned long smi_data_buf_size;
-> +static unsigned long max_smi_data_buf_size = MAX_SMI_DATA_BUF_SIZE;
->  static u32 smi_data_buf_phys_addr;
->  static DEFINE_MUTEX(smi_data_lock);
-> +static u8 *eps_buffer;
->
->  static unsigned int host_control_action;
->  static unsigned int host_control_smi_type;
->  static unsigned int host_control_on_shutdown;
->
-> +static bool wsmt_enabled;
-> +
->  /**
->   * smi_data_buf_free: free SMI data buffer
->   */
->  static void smi_data_buf_free(void)
->  {
-> -       if (!smi_data_buf)
-> +       if (!smi_data_buf || wsmt_enabled)
->                 return;
->
->         dev_dbg(&dcdbas_pdev->dev, "%s: phys: %x size: %lu\n",
-> @@ -86,7 +91,7 @@ static int smi_data_buf_realloc(unsigned long size)
->         if (smi_data_buf_size >= size)
->                 return 0;
->
-> -       if (size > MAX_SMI_DATA_BUF_SIZE)
-> +       if (size > max_smi_data_buf_size)
->                 return -EINVAL;
->
->         /* new buffer is needed */
-> @@ -169,7 +174,7 @@ static ssize_t smi_data_write(struct file *filp, struct kobject *kobj,
->  {
->         ssize_t ret;
->
-> -       if ((pos + count) > MAX_SMI_DATA_BUF_SIZE)
-> +       if ((pos + count) > max_smi_data_buf_size)
->                 return -EINVAL;
->
->         mutex_lock(&smi_data_lock);
-> @@ -322,8 +327,15 @@ static ssize_t smi_request_store(struct device *dev,
->                         ret = count;
->                 break;
->         case 1:
-> -               /* Calling Interface SMI */
-> -               smi_cmd->ebx = (u32) virt_to_phys(smi_cmd->command_buffer);
-> +               /*
-> +                * Calling Interface SMI
-> +                *
-> +                * Provide physical address of command buffer field within
-> +                * the struct smi_cmd... can't use virt_to_phys() on smi_cmd
-> +                * because address may be from memremap().
-> +                */
-> +               smi_cmd->ebx = smi_data_buf_phys_addr +
-> +                               offsetof(struct smi_cmd, command_buffer);
->                 ret = dcdbas_smi_request(smi_cmd);
->                 if (!ret)
->                         ret = count;
-> @@ -482,6 +494,93 @@ static void dcdbas_host_control(void)
->         }
->  }
->
-> +/* WSMT */
-> +
-> +static u8 checksum(u8 *buffer, u8 length)
-> +{
-> +       u8 sum = 0;
-> +       u8 *end = buffer + length;
-> +
-> +       while (buffer < end)
-> +               sum += *buffer++;
-> +       return sum;
-> +}
-> +
-> +static inline struct smm_eps_table *check_eps_table(u8 *addr)
-> +{
-> +       struct smm_eps_table *eps = (struct smm_eps_table *)addr;
-> +
-> +       if (strncmp(eps->smm_comm_buff_anchor, SMM_EPS_SIG, 4) != 0)
-> +               return NULL;
-> +
-> +       if (checksum(addr, eps->length) != 0)
-> +               return NULL;
-> +
-> +       return eps;
-> +}
-> +
-> +static int dcdbas_check_wsmt(void)
-> +{
-> +       struct acpi_table_wsmt *wsmt = NULL;
-> +       struct smm_eps_table *eps = NULL;
-> +       u64 remap_size;
-> +       u8 *addr;
-> +
-> +       acpi_get_table(ACPI_SIG_WSMT, 0, (struct acpi_table_header **)&wsmt);
-> +       if (!wsmt)
-> +               return 0;
-> +
-> +       /* Check if WSMT ACPI table shows that protection is enabled */
-> +       if (!(wsmt->protection_flags & ACPI_WSMT_FIXED_COMM_BUFFERS) ||
-> +           !(wsmt->protection_flags & ACPI_WSMT_COMM_BUFFER_NESTED_PTR_PROTECTION))
-> +               return 0;
-> +
-> +       /* Scan for EPS (entry point structure) */
-> +       for (addr = (u8 *)__va(0xf0000);
-> +            addr < (u8 *)__va(0x100000 - sizeof(struct smm_eps_table));
-> +            addr += 1) {
-> +               eps = check_eps_table(addr);
-> +               if (eps)
-> +                       break;
-> +       }
-> +
-> +       if (!eps) {
-> +               dev_dbg(&dcdbas_pdev->dev, "found WSMT, but no EPS found\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       /*
-> +        * Get physical address of buffer and map to virtual address.
-> +        * Table gives size in 4K pages, regardless of actual system page size.
-> +        */
-> +       if (upper_32_bits(eps->smm_comm_buff_addr + 8)) {
-> +               dev_warn(&dcdbas_pdev->dev, "found WSMT, but EPS buffer address is above 4GB\n");
-> +               return -EINVAL;
-> +       }
-> +       /*
-> +        * Limit remap size to MAX_SMI_DATA_BUF_SIZE + 8 (since the first 8
-> +        * bytes are used for a semaphore, not the data buffer itself).
-> +        */
-> +       remap_size = eps->num_of_4k_pages * PAGE_SIZE;
-> +       if (remap_size > MAX_SMI_DATA_BUF_SIZE + 8)
-> +               remap_size = MAX_SMI_DATA_BUF_SIZE + 8;
-> +       eps_buffer = memremap(eps->smm_comm_buff_addr, remap_size, MEMREMAP_WB);
-> +       if (!eps_buffer) {
-> +               dev_warn(&dcdbas_pdev->dev, "found WSMT, but failed to map EPS buffer\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       /* First 8 bytes is for a semaphore, not part of the smi_data_buf */
-> +       smi_data_buf_phys_addr = eps->smm_comm_buff_addr + 8;
-> +       smi_data_buf = eps_buffer + 8;
-> +       smi_data_buf_size = remap_size - 8;
-> +       max_smi_data_buf_size = smi_data_buf_size;
-> +       wsmt_enabled = true;
-> +       dev_info(&dcdbas_pdev->dev,
-> +                "WSMT found, using firmware-provided SMI buffer.\n");
-> +       return 1;
-> +}
-> +
->  /**
->   * dcdbas_reboot_notify: handle reboot notification for host control
->   */
-> @@ -548,6 +647,11 @@ static int dcdbas_probe(struct platform_device *dev)
->
->         dcdbas_pdev = dev;
->
-> +       /* Check if ACPI WSMT table specifies protected SMI buffer address */
-> +       error = dcdbas_check_wsmt();
-> +       if (error < 0)
-> +               return error;
-> +
->         /*
->          * BIOS SMI calls require buffer addresses be in 32-bit address space.
->          * This is done by setting the DMA mask below.
-> @@ -635,6 +739,8 @@ static void __exit dcdbas_exit(void)
->          */
->         if (dcdbas_pdev)
->                 smi_data_buf_free();
-> +       if (eps_buffer)
-> +               memunmap(eps_buffer);
->         platform_device_unregister(dcdbas_pdev_reg);
->         platform_driver_unregister(&dcdbas_driver);
->  }
-> diff --git a/drivers/firmware/dcdbas.h b/drivers/firmware/dcdbas.h
-> index ca3cb0a54ab6..52729a494b00 100644
-> --- a/drivers/firmware/dcdbas.h
-> +++ b/drivers/firmware/dcdbas.h
-> @@ -53,6 +53,7 @@
->  #define EXPIRED_TIMER                          (0)
->
->  #define SMI_CMD_MAGIC                          (0x534D4931)
-> +#define SMM_EPS_SIG                            "$SCB"
->
->  #define DCDBAS_DEV_ATTR_RW(_name) \
->         DEVICE_ATTR(_name,0600,_name##_show,_name##_store);
-> @@ -103,5 +104,14 @@ struct apm_cmd {
->
->  int dcdbas_smi_request(struct smi_cmd *smi_cmd);
->
-> +struct smm_eps_table {
-> +       char smm_comm_buff_anchor[4];
-> +       u8 length;
-> +       u8 checksum;
-> +       u8 version;
-> +       u64 smm_comm_buff_addr;
-> +       u64 num_of_4k_pages;
-> +} __packed;
-> +
->  #endif /* _DCDBAS_H_ */
->
-> --
-> 2.14.2
->
-
-
-
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 43bbe74..d00fee2 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -196,9 +196,67 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{}
+ };
+ 
++static const struct pmc_bit_map cnp_slps0_dbg0_map[] = {
++	{"AUDIO_D3",		BIT(0)},
++	{"OTG_D3",		BIT(1)},
++	{"XHCI_D3",		BIT(2)},
++	{"LPIO_D3",		BIT(3)},
++	{"SDX_D3",		BIT(4)},
++	{"SATA_D3",		BIT(5)},
++	{"UFS0_D3",		BIT(6)},
++	{"UFS1_D3",		BIT(7)},
++	{"EMMC_D3",		BIT(8)},
++	{}
++};
++
++static const struct pmc_bit_map cnp_slps0_dbg1_map[] = {
++	{"SDIO_PLL_OFF",	BIT(0)},
++	{"USB2_PLL_OFF",	BIT(1)},
++	{"AUDIO_PLL_OFF",	BIT(2)},
++	{"ISCLK_OC_PLL_OFF",	BIT(3)},
++	{"ISCLK_MAIN_PLL_OFF",	BIT(4)},
++	{"XOSC_OFF",		BIT(5)},
++	{"LPC_CLKS_GATED",	BIT(6)},
++	{"PCIE_CLKREQS_IDLE",	BIT(7)},
++	{"AUDIO_ROSC_OFF",	BIT(8)},
++	{"HPET_XOSC_CLK_REQ",	BIT(9)},
++	{"PMC_ROSC_SLOW_CLK",	BIT(10)},
++	{"AON2_ROSC_GATED",	BIT(11)},
++	{"CLKACKS_DEASSERTED",	BIT(12)},
++	{}
++};
++
++static const struct pmc_bit_map cnp_slps0_dbg2_map[] = {
++	{"MPHY_CORE_GATED",	BIT(0)},
++	{"CSME_GATED",		BIT(1)},
++	{"USB2_SUS_GATED",	BIT(2)},
++	{"DYN_FLEX_IO_IDLE",	BIT(3)},
++	{"GBE_NO_LINK",		BIT(4)},
++	{"THERM_SEN_DISABLED",	BIT(5)},
++	{"PCIE_LOW_POWER",	BIT(6)},
++	{"ISH_VNNAON_REQ_ACT",	BIT(7)},
++	{"ISH_VNN_REQ_ACT",	BIT(8)},
++	{"CNV_VNNAON_REQ_ACT",	BIT(9)},
++	{"CNV_VNN_REQ_ACT",	BIT(10)},
++	{"NPK_VNNON_REQ_ACT",	BIT(11)},
++	{"PMSYNC_STATE_IDLE",	BIT(12)},
++	{"ALST_GT_THRES",	BIT(13)},
++	{"PMC_ARC_PG_READY",	BIT(14)},
++	{}
++};
++
++static const struct pmc_bit_map *cnp_slps0_dbg_maps[] = {
++	cnp_slps0_dbg0_map,
++	cnp_slps0_dbg1_map,
++	cnp_slps0_dbg2_map,
++	NULL,
++};
++
+ static const struct pmc_reg_map cnp_reg_map = {
+ 	.pfear_sts = cnp_pfear_map,
+ 	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
++	.slps0_dbg_maps = cnp_slps0_dbg_maps,
++	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
+ 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+ 	.regmap_length = CNP_PMC_MMIO_REG_LEN,
+ 	.ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
+@@ -252,6 +310,8 @@ static int pmc_core_check_read_lock_bit(void)
+ }
+ 
+ #if IS_ENABLED(CONFIG_DEBUG_FS)
++static bool slps0_dbg_latch;
++
+ static void pmc_core_display_map(struct seq_file *s, int index,
+ 				 u8 pf_reg, const struct pmc_bit_map *pf_map)
+ {
+@@ -481,6 +541,57 @@ static const struct file_operations pmc_core_ltr_ignore_ops = {
+ 	.release        = single_release,
+ };
+ 
++static void pmc_core_slps0_dbg_latch(struct pmc_dev *pmcdev, bool reset)
++{
++	const struct pmc_reg_map *map = pmcdev->map;
++	u32 fd;
++
++	mutex_lock(&pmcdev->lock);
++
++	if (!reset && !slps0_dbg_latch)
++		goto out_unlock;
++
++	fd = pmc_core_reg_read(pmcdev, map->slps0_dbg_offset);
++	if (reset)
++		fd &= ~CNP_PMC_LATCH_SLPS0_EVENTS;
++	else
++		fd |= CNP_PMC_LATCH_SLPS0_EVENTS;
++	pmc_core_reg_write(pmcdev, map->slps0_dbg_offset, fd);
++
++	slps0_dbg_latch = 0;
++
++out_unlock:
++	mutex_unlock(&pmcdev->lock);
++}
++
++static int pmc_core_slps0_dbg_show(struct seq_file *s, void *unused)
++{
++	struct pmc_dev *pmcdev = s->private;
++	const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
++	const struct pmc_bit_map *map;
++	int offset;
++	u32 data;
++
++	pmc_core_slps0_dbg_latch(pmcdev, false);
++	offset = pmcdev->map->slps0_dbg_offset;
++	while (*maps) {
++		map = *maps;
++		data = pmc_core_reg_read(pmcdev, offset);
++		offset += 4;
++		while (map->name) {
++			seq_printf(s, "SLP_S0_DBG: %-32s\tState: %s\n",
++				   map->name,
++				   data & map->bit_mask ?
++				   "Yes" : "No");
++			++map;
++		}
++		++maps;
++	}
++	pmc_core_slps0_dbg_latch(pmcdev, true);
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(pmc_core_slps0_dbg);
++
+ static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+ {
+ 	debugfs_remove_recursive(pmcdev->dbgfs_dir);
+@@ -514,6 +625,15 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 				    0444, dir, pmcdev,
+ 				    &pmc_core_mphy_pg_ops);
+ 
++	if (pmcdev->map->slps0_dbg_maps) {
++		debugfs_create_file("slp_s0_debug_status", 0444,
++				    dir, pmcdev,
++				    &pmc_core_slps0_dbg_fops);
++
++		debugfs_create_bool("slp_s0_debug_latch", 0644,
++				    dir, &slps0_dbg_latch);
++	}
++
+ 	return 0;
+ }
+ #else
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index 5fa5f97..93a7e99 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -127,12 +127,14 @@ enum ppfear_regs {
+ #define CNP_PMC_SLP_S0_RES_COUNTER_OFFSET      0x193C
+ #define CNP_PMC_LTR_IGNORE_OFFSET              0x1B0C
+ #define CNP_PMC_PM_CFG_OFFSET                  0x1818
++#define CNP_PMC_SLPS0_DBG_OFFSET		0x10B4
+ /* Cannonlake: PGD PFET Enable Ack Status Register(s) start */
+ #define CNP_PMC_HOST_PPFEAR0A                  0x1D90
+ 
+ #define CNP_PMC_MMIO_REG_LEN                   0x2000
+ #define CNP_PPFEAR_NUM_ENTRIES                 8
+ #define CNP_PMC_READ_DISABLE_BIT               22
++#define CNP_PMC_LATCH_SLPS0_EVENTS		BIT(31)
+ 
+ struct pmc_bit_map {
+ 	const char *name;
+@@ -145,6 +147,7 @@ struct pmc_bit_map {
+  * @pfear_sts:		Maps name of IP block to PPFEAR* bit
+  * @mphy_sts:		Maps name of MPHY lane to MPHY status lane status bit
+  * @pll_sts:		Maps name of PLL to corresponding bit status
++ * @slps0_dbg_maps:	Array of SLP_S0_DBG* registers containing debug info
+  * @slp_s0_offset:	PWRMBASE offset to read SLP_S0 residency
+  * @ltr_ignore_offset:	PWRMBASE offset to read/write LTR ignore bit
+  * @regmap_length:	Length of memory to map from PWRMBASE address to access
+@@ -153,6 +156,7 @@ struct pmc_bit_map {
+  *			PPFEAR
+  * @pm_cfg_offset:	PWRMBASE offset to PM_CFG register
+  * @pm_read_disable_bit: Bit index to read PMC_READ_DISABLE
++ * @slps0_dbg_offset:	PWRMBASE offset to SLP_S0_DEBUG_REG*
+  *
+  * Each PCH has unique set of register offsets and bit indexes. This structure
+  * captures them to have a common implementation.
+@@ -161,6 +165,7 @@ struct pmc_reg_map {
+ 	const struct pmc_bit_map *pfear_sts;
+ 	const struct pmc_bit_map *mphy_sts;
+ 	const struct pmc_bit_map *pll_sts;
++	const struct pmc_bit_map **slps0_dbg_maps;
+ 	const u32 slp_s0_offset;
+ 	const u32 ltr_ignore_offset;
+ 	const int regmap_length;
+@@ -168,6 +173,7 @@ struct pmc_reg_map {
+ 	const int ppfear_buckets;
+ 	const u32 pm_cfg_offset;
+ 	const int pm_read_disable_bit;
++	const u32 slps0_dbg_offset;
+ };
+ 
+ /**
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
