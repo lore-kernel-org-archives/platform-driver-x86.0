@@ -1,270 +1,131 @@
-From: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v4] dcdbas: Add support for WSMT ACPI table
-Date: Thu, 14 Jun 2018 10:45:50 -0500
-Message-ID: <3b881313-d96c-0395-05f3-dd612b7e440f@gmail.com>
-References: <45b8bde6-aaa8-3f3f-0528-81e5e931751c@gmail.com>
- <bc6846e1-2b6d-dcc2-355c-2699aa1607a2@gmail.com>
- <CAHp75Vdmqm+r=Orxs6_dCr18y+EwEQ=s-7UgaZKHuKbtjMcOig@mail.gmail.com>
- <20180609010420.GA112645@localhost.localdomain>
- <CAHp75VcA5ZWahraDP69_hBHuqxw6cng93zAa1op5EBYfuCSPwg@mail.gmail.com>
- <b59027b3-a48e-f168-5f12-c67758c0c2c7@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH v3 27/27] fix a series of Documentation/ broken file name references
+Date: Thu, 14 Jun 2018 13:09:12 -0300
+Message-ID: <a98dcea5ad61aad741c88be991d6446b4d6bc029.1528990947.git.mchehab+samsung@kernel.org>
+References: <cover.1528990947.git.mchehab+samsung@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b59027b3-a48e-f168-5f12-c67758c0c2c7@gmail.com>
-Content-Language: en-US
+In-Reply-To: <cover.1528990947.git.mchehab+samsung@kernel.org>
+In-Reply-To: <cover.1528990947.git.mchehab+samsung@kernel.org>
+References: <cover.1528990947.git.mchehab+samsung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>
-Cc: Douglas_Warzecha@dell.com, Mario Limonciello <mario.limonciello@dell.com>, Jared.Dominguez@dell.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Harry Wei <harryxiyou@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "David S. Miller" <davem@davemloft.net>, Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, linux-kernel@zh-kernel.org, dmaengine@vger.kernel.org, platform-driver-x86@vger.kernel.org, sparclinux@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+As files move around, their previous links break. Fix the
+references for them.
 
-If the WSMT ACPI table is present and indicates that a fixed communication
-buffer should be used, use the firmware-specified buffer instead of
-allocating a buffer in memory for communications between the dcdbas driver
-and firmare.
-
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
-v2 Bumped driver version to 5.6.0-3.3
-v3 Removed dependency on ACPI in Kconfig
-   Moved the added #include to be in alphabetical order
-   Added comments in smi_request_store()
-   Simplified checksum code
-   Changed loop searching 0xf0000 to be more readable
-   Reworked calculation of remap_size & smi_data_buf_size
-v4 Fixed comment that starts with "Calling Interface SMI"
-   Fixed formatting of first "if" statement in dcdbas_check_wsmt()
+ Documentation/translations/zh_CN/io_ordering.txt | 2 +-
+ drivers/dma/dmaengine.c                          | 2 +-
+ drivers/platform/x86/Kconfig                     | 2 +-
+ drivers/sbus/char/oradax.c                       | 2 +-
+ fs/befs/ChangeLog                                | 2 +-
+ fs/orangefs/orangefs-sysfs.c                     | 2 +-
+ include/linux/platform_data/sc18is602.h          | 2 +-
+ kernel/power/main.c                              | 2 +-
+ 8 files changed, 8 insertions(+), 8 deletions(-)
 
-
- drivers/firmware/dcdbas.c | 118 +++++++++++++++++++++++++++++++++++++++++++---
- drivers/firmware/dcdbas.h |  10 ++++
- 2 files changed, 122 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/firmware/dcdbas.c b/drivers/firmware/dcdbas.c
-index 0bdea60c65dd..4cac70d05bfc 100644
---- a/drivers/firmware/dcdbas.c
-+++ b/drivers/firmware/dcdbas.c
-@@ -21,6 +21,7 @@
+diff --git a/Documentation/translations/zh_CN/io_ordering.txt b/Documentation/translations/zh_CN/io_ordering.txt
+index e592daf4e014..1f8127bdd415 100644
+--- a/Documentation/translations/zh_CN/io_ordering.txt
++++ b/Documentation/translations/zh_CN/io_ordering.txt
+@@ -1,4 +1,4 @@
+-Chinese translated version of Documentation/io_orderings.txt
++Chinese translated version of Documentation/io_ordering.txt
+ 
+ If you have any comment or update to the content, please contact the
+ original document maintainer directly.  However, if you have a problem
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index b451354735d3..08ba8473a284 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -38,7 +38,7 @@
+  * Each device has a channels list, which runs unlocked but is never modified
+  * once the device is registered, it's just setup by the driver.
+  *
+- * See Documentation/dmaengine.txt for more details
++ * See Documentation/driver-api/dmaengine for more details
   */
  
- #include <linux/platform_device.h>
-+#include <linux/acpi.h>
- #include <linux/dma-mapping.h>
- #include <linux/errno.h>
- #include <linux/cpu.h>
-@@ -41,7 +42,7 @@
- #include "dcdbas.h"
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index f27cb186437d..ac4d48830415 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1052,7 +1052,7 @@ config SAMSUNG_LAPTOP
+ 	  function keys, wireless LED, LCD backlight level.
  
- #define DRIVER_NAME		"dcdbas"
--#define DRIVER_VERSION		"5.6.0-3.2"
-+#define DRIVER_VERSION		"5.6.0-3.3"
- #define DRIVER_DESCRIPTION	"Dell Systems Management Base Driver"
+ 	  It may also provide some sysfs files described in
+-	  <file:Documentation/ABI/testing/sysfs-platform-samsung-laptop>
++	  <file:Documentation/ABI/testing/sysfs-driver-samsung-laptop>
  
- static struct platform_device *dcdbas_pdev;
-@@ -49,19 +50,23 @@ static struct platform_device *dcdbas_pdev;
- static u8 *smi_data_buf;
- static dma_addr_t smi_data_buf_handle;
- static unsigned long smi_data_buf_size;
-+static unsigned long max_smi_data_buf_size = MAX_SMI_DATA_BUF_SIZE;
- static u32 smi_data_buf_phys_addr;
- static DEFINE_MUTEX(smi_data_lock);
-+static u8 *eps_buffer;
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called samsung-laptop.
+diff --git a/drivers/sbus/char/oradax.c b/drivers/sbus/char/oradax.c
+index 1754f55e2fac..524f9ea62e52 100644
+--- a/drivers/sbus/char/oradax.c
++++ b/drivers/sbus/char/oradax.c
+@@ -30,7 +30,7 @@
+  * the recommended way for applications to use the coprocessor, and
+  * the driver interface is not intended for general use.
+  *
+- * See Documentation/sparc/oradax/oracle_dax.txt for more details.
++ * See Documentation/sparc/oradax/oracle-dax.txt for more details.
+  */
  
- static unsigned int host_control_action;
- static unsigned int host_control_smi_type;
- static unsigned int host_control_on_shutdown;
+ #include <linux/uaccess.h>
+diff --git a/fs/befs/ChangeLog b/fs/befs/ChangeLog
+index 16f2dfe8c2f7..aff7eec8f327 100644
+--- a/fs/befs/ChangeLog
++++ b/fs/befs/ChangeLog
+@@ -389,7 +389,7 @@ Version 0.4 (2001-10-28)
+ 	(fs/nls/Config.in)
  
-+static bool wsmt_enabled;
-+
+ * Added Configure.help entries for CONFIG_BEFS_FS and CONFIG_DEBUG_BEFS
+-	(Documentation/Configure.help)
++	(currently at fs/befs/Kconfig)
+ 
+ 2001-08-??
+ ==========
+diff --git a/fs/orangefs/orangefs-sysfs.c b/fs/orangefs/orangefs-sysfs.c
+index 079a465796f3..dd28079f518c 100644
+--- a/fs/orangefs/orangefs-sysfs.c
++++ b/fs/orangefs/orangefs-sysfs.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * Documentation/ABI/stable/orangefs-sysfs:
++ * Documentation/ABI/stable/sysfs-fs-orangefs:
+  *
+  * What:		/sys/fs/orangefs/perf_counter_reset
+  * Date:		June 2015
+diff --git a/include/linux/platform_data/sc18is602.h b/include/linux/platform_data/sc18is602.h
+index 997b06634152..18602cab7799 100644
+--- a/include/linux/platform_data/sc18is602.h
++++ b/include/linux/platform_data/sc18is602.h
+@@ -7,7 +7,7 @@
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
+  *
+- * For further information, see the Documentation/spi/sc18is602 file.
++ * For further information, see the Documentation/spi/spi-sc18is602 file.
+  */
+ 
  /**
-  * smi_data_buf_free: free SMI data buffer
-  */
- static void smi_data_buf_free(void)
- {
--	if (!smi_data_buf)
-+	if (!smi_data_buf || wsmt_enabled)
- 		return;
- 
- 	dev_dbg(&dcdbas_pdev->dev, "%s: phys: %x size: %lu\n",
-@@ -86,7 +91,7 @@ static int smi_data_buf_realloc(unsigned long size)
- 	if (smi_data_buf_size >= size)
- 		return 0;
- 
--	if (size > MAX_SMI_DATA_BUF_SIZE)
-+	if (size > max_smi_data_buf_size)
- 		return -EINVAL;
- 
- 	/* new buffer is needed */
-@@ -169,7 +174,7 @@ static ssize_t smi_data_write(struct file *filp, struct kobject *kobj,
- {
- 	ssize_t ret;
- 
--	if ((pos + count) > MAX_SMI_DATA_BUF_SIZE)
-+	if ((pos + count) > max_smi_data_buf_size)
- 		return -EINVAL;
- 
- 	mutex_lock(&smi_data_lock);
-@@ -322,8 +327,15 @@ static ssize_t smi_request_store(struct device *dev,
- 			ret = count;
- 		break;
- 	case 1:
--		/* Calling Interface SMI */
--		smi_cmd->ebx = (u32) virt_to_phys(smi_cmd->command_buffer);
-+		/*
-+		 * Calling Interface SMI
-+		 *
-+		 * Provide physical address of command buffer field within
-+		 * the struct smi_cmd... can't use virt_to_phys() on smi_cmd
-+		 * because address may be from memremap().
-+		 */
-+		smi_cmd->ebx = smi_data_buf_phys_addr +
-+				offsetof(struct smi_cmd, command_buffer);
- 		ret = dcdbas_smi_request(smi_cmd);
- 		if (!ret)
- 			ret = count;
-@@ -482,6 +494,93 @@ static void dcdbas_host_control(void)
- 	}
- }
- 
-+/* WSMT */
-+
-+static u8 checksum(u8 *buffer, u8 length)
-+{
-+	u8 sum = 0;
-+	u8 *end = buffer + length;
-+
-+	while (buffer < end)
-+		sum += *buffer++;
-+	return sum;
-+}
-+
-+static inline struct smm_eps_table *check_eps_table(u8 *addr)
-+{
-+	struct smm_eps_table *eps = (struct smm_eps_table *)addr;
-+
-+	if (strncmp(eps->smm_comm_buff_anchor, SMM_EPS_SIG, 4) != 0)
-+		return NULL;
-+
-+	if (checksum(addr, eps->length) != 0)
-+		return NULL;
-+
-+	return eps;
-+}
-+
-+static int dcdbas_check_wsmt(void)
-+{
-+	struct acpi_table_wsmt *wsmt = NULL;
-+	struct smm_eps_table *eps = NULL;
-+	u64 remap_size;
-+	u8 *addr;
-+
-+	acpi_get_table(ACPI_SIG_WSMT, 0, (struct acpi_table_header **)&wsmt);
-+	if (!wsmt)
-+		return 0;
-+
-+	/* Check if WSMT ACPI table shows that protection is enabled */
-+	if (!(wsmt->protection_flags & ACPI_WSMT_FIXED_COMM_BUFFERS) ||
-+	    !(wsmt->protection_flags & ACPI_WSMT_COMM_BUFFER_NESTED_PTR_PROTECTION))
-+		return 0;
-+
-+	/* Scan for EPS (entry point structure) */
-+	for (addr = (u8 *)__va(0xf0000);
-+	     addr < (u8 *)__va(0x100000 - sizeof(struct smm_eps_table));
-+	     addr += 1) {
-+		eps = check_eps_table(addr);
-+		if (eps)
-+			break;
-+	}
-+
-+	if (!eps) {
-+		dev_dbg(&dcdbas_pdev->dev, "found WSMT, but no EPS found\n");
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * Get physical address of buffer and map to virtual address.
-+	 * Table gives size in 4K pages, regardless of actual system page size.
-+	 */
-+	if (upper_32_bits(eps->smm_comm_buff_addr + 8)) {
-+		dev_warn(&dcdbas_pdev->dev, "found WSMT, but EPS buffer address is above 4GB\n");
-+		return -EINVAL;
-+	}
-+	/*
-+	 * Limit remap size to MAX_SMI_DATA_BUF_SIZE + 8 (since the first 8
-+	 * bytes are used for a semaphore, not the data buffer itself).
-+	 */
-+	remap_size = eps->num_of_4k_pages * PAGE_SIZE;
-+	if (remap_size > MAX_SMI_DATA_BUF_SIZE + 8)
-+		remap_size = MAX_SMI_DATA_BUF_SIZE + 8;
-+	eps_buffer = memremap(eps->smm_comm_buff_addr, remap_size, MEMREMAP_WB);
-+	if (!eps_buffer) {
-+		dev_warn(&dcdbas_pdev->dev, "found WSMT, but failed to map EPS buffer\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* First 8 bytes is for a semaphore, not part of the smi_data_buf */
-+	smi_data_buf_phys_addr = eps->smm_comm_buff_addr + 8;
-+	smi_data_buf = eps_buffer + 8;
-+	smi_data_buf_size = remap_size - 8;
-+	max_smi_data_buf_size = smi_data_buf_size;
-+	wsmt_enabled = true;
-+	dev_info(&dcdbas_pdev->dev,
-+		 "WSMT found, using firmware-provided SMI buffer.\n");
-+	return 1;
-+}
-+
- /**
-  * dcdbas_reboot_notify: handle reboot notification for host control
-  */
-@@ -548,6 +647,11 @@ static int dcdbas_probe(struct platform_device *dev)
- 
- 	dcdbas_pdev = dev;
- 
-+	/* Check if ACPI WSMT table specifies protected SMI buffer address */
-+	error = dcdbas_check_wsmt();
-+	if (error < 0)
-+		return error;
-+
- 	/*
- 	 * BIOS SMI calls require buffer addresses be in 32-bit address space.
- 	 * This is done by setting the DMA mask below.
-@@ -635,6 +739,8 @@ static void __exit dcdbas_exit(void)
- 	 */
- 	if (dcdbas_pdev)
- 		smi_data_buf_free();
-+	if (eps_buffer)
-+		memunmap(eps_buffer);
- 	platform_device_unregister(dcdbas_pdev_reg);
- 	platform_driver_unregister(&dcdbas_driver);
- }
-diff --git a/drivers/firmware/dcdbas.h b/drivers/firmware/dcdbas.h
-index ca3cb0a54ab6..52729a494b00 100644
---- a/drivers/firmware/dcdbas.h
-+++ b/drivers/firmware/dcdbas.h
-@@ -53,6 +53,7 @@
- #define EXPIRED_TIMER				(0)
- 
- #define SMI_CMD_MAGIC				(0x534D4931)
-+#define SMM_EPS_SIG				"$SCB"
- 
- #define DCDBAS_DEV_ATTR_RW(_name) \
- 	DEVICE_ATTR(_name,0600,_name##_show,_name##_store);
-@@ -103,5 +104,14 @@ struct apm_cmd {
- 
- int dcdbas_smi_request(struct smi_cmd *smi_cmd);
- 
-+struct smm_eps_table {
-+	char smm_comm_buff_anchor[4];
-+	u8 length;
-+	u8 checksum;
-+	u8 version;
-+	u64 smm_comm_buff_addr;
-+	u64 num_of_4k_pages;
-+} __packed;
-+
- #endif /* _DCDBAS_H_ */
- 
+diff --git a/kernel/power/main.c b/kernel/power/main.c
+index 705c2366dafe..3345ced80112 100644
+--- a/kernel/power/main.c
++++ b/kernel/power/main.c
+@@ -455,7 +455,7 @@ struct kobject *power_kobj;
+  * state - control system sleep states.
+  *
+  * show() returns available sleep state labels, which may be "mem", "standby",
+- * "freeze" and "disk" (hibernation).  See Documentation/power/states.txt for a
++ * "freeze" and "disk" (hibernation).  See Documentation/power/interface.txt for a
+  * description of what they mean.
+  *
+  * store() accepts one of those strings, translates it into the proper
 -- 
-2.14.2
+2.17.1
