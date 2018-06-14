@@ -1,7 +1,7 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
 Subject: Re: [PATCH v3 27/27] fix a series of Documentation/ broken file name references
-Date: Thu, 14 Jun 2018 18:18:25 +0200
-Message-ID: <CAJZ5v0hjcH-R+Kdb67o5dxRqMi9qXMDCG6w+hg1RU3HKi933sQ@mail.gmail.com>
+Date: Thu, 14 Jun 2018 20:21:12 +0300
+Message-ID: <CAHp75VdVf3wfT=Cg2OrPSmvv9OLARtSQZjdF5GWxhFqOy_iVqw@mail.gmail.com>
 References: <cover.1528990947.git.mchehab+samsung@kernel.org> <a98dcea5ad61aad741c88be991d6446b4d6bc029.1528990947.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,7 +12,7 @@ To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Harry Wei <harryxiyou@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "David S. Miller" <davem@davemloft.net>, Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, linux-kernel@zh-kernel.org, dmaengine <dmaengine@vger.kernel.org>, Platform Driver <plat>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 14, 2018 at 6:09 PM, Mauro Carvalho Chehab
+On Thu, Jun 14, 2018 at 7:09 PM, Mauro Carvalho Chehab
 <mchehab+samsung@kernel.org> wrote:
 > As files move around, their previous links break. Fix the
 > references for them.
@@ -63,6 +63,11 @@ On Thu, Jun 14, 2018 at 6:09 PM, Mauro Carvalho Chehab
 > -         <file:Documentation/ABI/testing/sysfs-platform-samsung-laptop>
 > +         <file:Documentation/ABI/testing/sysfs-driver-samsung-laptop>
 >
+
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+(PDx86 bits)
+
 >           To compile this driver as a module, choose M here: the module
 >           will be called samsung-laptop.
 > diff --git a/drivers/sbus/char/oradax.c b/drivers/sbus/char/oradax.c
@@ -126,13 +131,15 @@ On Thu, Jun 14, 2018 at 6:09 PM, Mauro Carvalho Chehab
 >   * show() returns available sleep state labels, which may be "mem", "standby",
 > - * "freeze" and "disk" (hibernation).  See Documentation/power/states.txt for a
 > + * "freeze" and "disk" (hibernation).  See Documentation/power/interface.txt for a
-
-This should be Documentation/admin-guide/pm/sleep-states.rst rather.
-
 >   * description of what they mean.
 >   *
 >   * store() accepts one of those strings, translates it into the proper
 > --
+> 2.17.1
+>
 
-Thanks,
-Rafael
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
