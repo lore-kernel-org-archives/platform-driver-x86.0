@@ -1,135 +1,101 @@
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH v4 26/26] fix a series of Documentation/ broken file name references
-Date: Fri, 15 Jun 2018 13:30:54 -0300
-Message-ID: <041e7a803fc0e5c5dfc1fb8b2f761074ca0baa2c.1529079120.git.mchehab+samsung@kernel.org>
-References: <cover.1529079119.git.mchehab+samsung@kernel.org>
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH] platform/x86: dell-smbios-base: Support systems without tokens
+Date: Fri, 15 Jun 2018 12:12:51 -0500
+Message-ID: <1529082771-21309-1-git-send-email-mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1529079119.git.mchehab+samsung@kernel.org>
-In-Reply-To: <cover.1529079119.git.mchehab+samsung@kernel.org>
-References: <cover.1529079119.git.mchehab+samsung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Harry Wei <harryxiyou@gmail.com>, Vinod Koul <vkoul@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "David S. Miller" <davem@davemloft.net>, Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, linux-kernel@zh-kernel.org, dmaengine@vger.kernel.org, platform-driver-x86@vger.kernel.org, sparclinux@vger.kernel.org, devel@lists.orangefs.org, linux-pm@vge
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-As files move around, their previous links break. Fix the
-references for them.
+Some Dell servers can use dell-smbios but they don't support the
+token interface.  Make it optional.
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- Documentation/translations/zh_CN/io_ordering.txt | 2 +-
- drivers/dma/dmaengine.c                          | 2 +-
- drivers/platform/x86/Kconfig                     | 2 +-
- drivers/sbus/char/oradax.c                       | 2 +-
- fs/befs/ChangeLog                                | 2 +-
- fs/orangefs/orangefs-sysfs.c                     | 2 +-
- include/linux/platform_data/sc18is602.h          | 2 +-
- kernel/power/main.c                              | 5 +++--
- 8 files changed, 10 insertions(+), 9 deletions(-)
+ drivers/platform/x86/dell-smbios-base.c | 35 ++++++++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/io_ordering.txt b/Documentation/translations/zh_CN/io_ordering.txt
-index e592daf4e014..1f8127bdd415 100644
---- a/Documentation/translations/zh_CN/io_ordering.txt
-+++ b/Documentation/translations/zh_CN/io_ordering.txt
-@@ -1,4 +1,4 @@
--Chinese translated version of Documentation/io_orderings.txt
-+Chinese translated version of Documentation/io_ordering.txt
+diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x86/dell-smbios-base.c
+index 446dbff..ac88032 100644
+--- a/drivers/platform/x86/dell-smbios-base.c
++++ b/drivers/platform/x86/dell-smbios-base.c
+@@ -212,6 +212,12 @@ int dell_smbios_call_filter(struct device *d,
+ 	if ((buffer->cmd_class == CLASS_TOKEN_READ ||
+ 	     buffer->cmd_class == CLASS_TOKEN_WRITE) &&
+ 	     buffer->cmd_select < 3) {
++		/* tokens enabled ? */
++		if (!da_tokens) {
++			dev_dbg(d, "no token support on this system\n");
++			return -EINVAL;
++		}
++
+ 		/* find the matching token ID */
+ 		for (i = 0; i < da_num_tokens; i++) {
+ 			if (da_tokens[i].location != buffer->input[0])
+@@ -315,6 +321,9 @@ struct calling_interface_token *dell_smbios_find_token(int tokenid)
+ {
+ 	int i;
  
- If you have any comment or update to the content, please contact the
- original document maintainer directly.  However, if you have a problem
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index b451354735d3..08ba8473a284 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -38,7 +38,7 @@
-  * Each device has a channels list, which runs unlocked but is never modified
-  * once the device is registered, it's just setup by the driver.
-  *
-- * See Documentation/dmaengine.txt for more details
-+ * See Documentation/driver-api/dmaengine for more details
-  */
++	if (!da_tokens)
++		return NULL;
++
+ 	for (i = 0; i < da_num_tokens; i++) {
+ 		if (da_tokens[i].tokenID == tokenid)
+ 			return &da_tokens[i];
+@@ -570,11 +579,6 @@ static int __init dell_smbios_init(void)
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index f27cb186437d..ac4d48830415 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1052,7 +1052,7 @@ config SAMSUNG_LAPTOP
- 	  function keys, wireless LED, LCD backlight level.
+ 	dmi_walk(find_tokens, NULL);
  
- 	  It may also provide some sysfs files described in
--	  <file:Documentation/ABI/testing/sysfs-platform-samsung-laptop>
-+	  <file:Documentation/ABI/testing/sysfs-driver-samsung-laptop>
+-	if (!da_tokens)  {
+-		pr_info("Unable to find dmi tokens\n");
+-		return -ENODEV;
+-	}
+-
+ 	ret = platform_driver_register(&platform_driver);
+ 	if (ret)
+ 		goto fail_platform_driver;
+@@ -588,13 +592,6 @@ static int __init dell_smbios_init(void)
+ 	if (ret)
+ 		goto fail_platform_device_add;
  
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called samsung-laptop.
-diff --git a/drivers/sbus/char/oradax.c b/drivers/sbus/char/oradax.c
-index 1754f55e2fac..524f9ea62e52 100644
---- a/drivers/sbus/char/oradax.c
-+++ b/drivers/sbus/char/oradax.c
-@@ -30,7 +30,7 @@
-  * the recommended way for applications to use the coprocessor, and
-  * the driver interface is not intended for general use.
-  *
-- * See Documentation/sparc/oradax/oracle_dax.txt for more details.
-+ * See Documentation/sparc/oradax/oracle-dax.txt for more details.
-  */
+-	/* duplicate tokens will cause problems building sysfs files */
+-	zero_duplicates(&platform_device->dev);
+-
+-	ret = build_tokens_sysfs(platform_device);
+-	if (ret)
+-		goto fail_create_group;
+-
+ 	/* register backends */
+ 	wmi = init_dell_smbios_wmi();
+ 	if (wmi)
+@@ -605,7 +602,16 @@ static int __init dell_smbios_init(void)
+ 	if (wmi && smm) {
+ 		pr_err("No SMBIOS backends available (wmi: %d, smm: %d)\n",
+ 			wmi, smm);
+-		goto fail_sysfs;
++		goto fail_create_group;
++	}
++
++	if (da_tokens)  {
++		/* duplicate tokens will cause problems building sysfs files */
++		zero_duplicates(&platform_device->dev);
++
++		ret = build_tokens_sysfs(platform_device);
++		if (ret)
++			goto fail_sysfs;
+ 	}
  
- #include <linux/uaccess.h>
-diff --git a/fs/befs/ChangeLog b/fs/befs/ChangeLog
-index 16f2dfe8c2f7..aff7eec8f327 100644
---- a/fs/befs/ChangeLog
-+++ b/fs/befs/ChangeLog
-@@ -389,7 +389,7 @@ Version 0.4 (2001-10-28)
- 	(fs/nls/Config.in)
- 
- * Added Configure.help entries for CONFIG_BEFS_FS and CONFIG_DEBUG_BEFS
--	(Documentation/Configure.help)
-+	(currently at fs/befs/Kconfig)
- 
- 2001-08-??
- ==========
-diff --git a/fs/orangefs/orangefs-sysfs.c b/fs/orangefs/orangefs-sysfs.c
-index 079a465796f3..dd28079f518c 100644
---- a/fs/orangefs/orangefs-sysfs.c
-+++ b/fs/orangefs/orangefs-sysfs.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Documentation/ABI/stable/orangefs-sysfs:
-+ * Documentation/ABI/stable/sysfs-fs-orangefs:
-  *
-  * What:		/sys/fs/orangefs/perf_counter_reset
-  * Date:		June 2015
-diff --git a/include/linux/platform_data/sc18is602.h b/include/linux/platform_data/sc18is602.h
-index 997b06634152..18602cab7799 100644
---- a/include/linux/platform_data/sc18is602.h
-+++ b/include/linux/platform_data/sc18is602.h
-@@ -7,7 +7,7 @@
-  * it under the terms of the GNU General Public License version 2 as
-  * published by the Free Software Foundation.
-  *
-- * For further information, see the Documentation/spi/sc18is602 file.
-+ * For further information, see the Documentation/spi/spi-sc18is602 file.
-  */
- 
- /**
-diff --git a/kernel/power/main.c b/kernel/power/main.c
-index 705c2366dafe..d9706da10930 100644
---- a/kernel/power/main.c
-+++ b/kernel/power/main.c
-@@ -455,8 +455,9 @@ struct kobject *power_kobj;
-  * state - control system sleep states.
-  *
-  * show() returns available sleep state labels, which may be "mem", "standby",
-- * "freeze" and "disk" (hibernation).  See Documentation/power/states.txt for a
-- * description of what they mean.
-+ * "freeze" and "disk" (hibernation).
-+ * See Documentation/admin-guide/pm/sleep-states.rst for a description of
-+ * what they mean.
-  *
-  * store() accepts one of those strings, translates it into the proper
-  * enumerated value, and initiates a suspend transition.
+ 	return 0;
+@@ -633,7 +639,8 @@ static void __exit dell_smbios_exit(void)
+ 	exit_dell_smbios_smm();
+ 	mutex_lock(&smbios_mutex);
+ 	if (platform_device) {
+-		free_group(platform_device);
++		if (da_tokens)
++			free_group(platform_device);
+ 		platform_device_unregister(platform_device);
+ 		platform_driver_unregister(&platform_driver);
+ 	}
 -- 
-2.17.1
+2.7.4
