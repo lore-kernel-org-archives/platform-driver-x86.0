@@ -1,170 +1,112 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
 Subject: Re: ThinkPad T480s & LED_MUTE, LED_MICMUTE
-Date: Fri, 15 Jun 2018 21:09:15 +0200
-Message-ID: <20180615190915.cdntdeesc52ei35u@pali>
+Date: Fri, 15 Jun 2018 21:09:59 +0200
+Message-ID: <20180615190959.pqipwnm6a3tf3lxc@pali>
 References: <20180608111057.4wxpg7m7nm7suf6n@pali>
- <20180615112606.GA3986@amd>
- <20180615113728.h7snxhe2juaqvjyx@pali>
- <20180615123007.nxsymdvr3nj3it5i@khazad-dum.debian.net>
+ <s5hk1r01acc.wl-tiwai@suse.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="nxzveii33etgxj24"
+        protocol="application/pgp-signature"; boundary="sak2akqrac45d545"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180615123007.nxsymdvr3nj3it5i@khazad-dum.debian.net>
+In-Reply-To: <s5hk1r01acc.wl-tiwai@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Pavel Machek <pavel@ucw.cz>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 
---nxzveii33etgxj24
+--sak2akqrac45d545
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Friday 15 June 2018 09:30:07 Henrique de Moraes Holschuh wrote:
-> On Fri, 15 Jun 2018, Pali Roh=C3=A1r wrote:
-> > Henrique, any idea why there are no exported led classes for mute and
-> > micmute? And how are suppose to be controlled?
->=20
-> I have to look into the code, it was contributed by someone who had
-> access to the proper hardware to test it.
->=20
-> But the way *I* would like it to work is this:
->=20
-> 1. When implemented in *hardware* or *EC*, let the hardware and EC take
->    full control, and never allow the operating system to mess with it.
->    So, it becomes much harder for that LED to "lie".
-
-This means that kernel should not export any led class device. Or when
-exported, then "set" operation should always fail.
-
-> 2. Otherwise implement it in-kernel, so that userspace cannot unmute
->    when the human has activated the "mute" switch, and the LED cannot be
->    controlled by userspace to lie (report mute when it is not mute).
-
-This looks like a good candidate to use led "trigger" interface. Create
-a mute trigger and attach it to that led device.
-
-I hope that this is what Pavel means.
-
-> It might, or might not be possible to achieve the above.
->=20
-> > > With thinkpad_acpi.ko unloaded, hardware drives the LEDs, so nothing
-> > > for us to do...
+On Friday 15 June 2018 14:51:47 Takashi Iwai wrote:
+> On Fri, 08 Jun 2018 13:10:57 +0200,
+> Pali Roh=C3=A1r wrote:
 > >=20
-> > So somehow tell thinkpad_acpi.ko to let hardware control those LEDs when
-> > thinkpad_acpi.ko is loaded?
+> > Hi! With up-to-date thinkpad_acpi.ko driver on ThinkPad T480s I'm seeing
+> > a strange behavior of LEDs which are integrated into mic mute (Fn+F4)
+> > and mute (Fn+F1) keys.
+> >=20
+> > When thinkpad_acpi.ko is not loaded, then mute key is working fine. When
+> > pressed, it correctly generates KEY_MUTE on AT Translated Set 2 keyboard
+> > input device and also turn on/of mute led. But when micmute key is
+> > pressed then, nothing happen. No key event is reported and also led is
+> > not turned on/off.
+> >=20
+> > On the other hand, when thinkpad_acpi.ko is loaded, then both buttons
+> > mute and micmute correctly generates input events; mute via AT keyboard
+> > and micmute via ThinkPad Extra Buttons. But led is not changed. When
+> > thinkpad_acpi.ko is loaded it turn off both leds (mute and micmute) and
+> > leds after pressing any of those buttons, leds are not turned on again.
+> >=20
+> > When thinkpad_acpi.ko is unloaded, then pressing mute button again start
+> > switching led on/off.
+> >=20
+> > So it seems that some init sequence of thinkpad_acpi.ko breaks mute led.
+> > And fini sequence of thinkpad_acpi.ko makes mute led working again.
 >=20
-> I.e. look into the DSDT and XSDT, to find out what it is doing.  It will
-> be there: it is very rare for the thinkpad EC itself to implement these
-> behavior changes.
+> Usually the mute LED on Thinkpad is triggered from HD-audio driver
+> (sound/pci/hda/thinkpad_helper.c), and it's a soft-bound via
+> symbol_request(tpacpi_led_set).  I thought thinkpad_acpi is
+> auto-loaded when the module gets bound.
+>=20
+> A possible explanation would be that TPT480s has neither IBM0068,
+> LEN0068 nor LEN0268 ACPI HIDs, hence the driver is not auto-loaded.
 
-DSDT helped. Thanks!
+I have Debian Stretch kernel (4.9) which does not have LEN0268 alias for
+thinkpad_acpi.ko. So thinkpad_acpi.ko is not loaded automatically. But I
+have put thinkpad_acpi into /etc/modules and it is now automatically
+loaded at boot.
 
-Function with "EC.LED" name is self explaining and also "EC.HKEY". I
-used acpi_call.ko for debugging and here are results how to control
-these two leds on ThinkPad T480s:
+I also compiled upstream version of thinkpad_acpi.ko, loaded it in
+Stretch kernel, but it behaves in same way.
 
-        Scope (\_SB.PCI0.LPCB.EC.HKEY)
-        {
-            Method (MMTG, 0, NotSerialized)
-            {
-                Local0 =3D 0x0101
-                If (HDMC)
-                {
-                    Local0 |=3D 0x00010000
-                }
+Maybe... there could be a problem that thinkpad_acpi.ko must be already
+loaded when sound subsystem is doing initialization? If yes, this could
+explain it as /etc/modules is loaded at later stage and manually loading
+of new version of thinkpad_acpi.ko at runtime does not help when sound
+subsystem is already running.
 
-                Return (Local0)
-            }
+> (In HD-audio driver side, the ACPI ID is checked and the mute LED
+>  control is applied only to these three IDs, too.)
+> Meanwhile, when you load thinkpad_acpi, it does still recognize some
+> device and initialize it.  By the initialization, it goes out of BIOS
+> control, and the OS control is expected...   This is my wild guess.
+>=20
+>=20
+> BTW, the reason we have no LED class for these is that we don't want
+> to confuse users by providing multiple ways to access to the single
+> stuff.  We've had already the mute LED control from the audio driver
+> since long time ago, we don't want to drop and enforce the user-space
+> solution (that is anyway flakier than in kernel in most cases).
 
-            Method (MMTS, 1, NotSerialized)
-            {
-                If (HDMC)
-                {
-                    Noop
-                }
-                ElseIf (Arg0 =3D=3D 0x02)
-                {
-                    \_SB.PCI0.LPCB.EC.LED (0x0E, 0x80)
-                }
-                ElseIf (Arg0 =3D=3D 0x03)
-                {
-                    \_SB.PCI0.LPCB.EC.LED (0x0E, 0xC0)
-                }
-                Else
-                {
-                    \_SB.PCI0.LPCB.EC.LED (0x0E, 0x00)
-                }
-            }
-        }
+If possible... I would prefer swapped LED behavior: turn led on when
+microphone is turned on AND turn led off when microphone is turned off.
+Because current behavior is to have turned led off when microphone is
+on which seems a bit strange. Also microphone is in majority of time not
+used and when is not used it is (or should be) turned off. On the other
+hand e.g. CAPSLOCK led is turned on when CAPSLOCK is enabled (and not
+opposite) -- which matches uses, it is not used in majority of time.
 
-        Scope (\_SB.PCI0.LPCB.EC.HKEY)
-        {
-            Method (GSMS, 1, NotSerialized)
-            {
-                Return (\AUDC (0x00, 0x00))
-            }
-
-            Method (SSMS, 1, NotSerialized)
-            {
-                Return (\AUDC (0x01, (Arg0 & 0x01)))
-            }
-
-            Method (SHDA, 1, NotSerialized)
-            {
-                Local0 =3D Arg0
-                If ((OSYS >=3D 0x07DF) && (Local0 =3D=3D 0x01))
-                {
-                    Local0 =3D 0x02
-                }
-
-                Return (\AUDC (0x02, (Local0 & 0x03)))
-            }
-        }
-
-    Method (AUDC, 2, NotSerialized)
-    {
-        Return (SMI (0x14, 0x07, Arg0, Arg1, 0x00))
-    }
-
-MMTS controls mic mute led. When Arg0 is 0x02 then mic mute led is
-turned on. When it is 0x03 then it starts blinking. And otherwise is
-turned off. MM in name probably means MicMute and S as set. I guess that
-MMTG (G as get) would return capabilities as it returns constant.
-
-blink: echo "\_SB.PCI0.LPCB.EC.HKEY.MMTS 3" > /proc/acpi/call
-on:    echo "\_SB.PCI0.LPCB.EC.HKEY.MMTS 2" > /proc/acpi/call
-off:   echo "\_SB.PCI0.LPCB.EC.HKEY.MMTS 0" > /proc/acpi/call
-
-SSMS controls mute led. It calls some SMI method via AUDC. When Arg0 has
-first bit set to one then mute led is turned on. When set to zero then
-is turned off. GSMS takes one parameter, but ignores it. When mute led
-is turned off then it returns 0x100. When mute led is turned on then it
-return 0x101. So looks like that "G" in GSMS means "get" and "S" in SSMS
-means set. What is SHDA doing, I have not figured out. It does not
-change GSMS result nor led status. When called with argument 1..10 then
-it returns always returned 0x0 except for 3 and 7 it returned
-0x80000000. There is no blinking support (or at least I have not figured
-out).
-
-on:    echo "\_SB.PCI0.LPCB.EC.HKEY.SSMS 1" > /proc/acpi/call
-off:   echo "\_SB.PCI0.LPCB.EC.HKEY.SSMS 0" > /proc/acpi/call
+>=20
+> thanks,
+>=20
+> Takashi
 
 --=20
 Pali Roh=C3=A1r
 pali.rohar@gmail.com
 
---nxzveii33etgxj24
+--sak2akqrac45d545
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWyQO2AAKCRCL8Mk9A+RD
-UsbLAJ9Z/rS7vsdYqcH3z2t3XJ/NaSbjDwCfXG/D1KRqD6yO8rv0s/CCEfKLJcM=
-=lPFY
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWyQPBQAKCRCL8Mk9A+RD
+UrtHAJkB5cAenB0sM6BVqgbhZriVYxEaVgCfSNUzJoOmk94jtUKPt0UeA7uh8ws=
+=EwWa
 -----END PGP SIGNATURE-----
 
---nxzveii33etgxj24--
+--sak2akqrac45d545--
