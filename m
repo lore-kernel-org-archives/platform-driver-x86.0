@@ -1,162 +1,141 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: ThinkPad T480s & LED_MUTE, LED_MICMUTE
-Date: Sat, 16 Jun 2018 17:43:09 +0200
-Message-ID: <20180616154309.ualrx2py6ndr5xgz@pali>
-References: <20180608111057.4wxpg7m7nm7suf6n@pali>
- <s5hk1r01acc.wl-tiwai@suse.de>
- <20180615190959.pqipwnm6a3tf3lxc@pali>
- <s5hmuvvtdmi.wl-tiwai@suse.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v4 26/26] fix a series of Documentation/ broken file name references
+Date: Sat, 16 Jun 2018 17:52:29 +0200
+Message-ID: <CAJZ5v0gVBxDZnNXG4Kf9M0wMwR1R97kg6uNmAYi5Rf-5kPBNQQ@mail.gmail.com>
+References: <cover.1529079119.git.mchehab+samsung@kernel.org> <041e7a803fc0e5c5dfc1fb8b2f761074ca0baa2c.1529079120.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xo3hws7qzxgkftvu"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <s5hmuvvtdmi.wl-tiwai@suse.de>
+In-Reply-To: <041e7a803fc0e5c5dfc1fb8b2f761074ca0baa2c.1529079120.git.mchehab+samsung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mauro Carvalho Chehab <mchehab@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Harry Wei <harryxiyou@gmail.com>, Vinod Koul <vkoul@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "David S. Miller" <davem@davemloft.net>, Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, linux-kernel@zh-kernel.org, dmaengine <dmaengine@vger.kernel.org>, Platform Driver <plat>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Fri, Jun 15, 2018 at 6:30 PM, Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
+> As files move around, their previous links break. Fix the
+> references for them.
+>
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  Documentation/translations/zh_CN/io_ordering.txt | 2 +-
+>  drivers/dma/dmaengine.c                          | 2 +-
+>  drivers/platform/x86/Kconfig                     | 2 +-
+>  drivers/sbus/char/oradax.c                       | 2 +-
+>  fs/befs/ChangeLog                                | 2 +-
+>  fs/orangefs/orangefs-sysfs.c                     | 2 +-
+>  include/linux/platform_data/sc18is602.h          | 2 +-
+>  kernel/power/main.c                              | 5 +++--
+>  8 files changed, 10 insertions(+), 9 deletions(-)
+>
+> diff --git a/Documentation/translations/zh_CN/io_ordering.txt b/Documentation/translations/zh_CN/io_ordering.txt
+> index e592daf4e014..1f8127bdd415 100644
+> --- a/Documentation/translations/zh_CN/io_ordering.txt
+> +++ b/Documentation/translations/zh_CN/io_ordering.txt
+> @@ -1,4 +1,4 @@
+> -Chinese translated version of Documentation/io_orderings.txt
+> +Chinese translated version of Documentation/io_ordering.txt
+>
+>  If you have any comment or update to the content, please contact the
+>  original document maintainer directly.  However, if you have a problem
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index b451354735d3..08ba8473a284 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -38,7 +38,7 @@
+>   * Each device has a channels list, which runs unlocked but is never modified
+>   * once the device is registered, it's just setup by the driver.
+>   *
+> - * See Documentation/dmaengine.txt for more details
+> + * See Documentation/driver-api/dmaengine for more details
+>   */
+>
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index f27cb186437d..ac4d48830415 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1052,7 +1052,7 @@ config SAMSUNG_LAPTOP
+>           function keys, wireless LED, LCD backlight level.
+>
+>           It may also provide some sysfs files described in
+> -         <file:Documentation/ABI/testing/sysfs-platform-samsung-laptop>
+> +         <file:Documentation/ABI/testing/sysfs-driver-samsung-laptop>
+>
+>           To compile this driver as a module, choose M here: the module
+>           will be called samsung-laptop.
+> diff --git a/drivers/sbus/char/oradax.c b/drivers/sbus/char/oradax.c
+> index 1754f55e2fac..524f9ea62e52 100644
+> --- a/drivers/sbus/char/oradax.c
+> +++ b/drivers/sbus/char/oradax.c
+> @@ -30,7 +30,7 @@
+>   * the recommended way for applications to use the coprocessor, and
+>   * the driver interface is not intended for general use.
+>   *
+> - * See Documentation/sparc/oradax/oracle_dax.txt for more details.
+> + * See Documentation/sparc/oradax/oracle-dax.txt for more details.
+>   */
+>
+>  #include <linux/uaccess.h>
+> diff --git a/fs/befs/ChangeLog b/fs/befs/ChangeLog
+> index 16f2dfe8c2f7..aff7eec8f327 100644
+> --- a/fs/befs/ChangeLog
+> +++ b/fs/befs/ChangeLog
+> @@ -389,7 +389,7 @@ Version 0.4 (2001-10-28)
+>         (fs/nls/Config.in)
+>
+>  * Added Configure.help entries for CONFIG_BEFS_FS and CONFIG_DEBUG_BEFS
+> -       (Documentation/Configure.help)
+> +       (currently at fs/befs/Kconfig)
+>
+>  2001-08-??
+>  ==========
+> diff --git a/fs/orangefs/orangefs-sysfs.c b/fs/orangefs/orangefs-sysfs.c
+> index 079a465796f3..dd28079f518c 100644
+> --- a/fs/orangefs/orangefs-sysfs.c
+> +++ b/fs/orangefs/orangefs-sysfs.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * Documentation/ABI/stable/orangefs-sysfs:
+> + * Documentation/ABI/stable/sysfs-fs-orangefs:
+>   *
+>   * What:               /sys/fs/orangefs/perf_counter_reset
+>   * Date:               June 2015
+> diff --git a/include/linux/platform_data/sc18is602.h b/include/linux/platform_data/sc18is602.h
+> index 997b06634152..18602cab7799 100644
+> --- a/include/linux/platform_data/sc18is602.h
+> +++ b/include/linux/platform_data/sc18is602.h
+> @@ -7,7 +7,7 @@
+>   * it under the terms of the GNU General Public License version 2 as
+>   * published by the Free Software Foundation.
+>   *
+> - * For further information, see the Documentation/spi/sc18is602 file.
+> + * For further information, see the Documentation/spi/spi-sc18is602 file.
+>   */
+>
+>  /**
+> diff --git a/kernel/power/main.c b/kernel/power/main.c
+> index 705c2366dafe..d9706da10930 100644
+> --- a/kernel/power/main.c
+> +++ b/kernel/power/main.c
+> @@ -455,8 +455,9 @@ struct kobject *power_kobj;
+>   * state - control system sleep states.
+>   *
+>   * show() returns available sleep state labels, which may be "mem", "standby",
+> - * "freeze" and "disk" (hibernation).  See Documentation/power/states.txt for a
+> - * description of what they mean.
+> + * "freeze" and "disk" (hibernation).
+> + * See Documentation/admin-guide/pm/sleep-states.rst for a description of
+> + * what they mean.
 
---xo3hws7qzxgkftvu
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-On Saturday 16 June 2018 09:05:41 Takashi Iwai wrote:
-> On Fri, 15 Jun 2018 21:09:59 +0200,
-> Pali Roh=C3=A1r wrote:
-> >=20
-> > On Friday 15 June 2018 14:51:47 Takashi Iwai wrote:
-> > > On Fri, 08 Jun 2018 13:10:57 +0200,
-> > > Pali Roh=C3=A1r wrote:
-> > > >=20
-> > > > Hi! With up-to-date thinkpad_acpi.ko driver on ThinkPad T480s I'm s=
-eeing
-> > > > a strange behavior of LEDs which are integrated into mic mute (Fn+F=
-4)
-> > > > and mute (Fn+F1) keys.
-> > > >=20
-> > > > When thinkpad_acpi.ko is not loaded, then mute key is working fine.=
- When
-> > > > pressed, it correctly generates KEY_MUTE on AT Translated Set 2 key=
-board
-> > > > input device and also turn on/of mute led. But when micmute key is
-> > > > pressed then, nothing happen. No key event is reported and also led=
- is
-> > > > not turned on/off.
-> > > >=20
-> > > > On the other hand, when thinkpad_acpi.ko is loaded, then both butto=
-ns
-> > > > mute and micmute correctly generates input events; mute via AT keyb=
-oard
-> > > > and micmute via ThinkPad Extra Buttons. But led is not changed. When
-> > > > thinkpad_acpi.ko is loaded it turn off both leds (mute and micmute)=
- and
-> > > > leds after pressing any of those buttons, leds are not turned on ag=
-ain.
-> > > >=20
-> > > > When thinkpad_acpi.ko is unloaded, then pressing mute button again =
-start
-> > > > switching led on/off.
-> > > >=20
-> > > > So it seems that some init sequence of thinkpad_acpi.ko breaks mute=
- led.
-> > > > And fini sequence of thinkpad_acpi.ko makes mute led working again.
-> > >=20
-> > > Usually the mute LED on Thinkpad is triggered from HD-audio driver
-> > > (sound/pci/hda/thinkpad_helper.c), and it's a soft-bound via
-> > > symbol_request(tpacpi_led_set).  I thought thinkpad_acpi is
-> > > auto-loaded when the module gets bound.
-> > >=20
-> > > A possible explanation would be that TPT480s has neither IBM0068,
-> > > LEN0068 nor LEN0268 ACPI HIDs, hence the driver is not auto-loaded.
-> >=20
-> > I have Debian Stretch kernel (4.9) which does not have LEN0268 alias for
-> > thinkpad_acpi.ko. So thinkpad_acpi.ko is not loaded automatically. But I
-> > have put thinkpad_acpi into /etc/modules and it is now automatically
-> > loaded at boot.
->=20
-> That's odd.  It's exposed via
->   MODULE_DEVICE_TABLE(acpi, ibm_htk_device_ids);
->=20
-> It's been already in 4.9.  At this point, something is fishy.
+for the PM part above.
 
-$ /sbin/modinfo thinkpad_acpi | grep alias
-alias:          dmi:bvnIBM:bvrI[MU]ET??WW*
-alias:          tpacpi
-alias:          acpi*:LEN0068:*
-alias:          acpi*:IBM0068:*
-
-No there is no LEN0268 on 4.9.
-
-> > I also compiled upstream version of thinkpad_acpi.ko, loaded it in
-> > Stretch kernel, but it behaves in same way.
-> >
-> > Maybe... there could be a problem that thinkpad_acpi.ko must be already
-> > loaded when sound subsystem is doing initialization? If yes, this could
-> > explain it as /etc/modules is loaded at later stage and manually loading
-> > of new version of thinkpad_acpi.ko at runtime does not help when sound
-> > subsystem is already running.
->=20
-> Not really.  The HD-audio driver tries to bind with tpacpi_led_set()
-> via symbol_request().  i.e. if it's not present, it tries to load a
-> module.
->=20
-> Check whether hda_fixup_thinkpad_acpi() is called and the symbol gets
-> loaded or not.
->=20
-> But, I don't think it's worth to debug such an old kernel primarily.
-
-It is default one used by the last released Debian stable version.
-
-> Could you test the latest Linus tree or 4.17.x at least as a test
-> basis?
-
-Ok, will do that later.
-
-> > > (In HD-audio driver side, the ACPI ID is checked and the mute LED
-> > >  control is applied only to these three IDs, too.)
-> > > Meanwhile, when you load thinkpad_acpi, it does still recognize some
-> > > device and initialize it.  By the initialization, it goes out of BIOS
-> > > control, and the OS control is expected...   This is my wild guess.
-> > >=20
-> > >=20
-> > > BTW, the reason we have no LED class for these is that we don't want
-> > > to confuse users by providing multiple ways to access to the single
-> > > stuff.  We've had already the mute LED control from the audio driver
-> > > since long time ago, we don't want to drop and enforce the user-space
-> > > solution (that is anyway flakier than in kernel in most cases).
-> >=20
-> > If possible... I would prefer swapped LED behavior: turn led on when
-> > microphone is turned on AND turn led off when microphone is turned off.
-> > Because current behavior is to have turned led off when microphone is
-> > on which seems a bit strange. Also microphone is in majority of time not
-> > used and when is not used it is (or should be) turned off. On the other
-> > hand e.g. CAPSLOCK led is turned on when CAPSLOCK is enabled (and not
-> > opposite) -- which matches uses, it is not used in majority of time.
->=20
-> Currently the mixer control to change such LED behavior is provided
-> only for Dell laptops.  It'd be trivial to port to Thinkpad, though.
-> I can provide a patch once after you test with the recent kernels.
->=20
->=20
-> thanks,
->=20
-> Takashi
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---xo3hws7qzxgkftvu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCWyUwCwAKCRCL8Mk9A+RD
-Uhq6AJ43bcEE+oQ1etKkpYS5XeWAvbh91ACdETFjNhGZM9uGOUPhNAFUQFBtBjQ=
-=Qd2z
------END PGP SIGNATURE-----
-
---xo3hws7qzxgkftvu--
+>   *
+>   * store() accepts one of those strings, translates it into the proper
+>   * enumerated value, and initiates a suspend transition.
+> --
