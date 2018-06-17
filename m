@@ -1,87 +1,57 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3] platform/x86: touchscreen_dmi: Add info for the ONDA
- V891W Dual OS
-Date: Sun, 17 Jun 2018 19:47:44 +0300
-Message-ID: <CAHp75VeBWw1VOJiSHTdKpnrOFiCoKDmxt6HS1ctoWjhKHBiN7Q@mail.gmail.com>
-References: <20180617140326.12854-1-youling257@gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v6 6/8] platform/mellanox: Introduce support for Mellanox
+ register access driver
+Date: Sun, 17 Jun 2018 09:52:16 -0700
+Message-ID: <b804ccc4-77c3-e7a9-9486-8d12d50ec5f7@infradead.org>
+References: <1529254615-88124-1-git-send-email-vadimp@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180617140326.12854-1-youling257@gmail.com>
+In-Reply-To: <1529254615-88124-1-git-send-email-vadimp@mellanox.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: youling 257 <youling257@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Hans de Goede <hdegoede@redhat.com>
+To: Vadim Pasternak <vadimp@mellanox.com>, dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, ivecera@redhat.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Thanks for the patch, my comments below.
-
-On Sun, Jun 17, 2018 at 5:03 PM youling257 <youling257@gmail.com> wrote:
->
-> Add touchscreen info for the ONDA V891W Dual OS
-
-It would be nice to end sentences with period.
-
->
-> Signed-off-by: youling257 <youling257@gmail.com>
-
-There is still couple of things that prevents me to apply:
- - please use your real name in SoB
- - you forget to add Hans' tag
-
+On 06/17/2018 09:56 AM, Vadim Pasternak wrote:
 > ---
->  drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index 6284946cb0d1..2ad9327c8c0f 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -221,6 +221,24 @@ static const struct ts_dmi_data onda_v891w_v1_data = {
->         .properties     = onda_v891w_v1_props,
->  };
->
-> +static const struct property_entry onda_v891w_v3_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 35),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 15),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1625),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1135),
-> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-> +       PROPERTY_ENTRY_STRING("firmware-name",
-> +                             "gsl3676-onda-v891w-v3.fw"),
-> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
-> +       { }
-> +};
+>  drivers/platform/mellanox/Kconfig     |  11 ++
+>  drivers/platform/mellanox/Makefile    |   1 +
+>  drivers/platform/mellanox/mlxreg-io.c | 245 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 257 insertions(+)
+>  create mode 100644 drivers/platform/mellanox/mlxreg-io.c
+
+Hi,
+
+> diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
+> index 591bccd..ddfae9fc 100644
+> --- a/drivers/platform/mellanox/Kconfig
+> +++ b/drivers/platform/mellanox/Kconfig
+> @@ -23,4 +23,15 @@ config MLXREG_HOTPLUG
+>  	  This driver handles hot-plug events for the power suppliers, power
+>  	  cables and fans on the wide range Mellanox IB and Ethernet systems.
+>  
+> +config MLXREG_IO
+> +	tristate "Mellanox platform register access driver support"
+> +	depends on REGMAP
+> +	depends on HWMON
+> +	help
+> +	  This driver allows access to Mellanox programmable device register
+> +	  space trough sysfs interface. The sets of registers for sysfs access
+
+	        through
+
+> +	  are defined per system type bases and includes the registers related
+
+	                                    and include the
+
+> +	  to system resets operation, system reset causes monitoring and some
+> +	  kinds of mux selection.
 > +
-> +static const struct ts_dmi_data onda_v891w_v3_data = {
-> +       .acpi_name      = "MSSL1680:00",
-> +       .properties     = onda_v891w_v3_props,
-> +};
-> +
->  static const struct property_entry pipo_w2s_props[] = {
->         PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
->         PROPERTY_ENTRY_U32("touchscreen-size-y", 880),
-> @@ -481,6 +499,15 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
->                         DMI_EXACT_MATCH(DMI_BIOS_VERSION, "ONDA.W89EBBN08"),
->                 },
->         },
-> +       {
-> +               /* ONDA V891w Dual OS P891DCF2V1A01274 64GB */
-> +               .driver_data = (void *)&onda_v891w_v3_data,
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "ONDA Tablet"),
-> +                       DMI_MATCH(DMI_BIOS_VERSION, "ONDA.D890HBBNR0A"),
-> +               },
-> +       },
->         {
->                 /* Pipo W2S */
->                 .driver_data = (void *)&pipo_w2s_data,
-> --
-> 2.17.1
->
+>  endif # MELLANOX_PLATFORM
 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+~Randy
