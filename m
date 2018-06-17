@@ -1,64 +1,337 @@
-From: youling257 <youling257@gmail.com>
-Subject: [PATCH v3] platform/x86: touchscreen_dmi: Add info for the ONDA V891W Dual OS
-Date: Sun, 17 Jun 2018 22:03:26 +0800
-Message-ID: <20180617140326.12854-1-youling257@gmail.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [PATCH v6 6/8] platform/mellanox: Introduce support for Mellanox register access driver
+Date: Sun, 17 Jun 2018 16:56:53 +0000
+Message-ID: <1529254615-88124-1-git-send-email-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, andy@infradead.org, dvhart@infradead.org, hdegoede@redhat.com, youling257 <youling257@gmail.com>
+To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, ivecera@redhat.com, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add touchscreen info for the ONDA V891W Dual OS
+Introduce new Mellanox platform driver to allow access to Mellanox
+programmable device register space trough sysfs interface.
+The driver purpose is to provide sysfs interface for user space for the
+registers essential for system control and monitoring.
+The sets of registers for sysfs access are supposed to be defined per
+system type bases and include the registers related to system resets
+operation, system reset causes monitoring and some kinds of mux selection.
 
-Signed-off-by: youling257 <youling257@gmail.com>
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 ---
- drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+v5-v6:
+ Comments pointed out by Darren:
+ - Fix "filed" to "field" and "form" to "from".
+ - Drop redundant case for "full register" kind of attribute.
+   Since regmap_config structure includes the field with the number of
+   bits in a register address, it protects register from reading/writing
+   above this limit.
+ - Use len parameter, received from the user space in kstrtou32 to prevent
+   reading beyond the end of input buffer.
+ - Move comment to correct location in mlxreg_io_attr_store routine.
+ - Provide regval reading operation into a static local function.
+v4-v5:
+ Comments pointed out by Darren:
+ - Add more comments.
+ - Add validation for the buffer length in attribute store method.
+ - Remove unnecessary check for input value in attribute store method.
+ - Change name val to input_value in order to improve code readability.
+ Changes added by Vadim:
+ - Extend logic in attribute show and store methods to cover all
+   configurations.
+v2->v3:
+ Comments pointed out by Darren:
+ - Remove conditional assignment per attribute mode type, because mode
+   will guard against not permitted access.
+   Verified by Vadim.
+v1->v2:
+ Change added by Vadim:
+ - Change ---help--- to help in Kconfig, according to new requirements;
+---
+ drivers/platform/mellanox/Kconfig     |  11 ++
+ drivers/platform/mellanox/Makefile    |   1 +
+ drivers/platform/mellanox/mlxreg-io.c | 245 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 257 insertions(+)
+ create mode 100644 drivers/platform/mellanox/mlxreg-io.c
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 6284946cb0d1..2ad9327c8c0f 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -221,6 +221,24 @@ static const struct ts_dmi_data onda_v891w_v1_data = {
- 	.properties	= onda_v891w_v1_props,
- };
+diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
+index 591bccd..ddfae9fc 100644
+--- a/drivers/platform/mellanox/Kconfig
++++ b/drivers/platform/mellanox/Kconfig
+@@ -23,4 +23,15 @@ config MLXREG_HOTPLUG
+ 	  This driver handles hot-plug events for the power suppliers, power
+ 	  cables and fans on the wide range Mellanox IB and Ethernet systems.
  
-+static const struct property_entry onda_v891w_v3_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 35),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 15),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1625),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1135),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name",
-+			      "gsl3676-onda-v891w-v3.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
++config MLXREG_IO
++	tristate "Mellanox platform register access driver support"
++	depends on REGMAP
++	depends on HWMON
++	help
++	  This driver allows access to Mellanox programmable device register
++	  space trough sysfs interface. The sets of registers for sysfs access
++	  are defined per system type bases and includes the registers related
++	  to system resets operation, system reset causes monitoring and some
++	  kinds of mux selection.
++
+ endif # MELLANOX_PLATFORM
+diff --git a/drivers/platform/mellanox/Makefile b/drivers/platform/mellanox/Makefile
+index 7c8385e..57074d9c 100644
+--- a/drivers/platform/mellanox/Makefile
++++ b/drivers/platform/mellanox/Makefile
+@@ -4,3 +4,4 @@
+ # Mellanox Platform-Specific Drivers
+ #
+ obj-$(CONFIG_MLXREG_HOTPLUG)	+= mlxreg-hotplug.o
++obj-$(CONFIG_MLXREG_IO) += mlxreg-io.o
+diff --git a/drivers/platform/mellanox/mlxreg-io.c b/drivers/platform/mellanox/mlxreg-io.c
+new file mode 100644
+index 0000000..c192dfe
+--- /dev/null
++++ b/drivers/platform/mellanox/mlxreg-io.c
+@@ -0,0 +1,245 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Mellanox register access driver
++ *
++ * Copyright (C) 2018 Mellanox Technologies
++ * Copyright (C) 2018 Vadim Pasternak <vadimp@mellanox.com>
++ */
++
++#include <linux/bitops.h>
++#include <linux/device.h>
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/platform_data/mlxreg.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++/* Attribute parameters. */
++#define MLXREG_IO_ATT_SIZE	10
++#define MLXREG_IO_ATT_NUM	48
++
++/**
++ * struct mlxreg_io_priv_data - driver's private data:
++ *
++ * @pdev: platform device;
++ * @pdata: platform data;
++ * @hwmon: hwmon device;
++ * @mlxreg_io_attr: sysfs attributes array;
++ * @mlxreg_io_dev_attr: sysfs sensor device attribute array;
++ * @group: sysfs attribute group;
++ * @groups: list of sysfs attribute group for hwmon registration;
++ */
++struct mlxreg_io_priv_data {
++	struct platform_device *pdev;
++	struct mlxreg_core_platform_data *pdata;
++	struct device *hwmon;
++	struct attribute *mlxreg_io_attr[MLXREG_IO_ATT_NUM + 1];
++	struct sensor_device_attribute mlxreg_io_dev_attr[MLXREG_IO_ATT_NUM];
++	struct attribute_group group;
++	const struct attribute_group *groups[2];
 +};
 +
-+static const struct ts_dmi_data onda_v891w_v3_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= onda_v891w_v3_props,
++static int
++mlxreg_io_get_reg(void *regmap, struct mlxreg_core_data *data, u32 in_val,
++		  bool rw_flag, u32 *regval)
++{
++	int ret;
++
++	ret = regmap_read(regmap, data->reg, regval);
++	if (ret)
++		goto access_error;
++
++	/*
++	 * There are three kinds of attributes: single bit, full register's
++	 * bits and bit sequence. For the first kind field mask indicates which
++	 * bits are not related and field bit is set zero. For the second kind
++	 * field mask is set to zero and field bit is set with all bits one.
++	 * No special handling for such kind of attributes - pass value as is.
++	 * For the third kind, field mask indicates which bits are related and
++	 * field bit is set to the first bit number (from 1 to 32) is the bit
++	 * sequence.
++	 */
++	if (!data->bit) {
++		/* Single bit. */
++		if (rw_flag) {
++			/* For show: expose effective bit value as 0 or 1. */
++			*regval = !!(*regval & ~data->mask);
++		} else {
++			/* For store: set effective bit value. */
++			*regval &= data->mask;
++			if (in_val)
++				*regval |= ~data->mask;
++		}
++	} else if (data->mask) {
++		/* Bit sequence. */
++		if (rw_flag) {
++			/* For show: mask and shift right. */
++			*regval = ror32(*regval & data->mask, (data->bit - 1));
++		} else {
++			/* For store: shift to the position and mask. */
++			in_val = rol32(in_val, data->bit - 1) & data->mask;
++			/* Clear relevant bits and set them to new value. */
++			*regval = (*regval & ~data->mask) | in_val;
++		}
++	}
++
++access_error:
++	return ret;
++}
++
++static ssize_t
++mlxreg_io_attr_show(struct device *dev, struct device_attribute *attr,
++		    char *buf)
++{
++	struct mlxreg_io_priv_data *priv = dev_get_drvdata(dev);
++	int index = to_sensor_dev_attr(attr)->index;
++	struct mlxreg_core_data *data = priv->pdata->data + index;
++	u32 regval = 0;
++	int ret;
++
++	ret = mlxreg_io_get_reg(priv->pdata->regmap, data, 0, true, &regval);
++	if (ret)
++		goto access_error;
++
++	return sprintf(buf, "%u\n", regval);
++
++access_error:
++	return ret;
++}
++
++static ssize_t
++mlxreg_io_attr_store(struct device *dev, struct device_attribute *attr,
++		     const char *buf, size_t len)
++{
++	struct mlxreg_io_priv_data *priv = dev_get_drvdata(dev);
++	int index = to_sensor_dev_attr(attr)->index;
++	struct mlxreg_core_data *data = priv->pdata->data + index;
++	u32 input_val, regval;
++	int ret;
++
++	if (len > MLXREG_IO_ATT_SIZE)
++		return -EINVAL;
++
++	/* Convert buffer to input value. */
++	ret = kstrtou32(buf, len, &input_val);
++	if (ret)
++		return ret;
++
++	ret = mlxreg_io_get_reg(priv->pdata->regmap, data, input_val, false,
++				&regval);
++	if (ret)
++		goto access_error;
++
++	ret = regmap_write(priv->pdata->regmap, data->reg, regval);
++	if (ret)
++		goto access_error;
++
++	return len;
++
++access_error:
++	dev_err(&priv->pdev->dev, "Bus access error\n");
++	return ret;
++}
++
++static struct device_attribute mlxreg_io_devattr_rw = {
++	.show	= mlxreg_io_attr_show,
++	.store	= mlxreg_io_attr_store,
 +};
 +
- static const struct property_entry pipo_w2s_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 880),
-@@ -481,6 +499,15 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "ONDA.W89EBBN08"),
- 		},
- 	},
-+	{
-+		/* ONDA V891w Dual OS P891DCF2V1A01274 64GB */
-+		.driver_data = (void *)&onda_v891w_v3_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "ONDA Tablet"),
-+			DMI_MATCH(DMI_BIOS_VERSION, "ONDA.D890HBBNR0A"),
-+		},
++static int mlxreg_io_attr_init(struct mlxreg_io_priv_data *priv)
++{
++	int i;
++
++	priv->group.attrs = devm_kzalloc(&priv->pdev->dev,
++					 priv->pdata->counter *
++					 sizeof(struct attribute *),
++					 GFP_KERNEL);
++	if (!priv->group.attrs)
++		return -ENOMEM;
++
++	for (i = 0; i < priv->pdata->counter; i++) {
++		priv->mlxreg_io_attr[i] =
++				&priv->mlxreg_io_dev_attr[i].dev_attr.attr;
++		memcpy(&priv->mlxreg_io_dev_attr[i].dev_attr,
++		       &mlxreg_io_devattr_rw, sizeof(struct device_attribute));
++
++		/* Set attribute name as a label. */
++		priv->mlxreg_io_attr[i]->name =
++				devm_kasprintf(&priv->pdev->dev, GFP_KERNEL,
++					       priv->pdata->data[i].label);
++
++		if (!priv->mlxreg_io_attr[i]->name) {
++			dev_err(&priv->pdev->dev, "Memory allocation failed for sysfs attribute %d.\n",
++				i + 1);
++			return -ENOMEM;
++		}
++
++		priv->mlxreg_io_dev_attr[i].dev_attr.attr.mode =
++						priv->pdata->data[i].mode;
++		priv->mlxreg_io_dev_attr[i].dev_attr.attr.name =
++					priv->mlxreg_io_attr[i]->name;
++		priv->mlxreg_io_dev_attr[i].index = i;
++		sysfs_attr_init(&priv->mlxreg_io_dev_attr[i].dev_attr.attr);
++	}
++
++	priv->group.attrs = priv->mlxreg_io_attr;
++	priv->groups[0] = &priv->group;
++	priv->groups[1] = NULL;
++
++	return 0;
++}
++
++static int mlxreg_io_probe(struct platform_device *pdev)
++{
++	struct mlxreg_io_priv_data *priv;
++	int err;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->pdata = dev_get_platdata(&pdev->dev);
++	if (!priv->pdata) {
++		dev_err(&pdev->dev, "Failed to get platform data.\n");
++		return -EINVAL;
++	}
++
++	priv->pdev = pdev;
++
++	err = mlxreg_io_attr_init(priv);
++	if (err) {
++		dev_err(&priv->pdev->dev, "Failed to allocate attributes: %d\n",
++			err);
++		return err;
++	}
++
++	priv->hwmon = devm_hwmon_device_register_with_groups(&pdev->dev,
++							     "mlxreg_io",
++							      priv,
++							      priv->groups);
++	if (IS_ERR(priv->hwmon)) {
++		dev_err(&pdev->dev, "Failed to register hwmon device %ld\n",
++			PTR_ERR(priv->hwmon));
++		return PTR_ERR(priv->hwmon);
++	}
++
++	dev_set_drvdata(&pdev->dev, priv);
++
++	return 0;
++}
++
++static struct platform_driver mlxreg_io_driver = {
++	.driver = {
++	    .name = "mlxreg-io",
 +	},
- 	{
- 		/* Pipo W2S */
- 		.driver_data = (void *)&pipo_w2s_data,
++	.probe = mlxreg_io_probe,
++};
++
++module_platform_driver(mlxreg_io_driver);
++
++MODULE_AUTHOR("Vadim Pasternak <vadimp@mellanox.com>");
++MODULE_DESCRIPTION("Mellanox regmap I/O access driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:mlxreg-io");
 -- 
-2.17.1
+2.1.4
