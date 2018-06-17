@@ -1,122 +1,87 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH v6 8/8] Documentation/ABI: Add documentation mlxreg-io sysfs interfaces
-Date: Sun, 17 Jun 2018 16:56:55 +0000
-Message-ID: <1529254615-88124-3-git-send-email-vadimp@mellanox.com>
-References: <1529254615-88124-1-git-send-email-vadimp@mellanox.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3] platform/x86: touchscreen_dmi: Add info for the ONDA
+ V891W Dual OS
+Date: Sun, 17 Jun 2018 19:47:44 +0300
+Message-ID: <CAHp75VeBWw1VOJiSHTdKpnrOFiCoKDmxt6HS1ctoWjhKHBiN7Q@mail.gmail.com>
+References: <20180617140326.12854-1-youling257@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529254615-88124-1-git-send-email-vadimp@mellanox.com>
+In-Reply-To: <20180617140326.12854-1-youling257@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy.shevchenko@gmail.com, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, jiri@resnulli.us, michaelsh@mellanox.com, ivecera@redhat.com, Vadim Pasternak <vadimp@mellanox.com>
+To: youling 257 <youling257@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Hans de Goede <hdegoede@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add documentation for mlxreg-io platform driver sysfs interfaces to allow
-user space access for system resets control, reset causes monitoring,
-programmable devices version reading and device selection control.
+Thanks for the patch, my comments below.
 
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
----
-v5-v6:
- Changes added by Vadim:
- - Change kernel version from 4.18 to 4.19.
-v4-v5:
- Comments pointed out by Darren:
- - Rename cause to reset.
- - Extend explanation in doc file.
- Changes added by Vadim:
- - Add two new attributes.
- - Re-arrange in alphabetic order after changes.
- - Change date from May to June.
-v4:
- Comments pointed out by Greg:
- Add Documentation/ABI/ entries for the new sysfs files.
----
- Documentation/ABI/stable/sysfs-driver-mlxreg-io | 77 +++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/ABI/stable/sysfs-driver-mlxreg-io
+On Sun, Jun 17, 2018 at 5:03 PM youling257 <youling257@gmail.com> wrote:
+>
+> Add touchscreen info for the ONDA V891W Dual OS
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-new file mode 100644
-index 0000000..815689b
---- /dev/null
-+++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-@@ -0,0 +1,77 @@
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
-+							asic_health
-+
-+Date:		June 2018
-+KernelVersion:	4.19
-+Contact:	Vadim Pasternak <vadimpmellanox.com>
-+Description:	This file shows ASIC health status. The possible values are:
-+		0 - health failed, 2 - health OK, 3 - ASIC in booting state.
-+
-+		The files are read only.
-+
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
-+							cpld1_version
-+							cpld2_version
-+
-+Date:		June 2018
-+KernelVersion:	4.19
-+Contact:	Vadim Pasternak <vadimpmellanox.com>
-+Description:	These files show with which CPLD versions have been burned
-+		on carrier and switch boards.
-+
-+		The files are read only.
-+
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/select_iio
-+Date:		June 2018
-+KernelVersion:	4.19
-+Contact:	Vadim Pasternak <vadimpmellanox.com>
-+Description:	This file allows iio devices selection.
-+
-+		Attribute select_iio can be written with 0 or with 1. It
-+		selects which one of iio devices can be accessed.
-+
-+		The file is read/write.
-+
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/psu1_on
-+		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/psu2_on
-+		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/pwr_cycle
-+		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/pwr_down
-+Date:		June 2018
-+KernelVersion:	4.19
-+Contact:	Vadim Pasternak <vadimpmellanox.com>
-+Description:	These files allow asserting system power cycling, switching
-+		power supply units on and off and system's main power domain
-+		shutdown.
-+		Expected behavior:
-+		When pwr_cycle is written 1: auxiliary power domain will go
-+		down and after short period (about 1 second) up.
-+		When  psu1_on or psu2_on is written 1, related unit will be
-+		disconnected from the power source, when written 0 - connected.
-+		If both are written 1 - power supplies main power domain will
-+		go down.
-+		When pwr_down is written 1, system's main power domain will go
-+		down.
-+
-+		The files are write only.
-+
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
-+							reset_aux_pwr_or_ref
-+							reset_asic_thermal
-+							reset_hotswap_or_wd
-+							reset_fw_reset
-+							reset_long_pb
-+							reset_main_pwr_fail
-+							reset_short_pb
-+							reset_sw_reset
-+Date:		June 2018
-+KernelVersion:	4.19
-+Contact:	Vadim Pasternak <vadimpmellanox.com>
-+Description:	These files show the system reset cause, as following: power
-+		auxiliary outage or power refresh, ASIC thermal shutdown,
-+		hotswap or watchdog, firmware reset, long press power button,
-+		short press power button, software reset. Value 1 in file means
-+		this is reset cause, 0 - otherwise. Only one of the above
-+		causes could be 1 at the same time, representing only last
-+		reset cause.
-+
-+		The files are read only.
+It would be nice to end sentences with period.
+
+>
+> Signed-off-by: youling257 <youling257@gmail.com>
+
+There is still couple of things that prevents me to apply:
+ - please use your real name in SoB
+ - you forget to add Hans' tag
+
+> ---
+>  drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index 6284946cb0d1..2ad9327c8c0f 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -221,6 +221,24 @@ static const struct ts_dmi_data onda_v891w_v1_data = {
+>         .properties     = onda_v891w_v1_props,
+>  };
+>
+> +static const struct property_entry onda_v891w_v3_props[] = {
+> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 35),
+> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 15),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1625),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1135),
+> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +       PROPERTY_ENTRY_STRING("firmware-name",
+> +                             "gsl3676-onda-v891w-v3.fw"),
+> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +       { }
+> +};
+> +
+> +static const struct ts_dmi_data onda_v891w_v3_data = {
+> +       .acpi_name      = "MSSL1680:00",
+> +       .properties     = onda_v891w_v3_props,
+> +};
+> +
+>  static const struct property_entry pipo_w2s_props[] = {
+>         PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
+>         PROPERTY_ENTRY_U32("touchscreen-size-y", 880),
+> @@ -481,6 +499,15 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+>                         DMI_EXACT_MATCH(DMI_BIOS_VERSION, "ONDA.W89EBBN08"),
+>                 },
+>         },
+> +       {
+> +               /* ONDA V891w Dual OS P891DCF2V1A01274 64GB */
+> +               .driver_data = (void *)&onda_v891w_v3_data,
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "ONDA Tablet"),
+> +                       DMI_MATCH(DMI_BIOS_VERSION, "ONDA.D890HBBNR0A"),
+> +               },
+> +       },
+>         {
+>                 /* Pipo W2S */
+>                 .driver_data = (void *)&pipo_w2s_data,
+> --
+> 2.17.1
+>
+
+
 -- 
-2.1.4
+With Best Regards,
+Andy Shevchenko
