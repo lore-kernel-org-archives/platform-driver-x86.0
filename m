@@ -1,50 +1,65 @@
-From: valdis.kletnieks@vt.edu
-Subject: Re: wmi: usercopy: Kernel memory overwrite attempt detected to spans multiple pages (offset 0, size 4104)
-Date: Sun, 17 Jun 2018 19:03:33 -0400
-Message-ID: <134035.1529276613@turing-police.cc.vt.edu>
-References: <1529182886.3450.3.camel@gmail.com> <1529186697.2784.2.camel@gmail.com> <CAGXu5jLwA37YJWi50i7bQZ6N7MtctvbXjsVg337zgD11AQ=9SA@mail.gmail.com>
- <1529263827.6069.4.camel@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1529276613_2593P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
+From: youling257 <youling257@gmail.com>
+Subject: [PATCH v4] platform/x86: touchscreen_dmi: Add info for the ONDA V891W Dual OS tablet
+Date: Mon, 18 Jun 2018 07:58:12 +0800
+Message-ID: <20180617235812.18596-1-youling257@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529263827.6069.4.camel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mihai =?UTF-8?Q?Don=C8=9Bu?= <mihai.dontu@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>, LKML <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, andy@infradead.org, dvhart@infradead.org, hdegoede@redhat.com, youling257 <youling257@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
---==_Exmh_1529276613_2593P
-Content-Type: text/plain; charset=us-ascii
+Add touchscreen info for the ONDA V891W Dual OS tablet
 
-On Sun, 17 Jun 2018 22:30:27 +0300, Mihai Donțu said:
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: youling257 <youling257@gmail.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-> Your patch works OK for me, thank you. The libsmbios tool, however, not
-> so much. It appears to be behind latest developments.
->
-> # echo "+keyboard" >/sys/class/leds/dell\:\:kbd_backlight/start_triggers
->
-> is all that is needed today.
-
-If you're ever in this remote corner of southwest Virginia, I owe you a beverage.
-I was going bonkers trying to figure out why my Dell Latitude's keyboard no
-longer had a backlight... (and wondering if I was going to need to replace it
-*again* - this laptop is 5 years old and on its third keyboard already)
-
---==_Exmh_1529276613_2593P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.8.0 04/21/2017
-
-iQEVAwUBWyboxY0DS38y7CIcAQJLhAf/RLIjU2o0G7Sm3G6zK1mMNewF9a4LOls+
-eZUpQC6fZB5g+x+xP4+fontc7czdeNQZBkW61Pl9jbRVrOALkvYpoiGHn8EnjxrA
-jW7H6wisfZ4xDbo97CS2GpP/pwadgTffPzdABpylo51sh3UWvdYNOMtMlZQL+MSP
-fNf8ea1sv6dvVZjQNv2spgLLAL5fcG30V0KPDXtv5tWPGDTSoI2F2KgPA1wArgUr
-pevvcZI2AyRW5sLQTNUMtDLdvSZTuVy4pFT2eHEoRyMHmnCvqELoN8d9v/aqrDpt
-Ueca6oDYO30BzKAqKYI3K9bicCWpS6JlKn4juPvJeKL9LFJM31fVVQ==
-=cdug
------END PGP SIGNATURE-----
-
---==_Exmh_1529276613_2593P--
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 6284946cb0d1..2ad9327c8c0f 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -221,6 +221,24 @@ static const struct ts_dmi_data onda_v891w_v1_data = {
+ 	.properties	= onda_v891w_v1_props,
+ };
+ 
++static const struct property_entry onda_v891w_v3_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 35),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 15),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1625),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1135),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_STRING("firmware-name",
++			      "gsl3676-onda-v891w-v3.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
++	{ }
++};
++
++static const struct ts_dmi_data onda_v891w_v3_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= onda_v891w_v3_props,
++};
++
+ static const struct property_entry pipo_w2s_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 880),
+@@ -481,6 +499,15 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "ONDA.W89EBBN08"),
+ 		},
+ 	},
++	{
++		/* ONDA V891w Dual OS P891DCF2V1A01274 64GB */
++		.driver_data = (void *)&onda_v891w_v3_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "ONDA Tablet"),
++			DMI_MATCH(DMI_BIOS_VERSION, "ONDA.D890HBBNR0A"),
++		},
++	},
+ 	{
+ 		/* Pipo W2S */
+ 		.driver_data = (void *)&pipo_w2s_data,
+-- 
+2.17.1
