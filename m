@@ -1,73 +1,75 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v5] platform/x86: touchscreen_dmi: Add info for the ONDA V891W Dual OS tablet
-Date: Mon, 18 Jun 2018 15:11:44 +0200
-Message-ID: <20180618131144.13890-1-hdegoede@redhat.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: wmi: usercopy: Kernel memory overwrite attempt detected to spans
+ multiple pages (offset 0, size 4104)
+Date: Mon, 18 Jun 2018 13:34:35 +0000
+Message-ID: <00bb7cdf16034d2b8832bbc9f9ed284f@ausx13mpc120.AMER.DELL.COM>
+References: <1529182886.3450.3.camel@gmail.com>
+         <1529186697.2784.2.camel@gmail.com>
+         <CAGXu5jLwA37YJWi50i7bQZ6N7MtctvbXjsVg337zgD11AQ=9SA@mail.gmail.com>
+ <1529263827.6069.4.camel@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1529263827.6069.4.camel@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, youling257 <youling257@gmail.com>
+To: mihai.dontu@gmail.com, keescook@chromium.org
+Cc: linux-kernel@vger.kernel.org, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: youling257 <youling257@gmail.com>
-
-Add touchscreen info for hardware revision "v3" of the ONDA V891W Dual
-OS tablet.
-
-Reported-and-tested-by: youling257 <youling257@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v5:
--Replaced youlin's S-o-b with mine since youlin does not want to use his
- real name and I certify that he has created this patch and has the rights
- to submit it under the GPL
----
- drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 4670c8fc1eef..8578f9e28ee0 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -264,6 +264,24 @@ static const struct ts_dmi_data onda_v891w_v1_data = {
- 	.properties	= onda_v891w_v1_props,
- };
- 
-+static const struct property_entry onda_v891w_v3_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 35),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 15),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1625),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1135),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name",
-+			      "gsl3676-onda-v891w-v3.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data onda_v891w_v3_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= onda_v891w_v3_props,
-+};
-+
- static const struct property_entry pipo_w2s_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 880),
-@@ -543,6 +561,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "ONDA.W89EBBN08"),
- 		},
- 	},
-+	{
-+		/* ONDA V891w Dual OS P891DCF2V1A01274 64GB */
-+		.driver_data = (void *)&onda_v891w_v3_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "ONDA Tablet"),
-+			DMI_MATCH(DMI_BIOS_VERSION, "ONDA.D890HBBNR0A"),
-+		},
-+	},
- 	{
- 		/* Pipo W2S */
- 		.driver_data = (void *)&pipo_w2s_data,
--- 
-2.17.1
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
+LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
+bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIE1paGFpIERvbj91DQo+IFNlbnQ6IFN1
+bmRheSwgSnVuZSAxNywgMjAxOCAyOjMwIFBNDQo+IFRvOiBLZWVzIENvb2sNCj4gQ2M6IExLTUw7
+IERhcnJlbiBIYXJ0OyBBbmR5IFNoZXZjaGVua287IFBsYXRmb3JtIERyaXZlcg0KPiBTdWJqZWN0
+OiBSZTogd21pOiB1c2VyY29weTogS2VybmVsIG1lbW9yeSBvdmVyd3JpdGUgYXR0ZW1wdCBkZXRl
+Y3RlZCB0byBzcGFucw0KPiBtdWx0aXBsZSBwYWdlcyAob2Zmc2V0IDAsIHNpemUgNDEwNCkNCj4g
+DQo+IE9uIFN1biwgMjAxOC0wNi0xNyBhdCAxMDozNiAtMDcwMCwgS2VlcyBDb29rIHdyb3RlOg0K
+PiA+IE9uIFNhdCwgSnVuIDE2LCAyMDE4IGF0IDM6MDQgUE0sIE1paGFpIERvbsibdSB3cm90ZToN
+Cj4gPiA+IE9uIFN1biwgMjAxOC0wNi0xNyBhdCAwMDowMSArMDMwMCwgTWloYWkgRG9uyJt1IHdy
+b3RlOg0KPiA+ID4gPiBXaGlsZSB0cnlpbmcgdG8gYWRqdXN0IHRoZSBrZXlib2FyZCBiYWNrbGln
+aHQgbW9kZSwgSSBoaXQgdGhpcyBCVUc6DQo+ID4gPiA+DQo+ID4gPiA+IEp1biAxNiAyMjoxNjow
+NyBtZG9udHUtbCBrZXJuZWw6IHVzZXJjb3B5OiBLZXJuZWwgbWVtb3J5IG92ZXJ3cml0ZSBhdHRl
+bXB0DQo+IGRldGVjdGVkIHRvIHNwYW5zIG11bHRpcGxlIHBhZ2VzIChvZmZzZXQgMCwgc2l6ZSA0
+MTA0KSENCj4gPg0KPiA+IENPTkZJR19IQVJERU5FRF9VU0VSQ09QWV9QQUdFU1BBTj15IGlzIHJl
+YWxseSBvbmx5IHVzZWZ1bCBmb3INCj4gPiBkZWJ1Z2dpbmcgc3BlY2lhbCBjYXNlcy4gRm9yIG5v
+dywgSSByZWNvbW1lbmQgbGVhdmluZyBpdCBkaXNhYmxlZCwNCj4gPiBzaW5jZSB0aGVyZSBhcmUg
+YSBsb3Qgb2YgY2FzZXMgaXQgc3RpbGwgdHJpcHMgb3Zlci4NCj4gPg0KPiA+ID4gSSBldmVudHVh
+bGx5IHNwcmlua2xlZCBzb21lIHByaW50ay1zIGFuZCBnb3QgdGhpczoNCj4gPiA+DQo+ID4gPiAg
+ODU1ICAgICAgICAgaWYgKGNvcHlfZnJvbV91c2VyKGJ1ZiwgaW5wdXQsIHdibG9jay0+cmVxX2J1
+Zl9zaXplKSkgew0KPiA+ID4gIDg1NiAgICAgICAgICAgICAgICAgZGV2X2RiZygmd2Jsb2NrLT5k
+ZXYuZGV2LCAiQ29weSAlbGx1IGZyb20gdXNlciBmYWlsZWRcbiIsDQo+ID4gPiAgODU3ICAgICAg
+ICAgICAgICAgICAgICAgICAgIHdibG9jay0+cmVxX2J1Zl9zaXplKTsNCj4gPiA+ICA4NTggICAg
+ICAgICAgICAgICAgIHJldCA9IC1FRkFVTFQ7DQo+ID4gPiAgODU5ICAgICAgICAgICAgICAgICBn
+b3RvIG91dF9pb2N0bDsNCj4gPiA+ICA4NjAgICAgICAgICB9DQo+ID4NCj4gPiBIb3dldmVyLCBz
+aW5jZSB5b3UgdHJhY2tlZCB0aGlzIG9uZSBkb3duLCBJIHRoaW5rIHRoaXMgd291bGQgYmUgZml4
+ZWQNCj4gPiBieSBhZGp1c3RpbmcgdGhlIGhhbmRsZXJfZGF0YSBhbGxvY2F0aW9uOg0KPiA+DQo+
+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvd21pLmMgYi9kcml2ZXJz
+L3BsYXRmb3JtL3g4Ni93bWkuYw0KPiA+IGluZGV4IDhlM2QwMTQ2ZmY4Yy4uZWE2YmY5OGYxOTdh
+IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3dtaS5jDQo+ID4gKysrIGIv
+ZHJpdmVycy9wbGF0Zm9ybS94ODYvd21pLmMNCj4gPiBAQCAtOTE4LDggKzkxOCw4IEBAIHN0YXRp
+YyBpbnQgd21pX2Rldl9wcm9iZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gICAgICAgICAgICAg
+ICAgIH0NCj4gPg0KPiA+ICAgICAgICAgICAgICAgICBjb3VudCA9IGdldF9vcmRlcih3YmxvY2st
+PnJlcV9idWZfc2l6ZSk7DQo+ID4gLSAgICAgICAgICAgICAgIHdibG9jay0+aGFuZGxlcl9kYXRh
+ID0gKHZvaWQgKilfX2dldF9mcmVlX3BhZ2VzKEdGUF9LRVJORUwsDQo+ID4gLSAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvdW50
+KTsNCj4gPiArICAgICAgICAgICAgICAgd2Jsb2NrLT5oYW5kbGVyX2RhdGEgPSAodm9pZCAqKQ0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIF9fZ2V0X2ZyZWVfcGFnZXMoR0ZQX0tFUk5FTCB8
+IF9fR0ZQX0NPTVAsIGNvdW50KTsNCj4gPiAgICAgICAgICAgICAgICAgaWYgKCF3YmxvY2stPmhh
+bmRsZXJfZGF0YSkgew0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHJldCA9IC1FTk9NRU07
+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgZ290byBwcm9iZV9mYWlsdXJlOw0KPiA+DQo+
+IA0KPiBZb3VyIHBhdGNoIHdvcmtzIE9LIGZvciBtZSwgdGhhbmsgeW91LiBUaGUgbGlic21iaW9z
+IHRvb2wsIGhvd2V2ZXIsIG5vdA0KPiBzbyBtdWNoLiBJdCBhcHBlYXJzIHRvIGJlIGJlaGluZCBs
+YXRlc3QgZGV2ZWxvcG1lbnRzLg0KPiANCj4gIyBlY2hvICIra2V5Ym9hcmQiID4vc3lzL2NsYXNz
+L2xlZHMvZGVsbFw6XDprYmRfYmFja2xpZ2h0L3N0YXJ0X3RyaWdnZXJzDQoNClBsZWFzZSBmZWVs
+IGZyZWUgdG8gc2VuZCBhIFBSIHRvIGF1Z21lbnQgbGlic21iaW9zIHRvIHByZWZlciB0aGlzIHN5
+c2ZzIGludGVyZmFjZQ0KaWYgaXQncyBwcmVzZW50IG92ZXIgdGhlIGRpcmVjdCBjb21tdW5pY2F0
+aW9uIHBhdGguDQoNCj4gDQo+IGlzIGFsbCB0aGF0IGlzIG5lZWRlZCB0b2RheS4NCj4gDQo+IFJl
+Z2FyZHMsDQo+IA0KPiA+IEJ1dCBpbiBsb29raW5nIGZ1cnRoZXIsIEkgZG9uJ3Qga25vdyB3aHkg
+dGhpcyBpcyB1c2luZw0KPiA+IF9fZ2V0X2ZyZWVfcGFnZXMoKSBpbnN0ZWFkIG9mIGttYWxsb2M/
+IEluIGZhY3QsIHRoZXJlIGlzIGEga2ZyZWUoKSBpbg0KPiA+IHRoZSBlcnJvciBwYXRoLCB3aGlj
+aCBsb29rcyB3cm9uZzoNCj4gPg0KPiA+ICAgICAgICAga2ZyZWUod2Jsb2NrLT5oYW5kbGVyX2Rh
+dGEpOw0KPiA+DQo+ID4gSSB0aGluayB0aGlzIHNob3VsZCBqdXN0IGJlIGNvbnZlcnRlZCB0byB1
+c2luZyBrbWFsbG9jL2tmcmVlIGV2ZXJ5d2hlcmUuDQo+IA0KPiAtLQ0KPiBNaWhhaSBEb27Im3UN
+Cg0K
