@@ -1,81 +1,72 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v4] platform/x86: touchscreen_dmi: Add info for the ONDA
- V891W Dual OS tablet
-Date: Tue, 19 Jun 2018 08:05:22 +1000
-Message-ID: <20180619080522.40a20951@canb.auug.org.au>
-References: <20180617235812.18596-1-youling257@gmail.com>
-        <342c314e-6e9f-aefc-3ec0-300b53071089@redhat.com>
-        <32076294-07ac-7801-2220-7468e71c275e@redhat.com>
-        <CAHp75VfPPnqgsHFwfLaUZSYa3i2tUmvWpwgxEAz45q61aU9OGA@mail.gmail.com>
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Subject: Re: Do Qualcomm drivers use DMA buffers for
+ request_firmware_into_buf()?
+Date: Tue, 19 Jun 2018 01:49:43 +0200
+Message-ID: <20180618234943.GV5527@wotan.suse.de>
+References: <20180424234219.GX14440@wotan.suse.de>
+ <1524632409.3371.48.camel@linux.vnet.ibm.com>
+ <20180425175557.GY14440@wotan.suse.de>
+ <CAB0TPYGnCu+anWHBGvkaigxD--8uHQaQJ2c62kegJ7mTqvkmnA@mail.gmail.com>
+ <20180508153805.GC27853@wotan.suse.de>
+ <20180601192346.GQ4511@wotan.suse.de>
+ <20180606203257.GH4511@wotan.suse.de>
+ <20180607161847.GN510@tuxbook-pro>
+ <CAKv+Gu8+Fq7BD4XD-YCyXzZh0mg6Z2k-0styj0cw6_uZfaqy4Q@mail.gmail.com>
+ <20180607180611.GQ510@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/=7Rk8ADpmHC12MzCvX2M/I6"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfPPnqgsHFwfLaUZSYa3i2tUmvWpwgxEAz45q61aU9OGA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, youling257 <youling257@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20180607180611.GQ510@tuxbook-pro>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matt Fleming <matt@codeblueprint.co.uk>, Will Deacon <will.deacon@arm.com>, Michal Hocko <mhocko@kernel.org>, David Howells <dhowells@redhat.com>, David Brown <david.brown@linaro.org>, Peter Jones <pjones@redhat.com>, "Luis R. Rodriguez" <mcgrof@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>, Nicolas Broeking <nbroeking@me.com>, Jonathan Corbet <corbet@lwn.net>, the arch/x86 maintainers <x86@kernel.org>, Arve Hj?nnev?g <arve@android.com>, Ingo Molnar <mingo@redhat.com>, Kalle Valo <kvalo@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Darren Hart <dvhart@infradead.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Arend Van Spriel <arend.vanspriel@broadcom.com>, Todd Kjos <tkjos@android.com>, Kees Cook <keescook@chromium.org>, linux-
 List-Id: platform-driver-x86.vger.kernel.org
 
---Sig_/=7Rk8ADpmHC12MzCvX2M/I6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Andy,
-
-On Mon, 18 Jun 2018 16:59:30 +0300 Andy Shevchenko <andy.shevchenko@gmail.c=
-om> wrote:
+On Thu, Jun 07, 2018 at 11:06:11AM -0700, Bjorn Andersson wrote:
+> On Thu 07 Jun 09:23 PDT 2018, Ard Biesheuvel wrote:
+> 
+> > On 7 June 2018 at 18:18, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
+> > > On Wed 06 Jun 13:32 PDT 2018, Luis R. Rodriguez wrote:
+> > >
+> > >> On Fri, Jun 01, 2018 at 09:23:46PM +0200, Luis R. Rodriguez wrote:
+> > >> > On Tue, May 08, 2018 at 03:38:05PM +0000, Luis R. Rodriguez wrote:
+> > >> > > On Fri, May 04, 2018 at 12:44:37PM -0700, Martijn Coenen wrote:
+> > >> > > >
+> > >> > > > I think the Qualcomm folks owning this (Andy, David, Bjorn, already
+> > >> > > > cc'd here) are better suited to answer that question.
+> > >> > >
+> > >> > > Andy, David, Bjorn?
+> > >> >
+> > >> > Andy, David, Bjorn?
+> > >>
+> > >> A month now with no answer...
 >
-> > youling has indicated to me (off-list) that he does not
-> > want to use his real name.
-> >
-> > He has already provided me with the touchscreen details
-> > and dmi strings for this tablet a while ago and I had
-> > writing the exact same quirk on my TODO list already.
-> >
-> > As such I've no doubt that he created this patch and
-> > has the rights to Submit it under the GPL license.
-> >
-> > So I'm going to resubmit this with his S-o-b removed
-> > and replaced with mine. Where the intent of my
-> > S-o-b is to certify point c. of the certificate
-> > of origin, quoting from:
-> >
-> > https://www.kernel.org/doc/html/latest/process/submitting-patches.html#=
-developer-s-certificate-of-origin-1-1
-> >
-> > "c. The contribution was provided directly to me by some other person w=
-ho
-> > certified (a), (b) or (c) and I have not modified it."
-> >
-> > This seems better then me re-creating the exact
-> > same patch from scratch. =20
->=20
-> I guess this will not pass checks Stephen has.
-> So, Stephen, how should we proceed?
+> So it's this memremap() region that we pass to
+> request_firmware_into_buf() currently, the previously mentioned
+> dma_alloc_coherent() region is used as we invoke the secure world
+> operation to set up the firmware authentication.
 
-That's fine.  I amy report it (If I forget this email), but you can
-just ignore the report.  My scripted checks obviously can't take this
-case into account.
+memremap() is for IO memory, and in that sense it is also not much different
+from DMA memory in terms of the concerns Mimi has for LSMs and what guarantees
+LSMs can make to users.
 
---=20
-Cheers,
-Stephen Rothwell
+Regardless of the device, once you write certain data to the IO memory we cannot
+be sure the device will wait for all IO to be written, this will be device specific.
 
---Sig_/=7Rk8ADpmHC12MzCvX2M/I6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+As such I would suggest READING_IOMEM for this case have request_firmware_into_buf()
+use it.
 
------BEGIN PGP SIGNATURE-----
+With that said, since we have only one user of this caller, a future rename
+to reflect its current actual use would be good. The rename can wait though.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlsoLKIACgkQAVBC80lX
-0GwUWAf+IPuTkMyXrUOf76PcmJq6uAcEdoyOa+kwantW3LtEjZG8AuvS2J4ut/Cp
-GM8Xn2GSHJ/eLDIKX6qef88jw9zrrVHLIehTcT30LMcz0732jULz4/K7L7450xFb
-QG+H+KhNZRfh6FAIWUxZxmUzILOk021jHn/C4BRxclwM9V+Y7jwfwUhKSkEXTyyb
-paBSuXEe+gG9RvDe+toJbakMF/8zdTKzyB96YwWy4v6ZzGmtFMmmOuvpacAqjsDZ
-AlxzWQ0lvtKS6xK5rgOTy1eF6xASnBxJI8rlBYthdQe00Cgk9AhJ9MfvKZOAJODN
-NabV8aqctwOyx7jJEE8Sb8jjy18cTw==
-=OcAw
------END PGP SIGNATURE-----
-
---Sig_/=7Rk8ADpmHC12MzCvX2M/I6--
+  Luis
