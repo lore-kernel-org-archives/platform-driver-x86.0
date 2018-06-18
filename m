@@ -1,75 +1,75 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: wmi: usercopy: Kernel memory overwrite attempt detected to spans
- multiple pages (offset 0, size 4104)
-Date: Mon, 18 Jun 2018 13:34:35 +0000
-Message-ID: <00bb7cdf16034d2b8832bbc9f9ed284f@ausx13mpc120.AMER.DELL.COM>
-References: <1529182886.3450.3.camel@gmail.com>
-         <1529186697.2784.2.camel@gmail.com>
-         <CAGXu5jLwA37YJWi50i7bQZ6N7MtctvbXjsVg337zgD11AQ=9SA@mail.gmail.com>
- <1529263827.6069.4.camel@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4] platform/x86: touchscreen_dmi: Add info for the ONDA
+ V891W Dual OS tablet
+Date: Mon, 18 Jun 2018 16:59:30 +0300
+Message-ID: <CAHp75VfPPnqgsHFwfLaUZSYa3i2tUmvWpwgxEAz45q61aU9OGA@mail.gmail.com>
+References: <20180617235812.18596-1-youling257@gmail.com> <342c314e-6e9f-aefc-3ec0-300b53071089@redhat.com>
+ <32076294-07ac-7801-2220-7468e71c275e@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529263827.6069.4.camel@gmail.com>
-Content-Language: en-US
+In-Reply-To: <32076294-07ac-7801-2220-7468e71c275e@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mihai.dontu@gmail.com, keescook@chromium.org
-Cc: linux-kernel@vger.kernel.org, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: youling257 <youling257@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
-LW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93
-bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIE1paGFpIERvbj91DQo+IFNlbnQ6IFN1
-bmRheSwgSnVuZSAxNywgMjAxOCAyOjMwIFBNDQo+IFRvOiBLZWVzIENvb2sNCj4gQ2M6IExLTUw7
-IERhcnJlbiBIYXJ0OyBBbmR5IFNoZXZjaGVua287IFBsYXRmb3JtIERyaXZlcg0KPiBTdWJqZWN0
-OiBSZTogd21pOiB1c2VyY29weTogS2VybmVsIG1lbW9yeSBvdmVyd3JpdGUgYXR0ZW1wdCBkZXRl
-Y3RlZCB0byBzcGFucw0KPiBtdWx0aXBsZSBwYWdlcyAob2Zmc2V0IDAsIHNpemUgNDEwNCkNCj4g
-DQo+IE9uIFN1biwgMjAxOC0wNi0xNyBhdCAxMDozNiAtMDcwMCwgS2VlcyBDb29rIHdyb3RlOg0K
-PiA+IE9uIFNhdCwgSnVuIDE2LCAyMDE4IGF0IDM6MDQgUE0sIE1paGFpIERvbsibdSB3cm90ZToN
-Cj4gPiA+IE9uIFN1biwgMjAxOC0wNi0xNyBhdCAwMDowMSArMDMwMCwgTWloYWkgRG9uyJt1IHdy
-b3RlOg0KPiA+ID4gPiBXaGlsZSB0cnlpbmcgdG8gYWRqdXN0IHRoZSBrZXlib2FyZCBiYWNrbGln
-aHQgbW9kZSwgSSBoaXQgdGhpcyBCVUc6DQo+ID4gPiA+DQo+ID4gPiA+IEp1biAxNiAyMjoxNjow
-NyBtZG9udHUtbCBrZXJuZWw6IHVzZXJjb3B5OiBLZXJuZWwgbWVtb3J5IG92ZXJ3cml0ZSBhdHRl
-bXB0DQo+IGRldGVjdGVkIHRvIHNwYW5zIG11bHRpcGxlIHBhZ2VzIChvZmZzZXQgMCwgc2l6ZSA0
-MTA0KSENCj4gPg0KPiA+IENPTkZJR19IQVJERU5FRF9VU0VSQ09QWV9QQUdFU1BBTj15IGlzIHJl
-YWxseSBvbmx5IHVzZWZ1bCBmb3INCj4gPiBkZWJ1Z2dpbmcgc3BlY2lhbCBjYXNlcy4gRm9yIG5v
-dywgSSByZWNvbW1lbmQgbGVhdmluZyBpdCBkaXNhYmxlZCwNCj4gPiBzaW5jZSB0aGVyZSBhcmUg
-YSBsb3Qgb2YgY2FzZXMgaXQgc3RpbGwgdHJpcHMgb3Zlci4NCj4gPg0KPiA+ID4gSSBldmVudHVh
-bGx5IHNwcmlua2xlZCBzb21lIHByaW50ay1zIGFuZCBnb3QgdGhpczoNCj4gPiA+DQo+ID4gPiAg
-ODU1ICAgICAgICAgaWYgKGNvcHlfZnJvbV91c2VyKGJ1ZiwgaW5wdXQsIHdibG9jay0+cmVxX2J1
-Zl9zaXplKSkgew0KPiA+ID4gIDg1NiAgICAgICAgICAgICAgICAgZGV2X2RiZygmd2Jsb2NrLT5k
-ZXYuZGV2LCAiQ29weSAlbGx1IGZyb20gdXNlciBmYWlsZWRcbiIsDQo+ID4gPiAgODU3ICAgICAg
-ICAgICAgICAgICAgICAgICAgIHdibG9jay0+cmVxX2J1Zl9zaXplKTsNCj4gPiA+ICA4NTggICAg
-ICAgICAgICAgICAgIHJldCA9IC1FRkFVTFQ7DQo+ID4gPiAgODU5ICAgICAgICAgICAgICAgICBn
-b3RvIG91dF9pb2N0bDsNCj4gPiA+ICA4NjAgICAgICAgICB9DQo+ID4NCj4gPiBIb3dldmVyLCBz
-aW5jZSB5b3UgdHJhY2tlZCB0aGlzIG9uZSBkb3duLCBJIHRoaW5rIHRoaXMgd291bGQgYmUgZml4
-ZWQNCj4gPiBieSBhZGp1c3RpbmcgdGhlIGhhbmRsZXJfZGF0YSBhbGxvY2F0aW9uOg0KPiA+DQo+
-ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvd21pLmMgYi9kcml2ZXJz
-L3BsYXRmb3JtL3g4Ni93bWkuYw0KPiA+IGluZGV4IDhlM2QwMTQ2ZmY4Yy4uZWE2YmY5OGYxOTdh
-IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3dtaS5jDQo+ID4gKysrIGIv
-ZHJpdmVycy9wbGF0Zm9ybS94ODYvd21pLmMNCj4gPiBAQCAtOTE4LDggKzkxOCw4IEBAIHN0YXRp
-YyBpbnQgd21pX2Rldl9wcm9iZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gICAgICAgICAgICAg
-ICAgIH0NCj4gPg0KPiA+ICAgICAgICAgICAgICAgICBjb3VudCA9IGdldF9vcmRlcih3YmxvY2st
-PnJlcV9idWZfc2l6ZSk7DQo+ID4gLSAgICAgICAgICAgICAgIHdibG9jay0+aGFuZGxlcl9kYXRh
-ID0gKHZvaWQgKilfX2dldF9mcmVlX3BhZ2VzKEdGUF9LRVJORUwsDQo+ID4gLSAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvdW50
-KTsNCj4gPiArICAgICAgICAgICAgICAgd2Jsb2NrLT5oYW5kbGVyX2RhdGEgPSAodm9pZCAqKQ0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIF9fZ2V0X2ZyZWVfcGFnZXMoR0ZQX0tFUk5FTCB8
-IF9fR0ZQX0NPTVAsIGNvdW50KTsNCj4gPiAgICAgICAgICAgICAgICAgaWYgKCF3YmxvY2stPmhh
-bmRsZXJfZGF0YSkgew0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHJldCA9IC1FTk9NRU07
-DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgZ290byBwcm9iZV9mYWlsdXJlOw0KPiA+DQo+
-IA0KPiBZb3VyIHBhdGNoIHdvcmtzIE9LIGZvciBtZSwgdGhhbmsgeW91LiBUaGUgbGlic21iaW9z
-IHRvb2wsIGhvd2V2ZXIsIG5vdA0KPiBzbyBtdWNoLiBJdCBhcHBlYXJzIHRvIGJlIGJlaGluZCBs
-YXRlc3QgZGV2ZWxvcG1lbnRzLg0KPiANCj4gIyBlY2hvICIra2V5Ym9hcmQiID4vc3lzL2NsYXNz
-L2xlZHMvZGVsbFw6XDprYmRfYmFja2xpZ2h0L3N0YXJ0X3RyaWdnZXJzDQoNClBsZWFzZSBmZWVs
-IGZyZWUgdG8gc2VuZCBhIFBSIHRvIGF1Z21lbnQgbGlic21iaW9zIHRvIHByZWZlciB0aGlzIHN5
-c2ZzIGludGVyZmFjZQ0KaWYgaXQncyBwcmVzZW50IG92ZXIgdGhlIGRpcmVjdCBjb21tdW5pY2F0
-aW9uIHBhdGguDQoNCj4gDQo+IGlzIGFsbCB0aGF0IGlzIG5lZWRlZCB0b2RheS4NCj4gDQo+IFJl
-Z2FyZHMsDQo+IA0KPiA+IEJ1dCBpbiBsb29raW5nIGZ1cnRoZXIsIEkgZG9uJ3Qga25vdyB3aHkg
-dGhpcyBpcyB1c2luZw0KPiA+IF9fZ2V0X2ZyZWVfcGFnZXMoKSBpbnN0ZWFkIG9mIGttYWxsb2M/
-IEluIGZhY3QsIHRoZXJlIGlzIGEga2ZyZWUoKSBpbg0KPiA+IHRoZSBlcnJvciBwYXRoLCB3aGlj
-aCBsb29rcyB3cm9uZzoNCj4gPg0KPiA+ICAgICAgICAga2ZyZWUod2Jsb2NrLT5oYW5kbGVyX2Rh
-dGEpOw0KPiA+DQo+ID4gSSB0aGluayB0aGlzIHNob3VsZCBqdXN0IGJlIGNvbnZlcnRlZCB0byB1
-c2luZyBrbWFsbG9jL2tmcmVlIGV2ZXJ5d2hlcmUuDQo+IA0KPiAtLQ0KPiBNaWhhaSBEb27Im3UN
-Cg0K
++Cc: Stephen
+
+On Mon, Jun 18, 2018 at 3:54 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> Hi,
+>
+> On 18-06-18 10:43, Hans de Goede wrote:
+>>
+>> Hi,
+>>
+>> On 18-06-18 01:58, youling257 wrote:
+>>>
+>>> Add touchscreen info for the ONDA V891W Dual OS tablet
+>>
+>>
+>> Nitpick: still missing a period '.' at the end, this should be:
+>>
+>> Add touchscreen info for the ONDA V891W Dual OS tablet.
+>>
+>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>> Signed-off-by: youling257 <youling257@gmail.com>
+>>
+>>
+>> As Andy indicated you need to use your real name when submitting
+>> kernel patches, not an internet alias (or a nick).
+>>
+>> So you need to re-submit this with something like this:
+>>
+>> Signed-off-by: FirstName LastName <youling257@gmail.com>
+>
+>
+> youling has indicated to me (off-list) that he does not
+> want to use his real name.
+>
+> He has already provided me with the touchscreen details
+> and dmi strings for this tablet a while ago and I had
+> writing the exact same quirk on my TODO list already.
+>
+> As such I've no doubt that he created this patch and
+> has the rights to Submit it under the GPL license.
+>
+> So I'm going to resubmit this with his S-o-b removed
+> and replaced with mine. Where the intent of my
+> S-o-b is to certify point c. of the certificate
+> of origin, quoting from:
+>
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#developer-s-certificate-of-origin-1-1
+>
+> "c. The contribution was provided directly to me by some other person who
+> certified (a), (b) or (c) and I have not modified it."
+>
+> This seems better then me re-creating the exact
+> same patch from scratch.
+
+I guess this will not pass checks Stephen has.
+So, Stephen, how should we proceed?
+
+-- 
+With Best Regards,
+Andy Shevchenko
