@@ -1,46 +1,147 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
 Subject: Re: ThinkPad T480s & LED_MUTE, LED_MICMUTE
-Date: Mon, 18 Jun 2018 12:11:44 +0200
-Message-ID: <20180618101144.l5azlrg5jq32fpbf@pali>
-References: <20180608111057.4wxpg7m7nm7suf6n@pali> <20180615112606.GA3986@amd>
- <20180615113728.h7snxhe2juaqvjyx@pali>
- <20180615123007.nxsymdvr3nj3it5i@khazad-dum.debian.net>
- <20180615190915.cdntdeesc52ei35u@pali>
- <20180615233628.gy2ffgupctheyqof@khazad-dum.debian.net>
+Date: Mon, 18 Jun 2018 12:28:06 +0200
+Message-ID: <20180618102806.vwm4rhvxhn6hi43z@pali>
+References: <20180608111057.4wxpg7m7nm7suf6n@pali>
+ <s5hk1r01acc.wl-tiwai@suse.de>
+ <20180615190959.pqipwnm6a3tf3lxc@pali>
+ <s5hmuvvtdmi.wl-tiwai@suse.de>
+ <20180616154309.ualrx2py6ndr5xgz@pali>
+ <s5hh8m2u3cp.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180615233628.gy2ffgupctheyqof-ZGHd14iZgfaRjzvQDGKj+xxZW9W5cXbT@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
-Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <s5hh8m2u3cp.wl-tiwai@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gRnJpZGF5IDE1IEp1bmUgMjAxOCAyMDozNjoyOCBIZW5yaXF1ZSBkZSBNb3JhZXMgSG9sc2No
-dWggd3JvdGU6Cj4gT24gRnJpLCAxNSBKdW4gMjAxOCwgUGFsaSBSb2jDoXIgd3JvdGU6Cj4gPiBt
-ZWFucyBzZXQuIFdoYXQgaXMgU0hEQSBkb2luZywgSSBoYXZlIG5vdCBmaWd1cmVkIG91dC4gSXQg
-ZG9lcyBub3QKPiAKPiBMb29rIGF0IHRoZSBIREEgbWl4ZXIgc3RhdGUsIFNIREEgaXMgbGlrZWx5
-IHRvIGJlIGRpcmVjdGx5IG1lc3Npbmcgd2l0aAo+IGl0LgoKTm93IEkgZm91bmQgZm9sbG93aW5n
-IGVtYWlsIHRocmVhZCBiZXR3ZWVuIHlvdSBhbmQgQWxleCB3aXRoIHBhdGNoIHdoaWNoCmNvbmZp
-Z3VyZXMgSERBIG1peGVyIHZpYSB0aGF0IFNIREEgbWV0aG9kOgoKaHR0cHM6Ly93d3cuc3Bpbmlj
-cy5uZXQvbGlzdHMvcGxhdGZvcm0tZHJpdmVyLXg4Ni9tc2cwMzIwNi5odG1sCgpCdXQgbG9va3Mg
-bGlrZSB0aGF0IHBhdGNoIHdhcyBuZXZlciBpbmNsdWRlZCBpbnRvIG1haW5saW5lIGtlcm5lbC4u
-LgoKU2VlbXMgaXQgd291bGQgYmUgbmVlZGVkIGluIHNvbWUgcGFydCAodG8gbm90IGJyZWFrIG9s
-ZGVyIFRoaW5rcGFkcykgZm9yCnRoYXQgTEVEIHN1cHBvcnQgaW4gYWxzYSBtaXhlciBhYm91dCB3
-aGljaCBUYWthc2hpIEl3YWkgd3JvdGUuCgotLSAKUGFsaSBSb2jDoXIKcGFsaS5yb2hhckBnbWFp
-bC5jb20KCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpDaGVjayBvdXQgdGhlIHZpYnJhbnQgdGVjaCBj
-b21tdW5pdHkgb24gb25lIG9mIHRoZSB3b3JsZCdzIG1vc3QKZW5nYWdpbmcgdGVjaCBzaXRlcywg
-U2xhc2hkb3Qub3JnISBodHRwOi8vc2RtLmxpbmsvc2xhc2hkb3QKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaWJtLWFjcGktZGV2ZWwgbWFpbGluZyBsaXN0
-CmlibS1hY3BpLWRldmVsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApodHRwczovL2xpc3RzLnNvdXJj
-ZWZvcmdlLm5ldC9saXN0cy9saXN0aW5mby9pYm0tYWNwaS1kZXZlbAo=
+On Saturday 16 June 2018 18:02:14 Takashi Iwai wrote:
+> On Sat, 16 Jun 2018 17:43:09 +0200,
+> Pali Rohár wrote:
+> > 
+> > On Saturday 16 June 2018 09:05:41 Takashi Iwai wrote:
+> > > On Fri, 15 Jun 2018 21:09:59 +0200,
+> > > Pali Rohár wrote:
+> > > > 
+> > > > On Friday 15 June 2018 14:51:47 Takashi Iwai wrote:
+> > > > > On Fri, 08 Jun 2018 13:10:57 +0200,
+> > > > > Pali Rohár wrote:
+> > > > > > 
+> > > > > > Hi! With up-to-date thinkpad_acpi.ko driver on ThinkPad T480s I'm seeing
+> > > > > > a strange behavior of LEDs which are integrated into mic mute (Fn+F4)
+> > > > > > and mute (Fn+F1) keys.
+> > > > > > 
+> > > > > > When thinkpad_acpi.ko is not loaded, then mute key is working fine. When
+> > > > > > pressed, it correctly generates KEY_MUTE on AT Translated Set 2 keyboard
+> > > > > > input device and also turn on/of mute led. But when micmute key is
+> > > > > > pressed then, nothing happen. No key event is reported and also led is
+> > > > > > not turned on/off.
+> > > > > > 
+> > > > > > On the other hand, when thinkpad_acpi.ko is loaded, then both buttons
+> > > > > > mute and micmute correctly generates input events; mute via AT keyboard
+> > > > > > and micmute via ThinkPad Extra Buttons. But led is not changed. When
+> > > > > > thinkpad_acpi.ko is loaded it turn off both leds (mute and micmute) and
+> > > > > > leds after pressing any of those buttons, leds are not turned on again.
+> > > > > > 
+> > > > > > When thinkpad_acpi.ko is unloaded, then pressing mute button again start
+> > > > > > switching led on/off.
+> > > > > > 
+> > > > > > So it seems that some init sequence of thinkpad_acpi.ko breaks mute led.
+> > > > > > And fini sequence of thinkpad_acpi.ko makes mute led working again.
+> > > > > 
+> > > > > Usually the mute LED on Thinkpad is triggered from HD-audio driver
+> > > > > (sound/pci/hda/thinkpad_helper.c), and it's a soft-bound via
+> > > > > symbol_request(tpacpi_led_set).  I thought thinkpad_acpi is
+> > > > > auto-loaded when the module gets bound.
+> > > > > 
+> > > > > A possible explanation would be that TPT480s has neither IBM0068,
+> > > > > LEN0068 nor LEN0268 ACPI HIDs, hence the driver is not auto-loaded.
+> > > > 
+> > > > I have Debian Stretch kernel (4.9) which does not have LEN0268 alias for
+> > > > thinkpad_acpi.ko. So thinkpad_acpi.ko is not loaded automatically. But I
+> > > > have put thinkpad_acpi into /etc/modules and it is now automatically
+> > > > loaded at boot.
+> > > 
+> > > That's odd.  It's exposed via
+> > >   MODULE_DEVICE_TABLE(acpi, ibm_htk_device_ids);
+> > > 
+> > > It's been already in 4.9.  At this point, something is fishy.
+> > 
+> > $ /sbin/modinfo thinkpad_acpi | grep alias
+> > alias:          dmi:bvnIBM:bvrI[MU]ET??WW*
+> > alias:          tpacpi
+> > alias:          acpi*:LEN0068:*
+> > alias:          acpi*:IBM0068:*
+> > 
+> > No there is no LEN0268 on 4.9.
+> 
+> OK, that's the cause.  It's really old.
+> 
+> The commit a3c42a467a25 ("platform/x86: thinkpad_acpi: Adding new
+> hotkey ID for Lenovo thinkpad") has to be backported.
+
+This commit just autoloads thinkpad_acpi driver, right? So manual
+modprobe (for now) is OK too?
+
+> Also, in the HD-audio side, the commit 2ecb704a1290 ("ALSA: hda - add
+> a new condition to check if it is thinkpad") is needed, too.
+
+This commit was introduced in 4.9 and Debian kernel has it. I looked
+into Debian source code and there is check for LEN0268 in file
+sound/pci/hda/thinkpad_helper.c
+
+> > > > I also compiled upstream version of thinkpad_acpi.ko, loaded it in
+> > > > Stretch kernel, but it behaves in same way.
+> > > >
+> > > > Maybe... there could be a problem that thinkpad_acpi.ko must be already
+> > > > loaded when sound subsystem is doing initialization? If yes, this could
+> > > > explain it as /etc/modules is loaded at later stage and manually loading
+> > > > of new version of thinkpad_acpi.ko at runtime does not help when sound
+> > > > subsystem is already running.
+> > > 
+> > > Not really.  The HD-audio driver tries to bind with tpacpi_led_set()
+> > > via symbol_request().  i.e. if it's not present, it tries to load a
+> > > module.
+> > > 
+> > > Check whether hda_fixup_thinkpad_acpi() is called and the symbol gets
+> > > loaded or not.
+> > > 
+> > > But, I don't think it's worth to debug such an old kernel primarily.
+> > 
+> > It is default one used by the last released Debian stable version.
+> 
+> Heh, that explains :)
+> 
+> And there was a recent regression in HD-audio that was addressed in
+> 4.9.104.  If you're using some earlier 4.9.x, you might hit the
+> problem regarding HD-audio thinkpad_acpi binding.
+
+Debian has currently 4.9.88.
+
+> (But I guess it doesn't work in anyway without the backport of the
+>  commit above.)
+
+Which change/regression it is? As 2ecb704a1290 is already part of 4.9 I
+think this is a problem why it is not working...
+
+> > > Could you test the latest Linus tree or 4.17.x at least as a test
+> > > basis?
+> > 
+> > Ok, will do that later.
+> 
+> If my analysis above is correct, everything should work with the
+> recent upstream kernel as is.
+> 
+> Once after you confirm it, I can cook a patch to add the mixer enum to
+> change LED behavior as you wanted.
+> 
+> 
+> Takashi
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
