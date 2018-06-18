@@ -1,93 +1,46 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v4] platform/x86: touchscreen_dmi: Add info for the ONDA
- V891W Dual OS tablet
-Date: Mon, 18 Jun 2018 10:43:48 +0200
-Message-ID: <342c314e-6e9f-aefc-3ec0-300b53071089@redhat.com>
-References: <20180617235812.18596-1-youling257@gmail.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: ThinkPad T480s & LED_MUTE, LED_MICMUTE
+Date: Mon, 18 Jun 2018 12:11:44 +0200
+Message-ID: <20180618101144.l5azlrg5jq32fpbf@pali>
+References: <20180608111057.4wxpg7m7nm7suf6n@pali> <20180615112606.GA3986@amd>
+ <20180615113728.h7snxhe2juaqvjyx@pali>
+ <20180615123007.nxsymdvr3nj3it5i@khazad-dum.debian.net>
+ <20180615190915.cdntdeesc52ei35u@pali>
+ <20180615233628.gy2ffgupctheyqof@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180617235812.18596-1-youling257@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: youling257 <youling257@gmail.com>, linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, andy@infradead.org, dvhart@infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180615233628.gy2ffgupctheyqof-ZGHd14iZgfaRjzvQDGKj+xxZW9W5cXbT@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-On 18-06-18 01:58, youling257 wrote:
-> Add touchscreen info for the ONDA V891W Dual OS tablet
-
-Nitpick: still missing a period '.' at the end, this should be:
-
-Add touchscreen info for the ONDA V891W Dual OS tablet.
-
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: youling257 <youling257@gmail.com>
-
-As Andy indicated you need to use your real name when submitting
-kernel patches, not an internet alias (or a nick).
-
-So you need to re-submit this with something like this:
-
-Signed-off-by: FirstName LastName <youling257@gmail.com>
-
-Regards,
-
-Hans
-
-
-
-
-> ---
->   drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
->   1 file changed, 27 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index 6284946cb0d1..2ad9327c8c0f 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -221,6 +221,24 @@ static const struct ts_dmi_data onda_v891w_v1_data = {
->   	.properties	= onda_v891w_v1_props,
->   };
->   
-> +static const struct property_entry onda_v891w_v3_props[] = {
-> +	PROPERTY_ENTRY_U32("touchscreen-min-x", 35),
-> +	PROPERTY_ENTRY_U32("touchscreen-min-y", 15),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1625),
-> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1135),
-> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-> +	PROPERTY_ENTRY_STRING("firmware-name",
-> +			      "gsl3676-onda-v891w-v3.fw"),
-> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +	PROPERTY_ENTRY_BOOL("silead,home-button"),
-> +	{ }
-> +};
-> +
-> +static const struct ts_dmi_data onda_v891w_v3_data = {
-> +	.acpi_name	= "MSSL1680:00",
-> +	.properties	= onda_v891w_v3_props,
-> +};
-> +
->   static const struct property_entry pipo_w2s_props[] = {
->   	PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
->   	PROPERTY_ENTRY_U32("touchscreen-size-y", 880),
-> @@ -481,6 +499,15 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
->   			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "ONDA.W89EBBN08"),
->   		},
->   	},
-> +	{
-> +		/* ONDA V891w Dual OS P891DCF2V1A01274 64GB */
-> +		.driver_data = (void *)&onda_v891w_v3_data,
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "ONDA Tablet"),
-> +			DMI_MATCH(DMI_BIOS_VERSION, "ONDA.D890HBBNR0A"),
-> +		},
-> +	},
->   	{
->   		/* Pipo W2S */
->   		.driver_data = (void *)&pipo_w2s_data,
-> 
+T24gRnJpZGF5IDE1IEp1bmUgMjAxOCAyMDozNjoyOCBIZW5yaXF1ZSBkZSBNb3JhZXMgSG9sc2No
+dWggd3JvdGU6Cj4gT24gRnJpLCAxNSBKdW4gMjAxOCwgUGFsaSBSb2jDoXIgd3JvdGU6Cj4gPiBt
+ZWFucyBzZXQuIFdoYXQgaXMgU0hEQSBkb2luZywgSSBoYXZlIG5vdCBmaWd1cmVkIG91dC4gSXQg
+ZG9lcyBub3QKPiAKPiBMb29rIGF0IHRoZSBIREEgbWl4ZXIgc3RhdGUsIFNIREEgaXMgbGlrZWx5
+IHRvIGJlIGRpcmVjdGx5IG1lc3Npbmcgd2l0aAo+IGl0LgoKTm93IEkgZm91bmQgZm9sbG93aW5n
+IGVtYWlsIHRocmVhZCBiZXR3ZWVuIHlvdSBhbmQgQWxleCB3aXRoIHBhdGNoIHdoaWNoCmNvbmZp
+Z3VyZXMgSERBIG1peGVyIHZpYSB0aGF0IFNIREEgbWV0aG9kOgoKaHR0cHM6Ly93d3cuc3Bpbmlj
+cy5uZXQvbGlzdHMvcGxhdGZvcm0tZHJpdmVyLXg4Ni9tc2cwMzIwNi5odG1sCgpCdXQgbG9va3Mg
+bGlrZSB0aGF0IHBhdGNoIHdhcyBuZXZlciBpbmNsdWRlZCBpbnRvIG1haW5saW5lIGtlcm5lbC4u
+LgoKU2VlbXMgaXQgd291bGQgYmUgbmVlZGVkIGluIHNvbWUgcGFydCAodG8gbm90IGJyZWFrIG9s
+ZGVyIFRoaW5rcGFkcykgZm9yCnRoYXQgTEVEIHN1cHBvcnQgaW4gYWxzYSBtaXhlciBhYm91dCB3
+aGljaCBUYWthc2hpIEl3YWkgd3JvdGUuCgotLSAKUGFsaSBSb2jDoXIKcGFsaS5yb2hhckBnbWFp
+bC5jb20KCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpDaGVjayBvdXQgdGhlIHZpYnJhbnQgdGVjaCBj
+b21tdW5pdHkgb24gb25lIG9mIHRoZSB3b3JsZCdzIG1vc3QKZW5nYWdpbmcgdGVjaCBzaXRlcywg
+U2xhc2hkb3Qub3JnISBodHRwOi8vc2RtLmxpbmsvc2xhc2hkb3QKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaWJtLWFjcGktZGV2ZWwgbWFpbGluZyBsaXN0
+CmlibS1hY3BpLWRldmVsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApodHRwczovL2xpc3RzLnNvdXJj
+ZWZvcmdlLm5ldC9saXN0cy9saXN0aW5mby9pYm0tYWNwaS1kZXZlbAo=
