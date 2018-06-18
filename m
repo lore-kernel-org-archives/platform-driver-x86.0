@@ -1,122 +1,125 @@
 From: Andy Lutomirski <luto@kernel.org>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 07/13] x86, sgx: detect Intel SGX
-Date: Mon, 18 Jun 2018 14:36:35 -0700
-Message-ID: <CALCETrU+s97soHtiC3p3hkdwqZhEMdjPyJByskb99a+Z8PZjpA@mail.gmail.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
+ launch enclave
+Date: Mon, 18 Jun 2018 14:58:59 -0700
+Message-ID: <CALCETrV-4D-M2ap1EFHQiQerYf_XgwLmBAx5WMvcCUefOODjOA@mail.gmail.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-8-jarkko.sakkinen@linux.intel.com> <4fc3b6b0-6e4b-3d5f-4d54-2bf7539c7a17@intel.com>
+ <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com> <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
+ <CALCETrVp1ZhrxF5bQDSaZpLucS88tErejj5JC6Jb0fB5etWRbA@mail.gmail.com>
+ <20180611115255.GC22164@hmswarspite.think-freely.org> <CALCETrX6SD0ThNzpjkbXd7CbNTguzqiQhWMomGK+tocx_DE9XQ@mail.gmail.com>
+ <20180612174535.GE19168@hmswarspite.think-freely.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4fc3b6b0-6e4b-3d5f-4d54-2bf7539c7a17@intel.com>
+In-Reply-To: <20180612174535.GE19168@hmswarspite.think-freely.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, Greg KH <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, npmccallum@redhat.com, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: nhorman@redhat.com
+Cc: Andrew Lutomirski <luto@kernel.org>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, npmccallum@redhat.com, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, andy@infradead.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jun 18, 2018 at 8:11 AM Dave Hansen <dave.hansen@intel.com> wrote:
+On Tue, Jun 12, 2018 at 10:45 AM Neil Horman <nhorman@redhat.com> wrote:
 >
-> > +config INTEL_SGX_CORE
-> > +     prompt "Intel SGX core functionality
-> > +     depends on X86_64 && CPU_SUP_INTEL
-> > +     help
-> > +     Intel Software Guard eXtensions (SGX) is a set of CPU instructions
-> > +     that allows ring 3 applications to create enclaves; private regions
-> > +     of memory that are protected, by hardware, from unauthorized access
-> > +     and/or modification.
+> On Mon, Jun 11, 2018 at 09:55:29PM -0700, Andy Lutomirski wrote:
+> > On Mon, Jun 11, 2018 at 4:52 AM Neil Horman <nhorman@redhat.com> wrote:
+> > >
+> > > On Sun, Jun 10, 2018 at 10:17:13PM -0700, Andy Lutomirski wrote:
+> > > > > On Jun 9, 2018, at 10:39 PM, Andy Lutomirski <luto@kernel.org> wrote:
+> > > > >
+> > > > > On Fri, Jun 8, 2018 at 10:32 AM Jarkko Sakkinen
+> > > > > <jarkko.sakkinen@linux.intel.com> wrote:
+> > > > >>
+> > > > >> The Launch Enclave (LE) generates cryptographic launch tokens for user
+> > > > >> enclaves. A launch token is used by EINIT to check whether the enclave
+> > > > >> is authorized to launch or not. By having its own launch enclave, Linux
+> > > > >> has full control of the enclave launch process.
+> > > > >>
+> > > > >> LE is wrapped into a user space proxy program that reads enclave
+> > > > >> signatures outputs launch tokens. The kernel-side glue code is
+> > > > >> implemented by using the user space helper framework.  The IPC between
+> > > > >> the LE proxy program and kernel is handled with an anonymous inode.
+> > > > >>
+> > > > >> The commit also adds enclave signing tool that is used by kbuild to
+> > > > >> measure and sign the launch enclave. CONFIG_INTEL_SGX_SIGNING_KEY points
+> > > > >> to a PEM-file for the 3072-bit RSA key that is used as the LE public key
+> > > > >> pair. The default location is:
+> > > > >>
+> > > > >>  drivers/platform/x86/intel_sgx/sgx_signing_key.pem
+> > > > >>
+> > > > >> If the default key does not exist kbuild will generate a random key and
+> > > > >> place it to this location. KBUILD_SGX_SIGN_PIN can be used to specify
+> > > > >> the passphrase for the LE public key.
+> > > > >
+> > > > > It seems to me that it might be more useful to just commit a key pair
+> > > > > into the kernel.  As far as I know, there is no security whatsoever
+> > > > > gained by keeping the private key private, so why not make
+> > > > > reproducible builds easier by simply fixing the key?
+> > > >
+> > > > Having thought about this some more, I think that you should
+> > > > completely remove support for specifying a key. Provide a fixed key
+> > > > pair, hard code the cache, and call it a day. If you make the key
+> > > > configurable, every vendor that has any vendor keys (Debian, Ubuntu,
+> > > > Fedora, Red Hat, SuSE, Clear Linux, etc) will see that config option
+> > > > and set up their own key pair for no gain whatsoever.  Instead, it'll
+> > > > give some illusion of security and it'll slow down operations in a VM
+> > > > guest due to swapping out the values of the MSRs.  And, if the code to
+> > > > support a locked MSR that just happens to have the right value stays
+> > > > in the kernel, then we'll risk having vendors actually ship one
+> > > > distro's public key hash, and that will seriously suck.
+> > > >
+> > > If you hard code the key pair however, doesn't that imply that anyone can sign a
+> > > user space binary as a launch enclave, and potentially gain control of the token
+> > > granting process?
+> >
+> > Yes and no.
+> >
+> > First of all, the kernel driver shouldn't be allowing user code to
+> > launch a launch enclave regardless of signature.  I haven't gotten far
+> > enough in reviewing the code to see whether that's the case, but if
+> > it's not, it should be fixed before it's merged.
+> >
+> Ok, I agree with you here.
 >
-> That semicolon needs to be a colon.  The second half of that sentence is
-> not a stand-alone statement.
+> > But keep in mind that control of the token granting process is not the
+> > same thing as control over the right to launch an enclave.  On systems
+> > without the LE hash MSRs, Intel controls the token granting process
+> > and, barring some attack, an enclave that isn't blessed by Intel can't
+> > be launched.  Support for that model will not be merged into upstream
+> > Linux.  But on systems that have the LE hash MSRs and leave them
+> > unlocked, there is effectively no hardware-enforced launch control.
+> > Instead we have good old kernel policy.  If a user wants to launch an
+> > enclave, they need to get the kernel to launch the enclave, and the
+> > kernel needs to apply its policy.  The patch here (the in-kernel
+> > launch enclave) has a wide-open policy.
+> >
 >
-> > +     This option enables kernel recognition of SGX, high-level management
-> > +     of the Enclave Page Cache (EPC), tracking and writing of SGX Launch
-> > +     Enclave Hash MSRs, and allows for virtualization of SGX via KVM. By
-> > +     iteslf, this option does not provide SGX support to userspace.
-> > +
-> > +     For details, see Documentation/x86/intel_sgx.rst
-> > +
-> > +     If unsure, say N.
-> > +
-> >  config EFI
-> >       bool "EFI runtime service support"
-> >       depends on ACPI
-> > diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
-> > new file mode 100644
-> > index 000000000000..fa3e6e0eb8af
-> > --- /dev/null
-> > +++ b/arch/x86/include/asm/sgx.h
-> > @@ -0,0 +1,25 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> > +// Copyright(c) 2016-18 Intel Corporation.
-> > +//
-> > +// Authors:
-> > +//
-> > +// Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > +// Suresh Siddha <suresh.b.siddha@intel.com>
-> > +// Sean Christopherson <sean.j.christopherson@intel.com>
-> > +
-> > +#ifndef _ASM_X86_SGX_H
-> > +#define _ASM_X86_SGX_H
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +#define SGX_CPUID 0x12
+> Right, also agree here.  Systems without Flexible Launch Control are a
+> non-starter, we're only considering FLC systems here
 >
-> Hey, I just saw 0x12 as a magic, hard-coded number earlier in these
-> patches.  It seems cruel to hard-code it, and then also have a #define
-> that isn't used.
+> > So, as a practical matter, if every distro has their own LE key and
+> > keeps it totally safe, then a system that locks the MSRs to one
+> > distro's key makes it quite annoying to run another distro's intel_sgx
+> > driver, but there is no effect on the actual security of the system.
+> >
+> I agree that for systems that firmware-lock the msrs are annoying, but I would
+> think that IHV's would want to keep those msrs unlocked specifically to allow a
+> wide range of distributions to use this feature.
 >
-> > +enum sgx_cpuid {
-> > +     SGX_CPUID_CAPABILITIES  = 0,
-> > +     SGX_CPUID_ATTRIBUTES    = 1,
-> > +     SGX_CPUID_EPC_BANKS     = 2,
-> > +};
->
-> These are cpuid *leaves*, right?  Please make this clear that these are
-> hardware-defined values and not some kind of software construct.
->
-> > +bool sgx_enabled __ro_after_init = false;
-> > +EXPORT_SYMBOL(sgx_enabled);
-> > +
-> > +static __init bool sgx_is_enabled(void)
-> > +{
-> > +     unsigned long fc;
-> > +
-> > +     if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
-> > +             return false;
->
-> Not necessary. CPUID does this part for you.
+> As for benefits to security, I think there are some.  Namely, by leaving the
+> MSRS unlocked, A distribution can, rather than providing their own distirbution
+> key, pass the root of trust on to the end user.  I can easily envision a
+> downstream customer that wants to use SGX, and do so in such a way that they are
+> assured that their OS vendor doesn't have the ability to run an LE on their
+> system (at least not without the visual cue of specifying a different key hash
+> at the OS boot).
 
-More to the point, if a non-Intel vendor chooses to support SGX, then
-the driver should allow it.
+Which achieves what, exactly?  The launch public key hash isn't the
+root of trust of anything except for a really awkward mechanism to
+limit the enclaves that get run.  If there is actual demand to limit
+enclaves that get run, let's do it correctly: add some code in the
+kernel that enforces a policy before launching an enclave.
 
->
-> > +     if (!boot_cpu_has(X86_FEATURE_SGX))
-> > +             return false;
-> > +
-> > +     if (!boot_cpu_has(X86_FEATURE_SGX1))
-> > +             return false;
-> > +
-> > +     rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
-> > +     if (!(fc & FEATURE_CONTROL_LOCKED))
-> > +             return false;
-> > +
-> > +     if (!(fc & FEATURE_CONTROL_SGX_ENABLE))
-> > +             return false;
->
-> Comments, please.  Why would this happen?  What would it mean?
+If the MSRs are unlocked, there is no stronger guarantee available
+even if you supply your own custom LE.  If the kernel is owned, the
+attacker can just change the MSRs.
 
-Let's add actual pr_info() statements to document this, like:
-
-SGX: disabled by firmware
-SGX: disabled because CPU does not support flexible launch control
-SGX: disabled because firmware does not support flexible launch control
-SGX: disabled because the phase of the moon is wrong
-SGX: enabled; using SGX1
-SGX: enabled, using SGX2
-
-If the CPU doesn't support SGX at all, then I see no reason to print anything.
-
-etc.
-
-(Is the feature actually called flexible launch control?  I may have
-made that up.)
+--Andy
