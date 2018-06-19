@@ -1,49 +1,33 @@
-From: Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v11 04/13] x86, sgx: add SGX definitions to msr-index.h
-Date: Tue, 19 Jun 2018 07:01:57 -0700
-Message-ID: <4a92d6d2-30d9-eeaf-1afc-cfa35cae004e@intel.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v11 09/13] x86, sgx: basic routines for enclave page cache
+Date: Tue, 19 Jun 2018 17:08:15 +0300
+Message-ID: <20180619140815.GA8034@linux.intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-5-jarkko.sakkinen@linux.intel.com>
- <a51c11da-650a-1828-4173-e424a5340565@intel.com>
- <20180619131828.GD5609@linux.intel.com>
+ <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
+ <78982a32-c589-48e2-9a83-fd36903b5588@fortanix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619131828.GD5609@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <78982a32-c589-48e2-9a83-fd36903b5588@fortanix.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Haim Cohen <haim.cohen@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Tom Lendacky <thomas.lendacky@amd.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
+To: Jethro Beekman <jethro@fortanix.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 06/19/2018 06:18 AM, Jarkko Sakkinen wrote:
-> On Fri, Jun 08, 2018 at 10:25:29AM -0700, Dave Hansen wrote:
->> On 06/08/2018 10:09 AM, Jarkko Sakkinen wrote:
->>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
->>> Signed-off-by: Haim Cohen <haim.cohen@intel.com>
->>> Tested-by: Serge Ayoun <serge.ayoun@intel.com>
->>> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>> Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->>
->> These are a mess.  If you're signing off on it, a review of some kind is
->> pretty implied.
->>
->> Also, how did Sean write this, send it to Haim to sign off on it, and
->> then send it to you?  That seems unlikely.
+On Fri, Jun 08, 2018 at 11:21:48AM -0700, Jethro Beekman wrote:
+> On 2018-06-08 10:09, Jarkko Sakkinen wrote:
+> > +/*
+> > + * Writing the LE hash MSRs is extraordinarily expensive, e.g.
+> > + * 3-4x slower than normal MSRs, so we use a per-cpu cache to
+> > + * track the last known value of the MSRs to avoid unnecessarily
+> > + * writing the MSRs with the current value.  Because most Linux
+> > + * kernels will use an LE that is signed with a non-Intel key,
 > 
-> They've both done something to this. How should I change it then?
+> I don't think you can predict what most Linux kernels will be doing. I think
+> not initializing the cache to the CPU's initial value is fine, but this
+> particular argument shouldn't appear in the rationale.
 
-Who added their Signed-off-by?
+Are you just referring to the last sentence or the whole paragraph?
 
-I would probably add a single "Co-developed-by:" for each of them and a
-single Signed-off-by, like commit 12c89130a56ae:
-
-    Co-developed-by: Tony Luck <tony.luck@intel.com>
-    Reported-by: Mika Penttilä <mika.penttila@nextfour.com>
-    Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-    Cc: Al Viro <viro@zeniv.linux.org.uk>
-    Cc: Andrew Morton <akpm@linux-foundation.org>
-    Cc: Andy Lutomirski <luto@amacapital.net>
-    ...
+/Jarkko
