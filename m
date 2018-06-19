@@ -1,72 +1,38 @@
-From: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Subject: Re: Do Qualcomm drivers use DMA buffers for
- request_firmware_into_buf()?
-Date: Tue, 19 Jun 2018 01:49:43 +0200
-Message-ID: <20180618234943.GV5527@wotan.suse.de>
-References: <20180424234219.GX14440@wotan.suse.de>
- <1524632409.3371.48.camel@linux.vnet.ibm.com>
- <20180425175557.GY14440@wotan.suse.de>
- <CAB0TPYGnCu+anWHBGvkaigxD--8uHQaQJ2c62kegJ7mTqvkmnA@mail.gmail.com>
- <20180508153805.GC27853@wotan.suse.de>
- <20180601192346.GQ4511@wotan.suse.de>
- <20180606203257.GH4511@wotan.suse.de>
- <20180607161847.GN510@tuxbook-pro>
- <CAKv+Gu8+Fq7BD4XD-YCyXzZh0mg6Z2k-0styj0cw6_uZfaqy4Q@mail.gmail.com>
- <20180607180611.GQ510@tuxbook-pro>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v4 26/26] fix a series of Documentation/ broken file name
+ references
+Date: Tue, 19 Jun 2018 09:44:12 +0530
+Message-ID: <20180619041412.GL25852@vkoul-mobl>
+References: <cover.1529079119.git.mchehab+samsung@kernel.org>
+ <041e7a803fc0e5c5dfc1fb8b2f761074ca0baa2c.1529079120.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180607180611.GQ510@tuxbook-pro>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matt Fleming <matt@codeblueprint.co.uk>, Will Deacon <will.deacon@arm.com>, Michal Hocko <mhocko@kernel.org>, David Howells <dhowells@redhat.com>, David Brown <david.brown@linaro.org>, Peter Jones <pjones@redhat.com>, "Luis R. Rodriguez" <mcgrof@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>, Nicolas Broeking <nbroeking@me.com>, Jonathan Corbet <corbet@lwn.net>, the arch/x86 maintainers <x86@kernel.org>, Arve Hj?nnev?g <arve@android.com>, Ingo Molnar <mingo@redhat.com>, Kalle Valo <kvalo@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Darren Hart <dvhart@infradead.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Arend Van Spriel <arend.vanspriel@broadcom.com>, Todd Kjos <tkjos@android.com>, Kees Cook <keescook@chromium.org>, linux-
+In-Reply-To: <041e7a803fc0e5c5dfc1fb8b2f761074ca0baa2c.1529079120.git.mchehab+samsung@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Harry Wei <harryxiyou@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "David S. Miller" <davem@davemloft.net>, Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, linux-kernel@zh-kernel.org, dmaengine@vger.kernel.org, platform-driver-x86@vger.kernel.org, sparclinux@vger.kernel.org, devel@lists.orangefs.org, linux-pm@
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 07, 2018 at 11:06:11AM -0700, Bjorn Andersson wrote:
-> On Thu 07 Jun 09:23 PDT 2018, Ard Biesheuvel wrote:
-> 
-> > On 7 June 2018 at 18:18, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
-> > > On Wed 06 Jun 13:32 PDT 2018, Luis R. Rodriguez wrote:
-> > >
-> > >> On Fri, Jun 01, 2018 at 09:23:46PM +0200, Luis R. Rodriguez wrote:
-> > >> > On Tue, May 08, 2018 at 03:38:05PM +0000, Luis R. Rodriguez wrote:
-> > >> > > On Fri, May 04, 2018 at 12:44:37PM -0700, Martijn Coenen wrote:
-> > >> > > >
-> > >> > > > I think the Qualcomm folks owning this (Andy, David, Bjorn, already
-> > >> > > > cc'd here) are better suited to answer that question.
-> > >> > >
-> > >> > > Andy, David, Bjorn?
-> > >> >
-> > >> > Andy, David, Bjorn?
-> > >>
-> > >> A month now with no answer...
->
-> So it's this memremap() region that we pass to
-> request_firmware_into_buf() currently, the previously mentioned
-> dma_alloc_coherent() region is used as we invoke the secure world
-> operation to set up the firmware authentication.
+On 15-06-18, 13:30, Mauro Carvalho Chehab wrote:
 
-memremap() is for IO memory, and in that sense it is also not much different
-from DMA memory in terms of the concerns Mimi has for LSMs and what guarantees
-LSMs can make to users.
+>  If you have any comment or update to the content, please contact the
+>  original document maintainer directly.  However, if you have a problem
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index b451354735d3..08ba8473a284 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -38,7 +38,7 @@
+>   * Each device has a channels list, which runs unlocked but is never modified
+>   * once the device is registered, it's just setup by the driver.
+>   *
+> - * See Documentation/dmaengine.txt for more details
+> + * See Documentation/driver-api/dmaengine for more details
 
-Regardless of the device, once you write certain data to the IO memory we cannot
-be sure the device will wait for all IO to be written, this will be device specific.
+DMAengine part:
 
-As such I would suggest READING_IOMEM for this case have request_firmware_into_buf()
-use it.
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
-With that said, since we have only one user of this caller, a future rename
-to reflect its current actual use would be good. The rename can wait though.
-
-  Luis
+-- 
+~Vinod
