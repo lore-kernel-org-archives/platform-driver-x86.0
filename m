@@ -1,105 +1,58 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v11 07/13] x86, sgx: detect Intel SGX
-Date: Tue, 19 Jun 2018 16:34:22 +0300
-Message-ID: <20180619133422.GJ5609@linux.intel.com>
+Subject: Re: [PATCH v11 11/13] intel_sgx: ptrace() support
+Date: Tue, 19 Jun 2018 16:38:37 +0300
+Message-ID: <20180619133837.GK5609@linux.intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-8-jarkko.sakkinen@linux.intel.com>
- <20180611113521.GB22164@hmswarspite.think-freely.org>
+ <20180608171216.26521-12-jarkko.sakkinen@linux.intel.com>
+ <91e35b3e-b42d-b3d5-752c-031973e69273@intel.com>
+ <1528729329.9779.28.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180611113521.GB22164@hmswarspite.think-freely.org>
+In-Reply-To: <1528729329.9779.28.camel@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andi Kleen <ak@linux.intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jun 11, 2018 at 07:35:21AM -0400, Neil Horman wrote:
-> On Fri, Jun 08, 2018 at 07:09:42PM +0200, Jarkko Sakkinen wrote:
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > Intel(R) SGX is a set of CPU instructions that can be used by applications
-> > to set aside private regions of code and data. The code outside the enclave
-> > is disallowed to access the memory inside the enclave by the CPU access
-> > control.
-> > 
-> > This commit adds the check for SGX to arch/x86 and a new config option,
-> > INTEL_SGX_CORE. Exposes a boolean variable 'sgx_enabled' to query whether
-> > or not the SGX support is available.
-> > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  arch/x86/Kconfig                | 19 ++++++++++++
-> >  arch/x86/include/asm/sgx.h      | 25 ++++++++++++++++
-> >  arch/x86/include/asm/sgx_pr.h   | 20 +++++++++++++
-> >  arch/x86/kernel/cpu/Makefile    |  1 +
-> >  arch/x86/kernel/cpu/intel_sgx.c | 53 +++++++++++++++++++++++++++++++++
-> >  5 files changed, 118 insertions(+)
-> >  create mode 100644 arch/x86/include/asm/sgx.h
-> >  create mode 100644 arch/x86/include/asm/sgx_pr.h
-> >  create mode 100644 arch/x86/kernel/cpu/intel_sgx.c
-> > 
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index c07f492b871a..42015d5366ef 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -1925,6 +1925,25 @@ config X86_INTEL_MEMORY_PROTECTION_KEYS
-> >  
-> >  	  If unsure, say y.
-> >  
-> > +config INTEL_SGX_CORE
-> > +	prompt "Intel SGX core functionality"
-> > +	def_bool n
-> > +	depends on X86_64 && CPU_SUP_INTEL
-> > +	help
-> > +	Intel Software Guard eXtensions (SGX) is a set of CPU instructions
-> > +	that allows ring 3 applications to create enclaves; private regions
-> > +	of memory that are protected, by hardware, from unauthorized access
-> > +	and/or modification.
-> > +
-> > +	This option enables kernel recognition of SGX, high-level management
-> > +	of the Enclave Page Cache (EPC), tracking and writing of SGX Launch
-> > +	Enclave Hash MSRs, and allows for virtualization of SGX via KVM. By
-> > +	iteslf, this option does not provide SGX support to userspace.
-> > +
-> > +	For details, see Documentation/x86/intel_sgx.rst
-> > +
-> > +	If unsure, say N.
-> > +
-> >  config EFI
-> >  	bool "EFI runtime service support"
-> >  	depends on ACPI
-> > diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
-> > new file mode 100644
-> > index 000000000000..fa3e6e0eb8af
-> > --- /dev/null
-> > +++ b/arch/x86/include/asm/sgx.h
-> > @@ -0,0 +1,25 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> > +// Copyright(c) 2016-18 Intel Corporation.
-> > +//
-> > +// Authors:
-> > +//
-> > +// Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > +// Suresh Siddha <suresh.b.siddha@intel.com>
-> > +// Sean Christopherson <sean.j.christopherson@intel.com>
-> > +
-> > +#ifndef _ASM_X86_SGX_H
-> > +#define _ASM_X86_SGX_H
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +#define SGX_CPUID 0x12
-> > +
-> Agree with Dave, this can just be remoed and you can use the feature macro from
-> cpuid.h instead
+On Mon, Jun 11, 2018 at 08:02:09AM -0700, Sean Christopherson wrote:
+> On Fri, 2018-06-08 at 11:34 -0700, Dave Hansen wrote:
+> > On 06/08/2018 10:09 AM, Jarkko Sakkinen wrote:
+> > > 
+> > > +		ret = sgx_edbgrd(encl, entry, align, data);
+> > > +		if (ret)
+> > > +			break;
+> > > +		if (write) {
+> > > +			memcpy(data + offset, buf + i, cnt);
+> > > +			ret = sgx_edbgwr(encl, entry, align, data);
+> > > +			if (ret)
+> > > +				break;
+> > > +		}
+> > > +		else
+> > > +			memcpy(buf + i,data + offset, cnt);
+> > > +	}
+> > The SGX instructions like "edbgrd" be great to put on a license plat,
+> > but we can do better in the kernel.  Can you give these reasonable
+> > english names, please?  sgx_debug_write(), maybe?
 > 
-> Neil
+> IMO the function names for ENCLS leafs are appropriate.  The real
+> issue is the lack of documentation of the ENCLS helpers and their
+> naming conventions.
+> 
+> The sgx_<leaf> functions, e.g. sgx_edbgrd(), are essentially direct
+> invocations of the specific leaf, i.e. they are dumb wrappers to
+> the lower level leaf functions, e.g. __edbgrd().  The wrappers exist
+> primarily to deal with the boilerplate necessary to access a page in
+> the EPC.  sgx_<leaf> conveys that the function contains the preamble
+> and/or postamble needed to execute its leaf, but otherwise does not
+> contain any logic.
+> 
+> Functions with actual logic do have English names, e.g.
+> sgx_encl_init(), sgx_encl_add_page(), sgx_encl_modify_pages() etc...
 
-Will do, thanks.
+I agree with Sean on the naming and agree with Dave on his comments in
+earlier patch in the series needs a better documentation.
 
 /Jarkko
