@@ -1,81 +1,131 @@
-From: Chris Chiu <chiu@endlessm.com>
-Subject: Re: [PATCH v2 1/2] platform/x86: asus-wmi: Call led hw_changed API on
- kbd brightness change
-Date: Tue, 19 Jun 2018 15:09:10 +0800
-Message-ID: <CAB4CAweu0z5XjH0hTB9t=RA37KSRLsLGSAAeJLupLNcyV6LVBg@mail.gmail.com>
-References: <20180611071838.47945-1-chiu@endlessm.com> <CAHp75VdfUO9rS-=nn+Ffe8bMEbCO-0xe8QBVqsJAZVFTMYkNxg@mail.gmail.com>
- <CAB4CAwdKJiuEiV1CtoyYTZTatRt73BQbRX5kyEtpqNj8STj5-w@mail.gmail.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: ThinkPad T480s & LED_MUTE, LED_MICMUTE
+Date: Tue, 19 Jun 2018 10:37:12 +0200
+Message-ID: <20180619083712.dwb4d357sfxcgrre@pali>
+References: <20180608111057.4wxpg7m7nm7suf6n@pali>
+ <s5hk1r01acc.wl-tiwai@suse.de>
+ <20180615190959.pqipwnm6a3tf3lxc@pali>
+ <s5hmuvvtdmi.wl-tiwai@suse.de>
+ <20180616154309.ualrx2py6ndr5xgz@pali>
+ <s5hh8m2u3cp.wl-tiwai@suse.de>
+ <20180618102806.vwm4rhvxhn6hi43z@pali>
+ <s5ha7rsz8i8.wl-tiwai@suse.de>
+ <20180618112121.cl76a3oozsbbbqnb@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAB4CAwdKJiuEiV1CtoyYTZTatRt73BQbRX5kyEtpqNj8STj5-w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Hans de Goede <hdegoede@redhat.com>, Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180618112121.cl76a3oozsbbbqnb@pali>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 14, 2018 at 2:58 PM, Chris Chiu <chiu@endlessm.com> wrote:
-> On Wed, Jun 13, 2018 at 8:49 PM, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> On Mon, Jun 11, 2018 at 10:18 AM, Chris Chiu <chiu@endlessm.com> wrote:
->>> Make asus-wmi notify on hotkey kbd brightness changes, listen for
->>> brightness events and update the brightness directly in the driver.
->>
->>> For this purpose, bound check on brightness in kbd_led_set must be
->>> based on the same data type to prevent illegal value been set.
->>
->>> @@ -497,9 +498,9 @@ static void kbd_led_set(struct led_classdev *led_cdev,
->>>
->>>         asus = container_of(led_cdev, struct asus_wmi, kbd_led);
->>>
->>> -       if (value > asus->kbd_led.max_brightness)
->>> +       if ((int)value > (int)asus->kbd_led.max_brightness)
->>>                 value = asus->kbd_led.max_brightness;
->>> -       else if (value < 0)
->>> +       else if ((int)value < 0)
->>>                 value = 0;
->>
->> I didn't quite understand this part of the problem.
->> Does it exist in the current code? Can it be split to a separate change?
->>
->> Can we avoid those ugly castings?
->>
->
-> I'd like to remove the ugly castings but there's a concern I may need some
-> advices. I don't know whether if the bound check logic ever verified before.
-> Maybe the value passed via sysfs is already correctly bounded?
->
-> When the kbd_led_wk comes to -1, `if (value > asus->kbd_led.max_brightness)`
-> returns true and `if (value < 0)` return false which confused me. It
-> should relate
-> to the 2nd argument type is enum led_brightness which I consider it as integer.
-> The unexpected return value cause the KBD_BRTDWN cyclic, 3->2->0->-1
-> (3 again in kbd_led_set)->2->1. After applying the casting on both operands
-> `if ((int)value > (int)asus->kbd_led.max_brightness)`, the other
-> unexpected false
-> returned by `if (value < 0)` makes each KBD_BRTDOWN to be 3 -> 2 -> 1 -> 0 ->
-> -1 -> -2 -> -3 ->..... That's what the ugly casting for. I used to
-> tend to do boundary
-> limit before calling kbd_led_set as follows
->
-> kbd_led_set(&asus->kbd_led, MIN(asus->kbd_led_wk + 1,
-> asus->kbd_led.max_brightness);
-> and
-> kbd_led_set(&asus->kbd_led, MAX(asus->kbd_led_wk - 1, 0));
->
-> If so, the boundary limit logic would be totally redundant but I think
-> it may be still
-> useful to check the value passed from sysfs? Any suggestion which one would
-> be better?
->
-> Chris
->
->> --
->> With Best Regards,
->> Andy Shevchenko
-
-Gentle ping.
-
-Cheers.
-
-Chris
+T24gTW9uZGF5IDE4IEp1bmUgMjAxOCAxMzoyMToyMSBQYWxpIFJvaMOhciB3cm90ZToKPiBPbiBN
+b25kYXkgMTggSnVuZSAyMDE4IDEyOjM2OjMxIFRha2FzaGkgSXdhaSB3cm90ZToKPiA+IE9uIE1v
+biwgMTggSnVuIDIwMTggMTI6Mjg6MDYgKzAyMDAsCj4gPiBQYWxpIFJvaMOhciB3cm90ZToKPiA+
+ID4gCj4gPiA+IE9uIFNhdHVyZGF5IDE2IEp1bmUgMjAxOCAxODowMjoxNCBUYWthc2hpIEl3YWkg
+d3JvdGU6Cj4gPiA+ID4gT24gU2F0LCAxNiBKdW4gMjAxOCAxNzo0MzowOSArMDIwMCwKPiA+ID4g
+PiBQYWxpIFJvaMOhciB3cm90ZToKPiA+ID4gPiA+IAo+ID4gPiA+ID4gT24gU2F0dXJkYXkgMTYg
+SnVuZSAyMDE4IDA5OjA1OjQxIFRha2FzaGkgSXdhaSB3cm90ZToKPiA+ID4gPiA+ID4gT24gRnJp
+LCAxNSBKdW4gMjAxOCAyMTowOTo1OSArMDIwMCwKPiA+ID4gPiA+ID4gUGFsaSBSb2jDoXIgd3Jv
+dGU6Cj4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gT24gRnJpZGF5IDE1IEp1bmUgMjAxOCAx
+NDo1MTo0NyBUYWthc2hpIEl3YWkgd3JvdGU6Cj4gPiA+ID4gPiA+ID4gPiBPbiBGcmksIDA4IEp1
+biAyMDE4IDEzOjEwOjU3ICswMjAwLAo+ID4gPiA+ID4gPiA+ID4gUGFsaSBSb2jDoXIgd3JvdGU6
+Cj4gPiA+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+ID4gPiBIaSEgV2l0aCB1cC10by1kYXRl
+IHRoaW5rcGFkX2FjcGkua28gZHJpdmVyIG9uIFRoaW5rUGFkIFQ0ODBzIEknbSBzZWVpbmcKPiA+
+ID4gPiA+ID4gPiA+ID4gYSBzdHJhbmdlIGJlaGF2aW9yIG9mIExFRHMgd2hpY2ggYXJlIGludGVn
+cmF0ZWQgaW50byBtaWMgbXV0ZSAoRm4rRjQpCj4gPiA+ID4gPiA+ID4gPiA+IGFuZCBtdXRlIChG
+bitGMSkga2V5cy4KPiA+ID4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiA+IFdoZW4gdGhp
+bmtwYWRfYWNwaS5rbyBpcyBub3QgbG9hZGVkLCB0aGVuIG11dGUga2V5IGlzIHdvcmtpbmcgZmlu
+ZS4gV2hlbgo+ID4gPiA+ID4gPiA+ID4gPiBwcmVzc2VkLCBpdCBjb3JyZWN0bHkgZ2VuZXJhdGVz
+IEtFWV9NVVRFIG9uIEFUIFRyYW5zbGF0ZWQgU2V0IDIga2V5Ym9hcmQKPiA+ID4gPiA+ID4gPiA+
+ID4gaW5wdXQgZGV2aWNlIGFuZCBhbHNvIHR1cm4gb24vb2YgbXV0ZSBsZWQuIEJ1dCB3aGVuIG1p
+Y211dGUga2V5IGlzCj4gPiA+ID4gPiA+ID4gPiA+IHByZXNzZWQgdGhlbiwgbm90aGluZyBoYXBw
+ZW4uIE5vIGtleSBldmVudCBpcyByZXBvcnRlZCBhbmQgYWxzbyBsZWQgaXMKPiA+ID4gPiA+ID4g
+PiA+ID4gbm90IHR1cm5lZCBvbi9vZmYuCj4gPiA+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+
+ID4gPiBPbiB0aGUgb3RoZXIgaGFuZCwgd2hlbiB0aGlua3BhZF9hY3BpLmtvIGlzIGxvYWRlZCwg
+dGhlbiBib3RoIGJ1dHRvbnMKPiA+ID4gPiA+ID4gPiA+ID4gbXV0ZSBhbmQgbWljbXV0ZSBjb3Jy
+ZWN0bHkgZ2VuZXJhdGVzIGlucHV0IGV2ZW50czsgbXV0ZSB2aWEgQVQga2V5Ym9hcmQKPiA+ID4g
+PiA+ID4gPiA+ID4gYW5kIG1pY211dGUgdmlhIFRoaW5rUGFkIEV4dHJhIEJ1dHRvbnMuIEJ1dCBs
+ZWQgaXMgbm90IGNoYW5nZWQuIFdoZW4KPiA+ID4gPiA+ID4gPiA+ID4gdGhpbmtwYWRfYWNwaS5r
+byBpcyBsb2FkZWQgaXQgdHVybiBvZmYgYm90aCBsZWRzIChtdXRlIGFuZCBtaWNtdXRlKSBhbmQK
+PiA+ID4gPiA+ID4gPiA+ID4gbGVkcyBhZnRlciBwcmVzc2luZyBhbnkgb2YgdGhvc2UgYnV0dG9u
+cywgbGVkcyBhcmUgbm90IHR1cm5lZCBvbiBhZ2Fpbi4KPiA+ID4gPiA+ID4gPiA+ID4gCj4gPiA+
+ID4gPiA+ID4gPiA+IFdoZW4gdGhpbmtwYWRfYWNwaS5rbyBpcyB1bmxvYWRlZCwgdGhlbiBwcmVz
+c2luZyBtdXRlIGJ1dHRvbiBhZ2FpbiBzdGFydAo+ID4gPiA+ID4gPiA+ID4gPiBzd2l0Y2hpbmcg
+bGVkIG9uL29mZi4KPiA+ID4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiA+IFNvIGl0IHNl
+ZW1zIHRoYXQgc29tZSBpbml0IHNlcXVlbmNlIG9mIHRoaW5rcGFkX2FjcGkua28gYnJlYWtzIG11
+dGUgbGVkLgo+ID4gPiA+ID4gPiA+ID4gPiBBbmQgZmluaSBzZXF1ZW5jZSBvZiB0aGlua3BhZF9h
+Y3BpLmtvIG1ha2VzIG11dGUgbGVkIHdvcmtpbmcgYWdhaW4uCj4gPiA+ID4gPiA+ID4gPiAKPiA+
+ID4gPiA+ID4gPiA+IFVzdWFsbHkgdGhlIG11dGUgTEVEIG9uIFRoaW5rcGFkIGlzIHRyaWdnZXJl
+ZCBmcm9tIEhELWF1ZGlvIGRyaXZlcgo+ID4gPiA+ID4gPiA+ID4gKHNvdW5kL3BjaS9oZGEvdGhp
+bmtwYWRfaGVscGVyLmMpLCBhbmQgaXQncyBhIHNvZnQtYm91bmQgdmlhCj4gPiA+ID4gPiA+ID4g
+PiBzeW1ib2xfcmVxdWVzdCh0cGFjcGlfbGVkX3NldCkuICBJIHRob3VnaHQgdGhpbmtwYWRfYWNw
+aSBpcwo+ID4gPiA+ID4gPiA+ID4gYXV0by1sb2FkZWQgd2hlbiB0aGUgbW9kdWxlIGdldHMgYm91
+bmQuCj4gPiA+ID4gPiA+ID4gPiAKPiA+ID4gPiA+ID4gPiA+IEEgcG9zc2libGUgZXhwbGFuYXRp
+b24gd291bGQgYmUgdGhhdCBUUFQ0ODBzIGhhcyBuZWl0aGVyIElCTTAwNjgsCj4gPiA+ID4gPiA+
+ID4gPiBMRU4wMDY4IG5vciBMRU4wMjY4IEFDUEkgSElEcywgaGVuY2UgdGhlIGRyaXZlciBpcyBu
+b3QgYXV0by1sb2FkZWQuCj4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gSSBoYXZlIERlYmlh
+biBTdHJldGNoIGtlcm5lbCAoNC45KSB3aGljaCBkb2VzIG5vdCBoYXZlIExFTjAyNjggYWxpYXMg
+Zm9yCj4gPiA+ID4gPiA+ID4gdGhpbmtwYWRfYWNwaS5rby4gU28gdGhpbmtwYWRfYWNwaS5rbyBp
+cyBub3QgbG9hZGVkIGF1dG9tYXRpY2FsbHkuIEJ1dCBJCj4gPiA+ID4gPiA+ID4gaGF2ZSBwdXQg
+dGhpbmtwYWRfYWNwaSBpbnRvIC9ldGMvbW9kdWxlcyBhbmQgaXQgaXMgbm93IGF1dG9tYXRpY2Fs
+bHkKPiA+ID4gPiA+ID4gPiBsb2FkZWQgYXQgYm9vdC4KPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+
+IFRoYXQncyBvZGQuICBJdCdzIGV4cG9zZWQgdmlhCj4gPiA+ID4gPiA+ICAgTU9EVUxFX0RFVklD
+RV9UQUJMRShhY3BpLCBpYm1faHRrX2RldmljZV9pZHMpOwo+ID4gPiA+ID4gPiAKPiA+ID4gPiA+
+ID4gSXQncyBiZWVuIGFscmVhZHkgaW4gNC45LiAgQXQgdGhpcyBwb2ludCwgc29tZXRoaW5nIGlz
+IGZpc2h5Lgo+ID4gPiA+ID4gCj4gPiA+ID4gPiAkIC9zYmluL21vZGluZm8gdGhpbmtwYWRfYWNw
+aSB8IGdyZXAgYWxpYXMKPiA+ID4gPiA+IGFsaWFzOiAgICAgICAgICBkbWk6YnZuSUJNOmJ2cklb
+TVVdRVQ/P1dXKgo+ID4gPiA+ID4gYWxpYXM6ICAgICAgICAgIHRwYWNwaQo+ID4gPiA+ID4gYWxp
+YXM6ICAgICAgICAgIGFjcGkqOkxFTjAwNjg6Kgo+ID4gPiA+ID4gYWxpYXM6ICAgICAgICAgIGFj
+cGkqOklCTTAwNjg6Kgo+ID4gPiA+ID4gCj4gPiA+ID4gPiBObyB0aGVyZSBpcyBubyBMRU4wMjY4
+IG9uIDQuOS4KPiA+ID4gPiAKPiA+ID4gPiBPSywgdGhhdCdzIHRoZSBjYXVzZS4gIEl0J3MgcmVh
+bGx5IG9sZC4KPiA+ID4gPiAKPiA+ID4gPiBUaGUgY29tbWl0IGEzYzQyYTQ2N2EyNSAoInBsYXRm
+b3JtL3g4NjogdGhpbmtwYWRfYWNwaTogQWRkaW5nIG5ldwo+ID4gPiA+IGhvdGtleSBJRCBmb3Ig
+TGVub3ZvIHRoaW5rcGFkIikgaGFzIHRvIGJlIGJhY2twb3J0ZWQuCj4gPiA+IAo+ID4gPiBUaGlz
+IGNvbW1pdCBqdXN0IGF1dG9sb2FkcyB0aGlua3BhZF9hY3BpIGRyaXZlciwgcmlnaHQ/IFNvIG1h
+bnVhbAo+ID4gPiBtb2Rwcm9iZSAoZm9yIG5vdykgaXMgT0sgdG9vPwo+ID4gCj4gPiBXZWxsLCB0
+aGUgbWFudWFsIG1vZHByb2JlIGlzIHN1cGVyZmx1b3VzIGlmIGl0J3MgcHJvcGVybHkgYm91bmQg
+d2l0aAo+ID4gSEQtYXVkaW8gZHJpdmVyLiAgVGhlIEhELWF1ZGlvIGRyaXZlciBjYWxscyBzeW1i
+b2xfcmVxdWVzdCgpLCBzbyBpdAo+ID4gc2hvdWxkIGRvIG1vZHByb2JlIGJ5IGl0c2VsZi4KPiA+
+IAo+ID4gPiA+IEFsc28sIGluIHRoZSBIRC1hdWRpbyBzaWRlLCB0aGUgY29tbWl0IDJlY2I3MDRh
+MTI5MCAoIkFMU0E6IGhkYSAtIGFkZAo+ID4gPiA+IGEgbmV3IGNvbmRpdGlvbiB0byBjaGVjayBp
+ZiBpdCBpcyB0aGlua3BhZCIpIGlzIG5lZWRlZCwgdG9vLgo+ID4gPiAKPiA+ID4gVGhpcyBjb21t
+aXQgd2FzIGludHJvZHVjZWQgaW4gNC45IGFuZCBEZWJpYW4ga2VybmVsIGhhcyBpdC4gSSBsb29r
+ZWQKPiA+ID4gaW50byBEZWJpYW4gc291cmNlIGNvZGUgYW5kIHRoZXJlIGlzIGNoZWNrIGZvciBM
+RU4wMjY4IGluIGZpbGUKPiA+ID4gc291bmQvcGNpL2hkYS90aGlua3BhZF9oZWxwZXIuYwo+ID4g
+Cj4gPiBUaGVuIGNoZWNrIHdoZXRoZXIgdGhlIGZ1bmN0aW9uIGdldHMgcmVhbGx5IGNhbGxlZC4K
+PiAKPiBDaGVja2VkLCBubyBpdCBpcyBub3QgY2FsbGVkLgo+IAo+IE5vdyBJIHNlZSB0aGF0IHNu
+ZF9oZGFfY29kZWNfZ2VuZXJpYyBpcyB2aXNpYmxlIGluIGxzbW9kIGFuZCB0aGlua3BhZAo+IGhl
+bHBlciBpcyBjb21waWxlZCBvbmx5IGludG8gc25kLWhkYS1jb2RlYy1yZWFsdGVrIGFuZAo+IHNu
+ZC1oZGEtY29kZWMtY29uZXhhbnQuLi4gVGhlcmVmb3JlIG5vYm9keSBpcyBldmVuIHRyeWluZyB0
+byB1c2UgdGhhdAo+IGZ1bmN0aW9uLgoKSW50ZXJlc3RpbmcgaXMgdGhpcyBwYXJ0OgoKJCBoZWFk
+IC9wcm9jL2Fzb3VuZC9jYXJkMC9jb2RlYyMwCkNvZGVjOiBSZWFsdGVrIEFMQzI1NwpBZGRyZXNz
+OiAwCkFGRyBGdW5jdGlvbiBJZDogMHgxICh1bnNvbCAxKQpWZW5kb3IgSWQ6IDB4MTBlYzAyNTcK
+U3Vic3lzdGVtIElkOiAweDE3YWEyMjU4ClJldmlzaW9uIElkOiAweDEwMDAwMQpObyBNb2RlbSBG
+dW5jdGlvbiBHcm91cCBmb3VuZApEZWZhdWx0IFBDTToKICAgIHJhdGVzIFsweDU2MF06IDQ0MTAw
+IDQ4MDAwIDk2MDAwIDE5MjAwMAogICAgICAgIGJpdHMgWzB4ZV06IDE2IDIwIDI0CgpJdCB1c2Vz
+IHZlbmRvciBpZCAweDEwZWMwMjU3IGFuZCBzdXBwb3J0IGZvciBpdCB3YXMgYWRkZWQgaW50bwpz
+bmQtaGRhLWNvZGVjLXJlYWx0ZWsgaW4gY29tbWl0IGY0MjllN2U0OTQgd2hpY2ggd2FzIGludHJv
+ZHVjZWQgaW4KdmVyc2lvbiB2NC4xNS4KCmh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9s
+aW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQvP2lkPWY0MjllN2U0OTRh
+ZmFkZWQ3NmU2MmM2Zjk4MjExYTYzNWFhMDMwOTgKCkkgYXBwbGllZCB0aGlzIHBhdGNoIHRvIERl
+YmlhbidzIDQuOSBrZXJuZWwgYW5kIG11dGUgJiBtaWMgbXV0ZSBsZWRzCnN0YXJ0ZWQgd29ya2lu
+Zy4gVGhpcyBvbmUgcGF0Y2ggd2FzIGVub3VnaC4KClRha2FzaGksIGl0IGlzIHBvc3NpYmxlIHRv
+IGJhY2twb3J0IHRoaXMgcGF0Y2ggaW50byAtc3RhYmxlIHRyZWVzPwoKLS0gClBhbGkgUm9ow6Fy
+CnBhbGkucm9oYXJAZ21haWwuY29tCgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KQ2hlY2sgb3V0IHRo
+ZSB2aWJyYW50IHRlY2ggY29tbXVuaXR5IG9uIG9uZSBvZiB0aGUgd29ybGQncyBtb3N0CmVuZ2Fn
+aW5nIHRlY2ggc2l0ZXMsIFNsYXNoZG90Lm9yZyEgaHR0cDovL3NkbS5saW5rL3NsYXNoZG90Cl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlibS1hY3BpLWRl
+dmVsIG1haWxpbmcgbGlzdAppYm0tYWNwaS1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0
+cHM6Ly9saXN0cy5zb3VyY2Vmb3JnZS5uZXQvbGlzdHMvbGlzdGluZm8vaWJtLWFjcGktZGV2ZWwK
