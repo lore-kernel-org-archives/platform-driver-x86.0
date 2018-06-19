@@ -1,48 +1,47 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v11 10/13] intel_sgx: driver for Intel Software Guard
- Extensions
-Date: Tue, 19 Jun 2018 16:29:23 +0300
-Message-ID: <20180619132923.GF5609@linux.intel.com>
+Subject: Re: [PATCH v11 12/13] intel_sgx: driver documentation
+Date: Tue, 19 Jun 2018 16:30:43 +0300
+Message-ID: <20180619133043.GG5609@linux.intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-11-jarkko.sakkinen@linux.intel.com>
- <b4403cf7-ddfa-284a-d61f-ad93b895b097@intel.com>
+ <20180608171216.26521-13-jarkko.sakkinen@linux.intel.com>
+ <6200618e-bcc8-23ba-afe8-4c6be8b364f0@fortanix.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b4403cf7-ddfa-284a-d61f-ad93b895b097@intel.com>
+In-Reply-To: <6200618e-bcc8-23ba-afe8-4c6be8b364f0@fortanix.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
+To: Jethro Beekman <jethro@fortanix.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 08, 2018 at 12:35:51PM -0700, Dave Hansen wrote:
-> > +#define sgx_pr_ratelimited(level, encl, fmt, ...)			\
-> > +	pr_ ## level ## _ratelimited("[%d:0x%p] " fmt,			\
-> > +				     pid_nr((encl)->tgid),		\
-> > +				     (void *)(encl)->base, ##__VA_ARGS__)
+On Fri, Jun 08, 2018 at 11:32:17AM -0700, Jethro Beekman wrote:
+> On 2018-06-08 10:09, Jarkko Sakkinen wrote:
+> > +Launching enclaves
+> > +------------------
 > > +
-> > +#define sgx_dbg(encl, fmt, ...) \
-> > +	sgx_pr_ratelimited(debug, encl, fmt, ##__VA_ARGS__)
-> > +#define sgx_info(encl, fmt, ...) \
-> > +	sgx_pr_ratelimited(info, encl, fmt, ##__VA_ARGS__)
-> > +#define sgx_warn(encl, fmt, ...) \
-> > +	sgx_pr_ratelimited(warn, encl, fmt, ##__VA_ARGS__)
-> > +#define sgx_err(encl, fmt, ...) \
-> > +	sgx_pr_ratelimited(err, encl, fmt, ##__VA_ARGS__)
-> > +#define sgx_crit(encl, fmt, ...) \
-> > +	sgx_pr_ratelimited(crit, encl, fmt, ##__VA_ARGS__)
+> > +For privileged enclaves the launch is performed simply by submitting the
+> > +SIGSTRUCT for that enclave to ENCLS(EINIT). For unprivileged enclaves the
+> > +driver hosts a process in ring-3 that hosts a launch enclave signed with a key
+> > +supplied for kbuild.
+> > +
+> > +The current implementation of the launch enclave generates a token for any
+> > +enclave. In the future it could be potentially extended to have ways to
+> > +configure policy what can be lauched.
+> > +
+> > +The driver will fail to initialize if it cannot start its own launch enclave.
+> > +A user space application can submit a SIGSTRUCT instance through the ioctl API.
+> > +The kernel will take care of the rest.
+> > +
+> > +This design assures that the Linux kernel has always full control, which
+> > +enclaves get to launch and which do not, even if the public key MSRs are
 > 
-> I thought the pr_* thingies were to keep everyone from having to do this
-> in each driver.  Why did you need this?
+> As discussed previously at length, since the kernel needs to execute
+> ENCLS[EINIT], it has full control to deny the launching of enclaves
+> regardless of any launch enclave implementation. Please change this
+> misleading statement.
 
-Prefixing with the enclave information.
-
-> Can you do any better than a 2,000-line patch?  For instance, could you
-> break out the memory management portion into its own part and have that
-> reviewed by mm folks?  Or the ioctl()'s by device driver folks?
-
-I'll see if this could be broken down into two i.e. driver without
-swapping callbacks and one for the callbacks.
+Remember the discussion, forgot to change it. I'll fix this for the next
+version.
 
 /Jarkko
