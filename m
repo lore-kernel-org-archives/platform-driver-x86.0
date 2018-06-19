@@ -1,58 +1,49 @@
-From: Benjamin Berg <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Add support
- for calculator hotkey
-Date: Tue, 19 Jun 2018 17:51:52 +0200
-Message-ID: <20180619155152.4984-1-bberg@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v11 09/13] x86, sgx: basic routines for enclave page cache
+Date: Tue, 19 Jun 2018 08:59:25 -0700
+Message-ID: <20180619155924.GA13375@linux.intel.com>
+References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
+ <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
+ <3c1b04d6-6e93-efaa-1890-101b7fd9784c@intel.com>
+ <20180619145753.GB8034@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Christian Kellner <ckellner-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benjamin Berg <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180619145753.GB8034@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The P52 has a keyboard which features a calculator key above the numpad.
-Add support for this the calculator key (0x1313).
+On Tue, Jun 19, 2018 at 05:57:53PM +0300, Jarkko Sakkinen wrote:
+> On Fri, Jun 08, 2018 at 11:24:12AM -0700, Dave Hansen wrote:
+> > On 06/08/2018 10:09 AM, Jarkko Sakkinen wrote:
+> > > +static __init bool sgx_is_enabled(bool *lc_enabled)
+> > >  {
+> > >  	unsigned long fc;
+> > >  
+> > > @@ -41,12 +466,26 @@ static __init bool sgx_is_enabled(void)
+> > >  	if (!(fc & FEATURE_CONTROL_SGX_ENABLE))
+> > >  		return false;
+> > >  
+> > > +	*lc_enabled = !!(fc & FEATURE_CONTROL_SGX_LE_WR);
+> > > +
+> > >  	return true;
+> > >  }
+> > 
+> > I'm baffled why lc_enabled is connected to the enclave page cache.
+> 
+> KVM works only with writable MSRs. Driver works both with writable
+> and read-only MSRs.
 
-Signed-off-by: Benjamin Berg <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- drivers/platform/x86/thinkpad_acpi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+That's not true, KVM can/will support SGX regardless of whether or not
+Launch Control (LC) is available and/or enabled.  KVM does need to
+know whether or not LC is enabled.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index cae9b0595692..6c979fe44ea7 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -1928,7 +1928,7 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
- 	/* first new observed key (star, favorites) is 0x1311 */
- 	TP_ACPI_HOTKEYSCAN_STAR = 69,
- 	TP_ACPI_HOTKEYSCAN_CLIPPING_TOOL2,
--	TP_ACPI_HOTKEYSCAN_UNK25,
-+	TP_ACPI_HOTKEYSCAN_CALCULATOR,
- 	TP_ACPI_HOTKEYSCAN_BLUETOOTH,
- 	TP_ACPI_HOTKEYSCAN_KEYBOARD,
+Back to Dave's question, LC isn't connected to the EPC management,
+the LC code should be split into a separate patch.
  
-@@ -3449,7 +3449,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 
- 		KEY_FAVORITES,       /* Favorite app, 0x311 */
- 		KEY_RESERVED,        /* Clipping tool */
--		KEY_RESERVED,
-+		KEY_CALC,            /* Calculator (above numpad), 0x313 */
- 		KEY_BLUETOOTH,       /* Bluetooth */
- 		KEY_KEYBOARD         /* Keyboard, 0x315 */
- 		},
--- 
-2.17.1
-
-
-------------------------------------------------------------------------------
-Check out the vibrant tech community on one of the world's most
-engaging tech sites, Slashdot.org! http://sdm.link/slashdot
+> Thanks, I'll try my best to deal with all this :-)
+> 
+> /Jarkko
