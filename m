@@ -1,33 +1,47 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v11 00/13] Intel SGX1 support
-Date: Tue, 19 Jun 2018 17:59:43 +0300
-Message-ID: <20180619145943.GC8034@linux.intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
+ launch enclave
+Date: Tue, 19 Jun 2018 18:05:50 +0300
+Message-ID: <20180619150550.GD8034@linux.intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180612105011.GA26931@amd>
+ <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
+ <CALCETrWSDVdrrVbvEbOH06OQcBkGF-M9R5WQkQ0r4qK2oAL3vQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180612105011.GA26931@amd>
+In-Reply-To: <CALCETrWSDVdrrVbvEbOH06OQcBkGF-M9R5WQkQ0r4qK2oAL3vQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, David Woodhouse <dwmw@amazon.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, open list:KERNEL VIRTUAL M
+To: Andy Lutomirski <luto@kernel.org>
+Cc: X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, andy@infradead.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jun 12, 2018 at 12:50:12PM +0200, Pavel Machek wrote:
-> On Fri 2018-06-08 19:09:35, Jarkko Sakkinen wrote:
-> > Intel(R) SGX is a set of CPU instructions that can be used by applications
-> > to set aside private regions of code and data. The code outside the enclave
-> > is disallowed to access the memory inside the enclave by the CPU access
-> > control.  In a way you can think that SGX provides inverted sandbox. It
-> > protects the application from a malicious host.
+On Fri, Jun 08, 2018 at 11:50:14AM -0700, Andy Lutomirski wrote:
+> On Fri, Jun 8, 2018 at 10:32 AM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> >
+> > The Launch Enclave (LE) generates cryptographic launch tokens for user
+> > enclaves. A launch token is used by EINIT to check whether the enclave
+> > is authorized to launch or not. By having its own launch enclave, Linux
+> > has full control of the enclave launch process.
+> >
+> > LE is wrapped into a user space proxy program that reads enclave
+> > signatures outputs launch tokens. The kernel-side glue code is
+> > implemented by using the user space helper framework.  The IPC between
+> > the LE proxy program and kernel is handled with an anonymous inode.
+> >
+> > The commit also adds enclave signing tool that is used by kbuild to
+> > measure and sign the launch enclave. CONFIG_INTEL_SGX_SIGNING_KEY points
+> > to a PEM-file for the 3072-bit RSA key that is used as the LE public key
+> > pair. The default location is:
 > 
-> Do you intend to allow non-root applications to use SGX?
+> It might be nice to use the infrastructure that Alexei added for
+> bpfilter (the umh_blob stuff) here, which is slated for merging in
+> this merge window.
 > 
-> What are non-evil uses for SGX?
-> 
-> ...because it is quite useful for some kinds of evil:
+> --Andy
 
-The default permissions for the device are 600.
+Thanks, not familiar with this work. Is there any documentation for
+it available?
 
 /Jarkko
