@@ -1,58 +1,49 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v11 11/13] intel_sgx: ptrace() support
-Date: Tue, 19 Jun 2018 16:38:37 +0300
-Message-ID: <20180619133837.GK5609@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v11 04/13] x86, sgx: add SGX definitions to msr-index.h
+Date: Tue, 19 Jun 2018 07:01:57 -0700
+Message-ID: <4a92d6d2-30d9-eeaf-1afc-cfa35cae004e@intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-12-jarkko.sakkinen@linux.intel.com>
- <91e35b3e-b42d-b3d5-752c-031973e69273@intel.com>
- <1528729329.9779.28.camel@intel.com>
+ <20180608171216.26521-5-jarkko.sakkinen@linux.intel.com>
+ <a51c11da-650a-1828-4173-e424a5340565@intel.com>
+ <20180619131828.GD5609@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1528729329.9779.28.camel@intel.com>
+In-Reply-To: <20180619131828.GD5609@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>, open list <linux-kernel@vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Haim Cohen <haim.cohen@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Tom Lendacky <thomas.lendacky@amd.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jun 11, 2018 at 08:02:09AM -0700, Sean Christopherson wrote:
-> On Fri, 2018-06-08 at 11:34 -0700, Dave Hansen wrote:
-> > On 06/08/2018 10:09 AM, Jarkko Sakkinen wrote:
-> > > 
-> > > +		ret = sgx_edbgrd(encl, entry, align, data);
-> > > +		if (ret)
-> > > +			break;
-> > > +		if (write) {
-> > > +			memcpy(data + offset, buf + i, cnt);
-> > > +			ret = sgx_edbgwr(encl, entry, align, data);
-> > > +			if (ret)
-> > > +				break;
-> > > +		}
-> > > +		else
-> > > +			memcpy(buf + i,data + offset, cnt);
-> > > +	}
-> > The SGX instructions like "edbgrd" be great to put on a license plat,
-> > but we can do better in the kernel.††Can you give these reasonable
-> > english names, please?††sgx_debug_write(), maybe?
+On 06/19/2018 06:18 AM, Jarkko Sakkinen wrote:
+> On Fri, Jun 08, 2018 at 10:25:29AM -0700, Dave Hansen wrote:
+>> On 06/08/2018 10:09 AM, Jarkko Sakkinen wrote:
+>>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>>> Signed-off-by: Haim Cohen <haim.cohen@intel.com>
+>>> Tested-by: Serge Ayoun <serge.ayoun@intel.com>
+>>> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>> Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>
+>> These are a mess.  If you're signing off on it, a review of some kind is
+>> pretty implied.
+>>
+>> Also, how did Sean write this, send it to Haim to sign off on it, and
+>> then send it to you?  That seems unlikely.
 > 
-> IMO the function names for ENCLS leafs are appropriate. †The real
-> issue is the lack of documentation of the ENCLS helpers and their
-> naming conventions.
-> 
-> The sgx_<leaf> functions, e.g. sgx_edbgrd(), are essentially†direct
-> invocations of the specific leaf, i.e. they are dumb wrappers to
-> the lower level leaf functions, e.g. __edbgrd(). †The wrappers exist
-> primarily to deal with the boilerplate necessary to access a page in
-> the EPC. †sgx_<leaf> conveys that the function contains the preamble
-> and/or postamble needed to execute its leaf, but otherwise does not
-> contain any logic.
-> 
-> Functions with actual logic do have English names, e.g.
-> sgx_encl_init(), sgx_encl_add_page(),†sgx_encl_modify_pages() etc...
+> They've both done something to this. How should I change it then?
 
-I agree with Sean on the naming and agree with Dave on his comments in
-earlier patch in the series needs a better documentation.
+Who added their Signed-off-by?
 
-/Jarkko
+I would probably add a single "Co-developed-by:" for each of them and a
+single Signed-off-by, like commit 12c89130a56ae:
+
+    Co-developed-by: Tony Luck <tony.luck@intel.com>
+    Reported-by: Mika Penttil√§ <mika.penttila@nextfour.com>
+    Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+    Cc: Al Viro <viro@zeniv.linux.org.uk>
+    Cc: Andrew Morton <akpm@linux-foundation.org>
+    Cc: Andy Lutomirski <luto@amacapital.net>
+    ...
