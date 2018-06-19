@@ -1,299 +1,109 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v11 12/13] intel_sgx: driver documentation
-Date: Tue, 19 Jun 2018 16:31:26 +0300
-Message-ID: <20180619133126.GH5609@linux.intel.com>
+Subject: Re: [PATCH v11 07/13] x86, sgx: detect Intel SGX
+Date: Tue, 19 Jun 2018 16:33:43 +0300
+Message-ID: <20180619133343.GI5609@linux.intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-13-jarkko.sakkinen@linux.intel.com>
- <d88234f6-d9f9-561e-b1ab-4bfaddc3dd72@infradead.org>
+ <20180608171216.26521-8-jarkko.sakkinen@linux.intel.com>
+ <4fc3b6b0-6e4b-3d5f-4d54-2bf7539c7a17@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d88234f6-d9f9-561e-b1ab-4bfaddc3dd72@infradead.org>
+In-Reply-To: <4fc3b6b0-6e4b-3d5f-4d54-2bf7539c7a17@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andi Kleen <ak@linux.intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 08, 2018 at 02:41:07PM -0700, Randy Dunlap wrote:
-> On 06/08/2018 10:09 AM, Jarkko Sakkinen wrote:
-> > Documentation of the features of the  Software Guard eXtensions usable
-> > for the Linux kernel and how the driver internals uses these features.
-> > In addition, contains documentation for the ioctl API.
-> > 
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+On Fri, Jun 08, 2018 at 10:36:14AM -0700, Dave Hansen wrote:
+> > +config INTEL_SGX_CORE
+> > +	prompt "Intel SGX core functionality
+> > +	depends on X86_64 && CPU_SUP_INTEL
+> > +	help
+> > +	Intel Software Guard eXtensions (SGX) is a set of CPU instructions
+> > +	that allows ring 3 applications to create enclaves; private regions
+> > +	of memory that are protected, by hardware, from unauthorized access
+> > +	and/or modification.
 > 
-> Hi,
+> That semicolon needs to be a colon.  The second half of that sentence is
+> not a stand-alone statement.
 > 
-> I have a few corrections below...
-> 
-> 
-> > ---
-> >  Documentation/index.rst         |   1 +
-> >  Documentation/x86/intel_sgx.rst | 195 ++++++++++++++++++++++++++++++++
-> >  2 files changed, 196 insertions(+)
-> >  create mode 100644 Documentation/x86/intel_sgx.rst
-> > 
-> > diff --git a/Documentation/index.rst b/Documentation/index.rst
-> > index 3b99ab931d41..b9fb92928e8c 100644
-> > --- a/Documentation/index.rst
-> > +++ b/Documentation/index.rst
-> > @@ -100,6 +100,7 @@ implementation.
-> >     :maxdepth: 2
-> >  
-> >     sh/index
-> > +   x86/index
-> >  
-> >  Korean translations
-> >  -------------------
-> > diff --git a/Documentation/x86/intel_sgx.rst b/Documentation/x86/intel_sgx.rst
+> > +	This option enables kernel recognition of SGX, high-level management
+> > +	of the Enclave Page Cache (EPC), tracking and writing of SGX Launch
+> > +	Enclave Hash MSRs, and allows for virtualization of SGX via KVM. By
+> > +	iteslf, this option does not provide SGX support to userspace.
+> > +
+> > +	For details, see Documentation/x86/intel_sgx.rst
+> > +
+> > +	If unsure, say N.
+> > +
+> >  config EFI
+> >  	bool "EFI runtime service support"
+> >  	depends on ACPI
+> > diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
 > > new file mode 100644
-> > index 000000000000..ecbe544eb2cb
+> > index 000000000000..fa3e6e0eb8af
 > > --- /dev/null
-> > +++ b/Documentation/x86/intel_sgx.rst
-> > @@ -0,0 +1,195 @@
-> > +===================
-> > +Intel(R) SGX driver
-> > +===================
+> > +++ b/arch/x86/include/asm/sgx.h
+> > @@ -0,0 +1,25 @@
+> > +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> > +// Copyright(c) 2016-18 Intel Corporation.
+> > +//
+> > +// Authors:
+> > +//
+> > +// Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > +// Suresh Siddha <suresh.b.siddha@intel.com>
+> > +// Sean Christopherson <sean.j.christopherson@intel.com>
 > > +
-> > +Introduction
-> > +============
+> > +#ifndef _ASM_X86_SGX_H
+> > +#define _ASM_X86_SGX_H
 > > +
-> > +Intel(R) SGX is a set of CPU instructions that can be used by applications to
-> > +set aside private regions of code and data. The code outside the enclave is
-> > +disallowed to access the memory inside the enclave by the CPU access control.
-> > +In a way you can think that SGX provides inverted sandbox. It protects the
-> > +application from a malicious host.
+> > +#include <linux/types.h>
 > > +
-> > +You can tell if your CPU supports SGX by looking into ``/proc/cpuinfo``:
-> > +
-> > +	``cat /proc/cpuinfo  | grep sgx``
-> > +
-> > +Overview of SGX
-> > +===============
-> > +
-> > +SGX has a set of data structures to maintain information about the enclaves and
-> > +their security properties. BIOS reserves a fixed size region of physical memory
-> > +for these structures by setting Processor Reserved Memory Range Registers
-> > +(PRMRR).
-> > +
-> > +This memory range is protected from outside access by the CPU and all the data
-> > +coming in and out of the CPU package is encrypted by a key that is generated for
-> > +each boot cycle.
-> > +
-> > +Enclaves execute in ring-3 in a special enclave submode using pages from the
-> > +reserved memory range. A fixed logical address range for the enclave is reserved
-> > +by ENCLS(ECREATE), a leaf instruction used to create enclaves. It is referred in
-> > +the documentation commonly as the ELRANGE.
-> > +
-> > +Every memory access to the ELRANGE is asserted by the CPU. If the CPU is not
-> > +executing in the enclave mode inside the enclave, #GP is raised. On the other
-> > +hand enclave code can make memory accesses both inside and outside of the
-> > +ELRANGE.
-> > +
-> > +Enclave can only execute code inside the ELRANGE. Instructions that may cause
-> > +VMEXIT, IO instructions and instructions that require a privilege change are
-> > +prohibited inside the enclave. Interrupts and exceptions always cause enclave
-> > +to exit and jump to an address outside the enclave given when the enclave is
-> > +entered by using the leaf instruction ENCLS(EENTER).
-> > +
-> > +Data types
-> > +----------
-> > +
-> > +The protected memory range contains the following data:
-> > +
-> > +* **Enclave Page Cache (EPC):** protected pages
-> > +* **Enclave Page Cache Map (EPCM):** a database that describes the state of the
-> > +  pages and link them to an enclave.
-> > +
-> > +EPC has a number of different types of pages:
-> > +
-> > +* **SGX Enclave Control Structure (SECS)**: describes the global
-> > +  properties of an enclave.
-> > +* **Regular (REG):** code and data pages in the ELRANGE.
-> > +* **Thread Control Structure (TCS):** pages that define entry points inside an
-> > +  enclave. The enclave can only be entered through these entry points and each
-> > +  can host a single hardware thread at a time.
-> > +* **Version Array (VA)**: 64-bit version numbers for pages that have been
-> > +  swapped outside the enclave. Each page contains 512 version numbers.
-> > +
-> > +Launch control
-> > +--------------
-> > +
-> > +To launch an enclave, two structures must be provided for ENCLS(EINIT):
-> > +
-> > +1. **SIGSTRUCT:** signed measurement of the enclave binary.
-> > +2. **EINITTOKEN:** a cryptographic token CMAC-signed with a AES256-key called
-> > +   *launch key*, which is re-generated for each boot cycle.
-> > +
-> > +The CPU holds a SHA256 hash of a 3072-bit RSA public key inside
-> > +IA32_SGXLEPUBKEYHASHn MSRs. Enclaves with a SIGSTRUCT that is signed with this
-> > +key do not require a valid EINITTOKEN and can be authorized with special
-> > +privileges. One of those privileges is ability to acquire the launch key with
-> > +ENCLS(EGETKEY).
-> > +
-> > +**IA32_FEATURE_CONTROL[17]** is used by to BIOS configure whether
+> > +#define SGX_CPUID 0x12
 > 
->                                         by the BIOS to configure whether
-> 
-> > +IA32_SGXLEPUBKEYHASH MSRs are read-only or read-write before locking the
-> > +feature control register and handing over control to the operating system.
-> > +
-> > +Enclave construction
-> > +--------------------
-> > +
-> > +The construction is started by filling out the SECS that contains enclave
-> > +address range, privileged attributes and measurement of TCS and REG pages (pages
-> > +that will be mapped to the address range) among the other things. This structure
-> > +is passed out to the ENCLS(ECREATE) together with a physical address of a page
-> > +in EPC that will hold the SECS.
-> > +
-> > +Then pages are added with ENCLS(EADD) and measured with ENCLS(EEXTEND).  Finally
-> 
-> "measured"?  what does that mean?
-> 
-> > +enclave is initialized with ENCLS(EINIT). ENCLS(INIT) checks that the SIGSTRUCT
-> > +is signed with the contained public key and that the supplied EINITTOKEN is
-> > +valid (CMAC'd with the launch key). If these hold, the enclave is successfully
-> > +initialized.
-> > +
-> > +Swapping pages
-> > +--------------
-> > +
-> > +Enclave pages can be swapped out with ENCLS(EWB) to the unprotected memory. In
-> > +addition to the EPC page, ENCLS(EWB) takes in a VA page and address for PCMD
-> > +structure (Page Crypto MetaData) as input. The VA page will seal a version
-> > +number for the page. PCMD is 128 byte structure that contains tracking
-> > +information for the page, most importantly its MAC. With these structures the
-> > +enclave is sealed and rollback protected while it resides in the unprotected
-> > +memory.
-> > +
-> > +Before the page can be swapped out it must not have any active TLB references.
-> > +By using ENCLS(EBLOCK) instructions no new TLB entries can be created to it.
-> > +After this the a counter called *epoch* associated hardware threads inside the
-> 
-> huh?
-> 
-> > +enclave is increased with ENCLS(ETRACK). After all the threads from the previous
-> > +epoch have exited the page can be safely swapped out.
-> > +
-> > +An enclave memory access to a swapped out pages will cause #PF. #PF handler can
-> > +fault the page back by using ENCLS(ELDU).
-> > +
-> > +Kernel internals
-> > +================
-> > +
-> > +Requirements
-> > +------------
-> > +
-> > +Because SGX has an ever evolving and expanding feature set, it's possible for
-> > +a BIOS or VMM to configure a system in such a way that not all cpus are equal,
-> 
->                                                                   CPUs
-> 
-> > +e.g. where Launch Control is only enabled on a subset of cpus.  Linux does
-> 
->                                                             CPUs.
-> 
-> > +*not* support such a heterogenous system configuration, nor does it even
-> 
->                         heterogeneous
-> 
-> > +attempt to play nice in the face of a misconfigured system.  With the exception
-> > +of Launch Control's hash MSRs, which can vary per cpu, Linux assumes that all
-> 
->                                                      CPU,
-> 
-> > +cpus have a configuration that is identical to the boot cpu.
-> 
->    CPUs                                                    CPU.
-> 
-> > +
-> > +
-> > +Roles and responsibilities
-> > +--------------------------
-> > +
-> > +SGX introduces system resources, e.g. EPC memory, that must be accessible to
-> > +multiple entities, e.g. the native kernel driver (to expose SGX to userspace)
-> > +and KVM (to expose SGX to VMs), ideally without introducing any dependencies
-> > +between each SGX entity.  To that end, the kernel owns and manages the shared
-> > +system resources, i.e. the EPC and Launch Control MSRs, and defines functions
-> > +that provide appropriate access to the shared resources.  SGX support for
-> > +userpace and VMs is left to the SGX platform driver and KVM respectively.
-> 
->    userspace
-> 
-> > +
-> > +Launching enclaves
-> > +------------------
-> > +
-> > +For privileged enclaves the launch is performed simply by submitting the
-> > +SIGSTRUCT for that enclave to ENCLS(EINIT). For unprivileged enclaves the
-> > +driver hosts a process in ring-3 that hosts a launch enclave signed with a key
-> > +supplied for kbuild.
-> > +
-> > +The current implementation of the launch enclave generates a token for any
-> > +enclave. In the future it could be potentially extended to have ways to
-> > +configure policy what can be lauched.
-> 
->                                 launched.
-> 
-> > +
-> > +The driver will fail to initialize if it cannot start its own launch enclave.
-> > +A user space application can submit a SIGSTRUCT instance through the ioctl API.
-> > +The kernel will take care of the rest.
-> > +
-> > +This design assures that the Linux kernel has always full control, which
-> > +enclaves get to launch and which do not, even if the public key MSRs are
-> > +read-only. Having launch intrinsics inside the kernel also enables easy
-> > +development of enclaves without necessarily needing any heavy weight SDK.
-> > +Having a low-barrier to implement enclaves could make sense for example for
-> 
->             low barrier
-> 
-> > +system daemons where amount of dependecies ought to be minimized.
-> 
->                                   dependencies
-> 
-> > +
-> > +EPC management
-> > +--------------
-> > +
-> > +Due to the unique requirements for swapping EPC pages, and because EPC pages
-> > +(currently) do not have associated page structures, management of the EPC is
-> > +not handled by the standard Linux swapper.  SGX directly handles swapping
-> > +of EPC pages, including a kthread to initiate reclaim and a rudimentary LRU
-> > +mechanism.  Consumsers of EPC pages, e.g. the SGX driver, are required to
-> 
->                Consumers
-> 
-> > +implement function callbacks that can be invoked by the kernel to age,
-> > +swap, and/or forcefully reclaim a target EPC page.  In effect, the kernel
-> > +controls what happens and when, while the consumers (driver, KVM, etc..) do
-> > +the actual work.
-> > +
-> > +SGX uapi
-> > +========
-> > +
-> > +.. kernel-doc:: drivers/platform/x86/intel_sgx/sgx_ioctl.c
-> > +   :functions: sgx_ioc_enclave_create
-> > +               sgx_ioc_enclave_add_page
-> > +               sgx_ioc_enclave_init
-> > +
-> > +.. kernel-doc:: arch/x86/include/uapi/asm/sgx.h
-> > +
-> > +References
-> > +==========
-> > +
-> > +* System Programming Manual: 39.1.4 Intel® SGX Launch Control Configuration
-> > 
-> 
-> 
-> -- 
-> ~Randy
+> Hey, I just saw 0x12 as a magic, hard-coded number earlier in these
+> patches.  It seems cruel to hard-code it, and then also have a #define
+> that isn't used.
 
-Thank you, I'll refine the parts that you pointed out for the next
-version.
+It i then is a regression in the series. I'll fix it.
+
+> > +enum sgx_cpuid {
+> > +	SGX_CPUID_CAPABILITIES	= 0,
+> > +	SGX_CPUID_ATTRIBUTES	= 1,
+> > +	SGX_CPUID_EPC_BANKS	= 2,
+> > +};
+> 
+> These are cpuid *leaves*, right?  Please make this clear that these are
+> hardware-defined values and not some kind of software construct.
+> 
+> > +bool sgx_enabled __ro_after_init = false;
+> > +EXPORT_SYMBOL(sgx_enabled);
+> > +
+> > +static __init bool sgx_is_enabled(void)
+> > +{
+> > +	unsigned long fc;
+> > +
+> > +	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+> > +		return false;
+> 
+> Not necessary. CPUID does this part for you.
+> 
+> > +	if (!boot_cpu_has(X86_FEATURE_SGX))
+> > +		return false;
+> > +
+> > +	if (!boot_cpu_has(X86_FEATURE_SGX1))
+> > +		return false;
+> > +
+> > +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
+> > +	if (!(fc & FEATURE_CONTROL_LOCKED))
+> > +		return false;
+> > +
+> > +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE))
+> > +		return false;
+> 
+> Comments, please.  Why would this happen?  What would it mean?
+
+Thanks for the feedback! I'll refine the parts that you pointed out.
 
 /Jarkko
