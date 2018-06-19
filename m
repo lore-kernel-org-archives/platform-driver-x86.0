@@ -1,267 +1,129 @@
-From: Dave Hansen <dave.hansen@intel.com>
+From: Jethro Beekman <jethro@fortanix.com>
 Subject: Re: [PATCH v11 09/13] x86, sgx: basic routines for enclave page cache
-Date: Tue, 19 Jun 2018 08:32:02 -0700
-Message-ID: <5226fbdc-dcad-4856-68bb-3219ab31b30d@intel.com>
+Date: Tue, 19 Jun 2018 08:44:40 -0700
+Message-ID: <aafa64b6-b5a0-fbfb-8b1f-995044745ccd@fortanix.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
  <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
- <3c1b04d6-6e93-efaa-1890-101b7fd9784c@intel.com>
- <20180619145753.GB8034@linux.intel.com>
+ <78982a32-c589-48e2-9a83-fd36903b5588@fortanix.com>
+ <20180619140815.GA8034@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms060204060202090707080307"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180619145753.GB8034@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <20180619140815.GA8034@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 06/19/2018 07:57 AM, Jarkko Sakkinen wrote:
-> On Fri, Jun 08, 2018 at 11:24:12AM -0700, Dave Hansen wrote:
->>> Each subsystem that uses SGX must provide a set of callbacks for EPC
->>> pages that are used to reclaim, block and write an EPC page. Kernel
->>> takes the responsibility of maintaining LRU cache for them.
+This is a cryptographically signed message in MIME format.
+
+--------------ms060204060202090707080307
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 2018-06-19 07:08, Jarkko Sakkinen wrote:
+> On Fri, Jun 08, 2018 at 11:21:48AM -0700, Jethro Beekman wrote:
+>> On 2018-06-08 10:09, Jarkko Sakkinen wrote:
+>>> +/*
+>>> + * Writing the LE hash MSRs is extraordinarily expensive, e.g.
+>>> + * 3-4x slower than normal MSRs, so we use a per-cpu cache to
+>>> + * track the last known value of the MSRs to avoid unnecessarily
+>>> + * writing the MSRs with the current value.  Because most Linux
+>>> + * kernels will use an LE that is signed with a non-Intel key,
 >>
->> What does a "subsystem that uses SGX" mean?  Do we have one of those
->> already?
-> 
-> Driver and KVM.
+>> I don't think you can predict what most Linux kernels will be doing. I=
+ think
+>> not initializing the cache to the CPU's initial value is fine, but thi=
+s
+>> particular argument shouldn't appear in the rationale.
+>=20
+> Are you just referring to the last sentence or the whole paragraph?
 
-Could you just say "the SGX and driver both provide a set of callbacks"?
+Just the last sentence.
 
->>> +struct sgx_secs {
->>> +	uint64_t size;
->>> +	uint64_t base;
->>> +	uint32_t ssaframesize;
->>> +	uint32_t miscselect;
->>> +	uint8_t reserved1[SGX_SECS_RESERVED1_SIZE];
->>> +	uint64_t attributes;
->>> +	uint64_t xfrm;
->>> +	uint32_t mrenclave[8];
->>> +	uint8_t reserved2[SGX_SECS_RESERVED2_SIZE];
->>> +	uint32_t mrsigner[8];
->>> +	uint8_t	reserved3[SGX_SECS_RESERVED3_SIZE];
->>> +	uint16_t isvvprodid;
->>> +	uint16_t isvsvn;
->>> +	uint8_t reserved4[SGX_SECS_RESERVED4_SIZE];
->>> +};
->>
->> This is a hardware structure, right?  Doesn't it need to be packed?
-> 
-> Everything is aligned properly in this struct.
+> /Jarkko
+Jethro
 
-The compiler doesn't guarantee the way you have it laid out.  It might
-work today, but it's subject to being changed.
 
->>> +enum sgx_tcs_flags {
->>> +	SGX_TCS_DBGOPTIN	= 0x01, /* cleared on EADD */
->>> +};
->>> +
->>> +#define SGX_TCS_RESERVED_MASK 0xFFFFFFFFFFFFFFFEL
->>
->> Would it be possible to separate out the SGX software structures from
->> SGX hardware?  It's hard to tell them apart.
-> 
-> How do you draw the line in the architectural structures?
+--------------ms060204060202090707080307
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-I know then when I see them.
-
-"SGX_TCS_DBGOPTIN" - Hardware
-"SGX_NR_TO_SCAN" - Software
-
-Please at least make an effort to do this.
-
->>> +#define SGX_NR_TO_SCAN	16
->>> +#define SGX_NR_LOW_PAGES 32
->>> +#define SGX_NR_HIGH_PAGES 64
->>> +
->>>  bool sgx_enabled __ro_after_init = false;
->>>  EXPORT_SYMBOL(sgx_enabled);
->>> +bool sgx_lc_enabled __ro_after_init;
->>> +EXPORT_SYMBOL(sgx_lc_enabled);
->>> +atomic_t sgx_nr_free_pages = ATOMIC_INIT(0);
->>
->> Hmmm, global atomic.  Doesn't sound very scalable.
-> 
-> We could potentially remove this completely as banks have 'free_cnt'
-> field and use the sum when needed as the value.
-
-That seems prudent.
-
->>> +struct sgx_epc_bank sgx_epc_banks[SGX_MAX_EPC_BANKS];
->>> +EXPORT_SYMBOL(sgx_epc_banks);
->>> +int sgx_nr_epc_banks;
->>> +EXPORT_SYMBOL(sgx_nr_epc_banks);
->>> +LIST_HEAD(sgx_active_page_list);
->>> +EXPORT_SYMBOL(sgx_active_page_list);
->>> +DEFINE_SPINLOCK(sgx_active_page_list_lock);
->>> +EXPORT_SYMBOL(sgx_active_page_list_lock);
->>
->> Hmmm, global spinlock protecting a page allocator linked list.  Sounds
->> even worse than at atomic.
->>
->> Why is this OK?
-> 
-> Any suggestions what would be a better place in order to make a
-> fine grained granularity?
-
-The bank seems a logical place.  Or, create a structure that actually
-hangs off NUMA nodes.
-
-BTW, do we *have* locality information for SGX banks?
->>> +/**
->>> + * sgx_try_alloc_page - try to allocate an EPC page
->>> + * @impl:	implementation for the struct sgx_epc_page
->>> + *
->>> + * Try to grab a page from the free EPC page list. If there is a free page
->>> + * available, it is returned to the caller.
->>> + *
->>> + * Return:
->>> + *   a &struct sgx_epc_page instace,
->>> + *   NULL otherwise
->>> + */
->>> +struct sgx_epc_page *sgx_try_alloc_page(struct sgx_epc_page_impl *impl)
->>> +{
->>> +	struct sgx_epc_bank *bank;
->>> +	struct sgx_epc_page *page = NULL;
->>> +	int i;
->>> +
->>> +	for (i = 0; i < sgx_nr_epc_banks; i++) {
->>> +		bank = &sgx_epc_banks[i];
->>
->> What's a bank?  How many banks does a system have?
-> 
-> AFAIK, UMA systems have one bank. NUMA have multiple. It is a physical
-> memory region reserved for enclave pages.
-
-That's great text to include near the structure definition for
-sgx_epc_bank.
-
->>> +		down_write(&bank->lock);
->>> +
->>> +		if (atomic_read(&bank->free_cnt))
->>> +			page = bank->pages[atomic_dec_return(&bank->free_cnt)];
->>
->> Why is a semaphore getting used here?  I don't see any sleeping or
->> anything happening under this lock.
-> 
-> Should be changed to reader-writer spinlock, thanks.
-
-Which also reminds me...  It would be nice to explicitly call out why
-you need an atomic_t inside a lock-protected structure.
-
->>> +	}
->>> +
->>> +	if (atomic_read(&sgx_nr_free_pages) < SGX_NR_LOW_PAGES)
->>> +		wake_up(&ksgxswapd_waitq);
->>> +
->>> +	return entry;
->>> +}
->>> +EXPORT_SYMBOL(sgx_alloc_page);
->>
->> Why aren't these _GPL exports?
-> 
-> Source files a dual licensed.
-
-Sounds like a great thing to ask your licensing or legal team about.
-
->>> +/**
->>> + * sgx_free_page - free an EPC page
->>> + *
->>> + * @page:	any EPC page
->>> + *
->>> + * Remove an EPC page and insert it back to the list of free pages.
->>> + *
->>> + * Return: SGX error code
->>> + */
->>> +int sgx_free_page(struct sgx_epc_page *page)
->>> +{
->>> +	struct sgx_epc_bank *bank = SGX_EPC_BANK(page);
->>> +	int ret;
->>> +
->>> +	ret = sgx_eremove(page);
->>> +	if (ret) {
->>> +		pr_debug("EREMOVE returned %d\n", ret);
->>> +		return ret;
->>> +	}
->>> +
->>> +	down_read(&bank->lock);
->>> +	bank->pages[atomic_inc_return(&bank->free_cnt) - 1] = page;
->>> +	atomic_inc(&sgx_nr_free_pages);
->>> +	up_read(&bank->lock);
->>> +
->>> +	return 0;
->>> +}
->>
->> bank->lock confuses me.  This seems to be writing to a bank, but only
->> needs a read lock.  Why?
-> 
-> It could be either way around:
-> 
-> 1. Allow multiple threads that free a page to access the array.
-> 2. Allow multiple threads that alloc a page to access the array.
-
-Whatever way you choose, please document the locking scheme.
-
->>> +/**
->>> + * sgx_get_page - pin an EPC page
->>> + * @page:	an EPC page
->>> + *
->>> + * Return: a pointer to the pinned EPC page
->>> + */
->>> +void *sgx_get_page(struct sgx_epc_page *page)
->>> +{
->>> +	struct sgx_epc_bank *bank = SGX_EPC_BANK(page);
->>> +
->>> +	if (IS_ENABLED(CONFIG_X86_64))
->>> +		return (void *)(bank->va + SGX_EPC_ADDR(page) - bank->pa);
->>> +
->>> +	return kmap_atomic_pfn(SGX_EPC_PFN(page));
->>> +}
->>> +EXPORT_SYMBOL(sgx_get_page);
->>
->> This is odd.  Do you really want to detect 64-bit, or CONFIG_HIGHMEM?
-> 
-> For 32-bit (albeit not supported at this point) it makes sense to always
-> use kmap_atomic_pfn() as the virtua address area is very limited.
-
-That makes no sense.  32-bit kernels have plenty of virtual address
-space if not using highmem.
-
->>> +struct page *sgx_get_backing(struct file *file, pgoff_t index)
->>> +{
->>> +	struct inode *inode = file->f_path.dentry->d_inode;
->>> +	struct address_space *mapping = inode->i_mapping;
->>> +	gfp_t gfpmask = mapping_gfp_mask(mapping);
->>> +
->>> +	return shmem_read_mapping_page_gfp(mapping, index, gfpmask);
->>> +}
->>> +EXPORT_SYMBOL(sgx_get_backing);
->>
->> What does shmem have to do with all this?
-> 
-> Backing storage is an shmem file similarly is in drm.
-
-That's something good to call out in the changelog: how shmem gets used
-here.
-
->>> +static __init bool sgx_is_enabled(bool *lc_enabled)
->>>  {
->>>  	unsigned long fc;
->>>  
->>> @@ -41,12 +466,26 @@ static __init bool sgx_is_enabled(void)
->>>  	if (!(fc & FEATURE_CONTROL_SGX_ENABLE))
->>>  		return false;
->>>  
->>> +	*lc_enabled = !!(fc & FEATURE_CONTROL_SGX_LE_WR);
->>> +
->>>  	return true;
->>>  }
->>
->> I'm baffled why lc_enabled is connected to the enclave page cache.
-> 
-> KVM works only with writable MSRs. Driver works both with writable
-> and read-only MSRs.
-
-Could you help with my confusion by documenting this a bit?
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+CyAwggUyMIIEGqADAgECAhEA8MVmReo60XmFXNF7R8+qGDANBgkqhkiG9w0BAQsFADCBlzEL
+MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
+Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0Eg
+Q2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTcwOTE0MDAw
+MDAwWhcNMTgwOTE0MjM1OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNqZXRocm9AZm9ydGFuaXgu
+Y29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz7i2PMd8+ac44evn+E/vAnvp
+p3rSuGpPBG8a5a7TomxjN1KilgX7juFiY7LZjZZe955hCzCoou+lyNgCCSbZzcKsYuIyydkj
+UBBGIcTSblxCbko21J3yyk0JwAwSoaxlZwKrsbjUTHSl/0E6SBQpybRZsAficbdSRz+s7jG7
+f6DtnikAtTYof+mBxwZC30Gzxh3RQEjA0PwaSP35tXffrplfazeog099eiVWLIDYA/kSaiac
+SgheMK02Wi0Iu0fGZ3Y9QMVaB2r5Bhm+hODvJv/WAjEUuZGwo3K4aR/934W79pq5bXwUReXy
+/5VxE1acjz6rFnCqBJuNgrzDiGF4ywIDAQABo4IB6TCCAeUwHwYDVR0jBBgwFoAUgq9sjPjF
+/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFH990qeqLXTAXNqiGOMUQIhUf9TWMA4GA1UdDwEB
+/wQEAwIFoDAMBgNVHRMBAf8EAjAAMCAGA1UdJQQZMBcGCCsGAQUFBwMEBgsrBgEEAbIxAQMF
+AjARBglghkgBhvhCAQEEBAMCBSAwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAQEwKzApBggr
+BgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2g
+S4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRp
+b25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklo
+dHRwOi8vY3J0LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFu
+ZFNlY3VyZUVtYWlsQ0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5j
+b20wHgYDVR0RBBcwFYETamV0aHJvQGZvcnRhbml4LmNvbTANBgkqhkiG9w0BAQsFAAOCAQEA
+BzIiuD+ggLjwfH5xKn7eotgwkH3V6qCWD21G1++PIxuLjCzRN87rMOZcmrMa2HJkDVz4NZYe
+Er98p40JKNNVabKBI8+aF79Gfl0y3Mojr53ojV+x0wt2U04EmOXONuCHdLgxv5JvReFLXo6h
+bIZQoe4Cwfgj541QPLDzoSuMrMUAcNSjt6o/SIeIu+Udv84ET2YckxiBXDiKUXRfW+GWet3w
+1tUYrUSfwTA7Ho2YUbZu/L4FFRrUXQD6zYrB3f0sStDxWijKsRwLrdzqKVs0hsu42wZcNR/v
+YzWnJQBVuCIpr0I/rTHY4E8w5h0Hz5mPABkNxLfOYKRJ1VUMQSgHGzCCBeYwggPOoAMCAQIC
+EGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNVBAYTAkdCMRswGQYD
+VQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNP
+TU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRpb24gQXV0
+aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYTAkdC
+MRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
+BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
+MIIBCgKCAQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQ
+PTRI5Or1u6zf+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivl
+JTRENf+RKwrB6vcfWlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG
+9qrxpZxyb4o4yNNwTqzaaPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoS
+WY66nJN/VCJv5ym6Q0mdCbDKCMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQAB
+o4IBPDCCATgwHwYDVR0jBBgwFoAUu69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKv
+bIz4xf6WYXzoHz0rcUhexIvAMA4GA1UdDwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEA
+MBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8ERTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9k
+b2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDBxBggrBgEFBQcB
+AQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUFk
+ZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wDQYJ
+KoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2SQgG1NgvNc3fQP7TcePo
+7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs0j8CGpfb+SJA3GaB
+Q+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDMKVmU/PUWNMKS
+TvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+E2pvOUtY
++hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfHM5td
+hYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
+jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJ
+M/1tyZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJU
+mpvVdZ4ognzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTK
+TlL8YXLI8nAbR9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIEODCCBDQCAQEw
+ga0wgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNV
+BAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01P
+RE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA8MVm
+Reo60XmFXNF7R8+qGDANBglghkgBZQMEAgEFAKCCAlswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgwNjE5MTU0NDQwWjAvBgkqhkiG9w0BCQQxIgQgrOD4
+7lgfLY5jEag9Lo1X1lx/MMS5olDAbop9sQ2GJYwwbAYJKoZIhvcNAQkPMV8wXTALBglghkgB
+ZQMEASowCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG
+9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBvgYJKwYBBAGCNxAEMYGwMIGtMIGX
+MQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
+YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJT
+QSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAPDFZkXqOtF5
+hVzRe0fPqhgwgcAGCyqGSIb3DQEJEAILMYGwoIGtMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UE
+CBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01P
+RE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGljYXRp
+b24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAPDFZkXqOtF5hVzRe0fPqhgwDQYJKoZIhvcNAQEB
+BQAEggEAAeufIcHVF37p9zCZZi4ktt//uul7YFAc8Gj+LT9Ay+IxmEdOOKuTPSdBgjszLEKt
+cZyZpCzX3hxUujjX7Pa/HyY9Nkzncuk42g0q2SNhX7CXSlRKMKGZCGDGvUvOyxOnqpcDq1hd
+smyReOaEm8W08RG7KyCWus+rgMztNTaJxDIflNZoUwyETSxM8CPJVPLPyPpmKlTRSYrHsb7/
+Alscm5n8MrTlBHgc1dEMsLPPWBvT+TIjEjLrPKAx00BepH5eaPQx/kgdiB8ysugz02fEI2Nk
+5fKbQIPhP2pMZZ9WyQWhqEATrIfJvcG7noZ731OhJKHz1fpqeQyzQRWPDNZuWwAAAAAAAA==
+--------------ms060204060202090707080307--
