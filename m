@@ -1,159 +1,182 @@
-From: Nathaniel McCallum <npmccallum@redhat.com>
+From: Jethro Beekman <jethro@fortanix.com>
 Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
  launch enclave
-Date: Wed, 20 Jun 2018 12:28:52 -0400
-Message-ID: <CAOASepN9t3jF4ajfKLG_odTZddOvXjY_DqLQhRPWhJ-imtjkgg@mail.gmail.com>
+Date: Wed, 20 Jun 2018 11:16:30 -0700
+Message-ID: <e3f8e5b9-aa1e-20da-37ac-3c3caafa66bc@fortanix.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com> <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
+ <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
+ <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
  <CALCETrVp1ZhrxF5bQDSaZpLucS88tErejj5JC6Jb0fB5etWRbA@mail.gmail.com>
- <20180611115255.GC22164@hmswarspite.think-freely.org> <CALCETrX6SD0ThNzpjkbXd7CbNTguzqiQhWMomGK+tocx_DE9XQ@mail.gmail.com>
- <20180612174535.GE19168@hmswarspite.think-freely.org> <CALCETrV-4D-M2ap1EFHQiQerYf_XgwLmBAx5WMvcCUefOODjOA@mail.gmail.com>
+ <20180611115255.GC22164@hmswarspite.think-freely.org>
+ <CALCETrX6SD0ThNzpjkbXd7CbNTguzqiQhWMomGK+tocx_DE9XQ@mail.gmail.com>
+ <20180612174535.GE19168@hmswarspite.think-freely.org>
+ <CALCETrV-4D-M2ap1EFHQiQerYf_XgwLmBAx5WMvcCUefOODjOA@mail.gmail.com>
+ <CAOASepN9t3jF4ajfKLG_odTZddOvXjY_DqLQhRPWhJ-imtjkgg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms000002030503000706070309"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALCETrV-4D-M2ap1EFHQiQerYf_XgwLmBAx5WMvcCUefOODjOA@mail.gmail.com>
+In-Reply-To: <CAOASepN9t3jF4ajfKLG_odTZddOvXjY_DqLQhRPWhJ-imtjkgg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: luto@kernel.org
+To: Nathaniel McCallum <npmccallum@redhat.com>, luto@kernel.org
 Cc: Neil Horman <nhorman@redhat.com>, jarkko.sakkinen@linux.intel.com, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, intel-sgx-kernel-dev@lists.01.org, hpa@zytor.com, dvhart@infradead.org, tglx@linutronix.de, andy@infradead.org, Peter Jones <pjones@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-As I understand it, the current policy models under discussion look like this:
+This is a cryptographically signed message in MIME format.
 
-1. SGX w/o FLC (not being merged) looks like this:
-  Intel CPU => (Intel signed) launch enclave => enclaves
+--------------ms000002030503000706070309
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-2. SGX w/ FLC, looks like this:
-  Intel CPU => kernel => launch enclave => enclaves
+On 2018-06-20 09:28, Nathaniel McCallum wrote:
+> As I understand it, the current policy models under discussion look lik=
+e this:
+>=20
+> 1. SGX w/o FLC (not being merged) looks like this:
+>    Intel CPU =3D> (Intel signed) launch enclave =3D> enclaves
 
-3. Andy is proposing this:
-  Intel CPU => kernel => enclaves
+I think you mean:
 
-This proposal is based on the fact that if the kernel can write to the
-MSRs then a kernel compromise allows an attacker to run their own
-launch enclave and therefore having an independent launch enclave adds
-only complexity but not security.
+      Intel CPU =3D> kernel =3D> (Intel signed) launch enclave =3D> encla=
+ves
 
-Is it possible to restrict the ability of the kernel to change the
-MSRs? For example, could a UEFI module manage the MSRs? Could the
-launch enclave live entirely within that UEFI module?
+>=20
+> 2. SGX w/ FLC, looks like this:
+>    Intel CPU =3D> kernel =3D> launch enclave =3D> enclaves
+>=20
+> 3. Andy is proposing this:
+>    Intel CPU =3D> kernel =3D> enclaves
+>=20
+> This proposal is based on the fact that if the kernel can write to the
+> MSRs then a kernel compromise allows an attacker to run their own
+> launch enclave and therefore having an independent launch enclave adds
+> only complexity but not security.
+>=20
+> Is it possible to restrict the ability of the kernel to change the
+> MSRs? For example, could a UEFI module manage the MSRs? Could the
+> launch enclave live entirely within that UEFI module?
 
-4. I am suggesting this:
-  Intel CPU => UEFI module => enclaves
+On 2017-03-17 09:15, Jethro Beekman wrote:
+ > While collecting my thoughts about the issue I read through the
+ > documentation again and it seems that it will not be possible for a
+ > platform to lock in a non-Intel hash at all. From Section 39.1.4 of th=
+e
+ > latest Intel SDM:
+ >
+ >  > IA32_SGXLEPUBKEYHASH defaults to digest of Intel=E2=80=99s launch e=
+nclave
+ >  > signing key after reset.
+ >  >
+ >  > IA32_FEATURE_CONTROL bit 17 controls the permissions on the
+ >  > IA32_SGXLEPUBKEYHASH MSRs when CPUID.(EAX=3D12H, ECX=3D00H):EAX[0] =
+=3D 1.
+ >  > If IA32_FEATURE_CONTROL is locked with bit 17 set,
+ >  > IA32_SGXLEPUBKEYHASH MSRs are reconfigurable (writeable). If either=
 
-Under this architecture, the kernel isn't involved in policy at all
-and users get exactly the same freedoms they already have with Secure
-Boot. Further, the launch enclave can be independently updated and
-could be distributed in linux-firmware. The UEFI module can also be
-shared across operating systems. If I want to have my own enclave
-policy, then I can build the UEFI module myself, with my
-modifications, and I can disable Secure Boot. Alternatively,
-distributions that want to set their own policies can build their own
-UEFI module and sign it with their vendor key.
-On Mon, Jun 18, 2018 at 5:59 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Tue, Jun 12, 2018 at 10:45 AM Neil Horman <nhorman@redhat.com> wrote:
-> >
-> > On Mon, Jun 11, 2018 at 09:55:29PM -0700, Andy Lutomirski wrote:
-> > > On Mon, Jun 11, 2018 at 4:52 AM Neil Horman <nhorman@redhat.com> wrote:
-> > > >
-> > > > On Sun, Jun 10, 2018 at 10:17:13PM -0700, Andy Lutomirski wrote:
-> > > > > > On Jun 9, 2018, at 10:39 PM, Andy Lutomirski <luto@kernel.org> wrote:
-> > > > > >
-> > > > > > On Fri, Jun 8, 2018 at 10:32 AM Jarkko Sakkinen
-> > > > > > <jarkko.sakkinen@linux.intel.com> wrote:
-> > > > > >>
-> > > > > >> The Launch Enclave (LE) generates cryptographic launch tokens for user
-> > > > > >> enclaves. A launch token is used by EINIT to check whether the enclave
-> > > > > >> is authorized to launch or not. By having its own launch enclave, Linux
-> > > > > >> has full control of the enclave launch process.
-> > > > > >>
-> > > > > >> LE is wrapped into a user space proxy program that reads enclave
-> > > > > >> signatures outputs launch tokens. The kernel-side glue code is
-> > > > > >> implemented by using the user space helper framework.  The IPC between
-> > > > > >> the LE proxy program and kernel is handled with an anonymous inode.
-> > > > > >>
-> > > > > >> The commit also adds enclave signing tool that is used by kbuild to
-> > > > > >> measure and sign the launch enclave. CONFIG_INTEL_SGX_SIGNING_KEY points
-> > > > > >> to a PEM-file for the 3072-bit RSA key that is used as the LE public key
-> > > > > >> pair. The default location is:
-> > > > > >>
-> > > > > >>  drivers/platform/x86/intel_sgx/sgx_signing_key.pem
-> > > > > >>
-> > > > > >> If the default key does not exist kbuild will generate a random key and
-> > > > > >> place it to this location. KBUILD_SGX_SIGN_PIN can be used to specify
-> > > > > >> the passphrase for the LE public key.
-> > > > > >
-> > > > > > It seems to me that it might be more useful to just commit a key pair
-> > > > > > into the kernel.  As far as I know, there is no security whatsoever
-> > > > > > gained by keeping the private key private, so why not make
-> > > > > > reproducible builds easier by simply fixing the key?
-> > > > >
-> > > > > Having thought about this some more, I think that you should
-> > > > > completely remove support for specifying a key. Provide a fixed key
-> > > > > pair, hard code the cache, and call it a day. If you make the key
-> > > > > configurable, every vendor that has any vendor keys (Debian, Ubuntu,
-> > > > > Fedora, Red Hat, SuSE, Clear Linux, etc) will see that config option
-> > > > > and set up their own key pair for no gain whatsoever.  Instead, it'll
-> > > > > give some illusion of security and it'll slow down operations in a VM
-> > > > > guest due to swapping out the values of the MSRs.  And, if the code to
-> > > > > support a locked MSR that just happens to have the right value stays
-> > > > > in the kernel, then we'll risk having vendors actually ship one
-> > > > > distro's public key hash, and that will seriously suck.
-> > > > >
-> > > > If you hard code the key pair however, doesn't that imply that anyone can sign a
-> > > > user space binary as a launch enclave, and potentially gain control of the token
-> > > > granting process?
-> > >
-> > > Yes and no.
-> > >
-> > > First of all, the kernel driver shouldn't be allowing user code to
-> > > launch a launch enclave regardless of signature.  I haven't gotten far
-> > > enough in reviewing the code to see whether that's the case, but if
-> > > it's not, it should be fixed before it's merged.
-> > >
-> > Ok, I agree with you here.
-> >
-> > > But keep in mind that control of the token granting process is not the
-> > > same thing as control over the right to launch an enclave.  On systems
-> > > without the LE hash MSRs, Intel controls the token granting process
-> > > and, barring some attack, an enclave that isn't blessed by Intel can't
-> > > be launched.  Support for that model will not be merged into upstream
-> > > Linux.  But on systems that have the LE hash MSRs and leave them
-> > > unlocked, there is effectively no hardware-enforced launch control.
-> > > Instead we have good old kernel policy.  If a user wants to launch an
-> > > enclave, they need to get the kernel to launch the enclave, and the
-> > > kernel needs to apply its policy.  The patch here (the in-kernel
-> > > launch enclave) has a wide-open policy.
-> > >
-> >
-> > Right, also agree here.  Systems without Flexible Launch Control are a
-> > non-starter, we're only considering FLC systems here
-> >
-> > > So, as a practical matter, if every distro has their own LE key and
-> > > keeps it totally safe, then a system that locks the MSRs to one
-> > > distro's key makes it quite annoying to run another distro's intel_sgx
-> > > driver, but there is no effect on the actual security of the system.
-> > >
-> > I agree that for systems that firmware-lock the msrs are annoying, but I would
-> > think that IHV's would want to keep those msrs unlocked specifically to allow a
-> > wide range of distributions to use this feature.
-> >
-> > As for benefits to security, I think there are some.  Namely, by leaving the
-> > MSRS unlocked, A distribution can, rather than providing their own distirbution
-> > key, pass the root of trust on to the end user.  I can easily envision a
-> > downstream customer that wants to use SGX, and do so in such a way that they are
-> > assured that their OS vendor doesn't have the ability to run an LE on their
-> > system (at least not without the visual cue of specifying a different key hash
-> > at the OS boot).
->
-> Which achieves what, exactly?  The launch public key hash isn't the
-> root of trust of anything except for a really awkward mechanism to
-> limit the enclaves that get run.  If there is actual demand to limit
-> enclaves that get run, let's do it correctly: add some code in the
-> kernel that enforces a policy before launching an enclave.
->
-> If the MSRs are unlocked, there is no stronger guarantee available
-> even if you supply your own custom LE.  If the kernel is owned, the
-> attacker can just change the MSRs.
->
-> --Andy
+ >  > IA32_FEATURE_CONTROL is not locked or bit 17 is clear, the MSRs are=
+
+ >  > read only.
+ >
+ > This last bit is also repeated in different words in Table 35-2 and
+ > Section 42.2.2. The MSRs are *not writable* before the write-lock bit
+ > itself is locked. Meaning the MSRs are either locked with Intel's key
+ > hash, or not locked at all.
+
+>=20
+> 4. I am suggesting this:
+>    Intel CPU =3D> UEFI module =3D> enclaves
+>=20
+> Under this architecture, the kernel isn't involved in policy at all
+> and users get exactly the same freedoms they already have with Secure
+> Boot. Further, the launch enclave can be independently updated and
+> could be distributed in linux-firmware. The UEFI module can also be
+> shared across operating systems. If I want to have my own enclave
+> policy, then I can build the UEFI module myself, with my
+> modifications, and I can disable Secure Boot. Alternatively,
+> distributions that want to set their own policies can build their own
+> UEFI module and sign it with their vendor key.
+
+Jethro Beekman | Fortanix
+
+
+--------------ms000002030503000706070309
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+CyAwggUyMIIEGqADAgECAhEA8MVmReo60XmFXNF7R8+qGDANBgkqhkiG9w0BAQsFADCBlzEL
+MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
+Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0Eg
+Q2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTcwOTE0MDAw
+MDAwWhcNMTgwOTE0MjM1OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNqZXRocm9AZm9ydGFuaXgu
+Y29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz7i2PMd8+ac44evn+E/vAnvp
+p3rSuGpPBG8a5a7TomxjN1KilgX7juFiY7LZjZZe955hCzCoou+lyNgCCSbZzcKsYuIyydkj
+UBBGIcTSblxCbko21J3yyk0JwAwSoaxlZwKrsbjUTHSl/0E6SBQpybRZsAficbdSRz+s7jG7
+f6DtnikAtTYof+mBxwZC30Gzxh3RQEjA0PwaSP35tXffrplfazeog099eiVWLIDYA/kSaiac
+SgheMK02Wi0Iu0fGZ3Y9QMVaB2r5Bhm+hODvJv/WAjEUuZGwo3K4aR/934W79pq5bXwUReXy
+/5VxE1acjz6rFnCqBJuNgrzDiGF4ywIDAQABo4IB6TCCAeUwHwYDVR0jBBgwFoAUgq9sjPjF
+/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFH990qeqLXTAXNqiGOMUQIhUf9TWMA4GA1UdDwEB
+/wQEAwIFoDAMBgNVHRMBAf8EAjAAMCAGA1UdJQQZMBcGCCsGAQUFBwMEBgsrBgEEAbIxAQMF
+AjARBglghkgBhvhCAQEEBAMCBSAwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAQEwKzApBggr
+BgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2g
+S4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRp
+b25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklo
+dHRwOi8vY3J0LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFu
+ZFNlY3VyZUVtYWlsQ0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5j
+b20wHgYDVR0RBBcwFYETamV0aHJvQGZvcnRhbml4LmNvbTANBgkqhkiG9w0BAQsFAAOCAQEA
+BzIiuD+ggLjwfH5xKn7eotgwkH3V6qCWD21G1++PIxuLjCzRN87rMOZcmrMa2HJkDVz4NZYe
+Er98p40JKNNVabKBI8+aF79Gfl0y3Mojr53ojV+x0wt2U04EmOXONuCHdLgxv5JvReFLXo6h
+bIZQoe4Cwfgj541QPLDzoSuMrMUAcNSjt6o/SIeIu+Udv84ET2YckxiBXDiKUXRfW+GWet3w
+1tUYrUSfwTA7Ho2YUbZu/L4FFRrUXQD6zYrB3f0sStDxWijKsRwLrdzqKVs0hsu42wZcNR/v
+YzWnJQBVuCIpr0I/rTHY4E8w5h0Hz5mPABkNxLfOYKRJ1VUMQSgHGzCCBeYwggPOoAMCAQIC
+EGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNVBAYTAkdCMRswGQYD
+VQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNP
+TU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRpb24gQXV0
+aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYTAkdC
+MRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
+BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
+MIIBCgKCAQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQ
+PTRI5Or1u6zf+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivl
+JTRENf+RKwrB6vcfWlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG
+9qrxpZxyb4o4yNNwTqzaaPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoS
+WY66nJN/VCJv5ym6Q0mdCbDKCMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQAB
+o4IBPDCCATgwHwYDVR0jBBgwFoAUu69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKv
+bIz4xf6WYXzoHz0rcUhexIvAMA4GA1UdDwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEA
+MBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8ERTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9k
+b2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDBxBggrBgEFBQcB
+AQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUFk
+ZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wDQYJ
+KoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2SQgG1NgvNc3fQP7TcePo
+7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs0j8CGpfb+SJA3GaB
+Q+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDMKVmU/PUWNMKS
+TvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+E2pvOUtY
++hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfHM5td
+hYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
+jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJ
+M/1tyZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJU
+mpvVdZ4ognzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTK
+TlL8YXLI8nAbR9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIEODCCBDQCAQEw
+ga0wgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNV
+BAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01P
+RE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA8MVm
+Reo60XmFXNF7R8+qGDANBglghkgBZQMEAgEFAKCCAlswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgwNjIwMTgxNjMwWjAvBgkqhkiG9w0BCQQxIgQgdMNK
+yo1e6IZtTbBTUywrkGgtuFdmzAqJM4CHEWdldU0wbAYJKoZIhvcNAQkPMV8wXTALBglghkgB
+ZQMEASowCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG
+9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBvgYJKwYBBAGCNxAEMYGwMIGtMIGX
+MQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
+YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJT
+QSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAPDFZkXqOtF5
+hVzRe0fPqhgwgcAGCyqGSIb3DQEJEAILMYGwoIGtMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UE
+CBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01P
+RE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGljYXRp
+b24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAPDFZkXqOtF5hVzRe0fPqhgwDQYJKoZIhvcNAQEB
+BQAEggEAS/mFVWLqwb8VAFzjfNdYeklLcjKevUEh7BYWalltq2JLdvlzgVf9vfHX6IZWAkNS
+MLO+0oTa3e7SvqeapmaonVk1IH5KYG86Rf/jNbLROEz38Yzdv180ugNsvBGYjuqrrdSufzfv
+bWcUgP9tvBLgsyjOjWZsGwlNC3oYCVR3yZNx+qXs5mTn96Lyi4HfTk8dvZpwQ7t3tpOxbsZ7
+sJPNgtN6ezp6kLK4FMwPN0E7Hu8htLGnF0GiXjh/fK1rzuOas8U5l9pCCX4frL+rN7Tv7xEz
+nDe7PgY0PzE/DA31SK7bHJ7FYJCT4PFrCsHqVU2Gytb73G4AHwJX6qeTjEA6UQAAAAAAAA==
+--------------ms000002030503000706070309--
