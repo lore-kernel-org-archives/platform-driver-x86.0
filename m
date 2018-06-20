@@ -1,70 +1,67 @@
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
- launch enclave
-Date: Wed, 20 Jun 2018 14:01:59 -0700
-Message-ID: <20180620210158.GA24328@linux.intel.com>
-References: <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
- <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
- <CALCETrVp1ZhrxF5bQDSaZpLucS88tErejj5JC6Jb0fB5etWRbA@mail.gmail.com>
- <20180611115255.GC22164@hmswarspite.think-freely.org>
- <CALCETrX6SD0ThNzpjkbXd7CbNTguzqiQhWMomGK+tocx_DE9XQ@mail.gmail.com>
- <20180612174535.GE19168@hmswarspite.think-freely.org>
- <CALCETrV-4D-M2ap1EFHQiQerYf_XgwLmBAx5WMvcCUefOODjOA@mail.gmail.com>
- <CAOASepN9t3jF4ajfKLG_odTZddOvXjY_DqLQhRPWhJ-imtjkgg@mail.gmail.com>
- <e3f8e5b9-aa1e-20da-37ac-3c3caafa66bc@fortanix.com>
- <b5c81504-83cd-8150-ebe4-41355026590f@fortanix.com>
+From: Kees Cook <keescook@chromium.org>
+Subject: [PATCH] platform/x86: wmi: Do not mix pages and kmalloc
+Date: Wed, 20 Jun 2018 14:31:41 -0700
+Message-ID: <20180620213141.GA8957@beast>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b5c81504-83cd-8150-ebe4-41355026590f@fortanix.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jethro Beekman <jethro@fortanix.com>
-Cc: Nathaniel McCallum <npmccallum@redhat.com>, luto@kernel.org, Neil Horman <nhorman@redhat.com>, jarkko.sakkinen@linux.intel.com, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, intel-sgx-kernel-dev@lists.01.org, hpa@zytor.com, dvhart@infradead.org, tglx@linutronix.de, andy@infradead.org, Peter Jones <pjones@redhat.com>
+To: Darren Hart <dvhart@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Mihai =?utf-8?B?RG9uyJt1?= <mihai.dontu@gmail.com>, Mario.Limonciello@dell.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 20, 2018 at 11:39:00AM -0700, Jethro Beekman wrote:
-> On 2018-06-20 11:16, Jethro Beekman wrote:
-> > > This last bit is also repeated in different words in Table 35-2 and
-> > > Section 42.2.2. The MSRs are *not writable* before the write-lock bit
-> > > itself is locked. Meaning the MSRs are either locked with Intel's key
-> > > hash, or not locked at all.
-> 
-> Actually, this might be a documentation bug. I have some test hardware and I
-> was able to configure the MSRs in the BIOS and then read the MSRs after boot
-> like this:
-> 
-> MSR 0x3a 0x0000000000040005
-> MSR 0x8c 0x20180620aaaaaaaa
-> MSR 0x8d 0x20180620bbbbbbbb
-> MSR 0x8e 0x20180620cccccccc
-> MSR 0x8f 0x20180620dddddddd
-> 
-> Since this is not production hardware, it could also be a CPU bug of course.
-> 
-> If it is indeed possible to configure AND lock the MSR values to non-Intel
-> values, I'm very much in favor of Nathaniels proposal to treat the launch
-> enclave like any other firmware blob.
+The probe handler_data was being allocated with __get_free_pages()
+for no reason I could find. The error path was using kfree(). Since
+other things are happily using kmalloc() in the probe path, switch to
+kmalloc() entirely. This fixes the error path mismatch and will avoid
+issues with CONFIG_HARDENED_USERCOPY_PAGESPAN=y.
 
-It's not a CPU or documentation bug (though the latter is arguable).
-SGX has an activation step that is triggered by doing a WRMSR(0x7a)
-with bit 0 set.  Until SGX is activated, the SGX related bits in
-IA32_FEATURE_CONTROL cannot be set, i.e. SGX can't be enabled.  But,
-the LE hash MSRs are fully writable prior to activation, e.g. to
-allow firmware to lock down the LE key with a non-Intel value.
+Reported-by: Mihai Donțu <mihai.dontu@gmail.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/platform/x86/wmi.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-So yes, it's possible to lock the MSRs to a non-Intel value.  The
-obvious caveat is that whatever blob is used to write the MSRs would
-need be executed prior to activation.
-
-As for the SDM, it's a documentation... omission?  SGX activation
-is intentionally omitted from the SDM.  The intended usage model is
-that firmware will always do the activation (if it wants SGX enabled),
-i.e. post-firmware software will only ever "see" SGX as disabled or
-in the fully activated state, and so the SDM doesn't describe SGX
-behavior prior to activation.  I believe the activation process, or
-at least what is required from firmware, is documented in the BIOS
-writer's guide.
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 8e3d0146ff8c..04791ea5d97b 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -895,7 +895,6 @@ static int wmi_dev_probe(struct device *dev)
+ 	struct wmi_driver *wdriver =
+ 		container_of(dev->driver, struct wmi_driver, driver);
+ 	int ret = 0;
+-	int count;
+ 	char *buf;
  
-> Jethro Beekman | Fortanix
-> 
+ 	if (ACPI_FAILURE(wmi_method_enable(wblock, 1)))
+@@ -917,9 +916,8 @@ static int wmi_dev_probe(struct device *dev)
+ 			goto probe_failure;
+ 		}
+ 
+-		count = get_order(wblock->req_buf_size);
+-		wblock->handler_data = (void *)__get_free_pages(GFP_KERNEL,
+-								count);
++		wblock->handler_data = kmalloc(wblock->req_buf_size,
++					       GFP_KERNEL);
+ 		if (!wblock->handler_data) {
+ 			ret = -ENOMEM;
+ 			goto probe_failure;
+@@ -964,8 +962,7 @@ static int wmi_dev_remove(struct device *dev)
+ 	if (wdriver->filter_callback) {
+ 		misc_deregister(&wblock->char_dev);
+ 		kfree(wblock->char_dev.name);
+-		free_pages((unsigned long)wblock->handler_data,
+-			   get_order(wblock->req_buf_size));
++		kfree(wblock->handler_data);
+ 	}
+ 
+ 	if (wdriver->remove)
+-- 
+2.17.1
+
+
+-- 
+Kees Cook
+Pixel Security
