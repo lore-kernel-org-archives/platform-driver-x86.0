@@ -1,8 +1,8 @@
 From: Jethro Beekman <jethro@fortanix.com>
 Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
  launch enclave
-Date: Wed, 20 Jun 2018 11:16:30 -0700
-Message-ID: <e3f8e5b9-aa1e-20da-37ac-3c3caafa66bc@fortanix.com>
+Date: Wed, 20 Jun 2018 11:39:00 -0700
+Message-ID: <b5c81504-83cd-8150-ebe4-41355026590f@fortanix.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
  <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
  <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
@@ -12,10 +12,11 @@ References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
  <20180612174535.GE19168@hmswarspite.think-freely.org>
  <CALCETrV-4D-M2ap1EFHQiQerYf_XgwLmBAx5WMvcCUefOODjOA@mail.gmail.com>
  <CAOASepN9t3jF4ajfKLG_odTZddOvXjY_DqLQhRPWhJ-imtjkgg@mail.gmail.com>
+ <e3f8e5b9-aa1e-20da-37ac-3c3caafa66bc@fortanix.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms000002030503000706070309"
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms000606030002060502060906"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOASepN9t3jF4ajfKLG_odTZddOvXjY_DqLQhRPWhJ-imtjkgg@mail.gmail.com>
+In-Reply-To: <e3f8e5b9-aa1e-20da-37ac-3c3caafa66bc@fortanix.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Nathaniel McCallum <npmccallum@redhat.com>, luto@kernel.org
 Cc: Neil Horman <nhorman@redhat.com>, jarkko.sakkinen@linux.intel.com, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, intel-sgx-kernel-dev@lists.01.org, hpa@zytor.com, dvhart@infradead.org, tglx@linutronix.de, andy@infradead.org, Peter Jones <pjones@redhat.com>
@@ -23,83 +24,41 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 This is a cryptographically signed message in MIME format.
 
---------------ms000002030503000706070309
+--------------ms000606030002060502060906
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On 2018-06-20 09:28, Nathaniel McCallum wrote:
-> As I understand it, the current policy models under discussion look lik=
-e this:
->=20
-> 1. SGX w/o FLC (not being merged) looks like this:
->    Intel CPU =3D> (Intel signed) launch enclave =3D> enclaves
+On 2018-06-20 11:16, Jethro Beekman wrote:
+>  > This last bit is also repeated in different words in Table 35-2 and
+>  > Section 42.2.2. The MSRs are *not writable* before the write-lock bi=
+t
+>  > itself is locked. Meaning the MSRs are either locked with Intel's ke=
+y
+>  > hash, or not locked at all.
 
-I think you mean:
+Actually, this might be a documentation bug. I have some test hardware=20
+and I was able to configure the MSRs in the BIOS and then read the MSRs=20
+after boot like this:
 
-      Intel CPU =3D> kernel =3D> (Intel signed) launch enclave =3D> encla=
-ves
+MSR 0x3a 0x0000000000040005
+MSR 0x8c 0x20180620aaaaaaaa
+MSR 0x8d 0x20180620bbbbbbbb
+MSR 0x8e 0x20180620cccccccc
+MSR 0x8f 0x20180620dddddddd
 
->=20
-> 2. SGX w/ FLC, looks like this:
->    Intel CPU =3D> kernel =3D> launch enclave =3D> enclaves
->=20
-> 3. Andy is proposing this:
->    Intel CPU =3D> kernel =3D> enclaves
->=20
-> This proposal is based on the fact that if the kernel can write to the
-> MSRs then a kernel compromise allows an attacker to run their own
-> launch enclave and therefore having an independent launch enclave adds
-> only complexity but not security.
->=20
-> Is it possible to restrict the ability of the kernel to change the
-> MSRs? For example, could a UEFI module manage the MSRs? Could the
-> launch enclave live entirely within that UEFI module?
+Since this is not production hardware, it could also be a CPU bug of cour=
+se.
 
-On 2017-03-17 09:15, Jethro Beekman wrote:
- > While collecting my thoughts about the issue I read through the
- > documentation again and it seems that it will not be possible for a
- > platform to lock in a non-Intel hash at all. From Section 39.1.4 of th=
-e
- > latest Intel SDM:
- >
- >  > IA32_SGXLEPUBKEYHASH defaults to digest of Intel=E2=80=99s launch e=
-nclave
- >  > signing key after reset.
- >  >
- >  > IA32_FEATURE_CONTROL bit 17 controls the permissions on the
- >  > IA32_SGXLEPUBKEYHASH MSRs when CPUID.(EAX=3D12H, ECX=3D00H):EAX[0] =
-=3D 1.
- >  > If IA32_FEATURE_CONTROL is locked with bit 17 set,
- >  > IA32_SGXLEPUBKEYHASH MSRs are reconfigurable (writeable). If either=
+If it is indeed possible to configure AND lock the MSR values to=20
+non-Intel values, I'm very much in favor of Nathaniels proposal to treat =
 
- >  > IA32_FEATURE_CONTROL is not locked or bit 17 is clear, the MSRs are=
-
- >  > read only.
- >
- > This last bit is also repeated in different words in Table 35-2 and
- > Section 42.2.2. The MSRs are *not writable* before the write-lock bit
- > itself is locked. Meaning the MSRs are either locked with Intel's key
- > hash, or not locked at all.
-
->=20
-> 4. I am suggesting this:
->    Intel CPU =3D> UEFI module =3D> enclaves
->=20
-> Under this architecture, the kernel isn't involved in policy at all
-> and users get exactly the same freedoms they already have with Secure
-> Boot. Further, the launch enclave can be independently updated and
-> could be distributed in linux-firmware. The UEFI module can also be
-> shared across operating systems. If I want to have my own enclave
-> policy, then I can build the UEFI module myself, with my
-> modifications, and I can disable Secure Boot. Alternatively,
-> distributions that want to set their own policies can build their own
-> UEFI module and sign it with their vendor key.
+the launch enclave like any other firmware blob.
 
 Jethro Beekman | Fortanix
 
 
---------------ms000002030503000706070309
+--------------ms000606030002060502060906
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -163,8 +122,8 @@ ga0wgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNV
 BAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01P
 RE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA8MVm
 Reo60XmFXNF7R8+qGDANBglghkgBZQMEAgEFAKCCAlswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgwNjIwMTgxNjMwWjAvBgkqhkiG9w0BCQQxIgQgdMNK
-yo1e6IZtTbBTUywrkGgtuFdmzAqJM4CHEWdldU0wbAYJKoZIhvcNAQkPMV8wXTALBglghkgB
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgwNjIwMTgzOTAwWjAvBgkqhkiG9w0BCQQxIgQgsOqS
+pb4FFWHWKNj1H7SAj101ceLIsXWpZOI2FQFvdkYwbAYJKoZIhvcNAQkPMV8wXTALBglghkgB
 ZQMEASowCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG
 9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBvgYJKwYBBAGCNxAEMYGwMIGtMIGX
 MQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
@@ -174,9 +133,9 @@ hVzRe0fPqhgwgcAGCyqGSIb3DQEJEAILMYGwoIGtMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UE
 CBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01P
 RE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGljYXRp
 b24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAPDFZkXqOtF5hVzRe0fPqhgwDQYJKoZIhvcNAQEB
-BQAEggEAS/mFVWLqwb8VAFzjfNdYeklLcjKevUEh7BYWalltq2JLdvlzgVf9vfHX6IZWAkNS
-MLO+0oTa3e7SvqeapmaonVk1IH5KYG86Rf/jNbLROEz38Yzdv180ugNsvBGYjuqrrdSufzfv
-bWcUgP9tvBLgsyjOjWZsGwlNC3oYCVR3yZNx+qXs5mTn96Lyi4HfTk8dvZpwQ7t3tpOxbsZ7
-sJPNgtN6ezp6kLK4FMwPN0E7Hu8htLGnF0GiXjh/fK1rzuOas8U5l9pCCX4frL+rN7Tv7xEz
-nDe7PgY0PzE/DA31SK7bHJ7FYJCT4PFrCsHqVU2Gytb73G4AHwJX6qeTjEA6UQAAAAAAAA==
---------------ms000002030503000706070309--
+BQAEggEATB7kQEwmXnilJf622g5VcTLQo68ep+rkXGFgQAYmkNIvtuVUP2n0e010i5n7vFr8
+TPMYGGMUIo8fuz3HYc/tKh/rupXA8JCvM7edjXoJKzOtU8CHiYWURVEmqcgFrtNt7dfnLS4U
+NeArOgmn1gt0mservVSuxkkqMbVOsqiRxKnQozWiArrgsrkR38UfgPL69CjGLMdO8EFKvzut
+Qk0kFMqYy6qhG5Qnh0zEkVBhy2wKisIR01dK9jDK1/s8e8jzoOLVGr5WQhxokJ7ZEpUP9GvE
+sdk5x8DQc119ddiiHSN12CcqXb8nf9KgCSwfVjZBZ83X1OvvW5vm7fTSXobSWAAAAAAAAA==
+--------------ms000606030002060502060906--
