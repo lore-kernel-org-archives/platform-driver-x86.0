@@ -1,77 +1,53 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
- launch enclave
-Date: Wed, 20 Jun 2018 10:23:49 +0300
-Message-ID: <20180620072349.GA4329@linux.intel.com>
-References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
- <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
- <CALCETrVp1ZhrxF5bQDSaZpLucS88tErejj5JC6Jb0fB5etWRbA@mail.gmail.com>
+From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Add
+ support for calculator hotkey
+Date: Wed, 20 Jun 2018 09:51:08 -0300
+Message-ID: <20180620125108.n6jmpetshhamn2ig@khazad-dum.debian.net>
+References: <20180619155152.4984-1-bberg@redhat.com>
+ <20180619181236.4qcyc7qmziqiijn4@khazad-dum.debian.net>
+ <5b3d294cd3bfd1c8ce8ae955f13df4d3814109aa.camel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CALCETrVp1ZhrxF5bQDSaZpLucS88tErejj5JC6Jb0fB5etWRbA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Lutomirski <luto@kernel.org>
-Cc: X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, andy@infradead.org
+In-Reply-To: <5b3d294cd3bfd1c8ce8ae955f13df4d3814109aa.camel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Benjamin Berg <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Christian Kellner <ckellner-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Jun 10, 2018 at 10:17:13PM -0700, Andy Lutomirski wrote:
-> > On Jun 9, 2018, at 10:39 PM, Andy Lutomirski <luto@kernel.org> wrote:
-> >
-> > On Fri, Jun 8, 2018 at 10:32 AM Jarkko Sakkinen
-> > <jarkko.sakkinen@linux.intel.com> wrote:
-> >>
-> >> The Launch Enclave (LE) generates cryptographic launch tokens for user
-> >> enclaves. A launch token is used by EINIT to check whether the enclave
-> >> is authorized to launch or not. By having its own launch enclave, Linux
-> >> has full control of the enclave launch process.
-> >>
-> >> LE is wrapped into a user space proxy program that reads enclave
-> >> signatures outputs launch tokens. The kernel-side glue code is
-> >> implemented by using the user space helper framework.  The IPC between
-> >> the LE proxy program and kernel is handled with an anonymous inode.
-> >>
-> >> The commit also adds enclave signing tool that is used by kbuild to
-> >> measure and sign the launch enclave. CONFIG_INTEL_SGX_SIGNING_KEY points
-> >> to a PEM-file for the 3072-bit RSA key that is used as the LE public key
-> >> pair. The default location is:
-> >>
-> >>  drivers/platform/x86/intel_sgx/sgx_signing_key.pem
-> >>
-> >> If the default key does not exist kbuild will generate a random key and
-> >> place it to this location. KBUILD_SGX_SIGN_PIN can be used to specify
-> >> the passphrase for the LE public key.
-> >
-> > It seems to me that it might be more useful to just commit a key pair
-> > into the kernel.  As far as I know, there is no security whatsoever
-> > gained by keeping the private key private, so why not make
-> > reproducible builds easier by simply fixing the key?
+On Tue, 19 Jun 2018, Benjamin Berg wrote:
+> > That said, it would be nice to know if other models also have this
+> > hotkey, especially if it has a different meaning (in which case we just
+> > special-case the keymap in the driver, so it is *not* a problem).
 > 
-> Having thought about this some more, I think that you should
-> completely remove support for specifying a key. Provide a fixed key
-> pair, hard code the cache, and call it a day. If you make the key
-> configurable, every vendor that has any vendor keys (Debian, Ubuntu,
-> Fedora, Red Hat, SuSE, Clear Linux, etc) will see that config option
-> and set up their own key pair for no gain whatsoever.  Instead, it'll
-> give some illusion of security and it'll slow down operations in a VM
-> guest due to swapping out the values of the MSRs.  And, if the code to
-> support a locked MSR that just happens to have the right value stays
-> in the kernel, then we'll risk having vendors actually ship one
-> distro's public key hash, and that will seriously suck.
-> 
-> I'm going to try to get this code working tomorrow.  I'll keep you
-> posted on how that goes.  Can you point me to the userspace bits (i.e.
-> something buildable that will run on a kernel with your patches
-> applied)?
+> I believe this is not specific to the P52 but simply the keyboard
+> version that includes a numpad. I only have the P52, but looking at
+> photos of e.g. the T570 and T580 the keyboard looks identical there.
 
-Sorry for some delay. I was on leave last week.
+Hopefully we get a report from an user of these keyboards.  Identical is
+good, the only issue would be if they were not identical...
 
-The SDK supports my driver starting from 2.1 release:
+> On a different note, these keyboards also have "=", "(" and ")" keys
+> above the numpad. These keys emit the key combinations required for a
+> US keyboard layout on the P52 I have. I do believe there is a way to
+> set the keyboard layout through ACPI which I suspect changes the
+> emitted keycodes to match the expected values for other layouts.
+> Unfortunately supporting that seems quite involved.
 
-  https://github.com/intel/linux-sgx
+Yikes.  Hopefully we won't need to mess with this.
 
-SampleCode folder contains some trivial test code to run.
+-- 
+  Henrique Holschuh
 
-/Jarkko
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, Slashdot.org! http://sdm.link/slashdot
