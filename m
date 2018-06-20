@@ -1,10 +1,9 @@
-From: Jethro Beekman <jethro@fortanix.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
  launch enclave
-Date: Wed, 20 Jun 2018 11:39:00 -0700
-Message-ID: <b5c81504-83cd-8150-ebe4-41355026590f@fortanix.com>
-References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
+Date: Wed, 20 Jun 2018 14:01:59 -0700
+Message-ID: <20180620210158.GA24328@linux.intel.com>
+References: <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
  <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
  <CALCETrVp1ZhrxF5bQDSaZpLucS88tErejj5JC6Jb0fB5etWRbA@mail.gmail.com>
  <20180611115255.GC22164@hmswarspite.think-freely.org>
@@ -13,129 +12,59 @@ References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
  <CALCETrV-4D-M2ap1EFHQiQerYf_XgwLmBAx5WMvcCUefOODjOA@mail.gmail.com>
  <CAOASepN9t3jF4ajfKLG_odTZddOvXjY_DqLQhRPWhJ-imtjkgg@mail.gmail.com>
  <e3f8e5b9-aa1e-20da-37ac-3c3caafa66bc@fortanix.com>
+ <b5c81504-83cd-8150-ebe4-41355026590f@fortanix.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms000606030002060502060906"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e3f8e5b9-aa1e-20da-37ac-3c3caafa66bc@fortanix.com>
+Content-Disposition: inline
+In-Reply-To: <b5c81504-83cd-8150-ebe4-41355026590f@fortanix.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nathaniel McCallum <npmccallum@redhat.com>, luto@kernel.org
-Cc: Neil Horman <nhorman@redhat.com>, jarkko.sakkinen@linux.intel.com, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, intel-sgx-kernel-dev@lists.01.org, hpa@zytor.com, dvhart@infradead.org, tglx@linutronix.de, andy@infradead.org, Peter Jones <pjones@redhat.com>
+To: Jethro Beekman <jethro@fortanix.com>
+Cc: Nathaniel McCallum <npmccallum@redhat.com>, luto@kernel.org, Neil Horman <nhorman@redhat.com>, jarkko.sakkinen@linux.intel.com, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, intel-sgx-kernel-dev@lists.01.org, hpa@zytor.com, dvhart@infradead.org, tglx@linutronix.de, andy@infradead.org, Peter Jones <pjones@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
+On Wed, Jun 20, 2018 at 11:39:00AM -0700, Jethro Beekman wrote:
+> On 2018-06-20 11:16, Jethro Beekman wrote:
+> > > This last bit is also repeated in different words in Table 35-2 and
+> > > Section 42.2.2. The MSRs are *not writable* before the write-lock bit
+> > > itself is locked. Meaning the MSRs are either locked with Intel's key
+> > > hash, or not locked at all.
+> 
+> Actually, this might be a documentation bug. I have some test hardware and I
+> was able to configure the MSRs in the BIOS and then read the MSRs after boot
+> like this:
+> 
+> MSR 0x3a 0x0000000000040005
+> MSR 0x8c 0x20180620aaaaaaaa
+> MSR 0x8d 0x20180620bbbbbbbb
+> MSR 0x8e 0x20180620cccccccc
+> MSR 0x8f 0x20180620dddddddd
+> 
+> Since this is not production hardware, it could also be a CPU bug of course.
+> 
+> If it is indeed possible to configure AND lock the MSR values to non-Intel
+> values, I'm very much in favor of Nathaniels proposal to treat the launch
+> enclave like any other firmware blob.
 
---------------ms000606030002060502060906
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+It's not a CPU or documentation bug (though the latter is arguable).
+SGX has an activation step that is triggered by doing a WRMSR(0x7a)
+with bit 0 set.  Until SGX is activated, the SGX related bits in
+IA32_FEATURE_CONTROL cannot be set, i.e. SGX can't be enabled.  But,
+the LE hash MSRs are fully writable prior to activation, e.g. to
+allow firmware to lock down the LE key with a non-Intel value.
 
-On 2018-06-20 11:16, Jethro Beekman wrote:
->  > This last bit is also repeated in different words in Table 35-2 and
->  > Section 42.2.2. The MSRs are *not writable* before the write-lock bi=
-t
->  > itself is locked. Meaning the MSRs are either locked with Intel's ke=
-y
->  > hash, or not locked at all.
+So yes, it's possible to lock the MSRs to a non-Intel value.  The
+obvious caveat is that whatever blob is used to write the MSRs would
+need be executed prior to activation.
 
-Actually, this might be a documentation bug. I have some test hardware=20
-and I was able to configure the MSRs in the BIOS and then read the MSRs=20
-after boot like this:
-
-MSR 0x3a 0x0000000000040005
-MSR 0x8c 0x20180620aaaaaaaa
-MSR 0x8d 0x20180620bbbbbbbb
-MSR 0x8e 0x20180620cccccccc
-MSR 0x8f 0x20180620dddddddd
-
-Since this is not production hardware, it could also be a CPU bug of cour=
-se.
-
-If it is indeed possible to configure AND lock the MSR values to=20
-non-Intel values, I'm very much in favor of Nathaniels proposal to treat =
-
-the launch enclave like any other firmware blob.
-
-Jethro Beekman | Fortanix
-
-
---------------ms000606030002060502060906
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-CyAwggUyMIIEGqADAgECAhEA8MVmReo60XmFXNF7R8+qGDANBgkqhkiG9w0BAQsFADCBlzEL
-MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
-Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0Eg
-Q2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTcwOTE0MDAw
-MDAwWhcNMTgwOTE0MjM1OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNqZXRocm9AZm9ydGFuaXgu
-Y29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz7i2PMd8+ac44evn+E/vAnvp
-p3rSuGpPBG8a5a7TomxjN1KilgX7juFiY7LZjZZe955hCzCoou+lyNgCCSbZzcKsYuIyydkj
-UBBGIcTSblxCbko21J3yyk0JwAwSoaxlZwKrsbjUTHSl/0E6SBQpybRZsAficbdSRz+s7jG7
-f6DtnikAtTYof+mBxwZC30Gzxh3RQEjA0PwaSP35tXffrplfazeog099eiVWLIDYA/kSaiac
-SgheMK02Wi0Iu0fGZ3Y9QMVaB2r5Bhm+hODvJv/WAjEUuZGwo3K4aR/934W79pq5bXwUReXy
-/5VxE1acjz6rFnCqBJuNgrzDiGF4ywIDAQABo4IB6TCCAeUwHwYDVR0jBBgwFoAUgq9sjPjF
-/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFH990qeqLXTAXNqiGOMUQIhUf9TWMA4GA1UdDwEB
-/wQEAwIFoDAMBgNVHRMBAf8EAjAAMCAGA1UdJQQZMBcGCCsGAQUFBwMEBgsrBgEEAbIxAQMF
-AjARBglghkgBhvhCAQEEBAMCBSAwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAQEwKzApBggr
-BgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2g
-S4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRp
-b25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklo
-dHRwOi8vY3J0LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFu
-ZFNlY3VyZUVtYWlsQ0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5j
-b20wHgYDVR0RBBcwFYETamV0aHJvQGZvcnRhbml4LmNvbTANBgkqhkiG9w0BAQsFAAOCAQEA
-BzIiuD+ggLjwfH5xKn7eotgwkH3V6qCWD21G1++PIxuLjCzRN87rMOZcmrMa2HJkDVz4NZYe
-Er98p40JKNNVabKBI8+aF79Gfl0y3Mojr53ojV+x0wt2U04EmOXONuCHdLgxv5JvReFLXo6h
-bIZQoe4Cwfgj541QPLDzoSuMrMUAcNSjt6o/SIeIu+Udv84ET2YckxiBXDiKUXRfW+GWet3w
-1tUYrUSfwTA7Ho2YUbZu/L4FFRrUXQD6zYrB3f0sStDxWijKsRwLrdzqKVs0hsu42wZcNR/v
-YzWnJQBVuCIpr0I/rTHY4E8w5h0Hz5mPABkNxLfOYKRJ1VUMQSgHGzCCBeYwggPOoAMCAQIC
-EGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNVBAYTAkdCMRswGQYD
-VQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNP
-TU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRpb24gQXV0
-aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYTAkdC
-MRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
-BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
-MIIBCgKCAQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQ
-PTRI5Or1u6zf+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivl
-JTRENf+RKwrB6vcfWlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG
-9qrxpZxyb4o4yNNwTqzaaPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoS
-WY66nJN/VCJv5ym6Q0mdCbDKCMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQAB
-o4IBPDCCATgwHwYDVR0jBBgwFoAUu69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKv
-bIz4xf6WYXzoHz0rcUhexIvAMA4GA1UdDwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEA
-MBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8ERTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9k
-b2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDBxBggrBgEFBQcB
-AQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUFk
-ZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wDQYJ
-KoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2SQgG1NgvNc3fQP7TcePo
-7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs0j8CGpfb+SJA3GaB
-Q+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDMKVmU/PUWNMKS
-TvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+E2pvOUtY
-+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfHM5td
-hYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
-jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJ
-M/1tyZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJU
-mpvVdZ4ognzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTK
-TlL8YXLI8nAbR9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIEODCCBDQCAQEw
-ga0wgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNV
-BAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01P
-RE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA8MVm
-Reo60XmFXNF7R8+qGDANBglghkgBZQMEAgEFAKCCAlswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMTgwNjIwMTgzOTAwWjAvBgkqhkiG9w0BCQQxIgQgsOqS
-pb4FFWHWKNj1H7SAj101ceLIsXWpZOI2FQFvdkYwbAYJKoZIhvcNAQkPMV8wXTALBglghkgB
-ZQMEASowCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG
-9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBvgYJKwYBBAGCNxAEMYGwMIGtMIGX
-MQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
-YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJT
-QSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAPDFZkXqOtF5
-hVzRe0fPqhgwgcAGCyqGSIb3DQEJEAILMYGwoIGtMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UE
-CBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01P
-RE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGljYXRp
-b24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAPDFZkXqOtF5hVzRe0fPqhgwDQYJKoZIhvcNAQEB
-BQAEggEATB7kQEwmXnilJf622g5VcTLQo68ep+rkXGFgQAYmkNIvtuVUP2n0e010i5n7vFr8
-TPMYGGMUIo8fuz3HYc/tKh/rupXA8JCvM7edjXoJKzOtU8CHiYWURVEmqcgFrtNt7dfnLS4U
-NeArOgmn1gt0mservVSuxkkqMbVOsqiRxKnQozWiArrgsrkR38UfgPL69CjGLMdO8EFKvzut
-Qk0kFMqYy6qhG5Qnh0zEkVBhy2wKisIR01dK9jDK1/s8e8jzoOLVGr5WQhxokJ7ZEpUP9GvE
-sdk5x8DQc119ddiiHSN12CcqXb8nf9KgCSwfVjZBZ83X1OvvW5vm7fTSXobSWAAAAAAAAA==
---------------ms000606030002060502060906--
+As for the SDM, it's a documentation... omission?  SGX activation
+is intentionally omitted from the SDM.  The intended usage model is
+that firmware will always do the activation (if it wants SGX enabled),
+i.e. post-firmware software will only ever "see" SGX as disabled or
+in the fully activated state, and so the SDM doesn't describe SGX
+behavior prior to activation.  I believe the activation process, or
+at least what is required from firmware, is documented in the BIOS
+writer's guide.
+ 
+> Jethro Beekman | Fortanix
+> 
