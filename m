@@ -1,63 +1,124 @@
-From: Benjamin Berg <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] platform/x86: thinkpad_acpi: Add
- support for calculator hotkey
-Date: Wed, 20 Jun 2018 15:49:27 +0200
-Message-ID: <20180620134927.6468-1-bberg@redhat.com>
+From: Chris Chiu <chiu@endlessm.com>
+Subject: Re: [PATCH v2 1/2] platform/x86: asus-wmi: Call led hw_changed API on
+ kbd brightness change
+Date: Wed, 20 Jun 2018 22:40:46 +0800
+Message-ID: <CAB4CAwd0TSvMdFpuPqyAMwViA=6NcLvo9=rwkF-Mf=zz5si0RQ@mail.gmail.com>
+References: <20180611071838.47945-1-chiu@endlessm.com> <CAHp75VdfUO9rS-=nn+Ffe8bMEbCO-0xe8QBVqsJAZVFTMYkNxg@mail.gmail.com>
+ <CAB4CAwdKJiuEiV1CtoyYTZTatRt73BQbRX5kyEtpqNj8STj5-w@mail.gmail.com> <CAD8Lp4596OLxc9sw=DwAZ_nHLEOt686xxatqCmSpV0eEWwigjQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Christian Kellner <ckellner-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benjamin Berg <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD8Lp4596OLxc9sw=DwAZ_nHLEOt686xxatqCmSpV0eEWwigjQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Drake <drake@endlessm.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Hans de Goede <hdegoede@redhat.com>, Linux Upstreaming Team <linux@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The P52 has a keyboard which features a calculator key above the numpad.
-Add support for this the calculator key (0x1313).
+On Wed, Jun 20, 2018 at 12:46 AM, Daniel Drake <drake@endlessm.com> wrote:
+> Hi,
+>
+> On Thu, Jun 14, 2018 at 1:58 AM, Chris Chiu <chiu@endlessm.com> wrote:
+>>
+>> On Wed, Jun 13, 2018 at 8:49 PM, Andy Shevchenko
+>> <andy.shevchenko@gmail.com> wrote:
+>> > On Mon, Jun 11, 2018 at 10:18 AM, Chris Chiu <chiu@endlessm.com> wrote:
+>> >> Make asus-wmi notify on hotkey kbd brightness changes, listen for
+>> >> brightness events and update the brightness directly in the driver.
+>> >
+>> >> For this purpose, bound check on brightness in kbd_led_set must be
+>> >> based on the same data type to prevent illegal value been set.
+>> >
+>> >> @@ -497,9 +498,9 @@ static void kbd_led_set(struct led_classdev *led_cdev,
+>> >>
+>> >>         asus = container_of(led_cdev, struct asus_wmi, kbd_led);
+>> >>
+>> >> -       if (value > asus->kbd_led.max_brightness)
+>> >> +       if ((int)value > (int)asus->kbd_led.max_brightness)
+>> >>                 value = asus->kbd_led.max_brightness;
+>> >> -       else if (value < 0)
+>> >> +       else if ((int)value < 0)
+>> >>                 value = 0;
+>> >
+>> > I didn't quite understand this part of the problem.
+>> > Does it exist in the current code? Can it be split to a separate change?
+>> >
+>> > Can we avoid those ugly castings?
+>> >
+>>
+>> I'd like to remove the ugly castings but there's a concern I may need some
+>> advices. I don't know whether if the bound check logic ever verified before.
+>> Maybe the value passed via sysfs is already correctly bounded?
+>
+> The casts come from the underlying need to limit the minumum and
+> maximum brightness within available bounds, plus difficulties doing
+> that when you are dealing with an enum data type.
+>
+> kbd_led_set is a function pointer (from led_classdev.brightness_set)
+> which has this definition:
+>
+> void (*brightness_set)(struct led_classdev *led_cdev, enum
+> led_brightness brightness);
+>
+> It seems that the compiler has the choice of whether to use a signed
+> or unsigned type for enums. According to your tests, and a quick test
+> app below, it seems like gcc is using unsigned.
+>
+>   #include <stdio.h>
+>   enum led_brightness { LED_OFF = 0 };
+>   int main(void) {
+>     enum led_brightness tmp = -1;
+>     if (tmp < 0)
+>       printf("less than zero\n");
+>     else
+>       printf("gt zero\n");
+>   }
+>
+> This test app prints "gt zero"
+>
+> led-class.c:brightness_store() uses kstrtoul() so there is no chance
+> of passing a negative value through this codepath, as you suspected.
+> But we do need to do something with negative bounds for the code that
+> you are adding here.
+>
+> I suggest doing it like this:
+>
+> static void __kbd_led_set(struct led_classdev *led_cdev, int value)
+> {
+>     struct asus_wmi *asus;
+>
+>     asus = container_of(led_cdev, struct asus_wmi, kbd_led);
+>
+>     if (value > asus->kbd_led.max_brightness)
+>         value = asus->kbd_led.max_brightness;
 
-Signed-off-by: Benjamin Berg <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+The `value > asus->kbd_led.max_brightness` will still return false here.
+So I would modify as follows in v3.
+    int max_level = asus->kbd_led.max_brightness;
 
----
-v2:
- * Change comment to indicate that key is found on the P52
----
- drivers/platform/x86/thinkpad_acpi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+    if (value > max_level)
+        value = max_level;
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index cae9b0595692..9e8061f44563 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -1928,7 +1928,7 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
- 	/* first new observed key (star, favorites) is 0x1311 */
- 	TP_ACPI_HOTKEYSCAN_STAR = 69,
- 	TP_ACPI_HOTKEYSCAN_CLIPPING_TOOL2,
--	TP_ACPI_HOTKEYSCAN_UNK25,
-+	TP_ACPI_HOTKEYSCAN_CALCULATOR,
- 	TP_ACPI_HOTKEYSCAN_BLUETOOTH,
- 	TP_ACPI_HOTKEYSCAN_KEYBOARD,
- 
-@@ -3449,7 +3449,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 
- 		KEY_FAVORITES,       /* Favorite app, 0x311 */
- 		KEY_RESERVED,        /* Clipping tool */
--		KEY_RESERVED,
-+		KEY_CALC,            /* Calculator (above numpad, P52) */
- 		KEY_BLUETOOTH,       /* Bluetooth */
- 		KEY_KEYBOARD         /* Keyboard, 0x315 */
- 		},
--- 
-2.17.1
+I've verified there's no regression on led_classdev call path via sysfs.
 
-
-------------------------------------------------------------------------------
-Check out the vibrant tech community on one of the world's most
-engaging tech sites, Slashdot.org! http://sdm.link/slashdot
+>     else if (value < 0)
+>         value = 0;
+>
+>     asus->kbd_led_wk = value;
+>     queue_work(asus->led_workqueue, &asus->kbd_led_work);
+> }
+>
+> static void kbd_led_set(struct led_classdev *led_cdev,
+>             enum led_brightness value)
+> {
+>     return __kbd_led_set(led_cdev, value);
+> }
+>
+> Now kbd_led_set can continue being a correctly typed function pointer
+> for led_classdev.brightness_set. And from the code you are adding here
+> you can call __kbd_led_set directly with signed integer values, and
+> rely on correct bounds correction without ugly casts.
+>
+> Andy, what do you think?
+>
+> Thanks
+> Daniel
