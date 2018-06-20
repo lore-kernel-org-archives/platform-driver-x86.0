@@ -1,86 +1,159 @@
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v11 09/13] x86, sgx: basic routines for enclave page
- cache
-Date: Wed, 20 Jun 2018 08:26:05 -0700
-Message-ID: <1529508365.9779.63.camel@intel.com>
+From: Nathaniel McCallum <npmccallum@redhat.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
+ launch enclave
+Date: Wed, 20 Jun 2018 12:28:52 -0400
+Message-ID: <CAOASepN9t3jF4ajfKLG_odTZddOvXjY_DqLQhRPWhJ-imtjkgg@mail.gmail.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
-         <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
+ <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com> <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
+ <CALCETrVp1ZhrxF5bQDSaZpLucS88tErejj5JC6Jb0fB5etWRbA@mail.gmail.com>
+ <20180611115255.GC22164@hmswarspite.think-freely.org> <CALCETrX6SD0ThNzpjkbXd7CbNTguzqiQhWMomGK+tocx_DE9XQ@mail.gmail.com>
+ <20180612174535.GE19168@hmswarspite.think-freely.org> <CALCETrV-4D-M2ap1EFHQiQerYf_XgwLmBAx5WMvcCUefOODjOA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <CALCETrV-4D-M2ap1EFHQiQerYf_XgwLmBAx5WMvcCUefOODjOA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
+To: luto@kernel.org
+Cc: Neil Horman <nhorman@redhat.com>, jarkko.sakkinen@linux.intel.com, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, intel-sgx-kernel-dev@lists.01.org, hpa@zytor.com, dvhart@infradead.org, tglx@linutronix.de, andy@infradead.org, Peter Jones <pjones@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 2018-06-08 at 19:09 +0200, Jarkko Sakkinen wrote:
-> SGX has a set of data structures to maintain information about the enclaves
-> and their security properties. BIOS reserves a fixed size region of
-> physical memory for these structures by setting Processor Reserved Memory
-> Range Registers (PRMRR). This memory area is called Enclave Page Cache
-> (EPC).
-> 
-> This commit implements the basic routines to allocate and free pages from
-> different EPC banks. There is also a swapper thread ksgxswapd for EPC pages
-> that gets woken up by sgx_alloc_page() when we run below the low watermark.
-> The swapper thread continues swapping pages up until it reaches the high
-> watermark.
-> 
-> Each subsystem that uses SGX must provide a set of callbacks for EPC
-> pages that are used to reclaim, block and write an EPC page. Kernel
-> takes the responsibility of maintaining LRU cache for them.
-> 
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  arch/x86/include/asm/sgx.h      |  67 +++++
->  arch/x86/include/asm/sgx_arch.h | 224 ++++++++++++++++
->  arch/x86/kernel/cpu/intel_sgx.c | 443 +++++++++++++++++++++++++++++++-
->  3 files changed, 732 insertions(+), 2 deletions(-)
->  create mode 100644 arch/x86/include/asm/sgx_arch.h
+As I understand it, the current policy models under discussion look like this:
 
-...
+1. SGX w/o FLC (not being merged) looks like this:
+  Intel CPU => (Intel signed) launch enclave => enclaves
 
-> diff --git a/arch/x86/kernel/cpu/intel_sgx.c b/arch/x86/kernel/cpu/intel_sgx.c
-> index db6b315334f4..ae2b5c5b455f 100644
-> --- a/arch/x86/kernel/cpu/intel_sgx.c
-> +++ b/arch/x86/kernel/cpu/intel_sgx.c
-> @@ -14,14 +14,439 @@
->  #include <linux/freezer.h>
->  #include <linux/highmem.h>
->  #include <linux/kthread.h>
-> +#include <linux/pagemap.h>
->  #include <linux/ratelimit.h>
->  #include <linux/sched/signal.h>
-> +#include <linux/shmem_fs.h>
->  #include <linux/slab.h>
->  
-> +#define SGX_NR_TO_SCAN	16
-> +#define SGX_NR_LOW_PAGES 32
-> +#define SGX_NR_HIGH_PAGES 64
-> +
->  bool sgx_enabled __ro_after_init = false;
->  EXPORT_SYMBOL(sgx_enabled);
-> +bool sgx_lc_enabled __ro_after_init;
-> +EXPORT_SYMBOL(sgx_lc_enabled);
-> +atomic_t sgx_nr_free_pages = ATOMIC_INIT(0);
-> +EXPORT_SYMBOL(sgx_nr_free_pages);
-> +struct sgx_epc_bank sgx_epc_banks[SGX_MAX_EPC_BANKS];
-> +EXPORT_SYMBOL(sgx_epc_banks);
-> +int sgx_nr_epc_banks;
-> +EXPORT_SYMBOL(sgx_nr_epc_banks);
-> +LIST_HEAD(sgx_active_page_list);
-> +EXPORT_SYMBOL(sgx_active_page_list);
-> +DEFINE_SPINLOCK(sgx_active_page_list_lock);
-> +EXPORT_SYMBOL(sgx_active_page_list_lock);
+2. SGX w/ FLC, looks like this:
+  Intel CPU => kernel => launch enclave => enclaves
 
-I don't think we should be exporting anything other than sgx_enabled
-and sgx_lc_enabled.  The only external use of a symbol that can't be
-trivially (re)moved is in the driver's sgx_pm_suspend() in sgx_main.c,
-which uses the sgx_active_page_list to invalidate enclaves.  And that
-behavior seems unsafe, e.g. an enclave could theoretically have zero
-pages on the active list and so could be missed in the suspend flow.
+3. Andy is proposing this:
+  Intel CPU => kernel => enclaves
 
-> +static struct task_struct *ksgxswapd_tsk;
-> +static DECLARE_WAIT_QUEUE_HEAD(ksgxswapd_waitq);
+This proposal is based on the fact that if the kernel can write to the
+MSRs then a kernel compromise allows an attacker to run their own
+launch enclave and therefore having an independent launch enclave adds
+only complexity but not security.
+
+Is it possible to restrict the ability of the kernel to change the
+MSRs? For example, could a UEFI module manage the MSRs? Could the
+launch enclave live entirely within that UEFI module?
+
+4. I am suggesting this:
+  Intel CPU => UEFI module => enclaves
+
+Under this architecture, the kernel isn't involved in policy at all
+and users get exactly the same freedoms they already have with Secure
+Boot. Further, the launch enclave can be independently updated and
+could be distributed in linux-firmware. The UEFI module can also be
+shared across operating systems. If I want to have my own enclave
+policy, then I can build the UEFI module myself, with my
+modifications, and I can disable Secure Boot. Alternatively,
+distributions that want to set their own policies can build their own
+UEFI module and sign it with their vendor key.
+On Mon, Jun 18, 2018 at 5:59 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Tue, Jun 12, 2018 at 10:45 AM Neil Horman <nhorman@redhat.com> wrote:
+> >
+> > On Mon, Jun 11, 2018 at 09:55:29PM -0700, Andy Lutomirski wrote:
+> > > On Mon, Jun 11, 2018 at 4:52 AM Neil Horman <nhorman@redhat.com> wrote:
+> > > >
+> > > > On Sun, Jun 10, 2018 at 10:17:13PM -0700, Andy Lutomirski wrote:
+> > > > > > On Jun 9, 2018, at 10:39 PM, Andy Lutomirski <luto@kernel.org> wrote:
+> > > > > >
+> > > > > > On Fri, Jun 8, 2018 at 10:32 AM Jarkko Sakkinen
+> > > > > > <jarkko.sakkinen@linux.intel.com> wrote:
+> > > > > >>
+> > > > > >> The Launch Enclave (LE) generates cryptographic launch tokens for user
+> > > > > >> enclaves. A launch token is used by EINIT to check whether the enclave
+> > > > > >> is authorized to launch or not. By having its own launch enclave, Linux
+> > > > > >> has full control of the enclave launch process.
+> > > > > >>
+> > > > > >> LE is wrapped into a user space proxy program that reads enclave
+> > > > > >> signatures outputs launch tokens. The kernel-side glue code is
+> > > > > >> implemented by using the user space helper framework.  The IPC between
+> > > > > >> the LE proxy program and kernel is handled with an anonymous inode.
+> > > > > >>
+> > > > > >> The commit also adds enclave signing tool that is used by kbuild to
+> > > > > >> measure and sign the launch enclave. CONFIG_INTEL_SGX_SIGNING_KEY points
+> > > > > >> to a PEM-file for the 3072-bit RSA key that is used as the LE public key
+> > > > > >> pair. The default location is:
+> > > > > >>
+> > > > > >>  drivers/platform/x86/intel_sgx/sgx_signing_key.pem
+> > > > > >>
+> > > > > >> If the default key does not exist kbuild will generate a random key and
+> > > > > >> place it to this location. KBUILD_SGX_SIGN_PIN can be used to specify
+> > > > > >> the passphrase for the LE public key.
+> > > > > >
+> > > > > > It seems to me that it might be more useful to just commit a key pair
+> > > > > > into the kernel.  As far as I know, there is no security whatsoever
+> > > > > > gained by keeping the private key private, so why not make
+> > > > > > reproducible builds easier by simply fixing the key?
+> > > > >
+> > > > > Having thought about this some more, I think that you should
+> > > > > completely remove support for specifying a key. Provide a fixed key
+> > > > > pair, hard code the cache, and call it a day. If you make the key
+> > > > > configurable, every vendor that has any vendor keys (Debian, Ubuntu,
+> > > > > Fedora, Red Hat, SuSE, Clear Linux, etc) will see that config option
+> > > > > and set up their own key pair for no gain whatsoever.  Instead, it'll
+> > > > > give some illusion of security and it'll slow down operations in a VM
+> > > > > guest due to swapping out the values of the MSRs.  And, if the code to
+> > > > > support a locked MSR that just happens to have the right value stays
+> > > > > in the kernel, then we'll risk having vendors actually ship one
+> > > > > distro's public key hash, and that will seriously suck.
+> > > > >
+> > > > If you hard code the key pair however, doesn't that imply that anyone can sign a
+> > > > user space binary as a launch enclave, and potentially gain control of the token
+> > > > granting process?
+> > >
+> > > Yes and no.
+> > >
+> > > First of all, the kernel driver shouldn't be allowing user code to
+> > > launch a launch enclave regardless of signature.  I haven't gotten far
+> > > enough in reviewing the code to see whether that's the case, but if
+> > > it's not, it should be fixed before it's merged.
+> > >
+> > Ok, I agree with you here.
+> >
+> > > But keep in mind that control of the token granting process is not the
+> > > same thing as control over the right to launch an enclave.  On systems
+> > > without the LE hash MSRs, Intel controls the token granting process
+> > > and, barring some attack, an enclave that isn't blessed by Intel can't
+> > > be launched.  Support for that model will not be merged into upstream
+> > > Linux.  But on systems that have the LE hash MSRs and leave them
+> > > unlocked, there is effectively no hardware-enforced launch control.
+> > > Instead we have good old kernel policy.  If a user wants to launch an
+> > > enclave, they need to get the kernel to launch the enclave, and the
+> > > kernel needs to apply its policy.  The patch here (the in-kernel
+> > > launch enclave) has a wide-open policy.
+> > >
+> >
+> > Right, also agree here.  Systems without Flexible Launch Control are a
+> > non-starter, we're only considering FLC systems here
+> >
+> > > So, as a practical matter, if every distro has their own LE key and
+> > > keeps it totally safe, then a system that locks the MSRs to one
+> > > distro's key makes it quite annoying to run another distro's intel_sgx
+> > > driver, but there is no effect on the actual security of the system.
+> > >
+> > I agree that for systems that firmware-lock the msrs are annoying, but I would
+> > think that IHV's would want to keep those msrs unlocked specifically to allow a
+> > wide range of distributions to use this feature.
+> >
+> > As for benefits to security, I think there are some.  Namely, by leaving the
+> > MSRS unlocked, A distribution can, rather than providing their own distirbution
+> > key, pass the root of trust on to the end user.  I can easily envision a
+> > downstream customer that wants to use SGX, and do so in such a way that they are
+> > assured that their OS vendor doesn't have the ability to run an LE on their
+> > system (at least not without the visual cue of specifying a different key hash
+> > at the OS boot).
+>
+> Which achieves what, exactly?  The launch public key hash isn't the
+> root of trust of anything except for a really awkward mechanism to
+> limit the enclaves that get run.  If there is actual demand to limit
+> enclaves that get run, let's do it correctly: add some code in the
+> kernel that enforces a policy before launching an enclave.
+>
+> If the MSRs are unlocked, there is no stronger guarantee available
+> even if you supply your own custom LE.  If the kernel is owned, the
+> attacker can just change the MSRs.
+>
+> --Andy
