@@ -1,51 +1,51 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: wmi: Do not mix pages and kmalloc
-Date: Wed, 20 Jun 2018 17:17:21 -0700
-Message-ID: <20180621001721.GB3250@fury>
-References: <20180620213141.GA8957@beast>
- <20180620233736.GA3250@fury>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86: wmi: Do not mix pages and kmalloc
+Date: Thu, 21 Jun 2018 01:24:34 +0000
+Message-ID: <3974cbadd027497982b5a52c765fb698@ausx13mpc120.AMER.DELL.COM>
+References: <20180620213141.GA8957@beast> <20180620233736.GA3250@fury>
  <CAGXu5jL4V9sL7Ai1SVTNkg8OE70c6kLJBdqNtj9Z06MOb4zG0g@mail.gmail.com>
+ <20180621001721.GB3250@fury>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGXu5jL4V9sL7Ai1SVTNkg8OE70c6kLJBdqNtj9Z06MOb4zG0g@mail.gmail.com>
+In-Reply-To: <20180621001721.GB3250@fury>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kees Cook <keescook@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Mihai =?utf-8?B?RG9uyJt1?= <mihai.dontu@gmail.com>, Mario.Limonciello@dell.com
+To: dvhart@infradead.org, keescook@chromium.org
+Cc: linux-kernel@vger.kernel.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, mihai.dontu@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 20, 2018 at 04:43:14PM -0700, Kees Cook wrote:
-> On Wed, Jun 20, 2018 at 4:37 PM, Darren Hart <dvhart@infradead.org> wrote:
-> > On Wed, Jun 20, 2018 at 02:31:41PM -0700, Kees Cook wrote:
-> >> The probe handler_data was being allocated with __get_free_pages()
-> >> for no reason I could find. The error path was using kfree(). Since
-> >
-> > v4 of Mario's series used kmalloc:
-> > https://patchwork.kernel.org/patch/9985827/
-> >
-> > This was changed in v10 to use __get_free_pages:
-> > https://patchwork.kernel.org/patch/10018023/
-> >
-> > But... I'm not finding the discussion that led to this change.... Mario,
-> > do you recall? Something about contiguous memory? We had a similar
-> > discussion on an earlier series:
-> >
-> > https://patchwork.kernel.org/patch/9975277/
-> 
-> FWIW, kmalloc gets you contiguous memory...
-
-Yeah, I'm not finding a valid reason to use __get_free_pages over kmalloc in
-this case. I'll give Mario a chance to respond in case I'm just missing
-something, but otherwise will plan to apply this patch.
-
-> 
-> But if the reason is found and needs to stay, the probe error path's
-> kfree() needs to be fixed, and __GFP_COMP needs to be added to the
-> free page flags.
-
-Got it, thanks Kees.
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEYXJyZW4gSGFydCBbbWFpbHRv
+OmR2aGFydEBpbmZyYWRlYWQub3JnXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgMjAsIDIwMTgg
+NzoxNyBQTQ0KPiBUbzogS2VlcyBDb29rDQo+IENjOiBMS01MOyBBbmR5IFNoZXZjaGVua287IFBs
+YXRmb3JtIERyaXZlcjsgTWloYWkgRG9uyJt1OyBMaW1vbmNpZWxsbywgTWFyaW8NCj4gU3ViamVj
+dDogUmU6IFtQQVRDSF0gcGxhdGZvcm0veDg2OiB3bWk6IERvIG5vdCBtaXggcGFnZXMgYW5kIGtt
+YWxsb2MNCj4gDQo+IE9uIFdlZCwgSnVuIDIwLCAyMDE4IGF0IDA0OjQzOjE0UE0gLTA3MDAsIEtl
+ZXMgQ29vayB3cm90ZToNCj4gPiBPbiBXZWQsIEp1biAyMCwgMjAxOCBhdCA0OjM3IFBNLCBEYXJy
+ZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+IHdyb3RlOg0KPiA+ID4gT24gV2VkLCBKdW4g
+MjAsIDIwMTggYXQgMDI6MzE6NDFQTSAtMDcwMCwgS2VlcyBDb29rIHdyb3RlOg0KPiA+ID4+IFRo
+ZSBwcm9iZSBoYW5kbGVyX2RhdGEgd2FzIGJlaW5nIGFsbG9jYXRlZCB3aXRoIF9fZ2V0X2ZyZWVf
+cGFnZXMoKQ0KPiA+ID4+IGZvciBubyByZWFzb24gSSBjb3VsZCBmaW5kLiBUaGUgZXJyb3IgcGF0
+aCB3YXMgdXNpbmcga2ZyZWUoKS4gU2luY2UNCj4gPiA+DQo+ID4gPiB2NCBvZiBNYXJpbydzIHNl
+cmllcyB1c2VkIGttYWxsb2M6DQo+ID4gPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
+dGNoLzk5ODU4MjcvDQo+ID4gPg0KPiA+ID4gVGhpcyB3YXMgY2hhbmdlZCBpbiB2MTAgdG8gdXNl
+IF9fZ2V0X2ZyZWVfcGFnZXM6DQo+ID4gPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
+dGNoLzEwMDE4MDIzLw0KPiA+ID4NCj4gPiA+IEJ1dC4uLiBJJ20gbm90IGZpbmRpbmcgdGhlIGRp
+c2N1c3Npb24gdGhhdCBsZWQgdG8gdGhpcyBjaGFuZ2UuLi4uIE1hcmlvLA0KPiA+ID4gZG8geW91
+IHJlY2FsbD8gU29tZXRoaW5nIGFib3V0IGNvbnRpZ3VvdXMgbWVtb3J5PyBXZSBoYWQgYSBzaW1p
+bGFyDQo+ID4gPiBkaXNjdXNzaW9uIG9uIGFuIGVhcmxpZXIgc2VyaWVzOg0KPiA+ID4NCj4gPiA+
+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTk3NTI3Ny8NCj4gPg0KPiA+IEZX
+SVcsIGttYWxsb2MgZ2V0cyB5b3UgY29udGlndW91cyBtZW1vcnkuLi4NCj4gDQo+IFllYWgsIEkn
+bSBub3QgZmluZGluZyBhIHZhbGlkIHJlYXNvbiB0byB1c2UgX19nZXRfZnJlZV9wYWdlcyBvdmVy
+IGttYWxsb2MgaW4NCj4gdGhpcyBjYXNlLiBJJ2xsIGdpdmUgTWFyaW8gYSBjaGFuY2UgdG8gcmVz
+cG9uZCBpbiBjYXNlIEknbSBqdXN0IG1pc3NpbmcNCj4gc29tZXRoaW5nLCBidXQgb3RoZXJ3aXNl
+IHdpbGwgcGxhbiB0byBhcHBseSB0aGlzIHBhdGNoLg0KDQpJIHRoaW5rIGl0IHdhcyBmb3IgY29u
+dGlndW91cyBtZW1vcnksIHNvIGlmIGttYWxsb2MgaXMgZ2l2aW5nIHRoYXQgSSBhZ3JlZQ0Kbm8g
+bmVlZCB0byBrZWVwIF9fZ2V0X2ZyZWVfcGFnZXMgaW5zdGVhZC4NCg0KQWNrZWQtYnk6IE1hcmlv
+IExpbW9uY2llbGxvIDxNYXJpby5saW1vbmNpZWxsb0BkZWxsLmNvbT4NCg0KVGhhbmtzLA0KDQo+
+IA0KPiA+DQo+ID4gQnV0IGlmIHRoZSByZWFzb24gaXMgZm91bmQgYW5kIG5lZWRzIHRvIHN0YXks
+IHRoZSBwcm9iZSBlcnJvciBwYXRoJ3MNCj4gPiBrZnJlZSgpIG5lZWRzIHRvIGJlIGZpeGVkLCBh
+bmQgX19HRlBfQ09NUCBuZWVkcyB0byBiZSBhZGRlZCB0byB0aGUNCj4gPiBmcmVlIHBhZ2UgZmxh
+Z3MuDQo+IA0KPiBHb3QgaXQsIHRoYW5rcyBLZWVzLg0KPiANCj4gLS0NCj4gRGFycmVuIEhhcnQN
+Cj4gVk13YXJlIE9wZW4gU291cmNlIFRlY2hub2xvZ3kgQ2VudGVyDQo=
