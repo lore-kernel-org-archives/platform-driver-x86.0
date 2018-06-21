@@ -1,94 +1,55 @@
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
- launch enclave
-Date: Thu, 21 Jun 2018 11:29:03 -0400
-Message-ID: <20180621152903.GB1324@hmswarspite.think-freely.org>
-References: <CALCETrVp1ZhrxF5bQDSaZpLucS88tErejj5JC6Jb0fB5etWRbA@mail.gmail.com>
- <20180611115255.GC22164@hmswarspite.think-freely.org>
- <CALCETrX6SD0ThNzpjkbXd7CbNTguzqiQhWMomGK+tocx_DE9XQ@mail.gmail.com>
- <20180612174535.GE19168@hmswarspite.think-freely.org>
- <CALCETrV-4D-M2ap1EFHQiQerYf_XgwLmBAx5WMvcCUefOODjOA@mail.gmail.com>
- <CAOASepN9t3jF4ajfKLG_odTZddOvXjY_DqLQhRPWhJ-imtjkgg@mail.gmail.com>
- <e3f8e5b9-aa1e-20da-37ac-3c3caafa66bc@fortanix.com>
- <b5c81504-83cd-8150-ebe4-41355026590f@fortanix.com>
- <20180620210158.GA24328@linux.intel.com>
- <CAOASepN1AtgEhobJUVh=rcsQ_Qt8ujoEhnivV-29y=-AiyJwZQ@mail.gmail.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v11 04/13] x86, sgx: add SGX definitions to msr-index.h
+Date: Thu, 21 Jun 2018 20:22:29 +0300
+Message-ID: <20180621172229.GB12562@linux.intel.com>
+References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
+ <20180608171216.26521-5-jarkko.sakkinen@linux.intel.com>
+ <a51c11da-650a-1828-4173-e424a5340565@intel.com>
+ <20180619131828.GD5609@linux.intel.com>
+ <4a92d6d2-30d9-eeaf-1afc-cfa35cae004e@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOASepN1AtgEhobJUVh=rcsQ_Qt8ujoEhnivV-29y=-AiyJwZQ@mail.gmail.com>
+In-Reply-To: <4a92d6d2-30d9-eeaf-1afc-cfa35cae004e@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nathaniel McCallum <npmccallum@redhat.com>
-Cc: sean.j.christopherson@intel.com, jethro@fortanix.com, luto@kernel.org, jarkko.sakkinen@linux.intel.com, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, intel-sgx-kernel-dev@lists.01.org, hpa@zytor.com, dvhart@infradead.org, tglx@linutronix.de, andy@infradead.org, Peter Jones <pjones@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Haim Cohen <haim.cohen@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Tom Lendacky <thomas.lendacky@amd.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 21, 2018 at 08:32:25AM -0400, Nathaniel McCallum wrote:
-> On Wed, Jun 20, 2018 at 5:02 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Wed, Jun 20, 2018 at 11:39:00AM -0700, Jethro Beekman wrote:
-> > > On 2018-06-20 11:16, Jethro Beekman wrote:
-> > > > > This last bit is also repeated in different words in Table 35-2 and
-> > > > > Section 42.2.2. The MSRs are *not writable* before the write-lock bit
-> > > > > itself is locked. Meaning the MSRs are either locked with Intel's key
-> > > > > hash, or not locked at all.
-> > >
-> > > Actually, this might be a documentation bug. I have some test hardware and I
-> > > was able to configure the MSRs in the BIOS and then read the MSRs after boot
-> > > like this:
-> > >
-> > > MSR 0x3a 0x0000000000040005
-> > > MSR 0x8c 0x20180620aaaaaaaa
-> > > MSR 0x8d 0x20180620bbbbbbbb
-> > > MSR 0x8e 0x20180620cccccccc
-> > > MSR 0x8f 0x20180620dddddddd
-> > >
-> > > Since this is not production hardware, it could also be a CPU bug of course.
-> > >
-> > > If it is indeed possible to configure AND lock the MSR values to non-Intel
-> > > values, I'm very much in favor of Nathaniels proposal to treat the launch
-> > > enclave like any other firmware blob.
-> >
-> > It's not a CPU or documentation bug (though the latter is arguable).
-> > SGX has an activation step that is triggered by doing a WRMSR(0x7a)
-> > with bit 0 set.  Until SGX is activated, the SGX related bits in
-> > IA32_FEATURE_CONTROL cannot be set, i.e. SGX can't be enabled.  But,
-> > the LE hash MSRs are fully writable prior to activation, e.g. to
-> > allow firmware to lock down the LE key with a non-Intel value.
-> >
-> > So yes, it's possible to lock the MSRs to a non-Intel value.  The
-> > obvious caveat is that whatever blob is used to write the MSRs would
-> > need be executed prior to activation.
+On Tue, Jun 19, 2018 at 07:01:57AM -0700, Dave Hansen wrote:
+> On 06/19/2018 06:18 AM, Jarkko Sakkinen wrote:
+> > On Fri, Jun 08, 2018 at 10:25:29AM -0700, Dave Hansen wrote:
+> >> On 06/08/2018 10:09 AM, Jarkko Sakkinen wrote:
+> >>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >>> Signed-off-by: Haim Cohen <haim.cohen@intel.com>
+> >>> Tested-by: Serge Ayoun <serge.ayoun@intel.com>
+> >>> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> >>> Tested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> >>> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> >>
+> >> These are a mess.  If you're signing off on it, a review of some kind is
+> >> pretty implied.
+> >>
+> >> Also, how did Sean write this, send it to Haim to sign off on it, and
+> >> then send it to you?  That seems unlikely.
+> > 
+> > They've both done something to this. How should I change it then?
 > 
-> This implies that it should be possible to create MSR activation (and
-> an embedded launch enclave?) entirely as a UEFI module. The kernel
-> would still get to manage who has access to /dev/sgx and other
-> important non-cryptographic policy details. Users would still be able
-> to control the cryptographic policy details (via BIOS Secure Boot
-> configuration that exists today). Distributions could still control
-> cryptographic policy details via signing of the UEFI module with their
-> own Secure Boot key (or using something like shim). The UEFI module
-> (and possibly the external launch enclave) could be distributed via
-> linux-firmware.
+> Who added their Signed-off-by?
 > 
-> Andy/Neil, does this work for you?
+> I would probably add a single "Co-developed-by:" for each of them and a
+> single Signed-off-by, like commit 12c89130a56ae:
 > 
-I need some time to digest it.  Who in your mind is writing the UEFI module.  Is
-that the firmware vendor or IHV?
+>     Co-developed-by: Tony Luck <tony.luck@intel.com>
+>     Reported-by: Mika Penttilä <mika.penttila@nextfour.com>
+>     Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>     Cc: Al Viro <viro@zeniv.linux.org.uk>
+>     Cc: Andrew Morton <akpm@linux-foundation.org>
+>     Cc: Andy Lutomirski <luto@amacapital.net>
+>     ...
 
-Neil
+Thanks, I was not aware of that tag.
 
-> > As for the SDM, it's a documentation... omission?  SGX activation
-> > is intentionally omitted from the SDM.  The intended usage model is
-> > that firmware will always do the activation (if it wants SGX enabled),
-> > i.e. post-firmware software will only ever "see" SGX as disabled or
-> > in the fully activated state, and so the SDM doesn't describe SGX
-> > behavior prior to activation.  I believe the activation process, or
-> > at least what is required from firmware, is documented in the BIOS
-> > writer's guide.
-> >
-> > > Jethro Beekman | Fortanix
-> > >
-> >
-> >
+/Jarkko
