@@ -1,51 +1,66 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: wmi: Do not mix pages and kmalloc
-Date: Thu, 21 Jun 2018 01:24:34 +0000
-Message-ID: <3974cbadd027497982b5a52c765fb698@ausx13mpc120.AMER.DELL.COM>
-References: <20180620213141.GA8957@beast> <20180620233736.GA3250@fury>
- <CAGXu5jL4V9sL7Ai1SVTNkg8OE70c6kLJBdqNtj9Z06MOb4zG0g@mail.gmail.com>
- <20180621001721.GB3250@fury>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: ThinkPad T480s & LED_MUTE, LED_MICMUTE
+Date: Thu, 21 Jun 2018 13:24:07 +0200
+Message-ID: <20180621112407.fxwnkdvgtxwifryd@pali>
+References: <s5hk1r01acc.wl-tiwai@suse.de>
+ <20180615190959.pqipwnm6a3tf3lxc@pali>
+ <s5hmuvvtdmi.wl-tiwai@suse.de>
+ <20180616154309.ualrx2py6ndr5xgz@pali>
+ <s5hh8m2u3cp.wl-tiwai@suse.de>
+ <20180618102806.vwm4rhvxhn6hi43z@pali>
+ <s5ha7rsz8i8.wl-tiwai@suse.de>
+ <20180618112121.cl76a3oozsbbbqnb@pali>
+ <20180619083712.dwb4d357sfxcgrre@pali>
+ <s5ho9g7dv6j.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180621001721.GB3250@fury>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <s5ho9g7dv6j.wl-tiwai@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, keescook@chromium.org
-Cc: linux-kernel@vger.kernel.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, mihai.dontu@gmail.com
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBEYXJyZW4gSGFydCBbbWFpbHRv
-OmR2aGFydEBpbmZyYWRlYWQub3JnXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgMjAsIDIwMTgg
-NzoxNyBQTQ0KPiBUbzogS2VlcyBDb29rDQo+IENjOiBMS01MOyBBbmR5IFNoZXZjaGVua287IFBs
-YXRmb3JtIERyaXZlcjsgTWloYWkgRG9uyJt1OyBMaW1vbmNpZWxsbywgTWFyaW8NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSF0gcGxhdGZvcm0veDg2OiB3bWk6IERvIG5vdCBtaXggcGFnZXMgYW5kIGtt
-YWxsb2MNCj4gDQo+IE9uIFdlZCwgSnVuIDIwLCAyMDE4IGF0IDA0OjQzOjE0UE0gLTA3MDAsIEtl
-ZXMgQ29vayB3cm90ZToNCj4gPiBPbiBXZWQsIEp1biAyMCwgMjAxOCBhdCA0OjM3IFBNLCBEYXJy
-ZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+IHdyb3RlOg0KPiA+ID4gT24gV2VkLCBKdW4g
-MjAsIDIwMTggYXQgMDI6MzE6NDFQTSAtMDcwMCwgS2VlcyBDb29rIHdyb3RlOg0KPiA+ID4+IFRo
-ZSBwcm9iZSBoYW5kbGVyX2RhdGEgd2FzIGJlaW5nIGFsbG9jYXRlZCB3aXRoIF9fZ2V0X2ZyZWVf
-cGFnZXMoKQ0KPiA+ID4+IGZvciBubyByZWFzb24gSSBjb3VsZCBmaW5kLiBUaGUgZXJyb3IgcGF0
-aCB3YXMgdXNpbmcga2ZyZWUoKS4gU2luY2UNCj4gPiA+DQo+ID4gPiB2NCBvZiBNYXJpbydzIHNl
-cmllcyB1c2VkIGttYWxsb2M6DQo+ID4gPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
-dGNoLzk5ODU4MjcvDQo+ID4gPg0KPiA+ID4gVGhpcyB3YXMgY2hhbmdlZCBpbiB2MTAgdG8gdXNl
-IF9fZ2V0X2ZyZWVfcGFnZXM6DQo+ID4gPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
-dGNoLzEwMDE4MDIzLw0KPiA+ID4NCj4gPiA+IEJ1dC4uLiBJJ20gbm90IGZpbmRpbmcgdGhlIGRp
-c2N1c3Npb24gdGhhdCBsZWQgdG8gdGhpcyBjaGFuZ2UuLi4uIE1hcmlvLA0KPiA+ID4gZG8geW91
-IHJlY2FsbD8gU29tZXRoaW5nIGFib3V0IGNvbnRpZ3VvdXMgbWVtb3J5PyBXZSBoYWQgYSBzaW1p
-bGFyDQo+ID4gPiBkaXNjdXNzaW9uIG9uIGFuIGVhcmxpZXIgc2VyaWVzOg0KPiA+ID4NCj4gPiA+
-IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTk3NTI3Ny8NCj4gPg0KPiA+IEZX
-SVcsIGttYWxsb2MgZ2V0cyB5b3UgY29udGlndW91cyBtZW1vcnkuLi4NCj4gDQo+IFllYWgsIEkn
-bSBub3QgZmluZGluZyBhIHZhbGlkIHJlYXNvbiB0byB1c2UgX19nZXRfZnJlZV9wYWdlcyBvdmVy
-IGttYWxsb2MgaW4NCj4gdGhpcyBjYXNlLiBJJ2xsIGdpdmUgTWFyaW8gYSBjaGFuY2UgdG8gcmVz
-cG9uZCBpbiBjYXNlIEknbSBqdXN0IG1pc3NpbmcNCj4gc29tZXRoaW5nLCBidXQgb3RoZXJ3aXNl
-IHdpbGwgcGxhbiB0byBhcHBseSB0aGlzIHBhdGNoLg0KDQpJIHRoaW5rIGl0IHdhcyBmb3IgY29u
-dGlndW91cyBtZW1vcnksIHNvIGlmIGttYWxsb2MgaXMgZ2l2aW5nIHRoYXQgSSBhZ3JlZQ0Kbm8g
-bmVlZCB0byBrZWVwIF9fZ2V0X2ZyZWVfcGFnZXMgaW5zdGVhZC4NCg0KQWNrZWQtYnk6IE1hcmlv
-IExpbW9uY2llbGxvIDxNYXJpby5saW1vbmNpZWxsb0BkZWxsLmNvbT4NCg0KVGhhbmtzLA0KDQo+
-IA0KPiA+DQo+ID4gQnV0IGlmIHRoZSByZWFzb24gaXMgZm91bmQgYW5kIG5lZWRzIHRvIHN0YXks
-IHRoZSBwcm9iZSBlcnJvciBwYXRoJ3MNCj4gPiBrZnJlZSgpIG5lZWRzIHRvIGJlIGZpeGVkLCBh
-bmQgX19HRlBfQ09NUCBuZWVkcyB0byBiZSBhZGRlZCB0byB0aGUNCj4gPiBmcmVlIHBhZ2UgZmxh
-Z3MuDQo+IA0KPiBHb3QgaXQsIHRoYW5rcyBLZWVzLg0KPiANCj4gLS0NCj4gRGFycmVuIEhhcnQN
-Cj4gVk13YXJlIE9wZW4gU291cmNlIFRlY2hub2xvZ3kgQ2VudGVyDQo=
+On Tuesday 19 June 2018 10:42:12 Takashi Iwai wrote:
+> On Tue, 19 Jun 2018 10:37:12 +0200,
+> Pali Rohár wrote:
+> > Interesting is this part:
+> > 
+> > $ head /proc/asound/card0/codec#0
+> > Codec: Realtek ALC257
+> > Address: 0
+> > AFG Function Id: 0x1 (unsol 1)
+> > Vendor Id: 0x10ec0257
+> > Subsystem Id: 0x17aa2258
+> > Revision Id: 0x100001
+> > No Modem Function Group found
+> > Default PCM:
+> >     rates [0x560]: 44100 48000 96000 192000
+> >         bits [0xe]: 16 20 24
+> > 
+> > It uses vendor id 0x10ec0257 and support for it was added into
+> > snd-hda-codec-realtek in commit f429e7e494 which was introduced in
+> > version v4.15.
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f429e7e494afaded76e62c6f98211a635aa03098
+> > 
+> > I applied this patch to Debian's 4.9 kernel and mute & mic mute leds
+> > started working. This one patch was enough.
+> > 
+> > Takashi, it is possible to backport this patch into -stable trees?
+> 
+> It has already a Cc-to-stable, so it should have been backported.
+> Maybe it wasn't applicable at that time due to lack of other dependent
+> patches...
+> 
+> In anyway, feel free to ping Greg for including it to 4.9.x if it
+> works for you now.
+
+I sent email to Greg, but it was eaten by "email-bot of Greg
+Kroah-Hartman's inbox". So I sent another patch email to stable ML.
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
