@@ -1,81 +1,46 @@
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH] platform/x86: dell-smbios: make a function and a pointer
- static
-Date: Sat, 23 Jun 2018 08:24:26 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1806230823500.2696@hadrien>
-References: <20180621181524.30550-1-colin.king@canonical.com> <20180623002237.GG27466@fury>
+From: Damjan Georgievski <gdamjan@gmail.com>
+Subject: Re: [ibm-acpi-devel] ThinkPad T480s & LED_MUTE, LED_MICMUTE
+Date: Sat, 23 Jun 2018 14:46:39 +0200
+Message-ID: <CAEk1YH7RJx8y-tcNZ5SwR9ruX_HZmH61=f4Vb+CN4zfoJM-oiw@mail.gmail.com>
+References: <s5hk1r01acc.wl-tiwai@suse.de> <20180615190959.pqipwnm6a3tf3lxc@pali>
+ <s5hmuvvtdmi.wl-tiwai@suse.de> <20180616154309.ualrx2py6ndr5xgz@pali>
+ <s5hh8m2u3cp.wl-tiwai@suse.de> <20180618102806.vwm4rhvxhn6hi43z@pali>
+ <s5ha7rsz8i8.wl-tiwai@suse.de> <20180618112121.cl76a3oozsbbbqnb@pali>
+ <20180618112618.hcwiacfzzu4swwd2@pali> <s5h1sd4xg3t.wl-tiwai@suse.de>
+ <20180621113031.gv53yv3g46uaetwm@pali> <CAEk1YH6-b3HtBN335XNxeYRWCCsBm52kC95_EZH3B4G-_TP5Pw@mail.gmail.com>
+ <s5hvaacjrm4.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180623002237.GG27466@fury>
+In-Reply-To: <s5hvaacjrm4.wl-tiwai@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Colin King <colin.king@canonical.com>, Mario Limonciello <mario.limonciello@dell.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+On 21 June 2018 at 13:39, Takashi Iwai <tiwai@suse.de> wrote:
+> On Thu, 21 Jun 2018 13:35:21 +0200,
+> Damjan Georgievski wrote:
+>>
+>> > I applied them to Debian's kernel (with slightly modification) and they
+>> > are working fine. Via "alsamixer -c 0" I can change "Mic Mute-LED Mode"
+>> > to "Follow Capture" and then led is ON only when microphone is ON.
+>> > Recording from microphone is working in both configurations.
+>>
+>> hm this is the opposite of how it works on my T450s and X1, where the
+>> led is ON when microphone is muted.
+>> (I do wish the led would be ON when the microphone is not muted ie. listening)
+>
+> Don't worry, it's still the default behavior ("Follow Mute").
+> Only when user chooses another mode (e.g. "Follow Capture"), the
+> behavior changes.
+
+Yeah, sorry, I didn't notice that the topic changed in the thread.
+
+Anyways, I was intrigued and applied the patches on top of 4.18.0-rc1
+and I can report it works fine on X1 Carbon (5th gen).
 
 
-On Fri, 22 Jun 2018, Darren Hart wrote:
 
-> On Thu, Jun 21, 2018 at 07:15:24PM +0100, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > The function dell_smbios_smm_call and pointer platform_device are
-> > local to the source and do not need to be in global scope, so make
-> > them static.
-> >
-> > Cleans up sparse warnings:
-> > warning: symbol 'platform_device' was not declared. Should it be static?
-> > warning: symbol 'dell_smbios_smm_call' was not declared. Should it be
-> > static?
-> >
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  drivers/platform/x86/dell-smbios-smm.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/dell-smbios-smm.c b/drivers/platform/x86/dell-smbios-smm.c
-> > index e9e9da556318..97a90bebc360 100644
-> > --- a/drivers/platform/x86/dell-smbios-smm.c
-> > +++ b/drivers/platform/x86/dell-smbios-smm.c
-> > @@ -24,7 +24,7 @@
-> >  static int da_command_address;
-> >  static int da_command_code;
-> >  static struct calling_interface_buffer *buffer;
-> > -struct platform_device *platform_device;
-> > +static struct platform_device *platform_device;
-> >  static DEFINE_MUTEX(smm_mutex);
-> >
-> >  static const struct dmi_system_id dell_device_table[] __initconst = {
-> > @@ -82,7 +82,7 @@ static void find_cmd_address(const struct dmi_header *dm, void *dummy)
-> >  	}
-> >  }
-> >
-> > -int dell_smbios_smm_call(struct calling_interface_buffer *input)
-> > +static int dell_smbios_smm_call(struct calling_interface_buffer *input)
->
-> Hrm. So these are passed by pointer to dell_smbios_register_device(), which is in
-> turn called by dell_smbios_call() from dell-smbios-base.c.
->
-> So while it is valid to make these static, since we're not referencing the
-> symbol, but the pointer value instead - I do worry about the "static" suggesting
-> to someone reading the code that this data is not used outside of this file,
-> when it is.
-
-Static protects the name.  The name in this case is very generic.
-
-julia
-
->
-> I'm not finding a position on this in coding-style.
->
-> Andy, do you care to weigh in on this?
->
-> --
-> Darren Hart
-> VMware Open Source Technology Center
-> --
-> To unsubscribe from this list: send the line "unsubscribe kernel-janitors" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+-- 
+damjan
