@@ -1,46 +1,71 @@
-From: Damjan Georgievski <gdamjan@gmail.com>
-Subject: Re: [ibm-acpi-devel] ThinkPad T480s & LED_MUTE, LED_MICMUTE
-Date: Sat, 23 Jun 2018 14:46:39 +0200
-Message-ID: <CAEk1YH7RJx8y-tcNZ5SwR9ruX_HZmH61=f4Vb+CN4zfoJM-oiw@mail.gmail.com>
-References: <s5hk1r01acc.wl-tiwai@suse.de> <20180615190959.pqipwnm6a3tf3lxc@pali>
- <s5hmuvvtdmi.wl-tiwai@suse.de> <20180616154309.ualrx2py6ndr5xgz@pali>
- <s5hh8m2u3cp.wl-tiwai@suse.de> <20180618102806.vwm4rhvxhn6hi43z@pali>
- <s5ha7rsz8i8.wl-tiwai@suse.de> <20180618112121.cl76a3oozsbbbqnb@pali>
- <20180618112618.hcwiacfzzu4swwd2@pali> <s5h1sd4xg3t.wl-tiwai@suse.de>
- <20180621113031.gv53yv3g46uaetwm@pali> <CAEk1YH6-b3HtBN335XNxeYRWCCsBm52kC95_EZH3B4G-_TP5Pw@mail.gmail.com>
- <s5hvaacjrm4.wl-tiwai@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Matt Delco <delco@chromium.org>
+Subject: [PATCH v2] platform/x86: intel-vbtn: Add support for dock mode detection
+Date: Sun, 24 Jun 2018 17:29:40 -0700
+Message-ID: <20180625002940.117141-1-delco@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <s5hvaacjrm4.wl-tiwai@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, ibm-acpi-devel@lists.sourceforge.net, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: AceLan Kao <acelan.kao@canonical.com>
+Cc: Matt Delco <delco@chromium.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 21 June 2018 at 13:39, Takashi Iwai <tiwai@suse.de> wrote:
-> On Thu, 21 Jun 2018 13:35:21 +0200,
-> Damjan Georgievski wrote:
->>
->> > I applied them to Debian's kernel (with slightly modification) and they
->> > are working fine. Via "alsamixer -c 0" I can change "Mic Mute-LED Mode"
->> > to "Follow Capture" and then led is ON only when microphone is ON.
->> > Recording from microphone is working in both configurations.
->>
->> hm this is the opposite of how it works on my T450s and X1, where the
->> led is ON when microphone is muted.
->> (I do wish the led would be ON when the microphone is not muted ie. listening)
->
-> Don't worry, it's still the default behavior ("Follow Mute").
-> Only when user chooses another mode (e.g. "Follow Capture"), the
-> behavior changes.
+The Dell laptop I have has an ACPI that sends 0xCB and 0xCC on entering
+tablet mode.  On exiting tablet mode it sends 0xCA and 0xCD. Based on:
 
-Yeah, sorry, I didn't notice that the topic changed in the thread.
+http://www.traby.de/medion/DSDT/dsdt.dsl
+https://gist.github.com/jprvita/5737de3cbb670e80973b7d4e51c38ab6
+https://osdn.net/projects/android-x86/scm/git/kernel/commits/
+7cbe5a330687b851f32dd9f1048a6ce182d0ff44
 
-Anyways, I was intrigued and applied the patches on top of 4.18.0-rc1
-and I can report it works fine on X1 Carbon (5th gen).
+It appears that 0xCA and 0xCB are about dock mode, which for my
+convertible laptop seems questionably tied to whether I've put
+the laptop in tablet or laptop mode.  I previously proposed no-oping
+0xCA and 0xCB but this revised change attempts to add support for
+detecting dock mode--this detection will essentially be broken for
+my laptop (the main workaround would be for 0xCA and 0xCB to be used
+to provoke a query of the VGBS method that reports the current dock &
+tablet mode [which is accurately reported on my laptop but based on
+the prior workarounds in the driver it apparently can't be trusted
+for all systems]).
 
+Signed-off-by: Matt Delco <delco@chromium.org>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/platform/x86/intel-vbtn.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index c13780b8dabb..06cd7e818ed5 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -17,6 +17,7 @@
+ 
+ /* When NOT in tablet mode, VGBS returns with the flag 0x40 */
+ #define TABLET_MODE_FLAG 0x40
++#define DOCK_MODE_FLAG   0x80
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("AceLan Kao");
+@@ -38,6 +39,8 @@ static const struct key_entry intel_vbtn_keymap[] = {
+ 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
+ 	{ KE_KEY,    0xC8, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key press */
+ 	{ KE_KEY,    0xC9, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key release */
++	{ KE_SW,     0xCA, { .sw = { SW_DOCK, 1 } } },		/* Docked */
++	{ KE_SW,     0xCB, { .sw = { SW_DOCK, 0 } } },		/* Undocked */
+ 	{ KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } },	/* Tablet */
+ 	{ KE_SW,     0xCD, { .sw = { SW_TABLET_MODE, 0 } } },	/* Laptop */
+ 	{ KE_END },
+@@ -121,6 +124,8 @@ static void detect_tablet_mode(struct platform_device *device)
+ 
+ 	m = !(obj->integer.value & TABLET_MODE_FLAG);
+ 	input_report_switch(priv->input_dev, SW_TABLET_MODE, m);
++	m = (obj->integer.value & DOCK_MODE_FLAG) ? 1 : 0;
++	input_report_switch(priv->input_dev, SW_DOCK, m);
+ out:
+ 	kfree(vgbs_output.pointer);
+ }
 -- 
-damjan
+2.18.0.rc2.346.g013aa6912e-goog
