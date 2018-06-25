@@ -1,63 +1,72 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
- launch enclave
-Date: Mon, 25 Jun 2018 08:45:31 -0700
-Message-ID: <CALCETrXos3b-VJxLCb1nwP1x2s5jiDmuQDWVahTVdXGxhqqsDw@mail.gmail.com>
-References: <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
- <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
- <CALCETrVp1ZhrxF5bQDSaZpLucS88tErejj5JC6Jb0fB5etWRbA@mail.gmail.com>
- <20180611115255.GC22164@hmswarspite.think-freely.org> <CALCETrX6SD0ThNzpjkbXd7CbNTguzqiQhWMomGK+tocx_DE9XQ@mail.gmail.com>
- <20180612174535.GE19168@hmswarspite.think-freely.org> <CALCETrV-4D-M2ap1EFHQiQerYf_XgwLmBAx5WMvcCUefOODjOA@mail.gmail.com>
- <CAOASepN9t3jF4ajfKLG_odTZddOvXjY_DqLQhRPWhJ-imtjkgg@mail.gmail.com>
- <e3f8e5b9-aa1e-20da-37ac-3c3caafa66bc@fortanix.com> <b5c81504-83cd-8150-ebe4-41355026590f@fortanix.com>
- <20180620210158.GA24328@linux.intel.com> <CAOASepN1AtgEhobJUVh=rcsQ_Qt8ujoEhnivV-29y=-AiyJwZQ@mail.gmail.com>
- <73b7e4e3712074b73f4ac8211699d24dfdced6bf.camel@linux.intel.com>
+From: Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v11 09/13] x86, sgx: basic routines for enclave page cache
+Date: Mon, 25 Jun 2018 12:14:16 -0400
+Message-ID: <20180625161416.GC18878@hmswarspite.think-freely.org>
+References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
+ <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
+ <1529500871.9779.58.camel@intel.com>
+ <b8ea3787ae99637a8aae286ff90ac6889d8b55f4.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <73b7e4e3712074b73f4ac8211699d24dfdced6bf.camel@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <b8ea3787ae99637a8aae286ff90ac6889d8b55f4.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: npmccallum@redhat.com, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, Jethro Beekman <jethro@fortanix.com>, Andrew Lutomirski <luto@kernel.org>, nhorman@redhat.com, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, andy@infradead.org, Peter Jones <pjones@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jun 25, 2018 at 2:41 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Thu, 2018-06-21 at 08:32 -0400, Nathaniel McCallum wrote:
-> > This implies that it should be possible to create MSR activation (and
-> > an embedded launch enclave?) entirely as a UEFI module. The kernel
-> > would still get to manage who has access to /dev/sgx and other
-> > important non-cryptographic policy details. Users would still be able
-> > to control the cryptographic policy details (via BIOS Secure Boot
-> > configuration that exists today). Distributions could still control
-> > cryptographic policy details via signing of the UEFI module with their
-> > own Secure Boot key (or using something like shim). The UEFI module
-> > (and possibly the external launch enclave) could be distributed via
-> > linux-firmware.
-> >
-> > Andy/Neil, does this work for you?
->
-> Nothing against having UEFI module for MSR activation step.
->
-> And we would move the existing in-kernel LE to firmware so that it is
-> avaible for locked-in-to-non-Intel-values case?
->
+On Mon, Jun 25, 2018 at 12:21:22PM +0300, Jarkko Sakkinen wrote:
+> On Wed, 2018-06-20 at 06:21 -0700, Sean Christopherson wrote:
+> > On Fri, 2018-06-08 at 19:09 +0200, Jarkko Sakkinen wrote:
+> > > SGX has a set of data structures to maintain information about the enclaves
+> > > and their security properties. BIOS reserves a fixed size region of
+> > > physical memory for these structures by setting Processor Reserved Memory
+> > > Range Registers (PRMRR). This memory area is called Enclave Page Cache
+> > > (EPC).
+> > > 
+> > > This commit implements the basic routines to allocate and free pages from
+> > > different EPC banks. There is also a swapper thread ksgxswapd for EPC pages
+> > > that gets woken up by sgx_alloc_page() when we run below the low watermark.
+> > > The swapper thread continues swapping pages up until it reaches the high
+> > > watermark.
+> > > 
+> > > Each subsystem that uses SGX must provide a set of callbacks for EPC
+> > > pages that are used to reclaim, block and write an EPC page. Kernel
+> > > takes the responsibility of maintaining LRU cache for them.
+> > > 
+> > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > ---
+> > >  arch/x86/include/asm/sgx.h      |  67 +++++
+> > >  arch/x86/include/asm/sgx_arch.h | 224 ++++++++++++++++
+> > >  arch/x86/kernel/cpu/intel_sgx.c | 443 +++++++++++++++++++++++++++++++-
+> > >  3 files changed, 732 insertions(+), 2 deletions(-)
+> > >  create mode 100644 arch/x86/include/asm/sgx_arch.h
+> > 
+> > ...
+> > 
+> > > +struct sgx_pcmd {
+> > > +	struct sgx_secinfo secinfo;
+> > > +	uint64_t enclave_id;
+> > > +	uint8_t reserved[40];
+> > > +	uint8_t mac[16];
+> > > +};
+> > 
+> > sgx_pcmd has a 128-byte alignment requirement.  I think it's
+> > worth specifying here as sgx_pcmd is small enough that it could
+> > be put on the stack, e.g. by KVM when trapping and executing
+> > ELD* on behalf of a guest VM.
+> > 
+> > In fact, it probably makes sense to add alightment attributes
+> > to all SGX structs for self-documentation purposes, even though
+> > many of them will never be allocated statically or on the stack.
+> 
+> I agree with this. It also documents stuff so that you don't have
+> to look it up from the SDM.
+> 
+> Neil: this should also clear your concerns.
+> 
+Agreed
+Neil
 
-This is a hell of a lot of complexity.  To get it right we'd need an
-actual formal spec of what firmware is supposed to do and how it
-integrates with the kernel, and we'd need a reason why it's useful.
-
-I'm personally rather strongly in favor of the vastly simpler model in
-which we first merge SGX without LE support at all.  Instead we use
-the approach where we just twiddle the MSRs to launch normal enclaves
-without an init token at all, which is probably considerably faster
-and will remove several thousand lines of code.  If and when a bona
-fide use case for LE support shows up, we can work out the details and
-merge it.
-
-Right now, we're talking about a lot of design considerations, a lot
-of interoperability considerations, and a lot of code to support a use
-case that doesn't clearly exist.
-
---Andy
+> /Jarkko
