@@ -1,81 +1,29 @@
-From: AceLan Kao <acelan.kao@canonical.com>
-Subject: Re: [PATCH v2] platform/x86: intel-vbtn: Add support for dock mode detection
-Date: Mon, 25 Jun 2018 14:25:27 +0800
-Message-ID: <CAFv23Qk_scxPrPMJ6aWhEMqijaS0dJ4LUB73bKfr_UAWqbx3aQ@mail.gmail.com>
-References: <20180625002940.117141-1-delco@chromium.org>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 09/13] x86, sgx: basic
+ routines for enclave page cache
+Date: Mon, 25 Jun 2018 10:36:47 +0300
+Message-ID: <208b7c272ca4a5f01299ec6c89f57b2b00b7866d.camel@linux.intel.com>
+References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
+         <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
+         <78982a32-c589-48e2-9a83-fd36903b5588@fortanix.com>
+         <CALCETrXTjjiARJf=pc3mqrot3_VDoQtZM=PJg=fpg=P1x63jyw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180625002940.117141-1-delco@chromium.org>
+In-Reply-To: <CALCETrXTjjiARJf=pc3mqrot3_VDoQtZM=PJg=fpg=P1x63jyw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Delco <delco@chromium.org>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Andy Lutomirski <luto@kernel.org>, Jethro Beekman <jethro@fortanix.com>
+Cc: X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, npmccallum@redhat.com, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, intel-sgx-kernel-dev@lists.01.org, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Looks good to me
+On Mon, 2018-06-18 at 14:33 -0700, Andy Lutomirski wrote:
+> When KVM host support goes in, even this won't be good enough if we
+> want to allow passthrough access to the MSRs because we will no longer
+> be able to guarantee that all zeros is invalid.  Instead we'd need an
+> actual flag saying that the cache is invalid.
 
-Reviewed-By: AceLan Kao <acelan.kao@canonical.com>
+I'm not sure if I understood this part. If it was pass-through, and
+there was a flag, how that flag in the host would get updated?
 
-2018-06-25 8:29 GMT+08:00 Matt Delco <delco@chromium.org>:
-> The Dell laptop I have has an ACPI that sends 0xCB and 0xCC on entering
-> tablet mode.  On exiting tablet mode it sends 0xCA and 0xCD. Based on:
->
-> http://www.traby.de/medion/DSDT/dsdt.dsl
-> https://gist.github.com/jprvita/5737de3cbb670e80973b7d4e51c38ab6
-> https://osdn.net/projects/android-x86/scm/git/kernel/commits/
-> 7cbe5a330687b851f32dd9f1048a6ce182d0ff44
->
-> It appears that 0xCA and 0xCB are about dock mode, which for my
-> convertible laptop seems questionably tied to whether I've put
-> the laptop in tablet or laptop mode.  I previously proposed no-oping
-> 0xCA and 0xCB but this revised change attempts to add support for
-> detecting dock mode--this detection will essentially be broken for
-> my laptop (the main workaround would be for 0xCA and 0xCB to be used
-> to provoke a query of the VGBS method that reports the current dock &
-> tablet mode [which is accurately reported on my laptop but based on
-> the prior workarounds in the driver it apparently can't be trusted
-> for all systems]).
->
-> Signed-off-by: Matt Delco <delco@chromium.org>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/platform/x86/intel-vbtn.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-> index c13780b8dabb..06cd7e818ed5 100644
-> --- a/drivers/platform/x86/intel-vbtn.c
-> +++ b/drivers/platform/x86/intel-vbtn.c
-> @@ -17,6 +17,7 @@
->
->  /* When NOT in tablet mode, VGBS returns with the flag 0x40 */
->  #define TABLET_MODE_FLAG 0x40
-> +#define DOCK_MODE_FLAG   0x80
->
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("AceLan Kao");
-> @@ -38,6 +39,8 @@ static const struct key_entry intel_vbtn_keymap[] = {
->         { KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },        /* volume-down key release */
->         { KE_KEY,    0xC8, { KEY_ROTATE_LOCK_TOGGLE } },        /* rotate-lock key press */
->         { KE_KEY,    0xC9, { KEY_ROTATE_LOCK_TOGGLE } },        /* rotate-lock key release */
-> +       { KE_SW,     0xCA, { .sw = { SW_DOCK, 1 } } },          /* Docked */
-> +       { KE_SW,     0xCB, { .sw = { SW_DOCK, 0 } } },          /* Undocked */
->         { KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } },   /* Tablet */
->         { KE_SW,     0xCD, { .sw = { SW_TABLET_MODE, 0 } } },   /* Laptop */
->         { KE_END },
-> @@ -121,6 +124,8 @@ static void detect_tablet_mode(struct platform_device *device)
->
->         m = !(obj->integer.value & TABLET_MODE_FLAG);
->         input_report_switch(priv->input_dev, SW_TABLET_MODE, m);
-> +       m = (obj->integer.value & DOCK_MODE_FLAG) ? 1 : 0;
-> +       input_report_switch(priv->input_dev, SW_DOCK, m);
->  out:
->         kfree(vgbs_output.pointer);
->  }
-> --
-> 2.18.0.rc2.346.g013aa6912e-goog
->
+/Jarkko
