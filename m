@@ -1,67 +1,68 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v11 08/13] x86, sgx: added ENCLS wrappers
-Date: Mon, 25 Jun 2018 12:16:03 +0300
-Message-ID: <b9c2c1866be84dc96ce1186c5242820f290517e0.camel@linux.intel.com>
+Subject: Re: [PATCH v11 09/13] x86, sgx: basic routines for enclave page
+ cache
+Date: Mon, 25 Jun 2018 12:21:22 +0300
+Message-ID: <b8ea3787ae99637a8aae286ff90ac6889d8b55f4.camel@linux.intel.com>
 References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
-         <20180608171216.26521-9-jarkko.sakkinen@linux.intel.com>
-         <1529500355.9779.51.camel@intel.com>
+         <20180608171216.26521-10-jarkko.sakkinen@linux.intel.com>
+         <1529500871.9779.58.camel@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1529500355.9779.51.camel@intel.com>
+In-Reply-To: <1529500871.9779.58.camel@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sean Christopherson <sean.j.christopherson@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
 Cc: dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 2018-06-20 at 06:12 -0700, Sean Christopherson wrote:
+On Wed, 2018-06-20 at 06:21 -0700, Sean Christopherson wrote:
 > On Fri, 2018-06-08 at 19:09 +0200, Jarkko Sakkinen wrote:
-> > This commit adds wrappers for Intel(R) SGX ENCLS opcode functionality.
+> > SGX has a set of data structures to maintain information about the enclaves
+> > and their security properties. BIOS reserves a fixed size region of
+> > physical memory for these structures by setting Processor Reserved Memory
+> > Range Registers (PRMRR). This memory area is called Enclave Page Cache
+> > (EPC).
+> > 
+> > This commit implements the basic routines to allocate and free pages from
+> > different EPC banks. There is also a swapper thread ksgxswapd for EPC pages
+> > that gets woken up by sgx_alloc_page() when we run below the low watermark.
+> > The swapper thread continues swapping pages up until it reaches the high
+> > watermark.
+> > 
+> > Each subsystem that uses SGX must provide a set of callbacks for EPC
+> > pages that are used to reclaim, block and write an EPC page. Kernel
+> > takes the responsibility of maintaining LRU cache for them.
 > > 
 > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 > > ---
-> >  arch/x86/include/asm/sgx.h | 198 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 198 insertions(+)
-> > 
-> > diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
-> > index fa3e6e0eb8af..a2f727f85b91 100644
-> > --- a/arch/x86/include/asm/sgx.h
-> > +++ b/arch/x86/include/asm/sgx.h
-> > @@ -10,6 +10,10 @@
-> >  #ifndef _ASM_X86_SGX_H
-> >  #define _ASM_X86_SGX_H
-> >  
-> > +#include <asm/sgx_arch.h>
-> > +#include <asm/asm.h>
-> > +#include <linux/bitops.h>
-> > +#include <linux/err.h>
-> >  #include <linux/types.h>
-> >  
-> >  #define SGX_CPUID 0x12
-> > @@ -20,6 +24,200 @@ enum sgx_cpuid {
-> >  	SGX_CPUID_EPC_BANKS	= 2,
-> >  };
-> >  
-> > +enum sgx_commands {
+> >  arch/x86/include/asm/sgx.h      |  67 +++++
+> >  arch/x86/include/asm/sgx_arch.h | 224 ++++++++++++++++
+> >  arch/x86/kernel/cpu/intel_sgx.c | 443 +++++++++++++++++++++++++++++++-
+> >  3 files changed, 732 insertions(+), 2 deletions(-)
+> >  create mode 100644 arch/x86/include/asm/sgx_arch.h
 > 
-> This should be something like "sgx_encls_leafs" and probably moved
-> to sgx_arch.h (as Dave alluded to, these are architectural values).
-> "sgx_commands" is not accurate (they're only the cpl0 "commands")
-> and will have collision issues in the future, e.g. with the ENCLV
-> instruction and its leafs.
+> ...
 > 
-> > +	ECREATE	= 0x0,
-> > +	EADD	= 0x1,
-> > +	EINIT	= 0x2,
-> > +	EREMOVE	= 0x3,
-> > +	EDGBRD	= 0x4,
-> > +	EDGBWR	= 0x5,
-> > +	EEXTEND	= 0x6,
+> > +struct sgx_pcmd {
+> > +	struct sgx_secinfo secinfo;
+> > +	uint64_t enclave_id;
+> > +	uint8_t reserved[40];
+> > +	uint8_t mac[16];
+> > +};
 > 
-> Even though it's not used in the code (yet...), I think ELDB,
-> leaf 0x7, should be defined here for completeness.
+> sgx_pcmd has a 128-byte alignment requirement.  I think it's
+> worth specifying here as sgx_pcmd is small enough that it could
+> be put on the stack, e.g. by KVM when trapping and executing
+> ELD* on behalf of a guest VM.
+> 
+> In fact, it probably makes sense to add alightment attributes
+> to all SGX structs for self-documentation purposes, even though
+> many of them will never be allocated statically or on the stack.
 
-Sure.
+I agree with this. It also documents stuff so that you don't have
+to look it up from the SDM.
+
+Neil: this should also clear your concerns.
 
 /Jarkko
