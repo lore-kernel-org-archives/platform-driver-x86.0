@@ -1,76 +1,44 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: Do Qualcomm drivers use DMA buffers for
- request_firmware_into_buf()?
-Date: Mon, 25 Jun 2018 17:08:08 -0700
-Message-ID: <20180626000808.GE1860@tuxbook-pro>
-References: <20180425175557.GY14440@wotan.suse.de>
- <CAB0TPYGnCu+anWHBGvkaigxD--8uHQaQJ2c62kegJ7mTqvkmnA@mail.gmail.com>
- <20180508153805.GC27853@wotan.suse.de>
- <20180601192346.GQ4511@wotan.suse.de>
- <20180606203257.GH4511@wotan.suse.de>
- <20180607161847.GN510@tuxbook-pro>
- <CAKv+Gu8+Fq7BD4XD-YCyXzZh0mg6Z2k-0styj0cw6_uZfaqy4Q@mail.gmail.com>
- <20180607163308.GA18834@kroah.com>
- <20180607182117.GR510@tuxbook-pro>
- <CAKv+Gu9yfa=dP-5Fzv8-E6O23zPJXJqquTAt6gCqYyt3OowkvA@mail.gmail.com>
+From: Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: Re: [PATCH v4] dcdbas: Add support for WSMT ACPI table
+Date: Mon, 25 Jun 2018 22:12:12 -0500
+Message-ID: <32481fee-df4b-5af2-25f6-4d2dca487fbd@gmail.com>
+References: <45b8bde6-aaa8-3f3f-0528-81e5e931751c@gmail.com>
+ <bc6846e1-2b6d-dcc2-355c-2699aa1607a2@gmail.com>
+ <CAHp75Vdmqm+r=Orxs6_dCr18y+EwEQ=s-7UgaZKHuKbtjMcOig@mail.gmail.com>
+ <20180609010420.GA112645@localhost.localdomain>
+ <CAHp75VcA5ZWahraDP69_hBHuqxw6cng93zAa1op5EBYfuCSPwg@mail.gmail.com>
+ <b59027b3-a48e-f168-5f12-c67758c0c2c7@gmail.com>
+ <3b881313-d96c-0395-05f3-dd612b7e440f@gmail.com>
+ <CAHp75VctDOupi9Vk+njzj3U5G8BthwnaNqE=Y8mOhJLviFkYbA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu9yfa=dP-5Fzv8-E6O23zPJXJqquTAt6gCqYyt3OowkvA@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: linux-efi <linux-efi@vger.kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, Will Deacon <will.deacon@arm.com>, Michal Hocko <mhocko@kernel.org>, David Howells <dhowells@redhat.com>, David Brown <david.brown@linaro.org>, Peter Jones <pjones@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>, linux-security-module <linux-security-module@vger.kernel.org>, Nicolas Broeking <nbroeking@me.com>, Jonathan Corbet <corbet@lwn.net>, the arch/x86 maintainers <x86@kernel.org>, "Luis R. Rodriguez" <mcgrof@kernel.org>, Ingo Molnar <mingo@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Andy Gross <andy.gross@linaro.org>, Darren Hart <dvhart@infradead.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Arend Van Spriel <arend.vanspriel@broadcom.com>, Todd Kjos <tkjos@android.com>, Kees Cook <keescook@chromium.org>, Rik van Riel <riel@surr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VctDOupi9Vk+njzj3U5G8BthwnaNqE=Y8mOhJLviFkYbA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Mario Limonciello <mario_limonciello@dell.com>
+Cc: Darren Hart <dvhart@infradead.org>, Douglas_Warzecha@dell.com, Jared.Dominguez@dell.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu 07 Jun 11:42 PDT 2018, Ard Biesheuvel wrote:
 
-> On 7 June 2018 at 20:21, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
-> > On Thu 07 Jun 09:33 PDT 2018, Greg Kroah-Hartman wrote:
-[..]
-> >>
-> >> Why not just use kmalloc, it will always return a DMAable buffer.
-> >>
-> >
-> > For the buffers being targeted by request_firmware_into_buf() the
-> > problem is that some of them has requirements of physical placement and
-> > they are all too big for kmalloc() (i.e. tens of mb).
-> >
-> >
-> > For the dma_alloc_coherent() buffer that was mentioned earlier, which is
-> > not related to the firmware loading, it's not used because the buffer is
-> > passed to secure world, which temporarily locks Linux out from the
-> > memory region. Traditionally this region was kmalloc'ed downstream, but
-> > due to speculative access violations this code moved to use the DMA
-> > streaming API, although there's no actual DMA going on.
-> >
+
+On 6/14/2018 12:26 PM, Andy Shevchenko wrote:
+> On Thu, Jun 14, 2018 at 6:45 PM, Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
+>>
+>> If the WSMT ACPI table is present and indicates that a fixed communication
+>> buffer should be used, use the firmware-specified buffer instead of
+>> allocating a buffer in memory for communications between the dcdbas driver
+>> and firmare.
 > 
-> OK, so you are relying on the fact that dma_alloc_coherent() gives you
-> a device mapping (because the qcom_scm device is described as non
-> cache coherent), but this sounds risky to me. The linear alias of that
-> memory will still be mapped cacheable, and could potentially still be
-> accessed speculatively AFAIK.
+> Thanks for an update.
+> 
+> I answered to previous thread. The questions / comments are still
+> applicable here.
 > 
 
-Yes and we are aware of the risk of having the linear alias present, but
-have yet to find a suitable way to handle this.
+I answered your questions in the previous thread (a while back).
 
-The proposed mechanism was to use reserved-memory and memremap() the
-region while it should be available in Linux, but while this would work
-for some cases (e.g. memory regions for semi-static firmware executed by
-co-processors) it doesn't handle the scenarios where the memory-need is
-dynamic.
+Please let me know if there are any more concerns with this.  Thanks!
 
-So suggestions are very welcome on how to better handle this.
-
-Regards,
-Bjorn
+ 
