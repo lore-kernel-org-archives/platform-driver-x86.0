@@ -1,102 +1,298 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: Do Qualcomm drivers use DMA buffers for
- request_firmware_into_buf()?
-Date: Thu, 28 Jun 2018 00:21:47 +0200
-Message-ID: <CAKv+Gu-CZpr_tBs_+xz2uGAXcO5k5nKnfeqiD0qtH1AAfgU8+w@mail.gmail.com>
-References: <CAB0TPYGnCu+anWHBGvkaigxD--8uHQaQJ2c62kegJ7mTqvkmnA@mail.gmail.com>
- <20180508153805.GC27853@wotan.suse.de> <20180601192346.GQ4511@wotan.suse.de>
- <20180606203257.GH4511@wotan.suse.de> <20180607161847.GN510@tuxbook-pro>
- <CAKv+Gu8+Fq7BD4XD-YCyXzZh0mg6Z2k-0styj0cw6_uZfaqy4Q@mail.gmail.com>
- <20180607163308.GA18834@kroah.com> <20180607182117.GR510@tuxbook-pro>
- <CAKv+Gu9yfa=dP-5Fzv8-E6O23zPJXJqquTAt6gCqYyt3OowkvA@mail.gmail.com>
- <20180626000808.GE1860@tuxbook-pro> <20180627180059.GA21242@wotan.suse.de>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: intel-hid: Add support for Device
+ Specific Methods
+Date: Wed, 27 Jun 2018 15:27:33 -0700
+Message-ID: <8ced867417ef922fe2872a6aa4ba86d25363fddf.camel@linux.intel.com>
+References: <20180626233454.47340-1-srinivas.pandruvada@linux.intel.com>
+         <CAHp75Vcn22DG0=TPdq+RYTErtaGFMf4POpuZyP9X78+9FrhLyA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180627180059.GA21242@wotan.suse.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: linux-efi <linux-efi@vger.kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, Will Deacon <will.deacon@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Howells <dhowells@redhat.com>, David Brown <david.brown@linaro.org>, Peter Jones <pjones@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>, Nicolas Broeking <nbroeking@me.com>, Jonathan Corbet <corbet@lwn.net>, the arch/x86 maintainers <x86@kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Andy Gross <andy.gross@linaro.org>, Darren Hart <dvhart@infradead.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, platform-driver-x86@vger.kernel.org, Arend Van Spriel <arend.vanspriel@broadcom.com>, Todd Kjos <tkjos@android.com>, Kees Cook <keescook@chromium.org>Rik van Riel <r>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vcn22DG0=TPdq+RYTErtaGFMf4POpuZyP9X78+9FrhLyA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Mario Limonciello <Mario.Limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 27 June 2018 at 20:00, Luis R. Rodriguez <mcgrof@kernel.org> wrote:
-> On Mon, Jun 25, 2018 at 05:08:08PM -0700, Bjorn Andersson wrote:
->> On Thu 07 Jun 11:42 PDT 2018, Ard Biesheuvel wrote:
->>
->> > On 7 June 2018 at 20:21, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
->> > > On Thu 07 Jun 09:33 PDT 2018, Greg Kroah-Hartman wrote:
->> [..]
->> > >>
->> > >> Why not just use kmalloc, it will always return a DMAable buffer.
->> > >>
->> > >
->> > > For the buffers being targeted by request_firmware_into_buf() the
->> > > problem is that some of them has requirements of physical placement and
->> > > they are all too big for kmalloc() (i.e. tens of mb).
->> > >
->> > >
->> > > For the dma_alloc_coherent() buffer that was mentioned earlier, which is
->> > > not related to the firmware loading, it's not used because the buffer is
->> > > passed to secure world, which temporarily locks Linux out from the
->> > > memory region. Traditionally this region was kmalloc'ed downstream, but
->> > > due to speculative access violations this code moved to use the DMA
->> > > streaming API, although there's no actual DMA going on.
->> > >
->> >
->> > OK, so you are relying on the fact that dma_alloc_coherent() gives you
->> > a device mapping (because the qcom_scm device is described as non
->> > cache coherent), but this sounds risky to me. The linear alias of that
->> > memory will still be mapped cacheable, and could potentially still be
->> > accessed speculatively AFAIK.
->> >
->>
->> Yes and we are aware of the risk of having the linear alias present, but
->> have yet to find a suitable way to handle this.
->>
->> The proposed mechanism was to use reserved-memory and memremap() the
->> region while it should be available in Linux,
->
-> That's still IO memory, and so it would be up to the specific device if
-> or not it could access the memory before a full write is done.
->
+On Thu, 2018-06-28 at 01:15 +0300, Andy Shevchenko wrote:
+> On Wed, Jun 27, 2018 at 2:34 AM, Srinivas Pandruvada
+> <srinivas.pandruvada@linux.intel.com> wrote:
+> > In some of the recent platforms, it is possible that stand alone
+> > methods
+> > for HEBC() or other methods used in this driver may not exist. In
+> > this
+> > case intel-hid driver will fail to load and power button will not
+> > be
+> > functional.
+> > 
+> > It is also possible that some quirks in this driver added for some
+> > platforms
+> > may have same issue in loading intel-hid driver.
+> > 
+> > There is an update to the ACPI details for the HID event filter
+> > driver.
+> > In the updated specification a _DSM is added, which has separate
+> > function
+> > indexes for each of the previous stand alone methods.
+> > 
+> > This change brings in support for the _DSM and allows usage of
+> > function
+> > index for corresponding stand alone methods.
+> > 
+> > Details of Device Specific Method:
+> > 
+> > Intel HID Event Filter Driver _DSM UUID:
+> > eeec56b3-4442-408f-a792-4edd4d758054
+> > 
+> > • Function index 0: Returns a buffer with a bit-field representing
+> > the
+> > supported function IDs.
+> > 
+> > Function Index  ASL Object
+> > --------------------------------
+> > 1               BTNL
+> > 2               HDMM
+> > 3               HDSM
+> > 4               HDEM
+> > 5               BTNS
+> > 6               BTNE
+> > 7               HEBC
+> > 8               VGBS
+> > 9               HEBC
+> > 
+> > One significant change is to query the supported methods
+> > implemented on
+> > the platform. So the previous HEBC() has two variants. HEBC v1 and
+> > HEBC v2. The v2 version allowed further define which of the 5-
+> > button
+> > are actually defined by the platform. HEBC v2 support is only
+> > available
+> > via new DSM.
+> > 
+> > v1 Button details:
+> > Bits [0] - Rotation Lock, Num Lock, Home, End, Page Up,
+> > Page Down
+> > Bits [1] - Wireless Radio Control
+> > Bits [2] - System Power Down
+> > Bits [3] - System Hibernate
+> > Bits [4] - System Sleep/ System Wake
+> > Bits [5] - Scan Next Track
+> > Bits [6] - Scan Previous Track
+> > Bits [7] - Stop
+> > Bits [8] - Play/Pause
+> > Bits [9] - Mute
+> > Bits [10] - Volume Increment
+> > Bits [11] - Volume Decrement
+> > Bits [12] - Display Brightness Increment
+> > Bits [13] - Display Brightness Decrement
+> > Bits [14] - Lock Tablet
+> > Bits [15] - Release Tablet
+> > Bits [16] - Toggle Bezel
+> > Bits [17] - 5 button array
+> > Bits [18-31] - reserved
+> > 
+> > v2 Buttom details:
+> > Bits [0] - Rotation Lock, Num Lock, Home, End, Page Up, Page Down
+> > Bits [1] - Wireless Radio Control
+> > Bits [2] - System Power Down
+> > Bits [3] - System Hibernate
+> > Bits [4] - System Sleep/ System Wake
+> > Bits [5] - Scan Next Track
+> > Bits [6] - Scan Previous Track
+> > Bits [7] - Stop
+> > Bits [8] - Play/Pause
+> > Bits [9] - Mute
+> > Bits [10] - Volume Increment
+> > Bits [11] - Volume Decrement
+> > Bits [12] - Display Brightness Increment
+> > Bits [13] - Display Brightness Decrement
+> > Bits [14] - Lock Tablet
+> > Bits [15] - Release Tablet
+> > Bits [16] - Toggle Bezel
+> > Bits [17] - 5 button array
+> > Bits [18] – Power Button
+> > Bits [19] - W Home Button
+> > Bits [20] - Volume Up Button
+> > Bits [21] - Volume Down Button
+> > Bits [22] – Rotation Lock Button
+> > Bits [23-31] – reserved
+> 
+> It's hard to get if they have a common part.
+> If so, perhaps in the latter drop the common part and replace it with
+> 
+> ... same as v1 ...
+> 
+> or alike.
+ I am copying as is from spec, so that they can be matched.
 
-The risk here is about having aliases with mismatched attributes,
-which may result in loss of coherency and corrupt your data. This is
-not about the risk of loading a file with an invalid signature
+> 
+> 
+> > +enum intel_hid_dsm_fn_codes {
+> > +       INTEL_HID_DSM_FN_INVALID,
+> > +       BTNL_FN_CODE,
+> > +       HDMM_FN_CODE,
+> > +       HDSM_FN_CODE,
+> > +       HDEM_FN_CODE,
+> > +       BTNS_FN_CODE,
+> > +       BTNE_FN_CODE,
+> > +       HEBC_V1_FN_CODE,
+> > +       VGBS_FN_CODE,
+> > +       HEBC_V2_FN_CODE,
+> > +       HEBC_MAX_FN_CODES
+> 
+> For sake of consistency I would rather name it
+> INTEL_HID_DSM_FN_MAX
+Makes sense.
 
-And what do you mean by 'IO memory'? Bus masters that are not behind
-an IOMMU can access all of the kernel's memory all of the time,
-regardless of whether and how it chooses to use it. So from a security
-perspective, there is no distinction, and you can only distinguish
-between before and after informing the device where it can find the
-firmware buffer in memory.
+> 
+> > +};
+> > +static bool intel_hid_execute_method(acpi_handle handle,
+> > +                                    enum intel_hid_dsm_fn_codes
+> > fn_index,
+> > +                                    unsigned long long arg)
+> >  {
+> > +       union acpi_object *obj, argv4, req;
+> >         acpi_status status;
+> > +       guid_t dsm_guid;
+> > +       char *method_name;
+> > 
+> > +       if (fn_index <= INTEL_HID_DSM_FN_INVALID ||
+> > +           fn_index >= HEBC_MAX_FN_CODES)
+> > +               return false;
+> > +
+> > +       method_name = (char *)intel_hid_dsm_fn_to_method[fn_index];
+> 
+> Can it be const char * in the first place?
+The array is const char *. But acpi_execute_simple_method expects
+char*.
+So either I can change the array of methods to char * or leave like
+this.
+Since array is not going to change, I prefer that to be const char *.
 
-So given that we are dealing here with other masters that can change
-all of your memory behind your back, including the actual code you are
-running that implements the signature check, I wonder if there is a
-point to obsessing about this use case from a validation point of
-view. The higher privilege level protects itself by doing its own
-signature check, and doing the same at a lower privilege level seems
-redundant to me.
+> 
+> > +
+> > +       if (!(intel_hid_dsm_fn_mask & fn_index))
+> > +               goto skip_dsm_exec;
+> > +
+> > +       guid_parse(HID_EVENT_FILTER_UUID, &dsm_guid);
+> 
+> Perhaps we can cache this in global variable and parse only once at
+> init / probe time?
+OK
 
->> but while this would work
->> for some cases (e.g. memory regions for semi-static firmware executed by
->> co-processors) it doesn't handle the scenarios where the memory-need is
->> dynamic.
->>
->> So suggestions are very welcome on how to better handle this.
->
-> I *believe* Vlastimil's seems to suggest kvmalloc(), but note that if getting the
-> memory to be contiguous fails, it would fallback to a non-contiguous (vmalloc)
-> allocation.
->
->   Luis
+> 
+> > +
+> > +       /* All methods expects a package with one integer element
+> > */
+> > +       req.type = ACPI_TYPE_INTEGER;
+> > +       req.integer.value = arg;
+> > +
+> > +       argv4.type = ACPI_TYPE_PACKAGE;
+> > +       argv4.package.count = 1;
+> > +       argv4.package.elements = &req;
+> > +
+> > +       obj = acpi_evaluate_dsm(handle, &dsm_guid, 1, fn_index,
+> > &argv4);
+> > +       if (obj) {
+> > +               pr_debug("Exec DSM Fn code: %d[%s] success\n",
+> > fn_index,
+> > +                        method_name);
+> 
+> acpi_handle_debug() ?
+OK.
+
+> 
+> > +               ACPI_FREE(obj);
+> > +               return true;
+> > +       }
+> > +
+> > +skip_dsm_exec:
+> > +       status = acpi_execute_simple_method(handle, method_name,
+> > arg);
+> > +       if (ACPI_SUCCESS(status))
+> > +               return true;
+> > +
+> > +       return false;
+> > +}
+> > +
+> > +static bool intel_hid_evaluate_method(acpi_handle handle,
+> > +                                     enum intel_hid_dsm_fn_codes
+> > fn_index,
+> > +                                     unsigned long long *result)
+> > +{
+> 
+> Same comments as per previous function.
+> 
+> > +}
+> > +static void intel_hid_init_dsm(acpi_handle handle)
+> > +{
+> 
+> Ditto.
+> 
+> > +}
+> > +
+> > +static int intel_hid_set_enable(struct device *device, bool
+> > enable)
+> > +{
+> > +
+> > +       /* Enable|disable features - power button is always enabled
+> > */
+> > +       if (!intel_hid_execute_method(ACPI_HANDLE(device),
+> > HDSM_FN_CODE,
+> > +                                     enable)) {
+> 
+> For me the temporary variable looks slightly better.
+> 
+> acpi_handle handle = ACPI_HANDLE(device);
+OK
+
+> 
+> 
+> >                 dev_warn(device, "failed to %sable hotkeys\n",
+> >                          enable ? "en" : "dis");
+> >                 return -EIO;
+> > @@ -129,9 +259,8 @@ static void intel_button_array_enable(struct
+> > device *device, bool enable)
+> >         }
+> > 
+> >         /* Enable|disable features - power button is always enabled
+> > */
+> > -       status = acpi_execute_simple_method(handle, "BTNE",
+> > -                                           enable ? button_cap :
+> > 1);
+> > -       if (ACPI_FAILURE(status))
+> > +       if (!intel_hid_execute_method(handle, BTNE_FN_CODE,
+> > +                                     enable ? button_cap : 1))
+> >                 dev_warn(device, "failed to set button
+> > capability\n");
+> >  }
+> 
+> 
+> >         if (priv->array) {
+> > +               unsigned long long results;
+> > +
+> 
+> Seems it's not used, perhaps call it dummy instead?
+> 
+OK.
+
+> >                 intel_button_array_enable(&device->dev, true);
+> > 
+> >                 /* Call button load method to enable HID power
+> > button */
+> > -               status = acpi_evaluate_object(handle, "BTNL", NULL,
+> > NULL);
+> > -               if (ACPI_FAILURE(status))
+> > +               if (!intel_hid_evaluate_method(handle,
+> > BTNL_FN_CODE,
+> > +                                              &results)) {
+> >                         dev_warn(&device->dev,
+> >                                  "failed to enable HID power
+> > button\n");
+> > +               }
+> >         }
+> 
+> 
+Thanks,
+Srinivas
