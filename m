@@ -1,66 +1,85 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [intel-sgx-kernel-dev] [PATCH v11 13/13] intel_sgx: in-kernel
- launch enclave
-Date: Wed, 27 Jun 2018 18:31:35 +0300
-Message-ID: <2fef21b0fb411015cfb748c3fecaf7575652f500.camel@linux.intel.com>
-References: <20180608171216.26521-14-jarkko.sakkinen@linux.intel.com>
-         <CALCETrW3aZJMMm1GqgPm-cOD3p7JvKxLj7j85KJwfNW2iHTj4A@mail.gmail.com>
-         <CALCETrVp1ZhrxF5bQDSaZpLucS88tErejj5JC6Jb0fB5etWRbA@mail.gmail.com>
-         <20180611115255.GC22164@hmswarspite.think-freely.org>
-         <CALCETrX6SD0ThNzpjkbXd7CbNTguzqiQhWMomGK+tocx_DE9XQ@mail.gmail.com>
-         <20180612174535.GE19168@hmswarspite.think-freely.org>
-         <CALCETrV-4D-M2ap1EFHQiQerYf_XgwLmBAx5WMvcCUefOODjOA@mail.gmail.com>
-         <CAOASepN9t3jF4ajfKLG_odTZddOvXjY_DqLQhRPWhJ-imtjkgg@mail.gmail.com>
-         <e3f8e5b9-aa1e-20da-37ac-3c3caafa66bc@fortanix.com>
-         <b5c81504-83cd-8150-ebe4-41355026590f@fortanix.com>
-         <20180620210158.GA24328@linux.intel.com>
-         <CAOASepN1AtgEhobJUVh=rcsQ_Qt8ujoEhnivV-29y=-AiyJwZQ@mail.gmail.com>
-         <73b7e4e3712074b73f4ac8211699d24dfdced6bf.camel@linux.intel.com>
-         <CALCETrXos3b-VJxLCb1nwP1x2s5jiDmuQDWVahTVdXGxhqqsDw@mail.gmail.com>
-         <689641dc26a91f7b4b6bfdb763fec90bf7c3e984.camel@linux.intel.com>
-         <CAOASepOq52tmDx5ycd6hDhKg9_+beZ0Y8zoVeOBbJu=LX8_2mA@mail.gmail.com>
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+Subject: Re: Do Qualcomm drivers use DMA buffers for
+ request_firmware_into_buf()?
+Date: Wed, 27 Jun 2018 20:00:59 +0200
+Message-ID: <20180627180059.GA21242@wotan.suse.de>
+References: <CAB0TPYGnCu+anWHBGvkaigxD--8uHQaQJ2c62kegJ7mTqvkmnA@mail.gmail.com>
+ <20180508153805.GC27853@wotan.suse.de>
+ <20180601192346.GQ4511@wotan.suse.de>
+ <20180606203257.GH4511@wotan.suse.de>
+ <20180607161847.GN510@tuxbook-pro>
+ <CAKv+Gu8+Fq7BD4XD-YCyXzZh0mg6Z2k-0styj0cw6_uZfaqy4Q@mail.gmail.com>
+ <20180607163308.GA18834@kroah.com>
+ <20180607182117.GR510@tuxbook-pro>
+ <CAKv+Gu9yfa=dP-5Fzv8-E6O23zPJXJqquTAt6gCqYyt3OowkvA@mail.gmail.com>
+ <20180626000808.GE1860@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOASepOq52tmDx5ycd6hDhKg9_+beZ0Y8zoVeOBbJu=LX8_2mA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nathaniel McCallum <npmccallum@redhat.com>
-Cc: luto@kernel.org, sean.j.christopherson@intel.com, jethro@fortanix.com, Neil Horman <nhorman@redhat.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com, intel-sgx-kernel-dev@lists.01.org, hpa@zytor.com, dvhart@infradead.org, tglx@linutronix.de, andy@infradead.org, Peter Jones <pjones@redhat.com>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20180626000808.GE1860@tuxbook-pro>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Vlastimil Babka <vbabka@suse.cz>
+Cc: linux-efi <linux-efi@vger.kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, Will Deacon <will.deacon@arm.com>, Michal Hocko <mhocko@kernel.org>, David Howells <dhowells@redhat.com>, David Brown <david.brown@linaro.org>, Peter Jones <pjones@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>, linux-security-module <linux-security-module@vger.kernel.org>, Nicolas Broeking <nbroeking@me.com>, Jonathan Corbet <corbet@lwn.net>, the arch/x86 maintainers <x86@kernel.org>, "Luis R. Rodriguez" <mcgrof@kernel.org>, Ingo Molnar <mingo@redhat.com>, Andy Gross <andy.gross@linaro.org>, Darren Hart <dvhart@infradead.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Arend Van Spriel <arend.vanspriel@broadcom.com>, Todd Kjos <tkjos@android.com>, Kees Cook <keescook@chromium.org>, Rik van Riel <riel@surriel.com>, linux-arm-msm@vger.kern
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 2018-06-26 at 11:01 -0400, Nathaniel McCallum wrote:
-> On Tue, Jun 26, 2018 at 4:44 AM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> > 
-> > On Mon, 2018-06-25 at 08:45 -0700, Andy Lutomirski wrote:
-> > > I'm personally rather strongly in favor of the vastly simpler model in
-> > > which we first merge SGX without LE support at all.  Instead we use
-> > > the approach where we just twiddle the MSRs to launch normal enclaves
-> > > without an init token at all, which is probably considerably faster
-> > > and will remove several thousand lines of code.  If and when a bona
-> > > fide use case for LE support shows up, we can work out the details and
-> > > merge it.
-> > 
-> > Andy, I was going to propose exactly the same :-)
-> > 
-> > We can upstream SGX that supports only unlocked MSRs and that does
-> > not preventing to upstream support for locked MSRs later. Even if
-> > we had a consensus for locked MSRs, making two milestones for the
-> > mainline would make perfect sense.
-> > 
-> > I came into this conclusion last night because all the other review
-> > comments not concerning the launch control are easily sorted out.
+On Mon, Jun 25, 2018 at 05:08:08PM -0700, Bjorn Andersson wrote:
+> On Thu 07 Jun 11:42 PDT 2018, Ard Biesheuvel wrote:
 > 
-> +1. Let's do this and get it merged without launch enclave support
-> lockdown now. We can revisit this once we have hands on experience
-> with the technology.
+> > On 7 June 2018 at 20:21, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
+> > > On Thu 07 Jun 09:33 PDT 2018, Greg Kroah-Hartman wrote:
+> [..]
+> > >>
+> > >> Why not just use kmalloc, it will always return a DMAable buffer.
+> > >>
+> > >
+> > > For the buffers being targeted by request_firmware_into_buf() the
+> > > problem is that some of them has requirements of physical placement and
+> > > they are all too big for kmalloc() (i.e. tens of mb).
+> > >
+> > >
+> > > For the dma_alloc_coherent() buffer that was mentioned earlier, which is
+> > > not related to the firmware loading, it's not used because the buffer is
+> > > passed to secure world, which temporarily locks Linux out from the
+> > > memory region. Traditionally this region was kmalloc'ed downstream, but
+> > > due to speculative access violations this code moved to use the DMA
+> > > streaming API, although there's no actual DMA going on.
+> > >
+> > 
+> > OK, so you are relying on the fact that dma_alloc_coherent() gives you
+> > a device mapping (because the qcom_scm device is described as non
+> > cache coherent), but this sounds risky to me. The linear alias of that
+> > memory will still be mapped cacheable, and could potentially still be
+> > accessed speculatively AFAIK.
+> > 
+> 
+> Yes and we are aware of the risk of having the linear alias present, but
+> have yet to find a suitable way to handle this.
+> 
+> The proposed mechanism was to use reserved-memory and memremap() the
+> region while it should be available in Linux,
 
-I'm proceeding with this ATM.
+That's still IO memory, and so it would be up to the specific device if
+or not it could access the memory before a full write is done.
 
-I'm going to send v12 next week.
+> but while this would work
+> for some cases (e.g. memory regions for semi-static firmware executed by
+> co-processors) it doesn't handle the scenarios where the memory-need is
+> dynamic.
+> 
+> So suggestions are very welcome on how to better handle this.
 
-I'll do my best to address all of the review comments but expect to miss some
-of them.
+I *believe* Vlastimil's seems to suggest kvmalloc(), but note that if getting the
+memory to be contiguous fails, it would fallback to a non-contiguous (vmalloc)
+allocation.
 
-/Jarkko
+  Luis
