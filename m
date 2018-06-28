@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86: intel-hid: Add support for Device Specific Methods
-Date: Thu, 28 Jun 2018 11:12:41 -0700
-Message-ID: <20180628181241.54728-1-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v2] platform/x86: intel-hid: Add support for Device Specific Methods
+Date: Thu, 28 Jun 2018 11:19:06 -0700
+Message-ID: <20180628181906.54910-1-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -86,6 +86,11 @@ Bits [23-31] – reserved
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
+Accidently sent the patch without change of version, so please ignore
+the previous one sent today.
+v2:
+	Minor changes suggested by Andy
+
  drivers/platform/x86/intel-hid.c | 178 ++++++++++++++++++++++++++++++++++-----
  1 file changed, 157 insertions(+), 21 deletions(-)
 
