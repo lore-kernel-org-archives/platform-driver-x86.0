@@ -1,66 +1,61 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the "Connect Tablet 9" tablet
-Date: Sun,  1 Jul 2018 11:32:56 +0200
-Message-ID: <20180701093256.7043-2-hdegoede@redhat.com>
-References: <20180701093256.7043-1-hdegoede@redhat.com>
+From: Jun Bo Bi <jambonmcyeah@gmail.com>
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add touchscreen platform data for the Onda V820w tablet
+Date: Sun,  1 Jul 2018 17:47:14 -0400
+Message-ID: <20180701214714.2522-1-jambonmcyeah@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180701093256.7043-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: jambonmcyeah@gmail.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, hdegoede@redhat.com, dvhart@infradead.org, andy@infradead.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add touchscreen info for the "Connect Tablet 9" tablet. This appears to be
-a variant of the same hardware as the ITworks TW891 tablet, but it needs
-different firmware for the touchscreen to fonction properly.
+Add touchscreen platform data for the Onda V820w tablet
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jun Bo Bi <jambonmcyeah@gmail.com>
 ---
- drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 8578f9e28ee0..8086e01e069e 100644
+index 6284946cb0d1..a8e083db0369 100644
 --- a/drivers/platform/x86/touchscreen_dmi.c
 +++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -119,6 +119,23 @@ static const struct ts_dmi_data chuwi_vi10_data = {
- 	.properties     = chuwi_vi10_props,
+@@ -204,6 +204,22 @@ static const struct ts_dmi_data onda_obook_20_plus_data = {
+ 	.properties	= onda_obook_20_plus_props,
  };
  
-+static const struct property_entry connect_tablet9_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 9),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 8),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1664),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 878),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++static const struct property_entry onda_v820w_32g_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1665),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
 +	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-connect-tablet9.fw"),
++	PROPERTY_ENTRY_STRING("firmware-name",
++			      "gsl1680-onda-v820w-32g.fw"),
 +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
 +	{ }
 +};
 +
-+static const struct ts_dmi_data connect_tablet9_data = {
-+	.acpi_name      = "MSSL1680:00",
-+	.properties     = connect_tablet9_props,
++static const struct silead_ts_dmi_data onda_v820w_32g_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= onda_v820w_32g_props,
 +};
 +
- static const struct property_entry cube_iwork8_air_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 900),
-@@ -470,6 +487,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "S165"),
+ static const struct property_entry onda_v891w_v1_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 46),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y",  8),
+@@ -470,6 +486,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "OBOOK 20 PLUS"),
  		},
  	},
 +	{
-+		/* Connect Tablet 9 */
-+		.driver_data = (void *)&connect_tablet9_data,
++		/* ONDA V820w DualOS */
++		.driver_data = (void *)&onda_v820w_32g_data,
 +		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Connect"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Tablet 9"),
++			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "ONDA"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "V820w DualOS")
 +		},
 +	},
  	{
- 		/* CUBE iwork8 Air */
- 		.driver_data = (void *)&cube_iwork8_air_data,
+ 		/* ONDA V891w revision P891WBEBV1B00 aka v1 */
+ 		.driver_data = (void *)&onda_v891w_v1_data,
 -- 
-2.17.1
+2.18.0
