@@ -1,54 +1,45 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-smbios-wmi: make function
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86: dell-smbios-wmi: make function
  dell_smbios_wmi_call static
-Date: Mon, 2 Jul 2018 16:15:04 +0300
-Message-ID: <CAHp75Vf8AAnmvdWsUPyRY+13vi43Ta=FiaVEhNwn1+QyN88K0A@mail.gmail.com>
+Date: Mon, 2 Jul 2018 13:33:29 +0000
+Message-ID: <2ebb046f53e047e6aefc78c0f73594dc@ausx13mpc120.AMER.DELL.COM>
 References: <20180630121024.18993-1-colin.king@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180630121024.18993-1-colin.king@canonical.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Colin King <colin.king@canonical.com>
-Cc: Mario Limonciello <mario.limonciello@dell.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, kernel-janitors@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: colin.king@canonical.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Jun 30, 2018 at 3:10 PM, Colin King <colin.king@canonical.com> wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The function dell_smbios_wmi_call is local to the source and does not
-> need to be in global scope, so make it static.
->
-> Cleans up sparse warning:
-> symbol 'dell_smbios_wmi_call' was not declared. Should it be static?
->
-
-Pushed to my review and testing queue, thanks!
-
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/platform/x86/dell-smbios-wmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
-> index fbefedb1c172..88afe5651d24 100644
-> --- a/drivers/platform/x86/dell-smbios-wmi.c
-> +++ b/drivers/platform/x86/dell-smbios-wmi.c
-> @@ -82,7 +82,7 @@ static int run_smbios_call(struct wmi_device *wdev)
->         return 0;
->  }
->
-> -int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
-> +static int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
->  {
->         struct wmi_smbios_priv *priv;
->         size_t difference;
-> --
-> 2.17.1
->
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ29saW4gS2luZyBbbWFp
+bHRvOmNvbGluLmtpbmdAY2Fub25pY2FsLmNvbV0NCj4gU2VudDogU2F0dXJkYXksIEp1bmUgMzAs
+IDIwMTggNzoxMCBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvOyBEYXJyZW4gSGFydDsgQW5k
+eSBTaGV2Y2hlbmtvOyBwbGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmcNCj4g
+Q2M6IGtlcm5lbC1qYW5pdG9yc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmcNCj4gU3ViamVjdDogW1BBVENIXSBwbGF0Zm9ybS94ODY6IGRlbGwtc21iaW9zLXdt
+aTogbWFrZSBmdW5jdGlvbg0KPiBkZWxsX3NtYmlvc193bWlfY2FsbCBzdGF0aWMNCj4gDQo+IEZy
+b206IENvbGluIElhbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQo+IA0KPiBUaGUg
+ZnVuY3Rpb24gZGVsbF9zbWJpb3Nfd21pX2NhbGwgaXMgbG9jYWwgdG8gdGhlIHNvdXJjZSBhbmQg
+ZG9lcyBub3QNCj4gbmVlZCB0byBiZSBpbiBnbG9iYWwgc2NvcGUsIHNvIG1ha2UgaXQgc3RhdGlj
+Lg0KPiANCj4gQ2xlYW5zIHVwIHNwYXJzZSB3YXJuaW5nOg0KPiBzeW1ib2wgJ2RlbGxfc21iaW9z
+X3dtaV9jYWxsJyB3YXMgbm90IGRlY2xhcmVkLiBTaG91bGQgaXQgYmUgc3RhdGljPw0KPiANCj4g
+U2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4N
+Cg0KU2FtZSB2YWluIGFzIHRoZSBvdGhlciBvbmUgb2YgdGhlc2UsIG1ha2VzIHNlbnNlIHRvIG1l
+Lg0KDQpBY2tlZC1ieTogTWFyaW8gTGltb25jaWVsbG8gPG1hcmlvLmxpbW9uY2llbGxvQGRlbGwu
+Y29tPg0KDQo+IC0tLQ0KPiAgZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1zbWJpb3Mtd21pLmMg
+fCAyICstDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkN
+Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXNtYmlvcy13bWku
+YyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtDQo+IHNtYmlvcy13bWkuYw0KPiBpbmRleCBm
+YmVmZWRiMWMxNzIuLjg4YWZlNTY1MWQyNCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9y
+bS94ODYvZGVsbC1zbWJpb3Mtd21pLmMNCj4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVs
+bC1zbWJpb3Mtd21pLmMNCj4gQEAgLTgyLDcgKzgyLDcgQEAgc3RhdGljIGludCBydW5fc21iaW9z
+X2NhbGwoc3RydWN0IHdtaV9kZXZpY2UgKndkZXYpDQo+ICAJcmV0dXJuIDA7DQo+ICB9DQo+IA0K
+PiAtaW50IGRlbGxfc21iaW9zX3dtaV9jYWxsKHN0cnVjdCBjYWxsaW5nX2ludGVyZmFjZV9idWZm
+ZXIgKmJ1ZmZlcikNCj4gK3N0YXRpYyBpbnQgZGVsbF9zbWJpb3Nfd21pX2NhbGwoc3RydWN0IGNh
+bGxpbmdfaW50ZXJmYWNlX2J1ZmZlciAqYnVmZmVyKQ0KPiAgew0KPiAgCXN0cnVjdCB3bWlfc21i
+aW9zX3ByaXYgKnByaXY7DQo+ICAJc2l6ZV90IGRpZmZlcmVuY2U7DQo+IC0tDQo+IDIuMTcuMQ0K
+DQo=
