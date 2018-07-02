@@ -1,83 +1,71 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v3] dcdbas: Add support for WSMT ACPI table
-Date: Mon, 2 Jul 2018 14:07:00 +0000
-Message-ID: <e17fbb51b98d45318001adb7eb6a51b2@ausx13mpc120.AMER.DELL.COM>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3] dcdbas: Add support for WSMT ACPI table
+Date: Mon, 2 Jul 2018 18:21:39 +0300
+Message-ID: <CAHp75VfNo9NVfgGn4Fqa5fA9zp47TkqHwn1MJ044qMQoMNMB-Q@mail.gmail.com>
 References: <45b8bde6-aaa8-3f3f-0528-81e5e931751c@gmail.com>
- <bc6846e1-2b6d-dcc2-355c-2699aa1607a2@gmail.com>
- <CAHp75Vdmqm+r=Orxs6_dCr18y+EwEQ=s-7UgaZKHuKbtjMcOig@mail.gmail.com>
- <20180609010420.GA112645@localhost.localdomain>
- <CAHp75VcA5ZWahraDP69_hBHuqxw6cng93zAa1op5EBYfuCSPwg@mail.gmail.com>
- <b59027b3-a48e-f168-5f12-c67758c0c2c7@gmail.com>
- <CAHp75VcK78jL_7sF+ZGaPpwDED-6Xd+SdH_5WCfSBsVJW2GnDg@mail.gmail.com>
- <8307f1e0-c480-3f78-9327-e248208e5349@gmail.com>
- <CAHp75VdTGXqE__VHjRphEmpMVfxaVVik=u-_0NRhQAKeq=+ZKA@mail.gmail.com>
- <b5652ed8-5fff-4f8b-ec0f-467bce853bf8@gmail.com>
- <CAHp75VfL3v8U6o36-e3+XPL53sb9wMUOXsL6gn3XE4=-kJjuKQ@mail.gmail.com>
- <367a12e9-7d10-98e4-4791-69cdc7d01129@gmail.com>
- <CAHp75VdSVLzNHnrOzzrBMf4X2Cg4QACRrnxKNkQzcYJ0h5W+tw@mail.gmail.com>
+ <bc6846e1-2b6d-dcc2-355c-2699aa1607a2@gmail.com> <CAHp75Vdmqm+r=Orxs6_dCr18y+EwEQ=s-7UgaZKHuKbtjMcOig@mail.gmail.com>
+ <20180609010420.GA112645@localhost.localdomain> <CAHp75VcA5ZWahraDP69_hBHuqxw6cng93zAa1op5EBYfuCSPwg@mail.gmail.com>
+ <b59027b3-a48e-f168-5f12-c67758c0c2c7@gmail.com> <CAHp75VcK78jL_7sF+ZGaPpwDED-6Xd+SdH_5WCfSBsVJW2GnDg@mail.gmail.com>
+ <8307f1e0-c480-3f78-9327-e248208e5349@gmail.com> <CAHp75VdTGXqE__VHjRphEmpMVfxaVVik=u-_0NRhQAKeq=+ZKA@mail.gmail.com>
+ <b5652ed8-5fff-4f8b-ec0f-467bce853bf8@gmail.com> <CAHp75VfL3v8U6o36-e3+XPL53sb9wMUOXsL6gn3XE4=-kJjuKQ@mail.gmail.com>
+ <367a12e9-7d10-98e4-4791-69cdc7d01129@gmail.com> <CAHp75VdSVLzNHnrOzzrBMf4X2Cg4QACRrnxKNkQzcYJ0h5W+tw@mail.gmail.com>
+ <e17fbb51b98d45318001adb7eb6a51b2@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdSVLzNHnrOzzrBMf4X2Cg4QACRrnxKNkQzcYJ0h5W+tw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <e17fbb51b98d45318001adb7eb6a51b2@ausx13mpc120.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.shevchenko@gmail.com, stuart.w.hayes@gmail.com
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: Stuart Hayes <stuart.w.hayes@gmail.com>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
-aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBGcmlkYXksIEp1bmUgMjks
-IDIwMTggMjozMCBQTQ0KPiBUbzogU3R1YXJ0IEhheWVzDQo+IENjOiBEYXJyZW4gSGFydDsgTGlt
-b25jaWVsbG8sIE1hcmlvOyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0OyBQbGF0Zm9ybSBEcml2
-ZXINCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2M10gZGNkYmFzOiBBZGQgc3VwcG9ydCBmb3IgV1NN
-VCBBQ1BJIHRhYmxlDQo+IA0KPiBPbiBGcmksIEp1biAyOSwgMjAxOCBhdCA5OjU2IFBNLCBTdHVh
-cnQgSGF5ZXMgPHN0dWFydC53LmhheWVzQGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4gT24gMDYvMjcv
-MjAxOCAwNjo1MiBQTSwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiA+PiBPbiBGcmksIEp1biAx
-NSwgMjAxOCBhdCAxOjMxIEFNLCBTdHVhcnQgSGF5ZXMgPHN0dWFydC53LmhheWVzQGdtYWlsLmNv
-bT4NCj4gd3JvdGU6DQo+ID4+PiBPbiA2LzE0LzIwMTggMTI6MjUgUE0sIEFuZHkgU2hldmNoZW5r
-byB3cm90ZToNCj4gPj4+PiBPbiBUaHUsIEp1biAxNCwgMjAxOCBhdCA1OjIyIFBNLCBTdHVhcnQg
-SGF5ZXMgPHN0dWFydC53LmhheWVzQGdtYWlsLmNvbT4NCj4gd3JvdGU6DQo+ID4+Pj4+IE9uIDYv
-MTMvMjAxOCAzOjU0IEFNLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6DQo+IA0KPiA+Pj4+IFRoYW5r
-cywgYnV0IGhlcmUgSSBtZWFudCArPSAxIHZzICs9IDE2IHN0ZXAuDQo+IA0KPiA+IEkgZGlkIHJl
-YWxpemUgdGhhdCB0aGUgZGVidWcgY29kZSB0aGF0IHByaW50ZWQgdGhlIGFkZHJlc3Mgb2YgdGhl
-IEVQUyB0YWJsZSB3YXMgbm90DQo+ID4gd29ya2luZyByaWdodCwgYW5kIHRoZSB0YWJsZSBvbiBt
-eSBzeXN0ZW0gaXMgYWN0dWFsbHkgMTYtYnl0ZSBhbGlnbmVkLiAgSG93ZXZlciwNCj4gPiB0aGUg
-ZG9jdW1lbnRhdGlvbiBvbiB0aGUgRVBTIGRvZXMgbm90IHNwZWNpZnkgdGhhdCBpdCB3aWxsIGJl
-IDE2LWJ5dGUgYWxpZ25lZCwgc28gSQ0KPiA+IGRvbid0IHRoaW5rIHRoZSBkcml2ZXIgc2hvdWxk
-IG1ha2UgdGhhdCBhc3N1bXB0aW9uLCBlc3BlY2lhbGx5IHNpbmNlIHNjYW5uaW5nIGENCj4gNjRL
-DQo+ID4gcmVnaW9uIGJ5dGUgYnkgYnl0ZSBzaG91bGQgdGFrZSB2ZXJ5IGxpdHRsZSBleHRyYSB0
-aW1lIG92ZXIgc2Nhbm5pbmcgZXZlcnkgMTZ0aA0KPiBieXRlLg0KPiANCj4gPiBJIGd1ZXNzIHRo
-aXMgaXNuJ3QgbmVlZGVkIHNpbmNlIHRoZSB0YWJsZSBvbiBteSBzeXN0ZW0gYWN0dWFsbHkgaXMg
-MTYtYnl0ZSBhbGlnbmVkLg0KPiANCj4gSSB0aGluayB0aGUgMTYgYnl0ZSBpcyBhIG5hdHVyYWwg
-YWxpZ25tZW50IGFwcGxpY2FibGUgdG8gYWxsIHRhYmxlcyBsaWtlIGEgc3VjaC4NCj4gSSB3b3Vs
-ZCByYXRoZXIgZ28gd2l0aCBpdCB1bnRpbCB3ZSB3aWxsIGdldCBhICh3ZWlyZCkgQklPUyB3aGlj
-aCBkb2VzDQo+IG5vdCBzdXBwb3J0IHRoYXQuDQo+IA0KPiAoSSBiZWxpZXZlIHRoaXMgYWxpZ25t
-ZW50IGp1c3QgY29tZXMgYnkgZGVmaW5pdGlvbiBvZiBDIEFCSXMgZm9yIHRoZQ0KPiBzdHJ1Y3R1
-cmVzIC8gdHlwZXMuIFNvLCBlYWNoIGRlZmluZWQgdHlwZSBpcyBsb2NhdGVkIG9uIGFuIGFsaWdu
-ZWQNCj4gYm91bmRhcmllcykNCj4gDQo+ID4+PiBbIDQ2ODAuMTk0MDEyXSBkY2RiYXMgZGNkYmFz
-OiBXU01UIGZvdW5kLCB1c2luZyBmaXJtd2FyZS1wcm92aWRlZCBTTUkNCj4gYnVmZmVyLg0KPiA+
-Pj4gWyA0NjgwLjE5NTMyN10gZGNkYmFzIGRjZGJhczogRGVsbCBTeXN0ZW1zIE1hbmFnZW1lbnQg
-QmFzZSBEcml2ZXIgKHZlcnNpb24NCj4gNS42LjAtMy4zKQ0KPiA+Pg0KPiA+PiBPSywgbm93IHRo
-ZSBtb3N0IGltcG9ydGFudCBxdWVzdGlvbiwgZGlkIHlvdSBpbnZlc3RpZ2F0ZSAiU01NDQo+ID4+
-IENvbW11bmljYXRpb24gQUNQSSBUYWJsZSI/DQo+ID4+IENhbiB5b3UgdXRpbGl6ZSBpbmZvcm1h
-dGlvbiBpbiBpdD8NCj4gDQo+ID4gRGVsbCBCSU9TIGRvZXMgbm90IHByb3ZpZGUgYSAiU01NIENv
-bW11bmljYXRpb24gQUNQSSBUYWJsZSIsIGp1c3QgdGhlIEVQUy4gIEl0DQo+IGFwcGVhcnMNCj4g
-PiB0aGF0IHRoZSAiU01NIENvbW11bmljYXRpb24gQUNQSSBUYWJsZSIgaXMgZGVwcmVjYXRlZCBp
-biB0aGUgVUVGSSAyLjcgc3BlYy4NCj4gQWxzbywgdGhlDQo+ID4gZGNkYmFzIGRyaXZlciBpcyBm
-b3IgRGVsbCBzeXN0ZW1zIG9ubHkuDQo+IA0KPiA+IFRoZSBFUFMgdGFibGUgaXNuJ3QgYW4gQUNQ
-SSB0YWJsZSwNCj4gPiBpdCdzIGp1c3QgYSBEZWxsLWRlZmluZWQgdGFibGUuDQo+IA0KPiBIbW0u
-Li4gSXQncyBlaXRoZXIgc3RyYW5nZSBvciBoYXMgc29tZSBiYWNrZ3JvdW5kIHdoeSBpcyBzby4N
-Cj4gT0sgaXQgaGFzIGEgbm90ZSB0aGF0IHRoZXJlIGlzIG5vIHVzZSBjYXNlLCBidXQgaGVyZSBp
-dCBpcyENCj4gDQo+IE1hcmlvLCBjYW4gd2UgY29uc2lkZXIgdGhpcyBhcyBhIEJJT1MgYnVnIHdo
-aWNoIGRvZXNuJ3QgcHJvdmlkZSBTTU0NCj4gQ29tbXVuaWNhdGlvbiBBQ1BJIHRhYmxlPw0KPiAN
-Cj4gQ2FuIGl0IGJlIGVzY2FsYXRlZCBvbiBVRUZJIGNvbW1pdHRlZT8NCj4gDQoNCkkgZG9uJ3Qg
-YmVsaWV2ZSBTTU0gY29tbXVuaWNhdGlvbiBBQ1BJIHRhYmxlIGhhcyBldmVyIGJlZW4gaW1wbGVt
-ZW50ZWQgYnkgRGVsbA0Kb24gc2VydmVyIG9yIGNsaWVudCBCSU9TLiAgSSBkbyBhZ3JlZSB0aGlz
-IHRhYmxlIGRlc2NyaWJlcyB0aGUgYmVoYXZpb3IgdGhhdCBEQ0RCQVMgZHJpdmVyDQpoYXMgdXNl
-ZCBzaW5jZSBiZWZvcmUgZXZlbiBVRUZJIEJJT1MgcHJldHR5IGFjY3VyYXRlbHkuDQoNClN0dWFy
-dCBhbmQgSSBkaWQgZGlzY3VzcyB3aXRoIHNlcnZlciBCSU9TICh3aG8gdXNlcyB0aGlzIEVQUyBt
-ZWNoYW5pc20pIHRvIHNlZSBpZiBpdHMgcG9zc2libGUNCnRvIG1vdmUgRVBTIHRvIFNNTSBjb21t
-dW5pY2F0aW9uIEFDUEkgdGFibGUgaG93ZXZlciBzaW5jZSBpdCdzIGJlZW4gZGVwcmVjYXRlZCBi
-eQ0KVUVGSSAyLjcgdGhleSB3ZXJlbid0IHdpbGxpbmcgdG8gYWRvcHQgaXQuDQoNClN0dWFydCwg
-YW55dGhpbmcgZWxzZSB5b3Ugd2FudCB0byBhZGQgaGVyZT8NCg0K
+On Mon, Jul 2, 2018 at 5:07 PM,  <Mario.Limonciello@dell.com> wrote:
+
+>> >> OK, now the most important question, did you investigate "SMM
+>> >> Communication ACPI Table"?
+>> >> Can you utilize information in it?
+>>
+>> > Dell BIOS does not provide a "SMM Communication ACPI Table", just the EPS.  It
+>> appears
+>> > that the "SMM Communication ACPI Table" is deprecated in the UEFI 2.7 spec.
+>> Also, the
+>> > dcdbas driver is for Dell systems only.
+>>
+>> > The EPS table isn't an ACPI table,
+>> > it's just a Dell-defined table.
+>>
+>> Hmm... It's either strange or has some background why is so.
+>> OK it has a note that there is no use case, but here it is!
+>>
+>> Mario, can we consider this as a BIOS bug which doesn't provide SMM
+>> Communication ACPI table?
+>>
+>> Can it be escalated on UEFI committee?
+
+> I don't believe SMM communication ACPI table has ever been implemented by Dell
+> on server or client BIOS.  I do agree this table describes the behavior that DCDBAS driver
+> has used since before even UEFI BIOS pretty accurately.
+
+So, EPS table has been for ages in Dell machines?
+Can we consider it as a predecessor of that SMM communication ACPI table?
+
+> Stuart and I did discuss with server BIOS (who uses this EPS mechanism) to see if its possible
+> to move EPS to SMM communication ACPI table however since it's been deprecated by
+> UEFI 2.7 they weren't willing to adopt it.
+
+It's pity, but the motivation to deprecate is "lack of use" which is
+not true. That's why I would suggest to escalate this to UEFI
+committee.
+
+> Stuart, anything else you want to add here?
+
+Darren, what's your opinion about this?
+
+P.S. I'm not against this approach (just some technical comments I
+already shared), but on the other hand it would be nice to have undo
+that deprecation and follow the standard in new firmwares.
+Would you agree?
+
+-- 
+With Best Regards,
+Andy Shevchenko
