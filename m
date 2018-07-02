@@ -1,64 +1,83 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: intel-hid: Add support for Device
- Specific Methods
-Date: Mon, 2 Jul 2018 17:06:14 +0300
-Message-ID: <CAHp75VerxQrPwHTU9PF_q_8xkRm7=cBTPf2tb_5xPEoBQKcL8A@mail.gmail.com>
-References: <20180628181906.54910-1-srinivas.pandruvada@linux.intel.com>
- <74ac9bf130074e0a8f86a7904783d091@ausx13mpc120.AMER.DELL.COM>
- <95b3748fcb911c7305bd2bbcfd4e368f044f8b14.camel@linux.intel.com>
- <CAHp75VdX+i_N_GttiL3QZrpivpUeJa0ofGfeJR1FkfuiBWocqA@mail.gmail.com> <cc4bc804434a40d9bdd2fa03bbb875aa@ausx13mpc120.AMER.DELL.COM>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v3] dcdbas: Add support for WSMT ACPI table
+Date: Mon, 2 Jul 2018 14:07:00 +0000
+Message-ID: <e17fbb51b98d45318001adb7eb6a51b2@ausx13mpc120.AMER.DELL.COM>
+References: <45b8bde6-aaa8-3f3f-0528-81e5e931751c@gmail.com>
+ <bc6846e1-2b6d-dcc2-355c-2699aa1607a2@gmail.com>
+ <CAHp75Vdmqm+r=Orxs6_dCr18y+EwEQ=s-7UgaZKHuKbtjMcOig@mail.gmail.com>
+ <20180609010420.GA112645@localhost.localdomain>
+ <CAHp75VcA5ZWahraDP69_hBHuqxw6cng93zAa1op5EBYfuCSPwg@mail.gmail.com>
+ <b59027b3-a48e-f168-5f12-c67758c0c2c7@gmail.com>
+ <CAHp75VcK78jL_7sF+ZGaPpwDED-6Xd+SdH_5WCfSBsVJW2GnDg@mail.gmail.com>
+ <8307f1e0-c480-3f78-9327-e248208e5349@gmail.com>
+ <CAHp75VdTGXqE__VHjRphEmpMVfxaVVik=u-_0NRhQAKeq=+ZKA@mail.gmail.com>
+ <b5652ed8-5fff-4f8b-ec0f-467bce853bf8@gmail.com>
+ <CAHp75VfL3v8U6o36-e3+XPL53sb9wMUOXsL6gn3XE4=-kJjuKQ@mail.gmail.com>
+ <367a12e9-7d10-98e4-4791-69cdc7d01129@gmail.com>
+ <CAHp75VdSVLzNHnrOzzrBMf4X2Cg4QACRrnxKNkQzcYJ0h5W+tw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cc4bc804434a40d9bdd2fa03bbb875aa@ausx13mpc120.AMER.DELL.COM>
+In-Reply-To: <CAHp75VdSVLzNHnrOzzrBMf4X2Cg4QACRrnxKNkQzcYJ0h5W+tw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: andy.shevchenko@gmail.com, stuart.w.hayes@gmail.com
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jul 2, 2018 at 4:51 PM,  <Mario.Limonciello@dell.com> wrote:
-
->> > So there are some customers who will have issue with power button
->> > without this patch, so it should be also marked for stable also.
->> > Also this may be a candidate for 4.18-rcX.
->> >
->>
->> I'm not sure Greg will take this selling point for rather big patch.
->> From changelog, honestly, I don't see any regression description,
->> looks like "it wasn't working before change anyway".
->>
->
-> Just for adding some context.
->
-> Some platforms have moved to different interface in ASL in FW upgrade
-> due to deficiencies/bugs present with old interface.  So yes it's platform FW
-> change in behavior that leads to Linux kernel regression.  Windows driver has supported
-> both interfaces for a long time.  Linux kernel however doesn't support this interface until now.
->
->> For now, I pushed this to my review and testing queue as is, thanks!
->
-> If not stable I think it would at least be ideal to try to bring this to 4.18-rcX if possible for
-> compatibility with more platforms that will come with this other interface instead.
-
-Citing Linus:
-
---- 8< --- 8< ---
-So please, people, the "fixes" during the rc series really should be
-things that are _regressions_. If it used to work, and it no longer does,
-then fixing that is a good and proper fix. Or if something oopses or has a
-security implication, then the fix for that is a real fix.
-
-But if it's something that has never worked, even if it "fixes" some
-behavior, then it's new development, and that should come in during the
-merge window. Just because you think it's a "fix" doesn't mean that it
-really is one, at least in the "during the rc series" sense.
---- 8< --- 8< ---
-
-So, if we can sell him that it used to work and firmware fix is a
-Linux regression I'm fine.
-
-Darren, what do you think?
-
--- 
-With Best Regards,
-Andy Shevchenko
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gW21h
+aWx0bzphbmR5LnNoZXZjaGVua29AZ21haWwuY29tXQ0KPiBTZW50OiBGcmlkYXksIEp1bmUgMjks
+IDIwMTggMjozMCBQTQ0KPiBUbzogU3R1YXJ0IEhheWVzDQo+IENjOiBEYXJyZW4gSGFydDsgTGlt
+b25jaWVsbG8sIE1hcmlvOyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0OyBQbGF0Zm9ybSBEcml2
+ZXINCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2M10gZGNkYmFzOiBBZGQgc3VwcG9ydCBmb3IgV1NN
+VCBBQ1BJIHRhYmxlDQo+IA0KPiBPbiBGcmksIEp1biAyOSwgMjAxOCBhdCA5OjU2IFBNLCBTdHVh
+cnQgSGF5ZXMgPHN0dWFydC53LmhheWVzQGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4gT24gMDYvMjcv
+MjAxOCAwNjo1MiBQTSwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiA+PiBPbiBGcmksIEp1biAx
+NSwgMjAxOCBhdCAxOjMxIEFNLCBTdHVhcnQgSGF5ZXMgPHN0dWFydC53LmhheWVzQGdtYWlsLmNv
+bT4NCj4gd3JvdGU6DQo+ID4+PiBPbiA2LzE0LzIwMTggMTI6MjUgUE0sIEFuZHkgU2hldmNoZW5r
+byB3cm90ZToNCj4gPj4+PiBPbiBUaHUsIEp1biAxNCwgMjAxOCBhdCA1OjIyIFBNLCBTdHVhcnQg
+SGF5ZXMgPHN0dWFydC53LmhheWVzQGdtYWlsLmNvbT4NCj4gd3JvdGU6DQo+ID4+Pj4+IE9uIDYv
+MTMvMjAxOCAzOjU0IEFNLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6DQo+IA0KPiA+Pj4+IFRoYW5r
+cywgYnV0IGhlcmUgSSBtZWFudCArPSAxIHZzICs9IDE2IHN0ZXAuDQo+IA0KPiA+IEkgZGlkIHJl
+YWxpemUgdGhhdCB0aGUgZGVidWcgY29kZSB0aGF0IHByaW50ZWQgdGhlIGFkZHJlc3Mgb2YgdGhl
+IEVQUyB0YWJsZSB3YXMgbm90DQo+ID4gd29ya2luZyByaWdodCwgYW5kIHRoZSB0YWJsZSBvbiBt
+eSBzeXN0ZW0gaXMgYWN0dWFsbHkgMTYtYnl0ZSBhbGlnbmVkLiAgSG93ZXZlciwNCj4gPiB0aGUg
+ZG9jdW1lbnRhdGlvbiBvbiB0aGUgRVBTIGRvZXMgbm90IHNwZWNpZnkgdGhhdCBpdCB3aWxsIGJl
+IDE2LWJ5dGUgYWxpZ25lZCwgc28gSQ0KPiA+IGRvbid0IHRoaW5rIHRoZSBkcml2ZXIgc2hvdWxk
+IG1ha2UgdGhhdCBhc3N1bXB0aW9uLCBlc3BlY2lhbGx5IHNpbmNlIHNjYW5uaW5nIGENCj4gNjRL
+DQo+ID4gcmVnaW9uIGJ5dGUgYnkgYnl0ZSBzaG91bGQgdGFrZSB2ZXJ5IGxpdHRsZSBleHRyYSB0
+aW1lIG92ZXIgc2Nhbm5pbmcgZXZlcnkgMTZ0aA0KPiBieXRlLg0KPiANCj4gPiBJIGd1ZXNzIHRo
+aXMgaXNuJ3QgbmVlZGVkIHNpbmNlIHRoZSB0YWJsZSBvbiBteSBzeXN0ZW0gYWN0dWFsbHkgaXMg
+MTYtYnl0ZSBhbGlnbmVkLg0KPiANCj4gSSB0aGluayB0aGUgMTYgYnl0ZSBpcyBhIG5hdHVyYWwg
+YWxpZ25tZW50IGFwcGxpY2FibGUgdG8gYWxsIHRhYmxlcyBsaWtlIGEgc3VjaC4NCj4gSSB3b3Vs
+ZCByYXRoZXIgZ28gd2l0aCBpdCB1bnRpbCB3ZSB3aWxsIGdldCBhICh3ZWlyZCkgQklPUyB3aGlj
+aCBkb2VzDQo+IG5vdCBzdXBwb3J0IHRoYXQuDQo+IA0KPiAoSSBiZWxpZXZlIHRoaXMgYWxpZ25t
+ZW50IGp1c3QgY29tZXMgYnkgZGVmaW5pdGlvbiBvZiBDIEFCSXMgZm9yIHRoZQ0KPiBzdHJ1Y3R1
+cmVzIC8gdHlwZXMuIFNvLCBlYWNoIGRlZmluZWQgdHlwZSBpcyBsb2NhdGVkIG9uIGFuIGFsaWdu
+ZWQNCj4gYm91bmRhcmllcykNCj4gDQo+ID4+PiBbIDQ2ODAuMTk0MDEyXSBkY2RiYXMgZGNkYmFz
+OiBXU01UIGZvdW5kLCB1c2luZyBmaXJtd2FyZS1wcm92aWRlZCBTTUkNCj4gYnVmZmVyLg0KPiA+
+Pj4gWyA0NjgwLjE5NTMyN10gZGNkYmFzIGRjZGJhczogRGVsbCBTeXN0ZW1zIE1hbmFnZW1lbnQg
+QmFzZSBEcml2ZXIgKHZlcnNpb24NCj4gNS42LjAtMy4zKQ0KPiA+Pg0KPiA+PiBPSywgbm93IHRo
+ZSBtb3N0IGltcG9ydGFudCBxdWVzdGlvbiwgZGlkIHlvdSBpbnZlc3RpZ2F0ZSAiU01NDQo+ID4+
+IENvbW11bmljYXRpb24gQUNQSSBUYWJsZSI/DQo+ID4+IENhbiB5b3UgdXRpbGl6ZSBpbmZvcm1h
+dGlvbiBpbiBpdD8NCj4gDQo+ID4gRGVsbCBCSU9TIGRvZXMgbm90IHByb3ZpZGUgYSAiU01NIENv
+bW11bmljYXRpb24gQUNQSSBUYWJsZSIsIGp1c3QgdGhlIEVQUy4gIEl0DQo+IGFwcGVhcnMNCj4g
+PiB0aGF0IHRoZSAiU01NIENvbW11bmljYXRpb24gQUNQSSBUYWJsZSIgaXMgZGVwcmVjYXRlZCBp
+biB0aGUgVUVGSSAyLjcgc3BlYy4NCj4gQWxzbywgdGhlDQo+ID4gZGNkYmFzIGRyaXZlciBpcyBm
+b3IgRGVsbCBzeXN0ZW1zIG9ubHkuDQo+IA0KPiA+IFRoZSBFUFMgdGFibGUgaXNuJ3QgYW4gQUNQ
+SSB0YWJsZSwNCj4gPiBpdCdzIGp1c3QgYSBEZWxsLWRlZmluZWQgdGFibGUuDQo+IA0KPiBIbW0u
+Li4gSXQncyBlaXRoZXIgc3RyYW5nZSBvciBoYXMgc29tZSBiYWNrZ3JvdW5kIHdoeSBpcyBzby4N
+Cj4gT0sgaXQgaGFzIGEgbm90ZSB0aGF0IHRoZXJlIGlzIG5vIHVzZSBjYXNlLCBidXQgaGVyZSBp
+dCBpcyENCj4gDQo+IE1hcmlvLCBjYW4gd2UgY29uc2lkZXIgdGhpcyBhcyBhIEJJT1MgYnVnIHdo
+aWNoIGRvZXNuJ3QgcHJvdmlkZSBTTU0NCj4gQ29tbXVuaWNhdGlvbiBBQ1BJIHRhYmxlPw0KPiAN
+Cj4gQ2FuIGl0IGJlIGVzY2FsYXRlZCBvbiBVRUZJIGNvbW1pdHRlZT8NCj4gDQoNCkkgZG9uJ3Qg
+YmVsaWV2ZSBTTU0gY29tbXVuaWNhdGlvbiBBQ1BJIHRhYmxlIGhhcyBldmVyIGJlZW4gaW1wbGVt
+ZW50ZWQgYnkgRGVsbA0Kb24gc2VydmVyIG9yIGNsaWVudCBCSU9TLiAgSSBkbyBhZ3JlZSB0aGlz
+IHRhYmxlIGRlc2NyaWJlcyB0aGUgYmVoYXZpb3IgdGhhdCBEQ0RCQVMgZHJpdmVyDQpoYXMgdXNl
+ZCBzaW5jZSBiZWZvcmUgZXZlbiBVRUZJIEJJT1MgcHJldHR5IGFjY3VyYXRlbHkuDQoNClN0dWFy
+dCBhbmQgSSBkaWQgZGlzY3VzcyB3aXRoIHNlcnZlciBCSU9TICh3aG8gdXNlcyB0aGlzIEVQUyBt
+ZWNoYW5pc20pIHRvIHNlZSBpZiBpdHMgcG9zc2libGUNCnRvIG1vdmUgRVBTIHRvIFNNTSBjb21t
+dW5pY2F0aW9uIEFDUEkgdGFibGUgaG93ZXZlciBzaW5jZSBpdCdzIGJlZW4gZGVwcmVjYXRlZCBi
+eQ0KVUVGSSAyLjcgdGhleSB3ZXJlbid0IHdpbGxpbmcgdG8gYWRvcHQgaXQuDQoNClN0dWFydCwg
+YW55dGhpbmcgZWxzZSB5b3Ugd2FudCB0byBhZGQgaGVyZT8NCg0K
