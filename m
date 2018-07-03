@@ -1,7 +1,7 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v12 07/13] x86/sgx: data structures for tracking available EPC pages
-Date: Tue,  3 Jul 2018 21:19:52 +0300
-Message-ID: <20180703182118.15024-8-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v12 08/13] x86/sgx: wrappers for ENCLS opcode leaf functions
+Date: Tue,  3 Jul 2018 21:19:53 +0300
+Message-ID: <20180703182118.15024-9-jarkko.sakkinen@linux.intel.com>
 References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com>
@@ -11,240 +11,239 @@ Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, 
         64-BIT" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-SGX has a set of data structures to maintain information about the enclaves
-and their security properties. BIOS reserves a fixed size region of
-physical memory for these structures by setting Processor Reserved Memory
-Range Registers (PRMRR). This memory area is called Enclave Page Cache
-(EPC).
-
-This commit adds a database of EPC banks for kernel to easily access the
-available EPC pages. On UMA architectures there is a singe bank of EPC
-pages. On NUMA architectures there is an EPC bank for each node.
+This commit adds wrappers for Intel(R) SGX ENCLS opcode leaf functions
+except for ENCLS(EINIT). The ENCLS instruction invokes the privileged
+functions for managing (creation, initialization and swapping) and
+debugging enclaves.
 
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Co-developed-by: Serge Ayoun <serge.ayoun@intel.com>
 Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/sgx.h      |  30 +++++++
- arch/x86/kernel/cpu/intel_sgx.c | 146 +++++++++++++++++++++++++++++++-
- 2 files changed, 175 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/sgx.h      | 176 ++++++++++++++++++++++++++++++++
+ arch/x86/include/asm/sgx_arch.h |  19 ++++
+ 2 files changed, 195 insertions(+)
 
 diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
-index 2130e639ab49..77b2294fcfb0 100644
+index 77b2294fcfb0..a42c8ed10f7d 100644
 --- a/arch/x86/include/asm/sgx.h
 +++ b/arch/x86/include/asm/sgx.h
-@@ -4,9 +4,39 @@
- #ifndef _ASM_X86_SGX_H
- #define _ASM_X86_SGX_H
- 
-+#include <asm/sgx_arch.h>
-+#include <asm/asm.h>
-+#include <linux/bitops.h>
-+#include <linux/err.h>
-+#include <linux/rwsem.h>
+@@ -11,6 +11,157 @@
+ #include <linux/rwsem.h>
  #include <linux/types.h>
  
-+#define SGX_MAX_EPC_BANKS 8
++#define IS_ENCLS_FAULT(r) ((r) & 0xffff0000)
++#define ENCLS_FAULT_VECTOR(r) ((r) >> 16)
 +
-+#define SGX_EPC_BANK(epc_page) \
-+	(&sgx_epc_banks[(unsigned long)(epc_page->desc) & ~PAGE_MASK])
-+#define SGX_EPC_PFN(epc_page) PFN_DOWN((unsigned long)(epc_page->desc))
-+#define SGX_EPC_ADDR(epc_page) ((unsigned long)(epc_page->desc) & PAGE_MASK)
++#define ENCLS_TO_ERR(r) (IS_ENCLS_FAULT(r) ? -EFAULT :		\
++			(r) == SGX_UNMASKED_EVENT ? -EINTR :	\
++			(r) == SGX_MAC_COMPARE_FAIL ? -EIO :	\
++			(r) == SGX_ENTRYEPOCH_LOCKED ? -EBUSY : -EPERM)
 +
-+struct sgx_epc_page {
-+	unsigned long desc;
-+	struct list_head list;
-+};
++#define __encls_ret_N(rax, inputs...)			\
++	({						\
++	int ret;					\
++	asm volatile(					\
++	"1: .byte 0x0f, 0x01, 0xcf;\n\t"		\
++	"2:\n"						\
++	".section .fixup,\"ax\"\n"			\
++	"3: shll $16,%%eax\n"				\
++	"   jmp 2b\n"					\
++	".previous\n"					\
++	_ASM_EXTABLE_FAULT(1b, 3b)			\
++	: "=a"(ret)					\
++	: "a"(rax), inputs				\
++	: "memory");					\
++	ret;						\
++	})
 +
-+struct sgx_epc_bank {
-+	unsigned long pa;
-+	unsigned long va;
-+	unsigned long size;
-+	struct sgx_epc_page *pages_data;
-+	struct sgx_epc_page **pages;
-+	atomic_t free_cnt;
-+	struct rw_semaphore lock;
-+};
++#define __encls_ret_1(rax, rcx)				\
++	({						\
++	__encls_ret_N(rax, "c"(rcx));			\
++	})
 +
- extern bool sgx_enabled;
- extern bool sgx_lc_enabled;
++#define __encls_ret_2(rax, rbx, rcx)			\
++	({						\
++	__encls_ret_N(rax, "b"(rbx), "c"(rcx));		\
++	})
++
++#define __encls_ret_3(rax, rbx, rcx, rdx)			\
++	({							\
++	__encls_ret_N(rax, "b"(rbx), "c"(rcx), "d"(rdx));	\
++	})
++
++#define __encls_N(rax, rbx_out, inputs...)		\
++	({						\
++	int ret;					\
++	asm volatile(					\
++	"1: .byte 0x0f, 0x01, 0xcf;\n\t"		\
++	"   xor %%eax,%%eax;\n"				\
++	"2:\n"						\
++	".section .fixup,\"ax\"\n"			\
++	"3: shll $16,%%eax\n"				\
++	"   jmp 2b\n"					\
++	".previous\n"					\
++	_ASM_EXTABLE_FAULT(1b, 3b)				\
++	: "=a"(ret), "=b"(rbx_out)			\
++	: "a"(rax), inputs				\
++	: "memory");					\
++	ret;						\
++	})
++
++#define __encls_2(rax, rbx, rcx)				\
++	({							\
++	unsigned long ign_rbx_out;				\
++	__encls_N(rax, ign_rbx_out, "b"(rbx), "c"(rcx));	\
++	})
++
++#define __encls_1_1(rax, data, rcx)			\
++	({						\
++	unsigned long rbx_out;				\
++	int ret = __encls_N(rax, rbx_out, "c"(rcx));	\
++	if (!ret)					\
++		data = rbx_out;				\
++	ret;						\
++	})
++
++static inline int __ecreate(struct sgx_pageinfo *pginfo, void *secs)
++{
++	return __encls_2(ECREATE, pginfo, secs);
++}
++
++static inline int __eextend(void *secs, void *epc)
++{
++	return __encls_2(EEXTEND, secs, epc);
++}
++
++static inline int __eadd(struct sgx_pageinfo *pginfo, void *epc)
++{
++	return __encls_2(EADD, pginfo, epc);
++}
++
++static inline int __einit(void *sigstruct, struct sgx_einittoken *einittoken,
++			  void *secs)
++{
++	return __encls_ret_3(EINIT, sigstruct, secs, einittoken);
++}
++
++static inline int __eremove(void *epc)
++{
++	return __encls_ret_1(EREMOVE, epc);
++}
++
++static inline int __edbgwr(unsigned long addr, unsigned long *data)
++{
++	return __encls_2(EDGBWR, *data, addr);
++}
++
++static inline int __edbgrd(unsigned long addr, unsigned long *data)
++{
++	return __encls_1_1(EDGBRD, *data, addr);
++}
++
++static inline int __etrack(void *epc)
++{
++	return __encls_ret_1(ETRACK, epc);
++}
++
++static inline int __eldu(struct sgx_pageinfo *pginfo, void *epc, void *va)
++{
++	return __encls_ret_3(ELDU, pginfo, epc, va);
++}
++
++static inline int __eblock(void *epc)
++{
++	return __encls_ret_1(EBLOCK, epc);
++}
++
++static inline int __epa(void *epc)
++{
++	unsigned long rbx = SGX_PAGE_TYPE_VA;
++
++	return __encls_2(EPA, rbx, epc);
++}
++
++static inline int __ewb(struct sgx_pageinfo *pginfo, void *epc, void *va)
++{
++	return __encls_ret_3(EWB, pginfo, epc, va);
++}
++
++static inline int __eaug(struct sgx_pageinfo *pginfo, void *epc)
++{
++	return __encls_2(EAUG, pginfo, epc);
++}
++
++static inline int __emodpr(struct sgx_secinfo *secinfo, void *epc)
++{
++	return __encls_ret_2(EMODPR, secinfo, epc);
++}
++
++static inline int __emodt(struct sgx_secinfo *secinfo, void *epc)
++{
++	return __encls_ret_2(EMODT, secinfo, epc);
++}
++
+ #define SGX_MAX_EPC_BANKS 8
  
-+void *sgx_get_page(struct sgx_epc_page *ptr);
-+void sgx_put_page(void *epc_page_ptr);
+ #define SGX_EPC_BANK(epc_page) \
+@@ -39,4 +190,29 @@ extern bool sgx_lc_enabled;
+ void *sgx_get_page(struct sgx_epc_page *ptr);
+ void sgx_put_page(void *epc_page_ptr);
+ 
++#define SGX_FN(name, params...)		\
++{					\
++	void *epc;			\
++	int ret;			\
++	epc = sgx_get_page(epc_page);	\
++	ret = __##name(params);		\
++	sgx_put_page(epc);		\
++	return ret;			\
++}
++
++#define BUILD_SGX_FN(fn, name)				\
++static inline int fn(struct sgx_epc_page *epc_page)	\
++	SGX_FN(name, epc)
++BUILD_SGX_FN(sgx_eremove, eremove)
++BUILD_SGX_FN(sgx_eblock, eblock)
++BUILD_SGX_FN(sgx_etrack, etrack)
++BUILD_SGX_FN(sgx_epa, epa)
++
++static inline int sgx_emodpr(struct sgx_secinfo *secinfo,
++			     struct sgx_epc_page *epc_page)
++	SGX_FN(emodpr, secinfo, epc)
++static inline int sgx_emodt(struct sgx_secinfo *secinfo,
++			    struct sgx_epc_page *epc_page)
++	SGX_FN(emodt, secinfo, epc)
 +
  #endif /* _ASM_X86_SGX_H */
-diff --git a/arch/x86/kernel/cpu/intel_sgx.c b/arch/x86/kernel/cpu/intel_sgx.c
-index 77d94115c4cf..60cbc7cfb868 100644
---- a/arch/x86/kernel/cpu/intel_sgx.c
-+++ b/arch/x86/kernel/cpu/intel_sgx.c
-@@ -6,8 +6,10 @@
- #include <linux/freezer.h>
- #include <linux/highmem.h>
- #include <linux/kthread.h>
-+#include <linux/pagemap.h>
- #include <linux/ratelimit.h>
- #include <linux/sched/signal.h>
-+#include <linux/shmem_fs.h>
- #include <linux/slab.h>
+diff --git a/arch/x86/include/asm/sgx_arch.h b/arch/x86/include/asm/sgx_arch.h
+index 41a37eaa3f51..85e6eb4c11a5 100644
+--- a/arch/x86/include/asm/sgx_arch.h
++++ b/arch/x86/include/asm/sgx_arch.h
+@@ -14,6 +14,25 @@ enum sgx_cpuid {
+ 	SGX_CPUID_EPC_BANKS	= 2,
+ };
  
- bool sgx_enabled __ro_after_init;
-@@ -15,6 +17,139 @@ EXPORT_SYMBOL(sgx_enabled);
- bool sgx_lc_enabled __ro_after_init;
- EXPORT_SYMBOL(sgx_lc_enabled);
- 
-+static atomic_t sgx_nr_free_pages = ATOMIC_INIT(0);
-+static struct sgx_epc_bank sgx_epc_banks[SGX_MAX_EPC_BANKS];
-+static int sgx_nr_epc_banks;
++enum sgx_encls_leafs {
++	ECREATE	= 0x0,
++	EADD	= 0x1,
++	EINIT	= 0x2,
++	EREMOVE	= 0x3,
++	EDGBRD	= 0x4,
++	EDGBWR	= 0x5,
++	EEXTEND	= 0x6,
++	ELDB	= 0x7,
++	ELDU	= 0x8,
++	EBLOCK	= 0x9,
++	EPA	= 0xA,
++	EWB	= 0xB,
++	ETRACK	= 0xC,
++	EAUG	= 0xD,
++	EMODPR	= 0xE,
++	EMODT	= 0xF,
++};
 +
-+/**
-+ * sgx_get_page - pin an EPC page
-+ * @page:	an EPC page
-+ *
-+ * Return: a pointer to the pinned EPC page
-+ */
-+void *sgx_get_page(struct sgx_epc_page *page)
-+{
-+	struct sgx_epc_bank *bank = SGX_EPC_BANK(page);
-+
-+	if (IS_ENABLED(CONFIG_X86_64))
-+		return (void *)(bank->va + SGX_EPC_ADDR(page) - bank->pa);
-+
-+	return kmap_atomic_pfn(SGX_EPC_PFN(page));
-+}
-+EXPORT_SYMBOL(sgx_get_page);
-+
-+/**
-+ * sgx_put_page - unpin an EPC page
-+ * @ptr:	a pointer to the pinned EPC page
-+ */
-+void sgx_put_page(void *ptr)
-+{
-+	if (IS_ENABLED(CONFIG_X86_64))
-+		return;
-+
-+	kunmap_atomic(ptr);
-+}
-+EXPORT_SYMBOL(sgx_put_page);
-+
-+static __init int sgx_init_epc_bank(unsigned long addr, unsigned long size,
-+				    unsigned long index,
-+				    struct sgx_epc_bank *bank)
-+{
-+	unsigned long nr_pages = size >> PAGE_SHIFT;
-+	unsigned long i;
-+	void *va;
-+
-+	if (IS_ENABLED(CONFIG_X86_64)) {
-+		va = ioremap_cache(addr, size);
-+		if (!va)
-+			return -ENOMEM;
-+	}
-+
-+	bank->pages_data = kzalloc(nr_pages * sizeof(struct sgx_epc_page),
-+				   GFP_KERNEL);
-+	if (!bank->pages_data) {
-+		if (IS_ENABLED(CONFIG_X86_64))
-+			iounmap(va);
-+
-+		return -ENOMEM;
-+	}
-+
-+	bank->pages = kzalloc(nr_pages * sizeof(struct sgx_epc_page *),
-+			      GFP_KERNEL);
-+	if (!bank->pages) {
-+		if (IS_ENABLED(CONFIG_X86_64))
-+			iounmap(va);
-+		kfree(bank->pages_data);
-+		bank->pages_data = NULL;
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < nr_pages; i++) {
-+		bank->pages[i] = &bank->pages_data[i];
-+		bank->pages[i]->desc = (addr + (i << PAGE_SHIFT)) | index;
-+	}
-+
-+	bank->pa = addr;
-+	bank->size = size;
-+	if (IS_ENABLED(CONFIG_X86_64))
-+		bank->va = (unsigned long)va;
-+
-+	atomic_set(&bank->free_cnt, nr_pages);
-+	init_rwsem(&bank->lock);
-+	atomic_add(nr_pages, &sgx_nr_free_pages);
-+	return 0;
-+}
-+
-+static __init void sgx_page_cache_teardown(void)
-+{
-+	struct sgx_epc_bank *bank;
-+	int i;
-+
-+	for (i = 0; i < sgx_nr_epc_banks; i++) {
-+		bank = &sgx_epc_banks[i];
-+
-+		if (IS_ENABLED(CONFIG_X86_64))
-+			iounmap((void *)bank->va);
-+
-+		kfree(bank->pages);
-+		kfree(bank->pages_data);
-+	}
-+}
-+
-+static __init int sgx_page_cache_init(void)
-+{
-+	unsigned long size;
-+	unsigned int eax;
-+	unsigned int ebx;
-+	unsigned int ecx;
-+	unsigned int edx;
-+	unsigned long pa;
-+	int i;
-+	int ret;
-+
-+	for (i = 0; i < SGX_MAX_EPC_BANKS; i++) {
-+		cpuid_count(SGX_CPUID, i + SGX_CPUID_EPC_BANKS, &eax, &ebx,
-+			    &ecx, &edx);
-+		if (!(eax & 0xf))
-+			break;
-+
-+		pa = ((u64)(ebx & 0xfffff) << 32) + (u64)(eax & 0xfffff000);
-+		size = ((u64)(edx & 0xfffff) << 32) + (u64)(ecx & 0xfffff000);
-+
-+		pr_info("EPC bank 0x%lx-0x%lx\n", pa, pa + size);
-+
-+		ret = sgx_init_epc_bank(pa, size, i, &sgx_epc_banks[i]);
-+		if (ret) {
-+			sgx_page_cache_teardown();
-+			return ret;
-+		}
-+
-+		sgx_nr_epc_banks++;
-+	}
-+
-+	return 0;
-+}
-+
- static __init bool sgx_is_enabled(bool *lc_enabled)
- {
- 	unsigned long fc;
-@@ -47,7 +182,16 @@ static __init bool sgx_is_enabled(bool *lc_enabled)
- 
- static __init int sgx_init(void)
- {
--	sgx_enabled = sgx_is_enabled(&sgx_lc_enabled);
-+	int ret;
-+
-+	if (!sgx_is_enabled(&sgx_lc_enabled))
-+		return 0;
-+
-+	ret = sgx_page_cache_init();
-+	if (ret)
-+		return ret;
-+
-+	sgx_enabled = true;
- 	return 0;
- }
+ #define SGX_SSA_GPRS_SIZE		182
+ #define SGX_SSA_MISC_EXINFO_SIZE	16
  
 -- 
 2.17.1
