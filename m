@@ -1,39 +1,48 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v12 01/13] x86/sgx: updated MAINTAINERS
-Date: Tue,  3 Jul 2018 21:19:46 +0300
-Message-ID: <20180703182118.15024-2-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v12 02/13] x86/sgx: add SGX definitions to cpufeature
+Date: Tue,  3 Jul 2018 21:19:47 +0300
+Message-ID: <20180703182118.15024-3-jarkko.sakkinen@linux.intel.com>
 References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, open list <linux-kernel@vger.kernel.org>
+Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Kai Huang <kai.huang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, David Woodhouse <dwmw@amazon.co.uk>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>, "open list:X86 ARCHITECTURE 32-BIT AND
+        64-BIT" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Updated the MAINTAINERS file to point to the Intel SGX subsystem tree.
+From: Kai Huang <kai.huang@linux.intel.com>
 
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Added X86_FEATURE_SGX and X86_FEATURE_SGX_LC definitions that define the
+bits CPUID level 7 bits for determining whether the CPU supports SGX and
+launch configuration other than the Intel proprietary key. If this the
+case, IA32_SGXLEPUBKEYHASHn MSRs (0 < n < 4) are available for defining the
+root key for enclaves.
+
+Signed-off-by: Kai Huang <kai.huang@linux.intel.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/include/asm/cpufeatures.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ca4afd68530c..12f7c68378e8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7329,6 +7329,13 @@ L:	linux-gpio@vger.kernel.org
- S:	Maintained
- F:	drivers/gpio/gpio-intel-mid.c
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index fb00a2fca990..54d5269e1b86 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -234,6 +234,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
+ #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
+ #define X86_FEATURE_TSC_ADJUST		( 9*32+ 1) /* TSC adjustment MSR 0x3B */
++#define X86_FEATURE_SGX			( 9*32+ 2) /* Software Guard Extensions */
+ #define X86_FEATURE_BMI1		( 9*32+ 3) /* 1st group bit manipulation extensions */
+ #define X86_FEATURE_HLE			( 9*32+ 4) /* Hardware Lock Elision */
+ #define X86_FEATURE_AVX2		( 9*32+ 5) /* AVX2 instructions */
+@@ -327,6 +328,7 @@
+ #define X86_FEATURE_LA57		(16*32+16) /* 5-level page tables */
+ #define X86_FEATURE_RDPID		(16*32+22) /* RDPID instruction */
+ #define X86_FEATURE_CLDEMOTE		(16*32+25) /* CLDEMOTE instruction */
++#define X86_FEATURE_SGX_LC		(16*32+30) /* supports SGX launch configuration */
  
-+INTEL SGX
-+M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-+L:	linux-sgx@vger.kernel.org
-+Q:	https://patchwork.kernel.org/project/intel-sgx/list/
-+F:	drivers/platform/x86/intel_sgx/
-+K:	\bSGX_
-+
- INVENSENSE MPU-3050 GYROSCOPE DRIVER
- M:	Linus Walleij <linus.walleij@linaro.org>
- L:	linux-iio@vger.kernel.org
+ /* AMD-defined CPU features, CPUID level 0x80000007 (EBX), word 17 */
+ #define X86_FEATURE_OVERFLOW_RECOV	(17*32+ 0) /* MCA overflow recovery support */
 -- 
 2.17.1
