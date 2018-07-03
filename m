@@ -1,287 +1,261 @@
-From: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v5] dcdbas: Add support for WSMT ACPI table
-Date: Tue, 3 Jul 2018 11:20:21 -0500
-Message-ID: <4e26f407-58c0-09b6-6735-f004d5e86969@gmail.com>
-References: <45b8bde6-aaa8-3f3f-0528-81e5e931751c@gmail.com>
- <bc6846e1-2b6d-dcc2-355c-2699aa1607a2@gmail.com>
- <CAHp75Vdmqm+r=Orxs6_dCr18y+EwEQ=s-7UgaZKHuKbtjMcOig@mail.gmail.com>
- <20180609010420.GA112645@localhost.localdomain>
- <CAHp75VcA5ZWahraDP69_hBHuqxw6cng93zAa1op5EBYfuCSPwg@mail.gmail.com>
- <b59027b3-a48e-f168-5f12-c67758c0c2c7@gmail.com>
- <CAHp75VcK78jL_7sF+ZGaPpwDED-6Xd+SdH_5WCfSBsVJW2GnDg@mail.gmail.com>
- <8307f1e0-c480-3f78-9327-e248208e5349@gmail.com>
- <CAHp75VdTGXqE__VHjRphEmpMVfxaVVik=u-_0NRhQAKeq=+ZKA@mail.gmail.com>
- <b5652ed8-5fff-4f8b-ec0f-467bce853bf8@gmail.com>
- <CAHp75VfL3v8U6o36-e3+XPL53sb9wMUOXsL6gn3XE4=-kJjuKQ@mail.gmail.com>
- <367a12e9-7d10-98e4-4791-69cdc7d01129@gmail.com>
- <CAHp75VdSVLzNHnrOzzrBMf4X2Cg4QACRrnxKNkQzcYJ0h5W+tw@mail.gmail.com>
- <e17fbb51b98d45318001adb7eb6a51b2@ausx13mpc120.AMER.DELL.COM>
- <CAHp75VfNo9NVfgGn4Fqa5fA9zp47TkqHwn1MJ044qMQoMNMB-Q@mail.gmail.com>
- <73c53c23c0824e4595292bfafc6054ee@ausx13mpc120.AMER.DELL.COM>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v12 00/13] Intel SGX1 support
+Date: Tue,  3 Jul 2018 21:19:45 +0300
+Message-ID: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <73c53c23c0824e4595292bfafc6054ee@ausx13mpc120.AMER.DELL.COM>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com, andy.shevchenko@gmail.com
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: x86@kernel.org, platform-driver-x86@vger.kernel.org
+Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, David Woodhouse <dwmw@amazon.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, "open list:KERNEL VIRTUAL MACHINE FOR X86" <kvm@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+Intel(R) SGX is a set of CPU instructions that can be used by applications
+to set aside private regions of code and data. The code outside the enclave
+is disallowed to access the memory inside the enclave by the CPU access
+control.  In a way you can think that SGX provides inverted sandbox. It
+protects the application from a malicious host.
 
-If the WSMT ACPI table is present and indicates that a fixed communication
-buffer should be used, use the firmware-specified buffer instead of
-allocating a buffer in memory for communications between the dcdbas driver
-and firmare.
+There is a new hardware unit in the processor called Memory Encryption
+Engine (MEE) starting from the Skylake microacrhitecture. BIOS can define
+one or many MEE regions that can hold enclave data by configuring them with
+PRMRR registers.
 
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
----
-v2 Bumped driver version to 5.6.0-3.3
-v3 Removed dependency on ACPI in Kconfig
-   Moved the added #include to be in alphabetical order
-   Added comments in smi_request_store()
-   Simplified checksum code
-   Changed loop searching 0xf0000 to be more readable
-   Reworked calculation of remap_size & smi_data_buf_size
-v4 Fixed comment that starts with "Calling Interface SMI"
-   Fixed formatting of first "if" statement in dcdbas_check_wsmt()
-v5 Reworked comment that starts with "Calling Interface SMI"
-   Changed EPS scanning loop to check every 16 bytes
+The MEE automatically encrypts the data leaving the processor package to
+the MEE regions. The data is encrypted using a random key whose life-time
+is exactly one power cycle.
 
+The current implementation requires that the firmware sets
+IA32_SGXLEPUBKEYHASH* MSRs as writable so that ultimately the kernel can
+decide what enclaves it wants run. The implementation does not create
+any bottlenecks to support read-only MSRs later on.
 
- drivers/firmware/dcdbas.c | 123 +++++++++++++++++++++++++++++++++++++++++++---
- drivers/firmware/dcdbas.h |  10 ++++
- 2 files changed, 127 insertions(+), 6 deletions(-)
+You can tell if your CPU supports SGX by looking into /proc/cpuinfo:
 
-diff --git a/drivers/firmware/dcdbas.c b/drivers/firmware/dcdbas.c
-index 0bdea60c65dd..ae28e48ff7dc 100644
---- a/drivers/firmware/dcdbas.c
-+++ b/drivers/firmware/dcdbas.c
-@@ -21,6 +21,7 @@
-  */
- 
- #include <linux/platform_device.h>
-+#include <linux/acpi.h>
- #include <linux/dma-mapping.h>
- #include <linux/errno.h>
- #include <linux/cpu.h>
-@@ -41,7 +42,7 @@
- #include "dcdbas.h"
- 
- #define DRIVER_NAME		"dcdbas"
--#define DRIVER_VERSION		"5.6.0-3.2"
-+#define DRIVER_VERSION		"5.6.0-3.3"
- #define DRIVER_DESCRIPTION	"Dell Systems Management Base Driver"
- 
- static struct platform_device *dcdbas_pdev;
-@@ -49,19 +50,23 @@ static struct platform_device *dcdbas_pdev;
- static u8 *smi_data_buf;
- static dma_addr_t smi_data_buf_handle;
- static unsigned long smi_data_buf_size;
-+static unsigned long max_smi_data_buf_size = MAX_SMI_DATA_BUF_SIZE;
- static u32 smi_data_buf_phys_addr;
- static DEFINE_MUTEX(smi_data_lock);
-+static u8 *eps_buffer;
- 
- static unsigned int host_control_action;
- static unsigned int host_control_smi_type;
- static unsigned int host_control_on_shutdown;
- 
-+static bool wsmt_enabled;
-+
- /**
-  * smi_data_buf_free: free SMI data buffer
-  */
- static void smi_data_buf_free(void)
- {
--	if (!smi_data_buf)
-+	if (!smi_data_buf || wsmt_enabled)
- 		return;
- 
- 	dev_dbg(&dcdbas_pdev->dev, "%s: phys: %x size: %lu\n",
-@@ -86,7 +91,7 @@ static int smi_data_buf_realloc(unsigned long size)
- 	if (smi_data_buf_size >= size)
- 		return 0;
- 
--	if (size > MAX_SMI_DATA_BUF_SIZE)
-+	if (size > max_smi_data_buf_size)
- 		return -EINVAL;
- 
- 	/* new buffer is needed */
-@@ -169,7 +174,7 @@ static ssize_t smi_data_write(struct file *filp, struct kobject *kobj,
- {
- 	ssize_t ret;
- 
--	if ((pos + count) > MAX_SMI_DATA_BUF_SIZE)
-+	if ((pos + count) > max_smi_data_buf_size)
- 		return -EINVAL;
- 
- 	mutex_lock(&smi_data_lock);
-@@ -322,8 +327,20 @@ static ssize_t smi_request_store(struct device *dev,
- 			ret = count;
- 		break;
- 	case 1:
--		/* Calling Interface SMI */
--		smi_cmd->ebx = (u32) virt_to_phys(smi_cmd->command_buffer);
-+		/*
-+		 * Calling Interface SMI
-+		 *
-+		 * Provide physical address of command buffer field within
-+		 * the struct smi_cmd to BIOS.
-+		 *
-+		 * Because the address that smi_cmd (smi_data_buf) points to
-+		 * will be from memremap() of a non-memory address if WSMT
-+		 * is present, we can't use virt_to_phys() on smi_cmd, so
-+		 * we have to use the physical address that was saved when
-+		 * the virtual address for smi_cmd was received.
-+		 */
-+		smi_cmd->ebx = smi_data_buf_phys_addr +
-+				offsetof(struct smi_cmd, command_buffer);
- 		ret = dcdbas_smi_request(smi_cmd);
- 		if (!ret)
- 			ret = count;
-@@ -482,6 +499,93 @@ static void dcdbas_host_control(void)
- 	}
- }
- 
-+/* WSMT */
-+
-+static u8 checksum(u8 *buffer, u8 length)
-+{
-+	u8 sum = 0;
-+	u8 *end = buffer + length;
-+
-+	while (buffer < end)
-+		sum += *buffer++;
-+	return sum;
-+}
-+
-+static inline struct smm_eps_table *check_eps_table(u8 *addr)
-+{
-+	struct smm_eps_table *eps = (struct smm_eps_table *)addr;
-+
-+	if (strncmp(eps->smm_comm_buff_anchor, SMM_EPS_SIG, 4) != 0)
-+		return NULL;
-+
-+	if (checksum(addr, eps->length) != 0)
-+		return NULL;
-+
-+	return eps;
-+}
-+
-+static int dcdbas_check_wsmt(void)
-+{
-+	struct acpi_table_wsmt *wsmt = NULL;
-+	struct smm_eps_table *eps = NULL;
-+	u64 remap_size;
-+	u8 *addr;
-+
-+	acpi_get_table(ACPI_SIG_WSMT, 0, (struct acpi_table_header **)&wsmt);
-+	if (!wsmt)
-+		return 0;
-+
-+	/* Check if WSMT ACPI table shows that protection is enabled */
-+	if (!(wsmt->protection_flags & ACPI_WSMT_FIXED_COMM_BUFFERS) ||
-+	    !(wsmt->protection_flags & ACPI_WSMT_COMM_BUFFER_NESTED_PTR_PROTECTION))
-+		return 0;
-+
-+	/* Scan for EPS (entry point structure) */
-+	for (addr = (u8 *)__va(0xf0000);
-+	     addr < (u8 *)__va(0x100000 - sizeof(struct smm_eps_table));
-+	     addr += 16) {
-+		eps = check_eps_table(addr);
-+		if (eps)
-+			break;
-+	}
-+
-+	if (!eps) {
-+		dev_dbg(&dcdbas_pdev->dev, "found WSMT, but no EPS found\n");
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * Get physical address of buffer and map to virtual address.
-+	 * Table gives size in 4K pages, regardless of actual system page size.
-+	 */
-+	if (upper_32_bits(eps->smm_comm_buff_addr + 8)) {
-+		dev_warn(&dcdbas_pdev->dev, "found WSMT, but EPS buffer address is above 4GB\n");
-+		return -EINVAL;
-+	}
-+	/*
-+	 * Limit remap size to MAX_SMI_DATA_BUF_SIZE + 8 (since the first 8
-+	 * bytes are used for a semaphore, not the data buffer itself).
-+	 */
-+	remap_size = eps->num_of_4k_pages * PAGE_SIZE;
-+	if (remap_size > MAX_SMI_DATA_BUF_SIZE + 8)
-+		remap_size = MAX_SMI_DATA_BUF_SIZE + 8;
-+	eps_buffer = memremap(eps->smm_comm_buff_addr, remap_size, MEMREMAP_WB);
-+	if (!eps_buffer) {
-+		dev_warn(&dcdbas_pdev->dev, "found WSMT, but failed to map EPS buffer\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* First 8 bytes is for a semaphore, not part of the smi_data_buf */
-+	smi_data_buf_phys_addr = eps->smm_comm_buff_addr + 8;
-+	smi_data_buf = eps_buffer + 8;
-+	smi_data_buf_size = remap_size - 8;
-+	max_smi_data_buf_size = smi_data_buf_size;
-+	wsmt_enabled = true;
-+	dev_info(&dcdbas_pdev->dev,
-+		 "WSMT found, using firmware-provided SMI buffer.\n");
-+	return 1;
-+}
-+
- /**
-  * dcdbas_reboot_notify: handle reboot notification for host control
-  */
-@@ -548,6 +652,11 @@ static int dcdbas_probe(struct platform_device *dev)
- 
- 	dcdbas_pdev = dev;
- 
-+	/* Check if ACPI WSMT table specifies protected SMI buffer address */
-+	error = dcdbas_check_wsmt();
-+	if (error < 0)
-+		return error;
-+
- 	/*
- 	 * BIOS SMI calls require buffer addresses be in 32-bit address space.
- 	 * This is done by setting the DMA mask below.
-@@ -635,6 +744,8 @@ static void __exit dcdbas_exit(void)
- 	 */
- 	if (dcdbas_pdev)
- 		smi_data_buf_free();
-+	if (eps_buffer)
-+		memunmap(eps_buffer);
- 	platform_device_unregister(dcdbas_pdev_reg);
- 	platform_driver_unregister(&dcdbas_driver);
- }
-diff --git a/drivers/firmware/dcdbas.h b/drivers/firmware/dcdbas.h
-index ca3cb0a54ab6..52729a494b00 100644
---- a/drivers/firmware/dcdbas.h
-+++ b/drivers/firmware/dcdbas.h
-@@ -53,6 +53,7 @@
- #define EXPIRED_TIMER				(0)
- 
- #define SMI_CMD_MAGIC				(0x534D4931)
-+#define SMM_EPS_SIG				"$SCB"
- 
- #define DCDBAS_DEV_ATTR_RW(_name) \
- 	DEVICE_ATTR(_name,0600,_name##_show,_name##_store);
-@@ -103,5 +104,14 @@ struct apm_cmd {
- 
- int dcdbas_smi_request(struct smi_cmd *smi_cmd);
- 
-+struct smm_eps_table {
-+	char smm_comm_buff_anchor[4];
-+	u8 length;
-+	u8 checksum;
-+	u8 version;
-+	u64 smm_comm_buff_addr;
-+	u64 num_of_4k_pages;
-+} __packed;
-+
- #endif /* _DCDBAS_H_ */
- 
+	cat /proc/cpuinfo  | grep sgx
+
+v12:
+* Split to more narrow scoped commits in order to ease the review process and
+  use co-developed-by tag for co-authors of commits instead of listing them in
+  the source files.
+* Removed cruft EXPORT_SYMBOL() declarations and converted to static variables.
+* Removed in-kernel LE i.e. this version of the SGX software stack only
+  supports unlocked IA32_SGXLEPUBKEYHASHx MSRs.
+* Refined documentation on launching enclaves, swapping and enclave
+  construction.
+* Refined sgx_arch.h to include alignment information for every struct that
+  requires it and removed structs that are not needed without an LE.
+* Got rid of SGX_CPUID.
+* SGX detection now prints log messages about firmware configuration issues.
+
+v11:
+* Polished ENCLS wrappers with refined exception handling.
+* ksgxswapd was not stopped (regression in v5) in
+  sgx_page_cache_teardown(), which causes a leaked kthread after driver
+  deinitialization.
+* Shutdown sgx_le_proxy when going to suspend because its EPC pages will be
+  invalidated when resuming, which will cause it not function properly
+  anymore.
+* Set EINITTOKEN.VALID to zero for a token that is passed when
+  SGXLEPUBKEYHASH matches MRSIGNER as alloc_page() does not give a zero
+  page.
+* Fixed the check in sgx_edbgrd() for a TCS page. Allowed to read offsets
+  around the flags field, which causes a #GP. Only flags read is readable.
+* On read access memcpy() call inside sgx_vma_access() had src and dest
+  parameters in wrong order.
+* The build issue with CONFIG_KASAN is now fixed. Added undefined symbols
+  to LE even if “KASAN_SANITIZE := false” was set in the makefile. 
+* Fixed a regression in the #PF handler. If a page has
+  SGX_ENCL_PAGE_RESERVED flag the #PF handler should unconditionally fail.
+  It did not, which caused weird races when trying to change other parts of
+  swapping code.
+* EPC management has been refactored to a flat LRU cache and moved to
+  arch/x86. The swapper thread reads a cluster of EPC pages and swaps all
+  of them. It can now swap from multiple enclaves in the same round.
+* For the sake of consistency with SGX_IOC_ENCLAVE_ADD_PAGE, return -EINVAL
+  when an enclave is already initialized or dead instead of zero.
+
+v10:
+* Cleaned up anon inode based IPC between the ring-0 and ring-3 parts
+  of the driver.
+* Unset the reserved flag from an enclave page if EDBGRD/WR fails
+  (regression in v6).
+* Close the anon inode when LE is stopped (regression in v9).
+* Update the documentation with a more detailed description of SGX.
+
+v9:
+* Replaced kernel-LE IPC based on pipes with an anonymous inode.
+  The driver does not require anymore new exports.
+
+v8:
+* Check that public key MSRs match the LE public key hash in the
+  driver initialization when the MSRs are read-only.
+* Fix the race in VA slot allocation by checking the fullness
+  immediately after succeesful allocation.
+* Fix the race in hash mrsigner calculation between the launch
+  enclave and user enclaves by having a separate lock for hash
+  calculation.
+
+v7:
+* Fixed offset calculation in sgx_edbgr/wr(). Address was masked with PAGE_MASK
+  when it should have been masked with ~PAGE_MASK.
+* Fixed a memory leak in sgx_ioc_enclave_create().
+* Simplified swapping code by using a pointer array for a cluster
+  instead of a linked list.
+* Squeezed struct sgx_encl_page to 32 bytes.
+* Fixed deferencing of an RSA key on OpenSSL 1.1.0.
+* Modified TC's CMAC to use kernel AES-NI. Restructured the code
+  a bit in order to better align with kernel conventions.
+
+v6:
+* Fixed semaphore underrun when accessing /dev/sgx from the launch enclave.
+* In sgx_encl_create() s/IS_ERR(secs)/IS_ERR(encl)/.
+* Removed virtualization chapter from the documentation.
+* Changed the default filename for the signing key as signing_key.pem.
+* Reworked EPC management in a way that instead of a linked list of
+  struct sgx_epc_page instances there is an array of integers that
+  encodes address and bank of an EPC page (the same data as 'pa' field
+  earlier). The locking has been moved to the EPC bank level instead
+  of a global lock.
+* Relaxed locking requirements for EPC management. EPC pages can be
+  released back to the EPC bank concurrently.
+* Cleaned up ptrace() code.
+* Refined commit messages for new architectural constants.
+* Sorted includes in every source file.
+* Sorted local variable declarations according to the line length in
+  every function.
+* Style fixes based on Darren's comments to sgx_le.c.
+
+v5:
+* Described IPC between the Launch Enclave and kernel in the commit messages.
+* Fixed all relevant checkpatch.pl issues that I have forgot fix in earlier
+  versions except those that exist in the imported TinyCrypt code.
+* Fixed spelling mistakes in the documentation.
+* Forgot to check the return value of sgx_drv_subsys_init().
+* Encapsulated properly page cache init and teardown.
+* Collect epc pages to a temp list in sgx_add_epc_bank
+* Removed SGX_ENCLAVE_INIT_ARCH constant.
+
+v4:
+* Tied life-cycle of the sgx_le_proxy process to /dev/sgx.
+* Removed __exit annotation from sgx_drv_subsys_exit().
+* Fixed a leak of a backing page in sgx_process_add_page_req() in the
+  case when vm_insert_pfn() fails.
+* Removed unused symbol exports for sgx_page_cache.c.
+* Updated sgx_alloc_page() to require encl parameter and documented the
+  behavior (Sean Christopherson).
+* Refactored a more lean API for sgx_encl_find() and documented the behavior.
+* Moved #PF handler to sgx_fault.c.
+* Replaced subsys_system_register() with plain bus_register().
+* Retry EINIT 2nd time only if MSRs are not locked.
+
+v3:
+* Check that FEATURE_CONTROL_LOCKED and FEATURE_CONTROL_SGX_ENABLE are set.
+* Return -ERESTARTSYS in __sgx_encl_add_page() when sgx_alloc_page() fails.
+* Use unused bits in epc_page->pa to store the bank number.
+* Removed #ifdef for WQ_NONREENTRANT.
+* If mmu_notifier_register() fails with -EINTR, return -ERESTARTSYS.
+* Added --remove-section=.got.plt to objcopy flags in order to prevent a
+  dummy .got.plt, which will cause an inconsistent size for the LE.
+* Documented sgx_encl_* functions.
+* Added remark about AES implementation used inside the LE.
+* Removed redundant sgx_sys_exit() from le/main.c.
+* Fixed struct sgx_secinfo alignment from 128 to 64 bytes.
+* Validate miscselect in sgx_encl_create().
+* Fixed SSA frame size calculation to take the misc region into account.
+* Implemented consistent exception handling to __encls() and __encls_ret().
+* Implemented a proper device model in order to allow sysfs attributes
+  and in-kernel API.
+* Cleaned up various "find enclave" implementations to the unified
+  sgx_encl_find().
+* Validate that vm_pgoff is zero.
+* Discard backing pages with shmem_truncate_range() after EADD.
+* Added missing EEXTEND operations to LE signing and launch.
+* Fixed SSA size for GPRS region from 168 to 184 bytes.
+* Fixed the checks for TCS flags. Now DBGOPTIN is allowed.
+* Check that TCS addresses are in ELRANGE and not just page aligned.
+* Require kernel to be compiled with X64_64 and CPU_SUP_INTEL.
+* Fixed an incorrect value for SGX_ATTR_DEBUG from 0x01 to 0x02.
+
+v2:
+* get_rand_uint32() changed the value of the pointer instead of value
+  where it is pointing at.
+* Launch enclave incorrectly used sigstruct attributes-field instead of
+  enclave attributes-field.
+* Removed unused struct sgx_add_page_req from sgx_ioctl.c
+* Removed unused sgx_has_sgx2.
+* Updated arch/x86/include/asm/sgx.h so that it provides stub
+  implementations when sgx in not enabled.
+* Removed cruft rdmsr-calls from sgx_set_pubkeyhash_msrs().
+* return -ENOMEM in sgx_alloc_page() when VA pages consume too much space
+* removed unused global sgx_nr_pids
+* moved sgx_encl_release to sgx_encl.c
+* return -ERESTARTSYS instead of -EINTR in sgx_encl_init()
+
+Jarkko Sakkinen (8):
+  x86/sgx: updated MAINTAINERS
+  x86/sgx: architectural structures
+  x86/sgx: data structures for tracking available EPC pages
+  x86/sgx: wrappers for ENCLS opcode leaf functions
+  x86/sgx: EPC page allocation routines
+  platform/x86: Intel SGX driver
+  platform/x86: ptrace() support for the SGX driver
+  x86/sgx: driver documentation
+
+Kai Huang (1):
+  x86/sgx: add SGX definitions to cpufeature
+
+Sean Christopherson (4):
+  x86/sgx: add SGX definitions to msr-index.h
+  x86/cpufeatures: add Intel-defined SGX leaf CPUID_12_EAX
+  x86/sgx: detect Intel SGX
+  x86/sgx: sgx_einit()
+
+ Documentation/index.rst                       |    1 +
+ Documentation/x86/intel_sgx.rst               |  185 +++
+ MAINTAINERS                                   |    7 +
+ arch/x86/Kconfig                              |   19 +
+ arch/x86/include/asm/cpufeature.h             |    7 +-
+ arch/x86/include/asm/cpufeatures.h            |   10 +-
+ arch/x86/include/asm/disabled-features.h      |    3 +-
+ arch/x86/include/asm/msr-index.h              |    8 +
+ arch/x86/include/asm/required-features.h      |    3 +-
+ arch/x86/include/asm/sgx.h                    |  246 ++++
+ arch/x86/include/asm/sgx_arch.h               |  202 ++++
+ arch/x86/include/asm/sgx_pr.h                 |   29 +
+ arch/x86/include/uapi/asm/sgx.h               |  138 +++
+ arch/x86/kernel/cpu/Makefile                  |    1 +
+ arch/x86/kernel/cpu/common.c                  |    7 +
+ arch/x86/kernel/cpu/intel_sgx.c               |  460 ++++++++
+ arch/x86/kvm/cpuid.h                          |    1 +
+ drivers/platform/x86/Kconfig                  |    2 +
+ drivers/platform/x86/Makefile                 |    1 +
+ drivers/platform/x86/intel_sgx/Kconfig        |   22 +
+ drivers/platform/x86/intel_sgx/Makefile       |   13 +
+ drivers/platform/x86/intel_sgx/sgx.h          |  157 +++
+ drivers/platform/x86/intel_sgx/sgx_encl.c     | 1011 +++++++++++++++++
+ .../platform/x86/intel_sgx/sgx_encl_page.c    |  286 +++++
+ drivers/platform/x86/intel_sgx/sgx_fault.c    |  151 +++
+ drivers/platform/x86/intel_sgx/sgx_ioctl.c    |  231 ++++
+ drivers/platform/x86/intel_sgx/sgx_main.c     |  298 +++++
+ drivers/platform/x86/intel_sgx/sgx_vma.c      |  174 +++
+ 28 files changed, 3668 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/x86/intel_sgx.rst
+ create mode 100644 arch/x86/include/asm/sgx.h
+ create mode 100644 arch/x86/include/asm/sgx_arch.h
+ create mode 100644 arch/x86/include/asm/sgx_pr.h
+ create mode 100644 arch/x86/include/uapi/asm/sgx.h
+ create mode 100644 arch/x86/kernel/cpu/intel_sgx.c
+ create mode 100644 drivers/platform/x86/intel_sgx/Kconfig
+ create mode 100644 drivers/platform/x86/intel_sgx/Makefile
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx.h
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_encl.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_encl_page.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_fault.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_ioctl.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_main.c
+ create mode 100644 drivers/platform/x86/intel_sgx/sgx_vma.c
+
 -- 
-2.14.2
+2.17.1
