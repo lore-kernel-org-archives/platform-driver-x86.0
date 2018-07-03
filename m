@@ -1,84 +1,34 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v12 07/13] x86/sgx: data structures for tracking available
- EPC pages
-Date: Tue, 3 Jul 2018 22:44:24 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1807032242140.1816@nanos.tec.linutronix.de>
-References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com> <20180703182118.15024-8-jarkko.sakkinen@linux.intel.com> <alpine.DEB.2.21.1807032110460.1816@nanos.tec.linutronix.de> <00ca61d5-5a1d-5c83-3b49-62c899a87041@infradead.org>
+From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v12 05/13] x86/sgx: architectural structures
+Date: Tue, 3 Jul 2018 14:22:52 -0700
+Message-ID: <5790d6a4-7d30-1ed8-0214-f68f1cb72294@intel.com>
+References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com>
+ <20180703182118.15024-6-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <00ca61d5-5a1d-5c83-3b49-62c899a87041@infradead.org>
+In-Reply-To: <20180703182118.15024-6-jarkko.sakkinen@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
+Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 3 Jul 2018, Randy Dunlap wrote:
-> On 07/03/18 12:46, Thomas Gleixner wrote:
-> > On Tue, 3 Jul 2018, Jarkko Sakkinen wrote:
-> > 
-> >> SGX has a set of data structures to maintain information about the enclaves
-> >> and their security properties. BIOS reserves a fixed size region of
-> >> physical memory for these structures by setting Processor Reserved Memory
-> >> Range Registers (PRMRR). This memory area is called Enclave Page Cache
-> >> (EPC).
-> >>
-> >> This commit adds a database of EPC banks for kernel to easily access the
-> 
-> what kind of database?  How does one query it?
-> 
-> >> diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
-> >> index 2130e639ab49..77b2294fcfb0 100644
-> >> --- a/arch/x86/include/asm/sgx.h
-> >> +++ b/arch/x86/include/asm/sgx.h
-> 
-> 
-> >> +/**
-> >> + * sgx_get_page - pin an EPC page
-> > 
-> > Description starts with an uppercase letter.
-> 
-> How would someone know that?  It's not documented anywhere.
+On 07/03/2018 11:19 AM, Jarkko Sakkinen wrote:
+> +enum sgx_cpuid {
+> +	SGX_CPUID_CAPABILITIES	= 0,
+> +	SGX_CPUID_ATTRIBUTES	= 1,
+> +	SGX_CPUID_EPC_BANKS	= 2,
+> +};
 
-It's a short sentence decribing the function and sentences start usually
-with uppercase letters, right?
+I made a review comment about these last time.  I don't remember
+receiving any kind of response from you on it, or seeing it addressed in
+these patches in any kind of way.
 
-> I happen to disagree with it.
+I've also seen comments from Thomas that sound really familiar such as
+the lack of comments on the paging code or the use of a semaphore to
+protect things that don't sleep.  I made very, very similar comments on
+the last posting.
 
-Then we have to agree that we disagree.
-
-> >> +static __init int sgx_page_cache_init(void)
-> >> +{
-> >> +	unsigned long size;
-> >> +	unsigned int eax;
-> >> +	unsigned int ebx;
-> >> +	unsigned int ecx;
-> >> +	unsigned int edx;
-> >> +	unsigned long pa;
-> >> +	int i;
-> >> +	int ret;
-> > 
-> > Please aggregate the declarations of the same type. No point in wasting all
-> > the screen space. And please use 'u32' for ea-dx
-> > 
-> >> +
-> >> +	for (i = 0; i < SGX_MAX_EPC_BANKS; i++) {
-> >> +		cpuid_count(SGX_CPUID, i + SGX_CPUID_EPC_BANKS, &eax, &ebx,
-> >> +			    &ecx, &edx);
-> >> +		if (!(eax & 0xf))
-> >> +			break;
-> >> +
-> >> +		pa = ((u64)(ebx & 0xfffff) << 32) + (u64)(eax & 0xfffff000);
-> >> +		size = ((u64)(edx & 0xfffff) << 32) + (u64)(ecx & 0xfffff000);
-> > 
-> > These magic constants should be 'U', using uppercase 'F' and defines. Plus
-> > this wants a comment how pa and size are cobbled together from the cpuid
-> > regs.
-> 
-> Why the uppercase 'F'?
-
-Makes is more readable IMO, but I'm not religious about that.
-
-Thanks,
-
-	tglx
+Is there a reason that those comments were not addressed?
