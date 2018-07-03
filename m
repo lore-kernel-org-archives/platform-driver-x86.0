@@ -1,121 +1,80 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v12 08/13] x86/sgx: wrappers for ENCLS opcode leaf
- functions
-Date: Tue, 3 Jul 2018 22:16:12 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1807032149300.1816@nanos.tec.linutronix.de>
-References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com> <20180703182118.15024-9-jarkko.sakkinen@linux.intel.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v12 07/13] x86/sgx: data structures for tracking available
+ EPC pages
+Date: Tue, 3 Jul 2018 13:26:11 -0700
+Message-ID: <00ca61d5-5a1d-5c83-3b49-62c899a87041@infradead.org>
+References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com>
+ <20180703182118.15024-8-jarkko.sakkinen@linux.intel.com>
+ <alpine.DEB.2.21.1807032110460.1816@nanos.tec.linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703182118.15024-9-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <alpine.DEB.2.21.1807032110460.1816@nanos.tec.linutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 3 Jul 2018, Jarkko Sakkinen wrote:
+On 07/03/18 12:46, Thomas Gleixner wrote:
+> On Tue, 3 Jul 2018, Jarkko Sakkinen wrote:
+> 
+>> SGX has a set of data structures to maintain information about the enclaves
+>> and their security properties. BIOS reserves a fixed size region of
+>> physical memory for these structures by setting Processor Reserved Memory
+>> Range Registers (PRMRR). This memory area is called Enclave Page Cache
+>> (EPC).
+>>
+>> This commit adds a database of EPC banks for kernel to easily access the
 
-> This commit adds wrappers for Intel(R) SGX ENCLS opcode leaf functions
+what kind of database?  How does one query it?
 
-Add...
+>> diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
+>> index 2130e639ab49..77b2294fcfb0 100644
+>> --- a/arch/x86/include/asm/sgx.h
+>> +++ b/arch/x86/include/asm/sgx.h
 
-> except for ENCLS(EINIT). The ENCLS instruction invokes the privileged
-> functions for managing (creation, initialization and swapping) and
-> debugging enclaves.
->  
-> +#define IS_ENCLS_FAULT(r) ((r) & 0xffff0000)
-> +#define ENCLS_FAULT_VECTOR(r) ((r) >> 16)
-> +
-> +#define ENCLS_TO_ERR(r) (IS_ENCLS_FAULT(r) ? -EFAULT :		\
-> +			(r) == SGX_UNMASKED_EVENT ? -EINTR :	\
-> +			(r) == SGX_MAC_COMPARE_FAIL ? -EIO :	\
-> +			(r) == SGX_ENTRYEPOCH_LOCKED ? -EBUSY : -EPERM)
 
-Inlines please along with proper comments.
+>> +/**
+>> + * sgx_get_page - pin an EPC page
+> 
+> Description starts with an uppercase letter.
 
-> +#define __encls_ret_N(rax, inputs...)			\
-> +	({						\
-> +	int ret;					\
-> +	asm volatile(					\
-> +	"1: .byte 0x0f, 0x01, 0xcf;\n\t"		\
-> +	"2:\n"						\
-> +	".section .fixup,\"ax\"\n"			\
-> +	"3: shll $16,%%eax\n"				\
+How would someone know that?  It's not documented anywhere.
+I happen to disagree with it.
 
-SHLL ??? _All_ the macro maze needs proper comments.
 
-> +	"   jmp 2b\n"					\
-> +	".previous\n"					\
-> +	_ASM_EXTABLE_FAULT(1b, 3b)			\
-> +	: "=a"(ret)					\
-> +	: "a"(rax), inputs				\
-> +	: "memory");					\
-> +	ret;						\
-> +	})
+>> +static __init int sgx_page_cache_init(void)
+>> +{
+>> +	unsigned long size;
+>> +	unsigned int eax;
+>> +	unsigned int ebx;
+>> +	unsigned int ecx;
+>> +	unsigned int edx;
+>> +	unsigned long pa;
+>> +	int i;
+>> +	int ret;
+> 
+> Please aggregate the declarations of the same type. No point in wasting all
+> the screen space. And please use 'u32' for ea-dx
+> 
+>> +
+>> +	for (i = 0; i < SGX_MAX_EPC_BANKS; i++) {
+>> +		cpuid_count(SGX_CPUID, i + SGX_CPUID_EPC_BANKS, &eax, &ebx,
+>> +			    &ecx, &edx);
+>> +		if (!(eax & 0xf))
+>> +			break;
+>> +
+>> +		pa = ((u64)(ebx & 0xfffff) << 32) + (u64)(eax & 0xfffff000);
+>> +		size = ((u64)(edx & 0xfffff) << 32) + (u64)(ecx & 0xfffff000);
+> 
+> These magic constants should be 'U', using uppercase 'F' and defines. Plus
+> this wants a comment how pa and size are cobbled together from the cpuid
+> regs.
 
-....
+Why the uppercase 'F'?
 
-> +static inline int __emodt(struct sgx_secinfo *secinfo, void *epc)
-> +{
-> +	return __encls_ret_2(EMODT, secinfo, epc);
-> +}
-> +
->  #define SGX_MAX_EPC_BANKS 8
->  
->  #define SGX_EPC_BANK(epc_page) \
-> @@ -39,4 +190,29 @@ extern bool sgx_lc_enabled;
->  void *sgx_get_page(struct sgx_epc_page *ptr);
->  void sgx_put_page(void *epc_page_ptr);
-
-> +#define SGX_FN(name, params...)		\
-> +{					\
-> +	void *epc;			\
-> +	int ret;			\
-> +	epc = sgx_get_page(epc_page);	\
-> +	ret = __##name(params);		\
-> +	sgx_put_page(epc);		\
-
-This whole get/put magic is totally pointless. The stuff is 64bit only, so
-all it needs is the address, because 'put' is a noop on 64bit.
-
-> +	return ret;			\
-> +}
-> +
-> +#define BUILD_SGX_FN(fn, name)				\
-> +static inline int fn(struct sgx_epc_page *epc_page)	\
-> +	SGX_FN(name, epc)
-> +BUILD_SGX_FN(sgx_eremove, eremove)
-> +BUILD_SGX_FN(sgx_eblock, eblock)
-> +BUILD_SGX_FN(sgx_etrack, etrack)
-> +BUILD_SGX_FN(sgx_epa, epa)
-> +
-> +static inline int sgx_emodpr(struct sgx_secinfo *secinfo,
-> +			     struct sgx_epc_page *epc_page)
-> +	SGX_FN(emodpr, secinfo, epc)
-> +static inline int sgx_emodt(struct sgx_secinfo *secinfo,
-> +			    struct sgx_epc_page *epc_page)
-> +	SGX_FN(emodt, secinfo, epc)
-
-Bah this is really unreadable crap. What's so horribly wrong with writing
-this simply as:
-
-static inline int sgx_eremove(struct sgx_epc_page *epc_page)
-{
-	return __encls_ret_1(EREMOVE, epc_page_addr(epc_page));
-}
-
-static inline int sgx_emodt(struct sgx_secinfo *secinfo,
-			    struct sgx_epc_page *epc_page)
-{
-	return __encls_ret_2(EREMOVE, secinfo, epc_page_addr(epc_page));
-}
-
-instead of all these completely pointless meta functions and build macro
-maze around it.
-
-Why? Because then every function which is actually used in code has a
-proper prototype instead of nongrepable magic and a gazillion of wrappers.
-
-Thanks,
-
-	tglx
+thnx,
+-- 
+~Randy
