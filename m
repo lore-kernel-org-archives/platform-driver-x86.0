@@ -1,31 +1,36 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Subject: Re: [PATCH v12 07/13] x86/sgx: data structures for tracking
  available EPC pages
-Date: Wed, 4 Jul 2018 20:34:48 +0300
-Message-ID: <20180704173448.GJ6724@linux.intel.com>
+Date: Wed, 4 Jul 2018 20:36:12 +0300
+Message-ID: <20180704173612.GK6724@linux.intel.com>
 References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com>
  <20180703182118.15024-8-jarkko.sakkinen@linux.intel.com>
- <48296e78-5979-a22f-c337-633deccf30bf@intel.com>
+ <alpine.DEB.2.21.1807032110460.1816@nanos.tec.linutronix.de>
+ <00ca61d5-5a1d-5c83-3b49-62c899a87041@infradead.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <48296e78-5979-a22f-c337-633deccf30bf@intel.com>
+In-Reply-To: <00ca61d5-5a1d-5c83-3b49-62c899a87041@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jul 03, 2018 at 12:03:48PM -0700, Dave Hansen wrote:
-> On 07/03/2018 11:19 AM, Jarkko Sakkinen wrote:
-> > This commit adds a database of EPC banks for kernel to easily access the
-> > available EPC pages. On UMA architectures there is a singe bank of EPC
-> > pages. On NUMA architectures there is an EPC bank for each node.
+On Tue, Jul 03, 2018 at 01:26:11PM -0700, Randy Dunlap wrote:
+> On 07/03/18 12:46, Thomas Gleixner wrote:
+> > On Tue, 3 Jul 2018, Jarkko Sakkinen wrote:
+> > 
+> >> SGX has a set of data structures to maintain information about the enclaves
+> >> and their security properties. BIOS reserves a fixed size region of
+> >> physical memory for these structures by setting Processor Reserved Memory
+> >> Range Registers (PRMRR). This memory area is called Enclave Page Cache
+> >> (EPC).
+> >>
+> >> This commit adds a database of EPC banks for kernel to easily access the
 > 
-> Is this universally true?  What about Sub-NUMA-Clustering/Cluster-on-Die
-> systems?
+> what kind of database?  How does one query it?
 
-I have to say that I do not have a good answer right now but I will
-study this area for the next version.
+Have to think of a better word. Thanks!
 
 /Jarkko
