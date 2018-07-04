@@ -1,34 +1,43 @@
-From: Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v12 05/13] x86/sgx: architectural structures
-Date: Tue, 3 Jul 2018 14:22:52 -0700
-Message-ID: <5790d6a4-7d30-1ed8-0214-f68f1cb72294@intel.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v12 09/13] x86/sgx: EPC page allocation routines
+Date: Wed, 4 Jul 2018 06:25:53 +0200
+Message-ID: <20180704042516.GA20409@zn.tnic>
 References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com>
- <20180703182118.15024-6-jarkko.sakkinen@linux.intel.com>
+ <20180703182118.15024-10-jarkko.sakkinen@linux.intel.com>
+ <alpine.DEB.2.21.1807032216390.1816@nanos.tec.linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703182118.15024-6-jarkko.sakkinen@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1807032216390.1816@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 07/03/2018 11:19 AM, Jarkko Sakkinen wrote:
-> +enum sgx_cpuid {
-> +	SGX_CPUID_CAPABILITIES	= 0,
-> +	SGX_CPUID_ATTRIBUTES	= 1,
-> +	SGX_CPUID_EPC_BANKS	= 2,
-> +};
+On Tue, Jul 03, 2018 at 10:41:14PM +0200, Thomas Gleixner wrote:
+> On Tue, 3 Jul 2018, Jarkko Sakkinen wrote:
+> >  
+> > +#define SGX_NR_TO_SCAN	16
+> > +#define SGX_NR_LOW_PAGES 32
+> > +#define SGX_NR_HIGH_PAGES 64
+> > +
+> >  bool sgx_enabled __ro_after_init;
+> >  EXPORT_SYMBOL(sgx_enabled);
+> >  bool sgx_lc_enabled __ro_after_init;
+> >  EXPORT_SYMBOL(sgx_lc_enabled);
+> > +LIST_HEAD(sgx_active_page_list);
+> > +EXPORT_SYMBOL(sgx_active_page_list);
+> > +DEFINE_SPINLOCK(sgx_active_page_list_lock);
+> > +EXPORT_SYMBOL(sgx_active_page_list_lock);
+> 
+> Why is all of this exported. If done right then no call site has to fiddle
+> with the list and the lock at all.
 
-I made a review comment about these last time.  I don't remember
-receiving any kind of response from you on it, or seeing it addressed in
-these patches in any kind of way.
+... and also, why are the other exports not EXPORT_SYMBOL_GPL?
 
-I've also seen comments from Thomas that sound really familiar such as
-the lack of comments on the paging code or the use of a semaphore to
-protect things that don't sleep.  I made very, very similar comments on
-the last posting.
+-- 
+Regards/Gruss,
+    Boris.
 
-Is there a reason that those comments were not addressed?
+Good mailing practices for 400: avoid top-posting and trim the reply.
