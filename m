@@ -1,38 +1,90 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v12 04/13] x86/cpufeatures: add Intel-defined SGX leaf
- CPUID_12_EAX
-Date: Wed, 4 Jul 2018 20:27:23 +0300
-Message-ID: <20180704172723.GG6724@linux.intel.com>
+Subject: Re: [PATCH v12 06/13] x86/sgx: detect Intel SGX
+Date: Wed, 4 Jul 2018 20:28:14 +0300
+Message-ID: <20180704172814.GH6724@linux.intel.com>
 References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com>
- <20180703182118.15024-5-jarkko.sakkinen@linux.intel.com>
- <alpine.DEB.2.21.1807032051510.1816@nanos.tec.linutronix.de>
+ <20180703182118.15024-7-jarkko.sakkinen@linux.intel.com>
+ <alpine.DEB.2.21.1807032105290.1816@nanos.tec.linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1807032051510.1816@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1807032105290.1816@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexei Starovoitov <ast@kernel.org>, David Woodhouse <dwmw@amazon.co.uk>, Andi Kleen <ak@linux.intel.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Tom Lendacky <thomas.lendacky@amd.com>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Andy Lutomirski <luto@kernel.org>, Ricardo Neri <ricardo.>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Vikas Shivappa <vikas.shivappa@linux.intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Andi Kleen <ak@linux.intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jul 03, 2018 at 08:54:56PM +0200, Thomas Gleixner wrote:
+On Tue, Jul 03, 2018 at 09:09:52PM +0200, Thomas Gleixner wrote:
 > On Tue, 3 Jul 2018, Jarkko Sakkinen wrote:
+> > @@ -0,0 +1,54 @@
+> > +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> > +// Copyright(c) 2016-17 Intel Corporation.
+> > +
+> > +#include <asm/sgx.h>
+> > +#include <asm/sgx_pr.h>
+> > +#include <linux/freezer.h>
+> > +#include <linux/highmem.h>
+> > +#include <linux/kthread.h>
+> > +#include <linux/ratelimit.h>
+> > +#include <linux/sched/signal.h>
+> > +#include <linux/slab.h>
 > 
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > CPUID_12_EAX is an Intel-defined feature bits leaf dedicated for SGX.
-> > There are currently four documented feature bits, with more expected in
-> > the not-too-distant future.
-> > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> The common include ordering is
 > 
-> Lacks SOB
+> include linux/....
 > 
+> include asm/...
+> 
+> > +
+> > +bool sgx_enabled __ro_after_init;
+> > +EXPORT_SYMBOL(sgx_enabled);
+> 
+> 
+> > +bool sgx_lc_enabled __ro_after_init;
+> > +EXPORT_SYMBOL(sgx_lc_enabled);
+> > +
+> > +static __init bool sgx_is_enabled(bool *lc_enabled)
+> > +{
+> > +	unsigned long fc;
+> > +
+> > +	if (!boot_cpu_has(X86_FEATURE_SGX))
+> > +		return false;
+> > +
+> > +	if (!boot_cpu_has(X86_FEATURE_SGX1))
+> > +		return false;
+> > +
+> > +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
+> > +	if (!(fc & FEATURE_CONTROL_LOCKED)) {
+> > +		pr_info("IA32_FEATURE_CONTROL MSR is not locked\n");
+> > +		return false;
+> > +	}
+> > +
+> > +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE)) {
+> > +		pr_info("disabled by the firmware\n");
+> > +		return false;
+> > +	}
+> > +
+> > +	if (!(fc & FEATURE_CONTROL_SGX_LE_WR)) {
+> > +		pr_info("IA32_SGXLEPUBKEYHASHn MSRs are not writable\n");
+> > +		return false;
+> > +	}
+> > +
+> > +	*lc_enabled = !!(fc & FEATURE_CONTROL_SGX_LE_WR);
+> > +	return true;
+> > +}
+> > +
+> > +static __init int sgx_init(void)
+> > +{
+> > +	sgx_enabled = sgx_is_enabled(&sgx_lc_enabled);
+> 
+> This is horrible, really. Both variables are global. So what the heck is
+> wrong with assigning them directly in the function? 
+
+Fully agreed, does not make any sense.
+
 > Thanks,
 > 
 > 	tglx
-
-Thanks, will refine!
 
 /Jarkko
