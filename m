@@ -1,48 +1,36 @@
-From: Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v12 05/13] x86/sgx: architectural structures
-Date: Thu, 5 Jul 2018 08:31:42 -0700
-Message-ID: <f9fe78ca-0ff4-814c-3681-a2366be01337@intel.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v12 03/13] x86/sgx: add SGX definitions to msr-index.h
+Date: Thu, 5 Jul 2018 19:05:49 +0300
+Message-ID: <20180705160549.GA12818@linux.intel.com>
 References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com>
- <20180703182118.15024-6-jarkko.sakkinen@linux.intel.com>
+ <20180703182118.15024-4-jarkko.sakkinen@linux.intel.com>
+ <296d6c54-306d-ebec-0a7a-68e06d00e704@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180703182118.15024-6-jarkko.sakkinen@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <296d6c54-306d-ebec-0a7a-68e06d00e704@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@suse.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, David Woodhouse <dwmw@amazon.co.uk>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 07/03/2018 11:19 AM, Jarkko Sakkinen wrote:
-> +struct sgx_secs {
-> +	uint64_t size;
-> +	uint64_t base;
-> +	uint32_t ssaframesize;
-> +	uint32_t miscselect;
-> +	uint8_t reserved1[SGX_SECS_RESERVED1_SIZE];
-> +	uint64_t attributes;
-> +	uint64_t xfrm;
-> +	uint32_t mrenclave[8];
-> +	uint8_t reserved2[SGX_SECS_RESERVED2_SIZE];
-> +	uint32_t mrsigner[8];
-> +	uint8_t	reserved3[SGX_SECS_RESERVED3_SIZE];
-> +	uint16_t isvvprodid;
-> +	uint16_t isvsvn;
-> +	uint8_t reserved4[SGX_SECS_RESERVED4_SIZE];
-> +} __packed __aligned(4096);
+On Tue, Jul 03, 2018 at 11:31:59AM -0700, Dave Hansen wrote:
+> On 07/03/2018 11:19 AM, Jarkko Sakkinen wrote:
+> > --- a/arch/x86/include/asm/msr-index.h
+> > +++ b/arch/x86/include/asm/msr-index.h
+> > @@ -479,6 +479,8 @@
+> >  #define FEATURE_CONTROL_LOCKED				(1<<0)
+> >  #define FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX	(1<<1)
+> >  #define FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX	(1<<2)
+> > +#define FEATURE_CONTROL_SGX_ENABLE                      (1<<18)
+> > +#define FEATURE_CONTROL_SGX_LE_WR			(1<<17)
+> >  #define FEATURE_CONTROL_LMCE				(1<<20)
+> 
+> Have you run checkpatch.pl on these?  There's a tabs-vs-spaces issue here.
 
-Why are the uint* versions in use here?  Those are for userspace ABI,
-but this is entirely for in-kernel-use, right?
+High portion of lines in this file are over 80 characters and have this
+same incosistent spacing. I'm not sure if this should be fixed bacause
+it would be consistent with the formatting that this file uses...
 
-We've used u8/16/32/64 in arch code in a bunch of places.  They're at
-least a bit more compact and easier to read.  It's this:
-
-	u8	foo;
-	u64	bar;
-
-vs. this:
-
-	uint8_t	 foo;
-	uint64_t bar;
+/Jarkko
