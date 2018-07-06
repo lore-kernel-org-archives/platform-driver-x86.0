@@ -1,76 +1,61 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH resend v4] dell_rbu: make firmware payload memory
- uncachable
-Date: Fri, 6 Jul 2018 16:28:32 +0000
-Message-ID: <eca11a9c20d14480ae02b2912b7a6447@ausx13mpc120.AMER.DELL.COM>
-References: <eb0db565-5f8a-ab1e-2bf3-2def3ec3eddc@gmail.com>
- <5318cc53-31b4-5c83-abb7-c3ff5d892af2@gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/2] platform/x86: wmi: prefix sysfs files in
+ /sys/bus/wmi with the ACPI device
+Date: Fri, 6 Jul 2018 16:00:40 -0700
+Message-ID: <20180706230040.GA3041@fury>
+References: <1512786861-1014-1-git-send-email-mario.limonciello@dell.com>
+ <1512786861-1014-2-git-send-email-mario.limonciello@dell.com>
+ <DDE9D9EA-D55D-41CC-94ED-EB2A590B7BCF@amacapital.net>
+ <1512790860266.96149@Dell.com>
+ <CALCETrWm9jY-jo9EN7KW+E4Gc1nDPrQAJ_g+07L-UgZpe5XgMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5318cc53-31b4-5c83-abb7-c3ff5d892af2@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CALCETrWm9jY-jo9EN7KW+E4Gc1nDPrQAJ_g+07L-UgZpe5XgMA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: stuart.w.hayes@gmail.com, linux-kernel@vger.kernel.org, Stuart.Hayes@dell.com
-Cc: tiwai@suse.de, andy.shevchenko@gmail.com, dvhart@infradead.org, platform-driver-x86@vger.kernel.org
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogcGxhdGZvcm0tZHJpdmVy
-LXg4Ni1vd25lckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpwbGF0Zm9ybS1kcml2ZXIteDg2LQ0K
-PiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBTdHVhcnQgSGF5ZXMNCj4gU2Vu
-dDogRnJpZGF5LCBKdWx5IDYsIDIwMTggMTE6MTkgQU0NCj4gVG86IGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmcNCj4gQ2M6IFRha2FzaGkgSXdhaTsgQW5keSBTaGV2Y2hlbmtvOyBkdmhhcnRA
-aW5mcmFkZWFkLm9yZzsgUGxhdGZvcm0gRHJpdmVyDQo+IFN1YmplY3Q6IFtQQVRDSCByZXNlbmQg
-djRdIGRlbGxfcmJ1OiBtYWtlIGZpcm13YXJlIHBheWxvYWQgbWVtb3J5IHVuY2FjaGFibGUNCj4g
-DQo+IFRoZSBkZWxsX3JidSBkcml2ZXIgdGFrZXMgZmlybXdhcmUgdXBkYXRlIHBheWxvYWRzIGFu
-ZCBwdXRzIHRoZW0gaW4gbWVtb3J5IHNvDQo+IHRoZSBzeXN0ZW0gQklPUyBjYW4gZmluZCB0aGVt
-IGFmdGVyIGEgcmVib290LiAgVGhpcyBzb21ldGltZXMgZmFpbHMgKHRob3VnaA0KPiByYXJlbHkp
-LCBiZWNhdXNlIHRoZSBtZW1vcnkgY29udGFpbmluZyB0aGUgcGF5bG9hZCBpcyBpbiB0aGUgQ1BV
-IGNhY2hlIGJ1dA0KPiBuZXZlciBnZXRzIHdyaXR0ZW4gYmFjayB0byBtYWluIG1lbW9yeSBiZWZv
-cmUgdGhlIHN5c3RlbSBpcyByZWJvb3RlZCAoQ1BVDQo+IGNhY2hlIGNvbnRlbnRzIGFyZSBsb3N0
-IG9uIHJlYm9vdCkuDQo+IA0KPiBXaXRoIHRoaXMgcGF0Y2gsIHRoZSBwYXlsb2FkIG1lbW9yeSB3
-aWxsIGJlIGNoYW5nZWQgdG8gdW5jYWNoYWJsZSB0byBlbnN1cmUNCj4gdGhhdCB0aGUgcGF5bG9h
-ZCBpcyBhY3R1YWxseSBpbiBtYWluIG1lbW9yeSBiZWZvcmUgdGhlIHN5c3RlbSBpcyByZWJvb3Rl
-ZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFN0dWFydCBIYXllcyA8c3R1YXJ0LncuaGF5ZXNAZ21h
-aWwuY29tPg0KPiBSZXZpZXdlZC1ieTogVGFrYXNoaSBJd2FpIDx0aXdhaUBzdXNlLmRlPg0KPiBT
-aWduZWQtb2ZmLWJ5OiBUYWthc2hpIEl3YWkgPHRpd2FpQHN1c2UuZGU+DQoNClJldmlld2VkLWJ5
-OiBNYXJpbyBMaW1vbmNpZWxsbyA8bWFyaW8ubGltb25jaWVsbG9AZGVsbC5jb20+DQoNCj4gLS0t
-DQo+IHYyIEFkZGVkIGluY2x1ZGUsIHJlbW92ZWQgZXh0cmEgcGFyZW50aGVzZXMNCj4gdjMgQ29y
-cmVjdGVkIGZvcm1hdHRpbmcgYW5kIGluY2x1ZGUgbGluZQ0KPiB2NCBNb3ZlZCBzZXRfbWVtb3J5
-X3VjKCkgb3V0c2lkZSB0aGUgd2hpbGUgbG9vcCBzbyB0aGF0IHRoZSBtZW1vcnkgaXMNCj4gICAg
-ZGVmaW5pdGVseSBhbGxvY2F0ZWQgYmVmb3JlIGl0IGlzIHNldCB0byB1bmNhY2hhYmxlDQo+IA0K
-PiBUaGlzIGRyaXZlciBoYXMgbm8gbWFpbnRhaW5lci4NCg0KU3R1YXJ0LA0KDQpPdXRzaWRlIG9m
-IHRoaXMgcGF0Y2gsIEkgdGhpbmsgaXQgd291bGQgbWFrZSBzZW5zZSB0byBzZW5kIHNvbWUgZm9s
-bG93IHVwIHBhdGNoDQpzZXJpZXMgdGhhdCBkbyB0aGUgZm9sbG93aW5nOg0KDQoxKSBMZXQgeW91
-IHRha2Ugb3ZlciBhcyBtYWludGFpbmVyIChVcGRhdGUgTUFJTlRBSU5FUlMpDQoyKSBNb3ZlIHRo
-aXMgZHJpdmVyIHRvIHBsYXRmb3JtLXg4Ng0KMykgVXBkYXRlIGRlbGxfcmJ1LnR4dCB3aXRoIHRo
-ZSBjb3JyZWN0IFVSTHMgYW5kIG1lbnRpb24gdGhhdCBpdCdzIG9ubHkgZm9yIGVudGVycHJpc2UN
-CmhhcmR3YXJlLiAgICBDbGllbnQgaGFyZHdhcmUgaGFzIGluc3RlYWQgb3B0ZWQgdG8gc3VwcG9y
-dCBVRUZJIGNhcHN1bGVzIGZvciB1cGRhdGVzDQpmcm9tIExpbnV4Lg0KDQpTaW5jZSBpdCdzIHJl
-YWxseSBhIHBsYXRmb3JtIGZlYXR1cmUgYW5kIHNwZWNpZmljIHRvIG9ubHkgRGVsbCBlbnRlcnBy
-aXNlIGhhcmR3YXJlDQpJIHRoaW5rIGl0IG1ha2VzIHNlbnNlIHRvIG1vdmUgb3ZlciB0byBhbiBh
-cmVhIHdpdGggc3Vic3lzdGVtIG1haW50YWluZXJzIHRoYXQNCmNhbiBoZWxwIHRvIHJldmlldyBw
-YXRjaGVzIGFzIG5lZWRlZC4NCg0KPiANCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Zpcm13
-YXJlL2RlbGxfcmJ1LmMgYi9kcml2ZXJzL2Zpcm13YXJlL2RlbGxfcmJ1LmMNCj4gaW5kZXggMmY0
-NTJmMWY3YzhhLi41M2YyN2E2ZTJkNzYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZmlybXdhcmUv
-ZGVsbF9yYnUuYw0KPiArKysgYi9kcml2ZXJzL2Zpcm13YXJlL2RlbGxfcmJ1LmMNCj4gQEAgLTQ1
-LDYgKzQ1LDcgQEANCj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGVwYXJhbS5oPg0KPiAgI2luY2x1
-ZGUgPGxpbnV4L2Zpcm13YXJlLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvZG1hLW1hcHBpbmcuaD4N
-Cj4gKyNpbmNsdWRlIDxhc20vc2V0X21lbW9yeS5oPg0KPiANCj4gIE1PRFVMRV9BVVRIT1IoIkFi
-aGF5IFNhbHVua2UgPGFiaGF5X3NhbHVua2VAZGVsbC5jb20+Iik7DQo+ICBNT0RVTEVfREVTQ1JJ
-UFRJT04oIkRyaXZlciBmb3IgdXBkYXRpbmcgQklPUyBpbWFnZSBvbiBERUxMIHN5c3RlbXMiKTsN
-Cj4gQEAgLTE4MSw2ICsxODIsMTEgQEAgc3RhdGljIGludCBjcmVhdGVfcGFja2V0KHZvaWQgKmRh
-dGEsIHNpemVfdCBsZW5ndGgpDQo+ICAJCQlwYWNrZXRfZGF0YV90ZW1wX2J1ZiA9IE5VTEw7DQo+
-ICAJCX0NCj4gIAl9DQo+ICsJLyoNCj4gKwkgKiBzZXQgdG8gdW5jYWNoYWJsZSBvciBpdCBtYXkg
-bmV2ZXIgZ2V0IHdyaXR0ZW4gYmFjayBiZWZvcmUgcmVib290DQo+ICsJICovDQo+ICsJc2V0X21l
-bW9yeV91YygodW5zaWduZWQgbG9uZylwYWNrZXRfZGF0YV90ZW1wX2J1ZiwgMSA8PCBvcmRlcm51
-bSk7DQo+ICsNCj4gIAlzcGluX2xvY2soJnJidV9kYXRhLmxvY2spOw0KPiANCj4gIAluZXdwYWNr
-ZXQtPmRhdGEgPSBwYWNrZXRfZGF0YV90ZW1wX2J1ZjsNCj4gQEAgLTM0OSw2ICszNTUsOCBAQCBz
-dGF0aWMgdm9pZCBwYWNrZXRfZW1wdHlfbGlzdCh2b2lkKQ0KPiAgCQkgKiB0byBtYWtlIHN1cmUg
-dGhlcmUgYXJlIG5vIHN0YWxlIFJCVSBwYWNrZXRzIGxlZnQgaW4gbWVtb3J5DQo+ICAJCSAqLw0K
-PiAgCQltZW1zZXQobmV3cGFja2V0LT5kYXRhLCAwLCByYnVfZGF0YS5wYWNrZXRzaXplKTsNCj4g
-KwkJc2V0X21lbW9yeV93YigodW5zaWduZWQgbG9uZyluZXdwYWNrZXQtPmRhdGEsDQo+ICsJCQkx
-IDw8IG5ld3BhY2tldC0+b3JkZXJudW0pOw0KPiAgCQlmcmVlX3BhZ2VzKCh1bnNpZ25lZCBsb25n
-KSBuZXdwYWNrZXQtPmRhdGEsDQo+ICAJCQluZXdwYWNrZXQtPm9yZGVybnVtKTsNCj4gIAkJa2Zy
-ZWUobmV3cGFja2V0KTsNCg==
+On Sat, Dec 09, 2017 at 01:32:29PM -0800, Andy Lutomirski wrote:
+> On Fri, Dec 8, 2017 at 7:41 PM,  <Mario.Limonciello@dell.com> wrote:
+> >>> On Dec 8, 2017, at 6:34 PM, Mario Limonciello <mario.limonciello@dell.com> wrote:
+> >>>
+> >>> It's possible for the same GUID to show up on as system twice.
+> >>> This means using solely the GUID for identify the file will not
+> >>> be sufficient.
+> >>
+> >>Isn't the file already in a per-bus directory?
+> >
+> > Yep, but the symlink created in /sys/bus/wmi/devices isn't.
+> > That's where the kernel complains about duplicate sysfs
+> > attributes.
+> >
+> > It's not exactly a pretty path I submitted, but it does avoid
+> > those collisions.
+> >
+> > Example (with this in place from /sys/bus/wmi/devices):
+> > lrwxrwxrwx 1 root root 0 Dec  8 21:39 PNP0C14:04-70FE8229-D03B-4214-A1C6-1F884B1A892A -> ../../../devices/platform/PNP0C14:04/wmi_bus/wmi_bus-PNP0C14:04/PNP0C14:04-70FE8229-D03B-4214-A1C6-1F884B1A892A
+> 
+> Right, I saw that in the cover letter right after sending this.
+> 
+> Greg, is there a cleaner way to deal with this?  There are two
+> instances of the same bus type, each of which would like to have a
+> device called "70FE8229-D03B-4214-A1C6-1F884B1A892A".  Can we somehow
+> rename the symlinks without renaming the device, or are we just
+> supposed to prefix the device name like Mario is doing here?
+> 
+
+Mario,
+
+This one has been lingering at the bottom of my patch stack for a while now -
+sorry for not poking on this earlier. Is this still something you have a need
+for?
+
+If so, would you resend and add Greg to Cc - specifically directing Andy's
+question above to him?
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
