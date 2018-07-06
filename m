@@ -1,59 +1,70 @@
-From: hpa@zytor.com
-Subject: Re: [PATCH v12 05/13] x86/sgx: architectural structures
-Date: Thu, 05 Jul 2018 14:50:05 -0700
-Message-ID: <E666884A-3EED-426E-BAB1-FA23C57BA5B9@zytor.com>
-References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com> <20180703182118.15024-6-jarkko.sakkinen@linux.intel.com> <f9fe78ca-0ff4-814c-3681-a2366be01337@intel.com> <20180705200912.GA10701@linux.intel.com>
+From: Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: [PATCH resend v4] dell_rbu: make firmware payload memory uncachable
+Date: Fri, 6 Jul 2018 11:18:34 -0500
+Message-ID: <5318cc53-31b4-5c83-abb7-c3ff5d892af2@gmail.com>
+References: <eb0db565-5f8a-ab1e-2bf3-2def3ec3eddc@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180705200912.GA10701@linux.intel.com>
+In-Reply-To: <eb0db565-5f8a-ab1e-2bf3-2def3ec3eddc@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dave Hansen <dave.hansen@intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Takashi Iwai <tiwai@suse.de>, Andy Shevchenko <andy.shevchenko@gmail.com>, dvhart@infradead.org, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On July 5, 2018 1:09:12 PM PDT, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
->On Thu, Jul 05, 2018 at 08:31:42AM -0700, Dave Hansen wrote:
->> On 07/03/2018 11:19 AM, Jarkko Sakkinen wrote:
->> > +struct sgx_secs {
->> > +	uint64_t size;
->> > +	uint64_t base;
->> > +	uint32_t ssaframesize;
->> > +	uint32_t miscselect;
->> > +	uint8_t reserved1[SGX_SECS_RESERVED1_SIZE];
->> > +	uint64_t attributes;
->> > +	uint64_t xfrm;
->> > +	uint32_t mrenclave[8];
->> > +	uint8_t reserved2[SGX_SECS_RESERVED2_SIZE];
->> > +	uint32_t mrsigner[8];
->> > +	uint8_t	reserved3[SGX_SECS_RESERVED3_SIZE];
->> > +	uint16_t isvvprodid;
->> > +	uint16_t isvsvn;
->> > +	uint8_t reserved4[SGX_SECS_RESERVED4_SIZE];
->> > +} __packed __aligned(4096);
->> 
->> Why are the uint* versions in use here?  Those are for userspace ABI,
->> but this is entirely for in-kernel-use, right?
->> 
->> We've used u8/16/32/64 in arch code in a bunch of places.  They're at
->> least a bit more compact and easier to read.  It's this:
->> 
->> 	u8	foo;
->> 	u64	bar;
->> 
->> vs. this:
->> 
->> 	uint8_t	 foo;
->> 	uint64_t bar;
->
->The reason was that with in-kernel LE these were in fact used by
->user space code. Now they can be changed to those that you
->suggested.
->
->/Jarkko
+The dell_rbu driver takes firmware update payloads and puts them in memory so
+the system BIOS can find them after a reboot.  This sometimes fails (though
+rarely), because the memory containing the payload is in the CPU cache but
+never gets written back to main memory before the system is rebooted (CPU
+cache contents are lost on reboot).
 
-For things exported to user space use __u* and __s* types... the _t types would actually violate the C standard with respect to namespace pollution.
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+With this patch, the payload memory will be changed to uncachable to ensure
+that the payload is actually in main memory before the system is rebooted.
+
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+v2 Added include, removed extra parentheses
+v3 Corrected formatting and include line
+v4 Moved set_memory_uc() outside the while loop so that the memory is
+   definitely allocated before it is set to uncachable
+
+This driver has no maintainer.
+
+
+diff --git a/drivers/firmware/dell_rbu.c b/drivers/firmware/dell_rbu.c
+index 2f452f1f7c8a..53f27a6e2d76 100644
+--- a/drivers/firmware/dell_rbu.c
++++ b/drivers/firmware/dell_rbu.c
+@@ -45,6 +45,7 @@
+ #include <linux/moduleparam.h>
+ #include <linux/firmware.h>
+ #include <linux/dma-mapping.h>
++#include <asm/set_memory.h>
+ 
+ MODULE_AUTHOR("Abhay Salunke <abhay_salunke@dell.com>");
+ MODULE_DESCRIPTION("Driver for updating BIOS image on DELL systems");
+@@ -181,6 +182,11 @@ static int create_packet(void *data, size_t length)
+ 			packet_data_temp_buf = NULL;
+ 		}
+ 	}
++	/*
++	 * set to uncachable or it may never get written back before reboot
++	 */
++	set_memory_uc((unsigned long)packet_data_temp_buf, 1 << ordernum);
++
+ 	spin_lock(&rbu_data.lock);
+ 
+ 	newpacket->data = packet_data_temp_buf;
+@@ -349,6 +355,8 @@ static void packet_empty_list(void)
+ 		 * to make sure there are no stale RBU packets left in memory
+ 		 */
+ 		memset(newpacket->data, 0, rbu_data.packetsize);
++		set_memory_wb((unsigned long)newpacket->data,
++			1 << newpacket->ordernum);
+ 		free_pages((unsigned long) newpacket->data,
+ 			newpacket->ordernum);
+ 		kfree(newpacket);
