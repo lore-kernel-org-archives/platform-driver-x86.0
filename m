@@ -1,60 +1,58 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/2] platform/x86: wmi: prefix sysfs files in
- /sys/bus/wmi with the ACPI device
-Date: Fri, 6 Jul 2018 16:00:40 -0700
-Message-ID: <20180706230040.GA3041@fury>
-References: <1512786861-1014-1-git-send-email-mario.limonciello@dell.com>
- <1512786861-1014-2-git-send-email-mario.limonciello@dell.com>
- <DDE9D9EA-D55D-41CC-94ED-EB2A590B7BCF@amacapital.net>
- <1512790860266.96149@Dell.com>
- <CALCETrWm9jY-jo9EN7KW+E4Gc1nDPrQAJ_g+07L-UgZpe5XgMA@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: acer-wmi: mark expected switch
+ fall-throughs
+Date: Fri, 6 Jul 2018 16:15:42 -0700
+Message-ID: <20180706231542.GB3041@fury>
+References: <20180705204221.GA11336@embeddedor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CALCETrWm9jY-jo9EN7KW+E4Gc1nDPrQAJ_g+07L-UgZpe5XgMA@mail.gmail.com>
+In-Reply-To: <20180705204221.GA11336@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Lee, Chun-Yi" <jlee@suse.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Dec 09, 2017 at 01:32:29PM -0800, Andy Lutomirski wrote:
-> On Fri, Dec 8, 2017 at 7:41 PM,  <Mario.Limonciello@dell.com> wrote:
-> >>> On Dec 8, 2017, at 6:34 PM, Mario Limonciello <mario.limonciello@dell.com> wrote:
-> >>>
-> >>> It's possible for the same GUID to show up on as system twice.
-> >>> This means using solely the GUID for identify the file will not
-> >>> be sufficient.
-> >>
-> >>Isn't the file already in a per-bus directory?
-> >
-> > Yep, but the symlink created in /sys/bus/wmi/devices isn't.
-> > That's where the kernel complains about duplicate sysfs
-> > attributes.
-> >
-> > It's not exactly a pretty path I submitted, but it does avoid
-> > those collisions.
-> >
-> > Example (with this in place from /sys/bus/wmi/devices):
-> > lrwxrwxrwx 1 root root 0 Dec  8 21:39 PNP0C14:04-70FE8229-D03B-4214-A1C6-1F884B1A892A -> ../../../devices/platform/PNP0C14:04/wmi_bus/wmi_bus-PNP0C14:04/PNP0C14:04-70FE8229-D03B-4214-A1C6-1F884B1A892A
+On Thu, Jul 05, 2018 at 03:42:21PM -0500, Gustavo A. R. Silva wrote:
+> In preparation to enabling -Wimplicit-fallthrough, mark switch cases
+> where we are expecting to fall through.
 > 
-> Right, I saw that in the cover letter right after sending this.
+> Warning level 2 was used: -Wimplicit-fallthrough=2
 > 
-> Greg, is there a cleaner way to deal with this?  There are two
-> instances of the same bus type, each of which would like to have a
-> device called "70FE8229-D03B-4214-A1C6-1F884B1A892A".  Can we somehow
-> rename the symlinks without renaming the device, or are we just
-> supposed to prefix the device name like Mario is doing here?
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/platform/x86/acer-wmi.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index 8952173..114b028 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -1018,6 +1018,7 @@ static acpi_status WMID_get_u32(u32 *value, u32 cap)
+>  			*value = tmp & 0x1;
+>  			return 0;
+>  		}
+> +		/* else: fall through */
+>  	default:
+>  		return AE_ERROR;
+>  	}
+> @@ -1344,6 +1345,7 @@ static acpi_status get_u32(u32 *value, u32 cap)
+>  			status = AMW0_get_u32(value, cap);
+>  			break;
+>  		}
+> +		/* else: fall through */
+>  	case ACER_WMID:
+>  		status = WMID_get_u32(value, cap);
+>  		break;
+> @@ -1386,6 +1388,7 @@ static acpi_status set_u32(u32 value, u32 cap)
+>  
+>  				return AMW0_set_u32(value, cap);
+>  			}
+> +			/* else: fall through */
 
-Mario,
-
-This one has been lingering at the bottom of my patch stack for a while now -
-sorry for not poking on this earlier. Is this still something you have a need
-for?
-
-If so, would you resend and add Greg to Cc - specifically directing Andy's
-question above to him?
+I suspect you are correct, bu these last two weren't obviously intentional to
+me. Has this seen any testing?
 
 -- 
 Darren Hart
