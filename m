@@ -1,42 +1,50 @@
-From: <Mario.Limonciello@dell.com>
-Subject: Re: [PATCH v2] platform/x86: intel-hid: Add support for Device
- Specific Methods
-Date: Sat, 7 Jul 2018 03:48:54 +0000
-Message-ID: <1530935335264.5774@Dell.com>
-References: <20180628181906.54910-1-srinivas.pandruvada@linux.intel.com>
- <74ac9bf130074e0a8f86a7904783d091@ausx13mpc120.AMER.DELL.COM>
- <95b3748fcb911c7305bd2bbcfd4e368f044f8b14.camel@linux.intel.com>
- <CAHp75VdX+i_N_GttiL3QZrpivpUeJa0ofGfeJR1FkfuiBWocqA@mail.gmail.com>
- <cc4bc804434a40d9bdd2fa03bbb875aa@ausx13mpc120.AMER.DELL.COM>
- <CAHp75VerxQrPwHTU9PF_q_8xkRm7=cBTPf2tb_5xPEoBQKcL8A@mail.gmail.com>,<20180706235907.GE3041@fury>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] platform/x86/toshiba_acpi.c: fix defined but not used build
+ warnings
+Date: Fri, 6 Jul 2018 20:53:09 -0700
+Message-ID: <59774e7f-103c-70b1-11bf-b2af16947dc8@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180706235907.GE3041@fury>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy.shevchenko@gmail.com
-Cc: srinivas.pandruvada@linux.intel.com, alex.hung@canonical.com, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, rjw@rjwysocki.net
+To: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Azael Avalos <coproscefalo@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
->I strongly advocate for vendors to have more control over their drivers,=
-=0A=
->but this scenario really frustrates me. I don't think I can justify this=
-=0A=
->to Linus as a fix. But before we just say "no" (because hey, I want=0A=
->these fixes available as early as possible too), let's ask Rafael if he=0A=
->has an opinion or if there is precedent for this in his experience with=0A=
->ACPI drivers in general:=0A=
-=0A=
-Full disclosure - an updated FW has since been rolled out that reverted thi=
-s=0A=
-behavior back to previous FW behavior due to lack of Linux support for the=
-=0A=
-new _DSM.  There is desire to use the new interface (as it did fix actual=
-=0A=
-problems with the old one) so at some point it may return.  When that happe=
-ns=0A=
-it would be ideal that people who are (for example) running an LTS kernel=
-=0A=
-or distro kernel that tracks stable can pick it up too.=0A=
+From: Randy Dunlap <rdunlap@infradead.org>
+
+Fix a build warning in toshiba_acpi.c when CONFIG_PROC_FS is not enabled
+by marking the unused function as __maybe_unused.
+
+../drivers/platform/x86/toshiba_acpi.c:1685:12: warning: 'version_proc_show' defined but not used [-Wunused-function]
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+---
+ drivers/platform/x86/toshiba_acpi.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- linux-next-20180706.orig/drivers/platform/x86/toshiba_acpi.c
++++ linux-next-20180706/drivers/platform/x86/toshiba_acpi.c
+@@ -34,6 +34,7 @@
+ #define TOSHIBA_ACPI_VERSION	"0.24"
+ #define PROC_INTERFACE_VERSION	1
+ 
++#include <linux/compiler.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+@@ -1682,7 +1683,7 @@ static const struct file_operations keys
+ 	.write		= keys_proc_write,
+ };
+ 
+-static int version_proc_show(struct seq_file *m, void *v)
++static int __maybe_unused version_proc_show(struct seq_file *m, void *v)
+ {
+ 	seq_printf(m, "driver:                  %s\n", TOSHIBA_ACPI_VERSION);
+ 	seq_printf(m, "proc_interface:          %d\n", PROC_INTERFACE_VERSION);
