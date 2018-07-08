@@ -1,57 +1,70 @@
-From: Damien =?UTF-8?B?VGjDqWJhdWx0?= <damien@dtbo.net>
-Subject: [PATCH] dell-laptop: Fix backlight detection
-Date: Sun, 8 Jul 2018 17:02:20 +0200
-Message-ID: <20180708170220.35f40818@anakin>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: intel-hid: Add support for Device
+ Specific Methods
+Date: Sun, 8 Jul 2018 20:53:36 +0300
+Message-ID: <CAHp75VeUf2m+eRDYzTWL6a8O3+AQV7rs_RzbtmTD5yh+TEQ0cA@mail.gmail.com>
+References: <20180628181906.54910-1-srinivas.pandruvada@linux.intel.com>
+ <74ac9bf130074e0a8f86a7904783d091@ausx13mpc120.AMER.DELL.COM>
+ <95b3748fcb911c7305bd2bbcfd4e368f044f8b14.camel@linux.intel.com>
+ <CAHp75VdX+i_N_GttiL3QZrpivpUeJa0ofGfeJR1FkfuiBWocqA@mail.gmail.com>
+ <cc4bc804434a40d9bdd2fa03bbb875aa@ausx13mpc120.AMER.DELL.COM>
+ <CAHp75VerxQrPwHTU9PF_q_8xkRm7=cBTPf2tb_5xPEoBQKcL8A@mail.gmail.com>
+ <20180706235907.GE3041@fury> <1530935335264.5774@Dell.com>
+ <CAHp75VeW9y2z2N7bzwY-kztLvgJYmHECHRF1q5Mr8ude8LOMUQ@mail.gmail.com> <82968804b607bf33550ba6fbaebc658db3953804.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <82968804b607bf33550ba6fbaebc658db3953804.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Darren Hart <dvhart@infradead.org>, Alex Hung <alex.hung@canonical.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Fix return code check for "max brightness" ACPI call.
+On Sun, Jul 8, 2018 at 2:37 AM, Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+> On Sat, 2018-07-07 at 19:24 +0300, Andy Shevchenko wrote:
+>> On Sat, Jul 7, 2018 at 6:48 AM,  <Mario.Limonciello@dell.com> wrote:
+>> > > I strongly advocate for vendors to have more control over their
+>> > > drivers,
+>> > > but this scenario really frustrates me. I don't think I can
+>> > > justify this
+>> > > to Linus as a fix. But before we just say "no" (because hey, I
+>> > > want
+>> > > these fixes available as early as possible too), let's ask Rafael
+>> > > if he
+>> > > has an opinion or if there is precedent for this in his
+>> > > experience with
+>> > > ACPI drivers in general:
+>> >
+>> > Full disclosure - an updated FW has since been rolled out that
+>> > reverted this
+>> > behavior back to previous FW behavior due to lack of Linux support
+>> > for the
+>> > new _DSM.  There is desire to use the new interface (as it did fix
+>> > actual
+>> > problems with the old one) so at some point it may return.  When
+>> > that happens
+>> > it would be ideal that people who are (for example) running an LTS
+>> > kernel
+>> > or distro kernel that tracks stable can pick it up too.
+>>
+>> I am all for the better user experience and bugs especially in FW
+>> should be fixed, but I think to support all kind of behaviour the new
+>> FW release should always provide a knob by which we can check if some
+>> feature is supported or not.
+>>
+>> Above sounds to me as mistake in design of the fix.
+> The fix here takes care of all the combination. If the new _DSM is
+> available, it checks what functionality the _DSM interface can provide
+> (Fn 0). For those functionality it gets using _DSM matching new FW
+> interface. If there is no _DSM or _DSM doesn't provide the
+> functionality or _DSM provided method fails, it still revert to old FW
+> interface style using standalone method. Eventually because of
+> configurable 5-button array, all platforms will be using new FW
+> interface with consideration of backward compatibility.
 
-The dell laptop ACPI video brightness control is not present on dell
-laptops anymore, but was present in older kernel versions.
+Srinivas, thanks for elaboration.
 
-The code that checks the return value is incorrect since the SMM
-refactoring.
-
-The old code was:
-  if (buffer->output[0] =3D=3D 0)
-
-Which was changed to:
-  ret =3D dell_send_request(...)
-  if (ret)
-
-However, dell_send_request() will return 0 if buffer->output[0] =3D=3D 0,
-so we must change the check to:
-  if (ret =3D=3D 0)
-
-This issue was found on a Dell M4800 laptop, and the fix tested on it
-as well.
-
-Fixes: 549b4930f057 ("dell-smbios: Introduce dispatcher for SMM calls")
-Signed-off-by: Damien Th=C3=A9bault <damien@dtbo.net>
-Tested-by: Damien Th=C3=A9bault <damien@dtbo.net>
----
- drivers/platform/x86/dell-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/dell-laptop.c
-b/drivers/platform/x86/dell-laptop.c index f1fa8612db40..06978c14c83b
-100644 --- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -2185,7 +2185,7 @@ static int __init dell_init(void)
- 		dell_fill_request(&buffer, token->location, 0, 0, 0);
- 		ret =3D dell_send_request(&buffer,
- 					CLASS_TOKEN_READ,
-SELECT_TOKEN_AC);
--		if (ret)
-+		if (ret =3D=3D 0)
- 			max_intensity =3D buffer.output[3];
- 	}
-=20
---=20
-2.17.1
+-- 
+With Best Regards,
+Andy Shevchenko
