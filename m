@@ -1,87 +1,95 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] dell-laptop: Fix backlight detection
-Date: Mon, 9 Jul 2018 14:57:41 -0700
-Message-ID: <20180709215741.GC30247@fury>
-References: <20180708170220.35f40818@anakin>
+Subject: Re: [PATCH v2] platform/x86: intel-hid: Add support for Device
+ Specific Methods
+Date: Mon, 9 Jul 2018 16:17:09 -0700
+Message-ID: <20180709231709.GA25221@fury>
+References: <74ac9bf130074e0a8f86a7904783d091@ausx13mpc120.AMER.DELL.COM>
+ <95b3748fcb911c7305bd2bbcfd4e368f044f8b14.camel@linux.intel.com>
+ <CAHp75VdX+i_N_GttiL3QZrpivpUeJa0ofGfeJR1FkfuiBWocqA@mail.gmail.com>
+ <cc4bc804434a40d9bdd2fa03bbb875aa@ausx13mpc120.AMER.DELL.COM>
+ <CAHp75VerxQrPwHTU9PF_q_8xkRm7=cBTPf2tb_5xPEoBQKcL8A@mail.gmail.com>
+ <20180706235907.GE3041@fury>
+ <ccb18d853b254f680895c45862274ec8bdd70ab0.camel@linux.intel.com>
+ <1dfb07bd3461414e8db492e643d7de88@ausx13mpc120.AMER.DELL.COM>
+ <20180709210646.GA30247@fury>
+ <b79253ee160b4d08a48ac0a805939296@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180708170220.35f40818@anakin>
+In-Reply-To: <b79253ee160b4d08a48ac0a805939296@ausx13mpc120.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Damien =?iso-8859-1?Q?Th=E9bault?= <damien@dtbo.net>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andy@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mario.Limonciello@dell.com
+Cc: srinivas.pandruvada@linux.intel.com, andy.shevchenko@gmail.com, alex.hung@canonical.com, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, rjw@rjwysocki.net
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Jul 08, 2018 at 05:02:20PM +0200, Damien Thébault wrote:
-> Fix return code check for "max brightness" ACPI call.
+On Mon, Jul 09, 2018 at 09:08:56PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Darren Hart [mailto:dvhart@infradead.org]
+> > Sent: Monday, July 9, 2018 4:07 PM
+> > To: Limonciello, Mario
+> > Cc: srinivas.pandruvada@linux.intel.com; andy.shevchenko@gmail.com;
+> > alex.hung@canonical.com; andy@infradead.org; platform-driver-
+> > x86@vger.kernel.org; linux-kernel@vger.kernel.org; rjw@rjwysocki.net
+> > Subject: Re: [PATCH v2] platform/x86: intel-hid: Add support for Device Specific
+> > Methods
+> > 
+> > On Mon, Jul 09, 2018 at 04:38:16AM +0000, Mario.Limonciello@dell.com wrote:
+> > > > -----Original Message-----
+> > > > From: Srinivas Pandruvada [mailto:srinivas.pandruvada@linux.intel.com]
+> > > > Sent: Saturday, July 7, 2018 8:44 AM
+> > > > To: Darren Hart; Andy Shevchenko
+> > > > Cc: Limonciello, Mario; Alex Hung; Andy Shevchenko; Platform Driver; Linux
+> > Kernel
+> > > > Mailing List; Rafael J. Wysocki
+> > > > Subject: Re: [PATCH v2] platform/x86: intel-hid: Add support for Device Specific
+> > > > Methods
+> > > >
+> > > > On Fri, 2018-07-06 at 16:59 -0700, Darren Hart wrote:
+> > > > > On Mon, Jul 02, 2018 at 05:06:14PM +0300, Andy Shevchenko wrote:
+> > > > > > On Mon, Jul 2, 2018 at 4:51 PM,  <Mario.Limonciello@dell.com>
+> > > > > > wrote:
+> > ...
+> > > > Mario can add more.
+> > > > But I think Dell has released a BIOS fix, so that power button can
+> > > > still work using non _DSM way. So I think we can wait for normal
+> > > > release cycle.
+> > >
+> > > Yeah, I added some comments on a separate reply already indicating this.
+> > >
+> > > The affected system we know about has reverted the new interface.
+> > >
+> > > This all stems from an expectation that the _DSM has been there for "many"
+> > > releases on the Windows side.  Long enough that even all the corporate
+> > downgrade
+> > > scenarios to older Windows versions and the drivers with them all worked
+> > properly.
+> > >
+> > > If this doesn't end up being a candidate for backporting to stable we'll probably
+> > > end up asking our various OS partners to backport it as a SAUCE type patch in
+> > distro
+> > > kernels to eventually be able to turn this back on.
+> > 
+> > Thanks Mario. We'll skip the RC. We can discuss -stable as a separate
+> > issue.  This patch fixes a demonstrable bug, the biggest obstacle here
+> > is the size. At 240 lines with context, it more than doubles the maximum
+> > patch size for stable.
+> > 
+> > My recommendation is that we treat the stable backport of this as a
+> > special case, e.g. Andy and I don't tag it, but you or Srinivas propose
+> > it and specifically make the case for why an exception should be made to
+> > Greg.
+> > 
+> > How self contained and isolated this change is will be an important part
+> > of the argument. On the one hand, it's all one file, on the other hand,
+> > this is a fairly generic driver in use in more and more platforms, with
+> > the potential for widespread impact if this introduces a new bug.
+> > 
 > 
-> The dell laptop ACPI video brightness control is not present on dell
-> laptops anymore, but was present in older kernel versions.
-> 
-> The code that checks the return value is incorrect since the SMM
-> refactoring.
-> 
-> The old code was:
->   if (buffer->output[0] == 0)
-> 
-> Which was changed to:
->   ret = dell_send_request(...)
->   if (ret)
-> 
-> However, dell_send_request() will return 0 if buffer->output[0] == 0,
-> so we must change the check to:
->   if (ret == 0)
-> 
-> This issue was found on a Dell M4800 laptop, and the fix tested on it
-> as well.
-> 
-> Fixes: 549b4930f057 ("dell-smbios: Introduce dispatcher for SMM calls")
-> Signed-off-by: Damien Thébault <damien@dtbo.net>
-> Tested-by: Damien Thébault <damien@dtbo.net>
+> In that case, how about we let it bake for a while and maybe by the time
+> 4.19 comes out is when we do the proposal of a stable backport?
 
-Thanks for the analysis and fix Damien.
-
-I was unable to apply the patch. Apparently due to your Content-Tranfer-Encoding
-being set to "quoted-printable". This converts "=" characters to =3D.
-Please work with your mail client and try sending the patch
-to yourself and applying it. Once that works, please resend.
-
-I suspect you may need to do one or both of the following:
-
-- Disable preferences->compose->"wrap pasted text" (or whichever applies to how
-  you get the patch into the compose window)
-
-- Set Preferences->Mail Handling->Sending->Transfer Encoding to 8bit to avoid
-  "quoted-printable".
-
-Other claws users who send patches have Content-Transfer-Encoding set to 7bit
-
-Thanks,
-
-> ---
->  drivers/platform/x86/dell-laptop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/dell-laptop.c
-> b/drivers/platform/x86/dell-laptop.c index f1fa8612db40..06978c14c83b
-> 100644 --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
-> @@ -2185,7 +2185,7 @@ static int __init dell_init(void)
->  		dell_fill_request(&buffer, token->location, 0, 0, 0);
->  		ret = dell_send_request(&buffer,
->  					CLASS_TOKEN_READ,
-> SELECT_TOKEN_AC);
-> -		if (ret)
-> +		if (ret == 0)
->  			max_intensity = buffer.output[3];
->  	}
->  
-> -- 
-> 2.17.1
-> 
-
+Works for me.
 -- 
 Darren Hart
 VMware Open Source Technology Center
