@@ -1,70 +1,56 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: intel-hid: Add support for Device
- Specific Methods
-Date: Sun, 8 Jul 2018 20:53:36 +0300
-Message-ID: <CAHp75VeUf2m+eRDYzTWL6a8O3+AQV7rs_RzbtmTD5yh+TEQ0cA@mail.gmail.com>
-References: <20180628181906.54910-1-srinivas.pandruvada@linux.intel.com>
- <74ac9bf130074e0a8f86a7904783d091@ausx13mpc120.AMER.DELL.COM>
- <95b3748fcb911c7305bd2bbcfd4e368f044f8b14.camel@linux.intel.com>
- <CAHp75VdX+i_N_GttiL3QZrpivpUeJa0ofGfeJR1FkfuiBWocqA@mail.gmail.com>
- <cc4bc804434a40d9bdd2fa03bbb875aa@ausx13mpc120.AMER.DELL.COM>
- <CAHp75VerxQrPwHTU9PF_q_8xkRm7=cBTPf2tb_5xPEoBQKcL8A@mail.gmail.com>
- <20180706235907.GE3041@fury> <1530935335264.5774@Dell.com>
- <CAHp75VeW9y2z2N7bzwY-kztLvgJYmHECHRF1q5Mr8ude8LOMUQ@mail.gmail.com> <82968804b607bf33550ba6fbaebc658db3953804.camel@linux.intel.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] dell-laptop: Fix backlight detection
+Date: Mon, 9 Jul 2018 04:14:50 +0000
+Message-ID: <b8e9239fd2a74c1187aea671f89cd854@ausx13mpc120.AMER.DELL.COM>
+References: <20180708170220.35f40818@anakin>
+ <20180708150914.x4tpxbe5yq54hw6a@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <82968804b607bf33550ba6fbaebc658db3953804.camel@linux.intel.com>
+In-Reply-To: <20180708150914.x4tpxbe5yq54hw6a@pali>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Darren Hart <dvhart@infradead.org>, Alex Hung <alex.hung@canonical.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: pali.rohar@gmail.com, damien@dtbo.net
+Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Jul 8, 2018 at 2:37 AM, Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
-> On Sat, 2018-07-07 at 19:24 +0300, Andy Shevchenko wrote:
->> On Sat, Jul 7, 2018 at 6:48 AM,  <Mario.Limonciello@dell.com> wrote:
->> > > I strongly advocate for vendors to have more control over their
->> > > drivers,
->> > > but this scenario really frustrates me. I don't think I can
->> > > justify this
->> > > to Linus as a fix. But before we just say "no" (because hey, I
->> > > want
->> > > these fixes available as early as possible too), let's ask Rafael
->> > > if he
->> > > has an opinion or if there is precedent for this in his
->> > > experience with
->> > > ACPI drivers in general:
->> >
->> > Full disclosure - an updated FW has since been rolled out that
->> > reverted this
->> > behavior back to previous FW behavior due to lack of Linux support
->> > for the
->> > new _DSM.  There is desire to use the new interface (as it did fix
->> > actual
->> > problems with the old one) so at some point it may return.  When
->> > that happens
->> > it would be ideal that people who are (for example) running an LTS
->> > kernel
->> > or distro kernel that tracks stable can pick it up too.
->>
->> I am all for the better user experience and bugs especially in FW
->> should be fixed, but I think to support all kind of behaviour the new
->> FW release should always provide a knob by which we can check if some
->> feature is supported or not.
->>
->> Above sounds to me as mistake in design of the fix.
-> The fix here takes care of all the combination. If the new _DSM is
-> available, it checks what functionality the _DSM interface can provide
-> (Fn 0). For those functionality it gets using _DSM matching new FW
-> interface. If there is no _DSM or _DSM doesn't provide the
-> functionality or _DSM provided method fails, it still revert to old FW
-> interface style using standalone method. Eventually because of
-> configurable 5-button array, all platforms will be using new FW
-> interface with consideration of backward compatibility.
-
-Srinivas, thanks for elaboration.
-
--- 
-With Best Regards,
-Andy Shevchenko
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciBbbWFpbHRv
+OnBhbGkucm9oYXJAZ21haWwuY29tXQ0KPiBTZW50OiBTdW5kYXksIEp1bHkgOCwgMjAxOCA4OjA5
+IEFNDQo+IFRvOiBEYW1pZW4gVGjDqWJhdWx0DQo+IENjOiBNYXR0aGV3IEdhcnJldHQ7IERhcnJl
+biBIYXJ0OyBBbmR5IFNoZXZjaGVua287IExpbW9uY2llbGxvLCBNYXJpbzsgcGxhdGZvcm0tDQo+
+IGRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGRlbGwtbGFwdG9wOiBGaXggYmFja2xpZ2h0IGRldGVj
+dGlvbg0KPiANCj4gT24gU3VuZGF5IDA4IEp1bHkgMjAxOCAxNzowMjoyMCBEYW1pZW4gVGjDqWJh
+dWx0IHdyb3RlOg0KPiA+IEZpeCByZXR1cm4gY29kZSBjaGVjayBmb3IgIm1heCBicmlnaHRuZXNz
+IiBBQ1BJIGNhbGwuDQo+ID4NCj4gPiBUaGUgZGVsbCBsYXB0b3AgQUNQSSB2aWRlbyBicmlnaHRu
+ZXNzIGNvbnRyb2wgaXMgbm90IHByZXNlbnQgb24gZGVsbA0KPiA+IGxhcHRvcHMgYW55bW9yZSwg
+YnV0IHdhcyBwcmVzZW50IGluIG9sZGVyIGtlcm5lbCB2ZXJzaW9ucy4NCj4gPg0KPiA+IFRoZSBj
+b2RlIHRoYXQgY2hlY2tzIHRoZSByZXR1cm4gdmFsdWUgaXMgaW5jb3JyZWN0IHNpbmNlIHRoZSBT
+TU0NCj4gPiByZWZhY3RvcmluZy4NCj4gPg0KPiA+IFRoZSBvbGQgY29kZSB3YXM6DQo+ID4gICBp
+ZiAoYnVmZmVyLT5vdXRwdXRbMF0gPT0gMCkNCj4gPg0KPiA+IFdoaWNoIHdhcyBjaGFuZ2VkIHRv
+Og0KPiA+ICAgcmV0ID0gZGVsbF9zZW5kX3JlcXVlc3QoLi4uKQ0KPiA+ICAgaWYgKHJldCkNCj4g
+Pg0KPiA+IEhvd2V2ZXIsIGRlbGxfc2VuZF9yZXF1ZXN0KCkgd2lsbCByZXR1cm4gMCBpZiBidWZm
+ZXItPm91dHB1dFswXSA9PSAwLA0KPiA+IHNvIHdlIG11c3QgY2hhbmdlIHRoZSBjaGVjayB0bzoN
+Cj4gPiAgIGlmIChyZXQgPT0gMCkNCj4gDQo+IFlvdSBhcmUgcmlnaHQsIGRlbGxfc2VuZF9yZXF1
+ZXN0KCkgcmV0dXJuIG5vbi16ZXJvIHZhbHVlIG9uIGVycm9yLg0KPiANCj4gPiBUaGlzIGlzc3Vl
+IHdhcyBmb3VuZCBvbiBhIERlbGwgTTQ4MDAgbGFwdG9wLCBhbmQgdGhlIGZpeCB0ZXN0ZWQgb24g
+aXQNCj4gPiBhcyB3ZWxsLg0KPiA+DQo+ID4gRml4ZXM6IDU0OWI0OTMwZjA1NyAoImRlbGwtc21i
+aW9zOiBJbnRyb2R1Y2UgZGlzcGF0Y2hlciBmb3IgU01NIGNhbGxzIikNCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBEYW1pZW4gVGjDqWJhdWx0IDxkYW1pZW5AZHRiby5uZXQ+DQo+ID4gVGVzdGVkLWJ5OiBE
+YW1pZW4gVGjDqWJhdWx0IDxkYW1pZW5AZHRiby5uZXQ+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMv
+cGxhdGZvcm0veDg2L2RlbGwtbGFwdG9wLmMgfCAyICstDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAx
+IGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvcGxhdGZvcm0veDg2L2RlbGwtbGFwdG9wLmMNCj4gPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2
+L2RlbGwtbGFwdG9wLmMgaW5kZXggZjFmYTg2MTJkYjQwLi4wNjk3OGMxNGM4M2INCj4gPiAxMDA2
+NDQgLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1sYXB0b3AuYw0KPiA+ICsrKyBiL2Ry
+aXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtbGFwdG9wLmMNCj4gPiBAQCAtMjE4NSw3ICsyMTg1LDcg
+QEAgc3RhdGljIGludCBfX2luaXQgZGVsbF9pbml0KHZvaWQpDQo+ID4gIAkJZGVsbF9maWxsX3Jl
+cXVlc3QoJmJ1ZmZlciwgdG9rZW4tPmxvY2F0aW9uLCAwLCAwLCAwKTsNCj4gPiAgCQlyZXQgPSBk
+ZWxsX3NlbmRfcmVxdWVzdCgmYnVmZmVyLA0KPiA+ICAJCQkJCUNMQVNTX1RPS0VOX1JFQUQsDQo+
+ID4gU0VMRUNUX1RPS0VOX0FDKTsNCj4gPiAtCQlpZiAocmV0KQ0KPiA+ICsJCWlmIChyZXQgPT0g
+MCkNCj4gPiAgCQkJbWF4X2ludGVuc2l0eSA9IGJ1ZmZlci5vdXRwdXRbM107DQo+ID4gIAl9DQo+
+ID4NCj4gDQo+IFJldmlld2VkLWJ5OiBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBnbWFpbC5jb20+
+DQo+IA0KDQpUaGFua3MgZm9yIHRoaXMgY2F0Y2guDQoNClJldmlld2VkLWJ5OiBNYXJpbyBMaW1v
+bmNpZWxsbyA8bWFyaW8ubGltb25jaWVsbG9AZGVsbC5jb20+DQoNClRoaXMgc2hvdWxkIHByb2Jh
+Ymx5IGdvIHRvIHN0YWJsZSBhcyB3ZWxsLg0K
