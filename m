@@ -1,119 +1,116 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v2] platform/x86: intel-hid: Add support for Device
- Specific Methods
-Date: Mon, 9 Jul 2018 04:38:16 +0000
-Message-ID: <1dfb07bd3461414e8db492e643d7de88@ausx13mpc120.AMER.DELL.COM>
-References: <20180628181906.54910-1-srinivas.pandruvada@linux.intel.com>
-         <74ac9bf130074e0a8f86a7904783d091@ausx13mpc120.AMER.DELL.COM>
-         <95b3748fcb911c7305bd2bbcfd4e368f044f8b14.camel@linux.intel.com>
-         <CAHp75VdX+i_N_GttiL3QZrpivpUeJa0ofGfeJR1FkfuiBWocqA@mail.gmail.com>
-         <cc4bc804434a40d9bdd2fa03bbb875aa@ausx13mpc120.AMER.DELL.COM>
-         <CAHp75VerxQrPwHTU9PF_q_8xkRm7=cBTPf2tb_5xPEoBQKcL8A@mail.gmail.com>
-         <20180706235907.GE3041@fury>
- <ccb18d853b254f680895c45862274ec8bdd70ab0.camel@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] headers: fix linux/mod_devicetable.h inclusions
+Date: Mon,  9 Jul 2018 17:19:02 +0200
+Message-ID: <20180709151947.940759-1-arnd@arndb.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ccb18d853b254f680895c45862274ec8bdd70ab0.camel@linux.intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.pandruvada@linux.intel.com, dvhart@infradead.org, andy.shevchenko@gmail.com
-Cc: alex.hung@canonical.com, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, rjw@rjwysocki.net
+To: Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Gabriel Somlo <somlo@cmu.edu>, "Michael S. Tsirkin" <mst@redhat.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>, qemu-devel@nongnu.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTcmluaXZhcyBQYW5kcnV2YWRh
-IFttYWlsdG86c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5jb21dDQo+IFNlbnQ6IFNh
-dHVyZGF5LCBKdWx5IDcsIDIwMTggODo0NCBBTQ0KPiBUbzogRGFycmVuIEhhcnQ7IEFuZHkgU2hl
-dmNoZW5rbw0KPiBDYzogTGltb25jaWVsbG8sIE1hcmlvOyBBbGV4IEh1bmc7IEFuZHkgU2hldmNo
-ZW5rbzsgUGxhdGZvcm0gRHJpdmVyOyBMaW51eCBLZXJuZWwNCj4gTWFpbGluZyBMaXN0OyBSYWZh
-ZWwgSi4gV3lzb2NraQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyXSBwbGF0Zm9ybS94ODY6IGlu
-dGVsLWhpZDogQWRkIHN1cHBvcnQgZm9yIERldmljZSBTcGVjaWZpYw0KPiBNZXRob2RzDQo+IA0K
-PiBPbiBGcmksIDIwMTgtMDctMDYgYXQgMTY6NTkgLTA3MDAsIERhcnJlbiBIYXJ0IHdyb3RlOg0K
-PiA+IE9uIE1vbiwgSnVsIDAyLCAyMDE4IGF0IDA1OjA2OjE0UE0gKzAzMDAsIEFuZHkgU2hldmNo
-ZW5rbyB3cm90ZToNCj4gPiA+IE9uIE1vbiwgSnVsIDIsIDIwMTggYXQgNDo1MSBQTSwgIDxNYXJp
-by5MaW1vbmNpZWxsb0BkZWxsLmNvbT4NCj4gPiA+IHdyb3RlOg0KPiA+ID4NCj4gPiA+ID4gPiA+
-IFNvIHRoZXJlIGFyZSBzb21lIGN1c3RvbWVycyB3aG8gd2lsbCBoYXZlIGlzc3VlIHdpdGggcG93
-ZXINCj4gPiA+ID4gPiA+IGJ1dHRvbg0KPiA+ID4gPiA+ID4gd2l0aG91dCB0aGlzIHBhdGNoLCBz
-byBpdCBzaG91bGQgYmUgYWxzbyBtYXJrZWQgZm9yIHN0YWJsZQ0KPiA+ID4gPiA+ID4gYWxzby4N
-Cj4gPiA+ID4gPiA+IEFsc28gdGhpcyBtYXkgYmUgYSBjYW5kaWRhdGUgZm9yIDQuMTgtcmNYLg0K
-PiA+ID4gPiA+ID4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEknbSBub3Qgc3VyZSBHcmVnIHdpbGwg
-dGFrZSB0aGlzIHNlbGxpbmcgcG9pbnQgZm9yIHJhdGhlciBiaWcNCj4gPiA+ID4gPiBwYXRjaC4N
-Cj4gPiA+ID4gPiBGcm9tIGNoYW5nZWxvZywgaG9uZXN0bHksIEkgZG9uJ3Qgc2VlIGFueSByZWdy
-ZXNzaW9uDQo+ID4gPiA+ID4gZGVzY3JpcHRpb24sDQo+ID4gPiA+ID4gbG9va3MgbGlrZSAiaXQg
-d2Fzbid0IHdvcmtpbmcgYmVmb3JlIGNoYW5nZSBhbnl3YXkiLg0KPiA+ID4gPiA+DQo+ID4gPiA+
-DQo+ID4gPiA+IEp1c3QgZm9yIGFkZGluZyBzb21lIGNvbnRleHQuDQo+ID4gPiA+DQo+ID4gPiA+
-IFNvbWUgcGxhdGZvcm1zIGhhdmUgbW92ZWQgdG8gZGlmZmVyZW50IGludGVyZmFjZSBpbiBBU0wg
-aW4gRlcNCj4gPiA+ID4gdXBncmFkZQ0KPiA+ID4gPiBkdWUgdG8gZGVmaWNpZW5jaWVzL2J1Z3Mg
-cHJlc2VudCB3aXRoIG9sZCBpbnRlcmZhY2UuICBTbyB5ZXMgaXQncw0KPiA+ID4gPiBwbGF0Zm9y
-bSBGVw0KPiA+ID4gPiBjaGFuZ2UgaW4gYmVoYXZpb3IgdGhhdCBsZWFkcyB0byBMaW51eCBrZXJu
-ZWwNCj4gPiA+ID4gcmVncmVzc2lvbi4gIFdpbmRvd3MgZHJpdmVyIGhhcyBzdXBwb3J0ZWQNCj4g
-PiA+ID4gYm90aCBpbnRlcmZhY2VzIGZvciBhIGxvbmcgdGltZS4gIExpbnV4IGtlcm5lbCBob3dl
-dmVyIGRvZXNuJ3QNCj4gPiA+ID4gc3VwcG9ydCB0aGlzIGludGVyZmFjZSB1bnRpbCBub3cuDQo+
-ID4gPiA+DQo+ID4gPiA+ID4gRm9yIG5vdywgSSBwdXNoZWQgdGhpcyB0byBteSByZXZpZXcgYW5k
-IHRlc3RpbmcgcXVldWUgYXMgaXMsDQo+ID4gPiA+ID4gdGhhbmtzIQ0KPiA+ID4gPg0KPiA+ID4g
-PiBJZiBub3Qgc3RhYmxlIEkgdGhpbmsgaXQgd291bGQgYXQgbGVhc3QgYmUgaWRlYWwgdG8gdHJ5
-IHRvIGJyaW5nDQo+ID4gPiA+IHRoaXMgdG8gNC4xOC1yY1ggaWYgcG9zc2libGUgZm9yDQo+ID4g
-PiA+IGNvbXBhdGliaWxpdHkgd2l0aCBtb3JlIHBsYXRmb3JtcyB0aGF0IHdpbGwgY29tZSB3aXRo
-IHRoaXMgb3RoZXINCj4gPiA+ID4gaW50ZXJmYWNlIGluc3RlYWQuDQo+ID4gPg0KPiA+ID4gQ2l0
-aW5nIExpbnVzOg0KPiA+ID4NCj4gPiA+IC0tLSA4PCAtLS0gODwgLS0tDQo+ID4gPiBTbyBwbGVh
-c2UsIHBlb3BsZSwgdGhlICJmaXhlcyIgZHVyaW5nIHRoZSByYyBzZXJpZXMgcmVhbGx5IHNob3Vs
-ZA0KPiA+ID4gYmUNCj4gPiA+IHRoaW5ncyB0aGF0IGFyZSBfcmVncmVzc2lvbnNfLiBJZiBpdCB1
-c2VkIHRvIHdvcmssIGFuZCBpdCBubyBsb25nZXINCj4gPiA+IGRvZXMsDQo+ID4gPiB0aGVuIGZp
-eGluZyB0aGF0IGlzIGEgZ29vZCBhbmQgcHJvcGVyIGZpeC4gT3IgaWYgc29tZXRoaW5nIG9vcHNl
-cw0KPiA+ID4gb3IgaGFzIGENCj4gPiA+IHNlY3VyaXR5IGltcGxpY2F0aW9uLCB0aGVuIHRoZSBm
-aXggZm9yIHRoYXQgaXMgYSByZWFsIGZpeC4NCj4gPiA+DQo+ID4gPiBCdXQgaWYgaXQncyBzb21l
-dGhpbmcgdGhhdCBoYXMgbmV2ZXIgd29ya2VkLCBldmVuIGlmIGl0ICJmaXhlcyINCj4gPiA+IHNv
-bWUNCj4gPiA+IGJlaGF2aW9yLCB0aGVuIGl0J3MgbmV3IGRldmVsb3BtZW50LCBhbmQgdGhhdCBz
-aG91bGQgY29tZSBpbiBkdXJpbmcNCj4gPiA+IHRoZQ0KPiA+ID4gbWVyZ2Ugd2luZG93LiBKdXN0
-IGJlY2F1c2UgeW91IHRoaW5rIGl0J3MgYSAiZml4IiBkb2Vzbid0IG1lYW4gdGhhdA0KPiA+ID4g
-aXQNCj4gPiA+IHJlYWxseSBpcyBvbmUsIGF0IGxlYXN0IGluIHRoZSAiZHVyaW5nIHRoZSByYyBz
-ZXJpZXMiIHNlbnNlLg0KPiA+ID4gLS0tIDg8IC0tLSA4PCAtLS0NCj4gPiA+DQo+ID4gPiBTbywg
-aWYgd2UgY2FuIHNlbGwgaGltIHRoYXQgaXQgdXNlZCB0byB3b3JrIGFuZCBmaXJtd2FyZSBmaXgg
-aXMgYQ0KPiA+ID4gTGludXggcmVncmVzc2lvbiBJJ20gZmluZS4NCj4gPiA+DQo+ID4gPiBEYXJy
-ZW4sIHdoYXQgZG8geW91IHRoaW5rPw0KPiA+DQo+ID4gU28gaWYgSSB1bmRlcnN0YW5kIHRoaXMg
-Y29ycmVjdGx5LCB3ZSBoYXZlIHRoaXMgdGltZWxpbmUuDQo+ID4NCj4gPiBMaW51eCB2NC4xNg0K
-PiA+IC0gTWFjaGluZSBBIHdvcmtzDQo+ID4gTGludXggdjQuMTcNCj4gPiAtIE1hY2hpbmUgQSB3
-b3Jrcw0KPiA+IC0gTWFjaGluZSBBIHVwZGF0ZXMgZmlybXdhcmUNCj4gPiAtIE1hY2hpbmUgQSBz
-dG9wcyB3b3JraW5nDQo+ID4gTGludXggdjQuMTgNCj4gPiAtIE1hY2hpbmUgQSBzdGlsbCBkb2Vz
-bid0IHdvcmsNCj4gPg0KPiA+IFNvIGl0IGlzIG5vdCBhICpMaW51eCBrZXJuZWwqIHJlZ3Jlc3Np
-b24uDQo+ID4NCj4gPiBUaGUgcGF0Y2ggaXMgdG9vIGxhcmdlIGZvciBzdGFuZGFyZCBzdGFibGUg
-cnVsZXMuDQo+ID4NCj4gPiBJdCBpcyBhIHJlZ3Jlc3Npb24gZnJvbSBhbnkgdXNlcidzIHBlcnNw
-ZWN0aXZlIC0gdGhlIG1hY2hpbmUgd29ya2VkLA0KPiA+IHRoZXkgZm9sbG93ZWQgZ29vZCBkaWdp
-dGFsIGh5Z2llbmUgYW5kIHVwZGF0ZWQgdGhlaXIgZmlybXdhcmUsIGFuZA0KPiA+IG5vdw0KPiA+
-IGl0IGRvZXNuJ3QuIFRoaXMgdXNlciB3aWxsIG5vdyB0aGluayB0d2ljZSBiZWZvcmUgdGhleSB1
-cGRhdGUgdGhlaXINCj4gPiBCSU9TDQo+ID4gYWdhaW4sIHNpbmNlIGl0IG1heSBmdW5kYW1lbnRh
-bGx5IGNoYW5nZSB0aGUgcGxhdGZvcm0sIHJhdGhlciB0aGFuDQo+ID4gY29tbWl0dGluZyB0byBv
-bmx5IGZpeGluZyB0aGluZ3MgYmVsb3cgdGhlIE9TIEludGVyZmFjZSBsYXllci4gOi0oDQo+ID4N
-Cj4gPiBUaGUgcmlzayBvZiBjb3Vyc2UgaXMgdGhhdCB0aGlzIGludHJvZHVjZXMgbmV3IGJ1Z3Mg
-LSBhbmQgYXMgd2l0aA0KPiA+IGFueXRoaW5nIHRoYXQgc3RpbGwgdXNlcyBfRFNNIChzaWdoLCB3
-aHk/KSB0aGF0IGlzIHF1aXRlIHBvc3NpYmxlIGR1ZQ0KPiA+IHRvDQo+ID4gdGhlIG9wYXF1ZSBp
-bnRlcmZhY2UuIFZlcnkgdW5mb3J0dW5hdGUgdG8gc2VlIF9EU00gQURERUQgdG8gYQ0KPiA+IHBy
-ZXZpb3VzbHkNCj4gPiBfRFNNIGZyZWUgaW1wbGVtZW50YXRpb24uIExpbnVzIGlzIHJpZ2h0LCB0
-aGlzIGlzIG5vdCBhIGZpeCwgdGhpcyBpcw0KPiA+IGZlYXR1cmUgZGV2ZWxvcG1lbnQuDQo+ID4N
-Cj4gPiBJIHN0cm9uZ2x5IGFkdm9jYXRlIGZvciB2ZW5kb3JzIHRvIGhhdmUgbW9yZSBjb250cm9s
-IG92ZXIgdGhlaXINCj4gPiBkcml2ZXJzLA0KPiA+IGJ1dCB0aGlzIHNjZW5hcmlvIHJlYWxseSBm
-cnVzdHJhdGVzIG1lLiBJIGRvbid0IHRoaW5rIEkgY2FuIGp1c3RpZnkNCj4gPiB0aGlzDQo+ID4g
-dG8gTGludXMgYXMgYSBmaXguIEJ1dCBiZWZvcmUgd2UganVzdCBzYXkgIm5vIiAoYmVjYXVzZSBo
-ZXksIEkgd2FudA0KPiA+IHRoZXNlIGZpeGVzIGF2YWlsYWJsZSBhcyBlYXJseSBhcyBwb3NzaWJs
-ZSB0b28pLCBsZXQncyBhc2sgUmFmYWVsIGlmDQo+ID4gaGUNCj4gPiBoYXMgYW4gb3BpbmlvbiBv
-ciBpZiB0aGVyZSBpcyBwcmVjZWRlbnQgZm9yIHRoaXMgaW4gaGlzIGV4cGVyaWVuY2UNCj4gPiB3
-aXRoDQo+ID4gQUNQSSBkcml2ZXJzIGluIGdlbmVyYWw6DQo+ID4NCj4gPiBSYWZhZWw/DQo+ID4N
-Cj4gPiBGaW5hbGx5LCB3ZSBjYW4gYWxzbyBqdXN0IGFzayBMaW51cy4gVGhlIGZpcm13YXJlIHVw
-ZGF0ZSBicm9rZSB0aGUNCj4gPiBwb3dlcg0KPiA+IGJ1dHRvbiwgd2UgY2FuIGdldCBpdCB3b3Jr
-aW5nIGFnYWluIGJ5IHN1cHBvcnRpbmcgdGhlIG5ldyBBUEkgd2l0aA0KPiA+IHRoaXMNCj4gPiBw
-YXRjaC4uLiBzZWUgd2hhdCBoZSBzYXlzLg0KDQo+IE1hcmlvIGNhbiBhZGQgbW9yZS4NCj4gQnV0
-IEkgdGhpbmsgRGVsbCBoYXMgcmVsZWFzZWQgYSBCSU9TIGZpeCwgc28gdGhhdCBwb3dlciBidXR0
-b24gY2FuDQo+IHN0aWxsIHdvcmsgdXNpbmcgbm9uIF9EU00gd2F5LiBTbyBJIHRoaW5rIHdlIGNh
-biB3YWl0IGZvciBub3JtYWwNCj4gcmVsZWFzZSBjeWNsZS4NCg0KWWVhaCwgSSBhZGRlZCBzb21l
-IGNvbW1lbnRzIG9uIGEgc2VwYXJhdGUgcmVwbHkgYWxyZWFkeSBpbmRpY2F0aW5nIHRoaXMuDQoN
-ClRoZSBhZmZlY3RlZCBzeXN0ZW0gd2Uga25vdyBhYm91dCBoYXMgcmV2ZXJ0ZWQgdGhlIG5ldyBp
-bnRlcmZhY2UuDQoNClRoaXMgYWxsIHN0ZW1zIGZyb20gYW4gZXhwZWN0YXRpb24gdGhhdCB0aGUg
-X0RTTSBoYXMgYmVlbiB0aGVyZSBmb3IgIm1hbnkiDQpyZWxlYXNlcyBvbiB0aGUgV2luZG93cyBz
-aWRlLiAgTG9uZyBlbm91Z2ggdGhhdCBldmVuIGFsbCB0aGUgY29ycG9yYXRlIGRvd25ncmFkZQ0K
-c2NlbmFyaW9zIHRvIG9sZGVyIFdpbmRvd3MgdmVyc2lvbnMgYW5kIHRoZSBkcml2ZXJzIHdpdGgg
-dGhlbSBhbGwgd29ya2VkIHByb3Blcmx5Lg0KDQpJZiB0aGlzIGRvZXNuJ3QgZW5kIHVwIGJlaW5n
-IGEgY2FuZGlkYXRlIGZvciBiYWNrcG9ydGluZyB0byBzdGFibGUgd2UnbGwgcHJvYmFibHkNCmVu
-ZCB1cCBhc2tpbmcgb3VyIHZhcmlvdXMgT1MgcGFydG5lcnMgdG8gYmFja3BvcnQgaXQgYXMgYSBT
-QVVDRSB0eXBlIHBhdGNoIGluIGRpc3Rybw0Ka2VybmVscyB0byBldmVudHVhbGx5IGJlIGFibGUg
-dG8gdHVybiB0aGlzIGJhY2sgb24uDQo=
+A couple of drivers produced build errors after the mod_devicetable.h
+header was split out from the platform_device one, e.g.
+
+drivers/media/platform/davinci/vpbe_osd.c:42:40: error: array type has incomplete element type 'struct platform_device_id'
+drivers/media/platform/davinci/vpbe_venc.c:42:40: error: array type has incomplete element type 'struct platform_device_id'
+
+This adds the inclusion where needed.
+
+Fixes: ac3167257b9f ("headers: separate linux/mod_devicetable.h from linux/platform_device.h")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/firmware/qemu_fw_cfg.c             | 1 +
+ drivers/media/platform/davinci/vpbe_osd.c  | 1 +
+ drivers/media/platform/davinci/vpbe_venc.c | 1 +
+ drivers/media/platform/qcom/venus/vdec.c   | 1 +
+ drivers/media/platform/qcom/venus/venc.c   | 1 +
+ drivers/media/platform/sti/hva/hva-v4l2.c  | 1 +
+ drivers/platform/x86/intel_punit_ipc.c     | 1 +
+ 7 files changed, 7 insertions(+)
+
+diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+index 14fedbeca724..039e0f91dba8 100644
+--- a/drivers/firmware/qemu_fw_cfg.c
++++ b/drivers/firmware/qemu_fw_cfg.c
+@@ -28,6 +28,7 @@
+  */
+ 
+ #include <linux/module.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/platform_device.h>
+ #include <linux/acpi.h>
+ #include <linux/slab.h>
+diff --git a/drivers/media/platform/davinci/vpbe_osd.c b/drivers/media/platform/davinci/vpbe_osd.c
+index 7f610320426d..c551a25d90d9 100644
+--- a/drivers/media/platform/davinci/vpbe_osd.c
++++ b/drivers/media/platform/davinci/vpbe_osd.c
+@@ -18,6 +18,7 @@
+  *
+  */
+ #include <linux/module.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/kernel.h>
+ #include <linux/interrupt.h>
+ #include <linux/platform_device.h>
+diff --git a/drivers/media/platform/davinci/vpbe_venc.c b/drivers/media/platform/davinci/vpbe_venc.c
+index ba157827192c..ddcad7b3e76c 100644
+--- a/drivers/media/platform/davinci/vpbe_venc.c
++++ b/drivers/media/platform/davinci/vpbe_venc.c
+@@ -11,6 +11,7 @@
+  * GNU General Public License for more details.
+  */
+ #include <linux/module.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/ctype.h>
+diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
+index f89a91d43cc9..d4e23c7df347 100644
+--- a/drivers/media/platform/qcom/venus/vdec.c
++++ b/drivers/media/platform/qcom/venus/vdec.c
+@@ -14,6 +14,7 @@
+  */
+ #include <linux/clk.h>
+ #include <linux/module.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/slab.h>
+diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
+index f7a87a3dbb46..0522cf202b75 100644
+--- a/drivers/media/platform/qcom/venus/venc.c
++++ b/drivers/media/platform/qcom/venus/venc.c
+@@ -14,6 +14,7 @@
+  */
+ #include <linux/clk.h>
+ #include <linux/module.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/slab.h>
+diff --git a/drivers/media/platform/sti/hva/hva-v4l2.c b/drivers/media/platform/sti/hva/hva-v4l2.c
+index 15080cb00fa7..5a807c7c5e79 100644
+--- a/drivers/media/platform/sti/hva/hva-v4l2.c
++++ b/drivers/media/platform/sti/hva/hva-v4l2.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/module.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <media/v4l2-event.h>
+diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
+index b5b890127479..f1afc0ebbc68 100644
+--- a/drivers/platform/x86/intel_punit_ipc.c
++++ b/drivers/platform/x86/intel_punit_ipc.c
+@@ -12,6 +12,7 @@
+  */
+ 
+ #include <linux/module.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/acpi.h>
+ #include <linux/delay.h>
+ #include <linux/bitops.h>
+-- 
+2.9.0
