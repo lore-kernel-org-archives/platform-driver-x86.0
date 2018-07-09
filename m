@@ -1,125 +1,74 @@
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH] headers: fix linux/mod_devicetable.h inclusions
-Date: Mon, 9 Jul 2018 20:47:52 +0300
-Message-ID: <20180709204747-mutt-send-email-mst@kernel.org>
-References: <20180709151947.940759-1-arnd@arndb.de>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v2] platform/x86: intel-hid: Add support for Device
+ Specific Methods
+Date: Mon, 9 Jul 2018 14:06:46 -0700
+Message-ID: <20180709210646.GA30247@fury>
+References: <20180628181906.54910-1-srinivas.pandruvada@linux.intel.com>
+ <74ac9bf130074e0a8f86a7904783d091@ausx13mpc120.AMER.DELL.COM>
+ <95b3748fcb911c7305bd2bbcfd4e368f044f8b14.camel@linux.intel.com>
+ <CAHp75VdX+i_N_GttiL3QZrpivpUeJa0ofGfeJR1FkfuiBWocqA@mail.gmail.com>
+ <cc4bc804434a40d9bdd2fa03bbb875aa@ausx13mpc120.AMER.DELL.COM>
+ <CAHp75VerxQrPwHTU9PF_q_8xkRm7=cBTPf2tb_5xPEoBQKcL8A@mail.gmail.com>
+ <20180706235907.GE3041@fury>
+ <ccb18d853b254f680895c45862274ec8bdd70ab0.camel@linux.intel.com>
+ <1dfb07bd3461414e8db492e643d7de88@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180709151947.940759-1-arnd@arndb.de>
+In-Reply-To: <1dfb07bd3461414e8db492e643d7de88@ausx13mpc120.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gabriel Somlo <somlo@cmu.edu>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?iso-8859-1?Q?Marc-Andr=E9?= Lureau <marcandre.lureau@redhat.com>, qemu-devel@nongnu.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Mario.Limonciello@dell.com
+Cc: srinivas.pandruvada@linux.intel.com, andy.shevchenko@gmail.com, alex.hung@canonical.com, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, rjw@rjwysocki.net
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jul 09, 2018 at 05:19:02PM +0200, Arnd Bergmann wrote:
-> A couple of drivers produced build errors after the mod_devicetable.h
-> header was split out from the platform_device one, e.g.
+On Mon, Jul 09, 2018 at 04:38:16AM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Srinivas Pandruvada [mailto:srinivas.pandruvada@linux.intel.com]
+> > Sent: Saturday, July 7, 2018 8:44 AM
+> > To: Darren Hart; Andy Shevchenko
+> > Cc: Limonciello, Mario; Alex Hung; Andy Shevchenko; Platform Driver; Linux Kernel
+> > Mailing List; Rafael J. Wysocki
+> > Subject: Re: [PATCH v2] platform/x86: intel-hid: Add support for Device Specific
+> > Methods
+> > 
+> > On Fri, 2018-07-06 at 16:59 -0700, Darren Hart wrote:
+> > > On Mon, Jul 02, 2018 at 05:06:14PM +0300, Andy Shevchenko wrote:
+> > > > On Mon, Jul 2, 2018 at 4:51 PM,  <Mario.Limonciello@dell.com>
+> > > > wrote:
+...
+> > Mario can add more.
+> > But I think Dell has released a BIOS fix, so that power button can
+> > still work using non _DSM way. So I think we can wait for normal
+> > release cycle.
 > 
-> drivers/media/platform/davinci/vpbe_osd.c:42:40: error: array type has incomplete element type 'struct platform_device_id'
-> drivers/media/platform/davinci/vpbe_venc.c:42:40: error: array type has incomplete element type 'struct platform_device_id'
+> Yeah, I added some comments on a separate reply already indicating this.
 > 
-> This adds the inclusion where needed.
+> The affected system we know about has reverted the new interface.
 > 
-> Fixes: ac3167257b9f ("headers: separate linux/mod_devicetable.h from linux/platform_device.h")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> This all stems from an expectation that the _DSM has been there for "many"
+> releases on the Windows side.  Long enough that even all the corporate downgrade
+> scenarios to older Windows versions and the drivers with them all worked properly.
+> 
+> If this doesn't end up being a candidate for backporting to stable we'll probably
+> end up asking our various OS partners to backport it as a SAUCE type patch in distro
+> kernels to eventually be able to turn this back on.
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Thanks Mario. We'll skip the RC. We can discuss -stable as a separate
+issue.  This patch fixes a demonstrable bug, the biggest obstacle here
+is the size. At 240 lines with context, it more than doubles the maximum
+patch size for stable.
 
-> ---
->  drivers/firmware/qemu_fw_cfg.c             | 1 +
->  drivers/media/platform/davinci/vpbe_osd.c  | 1 +
->  drivers/media/platform/davinci/vpbe_venc.c | 1 +
->  drivers/media/platform/qcom/venus/vdec.c   | 1 +
->  drivers/media/platform/qcom/venus/venc.c   | 1 +
->  drivers/media/platform/sti/hva/hva-v4l2.c  | 1 +
->  drivers/platform/x86/intel_punit_ipc.c     | 1 +
->  7 files changed, 7 insertions(+)
-> 
-> diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
-> index 14fedbeca724..039e0f91dba8 100644
-> --- a/drivers/firmware/qemu_fw_cfg.c
-> +++ b/drivers/firmware/qemu_fw_cfg.c
-> @@ -28,6 +28,7 @@
->   */
->  
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/platform_device.h>
->  #include <linux/acpi.h>
->  #include <linux/slab.h>
-> diff --git a/drivers/media/platform/davinci/vpbe_osd.c b/drivers/media/platform/davinci/vpbe_osd.c
-> index 7f610320426d..c551a25d90d9 100644
-> --- a/drivers/media/platform/davinci/vpbe_osd.c
-> +++ b/drivers/media/platform/davinci/vpbe_osd.c
-> @@ -18,6 +18,7 @@
->   *
->   */
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/kernel.h>
->  #include <linux/interrupt.h>
->  #include <linux/platform_device.h>
-> diff --git a/drivers/media/platform/davinci/vpbe_venc.c b/drivers/media/platform/davinci/vpbe_venc.c
-> index ba157827192c..ddcad7b3e76c 100644
-> --- a/drivers/media/platform/davinci/vpbe_venc.c
-> +++ b/drivers/media/platform/davinci/vpbe_venc.c
-> @@ -11,6 +11,7 @@
->   * GNU General Public License for more details.
->   */
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/kernel.h>
->  #include <linux/init.h>
->  #include <linux/ctype.h>
-> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-> index f89a91d43cc9..d4e23c7df347 100644
-> --- a/drivers/media/platform/qcom/venus/vdec.c
-> +++ b/drivers/media/platform/qcom/venus/vdec.c
-> @@ -14,6 +14,7 @@
->   */
->  #include <linux/clk.h>
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
-> diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-> index f7a87a3dbb46..0522cf202b75 100644
-> --- a/drivers/media/platform/qcom/venus/venc.c
-> +++ b/drivers/media/platform/qcom/venus/venc.c
-> @@ -14,6 +14,7 @@
->   */
->  #include <linux/clk.h>
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
-> diff --git a/drivers/media/platform/sti/hva/hva-v4l2.c b/drivers/media/platform/sti/hva/hva-v4l2.c
-> index 15080cb00fa7..5a807c7c5e79 100644
-> --- a/drivers/media/platform/sti/hva/hva-v4l2.c
-> +++ b/drivers/media/platform/sti/hva/hva-v4l2.c
-> @@ -6,6 +6,7 @@
->   */
->  
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <media/v4l2-event.h>
-> diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
-> index b5b890127479..f1afc0ebbc68 100644
-> --- a/drivers/platform/x86/intel_punit_ipc.c
-> +++ b/drivers/platform/x86/intel_punit_ipc.c
-> @@ -12,6 +12,7 @@
->   */
->  
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/acpi.h>
->  #include <linux/delay.h>
->  #include <linux/bitops.h>
-> -- 
-> 2.9.0
+My recommendation is that we treat the stable backport of this as a
+special case, e.g. Andy and I don't tag it, but you or Srinivas propose
+it and specifically make the case for why an exception should be made to
+Greg.
+
+How self contained and isolated this change is will be an important part
+of the argument. On the one hand, it's all one file, on the other hand,
+this is a fairly generic driver in use in more and more platforms, with
+the potential for widespread impact if this introduces a new bug.
+
+-- 
+Darren Hart
+VMware Open Source Technology Center
