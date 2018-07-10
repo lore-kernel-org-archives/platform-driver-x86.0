@@ -1,95 +1,64 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH v2] platform/x86: intel-hid: Add support for Device
- Specific Methods
-Date: Mon, 9 Jul 2018 16:17:09 -0700
-Message-ID: <20180709231709.GA25221@fury>
-References: <74ac9bf130074e0a8f86a7904783d091@ausx13mpc120.AMER.DELL.COM>
- <95b3748fcb911c7305bd2bbcfd4e368f044f8b14.camel@linux.intel.com>
- <CAHp75VdX+i_N_GttiL3QZrpivpUeJa0ofGfeJR1FkfuiBWocqA@mail.gmail.com>
- <cc4bc804434a40d9bdd2fa03bbb875aa@ausx13mpc120.AMER.DELL.COM>
- <CAHp75VerxQrPwHTU9PF_q_8xkRm7=cBTPf2tb_5xPEoBQKcL8A@mail.gmail.com>
- <20180706235907.GE3041@fury>
- <ccb18d853b254f680895c45862274ec8bdd70ab0.camel@linux.intel.com>
- <1dfb07bd3461414e8db492e643d7de88@ausx13mpc120.AMER.DELL.COM>
- <20180709210646.GA30247@fury>
- <b79253ee160b4d08a48ac0a805939296@ausx13mpc120.AMER.DELL.COM>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v12 05/13] x86/sgx: architectural structures
+Date: Tue, 10 Jul 2018 11:06:57 +0300
+Message-ID: <CAHp75Vf-P6FhBLwWbAcU2z48+y5+uMTPKMLU6dRHBBKkbremeA@mail.gmail.com>
+References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com>
+ <20180703182118.15024-6-jarkko.sakkinen@linux.intel.com> <f9fe78ca-0ff4-814c-3681-a2366be01337@intel.com>
+ <20180705200912.GA10701@linux.intel.com> <E666884A-3EED-426E-BAB1-FA23C57BA5B9@zytor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b79253ee160b4d08a48ac0a805939296@ausx13mpc120.AMER.DELL.COM>
+In-Reply-To: <E666884A-3EED-426E-BAB1-FA23C57BA5B9@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com
-Cc: srinivas.pandruvada@linux.intel.com, andy.shevchenko@gmail.com, alex.hung@canonical.com, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, rjw@rjwysocki.net
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dave Hansen <dave.hansen@intel.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jul 09, 2018 at 09:08:56PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Darren Hart [mailto:dvhart@infradead.org]
-> > Sent: Monday, July 9, 2018 4:07 PM
-> > To: Limonciello, Mario
-> > Cc: srinivas.pandruvada@linux.intel.com; andy.shevchenko@gmail.com;
-> > alex.hung@canonical.com; andy@infradead.org; platform-driver-
-> > x86@vger.kernel.org; linux-kernel@vger.kernel.org; rjw@rjwysocki.net
-> > Subject: Re: [PATCH v2] platform/x86: intel-hid: Add support for Device Specific
-> > Methods
-> > 
-> > On Mon, Jul 09, 2018 at 04:38:16AM +0000, Mario.Limonciello@dell.com wrote:
-> > > > -----Original Message-----
-> > > > From: Srinivas Pandruvada [mailto:srinivas.pandruvada@linux.intel.com]
-> > > > Sent: Saturday, July 7, 2018 8:44 AM
-> > > > To: Darren Hart; Andy Shevchenko
-> > > > Cc: Limonciello, Mario; Alex Hung; Andy Shevchenko; Platform Driver; Linux
-> > Kernel
-> > > > Mailing List; Rafael J. Wysocki
-> > > > Subject: Re: [PATCH v2] platform/x86: intel-hid: Add support for Device Specific
-> > > > Methods
-> > > >
-> > > > On Fri, 2018-07-06 at 16:59 -0700, Darren Hart wrote:
-> > > > > On Mon, Jul 02, 2018 at 05:06:14PM +0300, Andy Shevchenko wrote:
-> > > > > > On Mon, Jul 2, 2018 at 4:51 PM,  <Mario.Limonciello@dell.com>
-> > > > > > wrote:
-> > ...
-> > > > Mario can add more.
-> > > > But I think Dell has released a BIOS fix, so that power button can
-> > > > still work using non _DSM way. So I think we can wait for normal
-> > > > release cycle.
-> > >
-> > > Yeah, I added some comments on a separate reply already indicating this.
-> > >
-> > > The affected system we know about has reverted the new interface.
-> > >
-> > > This all stems from an expectation that the _DSM has been there for "many"
-> > > releases on the Windows side.  Long enough that even all the corporate
-> > downgrade
-> > > scenarios to older Windows versions and the drivers with them all worked
-> > properly.
-> > >
-> > > If this doesn't end up being a candidate for backporting to stable we'll probably
-> > > end up asking our various OS partners to backport it as a SAUCE type patch in
-> > distro
-> > > kernels to eventually be able to turn this back on.
-> > 
-> > Thanks Mario. We'll skip the RC. We can discuss -stable as a separate
-> > issue.  This patch fixes a demonstrable bug, the biggest obstacle here
-> > is the size. At 240 lines with context, it more than doubles the maximum
-> > patch size for stable.
-> > 
-> > My recommendation is that we treat the stable backport of this as a
-> > special case, e.g. Andy and I don't tag it, but you or Srinivas propose
-> > it and specifically make the case for why an exception should be made to
-> > Greg.
-> > 
-> > How self contained and isolated this change is will be an important part
-> > of the argument. On the one hand, it's all one file, on the other hand,
-> > this is a fairly generic driver in use in more and more platforms, with
-> > the potential for widespread impact if this introduces a new bug.
-> > 
-> 
-> In that case, how about we let it bake for a while and maybe by the time
-> 4.19 comes out is when we do the proposal of a stable backport?
+On Fri, Jul 6, 2018 at 12:50 AM,  <hpa@zytor.com> wrote:
+> On July 5, 2018 1:09:12 PM PDT, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+>>On Thu, Jul 05, 2018 at 08:31:42AM -0700, Dave Hansen wrote:
+>>> On 07/03/2018 11:19 AM, Jarkko Sakkinen wrote:
+>>> > +struct sgx_secs {
+>>> > +  uint64_t size;
+>>> > +  uint64_t base;
+>>> > +  uint32_t ssaframesize;
+>>> > +  uint32_t miscselect;
+>>> > +  uint8_t reserved1[SGX_SECS_RESERVED1_SIZE];
+>>> > +  uint64_t attributes;
+>>> > +  uint64_t xfrm;
+>>> > +  uint32_t mrenclave[8];
+>>> > +  uint8_t reserved2[SGX_SECS_RESERVED2_SIZE];
+>>> > +  uint32_t mrsigner[8];
+>>> > +  uint8_t reserved3[SGX_SECS_RESERVED3_SIZE];
+>>> > +  uint16_t isvvprodid;
+>>> > +  uint16_t isvsvn;
+>>> > +  uint8_t reserved4[SGX_SECS_RESERVED4_SIZE];
+>>> > +} __packed __aligned(4096);
+>>>
+>>> Why are the uint* versions in use here?  Those are for userspace ABI,
+>>> but this is entirely for in-kernel-use, right?
+>>>
+>>> We've used u8/16/32/64 in arch code in a bunch of places.  They're at
+>>> least a bit more compact and easier to read.  It's this:
+>>>
+>>>      u8      foo;
+>>>      u64     bar;
+>>>
+>>> vs. this:
+>>>
+>>>      uint8_t  foo;
+>>>      uint64_t bar;
+>>
+>>The reason was that with in-kernel LE these were in fact used by
+>>user space code. Now they can be changed to those that you
+>>suggested.
 
-Works for me.
+> For things exported to user space use __u* and __s* types... the _t types would actually violate the C standard with respect to namespace pollution.
+
+Hmm... Coding style 5(d) allows to use uintNN_t in new code (as a
+variation of uNN choice).
+
+
 -- 
-Darren Hart
-VMware Open Source Technology Center
+With Best Regards,
+Andy Shevchenko
