@@ -1,28 +1,45 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v12 05/13] x86/sgx: architectural structures
-Date: Tue, 10 Jul 2018 13:57:27 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1807101356290.4356@nanos.tec.linutronix.de>
-References: <20180703182118.15024-1-jarkko.sakkinen@linux.intel.com> <20180703182118.15024-6-jarkko.sakkinen@linux.intel.com> <f9fe78ca-0ff4-814c-3681-a2366be01337@intel.com> <20180705200912.GA10701@linux.intel.com> <E666884A-3EED-426E-BAB1-FA23C57BA5B9@zytor.com>
- <CAHp75Vf-P6FhBLwWbAcU2z48+y5+uMTPKMLU6dRHBBKkbremeA@mail.gmail.com>
+From: Colin King <colin.king@canonical.com>
+Subject: [PATCH] platform/x86: intel_ips: remove redundant variables slope and offset
+Date: Wed, 11 Jul 2018 09:09:10 +0100
+Message-ID: <20180711080910.4769-1-colin.king@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vf-P6FhBLwWbAcU2z48+y5+uMTPKMLU6dRHBBKkbremeA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Dave Hansen <dave.hansen@intel.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 10 Jul 2018, Andy Shevchenko wrote:
-> On Fri, Jul 6, 2018 at 12:50 AM,  <hpa@zytor.com> wrote:
-> 
-> > For things exported to user space use __u* and __s* types... the _t types would actually violate the C standard with respect to namespace pollution.
-> 
-> Hmm... Coding style 5(d) allows to use uintNN_t in new code (as a
-> variation of uNN choice).
+From: Colin Ian King <colin.king@canonical.com>
 
-But not for user space exposed headers. See 5(e) for that matter.
+Variables slope and offset are being assigned but are never used hence
+they are redundant and can be removed.
 
-Thanks,
+Cleans up clang warnings:
+warning: variable 'slope' set but not used [-Wunused-but-set-variable]
+warning: variable 'offset' set but not used [-Wunused-but-set-variable]
 
-	tglx
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/platform/x86/intel_ips.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index 014fc1634a3d..c5ece7ef08c6 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -858,10 +858,7 @@ static u16 read_mgtv(struct ips_driver *ips)
+ 
+ static u16 read_ptv(struct ips_driver *ips)
+ {
+-	u16 val, slope, offset;
+-
+-	slope = (ips->pta_val & PTA_SLOPE_MASK) >> PTA_SLOPE_SHIFT;
+-	offset = ips->pta_val & PTA_OFFSET_MASK;
++	u16 val;
+ 
+ 	val = thm_readw(THM_PTV) & PTV_MASK;
+ 
+-- 
+2.17.1
