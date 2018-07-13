@@ -1,131 +1,69 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] headers: fix linux/mod_devicetable.h inclusions
-Date: Wed, 11 Jul 2018 20:47:27 -0700
-Message-ID: <f1dcc366-d375-fe1b-771a-bb310fdc1df3@infradead.org>
-References: <20180709151947.940759-1-arnd@arndb.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/mellanox: Use 2-factor allocator calls
+Date: Fri, 13 Jul 2018 17:19:39 +0300
+Message-ID: <CAHp75Vd2pX_AjMwEHQUOL7WfokgoY+bsakCJxbojBBxuuF_H+Q@mail.gmail.com>
+References: <20180704172908.GA33650@beast> <HE1PR0502MB3753318D0C380DFEBCD6E452A2410@HE1PR0502MB3753.eurprd05.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180709151947.940759-1-arnd@arndb.de>
-Content-Language: en-US
+In-Reply-To: <HE1PR0502MB3753318D0C380DFEBCD6E452A2410@HE1PR0502MB3753.eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Gabriel Somlo <somlo@cmu.edu>, "Michael S. Tsirkin" <mst@redhat.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?Q?Marc-Andr=c3=a9_Lureau?= <marcandre.lureau@redhat.com>, qemu-devel@nongnu.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Vadim Pasternak <vadimp@mellanox.com>
+Cc: Kees Cook <keescook@chromium.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 07/09/2018 08:19 AM, Arnd Bergmann wrote:
-> A couple of drivers produced build errors after the mod_devicetable.h
-> header was split out from the platform_device one, e.g.
-> 
-> drivers/media/platform/davinci/vpbe_osd.c:42:40: error: array type has incomplete element type 'struct platform_device_id'
-> drivers/media/platform/davinci/vpbe_venc.c:42:40: error: array type has incomplete element type 'struct platform_device_id'
-> 
-> This adds the inclusion where needed.
-> 
-> Fixes: ac3167257b9f ("headers: separate linux/mod_devicetable.h from linux/platform_device.h")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Wed, Jul 4, 2018 at 10:39 PM, Vadim Pasternak <vadimp@mellanox.com> wrote:
+>
+>
+>> -----Original Message-----
+>> From: Kees Cook [mailto:keescook@chromium.org]
+>> Sent: Wednesday, July 04, 2018 8:29 PM
+>> To: Darren Hart <dvhart@infradead.org>
+>> Cc: Vadim Pasternak <vadimp@mellanox.com>; Andy Shevchenko
+>> <andy@infradead.org>; platform-driver-x86@vger.kernel.org; linux-
+>> kernel@vger.kernel.org
+>> Subject: [PATCH] platform/mellanox: Use 2-factor allocator calls
+>>
+>> As already done treewide, switch from open-coded multiplication to using 2-
+>> factor allocation helpers.
+>>
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Pushed to my review and testing queue, thanks!
 
-Thanks.
+> Acked-by: Vadim Pasternak <vadimp@mellanox.com>
+>
+>> ---
+>>  drivers/platform/mellanox/mlxreg-io.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/platform/mellanox/mlxreg-io.c
+>> b/drivers/platform/mellanox/mlxreg-io.c
+>> index c192dfe6bd65..acfaf64ffde6 100644
+>> --- a/drivers/platform/mellanox/mlxreg-io.c
+>> +++ b/drivers/platform/mellanox/mlxreg-io.c
+>> @@ -152,8 +152,8 @@ static int mlxreg_io_attr_init(struct mlxreg_io_priv_data
+>> *priv)  {
+>>       int i;
+>>
+>> -     priv->group.attrs = devm_kzalloc(&priv->pdev->dev,
+>> -                                      priv->pdata->counter *
+>> +     priv->group.attrs = devm_kcalloc(&priv->pdev->dev,
+>> +                                      priv->pdata->counter,
+>>                                        sizeof(struct attribute *),
+>>                                        GFP_KERNEL);
+>>       if (!priv->group.attrs)
+>> --
+>> 2.17.1
+>>
+>>
+>> --
+>> Kees Cook
+>> Pixel Security
 
-> ---
->  drivers/firmware/qemu_fw_cfg.c             | 1 +
->  drivers/media/platform/davinci/vpbe_osd.c  | 1 +
->  drivers/media/platform/davinci/vpbe_venc.c | 1 +
->  drivers/media/platform/qcom/venus/vdec.c   | 1 +
->  drivers/media/platform/qcom/venus/venc.c   | 1 +
->  drivers/media/platform/sti/hva/hva-v4l2.c  | 1 +
->  drivers/platform/x86/intel_punit_ipc.c     | 1 +
->  7 files changed, 7 insertions(+)
-> 
-> diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
-> index 14fedbeca724..039e0f91dba8 100644
-> --- a/drivers/firmware/qemu_fw_cfg.c
-> +++ b/drivers/firmware/qemu_fw_cfg.c
-> @@ -28,6 +28,7 @@
->   */
->  
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/platform_device.h>
->  #include <linux/acpi.h>
->  #include <linux/slab.h>
-> diff --git a/drivers/media/platform/davinci/vpbe_osd.c b/drivers/media/platform/davinci/vpbe_osd.c
-> index 7f610320426d..c551a25d90d9 100644
-> --- a/drivers/media/platform/davinci/vpbe_osd.c
-> +++ b/drivers/media/platform/davinci/vpbe_osd.c
-> @@ -18,6 +18,7 @@
->   *
->   */
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/kernel.h>
->  #include <linux/interrupt.h>
->  #include <linux/platform_device.h>
-> diff --git a/drivers/media/platform/davinci/vpbe_venc.c b/drivers/media/platform/davinci/vpbe_venc.c
-> index ba157827192c..ddcad7b3e76c 100644
-> --- a/drivers/media/platform/davinci/vpbe_venc.c
-> +++ b/drivers/media/platform/davinci/vpbe_venc.c
-> @@ -11,6 +11,7 @@
->   * GNU General Public License for more details.
->   */
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/kernel.h>
->  #include <linux/init.h>
->  #include <linux/ctype.h>
-> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-> index f89a91d43cc9..d4e23c7df347 100644
-> --- a/drivers/media/platform/qcom/venus/vdec.c
-> +++ b/drivers/media/platform/qcom/venus/vdec.c
-> @@ -14,6 +14,7 @@
->   */
->  #include <linux/clk.h>
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
-> diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-> index f7a87a3dbb46..0522cf202b75 100644
-> --- a/drivers/media/platform/qcom/venus/venc.c
-> +++ b/drivers/media/platform/qcom/venus/venc.c
-> @@ -14,6 +14,7 @@
->   */
->  #include <linux/clk.h>
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/slab.h>
-> diff --git a/drivers/media/platform/sti/hva/hva-v4l2.c b/drivers/media/platform/sti/hva/hva-v4l2.c
-> index 15080cb00fa7..5a807c7c5e79 100644
-> --- a/drivers/media/platform/sti/hva/hva-v4l2.c
-> +++ b/drivers/media/platform/sti/hva/hva-v4l2.c
-> @@ -6,6 +6,7 @@
->   */
->  
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <media/v4l2-event.h>
-> diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
-> index b5b890127479..f1afc0ebbc68 100644
-> --- a/drivers/platform/x86/intel_punit_ipc.c
-> +++ b/drivers/platform/x86/intel_punit_ipc.c
-> @@ -12,6 +12,7 @@
->   */
->  
->  #include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/acpi.h>
->  #include <linux/delay.h>
->  #include <linux/bitops.h>
-> 
 
 
 -- 
-~Randy
+With Best Regards,
+Andy Shevchenko
