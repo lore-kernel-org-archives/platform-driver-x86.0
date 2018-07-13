@@ -1,68 +1,46 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/mellanox: Use 2-factor allocator calls
-Date: Fri, 13 Jul 2018 17:19:39 +0300
-Message-ID: <CAHp75Vd2pX_AjMwEHQUOL7WfokgoY+bsakCJxbojBBxuuF_H+Q@mail.gmail.com>
-References: <20180704172908.GA33650@beast> <HE1PR0502MB3753318D0C380DFEBCD6E452A2410@HE1PR0502MB3753.eurprd05.prod.outlook.com>
+Subject: Re: [PATCH resend v4] dell_rbu: make firmware payload memory uncachable
+Date: Fri, 13 Jul 2018 17:26:20 +0300
+Message-ID: <CAHp75VfpX7m3zLii3MKbW=S2rkh7O4BVygFdP7aB95jJ8hCBuA@mail.gmail.com>
+References: <eb0db565-5f8a-ab1e-2bf3-2def3ec3eddc@gmail.com>
+ <5318cc53-31b4-5c83-abb7-c3ff5d892af2@gmail.com> <eca11a9c20d14480ae02b2912b7a6447@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <HE1PR0502MB3753318D0C380DFEBCD6E452A2410@HE1PR0502MB3753.eurprd05.prod.outlook.com>
+In-Reply-To: <eca11a9c20d14480ae02b2912b7a6447@ausx13mpc120.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: Kees Cook <keescook@chromium.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: Stuart Hayes <stuart.w.hayes@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stuart.Hayes@dell.com, Takashi Iwai <tiwai@suse.de>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jul 4, 2018 at 10:39 PM, Vadim Pasternak <vadimp@mellanox.com> wrote:
->
->
->> -----Original Message-----
->> From: Kees Cook [mailto:keescook@chromium.org]
->> Sent: Wednesday, July 04, 2018 8:29 PM
->> To: Darren Hart <dvhart@infradead.org>
->> Cc: Vadim Pasternak <vadimp@mellanox.com>; Andy Shevchenko
->> <andy@infradead.org>; platform-driver-x86@vger.kernel.org; linux-
->> kernel@vger.kernel.org
->> Subject: [PATCH] platform/mellanox: Use 2-factor allocator calls
->>
->> As already done treewide, switch from open-coded multiplication to using 2-
->> factor allocation helpers.
->>
->> Signed-off-by: Kees Cook <keescook@chromium.org>
->
+On Fri, Jul 6, 2018 at 7:28 PM,  <Mario.Limonciello@dell.com> wrote:
+
+> Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
 
 Pushed to my review and testing queue, thanks!
 
-> Acked-by: Vadim Pasternak <vadimp@mellanox.com>
+>> This driver has no maintainer.
 >
->> ---
->>  drivers/platform/mellanox/mlxreg-io.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/mellanox/mlxreg-io.c
->> b/drivers/platform/mellanox/mlxreg-io.c
->> index c192dfe6bd65..acfaf64ffde6 100644
->> --- a/drivers/platform/mellanox/mlxreg-io.c
->> +++ b/drivers/platform/mellanox/mlxreg-io.c
->> @@ -152,8 +152,8 @@ static int mlxreg_io_attr_init(struct mlxreg_io_priv_data
->> *priv)  {
->>       int i;
->>
->> -     priv->group.attrs = devm_kzalloc(&priv->pdev->dev,
->> -                                      priv->pdata->counter *
->> +     priv->group.attrs = devm_kcalloc(&priv->pdev->dev,
->> +                                      priv->pdata->counter,
->>                                        sizeof(struct attribute *),
->>                                        GFP_KERNEL);
->>       if (!priv->group.attrs)
->> --
->> 2.17.1
->>
->>
->> --
->> Kees Cook
->> Pixel Security
+> Stuart,
+>
+> Outside of this patch, I think it would make sense to send some follow up patch
+> series that do the following:
+>
+> 1) Let you take over as maintainer (Update MAINTAINERS)
 
+> 2) Move this driver to platform-x86
 
+Darren, what do you think about this step?
+
+If we would go this way, first move, then take maintainership to reduce a churn.
+
+> 3) Update dell_rbu.txt with the correct URLs and mention that it's only for enterprise
+> hardware.    Client hardware has instead opted to support UEFI capsules for updates
+> from Linux.
+>
+> Since it's really a platform feature and specific to only Dell enterprise hardware
+> I think it makes sense to move over to an area with subsystem maintainers that
+> can help to review patches as needed.
 
 -- 
 With Best Regards,
