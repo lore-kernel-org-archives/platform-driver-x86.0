@@ -1,14 +1,13 @@
-From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux-9XfqOkM5JgxKQ7RDE2T8Pw@public.gmane.org>
-Subject: [PATCH v2] platform/x86: thinkpad_acpi: Fix
- multi-battery bug
-Date: Thu,  2 Aug 2018 00:24:18 +0200
-Message-ID: <20180801222418.21892-1-linux@weissschuh.net>
-References: <20180801114747.qrjclik665ya7oh5@khazad-dum.debian.net>
+From: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] platform/x86: thinkpad_acpi: extend
+ battery quirk coverage
+Date: Thu, 2 Aug 2018 22:28:49 +0200
+Message-ID: <20180802202849.GA2580@Mindship-05.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20180801114747.qrjclik665ya7oh5-ZGHd14iZgfaRjzvQDGKj+xxZW9W5cXbT@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
  <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
@@ -17,37 +16,48 @@ List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@publi
 List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
  <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
 Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux-9XfqOkM5JgxKQ7RDE2T8Pw@public.gmane.org>, Ognjen Galic <smclt30p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, jermizzey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-VGhlIHN0cnVjdCBjb250YWluaW5nIHRoZSBzdXBwb3J0ZWQgb3BlcmF0aW9ucyBmb3IgYWxsIGJh
-dHRlcmllcyBpcwpiZWluZyB6ZXJvZWQgb24gZWFjaCBiYXR0ZXJ5IHByb2JlLiAgVGhpcyBwcmV2
-ZW50cyBhbGwgb3RoZXIgYmF0dGVyaWVzCmV4Y2VwdCB0aGUgbGFzdGx5IHByb2JlZCBvbmUgZnJv
-bSBiZWluZyBjb25maWd1cmVkLgoKU2lnbmVkLW9mZi1ieTogVGhvbWFzIFdlacOfc2NodWggPGxp
-bnV4QHdlaXNzc2NodWgubmV0PgotLS0KCkNoYW5nZXMgc2luY2UgdjE6CgoqIE1pc3Npbmcgc2ln
-bi1vZmYgYWRkZWQKCiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9hY3BpLmMgfCA2ICsr
-KysrLQogMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYyBiL2RyaXZlcnMv
-cGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYwppbmRleCAzZGJmZjJkZGE5YmUuLjYwZGUxYzU3
-N2NlMCAxMDA2NDQKLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jCisr
-KyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYwpAQCAtOTM3NCw3ICs5Mzc0
-LDkgQEAgc3RhdGljIGludCB0cGFjcGlfYmF0dGVyeV9wcm9iZShpbnQgYmF0dGVyeSkKIHsKIAlp
-bnQgcmV0ID0gMDsKIAotCW1lbXNldCgmYmF0dGVyeV9pbmZvLCAwLCBzaXplb2Yoc3RydWN0IHRw
-YWNwaV9iYXR0ZXJ5X2RyaXZlcl9kYXRhKSk7CisJbWVtc2V0KCZiYXR0ZXJ5X2luZm8uYmF0dGVy
-aWVzW2JhdHRlcnldLCAwLAorCQlzaXplb2YoYmF0dGVyeV9pbmZvLmJhdHRlcmllc1tiYXR0ZXJ5
-XSkpOworCiAJLyoKIAkgKiAxKSBHZXQgdGhlIGN1cnJlbnQgc3RhcnQgdGhyZXNob2xkCiAJICog
-MikgQ2hlY2sgZm9yIHN1cHBvcnQKQEAgLTk2MTYsNiArOTYxOCw4IEBAIHN0YXRpYyBjb25zdCBz
-dHJ1Y3QgdHBhY3BpX3F1aXJrIGJhdHRlcnlfcXVpcmtfdGFibGVbXSBfX2luaXRjb25zdCA9IHsK
-IAogc3RhdGljIGludCBfX2luaXQgdHBhY3BpX2JhdHRlcnlfaW5pdChzdHJ1Y3QgaWJtX2luaXRf
-c3RydWN0ICppYm0pCiB7CisJbWVtc2V0KCZiYXR0ZXJ5X2luZm8sIDAsIHNpemVvZihiYXR0ZXJ5
-X2luZm8pKTsKKwogCXRwX2ZlYXR1cmVzLmJhdHRlcnlfZm9yY2VfcHJpbWFyeSA9IHRwYWNwaV9j
-aGVja19xdWlya3MoCiAJCQkJCWJhdHRlcnlfcXVpcmtfdGFibGUsCiAJCQkJCUFSUkFZX1NJWkUo
-YmF0dGVyeV9xdWlya190YWJsZSkpOwotLSAKMi4xOC4wCgoKLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-CkNoZWNrIG91dCB0aGUgdmlicmFudCB0ZWNoIGNvbW11bml0eSBvbiBvbmUgb2YgdGhlIHdvcmxk
-J3MgbW9zdAplbmdhZ2luZyB0ZWNoIHNpdGVzLCBTbGFzaGRvdC5vcmchIGh0dHA6Ly9zZG0ubGlu
-ay9zbGFzaGRvdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwppYm0tYWNwaS1kZXZlbCBtYWlsaW5nIGxpc3QKaWJtLWFjcGktZGV2ZWxAbGlzdHMuc291cmNl
-Zm9yZ2UubmV0Cmh0dHBzOi8vbGlzdHMuc291cmNlZm9yZ2UubmV0L2xpc3RzL2xpc3RpbmZvL2li
-bS1hY3BpLWRldmVsCg==
+Based on bug reports and a web search for
+    "Thinkpad_acpi: Error probing battery 2"
+four more models were found that require the battery quirk:
+Lenovo B5400, Thinkpad 11e, Thinkpad 11e gen 3, Thinkpad 13 gen 3.
+
+Signed-off-by: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-by: James Cheshire <jermizzey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+---
+
+I avoided the ping-pong style and added James Cheshire as a tester.
+Andy suggested to Cc: him, but if I understand the kernel documentation on
+submitting patches correctly, a Tested-by: is in order. James tested on a
+Thinkpad 11e and agreed to be included in the commit message.
+
+ drivers/platform/x86/thinkpad_acpi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 3dbff2dd..fd49855a 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -9611,7 +9611,11 @@ static const struct tpacpi_quirk battery_quirk_table[] __initconst = {
+ 	 * Individual addressing is broken on models that expose the
+ 	 * primary battery as BAT1.
+ 	 */
++	TPACPI_Q_LNV('J', '7', true),       /* B5400 */
++	TPACPI_Q_LNV('J', 'I', true),       /* Thinkpad 11e */
++	TPACPI_Q_LNV3('R', '0', 'B', true), /* Thinkpad 11e gen 3 */
+ 	TPACPI_Q_LNV3('R', '0', 'C', true), /* Thinkpad 13 */
++	TPACPI_Q_LNV3('R', '0', 'J', true), /* Thinkpad 13 gen 2 */
+ };
+ 
+ static int __init tpacpi_battery_init(struct ibm_init_struct *ibm)
+-- 
+2.18.0
+
+
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, Slashdot.org! http://sdm.link/slashdot
