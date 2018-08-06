@@ -1,15 +1,14 @@
 From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Fix
- multi-battery bug
-Date: Mon, 6 Aug 2018 16:24:15 +0300
-Message-ID: <CAHp75VeprNMVniQ_KrQRU9v3kt4kxEnHYO+ds5pOYokvv=0YdQ@mail.gmail.com>
-References: <20180801114747.qrjclik665ya7oh5@khazad-dum.debian.net>
- <20180801222418.21892-1-linux@weissschuh.net>
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: extend
+ battery quirk coverage
+Date: Mon, 6 Aug 2018 16:24:42 +0300
+Message-ID: <CAHp75Ve1z8f4wDvD_BA5exeMZ7Kuy_acOX1sSnvCZpJXh9E2aQ@mail.gmail.com>
+References: <20180802202849.GA2580@Mindship-05.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20180801222418.21892-1-linux-9XfqOkM5JgxKQ7RDE2T8Pw@public.gmane.org>
+In-Reply-To: <20180802202849.GA2580-7Pk1HLXsvWqf6HGZUO+WniZi+YwRKgec@public.gmane.org>
 List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
  <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
@@ -18,45 +17,58 @@ List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@publi
 List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
  <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
 Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux-9XfqOkM5JgxKQ7RDE2T8Pw@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Ognjen Galic <smclt30p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, jermizzey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gVGh1LCBBdWcgMiwgMjAxOCBhdCAxOjI0IEFNLCBUaG9tYXMgV2Vpw59zY2h1aCA8bGludXhA
-d2Vpc3NzY2h1aC5uZXQ+IHdyb3RlOgo+IFRoZSBzdHJ1Y3QgY29udGFpbmluZyB0aGUgc3VwcG9y
-dGVkIG9wZXJhdGlvbnMgZm9yIGFsbCBiYXR0ZXJpZXMgaXMKPiBiZWluZyB6ZXJvZWQgb24gZWFj
-aCBiYXR0ZXJ5IHByb2JlLiAgVGhpcyBwcmV2ZW50cyBhbGwgb3RoZXIgYmF0dGVyaWVzCj4gZXhj
-ZXB0IHRoZSBsYXN0bHkgcHJvYmVkIG9uZSBmcm9tIGJlaW5nIGNvbmZpZ3VyZWQuCgpZb3UgZm9y
-Z290IHRvIGluY2x1ZGUgc3Vic3lzdGVtIG1haW50YWluZXJzIGFsb25nIHdpdGggZHJpdmVyIG1h
-aW50YWluZXIuCgpJIHB1c2hlZCB0aGlzIHRvIG15IHJldmlldyBhbmQgdGVzdGluZyBxdWV1ZSwg
-bWVhbndoaWxlIEkgd291bGQgd2FpdApmb3IgQWNrIGZyb20gSGVucmlxdWUuCgo+Cj4gU2lnbmVk
-LW9mZi1ieTogVGhvbWFzIFdlacOfc2NodWggPGxpbnV4QHdlaXNzc2NodWgubmV0Pgo+IC0tLQo+
-Cj4gQ2hhbmdlcyBzaW5jZSB2MToKPgo+ICogTWlzc2luZyBzaWduLW9mZiBhZGRlZAo+Cj4gIGRy
-aXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYyB8IDYgKysrKystCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPgo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9hY3BpLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4
-Ni90aGlua3BhZF9hY3BpLmMKPiBpbmRleCAzZGJmZjJkZGE5YmUuLjYwZGUxYzU3N2NlMCAxMDA2
-NDQKPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9hY3BpLmMKPiArKysgYi9k
-cml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9hY3BpLmMKPiBAQCAtOTM3NCw3ICs5Mzc0LDkg
-QEAgc3RhdGljIGludCB0cGFjcGlfYmF0dGVyeV9wcm9iZShpbnQgYmF0dGVyeSkKPiAgewo+ICAg
-ICAgICAgaW50IHJldCA9IDA7Cj4KPiAtICAgICAgIG1lbXNldCgmYmF0dGVyeV9pbmZvLCAwLCBz
-aXplb2Yoc3RydWN0IHRwYWNwaV9iYXR0ZXJ5X2RyaXZlcl9kYXRhKSk7Cj4gKyAgICAgICBtZW1z
-ZXQoJmJhdHRlcnlfaW5mby5iYXR0ZXJpZXNbYmF0dGVyeV0sIDAsCj4gKyAgICAgICAgICAgICAg
-IHNpemVvZihiYXR0ZXJ5X2luZm8uYmF0dGVyaWVzW2JhdHRlcnldKSk7Cj4gKwo+ICAgICAgICAg
-LyoKPiAgICAgICAgICAqIDEpIEdldCB0aGUgY3VycmVudCBzdGFydCB0aHJlc2hvbGQKPiAgICAg
-ICAgICAqIDIpIENoZWNrIGZvciBzdXBwb3J0Cj4gQEAgLTk2MTYsNiArOTYxOCw4IEBAIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgdHBhY3BpX3F1aXJrIGJhdHRlcnlfcXVpcmtfdGFibGVbXSBfX2luaXRj
-b25zdCA9IHsKPgo+ICBzdGF0aWMgaW50IF9faW5pdCB0cGFjcGlfYmF0dGVyeV9pbml0KHN0cnVj
-dCBpYm1faW5pdF9zdHJ1Y3QgKmlibSkKPiAgewo+ICsgICAgICAgbWVtc2V0KCZiYXR0ZXJ5X2lu
-Zm8sIDAsIHNpemVvZihiYXR0ZXJ5X2luZm8pKTsKPiArCj4gICAgICAgICB0cF9mZWF0dXJlcy5i
-YXR0ZXJ5X2ZvcmNlX3ByaW1hcnkgPSB0cGFjcGlfY2hlY2tfcXVpcmtzKAo+ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBiYXR0ZXJ5X3F1aXJrX3RhYmxlLAo+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBBUlJBWV9TSVpFKGJhdHRlcnlfcXVp
-cmtfdGFibGUpKTsKPiAtLQo+IDIuMTguMAo+CgoKCi0tIApXaXRoIEJlc3QgUmVnYXJkcywKQW5k
-eSBTaGV2Y2hlbmtvCgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KQ2hlY2sgb3V0IHRoZSB2aWJyYW50
-IHRlY2ggY29tbXVuaXR5IG9uIG9uZSBvZiB0aGUgd29ybGQncyBtb3N0CmVuZ2FnaW5nIHRlY2gg
-c2l0ZXMsIFNsYXNoZG90Lm9yZyEgaHR0cDovL3NkbS5saW5rL3NsYXNoZG90Cl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlibS1hY3BpLWRldmVsIG1haWxp
-bmcgbGlzdAppYm0tYWNwaS1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6Ly9saXN0
-cy5zb3VyY2Vmb3JnZS5uZXQvbGlzdHMvbGlzdGluZm8vaWJtLWFjcGktZGV2ZWwK
+On Thu, Aug 2, 2018 at 11:28 PM, Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Based on bug reports and a web search for
+>     "Thinkpad_acpi: Error probing battery 2"
+> four more models were found that require the battery quirk:
+> Lenovo B5400, Thinkpad 11e, Thinkpad 11e gen 3, Thinkpad 13 gen 3.
+>
+
+Pushed to my review and testing queue, thanks!
+
+> Signed-off-by: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Tested-by: James Cheshire <jermizzey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+> ---
+>
+> I avoided the ping-pong style and added James Cheshire as a tester.
+> Andy suggested to Cc: him, but if I understand the kernel documentation on
+> submitting patches correctly, a Tested-by: is in order. James tested on a
+> Thinkpad 11e and agreed to be included in the commit message.
+>
+>  drivers/platform/x86/thinkpad_acpi.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 3dbff2dd..fd49855a 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -9611,7 +9611,11 @@ static const struct tpacpi_quirk battery_quirk_table[] __initconst = {
+>          * Individual addressing is broken on models that expose the
+>          * primary battery as BAT1.
+>          */
+> +       TPACPI_Q_LNV('J', '7', true),       /* B5400 */
+> +       TPACPI_Q_LNV('J', 'I', true),       /* Thinkpad 11e */
+> +       TPACPI_Q_LNV3('R', '0', 'B', true), /* Thinkpad 11e gen 3 */
+>         TPACPI_Q_LNV3('R', '0', 'C', true), /* Thinkpad 13 */
+> +       TPACPI_Q_LNV3('R', '0', 'J', true), /* Thinkpad 13 gen 2 */
+>  };
+>
+>  static int __init tpacpi_battery_init(struct ibm_init_struct *ibm)
+> --
+> 2.18.0
+>
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, Slashdot.org! http://sdm.link/slashdot
