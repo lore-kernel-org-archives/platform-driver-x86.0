@@ -1,71 +1,62 @@
-From: Mihai =?UTF-8?Q?Don=C8=9Bu?= <mihai.dontu@gmail.com>
-Subject: Re: [PATCH] platform/x86: wmi: Do not mix pages and kmalloc
-Date: Mon, 06 Aug 2018 14:36:32 +0300
-Message-ID: <1533555392.28014.25.camel@gmail.com>
-References: <20180620213141.GA8957@beast> <20180620233736.GA3250@fury>
-         <CAGXu5jL4V9sL7Ai1SVTNkg8OE70c6kLJBdqNtj9Z06MOb4zG0g@mail.gmail.com>
-         <20180621001721.GB3250@fury>
-         <3974cbadd027497982b5a52c765fb698@ausx13mpc120.AMER.DELL.COM>
-         <20180622232730.GA27466@fury>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Fix
+ multi-battery bug
+Date: Mon, 6 Aug 2018 16:24:15 +0300
+Message-ID: <CAHp75VeprNMVniQ_KrQRU9v3kt4kxEnHYO+ds5pOYokvv=0YdQ@mail.gmail.com>
+References: <20180801114747.qrjclik665ya7oh5@khazad-dum.debian.net>
+ <20180801222418.21892-1-linux@weissschuh.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180622232730.GA27466@fury>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: keescook@chromium.org, linux-kernel@vger.kernel.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, Mario.Limonciello@dell.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20180801222418.21892-1-linux-9XfqOkM5JgxKQ7RDE2T8Pw@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux-9XfqOkM5JgxKQ7RDE2T8Pw@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Ognjen Galic <smclt30p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Darren,
-
-On Fri, 2018-06-22 at 16:27 -0700, Darren Hart wrote:
-> On Thu, Jun 21, 2018 at 01:24:34AM +0000, Mario.Limonciello@dell.com wrote:
-> > > -----Original Message-----
-> > > From: Darren Hart [mailto:dvhart@infradead.org]
-> > > Sent: Wednesday, June 20, 2018 7:17 PM
-> > > To: Kees Cook
-> > > Cc: LKML; Andy Shevchenko; Platform Driver; Mihai Donțu; Limonciello, Mario
-> > > Subject: Re: [PATCH] platform/x86: wmi: Do not mix pages and kmalloc
-> > > 
-> > > On Wed, Jun 20, 2018 at 04:43:14PM -0700, Kees Cook wrote:
-> > > > On Wed, Jun 20, 2018 at 4:37 PM, Darren Hart <dvhart@infradead.org> wrote:
-> > > > > On Wed, Jun 20, 2018 at 02:31:41PM -0700, Kees Cook wrote:
-> > > > > > The probe handler_data was being allocated with __get_free_pages()
-> > > > > > for no reason I could find. The error path was using kfree(). Since
-> > > > > 
-> > > > > v4 of Mario's series used kmalloc:
-> > > > > https://patchwork.kernel.org/patch/9985827/
-> > > > > 
-> > > > > This was changed in v10 to use __get_free_pages:
-> > > > > https://patchwork.kernel.org/patch/10018023/
-> > > > > 
-> > > > > But... I'm not finding the discussion that led to this change.... Mario,
-> > > > > do you recall? Something about contiguous memory? We had a similar
-> > > > > discussion on an earlier series:
-> > > > > 
-> > > > > https://patchwork.kernel.org/patch/9975277/
-> > > > 
-> > > > FWIW, kmalloc gets you contiguous memory...
-> > > 
-> > > Yeah, I'm not finding a valid reason to use __get_free_pages over kmalloc in
-> > > this case. I'll give Mario a chance to respond in case I'm just missing
-> > > something, but otherwise will plan to apply this patch.
-> > 
-> > I think it was for contiguous memory, so if kmalloc is giving that I agree
-> > no need to keep __get_free_pages instead.
-> > 
-> > Acked-by: Mario Limonciello <Mario.limonciello@dell.com>
-> 
-> Confirmed, kmalloc in physically contiguous.
-> 
-> Queued up, and tagged for stable. Thanks everyone.
-> 
-
-Would it be possible to queue this for 4.18 or is it too late? I just
-noticed it has not reached 4.17.12 either.
-
-Thanks,
-
--- 
-Mihai Donțu
+T24gVGh1LCBBdWcgMiwgMjAxOCBhdCAxOjI0IEFNLCBUaG9tYXMgV2Vpw59zY2h1aCA8bGludXhA
+d2Vpc3NzY2h1aC5uZXQ+IHdyb3RlOgo+IFRoZSBzdHJ1Y3QgY29udGFpbmluZyB0aGUgc3VwcG9y
+dGVkIG9wZXJhdGlvbnMgZm9yIGFsbCBiYXR0ZXJpZXMgaXMKPiBiZWluZyB6ZXJvZWQgb24gZWFj
+aCBiYXR0ZXJ5IHByb2JlLiAgVGhpcyBwcmV2ZW50cyBhbGwgb3RoZXIgYmF0dGVyaWVzCj4gZXhj
+ZXB0IHRoZSBsYXN0bHkgcHJvYmVkIG9uZSBmcm9tIGJlaW5nIGNvbmZpZ3VyZWQuCgpZb3UgZm9y
+Z290IHRvIGluY2x1ZGUgc3Vic3lzdGVtIG1haW50YWluZXJzIGFsb25nIHdpdGggZHJpdmVyIG1h
+aW50YWluZXIuCgpJIHB1c2hlZCB0aGlzIHRvIG15IHJldmlldyBhbmQgdGVzdGluZyBxdWV1ZSwg
+bWVhbndoaWxlIEkgd291bGQgd2FpdApmb3IgQWNrIGZyb20gSGVucmlxdWUuCgo+Cj4gU2lnbmVk
+LW9mZi1ieTogVGhvbWFzIFdlacOfc2NodWggPGxpbnV4QHdlaXNzc2NodWgubmV0Pgo+IC0tLQo+
+Cj4gQ2hhbmdlcyBzaW5jZSB2MToKPgo+ICogTWlzc2luZyBzaWduLW9mZiBhZGRlZAo+Cj4gIGRy
+aXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYyB8IDYgKysrKystCj4gIDEgZmlsZSBj
+aGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPgo+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9hY3BpLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4
+Ni90aGlua3BhZF9hY3BpLmMKPiBpbmRleCAzZGJmZjJkZGE5YmUuLjYwZGUxYzU3N2NlMCAxMDA2
+NDQKPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9hY3BpLmMKPiArKysgYi9k
+cml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9hY3BpLmMKPiBAQCAtOTM3NCw3ICs5Mzc0LDkg
+QEAgc3RhdGljIGludCB0cGFjcGlfYmF0dGVyeV9wcm9iZShpbnQgYmF0dGVyeSkKPiAgewo+ICAg
+ICAgICAgaW50IHJldCA9IDA7Cj4KPiAtICAgICAgIG1lbXNldCgmYmF0dGVyeV9pbmZvLCAwLCBz
+aXplb2Yoc3RydWN0IHRwYWNwaV9iYXR0ZXJ5X2RyaXZlcl9kYXRhKSk7Cj4gKyAgICAgICBtZW1z
+ZXQoJmJhdHRlcnlfaW5mby5iYXR0ZXJpZXNbYmF0dGVyeV0sIDAsCj4gKyAgICAgICAgICAgICAg
+IHNpemVvZihiYXR0ZXJ5X2luZm8uYmF0dGVyaWVzW2JhdHRlcnldKSk7Cj4gKwo+ICAgICAgICAg
+LyoKPiAgICAgICAgICAqIDEpIEdldCB0aGUgY3VycmVudCBzdGFydCB0aHJlc2hvbGQKPiAgICAg
+ICAgICAqIDIpIENoZWNrIGZvciBzdXBwb3J0Cj4gQEAgLTk2MTYsNiArOTYxOCw4IEBAIHN0YXRp
+YyBjb25zdCBzdHJ1Y3QgdHBhY3BpX3F1aXJrIGJhdHRlcnlfcXVpcmtfdGFibGVbXSBfX2luaXRj
+b25zdCA9IHsKPgo+ICBzdGF0aWMgaW50IF9faW5pdCB0cGFjcGlfYmF0dGVyeV9pbml0KHN0cnVj
+dCBpYm1faW5pdF9zdHJ1Y3QgKmlibSkKPiAgewo+ICsgICAgICAgbWVtc2V0KCZiYXR0ZXJ5X2lu
+Zm8sIDAsIHNpemVvZihiYXR0ZXJ5X2luZm8pKTsKPiArCj4gICAgICAgICB0cF9mZWF0dXJlcy5i
+YXR0ZXJ5X2ZvcmNlX3ByaW1hcnkgPSB0cGFjcGlfY2hlY2tfcXVpcmtzKAo+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBiYXR0ZXJ5X3F1aXJrX3RhYmxlLAo+ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBBUlJBWV9TSVpFKGJhdHRlcnlfcXVp
+cmtfdGFibGUpKTsKPiAtLQo+IDIuMTguMAo+CgoKCi0tIApXaXRoIEJlc3QgUmVnYXJkcywKQW5k
+eSBTaGV2Y2hlbmtvCgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KQ2hlY2sgb3V0IHRoZSB2aWJyYW50
+IHRlY2ggY29tbXVuaXR5IG9uIG9uZSBvZiB0aGUgd29ybGQncyBtb3N0CmVuZ2FnaW5nIHRlY2gg
+c2l0ZXMsIFNsYXNoZG90Lm9yZyEgaHR0cDovL3NkbS5saW5rL3NsYXNoZG90Cl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlibS1hY3BpLWRldmVsIG1haWxp
+bmcgbGlzdAppYm0tYWNwaS1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6Ly9saXN0
+cy5zb3VyY2Vmb3JnZS5uZXQvbGlzdHMvbGlzdGluZm8vaWJtLWFjcGktZGV2ZWwK
