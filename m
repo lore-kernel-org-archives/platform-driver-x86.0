@@ -1,59 +1,46 @@
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] platform/x86: acer-wmi: refactor function has_cap
-Date: Mon, 6 Aug 2018 15:31:13 -0500
-Message-ID: <74e18643-5d0a-ecad-b3c3-4b27f399d8ce@embeddedor.com>
-References: <20180806200052.GA29026@embeddedor.com>
- <CAHp75VdrmVgGSTeT+rzyQbKwJyseq06b6s+d8aXCvimGgL3uMQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v3 0/4] ACPI bugfix + i2c-multi-instantiate pseudo driver
+Date: Tue,  7 Aug 2018 10:05:35 +0200
+Message-ID: <20180807080539.17811-1-hdegoede@redhat.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdrmVgGSTeT+rzyQbKwJyseq06b6s+d8aXCvimGgL3uMQ@mail.gmail.com>
-Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Lee, Chun-Yi" <jlee@suse.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Joe Perches <joe@perches.com>, David Laight <David.Laight@aculab.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Hans de Goede <hdegoede@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, John Garry <john.garry@huawei.com>, linux-i2c@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+Hi All,
 
+So here is my third attempt at dealing with multiple i2c devices being
+described in a single ACPI fwnode.
 
-On 8/6/18 3:16 PM, Andy Shevchenko wrote:
-> On Mon, Aug 6, 2018 at 11:00 PM, Gustavo A. R. Silva
-> <gustavo@embeddedor.com> wrote:
->> Refactor function has_cap in order to avoid returning integer
->> values, when instead it should return booleans.
->>
->> This code was detected with the help of Coccinelle.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  drivers/platform/x86/acer-wmi.c | 5 +----
->>  1 file changed, 1 insertion(+), 4 deletions(-)
->>
->> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
->> index 8952173..ff1689d 100644
->> --- a/drivers/platform/x86/acer-wmi.c
->> +++ b/drivers/platform/x86/acer-wmi.c
->> @@ -672,10 +672,7 @@ static void __init find_quirks(void)
->>
->>  static bool has_cap(u32 cap)
->>  {
->> -       if ((interface->capability & cap) != 0)
->> -               return 1;
->> -
->> -       return 0;
->> +       return (interface->capability & cap) != 0;
->>  }
-> 
-> Thanks, as Joe mentioned even != 0 part is not needed (followed by
-> unneeded parens), though I would let it be (one line is good enough to
-> me) if there will be no strong preferences.
-> 
+Like the second attemp This is still based on having a special driver for
+these corner cases which can be a module and only loaded when on hardware
+which needs this.
 
-Oh, yeah. I like it better what Joe suggested.
+New this time around is that this now is a platform driver, avoiding the
+need for the I2C_CLIENT_IGNORE_BUSY hack and having 2 i2c-clients at
+the address of the first i2c ACPI resource.
 
-Let me send v2, shortly.
+While working on the ACPI changes for enumerating ACPI nodes which
+are handled by the new i2c-multi-instantiate driver as platform devices
+I found a bug caused by a combination of my:
+"ACPI / scan: Use acpi_bus_get_status() to initialize ACPI_TYPE_DEVICE devs"
+and the somewhat (but not much) later added:
+"ACPI / scan: Do not enumerate Indirect IO host children"
+commits, specifically the second one does not work because of the first
+one, I guess it was tested against a kernel without the first commit.
+My changes for enumerating relevant ACPI nodes as platform devices
+hit the same problem.
 
-Thanks
---
-Gustavo
+Thus the first patch of this series is an ACPI bugfix for that problem.
+The second patch changes acpi/scan.c to enumerate relevant ACPI nodes as
+platform devices.
+The third patch is an ACPI cleanup patch made possible by the first patch.
+All 3 these patches are new in this version of this series.
+
+And finally the fourth patch is the actual i2c-multi-instantiate driver,
+now as platform driver living under drivers/platform/x86 .
+
+Regards,
+
+Hans
