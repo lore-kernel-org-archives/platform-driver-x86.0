@@ -1,62 +1,30 @@
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH v2] platform/x86: acer-wmi: refactor function has_cap
-Date: Thu, 9 Aug 2018 08:44:29 +0800
-Message-ID: <20180809004410.GF13767@linux-l9pv.suse>
-References: <20180806203832.GA11751@embeddedor.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v4 4/4] i2c: Add multi-instantiate pseudo driver
+Date: Thu, 9 Aug 2018 11:15:49 +0200
+Message-ID: <06718a13-8c68-e74f-df4c-64b9a928bdd4@redhat.com>
+References: <20180808083006.31919-1-hdegoede@redhat.com>
+ <20180808083006.31919-5-hdegoede@redhat.com>
+ <20180808170014.izjkviwh67hfu3hz@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180806203832.GA11751@embeddedor.com>
+In-Reply-To: <20180808170014.izjkviwh67hfu3hz@ninjato>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Joe Perches <joe@perches.com>, David Laight <David.Laight@aculab.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, John Garry <john.garry@huawei.com>, linux-i2c@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Gustavo, 
+Hi,
 
-Sorry for my delay!
-
-On Mon, Aug 06, 2018 at 03:38:32PM -0500, Gustavo A. R. Silva wrote:
-> Refactor function has_cap in order to avoid returning integer
-> values, when instead it should return booleans.
+On 08-08-18 19:00, Wolfram Sang wrote:
 > 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> $subject still says "i2c:"
 
-Thanks for your patch and also thank Andy and Joe's help. 
+Ah, good point I will send a v5 with this fixed, I will also
+do s/no_clients/num_clients/ for v5 as Andy requested.
 
-Please feel free to add:
+Regards,
 
-Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com> 
-
-Joey Lee
-
-> ---
-> Changes in v2:
-> 	Remove parentheses and unnecessary code. Thank you all for
-> 	the feedback!
-> 
->  drivers/platform/x86/acer-wmi.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 8952173..3294bb2 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -672,10 +672,7 @@ static void __init find_quirks(void)
->  
->  static bool has_cap(u32 cap)
->  {
-> -	if ((interface->capability & cap) != 0)
-> -		return 1;
-> -
-> -	return 0;
-> +	return interface->capability & cap;
->  }
->  
->  /*
-> -- 
-> 2.7.4
-> 
+Hans
