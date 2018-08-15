@@ -1,53 +1,71 @@
-From: Chris Chiu <chiu@endlessm.com>
-Subject: Re: [PATCH v3 1/2] platform/x86: asus-wmi: Call led hw_changed API on
- kbd brightness change
-Date: Wed, 15 Aug 2018 17:49:15 +0800
-Message-ID: <CAB4CAwdZYAKEDeboMFVpp9fnKPbdNZWP=VqroOOPmvcYwinX3A@mail.gmail.com>
-References: <20180620144645.2084-1-chiu@endlessm.com> <CAB4CAwdCixoGj9t=1Nvcc52kAjmcMWobKt11pRa0vNyLdeA_rg@mail.gmail.com>
- <CAHp75VcvaJVuM=TL2AJaC=y5B9GRVbXO0DczfHWs+i03OJRXcw@mail.gmail.com>
- <CAB4CAwedViX=U0DJNsZeUhJinQ1UBQ3KVTuhRJO7ni-xvqbJ3Q@mail.gmail.com> <CAHp75Veu9+vQPjq+1uWnaocobcHUBpkHKx6OfKW3-E_UeVtKfA@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: acer-wmi: refactor function has_cap
+Date: Wed, 15 Aug 2018 12:54:51 +0300
+Message-ID: <CAHp75VeWpXGaMTEmcqCHojEMBUR_k1oHMXZ3+Vc-ydPkH1gW=Q@mail.gmail.com>
+References: <20180806203832.GA11751@embeddedor.com> <20180809004410.GF13767@linux-l9pv.suse>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Veu9+vQPjq+1uWnaocobcHUBpkHKx6OfKW3-E_UeVtKfA@mail.gmail.com>
+In-Reply-To: <20180809004410.GF13767@linux-l9pv.suse>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Hans de Goede <hdegoede@redhat.com>, Linux Upstreaming Team <linux@endlessm.com>
+To: joeyli <jlee@suse.com>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Joe Perches <joe@perches.com>, David Laight <David.Laight@aculab.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Aug 15, 2018 at 5:45 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Aug 15, 2018 at 12:34 PM, Chris Chiu <chiu@endlessm.com> wrote:
->> On Mon, Jul 2, 2018 at 8:10 PM, Andy Shevchenko
->> <andy.shevchenko@gmail.com> wrote:
->>> On Wed, Jun 27, 2018 at 1:27 PM, Chris Chiu <chiu@endlessm.com> wrote:
->>>> On Wed, Jun 20, 2018 at 10:46 PM, Chris Chiu <chiu@endlessm.com> wrote:
->>>>> Make asus-wmi notify on hotkey kbd brightness changes, listen for
->>>>> brightness events and update the brightness directly in the driver.
->>>>> Create new do_kbd_led_set function for in-driver update, and leave
->>>>> kbd_led_set for original led_classdev call path.
->>>>>
->>>>> Update the brightness by led_classdev_notify_brightness_hw_changed.
->>>>> This will allow userspace to monitor (poll) for brightness changes
->>>>> on the LED without reporting via input keymapping.
->>>
->>> LGTM, I'm about to push it to my review and testing queue, so, we will
->>> have 1 day or so time to gather objections if any.
->>> Thanks!
->>>
+On Thu, Aug 9, 2018 at 3:44 AM, joeyli <jlee@suse.com> wrote:
+> Hi Gustavo,
+>
+> Sorry for my delay!
+>
+> On Mon, Aug 06, 2018 at 03:38:32PM -0500, Gustavo A. R. Silva wrote:
+>> Refactor function has_cap in order to avoid returning integer
+>> values, when instead it should return booleans.
 >>
->> Gentle ping. How's the review so far? Maybe need more time for more info?
+>> This code was detected with the help of Coccinelle.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 >
-> Sorry, I thought we have no objections and I pushed it to our for-next
-> quite time ago [1].
-> Should I do something differently?
+> Thanks for your patch and also thank Andy and Joe's help.
 >
-> [1]: http://git.infradead.org/linux-platform-drivers-x86.git/commitdiff/dbb3d78f61badeadc7448f9d88a070a76612860f
+> Please feel free to add:
 >
-> --
-> With Best Regards,
-> Andy Shevchenko
+> Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com>
+>
 
-It's good to know. Thank you.
+Pushed to my review and testing queue, thanks!
 
-Chris
+> Joey Lee
+>
+>> ---
+>> Changes in v2:
+>>       Remove parentheses and unnecessary code. Thank you all for
+>>       the feedback!
+>>
+>>  drivers/platform/x86/acer-wmi.c | 5 +----
+>>  1 file changed, 1 insertion(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+>> index 8952173..3294bb2 100644
+>> --- a/drivers/platform/x86/acer-wmi.c
+>> +++ b/drivers/platform/x86/acer-wmi.c
+>> @@ -672,10 +672,7 @@ static void __init find_quirks(void)
+>>
+>>  static bool has_cap(u32 cap)
+>>  {
+>> -     if ((interface->capability & cap) != 0)
+>> -             return 1;
+>> -
+>> -     return 0;
+>> +     return interface->capability & cap;
+>>  }
+>>
+>>  /*
+>> --
+>> 2.7.4
+>>
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
