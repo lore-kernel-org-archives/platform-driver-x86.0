@@ -1,73 +1,127 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v6 4/4] platform/x86: Add ACPI i2c-multi-instantiate pseudo driver
-Date: Sun, 12 Aug 2018 13:14:23 +0200
-Message-ID: <1946404.OiO1uWY7Ot@aspire.rjw.lan>
-References: <20180809114046.21366-1-hdegoede@redhat.com> <CAJZ5v0jbNTGEXWJ+CtPOKSM=AyB5-3hV-tMCYehj5w87i_2znA@mail.gmail.com> <9805a950-dfd3-df13-15e8-d60703ce0498@redhat.com>
+From: Chris Chiu <chiu@endlessm.com>
+Subject: Re: [PATCH v3 1/2] platform/x86: asus-wmi: Call led hw_changed API on
+ kbd brightness change
+Date: Wed, 15 Aug 2018 17:34:18 +0800
+Message-ID: <CAB4CAwedViX=U0DJNsZeUhJinQ1UBQ3KVTuhRJO7ni-xvqbJ3Q@mail.gmail.com>
+References: <20180620144645.2084-1-chiu@endlessm.com> <CAB4CAwdCixoGj9t=1Nvcc52kAjmcMWobKt11pRa0vNyLdeA_rg@mail.gmail.com>
+ <CAHp75VcvaJVuM=TL2AJaC=y5B9GRVbXO0DczfHWs+i03OJRXcw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9805a950-dfd3-df13-15e8-d60703ce0498@redhat.com>
+In-Reply-To: <CAHp75VcvaJVuM=TL2AJaC=y5B9GRVbXO0DczfHWs+i03OJRXcw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Wolfram Sang <wsa@the-dreams.de>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-i2c <linux-i2c@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Hans de Goede <hdegoede@redhat.com>, Linux Upstreaming Team <linux@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thursday, August 9, 2018 2:08:41 PM CEST Hans de Goede wrote:
-> Hi,
-> 
-> On 09-08-18 13:55, Rafael J. Wysocki wrote:
-> > On Thu, Aug 9, 2018 at 1:40 PM, Hans de Goede <hdegoede@redhat.com> wrote:
-> >> On systems with ACPI instantiated i2c-clients, normally there is 1 fw_node
-> >> per i2c-device and that fw-node contains 1 I2cSerialBus resource for that 1
-> >> i2c-device.
-> >>
-> >> But in some rare cases the manufacturer has decided to describe multiple
-> >> i2c-devices in a single ACPI fwnode with multiple I2cSerialBus resources.
-> >>
-> >> An earlier attempt to fix this in the i2c-core resulted in a lot of extra
-> >> code to support this corner-case.
-> >>
-> >> This commit introduces a new i2c-multi-instantiate driver which fixes this
-> >> in a different way. This new driver can be built as a module which will
-> >> only loaded on affected systems.
-> >>
-> >> This driver will instantiate a new i2c-client per I2cSerialBus resource,
-> >> using the driver_data from the acpi_device_id it is binding to to tell it
-> >> which chip-type (and optional irq-resource) to use when instantiating.
-> >>
-> >> Note this driver depends on a platform device being instantiated for the
-> >> ACPI fwnode, see the i2c_multi_instantiate_ids list of ACPI device-ids in
-> >> drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
-> >>
-> >> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >> Acked-by: Wolfram Sang <wsa@the-dreams.de>
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >> ---
-> >> Changes in v2:
-> >> -Rebase on top of 4.18-rc2
-> >>
-> >> Changes in v3:
-> >> -Change from an i2c-driver using a hack to allow having multiple i2c clients
-> >>   at the same address to a platform-driver
-> >>
-> >> Changes in v4:
-> >> -Tweak MAINTAINERS entry a bit
-> >>
-> >> Changes in v5:
-> >> -s/no_clients/num_clients/
-> >> -Change patch Subject prefix to platform/x86
-> >>
-> >> Changes in v6:
-> >> -s/irq_idx/gpio_irq_idx/
-> > 
-> > And this is the only patch that has changed in v6, right?
-> 
-> Correct.
-> 
-> > Anyway, if you have further updates on top of this series, please send
-> > them as incremental patches.
-> 
-> Ok, will do.
+On Mon, Jul 2, 2018 at 8:10 PM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Wed, Jun 27, 2018 at 1:27 PM, Chris Chiu <chiu@endlessm.com> wrote:
+>> On Wed, Jun 20, 2018 at 10:46 PM, Chris Chiu <chiu@endlessm.com> wrote:
+>>> Make asus-wmi notify on hotkey kbd brightness changes, listen for
+>>> brightness events and update the brightness directly in the driver.
+>>> Create new do_kbd_led_set function for in-driver update, and leave
+>>> kbd_led_set for original led_classdev call path.
+>>>
+>>> Update the brightness by led_classdev_notify_brightness_hw_changed.
+>>> This will allow userspace to monitor (poll) for brightness changes
+>>> on the LED without reporting via input keymapping.
+>
+> LGTM, I'm about to push it to my review and testing queue, so, we will
+> have 1 day or so time to gather objections if any.
+> Thanks!
+>
 
-The series has been applied, thanks!
+Gentle ping. How's the review so far? Maybe need more time for more info?
+
+Chris
+
+>>>
+>>> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+>>> ---
+>>>  drivers/platform/x86/asus-wmi.c | 26 ++++++++++++++++++++++----
+>>>  1 file changed, 22 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+>>> index 1f6e68f0b646..f2b9037f6ded 100644
+>>> --- a/drivers/platform/x86/asus-wmi.c
+>>> +++ b/drivers/platform/x86/asus-wmi.c
+>>> @@ -460,6 +460,7 @@ static void kbd_led_update(struct work_struct *work)
+>>>                 ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
+>>>
+>>>         asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
+>>> +       led_classdev_notify_brightness_hw_changed(&asus->kbd_led, asus->kbd_led_wk);
+>>>  }
+>>>
+>>>  static int kbd_led_read(struct asus_wmi *asus, int *level, int *env)
+>>> @@ -490,15 +491,16 @@ static int kbd_led_read(struct asus_wmi *asus, int *level, int *env)
+>>>         return retval;
+>>>  }
+>>>
+>>> -static void kbd_led_set(struct led_classdev *led_cdev,
+>>> -                       enum led_brightness value)
+>>> +static void do_kbd_led_set(struct led_classdev *led_cdev, int value)
+>>>  {
+>>>         struct asus_wmi *asus;
+>>> +       int max_level;
+>>>
+>>>         asus = container_of(led_cdev, struct asus_wmi, kbd_led);
+>>> +       max_level = asus->kbd_led.max_brightness;
+>>>
+>>> -       if (value > asus->kbd_led.max_brightness)
+>>> -               value = asus->kbd_led.max_brightness;
+>>> +       if (value > max_level)
+>>> +               value = max_level;
+>>>         else if (value < 0)
+>>>                 value = 0;
+>>>
+>>> @@ -506,6 +508,12 @@ static void kbd_led_set(struct led_classdev *led_cdev,
+>>>         queue_work(asus->led_workqueue, &asus->kbd_led_work);
+>>>  }
+>>>
+>>> +static void kbd_led_set(struct led_classdev *led_cdev,
+>>> +                       enum led_brightness value)
+>>> +{
+>>> +       do_kbd_led_set(led_cdev, value);
+>>> +}
+>>> +
+>>>  static enum led_brightness kbd_led_get(struct led_classdev *led_cdev)
+>>>  {
+>>>         struct asus_wmi *asus;
+>>> @@ -656,6 +664,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+>>>
+>>>                 asus->kbd_led_wk = led_val;
+>>>                 asus->kbd_led.name = "asus::kbd_backlight";
+>>> +               asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
+>>>                 asus->kbd_led.brightness_set = kbd_led_set;
+>>>                 asus->kbd_led.brightness_get = kbd_led_get;
+>>>                 asus->kbd_led.max_brightness = 3;
+>>> @@ -1745,6 +1754,15 @@ static void asus_wmi_notify(u32 value, void *context)
+>>>                 }
+>>>         }
+>>>
+>>> +       if (code == NOTIFY_KBD_BRTUP) {
+>>> +               do_kbd_led_set(&asus->kbd_led, asus->kbd_led_wk + 1);
+>>> +               goto exit;
+>>> +       }
+>>> +       if (code == NOTIFY_KBD_BRTDWN) {
+>>> +               do_kbd_led_set(&asus->kbd_led, asus->kbd_led_wk - 1);
+>>> +               goto exit;
+>>> +       }
+>>> +
+>>>         if (is_display_toggle(code) &&
+>>>             asus->driver->quirks->no_display_toggle)
+>>>                 goto exit;
+>>> --
+>>> 2.11.0
+>>>
+>>
+>> Gentle ping. Any comment for the v3 patch?
+>>
+>> Chris
+>
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
