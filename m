@@ -1,55 +1,44 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Add keymap entry for lid flip
- action on Asus UX360
-Date: Wed, 15 Aug 2018 13:15:52 +0300
-Message-ID: <CAHp75VcMxMMgLS5y1=k2wMHy5HNbBVgJFMNJ0gErsExss4K65Q@mail.gmail.com>
-References: <04607a59-7e47-5463-7ff6-cb1aae7e3626@vaolix.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] platform/x86: fix intel_punit_ipc.c build errors
+Date: Wed, 15 Aug 2018 09:12:07 -0700
+Message-ID: <aee82dc5-cc0f-0698-04a8-a5857fce9791@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <04607a59-7e47-5463-7ff6-cb1aae7e3626@vaolix.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aleh Filipovich <aleh@vaolix.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Cc: Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Aug 10, 2018 at 11:07 PM, Aleh Filipovich <aleh@vaolix.com> wrote:
-> Add entry to WMI keymap for lid flip event on Asus UX360.
->
-> On Asus Zenbook ux360 flipping lid from/to tablet mode triggers
-> keyscan code 0xfa which cannot be handled and results in kernel
-> log message "Unknown key fa pressed".
->
->
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Pushed to my review and testing queue, thanks!
+Fix build errors by #including <linux/io.h>.
 
-P.S. your patch is mangled, please, pay attention to the format next time.
+../drivers/platform/x86/intel_punit_ipc.c: In function 'ipc_read_status':
+../drivers/platform/x86/intel_punit_ipc.c:55:2: error: implicit declaration of function 'readl' [-Werror=implicit-function-declaration]
+  return readl(ipcdev->base[type][BASE_IFACE]);
+../drivers/platform/x86/intel_punit_ipc.c: In function 'ipc_write_cmd':
+../drivers/platform/x86/intel_punit_ipc.c:60:2: error: implicit declaration of function 'writel' [-Werror=implicit-function-declaration]
+  writel(cmd, ipcdev->base[type][BASE_IFACE]);
 
-> Signed-off-by: Aleh Filipovich<aleh@appnexus.com>
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c
-> b/drivers/platform/x86/asus-nb-wmi.c
-> index 136ff2b4cce5..db2af09067db 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -496,6 +496,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
->         { KE_KEY, 0xC4, { KEY_KBDILLUMUP } },
->         { KE_KEY, 0xC5, { KEY_KBDILLUMDOWN } },
->         { KE_IGNORE, 0xC6, },  /* Ambient Light Sensor notification */
-> +       { KE_KEY, 0xFA, { KEY_PROG2 } },           /* Lid flip action */
->         { KE_END, 0},
->  };
->
-> --
-> 2.18.0
->
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Zha Qipeng <qipeng.zha@intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+---
+Found in linux-next but applies to current mainline also.
 
+ drivers/platform/x86/intel_punit_ipc.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+--- linux-next-20180815.orig/drivers/platform/x86/intel_punit_ipc.c
++++ linux-next-20180815/drivers/platform/x86/intel_punit_ipc.c
+@@ -18,6 +18,7 @@
+ #include <linux/bitops.h>
+ #include <linux/device.h>
+ #include <linux/interrupt.h>
++#include <linux/io.h>
+ #include <linux/platform_device.h>
+ #include <asm/intel_punit_ipc.h>
+ 
