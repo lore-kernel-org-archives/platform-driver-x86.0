@@ -1,41 +1,43 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] intel_punit_ipc: include linux/io.h
-Date: Fri, 17 Aug 2018 13:48:09 +0300
-Message-ID: <CAHp75Vf2sad4PtS+97c7pWUxRpRc2zizsrZJs+Oumj+HD1KmdQ@mail.gmail.com>
-References: <20180817095131.2557798-1-arnd@arndb.de>
+Subject: Re: [PATCH] platform/x86: fix intel_punit_ipc.c build errors
+Date: Fri, 17 Aug 2018 14:00:02 +0300
+Message-ID: <CAHp75Vch70rk+zZ2wv=qjPzEDhAnqRBwBuDEU3x40=+fVZhF1g@mail.gmail.com>
+References: <aee82dc5-cc0f-0698-04a8-a5857fce9791@infradead.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180817095131.2557798-1-arnd@arndb.de>
+In-Reply-To: <aee82dc5-cc0f-0698-04a8-a5857fce9791@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>
-Cc: Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nicolai Stange <nstange@suse.de>, Thomas Gleixner <tglx@linutronix.de>, "Michael S. Tsirkin" <mst@redhat.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd.bergmann@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Aug 17, 2018 at 12:51 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> After we stop including linux/irq.h implicitly, we don't see linux/io.h
-> in intel_punit_ipc.c, leading to a build failure:
+On Wed, Aug 15, 2018 at 7:12 PM, Randy Dunlap <rdunlap@infradead.org> wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
 >
-> drivers/platform/x86/intel_punit_ipc.c: In function 'ipc_read_status':
-> drivers/platform/x86/intel_punit_ipc.c:55:9: error: implicit declaration of function 'readl' [-Werror=implicit-function-declaration]
+> Fix build errors by #including <linux/io.h>.
 >
-> Add back the include that is clearly needed.
+> ../drivers/platform/x86/intel_punit_ipc.c: In function 'ipc_read_status':
+> ../drivers/platform/x86/intel_punit_ipc.c:55:2: error: implicit declaration of function 'readl' [-Werror=implicit-function-declaration]
+>   return readl(ipcdev->base[type][BASE_IFACE]);
+> ../drivers/platform/x86/intel_punit_ipc.c: In function 'ipc_write_cmd':
+> ../drivers/platform/x86/intel_punit_ipc.c:60:2: error: implicit declaration of function 'writel' [-Werror=implicit-function-declaration]
+>   writel(cmd, ipcdev->base[type][BASE_IFACE]);
 >
 
-Thanks, Randy already sent a patch
+Thanks, pushed to our for-next queue, with Fixes tag appended.
 
-> Fixes: 447ae3166702 ("x86: Don't include linux/irq.h from asm/hardirq.h")
-> Cc: Nicolai Stange <nstange@suse.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Zha Qipeng <qipeng.zha@intel.com>
+> Cc: platform-driver-x86@vger.kernel.org
 > ---
->  drivers/platform/x86/intel_punit_ipc.c | 1 +
+> Found in linux-next but applies to current mainline also.
+>
+>  drivers/platform/x86/intel_punit_ipc.c |    1 +
 >  1 file changed, 1 insertion(+)
 >
-> diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
-> index f1afc0ebbc68..2efeab650345 100644
-> --- a/drivers/platform/x86/intel_punit_ipc.c
-> +++ b/drivers/platform/x86/intel_punit_ipc.c
+> --- linux-next-20180815.orig/drivers/platform/x86/intel_punit_ipc.c
+> +++ linux-next-20180815/drivers/platform/x86/intel_punit_ipc.c
 > @@ -18,6 +18,7 @@
 >  #include <linux/bitops.h>
 >  #include <linux/device.h>
@@ -44,8 +46,7 @@ Thanks, Randy already sent a patch
 >  #include <linux/platform_device.h>
 >  #include <asm/intel_punit_ipc.h>
 >
-> --
-> 2.18.0
+>
 >
 
 
