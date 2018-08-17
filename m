@@ -1,51 +1,45 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: fix intel_punit_ipc.c build errors
-Date: Fri, 17 Aug 2018 14:00:02 +0300
-Message-ID: <CAHp75Vch70rk+zZ2wv=qjPzEDhAnqRBwBuDEU3x40=+fVZhF1g@mail.gmail.com>
-References: <aee82dc5-cc0f-0698-04a8-a5857fce9791@infradead.org>
+Subject: Re: [PATCH] platform/x86: acer-wmi: Silence "unsupported" message a bit
+Date: Fri, 17 Aug 2018 14:07:38 +0300
+Message-ID: <CAHp75Vd1ZZDJtASfFpr=eE+zaEiOxH3ohdSOe1aTcE3qEMd_QA@mail.gmail.com>
+References: <7ccdc39d7e255547e851497ef9f449715b45f8bd.camel@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <aee82dc5-cc0f-0698-04a8-a5857fce9791@infradead.org>
+In-Reply-To: <7ccdc39d7e255547e851497ef9f449715b45f8bd.camel@kernel.crashing.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd.bergmann@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Zha Qipeng <qipeng.zha@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: "Lee, Chun-Yi" <jlee@suse.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Aug 15, 2018 at 7:12 PM, Randy Dunlap <rdunlap@infradead.org> wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
+On Thu, Aug 16, 2018 at 2:27 AM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> This driver prints that "Unsupported machine..." message on every boot on
+> ThinkPad X1 Carbon laptops (and I assume a number of other systems), which
+> causes graphical boots to "glitch" a bit and is rather annoying ...
 >
-> Fix build errors by #including <linux/io.h>.
->
-> ../drivers/platform/x86/intel_punit_ipc.c: In function 'ipc_read_status':
-> ../drivers/platform/x86/intel_punit_ipc.c:55:2: error: implicit declaration of function 'readl' [-Werror=implicit-function-declaration]
->   return readl(ipcdev->base[type][BASE_IFACE]);
-> ../drivers/platform/x86/intel_punit_ipc.c: In function 'ipc_write_cmd':
-> ../drivers/platform/x86/intel_punit_ipc.c:60:2: error: implicit declaration of function 'writel' [-Werror=implicit-function-declaration]
->   writel(cmd, ipcdev->base[type][BASE_IFACE]);
->
+> Make it a pr_debug instead.
 
-Thanks, pushed to our for-next queue, with Fixes tag appended.
+Thanks for the patch. Unfortunately it doesn't apply.
+Please, check your mail clients and tools for formatting patch (it
+produced at the end spaces instead of tabs)
 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Zha Qipeng <qipeng.zha@intel.com>
-> Cc: platform-driver-x86@vger.kernel.org
+>
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 > ---
-> Found in linux-next but applies to current mainline also.
 >
->  drivers/platform/x86/intel_punit_ipc.c |    1 +
->  1 file changed, 1 insertion(+)
->
-> --- linux-next-20180815.orig/drivers/platform/x86/intel_punit_ipc.c
-> +++ linux-next-20180815/drivers/platform/x86/intel_punit_ipc.c
-> @@ -18,6 +18,7 @@
->  #include <linux/bitops.h>
->  #include <linux/device.h>
->  #include <linux/interrupt.h>
-> +#include <linux/io.h>
->  #include <linux/platform_device.h>
->  #include <asm/intel_punit_ipc.h>
->
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index 8952173dd380..7f7192e8fdab 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -2216,7 +2216,7 @@ static int __init acer_wmi_init(void)
+>         if (wmi_has_guid(AMW0_GUID1) &&
+>             !dmi_check_system(amw0_whitelist) &&
+>             quirks == &quirk_unknown) {
+> -               pr_err("Unsupported machine has AMW0_GUID1, unable to load\n");
+> +               pr_debug("Unsupported machine has AMW0_GUID1, unable to load\n");
+>                 return -ENODEV;
+>         }
 >
 >
 
