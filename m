@@ -1,114 +1,194 @@
 From: Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v13 06/13] x86/sgx: Detect Intel SGX
-Date: Mon, 27 Aug 2018 12:53:59 -0700
-Message-ID: <50c199b6-e8eb-9120-0d2a-5e60ac0139b4@intel.com>
+Subject: Re: [PATCH v13 07/13] x86/sgx: Add data structures for tracking the
+ EPC pages
+Date: Mon, 27 Aug 2018 14:07:53 -0700
+Message-ID: <4666cae8-c711-8dd5-cbce-3d97cc19a9e5@intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-7-jarkko.sakkinen@linux.intel.com>
+ <20180827185507.17087-8-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827185507.17087-7-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20180827185507.17087-8-jarkko.sakkinen@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Suresh Siddha <suresh.b.siddha@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Serge Ayoun <serge.ayoun@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Borislav Petkov <bp@suse.de>, Reinette Chatre <reinette.chatre@intel.com>, Andi Kleen <ak@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Serge Ayoun <serge.ayoun@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Suresh Siddha <suresh.b.siddha@intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-> +config INTEL_SGX_CORE
-> +	prompt "Intel SGX core functionality"
-> +	def_bool n
-> +	depends on X86_64 && CPU_SUP_INTEL
-> +	help
-> +	Intel Software Guard eXtensions (SGX) is a set of CPU instructions
-> +	that allows ring 3 applications to create enclaves, private regions
-> +	of memory that are protected, by hardware, from unauthorized access
-> +	and/or modification.
-
-This is a bit comma-crazy.  Also, considering some of our recent CVE
-fun, I'd probably not claim hardware protection. :)
-
-Maybe:
-
-	Intel Software Guard eXtensions (SGX) CPU feature that allows
-	ring 3 applications to create enclaves: private regions
-	of memory that are architecturally protected from unauthorized
-	access and/or modification.
-
-> +	This option enables kernel recognition of SGX, high-level management
-> +	of the Enclave Page Cache (EPC), tracking and writing of SGX Launch
-> +	Enclave Hash MSRs, and allows for virtualization of SGX via KVM. By
-> +	iteslf, this option does not provide SGX support to userspace.
-
-itself
-
-
-> diff --git a/arch/x86/include/asm/sgx_pr.h b/arch/x86/include/asm/sgx_pr.h
-> new file mode 100644
-> index 000000000000..c68578127620
-> --- /dev/null
-> +++ b/arch/x86/include/asm/sgx_pr.h
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> +// Copyright(c) 2016-17 Intel Corporation.
+On 08/27/2018 11:53 AM, Jarkko Sakkinen wrote:
+> Add data structures to track Enclave Page Cache (EPC) pages.  EPC is
+> divided into multiple banks (1-N) of which addresses and sizes can be
+> enumerated with CPUID by the OS.
+> 
+> On NUMA systems a node can have at most bank. A bank can be at most part of
+> two nodes. SGX supports both nodes with a single memory controller and also
+> sub-cluster nodes with severals memory controllers on a single die.
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Co-developed-by: Serge Ayoun <serge.ayoun@intel.com>
+> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Serge Ayoun <serge.ayoun@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/include/asm/sgx.h      |  60 ++++++++++++++++++
+>  arch/x86/kernel/cpu/intel_sgx.c | 106 +++++++++++++++++++++++++++++++-
+>  2 files changed, 164 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
+> index 2130e639ab49..17b7b3aa66bf 100644
+> --- a/arch/x86/include/asm/sgx.h
+> +++ b/arch/x86/include/asm/sgx.h
+> @@ -4,9 +4,69 @@
+>  #ifndef _ASM_X86_SGX_H
+>  #define _ASM_X86_SGX_H
+>  
+> +#include <linux/bitops.h>
+> +#include <linux/err.h>
+> +#include <linux/rwsem.h>
+>  #include <linux/types.h>
+> +#include <asm/sgx_arch.h>
+> +#include <asm/asm.h>
 > +
-> +#ifndef _ASM_X86_SGX_PR_H
-> +#define _ASM_X86_SGX_PR_H
+> +#define SGX_MAX_EPC_BANKS 8
+
+This is _still_ missing a meaningful description of what a bank is and
+whether it is a hardware or software structure.
+
+It would also help us to determine whether your bit packing below is
+really required.
+
+> +struct sgx_epc_page {
+> +	unsigned long desc;
+> +	struct list_head list;
+> +};
 > +
-> +#include <linux/printk.h>
-> +#include <linux/ratelimit.h>
+> +struct sgx_epc_bank {
+> +	unsigned long pa;
+> +	void *va;
+> +	unsigned long size;
+
+Please add units.  size could be bytes or pages, or who knows what.  I
+can't tell you how many bugs I've tripped over in the past from simple
+unit conversions
+
+> +	struct sgx_epc_page *pages_data;
+> +	struct sgx_epc_page **pages;
+> +	unsigned long free_cnt;
+> +	spinlock_t lock;
+> +};
+>  
+>  extern bool sgx_enabled;
+>  extern bool sgx_lc_enabled;
+> +extern struct sgx_epc_bank sgx_epc_banks[SGX_MAX_EPC_BANKS];
 > +
-> +#undef pr_fmt
-> +#define pr_fmt(fmt) "sgx: " fmt
-> +
-> +#endif /* _ASM_X86_SGX_PR_H */
+> +/*
+> + * enum sgx_epc_page_desc - defines bits and masks for an EPC page's desc
 
-I don't think this belongs in a generic header.  Generally, we do the
-pr_fmt stuff in .c files, not in headers.  If someone includes this
-header directly or indirectly, they'll get a big surprise.
+Why are you bothering packing these bits?  This seems a rather
+convoluted way to store two integers.
 
-If you *must* have this in a .h file, put it in
-arch/x86/kernel/cpu/intel_sgx.h or something and #include "intel_sgx.h"
-in all the .c files where you want this.
-
-
-> +static __init int sgx_init(void)
+> +static __init int sgx_init_epc_bank(u64 addr, u64 size, unsigned long index,
+> +				    struct sgx_epc_bank *bank)
 > +{
-> +	unsigned long fc;
+> +	unsigned long nr_pages = size >> PAGE_SHIFT;
+> +	struct sgx_epc_page *pages_data;
+> +	unsigned long i;
+> +	void *va;
 > +
-> +	if (!boot_cpu_has(X86_FEATURE_SGX))
-> +		return false;
+> +	va = ioremap_cache(addr, size);
+> +	if (!va)
+> +		return -ENOMEM;
 > +
-> +	if (!boot_cpu_has(X86_FEATURE_SGX1))
-> +		return false;
+> +	pages_data = kcalloc(nr_pages, sizeof(struct sgx_epc_page), GFP_KERNEL);
+> +	if (!pages_data)
+> +		goto out_iomap;
+
+This looks like you're roughly limited by the page allocator to a bank
+size of ~1.4GB which seems kinda small.  Is this really OK?
+
+> +	bank->pages = kcalloc(nr_pages, sizeof(struct sgx_epc_page *),
+> +			      GFP_KERNEL);
+> +	if (!bank->pages)
+> +		goto out_pdata;
 > +
-> +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
-> +	if (!(fc & FEATURE_CONTROL_LOCKED)) {
-> +		pr_info("IA32_FEATURE_CONTROL MSR is not locked\n");
-> +		return false;
+> +	for (i = 0; i < nr_pages; i++) {
+> +		bank->pages[i] = &pages_data[i];
+> +		bank->pages[i]->desc = (addr + (i << PAGE_SHIFT)) | index;
 > +	}
-
-This is a rather crummy error message.  Doesn't this keep sgx from
-initializing?  Would something like this be more informative?
-
-	pr_info("failed init: IA32_FEATURE_CONTROL MSR not locked\n");
-
-> +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE)) {
-> +		pr_info("disabled by the firmware\n");
-> +		return false;
-> +	}
 > +
-> +	if (!(fc & FEATURE_CONTROL_SGX_LE_WR))
-> +		pr_info("IA32_SGXLEPUBKEYHASHn MSRs are not writable\n");
-
-How about something that might help an end user?  Perhaps:
-
-	pr_warn("launch configuration not available\n");
-
-> +	sgx_enabled = true;
-> +	sgx_lc_enabled = !!(fc & FEATURE_CONTROL_SGX_LE_WR);
+> +	bank->pa = addr;
+> +	bank->size = size;
+> +	bank->va = va;
+> +	bank->free_cnt = nr_pages;
+> +	bank->pages_data = pages_data;
+> +	spin_lock_init(&bank->lock);
 > +	return 0;
+> +out_pdata:
+> +	kfree(pages_data);
+> +out_iomap:
+> +	iounmap(va);
+> +	return -ENOMEM;
 > +}
 > +
-> +arch_initcall(sgx_init);
-> 
+> +static __init void sgx_page_cache_teardown(void)
+> +{
+> +	struct sgx_epc_bank *bank;
+> +	int i;
+> +
+> +	for (i = 0; i < sgx_nr_epc_banks; i++) {
+> +		bank = &sgx_epc_banks[i];
+> +		iounmap((void *)bank->va);
+> +		kfree(bank->pages);
+> +		kfree(bank->pages_data);
+> +	}
+> +}
+> +
+> +static inline u64 sgx_combine_bank_regs(u64 low, u64 high)
+> +{
+> +	return (low & 0xFFFFF000) + ((high & 0xFFFFF) << 32);
+> +}
+
+-ENOCOMMENT for a rather weird looking calculation
+
+> +static __init int sgx_page_cache_init(void)
+> +{
+> +	u32 eax, ebx, ecx, edx;
+> +	u64 pa, size;
+> +	int ret;
+> +	int i;
+> +
+> +	for (i = 0; i < SGX_MAX_EPC_BANKS; i++) {
+> +		cpuid_count(SGX_CPUID, 2 + i, &eax, &ebx, &ecx, &edx);
+> +		if (!(eax & 0xF))
+> +			break;
+
+So, we have random data coming out of a random CPUID leaf being called
+'eax' and then being tested against a random hard-coded mask.  This
+seems rather unfortunate for someone trying to understand the code.  Can
+we do better?
+
+> +		pa = sgx_combine_bank_regs(eax, ebx);
+> +		size = sgx_combine_bank_regs(ecx, edx);
+> +		pr_info("EPC bank 0x%llx-0x%llx\n", pa, pa + size - 1);
+> +		ret = sgx_init_epc_bank(pa, size, i, &sgx_epc_banks[i]);
+> +		if (ret) {
+> +			sgx_page_cache_teardown();
+> +			return ret;
+> +		}
+
+So if one bank fails, we tear down all banks, yet leave sgx_nr_epc_banks
+incremented?  That sounds troublesome.
+
+> +		sgx_nr_epc_banks++;
+> +	}
+> +
+> +	if (!sgx_nr_epc_banks) {
+> +		pr_err("There are zero EPC banks.\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+
+Does this support hot-addition of a bank?  If not, why not?
