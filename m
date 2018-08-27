@@ -1,42 +1,33 @@
 From: Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v13 04/13] x86/sgx: Architectural structures
-Date: Mon, 27 Aug 2018 12:41:29 -0700
-Message-ID: <3e8cf7d4-0d84-9526-816a-a2da30d81de7@intel.com>
+Subject: Re: [PATCH v13 05/13] x86/msr: Add SGX definitions to msr-index.h
+Date: Mon, 27 Aug 2018 12:42:32 -0700
+Message-ID: <c4c85a47-6de4-1171-4fd5-4a4bdd4d31db@intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-5-jarkko.sakkinen@linux.intel.com>
+ <20180827185507.17087-6-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827185507.17087-5-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20180827185507.17087-6-jarkko.sakkinen@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Haim Cohen <haim.cohen@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Tom Lendacky <thomas.lendacky@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw@amazon.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Matt Turner <mattst88@gmail.com>, Andy Lutomirski <luto@kernel.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-> +/**
-> + * enum sgx_encls_leaves - return codes for ENCLS, ENCLU and ENCLV
-> + * %SGX_SUCCESS:		No error.
-> + * %SGX_INVALID_SIG_STRUCT:	SIGSTRUCT contains an invalid value.
-> + * %SGX_INVALID_ATTRIBUTE:	Enclave is not attempting to access a resource
-> + *				for which it is not authorized.
-> + * %SGX_BLKSTATE:		EPC page is already blocked.
-> + * %SGX_INVALID_MEASUREMENT:	SIGSTRUCT or EINITTOKEN contains an incorrect
-> + *				measurement.
-...
-> +enum sgx_return_codes {
-> +	SGX_SUCCESS			= 0,
-> +	SGX_INVALID_SIG_STRUCT		= 1,
-> +	SGX_INVALID_ATTRIBUTE		= 2,
-> +	SGX_BLKSTATE			= 3,
-> +	SGX_INVALID_MEASUREMENT		= 4,
-...
+On 08/27/2018 11:53 AM, Jarkko Sakkinen wrote:
+> @@ -866,10 +867,9 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+>  		}
+>  	}
+>  
+> -	/* Intel SGX features: level 0x00000012 */
+> -	if (c->cpuid_level >= 0x00000012) {
+> -		cpuid(0x00000012, &eax, &ebx, &ecx, &edx);
+> -
+> +	/* Intel SGX features */
+> +	if (c->cpuid_level >= SGX_CPUID) {
+> +		cpuid(SGX_CPUID,  &eax, &ebx, &ecx, &edx);
+>  		c->x86_capability[CPUID_12_EAX] = eax;
+>  	}
 
-I don't think I've ever seen this particular method of commenting
-before.  It's rather verbose and duplicates the names twice, which seems
-a bit silly.
-
-Can you talk a bit about why you chose to do it this way?  I'd
-personally much rather see at least some brief comments inline with the
-definitions.
+This hunk has no apparent connection to the changelog.
