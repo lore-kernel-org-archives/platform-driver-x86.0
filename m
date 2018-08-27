@@ -1,88 +1,174 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v13 05/13] x86/msr: Add SGX definitions to msr-index.h
-Date: Mon, 27 Aug 2018 21:53:26 +0300
-Message-ID: <20180827185507.17087-6-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v13 06/13] x86/sgx: Detect Intel SGX
+Date: Mon, 27 Aug 2018 21:53:27 +0300
+Message-ID: <20180827185507.17087-7-jarkko.sakkinen@linux.intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Haim Cohen <haim.cohen@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Tom Lendacky <thomas.lendacky@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, David Woodhouse <dwmw@amazon.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Matt Turner <mattst88@gmail.com>, Andy Lutomirski <luto@kernel.org>, "open list:X86 ARCHITECTURE 32-BIT AND
+Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Suresh Siddha <suresh.b.siddha@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Serge Ayoun <serge.ayoun@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Borislav Petkov <bp@suse.de>, Reinette Chatre <reinette.chatre@intel.com>, Andi Kleen <ak@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "open list:X86 ARCHITECTURE 32-BIT AND
         64-BIT" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-ENCLS and ENCLU are usable if and only if SGX_ENABLE is set and After
-SGX is activated the IA32_SGXLEPUBKEYHASHn MSRs are writable if
-SGX_LC_WR is set and the feature control is locked.
+Intel(R) SGX is a set of CPU instructions that can be used by applications
+to set aside private regions of code and data. The code outside the enclave
+is disallowed to access the memory inside the enclave by the CPU access
+control.
 
-SGX related bits in IA32_FEATURE_CONTROL cannot be set before SGX is
-activated by the pre-boot firmware. SGX activation is triggered by
-setting bit 0 in the MSR 0x7a. Until SGX is activated, the LE hash MSRs
-are writable to allow pre-boot firmware to lock down the LE root key
-with a non-Intel value.
+Add a check for SGX to arch/x86 and a new config option, INTEL_SGX_CORE.
+Expose a boolean variable 'sgx_enabled' to query whether or not the SGX
+support is available.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Co-developed-by: Haim Cohen <haim.cohen@intel.com>
-Signed-off-by: Haim Cohen <haim.cohen@intel.com>
+Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Co-developed-by: Suresh Siddha <suresh.b.siddha@intel.com>
+Signed-off-by: Suresh Siddha <suresh.b.siddha@intel.com>
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- arch/x86/include/asm/msr-index.h | 8 ++++++++
- arch/x86/kernel/cpu/common.c     | 8 ++++----
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ arch/x86/Kconfig                | 19 +++++++++++++
+ arch/x86/include/asm/sgx.h      | 12 +++++++++
+ arch/x86/include/asm/sgx_pr.h   | 13 +++++++++
+ arch/x86/kernel/cpu/Makefile    |  1 +
+ arch/x86/kernel/cpu/intel_sgx.c | 47 +++++++++++++++++++++++++++++++++
+ 5 files changed, 92 insertions(+)
+ create mode 100644 arch/x86/include/asm/sgx.h
+ create mode 100644 arch/x86/include/asm/sgx_pr.h
+ create mode 100644 arch/x86/kernel/cpu/intel_sgx.c
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 4731f0cf97c5..44d7b68e7f52 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -486,6 +486,8 @@
- #define FEATURE_CONTROL_LOCKED				(1<<0)
- #define FEATURE_CONTROL_VMXON_ENABLED_INSIDE_SMX	(1<<1)
- #define FEATURE_CONTROL_VMXON_ENABLED_OUTSIDE_SMX	(1<<2)
-+#define FEATURE_CONTROL_SGX_ENABLE			(1<<18)
-+#define FEATURE_CONTROL_SGX_LE_WR			(1<<17)
- #define FEATURE_CONTROL_LMCE				(1<<20)
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index b0312f8947ce..3c7571422a07 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1911,6 +1911,25 @@ config X86_INTEL_MEMORY_PROTECTION_KEYS
  
- #define MSR_IA32_APICBASE		0x0000001b
-@@ -552,6 +554,12 @@
- #define PACKAGE_THERM_INT_LOW_ENABLE		(1 << 1)
- #define PACKAGE_THERM_INT_PLN_ENABLE		(1 << 24)
+ 	  If unsure, say y.
  
-+/* Intel SGX MSRs */
-+#define MSR_IA32_SGXLEPUBKEYHASH0	0x0000008C
-+#define MSR_IA32_SGXLEPUBKEYHASH1	0x0000008D
-+#define MSR_IA32_SGXLEPUBKEYHASH2	0x0000008E
-+#define MSR_IA32_SGXLEPUBKEYHASH3	0x0000008F
++config INTEL_SGX_CORE
++	prompt "Intel SGX core functionality"
++	def_bool n
++	depends on X86_64 && CPU_SUP_INTEL
++	help
++	Intel Software Guard eXtensions (SGX) is a set of CPU instructions
++	that allows ring 3 applications to create enclaves, private regions
++	of memory that are protected, by hardware, from unauthorized access
++	and/or modification.
 +
- /* Thermal Thresholds Support */
- #define THERM_INT_THRESHOLD0_ENABLE    (1 << 15)
- #define THERM_SHIFT_THRESHOLD0        8
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 211c76322ddf..282ceef992b0 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -52,6 +52,7 @@
- #include <asm/microcode_intel.h>
- #include <asm/intel-family.h>
- #include <asm/cpu_device_id.h>
-+#include <asm/sgx_arch.h>
++	This option enables kernel recognition of SGX, high-level management
++	of the Enclave Page Cache (EPC), tracking and writing of SGX Launch
++	Enclave Hash MSRs, and allows for virtualization of SGX via KVM. By
++	iteslf, this option does not provide SGX support to userspace.
++
++	For details, see Documentation/x86/intel_sgx.rst
++
++	If unsure, say N.
++
+ config EFI
+ 	bool "EFI runtime service support"
+ 	depends on ACPI
+diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
+new file mode 100644
+index 000000000000..2130e639ab49
+--- /dev/null
++++ b/arch/x86/include/asm/sgx.h
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
++// Copyright(c) 2016-18 Intel Corporation.
++
++#ifndef _ASM_X86_SGX_H
++#define _ASM_X86_SGX_H
++
++#include <linux/types.h>
++
++extern bool sgx_enabled;
++extern bool sgx_lc_enabled;
++
++#endif /* _ASM_X86_SGX_H */
+diff --git a/arch/x86/include/asm/sgx_pr.h b/arch/x86/include/asm/sgx_pr.h
+new file mode 100644
+index 000000000000..c68578127620
+--- /dev/null
++++ b/arch/x86/include/asm/sgx_pr.h
+@@ -0,0 +1,13 @@
++// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
++// Copyright(c) 2016-17 Intel Corporation.
++
++#ifndef _ASM_X86_SGX_PR_H
++#define _ASM_X86_SGX_PR_H
++
++#include <linux/printk.h>
++#include <linux/ratelimit.h>
++
++#undef pr_fmt
++#define pr_fmt(fmt) "sgx: " fmt
++
++#endif /* _ASM_X86_SGX_PR_H */
+diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
+index 347137e80bf5..71876f2b35fc 100644
+--- a/arch/x86/kernel/cpu/Makefile
++++ b/arch/x86/kernel/cpu/Makefile
+@@ -38,6 +38,7 @@ obj-$(CONFIG_CPU_SUP_UMC_32)		+= umc.o
+ obj-$(CONFIG_INTEL_RDT)	+= intel_rdt.o intel_rdt_rdtgroup.o intel_rdt_monitor.o
+ obj-$(CONFIG_INTEL_RDT)	+= intel_rdt_ctrlmondata.o intel_rdt_pseudo_lock.o
+ CFLAGS_intel_rdt_pseudo_lock.o = -I$(src)
++obj-$(CONFIG_INTEL_SGX_CORE)		+= intel_sgx.o
  
- #ifdef CONFIG_X86_LOCAL_APIC
- #include <asm/uv/uv.h>
-@@ -866,10 +867,9 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
- 		}
- 	}
- 
--	/* Intel SGX features: level 0x00000012 */
--	if (c->cpuid_level >= 0x00000012) {
--		cpuid(0x00000012, &eax, &ebx, &ecx, &edx);
--
-+	/* Intel SGX features */
-+	if (c->cpuid_level >= SGX_CPUID) {
-+		cpuid(SGX_CPUID,  &eax, &ebx, &ecx, &edx);
- 		c->x86_capability[CPUID_12_EAX] = eax;
- 	}
- 
+ obj-$(CONFIG_X86_MCE)			+= mcheck/
+ obj-$(CONFIG_MTRR)			+= mtrr/
+diff --git a/arch/x86/kernel/cpu/intel_sgx.c b/arch/x86/kernel/cpu/intel_sgx.c
+new file mode 100644
+index 000000000000..17b46bec9c54
+--- /dev/null
++++ b/arch/x86/kernel/cpu/intel_sgx.c
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
++// Copyright(c) 2016-17 Intel Corporation.
++
++#include <asm/sgx.h>
++#include <asm/sgx_pr.h>
++#include <linux/freezer.h>
++#include <linux/highmem.h>
++#include <linux/kthread.h>
++#include <linux/ratelimit.h>
++#include <linux/sched/signal.h>
++#include <linux/slab.h>
++
++bool sgx_enabled __ro_after_init;
++EXPORT_SYMBOL_GPL(sgx_enabled);
++bool sgx_lc_enabled __ro_after_init;
++EXPORT_SYMBOL_GPL(sgx_lc_enabled);
++
++static __init int sgx_init(void)
++{
++	unsigned long fc;
++
++	if (!boot_cpu_has(X86_FEATURE_SGX))
++		return false;
++
++	if (!boot_cpu_has(X86_FEATURE_SGX1))
++		return false;
++
++	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
++	if (!(fc & FEATURE_CONTROL_LOCKED)) {
++		pr_info("IA32_FEATURE_CONTROL MSR is not locked\n");
++		return false;
++	}
++
++	if (!(fc & FEATURE_CONTROL_SGX_ENABLE)) {
++		pr_info("disabled by the firmware\n");
++		return false;
++	}
++
++	if (!(fc & FEATURE_CONTROL_SGX_LE_WR))
++		pr_info("IA32_SGXLEPUBKEYHASHn MSRs are not writable\n");
++
++	sgx_enabled = true;
++	sgx_lc_enabled = !!(fc & FEATURE_CONTROL_SGX_LE_WR);
++	return 0;
++}
++
++arch_initcall(sgx_init);
 -- 
 2.17.1
