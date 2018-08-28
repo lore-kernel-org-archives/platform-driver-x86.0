@@ -1,30 +1,54 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v13 09/13] x86/sgx: Enclave Page Cache (EPC) memory
- manager
-Date: Tue, 28 Aug 2018 11:36:15 +0300
-Message-ID: <20180828083615.GI15508@linux.intel.com>
+From: Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH v13 03/13] x86/cpufeatures: Add Intel-defined SGX leaf
+ CPUID_12_EAX
+Date: Tue, 28 Aug 2018 12:21:40 +0200
+Message-ID: <20180828102140.GA31102@nazgul.tnic>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
- <40632d90-8222-e31a-4729-22b89ed52a8d@intel.com>
+ <20180827185507.17087-4-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <40632d90-8222-e31a-4729-22b89ed52a8d@intel.com>
+In-Reply-To: <20180827185507.17087-4-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Suresh Siddha <suresh.b.siddha@intel.com>, Serge Ayoun <serge.ayoun@intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Woodhouse <dwmw@amazon.co.uk>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Andy Lutomirski <luto@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Aug 27, 2018 at 02:14:24PM -0700, Dave Hansen wrote:
-> On 08/27/2018 11:53 AM, Jarkko Sakkinen wrote:
-> > +enum sgx_alloc_flags {
-> > +	SGX_ALLOC_ATOMIC	= BIT(0),
-> > +};
-> 
-> Doing this with enums is unprecedented IMNHO.  Why are you doing it this
-> way for simple, one-off constants?
+On Mon, Aug 27, 2018 at 09:53:24PM +0300, Jarkko Sakkinen wrote:
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index 7bb647f57d42..4af60a0fdb20 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -13,7 +13,7 @@
+>  /*
+>   * Defines x86 CPU feature bits
+>   */
+> -#define NCAPINTS			19	   /* N 32-bit words worth of info */
+> +#define NCAPINTS			20	   /* N 32-bit words worth of info */
+>  #define NBUGINTS			1	   /* N 32-bit bug flags */
+>  
+>  /*
+> @@ -349,6 +349,12 @@
+>  #define X86_FEATURE_ARCH_CAPABILITIES	(18*32+29) /* IA32_ARCH_CAPABILITIES MSR (Intel) */
+>  #define X86_FEATURE_SPEC_CTRL_SSBD	(18*32+31) /* "" Speculative Store Bypass Disable */
+>  
+> +/* Intel SGX CPU features, CPUID level 0x000000012:0 (EAX), word 19 */
+> +#define X86_FEATURE_SGX1		(19*32+ 0) /* SGX1 leaf functions */
+> +#define X86_FEATURE_SGX2		(19*32+ 1) /* SGX2 leaf functions */
+> +#define X86_FEATURE_SGX_ENCLV		(19*32+ 5) /* SGX ENCLV instruction, leafs E[INC|DEC]VIRTCHILD, ESETCONTEXT */
+> +#define X86_FEATURE_SGX_ENCLS_C		(19*32+ 6) /* SGX ENCLS leafs ERDINFO, ETRACK, ELDBC and ELDUC */
 
-I'll change it to bool, thanks.
+No need to add a whole new ->x86_capability member for 4 bits - just add
+those bits to leaf 8 where the artificial virtualization flags are -
+there's some room there.
 
-/Jarkko
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Linux GmbH, GF: Felix Imendörffer, Jane Smithard, Graham Norton, HRB 21284 (AG Nürnberg)
+-- 
