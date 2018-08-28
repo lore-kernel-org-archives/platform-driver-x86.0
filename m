@@ -1,25 +1,31 @@
-From: Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v13 09/13] x86/sgx: Enclave Page Cache (EPC) memory
- manager
-Date: Mon, 27 Aug 2018 14:14:24 -0700
-Message-ID: <40632d90-8222-e31a-4729-22b89ed52a8d@intel.com>
+From: "Huang, Kai" <kai.huang@intel.com>
+Subject: RE: [PATCH v13 02/13] x86/cpufeature: Add SGX and SGX_LC CPU
+ features
+Date: Tue, 28 Aug 2018 00:07:41 +0000
+Message-ID: <105F7BF4D0229846AF094488D65A09893540B623@PGSMSX112.gar.corp.intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
+ <20180827185507.17087-3-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20180827185507.17087-3-jarkko.sakkinen@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Suresh Siddha <suresh.b.siddha@intel.com>, Serge Ayoun <serge.ayoun@intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: "Hansen, Dave" <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, "nhorman@redhat.com" <nhorman@redhat.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, Kai Huang <kai.huang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 08/27/2018 11:53 AM, Jarkko Sakkinen wrote:
-> +enum sgx_alloc_flags {
-> +	SGX_ALLOC_ATOMIC	= BIT(0),
-> +};
+> +#define X86_FEATURE_SGX_LC		(16*32+30) /* supports SGX launch
+> configuration */
 
-Doing this with enums is unprecedented IMNHO.  Why are you doing it this
-way for simple, one-off constants?
+Sorry if it was me who wrote the comment "SGX launch configuration". I think we should just use "SGX launch control". :)
+
+Thanks,
+-Kai
+> 
+>  /* AMD-defined CPU features, CPUID level 0x80000007 (EBX), word 17 */
+>  #define X86_FEATURE_OVERFLOW_RECOV	(17*32+ 0) /* MCA overflow
+> recovery support */
+> --
+> 2.17.1
