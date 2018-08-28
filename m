@@ -1,28 +1,36 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v13 02/13] x86/cpufeature: Add SGX and SGX_LC CPU features
-Date: Tue, 28 Aug 2018 10:17:23 +0300
-Message-ID: <20180828071723.GA15508@linux.intel.com>
+Subject: Re: [PATCH v13 03/13] x86/cpufeatures: Add Intel-defined SGX leaf
+ CPUID_12_EAX
+Date: Tue, 28 Aug 2018 10:23:55 +0300
+Message-ID: <20180828072355.GB15508@linux.intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-3-jarkko.sakkinen@linux.intel.com>
- <105F7BF4D0229846AF094488D65A09893540B623@PGSMSX112.gar.corp.intel.com>
+ <20180827185507.17087-4-jarkko.sakkinen@linux.intel.com>
+ <70dec13f-2182-e4d6-da71-a568d6e9354b@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <105F7BF4D0229846AF094488D65A09893540B623@PGSMSX112.gar.corp.intel.com>
+In-Reply-To: <70dec13f-2182-e4d6-da71-a568d6e9354b@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, "nhorman@redhat.com" <nhorman@redhat.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, Kai Huang <kai.huang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Woodhouse <dwmw@amazon.co.uk>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Andy Lutomirski <luto@kerne>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Aug 28, 2018 at 12:07:41AM +0000, Huang, Kai wrote:
-> > +#define X86_FEATURE_SGX_LC		(16*32+30) /* supports SGX launch
-> > configuration */
+On Mon, Aug 27, 2018 at 12:39:36PM -0700, Dave Hansen wrote:
+> On 08/27/2018 11:53 AM, Jarkko Sakkinen wrote:
+> > +	/* Intel SGX features: level 0x00000012 */
+> > +	if (c->cpuid_level >= 0x00000012) {
+> > +		cpuid(0x00000012, &eax, &ebx, &ecx, &edx);
+> > +
+> > +		c->x86_capability[CPUID_12_EAX] = eax;
+> > +	}
 > 
-> Sorry if it was me who wrote the comment "SGX launch configuration". I
-> think we should just use "SGX launch control". :)
+> I've given this specific bit of feedback at least once in the past.
+> These patches are not ordered properly.  You introduce this in the next
+> patch:
+> 
+> +#define SGX_CPUID 0x12
 
-Not sure if we should change though. The former is more self-explaining,
-the latter is "more official".
+Yeah, my mistake probably when squashing fixups.
 
 /Jarkko
