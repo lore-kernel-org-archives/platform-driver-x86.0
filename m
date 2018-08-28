@@ -1,111 +1,75 @@
-From: Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v13 07/13] x86/sgx: Add data structures for tracking the
- EPC pages
-Date: Tue, 28 Aug 2018 09:53:11 -0700
-Message-ID: <68d730bc-898c-973f-9506-648fd8a7c610@intel.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v13 09/13] x86/sgx: Enclave Page Cache (EPC) memory
+ manager
+Date: Tue, 28 Aug 2018 14:22:44 -0700
+Message-ID: <20180828212244.GA29488@linux.intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-8-jarkko.sakkinen@linux.intel.com>
- <4666cae8-c711-8dd5-cbce-3d97cc19a9e5@intel.com>
- <20180828103040.GA21326@linux.intel.com>
+ <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
+ <7c5df14e-3028-46b3-fe93-aa6ba8352317@intel.com>
+ <20180828083540.GH15508@linux.intel.com>
+ <132d309d-77e2-52ed-7251-abb2c80cdf49@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180828103040.GA21326@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <132d309d-77e2-52ed-7251-abb2c80cdf49@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Serge Ayoun <serge.ayoun@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Suresh Siddha <suresh.b.siddha@intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Suresh Siddha <suresh.b.siddha@intel.com>, Serge Ayoun <serge.ayoun@intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
->>>  extern bool sgx_enabled;
->>>  extern bool sgx_lc_enabled;
->>> +extern struct sgx_epc_bank sgx_epc_banks[SGX_MAX_EPC_BANKS];
->>> +
->>> +/*
->>> + * enum sgx_epc_page_desc - defines bits and masks for an EPC page's desc
->>
->> Why are you bothering packing these bits?  This seems a rather
->> convoluted way to store two integers.
+On Tue, Aug 28, 2018 at 07:07:33AM -0700, Dave Hansen wrote:
+> On 08/28/2018 01:35 AM, Jarkko Sakkinen wrote:
+> > On Mon, Aug 27, 2018 at 02:15:34PM -0700, Dave Hansen wrote:
+> >> On 08/27/2018 11:53 AM, Jarkko Sakkinen wrote:
+> >>> +struct sgx_epc_page_ops {
+> >>> +	bool (*get)(struct sgx_epc_page *epc_page);
+> >>> +	void (*put)(struct sgx_epc_page *epc_page);
+> >>> +	bool (*reclaim)(struct sgx_epc_page *epc_page);
+> >>> +	void (*block)(struct sgx_epc_page *epc_page);
+> >>> +	void (*write)(struct sgx_epc_page *epc_page);
+> >>> +};
+> >> Why do we need a fancy, slow (retpoline'd) set of function pointers when
+> >> we only have one user of these (the SGX driver)?
+> > KVM has its own implementation for these operations.
 > 
-> To keep struct sgx_epc_page 64 bytes.
-
-It's a list_head and a ulong now.  That doesn't add up to 64.
-
-If you properly describe the bounds and limits of banks we can possibly
-help you find a nice solution.  As it stands, they are totally opaque
-and we have no idea what is going on.
-
->>> +static __init int sgx_init_epc_bank(u64 addr, u64 size, unsigned long index,
->>> +				    struct sgx_epc_bank *bank)
->>> +{
->>> +	unsigned long nr_pages = size >> PAGE_SHIFT;
->>> +	struct sgx_epc_page *pages_data;
->>> +	unsigned long i;
->>> +	void *va;
->>> +
->>> +	va = ioremap_cache(addr, size);
->>> +	if (!va)
->>> +		return -ENOMEM;
->>> +
->>> +	pages_data = kcalloc(nr_pages, sizeof(struct sgx_epc_page), GFP_KERNEL);
->>> +	if (!pages_data)
->>> +		goto out_iomap;
->>
->> This looks like you're roughly limited by the page allocator to a bank
->> size of ~1.4GB which seems kinda small.  Is this really OK?
+> That belongs in the changelog.
 > 
-> Where does this limitation come from?
+> Also, where is the implementation?  How can we assess this code that was
+> built to create an abstraction without both of the users?
 
-The page allocator can only do 4MB at a time.  Using your 64 byte
-numbers: 4MB/64 = 64k sgx_epc_pages.  64k*PAGE_SIZE = 256MB.  So you can
-only handle 256MB banks with this code.
+I can provide an early preview of the KVM reclaim code, but honestly
+I think that would do more harm than good.  The VMX architecture for
+EPC reclaim is complex, even for SGX standards.  Opening that can of
+worms would likely derail this discussion.  That being said, this
+abstraction isn't exactly what KVM will need, but it's pretty close
+and gives us something to build on.
 
-BTW, if you only have 64k worth of pages, you can use a u16 for the index.
+Regardless, this layer of indirection is justifiable even with a
+single implementation.  Reclaiming an EPC page is not a simple matter
+of copying the data somewhere else and marking the page not present.
+Actual eviction requires a reference to the Secure Enclave Control
+Structure (SECS) of the enclave that owns the page.  Software needs
+to ensure it doesn't violate the hardware-enforced access rules, e.g.
+most reclaim activites need to be done under a per-enclave lock.
+Not all pages have the same reclaim rules, e.g. an SECS can only
+be reclaimed after all its child pages have reclaimed, a VA page
+doesn't need to be blocked, etc...  And the list goes on...
 
->>> +	u32 eax, ebx, ecx, edx;
->>> +	u64 pa, size;
->>> +	int ret;
->>> +	int i;
->>> +
->>> +	for (i = 0; i < SGX_MAX_EPC_BANKS; i++) {
->>> +		cpuid_count(SGX_CPUID, 2 + i, &eax, &ebx, &ecx, &edx);
->>> +		if (!(eax & 0xF))
->>> +			break;
->>
->> So, we have random data coming out of a random CPUID leaf being called
->> 'eax' and then being tested against a random hard-coded mask.  This
->> seems rather unfortunate for someone trying to understand the code.  Can
->> we do better?
-> 
-> Should probably do something along the lines:
-> 
-> #define SGX_CPUID_SECTION(i) (2 + (i))
-> 
-> enum sgx_section {
-> 	SGX_CPUID_SECTION_INVALID	= 0x00,
-> 	SGX_CPUID_SECTION_VALID		= 0x1B,
-> 	SGX_CPUID_SECTION_MASK		= 0xFF,
-> };
+All of the tracking metadata and logic about what can be evicted when
+resides in the driver component[1], e.g. the core SGX code doesn't
+even have a software representation of an enclave.  Alternatively the
+driver could provide a single "do_reclaim" function if we wanted to
+avoid a fancy abstraction layer, and in fact that's how I initially
+implemented the abstraction, but that approach has it's own warts and
+in a lot of ways makes the end result more complex.
 
-Plus comments, that would be nice.
+Ultimately, moving pages in/out of the EPC is so abysmally slow that
+the raw performance of software is almost completely irrelevant.  The
+algorithms certainly matter, but optimizing away things like function
+pointers definitely takes a back seat to just about everything else.
 
->>> +		sgx_nr_epc_banks++;
->>> +	}
->>> +
->>> +	if (!sgx_nr_epc_banks) {
->>> +		pr_err("There are zero EPC banks.\n");
->>> +		return -ENODEV;
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>
->> Does this support hot-addition of a bank?  If not, why not?
-...
-> I'm not aware that we would have an ACPI specification for SGX so this
-> is all I have at the moment (does not show any ACPI event for
-> hotplugging).
-
-So you're saying the one platform you looked at don't support hotplug.
-I was looking for a more broad statement about SGX.
+[1] Early versions of SGX support tried to put all EPC management in
+    the driver, but that approach caused major problems for KVM (even
+    without reclaim support) and received a less than enthusiastic
+    response from the community.
