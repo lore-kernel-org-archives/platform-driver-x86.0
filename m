@@ -1,134 +1,34 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v13 06/13] x86/sgx: Detect Intel SGX
-Date: Tue, 28 Aug 2018 11:28:11 +0300
-Message-ID: <20180828082811.GG15508@linux.intel.com>
+Subject: Re: [PATCH v13 09/13] x86/sgx: Enclave Page Cache (EPC) memory
+ manager
+Date: Tue, 28 Aug 2018 11:35:40 +0300
+Message-ID: <20180828083540.GH15508@linux.intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-7-jarkko.sakkinen@linux.intel.com>
- <50c199b6-e8eb-9120-0d2a-5e60ac0139b4@intel.com>
+ <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
+ <7c5df14e-3028-46b3-fe93-aa6ba8352317@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <50c199b6-e8eb-9120-0d2a-5e60ac0139b4@intel.com>
+In-Reply-To: <7c5df14e-3028-46b3-fe93-aa6ba8352317@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Dave Hansen <dave.hansen@intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Suresh Siddha <suresh.b.siddha@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Serge Ayoun <serge.ayoun@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Borislav Petkov <bp@suse.de>, Reinette Chatre <reinette.chatre@intel.com>, Andi Kleen <ak@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Suresh Siddha <suresh.b.siddha@intel.com>, Serge Ayoun <serge.ayoun@intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Aug 27, 2018 at 12:53:59PM -0700, Dave Hansen wrote:
-> > +config INTEL_SGX_CORE
-> > +	prompt "Intel SGX core functionality"
-> > +	def_bool n
-> > +	depends on X86_64 && CPU_SUP_INTEL
-> > +	help
-> > +	Intel Software Guard eXtensions (SGX) is a set of CPU instructions
-> > +	that allows ring 3 applications to create enclaves, private regions
-> > +	of memory that are protected, by hardware, from unauthorized access
-> > +	and/or modification.
+On Mon, Aug 27, 2018 at 02:15:34PM -0700, Dave Hansen wrote:
+> On 08/27/2018 11:53 AM, Jarkko Sakkinen wrote:
+> > +struct sgx_epc_page_ops {
+> > +	bool (*get)(struct sgx_epc_page *epc_page);
+> > +	void (*put)(struct sgx_epc_page *epc_page);
+> > +	bool (*reclaim)(struct sgx_epc_page *epc_page);
+> > +	void (*block)(struct sgx_epc_page *epc_page);
+> > +	void (*write)(struct sgx_epc_page *epc_page);
+> > +};
 > 
-> This is a bit comma-crazy.  Also, considering some of our recent CVE
-> fun, I'd probably not claim hardware protection. :)
+> Why do we need a fancy, slow (retpoline'd) set of function pointers when
+> we only have one user of these (the SGX driver)?
 
-Agreed :)
-
-> Maybe:
-> 
-> 	Intel Software Guard eXtensions (SGX) CPU feature that allows
-> 	ring 3 applications to create enclaves: private regions
-> 	of memory that are architecturally protected from unauthorized
-> 	access and/or modification.
-
-Yeah, looks way more better structured.
-
-> > +	This option enables kernel recognition of SGX, high-level management
-> > +	of the Enclave Page Cache (EPC), tracking and writing of SGX Launch
-> > +	Enclave Hash MSRs, and allows for virtualization of SGX via KVM. By
-> > +	iteslf, this option does not provide SGX support to userspace.
-> 
-> itself
-> 
-> 
-> > diff --git a/arch/x86/include/asm/sgx_pr.h b/arch/x86/include/asm/sgx_pr.h
-> > new file mode 100644
-> > index 000000000000..c68578127620
-> > --- /dev/null
-> > +++ b/arch/x86/include/asm/sgx_pr.h
-> > @@ -0,0 +1,13 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> > +// Copyright(c) 2016-17 Intel Corporation.
-> > +
-> > +#ifndef _ASM_X86_SGX_PR_H
-> > +#define _ASM_X86_SGX_PR_H
-> > +
-> > +#include <linux/printk.h>
-> > +#include <linux/ratelimit.h>
-> > +
-> > +#undef pr_fmt
-> > +#define pr_fmt(fmt) "sgx: " fmt
-> > +
-> > +#endif /* _ASM_X86_SGX_PR_H */
-> 
-> I don't think this belongs in a generic header.  Generally, we do the
-> pr_fmt stuff in .c files, not in headers.  If someone includes this
-> header directly or indirectly, they'll get a big surprise.
-> 
-> If you *must* have this in a .h file, put it in
-> arch/x86/kernel/cpu/intel_sgx.h or something and #include "intel_sgx.h"
-> in all the .c files where you want this.
-
-I think for intel_sgx.c (the core part) we could just manually add the
-"sgx:" prefix because there are only few log messages. I would move the
-definition to drivers/platform/x86/intel_sgx/sgx.h because the prefix
-makes sense for all .c files there AFAIK.
-
-> > +static __init int sgx_init(void)
-> > +{
-> > +	unsigned long fc;
-> > +
-> > +	if (!boot_cpu_has(X86_FEATURE_SGX))
-> > +		return false;
-> > +
-> > +	if (!boot_cpu_has(X86_FEATURE_SGX1))
-> > +		return false;
-> > +
-> > +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
-> > +	if (!(fc & FEATURE_CONTROL_LOCKED)) {
-> > +		pr_info("IA32_FEATURE_CONTROL MSR is not locked\n");
-> > +		return false;
-> > +	}
-> 
-> This is a rather crummy error message.  Doesn't this keep sgx from
-> initializing?  Would something like this be more informative?
-> 
-> 	pr_info("failed init: IA32_FEATURE_CONTROL MSR not locked\n");
-
-What about:
-
-pr_err(FW_BUG "IA32_FEATURE_CONTROL MSR not locked\n");
-
-> > +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE)) {
-> > +		pr_info("disabled by the firmware\n");
-> > +		return false;
-> > +	}
-> > +
-> > +	if (!(fc & FEATURE_CONTROL_SGX_LE_WR))
-> > +		pr_info("IA32_SGXLEPUBKEYHASHn MSRs are not writable\n");
-> 
-> How about something that might help an end user?  Perhaps:
-> 
-> 	pr_warn("launch configuration not available\n");
-
-I think this message is a false flag here in the first place as KVM does
-not require writable MSRs. It really should be moved to the driver.
-
-> > +	sgx_enabled = true;
-> > +	sgx_lc_enabled = !!(fc & FEATURE_CONTROL_SGX_LE_WR);
-> > +	return 0;
-> > +}
-> > +
-> > +arch_initcall(sgx_init);
-> > 
-> 
-> 
+KVM has its own implementation for these operations.
 
 /Jarkko
