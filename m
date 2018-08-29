@@ -1,81 +1,125 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: Add Intel ISP dummy driver
-Date: Wed, 29 Aug 2018 21:20:11 +0300
-Message-ID: <20180829182011.GG11447@smile.fi.intel.com>
-References: <20180829135744.16205-1-hdegoede@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v13 10/13] x86/sgx: Add sgx_einit() for initializing
+ enclaves
+Date: Wed, 29 Aug 2018 13:33:51 -0700
+Message-ID: <20180829203351.GB7142@linux.intel.com>
+References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
+ <20180827185507.17087-11-jarkko.sakkinen@linux.intel.com>
+ <1535406078.3416.9.camel@intel.com>
+ <20180828070129.GA5301@linux.intel.com>
+ <105F7BF4D0229846AF094488D65A09893541037C@PGSMSX112.gar.corp.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180829135744.16205-1-hdegoede@redhat.com>
+In-Reply-To: <105F7BF4D0229846AF094488D65A09893541037C@PGSMSX112.gar.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "nhorman@redhat.com" <nhorman@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "suresh.b.siddha@intel.com" <suresh.b.siddha@intel.com>, "Ayoun, Serge" <serge.ayoun@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "mingo@redhat.com" <mingo@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Aug 29, 2018 at 03:57:44PM +0200, Hans de Goede wrote:
-> The Image Signal Processor found on Cherry Trail devices is brought up in
-> D0 state on devices which have camera sensors attached to it. The ISP will
-> not enter D3 state again without some massaging of its registers beforehand
-> and the ISP not being in D3 state blocks the SoC from entering S0ix modes.
+On Wed, Aug 29, 2018 at 12:33:54AM -0700, Huang, Kai wrote:
+> [snip..]
 > 
-> There was a driver for the ISP in drivers/staging but that got removed
-> again because it never worked. It does not seem likely that a real
-> driver for the ISP will be added to the mainline kernel anytime soon.
+> > > >
+> > > > @@ -38,6 +39,18 @@ static LIST_HEAD(sgx_active_page_list);  static
+> > > > DEFINE_SPINLOCK(sgx_active_page_list_lock);
+> > > >  static struct task_struct *ksgxswapd_tsk;  static
+> > > > DECLARE_WAIT_QUEUE_HEAD(ksgxswapd_waitq);
+> > > > +static struct notifier_block sgx_pm_notifier; static u64
+> > > > +sgx_pm_cnt;
+> > > > +
+> > > > +/* The cache for the last known values of IA32_SGXLEPUBKEYHASHx
+> > > > +MSRs
+> > > > for each
+> > > > + * CPU. The entries are initialized when they are first used by
+> > > > sgx_einit().
+> > > > + */
+> > > > +struct sgx_lepubkeyhash {
+> > > > +	u64 msrs[4];
+> > > > +	u64 pm_cnt;
+> > >
+> > > May I ask why do we need pm_cnt here? In fact why do we need suspend
+> > > staff (namely, sgx_pm_cnt above, and related code in this patch) here
+> > > in this patch? From the patch commit message I don't see why we need
+> > > PM staff here. Please give comment why you need PM staff, or you may
+> > > consider to split the PM staff to another patch.
+> > 
+> > Refining the commit message probably makes more sense because without PM
+> > code sgx_einit() would be broken. The MSRs have been reset after waking up.
+> > 
+> > Some kind of counter is required to keep track of the power cycle. When going
+> > to sleep the sgx_pm_cnt is increased. sgx_einit() compares the current value of
+> > the global count to the value in the cache entry to see whether we are in a new
+> > power cycle.
 > 
-> This commit adds a dummy driver which contains the necessary magic from
-> the staging driver to powerdown the ISP, so that Cherry Trail devices where
-> the ISP is used will properly use S0ix modes when suspended.
+> You mean reset to Intel default? I think we can also just reset the cached MSR
+> values on each power cycle, which would be simpler, IMHO?
+
+Refresh my brain, does hardware reset the MSRs on a transition to S3 or lower?
+
+> I think we definitely need some code to handle S3-S5, but should be in
+> separate patches, since I think the major impact of S3-S5 is entire EPC
+> being destroyed. I think keeping pm_cnt is not sufficient enough to handle
+> such case?
+> > 
+> > This brings up one question though: how do we deal with VM host going to sleep?
+> > VM guest would not be aware of this.
 > 
-> Together with other recent S0ix related fixes this allows S0ix modes to
-> be entered on e.g. a Chuwi Hi8 Pro and a HP x2 210.
+> IMO VM just gets "sudden loss of EPC" after suspend & resume in host. SGX driver
+> and SDK should be able to handle "sudden loss of EPC", ie, co-working together to
+> re-establish the missing enclaves.
 > 
+> Actually supporting "sudden loss of EPC" is a requirement to support live migration
+> of VM w/ SGX. Internally long time ago we had a discussion and the decision was we
+> should support SGX live migration given two facts:
+> 
+> 1) losing platform-dependent is not important. For example, losing sealing key is
+> not a problem, as we could get secrets provisioned again from remote. 2) Both windows
+> & linux driver commit to support "sudden loss of EPC".
+> 
+> I don't think we have to support in very first upstream driver, but I think we need
+> to support someday.
 
-Thanks for the patch, my comments below.
+Actually, we can easily support this in the driver, at least for SGX1
+hardware.  SGX2 isn't difficult to handle, but we've intentionally
+postponed those patches until SGX1 support is in mainline[1].
+Accesses to the EPC after it is lost will cause faults.  Userspace
+EPC accesses, e.g. ERESUME, will get a SIGSEGV that the process
+should interpret as an "I should restart my enclave" event.  The
+SDK already does this.  In the driver, we just need to be aware of
+this potential behavior and not freak out.  Specifically, SGX_INVD
+needs to not WARN on faults that may have been due to a the EPC
+being nuked.  I think we can even remove the sgx_encl_pm_notifier()
+code altogether.
 
->  drivers/platform/x86/intel_isp_dummy.c | 119 +++++++++++++++++++++++++
+[1] SGX1 hardware signals a #GP on an access to an invalid EPC page.
+    SGX2 signals a #PF with the PF_SGX error code bit set.  This is
+    problematic because the kernel looks at the PTEs for CR2 and sees
+    nothing wrong, so it thinks it should just restart the
+    instruction, leading to an infinite fault loop.  Resolving this
+    is fairly straightforward, but a complete fix requires propagating
+    PF_SGX down to the ENCLS fixup handler, which means plumbing the
+    error code through the fixup handlers or smushing PF_SGX into
+    trapnr.  Since there is a parallel effort to plumb the error code
+    through the handlers, https://lkml.org/lkml/2018/8/6/924, we opted
+    to do this in a separate series.
 
-First of all, I would like to see that this is about pm and pm only, so,
-perhaps
-
-intel_isp_pm ?
-
-OTOH, it would be nice to have less confusing of what ISP we are talking about,
-so,
-
-intel_atomisp2_pm ?
-
-> +config INTEL_ISP_DUMMY
-> +	tristate "Intel ISP dummy driver"
-
-> +	depends on PCI && IOSF_MBI && PM
-
-If someone decides to port this to kernels where ATOMISP driver is still
-available, it might be a conflict here. I dunno if it's a good idea to put
-something like depends !ATOMISP here taking into consideration that it would be
-staled option.
-
-> +	while (1) {
-
-A nit: I would rather put it like
-
-do {
-...
-} while (time_after(...));
-
-> +		/* Wait until ISPSSPM0 bit[25:24] shows 0x3 */
-> +		iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0, &val);
-> +		val = (val & ISPSSPM0_ISPSSS_MASK) >> ISPSSPM0_ISPSSS_OFFSET;
-> +		if (val == ISPSSPM0_IUNIT_POWER_OFF)
-> +			break;
-> +
-> +		if (time_after(jiffies, timeout)) {
-> +			dev_err(&dev->dev, "IUNIT power-off timeout.\n");
-> +			return -EBUSY;
-> +		}
-> +		usleep_range(1000, 2000);
-> +	}
-
--- 
-With Best Regards,
-Andy Shevchenko
+> Sean, 
+> 
+> Would you be able to comment here?
+> 
+> > 
+> > I think the best measure would be to add a new parameter to sgx_einit() that
+> > enforces update of the MSRs. The driver can then set this parameter in the case
+> > when sgx_einit() returns SGX_INVALID_LICENSE. This is coherent because the
+> > driver requires writable MSRs. It would not be coherent to do it directly in the
+> > core because KVM does not require writable MSRs.
+> 
+> IMHO this is not required, as I mentioned above.
+> 
+> And 
+> [snip...]
+> 
+> Thanks,
+> -Kai
