@@ -1,53 +1,214 @@
-From: "Huang, Kai" <kai.huang@intel.com>
-Subject: RE: [PATCH v13 02/13] x86/cpufeature: Add SGX and SGX_LC CPU
- features
-Date: Wed, 29 Aug 2018 07:36:13 +0000
-Message-ID: <105F7BF4D0229846AF094488D65A0989354103A9@PGSMSX112.gar.corp.intel.com>
-References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-3-jarkko.sakkinen@linux.intel.com>
- <105F7BF4D0229846AF094488D65A09893540B623@PGSMSX112.gar.corp.intel.com>
- <20180828071723.GA15508@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: Add Intel ISP dummy driver
+Date: Wed, 29 Aug 2018 15:57:44 +0200
+Message-ID: <20180829135744.16205-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180828071723.GA15508@linux.intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, "nhorman@redhat.com" <nhorman@redhat.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, Kai Huang <kai.huang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-> -----Original Message-----
-> From: Jarkko Sakkinen [mailto:jarkko.sakkinen@linux.intel.com]
-> Sent: Tuesday, August 28, 2018 7:17 PM
-> To: Huang, Kai <kai.huang@intel.com>
-> Cc: x86@kernel.org; platform-driver-x86@vger.kernel.org; Hansen, Dave
-> <dave.hansen@intel.com>; Christopherson, Sean J
-> <sean.j.christopherson@intel.com>; nhorman@redhat.com;
-> npmccallum@redhat.com; linux-sgx@vger.kernel.org; Kai Huang
-> <kai.huang@linux.intel.com>; Thomas Gleixner <tglx@linutronix.de>; Ingo
-> Molnar <mingo@redhat.com>; H. Peter Anvin <hpa@zytor.com>; Borislav
-> Petkov <bp@suse.de>; Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>;
-> David Woodhouse <dwmw@amazon.co.uk>; open list:X86 ARCHITECTURE (32-
-> BIT AND 64-BIT) <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH v13 02/13] x86/cpufeature: Add SGX and SGX_LC CPU
-> features
-> 
-> On Tue, Aug 28, 2018 at 12:07:41AM +0000, Huang, Kai wrote:
-> > > +#define X86_FEATURE_SGX_LC		(16*32+30) /* supports SGX
-> launch
-> > > configuration */
-> >
-> > Sorry if it was me who wrote the comment "SGX launch configuration". I
-> > think we should just use "SGX launch control". :)
-> 
-> Not sure if we should change though. The former is more self-explaining, the
-> latter is "more official".
+The Image Signal Processor found on Cherry Trail devices is brought up in
+D0 state on devices which have camera sensors attached to it. The ISP will
+not enter D3 state again without some massaging of its registers beforehand
+and the ISP not being in D3 state blocks the SoC from entering S0ix modes.
 
-I'll let you decide.  To me the comment should explain what does "LC" mean, and to me it means "launch control". :)
+There was a driver for the ISP in drivers/staging but that got removed
+again because it never worked. It does not seem likely that a real
+driver for the ISP will be added to the mainline kernel anytime soon.
 
-Thanks,
--Kai
-> 
-> /Jarkko
+This commit adds a dummy driver which contains the necessary magic from
+the staging driver to powerdown the ISP, so that Cherry Trail devices where
+the ISP is used will properly use S0ix modes when suspended.
+
+Together with other recent S0ix related fixes this allows S0ix modes to
+be entered on e.g. a Chuwi Hi8 Pro and a HP x2 210.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=196915
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ MAINTAINERS                            |   6 ++
+ drivers/platform/x86/Kconfig           |  12 +++
+ drivers/platform/x86/Makefile          |   1 +
+ drivers/platform/x86/intel_isp_dummy.c | 119 +++++++++++++++++++++++++
+ 4 files changed, 138 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_isp_dummy.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index dbe7836e4f6b..ae654c69300a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7258,6 +7258,12 @@ S:	Maintained
+ F:	drivers/media/pci/intel/ipu3/
+ F:	Documentation/media/uapi/v4l/pixfmt-srggb10-ipu3.rst
+ 
++INTEL ISP DUMMY DRIVER
++M:	Hans de Goede <hdegoede@redhat.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/intel_isp_dummy.c
++
+ INTEL IXP4XX QMGR, NPE, ETHERNET and HSS SUPPORT
+ M:	Krzysztof Halasa <khalasa@piap.pl>
+ S:	Maintained
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 64c82592d4b6..0ba6fac1d0c9 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1230,6 +1230,18 @@ config I2C_MULTI_INSTANTIATE
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called i2c-multi-instantiate.
+ 
++config INTEL_ISP_DUMMY
++	tristate "Intel ISP dummy driver"
++	depends on PCI && IOSF_MBI && PM
++	help
++	  Dummy driver for Intel's Image Signal Processor found on Bay and
++	  Cherry Trail devices. The sole purpose of this driver is to turn
++	  the ISP off (put it in D3) to save power and to allow entering of
++	  S0ix modes.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel_isp_dummy.
++
+ endif # X86_PLATFORM_DEVICES
+ 
+ config PMC_ATOM
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index e6d1becf81ce..df854a630a83 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -92,3 +92,4 @@ obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
+ obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
+ obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
+ obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
++obj-$(CONFIG_INTEL_ISP_DUMMY)	+= intel_isp_dummy.o
+diff --git a/drivers/platform/x86/intel_isp_dummy.c b/drivers/platform/x86/intel_isp_dummy.c
+new file mode 100644
+index 000000000000..f65100e5a0bd
+--- /dev/null
++++ b/drivers/platform/x86/intel_isp_dummy.c
+@@ -0,0 +1,119 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Dummy driver for Intel's Image Signal Processor found on Bay and Cherry
++ * Trail devices. The sole purpose of this driver is to allow the ISP to
++ * be put in D3.
++ *
++ * Copyright (C) 2018 Hans de Goede <hdegoede@redhat.com>
++ *
++ * Based on various non upstream patches for ISP support:
++ * Copyright (C) 2010-2017 Intel Corporation. All rights reserved.
++ * Copyright (c) 2010 Silicon Hive www.siliconhive.com.
++ */
++
++#include <linux/delay.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
++#include <linux/pci.h>
++#include <linux/pm_runtime.h>
++#include <asm/iosf_mbi.h>
++
++/* PCI configuration regs */
++#define PCI_INTERRUPT_CTRL		0x9c
++
++#define PCI_CSI_CONTROL			0xe8
++#define PCI_CSI_CONTROL_PORTS_OFF_MASK	0x7
++
++/* IOSF BT_MBI_UNIT_PMC regs */
++#define ISPSSPM0			0x39
++#define ISPSSPM0_ISPSSC_OFFSET		0
++#define ISPSSPM0_ISPSSC_MASK		0x00000003
++#define ISPSSPM0_ISPSSS_OFFSET		24
++#define ISPSSPM0_ISPSSS_MASK		0x03000000
++#define ISPSSPM0_IUNIT_POWER_ON		0x0
++#define ISPSSPM0_IUNIT_POWER_OFF	0x3
++
++static int isp_probe(struct pci_dev *dev, const struct pci_device_id *id)
++{
++	unsigned long timeout;
++	u32 val;
++
++	pci_write_config_dword(dev, PCI_INTERRUPT_CTRL, 0);
++
++	/*
++	 * MRFLD IUNIT DPHY is located in an always-power-on island
++	 * MRFLD HW design need all CSI ports are disabled before
++	 * powering down the IUNIT.
++	 */
++	pci_read_config_dword(dev, PCI_CSI_CONTROL, &val);
++	val |= PCI_CSI_CONTROL_PORTS_OFF_MASK;
++	pci_write_config_dword(dev, PCI_CSI_CONTROL, val);
++
++	/* Write 0x3 to ISPSSPM0 bit[1:0] to power off the IUNIT */
++	iosf_mbi_modify(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0,
++			ISPSSPM0_IUNIT_POWER_OFF, ISPSSPM0_ISPSSC_MASK);
++
++	/*
++	 * There should be no IUNIT access while power-down is
++	 * in progress HW sighting: 4567865
++	 * Wait up to 50 ms for the IUNIT to shut down.
++	 */
++	timeout = jiffies + msecs_to_jiffies(50);
++	while (1) {
++		/* Wait until ISPSSPM0 bit[25:24] shows 0x3 */
++		iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0, &val);
++		val = (val & ISPSSPM0_ISPSSS_MASK) >> ISPSSPM0_ISPSSS_OFFSET;
++		if (val == ISPSSPM0_IUNIT_POWER_OFF)
++			break;
++
++		if (time_after(jiffies, timeout)) {
++			dev_err(&dev->dev, "IUNIT power-off timeout.\n");
++			return -EBUSY;
++		}
++		usleep_range(1000, 2000);
++	}
++
++	pm_runtime_allow(&dev->dev);
++	pm_runtime_put_sync_suspend(&dev->dev);
++
++	return 0;
++}
++
++static void isp_remove(struct pci_dev *dev)
++{
++	pm_runtime_get_sync(&dev->dev);
++	pm_runtime_forbid(&dev->dev);
++}
++
++static int isp_pci_suspend(struct device *dev)
++{
++	return 0;
++}
++
++static int isp_pci_resume(struct device *dev)
++{
++	return 0;
++}
++
++static UNIVERSAL_DEV_PM_OPS(isp_pm_ops, isp_pci_suspend,
++			    isp_pci_resume, NULL);
++
++static const struct pci_device_id isp_id_table[] = {
++	{ PCI_VDEVICE(INTEL, 0x22b8), },
++	{ 0, }
++};
++MODULE_DEVICE_TABLE(pci, isp_id_table);
++
++static struct pci_driver isp_pci_driver = {
++	.name = "intel_isp_dummy",
++	.id_table = isp_id_table,
++	.probe = isp_probe,
++	.remove = isp_remove,
++	.driver.pm = &isp_pm_ops,
++};
++
++module_pci_driver(isp_pci_driver);
++
++MODULE_DESCRIPTION("Intel ISP dummy driver (to allow suspend)");
++MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.19.0.rc0
