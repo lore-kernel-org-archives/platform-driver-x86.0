@@ -1,109 +1,57 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/9] PCI hotplug diet
-Date: Thu, 30 Aug 2018 11:50:13 +0300
-Message-ID: <CAHp75Veby=mo5s7QvfEhVLjGYBEL9GDDD_CfBmgS3Y+sxRzwSA@mail.gmail.com>
-References: <cover.1534686484.git.lukas@wunner.de>
+From: Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: [PATCH AUTOSEL 4.18 029/113] platform/x86: intel_punit_ipc: fix build
+ errors
+Date: Thu, 30 Aug 2018 18:02:28 +0000
+Message-ID: <20180830180050.35735-29-alexander.levin@microsoft.com>
+References: <20180830180050.35735-1-alexander.levin@microsoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <cover.1534686484.git.lukas@wunner.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-s390@vger.kernel.org, linux-pci@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, Keith Busch <keith.busch@intel.com>, Paul Mackerras <paulus@samba.org>, zubarev@us.ibm.com, prarit@redhat.com, scott@spiteful.org, Sebastian Ott <sebott@linux.vnet.ibm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, Darren Hart <dvhart@infradead.org>, Len Brown <lenb@kernel.org>, dan.zink@hpe.com, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, gwshan@linux.vnet.ibm.com, jshah@us.ibm.com, okaya@kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, gerald.schaefer@de.ibm.com, Oza Pawandeep <poza@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Corentin Chary <corentin.chary@gmail.com>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxpp>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180830180050.35735-1-alexander.levin@microsoft.com>
+Content-Language: en-US
+Sender: stable-owner@vger.kernel.org
+To: "stable@vger.kernel.org" <stable@vger.kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <Alexander.Levin@microsoft.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Aug 19, 2018 at 5:35 PM Lukas Wunner <lukas@wunner.de> wrote:
->
-> Here's PCI hotplug material I've prepared for v4.20:
->
-> Patches [1/9] to [8/9] reduce the code by 488 lines.  There should be no
-> loss of functionality and no new features, just less and simpler code.
->
-> Patch [9/9] collects TODOs for hotplug drivers to spur contributions.
->
->
-> I've assumed that my patch "PCI: pciehp: Differentiate between surprise
-> and safe removal" (submitted July 31) gets merged before this series:
-> https://patchwork.ozlabs.org/patch/951386/
->
-> If that patch is not accepted or other pciehp-related patches are merged
-> before this series, I'll have to rebase patch [4/9] ("PCI: pciehp: Unify
-> controller and slot structs").  No big deal, just a heads-up.
->
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+[ Upstream commit 340fd4cff43f18bace9358d4decdc9b6ed0715be ]
 
-for PDx86 bits
+Fix build errors by #including <linux/io.h>.
 
-> Thanks,
->
-> Lukas
->
->
-> Lukas Wunner (9):
->   PCI: Simplify disconnected marking
->   PCI: pciehp: Drop unnecessary includes
->   PCI: pciehp: Drop hotplug_slot_ops wrappers
->   PCI: pciehp: Unify controller and slot structs
->   PCI: pciehp: Reshuffle controller struct for clarity
->   PCI: hotplug: Constify hotplug_slot_ops
->   PCI: hotplug: Drop hotplug_slot_info
->   PCI: hotplug: Embed hotplug_slot
->   PCI: hotplug: Document TODOs
->
->  arch/powerpc/include/asm/pnv-pci.h      |   2 +-
->  drivers/pci/hotplug/TODO                |  74 +++++++
->  drivers/pci/hotplug/acpiphp.h           |  10 +-
->  drivers/pci/hotplug/acpiphp_core.c      |  36 +---
->  drivers/pci/hotplug/acpiphp_ibm.c       |   2 +-
->  drivers/pci/hotplug/cpci_hotplug.h      |  11 +-
->  drivers/pci/hotplug/cpci_hotplug_core.c | 105 +++-------
->  drivers/pci/hotplug/cpci_hotplug_pci.c  |   6 +-
->  drivers/pci/hotplug/cpqphp.h            |   9 +-
->  drivers/pci/hotplug/cpqphp_core.c       |  59 ++----
->  drivers/pci/hotplug/cpqphp_ctrl.c       |  31 +--
->  drivers/pci/hotplug/ibmphp.h            |   9 +-
->  drivers/pci/hotplug/ibmphp_core.c       | 121 ++++-------
->  drivers/pci/hotplug/ibmphp_ebda.c       |  70 +------
->  drivers/pci/hotplug/pci_hotplug_core.c  |  53 ++---
->  drivers/pci/hotplug/pciehp.h            | 138 ++++++-------
->  drivers/pci/hotplug/pciehp_core.c       | 127 +++---------
->  drivers/pci/hotplug/pciehp_ctrl.c       | 255 +++++++++++-------------
->  drivers/pci/hotplug/pciehp_hpc.c        | 127 ++++--------
->  drivers/pci/hotplug/pciehp_pci.c        |  24 +--
->  drivers/pci/hotplug/pnv_php.c           |  35 ++--
->  drivers/pci/hotplug/rpaphp.h            |  10 +-
->  drivers/pci/hotplug/rpaphp_core.c       |  20 +-
->  drivers/pci/hotplug/rpaphp_pci.c        |  11 +-
->  drivers/pci/hotplug/rpaphp_slot.c       |  22 +-
->  drivers/pci/hotplug/s390_pci_hpc.c      |  44 ++--
->  drivers/pci/hotplug/sgi_hotplug.c       |  63 +++---
->  drivers/pci/hotplug/shpchp.h            |   8 +-
->  drivers/pci/hotplug/shpchp_core.c       |  48 ++---
->  drivers/pci/hotplug/shpchp_ctrl.c       |  21 +-
->  drivers/pci/pci.c                       |   4 +-
->  drivers/pci/pcie/err.c                  |   8 +-
->  drivers/pci/slot.c                      |   2 +-
->  drivers/platform/x86/asus-wmi.c         |  39 +---
->  drivers/platform/x86/eeepc-laptop.c     |  43 ++--
->  include/linux/pci_hotplug.h             |  43 +---
->  36 files changed, 638 insertions(+), 1052 deletions(-)
->  create mode 100644 drivers/pci/hotplug/TODO
->
-> --
-> 2.18.0
->
+../drivers/platform/x86/intel_punit_ipc.c: In function 'ipc_read_status':
+../drivers/platform/x86/intel_punit_ipc.c:55:2: error: implicit declaration=
+ of function 'readl' [-Werror=3Dimplicit-function-declaration]
+  return readl(ipcdev->base[type][BASE_IFACE]);
+../drivers/platform/x86/intel_punit_ipc.c: In function 'ipc_write_cmd':
+../drivers/platform/x86/intel_punit_ipc.c:60:2: error: implicit declaration=
+ of function 'writel' [-Werror=3Dimplicit-function-declaration]
+  writel(cmd, ipcdev->base[type][BASE_IFACE]);
 
+Fixes: 447ae3166702 ("x86: Don't include linux/irq.h from asm/hardirq.h")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Zha Qipeng <qipeng.zha@intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+---
+ drivers/platform/x86/intel_punit_ipc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
--- 
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/=
+intel_punit_ipc.c
+index b5b890127479..b7dfe06261f1 100644
+--- a/drivers/platform/x86/intel_punit_ipc.c
++++ b/drivers/platform/x86/intel_punit_ipc.c
+@@ -17,6 +17,7 @@
+ #include <linux/bitops.h>
+ #include <linux/device.h>
+ #include <linux/interrupt.h>
++#include <linux/io.h>
+ #include <linux/platform_device.h>
+ #include <asm/intel_punit_ipc.h>
+=20
+--=20
+2.17.1
