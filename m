@@ -1,14 +1,14 @@
 From: Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: [PATCH AUTOSEL 4.14 19/67] platform/x86: intel_punit_ipc: fix build
+Subject: [PATCH AUTOSEL 4.9 14/42] platform/x86: intel_punit_ipc: fix build
  errors
-Date: Thu, 30 Aug 2018 18:10:12 +0000
-Message-ID: <20180830180918.36327-19-alexander.levin@microsoft.com>
-References: <20180830180918.36327-1-alexander.levin@microsoft.com>
+Date: Thu, 30 Aug 2018 18:13:43 +0000
+Message-ID: <20180830181245.36526-14-alexander.levin@microsoft.com>
+References: <20180830181245.36526-1-alexander.levin@microsoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20180830180918.36327-1-alexander.levin@microsoft.com>
+In-Reply-To: <20180830181245.36526-1-alexander.levin@microsoft.com>
 Content-Language: en-US
 Sender: stable-owner@vger.kernel.org
 To: "stable@vger.kernel.org" <stable@vger.kernel.org>
