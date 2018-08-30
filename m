@@ -1,101 +1,109 @@
-From: "Huang, Kai" <kai.huang@intel.com>
-Subject: RE: [PATCH v13 10/13] x86/sgx: Add sgx_einit() for initializing
- enclaves
-Date: Thu, 30 Aug 2018 01:45:29 +0000
-Message-ID: <105F7BF4D0229846AF094488D65A098935412392@PGSMSX112.gar.corp.intel.com>
-References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-11-jarkko.sakkinen@linux.intel.com>
- <1535406078.3416.9.camel@intel.com> <20180828070129.GA5301@linux.intel.com>
- <105F7BF4D0229846AF094488D65A09893541037C@PGSMSX112.gar.corp.intel.com>
- <20180829203351.GB7142@linux.intel.com>
- <105F7BF4D0229846AF094488D65A09893541195D@PGSMSX112.gar.corp.intel.com>
- <20180829210901.GA7176@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 0/9] PCI hotplug diet
+Date: Thu, 30 Aug 2018 11:50:13 +0300
+Message-ID: <CAHp75Veby=mo5s7QvfEhVLjGYBEL9GDDD_CfBmgS3Y+sxRzwSA@mail.gmail.com>
+References: <cover.1534686484.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180829210901.GA7176@linux.intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "nhorman@redhat.com" <nhorman@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "suresh.b.siddha@intel.com" <suresh.b.siddha@intel.com>, "Ayoun, Serge" <serge.ayoun@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "mingo@redhat.com" <mingo@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <cover.1534686484.git.lukas@wunner.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-s390@vger.kernel.org, linux-pci@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, Keith Busch <keith.busch@intel.com>, Paul Mackerras <paulus@samba.org>, zubarev@us.ibm.com, prarit@redhat.com, scott@spiteful.org, Sebastian Ott <sebott@linux.vnet.ibm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, Darren Hart <dvhart@infradead.org>, Len Brown <lenb@kernel.org>, dan.zink@hpe.com, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, gwshan@linux.vnet.ibm.com, jshah@us.ibm.com, okaya@kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, gerald.schaefer@de.ibm.com, Oza Pawandeep <poza@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Corentin Chary <corentin.chary@gmail.com>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxpp>
 List-Id: platform-driver-x86.vger.kernel.org
 
-> > > > > Some kind of counter is required to keep track of the power cycle.
-> > > > > When going to sleep the sgx_pm_cnt is increased. sgx_einit()
-> > > > > compares the current value of the global count to the value in
-> > > > > the cache entry to see whether we are in a new power cycle.
-> > > >
-> > > > You mean reset to Intel default? I think we can also just reset
-> > > > the cached MSR values on each power cycle, which would be simpler,
-> IMHO?
-> > >
-> > > Refresh my brain, does hardware reset the MSRs on a transition to S3 or
-> lower?
+On Sun, Aug 19, 2018 at 5:35 PM Lukas Wunner <lukas@wunner.de> wrote:
+>
+> Here's PCI hotplug material I've prepared for v4.20:
+>
+> Patches [1/9] to [8/9] reduce the code by 488 lines.  There should be no
+> loss of functionality and no new features, just less and simpler code.
+>
+> Patch [9/9] collects TODOs for hotplug drivers to spur contributions.
+>
+>
+> I've assumed that my patch "PCI: pciehp: Differentiate between surprise
+> and safe removal" (submitted July 31) gets merged before this series:
+> https://patchwork.ozlabs.org/patch/951386/
+>
+> If that patch is not accepted or other pciehp-related patches are merged
+> before this series, I'll have to rebase patch [4/9] ("PCI: pciehp: Unify
+> controller and slot structs").  No big deal, just a heads-up.
+>
 
-Sorry I missed this one. To be honest I don't know. I checked the SDM and all I can find is:
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-"On reset, the default value is the digest of Intel's signing key."
+for PDx86 bits
 
-Jarkko may know.
+> Thanks,
+>
+> Lukas
+>
+>
+> Lukas Wunner (9):
+>   PCI: Simplify disconnected marking
+>   PCI: pciehp: Drop unnecessary includes
+>   PCI: pciehp: Drop hotplug_slot_ops wrappers
+>   PCI: pciehp: Unify controller and slot structs
+>   PCI: pciehp: Reshuffle controller struct for clarity
+>   PCI: hotplug: Constify hotplug_slot_ops
+>   PCI: hotplug: Drop hotplug_slot_info
+>   PCI: hotplug: Embed hotplug_slot
+>   PCI: hotplug: Document TODOs
+>
+>  arch/powerpc/include/asm/pnv-pci.h      |   2 +-
+>  drivers/pci/hotplug/TODO                |  74 +++++++
+>  drivers/pci/hotplug/acpiphp.h           |  10 +-
+>  drivers/pci/hotplug/acpiphp_core.c      |  36 +---
+>  drivers/pci/hotplug/acpiphp_ibm.c       |   2 +-
+>  drivers/pci/hotplug/cpci_hotplug.h      |  11 +-
+>  drivers/pci/hotplug/cpci_hotplug_core.c | 105 +++-------
+>  drivers/pci/hotplug/cpci_hotplug_pci.c  |   6 +-
+>  drivers/pci/hotplug/cpqphp.h            |   9 +-
+>  drivers/pci/hotplug/cpqphp_core.c       |  59 ++----
+>  drivers/pci/hotplug/cpqphp_ctrl.c       |  31 +--
+>  drivers/pci/hotplug/ibmphp.h            |   9 +-
+>  drivers/pci/hotplug/ibmphp_core.c       | 121 ++++-------
+>  drivers/pci/hotplug/ibmphp_ebda.c       |  70 +------
+>  drivers/pci/hotplug/pci_hotplug_core.c  |  53 ++---
+>  drivers/pci/hotplug/pciehp.h            | 138 ++++++-------
+>  drivers/pci/hotplug/pciehp_core.c       | 127 +++---------
+>  drivers/pci/hotplug/pciehp_ctrl.c       | 255 +++++++++++-------------
+>  drivers/pci/hotplug/pciehp_hpc.c        | 127 ++++--------
+>  drivers/pci/hotplug/pciehp_pci.c        |  24 +--
+>  drivers/pci/hotplug/pnv_php.c           |  35 ++--
+>  drivers/pci/hotplug/rpaphp.h            |  10 +-
+>  drivers/pci/hotplug/rpaphp_core.c       |  20 +-
+>  drivers/pci/hotplug/rpaphp_pci.c        |  11 +-
+>  drivers/pci/hotplug/rpaphp_slot.c       |  22 +-
+>  drivers/pci/hotplug/s390_pci_hpc.c      |  44 ++--
+>  drivers/pci/hotplug/sgi_hotplug.c       |  63 +++---
+>  drivers/pci/hotplug/shpchp.h            |   8 +-
+>  drivers/pci/hotplug/shpchp_core.c       |  48 ++---
+>  drivers/pci/hotplug/shpchp_ctrl.c       |  21 +-
+>  drivers/pci/pci.c                       |   4 +-
+>  drivers/pci/pcie/err.c                  |   8 +-
+>  drivers/pci/slot.c                      |   2 +-
+>  drivers/platform/x86/asus-wmi.c         |  39 +---
+>  drivers/platform/x86/eeepc-laptop.c     |  43 ++--
+>  include/linux/pci_hotplug.h             |  43 +---
+>  36 files changed, 638 insertions(+), 1052 deletions(-)
+>  create mode 100644 drivers/pci/hotplug/TODO
+>
+> --
+> 2.18.0
+>
 
-> > >
-> > > > I think we definitely need some code to handle S3-S5, but should
-> > > > be in separate patches, since I think the major impact of S3-S5 is
-> > > > entire EPC being destroyed. I think keeping pm_cnt is not
-> > > > sufficient enough to handle such case?
-> > > > >
-> > > > > This brings up one question though: how do we deal with VM host
-> > > > > going to
-> > > sleep?
-> > > > > VM guest would not be aware of this.
-> > > >
-> > > > IMO VM just gets "sudden loss of EPC" after suspend & resume in host.
-> > > > SGX driver and SDK should be able to handle "sudden loss of EPC",
-> > > > ie, co-working together to re-establish the missing enclaves.
-> > > >
-> > > > Actually supporting "sudden loss of EPC" is a requirement to
-> > > > support live migration of VM w/ SGX. Internally long time ago we
-> > > > had a discussion and the decision was we should support SGX live
-> > > > migration given
-> > > two facts:
-> > > >
-> > > > 1) losing platform-dependent is not important. For example, losing
-> > > > sealing key is not a problem, as we could get secrets provisioned
-> > > > again from remote. 2) Both windows & linux driver commit to
-> > > > support "sudden
-> > > loss of EPC".
-> > > >
-> > > > I don't think we have to support in very first upstream driver,
-> > > > but I think we need to support someday.
-> > >
-> > > Actually, we can easily support this in the driver, at least for SGX1 hardware.
-> >
-> > That's my guess too. Just want to check whether we are still on the
-> > same page :)
-> >
-> > > SGX2 isn't difficult to handle, but we've intentionally postponed
-> > > those patches until SGX1 support is in mainline[1].
-> > > Accesses to the EPC after it is lost will cause faults.  Userspace EPC accesses,
-> e.g.
-> > > ERESUME, will get a SIGSEGV that the process should interpret as an
-> > > "I should restart my enclave" event.  The SDK already does this.  In
-> > > the driver, we just need to be aware of this potential behavior and
-> > > not freak out.  Specifically, SGX_INVD needs to not WARN on faults that may
-> have been due to a the EPC being nuked.
-> > > I think we can even remove the sgx_encl_pm_notifier() code altogether.
-> >
-> > Possibly we still need to do some cleanup, ie, all structures of enclaves, upon
-> resume?
-> 
-> Not for functional reasons.  The driver will automatically do the cleanup via
-> SGX_INVD when it next accesses the enclave's pages and takes a fault, e.g.
-> during reclaim.  Proactively reclaiming the EPC pages would probably affect
-> performance, though not necessarily in a good way.  And I think it would be a
-> beneficial to get the driver out of the suspend/hibernate/resume paths, e.g.
-> zapping all enclaves could noticeably impact suspend/resume latency.
 
-Sure.
-
-Thanks,
--Kai
+-- 
+With Best Regards,
+Andy Shevchenko
