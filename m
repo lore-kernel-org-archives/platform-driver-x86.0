@@ -1,57 +1,73 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v13 07/13] x86/sgx: Add data structures for tracking the
- EPC pages
-Date: Fri, 31 Aug 2018 14:13:34 +0300
-Message-ID: <20180831111334.GB16827@linux.intel.com>
+Subject: Re: [PATCH v13 09/13] x86/sgx: Enclave Page Cache (EPC) memory
+ manager
+Date: Fri, 31 Aug 2018 14:22:45 +0300
+Message-ID: <20180831112245.GC16827@linux.intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-8-jarkko.sakkinen@linux.intel.com>
- <4666cae8-c711-8dd5-cbce-3d97cc19a9e5@intel.com>
- <20180828103040.GA21326@linux.intel.com>
- <68d730bc-898c-973f-9506-648fd8a7c610@intel.com>
- <20180828213432.GB29488@linux.intel.com>
+ <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
+ <7c5df14e-3028-46b3-fe93-aa6ba8352317@intel.com>
+ <20180828083540.GH15508@linux.intel.com>
+ <132d309d-77e2-52ed-7251-abb2c80cdf49@intel.com>
+ <20180828212244.GA29488@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180828213432.GB29488@linux.intel.com>
+In-Reply-To: <20180828212244.GA29488@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Serge Ayoun <serge.ayoun@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Suresh Siddha <suresh.b.siddha@intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Suresh Siddha <suresh.b.siddha@intel.com>, Serge Ayoun <serge.ayoun@intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Aug 28, 2018 at 02:34:32PM -0700, Sean Christopherson wrote:
-> On Tue, Aug 28, 2018 at 09:53:11AM -0700, Dave Hansen wrote:
-> > >>> +		sgx_nr_epc_banks++;
-> > >>> +	}
-> > >>> +
-> > >>> +	if (!sgx_nr_epc_banks) {
-> > >>> +		pr_err("There are zero EPC banks.\n");
-> > >>> +		return -ENODEV;
-> > >>> +	}
-> > >>> +
-> > >>> +	return 0;
-> > >>> +}
-> > >>
-> > >> Does this support hot-addition of a bank?  If not, why not?
-> > ...
-> > > I'm not aware that we would have an ACPI specification for SGX so this
-> > > is all I have at the moment (does not show any ACPI event for
-> > > hotplugging).
+On Tue, Aug 28, 2018 at 02:22:44PM -0700, Sean Christopherson wrote:
+> On Tue, Aug 28, 2018 at 07:07:33AM -0700, Dave Hansen wrote:
+> > On 08/28/2018 01:35 AM, Jarkko Sakkinen wrote:
+> > > On Mon, Aug 27, 2018 at 02:15:34PM -0700, Dave Hansen wrote:
+> > >> On 08/27/2018 11:53 AM, Jarkko Sakkinen wrote:
+> > >>> +struct sgx_epc_page_ops {
+> > >>> +	bool (*get)(struct sgx_epc_page *epc_page);
+> > >>> +	void (*put)(struct sgx_epc_page *epc_page);
+> > >>> +	bool (*reclaim)(struct sgx_epc_page *epc_page);
+> > >>> +	void (*block)(struct sgx_epc_page *epc_page);
+> > >>> +	void (*write)(struct sgx_epc_page *epc_page);
+> > >>> +};
+> > >> Why do we need a fancy, slow (retpoline'd) set of function pointers when
+> > >> we only have one user of these (the SGX driver)?
+> > > KVM has its own implementation for these operations.
 > > 
-> > So you're saying the one platform you looked at don't support hotplug.
-> > I was looking for a more broad statement about SGX.
+> > That belongs in the changelog.
+> > 
+> > Also, where is the implementation?  How can we assess this code that was
+> > built to create an abstraction without both of the users?
 > 
-> Hardware doesn't support hotplug of EPC as the EPC size and location
-> is locked during activation of SGX.  And IIRC, activation of SGX must
-> be synchronized across all CPUs in a multi-socket platform, e.g. you
-> can't late-enable SGX on a socket and due hotplugging that way.
+> I can provide an early preview of the KVM reclaim code, but honestly
+> I think that would do more harm than good.  The VMX architecture for
+> EPC reclaim is complex, even for SGX standards.  Opening that can of
+> worms would likely derail this discussion.  That being said, this
+> abstraction isn't exactly what KVM will need, but it's pretty close
+> and gives us something to build on.
+> 
+> Regardless, this layer of indirection is justifiable even with a
+> single implementation.  Reclaiming an EPC page is not a simple matter
+> of copying the data somewhere else and marking the page not present.
+> Actual eviction requires a reference to the Secure Enclave Control
+> Structure (SECS) of the enclave that owns the page.  Software needs
+> to ensure it doesn't violate the hardware-enforced access rules, e.g.
+> most reclaim activites need to be done under a per-enclave lock.
+> Not all pages have the same reclaim rules, e.g. an SECS can only
+> be reclaimed after all its child pages have reclaimed, a VA page
+> doesn't need to be blocked, etc...  And the list goes on...
 
-Makes me wonder how on a multisocket platform would this work anyway
-given that they have different fused keys?
+To simplify a bit what Sean said about the key difference to a standard
+page is that in SGX a page is part of a hierarchical structure. EPC
+pages have hardware enforced dependencies to each other.
 
-> In a virtualized environment there are no such restrictions.  I am not
-> aware of any explicit requirements or use cases for supporting hotplug
-> of EPC, but that's probably only because virtualization of SGX is
-> fairly nascent.
+Examples: 
+
+1. You cannot delete or swap SECS before its children have been deleted or
+   swapped. You get SGX_CHILD_PRESENT erro from EREMOVE.
+2. In order to swap or fault a page you need to have an EPC page that
+   holds a version number for the page you want to swap. These are
+   called Version Array (VA) pages.
 
 /Jarkko
