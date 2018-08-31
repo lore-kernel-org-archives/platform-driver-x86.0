@@ -1,73 +1,82 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v13 09/13] x86/sgx: Enclave Page Cache (EPC) memory
- manager
-Date: Fri, 31 Aug 2018 14:22:45 +0300
-Message-ID: <20180831112245.GC16827@linux.intel.com>
+Subject: Re: [PATCH v13 10/13] x86/sgx: Add sgx_einit() for initializing
+ enclaves
+Date: Fri, 31 Aug 2018 15:17:03 +0300
+Message-ID: <20180831121645.GA18075@linux.intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
- <7c5df14e-3028-46b3-fe93-aa6ba8352317@intel.com>
- <20180828083540.GH15508@linux.intel.com>
- <132d309d-77e2-52ed-7251-abb2c80cdf49@intel.com>
- <20180828212244.GA29488@linux.intel.com>
+ <20180827185507.17087-11-jarkko.sakkinen@linux.intel.com>
+ <1535406078.3416.9.camel@intel.com>
+ <20180828070129.GA5301@linux.intel.com>
+ <105F7BF4D0229846AF094488D65A09893541037C@PGSMSX112.gar.corp.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180828212244.GA29488@linux.intel.com>
+In-Reply-To: <105F7BF4D0229846AF094488D65A09893541037C@PGSMSX112.gar.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Suresh Siddha <suresh.b.siddha@intel.com>, Serge Ayoun <serge.ayoun@intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "nhorman@redhat.com" <nhorman@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "suresh.b.siddha@intel.com" <suresh.b.siddha@intel.com>, "Ayoun, Serge" <serge.ayoun@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "mingo@redhat.com" <mingo@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Aug 28, 2018 at 02:22:44PM -0700, Sean Christopherson wrote:
-> On Tue, Aug 28, 2018 at 07:07:33AM -0700, Dave Hansen wrote:
-> > On 08/28/2018 01:35 AM, Jarkko Sakkinen wrote:
-> > > On Mon, Aug 27, 2018 at 02:15:34PM -0700, Dave Hansen wrote:
-> > >> On 08/27/2018 11:53 AM, Jarkko Sakkinen wrote:
-> > >>> +struct sgx_epc_page_ops {
-> > >>> +	bool (*get)(struct sgx_epc_page *epc_page);
-> > >>> +	void (*put)(struct sgx_epc_page *epc_page);
-> > >>> +	bool (*reclaim)(struct sgx_epc_page *epc_page);
-> > >>> +	void (*block)(struct sgx_epc_page *epc_page);
-> > >>> +	void (*write)(struct sgx_epc_page *epc_page);
-> > >>> +};
-> > >> Why do we need a fancy, slow (retpoline'd) set of function pointers when
-> > >> we only have one user of these (the SGX driver)?
-> > > KVM has its own implementation for these operations.
-> > 
-> > That belongs in the changelog.
-> > 
-> > Also, where is the implementation?  How can we assess this code that was
-> > built to create an abstraction without both of the users?
+On Wed, Aug 29, 2018 at 07:33:54AM +0000, Huang, Kai wrote:
+> [snip..]
 > 
-> I can provide an early preview of the KVM reclaim code, but honestly
-> I think that would do more harm than good.  The VMX architecture for
-> EPC reclaim is complex, even for SGX standards.  Opening that can of
-> worms would likely derail this discussion.  That being said, this
-> abstraction isn't exactly what KVM will need, but it's pretty close
-> and gives us something to build on.
+> > > >
+> > > > @@ -38,6 +39,18 @@ static LIST_HEAD(sgx_active_page_list);  static
+> > > > DEFINE_SPINLOCK(sgx_active_page_list_lock);
+> > > >  static struct task_struct *ksgxswapd_tsk;  static
+> > > > DECLARE_WAIT_QUEUE_HEAD(ksgxswapd_waitq);
+> > > > +static struct notifier_block sgx_pm_notifier; static u64
+> > > > +sgx_pm_cnt;
+> > > > +
+> > > > +/* The cache for the last known values of IA32_SGXLEPUBKEYHASHx
+> > > > +MSRs
+> > > > for each
+> > > > + * CPU. The entries are initialized when they are first used by
+> > > > sgx_einit().
+> > > > + */
+> > > > +struct sgx_lepubkeyhash {
+> > > > +	u64 msrs[4];
+> > > > +	u64 pm_cnt;
+> > >
+> > > May I ask why do we need pm_cnt here? In fact why do we need suspend
+> > > staff (namely, sgx_pm_cnt above, and related code in this patch) here
+> > > in this patch? From the patch commit message I don't see why we need
+> > > PM staff here. Please give comment why you need PM staff, or you may
+> > > consider to split the PM staff to another patch.
+> > 
+> > Refining the commit message probably makes more sense because without PM
+> > code sgx_einit() would be broken. The MSRs have been reset after waking up.
+> > 
+> > Some kind of counter is required to keep track of the power cycle. When going
+> > to sleep the sgx_pm_cnt is increased. sgx_einit() compares the current value of
+> > the global count to the value in the cache entry to see whether we are in a new
+> > power cycle.
 > 
-> Regardless, this layer of indirection is justifiable even with a
-> single implementation.  Reclaiming an EPC page is not a simple matter
-> of copying the data somewhere else and marking the page not present.
-> Actual eviction requires a reference to the Secure Enclave Control
-> Structure (SECS) of the enclave that owns the page.  Software needs
-> to ensure it doesn't violate the hardware-enforced access rules, e.g.
-> most reclaim activites need to be done under a per-enclave lock.
-> Not all pages have the same reclaim rules, e.g. an SECS can only
-> be reclaimed after all its child pages have reclaimed, a VA page
-> doesn't need to be blocked, etc...  And the list goes on...
+> You mean reset to Intel default? I think we can also just reset the
+> cached MSR values on each power cycle, which would be simpler, IMHO?
 
-To simplify a bit what Sean said about the key difference to a standard
-page is that in SGX a page is part of a hierarchical structure. EPC
-pages have hardware enforced dependencies to each other.
+I don't really see that much difference in the complexity.
 
-Examples: 
+> I think we definitely need some code to handle S3-S5, but should be in
+> separate patches, since I think the major impact of S3-S5 is entire
+> EPC being destroyed. I think keeping pm_cnt is not sufficient enough
+> to handle such case?
 
-1. You cannot delete or swap SECS before its children have been deleted or
-   swapped. You get SGX_CHILD_PRESENT erro from EREMOVE.
-2. In order to swap or fault a page you need to have an EPC page that
-   holds a version number for the page you want to swap. These are
-   called Version Array (VA) pages.
+The driver has SGX_POWER_LOST_ENCLAVE for ioctls and it deletes the TCS
+entries.
+
+> > This brings up one question though: how do we deal with VM host going to sleep?
+> > VM guest would not be aware of this.
+> 
+> IMO VM just gets "sudden loss of EPC" after suspend & resume in host.
+> SGX driver and SDK should be able to handle "sudden loss of EPC", ie,
+> co-working together to re-establish the missing enclaves.
+
+This is not about EPC. It is already dealt by the driver. I'm concerned
+about the MSR cache as it would mess up.
+
+But I guess this logic is part of the KVM code anyway now that I think
+more of it.
 
 /Jarkko
