@@ -1,90 +1,109 @@
-From: "Dr. Greg" <greg@enjellic.com>
-Subject: Re: [PATCH v13 02/13] x86/cpufeature: Add SGX and SGX_LC CPU features
-Date: Fri, 31 Aug 2018 11:18:04 -0500
-Message-ID: <20180831161804.GA1923@wind.enjellic.com>
-References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com> <20180827185507.17087-3-jarkko.sakkinen@linux.intel.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v13 10/13] x86/sgx: Add sgx_einit() for initializing
+ enclaves
+Date: Fri, 31 Aug 2018 10:43:30 -0700
+Message-ID: <20180831174330.GA21555@linux.intel.com>
+References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
+ <20180827185507.17087-11-jarkko.sakkinen@linux.intel.com>
+ <1535406078.3416.9.camel@intel.com>
+ <20180828070129.GA5301@linux.intel.com>
+ <105F7BF4D0229846AF094488D65A09893541037C@PGSMSX112.gar.corp.intel.com>
+ <20180829203351.GB7142@linux.intel.com>
+ <105F7BF4D0229846AF094488D65A09893541195D@PGSMSX112.gar.corp.intel.com>
+ <20180829210901.GA7176@linux.intel.com>
+ <105F7BF4D0229846AF094488D65A098935412392@PGSMSX112.gar.corp.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180827185507.17087-3-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <105F7BF4D0229846AF094488D65A098935412392@PGSMSX112.gar.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Kai Huang <kai.huang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "nhorman@redhat.com" <nhorman@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "suresh.b.siddha@intel.com" <suresh.b.siddha@intel.com>, "Ayoun, Serge" <serge.ayoun@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "mingo@redhat.com" <mingo@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Aug 27, 2018 at 09:53:23PM +0300, Jarkko Sakkinen wrote:
-
-Good morning, I hope the week has gone well for everyone.
-
-> From: Kai Huang <kai.huang@linux.intel.com>
+On Wed, Aug 29, 2018 at 06:45:29PM -0700, Huang, Kai wrote:
+> > > > > > Some kind of counter is required to keep track of the power cycle.
+> > > > > > When going to sleep the sgx_pm_cnt is increased. sgx_einit()
+> > > > > > compares the current value of the global count to the value in
+> > > > > > the cache entry to see whether we are in a new power cycle.
+> > > > >
+> > > > > You mean reset to Intel default? I think we can also just reset
+> > > > > the cached MSR values on each power cycle, which would be simpler,
+> > IMHO?
+> > > >
+> > > > Refresh my brain, does hardware reset the MSRs on a transition to S3 or
+> > lower?
 > 
-> Add X86_FEATURE_SGX and X86_FEATURE_SGX_LC that define the bits
-> determining whether the CPU supports SGX and user launch configuration
-> i.e. using a custom root key rather the Intel proprietary key for
-> enclave signing.
+> Sorry I missed this one. To be honest I don't know. I checked the SDM and all I can find is:
+> 
+> "On reset, the default value is the digest of Intel's signing key."
 
-First of all thanks to Jarkko, Sean et.al who have been working on
-Linux SGX eco-system support.  Given the nature and apparent mystique
-surrounding this technology, we are assuming that Intel has you locked
-away in dungeons somewhere... :-)
-
-I direct engineering efforts for an SGX development company.  We are a
-licensed Intel ISV, ie. we have a signing key on the launch enclave
-whitelist.  Due to the nature of our products we designed an
-independent implementation of the PSW which includes enclave loading
-and execution, EPID provisioning and remote attestation
-infrastructure.  We have also done initial engineering on the
-feasibility of developing an independent authentication and
-attestation service.
-
-So I think we understand this technology about as well as anyone.
-
-Our reflections on the patch series are not technical as much as
-operational.  To wit; are you guys developing this driver 'blind',
-ie. simply based on guidance from the SDM or are you testing them on
-simulators or do you actually have real live hardware with these
-capabilities?
-
-If you boil these 'new' patches down they basically address three
-primary areas of functionality; Enclave Dynamic Memory Management
-(EDMM), Flexible Launch Control (Unlocked identity modulus signature
-registers) and NUMA support.  You could also throw in virtualization
-as that is another whole can of worms given a VM may not end up on the
-same die, ie. TCB base.
-
-Other then a smattering of machines which advertise basic SGX2
-instruction support for EDMM, there is virtually no hardware available
-to test any of this functionality on.  Also of interest, there is
-virtually no guidance available as to when any of this functionality
-will become available.
-
-We don't see how the Linux/SGX community can effectively debug and
-support this driver without some kind of an idea as to what hardware
-to be acquiring to test this functionality.  I'm assuming that Intel
-has 'preferred partners' which do have access to this knowledge, which
-is fine, but it would seem odd to expect general community support of
-a driver that uses this model.
-
-It would be a significant statement in support of the community if the
-documentation for the driver included a table of functionality and the
-chip and chipset versions needed to support the stated functionality.
-That would significantly increase the ability for this driver to be
-supported and tested.
-
-Once again, thanks for all the legwork on the driver, however you are
-managing to exercise its functionality.
-
-Dr. Greg
-
-As always,
-Dr. Greg Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686
-FAX: 701-281-3949           EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"The couple is registered at Herbergers, Target and Fleet Farm."
-                                -- Wedding invitation
-                                   West Central Minnesota
+I confirmed the MSRs are reset any time the EPC is lost.  Not sure
+what happens if the MSRs contained a non-Intel value but feature
+control is locked with SGX launch control disabled.  I'll post an
+update when I have an answer.
+ 
+> Jarkko may know.
+> 
+> > > >
+> > > > > I think we definitely need some code to handle S3-S5, but should
+> > > > > be in separate patches, since I think the major impact of S3-S5 is
+> > > > > entire EPC being destroyed. I think keeping pm_cnt is not
+> > > > > sufficient enough to handle such case?
+> > > > > >
+> > > > > > This brings up one question though: how do we deal with VM host
+> > > > > > going to
+> > > > sleep?
+> > > > > > VM guest would not be aware of this.
+> > > > >
+> > > > > IMO VM just gets "sudden loss of EPC" after suspend & resume in host.
+> > > > > SGX driver and SDK should be able to handle "sudden loss of EPC",
+> > > > > ie, co-working together to re-establish the missing enclaves.
+> > > > >
+> > > > > Actually supporting "sudden loss of EPC" is a requirement to
+> > > > > support live migration of VM w/ SGX. Internally long time ago we
+> > > > > had a discussion and the decision was we should support SGX live
+> > > > > migration given
+> > > > two facts:
+> > > > >
+> > > > > 1) losing platform-dependent is not important. For example, losing
+> > > > > sealing key is not a problem, as we could get secrets provisioned
+> > > > > again from remote. 2) Both windows & linux driver commit to
+> > > > > support "sudden
+> > > > loss of EPC".
+> > > > >
+> > > > > I don't think we have to support in very first upstream driver,
+> > > > > but I think we need to support someday.
+> > > >
+> > > > Actually, we can easily support this in the driver, at least for SGX1 hardware.
+> > >
+> > > That's my guess too. Just want to check whether we are still on the
+> > > same page :)
+> > >
+> > > > SGX2 isn't difficult to handle, but we've intentionally postponed
+> > > > those patches until SGX1 support is in mainline[1].
+> > > > Accesses to the EPC after it is lost will cause faults.  Userspace EPC accesses,
+> > e.g.
+> > > > ERESUME, will get a SIGSEGV that the process should interpret as an
+> > > > "I should restart my enclave" event.  The SDK already does this.  In
+> > > > the driver, we just need to be aware of this potential behavior and
+> > > > not freak out.  Specifically, SGX_INVD needs to not WARN on faults that may
+> > have been due to a the EPC being nuked.
+> > > > I think we can even remove the sgx_encl_pm_notifier() code altogether.
+> > >
+> > > Possibly we still need to do some cleanup, ie, all structures of enclaves, upon
+> > resume?
+> > 
+> > Not for functional reasons.  The driver will automatically do the cleanup via
+> > SGX_INVD when it next accesses the enclave's pages and takes a fault, e.g.
+> > during reclaim.  Proactively reclaiming the EPC pages would probably affect
+> > performance, though not necessarily in a good way.  And I think it would be a
+> > beneficial to get the driver out of the suspend/hibernate/resume paths, e.g.
+> > zapping all enclaves could noticeably impact suspend/resume latency.
+> 
+> Sure.
+> 
+> Thanks,
+> -Kai
+> 
