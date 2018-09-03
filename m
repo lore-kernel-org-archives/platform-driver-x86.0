@@ -1,42 +1,47 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v13 09/13] x86/sgx: Enclave Page Cache (EPC) memory manager
-Date: Mon, 3 Sep 2018 22:02:16 +0300
-Message-ID: <CAHp75Vf39J8U3VnmxP+BBYi7rqzidxdD58Yx_fdnLXRro_QBgg@mail.gmail.com>
-References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com> <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v13 01/13] x86/sgx: Update MAINTAINERS
+Date: Mon, 3 Sep 2018 22:10:23 +0300
+Message-ID: <20180903191023.GA13497@linux.intel.com>
+References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
+ <20180827185507.17087-2-jarkko.sakkinen@linux.intel.com>
+ <CAHp75VfM6w6OrgczpMOY8wMK8Uw_SLm+RHDitYjrnNSX4aTepg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfM6w6OrgczpMOY8wMK8Uw_SLm+RHDitYjrnNSX4aTepg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, suresh.b.siddha@intel.com, serge.ayoun@intel.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Aug 27, 2018 at 9:58 PM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> Add a Enclave Page Cache (EPC) memory manager that can be used to
-> allocate and free EPC pages. The swapper thread ksgxswapd reclaims pages
-> on the event when the number of free EPC pages goes below
-> %SGX_NR_LOW_PAGES up until it reaches %SGX_NR_HIGH_PAGES.
->
-> Pages are reclaimed in LRU fashion from a global list. The consumers
-> take care of calling EBLOCK (block page from new accesses), ETRACK
-> (restart counting the entering hardware threads) and EWB (write page to
-> the regular memory) because executing these operations usually (if not
-> always) requires to do some subsystem-internal locking operations.
+On Mon, Sep 03, 2018 at 03:56:05PM +0300, Andy Shevchenko wrote:
+> On Mon, Aug 27, 2018 at 9:56 PM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> >
+> > Add the maintainer information for the SGX subsystem.
+> >
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> >  MAINTAINERS | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 24b200d91b30..877fbc6ef7a7 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -7562,6 +7562,13 @@ L:       linux-gpio@vger.kernel.org
+> >  S:     Maintained
+> >  F:     drivers/gpio/gpio-intel-mid.c
+> >
+> > +INTEL SGX
+> 
+> It should go in between of
+> 
+> INTEL RDMA RNIC DRIVER
+> ...
+> INTEL SHA MULTIBUFFER DRIVER
 
-> +                       list_del(&page->list);
+Thanks, I'll put into the correct place.
 
-Is this page will be completely gone? Otherwise it might be needed to
-reinit list head here as well.
-
-> +       WARN(ret < 0, "sgx: cannot free page, reclaim in-progress");
-> +       WARN(ret > 0, "sgx: EREMOVE returned %d (0x%x)", ret, ret);
-
-I'm not sure (though it's easy to check) that you need sgx: prefix
-here. WARN() might take pr_fmt() if defined.
-
--- 
-With Best Regards,
-Andy Shevchenko
+/Jarkko
