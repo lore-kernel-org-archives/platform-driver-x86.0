@@ -1,72 +1,39 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Subject: [PATCH 4/4] platform/x86: intel_telemetry: report debugfs failure
-Date: Mon,  3 Sep 2018 23:34:15 +0530
-Message-ID: <20180903180415.31575-4-rajneesh.bhardwaj@linux.intel.com>
-References: <20180903180415.31575-1-rajneesh.bhardwaj@linux.intel.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v13 10/13] x86/sgx: Add sgx_einit() for initializing
+ enclaves
+Date: Mon, 3 Sep 2018 21:15:09 +0300
+Message-ID: <20180903181509.GA9265@linux.intel.com>
+References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
+ <20180827185507.17087-11-jarkko.sakkinen@linux.intel.com>
+ <1535406078.3416.9.camel@intel.com>
+ <20180828070129.GA5301@linux.intel.com>
+ <105F7BF4D0229846AF094488D65A09893541037C@PGSMSX112.gar.corp.intel.com>
+ <20180829203351.GB7142@linux.intel.com>
+ <105F7BF4D0229846AF094488D65A09893541195D@PGSMSX112.gar.corp.intel.com>
+ <20180829210901.GA7176@linux.intel.com>
+ <105F7BF4D0229846AF094488D65A098935412392@PGSMSX112.gar.corp.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180903180415.31575-1-rajneesh.bhardwaj@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <105F7BF4D0229846AF094488D65A098935412392@PGSMSX112.gar.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, rajneesh.bhardwaj@intel.com, souvik.k.chakravarty@intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Matt Turner <matt.turner@intel.com>, Len Brown <len.brown@intel.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@intel.com>
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: "Christopherson, Sean J" <sean.j.christopherson@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "nhorman@redhat.com" <nhorman@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "suresh.b.siddha@intel.com" <suresh.b.siddha@intel.com>, "Ayoun, Serge" <serge.ayoun@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "mingo@redhat.com" <mingo@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On some Goldmont based systems such as ASRock J3455M the BIOS may not
-enable the IPC1 device that provides access to the PMC and PUNIT. In
-such scenarios, the ioss and pss resources from the platform device can
-not be obtained and result in a invalid telemetry_plt_config.
-This is also applicable to the platforms where the BIOS supports IPC1
-device under debug configurations but IPC1 is disabled by user or the
-policy.
+On Thu, Aug 30, 2018 at 01:45:29AM +0000, Huang, Kai wrote:
+> > > > Refresh my brain, does hardware reset the MSRs on a transition to S3 or
+> > lower?
+> 
+> Sorry I missed this one. To be honest I don't know. I checked the SDM and all I can find is:
+> 
+> "On reset, the default value is the digest of Intel's signing key."
+> 
+> Jarkko may know.
 
-This change allows user to know the reason for not seeing entries under
-/sys/kernel/debug/telemetry/* when there is no apparent failure at boot.
+I found this out by testing. The cached MSR values stop working after
+waking up from S3. Have not found anything better from the SDM but it
+is the behavior that I've observed on my GLK NUC at least.
 
-Cc: Matt Turner <matt.turner@intel.com>
-Cc: Len Brown <len.brown@intel.com>
-Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@intel.com>
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=198779
-
-Acked-by: Matt Turner <matt.turner@intel.com>
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
----
- drivers/platform/x86/intel_telemetry_debugfs.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-index ffd0474b0531..77212e9b22d6 100644
---- a/drivers/platform/x86/intel_telemetry_debugfs.c
-+++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-@@ -951,12 +951,16 @@ static int __init telemetry_debugfs_init(void)
- 	debugfs_conf = (struct telemetry_debugfs_conf *)id->driver_data;
- 
- 	err = telemetry_pltconfig_valid();
--	if (err < 0)
--		return -ENODEV;
-+	if (err < 0) {
-+		pr_debug("Invalid pltconfig, ensure IPC1 device is enabled in BIOS\n");
-+		goto exit;
-+	}
- 
- 	err = telemetry_debugfs_check_evts();
--	if (err < 0)
--		return -EINVAL;
-+	if (err < 0) {
-+		pr_debug("telemetry_debugfs_check_evts failed\n");
-+		goto exit;
-+	}
- 
- 	register_pm_notifier(&pm_notifier);
- 
-@@ -1020,6 +1024,8 @@ static int __init telemetry_debugfs_init(void)
- 	debugfs_conf->telemetry_dbg_dir = NULL;
- out_pm:
- 	unregister_pm_notifier(&pm_notifier);
-+exit:
-+	pr_debug(pr_fmt(DRIVER_NAME) " Failed\n");
- 
- 	return err;
- }
--- 
-2.17.1
+/Jarkko
