@@ -1,124 +1,77 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v13 04/13] x86/sgx: Architectural structures
-Date: Mon, 3 Sep 2018 22:17:56 +0300
-Message-ID: <20180903191756.GB13497@linux.intel.com>
+Subject: Re: [PATCH v13 10/13] x86/sgx: Add sgx_einit() for initializing
+ enclaves
+Date: Mon, 3 Sep 2018 22:19:26 +0300
+Message-ID: <20180903191926.GC13497@linux.intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-5-jarkko.sakkinen@linux.intel.com>
- <CAHp75VchsQXGRrcrcB06w68PzUZb5NJLo2B_ZKf6ZLqyBbvWhA@mail.gmail.com>
+ <20180827185507.17087-11-jarkko.sakkinen@linux.intel.com>
+ <1535406078.3416.9.camel@intel.com>
+ <20180828070129.GA5301@linux.intel.com>
+ <105F7BF4D0229846AF094488D65A09893541037C@PGSMSX112.gar.corp.intel.com>
+ <20180831121645.GA18075@linux.intel.com>
+ <20180831181509.GB21555@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75VchsQXGRrcrcB06w68PzUZb5NJLo2B_ZKf6ZLqyBbvWhA@mail.gmail.com>
+In-Reply-To: <20180831181509.GB21555@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: "Huang, Kai" <kai.huang@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "nhorman@redhat.com" <nhorman@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "suresh.b.siddha@intel.com" <suresh.b.siddha@intel.com>, "Ayoun, Serge" <serge.ayoun@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "mingo@redhat.com" <mingo@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Sep 03, 2018 at 04:16:42PM +0300, Andy Shevchenko wrote:
-> On Mon, Aug 27, 2018 at 9:57 PM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > Add arch/x86/include/asm/sgx_arch.h, which contains definitions for the
-> > architectural data structures used by the CPU to implement the SGX.
+On Fri, Aug 31, 2018 at 11:15:09AM -0700, Sean Christopherson wrote:
+> On Fri, Aug 31, 2018 at 03:17:03PM +0300, Jarkko Sakkinen wrote:
+> > On Wed, Aug 29, 2018 at 07:33:54AM +0000, Huang, Kai wrote:
+> > > [snip..]
+> > > 
+> > > > > >
+> > > > > > @@ -38,6 +39,18 @@ static LIST_HEAD(sgx_active_page_list);  static
+> > > > > > DEFINE_SPINLOCK(sgx_active_page_list_lock);
+> > > > > >  static struct task_struct *ksgxswapd_tsk;  static
+> > > > > > DECLARE_WAIT_QUEUE_HEAD(ksgxswapd_waitq);
+> > > > > > +static struct notifier_block sgx_pm_notifier; static u64
+> > > > > > +sgx_pm_cnt;
+> > > > > > +
+> > > > > > +/* The cache for the last known values of IA32_SGXLEPUBKEYHASHx
+> > > > > > +MSRs
+> > > > > > for each
+> > > > > > + * CPU. The entries are initialized when they are first used by
+> > > > > > sgx_einit().
+> > > > > > + */
+> > > > > > +struct sgx_lepubkeyhash {
+> > > > > > +	u64 msrs[4];
+> > > > > > +	u64 pm_cnt;
+> > > > >
+> > > > > May I ask why do we need pm_cnt here? In fact why do we need suspend
+> > > > > staff (namely, sgx_pm_cnt above, and related code in this patch) here
+> > > > > in this patch? From the patch commit message I don't see why we need
+> > > > > PM staff here. Please give comment why you need PM staff, or you may
+> > > > > consider to split the PM staff to another patch.
+> > > > 
+> > > > Refining the commit message probably makes more sense because without PM
+> > > > code sgx_einit() would be broken. The MSRs have been reset after waking up.
+> > > > 
+> > > > Some kind of counter is required to keep track of the power cycle. When going
+> > > > to sleep the sgx_pm_cnt is increased. sgx_einit() compares the current value of
+> > > > the global count to the value in the cache entry to see whether we are in a new
+> > > > power cycle.
+> > > 
+> > > You mean reset to Intel default? I think we can also just reset the
+> > > cached MSR values on each power cycle, which would be simpler, IMHO?
+> > 
+> > I don't really see that much difference in the complexity.
 > 
-> > +/**
-> > + * enum sgx_encls_leaves - ENCLS leaf functions
-> > + * %ECREATE:   Create an enclave.
-> > + * %EADD:      Add a page to an enclave.
-> > + * %EINIT:     Launch an enclave.
-> > + * %EREMOVE:   Remove a page from an enclave.
-> > + * %EDBGRD:    Read a word from an enclve (peek).
-> > + * %EDBGWR:    Write a word to an enclave (poke).
-> > + * %EEXTEND:   Measure 256 bytes of an added enclave page.
-> > + * %ELDB:      Load a swapped page in blocked state.
-> > + * %ELDU:      Load a swapped page in unblocked state.
-> > + * %EBLOCK:    Change page state to blocked i.e. entering hardware threads
-> > + *             cannot access it and create new TLB entries.
-> > + * %EPA:       Create a Version Array (VA) page used to store isvsvn number
-> > + *             for a swapped EPC page.
-> > + * %EWB:       Swap an enclave page to the regular memory. Checks that all
-> > + *             threads have exited that were in the previous shoot-down
-> > + *             sequence.
-> > + * %ETRACK:    Start a new shoot down sequence. Used to together with EBLOCK
-> > + *             to make sure that a page is safe to swap.
-> > + */
-> > +enum sgx_encls_leaves {
-> > +       ECREATE = 0x0,
-> > +       EADD    = 0x1,
-> > +       EINIT   = 0x2,
-> > +       EREMOVE = 0x3,
-> > +       EDGBRD  = 0x4,
-> > +       EDGBWR  = 0x5,
-> > +       EEXTEND = 0x6,
-> > +       ELDB    = 0x7,
-> > +       ELDU    = 0x8,
-> > +       EBLOCK  = 0x9,
-> > +       EPA     = 0xA,
-> > +       EWB     = 0xB,
-> > +       ETRACK  = 0xC,
-> > +       EAUG    = 0xD,
-> > +       EMODPR  = 0xE,
-> > +       EMODT   = 0xF,
-> > +};
-> 
-> Hmm... This E prefix confuses me with (system wide) error codes. Has
-> it been discussed before? If so, can you point on the conclusion why
-> the current format is good?
+> Tracking the validity of the cache means we're hosed if we miss any
+> condition that causes the MSRs to be reset.  I think we're better off
+> assuming the cache can be stale at any time, i.e. don't track power
+> cyles and instead handle EINIT failure due to INVALID_TOKEN by writing
+> the cache+MSRs with the desired hash and retrying EINIT.  EINIT is
+> interruptible and its latency is extremely variable in any case, e.g.
+> tens of thousands of cycles, so this rarely-hit "slow path" probably
+> wouldn't affect the worst case latency of EINIT.
 
-That is how they are prefixed in the SDM.
-
-> > +enum sgx_miscselect {
-> > +       SGX_MISC_EXINFO         = 0x01,
-> > +};
-> > +
-> > +#define SGX_MISC_RESERVED_MASK 0xFFFFFFFFFFFFFFFEULL
-> 
-> Any idea why we are not using BIT_ULL() / BIT() and GENMASK_ULL() /
-> GENMASK() in the code?
-
-No good reason. I'll change it.
-
-> > +enum sgx_attribute {
-> > +       SGX_ATTR_DEBUG          = 0x02,
-> > +       SGX_ATTR_MODE64BIT      = 0x04,
-> > +       SGX_ATTR_PROVISIONKEY   = 0x10,
-> > +       SGX_ATTR_EINITTOKENKEY  = 0x20,
-> > +};
-> > +
-> > +#define SGX_ATTR_RESERVED_MASK 0xFFFFFFFFFFFFFFC9ULL
-> 
-> Some times listing explicitly not-reserved bits might be better and
-> figuring out reserved mask is a simple ~ operation.
-
-Yea, agreed.
-
-> > +enum sgx_tcs_flags {
-> > +       SGX_TCS_DBGOPTIN        = 0x01,
-> > +};
-> > +
-> > +#define SGX_TCS_RESERVED_MASK 0xFFFFFFFFFFFFFFFEULL
-> 
-> > +#define SGX_SECINFO_PERMISSION_MASK    0x0000000000000007ULL
-> > +#define SGX_SECINFO_PAGE_TYPE_MASK     0x000000000000FF00ULL
-> > +#define SGX_SECINFO_RESERVED_MASK      0xFFFFFFFFFFFF00F8ULL
-> 
-> So, something like
-> 
-> MASK1 GENMASK_ULL
-> MASK2 GENMASK_ULL
-> MASK3 ~(MASK1  | MASK2)
-> 
-> ?
-
-Definitely. I think it is just a matter of legacy why they are like they
-are :-) These constants have gone over long time and they are not
-usually places where you have to look for regressions. Thanks for
-spotting these.
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+Sounds a good refiniment. Pretty good solution to heal from host sleep
+on the guest VM and then there is no need for driver changes.
 
 /Jarkko
