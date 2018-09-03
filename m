@@ -1,48 +1,51 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v13 06/13] x86/sgx: Detect Intel SGX
-Date: Mon, 3 Sep 2018 17:26:43 +0300
-Message-ID: <CAHp75VeN7QoftgkqP-L6JRZi=MRpQkVioBLP7VDLwH=rpnEp_w@mail.gmail.com>
-References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com> <20180827185507.17087-7-jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v13 07/13] x86/sgx: Add data structures for tracking the
+ EPC pages
+Date: Mon, 3 Sep 2018 17:41:53 +0300
+Message-ID: <CAHp75VcjKkJR4_H-acbVm3BwA4tVR8gUtkg9STqOK2UG20Tvgg@mail.gmail.com>
+References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com> <20180827185507.17087-8-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827185507.17087-7-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20180827185507.17087-8-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, suresh.b.siddha@intel.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, serge.ayoun@intel.com, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Borislav Petkov <bp@suse.de>, Reinette Chatre <reinette.chatre@intel.com>, Andi Kleen <ak@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, serge.ayoun@intel.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, suresh.b.siddha@intel.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Aug 27, 2018 at 9:57 PM Jarkko Sakkinen
+On Mon, Aug 27, 2018 at 9:58 PM Jarkko Sakkinen
 <jarkko.sakkinen@linux.intel.com> wrote:
 >
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
+> Add data structures to track Enclave Page Cache (EPC) pages.  EPC is
+> divided into multiple banks (1-N) of which addresses and sizes can be
+> enumerated with CPUID by the OS.
 >
-> Intel(R) SGX is a set of CPU instructions that can be used by applications
-> to set aside private regions of code and data. The code outside the enclave
-> is disallowed to access the memory inside the enclave by the CPU access
-> control.
->
-> Add a check for SGX to arch/x86 and a new config option, INTEL_SGX_CORE.
-> Expose a boolean variable 'sgx_enabled' to query whether or not the SGX
-> support is available.
+> On NUMA systems a node can have at most bank. A bank can be at most part of
+> two nodes. SGX supports both nodes with a single memory controller and also
+> sub-cluster nodes with severals memory controllers on a single die.
 
-> +       prompt "Intel SGX core functionality"
-> +       def_bool n
-
-Default 'default' is 'n'. Perhaps changing prompt to bool will make it
-one line less.
-
+> -#include <asm/sgx.h>
+> -#include <asm/sgx_pr.h>
+>  #include <linux/freezer.h>
+>  #include <linux/highmem.h>
+>  #include <linux/kthread.h>
+> +#include <linux/pagemap.h>
+>  #include <linux/ratelimit.h>
+>  #include <linux/sched/signal.h>
+> +#include <linux/shmem_fs.h>
+>  #include <linux/slab.h>
 > +#include <asm/sgx.h>
 > +#include <asm/sgx_pr.h>
 
-Don't we put linux/* followed by asm/* ?
+Squash issues?
 
-> +#include <linux/freezer.h>
-> +#include <linux/highmem.h>
-> +#include <linux/kthread.h>
-> +#include <linux/ratelimit.h>
-> +#include <linux/sched/signal.h>
-> +#include <linux/slab.h>
+> +       va = ioremap_cache(addr, size);
+> +       if (!va)
+> +               return -ENOMEM;
+
+I'm not sure this is a right API. Do we operate with memory? Does it
+have I/O side effects?
+If no, memremap() would be better to use.
 
 -- 
 With Best Regards,
