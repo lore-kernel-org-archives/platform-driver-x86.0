@@ -1,39 +1,42 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v13 10/13] x86/sgx: Add sgx_einit() for initializing
- enclaves
-Date: Mon, 3 Sep 2018 21:15:09 +0300
-Message-ID: <20180903181509.GA9265@linux.intel.com>
-References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-11-jarkko.sakkinen@linux.intel.com>
- <1535406078.3416.9.camel@intel.com>
- <20180828070129.GA5301@linux.intel.com>
- <105F7BF4D0229846AF094488D65A09893541037C@PGSMSX112.gar.corp.intel.com>
- <20180829203351.GB7142@linux.intel.com>
- <105F7BF4D0229846AF094488D65A09893541195D@PGSMSX112.gar.corp.intel.com>
- <20180829210901.GA7176@linux.intel.com>
- <105F7BF4D0229846AF094488D65A098935412392@PGSMSX112.gar.corp.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v13 09/13] x86/sgx: Enclave Page Cache (EPC) memory manager
+Date: Mon, 3 Sep 2018 22:02:16 +0300
+Message-ID: <CAHp75Vf39J8U3VnmxP+BBYi7rqzidxdD58Yx_fdnLXRro_QBgg@mail.gmail.com>
+References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com> <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <105F7BF4D0229846AF094488D65A098935412392@PGSMSX112.gar.corp.intel.com>
+In-Reply-To: <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "Christopherson, Sean J" <sean.j.christopherson@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "nhorman@redhat.com" <nhorman@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "suresh.b.siddha@intel.com" <suresh.b.siddha@intel.com>, "Ayoun, Serge" <serge.ayoun@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "mingo@redhat.com" <mingo@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, suresh.b.siddha@intel.com, serge.ayoun@intel.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Aug 30, 2018 at 01:45:29AM +0000, Huang, Kai wrote:
-> > > > Refresh my brain, does hardware reset the MSRs on a transition to S3 or
-> > lower?
-> 
-> Sorry I missed this one. To be honest I don't know. I checked the SDM and all I can find is:
-> 
-> "On reset, the default value is the digest of Intel's signing key."
-> 
-> Jarkko may know.
+On Mon, Aug 27, 2018 at 9:58 PM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> Add a Enclave Page Cache (EPC) memory manager that can be used to
+> allocate and free EPC pages. The swapper thread ksgxswapd reclaims pages
+> on the event when the number of free EPC pages goes below
+> %SGX_NR_LOW_PAGES up until it reaches %SGX_NR_HIGH_PAGES.
+>
+> Pages are reclaimed in LRU fashion from a global list. The consumers
+> take care of calling EBLOCK (block page from new accesses), ETRACK
+> (restart counting the entering hardware threads) and EWB (write page to
+> the regular memory) because executing these operations usually (if not
+> always) requires to do some subsystem-internal locking operations.
 
-I found this out by testing. The cached MSR values stop working after
-waking up from S3. Have not found anything better from the SDM but it
-is the behavior that I've observed on my GLK NUC at least.
+> +                       list_del(&page->list);
 
-/Jarkko
+Is this page will be completely gone? Otherwise it might be needed to
+reinit list head here as well.
+
+> +       WARN(ret < 0, "sgx: cannot free page, reclaim in-progress");
+> +       WARN(ret > 0, "sgx: EREMOVE returned %d (0x%x)", ret, ret);
+
+I'm not sure (though it's easy to check) that you need sgx: prefix
+here. WARN() might take pr_fmt() if defined.
+
+-- 
+With Best Regards,
+Andy Shevchenko
