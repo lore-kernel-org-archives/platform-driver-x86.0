@@ -1,43 +1,231 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v13 08/13] x86/sgx: Add wrappers for ENCLS leaf functions
-Date: Mon, 3 Sep 2018 18:01:26 +0300
-Message-ID: <CAHp75VdHmfx70=4jZnGZcgk5HTegDtizo7Uauk_bH43RpDXCfg@mail.gmail.com>
-References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com> <20180827185507.17087-9-jarkko.sakkinen@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Subject: [PATCH 1/4] platform/x86: intel_pmc_core: Show Latency Tolerance info
+Date: Mon,  3 Sep 2018 23:34:12 +0530
+Message-ID: <20180903180415.31575-1-rajneesh.bhardwaj@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827185507.17087-9-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, serge.ayoun@intel.com, suresh.b.siddha@intel.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, rajneesh.bhardwaj@intel.com, souvik.k.chakravarty@intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Aug 27, 2018 at 9:58 PM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> Add wrappers for Intel(R) SGX ENCLS opcode leaf functions except
-> ENCLS(EINIT). ENCLS invokes privileged functions for managing (creation,
-> initialization and swapping) and debugging enclaves.
+This adds support to show the Latency Tolerance Reporting for the IPs on
+the PCH as reported by the PMC. The format shown here is raw LTR data
+payload that can further be decoded as per the PCI specification.
 
-> +#define ENCLS_FAULT_FLAG 0x40000000UL
-> +#define ENCLS_FAULT_FLAG_ASM "$0x40000000"
+This also fixes some minor alignment issues in the header file by
+removing spaces and converting to tabs at some places.
 
-Hmm... Why it can't have same name?
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+---
+ drivers/platform/x86/intel_pmc_core.c | 75 +++++++++++++++++++++++++++
+ drivers/platform/x86/intel_pmc_core.h | 55 +++++++++++++++++---
+ 2 files changed, 123 insertions(+), 7 deletions(-)
 
-See, how _AC() macro is defined and being used.
-
-> +#define ENCLS_TRAPNR(r) ((r) & ~ENCLS_FAULT_FLAG)
-
-If result of macro is assigned to some variable and (r) by some reason
-is 32-bit type
-and you compile as 64-bit object, compiler will warn here.
-Please, check this is not the case in any of use of this macro.
-Otherwise you need a type casting, like
-
-foo = bar & (u32)~BAR;
-
-(or using typeof() might work)
-
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 2d272a3e0176..972735bd4c75 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -110,10 +110,38 @@ static const struct pmc_bit_map spt_pfear_map[] = {
+ 	{},
+ };
+ 
++static const struct pmc_bit_map spt_ltr_show_map[] = {
++	{"IP 0	: LTR_SOUTHPORT_A",		SPT_PMC_LTR_SPA},
++	{"IP 1	: LTR_SOUTHPORT_B",		SPT_PMC_LTR_SPB},
++	{"IP 2	: LTR_SATA",			SPT_PMC_LTR_SATA},
++	{"IP 3	: LTR_GIGABIT_ETHERNET",	SPT_PMC_LTR_GBE},
++	{"IP 4	: LTR_XHCI",			SPT_PMC_LTR_XHCI},
++	/* IP 5 is reserved */
++	{"IP 6	: LTR_ME",			SPT_PMC_LTR_ME},
++	/* EVA is Enterprise Value Add, doesn't really exist on PCH */
++	{"IP 7	: LTR_EVA",			SPT_PMC_LTR_EVA},
++	{"IP 8	: LTR_SOUTHPORT_C",		SPT_PMC_LTR_SPC},
++	{"IP 9	: LTR_HD_AUDIO",		SPT_PMC_LTR_AZ},
++	/* IP 10 is reserved */
++	{"IP 11	: LTR_LPSS",			SPT_PMC_LTR_LPSS},
++	{"IP 12	: LTR_SOUTHPORT_D",		SPT_PMC_LTR_SPD},
++	{"IP 13	: LTR_SOUTHPORT_E",		SPT_PMC_LTR_SPE},
++	{"IP 14	: LTR_CAMERA",			SPT_PMC_LTR_CAM},
++	{"IP 15	: LTR_ESPI",			SPT_PMC_LTR_ESPI},
++	{"IP 16	: LTR_SCC",			SPT_PMC_LTR_SCC},
++	{"IP 17	: LTR_ISH",			SPT_PMC_LTR_ISH},
++	/* Below two cannot be for LTR_IGNORE */
++	{"LTR_CURRENT_PLATFORM",		SPT_PMC_LTR_CUR_PLT},
++	{"LTR_AGGREGATED_SYSTEM",		SPT_PMC_LTR_CUR_ASLT},
++	{},
++
++};
++
+ static const struct pmc_reg_map spt_reg_map = {
+ 	.pfear_sts = spt_pfear_map,
+ 	.mphy_sts = spt_mphy_map,
+ 	.pll_sts = spt_pll_map,
++	.ltr_show_sts = spt_ltr_show_map,
+ 	.slp_s0_offset = SPT_PMC_SLP_S0_RES_COUNTER_OFFSET,
+ 	.ltr_ignore_offset = SPT_PMC_LTR_IGNORE_OFFSET,
+ 	.regmap_length = SPT_PMC_MMIO_REG_LEN,
+@@ -252,10 +280,39 @@ static const struct pmc_bit_map *cnp_slps0_dbg_maps[] = {
+ 	NULL,
+ };
+ 
++static const struct pmc_bit_map cnp_ltr_show_map[] = {
++	{"IP 0	: LTR_SOUTHPORT_A",		CNP_PMC_LTR_SPA},
++	{"IP 1	: LTR_SOUTHPORT_B",		CNP_PMC_LTR_SPB},
++	{"IP 2	: LTR_SATA",			CNP_PMC_LTR_SATA},
++	{"IP 3	: LTR_GIGABIT_ETHERNET",	CNP_PMC_LTR_GBE},
++	{"IP 4	: LTR_XHCI",			CNP_PMC_LTR_XHCI},
++	/* IP 5 is reserved */
++	{"IP 6	: LTR_ME",			CNP_PMC_LTR_ME},
++	/* EVA is Enterprise Value Add, doesn't really exist on PCH */
++	{"IP 7	: LTR_EVA",			CNP_PMC_LTR_EVA},
++	{"IP 8	: LTR_SOUTHPORT_C",		CNP_PMC_LTR_SPC},
++	{"IP 9	: LTR_HD_AUDIO",		CNP_PMC_LTR_AZ},
++	{"IP 10	: LTR_CNV",			CNP_PMC_LTR_CNV},
++	{"IP 11	: LTR_LPSS",			CNP_PMC_LTR_LPSS},
++	{"IP 12	: LTR_SOUTHPORT_D",		CNP_PMC_LTR_SPD},
++	{"IP 13	: LTR_SOUTHPORT_E",		CNP_PMC_LTR_SPE},
++	{"IP 14	: LTR_CAMERA",			CNP_PMC_LTR_CAM},
++	{"IP 15	: LTR_ESPI",			CNP_PMC_LTR_ESPI},
++	{"IP 16	: LTR_SCC",			CNP_PMC_LTR_SCC},
++	{"IP 17	: LTR_ISH",			CNP_PMC_LTR_ISH},
++	{"IP 18	: LTR_UFSX2",			CNP_PMC_LTR_UFSX2},
++	{"IP 19	: LTR_EMMC",			CNP_PMC_LTR_EMMC},
++	{"LTR_CURRENT_PLATFORM",		CNP_PMC_LTR_CUR_PLT},
++	{"LTR_AGGREGATED_SYSTEM",		CNP_PMC_LTR_CUR_ASLT},
++	{},
++
++};
++
+ static const struct pmc_reg_map cnp_reg_map = {
+ 	.pfear_sts = cnp_pfear_map,
+ 	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
+ 	.slps0_dbg_maps = cnp_slps0_dbg_maps,
++	.ltr_show_sts = cnp_ltr_show_map,
+ 	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
+ 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+ 	.regmap_length = CNP_PMC_MMIO_REG_LEN,
+@@ -592,6 +649,21 @@ static int pmc_core_slps0_dbg_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_slps0_dbg);
+ 
++static int pmc_core_ltr_show(struct seq_file *s, void *unused)
++{
++	struct pmc_dev *pmcdev = s->private;
++	const struct pmc_bit_map *map = pmcdev->map->ltr_show_sts;
++	int index;
++
++	for (index = 0; map[index].name ; index++) {
++		seq_printf(s, "%-32s\tRAW LTR: 0x%x\n",
++			   map[index].name,
++			   pmc_core_reg_read(pmcdev, map[index].bit_mask));
++	}
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(pmc_core_ltr);
++
+ static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+ {
+ 	debugfs_remove_recursive(pmcdev->dbgfs_dir);
+@@ -616,6 +688,9 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 	debugfs_create_file("ltr_ignore", 0644, dir, pmcdev,
+ 			    &pmc_core_ltr_ignore_ops);
+ 
++	debugfs_create_file("ltr_show", 0644, dir, pmcdev,
++			    &pmc_core_ltr_fops);
++
+ 	if (pmcdev->map->pll_sts)
+ 		debugfs_create_file("pll_status", 0444, dir, pmcdev,
+ 				    &pmc_core_pll_ops);
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index 93a7e99e1f8b..b24407048fa1 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -45,6 +45,24 @@
+ #define SPT_PMC_MSG_FULL_STS_BIT		0x18
+ #define NUM_RETRIES				100
+ #define NUM_IP_IGN_ALLOWED			17
++#define SPT_PMC_LTR_CUR_PLT			0x350
++#define SPT_PMC_LTR_CUR_ASLT			0x354
++#define SPT_PMC_LTR_SPA				0x360
++#define SPT_PMC_LTR_SPB				0x364
++#define SPT_PMC_LTR_SATA			0x368
++#define SPT_PMC_LTR_GBE				0x36C
++#define SPT_PMC_LTR_XHCI			0x370
++#define SPT_PMC_LTR_ME				0x378
++#define SPT_PMC_LTR_EVA				0x37C
++#define SPT_PMC_LTR_SPC				0x380
++#define SPT_PMC_LTR_AZ				0x384
++#define SPT_PMC_LTR_LPSS			0x38C
++#define SPT_PMC_LTR_CAM				0x390
++#define SPT_PMC_LTR_SPD				0x394
++#define SPT_PMC_LTR_SPE				0x398
++#define SPT_PMC_LTR_ESPI			0x39C
++#define SPT_PMC_LTR_SCC				0x3A0
++#define SPT_PMC_LTR_ISH				0x3A4
+ 
+ /* Sunrise Point: PGD PFET Enable Ack Status Registers */
+ enum ppfear_regs {
+@@ -124,17 +142,38 @@ enum ppfear_regs {
+ #define SPT_PMC_BIT_MPHY_CMN_LANE3		BIT(3)
+ 
+ /* Cannonlake Power Management Controller register offsets */
+-#define CNP_PMC_SLP_S0_RES_COUNTER_OFFSET      0x193C
+-#define CNP_PMC_LTR_IGNORE_OFFSET              0x1B0C
+-#define CNP_PMC_PM_CFG_OFFSET                  0x1818
++#define CNP_PMC_SLP_S0_RES_COUNTER_OFFSET	0x193C
++#define CNP_PMC_LTR_IGNORE_OFFSET		0x1B0C
++#define CNP_PMC_PM_CFG_OFFSET			0x1818
+ #define CNP_PMC_SLPS0_DBG_OFFSET		0x10B4
+ /* Cannonlake: PGD PFET Enable Ack Status Register(s) start */
+-#define CNP_PMC_HOST_PPFEAR0A                  0x1D90
++#define CNP_PMC_HOST_PPFEAR0A			0x1D90
+ 
+-#define CNP_PMC_MMIO_REG_LEN                   0x2000
+-#define CNP_PPFEAR_NUM_ENTRIES                 8
+-#define CNP_PMC_READ_DISABLE_BIT               22
++#define CNP_PMC_MMIO_REG_LEN			0x2000
++#define CNP_PPFEAR_NUM_ENTRIES			8
++#define CNP_PMC_READ_DISABLE_BIT		22
+ #define CNP_PMC_LATCH_SLPS0_EVENTS		BIT(31)
++#define CNP_PMC_LTR_CUR_PLT			0x1B50
++#define CNP_PMC_LTR_CUR_ASLT			0x1B54
++#define CNP_PMC_LTR_SPA				0x1B60
++#define CNP_PMC_LTR_SPB				0x1B64
++#define CNP_PMC_LTR_SATA			0x1B68
++#define CNP_PMC_LTR_GBE				0x1B6C
++#define CNP_PMC_LTR_XHCI			0x1B70
++#define CNP_PMC_LTR_ME				0x1B78
++#define CNP_PMC_LTR_EVA				0x1B7C
++#define CNP_PMC_LTR_SPC				0x1B80
++#define CNP_PMC_LTR_AZ				0x1B84
++#define CNP_PMC_LTR_LPSS			0x1B8C
++#define CNP_PMC_LTR_CAM				0x1B90
++#define CNP_PMC_LTR_SPD				0x1B94
++#define CNP_PMC_LTR_SPE				0x1B98
++#define CNP_PMC_LTR_ESPI			0x1B9C
++#define CNP_PMC_LTR_SCC				0x1BA0
++#define CNP_PMC_LTR_ISH				0x1BA4
++#define CNP_PMC_LTR_CNV				0x1BF0
++#define CNP_PMC_LTR_EMMC			0x1BF4
++#define CNP_PMC_LTR_UFSX2			0x1BF8
+ 
+ struct pmc_bit_map {
+ 	const char *name;
+@@ -148,6 +187,7 @@ struct pmc_bit_map {
+  * @mphy_sts:		Maps name of MPHY lane to MPHY status lane status bit
+  * @pll_sts:		Maps name of PLL to corresponding bit status
+  * @slps0_dbg_maps:	Array of SLP_S0_DBG* registers containing debug info
++ * @ltr_show_sts:	Maps PCH IP Names to their MMIO register offsets
+  * @slp_s0_offset:	PWRMBASE offset to read SLP_S0 residency
+  * @ltr_ignore_offset:	PWRMBASE offset to read/write LTR ignore bit
+  * @regmap_length:	Length of memory to map from PWRMBASE address to access
+@@ -166,6 +206,7 @@ struct pmc_reg_map {
+ 	const struct pmc_bit_map *mphy_sts;
+ 	const struct pmc_bit_map *pll_sts;
+ 	const struct pmc_bit_map **slps0_dbg_maps;
++	const struct pmc_bit_map *ltr_show_sts;
+ 	const u32 slp_s0_offset;
+ 	const u32 ltr_ignore_offset;
+ 	const int regmap_length;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
