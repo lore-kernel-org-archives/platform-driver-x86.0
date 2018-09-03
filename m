@@ -1,68 +1,102 @@
-From: Sebastian Ott <sebott@linux.ibm.com>
-Subject: Re: [PATCH 8/9] PCI: hotplug: Embed hotplug_slot
-Date: Mon, 3 Sep 2018 19:54:49 +0200 (CEST)
-Message-ID: <alpine.LFD.2.21.1809031953000.1716@schleppi>
-References: <cover.1534686484.git.lukas@wunner.de>
- <9918fbca94bcfc03d1560b191d138d3e6664cc86.1534686485.git.lukas@wunner.de>
+From: "Huang, Kai" <kai.huang@intel.com>
+Subject: RE: [PATCH v13 10/13] x86/sgx: Add sgx_einit() for initializing
+ enclaves
+Date: Mon, 3 Sep 2018 23:45:14 +0000
+Message-ID: <105F7BF4D0229846AF094488D65A09893541970F@PGSMSX112.gar.corp.intel.com>
+References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
+ <20180827185507.17087-11-jarkko.sakkinen@linux.intel.com>
+ <1535406078.3416.9.camel@intel.com> <20180828070129.GA5301@linux.intel.com>
+ <105F7BF4D0229846AF094488D65A09893541037C@PGSMSX112.gar.corp.intel.com>
+ <20180831121645.GA18075@linux.intel.com>
+ <20180831181509.GB21555@linux.intel.com>
+ <20180903191926.GC13497@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <9918fbca94bcfc03d1560b191d138d3e6664cc86.1534686485.git.lukas@wunner.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Scott Murray <scott@spiteful.org>, Sebastian Ott <sebott@linux.vnet.ibm.com>, linux-acpi@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>, Darren Hart <dvhart@infradead.org>, Len Brown <lenb@kernel.org>, linux-s390@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, Gavin Shan <gwshan@linux.vnet.ibm.com>, Sinan Kaya <okaya@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Gerald Schaefer <gerald.schaefer@de.ibm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Corentin Chary <corentin.chary@gmail.com>, linuxppc-dev@lists.ozlabs.org, Andy Shevchenko <andy@infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180903191926.GC13497@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "nhorman@redhat.com" <nhorman@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "suresh.b.siddha@intel.com" <suresh.b.siddha@intel.com>, "Ayoun, Serge" <serge.ayoun@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "mingo@redhat.com" <mingo@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, 19 Aug 2018, Lukas Wunner wrote:
-> When the PCI hotplug core and its first user, cpqphp, were introduced in
-> February 2002 with historic commit a8a2069f432c, cpqphp allocated a slot
-> struct for its internal use plus a hotplug_slot struct to be registered
-> with the hotplug core and linked the two with pointers:
-> https://git.kernel.org/tglx/history/c/a8a2069f432c
+> -----Original Message-----
+> From: linux-sgx-owner@vger.kernel.org [mailto:linux-sgx-
+> owner@vger.kernel.org] On Behalf Of Jarkko Sakkinen
+> Sent: Tuesday, September 4, 2018 7:19 AM
+> To: Christopherson, Sean J <sean.j.christopherson@intel.com>
+> Cc: Huang, Kai <kai.huang@intel.com>; platform-driver-x86@vger.kernel.org;
+> x86@kernel.org; nhorman@redhat.com; linux-kernel@vger.kernel.org;
+> tglx@linutronix.de; suresh.b.siddha@intel.com; Ayoun, Serge
+> <serge.ayoun@intel.com>; hpa@zytor.com; npmccallum@redhat.com;
+> mingo@redhat.com; linux-sgx@vger.kernel.org; Hansen, Dave
+> <dave.hansen@intel.com>
+> Subject: Re: [PATCH v13 10/13] x86/sgx: Add sgx_einit() for initializing enclaves
 > 
-> Nowadays, the predominant pattern in the tree is to embed ("subclass")
-> such structures in one another and cast to the containing struct with
-> container_of().  But it wasn't until July 2002 that container_of() was
-> introduced with historic commit ec4f214232cf:
-> https://git.kernel.org/tglx/history/c/ec4f214232cf
+> On Fri, Aug 31, 2018 at 11:15:09AM -0700, Sean Christopherson wrote:
+> > On Fri, Aug 31, 2018 at 03:17:03PM +0300, Jarkko Sakkinen wrote:
+> > > On Wed, Aug 29, 2018 at 07:33:54AM +0000, Huang, Kai wrote:
+> > > > [snip..]
+> > > >
+> > > > > > >
+> > > > > > > @@ -38,6 +39,18 @@ static LIST_HEAD(sgx_active_page_list);
+> > > > > > > static DEFINE_SPINLOCK(sgx_active_page_list_lock);
+> > > > > > >  static struct task_struct *ksgxswapd_tsk;  static
+> > > > > > > DECLARE_WAIT_QUEUE_HEAD(ksgxswapd_waitq);
+> > > > > > > +static struct notifier_block sgx_pm_notifier; static u64
+> > > > > > > +sgx_pm_cnt;
+> > > > > > > +
+> > > > > > > +/* The cache for the last known values of
+> > > > > > > +IA32_SGXLEPUBKEYHASHx MSRs
+> > > > > > > for each
+> > > > > > > + * CPU. The entries are initialized when they are first
+> > > > > > > + used by
+> > > > > > > sgx_einit().
+> > > > > > > + */
+> > > > > > > +struct sgx_lepubkeyhash {
+> > > > > > > +	u64 msrs[4];
+> > > > > > > +	u64 pm_cnt;
+> > > > > >
+> > > > > > May I ask why do we need pm_cnt here? In fact why do we need
+> > > > > > suspend staff (namely, sgx_pm_cnt above, and related code in
+> > > > > > this patch) here in this patch? From the patch commit message
+> > > > > > I don't see why we need PM staff here. Please give comment why
+> > > > > > you need PM staff, or you may consider to split the PM staff to another
+> patch.
+> > > > >
+> > > > > Refining the commit message probably makes more sense because
+> > > > > without PM code sgx_einit() would be broken. The MSRs have been reset
+> after waking up.
+> > > > >
+> > > > > Some kind of counter is required to keep track of the power
+> > > > > cycle. When going to sleep the sgx_pm_cnt is increased.
+> > > > > sgx_einit() compares the current value of the global count to
+> > > > > the value in the cache entry to see whether we are in a new power cycle.
+> > > >
+> > > > You mean reset to Intel default? I think we can also just reset
+> > > > the cached MSR values on each power cycle, which would be simpler,
+> IMHO?
+> > >
+> > > I don't really see that much difference in the complexity.
+> >
+> > Tracking the validity of the cache means we're hosed if we miss any
+> > condition that causes the MSRs to be reset.  I think we're better off
+> > assuming the cache can be stale at any time, i.e. don't track power
+> > cyles and instead handle EINIT failure due to INVALID_TOKEN by writing
+> > the cache+MSRs with the desired hash and retrying EINIT.  EINIT is
+> > interruptible and its latency is extremely variable in any case, e.g.
+> > tens of thousands of cycles, so this rarely-hit "slow path" probably
+> > wouldn't affect the worst case latency of EINIT.
 > 
-> pnv_php, introduced in 2016, did the right thing and embedded struct
-> hotplug_slot in its internal struct pnv_php_slot, but all other drivers
-> cargo-culted cpqphp's design and linked separate structs with pointers.
-> 
-> Embedding structs is preferrable to linking them with pointers because
-> it requires fewer allocations, thereby reducing overhead and simplifying
-> error paths.  Casting an embedded struct to the containing struct
-> becomes a cheap subtraction rather than a dereference.  And having fewer
-> pointers reduces the risk of them pointing nowhere either accidentally
-> or due to an attack.
-> 
-> Convert all drivers to embed struct hotplug_slot in their internal slot
-> struct.  The "private" pointer in struct hotplug_slot thereby becomes
-> unused, so drop it.
-> 
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Scott Murray <scott@spiteful.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>
-> Cc: Sebastian Ott <sebott@linux.vnet.ibm.com>
-> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> Cc: Corentin Chary <corentin.chary@gmail.com>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
+> Sounds a good refiniment. Pretty good solution to heal from host sleep on the
+> guest VM and then there is no need for driver changes.
 
-for s390_pci_hpc.c:
-Acked-by: Sebastian Ott <sebott@linux.ibm.com>
+To me either way should be OK, keeping MSR cache or retrying EINIT, since EINIT should not be in performance critical path I think.
+
+But INVALID_TOKEN is not only returned when MSRs are mismatched, so do you plan to check to rule out other cases that cause INVALID_TOKEN before retrying EINIT, or unconditionally  retry EINIT? And we should only retry once?
+
+Thanks,
+-Kai
+> 
+> /Jarkko
