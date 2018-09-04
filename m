@@ -1,54 +1,90 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v13 08/13] x86/sgx: Add wrappers for ENCLS leaf functions
-Date: Tue, 4 Sep 2018 14:09:52 +0300
-Message-ID: <20180904110952.GD5423@linux.intel.com>
-References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-9-jarkko.sakkinen@linux.intel.com>
- <CAHp75VdHmfx70=4jZnGZcgk5HTegDtizo7Uauk_bH43RpDXCfg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdHmfx70=4jZnGZcgk5HTegDtizo7Uauk_bH43RpDXCfg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, serge.ayoun@intel.com, suresh.b.siddha@intel.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH v3 01/10] usb: typec: Take care of driver module reference counting
+Date: Tue,  4 Sep 2018 14:22:10 +0300
+Message-ID: <20180904112219.89287-2-heikki.krogerus@linux.intel.com>
+References: <20180904112219.89287-1-heikki.krogerus@linux.intel.com>
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180904112219.89287-1-heikki.krogerus@linux.intel.com>
+Sender: stable-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Sep 03, 2018 at 06:01:26PM +0300, Andy Shevchenko wrote:
-> On Mon, Aug 27, 2018 at 9:58 PM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > Add wrappers for Intel(R) SGX ENCLS opcode leaf functions except
-> > ENCLS(EINIT). ENCLS invokes privileged functions for managing (creation,
-> > initialization and swapping) and debugging enclaves.
-> 
-> > +#define ENCLS_FAULT_FLAG 0x40000000UL
-> > +#define ENCLS_FAULT_FLAG_ASM "$0x40000000"
-> 
-> Hmm... Why it can't have same name?
-> 
-> See, how _AC() macro is defined and being used.
+Functions typec_mux_get() and typec_switch_get() already
+make sure that the mux device reference count is
+incremented, but the same must be done to the driver module
+as well to prevent the drivers from being unloaded in the
+middle of operation.
 
-Thanks, we'll migrate this to use _AC().
+This fixes a potential "BUG: unable to handle kernel paging
+request at ..." from happening.
 
-> > +#define ENCLS_TRAPNR(r) ((r) & ~ENCLS_FAULT_FLAG)
-> 
-> If result of macro is assigned to some variable and (r) by some reason
-> is 32-bit type
-> and you compile as 64-bit object, compiler will warn here.
-> Please, check this is not the case in any of use of this macro.
-> Otherwise you need a type casting, like
-> 
-> foo = bar & (u32)~BAR;
-> 
-> (or using typeof() might work)
+Fixes: 93dd2112c7b2 ("usb: typec: mux: Get the mux identifier from function parameter")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/usb/typec/mux.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-Thanks for spotting this. I will check the use of this macro.
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-
-/Jarkko
+diff --git a/drivers/usb/typec/mux.c b/drivers/usb/typec/mux.c
+index ddaac63ecf12..d990aa510fab 100644
+--- a/drivers/usb/typec/mux.c
++++ b/drivers/usb/typec/mux.c
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/list.h>
++#include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/usb/typec_mux.h>
+ 
+@@ -49,8 +50,10 @@ struct typec_switch *typec_switch_get(struct device *dev)
+ 	mutex_lock(&switch_lock);
+ 	sw = device_connection_find_match(dev, "typec-switch", NULL,
+ 					  typec_switch_match);
+-	if (!IS_ERR_OR_NULL(sw))
++	if (!IS_ERR_OR_NULL(sw)) {
++		WARN_ON(!try_module_get(sw->dev->driver->owner));
+ 		get_device(sw->dev);
++	}
+ 	mutex_unlock(&switch_lock);
+ 
+ 	return sw;
+@@ -65,8 +68,10 @@ EXPORT_SYMBOL_GPL(typec_switch_get);
+  */
+ void typec_switch_put(struct typec_switch *sw)
+ {
+-	if (!IS_ERR_OR_NULL(sw))
++	if (!IS_ERR_OR_NULL(sw)) {
++		module_put(sw->dev->driver->owner);
+ 		put_device(sw->dev);
++	}
+ }
+ EXPORT_SYMBOL_GPL(typec_switch_put);
+ 
+@@ -136,8 +141,10 @@ struct typec_mux *typec_mux_get(struct device *dev, const char *name)
+ 
+ 	mutex_lock(&mux_lock);
+ 	mux = device_connection_find_match(dev, name, NULL, typec_mux_match);
+-	if (!IS_ERR_OR_NULL(mux))
++	if (!IS_ERR_OR_NULL(mux)) {
++		WARN_ON(!try_module_get(mux->dev->driver->owner));
+ 		get_device(mux->dev);
++	}
+ 	mutex_unlock(&mux_lock);
+ 
+ 	return mux;
+@@ -152,8 +159,10 @@ EXPORT_SYMBOL_GPL(typec_mux_get);
+  */
+ void typec_mux_put(struct typec_mux *mux)
+ {
+-	if (!IS_ERR_OR_NULL(mux))
++	if (!IS_ERR_OR_NULL(mux)) {
++		module_put(mux->dev->driver->owner);
+ 		put_device(mux->dev);
++	}
+ }
+ EXPORT_SYMBOL_GPL(typec_mux_put);
+ 
+-- 
+2.18.0
