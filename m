@@ -1,42 +1,52 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v13 10/13] x86/sgx: Add sgx_einit() for initializing
- enclaves
-Date: Tue, 4 Sep 2018 18:30:21 +0300
-Message-ID: <20180904153021.GB8344@linux.intel.com>
+Subject: Re: [PATCH v13 09/13] x86/sgx: Enclave Page Cache (EPC) memory
+ manager
+Date: Tue, 4 Sep 2018 18:38:03 +0300
+Message-ID: <20180904153803.GC8344@linux.intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-11-jarkko.sakkinen@linux.intel.com>
- <1535406078.3416.9.camel@intel.com>
- <20180828070129.GA5301@linux.intel.com>
- <105F7BF4D0229846AF094488D65A09893541037C@PGSMSX112.gar.corp.intel.com>
- <20180831121645.GA18075@linux.intel.com>
- <20180831181509.GB21555@linux.intel.com>
- <20180903191926.GC13497@linux.intel.com>
- <105F7BF4D0229846AF094488D65A09893541970F@PGSMSX112.gar.corp.intel.com>
- <20180904145451.GA5233@linux.intel.com>
+ <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
+ <CAHp75Vf39J8U3VnmxP+BBYi7rqzidxdD58Yx_fdnLXRro_QBgg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180904145451.GA5233@linux.intel.com>
+In-Reply-To: <CAHp75Vf39J8U3VnmxP+BBYi7rqzidxdD58Yx_fdnLXRro_QBgg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: "Huang, Kai" <kai.huang@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "nhorman@redhat.com" <nhorman@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "suresh.b.siddha@intel.com" <suresh.b.siddha@intel.com>, "Ayoun, Serge" <serge.ayoun@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "mingo@redhat.com" <mingo@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, suresh.b.siddha@intel.com, serge.ayoun@intel.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Sep 04, 2018 at 07:54:51AM -0700, Sean Christopherson wrote:
-> I don't see any value in trying to rule out specific causes of
-> INVALID_TOKEN, but we should only retry EINIT if ret==INVALID_TOKEN
-> and RDMSR(HASH0) != sgx_lepubkeyhash[0].  Only the first MSR needs to
-> be checked for validity as they're a package deal, i.e. they'll all be
-> valid or all be reset.  There shouldn't be a limit on retry attempts,
-> e.g. the MSRs could theoretically be reset between WRMSR and EINIT.
+On Mon, Sep 03, 2018 at 10:02:16PM +0300, Andy Shevchenko wrote:
+> On Mon, Aug 27, 2018 at 9:58 PM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> >
+> > Add a Enclave Page Cache (EPC) memory manager that can be used to
+> > allocate and free EPC pages. The swapper thread ksgxswapd reclaims pages
+> > on the event when the number of free EPC pages goes below
+> > %SGX_NR_LOW_PAGES up until it reaches %SGX_NR_HIGH_PAGES.
+> >
+> > Pages are reclaimed in LRU fashion from a global list. The consumers
+> > take care of calling EBLOCK (block page from new accesses), ETRACK
+> > (restart counting the entering hardware threads) and EWB (write page to
+> > the regular memory) because executing these operations usually (if not
+> > always) requires to do some subsystem-internal locking operations.
+> 
+> > +                       list_del(&page->list);
+> 
+> Is this page will be completely gone? Otherwise it might be needed to
+> reinit list head here as well.
 
-Why is doing rdmsrs necessary? With the INVALID_TOKEN error we know we
-are out-of-sync i.e. have been sleeping and then one just needs to do
-wrmsrs.
+The swapper cannot access the page once it has been removed from the
+list of active pages so it does not matter whether this is list_del()
+or list_del_init().
 
-I think one retry should be enough given that VMM traps EINIT. One retry
-is needed to take care of the guest itself (or host if we are running on
-bare metal) having been in a sleep state.
+> > +       WARN(ret < 0, "sgx: cannot free page, reclaim in-progress");
+> > +       WARN(ret > 0, "sgx: EREMOVE returned %d (0x%x)", ret, ret);
+> 
+> I'm not sure (though it's easy to check) that you need sgx: prefix
+> here. WARN() might take pr_fmt() if defined.
+
+Sean, you took care of this one. Was it so that WARN() does not respect
+pr_fmt?
 
 /Jarkko
