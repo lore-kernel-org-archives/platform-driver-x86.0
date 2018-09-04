@@ -1,34 +1,32 @@
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v13 09/13] x86/sgx: Enclave Page Cache (EPC) memory
- manager
-Date: Tue, 4 Sep 2018 08:45:53 -0700
-Message-ID: <20180904154553.GA5412@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v13 04/13] x86/sgx: Architectural structures
+Date: Tue, 4 Sep 2018 09:04:44 -0700
+Message-ID: <83f5ec5f-1b31-15eb-7341-84ee9c7977e2@intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
- <CAHp75Vf39J8U3VnmxP+BBYi7rqzidxdD58Yx_fdnLXRro_QBgg@mail.gmail.com>
- <20180904153803.GC8344@linux.intel.com>
+ <20180827185507.17087-5-jarkko.sakkinen@linux.intel.com>
+ <CAHp75VchsQXGRrcrcB06w68PzUZb5NJLo2B_ZKf6ZLqyBbvWhA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180904153803.GC8344@linux.intel.com>
+In-Reply-To: <CAHp75VchsQXGRrcrcB06w68PzUZb5NJLo2B_ZKf6ZLqyBbvWhA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, suresh.b.siddha@intel.com, serge.ayoun@intel.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Sep 04, 2018 at 06:38:03PM +0300, Jarkko Sakkinen wrote:
-> On Mon, Sep 03, 2018 at 10:02:16PM +0300, Andy Shevchenko wrote:
-> > On Mon, Aug 27, 2018 at 9:58 PM Jarkko Sakkinen
-> > <jarkko.sakkinen@linux.intel.com> wrote:
-> > >
-> > > +       WARN(ret < 0, "sgx: cannot free page, reclaim in-progress");
-> > > +       WARN(ret > 0, "sgx: EREMOVE returned %d (0x%x)", ret, ret);
-> > 
-> > I'm not sure (though it's easy to check) that you need sgx: prefix
-> > here. WARN() might take pr_fmt() if defined.
-> 
-> Sean, you took care of this one. Was it so that WARN() does not respect
-> pr_fmt?
+On 09/03/2018 06:16 AM, Andy Shevchenko wrote:
+>> +       EBLOCK  = 0x9,
+>> +       EPA     = 0xA,
+>> +       EWB     = 0xB,
+>> +       ETRACK  = 0xC,
+>> +       EAUG    = 0xD,
+>> +       EMODPR  = 0xE,
+>> +       EMODT   = 0xF,
+>> +};
+> Hmm... This E prefix confuses me with (system wide) error codes. Has
+> it been discussed before? If so, can you point on the conclusion why
+> the current format is good?
 
-Yep, WARN() doesn't respect pr_fmt.
+Making them SGX_EWHATEVER isn't a horrible idea.
