@@ -1,64 +1,54 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v13 07/13] x86/sgx: Add data structures for tracking the
- EPC pages
-Date: Tue, 4 Sep 2018 12:59:23 +0300
-Message-ID: <20180904095923.GC5423@linux.intel.com>
+Subject: Re: [PATCH v13 08/13] x86/sgx: Add wrappers for ENCLS leaf functions
+Date: Tue, 4 Sep 2018 14:09:52 +0300
+Message-ID: <20180904110952.GD5423@linux.intel.com>
 References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-8-jarkko.sakkinen@linux.intel.com>
- <CAHp75VcjKkJR4_H-acbVm3BwA4tVR8gUtkg9STqOK2UG20Tvgg@mail.gmail.com>
+ <20180827185507.17087-9-jarkko.sakkinen@linux.intel.com>
+ <CAHp75VdHmfx70=4jZnGZcgk5HTegDtizo7Uauk_bH43RpDXCfg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcjKkJR4_H-acbVm3BwA4tVR8gUtkg9STqOK2UG20Tvgg@mail.gmail.com>
+In-Reply-To: <CAHp75VdHmfx70=4jZnGZcgk5HTegDtizo7Uauk_bH43RpDXCfg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, serge.ayoun@intel.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, suresh.b.siddha@intel.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, serge.ayoun@intel.com, suresh.b.siddha@intel.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Sep 03, 2018 at 05:41:53PM +0300, Andy Shevchenko wrote:
+On Mon, Sep 03, 2018 at 06:01:26PM +0300, Andy Shevchenko wrote:
 > On Mon, Aug 27, 2018 at 9:58 PM Jarkko Sakkinen
 > <jarkko.sakkinen@linux.intel.com> wrote:
 > >
-> > Add data structures to track Enclave Page Cache (EPC) pages.  EPC is
-> > divided into multiple banks (1-N) of which addresses and sizes can be
-> > enumerated with CPUID by the OS.
-> >
-> > On NUMA systems a node can have at most bank. A bank can be at most part of
-> > two nodes. SGX supports both nodes with a single memory controller and also
-> > sub-cluster nodes with severals memory controllers on a single die.
+> > Add wrappers for Intel(R) SGX ENCLS opcode leaf functions except
+> > ENCLS(EINIT). ENCLS invokes privileged functions for managing (creation,
+> > initialization and swapping) and debugging enclaves.
 > 
-> > -#include <asm/sgx.h>
-> > -#include <asm/sgx_pr.h>
-> >  #include <linux/freezer.h>
-> >  #include <linux/highmem.h>
-> >  #include <linux/kthread.h>
-> > +#include <linux/pagemap.h>
-> >  #include <linux/ratelimit.h>
-> >  #include <linux/sched/signal.h>
-> > +#include <linux/shmem_fs.h>
-> >  #include <linux/slab.h>
-> > +#include <asm/sgx.h>
-> > +#include <asm/sgx_pr.h>
+> > +#define ENCLS_FAULT_FLAG 0x40000000UL
+> > +#define ENCLS_FAULT_FLAG_ASM "$0x40000000"
 > 
-> Squash issues?
-
-Yes :-/
-
-> > +       va = ioremap_cache(addr, size);
-> > +       if (!va)
-> > +               return -ENOMEM;
+> Hmm... Why it can't have same name?
 > 
-> I'm not sure this is a right API. Do we operate with memory? Does it
-> have I/O side effects?
-> If no, memremap() would be better to use.
+> See, how _AC() macro is defined and being used.
 
-Had this idea a long time ago but had forgotten it. EPC is from caching
-perspective like regular memory.
+Thanks, we'll migrate this to use _AC().
 
+> > +#define ENCLS_TRAPNR(r) ((r) & ~ENCLS_FAULT_FLAG)
+> 
+> If result of macro is assigned to some variable and (r) by some reason
+> is 32-bit type
+> and you compile as 64-bit object, compiler will warn here.
+> Please, check this is not the case in any of use of this macro.
+> Otherwise you need a type casting, like
+> 
+> foo = bar & (u32)~BAR;
+> 
+> (or using typeof() might work)
+
+Thanks for spotting this. I will check the use of this macro.
+
+> 
 > -- 
 > With Best Regards,
 > Andy Shevchenko
-> 
 
 /Jarkko
