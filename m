@@ -1,75 +1,37 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v13 10/13] x86/sgx: Add sgx_einit() for initializing enclaves
-Date: Tue, 4 Sep 2018 19:05:09 +0300
-Message-ID: <CAHp75VfKdb6fj6EqghEuQazVqGUNJ=FLk+ka+5PyX795-1T-MA@mail.gmail.com>
-References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com> <20180827185507.17087-11-jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v13 04/13] x86/sgx: Architectural structures
+Date: Tue, 4 Sep 2018 19:06:26 +0300
+Message-ID: <CAHp75VfqFAgPbHDLBdDF_VRFRoGuBBMtA0HuOeDTZtNgFe-8yQ@mail.gmail.com>
+References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
+ <20180827185507.17087-5-jarkko.sakkinen@linux.intel.com> <CAHp75VchsQXGRrcrcB06w68PzUZb5NJLo2B_ZKf6ZLqyBbvWhA@mail.gmail.com>
+ <83f5ec5f-1b31-15eb-7341-84ee9c7977e2@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827185507.17087-11-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <83f5ec5f-1b31-15eb-7341-84ee9c7977e2@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, suresh.b.siddha@intel.com, serge.ayoun@intel.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Aug 27, 2018 at 9:58 PM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
+On Tue, Sep 4, 2018 at 7:04 PM Dave Hansen <dave.hansen@intel.com> wrote:
 >
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
+> On 09/03/2018 06:16 AM, Andy Shevchenko wrote:
+> >> +       EBLOCK  = 0x9,
+> >> +       EPA     = 0xA,
+> >> +       EWB     = 0xB,
+> >> +       ETRACK  = 0xC,
+> >> +       EAUG    = 0xD,
+> >> +       EMODPR  = 0xE,
+> >> +       EMODT   = 0xF,
+> >> +};
+> > Hmm... This E prefix confuses me with (system wide) error codes. Has
+> > it been discussed before? If so, can you point on the conclusion why
+> > the current format is good?
 >
-> Add a function to perform ENCLS(EINIT), which initializes an enclave,
-> which can be used by a driver for running enclaves and VMMs.
->
-> Writing the LE hash MSRs is extraordinarily expensive, e.g. 3-4x slower
-> than normal MSRs, so we use a per-cpu cache to track the last known value
-> of the MSRs to avoid unnecessarily writing the MSRs with the current value.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Making them SGX_EWHATEVER isn't a horrible idea.
 
-> +int sgx_einit(struct sgx_sigstruct *sigstruct, struct sgx_einittoken *token,
-> +             struct sgx_epc_page *secs_page, u64 lepubkeyhash[4]);
-
-This [4] doesn't make any sense in a C when used in function call
-parameter list.
-
-> +/* The cache for the last known values of IA32_SGXLEPUBKEYHASHx MSRs for each
-> + * CPU. The entries are initialized when they are first used by sgx_einit().
-> + */
-> +struct sgx_lepubkeyhash {
-> +       u64 msrs[4];
-
-4 is MAGIC.
-
-> +       u64 pm_cnt;
-> +};
-
-> +int sgx_einit(struct sgx_sigstruct *sigstruct, struct sgx_einittoken *token,
-> +             struct sgx_epc_page *secs_page, u64 lepubkeyhash[4])
-
-Same two comments about [4].
-
-> +{
-
-> +       cache = per_cpu(sgx_lepubkeyhash_cache, smp_processor_id());
-
-> +       if (!cache) {
-
-How often it's being expected to happen?
-
-> +               cache = kzalloc(sizeof(struct sgx_lepubkeyhash), GFP_KERNEL);
-> +               if (!cache)
-> +                       return -ENOMEM;
-> +       }
-
-> +       for (i = 0; i < 4; i++) {
-
-Same MAGIC?
-
-> +       }
-
-> +}
++1 here. Namespace will not shadow SDM naming scheme.
 
 -- 
 With Best Regards,
