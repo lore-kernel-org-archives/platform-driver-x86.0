@@ -1,65 +1,45 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v13 10/13] x86/sgx: Add sgx_einit() for initializing
- enclaves
-Date: Wed, 5 Sep 2018 20:39:40 +0300
-Message-ID: <20180905173940.GG11368@linux.intel.com>
-References: <1535406078.3416.9.camel@intel.com>
- <20180828070129.GA5301@linux.intel.com>
- <105F7BF4D0229846AF094488D65A09893541037C@PGSMSX112.gar.corp.intel.com>
- <20180831121645.GA18075@linux.intel.com>
- <20180831181509.GB21555@linux.intel.com>
- <20180903191926.GC13497@linux.intel.com>
- <105F7BF4D0229846AF094488D65A09893541970F@PGSMSX112.gar.corp.intel.com>
- <20180904145451.GA5233@linux.intel.com>
- <20180904153021.GB8344@linux.intel.com>
- <20180904163546.GA5421@linux.intel.com>
+From: Ike Panhc <ike.pan@canonical.com>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Use __func__ instead of
+ read_ec_cmd in pr_err
+Date: Thu, 6 Sep 2018 16:49:22 +0800
+Message-ID: <9fce93c1-ad6f-8d02-0cf7-42680b78a924@canonical.com>
+References: <1536044899-10452-1-git-send-email-zhang.xianwei8@zte.com.cn>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180904163546.GA5421@linux.intel.com>
+In-Reply-To: <1536044899-10452-1-git-send-email-zhang.xianwei8@zte.com.cn>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: "Huang, Kai" <kai.huang@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "nhorman@redhat.com" <nhorman@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "suresh.b.siddha@intel.com" <suresh.b.siddha@intel.com>, "Ayoun, Serge" <serge.ayoun@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "mingo@redhat.com" <mingo@redhat.com>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "Hansen, Dave" <dave.hansen@intel.com>
+To: Zhang Xianwei <zhang.xianwei8@zte.com.cn>, dvhart@infradead.org, andy@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, zhong.weidong@zte.com.cn, jiang.biao2@zte.com.cn
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Sep 04, 2018 at 09:35:46AM -0700, Sean Christopherson wrote:
-> On Tue, Sep 04, 2018 at 06:30:21PM +0300, Jarkko Sakkinen wrote:
-> > On Tue, Sep 04, 2018 at 07:54:51AM -0700, Sean Christopherson wrote:
-> > > I don't see any value in trying to rule out specific causes of
-> > > INVALID_TOKEN, but we should only retry EINIT if ret==INVALID_TOKEN
-> > > and RDMSR(HASH0) != sgx_lepubkeyhash[0].  Only the first MSR needs to
-> > > be checked for validity as they're a package deal, i.e. they'll all be
-> > > valid or all be reset.  There shouldn't be a limit on retry attempts,
-> > > e.g. the MSRs could theoretically be reset between WRMSR and EINIT.
-> > 
-> > Why is doing rdmsrs necessary? With the INVALID_TOKEN error we know we
-> > are out-of-sync i.e. have been sleeping and then one just needs to do
-> > wrmsrs.
+On 09/04/2018 03:08 PM, Zhang Xianwei wrote:
+> Refer to the commit f1395edbcec8 ("platform/x86: ideapad-laptop: Use
+> __func__ instead of write_ec_cmd in pr_err"), prefer using '"%s...",
+> __func__' to using 'read_ec_cmd' in read_ec_data.
 > 
-> As Kai mentioned, INVALID_TOKEN is returned for other reasons, e.g. a
-> production enclave trying to use a debug token or reserved bits set in
-> the token.  And in the KVM case, the hash and token are provided by
-> the guest, so it's entirely possible the enclave/token is not signed
-> with the key specified in the hash.  RDMSR is relatively inexpensive
-> compared to the overall cost of EINIT.  Though of course EINIT failure
-> isn't exactly a fast path, so I'm ok if you want to opt for simplicity
-> and retry on INVALID_TOKEN without checking the MSRs, just make sure
-> to add a comment indicating we're intentionally not checking the MSRs.
-
-Great!
-
-> > I think one retry should be enough given that VMM traps EINIT. One retry
-> > is needed to take care of the guest itself (or host if we are running on
-> > bare metal) having been in a sleep state.
+> Signed-off-by: Zhang Xianwei <zhang.xianwei8@zte.com.cn>
+> ---
+>  drivers/platform/x86/ideapad-laptop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Assuming we do RDMSR(hash0), that should be sufficient to prevent
-> infinite retry and it protects against the MSRs being lost between
-> WRMSR and EINIT during retry.  That being said, I'm ok retrying only
-> once, especially if you want to omit the RDMSR.  Disabling preemption
-> should prevent the kernel from suspending between WRMSR and EINIT,
-> I'm just being paranoid.
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index d4f1259..f856d59 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -212,7 +212,7 @@ static int read_ec_data(acpi_handle handle, int cmd, unsigned long *data)
+>  			return 0;
+>  		}
+>  	}
+> -	pr_err("timeout in read_ec_cmd\n");
+> +	pr_err("timeout in %s\n", __func__);
+>  	return -1;
+>  }
+>  
+> 
 
-But they are in the same preempt-disabled-region already?
+Good catch. Thanks.
 
-/Jarkko
+Acked-by: Ike Panhc <ike.pan@canonical.com>
