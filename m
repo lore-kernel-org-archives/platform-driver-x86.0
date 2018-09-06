@@ -1,45 +1,50 @@
-From: Ike Panhc <ike.pan@canonical.com>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Use __func__ instead of
- read_ec_cmd in pr_err
-Date: Thu, 6 Sep 2018 16:49:22 +0800
-Message-ID: <9fce93c1-ad6f-8d02-0cf7-42680b78a924@canonical.com>
-References: <1536044899-10452-1-git-send-email-zhang.xianwei8@zte.com.cn>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v13 11/13] platform/x86: Intel SGX driver
+Date: Thu, 6 Sep 2018 12:21:00 +0300
+Message-ID: <20180906092100.GA27302@linux.intel.com>
+References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
+ <20180827185507.17087-12-jarkko.sakkinen@linux.intel.com>
+ <CAHp75VcqKunkHYNdd287_F7APHwYr7K9QD2PVCkqBqJWG2_E-g@mail.gmail.com>
+ <20180905173355.GE11368@linux.intel.com>
+ <CAHp75Vc2SZUfRnBPZ9xJ_B=KJL7yK9hqRZiFOTswn0AzjnLD1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536044899-10452-1-git-send-email-zhang.xianwei8@zte.com.cn>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vc2SZUfRnBPZ9xJ_B=KJL7yK9hqRZiFOTswn0AzjnLD1A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhang Xianwei <zhang.xianwei8@zte.com.cn>, dvhart@infradead.org, andy@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, zhong.weidong@zte.com.cn, jiang.biao2@zte.com.cn
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, serge.ayoun@intel.com, shay.katz-zamir@intel.com, suresh.b.siddha@intel.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>, Eric Biggers <ebiggers@google.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 09/04/2018 03:08 PM, Zhang Xianwei wrote:
-> Refer to the commit f1395edbcec8 ("platform/x86: ideapad-laptop: Use
-> __func__ instead of write_ec_cmd in pr_err"), prefer using '"%s...",
-> __func__' to using 'read_ec_cmd' in read_ec_data.
+On Wed, Sep 05, 2018 at 08:36:54PM +0300, Andy Shevchenko wrote:
+> On Wed, Sep 5, 2018 at 8:34 PM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> > On Tue, Sep 04, 2018 at 08:59:58PM +0300, Andy Shevchenko wrote:
+> > > On Mon, Aug 27, 2018 at 9:58 PM Jarkko Sakkinen
+> > > <jarkko.sakkinen@linux.intel.com> wrote:
 > 
-> Signed-off-by: Zhang Xianwei <zhang.xianwei8@zte.com.cn>
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > Thanks, very detailed! Does not make sense to ack these separately so I
+> > just say that I try to fix them all with care.
 > 
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index d4f1259..f856d59 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -212,7 +212,7 @@ static int read_ec_data(acpi_handle handle, int cmd, unsigned long *data)
->  			return 0;
->  		}
->  	}
-> -	pr_err("timeout in read_ec_cmd\n");
-> +	pr_err("timeout in %s\n", __func__);
->  	return -1;
->  }
->  
+> Just comment on which you disagree.
+> I think one of them is the header file location. It seems I missed
+> it's current place.
 > 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 
-Good catch. Thanks.
+Ah, right, sorry forgot to comment it in LKML.
 
-Acked-by: Ike Panhc <ike.pan@canonical.com>
+There is another open. If I grep through the kernel tree I see SPDX
+headers that are decorated both with C99- and C89-style comments. I
+guess I ended up using C99-style because when I was instructed to add
+SPDX headers in the first place that was the example I was given. Still
+checkpatch.pl complains about C99-style comments.
+
+Which one is right and why the kernel tree is polluted with C99-headers
+when they do not pass checkpatch.pl? How those commits were ever
+accepted?
+
+/Jarkko
