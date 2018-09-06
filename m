@@ -1,55 +1,78 @@
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Subject: Re: [PATCH v13 11/13] platform/x86: Intel SGX driver
-Date: Thu, 6 Sep 2018 19:35:46 +0200
-Message-ID: <CANiq72kpY1y2aPH+GMi8mWZdttfdYJ3wk0cvE_qVD97vdvTJbQ@mail.gmail.com>
-References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-12-jarkko.sakkinen@linux.intel.com> <CAHp75VcqKunkHYNdd287_F7APHwYr7K9QD2PVCkqBqJWG2_E-g@mail.gmail.com>
- <20180905173355.GE11368@linux.intel.com> <CAHp75Vc2SZUfRnBPZ9xJ_B=KJL7yK9hqRZiFOTswn0AzjnLD1A@mail.gmail.com>
- <20180906092100.GA27302@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v3 02/10] usb: roles: Handle driver reference counting
+Date: Thu, 6 Sep 2018 22:59:34 +0200
+Message-ID: <881eb4df-3e77-3475-1ec7-02b060b7ad83@redhat.com>
+References: <20180904112219.89287-1-heikki.krogerus@linux.intel.com>
+ <20180904112219.89287-3-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180906092100.GA27302@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, serge.ayoun@intel.com, shay.katz-zamir@intel.com, "Siddha, Suresh B" <suresh.b.siddha@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>, Eric Biggers <ebiggers@google.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180904112219.89287-3-heikki.krogerus@linux.intel.com>
+Content-Language: en-US
+Sender: stable-owner@vger.kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Jarkko,
+HI,
 
-On Thu, Sep 6, 2018 at 11:21 AM, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
-> There is another open. If I grep through the kernel tree I see SPDX
-> headers that are decorated both with C99- and C89-style comments. I
-> guess I ended up using C99-style because when I was instructed to add
-> SPDX headers in the first place that was the example I was given. Still
-> checkpatch.pl complains about C99-style comments.
->
-> Which one is right and why the kernel tree is polluted with C99-headers
-> when they do not pass checkpatch.pl? How those commits were ever
-> accepted?
+On 04-09-18 13:22, Heikki Krogerus wrote:
+> This fixes potential "BUG: unable to handle kernel paging
+> request at ..." from happening.
+> 
+> Fixes: fde0aa6c175a ("usb: common: Small class for USB role switches")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+>   drivers/usb/common/roles.c | 15 ++++++++++++---
+>   1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/common/roles.c b/drivers/usb/common/roles.c
+> index 15cc76e22123..3d8a776e55ee 100644
+> --- a/drivers/usb/common/roles.c
+> +++ b/drivers/usb/common/roles.c
+> @@ -109,8 +109,15 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
+>    */
+>   struct usb_role_switch *usb_role_switch_get(struct device *dev)
+>   {
+> -	return device_connection_find_match(dev, "usb-role-switch", NULL,
+> -					    usb_role_switch_match);
+> +	struct usb_role_switch *sw;
+> +
+> +	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
+> +					  usb_role_switch_match);
+> +
+> +	if (!IS_ERR(sw))
+> +		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
 
-See Documentation/process/license-rules.rst. Headers should go with
-C-style comments:
+While testing I found a bug, so sorry but this is going to need a v4,
+device_connection_find_match() may return NULL here, so this needs
+to be if (!IS_ERR_OR_NULL(sw)) to avoid an oops.
 
-   The SPDX license identifier is added in form of a comment.  The comment
-   style depends on the file type::
+Note I'm also seeing some other issues which I need to debug I will
+do so tomorrow morning so you may want to wait a bit with v4.
 
-      C source: // SPDX-License-Identifier: <SPDX License Expression>
-      C header: /* SPDX-License-Identifier: <SPDX License Expression> */
+Regards,
 
-And:
+Hans
 
-   If a specific tool cannot handle the standard comment style, then the
-   appropriate comment mechanism which the tool accepts shall be used. This
-   is the reason for having the "/\* \*/" style comment in C header
-   files. There was build breakage observed with generated .lds files where
-   'ld' failed to parse the C++ comment. This has been fixed by now, but
-   there are still older assembler tools which cannot handle C++ style
-   comments.
 
-The ones that got in are probably either old or they slipped through
-(and they do not break the build).
-
-Cheers,
-Miguel
+> +
+> +	return sw;
+>   }
+>   EXPORT_SYMBOL_GPL(usb_role_switch_get);
+>   
+> @@ -122,8 +129,10 @@ EXPORT_SYMBOL_GPL(usb_role_switch_get);
+>    */
+>   void usb_role_switch_put(struct usb_role_switch *sw)
+>   {
+> -	if (!IS_ERR_OR_NULL(sw))
+> +	if (!IS_ERR_OR_NULL(sw)) {
+>   		put_device(&sw->dev);
+> +		module_put(sw->dev.parent->driver->owner);
+> +	}
+>   }
+>   EXPORT_SYMBOL_GPL(usb_role_switch_put);
+>   
+> 
