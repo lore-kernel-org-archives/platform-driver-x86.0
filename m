@@ -1,63 +1,115 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v3 02/10] usb: roles: Handle driver reference counting
-Date: Fri, 7 Sep 2018 12:48:07 +0300
-Message-ID: <20180907094807.GH25121@kuha.fi.intel.com>
-References: <20180904112219.89287-1-heikki.krogerus@linux.intel.com>
- <20180904112219.89287-3-heikki.krogerus@linux.intel.com>
- <881eb4df-3e77-3475-1ec7-02b060b7ad83@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v13 11/13] platform/x86: Intel SGX driver
+Date: Fri, 7 Sep 2018 10:02:40 -0700
+Message-ID: <20180907170240.GA21376@linux.intel.com>
+References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
+ <20180827185507.17087-12-jarkko.sakkinen@linux.intel.com>
+ <CAHp75VcqKunkHYNdd287_F7APHwYr7K9QD2PVCkqBqJWG2_E-g@mail.gmail.com>
+ <20180905173355.GE11368@linux.intel.com>
+ <CAHp75Vc2SZUfRnBPZ9xJ_B=KJL7yK9hqRZiFOTswn0AzjnLD1A@mail.gmail.com>
+ <20180906092100.GA27302@linux.intel.com>
+ <CANiq72kpY1y2aPH+GMi8mWZdttfdYJ3wk0cvE_qVD97vdvTJbQ@mail.gmail.com>
+ <5137f85388e26ea1ed46b34901b0f18540aee7cb.camel@perches.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <881eb4df-3e77-3475-1ec7-02b060b7ad83@redhat.com>
-Sender: stable-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, stable@vger.kernel.org
+In-Reply-To: <5137f85388e26ea1ed46b34901b0f18540aee7cb.camel@perches.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, serge.ayoun@intel.com, shay.katz-zamir@intel.com, "Siddha, Suresh B" <suresh.b.siddha@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>, Eric Biggers <ebiggers@google.com>, Linux Kernel Mailing List <linux-kernel@>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Sep 06, 2018 at 10:59:34PM +0200, Hans de Goede wrote:
-> HI,
+On Thu, Sep 06, 2018 at 05:50:01PM -0700, Joe Perches wrote:
+> On Thu, 2018-09-06 at 19:35 +0200, Miguel Ojeda wrote:
+> > > Which one is right and why the kernel tree is polluted with C99-headers
+> > > when they do not pass checkpatch.pl?
 > 
-> On 04-09-18 13:22, Heikki Krogerus wrote:
-> > This fixes potential "BUG: unable to handle kernel paging
-> > request at ..." from happening.
-> > 
-> > Fixes: fde0aa6c175a ("usb: common: Small class for USB role switches")
-> > Cc: <stable@vger.kernel.org>
-> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > ---
-> >   drivers/usb/common/roles.c | 15 ++++++++++++---
-> >   1 file changed, 12 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/usb/common/roles.c b/drivers/usb/common/roles.c
-> > index 15cc76e22123..3d8a776e55ee 100644
-> > --- a/drivers/usb/common/roles.c
-> > +++ b/drivers/usb/common/roles.c
-> > @@ -109,8 +109,15 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
-> >    */
-> >   struct usb_role_switch *usb_role_switch_get(struct device *dev)
-> >   {
-> > -	return device_connection_find_match(dev, "usb-role-switch", NULL,
-> > -					    usb_role_switch_match);
-> > +	struct usb_role_switch *sw;
-> > +
-> > +	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
-> > +					  usb_role_switch_match);
-> > +
-> > +	if (!IS_ERR(sw))
-> > +		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
-> 
-> While testing I found a bug, so sorry but this is going to need a v4,
-> device_connection_find_match() may return NULL here, so this needs
-> to be if (!IS_ERR_OR_NULL(sw)) to avoid an oops.
-> 
-> Note I'm also seeing some other issues which I need to debug I will
-> do so tomorrow morning so you may want to wait a bit with v4.
+> checkpatch ignores c99 headers since 2016.
 
-Np. Take your time. And thanks for testing these.
+Jarkko was referring to c99 comments for the SPDX license.  checkpatch
+explicitly requires c-style comments for headers and assembly files as
+dictated by Documentation/process/license-rules.rst.  
 
+$ grep -r SPDX **/*.h | grep \/\/ | wc -l
+665
 
-Cheers,
+$ grep -r SPDX **/*.S | grep \/\/ | wc -l
+22
 
--- 
-heikki
+$ git show 9f3a89926d6df
+commit 9f3a89926d6dfc30a4fd1bbcb92cc7b218d3786d
+Author: Rob Herring <robh@kernel.org>
+Date:   Tue Apr 10 16:33:13 2018 -0700
+
+    checkpatch.pl: add SPDX license tag check
+
+    Add SPDX license tag check based on the rules defined in
+    Documentation/process/license-rules.rst.  To summarize, SPDX license
+    tags should be on the 1st line (or 2nd line in scripts) using the
+    appropriate comment style for the file type.
+
+    Link: http://lkml.kernel.org/r/20180202154026.15298-1-robh@kernel.org
+    Signed-off-by: Rob Herring <robh@kernel.org>
+    Signed-off-by: Joe Perches <joe@perches.com>
+    Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Acked-by: Philippe Ombredanne <pombredanne@nexb.com>
+    Cc: Andy Whitcroft <apw@canonical.com>
+    Cc: Joe Perches <joe@perches.com>
+    Cc: Thomas Gleixner <tglx@linutronix.de>
+    Cc: Igor Stoppa <igor.stoppa@huawei.com>
+    Cc: Jonathan Corbet <corbet@lwn.net>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index b464a4c3f863..0f022b56f117 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2257,6 +2257,8 @@ sub process {
+
+        my $camelcase_file_seeded = 0;
+
++       my $checklicenseline = 1;
++
+        sanitise_line_reset();
+        my $line;
+        foreach my $rawline (@rawlines) {
+@@ -2448,6 +2450,7 @@ sub process {
+                        } else {
+                                $check = $check_orig;
+                        }
++                       $checklicenseline = 1;
+                        next;
+                }
+
+@@ -2911,6 +2914,30 @@ sub process {
+                        }
+                }
+
++# check for using SPDX license tag at beginning of files
++               if ($realline == $checklicenseline) {
++                       if ($rawline =~ /^[ \+]\s*\#\!\s*\//) {
++                               $checklicenseline = 2;
++                       } elsif ($rawline =~ /^\+/) {
++                               my $comment = "";
++                               if ($realfile =~ /\.(h|s|S)$/) {
++                                       $comment = '/*';
++                               } elsif ($realfile =~ /\.(c|dts|dtsi)$/) {
++                                       $comment = '//';
++                               } elsif (($checklicenseline == 2) || $realfile =~ /\.(sh|pl|py|awk|tc)$/) {
++                                       $comment = '#';
++                               } elsif ($realfile =~ /\.rst$/) {
++                                       $comment = '..';
++                               }
++
++                               if ($comment !~ /^$/ &&
++                                   $rawline !~ /^\+\Q$comment\E SPDX-License-Identifier: /) {
++                                       WARN("SPDX_LICENSE_TAG",
++                                            "Missing or malformed SPDX-License-Identifier tag in line $checklicenseline\n" . $herecurr);
++                               }
++                       }
++               }
++
+ # check we are in a valid source file if not then ignore this hunk
+                next if ($realfile !~ /\.(h|c|s|S|sh|dtsi|dts)$/);
