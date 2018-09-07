@@ -1,14 +1,14 @@
 From: Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: [PATCH AUTOSEL 3.18 19/19] platform/x86: toshiba_acpi: Fix defined
- but not used build warnings
-Date: Fri, 7 Sep 2018 00:39:39 +0000
-Message-ID: <20180907003923.58019-19-alexander.levin@microsoft.com>
-References: <20180907003923.58019-1-alexander.levin@microsoft.com>
+Subject: [PATCH AUTOSEL 4.4 29/30] platform/x86: toshiba_acpi: Fix defined but
+ not used build warnings
+Date: Fri, 7 Sep 2018 00:39:18 +0000
+Message-ID: <20180907003853.57942-29-alexander.levin@microsoft.com>
+References: <20180907003853.57942-1-alexander.levin@microsoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180907003923.58019-1-alexander.levin@microsoft.com>
+In-Reply-To: <20180907003853.57942-1-alexander.levin@microsoft.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: "stable@vger.kernel.org" <stable@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -37,18 +37,18 @@ Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/tos=
 hiba_acpi.c
-index ab6151f05420..c0b64e571a5e 100644
+index f774cb576ffa..1ff95b5a429d 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -41,6 +41,7 @@
- #define TOSHIBA_ACPI_VERSION	"0.20"
+@@ -34,6 +34,7 @@
+ #define TOSHIBA_ACPI_VERSION	"0.23"
  #define PROC_INTERFACE_VERSION	1
 =20
 +#include <linux/compiler.h>
  #include <linux/kernel.h>
  #include <linux/module.h>
  #include <linux/init.h>
-@@ -1233,7 +1234,7 @@ static const struct file_operations keys_proc_fops =
+@@ -1472,7 +1473,7 @@ static const struct file_operations keys_proc_fops =
 =3D {
  	.write		=3D keys_proc_write,
  };
