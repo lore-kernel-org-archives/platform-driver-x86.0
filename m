@@ -1,115 +1,53 @@
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v13 11/13] platform/x86: Intel SGX driver
-Date: Fri, 7 Sep 2018 10:02:40 -0700
-Message-ID: <20180907170240.GA21376@linux.intel.com>
-References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
- <20180827185507.17087-12-jarkko.sakkinen@linux.intel.com>
- <CAHp75VcqKunkHYNdd287_F7APHwYr7K9QD2PVCkqBqJWG2_E-g@mail.gmail.com>
- <20180905173355.GE11368@linux.intel.com>
- <CAHp75Vc2SZUfRnBPZ9xJ_B=KJL7yK9hqRZiFOTswn0AzjnLD1A@mail.gmail.com>
- <20180906092100.GA27302@linux.intel.com>
- <CANiq72kpY1y2aPH+GMi8mWZdttfdYJ3wk0cvE_qVD97vdvTJbQ@mail.gmail.com>
- <5137f85388e26ea1ed46b34901b0f18540aee7cb.camel@perches.com>
+From: Yves-Alexis Perez <corsac-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Fix
+ multi-battery bug
+Date: Fri, 07 Sep 2018 13:41:01 +0200
+Message-ID: <6c62d06dee6572f7d03280ed9e9f6d7b7d9babf1.camel@debian.org>
+References: <20180801114747.qrjclik665ya7oh5@khazad-dum.debian.net>
+ <20180801222418.21892-1-linux@weissschuh.net>
+ <CAHp75VeprNMVniQ_KrQRU9v3kt4kxEnHYO+ds5pOYokvv=0YdQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5137f85388e26ea1ed46b34901b0f18540aee7cb.camel@perches.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, serge.ayoun@intel.com, shay.katz-zamir@intel.com, "Siddha, Suresh B" <suresh.b.siddha@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>, Eric Biggers <ebiggers@google.com>, Linux Kernel Mailing List <linux-kernel@>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <CAHp75VeprNMVniQ_KrQRU9v3kt4kxEnHYO+ds5pOYokvv=0YdQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <linux-9XfqOkM5JgxKQ7RDE2T8Pw@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Ognjen Galic <smclt30p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Sep 06, 2018 at 05:50:01PM -0700, Joe Perches wrote:
-> On Thu, 2018-09-06 at 19:35 +0200, Miguel Ojeda wrote:
-> > > Which one is right and why the kernel tree is polluted with C99-headers
-> > > when they do not pass checkpatch.pl?
-> 
-> checkpatch ignores c99 headers since 2016.
-
-Jarkko was referring to c99 comments for the SPDX license.  checkpatch
-explicitly requires c-style comments for headers and assembly files as
-dictated by Documentation/process/license-rules.rst.  
-
-$ grep -r SPDX **/*.h | grep \/\/ | wc -l
-665
-
-$ grep -r SPDX **/*.S | grep \/\/ | wc -l
-22
-
-$ git show 9f3a89926d6df
-commit 9f3a89926d6dfc30a4fd1bbcb92cc7b218d3786d
-Author: Rob Herring <robh@kernel.org>
-Date:   Tue Apr 10 16:33:13 2018 -0700
-
-    checkpatch.pl: add SPDX license tag check
-
-    Add SPDX license tag check based on the rules defined in
-    Documentation/process/license-rules.rst.  To summarize, SPDX license
-    tags should be on the 1st line (or 2nd line in scripts) using the
-    appropriate comment style for the file type.
-
-    Link: http://lkml.kernel.org/r/20180202154026.15298-1-robh@kernel.org
-    Signed-off-by: Rob Herring <robh@kernel.org>
-    Signed-off-by: Joe Perches <joe@perches.com>
-    Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Acked-by: Philippe Ombredanne <pombredanne@nexb.com>
-    Cc: Andy Whitcroft <apw@canonical.com>
-    Cc: Joe Perches <joe@perches.com>
-    Cc: Thomas Gleixner <tglx@linutronix.de>
-    Cc: Igor Stoppa <igor.stoppa@huawei.com>
-    Cc: Jonathan Corbet <corbet@lwn.net>
-    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index b464a4c3f863..0f022b56f117 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2257,6 +2257,8 @@ sub process {
-
-        my $camelcase_file_seeded = 0;
-
-+       my $checklicenseline = 1;
-+
-        sanitise_line_reset();
-        my $line;
-        foreach my $rawline (@rawlines) {
-@@ -2448,6 +2450,7 @@ sub process {
-                        } else {
-                                $check = $check_orig;
-                        }
-+                       $checklicenseline = 1;
-                        next;
-                }
-
-@@ -2911,6 +2914,30 @@ sub process {
-                        }
-                }
-
-+# check for using SPDX license tag at beginning of files
-+               if ($realline == $checklicenseline) {
-+                       if ($rawline =~ /^[ \+]\s*\#\!\s*\//) {
-+                               $checklicenseline = 2;
-+                       } elsif ($rawline =~ /^\+/) {
-+                               my $comment = "";
-+                               if ($realfile =~ /\.(h|s|S)$/) {
-+                                       $comment = '/*';
-+                               } elsif ($realfile =~ /\.(c|dts|dtsi)$/) {
-+                                       $comment = '//';
-+                               } elsif (($checklicenseline == 2) || $realfile =~ /\.(sh|pl|py|awk|tc)$/) {
-+                                       $comment = '#';
-+                               } elsif ($realfile =~ /\.rst$/) {
-+                                       $comment = '..';
-+                               }
-+
-+                               if ($comment !~ /^$/ &&
-+                                   $rawline !~ /^\+\Q$comment\E SPDX-License-Identifier: /) {
-+                                       WARN("SPDX_LICENSE_TAG",
-+                                            "Missing or malformed SPDX-License-Identifier tag in line $checklicenseline\n" . $herecurr);
-+                               }
-+                       }
-+               }
-+
- # check we are in a valid source file if not then ignore this hunk
-                next if ($realfile !~ /\.(h|c|s|S|sh|dtsi|dts)$/);
+LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQpIYXNoOiBTSEEyNTYKCk9uIE1vbiwg
+MjAxOC0wOC0wNiBhdCAxNjoyNCArMDMwMCwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOgo+IE9uIFRo
+dSwgQXVnIDIsIDIwMTggYXQgMToyNCBBTSwgVGhvbWFzIFdlacOfc2NodWggPGxpbnV4QHdlaXNz
+c2NodWgubmV0PiB3cm90ZToKPiA+IFRoZSBzdHJ1Y3QgY29udGFpbmluZyB0aGUgc3VwcG9ydGVk
+IG9wZXJhdGlvbnMgZm9yIGFsbCBiYXR0ZXJpZXMgaXMKPiA+IGJlaW5nIHplcm9lZCBvbiBlYWNo
+IGJhdHRlcnkgcHJvYmUuICBUaGlzIHByZXZlbnRzIGFsbCBvdGhlciBiYXR0ZXJpZXMKPiA+IGV4
+Y2VwdCB0aGUgbGFzdGx5IHByb2JlZCBvbmUgZnJvbSBiZWluZyBjb25maWd1cmVkLgo+IAo+IFlv
+dSBmb3Jnb3QgdG8gaW5jbHVkZSBzdWJzeXN0ZW0gbWFpbnRhaW5lcnMgYWxvbmcgd2l0aCBkcml2
+ZXIgbWFpbnRhaW5lci4KPiAKPiBJIHB1c2hlZCB0aGlzIHRvIG15IHJldmlldyBhbmQgdGVzdGlu
+ZyBxdWV1ZSwgbWVhbndoaWxlIEkgd291bGQgd2FpdAo+IGZvciBBY2sgZnJvbSBIZW5yaXF1ZS4K
+CkhpIEFuZHksIFRob21hcyBhbmQgSGVucmlxdWUsCgp3YXMgdGhpcyBpbmNsdWRlZCBpbiBhbnkg
+dHJlZSBhbmQgaXMgaXQgb24gcm91dGUgdG8gTGludXMgc29tZWhvdz8KCk15IFRoaW5rUGFkIFgy
+NTAgaGFzIHR3byBiYXR0ZXJpZXMgYW5kIEkgY2FuIG9ubHkgY29uZmlndXJlIHRocmVzaG9sZCBv
+biBCQVQwLAphbmQgSSBndWVzcyBpdCdzIGJlY2F1c2Ugb2YgdGhpcywgc28gaXQnZCBiZSBuaWNl
+IHRvIGhhdmUgaXQgZml4ZWQgKGFuZCBtYXliZQpiYWNrcG9ydGVkIHRvIHJlbGV2YW50IHN0YWJs
+ZSBrZXJuZWxzKS4KClJlZ2FyZHMsCi0gLS0gCll2ZXMtQWxleGlzCi0tLS0tQkVHSU4gUEdQIFNJ
+R05BVFVSRS0tLS0tCgppUUV6QkFFQkNBQWRGaUVFOHZpMzRRZ2ZvODN4MzVnRjNyWWN5UHBYUkZz
+RkFsdVNZODBBQ2drUTNyWWN5UHBYClJGc2M5UWYrTko0emxLTnpmeGgyRWh0cjRuOE5vNlgvZXFT
+SEQxSndxMjhlTnpZbTh3VW11SXdRZHpSeVlDZ0EKcG5zZXhlKzdRRGVEWU5IZ3IyNTFsVGR2ais2
+SXozZHdMRS9XQ0xQQ3huWGE4SmEwMk1HWnhSeVl0MVhpR2lZdQp4bUdQOFA2MkFlMzg0eE5hbFV0
+aThIeFg5anVHSklIdXBUQ0ZVVVljS250Z21ZczdZU1cvVWttL0pYL051UTJoClFkZXhqdXF1Z3hz
+U00zNWRIWXpDOVM5VnVtRnZzNWVkOG9Ib2RlSWtVTW9GZ0gxQkNpcUEzTmloODdNa24rWmQKd3VG
+V0ptOXZrZW02bHlTWEdqbHVzUmJPcmtoT2FkQ09QNlJ0Tkc0Y1NmSlBZTnIyR2JQa3liNXcxdVZ2
+K005NQpYTjl4V2MwcHYyd1R2SnM5M3NnWmdVUjFGYSsvSlE9PQo9dk43VwotLS0tLUVORCBQR1Ag
+U0lHTkFUVVJFLS0tLS0KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwppYm0tYWNwaS1kZXZlbCBtYWlsaW5nIGxpc3QKaWJtLWFjcGktZGV2ZWxAbGlzdHMu
+c291cmNlZm9yZ2UubmV0Cmh0dHBzOi8vbGlzdHMuc291cmNlZm9yZ2UubmV0L2xpc3RzL2xpc3Rp
+bmZvL2libS1hY3BpLWRldmVsCg==
