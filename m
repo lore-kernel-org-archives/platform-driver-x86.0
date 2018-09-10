@@ -1,82 +1,99 @@
-From: "Xu, Pinzhen" <pinzhen.xu@intel.com>
-Subject: Memory leak in dell-smbios-wmi.c
-Date: Mon, 10 Sep 2018 02:45:12 +0000
-Message-ID: <9B08B519B25F86498FA0D010F395E43DED0AD3@shsmsx102.ccr.corp.intel.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: Re: [RFC PATCH] platform/x86: asus-wmi: Simplify the keyboard
+ brightness updating process
+Date: Mon, 10 Sep 2018 16:56:55 +0800
+Message-ID: <CAPpJ_eeK68jvMQ02hR2i+eP8Xo9YyWWUGYqG7e6dsWP=XTTCyQ@mail.gmail.com>
+References: <20180816084104.434-1-jian-hong@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <20180816084104.434-1-jian-hong@endlessm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>
+Cc: Jian-Hong Pan <jian-hong@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-There might be a possible memory leak in drivers/platform/x86/dell-smbios-wmi.c
-In the `run_smbios_call' function, the buffer created via ACPI_ALLOCATE_BUFFER
-within the output object is not freed properly.
+2018-08-16 16:41 GMT+08:00 Jian-Hong Pan <jian-hong@endlessm.com>:
+> The original asus-wmi queues a work which calls the ACPI/WMI methods to
+> update the keyboard LED brightness.  Similar drivers - acer-wmi,
+> dell-wmi-led just call the ACPI/WMI methods directly without workqueues.
+>
+> This patch simplifies the keyboard brightness updating process which
+> calls the kbd_led_update function directly without workqueue in
+> asus-wmi.
+>
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 14 ++++----------
+>  1 file changed, 4 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 34dcc1aac4ea..d3d500851a7a 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -239,7 +239,6 @@ struct asus_wmi {
+>         int lightbar_led_wk;
+>         struct workqueue_struct *led_workqueue;
+>         struct work_struct tpd_led_work;
+> -       struct work_struct kbd_led_work;
+>         struct work_struct wlan_led_work;
+>         struct work_struct lightbar_led_work;
+>
+> @@ -456,12 +455,9 @@ static enum led_brightness tpd_led_get(struct led_classdev *led_cdev)
+>         return read_tpd_led_state(asus);
+>  }
+>
+> -static void kbd_led_update(struct work_struct *work)
+> +static void kbd_led_update(struct asus_wmi *asus)
+>  {
+>         int ctrl_param = 0;
+> -       struct asus_wmi *asus;
+> -
+> -       asus = container_of(work, struct asus_wmi, kbd_led_work);
+>
+>         /*
+>          * bits 0-2: level
+> @@ -516,7 +512,7 @@ static void do_kbd_led_set(struct led_classdev *led_cdev, int value)
+>                 value = 0;
+>
+>         asus->kbd_led_wk = value;
+> -       queue_work(asus->led_workqueue, &asus->kbd_led_work);
+> +       kbd_led_update(asus);
+>  }
+>
+>  static void kbd_led_set(struct led_classdev *led_cdev,
+> @@ -671,8 +667,6 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+>
+>         led_val = kbd_led_read(asus, NULL, NULL);
+>         if (led_val >= 0) {
+> -               INIT_WORK(&asus->kbd_led_work, kbd_led_update);
+> -
+>                 asus->kbd_led_wk = led_val;
+>                 asus->kbd_led.name = "asus::kbd_backlight";
+>                 asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
+> @@ -2314,7 +2308,7 @@ static int asus_hotk_resume(struct device *device)
+>         struct asus_wmi *asus = dev_get_drvdata(device);
+>
+>         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
+> -               queue_work(asus->led_workqueue, &asus->kbd_led_work);
+> +               kbd_led_update(asus);
+>
+>         return 0;
+>  }
+> @@ -2350,7 +2344,7 @@ static int asus_hotk_restore(struct device *device)
+>                 rfkill_set_sw_state(asus->uwb.rfkill, bl);
+>         }
+>         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
+> -               queue_work(asus->led_workqueue, &asus->kbd_led_work);
+> +               kbd_led_update(asus);
+>
+>         return 0;
+>  }
+> --
+> 2.11.0
+>
 
+Just gentle ping.  Any comment for this patch?
 
-Generally, this buffer should be freed using:
-  kfree(output.pointer);
-
-
-But it hasn't been cleaned up after a `memcpy' being done.
-static int run_smbios_call(struct wmi_device *wdev)
-{
-      struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
-      struct wmi_smbios_priv *priv;
-      struct acpi_buffer input;
-      union acpi_object *obj;
-      acpi_status status;
-
-      priv = dev_get_drvdata(&wdev->dev);
-      input.length = priv->req_buf_size - sizeof(u64);
-      input.pointer = &priv->buf->std;
-
-      dev_dbg(&wdev->dev, "evaluating: %u/%u [%x,%x,%x,%x]\n",
-            priv->buf->std.cmd_class, priv->buf->std.cmd_select,
-            priv->buf->std.input[0], priv->buf->std.input[1],
-            priv->buf->std.input[2], priv->buf->std.input[3]);
-
-      status = wmidev_evaluate_method(wdev, 0, 1, &input, &output);
-      if (ACPI_FAILURE(status))
-            return -EIO;
-      obj = (union acpi_object *)output.pointer;
-      if (obj->type != ACPI_TYPE_BUFFER) {
-            dev_dbg(&wdev->dev, "received type: %d\n", obj->type);
-            if (obj->type == ACPI_TYPE_INTEGER)
-                  dev_dbg(&wdev->dev, "SMBIOS call failed: %llu\n",
-                        obj->integer.value);
-            return -EIO;
-      }
-      memcpy(&priv->buf->std, obj->buffer.pointer, obj->buffer.length);
-      dev_dbg(&wdev->dev, "result: [%08x,%08x,%08x,%08x]\n",
-            priv->buf->std.output[0], priv->buf->std.output[1],
-            priv->buf->std.output[2], priv->buf->std.output[3]);
-
-      return 0;
-}
-
-
-Found with kmemleak:
-unreferenced object 0xffff8f79382e0000 (size 8192):
-  comm "fwupd", pid 3467, jiffies 4294967131 (age 265623.160s)
-  hex dump (first 32 bytes):
-    03 00 00 00 00 10 00 00 18 00 2e 38 79 8f ff ff  ...........8y...
-    00 00 00 00 00 00 00 00 11 00 16 00 00 00 00 00  ................
-  backtrace:
-    [<0000000000d8a77d>] __kmalloc+0x14e/0x240
-    [<00000000affbc59b>] acpi_os_allocate+0x27/0x29
-    [<000000003fd4a388>] acpi_ut_initialize_buffer+0x3f/0x73
-    [<0000000027ecea33>] acpi_evaluate_object+0x22b/0x3aa
-    [<00000000e26b12ce>] wmidev_evaluate_method+0x114/0x150 [wmi]
-    [<00000000ccecc6ff>] run_smbios_call+0x6d/0x190 [dell_smbios]
-    [<00000000e8e58b51>] dell_smbios_wmi_filter+0x71/0xd0 [dell_smbios]
-    [<00000000c3818758>] wmi_ioctl+0x100/0x232 [wmi]
-    [<00000000cbfe4a18>] do_vfs_ioctl+0xa8/0x620
-    [<0000000035f23e13>] ksys_ioctl+0x67/0x90
-    [<00000000b3776114>] __x64_sys_ioctl+0x1a/0x20
-    [<00000000477604b1>] do_syscall_64+0x5a/0x110
-    [<00000000a6b58460>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [<00000000fa4ff21e>] 0xffffffffffffffff
+Regards,
+Jian-Hong Pan
