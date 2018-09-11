@@ -1,58 +1,115 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v4 02/10] usb: roles: Handle driver reference counting
-Date: Tue, 11 Sep 2018 13:10:36 +0300
-Message-ID: <20180911101044.44004-3-heikki.krogerus@linux.intel.com>
-References: <20180911101044.44004-1-heikki.krogerus@linux.intel.com>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20180911101044.44004-1-heikki.krogerus@linux.intel.com>
-Sender: stable-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, stable@vger.kernel.org
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v13 09/13] x86/sgx: Enclave Page Cache (EPC) memory
+ manager
+Date: Tue, 11 Sep 2018 08:04:39 -0700
+Message-ID: <1536678279.5992.9.camel@intel.com>
+References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
+         <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
+Cc: dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Suresh Siddha <suresh.b.siddha@intel.com>, Serge Ayoun <serge.ayoun@intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This fixes potential "BUG: unable to handle kernel paging
-request at ..." from happening.
+On Mon, 2018-08-27 at 21:53 +0300, Jarkko Sakkinen wrote:
+> Add a Enclave Page Cache (EPC) memory manager that can be used to
+> allocate and free EPC pages. The swapper thread ksgxswapd reclaims pages
+> on the event when the number of free EPC pages goes below
+> %SGX_NR_LOW_PAGES up until it reaches %SGX_NR_HIGH_PAGES.
+> 
+> Pages are reclaimed in LRU fashion from a global list. The consumers
+> take care of calling EBLOCK (block page from new accesses), ETRACK
+> (restart counting the entering hardware threads) and EWB (write page to
+> the regular memory) because executing these operations usually (if not
+> always) requires to do some subsystem-internal locking operations.
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/include/asm/sgx.h      |  56 ++++--
+>  arch/x86/kernel/cpu/intel_sgx.c | 322 ++++++++++++++++++++++++++++++++
+>  2 files changed, 362 insertions(+), 16 deletions(-)
 
-Fixes: fde0aa6c175a ("usb: common: Small class for USB role switches")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/usb/common/roles.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+...
 
-diff --git a/drivers/usb/common/roles.c b/drivers/usb/common/roles.c
-index 15cc76e22123..99116af07f1d 100644
---- a/drivers/usb/common/roles.c
-+++ b/drivers/usb/common/roles.c
-@@ -109,8 +109,15 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
-  */
- struct usb_role_switch *usb_role_switch_get(struct device *dev)
- {
--	return device_connection_find_match(dev, "usb-role-switch", NULL,
--					    usb_role_switch_match);
-+	struct usb_role_switch *sw;
-+
-+	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
-+					  usb_role_switch_match);
-+
-+	if (!IS_ERR_OR_NULL(sw))
-+		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
-+
-+	return sw;
- }
- EXPORT_SYMBOL_GPL(usb_role_switch_get);
- 
-@@ -122,8 +129,10 @@ EXPORT_SYMBOL_GPL(usb_role_switch_get);
-  */
- void usb_role_switch_put(struct usb_role_switch *sw)
- {
--	if (!IS_ERR_OR_NULL(sw))
-+	if (!IS_ERR_OR_NULL(sw)) {
- 		put_device(&sw->dev);
-+		module_put(sw->dev.parent->driver->owner);
-+	}
- }
- EXPORT_SYMBOL_GPL(usb_role_switch_put);
- 
--- 
-2.18.0
+> +/**
+> + * sgx_reclaim_pages - reclaim EPC pages from the consumers
+> + *
+> + * Takes a fixed chunk of pages from the global list of consumed EPC pages and
+> + * tries to swap them. Only the pages that are either being freed by the
+> + * consumer or actively used are skipped.
+> + */
+> +static void sgx_reclaim_pages(void)
+> +{
+> +	struct sgx_epc_page *chunk[SGX_NR_TO_SCAN + 1];
+
+The array size should simply be SGX_NR_TO_SCAN.  The +1 is a remnant
+from the previous version that bounded the for-loops with "!chunk[i]"
+check instead of "i < j".  No functional issue, essentially just an
+unused variable.
+
+> +	struct sgx_epc_page *epc_page;
+> +	struct sgx_epc_bank *bank;
+> +	int i, j;
+> +
+> +	spin_lock(&sgx_active_page_list_lock);
+> +	for (i = 0, j = 0; i < SGX_NR_TO_SCAN; i++) {
+> +		if (list_empty(&sgx_active_page_list))
+> +			break;
+> +
+> +		epc_page = list_first_entry(&sgx_active_page_list,
+> +					    struct sgx_epc_page, list);
+> +		list_del_init(&epc_page->list);
+> +
+> +		if (epc_page->impl->ops->get(epc_page))
+> +			chunk[j++] = epc_page;
+> +		else
+> +			epc_page->desc &= ~SGX_EPC_PAGE_RECLAIMABLE;
+> +	}
+> +	spin_unlock(&sgx_active_page_list_lock);
+> +
+> +	for (i = 0; i < j; i++) {
+> +		epc_page = chunk[i];
+> +		if (epc_page->impl->ops->reclaim(epc_page))
+> +			continue;
+> +
+> +		spin_lock(&sgx_active_page_list_lock);
+> +		list_add_tail(&epc_page->list, &sgx_active_page_list);
+> +		spin_unlock(&sgx_active_page_list_lock);
+> +
+> +		epc_page->impl->ops->put(epc_page);
+> +		chunk[i] = NULL;
+> +	}
+> +
+> +	for (i = 0; i < j; i++) {
+> +		epc_page = chunk[i];
+> +		if (epc_page)
+> +			epc_page->impl->ops->block(epc_page);
+> +	}
+> +
+> +	for (i = 0; i < j; i++) {
+> +		epc_page = chunk[i];
+> +		if (epc_page) {
+> +			epc_page->impl->ops->write(epc_page);
+> +			epc_page->impl->ops->put(epc_page);
+> +
+> +			/*
+> +			 * Put the page back on the free list only after we
+> +			 * have put() our reference to the owner of the EPC
+> +			 * page, otherwise the page could be re-allocated and
+> +			 * we'd call put() on the wrong impl.
+> +			 */
+> +			epc_page->desc &= ~SGX_EPC_PAGE_RECLAIMABLE;
+> +
+> +			bank = sgx_epc_bank(epc_page);
+> +			spin_lock(&bank->lock);
+> +			bank->pages[bank->free_cnt++] = epc_page;
+> +			spin_unlock(&bank->lock);
+> +		}
+> +	}
+> +}
