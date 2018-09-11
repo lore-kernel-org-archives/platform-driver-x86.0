@@ -1,38 +1,90 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v13 11/13] platform/x86: Intel SGX driver
-Date: Mon, 10 Sep 2018 14:22:58 -0700
-Message-ID: <5582ed9b297db98ddb713b240e6059acf26bb8a7.camel@perches.com>
-References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
-         <20180827185507.17087-12-jarkko.sakkinen@linux.intel.com>
-         <CAHp75VcqKunkHYNdd287_F7APHwYr7K9QD2PVCkqBqJWG2_E-g@mail.gmail.com>
-         <20180905173355.GE11368@linux.intel.com>
-         <CAHp75Vc2SZUfRnBPZ9xJ_B=KJL7yK9hqRZiFOTswn0AzjnLD1A@mail.gmail.com>
-         <20180906092100.GA27302@linux.intel.com>
-         <CANiq72kpY1y2aPH+GMi8mWZdttfdYJ3wk0cvE_qVD97vdvTJbQ@mail.gmail.com>
-         <5137f85388e26ea1ed46b34901b0f18540aee7cb.camel@perches.com>
-         <20180910183744.GB20225@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180910183744.GB20225@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, serge.ayoun@intel.com, shay.katz-zamir@intel.com, "Siddha, Suresh B" <suresh.b.siddha@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>, Eric Biggers <ebiggers@google.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH v4 01/10] usb: typec: Take care of driver module reference counting
+Date: Tue, 11 Sep 2018 13:10:35 +0300
+Message-ID: <20180911101044.44004-2-heikki.krogerus@linux.intel.com>
+References: <20180911101044.44004-1-heikki.krogerus@linux.intel.com>
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180911101044.44004-1-heikki.krogerus@linux.intel.com>
+Sender: stable-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 2018-09-10 at 21:37 +0300, Jarkko Sakkinen wrote:
-> On Thu, Sep 06, 2018 at 05:50:01PM -0700, Joe Perches wrote:
-> > On Thu, 2018-09-06 at 19:35 +0200, Miguel Ojeda wrote:
-> > > > Which one is right and why the kernel tree is polluted with C99-headers
-> > > > when they do not pass checkpatch.pl?
-> > 
-> > checkpatch ignores c99 headers since 2016.
-> 
-> For headers I get these warnings:
-> 
-> WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
-> #243: FILE: drivers/platform/x86/intel_sgx/sgx.h:1:
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+Functions typec_mux_get() and typec_switch_get() already
+make sure that the mux device reference count is
+incremented, but the same must be done to the driver module
+as well to prevent the drivers from being unloaded in the
+middle of operation.
 
-Because .h files are supposed to use /* */
+This fixes a potential "BUG: unable to handle kernel paging
+request at ..." from happening.
+
+Fixes: 93dd2112c7b2 ("usb: typec: mux: Get the mux identifier from function parameter")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/usb/typec/mux.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/typec/mux.c b/drivers/usb/typec/mux.c
+index ddaac63ecf12..d990aa510fab 100644
+--- a/drivers/usb/typec/mux.c
++++ b/drivers/usb/typec/mux.c
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/list.h>
++#include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/usb/typec_mux.h>
+ 
+@@ -49,8 +50,10 @@ struct typec_switch *typec_switch_get(struct device *dev)
+ 	mutex_lock(&switch_lock);
+ 	sw = device_connection_find_match(dev, "typec-switch", NULL,
+ 					  typec_switch_match);
+-	if (!IS_ERR_OR_NULL(sw))
++	if (!IS_ERR_OR_NULL(sw)) {
++		WARN_ON(!try_module_get(sw->dev->driver->owner));
+ 		get_device(sw->dev);
++	}
+ 	mutex_unlock(&switch_lock);
+ 
+ 	return sw;
+@@ -65,8 +68,10 @@ EXPORT_SYMBOL_GPL(typec_switch_get);
+  */
+ void typec_switch_put(struct typec_switch *sw)
+ {
+-	if (!IS_ERR_OR_NULL(sw))
++	if (!IS_ERR_OR_NULL(sw)) {
++		module_put(sw->dev->driver->owner);
+ 		put_device(sw->dev);
++	}
+ }
+ EXPORT_SYMBOL_GPL(typec_switch_put);
+ 
+@@ -136,8 +141,10 @@ struct typec_mux *typec_mux_get(struct device *dev, const char *name)
+ 
+ 	mutex_lock(&mux_lock);
+ 	mux = device_connection_find_match(dev, name, NULL, typec_mux_match);
+-	if (!IS_ERR_OR_NULL(mux))
++	if (!IS_ERR_OR_NULL(mux)) {
++		WARN_ON(!try_module_get(mux->dev->driver->owner));
+ 		get_device(mux->dev);
++	}
+ 	mutex_unlock(&mux_lock);
+ 
+ 	return mux;
+@@ -152,8 +159,10 @@ EXPORT_SYMBOL_GPL(typec_mux_get);
+  */
+ void typec_mux_put(struct typec_mux *mux)
+ {
+-	if (!IS_ERR_OR_NULL(mux))
++	if (!IS_ERR_OR_NULL(mux)) {
++		module_put(mux->dev->driver->owner);
+ 		put_device(mux->dev);
++	}
+ }
+ EXPORT_SYMBOL_GPL(typec_mux_put);
+ 
+-- 
+2.18.0
