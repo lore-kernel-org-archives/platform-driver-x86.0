@@ -1,7 +1,7 @@
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v4 01/10] usb: typec: Take care of driver module reference counting
-Date: Tue, 11 Sep 2018 13:10:35 +0300
-Message-ID: <20180911101044.44004-2-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v4 02/10] usb: roles: Handle driver reference counting
+Date: Tue, 11 Sep 2018 13:10:36 +0300
+Message-ID: <20180911101044.44004-3-heikki.krogerus@linux.intel.com>
 References: <20180911101044.44004-1-heikki.krogerus@linux.intel.com>
 Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20180911101044.44004-1-heikki.krogerus@linux.intel.com>
@@ -10,81 +10,49 @@ To: Hans de Goede <hdegoede@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundat
 Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Functions typec_mux_get() and typec_switch_get() already
-make sure that the mux device reference count is
-incremented, but the same must be done to the driver module
-as well to prevent the drivers from being unloaded in the
-middle of operation.
-
-This fixes a potential "BUG: unable to handle kernel paging
+This fixes potential "BUG: unable to handle kernel paging
 request at ..." from happening.
 
-Fixes: 93dd2112c7b2 ("usb: typec: mux: Get the mux identifier from function parameter")
+Fixes: fde0aa6c175a ("usb: common: Small class for USB role switches")
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- drivers/usb/typec/mux.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/usb/common/roles.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/typec/mux.c b/drivers/usb/typec/mux.c
-index ddaac63ecf12..d990aa510fab 100644
---- a/drivers/usb/typec/mux.c
-+++ b/drivers/usb/typec/mux.c
-@@ -9,6 +9,7 @@
- 
- #include <linux/device.h>
- #include <linux/list.h>
-+#include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/usb/typec_mux.h>
- 
-@@ -49,8 +50,10 @@ struct typec_switch *typec_switch_get(struct device *dev)
- 	mutex_lock(&switch_lock);
- 	sw = device_connection_find_match(dev, "typec-switch", NULL,
- 					  typec_switch_match);
--	if (!IS_ERR_OR_NULL(sw))
-+	if (!IS_ERR_OR_NULL(sw)) {
-+		WARN_ON(!try_module_get(sw->dev->driver->owner));
- 		get_device(sw->dev);
-+	}
- 	mutex_unlock(&switch_lock);
- 
- 	return sw;
-@@ -65,8 +68,10 @@ EXPORT_SYMBOL_GPL(typec_switch_get);
+diff --git a/drivers/usb/common/roles.c b/drivers/usb/common/roles.c
+index 15cc76e22123..99116af07f1d 100644
+--- a/drivers/usb/common/roles.c
++++ b/drivers/usb/common/roles.c
+@@ -109,8 +109,15 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
   */
- void typec_switch_put(struct typec_switch *sw)
+ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ {
+-	return device_connection_find_match(dev, "usb-role-switch", NULL,
+-					    usb_role_switch_match);
++	struct usb_role_switch *sw;
++
++	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
++					  usb_role_switch_match);
++
++	if (!IS_ERR_OR_NULL(sw))
++		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
++
++	return sw;
+ }
+ EXPORT_SYMBOL_GPL(usb_role_switch_get);
+ 
+@@ -122,8 +129,10 @@ EXPORT_SYMBOL_GPL(usb_role_switch_get);
+  */
+ void usb_role_switch_put(struct usb_role_switch *sw)
  {
 -	if (!IS_ERR_OR_NULL(sw))
 +	if (!IS_ERR_OR_NULL(sw)) {
-+		module_put(sw->dev->driver->owner);
- 		put_device(sw->dev);
+ 		put_device(&sw->dev);
++		module_put(sw->dev.parent->driver->owner);
 +	}
  }
- EXPORT_SYMBOL_GPL(typec_switch_put);
- 
-@@ -136,8 +141,10 @@ struct typec_mux *typec_mux_get(struct device *dev, const char *name)
- 
- 	mutex_lock(&mux_lock);
- 	mux = device_connection_find_match(dev, name, NULL, typec_mux_match);
--	if (!IS_ERR_OR_NULL(mux))
-+	if (!IS_ERR_OR_NULL(mux)) {
-+		WARN_ON(!try_module_get(mux->dev->driver->owner));
- 		get_device(mux->dev);
-+	}
- 	mutex_unlock(&mux_lock);
- 
- 	return mux;
-@@ -152,8 +159,10 @@ EXPORT_SYMBOL_GPL(typec_mux_get);
-  */
- void typec_mux_put(struct typec_mux *mux)
- {
--	if (!IS_ERR_OR_NULL(mux))
-+	if (!IS_ERR_OR_NULL(mux)) {
-+		module_put(mux->dev->driver->owner);
- 		put_device(mux->dev);
-+	}
- }
- EXPORT_SYMBOL_GPL(typec_mux_put);
+ EXPORT_SYMBOL_GPL(usb_role_switch_put);
  
 -- 
 2.18.0
