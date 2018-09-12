@@ -1,65 +1,49 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: sony-laptop: Mark expected switch
- fall-through
-Date: Tue, 11 Sep 2018 15:51:21 -0700
-Message-ID: <20180911225121.GE5659@wrath>
-References: <20180705204703.GA12352@embeddedor.com>
- <20180706232427.GC3041@fury>
- <20180707185616.GA7168@taihen.jp>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 1/2] platform/x86: dell-smbios-wmi: Correct a memory leak
+Date: Wed, 12 Sep 2018 12:14:34 +0000
+Message-ID: <d140b6171dfe4e748b7491f4955c07be@ausx13mpc120.AMER.DELL.COM>
+References: <1536602513-13861-1-git-send-email-mario.limonciello@dell.com>
+ <20180910205139.GC5659@wrath>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180707185616.GA7168@taihen.jp>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mattia Dongili <malattia@linux.it>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180910205139.GC5659@wrath>
+Content-Language: en-US
+Sender: stable-owner@vger.kernel.org
+To: dvhart@infradead.org
+Cc: andy.shevchenko@gmail.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Jul 08, 2018 at 03:56:17AM +0900, Mattia Dongili wrote:
-> On Fri, Jul 06, 2018 at 04:24:27PM -0700, Darren Hart wrote:
-> > On Thu, Jul 05, 2018 at 03:47:03PM -0500, Gustavo A. R. Silva wrote:
-> > > In preparation to enabling -Wimplicit-fallthrough, mark switch cases
-> > > where we are expecting to fall through.
-> > > 
-> > > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> > > ---
-> > >  drivers/platform/x86/sony-laptop.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-> > > index b205b03..e614cb7 100644
-> > > --- a/drivers/platform/x86/sony-laptop.c
-> > > +++ b/drivers/platform/x86/sony-laptop.c
-> > > @@ -4427,6 +4427,7 @@ sony_pic_read_possible_resource(struct acpi_resource *resource, void *context)
-> > >  	default:
-> > >  		dprintk("Resource %d isn't an IRQ nor an IO port\n",
-> > >  			resource->type);
-> > > +		/* fall through */
-> > 
-> > Here too, I wonder if this is intentional. Either way, from what I can see, the
-> > final line in the function:
-> > 
-> > 	return AE_CTRL_TERMINATE;
-> > 
-> > Is unreachable as there are no "break" statements in the switch, and the default
-> > falls through to return AE_OK. Something doesn't seem right here.
-> 
-> I think so too. Looks to me that the default case was meant to return
-> AE_CTRL_TERMINATE (i.e. swapping it to be last would do).
-> 
-> Having written that code aeons ago, I'm not sure if there is a good
-> reason to be like that, though it still looks like a bug (that
-> existed ever since...).
-> 
-> Want to fix it as part of this patch series? Or I can send a patch
-> myself, let me know.
+Darren,
 
-Mattia,
+> -----Original Message-----
+> From: Darren Hart [mailto:dvhart@infradead.org]
+> Sent: Monday, September 10, 2018 3:52 PM
+> To: Limonciello, Mario
+> Cc: Andy Shevchenko; LKML; platform-driver-x86@vger.kernel.org;
+> stable@vger.kernel.org
+> Subject: Re: [PATCH 1/2] platform/x86: dell-smbios-wmi: Correct a memory =
+leak
+>=20
+> On Mon, Sep 10, 2018 at 01:01:52PM -0500, Mario Limonciello wrote:
+> > ACPI buffers were being allocated but never freed.
+> >
+> > Reported-by: Pinzhen Xu <pinzhen.xu@intel.com>
+> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> > Cc: stable@vger.kernel.org
+>=20
+> Thanks Mario and Pinzhen, both queued. That's an easy one to miss, the us=
+age not
+> being particularly obvious.
+>=20
 
-I'd prefer to decouple the fix from the implicit fall through discussion. Please
-send a separate fix.
+This cropped up and is fixed by that patch:
+https://github.com/dell/libsmbios/issues/63
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+Given the impact and how small the patch is, I think it might be good if th=
+is can come to 4.19-rcX if possible.
+Thoughts?
+
+I suspect this one might be the same issue too:
+https://bugzilla.redhat.com/show_bug.cgi?id=3D1627609
