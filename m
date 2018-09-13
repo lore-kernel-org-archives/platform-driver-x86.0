@@ -1,19 +1,19 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 28/78] platform/x86: intel_punit_ipc: fix build errors
-Date: Thu, 13 Sep 2018 15:31:15 +0200
-Message-ID: <20180913131808.353589565@linuxfoundation.org>
-References: <20180913131805.732342940@linuxfoundation.org>
+Subject: [PATCH 4.14 037/115] platform/x86: intel_punit_ipc: fix build errors
+Date: Thu, 13 Sep 2018 15:30:57 +0200
+Message-ID: <20180913131825.993778835@linuxfoundation.org>
+References: <20180913131823.327472833@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180913131805.732342940@linuxfoundation.org>
+In-Reply-To: <20180913131823.327472833@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Zha Qipeng <qipeng.zha@intel.com>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <alexander.levin@microsoft.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
