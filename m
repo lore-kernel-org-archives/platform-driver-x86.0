@@ -1,33 +1,32 @@
-From: Al Viro <viro@ZenIV.linux.org.uk>
-Subject: Re: [PATCH v2 05/17] compat_ioctl: move more drivers to
- generic_compat_ioctl_ptrarg
-Date: Fri, 14 Sep 2018 21:57:48 +0100
-Message-ID: <20180914205748.GC19965@ZenIV.linux.org.uk>
-References: <20180912150142.157913-1-arnd@arndb.de>
- <20180912151134.436719-1-arnd@arndb.de>
- <20180914203506.GE35251@wrath>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v13 09/13] x86/sgx: Enclave Page Cache (EPC) memory
+ manager
+Date: Sun, 16 Sep 2018 14:40:11 +0300
+Message-ID: <20180916114011.GA5040@linux.intel.com>
+References: <20180827185507.17087-1-jarkko.sakkinen@linux.intel.com>
+ <20180827185507.17087-10-jarkko.sakkinen@linux.intel.com>
+ <1536678279.5992.9.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180914203506.GE35251@wrath>
-Sender: netdev-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-fsdevel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, qat-linux@intel.com, linux-crypto@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, linux-rdma@vger.kernel.org, linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-remoteproc@vger.kernel.org, sparclinux@vger.kernel.org, linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-btrfs@vg
+In-Reply-To: <1536678279.5992.9.camel@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com, linux-sgx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Suresh Siddha <suresh.b.siddha@intel.com>, Serge Ayoun <serge.ayoun@intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Sep 14, 2018 at 01:35:06PM -0700, Darren Hart wrote:
- 
-> Acked-by: Darren Hart (VMware) <dvhart@infradead.org>
+On Tue, Sep 11, 2018 at 08:04:39AM -0700, Sean Christopherson wrote:
+> > +static void sgx_reclaim_pages(void)
+> > +{
+> > +	struct sgx_epc_page *chunk[SGX_NR_TO_SCAN + 1];
 > 
-> As for a longer term solution, would it be possible to init fops in such
-> a way that the compat_ioctl call defaults to generic_compat_ioctl_ptrarg
-> so we don't have to duplicate this boilerplate for every ioctl fops
-> structure?
+> The array size should simply be SGX_NR_TO_SCAN.  The +1 is a remnant
+> from the previous version that bounded the for-loops with "!chunk[i]"
+> check instead of "i < j".  No functional issue, essentially just an
+> unused variable.
 
-	Bad idea, that...  Because several years down the road somebody will add
-an ioctl that takes an unsigned int for argument.  Without so much as looking
-at your magical mystery macro being used to initialize file_operations.
+Thanks, yep, it is cruft.
 
-	FWIW, I would name that helper in more blunt way - something like
-compat_ioctl_only_compat_pointer_ioctls_here()...
+/Jarkko
