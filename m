@@ -1,51 +1,52 @@
-From: Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH v2 05/17] compat_ioctl: move more drivers to
- generic_compat_ioctl_ptrarg
-Date: Tue, 18 Sep 2018 11:59:52 -0600
-Message-ID: <20180918175952.GJ11367@ziepe.ca>
-References: <20180912150142.157913-1-arnd@arndb.de>
- <20180912151134.436719-1-arnd@arndb.de>
- <20180914203506.GE35251@wrath>
- <20180914205748.GC19965@ZenIV.linux.org.uk>
- <20180918175108.GF35251@wrath>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: intel_int0002_vgpio: Enable the driver on Bay Trail platforms
+Date: Wed, 19 Sep 2018 20:14:51 +0200
+Message-ID: <20180919181451.8771-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180918175108.GF35251@wrath>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-fsdevel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, qat-linux@intel.com, linux-crypto@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, amd-gfx@lists.freedesktop.org, linux-input@vger.kernel.org, linux-iio@vger.kernel.org, linux-rdma@vger.kernel.org, linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-remoteproc@vger.kernel.org, sparclinux@vger.kernel.org, linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org, linuxppc-d
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Sep 18, 2018 at 10:51:08AM -0700, Darren Hart wrote:
-> On Fri, Sep 14, 2018 at 09:57:48PM +0100, Al Viro wrote:
-> > On Fri, Sep 14, 2018 at 01:35:06PM -0700, Darren Hart wrote:
-> >  
-> > > Acked-by: Darren Hart (VMware) <dvhart@infradead.org>
-> > > 
-> > > As for a longer term solution, would it be possible to init fops in such
-> > > a way that the compat_ioctl call defaults to generic_compat_ioctl_ptrarg
-> > > so we don't have to duplicate this boilerplate for every ioctl fops
-> > > structure?
-> > 
-> > 	Bad idea, that...  Because several years down the road somebody will add
-> > an ioctl that takes an unsigned int for argument.  Without so much as looking
-> > at your magical mystery macro being used to initialize file_operations.
-> 
-> Fair, being explicit in the declaration as it is currently may be
-> preferable then.
+The intel_int0002_vgpio driver was added to avoid an IRQ 9 storm on Cherry
+Trail platforms.
 
-It would be much cleaner and safer if you could arrange things to add
-something like this to struct file_operations:
+When originally merged the CPU ID for Bay Trail SoCs was commented out
+of the list of valid CPU IDs because we did not have any reports of the
+IRQ storm on Bay Trail platforms.
 
-  long (*ptr_ioctl) (struct file *, unsigned int, void __user *);
+We now have a report of the IRQ 9 storm on the Bay Trail based Thinkpad
+Tablet 10 which is fixed by enabling this driver, so lets enable it on
+Bay Trail too.
 
-Where the core code automatically converts the unsigned long to the
-void __user * as appropriate.
+I've tested various other Bay Trail device with this driver enabled
+without adverse side-effects.
 
-Then it just works right always and the compiler will help address
-Al's concern down the road.
+BugLink: https://www.dpin.de/nf/finally-s0i3-is-there-thinkpad-tablet-10-sleeps-deeply-with-linux-kernel-4-15rc/#comments
+Reported-and-tested-by: Nicole Faerber <nicole@id3p.de>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/intel_int0002_vgpio.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-Cheers,
-Jason
+diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+index a473dc51b18d..987a3b03f225 100644
+--- a/drivers/platform/x86/intel_int0002_vgpio.c
++++ b/drivers/platform/x86/intel_int0002_vgpio.c
+@@ -57,11 +57,7 @@
+ #define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
+ 
+ static const struct x86_cpu_id int0002_cpu_ids[] = {
+-/*
+- * Limit ourselves to Cherry Trail for now, until testing shows we
+- * need to handle the INT0002 device on Baytrail too.
+- *	ICPU(INTEL_FAM6_ATOM_SILVERMONT1),	 * Valleyview, Bay Trail *
+- */
++	ICPU(INTEL_FAM6_ATOM_SILVERMONT1),	/* Valleyview, Bay Trail  */
+ 	ICPU(INTEL_FAM6_ATOM_AIRMONT),		/* Braswell, Cherry Trail */
+ 	{}
+ };
+-- 
+2.19.0.rc1
