@@ -1,44 +1,45 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: [PATCH 4/6] platform/x86: acerhdf: Add BIOS entry for Gateway LT31 v1.3307
-Date: Thu, 20 Sep 2018 21:44:19 -0400
-Message-ID: <20180921014421.30804-5-paul.gortmaker@windriver.com>
+From: "Peter Feuerer" <peter@piie.net>
+Subject: Re: [PATCH 0/6] platform/x86: acerhdf: new BIOS string, better
+ modparam handling
+Date: Fri, 21 Sep 2018 06:20:27 +0000
+Message-ID: <f401b6fed813afb86f5442c7707bf9fb@piie.net>
 References: <20180921014421.30804-1-paul.gortmaker@windriver.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180921014421.30804-1-paul.gortmaker@windriver.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>, Peter Feuerer <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+To: Paul Gortmaker <paul.gortmaker@windriver.com>, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-To fix:
+Hi,
 
-  acerhdf: unknown (unsupported) BIOS version Gateway  /LT31   /v1.3307 , please report, aborting!
+21. September 2018 03:45, "Paul Gortmaker" <paul.gortmaker@windriver.com> schrieb:
 
-As can be seen in the context, the BIOS registers haven't changed in
-the previous versions, so the assumption is they won't have changed
-in this last update for this somewhat older platform either.
+> I came across this older netbook over the xmas holidays, and noticed the
+> acerhdf driver wouldn't load. Turns out the BIOS string was too new,
+> and not listed in the driver. There were module params for overrides,
+> but I found their use isn't quite clear without reading the source.
+> 
+> Here I clarify some of the module parameter usage, and then add the new
+> BIOS string, so they won't be needed for this particular platform. Some
+> probe code is also shifted out to be __init to reduce the driver size a
+> bit. Further details can be found in the respective commit logs.
+> 
+> Since it was months ago when I created these patches, I retested on top
+> of tree to ensure things still work, as can be seen below.
 
-Cc: Peter Feuerer <peter@piie.net>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
----
- drivers/platform/x86/acerhdf.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks a lot for your work and this set of changes.  This improves quality.
+I reviewed all 6 patches.
 
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index fef3b727bc24..eddcd8e94a88 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -236,6 +236,7 @@ static const struct bios_settings bios_tbl[] = {
- 	{"Gateway", "LT31",   "v1.3201",  0x55, 0x58, {0x9e, 0x00}, 0},
- 	{"Gateway", "LT31",   "v1.3302",  0x55, 0x58, {0x9e, 0x00}, 0},
- 	{"Gateway", "LT31",   "v1.3303t", 0x55, 0x58, {0x9e, 0x00}, 0},
-+	{"Gateway", "LT31",   "v1.3307",  0x55, 0x58, {0x9e, 0x00}, 0},
- 	/* Packard Bell */
- 	{"Packard Bell", "DOA150",  "v0.3104",  0x55, 0x58, {0x21, 0x00}, 0},
- 	{"Packard Bell", "DOA150",  "v0.3105",  0x55, 0x58, {0x20, 0x00}, 0},
+Reviewed-by: Peter Feuerer <peter@piie.net>
+
+Please also add CC: Boris Petkov <bp@suse.de> for review.
+
+[...]
+
 -- 
-2.15.0
+kind regards,
+--peter;
