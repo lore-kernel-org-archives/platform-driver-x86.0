@@ -1,52 +1,65 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] platform/x86: intel_int0002_vgpio: Enable the driver on Bay Trail platforms
-Date: Wed, 19 Sep 2018 20:14:51 +0200
-Message-ID: <20180919181451.8771-1-hdegoede@redhat.com>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: [PATCH 1/6] platform/x86: acerhdf: clarify modinfo messages for BIOS override
+Date: Thu, 20 Sep 2018 21:44:16 -0400
+Message-ID: <20180921014421.30804-2-paul.gortmaker@windriver.com>
+References: <20180921014421.30804-1-paul.gortmaker@windriver.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180921014421.30804-1-paul.gortmaker@windriver.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>, Peter Feuerer <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The intel_int0002_vgpio driver was added to avoid an IRQ 9 storm on Cherry
-Trail platforms.
+Normally, a module parameter for a BIOS check override implies "pretend
+you support this version" (and the user will enter their local version).
 
-When originally merged the CPU ID for Bay Trail SoCs was commented out
-of the list of valid CPU IDs because we did not have any reports of the
-IRQ storm on Bay Trail platforms.
+However, this driver uses the model/BIOS module parameters in a way that
+is "pretend my system is the supported model XYZ with BIOS version ABC."
+which is less common.
 
-We now have a report of the IRQ 9 storm on the Bay Trail based Thinkpad
-Tablet 10 which is fixed by enabling this driver, so lets enable it on
-Bay Trail too.
+Since the help strings don't make such a distinction, one gets this
+somewhat frustrating scenario, where the user sees the error, enters
+*their* BIOS version and then gets the same error:
 
-I've tested various other Bay Trail device with this driver enabled
-without adverse side-effects.
+  root@gw:~# modprobe acerhdf
+  acerhdf: Acer Aspire One Fan driver, v.0.7.0
+  acerhdf: unknown (unsupported) BIOS version Gateway  /LT31   /v1.3307 , please report, aborting!
+  modprobe: ERROR: could not insert 'acerhdf': Invalid argument
 
-BugLink: https://www.dpin.de/nf/finally-s0i3-is-there-thinkpad-tablet-10-sleeps-deeply-with-linux-kernel-4-15rc/#comments
-Reported-and-tested-by: Nicole Faerber <nicole@id3p.de>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+  root@gw:~# modprobe acerhdf force_bios=v1.3307
+  acerhdf: Acer Aspire One Fan driver, v.0.7.0
+  acerhdf: forcing BIOS version: v1.3307
+  acerhdf: unknown (unsupported) BIOS version Gateway  /LT31   /v1.3307 , please report, aborting!
+  modprobe: ERROR: could not insert 'acerhdf': Invalid argument
+
+Clarify the module param help text to make it clear that the driver
+expects a choice from existing supported models/versions.
+
+Cc: Peter Feuerer <peter@piie.net>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 ---
- drivers/platform/x86/intel_int0002_vgpio.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/platform/x86/acerhdf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
-index a473dc51b18d..987a3b03f225 100644
---- a/drivers/platform/x86/intel_int0002_vgpio.c
-+++ b/drivers/platform/x86/intel_int0002_vgpio.c
-@@ -57,11 +57,7 @@
- #define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
+diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+index ea22591ee66f..3d5c4e183111 100644
+--- a/drivers/platform/x86/acerhdf.c
++++ b/drivers/platform/x86/acerhdf.c
+@@ -105,9 +105,9 @@ MODULE_PARM_DESC(fanoff, "Turn the fan off below this temperature");
+ module_param(verbose, uint, 0600);
+ MODULE_PARM_DESC(verbose, "Enable verbose dmesg output");
+ module_param_string(force_bios, force_bios, 16, 0);
+-MODULE_PARM_DESC(force_bios, "Force BIOS version and omit BIOS check");
++MODULE_PARM_DESC(force_bios, "Pretend system has this known supported BIOS version");
+ module_param_string(force_product, force_product, 16, 0);
+-MODULE_PARM_DESC(force_product, "Force BIOS product and omit BIOS check");
++MODULE_PARM_DESC(force_product, "Pretend system is this known supported model");
  
- static const struct x86_cpu_id int0002_cpu_ids[] = {
--/*
-- * Limit ourselves to Cherry Trail for now, until testing shows we
-- * need to handle the INT0002 device on Baytrail too.
-- *	ICPU(INTEL_FAM6_ATOM_SILVERMONT1),	 * Valleyview, Bay Trail *
-- */
-+	ICPU(INTEL_FAM6_ATOM_SILVERMONT1),	/* Valleyview, Bay Trail  */
- 	ICPU(INTEL_FAM6_ATOM_AIRMONT),		/* Braswell, Cherry Trail */
- 	{}
- };
+ /*
+  * cmd_off: to switch the fan completely off and check if the fan is off
 -- 
-2.19.0.rc1
+2.15.0
