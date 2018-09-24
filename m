@@ -1,58 +1,59 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.18 084/235] platform/x86: toshiba_acpi: Fix defined but not used build warnings
-Date: Mon, 24 Sep 2018 13:51:10 +0200
-Message-ID: <20180924113113.427659361@linuxfoundation.org>
-References: <20180924113103.999624566@linuxfoundation.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: intel_int0002_vgpio: Implement irq_set_wake
+Date: Mon, 24 Sep 2018 16:37:19 +0200
+Message-ID: <20180924143719.22191-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180924113103.999624566@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, "Darren Hart (VMware)" <dvhart@infradead.org>, Sasha Levin <alexander.levin@microsoft.com>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-4.18-stable review patch.  If anyone has any objections, please let me know.
+We were relying on the interrupt being shared with the ACPI SCI and the
+ACPI core calling irq_set_wake. But that does not always happen on
+Bay Trail devices, so we should do it ourselves.
 
-------------------
+This fixes wake from USB not working on various Bay Trail devices.
 
-From: Randy Dunlap <rdunlap@infradead.org>
-
-[ Upstream commit c2e2a618eb7104e18fdcf739d4d911563812a81c ]
-
-Fix a build warning in toshiba_acpi.c when CONFIG_PROC_FS is not enabled
-by marking the unused function as __maybe_unused.
-
-../drivers/platform/x86/toshiba_acpi.c:1685:12: warning: 'version_proc_show' defined but not used [-Wunused-function]
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Azael Avalos <coproscefalo@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Andy Shevchenko <andy@infradead.org>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/toshiba_acpi.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel_int0002_vgpio.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/drivers/platform/x86/toshiba_acpi.c
-+++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -34,6 +34,7 @@
- #define TOSHIBA_ACPI_VERSION	"0.24"
- #define PROC_INTERFACE_VERSION	1
+diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+index 987a3b03f225..33c3489f5bc1 100644
+--- a/drivers/platform/x86/intel_int0002_vgpio.c
++++ b/drivers/platform/x86/intel_int0002_vgpio.c
+@@ -106,6 +106,21 @@ static void int0002_irq_mask(struct irq_data *data)
+ 	outl(gpe_en_reg, GPE0A_EN_PORT);
+ }
  
-+#include <linux/compiler.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-@@ -1682,7 +1683,7 @@ static const struct file_operations keys
- 	.write		= keys_proc_write,
++static int int0002_irq_set_wake(struct irq_data *data, unsigned int on)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	struct platform_device *pdev = to_platform_device(chip->parent);
++	int irq = platform_get_irq(pdev, 0);
++
++	/* Propagate to parent irq */
++	if (on)
++		enable_irq_wake(irq);
++	else
++		disable_irq_wake(irq);
++
++	return 0;
++}
++
+ static irqreturn_t int0002_irq(int irq, void *data)
+ {
+ 	struct gpio_chip *chip = data;
+@@ -128,6 +143,7 @@ static struct irq_chip int0002_irqchip = {
+ 	.irq_ack		= int0002_irq_ack,
+ 	.irq_mask		= int0002_irq_mask,
+ 	.irq_unmask		= int0002_irq_unmask,
++	.irq_set_wake		= int0002_irq_set_wake,
  };
  
--static int version_proc_show(struct seq_file *m, void *v)
-+static int __maybe_unused version_proc_show(struct seq_file *m, void *v)
- {
- 	seq_printf(m, "driver:                  %s\n", TOSHIBA_ACPI_VERSION);
- 	seq_printf(m, "proc_interface:          %d\n", PROC_INTERFACE_VERSION);
+ static int int0002_probe(struct platform_device *pdev)
+-- 
+2.19.0.rc1
