@@ -1,19 +1,19 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 3.18 078/105] platform/x86: toshiba_acpi: Fix defined but not used build warnings
-Date: Mon, 24 Sep 2018 13:34:04 +0200
-Message-ID: <20180924113120.979738431@linuxfoundation.org>
-References: <20180924113113.268650190@linuxfoundation.org>
+Subject: [PATCH 4.4 26/70] platform/x86: toshiba_acpi: Fix defined but not used build warnings
+Date: Mon, 24 Sep 2018 13:52:25 +0200
+Message-ID: <20180924113101.494396911@linuxfoundation.org>
+References: <20180924113058.420454070@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180924113113.268650190@linuxfoundation.org>
+In-Reply-To: <20180924113058.420454070@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, "Darren Hart (VMware)" <dvhart@infradead.org>, Sasha Levin <alexander.levin@microsoft.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-3.18-stable review patch.  If anyone has any objections, please let me know.
+4.4-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -39,15 +39,15 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -41,6 +41,7 @@
- #define TOSHIBA_ACPI_VERSION	"0.20"
+@@ -34,6 +34,7 @@
+ #define TOSHIBA_ACPI_VERSION	"0.23"
  #define PROC_INTERFACE_VERSION	1
  
 +#include <linux/compiler.h>
  #include <linux/kernel.h>
  #include <linux/module.h>
  #include <linux/init.h>
-@@ -1233,7 +1234,7 @@ static const struct file_operations keys
+@@ -1472,7 +1473,7 @@ static const struct file_operations keys
  	.write		= keys_proc_write,
  };
  
