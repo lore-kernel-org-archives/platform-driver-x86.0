@@ -1,45 +1,58 @@
-From: "Peter Feuerer" <peter@piie.net>
-Subject: Re: [PATCH 0/6] platform/x86: acerhdf: new BIOS string, better
- modparam handling
-Date: Fri, 21 Sep 2018 06:20:27 +0000
-Message-ID: <f401b6fed813afb86f5442c7707bf9fb@piie.net>
-References: <20180921014421.30804-1-paul.gortmaker@windriver.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 3.18 078/105] platform/x86: toshiba_acpi: Fix defined but not used build warnings
+Date: Mon, 24 Sep 2018 13:34:04 +0200
+Message-ID: <20180924113120.979738431@linuxfoundation.org>
+References: <20180924113113.268650190@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180921014421.30804-1-paul.gortmaker@windriver.com>
+In-Reply-To: <20180924113113.268650190@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, "Darren Hart (VMware)" <dvhart@infradead.org>, Sasha Levin <alexander.levin@microsoft.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+3.18-stable review patch.  If anyone has any objections, please let me know.
 
-21. September 2018 03:45, "Paul Gortmaker" <paul.gortmaker@windriver.com> schrieb:
+------------------
 
-> I came across this older netbook over the xmas holidays, and noticed the
-> acerhdf driver wouldn't load. Turns out the BIOS string was too new,
-> and not listed in the driver. There were module params for overrides,
-> but I found their use isn't quite clear without reading the source.
-> 
-> Here I clarify some of the module parameter usage, and then add the new
-> BIOS string, so they won't be needed for this particular platform. Some
-> probe code is also shifted out to be __init to reduce the driver size a
-> bit. Further details can be found in the respective commit logs.
-> 
-> Since it was months ago when I created these patches, I retested on top
-> of tree to ensure things still work, as can be seen below.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Thanks a lot for your work and this set of changes.  This improves quality.
-I reviewed all 6 patches.
+[ Upstream commit c2e2a618eb7104e18fdcf739d4d911563812a81c ]
 
-Reviewed-by: Peter Feuerer <peter@piie.net>
+Fix a build warning in toshiba_acpi.c when CONFIG_PROC_FS is not enabled
+by marking the unused function as __maybe_unused.
 
-Please also add CC: Boris Petkov <bp@suse.de> for review.
+../drivers/platform/x86/toshiba_acpi.c:1685:12: warning: 'version_proc_show' defined but not used [-Wunused-function]
 
-[...]
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Azael Avalos <coproscefalo@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Andy Shevchenko <andy@infradead.org>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/platform/x86/toshiba_acpi.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
--- 
-kind regards,
---peter;
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -41,6 +41,7 @@
+ #define TOSHIBA_ACPI_VERSION	"0.20"
+ #define PROC_INTERFACE_VERSION	1
+ 
++#include <linux/compiler.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+@@ -1233,7 +1234,7 @@ static const struct file_operations keys
+ 	.write		= keys_proc_write,
+ };
+ 
+-static int version_proc_show(struct seq_file *m, void *v)
++static int __maybe_unused version_proc_show(struct seq_file *m, void *v)
+ {
+ 	seq_printf(m, "driver:                  %s\n", TOSHIBA_ACPI_VERSION);
+ 	seq_printf(m, "proc_interface:          %d\n", PROC_INTERFACE_VERSION);
