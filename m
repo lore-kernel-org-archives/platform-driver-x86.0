@@ -1,19 +1,19 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 26/70] platform/x86: toshiba_acpi: Fix defined but not used build warnings
-Date: Mon, 24 Sep 2018 13:52:25 +0200
-Message-ID: <20180924113101.494396911@linuxfoundation.org>
-References: <20180924113058.420454070@linuxfoundation.org>
+Subject: [PATCH 4.9 041/111] platform/x86: toshiba_acpi: Fix defined but not used build warnings
+Date: Mon, 24 Sep 2018 13:52:08 +0200
+Message-ID: <20180924113108.968250211@linuxfoundation.org>
+References: <20180924113103.337261320@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180924113058.420454070@linuxfoundation.org>
+In-Reply-To: <20180924113103.337261320@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, "Darren Hart (VMware)" <dvhart@infradead.org>, Sasha Levin <alexander.levin@microsoft.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-4.4-stable review patch.  If anyone has any objections, please let me know.
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -40,14 +40,14 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
 @@ -34,6 +34,7 @@
- #define TOSHIBA_ACPI_VERSION	"0.23"
+ #define TOSHIBA_ACPI_VERSION	"0.24"
  #define PROC_INTERFACE_VERSION	1
  
 +#include <linux/compiler.h>
  #include <linux/kernel.h>
  #include <linux/module.h>
- #include <linux/init.h>
-@@ -1472,7 +1473,7 @@ static const struct file_operations keys
+ #include <linux/moduleparam.h>
+@@ -1687,7 +1688,7 @@ static const struct file_operations keys
  	.write		= keys_proc_write,
  };
  
