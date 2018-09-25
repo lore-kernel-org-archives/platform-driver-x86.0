@@ -1,52 +1,69 @@
-From: Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v14 19/19] x86/sgx: Driver documentation
-Date: Tue, 25 Sep 2018 07:27:17 -0600
-Message-ID: <20180925072717.3a41af75@lwn.net>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v14 04/19] x86/cpufeatures: Add SGX feature bits
+Date: Tue, 25 Sep 2018 18:48:54 +0200
+Message-ID: <20180925164854.GF23986@zn.tnic>
 References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
-        <20180925130845.9962-20-jarkko.sakkinen@linux.intel.com>
+ <20180925130845.9962-5-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925130845.9962-20-jarkko.sakkinen@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <20180925130845.9962-5-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, David Wang <davidwang@zhaoxin.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "Levin, Alexander (Sasha Levin)" <alexander.levin@verizon.com>, Jia Zhang <qianyue.zj@alibaba-inc.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 25 Sep 2018 16:06:56 +0300
-Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-
-> Documentation of the features of the Software Guard eXtensions used
-> by the Linux kernel and basic design choices for the core and driver
-> and functionality.
+On Tue, Sep 25, 2018 at 04:06:41PM +0300, Jarkko Sakkinen wrote:
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
 > 
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  Documentation/index.rst         |   1 +
->  Documentation/x86/intel_sgx.rst | 185 ++++++++++++++++++++++++++++++++
->  2 files changed, 186 insertions(+)
->  create mode 100644 Documentation/x86/intel_sgx.rst
-> 
-> diff --git a/Documentation/index.rst b/Documentation/index.rst
-> index 5db7e87c7cb1..1cdc139adb40 100644
-> --- a/Documentation/index.rst
-> +++ b/Documentation/index.rst
-> @@ -104,6 +104,7 @@ implementation.
->     :maxdepth: 2
->  
->     sh/index
-> +   x86/index
+> Add SGX feature bits as part of the Linux defined leaf 8, which
+> currently contains virtualization flags.  There are currently four
+> documented SGX feature bits, with more expected in the not-too-distant
+> future.
 
-So you're adding this reference to x86/index, but the actual file
-(Documentation/x86/index.rst) doesn't exist; that will break the docs
-build.  I do appreciate your doing your document in RST, though!
+...
 
-Who is the intended audience for this document?  I see a bit of UAPI
-stuff that might be better placed in the userspace-api manual, mixed with
-stuff that user-space developers are unlikely to take much interest in.
-Might it be worth splitting this into two pieces?
+> +static void detect_sgx(struct cpuinfo_x86 *c)
+> +{
+> +#define _X86_FEATURE_SGX1		BIT(0)
+> +#define _X86_FEATURE_SGX2		BIT(1)
+> +#define _X86_FEATURE_SGX_ENCLV		BIT(5)
+> +#define _X86_FEATURE_SGX_ENCLS_C	BIT(6)
+> +
+> +	unsigned int eax;
+> +
+> +	clear_cpu_cap(c, X86_FEATURE_SGX1);
+> +	clear_cpu_cap(c, X86_FEATURE_SGX2);
+> +	clear_cpu_cap(c, X86_FEATURE_SGX_ENCLV);
+> +	clear_cpu_cap(c, X86_FEATURE_SGX_ENCLS_C);
+> +
+> +	if (c->cpuid_level < SGX_CPUID) {
+> +		pr_err_once("x86/sgx: cannot enumerate CPUID leaf (0x%x)\n",
+> +			    SGX_CPUID);
+> +		clear_cpu_cap(c, X86_FEATURE_SGX);
+> +		return;
+> +	}
+> +
+> +	eax = cpuid_eax(SGX_CPUID);
+> +
+> +	if (eax & _X86_FEATURE_SGX1)
+> +		set_cpu_cap(c, X86_FEATURE_SGX1);
+> +
+> +	if (eax & _X86_FEATURE_SGX2)
+> +		set_cpu_cap(c, X86_FEATURE_SGX2);
+> +
+> +	if (eax & _X86_FEATURE_SGX_ENCLV)
+> +		set_cpu_cap(c, X86_FEATURE_SGX_ENCLV);
+> +
+> +	if (eax & _X86_FEATURE_SGX_ENCLS_C)
+> +		set_cpu_cap(c, X86_FEATURE_SGX_ENCLS_C);
 
-Thanks,
 
-jon
+Look at arch/x86/kernel/cpu/scattered.c for how to do this properly.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
