@@ -1,7 +1,7 @@
 From: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH 1/5] firmware: dell_rbu: Make payload memory uncachable
-Date: Tue, 25 Sep 2018 14:34:14 -0500
-Message-ID: <20180925193418.28493-2-stuart.hayes@dell.com>
+Subject: [PATCH 3/5] firmware: dell_rbu: Move dell_rbu to drivers/platform/x86
+Date: Tue, 25 Sep 2018 14:34:16 -0500
+Message-ID: <20180925193418.28493-4-stuart.hayes@dell.com>
 References: <20180925193418.28493-1-stuart.hayes@dell.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,56 +14,89 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 From: Stuart Hayes <stuart.w.hayes@gmail.com>
 
-The dell_rbu driver takes firmware update payloads and puts them in memory so
-the system BIOS can find them after a reboot.  This sometimes fails (though
-rarely), because the memory containing the payload is in the CPU cache but
-never gets written back to main memory before the system is rebooted (CPU
-cache contents are lost on reboot).
-
-With this patch, the payload memory will be changed to uncachable to ensure
-that the payload is actually in main memory before the system is rebooted.
-
 Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 ---
-This patch has been discussed previously, see history at
-https://patchwork.kernel.org/patch/10512079/
+ drivers/firmware/Kconfig                      | 12 ------------
+ drivers/firmware/Makefile                     |  1 -
+ drivers/platform/x86/Kconfig                  | 12 ++++++++++++
+ drivers/platform/x86/Makefile                 |  1 +
+ drivers/{firmware => platform/x86}/dell_rbu.c |  0
+ 5 files changed, 13 insertions(+), 13 deletions(-)
+ rename drivers/{firmware => platform/x86}/dell_rbu.c (100%)
 
-
- drivers/firmware/dell_rbu.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/firmware/dell_rbu.c b/drivers/firmware/dell_rbu.c
-index fb8af5cb7c9b..ccefa84f7305 100644
---- a/drivers/firmware/dell_rbu.c
-+++ b/drivers/firmware/dell_rbu.c
-@@ -45,6 +45,7 @@
- #include <linux/moduleparam.h>
- #include <linux/firmware.h>
- #include <linux/dma-mapping.h>
-+#include <asm/set_memory.h>
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index 6e83880046d7..02f39d20efce 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -145,18 +145,6 @@ config EFI_PCDP
+ 	  See DIG64_HCDPv20_042804.pdf available from
+ 	  <http://www.dig64.org/specifications/> 
  
- MODULE_AUTHOR("Abhay Salunke <abhay_salunke@dell.com>");
- MODULE_DESCRIPTION("Driver for updating BIOS image on DELL systems");
-@@ -181,6 +182,11 @@ static int create_packet(void *data, size_t length)
- 			packet_data_temp_buf = NULL;
- 		}
- 	}
-+	/*
-+	 * set to uncachable or it may never get written back before reboot
-+	 */
-+	set_memory_uc((unsigned long)packet_data_temp_buf, 1 << ordernum);
+-config DELL_RBU
+-	tristate "BIOS update support for DELL systems via sysfs"
+-	depends on X86
+-	select FW_LOADER
+-	select FW_LOADER_USER_HELPER
+-	help
+-	 Say m if you want to have the option of updating the BIOS for your
+-	 DELL system. Note you need a Dell OpenManage or Dell Update package (DUP)
+-	 supporting application to communicate with the BIOS regarding the new
+-	 image for the image update to take effect.
+-	 See <file:Documentation/dell_rbu.txt> for more details on the driver.
+-
+ config DCDBAS
+ 	tristate "Dell Systems Management Base Driver"
+ 	depends on X86
+diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+index e18a041cfc53..61887ba9df1d 100644
+--- a/drivers/firmware/Makefile
++++ b/drivers/firmware/Makefile
+@@ -11,7 +11,6 @@ obj-$(CONFIG_DMI)		+= dmi_scan.o
+ obj-$(CONFIG_DMI_SYSFS)		+= dmi-sysfs.o
+ obj-$(CONFIG_EDD)		+= edd.o
+ obj-$(CONFIG_EFI_PCDP)		+= pcdp.o
+-obj-$(CONFIG_DELL_RBU)          += dell_rbu.o
+ obj-$(CONFIG_DCDBAS)		+= dcdbas.o
+ obj-$(CONFIG_DMIID)		+= dmi-id.o
+ obj-$(CONFIG_ISCSI_IBFT_FIND)	+= iscsi_ibft_find.o
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0c1aa6c314f5..cb037da32107 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -227,6 +227,18 @@ config DELL_RBTN
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called dell-rbtn.
+ 
++config DELL_RBU
++	tristate "BIOS update support for DELL systems via sysfs"
++	depends on X86
++	select FW_LOADER
++	select FW_LOADER_USER_HELPER
++	help
++	 Say m if you want to have the option of updating the BIOS for your
++	 DELL system. Note you need a Dell OpenManage or Dell Update package (DUP)
++	 supporting application to communicate with the BIOS regarding the new
++	 image for the image update to take effect.
++	 See <file:Documentation/dell_rbu.txt> for more details on the driver.
 +
- 	spin_lock(&rbu_data.lock);
  
- 	newpacket->data = packet_data_temp_buf;
-@@ -349,6 +355,8 @@ static void packet_empty_list(void)
- 		 * to make sure there are no stale RBU packets left in memory
- 		 */
- 		memset(newpacket->data, 0, rbu_data.packetsize);
-+		set_memory_wb((unsigned long)newpacket->data,
-+			1 << newpacket->ordernum);
- 		free_pages((unsigned long) newpacket->data,
- 			newpacket->ordernum);
- 		kfree(newpacket);
+ config FUJITSU_LAPTOP
+ 	tristate "Fujitsu Laptop Extras"
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index e6d1becf81ce..8843f8e22127 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -23,6 +23,7 @@ obj-$(CONFIG_DELL_WMI_AIO)	+= dell-wmi-aio.o
+ obj-$(CONFIG_DELL_WMI_LED)	+= dell-wmi-led.o
+ obj-$(CONFIG_DELL_SMO8800)	+= dell-smo8800.o
+ obj-$(CONFIG_DELL_RBTN)		+= dell-rbtn.o
++obj-$(CONFIG_DELL_RBU)          += dell_rbu.o
+ obj-$(CONFIG_ACER_WMI)		+= acer-wmi.o
+ obj-$(CONFIG_ACER_WIRELESS)	+= acer-wireless.o
+ obj-$(CONFIG_ACERHDF)		+= acerhdf.o
+diff --git a/drivers/firmware/dell_rbu.c b/drivers/platform/x86/dell_rbu.c
+similarity index 100%
+rename from drivers/firmware/dell_rbu.c
+rename to drivers/platform/x86/dell_rbu.c
 -- 
 2.19.0.221.g150f307af
