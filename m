@@ -1,48 +1,55 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v14 03/19] x86/cpufeature: Add SGX and SGX_LC CPU features
-Date: Tue, 25 Sep 2018 16:06:40 +0300
-Message-ID: <20180925130845.9962-4-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v14 07/19] x86/fault: x86/mm/pkeys: relocate stale comment regarding OSPKE
+Date: Tue, 25 Sep 2018 16:06:44 +0300
+Message-ID: <20180925130845.9962-8-jarkko.sakkinen@linux.intel.com>
 References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Kai Huang <kai.huang@linux.intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, "open list:X86 ARCHITECTURE 32-BIT AND
-        64-BIT" <linux-kernel@vger.kernel.org>
+Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Dave Hansen <dave.hansen@linux.intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 MM" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Kai Huang <kai.huang@linux.intel.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Add X86_FEATURE_SGX and X86_FEATURE_SGX_LC that define the bits
-determining whether the CPU supports SGX and user launch configuration
-i.e. using a custom root key rather the Intel proprietary key for
-enclave signing.
+The code being referenced was moved to a separate helper function
+but the comment was left behind.
 
-Signed-off-by: Kai Huang <kai.huang@linux.intel.com>
+Fixes: 33a709b25a76 ("mm/gup, x86/mm/pkeys: Check VMAs and PTEs for protection keys")
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- arch/x86/include/asm/cpufeatures.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/mm/fault.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 89a048c2faec..7bb647f57d42 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -236,6 +236,7 @@
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
- #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
- #define X86_FEATURE_TSC_ADJUST		( 9*32+ 1) /* TSC adjustment MSR 0x3B */
-+#define X86_FEATURE_SGX			( 9*32+ 2) /* Software Guard Extensions */
- #define X86_FEATURE_BMI1		( 9*32+ 3) /* 1st group bit manipulation extensions */
- #define X86_FEATURE_HLE			( 9*32+ 4) /* Hardware Lock Elision */
- #define X86_FEATURE_AVX2		( 9*32+ 5) /* AVX2 instructions */
-@@ -331,6 +332,7 @@
- #define X86_FEATURE_LA57		(16*32+16) /* 5-level page tables */
- #define X86_FEATURE_RDPID		(16*32+22) /* RDPID instruction */
- #define X86_FEATURE_CLDEMOTE		(16*32+25) /* CLDEMOTE instruction */
-+#define X86_FEATURE_SGX_LC		(16*32+30) /* supports SGX launch configuration */
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 47bebfe6efa7..85d20516b2f3 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -940,6 +940,11 @@ static inline bool bad_area_access_from_pkeys(unsigned long error_code,
+ 	/* This code is always called on the current mm */
+ 	bool foreign = false;
  
- /* AMD-defined CPU features, CPUID level 0x80000007 (EBX), word 17 */
- #define X86_FEATURE_OVERFLOW_RECOV	(17*32+ 0) /* MCA overflow recovery support */
++	/*
++	 * This OSPKE check is not strictly necessary at runtime.
++	 * But, doing it this way allows compiler optimizations
++	 * if pkeys are compiled out.
++	 */
+ 	if (!boot_cpu_has(X86_FEATURE_OSPKE))
+ 		return false;
+ 	if (error_code & X86_PF_PK)
+@@ -955,11 +960,6 @@ static noinline void
+ bad_area_access_error(struct pt_regs *regs, unsigned long error_code,
+ 		      unsigned long address, struct vm_area_struct *vma)
+ {
+-	/*
+-	 * This OSPKE check is not strictly necessary at runtime.
+-	 * But, doing it this way allows compiler optimizations
+-	 * if pkeys are compiled out.
+-	 */
+ 	if (bad_area_access_from_pkeys(error_code, vma))
+ 		__bad_area(regs, error_code, address, vma, SEGV_PKUERR);
+ 	else
 -- 
 2.17.1
