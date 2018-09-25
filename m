@@ -1,69 +1,41 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v14 04/19] x86/cpufeatures: Add SGX feature bits
-Date: Tue, 25 Sep 2018 18:48:54 +0200
-Message-ID: <20180925164854.GF23986@zn.tnic>
-References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
- <20180925130845.9962-5-jarkko.sakkinen@linux.intel.com>
+From: Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: [PATCH 0/5] Update and move Dell drivers dell_rbu and dcdbas
+Date: Tue, 25 Sep 2018 14:34:13 -0500
+Message-ID: <20180925193418.28493-1-stuart.hayes@dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180925130845.9962-5-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, David Wang <davidwang@zhaoxin.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "Levin, Alexander (Sasha Levin)" <alexander.levin@verizon.com>, Jia Zhang <qianyue.zj@alibaba-inc.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mario Limonciello <mario.limonciello@dell.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Stuart Hayes <stuart.w.hayes@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Sep 25, 2018 at 04:06:41PM +0300, Jarkko Sakkinen wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
-> 
-> Add SGX feature bits as part of the Linux defined leaf 8, which
-> currently contains virtualization flags.  There are currently four
-> documented SGX feature bits, with more expected in the not-too-distant
-> future.
+From: Stuart Hayes <stuart.w.hayes@gmail.com>
 
-...
+The dell_rbu and dcdbas drivers need some changes, and should be moved to
+drivers/platform/x86.  Additionally, dell_rbu needs a maintainer, and the
+listed maintainer for dcdbas is inactive and needs to be changed.
 
-> +static void detect_sgx(struct cpuinfo_x86 *c)
-> +{
-> +#define _X86_FEATURE_SGX1		BIT(0)
-> +#define _X86_FEATURE_SGX2		BIT(1)
-> +#define _X86_FEATURE_SGX_ENCLV		BIT(5)
-> +#define _X86_FEATURE_SGX_ENCLS_C	BIT(6)
-> +
-> +	unsigned int eax;
-> +
-> +	clear_cpu_cap(c, X86_FEATURE_SGX1);
-> +	clear_cpu_cap(c, X86_FEATURE_SGX2);
-> +	clear_cpu_cap(c, X86_FEATURE_SGX_ENCLV);
-> +	clear_cpu_cap(c, X86_FEATURE_SGX_ENCLS_C);
-> +
-> +	if (c->cpuid_level < SGX_CPUID) {
-> +		pr_err_once("x86/sgx: cannot enumerate CPUID leaf (0x%x)\n",
-> +			    SGX_CPUID);
-> +		clear_cpu_cap(c, X86_FEATURE_SGX);
-> +		return;
-> +	}
-> +
-> +	eax = cpuid_eax(SGX_CPUID);
-> +
-> +	if (eax & _X86_FEATURE_SGX1)
-> +		set_cpu_cap(c, X86_FEATURE_SGX1);
-> +
-> +	if (eax & _X86_FEATURE_SGX2)
-> +		set_cpu_cap(c, X86_FEATURE_SGX2);
-> +
-> +	if (eax & _X86_FEATURE_SGX_ENCLV)
-> +		set_cpu_cap(c, X86_FEATURE_SGX_ENCLV);
-> +
-> +	if (eax & _X86_FEATURE_SGX_ENCLS_C)
-> +		set_cpu_cap(c, X86_FEATURE_SGX_ENCLS_C);
+Stuart Hayes (5):
+  firmware: dell_rbu: Make payload memory uncachable
+  firmware: dcdbas: Add support for WSMT ACPI table
+  firmware: dell_rbu: Move dell_rbu to drivers/platform/x86
+  firmware: dcdbas: Move dcdbas to drivers/platform/x86
+  MAINTAINERS: Update maintainer for dcdbas and dell_rbu
 
-
-Look at arch/x86/kernel/cpu/scattered.c for how to do this properly.
+ MAINTAINERS                                   |  11 +-
+ drivers/firmware/Kconfig                      |  28 ----
+ drivers/firmware/Makefile                     |   2 -
+ drivers/platform/x86/Kconfig                  |  28 ++++
+ drivers/platform/x86/Makefile                 |   2 +
+ drivers/{firmware => platform/x86}/dcdbas.c   | 123 +++++++++++++++++-
+ drivers/{firmware => platform/x86}/dcdbas.h   |  10 ++
+ drivers/platform/x86/dell-smbios-smm.c        |   2 +-
+ drivers/{firmware => platform/x86}/dell_rbu.c |   8 ++
+ 9 files changed, 175 insertions(+), 39 deletions(-)
+ rename drivers/{firmware => platform/x86}/dcdbas.c (82%)
+ rename drivers/{firmware => platform/x86}/dcdbas.h (93%)
+ rename drivers/{firmware => platform/x86}/dell_rbu.c (98%)
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+2.19.0.221.g150f307af
