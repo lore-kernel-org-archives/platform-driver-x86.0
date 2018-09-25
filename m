@@ -1,55 +1,41 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v14 07/19] x86/fault: x86/mm/pkeys: relocate stale comment regarding OSPKE
-Date: Tue, 25 Sep 2018 16:06:44 +0300
-Message-ID: <20180925130845.9962-8-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v14 06/19] x86/mm: x86/sgx: Add new 'PF_SGX' page fault error code bit
+Date: Tue, 25 Sep 2018 16:06:43 +0300
+Message-ID: <20180925130845.9962-7-jarkko.sakkinen@linux.intel.com>
 References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: x86@kernel.org, platform-driver-x86@vger.kernel.org
-Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Dave Hansen <dave.hansen@linux.intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 MM" <linux-kernel@vger.kernel.org>
+Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Dave Hansen <dave.hansen@linux.intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, Juergen Gross <jgross@suse.com>, "open list:X86 ARCHITECTURE 32-BIT AND
+        64-BIT" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-The code being referenced was moved to a separate helper function
-but the comment was left behind.
+The SGX bit is set in the #PF error code if and only if the fault is
+detected by the Enclave Page Cache Map (EPCM), a hardware-managed
+table that enforces the paging permissions defined by the enclave,
+e.g. to prevent the kernel from changing the permissions of an
+enclave's page(s).
 
-Fixes: 33a709b25a76 ("mm/gup, x86/mm/pkeys: Check VMAs and PTEs for protection keys")
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- arch/x86/mm/fault.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/traps.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 47bebfe6efa7..85d20516b2f3 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -940,6 +940,11 @@ static inline bool bad_area_access_from_pkeys(unsigned long error_code,
- 	/* This code is always called on the current mm */
- 	bool foreign = false;
- 
-+	/*
-+	 * This OSPKE check is not strictly necessary at runtime.
-+	 * But, doing it this way allows compiler optimizations
-+	 * if pkeys are compiled out.
-+	 */
- 	if (!boot_cpu_has(X86_FEATURE_OSPKE))
- 		return false;
- 	if (error_code & X86_PF_PK)
-@@ -955,11 +960,6 @@ static noinline void
- bad_area_access_error(struct pt_regs *regs, unsigned long error_code,
- 		      unsigned long address, struct vm_area_struct *vma)
- {
--	/*
--	 * This OSPKE check is not strictly necessary at runtime.
--	 * But, doing it this way allows compiler optimizations
--	 * if pkeys are compiled out.
--	 */
- 	if (bad_area_access_from_pkeys(error_code, vma))
- 		__bad_area(regs, error_code, address, vma, SEGV_PKUERR);
- 	else
+diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
+index 3de69330e6c5..165c93dd700e 100644
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -162,5 +162,6 @@ enum x86_pf_error_code {
+ 	X86_PF_RSVD	=		1 << 3,
+ 	X86_PF_INSTR	=		1 << 4,
+ 	X86_PF_PK	=		1 << 5,
++	X86_PF_SGX	=		1 << 15,
+ };
+ #endif /* _ASM_X86_TRAPS_H */
 -- 
 2.17.1
