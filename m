@@ -1,7 +1,7 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 13/28] platform/x86: intel_oaktrail: Sort headers alphabetically
-Date: Wed, 26 Sep 2018 19:52:08 +0300
-Message-ID: <20180926165223.19390-13-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 22/28] platform/x86: intel_scu_ipc: Convert to use SPDX identifier
+Date: Wed, 26 Sep 2018 19:52:17 +0300
+Message-ID: <20180926165223.19390-22-andriy.shevchenko@linux.intel.com>
 References: <20180926165223.19390-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,46 +12,68 @@ To: Alex Hung <alex.hung@canonical.com>, Mario Limonciello <mario.limonciello@de
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Sort headers alphabetically for better maintenance.
+Reduce size of duplicated comments by switching to use SPDX identifier.
 
 No functional change.
 
-While here, remove unneeded linux/init.h inclusion.
-
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_oaktrail.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c     |  8 ++------
+ drivers/platform/x86/intel_scu_ipcutil.c | 12 ++++--------
+ 2 files changed, 6 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_oaktrail.c b/drivers/platform/x86/intel_oaktrail.c
-index 5747f63c8d9f..1d98fd9ca1ea 100644
---- a/drivers/platform/x86/intel_oaktrail.c
-+++ b/drivers/platform/x86/intel_oaktrail.c
-@@ -38,18 +38,18 @@
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 3f4b24a33430..cdab916fbf92 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -1,14 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+- * intel_scu_ipc.c: Driver for the Intel SCU IPC mechanism
++ * Driver for the Intel SCU IPC mechanism
+  *
+  * (C) Copyright 2008-2010,2015 Intel Corporation
+  * Author: Sreedhara DS (sreedhara.ds@intel.com)
+  *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License
+- * as published by the Free Software Foundation; version 2
+- * of the License.
+- *
+  * SCU running in ARC processor communicates with other entity running in IA
+  * core through IPC mechanism which in turn messaging between IA core ad SCU.
+  * SCU has two IPC mechanism IPC-1 and IPC-2. IPC-1 is used between IA32 and
+diff --git a/drivers/platform/x86/intel_scu_ipcutil.c b/drivers/platform/x86/intel_scu_ipcutil.c
+index 2a65cabe87f4..8afe6fa06d7b 100644
+--- a/drivers/platform/x86/intel_scu_ipcutil.c
++++ b/drivers/platform/x86/intel_scu_ipcutil.c
+@@ -1,15 +1,11 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+- * intel_scu_ipc.c: Driver for the Intel SCU IPC mechanism
++ * Driver for the Intel SCU IPC mechanism
+  *
+  * (C) Copyright 2008-2010 Intel Corporation
+  * Author: Sreedhara DS (sreedhara.ds@intel.com)
+  *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License
+- * as published by the Free Software Foundation; version 2
+- * of the License.
+- *
+- * This driver provides ioctl interfaces to call intel scu ipc driver api
++ * This driver provides IOCTL interfaces to call Intel SCU IPC driver API.
+  */
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ #include <linux/errno.h>
+@@ -26,7 +22,7 @@
  
--#include <linux/module.h>
--#include <linux/kernel.h>
--#include <linux/init.h>
- #include <linux/acpi.h>
--#include <linux/fb.h>
--#include <linux/mutex.h>
-+#include <linux/backlight.h>
-+#include <linux/dmi.h>
- #include <linux/err.h>
-+#include <linux/fb.h>
- #include <linux/i2c.h>
--#include <linux/backlight.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/platform_device.h>
--#include <linux/dmi.h>
- #include <linux/rfkill.h>
-+
- #include <acpi/video.h>
+ static int major;
  
- #define DRIVER_NAME	"intel_oaktrail"
+-/* ioctl commnds */
++/* IOCTL commands */
+ #define	INTE_SCU_IPC_REGISTER_READ	0
+ #define INTE_SCU_IPC_REGISTER_WRITE	1
+ #define INTE_SCU_IPC_REGISTER_UPDATE	2
 -- 
 2.19.0
