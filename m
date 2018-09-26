@@ -1,57 +1,68 @@
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v14 09/19] x86/mm: x86/sgx: Signal SEGV_SGXERR for #PFs
- w/ PF_SGX
-Date: Wed, 26 Sep 2018 10:35:16 -0700
-Message-ID: <20180926173516.GA10920@linux.intel.com>
-References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
- <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com>
- <CALCETrVAhiwv+g5fzVO3ZSHZgcQKbeeG8r3HUcXO9k7Gi94NdQ@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 3/4] platform/x86: intel_pmc_core: Decode Snoop / Non
+ Snoop LTR
+Date: Wed, 26 Sep 2018 20:42:53 +0300
+Message-ID: <CAHp75Vd96+3cB7PwhftpsTOb8WYg-9WLEQvGYt3rYNB7djX3dg@mail.gmail.com>
+References: <20180903180415.31575-1-rajneesh.bhardwaj@linux.intel.com>
+ <20180903180415.31575-3-rajneesh.bhardwaj@linux.intel.com>
+ <CAHp75VcKSVJQ54qFV1BwqnwUu4dkS6sOACT3nTntJV+Ww56Oag@mail.gmail.com> <d8df94fd-cf7d-197f-0532-24e2da8116a7@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CALCETrVAhiwv+g5fzVO3ZSHZgcQKbeeG8r3HUcXO9k7Gi94NdQ@mail.gmail.com>
+In-Reply-To: <d8df94fd-cf7d-197f-0532-24e2da8116a7@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, LKML <linux-kernel@vger.kernel.org>
+To: rajneesh.bhardwaj@linux.intel.com
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Sep 25, 2018 at 03:53:48PM -0700, Andy Lutomirski wrote:
-> Minor nit:
-> 
-> On Tue, Sep 25, 2018 at 6:12 AM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> >
-> 
-> > by (c) as the kernel doesn't really have any other reasonable option,
-> > e.g. we could kill the task or panic, but neither is warranted.
-> 
-> Not killing the task is quite nice, but...
-> 
-> > +       /*
-> > +        * Access is blocked by the Enclave Page Cache Map (EPCM),
-> > +        * i.e. the access is allowed by the PTE but not the EPCM.
-> > +        * This usually happens when the EPCM is yanked out from
-> > +        * under us, e.g. by hardware after a suspend/resume cycle.
-> > +        * In any case, there is nothing that can be done by the
-> > +        * kernel to resolve the fault (short of killing the task).
-> 
-> Maybe s/killing the task/sending a signal/?
+On Wed, Sep 26, 2018 at 5:19 PM Bhardwaj, Rajneesh
+<rajneesh.bhardwaj@linux.intel.com> wrote:
+> On 26-Sep-18 7:23 PM, Andy Shevchenko wrote:
+> > On Mon, Sep 3, 2018 at 9:05 PM Rajneesh Bhardwaj
+> > <rajneesh.bhardwaj@linux.intel.com> wrote:
 
-My intent was to document that, unlike all other page faults, the
-kernel can't fix the source of the fault even if it were omniscient.
+> >> +static void get_ltr_scale(u32 *val)
+> > What's wrong to return converted value? Actually the name should
+> > reflect what it does, ie *convert* value.
+>
+> I can change it as per your suggestion.
 
-How about this?  With formatting changes since it's long-winded...
+Please do.
 
-        /*
-         * Access is blocked by the Enclave Page Cache Map (EPCM), i.e. the
-         * access is allowed by the PTE but not the EPCM.  This usually happens
-         * when the EPCM is yanked out from under us, e.g. by hardware after a
-         * suspend/resume cycle.  In any case, software, i.e. the kernel, can't
-         * fix the source of the fault as the EPCM can't be directly modified
-         * by software.  Handle the fault as an access error in order to signal
-         * userspace, e.g. so that userspace can rebuild their enclave(s), even
-         * though userspace may not have actually violated access permissions.
-         */
+> >> +union ltr_payload {
+> >> +       u32 raw_data;
+> >> +       struct {
+> >> +       u32 snoop_val : 10;
+> >> +       u32 snoop_scale : 3;
+> >> +       u32 snoop_res : 2;
+> >> +       u32 snoop_req : 1;
+> >> +       u32 non_snoop_val : 10;
+> >> +       u32 non_snoop_scale : 3;
+> >> +       u32 non_snoop_res : 2;
+> >> +       u32 non_snoop_req : 1;
+> >> +       } bits;
+> >> +};
+> > Just use normal masks and shifts.
+>
+> I chose union over masks and shifts to reduce code size and ensured
+> correct endian-ness.
+
+How do you ensure endianess in union if you do nothing to it here? It
+just would reflect CPU endianess.
+
+> Just for my understanding, can you please let me
+> know why you feel masks/shift are better suited here?
+
+First of all, in the very same driver shifts and masks / standalone
+bits are already in use.
+Like you mentioned an endianess, it would make it more clear here,
+though it's still require to get a value in a proper one in the first
+place.
+On top of that, a compiler which might generate an awful code out of
+bits defined as above.
+
+Btw, there are helpers for that like those in bitfield.h.
+
+--
+With Best Regards,
+Andy Shevchenko
