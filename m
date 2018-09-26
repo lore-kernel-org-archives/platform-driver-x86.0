@@ -1,68 +1,35 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 3/4] platform/x86: intel_pmc_core: Decode Snoop / Non
- Snoop LTR
-Date: Wed, 26 Sep 2018 20:42:53 +0300
-Message-ID: <CAHp75Vd96+3cB7PwhftpsTOb8WYg-9WLEQvGYt3rYNB7djX3dg@mail.gmail.com>
-References: <20180903180415.31575-1-rajneesh.bhardwaj@linux.intel.com>
- <20180903180415.31575-3-rajneesh.bhardwaj@linux.intel.com>
- <CAHp75VcKSVJQ54qFV1BwqnwUu4dkS6sOACT3nTntJV+Ww56Oag@mail.gmail.com> <d8df94fd-cf7d-197f-0532-24e2da8116a7@linux.intel.com>
+Subject: Re: [RFC PATCH] platform/x86: asus-wmi: Simplify the keyboard
+ brightness updating process
+Date: Wed, 26 Sep 2018 20:48:54 +0300
+Message-ID: <CAHp75Vc18A6aUBrjyW6Df5gY563J0kbaEg2oi5yAVkJCKm0TZw@mail.gmail.com>
+References: <20180816084104.434-1-jian-hong@endlessm.com> <CAPpJ_eeK68jvMQ02hR2i+eP8Xo9YyWWUGYqG7e6dsWP=XTTCyQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d8df94fd-cf7d-197f-0532-24e2da8116a7@linux.intel.com>
+In-Reply-To: <CAPpJ_eeK68jvMQ02hR2i+eP8Xo9YyWWUGYqG7e6dsWP=XTTCyQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rajneesh.bhardwaj@linux.intel.com
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+To: Jian-Hong Pan <jian-hong@endlessm.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 26, 2018 at 5:19 PM Bhardwaj, Rajneesh
-<rajneesh.bhardwaj@linux.intel.com> wrote:
-> On 26-Sep-18 7:23 PM, Andy Shevchenko wrote:
-> > On Mon, Sep 3, 2018 at 9:05 PM Rajneesh Bhardwaj
-> > <rajneesh.bhardwaj@linux.intel.com> wrote:
-
-> >> +static void get_ltr_scale(u32 *val)
-> > What's wrong to return converted value? Actually the name should
-> > reflect what it does, ie *convert* value.
+On Mon, Sep 10, 2018 at 11:57 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
 >
-> I can change it as per your suggestion.
+> 2018-08-16 16:41 GMT+08:00 Jian-Hong Pan <jian-hong@endlessm.com>:
+> > The original asus-wmi queues a work which calls the ACPI/WMI methods to
+> > update the keyboard LED brightness.  Similar drivers - acer-wmi,
+> > dell-wmi-led just call the ACPI/WMI methods directly without workqueues.
+> >
+> > This patch simplifies the keyboard brightness updating process which
+> > calls the kbd_led_update function directly without workqueue in
+> > asus-wmi.
 
-Please do.
+> Just gentle ping.  Any comment for this patch?
 
-> >> +union ltr_payload {
-> >> +       u32 raw_data;
-> >> +       struct {
-> >> +       u32 snoop_val : 10;
-> >> +       u32 snoop_scale : 3;
-> >> +       u32 snoop_res : 2;
-> >> +       u32 snoop_req : 1;
-> >> +       u32 non_snoop_val : 10;
-> >> +       u32 non_snoop_scale : 3;
-> >> +       u32 non_snoop_res : 2;
-> >> +       u32 non_snoop_req : 1;
-> >> +       } bits;
-> >> +};
-> > Just use normal masks and shifts.
->
-> I chose union over masks and shifts to reduce code size and ensured
-> correct endian-ness.
+RFC patches are not supposed to be applied.
+So, feel free to resend as non-RFC, or wait a bit more if anyone would
+comment on it.
 
-How do you ensure endianess in union if you do nothing to it here? It
-just would reflect CPU endianess.
-
-> Just for my understanding, can you please let me
-> know why you feel masks/shift are better suited here?
-
-First of all, in the very same driver shifts and masks / standalone
-bits are already in use.
-Like you mentioned an endianess, it would make it more clear here,
-though it's still require to get a value in a proper one in the first
-place.
-On top of that, a compiler which might generate an awful code out of
-bits defined as above.
-
-Btw, there are helpers for that like those in bitfield.h.
-
---
+-- 
 With Best Regards,
 Andy Shevchenko
