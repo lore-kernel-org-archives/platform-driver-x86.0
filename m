@@ -1,62 +1,95 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: intel-wmi-thunderbolt: Add dynamic
- debugging
-Date: Wed, 26 Sep 2018 17:03:45 +0000
-Message-ID: <72af799dd45442e6bd35082e1579013a@ausx13mpc120.AMER.DELL.COM>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: intel-wmi-thunderbolt: Add dynamic debugging
+Date: Wed, 26 Sep 2018 20:10:34 +0300
+Message-ID: <CAHp75VcMDbiOhGzm7oXZ2jPcxe494YhSRFVzQtbUNj0ugUZfrQ@mail.gmail.com>
 References: <1537978258-2907-1-git-send-email-mario.limonciello@dell.com>
- <CAHp75VeGQTEZOrMbNsbsxSb4RcN1y=gAZuZ5Z6FawuU-e0+qcg@mail.gmail.com>
+ <CAHp75VeGQTEZOrMbNsbsxSb4RcN1y=gAZuZ5Z6FawuU-e0+qcg@mail.gmail.com> <72af799dd45442e6bd35082e1579013a@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeGQTEZOrMbNsbsxSb4RcN1y=gAZuZ5Z6FawuU-e0+qcg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <72af799dd45442e6bd35082e1579013a@ausx13mpc120.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.shevchenko@gmail.com
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mika.westerberg@intel.com
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Mika Westerberg <mika.westerberg@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiANCj4gT24gV2VkLCBTZXAgMjYsIDIwMTggYXQgNzoxMSBQTSBNYXJpbyBMaW1vbmNpZWxsbw0K
-PiA8bWFyaW8ubGltb25jaWVsbG9AZGVsbC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gU29tZSB1c2Vy
-cyBoYXZlIGJlZW4gcmVwb3J0aW5nIGlzc3VlcyB3aXRoIHRodW5kZXJib2x0IGJlaW5nIHR1cm5l
-ZCBvZmYNCj4gPiBiZWZvcmUgZnVsbHkgaW5pdGlhbGl6ZWQuICBUaGlzIGlzIHN1c3BlY3RlZCB0
-byBiZSBjYXVzZWQgYnkgdXNlcnNwYWNlDQo+ID4gdHVybmluZyBvZmYgdGhlIFRodW5kZXJib2x0
-IGNvbnRyb2xsZXIgdXNpbmcgaW50ZWwtd21pLXRodW5kZXJib2x0DQo+ID4gcHJlbWF0dXJlbHku
-DQo+ID4NCj4gDQo+ID4gRGV0YWlscyBhcmUgYXZhaWxhYmxlIGhlcmU6DQo+ID4gaHR0cHM6Ly9i
-dWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNnaT9pZD0yMDEyMjcNCj4gPiBodHRwczovL2J1
-Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTE5OTYzMQ0KPiANCj4gQnVnTGluazog
-Li4uID8NCj4gQnVnTGluazogLi4uID8NCj4gDQo+IEkgY2FuIGRvIGl0IG15c2VsZiBpZiB5b3Ug
-YXJlIG9rYXkgd2l0aCB0aGlzIGZvcm1hdC4NCj4gDQo+IFRoZSBwYXRjaCBpdHNlbGYgTEdUTS4N
-Cg0KU3VyZSwgdGhhbmsgeW91Lg0KDQo+IA0KPiA+DQo+ID4gVXNlcnNwYWNlIGhhcyBhbHJlYWR5
-IG1hZGUgc29tZSBtaXRpZ2lhdGlvbnMgZm9yIHRoaXMgc2l0dWF0aW9uOg0KPiA+IGh0dHBzOi8v
-Z2l0aHViLmNvbS9odWdoc2llL2Z3dXBkL2NvbW1pdC9lZjZmMWQ3Njk4M2M5YjY2DQo+ID4gaHR0
-cHM6Ly9naXRodWIuY29tL2h1Z2hzaWUvZnd1cGQvY29tbWl0L2MwN2NlNWI0ODg5YTUzODQNCj4g
-Pg0KPiA+IFRvIGFsbG93IGVhc2llciBkZWJ1Z2dpbmcgb2YgdGhpcyBzaXR1YXRpb24gYWRkIG91
-dHB1dCB0aGF0IGNhbiBiZSB0dXJuZWQNCj4gPiBvbiB3aXRoIGR5bmFtaWMgZGVidWdnaW5nIHRv
-IGJldHRlciByb290IGNhdXNlIHRoaXMgcHJvYmxlbS4NCj4gPg0KPiA+IFN1Z2dlc3RlZC1ieTog
-TWlrYSBXZXN0ZXJiZXJnIDxtaWthLndlc3RlcmJlcmdAaW50ZWwuY29tPg0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IE1hcmlvIExpbW9uY2llbGxvIDxtYXJpby5saW1vbmNpZWxsb0BkZWxsLmNvbT4NCj4g
-PiAtLS0NCj4gPiAgZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtd21pLXRodW5kZXJib2x0LmMg
-fCA2ICsrKysrLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0
-aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwt
-d21pLXRodW5kZXJib2x0LmMNCj4gYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC13bWktdGh1
-bmRlcmJvbHQuYw0KPiA+IGluZGV4IGMyMjU3YmQuLmNlNWZiZjAgMTAwNjQ0DQo+ID4gLS0tIGEv
-ZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtd21pLXRodW5kZXJib2x0LmMNCj4gPiArKysgYi9k
-cml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC13bWktdGh1bmRlcmJvbHQuYw0KPiA+IEBAIC0zOCwx
-MiArMzgsMTYgQEAgc3RhdGljIHNzaXplX3QgZm9yY2VfcG93ZXJfc3RvcmUoc3RydWN0IGRldmlj
-ZSAqZGV2LA0KPiA+ICAgICAgICAgaW5wdXQubGVuZ3RoID0gc2l6ZW9mKHU4KTsNCj4gPiAgICAg
-ICAgIGlucHV0LnBvaW50ZXIgPSAmbW9kZTsNCj4gPiAgICAgICAgIG1vZGUgPSBoZXhfdG9fYmlu
-KGJ1ZlswXSk7DQo+ID4gKyAgICAgICBkZXZfZGJnKGRldiwgImZvcmNlX3Bvd2VyOiBzdG9yaW5n
-ICUjeFxuIiwgbW9kZSk7DQo+ID4gICAgICAgICBpZiAobW9kZSA9PSAwIHx8IG1vZGUgPT0gMSkg
-ew0KPiA+ICAgICAgICAgICAgICAgICBzdGF0dXMgPSB3bWlfZXZhbHVhdGVfbWV0aG9kKElOVEVM
-X1dNSV9USFVOREVSQk9MVF9HVUlELCAwLCAxLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICZpbnB1dCwgTlVMTCk7DQo+ID4gLSAgICAgICAgICAgICAg
-IGlmIChBQ1BJX0ZBSUxVUkUoc3RhdHVzKSkNCj4gPiArICAgICAgICAgICAgICAgaWYgKEFDUElf
-RkFJTFVSRShzdGF0dXMpKSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2X2RiZyhk
-ZXYsICJmb3JjZV9wb3dlcjogZmFpbGVkIHRvIGV2YWx1YXRlIEFDUEkgbWV0aG9kXG4iKTsNCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsNCj4gPiArICAgICAgICAg
-ICAgICAgfQ0KPiA+ICAgICAgICAgfSBlbHNlIHsNCj4gPiArICAgICAgICAgICAgICAgZGV2X2Ri
-ZyhkZXYsICJmb3JjZV9wb3dlcjogdW5zdXBwb3J0ZWQgbW9kZVxuIik7DQo+ID4gICAgICAgICAg
-ICAgICAgIHJldHVybiAtRUlOVkFMOw0KPiA+ICAgICAgICAgfQ0KPiA+ICAgICAgICAgcmV0dXJu
-IGNvdW50Ow0KPiA+IC0tDQo+ID4gMi43LjQNCj4gPg0KPiANCj4gDQo+IC0tDQo+IFdpdGggQmVz
-dCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg==
+On Wed, Sep 26, 2018 at 8:03 PM <Mario.Limonciello@dell.com> wrote:
+>
+> >
+> > On Wed, Sep 26, 2018 at 7:11 PM Mario Limonciello
+> > <mario.limonciello@dell.com> wrote:
+> > >
+> > > Some users have been reporting issues with thunderbolt being turned off
+> > > before fully initialized.  This is suspected to be caused by userspace
+> > > turning off the Thunderbolt controller using intel-wmi-thunderbolt
+> > > prematurely.
+> > >
+> >
+> > > Details are available here:
+> > > https://bugzilla.kernel.org/show_bug.cgi?id=201227
+> > > https://bugzilla.kernel.org/show_bug.cgi?id=199631
+> >
+> > BugLink: ... ?
+> > BugLink: ... ?
+> >
+> > I can do it myself if you are okay with this format.
+> >
+> > The patch itself LGTM.
+>
+> Sure, thank you.
+
+Pushed to my review and testing queue with mentioned changes, thanks!
+
+>
+> >
+> > >
+> > > Userspace has already made some mitigiations for this situation:
+> > > https://github.com/hughsie/fwupd/commit/ef6f1d76983c9b66
+> > > https://github.com/hughsie/fwupd/commit/c07ce5b4889a5384
+> > >
+> > > To allow easier debugging of this situation add output that can be turned
+> > > on with dynamic debugging to better root cause this problem.
+> > >
+> > > Suggested-by: Mika Westerberg <mika.westerberg@intel.com>
+> > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> > > ---
+> > >  drivers/platform/x86/intel-wmi-thunderbolt.c | 6 +++++-
+> > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c
+> > b/drivers/platform/x86/intel-wmi-thunderbolt.c
+> > > index c2257bd..ce5fbf0 100644
+> > > --- a/drivers/platform/x86/intel-wmi-thunderbolt.c
+> > > +++ b/drivers/platform/x86/intel-wmi-thunderbolt.c
+> > > @@ -38,12 +38,16 @@ static ssize_t force_power_store(struct device *dev,
+> > >         input.length = sizeof(u8);
+> > >         input.pointer = &mode;
+> > >         mode = hex_to_bin(buf[0]);
+> > > +       dev_dbg(dev, "force_power: storing %#x\n", mode);
+> > >         if (mode == 0 || mode == 1) {
+> > >                 status = wmi_evaluate_method(INTEL_WMI_THUNDERBOLT_GUID, 0, 1,
+> > >                                              &input, NULL);
+> > > -               if (ACPI_FAILURE(status))
+> > > +               if (ACPI_FAILURE(status)) {
+> > > +                       dev_dbg(dev, "force_power: failed to evaluate ACPI method\n");
+> > >                         return -ENODEV;
+> > > +               }
+> > >         } else {
+> > > +               dev_dbg(dev, "force_power: unsupported mode\n");
+> > >                 return -EINVAL;
+> > >         }
+> > >         return count;
+> > > --
+> > > 2.7.4
+> > >
+> >
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
