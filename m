@@ -1,7 +1,7 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 04/28] platform/x86: intel-hid: Convert to use SPDX identifier
-Date: Wed, 26 Sep 2018 19:51:59 +0300
-Message-ID: <20180926165223.19390-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 08/28] platform/x86: intel_menlow: Convert to use SPDX identifier
+Date: Wed, 26 Sep 2018 19:52:03 +0300
+Message-ID: <20180926165223.19390-8-andriy.shevchenko@linux.intel.com>
 References: <20180926165223.19390-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -16,35 +16,53 @@ Reduce size of duplicated comments by switching to use SPDX identifier.
 
 No functional change.
 
+While here, correct MODULE_LICENSE() string to be aligned with license text.
+
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel-hid.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ drivers/platform/x86/intel_menlow.c | 21 +++------------------
+ 1 file changed, 3 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 6cf9b7fa5bf0..e28bcf61b126 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -1,19 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0+
+diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel_menlow.c
+index 76854f0bf70b..77eb8709c931 100644
+--- a/drivers/platform/x86/intel_menlow.c
++++ b/drivers/platform/x86/intel_menlow.c
+@@ -1,25 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0
  /*
-  *  Intel HID event & 5 button array driver
+- *  intel_menlow.c - Intel menlow Driver for thermal management extension
++ *  Intel menlow Driver for thermal management extension
   *
-  *  Copyright (C) 2015 Alex Hung <alex.hung@canonical.com>
-  *  Copyright (C) 2015 Andrew Lutomirski <luto@kernel.org>
+  *  Copyright (C) 2008 Intel Corp
+  *  Copyright (C) 2008 Sujith Thomas <sujith.thomas@intel.com>
+  *  Copyright (C) 2008 Zhang Rui <rui.zhang@intel.com>
+- *  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - *
 - *  This program is free software; you can redistribute it and/or modify
 - *  it under the terms of the GNU General Public License as published by
-- *  the Free Software Foundation; either version 2 of the License, or
-- *  (at your option) any later version.
+- *  the Free Software Foundation; version 2 of the License.
 - *
-- *  This program is distributed in the hope that it will be useful,
-- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *  GNU General Public License for more details.
+- *  This program is distributed in the hope that it will be useful, but
+- *  WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- *  General Public License for more details.
 - *
-  */
+- *  You should have received a copy of the GNU General Public License along
+- *  with this program; if not, write to the Free Software Foundation, Inc.,
+- *  59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+- *
+- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  *
+  *  This driver creates the sys I/F for programming the sensors.
+  *  It also implements the driver for intel menlow memory controller (hardware
+@@ -41,7 +26,7 @@
+ MODULE_AUTHOR("Thomas Sujith");
+ MODULE_AUTHOR("Zhang Rui");
+ MODULE_DESCRIPTION("Intel Menlow platform specific driver");
+-MODULE_LICENSE("GPL");
++MODULE_LICENSE("GPL v2");
  
- #include <linux/acpi.h>
+ /*
+  * Memory controller device control
 -- 
 2.19.0
