@@ -1,97 +1,42 @@
-From: Stefan Assmann <sassmann@kpanic.de>
-Subject: Re: [PATCH] Add Second Fan Support for Thinkpad P50
-Date: Wed, 26 Sep 2018 16:34:49 +0200
-Message-ID: <20180926143449.bnqliemloqw7fuyv@t530.fritz.box>
-References: <1522693621-3124-1-git-send-email-agk@godking.net>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 0/5] Update and move Dell drivers dell_rbu and dcdbas
+Date: Wed, 26 Sep 2018 14:50:32 +0000
+Message-ID: <2c21dba5f4074bc0861277ec5701d2ff@ausx13mpc120.AMER.DELL.COM>
+References: <20180925193418.28493-1-stuart.hayes@dell.com>
+ <CAHp75Ve=ZnkBbdG3Myu1qzubr6+q74Q0u9pR7+nHXG=yAO-0rA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1522693621-3124-1-git-send-email-agk@godking.net>
+In-Reply-To: <CAHp75Ve=ZnkBbdG3Myu1qzubr6+q74Q0u9pR7+nHXG=yAO-0rA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Kappner <agk@godking.net>
-Cc: ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: andy.shevchenko@gmail.com, stuart.w.hayes@gmail.com
+Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 2018-04-02 11:27, Alexander Kappner wrote:
-> The Thinkpad P50 has 2 fans. Add the 2FAN quirk so the tpacpi driver
-> properly reports both fan speeds.
-> Because the P50 doesn't report the version of its EC controller, we need to
-> identify it by BIOS version (N1).
-
-With 4.18 (including this patch) I'm seeing both fans on my P50.
-[root@p50 ~]# sensors
-[...]
-thinkpad-isa-0000
-Adapter: ISA adapter
-fan1:        2319 RPM
-fan2:        2323 RPM
-
-Is there a way to actually control the second fan? There's pwm1, but no
-pwm2. And pwm1 only affects fan1.
-
-[root@p50 ~]# ls -al /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon3/
-total 0
-drwxr-xr-x 3 root root    0 Sep 26 16:25 .
-drwxr-xr-x 3 root root    0 Sep 26 16:23 ..
-lrwxrwxrwx 1 root root    0 Sep 25 16:11 device -> ../../../thinkpad_hwmon
--r--r--r-- 1 root root 4096 Sep 25 16:11 fan1_input
--r--r--r-- 1 root root 4096 Sep 25 16:11 fan2_input
--r--r--r-- 1 root root 4096 Sep 25 16:11 name
-drwxr-xr-x 2 root root    0 Sep 26 15:57 power
--rw-r--r-- 1 root root 4096 Sep 26 16:25 pwm1
--rw-r--r-- 1 root root 4096 Sep 26 16:25 pwm1_enable
-lrwxrwxrwx 1 root root    0 Sep 25 16:11 subsystem -> ../../../../../class/hwmon
--rw-r--r-- 1 root root 4096 Sep 25 16:11 uevent
-
-[root@p50 ~]# echo 2 > /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon3/pwm1_enable
-[root@p50 ~]# sensors
-[...]
-thinkpad-isa-0000
-Adapter: ISA adapter
-fan1:        3042 RPM
-fan2:        2323 RPM
-
-Thanks!
-
-  Stefan
-
-
-> Signed-off-by: Alexander Kappner <agk@godking.net>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index d5eaf3b1..ebdc300 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -8699,16 +8699,24 @@ static const struct attribute_group fan_attr_group = {
->  	  .ec = TPID(__id1, __id2),		\
->  	  .quirks = __quirks }
->  
-> +#define TPACPI_FAN_QL_BIOS(__id1, __id2, __quirks)	\
-> +	{ .vendor = PCI_VENDOR_ID_LENOVO,	\
-> +	  .bios = TPID(__id1, __id2),		\
-> +	  .ec = TPACPI_MATCH_ANY,		\
-> +	  .quirks = __quirks }
-> +
->  static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
->  	TPACPI_FAN_QI('1', 'Y', TPACPI_FAN_Q1),
->  	TPACPI_FAN_QI('7', '8', TPACPI_FAN_Q1),
->  	TPACPI_FAN_QI('7', '6', TPACPI_FAN_Q1),
->  	TPACPI_FAN_QI('7', '0', TPACPI_FAN_Q1),
->  	TPACPI_FAN_QL('7', 'M', TPACPI_FAN_2FAN),
-> +	TPACPI_FAN_QL_BIOS('N', '1', TPACPI_FAN_2FAN) // Thinkpad P50 has 2 fans
->  };
->  
->  #undef TPACPI_FAN_QL
->  #undef TPACPI_FAN_QI
-> +#undef TPACPI_FAN_QL_BIOS
->  
->  static int __init fan_init(struct ibm_init_struct *iibm)
->  {
-> -- 
-> 2.1.4
-> 
-> 
+PiBPbiBUdWUsIFNlcCAyNSwgMjAxOCBhdCAxMDozNCBQTSBTdHVhcnQgSGF5ZXMgPHN0dWFydC53
+LmhheWVzQGdtYWlsLmNvbT4NCj4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBTdHVhcnQgSGF5ZXMg
+PHN0dWFydC53LmhheWVzQGdtYWlsLmNvbT4NCj4gPg0KPiA+IFRoZSBkZWxsX3JidSBhbmQgZGNk
+YmFzIGRyaXZlcnMgbmVlZCBzb21lIGNoYW5nZXMsIGFuZCBzaG91bGQgYmUgbW92ZWQgdG8NCj4g
+PiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni4gIEFkZGl0aW9uYWxseSwgZGVsbF9yYnUgbmVlZHMgYSBt
+YWludGFpbmVyLCBhbmQgdGhlDQo+ID4gbGlzdGVkIG1haW50YWluZXIgZm9yIGRjZGJhcyBpcyBp
+bmFjdGl2ZSBhbmQgbmVlZHMgdG8gYmUgY2hhbmdlZC4NCj4gDQo+IEkgcHVzaGVkIHRoaXMgc2Vy
+aWVzIHRvIG15IHJldmlldyBhbmQgdGVzdGluZyBxdWV1ZSB0byBhbGxvdyBib3RzIHBsYXkgd2l0
+aC4NCj4gDQo+IEJ1dC4NCj4gUGxlYXNlLCBhZGQgY29tbWl0IG1lc3NhZ2VzIHRvIHBhdGNoZXMg
+NCBhbmQgNSAoSSBjYW4ndCB0YWtlIHcvbyB0aGVtKS4NCj4gQ29sbGVjdCBEb3VnJ3MgdGFnIHRo
+YXQgcHJvdmVzIGhlIGlzIG9rYXkgd2l0aCB0aGUgY2hhbmdlIChJIHJlbWVtYmVyDQo+IGhlIGFu
+c3dlcmVkIHNvbWV0aGluZyB0byB0aGUgb2xkIHRocmVhZCwgdGhvdWdoIEkgZG9uJ3QgcmVtZW1i
+ZXIgdGhlDQo+IGRldGFpbHMgZXhjZXB0IGFubm95aW5nIGZvb3RlciB3aGljaCBzaG91bGQgbm90
+IGJlIHVwIGluIG9wZW4gc291cmNlDQo+IG1haWxpbmcgbGlzdHMpLg0KPiANCj4gU28sIHdoaWxl
+IGJvdHMgYXJlIHBsYXlpbmcgd2l0aCB0aGUgY29kZSBJJ20gd2FpdGluZyBmb3IgdjIgb2YgdGhp
+cw0KPiB3aXRoIGFib3ZlIGFkZHJlc3NlZC4NCj4gVGhhbmtzIQ0KPiANCg0KSnVzdCBzbyBpdCdz
+IGV4dHJhIGNsZWFyLCB5b3Ugd2FudCBhbiAiQWNrZWQtYnkiIHRhZyBmcm9tIERvdWcgVyBpbiBh
+IHB1YmxpYw0KZm9ydW0/ICBPciBoZSBzaG91bGQgYmUgQ0MgdG8gdGhhdCBwYXRjaCBhbmQgbmVl
+ZHMgdG8gZ2l2ZSB0aGUgYWNrZWQtYnkNCnRhZyBpbiB0aGUgVjI/DQoNCkhlIGFscmVhZHkgZGlk
+IHJlc3BvbmQgaW4gYSBwdWJsaWMgZm9ydW0gaW5kaWNhdGluZyB0aGlzIGFsdGhvdWdoIGhlIGRp
+ZG4ndA0KImdlbmVyYXRlIGEgdGFnIiBmb3IgdGhhdDoNCmh0dHBzOi8vd3d3LnNwaW5pY3MubmV0
+L2xpc3RzL3BsYXRmb3JtLWRyaXZlci14ODYvbXNnMTYzMzYuaHRtbA0KDQpDYW4gU3R1YXJ0IGp1
+c3QgYWRkIHRoZSAiQWNrZWQtYnkiIHRhZyBoaW1zZWxmIHRvIHRoZSBjb21taXQgaW4gVjIgYXQg
+dGhpcw0KcG9pbnQgY29uc2lkZXJpbmcgdGhhdD8gIE9yIGRvIHlvdSBuZWVkIHBhdGNod29yayB0
+byBwaWNrIGl0IHVwIGFuZCBhcHBseSBpdD8NCg0K
