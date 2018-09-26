@@ -1,79 +1,54 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [PATCH] platform/x86: mlx-platform: Properly use
- mlxplat_mlxcpld_msn201x_items
-Date: Wed, 26 Sep 2018 07:43:22 +0000
-Message-ID: <DB5PR05MB1640104C32067C3BE43CA529A2150@DB5PR05MB1640.eurprd05.prod.outlook.com>
-References: <20180926052115.21223-1-natechancellor@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: Use __func__ instead of
+ read_ec_cmd in pr_err
+Date: Wed, 26 Sep 2018 12:28:56 +0300
+Message-ID: <CAHp75Vf2YE4M9gkN6TYmJa5smAVWDD35+h9PwHkv4PYTEwb=4g@mail.gmail.com>
+References: <1536044899-10452-1-git-send-email-zhang.xianwei8@zte.com.cn> <9fce93c1-ad6f-8d02-0cf7-42680b78a924@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926052115.21223-1-natechancellor@gmail.com>
-Content-Language: en-US
+In-Reply-To: <9fce93c1-ad6f-8d02-0cf7-42680b78a924@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nathan Chancellor <natechancellor@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Ike Panhc <ike.pan@canonical.com>
+Cc: zhang.xianwei8@zte.com.cn, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, zhong.weidong@zte.com.cn, jiang.biao2@zte.com.cn
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Thu, Sep 6, 2018 at 11:49 AM Ike Panhc <ike.pan@canonical.com> wrote:
+>
+> On 09/04/2018 03:08 PM, Zhang Xianwei wrote:
+> > Refer to the commit f1395edbcec8 ("platform/x86: ideapad-laptop: Use
+> > __func__ instead of write_ec_cmd in pr_err"), prefer using '"%s...",
+> > __func__' to using 'read_ec_cmd' in read_ec_data.
+> >
+
+Pushed to my review and testing queue, thanks!
+
+> > Signed-off-by: Zhang Xianwei <zhang.xianwei8@zte.com.cn>
+> > ---
+> >  drivers/platform/x86/ideapad-laptop.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> > index d4f1259..f856d59 100644
+> > --- a/drivers/platform/x86/ideapad-laptop.c
+> > +++ b/drivers/platform/x86/ideapad-laptop.c
+> > @@ -212,7 +212,7 @@ static int read_ec_data(acpi_handle handle, int cmd, unsigned long *data)
+> >                       return 0;
+> >               }
+> >       }
+> > -     pr_err("timeout in read_ec_cmd\n");
+> > +     pr_err("timeout in %s\n", __func__);
+> >       return -1;
+> >  }
+> >
+> >
+>
+> Good catch. Thanks.
+>
+> Acked-by: Ike Panhc <ike.pan@canonical.com>
+>
 
 
-> -----Original Message-----
-> From: Nathan Chancellor <natechancellor@gmail.com>
-> Sent: Wednesday, September 26, 2018 8:21 AM
-> To: Vadim Pasternak <vadimp@mellanox.com>; Darren Hart
-> <dvhart@infradead.org>; Andy Shevchenko <andy@infradead.org>
-> Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; Na=
-than
-> Chancellor <natechancellor@gmail.com>
-> Subject: [PATCH] platform/x86: mlx-platform: Properly use
-> mlxplat_mlxcpld_msn201x_items
->=20
-> Clang warns that mlxplat_mlxcpld_msn201x_items is not going to be emitted=
- in
-> the final assembly because it's only used in ARRAY_SIZE right now, which =
-is a
-> compile time evaluation since the array's size is known.
->=20
-> drivers/platform/x86/mlx-platform.c:555:32: warning: variable
-> 'mlxplat_mlxcpld_msn201x_items' is not needed and will not be emitted [-
-> Wunneeded-internal-declaration] static struct mlxreg_core_item
-> mlxplat_mlxcpld_msn201x_items[] =3D {
->                                ^
-> 1 warning generated.
->=20
-> It appears this was a copy and paste mistake from when this item was firs=
-t
-> added. Use the definition in mlxplat_mlxcpld_msn201x_data so that Clang n=
-o
-> longer warns.
->=20
-> Link: https://github.com/ClangBuiltLinux/linux/issues/141
-> Fixes: a49a41482f61 ("platform/x86: mlx-platform: Add support for new
-> msn201x system type")
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
-
-Acked-by: Vadim Pasternak <vadimp@mellanox.com>
-
->  drivers/platform/x86/mlx-platform.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/m=
-lx-
-> platform.c
-> index d89936c93ba0..c2c3a1a19879 100644
-> --- a/drivers/platform/x86/mlx-platform.c
-> +++ b/drivers/platform/x86/mlx-platform.c
-> @@ -575,7 +575,7 @@ static struct mlxreg_core_item
-> mlxplat_mlxcpld_msn201x_items[] =3D {
->=20
->  static
->  struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_msn201x_data =
-=3D {
-> -	.items =3D mlxplat_mlxcpld_msn21xx_items,
-> +	.items =3D mlxplat_mlxcpld_msn201x_items,
->  	.counter =3D ARRAY_SIZE(mlxplat_mlxcpld_msn201x_items),
->  	.cell =3D MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET,
->  	.mask =3D MLXPLAT_CPLD_AGGR_MASK_DEF,
-> --
-> 2.19.0
+-- 
+With Best Regards,
+Andy Shevchenko
