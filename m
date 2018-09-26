@@ -1,62 +1,81 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/5] Update and move Dell drivers dell_rbu and dcdbas
-Date: Wed, 26 Sep 2018 19:55:34 +0300
-Message-ID: <CAHp75VfbdTxywsamjM=z-3kC__4_2_6i4LD9nD0yOSJayitS5A@mail.gmail.com>
-References: <20180925193418.28493-1-stuart.hayes@dell.com> <CAHp75Ve=ZnkBbdG3Myu1qzubr6+q74Q0u9pR7+nHXG=yAO-0rA@mail.gmail.com>
- <2c21dba5f4074bc0861277ec5701d2ff@ausx13mpc120.AMER.DELL.COM>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 20/28] platform/x86: intel-rst: Convert to use SPDX identifier
+Date: Wed, 26 Sep 2018 19:52:15 +0300
+Message-ID: <20180926165223.19390-20-andriy.shevchenko@linux.intel.com>
+References: <20180926165223.19390-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2c21dba5f4074bc0861277ec5701d2ff@ausx13mpc120.AMER.DELL.COM>
+In-Reply-To: <20180926165223.19390-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: Stuart Hayes <stuart.w.hayes@gmail.com>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Alex Hung <alex.hung@canonical.com>, Mario Limonciello <mario.limonciello@dell.com>, Sujith Thomas <sujith.thomas@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Zha Qipeng <qipeng.zha@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 26, 2018 at 5:50 PM <Mario.Limonciello@dell.com> wrote:
->
-> > On Tue, Sep 25, 2018 at 10:34 PM Stuart Hayes <stuart.w.hayes@gmail.com>
-> > wrote:
-> > >
-> > > From: Stuart Hayes <stuart.w.hayes@gmail.com>
-> > >
-> > > The dell_rbu and dcdbas drivers need some changes, and should be moved to
-> > > drivers/platform/x86.  Additionally, dell_rbu needs a maintainer, and the
-> > > listed maintainer for dcdbas is inactive and needs to be changed.
-> >
-> > I pushed this series to my review and testing queue to allow bots play with.
-> >
-> > But.
-> > Please, add commit messages to patches 4 and 5 (I can't take w/o them).
-> > Collect Doug's tag that proves he is okay with the change (I remember
-> > he answered something to the old thread, though I don't remember the
-> > details except annoying footer which should not be up in open source
-> > mailing lists).
-> >
-> > So, while bots are playing with the code I'm waiting for v2 of this
-> > with above addressed.
-> > Thanks!
-> >
->
-> Just so it's extra clear, you want an "Acked-by" tag from Doug W in a public
-> forum?  Or he should be CC to that patch and needs to give the acked-by
-> tag in the V2?
->
-> He already did respond in a public forum indicating this although he didn't
-> "generate a tag" for that:
-> https://www.spinics.net/lists/platform-driver-x86/msg16336.html
+Reduce size of duplicated comments by switching to use SPDX identifier.
 
-Thanks, that is what I need.
+No functional change.
 
-> Can Stuart just add the "Acked-by" tag himself to the commit in V2 at this
-> point considering that?
+While here, throw away some extra blank lines.
 
-Yes.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/intel-rst.c | 20 +-------------------
+ 1 file changed, 1 insertion(+), 19 deletions(-)
 
->  Or do you need patchwork to pick it up and apply it?
-
-No need. Manual update would work to me.
-
+diff --git a/drivers/platform/x86/intel-rst.c b/drivers/platform/x86/intel-rst.c
+index 56abf5cbb824..3b81cb896fed 100644
+--- a/drivers/platform/x86/intel-rst.c
++++ b/drivers/platform/x86/intel-rst.c
+@@ -1,22 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  *  Copyright 2013 Matthew Garrett <mjg59@srcf.ucam.org>
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
+- *
+- *  You should have received a copy of the GNU General Public License along
+- *  with this program; if not, write to the Free Software Foundation, Inc.,
+- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+  */
+ 
+-
+ #include <linux/acpi.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+@@ -52,12 +38,10 @@ static ssize_t irst_store_wakeup_events(struct device *dev,
+ 	acpi = to_acpi_device(dev);
+ 
+ 	error = kstrtoul(buf, 0, &value);
+-
+ 	if (error)
+ 		return error;
+ 
+ 	status = acpi_execute_simple_method(acpi->handle, "SFFS", value);
+-
+ 	if (ACPI_FAILURE(status))
+ 		return -EINVAL;
+ 
+@@ -98,12 +82,10 @@ static ssize_t irst_store_wakeup_time(struct device *dev,
+ 	acpi = to_acpi_device(dev);
+ 
+ 	error = kstrtoul(buf, 0, &value);
+-
+ 	if (error)
+ 		return error;
+ 
+ 	status = acpi_execute_simple_method(acpi->handle, "SFTV", value);
+-
+ 	if (ACPI_FAILURE(status))
+ 		return -EINVAL;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.19.0
