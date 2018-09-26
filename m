@@ -1,35 +1,70 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [RFC PATCH] platform/x86: asus-wmi: Simplify the keyboard
- brightness updating process
-Date: Wed, 26 Sep 2018 20:48:54 +0300
-Message-ID: <CAHp75Vc18A6aUBrjyW6Df5gY563J0kbaEg2oi5yAVkJCKm0TZw@mail.gmail.com>
-References: <20180816084104.434-1-jian-hong@endlessm.com> <CAPpJ_eeK68jvMQ02hR2i+eP8Xo9YyWWUGYqG7e6dsWP=XTTCyQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v14 09/19] x86/mm: x86/sgx: Signal SEGV_SGXERR for #PFs w/ PF_SGX
+Date: Wed, 26 Sep 2018 11:12:27 -0700
+Message-ID: <2D60780F-ADB4-48A4-AB74-15683493D369@amacapital.net>
+References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com> <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com> <CALCETrVAhiwv+g5fzVO3ZSHZgcQKbeeG8r3HUcXO9k7Gi94NdQ@mail.gmail.com> <20180926173516.GA10920@linux.intel.com>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPpJ_eeK68jvMQ02hR2i+eP8Xo9YyWWUGYqG7e6dsWP=XTTCyQ@mail.gmail.com>
+In-Reply-To: <20180926173516.GA10920@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jian-Hong Pan <jian-hong@endlessm.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Sep 10, 2018 at 11:57 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
->
-> 2018-08-16 16:41 GMT+08:00 Jian-Hong Pan <jian-hong@endlessm.com>:
-> > The original asus-wmi queues a work which calls the ACPI/WMI methods to
-> > update the keyboard LED brightness.  Similar drivers - acer-wmi,
-> > dell-wmi-led just call the ACPI/WMI methods directly without workqueues.
-> >
-> > This patch simplifies the keyboard brightness updating process which
-> > calls the kbd_led_update function directly without workqueue in
-> > asus-wmi.
 
-> Just gentle ping.  Any comment for this patch?
+> On Sep 26, 2018, at 10:35 AM, Sean Christopherson <sean.j.christopherson@i=
+ntel.com> wrote:
+>=20
+>> On Tue, Sep 25, 2018 at 03:53:48PM -0700, Andy Lutomirski wrote:
+>> Minor nit:
+>>=20
+>> On Tue, Sep 25, 2018 at 6:12 AM Jarkko Sakkinen
+>> <jarkko.sakkinen@linux.intel.com> wrote:
+>>>=20
+>>> From: Sean Christopherson <sean.j.christopherson@intel.com>
+>>>=20
+>>=20
+>>> by (c) as the kernel doesn't really have any other reasonable option,
+>>> e.g. we could kill the task or panic, but neither is warranted.
+>>=20
+>> Not killing the task is quite nice, but...
+>>=20
+>>> +       /*
+>>> +        * Access is blocked by the Enclave Page Cache Map (EPCM),
+>>> +        * i.e. the access is allowed by the PTE but not the EPCM.
+>>> +        * This usually happens when the EPCM is yanked out from
+>>> +        * under us, e.g. by hardware after a suspend/resume cycle.
+>>> +        * In any case, there is nothing that can be done by the
+>>> +        * kernel to resolve the fault (short of killing the task).
+>>=20
+>> Maybe s/killing the task/sending a signal/?
+>=20
+> My intent was to document that, unlike all other page faults, the
+> kernel can't fix the source of the fault even if it were omniscient.
+>=20
+> How about this?  With formatting changes since it's long-winded...
+>=20
+>        /*
+>         * Access is blocked by the Enclave Page Cache Map (EPCM), i.e. the=
 
-RFC patches are not supposed to be applied.
-So, feel free to resend as non-RFC, or wait a bit more if anyone would
-comment on it.
+>         * access is allowed by the PTE but not the EPCM.  This usually hap=
+pens
+>         * when the EPCM is yanked out from under us, e.g. by hardware afte=
+r a
+>         * suspend/resume cycle.  In any case, software, i.e. the kernel, c=
+an't
+>         * fix the source of the fault as the EPCM can't be directly modifi=
+ed
+>         * by software.  Handle the fault as an access error in order to si=
+gnal
+>         * userspace, e.g. so that userspace can rebuild their enclave(s), e=
+ven
+>         * though userspace may not have actually violated access permissio=
+ns.
+>         */
+>=20
 
--- 
-With Best Regards,
-Andy Shevchenko
+Looks good to me.=
