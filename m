@@ -1,7 +1,7 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 24/28] platform/x86: intel-smartconnect: Convert to use SPDX identifier
-Date: Wed, 26 Sep 2018 19:52:19 +0300
-Message-ID: <20180926165223.19390-24-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 17/28] platform/x86: intel_punit_ipc: Sort headers alphabetically
+Date: Wed, 26 Sep 2018 19:52:12 +0300
+Message-ID: <20180926165223.19390-17-andriy.shevchenko@linux.intel.com>
 References: <20180926165223.19390-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,44 +12,38 @@ To: Alex Hung <alex.hung@canonical.com>, Mario Limonciello <mario.limonciello@de
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Reduce size of duplicated comments by switching to use SPDX identifier.
+Sort headers alphabetically for better maintenance.
 
 No functional change.
 
-While here, throw away some extra blank lines.
-
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel-smartconnect.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+ drivers/platform/x86/intel_punit_ipc.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-smartconnect.c b/drivers/platform/x86/intel-smartconnect.c
-index 274ac488afcb..64c2dc93472f 100644
---- a/drivers/platform/x86/intel-smartconnect.c
-+++ b/drivers/platform/x86/intel-smartconnect.c
-@@ -1,22 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  *  Copyright 2013 Matthew Garrett <mjg59@srcf.ucam.org>
-- *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License as published by
-- *  the Free Software Foundation; either version 2 of the License, or
-- *  (at your option) any later version.
-- *
-- *  This program is distributed in the hope that it will be useful,
-- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *  GNU General Public License for more details.
-- *
-- *  You should have received a copy of the GNU General Public License along
-- *  with this program; if not, write to the Free Software Foundation, Inc.,
-- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
+index 2efeab650345..8eaa60c9ad69 100644
+--- a/drivers/platform/x86/intel_punit_ipc.c
++++ b/drivers/platform/x86/intel_punit_ipc.c
+@@ -11,15 +11,16 @@
+  * which provide mailbox interface for power management usage.
   */
  
--
+-#include <linux/module.h>
+-#include <linux/mod_devicetable.h>
  #include <linux/acpi.h>
- #include <linux/module.h>
+-#include <linux/delay.h>
+ #include <linux/bitops.h>
++#include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
+ #include <linux/platform_device.h>
++
+ #include <asm/intel_punit_ipc.h>
  
+ /* IPC Mailbox registers */
 -- 
 2.19.0
