@@ -1,42 +1,56 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH 0/5] Update and move Dell drivers dell_rbu and dcdbas
-Date: Wed, 26 Sep 2018 14:50:32 +0000
-Message-ID: <2c21dba5f4074bc0861277ec5701d2ff@ausx13mpc120.AMER.DELL.COM>
-References: <20180925193418.28493-1-stuart.hayes@dell.com>
- <CAHp75Ve=ZnkBbdG3Myu1qzubr6+q74Q0u9pR7+nHXG=yAO-0rA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH] platform/x86: intel-wmi-thunderbolt: Add dynamic debugging
+Date: Wed, 26 Sep 2018 11:10:58 -0500
+Message-ID: <1537978258-2907-1-git-send-email-mario.limonciello@dell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve=ZnkBbdG3Myu1qzubr6+q74Q0u9pR7+nHXG=yAO-0rA@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.shevchenko@gmail.com, stuart.w.hayes@gmail.com
-Cc: dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Mika Westerberg <mika.westerberg@intel.com>, Mario Limonciello <mario.limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiBPbiBUdWUsIFNlcCAyNSwgMjAxOCBhdCAxMDozNCBQTSBTdHVhcnQgSGF5ZXMgPHN0dWFydC53
-LmhheWVzQGdtYWlsLmNvbT4NCj4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBTdHVhcnQgSGF5ZXMg
-PHN0dWFydC53LmhheWVzQGdtYWlsLmNvbT4NCj4gPg0KPiA+IFRoZSBkZWxsX3JidSBhbmQgZGNk
-YmFzIGRyaXZlcnMgbmVlZCBzb21lIGNoYW5nZXMsIGFuZCBzaG91bGQgYmUgbW92ZWQgdG8NCj4g
-PiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni4gIEFkZGl0aW9uYWxseSwgZGVsbF9yYnUgbmVlZHMgYSBt
-YWludGFpbmVyLCBhbmQgdGhlDQo+ID4gbGlzdGVkIG1haW50YWluZXIgZm9yIGRjZGJhcyBpcyBp
-bmFjdGl2ZSBhbmQgbmVlZHMgdG8gYmUgY2hhbmdlZC4NCj4gDQo+IEkgcHVzaGVkIHRoaXMgc2Vy
-aWVzIHRvIG15IHJldmlldyBhbmQgdGVzdGluZyBxdWV1ZSB0byBhbGxvdyBib3RzIHBsYXkgd2l0
-aC4NCj4gDQo+IEJ1dC4NCj4gUGxlYXNlLCBhZGQgY29tbWl0IG1lc3NhZ2VzIHRvIHBhdGNoZXMg
-NCBhbmQgNSAoSSBjYW4ndCB0YWtlIHcvbyB0aGVtKS4NCj4gQ29sbGVjdCBEb3VnJ3MgdGFnIHRo
-YXQgcHJvdmVzIGhlIGlzIG9rYXkgd2l0aCB0aGUgY2hhbmdlIChJIHJlbWVtYmVyDQo+IGhlIGFu
-c3dlcmVkIHNvbWV0aGluZyB0byB0aGUgb2xkIHRocmVhZCwgdGhvdWdoIEkgZG9uJ3QgcmVtZW1i
-ZXIgdGhlDQo+IGRldGFpbHMgZXhjZXB0IGFubm95aW5nIGZvb3RlciB3aGljaCBzaG91bGQgbm90
-IGJlIHVwIGluIG9wZW4gc291cmNlDQo+IG1haWxpbmcgbGlzdHMpLg0KPiANCj4gU28sIHdoaWxl
-IGJvdHMgYXJlIHBsYXlpbmcgd2l0aCB0aGUgY29kZSBJJ20gd2FpdGluZyBmb3IgdjIgb2YgdGhp
-cw0KPiB3aXRoIGFib3ZlIGFkZHJlc3NlZC4NCj4gVGhhbmtzIQ0KPiANCg0KSnVzdCBzbyBpdCdz
-IGV4dHJhIGNsZWFyLCB5b3Ugd2FudCBhbiAiQWNrZWQtYnkiIHRhZyBmcm9tIERvdWcgVyBpbiBh
-IHB1YmxpYw0KZm9ydW0/ICBPciBoZSBzaG91bGQgYmUgQ0MgdG8gdGhhdCBwYXRjaCBhbmQgbmVl
-ZHMgdG8gZ2l2ZSB0aGUgYWNrZWQtYnkNCnRhZyBpbiB0aGUgVjI/DQoNCkhlIGFscmVhZHkgZGlk
-IHJlc3BvbmQgaW4gYSBwdWJsaWMgZm9ydW0gaW5kaWNhdGluZyB0aGlzIGFsdGhvdWdoIGhlIGRp
-ZG4ndA0KImdlbmVyYXRlIGEgdGFnIiBmb3IgdGhhdDoNCmh0dHBzOi8vd3d3LnNwaW5pY3MubmV0
-L2xpc3RzL3BsYXRmb3JtLWRyaXZlci14ODYvbXNnMTYzMzYuaHRtbA0KDQpDYW4gU3R1YXJ0IGp1
-c3QgYWRkIHRoZSAiQWNrZWQtYnkiIHRhZyBoaW1zZWxmIHRvIHRoZSBjb21taXQgaW4gVjIgYXQg
-dGhpcw0KcG9pbnQgY29uc2lkZXJpbmcgdGhhdD8gIE9yIGRvIHlvdSBuZWVkIHBhdGNod29yayB0
-byBwaWNrIGl0IHVwIGFuZCBhcHBseSBpdD8NCg0K
+Some users have been reporting issues with thunderbolt being turned off
+before fully initialized.  This is suspected to be caused by userspace
+turning off the Thunderbolt controller using intel-wmi-thunderbolt
+prematurely.
+
+Details are available here:
+https://bugzilla.kernel.org/show_bug.cgi?id=201227
+https://bugzilla.kernel.org/show_bug.cgi?id=199631
+
+Userspace has already made some mitigiations for this situation:
+https://github.com/hughsie/fwupd/commit/ef6f1d76983c9b66
+https://github.com/hughsie/fwupd/commit/c07ce5b4889a5384
+
+To allow easier debugging of this situation add output that can be turned
+on with dynamic debugging to better root cause this problem.
+
+Suggested-by: Mika Westerberg <mika.westerberg@intel.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ drivers/platform/x86/intel-wmi-thunderbolt.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c b/drivers/platform/x86/intel-wmi-thunderbolt.c
+index c2257bd..ce5fbf0 100644
+--- a/drivers/platform/x86/intel-wmi-thunderbolt.c
++++ b/drivers/platform/x86/intel-wmi-thunderbolt.c
+@@ -38,12 +38,16 @@ static ssize_t force_power_store(struct device *dev,
+ 	input.length = sizeof(u8);
+ 	input.pointer = &mode;
+ 	mode = hex_to_bin(buf[0]);
++	dev_dbg(dev, "force_power: storing %#x\n", mode);
+ 	if (mode == 0 || mode == 1) {
+ 		status = wmi_evaluate_method(INTEL_WMI_THUNDERBOLT_GUID, 0, 1,
+ 					     &input, NULL);
+-		if (ACPI_FAILURE(status))
++		if (ACPI_FAILURE(status)) {
++			dev_dbg(dev, "force_power: failed to evaluate ACPI method\n");
+ 			return -ENODEV;
++		}
+ 	} else {
++		dev_dbg(dev, "force_power: unsupported mode\n");
+ 		return -EINVAL;
+ 	}
+ 	return count;
+-- 
+2.7.4
