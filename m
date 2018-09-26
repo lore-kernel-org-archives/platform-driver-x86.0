@@ -1,105 +1,61 @@
-From: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v2 3/5] firmware: dell_rbu: Move dell_rbu to drivers/platform/x86
-Date: Wed, 26 Sep 2018 16:50:19 -0500
-Message-ID: <20180926215021.30471-4-stuart.w.hayes@gmail.com>
-References: <20180926215021.30471-1-stuart.w.hayes@gmail.com>
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v14 09/19] x86/mm: x86/sgx: Signal SEGV_SGXERR for #PFs w/ PF_SGX
+Date: Wed, 26 Sep 2018 15:37:45 -0700
+Message-ID: <CALCETrXyjRh1sBk1V21iTtjdhiWGCYsHnUNktkJC5xFiZy6c9A@mail.gmail.com>
+References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
+ <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com> <CALCETrVAhiwv+g5fzVO3ZSHZgcQKbeeG8r3HUcXO9k7Gi94NdQ@mail.gmail.com>
+ <20180926173516.GA10920@linux.intel.com> <2D60780F-ADB4-48A4-AB74-15683493D369@amacapital.net>
+ <9835e288-ba98-2f9e-ac73-504db9512bb9@intel.com> <20180926204400.GA11446@linux.intel.com>
+ <b7e14c6e-fc05-93fa-eef9-5e3f06ab4729@intel.com> <CALCETrXByb2UVuZ6AXUeOd8y90NAikbZuvdN3wf_TjHZ+CxNhA@mail.gmail.com>
+ <992b1d6d-cc0f-776f-d938-2a1f7cad52c8@intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926215021.30471-1-stuart.w.hayes@gmail.com>
+In-Reply-To: <992b1d6d-cc0f-776f-d938-2a1f7cad52c8@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mario Limonciello <mario.limonciello@dell.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Doug Warzecha <Douglas_Warzecha@dell.com>, Stuart Hayes <stuart.w.hayes@gmail.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: "Christopherson, Sean J" <sean.j.christopherson@intel.com>, Andrew Lutomirski <luto@kernel.org>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Move dell_rbu to the more appropriate directory drivers/platform/x86.
+On Wed, Sep 26, 2018 at 2:45 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 09/26/2018 02:15 PM, Andy Lutomirski wrote:
+> > Could we perhaps have a little vDSO entry (or syscall, I suppose) that
+> > runs an enclave an returns an error code, and rig up the #PF handler
+> > to check if the error happened in the vDSO entry and fix it up rather
+> > than sending a signal?
+>
+> Yeah, signals suck.
+>
+> So, instead of doing the enclave entry instruction (EENTER is it?), the
+> app would do the vDSO call.  It would have some calling convention, like
+> "set %rax to 0 before entering".  Then, we just teach the page fault
+> handler about the %RIP in the vDSO that can fault and how to move one
+> instruction later, munge %RIP to a value that tells about the error,
+> then return from the fault.  It would basically be like the kernel
+> exception tables, but for userspace.  Right?
 
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
----
-v2 changes:
- - add commit message
+Yeah.  Maybe like this:
 
- drivers/firmware/Kconfig                      | 12 ------------
- drivers/firmware/Makefile                     |  1 -
- drivers/platform/x86/Kconfig                  | 12 ++++++++++++
- drivers/platform/x86/Makefile                 |  1 +
- drivers/{firmware => platform/x86}/dell_rbu.c |  0
- 5 files changed, 13 insertions(+), 13 deletions(-)
- rename drivers/{firmware => platform/x86}/dell_rbu.c (100%)
+xorl %eax,%eax
+eenter_insn:
+ENCLU[whatever]
+eenter_landing_pad:
+ret
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index 6e83880046d7..02f39d20efce 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -145,18 +145,6 @@ config EFI_PCDP
- 	  See DIG64_HCDPv20_042804.pdf available from
- 	  <http://www.dig64.org/specifications/> 
- 
--config DELL_RBU
--	tristate "BIOS update support for DELL systems via sysfs"
--	depends on X86
--	select FW_LOADER
--	select FW_LOADER_USER_HELPER
--	help
--	 Say m if you want to have the option of updating the BIOS for your
--	 DELL system. Note you need a Dell OpenManage or Dell Update package (DUP)
--	 supporting application to communicate with the BIOS regarding the new
--	 image for the image update to take effect.
--	 See <file:Documentation/dell_rbu.txt> for more details on the driver.
--
- config DCDBAS
- 	tristate "Dell Systems Management Base Driver"
- 	depends on X86
-diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index e18a041cfc53..61887ba9df1d 100644
---- a/drivers/firmware/Makefile
-+++ b/drivers/firmware/Makefile
-@@ -11,7 +11,6 @@ obj-$(CONFIG_DMI)		+= dmi_scan.o
- obj-$(CONFIG_DMI_SYSFS)		+= dmi-sysfs.o
- obj-$(CONFIG_EDD)		+= edd.o
- obj-$(CONFIG_EFI_PCDP)		+= pcdp.o
--obj-$(CONFIG_DELL_RBU)          += dell_rbu.o
- obj-$(CONFIG_DCDBAS)		+= dcdbas.o
- obj-$(CONFIG_DMIID)		+= dmi-id.o
- obj-$(CONFIG_ISCSI_IBFT_FIND)	+= iscsi_ibft_find.o
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 0c1aa6c314f5..cb037da32107 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -227,6 +227,18 @@ config DELL_RBTN
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called dell-rbtn.
- 
-+config DELL_RBU
-+	tristate "BIOS update support for DELL systems via sysfs"
-+	depends on X86
-+	select FW_LOADER
-+	select FW_LOADER_USER_HELPER
-+	help
-+	 Say m if you want to have the option of updating the BIOS for your
-+	 DELL system. Note you need a Dell OpenManage or Dell Update package (DUP)
-+	 supporting application to communicate with the BIOS regarding the new
-+	 image for the image update to take effect.
-+	 See <file:Documentation/dell_rbu.txt> for more details on the driver.
-+
- 
- config FUJITSU_LAPTOP
- 	tristate "Fujitsu Laptop Extras"
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index e6d1becf81ce..8843f8e22127 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_DELL_WMI_AIO)	+= dell-wmi-aio.o
- obj-$(CONFIG_DELL_WMI_LED)	+= dell-wmi-led.o
- obj-$(CONFIG_DELL_SMO8800)	+= dell-smo8800.o
- obj-$(CONFIG_DELL_RBTN)		+= dell-rbtn.o
-+obj-$(CONFIG_DELL_RBU)          += dell_rbu.o
- obj-$(CONFIG_ACER_WMI)		+= acer-wmi.o
- obj-$(CONFIG_ACER_WIRELESS)	+= acer-wireless.o
- obj-$(CONFIG_ACERHDF)		+= acerhdf.o
-diff --git a/drivers/firmware/dell_rbu.c b/drivers/platform/x86/dell_rbu.c
-similarity index 100%
-rename from drivers/firmware/dell_rbu.c
-rename to drivers/platform/x86/dell_rbu.c
--- 
-2.19.0
+And the kernel would use the existing vdso2c vdso-symbol-finding
+mechanism to do the fixup.
+
+>
+> How would a syscall work, though?  I assume we can't just enter the
+> enclave from ring0.
+
+My understanding of how AEX works is a bit vague, but maybe a syscall
+could reuse the mechanism?  The vDSO approach seems considerably
+simpler.
+
+We do need to make sure that a fault that happens on or after return
+from an AEX event does the right thing.  But I'm still vague on how
+that works, sigh.
+
+--Andy
