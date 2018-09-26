@@ -1,79 +1,52 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/5] Update and move Dell drivers dell_rbu and dcdbas
-Date: Wed, 26 Sep 2018 14:05:14 +0300
-Message-ID: <CAHp75VcMDXsJWTzrEo+L7aQzaj1oRoUb_Cpc91J22p0wcybOjQ@mail.gmail.com>
-References: <20180925193418.28493-1-stuart.hayes@dell.com> <CAHp75Ve=ZnkBbdG3Myu1qzubr6+q74Q0u9pR7+nHXG=yAO-0rA@mail.gmail.com>
+Subject: Re: [PATCH 0/6] platform/x86: acerhdf: new BIOS string, better
+ modparam handling
+Date: Wed, 26 Sep 2018 14:09:25 +0300
+Message-ID: <CAHp75Vd3L2BQX02NQVM=ZTMkv4WpM=AXXVMyG0Cyc0SjjUU55g@mail.gmail.com>
+References: <20180921014421.30804-1-paul.gortmaker@windriver.com> <f401b6fed813afb86f5442c7707bf9fb@piie.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve=ZnkBbdG3Myu1qzubr6+q74Q0u9pR7+nHXG=yAO-0rA@mail.gmail.com>
+In-Reply-To: <f401b6fed813afb86f5442c7707bf9fb@piie.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: peter@piie.net
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 26, 2018 at 2:04 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Fri, Sep 21, 2018 at 9:20 AM Peter Feuerer <peter@piie.net> wrote:
 >
-> On Tue, Sep 25, 2018 at 10:34 PM Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
+> Hi,
+>
+> 21. September 2018 03:45, "Paul Gortmaker" <paul.gortmaker@windriver.com> schrieb:
+>
+> > I came across this older netbook over the xmas holidays, and noticed the
+> > acerhdf driver wouldn't load. Turns out the BIOS string was too new,
+> > and not listed in the driver. There were module params for overrides,
+> > but I found their use isn't quite clear without reading the source.
 > >
-> > From: Stuart Hayes <stuart.w.hayes@gmail.com>
+> > Here I clarify some of the module parameter usage, and then add the new
+> > BIOS string, so they won't be needed for this particular platform. Some
+> > probe code is also shifted out to be __init to reduce the driver size a
+> > bit. Further details can be found in the respective commit logs.
 > >
-> > The dell_rbu and dcdbas drivers need some changes, and should be moved to
-> > drivers/platform/x86.  Additionally, dell_rbu needs a maintainer, and the
-> > listed maintainer for dcdbas is inactive and needs to be changed.
+> > Since it was months ago when I created these patches, I retested on top
+> > of tree to ensure things still work, as can be seen below.
 >
-> I pushed this series to my review and testing queue to allow bots play with.
+> Thanks a lot for your work and this set of changes.  This improves quality.
+> I reviewed all 6 patches.
 >
-> But.
-> Please, add commit messages to patches 4 and 5 (I can't take w/o them).
-> Collect Doug's tag that proves he is okay with the change (I remember
-> he answered something to the old thread, though I don't remember the
-> details except annoying footer which should not be up in open source
-> mailing lists).
+> Reviewed-by: Peter Feuerer <peter@piie.net>
+>
+> Please also add CC: Boris Petkov <bp@suse.de> for review.
 
-Applying: MAINTAINERS: Update maintainer for dcdbas and dell_rbu
-.git/rebase-apply/patch:14: trailing whitespace.
-M:      Stuart Hayes <stuart.w.hayes@gmail.com>
-warning: 1 line adds whitespace errors.
-
-Fix the above as well.
+Shall I wait for Boris'  tags?
 
 >
-> So, while bots are playing with the code I'm waiting for v2 of this
-> with above addressed.
-> Thanks!
->
-> >
-> > Stuart Hayes (5):
-> >   firmware: dell_rbu: Make payload memory uncachable
-> >   firmware: dcdbas: Add support for WSMT ACPI table
-> >   firmware: dell_rbu: Move dell_rbu to drivers/platform/x86
-> >   firmware: dcdbas: Move dcdbas to drivers/platform/x86
-> >   MAINTAINERS: Update maintainer for dcdbas and dell_rbu
-> >
-> >  MAINTAINERS                                   |  11 +-
-> >  drivers/firmware/Kconfig                      |  28 ----
-> >  drivers/firmware/Makefile                     |   2 -
-> >  drivers/platform/x86/Kconfig                  |  28 ++++
-> >  drivers/platform/x86/Makefile                 |   2 +
-> >  drivers/{firmware => platform/x86}/dcdbas.c   | 123 +++++++++++++++++-
-> >  drivers/{firmware => platform/x86}/dcdbas.h   |  10 ++
-> >  drivers/platform/x86/dell-smbios-smm.c        |   2 +-
-> >  drivers/{firmware => platform/x86}/dell_rbu.c |   8 ++
-> >  9 files changed, 175 insertions(+), 39 deletions(-)
-> >  rename drivers/{firmware => platform/x86}/dcdbas.c (82%)
-> >  rename drivers/{firmware => platform/x86}/dcdbas.h (93%)
-> >  rename drivers/{firmware => platform/x86}/dell_rbu.c (98%)
-> >
-> > --
-> > 2.19.0.221.g150f307af
-> >
->
+> [...]
 >
 > --
-> With Best Regards,
-> Andy Shevchenko
+> kind regards,
+> --peter;
 
 
 
