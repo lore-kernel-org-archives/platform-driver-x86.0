@@ -1,94 +1,33 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel-wmi-thunderbolt: Add dynamic debugging
-Date: Wed, 26 Sep 2018 20:10:34 +0300
-Message-ID: <CAHp75VcMDbiOhGzm7oXZ2jPcxe494YhSRFVzQtbUNj0ugUZfrQ@mail.gmail.com>
-References: <1537978258-2907-1-git-send-email-mario.limonciello@dell.com>
- <CAHp75VeGQTEZOrMbNsbsxSb4RcN1y=gAZuZ5Z6FawuU-e0+qcg@mail.gmail.com> <72af799dd45442e6bd35082e1579013a@ausx13mpc120.AMER.DELL.COM>
+Subject: Re: [PATCH 1/4] platform/x86: intel_pmc_core: Show Latency Tolerance info
+Date: Wed, 26 Sep 2018 20:14:15 +0300
+Message-ID: <CAHp75Veeh3udVrWvdhAgPygcdWvBY6-=MBMy87=AUh4N-8ZRbQ@mail.gmail.com>
+References: <20180903180415.31575-1-rajneesh.bhardwaj@linux.intel.com>
+ <CAHp75Vesn4TrdF8tWLkU7nCRGp_o8fEK6gxpTkwM7E7zQo0qKg@mail.gmail.com> <04398317-a3b8-9387-e532-fcf26da9220e@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <72af799dd45442e6bd35082e1579013a@ausx13mpc120.AMER.DELL.COM>
+In-Reply-To: <04398317-a3b8-9387-e532-fcf26da9220e@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Mika Westerberg <mika.westerberg@intel.com>
+To: rajneesh.bhardwaj@linux.intel.com
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 26, 2018 at 8:03 PM <Mario.Limonciello@dell.com> wrote:
->
-> >
-> > On Wed, Sep 26, 2018 at 7:11 PM Mario Limonciello
-> > <mario.limonciello@dell.com> wrote:
-> > >
-> > > Some users have been reporting issues with thunderbolt being turned off
-> > > before fully initialized.  This is suspected to be caused by userspace
-> > > turning off the Thunderbolt controller using intel-wmi-thunderbolt
-> > > prematurely.
-> > >
-> >
-> > > Details are available here:
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=201227
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=199631
-> >
-> > BugLink: ... ?
-> > BugLink: ... ?
-> >
-> > I can do it myself if you are okay with this format.
-> >
-> > The patch itself LGTM.
->
-> Sure, thank you.
+On Wed, Sep 26, 2018 at 5:15 PM Bhardwaj, Rajneesh
+<rajneesh.bhardwaj@linux.intel.com> wrote:
+> On 26-Sep-18 7:18 PM, Andy Shevchenko wrote:
+> > On Mon, Sep 3, 2018 at 9:06 PM Rajneesh Bhardwaj
+> > <rajneesh.bhardwaj@linux.intel.com> wrote:
 
-Pushed to my review and testing queue with mentioned changes, thanks!
+> >> +       {"IP 16 : LTR_SCC",                     SPT_PMC_LTR_SCC},
+> >> +       {"IP 17 : LTR_ISH",                     SPT_PMC_LTR_ISH},
 
->
-> >
-> > >
-> > > Userspace has already made some mitigiations for this situation:
-> > > https://github.com/hughsie/fwupd/commit/ef6f1d76983c9b66
-> > > https://github.com/hughsie/fwupd/commit/c07ce5b4889a5384
-> > >
-> > > To allow easier debugging of this situation add output that can be turned
-> > > on with dynamic debugging to better root cause this problem.
-> > >
-> > > Suggested-by: Mika Westerberg <mika.westerberg@intel.com>
-> > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> > > ---
-> > >  drivers/platform/x86/intel-wmi-thunderbolt.c | 6 +++++-
-> > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c
-> > b/drivers/platform/x86/intel-wmi-thunderbolt.c
-> > > index c2257bd..ce5fbf0 100644
-> > > --- a/drivers/platform/x86/intel-wmi-thunderbolt.c
-> > > +++ b/drivers/platform/x86/intel-wmi-thunderbolt.c
-> > > @@ -38,12 +38,16 @@ static ssize_t force_power_store(struct device *dev,
-> > >         input.length = sizeof(u8);
-> > >         input.pointer = &mode;
-> > >         mode = hex_to_bin(buf[0]);
-> > > +       dev_dbg(dev, "force_power: storing %#x\n", mode);
-> > >         if (mode == 0 || mode == 1) {
-> > >                 status = wmi_evaluate_method(INTEL_WMI_THUNDERBOLT_GUID, 0, 1,
-> > >                                              &input, NULL);
-> > > -               if (ACPI_FAILURE(status))
-> > > +               if (ACPI_FAILURE(status)) {
-> > > +                       dev_dbg(dev, "force_power: failed to evaluate ACPI method\n");
-> > >                         return -ENODEV;
-> > > +               }
-> > >         } else {
-> > > +               dev_dbg(dev, "force_power: unsupported mode\n");
-> > >                 return -EINVAL;
-> > >         }
-> > >         return count;
-> > > --
-> > > 2.7.4
-> > >
-> >
-> >
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
+> > Before no map has this fancy "IP xx :" prefixes. Please, remove.
 
+>   The users of the driver often ask for IP Numbers while performing
+> LTR_IGNORE operation so this is deliberately added. Please consider it.
 
+You may enumerate during printing.
 
 -- 
 With Best Regards,
