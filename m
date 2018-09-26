@@ -1,38 +1,49 @@
-From: Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v14 09/19] x86/mm: x86/sgx: Signal SEGV_SGXERR for #PFs w/ PF_SGX
-Date: Tue, 25 Sep 2018 15:53:48 -0700
-Message-ID: <CALCETrVAhiwv+g5fzVO3ZSHZgcQKbeeG8r3HUcXO9k7Gi94NdQ@mail.gmail.com>
-References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com> <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] platform/x86: mlx-platform: Properly use mlxplat_mlxcpld_msn201x_items
+Date: Tue, 25 Sep 2018 22:21:15 -0700
+Message-ID: <20180926052115.21223-1-natechancellor@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andrew Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, LKML <linux-kernel@vger.kernel.org>
+To: Vadim Pasternak <vadimp@mellanox.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Nathan Chancellor <natechancellor@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Minor nit:
+Clang warns that mlxplat_mlxcpld_msn201x_items is not going to be
+emitted in the final assembly because it's only used in ARRAY_SIZE right
+now, which is a compile time evaluation since the array's size is known.
 
-On Tue, Sep 25, 2018 at 6:12 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
->
+drivers/platform/x86/mlx-platform.c:555:32: warning: variable
+'mlxplat_mlxcpld_msn201x_items' is not needed and will not be emitted
+[-Wunneeded-internal-declaration]
+static struct mlxreg_core_item mlxplat_mlxcpld_msn201x_items[] = {
+                               ^
+1 warning generated.
 
-> by (c) as the kernel doesn't really have any other reasonable option,
-> e.g. we could kill the task or panic, but neither is warranted.
+It appears this was a copy and paste mistake from when this item was
+first added. Use the definition in mlxplat_mlxcpld_msn201x_data so that
+Clang no longer warns.
 
-Not killing the task is quite nice, but...
+Link: https://github.com/ClangBuiltLinux/linux/issues/141
+Fixes: a49a41482f61 ("platform/x86: mlx-platform: Add support for new msn201x system type")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/platform/x86/mlx-platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +       /*
-> +        * Access is blocked by the Enclave Page Cache Map (EPCM),
-> +        * i.e. the access is allowed by the PTE but not the EPCM.
-> +        * This usually happens when the EPCM is yanked out from
-> +        * under us, e.g. by hardware after a suspend/resume cycle.
-> +        * In any case, there is nothing that can be done by the
-> +        * kernel to resolve the fault (short of killing the task).
-
-Maybe s/killing the task/sending a signal/?
-
---Andy
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index d89936c93ba0..c2c3a1a19879 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -575,7 +575,7 @@ static struct mlxreg_core_item mlxplat_mlxcpld_msn201x_items[] = {
+ 
+ static
+ struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_msn201x_data = {
+-	.items = mlxplat_mlxcpld_msn21xx_items,
++	.items = mlxplat_mlxcpld_msn201x_items,
+ 	.counter = ARRAY_SIZE(mlxplat_mlxcpld_msn201x_items),
+ 	.cell = MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET,
+ 	.mask = MLXPLAT_CPLD_AGGR_MASK_DEF,
+-- 
+2.19.0
