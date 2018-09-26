@@ -1,7 +1,7 @@
 From: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v2 2/5] firmware: dcdbas: Add support for WSMT ACPI table
-Date: Wed, 26 Sep 2018 16:50:18 -0500
-Message-ID: <20180926215021.30471-3-stuart.w.hayes@gmail.com>
+Subject: [PATCH v2 4/5] firmware: dcdbas: Move dcdbas to drivers/platform/x86
+Date: Wed, 26 Sep 2018 16:50:20 -0500
+Message-ID: <20180926215021.30471-5-stuart.w.hayes@gmail.com>
 References: <20180926215021.30471-1-stuart.w.hayes@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,248 +12,122 @@ To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Mario Limonciello <mario.limonciello@dell.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Doug Warzecha <Douglas_Warzecha@dell.com>, Stuart Hayes <stuart.w.hayes@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-If the WSMT ACPI table is present and indicates that a fixed communication
-buffer should be used, use the firmware-specified buffer instead of
-allocating a buffer in memory for communications between the dcdbas driver
-and firmare.
+Move dcdbas to the more appropriate directory drivers/platform/x86.
 
 Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 ---
-This patch has been discussed previously, see history at
-https://lore.kernel.org/patchwork/patch/958893/
+v2 changes:
+ - add commit message
 
- drivers/firmware/dcdbas.c | 123 ++++++++++++++++++++++++++++++++++++--
- drivers/firmware/dcdbas.h |  10 ++++
- 2 files changed, 127 insertions(+), 6 deletions(-)
+ drivers/firmware/Kconfig                    | 16 ----------------
+ drivers/firmware/Makefile                   |  1 -
+ drivers/platform/x86/Kconfig                | 16 ++++++++++++++++
+ drivers/platform/x86/Makefile               |  1 +
+ drivers/{firmware => platform/x86}/dcdbas.c |  0
+ drivers/{firmware => platform/x86}/dcdbas.h |  0
+ drivers/platform/x86/dell-smbios-smm.c      |  2 +-
+ 7 files changed, 18 insertions(+), 18 deletions(-)
+ rename drivers/{firmware => platform/x86}/dcdbas.c (100%)
+ rename drivers/{firmware => platform/x86}/dcdbas.h (100%)
 
-diff --git a/drivers/firmware/dcdbas.c b/drivers/firmware/dcdbas.c
-index 0bdea60c65dd..ae28e48ff7dc 100644
---- a/drivers/firmware/dcdbas.c
-+++ b/drivers/firmware/dcdbas.c
-@@ -21,6 +21,7 @@
-  */
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index 02f39d20efce..6d0c28fd3bad 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -145,22 +145,6 @@ config EFI_PCDP
+ 	  See DIG64_HCDPv20_042804.pdf available from
+ 	  <http://www.dig64.org/specifications/> 
  
+-config DCDBAS
+-	tristate "Dell Systems Management Base Driver"
+-	depends on X86
+-	help
+-	  The Dell Systems Management Base Driver provides a sysfs interface
+-	  for systems management software to perform System Management
+-	  Interrupts (SMIs) and Host Control Actions (system power cycle or
+-	  power off after OS shutdown) on certain Dell systems.
+-
+-	  See <file:Documentation/dcdbas.txt> for more details on the driver
+-	  and the Dell systems on which Dell systems management software makes
+-	  use of this driver.
+-
+-	  Say Y or M here to enable the driver for use by Dell systems
+-	  management software such as Dell OpenManage.
+-
+ config DMIID
+     bool "Export DMI identification via sysfs to userspace"
+     depends on DMI
+diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+index 61887ba9df1d..edda4206d8fc 100644
+--- a/drivers/firmware/Makefile
++++ b/drivers/firmware/Makefile
+@@ -11,7 +11,6 @@ obj-$(CONFIG_DMI)		+= dmi_scan.o
+ obj-$(CONFIG_DMI_SYSFS)		+= dmi-sysfs.o
+ obj-$(CONFIG_EDD)		+= edd.o
+ obj-$(CONFIG_EFI_PCDP)		+= pcdp.o
+-obj-$(CONFIG_DCDBAS)		+= dcdbas.o
+ obj-$(CONFIG_DMIID)		+= dmi-id.o
+ obj-$(CONFIG_ISCSI_IBFT_FIND)	+= iscsi_ibft_find.o
+ obj-$(CONFIG_ISCSI_IBFT)	+= iscsi_ibft.o
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index cb037da32107..1c7e553c28ce 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -105,6 +105,22 @@ config ASUS_LAPTOP
+ 
+ 	  If you have an ACPI-compatible ASUS laptop, say Y or M here.
+ 
++config DCDBAS
++	tristate "Dell Systems Management Base Driver"
++	depends on X86
++	help
++	  The Dell Systems Management Base Driver provides a sysfs interface
++	  for systems management software to perform System Management
++	  Interrupts (SMIs) and Host Control Actions (system power cycle or
++	  power off after OS shutdown) on certain Dell systems.
++
++	  See <file:Documentation/dcdbas.txt> for more details on the driver
++	  and the Dell systems on which Dell systems management software makes
++	  use of this driver.
++
++	  Say Y or M here to enable the driver for use by Dell systems
++	  management software such as Dell OpenManage.
++
+ #
+ # The DELL_SMBIOS driver depends on ACPI_WMI and/or DCDBAS if those
+ # backends are selected. The "depends" line prevents a configuration
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 8843f8e22127..4e2712c9c0b0 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_EEEPC_WMI)		+= eeepc-wmi.o
+ obj-$(CONFIG_MSI_LAPTOP)	+= msi-laptop.o
+ obj-$(CONFIG_ACPI_CMPC)		+= classmate-laptop.o
+ obj-$(CONFIG_COMPAL_LAPTOP)	+= compal-laptop.o
++obj-$(CONFIG_DCDBAS)		+= dcdbas.o
+ obj-$(CONFIG_DELL_SMBIOS)	+= dell-smbios.o
+ dell-smbios-objs		:= dell-smbios-base.o
+ dell-smbios-$(CONFIG_DELL_SMBIOS_WMI)	+= dell-smbios-wmi.o
+diff --git a/drivers/firmware/dcdbas.c b/drivers/platform/x86/dcdbas.c
+similarity index 100%
+rename from drivers/firmware/dcdbas.c
+rename to drivers/platform/x86/dcdbas.c
+diff --git a/drivers/firmware/dcdbas.h b/drivers/platform/x86/dcdbas.h
+similarity index 100%
+rename from drivers/firmware/dcdbas.h
+rename to drivers/platform/x86/dcdbas.h
+diff --git a/drivers/platform/x86/dell-smbios-smm.c b/drivers/platform/x86/dell-smbios-smm.c
+index 97a90bebc360..ab9b822a6dfe 100644
+--- a/drivers/platform/x86/dell-smbios-smm.c
++++ b/drivers/platform/x86/dell-smbios-smm.c
+@@ -18,7 +18,7 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
  #include <linux/platform_device.h>
-+#include <linux/acpi.h>
- #include <linux/dma-mapping.h>
- #include <linux/errno.h>
- #include <linux/cpu.h>
-@@ -41,7 +42,7 @@
- #include "dcdbas.h"
+-#include "../../firmware/dcdbas.h"
++#include "dcdbas.h"
+ #include "dell-smbios.h"
  
- #define DRIVER_NAME		"dcdbas"
--#define DRIVER_VERSION		"5.6.0-3.2"
-+#define DRIVER_VERSION		"5.6.0-3.3"
- #define DRIVER_DESCRIPTION	"Dell Systems Management Base Driver"
- 
- static struct platform_device *dcdbas_pdev;
-@@ -49,19 +50,23 @@ static struct platform_device *dcdbas_pdev;
- static u8 *smi_data_buf;
- static dma_addr_t smi_data_buf_handle;
- static unsigned long smi_data_buf_size;
-+static unsigned long max_smi_data_buf_size = MAX_SMI_DATA_BUF_SIZE;
- static u32 smi_data_buf_phys_addr;
- static DEFINE_MUTEX(smi_data_lock);
-+static u8 *eps_buffer;
- 
- static unsigned int host_control_action;
- static unsigned int host_control_smi_type;
- static unsigned int host_control_on_shutdown;
- 
-+static bool wsmt_enabled;
-+
- /**
-  * smi_data_buf_free: free SMI data buffer
-  */
- static void smi_data_buf_free(void)
- {
--	if (!smi_data_buf)
-+	if (!smi_data_buf || wsmt_enabled)
- 		return;
- 
- 	dev_dbg(&dcdbas_pdev->dev, "%s: phys: %x size: %lu\n",
-@@ -86,7 +91,7 @@ static int smi_data_buf_realloc(unsigned long size)
- 	if (smi_data_buf_size >= size)
- 		return 0;
- 
--	if (size > MAX_SMI_DATA_BUF_SIZE)
-+	if (size > max_smi_data_buf_size)
- 		return -EINVAL;
- 
- 	/* new buffer is needed */
-@@ -169,7 +174,7 @@ static ssize_t smi_data_write(struct file *filp, struct kobject *kobj,
- {
- 	ssize_t ret;
- 
--	if ((pos + count) > MAX_SMI_DATA_BUF_SIZE)
-+	if ((pos + count) > max_smi_data_buf_size)
- 		return -EINVAL;
- 
- 	mutex_lock(&smi_data_lock);
-@@ -322,8 +327,20 @@ static ssize_t smi_request_store(struct device *dev,
- 			ret = count;
- 		break;
- 	case 1:
--		/* Calling Interface SMI */
--		smi_cmd->ebx = (u32) virt_to_phys(smi_cmd->command_buffer);
-+		/*
-+		 * Calling Interface SMI
-+		 *
-+		 * Provide physical address of command buffer field within
-+		 * the struct smi_cmd to BIOS.
-+		 *
-+		 * Because the address that smi_cmd (smi_data_buf) points to
-+		 * will be from memremap() of a non-memory address if WSMT
-+		 * is present, we can't use virt_to_phys() on smi_cmd, so
-+		 * we have to use the physical address that was saved when
-+		 * the virtual address for smi_cmd was received.
-+		 */
-+		smi_cmd->ebx = smi_data_buf_phys_addr +
-+				offsetof(struct smi_cmd, command_buffer);
- 		ret = dcdbas_smi_request(smi_cmd);
- 		if (!ret)
- 			ret = count;
-@@ -482,6 +499,93 @@ static void dcdbas_host_control(void)
- 	}
- }
- 
-+/* WSMT */
-+
-+static u8 checksum(u8 *buffer, u8 length)
-+{
-+	u8 sum = 0;
-+	u8 *end = buffer + length;
-+
-+	while (buffer < end)
-+		sum += *buffer++;
-+	return sum;
-+}
-+
-+static inline struct smm_eps_table *check_eps_table(u8 *addr)
-+{
-+	struct smm_eps_table *eps = (struct smm_eps_table *)addr;
-+
-+	if (strncmp(eps->smm_comm_buff_anchor, SMM_EPS_SIG, 4) != 0)
-+		return NULL;
-+
-+	if (checksum(addr, eps->length) != 0)
-+		return NULL;
-+
-+	return eps;
-+}
-+
-+static int dcdbas_check_wsmt(void)
-+{
-+	struct acpi_table_wsmt *wsmt = NULL;
-+	struct smm_eps_table *eps = NULL;
-+	u64 remap_size;
-+	u8 *addr;
-+
-+	acpi_get_table(ACPI_SIG_WSMT, 0, (struct acpi_table_header **)&wsmt);
-+	if (!wsmt)
-+		return 0;
-+
-+	/* Check if WSMT ACPI table shows that protection is enabled */
-+	if (!(wsmt->protection_flags & ACPI_WSMT_FIXED_COMM_BUFFERS) ||
-+	    !(wsmt->protection_flags & ACPI_WSMT_COMM_BUFFER_NESTED_PTR_PROTECTION))
-+		return 0;
-+
-+	/* Scan for EPS (entry point structure) */
-+	for (addr = (u8 *)__va(0xf0000);
-+	     addr < (u8 *)__va(0x100000 - sizeof(struct smm_eps_table));
-+	     addr += 16) {
-+		eps = check_eps_table(addr);
-+		if (eps)
-+			break;
-+	}
-+
-+	if (!eps) {
-+		dev_dbg(&dcdbas_pdev->dev, "found WSMT, but no EPS found\n");
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * Get physical address of buffer and map to virtual address.
-+	 * Table gives size in 4K pages, regardless of actual system page size.
-+	 */
-+	if (upper_32_bits(eps->smm_comm_buff_addr + 8)) {
-+		dev_warn(&dcdbas_pdev->dev, "found WSMT, but EPS buffer address is above 4GB\n");
-+		return -EINVAL;
-+	}
-+	/*
-+	 * Limit remap size to MAX_SMI_DATA_BUF_SIZE + 8 (since the first 8
-+	 * bytes are used for a semaphore, not the data buffer itself).
-+	 */
-+	remap_size = eps->num_of_4k_pages * PAGE_SIZE;
-+	if (remap_size > MAX_SMI_DATA_BUF_SIZE + 8)
-+		remap_size = MAX_SMI_DATA_BUF_SIZE + 8;
-+	eps_buffer = memremap(eps->smm_comm_buff_addr, remap_size, MEMREMAP_WB);
-+	if (!eps_buffer) {
-+		dev_warn(&dcdbas_pdev->dev, "found WSMT, but failed to map EPS buffer\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* First 8 bytes is for a semaphore, not part of the smi_data_buf */
-+	smi_data_buf_phys_addr = eps->smm_comm_buff_addr + 8;
-+	smi_data_buf = eps_buffer + 8;
-+	smi_data_buf_size = remap_size - 8;
-+	max_smi_data_buf_size = smi_data_buf_size;
-+	wsmt_enabled = true;
-+	dev_info(&dcdbas_pdev->dev,
-+		 "WSMT found, using firmware-provided SMI buffer.\n");
-+	return 1;
-+}
-+
- /**
-  * dcdbas_reboot_notify: handle reboot notification for host control
-  */
-@@ -548,6 +652,11 @@ static int dcdbas_probe(struct platform_device *dev)
- 
- 	dcdbas_pdev = dev;
- 
-+	/* Check if ACPI WSMT table specifies protected SMI buffer address */
-+	error = dcdbas_check_wsmt();
-+	if (error < 0)
-+		return error;
-+
- 	/*
- 	 * BIOS SMI calls require buffer addresses be in 32-bit address space.
- 	 * This is done by setting the DMA mask below.
-@@ -635,6 +744,8 @@ static void __exit dcdbas_exit(void)
- 	 */
- 	if (dcdbas_pdev)
- 		smi_data_buf_free();
-+	if (eps_buffer)
-+		memunmap(eps_buffer);
- 	platform_device_unregister(dcdbas_pdev_reg);
- 	platform_driver_unregister(&dcdbas_driver);
- }
-diff --git a/drivers/firmware/dcdbas.h b/drivers/firmware/dcdbas.h
-index ca3cb0a54ab6..52729a494b00 100644
---- a/drivers/firmware/dcdbas.h
-+++ b/drivers/firmware/dcdbas.h
-@@ -53,6 +53,7 @@
- #define EXPIRED_TIMER				(0)
- 
- #define SMI_CMD_MAGIC				(0x534D4931)
-+#define SMM_EPS_SIG				"$SCB"
- 
- #define DCDBAS_DEV_ATTR_RW(_name) \
- 	DEVICE_ATTR(_name,0600,_name##_show,_name##_store);
-@@ -103,5 +104,14 @@ struct apm_cmd {
- 
- int dcdbas_smi_request(struct smi_cmd *smi_cmd);
- 
-+struct smm_eps_table {
-+	char smm_comm_buff_anchor[4];
-+	u8 length;
-+	u8 checksum;
-+	u8 version;
-+	u64 smm_comm_buff_addr;
-+	u64 num_of_4k_pages;
-+} __packed;
-+
- #endif /* _DCDBAS_H_ */
- 
+ static int da_command_address;
 -- 
 2.19.0
