@@ -1,7 +1,7 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 27/28] platform/x86: intel_turbo_max_3: Convert to use SPDX identifier
-Date: Wed, 26 Sep 2018 19:52:22 +0300
-Message-ID: <20180926165223.19390-27-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 14/28] platform/x86: intel_oaktrail: Convert to use SPDX identifier
+Date: Wed, 26 Sep 2018 19:52:09 +0300
+Message-ID: <20180926165223.19390-14-andriy.shevchenko@linux.intel.com>
 References: <20180926165223.19390-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -18,33 +18,42 @@ No functional change.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_turbo_max_3.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ drivers/platform/x86/intel_oaktrail.c | 18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_turbo_max_3.c b/drivers/platform/x86/intel_turbo_max_3.c
-index 0e1bdb883ceb..7b9cc841ab65 100644
---- a/drivers/platform/x86/intel_turbo_max_3.c
-+++ b/drivers/platform/x86/intel_turbo_max_3.c
-@@ -1,19 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/platform/x86/intel_oaktrail.c b/drivers/platform/x86/intel_oaktrail.c
+index 1d98fd9ca1ea..3c0438ba385e 100644
+--- a/drivers/platform/x86/intel_oaktrail.c
++++ b/drivers/platform/x86/intel_oaktrail.c
+@@ -1,5 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0+
  /*
-  * Intel Turbo Boost Max Technology 3.0 legacy (non HWP) enumeration driver
-  * Copyright (c) 2017, Intel Corporation.
-  * All rights reserved.
+- * intel_oaktrail.c - Intel OakTrail Platform support.
++ * Intel OakTrail Platform support
   *
-  * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+  * Copyright (C) 2010-2011 Intel Corporation
+  * Author: Yin Kangkai (kangkai.yin@intel.com)
+@@ -8,21 +9,6 @@
+  * <cezary.jackiewicz (at) gmail.com>, based on MSI driver
+  * Copyright (C) 2006 Lennart Poettering <mzxreary (at) 0pointer (dot) de>
+  *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
 - *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms and conditions of the GNU General Public License,
-- * version 2, as published by the Free Software Foundation.
+- *  This program is distributed in the hope that it will be useful, but
+- *  WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+- *  General Public License for more details.
 - *
-- * This program is distributed in the hope it will be useful, but WITHOUT
-- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-- * more details.
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+- *  02110-1301, USA.
 - *
-  */
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
+  * This driver does below things:
+  * 1. registers itself in the Linux backlight control in
+  *    /sys/class/backlight/intel_oaktrail/
 -- 
 2.19.0
