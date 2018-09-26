@@ -1,7 +1,7 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 28/28] platform/x86: intel-wmi-thunderbolt: Convert to use SPDX identifier
-Date: Wed, 26 Sep 2018 19:52:23 +0300
-Message-ID: <20180926165223.19390-28-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 05/28] platform/x86: intel_int0002_vgpio: Convert to use SPDX identifier
+Date: Wed, 26 Sep 2018 19:52:00 +0300
+Message-ID: <20180926165223.19390-5-andriy.shevchenko@linux.intel.com>
 References: <20180926165223.19390-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -20,35 +20,33 @@ While here, correct MODULE_LICENSE() string to be aligned with license text.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel-wmi-thunderbolt.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ drivers/platform/x86/intel_int0002_vgpio.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c b/drivers/platform/x86/intel-wmi-thunderbolt.c
-index c2257bd06f18..b029a70b084a 100644
---- a/drivers/platform/x86/intel-wmi-thunderbolt.c
-+++ b/drivers/platform/x86/intel-wmi-thunderbolt.c
-@@ -1,16 +1,8 @@
+diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+index 33c3489f5bc1..c958a628c375 100644
+--- a/drivers/platform/x86/intel_int0002_vgpio.c
++++ b/drivers/platform/x86/intel_int0002_vgpio.c
+@@ -1,3 +1,4 @@
 +// SPDX-License-Identifier: GPL-2.0
  /*
-  * WMI Thunderbolt driver
+  * Intel INT0002 "Virtual GPIO" driver
   *
-  * Copyright (C) 2017 Dell Inc. All Rights Reserved.
+@@ -9,10 +10,6 @@
+  *
+  * Author: Dyut Kumar Sil <dyut.k.sil@intel.com>
+  *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
 - *
-- *  This program is free software; you can redistribute it and/or modify it
-- *  under the terms of the GNU General Public License version 2 as published
-- *  by the Free Software Foundation.
-- *
-- *  This program is distributed in the hope that it will be useful,
-- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *  GNU General Public License for more details.
-  */
+  * Some peripherals on Bay Trail and Cherry Trail platforms signal a Power
+  * Management Event (PME) to the Power Management Controller (PMC) to wakeup
+  * the system. When this happens software needs to clear the PME bus 0 status
+@@ -228,4 +225,4 @@ module_platform_driver(int0002_driver);
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-@@ -95,4 +87,4 @@ module_wmi_driver(intel_wmi_thunderbolt_driver);
- MODULE_ALIAS("wmi:" INTEL_WMI_THUNDERBOLT_GUID);
- MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
- MODULE_DESCRIPTION("Intel WMI Thunderbolt force power driver");
+ MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
+ MODULE_DESCRIPTION("Intel INT0002 Virtual GPIO driver");
 -MODULE_LICENSE("GPL");
 +MODULE_LICENSE("GPL v2");
 -- 
