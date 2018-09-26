@@ -1,44 +1,66 @@
 From: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v2 0/5] Update and move Dell drivers dell_rbu and dcdbas
-Date: Wed, 26 Sep 2018 16:50:16 -0500
-Message-ID: <20180926215021.30471-1-stuart.w.hayes@gmail.com>
+Subject: [PATCH v2 1/5] firmware: dell_rbu: Make payload memory uncachable
+Date: Wed, 26 Sep 2018 16:50:17 -0500
+Message-ID: <20180926215021.30471-2-stuart.w.hayes@gmail.com>
+References: <20180926215021.30471-1-stuart.w.hayes@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180926215021.30471-1-stuart.w.hayes@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Mario Limonciello <mario.limonciello@dell.com>, LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Doug Warzecha <Douglas_Warzecha@dell.com>, Stuart Hayes <stuart.w.hayes@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The dell_rbu and dcdbas drivers need some changes, and should be moved to
-drivers/platform/x86.  Additionally, dell_rbu needs a maintainer, and the
-listed maintainer for dcdbas is inactive and needs to be changed.
+The dell_rbu driver takes firmware update payloads and puts them in memory so
+the system BIOS can find them after a reboot.  This sometimes fails (though
+rarely), because the memory containing the payload is in the CPU cache but
+never gets written back to main memory before the system is rebooted (CPU
+cache contents are lost on reboot).
 
-v2 changes:
- - add commit messages to patches that move dcdbas and dell_rbu
- - remove extra whitespace in MAINTAINERS
- - add acked-by from (previous) maintainer of dcdbas
+With this patch, the payload memory will be changed to uncachable to ensure
+that the payload is actually in main memory before the system is rebooted.
 
-Stuart Hayes (5):
-  firmware: dell_rbu: Make payload memory uncachable
-  firmware: dcdbas: Add support for WSMT ACPI table
-  firmware: dell_rbu: Move dell_rbu to drivers/platform/x86
-  firmware: dcdbas: Move dcdbas to drivers/platform/x86
-  MAINTAINERS: Update maintainer for dcdbas and dell_rbu
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+---
+This patch has been discussed previously, see history at
+https://patchwork.kernel.org/patch/10512079/
 
- MAINTAINERS                                   |  11 +-
- drivers/firmware/Kconfig                      |  28 ----
- drivers/firmware/Makefile                     |   2 -
- drivers/platform/x86/Kconfig                  |  28 ++++
- drivers/platform/x86/Makefile                 |   2 +
- drivers/{firmware => platform/x86}/dcdbas.c   | 123 +++++++++++++++++-
- drivers/{firmware => platform/x86}/dcdbas.h   |  10 ++
- drivers/platform/x86/dell-smbios-smm.c        |   2 +-
- drivers/{firmware => platform/x86}/dell_rbu.c |   8 ++
- 9 files changed, 175 insertions(+), 39 deletions(-)
- rename drivers/{firmware => platform/x86}/dcdbas.c (82%)
- rename drivers/{firmware => platform/x86}/dcdbas.h (93%)
- rename drivers/{firmware => platform/x86}/dell_rbu.c (98%)
+ drivers/firmware/dell_rbu.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
+diff --git a/drivers/firmware/dell_rbu.c b/drivers/firmware/dell_rbu.c
+index fb8af5cb7c9b..ccefa84f7305 100644
+--- a/drivers/firmware/dell_rbu.c
++++ b/drivers/firmware/dell_rbu.c
+@@ -45,6 +45,7 @@
+ #include <linux/moduleparam.h>
+ #include <linux/firmware.h>
+ #include <linux/dma-mapping.h>
++#include <asm/set_memory.h>
+ 
+ MODULE_AUTHOR("Abhay Salunke <abhay_salunke@dell.com>");
+ MODULE_DESCRIPTION("Driver for updating BIOS image on DELL systems");
+@@ -181,6 +182,11 @@ static int create_packet(void *data, size_t length)
+ 			packet_data_temp_buf = NULL;
+ 		}
+ 	}
++	/*
++	 * set to uncachable or it may never get written back before reboot
++	 */
++	set_memory_uc((unsigned long)packet_data_temp_buf, 1 << ordernum);
++
+ 	spin_lock(&rbu_data.lock);
+ 
+ 	newpacket->data = packet_data_temp_buf;
+@@ -349,6 +355,8 @@ static void packet_empty_list(void)
+ 		 * to make sure there are no stale RBU packets left in memory
+ 		 */
+ 		memset(newpacket->data, 0, rbu_data.packetsize);
++		set_memory_wb((unsigned long)newpacket->data,
++			1 << newpacket->ordernum);
+ 		free_pages((unsigned long) newpacket->data,
+ 			newpacket->ordernum);
+ 		kfree(newpacket);
 -- 
-2.19.0.221.g150f307af
+2.19.0
