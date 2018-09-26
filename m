@@ -1,51 +1,60 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel-wmi-thunderbolt: Add dynamic debugging
-Date: Wed, 26 Sep 2018 22:25:40 +0300
-Message-ID: <CAHp75VeCA1riXHHGjVz78BP0je+a5a6bgpXP5qdK+QxfHQpxdg@mail.gmail.com>
-References: <1537978258-2907-1-git-send-email-mario.limonciello@dell.com> <20180926183429.GP2664@lahna.fi.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v14 09/19] x86/mm: x86/sgx: Signal SEGV_SGXERR for #PFs w/
+ PF_SGX
+Date: Wed, 26 Sep 2018 13:16:59 -0700
+Message-ID: <9835e288-ba98-2f9e-ac73-504db9512bb9@intel.com>
+References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
+ <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com>
+ <CALCETrVAhiwv+g5fzVO3ZSHZgcQKbeeG8r3HUcXO9k7Gi94NdQ@mail.gmail.com>
+ <20180926173516.GA10920@linux.intel.com>
+ <2D60780F-ADB4-48A4-AB74-15683493D369@amacapital.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926183429.GP2664@lahna.fi.intel.com>
+In-Reply-To: <2D60780F-ADB4-48A4-AB74-15683493D369@amacapital.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@intel.com>
-Cc: Mario Limonciello <mario.limonciello@dell.com>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Andy Lutomirski <luto@amacapital.net>, Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 26, 2018 at 9:34 PM Mika Westerberg
-<mika.westerberg@intel.com> wrote:
->
-> On Wed, Sep 26, 2018 at 11:10:58AM -0500, Mario Limonciello wrote:
-> > Some users have been reporting issues with thunderbolt being turned off
-> > before fully initialized.  This is suspected to be caused by userspace
-> > turning off the Thunderbolt controller using intel-wmi-thunderbolt
-> > prematurely.
-> >
-> > Details are available here:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=201227
-> > https://bugzilla.kernel.org/show_bug.cgi?id=199631
-> >
-> > Userspace has already made some mitigiations for this situation:
->                                   ^^^^^^^^^^^^
-> mitigations?
+On 09/26/2018 11:12 AM, Andy Lutomirski wrote:
+>> e omniscient.
+>>
+>> How about this?  With formatting changes since it's long-winded...
+>>
+>>        /*
+>>         * Access is blocked by the Enclave Page Cache Map (EPCM), i.e. the
+>>         * access is allowed by the PTE but not the EPCM.  This usually happens
+>>         * when the EPCM is yanked out from under us, e.g. by hardware after a
+>>         * suspend/resume cycle.  In any case, software, i.e. the kernel, can't
+>>         * fix the source of the fault as the EPCM can't be directly modified
+>>         * by software.  Handle the fault as an access error in order to signal
+>>         * userspace, e.g. so that userspace can rebuild their enclave(s), even
+>>         * though userspace may not have actually violated access permissions.
+>>         */
+>>
+> Looks good to me.
 
-I've fixed that, but in any case I need to add your tag, thanks!
+Including the actual architectural definition of the bit might add some
+clarity.  The SDM explicitly says (Vol 3a section 4.7):
 
+	The fault resulted from violation of SGX-specific access-control
+	requirements.
 
->
-> > https://github.com/hughsie/fwupd/commit/ef6f1d76983c9b66
-> > https://github.com/hughsie/fwupd/commit/c07ce5b4889a5384
-> >
-> > To allow easier debugging of this situation add output that can be turned
-> > on with dynamic debugging to better root cause this problem.
-> >
-> > Suggested-by: Mika Westerberg <mika.westerberg@intel.com>
-> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
->
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Which totally squares with returning true from access_error().
 
+There's also a tidbit that says:
 
+	This flag is 1 if the exception is unrelated to paging and
+	resulted from violation of SGX-specific access-control
+	requirements. ... such a violation can occur only if there
+	is no ordinary page fault...
 
--- 
-With Best Regards,
-Andy Shevchenko
+This is pretty important.  It means that *none* of the other
+paging-related stuff that we're doing applies.
+
+We also need to clarify how this can happen.  Is it through something
+than an app does, or is it solely when the hardware does something under
+the covers, like suspend/resume.
