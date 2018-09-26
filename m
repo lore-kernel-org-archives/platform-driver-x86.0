@@ -1,81 +1,78 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 20/28] platform/x86: intel-rst: Convert to use SPDX identifier
-Date: Wed, 26 Sep 2018 19:52:15 +0300
-Message-ID: <20180926165223.19390-20-andriy.shevchenko@linux.intel.com>
-References: <20180926165223.19390-1-andriy.shevchenko@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: intel-wmi-thunderbolt: Add dynamic debugging
+Date: Wed, 26 Sep 2018 20:02:31 +0300
+Message-ID: <CAHp75VeGQTEZOrMbNsbsxSb4RcN1y=gAZuZ5Z6FawuU-e0+qcg@mail.gmail.com>
+References: <1537978258-2907-1-git-send-email-mario.limonciello@dell.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926165223.19390-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <1537978258-2907-1-git-send-email-mario.limonciello@dell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Hung <alex.hung@canonical.com>, Mario Limonciello <mario.limonciello@dell.com>, Sujith Thomas <sujith.thomas@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Zha Qipeng <qipeng.zha@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Mika Westerberg <mika.westerberg@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Reduce size of duplicated comments by switching to use SPDX identifier.
+On Wed, Sep 26, 2018 at 7:11 PM Mario Limonciello
+<mario.limonciello@dell.com> wrote:
+>
+> Some users have been reporting issues with thunderbolt being turned off
+> before fully initialized.  This is suspected to be caused by userspace
+> turning off the Thunderbolt controller using intel-wmi-thunderbolt
+> prematurely.
+>
 
-No functional change.
+> Details are available here:
+> https://bugzilla.kernel.org/show_bug.cgi?id=201227
+> https://bugzilla.kernel.org/show_bug.cgi?id=199631
 
-While here, throw away some extra blank lines.
+BugLink: ... ?
+BugLink: ... ?
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel-rst.c | 20 +-------------------
- 1 file changed, 1 insertion(+), 19 deletions(-)
+I can do it myself if you are okay with this format.
 
-diff --git a/drivers/platform/x86/intel-rst.c b/drivers/platform/x86/intel-rst.c
-index 56abf5cbb824..3b81cb896fed 100644
---- a/drivers/platform/x86/intel-rst.c
-+++ b/drivers/platform/x86/intel-rst.c
-@@ -1,22 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-  *  Copyright 2013 Matthew Garrett <mjg59@srcf.ucam.org>
-- *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License as published by
-- *  the Free Software Foundation; either version 2 of the License, or
-- *  (at your option) any later version.
-- *
-- *  This program is distributed in the hope that it will be useful,
-- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *  GNU General Public License for more details.
-- *
-- *  You should have received a copy of the GNU General Public License along
-- *  with this program; if not, write to the Free Software Foundation, Inc.,
-- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-  */
- 
--
- #include <linux/acpi.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-@@ -52,12 +38,10 @@ static ssize_t irst_store_wakeup_events(struct device *dev,
- 	acpi = to_acpi_device(dev);
- 
- 	error = kstrtoul(buf, 0, &value);
--
- 	if (error)
- 		return error;
- 
- 	status = acpi_execute_simple_method(acpi->handle, "SFFS", value);
--
- 	if (ACPI_FAILURE(status))
- 		return -EINVAL;
- 
-@@ -98,12 +82,10 @@ static ssize_t irst_store_wakeup_time(struct device *dev,
- 	acpi = to_acpi_device(dev);
- 
- 	error = kstrtoul(buf, 0, &value);
--
- 	if (error)
- 		return error;
- 
- 	status = acpi_execute_simple_method(acpi->handle, "SFTV", value);
--
- 	if (ACPI_FAILURE(status))
- 		return -EINVAL;
- 
+The patch itself LGTM.
+
+>
+> Userspace has already made some mitigiations for this situation:
+> https://github.com/hughsie/fwupd/commit/ef6f1d76983c9b66
+> https://github.com/hughsie/fwupd/commit/c07ce5b4889a5384
+>
+> To allow easier debugging of this situation add output that can be turned
+> on with dynamic debugging to better root cause this problem.
+>
+> Suggested-by: Mika Westerberg <mika.westerberg@intel.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> ---
+>  drivers/platform/x86/intel-wmi-thunderbolt.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c b/drivers/platform/x86/intel-wmi-thunderbolt.c
+> index c2257bd..ce5fbf0 100644
+> --- a/drivers/platform/x86/intel-wmi-thunderbolt.c
+> +++ b/drivers/platform/x86/intel-wmi-thunderbolt.c
+> @@ -38,12 +38,16 @@ static ssize_t force_power_store(struct device *dev,
+>         input.length = sizeof(u8);
+>         input.pointer = &mode;
+>         mode = hex_to_bin(buf[0]);
+> +       dev_dbg(dev, "force_power: storing %#x\n", mode);
+>         if (mode == 0 || mode == 1) {
+>                 status = wmi_evaluate_method(INTEL_WMI_THUNDERBOLT_GUID, 0, 1,
+>                                              &input, NULL);
+> -               if (ACPI_FAILURE(status))
+> +               if (ACPI_FAILURE(status)) {
+> +                       dev_dbg(dev, "force_power: failed to evaluate ACPI method\n");
+>                         return -ENODEV;
+> +               }
+>         } else {
+> +               dev_dbg(dev, "force_power: unsupported mode\n");
+>                 return -EINVAL;
+>         }
+>         return count;
+> --
+> 2.7.4
+>
+
+
 -- 
-2.19.0
+With Best Regards,
+Andy Shevchenko
