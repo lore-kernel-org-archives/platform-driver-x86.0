@@ -1,15 +1,16 @@
 From: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Subject: Re: [PATCH 1/4] platform/x86: intel_pmc_core: Show Latency Tolerance
- info
-Date: Wed, 26 Sep 2018 19:41:49 +0530
-Message-ID: <04398317-a3b8-9387-e532-fcf26da9220e@linux.intel.com>
+Subject: Re: [PATCH 3/4] platform/x86: intel_pmc_core: Decode Snoop / Non
+ Snoop LTR
+Date: Wed, 26 Sep 2018 19:49:21 +0530
+Message-ID: <d8df94fd-cf7d-197f-0532-24e2da8116a7@linux.intel.com>
 References: <20180903180415.31575-1-rajneesh.bhardwaj@linux.intel.com>
- <CAHp75Vesn4TrdF8tWLkU7nCRGp_o8fEK6gxpTkwM7E7zQo0qKg@mail.gmail.com>
+ <20180903180415.31575-3-rajneesh.bhardwaj@linux.intel.com>
+ <CAHp75VcKSVJQ54qFV1BwqnwUu4dkS6sOACT3nTntJV+Ww56Oag@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vesn4TrdF8tWLkU7nCRGp_o8fEK6gxpTkwM7E7zQo0qKg@mail.gmail.com>
+In-Reply-To: <CAHp75VcKSVJQ54qFV1BwqnwUu4dkS6sOACT3nTntJV+Ww56Oag@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
@@ -18,76 +19,126 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 
 
-On 26-Sep-18 7:18 PM, Andy Shevchenko wrote:
-> On Mon, Sep 3, 2018 at 9:06 PM Rajneesh Bhardwaj
+On 26-Sep-18 7:23 PM, Andy Shevchenko wrote:
+> On Mon, Sep 3, 2018 at 9:05 PM Rajneesh Bhardwaj
 > <rajneesh.bhardwaj@linux.intel.com> wrote:
->> This adds support to show the Latency Tolerance Reporting for the IPs on
->> the PCH as reported by the PMC. The format shown here is raw LTR data
->> payload that can further be decoded as per the PCI specification.
+>> The LTR values follow PCIE LTR encoding format and can be decoded as per
+>> https://pcisig.com/sites/default/files/specification_documents/ECN_LatencyTolnReporting_14Aug08.pdf
 >>
->> This also fixes some minor alignment issues in the header file by
->> removing spaces and converting to tabs at some places.
-> Thanks for the patch, my comments below.
+>> This adds support to translate the raw LTR values as read from the PMC
+>> to meaningful values in nanosecond units of time.
+>> +static void get_ltr_scale(u32 *val)
+> What's wrong to return converted value? Actually the name should
+> reflect what it does, ie *convert* value.
 
-Hi Andy,
-
-Thanks for the review, my answers below.
->
->> +static const struct pmc_bit_map spt_ltr_show_map[] = {
->> +       {"IP 0  : LTR_SOUTHPORT_A",             SPT_PMC_LTR_SPA},
->> +       {"IP 1  : LTR_SOUTHPORT_B",             SPT_PMC_LTR_SPB},
->> +       {"IP 2  : LTR_SATA",                    SPT_PMC_LTR_SATA},
->> +       {"IP 3  : LTR_GIGABIT_ETHERNET",        SPT_PMC_LTR_GBE},
->> +       {"IP 4  : LTR_XHCI",                    SPT_PMC_LTR_XHCI},
->> +       /* IP 5 is reserved */
->> +       {"IP 6  : LTR_ME",                      SPT_PMC_LTR_ME},
->> +       /* EVA is Enterprise Value Add, doesn't really exist on PCH */
->> +       {"IP 7  : LTR_EVA",                     SPT_PMC_LTR_EVA},
->> +       {"IP 8  : LTR_SOUTHPORT_C",             SPT_PMC_LTR_SPC},
->> +       {"IP 9  : LTR_HD_AUDIO",                SPT_PMC_LTR_AZ},
->> +       /* IP 10 is reserved */
->> +       {"IP 11 : LTR_LPSS",                    SPT_PMC_LTR_LPSS},
->> +       {"IP 12 : LTR_SOUTHPORT_D",             SPT_PMC_LTR_SPD},
->> +       {"IP 13 : LTR_SOUTHPORT_E",             SPT_PMC_LTR_SPE},
->> +       {"IP 14 : LTR_CAMERA",                  SPT_PMC_LTR_CAM},
->> +       {"IP 15 : LTR_ESPI",                    SPT_PMC_LTR_ESPI},
->> +       {"IP 16 : LTR_SCC",                     SPT_PMC_LTR_SCC},
->> +       {"IP 17 : LTR_ISH",                     SPT_PMC_LTR_ISH},
->> +       /* Below two cannot be for LTR_IGNORE */
->> +       {"LTR_CURRENT_PLATFORM",                SPT_PMC_LTR_CUR_PLT},
->> +       {"LTR_AGGREGATED_SYSTEM",               SPT_PMC_LTR_CUR_ASLT},
-> Before no map has this fancy "IP xx :" prefixes. Please, remove.
-
-  The users of the driver often ask for IP Numbers while performing 
-LTR_IGNORE operation so this is deliberately added. Please consider it.
+I can change it as per your suggestion.
 
 >
->> +       {},
-> No need for comma
-Ok.
+>> +{
+>> +       /*
+>> +        * As per PCIE specification supprting document
+> supporting
+
+oops. Will fix.
+
+>
+>> +        * ECN_LatencyTolnReporting_14Aug08.pdf the Latency
+>> +        * Tolerance Reporting data payload is encoded in a
+>> +        * 3 bit scale and 10 bit value fields. Values are
+>> +        * multiplied by the indicated scale to yield an absolute time
+>> +        * value, expressible in a range from 1 nanosecond to
+>> +        * 2^25*(2^10-1) = 34,326,183,936 nanoseconds.
+>> +        *
+>> +        * scale encoding is as follows:
+>> +        *
+>> +        * ----------------------------------------------
+>> +        * |scale factor        |       Multiplier (ns) |
+>> +        * ----------------------------------------------
+>> +        * |    0               |       1               |
+>> +        * |    1               |       32              |
+>> +        * |    2               |       1024            |
+>> +        * |    3               |       32768           |
+>> +        * |    4               |       1048576         |
+>> +        * |    5               |       33554432        |
+>> +        * |    6               |       Invalid         |
+>> +        * |    7               |       Invalid         |
+>> +        * ----------------------------------------------
+>> +        */
+>> +       if (*val > 5) {
+>> +               *val = 0;
+>> +               pr_warn("Invalid LTR scale factor.\n");
+>> +       } else {
+>> +               *val = 1U << (5 * (*val));
+>> +       }
+>> +}
 >> +
-> Redundant.
+>>   static int pmc_core_ltr_show(struct seq_file *s, void *unused)
+>>   {
+>>          struct pmc_dev *pmcdev = s->private;
+>>          const struct pmc_bit_map *map = pmcdev->map->ltr_show_sts;
+>> +       u64 decoded_snoop_ltr = 0, decoded_non_snoop_ltr = 0;
+>> +       union ltr_payload ltr_data;
+>> +       u32 scale = 0;
+> Redundant assignment.
 
-OK
+Ok
+
 >
+>>          int index;
+>>
+>>          for (index = 0; map[index].name ; index++) {
+>> -               seq_printf(s, "%-32s\tRAW LTR: 0x%x\n",
+>> +               ltr_data.raw_data = pmc_core_reg_read(pmcdev,
+>> +                                                     map[index].bit_mask);
+>> +
+>> +               if (ltr_data.bits.non_snoop_req) {
+>> +                       scale = ltr_data.bits.non_snoop_scale;
+>> +                       get_ltr_scale(&scale);
+>> +                       decoded_non_snoop_ltr =
+>> +                               ltr_data.bits.non_snoop_val * scale;
+>> +               }
+>> +
+>> +               if (ltr_data.bits.snoop_req) {
+>> +                       scale = ltr_data.bits.snoop_scale;
+>> +                       get_ltr_scale(&scale);
+>> +                       decoded_snoop_ltr =
+>> +                               ltr_data.bits.snoop_val * scale;
+>> +               }
+>> +
+>> +               seq_printf(s, "%-24s\tRaw LTR: 0x%-16x\t Non-Snoop LTR (ns): %-16llu\t Snoop LTR (ns): %-16llu\n",
+>>                             map[index].name,
+>> -                          pmc_core_reg_read(pmcdev, map[index].bit_mask));
+>> +                          ltr_data.raw_data,
+>> +                          decoded_non_snoop_ltr,
+>> +                          decoded_snoop_ltr);
+>> +
+>> +               decoded_snoop_ltr = decoded_non_snoop_ltr = 0;
+> You may do this at the beginning of the loop and get rid of assignment
+> in the definition block.
+
+Fine.
+
+>
+>>          }
+>>          return 0;
+>>   }
+>> +union ltr_payload {
+>> +       u32 raw_data;
+>> +       struct {
+>> +       u32 snoop_val : 10;
+>> +       u32 snoop_scale : 3;
+>> +       u32 snoop_res : 2;
+>> +       u32 snoop_req : 1;
+>> +       u32 non_snoop_val : 10;
+>> +       u32 non_snoop_scale : 3;
+>> +       u32 non_snoop_res : 2;
+>> +       u32 non_snoop_req : 1;
+>> +       } bits;
 >> +};
->> +static const struct pmc_bit_map cnp_ltr_show_map[] = {
-> Same comments as above.
->
->> +};
->> +       debugfs_create_file("ltr_show", 0644, dir, pmcdev,
->> +                           &pmc_core_ltr_fops);
-> One line?
+> Just use normal masks and shifts.
 
-IIRC, it was crossing the limit. I will check again and if possible 
-would change it.
+I chose union over masks and shifts to reduce code size and ensured 
+correct endian-ness. Just for my understanding, can you please let me 
+know why you feel masks/shift are better suited here?
 
 >
->>   #define NUM_RETRIES                            100
->>   #define NUM_IP_IGN_ALLOWED                     17
-> + blank line here.
-
-Sure.
-
->
->> +#define SPT_PMC_LTR_CUR_PLT                    0x350
