@@ -1,98 +1,97 @@
-From: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Subject: Re: [PATCH 2/4] platform/x86: intel_pmc_core: Fix LTR IGNORE Max
- offset
-Date: Wed, 26 Sep 2018 19:54:44 +0530
-Message-ID: <92d451b5-e6b7-74a2-dc71-19e30654c2f3@linux.intel.com>
-References: <20180903180415.31575-1-rajneesh.bhardwaj@linux.intel.com>
- <20180903180415.31575-2-rajneesh.bhardwaj@linux.intel.com>
- <CAHp75Vcx-rk_dgf6fNRMa6o-zFeSXAG+HSNMAN-1XVCsXvvv1w@mail.gmail.com>
+From: Stefan Assmann <sassmann@kpanic.de>
+Subject: Re: [PATCH] Add Second Fan Support for Thinkpad P50
+Date: Wed, 26 Sep 2018 16:34:49 +0200
+Message-ID: <20180926143449.bnqliemloqw7fuyv@t530.fritz.box>
+References: <1522693621-3124-1-git-send-email-agk@godking.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vcx-rk_dgf6fNRMa6o-zFeSXAG+HSNMAN-1XVCsXvvv1w@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1522693621-3124-1-git-send-email-agk@godking.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+To: Alexander Kappner <agk@godking.net>
+Cc: ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Thank you.
+On 2018-04-02 11:27, Alexander Kappner wrote:
+> The Thinkpad P50 has 2 fans. Add the 2FAN quirk so the tpacpi driver
+> properly reports both fan speeds.
+> Because the P50 doesn't report the version of its EC controller, we need to
+> identify it by BIOS version (N1).
+
+With 4.18 (including this patch) I'm seeing both fans on my P50.
+[root@p50 ~]# sensors
+[...]
+thinkpad-isa-0000
+Adapter: ISA adapter
+fan1:        2319 RPM
+fan2:        2323 RPM
+
+Is there a way to actually control the second fan? There's pwm1, but no
+pwm2. And pwm1 only affects fan1.
+
+[root@p50 ~]# ls -al /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon3/
+total 0
+drwxr-xr-x 3 root root    0 Sep 26 16:25 .
+drwxr-xr-x 3 root root    0 Sep 26 16:23 ..
+lrwxrwxrwx 1 root root    0 Sep 25 16:11 device -> ../../../thinkpad_hwmon
+-r--r--r-- 1 root root 4096 Sep 25 16:11 fan1_input
+-r--r--r-- 1 root root 4096 Sep 25 16:11 fan2_input
+-r--r--r-- 1 root root 4096 Sep 25 16:11 name
+drwxr-xr-x 2 root root    0 Sep 26 15:57 power
+-rw-r--r-- 1 root root 4096 Sep 26 16:25 pwm1
+-rw-r--r-- 1 root root 4096 Sep 26 16:25 pwm1_enable
+lrwxrwxrwx 1 root root    0 Sep 25 16:11 subsystem -> ../../../../../class/hwmon
+-rw-r--r-- 1 root root 4096 Sep 25 16:11 uevent
+
+[root@p50 ~]# echo 2 > /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon3/pwm1_enable
+[root@p50 ~]# sensors
+[...]
+thinkpad-isa-0000
+Adapter: ISA adapter
+fan1:        3042 RPM
+fan2:        2323 RPM
+
+Thanks!
+
+  Stefan
 
 
-On 26-Sep-18 7:27 PM, Andy Shevchenko wrote:
-> On Mon, Sep 3, 2018 at 9:05 PM Rajneesh Bhardwaj
-> <rajneesh.bhardwaj@linux.intel.com> wrote:
->> Cannonlake PCH allows us to ignore LTR from more IPs than Sunrisepoint
->> PCH so make the LTR ignore platform specific.
->>
-> This looks fine to me.
->
->> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
->> ---
->>   drivers/platform/x86/intel_pmc_core.c | 4 +++-
->>   drivers/platform/x86/intel_pmc_core.h | 4 +++-
->>   2 files changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
->> index 972735bd4c75..c1330a03523d 100644
->> --- a/drivers/platform/x86/intel_pmc_core.c
->> +++ b/drivers/platform/x86/intel_pmc_core.c
->> @@ -149,6 +149,7 @@ static const struct pmc_reg_map spt_reg_map = {
->>          .ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
->>          .pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
->>          .pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
->> +       .ltr_ignore_max = SPT_NUM_IP_IGN_ALLOWED,
->>   };
->>
->>   /* Cannonlake: PGD PFET Enable Ack Status Register(s) bitmap */
->> @@ -320,6 +321,7 @@ static const struct pmc_reg_map cnp_reg_map = {
->>          .ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
->>          .pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
->>          .pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
->> +       .ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
->>   };
->>
->>   static inline u8 pmc_core_reg_read_byte(struct pmc_dev *pmcdev, int offset)
->> @@ -566,7 +568,7 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file, const char __user
->>                  goto out_unlock;
->>          }
->>
->> -       if (val > NUM_IP_IGN_ALLOWED) {
->> +       if (val > map->ltr_ignore_max) {
->>                  err = -EINVAL;
->>                  goto out_unlock;
->>          }
->> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
->> index b24407048fa1..12663c58f122 100644
->> --- a/drivers/platform/x86/intel_pmc_core.h
->> +++ b/drivers/platform/x86/intel_pmc_core.h
->> @@ -44,7 +44,7 @@
->>   #define SPT_PMC_READ_DISABLE_BIT               0x16
->>   #define SPT_PMC_MSG_FULL_STS_BIT               0x18
->>   #define NUM_RETRIES                            100
->> -#define NUM_IP_IGN_ALLOWED                     17
->> +#define SPT_NUM_IP_IGN_ALLOWED                 17
->>   #define SPT_PMC_LTR_CUR_PLT                    0x350
->>   #define SPT_PMC_LTR_CUR_ASLT                   0x354
->>   #define SPT_PMC_LTR_SPA                                0x360
->> @@ -153,6 +153,7 @@ enum ppfear_regs {
->>   #define CNP_PPFEAR_NUM_ENTRIES                 8
->>   #define CNP_PMC_READ_DISABLE_BIT               22
->>   #define CNP_PMC_LATCH_SLPS0_EVENTS             BIT(31)
->> +#define CNP_NUM_IP_IGN_ALLOWED                 19
->>   #define CNP_PMC_LTR_CUR_PLT                    0x1B50
->>   #define CNP_PMC_LTR_CUR_ASLT                   0x1B54
->>   #define CNP_PMC_LTR_SPA                                0x1B60
->> @@ -215,6 +216,7 @@ struct pmc_reg_map {
->>          const u32 pm_cfg_offset;
->>          const int pm_read_disable_bit;
->>          const u32 slps0_dbg_offset;
->> +       const u32 ltr_ignore_max;
->>   };
->>
->>   /**
->> --
->> 2.17.1
->>
->
+> Signed-off-by: Alexander Kappner <agk@godking.net>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index d5eaf3b1..ebdc300 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -8699,16 +8699,24 @@ static const struct attribute_group fan_attr_group = {
+>  	  .ec = TPID(__id1, __id2),		\
+>  	  .quirks = __quirks }
+>  
+> +#define TPACPI_FAN_QL_BIOS(__id1, __id2, __quirks)	\
+> +	{ .vendor = PCI_VENDOR_ID_LENOVO,	\
+> +	  .bios = TPID(__id1, __id2),		\
+> +	  .ec = TPACPI_MATCH_ANY,		\
+> +	  .quirks = __quirks }
+> +
+>  static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+>  	TPACPI_FAN_QI('1', 'Y', TPACPI_FAN_Q1),
+>  	TPACPI_FAN_QI('7', '8', TPACPI_FAN_Q1),
+>  	TPACPI_FAN_QI('7', '6', TPACPI_FAN_Q1),
+>  	TPACPI_FAN_QI('7', '0', TPACPI_FAN_Q1),
+>  	TPACPI_FAN_QL('7', 'M', TPACPI_FAN_2FAN),
+> +	TPACPI_FAN_QL_BIOS('N', '1', TPACPI_FAN_2FAN) // Thinkpad P50 has 2 fans
+>  };
+>  
+>  #undef TPACPI_FAN_QL
+>  #undef TPACPI_FAN_QI
+> +#undef TPACPI_FAN_QL_BIOS
+>  
+>  static int __init fan_init(struct ibm_init_struct *iibm)
+>  {
+> -- 
+> 2.1.4
+> 
+> 
