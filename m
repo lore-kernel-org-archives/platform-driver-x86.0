@@ -1,7 +1,7 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 11/28] platform/x86: intel_mid_thermal: Sort headers alphabetically
-Date: Wed, 26 Sep 2018 19:52:06 +0300
-Message-ID: <20180926165223.19390-11-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 15/28] platform/x86: intel_pmc: Sort headers alphabetically
+Date: Wed, 26 Sep 2018 19:52:10 +0300
+Message-ID: <20180926165223.19390-15-andriy.shevchenko@linux.intel.com>
 References: <20180926165223.19390-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -20,33 +20,49 @@ While here, remove unneeded linux/init.h inclusion.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_mid_thermal.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_mid_thermal.c b/drivers/platform/x86/intel_mid_thermal.c
-index 008a76903cbf..3fa8207dd34e 100644
---- a/drivers/platform/x86/intel_mid_thermal.c
-+++ b/drivers/platform/x86/intel_mid_thermal.c
-@@ -24,16 +24,15 @@
- 
- #define pr_fmt(fmt) "intel_mid_thermal: " fmt
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index e7edc8c63936..8b88e1743e41 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -15,25 +15,24 @@
+  * core through IPC mechanism which in turn messaging between IA core ad PMC.
+  */
  
 -#include <linux/module.h>
++#include <linux/acpi.h>
++#include <linux/atomic.h>
++#include <linux/bitops.h>
+ #include <linux/delay.h>
+-#include <linux/errno.h>
 -#include <linux/init.h>
-+#include <linux/device.h>
- #include <linux/err.h>
-+#include <linux/mfd/intel_msic.h>
+ #include <linux/device.h>
+-#include <linux/pm.h>
++#include <linux/errno.h>
++#include <linux/interrupt.h>
++#include <linux/io-64-nonatomic-lo-hi.h>
++#include <linux/kernel.h>
 +#include <linux/module.h>
- #include <linux/param.h>
--#include <linux/device.h>
++#include <linux/notifier.h>
+ #include <linux/pci.h>
  #include <linux/platform_device.h>
--#include <linux/slab.h>
- #include <linux/pm.h>
-+#include <linux/slab.h>
- #include <linux/thermal.h>
--#include <linux/mfd/intel_msic.h>
+-#include <linux/interrupt.h>
++#include <linux/pm.h>
+ #include <linux/pm_qos.h>
+-#include <linux/kernel.h>
+-#include <linux/bitops.h>
+ #include <linux/sched.h>
+-#include <linux/atomic.h>
+-#include <linux/notifier.h>
+-#include <linux/suspend.h>
+-#include <linux/acpi.h>
+-#include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/spinlock.h>
++#include <linux/suspend.h>
  
- /* Number of thermal sensors */
- #define MSIC_THERMAL_SENSORS	4
+ #include <asm/intel_pmc_ipc.h>
+ 
 -- 
 2.19.0
