@@ -1,7 +1,7 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 07/28] platform/x86: intel_menlow: Sort headers alphabetically
-Date: Wed, 26 Sep 2018 19:52:02 +0300
-Message-ID: <20180926165223.19390-7-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 18/28] platform/x86: intel_punit_ipc: Convert to use SPDX identifier
+Date: Wed, 26 Sep 2018 19:52:13 +0300
+Message-ID: <20180926165223.19390-18-andriy.shevchenko@linux.intel.com>
 References: <20180926165223.19390-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,39 +12,32 @@ To: Alex Hung <alex.hung@canonical.com>, Mario Limonciello <mario.limonciello@de
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Sort headers alphabetically for better maintenance.
+Reduce size of duplicated comments by switching to use SPDX identifier.
 
 No functional change.
 
-While here, remove unneeded linux/init.h inclusion.
-
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_menlow.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel_punit_ipc.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel_menlow.c
-index ef9b0af8cdd3..76854f0bf70b 100644
---- a/drivers/platform/x86/intel_menlow.c
-+++ b/drivers/platform/x86/intel_menlow.c
-@@ -29,15 +29,14 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/acpi.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/init.h>
--#include <linux/slab.h>
--#include <linux/types.h>
- #include <linux/pci.h>
- #include <linux/pm.h>
-+#include <linux/slab.h>
- #include <linux/thermal.h>
--#include <linux/acpi.h>
-+#include <linux/types.h>
- 
- MODULE_AUTHOR("Thomas Sujith");
- MODULE_AUTHOR("Zhang Rui");
+diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
+index 8eaa60c9ad69..79671927f4ef 100644
+--- a/drivers/platform/x86/intel_punit_ipc.c
++++ b/drivers/platform/x86/intel_punit_ipc.c
+@@ -1,12 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Driver for the Intel P-Unit Mailbox IPC mechanism
+  *
+  * (C) Copyright 2015 Intel Corporation
+  *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+  * The heart of the P-Unit is the Foxton microcontroller and its firmware,
+  * which provide mailbox interface for power management usage.
+  */
 -- 
 2.19.0
