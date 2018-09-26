@@ -1,66 +1,57 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 4/4] platform/x86: intel_telemetry: report debugfs failure
-Date: Wed, 26 Sep 2018 20:18:18 +0300
-Message-ID: <CAHp75VeCC0CUmzieujpxUP1A3Mn8J9gekX6Vn-fbtD_ZFPbnYw@mail.gmail.com>
-References: <20180903180415.31575-1-rajneesh.bhardwaj@linux.intel.com>
- <20180903180415.31575-4-rajneesh.bhardwaj@linux.intel.com>
- <CAHp75VcE+BY=8aKEGqzkDBVazLGtwNNCa1CYCKGirS1vBLVXPg@mail.gmail.com> <69ad420e-362c-d8c9-331f-056cdaefb1eb@linux.intel.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v14 09/19] x86/mm: x86/sgx: Signal SEGV_SGXERR for #PFs
+ w/ PF_SGX
+Date: Wed, 26 Sep 2018 10:35:16 -0700
+Message-ID: <20180926173516.GA10920@linux.intel.com>
+References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
+ <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com>
+ <CALCETrVAhiwv+g5fzVO3ZSHZgcQKbeeG8r3HUcXO9k7Gi94NdQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <69ad420e-362c-d8c9-331f-056cdaefb1eb@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <CALCETrVAhiwv+g5fzVO3ZSHZgcQKbeeG8r3HUcXO9k7Gi94NdQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rajneesh.bhardwaj@linux.intel.com
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, matt.turner@intel.com, "Brown, Len" <len.brown@intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dave Hansen <dave.hansen@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 26, 2018 at 5:24 PM Bhardwaj, Rajneesh
-<rajneesh.bhardwaj@linux.intel.com> wrote:
-> On 26-Sep-18 7:26 PM, Andy Shevchenko wrote:
-> > On Mon, Sep 3, 2018 at 9:05 PM Rajneesh Bhardwaj
-> > <rajneesh.bhardwaj@linux.intel.com> wrote:
-
-> >> not be obtained and result in a invalid telemetry_plt_config.
-> > What is telemetry_plt_config?
->
-> Internal data structure that holds platform config, maintained by the
-> telemetry platform driver.
-
-You need to spell if for the reader.
-
-> >> This is also applicable to the platforms where the BIOS supports IPC1
-> >> device under debug configurations but IPC1 is disabled by user or the
-> >> policy.
-> >>
-> >> This change allows user to know the reason for not seeing entries unde=
-r
-> >> /sys/kernel/debug/telemetry/* when there is no apparent failure at boo=
-t.
-
-> >> +exit:
-> >> +       pr_debug(pr_fmt(DRIVER_NAME) " Failed\n");
-> > Completely useless.
+On Tue, Sep 25, 2018 at 03:53:48PM -0700, Andy Lutomirski wrote:
+> Minor nit:
+> 
+> On Tue, Sep 25, 2018 at 6:12 AM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
 > >
-> > Device core does it in generic way.
->
-> If i remove this print then perhaps there is no need of this patch.
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> >
+> 
+> > by (c) as the kernel doesn't really have any other reasonable option,
+> > e.g. we could kill the task or panic, but neither is warranted.
+> 
+> Not killing the task is quite nice, but...
+> 
+> > +       /*
+> > +        * Access is blocked by the Enclave Page Cache Map (EPCM),
+> > +        * i.e. the access is allowed by the PTE but not the EPCM.
+> > +        * This usually happens when the EPCM is yanked out from
+> > +        * under us, e.g. by hardware after a suspend/resume cycle.
+> > +        * In any case, there is nothing that can be done by the
+> > +        * kernel to resolve the fault (short of killing the task).
+> 
+> Maybe s/killing the task/sending a signal/?
 
-Maybe.
+My intent was to document that, unlike all other page faults, the
+kernel can't fix the source of the fault even if it were omniscient.
 
-> Reason to print this is that the platform driver / core driver does not
-> show any error.
+How about this?  With formatting changes since it's long-winded...
 
-If the code fails and returns 0 =E2=80=94 it's a bug in error reporting ins=
-ide the code.
-
-> In-fact they are even loaded in module table. OTOH, this
-> debugfs interface fails. This is very confusing to the users if they
-> check the lsmod output so i feel this print might help.
-
-Again, device core *already has* this and even more (it prints also a
-return code!).
-
---=20
-With Best Regards,
-Andy Shevchenko
+        /*
+         * Access is blocked by the Enclave Page Cache Map (EPCM), i.e. the
+         * access is allowed by the PTE but not the EPCM.  This usually happens
+         * when the EPCM is yanked out from under us, e.g. by hardware after a
+         * suspend/resume cycle.  In any case, software, i.e. the kernel, can't
+         * fix the source of the fault as the EPCM can't be directly modified
+         * by software.  Handle the fault as an access error in order to signal
+         * userspace, e.g. so that userspace can rebuild their enclave(s), even
+         * though userspace may not have actually violated access permissions.
+         */
