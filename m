@@ -1,53 +1,67 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v14 04/19] x86/cpufeatures: Add SGX feature bits
-Date: Thu, 27 Sep 2018 16:16:42 +0300
-Message-ID: <20180927131642.GE5436@linux.intel.com>
+Subject: Re: [PATCH v14 09/19] x86/mm: x86/sgx: Signal SEGV_SGXERR for #PFs
+ w/ PF_SGX
+Date: Thu, 27 Sep 2018 16:42:23 +0300
+Message-ID: <20180927134223.GA8242@linux.intel.com>
 References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
- <20180925130845.9962-5-jarkko.sakkinen@linux.intel.com>
- <20180925164854.GF23986@zn.tnic>
- <20180926111139.GA12037@linux.intel.com>
- <20180926113617.GD5584@zn.tnic>
+ <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com>
+ <CALCETrVAhiwv+g5fzVO3ZSHZgcQKbeeG8r3HUcXO9k7Gi94NdQ@mail.gmail.com>
+ <20180926173516.GA10920@linux.intel.com>
+ <2D60780F-ADB4-48A4-AB74-15683493D369@amacapital.net>
+ <9835e288-ba98-2f9e-ac73-504db9512bb9@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180926113617.GD5584@zn.tnic>
+In-Reply-To: <9835e288-ba98-2f9e-ac73-504db9512bb9@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, David Wang <davidwang@zhaoxin.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "Levin, Alexander (Sasha Levin)" <alexander.levin@verizon.com>, Jia Zhang <qianyue.zj@alibaba-inc.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, He Chen <he.chen@linux.intel.com>, Lu
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>, Sean Christopherson <sean.j.christopherson@intel.com>, Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 26, 2018 at 01:36:17PM +0200, Borislav Petkov wrote:
-> On Wed, Sep 26, 2018 at 02:11:39PM +0300, Jarkko Sakkinen wrote:
-> > Thank you. I guess I understand what you want me to do i.e.
-> > 
-> > +       { X86_FEATURE_SGX1,             CPUID_EAX,  0, 0x00000012, 0 },
-> > +       { X86_FEATURE_SGX2,             CPUID_EAX,  1, 0x00000012, 0 },
-> > +       { X86_FEATURE_ENCLV,            CPUID_EAX,  5, 0x00000012, 0 },
-> > +       { X86_FEATURE_ENCLS_C,          CPUID_EAX,  6, 0x00000012, 0 },
+On Wed, Sep 26, 2018 at 01:16:59PM -0700, Dave Hansen wrote:
+> On 09/26/2018 11:12 AM, Andy Lutomirski wrote:
+> >> e omniscient.
+> >>
+> >> How about this?  With formatting changes since it's long-winded...
+> >>
+> >>        /*
+> >>         * Access is blocked by the Enclave Page Cache Map (EPCM), i.e. the
+> >>         * access is allowed by the PTE but not the EPCM.  This usually happens
+> >>         * when the EPCM is yanked out from under us, e.g. by hardware after a
+> >>         * suspend/resume cycle.  In any case, software, i.e. the kernel, can't
+> >>         * fix the source of the fault as the EPCM can't be directly modified
+> >>         * by software.  Handle the fault as an access error in order to signal
+> >>         * userspace, e.g. so that userspace can rebuild their enclave(s), even
+> >>         * though userspace may not have actually violated access permissions.
+> >>         */
+> >>
+> > Looks good to me.
 > 
-> Yap.
+> Including the actual architectural definition of the bit might add some
+> clarity.  The SDM explicitly says (Vol 3a section 4.7):
 > 
-> > What puzzles me is that I cannot find any call site for
-> > get_scattered_cpuid_leaf():
-> > 
-> > $ git grep get_scattered
-> > arch/x86/kernel/cpu/cpu.h:extern u32 get_scattered_cpuid_leaf(unsigned int level,
-> > arch/x86/kernel/cpu/scattered.c:u32 get_scattered_cpuid_leaf(unsigned int level, unsigned int sub_leaf,
-> > arch/x86/kernel/cpu/scattered.c:EXPORT_SYMBOL_GPL(get_scattered_cpuid_leaf);
+> 	The fault resulted from violation of SGX-specific access-control
+> 	requirements.
 > 
-> That used to be used in kvm last, see b7b27aa011a1df42728d1768fc181d9ce69e6911,
-> which removed it.
+> Which totally squares with returning true from access_error().
 > 
-> And it got added by
+> There's also a tidbit that says:
 > 
->   47bdf3378d62 ("x86/cpuid: Provide get_scattered_cpuid_leaf()")
+> 	This flag is 1 if the exception is unrelated to paging and
+> 	resulted from violation of SGX-specific access-control
+> 	requirements. ... such a violation can occur only if there
+> 	is no ordinary page fault...
 > 
-> Lemme add those people to CC.
+> This is pretty important.  It means that *none* of the other
+> paging-related stuff that we're doing applies.
 > 
-> If no one wants it, feel free to decomission it.
+> We also need to clarify how this can happen.  Is it through something
+> than an app does, or is it solely when the hardware does something under
+> the covers, like suspend/resume.
 
-Still kind of leaves me puzzled about the situation :-) Why this wasn't
-used for example to replace detect_vmx_virtcap()?
+When you change page permissions lets say with mprotect after the and
+try to do an invalid access according to the EPCM permissions this can
+happen.
 
 /Jarkko
