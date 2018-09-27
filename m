@@ -1,35 +1,50 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v14 04/19] x86/cpufeatures: Add SGX feature bits
-Date: Thu, 27 Sep 2018 15:51:39 +0200
-Message-ID: <20180927135139.GB19687@zn.tnic>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v14 09/19] x86/mm: x86/sgx: Signal SEGV_SGXERR for #PFs
+ w/ PF_SGX
+Date: Thu, 27 Sep 2018 16:56:03 +0300
+Message-ID: <20180927135603.GF8242@linux.intel.com>
 References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
- <20180925130845.9962-5-jarkko.sakkinen@linux.intel.com>
- <20180925164854.GF23986@zn.tnic>
- <20180926111139.GA12037@linux.intel.com>
- <20180926113617.GD5584@zn.tnic>
- <20180927131642.GE5436@linux.intel.com>
+ <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com>
+ <CALCETrVAhiwv+g5fzVO3ZSHZgcQKbeeG8r3HUcXO9k7Gi94NdQ@mail.gmail.com>
+ <20180926173516.GA10920@linux.intel.com>
+ <2D60780F-ADB4-48A4-AB74-15683493D369@amacapital.net>
+ <9835e288-ba98-2f9e-ac73-504db9512bb9@intel.com>
+ <20180926204400.GA11446@linux.intel.com>
+ <b7e14c6e-fc05-93fa-eef9-5e3f06ab4729@intel.com>
+ <CALCETrXByb2UVuZ6AXUeOd8y90NAikbZuvdN3wf_TjHZ+CxNhA@mail.gmail.com>
+ <992b1d6d-cc0f-776f-d938-2a1f7cad52c8@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180927131642.GE5436@linux.intel.com>
+In-Reply-To: <992b1d6d-cc0f-776f-d938-2a1f7cad52c8@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, David Wang <davidwang@zhaoxin.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "Levin, Alexander (Sasha Levin)" <alexander.levin@verizon.com>, Jia Zhang <qianyue.zj@alibaba-inc.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, He Chen <he.chen@linux.intel.com>, Lu
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, Andrew Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Sep 27, 2018 at 04:16:42PM +0300, Jarkko Sakkinen wrote:
-> Still kind of leaves me puzzled about the situation :-) Why this wasn't
-> used for example to replace detect_vmx_virtcap()?
+On Wed, Sep 26, 2018 at 02:45:17PM -0700, Dave Hansen wrote:
+> On 09/26/2018 02:15 PM, Andy Lutomirski wrote:
+> > Could we perhaps have a little vDSO entry (or syscall, I suppose) that
+> > runs an enclave an returns an error code, and rig up the #PF handler
+> > to check if the error happened in the vDSO entry and fix it up rather
+> > than sending a signal?
+> 
+> Yeah, signals suck.
+> 
+> So, instead of doing the enclave entry instruction (EENTER is it?), the
+> app would do the vDSO call.  It would have some calling convention, like
+> "set %rax to 0 before entering".  Then, we just teach the page fault
+> handler about the %RIP in the vDSO that can fault and how to move one
+> instruction later, munge %RIP to a value that tells about the error,
+> then return from the fault.  It would basically be like the kernel
+> exception tables, but for userspace.  Right?
+> 
+> How would a syscall work, though?  I assume we can't just enter the
+> enclave from ring0.
 
-I don't understand - detect_vmx_virtcap() is setting X86_FEATURE bits
-based on MSR settings. get_scattered_cpuid_leaf() is regenerating a
-CPUID leaf from the scattered bits.
+Enclave cannot be entered from ring-0.
 
-Looks like apples and oranges to me...
+For me this plan sounds simple and sound.
 
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+/Jarkko
