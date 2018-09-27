@@ -1,64 +1,94 @@
-From: Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v14 09/19] x86/mm: x86/sgx: Signal SEGV_SGXERR for #PFs w/
- PF_SGX
-Date: Thu, 27 Sep 2018 08:53:27 -0700
-Message-ID: <df12aea6-8b78-6336-e158-68c7bf416af9@intel.com>
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [PATCH v14 08/19] signal: x86/sgx: Add SIGSEGV siginfo code for SGX EPCM fault
+Date: Thu, 27 Sep 2018 20:41:48 +0200
+Message-ID: <87in2qpytv.fsf@xmission.com>
 References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
- <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com>
- <CALCETrVAhiwv+g5fzVO3ZSHZgcQKbeeG8r3HUcXO9k7Gi94NdQ@mail.gmail.com>
- <20180926173516.GA10920@linux.intel.com>
- <2D60780F-ADB4-48A4-AB74-15683493D369@amacapital.net>
- <9835e288-ba98-2f9e-ac73-504db9512bb9@intel.com>
- <20180927134223.GA8242@linux.intel.com>
- <d0e47333-18b9-51c3-7d79-f27d6005f24f@intel.com>
- <20180927153952.GA13225@linux.intel.com>
+        <20180925130845.9962-9-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180927153952.GA13225@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <20180925130845.9962-9-jarkko.sakkinen@linux.intel.com> (Jarkko
+        Sakkinen's message of "Tue, 25 Sep 2018 16:06:45 +0300")
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Andy Lutomirski <luto@amacapital.net>, Sean Christopherson <sean.j.christopherson@intel.com>, Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Dave Hansen <dave.hansen@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 09/27/2018 08:39 AM, Jarkko Sakkinen wrote:
-> On Thu, Sep 27, 2018 at 07:58:41AM -0700, Dave Hansen wrote:
->> On 09/27/2018 06:42 AM, Jarkko Sakkinen wrote:
->>>> 	This flag is 1 if the exception is unrelated to paging and
->>>> 	resulted from violation of SGX-specific access-control
->>>> 	requirements. ... such a violation can occur only if there
->>>> 	is no ordinary page fault...
->>>>
->>>> This is pretty important.  It means that *none* of the other
->>>> paging-related stuff that we're doing applies.
->>>>
->>>> We also need to clarify how this can happen.  Is it through something
->>>> than an app does, or is it solely when the hardware does something under
->>>> the covers, like suspend/resume.
->>> When you change page permissions lets say with mprotect after the and
->>> try to do an invalid access according to the EPCM permissions this can
->>> happen.
->>
->> So, there are pages that are non-executable, non-readable, or
->> non-writable both via the page tables and via underlying SGX
->> permissions.  Then, we allow an mprotect() and a later access will
->> result in one of these SGX faults?
-> 
-> The permissions are intersection of PTE and EPCM permissions.
+Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> writes:
 
-Right, but this *fault* bit is not.
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
+>
+> The SGX Enclave Page Cache Map (EPCM) is a hardware-managed table
+> that enforces accesses to an enclave's EPC page in addition to the
+> software-managed kernel page tables, i.e. the effective permissions
+> for an EPC page are a logical AND of the kernel's page tables and
+> the corresponding EPCM entry.  The primary purpose of the EPCM is
+> to prevent a malcious or compromised kernel from attacking an enclave
+> by modifying the enclave's page tables.  The EPCM entires for an
+> enclave are populated when the enclave is built and verified, using
+> metadata provided by the enclave that is included in the measurement
+> used to verify the enclave.
+>
+> In normal operation of a properly functioning, non-malicious kernel
+> (and enclave), the EPCM permissions will never trigger a fault, i.e.
+> the kernel may make the permissions for an EPC page more restrictive,
+> e.g. mark it not-present to swap out the EPC page, but the kernel will
+> never make its permissions less restrictive.
+>
+> But, there is a legitimate scenario in which the kernel's page tables
+> can become less restrictive than the EPCM: on current hardware all
+> enclaves are destroyed (by hardware) on a transition to S3 or lower
+> sleep states, i.e. all EPCM entries are invalid (not-present) after
+> the system resumes from its sleep state.
+>
+> Unfortunately, on CPUs that support only SGX1, EPCM violations result
+> in a #GP.  The upside of the #GP is that no kernel changes are needed
+> to deal with the EPCM being blasted away by hardware, e.g. userspace
+> gets a SIGSEGV, assumes the EPCM was lost and restarts its enclave
+> and everyone is happy.  The downside is that userspace has to assume
+> the SIGSEGV was because the EPC was lost (or possibly do some leg work
+> to rule out other causes).
+>
+> In SGX2, the oddity of delivering a #GP due to what are inherently
+> paging related violations is remedied.  CPUs that support SGX2 deliver
+> EPCM violations as #PFs with a new SGX error code bit set.  So, now
+> that hardware provides us with a way to unequivocally determine that
+> a fault was due to a EPCM violation, define a signfo code for SIGSEGV
+> so that the information can be passed onto userspace.
+>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  include/uapi/asm-generic/siginfo.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/include/uapi/asm-generic/siginfo.h b/include/uapi/asm-generic/siginfo.h
+> index 80e2a7227205..fdd898e2325b 100644
+> --- a/include/uapi/asm-generic/siginfo.h
+> +++ b/include/uapi/asm-generic/siginfo.h
+> @@ -225,7 +225,11 @@ typedef struct siginfo {
+>  #else
+>  # define SEGV_PKUERR	4	/* failed protection key checks */
+>  #endif
+> +#ifdef __x86_64__
+> +#define SEGV_SGXERR	5	/* SGX Enclave Page Cache Map fault */
+> +#else
+>  #define SEGV_ACCADI	5	/* ADI not enabled for mapped object */
+> +#endif
 
-> EPCM permissions are part of the enclave measurement. For SGX1 they are
-> static. For SGX2 they can be changed with EMODPR/EACCEPT protocol (i.e.
-> measurement can be updated after enclave initialization).
+Don't do this crazy ifdef thing.  si_codes are not supposed to be per
+architecture.  There are a few historical bugs but with a 32bit space
+it is just stupid to add #ifdefs.
 
-What does this all have to do with enclave measurement?
+Just set.
+#define SEGV_SGXERR 8 and increase NSIGSEGV
 
->> What permissions are these, exactly?  Is it even a good idea to let that
->> mprotect() go through in the first place?
-> 
-> You define RWX for each page when you do EADD.
+Anything else is just asking for trouble.  Especially when you want to
+get SGX working on itaninum.
 
-Are those permissions reflected into the VMAs mapping the enclave memory?
+>  #define SEGV_ADIDERR	6	/* Disrupting MCD error */
+>  #define SEGV_ADIPERR	7	/* Precise MCD exception */
+>  #define NSIGSEGV	7
+
+Eric
