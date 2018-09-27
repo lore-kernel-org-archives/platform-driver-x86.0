@@ -1,94 +1,75 @@
 From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH v14 08/19] signal: x86/sgx: Add SIGSEGV siginfo code for SGX EPCM fault
-Date: Thu, 27 Sep 2018 20:41:48 +0200
-Message-ID: <87in2qpytv.fsf@xmission.com>
+Subject: Re: [PATCH v14 09/19] x86/mm: x86/sgx: Signal SEGV_SGXERR for #PFs w/ PF_SGX
+Date: Thu, 27 Sep 2018 21:43:15 +0200
+Message-ID: <87zhw2ohf0.fsf@xmission.com>
 References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
-        <20180925130845.9962-9-jarkko.sakkinen@linux.intel.com>
+        <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925130845.9962-9-jarkko.sakkinen@linux.intel.com> (Jarkko
-        Sakkinen's message of "Tue, 25 Sep 2018 16:06:45 +0300")
+In-Reply-To: <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com> (Jarkko
+        Sakkinen's message of "Tue, 25 Sep 2018 16:06:46 +0300")
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Dave Hansen <dave.hansen@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 MM" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
 Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> writes:
 
 > From: Sean Christopherson <sean.j.christopherson@intel.com>
 >
-> The SGX Enclave Page Cache Map (EPCM) is a hardware-managed table
-> that enforces accesses to an enclave's EPC page in addition to the
-> software-managed kernel page tables, i.e. the effective permissions
-> for an EPC page are a logical AND of the kernel's page tables and
-> the corresponding EPCM entry.  The primary purpose of the EPCM is
-> to prevent a malcious or compromised kernel from attacking an enclave
-> by modifying the enclave's page tables.  The EPCM entires for an
-> enclave are populated when the enclave is built and verified, using
-> metadata provided by the enclave that is included in the measurement
-> used to verify the enclave.
+> Signal SIGSEGV(SEGV_SGXERR) for all faults with PF_SGX set in the
+> error code.  The PF_SGX bit is set if and only if the #PF is detected
+> by the Enclave Page Cache Map (EPCM), which is consulted only after
+> an access walks the kernel's page tables, i.e.:
 >
-> In normal operation of a properly functioning, non-malicious kernel
-> (and enclave), the EPCM permissions will never trigger a fault, i.e.
-> the kernel may make the permissions for an EPC page more restrictive,
-> e.g. mark it not-present to swap out the EPC page, but the kernel will
-> never make its permissions less restrictive.
+>   a. the access was allowed by the kernel
+>   b. the kernel's tables have become less restrictive than the EPCM
+>   c. the kernel cannot fixup the cause of the fault
 >
-> But, there is a legitimate scenario in which the kernel's page tables
-> can become less restrictive than the EPCM: on current hardware all
-> enclaves are destroyed (by hardware) on a transition to S3 or lower
-> sleep states, i.e. all EPCM entries are invalid (not-present) after
-> the system resumes from its sleep state.
+> Noteably, (b) implies that either the kernel has botched the EPC
+> mappings or the EPCM has been invalidated due to a power event.  In
+> either case, userspace needs to be alerted so that it can take
+> appropriate action, e.g. restart the enclave.  This is reinforced
+> by (c) as the kernel doesn't really have any other reasonable option,
+> e.g. we could kill the task or panic, but neither is warranted.
 >
-> Unfortunately, on CPUs that support only SGX1, EPCM violations result
-> in a #GP.  The upside of the #GP is that no kernel changes are needed
-> to deal with the EPCM being blasted away by hardware, e.g. userspace
-> gets a SIGSEGV, assumes the EPCM was lost and restarts its enclave
-> and everyone is happy.  The downside is that userspace has to assume
-> the SIGSEGV was because the EPC was lost (or possibly do some leg work
-> to rule out other causes).
->
-> In SGX2, the oddity of delivering a #GP due to what are inherently
-> paging related violations is remedied.  CPUs that support SGX2 deliver
-> EPCM violations as #PFs with a new SGX error code bit set.  So, now
-> that hardware provides us with a way to unequivocally determine that
-> a fault was due to a EPCM violation, define a signfo code for SIGSEGV
-> so that the information can be passed onto userspace.
->
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
 > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
 > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 > ---
->  include/uapi/asm-generic/siginfo.h | 4 ++++
->  1 file changed, 4 insertions(+)
+>  arch/x86/mm/fault.c | 20 +++++++++++++++++---
+>  1 file changed, 17 insertions(+), 3 deletions(-)
 >
-> diff --git a/include/uapi/asm-generic/siginfo.h b/include/uapi/asm-generic/siginfo.h
-> index 80e2a7227205..fdd898e2325b 100644
-> --- a/include/uapi/asm-generic/siginfo.h
-> +++ b/include/uapi/asm-generic/siginfo.h
-> @@ -225,7 +225,11 @@ typedef struct siginfo {
->  #else
->  # define SEGV_PKUERR	4	/* failed protection key checks */
->  #endif
-> +#ifdef __x86_64__
-> +#define SEGV_SGXERR	5	/* SGX Enclave Page Cache Map fault */
-> +#else
->  #define SEGV_ACCADI	5	/* ADI not enabled for mapped object */
-> +#endif
+> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+> index 85d20516b2f3..3fb2b2838d6c 100644
+> --- a/arch/x86/mm/fault.c
+> +++ b/arch/x86/mm/fault.c
+> @@ -960,10 +960,13 @@ static noinline void
+>  bad_area_access_error(struct pt_regs *regs, unsigned long error_code,
+>  		      unsigned long address, struct vm_area_struct *vma)
+>  {
+> +	int si_code = SEGV_ACCERR;
+> +
+>  	if (bad_area_access_from_pkeys(error_code, vma))
+> -		__bad_area(regs, error_code, address, vma, SEGV_PKUERR);
+> -	else
+> -		__bad_area(regs, error_code, address, vma, SEGV_ACCERR);
+> +		si_code = SEGV_PKUERR;
+> +	else if (unlikely(error_code & X86_PF_SGX))
+> +		si_code = SEGV_SGXERR;
+> +	__bad_area(regs, error_code, address, vma, si_code);
+>  }
 
-Don't do this crazy ifdef thing.  si_codes are not supposed to be per
-architecture.  There are a few historical bugs but with a 32bit space
-it is just stupid to add #ifdefs.
+This conflicts with a cleanup in this area I have sitting in linux-next.
+It isn't in the x86 tree but you can find my siginfo tree at:
 
-Just set.
-#define SEGV_SGXERR 8 and increase NSIGSEGV
+git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git siginfo-next
 
-Anything else is just asking for trouble.  Especially when you want to
-get SGX working on itaninum.
+In my tree bad area no longer takes a vma parameter.
 
->  #define SEGV_ADIDERR	6	/* Disrupting MCD error */
->  #define SEGV_ADIPERR	7	/* Precise MCD exception */
->  #define NSIGSEGV	7
+If you are going to make changes to the fault handling code this cycle
+please let's figure out how to build it on top of my clean ups.
 
-Eric
+Thank you,
+Eric Biederman
