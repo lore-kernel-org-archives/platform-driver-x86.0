@@ -1,89 +1,57 @@
-From: Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH] platform/x86: asus-wmi: Simplify the keyboard brightness updating process
-Date: Thu, 27 Sep 2018 16:50:09 +0800
-Message-ID: <20180927085009.4190-1-jian-hong@endlessm.com>
-References: <20180816084104.434-1-jian-hong@endlessm.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 0/5] Update and move Dell drivers dell_rbu and dcdbas
+Date: Thu, 27 Sep 2018 12:01:18 +0300
+Message-ID: <CAHp75VeuGUmGGaUSQ2ebYsAZRtJWrFmERQGvzZ5qdn=rpwTqWA@mail.gmail.com>
+References: <20180926215021.30471-1-stuart.w.hayes@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180816084104.434-1-jian-hong@endlessm.com>
+In-Reply-To: <20180926215021.30471-1-stuart.w.hayes@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, Jian-Hong Pan <jian-hong@endlessm.com>
+To: Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Doug Warzecha <Douglas_Warzecha@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The original asus-wmi queues a work which calls the ACPI/WMI methods to
-update the keyboard LED brightness.  Similar drivers - acer-wmi,
-dell-wmi-led just call the ACPI/WMI methods directly without workqueues.
+On Thu, Sep 27, 2018 at 12:50 AM Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
+>
+> The dell_rbu and dcdbas drivers need some changes, and should be moved to
+> drivers/platform/x86.  Additionally, dell_rbu needs a maintainer, and the
+> listed maintainer for dcdbas is inactive and needs to be changed.
+>
 
-This patch simplifies the keyboard brightness updating process which
-calls the kbd_led_update function directly without workqueue in
-asus-wmi.
+Pushed to my review and testing queue, thanks!
 
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
----
- drivers/platform/x86/asus-wmi.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+> v2 changes:
+>  - add commit messages to patches that move dcdbas and dell_rbu
+>  - remove extra whitespace in MAINTAINERS
+>  - add acked-by from (previous) maintainer of dcdbas
+>
+> Stuart Hayes (5):
+>   firmware: dell_rbu: Make payload memory uncachable
+>   firmware: dcdbas: Add support for WSMT ACPI table
+>   firmware: dell_rbu: Move dell_rbu to drivers/platform/x86
+>   firmware: dcdbas: Move dcdbas to drivers/platform/x86
+>   MAINTAINERS: Update maintainer for dcdbas and dell_rbu
+>
+>  MAINTAINERS                                   |  11 +-
+>  drivers/firmware/Kconfig                      |  28 ----
+>  drivers/firmware/Makefile                     |   2 -
+>  drivers/platform/x86/Kconfig                  |  28 ++++
+>  drivers/platform/x86/Makefile                 |   2 +
+>  drivers/{firmware => platform/x86}/dcdbas.c   | 123 +++++++++++++++++-
+>  drivers/{firmware => platform/x86}/dcdbas.h   |  10 ++
+>  drivers/platform/x86/dell-smbios-smm.c        |   2 +-
+>  drivers/{firmware => platform/x86}/dell_rbu.c |   8 ++
+>  9 files changed, 175 insertions(+), 39 deletions(-)
+>  rename drivers/{firmware => platform/x86}/dcdbas.c (82%)
+>  rename drivers/{firmware => platform/x86}/dcdbas.h (93%)
+>  rename drivers/{firmware => platform/x86}/dell_rbu.c (98%)
+>
+> --
+> 2.19.0.221.g150f307af
+>
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 2d6e272315a8..9441cce636e6 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -239,7 +239,6 @@ struct asus_wmi {
- 	int lightbar_led_wk;
- 	struct workqueue_struct *led_workqueue;
- 	struct work_struct tpd_led_work;
--	struct work_struct kbd_led_work;
- 	struct work_struct wlan_led_work;
- 	struct work_struct lightbar_led_work;
- 
-@@ -456,12 +455,9 @@ static enum led_brightness tpd_led_get(struct led_classdev *led_cdev)
- 	return read_tpd_led_state(asus);
- }
- 
--static void kbd_led_update(struct work_struct *work)
-+static void kbd_led_update(struct asus_wmi *asus)
- {
- 	int ctrl_param = 0;
--	struct asus_wmi *asus;
--
--	asus = container_of(work, struct asus_wmi, kbd_led_work);
- 
- 	/*
- 	 * bits 0-2: level
-@@ -516,7 +512,7 @@ static void do_kbd_led_set(struct led_classdev *led_cdev, int value)
- 		value = 0;
- 
- 	asus->kbd_led_wk = value;
--	queue_work(asus->led_workqueue, &asus->kbd_led_work);
-+	kbd_led_update(asus);
- }
- 
- static void kbd_led_set(struct led_classdev *led_cdev,
-@@ -671,8 +667,6 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 
- 	led_val = kbd_led_read(asus, NULL, NULL);
- 	if (led_val >= 0) {
--		INIT_WORK(&asus->kbd_led_work, kbd_led_update);
--
- 		asus->kbd_led_wk = led_val;
- 		asus->kbd_led.name = "asus::kbd_backlight";
- 		asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
-@@ -2310,7 +2304,7 @@ static int asus_hotk_resume(struct device *device)
- 	struct asus_wmi *asus = dev_get_drvdata(device);
- 
- 	if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
--		queue_work(asus->led_workqueue, &asus->kbd_led_work);
-+		kbd_led_update(asus);
- 
- 	return 0;
- }
-@@ -2346,7 +2340,7 @@ static int asus_hotk_restore(struct device *device)
- 		rfkill_set_sw_state(asus->uwb.rfkill, bl);
- 	}
- 	if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
--		queue_work(asus->led_workqueue, &asus->kbd_led_work);
-+		kbd_led_update(asus);
- 
- 	return 0;
- }
+
 -- 
-2.11.0
+With Best Regards,
+Andy Shevchenko
