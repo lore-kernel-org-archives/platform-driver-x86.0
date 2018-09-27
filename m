@@ -1,26 +1,54 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v14 11/19] x86/sgx: Add wrappers for ENCLS leaf functions
-Date: Thu, 27 Sep 2018 16:12:27 +0300
-Message-ID: <20180927131227.GB5436@linux.intel.com>
+Subject: Re: [PATCH v14 10/19] x86/sgx: Detect Intel SGX
+Date: Thu, 27 Sep 2018 16:13:00 +0300
+Message-ID: <20180927131300.GC5436@linux.intel.com>
 References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
- <20180925130845.9962-12-jarkko.sakkinen@linux.intel.com>
- <a2d77169-5c14-10f0-425f-41e37f791ece@infradead.org>
+ <20180925130845.9962-11-jarkko.sakkinen@linux.intel.com>
+ <7ea823ce-d6ee-1ff0-efb4-3ca93536fb7e@infradead.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a2d77169-5c14-10f0-425f-41e37f791ece@infradead.org>
+In-Reply-To: <7ea823ce-d6ee-1ff0-efb4-3ca93536fb7e@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Randy Dunlap <rdunlap@infradead.org>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Suresh Siddha <suresh.b.siddha@intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Reinette Chatre <reinette.chatre@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Sep 25, 2018 at 01:01:47PM -0700, Randy Dunlap wrote:
+On Tue, Sep 25, 2018 at 01:02:14PM -0700, Randy Dunlap wrote:
+> On 9/25/18 6:06 AM, Jarkko Sakkinen wrote:
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index 1a0be022f91d..b47e1a144409 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -1913,6 +1913,23 @@ config X86_INTEL_MEMORY_PROTECTION_KEYS
+> >  
+> >  	  If unsure, say y.
+> >  
+> > +config INTEL_SGX_CORE
+> > +	bool "Intel SGX core functionality"
+> > +	depends on X86_64 && CPU_SUP_INTEL
+> > +	help
+> > +	Intel Software Guard eXtensions (SGX) CPU feature that allows ring 3
+> > +	applications to create enclaves: private regions of memory that are
+> > +	architecturally protected from unauthorized access and/or modification.
+> > +
+> > +	This option enables kernel recognition of SGX, high-level management
+> > +	of the Enclave Page Cache (EPC), tracking and writing of SGX Launch
+> > +	Enclave Hash MSRs, and allows for virtualization of SGX via KVM. By
+> > +	itself, this option does not provide SGX support to userspace.
+> > +
+> > +	For details, see Documentation/x86/intel_sgx.rst
+> > +
+> > +	If unsure, say N.
+> > +
+> 
 > Hi,
-> Please don't use "/**" to begin comment blocks that are not kernel-doc
-> notation, like the 3 below.  Note: I might have seen one (or some) of
-> these "fixed" in other patches in this series (not sure).
+> coding-style.rst says that help text should be indented with
+> one tab + 2 spaces.
+> 
+> thanks.
 
-Thanks Randy.
+Thank you.
 
 /Jarkko
