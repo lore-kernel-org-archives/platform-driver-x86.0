@@ -1,85 +1,65 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v14 09/19] x86/mm: x86/sgx: Signal SEGV_SGXERR for #PFs
- w/ PF_SGX
-Date: Fri, 28 Sep 2018 15:17:50 +0300
-Message-ID: <a70563ea8a4bfbf9d531d1bc0ca5f5577e6b83be.camel@linux.intel.com>
-References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
-         <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com>
-         <87zhw2ohf0.fsf@xmission.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Joe Perches <joe@perches.com>
+Subject: Bad MAINTAINERS pattern in section 'INTEL PMC CORE DRIVER'
+Date: Fri, 28 Sep 2018 14:53:39 -0700
+Message-ID: <20180928215339.29516-1-joe@perches.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87zhw2ohf0.fsf@xmission.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 MM" <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 2018-09-27 at 21:43 +0200, Eric W. Biederman wrote:
-> Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> writes:
-> 
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
-> > Signal SIGSEGV(SEGV_SGXERR) for all faults with PF_SGX set in the
-> > error code.  The PF_SGX bit is set if and only if the #PF is detected
-> > by the Enclave Page Cache Map (EPCM), which is consulted only after
-> > an access walks the kernel's page tables, i.e.:
-> > 
-> >   a. the access was allowed by the kernel
-> >   b. the kernel's tables have become less restrictive than the EPCM
-> >   c. the kernel cannot fixup the cause of the fault
-> > 
-> > Noteably, (b) implies that either the kernel has botched the EPC
-> > mappings or the EPCM has been invalidated due to a power event.  In
-> > either case, userspace needs to be alerted so that it can take
-> > appropriate action, e.g. restart the enclave.  This is reinforced
-> > by (c) as the kernel doesn't really have any other reasonable option,
-> > e.g. we could kill the task or panic, but neither is warranted.
-> > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  arch/x86/mm/fault.c | 20 +++++++++++++++++---
-> >  1 file changed, 17 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> > index 85d20516b2f3..3fb2b2838d6c 100644
-> > --- a/arch/x86/mm/fault.c
-> > +++ b/arch/x86/mm/fault.c
-> > @@ -960,10 +960,13 @@ static noinline void
-> >  bad_area_access_error(struct pt_regs *regs, unsigned long error_code,
-> >  		      unsigned long address, struct vm_area_struct *vma)
-> >  {
-> > +	int si_code = SEGV_ACCERR;
-> > +
-> >  	if (bad_area_access_from_pkeys(error_code, vma))
-> > -		__bad_area(regs, error_code, address, vma, SEGV_PKUERR);
-> > -	else
-> > -		__bad_area(regs, error_code, address, vma, SEGV_ACCERR);
-> > +		si_code = SEGV_PKUERR;
-> > +	else if (unlikely(error_code & X86_PF_SGX))
-> > +		si_code = SEGV_SGXERR;
-> > +	__bad_area(regs, error_code, address, vma, si_code);
-> >  }
-> 
-> This conflicts with a cleanup in this area I have sitting in linux-next.
-> It isn't in the x86 tree but you can find my siginfo tree at:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git
-> siginfo-next
-> 
-> In my tree bad area no longer takes a vma parameter.
-> 
-> If you are going to make changes to the fault handling code this cycle
-> please let's figure out how to build it on top of my clean ups.
+Please fix this defect appropriately.
 
-We are now going with the proposed vdso solution for v15. Thank you for
-your feedback. I'll sync with you if that route would show non-feasible
-(still prototyping the vdso solution). 
+linux-next MAINTAINERS section:
 
-> Thank you,
-> Eric Biederman
+	7441	INTEL PMC CORE DRIVER
+	7442	M:	Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+	7443	M:	Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+	7444	L:	platform-driver-x86@vger.kernel.org
+	7445	S:	Maintained
+-->	7446	F:	arch/x86/include/asm/pmc_core.h
+	7447	F:	drivers/platform/x86/intel_pmc_core*
 
-/Jarkko
+Commit that introduced this:
+
+commit 7683e9e529258d01ce99216ad3be21f59eff83ec
+ Author: Linus Torvalds <torvalds@linux-foundation.org>
+ Date:   Sun Jul 23 16:06:21 2017 -0700
+ 
+     Properly alphabetize MAINTAINERS file
+     
+     This adds a perl script to actually parse the MAINTAINERS file, clean up
+     some whitespace in it, warn about errors in it, and then properly sort
+     the end result.
+     
+     My perl-fu is atrocious, so the script has basically been created by
+     randomly putting various characters in a pile, mixing them around, and
+     then looking it the end result does anything interesting when used as a
+     perl script.
+     
+     Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+ 
+  MAINTAINERS                  | 3585 +++++++++++++++++++++---------------------
+  scripts/parse-maintainers.pl |   77 +
+  2 files changed, 1868 insertions(+), 1794 deletions(-)
+
+Last commit with arch/x86/include/asm/pmc_core.h
+
+commit 941691ef2197944a202d7870dcd7da3fb0391c65
+Author: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Date:   Wed Jan 31 11:50:22 2018 +0530
+
+    platform/x86: intel_pmc_core: Remove unused header file
+    
+    Recently sent patch 'platform/x86: intel_pmc_core: Remove unused EXPORTED
+    API' missed to remove the header file 'arch/x86/include/asm/pmc_core.h'
+    which was solely used to declare the EXPORTED API
+    'intel_pmc_slp_s0_counter_read'. This patch provides the errata fix for the
+    same.
+    
+    Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+    Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+ arch/x86/include/asm/pmc_core.h       | 27 ---------------------------
+ drivers/platform/x86/intel_pmc_core.c |  1 -
+ 2 files changed, 28 deletions(-)
