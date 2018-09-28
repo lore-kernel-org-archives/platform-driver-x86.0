@@ -1,75 +1,119 @@
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH v14 09/19] x86/mm: x86/sgx: Signal SEGV_SGXERR for #PFs w/ PF_SGX
-Date: Thu, 27 Sep 2018 21:43:15 +0200
-Message-ID: <87zhw2ohf0.fsf@xmission.com>
-References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
-        <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Subject: Re: [PATCH 4/4] platform/x86: intel_telemetry: report debugfs failure
+Date: Fri, 28 Sep 2018 14:40:58 +0530
+Message-ID: <20180928091057.GA30809@raj-desk2.iind.intel.com>
+References: <20180903180415.31575-1-rajneesh.bhardwaj@linux.intel.com>
+ <20180903180415.31575-4-rajneesh.bhardwaj@linux.intel.com>
+ <CAHp75VcE+BY=8aKEGqzkDBVazLGtwNNCa1CYCKGirS1vBLVXPg@mail.gmail.com>
+ <69ad420e-362c-d8c9-331f-056cdaefb1eb@linux.intel.com>
+ <CAHp75VeCC0CUmzieujpxUP1A3Mn8J9gekX6Vn-fbtD_ZFPbnYw@mail.gmail.com>
+ <bb2d01ce-e2c9-18a8-7409-8c014989f732@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925130845.9962-10-jarkko.sakkinen@linux.intel.com> (Jarkko
-        Sakkinen's message of "Tue, 25 Sep 2018 16:06:46 +0300")
+Content-Disposition: inline
+In-Reply-To: <bb2d01ce-e2c9-18a8-7409-8c014989f732@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 MM" <linux-kernel@vger.kernel.org>
+To: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, matt.turner@intel.com, "Brown, Len" <len.brown@intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> writes:
+On Fri, Sep 28, 2018 at 02:44:06PM +0530, Bhardwaj, Rajneesh wrote:
 
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
+Resending it since previous message had few HTML contents so it was not
+delivered to the list.
+
 >
-> Signal SIGSEGV(SEGV_SGXERR) for all faults with PF_SGX set in the
-> error code.  The PF_SGX bit is set if and only if the #PF is detected
-> by the Enclave Page Cache Map (EPCM), which is consulted only after
-> an access walks the kernel's page tables, i.e.:
 >
->   a. the access was allowed by the kernel
->   b. the kernel's tables have become less restrictive than the EPCM
->   c. the kernel cannot fixup the cause of the fault
+> On 26-Sep-18 10:48 PM, Andy Shevchenko wrote:
+> >On Wed, Sep 26, 2018 at 5:24 PM Bhardwaj, Rajneesh
+> ><rajneesh.bhardwaj@linux.intel.com> wrote:
+> >>On 26-Sep-18 7:26 PM, Andy Shevchenko wrote:
+> >>>On Mon, Sep 3, 2018 at 9:05 PM Rajneesh Bhardwaj
+> >>><rajneesh.bhardwaj@linux.intel.com> wrote:
+> >>>>not be obtained and result in a invalid telemetry_plt_config.
+> >>>What is telemetry_plt_config?
+> >>Internal data structure that holds platform config, maintained by the
+> >>telemetry platform driver.
+> >You need to spell if for the reader.
 >
-> Noteably, (b) implies that either the kernel has botched the EPC
-> mappings or the EPCM has been invalidated due to a power event.  In
-> either case, userspace needs to be alerted so that it can take
-> appropriate action, e.g. restart the enclave.  This is reinforced
-> by (c) as the kernel doesn't really have any other reasonable option,
-> e.g. we could kill the task or panic, but neither is warranted.
+> Sure, thanks for the suggestion. I will do it if you agree to my explanation
+> below and require v2.
 >
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  arch/x86/mm/fault.c | 20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
+> >
+> >>>>This is also applicable to the platforms where the BIOS supports IPC1
+> >>>>device under debug configurations but IPC1 is disabled by user or the
+> >>>>policy.
+> >>>>
+> >>>>This change allows user to know the reason for not seeing entries under
+> >>>>/sys/kernel/debug/telemetry/* when there is no apparent failure at boot.
+> >>>>+exit:
+> >>>>+       pr_debug(pr_fmt(DRIVER_NAME) " Failed\n");
+> >>>Completely useless.
+> >>>
+> >>>Device core does it in generic way.
+> >>If i remove this print then perhaps there is no need of this patch.
+> >Maybe.
+> >
+> >
+> >
+> >>Reason to print this is that the platform driver / core driver does not
+> >>show any error.
+> >If the code fails and returns 0 — it's a bug in error reporting inside the code.
 >
-> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> index 85d20516b2f3..3fb2b2838d6c 100644
-> --- a/arch/x86/mm/fault.c
-> +++ b/arch/x86/mm/fault.c
-> @@ -960,10 +960,13 @@ static noinline void
->  bad_area_access_error(struct pt_regs *regs, unsigned long error_code,
->  		      unsigned long address, struct vm_area_struct *vma)
->  {
-> +	int si_code = SEGV_ACCERR;
-> +
->  	if (bad_area_access_from_pkeys(error_code, vma))
-> -		__bad_area(regs, error_code, address, vma, SEGV_PKUERR);
-> -	else
-> -		__bad_area(regs, error_code, address, vma, SEGV_ACCERR);
-> +		si_code = SEGV_PKUERR;
-> +	else if (unlikely(error_code & X86_PF_SGX))
-> +		si_code = SEGV_SGXERR;
-> +	__bad_area(regs, error_code, address, vma, si_code);
->  }
 
-This conflicts with a cleanup in this area I have sitting in linux-next.
-It isn't in the x86 tree but you can find my siginfo tree at:
+Below are my comments as per previous mail.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git siginfo-next
+> The existing Telemetry ecosystem for Atom consists of IPC driver, telem core
+> driver and telem platform driver but there are no consumers of the APIs
+> except the ones in telem debugfs driver. Here in this case, not all drivers
+> that make up the telemetry infra return failure. Here is how the system
+> looks w/wo IPC1 setting in the BIOS.
+>
+> When IPC is present
+>
+> root@raj-glk:~# lsmod | grep -i telem
+>
+> intel_telemetry_debugfs245760
+>
+> intel_telemetry_pltdrv204800
+>
+> intel_punit_ipc163841 intel_telemetry_pltdrv
+>
+> intel_telemetry_core163842 intel_telemetry_debugfs,intel_telemetry_pltdrv
+>
+> intel_pmc_ipc204802 intel_telemetry_debugfs,intel_telemetry_pltdrv
+>
+> When IPC is missing
+>
+> root@raj-glk:~# lsmod | grep -i telem
+>
+> intel_telemetry_pltdrv204800
+>
+> intel_punit_ipc163841 intel_telemetry_pltdrv
+>
+> intel_telemetry_core163841 intel_telemetry_pltdrv
+>
+> intel_pmc_ipc204801 intel_telemetry_pltdrv
+>
+>
+> If we look at the dmesg log, we see  "intel_telemetry_core Init". So one
+> might think that the driver has loaded fine since user may not know that
+> telemetry is more than just one driver. Such things are often reported by
+> users of this driver.
+> So IMHO, keeping this error helps user triage the problem easily. I can
+> change to pr_info you'd like it.
+>
+> >
+> >>In-fact they are even loaded in module table. OTOH, this
+> >>debugfs interface fails. This is very confusing to the users if they
+> >>check the lsmod output so i feel this print might help.
+> >Again, device core *already has* this and even more (it prints also a
+> >return code!).
+> >
+>
 
-In my tree bad area no longer takes a vma parameter.
-
-If you are going to make changes to the fault handling code this cycle
-please let's figure out how to build it on top of my clean ups.
-
-Thank you,
-Eric Biederman
+-- 
+Best Regards,
+Rajneesh
