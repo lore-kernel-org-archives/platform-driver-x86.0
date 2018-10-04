@@ -1,90 +1,65 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: Re: Bad MAINTAINERS pattern in section 'INTEL PMC CORE DRIVER'
-Date: Wed, 3 Oct 2018 17:15:50 +0530
-Message-ID: <20181003114549.GA11877@raj-desk2.iind.intel.com>
-References: <20180928215339.29516-1-joe@perches.com>
- <CAHp75Ve-LfScEuYg6Luzy4Sekatm3qVbr3wsQAJVR-YUN-10Ww@mail.gmail.com>
- <c505fe842c58abd6f91e0dba3dd552ce01e4ea39.camel@perches.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the Trekstor Primebook C11 convertible
+Date: Thu,  4 Oct 2018 14:34:45 +0200
+Message-ID: <20181004123445.17497-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c505fe842c58abd6f91e0dba3dd552ce01e4ea39.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Alicia Hormann <ahormann@gmx.net>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Oct 03, 2018 at 03:10:58AM -0700, Joe Perches wrote:
-> On Wed, 2018-10-03 at 11:00 +0300, Andy Shevchenko wrote:
-> > On Sat, Sep 29, 2018 at 12:54 AM Joe Perches <joe@perches.com> wrote:
-> > > Please fix this defect appropriately.
-> > > 
-> > > linux-next MAINTAINERS section:
-> > > 
-> > >         7441    INTEL PMC CORE DRIVER
-> > >         7442    M:      Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-> > >         7443    M:      Vishwanath Somayaji <vishwanath.somayaji@intel.com>
-> > >         7444    L:      platform-driver-x86@vger.kernel.org
-> > >         7445    S:      Maintained
-> > > -->     7446    F:      arch/x86/include/asm/pmc_core.h
-> > >         7447    F:      drivers/platform/x86/intel_pmc_core*
-> > > 
-> > > Commit that introduced this:
-> > 
-> > This is strange the shuffle of the MAINTAINERS based on the script is
-> > a culprit of the above inconsistency.
-> > 
-> > Btw, I run parse-maintainers.pl against it and there are a lot more
-> > "unsorted" lines.
-> > What Linus or me or both did miss?
-> 
-> Nothing really.
-> 
-> The script used git-blame on the specific line, that's all.
+Add touchscreen info for the Trekstor Primebook C11 convertible.
 
-Thanks for reporting this. I have sent the fix to the list.
-https://lkml.org/lkml/2018/10/3/500.
+Cc: Alicia Hormann <ahormann@gmx.net>
+Suggested-by: Alicia Hormann <ahormann@gmx.net>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-> 
-> There is no simple way to actually find a specific
-> commit that adds a particular line to a file if there is
-> any refactoring done to the file after it was added.
-> 
-> commit b740d2e9233cb33626d3b62210bcfc6a34baa839
-> Author: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-> Date:   Thu May 26 14:41:19 2016 +0530
-> 
->     platform/x86: Add PMC Driver for Intel Core SoC
-> 
-> Anyway, the real cause of the file pattern being unused
-> was also written below:
-> 
-> > > Last commit with arch/x86/include/asm/pmc_core.h
-> > > 
-> > > commit 941691ef2197944a202d7870dcd7da3fb0391c65
-> > > Author: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-> > > Date:   Wed Jan 31 11:50:22 2018 +0530
-> > > 
-> > >     platform/x86: intel_pmc_core: Remove unused header file
-> > > 
-> > >     Recently sent patch 'platform/x86: intel_pmc_core: Remove unused EXPORTED
-> > >     API' missed to remove the header file 'arch/x86/include/asm/pmc_core.h'
-> > >     which was solely used to declare the EXPORTED API
-> > >     'intel_pmc_slp_s0_counter_read'. This patch provides the errata fix for the
-> > >     same.
-> > > 
-> > >     Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-> > >     Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > 
-> > >  arch/x86/include/asm/pmc_core.h       | 27 ---------------------------
-> > >  drivers/platform/x86/intel_pmc_core.c |  1 -
-> > >  2 files changed, 28 deletions(-)
-> 
-> 
-> > 
-> 
-
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index f30337d68007..4e6fdc1fbfdf 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -421,6 +421,22 @@ static const struct ts_dmi_data teclast_x98plus2_data = {
+ 	.properties	= teclast_x98plus2_props,
+ };
+ 
++static const struct property_entry trekstor_primebook_c11_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1970),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1530),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_STRING("firmware-name",
++			      "gsl1680-trekstor-primebook-c11.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
++	{ }
++};
++
++static const struct ts_dmi_data trekstor_primebook_c11_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= trekstor_primebook_c11_props,
++};
++
+ static const struct property_entry trekstor_primebook_c13_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 2624),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1920),
+@@ -706,6 +722,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "X98 Plus II"),
+ 		},
+ 	},
++	{
++		/* Trekstor Primebook C11 */
++		.driver_data = (void *)&trekstor_primebook_c11_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Primebook C11"),
++		},
++	},
+ 	{
+ 		/* Trekstor Primebook C13 */
+ 		.driver_data = (void *)&trekstor_primebook_c13_data,
 -- 
-Best Regards,
-Rajneesh
+2.19.0
