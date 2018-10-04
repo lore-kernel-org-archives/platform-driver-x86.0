@@ -1,65 +1,50 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the Trekstor Primebook C11 convertible
-Date: Thu,  4 Oct 2018 14:34:45 +0200
-Message-ID: <20181004123445.17497-1-hdegoede@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: intel_pmc_core: Update MAINTAINERS
+Date: Thu, 4 Oct 2018 15:41:43 +0300
+Message-ID: <CAHp75Vf980Wih6+cfEd-SjRDZNKdMT20wbocvsRFZ0OjHaGbhg@mail.gmail.com>
+References: <20181003115110.25996-1-rajneesh.bhardwaj@linux.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181003115110.25996-1-rajneesh.bhardwaj@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Alicia Hormann <ahormann@gmx.net>
+To: rajneesh.bhardwaj@linux.intel.com
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Joe Perches <joe@perches.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add touchscreen info for the Trekstor Primebook C11 convertible.
+On Wed, Oct 3, 2018 at 2:53 PM Rajneesh Bhardwaj
+<rajneesh.bhardwaj@linux.intel.com> wrote:
+>
+> This removes the entry for pmc_core.h file in the MAINTAINERS as the
+> file is already removed by a previous commit.
+> "platform/x86: intel_pmc_core: Remove unused header file"
+>
 
-Cc: Alicia Hormann <ahormann@gmx.net>
-Suggested-by: Alicia Hormann <ahormann@gmx.net>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Pushed to our for-next branch directly, thanks!
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index f30337d68007..4e6fdc1fbfdf 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -421,6 +421,22 @@ static const struct ts_dmi_data teclast_x98plus2_data = {
- 	.properties	= teclast_x98plus2_props,
- };
- 
-+static const struct property_entry trekstor_primebook_c11_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1970),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1530),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name",
-+			      "gsl1680-trekstor-primebook-c11.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data trekstor_primebook_c11_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= trekstor_primebook_c11_props,
-+};
-+
- static const struct property_entry trekstor_primebook_c13_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 2624),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1920),
-@@ -706,6 +722,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "X98 Plus II"),
- 		},
- 	},
-+	{
-+		/* Trekstor Primebook C11 */
-+		.driver_data = (void *)&trekstor_primebook_c11_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Primebook C11"),
-+		},
-+	},
- 	{
- 		/* Trekstor Primebook C13 */
- 		.driver_data = (void *)&trekstor_primebook_c13_data,
+> Reported-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+> ---
+>  MAINTAINERS | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9ad052aeac39..60d029b65767 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7468,7 +7468,6 @@ M:        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+>  M:     Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+>  L:     platform-driver-x86@vger.kernel.org
+>  S:     Maintained
+> -F:     arch/x86/include/asm/pmc_core.h
+>  F:     drivers/platform/x86/intel_pmc_core*
+>
+>  INTEL PMC/P-Unit IPC DRIVER
+> --
+> 2.17.1
+>
+
+
 -- 
-2.19.0
+With Best Regards,
+Andy Shevchenko
