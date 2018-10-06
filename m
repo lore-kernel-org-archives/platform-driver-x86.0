@@ -1,78 +1,81 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v14 15/19] platform/x86: Intel SGX driver
-Date: Fri, 5 Oct 2018 14:32:44 +0300
-Message-ID: <20181005113244.GB25985@linux.intel.com>
-References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
- <20180925130845.9962-16-jarkko.sakkinen@linux.intel.com>
- <1538676077.2562.6.camel@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Subject: [PATCH v2 2/4] platform/x86: intel_pmc_core: Fix LTR IGNORE Max offset
+Date: Sat,  6 Oct 2018 12:21:11 +0530
+Message-ID: <20181006065113.669-2-rajneesh.bhardwaj@linux.intel.com>
+References: <20181006065113.669-1-rajneesh.bhardwaj@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1538676077.2562.6.camel@intel.com>
+In-Reply-To: <20181006065113.669-1-rajneesh.bhardwaj@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, rajneesh.bhardwaj@intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Oct 04, 2018 at 11:01:17AM -0700, Sean Christopherson wrote:
-> On Tue, 2018-09-25 at 16:06 +0300, Jarkko Sakkinen wrote:
-> > Intel Software Guard eXtensions (SGX) is a set of CPU instructions that
-> > can be used by applications to set aside private regions of code and
-> > data. The code outside the enclave is disallowed to access the memory
-> > inside the enclave by the CPU access control.
-> > 
-> > SGX driver provides a ioctl API for loading and initializing enclaves.
-> > Address range for enclaves is reserved with mmap() and they are
-> > destroyed with munmap(). Enclave construction, measurement and
-> > initialization is done with the provided the ioctl API.
-> 
-> ...
-> 
-> > +/**
-> > + * sgx_ioc_enclave_init - handler for %SGX_IOC_ENCLAVE_INIT
-> > + *
-> > + * @filep:	open file to /dev/sgx
-> > + * @cmd:	the command value
-> > + * @arg:	pointer to an &sgx_enclave_init instance
-> > + *
-> > + * Flushes the remaining enqueued EADD operations and performs EINIT. Does not
-> > + * allow the EINITTOKENKEY attribute for an enclave.
-> > + *
-> > + * Return:
-> > + *   0 on success,
-> > + *   SGX error code on EINIT failure,
-> > + *   -errno otherwise
-> > + */
-> > +static long sgx_ioc_enclave_init(struct file *filep, unsigned int cmd,
-> > +				 unsigned long arg)
-> > +{
-> > +	struct sgx_enclave_init *initp = (struct sgx_enclave_init *)arg;
-> > +	struct sgx_sigstruct *sigstruct;
-> > +	struct sgx_einittoken *einittoken;
-> > +	struct sgx_encl *encl;
-> > +	struct page *initp_page;
-> > +	int ret;
-> > +
-> > +	initp_page = alloc_page(GFP_HIGHUSER);
-> > +	if (!initp_page)
-> > +		return -ENOMEM;
-> > +
-> > +	sigstruct = kmap(initp_page);
-> > +	einittoken = (struct sgx_einittoken *)
-> > +		((unsigned long)sigstruct + PAGE_SIZE / 2);
-> > +	memset(einittoken, 0, sizeof(*einittoken));
-> > +
-> > +	ret = copy_from_user(sigstruct, (void __user *)initp->sigstruct,
-> > +			     sizeof(*sigstruct));
-> > +	if (ret)
-> > +		goto out;
-> > +	if (sigstruct->attributes & SGX_ATTR_EINITTOKENKEY) {
-> > +		ret = EINVAL;
-> 
-> This should be "ret = -EINVAL".
+Cannonlake PCH allows us to ignore LTR from more IPs than Sunrisepoint
+PCH so make the LTR ignore platform specific.
 
-Ouch :-( Thank you for spotting this out.
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+---
+ drivers/platform/x86/intel_pmc_core.c | 4 +++-
+ drivers/platform/x86/intel_pmc_core.h | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-/Jarkko
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 217a822a8da1..c616cfedf2be 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -148,6 +148,7 @@ static const struct pmc_reg_map spt_reg_map = {
+ 	.ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
++	.ltr_ignore_max = SPT_NUM_IP_IGN_ALLOWED,
+ };
+ 
+ /* Cannonlake: PGD PFET Enable Ack Status Register(s) bitmap */
+@@ -319,6 +320,7 @@ static const struct pmc_reg_map cnp_reg_map = {
+ 	.ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
+ };
+ 
+ static inline u8 pmc_core_reg_read_byte(struct pmc_dev *pmcdev, int offset)
+@@ -565,7 +567,7 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file, const char __user
+ 		goto out_unlock;
+ 	}
+ 
+-	if (val > NUM_IP_IGN_ALLOWED) {
++	if (val > map->ltr_ignore_max) {
+ 		err = -EINVAL;
+ 		goto out_unlock;
+ 	}
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index 7a00436e337d..7f8181057ec8 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -44,7 +44,7 @@
+ #define SPT_PMC_READ_DISABLE_BIT		0x16
+ #define SPT_PMC_MSG_FULL_STS_BIT		0x18
+ #define NUM_RETRIES				100
+-#define NUM_IP_IGN_ALLOWED			17
++#define SPT_NUM_IP_IGN_ALLOWED			17
+ 
+ #define SPT_PMC_LTR_CUR_PLT			0x350
+ #define SPT_PMC_LTR_CUR_ASLT			0x354
+@@ -154,6 +154,7 @@ enum ppfear_regs {
+ #define CNP_PPFEAR_NUM_ENTRIES			8
+ #define CNP_PMC_READ_DISABLE_BIT		22
+ #define CNP_PMC_LATCH_SLPS0_EVENTS		BIT(31)
++#define CNP_NUM_IP_IGN_ALLOWED			19
+ #define CNP_PMC_LTR_CUR_PLT			0x1B50
+ #define CNP_PMC_LTR_CUR_ASLT			0x1B54
+ #define CNP_PMC_LTR_SPA				0x1B60
+@@ -216,6 +217,7 @@ struct pmc_reg_map {
+ 	const u32 pm_cfg_offset;
+ 	const int pm_read_disable_bit;
+ 	const u32 slps0_dbg_offset;
++	const u32 ltr_ignore_max;
+ };
+ 
+ /**
+-- 
+2.17.1
