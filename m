@@ -1,70 +1,37 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: intel_telemetry: Update maintainers info
-Date: Tue, 9 Oct 2018 17:13:25 +0300
-Message-ID: <CAHp75VcHUZzzemZdtuNgOYMA=DJ-naWk1Cxj0yPxZn3-W151Bw@mail.gmail.com>
-References: <20181008144303.23878-1-rajneesh.bhardwaj@linux.intel.com>
- <CAHp75VfNsasf-hpiubrfw=x+iVjBOOcY=uj6dB97iVpkoT6K=w@mail.gmail.com> <f6742716-d302-9af6-4d7f-428def965279@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Subject: [Patch v2] MAINTAINERS: intel_telemetry: Update maintainers info
+Date: Tue,  9 Oct 2018 19:48:33 +0530
+Message-ID: <20181009141833.25972-1-rajneesh.bhardwaj@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f6742716-d302-9af6-4d7f-428def965279@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rajneesh.bhardwaj@linux.intel.com
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, David Box <david.e.box@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, rajneesh.bhardwaj@intel.com, david.e.box@linux.intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Oct 9, 2018 at 5:12 PM Bhardwaj, Rajneesh
-<rajneesh.bhardwaj@linux.intel.com> wrote:
->
->
->
-> On 09-Oct-18 5:07 PM, Andy Shevchenko wrote:
-> > On Mon, Oct 8, 2018 at 5:44 PM Rajneesh Bhardwaj
-> > <rajneesh.bhardwaj@linux.intel.com> wrote:
-> >> Add myself and David as the new maintainers for Intel Telemetry driver.
-> >>
-> > There is no explanation why.
-> > (Like previous one left the company, and / or you are doing set of the
-> > drivers related to PMC where telemetry is part of, etc)
->
-> Hi Andy,
->   Souvik no longer works with Intel. I and David are volunteering to
-> take up the task on his behalf since we do work on drivers which are
-> pretty close to this one in terms of functionalities.
->
+Add myself and David as the new maintainers for Intel Telemetry driver
+since Souvik no longer works with Intel. David and I work on power
+management and debug related drivers which are pretty close to this one
+in terms of functionalities so volunteering for the task.
 
-Good, please update the commit message and send v2. Thanks!
+Signed-off-by: Box, David E <david.e.box@linux.intel.com>
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+---
+ MAINTAINERS | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> Thanks
-> Rajneesh
->
-> >> Signed-off-by: Box, David E <david.e.box@linux.intel.com>
-> >> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-> >> ---
-> >>   MAINTAINERS | 3 ++-
-> >>   1 file changed, 2 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/MAINTAINERS b/MAINTAINERS
-> >> index 22065048d89d..f33ebd1b8034 100644
-> >> --- a/MAINTAINERS
-> >> +++ b/MAINTAINERS
-> >> @@ -7530,7 +7530,8 @@ F:        arch/x86/crypto/sha*-mb/
-> >>   F:     crypto/mcryptd.c
-> >>
-> >>   INTEL TELEMETRY DRIVER
-> >> -M:     Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-> >> +M:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-> >> +M:     Box, David E <david.e.box@linux.intel.com>
-> >>   L:     platform-driver-x86@vger.kernel.org
-> >>   S:     Maintained
-> >>   F:     arch/x86/include/asm/intel_telemetry.h
-> >> --
-> >> 2.17.1
-> >>
-> >
->
-
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 22065048d89d..f33ebd1b8034 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7530,7 +7530,8 @@ F:	arch/x86/crypto/sha*-mb/
+ F:	crypto/mcryptd.c
+ 
+ INTEL TELEMETRY DRIVER
+-M:	Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
++M:	Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
++M:	Box, David E <david.e.box@linux.intel.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	arch/x86/include/asm/intel_telemetry.h
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
