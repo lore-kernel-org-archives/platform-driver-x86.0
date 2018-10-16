@@ -1,55 +1,52 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: 2nd Fan quirk for Thinkpad P50 causes spurios
- touchpad/trackpoint events on ThinkPad L570
-Date: Mon, 15 Oct 2018 17:11:54 -0700
-Message-ID: <CAKdAkRTbQ+-+h8SMGf9Khc4+wE+P3_UCbYR0DDi1MoBwfSOWZQ@mail.gmail.com>
-References: <eee05e84-42ed-a6ad-65c6-f5b2fe7cdd27@ristioja.ee>
- <36111ed4-621c-47a8-bc6a-66cf756a0ac6@ristioja.ee>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH V3] MAINTAINERS: intel_telemetry: Update maintainers info
+Date: Tue, 16 Oct 2018 18:51:51 +0300
+Message-ID: <CAHp75VcPiyU+NKnzEdqSye2Eat8RtxNyFbUKZ3DGdXinF5A=eg@mail.gmail.com>
+References: <262d8a05cedc76bc90fa5be7d3b92d5faa2b4ce9.camel@perches.com>
+ <20181012162816.14396-1-david.e.box@intel.com> <6fd036103f87d52214694ac0a172527a113c07b5.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <36111ed4-621c-47a8-bc6a-66cf756a0ac6-89mTbI93R4uuvFJfX82//w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: jaak-89mTbI93R4uuvFJfX82//w@public.gmane.org
-Cc: agk-mA9ux5SlULTR7s880joybQ@public.gmane.org, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ibm-acpi-devel <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6fd036103f87d52214694ac0a172527a113c07b5.camel@perches.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: "Box, David E" <david.e.box@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, rajneesh.bhardwaj@linux.intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Oct 13, 2018 at 6:32 AM Jaak Ristioja <jaak-89mTbI93R4uuvFJfX82//w@public.gmane.org> wrote:
+On Fri, Oct 12, 2018 at 7:46 PM Joe Perches <joe@perches.com> wrote:
 >
-> On 27.08.2018 19:22, Jaak Ristioja wrote:
-> > Upgrading Linux from 4.16 to 4.17, a ThinkPad L570 started receiving
-> > spurious input events, mostly right mouse button click events, but also
-> > cursor jumps.
+> On Fri, 2018-10-12 at 09:28 -0700, David E. Box wrote:
+> > Remove Souvik who has left this role. Add Rajneesh and David who work
+> > jointly on telemetry updates for new platforms.
 > >
-> > I have not attempted to understand whether these events come from the
-> > trackpoint or touchpad or some other driver, but I managed to bisect
-> > this issue to commit a986c75a7df0 titled "platform/x86: thinkpad_acpi:
-> > Add 2nd Fan Support for Thinkpad P50" by Alexander Kappner.
+> > Signed-off-by: David E. Box <david.e.box@intel.com>
+> > Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+> []
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> []
+> > @@ -7355,7 +7355,8 @@ F:      arch/x86/crypto/sha*-mb
+> >  F:   crypto/mcryptd.c
 > >
-> > Apparently the quirk mitigation is applied when the BIOS version begins
-> > with N1. The BIOS version on the L570 in question is N1XET57W (1.35 )
-> > which is probably why this commit causes the described problems on the
-> > ThinkPad L570. How exactly? - I don't know.
-> >
-> > The issue did not reproduce when running some stable 4.17 and 4.18
-> > kernels with commit a986c75a7df0 reverted.
-> >
-> > Please fix this for future kernels. Thanks! :)
+> >  INTEL TELEMETRY DRIVER
+> > -M:   Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+> > +M:   Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+> > +M:   "David E. Box" <david.e.box@linux.intel.com>
+> >  L:   platform-driver-x86@vger.kernel.org
+> >  S:   Maintained
 >
-> Ping. Do you need any additional information?
+>         S: Status, one of the following:
+>            Supported:   Someone is actually paid to look after this.
+>            Maintained:  Someone actually looks after it.
+>
+> Perhaps this is driver status should be marked
+>
+>         "S:     Supported"
+>
+> >  F:   arch/x86/include/asm/intel_telemetry.h
 
-Sounds like we need tighter check for the quirk, maybe based on
-DMI/Board name? Can we revert the offending commit for now?
-
-Thanks.
+Thanks, Joe.
+I may fix it when applying.
 
 -- 
-Dmitry
+With Best Regards,
+Andy Shevchenko
