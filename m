@@ -1,98 +1,55 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v14 19/19] x86/sgx: Driver documentation
-Date: Mon, 15 Oct 2018 22:54:36 +0200
-Message-ID: <20181015205436.GA28500@amd>
-References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
- <20180925130845.9962-20-jarkko.sakkinen@linux.intel.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: 2nd Fan quirk for Thinkpad P50 causes spurios
+ touchpad/trackpoint events on ThinkPad L570
+Date: Mon, 15 Oct 2018 17:11:54 -0700
+Message-ID: <CAKdAkRTbQ+-+h8SMGf9Khc4+wE+P3_UCbYR0DDi1MoBwfSOWZQ@mail.gmail.com>
+References: <eee05e84-42ed-a6ad-65c6-f5b2fe7cdd27@ristioja.ee>
+ <36111ed4-621c-47a8-bc6a-66cf756a0ac6@ristioja.ee>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180925130845.9962-20-jarkko.sakkinen@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <36111ed4-621c-47a8-bc6a-66cf756a0ac6-89mTbI93R4uuvFJfX82//w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: jaak-89mTbI93R4uuvFJfX82//w@public.gmane.org
+Cc: agk-mA9ux5SlULTR7s880joybQ@public.gmane.org, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ibm-acpi-devel <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Sat, Oct 13, 2018 at 6:32 AM Jaak Ristioja <jaak-89mTbI93R4uuvFJfX82//w@public.gmane.org> wrote:
+>
+> On 27.08.2018 19:22, Jaak Ristioja wrote:
+> > Upgrading Linux from 4.16 to 4.17, a ThinkPad L570 started receiving
+> > spurious input events, mostly right mouse button click events, but also
+> > cursor jumps.
+> >
+> > I have not attempted to understand whether these events come from the
+> > trackpoint or touchpad or some other driver, but I managed to bisect
+> > this issue to commit a986c75a7df0 titled "platform/x86: thinkpad_acpi:
+> > Add 2nd Fan Support for Thinkpad P50" by Alexander Kappner.
+> >
+> > Apparently the quirk mitigation is applied when the BIOS version begins
+> > with N1. The BIOS version on the L570 in question is N1XET57W (1.35 )
+> > which is probably why this commit causes the described problems on the
+> > ThinkPad L570. How exactly? - I don't know.
+> >
+> > The issue did not reproduce when running some stable 4.17 and 4.18
+> > kernels with commit a986c75a7df0 reverted.
+> >
+> > Please fix this for future kernels. Thanks! :)
+>
+> Ping. Do you need any additional information?
 
---XsQoSWH+UP9D9v3l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sounds like we need tighter check for the quirk, maybe based on
+DMI/Board name? Can we revert the offending commit for now?
 
-On Tue 2018-09-25 16:06:56, Jarkko Sakkinen wrote:
-> Documentation of the features of the Software Guard eXtensions used
-> by the Linux kernel and basic design choices for the core and driver
-> and functionality.
->=20
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Thanks.
 
-> --- /dev/null
-> +++ b/Documentation/x86/intel_sgx.rst
-> @@ -0,0 +1,185 @@
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +Intel(R) SGX driver
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Introduction
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Intel(R) SGX is a set of CPU instructions that can be used by applicatio=
-ns to
-> +set aside private regions of code and data. The code outside the enclave=
- is
-> +disallowed to access the memory inside the enclave by the CPU access con=
-trol.
-> +In a way you can think that SGX provides inverted sandbox. It protects t=
-he
-> +application from a malicious host.
-
-Well, recently hardware had some problems keeping its
-promises. So... what about rowhammer, meltdown and spectre?
-
-Which ones apply, which ones do not, and on what cpu generations?
-
-> +Overview of SGX
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +SGX has a set of data structures to maintain information about the encla=
-ves and
-> +their security properties. BIOS reserves a fixed size region of physical=
- memory
-> +for these structures by setting Processor Reserved Memory Range Registers
-> +(PRMRR).
-> +
-> +This memory range is protected from outside access by the CPU and all th=
-e data
-> +coming in and out of the CPU package is encrypted by a key that is gener=
-ated for
-> +each boot cycle.
-
-Encryption, that sounds nice, but it is hard to do right. If SGX
-protected code changes single bit in its memory, how many bits will be
-changed in physical RAM?
-
-Can we get security people to look at this and perhaps tells us what
-properties it has?
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---XsQoSWH+UP9D9v3l
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvE/owACgkQMOfwapXb+vI5JACeIS4TIY4nGCXYOUBBdtMzSfEh
-JH4AoKFfu10QTC4CbpAC/REiWoJy7pLi
-=Zkv5
------END PGP SIGNATURE-----
-
---XsQoSWH+UP9D9v3l--
+-- 
+Dmitry
