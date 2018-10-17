@@ -1,46 +1,50 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
 Subject: Re: [PATCH v14 19/19] x86/sgx: Driver documentation
-Date: Thu, 18 Oct 2018 02:45:27 +0300 (EEST)
-Message-ID: <alpine.DEB.2.21.1810180205490.5022@jsakkine-mobl1>
-References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com> <20180925130845.9962-20-jarkko.sakkinen@linux.intel.com> <20181015205436.GA28500@amd>
+Date: Wed, 17 Oct 2018 16:56:51 -0700
+Message-ID: <fe28962d-367b-b8bb-8280-fe48c7d08813@intel.com>
+References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
+ <20180925130845.9962-20-jarkko.sakkinen@linux.intel.com>
+ <20181015205436.GA28500@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181015205436.GA28500@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Pavel Machek <pavel@ucw.cz>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 15 Oct 2018, Pavel Machek wrote:
-> On Tue 2018-09-25 16:06:56, Jarkko Sakkinen wrote:
+On 10/15/2018 01:54 PM, Pavel Machek wrote:
 >> +Intel(R) SGX is a set of CPU instructions that can be used by applications to
 >> +set aside private regions of code and data. The code outside the enclave is
 >> +disallowed to access the memory inside the enclave by the CPU access control.
 >> +In a way you can think that SGX provides inverted sandbox. It protects the
 >> +application from a malicious host.
->
 > Well, recently hardware had some problems keeping its
 > promises. So... what about rowhammer, meltdown and spectre?
 
-Doesn't hardware always have this problem over time?
+There's a ton of documentation out there about what kinds of protections
+SGX provides.  I don't think this is an appropriate place to have an
+exhaustive discussion about it.  But, there's extensive discussion of it
+on Intel's security site:
+
+https://software.intel.com/security-software-guidance/
+
+There's documentation on how L1TF affects SGX here:
+
+https://software.intel.com/security-software-guidance/software-guidance/l1-terminal-fault
+
+Or Spectre v2 here:
+
+https://software.intel.com/security-software-guidance/software-guidance/bounds-check-bypass
 
 > Which ones apply, which ones do not, and on what cpu generations?
 
-Definitely should be refined.
+The CVEs list this in pretty exhaustive detail.  The L1TF/SGX one, for
+example:
 
-Meltdowns approach AFAIK does not work because reads outside the enclave
-will always have a predefined value (-1) but only if the page is present,
-which was later exploited in the Foreshadow attack.
+https://nvd.nist.gov/vuln/detail/CVE-2018-3615
 
-> Encryption, that sounds nice, but it is hard to do right. If SGX
-> protected code changes single bit in its memory, how many bits will be
-> changed in physical RAM?
-
-512-bit blocks and merkle tree based mac. It is pretty well documented
-in https://eprint.iacr.org/2016/204.pdf. I'll take not to myself to add
-this to the references.
-
-Thanks for the feedback. The ocumentation is hard to drive forward w/o it.
-
-/Jarkko
+Lists a bunch of processor models.
