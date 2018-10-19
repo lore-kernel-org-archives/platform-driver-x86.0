@@ -1,60 +1,52 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 Subject: Re: [PATCH V3] MAINTAINERS: intel_telemetry: Update maintainers info
-Date: Fri, 19 Oct 2018 17:02:11 +0300
-Message-ID: <CAHp75VdvVCcnqBZ7Ctd86MSCgYqubaybMhZoPSi_p9hZ310xkg@mail.gmail.com>
-References: <262d8a05cedc76bc90fa5be7d3b92d5faa2b4ce9.camel@perches.com>
- <20181012162816.14396-1-david.e.box@intel.com> <6fd036103f87d52214694ac0a172527a113c07b5.camel@perches.com>
- <CAHp75VcPiyU+NKnzEdqSye2Eat8RtxNyFbUKZ3DGdXinF5A=eg@mail.gmail.com>
+Date: Fri, 19 Oct 2018 17:02:42 +0300
+Message-ID: <CAHp75VfzQN-OX34Dt8Ce5G98vWyVT1HM86pxoj6BHENac38P5Q@mail.gmail.com>
+References: <262d8a05cedc76bc90fa5be7d3b92d5faa2b4ce9.camel@perches.com> <20181012162816.14396-1-david.e.box@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcPiyU+NKnzEdqSye2Eat8RtxNyFbUKZ3DGdXinF5A=eg@mail.gmail.com>
+In-Reply-To: <20181012162816.14396-1-david.e.box@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: "Box, David E" <david.e.box@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, rajneesh.bhardwaj@linux.intel.com
+To: "Box, David E" <david.e.box@intel.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, rajneesh.bhardwaj@linux.intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Oct 16, 2018 at 6:51 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Fri, Oct 12, 2018 at 7:29 PM David E. Box <david.e.box@intel.com> wrote:
 >
-> On Fri, Oct 12, 2018 at 7:46 PM Joe Perches <joe@perches.com> wrote:
-> >
-> > On Fri, 2018-10-12 at 09:28 -0700, David E. Box wrote:
-> > > Remove Souvik who has left this role. Add Rajneesh and David who work
-> > > jointly on telemetry updates for new platforms.
-> > >
-> > > Signed-off-by: David E. Box <david.e.box@intel.com>
-> > > Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-> > []
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > []
-> > > @@ -7355,7 +7355,8 @@ F:      arch/x86/crypto/sha*-mb
-> > >  F:   crypto/mcryptd.c
-> > >
-> > >  INTEL TELEMETRY DRIVER
-> > > -M:   Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-> > > +M:   Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-> > > +M:   "David E. Box" <david.e.box@linux.intel.com>
-> > >  L:   platform-driver-x86@vger.kernel.org
-> > >  S:   Maintained
-> >
-> >         S: Status, one of the following:
-> >            Supported:   Someone is actually paid to look after this.
-> >            Maintained:  Someone actually looks after it.
-> >
-> > Perhaps this is driver status should be marked
-> >
-> >         "S:     Supported"
-> >
-> > >  F:   arch/x86/include/asm/intel_telemetry.h
+> Remove Souvik who has left this role. Add Rajneesh and David who work
+> jointly on telemetry updates for new platforms.
 >
-> Thanks, Joe.
-> I may fix it when applying.
 
-Hmm... Since it's not related to the change done in the patch I would
-do rather a separate one. And moreover hear an opinion from Darren. I
-don't remember if we have any rule of thumb for the drivers to be only
-"supported" and not "maintained".
+Pushed to my reviewing and testing queue, thanks!
+
+> Signed-off-by: David E. Box <david.e.box@intel.com>
+> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+> ---
+>
+>         V3: Change signoff format
+>
+>  MAINTAINERS | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 544cac829cf4..cbe1595db4a5 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7355,7 +7355,8 @@ F:        arch/x86/crypto/sha*-mb
+>  F:     crypto/mcryptd.c
+>
+>  INTEL TELEMETRY DRIVER
+> -M:     Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+> +M:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+> +M:     "David E. Box" <david.e.box@linux.intel.com>
+>  L:     platform-driver-x86@vger.kernel.org
+>  S:     Maintained
+>  F:     arch/x86/include/asm/intel_telemetry.h
+> --
+> 2.14.4
+>
+
 
 -- 
 With Best Regards,
