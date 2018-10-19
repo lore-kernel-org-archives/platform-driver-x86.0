@@ -1,80 +1,73 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 4/4] platform/x86: intel_telemetry: report debugfs failure
-Date: Fri, 19 Oct 2018 15:39:22 +0300
-Message-ID: <CAHp75VfS2cB3fh1R_iQk91skU-p+yZ_X1Jx2sBaiwHmtAZ0dpw@mail.gmail.com>
-References: <20181006065113.669-1-rajneesh.bhardwaj@linux.intel.com> <20181006065113.669-4-rajneesh.bhardwaj@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Trekstor
+ Primetab T13B tablet
+Date: Fri, 19 Oct 2018 15:48:19 +0300
+Message-ID: <CAHp75Ve=n6oFRr7zoDfHMUGOACmgk1XbqU_q0n+j0D3D+6B0sg@mail.gmail.com>
+References: <20181008072505.GA8334@mcepok-pc>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181006065113.669-4-rajneesh.bhardwaj@linux.intel.com>
+In-Reply-To: <20181008072505.GA8334@mcepok-pc>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rajneesh.bhardwaj@linux.intel.com
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, matt.turner@intel.com, "Brown, Len" <len.brown@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
+To: marian.cepok@gmail.com
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Oct 6, 2018 at 9:54 AM Rajneesh Bhardwaj
-<rajneesh.bhardwaj@linux.intel.com> wrote:
+On Mon, Oct 8, 2018 at 10:25 AM Marian Cepok <marian.cepok@gmail.com> wrote:
 >
-> On some Goldmont based systems such as ASRock J3455M the BIOS may not
-> enable the IPC1 device that provides access to the PMC and PUNIT. In
-> such scenarios, the IOSS and PSS resources from the platform device can
-> not be obtained and result in a invalid telemetry_plt_config which is an
-> internal data structure that holds platform config and is maintained by
-> the telemetry platform driver.
->
-> This is also applicable to the platforms where the BIOS supports IPC1
-> device under debug configurations but IPC1 is disabled by user or the
-> policy.
->
-> This change allows user to know the reason for not seeing entries under
-> /sys/kernel/debug/telemetry/* when there is no apparent failure at boot.
+> Add touchscreen info for the Trekstor Primetab T13B tablet.
 >
 
 Pushed to my review and testing queue, thanks!
 
-P.S. I appended one more patch against this file, please check if it's okay.
-
-> Cc: Matt Turner <matt.turner@intel.com>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@intel.com>
->
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=198779
-> Acked-by: Matt Turner <matt.turner@intel.com>
-> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Marian Cepok <marian.cepok@gmail.com>
 > ---
-> Changes in v2:
->  * Removed print and out label both as suggested by Andy.
->  * changed to pr_info.
->  * Other minor style fixes.
+>  drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 >
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index cb204f973491..c07954f0efc6 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -381,6 +381,22 @@ static const struct ts_dmi_data trekstor_primebook_c13_data = {
+>         .properties     = trekstor_primebook_c13_props,
+>  };
 >
->  drivers/platform/x86/intel_telemetry_debugfs.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-> index ffd0474b0531..1423fa8710fd 100644
-> --- a/drivers/platform/x86/intel_telemetry_debugfs.c
-> +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-> @@ -951,12 +951,16 @@ static int __init telemetry_debugfs_init(void)
->         debugfs_conf = (struct telemetry_debugfs_conf *)id->driver_data;
->
->         err = telemetry_pltconfig_valid();
-> -       if (err < 0)
-> +       if (err < 0) {
-> +               pr_info("Invalid pltconfig, ensure IPC1 device is enabled in BIOS\n");
->                 return -ENODEV;
-> +       }
->
->         err = telemetry_debugfs_check_evts();
-> -       if (err < 0)
-> +       if (err < 0) {
-> +               pr_info("telemetry_debugfs_check_evts failed\n");
->                 return -EINVAL;
-> +       }
->
->         register_pm_notifier(&pm_notifier);
->
+> +static const struct property_entry trekstor_primetab_t13b_props[] = {
+> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 2500),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1900),
+> +       PROPERTY_ENTRY_STRING("firmware-name",
+> +                             "gsl1680-trekstor-primetab-t13b.fw"),
+> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +       { }
+> +};
+> +
+> +static const struct ts_dmi_data trekstor_primetab_t13b_data = {
+> +       .acpi_name  = "MSSL1680:00",
+> +       .properties = trekstor_primetab_t13b_props,
+> +};
+> +
+>  static const struct property_entry trekstor_surftab_twin_10_1_props[] = {
+>         PROPERTY_ENTRY_U32("touchscreen-size-x", 1900),
+>         PROPERTY_ENTRY_U32("touchscreen-size-y", 1280),
+> @@ -648,6 +664,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "Primebook C13"),
+>                 },
+>         },
+> +       {
+> +               /* Trekstor Primetab T13B */
+> +               .driver_data = (void *)&trekstor_primetab_t13b_data,
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Primetab T13B"),
+> +               },
+> +       },
+>         {
+>                 /* TrekStor SurfTab twin 10.1 ST10432-8 */
+>                 .driver_data = (void *)&trekstor_surftab_twin_10_1_data,
 > --
 > 2.17.1
 >
