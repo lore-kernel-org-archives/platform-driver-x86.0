@@ -1,105 +1,76 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Simplify the keyboard brightness
- updating process
-Date: Fri, 19 Oct 2018 14:50:36 +0300
-Message-ID: <CAHp75VeqVXh8LsAppBmNJCbjL6T4g6ZhS=PSQbNqigrmKwbsdw@mail.gmail.com>
-References: <20180816084104.434-1-jian-hong@endlessm.com> <20180927085009.4190-1-jian-hong@endlessm.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Trekstor
+ Primebook C11 convertible
+Date: Fri, 19 Oct 2018 14:56:47 +0300
+Message-ID: <CAHp75VepsK+3o5qH9i8x=uvCABt-QOuBq2WNiqGAQYVSFOqTyA@mail.gmail.com>
+References: <20181004123445.17497-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180927085009.4190-1-jian-hong@endlessm.com>
+In-Reply-To: <20181004123445.17497-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jian-Hong Pan <jian-hong@endlessm.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ahormann@gmx.net
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Sep 27, 2018 at 11:52 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
+On Thu, Oct 4, 2018 at 3:35 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> The original asus-wmi queues a work which calls the ACPI/WMI methods to
-> update the keyboard LED brightness.  Similar drivers - acer-wmi,
-> dell-wmi-led just call the ACPI/WMI methods directly without workqueues.
->
-> This patch simplifies the keyboard brightness updating process which
-> calls the kbd_led_update function directly without workqueue in
-> asus-wmi.
+> Add touchscreen info for the Trekstor Primebook C11 convertible.
 >
 
-Okay, this wasn't get any comment so far and my brief reading of the
-call chain doesn't give me any objections.
-I'm about to push this to accepted queue (for-next) since it was
-already enough time passed in reviewing and testing queue.
+Applied, thanks!
 
-Thanks!
-
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> Cc: Alicia Hormann <ahormann@gmx.net>
+> Suggested-by: Alicia Hormann <ahormann@gmx.net>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/platform/x86/asus-wmi.c | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
+>  drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 >
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 2d6e272315a8..9441cce636e6 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -239,7 +239,6 @@ struct asus_wmi {
->         int lightbar_led_wk;
->         struct workqueue_struct *led_workqueue;
->         struct work_struct tpd_led_work;
-> -       struct work_struct kbd_led_work;
->         struct work_struct wlan_led_work;
->         struct work_struct lightbar_led_work;
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index f30337d68007..4e6fdc1fbfdf 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -421,6 +421,22 @@ static const struct ts_dmi_data teclast_x98plus2_data = {
+>         .properties     = teclast_x98plus2_props,
+>  };
 >
-> @@ -456,12 +455,9 @@ static enum led_brightness tpd_led_get(struct led_classdev *led_cdev)
->         return read_tpd_led_state(asus);
->  }
->
-> -static void kbd_led_update(struct work_struct *work)
-> +static void kbd_led_update(struct asus_wmi *asus)
->  {
->         int ctrl_param = 0;
-> -       struct asus_wmi *asus;
-> -
-> -       asus = container_of(work, struct asus_wmi, kbd_led_work);
->
->         /*
->          * bits 0-2: level
-> @@ -516,7 +512,7 @@ static void do_kbd_led_set(struct led_classdev *led_cdev, int value)
->                 value = 0;
->
->         asus->kbd_led_wk = value;
-> -       queue_work(asus->led_workqueue, &asus->kbd_led_work);
-> +       kbd_led_update(asus);
->  }
->
->  static void kbd_led_set(struct led_classdev *led_cdev,
-> @@ -671,8 +667,6 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
->
->         led_val = kbd_led_read(asus, NULL, NULL);
->         if (led_val >= 0) {
-> -               INIT_WORK(&asus->kbd_led_work, kbd_led_update);
-> -
->                 asus->kbd_led_wk = led_val;
->                 asus->kbd_led.name = "asus::kbd_backlight";
->                 asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
-> @@ -2310,7 +2304,7 @@ static int asus_hotk_resume(struct device *device)
->         struct asus_wmi *asus = dev_get_drvdata(device);
->
->         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
-> -               queue_work(asus->led_workqueue, &asus->kbd_led_work);
-> +               kbd_led_update(asus);
->
->         return 0;
->  }
-> @@ -2346,7 +2340,7 @@ static int asus_hotk_restore(struct device *device)
->                 rfkill_set_sw_state(asus->uwb.rfkill, bl);
->         }
->         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
-> -               queue_work(asus->led_workqueue, &asus->kbd_led_work);
-> +               kbd_led_update(asus);
->
->         return 0;
->  }
+> +static const struct property_entry trekstor_primebook_c11_props[] = {
+> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1970),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1530),
+> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +       PROPERTY_ENTRY_STRING("firmware-name",
+> +                             "gsl1680-trekstor-primebook-c11.fw"),
+> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +       { }
+> +};
+> +
+> +static const struct ts_dmi_data trekstor_primebook_c11_data = {
+> +       .acpi_name      = "MSSL1680:00",
+> +       .properties     = trekstor_primebook_c11_props,
+> +};
+> +
+>  static const struct property_entry trekstor_primebook_c13_props[] = {
+>         PROPERTY_ENTRY_U32("touchscreen-size-x", 2624),
+>         PROPERTY_ENTRY_U32("touchscreen-size-y", 1920),
+> @@ -706,6 +722,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "X98 Plus II"),
+>                 },
+>         },
+> +       {
+> +               /* Trekstor Primebook C11 */
+> +               .driver_data = (void *)&trekstor_primebook_c11_data,
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Primebook C11"),
+> +               },
+> +       },
+>         {
+>                 /* Trekstor Primebook C13 */
+>                 .driver_data = (void *)&trekstor_primebook_c13_data,
 > --
-> 2.11.0
+> 2.19.0
 >
 
 
