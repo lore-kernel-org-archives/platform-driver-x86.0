@@ -1,78 +1,39 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v14 19/19] x86/sgx: Driver documentation
-Date: Thu, 18 Oct 2018 11:57:27 +0200
-Message-ID: <20181018095727.GC10861@amd>
-References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com>
- <20180925130845.9962-20-jarkko.sakkinen@linux.intel.com>
- <20181015205436.GA28500@amd>
- <alpine.DEB.2.21.1810180205490.5022@jsakkine-mobl1>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 0/1] ACPI / scan: Create platform device for INT33FE ACPI nodes
+Date: Fri, 19 Oct 2018 12:24:14 +0200
+Message-ID: <2477276.ZfWzuKp1JK@aspire.rjw.lan>
+References: <20181017085928.13406-1-hdegoede@redhat.com> <CAHp75VcxnGzKbOwEDu_MSKQ1D28=pESTVm+YSHQTjrMXUaKMoA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="6zdv2QT/q3FMhpsV"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1810180205490.5022@jsakkine-mobl1>
+In-Reply-To: <CAHp75VcxnGzKbOwEDu_MSKQ1D28=pESTVm+YSHQTjrMXUaKMoA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-
---6zdv2QT/q3FMhpsV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu 2018-10-18 02:45:27, Jarkko Sakkinen wrote:
-> On Mon, 15 Oct 2018, Pavel Machek wrote:
-> >On Tue 2018-09-25 16:06:56, Jarkko Sakkinen wrote:
-> >>+Intel(R) SGX is a set of CPU instructions that can be used by applicat=
-ions to
-> >>+set aside private regions of code and data. The code outside the encla=
-ve is
-> >>+disallowed to access the memory inside the enclave by the CPU access c=
-ontrol.
-> >>+In a way you can think that SGX provides inverted sandbox. It protects=
- the
-> >>+application from a malicious host.
+On Wednesday, October 17, 2018 1:39:54 PM CEST Andy Shevchenko wrote:
+> On Wed, Oct 17, 2018 at 11:59 AM Hans de Goede <hdegoede@redhat.com> wrote:
 > >
-> >Well, recently hardware had some problems keeping its
-> >promises. So... what about rowhammer, meltdown and spectre?
->=20
-> Doesn't hardware always have this problem over time?
+> > Hi Rafael, Andy,
+> >
+> > For the why and what of this patch see the (somewhat long) commit message.
+> >
+> > The single patch in this set both touches drivers/acpi/scan.c and
+> > drivers/platform/x86/intel_cht_int33fe.c, this is done this way to avoid
+> > regressions when bisecting.
+> >
+> > The main change here really is to ACPI change and intel_cht_int33fe.c is
+> > modified to follow suit. Also I do not expect intel_cht_int33fe.c to see
+> > much changes this cycle. As such I believe it would be best to merge this
+> > patch through Rafael's tree (after review).
+> >
+> > Andy is that ok with you and we have your ack for this?
+> 
+> I love this patch!
+> 
+> Definitely,
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-No, not really.
-
-In this case, tries to protect from hardware "attacks" done by machine
-owner. That job is theoretically impossible, so you have harder
-situation than most..
-
-> >Which ones apply, which ones do not, and on what cpu generations?
->=20
-> Definitely should be refined.
->=20
-> Meltdowns approach AFAIK does not work because reads outside the enclave
-> will always have a predefined value (-1) but only if the page is present,
-> which was later exploited in the Foreshadow attack.
-
-What about L1tf and https://github.com/lsds/spectre-attack-sgx ?
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---6zdv2QT/q3FMhpsV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvIWQcACgkQMOfwapXb+vIbCwCgw3wWxvBiMbEy5TVWTbYyQmif
-TjkAniEwkld7XGcUBTl90sv+3trigWg1
-=YAi6
------END PGP SIGNATURE-----
-
---6zdv2QT/q3FMhpsV--
+Patch applied, thanks!
