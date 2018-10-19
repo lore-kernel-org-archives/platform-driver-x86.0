@@ -1,77 +1,105 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: mlx-platform: Properly use mlxplat_mlxcpld_msn201x_items
-Date: Fri, 19 Oct 2018 14:38:17 +0300
-Message-ID: <CAHp75VeS0sodYAY_OTfi8HvLvaE8eHHv1JL9BGoLxrsxwzBnSA@mail.gmail.com>
-References: <20180926052115.21223-1-natechancellor@gmail.com> <DB5PR05MB1640104C32067C3BE43CA529A2150@DB5PR05MB1640.eurprd05.prod.outlook.com>
+Subject: Re: [PATCH] platform/x86: asus-wmi: Simplify the keyboard brightness
+ updating process
+Date: Fri, 19 Oct 2018 14:50:36 +0300
+Message-ID: <CAHp75VeqVXh8LsAppBmNJCbjL6T4g6ZhS=PSQbNqigrmKwbsdw@mail.gmail.com>
+References: <20180816084104.434-1-jian-hong@endlessm.com> <20180927085009.4190-1-jian-hong@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB5PR05MB1640104C32067C3BE43CA529A2150@DB5PR05MB1640.eurprd05.prod.outlook.com>
+In-Reply-To: <20180927085009.4190-1-jian-hong@endlessm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: natechancellor@gmail.com, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Jian-Hong Pan <jian-hong@endlessm.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 26, 2018 at 10:43 AM Vadim Pasternak <vadimp@mellanox.com> wrote:
+On Thu, Sep 27, 2018 at 11:52 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
 >
+> The original asus-wmi queues a work which calls the ACPI/WMI methods to
+> update the keyboard LED brightness.  Similar drivers - acer-wmi,
+> dell-wmi-led just call the ACPI/WMI methods directly without workqueues.
 >
+> This patch simplifies the keyboard brightness updating process which
+> calls the kbd_led_update function directly without workqueue in
+> asus-wmi.
 >
-> > -----Original Message-----
-> > From: Nathan Chancellor <natechancellor@gmail.com>
-> > Sent: Wednesday, September 26, 2018 8:21 AM
-> > To: Vadim Pasternak <vadimp@mellanox.com>; Darren Hart
-> > <dvhart@infradead.org>; Andy Shevchenko <andy@infradead.org>
-> > Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; Nathan
-> > Chancellor <natechancellor@gmail.com>
-> > Subject: [PATCH] platform/x86: mlx-platform: Properly use
-> > mlxplat_mlxcpld_msn201x_items
-> >
-> > Clang warns that mlxplat_mlxcpld_msn201x_items is not going to be emitted in
-> > the final assembly because it's only used in ARRAY_SIZE right now, which is a
-> > compile time evaluation since the array's size is known.
-> >
-> > drivers/platform/x86/mlx-platform.c:555:32: warning: variable
-> > 'mlxplat_mlxcpld_msn201x_items' is not needed and will not be emitted [-
-> > Wunneeded-internal-declaration] static struct mlxreg_core_item
-> > mlxplat_mlxcpld_msn201x_items[] = {
-> >                                ^
-> > 1 warning generated.
-> >
-> > It appears this was a copy and paste mistake from when this item was first
-> > added. Use the definition in mlxplat_mlxcpld_msn201x_data so that Clang no
-> > longer warns.
-> >
 
-Pushed and applied, thanks!
+Okay, this wasn't get any comment so far and my brief reading of the
+call chain doesn't give me any objections.
+I'm about to push this to accepted queue (for-next) since it was
+already enough time passed in reviewing and testing queue.
 
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/141
-> > Fixes: a49a41482f61 ("platform/x86: mlx-platform: Add support for new
-> > msn201x system type")
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
+Thanks!
+
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 14 ++++----------
+>  1 file changed, 4 insertions(+), 10 deletions(-)
 >
-> Acked-by: Vadim Pasternak <vadimp@mellanox.com>
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 2d6e272315a8..9441cce636e6 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -239,7 +239,6 @@ struct asus_wmi {
+>         int lightbar_led_wk;
+>         struct workqueue_struct *led_workqueue;
+>         struct work_struct tpd_led_work;
+> -       struct work_struct kbd_led_work;
+>         struct work_struct wlan_led_work;
+>         struct work_struct lightbar_led_work;
 >
-> >  drivers/platform/x86/mlx-platform.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-
-> > platform.c
-> > index d89936c93ba0..c2c3a1a19879 100644
-> > --- a/drivers/platform/x86/mlx-platform.c
-> > +++ b/drivers/platform/x86/mlx-platform.c
-> > @@ -575,7 +575,7 @@ static struct mlxreg_core_item
-> > mlxplat_mlxcpld_msn201x_items[] = {
-> >
-> >  static
-> >  struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_msn201x_data = {
-> > -     .items = mlxplat_mlxcpld_msn21xx_items,
-> > +     .items = mlxplat_mlxcpld_msn201x_items,
-> >       .counter = ARRAY_SIZE(mlxplat_mlxcpld_msn201x_items),
-> >       .cell = MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET,
-> >       .mask = MLXPLAT_CPLD_AGGR_MASK_DEF,
-> > --
-> > 2.19.0
+> @@ -456,12 +455,9 @@ static enum led_brightness tpd_led_get(struct led_classdev *led_cdev)
+>         return read_tpd_led_state(asus);
+>  }
+>
+> -static void kbd_led_update(struct work_struct *work)
+> +static void kbd_led_update(struct asus_wmi *asus)
+>  {
+>         int ctrl_param = 0;
+> -       struct asus_wmi *asus;
+> -
+> -       asus = container_of(work, struct asus_wmi, kbd_led_work);
+>
+>         /*
+>          * bits 0-2: level
+> @@ -516,7 +512,7 @@ static void do_kbd_led_set(struct led_classdev *led_cdev, int value)
+>                 value = 0;
+>
+>         asus->kbd_led_wk = value;
+> -       queue_work(asus->led_workqueue, &asus->kbd_led_work);
+> +       kbd_led_update(asus);
+>  }
+>
+>  static void kbd_led_set(struct led_classdev *led_cdev,
+> @@ -671,8 +667,6 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+>
+>         led_val = kbd_led_read(asus, NULL, NULL);
+>         if (led_val >= 0) {
+> -               INIT_WORK(&asus->kbd_led_work, kbd_led_update);
+> -
+>                 asus->kbd_led_wk = led_val;
+>                 asus->kbd_led.name = "asus::kbd_backlight";
+>                 asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
+> @@ -2310,7 +2304,7 @@ static int asus_hotk_resume(struct device *device)
+>         struct asus_wmi *asus = dev_get_drvdata(device);
+>
+>         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
+> -               queue_work(asus->led_workqueue, &asus->kbd_led_work);
+> +               kbd_led_update(asus);
+>
+>         return 0;
+>  }
+> @@ -2346,7 +2340,7 @@ static int asus_hotk_restore(struct device *device)
+>                 rfkill_set_sw_state(asus->uwb.rfkill, bl);
+>         }
+>         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
+> -               queue_work(asus->led_workqueue, &asus->kbd_led_work);
+> +               kbd_led_update(asus);
+>
+>         return 0;
+>  }
+> --
+> 2.11.0
 >
 
 
