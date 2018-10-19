@@ -1,12 +1,13 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 2/4] platform/x86: intel_pmc_core: Fix LTR IGNORE Max offset
-Date: Fri, 19 Oct 2018 15:13:29 +0300
-Message-ID: <CAHp75Vde__h3XDjw_TLQA8YVrnCU+_JJgr-Mr_gtQE77Pwjy2A@mail.gmail.com>
-References: <20181006065113.669-1-rajneesh.bhardwaj@linux.intel.com> <20181006065113.669-2-rajneesh.bhardwaj@linux.intel.com>
+Subject: Re: [PATCH v2 3/4] platform/x86: intel_pmc_core: Decode Snoop / Non
+ Snoop LTR
+Date: Fri, 19 Oct 2018 15:34:07 +0300
+Message-ID: <CAHp75VcLN6g-6FJsVgxPZRV675N6YQzxsbm19BWgKhpiYfmG3w@mail.gmail.com>
+References: <20181006065113.669-1-rajneesh.bhardwaj@linux.intel.com> <20181006065113.669-3-rajneesh.bhardwaj@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181006065113.669-2-rajneesh.bhardwaj@linux.intel.com>
+In-Reply-To: <20181006065113.669-3-rajneesh.bhardwaj@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: rajneesh.bhardwaj@linux.intel.com
 Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
@@ -15,80 +16,125 @@ List-Id: platform-driver-x86.vger.kernel.org
 On Sat, Oct 6, 2018 at 9:54 AM Rajneesh Bhardwaj
 <rajneesh.bhardwaj@linux.intel.com> wrote:
 >
-> Cannonlake PCH allows us to ignore LTR from more IPs than Sunrisepoint
-> PCH so make the LTR ignore platform specific.
+> The LTR values follow PCIE LTR encoding format and can be decoded as per
+> https://pcisig.com/sites/default/files/specification_documents/ECN_LatencyTolnReporting_14Aug08.pdf
 >
+> This adds support to translate the raw LTR values as read from the PMC
+> to meaningful values in nanosecond units of time.
 
-Pushed to my reviewing and testing queue, thanks!
+While I have pushed this to my review and testing queue, it needs a
+bit more work. See my comments below.
 
-> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_pmc_core.c | 4 +++-
->  drivers/platform/x86/intel_pmc_core.h | 4 +++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index 217a822a8da1..c616cfedf2be 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -148,6 +148,7 @@ static const struct pmc_reg_map spt_reg_map = {
->         .ppfear_buckets = SPT_PPFEAR_NUM_ENTRIES,
->         .pm_cfg_offset = SPT_PMC_PM_CFG_OFFSET,
->         .pm_read_disable_bit = SPT_PMC_READ_DISABLE_BIT,
-> +       .ltr_ignore_max = SPT_NUM_IP_IGN_ALLOWED,
->  };
->
->  /* Cannonlake: PGD PFET Enable Ack Status Register(s) bitmap */
-> @@ -319,6 +320,7 @@ static const struct pmc_reg_map cnp_reg_map = {
->         .ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
->         .pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
->         .pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-> +       .ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
->  };
->
->  static inline u8 pmc_core_reg_read_byte(struct pmc_dev *pmcdev, int offset)
-> @@ -565,7 +567,7 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file, const char __user
->                 goto out_unlock;
+> +static u32 convert_ltr_scale(u32 val)
+> +{
+
+> +       u32 scale = 0;
+
+Redundant, see below.
+
+> +       /*
+> +        * As per PCIE specification supporting document
+> +        * ECN_LatencyTolnReporting_14Aug08.pdf the Latency
+> +        * Tolerance Reporting data payload is encoded in a
+> +        * 3 bit scale and 10 bit value fields. Values are
+> +        * multiplied by the indicated scale to yield an absolute time
+> +        * value, expressible in a range from 1 nanosecond to
+> +        * 2^25*(2^10-1) = 34,326,183,936 nanoseconds.
+> +        *
+> +        * scale encoding is as follows:
+> +        *
+> +        * ----------------------------------------------
+> +        * |scale factor        |       Multiplier (ns) |
+> +        * ----------------------------------------------
+> +        * |    0               |       1               |
+> +        * |    1               |       32              |
+> +        * |    2               |       1024            |
+> +        * |    3               |       32768           |
+> +        * |    4               |       1048576         |
+> +        * |    5               |       33554432        |
+> +        * |    6               |       Invalid         |
+> +        * |    7               |       Invalid         |
+> +        * ----------------------------------------------
+> +        */
+
+> +       if (val > 5)
+
+> +               pr_warn("Invalid LTR scale factor.\n");
+
+if (...) {
+ pr_warn(...); // Btw, Does it recoverable state? What user will get
+with returned 0 as a multiplier?
+ return 0; // Btw, is 0 fits better than ~0? How hw would behave with
+this value?
+}
+
+> +       else
+> +               scale = 1U << (5 * (val));
+> +
+> +       return scale;
+
+return 1U << (5 * val);
+
+> +}
+
+>         for (index = 0; map[index].name ; index++) {
+> -               seq_printf(s, "IP %-2d :%-32s\tRAW LTR: 0x%x\n", index,
+> -                          map[index].name,
+> -                          pmc_core_reg_read(pmcdev, map[index].bit_mask));
+
+We use 32 characters for the names. Here are two minor issues:
+- inconsistency with the rest
+- ping-pong style of programming (you changed 32 to 24 in the same
+series where you introduced 32 in the first place).
+
+
+> +               decoded_snoop_ltr = decoded_non_snoop_ltr = 0;
+> +               ltr_raw_data = pmc_core_reg_read(pmcdev,
+> +                                                map[index].bit_mask);
+> +               snoop_ltr = ltr_raw_data & ~MTPMC_MASK;
+> +               nonsnoop_ltr = (ltr_raw_data >> 0x10) & ~MTPMC_MASK;
+> +
+> +               if (FIELD_GET(LTR_REQ_NONSNOOP, ltr_raw_data)) {
+> +                       scale = FIELD_GET(LTR_DECODED_SCALE, nonsnoop_ltr);
+> +                       val = FIELD_GET(LTR_DECODED_VAL, nonsnoop_ltr);
+> +                       decoded_non_snoop_ltr = val * convert_ltr_scale(scale);
+> +               }
+> +
+> +               if (FIELD_GET(LTR_REQ_SNOOP, ltr_raw_data)) {
+> +                       scale = FIELD_GET(LTR_DECODED_SCALE, snoop_ltr);
+> +                       val = FIELD_GET(LTR_DECODED_VAL, snoop_ltr);
+> +                       decoded_snoop_ltr = val * convert_ltr_scale(scale);
+> +               }
+> +
+
+> +               seq_printf(s, "IP %-2d :%-24s\tRaw LTR: 0x%-16x\t Non-Snoop LTR (ns): %-16llu\t Snoop LTR (ns): %-16llu\n",
+
+Here 0x%-16x would look a bit strange and difficult to parse. 0x%016x
+much better.
+After you remove the index, it would give you 4 more characters,
+though it 4 less than 8 you got from reducing 32 to 24.
+
+OTOH, those long texts perhaps may be compressed somehow, at least
+remove LTR duplicating from the last two. Remove spaces after '\t' as
+well.
+
+> +                          index, map[index].name, ltr_raw_data,
+> +                          decoded_non_snoop_ltr,
+> +                          decoded_snoop_ltr);
 >         }
->
-> -       if (val > NUM_IP_IGN_ALLOWED) {
-> +       if (val > map->ltr_ignore_max) {
->                 err = -EINVAL;
->                 goto out_unlock;
->         }
-> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-> index 7a00436e337d..7f8181057ec8 100644
+>         return 0;
+>  }
+
 > --- a/drivers/platform/x86/intel_pmc_core.h
 > +++ b/drivers/platform/x86/intel_pmc_core.h
-> @@ -44,7 +44,7 @@
->  #define SPT_PMC_READ_DISABLE_BIT               0x16
->  #define SPT_PMC_MSG_FULL_STS_BIT               0x18
->  #define NUM_RETRIES                            100
-> -#define NUM_IP_IGN_ALLOWED                     17
-> +#define SPT_NUM_IP_IGN_ALLOWED                 17
->
->  #define SPT_PMC_LTR_CUR_PLT                    0x350
->  #define SPT_PMC_LTR_CUR_ASLT                   0x354
-> @@ -154,6 +154,7 @@ enum ppfear_regs {
->  #define CNP_PPFEAR_NUM_ENTRIES                 8
->  #define CNP_PMC_READ_DISABLE_BIT               22
->  #define CNP_PMC_LATCH_SLPS0_EVENTS             BIT(31)
-> +#define CNP_NUM_IP_IGN_ALLOWED                 19
->  #define CNP_PMC_LTR_CUR_PLT                    0x1B50
->  #define CNP_PMC_LTR_CUR_ASLT                   0x1B54
->  #define CNP_PMC_LTR_SPA                                0x1B60
-> @@ -216,6 +217,7 @@ struct pmc_reg_map {
->         const u32 pm_cfg_offset;
->         const int pm_read_disable_bit;
->         const u32 slps0_dbg_offset;
-> +       const u32 ltr_ignore_max;
->  };
->
->  /**
-> --
-> 2.17.1
->
+> @@ -177,6 +177,11 @@ enum ppfear_regs {
 
+It might be good idea to include linux/bits.h here.
+
+> +#define LTR_REQ_NONSNOOP                       BIT(31)
+> +#define LTR_REQ_SNOOP                          BIT(15)
+> +#define LTR_DECODED_VAL                                GENMASK(9, 0)
+> +#define LTR_DECODED_SCALE                      GENMASK(12, 10)
 
 -- 
 With Best Regards,
