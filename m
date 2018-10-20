@@ -1,31 +1,135 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v14 19/19] x86/sgx: Driver documentation
-Date: Sat, 20 Oct 2018 02:59:57 +0300 (EEST)
-Message-ID: <alpine.DEB.2.21.1810200235290.9963@jsakkine-mobl1>
-References: <20180925130845.9962-1-jarkko.sakkinen@linux.intel.com> <20180925130845.9962-20-jarkko.sakkinen@linux.intel.com> <20181015205436.GA28500@amd> <alpine.DEB.2.21.1810180205490.5022@jsakkine-mobl1> <20181018095727.GC10861@amd>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add min-x and min-y settings for various models
+Date: Sat, 20 Oct 2018 12:21:00 +0200
+Message-ID: <20181020102100.14111-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181018095727.GC10861@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, linux-sgx@vger.kernel.org, andriy.shevchenko@linux.intel.com, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 18 Oct 2018, Pavel Machek wrote:
->> Definitely should be refined.
->>
->> Meltdowns approach AFAIK does not work because reads outside the enclave
->> will always have a predefined value (-1) but only if the page is present,
->> which was later exploited in the Foreshadow attack.
->
-> What about L1tf and https://github.com/lsds/spectre-attack-sgx ?
+Add min-x and min-y settings now that we've support for this and for some
+models also update the width/height settings with slighly more accurate
+values.
 
-L1TF is the vuln and Foreshadow is the attack taking advantage of the
-vuln. I didn't mean to patch the documention in my response or give
-extensive list of the vulns if you expected that.
+This fixes touches along the edges registering at the wrong coordinates.
 
-For kernel documentation it does make sense to give a threat model
-but not enumerate every possible vuln.
+While at it also set max-fingers to 10 in a couple of cases where the
+touchpad can handle 10 fingers (rather then the default 5) and that was
+missing.
 
-/Jarkko
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 33 +++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index f852009e0e30..3a65a37f8ac8 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -51,10 +51,13 @@ static const struct ts_dmi_data chuwi_hi8_data = {
+ };
+ 
+ static const struct property_entry chuwi_hi8_pro_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 6),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+ 	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-chuwi-hi8-pro.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+ 	PROPERTY_ENTRY_BOOL("silead,home-button"),
+ 	PROPERTY_ENTRY_BOOL("efi-embedded-firmware"),
+ 	{ }
+@@ -75,6 +78,8 @@ static const struct ts_dmi_data chuwi_hi8_pro_data = {
+ };
+ 
+ static const struct property_entry chuwi_vi8_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1724),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+@@ -121,9 +126,9 @@ static const struct ts_dmi_data chuwi_vi10_data = {
+ 
+ static const struct property_entry connect_tablet9_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 9),
+-	PROPERTY_ENTRY_U32("touchscreen-min-y", 8),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 10),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1664),
+-	PROPERTY_ENTRY_U32("touchscreen-size-y", 878),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 880),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+ 	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-connect-tablet9.fw"),
+@@ -137,8 +142,10 @@ static const struct ts_dmi_data connect_tablet9_data = {
+ };
+ 
+ static const struct property_entry cube_iwork8_air_props[] = {
+-	PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
+-	PROPERTY_ENTRY_U32("touchscreen-size-y", 900),
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1664),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 896),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+ 	PROPERTY_ENTRY_STRING("firmware-name", "gsl3670-cube-iwork8-air.fw"),
+ 	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+@@ -222,11 +229,14 @@ static const struct ts_dmi_data gp_electronic_t701_data = {
+ };
+ 
+ static const struct property_entry itworks_tw891_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 5),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1600),
+-	PROPERTY_ENTRY_U32("touchscreen-size-y", 890),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 896),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+ 	PROPERTY_ENTRY_STRING("firmware-name", "gsl3670-itworks-tw891.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+ 	{ }
+ };
+ 
+@@ -250,8 +260,10 @@ static const struct ts_dmi_data jumper_ezpad_6_pro_data = {
+ };
+ 
+ static const struct property_entry jumper_ezpad_mini3_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 23),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 16),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1700),
+-	PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1138),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+ 	PROPERTY_ENTRY_STRING("firmware-name", "gsl3676-jumper-ezpad-mini3.fw"),
+ 	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+@@ -403,11 +415,14 @@ static const struct ts_dmi_data pov_mobii_wintab_p800w_v20_data = {
+ };
+ 
+ static const struct property_entry pov_mobii_wintab_p800w_v21_props[] = {
+-	PROPERTY_ENTRY_U32("touchscreen-size-x", 1800),
+-	PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 8),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1794),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
+ 	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+ 	PROPERTY_ENTRY_STRING("firmware-name",
+ 			      "gsl3692-pov-mobii-wintab-p800w.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+ 	PROPERTY_ENTRY_BOOL("silead,home-button"),
+ 	{ }
+ };
+@@ -494,6 +509,8 @@ static const struct ts_dmi_data trekstor_surftab_twin_10_1_data = {
+ };
+ 
+ static const struct property_entry trekstor_surftab_wintron70_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 12),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 8),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 884),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 632),
+ 	PROPERTY_ENTRY_STRING("firmware-name",
+-- 
+2.19.0
