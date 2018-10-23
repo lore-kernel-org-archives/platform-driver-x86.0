@@ -1,89 +1,370 @@
-From: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: 2nd Fan quirk for Thinkpad P50 causes spurios
- touchpad/trackpoint events on ThinkPad L570
-Date: Tue, 23 Oct 2018 10:16:22 +0200
-Message-ID: <CAJ2ouawfddrf8K22auR4OaJkO_n5f-rme=+XrbQYNo0eJfCtQA@mail.gmail.com>
-References: <eee05e84-42ed-a6ad-65c6-f5b2fe7cdd27@ristioja.ee>
- <36111ed4-621c-47a8-bc6a-66cf756a0ac6@ristioja.ee>
- <CAKdAkRTbQ+-+h8SMGf9Khc4+wE+P3_UCbYR0DDi1MoBwfSOWZQ@mail.gmail.com>
- <20181023035007.iy5vy2z3vuto2d6s@khazad-dum.debian.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20181023035007.iy5vy2z3vuto2d6s-ZGHd14iZgfaRjzvQDGKj+xxZW9W5cXbT@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org
-Cc: agk-mA9ux5SlULTR7s880joybQ@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jaak-89mTbI93R4uuvFJfX82//w@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+From: Peng Hao <peng.hao2@zte.com.cn>
+Subject: [PATCH 1/4]  pvpanic: move pvpanic to misc as common driver
+Date: Wed, 24 Oct 2018 01:25:34 +0800
+Message-ID: <1540315537-70007-1-git-send-email-peng.hao2@zte.com.cn>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, andy@infradead.org, dvhart@infradead.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com, Peng Hao <peng.hao2@zte.com.cn>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Oct 23, 2018 at 6:06 AM Henrique de Moraes Holschuh
-<hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org> wrote:
->
-> On Mon, 15 Oct 2018, Dmitry Torokhov wrote:
-> > On Sat, Oct 13, 2018 at 6:32 AM Jaak Ristioja <jaak-89mTbI93R4uuvFJfX82//w@public.gmane.org> wrote:
-> > > On 27.08.2018 19:22, Jaak Ristioja wrote:
-> > > > Upgrading Linux from 4.16 to 4.17, a ThinkPad L570 started receiving
-> > > > spurious input events, mostly right mouse button click events, but also
-> > > > cursor jumps.
-> > > >
-> > > > I have not attempted to understand whether these events come from the
-> > > > trackpoint or touchpad or some other driver, but I managed to bisect
-> > > > this issue to commit a986c75a7df0 titled "platform/x86: thinkpad_acpi:
-> > > > Add 2nd Fan Support for Thinkpad P50" by Alexander Kappner.
-> > > >
-> > > > Apparently the quirk mitigation is applied when the BIOS version begins
-> > > > with N1. The BIOS version on the L570 in question is N1XET57W (1.35 )
-> > > > which is probably why this commit causes the described problems on the
-> > > > ThinkPad L570. How exactly? - I don't know.
-> > > >
-> > > > The issue did not reproduce when running some stable 4.17 and 4.18
-> > > > kernels with commit a986c75a7df0 reverted.
-> > > >
-> > > > Please fix this for future kernels. Thanks! :)
-> > >
-> > > Ping. Do you need any additional information?
-> >
-> > Sounds like we need tighter check for the quirk, maybe based on
-> > DMI/Board name? Can we revert the offending commit for now?
->
-> Apparently it has to be fixed properly, because if I understood the
-> issue correctly, every two-character quirk will trigger on *any*
-> three-character model that starts with those two characters.
+move pvpanic.c from drivers/platform/x86 to drivers/misc.
+following patches will use pvpanic device in arm64.
 
-This should be (and hopefully is) incorrect.
-In the tpacpi_check_quirks function, equality between the quirk bios
-and the actual model bios is tested. For two-character models there
-are three nonzero bytes, for two character models there are only two.
-Therefore, a two-character quirk should not trigger on any
-three-character model.
+Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
+---
+ drivers/misc/Kconfig           |   7 +++
+ drivers/misc/Makefile          |   1 +
+ drivers/misc/pvpanic.c         | 124 +++++++++++++++++++++++++++++++++++++++++
+ drivers/platform/Kconfig       |   3 +
+ drivers/platform/Makefile      |   1 +
+ drivers/platform/x86/Kconfig   |   8 ---
+ drivers/platform/x86/Makefile  |   1 -
+ drivers/platform/x86/pvpanic.c | 124 -----------------------------------------
+ 8 files changed, 136 insertions(+), 133 deletions(-)
+ create mode 100644 drivers/misc/pvpanic.c
+ delete mode 100644 drivers/platform/x86/pvpanic.c
 
-> We could revert the three-character quirk support, but this would cause
-> regressions as well.
-
-I doubt this would fix anything. Maybe the bios id for the L570 that
-is used by the driver is not the one Jaak Ristioja reported? The
-detected string is reported in the dmesg output.
-
-That said, I do wonder why the fan quirks redefine all matching macros
-(TPACPI_FAN_Q*) and don't use the generic ones (TPACPI_Q*). This looks
-like an easy thing to clean up.
-
-Regards,
-- Jouke
-
-> --
->   Henrique Holschuh
->
->
-> _______________________________________________
-> ibm-acpi-devel mailing list
-> ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-> https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 5d71300..ca55c94 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -499,6 +499,13 @@ config MISC_RTSX
+ 	tristate
+ 	default MISC_RTSX_PCI || MISC_RTSX_USB
+ 
++config PVPANIC
++	tristate "pvpanic device support"
++	help
++          This driver provides support for the pvpanic device.  pvpanic is
++          a paravirtualized device provided by QEMU; it lets a virtual machine
++          (guest) communicate panic events to the host.
++
+ source "drivers/misc/c2port/Kconfig"
+ source "drivers/misc/eeprom/Kconfig"
+ source "drivers/misc/cb710/Kconfig"
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index 20be70c..39dc005 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -57,3 +57,4 @@ obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
+ obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
+ obj-$(CONFIG_OCXL)		+= ocxl/
+ obj-$(CONFIG_MISC_RTSX)		+= cardreader/
++obj-$(CONFIG_PVPANIC)  		+= pvpanic.o
+diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
+new file mode 100644
+index 0000000..fd86dab
+--- /dev/null
++++ b/drivers/misc/pvpanic.c
+@@ -0,0 +1,124 @@
++/*
++ *  pvpanic.c - pvpanic Device Support
++ *
++ *  Copyright (C) 2013 Fujitsu.
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/types.h>
++#include <linux/acpi.h>
++
++MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
++MODULE_DESCRIPTION("pvpanic device driver");
++MODULE_LICENSE("GPL");
++
++static int pvpanic_add(struct acpi_device *device);
++static int pvpanic_remove(struct acpi_device *device);
++
++static const struct acpi_device_id pvpanic_device_ids[] = {
++	{ "QEMU0001", 0 },
++	{ "", 0 },
++};
++MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
++
++#define PVPANIC_PANICKED	(1 << 0)
++
++static u16 port;
++
++static struct acpi_driver pvpanic_driver = {
++	.name =		"pvpanic",
++	.class =	"QEMU",
++	.ids =		pvpanic_device_ids,
++	.ops =		{
++				.add =		pvpanic_add,
++				.remove =	pvpanic_remove,
++			},
++	.owner =	THIS_MODULE,
++};
++
++static void
++pvpanic_send_event(unsigned int event)
++{
++	outb(event, port);
++}
++
++static int
++pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
++		     void *unused)
++{
++	pvpanic_send_event(PVPANIC_PANICKED);
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block pvpanic_panic_nb = {
++	.notifier_call = pvpanic_panic_notify,
++	.priority = 1, /* let this called before broken drm_fb_helper */
++};
++
++
++static acpi_status
++pvpanic_walk_resources(struct acpi_resource *res, void *context)
++{
++	switch (res->type) {
++	case ACPI_RESOURCE_TYPE_END_TAG:
++		return AE_OK;
++
++	case ACPI_RESOURCE_TYPE_IO:
++		port = res->data.io.minimum;
++		return AE_OK;
++
++	default:
++		return AE_ERROR;
++	}
++}
++
++static int pvpanic_add(struct acpi_device *device)
++{
++	int ret;
++
++	ret = acpi_bus_get_status(device);
++	if (ret < 0)
++		return ret;
++
++	if (!device->status.enabled || !device->status.functional)
++		return -ENODEV;
++
++	acpi_walk_resources(device->handle, METHOD_NAME__CRS,
++			    pvpanic_walk_resources, NULL);
++
++	if (!port)
++		return -ENODEV;
++
++	atomic_notifier_chain_register(&panic_notifier_list,
++				       &pvpanic_panic_nb);
++
++	return 0;
++}
++
++static int pvpanic_remove(struct acpi_device *device)
++{
++
++	atomic_notifier_chain_unregister(&panic_notifier_list,
++					 &pvpanic_panic_nb);
++	return 0;
++}
++
++module_acpi_driver(pvpanic_driver);
+diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
+index d4c2e42..8b64b78 100644
+--- a/drivers/platform/Kconfig
++++ b/drivers/platform/Kconfig
+@@ -1,3 +1,6 @@
++if ARM64
++source "drivers/platform/arm/Kconfig"
++endif
+ if X86
+ source "drivers/platform/x86/Kconfig"
+ endif
+diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
+index 4b2ce58..232231c 100644
+--- a/drivers/platform/Makefile
++++ b/drivers/platform/Makefile
+@@ -3,6 +3,7 @@
+ # Makefile for linux/drivers/platform
+ #
+ 
++obj-$(CONFIG_ARM64)               += arm/
+ obj-$(CONFIG_X86)		+= x86/
+ obj-$(CONFIG_MELLANOX_PLATFORM)	+= mellanox/
+ obj-$(CONFIG_MIPS)		+= mips/
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index ef016e4..a6b412e 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1119,14 +1119,6 @@ config INTEL_SMARTCONNECT
+ 	  This driver checks to determine whether the device has Intel Smart
+ 	  Connect enabled, and if so disables it.
+ 
+-config PVPANIC
+-	tristate "pvpanic device support"
+-	depends on ACPI
+-	---help---
+-	  This driver provides support for the pvpanic device.  pvpanic is
+-	  a paravirtualized device provided by QEMU; it lets a virtual machine
+-	  (guest) communicate panic events to the host.
+-
+ config INTEL_PMC_IPC
+ 	tristate "Intel PMC IPC Driver"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 2ba6cb7..a4ec299 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -75,7 +75,6 @@ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
+ obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
+ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
+ 
+-obj-$(CONFIG_PVPANIC)           += pvpanic.o
+ obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
+ obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
+ obj-$(CONFIG_SILEAD_DMI)	+= silead_dmi.o
+diff --git a/drivers/platform/x86/pvpanic.c b/drivers/platform/x86/pvpanic.c
+deleted file mode 100644
+index fd86dab..0000000
+--- a/drivers/platform/x86/pvpanic.c
++++ /dev/null
+@@ -1,124 +0,0 @@
+-/*
+- *  pvpanic.c - pvpanic Device Support
+- *
+- *  Copyright (C) 2013 Fujitsu.
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
+- *
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+- */
+-
+-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-
+-#include <linux/kernel.h>
+-#include <linux/module.h>
+-#include <linux/init.h>
+-#include <linux/types.h>
+-#include <linux/acpi.h>
+-
+-MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
+-MODULE_DESCRIPTION("pvpanic device driver");
+-MODULE_LICENSE("GPL");
+-
+-static int pvpanic_add(struct acpi_device *device);
+-static int pvpanic_remove(struct acpi_device *device);
+-
+-static const struct acpi_device_id pvpanic_device_ids[] = {
+-	{ "QEMU0001", 0 },
+-	{ "", 0 },
+-};
+-MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
+-
+-#define PVPANIC_PANICKED	(1 << 0)
+-
+-static u16 port;
+-
+-static struct acpi_driver pvpanic_driver = {
+-	.name =		"pvpanic",
+-	.class =	"QEMU",
+-	.ids =		pvpanic_device_ids,
+-	.ops =		{
+-				.add =		pvpanic_add,
+-				.remove =	pvpanic_remove,
+-			},
+-	.owner =	THIS_MODULE,
+-};
+-
+-static void
+-pvpanic_send_event(unsigned int event)
+-{
+-	outb(event, port);
+-}
+-
+-static int
+-pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
+-		     void *unused)
+-{
+-	pvpanic_send_event(PVPANIC_PANICKED);
+-	return NOTIFY_DONE;
+-}
+-
+-static struct notifier_block pvpanic_panic_nb = {
+-	.notifier_call = pvpanic_panic_notify,
+-	.priority = 1, /* let this called before broken drm_fb_helper */
+-};
+-
+-
+-static acpi_status
+-pvpanic_walk_resources(struct acpi_resource *res, void *context)
+-{
+-	switch (res->type) {
+-	case ACPI_RESOURCE_TYPE_END_TAG:
+-		return AE_OK;
+-
+-	case ACPI_RESOURCE_TYPE_IO:
+-		port = res->data.io.minimum;
+-		return AE_OK;
+-
+-	default:
+-		return AE_ERROR;
+-	}
+-}
+-
+-static int pvpanic_add(struct acpi_device *device)
+-{
+-	int ret;
+-
+-	ret = acpi_bus_get_status(device);
+-	if (ret < 0)
+-		return ret;
+-
+-	if (!device->status.enabled || !device->status.functional)
+-		return -ENODEV;
+-
+-	acpi_walk_resources(device->handle, METHOD_NAME__CRS,
+-			    pvpanic_walk_resources, NULL);
+-
+-	if (!port)
+-		return -ENODEV;
+-
+-	atomic_notifier_chain_register(&panic_notifier_list,
+-				       &pvpanic_panic_nb);
+-
+-	return 0;
+-}
+-
+-static int pvpanic_remove(struct acpi_device *device)
+-{
+-
+-	atomic_notifier_chain_unregister(&panic_notifier_list,
+-					 &pvpanic_panic_nb);
+-	return 0;
+-}
+-
+-module_acpi_driver(pvpanic_driver);
+-- 
+1.8.3.1
