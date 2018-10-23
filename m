@@ -1,100 +1,60 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 0/15] Add support for OLPC XO 1.75 Embedded Controller
-Date: Sun, 21 Oct 2018 23:45:54 +0200
-Message-ID: <20181021214554.i2mb5yn2doabyt5a@earth.universe>
-References: <20181010172300.317643-1-lkundrak@v3.sk>
+From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Subject: Re: 2nd Fan quirk for Thinkpad P50 causes spurios
+ touchpad/trackpoint events on ThinkPad L570
+Date: Tue, 23 Oct 2018 00:47:32 -0300
+Message-ID: <20181023034732.otali4g2sbdrbdk6@khazad-dum.debian.net>
+References: <eee05e84-42ed-a6ad-65c6-f5b2fe7cdd27@ristioja.ee>
+ <36111ed4-621c-47a8-bc6a-66cf756a0ac6@ristioja.ee>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4634300731478293321=="
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20181010172300.317643-1-lkundrak@v3.sk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, devel@driverdev.osuosl.org, Eric Miao <eric.y.miao@gmail.com>, James Cameron <quozl@laptop.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>, Andy Shevchenko <andy@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <36111ed4-621c-47a8-bc6a-66cf756a0ac6-89mTbI93R4uuvFJfX82//w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jaak Ristioja <jaak-89mTbI93R4uuvFJfX82//w@public.gmane.org>
+Cc: Alexander Kappner <agk-mA9ux5SlULTR7s880joybQ@public.gmane.org>, Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Sat, 13 Oct 2018, Jaak Ristioja wrote:
+> On 27.08.2018 19:22, Jaak Ristioja wrote:
+> > Upgrading Linux from 4.16 to 4.17, a ThinkPad L570 started receiving
+> > spurious input events, mostly right mouse button click events, but also
+> > cursor jumps.
+> > 
+> > I have not attempted to understand whether these events come from the
+> > trackpoint or touchpad or some other driver, but I managed to bisect
+> > this issue to commit a986c75a7df0 titled "platform/x86: thinkpad_acpi:
+> > Add 2nd Fan Support for Thinkpad P50" by Alexander Kappner.
+> > 
+> > Apparently the quirk mitigation is applied when the BIOS version begins
+> > with N1. The BIOS version on the L570 in question is N1XET57W (1.35 )
+> > which is probably why this commit causes the described problems on the
+> > ThinkPad L570. How exactly? - I don't know.
+> > 
+> > The issue did not reproduce when running some stable 4.17 and 4.18
+> > kernels with commit a986c75a7df0 reverted.
+> > 
+> > Please fix this for future kernels. Thanks! :)
+> 
+> Ping. Do you need any additional information?
 
---===============4634300731478293321==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jnox64lrvnzk7wym"
-Content-Disposition: inline
+It looks like it is failing to detect N1X and N1 as different models,
+the bug is likely on this commit:
 
+	commit 846a416b4630fc960c10500b4194ad504bc22d4b
+	platform/x86: thinkpad_acpi: Proper model/release matching
 
---jnox64lrvnzk7wym
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Real life has been **extremely** busy, so I'd appreciate a patch.
+Otherwise I will eventually get to it, but it might take a few
+weeks(!!).
 
-Hi,
-
-On Wed, Oct 10, 2018 at 07:22:45PM +0200, Lubomir Rintel wrote:
-> Hi.
->=20
-> This patchset adds support for the Embedded Controller on an OLPC XO
-> 1.75 machine. OLPC XO 1.75 is a MMP2 based ARM laptop. It plugs into
-> the existing OLPC platform infrastructure, currently used by the x86
-> based models.
->=20
-> The EC operates in SPI master mode, meaning the SOC is the SPI slave. It
-> uses extra handshake signal to signal readiness of SOC to accept data
-> from EC and to initiate a transaction if SOC wishes to submit data.
->=20
-> The SPI slave support for MMP2 was submitted separately:
-> https://lore.kernel.org/lkml/20181010170936.316862-1-lkundrak@v3.sk/T/#t
->=20
-> THe "power: supply: olpc_battery: correct the temperature" patch was
-> already sent out separately, but I'm including it because the last
-> commit of the set depends on it.
->=20
-> Tested to work on an OLPC XO 1.75 and also tested not to break x86
-> support with an OLPC XO 1 machine. I don't have a XO 1.5, but it's
-> unlikely this breaks it when XO 1 works.
->=20
-> Thanks in advance for reviews and feedback of any kind.
-
-I reviewed the power-supply related patches (1, 10, 12-15) and think
-they are fine apart from the things found by Andy Shevchenko.
-
--- Sebastian
-
---jnox64lrvnzk7wym
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlvM848ACgkQ2O7X88g7
-+pqfnA//TKs8BES/kjdXsbsj0Q2N00S/gqI2yAJfPVzPjGUx8CwKBsRzW1yiQa5L
-PLupI4oHdeRkThPP8o3aS1kLwHuJXxDt9VWCNQl98LpoTPs9iTDGfraFfSlVSFYG
-arjQBKbPBt1wLt2hsEOgiipPA9nNZM+rFcO3nzYbTKgmf+wQ+bpKettsf/3qDeNV
-3ZPj2LK/WX3jY0cnIw2y1vuR5PJj4eBsPwWC+FeOj63JJBtCHfY6jvfMv0rcOOz3
-u9AQQJdhd23BK5xWT8qrOQ0OPLWvr9sFpImAvUjwT52okULTzCUJsFUR+X3iWHBg
-FtHSUjwzf4tMVHQFsQmUGOdjrzXNnAOFs+OV3r/MHRNPc/eHHSE1GfPlgE3o0MBp
-dFFs60geDQStMBxkGnCi1ILoU2pzOkBG/t0Hzd0rWGHWJPYApZIv5yJ8b/EBO+nJ
-+e5/dXhe3d6lpdr6mECRoMXnpeGZAmhX95LLi6CdyMb9BfZVP2PVugBeD3pIaGwH
-sEj21DXPTFM1lhgKFjD884E2CQEEpnxRhbcLCnpDmFjkt20h8irChVqq3NPaCphX
-+4DgSj3ZRE9EgNNWgAA2K4UoJFupeGxk9EatMxMpxWybnoYgwyBg+SFZeh/v7LJt
-9LC2H1BGBA0eP1A6UUc+ETcV9Qj2C/BGVbbKUfR7hLCxrx8WDaQ=
-=Xjo8
------END PGP SIGNATURE-----
-
---jnox64lrvnzk7wym--
-
---===============4634300731478293321==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devel mailing list
-devel@linuxdriverproject.org
-http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
-
---===============4634300731478293321==--
+-- 
+  Henrique Holschuh
