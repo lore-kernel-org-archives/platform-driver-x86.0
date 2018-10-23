@@ -1,7 +1,7 @@
 From: Peng Hao <peng.hao2@zte.com.cn>
-Subject: [PATCH 2/4]  pvpanic: add pvpanic support for arm64
-Date: Wed, 24 Oct 2018 01:25:35 +0800
-Message-ID: <1540315537-70007-2-git-send-email-peng.hao2@zte.com.cn>
+Subject: [PATCH 3/4]  pvpanic: add access to pvpanic device information by using FDT
+Date: Wed, 24 Oct 2018 01:25:36 +0800
+Message-ID: <1540315537-70007-3-git-send-email-peng.hao2@zte.com.cn>
 References: <1540315537-70007-1-git-send-email-peng.hao2@zte.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1540315537-70007-1-git-send-email-peng.hao2@zte.com.cn>
@@ -10,86 +10,112 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundat
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com, Peng Hao <peng.hao2@zte.com.cn>
 List-Id: platform-driver-x86.vger.kernel.org
 
-pvpanic device is a qemu-specific emulation device. Pvpanic
-devices are now available for ARM64. This patch supports the APCI
-way to get device information.
+By default, when ACPI tables and FDT coexist for ARM64,
+kernel takes precedence over FDT to get device information.
+This patch increases the way to get information through FDT.
 
 Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 ---
- drivers/misc/pvpanic.c | 22 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ drivers/misc/pvpanic.c | 69 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 68 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
-index fd86dab..bdcff8b 100644
+index bdcff8b..102a119 100644
 --- a/drivers/misc/pvpanic.c
 +++ b/drivers/misc/pvpanic.c
-@@ -35,13 +35,16 @@
+@@ -2,6 +2,7 @@
+  *  pvpanic.c - pvpanic Device Support
+  *
+  *  Copyright (C) 2013 Fujitsu.
++ *  Copyright (C) 2018 ZTE.
+  *
+  *  This program is free software; you can redistribute it and/or modify
+  *  it under the terms of the GNU General Public License as published by
+@@ -25,6 +26,10 @@
+ #include <linux/init.h>
+ #include <linux/types.h>
+ #include <linux/acpi.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <asm/virt.h>
++#include <linux/platform_device.h>
  
- static const struct acpi_device_id pvpanic_device_ids[] = {
- 	{ "QEMU0001", 0 },
-+	{ "PVPANIC01", 0 },
- 	{ "", 0 },
+ MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
+ MODULE_DESCRIPTION("pvpanic device driver");
+@@ -79,6 +84,37 @@
+ 	.priority = 1, /* let this called before broken drm_fb_helper */
  };
- MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
  
- #define PVPANIC_PANICKED	(1 << 0)
- 
++static int pvpanic_mmio_probe(struct platform_device *pdev)
++{
++	struct resource *mem;
 +
-+static void __iomem *base;
++	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!mem)
++		return -EINVAL;
++
++	if (!devm_request_mem_region(&pdev->dev, mem->start,
++				     resource_size(mem), pdev->name))
++		return -EBUSY;
++
++	base = devm_ioremap(&pdev->dev, mem->start,
++			   resource_size(mem));
++	if (base == NULL)
++		return -EFAULT;
++	atomic_notifier_chain_register(&panic_notifier_list,
++				      &pvpanic_panic_nb);
++
++	return 0;
++}
++
++static int pvpanic_mmio_remove(struct platform_device *pdev)
++{
++
++	atomic_notifier_chain_unregister(&panic_notifier_list,
++					&pvpanic_panic_nb);
++
++	return 0;
++}
++
  
- static struct acpi_driver pvpanic_driver = {
- 	.name =		"pvpanic",
-@@ -57,7 +60,10 @@
- static void
- pvpanic_send_event(unsigned int event)
- {
--	outb(event, port);
-+	if (port)
-+		outb(event, port);
-+	else if (base)
-+		writeb(event, base);
- }
- 
- static int
-@@ -77,6 +83,8 @@
  static acpi_status
  pvpanic_walk_resources(struct acpi_resource *res, void *context)
- {
-+	struct acpi_resource_fixed_memory32 *fixmem32;
-+
- 	switch (res->type) {
- 	case ACPI_RESOURCE_TYPE_END_TAG:
- 		return AE_OK;
-@@ -84,7 +92,11 @@
- 	case ACPI_RESOURCE_TYPE_IO:
- 		port = res->data.io.minimum;
- 		return AE_OK;
--
-+
-+	case ACPI_RESOURCE_TYPE_FIXED_MEMORY32:
-+		fixmem32 = &res->data.fixed_memory32;
-+		base = ioremap(fixmem32->address, fixmem32->address_length);
-+		return AE_OK;
- 	default:
- 		return AE_ERROR;
- 	}
-@@ -104,7 +116,7 @@ static int pvpanic_add(struct acpi_device *device)
- 	acpi_walk_resources(device->handle, METHOD_NAME__CRS,
- 			    pvpanic_walk_resources, NULL);
- 
--	if (!port)
-+	if (!port && !base)
- 		return -ENODEV;
- 
- 	atomic_notifier_chain_register(&panic_notifier_list,
-@@ -118,6 +130,8 @@ static int pvpanic_remove(struct acpi_device *device)
- 
- 	atomic_notifier_chain_unregister(&panic_notifier_list,
- 					 &pvpanic_panic_nb);
-+	if (base)
-+		iounmap(base);
+@@ -135,4 +171,35 @@ static int pvpanic_remove(struct acpi_device *device)
  	return 0;
  }
  
+-module_acpi_driver(pvpanic_driver);
++static const struct of_device_id pvpanic_mmio_match[] = {
++	{ .compatible = "qemu,pvpanic-mmio", },
++	{},
++};
++
++static struct platform_driver pvpanic_mmio_driver = {
++	.driver = {
++		.name = "pvpanic-mmio",
++		.of_match_table = pvpanic_mmio_match,
++	},
++	.probe = pvpanic_mmio_probe,
++	.remove = pvpanic_mmio_remove,
++};
++
++static int __init pvpanic_mmio_init(void)
++{
++	if (acpi_disabled)
++		return platform_driver_register(&pvpanic_mmio_driver);
++	else
++		return acpi_bus_register_driver(&pvpanic_driver);
++}
++
++static void __exit pvpanic_mmio_exit(void)
++{
++	if (acpi_disabled)
++		platform_driver_unregister(&pvpanic_mmio_driver);
++	else
++		acpi_bus_unregister_driver(&pvpanic_driver);
++}
++
++module_init(pvpanic_mmio_init);
++module_exit(pvpanic_mmio_exit);
 -- 
 1.8.3.1
