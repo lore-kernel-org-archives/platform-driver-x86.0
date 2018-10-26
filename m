@@ -1,81 +1,53 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V2 4/4] misc/pvpanic : pvpanic: add document for
- pvpanic-mmio DT
-Date: Wed, 24 Oct 2018 08:35:31 -0500
-Message-ID: <CAL_Jsq+Bj2A8z=_vTr+sz4HGCSC8zN7VQkWL1inJYQ56JSkPNg@mail.gmail.com>
-References: <1540401136-78500-1-git-send-email-peng.hao2@zte.com.cn> <1540401136-78500-4-git-send-email-peng.hao2@zte.com.cn>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: Re: [PATCH V2 2/4] misc/pvpanic: add MMIO support
+Date: Fri, 26 Oct 2018 09:11:01 +0200
+Message-ID: <CAK8P3a0Y7en4Aa_-ho7fdp17SsG=XnTePhTeqxFmr5PE4LvHeA@mail.gmail.com>
+References: <CAHp75Ves+GCP8ZfOCXDcZNkyEo31hiPTyarRoYvhkjHeV+9dug@mail.gmail.com>
+ <201810261140543493998@zte.com.cn>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1540401136-78500-4-git-send-email-peng.hao2@zte.com.cn>
+In-Reply-To: <201810261140543493998@zte.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 To: peng.hao2@zte.com.cn
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com
+Cc: andy.shevchenko@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, andy@infradead.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Please Cc DT list for bindings.
+On 10/26/18, peng.hao2@zte.com.cn <peng.hao2@zte.com.cn> wrote:
+>>
+>> On some architectures (e.g. arm64), it's preferable to use MMIO, since
+>> this can be used standalone. Add MMIO support to the pvpanic driver.
+>>
+>>
+>>No global variables, please.
 
-On Wed, Oct 24, 2018 at 4:01 AM Peng Hao <peng.hao2@zte.com.cn> wrote:
->
+There obviously has to be at least one global variable here, since the
+caller of panic() has no context about the device that provides
+the MMIO register. But I agree that using ioreadxx() here would
+be nice to simplify the code, and it avoids having separate variables
+for pio and mmio mode.
 
-Commit message?
+>>If your switch to ioreadxx()iowritexx() it would really help you here.
+>>
+> I can use iowrite8, but here:
+>  if (base)
+>       iounmap(base);
+> I found the nearest API pci_iounmap, but it's a bit strange to see how this
+> function is
+> used here from the name of the function.
+> And I do not confirm that this API is suitable for all architectures.
 
-"dt-bindings: misc: ..." for the subject.
+From reading the driver, I think you either come from a caller that
+always uses PIO or from one that always uses MMIO, and they
+are paired with probe/remove, so you can assign the global
+__iomem pointer using either ioport_map() or ioremap(), and
+undo that using ioport_unmap/iounmap respectively, while the
+user just uses iowrite8() unconditionally. This is allowed by the
+iowritexx() interfaces.
 
-> Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
-> ---
->  .../devicetree/bindings/arm/pvpanic-mmio.txt       | 29 ++++++++++++++++++++++
+Alternatively, using devm_ioremap_resource() should work for
+either pio or mmio, but it requires a device pointer, which in turn
+means you have to slightly rewrite the ACPI portion to use a
+platform_driver instead.
 
-As Mark said, not ARM specific. So please move to bindings/misc/ and
-use the compatible string for the name (qemu,pvpanic-mmio.txt).
-
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/pvpanic-mmio.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/pvpanic-mmio.txt b/Documentation/devicetree/bindings/arm/pvpanic-mmio.txt
-> new file mode 100644
-> index 0000000..a6bdacd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/pvpanic-mmio.txt
-> @@ -0,0 +1,29 @@
-> +* QEMU PVPANIC MMIO Configuration bindings for ARM
-
-Drop the "for ARM"
-
-> +
-> +QEMU's emulation / virtualization targets provide the following PVPANIC
-> +MMIO Configuration interface on the "virt" machine.
-> +type:
-> +
-> +- a read-write, 16-bit wide data register.
-> +
-> +QEMU exposes the data register to guests as memory mapped registers.
-
-I have to wonder why we need a QEMU specific way to signal a panic.
-What about every real platform that panics? What are they supposed to
-do? Shouldn't this be a PSCI call so we can have something not per
-platform?
-
-> +
-> +Required properties:
-> +
-> +- compatible: "qemu,pvpanic-mmio".
-> +- reg: the MMIO region used by the device.
-> +  * Bytes 0x0  Write panic event to the reg when guest OS panics.
-> +  * Bytes 0x1  Reserved.
-> +
-> +Example:
-> +
-> +/ {
-> +        #size-cells = <0x2>;
-> +        #address-cells = <0x2>;
-> +
-> +        pvpanic-mmio@9060000 {
-> +                compatible = "qemu,pvpanic-mmio";
-> +                reg = <0x0 0x9060000 0x0 0x2>;
-> +        };
-> +};
-> +
-> --
-> 1.8.3.1
->
+      Arnd
