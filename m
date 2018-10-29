@@ -1,7 +1,7 @@
 From: Peng Hao <peng.hao2@zte.com.cn>
-Subject: [PATCH V4 4/5]  misc/pvpanic: add support to get pvpanic device info by FDT
-Date: Mon, 29 Oct 2018 19:32:22 +0800
-Message-ID: <1540812743-1825-4-git-send-email-peng.hao2@zte.com.cn>
+Subject: [PATCH 5/5]  dt-bindings/misc/pvpanic :add document for pvpanic-mmio
+Date: Mon, 29 Oct 2018 19:32:23 +0800
+Message-ID: <1540812743-1825-5-git-send-email-peng.hao2@zte.com.cn>
 References: <1540812743-1825-1-git-send-email-peng.hao2@zte.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1540812743-1825-1-git-send-email-peng.hao2@zte.com.cn>
@@ -10,109 +10,48 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundat
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com, linux-doc@vger.kernel.org, Peng Hao <peng.hao2@zte.com.cn>
 List-Id: platform-driver-x86.vger.kernel.org
 
-By default, when ACPI tables and FDT coexist for ARM64,
-current kernel takes precedence over FDT to get device information.
-Virt machine in qemu provides both FDT and ACPI table. This patch
-increases the way to get information through FDT.
+Add dt-bindings document for "qemu:pvpanic-mmio".
 
 Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 ---
- drivers/misc/pvpanic.c | 63 +++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 62 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/misc/pvpanic-mmio.txt      | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/pvpanic-mmio.txt
 
-diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
-index cfd7fef..eb1ed0f 100644
---- a/drivers/misc/pvpanic.c
-+++ b/drivers/misc/pvpanic.c
-@@ -3,15 +3,19 @@
-  *  Pvpanic Device Support
-  *
-  *  Copyright (C) 2013 Fujitsu.
-+ *  Copyright (C) 2018 ZTE.
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/platform_device.h>
-+#include <linux/of_address.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/types.h>
- #include <linux/acpi.h>
-+#include <linux/of.h>
- 
- MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
- MODULE_DESCRIPTION("pvpanic device driver");
-@@ -60,6 +64,32 @@
- 	.priority = 1, /* let this called before broken drm_fb_helper */
- };
- 
-+static int pvpanic_mmio_probe(struct platform_device *pdev)
-+{
-+	struct resource *mem;
+diff --git a/Documentation/devicetree/bindings/misc/pvpanic-mmio.txt b/Documentation/devicetree/bindings/misc/pvpanic-mmio.txt
+new file mode 100644
+index 0000000..3db6d19
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/pvpanic-mmio.txt
+@@ -0,0 +1,29 @@
++* QEMU PVPANIC MMIO Configuration bindings
 +
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!mem)
-+		return -EINVAL;
++QEMU's emulation / virtualization targets provide the following PVPANIC
++MMIO Configuration interface on the "virt" machine.
++type:
 +
-+	base = devm_ioremap_resource(&pdev->dev, mem);
-+	if (base == NULL)
-+		return -EFAULT;
++- a read-write, 16-bit wide data register.
 +
-+	atomic_notifier_chain_register(&panic_notifier_list,
-+				       &pvpanic_panic_nb);
++QEMU exposes the data register to guests as memory mapped registers.
 +
-+	return 0;
-+}
++Required properties:
 +
-+static int pvpanic_mmio_remove(struct platform_device *pdev)
-+{
++- compatible: "qemu,pvpanic-mmio".
++- reg: the MMIO region used by the device.
++  * Bytes 0x0  Write panic event to the reg when guest OS panics.
++  * Bytes 0x1  Reserved.
 +
-+	atomic_notifier_chain_unregister(&panic_notifier_list,
-+					 &pvpanic_panic_nb);
++Example:
 +
-+	return 0;
-+}
- 
- static acpi_status
- pvpanic_walk_resources(struct acpi_resource *res, void *context)
-@@ -118,4 +148,35 @@ static int pvpanic_remove(struct acpi_device *device)
- 	return 0;
- }
- 
--module_acpi_driver(pvpanic_driver);
-+static const struct of_device_id pvpanic_mmio_match[] = {
-+	{ .compatible = "qemu,pvpanic-mmio", },
-+	{}
++/ {
++        #size-cells = <0x2>;
++        #address-cells = <0x2>;
++
++        pvpanic-mmio@9060000 {
++                compatible = "qemu,pvpanic-mmio";
++                reg = <0x0 0x9060000 0x0 0x2>;
++        };
 +};
 +
-+static struct platform_driver pvpanic_mmio_driver = {
-+	.driver = {
-+		.name = "pvpanic-mmio",
-+		.of_match_table = pvpanic_mmio_match,
-+	},
-+	.probe = pvpanic_mmio_probe,
-+	.remove = pvpanic_mmio_remove,
-+};
-+
-+static int __init pvpanic_mmio_init(void)
-+{
-+	if (acpi_disabled)
-+		return platform_driver_register(&pvpanic_mmio_driver);
-+	else
-+		return acpi_bus_register_driver(&pvpanic_driver);
-+}
-+
-+static void __exit pvpanic_mmio_exit(void)
-+{
-+	if (acpi_disabled)
-+		platform_driver_unregister(&pvpanic_mmio_driver);
-+	else
-+		acpi_bus_unregister_driver(&pvpanic_driver);
-+}
-+
-+module_init(pvpanic_mmio_init);
-+module_exit(pvpanic_mmio_exit);
 -- 
 1.8.3.1
