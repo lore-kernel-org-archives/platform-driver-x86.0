@@ -1,144 +1,230 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add min-x and min-y
- settings for various models
-Date: Mon, 29 Oct 2018 13:58:31 +0200
-Message-ID: <CAHp75VeHpCbJTT-U8QPS8J5O7OZ53HjMCz+tHQL6J-iC4qOzrw@mail.gmail.com>
-References: <20181020102100.14111-1-hdegoede@redhat.com>
+Subject: Re: [PATCH v2] platform/x86: Add Intel AtomISP2 dummy /
+ power-management driver
+Date: Mon, 29 Oct 2018 14:00:03 +0200
+Message-ID: <CAHp75Vf2ioDkNgA42J14p+_t7Hjdszmbpwh9nMSwQtxANuzLtg@mail.gmail.com>
+References: <20181014175427.22139-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181020102100.14111-1-hdegoede@redhat.com>
+In-Reply-To: <20181014175427.22139-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans de Goede <hdegoede@redhat.com>
 Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Oct 20, 2018 at 1:21 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Sun, Oct 14, 2018 at 8:54 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Add min-x and min-y settings now that we've support for this and for some
-> models also update the width/height settings with slighly more accurate
-> values.
+> The Image Signal Processor found on Cherry Trail devices is brought up in
+> D0 state on devices which have camera sensors attached to it. The ISP will
+> not enter D3 state again without some massaging of its registers beforehand
+> and the ISP not being in D3 state blocks the SoC from entering S0ix modes.
 >
-> This fixes touches along the edges registering at the wrong coordinates.
+> There was a driver for the ISP in drivers/staging but that got removed
+> again because it never worked. It does not seem likely that a real
+> driver for the ISP will be added to the mainline kernel anytime soon.
 >
-> While at it also set max-fingers to 10 in a couple of cases where the
-> touchpad can handle 10 fingers (rather then the default 5) and that was
-> missing.
+> This commit adds a dummy driver which contains the necessary magic from
+> the staging driver to powerdown the ISP, so that Cherry Trail devices where
+> the ISP is used will properly use S0ix modes when suspended.
+>
+> Together with other recent S0ix related fixes this allows S0ix modes to
+> be entered on e.g. a Chuwi Hi8 Pro and a HP x2 210.
+>
 
+There are might be slight improvements, but in general it's okay.
 Applied, thanks!
 
->
+P.S. It's possible we need to add Merrifield ID there, I will do it
+myself along with cosmetic changes as a separate patches later on.
+
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=196915
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/platform/x86/touchscreen_dmi.c | 33 +++++++++++++++++++-------
->  1 file changed, 25 insertions(+), 8 deletions(-)
+> Changes in v2:
+> -Rename the driver and Kconfig option from intel-isp-dummy to intel-atomisp2-pm
+> ---
+>  MAINTAINERS                              |   6 ++
+>  drivers/platform/x86/Kconfig             |  12 +++
+>  drivers/platform/x86/Makefile            |   1 +
+>  drivers/platform/x86/intel_atomisp2_pm.c | 119 +++++++++++++++++++++++
+>  4 files changed, 138 insertions(+)
+>  create mode 100644 drivers/platform/x86/intel_atomisp2_pm.c
 >
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index f852009e0e30..3a65a37f8ac8 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -51,10 +51,13 @@ static const struct ts_dmi_data chuwi_hi8_data = {
->  };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2c5d5c6859b8..ba9e5da792ea 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7306,6 +7306,12 @@ L:       alsa-devel@alsa-project.org (moderated for non-subscribers)
+>  S:     Supported
+>  F:     sound/soc/intel/
 >
->  static const struct property_entry chuwi_hi8_pro_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 6),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
->         PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
->         PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
->         PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->         PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-chuwi-hi8-pro.fw"),
-> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
->         PROPERTY_ENTRY_BOOL("silead,home-button"),
->         PROPERTY_ENTRY_BOOL("efi-embedded-firmware"),
->         { }
-> @@ -75,6 +78,8 @@ static const struct ts_dmi_data chuwi_hi8_pro_data = {
->  };
+> +INTEL ATOMISP2 DUMMY / POWER-MANAGEMENT DRIVER
+> +M:     Hans de Goede <hdegoede@redhat.com>
+> +L:     platform-driver-x86@vger.kernel.org
+> +S:     Maintained
+> +F:     drivers/platform/x86/intel_atomisp2_pm.c
+> +
+>  INTEL C600 SERIES SAS CONTROLLER DRIVER
+>  M:     Intel SCU Linux support <intel-linux-scu@intel.com>
+>  M:     Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 48bec711e5e3..5eedcec0fefe 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1232,6 +1232,18 @@ config I2C_MULTI_INSTANTIATE
+>           To compile this driver as a module, choose M here: the module
+>           will be called i2c-multi-instantiate.
 >
->  static const struct property_entry chuwi_vi8_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
->         PROPERTY_ENTRY_U32("touchscreen-size-x", 1724),
->         PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
->         PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-> @@ -121,9 +126,9 @@ static const struct ts_dmi_data chuwi_vi10_data = {
+> +config INTEL_ATOMISP2_PM
+> +       tristate "Intel AtomISP2 dummy / power-management driver"
+> +       depends on PCI && IOSF_MBI && PM
+> +       help
+> +         Power-management driver for Intel's Image Signal Processor found on
+> +         Bay and Cherry Trail devices. This dummy driver's sole purpose is to
+> +         turn the ISP off (put it in D3) to save power and to allow entering
+> +         of S0ix modes.
+> +
+> +         To compile this driver as a module, choose M here: the module
+> +         will be called intel_atomisp2_pm.
+> +
+>  endif # X86_PLATFORM_DEVICES
 >
->  static const struct property_entry connect_tablet9_props[] = {
->         PROPERTY_ENTRY_U32("touchscreen-min-x", 9),
-> -       PROPERTY_ENTRY_U32("touchscreen-min-y", 8),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 10),
->         PROPERTY_ENTRY_U32("touchscreen-size-x", 1664),
-> -       PROPERTY_ENTRY_U32("touchscreen-size-y", 878),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 880),
->         PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
->         PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->         PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-connect-tablet9.fw"),
-> @@ -137,8 +142,10 @@ static const struct ts_dmi_data connect_tablet9_data = {
->  };
->
->  static const struct property_entry cube_iwork8_air_props[] = {
-> -       PROPERTY_ENTRY_U32("touchscreen-size-x", 1660),
-> -       PROPERTY_ENTRY_U32("touchscreen-size-y", 900),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1664),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 896),
->         PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->         PROPERTY_ENTRY_STRING("firmware-name", "gsl3670-cube-iwork8-air.fw"),
->         PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> @@ -222,11 +229,14 @@ static const struct ts_dmi_data gp_electronic_t701_data = {
->  };
->
->  static const struct property_entry itworks_tw891_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 5),
->         PROPERTY_ENTRY_U32("touchscreen-size-x", 1600),
-> -       PROPERTY_ENTRY_U32("touchscreen-size-y", 890),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 896),
->         PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
->         PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->         PROPERTY_ENTRY_STRING("firmware-name", "gsl3670-itworks-tw891.fw"),
-> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
->         { }
->  };
->
-> @@ -250,8 +260,10 @@ static const struct ts_dmi_data jumper_ezpad_6_pro_data = {
->  };
->
->  static const struct property_entry jumper_ezpad_mini3_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 23),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 16),
->         PROPERTY_ENTRY_U32("touchscreen-size-x", 1700),
-> -       PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1138),
->         PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->         PROPERTY_ENTRY_STRING("firmware-name", "gsl3676-jumper-ezpad-mini3.fw"),
->         PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> @@ -403,11 +415,14 @@ static const struct ts_dmi_data pov_mobii_wintab_p800w_v20_data = {
->  };
->
->  static const struct property_entry pov_mobii_wintab_p800w_v21_props[] = {
-> -       PROPERTY_ENTRY_U32("touchscreen-size-x", 1800),
-> -       PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 8),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1794),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
->         PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->         PROPERTY_ENTRY_STRING("firmware-name",
->                               "gsl3692-pov-mobii-wintab-p800w.fw"),
-> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
->         PROPERTY_ENTRY_BOOL("silead,home-button"),
->         { }
->  };
-> @@ -494,6 +509,8 @@ static const struct ts_dmi_data trekstor_surftab_twin_10_1_data = {
->  };
->
->  static const struct property_entry trekstor_surftab_wintron70_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 12),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 8),
->         PROPERTY_ENTRY_U32("touchscreen-size-x", 884),
->         PROPERTY_ENTRY_U32("touchscreen-size-y", 632),
->         PROPERTY_ENTRY_STRING("firmware-name",
+>  config PMC_ATOM
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index e6d1becf81ce..dc29af4d8e2f 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -92,3 +92,4 @@ obj-$(CONFIG_MLX_PLATFORM)    += mlx-platform.o
+>  obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
+>  obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)    += intel_chtdc_ti_pwrbtn.o
+>  obj-$(CONFIG_I2C_MULTI_INSTANTIATE)    += i2c-multi-instantiate.o
+> +obj-$(CONFIG_INTEL_ATOMISP2_PM)        += intel_atomisp2_pm.o
+> diff --git a/drivers/platform/x86/intel_atomisp2_pm.c b/drivers/platform/x86/intel_atomisp2_pm.c
+> new file mode 100644
+> index 000000000000..9371603a0ac9
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_atomisp2_pm.c
+> @@ -0,0 +1,119 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Dummy driver for Intel's Image Signal Processor found on Bay and Cherry
+> + * Trail devices. The sole purpose of this driver is to allow the ISP to
+> + * be put in D3.
+> + *
+> + * Copyright (C) 2018 Hans de Goede <hdegoede@redhat.com>
+> + *
+> + * Based on various non upstream patches for ISP support:
+> + * Copyright (C) 2010-2017 Intel Corporation. All rights reserved.
+> + * Copyright (c) 2010 Silicon Hive www.siliconhive.com.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/pci.h>
+> +#include <linux/pm_runtime.h>
+> +#include <asm/iosf_mbi.h>
+> +
+> +/* PCI configuration regs */
+> +#define PCI_INTERRUPT_CTRL             0x9c
+> +
+> +#define PCI_CSI_CONTROL                        0xe8
+> +#define PCI_CSI_CONTROL_PORTS_OFF_MASK 0x7
+> +
+> +/* IOSF BT_MBI_UNIT_PMC regs */
+> +#define ISPSSPM0                       0x39
+> +#define ISPSSPM0_ISPSSC_OFFSET         0
+> +#define ISPSSPM0_ISPSSC_MASK           0x00000003
+> +#define ISPSSPM0_ISPSSS_OFFSET         24
+> +#define ISPSSPM0_ISPSSS_MASK           0x03000000
+> +#define ISPSSPM0_IUNIT_POWER_ON                0x0
+> +#define ISPSSPM0_IUNIT_POWER_OFF       0x3
+> +
+> +static int isp_probe(struct pci_dev *dev, const struct pci_device_id *id)
+> +{
+> +       unsigned long timeout;
+> +       u32 val;
+> +
+> +       pci_write_config_dword(dev, PCI_INTERRUPT_CTRL, 0);
+> +
+> +       /*
+> +        * MRFLD IUNIT DPHY is located in an always-power-on island
+> +        * MRFLD HW design need all CSI ports are disabled before
+> +        * powering down the IUNIT.
+> +        */
+> +       pci_read_config_dword(dev, PCI_CSI_CONTROL, &val);
+> +       val |= PCI_CSI_CONTROL_PORTS_OFF_MASK;
+> +       pci_write_config_dword(dev, PCI_CSI_CONTROL, val);
+> +
+> +       /* Write 0x3 to ISPSSPM0 bit[1:0] to power off the IUNIT */
+> +       iosf_mbi_modify(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0,
+> +                       ISPSSPM0_IUNIT_POWER_OFF, ISPSSPM0_ISPSSC_MASK);
+> +
+> +       /*
+> +        * There should be no IUNIT access while power-down is
+> +        * in progress HW sighting: 4567865
+> +        * Wait up to 50 ms for the IUNIT to shut down.
+> +        */
+> +       timeout = jiffies + msecs_to_jiffies(50);
+> +       while (1) {
+> +               /* Wait until ISPSSPM0 bit[25:24] shows 0x3 */
+> +               iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0, &val);
+> +               val = (val & ISPSSPM0_ISPSSS_MASK) >> ISPSSPM0_ISPSSS_OFFSET;
+> +               if (val == ISPSSPM0_IUNIT_POWER_OFF)
+> +                       break;
+> +
+> +               if (time_after(jiffies, timeout)) {
+> +                       dev_err(&dev->dev, "IUNIT power-off timeout.\n");
+> +                       return -EBUSY;
+> +               }
+> +               usleep_range(1000, 2000);
+> +       }
+> +
+> +       pm_runtime_allow(&dev->dev);
+> +       pm_runtime_put_sync_suspend(&dev->dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static void isp_remove(struct pci_dev *dev)
+> +{
+> +       pm_runtime_get_sync(&dev->dev);
+> +       pm_runtime_forbid(&dev->dev);
+> +}
+> +
+> +static int isp_pci_suspend(struct device *dev)
+> +{
+> +       return 0;
+> +}
+> +
+> +static int isp_pci_resume(struct device *dev)
+> +{
+> +       return 0;
+> +}
+> +
+> +static UNIVERSAL_DEV_PM_OPS(isp_pm_ops, isp_pci_suspend,
+> +                           isp_pci_resume, NULL);
+> +
+> +static const struct pci_device_id isp_id_table[] = {
+> +       { PCI_VDEVICE(INTEL, 0x22b8), },
+> +       { 0, }
+> +};
+> +MODULE_DEVICE_TABLE(pci, isp_id_table);
+> +
+> +static struct pci_driver isp_pci_driver = {
+> +       .name = "intel_atomisp2_pm",
+> +       .id_table = isp_id_table,
+> +       .probe = isp_probe,
+> +       .remove = isp_remove,
+> +       .driver.pm = &isp_pm_ops,
+> +};
+> +
+> +module_pci_driver(isp_pci_driver);
+> +
+> +MODULE_DESCRIPTION("Intel AtomISP2 dummy / power-management drv (for suspend)");
+> +MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
+> +MODULE_LICENSE("GPL v2");
 > --
 > 2.19.0
 >
