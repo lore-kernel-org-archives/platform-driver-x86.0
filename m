@@ -1,166 +1,90 @@
 From: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Subject: Re: [PATCH v2 3/4] platform/x86: intel_pmc_core: Decode Snoop / Non
- Snoop LTR
-Date: Tue, 30 Oct 2018 13:10:35 +0530
-Message-ID: <7d7d59a3-241d-9753-24e0-74a8f0fc9df6@linux.intel.com>
+Subject: Re: [PATCH v2 4/4] platform/x86: intel_telemetry: report debugfs
+ failure
+Date: Tue, 30 Oct 2018 13:11:10 +0530
+Message-ID: <b1d972ce-6672-344c-e432-c8bc9bb20dad@linux.intel.com>
 References: <20181006065113.669-1-rajneesh.bhardwaj@linux.intel.com>
- <20181006065113.669-3-rajneesh.bhardwaj@linux.intel.com>
- <CAHp75VcLN6g-6FJsVgxPZRV675N6YQzxsbm19BWgKhpiYfmG3w@mail.gmail.com>
+ <20181006065113.669-4-rajneesh.bhardwaj@linux.intel.com>
+ <CAHp75VfS2cB3fh1R_iQk91skU-p+yZ_X1Jx2sBaiwHmtAZ0dpw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcLN6g-6FJsVgxPZRV675N6YQzxsbm19BWgKhpiYfmG3w@mail.gmail.com>
+In-Reply-To: <CAHp75VfS2cB3fh1R_iQk91skU-p+yZ_X1Jx2sBaiwHmtAZ0dpw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, "Pandruvada, Srinivas" <srinivas.pandruvada@linux.intel.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, matt.turner@intel.com, "Brown, Len" <len.brown@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Andy,
-
-Thanks for your review. My comments below.
-
-If you agree then i can quickly send v3 addressing all suggestions so we 
-can make it in time for 4.20 merge window.
 
 
-On 19-Oct-18 6:04 PM, Andy Shevchenko wrote:
+On 19-Oct-18 6:09 PM, Andy Shevchenko wrote:
 > On Sat, Oct 6, 2018 at 9:54 AM Rajneesh Bhardwaj
 > <rajneesh.bhardwaj@linux.intel.com> wrote:
->> The LTR values follow PCIE LTR encoding format and can be decoded as per
->> https://pcisig.com/sites/default/files/specification_documents/ECN_LatencyTolnReporting_14Aug08.pdf
+>> On some Goldmont based systems such as ASRock J3455M the BIOS may not
+>> enable the IPC1 device that provides access to the PMC and PUNIT. In
+>> such scenarios, the IOSS and PSS resources from the platform device can
+>> not be obtained and result in a invalid telemetry_plt_config which is an
+>> internal data structure that holds platform config and is maintained by
+>> the telemetry platform driver.
 >>
->> This adds support to translate the raw LTR values as read from the PMC
->> to meaningful values in nanosecond units of time.
-> While I have pushed this to my review and testing queue, it needs a
-> bit more work. See my comments below.
+>> This is also applicable to the platforms where the BIOS supports IPC1
+>> device under debug configurations but IPC1 is disabled by user or the
+>> policy.
+>>
+>> This change allows user to know the reason for not seeing entries under
+>> /sys/kernel/debug/telemetry/* when there is no apparent failure at boot.
+>>
+> Pushed to my review and testing queue, thanks!
 >
->> +static u32 convert_ltr_scale(u32 val)
->> +{
->> +       u32 scale = 0;
-> Redundant, see below.
->
->> +       /*
->> +        * As per PCIE specification supporting document
->> +        * ECN_LatencyTolnReporting_14Aug08.pdf the Latency
->> +        * Tolerance Reporting data payload is encoded in a
->> +        * 3 bit scale and 10 bit value fields. Values are
->> +        * multiplied by the indicated scale to yield an absolute time
->> +        * value, expressible in a range from 1 nanosecond to
->> +        * 2^25*(2^10-1) = 34,326,183,936 nanoseconds.
->> +        *
->> +        * scale encoding is as follows:
->> +        *
->> +        * ----------------------------------------------
->> +        * |scale factor        |       Multiplier (ns) |
->> +        * ----------------------------------------------
->> +        * |    0               |       1               |
->> +        * |    1               |       32              |
->> +        * |    2               |       1024            |
->> +        * |    3               |       32768           |
->> +        * |    4               |       1048576         |
->> +        * |    5               |       33554432        |
->> +        * |    6               |       Invalid         |
->> +        * |    7               |       Invalid         |
->> +        * ----------------------------------------------
->> +        */
->> +       if (val > 5)
->> +               pr_warn("Invalid LTR scale factor.\n");
-> if (...) {
->   pr_warn(...); // Btw, Does it recoverable state? What user will get
-> with returned 0 as a multiplier?
->   return 0; // Btw, is 0 fits better than ~0? How hw would behave with
-> this value?
-> }
+> P.S. I appended one more patch against this file, please check if it's okay.
 
-We show 0 LTR for invalid scale as PMC output is junk sometimes.
-
+Thank you Andy. I will check it when Infradead is online.
 
 >
->> +       else
->> +               scale = 1U << (5 * (val));
->> +
->> +       return scale;
-> return 1U << (5 * val);
-
-We intend to return 0 so for invalid LTR scale. This will make retuen 
-non zero and we dont want that.
-
+>> Cc: Matt Turner <matt.turner@intel.com>
+>> Cc: Len Brown <len.brown@intel.com>
+>> Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
+>> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@intel.com>
+>>
+>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=198779
+>> Acked-by: Matt Turner <matt.turner@intel.com>
+>> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+>> ---
+>> Changes in v2:
+>>   * Removed print and out label both as suggested by Andy.
+>>   * changed to pr_info.
+>>   * Other minor style fixes.
+>>
+>>
+>>   drivers/platform/x86/intel_telemetry_debugfs.c | 8 ++++++--
+>>   1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
+>> index ffd0474b0531..1423fa8710fd 100644
+>> --- a/drivers/platform/x86/intel_telemetry_debugfs.c
+>> +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+>> @@ -951,12 +951,16 @@ static int __init telemetry_debugfs_init(void)
+>>          debugfs_conf = (struct telemetry_debugfs_conf *)id->driver_data;
+>>
+>>          err = telemetry_pltconfig_valid();
+>> -       if (err < 0)
+>> +       if (err < 0) {
+>> +               pr_info("Invalid pltconfig, ensure IPC1 device is enabled in BIOS\n");
+>>                  return -ENODEV;
+>> +       }
+>>
+>>          err = telemetry_debugfs_check_evts();
+>> -       if (err < 0)
+>> +       if (err < 0) {
+>> +               pr_info("telemetry_debugfs_check_evts failed\n");
+>>                  return -EINVAL;
+>> +       }
+>>
+>>          register_pm_notifier(&pm_notifier);
+>>
+>> --
+>> 2.17.1
+>>
 >
->> +}
->>          for (index = 0; map[index].name ; index++) {
->> -               seq_printf(s, "IP %-2d :%-32s\tRAW LTR: 0x%x\n", index,
->> -                          map[index].name,
->> -                          pmc_core_reg_read(pmcdev, map[index].bit_mask));
-> We use 32 characters for the names. Here are two minor issues:
-> - inconsistency with the rest
-
-intentional.
-
-> - ping-pong style of programming (you changed 32 to 24 in the same
-> series where you introduced 32 in the first place).
-
-This is because the formatted output looks better with this width. I 
-used 32 for the earlier patch because its consistent with rest and also 
-does not look bad on screen.
-
->
->
->> +               decoded_snoop_ltr = decoded_non_snoop_ltr = 0;
->> +               ltr_raw_data = pmc_core_reg_read(pmcdev,
->> +                                                map[index].bit_mask);
->> +               snoop_ltr = ltr_raw_data & ~MTPMC_MASK;
->> +               nonsnoop_ltr = (ltr_raw_data >> 0x10) & ~MTPMC_MASK;
->> +
->> +               if (FIELD_GET(LTR_REQ_NONSNOOP, ltr_raw_data)) {
->> +                       scale = FIELD_GET(LTR_DECODED_SCALE, nonsnoop_ltr);
->> +                       val = FIELD_GET(LTR_DECODED_VAL, nonsnoop_ltr);
->> +                       decoded_non_snoop_ltr = val * convert_ltr_scale(scale);
->> +               }
->> +
->> +               if (FIELD_GET(LTR_REQ_SNOOP, ltr_raw_data)) {
->> +                       scale = FIELD_GET(LTR_DECODED_SCALE, snoop_ltr);
->> +                       val = FIELD_GET(LTR_DECODED_VAL, snoop_ltr);
->> +                       decoded_snoop_ltr = val * convert_ltr_scale(scale);
->> +               }
->> +
->> +               seq_printf(s, "IP %-2d :%-24s\tRaw LTR: 0x%-16x\t Non-Snoop LTR (ns): %-16llu\t Snoop LTR (ns): %-16llu\n",
-> Here 0x%-16x would look a bit strange and difficult to parse. 0x%016x
-> much better.
-
-Sure, I can test how it looks with 0x%016x and modify it.
-
-> After you remove the index, it would give you 4 more characters,
-> though it 4 less than 8 you got from reducing 32 to 24.
-
-I plan to keep the index as is. Reason for this is mentioned in previous 
-patch that introduces this index.
-
->
-> OTOH, those long texts perhaps may be compressed somehow, at least
-> remove LTR duplicating from the last two. Remove spaces after '\t' as
-> well.
-
-Noted.
-
->
->> +                          index, map[index].name, ltr_raw_data,
->> +                          decoded_non_snoop_ltr,
->> +                          decoded_snoop_ltr);
->>          }
->>          return 0;
->>   }
->> --- a/drivers/platform/x86/intel_pmc_core.h
->> +++ b/drivers/platform/x86/intel_pmc_core.h
->> @@ -177,6 +177,11 @@ enum ppfear_regs {
-> It might be good idea to include linux/bits.h here.
-
-Certainly. Luckily 0day bot didnt complain about randconfigs etc so is 
-it really needed as it will increase size?
-
->
->> +#define LTR_REQ_NONSNOOP                       BIT(31)
->> +#define LTR_REQ_SNOOP                          BIT(15)
->> +#define LTR_DECODED_VAL                                GENMASK(9, 0)
->> +#define LTR_DECODED_SCALE                      GENMASK(12, 10)
