@@ -1,93 +1,117 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH v2 1/4] platform/x86: intel_pmc_core: Show Latency
- Tolerance info
-Date: Tue, 30 Oct 2018 11:50:00 -0700
-Message-ID: <327d2cd2561270d975e26a7f52d81ef85cbcc507.camel@linux.intel.com>
-References: <20181006065113.669-1-rajneesh.bhardwaj@linux.intel.com>
-         <CAHp75VcQ3SDQ4X9+LX+y2vB4PWQURid4R=qy5+5PkWHC5nGqQA@mail.gmail.com>
-         <a839e9d3-838b-0fb1-55ac-07562ec71313@linux.intel.com>
-         <CAHp75Vd8zUR9LYOj1X-3FgqnB_XVZD5hbA+WPN_7T_6kZBAQ5w@mail.gmail.com>
-         <0d940313e1be7ddaa06c5ebf4aea7a4df84540f2.camel@linux.intel.com>
-         <CAHp75VcF5jB6hnLVbMJJKRvuRN7=0BS+OS1nB-EeR8Y8nTVz3w@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [RFC][PATCH v1] ACPI / scan: Create platform device for BOSC0200
+ ACPI nodes
+Date: Tue, 30 Oct 2018 19:52:32 +0100
+Message-ID: <93b9b138-2e58-8fcc-f86d-688afc3a59c1@redhat.com>
+References: <20181030144706.6737-1-andriy.shevchenko@linux.intel.com>
+ <3e34f7c0-e747-7393-4b79-317b8483f0a6@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcF5jB6hnLVbMJJKRvuRN7=0BS+OS1nB-EeR8Y8nTVz3w@mail.gmail.com>
+In-Reply-To: <3e34f7c0-e747-7393-4b79-317b8483f0a6@redhat.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: rajneesh.bhardwaj@linux.intel.com, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Javier Martinez Canillas <javierm@redhat.com>
+Cc: Steven Presser <steve@pressers.name>, Bastien Nocera <hadess@hadess.net>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 2018-10-30 at 20:33 +0200, Andy Shevchenko wrote:
-> On Tue, Oct 30, 2018 at 8:03 PM Srinivas Pandruvada
-> <srinivas.pandruvada@linux.intel.com> wrote:
-> 
-> > > > Index printing is required here (for LTR Show and LTR Ignore)
-> > > > because it
-> > > > paves an obvious and easy way for the users of this driver to
-> > > > know
-> > > > the
-> > > > IP number to be used for LTR ignore. This was specifically
-> > > > requested by
-> > > > some customer and Srinivas asked me to implement this so adding
-> > > > him
-> > > > for
-> > > > his inputs.
-> > > 
-> > > So, why it should be in kernel? When user prints this, they
-> > > usually
-> > > call `cat /.../file`, right?
-> > > Is it too hard to call `cat -n /.../file` instead? The benefit of
-> > > such
-> > > approach is that it's independent on the file we are printing.
-> > > 
-> > > (Note, `grep -n <PATTERN> /.../file` does the same`)
-> > > 
-> > > For more variants
-> > > 
-> > 
-> > 
-https://stackoverflow.com/questions/8206370/add-numbers-to-the-beginning-of-every-line-in-a-file
-> > > 
-> > 
-> > We get copy/paste data from some serial terminals from systems
-> > which
-> > don't have traditional linux shell or busy box. Not sure if they
-> > can do
-> > cat "-n" option or have this command at all. So line number helps.
-> > They
-> > can't even store output as as file as this is RO file system.
-> 
-> Hmm... I'm not following this. If there is serial connection where at
-> least you may see things, how it's guaranteed that it will not print
-> more enough to rewrite the DTE's input buffer?
-No guarantee, This is just best effort.
-We get something like this from emails:
+Hi,
 
-Device	S-state	  Status   Sysfs node BR1A	  S4	*disabled  pci:
-0000:00:01.0 BR1B	  S4	*disabled BR2A	  S4	*disabled  pci:
-0000:00:02.0
-
-Any line marker helps. But again this is not a hard requirement.
-There will always be argument, that this can be done in other ways.
-
-For sake of time discussing this:
-
-Rajneesh,
-Please get rid of index printing.
-
-> On the other hand if you copy the data to the other system which, I
-> bet, has `cat -n` available, not a problem either.
+On 30-10-18 16:27, Hans de Goede wrote:
+> Hi,
 > 
-> So, the use case here, AFAICS, if you have a debug log enabled and
-> it's spitted out like SysRq where you can see, but not able to copy
-> and it's guaranteed not to overflow on the screen / output device.
+> On 30-10-18 15:47, Andy Shevchenko wrote:
+>> On some laptops the ACPI device with BOSC0200 _HID is representing
+>> two accelerometers under one node.
+>>
+>> We add an ID to the I2C multi instantiate list to enumerate
+>> all I2C slaves correctly.
 > 
-> > But I am not as sticky on this.
+> I believe that overall the approach here is correct, but I've
+> several (at least 4 different models) devices which use the
+> BOSC0200 _HID but with only 1 accelerometer / 1 I2cSerialBus
+> resource in the _CRS table.
 > 
-> Since it's a debugfs and not any ABI implied, I'm fine with it to
-> have, but I would like to understand the real use case of it (and
-> this
-> definitely should be reflected in the commit message).
+> So I believe that you need to add a new optional bool to
+> struct i2c_inst_data and ignore i2c_acpi_new_device()
+> returning NULL when this is set (and set it for the second
+> accelerometer).
 > 
+> i2c_unregister_device can handle NULL, so some entries
+> of the multi->clients[i] array ending up as NULL is not
+> a problem.
+> 
+> Hmm, I have just realized that there is another issue
+> which is a real problem, we have stuff like this:
+> 
+> [hans@shalem linux]$ ack BOSC0200 /lib/udev/hwdb.d/60-sensor.hwdb
+> sensor:modalias:acpi:BOSC0200*:dmi:*:svnHampoo:pnD2D3_Vi8A1:*
+> sensor:modalias:acpi:BOSC0200*:dmi:*:svnHampoo:pnX1D3_C806N:*
+> sensor:modalias:acpi:BOSC0200*:dmi:*:svn*CHUWIINNOVATIONANDTECHNOLOGY*:pnHi10protablet:*
+> sensor:modalias:acpi:BOSC0200*:dmi:*:svnHampoo:pnP02BD6_HI-122LP:*
+> # match the entire dmi-alias, assuming that the use of a BOSC0200 +
+> sensor:modalias:acpi:BOSC0200*:dmi:bvnAmericanMegatrendsInc.:bvr5.11:bd05/07/2016:svnDefaultstring:pnDefaultstring:pvrDefaultstring:rvnHampoo:rnCherryTrailCR:rvrDefaultstring:cvnDefaultstring:ct3:cvrDefaultstring:
+> sensor:modalias:acpi:BOSC0200*:dmi:bvnAmericanMegatrendsInc.:bvr5.11:bd05/28/2016:svnDefaultstring:pnDefaultstring:pvrDefaultstring:rvnHampoo:rnCherryTrailCR:rvrDefaultstring:cvnDefaultstring:ct3:cvrDefaultstring:
+> sensor:modalias:acpi:BOSC0200*:dmi:bvnINSYDECorp.:bvrjumperx.T87.KFBNEE*
+> sensor:modalias:acpi:BOSC0200*:dmi:*:svnJumper:pnEZpad:*:rvr.A006:*
+> sensor:modalias:acpi:BOSC0200:BOSC0200:dmi:*ThinkPadYoga11e3rdGen*
+> sensor:modalias:acpi:*BOSC0200*:dmi:*:svnLENOVO*:pn80XF:*
+> sensor:modalias:acpi:*BOSC0200*:dmi:*:svnLENOVO*:pn80XE:*
+> sensor:modalias:acpi:BOSC0200*:dmi:*:svnLINX*:pnLINX1010B:*
+> 
+> And using i2c-multi-instantiate will change the modalias from
+> acpi:BOSC0200 to i2c:bmc150_accel breaking this.
+> 
+> One way to fix this would be making sure we only use an
+> i2c:bmc150_accel modalias for the second device. This will
+> also allow differentiating between the 2 in hwdb quirks for
+> devices with 2 accelerometers. But the way we currently
+> generate modalias-es does not allow doing this in an
+> easy way. Making this possible will require some changes to
+> show_modalias() and i2c_device_uevent() in
+> drivers/i2c/i2c-core-base.c
+
+Ok, new idea how about we modify the code in acpi_device_enumeration_by_parent
+to instead of looking at a HID list, to simply count if there is more then
+1 I2cSerialBus resource and if that is the case enumerate the device as
+a platform device for i2c-multi-instantiate.c to handle. This means that
+we will only change the way how the BOSC0200 is enumerated on the
+Yoga 11e and not elsewhere.
+
+This is somewhat likely to trigger a regression somewhere, but we should
+be able to fix those regressions by adding the necessary info to
+i2c-multi-instantiate.c.  Then it could still be a problem because of
+the modalias changing for an i2c device from some other DSDT which we
+are not aware of yet, but that only is a problem if the modalias is
+used in hwdb. The actual driver for the hardware should bind to the
+new modalias too and if not we can fix that.
+
+I believe the amount of devices which turn out to have more then 1
+I2cSerialBus resource will be small and the set of devices which are already
+working somehow (because the 1st resource is the one we care about) and also
+have a hwdb entry will likely be very small and we can help users who
+hit this combo by providing hwdb patches.
+
+...
+
+Hmm, a quick random spot check of a few of the too many DSTDs I have
+turns out that at least the INT34D3 (Intel Whiskey Cove PMIC) will
+be bitten by this. This is trivial to fix though.
+
+And another one is the "CPLM3218" ambient light sensor, which does
+not have an in tree driver, but there is an out of tree one which
+is on my list to upstream...
+
+This will also cause us to stop generating i2c-clients for some of
+the camera sensors on BYT/CHT since some list multiple (some up to 10 ???)
+addresses I guess this is for some sorta auto-probe function in
+the windows drivers.
+
+TL;DR: the idea of just checking for multiple I2cSerialBus resources
+in a single acpi_fwnode is interesting, but might cause more problems
+then I would hope.
+
+Regards,
+
+Hans
