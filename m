@@ -1,90 +1,78 @@
-From: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Subject: Re: [PATCH v2 4/4] platform/x86: intel_telemetry: report debugfs
- failure
-Date: Tue, 30 Oct 2018 13:11:10 +0530
-Message-ID: <b1d972ce-6672-344c-e432-c8bc9bb20dad@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 1/4] platform/x86: intel_pmc_core: Show Latency
+ Tolerance info
+Date: Tue, 30 Oct 2018 11:30:50 +0200
+Message-ID: <CAHp75Vd8zUR9LYOj1X-3FgqnB_XVZD5hbA+WPN_7T_6kZBAQ5w@mail.gmail.com>
 References: <20181006065113.669-1-rajneesh.bhardwaj@linux.intel.com>
- <20181006065113.669-4-rajneesh.bhardwaj@linux.intel.com>
- <CAHp75VfS2cB3fh1R_iQk91skU-p+yZ_X1Jx2sBaiwHmtAZ0dpw@mail.gmail.com>
+ <CAHp75VcQ3SDQ4X9+LX+y2vB4PWQURid4R=qy5+5PkWHC5nGqQA@mail.gmail.com> <a839e9d3-838b-0fb1-55ac-07562ec71313@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfS2cB3fh1R_iQk91skU-p+yZ_X1Jx2sBaiwHmtAZ0dpw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <a839e9d3-838b-0fb1-55ac-07562ec71313@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, matt.turner@intel.com, "Brown, Len" <len.brown@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
+To: rajneesh.bhardwaj@linux.intel.com
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-
-
-On 19-Oct-18 6:09 PM, Andy Shevchenko wrote:
-> On Sat, Oct 6, 2018 at 9:54 AM Rajneesh Bhardwaj
-> <rajneesh.bhardwaj@linux.intel.com> wrote:
->> On some Goldmont based systems such as ASRock J3455M the BIOS may not
->> enable the IPC1 device that provides access to the PMC and PUNIT. In
->> such scenarios, the IOSS and PSS resources from the platform device can
->> not be obtained and result in a invalid telemetry_plt_config which is an
->> internal data structure that holds platform config and is maintained by
->> the telemetry platform driver.
->>
->> This is also applicable to the platforms where the BIOS supports IPC1
->> device under debug configurations but IPC1 is disabled by user or the
->> policy.
->>
->> This change allows user to know the reason for not seeing entries under
->> /sys/kernel/debug/telemetry/* when there is no apparent failure at boot.
->>
-> Pushed to my review and testing queue, thanks!
+On Tue, Oct 30, 2018 at 9:25 AM Bhardwaj, Rajneesh
+<rajneesh.bhardwaj@linux.intel.com> wrote:
 >
-> P.S. I appended one more patch against this file, please check if it's okay.
-
-Thank you Andy. I will check it when Infradead is online.
-
+> + Srinivas
 >
->> Cc: Matt Turner <matt.turner@intel.com>
->> Cc: Len Brown <len.brown@intel.com>
->> Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
->> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@intel.com>
->>
->> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=198779
->> Acked-by: Matt Turner <matt.turner@intel.com>
->> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
->> ---
->> Changes in v2:
->>   * Removed print and out label both as suggested by Andy.
->>   * changed to pr_info.
->>   * Other minor style fixes.
->>
->>
->>   drivers/platform/x86/intel_telemetry_debugfs.c | 8 ++++++--
->>   1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
->> index ffd0474b0531..1423fa8710fd 100644
->> --- a/drivers/platform/x86/intel_telemetry_debugfs.c
->> +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
->> @@ -951,12 +951,16 @@ static int __init telemetry_debugfs_init(void)
->>          debugfs_conf = (struct telemetry_debugfs_conf *)id->driver_data;
->>
->>          err = telemetry_pltconfig_valid();
->> -       if (err < 0)
->> +       if (err < 0) {
->> +               pr_info("Invalid pltconfig, ensure IPC1 device is enabled in BIOS\n");
->>                  return -ENODEV;
->> +       }
->>
->>          err = telemetry_debugfs_check_evts();
->> -       if (err < 0)
->> +       if (err < 0) {
->> +               pr_info("telemetry_debugfs_check_evts failed\n");
->>                  return -EINVAL;
->> +       }
->>
->>          register_pm_notifier(&pm_notifier);
->>
->> --
->> 2.17.1
->>
 >
+> On 19-Oct-18 5:42 PM, Andy Shevchenko wrote:
+> > On Sat, Oct 6, 2018 at 9:54 AM Rajneesh Bhardwaj
+> > <rajneesh.bhardwaj@linux.intel.com> wrote:
+> >> This adds support to show the Latency Tolerance Reporting for the IPs on
+> >> the PCH as reported by the PMC. The format shown here is raw LTR data
+> >> payload that can further be decoded as per the PCI specification.
+> >>
+> >> This also fixes some minor alignment issues in the header file by
+> >> removing spaces and converting to tabs at some places.
+> >>
+> > I have pushed slightly modified variant of this patch to my review and
+> > testing queue.
+> > Though this series needs a bit more work.
+>
+> Thanks again for your review Andy. I see that the infradead server is
+> down at the moment so i haven't seen your modifications yet.
+> http://git.infradead.org/linux-platform-drivers-x86.git/shortlog/refs/heads/review-andy
+> says gateway timeout.
+
+Oops, yesterday it worked perfectly.
+
+> > I see inconsistency now with the output with the rest of nodes there.
+>
+> index printing is not needed for those nodes hence i never added.
+>
+> > I don't care much, though some can be addressed for no regression.
+> >
+> > For example, index printing. Please, remove it. I completely forgot
+> > about userspace powerful tools. At least two very old and nice can
+> > enumerate lines for you.
+> > Obviously the index printing is redundant.
+>
+> Index printing is required here (for LTR Show and LTR Ignore) because it
+> paves an obvious and easy way for the users of this driver to know the
+> IP number to be used for LTR ignore. This was specifically requested by
+> some customer and Srinivas asked me to implement this so adding him for
+> his inputs.
+
+So, why it should be in kernel? When user prints this, they usually
+call `cat /.../file`, right?
+Is it too hard to call `cat -n /.../file` instead? The benefit of such
+approach is that it's independent on the file we are printing.
+
+(Note, `grep -n <PATTERN> /.../file` does the same`)
+
+For more variants
+https://stackoverflow.com/questions/8206370/add-numbers-to-the-beginning-of-every-line-in-a-file
+
+> I am also planning to add some documentation for this driver later so
+> please consider this in current form.
+
+Good.
+
+-- 
+With Best Regards,
+Andy Shevchenko
