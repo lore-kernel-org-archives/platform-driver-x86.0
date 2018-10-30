@@ -1,100 +1,120 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 4/4] platform/x86: intel_telemetry: report debugfs failure
-Date: Tue, 30 Oct 2018 15:12:22 +0200
-Message-ID: <CAHp75VfkW4PkgUj3yjyeUt8GVgQwbmQGB2GxN0Jj_appTPEi_A@mail.gmail.com>
-References: <20181006065113.669-1-rajneesh.bhardwaj@linux.intel.com>
- <20181006065113.669-4-rajneesh.bhardwaj@linux.intel.com> <CAHp75VfS2cB3fh1R_iQk91skU-p+yZ_X1Jx2sBaiwHmtAZ0dpw@mail.gmail.com>
- <b1d972ce-6672-344c-e432-c8bc9bb20dad@linux.intel.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [RFC][PATCH v1] ACPI / scan: Create platform device for BOSC0200 ACPI nodes
+Date: Tue, 30 Oct 2018 16:47:06 +0200
+Message-ID: <20181030144706.6737-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b1d972ce-6672-344c-e432-c8bc9bb20dad@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rajneesh.bhardwaj@linux.intel.com
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, matt.turner@intel.com, "Brown, Len" <len.brown@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Javier Martinez Canillas <javierm@redhat.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Steven Presser <steve@pressers.name>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Oct 30, 2018 at 9:41 AM Bhardwaj, Rajneesh
-<rajneesh.bhardwaj@linux.intel.com> wrote:
->
->
->
-> On 19-Oct-18 6:09 PM, Andy Shevchenko wrote:
-> > On Sat, Oct 6, 2018 at 9:54 AM Rajneesh Bhardwaj
-> > <rajneesh.bhardwaj@linux.intel.com> wrote:
-> >> On some Goldmont based systems such as ASRock J3455M the BIOS may not
-> >> enable the IPC1 device that provides access to the PMC and PUNIT. In
-> >> such scenarios, the IOSS and PSS resources from the platform device can
-> >> not be obtained and result in a invalid telemetry_plt_config which is an
-> >> internal data structure that holds platform config and is maintained by
-> >> the telemetry platform driver.
-> >>
-> >> This is also applicable to the platforms where the BIOS supports IPC1
-> >> device under debug configurations but IPC1 is disabled by user or the
-> >> policy.
-> >>
-> >> This change allows user to know the reason for not seeing entries under
-> >> /sys/kernel/debug/telemetry/* when there is no apparent failure at boot.
-> >>
-> > Pushed to my review and testing queue, thanks!
-> >
-> > P.S. I appended one more patch against this file, please check if it's okay.
->
-> Thank you Andy. I will check it when Infradead is online.
+On some laptops the ACPI device with BOSC0200 _HID is representing
+two accelerometers under one node.
 
-You may check our mirror on GH:
-https://github.com/dvhart/linux-pdx86
+We add an ID to the I2C multi instantiate list to enumerate
+all I2C slaves correctly.
 
->
-> >
-> >> Cc: Matt Turner <matt.turner@intel.com>
-> >> Cc: Len Brown <len.brown@intel.com>
-> >> Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-> >> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@intel.com>
-> >>
-> >> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=198779
-> >> Acked-by: Matt Turner <matt.turner@intel.com>
-> >> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-> >> ---
-> >> Changes in v2:
-> >>   * Removed print and out label both as suggested by Andy.
-> >>   * changed to pr_info.
-> >>   * Other minor style fixes.
-> >>
-> >>
-> >>   drivers/platform/x86/intel_telemetry_debugfs.c | 8 ++++++--
-> >>   1 file changed, 6 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-> >> index ffd0474b0531..1423fa8710fd 100644
-> >> --- a/drivers/platform/x86/intel_telemetry_debugfs.c
-> >> +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-> >> @@ -951,12 +951,16 @@ static int __init telemetry_debugfs_init(void)
-> >>          debugfs_conf = (struct telemetry_debugfs_conf *)id->driver_data;
-> >>
-> >>          err = telemetry_pltconfig_valid();
-> >> -       if (err < 0)
-> >> +       if (err < 0) {
-> >> +               pr_info("Invalid pltconfig, ensure IPC1 device is enabled in BIOS\n");
-> >>                  return -ENODEV;
-> >> +       }
-> >>
-> >>          err = telemetry_debugfs_check_evts();
-> >> -       if (err < 0)
-> >> +       if (err < 0) {
-> >> +               pr_info("telemetry_debugfs_check_evts failed\n");
-> >>                  return -EINVAL;
-> >> +       }
-> >>
-> >>          register_pm_notifier(&pm_notifier);
-> >>
-> >> --
-> >> 2.17.1
-> >>
-> >
->
+For reference here is the relevant DSDT blurb from the Yoga 11e:
 
+Device (ACC)
+{
+	Name (_ADR, Zero)  // _ADR: Address
+	Name (_HID, "BOSC0200")  // _HID: Hardware ID
+	Name (_CID, "BOSC0200")  // _CID: Compatible ID
+	Name (_DDN, "Accelerometer")  // _DDN: DOS Device Name
+	Name (_UID, One)  // _UID: Unique ID
+	Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+	{
+		Name (RBUF, ResourceTemplate ()
+		{
+			I2cSerialBusV2 (0x0019, ControllerInitiated, 0x00061A80,
+				AddressingMode7Bit, "\\_SB.PCI0.I2C3",
+				0x00, ResourceConsumer, , Exclusive,
+			)
+			I2cSerialBusV2 (0x0018, ControllerInitiated, 0x00061A80,
+				AddressingMode7Bit, "\\_SB.PCI0.I2C3",
+				0x00, ResourceConsumer, , Exclusive,
+			)
+		})
+		Return (RBUF) /* \_SB_.PCI0.I2C3.ACC_._CRS.RBUF */
+	}
 
+Reported-by: Jeremy Cline <jeremy@jcline.org>
+Cc: Steven Presser <steve@pressers.name>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+
+The previous approach had been discussed at
+https://lore.kernel.org/lkml/010001602cf53153-39ad69f1-1b39-4e6d-a748-9455a16c2fbd-000000@email.amazonses.com/
+
+This has an obvious regression as per commit 1911f48de0d9 ("iio: accel: bmc150:
+Add support for BOSC0200 ACPI device id") there are tables where under same ID
+we have different sets of the devices (luckily some of that is possible to
+autodetect):
+
+- one accellerometer  (250e)
+- one accellerometer  (222e)
+- two accellerometers (???)
+
+The proper enabling of the last case w/o a regression sounds like a DMI based
+data for I2C multi instantiate driver along with automatic selection of the latter
+whenever user selects bmc150-accel-i2c.c.
+
+ drivers/acpi/scan.c                          | 1 +
+ drivers/iio/accel/bmc150-accel-i2c.c         | 1 -
+ drivers/platform/x86/i2c-multi-instantiate.c | 7 +++++++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index bd1c59fb0e17..a8cdae057a47 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -1539,6 +1539,7 @@ static bool acpi_device_enumeration_by_parent(struct acpi_device *device)
+ 	 * which i2c_device_id to use for each resource.
+ 	 */
+ 	static const struct acpi_device_id i2c_multi_instantiate_ids[] = {
++		{"BOSC0200", },
+ 		{"BSG1160", },
+ 		{"INT33FE", },
+ 		{}
+diff --git a/drivers/iio/accel/bmc150-accel-i2c.c b/drivers/iio/accel/bmc150-accel-i2c.c
+index 8ffc308d5fd0..9d22a4d9d568 100644
+--- a/drivers/iio/accel/bmc150-accel-i2c.c
++++ b/drivers/iio/accel/bmc150-accel-i2c.c
+@@ -64,7 +64,6 @@ static const struct acpi_device_id bmc150_accel_acpi_match[] = {
+ 	{"BMA250E",	bma250e},
+ 	{"BMA222E",	bma222e},
+ 	{"BMA0280",	bma280},
+-	{"BOSC0200"},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(acpi, bmc150_accel_acpi_match);
+diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+index 5456581b473c..8e763765a05e 100644
+--- a/drivers/platform/x86/i2c-multi-instantiate.c
++++ b/drivers/platform/x86/i2c-multi-instantiate.c
+@@ -100,6 +100,12 @@ static int i2c_multi_inst_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct i2c_inst_data bosc0200_data[]  = {
++	{ "bmc150_accel", -1 },
++	{ "bmc150_accel", -1 },
++	{}
++};
++
+ static const struct i2c_inst_data bsg1160_data[]  = {
+ 	{ "bmc150_accel", 0 },
+ 	{ "bmc150_magn", -1 },
+@@ -112,6 +118,7 @@ static const struct i2c_inst_data bsg1160_data[]  = {
+  * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
+  */
+ static const struct acpi_device_id i2c_multi_inst_acpi_ids[] = {
++	{ "BOSC0200", (unsigned long)bosc0200_data },
+ 	{ "BSG1160", (unsigned long)bsg1160_data },
+ 	{ }
+ };
 -- 
-With Best Regards,
-Andy Shevchenko
+2.19.1
