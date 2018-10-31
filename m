@@ -1,75 +1,23 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V4 1/5]  pvpanic: move pvpanic to misc as common driver
-Date: Wed, 31 Oct 2018 07:05:17 +0000
-Message-ID: <20181031070517.ijplknobd6en4h5g@salmiak>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH V4 1/5] pvpanic: move pvpanic to misc as common driver
+Date: Wed, 31 Oct 2018 14:45:21 +0200
+Message-ID: <CAHp75Ve4JhTbEFTYKWCx2DS80NKPXZJ8GDiamEFLq3vPCgVvzw@mail.gmail.com>
 References: <1540993041-25611-1-git-send-email-peng.hao2@zte.com.cn>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
 In-Reply-To: <1540993041-25611-1-git-send-email-peng.hao2@zte.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Hao <peng.hao2@zte.com.cn>
-Cc: robh+dt@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, andy@infradead.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com, linux-doc@vger.kernel.org
+To: peng.hao2@zte.com.cn
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, hutao@cn.fujitsu.com, Linux Documentation List <linux-doc@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Oct 31, 2018 at 09:37:17PM +0800, Peng Hao wrote:
+On Wed, Oct 31, 2018 at 7:27 AM Peng Hao <peng.hao2@zte.com.cn> wrote:
+>
 > move pvpanic.c from drivers/platform/x86 to drivers/misc.
 > following patches will use pvpanic device in arm64.
 
-FWIW, the series as a whole looks fine to me, so for all patches:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks,
-Mark.
-
-> 
-> Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
-> ---
->  drivers/misc/Kconfig                     | 7 +++++++
->  drivers/misc/Makefile                    | 1 +
->  drivers/{platform/x86 => misc}/pvpanic.c | 0
->  drivers/platform/Kconfig                 | 3 +++
->  drivers/platform/Makefile                | 1 +
->  drivers/platform/x86/Kconfig             | 8 --------
->  drivers/platform/x86/Makefile            | 1 -
->  7 files changed, 12 insertions(+), 9 deletions(-)
->  rename drivers/{platform/x86 => misc}/pvpanic.c (100%)
-> 
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index 5d71300..ca55c94 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -499,6 +499,13 @@ config MISC_RTSX
->  	tristate
->  	default MISC_RTSX_PCI || MISC_RTSX_USB
->  
-> +config PVPANIC
-> +	tristate "pvpanic device support"
-> +	help
-> +          This driver provides support for the pvpanic device.  pvpanic is
-> +          a paravirtualized device provided by QEMU; it lets a virtual machine
-> +          (guest) communicate panic events to the host.
-> +
->  source "drivers/misc/c2port/Kconfig"
->  source "drivers/misc/eeprom/Kconfig"
->  source "drivers/misc/cb710/Kconfig"
-> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> index 20be70c..39dc005 100644
-> --- a/drivers/misc/Makefile
-> +++ b/drivers/misc/Makefile
-> @@ -57,3 +57,4 @@ obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
->  obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
->  obj-$(CONFIG_OCXL)		+= ocxl/
->  obj-$(CONFIG_MISC_RTSX)		+= cardreader/
-> +obj-$(CONFIG_PVPANIC)  		+= pvpanic.o
-> diff --git a/drivers/platform/x86/pvpanic.c b/drivers/misc/pvpanic.c
-> similarity index 100%
-> rename from drivers/platform/x86/pvpanic.c
-> rename to drivers/misc/pvpanic.c
-> diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
-> index d4c2e42..8b64b78 100644
 > --- a/drivers/platform/Kconfig
 > +++ b/drivers/platform/Kconfig
 > @@ -1,3 +1,6 @@
@@ -86,42 +34,18 @@ Mark.
 > @@ -3,6 +3,7 @@
 >  # Makefile for linux/drivers/platform
 >  #
->  
-> +obj-$(CONFIG_ARM64)               += arm/
->  obj-$(CONFIG_X86)		+= x86/
->  obj-$(CONFIG_MELLANOX_PLATFORM)	+= mellanox/
->  obj-$(CONFIG_MIPS)		+= mips/
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index ef016e4..a6b412e 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1119,14 +1119,6 @@ config INTEL_SMARTCONNECT
->  	  This driver checks to determine whether the device has Intel Smart
->  	  Connect enabled, and if so disables it.
->  
-> -config PVPANIC
-> -	tristate "pvpanic device support"
-> -	depends on ACPI
-> -	---help---
-> -	  This driver provides support for the pvpanic device.  pvpanic is
-> -	  a paravirtualized device provided by QEMU; it lets a virtual machine
-> -	  (guest) communicate panic events to the host.
-> -
->  config INTEL_PMC_IPC
->  	tristate "Intel PMC IPC Driver"
->  	depends on ACPI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 2ba6cb7..a4ec299 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -75,7 +75,6 @@ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
->  obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
->  obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
->  
-> -obj-$(CONFIG_PVPANIC)           += pvpanic.o
->  obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
->  obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
->  obj-$(CONFIG_SILEAD_DMI)	+= silead_dmi.o
-> -- 
-> 1.8.3.1
-> 
+>
+> +obj-$(CONFIG_ARM64)               +=3D arm/
+>  obj-$(CONFIG_X86)              +=3D x86/
+>  obj-$(CONFIG_MELLANOX_PLATFORM)        +=3D mellanox/
+>  obj-$(CONFIG_MIPS)             +=3D mips/
+
+I'm not sure:
+a) how it's related to the rest in this patch (should be split I suppose);
+b) how come arm64->arm replacement =E2=80=94 are platform drivers independe=
+nt
+from the (ARM) architecture?
+
+--=20
+With Best Regards,
+Andy Shevchenko
