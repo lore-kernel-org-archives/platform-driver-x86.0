@@ -1,90 +1,82 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V5 6/8]  misc/pvpanic: add MMIO support
-Date: Thu, 1 Nov 2018 11:42:12 +0000
-Message-ID: <20181101114212.k3s5marvi66eg5xn@lakrids.cambridge.arm.com>
+Subject: Re: [PATCH V5 8/8]  dt-bindings/misc/pvpanic :add document for
+ pvpanic-mmio
+Date: Thu, 1 Nov 2018 11:46:06 +0000
+Message-ID: <20181101114606.ehiis3adjchjvr34@lakrids.cambridge.arm.com>
 References: <1541085002-42993-1-git-send-email-peng.hao2@zte.com.cn>
- <1541085002-42993-6-git-send-email-peng.hao2@zte.com.cn>
+ <1541085002-42993-8-git-send-email-peng.hao2@zte.com.cn>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1541085002-42993-6-git-send-email-peng.hao2@zte.com.cn>
+In-Reply-To: <1541085002-42993-8-git-send-email-peng.hao2@zte.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Peng Hao <peng.hao2@zte.com.cn>
 Cc: robh+dt@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, andy@infradead.org, dvhart@infradead.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com, linux-doc@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Nov 01, 2018 at 11:10:00PM +0800, Peng Hao wrote:
-> On some architectures (e.g. arm64), it's preferable to use MMIO, since
-> this can be used standalone. Add MMIO support to the pvpanic driver.
+Please fix the spacing in the commit title. It should be formatted:
+
+  dt-bindings: misc/pvpanic: add document for pvpanic-mmio
+
+On Thu, Nov 01, 2018 at 11:10:02PM +0800, Peng Hao wrote:
+> Add dt-bindings document for "qemu:pvpanic-mmio".
 > 
 > Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 
+With the title fixed:
+
 Acked-by: Mark Rutland <mark.rutland@arm.com>
 
+When sending DT bindings in future, please follow the process in:
+
+  Documentation/devicetree/bindings/submitting-patches.txt
+
+... e.g., send the binding before the code using the binding.
+
+Thanks,
 Mark.
 
 > ---
->  drivers/misc/pvpanic.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
+>  .../devicetree/bindings/misc/pvpanic-mmio.txt      | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/pvpanic-mmio.txt
 > 
-> diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
-> index c20fdff..c0b787e 100644
-> --- a/drivers/misc/pvpanic.c
-> +++ b/drivers/misc/pvpanic.c
-> @@ -28,7 +28,7 @@
->  
->  #define PVPANIC_PANICKED	(1 << 0)
->  
-> -static u16 port;
-> +static void __iomem *base;
->  
->  static struct acpi_driver pvpanic_driver = {
->  	.name =		"pvpanic",
-> @@ -44,7 +44,7 @@
->  static void
->  pvpanic_send_event(unsigned int event)
->  {
-> -	outb(event, port);
-> +	iowrite8(event, base);
->  }
->  
->  static int
-> @@ -66,8 +66,14 @@
->  {
->  	struct resource r;
->  
-> -	if (acpi_dev_resource_io(res, &r) {
-> -		port = r.start;
-> +	if (acpi_dev_resource_io(res, &r) ||
-> +	    acpi_dev_resource_memory(res, &r)) {
-> +		if (r.flags & IORESOURCE_IO)
-> +			base = (void __iomem *) ioport_map(r.start,
-> +						r.end - r.start + 1);
-> +		else
-> +			base = ioremap(r.start, r.end - r.start + 1);
+> diff --git a/Documentation/devicetree/bindings/misc/pvpanic-mmio.txt b/Documentation/devicetree/bindings/misc/pvpanic-mmio.txt
+> new file mode 100644
+> index 0000000..985e907
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/pvpanic-mmio.txt
+> @@ -0,0 +1,29 @@
+> +* QEMU PVPANIC MMIO Configuration bindings
 > +
->  		return AE_OK;
->  	}
->  
-> @@ -89,7 +95,7 @@ static int pvpanic_add(struct acpi_device *device)
->  	acpi_walk_resources(device->handle, METHOD_NAME__CRS,
->  			    pvpanic_walk_resources, NULL);
->  
-> -	if (!port)
-> +	if (!base)
->  		return -ENODEV;
->  
->  	atomic_notifier_chain_register(&panic_notifier_list,
-> @@ -103,6 +109,8 @@ static int pvpanic_remove(struct acpi_device *device)
->  
->  	atomic_notifier_chain_unregister(&panic_notifier_list,
->  					 &pvpanic_panic_nb);
+> +QEMU's emulation / virtualization targets provide the following PVPANIC
+> +MMIO Configuration interface on the "virt" machine.
+> +type:
 > +
-> +	iounmap(base);
->  	return 0;
->  }
->  
+> +- a read-write, 16-bit wide data register.
+> +
+> +QEMU exposes the data register to guests as memory mapped registers.
+> +
+> +Required properties:
+> +
+> +- compatible: "qemu,pvpanic-mmio".
+> +- reg: the MMIO region used by the device.
+> +  * Bytes 0x0  Write panic event to the reg when guest OS panics.
+> +  * Bytes 0x1  Reserved.
+> +
+> +Example:
+> +
+> +/ {
+> +        #size-cells = <0x2>;
+> +        #address-cells = <0x2>;
+> +
+> +        pvpanic-mmio@9060000 {
+> +                compatible = "qemu,pvpanic-mmio";
+> +                reg = <0x0 0x9060000 0x0 0x2>;
+> +        };
+> +};
+> +
 > -- 
 > 1.8.3.1
 > 
