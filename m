@@ -1,7 +1,7 @@
 From: Peng Hao <peng.hao2@zte.com.cn>
-Subject: [PATCH V5 4/8]  misc/pvpanic :convert to SPDX license tags
-Date: Thu, 1 Nov 2018 23:09:58 +0800
-Message-ID: <1541085002-42993-4-git-send-email-peng.hao2@zte.com.cn>
+Subject: [PATCH V5 8/8]  dt-bindings/misc/pvpanic :add document for pvpanic-mmio
+Date: Thu, 1 Nov 2018 23:10:02 +0800
+Message-ID: <1541085002-42993-8-git-send-email-peng.hao2@zte.com.cn>
 References: <1541085002-42993-1-git-send-email-peng.hao2@zte.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1541085002-42993-1-git-send-email-peng.hao2@zte.com.cn>
@@ -10,41 +10,48 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundat
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com, linux-doc@vger.kernel.org, Peng Hao <peng.hao2@zte.com.cn>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patch updates license to use SPDX-License-Identifier
-instead of verbose license text.
+Add dt-bindings document for "qemu:pvpanic-mmio".
 
 Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 ---
- drivers/misc/pvpanic.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+ .../devicetree/bindings/misc/pvpanic-mmio.txt      | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/pvpanic-mmio.txt
 
-diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
-index 66534d4..0bcf1cd 100644
---- a/drivers/misc/pvpanic.c
-+++ b/drivers/misc/pvpanic.c
-@@ -1,21 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-- *  pvpanic.c - pvpanic Device Support
-+ *  Pvpanic Device Support
-  *
-  *  Copyright (C) 2013 Fujitsu.
-  *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License as published by
-- *  the Free Software Foundation; either version 2 of the License, or
-- *  (at your option) any later version.
-- *
-- *  This program is distributed in the hope that it will be useful,
-- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *  GNU General Public License for more details.
-- *
-- *  You should have received a copy of the GNU General Public License
-- *  along with this program; if not, write to the Free Software
-- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/Documentation/devicetree/bindings/misc/pvpanic-mmio.txt b/Documentation/devicetree/bindings/misc/pvpanic-mmio.txt
+new file mode 100644
+index 0000000..985e907
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/pvpanic-mmio.txt
+@@ -0,0 +1,29 @@
++* QEMU PVPANIC MMIO Configuration bindings
++
++QEMU's emulation / virtualization targets provide the following PVPANIC
++MMIO Configuration interface on the "virt" machine.
++type:
++
++- a read-write, 16-bit wide data register.
++
++QEMU exposes the data register to guests as memory mapped registers.
++
++Required properties:
++
++- compatible: "qemu,pvpanic-mmio".
++- reg: the MMIO region used by the device.
++  * Bytes 0x0  Write panic event to the reg when guest OS panics.
++  * Bytes 0x1  Reserved.
++
++Example:
++
++/ {
++        #size-cells = <0x2>;
++        #address-cells = <0x2>;
++
++        pvpanic-mmio@9060000 {
++                compatible = "qemu,pvpanic-mmio";
++                reg = <0x0 0x9060000 0x0 0x2>;
++        };
++};
++
 -- 
 1.8.3.1
