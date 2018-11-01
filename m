@@ -1,57 +1,32 @@
 From: Peng Hao <peng.hao2@zte.com.cn>
-Subject: [PATCH V5 8/8]  dt-bindings/misc/pvpanic :add document for pvpanic-mmio
-Date: Thu, 1 Nov 2018 23:10:02 +0800
-Message-ID: <1541085002-42993-8-git-send-email-peng.hao2@zte.com.cn>
-References: <1541085002-42993-1-git-send-email-peng.hao2@zte.com.cn>
+Subject: [PATCH V5 2/8]  misc/pvpanic: Remove one extra comma
+Date: Fri, 2 Nov 2018 00:13:36 +0800
+Message-ID: <1541088816-43620-1-git-send-email-peng.hao2@zte.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541085002-42993-1-git-send-email-peng.hao2@zte.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, andy@infradead.org, dvhart@infradead.org
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com, linux-doc@vger.kernel.org, Peng Hao <peng.hao2@zte.com.cn>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add dt-bindings document for "qemu:pvpanic-mmio".
+There is an extra comma in pvpanic_device_ids, remove it.
 
 Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 ---
- .../devicetree/bindings/misc/pvpanic-mmio.txt      | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/pvpanic-mmio.txt
+ drivers/misc/pvpanic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/misc/pvpanic-mmio.txt b/Documentation/devicetree/bindings/misc/pvpanic-mmio.txt
-new file mode 100644
-index 0000000..985e907
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/pvpanic-mmio.txt
-@@ -0,0 +1,29 @@
-+* QEMU PVPANIC MMIO Configuration bindings
-+
-+QEMU's emulation / virtualization targets provide the following PVPANIC
-+MMIO Configuration interface on the "virt" machine.
-+type:
-+
-+- a read-write, 16-bit wide data register.
-+
-+QEMU exposes the data register to guests as memory mapped registers.
-+
-+Required properties:
-+
-+- compatible: "qemu,pvpanic-mmio".
-+- reg: the MMIO region used by the device.
-+  * Bytes 0x0  Write panic event to the reg when guest OS panics.
-+  * Bytes 0x1  Reserved.
-+
-+Example:
-+
-+/ {
-+        #size-cells = <0x2>;
-+        #address-cells = <0x2>;
-+
-+        pvpanic-mmio@9060000 {
-+                compatible = "qemu,pvpanic-mmio";
-+                reg = <0x0 0x9060000 0x0 0x2>;
-+        };
-+};
-+
+diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
+index fd86dab..059005c 100644
+--- a/drivers/misc/pvpanic.c
++++ b/drivers/misc/pvpanic.c
+@@ -35,7 +35,7 @@
+ 
+ static const struct acpi_device_id pvpanic_device_ids[] = {
+ 	{ "QEMU0001", 0 },
+-	{ "", 0 },
++	{ "", 0 }
+ };
+ MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
+ 
 -- 
 1.8.3.1
