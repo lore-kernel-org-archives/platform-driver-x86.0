@@ -1,12 +1,13 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH V6 3/8] misc/pvpanic: add MMIO support
-Date: Fri, 2 Nov 2018 11:37:20 +0200
-Message-ID: <CAHp75VfxGpR1PWaP+FbTcgxsM8sRgyuCZBjTigZWbxJShFDrxQ@mail.gmail.com>
-References: <1541163378-54047-1-git-send-email-peng.hao2@zte.com.cn> <1541163378-54047-3-git-send-email-peng.hao2@zte.com.cn>
+Subject: Re: [PATCH V6 5/8] misc/pvpanic: add support to get pvpanic device
+ info by FDT
+Date: Fri, 2 Nov 2018 11:39:04 +0200
+Message-ID: <CAHp75VegH6fZi5cpoRERga+Z-rv=ahfTpvy-Fbu_bwX99gsZVw@mail.gmail.com>
+References: <1541163378-54047-1-git-send-email-peng.hao2@zte.com.cn> <1541163378-54047-5-git-send-email-peng.hao2@zte.com.cn>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541163378-54047-3-git-send-email-peng.hao2@zte.com.cn>
+In-Reply-To: <1541163378-54047-5-git-send-email-peng.hao2@zte.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 To: peng.hao2@zte.com.cn
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, hutao@cn.fujitsu.com, Linux Documentation List <linux-doc@vger.kernel.org>
@@ -14,77 +15,124 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 On Fri, Nov 2, 2018 at 6:46 AM Peng Hao <peng.hao2@zte.com.cn> wrote:
 >
-> On some architectures (e.g. arm64), it's preferable to use MMIO, since
-> this can be used standalone. Add MMIO support to the pvpanic driver.
+> By default, when ACPI tables and FDT coexist for ARM64,
+> current kernel takes precedence over FDT to get device information.
+> Virt machine in qemu provides both FDT and ACPI table. Increases the
+> way to get information through FDT.
 >
 
-0day complains b/c of 1st patch in the series.
+so OF dependency in Kconfig is a matter of this patch.
+Since 0day bot complain you might need to add
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+#include <linux/mod_devicetable.h>
 
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-This wasn't suggested by me. It's your idea to support to MMIO.
+as well.
 
 > Acked-by: Mark Rutland <mark.rutland@arm.com>
 > Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 > ---
->  drivers/misc/pvpanic.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
+>  drivers/misc/pvpanic.c | 67 +++++++++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 64 insertions(+), 3 deletions(-)
 >
 > diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
-> index 49c59e1..22fb487 100644
+> index 22fb487..5378d5f 100644
 > --- a/drivers/misc/pvpanic.c
 > +++ b/drivers/misc/pvpanic.c
-> @@ -41,7 +41,7 @@
+> @@ -2,6 +2,7 @@
+>   *  pvpanic.c - pvpanic Device Support
+>   *
+>   *  Copyright (C) 2013 Fujitsu.
+> + *  Copyright (C) 2018 ZTE.
+>   *
+>   *  This program is free software; you can redistribute it and/or modify
+>   *  it under the terms of the GNU General Public License as published by
+> @@ -20,11 +21,14 @@
 >
->  #define PVPANIC_PANICKED       (1 << 0)
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 >
-> -static u16 port;
-> +static void __iomem *base;
+> +#include <linux/acpi.h>
+> +#include <linux/init.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> -#include <linux/init.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+>  #include <linux/types.h>
+> -#include <linux/acpi.h>
 >
->  static struct acpi_driver pvpanic_driver = {
->         .name =         "pvpanic",
-> @@ -57,7 +57,7 @@
->  static void
->  pvpanic_send_event(unsigned int event)
->  {
-> -       outb(event, port);
-> +       iowrite8(event, base);
->  }
+>  MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
+>  MODULE_DESCRIPTION("pvpanic device driver");
+> @@ -73,6 +77,32 @@
+>         .priority = 1, /* let this called before broken drm_fb_helper */
+>  };
 >
->  static int
-> @@ -80,7 +80,11 @@
->         struct resource r;
->
->         if (acpi_dev_resource_io(res, &r)) {
-> -               port = r.start;
-> +               base = (void __iomem *) ioport_map(r.start,
-> +                                       r.end - r.start + 1);
-> +               return AE_OK;
-> +       } else if (acpi_dev_resource_memory(res, &r)) {
-> +               base = ioremap(r.start, r.end - r.start + 1);
->                 return AE_OK;
->         }
->
-> @@ -101,7 +105,7 @@ static int pvpanic_add(struct acpi_device *device)
->         acpi_walk_resources(device->handle, METHOD_NAME__CRS,
->                             pvpanic_walk_resources, NULL);
->
-> -       if (!port)
-> +       if (!base)
->                 return -ENODEV;
->
->         atomic_notifier_chain_register(&panic_notifier_list,
-> @@ -115,6 +119,8 @@ static int pvpanic_remove(struct acpi_device *device)
->
->         atomic_notifier_chain_unregister(&panic_notifier_list,
->                                          &pvpanic_panic_nb);
-> +       iounmap(base);
+> +static int pvpanic_mmio_probe(struct platform_device *pdev)
+> +{
+> +       struct resource *mem;
 > +
+> +       mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       if (!mem)
+> +               return -EINVAL;
+> +
+> +       base = devm_ioremap_resource(&pdev->dev, mem);
+> +       if (base == NULL)
+> +               return -EFAULT;
+> +
+> +       atomic_notifier_chain_register(&panic_notifier_list,
+> +                                      &pvpanic_panic_nb);
+> +
+> +       return 0;
+> +}
+> +
+> +static int pvpanic_mmio_remove(struct platform_device *pdev)
+> +{
+> +
+> +       atomic_notifier_chain_unregister(&panic_notifier_list,
+> +                                        &pvpanic_panic_nb);
+> +
+> +       return 0;
+> +}
+>
+>  static acpi_status
+>  pvpanic_walk_resources(struct acpi_resource *res, void *context)
+> @@ -124,4 +154,35 @@ static int pvpanic_remove(struct acpi_device *device)
 >         return 0;
 >  }
 >
+> -module_acpi_driver(pvpanic_driver);
+> +static const struct of_device_id pvpanic_mmio_match[] = {
+> +       { .compatible = "qemu,pvpanic-mmio", },
+> +       {}
+> +};
+> +
+> +static struct platform_driver pvpanic_mmio_driver = {
+> +       .driver = {
+> +               .name = "pvpanic-mmio",
+> +               .of_match_table = pvpanic_mmio_match,
+> +       },
+> +       .probe = pvpanic_mmio_probe,
+> +       .remove = pvpanic_mmio_remove,
+> +};
+> +
+> +static int __init pvpanic_mmio_init(void)
+> +{
+> +       if (acpi_disabled)
+> +               return platform_driver_register(&pvpanic_mmio_driver);
+> +       else
+> +               return acpi_bus_register_driver(&pvpanic_driver);
+> +}
+> +
+> +static void __exit pvpanic_mmio_exit(void)
+> +{
+> +       if (acpi_disabled)
+> +               platform_driver_unregister(&pvpanic_mmio_driver);
+> +       else
+> +               acpi_bus_unregister_driver(&pvpanic_driver);
+> +}
+> +
+> +module_init(pvpanic_mmio_init);
+> +module_exit(pvpanic_mmio_exit);
 > --
 > 1.8.3.1
 >
