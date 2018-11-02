@@ -1,52 +1,111 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 3/3] ALSA: hda: add support for Huawei WMI MicMute LED
-Date: Fri, 2 Nov 2018 20:33:38 +0200
-Message-ID: <CAHp75VfkyqWRrUND=U9Mb+2-HqpEZhpbUYKs5iTSn0mWK+W_sA@mail.gmail.com>
-References: <20181102041120.7603-1-ayman.bagabas@gmail.com>
- <20181102041120.7603-4-ayman.bagabas@gmail.com> <CAHp75VcA5M4XNVr94OALo3=AW3LbWU+Pz-KTRgodBtSP_K9-wA@mail.gmail.com>
- <s5hlg6bfi26.wl-tiwai@suse.de>
+Subject: Re: [PATCH 0/3] Fix display off hotkey on Asus machines
+Date: Fri, 2 Nov 2018 21:35:22 +0200
+Message-ID: <CAHp75VdzYf_CXiBzVrOUw+R5ZA8O-+_PGJ-Cv-q7QTXpvG0dVA@mail.gmail.com>
+References: <20181101002128.28884-1-jprvita@endlessm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <s5hlg6bfi26.wl-tiwai@suse.de>
+In-Reply-To: <20181101002128.28884-1-jprvita@endlessm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Ayman Bagabas <ayman.bagabas@gmail.com>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Hui Wang <hui.wang@canonical.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, kailang@realtek.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Bastien Nocera <hadess@hadess.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input <linux-input@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux@endlessm.com, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 2, 2018 at 8:30 PM Takashi Iwai <tiwai@suse.de> wrote:
-> On Fri, 02 Nov 2018 19:12:44 +0100,
-> Andy Shevchenko wrote:
-> >
-> > > +       if (action == HDA_FIXUP_ACT_PROBE) {
-> > > +               if (!huawei_wmi_micmute_led_set_func)
-> > > +                       huawei_wmi_micmute_led_set_func = symbol_request(huawei_wmi_micmute_led_set);
-> > > +               if (!huawei_wmi_micmute_led_set_func) {
-> > > +                       codec_warn(codec, "Failed to find huawei_wmi symbol huawei_wmi_micmute_led_set\n");
-> > > +                       return;
-> > > +               }
-> > > +               removefunc = (huawei_wmi_micmute_led_set_func(false) < 0)
-> > > +                       || (snd_hda_gen_add_micmute_led(codec, update_huawei_wmi_micmute_led) < 0);
-> > > +
-> > > +       }
-> > > +
-> > > +       if (huawei_wmi_micmute_led_set_func && (action == HDA_FIXUP_ACT_FREE || removefunc)) {
-> > > +               symbol_put(huawei_wmi_micmute_led_set);
-> > > +               huawei_wmi_micmute_led_set_func = NULL;
-> > > +       }
-> > > +}
-> >
-> > Takashi, is it a way how the rest sound drivers are written? B/c this
-> > symbol_request(s) look to me a bit ugly.
+On Thu, Nov 1, 2018 at 2:21 AM Jo=C3=A3o Paulo Rechi Vita <jprvita@gmail.co=
+m> wrote:
 >
-> It's a workaround for not having a hard dependency.  The HD-audio
-> codec driver is generic, and we don't want to load the multiple WMI
-> drivers always for using a Realtek codec.
+> Asus laptops have a hotkey function on the F7 key to turn the display
+> backlight OFF, labeled with a screen with a X inside, as shown on
+> https://dlcdnimgs.asus.com/websites/global/products/Xep1ZcSY8dyWXK11/imag=
+es/keyboard.png
 >
-> Ugly, yes, but simple enough.
+> This hotkey worked on very few Asus models, where the EC acts on the
+> backlight and input events are generated only to notify userspace of the
+> backlight status. On these machines the first hotkey press turns the
+> display backlight OFF and notifies the OS with 0x34, which asus-nb-wmi
+> forwards to userspace as KEY_DISPLAY_OFF, and a second press turns it
+> back ON and notifies the OS with 0x33, which asus-nb-wmi forwards to
+> userspace as KEY_DISPLAYTOGGLE. No other keys turn the display backlight
+> back ON, but their input is forwarded normally to the application under
+> focus.
+>
+> But for the majority of models, the EC actually does not act on the
+> backlight and we simply get a 0x33 notification every time the key is
+> pressed, or alternating values of 0x33 / 0x34. We have confirmed this
+> behavior on the following models: E203NAS, GL553VE, X441NC, X441UVK,
+> X541UVK, X555DG, X555UB, X555UQ, X560UD, X570ZD and X705FD, and the DSDT
+> on these machines and the working one (only confirmed on N552VW) is the
+> same for the query involved here.
+>
+> After trying to get information from Asus for quite some time on how
+> this works on Windows, we finally recently got a contact that was able
+> to give us a definitive answer and a specification for this feature.
+> According this contact the 0x33 / 0x34 is an old behavior and all newer
+> machines should only be notifying the OS with 0x35 instead, as newer ECs
+> don't control the backlight anymore. When a 0x35 notification is
+> received the OS should act on the display backlight. From the spec
+> (machine-translated from Chinese):
+>
+>   1.4 Fn+F7
+>   Function introduction
+>
+>   After the user presses Fn + F7, the screen will be closed through the
+>   Windows API. The user will immediately open the screen with the mouse
+>   and keyboard.
+>   The API used can be found in the Sample URL:
+>   https://code.msdn.microsoft.com/windowsdesktop/Coalescable-Timer-Sample=
+-d9da954c
+>   BIOS implementation
+>   Increase Notify code
+>   LCD On: 0x33 (display OSD)
+>   LCD Off: 0x34 (display OSD)
+>   LCD Switch: 0x35 (using API switch)
+>
+> The behavior on Windows with the ATKACPI driver from Asus installed
+> matches what is described above, with the hotkey turning OFF the
+> backlight of all connected displays with a fading effect, and any cursor
+> input or key press turning the backlight back ON. The key press or
+> cursor input is passed through to the application under focus or under
+> the cursor.
+>
+> With this information from the spec, a simple analysis of the DSDT
+> (pasted on the first commit of this series) shows that in order to have
+> the firmware notify the OS with 0x35 and have the OS act on the
+> backlight, we need to call WMNB(ASUS_WMI_DEVID_BACKLIGHT=3D=3D0x00050011,=
+ 2)
+> on the _WDG device. Then we can simply map that scan code to the
+> appropriate key code in the driver.
+>
+> In include/uapi/linux/input-event-codes.h KEY_DISPLAY_OFF is defined as
+> "display device to off state", but it is not actually handled by
+> userspace on a GNOME+Xorg stack. There are also KEY_SCREENSAVER and
+> KEY_SCREENLOCK / KEY_COFFEE. The former seems to be ignored by userspace
+> as well (and its value is higher than 255 so it can't be handled by Xorg
+> IIUC), and the later is mapped to XF86ScreenSaver by Xorg and triggers
+> the lock screen action on GNOME. KEY_SCREENLOCK seems to be what closest
+> matches the behavior described above in a Xorg world. I am not sure if
+> any of this changes with Wayland, so any clarifications in that regard
+> would be greatly appreciated.
+>
 
-Okay, thanks for elaboration.
+Pushed to my review and testing queue, thanks!
 
--- 
+> Jo=C3=A3o Paulo Rechi Vita (3):
+>   asus-wmi: Tell the EC the OS will handle the display off hotkey
+>   asus-nb-wmi: Map 0x35 to KEY_SCREENLOCK
+>   asus-nb-wmi: Drop mapping of 0x33 and 0x34 scan codes
+>
+>  drivers/platform/x86/asus-nb-wmi.c | 3 +--
+>  drivers/platform/x86/asus-wmi.c    | 3 ++-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> --
+> 2.19.1
+>
+
+
+--=20
 With Best Regards,
 Andy Shevchenko
