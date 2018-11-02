@@ -1,147 +1,90 @@
-From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [PATCH v2 3/3] ALSA: hda: add support for Huawei WMI MicMute LED
-Date: Fri,  2 Nov 2018 00:11:15 -0400
-Message-ID: <20181102041120.7603-4-ayman.bagabas@gmail.com>
-References: <20181102041120.7603-1-ayman.bagabas@gmail.com>
+From: Peng Hao <peng.hao2@zte.com.cn>
+Subject: [PATCH V6 1/8]  pvpanic: move pvpanic to misc as common driver
+Date: Fri, 2 Nov 2018 20:56:10 +0800
+Message-ID: <1541163378-54047-1-git-send-email-peng.hao2@zte.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181102041120.7603-1-ayman.bagabas@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Ayman Bagabas <ayman.bagabas@gmail.com>, Kailang Yang <kailang@realtek.com>, Hui Wang <hui.wang@canonical.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, andy@infradead.org, dvhart@infradead.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com, linux-doc@vger.kernel.org, Peng Hao <peng.hao2@zte.com.cn>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some of Huawei laptops come with a LED in the mic mute key. This patch
-enables and disable this LED accordingly.
+Move pvpanic.c from drivers/platform/x86 to drivers/misc.
+Following patches will use pvpanic device as common driver.
 
-Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 ---
- drivers/platform/x86/huawei_wmi.c |  1 +
- include/linux/huawei_wmi.h        |  7 +++++
- sound/pci/hda/huawei_wmi_helper.c | 48 +++++++++++++++++++++++++++++++
- sound/pci/hda/patch_realtek.c     | 10 +++++++
- 4 files changed, 66 insertions(+)
- create mode 100644 include/linux/huawei_wmi.h
- create mode 100644 sound/pci/hda/huawei_wmi_helper.c
+ drivers/misc/Kconfig                     | 8 ++++++++
+ drivers/misc/Makefile                    | 1 +
+ drivers/{platform/x86 => misc}/pvpanic.c | 0
+ drivers/platform/x86/Kconfig             | 8 --------
+ drivers/platform/x86/Makefile            | 1 -
+ 5 files changed, 9 insertions(+), 9 deletions(-)
+ rename drivers/{platform/x86 => misc}/pvpanic.c (100%)
 
-diff --git a/drivers/platform/x86/huawei_wmi.c b/drivers/platform/x86/huawei_wmi.c
-index 83545217ac19..cc5492571727 100644
---- a/drivers/platform/x86/huawei_wmi.c
-+++ b/drivers/platform/x86/huawei_wmi.c
-@@ -26,6 +26,7 @@
- #include <linux/input/sparse-keymap.h>
- #include <linux/acpi.h>
- #include <linux/wmi.h>
-+#include <linux/huawei_wmi.h>
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 3726eac..642626a 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -513,6 +513,14 @@ config MISC_RTSX
+ 	tristate
+ 	default MISC_RTSX_PCI || MISC_RTSX_USB
  
- MODULE_AUTHOR("Ayman Bagabas <ayman.bagabas@gmail.com>");
- MODULE_DESCRIPTION("Huawei WMI hotkeys");
-diff --git a/include/linux/huawei_wmi.h b/include/linux/huawei_wmi.h
-new file mode 100644
-index 000000000000..69b656c5029b
---- /dev/null
-+++ b/include/linux/huawei_wmi.h
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __HUAWEI_WMI_H__
-+#define __HUAWEI_WMI_H__
++config PVPANIC
++	tristate "pvpanic device support"
++	depends on ACPI || OF
++	help
++	  This driver provides support for the pvpanic device.  pvpanic is
++	  a paravirtualized device provided by QEMU; it lets a virtual machine
++	  (guest) communicate panic events to the host.
 +
-+int huawei_wmi_micmute_led_set(bool on);
-+
-+#endif
-diff --git a/sound/pci/hda/huawei_wmi_helper.c b/sound/pci/hda/huawei_wmi_helper.c
-new file mode 100644
-index 000000000000..77edb658cbf0
---- /dev/null
-+++ b/sound/pci/hda/huawei_wmi_helper.c
-@@ -0,0 +1,48 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Helper functions for Huawei WMI Mic Mute LED;
-+ * to be included from codec driver
-+ */
-+
-+#if IS_ENABLED(CONFIG_HUAWEI_LAPTOP)
-+#include <linux/huawei_wmi.h>
-+
-+static int (*huawei_wmi_micmute_led_set_func)(bool);
-+
-+static void update_huawei_wmi_micmute_led(struct hda_codec *codec)
-+{
-+	struct hda_gen_spec *spec = codec->spec;
-+
-+	huawei_wmi_micmute_led_set_func(spec->micmute_led.led_value);
-+}
-+
-+static void alc_fixup_huawei_wmi(struct hda_codec *codec,
-+				   const struct hda_fixup *fix, int action)
-+{
-+	bool removefunc = false;
-+
-+	if (action == HDA_FIXUP_ACT_PROBE) {
-+		if (!huawei_wmi_micmute_led_set_func)
-+			huawei_wmi_micmute_led_set_func = symbol_request(huawei_wmi_micmute_led_set);
-+		if (!huawei_wmi_micmute_led_set_func) {
-+			codec_warn(codec, "Failed to find huawei_wmi symbol huawei_wmi_micmute_led_set\n");
-+			return;
-+		}
-+		removefunc = (huawei_wmi_micmute_led_set_func(false) < 0)
-+			|| (snd_hda_gen_add_micmute_led(codec, update_huawei_wmi_micmute_led) < 0);
-+
-+	}
-+
-+	if (huawei_wmi_micmute_led_set_func && (action == HDA_FIXUP_ACT_FREE || removefunc)) {
-+		symbol_put(huawei_wmi_micmute_led_set);
-+		huawei_wmi_micmute_led_set_func = NULL;
-+	}
-+}
-+
-+#else
-+
-+static void alc_fixup_huawei_wmi(struct hda_codec *codec,
-+				const struct hda_fixup *fix, int action)
-+{
-+}
-+
-+#endif
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 4f7a39c7883c..d09457d2a4f3 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5374,6 +5374,9 @@ static void alc_fixup_thinkpad_acpi(struct hda_codec *codec,
- /* for alc295_fixup_hp_top_speakers */
- #include "hp_x360_helper.c"
+ source "drivers/misc/c2port/Kconfig"
+ source "drivers/misc/eeprom/Kconfig"
+ source "drivers/misc/cb710/Kconfig"
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index af22bbc..cd4b2f0 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -58,3 +58,4 @@ obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
+ obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
+ obj-$(CONFIG_OCXL)		+= ocxl/
+ obj-$(CONFIG_MISC_RTSX)		+= cardreader/
++obj-$(CONFIG_PVPANIC)  		+= pvpanic.o
+diff --git a/drivers/platform/x86/pvpanic.c b/drivers/misc/pvpanic.c
+similarity index 100%
+rename from drivers/platform/x86/pvpanic.c
+rename to drivers/misc/pvpanic.c
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0c1aa6c..4ac276c 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1121,14 +1121,6 @@ config INTEL_SMARTCONNECT
+ 	  This driver checks to determine whether the device has Intel Smart
+ 	  Connect enabled, and if so disables it.
  
-+/* for alc_fixup_huawei_micmute_led */
-+#include "huawei_wmi_helper.c"
-+
- enum {
- 	ALC269_FIXUP_SONY_VAIO,
- 	ALC275_FIXUP_SONY_VAIO_GPIO2,
-@@ -5494,6 +5497,7 @@ enum {
- 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
- 	ALC255_FIXUP_DELL_HEADSET_MIC,
- 	ALC256_FIXUP_HUAWEI_MBXP_PINS,
-+	ALC256_FIXUP_HUAWEI_WMI_MICMUTE_LED,
- 	ALC295_FIXUP_HP_X360,
- 	ALC221_FIXUP_HP_HEADSET_MIC,
- };
-@@ -6348,6 +6352,10 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MIC
- 	},
-+	[ALC256_FIXUP_HUAWEI_WMI_MICMUTE_LED] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc_fixup_huawei_wmi
-+	},
- 	[ALC256_FIXUP_HUAWEI_MBXP_PINS] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
-@@ -6363,6 +6371,8 @@ static const struct hda_fixup alc269_fixups[] = {
- 			{0x21, 0x04211020},
- 			{ },
- 		},
-+		.chained = true,
-+		.chain_id = ALC256_FIXUP_HUAWEI_WMI_MICMUTE_LED
- 	},
- 	[ALC295_FIXUP_HP_X360] = {
- 		.type = HDA_FIXUP_FUNC,
+-config PVPANIC
+-	tristate "pvpanic device support"
+-	depends on ACPI
+-	---help---
+-	  This driver provides support for the pvpanic device.  pvpanic is
+-	  a paravirtualized device provided by QEMU; it lets a virtual machine
+-	  (guest) communicate panic events to the host.
+-
+ config INTEL_PMC_IPC
+ 	tristate "Intel PMC IPC Driver"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index e6d1bec..e88f44e 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -75,7 +75,6 @@ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
+ obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
+ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
+ 
+-obj-$(CONFIG_PVPANIC)           += pvpanic.o
+ obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
+ obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
+ obj-$(CONFIG_TOUCHSCREEN_DMI)	+= touchscreen_dmi.o
 -- 
-2.17.2
+1.8.3.1
