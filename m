@@ -1,7 +1,7 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v15 11/23] x86/sgx: Add definitions for SGX's CPUID leaf and variable sub-leafs
-Date: Sat,  3 Nov 2018 01:11:10 +0200
-Message-ID: <20181102231320.29164-12-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v15 12/23] x86/cpufeatures: Add Intel-defined SGX_LC feature bit
+Date: Sat,  3 Nov 2018 01:11:11 +0200
+Message-ID: <20181102231320.29164-13-jarkko.sakkinen@linux.intel.com>
 References: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,53 +9,33 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org
-Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, mark.shanahan@intel.com, andriy.shevchenko@linux.intel.com, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE 32-BIT AND
+Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, mark.shanahan@intel.com, andriy.shevchenko@linux.intel.com, Kai Huang <kai.huang@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, "open list:X86 ARCHITECTURE 32-BIT AND
         64-BIT" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-SGX defines its own CPUID leaf, 0x12, along with a variable number of
-sub-leafs.  Sub-leafs 0 and 1 are always available if SGX is supported
-and enumerate various SGX features, e.g. instruction sets and enclave
-capabilities.  Sub-leafs 2+ are variable, both in their existence and
-in what they enumerate.  Bits 3:0 of EAX report the sub-leaf type,
-with the remaining bits in EAX, EBX, ECX and EDX being type-specific.
-Currently, the only known sub-leaf type enumerates an EPC section.  An
-EPC section is simply a range of EPC memory available to software.
-The "list" of varaible SGX sub-leafs is NULL-terminated, i.e. software
-is expected to query CPUID until an invalid sub-leaf is encountered.
+From: Kai Huang <kai.huang@linux.intel.com>
 
-Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+X86_FEATURE_SGX_LC reflects whether or not the CPU supports SGX Launch
+Control, i.e. enumerates the existence of IA32_FEATURE_CONTROL's
+SGX_LE_WR bit and the IA32_SGXLEPUBKEYHASH MSRs.
+
+Signed-off-by: Kai Huang <kai.huang@linux.intel.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- arch/x86/include/asm/sgx_arch.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/include/asm/sgx_arch.h b/arch/x86/include/asm/sgx_arch.h
-index d4c57154e6e6..29c37971e8b3 100644
---- a/arch/x86/include/asm/sgx_arch.h
-+++ b/arch/x86/include/asm/sgx_arch.h
-@@ -11,6 +11,21 @@
- #include <linux/types.h>
- #include <uapi/asm/sgx_errno.h>
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 1b8dea9a06cb..1213e68f87e7 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -341,6 +341,7 @@
+ #define X86_FEATURE_LA57		(16*32+16) /* 5-level page tables */
+ #define X86_FEATURE_RDPID		(16*32+22) /* RDPID instruction */
+ #define X86_FEATURE_CLDEMOTE		(16*32+25) /* CLDEMOTE instruction */
++#define X86_FEATURE_SGX_LC		(16*32+30) /* Software Guard Extensions Launch Control */
  
-+#define SGX_CPUID				0x12
-+#define SGX_CPUID_FIRST_VARIABLE_SUB_LEAF	2
-+
-+/**
-+ * enum sgx_sub_leaf_types - SGX CPUID variable sub-leaf types
-+ * %SGX_CPUID_SUB_LEAF_INVALID:		Indicates this sub-leaf is invalid.
-+ * %SGX_CPUID_SUB_LEAF_EPC_SECTION:	Sub-leaf enumerates an EPC section.
-+ * %SGX_CPUID_SUB_LEAF_TYPE_MASK:	Mask for bits containing the type.
-+ */
-+enum sgx_sub_leaf_types {
-+	SGX_CPUID_SUB_LEAF_INVALID	= 0x0,
-+	SGX_CPUID_SUB_LEAF_EPC_SECTION	= 0x1,
-+	SGX_CPUID_SUB_LEAF_TYPE_MASK	= 0xF,
-+};
-+
- /**
-  * enum sgx_encls_leaves - ENCLS leaf functions
-  * %SGX_ECREATE:	Create an enclave.
+ /* AMD-defined CPU features, CPUID level 0x80000007 (EBX), word 17 */
+ #define X86_FEATURE_OVERFLOW_RECOV	(17*32+ 0) /* MCA overflow recovery support */
 -- 
 2.19.1
