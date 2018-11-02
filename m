@@ -1,143 +1,234 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH V6 5/8] misc/pvpanic: add support to get pvpanic device
- info by FDT
-Date: Fri, 2 Nov 2018 11:39:04 +0200
-Message-ID: <CAHp75VegH6fZi5cpoRERga+Z-rv=ahfTpvy-Fbu_bwX99gsZVw@mail.gmail.com>
-References: <1541163378-54047-1-git-send-email-peng.hao2@zte.com.cn> <1541163378-54047-5-git-send-email-peng.hao2@zte.com.cn>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Subject: [PATCH v3 1/3] platform/x86: intel_pmc_core: Show Latency Tolerance info
+Date: Fri,  2 Nov 2018 15:57:01 +0530
+Message-ID: <20181102102703.21846-1-rajneesh.bhardwaj@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541163378-54047-5-git-send-email-peng.hao2@zte.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
-To: peng.hao2@zte.com.cn
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, hutao@cn.fujitsu.com, Linux Documentation List <linux-doc@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, rajneesh.bhardwaj@intel.com, srinivas.pandruvada@linux.intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 2, 2018 at 6:46 AM Peng Hao <peng.hao2@zte.com.cn> wrote:
->
-> By default, when ACPI tables and FDT coexist for ARM64,
-> current kernel takes precedence over FDT to get device information.
-> Virt machine in qemu provides both FDT and ACPI table. Increases the
-> way to get information through FDT.
->
+This adds support to show the Latency Tolerance Reporting for the IPs on
+the PCH as reported by the PMC. The format shown here is raw LTR data
+payload that can further be decoded as per the PCI specification.
 
-so OF dependency in Kconfig is a matter of this patch.
-Since 0day bot complain you might need to add
+This also fixes some minor alignment issues in the header file by
+removing spaces and converting to tabs at some places.
 
-#include <linux/mod_devicetable.h>
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+[andy: fixed output to avoid LTR duplication and put space after colon]
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+Changes in v3:
+ * Removed IP index printing.
 
-as well.
+ drivers/platform/x86/intel_pmc_core.c | 72 +++++++++++++++++++++++++++
+ drivers/platform/x86/intel_pmc_core.h | 56 ++++++++++++++++++---
+ 2 files changed, 121 insertions(+), 7 deletions(-)
 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
-> ---
->  drivers/misc/pvpanic.c | 67 +++++++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 64 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
-> index 22fb487..5378d5f 100644
-> --- a/drivers/misc/pvpanic.c
-> +++ b/drivers/misc/pvpanic.c
-> @@ -2,6 +2,7 @@
->   *  pvpanic.c - pvpanic Device Support
->   *
->   *  Copyright (C) 2013 Fujitsu.
-> + *  Copyright (C) 2018 ZTE.
->   *
->   *  This program is free software; you can redistribute it and/or modify
->   *  it under the terms of the GNU General Public License as published by
-> @@ -20,11 +21,14 @@
->
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->
-> +#include <linux/acpi.h>
-> +#include <linux/init.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> -#include <linux/init.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
->  #include <linux/types.h>
-> -#include <linux/acpi.h>
->
->  MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
->  MODULE_DESCRIPTION("pvpanic device driver");
-> @@ -73,6 +77,32 @@
->         .priority = 1, /* let this called before broken drm_fb_helper */
->  };
->
-> +static int pvpanic_mmio_probe(struct platform_device *pdev)
-> +{
-> +       struct resource *mem;
-> +
-> +       mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       if (!mem)
-> +               return -EINVAL;
-> +
-> +       base = devm_ioremap_resource(&pdev->dev, mem);
-> +       if (base == NULL)
-> +               return -EFAULT;
-> +
-> +       atomic_notifier_chain_register(&panic_notifier_list,
-> +                                      &pvpanic_panic_nb);
-> +
-> +       return 0;
-> +}
-> +
-> +static int pvpanic_mmio_remove(struct platform_device *pdev)
-> +{
-> +
-> +       atomic_notifier_chain_unregister(&panic_notifier_list,
-> +                                        &pvpanic_panic_nb);
-> +
-> +       return 0;
-> +}
->
->  static acpi_status
->  pvpanic_walk_resources(struct acpi_resource *res, void *context)
-> @@ -124,4 +154,35 @@ static int pvpanic_remove(struct acpi_device *device)
->         return 0;
->  }
->
-> -module_acpi_driver(pvpanic_driver);
-> +static const struct of_device_id pvpanic_mmio_match[] = {
-> +       { .compatible = "qemu,pvpanic-mmio", },
-> +       {}
-> +};
-> +
-> +static struct platform_driver pvpanic_mmio_driver = {
-> +       .driver = {
-> +               .name = "pvpanic-mmio",
-> +               .of_match_table = pvpanic_mmio_match,
-> +       },
-> +       .probe = pvpanic_mmio_probe,
-> +       .remove = pvpanic_mmio_remove,
-> +};
-> +
-> +static int __init pvpanic_mmio_init(void)
-> +{
-> +       if (acpi_disabled)
-> +               return platform_driver_register(&pvpanic_mmio_driver);
-> +       else
-> +               return acpi_bus_register_driver(&pvpanic_driver);
-> +}
-> +
-> +static void __exit pvpanic_mmio_exit(void)
-> +{
-> +       if (acpi_disabled)
-> +               platform_driver_unregister(&pvpanic_mmio_driver);
-> +       else
-> +               acpi_bus_unregister_driver(&pvpanic_driver);
-> +}
-> +
-> +module_init(pvpanic_mmio_init);
-> +module_exit(pvpanic_mmio_exit);
-> --
-> 1.8.3.1
->
-
-
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 2d272a3e0176..69270888558b 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -110,10 +110,37 @@ static const struct pmc_bit_map spt_pfear_map[] = {
+ 	{},
+ };
+ 
++static const struct pmc_bit_map spt_ltr_show_map[] = {
++	{"SOUTHPORT_A",		SPT_PMC_LTR_SPA},
++	{"SOUTHPORT_B",		SPT_PMC_LTR_SPB},
++	{"SATA",		SPT_PMC_LTR_SATA},
++	{"GIGABIT_ETHERNET",	SPT_PMC_LTR_GBE},
++	{"XHCI",		SPT_PMC_LTR_XHCI},
++	/* IP 5 is reserved */
++	{"ME",			SPT_PMC_LTR_ME},
++	/* EVA is Enterprise Value Add, doesn't really exist on PCH */
++	{"EVA",			SPT_PMC_LTR_EVA},
++	{"SOUTHPORT_C",		SPT_PMC_LTR_SPC},
++	{"HD_AUDIO",		SPT_PMC_LTR_AZ},
++	/* IP 10 is reserved */
++	{"LPSS",		SPT_PMC_LTR_LPSS},
++	{"SOUTHPORT_D",		SPT_PMC_LTR_SPD},
++	{"SOUTHPORT_E",		SPT_PMC_LTR_SPE},
++	{"CAMERA",		SPT_PMC_LTR_CAM},
++	{"ESPI",		SPT_PMC_LTR_ESPI},
++	{"SCC",			SPT_PMC_LTR_SCC},
++	{"ISH",			SPT_PMC_LTR_ISH},
++	/* Below two cannot be used for LTR_IGNORE */
++	{"CURRENT_PLATFORM",	SPT_PMC_LTR_CUR_PLT},
++	{"AGGREGATED_SYSTEM",	SPT_PMC_LTR_CUR_ASLT},
++	{}
++};
++
+ static const struct pmc_reg_map spt_reg_map = {
+ 	.pfear_sts = spt_pfear_map,
+ 	.mphy_sts = spt_mphy_map,
+ 	.pll_sts = spt_pll_map,
++	.ltr_show_sts = spt_ltr_show_map,
+ 	.slp_s0_offset = SPT_PMC_SLP_S0_RES_COUNTER_OFFSET,
+ 	.ltr_ignore_offset = SPT_PMC_LTR_IGNORE_OFFSET,
+ 	.regmap_length = SPT_PMC_MMIO_REG_LEN,
+@@ -252,10 +279,39 @@ static const struct pmc_bit_map *cnp_slps0_dbg_maps[] = {
+ 	NULL,
+ };
+ 
++static const struct pmc_bit_map cnp_ltr_show_map[] = {
++	{"SOUTHPORT_A",		CNP_PMC_LTR_SPA},
++	{"SOUTHPORT_B",		CNP_PMC_LTR_SPB},
++	{"SATA",		CNP_PMC_LTR_SATA},
++	{"GIGABIT_ETHERNET",	CNP_PMC_LTR_GBE},
++	{"XHCI",		CNP_PMC_LTR_XHCI},
++	/* IP 5 is reserved */
++	{"ME",			CNP_PMC_LTR_ME},
++	/* EVA is Enterprise Value Add, doesn't really exist on PCH */
++	{"EVA",			CNP_PMC_LTR_EVA},
++	{"SOUTHPORT_C",		CNP_PMC_LTR_SPC},
++	{"HD_AUDIO",		CNP_PMC_LTR_AZ},
++	{"CNV",			CNP_PMC_LTR_CNV},
++	{"LPSS",		CNP_PMC_LTR_LPSS},
++	{"SOUTHPORT_D",		CNP_PMC_LTR_SPD},
++	{"SOUTHPORT_E",		CNP_PMC_LTR_SPE},
++	{"CAMERA",		CNP_PMC_LTR_CAM},
++	{"ESPI",		CNP_PMC_LTR_ESPI},
++	{"SCC",			CNP_PMC_LTR_SCC},
++	{"ISH",			CNP_PMC_LTR_ISH},
++	{"UFSX2",		CNP_PMC_LTR_UFSX2},
++	{"EMMC",		CNP_PMC_LTR_EMMC},
++	/* Below two cannot be used for LTR_IGNORE */
++	{"CURRENT_PLATFORM",	CNP_PMC_LTR_CUR_PLT},
++	{"AGGREGATED_SYSTEM",	CNP_PMC_LTR_CUR_ASLT},
++	{}
++};
++
+ static const struct pmc_reg_map cnp_reg_map = {
+ 	.pfear_sts = cnp_pfear_map,
+ 	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
+ 	.slps0_dbg_maps = cnp_slps0_dbg_maps,
++	.ltr_show_sts = cnp_ltr_show_map,
+ 	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
+ 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+ 	.regmap_length = CNP_PMC_MMIO_REG_LEN,
+@@ -592,6 +648,20 @@ static int pmc_core_slps0_dbg_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_slps0_dbg);
+ 
++static int pmc_core_ltr_show(struct seq_file *s, void *unused)
++{
++	struct pmc_dev *pmcdev = s->private;
++	const struct pmc_bit_map *map = pmcdev->map->ltr_show_sts;
++	int index;
++
++	for (index = 0; map[index].name ; index++) {
++		seq_printf(s, "%-32s\tRAW LTR: 0x%x\n", map[index].name,
++			   pmc_core_reg_read(pmcdev, map[index].bit_mask));
++	}
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(pmc_core_ltr);
++
+ static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+ {
+ 	debugfs_remove_recursive(pmcdev->dbgfs_dir);
+@@ -616,6 +686,8 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 	debugfs_create_file("ltr_ignore", 0644, dir, pmcdev,
+ 			    &pmc_core_ltr_ignore_ops);
+ 
++	debugfs_create_file("ltr_show", 0644, dir, pmcdev, &pmc_core_ltr_fops);
++
+ 	if (pmcdev->map->pll_sts)
+ 		debugfs_create_file("pll_status", 0444, dir, pmcdev,
+ 				    &pmc_core_pll_ops);
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index 93a7e99e1f8b..7a00436e337d 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -46,6 +46,25 @@
+ #define NUM_RETRIES				100
+ #define NUM_IP_IGN_ALLOWED			17
+ 
++#define SPT_PMC_LTR_CUR_PLT			0x350
++#define SPT_PMC_LTR_CUR_ASLT			0x354
++#define SPT_PMC_LTR_SPA				0x360
++#define SPT_PMC_LTR_SPB				0x364
++#define SPT_PMC_LTR_SATA			0x368
++#define SPT_PMC_LTR_GBE				0x36C
++#define SPT_PMC_LTR_XHCI			0x370
++#define SPT_PMC_LTR_ME				0x378
++#define SPT_PMC_LTR_EVA				0x37C
++#define SPT_PMC_LTR_SPC				0x380
++#define SPT_PMC_LTR_AZ				0x384
++#define SPT_PMC_LTR_LPSS			0x38C
++#define SPT_PMC_LTR_CAM				0x390
++#define SPT_PMC_LTR_SPD				0x394
++#define SPT_PMC_LTR_SPE				0x398
++#define SPT_PMC_LTR_ESPI			0x39C
++#define SPT_PMC_LTR_SCC				0x3A0
++#define SPT_PMC_LTR_ISH				0x3A4
++
+ /* Sunrise Point: PGD PFET Enable Ack Status Registers */
+ enum ppfear_regs {
+ 	SPT_PMC_XRAM_PPFEAR0A = 0x590,
+@@ -124,17 +143,38 @@ enum ppfear_regs {
+ #define SPT_PMC_BIT_MPHY_CMN_LANE3		BIT(3)
+ 
+ /* Cannonlake Power Management Controller register offsets */
+-#define CNP_PMC_SLP_S0_RES_COUNTER_OFFSET      0x193C
+-#define CNP_PMC_LTR_IGNORE_OFFSET              0x1B0C
+-#define CNP_PMC_PM_CFG_OFFSET                  0x1818
++#define CNP_PMC_SLP_S0_RES_COUNTER_OFFSET	0x193C
++#define CNP_PMC_LTR_IGNORE_OFFSET		0x1B0C
++#define CNP_PMC_PM_CFG_OFFSET			0x1818
+ #define CNP_PMC_SLPS0_DBG_OFFSET		0x10B4
+ /* Cannonlake: PGD PFET Enable Ack Status Register(s) start */
+-#define CNP_PMC_HOST_PPFEAR0A                  0x1D90
++#define CNP_PMC_HOST_PPFEAR0A			0x1D90
+ 
+-#define CNP_PMC_MMIO_REG_LEN                   0x2000
+-#define CNP_PPFEAR_NUM_ENTRIES                 8
+-#define CNP_PMC_READ_DISABLE_BIT               22
++#define CNP_PMC_MMIO_REG_LEN			0x2000
++#define CNP_PPFEAR_NUM_ENTRIES			8
++#define CNP_PMC_READ_DISABLE_BIT		22
+ #define CNP_PMC_LATCH_SLPS0_EVENTS		BIT(31)
++#define CNP_PMC_LTR_CUR_PLT			0x1B50
++#define CNP_PMC_LTR_CUR_ASLT			0x1B54
++#define CNP_PMC_LTR_SPA				0x1B60
++#define CNP_PMC_LTR_SPB				0x1B64
++#define CNP_PMC_LTR_SATA			0x1B68
++#define CNP_PMC_LTR_GBE				0x1B6C
++#define CNP_PMC_LTR_XHCI			0x1B70
++#define CNP_PMC_LTR_ME				0x1B78
++#define CNP_PMC_LTR_EVA				0x1B7C
++#define CNP_PMC_LTR_SPC				0x1B80
++#define CNP_PMC_LTR_AZ				0x1B84
++#define CNP_PMC_LTR_LPSS			0x1B8C
++#define CNP_PMC_LTR_CAM				0x1B90
++#define CNP_PMC_LTR_SPD				0x1B94
++#define CNP_PMC_LTR_SPE				0x1B98
++#define CNP_PMC_LTR_ESPI			0x1B9C
++#define CNP_PMC_LTR_SCC				0x1BA0
++#define CNP_PMC_LTR_ISH				0x1BA4
++#define CNP_PMC_LTR_CNV				0x1BF0
++#define CNP_PMC_LTR_EMMC			0x1BF4
++#define CNP_PMC_LTR_UFSX2			0x1BF8
+ 
+ struct pmc_bit_map {
+ 	const char *name;
+@@ -148,6 +188,7 @@ struct pmc_bit_map {
+  * @mphy_sts:		Maps name of MPHY lane to MPHY status lane status bit
+  * @pll_sts:		Maps name of PLL to corresponding bit status
+  * @slps0_dbg_maps:	Array of SLP_S0_DBG* registers containing debug info
++ * @ltr_show_sts:	Maps PCH IP Names to their MMIO register offsets
+  * @slp_s0_offset:	PWRMBASE offset to read SLP_S0 residency
+  * @ltr_ignore_offset:	PWRMBASE offset to read/write LTR ignore bit
+  * @regmap_length:	Length of memory to map from PWRMBASE address to access
+@@ -166,6 +207,7 @@ struct pmc_reg_map {
+ 	const struct pmc_bit_map *mphy_sts;
+ 	const struct pmc_bit_map *pll_sts;
+ 	const struct pmc_bit_map **slps0_dbg_maps;
++	const struct pmc_bit_map *ltr_show_sts;
+ 	const u32 slp_s0_offset;
+ 	const u32 ltr_ignore_offset;
+ 	const int regmap_length;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
