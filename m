@@ -1,7 +1,7 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v15 05/23] x86/cpu/intel: Detect SGX support and update caps appropriately
-Date: Sat,  3 Nov 2018 01:11:04 +0200
-Message-ID: <20181102231320.29164-6-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v15 06/23] x86/mm: x86/sgx: Add new 'PF_SGX' page fault error code bit
+Date: Sat,  3 Nov 2018 01:11:05 +0200
+Message-ID: <20181102231320.29164-7-jarkko.sakkinen@linux.intel.com>
 References: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,68 +9,34 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org
-Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, mark.shanahan@intel.com, andriy.shevchenko@linux.intel.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, David Wang <davidwang@zhaoxin.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, "Levin, Alexander (Sasha Levin)" <alexander.levin@verizon.com>, Jia Zhang <qianyue.zj@alibaba-inc.com>, "open list:X86 ARCHITECTURE 32-BIT AND
+Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, mark.shanahan@intel.com, andriy.shevchenko@linux.intel.com, Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, David Woodhouse <dwmw@amazon.co.uk>, "open list:X86 ARCHITECTURE 32-BIT AND
         64-BIT" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Similar to other large Intel features such as VMX and TXT, SGX must be
-explicitly enabled in IA32_FEATURE_CONTROL MSR to be truly usable.
-Clear all SGX related capabilities if SGX is not fully enabled in
-IA32_FEATURE_CONTROL or if the SGX1 instruction set isn't supported
-(impossible on bare metal, theoretically possible in a VM if the VMM
-is doing something weird).
+The SGX bit is set in the #PF error code if and only if the fault is
+detected by the Enclave Page Cache Map (EPCM), a hardware-managed
+table that enforces the paging permissions defined by the enclave,
+e.g. to prevent the kernel from changing the permissions of an
+enclave's page(s).
 
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kernel/cpu/intel.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/x86/include/asm/traps.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index fc3c07fe7df5..9bf8fe2c04ac 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -596,6 +596,30 @@ static void detect_tme(struct cpuinfo_x86 *c)
- 	c->x86_phys_bits -= keyid_bits;
- }
- 
-+static void detect_sgx(struct cpuinfo_x86 *c)
-+{
-+	bool unsupported = false;
-+	unsigned long long fc;
-+
-+	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
-+	if (!(fc & FEATURE_CONTROL_LOCKED)) {
-+		pr_err_once("sgx: IA32_FEATURE_CONTROL MSR is not locked\n");
-+		unsupported = true;
-+	} else if (!(fc & FEATURE_CONTROL_SGX_ENABLE)) {
-+		pr_err_once("sgx: not enabled in IA32_FEATURE_CONTROL MSR\n");
-+		unsupported = true;
-+	} else if (!cpu_has(c, X86_FEATURE_SGX1)) {
-+		pr_err_once("sgx: SGX1 instruction set not supported\n");
-+		unsupported = true;
-+	}
-+
-+	if (unsupported) {
-+		setup_clear_cpu_cap(X86_FEATURE_SGX);
-+		setup_clear_cpu_cap(X86_FEATURE_SGX1);
-+		setup_clear_cpu_cap(X86_FEATURE_SGX2);
-+	}
-+}
-+
- static void init_intel_energy_perf(struct cpuinfo_x86 *c)
- {
- 	u64 epb;
-@@ -763,6 +787,9 @@ static void init_intel(struct cpuinfo_x86 *c)
- 	if (cpu_has(c, X86_FEATURE_TME))
- 		detect_tme(c);
- 
-+	if (cpu_has(c, X86_FEATURE_SGX))
-+		detect_sgx(c);
-+
- 	init_intel_energy_perf(c);
- 
- 	init_intel_misc_features(c);
+diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
+index 3de69330e6c5..165c93dd700e 100644
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -162,5 +162,6 @@ enum x86_pf_error_code {
+ 	X86_PF_RSVD	=		1 << 3,
+ 	X86_PF_INSTR	=		1 << 4,
+ 	X86_PF_PK	=		1 << 5,
++	X86_PF_SGX	=		1 << 15,
+ };
+ #endif /* _ASM_X86_TRAPS_H */
 -- 
 2.19.1
