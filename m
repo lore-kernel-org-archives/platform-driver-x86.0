@@ -1,49 +1,53 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 3/3] ALSA: hda: add support for Huawei WMI MicMute LED
-Date: Mon, 5 Nov 2018 16:46:59 +0200
-Message-ID: <CAHp75VfFbv8Xu8TZ3O7QPxrNiBN6admdUSUzOG9KZXYYZJzjyA@mail.gmail.com>
-References: <20181102041120.7603-1-ayman.bagabas@gmail.com>
- <20181102041120.7603-4-ayman.bagabas@gmail.com> <CAHp75VcA5M4XNVr94OALo3=AW3LbWU+Pz-KTRgodBtSP_K9-wA@mail.gmail.com>
- <33dce911f9544c53a7989430a1ce848444cf4e3b.camel@gmail.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v15 15/23] x86/sgx: Add wrappers for ENCLS leaf functions
+Date: Mon, 5 Nov 2018 19:30:38 +0200
+Message-ID: <20181105173038.GD4502@linux.intel.com>
+References: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
+ <20181102231320.29164-16-jarkko.sakkinen@linux.intel.com>
+ <CAHp75VdhSwy8zzf64PZnHhZVikJEzasu-=a+UOz4cLAxEJW-YA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <33dce911f9544c53a7989430a1ce848444cf4e3b.camel@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdhSwy8zzf64PZnHhZVikJEzasu-=a+UOz4cLAxEJW-YA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ayman Bagabas <ayman.bagabas@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kailang Yang <kailang@realtek.com>, Hui Wang <hui.wang@canonical.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, mark.shanahan@intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, suresh.b.siddha@intel.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Nov 3, 2018 at 1:21 AM <ayman.bagabas@gmail.com> wrote:
-> On Fri, 2018-11-02 at 20:12 +0200, Andy Shevchenko wrote:
-> > On Fri, Nov 2, 2018 at 6:12 AM Ayman Bagabas <ayman.bagabas@gmail.com
-> > > wrote:
-
-Takashi explained me, that is the way sound driver are using the
-external symbols, so, follow his suggestion.
-
-> > > +static int (*huawei_wmi_micmute_led_set_func)(bool);
+On Sat, Nov 03, 2018 at 03:17:35PM +0200, Andy Shevchenko wrote:
+> On Sat, Nov 3, 2018 at 1:18 AM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
 > >
-> > Why is that?
->
-> This is used with symbol_request and then in the update function to
-> locate the function from the wmi device. But I guess you are right, we
-> could use the function defined in the header file directly.
-
-> > Takashi, is it a way how the rest sound drivers are written? B/c this
-> > symbol_request(s) look to me a bit ugly.
+> > ENCLS is an umbrella instruction for a variety of cpl0 SGX functions.
+> > The ENCLS function that is executed is specified in EAX, with each
+> > function potentially having more leaf-specific operands beyond EAX.
+> > ENCLS introduces its own (positive value) error codes that (some)
+> > leafs use to return failure information in EAX.  Leafs that return
+> > an error code also modify RFLAGS.  And finally, ENCLS generates
+> > ENCLS-specific non-fatal #GPs and #PFs, i.e. a bug-free kernel may
+> > encounter faults on ENCLS that must be handled gracefully.
 > >
-> > > +/* for alc_fixup_huawei_micmute_led */
-> > > +#include "huawei_wmi_helper.c"
+> > Because of the complexity involved in encoding ENCLS and handling its
+> > assortment of failure paths, executing any given leaf is not a simple
+> > matter of emitting ENCLS.
 > >
-> > Ditto.
-> >
-> > Include *.c?! Huh?
->
-> Is that the wrong way? Should I define the functions directly into
-> patch_realtek.c?
+> > To enable adding support for ENCLS leafs with minimal fuss, add a
+> > two-layer macro system along with an encoding scheme to allow wrappers
+> > to return trap numbers along ENCLS-specific error codes.  The bottom
+> > layer of the macro system splits between the leafs that return an
+> > error code and those that do not.  The second layer generates the
+> > correct input/output annotations based on the number of operands for
+> > each leaf function.
+> 
+> > +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+> 
+> > +/**
+> 
+> I dunno if kernel-doc script still complains about this.
 
+Is there a way to ask for make htmldocs to do only a subset of docs?
+Still kind of trying to figure out what would be  a good flow for
+working with Sphinx.
 
--- 
-With Best Regards,
-Andy Shevchenko
+/Jarkko
