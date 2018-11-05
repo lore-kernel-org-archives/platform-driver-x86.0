@@ -1,45 +1,36 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v15 11/23] x86/sgx: Add definitions for SGX's CPUID leaf
- and variable sub-leafs
-Date: Mon, 5 Nov 2018 16:35:46 +0200
-Message-ID: <20181105143415.GA2798@linux.intel.com>
+Subject: Re: [PATCH v15 14/23] x86/cpu/intel: Clear SGX_LC capability if not
+ enabled in FEATURE_CONTROL
+Date: Mon, 5 Nov 2018 16:37:49 +0200
+Message-ID: <20181105143749.GB2798@linux.intel.com>
 References: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
- <20181102231320.29164-12-jarkko.sakkinen@linux.intel.com>
- <CAHp75VcgFstv5EjY2DzsLGAimxf3Z2g-Mych1zW40txS9b7Bmg@mail.gmail.com>
+ <20181102231320.29164-15-jarkko.sakkinen@linux.intel.com>
+ <CAHp75VctUJRTecG4rVHXm0uO18ZndMgqJgtNyG25HtSzJF5uzg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcgFstv5EjY2DzsLGAimxf3Z2g-Mych1zW40txS9b7Bmg@mail.gmail.com>
+In-Reply-To: <CAHp75VctUJRTecG4rVHXm0uO18ZndMgqJgtNyG25HtSzJF5uzg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, mark.shanahan@intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, mark.shanahan@intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, davidwang@zhaoxin.com, "Levin, Alexander (Sasha Levin)" <alexander.levin@verizon.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Nov 03, 2018 at 03:11:39PM +0200, Andy Shevchenko wrote:
-> On Sat, Nov 3, 2018 at 1:16 AM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > SGX defines its own CPUID leaf, 0x12, along with a variable number of
-> > sub-leafs.  Sub-leafs 0 and 1 are always available if SGX is supported
-> > and enumerate various SGX features, e.g. instruction sets and enclave
-> > capabilities.  Sub-leafs 2+ are variable, both in their existence and
-> > in what they enumerate.  Bits 3:0 of EAX report the sub-leaf type,
-> > with the remaining bits in EAX, EBX, ECX and EDX being type-specific.
-> > Currently, the only known sub-leaf type enumerates an EPC section.  An
-> > EPC section is simply a range of EPC memory available to software.
-> > The "list" of varaible SGX sub-leafs is NULL-terminated, i.e. software
-> > is expected to query CPUID until an invalid sub-leaf is encountered.
+On Sat, Nov 03, 2018 at 03:15:15PM +0200, Andy Shevchenko wrote:
+> > @@ -618,6 +618,8 @@ static void detect_sgx(struct cpuinfo_x86 *c)
+> >                 setup_clear_cpu_cap(X86_FEATURE_SGX1);
+> >                 setup_clear_cpu_cap(X86_FEATURE_SGX2);
+> >         }
+> > +       if (unsupported || !(fc & FEATURE_CONTROL_SGX_LE_WR))
+> > +               setup_clear_cpu_cap(X86_FEATURE_SGX_LC);
+> >  }
 > 
-> > +       SGX_CPUID_SUB_LEAF_TYPE_MASK    = 0xF,
-> 
-> GENMASK() if it suits here?
-> 
-> P.S. Btw, BIT() and GENMASK() macros are now in a separate header,
-> i.e. linux/bits.h, perhaps you might need to revisit code to include
-> it explicitly
+> A-ha, I see how you use this variable here (though it's still possible
+> to get rid of it, choose what is better for readability /
+> maintenance).
 
-Agreed. I would also think that is should be renamed simply as
-SGX_CPUID_SUBLEAF_MASK.
+I would propose to squash this one to the earlier commit and refactor
+it in a way that I proposed. Having this part as a separate commit in
+my opinion is a bit confusing.
 
 /Jarkko
