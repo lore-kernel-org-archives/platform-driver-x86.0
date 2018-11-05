@@ -1,7 +1,7 @@
 From: Peng Hao <peng.hao2@zte.com.cn>
-Subject: [PATCH V7 8/9]  misc/pvpanic: convert to SPDX license tags
-Date: Mon, 5 Nov 2018 18:40:30 +0800
-Message-ID: <1541414431-84128-8-git-send-email-peng.hao2@zte.com.cn>
+Subject: [PATCH V7 7/9]  misc/pvpanic: remove unnecessary header file
+Date: Mon, 5 Nov 2018 18:40:29 +0800
+Message-ID: <1541414431-84128-7-git-send-email-peng.hao2@zte.com.cn>
 References: <1541414431-84128-1-git-send-email-peng.hao2@zte.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1541414431-84128-1-git-send-email-peng.hao2@zte.com.cn>
@@ -10,44 +10,26 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundat
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com, linux-doc@vger.kernel.org, Peng Hao <peng.hao2@zte.com.cn>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Updates license to use SPDX-License-Identifier instead of
-verbose license text.
+Remove unnecessary header file init.h.
 
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Acked-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 ---
- drivers/misc/pvpanic.c | 17 ++---------------
- 1 file changed, 2 insertions(+), 15 deletions(-)
+ drivers/misc/pvpanic.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
-index e3d879b..f416c01 100644
+index fbb4d1f..e3d879b 100644
 --- a/drivers/misc/pvpanic.c
 +++ b/drivers/misc/pvpanic.c
-@@ -1,22 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0+
- /*
-- *  pvpanic.c - pvpanic Device Support
-+ *  Pvpanic Device Support
-  *
-  *  Copyright (C) 2013 Fujitsu.
-  *  Copyright (C) 2018 ZTE.
-- *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License as published by
-- *  the Free Software Foundation; either version 2 of the License, or
-- *  (at your option) any later version.
-- *
-- *  This program is distributed in the hope that it will be useful,
-- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *  GNU General Public License for more details.
-- *
-- *  You should have received a copy of the GNU General Public License
-- *  along with this program; if not, write to the Free Software
-- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-  */
- 
+@@ -22,7 +22,6 @@
  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/acpi.h>
+-#include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
 -- 
 1.8.3.1
