@@ -1,90 +1,92 @@
 From: Peng Hao <peng.hao2@zte.com.cn>
-Subject: [PATCH V8 01/11]  pvpanic: move pvpanic to misc as common driver
-Date: Tue, 6 Nov 2018 22:57:12 +0800
-Message-ID: <1541516242-98568-1-git-send-email-peng.hao2@zte.com.cn>
+Subject: [PATCH V8 07/11]  misc/pvpanic : break dependency on ACPI
+Date: Tue, 6 Nov 2018 22:57:18 +0800
+Message-ID: <1541516242-98568-7-git-send-email-peng.hao2@zte.com.cn>
+References: <1541516242-98568-1-git-send-email-peng.hao2@zte.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1541516242-98568-1-git-send-email-peng.hao2@zte.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, andy@infradead.org, dvhart@infradead.org
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com, linux-doc@vger.kernel.org, Peng Hao <peng.hao2@zte.com.cn>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Move pvpanic.c from drivers/platform/x86 to drivers/misc.
-Following patches will use pvpanic device in arm64.
+The pvpanic driver is available for architectures that do not
+support ACPI.So break the dependency.
 
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 ---
- drivers/misc/Kconfig                     | 8 ++++++++
- drivers/misc/Makefile                    | 1 +
- drivers/{platform/x86 => misc}/pvpanic.c | 0
- drivers/platform/x86/Kconfig             | 8 --------
- drivers/platform/x86/Makefile            | 1 -
- 5 files changed, 9 insertions(+), 9 deletions(-)
- rename drivers/{platform/x86 => misc}/pvpanic.c (100%)
+ drivers/misc/Kconfig   |  2 +-
+ drivers/misc/pvpanic.c | 23 +++++++++++++++++++++--
+ 2 files changed, 22 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 3726eac..64c898a 100644
+index 64c898a..642626a 100644
 --- a/drivers/misc/Kconfig
 +++ b/drivers/misc/Kconfig
-@@ -513,6 +513,14 @@ config MISC_RTSX
- 	tristate
- 	default MISC_RTSX_PCI || MISC_RTSX_USB
+@@ -515,7 +515,7 @@ config MISC_RTSX
  
-+config PVPANIC
-+	tristate "pvpanic device support"
-+	depends on ACPI
-+	help
-+	  This driver provides support for the pvpanic device.  pvpanic is
-+	  a paravirtualized device provided by QEMU; it lets a virtual machine
-+	  (guest) communicate panic events to the host.
-+
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
- source "drivers/misc/cb710/Kconfig"
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index af22bbc..b76d611 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -58,3 +58,4 @@ obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
- obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
- obj-$(CONFIG_OCXL)		+= ocxl/
- obj-$(CONFIG_MISC_RTSX)		+= cardreader/
-+obj-$(CONFIG_PVPANIC)   	+= pvpanic.o
-diff --git a/drivers/platform/x86/pvpanic.c b/drivers/misc/pvpanic.c
-similarity index 100%
-rename from drivers/platform/x86/pvpanic.c
-rename to drivers/misc/pvpanic.c
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 0c1aa6c..4ac276c 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1121,14 +1121,6 @@ config INTEL_SMARTCONNECT
- 	  This driver checks to determine whether the device has Intel Smart
- 	  Connect enabled, and if so disables it.
- 
--config PVPANIC
--	tristate "pvpanic device support"
+ config PVPANIC
+ 	tristate "pvpanic device support"
 -	depends on ACPI
--	---help---
--	  This driver provides support for the pvpanic device.  pvpanic is
--	  a paravirtualized device provided by QEMU; it lets a virtual machine
--	  (guest) communicate panic events to the host.
--
- config INTEL_PMC_IPC
- 	tristate "Intel PMC IPC Driver"
- 	depends on ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index e6d1bec..e88f44e 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -75,7 +75,6 @@ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
- obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
- obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
++	depends on ACPI || OF
+ 	help
+ 	  This driver provides support for the pvpanic device.  pvpanic is
+ 	  a paravirtualized device provided by QEMU; it lets a virtual machine
+diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
+index a9676b7..83f3187 100644
+--- a/drivers/misc/pvpanic.c
++++ b/drivers/misc/pvpanic.c
+@@ -57,6 +57,7 @@
+ 	.priority = 1, /* let this called before broken drm_fb_helper */
+ };
  
--obj-$(CONFIG_PVPANIC)           += pvpanic.o
- obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
- obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
- obj-$(CONFIG_TOUCHSCREEN_DMI)	+= touchscreen_dmi.o
++#ifdef CONFIG_ACPI
+ static int pvpanic_add(struct acpi_device *device);
+ static int pvpanic_remove(struct acpi_device *device);
+ 
+@@ -126,6 +127,24 @@ static int pvpanic_remove(struct acpi_device *device)
+ 	return 0;
+ }
+ 
++static int pvpanic_register_acpi_driver(void)
++{
++	return acpi_bus_register_driver(&pvpanic_driver);
++}
++
++static void pvpanic_unregister_acpi_driver(void)
++{
++	acpi_bus_unregister_driver(&pvpanic_driver);
++}
++#else
++static int pvpanic_register_acpi_driver(void)
++{
++	return -ENODEV;
++}
++
++static void pvpanic_unregister_acpi_driver(void) {}
++#endif
++
+ static int pvpanic_mmio_probe(struct platform_device *pdev)
+ {
+ 	struct resource *mem;
+@@ -172,7 +191,7 @@ static int __init pvpanic_mmio_init(void)
+ 	if (acpi_disabled)
+ 		return platform_driver_register(&pvpanic_mmio_driver);
+ 	else
+-		return acpi_bus_register_driver(&pvpanic_driver);
++		return pvpanic_register_acpi_driver();
+ }
+ 
+ static void __exit pvpanic_mmio_exit(void)
+@@ -180,7 +199,7 @@ static void __exit pvpanic_mmio_exit(void)
+ 	if (acpi_disabled)
+ 		platform_driver_unregister(&pvpanic_mmio_driver);
+ 	else
+-		acpi_bus_unregister_driver(&pvpanic_driver);
++		pvpanic_unregister_acpi_driver();
+ }
+ 
+ module_init(pvpanic_mmio_init);
 -- 
 1.8.3.1
