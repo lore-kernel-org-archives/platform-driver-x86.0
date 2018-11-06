@@ -1,7 +1,7 @@
 From: Peng Hao <peng.hao2@zte.com.cn>
-Subject: [PATCH V8 06/11]  misc/pvpanic : grouping ACPI related stuff
-Date: Tue, 6 Nov 2018 22:57:17 +0800
-Message-ID: <1541516242-98568-6-git-send-email-peng.hao2@zte.com.cn>
+Subject: [PATCH V8 10/11]  misc/pvpanic: convert to SPDX license tags
+Date: Tue, 6 Nov 2018 22:57:21 +0800
+Message-ID: <1541516242-98568-10-git-send-email-peng.hao2@zte.com.cn>
 References: <1541516242-98568-1-git-send-email-peng.hao2@zte.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1541516242-98568-1-git-send-email-peng.hao2@zte.com.cn>
@@ -10,79 +10,44 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundat
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com, linux-doc@vger.kernel.org, Peng Hao <peng.hao2@zte.com.cn>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Grouping ACPI related stuff and make preparation to break
-the ACPI dependency w/o any functional change.
+Updates license to use SPDX-License-Identifier instead of
+verbose license text.
 
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
 ---
- drivers/misc/pvpanic.c | 43 +++++++++++++++++++++----------------------
- 1 file changed, 21 insertions(+), 22 deletions(-)
+ drivers/misc/pvpanic.c | 17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
-index c7f62bd..a9676b7 100644
+index e365604..8afb528 100644
 --- a/drivers/misc/pvpanic.c
 +++ b/drivers/misc/pvpanic.c
-@@ -32,32 +32,12 @@
+@@ -1,22 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+- *  pvpanic.c - pvpanic Device Support
++ *  Pvpanic Device Support
+  *
+  *  Copyright (C) 2013 Fujitsu.
+  *  Copyright (C) 2018 ZTE.
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License as published by
+- *  the Free Software Foundation; either version 2 of the License, or
+- *  (at your option) any later version.
+- *
+- *  This program is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *  GNU General Public License for more details.
+- *
+- *  You should have received a copy of the GNU General Public License
+- *  along with this program; if not, write to the Free Software
+- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  */
  
- static void __iomem *base;
- 
-+#define PVPANIC_PANICKED        (1 << 0)
-+
- MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
- MODULE_DESCRIPTION("pvpanic device driver");
- MODULE_LICENSE("GPL");
- 
--static int pvpanic_add(struct acpi_device *device);
--static int pvpanic_remove(struct acpi_device *device);
--
--static const struct acpi_device_id pvpanic_device_ids[] = {
--	{ "QEMU0001", 0 },
--	{ "", 0 },
--};
--MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
--
--#define PVPANIC_PANICKED	(1 << 0)
--
--static struct acpi_driver pvpanic_driver = {
--	.name =		"pvpanic",
--	.class =	"QEMU",
--	.ids =		pvpanic_device_ids,
--	.ops =		{
--				.add =		pvpanic_add,
--				.remove =	pvpanic_remove,
--			},
--	.owner =	THIS_MODULE,
--};
--
- static void
- pvpanic_send_event(unsigned int event)
- {
-@@ -77,6 +57,25 @@
- 	.priority = 1, /* let this called before broken drm_fb_helper */
- };
- 
-+static int pvpanic_add(struct acpi_device *device);
-+static int pvpanic_remove(struct acpi_device *device);
-+
-+static const struct acpi_device_id pvpanic_device_ids[] = {
-+	{ "QEMU0001", 0 },
-+	{ "", 0 },
-+};
-+MODULE_DEVICE_TABLE(acpi, pvpanic_device_ids);
-+
-+static struct acpi_driver pvpanic_driver = {
-+	.name =		"pvpanic",
-+	.class =	"QEMU",
-+	.ids =		pvpanic_device_ids,
-+	.ops =		{
-+				.add =		pvpanic_add,
-+				.remove =	pvpanic_remove,
-+			},
-+	.owner =	THIS_MODULE,
-+};
- 
- static acpi_status
- pvpanic_walk_resources(struct acpi_resource *res, void *context)
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 -- 
 1.8.3.1
