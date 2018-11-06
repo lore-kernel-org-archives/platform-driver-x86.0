@@ -1,48 +1,36 @@
-From: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Subject: Re: [PATCH v3 3/3] platform/x86: intel_pmc_core: Decode Snoop / Non
- Snoop LTR
-Date: Tue, 6 Nov 2018 02:30:41 +0530
-Message-ID: <8021ed8d-6931-3ffd-6e46-630e9a2c4a66@linux.intel.com>
-References: <20181102103441.21943-1-rajneesh.bhardwaj@linux.intel.com>
- <CAHp75VfCcLPc_y4ZxvkahpMxjkj_5sntamYze90p7Ki94yU5Lg@mail.gmail.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v15 23/23] x86/sgx: Driver documentation
+Date: Tue, 6 Nov 2018 07:49:11 +0200
+Message-ID: <20181106054911.GA15575@linux.intel.com>
+References: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
+ <20181102231320.29164-24-jarkko.sakkinen@linux.intel.com>
+ <154ded23-fd1d-f324-4e0a-9de8eddcda6d@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfCcLPc_y4ZxvkahpMxjkj_5sntamYze90p7Ki94yU5Lg@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <154ded23-fd1d-f324-4e0a-9de8eddcda6d@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, mark.shanahan@intel.com, andriy.shevchenko@linux.intel.com, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Mon, Nov 05, 2018 at 12:27:11PM -0800, Dave Hansen wrote:
+> The ABI seems entirely undocumented and rather lightly designed, which
+> seems like something we should fix before this is merged.
 
+ABI is documented in arch/x86/include/uapi/asm/sgx.h that from which the
+documentation is included to intel_sgx.rst. I'm not saying that there is
+no space refine it but it is neither undocumented.
 
-On 03-Nov-18 12:02 AM, Andy Shevchenko wrote:
-> On Fri, Nov 2, 2018 at 12:37 PM Rajneesh Bhardwaj
-> <rajneesh.bhardwaj@linux.intel.com> wrote:
->> The LTR values follow PCIE LTR encoding format and can be decoded as per
->> https://pcisig.com/sites/default/files/specification_documents/ECN_LatencyTolnReporting_14Aug08.pdf
->>
->> This adds support to translate the raw LTR values as read from the PMC
->> to meaningful values in nanosecond units of time.
->> +#include <linux/bits.h>
-> I told you something different, i.e. put this header where you _use_
-> it, i.o.w into the header file.
+> Also, for a feature as massive and complicated as this one, it seems
+> irresponsible to not have a selftest.  Is that not feasible for some reason?
 
-Oops! Will move it to the header.
+I do have the in-kernel launch enclave stuff backed up here:
 
->
->> +#define LTR_REQ_NONSNOOP                       BIT(31)
->> +#define LTR_REQ_SNOOP                          BIT(15)
->> +#define LTR_DECODED_VAL                                GENMASK(9, 0)
->> +#define LTR_DECODED_SCALE                      GENMASK(12, 10)
-> If these are in one register, please keep ordered by start bit.
+https://github.com/jsakkine-intel/sgx-le-host
+https://github.com/jsakkine-intel/sgx-le
 
-Sure, will do.
+This is about as simple as it gets without any type of run-time.
 
->
-> The rest is fine.
->
-
-Many thanks again for your detailed review.
+/Jarkko
