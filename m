@@ -1,7 +1,7 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v16 16/22] x86/sgx: Add functions to allocate and free EPC pages
-Date: Tue,  6 Nov 2018 15:45:55 +0200
-Message-ID: <20181106134758.10572-17-jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH v16 17/22] x86/sgx: Add sgx_einit() for initializing enclaves
+Date: Tue,  6 Nov 2018 15:45:56 +0200
+Message-ID: <20181106134758.10572-18-jarkko.sakkinen@linux.intel.com>
 References: <20181106134758.10572-1-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -13,121 +13,118 @@ Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, 
         64-BIT" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-At this time there is no support for reclaiming pages prior to the
-owner explicitly freeing the page.  As for freeing pages, because
-freeing a page is expected to succeed in the vast majority of cases
-and because most call sites will not be equipped to handle failure,
-provide a variant for freeing a page that warns on failure, e.g. due
-to ENCLS[EREMOVE] failing.
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Add a helper function to perform ENCLS(EINIT) with the correct LE
+hash MSR values.  ENCLS[EINIT] initializes an enclave, verifying the
+enclave's measurement and preparing it for execution, i.e. the enclave
+cannot be run until it has been initialized.  The measurement aspect
+of EINIT references the MSR_IA32_SGXLEPUBKEYHASH* MSRs, with the CPU
+comparing CPU compares the key (technically its hash) used to sign the
+enclave[1] with the key hash stored in the MSRs, and will reject EINIT
+if the keys do not match.
+
+A per-cpu cache is used to avoid writing the MSRs as writing the MSRs
+is extraordinarily expensive, e.g. 300-400 cycles per MSR.  Because
+the cache may become stale, force update the MSRs and retry EINIT if
+the first EINIT fails due to an "invalid token".  An invalid token
+error does not necessarily mean the MSRs need to be updated, but the
+cost of an unnecessary write is minimal relative to the cost of EINIT
+itself.
+
+[1] For EINIT's purposes, the effective signer of the enclave may be
+    the enclave's owner, or a separate Launch Enclave that has created
+    an EINIT token for the target enclave.  When using an EINIT token,
+    the key used to sign the token must match the MSRs in order for
+    EINIT to succeed.
+
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
- arch/x86/include/asm/sgx.h      |  4 ++
- arch/x86/kernel/cpu/intel_sgx.c | 77 +++++++++++++++++++++++++++++++++
- 2 files changed, 81 insertions(+)
+ arch/x86/include/asm/sgx.h      |  2 ++
+ arch/x86/kernel/cpu/intel_sgx.c | 50 +++++++++++++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
 
 diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
-index efe3e213e582..372fc378018b 100644
+index 372fc378018b..4cdfa1d22c6e 100644
 --- a/arch/x86/include/asm/sgx.h
 +++ b/arch/x86/include/asm/sgx.h
-@@ -307,4 +307,8 @@ static inline int __emodt(struct sgx_secinfo *secinfo, void *addr)
- 	return __encls_ret_2(SGX_EMODT, secinfo, addr);
- }
+@@ -310,5 +310,7 @@ static inline int __emodt(struct sgx_secinfo *secinfo, void *addr)
+ struct sgx_epc_page *sgx_alloc_page(void);
+ int __sgx_free_page(struct sgx_epc_page *page);
+ void sgx_free_page(struct sgx_epc_page *page);
++int sgx_einit(struct sgx_sigstruct *sigstruct, struct sgx_einittoken *token,
++	      struct sgx_epc_page *secs, u64 *lepubkeyhash);
  
-+struct sgx_epc_page *sgx_alloc_page(void);
-+int __sgx_free_page(struct sgx_epc_page *page);
-+void sgx_free_page(struct sgx_epc_page *page);
-+
  #endif /* _ASM_X86_SGX_H */
 diff --git a/arch/x86/kernel/cpu/intel_sgx.c b/arch/x86/kernel/cpu/intel_sgx.c
-index 7587fc7ef9ef..e9a225fa14b7 100644
+index e9a225fa14b7..ec3d5de6b037 100644
 --- a/arch/x86/kernel/cpu/intel_sgx.c
 +++ b/arch/x86/kernel/cpu/intel_sgx.c
-@@ -15,6 +15,83 @@ EXPORT_SYMBOL_GPL(sgx_epc_sections);
+@@ -15,6 +15,9 @@ EXPORT_SYMBOL_GPL(sgx_epc_sections);
  
  static int sgx_nr_epc_sections;
  
-+/**
-+ * sgx_alloc_page - Allocate an EPC page
-+ *
-+ * Try to grab a page from the free EPC page list.
-+ *
-+ * Return:
-+ *   a pointer to a &struct sgx_epc_page instance,
-+ *   -errno on error
-+ */
-+struct sgx_epc_page *sgx_alloc_page(void)
++/* A per-cpu cache for the last known values of IA32_SGXLEPUBKEYHASHx MSRs. */
++static DEFINE_PER_CPU(u64 [4], sgx_lepubkeyhash_cache);
++
+ /**
+  * sgx_alloc_page - Allocate an EPC page
+  *
+@@ -91,6 +94,53 @@ void sgx_free_page(struct sgx_epc_page *page)
+ }
+ EXPORT_SYMBOL_GPL(sgx_free_page);
+ 
++static void sgx_update_lepubkeyhash_msrs(u64 *lepubkeyhash, bool enforce)
 +{
-+	struct sgx_epc_section *section;
-+	struct sgx_epc_page *page;
++	u64 __percpu *cache;
 +	int i;
 +
-+	for (i = 0; i < sgx_nr_epc_sections; i++) {
-+		section = &sgx_epc_sections[i];
-+		spin_lock(&section->lock);
-+		if (section->free_cnt) {
-+			page = section->pages[section->free_cnt - 1];
-+			section->free_cnt--;
++	cache = per_cpu(sgx_lepubkeyhash_cache, smp_processor_id());
++	for (i = 0; i < 4; i++) {
++		if (enforce || (lepubkeyhash[i] != cache[i])) {
++			wrmsrl(MSR_IA32_SGXLEPUBKEYHASH0 + i, lepubkeyhash[i]);
++			cache[i] = lepubkeyhash[i];
 +		}
-+		spin_unlock(&section->lock);
-+
-+		if (page)
-+			return page;
 +	}
-+
-+	return ERR_PTR(-ENOMEM);
 +}
-+EXPORT_SYMBOL_GPL(sgx_alloc_page);
 +
 +/**
-+ * __sgx_free_page - Free an EPC page
-+ * @page:	pointer a previously allocated EPC page
++ * sgx_einit - initialize an enclave
++ * @sigstruct:		a pointer a SIGSTRUCT
++ * @token:		a pointer an EINITTOKEN (optional)
++ * @secs:		a pointer a SECS
++ * @lepubkeyhash:	the desired value for IA32_SGXLEPUBKEYHASHx MSRs
 + *
-+ * EREMOVE an EPC page and insert it back to the list of free pages.
++ * Execute ENCLS[EINIT], writing the IA32_SGXLEPUBKEYHASHx MSRs according
++ * to @lepubkeyhash (if possible and necessary).
 + *
 + * Return:
-+ *   0 on success
-+ *   SGX error code if EREMOVE fails
++ *   0 on success,
++ *   -errno or SGX error on failure
 + */
-+int __sgx_free_page(struct sgx_epc_page *page)
-+{
-+	struct sgx_epc_section *section = sgx_epc_section(page);
-+	int ret;
-+
-+	ret = __eremove(sgx_epc_addr(page));
-+	if (ret)
-+		return ret;
-+
-+	spin_lock(&section->lock);
-+	section->pages[section->free_cnt++] = page;
-+	spin_unlock(&section->lock);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(__sgx_free_page);
-+
-+/**
-+ * sgx_free_page - Free an EPC page and WARN on failure
-+ * @page:	pointer to a previously allocated EPC page
-+ *
-+ * EREMOVE an EPC page and insert it back to the list of free pages, and WARN
-+ * if EREMOVE fails.  For use when the call site cannot (or chooses not to)
-+ * handle failure, i.e. the page is leaked on failure.
-+ */
-+void sgx_free_page(struct sgx_epc_page *page)
++int sgx_einit(struct sgx_sigstruct *sigstruct, struct sgx_einittoken *token,
++	      struct sgx_epc_page *secs, u64 *lepubkeyhash)
 +{
 +	int ret;
 +
-+	ret = __sgx_free_page(page);
-+	WARN(ret > 0, "sgx: EREMOVE returned %d (0x%x)", ret, ret);
++	if (!boot_cpu_has(X86_FEATURE_SGX_LC))
++		return __einit(sigstruct, token, sgx_epc_addr(secs));
++
++	preempt_disable();
++	sgx_update_lepubkeyhash_msrs(lepubkeyhash, false);
++	ret = __einit(sigstruct, token, sgx_epc_addr(secs));
++	if (ret == SGX_INVALID_EINITTOKEN) {
++		sgx_update_lepubkeyhash_msrs(lepubkeyhash, true);
++		ret = __einit(sigstruct, token, sgx_epc_addr(secs));
++	}
++	preempt_enable();
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(sgx_free_page);
-+
-+
++EXPORT_SYMBOL(sgx_einit);
+ 
  static __init void sgx_free_epc_section(struct sgx_epc_section *section)
  {
- 	int i;
 -- 
 2.19.1
