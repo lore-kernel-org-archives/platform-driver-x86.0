@@ -1,53 +1,70 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH V8 09/11] misc/pvpanic: change header file sort style
-Date: Tue, 6 Nov 2018 12:02:12 +0200
-Message-ID: <CAHp75Vd_Zs+DJrxNQ1r3YWhfxYpENZAENtnU+9Qi8mVvzSsCsg@mail.gmail.com>
-References: <1541516242-98568-1-git-send-email-peng.hao2@zte.com.cn> <1541516242-98568-9-git-send-email-peng.hao2@zte.com.cn>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v15 15/23] x86/sgx: Add wrappers for ENCLS leaf functions
+Date: Tue, 6 Nov 2018 14:03:41 +0200
+Message-ID: <20181106120341.GA11465@linux.intel.com>
+References: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
+ <20181102231320.29164-16-jarkko.sakkinen@linux.intel.com>
+ <CAHp75VdhSwy8zzf64PZnHhZVikJEzasu-=a+UOz4cLAxEJW-YA@mail.gmail.com>
+ <20181105173038.GD4502@linux.intel.com>
+ <CAHp75Vfa2jvjOtvERB_Td1zCrfKyJp24Prd+foYz02kUCjNr-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1541516242-98568-9-git-send-email-peng.hao2@zte.com.cn>
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vfa2jvjOtvERB_Td1zCrfKyJp24Prd+foYz02kUCjNr-g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: peng.hao2@zte.com.cn
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, hutao@cn.fujitsu.com, Linux Documentation List <linux-doc@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, mark.shanahan@intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, suresh.b.siddha@intel.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Nov 6, 2018 at 8:47 AM Peng Hao <peng.hao2@zte.com.cn> wrote:
->
-> Make header files alphabetical order.
->
+On Mon, Nov 05, 2018 at 10:39:46PM +0200, Andy Shevchenko wrote:
+> On Mon, Nov 5, 2018 at 7:30 PM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> >
+> > On Sat, Nov 03, 2018 at 03:17:35PM +0200, Andy Shevchenko wrote:
+> > > On Sat, Nov 3, 2018 at 1:18 AM Jarkko Sakkinen
+> > > <jarkko.sakkinen@linux.intel.com> wrote:
+> > > >
+> > > > ENCLS is an umbrella instruction for a variety of cpl0 SGX functions.
+> > > > The ENCLS function that is executed is specified in EAX, with each
+> > > > function potentially having more leaf-specific operands beyond EAX.
+> > > > ENCLS introduces its own (positive value) error codes that (some)
+> > > > leafs use to return failure information in EAX.  Leafs that return
+> > > > an error code also modify RFLAGS.  And finally, ENCLS generates
+> > > > ENCLS-specific non-fatal #GPs and #PFs, i.e. a bug-free kernel may
+> > > > encounter faults on ENCLS that must be handled gracefully.
+> > > >
+> > > > Because of the complexity involved in encoding ENCLS and handling its
+> > > > assortment of failure paths, executing any given leaf is not a simple
+> > > > matter of emitting ENCLS.
+> > > >
+> > > > To enable adding support for ENCLS leafs with minimal fuss, add a
+> > > > two-layer macro system along with an encoding scheme to allow wrappers
+> > > > to return trap numbers along ENCLS-specific error codes.  The bottom
+> > > > layer of the macro system splits between the leafs that return an
+> > > > error code and those that do not.  The second layer generates the
+> > > > correct input/output annotations based on the number of operands for
+> > > > each leaf function.
+> > >
+> > > > +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+> > >
+> > > > +/**
+> > >
+> > > I dunno if kernel-doc script still complains about this.
+> >
+> > Is there a way to ask for make htmldocs to do only a subset of docs?
+> > Still kind of trying to figure out what would be  a good flow for
+> > working with Sphinx.
+> 
+> What I'm telling here is about Copyright notice, which in my
+> understanding is not a part of kernel-doc formatting. Though I might
+> be mistaken.
+> I remember some USB code has that and I saw a warning.
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+I'll remove it because I don't find it in other headers under arch/x86.
 
-> Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
-> ---
->  drivers/misc/pvpanic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
-> index 479f7ba..e365604 100644
-> --- a/drivers/misc/pvpanic.c
-> +++ b/drivers/misc/pvpanic.c
-> @@ -21,13 +21,13 @@
->
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->
-> +#include <linux/acpi.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/platform_device.h>
->  #include <linux/types.h>
-> -#include <linux/acpi.h>
->
->  static void __iomem *base;
->
-> --
-> 1.8.3.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+/Jarkko
