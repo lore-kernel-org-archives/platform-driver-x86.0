@@ -1,31 +1,90 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v15 23/23] x86/sgx: Driver documentation
-Date: Tue, 6 Nov 2018 08:26:55 +0200
-Message-ID: <20181106062655.GA18671@linux.intel.com>
-References: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
- <20181102231320.29164-24-jarkko.sakkinen@linux.intel.com>
- <154ded23-fd1d-f324-4e0a-9de8eddcda6d@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Peng Hao <peng.hao2@zte.com.cn>
+Subject: [PATCH V8 01/11]  pvpanic: move pvpanic to misc as common driver
+Date: Tue, 6 Nov 2018 22:57:12 +0800
+Message-ID: <1541516242-98568-1-git-send-email-peng.hao2@zte.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <154ded23-fd1d-f324-4e0a-9de8eddcda6d@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, mark.shanahan@intel.com, andriy.shevchenko@linux.intel.com, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, andy@infradead.org, dvhart@infradead.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, hutao@cn.fujitsu.com, linux-doc@vger.kernel.org, Peng Hao <peng.hao2@zte.com.cn>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Nov 05, 2018 at 12:27:11PM -0800, Dave Hansen wrote:
-> This patch set establishes an ABI.  It basically sets in stone a bunch
-> of behaviors that the enclave, the kernel, and the out-of-enclave code
-> must follow.
-> 
-> There are a bunch of things that the enclave can do to %rsp or %rip, for
-> instance, that it is capable and/or permitted to do.
+Move pvpanic.c from drivers/platform/x86 to drivers/misc.
+Following patches will use pvpanic device in arm64.
 
-Just want to ask a follow-up from this so that I understand you better.
-Now we are talking abou ioctl API, right? I'm not exactly sure how
-EENTER/EEXIT/ERESUME behavior connects to that. I understand the tail
-of your message but this paragraph left me a bit puzzled...
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
+---
+ drivers/misc/Kconfig                     | 8 ++++++++
+ drivers/misc/Makefile                    | 1 +
+ drivers/{platform/x86 => misc}/pvpanic.c | 0
+ drivers/platform/x86/Kconfig             | 8 --------
+ drivers/platform/x86/Makefile            | 1 -
+ 5 files changed, 9 insertions(+), 9 deletions(-)
+ rename drivers/{platform/x86 => misc}/pvpanic.c (100%)
 
-/Jarkko
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 3726eac..64c898a 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -513,6 +513,14 @@ config MISC_RTSX
+ 	tristate
+ 	default MISC_RTSX_PCI || MISC_RTSX_USB
+ 
++config PVPANIC
++	tristate "pvpanic device support"
++	depends on ACPI
++	help
++	  This driver provides support for the pvpanic device.  pvpanic is
++	  a paravirtualized device provided by QEMU; it lets a virtual machine
++	  (guest) communicate panic events to the host.
++
+ source "drivers/misc/c2port/Kconfig"
+ source "drivers/misc/eeprom/Kconfig"
+ source "drivers/misc/cb710/Kconfig"
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index af22bbc..b76d611 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -58,3 +58,4 @@ obj-$(CONFIG_ASPEED_LPC_SNOOP)	+= aspeed-lpc-snoop.o
+ obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
+ obj-$(CONFIG_OCXL)		+= ocxl/
+ obj-$(CONFIG_MISC_RTSX)		+= cardreader/
++obj-$(CONFIG_PVPANIC)   	+= pvpanic.o
+diff --git a/drivers/platform/x86/pvpanic.c b/drivers/misc/pvpanic.c
+similarity index 100%
+rename from drivers/platform/x86/pvpanic.c
+rename to drivers/misc/pvpanic.c
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0c1aa6c..4ac276c 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1121,14 +1121,6 @@ config INTEL_SMARTCONNECT
+ 	  This driver checks to determine whether the device has Intel Smart
+ 	  Connect enabled, and if so disables it.
+ 
+-config PVPANIC
+-	tristate "pvpanic device support"
+-	depends on ACPI
+-	---help---
+-	  This driver provides support for the pvpanic device.  pvpanic is
+-	  a paravirtualized device provided by QEMU; it lets a virtual machine
+-	  (guest) communicate panic events to the host.
+-
+ config INTEL_PMC_IPC
+ 	tristate "Intel PMC IPC Driver"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index e6d1bec..e88f44e 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -75,7 +75,6 @@ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
+ obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
+ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
+ 
+-obj-$(CONFIG_PVPANIC)           += pvpanic.o
+ obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
+ obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
+ obj-$(CONFIG_TOUCHSCREEN_DMI)	+= touchscreen_dmi.o
+-- 
+1.8.3.1
