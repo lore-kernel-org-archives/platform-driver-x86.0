@@ -1,158 +1,234 @@
-From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [PATCH v3 3/3] ALSA: hda: add support for Huawei WMI micmute LED
-Date: Thu,  8 Nov 2018 12:16:55 -0500
-Message-ID: <20181108171701.4444-4-ayman.bagabas@gmail.com>
-References: <20181108171701.4444-1-ayman.bagabas@gmail.com>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Subject: [Patch v4 1/3] platform/x86: intel_pmc_core: Show Latency Tolerance info
+Date: Fri,  9 Nov 2018 00:32:42 +0530
+Message-ID: <20181108190244.19204-1-rajneesh.bhardwaj@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181108171701.4444-1-ayman.bagabas@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Ayman Bagabas <ayman.bagabas@gmail.com>, Kailang Yang <kailang@realtek.com>, Hui Wang <hui.wang@canonical.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, srinivas.pandruvada@linux.intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some of Huawei laptops come with a LED in the micmute key. This patch
-enables and disable this LED accordingly.
+This adds support to show the Latency Tolerance Reporting for the IPs on
+the PCH as reported by the PMC. The format shown here is raw LTR data
+payload that can further be decoded as per the PCI specification.
 
-Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
+This also fixes some minor alignment issues in the header file by
+removing spaces and converting to tabs at some places.
+
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 ---
- drivers/platform/x86/huawei_wmi.c            |  1 +
- include/linux/platform_data/x86/huawei_wmi.h |  9 ++++
- sound/pci/hda/huawei_wmi_helper.c            | 47 ++++++++++++++++++++
- sound/pci/hda/patch_realtek.c                | 13 +++++-
- 4 files changed, 69 insertions(+), 1 deletion(-)
- create mode 100644 include/linux/platform_data/x86/huawei_wmi.h
- create mode 100644 sound/pci/hda/huawei_wmi_helper.c
+Changes in v4:
+ * Removed unnecessary comments related to reserved IPs
+ * Reordered #defines in the header in chronological order
+ * Worked on patch taken from review-andy branch that removed LTR
+   duplication strings and other style fixes.
 
-diff --git a/drivers/platform/x86/huawei_wmi.c b/drivers/platform/x86/huawei_wmi.c
-index 658c44ab2126..f06aa967c311 100644
---- a/drivers/platform/x86/huawei_wmi.c
-+++ b/drivers/platform/x86/huawei_wmi.c
-@@ -23,6 +23,7 @@
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
- #include <linux/module.h>
-+#include <linux/platform_data/x86/huawei_wmi.h>
- 
- MODULE_AUTHOR("Ayman Bagabas <ayman.bagabas@gmail.com>");
- MODULE_DESCRIPTION("Huawei WMI hotkeys");
-diff --git a/include/linux/platform_data/x86/huawei_wmi.h b/include/linux/platform_data/x86/huawei_wmi.h
-new file mode 100644
-index 000000000000..dd251780ee5c
---- /dev/null
-+++ b/include/linux/platform_data/x86/huawei_wmi.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#if IS_ENABLED(CONFIG_HUAWEI_LAPTOP)
-+#ifndef __HUAWEI_WMI_H__
-+#define __HUAWEI_WMI_H__
-+
-+int huawei_wmi_micmute_led_set(bool on);
-+
-+#endif
-+#endif
-diff --git a/sound/pci/hda/huawei_wmi_helper.c b/sound/pci/hda/huawei_wmi_helper.c
-new file mode 100644
-index 000000000000..7c91f914ffba
---- /dev/null
-+++ b/sound/pci/hda/huawei_wmi_helper.c
-@@ -0,0 +1,47 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Helper functions for Huawei WMI micmute LED;
-+ * to be included from codec driver
-+ */
-+
-+#if IS_ENABLED(CONFIG_HUAWEI_LAPTOP)
-+#include <linux/platform_data/x86/huawei_wmi.h>
-+
-+static int (*huawei_wmi_micmute_led_set_func)(bool);
-+
-+static void update_huawei_wmi_micmute_led(struct hda_codec *codec)
-+{
-+	struct hda_gen_spec *spec = codec->spec;
-+	huawei_wmi_micmute_led_set_func(spec->micmute_led.led_value);
-+}
-+
-+static void alc_fixup_huawei_wmi(struct hda_codec *codec,
-+				   const struct hda_fixup *fix, int action)
-+{
-+	bool removefunc = false;
-+
-+	if (action == HDA_FIXUP_ACT_PROBE) {
-+		if (!huawei_wmi_micmute_led_set_func)
-+			huawei_wmi_micmute_led_set_func = symbol_request(huawei_wmi_micmute_led_set);
-+		if (!huawei_wmi_micmute_led_set_func) {
-+			codec_warn(codec, "Failed to find huawei_wmi symbol huawei_wmi_micmute_led_set\n");
-+			return;
-+		}
-+
-+		removefunc = (huawei_wmi_micmute_led_set_func(false) < 0)
-+			|| (snd_hda_gen_add_micmute_led(codec, update_huawei_wmi_micmute_led) < 0);
-+	}
-+
-+	if (huawei_wmi_micmute_led_set_func && (action == HDA_FIXUP_ACT_FREE || removefunc)) {
-+		symbol_put(huawei_wmi_micmute_led_set);
-+		huawei_wmi_micmute_led_set_func = NULL;
-+	}
-+}
-+
-+#else
-+
-+static void alc_fixup_huawei_wmi(struct hda_codec *codec,
-+				const struct hda_fixup *fix, int action)
-+{
-+}
-+
-+#endif
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index ed6c9c79ce46..a0fdcfb0b635 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5374,6 +5374,9 @@ static void alc_fixup_thinkpad_acpi(struct hda_codec *codec,
- /* for alc295_fixup_hp_top_speakers */
- #include "hp_x360_helper.c"
- 
-+/* for alc_fixup_huawei_micmute_led */
-+#include "huawei_wmi_helper.c"
-+
- enum {
- 	ALC269_FIXUP_SONY_VAIO,
- 	ALC275_FIXUP_SONY_VAIO_GPIO2,
-@@ -5494,6 +5497,7 @@ enum {
- 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
- 	ALC255_FIXUP_DELL_HEADSET_MIC,
- 	ALC256_FIXUP_HUAWEI_MBXP_PINS,
-+	ALC256_FIXUP_HUAWEI_WMI_MICMUTE_LED,
- 	ALC295_FIXUP_HP_X360,
- 	ALC221_FIXUP_HP_HEADSET_MIC,
+ drivers/platform/x86/intel_pmc_core.c | 69 +++++++++++++++++++++++++++
+ drivers/platform/x86/intel_pmc_core.h | 57 +++++++++++++++++++---
+ 2 files changed, 119 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 6b31d410cb09..54080c0e52fb 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -101,10 +101,35 @@ static const struct pmc_bit_map spt_pfear_map[] = {
+ 	{},
  };
-@@ -5765,6 +5769,10 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MIC
- 	},
-+	[ALC256_FIXUP_HUAWEI_WMI_MICMUTE_LED] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc_fixup_huawei_wmi
-+	},
- 	[ALC256_FIXUP_HUAWEI_MBXP_PINS] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
-@@ -5779,7 +5787,9 @@ static const struct hda_fixup alc269_fixups[] = {
- 			{0x1e, 0x411111f0},
- 			{0x21, 0x04211020},
- 			{ }
--		}
-+		},
-+		.chained = true,
-+		.chain_id = ALC256_FIXUP_HUAWEI_WMI_MICMUTE_LED
- 	},
- 	[ALC269_FIXUP_ASUS_X101_FUNC] = {
- 		.type = HDA_FIXUP_FUNC,
-@@ -6609,6 +6619,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x5109, "Thinkpad", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
- 	SND_PCI_QUIRK(0x17aa, 0x511e, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x511f, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
-+	SND_PCI_QUIRK(0x19e5, 0x3200, "Huawei MBX", ALC256_FIXUP_HUAWEI_WMI_MICMUTE_LED),
- 	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MBXP", ALC256_FIXUP_HUAWEI_MBXP_PINS),
- 	SND_PCI_QUIRK(0x17aa, 0x3bf8, "Quanta FL1", ALC269_FIXUP_PCM_44K),
- 	SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", ALC269_FIXUP_LENOVO_EAPD),
+ 
++static const struct pmc_bit_map spt_ltr_show_map[] = {
++	{"SOUTHPORT_A",		SPT_PMC_LTR_SPA},
++	{"SOUTHPORT_B",		SPT_PMC_LTR_SPB},
++	{"SATA",		SPT_PMC_LTR_SATA},
++	{"GIGABIT_ETHERNET",	SPT_PMC_LTR_GBE},
++	{"XHCI",		SPT_PMC_LTR_XHCI},
++	{"ME",			SPT_PMC_LTR_ME},
++	/* EVA is Enterprise Value Add, doesn't really exist on PCH */
++	{"EVA",			SPT_PMC_LTR_EVA},
++	{"SOUTHPORT_C",		SPT_PMC_LTR_SPC},
++	{"HD_AUDIO",		SPT_PMC_LTR_AZ},
++	{"LPSS",		SPT_PMC_LTR_LPSS},
++	{"SOUTHPORT_D",		SPT_PMC_LTR_SPD},
++	{"SOUTHPORT_E",		SPT_PMC_LTR_SPE},
++	{"CAMERA",		SPT_PMC_LTR_CAM},
++	{"ESPI",		SPT_PMC_LTR_ESPI},
++	{"SCC",			SPT_PMC_LTR_SCC},
++	{"ISH",			SPT_PMC_LTR_ISH},
++	/* Below two cannot be used for LTR_IGNORE */
++	{"CURRENT_PLATFORM",	SPT_PMC_LTR_CUR_PLT},
++	{"AGGREGATED_SYSTEM",	SPT_PMC_LTR_CUR_ASLT},
++	{}
++};
++
+ static const struct pmc_reg_map spt_reg_map = {
+ 	.pfear_sts = spt_pfear_map,
+ 	.mphy_sts = spt_mphy_map,
+ 	.pll_sts = spt_pll_map,
++	.ltr_show_sts = spt_ltr_show_map,
+ 	.slp_s0_offset = SPT_PMC_SLP_S0_RES_COUNTER_OFFSET,
+ 	.ltr_ignore_offset = SPT_PMC_LTR_IGNORE_OFFSET,
+ 	.regmap_length = SPT_PMC_MMIO_REG_LEN,
+@@ -243,10 +268,38 @@ static const struct pmc_bit_map *cnp_slps0_dbg_maps[] = {
+ 	NULL,
+ };
+ 
++static const struct pmc_bit_map cnp_ltr_show_map[] = {
++	{"SOUTHPORT_A",		CNP_PMC_LTR_SPA},
++	{"SOUTHPORT_B",		CNP_PMC_LTR_SPB},
++	{"SATA",		CNP_PMC_LTR_SATA},
++	{"GIGABIT_ETHERNET",	CNP_PMC_LTR_GBE},
++	{"XHCI",		CNP_PMC_LTR_XHCI},
++	{"ME",			CNP_PMC_LTR_ME},
++	/* EVA is Enterprise Value Add, doesn't really exist on PCH */
++	{"EVA",			CNP_PMC_LTR_EVA},
++	{"SOUTHPORT_C",		CNP_PMC_LTR_SPC},
++	{"HD_AUDIO",		CNP_PMC_LTR_AZ},
++	{"CNV",			CNP_PMC_LTR_CNV},
++	{"LPSS",		CNP_PMC_LTR_LPSS},
++	{"SOUTHPORT_D",		CNP_PMC_LTR_SPD},
++	{"SOUTHPORT_E",		CNP_PMC_LTR_SPE},
++	{"CAMERA",		CNP_PMC_LTR_CAM},
++	{"ESPI",		CNP_PMC_LTR_ESPI},
++	{"SCC",			CNP_PMC_LTR_SCC},
++	{"ISH",			CNP_PMC_LTR_ISH},
++	{"UFSX2",		CNP_PMC_LTR_UFSX2},
++	{"EMMC",		CNP_PMC_LTR_EMMC},
++	/* Below two cannot be used for LTR_IGNORE */
++	{"CURRENT_PLATFORM",	CNP_PMC_LTR_CUR_PLT},
++	{"AGGREGATED_SYSTEM",	CNP_PMC_LTR_CUR_ASLT},
++	{}
++};
++
+ static const struct pmc_reg_map cnp_reg_map = {
+ 	.pfear_sts = cnp_pfear_map,
+ 	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
+ 	.slps0_dbg_maps = cnp_slps0_dbg_maps,
++	.ltr_show_sts = cnp_ltr_show_map,
+ 	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
+ 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+ 	.regmap_length = CNP_PMC_MMIO_REG_LEN,
+@@ -583,6 +636,20 @@ static int pmc_core_slps0_dbg_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_slps0_dbg);
+ 
++static int pmc_core_ltr_show(struct seq_file *s, void *unused)
++{
++	struct pmc_dev *pmcdev = s->private;
++	const struct pmc_bit_map *map = pmcdev->map->ltr_show_sts;
++	int index;
++
++	for (index = 0; map[index].name ; index++) {
++		seq_printf(s, "%-32s\tRAW LTR: 0x%x\n", map[index].name,
++			   pmc_core_reg_read(pmcdev, map[index].bit_mask));
++	}
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(pmc_core_ltr);
++
+ static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+ {
+ 	debugfs_remove_recursive(pmcdev->dbgfs_dir);
+@@ -607,6 +674,8 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 	debugfs_create_file("ltr_ignore", 0644, dir, pmcdev,
+ 			    &pmc_core_ltr_ignore_ops);
+ 
++	debugfs_create_file("ltr_show", 0644, dir, pmcdev, &pmc_core_ltr_fops);
++
+ 	if (pmcdev->map->pll_sts)
+ 		debugfs_create_file("pll_status", 0444, dir, pmcdev,
+ 				    &pmc_core_pll_ops);
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index be045348ad86..fcb13ca1f2bd 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -37,6 +37,25 @@
+ #define NUM_RETRIES				100
+ #define NUM_IP_IGN_ALLOWED			17
+ 
++#define SPT_PMC_LTR_CUR_PLT			0x350
++#define SPT_PMC_LTR_CUR_ASLT			0x354
++#define SPT_PMC_LTR_SPA				0x360
++#define SPT_PMC_LTR_SPB				0x364
++#define SPT_PMC_LTR_SATA			0x368
++#define SPT_PMC_LTR_GBE				0x36C
++#define SPT_PMC_LTR_XHCI			0x370
++#define SPT_PMC_LTR_ME				0x378
++#define SPT_PMC_LTR_EVA				0x37C
++#define SPT_PMC_LTR_SPC				0x380
++#define SPT_PMC_LTR_AZ				0x384
++#define SPT_PMC_LTR_LPSS			0x38C
++#define SPT_PMC_LTR_CAM				0x390
++#define SPT_PMC_LTR_SPD				0x394
++#define SPT_PMC_LTR_SPE				0x398
++#define SPT_PMC_LTR_ESPI			0x39C
++#define SPT_PMC_LTR_SCC				0x3A0
++#define SPT_PMC_LTR_ISH				0x3A4
++
+ /* Sunrise Point: PGD PFET Enable Ack Status Registers */
+ enum ppfear_regs {
+ 	SPT_PMC_XRAM_PPFEAR0A = 0x590,
+@@ -115,18 +134,40 @@ enum ppfear_regs {
+ #define SPT_PMC_BIT_MPHY_CMN_LANE3		BIT(3)
+ 
+ /* Cannonlake Power Management Controller register offsets */
+-#define CNP_PMC_SLP_S0_RES_COUNTER_OFFSET      0x193C
+-#define CNP_PMC_LTR_IGNORE_OFFSET              0x1B0C
+-#define CNP_PMC_PM_CFG_OFFSET                  0x1818
+ #define CNP_PMC_SLPS0_DBG_OFFSET		0x10B4
++#define CNP_PMC_PM_CFG_OFFSET			0x1818
++#define CNP_PMC_SLP_S0_RES_COUNTER_OFFSET	0x193C
++#define CNP_PMC_LTR_IGNORE_OFFSET		0x1B0C
+ /* Cannonlake: PGD PFET Enable Ack Status Register(s) start */
+-#define CNP_PMC_HOST_PPFEAR0A                  0x1D90
++#define CNP_PMC_HOST_PPFEAR0A			0x1D90
+ 
+-#define CNP_PMC_MMIO_REG_LEN                   0x2000
+-#define CNP_PPFEAR_NUM_ENTRIES                 8
+-#define CNP_PMC_READ_DISABLE_BIT               22
+ #define CNP_PMC_LATCH_SLPS0_EVENTS		BIT(31)
+ 
++#define CNP_PMC_MMIO_REG_LEN			0x2000
++#define CNP_PPFEAR_NUM_ENTRIES			8
++#define CNP_PMC_READ_DISABLE_BIT		22
++#define CNP_PMC_LTR_CUR_PLT			0x1B50
++#define CNP_PMC_LTR_CUR_ASLT			0x1B54
++#define CNP_PMC_LTR_SPA				0x1B60
++#define CNP_PMC_LTR_SPB				0x1B64
++#define CNP_PMC_LTR_SATA			0x1B68
++#define CNP_PMC_LTR_GBE				0x1B6C
++#define CNP_PMC_LTR_XHCI			0x1B70
++#define CNP_PMC_LTR_ME				0x1B78
++#define CNP_PMC_LTR_EVA				0x1B7C
++#define CNP_PMC_LTR_SPC				0x1B80
++#define CNP_PMC_LTR_AZ				0x1B84
++#define CNP_PMC_LTR_LPSS			0x1B8C
++#define CNP_PMC_LTR_CAM				0x1B90
++#define CNP_PMC_LTR_SPD				0x1B94
++#define CNP_PMC_LTR_SPE				0x1B98
++#define CNP_PMC_LTR_ESPI			0x1B9C
++#define CNP_PMC_LTR_SCC				0x1BA0
++#define CNP_PMC_LTR_ISH				0x1BA4
++#define CNP_PMC_LTR_CNV				0x1BF0
++#define CNP_PMC_LTR_EMMC			0x1BF4
++#define CNP_PMC_LTR_UFSX2			0x1BF8
++
+ struct pmc_bit_map {
+ 	const char *name;
+ 	u32 bit_mask;
+@@ -139,6 +180,7 @@ struct pmc_bit_map {
+  * @mphy_sts:		Maps name of MPHY lane to MPHY status lane status bit
+  * @pll_sts:		Maps name of PLL to corresponding bit status
+  * @slps0_dbg_maps:	Array of SLP_S0_DBG* registers containing debug info
++ * @ltr_show_sts:	Maps PCH IP Names to their MMIO register offsets
+  * @slp_s0_offset:	PWRMBASE offset to read SLP_S0 residency
+  * @ltr_ignore_offset:	PWRMBASE offset to read/write LTR ignore bit
+  * @regmap_length:	Length of memory to map from PWRMBASE address to access
+@@ -157,6 +199,7 @@ struct pmc_reg_map {
+ 	const struct pmc_bit_map *mphy_sts;
+ 	const struct pmc_bit_map *pll_sts;
+ 	const struct pmc_bit_map **slps0_dbg_maps;
++	const struct pmc_bit_map *ltr_show_sts;
+ 	const u32 slp_s0_offset;
+ 	const u32 ltr_ignore_offset;
+ 	const int regmap_length;
 -- 
-2.17.2
+2.17.1
