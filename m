@@ -1,50 +1,179 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v15 23/23] x86/sgx: Driver documentation
-Date: Thu, 8 Nov 2018 21:20:40 +0200
-Message-ID: <20181108192040.GA21685@linux.intel.com>
-References: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
- <20181102231320.29164-24-jarkko.sakkinen@linux.intel.com>
- <154ded23-fd1d-f324-4e0a-9de8eddcda6d@intel.com>
- <20181106054911.GA15575@linux.intel.com>
- <e7b4c432-7005-308c-4da0-a80e0d294244@intel.com>
- <20181107163019.GA11509@linux.intel.com>
- <914dd171-b48a-12d9-eb77-3c40c8b210cb@intel.com>
- <20181108143942.GA13792@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 1/3] x86: add support for Huawei WMI hotkeys.
+Date: Thu, 8 Nov 2018 21:58:44 +0200
+Message-ID: <CAHp75Vev_0ObO=KLHfON8JAco=a9MURycH9uk-a+h1JqrSSQFA@mail.gmail.com>
+References: <20181108171701.4444-1-ayman.bagabas@gmail.com> <20181108171701.4444-2-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181108143942.GA13792@linux.intel.com>
+In-Reply-To: <20181108171701.4444-2-ayman.bagabas@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, mark.shanahan@intel.com, andriy.shevchenko@linux.intel.com, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Ayman Bagabas <ayman.bagabas@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kailang Yang <kailang@realtek.com>, Hui Wang <hui.wang@canonical.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Nov 08, 2018 at 04:39:42PM +0200, Jarkko Sakkinen wrote:
-> On Wed, Nov 07, 2018 at 09:09:37AM -0800, Dave Hansen wrote:
-> > On 11/7/18 8:30 AM, Jarkko Sakkinen wrote:
-> > >> Does this code run when I type "make kselftest"?  If not, I think we
-> > >> should rectify that.
-> > > No, it doesn't. It is just my backup for the non-SDK user space code
-> > > that I've made that I will use to fork my user space SGX projects in
-> > > the future.
-> > > 
-> > > I can work-out a selftest (and provide a new patch in the series) but
-> > > I'm still wondering what the enclave should do. I would suggest that
-> > > we start with an enclave that does just EEXIT and nothing else.
-> > 
-> > Yeah, that's a start.  But, a good selftest would include things like
-> > faults and error conditions.
-> 
-> Great. We can add more entry points to the enclave for different tests
-> but I'll start with a bare minimum. And yeah but ever goes into next
-> version I'll document the fault handling.
+On Thu, Nov 8, 2018 at 7:17 PM Ayman Bagabas <ayman.bagabas@gmail.com> wrote:
+>
+> This driver adds support for missing hotkeys on some Huawei laptops.
+> Currently, only Huawei Matebook X and Matebook X Pro is supported.
+>
 
-For the v17 I'll add exactly two test cases:
+Thanks for an update, my comments below.
 
-1. EENTER/EEXIT
-2. EENTER/exception
 
-So that it will easier to evaluate and demonstrate exception handling.
+> +config HUAWEI_LAPTOP
+> +       tristate "Huawei WMI hotkeys driver"
 
-/Jarkko
+> +       depends on ACPI
+
+Do you need an ACPI dependency be explicit here?
+
+> +       depends on ACPI_WMI
+> +       depends on INPUT
+> +       select INPUT_SPARSEKMAP
+> +       help
+> +         This driver provides support for Huawei WMI hotkeys.
+> +         It enables the missing keys and adds support to the micmute
+> +         LED found on some of these laptops.
+
+
+> +/*
+> + *  Huawei WMI hotkeys
+> + *
+> + *  Copyright (C) 2018       Ayman Bagabas <ayman.bagabas@gmail.com>
+
+> + *
+> + *  This program is free software: you can redistribute it and/or modify
+> + *  it under the terms of the GNU General Public License as published by
+> + *  the Free Software Foundation, either version 2 of the License, or
+> + *  (at your option) any later version.
+> + *
+> + *  This program is distributed in the hope that it will be useful,
+> + *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *  GNU General Public License for more details.
+> + *
+> + *  You should have received a copy of the GNU General Public License
+> + *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+> + *
+
+Please, replace this boilerplate text with appropriate SPDX identifier.
+
+> + */
+
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+
+One of them should be chosen.
+
+> +static char *event_guid;
+> +static struct input_dev *inputdev;
+
+> +int huawei_wmi_micmute_led_set(bool on)
+> +{
+> +       acpi_handle handle = ACPI_HANDLE(&inputdev->dev);
+> +       char *method;
+> +       union acpi_object args[3];
+
+> +       args[0].type = args[1].type = args[2].type = ACPI_TYPE_INTEGER;
+> +       args[1].integer.value = 0x04;
+
+Please, don't mix definitions and code.
+
+> +       struct acpi_object_list arg_list = {
+> +               .pointer = args,
+> +               .count = ARRAY_SIZE(args),
+> +       };
+> +
+> +       if (acpi_has_method(handle, method = "\\_SB.PCI0.LPCB.EC0.SPIN")) {
+> +               args[0].integer.value = 0;
+> +               args[2].integer.value = on ? 1 : 0;
+> +       } else if (acpi_has_method(handle, method = "\\_SB.PCI0.LPCB.EC0.WPIN")) {
+> +               args[0].integer.value = 1;
+> +               args[2].integer.value = on ? 0 : 1;
+> +       } else {
+> +               pr_err("Unable to find ACPI method\n");
+
+dev_err() here.
+
+> +               return -1;
+
+Return appropriate error code.
+
+> +       }
+> +
+> +       acpi_evaluate_object(handle, method, &arg_list, NULL);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(huawei_wmi_micmute_led_set);
+> +
+> +static void huawei_wmi_process_key(struct input_dev *inputdev, int code)
+> +{
+
+> +               acpi_status status;
+> +               unsigned long long result;
+> +               const char *method = "\\WMI0.WQ00";
+> +               union acpi_object args[] = {
+> +                               { .type = ACPI_TYPE_INTEGER  },
+> +               };
+
+> +               args[0].integer.value = 0;
+
+Don't mix definitions and code.
+
+> +               struct acpi_object_list arg_list = {
+> +                       .pointer = args,
+> +                       .count = ARRAY_SIZE(args),
+> +               };
+
+> +       if ((key->sw.code == KEY_BRIGHTNESSUP
+> +                       || key->sw.code == KEY_BRIGHTNESSDOWN)
+
+I believe this can fit one line.
+
+> +                       && strcmp(event_guid, MBXP_EVENT_GUID) == 0)
+> +               return;
+> +
+> +       sparse_keymap_report_entry(inputdev, key, 1, true);
+> +}
+
+> +static int __init huawei_wmi_init(void)
+> +{
+> +       int err;
+> +
+> +       if (wmi_has_guid(MBX_EVENT_GUID)) {
+> +               event_guid = MBX_EVENT_GUID;
+> +       } else if (wmi_has_guid(MBXP_EVENT_GUID)) {
+> +               event_guid = MBXP_EVENT_GUID;
+> +       } else {
+
+> +               pr_warn("No known WMI GUID found\n");
+
+Simple "Compatible WMI GUID not found\n".
+
+> +               return -ENODEV;
+> +       }
+> +
+
+> +       err = huawei_wmi_input_init();
+> +       if (err) {
+
+> +               pr_err("Failed to setup input device\n");
+
+Noise.
+
+> +               return err;
+> +       }
+> +
+> +       return 0;
+
+...just do
+
+return huawei_wmi_input_init();
+
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
