@@ -1,65 +1,62 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 04/15] Platform: OLPC: Remove an unused include
-Date: Tue, 13 Nov 2018 14:59:18 +0100
-Message-ID: <5a4c548be4cf9fb3fb6ce5128d6780eea3005215.camel@v3.sk>
-References: <20181010172300.317643-1-lkundrak@v3.sk>
-         <20181010172300.317643-5-lkundrak@v3.sk>
-         <CAHp75Veb++-F3yd9r5h305UQFvBFosRQvmPDfTTMFak9ZNVc7g@mail.gmail.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v15 23/23] x86/sgx: Driver documentation
+Date: Tue, 13 Nov 2018 17:13:16 +0200
+Message-ID: <20181113151316.GA3796@linux.intel.com>
+References: <20181102231320.29164-1-jarkko.sakkinen@linux.intel.com>
+ <20181102231320.29164-24-jarkko.sakkinen@linux.intel.com>
+ <154ded23-fd1d-f324-4e0a-9de8eddcda6d@intel.com>
+ <20181106054911.GA15575@linux.intel.com>
+ <e7b4c432-7005-308c-4da0-a80e0d294244@intel.com>
+ <20181107163019.GA11509@linux.intel.com>
+ <914dd171-b48a-12d9-eb77-3c40c8b210cb@intel.com>
+ <20181108143942.GA13792@linux.intel.com>
+ <20181108192040.GA21685@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Veb++-F3yd9r5h305UQFvBFosRQvmPDfTTMFak9ZNVc7g@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181108192040.GA21685@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, quozl@laptop.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, devel@driverdev.osuosl.or
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, mark.shanahan@intel.com, andriy.shevchenko@linux.intel.com, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-thank you for the response.
-
-On Fri, 2018-10-19 at 16:05 +0300, Andy Shevchenko wrote:
-> On Wed, Oct 10, 2018 at 8:23 PM Lubomir Rintel <lkundrak@v3.sk>
-> wrote:
-> > Also, the header is x86 specific, while there are non-x86 OLPC
-> > machines.
-> 
-> Same concern. as per patch 2.
-
-Which concern? If it's that it doesn't make sense in that particular
-place in the patch set, then I don't think so; this header is
-unnecessary and the patch has no other dependencies. But the changes
-that enable the OLPC EC platform code depend on this.
-
-> Also, you might want to sort headers in alphabetical order.
-
-But should I? Doing so in the same commit would obscure the actual
-change, and a separate commit would needlessly clobber git annotate.
-
-Thank you
-Lubo
-
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > ---
-> >  drivers/platform/olpc/olpc-ec.c | 1 -
-> >  1 file changed, 1 deletion(-)
+On Thu, Nov 08, 2018 at 09:20:40PM +0200, Jarkko Sakkinen wrote:
+> On Thu, Nov 08, 2018 at 04:39:42PM +0200, Jarkko Sakkinen wrote:
+> > On Wed, Nov 07, 2018 at 09:09:37AM -0800, Dave Hansen wrote:
+> > > On 11/7/18 8:30 AM, Jarkko Sakkinen wrote:
+> > > >> Does this code run when I type "make kselftest"?  If not, I think we
+> > > >> should rectify that.
+> > > > No, it doesn't. It is just my backup for the non-SDK user space code
+> > > > that I've made that I will use to fork my user space SGX projects in
+> > > > the future.
+> > > > 
+> > > > I can work-out a selftest (and provide a new patch in the series) but
+> > > > I'm still wondering what the enclave should do. I would suggest that
+> > > > we start with an enclave that does just EEXIT and nothing else.
+> > > 
+> > > Yeah, that's a start.  But, a good selftest would include things like
+> > > faults and error conditions.
 > > 
-> > diff --git a/drivers/platform/olpc/olpc-ec.c
-> > b/drivers/platform/olpc/olpc-ec.c
-> > index f99b183d5296..35a21c66cd0d 100644
-> > --- a/drivers/platform/olpc/olpc-ec.c
-> > +++ b/drivers/platform/olpc/olpc-ec.c
-> > @@ -15,7 +15,6 @@
-> >  #include <linux/module.h>
-> >  #include <linux/list.h>
-> >  #include <linux/olpc-ec.h>
-> > -#include <asm/olpc.h>
-> > 
-> >  struct ec_cmd_desc {
-> >         u8 cmd;
-> > --
-> > 2.19.0
-> > 
+> > Great. We can add more entry points to the enclave for different tests
+> > but I'll start with a bare minimum. And yeah but ever goes into next
+> > version I'll document the fault handling.
 > 
+> For the v17 I'll add exactly two test cases:
 > 
+> 1. EENTER/EEXIT
+> 2. EENTER/exception
+> 
+> So that it will easier to evaluate and demonstrate exception handling.
+> 
+> /Jarkko
+
+Here is my test program now:
+
+https://github.com/jsakkine-intel/sgx-selftest
+
+It is ~1100 lines ATM. Next I'll deploy it to the kernel tree. It has
+only (1) now but I'll add (2) too when I convert this to a kernel patch
+(probably by doing sgx_call() with a NULL pointer).
+
+/Jarkko
