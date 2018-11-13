@@ -1,10 +1,10 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.18 28/39] platform/x86: acerhdf: Add BIOS entry for Gateway LT31 v1.3307
-Date: Tue, 13 Nov 2018 00:50:42 -0500
-Message-ID: <20181113055053.78352-28-sashal@kernel.org>
-References: <20181113055053.78352-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 21/26] platform/x86: acerhdf: Add BIOS entry for Gateway LT31 v1.3307
+Date: Tue, 13 Nov 2018 00:51:45 -0500
+Message-ID: <20181113055150.78773-21-sashal@kernel.org>
+References: <20181113055150.78773-1-sashal@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113055053.78352-1-sashal@kernel.org>
+In-Reply-To: <20181113055150.78773-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Peter Feuerer <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
