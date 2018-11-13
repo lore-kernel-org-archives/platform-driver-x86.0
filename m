@@ -1,11 +1,11 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.18 21/39] platform/x86: intel_telemetry: report debugfs failure
-Date: Tue, 13 Nov 2018 00:50:35 -0500
-Message-ID: <20181113055053.78352-21-sashal@kernel.org>
-References: <20181113055053.78352-1-sashal@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113055053.78352-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 23/44] platform/x86: intel_telemetry: report debugfs failure
+Date: Tue, 13 Nov 2018 00:49:29 -0500
+Message-ID: <20181113054950.77898-23-sashal@kernel.org>
+References: <20181113054950.77898-1-sashal@kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20181113054950.77898-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
 To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Matt Turner <matt.turner@intel.com>, Len Brown <len.brown@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
