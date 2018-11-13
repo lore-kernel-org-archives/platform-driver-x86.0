@@ -1,69 +1,113 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 23/44] platform/x86: intel_telemetry: report debugfs failure
-Date: Tue, 13 Nov 2018 00:49:29 -0500
-Message-ID: <20181113054950.77898-23-sashal@kernel.org>
-References: <20181113054950.77898-1-sashal@kernel.org>
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20181113054950.77898-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Matt Turner <matt.turner@intel.com>, Len Brown <len.brown@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] ideapad-laptop: Add Lenovo Yoga 2 13 to the no_hw_rfkill
+ DMI list
+Date: Tue, 13 Nov 2018 14:52:50 +0200
+Message-ID: <CAHp75VcDYDsFCO-s=-QqwC-U0_a42qELoGeStX0JCKr1HHEhZA@mail.gmail.com>
+References: <20180516011741.18010-1-loic.wyn@gmail.com> <CAHp75VfY3nYgoUD3kjkZrMHzg2MZVNhgWiXJtxZAfpx_3ZGELQ@mail.gmail.com>
+ <CAJxRB+DUzxf2dAwBSPP2FTLkwXHGM22WvUM0yrLGB4inPE3O5A@mail.gmail.com> <CAJxRB+C3xzL_m755ifoVzPugCg=bCbb-_mMOvkoH7iUvs3MV8w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJxRB+C3xzL_m755ifoVzPugCg=bCbb-_mMOvkoH7iUvs3MV8w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Loic Wei-Yu-Neng <loic.wyn@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jiri Kosina <trivial@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
++Cc: mailing lists
 
-[ Upstream commit 8d98b1ef368feeb7720b8b9b6f3bd93f2ad892bc ]
+On Tue, Nov 13, 2018 at 5:21 AM Loic Wei-Yu-Neng <loic.wyn@gmail.com> wrote:
 
-On some Goldmont based systems such as ASRock J3455M the BIOS may not
-enable the IPC1 device that provides access to the PMC and PUNIT. In
-such scenarios, the IOSS and PSS resources from the platform device can
-not be obtained and result in a invalid telemetry_plt_config which is an
-internal data structure that holds platform config and is maintained by
-the telemetry platform driver.
+> Here you go,
+> I attached my patch.
 
-This is also applicable to the platforms where the BIOS supports IPC1
-device under debug configurations but IPC1 is disabled by user or the
-policy.
+Thanks, though in a kernel we have not using attachments. Moreover,
+since you forgot to include mailing lists the patchwork doesn't catch
+this either.
 
-This change allows user to know the reason for not seeing entries under
-/sys/kernel/debug/telemetry/* when there is no apparent failure at boot.
+Can you send it in a regular way, i.e. using `git format-patch ... &&
+git send-email ...` ?
 
-Cc: Matt Turner <matt.turner@intel.com>
-Cc: Len Brown <len.brown@intel.com>
-Cc: Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@intel.com>
+> I rebased it on top of today's latest:
+> * 7946462d31a0 (HEAD -> test) ideapad-laptop: Add Lenovo Yoga 2 13 to the no_hw_rfkill DMI list
+> * ccda4af0f4b9 (tag: v4.20-rc2, origin/master, origin/HEAD) Linux 4.20-rc2
+> *   7a3765ed66d1 Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
+> |\
+> | * 7236ead1b149 act_mirred: clear skb->tstamp on redirect
+> | * a9049ff9214d net: dsa: mv88e6xxx: Fix clearing of stats counters
+> | * 7ab412d33b4c tipc: fix link re-establish failure
+> | * 63c82997f5c0 net: sched: cls_flower: validate nested enc_opts_policy to avoid warning
+> | * fbd1d5245372 net: mvneta: correct typo
+> | * 62230715fd24 flow_dissector: do not dissect l4 ports for fragments
+> | * d02854dc1999 net: qualcomm: rmnet: Fix incorrect assignment of real_dev
+>
+> Loic
+>
+> On Fri, Oct 19, 2018 at 7:10 AM Loic Wei-Yu-Neng <loic.wyn@gmail.com> wrote:
+>>
+>> Hello Andy,
+>> Sure let me do that.
+>> Loic
+>>
+>> On Fri, Oct 19, 2018, 4:29 AM Andy Shevchenko <andy.shevchenko@gmail.com wrote:
+>>>
+>>> On Wed, May 16, 2018 at 4:18 AM Loic WEI YU NENG <loic.wyn@gmail.com> wrote:
+>>> >
+>>> > Some Lenovo ideapad models lack a physical rfkill switch.
+>>> > On Lenovo models Yoga 2 13, ideapad-laptop would wrongly report all
+>>> > radios as blocked by hardware which caused wireless network connections
+>>> > to fail.
+>>> > Add these models without an rfkill switch to the no_hw_rfkill list.
+>>> >
+>>>
+>>> I'm very sorry, but by some unclear reason this patch is missed in the
+>>> tree and in our patchwork.
+>>> Does it still actual?
+>>>
+>>> May you resend it rebased on top of our for-next branch?
+>>>
+>>> > Signed-off-by: Loic WEI YU NENG <loic.wyn@gmail.com>
+>>> > ---
+>>> >  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+>>> >  1 file changed, 7 insertions(+)
+>>> >
+>>> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+>>> > index 535199c9e6bc..0a843c4ca4fc 100644
+>>> > --- a/drivers/platform/x86/ideapad-laptop.c
+>>> > +++ b/drivers/platform/x86/ideapad-laptop.c
+>>> > @@ -1114,6 +1114,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+>>> >                         DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
+>>> >                 },
+>>> >         },
+>>> > +       {
+>>> > +               .ident = "Lenovo Yoga 2 13",
+>>> > +               .matches = {
+>>> > +                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>>> > +                       DMI_MATCH(DMI_PRODUCT_VERSION, "Yoga 2 13"),
+>>> > +               },
+>>> > +       },
+>>> >         {
+>>> >                 .ident = "Lenovo Yoga 3 1170 / 1470",
+>>> >                 .matches = {
+>>> > --
+>>> > 2.17.0
+>>> >
+>>>
+>>>
+>>> --
+>>> With Best Regards,
+>>> Andy Shevchenko
+>
+>
+>
+> --
+> Loic WEI YU NENG
+> US phone: +1 408 218 2826
+> FR phone: +33 674201069
+> email: loic.wyn@gmail.com
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=198779
-Acked-by: Matt Turner <matt.turner@intel.com>
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/intel_telemetry_debugfs.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-index ffd0474b0531..1423fa8710fd 100644
---- a/drivers/platform/x86/intel_telemetry_debugfs.c
-+++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-@@ -951,12 +951,16 @@ static int __init telemetry_debugfs_init(void)
- 	debugfs_conf = (struct telemetry_debugfs_conf *)id->driver_data;
- 
- 	err = telemetry_pltconfig_valid();
--	if (err < 0)
-+	if (err < 0) {
-+		pr_info("Invalid pltconfig, ensure IPC1 device is enabled in BIOS\n");
- 		return -ENODEV;
-+	}
- 
- 	err = telemetry_debugfs_check_evts();
--	if (err < 0)
-+	if (err < 0) {
-+		pr_info("telemetry_debugfs_check_evts failed\n");
- 		return -EINVAL;
-+	}
- 
- 	register_pm_notifier(&pm_notifier);
- 
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
