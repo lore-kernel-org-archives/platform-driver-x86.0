@@ -1,10 +1,10 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 08/11] platform/x86: acerhdf: Add BIOS entry for Gateway LT31 v1.3307
-Date: Tue, 13 Nov 2018 00:52:39 -0500
-Message-ID: <20181113055242.79261-8-sashal@kernel.org>
-References: <20181113055242.79261-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 13/17] platform/x86: acerhdf: Add BIOS entry for Gateway LT31 v1.3307
+Date: Tue, 13 Nov 2018 00:52:19 -0500
+Message-ID: <20181113055223.79060-13-sashal@kernel.org>
+References: <20181113055223.79060-1-sashal@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113055242.79261-1-sashal@kernel.org>
+In-Reply-To: <20181113055223.79060-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Peter Feuerer <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
@@ -34,7 +34,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 460fa6708bfc..3c4b107aba78 100644
+index 2acdb0d6ea89..a0533e4e52d7 100644
 --- a/drivers/platform/x86/acerhdf.c
 +++ b/drivers/platform/x86/acerhdf.c
 @@ -233,6 +233,7 @@ static const struct bios_settings bios_tbl[] = {
