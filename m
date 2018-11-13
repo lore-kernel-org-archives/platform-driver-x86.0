@@ -1,113 +1,65 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] ideapad-laptop: Add Lenovo Yoga 2 13 to the no_hw_rfkill
- DMI list
-Date: Tue, 13 Nov 2018 14:52:50 +0200
-Message-ID: <CAHp75VcDYDsFCO-s=-QqwC-U0_a42qELoGeStX0JCKr1HHEhZA@mail.gmail.com>
-References: <20180516011741.18010-1-loic.wyn@gmail.com> <CAHp75VfY3nYgoUD3kjkZrMHzg2MZVNhgWiXJtxZAfpx_3ZGELQ@mail.gmail.com>
- <CAJxRB+DUzxf2dAwBSPP2FTLkwXHGM22WvUM0yrLGB4inPE3O5A@mail.gmail.com> <CAJxRB+C3xzL_m755ifoVzPugCg=bCbb-_mMOvkoH7iUvs3MV8w@mail.gmail.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 04/15] Platform: OLPC: Remove an unused include
+Date: Tue, 13 Nov 2018 14:59:18 +0100
+Message-ID: <5a4c548be4cf9fb3fb6ce5128d6780eea3005215.camel@v3.sk>
+References: <20181010172300.317643-1-lkundrak@v3.sk>
+         <20181010172300.317643-5-lkundrak@v3.sk>
+         <CAHp75Veb++-F3yd9r5h305UQFvBFosRQvmPDfTTMFak9ZNVc7g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJxRB+C3xzL_m755ifoVzPugCg=bCbb-_mMOvkoH7iUvs3MV8w@mail.gmail.com>
+In-Reply-To: <CAHp75Veb++-F3yd9r5h305UQFvBFosRQvmPDfTTMFak9ZNVc7g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Loic Wei-Yu-Neng <loic.wyn@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jiri Kosina <trivial@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, quozl@laptop.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, devel@driverdev.osuosl.or
 List-Id: platform-driver-x86.vger.kernel.org
 
-+Cc: mailing lists
+Hi,
 
-On Tue, Nov 13, 2018 at 5:21 AM Loic Wei-Yu-Neng <loic.wyn@gmail.com> wrote:
+thank you for the response.
 
-> Here you go,
-> I attached my patch.
+On Fri, 2018-10-19 at 16:05 +0300, Andy Shevchenko wrote:
+> On Wed, Oct 10, 2018 at 8:23 PM Lubomir Rintel <lkundrak@v3.sk>
+> wrote:
+> > Also, the header is x86 specific, while there are non-x86 OLPC
+> > machines.
+> 
+> Same concern. as per patch 2.
 
-Thanks, though in a kernel we have not using attachments. Moreover,
-since you forgot to include mailing lists the patchwork doesn't catch
-this either.
+Which concern? If it's that it doesn't make sense in that particular
+place in the patch set, then I don't think so; this header is
+unnecessary and the patch has no other dependencies. But the changes
+that enable the OLPC EC platform code depend on this.
 
-Can you send it in a regular way, i.e. using `git format-patch ... &&
-git send-email ...` ?
+> Also, you might want to sort headers in alphabetical order.
 
-> I rebased it on top of today's latest:
-> * 7946462d31a0 (HEAD -> test) ideapad-laptop: Add Lenovo Yoga 2 13 to the no_hw_rfkill DMI list
-> * ccda4af0f4b9 (tag: v4.20-rc2, origin/master, origin/HEAD) Linux 4.20-rc2
-> *   7a3765ed66d1 Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
-> |\
-> | * 7236ead1b149 act_mirred: clear skb->tstamp on redirect
-> | * a9049ff9214d net: dsa: mv88e6xxx: Fix clearing of stats counters
-> | * 7ab412d33b4c tipc: fix link re-establish failure
-> | * 63c82997f5c0 net: sched: cls_flower: validate nested enc_opts_policy to avoid warning
-> | * fbd1d5245372 net: mvneta: correct typo
-> | * 62230715fd24 flow_dissector: do not dissect l4 ports for fragments
-> | * d02854dc1999 net: qualcomm: rmnet: Fix incorrect assignment of real_dev
->
-> Loic
->
-> On Fri, Oct 19, 2018 at 7:10 AM Loic Wei-Yu-Neng <loic.wyn@gmail.com> wrote:
->>
->> Hello Andy,
->> Sure let me do that.
->> Loic
->>
->> On Fri, Oct 19, 2018, 4:29 AM Andy Shevchenko <andy.shevchenko@gmail.com wrote:
->>>
->>> On Wed, May 16, 2018 at 4:18 AM Loic WEI YU NENG <loic.wyn@gmail.com> wrote:
->>> >
->>> > Some Lenovo ideapad models lack a physical rfkill switch.
->>> > On Lenovo models Yoga 2 13, ideapad-laptop would wrongly report all
->>> > radios as blocked by hardware which caused wireless network connections
->>> > to fail.
->>> > Add these models without an rfkill switch to the no_hw_rfkill list.
->>> >
->>>
->>> I'm very sorry, but by some unclear reason this patch is missed in the
->>> tree and in our patchwork.
->>> Does it still actual?
->>>
->>> May you resend it rebased on top of our for-next branch?
->>>
->>> > Signed-off-by: Loic WEI YU NENG <loic.wyn@gmail.com>
->>> > ---
->>> >  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
->>> >  1 file changed, 7 insertions(+)
->>> >
->>> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
->>> > index 535199c9e6bc..0a843c4ca4fc 100644
->>> > --- a/drivers/platform/x86/ideapad-laptop.c
->>> > +++ b/drivers/platform/x86/ideapad-laptop.c
->>> > @@ -1114,6 +1114,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
->>> >                         DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
->>> >                 },
->>> >         },
->>> > +       {
->>> > +               .ident = "Lenovo Yoga 2 13",
->>> > +               .matches = {
->>> > +                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->>> > +                       DMI_MATCH(DMI_PRODUCT_VERSION, "Yoga 2 13"),
->>> > +               },
->>> > +       },
->>> >         {
->>> >                 .ident = "Lenovo Yoga 3 1170 / 1470",
->>> >                 .matches = {
->>> > --
->>> > 2.17.0
->>> >
->>>
->>>
->>> --
->>> With Best Regards,
->>> Andy Shevchenko
->
->
->
-> --
-> Loic WEI YU NENG
-> US phone: +1 408 218 2826
-> FR phone: +33 674201069
-> email: loic.wyn@gmail.com
+But should I? Doing so in the same commit would obscure the actual
+change, and a separate commit would needlessly clobber git annotate.
 
+Thank you
+Lubo
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > ---
+> >  drivers/platform/olpc/olpc-ec.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/drivers/platform/olpc/olpc-ec.c
+> > b/drivers/platform/olpc/olpc-ec.c
+> > index f99b183d5296..35a21c66cd0d 100644
+> > --- a/drivers/platform/olpc/olpc-ec.c
+> > +++ b/drivers/platform/olpc/olpc-ec.c
+> > @@ -15,7 +15,6 @@
+> >  #include <linux/module.h>
+> >  #include <linux/list.h>
+> >  #include <linux/olpc-ec.h>
+> > -#include <asm/olpc.h>
+> > 
+> >  struct ec_cmd_desc {
+> >         u8 cmd;
+> > --
+> > 2.19.0
+> > 
+> 
+> 
