@@ -1,74 +1,48 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] ideapad-laptop: Add Lenovo Yoga 2 13 to the no_hw_rfkill
- DMI list
-Date: Tue, 13 Nov 2018 21:16:03 -0800
-Message-ID: <20181114051603.GF7890@fedora.eng.vmware.com>
-References: <20181114022245.5798-1-loic.wyn@gmail.com>
+From: Ayman Bagabas <ayman.bagabas@gmail.com>
+Subject: Re: [PATCH v5 3/3] ALSA: hda: add support for Huawei
+	WMI micmute LED
+Date: Tue, 13 Nov 2018 15:40:22 -0500
+Message-ID: <CAB3uXr5NrrQ4zLvpXM51EJtjJAAScDw_daj5bY40xtsUnj=RGg@mail.gmail.com>
+References: <20181111190250.6055-1-ayman.bagabas@gmail.com>
+ <20181111190250.6055-4-ayman.bagabas@gmail.com> <s5hsh04c28h.wl-tiwai@suse.de>
+ <CAHp75VfH3ypEeM+kEOCsAkKmd9NRUq3Q-soYJ4aPB9+icn3Rdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181114022245.5798-1-loic.wyn@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Loic WEI YU NENG <loic.wyn@gmail.com>
-Cc: andy.shevchenko@gmail.com, ike.pan@canonical.com, andy@infradead.org, trivial@kernel.org, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAHp75VfH3ypEeM+kEOCsAkKmd9NRUq3Q-soYJ4aPB9+icn3Rdg@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: ALSA Development Mailing List <alsa-devel@alsa-project.org>, Kailang Yang <kailang@realtek.com>, Takashi Iwai <tiwai@suse.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Hui Wang <hui.wang@canonical.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Nov 13, 2018 at 06:22:45PM -0800, Loic WEI YU NENG wrote:
-> Some Lenovo ideapad models lack a physical rfkill switch.
-> On Lenovo models Yoga 2 13, ideapad-laptop would wrongly report all
-> radios as blocked by hardware which caused wireless network connections
-> to fail.
-> Add these models without an rfkill switch to the no_hw_rfkill list.
-> 
-> Signed-off-by: Loic WEI YU NENG <loic.wyn@gmail.com>
+On Tue, Nov 13, 2018, 1:51 PM Andy Shevchenko <andy.shevchenko@gmail.com>
+wrote:
 
-Thank you for the patch.
+> On Tue, Nov 13, 2018 at 7:32 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > On Sun, 11 Nov 2018 20:02:45 +0100,
+> > Ayman Bagabas wrote:
+>
+>
+> > With that fix,
+> >   Reviewed-by: Takashi Iwai <tiwai@suse.de>
+>
+> Ayman, please, send next version with requested changes and appended
+> tags. I will apply it.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
 
-In the future, please be sure to check MAINTAINERS and include the
-relevant lists, now Cc'd.
+Andy, to clarify, what tags you referring to? Is it patch version?
 
-I see this in the context of your patch, but can you confirm the current
-driver fails to match your system? It contains the following, which I
-would expect to match:
-
-               .ident = "Lenovo Yoga 2 11 / 13 / Pro",
-                .matches = {
-                        DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-                        DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
-                },
-
-If it doesn't match, what does dmidecode report for SYS_VENDOR and
-BOARD_NAME on your system? Perhaps we need to make the above more
-generic.
-
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index b6489cba2985..1589dffab9fa 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -1188,6 +1188,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
->  			DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
->  		},
->  	},
-> +	{
-> +		.ident = "Lenovo Yoga 2 13",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +			DMI_MATCH(DMI_PRODUCT_VERSION, "Yoga 2 13"),
-> +		},
-> +	},
->  	{
->  		.ident = "Lenovo Yoga 3 1170 / 1470",
->  		.matches = {
-> -- 
-> 2.17.1
-> 
-> 
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+>
