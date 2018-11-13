@@ -1,10 +1,10 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 14/26] platform/x86: intel_telemetry: report debugfs failure
-Date: Tue, 13 Nov 2018 00:51:38 -0500
-Message-ID: <20181113055150.78773-14-sashal@kernel.org>
-References: <20181113055150.78773-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.18 21/39] platform/x86: intel_telemetry: report debugfs failure
+Date: Tue, 13 Nov 2018 00:50:35 -0500
+Message-ID: <20181113055053.78352-21-sashal@kernel.org>
+References: <20181113055053.78352-1-sashal@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181113055150.78773-1-sashal@kernel.org>
+In-Reply-To: <20181113055053.78352-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Matt Turner <matt.turner@intel.com>, Len Brown <len.brown@intel.com>, Souvik Kumar Chakravarty <souvik.k.chakravarty@intel.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
@@ -43,10 +43,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-index d4fc42b4cbeb..401bdc7a9d94 100644
+index ffd0474b0531..1423fa8710fd 100644
 --- a/drivers/platform/x86/intel_telemetry_debugfs.c
 +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-@@ -968,12 +968,16 @@ static int __init telemetry_debugfs_init(void)
+@@ -951,12 +951,16 @@ static int __init telemetry_debugfs_init(void)
  	debugfs_conf = (struct telemetry_debugfs_conf *)id->driver_data;
  
  	err = telemetry_pltconfig_valid();
