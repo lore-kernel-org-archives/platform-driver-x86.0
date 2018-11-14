@@ -1,55 +1,74 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v1 1/5] drivercore: Revert "deferral race condition fix"
-Date: Tue, 13 Nov 2018 16:33:45 -0800
-Message-ID: <20181114003345.GV2089@sirena.org.uk>
-References: <20181110181101.24557-1-andriy.shevchenko@linux.intel.com>
- <1c2c1031-a6b4-cbce-ceed-c2ce229c204e@ti.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] ideapad-laptop: Add Lenovo Yoga 2 13 to the no_hw_rfkill
+ DMI list
+Date: Tue, 13 Nov 2018 21:16:03 -0800
+Message-ID: <20181114051603.GF7890@fedora.eng.vmware.com>
+References: <20181114022245.5798-1-loic.wyn@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kM/PxlMMHsUUNZZW"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1c2c1031-a6b4-cbce-ceed-c2ce229c204e@ti.com>
+In-Reply-To: <20181114022245.5798-1-loic.wyn@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, linux-usb@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Roger Quadros <rogerq@ti.com>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, Sebastian Reichel <sre@kernel.org>, linux-omap@vger.kernel.org, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Grant Likely <grant.likely@linaro.org>, Andrzej Hajda <a.hajda@samsung.com>
+To: Loic WEI YU NENG <loic.wyn@gmail.com>
+Cc: andy.shevchenko@gmail.com, ike.pan@canonical.com, andy@infradead.org, trivial@kernel.org, platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Tue, Nov 13, 2018 at 06:22:45PM -0800, Loic WEI YU NENG wrote:
+> Some Lenovo ideapad models lack a physical rfkill switch.
+> On Lenovo models Yoga 2 13, ideapad-laptop would wrongly report all
+> radios as blocked by hardware which caused wireless network connections
+> to fail.
+> Add these models without an rfkill switch to the no_hw_rfkill list.
+> 
+> Signed-off-by: Loic WEI YU NENG <loic.wyn@gmail.com>
 
---kM/PxlMMHsUUNZZW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you for the patch.
 
-On Mon, Nov 12, 2018 at 06:11:26PM +0200, Peter Ujfalusi wrote:
+In the future, please be sure to check MAINTAINERS and include the
+relevant lists, now Cc'd.
 
-> if we revert the commit then the original issue will re-surfaces. afaik
-> it was not only audio which hit the 'last driver to be probed from the
-> deferred list would never probe, unless we provoke the kernel to load
-> additional module, or remove/reload the module' issue.
+I see this in the context of your patch, but can you confirm the current
+driver fails to match your system? It contains the following, which I
+would expect to match:
 
-Right, aren't we just going to be swapping one bug for another?
+               .ident = "Lenovo Yoga 2 11 / 13 / Pro",
+                .matches = {
+                        DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+                        DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
+                },
 
-> Do I understand correctly that in your case you have two modules
-> (dwc3-pci and extcon-intel-mrfld) in a deferred probe loop, iow both of
-> the drivers returns -EPROBE_DEFER and they just spin?
+If it doesn't match, what does dmidecode report for SYS_VENDOR and
+BOARD_NAME on your system? Perhaps we need to make the above more
+generic.
 
-> If both is deferring, how this supposed to work?
+> ---
+>  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index b6489cba2985..1589dffab9fa 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -1188,6 +1188,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+>  			DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
+>  		},
+>  	},
+> +	{
+> +		.ident = "Lenovo Yoga 2 13",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_VERSION, "Yoga 2 13"),
+> +		},
+> +	},
+>  	{
+>  		.ident = "Lenovo Yoga 3 1170 / 1470",
+>  		.matches = {
+> -- 
+> 2.17.1
+> 
+> 
 
-I'm struggling to follow the original explanation too :(
-
---kM/PxlMMHsUUNZZW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlvrbWMACgkQJNaLcl1U
-h9BMfwf/SGcoei9hwsRaGXL/3Tv+0Qikp9WNRT/2sUol+X6k9NHZwWTd59ts+w5+
-OOV7Cij0cIKBCKSr6X/AGsVL2Oa2MEU8CCdwAKSXVAcNaTXqIWraTFaXRR0YtuY4
-7Uu9Na60NPsDZY/tVmxK8XnAV6wj7IWhgnDGbe05wYnxPLC2oFt2wAGDw7ZMW1RE
-Bzv2NnVs11ZIPphUNa4Eu7mwmYaj9dRAHQN3FEjwMXNXnOKJS3UbRS3PKOJmfzgl
-Nf5PWsBcGLgd99i+s5AZFiZHopRsO75Pld3Vu0T+U252zyXFR1eI4jicojuYrZjF
-DERVmON8tTuNbxNwGpdv71b2jhzOpg==
-=nxIU
------END PGP SIGNATURE-----
-
---kM/PxlMMHsUUNZZW--
+-- 
+Darren Hart
+VMware Open Source Technology Center
