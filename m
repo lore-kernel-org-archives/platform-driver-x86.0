@@ -1,57 +1,142 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] ideapad-laptop: Add Lenovo Yoga 2 13 to the no_hw_rfkill
- DMI list
-Date: Wed, 14 Nov 2018 18:01:47 +0200
-Message-ID: <CAHp75VfX+4SUcKUPfQCeVM2M6dKwD+PZpTDHP2yi4yv35prhVQ@mail.gmail.com>
-References: <20181114151212.20942-1-loic.wyn@gmail.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH RFC] selftests/x86: Add a selftest for SGX
+Date: Wed, 14 Nov 2018 08:09:42 -0800
+Message-ID: <20181114160941.GA1387@linux.intel.com>
+References: <20181113214038.16136-1-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181114151212.20942-1-loic.wyn@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181113214038.16136-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Loic Wei-Yu-Neng <loic.wyn@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>, Andy Shevchenko <andy@infradead.org>, Jiri Kosina <trivial@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, Shuah Khan <shuah@kernel.org>, Ingo Molnar <mingo@kernel.org>, Dominik Brodowski <linux@dominikbrodowski.net>, Andy Lutomirski <luto@kernel.org>, Dmitry Safonov <dima@arista.com>, Florian Weimer <fweimer@redhat.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Suresh Siddha <suresh.b.siddha@intel.com>, open list <linux-kernel@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Nov 14, 2018 at 5:13 PM Loic WEI YU NENG <loic.wyn@gmail.com> wrote:
->
-> Some Lenovo ideapad models lack a physical rfkill switch.
-> On Lenovo models Yoga 2 13, ideapad-laptop would wrongly report all
-> radios as blocked by hardware which caused wireless network connections
-> to fail.
-> Add these models without an rfkill switch to the no_hw_rfkill list.
->
-
-Pushed to my review and testing queue, thanks
-
-> Signed-off-by: Loic WEI YU NENG <loic.wyn@gmail.com>
+On Tue, Nov 13, 2018 at 11:40:09PM +0200, Jarkko Sakkinen wrote:
+> Add a selftest for SGX. It is a trivial test where a simple enclave
+> copies one 64-bit word of memory between two memory locations given to
+> the enclave as arguments.
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 > ---
->  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index b6489cba2985..1589dffab9fa 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -1188,6 +1188,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
->                         DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
->                 },
->         },
-> +       {
-> +               .ident = "Lenovo Yoga 2 13",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +                       DMI_MATCH(DMI_PRODUCT_VERSION, "Yoga 2 13"),
-> +               },
-> +       },
->         {
->                 .ident = "Lenovo Yoga 3 1170 / 1470",
->                 .matches = {
-> --
-> 2.17.1
->
+> +SUBDIRS_64 := sgx
+> +ASSERT(!DEFINED(.altinstructions), "ALTERNATIVES are not supported in the SGX LE")
+> +ASSERT(!DEFINED(.altinstr_replacement), "ALTERNATIVES are not supported in the SGX LE")
+> +ASSERT(!DEFINED(.discard.retpoline_safe), "RETPOLINE ALTERNATIVES are not supported in the SGX LE")
+> +ASSERT(!DEFINED(.discard.nospec), "RETPOLINE ALTERNATIVES are not supported in the SGX LE")
 
+Maybe this?
 
--- 
-With Best Regards,
-Andy Shevchenko
+s/LE/Test Enclave
+
+> diff --git a/tools/testing/selftests/x86/sgx/encl_bootstrap.S b/tools/testing/selftests/x86/sgx/encl_bootstrap.S
+> new file mode 100644
+> index 000000000000..62251c7d9927
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/encl_bootstrap.S
+> @@ -0,0 +1,94 @@
+> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+> +/*
+> + * Copyright(c) 2016-18 Intel Corporation.
+> + */
+> +
+> +	.macro ENCLU
+> +	.byte 0x0f, 0x01, 0xd7
+> +	.endm
+> +
+> +	.section ".tcs", "a"
+> +	.balign	4096
+> +
+> +	.fill	1, 8, 0			# STATE (set by CPU)
+> +	.fill	1, 8, 0			# FLAGS
+> +	.long	encl_ssa		# OSSA
+
+Any reason not to do .quad for OSSA and OENTRY?
+
+> +	.fill	1, 4, 0
+> +	.fill	1, 4, 0			# CSSA (set by CPU)
+> +	.fill	1, 4, 1			# NSSA
+> +	.long	encl_entry		# OENTRY
+> +	.fill	1, 4, 0
+> +	.fill	1, 8, 0			# AEP (set by EENTER and ERESUME)
+> +	.fill	1, 8, 0			# OFSBASE
+> +	.fill	1, 8, 0			# OGSBASE
+> +	.fill	1, 4, 0xFFFFFFFF 	# FSLIMIT
+> +	.fill	1, 4, 0xFFFFFFFF	# GSLIMIT
+> +	.fill	503, 8, 0		# Reserved
+
+I'd prefer to do 1-byte fill with a size of 4024 to match the SDM.
+
+> +
+> +	.text
+> +
+> +encl_entry:
+> +	# %rbx contains the base address for TCS, which is also the first
+> +	# address inside the enclave. By adding $le_stack_end to it, we get the
+> +	# absolute address for the stack.
+> +	lea	(encl_stack)(%rbx), %rax
+> +	xchg	%rsp, %rax
+> +	push	%rax
+> +
+> +	push	%rcx # push the address after EENTER
+> +	push	%rbx # push the enclave base address
+> +
+> +	call	encl_body
+> +
+> +	pop	%rbx # pop the enclave base address
+> +
+> +	# Restore XSAVE registers to a synthetic state.
+> +	mov     $0xFFFFFFFF, %rax
+> +	mov     $0xFFFFFFFF, %rdx
+> +	lea	(xsave_area)(%rbx), %rdi
+> +	fxrstor	(%rdi)
+> +
+> +	# Clear GPRs
+> +	xor     %rcx, %rcx
+> +	xor     %rdx, %rdx
+> +	xor     %rdi, %rdi
+> +	xor     %rsi, %rsi
+> +	xor     %r8, %r8
+> +	xor     %r9, %r9
+> +	xor     %r10, %r10
+> +	xor     %r11, %r11
+> +	xor     %r12, %r12
+> +	xor     %r13, %r13
+> +	xor     %r14, %r14
+> +	xor     %r15, %r15
+> +
+> +	# Reset status flags
+> +	add     %rdx, %rdx # OF = SF = AF = CF = 0; ZF = PF = 1
+> +
+> +	pop	%rbx # pop the address after EENTER
+
+Probably worth expanding the comment to explain that ENCLU[EEXIT] takes the
+target address via %rbx, i.e. we're "returning" from the EENTER "call".
+
+> +
+> +	# Restore the caller stack.
+> +	pop	%rax
+> +	mov	%rax, %rsp
+> +
+> +	# EEXIT
+> +	mov	$4, %rax
+> +	enclu
+> +
+> +	.section ".data", "aw"
+> +
+> +encl_ssa:
+> +	.space 4096
+> +
+> +xsave_area:
+> +	.fill	1, 4, 0x037F		# FCW
+> +	.fill	5, 4, 0
+> +	.fill	1, 4, 0x1F80		# MXCSR
+> +	.fill	1, 4, 0xFFFF		# MXCSR_MASK
+> +	.fill	123, 4, 0
+> +	.fill	1, 4, 0x80000000	# XCOMP_BV[63] = 1, compaction mode
+> +	.fill	12, 4, 0
+> +
+> +	.balign 4096
+> +	.space 8192
+> +encl_stack:
