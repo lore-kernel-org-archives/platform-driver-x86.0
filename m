@@ -1,122 +1,83 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] ideapad-laptop: Add Lenovo Yoga 2 13 to the no_hw_rfkill
- DMI list
-Date: Wed, 14 Nov 2018 12:52:23 +0200
-Message-ID: <CAHp75VeE4ktOQ7AwL6v5Rend0EapEobYymyq2JW=D=nzM2qSbQ@mail.gmail.com>
-References: <20181114022245.5798-1-loic.wyn@gmail.com> <20181114051603.GF7890@fedora.eng.vmware.com>
- <CAJxRB+DyrRWLTsW6fpOYuhS5W3iS3FATSRsoQTFx9ZJjzLv_dg@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v1 2/5] extcon: Return -EPROBE_DEFER when extcon device
+ is not found
+Date: Wed, 14 Nov 2018 20:05:50 +0900
+Message-ID: <5BEC018E.8020102@samsung.com>
+References: <20181110181101.24557-1-andriy.shevchenko@linux.intel.com>
+        <CGME20181110181155epcas2p1ac9bffb2dc7dd6337db5c37f8a87bd5e@epcas2p1.samsung.com>
+        <20181110181101.24557-2-andriy.shevchenko@linux.intel.com>
+        <5BE8C821.5080002@samsung.com> <5BEB63C3.1020504@samsung.com>
+        <CAHp75Vfe586+tr5mUdSHv4ehmpi0KwS_m+UC0tfFHrdXwKhkig@mail.gmail.com>
+        <5BEBE741.6050101@samsung.com> <20181114093652.GK10650@smile.fi.intel.com>
+        <5BEBEF7C.7060003@samsung.com>
+        <CAHp75VcJwR7S8t2jSyRvtjKCwaUA5Pu=EL3+MjCgf3SVWnChEQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJxRB+DyrRWLTsW6fpOYuhS5W3iS3FATSRsoQTFx9ZJjzLv_dg@mail.gmail.com>
+In-reply-to: <CAHp75VcJwR7S8t2jSyRvtjKCwaUA5Pu=EL3+MjCgf3SVWnChEQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Loic Wei-Yu-Neng <loic.wyn@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Ike Panhc <ike.pan@canonical.com>, Andy Shevchenko <andy@infradead.org>, Jiri Kosina <trivial@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, USB <linux-usb@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Guenter Roeck <linux@roeck-us.net>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>, rogerq@ti.com, Linux PM <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Sebastian Reichel <sre@kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Nov 14, 2018 at 9:48 AM Loic Wei-Yu-Neng <loic.wyn@gmail.com> wrote:
->
-> Hello Darren,
-> Yes, the current driver fails to match match my laptop. I need to add this patch to have wifi functional on my laptop.
-> Here is the dmidecode snippet from my laptop:
->
-> Handle 0x0001, DMI type 1, 27 bytes
-> System Information
-> Manufacturer: LENOVO
-> Product Name: 20344
-> Version: Yoga 2 13
-> Serial Number: 3438666500284
-> UUID: 933A1748-ACE0-E311-A534-F8A9633129FA
-> Wake-up Type: Power Switch
-> SKU Number: LENOVO_MT_20344_BU_idea_FM_Yoga 2 13
-> Family: IDEAPAD
->
+On 2018년 11월 14일 19:20, Andy Shevchenko wrote:
+> On Wed, Nov 14, 2018 at 11:48 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>>
+>> On 2018년 11월 14일 18:36, Andy Shevchenko wrote:
+>>> On Wed, Nov 14, 2018 at 06:13:37PM +0900, Chanwoo Choi wrote:
+>>>> On 2018년 11월 14일 17:35, Andy Shevchenko wrote:
+>>>>> On Wed, Nov 14, 2018 at 1:53 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>>>>>
+>>>>>> I was thinking about again to change from NULL to EPROBE_DEFER.
+>>>>>>
+>>>>>> extcon_get_extcon_dev() function was almost called in the probe function.
+>>>>>> But, this function might be called on other position instead of probe.
+>>>>>
+>>>>> *Might be* sounds like a theoretical thing, care to share what is in you mind?
+>>>>> Current users and more important the new coming one are *all* doing the same.
+>>>>>
+>>>>>> ENODEV is more correct error instead of EPROBE_DEFER.
+>>>>>
+>>>>> So, you are proposing to continue duplicating conversion from ENODEV
+>>>>> to EPROBE_DEFER in *each* caller?
+>>>>
+>>>> The extcon core don't know the caller situation is in either probe() or other position
+>>>> in the caller driver. The caller driver should decide the kind of error value
+>>>> by using the return value of extcon_get_extcon_dev().
+>>>>
+>>>> extcon_get_extcon_dev() function cannot be modified for only one case.
+>>>> If some device driver call extcon_get_extcon_dev() out of probe() fuction,
+>>>> EPROBE_DEFER is not always correct.
+>>>
+>>> I agree with this, but look at the current state of affairs. All users do the same.
+>>> If we need to have another case we may consider this later.
+>>
+>> Because we know the potential wrong case of this change, I can't agree this change.
+>> If extcon_get_extcon_dev() returns ENODEV instead of EPROBE_DEFER,
+>> it is clear and then there are no problem on both current and future.
+> 
+> Changing NULL to -ENODEV is a trading bad to worse.
+> I would not go that way, so, it's your call.
 
-Yeah, it has slightly different Version string in your case.
+If you think that this change is not necessary, just keep the current code
+without the modification. Please drop this patch on next version.
 
-Since patchwork (*) still didn't catch your patch you need to resend
-with all maintainers and mailing lists included like Darren suggested.
+> 
+>>> API inside the kernel are not carved in the stone.
+> 
+> Only can repeat myself (see above). While I see *theoretical*
+> rationale on your side, mine has *practical* proofs.
+> So, I'm giving up on this and will duplicate same what it's done in 4
+> current callers.
+> 
 
-(*) patchwork is a database which is tracking patches and patch series
-that are communicated thru mailing lists. It makes maintainer's life
-easier and allow to keep a trail of what has been done and when.
-The web interface to our project is here
-https://patchwork.kernel.org/project/platform-driver-x86/list/
-
-
-> Loic
->
-> On Tue, Nov 13, 2018 at 9:16 PM Darren Hart <dvhart@infradead.org> wrote:
->>
->> On Tue, Nov 13, 2018 at 06:22:45PM -0800, Loic WEI YU NENG wrote:
->> > Some Lenovo ideapad models lack a physical rfkill switch.
->> > On Lenovo models Yoga 2 13, ideapad-laptop would wrongly report all
->> > radios as blocked by hardware which caused wireless network connections
->> > to fail.
->> > Add these models without an rfkill switch to the no_hw_rfkill list.
->> >
->> > Signed-off-by: Loic WEI YU NENG <loic.wyn@gmail.com>
->>
->> Thank you for the patch.
->>
->> In the future, please be sure to check MAINTAINERS and include the
->> relevant lists, now Cc'd.
->>
->> I see this in the context of your patch, but can you confirm the current
->> driver fails to match your system? It contains the following, which I
->> would expect to match:
->>
->>                .ident = "Lenovo Yoga 2 11 / 13 / Pro",
->>                 .matches = {
->>                         DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->>                         DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
->>                 },
->>
->> If it doesn't match, what does dmidecode report for SYS_VENDOR and
->> BOARD_NAME on your system? Perhaps we need to make the above more
->> generic.
->>
->> > ---
->> >  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
->> >  1 file changed, 7 insertions(+)
->> >
->> > diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
->> > index b6489cba2985..1589dffab9fa 100644
->> > --- a/drivers/platform/x86/ideapad-laptop.c
->> > +++ b/drivers/platform/x86/ideapad-laptop.c
->> > @@ -1188,6 +1188,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
->> >                       DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
->> >               },
->> >       },
->> > +     {
->> > +             .ident = "Lenovo Yoga 2 13",
->> > +             .matches = {
->> > +                     DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> > +                     DMI_MATCH(DMI_PRODUCT_VERSION, "Yoga 2 13"),
->> > +             },
->> > +     },
->> >       {
->> >               .ident = "Lenovo Yoga 3 1170 / 1470",
->> >               .matches = {
->> > --
->> > 2.17.1
->> >
->> >
->>
->> --
->> Darren Hart
->> VMware Open Source Technology Center
->
->
->
-> --
-> Loic WEI YU NENG
-> US phone: +1 408 218 2826
-> FR phone: +33 674201069
-> email: loic.wyn@gmail.com
-
-
+I think that it is more important for removing the potential wrong case
+instead of removing the duplicate code. The many device drivers already
+decided the proper error value by using the return value of function of 
+kernel framework.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
