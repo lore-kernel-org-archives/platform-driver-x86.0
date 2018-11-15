@@ -1,40 +1,53 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 02/15] Revert "platform/olpc: Make ec explicitly
- non-modular"
-Date: Thu, 15 Nov 2018 19:57:44 +0100
-Message-ID: <49eee45692f16dcbcf8aceaf3a999bb7f33178ba.camel@v3.sk>
-References: <20181010172300.317643-1-lkundrak@v3.sk>
-         <20181010172300.317643-3-lkundrak@v3.sk> <20181102221626.GC5322@amd>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v16 18/22] platform/x86: Intel SGX driver
+Date: Thu, 15 Nov 2018 22:00:02 +0200
+Message-ID: <20181115200002.GA24006@linux.intel.com>
+References: <20181106134758.10572-1-jarkko.sakkinen@linux.intel.com>
+ <20181106134758.10572-19-jarkko.sakkinen@linux.intel.com>
+ <1541522400.7839.48.camel@intel.com>
+ <20181107163757.GB11509@linux.intel.com>
+ <20181107180057.GB24807@linux.intel.com>
+ <20181108144603.GA14072@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181102221626.GC5322@amd>
+Content-Disposition: inline
+In-Reply-To: <20181108144603.GA14072@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Cameron <quozl@laptop.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, linux-pm@vger.kernel.org
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 2018-11-02 at 23:16 +0100, Pavel Machek wrote:
-> On Wed 2018-10-10 19:22:47, Lubomir Rintel wrote:
-> > It doesn't make sense to always have this built-in, e.g. on ARM
-> > multiplatform kernels. A better way to address the problem the
-> > original
-> > commit aimed to solve is to fix Kconfig.
-> > 
-> > This reverts commit f48d1496b8537d75776478c6942dd87f34d7f270.
+On Thu, Nov 08, 2018 at 04:46:03PM +0200, Jarkko Sakkinen wrote:
+> On Wed, Nov 07, 2018 at 10:00:57AM -0800, Sean Christopherson wrote:
+> > What do we gain by a single buffer vs. separate buffers?  The ioctl()
+> > would be slightly smaller but it seems like the actual code would be
+> > more complex.
 > 
-> This looks ok, but I don't see the Kconfig fix in the series. Is it
-> needed?
+> I'm fine with either. It was just a suggestion.
+> 
+> > The enclave build process also utilizes the backing as temp storage
+> > to avoid having to alloc kernel memory when queueing pages to be added
+> > by the worker thread (which reminds me that I wanted to document why a
+> > worker thread is used).  Keeping this behavior would effectively make
+> > providing backing mandatory.
+> 
+> Would it be a problem just allocate those pages with alloc_page() and
+> free them in the worker thread?
+> 
+> > Are there any potential complications with ENCLS consuming userspace
+> > pointers?  We'd have to wrap them with user_access_{begin,end}() and
+> > probably tweak the fixup, but I assume having the fixup handler means
+> > we're generally ok?
+> 
+> Last time I did it I used get_user_pages() for pinning. I'm not sure
+> why I should do anything but just re-use that.
 
-It's flipped to a tristate in "Platform: OLPC: Move OLPC config symbol
-out of x86 tree" and mentioned in the commit message.
+What about VA page swapping? Not saying that it'd have to be done right
+now but we need to answer whether it is enclave local or a global asset.
+If it is local it would also require an argument.
 
-Perhaps I could made that clear by separating the change into a
-separate patch. I'm keeping it as it is in next version of the patch
-set, but I'm going to improve this one's commit message and sort the
-patches closer together.
+I will most likely won't fix this for v17 because this detail needs
+careful consideration.
 
-> 							Pavel
-
-Lubo								
+/Jarkko
