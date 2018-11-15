@@ -1,176 +1,90 @@
-From: Florian Eckert <fe@dev.tdt.de>
-Subject: [PATCH v4 2/2] platform: Add reset button device for PC Engines APU boards
-Date: Thu, 15 Nov 2018 14:32:01 +0100
-Message-ID: <20181115133201.29092-3-fe@dev.tdt.de>
-References: <20181115133201.29092-1-fe@dev.tdt.de>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 12/15] power: supply: olpc_battery: Use DT to get
+ battery version
+Date: Thu, 15 Nov 2018 19:33:05 +0100
+Message-ID: <320e92fd7d942f364c83a1e8411629c1f8979d5f.camel@v3.sk>
+References: <20181010172300.317643-1-lkundrak@v3.sk>
+         <20181010172300.317643-13-lkundrak@v3.sk>
+         <CAHp75VeEFK+47pz+he6Su630jnoGKPamhatuoXopS5Ee=LZtTg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181115133201.29092-1-fe@dev.tdt.de>
+In-Reply-To: <CAHp75VeEFK+47pz+he6Su630jnoGKPamhatuoXopS5Ee=LZtTg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, andy.shevchenko@gmail.com, piotr.krol@3mdeb.com, Eckert.Florian@googlemail.com, dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Florian Eckert <fe@dev.tdt.de>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, quozl@laptop.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, devel@driverdev.osuosl.or
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add a platform/x86 device "gpio-keys-polled" for the frontpanel reset button.
-This device uses the gpio-apu driver for APU borads from PC Engines.
+On Fri, 2018-10-19 at 16:45 +0300, Andy Shevchenko wrote:
+> On Wed, Oct 10, 2018 at 8:23 PM Lubomir Rintel <lkundrak@v3.sk>
+> wrote:
+> > Avoid using the x86 OLPC platform specific call to get the board
+> > version. It won't work on FDT-based ARM MMP2 platform.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > ---
+> >  drivers/power/supply/olpc_battery.c | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/power/supply/olpc_battery.c
+> > b/drivers/power/supply/olpc_battery.c
+> > index 5a97e42a3547..540d44bf536f 100644
+> > --- a/drivers/power/supply/olpc_battery.c
+> > +++ b/drivers/power/supply/olpc_battery.c
+> > @@ -19,6 +19,7 @@
+> >  #include <linux/jiffies.h>
+> >  #include <linux/sched.h>
+> >  #include <linux/olpc-ec.h>
+> > +#include <linux/of.h>
+> >  #include <asm/olpc.h>
+> 
+> Keep it sorted, otherwise the change is good!
 
-Signed-off-by: Florian Eckert <fe@dev.tdt.de>
----
- drivers/platform/x86/Kconfig                  |  11 +++
- drivers/platform/x86/Makefile                 |   1 +
- drivers/platform/x86/pcengines-apu-platform.c | 114 ++++++++++++++++++++++++++
- 3 files changed, 126 insertions(+)
- create mode 100644 drivers/platform/x86/pcengines-apu-platform.c
+Yes, but... the headers are not sorted at the moment. I'll sort the new
+include before <linux/platform_device.h> so that I don't mess it up
+even more, but I don't feel like just sorting everything so that I
+don't obscure the actual change.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 54f6a40c75c6..5cd27c2174cb 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1288,6 +1288,17 @@ config INTEL_ATOMISP2_PM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel_atomisp2_pm.
- 
-+config PCENGINES_APU_PLATFORM
-+	bool "PCEngines APU System Support"
-+	depends on X86_64 && DMI && GPIOLIB
-+	help
-+	  This option enables system support for the PCEngines APU platform.
-+	  At present this just adds the GPIO reset button platform device on
-+	  APU2/APU3 boards.
-+
-+	  Note: You must still enable the drivers for GPIO and LED support
-+	  (GPIO_APU & LEDS_APU) to actually use the LEDs and the GPIOs.
-+
- endif # X86_PLATFORM_DEVICES
- 
- config PMC_ATOM
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 39ae94135406..f899cc4c6b48 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -96,3 +96,4 @@ obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
- obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
- obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
- obj-$(CONFIG_INTEL_ATOMISP2_PM)	+= intel_atomisp2_pm.o
-+obj-$(CONFIG_PCENGINES_APU_PLATFORM)	+= pcengines-apu-platform.o
-diff --git a/drivers/platform/x86/pcengines-apu-platform.c b/drivers/platform/x86/pcengines-apu-platform.c
-new file mode 100644
-index 000000000000..3bfbaa93cb11
---- /dev/null
-+++ b/drivers/platform/x86/pcengines-apu-platform.c
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * System Specific setup for PC-Engines APU2/APU3 devices
-+ *
-+ * Copyright (C) 2018 Florian Eckert <fe@dev.tdt.de>
-+ */
-+
-+#include <linux/dmi.h>
-+#include <linux/gpio_keys.h>
-+#include <linux/input.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+static const struct dmi_system_id apu2_gpio_dmi_table[] __initconst = {
-+	/* PC Engines APU2 with "Legacy" bios < 4.0.8 */
-+	{
-+		.ident = "apu2",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "APU2")
-+		}
-+	},
-+	/* PC Engines APU2 with "Legacy" bios >= 4.0.8 */
-+	{
-+		.ident = "apu2",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "apu2")
-+		}
-+	},
-+	/* PC Engines APU2 with "Mainline" bios */
-+	{
-+		.ident = "apu2",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "PC Engines apu2")
-+		}
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(dmi, apu2_gpio_dmi_table);
-+
-+static const struct dmi_system_id apu3_gpio_dmi_table[] __initconst = {
-+	/* PC Engines APU3 with "Legacy" bios < 4.0.8 */
-+	{
-+		.ident = "apu3",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "APU3")
-+		}
-+	},
-+	/* PC Engines APU3 with "Legacy" bios >= 4.0.8 */
-+	{
-+		.ident = "apu3",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "apu3")
-+		}
-+	},
-+	/* PC Engines APU3 with "Mainline" bios */
-+	{
-+		.ident = "apu3",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "PC Engines apu3")
-+		}
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(dmi, apu3_gpio_dmi_table);
-+
-+
-+static struct gpio_keys_button apu_gpio_buttons[] = {
-+	{
-+		.code			= KEY_RESTART,
-+		.gpio			= 20,
-+		.active_low		= 1,
-+		.desc			= "Reset button",
-+		.type			= EV_KEY,
-+		.debounce_interval	= 60,
-+	}
-+};
-+
-+static struct gpio_keys_platform_data apu_buttons_data = {
-+	.buttons		= apu_gpio_buttons,
-+	.nbuttons		= ARRAY_SIZE(apu_gpio_buttons),
-+	.poll_interval		= 20,
-+};
-+
-+static struct platform_device apu_button_dev = {
-+	.name			= "gpio-keys-polled",
-+	.id			= 1,
-+	.dev = {
-+		.platform_data		= &apu_buttons_data,
-+	}
-+};
-+
-+static int __init apu_init(void)
-+{
-+	if (!(dmi_check_system(apu2_gpio_dmi_table)) &&
-+		!(dmi_check_system(apu3_gpio_dmi_table))) {
-+		return -ENODEV;
-+	}
-+
-+	return platform_device_register(&apu_button_dev);
-+}
-+
-+static void __exit apu_exit(void)
-+{
-+	platform_device_unregister(&apu_button_dev);
-+}
-+
-+module_init(apu_init);
-+module_exit(apu_exit);
--- 
-2.11.0
+
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> > 
+> > @@ -622,11 +623,13 @@ static int olpc_battery_probe(struct
+> > platform_device *pdev)
+> >         olpc_ac = power_supply_register(&pdev->dev, &olpc_ac_desc,
+> > NULL);
+> >         if (IS_ERR(olpc_ac))
+> >                 return PTR_ERR(olpc_ac);
+> > -
+> > -       if (olpc_board_at_least(olpc_board_pre(0xd0))) { /* XO-1.5
+> > */
+> > +       if (of_property_match_string(pdev->dev.of_node,
+> > "compatible",
+> > +                                       "olpc,xo1.5-battery") >= 0)
+> > {
+> > +               /* XO-1.5 */
+> >                 olpc_bat_desc.properties = olpc_xo15_bat_props;
+> >                 olpc_bat_desc.num_properties =
+> > ARRAY_SIZE(olpc_xo15_bat_props);
+> > -       } else { /* XO-1 */
+> > +       } else {
+> > +               /* XO-1 */
+> >                 olpc_bat_desc.properties = olpc_xo1_bat_props;
+> >                 olpc_bat_desc.num_properties =
+> > ARRAY_SIZE(olpc_xo1_bat_props);
+> >         }
+> > @@ -672,6 +675,7 @@ static int olpc_battery_remove(struct
+> > platform_device *pdev)
+> > 
+> >  static const struct of_device_id olpc_battery_ids[] = {
+> >         { .compatible = "olpc,xo1-battery" },
+> > +       { .compatible = "olpc,xo1.5-battery" },
+> >         {}
+> >  };
+> >  MODULE_DEVICE_TABLE(of, olpc_battery_ids);
+> > --
+> > 2.19.0
+> > 
+
+Lubo
