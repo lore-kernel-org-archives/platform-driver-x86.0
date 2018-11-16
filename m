@@ -1,107 +1,50 @@
-From: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Cleanup
- quirks macros
-Date: Fri, 16 Nov 2018 14:18:00 +0100
-Message-ID: <20181116131800.GA11114@Mindship-05.localdomain>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v17 01/23] x86/sgx: Update MAINTAINERS
+Date: Fri, 16 Nov 2018 15:22:48 +0100
+Message-ID: <20181116142248.GH20313@zn.tnic>
+References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
+ <20181116010412.23967-2-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20181116010412.23967-2-jarkko.sakkinen@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, mark.shanahan@intel.com, luto@amacapital.net, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, open list <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Signed-off-by: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-The only difference in the generated code is that the quirk values are
-now within parentheses.
+On Fri, Nov 16, 2018 at 03:01:08AM +0200, Jarkko Sakkinen wrote:
+> Add the maintainer information for the SGX subsystem.
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> ---
+>  MAINTAINERS | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0abecc528dac..aaf56b544858 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7676,6 +7676,13 @@ L:	linux-gpio@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/gpio/gpio-intel-mid.c
+>  
+> +INTEL SGX
+> +M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> +L:	linux-sgx@vger.kernel.org
+> +Q:	https://patchwork.kernel.org/project/intel-sgx/list/
+> +F:	drivers/platform/x86/intel_sgx/
 
- drivers/platform/x86/thinkpad_acpi.c | 45 ++++++++--------------------
- 1 file changed, 13 insertions(+), 32 deletions(-)
+Looking at your diffstat, this doesn't cover it all.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index fde08a997..e1e51bfb3 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -478,6 +478,12 @@ do {									\
- 	  .ec = TPACPI_MATCH_ANY,		\
- 	  .quirks = (__quirk) }
- 
-+#define TPACPI_QEC_IBM(__id1, __id2, __quirk)	\
-+	{ .vendor = PCI_VENDOR_ID_IBM,		\
-+	  .bios = TPACPI_MATCH_ANY,		\
-+	  .ec = TPID(__id1, __id2),		\
-+	  .quirks = (__quirk) }
-+
- #define TPACPI_QEC_LNV(__id1, __id2, __quirk)	\
- 	{ .vendor = PCI_VENDOR_ID_LENOVO,	\
- 	  .bios = TPACPI_MATCH_ANY,		\
-@@ -5973,9 +5979,6 @@ static const struct tpacpi_quirk led_useful_qtable[] __initconst = {
- 	},
- };
- 
--#undef TPACPI_LEDQ_IBM
--#undef TPACPI_LEDQ_LNV
--
- static enum led_access_mode __init led_init_detect_mode(void)
- {
- 	acpi_status status;
-@@ -8710,40 +8713,18 @@ static const struct attribute_group fan_attr_group = {
- 	.attrs = fan_attributes,
- };
- 
--#define	TPACPI_FAN_Q1	0x0001		/* Unitialized HFSP */
-+#define TPACPI_FAN_Q1	0x0001		/* Unitialized HFSP */
- #define TPACPI_FAN_2FAN	0x0002		/* EC 0x31 bit 0 selects fan2 */
- 
--#define TPACPI_FAN_QI(__id1, __id2, __quirks)	\
--	{ .vendor = PCI_VENDOR_ID_IBM,		\
--	  .bios = TPACPI_MATCH_ANY,		\
--	  .ec = TPID(__id1, __id2),		\
--	  .quirks = __quirks }
--
--#define TPACPI_FAN_QL(__id1, __id2, __quirks)	\
--	{ .vendor = PCI_VENDOR_ID_LENOVO,	\
--	  .bios = TPACPI_MATCH_ANY,		\
--	  .ec = TPID(__id1, __id2),		\
--	  .quirks = __quirks }
--
--#define TPACPI_FAN_QB(__id1, __id2, __quirks)	\
--	{ .vendor = PCI_VENDOR_ID_LENOVO,	\
--	  .bios = TPID(__id1, __id2),		\
--	  .ec = TPACPI_MATCH_ANY,		\
--	  .quirks = __quirks }
--
- static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
--	TPACPI_FAN_QI('1', 'Y', TPACPI_FAN_Q1),
--	TPACPI_FAN_QI('7', '8', TPACPI_FAN_Q1),
--	TPACPI_FAN_QI('7', '6', TPACPI_FAN_Q1),
--	TPACPI_FAN_QI('7', '0', TPACPI_FAN_Q1),
--	TPACPI_FAN_QL('7', 'M', TPACPI_FAN_2FAN),
--	TPACPI_FAN_QB('N', '1', TPACPI_FAN_2FAN),
-+	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
-+	TPACPI_QEC_IBM('7', '8', TPACPI_FAN_Q1),
-+	TPACPI_QEC_IBM('7', '6', TPACPI_FAN_Q1),
-+	TPACPI_QEC_IBM('7', '0', TPACPI_FAN_Q1),
-+	TPACPI_QEC_LNV('7', 'M', TPACPI_FAN_2FAN),
-+	TPACPI_Q_LNV('N', '1', TPACPI_FAN_2FAN),
- };
- 
--#undef TPACPI_FAN_QL
--#undef TPACPI_FAN_QI
--#undef TPACPI_FAN_QB
--
- static int __init fan_init(struct ibm_init_struct *iibm)
- {
- 	int rc;
+One example: arch/x86/kernel/cpu/intel_sgx.c
+
+Also, was there any particular reasoning for calling the file
+intel_sgx.c instead of simply sgx.c ?
+
 -- 
-2.19.1
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
