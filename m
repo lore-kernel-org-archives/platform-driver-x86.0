@@ -1,82 +1,54 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v17 03/23] x86/cpufeatures: Add SGX sub-features (as
- Linux-defined bits)
-Date: Fri, 16 Nov 2018 15:37:15 +0100
-Message-ID: <20181116143715.GJ20313@zn.tnic>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v17 01/23] x86/sgx: Update MAINTAINERS
+Date: Fri, 16 Nov 2018 17:07:14 +0200
+Message-ID: <20181116150714.GA4244@linux.intel.com>
 References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
- <20181116010412.23967-4-jarkko.sakkinen@linux.intel.com>
+ <20181116010412.23967-2-jarkko.sakkinen@linux.intel.com>
+ <20181116142248.GH20313@zn.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181116010412.23967-4-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20181116142248.GH20313@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, mark.shanahan@intel.com, luto@amacapital.net, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, Fenghua Yu <fenghua.yu@intel.com>, Brijesh Singh <brijesh.singh@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, open list:X86 ARCHITECTURE (32-BIT AND 6
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, mark.shanahan@intel.com, luto@amacapital.net, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, open list <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 16, 2018 at 03:01:10AM +0200, Jarkko Sakkinen wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Fri, Nov 16, 2018 at 03:22:48PM +0100, Borislav Petkov wrote:
+> On Fri, Nov 16, 2018 at 03:01:08AM +0200, Jarkko Sakkinen wrote:
+> > Add the maintainer information for the SGX subsystem.
+> > 
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> >  MAINTAINERS | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 0abecc528dac..aaf56b544858 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -7676,6 +7676,13 @@ L:	linux-gpio@vger.kernel.org
+> >  S:	Maintained
+> >  F:	drivers/gpio/gpio-intel-mid.c
+> >  
+> > +INTEL SGX
+> > +M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > +L:	linux-sgx@vger.kernel.org
+> > +Q:	https://patchwork.kernel.org/project/intel-sgx/list/
+> > +F:	drivers/platform/x86/intel_sgx/
 > 
-> CPUID_12_EAX is an Intel-defined feature bits leaf dedicated for SGX
-> that enumerates the SGX instruction sets that are supported by the
-> CPU, e.g. SGX1, SGX2, etc...  Because Linux currently only cares about
-> two bits (SGX1 and SGX2) and there are currently only four documented
-> bits in total, relocate the bits to Linux-defined word 8 to conserve
-> space.
+> Looking at your diffstat, this doesn't cover it all.
 > 
-> But, keep the bit positions identical between the Intel-defined value
-> and the Linux-defined value, e.g. keep SGX1 at bit 0.  This allows KVM
-> to use its existing code for probing guest CPUID bits using Linux's
-> X86_FEATURE_* definitions.  To do so, shift around some existing bits
-> to effectively reserve bits 0-7 of word 8 for SGX sub-features.
+> One example: arch/x86/kernel/cpu/intel_sgx.c
 > 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  arch/x86/include/asm/cpufeatures.h       | 21 +++++++++++++++------
->  arch/x86/kernel/cpu/scattered.c          |  2 ++
->  tools/arch/x86/include/asm/cpufeatures.h | 21 +++++++++++++++------
->  3 files changed, 32 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index da7fed4939a3..afdf5f2e13b5 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -222,12 +222,21 @@
->  #define X86_FEATURE_L1TF_PTEINV		( 7*32+29) /* "" L1TF workaround PTE inversion */
->  #define X86_FEATURE_IBRS_ENHANCED	( 7*32+30) /* Enhanced IBRS */
->  
-> -/* Virtualization flags: Linux defined, word 8 */
-> -#define X86_FEATURE_TPR_SHADOW		( 8*32+ 0) /* Intel TPR Shadow */
-> -#define X86_FEATURE_VNMI		( 8*32+ 1) /* Intel Virtual NMI */
-> -#define X86_FEATURE_FLEXPRIORITY	( 8*32+ 2) /* Intel FlexPriority */
-> -#define X86_FEATURE_EPT			( 8*32+ 3) /* Intel Extended Page Table */
-> -#define X86_FEATURE_VPID		( 8*32+ 4) /* Intel Virtual Processor ID */
-> +/*
-> + * Scattered Intel features: Linux defined, word 8.
-> + *
-> + * Note that the bit location of the SGX features is meaningful as KVM expects
-> + * the Linux defined bit to match the Intel defined bit, e.g. X86_FEATURE_SGX1
-> + * must remain at bit 0, SGX2 at bit 1, etc...
-> + */
-> +#define X86_FEATURE_SGX1		( 8*32+ 0) /* SGX1 leaf functions */
-> +#define X86_FEATURE_SGX2		( 8*32+ 1) /* SGX2 leaf functions */
-> +
+> Also, was there any particular reasoning for calling the file
+> intel_sgx.c instead of simply sgx.c ?
 
-Yeah, add here	^^^^
+Ouch. There has been so much work in other patches that I've forgot
+to update it :-( Sorry.
 
-/* Bits [0:7] are reserved for SGX */
+Yes, I think it could be renamed as sgx.c. Should the driver part be
+also called as sgx.ko?
 
-or so, so that people don't use those. Once CPUID(12) gets more bits
-added to it, I don't see anything wrong with allocating a separate leaf
-for that.
-
-BUT(!), the question then is whether kvm would still be ok with that?
-I'm thinking yes, as it will simply use the new definitions, or?
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+/Jarkko
