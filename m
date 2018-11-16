@@ -1,80 +1,107 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
-Date: Fri, 16 Nov 2018 13:23:26 +0200
-Message-ID: <20181116112326.GA6445@linux.intel.com>
-References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
- <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com>
- <6fe0687b-70c9-9e7d-6f05-8963f18f0636@infradead.org>
+From: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Cleanup
+ quirks macros
+Date: Fri, 16 Nov 2018 14:18:00 +0100
+Message-ID: <20181116131800.GA11114@Mindship-05.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <6fe0687b-70c9-9e7d-6f05-8963f18f0636@infradead.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, mark.shanahan@intel.com, luto@amacapital.net, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Nov 15, 2018 at 05:37:27PM -0800, Randy Dunlap wrote:
-> On 11/15/18 5:01 PM, Jarkko Sakkinen wrote:
-> > Intel Software Guard eXtensions (SGX) is a set of CPU instructions that
-> > can be used by applications to set aside private regions of code and
-> > data. The code outside the enclave is disallowed to access the memory
-> > inside the enclave by the CPU access control.
-> > 
-> > SGX driver provides a ioctl API for loading and initializing enclaves.
-> > Address range for enclaves is reserved with mmap() and they are
-> > destroyed with munmap(). Enclave construction, measurement and
-> > initialization is done with the provided the ioctl API.
-> > 
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Co-developed-by: Serge Ayoun <serge.ayoun@intel.com>
-> > Signed-off-by: Serge Ayoun <serge.ayoun@intel.com>
-> > Co-developed-by: Shay Katz-zamir <shay.katz-zamir@intel.com>
-> > Signed-off-by: Shay Katz-zamir <shay.katz-zamir@intel.com>
-> > Co-developed-by: Suresh Siddha <suresh.b.siddha@intel.com>
-> > Signed-off-by: Suresh Siddha <suresh.b.siddha@intel.com>
-> > ---
-> 
-> > diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/asm/sgx.h
-> > new file mode 100644
-> > index 000000000000..aadf9c76e360
-> > --- /dev/null
-> > +++ b/arch/x86/include/uapi/asm/sgx.h
-> > @@ -0,0 +1,59 @@
-> > +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
-> > +/**
-> > + * Copyright(c) 2016-18 Intel Corporation.
-> > + */
-> > +#ifndef _UAPI_ASM_X86_SGX_H
-> > +#define _UAPI_ASM_X86_SGX_H
-> > +
-> > +#include <linux/types.h>
-> > +#include <linux/ioctl.h>
-> > +
-> > +#define SGX_MAGIC 0xA4
-> > +
-> > +#define SGX_IOC_ENCLAVE_CREATE \
-> > +	_IOW(SGX_MAGIC, 0x00, struct sgx_enclave_create)
-> > +#define SGX_IOC_ENCLAVE_ADD_PAGE \
-> > +	_IOW(SGX_MAGIC, 0x01, struct sgx_enclave_add_page)
-> > +#define SGX_IOC_ENCLAVE_INIT \
-> > +	_IOW(SGX_MAGIC, 0x02, struct sgx_enclave_init)
-> > +
-> > +/* IOCTL return values */
-> > +#define SGX_POWER_LOST_ENCLAVE		0x40000000
-> 
-> 
-> Hi,
-> The ioctl magic number should be documented in
-> Documentation/ioctl/ioctl-number.txt.
-> 
-> ta.
-> -- 
-> ~Randy
+Signed-off-by: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+The only difference in the generated code is that the quirk values are
+now within parentheses.
 
-Thank you. Addressed now in https://github.com/jsakkine-intel/linux-sgx.git.
+ drivers/platform/x86/thinkpad_acpi.c | 45 ++++++++--------------------
+ 1 file changed, 13 insertions(+), 32 deletions(-)
 
-/Jarkko
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index fde08a997..e1e51bfb3 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -478,6 +478,12 @@ do {									\
+ 	  .ec = TPACPI_MATCH_ANY,		\
+ 	  .quirks = (__quirk) }
+ 
++#define TPACPI_QEC_IBM(__id1, __id2, __quirk)	\
++	{ .vendor = PCI_VENDOR_ID_IBM,		\
++	  .bios = TPACPI_MATCH_ANY,		\
++	  .ec = TPID(__id1, __id2),		\
++	  .quirks = (__quirk) }
++
+ #define TPACPI_QEC_LNV(__id1, __id2, __quirk)	\
+ 	{ .vendor = PCI_VENDOR_ID_LENOVO,	\
+ 	  .bios = TPACPI_MATCH_ANY,		\
+@@ -5973,9 +5979,6 @@ static const struct tpacpi_quirk led_useful_qtable[] __initconst = {
+ 	},
+ };
+ 
+-#undef TPACPI_LEDQ_IBM
+-#undef TPACPI_LEDQ_LNV
+-
+ static enum led_access_mode __init led_init_detect_mode(void)
+ {
+ 	acpi_status status;
+@@ -8710,40 +8713,18 @@ static const struct attribute_group fan_attr_group = {
+ 	.attrs = fan_attributes,
+ };
+ 
+-#define	TPACPI_FAN_Q1	0x0001		/* Unitialized HFSP */
++#define TPACPI_FAN_Q1	0x0001		/* Unitialized HFSP */
+ #define TPACPI_FAN_2FAN	0x0002		/* EC 0x31 bit 0 selects fan2 */
+ 
+-#define TPACPI_FAN_QI(__id1, __id2, __quirks)	\
+-	{ .vendor = PCI_VENDOR_ID_IBM,		\
+-	  .bios = TPACPI_MATCH_ANY,		\
+-	  .ec = TPID(__id1, __id2),		\
+-	  .quirks = __quirks }
+-
+-#define TPACPI_FAN_QL(__id1, __id2, __quirks)	\
+-	{ .vendor = PCI_VENDOR_ID_LENOVO,	\
+-	  .bios = TPACPI_MATCH_ANY,		\
+-	  .ec = TPID(__id1, __id2),		\
+-	  .quirks = __quirks }
+-
+-#define TPACPI_FAN_QB(__id1, __id2, __quirks)	\
+-	{ .vendor = PCI_VENDOR_ID_LENOVO,	\
+-	  .bios = TPID(__id1, __id2),		\
+-	  .ec = TPACPI_MATCH_ANY,		\
+-	  .quirks = __quirks }
+-
+ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+-	TPACPI_FAN_QI('1', 'Y', TPACPI_FAN_Q1),
+-	TPACPI_FAN_QI('7', '8', TPACPI_FAN_Q1),
+-	TPACPI_FAN_QI('7', '6', TPACPI_FAN_Q1),
+-	TPACPI_FAN_QI('7', '0', TPACPI_FAN_Q1),
+-	TPACPI_FAN_QL('7', 'M', TPACPI_FAN_2FAN),
+-	TPACPI_FAN_QB('N', '1', TPACPI_FAN_2FAN),
++	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
++	TPACPI_QEC_IBM('7', '8', TPACPI_FAN_Q1),
++	TPACPI_QEC_IBM('7', '6', TPACPI_FAN_Q1),
++	TPACPI_QEC_IBM('7', '0', TPACPI_FAN_Q1),
++	TPACPI_QEC_LNV('7', 'M', TPACPI_FAN_2FAN),
++	TPACPI_Q_LNV('N', '1', TPACPI_FAN_2FAN),
+ };
+ 
+-#undef TPACPI_FAN_QL
+-#undef TPACPI_FAN_QI
+-#undef TPACPI_FAN_QB
+-
+ static int __init fan_init(struct ibm_init_struct *iibm)
+ {
+ 	int rc;
+-- 
+2.19.1
