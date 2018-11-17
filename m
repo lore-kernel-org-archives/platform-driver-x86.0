@@ -1,27 +1,38 @@
-From: Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH v17 07/23] x86/mm: x86/sgx: Add new 'PF_SGX' page fault
- error code bit
-Date: Fri, 16 Nov 2018 15:33:35 -0800
-Message-ID: <38993cf5-039a-d582-1759-876cb948c582@intel.com>
-References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
- <20181116010412.23967-8-jarkko.sakkinen@linux.intel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 02/17] dt-bindings: olpc,xo1.75-ec: Add OLPC XO-1.75
+ EC bindings
+Date: Sat, 17 Nov 2018 10:03:05 -0600
+Message-ID: <20181117160305.GA31494@bogus>
+References: <20181116162403.49854-1-lkundrak@v3.sk>
+ <20181116162403.49854-3-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181116010412.23967-8-jarkko.sakkinen@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181116162403.49854-3-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org
-Cc: sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, mark.shanahan@intel.com, luto@amacapital.net, Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Cameron <quozl@laptop.org>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, linux-pm@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 11/15/18 5:01 PM, Jarkko Sakkinen wrote:
-> The SGX bit is set in the #PF error code if and only if the fault is
-> detected by the Enclave Page Cache Map (EPCM), a hardware-managed
-> table that enforces the paging permissions defined by the enclave,
-> e.g. to prevent the kernel from changing the permissions of an
-> enclave's page(s).
+On Fri, 16 Nov 2018 17:23:48 +0100, Lubomir Rintel wrote:
+> The OLPC XO-1.75 Embedded Controller is a SPI master that uses extra
+> signals for handshaking. It needs to know when is the slave (Linux)
+> side's TX FIFO ready for transfer (the ready-gpio signal on the SPI
+> controller node) and when does it wish to respond with a command (the
+> cmd-gpio property).
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+> ---
+> Changes since v1:
+> - s/cmd-gpio/cmd-gpios/
+> - s/ready-gpio/ready-gpios/ in the documentation paragraph
+> - Remove status = "okay" from the example
+> 
+>  .../bindings/misc/olpc,xo1.75-ec.txt          | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt
+> 
 
-This should probably also mention that, despite being a page fault,
-X86_PF_SGX has nothing to do with paging itself.
+Reviewed-by: Rob Herring <robh@kernel.org>
