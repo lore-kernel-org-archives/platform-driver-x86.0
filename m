@@ -1,107 +1,76 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 1/2] gpio: Add driver for PC Engines APU boards
-Date: Mon, 19 Nov 2018 14:46:06 +0100
-Message-ID: <CACRpkdZx-GgfgfGmB6KmTjzBEMnKyq3pUsHsgaZ1uBooN_sj9g@mail.gmail.com>
-References: <20181115133201.29092-1-fe@dev.tdt.de> <20181115133201.29092-2-fe@dev.tdt.de>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
+Date: Mon, 19 Nov 2018 17:06:55 +0200
+Message-ID: <20181119150655.GA11843@linux.intel.com>
+References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
+ <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181115133201.29092-2-fe@dev.tdt.de>
+Content-Disposition: inline
+In-Reply-To: <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: fe@dev.tdt.de
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, piotr.krol@3mdeb.com, Eckert.Florian@googlemail.com, Darren Hart <dvhart@infradead.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org
+Cc: dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, mark.shanahan@intel.com, luto@amacapital.net, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Nov 15, 2018 at 2:32 PM Florian Eckert <fe@dev.tdt.de> wrote:
+On Fri, Nov 16, 2018 at 03:01:25AM +0200, Jarkko Sakkinen wrote:
+> Intel Software Guard eXtensions (SGX) is a set of CPU instructions that
+> can be used by applications to set aside private regions of code and
+> data. The code outside the enclave is disallowed to access the memory
+> inside the enclave by the CPU access control.
+> 
+> SGX driver provides a ioctl API for loading and initializing enclaves.
+> Address range for enclaves is reserved with mmap() and they are
+> destroyed with munmap(). Enclave construction, measurement and
+> initialization is done with the provided the ioctl API.
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Co-developed-by: Serge Ayoun <serge.ayoun@intel.com>
+> Signed-off-by: Serge Ayoun <serge.ayoun@intel.com>
+> Co-developed-by: Shay Katz-zamir <shay.katz-zamir@intel.com>
+> Signed-off-by: Shay Katz-zamir <shay.katz-zamir@intel.com>
+> Co-developed-by: Suresh Siddha <suresh.b.siddha@intel.com>
+> Signed-off-by: Suresh Siddha <suresh.b.siddha@intel.com>
 
-> Add a new device driver "gpio-apu" which will handle the GPIOs on APU2
-> and APU3 devices from PC Engines.
->
-> APU2 (https://pcengines.ch/schema/apu2c.pdf page 7):
-> - G32 is "button_reset" connected to the smd-button on the frontpanel
-> - G50 is "mpcie2_reset" connected to mPCIe2 reset line
-> - G51 is "mpcie3_reset" connected to mPCIe3 reset line
->
-> APU3 (https://pcengines.ch/schema/apu3c.pdf page 7):
-> - G32 is "button_reset" connected to the smd-button on the frontpanel
-> - G50 is "mpcie2_reset" connected to mPCIe2 reset line
-> - G51 is "mpcie3_reset" connected to mPCIe3 reset line
-> - G33 is "simswap" connected to SIM switch IC to swap the SIM between
->   mPCIe2 and mPCIe3 slot
->
-> Signed-off-by: Florian Eckert <fe@dev.tdt.de>
+Question: should be dissolve the driver completely and move this code to
+arch/x86/kernel/cpu/sgx/ (and rename intel_sgx.c as main.c)? Swapping
+patch removes the possibility to compile this as a module anyway.
 
-This is looking better and better! Thanks to everyone helping out
-and thanks for your perseverance Florian!
+Would make also maintainer hierarchy more clear and clean albeit that
+cannot be a guiding reason to do such change. Here's the current
+MAINTAINERS entry in my master:
 
-> +config GPIO_APU
-> +       tristate "PC Engines APU2/APU3 GPIO support"
-> +       depends on X86
-> +       select GPIO_GENERIC
+INTEL SGX
+M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+M:	Sean Christopherson <sean.j.christopherson@intel.com>
+L:	linux-sgx@vger.kernel.org
+S:	Maintained
+Q:	https://patchwork.kernel.org/project/intel-sgx/list/
+T:	git https://github.com/jsakkine-intel/linux-sgx.git
+F:	arch/x86/include/asm/sgx.h
+F:	arch/x86/include/uapi/asm/sgx.h
+F:	arch/x86/kernel/cpu/intel_sgx.c
+F:	drivers/platform/x86/intel_sgx/*
+K:	\bSGX_
 
-Excellent idea.
+If we do this, we would end up with this:
 
-But it seems you are not using this. You would be using
-it if you used bgpio_init() but if I understand correctly this
-driver cannot use that because this GPIO is something like
-one register per pin, correct?
+INTEL SGX
+M:	Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+M:	Sean Christopherson <sean.j.christopherson@intel.com>
+L:	linux-sgx@vger.kernel.org
+S:	Maintained
+Q:	https://patchwork.kernel.org/project/intel-sgx/list/
+T:	git https://github.com/jsakkine-intel/linux-sgx.git
+F:	arch/x86/include/asm/sgx.h
+F:	arch/x86/include/uapi/asm/sgx.h
+F:	arch/x86/kernel/cpu/sgx/*
+K:	\bSGX_
 
-Let me suggest:
+Then once the base code has been merged I would put my PRs to x86
+maintainers for subsequent kernel releases.
 
-> +struct apu_gpio_pdata {
-> +       struct platform_device *pdev;
-> +       struct gpio_chip *chip;
-
-Make that a real member of this struct and not a pointer.
-I.e. just remove the "*".
-
-> +static struct apu_gpio_pdata *apu_gpio;
-
-Why a static local? It seems you can just pass around
-the pointer.
-
-> +static int gpio_apu_get_dir(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       u32 val;
-> +
-> +       spin_lock(&apu_gpio->lock);
-> +
-> +       val = ~ioread32(apu_gpio->addr[offset]);
-> +       val = (val >> APU_GPIO_BIT_DIR) & 1;
-
-I would just:
-
-#include <linux/bits.h>
-
-val = ~ioread32(apu_gpio->addr[offset]);
-spin_unlock();
-
-return !!(val & BIT(APU_GPIO_BIT_DIR));
-
-This clamps the value to [0,1] in a nice way.
-
-> +static int gpio_apu_get_data(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       u32 val;
-> +
-> +       spin_lock(&apu_gpio->lock);
-> +
-> +       val = ioread32(apu_gpio->addr[offset]);
-> +
-> +       spin_unlock(&apu_gpio->lock);
-> +
-> +       return (val >> APU_GPIO_BIT_RD) & 1;
-
-return !!(val & BIT(APU_GPIO_BIT_RD));
-
-> +       return devm_gpiochip_add_data(&pdev->dev, apu_gpio->chip, NULL);
-
-Instead of passing NULL pas apu_gpio as the last argument and in
-all callbacks you can use:
-
-struct apu_gpio_pdata *apu_gpio = gpiochip_get_data(gc);
-
-To get a pointer to the per-instance state container.
-
-Yours,
-Linus Walleij
+/Jarkko
