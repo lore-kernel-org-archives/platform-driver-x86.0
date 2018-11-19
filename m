@@ -1,40 +1,66 @@
-From: Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
-Date: Mon, 19 Nov 2018 11:18:54 -0700
-Message-ID: <2804DD93-E67B-4E06-800D-82A2EA21FCC9@amacapital.net>
-References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com> <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com> <20181119150655.GA11843@linux.intel.com> <e8e640be-6f9f-0835-0578-48f140ac68f9@fortanix.com> <20181119171934.GA16252@linux.intel.com>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 3/3] ALSA: hda: add support for Huawei WMI micmute LED
+Date: Tue, 20 Nov 2018 00:57:13 +0100
+Message-ID: <20181119235713.GB7367@amd>
+References: <20181108171701.4444-1-ayman.bagabas@gmail.com>
+ <20181108171701.4444-4-ayman.bagabas@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="BwCQnh7xodEAoBMC"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119171934.GA16252@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <20181108171701.4444-4-ayman.bagabas@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jethro Beekman <jethro@fortanix.com>, "x86@kernel.org" <x86@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "dave.hansen@intel.com" <dave.hansen@intel.com>, "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>, "nhorman@redhat.com" <nhorman@redhat.com>, "npmccallum@redhat.com" <npmccallum@redhat.com>, "serge.ayoun@intel.com" <serge.ayoun@intel.com>, "shay.katz-zamir@intel.com" <shay.katz-zamir@intel.com>, "haitao.huang@linux.intel.com" <haitao.huang@linux.intel.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "kai.svahn@intel.com" <kai.svahn@intel.com>, mark.shanahan@inte
+To: Ayman Bagabas <ayman.bagabas@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kailang Yang <kailang@realtek.com>, Hui Wang <hui.wang@canonical.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 
+--BwCQnh7xodEAoBMC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Nov 19, 2018, at 10:19 AM, Jarkko Sakkinen <jarkko.sakkinen@linux.intel=
-.com> wrote:
->=20
->> On Mon, Nov 19, 2018 at 04:22:54PM +0000, Jethro Beekman wrote:
->>> On 2018-11-19 20:36, Jarkko Sakkinen wrote:
->>> Question: should be dissolve the driver completely and move this code to=
+Hi!
 
->>> arch/x86/kernel/cpu/sgx/ (and rename intel_sgx.c as main.c)? Swapping
->>> patch removes the possibility to compile this as a module anyway.
->>=20
->> No. We should keep the capability to build this as a module for other use=
-rs
->> of SGX. What is the swapping patch and why doesn't allow building as a
->> module?
+> Some of Huawei laptops come with a LED in the micmute key. This patch
+> enables and disable this LED accordingly.
 >=20
-> In some earlier version of the patch set the request was to remove the
-> callback interface to the driver so now core does direct calls to the
-> swapping operations.
->=20
->=20
+> Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 
-Once static_call lands, this will be a great use for it.=
+NAK.
+
+We already have a LED subsystem.=20
+
+> +#if IS_ENABLED(CONFIG_HUAWEI_LAPTOP)
+> +#include <linux/platform_data/x86/huawei_wmi.h>
+> +
+> +static int (*huawei_wmi_micmute_led_set_func)(bool);
+> +
+
+So we should not be doing this.
+
+Thinkpad ACPI module exports its LEDs there, for example.
+
+Thanks,
+
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--BwCQnh7xodEAoBMC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlvzTdkACgkQMOfwapXb+vJHtgCfSrSy/HEgobRBwkYpnbJZM5jI
+n7sAoKGojJc/+y6lgXlowIZ45WRVDCd0
+=9SXS
+-----END PGP SIGNATURE-----
+
+--BwCQnh7xodEAoBMC--
