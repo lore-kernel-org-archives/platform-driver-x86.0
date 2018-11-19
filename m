@@ -1,172 +1,107 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 06/15] Platform: OLPC: Add XO-1.75 EC driver
-Date: Mon, 19 Nov 2018 14:25:17 +0100
-Message-ID: <26d225cd1ed93faff6e0a0513680fa5385f05f2d.camel@v3.sk>
-References: <20181010172300.317643-1-lkundrak@v3.sk>
-         <20181010172300.317643-7-lkundrak@v3.sk>
-         <CAHp75VcefOJHZ3WdZYrGEJFjqg2s1oJ75Jg9gKmQFre_ScAPZg@mail.gmail.com>
-         <8881f5e48613c9d9d133e3964031fe2ab57f4801.camel@v3.sk>
-         <20181119104046.GC28607@amd>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 1/2] gpio: Add driver for PC Engines APU boards
+Date: Mon, 19 Nov 2018 14:46:06 +0100
+Message-ID: <CACRpkdZx-GgfgfGmB6KmTjzBEMnKyq3pUsHsgaZ1uBooN_sj9g@mail.gmail.com>
+References: <20181115133201.29092-1-fe@dev.tdt.de> <20181115133201.29092-2-fe@dev.tdt.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181119104046.GC28607@amd>
+In-Reply-To: <20181115133201.29092-2-fe@dev.tdt.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, quozl@laptop.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Platform Driver <platform-driver-x8>
+To: fe@dev.tdt.de
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, piotr.krol@3mdeb.com, Eckert.Florian@googlemail.com, Darren Hart <dvhart@infradead.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Pavel,
+On Thu, Nov 15, 2018 at 2:32 PM Florian Eckert <fe@dev.tdt.de> wrote:
 
-I've addressed some of Andy's concerns you're replying to below in a
-follow-up version of the patch. To many points I'm generally
-indifferent and prefer to lean towards making things easy for whoever
-may be likely to deal with the code in past. It's not clear to me who
-that might be, or how important either of you consider your remarks to
-be. I'll be thankful if anyone makes this clearer to me.
+> Add a new device driver "gpio-apu" which will handle the GPIOs on APU2
+> and APU3 devices from PC Engines.
+>
+> APU2 (https://pcengines.ch/schema/apu2c.pdf page 7):
+> - G32 is "button_reset" connected to the smd-button on the frontpanel
+> - G50 is "mpcie2_reset" connected to mPCIe2 reset line
+> - G51 is "mpcie3_reset" connected to mPCIe3 reset line
+>
+> APU3 (https://pcengines.ch/schema/apu3c.pdf page 7):
+> - G32 is "button_reset" connected to the smd-button on the frontpanel
+> - G50 is "mpcie2_reset" connected to mPCIe2 reset line
+> - G51 is "mpcie3_reset" connected to mPCIe3 reset line
+> - G33 is "simswap" connected to SIM switch IC to swap the SIM between
+>   mPCIe2 and mPCIe3 slot
+>
+> Signed-off-by: Florian Eckert <fe@dev.tdt.de>
 
-(I hoped that you're in the Cc list; thought git send-mail will see
-your address in the Acked-by tags and add you. I failed to notice that
-it's not the case. I apologize. Here's the v2 posting: [1].)
+This is looking better and better! Thanks to everyone helping out
+and thanks for your perseverance Florian!
 
-[1] https://lore.kernel.org/lkml/20181116162403.49854-1-lkundrak@v3.sk/
+> +config GPIO_APU
+> +       tristate "PC Engines APU2/APU3 GPIO support"
+> +       depends on X86
+> +       select GPIO_GENERIC
 
+Excellent idea.
 
-On Mon, 2018-11-19 at 11:40 +0100, Pavel Machek wrote:
-> Hi!
-> 
-> > > > +#include <linux/delay.h>
-> > > > +#include <linux/gpio/consumer.h>
-> > > > +#include <linux/spinlock.h>
-> > > > +#include <linux/completion.h>
-> > > > +#include <linux/slab.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +#include <linux/ctype.h>
-> > > > +#include <linux/olpc-ec.h>
-> > > > +#include <linux/spi/spi.h>
-> > > > +#include <linux/reboot.h>
-> > > > +#include <linux/input.h>
-> > > > +#include <linux/kfifo.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/power_supply.h>
-> > > 
-> > > Easy to maintain when it's sorted.
-> 
-> No / it depends.
+But it seems you are not using this. You would be using
+it if you used bgpio_init() but if I understand correctly this
+driver cannot use that because this GPIO is something like
+one register per pin, correct?
 
-I've sorted it in the new files; following a rule of keeping things
-sorted at the very least has an advantage of being unambiguous.
+Let me suggest:
 
-I'm not sorting things where they currently are not in order, since it
-would obscure real changes.
+> +struct apu_gpio_pdata {
+> +       struct platform_device *pdev;
+> +       struct gpio_chip *chip;
 
-> > > > +       channel = priv->rx_buf[0];
-> > > > +       byte = priv->rx_buf[1];
-> > > 
-> > > Maybe specific structures would fit better?
-> > > 
-> > > Like
-> > > 
-> > > struct olpc_ec_resp_hdr {
-> > >  u8 channel;
-> > >  u8 byte;
-> > > ...
-> > > }
-> 
-> Structures have padding and other nastyness...
+Make that a real member of this struct and not a pointer.
+I.e. just remove the "*".
 
-I've turned them into structs. It perhaps looks a bit better -- the
-structure members serving as a documentation for the protocol.
+> +static struct apu_gpio_pdata *apu_gpio;
 
-> > > > +                       pm_wakeup_event(priv->pwrbtn-
-> > > > >dev.parent,
-> > > > 1000);
-> > > 
-> > > Magic number.
-> 
-> Nothing wrong with magic numbers.
+Why a static local? It seems you can just pass around
+the pointer.
 
-Turned it into a define, but it's not like it's any clearer why that
-particular value works...
+> +static int gpio_apu_get_dir(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       u32 val;
+> +
+> +       spin_lock(&apu_gpio->lock);
+> +
+> +       val = ~ioread32(apu_gpio->addr[offset]);
+> +       val = (val >> APU_GPIO_BIT_DIR) & 1;
 
-I actually have little idea. I've copied this from the vendor's
-original driver.
+I would just:
 
-> > > > +       args[0] = mask & 0xff;
-> > > > +       args[1] = (mask >> 8) & 0xff;
-> > > 
-> > > ...mask >> 0;
-> > > ...mask >> 8;
-> 
-> No, please.
+#include <linux/bits.h>
 
-I've done this too, but I don't see much point either. Perhaps those
-within the OCD spectrum may appreciate :)
+val = ~ioread32(apu_gpio->addr[offset]);
+spin_unlock();
 
-> > > __maybe_unused  instead of ugly #ifdef?
-> > > 
-> > > > +{
-> > > > +       struct platform_device *pdev = to_platform_device(dev);
-> > > > +       struct olpc_xo175_ec *priv =
-> > > > platform_get_drvdata(pdev);
-> > > 
-> > > dev_get_drvdata() or how is it called?
-> > > 
-> > > > +       unsigned char hintargs[5];
-> > > 
-> > > struct olpc_ec_hint_cmd {
-> > > u8 ...
-> > > u32 ...
-> > > };
-> > > 
-> > > ?
-> 
-> No, unless you want to break the code. Or add __attribute__ packed
-> and
-> deal with endianness.
-> 
-> Just no.
+return !!(val & BIT(APU_GPIO_BIT_DIR));
 
-Turned it into a packed struct too for the same reasons as above.
+This clamps the value to [0,1] in a nice way.
 
-The endianness of the hints argument doesn't actually matter, since the
-EC firmware actually uses this in a debugging printf. It's not even
-cleat what endianness did EC expect initially.
+> +static int gpio_apu_get_data(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       u32 val;
+> +
+> +       spin_lock(&apu_gpio->lock);
+> +
+> +       val = ioread32(apu_gpio->addr[offset]);
+> +
+> +       spin_unlock(&apu_gpio->lock);
+> +
+> +       return (val >> APU_GPIO_BIT_RD) & 1;
 
-> > > > +       static unsigned int suspend_count;
-> > > 
-> > > u32 I suppose.
-> 
-> You know, there's semantic difference between unsigned int and
-> u32. And this sounds like candidate for unsigned int.
-> 
-> > > > +       /* Enable all EC events while we're awake */
-> > > > +       olpc_xo175_ec_set_event_mask(0xffff);
-> > > 
-> > > #define EC_ALL_EVENTS GENMASK(15, 0)
-> 
-> Actually that's less readable. Just don't.
+return !!(val & BIT(APU_GPIO_BIT_RD));
 
-Done this too, and, like the points above, I am indifferent too. Both
-seem equal to me.
+> +       return devm_gpiochip_add_data(&pdev->dev, apu_gpio->chip, NULL);
 
-> > > > +static const struct of_device_id olpc_xo175_ec_of_match[] = {
-> > > > +       { .compatible = "olpc,xo1.75-ec" },
-> > > > +       { },
-> > > 
-> > > No comma for terminators.
-> 
-> Comma is fine.
+Instead of passing NULL pas apu_gpio as the last argument and in
+all callbacks you can use:
 
-Removed it. Perhaps the lack of a comma could be understood as an
-indication that no further initializers shall follow.
+struct apu_gpio_pdata *apu_gpio = gpiochip_get_data(gc);
 
-> 	Pavel
+To get a pointer to the per-instance state container.
 
-Just in case I didn't stress that enough: I'm much more interested in
-things working well than style issues that too often are just matter of
-tast. I happily accept advice on those though.
-
-Take care,
-Lubo
+Yours,
+Linus Walleij
