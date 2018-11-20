@@ -1,81 +1,38 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 3/3] ALSA: hda: add support for Huawei WMI micmute LED
-Date: Tue, 20 Nov 2018 12:51:59 +0100
-Message-ID: <20181120115159.GG16916@amd>
-References: <20181108171701.4444-1-ayman.bagabas@gmail.com>
- <20181108171701.4444-4-ayman.bagabas@gmail.com>
- <20181119235713.GB7367@amd>
- <s5hr2fgfcrm.wl-tiwai@suse.de>
- <20181120091039.GA16916@amd>
- <s5hbm6kf6gi.wl-tiwai@suse.de>
- <20181120093610.GF16916@amd>
- <s5h4lccf58f.wl-tiwai@suse.de>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
+Date: Tue, 20 Nov 2018 14:04:42 +0200
+Message-ID: <20181120120442.GA22172@linux.intel.com>
+References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
+ <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com>
+ <CALCETrXctxfED1Dr-MuZxFnh5gzTyRL06hRJ_fQnNA8p2S4xEQ@mail.gmail.com>
+ <20181119161917.GF13298@linux.intel.com>
+ <CALCETrX+A4XaEMq3fJqmHUeeDHr_BdWh-Wk3ikXfY=L77BbaGA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2E/hm+v6kSLEYT3h"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <s5h4lccf58f.wl-tiwai@suse.de>
+In-Reply-To: <CALCETrX+A4XaEMq3fJqmHUeeDHr_BdWh-Wk3ikXfY=L77BbaGA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Ayman Bagabas <ayman.bagabas@gmail.com>, alsa-devel@alsa-project.org, Hui Wang <hui.wang@canonical.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Kailang Yang <kailang@realtek.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, andy@infradead.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Mon, Nov 19, 2018 at 08:59:24AM -0800, Andy Lutomirski wrote:
+> The idea here is that, under normal circumstances, provisioning only
+> runs once, or at least only runs rarely.  So, rather than the SDK
+> running provisioning whenever it feels like doing so (which is the
+> current behavior, I imagine, although I haven't looked), there would
+> be a privileged program, perhaps a systemd unit that runs when needed,
+> that produces the key material needed for remote attestation, and
+> non-root users that need attestation would get the keying material
+> from the provisioning service.  And the provisioning service could
+> implement its own policy.  Ideally, the service wouldn't give the
+> sealed keys to users at all but would, instead, just provide the
+> entire attestation service over a UNIX socket, which would make
+> provisioning capabilities revocable.
+> 
+> Does this make sense?
 
---2E/hm+v6kSLEYT3h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, it does for me at least now that you brought some context.
 
-Hi!
-
-> > You have general-purpose LED, yet you are treating it as "something
-> > special". That means ugly code (quoted above) and lack of flexibility.
-> >=20
-> > For example, if my notebook lacks HDD LED, I can use scrollock LED for
-> > that instead. Or, in reverse way, maybe "mic mute" LED is not useful
-> > for me, and I'd like to use it for notifications instead.
->=20
-> I'm not against adding the LEDs device implementation for any exotic
-> usage.
->=20
-> But for the audio mute LED features, you'll need really lots of other
-> works if it were implemented via leds device.  That's the hardest
-> part, and a few lines of hooks solves it easily in the kernel side.
-> That's all about it.
->=20
-> If you are ready for submitting the real solutions in user-space side
-> (patching PulseAudio and whatever all existing sound daemons, and
-> creating yet another daemon for non-PA systems (another footprint,
-> lovely), and so on), we can happily delete such in-kernel hooks :)
-
-I'm not saying we should move it to the userspace.
-
-I'm saying this should be "normal" led. drivers/leds/led-huawei-acpi.c,
-or something. Perhaps this acpi stuff is so similar you don't really
-need .c code.
-
-And then there should be a "mic muted" trigger. Similar to
-drivers/leds/trigger/ledtrig-disk.c.
-
-That should give us the flexibility, and should not be really much
-different from current implementation...
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---2E/hm+v6kSLEYT3h
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlvz9V8ACgkQMOfwapXb+vKyHACglkVaz0F7V5/vwEW8M2vG5q9G
-FKYAmwS3NlL+jtvD0eBkxD3Onq79P7q0
-=B6u7
------END PGP SIGNATURE-----
-
---2E/hm+v6kSLEYT3h--
+/Jarkko
