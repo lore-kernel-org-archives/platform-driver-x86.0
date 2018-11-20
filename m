@@ -1,227 +1,81 @@
-From: "Dr. Greg" <greg@enjellic.com>
-Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
-Date: Tue, 20 Nov 2018 05:15:08 -0600
-Message-ID: <20181120111508.GA26127@wind.enjellic.com>
-References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com> <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com> <CALCETrXctxfED1Dr-MuZxFnh5gzTyRL06hRJ_fQnNA8p2S4xEQ@mail.gmail.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 3/3] ALSA: hda: add support for Huawei WMI micmute LED
+Date: Tue, 20 Nov 2018 12:51:59 +0100
+Message-ID: <20181120115159.GG16916@amd>
+References: <20181108171701.4444-1-ayman.bagabas@gmail.com>
+ <20181108171701.4444-4-ayman.bagabas@gmail.com>
+ <20181119235713.GB7367@amd>
+ <s5hr2fgfcrm.wl-tiwai@suse.de>
+ <20181120091039.GA16916@amd>
+ <s5hbm6kf6gi.wl-tiwai@suse.de>
+ <20181120093610.GF16916@amd>
+ <s5h4lccf58f.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2E/hm+v6kSLEYT3h"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CALCETrXctxfED1Dr-MuZxFnh5gzTyRL06hRJ_fQnNA8p2S4xEQ@mail.gmail.com>
+In-Reply-To: <s5h4lccf58f.wl-tiwai@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, andy@infradead.org, LKML <linux-kernel@vger.kernel.o>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Ayman Bagabas <ayman.bagabas@gmail.com>, alsa-devel@alsa-project.org, Hui Wang <hui.wang@canonical.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Kailang Yang <kailang@realtek.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Nov 19, 2018 at 07:29:25AM -0800, Andy Lutomirski wrote:
 
-Good morning, I hope this note finds the week going well for everyone.
+--2E/hm+v6kSLEYT3h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, Nov 15, 2018 at 5:08 PM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > Intel Software Guard eXtensions (SGX) is a set of CPU instructions that
-> > can be used by applications to set aside private regions of code and
-> > data. The code outside the enclave is disallowed to access the memory
-> > inside the enclave by the CPU access control.
-> >
-> > SGX driver provides a ioctl API for loading and initializing enclaves.
-> > Address range for enclaves is reserved with mmap() and they are
-> > destroyed with munmap(). Enclave construction, measurement and
-> > initialization is done with the provided the ioctl API.
+Hi!
 
-> I brought this up a while back, and I think I should re-ask it now
-> that this driver is getting close to ready:
->
-> As it stands, there's just one SGX character device, and I imagine
-> that it'll be available to unprivileged applications.  I'm concerned
-> that this isn't quite what we want.  I certainly think that
-> everyone, or at least almost everyone, ought to be able to run
-> normal enclaves.  But I think that we should consider restricting
-> who can run specially privileged enclaves.  In particular, the
-> ability to run enclaves with the provisioning bit set is somewhat
-> sensitive, since it effectively allows access to a stable
-> fingerprint of the system.  Before flexible LC, this wasn't such a
-> big deal, since only Intel's provisioning enclave could see the key,
-> and Intel's enclave has some degree of control of what is done with
-> the key.  With flex LC, this protection is lost.
+> > You have general-purpose LED, yet you are treating it as "something
+> > special". That means ugly code (quoted above) and lack of flexibility.
+> >=20
+> > For example, if my notebook lacks HDD LED, I can use scrollock LED for
+> > that instead. Or, in reverse way, maybe "mic mute" LED is not useful
+> > for me, and I'd like to use it for notifications instead.
+>=20
+> I'm not against adding the LEDs device implementation for any exotic
+> usage.
+>=20
+> But for the audio mute LED features, you'll need really lots of other
+> works if it were implemented via leds device.  That's the hardest
+> part, and a few lines of hooks solves it easily in the kernel side.
+> That's all about it.
+>=20
+> If you are ready for submitting the real solutions in user-space side
+> (patching PulseAudio and whatever all existing sound daemons, and
+> creating yet another daemon for non-PA systems (another footprint,
+> lovely), and so on), we can happily delete such in-kernel hooks :)
 
-When I saw this thread over the weekend I was going to reply to it and
-raise this issue but Andy beat me to it.  Beyond that I was busy
-trying to get enough firwewood ready to stay warm for the winter so
-other priorities prevailed.. :-)
+I'm not saying we should move it to the userspace.
 
-About 6-8 months ago, Andy and I had a lively discussion on this list
-about whether or not there was a need, from a security perspective,
-for enclave based LC.  I understand the sentiment against enclave
-based LC, particularly with only a single vendor in control, but when
-the entire spectrum of SGX security guarantees are considered, things
-begin to fray at the edges a bit when LC is delegated to the kernel.
+I'm saying this should be "normal" led. drivers/leds/led-huawei-acpi.c,
+or something. Perhaps this acpi stuff is so similar you don't really
+need .c code.
 
-As everyone knows, in the most general sense, SGX is designed to
-implement security in an IAGO threat environment, ie. where the entire
-platform is compromised.  This is conceptually, if not provably
-possible, when all of the security contracts are fulfilled by
-enclaves.  Placing LC in the kernel has the effect of bringing the
-kernel into the TCB footprint of the overall security guarantees the
-technology is designed to deliver, which include privacy and
-anonymity.
+And then there should be a "mic muted" trigger. Similar to
+drivers/leds/trigger/ledtrig-disk.c.
 
-So, as Andy points out, we now need to work these security
-considerations into the design of what will be 'the' Linux SGX driver.
+That should give us the flexibility, and should not be really much
+different from current implementation...
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Moving LC into the kernel means that rigid security controls are no
-longer available for two security sensitive assets; The Provisioning
-Key (PK) and the Provisioning Seal Key (PSK).
+--2E/hm+v6kSLEYT3h
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-The PK is used to generate a unique Platform Provisioning IDentity
-(PPID) in the Endpoint Selection (ES) phase of the Intel Enhanced
-Privacy ID (EPID) provisioning protocol.  With the proposed driver, as
-Andy notes above, there is now the opportunity for adversarial
-generation of a unique platform identity by anyone who can create and
-run an enclave.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-The ENCLU[EGETKEY] instruction does not include the OWNEREPOCH values
-in the key derivation process so the PK is in effect a permanent and
-unique identity for a platform.
+iEYEARECAAYFAlvz9V8ACgkQMOfwapXb+vKyHACglkVaz0F7V5/vwEW8M2vG5q9G
+FKYAmwS3NlL+jtvD0eBkxD3Onq79P7q0
+=B6u7
+-----END PGP SIGNATURE-----
 
-The PSK is one of the statically derived symmetric keys that are
-available for sealing/encryption of data.  The PSK is used to encrypt
-and protect the EPID private key that Intel provisions to a platform.
-This private key is used by the quoting enclave to sign attestation
-reports for enclaves running on the platform.  The SGX privacy
-guarantees are a function of the security characteristics of EPID
-keys.
-
-So, loss of the PSK has implications with respect to the binding of an
-EPID to a platform and what entities can use the EPID private key.  In
-the enclave LC model the only entities with access to the key are the
-provisioning (PVE) and quoting (QE) enclaves.
-
-For the benefit of those not deeply involved in all this.  Shortly
-after the release of the Linux SDK/PSW, Intel evolved the ability to
-uniquely identify a platform and verify that an enclave is running on
-a 'GenuineIntel' platform into the Platform Certification Enclave
-(PCE).  This enclave has the provisioning attribute set and uses
-access to the PK to implement this functionality.
-
-Section 5.8.2 of the Costan and Devadas SGX review paper talk about
-the PK and the PSK.  This section notes, in a referral to section
-5.9.3, that restriction of general access to the PROVISION attribute
-by enclaves is important for SGX privacy guarantees.
-
-So I believe it is fair to state that this issue requires careful
-consideration as we move the Linux SGX eco-system forward.
-
-> But this is maybe more of a big deal than just access to a stable
-> fingerprint.  The ability to provision a remote attestation protocol
-> is a key part of running SGX malware, and SGX malware is surely
-> going to exist some day.  (Sure, Intel will try to block access to
-> the actual attestation service for malware, but I doubt that Intel
-> will be able to fully defend it.)
-
-Malware would not necessarily need the Intel attestation service.
-Once access to the PROVISION bit is available, malware teams could
-simply build their own attestation service.
-
-Malware authors are a bit limited now by the general design of the
-Intel PSW that mediates all enclave platform functionality through the
-aesm_service binary.  The group that I direct SGX engineering for,
-IDfusion, developed a complete replacement for the Intel PSW.  Our
-work is a minimum footprint implementation that focuses on the
-application of SGX to intelligent network endpoint devices and
-embedded environments.
-
-Our PSW supports the generation of 'fat binaries' where all of the
-functionality, including enclaves, can be embedded into a single
-statically linked and self-contained binary.  We developed a proof of
-concept application, based on the Apache Struts vulnerability, that
-loads one of these binaries on a platform which then sets up a secured
-and attested channel for spirting information off of the malware
-target.
-
-So the malware concerns are not theoretical, as we are not an
-extraordinarily clever group of individuals.  We are considering an
-open-source release of the tooling we have developed and even if we
-don't end up doing that someone else could easily implement equivalent
-functionality.
-
-We've written at some length about these issues in the following Intel
-SGX developer forum threads if anyone is interested:
-
-https://software.intel.com/en-us/forums/intel-software-guard-extensions-intel-sgx/topic/781730
-
-https://software.intel.com/en-us/forums/intel-software-guard-extensions-intel-sgx/topic/671517
-
-From a hardware perspective, FLC has now emerged on the Xeon E series
-of processors.  FLC isn't being deployed for the sake of openness or
-the open-source community, it is rather, secondary to a vertical
-marketing strategy that Intel is implementing for SGX.
-
-Intel is offering a subscription based service for data-center
-applications of SGX.  Attestation is based on an ECDSA secured
-certification that the enclave is running on a 'GenuineIntel' platform
-with a specific platform security version (PSVN), see the discussion
-on the PCE enclave above.
-
-Non server class, ie. workstations and embedded class devices, will
-presumably use a provisioning and EPID based strategy.
-
-> So I propose that there be a few device nodes.  Maybe
-> /dev/sgx/unprivilegd and /dev/sgx/provisioning?  The default mode of
-> the latter could be 0600.  If you've opened the unprivileged node,
-> you can only run enclaves without any special permission bits set.
->
-> We should also consider whether we allow the unprivileged node to
-> run launch enclaves, and, for that matter, whether we allow user
-> code to run launch enclaves at all, given that they're not useful
-> with the current architecture of the driver.
-
-Doing this right is probably going to take a bit more then two
-separate device nodes.
-
-I believe what the Linux community needs to do is to step back and
-consider how to create a driver architecture that supports what will
-be the certain stratification of SGX hardware.  I don't see the
-current driver being useful for anything but data-center class
-hardware for the intermediate if not foreseeable future.
-
-In addition, given what was detailed above, I don't see how this
-driver is going to be satisfactory for those of us delivering
-platforms with stringent security and privacy guarantees that are
-relevant in an IAGO model.  Like it or not the most stringent security
-contracts are only available in a full enclave based model.
-
-As a result, like it or not, the current driver needs the ability to
-function in both launch control modes.
-
-> --Andy
-
-Hopefully the above information is useful to the development dialogue.
-
-Developing a community driver is tedious at best, particularly for
-hardware such as this.  Our personal thanks to Jarkko and others who
-have been working through these issues.
-
-Best wishes for a productive remainder of the week and for a pleasant
-Thanksgiving holiday for those who will be celebrating that.
-
-Dr. Greg
-
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686
-FAX: 701-281-3949           EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"So you got your butt kicked by an 'old' guy.
-
- Before you taunted him did it ever cross your mind that the $1200
- Schmoelke aero-bars he was laying on and the $900 Rocket7 cycling
- shoes he was wearing might mean that the $10,000 custom bike frame he
- was riding was used for more than transportation to the Dairy Queen
- each night for a Dilly Bar?"
-                                -- Dr. G.W. Wettstein
-                                   Resurrection
+--2E/hm+v6kSLEYT3h--
