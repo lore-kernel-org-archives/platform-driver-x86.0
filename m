@@ -1,36 +1,113 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v16 18/22] platform/x86: Intel SGX driver
-Date: Wed, 21 Nov 2018 13:46:50 +0200
-Message-ID: <20181121114650.GA1638@linux.intel.com>
-References: <20181106134758.10572-1-jarkko.sakkinen@linux.intel.com>
- <20181106134758.10572-19-jarkko.sakkinen@linux.intel.com>
- <1541522400.7839.48.camel@intel.com>
- <20181107163757.GB11509@linux.intel.com>
- <20181107180057.GB24807@linux.intel.com>
- <20181108144603.GA14072@linux.intel.com>
- <20181115200002.GA24006@linux.intel.com>
- <20181115200406.GA24299@linux.intel.com>
- <20181115201625.GA25953@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v1 00/15] i2c-multi-instantiate: Adapt for INT3515 and
+ alike
+Date: Wed, 21 Nov 2018 13:00:07 +0100
+Message-ID: <cdb902c7-324c-3f19-6caa-ff78132c593d@redhat.com>
+References: <20181120155924.10773-1-andriy.shevchenko@linux.intel.com>
+ <24f96a15-6b57-c19d-b77d-fdc6c11fddc9@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181115201625.GA25953@linux.intel.com>
+In-Reply-To: <24f96a15-6b57-c19d-b77d-fdc6c11fddc9@redhat.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Nov 15, 2018 at 10:16:25PM +0200, Jarkko Sakkinen wrote:
-> This is how strongly think. I can go with VMAs for swapping *but* if
-> that is the route I would recommend using vm_mmap() instead of taking
-> pointer from user space. This way the way swapping is done can be always
-> changed. It will be a huge lock-in to do it otherwise.
+Hi,
 
-I digged out my old code and it should be easy to replace. Most of the
-issues were related to exit_mm(), which have been anyway sorted in the
-code base.
+On 21-11-18 12:27, Hans de Goede wrote:
+> Hi,
+> 
+> On 20-11-18 16:59, Andy Shevchenko wrote:
+>> Currently i2c-multi-instantiate driver does not support the case
+>> of INT3515 USB PD device, where:
+>>
+>> - Interrupt() is used instead of GpioInt()
+>> - All slaves may be the same from IP point of view
+>> - There can be variadic amount of slaves
+>>
+>> This series is addressing all above.
+>>
+>> Notes:
+>> - series has been smoke tested (Heikki would do BAT or more) on Coffee Lake system
+>> - patch for BOSC0200 might be considered as RFC since the modalias potential issue
+> 
+> Yeah the BOSC0200 patch cannot go upstream as is, that will break the
+> orientation quirks in hwdb on:
+> 
+> [hans@shalem systemd]$ grep BOSC0200 hwdb/60-sensor.hwdb | wc -l
+> 17
+> [hans@shalem systemd]$
+> 
+> At least 17 different models laptops / 2-in-1s
+> 
+>> The idea is to push this either through PDx86 tree (needs Rafael's ACKs) or ACPI.
+>> In any case it needs tags from Heikki, Hans, Mika, Wolfram and Jonathan.
+> 
+> Patches 1-5, 7-13 and 15 are: >
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-I'll do it for v18.
+Correction, I also have some small remarks to patch 9:
 
-/Jarkko
+[PATCH v1 09/15] platform/x86: i2c-multi-instantiate: Count I2cSerialBus() resources
+
+Which will need to be addressed before you can add my Reviewed-by.
+
+Regards,
+
+Hans
+
+
+
+
+> I will send separate replies to:
+> 
+> [PATCH v1 06/15] i2c: acpi: Assign fwnode for devices created via i2c_acpi_new_device()
+> [PATCH v1 14/15] ACPI / scan: Create platform device for BOSC0200 ACPI nodes
+> 
+> Which are both a NACK from me (in their current state) because they both will
+> cause regressions.
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> 
+> 
+> 
+>>
+>> Testing and comments are warmly welcome.
+>>
+>> Andy Shevchenko (15):
+>>    platform/x86: intel_cht_int33fe: Remove duplicate NULL check
+>>    platform/x86: intel_cht_int33fe: Accept errors of
+>>      i2c_acpi_new_device()
+>>    platform/x86: i2c-multi-instantiate: Accept errors of
+>>      i2c_acpi_new_device()
+>>    platform/x86: i2c-mutli-instantiate: Defer probe when no adapter found
+>>    i2c: acpi: Return error pointers from i2c_acpi_new_device()
+>>    i2c: acpi: Assign fwnode for devices created via i2c_acpi_new_device()
+>>    i2c: acpi: Use ACPI_FAILURE instead of !ACPI_SUCCESS
+>>    i2c: acpi: Introduce i2c_acpi_get_i2c_resource() helper
+>>    platform/x86: i2c-multi-instantiate: Count I2cSerialBus() resources
+>>    platform/x86: i2c-multi-instantiate: Distinguish IRQ resource type
+>>    platform/x86: i2c-multi-instantiate: Introduce IOAPIC IRQ support
+>>    platform/x86: i2c-multi-instantiate: Allow to have same slaves
+>>    ACPI / scan: Create platform device for INT3515 ACPI nodes
+>>    ACPI / scan: Create platform device for BOSC0200 ACPI nodes
+>>    iio: inv_mpu6050: Use i2c_acpi_get_i2c_resource() helper
+>>
+>>   drivers/acpi/scan.c                          |  2 +
+>>   drivers/i2c/i2c-core-acpi.c                  | 43 +++++----
+>>   drivers/iio/accel/bmc150-accel-i2c.c         |  1 -
+>>   drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c   | 16 ++--
+>>   drivers/platform/x86/i2c-multi-instantiate.c | 99 ++++++++++++++++----
+>>   drivers/platform/x86/intel_cht_int33fe.c     | 34 +++++--
+>>   drivers/usb/typec/tps6598x.c                 |  8 +-
+>>   include/linux/acpi.h                         | 11 +++
+>>   8 files changed, 158 insertions(+), 56 deletions(-)
+>>
