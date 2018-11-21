@@ -1,100 +1,36 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 06/15] i2c: acpi: Assign fwnode for devices created via
- i2c_acpi_new_device()
-Date: Wed, 21 Nov 2018 12:44:27 +0100
-Message-ID: <c2ad13ad-cf27-2700-a051-4dda56755ebd@redhat.com>
-References: <20181120155924.10773-1-andriy.shevchenko@linux.intel.com>
- <20181120155924.10773-7-andriy.shevchenko@linux.intel.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v16 18/22] platform/x86: Intel SGX driver
+Date: Wed, 21 Nov 2018 13:46:50 +0200
+Message-ID: <20181121114650.GA1638@linux.intel.com>
+References: <20181106134758.10572-1-jarkko.sakkinen@linux.intel.com>
+ <20181106134758.10572-19-jarkko.sakkinen@linux.intel.com>
+ <1541522400.7839.48.camel@intel.com>
+ <20181107163757.GB11509@linux.intel.com>
+ <20181107180057.GB24807@linux.intel.com>
+ <20181108144603.GA14072@linux.intel.com>
+ <20181115200002.GA24006@linux.intel.com>
+ <20181115200406.GA24299@linux.intel.com>
+ <20181115201625.GA25953@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181120155924.10773-7-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181115201625.GA25953@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-kernel@vger.kernel.org
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Thu, Nov 15, 2018 at 10:16:25PM +0200, Jarkko Sakkinen wrote:
+> This is how strongly think. I can go with VMAs for swapping *but* if
+> that is the route I would recommend using vm_mmap() instead of taking
+> pointer from user space. This way the way swapping is done can be always
+> changed. It will be a huge lock-in to do it otherwise.
 
-On 20-11-18 16:59, Andy Shevchenko wrote:
-> i2c_acpi_new_device() doesn't assign fwnode like it's done, for example,
-> in i2c_acpi_register_devices() path.
-> 
-> Assign fwnode in i2c_acpi_new_device() as it's done elsewhere.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+I digged out my old code and it should be easy to replace. Most of the
+issues were related to exit_mm(), which have been anyway sorted in the
+code base.
 
-As already mentioned in my reply to the cover letter, a NACK from me for
-this one.
+I'll do it for v18.
 
-The problem is that this causes the fwnode to be shared by all the
-"struct device"-s (embedded in the i2c-clients created).
-
-This in itself is not necessarily a problem, but it does become a
-problem when combined with using device_add_properties as
-intel_cht_int33fe.c does.
-
-Since the info in the ACPI tables for devices which use this
-driver is pretty terrible, we add a bunch of properties to notify
-the drivers about how the different parts which make up the Type-C
-functionality are tied together.
-
-device_add_properties creates a new fwnode and then calls
-set_secondary_fwnode. For devices which already have a fwnode
-assigned (which the i2c-clients will have after this patch)
-set_secondary_fwnode sets dev->fwnode->secondary to the fwnode
-which has been newly created to hold the added properties.
-
-Since all i2c-clients instantiated now share dev->fwnode,
-the result of this is that all i2c-clients created now will
-have the properties of the last i2c-client instantiated for
-an acpi-node which describes multiple clients in a single
-node.
-
-Also the fwnodes created  for the properties of earlier
-instantiated i2c-clients will be leaked.
-
-I see 2 possible solutions here:
-
-1) Changing this patch so that i2c_acpi_new_device() does:
-
-         /*
-          * The fwnode can not be shared between instantiated clients when
-          * adding device-properties to the instantiated client.
-          */
-	if (!info->properties)
-		info->fwnode = acpi_fwnode_handle(adev);
-
-2) Leave whether info->fwnode should be set or not up to the
-caller of i2c_acpi_new_device() (info is already passed in as
-a param). E.g. i2c-multi-instantiate.c could do this (for now,
-maybe in the future we will also want to add properties for
-some HIDs).
-
-I think that 1. is the best solution and this is all kernel internal,
-so we can always revisit this if necessary.
-
-Regards,
-
-Hans
-
-
-
-> ---
->   drivers/i2c/i2c-core-acpi.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> index af4b5bd5d973..478862abb82a 100644
-> --- a/drivers/i2c/i2c-core-acpi.c
-> +++ b/drivers/i2c/i2c-core-acpi.c
-> @@ -420,6 +420,7 @@ struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
->   	if (!adapter)
->   		return NULL;
->   
-> +	info->fwnode = acpi_fwnode_handle(adev);
->   	return i2c_new_device(adapter, info);
->   }
->   EXPORT_SYMBOL_GPL(i2c_acpi_new_device);
-> 
+/Jarkko
