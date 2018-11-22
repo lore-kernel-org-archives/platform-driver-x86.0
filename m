@@ -1,127 +1,135 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v17 06/23] x86/cpu/intel: Detect SGX support and update
- caps appropriately
-Date: Wed, 21 Nov 2018 19:17:28 +0100
-Message-ID: <20181121181728.GA27559@zn.tnic>
-References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
- <20181116010412.23967-7-jarkko.sakkinen@linux.intel.com>
+From: "Dr. Greg" <greg@enjellic.com>
+Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
+Date: Thu, 22 Nov 2018 05:12:53 -0600
+Message-ID: <20181122111253.GA31150@wind.enjellic.com>
+References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com> <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com> <CALCETrXctxfED1Dr-MuZxFnh5gzTyRL06hRJ_fQnNA8p2S4xEQ@mail.gmail.com> <20181119161917.GF13298@linux.intel.com> <CALCETrX+A4XaEMq3fJqmHUeeDHr_BdWh-Wk3ikXfY=L77BbaGA@mail.gmail.com> <20181120120442.GA22172@linux.intel.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181116010412.23967-7-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20181120120442.GA22172@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, mark.shanahan@intel.com, luto@amacapital.net, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, David Wang <davidwang@zhaoxin.com>, "Levin, Alexander (Sasha Levin)" <alexander.levin@verizon.com>, Jia Zhang <qianyue.zj@alibaba-inc.com>, open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)
+Cc: Andy Lutomirski <luto@amacapital.net>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, andy@infradead.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 16, 2018 at 03:01:13AM +0200, Jarkko Sakkinen wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
-> 
-> Similar to other large Intel features such as VMX and TXT, SGX must be
-> explicitly enabled in IA32_FEATURE_CONTROL MSR to be truly usable.
-> Clear all SGX related capabilities if SGX is not fully enabled in
-> IA32_FEATURE_CONTROL or if the SGX1 instruction set isn't supported
-> (impossible on bare metal, theoretically possible in a VM if the VMM is
-> doing something weird).
-> 
-> Like SGX itself, SGX Launch Control must be explicitly enabled via a
-> flag in IA32_FEATURE_CONTROL. Clear the SGX_LC capability if Launch
-> Control is not fully enabled (or obviously if SGX itself is disabled).
-> 
-> Note that clearing X86_FEATURE_SGX_LC creates a bit of a conundrum
-> regarding the SGXLEPUBKEYHASH MSRs, as it may be desirable to read the
-> MSRs even if they are not writable, e.g. to query the configured key,
-> but clearing the capability leaves no breadcrum for discerning whether
-> or not the MSRs exist.  But, such usage will be rare (KVM is the only
-> known case at this time) and not performance critical, so it's not
-> unreasonable to require the use of rdmsr_safe().  Clearing the cap bit
-> eliminates the need for an additional flag to track whether or not
-> Launch Control is truly enabled, which is what we care about the vast
-> majority of the time.
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  arch/x86/kernel/cpu/intel.c | 37 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index fc3c07fe7df5..8a20a193d399 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -596,6 +596,40 @@ static void detect_tme(struct cpuinfo_x86 *c)
->  	c->x86_phys_bits -= keyid_bits;
->  }
->  
-> +static void detect_sgx(struct cpuinfo_x86 *c)
-> +{
-> +	unsigned long long fc;
-> +
-> +	rdmsrl(MSR_IA32_FEATURE_CONTROL, fc);
-> +	if (!(fc & FEATURE_CONTROL_LOCKED)) {
-> +		pr_err_once("sgx: IA32_FEATURE_CONTROL MSR is not locked\n");
-> +		goto out_unsupported;
-> +	}
-> +
-> +	if (!(fc & FEATURE_CONTROL_SGX_ENABLE)) {
-> +		pr_err_once("sgx: not enabled in IA32_FEATURE_CONTROL MSR\n");
+On Tue, Nov 20, 2018 at 02:04:42PM +0200, Jarkko Sakkinen wrote:
 
-Start those messages with a capital letter: "sgx: SGX is not enabled ...".
+Good morning to everyone, Happy Thanksgiving to those who are
+celebrating the holiday.
 
-> +		goto out_unsupported;
-> +	}
-> +
-> +	if (!cpu_has(c, X86_FEATURE_SGX1)) {
-> +		pr_err_once("sgx: SGX1 instruction set not supported\n");
-> +		goto out_unsupported;
-> +	}
-> +
-> +	if (!(fc & FEATURE_CONTROL_SGX_LE_WR)) {
+> On Mon, Nov 19, 2018 at 08:59:24AM -0800, Andy Lutomirski wrote:
+> > The idea here is that, under normal circumstances, provisioning only
+> > runs once, or at least only runs rarely.  So, rather than the SDK
+> > running provisioning whenever it feels like doing so (which is the
+> > current behavior, I imagine, although I haven't looked), there would
+> > be a privileged program, perhaps a systemd unit that runs when needed,
+> > that produces the key material needed for remote attestation, and
+> > non-root users that need attestation would get the keying material
+> > from the provisioning service.  And the provisioning service could
+> > implement its own policy.  Ideally, the service wouldn't give the
+> > sealed keys to users at all but would, instead, just provide the
+> > entire attestation service over a UNIX socket, which would make
+> > provisioning capabilities revocable.
+> > 
+> > Does this make sense?
 
-I see the build failure here has been pointed out already but lemme
-repeat it out for another reason:
+> Yes, it does for me at least now that you brought some context.
 
-It is very important that no patch we merge breaks bisectability -
-please build every patch before sending:
+Let me see if I can add a bit of additional context to the above to
+frame further discussion regarding two major needs of the driver
+before it lands.
 
-arch/x86/kernel/cpu/intel.c: In function ‘detect_sgx’:
-arch/x86/kernel/cpu/intel.c:619:13: error: ‘FEATURE_CONTROL_SGX_LE_WR’ undeclared (first use in this function); did you mean ‘FEATURE_CONTROL_SGX_ENABLE’?
-  if (!(fc & FEATURE_CONTROL_SGX_LE_WR)) {
-             ^~~~~~~~~~~~~~~~~~~~~~~~~
-             FEATURE_CONTROL_SGX_ENABLE
-arch/x86/kernel/cpu/intel.c:619:13: note: each undeclared identifier is reported only once for each function it appears in
-make[3]: *** [scripts/Makefile.build:291: arch/x86/kernel/cpu/intel.o] Error 1
-make[3]: *** Waiting for unfinished jobs....
-make[2]: *** [scripts/Makefile.build:516: arch/x86/kernel/cpu] Error 2
-make[1]: *** [scripts/Makefile.build:516: arch/x86/kernel] Error 2
-make: *** [Makefile:1060: arch/x86] Error 2
-make: *** Waiting for unfinished jobs....
+What Andy is describing is how the current system already works.  The
+driver is at the root of a fairly complex eco-system of code,
+cryptography and protocols that implement SGX functionality.  This
+software stack is known as the SGX Platform SoftWare (PSW) or SGX
+runtime.
 
+The Intel provided runtime is implemented in C++ and, depending on how
+you count it, clocks in at around 50+ KLOC.  All of this ends up as a
+single 1.8 megabyte binary named aesm_service that links against 35
+shared libraries and is run by systemd.
 
-> +		pr_info_once("sgx: launch control MSRs are not writable\n");
-> +		goto out_msrs_rdonly;
-> +	}
-> +
-> +	return;
+This binary implements the functionality needed to load, initialize,
+run and attest enclaves.  It also implements communications with the
+Intel provisioning and attestation services which is needed to
+provision a private EPID key to the platform and to verify the status
+of an enclave attestation quote from a remote platform.
 
-<---- newline here.
+In order to achieve the SGX/IAGO security model, a lot of this
+functionality is implemented by choreographing exchanges between six
+Intel supplied and signed enclaves.  Intel supplies source code to
+these enclaves and understanding how all of this works requires an
+understanding of that codebase as well.  To top if off there is also a
+50K hunk of signed Java bytecode that gets stuffed into the Management
+Engine if you are interested in platform services.
 
-> +out_unsupported:
-> +	setup_clear_cpu_cap(X86_FEATURE_SGX);
-> +	setup_clear_cpu_cap(X86_FEATURE_SGX1);
-> +	setup_clear_cpu_cap(X86_FEATURE_SGX2);
+All of the above is what we wrote an independent implementation of, in
+straight C, that is capable of linking against the MUSL C library with
+only libelf and OpenSSL as dependencies.  We developed all of this to
+support a reasonably sophisticated multi-enclave SGX security
+application that implements modeling the runtime behavior of
+applications running on the Linux kernel.  That application uses an
+alternate enclave attestation and communications architecture that we
+independently developed.
 
-<---- newline here.
+I don't describe the above to hype or promote what we do.  Everyone
+discussing these issues is a professional software engineer or
+architect.  As such, you will know that by the time you get done doing
+all of the above, to the point where you are willing to take it to
+Washington, DC to do live technology demonstrations to government
+agencies with seven minutes of setup time, you are going to have to be
+pretty confident that you know how all of the pieces are supposed to
+go together.
 
-> +out_msrs_rdonly:
-> +	setup_clear_cpu_cap(X86_FEATURE_SGX_LC);
-> +}
+Based on this experience, if the proposed driver lands in its current
+state, Linux mainline will have, at least from a privacy perspective,
+an inferior implementation of SGX.  In addition, we are not confident
+the driver will be useful to anything other then server class hardware
+and will be incapable of supporting virtually all of the existing SGX
+hardware in the field.
 
--- 
-Regards/Gruss,
-    Boris.
+This is NOT a criticism of Jarkko's work or the overall technical
+implementation and quality of the driver.  We actually use and test a
+modified version of the proposed driver, along with the out of tree
+driver in our platforms.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+At a high level, addressing these issues is straight forward.  First,
+the driver needs to support authorization equivalent to that which is
+implemented in the current Intel Launch Enclave, ie. control over the
+SGX_FLAGS_PROVISION_KEY attribute.  Secondly, the driver needs to drop
+its prohibition against launch enclaves, ie. returning EINVAL when a
+request is made to initialize enclaves which have the
+SGX_FLAGS_EINITTOKEN_KEY attribute set.
+
+There will be some devil in the details with respect to both of these
+issues, but those discussions can follow later.  Addressing these two
+issues will at least create an environment where the proposed in-tree
+driver is equivalent in privacy and functionality to the out of tree
+driver.
+
+SGX is a remarkably complex piece of machinery.  Producing a useful
+driver requires the consideration of a lot of issues which, in our
+opinion, have not been fully represented in the discussions to date.
+
+> /Jarkko
+
+I hope the above is useful for framing future discussions.
+
+Have a good remainder of the week.
+
+Dr. Greg
+
+As always,
+Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
+4206 N. 19th Ave.           Specializing in information infra-structure
+Fargo, ND  58102            development.
+PH: 701-281-1686
+FAX: 701-281-3949           EMAIL: greg@enjellic.com
+------------------------------------------------------------------------------
+"I suppose that could could happen but he wouldn't know a Galois Field
+ if it kicked him in the nuts."
+                                -- Anonymous mathematician
+                                   Resurrection.
