@@ -1,149 +1,29 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 3/3] ALSA: hda: add support for Huawei WMI micmute LED
-Date: Sat, 24 Nov 2018 11:41:57 +0100
-Message-ID: <20181124104157.GA17954@amd>
-References: <s5hbm6kf6gi.wl-tiwai@suse.de>
- <20181120093610.GF16916@amd>
- <s5h4lccf58f.wl-tiwai@suse.de>
- <20181120115159.GG16916@amd>
- <s5hzhu4c569.wl-tiwai@suse.de>
- <CAHp75VddanEB-7qQutSWkbSZW4srRzGXkigCMxEP7zJ=KC6iKw@mail.gmail.com>
- <20181122131802.GB13339@amd>
- <s5h8t1l5ish.wl-tiwai@suse.de>
- <20181123233309.GA4340@amd>
- <s5hftvq99qe.wl-tiwai@suse.de>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v17 06/23] x86/cpu/intel: Detect SGX support and update
+ caps appropriately
+Date: Sat, 24 Nov 2018 05:54:31 -0800
+Message-ID: <20181124135431.GA7048@linux.intel.com>
+References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
+ <20181116010412.23967-7-jarkko.sakkinen@linux.intel.com>
+ <20181121181728.GA27559@zn.tnic>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <s5hftvq99qe.wl-tiwai@suse.de>
+In-Reply-To: <20181121181728.GA27559@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Ayman Bagabas <ayman.bagabas@gmail.com>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Hui Wang <hui.wang@canonical.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Kailang Yang <kailang@realtek.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, mark.shanahan@intel.com, luto@amacapital.net, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, David Woodhouse <dwmw@amazon.co.uk>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, David Wang <davidwang@zhaoxin.com>, "Levin, Alexander (Sasha Levin)" <alexander.levin@verizon.com>, Jia Zhang <qianyue.zj@alibaba-inc.com>, open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Wed, Nov 21, 2018 at 07:17:28PM +0100, Borislav Petkov wrote:
+> I see the build failure here has been pointed out already but lemme
+> repeat it out for another reason:
+> 
+> It is very important that no patch we merge breaks bisectability -
+> please build every patch before sending:
 
---SUOF0GtieIMvvwua
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yep, the patch ordering was incorrect. I agree and will check this
+for the next version. Thanks for your remarks.
 
-Hi!
-
-> > > > > > > > > You have general-purpose LED, yet you are treating it as =
-"something
-> > > > > > > > > special". That means ugly code (quoted above) and lack of=
- flexibility.
-> > > > > > > > >
-> >=20
-> > > > I'd prefer this to be normal LED and "mic muted" to become normal
-> > > > trigger.
-> > >=20
-> > > But how would you solve the existing problem?
-> > >=20
-> > > As already mentioned, you'll need to hook the LED trigger and the
-> > > actual mixer value change.  This is the biggest missing piece, and
-> > > it's the very reason we have the exported symbol from the platform
-> > > driver side.
-> > >=20
-> > > So, if you prefer in that way, please implement that for the existing
-> > > driver (thinkpad_acpi and dell-laptop) at first.  I'll be really happy
-> > > to get rid of the present ugly solution!  But it's been there just
-> > > because it's not so trivial at all.  FWIW, this must be all done
-> > > inside the kernel; otherwise you'll hit a regression.
-> >=20
-> > Ok, what about something like this?
-> >=20
-> > Tested, and it did not work. I guess I hooked it up at the wrong place
-> > in LED subsystem... or maybe thinkpad x60 is wrong machine to test on.
-
-I meant to say "wrong place in ALSA subsystem".
-
-> > Anyway, it looks less ugly than current code in alsa. We should not
-> > really be using mixer settings to turn LED on and off.
-> >=20
-> > Plus, it works in similar way triggers and LEDs "usually" do, and has
-> > all the flexibility.
->=20
-> Yes, thanks, that's something similar as what I had in mind, too.
-> I guess it's just a matter of thinkpad_acpi side implementation that
-> differs from your expectation.
->=20
-> However, one remaining problem is that the state will be inconsistent
-> depending on the driver module order, if we get rid of the dynamic
-> symbol binding.  Then both modules become completely individual and
-> thinkpad_acpi can be loaded at anytime later than HD-audio codec.
-> If a mixer state is already changed before loading thinkpad_acpi, this
-> event is lost and the state may be different in both sides.
-
-
-
-> So, we'd need to record the state in the mute-trigger side, and add a
-> function to return the current state.  Then thinkpad_acpi will query
-> the state at the initialization time.
-
-We want to record state at mute-trigger side, yes. Should not be
-really different from other triggers.
-
-> Also, we'll need also the normal mute LED in addition to the mic mute
-> LED, so there need to be two triggers.
-
-Yes.
-
-> In anyway, moving to this direction requires the leds class
-> implementation for dell-laptop.c as well as the new huawei stuff.  So,
-> I'd really like to have the "already good working" code before
-> actually hacking this, so that we can see and track the functional
-> regression more obviously.
-
-As well as thinkpad; note I did not do that part, because I don't have
-that LED on my test machine.
-
-Anyway, normally we get the architecture right and only then we merge
-the drivers.
-
-All Huawei hackers need to do is to convert their driver into normal
-LED driver, and test it with some other trigger (like heartbeat). Then
-we can be fairly sure it will work when we get the micmute done.
-
-> I can start hacking this in the next week.  At least I have a Dell
-> laptop and I can check the part of the changes locally.
->=20
-> Since the changes will be fairly cross-tree, it's better to have an
-> immutable branch to start with.  I'd branch off at 4.20-rc3 (or rc4),
-> apply the current patches, so that it can be merged to all relevant
-> trees cleanly.
-
-As you will not change any core LED code, I don't think any heavy
-synchronization with LED tree should be neccessary. We have LED
-triggers living outside drivers/leds/triggers, too, such as
-drivers/usb/common/led.c .
-
-(Actually, that's the beauty of the LED subsystem. You have standard
-trigger. You have standard LED -- which says it prefers that trigger if
-available. They are really independend, so you can test and merge them
-separately).
-
-Let me know if you need any more help.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---SUOF0GtieIMvvwua
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlv5KvUACgkQMOfwapXb+vIWUACgo9XFD+cSHR467QJO5t/Qxr8N
-FqQAmwbVs/CvpqDfPYzkubV/vFMCztZq
-=xDts
------END PGP SIGNATURE-----
-
---SUOF0GtieIMvvwua--
+/Jarkko
