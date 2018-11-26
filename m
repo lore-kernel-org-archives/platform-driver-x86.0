@@ -1,166 +1,59 @@
-From: Andy Lutomirski <luto@kernel.org>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
-Date: Mon, 26 Nov 2018 10:22:20 -0800
-Message-ID: <CALCETrVdooOwt080-f-Sr92pnbRVchsffxWGnnEHmH40qLyCdA@mail.gmail.com>
-References: <CALCETrX+A4XaEMq3fJqmHUeeDHr_BdWh-Wk3ikXfY=L77BbaGA@mail.gmail.com>
- <20181120120442.GA22172@linux.intel.com> <20181122111253.GA31150@wind.enjellic.com>
- <CALCETrWJr-C6yK8NBCp=NbapwHOaBFphiDU9VKEtQ0NMRrdC2g@mail.gmail.com>
- <20181124172114.GB32210@linux.intel.com> <20181125145329.GA5777@linux.intel.com>
- <0669C300-02CB-4EA6-BF88-5C4B4DDAD4C7@amacapital.net> <20181125185524.GA23224@wind.enjellic.com>
- <D45BC005-5064-4C75-B486-4E43C454E2F6@amacapital.net> <94154ECB-3EF7-4A37-9057-0B84DBCE650E@amacapital.net>
- <20181126110038.GA27609@wind.enjellic.com>
+Date: Mon, 26 Nov 2018 11:39:06 -0800
+Message-ID: <20181126193906.GA32327@linux.intel.com>
+References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
+ <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com>
+ <CALCETrXctxfED1Dr-MuZxFnh5gzTyRL06hRJ_fQnNA8p2S4xEQ@mail.gmail.com>
+ <20181120111508.GA26127@wind.enjellic.com>
+ <20181124161521.GB30310@linux.intel.com>
+ <20181124192454.GA12149@wind.enjellic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181126110038.GA27609@wind.enjellic.com>
+Content-Disposition: inline
+In-Reply-To: <20181124192454.GA12149@wind.enjellic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Dr. Greg Wettstein" <greg@enjellic.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Andrew Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>Andy
+To: "Dr. Greg" <greg@enjellic.com>
+Cc: Andy Lutomirski <luto@amacapital.net>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, andy@infradead.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Nov 26, 2018 at 3:00 AM Dr. Greg <greg@enjellic.com> wrote:
->
-> On Sun, Nov 25, 2018 at 04:37:00PM -0800, Andy Lutomirski wrote:
->
-> > Bah, I hit send on a partially written draft. I???ll try again soon.
-> >
-> > --Andy
->
-> Your first issue seems to be complete so I will respond to that in
-> order to make sure we are not talking past one another.
+On Sat, Nov 24, 2018 at 01:24:54PM -0600, Dr. Greg wrote:
+> On Sat, Nov 24, 2018 at 08:15:21AM -0800, Jarkko Sakkinen wrote:
+> 
+> > On Tue, Nov 20, 2018 at 05:15:08AM -0600, Dr. Greg wrote:
+> > > Malware would not necessarily need the Intel attestation service.
+> > > Once access to the PROVISION bit is available, malware teams could
+> > > simply build their own attestation service.
+> 
+> > AFAIK not possible as they wouldn't have access to the root
+> > provisioning key. Can be confirmed from the SDM's key derivation
+> > table (41-56).
+> 
+> What provisioning and attestation is all about is establishing an
+> identity binding for a platform in question.  The standard Intel
+> service binds the identity of a platform to an EPID private key.
+> 
+> With access to the SGX_FLAGS_PROVISION_BIT an enclave can generate a
+> perpetual identity for a platform based on the identity modulus
+> signature (MRSIGNER) of the key that signs the signature structure of
+> the enclave.  Without access to the root provisioning key a security
+> quorum or group has to be implemented via a subscription or enrollment
+> model but that is arguably not much of an obstacle.
+> 
+> That is pretty much the way standard botware works now.
+> 
+> Without provisions for cryptographically secure authorization and
+> policy enforcement in the driver, we will be creating infrastructure
+> for a new generation of botware/malware whose mothership will know
+> that a participating platform is running with full confidentiality and
+> integrity protections.
 
-It wasn't, but your answer is enlightening!  I've read the SGX
-*manual*, but I hadn't dug through the actual Intel-supplied enclaves.
-So, when I said that the LE isn't an important part of the overall
-trust model, I meant that it isn't *in hardware*.  It's certainly
-possible to write SGX software that weakens the security of the
-overall system, and Intel seems to have done so:
+OK, I think I got what you mean.
 
->
-> The Intel supplied launch enclave (LE) specifically denies
-> initialization of enclaves which have the PROVISION attribute set,
-> with the exception of enclaves whose MRSIGNER values match those of
-> the keys that Intel uses to sign the PCE and PVE enclaves.  See line
-> 219 of psw/ae/le/launch_enclave.cpp in the Intel SDK.
+With free access to the provision the bot net controller could be sure
+that a node is running inside an enclave. Is this what you are worried
+about? Please correct if not or even if there is a slight drift on what
+you are trying to state.
 
-This seems entirely reasonable.  (But see below...)
-
-> This report, along with the PEK, is submitted to the PCE enclave in
-> order to generate the Platform Provisioning IDentity (PPID), which is
-> the privacy critical identifier.  The PCE verifies the report
-> generated by the PVE and rejects the request to generate the PPID if
-> the report was generated by an enclave that was not initialized with
-> the PROVISION bit set, see line 109 of psw/ae/pce/pce.cpp.
-
-...and this seems entirely unreasonable.  Your description does indeed
-appear consistent with the code: the PCE will hand out the PPID to any
-requesting enclave that has the PROVISION bit set, so you are correct
-that:
-
-> Once again, the important design factor in all of this is the premise
-> that the launch enclave will not allow enclaves other then the PCE and
-> PVE to access the PROVISION bit.
-
-But here's where the whole thing goes off the rails.  I would argue
-that the Intel-supplied (and Intel-signed, apparently!) PCE is just
-straight-up buggy.  What Intel is *trying* to do is to hand out the
-PPID to an appropriately signed enclave.  What they actually did is to
-hand out the PPID to any enclave that has the PROVISION bit set.  This
-is poor design because it overload the PROVISION bit.  That bit is
-supposed to mean "may use EGETKEY to obtain provisioning and
-provisioning seal keys", which is not actually what Intel wants here.
-It's also poor design without FLC because it pointlessly relies on the
-LE to enforce a restriction on the use of provisioning enclaves, when
-the code could instead have checked MRSIGNER..  And it's just straight
-up wrong with FLC because there is no guarantee whatsoever that the LE
-being used is Intel's.  And, for that matter, there is no guarantee
-that the requesting enclave doesn't have the DEBUG bit set.
-
-(It's also poor design because the PCE doesn't appear to verify that
-the report passed in is actually intended to be associated with a call
-to get_ppid().  There appear to be reports associated with provision
-"msg1" and "msg3".  If it's possible to get a valid report for msg3 to
-be accepted as a msg1 report of vice versa, then it might be game
-over.)
-
-Sorry, but this is not Linux's problem.  The right fix is, in my
-opinion, entirely clear: the PCE should check MRSIGNER and possibly
-even MRENCLAVE in the report it receives.  Intel needs to fix their
-PCE, sign a fixed version, and find some way to revoke, to the extent
-possible, the old one.  And the SGX enclave authors need to understand
-something that is apparently subtle: THE LAUNCH POLICY IS NOT PART OF
-THE TCB AND SHOULD NOT BE RELIED UPON.  Enclaves can and should be
-written to remain secure even in the complete absence of any form of
-launch control.
-
-I went and filed a bug on github.  Let's see what happens:
-
-https://github.com/intel/linux-sgx/issues/345
-
-Also, the whole SGX report mechanism seems to be misused in the SDK.
-An SGX report is a cryptographic primitive that essentially acts like
-a signed blob.  Building a secure protocol on top of signed messages
-or on top of reports takes more than just making up ad hoc blob
-formats and signing them.  There needs to be domain separation between
-different messages, and this seems to be entirely missing.  Do you
-know if Intel has had a serious audit of their platform enclave code
-done?
-
->
-> > No, I have no clue why Intel did it this way.  I consider it to be a
-> > mistake.
->
-> Are you referring to there being a mistake in the trust relationships
-> that the provisioning protocol implements or the overall concept of a
-> provisioning key?
-
-I'm referring to the hardware's policy as to when keys that don't
-depend on OWNEREPOCH can be obtained.  As far as I know, the only real
-need for such keys is to verify that the running platform is a real
-Intel platform, which means that access to the provisioning key is
-only useful to Intel-approved services.  Why didn't Intel enforce this
-in hardware or microcode?  I see no reason that EGETKEY should hand
-out those key types of the enclave is not signed by Intel.  For that
-matter, I also don't see why the provisioning seal key needs to exist
--- the regular seal key could be used instead and, if OWNEREPOCH
-changes, the platform could just re-certify itself.
-
-> > >> The driver should establish the equivalent of three linked lists,
-> > >> maintainable via /sysfs pseudo-files or equivalent plumbing.  The
-> > >> lists are referenced by the kernel to enforce the following policies.
-> > >>
-> > >> 1.) The right to initialize an enclave without special attributes.
-> > >>
-> > >> 2.) The right to initialize an enclave with the PROVISION_KEY attribute set.
-> > >>
-> > >> 3.) The right to initialize an enclave with the LICENSE_KEY attribute set.
-> > >>
-> > >> The lists are populated with MRSIGNER values of enclaves that are
-> > >> allowed to initialize under the specified conditions.
->
-> > NAK because this is insufficient.  You're thinking of a model in
-> > which SGX-like protection is all that's needed.  This is an
-> > inadequate model of the real world.  The attack I'm most concerned
-> > about wrt provisioning is an attack in which an unauthorized user is
-> > permitted.
->
-> We will be interested in your comments as to why the proposal is
-> insufficient in the real world of FLC.
-
-That's what you get for reading my unfinished email :)
-
-Your proposal fails to protect against SGX malware.  Here's an SGX
-malware use case: the attacker writes a malicious enclave and gets a
-victim machine to run it as a non-root user.  They bundle it with a
-valid Intel-signed copy of the relevant platform enclaves and use them
-to bootstrap the attestation process.  The malicious enclave attests
-its identity to a command-and-control server and obtains malicious
-code to run.  The good guys can't reverse engineer the malware
-enclave, because they can't pass the attestation check and therefore
-can't obtain the encrypted code.
-
-This isn't prevented by your proposed solution: the provisioning
-enclaves are all signed by Intel.  What's needed is a check that
-prevents unauthorized *users* from running them.
-
---Andy
+/Jarkko
