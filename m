@@ -1,130 +1,49 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 05/13] i2c: acpi: Return error pointers from i2c_acpi_new_device()
-Date: Tue, 27 Nov 2018 17:37:20 +0200
-Message-ID: <20181127153728.47866-6-andriy.shevchenko@linux.intel.com>
-References: <20181127153728.47866-1-andriy.shevchenko@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 2/3] x86: add support for Huawei WMI hotkeys.
+Date: Tue, 27 Nov 2018 17:52:02 +0200
+Message-ID: <CAHp75Vd_k3Gu93hOUOLXD90O_eM3wy2K3QfMN0789PQEOixS=w@mail.gmail.com>
+References: <20181127025752.6459-1-ayman.bagabas@gmail.com>
+ <20181127025752.6459-3-ayman.bagabas@gmail.com> <s5hwooyye9c.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127153728.47866-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <s5hwooyye9c.wl-tiwai@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Ayman Bagabas <ayman.bagabas@gmail.com>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Hui Wang <hui.wang@canonical.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Kailang Yang <kailang@realtek.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The caller would like to know the reason why the i2c_acpi_new_device() fails.
-For example, if adapter is not available, it might be in the future and we
-would like to re-probe the clients again. But at the same time we would like to
-bail out if the error seems unrecoverable, such as invalid argument supplied.
-To achieve this, return error pointer in some cases.
+On Tue, Nov 27, 2018 at 1:02 PM Takashi Iwai <tiwai@suse.de> wrote:
+> On Tue, 27 Nov 2018 03:57:48 +0100,
+> Ayman Bagabas wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/i2c/i2c-core-acpi.c                  | 21 ++++++++++++++------
- drivers/platform/x86/i2c-multi-instantiate.c |  2 +-
- drivers/platform/x86/intel_cht_int33fe.c     |  6 +++---
- 3 files changed, 19 insertions(+), 10 deletions(-)
+> > +     handle = ACPI_HANDLE(&inputdev->dev);
+> > +     args[0].type = args[1].type = args[2].type = ACPI_TYPE_INTEGER;
+> > +     args[1].integer.value = 0x04;
+> > +
+> > +     if (acpi_has_method(handle, method = "\\_SB.PCI0.LPCB.EC0.SPIN")) {
+>
+> This looks ugly...  And checkpatch also complains.
 
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index 32affd3fa8bd..7e872ceaa14f 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -386,20 +386,22 @@ struct notifier_block i2c_acpi_notifier = {
-  *
-  * Also see i2c_new_device, which this function calls to create the i2c-client.
-  *
-- * Returns a pointer to the new i2c-client, or NULL if the adapter is not found.
-+ * Returns a pointer to the new i2c-client, or error pointer in case of failure.
-+ * Specifically, -ENODEV is returned if the adapter is not found.
-  */
- struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
- 				       struct i2c_board_info *info)
- {
- 	struct i2c_acpi_lookup lookup;
- 	struct i2c_adapter *adapter;
-+	struct i2c_client *client;
- 	struct acpi_device *adev;
- 	LIST_HEAD(resource_list);
- 	int ret;
- 
- 	adev = ACPI_COMPANION(dev);
- 	if (!adev)
--		return NULL;
-+		return ERR_PTR(-EINVAL);
- 
- 	memset(&lookup, 0, sizeof(lookup));
- 	lookup.info = info;
-@@ -408,16 +410,23 @@ struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
- 
- 	ret = acpi_dev_get_resources(adev, &resource_list,
- 				     i2c_acpi_fill_info, &lookup);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+
- 	acpi_dev_free_resource_list(&resource_list);
- 
--	if (ret < 0 || !info->addr)
--		return NULL;
-+	if (!info->addr)
-+		return ERR_PTR(-EADDRNOTAVAIL);
- 
- 	adapter = i2c_acpi_find_adapter_by_handle(lookup.adapter_handle);
- 	if (!adapter)
--		return NULL;
-+		return ERR_PTR(-ENODEV);
-+
-+	client = i2c_new_device(adapter, info);
-+	if (!client)
-+		return ERR_PTR(-ENODEV);
- 
--	return i2c_new_device(adapter, info);
-+	return client;
- }
- EXPORT_SYMBOL_GPL(i2c_acpi_new_device);
- 
-diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
-index 0e3a36f3ef64..18928e4ede7f 100644
---- a/drivers/platform/x86/i2c-multi-instantiate.c
-+++ b/drivers/platform/x86/i2c-multi-instantiate.c
-@@ -72,7 +72,7 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
- 			board_info.irq = ret;
- 		}
- 		multi->clients[i] = i2c_acpi_new_device(dev, i, &board_info);
--		if (!multi->clients[i])
-+		if (PTR_ERR(multi->clients[i]) == -ENODEV)
- 			ret = -EPROBE_DEFER; /* Wait for i2c-adapter to load */
- 		else if (IS_ERR(multi->clients[i]))
- 			ret = PTR_ERR(multi->clients[i]);
-diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-index 3ba139d3bd03..b8cab17ec596 100644
---- a/drivers/platform/x86/intel_cht_int33fe.c
-+++ b/drivers/platform/x86/intel_cht_int33fe.c
-@@ -168,7 +168,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 		board_info.dev_name = "max17047";
- 		board_info.properties = max17047_props;
- 		data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
--		if (!data->max17047)
-+		if (PTR_ERR(data->max17047) == -ENODEV)
- 			ret = -EPROBE_DEFER; /* Wait for i2c-adapter to load */
- 		else if (IS_ERR(data->max17047))
- 			ret = PTR_ERR(data->max17047);
-@@ -200,7 +200,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 	board_info.irq = fusb302_irq;
- 
- 	data->fusb302 = i2c_acpi_new_device(dev, 2, &board_info);
--	if (!data->fusb302)
-+	if (PTR_ERR(data->fusb302) == -ENODEV)
- 		ret = -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
- 	else if (IS_ERR(data->fusb302))
- 		ret = PTR_ERR(data->fusb302);
-@@ -214,7 +214,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 	strlcpy(board_info.type, "pi3usb30532", I2C_NAME_SIZE);
- 
- 	data->pi3usb30532 = i2c_acpi_new_device(dev, 3, &board_info);
--	if (!data->pi3usb30532)
-+	if (PTR_ERR(data->pi3usb30532) == -ENODEV)
- 		ret = -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
- 	else if (IS_ERR(data->pi3usb30532))
- 		ret = PTR_ERR(data->pi3usb30532);
+Good point.
+Actually another question is what handle do we get here? Can we check
+method name by relative path, i.e. "SPIN" / "WPIN" instead?
+
+> > +             args[0].integer.value = 0;
+> > +             args[2].integer.value = on ? 1 : 0;
+> > +     } else if (acpi_has_method(handle, method = "\\_SB.PCI0.LPCB.EC0.WPIN")) {
+> > +             args[0].integer.value = 1;
+> > +             args[2].integer.value = on ? 0 : 1;
+> > +     } else {
+> > +             dev_err(&inputdev->dev, "Unable to find ACPI method\n");
+> > +             return -ENOSYS;
+> > +     }
+>
+> Can these checks be done at initialization phase?  It doesn't seem
+> needed to be executed at each call.
+
+Agree.
+
 -- 
-2.19.2
+With Best Regards,
+Andy Shevchenko
