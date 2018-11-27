@@ -1,101 +1,104 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 0/6] Introduce audio-mute LED trigger (and
- conversions to it)
-Date: Tue, 27 Nov 2018 09:44:18 +0100
-Message-ID: <20181127084418.GA20504@amd>
-References: <20181126171126.20280-1-tiwai@suse.de>
+From: "Dr. Greg" <greg@enjellic.com>
+Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
+Date: Tue, 27 Nov 2018 02:55:33 -0600
+Message-ID: <20181127085533.GA12247@wind.enjellic.com>
+References: <20181119161917.GF13298@linux.intel.com> <CALCETrX+A4XaEMq3fJqmHUeeDHr_BdWh-Wk3ikXfY=L77BbaGA@mail.gmail.com> <20181120120442.GA22172@linux.intel.com> <20181122111253.GA31150@wind.enjellic.com> <CALCETrWJr-C6yK8NBCp=NbapwHOaBFphiDU9VKEtQ0NMRrdC2g@mail.gmail.com> <20181124172114.GB32210@linux.intel.com> <20181125145329.GA5777@linux.intel.com> <0669C300-02CB-4EA6-BF88-5C4B4DDAD4C7@amacapital.net> <20181126215145.GC868@linux.intel.com> <20181126230436.GA6737@linux.intel.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0837932930531882148=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181126171126.20280-1-tiwai@suse.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: alsa-devel@alsa-project.org, Ayman Bagabas <ayman.bagabas@gmail.com>, platform-driver-x86@vger.kernel.org, Hui Wang <hui.wang@canonical.com>, ibm-acpi-devel@lists.sourceforge.net, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181126230436.GA6737@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>, Andy Lutomirski <luto@kernel.org>, "Dr. Greg Wettstein" <greg@enjellic.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@inf>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Mon, Nov 26, 2018 at 03:04:36PM -0800, Jarkko Sakkinen wrote:
 
---===============0837932930531882148==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
-Content-Disposition: inline
+Good morning to everyone.
 
+> On Mon, Nov 26, 2018 at 01:51:45PM -0800, Jarkko Sakkinen wrote:
+> > > ioctl(sgx, SGX_IOC_ADD_RIGHT, sgx_provisioning);
+> > > 
+> > > This requires extra syscalls, but it doesn???t have the combinatorial
+> > > explosion problem.
+> > 
+> > I like this design because it is extendable. I'm now also in the same
+> > page why we need to protect provisioning in the first place. I would
+> > slight restructure this as
+> > 
+> > /dev/sgx/control
+> > /dev/sgx/attributes/provision
 
---UugvWAfsgieZRqgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> I guess it would be OK to upstream only control node first as long
+> as provision attribute is denied in order to keep the already huge
+> patch set a tiny bit smaller?
 
-Hi!
+At this point in time I believe there is a consensus that the driver
+needs a policy management framework of some type for an optimum
+implementation.  The PROVISION attribute has privacy implications and
+unrestricted access to release mode (full security) is problematic.
 
-> this is patch series I've hacked after useful conversation with
-> Pavel.  Basically this adds a new LED trigger audio-mute and
-> audio-micmute, and convert the HD-audio driver and the platform
-> drivers to use the LED trigger instead of the ugly direct dynamic
-> symbol binding.
+Since the thread has become a bit divergent I wanted to note that we
+have offered a proposal for a general policy management framework
+based on MRSIGNER values.  This framework is consistent with the SGX
+security model, ie. cryptographic rather then DAC based policy
+controls.  This framework also allows a much more flexible policy
+implementation that doesn't result in combinatoric issues.
 
-Thanks a lot for doing this!
+Our framework also allows the preservation of the current ABI which
+allows an EINITTOKEN to be passed in from userspace.  The framework
+also supports the ability to specify that only a kernel based launch
+enclave (LE) should be available if the platform owner or distribution
+should desire to implement such a model.
 
-> The latest version of patches are found in topic/leds-trigger branch
-> in my sound git tree.
->   git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
->=20
-> As these are cross-tree patches, the branch above is based cleanly on
-> v4.20-rc3, so that it can be merged well to multiple trees.
->=20
-> Once after getting the ACK's, I'll add tags and fixate for merges.
->=20
-> This patch series don't include huawei-wmi stuff; so Huawei patches
-> need rework.  I already have some piece of changes for huawei-wmi, so
-> please ping me if needed.
->=20
-> I checked briefly on my Dell laptop, and a Thinkpad model.
-> Wider tests are appreciated, of course.
+The policy management framework is straight forward.  Three linked
+lists or their equivalent which are populated through /sysfs
+pseudo-files or equivalent plumbing.  Each list is populated with
+MRSIGNER values for signing keys that are allowed to initialize
+enclaves under three separate conditions.
 
-Looks good... except one detail: you have "tpacpi::micmute" and
-"dell::micmute". I know it follows "tradition", but we are trying to
-fix that at the moment. Laptop micmute button is a laptop micmute
-button, and userspace should not need to know what prefix to use
-depending on vendor.
+1.) General enclaves without special attribute bits.
 
-I'd suggest using "sys::micmute".
+2.) Enclaves with the SGX_FLAGS_PROVISION_KEY attribute set. - i.e.,
+'Provisioning Enclaves'.
 
-With that:
+3.) Enclaves with the SGX_FLAGS_LICENSE_KEY attribute set - i.e., 'Launch
+Enclaves'.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+An all-null MRSIGNER value serves as a 'sealing' value that locks a
+list from any further modifications.
 
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+This architecture allows platform policies to be specified and then
+sealed at early boot by the root user.  At that point cryptographic
+policy controls are in place rather then DAC based controls, the
+latter of which have perpetual security liabilities in addition to the
+useability constraints inherent in a DAC or device node model.
 
---UugvWAfsgieZRqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+We have developed an independent implementation of the PSW and
+arguably have as much experience with issues surrounding how to
+interact with the device driver as anyone.  We have spent a lot of
+time thinking about these issues and the above framework provides the
+most flexible architecture available.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> /Jarkko
 
-iEYEARECAAYFAlv9A+IACgkQMOfwapXb+vLBsACgra1PraOEcBCMo5EbZ6z86T1F
-gv8Anj0Mgc1uTlJ0pApuknp6UrsME1Ct
-=1GT3
------END PGP SIGNATURE-----
+We would be happy to discuss specific aspects of the implementation.
 
---UugvWAfsgieZRqgk--
+Have a good day.
 
---===============0837932930531882148==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Dr. Greg
 
-
---===============0837932930531882148==--
+As always,
+Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
+4206 N. 19th Ave.           Specializing in information infra-structure
+Fargo, ND  58102            development.
+PH: 701-281-1686
+FAX: 701-281-3949           EMAIL: greg@enjellic.com
+------------------------------------------------------------------------------
+"Remember that when you take down the fishhouse you can't put
+ the minnows back into the lake, so throw them out on the ice.
+ Make sure you stomp on any of the live ones so they don't suffer."
+                                -- Fritz Wettstein
+                                   At the lake
