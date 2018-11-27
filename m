@@ -1,50 +1,72 @@
-From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [PATCH v7 3/3] ALSA: hda: add support for Huawei WMI micmute LED
-Date: Mon, 26 Nov 2018 21:57:49 -0500
-Message-ID: <20181127025752.6459-4-ayman.bagabas@gmail.com>
-References: <20181127025752.6459-1-ayman.bagabas@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] platform/x86: intel-ips: remove unnecessary checks in ips_debugfs_init
+Date: Tue, 27 Nov 2018 11:09:38 +0800
+Message-ID: <20181127030938.18160-1-yuehaibing@huawei.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127025752.6459-1-ayman.bagabas@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kailang Yang <kailang@realtek.com>, Hui Wang <hui.wang@canonical.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: ayman.bagabas@gmail.com
+To: dvhart@infradead.org, andy@infradead.org, jkosina@suse.cz
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, andriy.shevchenko@linux.intel.com, YueHaibing <yuehaibing@huawei.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some of Huawei laptops come with a LED in the micmute key. This patch
-enables the use of micmute LED for these devices:
-1. Matebook X (19e5:3200), (19e5:3201)
-2. Matebook X Pro (19e5:3204)
+As Greg KH explained in:
+https://lkml.org/lkml/2015/8/15/114
 
-Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
+There no need to check the return value of debugfs_create_file/
+debugfs_create_dir.
+
+This also fix static code checker warnings:
+
+drivers/platform/x86/intel_ips.c:1314
+ ips_debugfs_init() warn: passing zero to 'PTR_ERR'
+drivers/platform/x86/intel_ips.c:1328
+ ips_debugfs_init() warn: passing zero to 'PTR_ERR'
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- sound/pci/hda/patch_realtek.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel_ips.c | 21 +++------------------
+ 1 file changed, 3 insertions(+), 18 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 1326f32f4574..9766fd249bdf 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5776,7 +5776,9 @@ static const struct hda_fixup alc269_fixups[] = {
- 			{0x1e, 0x411111f0},
- 			{0x21, 0x04211020},
- 			{ }
+diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+index 225638a..5c5dc82 100644
+--- a/drivers/platform/x86/intel_ips.c
++++ b/drivers/platform/x86/intel_ips.c
+@@ -1310,32 +1310,17 @@ static void ips_debugfs_init(struct ips_driver *ips)
+ 	int i;
+ 
+ 	ips->debug_root = debugfs_create_dir("ips", NULL);
+-	if (!ips->debug_root) {
+-		dev_err(ips->dev, "failed to create debugfs entries: %ld\n",
+-			PTR_ERR(ips->debug_root));
+-		return;
+-	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(ips_debug_files); i++) {
+-		struct dentry *ent;
+ 		struct ips_debugfs_node *node = &ips_debug_files[i];
+ 
+ 		node->ips = ips;
+-		ent = debugfs_create_file(node->name, S_IFREG | S_IRUGO,
+-					  ips->debug_root, node,
+-					  &ips_debugfs_ops);
+-		if (!ent) {
+-			dev_err(ips->dev, "failed to create debug file: %ld\n",
+-				PTR_ERR(ent));
+-			goto err_cleanup;
 -		}
-+		},
-+		.chained = true,
-+		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
- 	},
- 	[ALC269_FIXUP_ASUS_X101_FUNC] = {
- 		.type = HDA_FIXUP_FUNC,
-@@ -6608,6 +6610,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x511f, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x3bf8, "Quanta FL1", ALC269_FIXUP_PCM_44K),
- 	SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", ALC269_FIXUP_LENOVO_EAPD),
-+	SND_PCI_QUIRK(0x19e5, 0x3200, "Huawei MBX", ALC255_FIXUP_MIC_MUTE_LED),
-+	SND_PCI_QUIRK(0x19e5, 0x3201, "Huawei MBX", ALC255_FIXUP_MIC_MUTE_LED),
- 	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MBXP", ALC256_FIXUP_HUAWEI_MBXP_PINS),
- 	SND_PCI_QUIRK(0x1b7d, 0xa831, "Ordissimo EVE2 ", ALC269VB_FIXUP_ORDISSIMO_EVE2), /* Also known as Malata PC-B1303 */
++		debugfs_create_file(node->name, S_IFREG | S_IRUGO,
++				    ips->debug_root, node,
++				    &ips_debugfs_ops);
+ 	}
+ 
+ 	return;
+-
+-err_cleanup:
+-	ips_debugfs_cleanup(ips);
+-	return;
+ }
+ #endif /* CONFIG_DEBUG_FS */
  
 -- 
-2.19.1
+2.7.0
