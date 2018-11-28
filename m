@@ -1,89 +1,37 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 0/6] Introduce audio-mute LED trigger (and
- conversions to it)
-Date: Wed, 28 Nov 2018 22:22:13 +0100
-Message-ID: <20181128212212.GE20670@amd>
-References: <20181126171126.20280-1-tiwai@suse.de> <20181127084418.GA20504@amd>
- <20181128111806.cb3cncpjeq73sptg@pali>
- <s5hy39dv3dg.wl-tiwai@suse.de> <20181128122505.GA1193@amd>
- <8bb45cc6-9f98-9fed-9676-7f1429328c4a@gmail.com>
- <20181128203410.GA20670@amd> <20181128204612.l3bayhop4qmep2hj@pali>
- <0ed37870-c7b6-fd6b-2f6e-7325fdde3629@gmail.com>
+From: Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
+Date: Wed, 28 Nov 2018 13:52:00 -0800
+Message-ID: <CALCETrV4UA5bn6dkq5aVycApx1ubq-rho_z=sHhxABbOSGZWMw@mail.gmail.com>
+References: <20181119161917.GF13298@linux.intel.com> <CALCETrX+A4XaEMq3fJqmHUeeDHr_BdWh-Wk3ikXfY=L77BbaGA@mail.gmail.com>
+ <20181120120442.GA22172@linux.intel.com> <20181122111253.GA31150@wind.enjellic.com>
+ <CALCETrWJr-C6yK8NBCp=NbapwHOaBFphiDU9VKEtQ0NMRrdC2g@mail.gmail.com>
+ <20181124172114.GB32210@linux.intel.com> <20181125145329.GA5777@linux.intel.com>
+ <0669C300-02CB-4EA6-BF88-5C4B4DDAD4C7@amacapital.net> <20181126215145.GC868@linux.intel.com>
+ <20181126230436.GA6737@linux.intel.com> <20181127085533.GA12247@wind.enjellic.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6175940629705471447=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <0ed37870-c7b6-fd6b-2f6e-7325fdde3629@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: alsa-devel@alsa-project.org, Ayman Bagabas <ayman.bagabas@gmail.com>, Takashi Iwai <tiwai@suse.de>, platform-driver-x86@vger.kernel.org, Hui Wang <hui.wang@canonical.com>, ibm-acpi-devel@lists.sourceforge.net, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181127085533.GA12247@wind.enjellic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Dr. Greg Wettstein" <greg@enjellic.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, Andrew Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>Andy
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Tue, Nov 27, 2018 at 12:55 AM Dr. Greg <greg@enjellic.com> wrote:
+> Since the thread has become a bit divergent I wanted to note that we
+> have offered a proposal for a general policy management framework
+> based on MRSIGNER values.  This framework is consistent with the SGX
+> security model, ie. cryptographic rather then DAC based policy
+> controls.  This framework also allows a much more flexible policy
+> implementation that doesn't result in combinatoric issues.
 
---===============6175940629705471447==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cPi+lWm09sJ+d57q"
-Content-Disposition: inline
+Can you give a concrete explanation of a problem that your proposal
+would solve?  As far as I can tell, it gets rid of a case in which an
+unprivileged attacker who can run enclaves but hasn't compromised the
+kernel can learn the PPID and other SGX-related permanent platform
+identifiers, but it does nothing to prevent the same attacker from
+learning non-SGX-related permanent identifiers, nor does it prevent
+the attacker from using the Intel quoting enclave (unless configured
+in a surprising way) and thus attesting to a remote system.
 
-
---cPi+lWm09sJ+d57q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > If external USB keyboard is identified as "input7" device, then
-> > "input7::mute" is a good name for mute key. But "sys::mute" does not say
-> > anything to which device or hardware it belongs nor does not solve
-> > problem that which device/driver/subsystem should have privilege to take
-> > this "sys" name.
->=20
-> How about just "platform" for the LEDs being part of the device
-> on which the system is running?
-
-"platform" works for me.
-
-Are we in agreement that this name will be used for all similar LEDs,
-as long as they are on the "main box" of the device, no matter if they
-are connected using acpi, gpio, i2c, ...?
-
-Should we start Documentation file explaining common names we want
-people to use?
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---cPi+lWm09sJ+d57q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlv/BwQACgkQMOfwapXb+vKb2ACfZJfWC+Arq4KD0vrx1ko3Sca0
-kDIAoI+CXAJl3Ca37mFYly/Hhi+Ydz6H
-=DHC4
------END PGP SIGNATURE-----
-
---cPi+lWm09sJ+d57q--
-
---===============6175940629705471447==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6175940629705471447==--
+So what problem does it solve?
