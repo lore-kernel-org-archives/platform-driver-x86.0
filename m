@@ -1,131 +1,40 @@
-From: ayman.bagabas@gmail.com
-Subject: Re: [PATCH v7 2/3] x86: add support for Huawei WMI hotkeys.
-Date: Tue, 27 Nov 2018 19:58:24 -0500
-Message-ID: <30a2b3bea95199ffc1a81f374deabbfadaeb2c22.camel@gmail.com>
-References: <20181127025752.6459-1-ayman.bagabas@gmail.com>
-         <20181127025752.6459-3-ayman.bagabas@gmail.com>
-         <s5h5zwi7t1s.wl-tiwai@suse.de>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
+Date: Tue, 27 Nov 2018 21:08:14 -0800
+Message-ID: <20181128050814.GA8842@linux.intel.com>
+References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
+ <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com>
+ <CALCETrXctxfED1Dr-MuZxFnh5gzTyRL06hRJ_fQnNA8p2S4xEQ@mail.gmail.com>
+ <20181119161917.GF13298@linux.intel.com>
+ <CALCETrX+A4XaEMq3fJqmHUeeDHr_BdWh-Wk3ikXfY=L77BbaGA@mail.gmail.com>
+ <20181120120442.GA22172@linux.intel.com>
+ <20181122111253.GA31150@wind.enjellic.com>
+ <CALCETrV4wOpk7wf9+ywd50PekGjfT7LNtwqHhcV08=oxPmKtKQ@mail.gmail.com>
+ <20181123103923.GA13851@wind.enjellic.com>
+ <20181124164534.GC30310@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <s5h5zwi7t1s.wl-tiwai@suse.de>
+Content-Disposition: inline
+In-Reply-To: <20181124164534.GC30310@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: alsa-devel@alsa-project.org, Hui Wang <hui.wang@canonical.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Kailang Yang <kailang@realtek.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: "Dr. Greg" <greg@enjellic.com>
+Cc: Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, LKML <linux-kernel@vger.kernel>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 2018-11-27 at 10:45 +0100, Takashi Iwai wrote:
-> On Tue, 27 Nov 2018 03:57:48 +0100,
-> Ayman Bagabas wrote:
-> > +static const struct key_entry huawei_wmi_keymap[] __initconst = {
-> > +		{ KE_KEY,    0x281, { KEY_BRIGHTNESSDOWN } },
-> > +		{ KE_KEY,    0x282, { KEY_BRIGHTNESSUP } },
-> > +		{ KE_KEY,    0x284, { KEY_MUTE } },
-> > +		{ KE_KEY,    0x285, { KEY_VOLUMEDOWN } },
-> > +		{ KE_KEY,    0x286, { KEY_VOLUMEUP } },
-> > +		{ KE_KEY,    0x287, { KEY_MICMUTE } },
-> > +		{ KE_KEY,    0x289, { KEY_WLAN } },
-> > +		// Huawei |M| button
-> > +		{ KE_KEY,    0x28a, { KEY_CONFIG } },
-> > +		// Keyboard light
-> > +		{ KE_IGNORE, 0x293, { KEY_KBDILLUMTOGGLE } },
-> > +		{ KE_IGNORE, 0x294, { KEY_KBDILLUMUP } },
-> > +		{ KE_IGNORE, 0x295, { KEY_KBDILLUMUP } },
-> > +		{ KE_END,    0 }
+On Sat, Nov 24, 2018 at 08:45:34AM -0800, Jarkko Sakkinen wrote:
+> On Fri, Nov 23, 2018 at 04:39:23AM -0600, Dr. Greg wrote:
+> > Jarkko, when this driver lands it will set the SGX ABI in stone for
+> > Linux.  It would be very, very helpful to the development community if
+> > there was some official guidance from Intel on whether or not FLC will
+> > be a universal feature on all hardware and the date that is going to
+> > happen or has happened.
 > 
-> The indentation looks too deep here.
-> 
-> > +static int huawei_wmi_micmute_led_set(bool on)
-> > +{
-> > +	acpi_handle handle;
-> > +	char *method;
-> > +	union acpi_object args[3];
-> > +	struct acpi_object_list arg_list = {
-> > +		.pointer = args,
-> > +		.count = ARRAY_SIZE(args),
-> > +	};
-> > +
-> > +	handle = ACPI_HANDLE(&inputdev->dev);
-> 
-> Just wondering whether the ACPI handle is assigned properly for this
-> device...
+> I seriously don't know but I can take this message to the mothership...
 
-It is, but it returns a handle at "\".
+LC enabling is essentially a platform vendors choice, not Intels choice,
+like many other CPU features that Linux is dependent on. Of course, if
+Linux ends supporting only LC that will without doubt have a big impact
+on vendors so in that way it is indirectly also communitys choice.
 
-> 
-> > +	args[0].type = args[1].type = args[2].type = ACPI_TYPE_INTEGER;
-> > +	args[1].integer.value = 0x04;
-> > +
-> > +	if (acpi_has_method(handle, method =
-> > "\\_SB.PCI0.LPCB.EC0.SPIN")) {
-> > +		args[0].integer.value = 0;
-> > +		args[2].integer.value = on ? 1 : 0;
-> > +	} else if (acpi_has_method(handle, method =
-> > "\\_SB.PCI0.LPCB.EC0.WPIN")) {
-> > +		args[0].integer.value = 1;
-> > +		args[2].integer.value = on ? 0 : 1;
-> > +	} else {
-> > +		dev_err(&inputdev->dev, "Unable to find ACPI
-> > method\n");
-> > +		return -ENOSYS;
-> > +	}
-> > +
-> > +	acpi_evaluate_object(handle, method, &arg_list, NULL);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int micmute_led_set(struct led_classdev *led_cdev,
-> > +		enum led_brightness brightness)
-> > +{
-> > +	int state = brightness != LED_OFF;
-> > +	int err;
-> > +
-> > +	err = huawei_wmi_micmute_led_set(state);
-> > +	return err < 0 ? err : 0;
-> 
-> No need for checking err here, you can return
-> huawei_wmi_mute_led_set() directly.
-> 
-> Or even you can fold two functions into one.
-
-I think folding them make more sense.
-
-> 
-> > +static int __init huawei_wmi_init(void)
-> > +{
-> > +	int err;
-> > +
-> > +	if (wmi_has_guid(MBX_EVENT_GUID)) {
-> > +		event_guid = MBX_EVENT_GUID;
-> > +	} else if (wmi_has_guid(MBXP_EVENT_GUID)) {
-> > +		event_guid = MBXP_EVENT_GUID;
-> > +	} else {
-> > +		pr_warn("Compatible WMI GUID not found\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	err = huawei_wmi_input_init();
-> > +	if (err)
-> > +		goto err_input;
-> > +
-> > +	micmute_led_cdev.brightness =
-> > ledtrig_audio_get(LED_AUDIO_MICMUTE);
-> > +	err = led_classdev_register(&inputdev->dev, &micmute_led_cdev);
-> > +	if (err)
-> > +		goto err_leds;
-> > +
-> > +	return 0;
-> 
-> Might it be cleaner to implement on top of wmi_driver?
-> Then you can create both input and led devices on wmi device.
-> 
-
-Done! Now led devices get registered when wmi probes a new device.
-Thanks.
-
-> 
-> thanks,
-> 
-> Takashi
+/Jarkko
