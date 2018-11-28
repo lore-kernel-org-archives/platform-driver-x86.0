@@ -1,40 +1,75 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
-Date: Wed, 28 Nov 2018 11:22:28 -0800
-Message-ID: <20181128192228.GC9023@linux.intel.com>
-References: <CALCETrWJr-C6yK8NBCp=NbapwHOaBFphiDU9VKEtQ0NMRrdC2g@mail.gmail.com>
- <20181124172114.GB32210@linux.intel.com>
- <20181125145329.GA5777@linux.intel.com>
- <0669C300-02CB-4EA6-BF88-5C4B4DDAD4C7@amacapital.net>
- <20181126215145.GC868@linux.intel.com>
- <20181126230436.GA6737@linux.intel.com>
- <20181127085533.GA12247@wind.enjellic.com>
- <20181127164129.GB4170@linux.intel.com>
- <C11C9312-65BC-460A-8F9F-608E101AE5C1@amacapital.net>
- <20181128104941.GA23077@wind.enjellic.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 0/6] Introduce audio-mute LED trigger (and
+ conversions to it)
+Date: Wed, 28 Nov 2018 20:58:03 +0100
+Message-ID: <8bb45cc6-9f98-9fed-9676-7f1429328c4a@gmail.com>
+References: <20181126171126.20280-1-tiwai@suse.de>
+ <20181127084418.GA20504@amd> <20181128111806.cb3cncpjeq73sptg@pali>
+ <s5hy39dv3dg.wl-tiwai@suse.de> <20181128122505.GA1193@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181128104941.GA23077@wind.enjellic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Dr. Greg" <greg@enjellic.com>
-Cc: Andy Lutomirski <luto@amacapital.net>, Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infrade>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20181128122505.GA1193@amd>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Pavel Machek <pavel@ucw.cz>, Takashi Iwai <tiwai@suse.de>
+Cc: alsa-devel@alsa-project.org, Ayman Bagabas <ayman.bagabas@gmail.com>, platform-driver-x86@vger.kernel.org, Hui Wang <hui.wang@canonical.com>, ibm-acpi-devel@lists.sourceforge.net, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-leds@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Nov 28, 2018 at 04:49:41AM -0600, Dr. Greg wrote:
-> We've been carrying a patch, that drops in on top of the proposed
-> kernel driver, that implements the needed policy management framework
-> for DAC fragile (FLC) platforms.  After a meeting yesterday with the
-> client that is funding the work, a decision was made to release the
-> enhancements when the SGX driver goes mainline.  That will at least
-> give developers the option of creating solutions on Linux that
-> implement the security guarantees that SGX was designed to deliver.
+On 11/28/2018 01:25 PM, Pavel Machek wrote:
+> On Wed 2018-11-28 12:38:19, Takashi Iwai wrote:
+>> On Wed, 28 Nov 2018 12:18:06 +0100,
+>> Pali Roh=E1r wrote:
+>>>
+>>> On Tuesday 27 November 2018 09:44:18 Pavel Machek wrote:
+>>>> Looks good... except one detail: you have "tpacpi::micmute" and
+>>>> "dell::micmute". I know it follows "tradition", but we are trying to
+>>>> fix that at the moment. Laptop micmute button is a laptop micmute
+>>>> button, and userspace should not need to know what prefix to use
+>>>> depending on vendor.
+>>>>
+>>>> I'd suggest using "sys::micmute".
+>>>
+>>> I can imagine that in future some devices like keyboards would have also
+>>> mute led. We already have keyboards with mute key, so it is something
+>>> not unrealistic. What should be name convention for these mute leds?
+>>>
+>>> Is not "sys::" prefix too generic?
+>>
+>> Good point.  I thought of "laptop::" but it's not always laptop.
+>> "builtin::"?  Doesn't sound great, either.
+>>
+>> A nice godfather is required here...
+> =
 
-We do not need yet another policy management framework to the *kernel*.
+> Just use sys:: :-).
+> =
 
-The token based approach that Andy is proposing is proven and well
-established method to create a mechanism. You can then create a daemon
-to user space that decides who it wants to send tokes.
+> laptop:: would work for me, too. (It is always laptop in the cases we
+> are handling now, right?)
+> =
 
-/Jarkko
+> When we get a keyboard with mute led, we'll have to decide if it
+> should be input6::mute -- because it is on keyboard, or if it is
+> sys::mute -- because the key is expected to mute whole system.
+
+drivers/input/input-leds.c seems to already support mute LED.
+It will be exposed as inputN::mute.
+
+Documentation/leds/leds-class.txt defines LED naming pattern
+to <devicename:color:function> and "sys" does not look as
+something resembling device name.
+
+-- =
+
+Best regards,
+Jacek Anaszewski
