@@ -1,49 +1,100 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/6] Introduce audio-mute LED trigger (and
-	conversions to it)
-Date: Wed, 28 Nov 2018 15:40:18 +0200
-Message-ID: <CAHp75VeY3xe8gjRPPHO-McqjB4e2aNh8kXwQ3N6weyeKh8CmRQ@mail.gmail.com>
-References: <20181126171126.20280-1-tiwai@suse.de> <20181127084418.GA20504@amd>
- <20181128111806.cb3cncpjeq73sptg@pali> <s5hy39dv3dg.wl-tiwai@suse.de>
- <20181128122505.GA1193@amd> <s5hr2f5uzo0.wl-tiwai@suse.de>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v5 00/15] i2c-multi-instantiate: Adapt for INT3515 and
+ alike
+Date: Wed, 28 Nov 2018 15:20:30 +0100
+Message-ID: <776a33a7-bea0-fac9-3dbd-e17223180623@redhat.com>
+References: <20181128114535.80223-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <s5hr2f5uzo0.wl-tiwai@suse.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: ALSA Development Mailing List <alsa-devel@alsa-project.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Hui Wang <hui.wang@canonical.com>, ibm-acpi-devel@lists.sourceforge.net, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181128114535.80223-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Nov 28, 2018 at 2:59 PM Takashi Iwai <tiwai@suse.de> wrote:
-> On Wed, 28 Nov 2018 13:25:05 +0100,
-> > On Wed 2018-11-28 12:38:19, Takashi Iwai wrote:
+Hi,
 
-> > Just use sys:: :-).
-> >
-> > laptop:: would work for me, too. (It is always laptop in the cases we
-> > are handling now, right?)
->
-> In theory, such a thing can be on all-in-one desktops, too.
->
-> > When we get a keyboard with mute led, we'll have to decide if it
-> > should be input6::mute -- because it is on keyboard, or if it is
-> > sys::mute -- because the key is expected to mute whole system.
->
-> OK, I'll wait for more comments in today and update accordingly.
+On 28-11-18 12:45, Andy Shevchenko wrote:
+> Currently i2c-multi-instantiate driver does not support the case
+> of INT3515 USB PD device, where:
+> 
+> - Interrupt() is used instead of GpioInt()
+> - All slaves may be the same from IP point of view
+> - There can be variadic amount of slaves
+> 
+> This series is addressing all above.
+> 
+> Note, series has been smoke tested (Heikki would do BAT or more)
+> on Intel Coffee Lake system.
+> 
+> The idea is to push this either through PDx86 tree (needs Rafael's ACKs) or ACPI.
+> In any case it needs tags from Heikki, Hans, Mika, Wolfram and Jonathan.
+> 
+> Testing and comments are warmly welcome.
+> 
+> In v5:
+> - unmess with patches 3 and 4 (there were squashed by my mistake)
+> - other than above no code change from v4
 
-sys sounds plausible to me. In any case we may revisit in the future
-if something happens to it. OTOH it would be part of ABI, right?
+v5 looks good to me, you can add my:
 
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+To the patches which don't have this yet.
+
+Regards,
+
+Hans
+
+
+
+
+> 
+> In v4:
+> - directly return -EPROBE_DEFER from i2c_acpi_new_device()
+> - due to above split error handling simplification to separate patches
+> 
+> In v3:
+> - revisit error codes returned by i2c_acpi_new_device() (Hans, Mika)
+> - add documentation to exported i2c_acpi_get_i2c_resource() (Mika)
+> - drop Hans' Rb tag in patch 5 due to changes
+> - append Mika's Ab tag to patch 6
+> 
+> In v2:
+> - drop patches to copy fwnode and to handle BOSC0200 device
+> - append check for amount of devices listed in the driver's mapping
+> - add Rb tag given by Hans
+> 
+> Andy Shevchenko (15):
+>    platform/x86: intel_cht_int33fe: Remove duplicate NULL check
+>    platform/x86: intel_cht_int33fe: Accept errors of
+>      i2c_acpi_new_device()
+>    platform/x86: i2c-multi-instantiate: Accept errors of
+>      i2c_acpi_new_device()
+>    platform/x86: i2c-multi-instantiate: Defer probe when no adapter found
+>    i2c: acpi: Return error pointers from i2c_acpi_new_device()
+>    platform/x86: intel_cht_int33fe: Get rid of obsolete conditional
+>    platform/x86: i2c-multi-instantiate: Get rid of obsolete conditional
+>    i2c: acpi: Use ACPI_FAILURE instead of !ACPI_SUCCESS
+>    i2c: acpi: Introduce i2c_acpi_get_i2c_resource() helper
+>    platform/x86: i2c-multi-instantiate: Count I2cSerialBus() resources
+>    platform/x86: i2c-multi-instantiate: Distinguish IRQ resource type
+>    platform/x86: i2c-multi-instantiate: Introduce IOAPIC IRQ support
+>    platform/x86: i2c-multi-instantiate: Allow to have same slaves
+>    ACPI / scan: Create platform device for INT3515 ACPI nodes
+>    iio: inv_mpu6050: Use i2c_acpi_get_i2c_resource() helper
+> 
+>   drivers/acpi/scan.c                          |  1 +
+>   drivers/i2c/i2c-core-acpi.c                  | 64 +++++++++----
+>   drivers/iio/imu/inv_mpu6050/inv_mpu_acpi.c   | 16 ++--
+>   drivers/platform/x86/i2c-multi-instantiate.c | 97 ++++++++++++++++----
+>   drivers/platform/x86/intel_cht_int33fe.c     | 20 ++--
+>   drivers/usb/typec/tps6598x.c                 |  8 +-
+>   include/linux/acpi.h                         | 11 +++
+>   7 files changed, 157 insertions(+), 60 deletions(-)
+> 
+> --
+> 2.19.2
+> 
