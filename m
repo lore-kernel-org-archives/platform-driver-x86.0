@@ -1,85 +1,135 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v5 02/15] platform/x86: intel_cht_int33fe: Accept errors of i2c_acpi_new_device()
-Date: Wed, 28 Nov 2018 13:45:22 +0200
-Message-ID: <20181128114535.80223-3-andriy.shevchenko@linux.intel.com>
-References: <20181128114535.80223-1-andriy.shevchenko@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 1/2] gpio: Add driver for PC Engines APU boards
+Date: Wed, 28 Nov 2018 14:00:10 +0200
+Message-ID: <CAHp75Vc0-t=nBGPbYjbaJDoPEg77xKLVDuhUtFQ6imgnkNuz-g@mail.gmail.com>
+References: <20181127132508.5501-1-fe@dev.tdt.de> <20181127132508.5501-2-fe@dev.tdt.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181128114535.80223-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20181127132508.5501-2-fe@dev.tdt.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Florian Eckert <fe@dev.tdt.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Eckert.Florian@googlemail.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-In the future i2c_acpi_new_device() will return error pointer in some cases.
-Prepare intel_cht_int33fe driver to support that.
+On Tue, Nov 27, 2018 at 3:25 PM Florian Eckert <fe@dev.tdt.de> wrote:
+>
+> Add a new device driver "gpio-apu" which will handle the GPIOs on APU2
+> and APU3 devices from PC Engines.
+>
+> APU2 (https://pcengines.ch/schema/apu2c.pdf page 7):
+> - G32 is "button_reset" connected to the smd-button on the frontpanel
+> - G50 is "mpcie2_reset" connected to mPCIe2 reset line
+> - G51 is "mpcie3_reset" connected to mPCIe3 reset line
+>
+> APU3 (https://pcengines.ch/schema/apu3c.pdf page 7):
+> - G32 is "button_reset" connected to the smd-button on the frontpanel
+> - G50 is "mpcie2_reset" connected to mPCIe2 reset line
+> - G51 is "mpcie3_reset" connected to mPCIe3 reset line
+> - G33 is "simswap" connected to SIM switch IC to swap the SIM between
+>   mPCIe2 and mPCIe3 slot
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/intel_cht_int33fe.c | 28 +++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
+> +/* PC Engines APU2/APU3 GPIO device driver
+> + *
+> + * Copyright (C) 2018 Florian Eckert <fe@dev.tdt.de>
+> + */
 
-diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-index 431151d4e611..367d6e304ade 100644
---- a/drivers/platform/x86/intel_cht_int33fe.c
-+++ b/drivers/platform/x86/intel_cht_int33fe.c
-@@ -168,8 +168,14 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 		board_info.dev_name = "max17047";
- 		board_info.properties = max17047_props;
- 		data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
--		if (!data->max17047)
--			return -EPROBE_DEFER; /* Wait for i2c-adapter to load */
-+		if (IS_ERR(data->max17047))
-+			ret = PTR_ERR(data->max17047);
-+		else if (!data->max17047)
-+			ret = -EPROBE_DEFER; /* Wait for i2c-adapter to load */
-+		else
-+			ret = 0;
-+		if (ret)
-+			return ret;
- 	}
- 
- 	data->connections[0].endpoint[0] = "port0";
-@@ -194,7 +200,13 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 	board_info.irq = fusb302_irq;
- 
- 	data->fusb302 = i2c_acpi_new_device(dev, 2, &board_info);
--	if (!data->fusb302)
-+	if (IS_ERR(data->fusb302))
-+		ret = PTR_ERR(data->fusb302);
-+	else if (!data->fusb302)
-+		ret = -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
-+	else
-+		ret = 0;
-+	if (ret)
- 		goto out_unregister_max17047;
- 
- 	memset(&board_info, 0, sizeof(board_info));
-@@ -202,7 +214,13 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 	strlcpy(board_info.type, "pi3usb30532", I2C_NAME_SIZE);
- 
- 	data->pi3usb30532 = i2c_acpi_new_device(dev, 3, &board_info);
--	if (!data->pi3usb30532)
-+	if (IS_ERR(data->pi3usb30532))
-+		ret = PTR_ERR(data->pi3usb30532);
-+	else if (!data->pi3usb30532)
-+		ret = -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
-+	else
-+		ret = 0;
-+	if (ret)
- 		goto out_unregister_fusb302;
- 
- 	platform_set_drvdata(pdev, data);
-@@ -217,7 +235,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 
- 	device_connections_remove(data->connections);
- 
--	return -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
-+	return ret;
- }
- 
- static int cht_int33fe_remove(struct platform_device *pdev)
+/*
+ * Multi-line comments
+ * have this style
+ */
+
+> +#include <linux/bits.h>
+> +#include <linux/dmi.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/input.h>
+> +#include <linux/kernel.h>
+
+kbuild bot complains for absence of
+
+#include <linux/mod_devicetable.h>
+
+here.
+
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+
+> +static int gpio_apu_get_dir(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       u32 val;
+> +       struct apu_gpio_pdata *apu_gpio = gpiochip_get_data(chip);
+> +
+> +       spin_lock(&apu_gpio->lock);
+> +
+
+> +       val = ~ioread32(apu_gpio->addr[offset]);
+
+There is no need to do ~ under spin lock.
+
+> +
+> +       spin_unlock(&apu_gpio->lock);
+> +
+> +       return !!(val & BIT(APU_GPIO_BIT_DIR));
+> +}
+
+> +       if (dmi_check_system(apu3_gpio_dmi_table)) {
+
+(1)
+
+> +               apu_gpio->addr = devm_kzalloc(&pdev->dev,
+> +                               sizeof(apu3_gpio_offset),
+> +                               GFP_KERNEL);
+
+> +
+
+No need to have this blank line. Same for the other cases.
+
+> +               if (!apu_gpio->addr)
+> +                       return -ENOMEM;
+
+> +       } else if (dmi_check_system(apu2_gpio_dmi_table)) {
+
+(2)
+
+I think I have already told about (1) and (2). You may create two
+callbacks and utilize .callback member in DMI table.
+
+> +       }
+
+> +static int __init apu_gpio_init(void)
+> +{
+
+> +       if (!(dmi_check_system(apu2_gpio_dmi_table)) &&
+> +               !(dmi_check_system(apu3_gpio_dmi_table))) {
+> +               pr_err("No PC Engines board detected\n");
+> +               return -ENODEV;
+> +       }
+
+I don't think we need this.
+
+> +       apu_gpio_pdev = platform_device_register_simple(KBUILD_MODNAME,
+> +                       -1, NULL, 0);
+> +       if (IS_ERR(apu_gpio_pdev))
+> +               return PTR_ERR(apu_gpio_pdev);
+> +
+> +
+> +       return platform_driver_register(&apu_gpio_driver);
+> +}
+> +
+> +static void __exit apu_gpio_exit(void)
+> +{
+> +       platform_device_unregister(apu_gpio_pdev);
+> +       platform_driver_unregister(&apu_gpio_driver);
+> +}
+> +
+> +module_init(apu_gpio_init);
+> +module_exit(apu_gpio_exit);
+
+After removing unneeded checks why not to simple use
+module_platform_driver()
+?
+
 -- 
-2.19.2
+With Best Regards,
+Andy Shevchenko
