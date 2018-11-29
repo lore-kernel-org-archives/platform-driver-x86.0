@@ -1,55 +1,88 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/2] platform/x86: wmi: prefix sysfs files in
- /sys/bus/wmi with the ACPI device
-Date: Wed, 28 Nov 2018 16:22:42 -0800
-Message-ID: <20181129002242.GB2468@fedora.eng.vmware.com>
-References: <1512786861-1014-1-git-send-email-mario.limonciello@dell.com>
- <1512786861-1014-2-git-send-email-mario.limonciello@dell.com>
- <DDE9D9EA-D55D-41CC-94ED-EB2A590B7BCF@amacapital.net>
- <1512790860266.96149@Dell.com>
- <CALCETrWm9jY-jo9EN7KW+E4Gc1nDPrQAJ_g+07L-UgZpe5XgMA@mail.gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH v2 2/6] platform/x86: dell-laptop: Add micmute
+	LED trigger support
+Date: Thu, 29 Nov 2018 08:31:27 +0100
+Message-ID: <20181129073131.4338-3-tiwai@suse.de>
+References: <20181129073131.4338-1-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CALCETrWm9jY-jo9EN7KW+E4Gc1nDPrQAJ_g+07L-UgZpe5XgMA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20181129073131.4338-1-tiwai@suse.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: Ayman Bagabas <ayman.bagabas@gmail.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, platform-driver-x86@vger.kernel.org, Hui Wang <hui.wang@canonical.com>, ibm-acpi-devel@lists.sourceforge.net, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-leds@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Dec 09, 2017 at 01:32:29PM -0800, Andy Lutomirski wrote:
-> On Fri, Dec 8, 2017 at 7:41 PM,  <Mario.Limonciello@dell.com> wrote:
-> >>> On Dec 8, 2017, at 6:34 PM, Mario Limonciello <mario.limonciello@dell.com> wrote:
-> >>>
-> >>> It's possible for the same GUID to show up on as system twice.
-> >>> This means using solely the GUID for identify the file will not
-> >>> be sufficient.
-> >>
-> >>Isn't the file already in a per-bus directory?
-> >
-> > Yep, but the symlink created in /sys/bus/wmi/devices isn't.
-> > That's where the kernel complains about duplicate sysfs
-> > attributes.
-> >
-> > It's not exactly a pretty path I submitted, but it does avoid
-> > those collisions.
-> >
-> > Example (with this in place from /sys/bus/wmi/devices):
-> > lrwxrwxrwx 1 root root 0 Dec  8 21:39 PNP0C14:04-70FE8229-D03B-4214-A1C6-1F884B1A892A -> ../../../devices/platform/PNP0C14:04/wmi_bus/wmi_bus-PNP0C14:04/PNP0C14:04-70FE8229-D03B-4214-A1C6-1F884B1A892A
-> 
-> Right, I saw that in the cover letter right after sending this.
-> 
-> Greg, is there a cleaner way to deal with this?  There are two
-> instances of the same bus type, each of which would like to have a
-> device called "70FE8229-D03B-4214-A1C6-1F884B1A892A".  Can we somehow
-> rename the symlinks without renaming the device, or are we just
-> supposed to prefix the device name like Mario is doing here?
-> 
-
-Mario, if this is still a concern (I presume it is) would you please
-resend the patch Cc gregkh directly?
-
--- 
-Darren Hart
-VMware Open Source Technology Center
+VGhpcyBwYXRjaCBhZGRzIHRoZSBMRUQgdHJpZ2dlciBzdXBwb3J0IGZvciBhdWRpbyBtaWMtbXV0
+ZSBjb250cm9sLgpBcyBvZiB0aGlzIHBhdGNoLCB0aGUgTEVEIGRldmljZSBpc24ndCB0aWVkIHdp
+dGggdGhlIGF1ZGlvIGRyaXZlciwgYW5kCmNhbiBiZSBjaGFuZ2VkIHZpYSB1c2VyLXNwYWNlIGF0
+ICJwbGF0Zm9ybTo6bWljbXV0ZSIgc3lzZnMgZW50cnkuCihUaGlzIG5ldyBwcmVmaXggInBsYXRm
+b3JtIiBpcyB0aGUgYWdyZWVtZW50IGFtb25nIHBlb3BsZSBmb3IKaW5kaWNhdGluZyB0aGUgZ2Vu
+ZXJpYyBsYXB0b3AgLyBzeXN0ZW0td2lkZSBhdHRyaWJ1dGUuKQoKVGhlIGJpbmRpbmcgd2l0aCBI
+RC1hdWRpbyBpcyBzdGlsbCBkb25lIHZpYSB0aGUgZXhpc3RpbmcgZXhwb3J0ZWQKZGVsbF9taWNt
+dXRlX2xlZF9zZXQoKS4gIEl0IHdpbGwgYmUgcmVwbGFjZWQgd2l0aCB0aGUgTEVEIHRyaWdnZXIK
+YmluZGluZyBpbiBsYXRlciBwYXRjaGVzLgoKQWxzbyB0aGlzIHNlbGVjdHMgQ09ORklHX0xFRFNf
+VFJJR0dFUlMgYW5kIENPTkZJR19MRURTX1RSSUdHRVJTX0FVRElPCnVuY29uZGl0aW9uYWxseS4g
+IFN0cmljdGx5IHNwZWFraW5nLCB0aGVzZSBhcmVuJ3QgMTAwJSBtYW5kYXRvcnksIGJ1dApsZWF2
+aW5nIHRoZXNlIG1hbnVhbCBzZWxlY3Rpb25zIHdvdWxkIGxlYWQgdG8gYSBmdW5jdGlvbmFsIHJl
+Z3Jlc3Npb24KZWFzaWx5IG9uY2UgYWZ0ZXIgY29udmVydGluZyBmcm9tIHRoZSBkeW5hbWljIHN5
+bWJvbCBiaW5kaW5nIHRvIHRoZQpMRURzIHRyaWdnZXIgaW4gYSBsYXRlciBwYXRjaC4KCkFja2Vk
+LWJ5OiBKYWNlayBBbmFzemV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT4KQWNrZWQt
+Ynk6IFBhdmVsIE1hY2hlayA8cGF2ZWxAdWN3LmN6PgpBY2tlZC1ieTogQW5keSBTaGV2Y2hlbmtv
+IDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPgpBY2tlZC1ieTogUGFsaSBSb2jDoXIgPHBhbGku
+cm9oYXJAZ21haWwuY29tPgpTaWduZWQtb2ZmLWJ5OiBUYWthc2hpIEl3YWkgPHRpd2FpQHN1c2Uu
+ZGU+Ci0tLQogZHJpdmVycy9wbGF0Zm9ybS94ODYvS2NvbmZpZyAgICAgICB8ICAyICsrCiBkcml2
+ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLWxhcHRvcC5jIHwgMjUgKysrKysrKysrKysrKysrKysrKysr
+KysrKwogMiBmaWxlcyBjaGFuZ2VkLCAyNyBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9wbGF0Zm9ybS94ODYvS2NvbmZpZyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L0tjb25maWcK
+aW5kZXggNTRmNmE0MGM3NWM2Li45YjljYzNjYzMzZTkgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGxh
+dGZvcm0veDg2L0tjb25maWcKKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvS2NvbmZpZwpAQCAt
+MTc3LDYgKzE3Nyw4IEBAIGNvbmZpZyBERUxMX0xBUFRPUAogCXNlbGVjdCBQT1dFUl9TVVBQTFkK
+IAlzZWxlY3QgTEVEU19DTEFTUwogCXNlbGVjdCBORVdfTEVEUworCXNlbGVjdCBMRURTX1RSSUdH
+RVJTCisJc2VsZWN0IExFRFNfVFJJR0dFUl9BVURJTwogCS0tLWhlbHAtLS0KIAlUaGlzIGRyaXZl
+ciBhZGRzIHN1cHBvcnQgZm9yIHJma2lsbCBhbmQgYmFja2xpZ2h0IGNvbnRyb2wgdG8gRGVsbAog
+CWxhcHRvcHMgKGV4Y2VwdCBmb3Igc29tZSBtb2RlbHMgY292ZXJlZCBieSB0aGUgQ29tcGFsIGRy
+aXZlcikuCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLWxhcHRvcC5jIGIv
+ZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1sYXB0b3AuYwppbmRleCAwNjk3OGMxNGM4M2IuLjBk
+YjJkYmY3YjBkMSAxMDA2NDQKLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1sYXB0b3Au
+YworKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLWxhcHRvcC5jCkBAIC0yMTMxLDYgKzIx
+MzEsMjMgQEAgaW50IGRlbGxfbWljbXV0ZV9sZWRfc2V0KGludCBzdGF0ZSkKIH0KIEVYUE9SVF9T
+WU1CT0xfR1BMKGRlbGxfbWljbXV0ZV9sZWRfc2V0KTsKIAorc3RhdGljIGludCBtaWNtdXRlX2xl
+ZF9zZXQoc3RydWN0IGxlZF9jbGFzc2RldiAqbGVkX2NkZXYsCisJCQkgICBlbnVtIGxlZF9icmln
+aHRuZXNzIGJyaWdodG5lc3MpCit7CisJaW50IHN0YXRlID0gYnJpZ2h0bmVzcyAhPSBMRURfT0ZG
+OworCWludCBlcnI7CisKKwllcnIgPSBkZWxsX21pY211dGVfbGVkX3NldChzdGF0ZSk7CisJcmV0
+dXJuIGVyciA8IDAgPyBlcnIgOiAwOworfQorCitzdGF0aWMgc3RydWN0IGxlZF9jbGFzc2RldiBt
+aWNtdXRlX2xlZF9jZGV2ID0geworCS5uYW1lID0gInBsYXRmb3JtOjptaWNtdXRlIiwKKwkubWF4
+X2JyaWdodG5lc3MgPSAxLAorCS5icmlnaHRuZXNzX3NldF9ibG9ja2luZyA9IG1pY211dGVfbGVk
+X3NldCwKKwkuZGVmYXVsdF90cmlnZ2VyID0gImF1ZGlvLW1pY211dGUiLAorfTsKKwogc3RhdGlj
+IGludCBfX2luaXQgZGVsbF9pbml0KHZvaWQpCiB7CiAJc3RydWN0IGNhbGxpbmdfaW50ZXJmYWNl
+X3Rva2VuICp0b2tlbjsKQEAgLTIxNzUsNiArMjE5MiwxMSBAQCBzdGF0aWMgaW50IF9faW5pdCBk
+ZWxsX2luaXQodm9pZCkKIAogCWRlbGxfbGFwdG9wX3JlZ2lzdGVyX25vdGlmaWVyKCZkZWxsX2xh
+cHRvcF9ub3RpZmllcik7CiAKKwltaWNtdXRlX2xlZF9jZGV2LmJyaWdodG5lc3MgPSBsZWR0cmln
+X2F1ZGlvX2dldChMRURfQVVESU9fTUlDTVVURSk7CisJcmV0ID0gbGVkX2NsYXNzZGV2X3JlZ2lz
+dGVyKCZwbGF0Zm9ybV9kZXZpY2UtPmRldiwgJm1pY211dGVfbGVkX2NkZXYpOworCWlmIChyZXQg
+PCAwKQorCQlnb3RvIGZhaWxfbGVkOworCiAJaWYgKGFjcGlfdmlkZW9fZ2V0X2JhY2tsaWdodF90
+eXBlKCkgIT0gYWNwaV9iYWNrbGlnaHRfdmVuZG9yKQogCQlyZXR1cm4gMDsKIApAQCAtMjIyMCw2
+ICsyMjQyLDggQEAgc3RhdGljIGludCBfX2luaXQgZGVsbF9pbml0KHZvaWQpCiBmYWlsX2dldF9i
+cmlnaHRuZXNzOgogCWJhY2tsaWdodF9kZXZpY2VfdW5yZWdpc3RlcihkZWxsX2JhY2tsaWdodF9k
+ZXZpY2UpOwogZmFpbF9iYWNrbGlnaHQ6CisJbGVkX2NsYXNzZGV2X3VucmVnaXN0ZXIoJm1pY211
+dGVfbGVkX2NkZXYpOworZmFpbF9sZWQ6CiAJZGVsbF9jbGVhbnVwX3Jma2lsbCgpOwogZmFpbF9y
+ZmtpbGw6CiAJcGxhdGZvcm1fZGV2aWNlX2RlbChwbGF0Zm9ybV9kZXZpY2UpOwpAQCAtMjIzOSw2
+ICsyMjYzLDcgQEAgc3RhdGljIHZvaWQgX19leGl0IGRlbGxfZXhpdCh2b2lkKQogCQl0b3VjaHBh
+ZF9sZWRfZXhpdCgpOwogCWtiZF9sZWRfZXhpdCgpOwogCWJhY2tsaWdodF9kZXZpY2VfdW5yZWdp
+c3RlcihkZWxsX2JhY2tsaWdodF9kZXZpY2UpOworCWxlZF9jbGFzc2Rldl91bnJlZ2lzdGVyKCZt
+aWNtdXRlX2xlZF9jZGV2KTsKIAlkZWxsX2NsZWFudXBfcmZraWxsKCk7CiAJaWYgKHBsYXRmb3Jt
+X2RldmljZSkgewogCQlwbGF0Zm9ybV9kZXZpY2VfdW5yZWdpc3RlcihwbGF0Zm9ybV9kZXZpY2Up
+OwotLSAKMi4xOS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcK
+aHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2
+ZWwK
