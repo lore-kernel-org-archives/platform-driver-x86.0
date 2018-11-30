@@ -1,50 +1,60 @@
-From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [PATCH v8 3/3] ALSA: hda: add support for Huawei WMI micmute LED
-Date: Thu, 29 Nov 2018 18:57:38 -0500
-Message-ID: <20181129235742.14332-4-ayman.bagabas@gmail.com>
-References: <20181129235742.14332-1-ayman.bagabas@gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v5 05/15] i2c: acpi: Return error pointers from
+ i2c_acpi_new_device()
+Date: Fri, 30 Nov 2018 10:53:04 +0100
+Message-ID: <20181130095304.GA1079@kunai>
+References: <20181128114535.80223-1-andriy.shevchenko@linux.intel.com>
+ <20181128114535.80223-6-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181129235742.14332-1-ayman.bagabas@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181128114535.80223-6-andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kailang Yang <kailang@realtek.com>, Hui Wang <hui.wang@canonical.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: ayman.bagabas@gmail.com
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some of Huawei laptops come with a LED in the micmute key. This patch
-enables the use of micmute LED for these devices:
-1. Matebook X (19e5:3200), (19e5:3201)
-2. Matebook X Pro (19e5:3204)
 
-Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
----
- sound/pci/hda/patch_realtek.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+--/04w6evG8XlLl3ft
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 1326f32f4574..9766fd249bdf 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5776,7 +5776,9 @@ static const struct hda_fixup alc269_fixups[] = {
- 			{0x1e, 0x411111f0},
- 			{0x21, 0x04211020},
- 			{ }
--		}
-+		},
-+		.chained = true,
-+		.chain_id = ALC255_FIXUP_MIC_MUTE_LED
- 	},
- 	[ALC269_FIXUP_ASUS_X101_FUNC] = {
- 		.type = HDA_FIXUP_FUNC,
-@@ -6608,6 +6610,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x511f, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x3bf8, "Quanta FL1", ALC269_FIXUP_PCM_44K),
- 	SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", ALC269_FIXUP_LENOVO_EAPD),
-+	SND_PCI_QUIRK(0x19e5, 0x3200, "Huawei MBX", ALC255_FIXUP_MIC_MUTE_LED),
-+	SND_PCI_QUIRK(0x19e5, 0x3201, "Huawei MBX", ALC255_FIXUP_MIC_MUTE_LED),
- 	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MBXP", ALC256_FIXUP_HUAWEI_MBXP_PINS),
- 	SND_PCI_QUIRK(0x1b7d, 0xa831, "Ordissimo EVE2 ", ALC269VB_FIXUP_ORDISSIMO_EVE2), /* Also known as Malata PC-B1303 */
- 
--- 
-2.19.1
+On Wed, Nov 28, 2018 at 01:45:25PM +0200, Andy Shevchenko wrote:
+> The caller would like to know the reason why the i2c_acpi_new_device() fa=
+ils.
+> For example, if adapter is not available, it might be in the future and we
+> would like to re-probe the clients again. But at the same time we would l=
+ike to
+> bail out if the error seems unrecoverable, such as invalid argument suppl=
+ied.
+> To achieve this, return error pointer in some cases.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
+
+
+--/04w6evG8XlLl3ft
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlwBCHsACgkQFA3kzBSg
+KbatgxAAob8ByaeD+a5hXFcsADxN47hMoRQWCjmzwp7C8iIQhGAVYnXwU+mabN3h
+p7hLzaSGoM76GqF3L7nFZel4qS643B3AYCfd2KHZcp+9cQwXfL7XGXdWJ1IFrycV
+1hvYPdLTf72sBBc95Cswt9D8v340aX0lTx+sIFUXnIbmQVQ8YVfQoA7SnCkIzDsw
+WFJZerxwKzTxaS1TZ/ARZn0TxBURp94AadqZGibVxNeXgsTI5e0Jvudl3n1CtZW8
+Xcvt6SfnL4T3DOxuinhHOm5qDeThHfsq5xoK+30dyjzpylMnMI8Fg8Lir5rqigDJ
+gxZfko4HIfKAlh4iUxLcqBim3ou5K5IzqZocIHEHQ9RQdHRcBEqAGmZkyqpeGDhW
+p/njU8Vz1DySJn1nhw99TMGgsSeFuljCyBhxB9L0tAQlltCWJjlyerfb6Qsz8bDG
+ahkAzFDBZsWKNFuPLAss/tn5jpOGwg3AY+2Mi1d4miyyLIazkIzBMIJtdbuE3faY
+YU43zdGi895xX/r/d3LTEIQ8ZSbK+oFq2cfQ9Ks/NKLC56fq46/jzBdvJWg7yGui
+MyVyWc07Kt8MLban4qXPiYTbCkyGrHVWwObK4ZTNysdOZH9pBYTP3HHLGkvCiieh
+5w5SKyUMIBR/t4mTcUIy7J9sc3RiLbL6PyfcEmVQvnFlSeqwcqA=
+=yHaq
+-----END PGP SIGNATURE-----
+
+--/04w6evG8XlLl3ft--
