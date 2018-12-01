@@ -1,166 +1,210 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Well-known LED names was Re: [PATCH 0/6] Introduce
- audio-mute LED trigger (and conversions to it)
-Date: Sat, 1 Dec 2018 15:41:01 +0100
-Message-ID: <20181201144101.GD31631@amd>
-References: <20181127084418.GA20504@amd> <20181128111806.cb3cncpjeq73sptg@pali>
- <s5hy39dv3dg.wl-tiwai@suse.de> <20181128122505.GA1193@amd>
- <8bb45cc6-9f98-9fed-9676-7f1429328c4a@gmail.com>
- <20181128203410.GA20670@amd> <20181128204612.l3bayhop4qmep2hj@pali>
- <0ed37870-c7b6-fd6b-2f6e-7325fdde3629@gmail.com>
- <20181128212212.GE20670@amd>
- <5f8eece3-95af-7866-d7d0-02cc3cb695ca@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4358365166168736433=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <5f8eece3-95af-7866-d7d0-02cc3cb695ca@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: alsa-devel@alsa-project.org, Ayman Bagabas <ayman.bagabas@gmail.com>, Takashi Iwai <tiwai@suse.de>, platform-driver-x86@vger.kernel.org, Hui Wang <hui.wang@canonical.com>, ibm-acpi-devel@lists.sourceforge.net, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-leds@vger.kernel.org
+From: Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH] platform/x86: convert to DEFINE_SHOW_ATTRIBUTE
+Date: Sat,  1 Dec 2018 10:52:29 -0500
+Message-ID: <20181201155229.8532-1-tiny.windzz@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rajneesh.bhardwaj@intel.com, vishwanath.somayaji@intel.com, dvhart@infradead.org, andy@infradead.org, david.e.box@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
+Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
 
---===============4358365166168736433==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lc9FT7cWel8HagAv"
-Content-Disposition: inline
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+---
+ drivers/platform/x86/intel_pmc_core.c         | 46 ++++---------------
+ .../platform/x86/intel_telemetry_debugfs.c    | 42 +++--------------
+ 2 files changed, 14 insertions(+), 74 deletions(-)
 
-
---lc9FT7cWel8HagAv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> >>> If external USB keyboard is identified as "input7" device, then
-> >>> "input7::mute" is a good name for mute key. But "sys::mute" does not =
-say
-> >>> anything to which device or hardware it belongs nor does not solve
-> >>> problem that which device/driver/subsystem should have privilege to t=
-ake
-> >>> this "sys" name.
-> >>
-> >> How about just "platform" for the LEDs being part of the device
-> >> on which the system is running?
-> >=20
-> > "platform" works for me.
-> >=20
-> > Are we in agreement that this name will be used for all similar LEDs,
-> > as long as they are on the "main box" of the device, no matter if they
-> > are connected using acpi, gpio, i2c, ...?
->=20
-> One doubt: say we have hdd activity LED on the "main box" - it
-> would be named "platform::disk".
->=20
-> Now, we add external USB disk. Previously we were considering
-> the naming for disk LEDs in the form e.g. "sdb::disk".
->=20
-> If so, there would be discrepancy between internal and external disk
-> LED names. Similarly in case of eth/adsl/wlan/camera LEDs.
-
-Well, it really depends if the "plaform::disk" is for all the disks,
-or if it is for sda. In the second case, it might be better to name it
-sda::disk...
-
-Anyway... I believe we should start documenting good and bad LEDs, so
-that patch authors know what is there, and can try to be consistent,
-and so that userland knows what names to probe for.
-
-What about following? Any other LEDs worth mentioning?
-
-commit c56708addf9c312cefd760bca218a0545258b217
-Author: Pavel <pavel@ucw.cz>
-Date:   Sat Dec 1 15:32:13 2018 +0100
-
-leds: Add list of well-known LED names
-   =20
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-
-diff --git a/Documentation/leds/well-known-leds.txt b/Documentation/leds/we=
-ll-known-leds.txt
-new file mode 100644
-index 0000000..9a262db
---- /dev/null
-+++ b/Documentation/leds/well-known-leds.txt
-@@ -0,0 +1,42 @@
-+-*- org -*-
-+
-+It is somehow important to provide consistent interface to the
-+userland. LED devices have one problem there, and that is naming of
-+directories in /sys/class/leds. It would be nice if userland would
-+just know right "name" for given LED function, but situation got more
-+complex.
-+
-+Anyway, if backwards compatibility is not an issue, new code should
-+use one of the "good" names from this list, and you should extend the
-+list where applicable.
-+
-+Bad names are listed, too, in case you are writing application that
-+wants to use particular feature, you should probe for good name first
-+but then try the bad ones, too".
-+
-+* Keyboards
-+
-+Good: "input*:*:capslock"
-+Good: "input*:*:scrolllock"
-+Good: "input*:*:numlock"
-+
-+Set of common keyboard LEDs, going back to PC AT or so.
-+
-+Bad: "tpacpi::thinklight" (IBM/Lenovo Thinkpads)
-+Bad: "lp5523:kb{1,2,3,4,5,6,7}" (Nokia N900)
-+
-+Keyboard frontlight/backlight.
-+
-+* Sound subsystem
-+
-+Good: "platform:*:mute"
-+Good: "platform:*:micmute"
-+
-+LEDs on notebook body, indicating that sound input / output is muted.
-+
-+* System notification
-+
-+Good: "status-led:{red,green,blue}" (Motorola Droid 4)
-+Bad: "lp5523:{r,g,b}" (Nokia N900)
-+
-+Phones usually have multi-color status LED.
-
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---lc9FT7cWel8HagAv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlwCnX0ACgkQMOfwapXb+vLo0wCghl7pPkG4xPiXLjZ2qehtFOtL
-z60AoJXadfpQ0Yyu7oJ0vKOW1QPv4sHB
-=5o7d
------END PGP SIGNATURE-----
-
---lc9FT7cWel8HagAv--
-
---===============4358365166168736433==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============4358365166168736433==--
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 6b31d410cb09..95311ad6ec6f 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -311,7 +311,7 @@ static void pmc_core_display_map(struct seq_file *s, int index,
+ 		   pf_map[index].bit_mask & pf_reg ? "Off" : "On");
+ }
+ 
+-static int pmc_core_ppfear_sts_show(struct seq_file *s, void *unused)
++static int pmc_core_ppfear_show(struct seq_file *s, void *unused)
+ {
+ 	struct pmc_dev *pmcdev = s->private;
+ 	const struct pmc_bit_map *map = pmcdev->map->pfear_sts;
+@@ -330,17 +330,7 @@ static int pmc_core_ppfear_sts_show(struct seq_file *s, void *unused)
+ 	return 0;
+ }
+ 
+-static int pmc_core_ppfear_sts_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, pmc_core_ppfear_sts_show, inode->i_private);
+-}
+-
+-static const struct file_operations pmc_core_ppfear_ops = {
+-	.open           = pmc_core_ppfear_sts_open,
+-	.read           = seq_read,
+-	.llseek         = seq_lseek,
+-	.release        = single_release,
+-};
++DEFINE_SHOW_ATTRIBUTE(pmc_core_ppfear);
+ 
+ /* This function should return link status, 0 means ready */
+ static int pmc_core_mtpmc_link_status(void)
+@@ -372,7 +362,7 @@ static int pmc_core_send_msg(u32 *addr_xram)
+ 	return 0;
+ }
+ 
+-static int pmc_core_mphy_pg_sts_show(struct seq_file *s, void *unused)
++static int pmc_core_mphy_pg_show(struct seq_file *s, void *unused)
+ {
+ 	struct pmc_dev *pmcdev = s->private;
+ 	const struct pmc_bit_map *map = pmcdev->map->mphy_sts;
+@@ -425,17 +415,7 @@ static int pmc_core_mphy_pg_sts_show(struct seq_file *s, void *unused)
+ 	return err;
+ }
+ 
+-static int pmc_core_mphy_pg_sts_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, pmc_core_mphy_pg_sts_show, inode->i_private);
+-}
+-
+-static const struct file_operations pmc_core_mphy_pg_ops = {
+-	.open           = pmc_core_mphy_pg_sts_open,
+-	.read           = seq_read,
+-	.llseek         = seq_lseek,
+-	.release        = single_release,
+-};
++DEFINE_SHOW_ATTRIBUTE(pmc_core_mphy_pg);
+ 
+ static int pmc_core_pll_show(struct seq_file *s, void *unused)
+ {
+@@ -472,17 +452,7 @@ static int pmc_core_pll_show(struct seq_file *s, void *unused)
+ 	return err;
+ }
+ 
+-static int pmc_core_pll_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, pmc_core_pll_show, inode->i_private);
+-}
+-
+-static const struct file_operations pmc_core_pll_ops = {
+-	.open           = pmc_core_pll_open,
+-	.read           = seq_read,
+-	.llseek         = seq_lseek,
+-	.release        = single_release,
+-};
++DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
+ 
+ static ssize_t pmc_core_ltr_ignore_write(struct file *file, const char __user
+ *userbuf, size_t count, loff_t *ppos)
+@@ -602,19 +572,19 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 			    &pmc_core_dev_state);
+ 
+ 	debugfs_create_file("pch_ip_power_gating_status", 0444, dir, pmcdev,
+-			    &pmc_core_ppfear_ops);
++			    &pmc_core_ppfear_fops);
+ 
+ 	debugfs_create_file("ltr_ignore", 0644, dir, pmcdev,
+ 			    &pmc_core_ltr_ignore_ops);
+ 
+ 	if (pmcdev->map->pll_sts)
+ 		debugfs_create_file("pll_status", 0444, dir, pmcdev,
+-				    &pmc_core_pll_ops);
++				    &pmc_core_pll_fops);
+ 
+ 	if (pmcdev->map->mphy_sts)
+ 		debugfs_create_file("mphy_core_lanes_power_gating_status",
+ 				    0444, dir, pmcdev,
+-				    &pmc_core_mphy_pg_ops);
++				    &pmc_core_mphy_pg_fops);
+ 
+ 	if (pmcdev->map->slps0_dbg_maps) {
+ 		debugfs_create_file("slp_s0_debug_status", 0444,
+diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
+index 40bce560eb30..98ba9185a27b 100644
+--- a/drivers/platform/x86/intel_telemetry_debugfs.c
++++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+@@ -466,17 +466,7 @@ static int telem_pss_states_show(struct seq_file *s, void *unused)
+ 	return 0;
+ }
+ 
+-static int telem_pss_state_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, telem_pss_states_show, inode->i_private);
+-}
+-
+-static const struct file_operations telem_pss_ops = {
+-	.open		= telem_pss_state_open,
+-	.read		= seq_read,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-};
++DEFINE_SHOW_ATTRIBUTE(telem_pss_states);
+ 
+ static int telem_ioss_states_show(struct seq_file *s, void *unused)
+ {
+@@ -505,17 +495,7 @@ static int telem_ioss_states_show(struct seq_file *s, void *unused)
+ 	return 0;
+ }
+ 
+-static int telem_ioss_state_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, telem_ioss_states_show, inode->i_private);
+-}
+-
+-static const struct file_operations telem_ioss_ops = {
+-	.open		= telem_ioss_state_open,
+-	.read		= seq_read,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-};
++DEFINE_SHOW_ATTRIBUTE(telem_ioss_states);
+ 
+ static int telem_soc_states_show(struct seq_file *s, void *unused)
+ {
+@@ -664,17 +644,7 @@ static int telem_soc_states_show(struct seq_file *s, void *unused)
+ 	return 0;
+ }
+ 
+-static int telem_soc_state_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, telem_soc_states_show, inode->i_private);
+-}
+-
+-static const struct file_operations telem_socstate_ops = {
+-	.open		= telem_soc_state_open,
+-	.read		= seq_read,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-};
++DEFINE_SHOW_ATTRIBUTE(telem_soc_states);
+ 
+ static int telem_s0ix_res_get(void *data, u64 *val)
+ {
+@@ -960,7 +930,7 @@ static int __init telemetry_debugfs_init(void)
+ 
+ 	f = debugfs_create_file("pss_info", S_IFREG | S_IRUGO,
+ 				debugfs_conf->telemetry_dbg_dir, NULL,
+-				&telem_pss_ops);
++				&telem_pss_states_fops);
+ 	if (!f) {
+ 		pr_err("pss_sample_info debugfs register failed\n");
+ 		goto out;
+@@ -968,7 +938,7 @@ static int __init telemetry_debugfs_init(void)
+ 
+ 	f = debugfs_create_file("ioss_info", S_IFREG | S_IRUGO,
+ 				debugfs_conf->telemetry_dbg_dir, NULL,
+-				&telem_ioss_ops);
++				&telem_ioss_states_fops);
+ 	if (!f) {
+ 		pr_err("ioss_sample_info debugfs register failed\n");
+ 		goto out;
+@@ -976,7 +946,7 @@ static int __init telemetry_debugfs_init(void)
+ 
+ 	f = debugfs_create_file("soc_states", S_IFREG | S_IRUGO,
+ 				debugfs_conf->telemetry_dbg_dir,
+-				NULL, &telem_socstate_ops);
++				NULL, &telem_soc_states_fops);
+ 	if (!f) {
+ 		pr_err("ioss_sample_info debugfs register failed\n");
+ 		goto out;
+-- 
+2.17.0
