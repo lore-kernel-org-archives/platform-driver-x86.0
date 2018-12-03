@@ -1,17 +1,14 @@
 From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: add
- unsafe_leds parameter
-Date: Mon, 3 Dec 2018 19:28:30 +0200
-Message-ID: <CAHp75VfGO5=ztPSRDv2Md8dhOOU_g3YRmdQ0r-m=HgEe2ZAoZA@mail.gmail.com>
-References: <CAGiEHCtu9-chj_wN1wau4aBzvcCR8Bmq1-2OZiHq0yqz3=BUSA@mail.gmail.com>
- <CAHp75Ve+Z5W=6SNx3eB1MrH=wDPTe9bjQGQ3tEGi9wYCXKD0Pg@mail.gmail.com>
- <CAHp75VfoogP8N0u7fzW7Xo3moSQxseAtFSu7H-yv6MczFFdakg@mail.gmail.com>
- <20181113174136.58198c3a@gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Cleanup
+ quirks macros
+Date: Mon, 3 Dec 2018 19:31:58 +0200
+Message-ID: <CAHp75VeC+4j56XbiFK=N=9_RcXz9XNdCjaBB5udkMt0np_wXsQ@mail.gmail.com>
+References: <20181116131800.GA11114@Mindship-05.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20181113174136.58198c3a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20181116131800.GA11114-7Pk1HLXsvWqf6HGZUO+WniZi+YwRKgec@public.gmane.org>
 List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
  <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
@@ -20,35 +17,105 @@ List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@publi
 List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
  <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
 Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Milan Hauth <milahu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Nov 13, 2018 at 6:41 PM Milan Hauth <milahu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Fri, Nov 16, 2018 at 3:18 PM Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
 
-> thanks for your replies.
+Please, submit a new version with changelog.
 
-Thanks for an update, though made in wrong format:
-- no top post
-- should be send as a separate patch in a separate thread
-- should have increased version
+Though, before doing this, I would hear if Henrique is OK with the
+change (for me it looks good)
 
-But the main one is...
+> Signed-off-by: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> The only difference in the generated code is that the quirk values are
+> now within parentheses.
+>
+>  drivers/platform/x86/thinkpad_acpi.c | 45 ++++++++--------------------
+>  1 file changed, 13 insertions(+), 32 deletions(-)
+>
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index fde08a997..e1e51bfb3 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -478,6 +478,12 @@ do {                                                                       \
+>           .ec = TPACPI_MATCH_ANY,               \
+>           .quirks = (__quirk) }
+>
+> +#define TPACPI_QEC_IBM(__id1, __id2, __quirk)  \
+> +       { .vendor = PCI_VENDOR_ID_IBM,          \
+> +         .bios = TPACPI_MATCH_ANY,             \
+> +         .ec = TPID(__id1, __id2),             \
+> +         .quirks = (__quirk) }
+> +
+>  #define TPACPI_QEC_LNV(__id1, __id2, __quirk)  \
+>         { .vendor = PCI_VENDOR_ID_LENOVO,       \
+>           .bios = TPACPI_MATCH_ANY,             \
+> @@ -5973,9 +5979,6 @@ static const struct tpacpi_quirk led_useful_qtable[] __initconst = {
+>         },
+>  };
+>
+> -#undef TPACPI_LEDQ_IBM
+> -#undef TPACPI_LEDQ_LNV
+> -
+>  static enum led_access_mode __init led_init_detect_mode(void)
+>  {
+>         acpi_status status;
+> @@ -8710,40 +8713,18 @@ static const struct attribute_group fan_attr_group = {
+>         .attrs = fan_attributes,
+>  };
+>
+> -#define        TPACPI_FAN_Q1   0x0001          /* Unitialized HFSP */
+> +#define TPACPI_FAN_Q1  0x0001          /* Unitialized HFSP */
+>  #define TPACPI_FAN_2FAN        0x0002          /* EC 0x31 bit 0 selects fan2 */
+>
+> -#define TPACPI_FAN_QI(__id1, __id2, __quirks)  \
+> -       { .vendor = PCI_VENDOR_ID_IBM,          \
+> -         .bios = TPACPI_MATCH_ANY,             \
+> -         .ec = TPID(__id1, __id2),             \
+> -         .quirks = __quirks }
+> -
+> -#define TPACPI_FAN_QL(__id1, __id2, __quirks)  \
+> -       { .vendor = PCI_VENDOR_ID_LENOVO,       \
+> -         .bios = TPACPI_MATCH_ANY,             \
+> -         .ec = TPID(__id1, __id2),             \
+> -         .quirks = __quirks }
+> -
+> -#define TPACPI_FAN_QB(__id1, __id2, __quirks)  \
+> -       { .vendor = PCI_VENDOR_ID_LENOVO,       \
+> -         .bios = TPID(__id1, __id2),           \
+> -         .ec = TPACPI_MATCH_ANY,               \
+> -         .quirks = __quirks }
+> -
+>  static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+> -       TPACPI_FAN_QI('1', 'Y', TPACPI_FAN_Q1),
+> -       TPACPI_FAN_QI('7', '8', TPACPI_FAN_Q1),
+> -       TPACPI_FAN_QI('7', '6', TPACPI_FAN_Q1),
+> -       TPACPI_FAN_QI('7', '0', TPACPI_FAN_Q1),
+> -       TPACPI_FAN_QL('7', 'M', TPACPI_FAN_2FAN),
+> -       TPACPI_FAN_QB('N', '1', TPACPI_FAN_2FAN),
+> +       TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+> +       TPACPI_QEC_IBM('7', '8', TPACPI_FAN_Q1),
+> +       TPACPI_QEC_IBM('7', '6', TPACPI_FAN_Q1),
+> +       TPACPI_QEC_IBM('7', '0', TPACPI_FAN_Q1),
+> +       TPACPI_QEC_LNV('7', 'M', TPACPI_FAN_2FAN),
+> +       TPACPI_Q_LNV('N', '1', TPACPI_FAN_2FAN),
+>  };
+>
+> -#undef TPACPI_FAN_QL
+> -#undef TPACPI_FAN_QI
+> -#undef TPACPI_FAN_QB
+> -
+>  static int __init fan_init(struct ibm_init_struct *iibm)
+>  {
+>         int rc;
+> --
+> 2.19.1
+>
 
-> > On Sat, 27 Oct 2018, Milan Hauth wrote:
-> > > move CONFIG_THINKPAD_ACPI_UNSAFE_LEDS compile config
-> > > to thinkpad_acpi.unsafe_leds module parameter
-> > >
-> > > so there is no more need to re-compile
-> > > to control important LEDs, which is unsafe
-> > >
-> > > Signed-off-by: Milan Hauth <milahu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >
-> > I am not confortable signing-off on this one.
-
-...I'm not familiar with this interface and I rely on Henrique's
-opinion, so, I can't take it.
-Sorry.
 
 -- 
 With Best Regards,
