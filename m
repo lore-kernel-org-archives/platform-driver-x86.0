@@ -1,154 +1,126 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 0/2] Add device driver for APU2/APU3 GPIOs
-Date: Mon, 3 Dec 2018 17:43:39 +0200
-Message-ID: <CAHp75VdEgm-=jHgJXz_mM6DZMnFVEeZW_es3VyL4L2V+khYWtg@mail.gmail.com>
-References: <20181127132508.5501-1-fe@dev.tdt.de> <CAHp75VfFYJQzTv_oe8RKPo03-FLYHy6BkrKaG23svAKtC+jVBg@mail.gmail.com>
- <583ca922b4a877a4b0577994e40ddf5f@dev.tdt.de> <CAHp75VcKu4fhP8=NH7fgfSFCh6xdCLWrNLcsHSuWvMcW+irfmA@mail.gmail.com>
- <70e7b8e2346b9837273b5edce0524584@dev.tdt.de> <CAHp75VfSKz8sauUKq2pxUhQ6xvmX4UeOBw6eEA+71=NUyWES9g@mail.gmail.com>
- <51e0d3f36dc23de801f2fdfc990f6c23@dev.tdt.de>
+From: ayman.bagabas@gmail.com
+Subject: Re: [PATCH v8 2/3] x86: add support for Huawei WMI hotkeys.
+Date: Mon, 03 Dec 2018 10:46:01 -0500
+Message-ID: <eaa9d7a8898df9487031995429ff11892c9cd0ca.camel@gmail.com>
+References: <20181129235742.14332-1-ayman.bagabas@gmail.com>
+         <20181129235742.14332-3-ayman.bagabas@gmail.com>
+         <s5hftvezupj.wl-tiwai@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51e0d3f36dc23de801f2fdfc990f6c23@dev.tdt.de>
+In-Reply-To: <s5hftvezupj.wl-tiwai@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Eckert <fe@dev.tdt.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Eckert.Florian@googlemail.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: alsa-devel@alsa-project.org, Hui Wang <hui.wang@canonical.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Kailang Yang <kailang@realtek.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Dec 3, 2018 at 9:58 AM Florian Eckert <fe@dev.tdt.de> wrote:
+On Mon, 2018-12-03 at 13:00 +0100, Takashi Iwai wrote:
+> On Fri, 30 Nov 2018 00:57:37 +0100,
+> Ayman Bagabas wrote:
+> > This driver adds support for missing hotkeys on some Huawei
+> > laptops.
+> > Laptops such as the Matebook X have non functioning hotkeys.
+> > Whereas
+> > newer laptops such as the Matebook X Pro come with working hotkeys
+> > out
+> > of the box.
+> > 
+> > Old laptops, such as the Matebook X, report hotkey events through
+> > ACPI
+> > device "\WMI0". However, new laptops, such as the Matebook X Pro,
+> > does not have this WMI device.
+> > 
+> > All the hotkeys on the Matebook X Pro work fine
+> > without this patch except (micmute, wlan, and huawei key). These
+> > keys
+> > and the brightness keys report events to "\AMW0" ACPI device. One
+> > problem is that brightness keys on the Matebook X Pro work without
+> > this
+> > patch. This results in reporting two brightness key press
+> > events one is captured by ACPI and another by this driver.
+> > 
+> > A solution would be to check if such event came from the "\AMW0"
+> > WMI driver
+> > then skip reporting event. Another solution would be to leave this
+> > to user-space to handle. Which
+> > can be achieved by using "hwdb" tables and remap those keys to
+> > "unknown".
+> > This solution seems more natural to me because it leaves the
+> > decision to
+> > user-space.
+> > 
+> > Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
+> 
+> The new patch looks much better than the previous one, thanks for
+> working on it.
+> 
+> Just a few comments:
+> 
+> > +struct huawei_wmi_priv {
+> > +	struct input_dev *idev;
+> > +	struct led_classdev cdev;
+> > +	acpi_handle handle;
+> 
+> Is this handle set in anywhere?  I couldn't see it in your patch.
+> If it's supposed to be NULL, passing NULL explicitly makes your
+> intention clearer.
+> 
+> 
+> > +static int huawei_wmi_leds_setup(struct wmi_device *wdev)
+> > +{
+> > +	struct huawei_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+> > +	acpi_status status;
+> > +
+> > +	// Skip registering LED subsystem if no ACPI method was found.
+> > +	status = acpi_get_handle(priv->handle, "\\_SB.PCI0.LPCB.EC0",
+> > &priv->handle);
+> > +	if (ACPI_FAILURE(status))
+> > +		return 0;
+> > +
+> > +	if (acpi_has_method(priv->handle, "SPIN"))
+> > +		priv->acpi_method = "SPIN";
+> > +	else if (acpi_has_method(priv->handle, "WPIN"))
+> > +		priv->acpi_method = "WPIN";
+> > +	else
+> > +		return 0;
+> > +
+> > +	priv->cdev.name = "platform::micmute";
+> > +	priv->cdev.max_brightness = 1;
+> > +	priv->cdev.brightness_set_blocking =
+> > huawei_wmi_micmute_led_set;
+> > +	priv->cdev.default_trigger = "audio-micmute";
+> > +	priv->cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> > +	priv->cdev.dev = &wdev->dev;
+> 
+> What about suspend/resume?
+> When the driver is bound wit HD-audio, the HD-audio will restore the
+> state at resume, so it would work.  But, by providing the LED class
+> device, it is supposed to work even without HD-audio, so it might
+> make
+> sense to pass LED_CORE_SUSPENDRESUME, too.
 
-> >> > Btw, is the statement in above email still actual? "...I can fix
-> >> > required things."
-> >
-> >> Yes i will fix your hints tomorrow and send a v6 of my patchset.
-> >> Thank you for your hints and time
-> >> It would be nice if you could fix ACPI problemmatik.
-> >
-> > I would like to see the ACPI dump for that...
->
-> See https://github.com/openwrt/openwrt/pull/1232#issuecomment-443224576
-> In this comment Micha=C5=82 =C5=BBygowski appended to this thread the mis=
-sing
-> files you want to have.
+Besides that, is there anything needed for wmi_device suspend/resume?
 
-Thanks!
+> 
+> 
+> > +static int __init huawei_wmi_init(void)
+> > +{
+> > +	if (!(wmi_has_guid(WMI0_EVENT_GUID) ||
+> > wmi_has_guid(AMW0_EVENT_GUID))) {
+> > +		pr_debug("Compatible WMI GUID not found\n");
+> > +		return -ENODEV;
+> > +	}
+> 
+> This is superfluous when you implement with wmi_driver.
+> In theory, the supported GUID can be added dynamically via sysfs,
+> too.
+> 
 
-So, let me clarify what we have:
- - some platforms are in the wild with old BIOS with broken ACPI tables
- - you still may fix the things for new BIOS version for all affected platf=
-orms
- - you need to support both
+I left it that way so it doesn't insert the module if these GUIDs were
+not found. Should I drop that and use module_wmi_driver instead?
 
-Is this all correct?
-
-For broken firmware you need to do the following:
- - create an MFD driver, which would instantiate GPIO and GPIO keys
-support (at least)
- - create one of each above drivers w/o any DMI crap (should be done
-as a part of MFD driver)
-
-For fixed BIOS you need to add the following (example, not a fully
-correct solution) at the level behind SB:
-
-Scope (SB)
-{
-  Device(GPIO)
-  {
-           Name (_ADR, Zero)  // _ADR: Address
-           Name (_HID, "AMDxxxx") // One ID per platform, so, APU2 :
-1, APU 3: 1 =3D> 2 unique IDs, in this case no need to add neither _HRV
-nor _UID
-           Name (_HRV, 2)          // Other approach is to have one ID
-but different _HRV: e.g. 2 for APU2, 3 for APU3
-           Name (_UID, Zero)        // Another approach is to have one
-device per community of pins and several _UID:s
-           Name (_DDN, "AMD APU General Purpose Input/Output (GPIO) control=
-ler")
-           Method (_CRS, 0, NotSerialized)
-           {
-               Name (RBUF, ResourceTemplate ()
-               {
-                   Memory32Fixed (ReadWrite,
-                       0xFED80000 // + offset + community0 offset
-                       0x0000xxxx, // + size of the community0
-                       )
-...
-                  Memory32Fixed (ReadWrite,
-                       0xFED80000 // + offset + communityN offset
-                       0x0000xxxx, // + size of the communityN
-                       )
-                   /* IRQ resource if needed and present on real HW */
-                   Interrupt (ResourceConsumer, Level, ActiveLow, Shared, ,=
-, )
-                   {
-                       0x000000xx,
-                   }
-               })
-               Return (RBUF) /* \_SB_.GPIO._CRS.RBUF */
-           }
-
-           Method (_STA, 0, NotSerialized)
-           {
-               Return (0x0F)
-           }
-  }
-
-  Device (BTNS)
-  {
-           Name (_HID, "PRP0001")
-           Name (_DDN, "GPIO buttons device")
-           Name (_CRS, ResourceTemplate () {
-               GpioIo (
-                   Exclusive,                  // Not shared
-                   PullUp,                     // Pull up the line
-                   0,                          // Debounce timeout
-                   0,                          // Drive strength
-                   IoRestrictionInputOnly,     // Only used as input
-                   "\\_SB.GPIO",           // GPIO controller
-                   0)                          // Must be 0
-               {
-                   x0,                         // GPIO pin offset in
-corresponding controller for Button 0
-                   x1,                         // for Button 1, and so on
-...
-               }
-           })
-
-           Name (_DSD, Package () {
-               ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-               Package () {
-                   Package () {"compatible", "gpio-keys-polled"},
-                   Package () {"poll-interval", 100},
-                   Package () {"autorepeat", 1}
-               },
-               ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-               Package () {
-                   Package () {"button-0", "BTN0"},
-                   Package () {"button-1", "BTN1"},
-...
-               }
-           })
-
-           // For more information about these bindings see:
-           // Documentation/devicetree/bindings/input/gpio-keys-polled.txt
-           // and Documentation/acpi/gpio-properties.txt.
-
-           Name (BTN0, Package () {
-               ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-               Package () {
-                   Package () {"linux,code", 105},
-                   Package () {"linux,input-type", 1},
-                   Package () {"gpios", Package () {^BTNS, 0, 0, 1}}
-               }
-           })
-
-  }
-}
-
-After updating firmware you would need just an ACPI ID table to be
-added to the GPIO driver. MFD driver should not be enumerated at all.
-
---=20
-With Best Regards,
-Andy Shevchenko
+> 
+> thanks,
+> 
+> Takashi
