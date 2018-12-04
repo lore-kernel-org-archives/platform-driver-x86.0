@@ -1,131 +1,39 @@
-From: Florian Eckert <fe@dev.tdt.de>
-Subject: Re: [PATCH v5 1/2] gpio: Add driver for PC Engines APU boards
-Date: Tue, 04 Dec 2018 11:17:37 +0100
-Message-ID: <9102ea20a4f7fec9021ea4e11570865a@dev.tdt.de>
-References: <20181127132508.5501-1-fe@dev.tdt.de>
- <20181127132508.5501-2-fe@dev.tdt.de>
- <CAHp75Vc0-t=nBGPbYjbaJDoPEg77xKLVDuhUtFQ6imgnkNuz-g@mail.gmail.com>
+From: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Cleanup
+ quirks macros
+Date: Tue, 4 Dec 2018 09:20:09 -0200
+Message-ID: <20181204112009.dnyvdltr72ss5x5x@khazad-dum.debian.net>
+References: <20181116131800.GA11114@Mindship-05.localdomain>
+ <CAHp75VeC+4j56XbiFK=N=9_RcXz9XNdCjaBB5udkMt0np_wXsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vc0-t=nBGPbYjbaJDoPEg77xKLVDuhUtFQ6imgnkNuz-g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Eckert.Florian@googlemail.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeC+4j56XbiFK=N=9_RcXz9XNdCjaBB5udkMt0np_wXsQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Mon, 03 Dec 2018, Andy Shevchenko wrote:
+> On Fri, Nov 16, 2018 at 3:18 PM Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> Please, submit a new version with changelog.
+> 
+> Though, before doing this, I would hear if Henrique is OK with the
+> change (for me it looks good)
 
+Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
 
-> /*
->  * Multi-line comments
->  * have this style
->  */
+there you have it :-)
 
-fixed
-
-
->> +#include <linux/kernel.h>
-> 
-> kbuild bot complains for absence of
-> 
-> #include <linux/mod_devicetable.h>
-> 
-> here.
-> 
-
-fixed
-
->> +static int gpio_apu_get_dir(struct gpio_chip *chip, unsigned int 
->> offset)
->> +{
->> +       u32 val;
->> +       struct apu_gpio_pdata *apu_gpio = gpiochip_get_data(chip);
->> +
->> +       spin_lock(&apu_gpio->lock);
->> +
-> 
->> +       val = ~ioread32(apu_gpio->addr[offset]);
-> 
-> There is no need to do ~ under spin lock.
-> 
-
-fixed
-
->> +
->> +       spin_unlock(&apu_gpio->lock);
->> +
->> +       return !!(val & BIT(APU_GPIO_BIT_DIR));
->> +}
-> 
->> +       if (dmi_check_system(apu3_gpio_dmi_table)) {
-> 
-> (1)
-> 
->> +               apu_gpio->addr = devm_kzalloc(&pdev->dev,
->> +                               sizeof(apu3_gpio_offset),
->> +                               GFP_KERNEL);
-> 
->> +
-> 
-> No need to have this blank line. Same for the other cases.
-> 
-
-fixed
-
->> +               if (!apu_gpio->addr)
->> +                       return -ENOMEM;
-> 
->> +       } else if (dmi_check_system(apu2_gpio_dmi_table)) {
-> 
-> (2)
-> 
-> I think I have already told about (1) and (2). You may create two
-> callbacks and utilize .callback member in DMI table.
-> 
-
-Done but I do not seen any advantage. I used the following driver as 
-basis.
-https://github.com/torvalds/linux/blob/master/drivers/leds/leds-clevo-mail.c
-
->> +       }
-> 
->> +static int __init apu_gpio_init(void)
->> +{
-> 
->> +       if (!(dmi_check_system(apu2_gpio_dmi_table)) &&
->> +               !(dmi_check_system(apu3_gpio_dmi_table))) {
->> +               pr_err("No PC Engines board detected\n");
->> +               return -ENODEV;
->> +       }
-> 
-> I don't think we need this.
-> 
-
-see below
-
-
->> +}
->> +
->> +module_init(apu_gpio_init);
->> +module_exit(apu_gpio_exit);
-
-> 
-> After removing unneeded checks why not to simple use
-> module_platform_driver()
-> ?
-
-I have fixed all the above hints from you now but using 
-"module_platform_driver" is no option.
-I played around with them but the driver does not find any device. So I 
-need the init function
-to add a platform device. Only if I do this way driver and device will 
-find and match. And I
-see the gpios under /sys/class/gpio. So I think I need this?
-I have not find any driver who has the same problems
-I used the following drivers as my basis:
-https://github.com/torvalds/linux/blob/master/drivers/leds/leds-apu.c
-https://github.com/torvalds/linux/blob/master/drivers/leds/leds-clevo-mail.c
-They all use dmi and need init/exit for platform device register and 
-unregister
+-- 
+  Henrique Holschuh
