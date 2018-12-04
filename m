@@ -1,28 +1,42 @@
-From: Frank Lee <tiny.windzz@gmail.com>
-Subject: Re: [PATCH] platform/x86: convert to DEFINE_SHOW_ATTRIBUTE
-Date: Tue, 4 Dec 2018 11:59:40 +0800
-Message-ID: <CAEExFWvRFrS-ZTSkrS5Npe7g-rxtxfCfk+AyTz00Lx4oAWhQ_g@mail.gmail.com>
-References: <20181201155229.8532-1-tiny.windzz@gmail.com> <CAHp75VdEbr9YfaCgHXNqScZC-KMobF2fU8rZb29nhZPBJvm2gg@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the Mediacom Flexbook Edge 11
+Date: Tue,  4 Dec 2018 10:20:04 +0100
+Message-ID: <20181204092004.5033-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdEbr9YfaCgHXNqScZC-KMobF2fU8rZb29nhZPBJvm2gg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.shevchenko@gmail.com
-Cc: rajneesh.bhardwaj@intel.com, vishwanath.somayaji@intel.com, dvhart@infradead.org, andy@infradead.org, David Box <david.e.box@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Dec 4, 2018 at 3:09 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Sat, Dec 1, 2018 at 5:52 PM Yangtao Li <tiny.windzz@gmail.com> wrote:
-> >
-> > Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
->
-> By some reason it's not applicable.
-> Please, rebase on top of our for-next branch, thanks!
-For what reason?
- I thought that for-next branch has not changed much.
+Add a DMI match for the Mediacom Flexbook Edge 11, this is the same hw
+as the Trekstor Primebook C11, so we use the same settings.
 
-Yours,
-Yangtao
+Reported-by: rmbg <alexofrichardmilitiabg@hotmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 0faf3fd895e3..ac20797af9b1 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -686,6 +686,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "jumperx.T87.KFBNEEA"),
+ 		},
+ 	},
++	{
++		/* Mediacom Flexbook Edge 11 (same hw as TS Primebook C11) */
++		.driver_data = (void *)&trekstor_primebook_c11_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MEDIACOM"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
++		},
++	},
+ 	{
+ 		/* Onda oBook 20 Plus */
+ 		.driver_data = (void *)&onda_obook_20_plus_data,
+-- 
+2.19.2
