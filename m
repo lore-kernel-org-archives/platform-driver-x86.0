@@ -1,37 +1,114 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: convert to DEFINE_SHOW_ATTRIBUTE
-Date: Wed, 5 Dec 2018 12:04:33 +0200
-Message-ID: <CAHp75Ve-E38KpO865f1rffAD1cSei5GFbBhzh2gg0h=Fg-h_Tg@mail.gmail.com>
-References: <20181201155229.8532-1-tiny.windzz@gmail.com> <CAHp75VdEbr9YfaCgHXNqScZC-KMobF2fU8rZb29nhZPBJvm2gg@mail.gmail.com>
- <CAEExFWvRFrS-ZTSkrS5Npe7g-rxtxfCfk+AyTz00Lx4oAWhQ_g@mail.gmail.com>
- <CAHp75VcSVEakAK4MeoG8zA7MaCWNoL2fOr48iFmxTsjbBpa5XA@mail.gmail.com>
- <CAEExFWtE7Yi8D+Dr=J7B3zqBRet0AX=ABHnUrJkZ2LO3aHdNeg@mail.gmail.com>
- <CAHp75Vc7Xfqnid9WLvQMPPWcFnRG0T4ZoHweA6Q-1ypWn29J2Q@mail.gmail.com>
- <CAEExFWso=uBKj4geVTr2zWOd74V1p5EWq=7r6AATSPh63MQ=mg@mail.gmail.com>
- <CAHp75VcXO0YNd32PVfk+BE68+OUCy=THNi9buU2Wu=PUZhPt8g@mail.gmail.com>
- <CAEExFWtxJrGnoCq1_Nx3uMCW009Qe3LksG4e10s6nW3=p=UWiw@mail.gmail.com>
- <CAHp75Vd1Nzd+CDArk+26vwJvq=rULXxOHfq5rQEQjByJtWjH9w@mail.gmail.com> <20181205084540.GA20250@raj-desk2.iind.intel.com>
+From: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] platform/x86: thinkpad_acpi: Cleanup
+ quirks macros
+Date: Wed, 5 Dec 2018 12:17:52 +0100
+Message-ID: <20181205111752.GA9780@Mindship-03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205084540.GA20250@raj-desk2.iind.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Cc: tiny.windzz@gmail.com, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, David Box <david.e.box@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Dec 5, 2018 at 10:56 AM Rajneesh Bhardwaj
-<rajneesh.bhardwaj@intel.com> wrote:
+- Use generic quirks macros for fan quirks
+The fan-specific quirks macros were duplicates of the generic ones.
 
-> Hi Andy, i was thinking of having it split into two patches as it touches
-> two unrelated files. What is your opinion?
+- Remove useless #undef lines
+The referenced macros are not defined anywhere.
 
-If it is the case, I agree with you.
-Since patch didn't applied clearly I even had no chance to look at it closer.
+Signed-off-by: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+---
 
-> Functionality wise, it looks good to me.
-Thanks.
+This time, with a more detailed commit message.
 
+ drivers/platform/x86/thinkpad_acpi.c | 45 ++++++++--------------------
+ 1 file changed, 13 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index fde08a997..e1e51bfb3 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -478,6 +478,12 @@ do {									\
+ 	  .ec = TPACPI_MATCH_ANY,		\
+ 	  .quirks = (__quirk) }
+ 
++#define TPACPI_QEC_IBM(__id1, __id2, __quirk)	\
++	{ .vendor = PCI_VENDOR_ID_IBM,		\
++	  .bios = TPACPI_MATCH_ANY,		\
++	  .ec = TPID(__id1, __id2),		\
++	  .quirks = (__quirk) }
++
+ #define TPACPI_QEC_LNV(__id1, __id2, __quirk)	\
+ 	{ .vendor = PCI_VENDOR_ID_LENOVO,	\
+ 	  .bios = TPACPI_MATCH_ANY,		\
+@@ -5973,9 +5979,6 @@ static const struct tpacpi_quirk led_useful_qtable[] __initconst = {
+ 	},
+ };
+ 
+-#undef TPACPI_LEDQ_IBM
+-#undef TPACPI_LEDQ_LNV
+-
+ static enum led_access_mode __init led_init_detect_mode(void)
+ {
+ 	acpi_status status;
+@@ -8710,40 +8713,18 @@ static const struct attribute_group fan_attr_group = {
+ 	.attrs = fan_attributes,
+ };
+ 
+-#define	TPACPI_FAN_Q1	0x0001		/* Unitialized HFSP */
++#define TPACPI_FAN_Q1	0x0001		/* Unitialized HFSP */
+ #define TPACPI_FAN_2FAN	0x0002		/* EC 0x31 bit 0 selects fan2 */
+ 
+-#define TPACPI_FAN_QI(__id1, __id2, __quirks)	\
+-	{ .vendor = PCI_VENDOR_ID_IBM,		\
+-	  .bios = TPACPI_MATCH_ANY,		\
+-	  .ec = TPID(__id1, __id2),		\
+-	  .quirks = __quirks }
+-
+-#define TPACPI_FAN_QL(__id1, __id2, __quirks)	\
+-	{ .vendor = PCI_VENDOR_ID_LENOVO,	\
+-	  .bios = TPACPI_MATCH_ANY,		\
+-	  .ec = TPID(__id1, __id2),		\
+-	  .quirks = __quirks }
+-
+-#define TPACPI_FAN_QB(__id1, __id2, __quirks)	\
+-	{ .vendor = PCI_VENDOR_ID_LENOVO,	\
+-	  .bios = TPID(__id1, __id2),		\
+-	  .ec = TPACPI_MATCH_ANY,		\
+-	  .quirks = __quirks }
+-
+ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+-	TPACPI_FAN_QI('1', 'Y', TPACPI_FAN_Q1),
+-	TPACPI_FAN_QI('7', '8', TPACPI_FAN_Q1),
+-	TPACPI_FAN_QI('7', '6', TPACPI_FAN_Q1),
+-	TPACPI_FAN_QI('7', '0', TPACPI_FAN_Q1),
+-	TPACPI_FAN_QL('7', 'M', TPACPI_FAN_2FAN),
+-	TPACPI_FAN_QB('N', '1', TPACPI_FAN_2FAN),
++	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
++	TPACPI_QEC_IBM('7', '8', TPACPI_FAN_Q1),
++	TPACPI_QEC_IBM('7', '6', TPACPI_FAN_Q1),
++	TPACPI_QEC_IBM('7', '0', TPACPI_FAN_Q1),
++	TPACPI_QEC_LNV('7', 'M', TPACPI_FAN_2FAN),
++	TPACPI_Q_LNV('N', '1', TPACPI_FAN_2FAN),
+ };
+ 
+-#undef TPACPI_FAN_QL
+-#undef TPACPI_FAN_QI
+-#undef TPACPI_FAN_QB
+-
+ static int __init fan_init(struct ibm_init_struct *iibm)
+ {
+ 	int rc;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.19.2
