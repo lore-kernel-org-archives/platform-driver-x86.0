@@ -1,109 +1,81 @@
-From: Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH 2/2] platform/x86: intel_telemetry: convert to DEFINE_SHOW_ATTRIBUTE
-Date: Wed,  5 Dec 2018 10:12:55 -0500
-Message-ID: <20181205151255.15367-2-tiny.windzz@gmail.com>
-References: <20181205151255.15367-1-tiny.windzz@gmail.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH v2 11/17] dt-bindings: olpc_battery: Add XO-1.5 battery
+Date: Wed, 5 Dec 2018 21:53:03 +0100
+Message-ID: <20181205205303.3zx3ap7jfkah7ruw@earth.universe>
+References: <20181116162403.49854-1-lkundrak@v3.sk>
+ <20181116162403.49854-12-lkundrak@v3.sk>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rmx6qoxsqzvhfohm"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205151255.15367-1-tiny.windzz@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20181116162403.49854-12-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rajneesh.bhardwaj@intel.com, vishwanath.somayaji@intel.com, dvhart@infradead.org, andy@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Cameron <quozl@laptop.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, linux-pm@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
- .../platform/x86/intel_telemetry_debugfs.c    | 42 +++----------------
- 1 file changed, 6 insertions(+), 36 deletions(-)
+--rmx6qoxsqzvhfohm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
-index 40bce560eb30..98ba9185a27b 100644
---- a/drivers/platform/x86/intel_telemetry_debugfs.c
-+++ b/drivers/platform/x86/intel_telemetry_debugfs.c
-@@ -466,17 +466,7 @@ static int telem_pss_states_show(struct seq_file *s, void *unused)
- 	return 0;
- }
- 
--static int telem_pss_state_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, telem_pss_states_show, inode->i_private);
--}
--
--static const struct file_operations telem_pss_ops = {
--	.open		= telem_pss_state_open,
--	.read		= seq_read,
--	.llseek		= seq_lseek,
--	.release	= single_release,
--};
-+DEFINE_SHOW_ATTRIBUTE(telem_pss_states);
- 
- static int telem_ioss_states_show(struct seq_file *s, void *unused)
- {
-@@ -505,17 +495,7 @@ static int telem_ioss_states_show(struct seq_file *s, void *unused)
- 	return 0;
- }
- 
--static int telem_ioss_state_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, telem_ioss_states_show, inode->i_private);
--}
--
--static const struct file_operations telem_ioss_ops = {
--	.open		= telem_ioss_state_open,
--	.read		= seq_read,
--	.llseek		= seq_lseek,
--	.release	= single_release,
--};
-+DEFINE_SHOW_ATTRIBUTE(telem_ioss_states);
- 
- static int telem_soc_states_show(struct seq_file *s, void *unused)
- {
-@@ -664,17 +644,7 @@ static int telem_soc_states_show(struct seq_file *s, void *unused)
- 	return 0;
- }
- 
--static int telem_soc_state_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, telem_soc_states_show, inode->i_private);
--}
--
--static const struct file_operations telem_socstate_ops = {
--	.open		= telem_soc_state_open,
--	.read		= seq_read,
--	.llseek		= seq_lseek,
--	.release	= single_release,
--};
-+DEFINE_SHOW_ATTRIBUTE(telem_soc_states);
- 
- static int telem_s0ix_res_get(void *data, u64 *val)
- {
-@@ -960,7 +930,7 @@ static int __init telemetry_debugfs_init(void)
- 
- 	f = debugfs_create_file("pss_info", S_IFREG | S_IRUGO,
- 				debugfs_conf->telemetry_dbg_dir, NULL,
--				&telem_pss_ops);
-+				&telem_pss_states_fops);
- 	if (!f) {
- 		pr_err("pss_sample_info debugfs register failed\n");
- 		goto out;
-@@ -968,7 +938,7 @@ static int __init telemetry_debugfs_init(void)
- 
- 	f = debugfs_create_file("ioss_info", S_IFREG | S_IRUGO,
- 				debugfs_conf->telemetry_dbg_dir, NULL,
--				&telem_ioss_ops);
-+				&telem_ioss_states_fops);
- 	if (!f) {
- 		pr_err("ioss_sample_info debugfs register failed\n");
- 		goto out;
-@@ -976,7 +946,7 @@ static int __init telemetry_debugfs_init(void)
- 
- 	f = debugfs_create_file("soc_states", S_IFREG | S_IRUGO,
- 				debugfs_conf->telemetry_dbg_dir,
--				NULL, &telem_socstate_ops);
-+				NULL, &telem_soc_states_fops);
- 	if (!f) {
- 		pr_err("ioss_sample_info debugfs register failed\n");
- 		goto out;
--- 
-2.17.0
+Hi,
+
+On Fri, Nov 16, 2018 at 05:23:57PM +0100, Lubomir Rintel wrote:
+> The XO-1 and XO-1.5 batteries apparently differ in an ability to report
+> ambient temperature.
+>=20
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+>=20
+> ---
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+-- Sebastian
+
+> Changes since v1:
+> - Collected Reviewed-by and Acked-by tags
+>=20
+>  Documentation/devicetree/bindings/power/supply/olpc_battery.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/olpc_battery.=
+txt b/Documentation/devicetree/bindings/power/supply/olpc_battery.txt
+> index c8901b3992d9..8d87d6b35a98 100644
+> --- a/Documentation/devicetree/bindings/power/supply/olpc_battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/olpc_battery.txt
+> @@ -2,4 +2,4 @@ OLPC battery
+>  ~~~~~~~~~~~~
+> =20
+>  Required properties:
+> -  - compatible : "olpc,xo1-battery"
+> +  - compatible : "olpc,xo1-battery" or "olpc,xo1.5-battery"
+> --=20
+> 2.19.1
+>=20
+
+--rmx6qoxsqzvhfohm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlwIOqwACgkQ2O7X88g7
++ppsMhAAqjiRTWfR/LVjMsfkcZ5JT7Tcsebbmp6IX5H2SJpq1hrvsdgvmNY6zU7x
+jo39BY06Oi36yy1kUTdFy5uuQUZNNGK2lIr7PX7eL1pT9BAcevho3EepyYB3XRTV
+oz8jyGSXSAVLvyRQDFDlIIyR9JGxJMFEo01rxiT3r1BgD62wAFFdpG3K3FQcCapK
+ylw96V9Uo4RdWKkv6dfN9MkHItrIKWNzIAN22AxGDSHkCjY0E7vYNjyZlK1TE/q4
+cBz+HOaPqpHJ2S1II0aD/U1bxFE/rBPmmqBWE/HEyQTi4m1Qvt3hHPxvuZpWw2ZD
+98fWeaPtu7a9BLy7MPRV6Tj3w2bjSFmhInfCWnfkfWgzrDl/oCExWtNPPezaO6Dl
+mdpaROkN6Kuhj0mcbwTgeJAchxto6kqblZQQO6LnE6dmbKp728+ZLgks1EMM/8WS
+cXf2s/hPfvrqmltcgWk5Fe6bp+ZNw7fPMHOzfCRjRp0HmQyOGF28TagWfZ94HsVH
+tB9oL8adIELEs+lVdjjsYAqeE38TKu8Qhd6VquCj+6S1fHT5gjIcfKH+0z/iEHom
+2PHa6VjiCglckFaSsLzyh8ehjPUSYjWZbPOWkPYBhNPivNM54YajuTxSnm3nYvCa
++hF1KixgZ3ZTK4KhYWKQgKHP14GxpCT98OAV2VFKYk4LgM515/g=
+=AmUH
+-----END PGP SIGNATURE-----
+
+--rmx6qoxsqzvhfohm--
