@@ -1,60 +1,103 @@
 From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
-Date: Sun, 9 Dec 2018 18:01:32 +0100
-Message-ID: <20181209170132.d4hhiic3dfoky4fr@devuan>
-References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
- <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com>
- <CALCETrXctxfED1Dr-MuZxFnh5gzTyRL06hRJ_fQnNA8p2S4xEQ@mail.gmail.com>
+Subject: Re: [PATCH v11 00/13] Intel SGX1 support
+Date: Sun, 9 Dec 2018 21:06:00 +0100
+Message-ID: <20181209200600.GA11608@amd>
+References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
+ <20180612105011.GA26931@amd>
+ <20180619145943.GC8034@linux.intel.com>
+ <20180619200414.GA3143@amd>
+ <20180619214833.GA5873@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CALCETrXctxfED1Dr-MuZxFnh5gzTyRL06hRJ_fQnNA8p2S4xEQ@mail.gmail.com>
+In-Reply-To: <20180619214833.GA5873@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, andy@infradead.org, LKML <linux-kernel@vger.kernel.o>
+To: Josh Triplett <josh@joshtriplett.org>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, David Woodhouse <dwmw@amazon.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Konrad Rzeszutek Wilk <konrad.wi>
 List-Id: platform-driver-x86.vger.kernel.org
+
+
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi!
 
-> On Thu, Nov 15, 2018 at 5:08 PM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > Intel Software Guard eXtensions (SGX) is a set of CPU instructions that
-> > can be used by applications to set aside private regions of code and
-> > data. The code outside the enclave is disallowed to access the memory
-> > inside the enclave by the CPU access control.
-> >
-> > SGX driver provides a ioctl API for loading and initializing enclaves.
-> > Address range for enclaves is reserved with mmap() and they are
-> > destroyed with munmap(). Enclave construction, measurement and
-> > initialization is done with the provided the ioctl API.
-> >
-> 
-> I brought this up a while back, and I think I should re-ask it now
-> that this driver is getting close to ready:
-> 
-> As it stands, there's just one SGX character device, and I imagine
-> that it'll be available to unprivileged applications.  I'm concerned
-> that this isn't quite what we want.  I certainly think that everyone,
-> or at least almost everyone, ought to be able to run normal
-> enclaves.
+(sorry to bring up old thread).
 
-I don't think nobody or postfix or guest should be running enclaves on
-my systems. First, I'd like to  be able to debug my systems.
+> > > > > Intel(R) SGX is a set of CPU instructions that can be used by app=
+lications
+> > > > > to set aside private regions of code and data. The code outside t=
+he enclave
+> > > > > is disallowed to access the memory inside the enclave by the CPU =
+access
+> > > > > control.  In a way you can think that SGX provides inverted sandb=
+ox. It
+> > > > > protects the application from a malicious host.
+> > > >=20
+> > > > Do you intend to allow non-root applications to use SGX?
+> > > >=20
+> > > > What are non-evil uses for SGX?
+> > > >=20
+> > > > ...because it is quite useful for some kinds of evil:
+> > >=20
+> > > The default permissions for the device are 600.
+> >=20
+> > Good. This does not belong to non-root.
+>=20
+> There are entirely legitimate use cases for using this as an
+> unprivileged user. However, that'll be up to system and distribution
+> policy, which can evolve over time, and it makes sense for the *initial*
+> kernel permission to start out root-only and then adjust permissions via
+> udev.
 
-Second, sgx quite complex and tricky. It may turn out to be secure in
-the end, but I'd not be surprised if we got few CVEs before we get
-there.
+Agreed.
 
-Last, I'd hate to find out in few years that I can't switch to amd
-cpu because firefox now requires sgx.
+> > What are some non-evil uses for SGX?
+>=20
+> Building a software certificate store. Hardening key-agent software like
+> ssh-agent or gpg-agent. Building a challenge-response authentication
+> system. Providing more assurance that your server infrastructure is
+> uncompromised. Offloading computation to a system without having to
+> fully trust that system.
 
-Just make it root-only or 660 by default. Users can get permission in
-similar way they get rights to audio..
+I think you can do the crypto stuff... as crypto already verifies the
+results. But I don't think you can do the computation offload.
 
-								Pavel
-								
--- 
+> As one of many possibilities, imagine a distcc that didn't have to trust
+> the compile nodes. The compile nodes could fail to return results at
+> all, but they couldn't alter the results.
+
+distcc on untrusted nodes ... oh yes, that would be great.
+
+Except that you can't do it, right? :-).
+
+First, AFAICT it would be quite hard to get gcc to run under SGX. But
+maybe you have spare month or three and can do it.
+
+But ... you really can't guarantee getting right results. Evil owner
+of the machine might intentionaly overheat the CPU, glitch the power,
+induce single-bit errors using gamma source, ... You can't do it.
+
+									Pavel
+--=20
 (english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlwNdagACgkQMOfwapXb+vLmBACglfRsX3Mr2i4qikFMap6DH0ZS
+3OwAnj5BaVdvd6w1ipEHlMOQVSTpim9l
+=7YhW
+-----END PGP SIGNATURE-----
+
+--bp/iNruPH9dso1Pn--
