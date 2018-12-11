@@ -1,137 +1,123 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: intel_pmc_core: convert to DEFINE_SHOW_ATTRIBUTE
-Date: Tue, 11 Dec 2018 12:16:27 +0200
-Message-ID: <CAHp75VcsQPx2pn84Fhh-qT71JwR1-0fEQm8nj2sei0oHByy7Dg@mail.gmail.com>
-References: <20181205151255.15367-1-tiny.windzz@gmail.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi:
+ Cleanup quirks macros
+Date: Tue, 11 Dec 2018 12:17:08 +0200
+Message-ID: <CAHp75VeHFqNxE0h0Yaq5Ly5Uox+T_YooRXyS=USA2KxMaKDRMA@mail.gmail.com>
+References: <20181205111752.GA9780@Mindship-03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181205151255.15367-1-tiny.windzz@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tiny.windzz@gmail.com
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20181205111752.GA9780@Mindship-03>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Dec 5, 2018 at 5:13 PM Yangtao Li <tiny.windzz@gmail.com> wrote:
+On Wed, Dec 5, 2018 at 1:18 PM Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >
-> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+> - Use generic quirks macros for fan quirks
+> The fan-specific quirks macros were duplicates of the generic ones.
+>
+> - Remove useless #undef lines
+> The referenced macros are not defined anywhere.
 >
 
-Both patches had been pushed, thanks!
+Patch had been pushed, thanks!
 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> Signed-off-by: Jouke Witteveen <j.witteveen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
 > ---
->  drivers/platform/x86/intel_pmc_core.c | 49 +++++----------------------
->  1 file changed, 8 insertions(+), 41 deletions(-)
 >
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index eba6f5c27e2f..22dbf115782e 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -367,7 +367,7 @@ static void pmc_core_display_map(struct seq_file *s, int index,
->                    pf_map[index].bit_mask & pf_reg ? "Off" : "On");
->  }
+> This time, with a more detailed commit message.
 >
-> -static int pmc_core_ppfear_sts_show(struct seq_file *s, void *unused)
-> +static int pmc_core_ppfear_show(struct seq_file *s, void *unused)
+>  drivers/platform/x86/thinkpad_acpi.c | 45 ++++++++--------------------
+>  1 file changed, 13 insertions(+), 32 deletions(-)
+>
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index fde08a997..e1e51bfb3 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -478,6 +478,12 @@ do {                                                                       \
+>           .ec = TPACPI_MATCH_ANY,               \
+>           .quirks = (__quirk) }
+>
+> +#define TPACPI_QEC_IBM(__id1, __id2, __quirk)  \
+> +       { .vendor = PCI_VENDOR_ID_IBM,          \
+> +         .bios = TPACPI_MATCH_ANY,             \
+> +         .ec = TPID(__id1, __id2),             \
+> +         .quirks = (__quirk) }
+> +
+>  #define TPACPI_QEC_LNV(__id1, __id2, __quirk)  \
+>         { .vendor = PCI_VENDOR_ID_LENOVO,       \
+>           .bios = TPACPI_MATCH_ANY,             \
+> @@ -5973,9 +5979,6 @@ static const struct tpacpi_quirk led_useful_qtable[] __initconst = {
+>         },
+>  };
+>
+> -#undef TPACPI_LEDQ_IBM
+> -#undef TPACPI_LEDQ_LNV
+> -
+>  static enum led_access_mode __init led_init_detect_mode(void)
 >  {
->         struct pmc_dev *pmcdev = s->private;
->         const struct pmc_bit_map *map = pmcdev->map->pfear_sts;
-> @@ -385,18 +385,7 @@ static int pmc_core_ppfear_sts_show(struct seq_file *s, void *unused)
+>         acpi_status status;
+> @@ -8710,40 +8713,18 @@ static const struct attribute_group fan_attr_group = {
+>         .attrs = fan_attributes,
+>  };
 >
->         return 0;
->  }
+> -#define        TPACPI_FAN_Q1   0x0001          /* Unitialized HFSP */
+> +#define TPACPI_FAN_Q1  0x0001          /* Unitialized HFSP */
+>  #define TPACPI_FAN_2FAN        0x0002          /* EC 0x31 bit 0 selects fan2 */
+>
+> -#define TPACPI_FAN_QI(__id1, __id2, __quirks)  \
+> -       { .vendor = PCI_VENDOR_ID_IBM,          \
+> -         .bios = TPACPI_MATCH_ANY,             \
+> -         .ec = TPID(__id1, __id2),             \
+> -         .quirks = __quirks }
 > -
-> -static int pmc_core_ppfear_sts_open(struct inode *inode, struct file *file)
-> -{
-> -       return single_open(file, pmc_core_ppfear_sts_show, inode->i_private);
-> -}
+> -#define TPACPI_FAN_QL(__id1, __id2, __quirks)  \
+> -       { .vendor = PCI_VENDOR_ID_LENOVO,       \
+> -         .bios = TPACPI_MATCH_ANY,             \
+> -         .ec = TPID(__id1, __id2),             \
+> -         .quirks = __quirks }
 > -
-> -static const struct file_operations pmc_core_ppfear_ops = {
-> -       .open           = pmc_core_ppfear_sts_open,
-> -       .read           = seq_read,
-> -       .llseek         = seq_lseek,
-> -       .release        = single_release,
-> -};
-> +DEFINE_SHOW_ATTRIBUTE(pmc_core_ppfear);
+> -#define TPACPI_FAN_QB(__id1, __id2, __quirks)  \
+> -       { .vendor = PCI_VENDOR_ID_LENOVO,       \
+> -         .bios = TPID(__id1, __id2),           \
+> -         .ec = TPACPI_MATCH_ANY,               \
+> -         .quirks = __quirks }
+> -
+>  static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+> -       TPACPI_FAN_QI('1', 'Y', TPACPI_FAN_Q1),
+> -       TPACPI_FAN_QI('7', '8', TPACPI_FAN_Q1),
+> -       TPACPI_FAN_QI('7', '6', TPACPI_FAN_Q1),
+> -       TPACPI_FAN_QI('7', '0', TPACPI_FAN_Q1),
+> -       TPACPI_FAN_QL('7', 'M', TPACPI_FAN_2FAN),
+> -       TPACPI_FAN_QB('N', '1', TPACPI_FAN_2FAN),
+> +       TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
+> +       TPACPI_QEC_IBM('7', '8', TPACPI_FAN_Q1),
+> +       TPACPI_QEC_IBM('7', '6', TPACPI_FAN_Q1),
+> +       TPACPI_QEC_IBM('7', '0', TPACPI_FAN_Q1),
+> +       TPACPI_QEC_LNV('7', 'M', TPACPI_FAN_2FAN),
+> +       TPACPI_Q_LNV('N', '1', TPACPI_FAN_2FAN),
+>  };
 >
->  /* This function should return link status, 0 means ready */
->  static int pmc_core_mtpmc_link_status(void)
-> @@ -428,7 +417,7 @@ static int pmc_core_send_msg(u32 *addr_xram)
->         return 0;
->  }
->
-> -static int pmc_core_mphy_pg_sts_show(struct seq_file *s, void *unused)
-> +static int pmc_core_mphy_pg_show(struct seq_file *s, void *unused)
+> -#undef TPACPI_FAN_QL
+> -#undef TPACPI_FAN_QI
+> -#undef TPACPI_FAN_QB
+> -
+>  static int __init fan_init(struct ibm_init_struct *iibm)
 >  {
->         struct pmc_dev *pmcdev = s->private;
->         const struct pmc_bit_map *map = pmcdev->map->mphy_sts;
-> @@ -480,18 +469,7 @@ static int pmc_core_mphy_pg_sts_show(struct seq_file *s, void *unused)
->         mutex_unlock(&pmcdev->lock);
->         return err;
->  }
-> -
-> -static int pmc_core_mphy_pg_sts_open(struct inode *inode, struct file *file)
-> -{
-> -       return single_open(file, pmc_core_mphy_pg_sts_show, inode->i_private);
-> -}
-> -
-> -static const struct file_operations pmc_core_mphy_pg_ops = {
-> -       .open           = pmc_core_mphy_pg_sts_open,
-> -       .read           = seq_read,
-> -       .llseek         = seq_lseek,
-> -       .release        = single_release,
-> -};
-> +DEFINE_SHOW_ATTRIBUTE(pmc_core_mphy_pg);
->
->  static int pmc_core_pll_show(struct seq_file *s, void *unused)
->  {
-> @@ -527,18 +505,7 @@ static int pmc_core_pll_show(struct seq_file *s, void *unused)
->         mutex_unlock(&pmcdev->lock);
->         return err;
->  }
-> -
-> -static int pmc_core_pll_open(struct inode *inode, struct file *file)
-> -{
-> -       return single_open(file, pmc_core_pll_show, inode->i_private);
-> -}
-> -
-> -static const struct file_operations pmc_core_pll_ops = {
-> -       .open           = pmc_core_pll_open,
-> -       .read           = seq_read,
-> -       .llseek         = seq_lseek,
-> -       .release        = single_release,
-> -};
-> +DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
->
->  static ssize_t pmc_core_ltr_ignore_write(struct file *file, const char __user
->  *userbuf, size_t count, loff_t *ppos)
-> @@ -729,7 +696,7 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
->                             &pmc_core_dev_state);
->
->         debugfs_create_file("pch_ip_power_gating_status", 0444, dir, pmcdev,
-> -                           &pmc_core_ppfear_ops);
-> +                           &pmc_core_ppfear_fops);
->
->         debugfs_create_file("ltr_ignore", 0644, dir, pmcdev,
->                             &pmc_core_ltr_ignore_ops);
-> @@ -738,12 +705,12 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
->
->         if (pmcdev->map->pll_sts)
->                 debugfs_create_file("pll_status", 0444, dir, pmcdev,
-> -                                   &pmc_core_pll_ops);
-> +                                   &pmc_core_pll_fops);
->
->         if (pmcdev->map->mphy_sts)
->                 debugfs_create_file("mphy_core_lanes_power_gating_status",
->                                     0444, dir, pmcdev,
-> -                                   &pmc_core_mphy_pg_ops);
-> +                                   &pmc_core_mphy_pg_fops);
->
->         if (pmcdev->map->slps0_dbg_maps) {
->                 debugfs_create_file("slp_s0_debug_status", 0444,
+>         int rc;
 > --
-> 2.17.0
+> 2.19.2
 >
 
 
