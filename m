@@ -1,85 +1,63 @@
-From: Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH v11 00/13] Intel SGX1 support
-Date: Mon, 10 Dec 2018 15:12:00 -0800
-Message-ID: <20181210231159.GA10718@localhost>
-References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
- <20180612105011.GA26931@amd>
- <20180619145943.GC8034@linux.intel.com>
- <20180619200414.GA3143@amd>
- <20180619214833.GA5873@localhost>
- <20181209200600.GA11608@amd>
- <20181210074717.GA9880@localhost>
- <20181210082704.GA14594@amd>
+From: Ayman Bagabas <ayman.bagabas@gmail.com>
+Subject: [PATCH v10 0/3] Huawei laptops
+Date: Tue, 11 Dec 2018 01:01:19 -0500
+Message-ID: <20181211060125.28671-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181210082704.GA14594@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, dave.hansen@intel.com, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, David Woodhouse <dwmw@amazon.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Konrad Rzeszutek Wilk <konrad.wi>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kailang Yang <kailang@realtek.com>, Hui Wang <hui.wang@canonical.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org
+Cc: ayman.bagabas@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Dec 10, 2018 at 09:27:04AM +0100, Pavel Machek wrote:
-> On Sun 2018-12-09 23:47:17, Josh Triplett wrote:
-> > On Sun, Dec 09, 2018 at 09:06:00PM +0100, Pavel Machek wrote:
-> > ...
-> > > > > > The default permissions for the device are 600.
-> > > > > 
-> > > > > Good. This does not belong to non-root.
-> > > > 
-> > > > There are entirely legitimate use cases for using this as an
-> > > > unprivileged user. However, that'll be up to system and distribution
-> > > > policy, which can evolve over time, and it makes sense for the *initial*
-> > > > kernel permission to start out root-only and then adjust permissions via
-> > > > udev.
-> > > 
-> > > Agreed.
-> > > 
-> > > > Building a software certificate store. Hardening key-agent software like
-> > > > ssh-agent or gpg-agent. Building a challenge-response authentication
-> > > > system. Providing more assurance that your server infrastructure is
-> > > > uncompromised. Offloading computation to a system without having to
-> > > > fully trust that system.
-> > > 
-> > > I think you can do the crypto stuff... as crypto already verifies the
-> > > results. But I don't think you can do the computation offload.
-> > 
-> > You can, as long as you can do attestation.
-> 
-> You can not, because random errors are very easy to trigger for person
-> with physical access,
+This patch set is based on the new audio LED triggers in topic/leds-trigger branch from
+        git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
 
-Random errors can also just happen, so if you're concerned about that
-you might want to build each object on two different machines and
-compare. Good luck generating the *same* random errors on two machines.
+Changes in v10:
+* Use ec_get_handle instead of acpi_get_handle since we are using the ec device
+* Switch to WMI0_EXPENSIVE_GUID and wmi_query_block to fetch keycode when WMI0 is used
 
-(And, of course, someone can also DoS you in any number of other ways,
-such as accepting data and then never sending back a result. So you'll
-need timeouts and failovers.)
+Changes in v9:
+* Explicitly use NULL in acpi_get_handle
+* Drop __initconst from huawei_wmi_keymap
 
-> > > > As one of many possibilities, imagine a distcc that didn't have to trust
-> > > > the compile nodes. The compile nodes could fail to return results at
-> > > > all, but they couldn't alter the results.
-> > > 
-> > > distcc on untrusted nodes ... oh yes, that would be great.
-> > > 
-> > > Except that you can't do it, right? :-).
-> > > 
-> > > First, AFAICT it would be quite hard to get gcc to run under SGX. But
-> > > maybe you have spare month or three and can do it.
-> > 
-> > Assuming you don't need to #include files, gcc seems quite simple to run
-> > in an enclave: data in, computation inside, data out.
-> 
-> So is there a plan to run dynamically linked binaries inside enclave?
+Changes in v8:
+* Switch to wmi_driver
+* Use devm to allocate and manage devices
+* Skip registering LED subsystem if a ACPI controller method was not found
 
-I've seen some approaches for that, but you could also just statically
-link your compiler. (Since you'd need attestation for all the individual
-libraries, you'd need to know the versions of all those libraries, so
-you might as well just statically link.)
+Changes in v7:
+* Use audio LED triggers patch set
+* Use KEY_CONFIG (XF86Tools) instead of KEY_PROG1.
+ In Windows, the key is used to launch Huawei PC manager. XF86Tools is
+ used by default on most desktop environments i.e. Gnome.
 
-> Or maybe even python/shell scripts? It looked to me like virtual
-> memory will be "interesting" for enclaves.
+Changes in v6:
+* Review tags
 
-Memory management doesn't seem that hard to deal with.
+Changes in v5:
+* Consistency in file names
+* How module would be enabled (Kconfig)
+* Match license in SPDX and MODULE_LICENSE 
+
+Changes in v4:
+* Code formatting
+
+Changes in v3:
+* Support for Huawei MBX
+* Style and formatting issues
+
+Ayman Bagabas (3):
+  ALSA: hda: fix front speakers on Huawei MBXP.
+  x86: add support for Huawei WMI hotkeys.
+  ALSA: hda: add support for Huawei WMI micmute LED
+
+ drivers/platform/x86/Kconfig      |  17 +++
+ drivers/platform/x86/Makefile     |   1 +
+ drivers/platform/x86/huawei-wmi.c | 220 ++++++++++++++++++++++++++++++
+ sound/pci/hda/patch_realtek.c     |  22 +++
+ 4 files changed, 260 insertions(+)
+ create mode 100644 drivers/platform/x86/huawei-wmi.c
+
+-- 
+2.19.2
