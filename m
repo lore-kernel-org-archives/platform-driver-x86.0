@@ -1,90 +1,34 @@
-From: Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH] x86/mm: Fix decoy address handling vs 32-bit builds
-Date: Tue, 11 Dec 2018 07:49:39 -0800
-Message-ID: <154454337985.789277.12133288391664677775.stgit@dwillia2-desk3.amr.corp.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v11 00/13] Intel SGX1 support
+Date: Tue, 11 Dec 2018 10:10:38 -0800
+Message-ID: <12301623-0a63-10ac-1d5e-828569a953e5@intel.com>
+References: <20180608171216.26521-1-jarkko.sakkinen@linux.intel.com>
+ <20180612105011.GA26931@amd> <20180619145943.GC8034@linux.intel.com>
+ <20180619200414.GA3143@amd> <20180619214833.GA5873@localhost>
+ <20181209200600.GA11608@amd> <20181210074717.GA9880@localhost>
+ <20181210082704.GA14594@amd> <20181210231159.GA10718@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181210231159.GA10718@localhost>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: x86@kernel.org
-Cc: Gert Robben <t2@gert.gr>Gert Robben <t2@gert.gr>, stable@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Josh Triplett <josh@joshtriplett.org>, Pavel Machek <pavel@ucw.cz>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, sean.j.christopherson@intel.com, nhorman@redhat.com, npmccallum@redhat.com, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@suse.de>, "David S. Miller" <davem@davemloft.net>, David Woodhouse <dwmw@amazon.co.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, "open list:INTEL SGX" <intel-sgx-kernel-dev@lists.01.org>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-A decoy address is used by set_mce_nospec() to update the cache
-attributes for a page that may contain poison (multi-bit ECC error)
-while attempting to minimize the possibility of triggering a speculative
-access to that page.
+On 12/10/18 3:12 PM, Josh Triplett wrote:
+>> Or maybe even python/shell scripts? It looked to me like virtual
+>> memory will be "interesting" for enclaves.
+> Memory management doesn't seem that hard to deal with.
 
-When reserve_memtype() is handling a decoy address it needs to convert
-it to its real physical alias. The conversion, AND'ing with
-__PHYSICAL_MASK, is broken for a 32-bit physical mask and
-reserve_memtype() is passed the last physical page. Gert reports
-triggering the:
+The problems are:
 
-    BUG_ON(start >= end);
-
-...assertion when running a 32-bit non-PAE build on a platform that has
-a driver resource at the top of physical memory:
-
-    BIOS-e820: [mem 0x00000000fff00000-0x00000000ffffffff] reserved
-
-Given that the decoy address scheme is only targeted at 64-bit builds
-and assumes that the top of physical address space is free for use as a
-decoy address range, simply bypass address sanitization in the 32-bit
-case.
-
-Lastly, there was no need to crash the system when this failure
-occurred, and no need to crash future systems if the assumptions of
-decoy addresses are ever violated. Change the BUG_ON() to a WARN() with
-an error return.
-
-Reported-by: Gert Robben <t2@gert.gr>
-Tested-by: Gert Robben <t2@gert.gr>
-Cc: <stable@vger.kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Fixes: 510ee090abc3 ("x86/mm/pat: Prepare {reserve, free}_memtype() for...")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- arch/x86/mm/pat.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/mm/pat.c b/arch/x86/mm/pat.c
-index 08013524fba1..4fe956a63b25 100644
---- a/arch/x86/mm/pat.c
-+++ b/arch/x86/mm/pat.c
-@@ -519,8 +519,13 @@ static u64 sanitize_phys(u64 address)
- 	 * for a "decoy" virtual address (bit 63 clear) passed to
- 	 * set_memory_X(). __pa() on a "decoy" address results in a
- 	 * physical address with bit 63 set.
-+	 *
-+	 * Decoy addresses are not present for 32-bit builds, see
-+	 * set_mce_nospec().
- 	 */
--	return address & __PHYSICAL_MASK;
-+	if (IS_ENABLED(CONFIG_X86_64))
-+		return address & __PHYSICAL_MASK;
-+	return address;
- }
- 
- /*
-@@ -546,7 +551,11 @@ int reserve_memtype(u64 start, u64 end, enum page_cache_mode req_type,
- 
- 	start = sanitize_phys(start);
- 	end = sanitize_phys(end);
--	BUG_ON(start >= end); /* end is exclusive */
-+	if (start >= end) {
-+		WARN(1, "%s failed: [mem %#010Lx-%#010Lx], req %s\n", __func__,
-+				start, end - 1, cattr_name(req_type));
-+		return -EINVAL;
-+	}
- 
- 	if (!pat_enabled()) {
- 		/* This is identical to page table setting without PAT */
+1. SGX enclave memory (EPC) is statically allocated at boot and can't
+   grow or shrink
+2. EPC is much smaller than regular RAM
+3. The core VM has no comprehension of EPC use, thus can not help
+   with its algorithms, like the LRU
+4. The SGX driver implements its own VM which is substantially simpler
+   than the core VM, but less feature-rich, fast, or scalable
