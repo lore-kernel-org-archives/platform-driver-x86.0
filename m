@@ -1,38 +1,66 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
-Date: Wed, 12 Dec 2018 20:00:36 +0200
-Message-ID: <20181212180036.GC6333@linux.intel.com>
-References: <20181125145329.GA5777@linux.intel.com>
- <0669C300-02CB-4EA6-BF88-5C4B4DDAD4C7@amacapital.net>
- <20181126215145.GC868@linux.intel.com>
- <20181126230436.GA6737@linux.intel.com>
- <20181127085533.GA12247@wind.enjellic.com>
- <20181127164129.GB4170@linux.intel.com>
- <C11C9312-65BC-460A-8F9F-608E101AE5C1@amacapital.net>
- <20181128104941.GA23077@wind.enjellic.com>
- <20181128192228.GC9023@linux.intel.com>
- <20181210104908.GA23132@wind.enjellic.com>
+From: Ayman Bagabas <ayman.bagabas@gmail.com>
+Subject: [PATCH v11 0/3] Huawei laptops
+Date: Wed, 12 Dec 2018 18:07:56 -0500
+Message-ID: <20181212230802.21140-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181210104908.GA23132@wind.enjellic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Dr. Greg" <greg@enjellic.com>
-Cc: Andy Lutomirski <luto@amacapital.net>, Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, "Christopherson, Sean J" <sean.j.christopherson@intel.com>, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infrade>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kailang Yang <kailang@realtek.com>, Hui Wang <hui.wang@canonical.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, alsa-devel@alsa-project.org
+Cc: ayman.bagabas@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Dec 10, 2018 at 04:49:08AM -0600, Dr. Greg wrote:
-> In the meantime, I wanted to confirm that your jarkko-sgx/master
-> branch contains the proposed driver that is headed upstream.  Before
-> adding the SFLC patches we thought it best to run the driver through
-> some testing in order to verify that any problems we generated where
-> attributable to our work and not the base driver.
+This patch set is based on the new audio LED triggers in topic/leds-trigger branch from
+        git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
 
-The master branch is by definition unstable at the moment i.e. it can
-sometimes (not often) contain unfinished changes. Use next for testing.
-I update next when I consider the master contents "stable enough".
+Changes in v11:
+* Minor code changes
 
-Thanks.
+Changes in v10:
+* Use ec_get_handle instead of acpi_get_handle since we are using the ec device
+* Switch to WMI0_EXPENSIVE_GUID and wmi_query_block to fetch keycode when WMI0 is used
 
-/Jarkko
+Changes in v9:
+* Explicitly use NULL in acpi_get_handle
+* Drop __initconst from huawei_wmi_keymap
+
+Changes in v8:
+* Switch to wmi_driver
+* Use devm to allocate and manage devices
+* Skip registering LED subsystem if a ACPI controller method was not found
+
+Changes in v7:
+* Use audio LED triggers patch set
+* Use KEY_CONFIG (XF86Tools) instead of KEY_PROG1.
+ In Windows, the key is used to launch Huawei PC manager. XF86Tools is
+ used by default on most desktop environments i.e. Gnome.
+
+Changes in v6:
+* Review tags
+
+Changes in v5:
+* Consistency in file names
+* How module would be enabled (Kconfig)
+* Match license in SPDX and MODULE_LICENSE 
+
+Changes in v4:
+* Code formatting
+
+Changes in v3:
+* Support for Huawei MBX
+* Style and formatting issues
+
+Ayman Bagabas (3):
+  ALSA: hda: fix front speakers on Huawei MBXP.
+  x86: add support for Huawei WMI hotkeys.
+  ALSA: hda: add support for Huawei WMI micmute LED
+
+ drivers/platform/x86/Kconfig      |  17 +++
+ drivers/platform/x86/Makefile     |   1 +
+ drivers/platform/x86/huawei-wmi.c | 208 ++++++++++++++++++++++++++++++
+ sound/pci/hda/patch_realtek.c     |  22 ++++
+ 4 files changed, 248 insertions(+)
+ create mode 100644 drivers/platform/x86/huawei-wmi.c
+
+-- 
+2.19.2
