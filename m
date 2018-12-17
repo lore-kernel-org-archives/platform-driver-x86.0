@@ -1,46 +1,42 @@
-From: Dave Hansen <dave.hansen@intel.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
-Date: Mon, 17 Dec 2018 11:40:18 -0800
-Message-ID: <6e6e6eec-f2a3-9b18-eed8-e0ba965774b0@intel.com>
+Date: Mon, 17 Dec 2018 21:49:13 +0200
+Message-ID: <20181217194913.GD29785@linux.intel.com>
 References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
  <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com>
  <7d5cde02-4649-546b-0f03-2d6414bb80b5@intel.com>
  <20181217180102.GA12560@linux.intel.com>
  <20181217183613.GD12491@linux.intel.com>
  <20181217184333.GA26920@linux.intel.com>
- <20181217184858.GF12491@linux.intel.com>
- <cf377db5-c702-0a1d-42b3-4caeb14eb6fa@intel.com>
- <20181217193758.GC29785@linux.intel.com>
+ <ccfb67a0-fd8d-82c8-8018-fd68e901f287@intel.com>
+ <CALCETrX0W4dhFJBHEbDbKed_QZxmw6ZNMajfsoVgqGqhMB0nDg@mail.gmail.com>
+ <beea8ad3-a607-5478-ad87-b8dd33e86146@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217193758.GC29785@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <beea8ad3-a607-5478-ad87-b8dd33e86146@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, mark.shanahan@intel.com, luto@amacapital.net, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Sean Christopherson <sean.j.christopherson@intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, Haitao Huang <haitao.huang@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 12/17/18 11:37 AM, Jarkko Sakkinen wrote:
->> Suggestion:
->>
->> It looks like you only expect one VMA per enclave.  Things go bonkers if
->> this is not true.  So, instead of storing encl->mm, don't.  You can get
->> the mm from vma->vm_mm and you could just store encl->vma instead.
-> The code actually supports having multiple VMAs per enclave.
-
-That seems at least somewhat at odds with this comment:
-
-> static void sgx_vma_open(struct vm_area_struct *vma)
-> {
->         struct sgx_encl *encl = vma->vm_private_data;
+On Mon, Dec 17, 2018 at 11:17:49AM -0800, Dave Hansen wrote:
+> On 12/17/18 11:12 AM, Andy Lutomirski wrote:
+> > So I'm not saying that you shouldn't do it the way you are now, but I
+> > do think that the changelog or at least some emails should explain
+> > *why* the enclave needs to keep a pointer to the creating process's
+> > mm.  And, if you do keep the current model, it would be nice to
+> > understand what happens if you do something awful like mremap()ing an
+> > enclave, or calling madvise on it, or otherwise abusing the vma.  Or
+> > doing fork(), for that matter.
 > 
->         if (!encl)
->                 return;
-> 
->         /* kref cannot underflow because ECREATE ioctl checks that there is only
->          * one single VMA for the enclave before proceeding.
->          */
->         kref_get(&encl->refcount);
-> }
+> Yeah, the code is built to have one VMA and only one VMA per enclave.
+> You need to go over the origin of this restriction and what enforces this.
+
+It is before ECREATE but after that you can split it with mprotect().
+
+Lets take an example. I'm not sure how we would acquire mm efficiently
+in sgx_encl_page_reclaim() otherwise than having it as a field in encl.
+
+/Jarkko
