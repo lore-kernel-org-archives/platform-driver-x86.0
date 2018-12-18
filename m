@@ -1,57 +1,57 @@
 From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
-Date: Tue, 18 Dec 2018 15:13:11 +0200
-Message-ID: <20181218131311.GB25667@linux.intel.com>
-References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
- <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com>
+Date: Tue, 18 Dec 2018 15:18:53 +0200
+Message-ID: <20181218131853.GC25667@linux.intel.com>
+References: <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com>
  <7d5cde02-4649-546b-0f03-2d6414bb80b5@intel.com>
  <20181217180102.GA12560@linux.intel.com>
  <20181217183613.GD12491@linux.intel.com>
  <20181217184333.GA26920@linux.intel.com>
- <20181217184858.GF12491@linux.intel.com>
- <20181217193322.GA29785@linux.intel.com>
- <20181217202149.GA19053@linux.intel.com>
+ <ccfb67a0-fd8d-82c8-8018-fd68e901f287@intel.com>
+ <CALCETrX0W4dhFJBHEbDbKed_QZxmw6ZNMajfsoVgqGqhMB0nDg@mail.gmail.com>
+ <20181217222047.GG12491@linux.intel.com>
+ <20181218013918.GC333@linux.intel.com>
+ <CALCETrUy25OJ8Q4eH81hwtvQyLGTmYCMMkEs+m8uNWqoFVt=-g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181217202149.GA19053@linux.intel.com>
+In-Reply-To: <CALCETrUy25OJ8Q4eH81hwtvQyLGTmYCMMkEs+m8uNWqoFVt=-g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-sgx@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com, shay.katz-zamir@intel.com, haitao.huang@linux.intel.com, andriy.shevchenko@linux.intel.com, tglx@linutronix.de, kai.svahn@intel.com, mark.shanahan@intel.com, luto@amacapital.net, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>, Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, Haitao Huang <haitao.huang@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Dec 17, 2018 at 10:21:49PM +0200, Jarkko Sakkinen wrote:
-> On Mon, Dec 17, 2018 at 09:33:22PM +0200, Jarkko Sakkinen wrote:
-> > On Mon, Dec 17, 2018 at 10:48:58AM -0800, Sean Christopherson wrote:
-> > > On Mon, Dec 17, 2018 at 08:43:33PM +0200, Jarkko Sakkinen wrote:
-> > > > On Mon, Dec 17, 2018 at 10:36:13AM -0800, Sean Christopherson wrote:
-> > > > > I'm pretty sure doing mmget() would result in circular dependencies and
-> > > > > a zombie enclave.  In the do_exit() case where a task is abruptly killed:
-> > > > >  
-> > > > >   - __mmput() is never called because the enclave holds a ref
-> > > > >   - sgx_encl_release() is never be called because its VMAs hold refs
-> > > > >   - sgx_vma_close() is never called because __mmput()->exit_mmap() is
-> > > > >     blocked and the process itself is dead, i.e. won't unmap anything.
-> > > > 
-> > > > Right, it does, you are absolutely right. Tried it and removed the
-> > > > commit already.
-> > > > 
-> > > > Well, what we came up from your suggestion i.e. setting mm to NULL
-> > > > and checking that is very subtle change and does not have any such
-> > > > circular dependencies. We'll go with that.
-> > > 
-> > > We can't set mm to NULL as we need it to unregister the notifier, and
-> > > I'm fairly certain attempting to unregister in the release callback
-> > > will deadlock.
-> > 
-> > Noticed that too. mmu_notifier_unregister() requires a valid mm.
+On Mon, Dec 17, 2018 at 08:55:02PM -0800, Andy Lutomirski wrote:
+> On Mon, Dec 17, 2018 at 5:39 PM Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> >
+> > On Mon, Dec 17, 2018 at 02:20:48PM -0800, Sean Christopherson wrote:
+> > > The only potential hiccup I can see is the build flow.  Currently,
+> > > EADD+EEXTEND is done via a work queue to avoid major performance issues
+> > > (10x regression) when userspace is building multiple enclaves in parallel
+> > > using goroutines to wrap Cgo (the issue might apply to any M:N scheduler,
+> > > but I've only confirmed the Golang case).  The issue is that allocating
+> > > an EPC page acts like a blocking syscall when the EPC is under pressure,
+> > > i.e. an EPC page isn't immediately available.  This causes Go's scheduler
+> > > to thrash and tank performance[1].
+> >
+> > I don't see any major issues having that kthread. All the code that
+> > maps the enclave would be removed.
+> >
+> > I would only allow to map enclave to process address space after the
+> > enclave has been initialized i.e. SGX_IOC_ENCLAVE_ATTACH.
+> >
 > 
-> Both branches updated...
+> What's SGX_IOC_ENCLAVE_ATTACH?  Why would it be needed at all?  I
+> would imagine that all pages would be faulted in as needed (or
+> prefaulted as an optimization) and the enclave would just work in any
+> process.
 
-I'm not still seeing why you would want to call sgx_free_page() from
-sgx_invalidate(). Kind of resistant to adding extra logging just for
-checking for programming errors. What I would do if I had to debug
-there a leak would be simply put kretprobe on __sgx_free_page().
+The way I see it the efficient way to implement this is to have the
+enclave attached to a single process address space at a time.
+
+#PF handler is trivial with multiple address spaces but swapping is
+a bit tedious as you would need to zap N processes.
 
 /Jarkko
