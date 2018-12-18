@@ -1,58 +1,63 @@
 From: Andy Lutomirski <luto@kernel.org>
 Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
-Date: Mon, 17 Dec 2018 20:59:54 -0800
-Message-ID: <CALCETrX1HXZvMk8UM6wV5StTj+vvqehAvybJYk66At60t91QGQ@mail.gmail.com>
+Date: Mon, 17 Dec 2018 21:02:03 -0800
+Message-ID: <CALCETrVTfGUSfm5hy9_F00LcMUHJqAjOmfJhtXP+uD5dnmt4EQ@mail.gmail.com>
 References: <20181116010412.23967-1-jarkko.sakkinen@linux.intel.com>
  <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com> <7d5cde02-4649-546b-0f03-2d6414bb80b5@intel.com>
  <20181217180102.GA12560@linux.intel.com> <20181217183613.GD12491@linux.intel.com>
  <20181217184333.GA26920@linux.intel.com> <ccfb67a0-fd8d-82c8-8018-fd68e901f287@intel.com>
- <CALCETrX0W4dhFJBHEbDbKed_QZxmw6ZNMajfsoVgqGqhMB0nDg@mail.gmail.com> <20181217222047.GG12491@linux.intel.com>
+ <CALCETrX0W4dhFJBHEbDbKed_QZxmw6ZNMajfsoVgqGqhMB0nDg@mail.gmail.com>
+ <20181217222047.GG12491@linux.intel.com> <20181218013918.GC333@linux.intel.com>
+ <20181218032702.GA2903@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217222047.GG12491@linux.intel.com>
+In-Reply-To: <20181218032702.GA2903@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, Haitao Huang <haitao.huang@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)
+To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, Haitao Huang <haitao.huang@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linu>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Dec 17, 2018 at 2:20 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Mon, Dec 17, 2018 at 7:27 PM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
 >
-
-> My brain is still sorting out the details, but I generally like the idea
-> of allocating an anon inode when creating an enclave, and exposing the
-> other ioctls() via the returned fd.  This is essentially the approach
-> used by KVM to manage multiple "layers" of ioctls across KVM itself, VMs
-> and vCPUS.  There are even similarities to accessing physical memory via
-> multiple disparate domains, e.g. host kernel, host userspace and guest.
+> On Tue, Dec 18, 2018 at 03:39:18AM +0200, Jarkko Sakkinen wrote:
+> > On Mon, Dec 17, 2018 at 02:20:48PM -0800, Sean Christopherson wrote:
+> > > The only potential hiccup I can see is the build flow.  Currently,
+> > > EADD+EEXTEND is done via a work queue to avoid major performance issues
+> > > (10x regression) when userspace is building multiple enclaves in parallel
+> > > using goroutines to wrap Cgo (the issue might apply to any M:N scheduler,
+> > > but I've only confirmed the Golang case).  The issue is that allocating
+> > > an EPC page acts like a blocking syscall when the EPC is under pressure,
+> > > i.e. an EPC page isn't immediately available.  This causes Go's scheduler
+> > > to thrash and tank performance[1].
+> >
+> > I don't see any major issues having that kthread. All the code that
+> > maps the enclave would be removed.
+> >
+> > I would only allow to map enclave to process address space after the
+> > enclave has been initialized i.e. SGX_IOC_ENCLAVE_ATTACH.
 >
-
-In my mind, opening /dev/sgx would give you the requisite inode.  I'm
-not 100% sure that the chardev infrastructure allows this, but I think
-it does.
-
-> The only potential hiccup I can see is the build flow.  Currently,
-> EADD+EEXTEND is done via a work queue to avoid major performance issues
-> (10x regression) when userspace is building multiple enclaves in parallel
-> using goroutines to wrap Cgo (the issue might apply to any M:N scheduler,
-> but I've only confirmed the Golang case).  The issue is that allocating
-> an EPC page acts like a blocking syscall when the EPC is under pressure,
-> i.e. an EPC page isn't immediately available.  This causes Go's scheduler
-> to thrash and tank performance[1].
-
-What's the issue, and how does a workqueue help?  I'm wondering if a
-nicer solution would be an ioctl to add lots of pages in a single
-call.
-
+> Some refined thoughts.
 >
-> Alternatively, we could change the EADD+EEXTEND flow to not insert the
-> added page's PFN into the owner's process space, i.e. force userspace to
-> fault when it runs the enclave.  But that only delays the issue because
-> eventually we'll want to account EPC pages, i.e. add a cgroup, at which
-> point we'll likely need current->mm anyways.
+> PTE insertion can done in the #PF handler. In fact, we can PoC this
+> already with the current architecture (and I will right after sending
+> v18).
+>
+> The backing space is a bit more nasty issue in the add pager thread.
+> The previous shmem swapping would have been a better fit. Maybe that
+> should be reconsidered?
+>
+> If shmem was used, all the commits up to "SGX Enclave Driver" could
+> be reworked to the new model.
+>
+> When we think about the swapping code, there uprises some difficulties.
+> Namely, when a page is swapped, the enclave must unmap the PTE from all
+> processes that have it mapped.
 
-You should be able to account the backing pages to a cgroup without
-actually sticking them into the EPC, no?  Or am I misunderstanding?  I
-guess we'll eventually want a cgroup to limit use of the limited EPC
-resources.
+That's what unmap_mapping_range(), etc do for you, no?  IOW make a
+struct address_space that represents the logical enclave address
+space, i.e. address 0 is the start and the pages count up from there.
+You can unmap pages whenever you want, and the core mm code will take
+care of zapping the pages from all vmas referencing that
+address_space.
