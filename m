@@ -1,7 +1,7 @@
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
-Date: Tue, 18 Dec 2018 10:53:49 -0800
-Message-ID: <20181218185349.GC30082@linux.intel.com>
+Date: Wed, 19 Dec 2018 06:47:32 +0200
+Message-ID: <20181219044732.GB14295@linux.intel.com>
 References: <20181116010412.23967-19-jarkko.sakkinen@linux.intel.com>
  <7d5cde02-4649-546b-0f03-2d6414bb80b5@intel.com>
  <20181217180102.GA12560@linux.intel.com>
@@ -18,91 +18,16 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
 In-Reply-To: <20181218154417.GC28326@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@intel.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, Haitao Huang <haitao.huang@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, Haitao Huang <haitao.huang@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vge>
 List-Id: platform-driver-x86.vger.kernel.org
 
 On Tue, Dec 18, 2018 at 07:44:18AM -0800, Sean Christopherson wrote:
-> On Mon, Dec 17, 2018 at 08:59:54PM -0800, Andy Lutomirski wrote:
-> > On Mon, Dec 17, 2018 at 2:20 PM Sean Christopherson
-> > <sean.j.christopherson@intel.com> wrote:
-> > >
-> > 
-> > > My brain is still sorting out the details, but I generally like the idea
-> > > of allocating an anon inode when creating an enclave, and exposing the
-> > > other ioctls() via the returned fd.  This is essentially the approach
-> > > used by KVM to manage multiple "layers" of ioctls across KVM itself, VMs
-> > > and vCPUS.  There are even similarities to accessing physical memory via
-> > > multiple disparate domains, e.g. host kernel, host userspace and guest.
-> > >
-> > 
-> > In my mind, opening /dev/sgx would give you the requisite inode.  I'm
-> > not 100% sure that the chardev infrastructure allows this, but I think
-> > it does.
-> 
 > My fd/inode knowledge is lacking, to say the least.  Whatever works, so
 > long as we have a way to uniquely identify enclaves.
 
-Actually, while we're dissecting the interface...
+I will simply trial and error :-) I think it should work since it does
+own an address space, but yeah, testing will tell. We can go also with
+anon inode if required.
 
-What if we re-organize the ioctls in such a way that we leave open the
-possibility of allocating raw EPC for KVM via /dev/sgx?  I'm not 100%
-positive this approach will work[1], but conceptually it fits well with
-KVM's memory model, e.g. KVM is aware of the GPA<->HVA association but
-generally speaking doesn't know what's physically backing each memory
-region.
-
-Tangentially related, I think we should support allocating multiple
-enclaves from a single /dev/sgx fd, i.e. a process shouldn't have to
-open /dev/sgx every time it wants to create a new enclave.
-
-Something like this:
-
-/dev/sgx
-  |
-  -> mmap() { return -EINVAL; }
-  |
-  -> unlocked_ioctl()
-     |
-     -> SGX_CREATE_ENCLAVE: { return alloc_enclave_fd(); }
-     |  |
-     |   -> mmap() { ... }
-     |  | 
-     |   -> get_unmapped_area() { 
-     |  |           if (enclave->size) {
-     |  |                   if (!addr)
-     |  |                           addr = enclave->base;
-     |  |                   if (addr + len + pgoff > enclave->base + enclave->size)
-     |  |                           return -EINVAL;
-     |  |           } else {
-     |  |                   if (!validate_size(len))
-     |  |                           return -EINVAL;
-     |  |                   addr = naturally_align(len);
-     |  |           }
-     |  |   }
-     |  |
-     |   -> unlocked_ioctl() {
-     |              SGX_ENCLAVE_ADD_PAGE: { ... }
-     |              SGX_ENCLAVE_INIT: { ... }
-     |              SGX_ENCLAVE_REMOVE_PAGES: { ... }
-     |              SGX_ENCLAVE_MODIFY_PAGES: { ... }
-     |      }
-     |
-     -> SGX_CREATE_VIRTUAL_EPC: {return alloc_epc_fd(); }
-        |
-         -> mmap() { ... }
-        |
-	 -> get_unmapped_area() {<page aligned/sized> }
-        |
-         -> unlocked_ioctl() {
-                    SGX_VIRTUAL_EPC_???:
-		    SGX_VIRTUAL_EPC_???:
-	    }
-
-
-[1] Delegating EPC management to /dev/sgx is viable for virtualizing SGX
-    without oversubscribing EPC to guests, but oversubscribing EPC in a
-    VMM requires handling EPC-related VM-Exits and using instructions
-    that will #UD if the CPU is not post-VMXON.  I *think* having KVM
-    forward VM-Exits to x86/sgx would work, but it's entirely possible
-    it'd be a complete cluster.
+/Jarkko
