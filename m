@@ -1,38 +1,30 @@
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v17 18/23] platform/x86: Intel SGX driver
-Date: Wed, 19 Dec 2018 07:24:27 +0200
-Message-ID: <20181219052427.GA15535@linux.intel.com>
-References: <7d5cde02-4649-546b-0f03-2d6414bb80b5@intel.com>
- <20181217180102.GA12560@linux.intel.com>
- <20181217183613.GD12491@linux.intel.com>
- <20181217184333.GA26920@linux.intel.com>
- <ccfb67a0-fd8d-82c8-8018-fd68e901f287@intel.com>
- <CALCETrX0W4dhFJBHEbDbKed_QZxmw6ZNMajfsoVgqGqhMB0nDg@mail.gmail.com>
- <20181217222047.GG12491@linux.intel.com>
- <CALCETrX1HXZvMk8UM6wV5StTj+vvqehAvybJYk66At60t91QGQ@mail.gmail.com>
- <20181218154417.GC28326@linux.intel.com>
- <20181219044732.GB14295@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 0/1] ACPI / scan: Create platform device for BSG2150 ACPI nodes
+Date: Thu, 20 Dec 2018 15:34:50 +0100
+Message-ID: <20181220143451.25962-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181219044732.GB14295@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-sgx@vger.kernel.org, nhorman@redhat.com, npmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>, shay.katz-zamir@intel.com, Haitao Huang <haitao.huang@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, "Svahn, Kai" <kai.svahn@intel.com>, mark.shanahan@intel.com, Suresh Siddha <suresh.b.siddha@intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vge>
+To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Dec 19, 2018 at 06:47:32AM +0200, Jarkko Sakkinen wrote:
-> On Tue, Dec 18, 2018 at 07:44:18AM -0800, Sean Christopherson wrote:
-> > My fd/inode knowledge is lacking, to say the least.  Whatever works, so
-> > long as we have a way to uniquely identify enclaves.
-> 
-> I will simply trial and error :-) I think it should work since it does
-> own an address space, but yeah, testing will tell. We can go also with
-> anon inode if required.
+Hi All,
 
-I think this can be concluded with the fact that it is nice to be able
-to multiplex the dev fd. That is the key reason for using anon inode.
-You KVM comment locks the decision here.
+This patch adds support for another ACPI HID which describes multiple
+i2c-clients in a single node. As such this applies on top of the recent
+patch from Andy making a similar change for INT3515 nodes:
 
-/Jarkko
+Commit a3dd034a1707 ("ACPI / scan: Create platform device for INT3515
+ACPI nodes"), which is in the platform-drivers-x86-v4.21-1 tag.
+
+As such I believe it would be best to merge this tree through the
+linux-platform-drivers-x86 tree, as was done for the INT3515 patch.
+
+Rafael, may we have your ack for merging the single line drivers/acpi
+change through the linux-platform-drivers-x86 tree?
+
+Regards,
+
+Hans
