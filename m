@@ -1,36 +1,52 @@
-From: Sinan Kaya <okaya@kernel.org>
-Subject: [PATCH v3 05/11] platform/x86: intel_pmc: Make PCI dependency explicit
-Date: Sun, 23 Dec 2018 23:25:14 +0000
-Message-ID: <20181223232521.11320-6-okaya@kernel.org>
-References: <20181223232521.11320-1-okaya@kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Aditya Pakki <pakki001@umn.edu>
+Subject: [PATCH] platform: x86: Add check for led_classdev_register
+Date: Mon, 24 Dec 2018 16:07:37 -0600
+Message-ID: <20181224220737.27539-1-pakki001@umn.edu>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181223232521.11320-1-okaya@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-next@vger.kernel.org
-Cc: linux-acpi@vger.kernel.org, Sinan Kaya <okaya@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: pakki001@umn.edu
+Cc: kjlu@umn.edu, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Code relies on PCI for execution. Specify this in the Kconfig.
+In function alienware_zone_init, the function led_classdev_register
+can return an error on failure. The fix checks the error and frees
+the allocated resources.
 
-Signed-off-by: Sinan Kaya <okaya@kernel.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 ---
- drivers/platform/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/alienware-wmi.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index b36ea14b41ad..7afb96cb1cd6 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1174,7 +1174,7 @@ config INTEL_SMARTCONNECT
+diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
+index f10af5c383c5..63ab6a2eb613 100644
+--- a/drivers/platform/x86/alienware-wmi.c
++++ b/drivers/platform/x86/alienware-wmi.c
+@@ -441,6 +441,7 @@ static int alienware_zone_init(struct platform_device *dev)
+ 	u8 zone;
+ 	char buffer[10];
+ 	char *name;
++	int ret;
  
- config INTEL_PMC_IPC
- 	tristate "Intel PMC IPC Driver"
--	depends on ACPI
-+	depends on ACPI && PCI
- 	---help---
- 	This driver provides support for PMC control on some Intel platforms.
- 	The PMC is an ARC processor which defines IPC commands for communication
+ 	if (interface == WMAX) {
+ 		lighting_control_state = WMAX_RUNNING;
+@@ -492,7 +493,17 @@ static int alienware_zone_init(struct platform_device *dev)
+ 	zone_attrs[quirks->num_zones] = &dev_attr_lighting_control_state.attr;
+ 	zone_attribute_group.attrs = zone_attrs;
+ 
+-	led_classdev_register(&dev->dev, &global_led);
++	ret = led_classdev_register(&dev->dev, &global_led);
++	if (ret < 0) {
++		if (zone_dev_attrs) {
++			for (zone = 0; zone < quirks->num_zones; zone++)
++				kfree(zone_dev_attrs[zone].attr.name);
++		}
++		kfree(zone_dev_attrs);
++		kfree(zone_data);
++		kfree(zone_attrs);
++		return ret;
++	}
+ 
+ 	return sysfs_create_group(&dev->dev.kobj, &zone_attribute_group);
+ }
 -- 
-2.19.0
+2.17.1
