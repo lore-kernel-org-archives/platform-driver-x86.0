@@ -1,52 +1,46 @@
-From: Aditya Pakki <pakki001@umn.edu>
-Subject: [PATCH] platform: x86: Add check for led_classdev_register
-Date: Mon, 24 Dec 2018 16:07:37 -0600
-Message-ID: <20181224220737.27539-1-pakki001@umn.edu>
+From: Sinan Kaya <Okaya@kernel.org>
+Subject: Re: [PATCH v1 06/11] platform/x86: apple-gmux: hide PCI specific code
+Date: Tue, 25 Dec 2018 16:33:43 +0300
+Message-ID: <CAK9iUCMUELeXMaqnXWxGKaEKX6OkfpWxvSxWiGjuNpvxneCk0g@mail.gmail.com>
+References: <20181222001452.7474-1-okaya@kernel.org> <20181222001452.7474-7-okaya@kernel.org>
+ <20181222080317.qicyihyauia6n63w@wunner.de> <CAHp75VfTmWN4bTNPaTL2KYYUWARvix67ynx2cKGzhO3o-0VY=g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VfTmWN4bTNPaTL2KYYUWARvix67ynx2cKGzhO3o-0VY=g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: pakki001@umn.edu
-Cc: kjlu@umn.edu, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Lukas Wunner <lukas@wunner.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-In function alienware_zone_init, the function led_classdev_register
-can return an error on failure. The fix checks the error and frees
-the allocated resources.
+On Mon, Dec 24, 2018 at 5:05 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+>
+>
+> On Saturday, December 22, 2018, Lukas Wunner <lukas@wunner.de> wrote:
+>>
+>> On Sat, Dec 22, 2018 at 12:14:47AM +0000, Sinan Kaya wrote:
+>> > Code is scanning PCI bus to find out if it is switchable or not. If
+>> > CONFIG_PCI is not set, assume unswitchable.
+>> >
+>>
+>> You can also drop the "platform/x86: " prefix from the subject if you
+>> like, all previous commits to this driver just use "apple-gmux: ".
+>>
+>> If you are okay with these changes, feel free to add my Reviewed-by
+>> when respinning.
+>>
+> I'm not okay with dropping prefix. You can but may not, please, remove the prefix.
+>
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/platform/x86/alienware-wmi.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+You mean 'keep the prefix' above, right?
 
-diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index f10af5c383c5..63ab6a2eb613 100644
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -441,6 +441,7 @@ static int alienware_zone_init(struct platform_device *dev)
- 	u8 zone;
- 	char buffer[10];
- 	char *name;
-+	int ret;
- 
- 	if (interface == WMAX) {
- 		lighting_control_state = WMAX_RUNNING;
-@@ -492,7 +493,17 @@ static int alienware_zone_init(struct platform_device *dev)
- 	zone_attrs[quirks->num_zones] = &dev_attr_lighting_control_state.attr;
- 	zone_attribute_group.attrs = zone_attrs;
- 
--	led_classdev_register(&dev->dev, &global_led);
-+	ret = led_classdev_register(&dev->dev, &global_led);
-+	if (ret < 0) {
-+		if (zone_dev_attrs) {
-+			for (zone = 0; zone < quirks->num_zones; zone++)
-+				kfree(zone_dev_attrs[zone].attr.name);
-+		}
-+		kfree(zone_dev_attrs);
-+		kfree(zone_data);
-+		kfree(zone_attrs);
-+		return ret;
-+	}
- 
- 	return sysfs_create_group(&dev->dev.kobj, &zone_attribute_group);
- }
--- 
-2.17.1
+What is the consensus?
+
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
