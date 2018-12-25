@@ -1,46 +1,37 @@
-From: Sinan Kaya <Okaya@kernel.org>
-Subject: Re: [PATCH v1 06/11] platform/x86: apple-gmux: hide PCI specific code
-Date: Tue, 25 Dec 2018 16:33:43 +0300
-Message-ID: <CAK9iUCMUELeXMaqnXWxGKaEKX6OkfpWxvSxWiGjuNpvxneCk0g@mail.gmail.com>
-References: <20181222001452.7474-1-okaya@kernel.org> <20181222001452.7474-7-okaya@kernel.org>
- <20181222080317.qicyihyauia6n63w@wunner.de> <CAHp75VfTmWN4bTNPaTL2KYYUWARvix67ynx2cKGzhO3o-0VY=g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Kangjie Lu <kjlu@umn.edu>
+Subject: [PATCH] wmi: avoid a double-fetch issue in wmi_ioctl
+Date: Tue, 25 Dec 2018 13:36:11 -0600
+Message-ID: <20181225193611.69216-1-kjlu@umn.edu>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfTmWN4bTNPaTL2KYYUWARvix67ynx2cKGzhO3o-0VY=g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Lukas Wunner <lukas@wunner.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: kjlu@umn.edu
+Cc: pakki001@umn.edu, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Dec 24, 2018 at 5:05 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
->
->
-> On Saturday, December 22, 2018, Lukas Wunner <lukas@wunner.de> wrote:
->>
->> On Sat, Dec 22, 2018 at 12:14:47AM +0000, Sinan Kaya wrote:
->> > Code is scanning PCI bus to find out if it is switchable or not. If
->> > CONFIG_PCI is not set, assume unswitchable.
->> >
->>
->> You can also drop the "platform/x86: " prefix from the subject if you
->> like, all previous commits to this driver just use "apple-gmux: ".
->>
->> If you are okay with these changes, feel free to add my Reviewed-by
->> when respinning.
->>
-> I'm not okay with dropping prefix. You can but may not, please, remove the prefix.
->
+buf->length is first copied in from user space and security-checked. The
+second copy issued by copy_from_user copies it again. The data in user
+space may have been modified by malicious users. filter_callback()
+further uses the potentially modified data. The fix avoids the
+double-fetch that overwrites buf->length.
 
-You mean 'keep the prefix' above, right?
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/platform/x86/wmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-What is the consensus?
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index bea35be68706..93cab9a70ad7 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -850,7 +850,8 @@ static long wmi_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 			buf->length, wblock->req_buf_size);
+ 
+ 	/* copy the structure from userspace */
+-	if (copy_from_user(buf, input, wblock->req_buf_size)) {
++	if (copy_from_user(buf->data, input->data,
++				wblock->req_buf_size - sizeof(buf->length))) {
+ 		dev_dbg(&wblock->dev.dev, "Copy %llu from user failed\n",
+ 			wblock->req_buf_size);
+ 		ret = -EFAULT;
+-- 
+2.17.2 (Apple Git-113)
