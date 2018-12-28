@@ -1,110 +1,99 @@
-From: Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH v8 06/25] x86/thinkpad_acpi: Use arch_nvram_ops methods
- instead of nvram_read_byte() and nvram_write_byte()
-Date: Wed, 26 Dec 2018 11:37:59 +1100
-Message-ID: <416df0c555a86aee4d0e7e08675abf71f2f5b775.1545784679.git.fthain@telegraphics.com.au>
-References: <cover.1545784679.git.fthain@telegraphics.com.au>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 27/46] x86/mm: Fix decoy address handling vs 32-bit builds
+Date: Fri, 28 Dec 2018 12:52:21 +0100
+Message-ID: <20181228113126.371890647@linuxfoundation.org>
+References: <20181228113124.971620049@linuxfoundation.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1545784679.git.fthain@telegraphics.com.au>
+In-Reply-To: <20181228113124.971620049@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Gert Robben <t2@gert.gr>, Dan Williams <dan.j.williams@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Make use of arch_nvram_ops in the thinkpad_acpi driver so that the
-nvram_* function exports can be removed.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Reviewed-by: Darren Hart <dvhart@linux.intel.com>
----
-I've tested this on a ThinkPad T43.
----
- drivers/platform/x86/thinkpad_acpi.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+------------------
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index fde08a997557..fbbf7b452e51 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -2435,30 +2435,30 @@ static void hotkey_read_nvram(struct tp_nvram_state *n, const u32 m)
- 	u8 d;
+From: Dan Williams <dan.j.williams@intel.com>
+
+commit 51c3fbd89d7554caa3290837604309f8d8669d99 upstream.
+
+A decoy address is used by set_mce_nospec() to update the cache attributes
+for a page that may contain poison (multi-bit ECC error) while attempting
+to minimize the possibility of triggering a speculative access to that
+page.
+
+When reserve_memtype() is handling a decoy address it needs to convert it
+to its real physical alias. The conversion, AND'ing with __PHYSICAL_MASK,
+is broken for a 32-bit physical mask and reserve_memtype() is passed the
+last physical page. Gert reports triggering the:
+
+    BUG_ON(start >= end);
+
+...assertion when running a 32-bit non-PAE build on a platform that has
+a driver resource at the top of physical memory:
+
+    BIOS-e820: [mem 0x00000000fff00000-0x00000000ffffffff] reserved
+
+Given that the decoy address scheme is only targeted at 64-bit builds and
+assumes that the top of physical address space is free for use as a decoy
+address range, simply bypass address sanitization in the 32-bit case.
+
+Lastly, there was no need to crash the system when this failure occurred,
+and no need to crash future systems if the assumptions of decoy addresses
+are ever violated. Change the BUG_ON() to a WARN() with an error return.
+
+Fixes: 510ee090abc3 ("x86/mm/pat: Prepare {reserve, free}_memtype() for...")
+Reported-by: Gert Robben <t2@gert.gr>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Gert Robben <t2@gert.gr>
+Cc: stable@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/154454337985.789277.12133288391664677775.stgit@dwillia2-desk3.amr.corp.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/mm/pat.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+--- a/arch/x86/mm/pat.c
++++ b/arch/x86/mm/pat.c
+@@ -519,8 +519,13 @@ static u64 sanitize_phys(u64 address)
+ 	 * for a "decoy" virtual address (bit 63 clear) passed to
+ 	 * set_memory_X(). __pa() on a "decoy" address results in a
+ 	 * physical address with bit 63 set.
++	 *
++	 * Decoy addresses are not present for 32-bit builds, see
++	 * set_mce_nospec().
+ 	 */
+-	return address & __PHYSICAL_MASK;
++	if (IS_ENABLED(CONFIG_X86_64))
++		return address & __PHYSICAL_MASK;
++	return address;
+ }
  
- 	if (m & TP_NVRAM_HKEY_GROUP_HK2) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_HK2);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_HK2);
- 		n->thinkpad_toggle = !!(d & TP_NVRAM_MASK_HKT_THINKPAD);
- 		n->zoom_toggle = !!(d & TP_NVRAM_MASK_HKT_ZOOM);
- 		n->display_toggle = !!(d & TP_NVRAM_MASK_HKT_DISPLAY);
- 		n->hibernate_toggle = !!(d & TP_NVRAM_MASK_HKT_HIBERNATE);
- 	}
- 	if (m & TP_ACPI_HKEY_KBD_LIGHT_MASK) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_THINKLIGHT);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_THINKLIGHT);
- 		n->thinklight_toggle = !!(d & TP_NVRAM_MASK_THINKLIGHT);
- 	}
- 	if (m & TP_ACPI_HKEY_DISPXPAND_MASK) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_VIDEO);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_VIDEO);
- 		n->displayexp_toggle =
- 				!!(d & TP_NVRAM_MASK_HKT_DISPEXPND);
- 	}
- 	if (m & TP_NVRAM_HKEY_GROUP_BRIGHTNESS) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
- 		n->brightness_level = (d & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
- 				>> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
- 		n->brightness_toggle =
- 				!!(d & TP_NVRAM_MASK_HKT_BRIGHTNESS);
- 	}
- 	if (m & TP_NVRAM_HKEY_GROUP_VOLUME) {
--		d = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
-+		d = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_MIXER);
- 		n->volume_level = (d & TP_NVRAM_MASK_LEVEL_VOLUME)
- 				>> TP_NVRAM_POS_LEVEL_VOLUME;
- 		n->mute = !!(d & TP_NVRAM_MASK_MUTE);
-@@ -6605,7 +6605,7 @@ static unsigned int tpacpi_brightness_nvram_get(void)
- {
- 	u8 lnvram;
+ /*
+@@ -546,7 +551,11 @@ int reserve_memtype(u64 start, u64 end,
  
--	lnvram = (nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
-+	lnvram = (arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS)
- 		  & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
- 		  >> TP_NVRAM_POS_LEVEL_BRIGHTNESS;
- 	lnvram &= bright_maxlvl;
-@@ -6630,7 +6630,7 @@ static void tpacpi_brightness_checkpoint_nvram(void)
- 	if (unlikely(!acpi_ec_read(TP_EC_BACKLIGHT, &lec)))
- 		goto unlock;
- 	lec &= TP_EC_BACKLIGHT_LVLMSK;
--	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
-+	b_nvram = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
+ 	start = sanitize_phys(start);
+ 	end = sanitize_phys(end);
+-	BUG_ON(start >= end); /* end is exclusive */
++	if (start >= end) {
++		WARN(1, "%s failed: [mem %#010Lx-%#010Lx], req %s\n", __func__,
++				start, end - 1, cattr_name(req_type));
++		return -EINVAL;
++	}
  
- 	if (lec != ((b_nvram & TP_NVRAM_MASK_LEVEL_BRIGHTNESS)
- 			     >> TP_NVRAM_POS_LEVEL_BRIGHTNESS)) {
-@@ -6638,7 +6638,7 @@ static void tpacpi_brightness_checkpoint_nvram(void)
- 		b_nvram &= ~(TP_NVRAM_MASK_LEVEL_BRIGHTNESS <<
- 				TP_NVRAM_POS_LEVEL_BRIGHTNESS);
- 		b_nvram |= lec;
--		nvram_write_byte(b_nvram, TP_NVRAM_ADDR_BRIGHTNESS);
-+		arch_nvram_ops.write_byte(b_nvram, TP_NVRAM_ADDR_BRIGHTNESS);
- 		dbg_printk(TPACPI_DBG_BRGHT,
- 			   "updated NVRAM backlight level to %u (0x%02x)\n",
- 			   (unsigned int) lec, (unsigned int) b_nvram);
-@@ -7236,13 +7236,13 @@ static void tpacpi_volume_checkpoint_nvram(void)
- 	if (unlikely(!acpi_ec_read(TP_EC_AUDIO, &lec)))
- 		goto unlock;
- 	lec &= ec_mask;
--	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
-+	b_nvram = arch_nvram_ops.read_byte(TP_NVRAM_ADDR_MIXER);
- 
- 	if (lec != (b_nvram & ec_mask)) {
- 		/* NVRAM needs update */
- 		b_nvram &= ~ec_mask;
- 		b_nvram |= lec;
--		nvram_write_byte(b_nvram, TP_NVRAM_ADDR_MIXER);
-+		arch_nvram_ops.write_byte(b_nvram, TP_NVRAM_ADDR_MIXER);
- 		dbg_printk(TPACPI_DBG_MIXER,
- 			   "updated NVRAM mixer status to 0x%02x (0x%02x)\n",
- 			   (unsigned int) lec, (unsigned int) b_nvram);
--- 
-2.19.2
+ 	if (!pat_enabled()) {
+ 		/* This is identical to page table setting without PAT */
