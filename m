@@ -1,41 +1,55 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: Please help!: Keyboard backlight not working on my NP900X5N
- laptop <previous not accepted due to HTML encoding>
-Date: Wed, 2 Jan 2019 18:08:43 -0800
-Message-ID: <20190103020843.GB21617@wrath>
-References: <c3ea9b3f-5ffe-df8f-726c-0bf6f3a82701@nisi.nl>
- <0e16bba8-046c-c559-9ee1-88c0341a51d5@nisi.nl>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 06/11] platform/x86: apple-gmux: Make PCI dependency explicit
+Date: Fri, 4 Jan 2019 16:12:20 +0200
+Message-ID: <CAHp75Ve0Ex245yt1efqSUS7tUuh6RnUdTowLebvJr-CtKkQSZA@mail.gmail.com>
+References: <20190102181038.4418-1-okaya@kernel.org> <20190102181038.4418-7-okaya@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0e16bba8-046c-c559-9ee1-88c0341a51d5@nisi.nl>
+In-Reply-To: <20190102181038.4418-7-okaya@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Vlietland <j.vlietland@nisi.nl>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy@infradead.org>, open list <linux-kernel@vger.kernel.org>, "open list:SAMSUNG LAPTOP DRIVER" <platform-driver-x86@vger.kernel.org>
+To: Sinan Kaya <okaya@kernel.org>
+Cc: linux-next <linux-next@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jan 03, 2019 at 12:20:15AM +0100, Jan Vlietland wrote:
-> Hi guys,
-> 
-> Sorry but still walking with this bug under my arm.
-> 
-> I can't find the right group to file the bug on bugzilla and also on
-> freenode I cannot find the right group.
-> 
-> Please help!
+On Wed, Jan 2, 2019 at 8:10 PM Sinan Kaya <okaya@kernel.org> wrote:
+>
+> After 'commit 5d32a66541c4 ("PCI/ACPI: Allow ACPI to be built without
+> CONFIG_PCI set")' dependencies on CONFIG_PCI that previously were
+> satisfied implicitly through dependencies on CONFIG_ACPI have to be
+> specified directly. This driver depends on the PCI infrastructure but
+> the dependency has not been explicitly called out.
+>
+> Fixes: 5d32a66541c46 ("PCI/ACPI: Allow ACPI to be built without CONFIG_PCI set")
+> Signed-off-by: Sinan Kaya <okaya@kernel.org>
+> ---
+>  drivers/platform/x86/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 7afb96cb1cd6..89f4b86244a7 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1136,6 +1136,7 @@ config SAMSUNG_Q10
+>  config APPLE_GMUX
+>         tristate "Apple Gmux Driver"
 
-Hi Jan,
+>         depends on ACPI
+> +       depends on PCI
 
-I responded to your original email from Dec 31. You will need to allow
-more time for people to respond as many of us are doing this work on our
-own time - and this was New Year's Eve/Day. General rule of thumb is to
-give people a week before following up. We make an effort to respond
-within 48 business hours, but I find that pretty difficult to keep up
-with myself.
+Can you stick with the same pattern you have used for the rest in this series?
+I.e.
+         depends on ACPI && PCI
 
-Let's continue the discussion in the original thread.
+
+>         depends on PNP
+>         depends on BACKLIGHT_CLASS_DEVICE
+>         depends on BACKLIGHT_APPLE=n || BACKLIGHT_APPLE
+> --
+> 2.19.0
+>
+
 
 -- 
-Darren Hart
-VMware Open Source Technology Center
+With Best Regards,
+Andy Shevchenko
