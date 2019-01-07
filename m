@@ -1,65 +1,82 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: intel-hid: Missing power button release on
- some Dell models
-Date: Mon, 7 Jan 2019 15:36:48 +0000
-Message-ID: <057ab73bef634b4f8c474924eb6db572@ausx13mpc120.AMER.DELL.COM>
-References: <20190106175644.24872-1-jerome.debretagne@gmail.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH v2 17/17] power: supply: olpc_battery: Add OLPC XO 1.75
+ support
+Date: Mon, 07 Jan 2019 19:02:37 +0100
+Message-ID: <d541d82647338c07fa59b0f2ef63880610733505.camel@v3.sk>
+References: <20181116162403.49854-1-lkundrak@v3.sk>
+         <20181116162403.49854-18-lkundrak@v3.sk> <20181202233458.GE23087@wrath>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190106175644.24872-1-jerome.debretagne@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181202233458.GE23087@wrath>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jerome.debretagne@gmail.com, alex.hung@canonical.com
-Cc: platform-driver-x86@vger.kernel.org, andy@infradead.org, dvhart@infradead.org, rjw@rjwysocki.net, cwhuang@android-x86.org, tristian.celestin@outlook.com, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Cameron <quozl@laptop.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, linux-pm@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogcGxhdGZvcm0tZHJpdmVy
-LXg4Ni1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPHBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93bmVy
-QHZnZXIua2VybmVsLm9yZz4gT24gQmVoYWxmIE9mIErDqXLDtG1lIGRlIEJyZXRhZ25lDQo+IFNl
-bnQ6IFN1bmRheSwgSmFudWFyeSA2LCAyMDE5IDExOjU3IEFNDQo+IFRvOiBBbGV4IEh1bmcNCj4g
-Q2M6IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBBbmR5IFNoZXZjaGVua287
-IERhcnJlbiBIYXJ0Ow0KPiBMaW1vbmNpZWxsbywgTWFyaW87IFJhZmFlbCBKLiBXeXNvY2tpOyBD
-aGloLVdlaSBIdWFuZzsgVHJpc3RpYW4gQ2VsZXN0aW47IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5r
-ZXJuZWwub3JnDQo+IFN1YmplY3Q6IFtQQVRDSF0gcGxhdGZvcm0veDg2OiBpbnRlbC1oaWQ6IE1p
-c3NpbmcgcG93ZXIgYnV0dG9uIHJlbGVhc2Ugb24gc29tZQ0KPiBEZWxsIG1vZGVscw0KPiANCj4g
-DQo+IFtFWFRFUk5BTCBFTUFJTF0NCj4gDQo+IFBvd2VyIGJ1dHRvbiBzdXNwZW5kIGZvciBzb21l
-IERlbGwgbW9kZWxzIHdhcyBhZGRlZCBpbjoNCj4gDQo+IGNvbW1pdCA4MjFiODUzNjYyODQgKGlu
-dGVsLWhpZDogUG93ZXIgYnV0dG9uIHN1c3BlbmQgb24gRGVsbCBMYXRpdHVkZSA3Mjc1KQ0KPiAN
-Cj4gYnkgY2hlY2tpbmcgYWdhaW5zdCB0aGUgcG93ZXIgYnV0dG9uIHByZXNzIG5vdGlmaWNhdGlv
-biAoMHhDRSkgdG8gcmVwb3J0DQo+IHRoZSBwb3dlciBidXR0b24gcHJlc3MgZXZlbnQuIFRoZSBj
-b3JyZXNwb25kaW5nIHBvd2VyIGJ1dHRvbiByZWxlYXNlDQo+IG5vdGlmaWNhdGlvbiAoMHhDRikg
-d2FzIGNhdWdodCBhbmQgaWdub3JlZCB0byBzdG9wIGl0IGZyb20gYmVpbmcgcmVwb3J0ZWQNCj4g
-YXMgYW4gInVua25vd24gZXZlbnQiIGluIHRoZSBsb2dzLg0KPiANCj4gVGhlIG1pc3NpbmcgYnV0
-dG9uIHJlbGVhc2UgZXZlbnQgaXMgY3JlYXRpbmcgaXNzdWVzIG9uIEFuZHJvaWQteDg2LCBhcw0K
-PiByZXBvcnRlZCBvbiB0aGUgcHJvamVjdCBtYWlsaW5nIGxpc3QgZm9yIGEgRGVsbCBMYXRpdHVk
-ZSA1MTc1IG1vZGVsLCBzaW5jZQ0KPiB0aGUgZXZlbnRzIGFyZSBleHBlY3RlZCBpbiBkb3duL3Vw
-IHBhaXJzLg0KPiANCj4gUmVwb3J0IHRoZSBwb3dlciBidXR0b24gcmVsZWFzZSBldmVudCB0byBm
-aXggdGhpcyBpc3N1ZS4NCj4gDQo+IExpbms6IGh0dHBzOi8vZ3JvdXBzLmdvb2dsZS5jb20vZm9y
-dW0vIyF0b3BpYy9hbmRyb2lkLXg4Ni9hU3daSzlOZjlSbw0KPiBUZXN0ZWQtYnk6IFRyaXN0aWFu
-IENlbGVzdGluIDx0cmlzdGlhbi5jZWxlc3RpbkBvdXRsb29rLmNvbT4NCj4gVGVzdGVkLWJ5OiBK
-w6lyw7RtZSBkZSBCcmV0YWduZSA8amVyb21lLmRlYnJldGFnbmVAZ21haWwuY29tPg0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBKw6lyw7RtZSBkZSBCcmV0YWduZSA8amVyb21lLmRlYnJldGFnbmVAZ21haWwu
-Y29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLWhpZC5jIHwgNyArKysr
-Ky0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0K
-PiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLWhpZC5jIGIvZHJp
-dmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtaGlkLmMNCj4gaW5kZXggZTI4YmNmNjFiMTI2Li5iYzBk
-NTVhNTkwMTUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLWhpZC5j
-DQo+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLWhpZC5jDQo+IEBAIC0zNjMsNyAr
-MzYzLDcgQEAgc3RhdGljIHZvaWQgbm90aWZ5X2hhbmRsZXIoYWNwaV9oYW5kbGUgaGFuZGxlLCB1
-MzIgZXZlbnQsDQo+IHZvaWQgKmNvbnRleHQpDQo+ICAJICogdGhlIDUtYnV0dG9uIGFycmF5LCBi
-dXQgc3RpbGwgc2VuZCBub3RpZmllcyB3aXRoIHBvd2VyIGJ1dHRvbg0KPiAgCSAqIGV2ZW50IGNv
-ZGUgdG8gdGhpcyBkZXZpY2Ugb2JqZWN0IG9uIHBvd2VyIGJ1dHRvbiBhY3Rpb25zLg0KPiAgCSAq
-DQo+IC0JICogUmVwb3J0IHRoZSBwb3dlciBidXR0b24gcHJlc3M7IGNhdGNoIGFuZCBpZ25vcmUg
-dGhlIGJ1dHRvbiByZWxlYXNlLg0KPiArCSAqIFJlcG9ydCB0aGUgcG93ZXIgYnV0dG9uIHByZXNz
-IGFuZCByZWxlYXNlLg0KPiAgCSAqLw0KPiAgCWlmICghcHJpdi0+YXJyYXkpIHsNCj4gIAkJaWYg
-KGV2ZW50ID09IDB4Y2UpIHsNCj4gQEAgLTM3Miw4ICszNzIsMTEgQEAgc3RhdGljIHZvaWQgbm90
-aWZ5X2hhbmRsZXIoYWNwaV9oYW5kbGUgaGFuZGxlLCB1MzIgZXZlbnQsDQo+IHZvaWQgKmNvbnRl
-eHQpDQo+ICAJCQlyZXR1cm47DQo+ICAJCX0NCj4gDQo+IC0JCWlmIChldmVudCA9PSAweGNmKQ0K
-PiArCQlpZiAoZXZlbnQgPT0gMHhjZikgew0KPiArCQkJaW5wdXRfcmVwb3J0X2tleShwcml2LT5p
-bnB1dF9kZXYsIEtFWV9QT1dFUiwgMCk7DQo+ICsJCQlpbnB1dF9zeW5jKHByaXYtPmlucHV0X2Rl
-dik7DQo+ICAJCQlyZXR1cm47DQo+ICsJCX0NCj4gIAl9DQo+IA0KPiAgCS8qIDB4QzAgaXMgZm9y
-IEhJRCBldmVudHMsIG90aGVyIHZhbHVlcyBhcmUgZm9yIDUgYnV0dG9uIGFycmF5ICovDQo+IC0t
-DQo+IDIuMTEuMA0KDQpSZXZpZXdlZC1ieTogTWFyaW8gTGltb25jaWVsbG8gPG1hcmlvLmxpbW9u
-Y2llbGxvQGRlbGwuY29tPg0K
+On Sun, 2018-12-02 at 15:34 -0800, Darren Hart wrote:
+> On Fri, Nov 16, 2018 at 05:24:03PM +0100, Lubomir Rintel wrote:
+> > The battery and the protocol are essentially the same as OLPC XO 1.5,
+> > but the responses from the EC are LSB first.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > 
+> > ---
+> > Changes since v1:
+> > - s/s16 ecword_to_cpu/u16 ecword_to_cpu/
+> > - s/u16 ec_byte/u16 ec_word/
+> > 
+> >  drivers/power/supply/olpc_battery.c | 23 ++++++++++++++++++-----
+> >  1 file changed, 18 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/olpc_battery.c
+> 
+> ...
+> 
+> > @@ -626,6 +635,10 @@ static int olpc_battery_probe(struct platform_device *pdev)
+> >  	if (ecver > 0x44) {
+> >  		/* XO 1 or 1.5 with a new EC firmware. */
+> >  		data->new_proto = 1;
+> > +	} else if (of_find_compatible_node(NULL, NULL, "olpc,xo1.75-ec")) {
+> 
+> This if/else blocks concerns me a bit, but I might just be missing some
+> context.
+> 
+> This tests both ecver as well as the OF compatible string, is this reliable? Do
+> we know that for all xo1.75-ec compatible nodes the ecver will be <= 0x44? Or,
+> is ecver undefined? If the latter, then perhaps this test should be performed
+> first?
+> 
+> if (of_find_compatible_node....x01.75-ec...)
+> 	...
+> else if (ecver > 0x44)
+> 	...
+> else
+> 	...
+> 
+> And what happens when ecver == 0x44? We test for > and < but not ==, <=,
+> or >= in this block
+
+You're right, the conditionals are not correct. On XO 1.75 the
+versioning is different (now at level 0x05) and uninteresting,
+therefore the XO 1.75 check needs to go first.
+
+On XO 1 and XO 1.75, we don't support < 0x44. 0x44 is okay, though uses
+stays with an old protocol, and > 0x44 uses a new protocol.
+
+Will follow up with a new version of the patch soon.
+
+> 
+> > +		/* XO 1.75 */
+> > +		data->new_proto = 1;
+> > +		data->little_endian = 1;
+> >  	} else if (ecver < 0x44) {
+> >  		/*
+> >  		 * We've seen a number of EC protocol changes; this driver
+> > -- 
+> > 2.19.1
+
+Thanks
+Lubo
