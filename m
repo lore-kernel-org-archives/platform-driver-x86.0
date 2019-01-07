@@ -1,65 +1,65 @@
-From: =?UTF-8?q?J=C3=A9r=C3=B4me=20de=20Bretagne?=
-        <jerome.debretagne@gmail.com>
-Subject: [PATCH] platform/x86: intel-hid: Missing power button release on some Dell models
-Date: Sun,  6 Jan 2019 18:56:44 +0100
-Message-ID: <20190106175644.24872-1-jerome.debretagne@gmail.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86: intel-hid: Missing power button release on
+ some Dell models
+Date: Mon, 7 Jan 2019 15:36:48 +0000
+Message-ID: <057ab73bef634b4f8c474924eb6db572@ausx13mpc120.AMER.DELL.COM>
+References: <20190106175644.24872-1-jerome.debretagne@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190106175644.24872-1-jerome.debretagne@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Hung <alex.hung@canonical.com>
-Cc: platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Mario Limonciello <mario.limonciello@dell.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Chih-Wei Huang <cwhuang@android-x86.org>, Tristian Celestin <tristian.celestin@outlook.com>, linux-kernel@vger.kernel.org
+To: jerome.debretagne@gmail.com, alex.hung@canonical.com
+Cc: platform-driver-x86@vger.kernel.org, andy@infradead.org, dvhart@infradead.org, rjw@rjwysocki.net, cwhuang@android-x86.org, tristian.celestin@outlook.com, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Power button suspend for some Dell models was added in:
-
-commit 821b85366284 (intel-hid: Power button suspend on Dell Latitude 7275)
-
-by checking against the power button press notification (0xCE) to report
-the power button press event. The corresponding power button release
-notification (0xCF) was caught and ignored to stop it from being reported
-as an "unknown event" in the logs.
-
-The missing button release event is creating issues on Android-x86, as
-reported on the project mailing list for a Dell Latitude 5175 model, since
-the events are expected in down/up pairs.
-
-Report the power button release event to fix this issue.
-
-Link: https://groups.google.com/forum/#!topic/android-x86/aSwZK9Nf9Ro
-Tested-by: Tristian Celestin <tristian.celestin@outlook.com>
-Tested-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
-Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
----
- drivers/platform/x86/intel-hid.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index e28bcf61b126..bc0d55a59015 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -363,7 +363,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	 * the 5-button array, but still send notifies with power button
- 	 * event code to this device object on power button actions.
- 	 *
--	 * Report the power button press; catch and ignore the button release.
-+	 * Report the power button press and release.
- 	 */
- 	if (!priv->array) {
- 		if (event == 0xce) {
-@@ -372,8 +372,11 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 			return;
- 		}
- 
--		if (event == 0xcf)
-+		if (event == 0xcf) {
-+			input_report_key(priv->input_dev, KEY_POWER, 0);
-+			input_sync(priv->input_dev);
- 			return;
-+		}
- 	}
- 
- 	/* 0xC0 is for HID events, other values are for 5 button array */
--- 
-2.11.0
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogcGxhdGZvcm0tZHJpdmVy
+LXg4Ni1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPHBsYXRmb3JtLWRyaXZlci14ODYtDQo+IG93bmVy
+QHZnZXIua2VybmVsLm9yZz4gT24gQmVoYWxmIE9mIErDqXLDtG1lIGRlIEJyZXRhZ25lDQo+IFNl
+bnQ6IFN1bmRheSwgSmFudWFyeSA2LCAyMDE5IDExOjU3IEFNDQo+IFRvOiBBbGV4IEh1bmcNCj4g
+Q2M6IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBBbmR5IFNoZXZjaGVua287
+IERhcnJlbiBIYXJ0Ow0KPiBMaW1vbmNpZWxsbywgTWFyaW87IFJhZmFlbCBKLiBXeXNvY2tpOyBD
+aGloLVdlaSBIdWFuZzsgVHJpc3RpYW4gQ2VsZXN0aW47IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5r
+ZXJuZWwub3JnDQo+IFN1YmplY3Q6IFtQQVRDSF0gcGxhdGZvcm0veDg2OiBpbnRlbC1oaWQ6IE1p
+c3NpbmcgcG93ZXIgYnV0dG9uIHJlbGVhc2Ugb24gc29tZQ0KPiBEZWxsIG1vZGVscw0KPiANCj4g
+DQo+IFtFWFRFUk5BTCBFTUFJTF0NCj4gDQo+IFBvd2VyIGJ1dHRvbiBzdXNwZW5kIGZvciBzb21l
+IERlbGwgbW9kZWxzIHdhcyBhZGRlZCBpbjoNCj4gDQo+IGNvbW1pdCA4MjFiODUzNjYyODQgKGlu
+dGVsLWhpZDogUG93ZXIgYnV0dG9uIHN1c3BlbmQgb24gRGVsbCBMYXRpdHVkZSA3Mjc1KQ0KPiAN
+Cj4gYnkgY2hlY2tpbmcgYWdhaW5zdCB0aGUgcG93ZXIgYnV0dG9uIHByZXNzIG5vdGlmaWNhdGlv
+biAoMHhDRSkgdG8gcmVwb3J0DQo+IHRoZSBwb3dlciBidXR0b24gcHJlc3MgZXZlbnQuIFRoZSBj
+b3JyZXNwb25kaW5nIHBvd2VyIGJ1dHRvbiByZWxlYXNlDQo+IG5vdGlmaWNhdGlvbiAoMHhDRikg
+d2FzIGNhdWdodCBhbmQgaWdub3JlZCB0byBzdG9wIGl0IGZyb20gYmVpbmcgcmVwb3J0ZWQNCj4g
+YXMgYW4gInVua25vd24gZXZlbnQiIGluIHRoZSBsb2dzLg0KPiANCj4gVGhlIG1pc3NpbmcgYnV0
+dG9uIHJlbGVhc2UgZXZlbnQgaXMgY3JlYXRpbmcgaXNzdWVzIG9uIEFuZHJvaWQteDg2LCBhcw0K
+PiByZXBvcnRlZCBvbiB0aGUgcHJvamVjdCBtYWlsaW5nIGxpc3QgZm9yIGEgRGVsbCBMYXRpdHVk
+ZSA1MTc1IG1vZGVsLCBzaW5jZQ0KPiB0aGUgZXZlbnRzIGFyZSBleHBlY3RlZCBpbiBkb3duL3Vw
+IHBhaXJzLg0KPiANCj4gUmVwb3J0IHRoZSBwb3dlciBidXR0b24gcmVsZWFzZSBldmVudCB0byBm
+aXggdGhpcyBpc3N1ZS4NCj4gDQo+IExpbms6IGh0dHBzOi8vZ3JvdXBzLmdvb2dsZS5jb20vZm9y
+dW0vIyF0b3BpYy9hbmRyb2lkLXg4Ni9hU3daSzlOZjlSbw0KPiBUZXN0ZWQtYnk6IFRyaXN0aWFu
+IENlbGVzdGluIDx0cmlzdGlhbi5jZWxlc3RpbkBvdXRsb29rLmNvbT4NCj4gVGVzdGVkLWJ5OiBK
+w6lyw7RtZSBkZSBCcmV0YWduZSA8amVyb21lLmRlYnJldGFnbmVAZ21haWwuY29tPg0KPiBTaWdu
+ZWQtb2ZmLWJ5OiBKw6lyw7RtZSBkZSBCcmV0YWduZSA8amVyb21lLmRlYnJldGFnbmVAZ21haWwu
+Y29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLWhpZC5jIHwgNyArKysr
+Ky0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0K
+PiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLWhpZC5jIGIvZHJp
+dmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtaGlkLmMNCj4gaW5kZXggZTI4YmNmNjFiMTI2Li5iYzBk
+NTVhNTkwMTUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLWhpZC5j
+DQo+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLWhpZC5jDQo+IEBAIC0zNjMsNyAr
+MzYzLDcgQEAgc3RhdGljIHZvaWQgbm90aWZ5X2hhbmRsZXIoYWNwaV9oYW5kbGUgaGFuZGxlLCB1
+MzIgZXZlbnQsDQo+IHZvaWQgKmNvbnRleHQpDQo+ICAJICogdGhlIDUtYnV0dG9uIGFycmF5LCBi
+dXQgc3RpbGwgc2VuZCBub3RpZmllcyB3aXRoIHBvd2VyIGJ1dHRvbg0KPiAgCSAqIGV2ZW50IGNv
+ZGUgdG8gdGhpcyBkZXZpY2Ugb2JqZWN0IG9uIHBvd2VyIGJ1dHRvbiBhY3Rpb25zLg0KPiAgCSAq
+DQo+IC0JICogUmVwb3J0IHRoZSBwb3dlciBidXR0b24gcHJlc3M7IGNhdGNoIGFuZCBpZ25vcmUg
+dGhlIGJ1dHRvbiByZWxlYXNlLg0KPiArCSAqIFJlcG9ydCB0aGUgcG93ZXIgYnV0dG9uIHByZXNz
+IGFuZCByZWxlYXNlLg0KPiAgCSAqLw0KPiAgCWlmICghcHJpdi0+YXJyYXkpIHsNCj4gIAkJaWYg
+KGV2ZW50ID09IDB4Y2UpIHsNCj4gQEAgLTM3Miw4ICszNzIsMTEgQEAgc3RhdGljIHZvaWQgbm90
+aWZ5X2hhbmRsZXIoYWNwaV9oYW5kbGUgaGFuZGxlLCB1MzIgZXZlbnQsDQo+IHZvaWQgKmNvbnRl
+eHQpDQo+ICAJCQlyZXR1cm47DQo+ICAJCX0NCj4gDQo+IC0JCWlmIChldmVudCA9PSAweGNmKQ0K
+PiArCQlpZiAoZXZlbnQgPT0gMHhjZikgew0KPiArCQkJaW5wdXRfcmVwb3J0X2tleShwcml2LT5p
+bnB1dF9kZXYsIEtFWV9QT1dFUiwgMCk7DQo+ICsJCQlpbnB1dF9zeW5jKHByaXYtPmlucHV0X2Rl
+dik7DQo+ICAJCQlyZXR1cm47DQo+ICsJCX0NCj4gIAl9DQo+IA0KPiAgCS8qIDB4QzAgaXMgZm9y
+IEhJRCBldmVudHMsIG90aGVyIHZhbHVlcyBhcmUgZm9yIDUgYnV0dG9uIGFycmF5ICovDQo+IC0t
+DQo+IDIuMTEuMA0KDQpSZXZpZXdlZC1ieTogTWFyaW8gTGltb25jaWVsbG8gPG1hcmlvLmxpbW9u
+Y2llbGxvQGRlbGwuY29tPg0K
