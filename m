@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 01/36] platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey
-Date: Tue,  8 Jan 2019 14:33:13 -0500
-Message-ID: <20190108193348.123880-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 01/28] platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey
+Date: Tue,  8 Jan 2019 14:34:18 -0500
+Message-ID: <20190108193445.124251-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -123,10 +123,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index ed277685da1d..10bd13b30178 100644
+index f96f7b865267..7c1defaef3f5 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -2154,7 +2154,8 @@ static int asus_wmi_add(struct platform_device *pdev)
+@@ -2084,7 +2084,8 @@ static int asus_wmi_add(struct platform_device *pdev)
  		err = asus_wmi_backlight_init(asus);
  		if (err && err != -ENODEV)
  			goto fail_backlight;
