@@ -1,12 +1,14 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 01/28] platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey
-Date: Tue,  8 Jan 2019 14:34:18 -0500
-Message-ID: <20190108193445.124251-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 02/53] platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey
+Date: Tue,  8 Jan 2019 14:31:30 -0500
+Message-ID: <20190108193222.123316-2-sashal@kernel.org>
+References: <20190108193222.123316-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190108193222.123316-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@gmail.com>, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
@@ -123,10 +125,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index f96f7b865267..7c1defaef3f5 100644
+index 7440f650e81a..3f662cd774d7 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -2084,7 +2084,8 @@ static int asus_wmi_add(struct platform_device *pdev)
+@@ -2147,7 +2147,8 @@ static int asus_wmi_add(struct platform_device *pdev)
  		err = asus_wmi_backlight_init(asus);
  		if (err && err != -ENODEV)
  			goto fail_backlight;
