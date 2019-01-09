@@ -1,57 +1,89 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6 05/11] platform/x86: intel_pmc: Make PCI dependency explicit
-Date: Wed, 9 Jan 2019 13:10:45 +0200
-Message-ID: <CAHp75VeKB_4Fc-G_QG0YnSqhAu9w8csASrgrg0cVAo_gYjeJ_g@mail.gmail.com>
-References: <20190105100606.6673-1-okaya@kernel.org> <20190105100606.6673-6-okaya@kernel.org>
- <3184241.VH7flF4h5P@aspire.rjw.lan>
+Subject: Re: [PATCH v4 07/15] Platform: OLPC: Use BIT() and GENMASK() for
+ event masks
+Date: Wed, 9 Jan 2019 13:14:08 +0200
+Message-ID: <CAHp75Vf=B4TxZ5ETXaezQAm3HGzQ6cNkApwxq+3_fw92phumkw@mail.gmail.com>
+References: <20190108175818.705110-1-lkundrak@v3.sk>
+ <20190108175818.705110-8-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3184241.VH7flF4h5P@aspire.rjw.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Sinan Kaya <okaya@kernel.org>, Andy Shevchenko <andy@infradead.org>, linux-next <linux-next@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190108175818.705110-8-lkundrak@v3.sk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, James Cameron <quozl@laptop.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Russell King <linux@armlinux.org.uk>, Platform Driver <platform-driver-x86@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jan 9, 2019 at 12:48 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+On Tue, Jan 8, 2019 at 7:58 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
 >
-> On Saturday, January 5, 2019 11:06:00 AM CET Sinan Kaya wrote:
-> > After 'commit 5d32a66541c4 ("PCI/ACPI: Allow ACPI to be built without
-> > CONFIG_PCI set")' dependencies on CONFIG_PCI that previously were
-> > satisfied implicitly through dependencies on CONFIG_ACPI have to be
-> > specified directly. Code relies on PCI for execution. Specify this
-> > in the Kconfig.
-> >
-> > Fixes: 5d32a66541c46 ("PCI/ACPI: Allow ACPI to be built without CONFIG_PCI set")
-> > Signed-off-by: Sinan Kaya <okaya@kernel.org>
-> > ---
-> >  drivers/platform/x86/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > index b36ea14b41ad..7afb96cb1cd6 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -1174,7 +1174,7 @@ config INTEL_SMARTCONNECT
-> >
-> >  config INTEL_PMC_IPC
-> >       tristate "Intel PMC IPC Driver"
-> > -     depends on ACPI
-> > +     depends on ACPI && PCI
-> >       ---help---
-> >       This driver provides support for PMC control on some Intel platforms.
-> >       The PMC is an ARC processor which defines IPC commands for communication
+> Just a cosmetic tidy-up.
 >
-> Andy, you had some reservations regarding this patch IIRC.
->
-> Should I apply it?
 
-Let's do it as a quick fix with something like below being added to
-the commit message:
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-"For sake of a quick fix this introduces a new mandatory dependency to
-the driver which may survive without it. Otherwise we need to revisit
-the driver architecture to address this properly."
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+>
+> ---
+> Changes since v1:
+> - This patch was added to the set.
+>
+>  include/linux/olpc-ec.h | 23 ++++++++++++-----------
+>  1 file changed, 12 insertions(+), 11 deletions(-)
+>
+> diff --git a/include/linux/olpc-ec.h b/include/linux/olpc-ec.h
+> index e28f72416a57..c4602364e909 100644
+> --- a/include/linux/olpc-ec.h
+> +++ b/include/linux/olpc-ec.h
+> @@ -2,6 +2,8 @@
+>  #ifndef _LINUX_OLPC_EC_H
+>  #define _LINUX_OLPC_EC_H
+>
+> +#include <linux/bits.h>
+> +
+>  /* XO-1 EC commands */
+>  #define EC_FIRMWARE_REV                        0x08
+>  #define EC_WRITE_SCI_MASK              0x1b
+> @@ -17,17 +19,16 @@
+>  #define EC_EXT_SCI_QUERY               0x85
+>
+>  /* SCI source values */
+> -#define EC_SCI_SRC_EMPTY        0x00
+> -#define EC_SCI_SRC_GAME         0x01
+> -#define EC_SCI_SRC_BATTERY      0x02
+> -#define EC_SCI_SRC_BATSOC       0x04
+> -#define EC_SCI_SRC_BATERR       0x08
+> -#define EC_SCI_SRC_EBOOK        0x10    /* XO-1 only */
+> -#define EC_SCI_SRC_WLAN         0x20    /* XO-1 only */
+> -#define EC_SCI_SRC_ACPWR        0x40
+> -#define EC_SCI_SRC_BATCRIT      0x80
+> -#define EC_SCI_SRC_GPWAKE       0x100   /* XO-1.5 only */
+> -#define EC_SCI_SRC_ALL          0x1FF
+> +#define EC_SCI_SRC_GAME         BIT(0)
+> +#define EC_SCI_SRC_BATTERY      BIT(1)
+> +#define EC_SCI_SRC_BATSOC       BIT(2)
+> +#define EC_SCI_SRC_BATERR       BIT(3)
+> +#define EC_SCI_SRC_EBOOK        BIT(4)    /* XO-1 only */
+> +#define EC_SCI_SRC_WLAN         BIT(5)    /* XO-1 only */
+> +#define EC_SCI_SRC_ACPWR        BIT(6)
+> +#define EC_SCI_SRC_BATCRIT      BIT(7)
+> +#define EC_SCI_SRC_GPWAKE       BIT(8)   /* XO-1.5 only */
+> +#define EC_SCI_SRC_ALL          GENMASK(8, 0)
+>
+>  struct platform_device;
+>
+> --
+> 2.20.1
+>
+
 
 -- 
 With Best Regards,
