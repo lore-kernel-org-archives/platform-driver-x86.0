@@ -1,95 +1,68 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v4 06/15] Platform: OLPC: Move EC-specific functionality
- out from x86
-Date: Thu, 10 Jan 2019 18:12:56 +0100
-Message-ID: <fb3a50bde8975ea6843508a3c4220ee8013069e1.camel@v3.sk>
-References: <20190108175818.705110-1-lkundrak@v3.sk>
-         <20190108175818.705110-7-lkundrak@v3.sk>
-         <CAHp75Vf7ctTmncjOfMKL7MDAi=4rr2huBmZ7RsAnPKyJv7HTQQ@mail.gmail.com>
+Subject: [PATCH v5 05/10] Platform: OLPC: Use BIT() and GENMASK() for event masks
+Date: Thu, 10 Jan 2019 18:58:40 +0100
+Message-ID: <20190110175845.1203986-6-lkundrak@v3.sk>
+References: <20190110175845.1203986-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vf7ctTmncjOfMKL7MDAi=4rr2huBmZ7RsAnPKyJv7HTQQ@mail.gmail.com>
+In-Reply-To: <20190110175845.1203986-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, James Cameron <quozl@laptop.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 2019-01-09 at 13:23 +0200, Andy Shevchenko wrote:
-> On Tue, Jan 8, 2019 at 7:59 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
-> > Move the olpc-ec driver away from the X86 OLPC platform so that it could be
-> > used by the ARM based laptops too. Notably, the driver for the OLPC battery,
-> > which is also used on the ARM models, builds on this driver's interface.
-> > 
-> > It is actually plaform independent: the OLPC EC commands with their argument
-> > and responses are mostly the same despite the delivery mechanism is
-> > different.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> >  #define OLPC_F_PRESENT         0x01
-> >  #define OLPC_F_DCON            0x02
-> > -#define OLPC_F_EC_WIDE_SCI     0x04
-> 
-> Still same concern, i.e. if the initially added definitions are
-> coupled together by some reason, why we split them?
-> As I told either move all, or none or put in commit message how
-> decoupling would benefit.
+Just a cosmetic tidy-up.
 
-I'm not moving this one -- I'm deleting it, because it's no longer used
-or useful. I don't mind keeping it there if you think it should stay
-though.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-> > +       /* EC version 0x5f adds support for wide SCI mask */
-> > +       if (ec->version >= 0x5f) {
-> > +               __be16 ec_word = cpu_to_be16(bits);
-> > +
-> > +               return olpc_ec_cmd(EC_WRITE_EXT_SCI_MASK, (void *) &ec_word, 2, NULL, 0);
-> 
-> No space is needed in "(void *)&ec_word".
-> 
-> > +       } else {
-> > +               unsigned char ec_byte = bits & 0xff;
-> 
-> Shouldn't be u8?
-> 
-> > +               return olpc_ec_cmd(EC_WRITE_SCI_MASK, &ec_byte, 1, NULL, 0);
-> > +       }
-> > +}
-> > +EXPORT_SYMBOL_GPL(olpc_ec_mask_write);
-> > +int olpc_ec_sci_query(u16 *sci_value)
-> > +{
-> > +       struct olpc_ec_priv *ec = ec_priv;
-> > +       int ret;
-> > +
-> > +       if (WARN_ON(!ec))
-> > +               return -ENODEV;
-> > +
-> > +       /* EC version 0x5f adds support for wide SCI mask */
-> > +       if (ec->version >= 0x5f) {
-> > +               __be16 ec_word;
-> > +
-> > +               ret = olpc_ec_cmd(EC_EXT_SCI_QUERY, NULL, 0, (void *)&ec_word, 2);
-> > +               if (ret == 0)
-> > +                       *sci_value = be16_to_cpu(ec_word);
-> > +       } else {
-> > +               unsigned char ec_byte;
-> 
-> u8?
-> 
-> > +
-> > +               ret = olpc_ec_cmd(EC_SCI_QUERY, NULL, 0, &ec_byte, 1);
-> > +               if (ret == 0)
-> > +                       *sci_value = ec_byte;
-> > +       }
-> > +
-> > +       return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(olpc_ec_sci_query);
+---
+Changes since v1:
+- This patch was added to the set.
 
-I'll follow up with fixes for the above.
+ include/linux/olpc-ec.h | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-Thanks.
-
-Lubo
+diff --git a/include/linux/olpc-ec.h b/include/linux/olpc-ec.h
+index 7fa3d27f7fee..f7b6a7eda232 100644
+--- a/include/linux/olpc-ec.h
++++ b/include/linux/olpc-ec.h
+@@ -2,6 +2,8 @@
+ #ifndef _LINUX_OLPC_EC_H
+ #define _LINUX_OLPC_EC_H
+=20
++#include <linux/bits.h>
++
+ /* XO-1 EC commands */
+ #define EC_FIRMWARE_REV			0x08
+ #define EC_WRITE_SCI_MASK		0x1b
+@@ -17,17 +19,16 @@
+ #define EC_EXT_SCI_QUERY		0x85
+=20
+ /* SCI source values */
+-#define EC_SCI_SRC_EMPTY        0x00
+-#define EC_SCI_SRC_GAME         0x01
+-#define EC_SCI_SRC_BATTERY      0x02
+-#define EC_SCI_SRC_BATSOC       0x04
+-#define EC_SCI_SRC_BATERR       0x08
+-#define EC_SCI_SRC_EBOOK        0x10    /* XO-1 only */
+-#define EC_SCI_SRC_WLAN         0x20    /* XO-1 only */
+-#define EC_SCI_SRC_ACPWR        0x40
+-#define EC_SCI_SRC_BATCRIT      0x80
+-#define EC_SCI_SRC_GPWAKE       0x100   /* XO-1.5 only */
+-#define EC_SCI_SRC_ALL          0x1FF
++#define EC_SCI_SRC_GAME         BIT(0)
++#define EC_SCI_SRC_BATTERY      BIT(1)
++#define EC_SCI_SRC_BATSOC       BIT(2)
++#define EC_SCI_SRC_BATERR       BIT(3)
++#define EC_SCI_SRC_EBOOK        BIT(4)    /* XO-1 only */
++#define EC_SCI_SRC_WLAN         BIT(5)    /* XO-1 only */
++#define EC_SCI_SRC_ACPWR        BIT(6)
++#define EC_SCI_SRC_BATCRIT      BIT(7)
++#define EC_SCI_SRC_GPWAKE       BIT(8)   /* XO-1.5 only */
++#define EC_SCI_SRC_ALL          GENMASK(8, 0)
+=20
+ struct platform_device;
+=20
+--=20
+2.20.1
