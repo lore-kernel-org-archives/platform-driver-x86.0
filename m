@@ -1,38 +1,42 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v5 08/10] power: supply: olpc_battery: Allow building the driver on non-x86
-Date: Thu, 10 Jan 2019 18:58:43 +0100
-Message-ID: <20190110175845.1203986-9-lkundrak@v3.sk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 01/10] dt-bindings: olpc,xo1.75-ec: Add OLPC XO-1.75
+ EC bindings
+Date: Fri, 11 Jan 2019 08:36:35 -0600
+Message-ID: <20190111143635.GA21484@bogus>
 References: <20190110175845.1203986-1-lkundrak@v3.sk>
+ <20190110175845.1203986-2-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110175845.1203986-1-lkundrak@v3.sk>
+Content-Disposition: inline
+In-Reply-To: <20190110175845.1203986-2-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lubomir Rintel <lkundrak@v3.sk>
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lubomir Rintel <lkundrak@v3.sk>, Pavel Machek <pavel@ucw.cz>
 List-Id: platform-driver-x86.vger.kernel.org
 
-With the recent changes to the driver and addition of OLPC XO-1.75 EC
-driver it is possible to use this driver on ARM-based XO laptops as
-well.
+On Thu, 10 Jan 2019 18:58:36 +0100, Lubomir Rintel wrote:
+> The OLPC XO-1.75 Embedded Controller is a SPI master that uses extra
+> signals for handshaking. It needs to know when is the slave (Linux)
+> side's TX FIFO ready for transfer (the ready-gpio signal on the SPI
+> controller node) and when does it wish to respond with a command (the
+> cmd-gpio property).
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+> ---
+> Changes since v1:
+> - s/cmd-gpio/cmd-gpios/
+> - s/ready-gpio/ready-gpios/ in the documentation paragraph
+> - Remove status = "okay" from the example
+> 
+>  .../bindings/misc/olpc,xo1.75-ec.txt          | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt
+> 
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/power/supply/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index e901b9879e7e..66e4d1958de3 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -151,7 +151,7 @@ config BATTERY_PMU
-=20
- config BATTERY_OLPC
- 	tristate "One Laptop Per Child battery"
--	depends on X86_32 && OLPC
-+	depends on OLPC_EC
- 	help
- 	  Say Y to enable support for the battery on the OLPC laptop.
-=20
---=20
-2.20.1
+If a tag was not added on purpose, please state why and what changed.
