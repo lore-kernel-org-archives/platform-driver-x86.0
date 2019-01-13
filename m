@@ -1,149 +1,63 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: Keyboard backlight not working on my NP900X5N laptop
-Date: Sat, 12 Jan 2019 20:02:01 -0800
-Message-ID: <20190113040201.GA1349@wrath>
-References: <ffa49970-ce0a-614e-3c90-03eb4924fbef@nisi.nl>
- <20190103020323.GA21617@wrath>
- <a675b43e-b40b-5049-2045-294325053723@nisi.nl>
+Subject: Re: [PATCH] platform/x86: intel-hid: Missing power button release on
+ some Dell models
+Date: Sat, 12 Jan 2019 20:15:32 -0800
+Message-ID: <20190113041532.GB1349@wrath>
+References: <20190106175644.24872-1-jerome.debretagne@gmail.com>
+ <057ab73bef634b4f8c474924eb6db572@ausx13mpc120.AMER.DELL.COM>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a675b43e-b40b-5049-2045-294325053723@nisi.nl>
+In-Reply-To: <057ab73bef634b4f8c474924eb6db572@ausx13mpc120.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Vlietland <j.vlietland@nisi.nl>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Andy Shevchenko <andy@infradead.org>, open list <linux-kernel@vger.kernel.org>, "open list:SAMSUNG LAPTOP DRIVER" <platform-driver-x86@vger.kernel.org>
+To: Mario.Limonciello@dell.com
+Cc: jerome.debretagne@gmail.com, alex.hung@canonical.com, platform-driver-x86@vger.kernel.org, andy@infradead.org, rjw@rjwysocki.net, cwhuang@android-x86.org, tristian.celestin@outlook.com, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jan 04, 2019 at 05:16:38PM +0100, Jan Vlietland wrote:
-> Hi Darren,
+On Mon, Jan 07, 2019 at 03:36:48PM +0000, Mario.Limonciello@dell.com wrote:
 > 
-> I understand your extra workload. For me it is just being another user
-> complaining about some bug. Sorry for that :-) Good to know the response
-> time. I will keep that in mind.
 > 
-> Anyway. I have changed the static variable to "0A", recompiled the module
-> and I get the same output 'no such device'.
-> 
-> However I am now running in EFI mode based on another bug:
-> 
-> https://bugs.freedesktop.org/show_bug.cgi?id=109209
-> 
-> ...and I see in the code....
-> 
->     struct samsung_laptop *samsung;
->     int ret;
-> 
->     if (efi_enabled(EFI_BOOT))
->         return -ENODEV;
-> 
->     quirks = &samsung_unknown;
->     if (!force && !dmi_check_system(samsung_dmi_table))
->         return -ENODEV;
-> 
->     samsung = kzalloc(sizeof(*samsung), GFP_KERNEL);
->     if (!samsung)
->         return -ENOMEM
-> 
-> Is that EFI restriction still valid. As far as I remember Samsung repaired
-> their BIOS. Or does the driver not work in EFI mode anyway?
+> > -----Original Message-----
+> > From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
+> > owner@vger.kernel.org> On Behalf Of Jérôme de Bretagne
+> > Sent: Sunday, January 6, 2019 11:57 AM
+> > To: Alex Hung
+> > Cc: platform-driver-x86@vger.kernel.org; Andy Shevchenko; Darren Hart;
+> > Limonciello, Mario; Rafael J. Wysocki; Chih-Wei Huang; Tristian Celestin; linux-
+> > kernel@vger.kernel.org
+> > Subject: [PATCH] platform/x86: intel-hid: Missing power button release on some
+> > Dell models
+> > 
+> > 
+> > [EXTERNAL EMAIL]
+> > 
+> > Power button suspend for some Dell models was added in:
+> > 
+> > commit 821b85366284 (intel-hid: Power button suspend on Dell Latitude 7275)
 
-Hi Jan,
+I've addressed this one, but please do run checkpatch and correct reported
+errors in the future. It checks commit reference format.
 
-Taking a closer look at the driver and the git log, the driver was disabled for
-EFI because it pokes at BIOS memory and that would mean poking at a completely
-different memory map when in EFI mode - it would be expected to fail - and in
-some cases it failed by bricking the laptop. See:
+> > 
+> > by checking against the power button press notification (0xCE) to report
+> > the power button press event. The corresponding power button release
+> > notification (0xCF) was caught and ignored to stop it from being reported
+> > as an "unknown event" in the logs.
+> > 
+> > The missing button release event is creating issues on Android-x86, as
+> > reported on the project mailing list for a Dell Latitude 5175 model, since
+> > the events are expected in down/up pairs.
+> > 
+> > Report the power button release event to fix this issue.
+> > 
+> > Link: https://groups.google.com/forum/#!topic/android-x86/aSwZK9Nf9Ro
+> > Tested-by: Tristian Celestin <tristian.celestin@outlook.com>
+> > Tested-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+> > Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
 
-e0094244e41c samsung-laptop: Disable on EFI hardware
-
-What appears to be needed here is for someone with the hardware and some
-experience tracing ACPI calls from whatever OS it ships with to figure out the
-new interface. I suspect it is either pure ACPI or possibly WMI, and a new
-driver may be needed.
-
-Have you tried this driver in BIOS mode with the OA change above?
-
-> 
-> 
-> On 03-01-19 03:03, Darren Hart wrote:
-> > On Mon, Dec 31, 2018 at 08:40:43PM +0100, Jan Vlietland wrote:
-> > > Hi all,
-> > > 
-> > Hey Jan,
-> > 
-> > > Greg K-H suggested to mail you guys.
-> > > 
-> > > I installed Linux 4.20.0-rc7 (downloaded, compiled and installed) on a Samsung NP900X5N laptop and have noticed 3 bugs. 2 of them I found in Bugzilla and replied on them (i915 and Nouveau issues). I am currently discussing them with an intel engineer.
-> > > 
-> > > On other bug I haven't found so therefore a mail directly to you guys as maintainers.
-> > > 
-> > > On my other machine, a Samsung NP900X4D (just bought it in the USA, 2017 model), the samsung-laptop.ko module is enabling the use of the keyboard backlight keys.
-> > > 
-> > > It is not working on my new machine NP900X5N. My samsung-laptop.ko driver isn't loading. If I try to load it manually it complains about 'no such device".
-> > > 
-> > > My Linux kernel is working in CSM mode. The module is still not loaded.
-> > > 
-> > That's correct.
-> > 
-> > > As it is weekend I did some more reading and debugging of the module. To my understanding the module checks the model and type of the laptop. The known models and types are stored in the struct:
-> > > 
-> > > static struct dmi_system_id __initdata samsung_dmi_table[]
-> > > 
-> > > I wondr if the NP900X5N notebook is included in this list.
-> > > 
-> > > With dmidecode -t chassis it shows:
-> > > Getting SMBIOS data from sysfs.
-> > > SMBIOS 3.0.0 present.
-> > > 
-> > > Handle 0x0003, DMI type 3, 22 bytes
-> > > Chassis Information
-> > >          Manufacturer: SAMSUNG ELECTRONICS CO., LTD.
-> > >          Type: Notebook
-> > >          Lock: Not Present
-> > >          Version: N/A
-> > >          Serial Number: 0F4C91CJ900346
-> > >          Asset Tag: No Asset Tag
-> > >          Boot-up State: Safe
-> > >          Power Supply State: Safe
-> > >          Thermal State: Other
-> > >          Security Status: None
-> > >          OEM Information: 0x00000000
-> > >          Height: Unspecified
-> > >          Number Of Power Cords: 1
-> > >          Contained Elements: 0
-> > >          SKU Number: Chassis
-> > > 
-> > > If I use the -u flag. The notebook value is 0x0A, not 0x10!!!
-> > > 
-> > > Could that be the reason for not loading?
-> > Seems likely.
-> > 
-> > > 		.matches = {
-> > > 			DMI_MATCH(DMI_SYS_VENDOR,
-> > > 					"SAMSUNG ELECTRONICS CO., LTD."),
-> > > 			DMI_MATCH(DMI_CHASSIS_TYPE, "10"), /* Notebook */
-> > > 		},
-> > > 
-> > > Maybe another reason could that that either the i915 and Nouveau modules are
-> > > not working well. I get black screens with the i915 and MMIO faults with the
-> > > nouveau driver. That is another issue that I need to tackle.
-> > > 
-> > I would expect a different error than "no such device" in that case.
-> > I think your first thought was correct.
-> > 
-> > As a simple test, I'd suggest replacing "10" with "0A" in the existing
-> > DMI_CHASSIS_TYPE match, recompile, and see if it loads and works
-> > correctly.  Would you be able to test this?
-> > 
-> > > Oh happy new year :-)
-> > 
-> > Happy New Year!
-> > 
-> 
-> 
-> 
+Queued for testing, thanks for the patch.
 
 -- 
 Darren Hart
