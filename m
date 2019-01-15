@@ -1,72 +1,57 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] Documentation/ABI: Correct mlxreg-io KernelVersion for 5.0
-Date: Tue, 15 Jan 2019 07:58:49 +0200
-Message-ID: <CAHp75Vf+ThbNZ10EB9Sx4tmm_sHJ5zqNF6mTB45tzJQOcD_68w@mail.gmail.com>
-References: <a15008d9dcde1653c22393e64eb83a07d4750caa.1547353746.git.dvhart@infradead.org>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v6 05/11] platform/x86: intel_pmc: Make PCI dependency explicit
+Date: Tue, 15 Jan 2019 19:40:45 +0100
+Message-ID: <3717479.LUAfB5gYd9@aspire.rjw.lan>
+References: <20190105100606.6673-1-okaya@kernel.org> <3184241.VH7flF4h5P@aspire.rjw.lan> <CAHp75VeKB_4Fc-G_QG0YnSqhAu9w8csASrgrg0cVAo_gYjeJ_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a15008d9dcde1653c22393e64eb83a07d4750caa.1547353746.git.dvhart@infradead.org>
+In-Reply-To: <CAHp75VeKB_4Fc-G_QG0YnSqhAu9w8csASrgrg0cVAo_gYjeJ_g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Darren Hart (VMware)" <dvhart@infradead.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Vadim Pasternak <vadimp@mellanox.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Sinan Kaya <okaya@kernel.org>, Andy Shevchenko <andy@infradead.org>, linux-next <linux-next@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Jan 13, 2019 at 6:32 AM Darren Hart (VMware)
-<dvhart@infradead.org> wrote:
->
-> The mlxreg-io for the merge window assumed 4.21 as the next kernel
-> version. Replace 4.21 with 5.0.
->
+On Wednesday, January 9, 2019 12:10:45 PM CET Andy Shevchenko wrote:
+> On Wed, Jan 9, 2019 at 12:48 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > On Saturday, January 5, 2019 11:06:00 AM CET Sinan Kaya wrote:
+> > > After 'commit 5d32a66541c4 ("PCI/ACPI: Allow ACPI to be built without
+> > > CONFIG_PCI set")' dependencies on CONFIG_PCI that previously were
+> > > satisfied implicitly through dependencies on CONFIG_ACPI have to be
+> > > specified directly. Code relies on PCI for execution. Specify this
+> > > in the Kconfig.
+> > >
+> > > Fixes: 5d32a66541c46 ("PCI/ACPI: Allow ACPI to be built without CONFIG_PCI set")
+> > > Signed-off-by: Sinan Kaya <okaya@kernel.org>
+> > > ---
+> > >  drivers/platform/x86/Kconfig | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> > > index b36ea14b41ad..7afb96cb1cd6 100644
+> > > --- a/drivers/platform/x86/Kconfig
+> > > +++ b/drivers/platform/x86/Kconfig
+> > > @@ -1174,7 +1174,7 @@ config INTEL_SMARTCONNECT
+> > >
+> > >  config INTEL_PMC_IPC
+> > >       tristate "Intel PMC IPC Driver"
+> > > -     depends on ACPI
+> > > +     depends on ACPI && PCI
+> > >       ---help---
+> > >       This driver provides support for PMC control on some Intel platforms.
+> > >       The PMC is an ARC processor which defines IPC commands for communication
+> >
+> > Andy, you had some reservations regarding this patch IIRC.
+> >
+> > Should I apply it?
+> 
+> Let's do it as a quick fix with something like below being added to
+> the commit message:
+> 
+> "For sake of a quick fix this introduces a new mandatory dependency to
+> the driver which may survive without it. Otherwise we need to revisit
+> the driver architecture to address this properly."
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-> ---
->  Documentation/ABI/stable/sysfs-driver-mlxreg-io | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> index 9b642669cb16..169fe08a649b 100644
-> --- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> +++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> @@ -24,7 +24,7 @@ What:         /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
->                                                         cpld3_version
->
->  Date:          November 2018
-> -KernelVersion: 4.21
-> +KernelVersion: 5.0
->  Contact:       Vadim Pasternak <vadimpmellanox.com>
->  Description:   These files show with which CPLD versions have been burned
->                 on LED board.
-> @@ -35,7 +35,7 @@ What:         /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
->                                                         jtag_enable
->
->  Date:          November 2018
-> -KernelVersion: 4.21
-> +KernelVersion: 5.0
->  Contact:       Vadim Pasternak <vadimpmellanox.com>
->  Description:   These files enable and disable the access to the JTAG domain.
->                 By default access to the JTAG domain is disabled.
-> @@ -105,7 +105,7 @@ What:               /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/
->                                                 reset_voltmon_upgrade_fail
->
->  Date:          November 2018
-> -KernelVersion: 4.21
-> +KernelVersion: 5.0
->  Contact:       Vadim Pasternak <vadimpmellanox.com>
->  Description:   These files show the system reset cause, as following: ComEx
->                 power fail, reset from ComEx, system platform reset, reset
-> --
-> 2.17.2
->
->
-> --
-> Darren Hart
-> VMware Open Source Technology Center
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Done, thanks!
