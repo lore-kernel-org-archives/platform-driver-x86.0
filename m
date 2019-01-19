@@ -1,57 +1,62 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v6 05/11] platform/x86: intel_pmc: Make PCI dependency explicit
-Date: Tue, 15 Jan 2019 19:40:45 +0100
-Message-ID: <3717479.LUAfB5gYd9@aspire.rjw.lan>
-References: <20190105100606.6673-1-okaya@kernel.org> <3184241.VH7flF4h5P@aspire.rjw.lan> <CAHp75VeKB_4Fc-G_QG0YnSqhAu9w8csASrgrg0cVAo_gYjeJ_g@mail.gmail.com>
+From: Yang Fan <nullptr.cpp@gmail.com>
+Subject: [PATCH v2] platform/x86: ideapad-laptop: Fix no_hw_rfkill_list for
+ Lenovo RESCUER R720-15IKBN
+Date: Sat, 19 Jan 2019 19:16:33 +0800
+Message-ID: <d4974133-580d-9166-f554-7e03bb1948b9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeKB_4Fc-G_QG0YnSqhAu9w8csASrgrg0cVAo_gYjeJ_g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Sinan Kaya <okaya@kernel.org>, Andy Shevchenko <andy@infradead.org>, linux-next <linux-next@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: ike.pan@canonical.com, dvhart@infradead.org, andy@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, nullptr.cpp@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wednesday, January 9, 2019 12:10:45 PM CET Andy Shevchenko wrote:
-> On Wed, Jan 9, 2019 at 12:48 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >
-> > On Saturday, January 5, 2019 11:06:00 AM CET Sinan Kaya wrote:
-> > > After 'commit 5d32a66541c4 ("PCI/ACPI: Allow ACPI to be built without
-> > > CONFIG_PCI set")' dependencies on CONFIG_PCI that previously were
-> > > satisfied implicitly through dependencies on CONFIG_ACPI have to be
-> > > specified directly. Code relies on PCI for execution. Specify this
-> > > in the Kconfig.
-> > >
-> > > Fixes: 5d32a66541c46 ("PCI/ACPI: Allow ACPI to be built without CONFIG_PCI set")
-> > > Signed-off-by: Sinan Kaya <okaya@kernel.org>
-> > > ---
-> > >  drivers/platform/x86/Kconfig | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > > index b36ea14b41ad..7afb96cb1cd6 100644
-> > > --- a/drivers/platform/x86/Kconfig
-> > > +++ b/drivers/platform/x86/Kconfig
-> > > @@ -1174,7 +1174,7 @@ config INTEL_SMARTCONNECT
-> > >
-> > >  config INTEL_PMC_IPC
-> > >       tristate "Intel PMC IPC Driver"
-> > > -     depends on ACPI
-> > > +     depends on ACPI && PCI
-> > >       ---help---
-> > >       This driver provides support for PMC control on some Intel platforms.
-> > >       The PMC is an ARC processor which defines IPC commands for communication
-> >
-> > Andy, you had some reservations regarding this patch IIRC.
-> >
-> > Should I apply it?
-> 
-> Let's do it as a quick fix with something like below being added to
-> the commit message:
-> 
-> "For sake of a quick fix this introduces a new mandatory dependency to
-> the driver which may survive without it. Otherwise we need to revisit
-> the driver architecture to address this properly."
+Commit ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo RESCUER 
+R720-15IKBN to no_hw_rfkill_list") added
+    DMI_MATCH(DMI_BOARD_NAME, "80WW")
+for Lenovo RESCUER R720-15IKBN.
 
-Done, thanks!
+But DMI_BOARD_NAME does not match 80WW on Lenovo RESCUER R720-15IKBN, 
+thus cause Wireless LAN still be hard blocked.
+
+On Lenovo RESCUER R720-15IKBN:
+    ~$ cat /sys/class/dmi/id/sys_vendor 
+    LENOVO
+    ~$ cat /sys/class/dmi/id/board_name 
+    Provence-5R3
+    ~$ cat /sys/class/dmi/id/product_name 
+    80WW
+    ~$ cat /sys/class/dmi/id/product_version 
+    Lenovo R720-15IKBN
+
+So on Lenovo RESCUER R720-15IKBN:
+    DMI_SYS_VENDOR should match "LENOVO",
+    DMI_BOARD_NAME should match "Provence-5R3",
+    DMI_PRODUCT_NAME should match "80WW",
+    DMI_PRODUCT_VERSION should match "Lenovo R720-15IKBN".
+
+Fix it, and in according with other entries in no_hw_rfkill_list, 
+use DMI_PRODUCT_VERSION instead of DMI_BOARD_NAME.
+
+Fixes: ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo 
+RESCUER R720-15IKBN to no_hw_rfkill_list")
+Signed-off-by: Yang Fan <nullptr.cpp@gmail.com>
+---
+ drivers/platform/x86/ideapad-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 1589dffab9faf..8b53a9ceb897c 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -989,7 +989,7 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 		.ident = "Lenovo RESCUER R720-15IKBN",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_BOARD_NAME, "80WW"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo R720-15IKBN"),
+ 		},
+ 	},
+ 	{
