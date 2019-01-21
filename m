@@ -1,123 +1,66 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH 2/3] platform/x86: wmi: add WMI support to
- MODULE_DEVICE_TABLE()
-Date: Sun, 20 Jan 2019 10:00:02 +0100
-Message-ID: <20190120090002.imufwdnvtufjgoxh@pali>
-References: <cover.1547827336.git.2pi@mok.nu>
- <ff56fb53485ec75b5e8a81f306983aa7976574c5.1547827336.git.2pi@mok.nu>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: asus-wmi: Allow loading on systems without the Asus Management GUID
+Date: Mon, 21 Jan 2019 14:24:36 +0100
+Message-ID: <20190121132436.31825-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ep2rclsk66ehzbgb"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ff56fb53485ec75b5e8a81f306983aa7976574c5.1547827336.git.2pi@mok.nu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mattias Jacobsson <2pi@mok.nu>
-Cc: yamada.masahiro@socionext.com, michal.lkml@markovi.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+hid-asus depends on asus-wmi through the asus_wmi_evaluate_method. Before
+this commit asus-wmi and thus hid-asus could not be loaded on non Asus
+systems. This breaks using Asus bluetooth keyboards such as the Asus
+T100CHI keyboard with non Asus systems.
 
---ep2rclsk66ehzbgb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This commit fixes this by allowing asus-wmi to load on systems without the
+Asus Management GUID.
 
-On Saturday 19 January 2019 12:55:54 Mattias Jacobsson wrote:
-> Add WMI support to MODULE_DEVICE_TABLE() by adding info about struct
-> wmi_device_id in devicetable-offsets.c and add a WMI entry point in
-> file2alias.c.
->=20
-> The type argument for MODULE_DEVICE_TABLE(type, name) is wmi.
->=20
-> Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
-> ---
->=20
-> The idea of adding wmi support to MODULE_DEVICE_TABLE() originates from
-> a suggestion at [1].
+This is save to do since all asus-wmi sub drivers use
+asus_wmi_register_driver which also checks for the GUID.
 
-Thanks for implementation!
+This commit also improves the error messages in asus_wmi_register_driver
+to include "ASUS" in their description tom make them more clear. This is
+important since we now rely on those errors when loaded on systems without
+the Asus Management GUID.
 
-> However [2] states: "Please note that this tag
-> should not be added without the reporter's permission, especially if
-> the idea was not posted in a public forum." about the "Suggested-by:"
-> tag.
-> Pali Roh=C3=A1r: May I add a "Suggested-by:" tag?
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/asus-wmi.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-Yes, you can!
-
-> [1]: https://lore.kernel.org/patchwork/patch/795892/#989423
-> [2]: Documentation/process/submitting-patches.rst
->=20
-> ---
->  scripts/mod/devicetable-offsets.c |  3 +++
->  scripts/mod/file2alias.c          | 18 ++++++++++++++++++
->  2 files changed, 21 insertions(+)
->=20
-> diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-=
-offsets.c
-> index 293004499b4d..99276a422e77 100644
-> --- a/scripts/mod/devicetable-offsets.c
-> +++ b/scripts/mod/devicetable-offsets.c
-> @@ -225,5 +225,8 @@ int main(void)
->  	DEVID_FIELD(typec_device_id, svid);
->  	DEVID_FIELD(typec_device_id, mode);
-> =20
-> +	DEVID(wmi_device_id);
-> +	DEVID_FIELD(wmi_device_id, guid_string);
-> +
->  	return 0;
->  }
-> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-> index a37af7d71973..f014a2466ff7 100644
-> --- a/scripts/mod/file2alias.c
-> +++ b/scripts/mod/file2alias.c
-> @@ -1287,6 +1287,23 @@ static int do_typec_entry(const char *filename, vo=
-id *symval, char *alias)
->  	return 1;
->  }
-> =20
-> +/* Looks like: wmi:guid */
-> +static int do_wmi_entry(const char *filename, void *symval, char *alias)
-> +{
-> +	DEF_FIELD_ADDR(symval, wmi_device_id, guid_string);
-> +	if (strlen(*guid_string) !=3D WMI_GUID_STRING_LEN) {
-> +		warn("Invalid WMI device id 'wmi:%s' in '%s'\n",
-> +				*guid_string, filename);
-> +		return 0;
-> +	}
-> +	if (snprintf(alias, 500, WMI_MODULE_PREFIX "%s", *guid_string) < 0) {
-> +		warn("Could not generate all MODULE_ALIAS's in '%s'\n",
-> +				filename);
-> +		return 0;
-> +	}
-> +	return 1;
-> +}
-> +
->  /* Does namelen bytes of name exactly match the symbol? */
->  static bool sym_is(const char *name, unsigned namelen, const char *symbo=
-l)
->  {
-> @@ -1357,6 +1374,7 @@ static const struct devtable devtable[] =3D {
->  	{"fslmc", SIZE_fsl_mc_device_id, do_fsl_mc_entry},
->  	{"tbsvc", SIZE_tb_service_id, do_tbsvc_entry},
->  	{"typec", SIZE_typec_device_id, do_typec_entry},
-> +	{"wmi", SIZE_wmi_device_id, do_wmi_entry},
->  };
-> =20
->  /* Create MODULE_ALIAS() statements.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---ep2rclsk66ehzbgb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXEQ4jwAKCRCL8Mk9A+RD
-Ut4UAJ9AQad7lLnB6TGKD3SvcQMDxn2mXACeI0niLpxaZfAEh0s1M5F6yIbBMDo=
-=qKIk
------END PGP SIGNATURE-----
-
---ep2rclsk66ehzbgb--
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 37b5de541270..ee1fa93708ec 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2265,12 +2265,12 @@ static int asus_wmi_probe(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	if (!wmi_has_guid(ASUS_WMI_MGMT_GUID)) {
+-		pr_warn("Management GUID not found\n");
++		pr_warn("ASUS Management GUID not found\n");
+ 		return -ENODEV;
+ 	}
+ 
+ 	if (wdrv->event_guid && !wmi_has_guid(wdrv->event_guid)) {
+-		pr_warn("Event GUID not found\n");
++		pr_warn("ASUS Event GUID not found\n");
+ 		return -ENODEV;
+ 	}
+ 
+@@ -2320,11 +2320,6 @@ EXPORT_SYMBOL_GPL(asus_wmi_unregister_driver);
+ 
+ static int __init asus_wmi_init(void)
+ {
+-	if (!wmi_has_guid(ASUS_WMI_MGMT_GUID)) {
+-		pr_info("Asus Management GUID not found\n");
+-		return -ENODEV;
+-	}
+-
+ 	pr_info("ASUS WMI generic driver loaded\n");
+ 	return 0;
+ }
+-- 
+2.20.1
