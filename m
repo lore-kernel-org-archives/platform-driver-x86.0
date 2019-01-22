@@ -1,25 +1,58 @@
-From: Sinan Kaya <okaya@kernel.org>
-Subject: Re: [for next][PATCH 1/2] platform/x86: Fix unmet dependency warning
- for ACPI_CMPC
-Date: Mon, 21 Jan 2019 17:48:31 -0500
-Message-ID: <23b1526a-b664-c4e3-2075-dd9cebe8c28c@kernel.org>
-References: <20190121224644.26903-1-okaya@kernel.org>
+From: Mattias Jacobsson <2pi@mok.nu>
+Subject: [PATCH] platform/x86: wmi: fix potential null pointer dereferences
+Date: Tue, 22 Jan 2019 21:03:01 +0100
+Message-ID: <20190122200302.19861-1-2pi@mok.nu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190121224644.26903-1-okaya@kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-next@vger.kernel.org
-Cc: linux-acpi@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: dvhart@infradead.org, andy@infradead.org
+Cc: 2pi@mok.nu, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 1/21/2019 5:46 PM, Sinan Kaya wrote:
-> ACPI_CMPC selects BACKLIGHT_LCD_SUPPORT but BACKLIGHT_LCD_SUPPORT
-> depends on BACKLIGHT_LCD_SUPPORT.
+In the function wmi_dev_match() there are three variables that
+potentially can result in a null pointer dereference. Namely:
+dev/wblock, driver/wmi_driver, and wmi_driver->id_table.
 
-This should have been:
+Check for NULL and return that the driver can't handle the device if any
+of these variables would result in a null pointer dereference.
 
-ACPI_CMPC selects BACKLIGHT_CLASS_DEVICE but BACKLIGHT_CLASS_DEVICE
-depends on BACKLIGHT_LCD_SUPPORT.
+The NULL checks are performed prior to running container_of() for the
+variables dev/wblock and driver/wmi_driver.
+
+Fixes: 844af950da94 ("platform/x86: wmi: Turn WMI into a bus driver")
+Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+---
+ drivers/platform/x86/wmi.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index bea35be68706..c596479e8b13 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -763,10 +763,18 @@ static void wmi_dev_release(struct device *dev)
+ 
+ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
+ {
+-	struct wmi_driver *wmi_driver =
+-		container_of(driver, struct wmi_driver, driver);
+-	struct wmi_block *wblock = dev_to_wblock(dev);
+-	const struct wmi_device_id *id = wmi_driver->id_table;
++	const struct wmi_device_id *id;
++	struct wmi_block *wblock;
++	struct wmi_driver *wmi_driver;
++
++	if (dev == NULL || driver == NULL)
++		return 0;
++	wblock = dev_to_wblock(dev);
++	wmi_driver = container_of(driver, struct wmi_driver, driver);
++
++	if (wmi_driver->id_table == NULL)
++		return 0;
++	id = wmi_driver->id_table;
+ 
+ 	while (id->guid_string) {
+ 		uuid_le driver_guid;
+-- 
+2.20.1
