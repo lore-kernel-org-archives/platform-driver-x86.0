@@ -1,45 +1,52 @@
 From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Allow loading on systems without
- the Asus Management GUID
-Date: Sat, 26 Jan 2019 13:18:46 -0800
-Message-ID: <20190126211846.GC13882@wrath>
-References: <20190121132436.31825-1-hdegoede@redhat.com>
+Subject: Re: [PATCH v2] platform/x86: ideapad-laptop: Fix no_hw_rfkill_list
+ for Lenovo RESCUER R720-15IKBN
+Date: Sat, 26 Jan 2019 13:33:50 -0800
+Message-ID: <20190126213350.GA41709@wrath>
+References: <d4974133-580d-9166-f554-7e03bb1948b9@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190121132436.31825-1-hdegoede@redhat.com>
+In-Reply-To: <d4974133-580d-9166-f554-7e03bb1948b9@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Yang Fan <nullptr.cpp@gmail.com>
+Cc: ike.pan@canonical.com, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 21, 2019 at 02:24:36PM +0100, Hans de Goede wrote:
-> hid-asus depends on asus-wmi through the asus_wmi_evaluate_method. Before
-> this commit asus-wmi and thus hid-asus could not be loaded on non Asus
-> systems. This breaks using Asus bluetooth keyboards such as the Asus
-> T100CHI keyboard with non Asus systems.
+On Sat, Jan 19, 2019 at 07:16:33PM +0800, Yang Fan wrote:
+> Commit ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo RESCUER 
+> R720-15IKBN to no_hw_rfkill_list") added
+>     DMI_MATCH(DMI_BOARD_NAME, "80WW")
+> for Lenovo RESCUER R720-15IKBN.
 > 
-> This commit fixes this by allowing asus-wmi to load on systems without the
-> Asus Management GUID.
+> But DMI_BOARD_NAME does not match 80WW on Lenovo RESCUER R720-15IKBN, 
+> thus cause Wireless LAN still be hard blocked.
 > 
-> This is save to do since all asus-wmi sub drivers use
-> asus_wmi_register_driver which also checks for the GUID.
+> On Lenovo RESCUER R720-15IKBN:
+>     ~$ cat /sys/class/dmi/id/sys_vendor 
+>     LENOVO
+>     ~$ cat /sys/class/dmi/id/board_name 
+>     Provence-5R3
+>     ~$ cat /sys/class/dmi/id/product_name 
+>     80WW
+>     ~$ cat /sys/class/dmi/id/product_version 
+>     Lenovo R720-15IKBN
 > 
-> This commit also improves the error messages in asus_wmi_register_driver
-> to include "ASUS" in their description tom make them more clear. This is
-> important since we now rely on those errors when loaded on systems without
-> the Asus Management GUID.
+> So on Lenovo RESCUER R720-15IKBN:
+>     DMI_SYS_VENDOR should match "LENOVO",
+>     DMI_BOARD_NAME should match "Provence-5R3",
+>     DMI_PRODUCT_NAME should match "80WW",
+>     DMI_PRODUCT_VERSION should match "Lenovo R720-15IKBN".
 > 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Fix it, and in according with other entries in no_hw_rfkill_list, 
+> use DMI_PRODUCT_VERSION instead of DMI_BOARD_NAME.
+> 
+> Fixes: ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo 
+> RESCUER R720-15IKBN to no_hw_rfkill_list")
+> Signed-off-by: Yang Fan <nullptr.cpp@gmail.com>
 
-Hi Hans,
-
-A few typos above, please consider adding a spellchecker to your editor for
-commit message authoring... I've taken care of them and queued this patch for
-testing.
-
-Thanks!
+Thanks for the patch, queued for testing.
 
 -- 
 Darren Hart
