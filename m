@@ -1,23 +1,19 @@
 From: Mattias Jacobsson <2pi@mok.nu>
-Subject: [PATCH v2 2/3] platform/x86: wmi: add WMI support to MODULE_DEVICE_TABLE()
-Date: Sun, 27 Jan 2019 20:03:28 +0100
-Message-ID: <680df320c7263bdd35f87794ae12fb9a9ef3b71c.1548610407.git.2pi@mok.nu>
-References: <cover.1548610407.git.2pi@mok.nu>
+Subject: [PATCH v2 0/3] platform/x86: wmi: add WMI support to MODULE_DEVICE_TABLE()
+Date: Sun, 27 Jan 2019 20:03:26 +0100
+Message-ID: <cover.1548610407.git.2pi@mok.nu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1548610407.git.2pi@mok.nu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: yamada.masahiro@socionext.com, michal.lkml@markovi.net, dvhart@infradead.org, andy@infradead.org, pali.rohar@gmail.com
+To: andy@infradead.org, dvhart@infradead.org, mario.limonciello@dell.com, michal.lkml@markovi.net, mjg59@srcf.ucam.org, pali.rohar@gmail.com, yamada.masahiro@socionext.com
 Cc: 2pi@mok.nu, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The kernel provides the macro MODULE_DEVICE_TABLE() where driver authors
-can specify their device type and their array of device_ids and thereby
-trigger the generation of the appropriate MODULE_ALIAS() output. This is
-opposed to having to specify one MODULE_ALIAS() for each device. The WMI
-device type is currently not supported.
+The kernel provides the macro MODULE_DEVICE_TABLE() which can help
+driver authors to generate the appropriate MODULE_ALIAS() output. The
+WMI device type is currently not supported by MODULE_DEVICE_TABLE().
 
 While using MODULE_DEVICE_TABLE() does increase the complexity as well
 as spreading out the implementation across the kernel, it does come with
@@ -28,68 +24,40 @@ some benefits too;
 * It helps each driver avoid keeping multiple versions of the same
   information in sync. That is, both the array of device_ids and the
   potential multitude of MODULE_ALIAS()'s.
+* Other things eg. [2]
 
-Add WMI support to MODULE_DEVICE_TABLE() by adding info about struct
-wmi_device_id in devicetable-offsets.c and add a WMI entry point in
-file2alias.c.
+This patchset adds WMI support to MODULE_DEVICE_TABLE().
 
-The type argument for MODULE_DEVICE_TABLE(type, name) is wmi.
+[PATCH 1/3]: prepare struct wmi_device_id
+[PATCH 2/3]: add support
+[PATCH 3/3]: update existing drivers to use MODULE_DEVICE_TABLE()
 
-Suggested-by: Pali Rohár <pali.rohar@gmail.com>
-Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
----
- scripts/mod/devicetable-offsets.c |  3 +++
- scripts/mod/file2alias.c          | 18 ++++++++++++++++++
- 2 files changed, 21 insertions(+)
+Changes in v2:
+* add one Suggested-by and one Reviewed-by tag
+* depend upon patch [1]
+* reword commit message for [PATCH 2/3] and [PATCH 3/3] to document the
+  reasoning behind the changes
 
-diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-offsets.c
-index 293004499b4d..99276a422e77 100644
---- a/scripts/mod/devicetable-offsets.c
-+++ b/scripts/mod/devicetable-offsets.c
-@@ -225,5 +225,8 @@ int main(void)
- 	DEVID_FIELD(typec_device_id, svid);
- 	DEVID_FIELD(typec_device_id, mode);
- 
-+	DEVID(wmi_device_id);
-+	DEVID_FIELD(wmi_device_id, guid_string);
-+
- 	return 0;
- }
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index a37af7d71973..f014a2466ff7 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -1287,6 +1287,23 @@ static int do_typec_entry(const char *filename, void *symval, char *alias)
- 	return 1;
- }
- 
-+/* Looks like: wmi:guid */
-+static int do_wmi_entry(const char *filename, void *symval, char *alias)
-+{
-+	DEF_FIELD_ADDR(symval, wmi_device_id, guid_string);
-+	if (strlen(*guid_string) != WMI_GUID_STRING_LEN) {
-+		warn("Invalid WMI device id 'wmi:%s' in '%s'\n",
-+				*guid_string, filename);
-+		return 0;
-+	}
-+	if (snprintf(alias, 500, WMI_MODULE_PREFIX "%s", *guid_string) < 0) {
-+		warn("Could not generate all MODULE_ALIAS's in '%s'\n",
-+				filename);
-+		return 0;
-+	}
-+	return 1;
-+}
-+
- /* Does namelen bytes of name exactly match the symbol? */
- static bool sym_is(const char *name, unsigned namelen, const char *symbol)
- {
-@@ -1357,6 +1374,7 @@ static const struct devtable devtable[] = {
- 	{"fslmc", SIZE_fsl_mc_device_id, do_fsl_mc_entry},
- 	{"tbsvc", SIZE_tb_service_id, do_tbsvc_entry},
- 	{"typec", SIZE_typec_device_id, do_typec_entry},
-+	{"wmi", SIZE_wmi_device_id, do_wmi_entry},
- };
- 
- /* Create MODULE_ALIAS() statements.
+[1]: https://lkml.kernel.org/r/20190122200302.19861-1-2pi@mok.nu
+[2]: https://lkml.kernel.org/r/20190126210634.GB13882@wrath
+
+Mattias Jacobsson (3):
+  platform/x86: wmi: move struct wmi_device_id to mod_devicetable.h
+  platform/x86: wmi: add WMI support to MODULE_DEVICE_TABLE()
+  platform/x86: wmi: use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
+
+ drivers/platform/x86/dell-smbios-wmi.c       |  2 +-
+ drivers/platform/x86/dell-wmi-descriptor.c   |  2 +-
+ drivers/platform/x86/dell-wmi.c              |  4 ++--
+ drivers/platform/x86/huawei-wmi.c            |  3 +--
+ drivers/platform/x86/intel-wmi-thunderbolt.c |  2 +-
+ drivers/platform/x86/wmi-bmof.c              |  2 +-
+ drivers/platform/x86/wmi.c                   |  2 +-
+ include/linux/mod_devicetable.h              | 13 +++++++++++++
+ include/linux/wmi.h                          |  5 +----
+ scripts/mod/devicetable-offsets.c            |  3 +++
+ scripts/mod/file2alias.c                     | 18 ++++++++++++++++++
+ 11 files changed, 43 insertions(+), 13 deletions(-)
+
 -- 
 2.20.1
