@@ -1,55 +1,51 @@
-From: Mattias Jacobsson <2pi@mok.nu>
-Subject: Re: [PATCH 0/3] platform/x86: wmi: add WMI support to
- MODULE_DEVICE_TABLE()
-Date: Sun, 27 Jan 2019 20:15:54 +0100
-Message-ID: <20190127191553.mxrqg7zyzwxwrmo5@mok.nu>
-References: <cover.1547827336.git.2pi@mok.nu>
- <20190126210634.GB13882@wrath>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 1/3] platform/x86: wmi: move struct wmi_device_id to mod_devicetable.h
+Date: Sun, 27 Jan 2019 22:20:02 +0200
+Message-ID: <CAHp75Vdsr8aY1ODpZUqR--jAfgRowJz8tbSGwS1SFTH-W4u0XA@mail.gmail.com>
+References: <cover.1548610407.git.2pi@mok.nu> <b40da7d75a8cf02f78db7896e07859e315477120.1548610407.git.2pi@mok.nu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190126210634.GB13882@wrath>
+In-Reply-To: <b40da7d75a8cf02f78db7896e07859e315477120.1548610407.git.2pi@mok.nu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: andy@infradead.org, mario.limonciello@dell.com, michal.lkml@markovi.net, mjg59@srcf.ucam.org, pali.rohar@gmail.com, yamada.masahiro@socionext.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 2pi@mok.nu
+To: Mattias Jacobsson <2pi@mok.nu>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Darren,
+On Sun, Jan 27, 2019 at 9:04 PM Mattias Jacobsson <2pi@mok.nu> wrote:
+>
+> In preparation for adding WMI support to MODULE_DEVICE_TABLE() move the
+> definition of struct wmi_device_id to mod_devicetable.h and inline
+> guid_string in the struct.
+>
+> Changing guid_string to an inline char array changes the loop conditions
+> when looping over an array of struct wmi_device_id. Therefore update
+> wmi_dev_match()'s loop to check for an empty guid_string instead of a
+> NULL pointer.
 
-On 2019-01-26, Darren Hart wrote:
-> On Sat, Jan 19, 2019 at 12:55:52PM +0100, Mattias Jacobsson wrote:
-> > This patchset adds WMI support to MODULE_DEVICE_TABLE().
-> 
-> Hi Mattias,
-> 
-> Thanks for the patch series. I've reviewed and found no major issues - but what
-> I'm missing from this cover letter and each commit message is the why. What is
-> the problem this series is intended to address? This should be clear in the
-> commit messages so developers reading the git history have the necessary context
-> to understand why the change was made and the intent behind them were.
+Below some minor comments.
 
-Thanks for reviewing the patchset!
+> -       while (id->guid_string) {
+> +       while (id->guid_string[0] != '\0') {
 
-> 
-> The only advantage that I see by the end of the series is removing the need for
-> driver authors to prefix the modules alias  with "wmi:" - which is an advantage
-> and avoids careless errors. Is that the only goal? It adds some complexity by
-> spreading the implementation across more files and more directories, so we need
-> to document the justification.
+Hmm.. I would rather put it as
 
-Now that you point it out I can definitely see that the reasoning isn't
-explicitly stated. Sorry about that!
+while (*id->guid_string) {
 
-I've updated the commit messages for [PATCH 2/3] and [PATCH 3/3] in v2
-of this patchset to clarify the "why".
+> +#define WMI_MODULE_PREFIX      "wmi:"
 
-> 
-> Thanks,
-> 
-> -- 
-> Darren Hart
-> VMware Open Source Technology Center
+> +#define WMI_GUID_STRING_LEN    36
 
-Thanks,
-Mattias
+Isn't this already defined in UUID namespace?
+(include/linux/uuid.h IIRC)
+
+>  #include <linux/device.h>
+>  #include <linux/acpi.h>
+
+> +#include <linux/mod_devicetable.h>
+
+Not sure it's needed since acpi.h includes that.
+
+-- 
+With Best Regards,
+Andy Shevchenko
