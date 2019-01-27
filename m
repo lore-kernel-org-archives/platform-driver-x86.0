@@ -1,50 +1,66 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 1/3] platform/x86: wmi: move struct wmi_device_id to mod_devicetable.h
-Date: Sun, 27 Jan 2019 22:20:02 +0200
-Message-ID: <CAHp75Vdsr8aY1ODpZUqR--jAfgRowJz8tbSGwS1SFTH-W4u0XA@mail.gmail.com>
-References: <cover.1548610407.git.2pi@mok.nu> <b40da7d75a8cf02f78db7896e07859e315477120.1548610407.git.2pi@mok.nu>
+Subject: Re: [PATCH v2 2/3] platform/x86: wmi: add WMI support to MODULE_DEVICE_TABLE()
+Date: Sun, 27 Jan 2019 22:22:34 +0200
+Message-ID: <CAHp75VfE0g9OVeOzJ5fBj4MGL4nv=a4S-n1fD9kfP1AaniAOGw@mail.gmail.com>
+References: <cover.1548610407.git.2pi@mok.nu> <680df320c7263bdd35f87794ae12fb9a9ef3b71c.1548610407.git.2pi@mok.nu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b40da7d75a8cf02f78db7896e07859e315477120.1548610407.git.2pi@mok.nu>
+In-Reply-To: <680df320c7263bdd35f87794ae12fb9a9ef3b71c.1548610407.git.2pi@mok.nu>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mattias Jacobsson <2pi@mok.nu>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, michal.lkml@markovi.net, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
 On Sun, Jan 27, 2019 at 9:04 PM Mattias Jacobsson <2pi@mok.nu> wrote:
 >
-> In preparation for adding WMI support to MODULE_DEVICE_TABLE() move the
-> definition of struct wmi_device_id to mod_devicetable.h and inline
-> guid_string in the struct.
+> The kernel provides the macro MODULE_DEVICE_TABLE() where driver authors
+> can specify their device type and their array of device_ids and thereby
+> trigger the generation of the appropriate MODULE_ALIAS() output. This is
+> opposed to having to specify one MODULE_ALIAS() for each device. The WMI
+> device type is currently not supported.
 >
-> Changing guid_string to an inline char array changes the loop conditions
-> when looping over an array of struct wmi_device_id. Therefore update
-> wmi_dev_match()'s loop to check for an empty guid_string instead of a
-> NULL pointer.
+> While using MODULE_DEVICE_TABLE() does increase the complexity as well
+> as spreading out the implementation across the kernel, it does come with
+> some benefits too;
+> * It makes different drivers look more similar; if you can specify the
+>   array of device_ids any device type specific input to MODULE_ALIAS()
+>   will automatically be generated for you.
+> * It helps each driver avoid keeping multiple versions of the same
+>   information in sync. That is, both the array of device_ids and the
+>   potential multitude of MODULE_ALIAS()'s.
+>
+> Add WMI support to MODULE_DEVICE_TABLE() by adding info about struct
+> wmi_device_id in devicetable-offsets.c and add a WMI entry point in
+> file2alias.c.
+>
+> The type argument for MODULE_DEVICE_TABLE(type, name) is wmi.
 
-Below some minor comments.
+> +/* Looks like: wmi:guid */
+> +static int do_wmi_entry(const char *filename, void *symval, char *alias)
+> +{
+> +       DEF_FIELD_ADDR(symval, wmi_device_id, guid_string);
+> +       if (strlen(*guid_string) != WMI_GUID_STRING_LEN) {
+> +               warn("Invalid WMI device id 'wmi:%s' in '%s'\n",
+> +                               *guid_string, filename);
+> +               return 0;
+> +       }
 
-> -       while (id->guid_string) {
-> +       while (id->guid_string[0] != '\0') {
+> +       if (snprintf(alias, 500, WMI_MODULE_PREFIX "%s", *guid_string) < 0) {
 
-Hmm.. I would rather put it as
+What the point to use snprintf here with arbitrary buffer size if we
+exactly know 2 facts:
+1. UUID string is  36 characters
+2. buffer is long enough
 
-while (*id->guid_string) {
+?
 
-> +#define WMI_MODULE_PREFIX      "wmi:"
-
-> +#define WMI_GUID_STRING_LEN    36
-
-Isn't this already defined in UUID namespace?
-(include/linux/uuid.h IIRC)
-
->  #include <linux/device.h>
->  #include <linux/acpi.h>
-
-> +#include <linux/mod_devicetable.h>
-
-Not sure it's needed since acpi.h includes that.
+> +               warn("Could not generate all MODULE_ALIAS's in '%s'\n",
+> +                               filename);
+> +               return 0;
+> +       }
+> +       return 1;
+> +}
 
 -- 
 With Best Regards,
