@@ -1,7 +1,7 @@
 From: Mattias Jacobsson <2pi@mok.nu>
-Subject: [PATCH v2 1/3] platform/x86: wmi: move struct wmi_device_id to mod_devicetable.h
-Date: Sun, 27 Jan 2019 20:03:27 +0100
-Message-ID: <b40da7d75a8cf02f78db7896e07859e315477120.1548610407.git.2pi@mok.nu>
+Subject: [PATCH v2 3/3] platform/x86: wmi: use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
+Date: Sun, 27 Jan 2019 20:03:29 +0100
+Message-ID: <d3f8c420937b75d1b9101e5392c5dbf54b763cb3.1548610407.git.2pi@mok.nu>
 References: <cover.1548610407.git.2pi@mok.nu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -9,83 +9,110 @@ Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1548610407.git.2pi@mok.nu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy@infradead.org
+To: mario.limonciello@dell.com, dvhart@infradead.org, andy@infradead.org, mjg59@srcf.ucam.org, pali.rohar@gmail.com
 Cc: 2pi@mok.nu, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-In preparation for adding WMI support to MODULE_DEVICE_TABLE() move the
-definition of struct wmi_device_id to mod_devicetable.h and inline
-guid_string in the struct.
+WMI drivers can if they have specified an array of struct wmi_device_id
+use the MODULE_DEVICE_TABLE() macro to automatically generate the
+appropriate MODULE_ALIAS() output. Thus avoiding to keep both the array
+of struct wmi_device_id and the MODULE_ALIAS() declaration(s) in sync.
 
-Changing guid_string to an inline char array changes the loop conditions
-when looping over an array of struct wmi_device_id. Therefore update
-wmi_dev_match()'s loop to check for an empty guid_string instead of a
-NULL pointer.
+Change all drivers that have specified an array of struct wmi_device_id
+to use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS().
 
 Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- drivers/platform/x86/wmi.c      |  2 +-
- include/linux/mod_devicetable.h | 13 +++++++++++++
- include/linux/wmi.h             |  5 +----
- 3 files changed, 15 insertions(+), 5 deletions(-)
+ drivers/platform/x86/dell-smbios-wmi.c       | 2 +-
+ drivers/platform/x86/dell-wmi-descriptor.c   | 2 +-
+ drivers/platform/x86/dell-wmi.c              | 4 ++--
+ drivers/platform/x86/huawei-wmi.c            | 3 +--
+ drivers/platform/x86/intel-wmi-thunderbolt.c | 2 +-
+ drivers/platform/x86/wmi-bmof.c              | 2 +-
+ 6 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index c596479e8b13..5cb36b0e8b60 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -776,7 +776,7 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
- 		return 0;
- 	id = wmi_driver->id_table;
+diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
+index cf2229ece9ff..c3ed3c8c17b9 100644
+--- a/drivers/platform/x86/dell-smbios-wmi.c
++++ b/drivers/platform/x86/dell-smbios-wmi.c
+@@ -277,4 +277,4 @@ void exit_dell_smbios_wmi(void)
+ 	wmi_driver_unregister(&dell_smbios_wmi_driver);
+ }
  
--	while (id->guid_string) {
-+	while (id->guid_string[0] != '\0') {
- 		uuid_le driver_guid;
+-MODULE_ALIAS("wmi:" DELL_WMI_SMBIOS_GUID);
++MODULE_DEVICE_TABLE(wmi, dell_smbios_wmi_id_table);
+diff --git a/drivers/platform/x86/dell-wmi-descriptor.c b/drivers/platform/x86/dell-wmi-descriptor.c
+index 072821aa47fc..14ab250b7d5a 100644
+--- a/drivers/platform/x86/dell-wmi-descriptor.c
++++ b/drivers/platform/x86/dell-wmi-descriptor.c
+@@ -207,7 +207,7 @@ static struct wmi_driver dell_wmi_descriptor_driver = {
  
- 		if (WARN_ON(uuid_le_to_bin(id->guid_string, &driver_guid)))
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index f9bd2f34b99f..ccc9bd4f32d2 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -779,4 +779,17 @@ struct typec_device_id {
- 	kernel_ulong_t driver_data;
- };
+ module_wmi_driver(dell_wmi_descriptor_driver);
  
-+/* WMI */
-+
-+#define WMI_MODULE_PREFIX	"wmi:"
-+#define WMI_GUID_STRING_LEN	36
-+
-+/**
-+ * struct wmi_device_id - WMI device identifier
-+ * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-+ */
-+struct wmi_device_id {
-+	const char guid_string[WMI_GUID_STRING_LEN+1];
-+};
-+
- #endif /* LINUX_MOD_DEVICETABLE_H */
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index 4757cb5077e5..592f81afecbb 100644
---- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -18,6 +18,7 @@
+-MODULE_ALIAS("wmi:" DELL_WMI_DESCRIPTOR_GUID);
++MODULE_DEVICE_TABLE(wmi, dell_wmi_descriptor_id_table);
+ MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
+ MODULE_DESCRIPTION("Dell WMI descriptor driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 16c7f3d9a335..0602aba62b3f 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -50,8 +50,6 @@ MODULE_LICENSE("GPL");
  
- #include <linux/device.h>
- #include <linux/acpi.h>
-+#include <linux/mod_devicetable.h>
- #include <uapi/linux/wmi.h>
+ static bool wmi_requires_smbios_request;
  
- struct wmi_device {
-@@ -39,10 +40,6 @@ extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
- 
- extern int set_required_buffer_size(struct wmi_device *wdev, u64 length);
- 
--struct wmi_device_id {
--	const char *guid_string;
--};
+-MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
 -
- struct wmi_driver {
- 	struct device_driver driver;
- 	const struct wmi_device_id *id_table;
+ struct dell_wmi_priv {
+ 	struct input_dev *input_dev;
+ 	u32 interface_version;
+@@ -738,3 +736,5 @@ static void __exit dell_wmi_exit(void)
+ 	wmi_driver_unregister(&dell_wmi_driver);
+ }
+ module_exit(dell_wmi_exit);
++
++MODULE_DEVICE_TABLE(wmi, dell_wmi_id_table);
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 59872f87b741..52fcac5b393a 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -201,8 +201,7 @@ static struct wmi_driver huawei_wmi_driver = {
+ 
+ module_wmi_driver(huawei_wmi_driver);
+ 
+-MODULE_ALIAS("wmi:"WMI0_EVENT_GUID);
+-MODULE_ALIAS("wmi:"AMW0_EVENT_GUID);
++MODULE_DEVICE_TABLE(wmi, huawei_wmi_id_table);
+ MODULE_AUTHOR("Ayman Bagabas <ayman.bagabas@gmail.com>");
+ MODULE_DESCRIPTION("Huawei WMI hotkeys");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c b/drivers/platform/x86/intel-wmi-thunderbolt.c
+index 9ded8e2af312..4dfa61434a76 100644
+--- a/drivers/platform/x86/intel-wmi-thunderbolt.c
++++ b/drivers/platform/x86/intel-wmi-thunderbolt.c
+@@ -88,7 +88,7 @@ static struct wmi_driver intel_wmi_thunderbolt_driver = {
+ 
+ module_wmi_driver(intel_wmi_thunderbolt_driver);
+ 
+-MODULE_ALIAS("wmi:" INTEL_WMI_THUNDERBOLT_GUID);
++MODULE_DEVICE_TABLE(wmi, intel_wmi_thunderbolt_id_table);
+ MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
+ MODULE_DESCRIPTION("Intel WMI Thunderbolt force power driver");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bmof.c
+index c4530ba715e8..8751a13134be 100644
+--- a/drivers/platform/x86/wmi-bmof.c
++++ b/drivers/platform/x86/wmi-bmof.c
+@@ -119,7 +119,7 @@ static struct wmi_driver wmi_bmof_driver = {
+ 
+ module_wmi_driver(wmi_bmof_driver);
+ 
+-MODULE_ALIAS("wmi:" WMI_BMOF_GUID);
++MODULE_DEVICE_TABLE(wmi, wmi_bmof_id_table);
+ MODULE_AUTHOR("Andrew Lutomirski <luto@kernel.org>");
+ MODULE_DESCRIPTION("WMI embedded Binary MOF driver");
+ MODULE_LICENSE("GPL");
 -- 
 2.20.1
