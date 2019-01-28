@@ -1,62 +1,52 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 157/304] platform/x86: mlx-platform: Fix tachometer registers
-Date: Mon, 28 Jan 2019 10:41:14 -0500
-Message-ID: <20190128154341.47195-157-sashal@kernel.org>
-References: <20190128154341.47195-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 018/258] platform/x86: asus-nb-wmi: Map 0x35 to KEY_SCREENLOCK
+Date: Mon, 28 Jan 2019 10:55:24 -0500
+Message-ID: <20190128155924.51521-18-sashal@kernel.org>
+References: <20190128155924.51521-1-sashal@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190128154341.47195-1-sashal@kernel.org>
+In-Reply-To: <20190128155924.51521-1-sashal@kernel.org>
 Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Vadim Pasternak <vadimp@mellanox.com>, Darren Hart <dvhart@infradead.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@gmail.com>, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Vadim Pasternak <vadimp@mellanox.com>
+From: João Paulo Rechi Vita <jprvita@gmail.com>
 
-[ Upstream commit edd45cba5ed7f53974475ddc9a1453c2c87b3328 ]
+[ Upstream commit b3f2f3799a972d3863d0fdc2ab6287aef6ca631f ]
 
-Shift by one the registers for tachometers (7 - 12).
+When the OS registers to handle events from the display off hotkey the
+EC will send a notification with 0x35 for every key press, independent
+of the backlight state.
 
-This fix is relevant for the same new systems MQMB7, MSN37, MSN34,
-which are about to be released to the customers.
-At the moment, none of them is at customers sites. The customers will
-not suffer from this change.
-This fix is necessary, because register used before for tachometer 7
-has been than reserved for the second PWM for newer systems, which are
-not supported yet in mlx-platform driver. So registers of tachometers
-7-12 have been shifted by one.
+The behavior of this key on Windows, with the ATKACPI driver from Asus
+installed, is turning off the backlight of all connected displays with a
+fading effect, and any cursor input or key press turning the backlight
+back on. The key press or cursor input that wakes up the display is also
+passed through to the application under the cursor or under focus.
 
-Fixes: 0378123c5800 ("platform/x86: mlx-platform: Add mlxreg-fan platform driver activation")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+The key that matches this behavior the closest is KEY_SCREENLOCK.
+
+Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/mlx-platform.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index c2c3a1a19879..14f88bfabd5d 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -83,12 +83,12 @@
- #define MLXPLAT_CPLD_LPC_REG_TACHO4_OFFSET	0xe7
- #define MLXPLAT_CPLD_LPC_REG_TACHO5_OFFSET	0xe8
- #define MLXPLAT_CPLD_LPC_REG_TACHO6_OFFSET	0xe9
--#define MLXPLAT_CPLD_LPC_REG_TACHO7_OFFSET	0xea
--#define MLXPLAT_CPLD_LPC_REG_TACHO8_OFFSET	0xeb
--#define MLXPLAT_CPLD_LPC_REG_TACHO9_OFFSET	0xec
--#define MLXPLAT_CPLD_LPC_REG_TACHO10_OFFSET	0xed
--#define MLXPLAT_CPLD_LPC_REG_TACHO11_OFFSET	0xee
--#define MLXPLAT_CPLD_LPC_REG_TACHO12_OFFSET	0xef
-+#define MLXPLAT_CPLD_LPC_REG_TACHO7_OFFSET	0xeb
-+#define MLXPLAT_CPLD_LPC_REG_TACHO8_OFFSET	0xec
-+#define MLXPLAT_CPLD_LPC_REG_TACHO9_OFFSET	0xed
-+#define MLXPLAT_CPLD_LPC_REG_TACHO10_OFFSET	0xee
-+#define MLXPLAT_CPLD_LPC_REG_TACHO11_OFFSET	0xef
-+#define MLXPLAT_CPLD_LPC_REG_TACHO12_OFFSET	0xf0
- #define MLXPLAT_CPLD_LPC_IO_RANGE		0x100
- #define MLXPLAT_CPLD_LPC_I2C_CH1_OFF		0xdb
- #define MLXPLAT_CPLD_LPC_I2C_CH2_OFF		0xda
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index db2af09067db..5a00a7665f9b 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -444,6 +444,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x32, { KEY_MUTE } },
+ 	{ KE_KEY, 0x33, { KEY_DISPLAYTOGGLE } }, /* LCD on */
+ 	{ KE_KEY, 0x34, { KEY_DISPLAY_OFF } }, /* LCD off */
++	{ KE_KEY, 0x35, { KEY_SCREENLOCK } },
+ 	{ KE_KEY, 0x40, { KEY_PREVIOUSSONG } },
+ 	{ KE_KEY, 0x41, { KEY_NEXTSONG } },
+ 	{ KE_KEY, 0x43, { KEY_STOPCD } }, /* Stop/Eject */
 -- 
 2.19.1
