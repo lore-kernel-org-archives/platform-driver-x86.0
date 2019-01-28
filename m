@@ -1,52 +1,53 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 022/304] platform/x86: asus-nb-wmi: Map 0x35 to KEY_SCREENLOCK
-Date: Mon, 28 Jan 2019 10:38:59 -0500
-Message-ID: <20190128154341.47195-22-sashal@kernel.org>
-References: <20190128154341.47195-1-sashal@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: wmi: fix potential null pointer dereferences
+Date: Mon, 28 Jan 2019 17:49:34 +0200
+Message-ID: <CAHp75Vdjq5S3gdk7iPEsbmAvxL1nVxxNSnTQ1O0KLxZ4uTH_tw@mail.gmail.com>
+References: <20190122200302.19861-1-2pi@mok.nu> <CAHp75Vfv1sMyAQn=ue0hroqAnbkhQayCj64xNBHO5PRRv53GSA@mail.gmail.com>
+ <20190128143845.2gneic5ip5b56mwv@mok.nu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190128154341.47195-1-sashal@kernel.org>
+In-Reply-To: <20190128143845.2gneic5ip5b56mwv@mok.nu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@gmail.com>, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Mattias Jacobsson <2pi@mok.nu>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: João Paulo Rechi Vita <jprvita@gmail.com>
+On Mon, Jan 28, 2019 at 4:39 PM Mattias Jacobsson <2pi@mok.nu> wrote:
+> On 2019-01-27, Andy Shevchenko wrote:
+> > On Tue, Jan 22, 2019 at 10:04 PM Mattias Jacobsson <2pi@mok.nu> wrote:
 
-[ Upstream commit b3f2f3799a972d3863d0fdc2ab6287aef6ca631f ]
+> > > -       struct wmi_driver *wmi_driver =
+> > > -               container_of(driver, struct wmi_driver, driver);
+> >
+> > AFAIU this is just a pointer arithmetics, no need to move it.
+>
+> That is my understanding too, it seamed backwards to do the NULL check
+> afterwards, but we still have access to dev and driver. So why not...
+>
+> >
+> > > -       struct wmi_block *wblock = dev_to_wblock(dev);
+> >
+> > > -       const struct wmi_device_id *id = wmi_driver->id_table;
+> > > +       const struct wmi_device_id *id;
+> > > +       struct wmi_block *wblock;
+> > > +       struct wmi_driver *wmi_driver;
+> > > +
+> >
+> > > +       if (dev == NULL || driver == NULL)
+> > > +               return 0;
+> >
+> > On which circumstances this may ever happen?
+>
+> Nothing in particular. If there is a bug in the caller of this function,
+> then that is when this will come into play. See my earlier mail to
+> Darren too.
 
-When the OS registers to handle events from the display off hotkey the
-EC will send a notification with 0x35 for every key press, independent
-of the backlight state.
+So, I suggest in these cases do not touch existing till the actual
+problem will be discovered and proved.
+I.o.w. touch only place which you have real problem, and describe this
+issue in commit message.
 
-The behavior of this key on Windows, with the ATKACPI driver from Asus
-installed, is turning off the backlight of all connected displays with a
-fading effect, and any cursor input or key press turning the backlight
-back on. The key press or cursor input that wakes up the display is also
-passed through to the application under the cursor or under focus.
-
-The key that matches this behavior the closest is KEY_SCREENLOCK.
-
-Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/asus-nb-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index db2af09067db..5a00a7665f9b 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -444,6 +444,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
- 	{ KE_KEY, 0x32, { KEY_MUTE } },
- 	{ KE_KEY, 0x33, { KEY_DISPLAYTOGGLE } }, /* LCD on */
- 	{ KE_KEY, 0x34, { KEY_DISPLAY_OFF } }, /* LCD off */
-+	{ KE_KEY, 0x35, { KEY_SCREENLOCK } },
- 	{ KE_KEY, 0x40, { KEY_PREVIOUSSONG } },
- 	{ KE_KEY, 0x41, { KEY_NEXTSONG } },
- 	{ KE_KEY, 0x43, { KEY_STOPCD } }, /* Stop/Eject */
 -- 
-2.19.1
+With Best Regards,
+Andy Shevchenko
