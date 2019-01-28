@@ -1,53 +1,62 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: wmi: fix potential null pointer dereferences
-Date: Mon, 28 Jan 2019 17:49:34 +0200
-Message-ID: <CAHp75Vdjq5S3gdk7iPEsbmAvxL1nVxxNSnTQ1O0KLxZ4uTH_tw@mail.gmail.com>
-References: <20190122200302.19861-1-2pi@mok.nu> <CAHp75Vfv1sMyAQn=ue0hroqAnbkhQayCj64xNBHO5PRRv53GSA@mail.gmail.com>
- <20190128143845.2gneic5ip5b56mwv@mok.nu>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 157/304] platform/x86: mlx-platform: Fix tachometer registers
+Date: Mon, 28 Jan 2019 10:41:14 -0500
+Message-ID: <20190128154341.47195-157-sashal@kernel.org>
+References: <20190128154341.47195-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190128143845.2gneic5ip5b56mwv@mok.nu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mattias Jacobsson <2pi@mok.nu>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190128154341.47195-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Vadim Pasternak <vadimp@mellanox.com>, Darren Hart <dvhart@infradead.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 28, 2019 at 4:39 PM Mattias Jacobsson <2pi@mok.nu> wrote:
-> On 2019-01-27, Andy Shevchenko wrote:
-> > On Tue, Jan 22, 2019 at 10:04 PM Mattias Jacobsson <2pi@mok.nu> wrote:
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-> > > -       struct wmi_driver *wmi_driver =
-> > > -               container_of(driver, struct wmi_driver, driver);
-> >
-> > AFAIU this is just a pointer arithmetics, no need to move it.
->
-> That is my understanding too, it seamed backwards to do the NULL check
-> afterwards, but we still have access to dev and driver. So why not...
->
-> >
-> > > -       struct wmi_block *wblock = dev_to_wblock(dev);
-> >
-> > > -       const struct wmi_device_id *id = wmi_driver->id_table;
-> > > +       const struct wmi_device_id *id;
-> > > +       struct wmi_block *wblock;
-> > > +       struct wmi_driver *wmi_driver;
-> > > +
-> >
-> > > +       if (dev == NULL || driver == NULL)
-> > > +               return 0;
-> >
-> > On which circumstances this may ever happen?
->
-> Nothing in particular. If there is a bug in the caller of this function,
-> then that is when this will come into play. See my earlier mail to
-> Darren too.
+[ Upstream commit edd45cba5ed7f53974475ddc9a1453c2c87b3328 ]
 
-So, I suggest in these cases do not touch existing till the actual
-problem will be discovered and proved.
-I.o.w. touch only place which you have real problem, and describe this
-issue in commit message.
+Shift by one the registers for tachometers (7 - 12).
 
+This fix is relevant for the same new systems MQMB7, MSN37, MSN34,
+which are about to be released to the customers.
+At the moment, none of them is at customers sites. The customers will
+not suffer from this change.
+This fix is necessary, because register used before for tachometer 7
+has been than reserved for the second PWM for newer systems, which are
+not supported yet in mlx-platform driver. So registers of tachometers
+7-12 have been shifted by one.
+
+Fixes: 0378123c5800 ("platform/x86: mlx-platform: Add mlxreg-fan platform driver activation")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/mlx-platform.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index c2c3a1a19879..14f88bfabd5d 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -83,12 +83,12 @@
+ #define MLXPLAT_CPLD_LPC_REG_TACHO4_OFFSET	0xe7
+ #define MLXPLAT_CPLD_LPC_REG_TACHO5_OFFSET	0xe8
+ #define MLXPLAT_CPLD_LPC_REG_TACHO6_OFFSET	0xe9
+-#define MLXPLAT_CPLD_LPC_REG_TACHO7_OFFSET	0xea
+-#define MLXPLAT_CPLD_LPC_REG_TACHO8_OFFSET	0xeb
+-#define MLXPLAT_CPLD_LPC_REG_TACHO9_OFFSET	0xec
+-#define MLXPLAT_CPLD_LPC_REG_TACHO10_OFFSET	0xed
+-#define MLXPLAT_CPLD_LPC_REG_TACHO11_OFFSET	0xee
+-#define MLXPLAT_CPLD_LPC_REG_TACHO12_OFFSET	0xef
++#define MLXPLAT_CPLD_LPC_REG_TACHO7_OFFSET	0xeb
++#define MLXPLAT_CPLD_LPC_REG_TACHO8_OFFSET	0xec
++#define MLXPLAT_CPLD_LPC_REG_TACHO9_OFFSET	0xed
++#define MLXPLAT_CPLD_LPC_REG_TACHO10_OFFSET	0xee
++#define MLXPLAT_CPLD_LPC_REG_TACHO11_OFFSET	0xef
++#define MLXPLAT_CPLD_LPC_REG_TACHO12_OFFSET	0xf0
+ #define MLXPLAT_CPLD_LPC_IO_RANGE		0x100
+ #define MLXPLAT_CPLD_LPC_I2C_CH1_OFF		0xdb
+ #define MLXPLAT_CPLD_LPC_I2C_CH2_OFF		0xda
 -- 
-With Best Regards,
-Andy Shevchenko
+2.19.1
