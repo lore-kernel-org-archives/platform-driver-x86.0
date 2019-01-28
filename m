@@ -1,165 +1,87 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 116/304] platform/x86: Fix config space access for intel_atomisp2_pm
-Date: Mon, 28 Jan 2019 10:40:33 -0500
-Message-ID: <20190128154341.47195-116-sashal@kernel.org>
-References: <20190128154341.47195-1-sashal@kernel.org>
+From: Szabolcs Fruhwald via iommu <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Subject: Re: [PATCH] dcdbas: Fix Intel-IOMMU domain allocation failure
+Date: Mon, 28 Jan 2019 15:42:17 -0800
+Message-ID: <CAKkQkjB08FjLDUv=_=uAxNjstqryx6VG5zOq1LQ71V+Rws7+-w@mail.gmail.com>
+References: <20190123230131.42094-1-sfruhwald@google.com>
+	<c4e7855966a94b0c999a5f4325a27e90@ausx13mpc120.AMER.DELL.COM>
+	<CAKkQkjD=Hdm-3WbmrrqEj4c5df3LH7sMU960rwqHqF0Gf4CU7A@mail.gmail.com>
+	<CAHp75Vc4r=ceP=SOQk2LR2B8fZjmdo33fV3yio3a352WwkMyMA@mail.gmail.com>
+	<CAKkQkjD6WGE2jPSqUQ-BpJmevix2vd4GoSFKK5J312mEJB0Jpg@mail.gmail.com>
+	<CAHp75VdhqGSCxZSPAW2DXq-cFUcDCoOnpW5mqD27LygGoiLMHA@mail.gmail.com>
+	<7cd81f91-a69e-1561-821f-f21148a3aec0@arm.com>
+Reply-To: Szabolcs Fruhwald <sfruhwald-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190128154341.47195-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Alan Cox <alan@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <7cd81f91-a69e-1561-821f-f21148a3aec0-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mario Limonciello <Mario.Limonciello-8PEkshWhKlo@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stuart Hayes <stuart.w.hayes-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+On Fri, Jan 25, 2019 at 5:12 AM Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+>
+> On 25/01/2019 11:58, Andy Shevchenko wrote:
+> > On Fri, Jan 25, 2019 at 3:50 AM Szabolcs Fruhwald <sfruhwald-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> >
+> > First of all, please do not top post!
+> >
+> >> I took a quick look at arch_setup_pdev_archdata(), overridden it in
+> >> dcdbas.c and it works well (despite it's being called twice, since
+> >> it's called from platform_device_alloc and platform_device_register).
+> >>
+> >> However, as I am not super familiar with ELF weak method references,
+> >> especially with its scope resolution / versioning part, so as I see
+> >> this weak method was introduced mainly for arch/** specific hooks.
+> >> Is it safe to override this method from driver code, when let's say
+> >> there's another implementation in the x86 arch code (currently there
+> >> isn't)?
+> >
+> > No, it should be done somewhere in arch/x86.
+> >
+> > OTOH, Intel iommu driver can do it based on the check dev_is_pci().
+> > For now I think it's better to solve this inside Intel iommu driver.
+>
+> Indeed - hacking code into individual device drivers which is entirely
+> specific to the current implementation of the intel-iommu driver sounds
+> like a recipe for a maintenance disaster (not to mention the extra fun
+> if any of those devices also end up in AMD-based systems).
+>
+> AFAICS, the VT-d spec accommodates non-PCI devices via DRHD and
+> corresponding ANDD entries, and the driver already has at least some
+> degree of support for those - see dmar_acpi_insert_dev_scope() - so it
+> may not need much more than just hooking up to the platform bus. If
+> these platform devices do actually master through the IOMMU but don't
+> have an appropriate device scope described, then frankly that's broken
+> firmware, but the place to work around that would still be in the DMAR code.
+>
+> Robin.
 
-[ Upstream commit 6a31061833a52a79c99221b6251db08cf377470e ]
+It does, however, unfortunately, AFAK this 'device' is not listed in
+any of those
+ACPI tables. This is not even a real device, it's a CMOS chip with a fixed mem
+segment and it needs dma only to let it read out the cmd data from a buffer.
+So it's not really possible to support proper iommu for this driver.
+Same is true for the previously mentioned drm915 mock test device.
 
-We lose even config space access when we power gate the ISP
-via the PUNIT. That makes lspci & co. produce gibberish.
+Either way, there are device drivers which for various reasons may need to
+opt-out / force 1:1 iommu mapping to work properly when iommu is turned on.
 
-To fix that let's try to implement actual runtime pm hooks
-and inform the pci core that the device always goes to
-D3cold. That will cause the pci core to resume the device
-before attempting config space access.
-
-This introduces another annoyance though. We get the
-following error every time we try to resume the device:
-intel_atomisp2_pm 0000:00:03.0: Refused to change power state, currently in D3
-
-The reason being that the pci core tries to put the device
-back into D0 via the standard PCI PM mechanism before
-calling the driver resume hook. To fix this properly
-we'd need to infiltrate the platform pm hooks (could
-turn ugly real fast), or use pm domains (which don't
-seem to exist on x86), or some extra early resume
-hook for the driver (which doesn't exist either).
-So maybe we just choose to live with the error?
-
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Alan Cox <alan@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/intel_atomisp2_pm.c | 68 +++++++++++++++++-------
- 1 file changed, 48 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_atomisp2_pm.c b/drivers/platform/x86/intel_atomisp2_pm.c
-index 9371603a0ac9..2a8c7a4cea35 100644
---- a/drivers/platform/x86/intel_atomisp2_pm.c
-+++ b/drivers/platform/x86/intel_atomisp2_pm.c
-@@ -33,46 +33,45 @@
- #define ISPSSPM0_IUNIT_POWER_ON		0x0
- #define ISPSSPM0_IUNIT_POWER_OFF	0x3
- 
--static int isp_probe(struct pci_dev *dev, const struct pci_device_id *id)
-+static int isp_set_power(struct pci_dev *dev, bool enable)
- {
- 	unsigned long timeout;
--	u32 val;
--
--	pci_write_config_dword(dev, PCI_INTERRUPT_CTRL, 0);
--
--	/*
--	 * MRFLD IUNIT DPHY is located in an always-power-on island
--	 * MRFLD HW design need all CSI ports are disabled before
--	 * powering down the IUNIT.
--	 */
--	pci_read_config_dword(dev, PCI_CSI_CONTROL, &val);
--	val |= PCI_CSI_CONTROL_PORTS_OFF_MASK;
--	pci_write_config_dword(dev, PCI_CSI_CONTROL, val);
-+	u32 val = enable ? ISPSSPM0_IUNIT_POWER_ON :
-+		ISPSSPM0_IUNIT_POWER_OFF;
- 
--	/* Write 0x3 to ISPSSPM0 bit[1:0] to power off the IUNIT */
-+	/* Write to ISPSSPM0 bit[1:0] to power on/off the IUNIT */
- 	iosf_mbi_modify(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0,
--			ISPSSPM0_IUNIT_POWER_OFF, ISPSSPM0_ISPSSC_MASK);
-+			val, ISPSSPM0_ISPSSC_MASK);
- 
- 	/*
- 	 * There should be no IUNIT access while power-down is
- 	 * in progress HW sighting: 4567865
- 	 * Wait up to 50 ms for the IUNIT to shut down.
-+	 * And we do the same for power on.
- 	 */
- 	timeout = jiffies + msecs_to_jiffies(50);
- 	while (1) {
--		/* Wait until ISPSSPM0 bit[25:24] shows 0x3 */
--		iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0, &val);
--		val = (val & ISPSSPM0_ISPSSS_MASK) >> ISPSSPM0_ISPSSS_OFFSET;
--		if (val == ISPSSPM0_IUNIT_POWER_OFF)
-+		u32 tmp;
-+
-+		/* Wait until ISPSSPM0 bit[25:24] shows the right value */
-+		iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0, &tmp);
-+		tmp = (tmp & ISPSSPM0_ISPSSS_MASK) >> ISPSSPM0_ISPSSS_OFFSET;
-+		if (tmp == val)
- 			break;
- 
- 		if (time_after(jiffies, timeout)) {
--			dev_err(&dev->dev, "IUNIT power-off timeout.\n");
-+			dev_err(&dev->dev, "IUNIT power-%s timeout.\n",
-+				enable ? "on" : "off");
- 			return -EBUSY;
- 		}
- 		usleep_range(1000, 2000);
- 	}
- 
-+	return 0;
-+}
-+
-+static int isp_probe(struct pci_dev *dev, const struct pci_device_id *id)
-+{
- 	pm_runtime_allow(&dev->dev);
- 	pm_runtime_put_sync_suspend(&dev->dev);
- 
-@@ -87,11 +86,40 @@ static void isp_remove(struct pci_dev *dev)
- 
- static int isp_pci_suspend(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	u32 val;
-+
-+	pci_write_config_dword(pdev, PCI_INTERRUPT_CTRL, 0);
-+
-+	/*
-+	 * MRFLD IUNIT DPHY is located in an always-power-on island
-+	 * MRFLD HW design need all CSI ports are disabled before
-+	 * powering down the IUNIT.
-+	 */
-+	pci_read_config_dword(pdev, PCI_CSI_CONTROL, &val);
-+	val |= PCI_CSI_CONTROL_PORTS_OFF_MASK;
-+	pci_write_config_dword(pdev, PCI_CSI_CONTROL, val);
-+
-+	/*
-+	 * We lose config space access when punit power gates
-+	 * the ISP. Can't use pci_set_power_state() because
-+	 * pmcsr won't actually change when we write to it.
-+	 */
-+	pci_save_state(pdev);
-+	pdev->current_state = PCI_D3cold;
-+	isp_set_power(pdev, false);
-+
- 	return 0;
- }
- 
- static int isp_pci_resume(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	isp_set_power(pdev, true);
-+	pdev->current_state = PCI_D0;
-+	pci_restore_state(pdev);
-+
- 	return 0;
- }
- 
--- 
-2.19.1
+I agree that the current way of handling this (archdata.iommu) in intel_iommu
+driver is not nice, a better solution might be to create a generalized way
+through iommu.h (eg a method or constant value stored in main dev /
+pdev struct),
+which is well documented to be used only for legacy drivers / special
+cases where
+forced 1:1 mapping is truly justified / last resort. And other arch
+iommu drivers can
+support this, if and until necessary (legacy drivers don't need anymore).
