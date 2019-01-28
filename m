@@ -1,52 +1,46 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 007/107] platform/x86: asus-nb-wmi: Map 0x35 to KEY_SCREENLOCK
-Date: Mon, 28 Jan 2019 11:18:07 -0500
-Message-ID: <20190128161947.57405-7-sashal@kernel.org>
-References: <20190128161947.57405-1-sashal@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Liming Sun <lsun@mellanox.com>
+Subject: [PATCH v8 0/2] TmFifo platform driver for Mellanox BlueField SoC
+Date: Mon, 28 Jan 2019 12:28:05 -0500
+Message-ID: <1548696487-8840-1-git-send-email-lsun@mellanox.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190128161947.57405-1-sashal@kernel.org>
+In-Reply-To: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@gmail.com>, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>
+Cc: Liming Sun <lsun@mellanox.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: João Paulo Rechi Vita <jprvita@gmail.com>
+This patch series implements the device side platform driver
+support for the TmFifo on Mellanox BlueField SoC.
 
-[ Upstream commit b3f2f3799a972d3863d0fdc2ab6287aef6ca631f ]
+TmFifo is part of the RShim component. It provides FIFOs to
+communicate with external host machine via USB or PCIe (SmartNic
+case). External host machine has driver to access the RShim
+component as well, which is not covered in this patch series.
 
-When the OS registers to handle events from the display off hotkey the
-EC will send a notification with 0x35 for every key press, independent
-of the backlight state.
+This patch series was submitted to drivers/soc in previous versions.
+This version (v8) re-submit it to drivers/platform according to
+the received comments / suggestions.
 
-The behavior of this key on Windows, with the ATKACPI driver from Asus
-installed, is turning off the backlight of all connected displays with a
-fading effect, and any cursor input or key press turning the backlight
-back on. The key press or cursor input that wakes up the display is also
-passed through to the application under the cursor or under focus.
+Patch v8 1/2 has changes according to some comments from Vadim
+Pasternak during Mellanox internal review.
 
-The key that matches this behavior the closest is KEY_SCREENLOCK.
+Patch v8 2/2 was reviewed by Rob Herring before, but might need
+a second look since the location of the driver code is moved.
 
-Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/asus-nb-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+Liming Sun (2):
+  platform/mellanox: Add TmFifo driver for Mellanox BlueField Soc
+  dt-bindings: soc: Add TmFifo binding for Mellanox BlueField SoC
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index c857d2d7bbec..d113103fd6af 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -479,6 +479,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
- 	{ KE_KEY, 0x32, { KEY_MUTE } },
- 	{ KE_KEY, 0x33, { KEY_DISPLAYTOGGLE } }, /* LCD on */
- 	{ KE_KEY, 0x34, { KEY_DISPLAY_OFF } }, /* LCD off */
-+	{ KE_KEY, 0x35, { KEY_SCREENLOCK } },
- 	{ KE_KEY, 0x40, { KEY_PREVIOUSSONG } },
- 	{ KE_KEY, 0x41, { KEY_NEXTSONG } },
- 	{ KE_KEY, 0x43, { KEY_STOPCD } }, /* Stop/Eject */
+ .../devicetree/bindings/soc/mellanox/tmfifo.txt    |   23 +
+ drivers/platform/mellanox/Kconfig                  |   13 +-
+ drivers/platform/mellanox/Makefile                 |    1 +
+ drivers/platform/mellanox/mlxbf-tmfifo-regs.h      |   67 +
+ drivers/platform/mellanox/mlxbf-tmfifo.c           | 1289 ++++++++++++++++++++
+ 5 files changed, 1392 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
+ create mode 100644 drivers/platform/mellanox/mlxbf-tmfifo-regs.h
+ create mode 100644 drivers/platform/mellanox/mlxbf-tmfifo.c
+
 -- 
-2.19.1
+1.8.3.1
