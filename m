@@ -1,75 +1,80 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: wmi: fix potential null pointer dereferences
-Date: Sun, 27 Jan 2019 22:32:00 +0200
-Message-ID: <CAHp75Vfv1sMyAQn=ue0hroqAnbkhQayCj64xNBHO5PRRv53GSA@mail.gmail.com>
-References: <20190122200302.19861-1-2pi@mok.nu>
+From: Mattias Jacobsson <2pi@mok.nu>
+Subject: Re: [PATCH v2 1/3] platform/x86: wmi: move struct wmi_device_id to
+ mod_devicetable.h
+Date: Mon, 28 Jan 2019 14:54:37 +0100
+Message-ID: <20190128135437.qetbebros3xkayyn@mok.nu>
+References: <cover.1548610407.git.2pi@mok.nu>
+ <b40da7d75a8cf02f78db7896e07859e315477120.1548610407.git.2pi@mok.nu>
+ <CAHp75Vdsr8aY1ODpZUqR--jAfgRowJz8tbSGwS1SFTH-W4u0XA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122200302.19861-1-2pi@mok.nu>
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vdsr8aY1ODpZUqR--jAfgRowJz8tbSGwS1SFTH-W4u0XA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mattias Jacobsson <2pi@mok.nu>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 2pi@mok.nu
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jan 22, 2019 at 10:04 PM Mattias Jacobsson <2pi@mok.nu> wrote:
->
-> In the function wmi_dev_match() there are three variables that
-> potentially can result in a null pointer dereference. Namely:
-> dev/wblock, driver/wmi_driver, and wmi_driver->id_table.
->
-> Check for NULL and return that the driver can't handle the device if any
-> of these variables would result in a null pointer dereference.
->
-> The NULL checks are performed prior to running container_of() for the
-> variables dev/wblock and driver/wmi_driver.
->
-> Fixes: 844af950da94 ("platform/x86: wmi: Turn WMI into a bus driver")
-> Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
-> ---
->  drivers/platform/x86/wmi.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index bea35be68706..c596479e8b13 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -763,10 +763,18 @@ static void wmi_dev_release(struct device *dev)
->
->  static int wmi_dev_match(struct device *dev, struct device_driver *driver)
->  {
-> -       struct wmi_driver *wmi_driver =
-> -               container_of(driver, struct wmi_driver, driver);
+Hi Andy,
 
-AFAIU this is just a pointer arithmetics, no need to move it.
+Thanks for reviewing!
 
-> -       struct wmi_block *wblock = dev_to_wblock(dev);
+On 2019-01-27, Andy Shevchenko wrote:
+> On Sun, Jan 27, 2019 at 9:04 PM Mattias Jacobsson <2pi@mok.nu> wrote:
+> >
+> > In preparation for adding WMI support to MODULE_DEVICE_TABLE() move the
+> > definition of struct wmi_device_id to mod_devicetable.h and inline
+> > guid_string in the struct.
+> >
+> > Changing guid_string to an inline char array changes the loop conditions
+> > when looping over an array of struct wmi_device_id. Therefore update
+> > wmi_dev_match()'s loop to check for an empty guid_string instead of a
+> > NULL pointer.
+> 
+> Below some minor comments.
+> 
+> > -       while (id->guid_string) {
+> > +       while (id->guid_string[0] != '\0') {
+> 
+> Hmm.. I would rather put it as
+> 
+> while (*id->guid_string) {
 
-> -       const struct wmi_device_id *id = wmi_driver->id_table;
-> +       const struct wmi_device_id *id;
-> +       struct wmi_block *wblock;
-> +       struct wmi_driver *wmi_driver;
-> +
+Sure.
 
-> +       if (dev == NULL || driver == NULL)
-> +               return 0;
+> 
+> > +#define WMI_MODULE_PREFIX      "wmi:"
+> 
+> > +#define WMI_GUID_STRING_LEN    36
+> 
+> Isn't this already defined in UUID namespace?
+> (include/linux/uuid.h IIRC)  
 
-On which circumstances this may ever happen?
+Kind of, UUID_STRING_LEN is defined in uuid.h. It is included behind a
+#ifdef __KERNEL__, but others seam to use things included through it so
+I guess it is alright...
 
-> +       wblock = dev_to_wblock(dev);
-> +       wmi_driver = container_of(driver, struct wmi_driver, driver);
-> +
-> +       if (wmi_driver->id_table == NULL)
-> +               return 0;
-> +       id = wmi_driver->id_table;
->
->         while (id->guid_string) {
->                 uuid_le driver_guid;
-> --
-> 2.20.1
->
+Let me know how you want it.
 
+> 
+> >  #include <linux/device.h>
+> >  #include <linux/acpi.h>
+> 
+> > +#include <linux/mod_devicetable.h>
+> 
+> Not sure it's needed since acpi.h includes that.
 
--- 
-With Best Regards,
-Andy Shevchenko
+It is included in acpi.h(behind CONFIG_ACPI), I thought it was cleaner
+with it included explicitly. Plus that we aren't relying on others to
+include it.
+
+Let me know how you want it.
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+
+Thanks,
+Mattias
