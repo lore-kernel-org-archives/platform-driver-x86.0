@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 06/80] platform/x86: asus-nb-wmi: Map 0x35 to KEY_SCREENLOCK
-Date: Mon, 28 Jan 2019 11:22:47 -0500
-Message-ID: <20190128162401.58841-6-sashal@kernel.org>
-References: <20190128162401.58841-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 3.18 03/61] platform/x86: asus-nb-wmi: Map 0x35 to KEY_SCREENLOCK
+Date: Mon, 28 Jan 2019 11:25:25 -0500
+Message-ID: <20190128162623.59854-3-sashal@kernel.org>
+References: <20190128162623.59854-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190128162401.58841-1-sashal@kernel.org>
+In-Reply-To: <20190128162623.59854-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@gmail.com>, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
@@ -37,10 +37,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 852d2de7f69f..2ee8d016fa5c 100644
+index f13b5b95c00f..b46a3653e6ab 100644
 --- a/drivers/platform/x86/asus-nb-wmi.c
 +++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -341,6 +341,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+@@ -314,6 +314,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
  	{ KE_KEY, 0x32, { KEY_MUTE } },
  	{ KE_KEY, 0x33, { KEY_DISPLAYTOGGLE } }, /* LCD on */
  	{ KE_KEY, 0x34, { KEY_DISPLAY_OFF } }, /* LCD off */
