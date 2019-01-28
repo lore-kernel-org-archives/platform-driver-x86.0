@@ -1,52 +1,61 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 018/258] platform/x86: asus-nb-wmi: Map 0x35 to KEY_SCREENLOCK
-Date: Mon, 28 Jan 2019 10:55:24 -0500
-Message-ID: <20190128155924.51521-18-sashal@kernel.org>
-References: <20190128155924.51521-1-sashal@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 1/3] platform/x86: wmi: move struct wmi_device_id to mod_devicetable.h
+Date: Mon, 28 Jan 2019 18:01:42 +0200
+Message-ID: <CAHp75Vco3sCDVC6QTf8FbOpwzOtoAO699fvdSCJv7G8HOVZEjg@mail.gmail.com>
+References: <cover.1548610407.git.2pi@mok.nu> <b40da7d75a8cf02f78db7896e07859e315477120.1548610407.git.2pi@mok.nu>
+ <CAHp75Vdsr8aY1ODpZUqR--jAfgRowJz8tbSGwS1SFTH-W4u0XA@mail.gmail.com> <20190128135437.qetbebros3xkayyn@mok.nu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190128155924.51521-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@gmail.com>, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190128135437.qetbebros3xkayyn@mok.nu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mattias Jacobsson <2pi@mok.nu>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: João Paulo Rechi Vita <jprvita@gmail.com>
+On Mon, Jan 28, 2019 at 3:55 PM Mattias Jacobsson <2pi@mok.nu> wrote:
+> On 2019-01-27, Andy Shevchenko wrote:
+> > On Sun, Jan 27, 2019 at 9:04 PM Mattias Jacobsson <2pi@mok.nu> wrote:
 
-[ Upstream commit b3f2f3799a972d3863d0fdc2ab6287aef6ca631f ]
+> > > +#define WMI_GUID_STRING_LEN    36
+> >
+> > Isn't this already defined in UUID namespace?
+> > (include/linux/uuid.h IIRC)
+>
+> Kind of, UUID_STRING_LEN is defined in uuid.h. It is included behind a
+> #ifdef __KERNEL__, but others seam to use things included through it so
+> I guess it is alright...
+>
+> Let me know how you want it.
 
-When the OS registers to handle events from the display off hotkey the
-EC will send a notification with 0x35 for every key press, independent
-of the backlight state.
+On one hand I think too many places with the same information is not
+good. On the other hand WMI might change this limit in the future and
+on top of this it seems you are sharing it with user space.
+However, file2alias.c includes kernel header directly and uses a
+duplicate definition for cases !__KERNEL__.
 
-The behavior of this key on Windows, with the ATKACPI driver from Asus
-installed, is turning off the backlight of all connected displays with a
-fading effect, and any cursor input or key press turning the backlight
-back on. The key press or cursor input that wakes up the display is also
-passed through to the application under the cursor or under focus.
+So, I would do that way.
+Use in mod_devicetable.h the definition from uuid.h (which is already
+included there), and duplicate the same definition in file2alias.c in
+the way it's done for the rest UUID stuff there.
 
-The key that matches this behavior the closest is KEY_SCREENLOCK.
+> > >  #include <linux/acpi.h>
+> >
+> > > +#include <linux/mod_devicetable.h>
+> >
+> > Not sure it's needed since acpi.h includes that.
+>
+> It is included in acpi.h(behind CONFIG_ACPI), I thought it was cleaner
+> with it included explicitly. Plus that we aren't relying on others to
+> include it.
+>
+> Let me know how you want it.
 
-Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/asus-nb-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+Since it's minor, it's up to you. Ideally we would better to split out
+that inclusion from acpi.h and explicitly do this in all similar
+cases, but it's not ours call here.
+That said, your variant is okay.
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index db2af09067db..5a00a7665f9b 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -444,6 +444,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
- 	{ KE_KEY, 0x32, { KEY_MUTE } },
- 	{ KE_KEY, 0x33, { KEY_DISPLAYTOGGLE } }, /* LCD on */
- 	{ KE_KEY, 0x34, { KEY_DISPLAY_OFF } }, /* LCD off */
-+	{ KE_KEY, 0x35, { KEY_SCREENLOCK } },
- 	{ KE_KEY, 0x40, { KEY_PREVIOUSSONG } },
- 	{ KE_KEY, 0x41, { KEY_NEXTSONG } },
- 	{ KE_KEY, 0x43, { KEY_STOPCD } }, /* Stop/Eject */
 -- 
-2.19.1
+With Best Regards,
+Andy Shevchenko
