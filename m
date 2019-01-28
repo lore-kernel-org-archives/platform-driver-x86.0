@@ -1,61 +1,62 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 1/3] platform/x86: wmi: move struct wmi_device_id to mod_devicetable.h
-Date: Mon, 28 Jan 2019 18:01:42 +0200
-Message-ID: <CAHp75Vco3sCDVC6QTf8FbOpwzOtoAO699fvdSCJv7G8HOVZEjg@mail.gmail.com>
-References: <cover.1548610407.git.2pi@mok.nu> <b40da7d75a8cf02f78db7896e07859e315477120.1548610407.git.2pi@mok.nu>
- <CAHp75Vdsr8aY1ODpZUqR--jAfgRowJz8tbSGwS1SFTH-W4u0XA@mail.gmail.com> <20190128135437.qetbebros3xkayyn@mok.nu>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 133/258] platform/x86: mlx-platform: Fix tachometer registers
+Date: Mon, 28 Jan 2019 10:57:19 -0500
+Message-ID: <20190128155924.51521-133-sashal@kernel.org>
+References: <20190128155924.51521-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190128135437.qetbebros3xkayyn@mok.nu>
+In-Reply-To: <20190128155924.51521-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mattias Jacobsson <2pi@mok.nu>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Vadim Pasternak <vadimp@mellanox.com>, Darren Hart <dvhart@infradead.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 28, 2019 at 3:55 PM Mattias Jacobsson <2pi@mok.nu> wrote:
-> On 2019-01-27, Andy Shevchenko wrote:
-> > On Sun, Jan 27, 2019 at 9:04 PM Mattias Jacobsson <2pi@mok.nu> wrote:
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-> > > +#define WMI_GUID_STRING_LEN    36
-> >
-> > Isn't this already defined in UUID namespace?
-> > (include/linux/uuid.h IIRC)
->
-> Kind of, UUID_STRING_LEN is defined in uuid.h. It is included behind a
-> #ifdef __KERNEL__, but others seam to use things included through it so
-> I guess it is alright...
->
-> Let me know how you want it.
+[ Upstream commit edd45cba5ed7f53974475ddc9a1453c2c87b3328 ]
 
-On one hand I think too many places with the same information is not
-good. On the other hand WMI might change this limit in the future and
-on top of this it seems you are sharing it with user space.
-However, file2alias.c includes kernel header directly and uses a
-duplicate definition for cases !__KERNEL__.
+Shift by one the registers for tachometers (7 - 12).
 
-So, I would do that way.
-Use in mod_devicetable.h the definition from uuid.h (which is already
-included there), and duplicate the same definition in file2alias.c in
-the way it's done for the rest UUID stuff there.
+This fix is relevant for the same new systems MQMB7, MSN37, MSN34,
+which are about to be released to the customers.
+At the moment, none of them is at customers sites. The customers will
+not suffer from this change.
+This fix is necessary, because register used before for tachometer 7
+has been than reserved for the second PWM for newer systems, which are
+not supported yet in mlx-platform driver. So registers of tachometers
+7-12 have been shifted by one.
 
-> > >  #include <linux/acpi.h>
-> >
-> > > +#include <linux/mod_devicetable.h>
-> >
-> > Not sure it's needed since acpi.h includes that.
->
-> It is included in acpi.h(behind CONFIG_ACPI), I thought it was cleaner
-> with it included explicitly. Plus that we aren't relying on others to
-> include it.
->
-> Let me know how you want it.
+Fixes: 0378123c5800 ("platform/x86: mlx-platform: Add mlxreg-fan platform driver activation")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/mlx-platform.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Since it's minor, it's up to you. Ideally we would better to split out
-that inclusion from acpi.h and explicitly do this in all similar
-cases, but it's not ours call here.
-That said, your variant is okay.
-
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index d89936c93ba0..78b4aa4410fb 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -83,12 +83,12 @@
+ #define MLXPLAT_CPLD_LPC_REG_TACHO4_OFFSET	0xe7
+ #define MLXPLAT_CPLD_LPC_REG_TACHO5_OFFSET	0xe8
+ #define MLXPLAT_CPLD_LPC_REG_TACHO6_OFFSET	0xe9
+-#define MLXPLAT_CPLD_LPC_REG_TACHO7_OFFSET	0xea
+-#define MLXPLAT_CPLD_LPC_REG_TACHO8_OFFSET	0xeb
+-#define MLXPLAT_CPLD_LPC_REG_TACHO9_OFFSET	0xec
+-#define MLXPLAT_CPLD_LPC_REG_TACHO10_OFFSET	0xed
+-#define MLXPLAT_CPLD_LPC_REG_TACHO11_OFFSET	0xee
+-#define MLXPLAT_CPLD_LPC_REG_TACHO12_OFFSET	0xef
++#define MLXPLAT_CPLD_LPC_REG_TACHO7_OFFSET	0xeb
++#define MLXPLAT_CPLD_LPC_REG_TACHO8_OFFSET	0xec
++#define MLXPLAT_CPLD_LPC_REG_TACHO9_OFFSET	0xed
++#define MLXPLAT_CPLD_LPC_REG_TACHO10_OFFSET	0xee
++#define MLXPLAT_CPLD_LPC_REG_TACHO11_OFFSET	0xef
++#define MLXPLAT_CPLD_LPC_REG_TACHO12_OFFSET	0xf0
+ #define MLXPLAT_CPLD_LPC_IO_RANGE		0x100
+ #define MLXPLAT_CPLD_LPC_I2C_CH1_OFF		0xdb
+ #define MLXPLAT_CPLD_LPC_I2C_CH2_OFF		0xda
 -- 
-With Best Regards,
-Andy Shevchenko
+2.19.1
