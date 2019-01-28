@@ -1,121 +1,52 @@
-From: Mattias Jacobsson <2pi@mok.nu>
-Subject: Re: [PATCH v2 2/3] platform/x86: wmi: add WMI support to
- MODULE_DEVICE_TABLE()
-Date: Mon, 28 Jan 2019 16:09:14 +0100
-Message-ID: <20190128150909.4r3tje5l34u5t2xs@mok.nu>
-References: <cover.1548610407.git.2pi@mok.nu>
- <680df320c7263bdd35f87794ae12fb9a9ef3b71c.1548610407.git.2pi@mok.nu>
- <CAHp75VfE0g9OVeOzJ5fBj4MGL4nv=a4S-n1fD9kfP1AaniAOGw@mail.gmail.com>
- <20190128140911.xsltdctpk3bya7ya@mok.nu>
- <20190128142701.xj4vwiind4ddbcj6@pali>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 022/304] platform/x86: asus-nb-wmi: Map 0x35 to KEY_SCREENLOCK
+Date: Mon, 28 Jan 2019 10:38:59 -0500
+Message-ID: <20190128154341.47195-22-sashal@kernel.org>
+References: <20190128154341.47195-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190128142701.xj4vwiind4ddbcj6@pali>
+In-Reply-To: <20190128154341.47195-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, michal.lkml@markovi.net, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 2pi@mok.nu
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@gmail.com>, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 2019-01-28, Pali Roh·r wrote:
-> On Monday 28 January 2019 15:09:11 Mattias Jacobsson wrote:
-> > Hi,
-> > 
-> > On 2019-01-27, Andy Shevchenko wrote:
-> > > On Sun, Jan 27, 2019 at 9:04 PM Mattias Jacobsson <2pi@mok.nu> wrote:
-> > > >
-> > > > The kernel provides the macro MODULE_DEVICE_TABLE() where driver authors
-> > > > can specify their device type and their array of device_ids and thereby
-> > > > trigger the generation of the appropriate MODULE_ALIAS() output. This is
-> > > > opposed to having to specify one MODULE_ALIAS() for each device. The WMI
-> > > > device type is currently not supported.
-> > > >
-> > > > While using MODULE_DEVICE_TABLE() does increase the complexity as well
-> > > > as spreading out the implementation across the kernel, it does come with
-> > > > some benefits too;
-> > > > * It makes different drivers look more similar; if you can specify the
-> > > >   array of device_ids any device type specific input to MODULE_ALIAS()
-> > > >   will automatically be generated for you.
-> > > > * It helps each driver avoid keeping multiple versions of the same
-> > > >   information in sync. That is, both the array of device_ids and the
-> > > >   potential multitude of MODULE_ALIAS()'s.
-> > > >
-> > > > Add WMI support to MODULE_DEVICE_TABLE() by adding info about struct
-> > > > wmi_device_id in devicetable-offsets.c and add a WMI entry point in
-> > > > file2alias.c.
-> > > >
-> > > > The type argument for MODULE_DEVICE_TABLE(type, name) is wmi.
-> > > 
-> > > > +/* Looks like: wmi:guid */
-> > > > +static int do_wmi_entry(const char *filename, void *symval, char *alias)
-> > > > +{
-> > > > +       DEF_FIELD_ADDR(symval, wmi_device_id, guid_string);
-> > > > +       if (strlen(*guid_string) != WMI_GUID_STRING_LEN) {
-> > > > +               warn("Invalid WMI device id 'wmi:%s' in '%s'\n",
-> > > > +                               *guid_string, filename);
-> > > > +               return 0;
-> > > > +       }
-> > > 
-> > > > +       if (snprintf(alias, 500, WMI_MODULE_PREFIX "%s", *guid_string) < 0) {
-> > > 
-> > > What the point to use snprintf here with arbitrary buffer size if we
-> > > exactly know 2 facts:
-> > > 1. UUID string is  36 characters
-> > > 2. buffer is long enough
-> > > 
-> > > ?
-> > 
-> > As long as no one changes the code, not much.
-> 
-> At least instead of hardcoded number 500, you should use pass size of alias:
+From: Jo√£o Paulo Rechi Vita <jprvita@gmail.com>
 
-Just a note; 500 comes from a few lines below in the do_table()
-function. It is the actual size of alias we get in do_wmi_entry().
+[ Upstream commit b3f2f3799a972d3863d0fdc2ab6287aef6ca631f ]
 
-> 
->   static int do_wmi_entry(const char *filename, void *symval, char *alias, size_t alias_size)
-> 
->   if (snprintf(alias, alias_size, WMI_MODULE_PREFIX "%s", *guid_string) < 0) {
+When the OS registers to handle events from the display off hotkey the
+EC will send a notification with 0x35 for every key press, independent
+of the backlight state.
 
-That is a good idea, but requires changing all other entry points.
-I was thinking of defining a DO_ENTRY_ALIAS_SIZE macro to replace
-all/any 500 in file2alias.c. However that is a separate patch.
+The behavior of this key on Windows, with the ATKACPI driver from Asus
+installed, is turning off the backlight of all connected displays with a
+fading effect, and any cursor input or key press turning the backlight
+back on. The key press or cursor input that wakes up the display is also
+passed through to the application under the cursor or under focus.
 
-> 
-> Or pass buffer of constant size and then you do not need to use snprintf:
-> 
->   #define ALIAS_SIZE (sizeof(WMI_MODULE_PREFIX)+WMI_GUID_STRING_LEN)
+The key that matches this behavior the closest is KEY_SCREENLOCK.
 
-I could use ALIAS_SIZE and add that to snprintf() instead of 500.
-While I guess it is unlikely that alias ever will be changed to be too
-short for us, using ALIAS_SIZE doesn't "guarantee" that we are within
-the bounds of alias if anything changes.
+Signed-off-by: Jo√£o Paulo Rechi Vita <jprvita@endlessm.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
->   static int do_wmi_entry(const char *filename, void *symval, char alias[ALIAS_SIZE])
-> 
-> This should not break even when code around changes.
-> 
-> > > 
-> > > > +               warn("Could not generate all MODULE_ALIAS's in '%s'\n",
-> > > > +                               filename);
-> > > > +               return 0;
-> > > > +       }
-> > > > +       return 1;
-> > > > +}
-> > > 
-> > > -- 
-> > > With Best Regards,
-> > > Andy Shevchenko
-> > 
-> > Thanks,
-> > Mattias
-> 
-> -- 
-> Pali Roh·r
-> pali.rohar@gmail.com
-
-Thanks,
-Mattias
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index db2af09067db..5a00a7665f9b 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -444,6 +444,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x32, { KEY_MUTE } },
+ 	{ KE_KEY, 0x33, { KEY_DISPLAYTOGGLE } }, /* LCD on */
+ 	{ KE_KEY, 0x34, { KEY_DISPLAY_OFF } }, /* LCD off */
++	{ KE_KEY, 0x35, { KEY_SCREENLOCK } },
+ 	{ KE_KEY, 0x40, { KEY_PREVIOUSSONG } },
+ 	{ KE_KEY, 0x41, { KEY_NEXTSONG } },
+ 	{ KE_KEY, 0x43, { KEY_STOPCD } }, /* Stop/Eject */
+-- 
+2.19.1
