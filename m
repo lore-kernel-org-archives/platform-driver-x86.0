@@ -1,132 +1,132 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 3/3] platform/x86: wmi: use MODULE_DEVICE_TABLE()
- instead of MODULE_ALIAS()
-Date: Wed, 30 Jan 2019 17:48:52 +0200
-Message-ID: <CAHp75VeRVThOnL8Lo2TENB0zdcW1Sd00CL88ha6h+QGceBr7sg@mail.gmail.com>
-References: <cover.1548860212.git.2pi@mok.nu> <830f6043839606c6ed04dfeaceeb0ce4d9cd1b54.1548860212.git.2pi@mok.nu>
+Subject: Re: [PATCH v3 2/3] platform/x86: wmi: add WMI support to MODULE_DEVICE_TABLE()
+Date: Wed, 30 Jan 2019 18:01:19 +0200
+Message-ID: <CAHp75VcLizx+jtMrbc3Ev-HcJVEjH2naFC0sj=7fX5nZSCGc8Q@mail.gmail.com>
+References: <cover.1548860212.git.2pi@mok.nu> <ae59210f24d66516a0af38c03fd0da923dd0e7da.1548860212.git.2pi@mok.nu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <830f6043839606c6ed04dfeaceeb0ce4d9cd1b54.1548860212.git.2pi@mok.nu>
+In-Reply-To: <ae59210f24d66516a0af38c03fd0da923dd0e7da.1548860212.git.2pi@mok.nu>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mattias Jacobsson <2pi@mok.nu>
-Cc: Mario Limonciello <mario.limonciello@dell.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, michal.lkml@markovi.net, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
 On Wed, Jan 30, 2019 at 5:15 PM Mattias Jacobsson <2pi@mok.nu> wrote:
 >
-> WMI drivers can if they have specified an array of struct wmi_device_id
-> use the MODULE_DEVICE_TABLE() macro to automatically generate the
-> appropriate MODULE_ALIAS() output. Thus avoiding to keep both the array
-> of struct wmi_device_id and the MODULE_ALIAS() declaration(s) in sync.
+> The kernel provides the macro MODULE_DEVICE_TABLE() where driver authors
+> can specify their device type and their array of device_ids and thereby
+> trigger the generation of the appropriate MODULE_ALIAS() output. This is
+> opposed to having to specify one MODULE_ALIAS() for each device. The WMI
+> device type is currently not supported.
 >
-> Change all drivers that have specified an array of struct wmi_device_id
-> to use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS().
-
-Please, split this per driver basis. It would help in maintenance phase...
-
+> While using MODULE_DEVICE_TABLE() does increase the complexity as well
+> as spreading out the implementation across the kernel, it does come with
+> some benefits too;
+> * It makes different drivers look more similar; if you can specify the
+>   array of device_ids any device type specific input to MODULE_ALIAS()
+>   will automatically be generated for you.
+> * It helps each driver avoid keeping multiple versions of the same
+>   information in sync. That is, both the array of device_ids and the
+>   potential multitude of MODULE_ALIAS()'s.
+>
+> Add WMI support to MODULE_DEVICE_TABLE() by adding info about struct
+> wmi_device_id in devicetable-offsets.c and add a WMI entry point in
+> file2alias.c.
+>
+> The type argument for MODULE_DEVICE_TABLE(type, name) is wmi.
+>
+> Suggested-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
 > Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
-
-> Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-
-...and AFAIU Mario gave his tag only for Dell related stuff.
-
 > ---
->  drivers/platform/x86/dell-smbios-wmi.c       | 2 +-
->  drivers/platform/x86/dell-wmi-descriptor.c   | 2 +-
->  drivers/platform/x86/dell-wmi.c              | 4 ++--
->  drivers/platform/x86/huawei-wmi.c            | 3 +--
->  drivers/platform/x86/intel-wmi-thunderbolt.c | 2 +-
->  drivers/platform/x86/wmi-bmof.c              | 2 +-
->  6 files changed, 7 insertions(+), 8 deletions(-)
 >
-> diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
-> index cf2229ece9ff..c3ed3c8c17b9 100644
-> --- a/drivers/platform/x86/dell-smbios-wmi.c
-> +++ b/drivers/platform/x86/dell-smbios-wmi.c
-> @@ -277,4 +277,4 @@ void exit_dell_smbios_wmi(void)
->         wmi_driver_unregister(&dell_smbios_wmi_driver);
->  }
->
-> -MODULE_ALIAS("wmi:" DELL_WMI_SMBIOS_GUID);
-> +MODULE_DEVICE_TABLE(wmi, dell_smbios_wmi_id_table);
-> diff --git a/drivers/platform/x86/dell-wmi-descriptor.c b/drivers/platform/x86/dell-wmi-descriptor.c
-> index 072821aa47fc..14ab250b7d5a 100644
-> --- a/drivers/platform/x86/dell-wmi-descriptor.c
-> +++ b/drivers/platform/x86/dell-wmi-descriptor.c
-> @@ -207,7 +207,7 @@ static struct wmi_driver dell_wmi_descriptor_driver = {
->
->  module_wmi_driver(dell_wmi_descriptor_driver);
->
-> -MODULE_ALIAS("wmi:" DELL_WMI_DESCRIPTOR_GUID);
-> +MODULE_DEVICE_TABLE(wmi, dell_wmi_descriptor_id_table);
->  MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
->  MODULE_DESCRIPTION("Dell WMI descriptor driver");
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index 16c7f3d9a335..0602aba62b3f 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -50,8 +50,6 @@ MODULE_LICENSE("GPL");
->
->  static bool wmi_requires_smbios_request;
->
-> -MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
-> -
->  struct dell_wmi_priv {
->         struct input_dev *input_dev;
->         u32 interface_version;
-> @@ -738,3 +736,5 @@ static void __exit dell_wmi_exit(void)
->         wmi_driver_unregister(&dell_wmi_driver);
->  }
->  module_exit(dell_wmi_exit);
+> What do you think about this usage of snprintf()? Now we check if there
+> is an error or if the printed string tried to exceeded the buffer.
+> Ideally 500 should be a macro or a parameter, but there isn't one
+> available. The number 500 comes from a few lines below in the function
+> do_table().
+
+This looks better, though minor comments.
+
+Indeed, 500 would be nicer to be defined as a constant (via preprocessor ma=
+cro).
+
+> +/* Looks like: wmi:guid */
+> +static int do_wmi_entry(const char *filename, void *symval, char *alias)
+> +{
+> +       DEF_FIELD_ADDR(symval, wmi_device_id, guid_string);
+> +       if (strlen(*guid_string) !=3D UUID_STRING_LEN) {
+> +               warn("Invalid WMI device id 'wmi:%s' in '%s'\n",
+> +                               *guid_string, filename);
+> +               return 0;
+> +       }
 > +
-> +MODULE_DEVICE_TABLE(wmi, dell_wmi_id_table);
-> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-> index 59872f87b741..52fcac5b393a 100644
-> --- a/drivers/platform/x86/huawei-wmi.c
-> +++ b/drivers/platform/x86/huawei-wmi.c
-> @@ -201,8 +201,7 @@ static struct wmi_driver huawei_wmi_driver = {
+
+> +       int len =3D snprintf(alias, 500, WMI_MODULE_PREFIX "%s", *guid_st=
+ring);
+
+Please, split declaration and assignment...
+
+> +
+
+...and drop this line.
+
+> +       if (len < 0 || len >=3D 500) {
+
+Would it even possible to get a negative number here?
+Same for any other number than slightly bigger than 36.
+
+You have above a check and here is the matter of either sudden
+replacement of the string during the operation or how snprintf is
+broken itself.
+Do you have a case in mind which can bring to the above conditions?
+
+> +               warn("Could not generate all MODULE_ALIAS's in '%s'\n",
+> +                               filename);
+> +               return 0;
+> +       }
+
+On top of that you have an ordinary case here and in similar ones we
+don't care about buffer size at all (perhaps BUILD_BUG_ON() what is
+needed here).
+
+So, what about simple
+
+{
+ DEF_FIELD_ADDR(...);
+ size_t len;
+
+ len =3D strlen(*guid_string);
+ if (len !=3D ...) {
+  ...
+ }
+sprintf(...);
+return 1;
+}
+
+?
+
+> +       return 1;
+> +}
+> +
+>  /* Does namelen bytes of name exactly match the symbol? */
+>  static bool sym_is(const char *name, unsigned namelen, const char *symbo=
+l)
+>  {
+> @@ -1357,6 +1378,7 @@ static const struct devtable devtable[] =3D {
+>         {"fslmc", SIZE_fsl_mc_device_id, do_fsl_mc_entry},
+>         {"tbsvc", SIZE_tb_service_id, do_tbsvc_entry},
+>         {"typec", SIZE_typec_device_id, do_typec_entry},
+> +       {"wmi", SIZE_wmi_device_id, do_wmi_entry},
+>  };
 >
->  module_wmi_driver(huawei_wmi_driver);
->
-> -MODULE_ALIAS("wmi:"WMI0_EVENT_GUID);
-> -MODULE_ALIAS("wmi:"AMW0_EVENT_GUID);
-> +MODULE_DEVICE_TABLE(wmi, huawei_wmi_id_table);
->  MODULE_AUTHOR("Ayman Bagabas <ayman.bagabas@gmail.com>");
->  MODULE_DESCRIPTION("Huawei WMI hotkeys");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c b/drivers/platform/x86/intel-wmi-thunderbolt.c
-> index 9ded8e2af312..4dfa61434a76 100644
-> --- a/drivers/platform/x86/intel-wmi-thunderbolt.c
-> +++ b/drivers/platform/x86/intel-wmi-thunderbolt.c
-> @@ -88,7 +88,7 @@ static struct wmi_driver intel_wmi_thunderbolt_driver = {
->
->  module_wmi_driver(intel_wmi_thunderbolt_driver);
->
-> -MODULE_ALIAS("wmi:" INTEL_WMI_THUNDERBOLT_GUID);
-> +MODULE_DEVICE_TABLE(wmi, intel_wmi_thunderbolt_id_table);
->  MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
->  MODULE_DESCRIPTION("Intel WMI Thunderbolt force power driver");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bmof.c
-> index c4530ba715e8..8751a13134be 100644
-> --- a/drivers/platform/x86/wmi-bmof.c
-> +++ b/drivers/platform/x86/wmi-bmof.c
-> @@ -119,7 +119,7 @@ static struct wmi_driver wmi_bmof_driver = {
->
->  module_wmi_driver(wmi_bmof_driver);
->
-> -MODULE_ALIAS("wmi:" WMI_BMOF_GUID);
-> +MODULE_DEVICE_TABLE(wmi, wmi_bmof_id_table);
->  MODULE_AUTHOR("Andrew Lutomirski <luto@kernel.org>");
->  MODULE_DESCRIPTION("WMI embedded Binary MOF driver");
->  MODULE_LICENSE("GPL");
+>  /* Create MODULE_ALIAS() statements.
 > --
 > 2.20.1
 >
 
 
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
