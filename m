@@ -1,90 +1,113 @@
 From: Mattias Jacobsson <2pi@mok.nu>
-Subject: [PATCH v3 1/3] platform/x86: wmi: move struct wmi_device_id to mod_devicetable.h
-Date: Wed, 30 Jan 2019 16:14:38 +0100
-Message-ID: <de9fb65f88eea485814d19d5708d70845e24032f.1548860212.git.2pi@mok.nu>
+Subject: [PATCH v3 2/3] platform/x86: wmi: add WMI support to MODULE_DEVICE_TABLE()
+Date: Wed, 30 Jan 2019 16:14:39 +0100
+Message-ID: <ae59210f24d66516a0af38c03fd0da923dd0e7da.1548860212.git.2pi@mok.nu>
 References: <cover.1548860212.git.2pi@mok.nu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1548860212.git.2pi@mok.nu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy@infradead.org
+To: yamada.masahiro@socionext.com, michal.lkml@markovi.net, dvhart@infradead.org, andy@infradead.org, pali.rohar@gmail.com
 Cc: 2pi@mok.nu, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-In preparation for adding WMI support to MODULE_DEVICE_TABLE() move the
-definition of struct wmi_device_id to mod_devicetable.h and inline
-guid_string in the struct.
+The kernel provides the macro MODULE_DEVICE_TABLE() where driver authors
+can specify their device type and their array of device_ids and thereby
+trigger the generation of the appropriate MODULE_ALIAS() output. This is
+opposed to having to specify one MODULE_ALIAS() for each device. The WMI
+device type is currently not supported.
 
-Changing guid_string to an inline char array changes the loop conditions
-when looping over an array of struct wmi_device_id. Therefore update
-wmi_dev_match()'s loop to check for an empty guid_string instead of a
-NULL pointer.
+While using MODULE_DEVICE_TABLE() does increase the complexity as well
+as spreading out the implementation across the kernel, it does come with
+some benefits too;
+* It makes different drivers look more similar; if you can specify the
+  array of device_ids any device type specific input to MODULE_ALIAS()
+  will automatically be generated for you.
+* It helps each driver avoid keeping multiple versions of the same
+  information in sync. That is, both the array of device_ids and the
+  potential multitude of MODULE_ALIAS()'s.
 
+Add WMI support to MODULE_DEVICE_TABLE() by adding info about struct
+wmi_device_id in devicetable-offsets.c and add a WMI entry point in
+file2alias.c.
+
+The type argument for MODULE_DEVICE_TABLE(type, name) is wmi.
+
+Suggested-by: Pali Rohár <pali.rohar@gmail.com>
 Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
 ---
- drivers/platform/x86/wmi.c      |  2 +-
- include/linux/mod_devicetable.h | 12 ++++++++++++
- include/linux/wmi.h             |  5 +----
- 3 files changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index b0f3d8ecd898..7b26b6ccf1a0 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -771,7 +771,7 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
- 	if (id == NULL)
- 		return 0;
+What do you think about this usage of snprintf()? Now we check if there
+is an error or if the printed string tried to exceeded the buffer.
+Ideally 500 should be a macro or a parameter, but there isn't one
+available. The number 500 comes from a few lines below in the function
+do_table().
+
+ scripts/mod/devicetable-offsets.c |  3 +++
+ scripts/mod/file2alias.c          | 22 ++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
+
+diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-offsets.c
+index 293004499b4d..99276a422e77 100644
+--- a/scripts/mod/devicetable-offsets.c
++++ b/scripts/mod/devicetable-offsets.c
+@@ -225,5 +225,8 @@ int main(void)
+ 	DEVID_FIELD(typec_device_id, svid);
+ 	DEVID_FIELD(typec_device_id, mode);
  
--	while (id->guid_string) {
-+	while (*id->guid_string) {
- 		uuid_le driver_guid;
++	DEVID(wmi_device_id);
++	DEVID_FIELD(wmi_device_id, guid_string);
++
+ 	return 0;
+ }
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index a37af7d71973..abaa6c090564 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -37,6 +37,7 @@ typedef unsigned char	__u8;
+ typedef struct {
+ 	__u8 b[16];
+ } uuid_le;
++#define	UUID_STRING_LEN		36
  
- 		if (WARN_ON(uuid_le_to_bin(id->guid_string, &driver_guid)))
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index f9bd2f34b99f..e44b90fa0aef 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -779,4 +779,16 @@ struct typec_device_id {
- 	kernel_ulong_t driver_data;
+ /* Big exception to the "don't include kernel headers into userspace, which
+  * even potentially has different endianness and word sizes, since
+@@ -1287,6 +1288,26 @@ static int do_typec_entry(const char *filename, void *symval, char *alias)
+ 	return 1;
+ }
+ 
++/* Looks like: wmi:guid */
++static int do_wmi_entry(const char *filename, void *symval, char *alias)
++{
++	DEF_FIELD_ADDR(symval, wmi_device_id, guid_string);
++	if (strlen(*guid_string) != UUID_STRING_LEN) {
++		warn("Invalid WMI device id 'wmi:%s' in '%s'\n",
++				*guid_string, filename);
++		return 0;
++	}
++
++	int len = snprintf(alias, 500, WMI_MODULE_PREFIX "%s", *guid_string);
++
++	if (len < 0 || len >= 500) {
++		warn("Could not generate all MODULE_ALIAS's in '%s'\n",
++				filename);
++		return 0;
++	}
++	return 1;
++}
++
+ /* Does namelen bytes of name exactly match the symbol? */
+ static bool sym_is(const char *name, unsigned namelen, const char *symbol)
+ {
+@@ -1357,6 +1378,7 @@ static const struct devtable devtable[] = {
+ 	{"fslmc", SIZE_fsl_mc_device_id, do_fsl_mc_entry},
+ 	{"tbsvc", SIZE_tb_service_id, do_tbsvc_entry},
+ 	{"typec", SIZE_typec_device_id, do_typec_entry},
++	{"wmi", SIZE_wmi_device_id, do_wmi_entry},
  };
  
-+/* WMI */
-+
-+#define WMI_MODULE_PREFIX	"wmi:"
-+
-+/**
-+ * struct wmi_device_id - WMI device identifier
-+ * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-+ */
-+struct wmi_device_id {
-+	const char guid_string[UUID_STRING_LEN+1];
-+};
-+
- #endif /* LINUX_MOD_DEVICETABLE_H */
-diff --git a/include/linux/wmi.h b/include/linux/wmi.h
-index 4757cb5077e5..592f81afecbb 100644
---- a/include/linux/wmi.h
-+++ b/include/linux/wmi.h
-@@ -18,6 +18,7 @@
- 
- #include <linux/device.h>
- #include <linux/acpi.h>
-+#include <linux/mod_devicetable.h>
- #include <uapi/linux/wmi.h>
- 
- struct wmi_device {
-@@ -39,10 +40,6 @@ extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
- 
- extern int set_required_buffer_size(struct wmi_device *wdev, u64 length);
- 
--struct wmi_device_id {
--	const char *guid_string;
--};
--
- struct wmi_driver {
- 	struct device_driver driver;
- 	const struct wmi_device_id *id_table;
+ /* Create MODULE_ALIAS() statements.
 -- 
 2.20.1
