@@ -1,68 +1,90 @@
 From: Mattias Jacobsson <2pi@mok.nu>
-Subject: [PATCH v3 0/3] platform/x86: wmi: add WMI support to MODULE_DEVICE_TABLE()
-Date: Wed, 30 Jan 2019 16:14:37 +0100
-Message-ID: <cover.1548860212.git.2pi@mok.nu>
+Subject: [PATCH v3 1/3] platform/x86: wmi: move struct wmi_device_id to mod_devicetable.h
+Date: Wed, 30 Jan 2019 16:14:38 +0100
+Message-ID: <de9fb65f88eea485814d19d5708d70845e24032f.1548860212.git.2pi@mok.nu>
+References: <cover.1548860212.git.2pi@mok.nu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1548860212.git.2pi@mok.nu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy@infradead.org, dvhart@infradead.org, mario.limonciello@dell.com, michal.lkml@markovi.net, mjg59@srcf.ucam.org, pali.rohar@gmail.com, yamada.masahiro@socionext.com
+To: dvhart@infradead.org, andy@infradead.org
 Cc: 2pi@mok.nu, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The kernel provides the macro MODULE_DEVICE_TABLE() which can help
-driver authors to generate the appropriate MODULE_ALIAS() output. The
-WMI device type is currently not supported by MODULE_DEVICE_TABLE().
+In preparation for adding WMI support to MODULE_DEVICE_TABLE() move the
+definition of struct wmi_device_id to mod_devicetable.h and inline
+guid_string in the struct.
 
-While using MODULE_DEVICE_TABLE() does increase the complexity as well
-as spreading out the implementation across the kernel, it does come with
-some benefits too;
-* It makes different drivers look more similar; if you can specify the
-  array of device_ids any device type specific input to MODULE_ALIAS()
-  will automatically be generated for you.
-* It helps each driver avoid keeping multiple versions of the same
-  information in sync. That is, both the array of device_ids and the
-  potential multitude of MODULE_ALIAS()'s.
-* Other things eg. [2]
+Changing guid_string to an inline char array changes the loop conditions
+when looping over an array of struct wmi_device_id. Therefore update
+wmi_dev_match()'s loop to check for an empty guid_string instead of a
+NULL pointer.
 
-This patchset adds WMI support to MODULE_DEVICE_TABLE().
+Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+---
+ drivers/platform/x86/wmi.c      |  2 +-
+ include/linux/mod_devicetable.h | 12 ++++++++++++
+ include/linux/wmi.h             |  5 +----
+ 3 files changed, 14 insertions(+), 5 deletions(-)
 
-[PATCH 1/3]: prepare struct wmi_device_id
-[PATCH 2/3]: add support
-[PATCH 3/3]: update existing drivers to use MODULE_DEVICE_TABLE()
-
-Changes in v3:
-* use UUID_STRING_LEN instead of self-defined
-* change loop condition in wmi_dev_match() according to comments
-* change the usage of snprintf return code in do_wmi_entry()
-
-Changes in v2:
-* add one Suggested-by and one Reviewed-by tag
-* depend upon patch [1]
-* reword commit message for [PATCH 2/3] and [PATCH 3/3] to document the
-  reasoning behind the changes
-
-[1]: https://lkml.kernel.org/r/20190122200302.19861-1-2pi@mok.nu
-[2]: https://lkml.kernel.org/r/20190126210634.GB13882@wrath
-
-Mattias Jacobsson (3):
-  platform/x86: wmi: move struct wmi_device_id to mod_devicetable.h
-  platform/x86: wmi: add WMI support to MODULE_DEVICE_TABLE()
-  platform/x86: wmi: use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS()
-
- drivers/platform/x86/dell-smbios-wmi.c       |  2 +-
- drivers/platform/x86/dell-wmi-descriptor.c   |  2 +-
- drivers/platform/x86/dell-wmi.c              |  4 ++--
- drivers/platform/x86/huawei-wmi.c            |  3 +--
- drivers/platform/x86/intel-wmi-thunderbolt.c |  2 +-
- drivers/platform/x86/wmi-bmof.c              |  2 +-
- drivers/platform/x86/wmi.c                   |  2 +-
- include/linux/mod_devicetable.h              | 12 +++++++++++
- include/linux/wmi.h                          |  5 +----
- scripts/mod/devicetable-offsets.c            |  3 +++
- scripts/mod/file2alias.c                     | 22 ++++++++++++++++++++
- 11 files changed, 46 insertions(+), 13 deletions(-)
-
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index b0f3d8ecd898..7b26b6ccf1a0 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -771,7 +771,7 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
+ 	if (id == NULL)
+ 		return 0;
+ 
+-	while (id->guid_string) {
++	while (*id->guid_string) {
+ 		uuid_le driver_guid;
+ 
+ 		if (WARN_ON(uuid_le_to_bin(id->guid_string, &driver_guid)))
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index f9bd2f34b99f..e44b90fa0aef 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -779,4 +779,16 @@ struct typec_device_id {
+ 	kernel_ulong_t driver_data;
+ };
+ 
++/* WMI */
++
++#define WMI_MODULE_PREFIX	"wmi:"
++
++/**
++ * struct wmi_device_id - WMI device identifier
++ * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
++ */
++struct wmi_device_id {
++	const char guid_string[UUID_STRING_LEN+1];
++};
++
+ #endif /* LINUX_MOD_DEVICETABLE_H */
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index 4757cb5077e5..592f81afecbb 100644
+--- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -18,6 +18,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/acpi.h>
++#include <linux/mod_devicetable.h>
+ #include <uapi/linux/wmi.h>
+ 
+ struct wmi_device {
+@@ -39,10 +40,6 @@ extern union acpi_object *wmidev_block_query(struct wmi_device *wdev,
+ 
+ extern int set_required_buffer_size(struct wmi_device *wdev, u64 length);
+ 
+-struct wmi_device_id {
+-	const char *guid_string;
+-};
+-
+ struct wmi_driver {
+ 	struct device_driver driver;
+ 	const struct wmi_device_id *id_table;
 -- 
 2.20.1
