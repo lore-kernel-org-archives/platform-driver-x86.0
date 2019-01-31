@@ -1,37 +1,62 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [for next][PATCH v3 1/2] platform/x86: Fix unmet dependency warning for ACPI_CMPC
-Date: Thu, 31 Jan 2019 00:56:08 +0100
-Message-ID: <309800316.xPVQqezZ0x@aspire.rjw.lan>
-References: <20190124193101.24519-1-okaya@kernel.org> <CAHp75VerwCxYqozQmaJZL8tcbfDFLBp+nTheP0Ran4qWPqTcLw@mail.gmail.com>
+From: Kai Renzig <k.renzig@gmail.com>
+Subject: [PATCH] platform/x86: silead_dmi: Add touchscreen platform data for the Chuwi Hi8 Air tablet
+Date: Thu, 31 Jan 2019 11:49:07 +0100
+Message-ID: <20190131104907.9649-1-k.renzig@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VerwCxYqozQmaJZL8tcbfDFLBp+nTheP0Ran4qWPqTcLw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Sinan Kaya <okaya@kernel.org>
-Cc: linux-next <linux-next@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Kai Renzig <k.renzig@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thursday, January 24, 2019 10:32:56 PM CET Andy Shevchenko wrote:
-> On Thu, Jan 24, 2019 at 9:31 PM Sinan Kaya <okaya@kernel.org> wrote:
-> >
-> > Add BACKLIGHT_LCD_SUPPORT for ACPI_CMPC to fix the
-> > warning: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE.
-> >
-> > ACPI_CMPC selects BACKLIGHT_CLASS_DEVICE but BACKLIGHT_CLASS_DEVICE
-> > depends on BACKLIGHT_LCD_SUPPORT.
-> >
-> > Copy BACKLIGHT_LCD_SUPPORT dependency into ACPI_CMPC to fix
-> >
-> > WARNING: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE
-> >   Depends on [n]: HAS_IOMEM [=y] && BACKLIGHT_LCD_SUPPORT [=n]
-> >   Selected by [y]:
-> >   - ACPI_CMPC [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && ACPI [=y] && INPUT [=y] && (RFKILL [=n] || RFKILL [=n]=n)
-> >
-> 
-> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> for both patches in case Rafael takes care of them.
+Add touchscreen platform data for the Chuwi Hi8 Air tablet.
 
-So both applied, thanks!
+Signed-off-by: Kai Renzig <k.renzig@gmail.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 8c5d47c0aea6..48e5d92040ab 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -41,6 +41,20 @@ static const struct ts_dmi_data chuwi_hi8_data = {
+ 	.properties     = chuwi_hi8_props,
+ };
+ 
++static const struct property_entry chuwi_hi8_air_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-chuwi-hi8-air.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	{ }
++};
++
++static const struct ts_dmi_data chuwi_hi8_air_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= chuwi_hi8_air_props,
++};
++
+ static const struct property_entry chuwi_hi8_pro_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 6),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
+@@ -497,6 +511,15 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "H1D_S806_206"),
+ 		},
+ 	},
++	{
++		/* Chuwi Hi8 Air (CWI543) */
++		.driver_data = (void *)&chuwi_hi8_air_data,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "Default string"),
++			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Hi8 Air"),
++		},
++	},
+ 	{
+ 		/* Chuwi Hi8 Pro (CWI513) */
+ 		.driver_data = (void *)&chuwi_hi8_pro_data,
+-- 
+2.19.1
