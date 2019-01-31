@@ -1,90 +1,156 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v2] platform/mellanox: Add bootctl driver for Mellanox
- BlueField Soc
-Date: Thu, 31 Jan 2019 19:20:20 +0000
-Message-ID: <DB6PR05MB32234336D53E88B2D81D1434A1910@DB6PR05MB3223.eurprd05.prod.outlook.com>
-References: <0b74e9ad12360b56bc0a3c2ca972798c424f2610.1548790896.git.lsun@mellanox.com>
- <1548953587-12719-1-git-send-email-lsun@mellanox.com>
- <CAHp75Vfr7+NONzthw=E77BqLb06=wgfmNqu7D01fkcNQMqUCsQ@mail.gmail.com>
- <DB6PR05MB3223E95170C064869591118AA1910@DB6PR05MB3223.eurprd05.prod.outlook.com>
+From: Maxim Mikityanskiy <maxtram95@gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_int0002_vgpio: Implement irq_set_wake
+Date: Thu, 31 Jan 2019 21:47:00 +0200
+Message-ID: <CAKErNvoeMs9cDDAvMfxaGLsKY3-q_JmrjCUB8VK4ZUXUVytwsQ@mail.gmail.com>
+References: <20180924143719.22191-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB6PR05MB3223E95170C064869591118AA1910@DB6PR05MB3223.eurprd05.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <20180924143719.22191-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-djMgaGFzIGJlZW4gcG9zdGVkIHdpdGggQ2hhbmdlbG9nIGFkZGVkLg0KDQpUaGFua3MhDQpMaW1p
-bmcNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMaW1pbmcgU3VuDQo+
-IFNlbnQ6IFRodXJzZGF5LCBKYW51YXJ5IDMxLCAyMDE5IDEyOjE4IFBNDQo+IFRvOiAnQW5keSBT
-aGV2Y2hlbmtvJyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4NCj4gQ2M6IEFuZHkgU2hldmNo
-ZW5rbyA8YW5keUBpbmZyYWRlYWQub3JnPjsgRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQu
-b3JnPjsgVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbWVsbGFub3guY29tPjsgRGF2aWQNCj4gV29v
-ZHMgPGR3b29kc0BtZWxsYW5veC5jb20+OyBQbGF0Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZl
-ci14ODZAdmdlci5rZXJuZWwub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgt
-DQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggdjJdIHBs
-YXRmb3JtL21lbGxhbm94OiBBZGQgYm9vdGN0bCBkcml2ZXIgZm9yIE1lbGxhbm94IEJsdWVGaWVs
-ZCBTb2MNCj4gDQo+IFBsZWFzZSBzZWUgbXkgcmVzcG9uc2UgaW5saW5lLiBXaWxsIHByb3ZpZGUg
-djMgb25jZSBJIHNvbHZlIHRoZSBjb21tZW50cy4NCj4gDQo+IFRoYW5rcywNCj4gTGltaW5nDQo+
-IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogQW5keSBTaGV2Y2hl
-bmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiA+IFNlbnQ6IFRodXJzZGF5LCBKYW51
-YXJ5IDMxLCAyMDE5IDEyOjAyIFBNDQo+ID4gVG86IExpbWluZyBTdW4gPGxzdW5AbWVsbGFub3gu
-Y29tPg0KPiA+IENjOiBBbmR5IFNoZXZjaGVua28gPGFuZHlAaW5mcmFkZWFkLm9yZz47IERhcnJl
-biBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz47IFZhZGltIFBhc3Rlcm5hayA8dmFkaW1wQG1l
-bGxhbm94LmNvbT47DQo+IERhdmlkDQo+ID4gV29vZHMgPGR3b29kc0BtZWxsYW5veC5jb20+OyBQ
-bGF0Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnPjsgTGlu
-dXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgtDQo+ID4ga2VybmVsQHZnZXIua2VybmVsLm9y
-Zz4NCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyXSBwbGF0Zm9ybS9tZWxsYW5veDogQWRkIGJv
-b3RjdGwgZHJpdmVyIGZvciBNZWxsYW5veCBCbHVlRmllbGQgU29jDQo+ID4NCj4gPiBPbiBUaHUs
-IEphbiAzMSwgMjAxOSBhdCA2OjUzIFBNIExpbWluZyBTdW4gPGxzdW5AbWVsbGFub3guY29tPiB3
-cm90ZToNCj4gPiA+DQo+ID4gPiBUaGlzIGNvbW1pdCBhZGRzIHRoZSBib290Y3RsIHBsYXRmb3Jt
-IGRyaXZlciBmb3IgTWVsbGFub3ggQmx1ZUZpZWxkDQo+ID4gPiBTb2MsIHdoaWNoIGNvbnRyb2xz
-IHRoZSBlTU1DIGJvb3QgcGFydGl0aW9uIHN3YXBwaW5nIGFuZCBzZW5kcyBTTUMNCj4gPiA+IGNh
-bGxzIHRvIEFURiBydW5uaW5nIGF0IGV4Y2VwdGlvbiBsZXZlbCBFTDMgdG8gcHJvZ3JhbSBzb21l
-IHN5c3RlbQ0KPiA+ID4gcmVnaXN0ZXIuIFRoaXMgcmVnaXN0ZXIgaXMgb25seSBhY2Nlc3NpYmxl
-IGluIHNlY3VyZSBjb2RlIGFuZCBpcw0KPiA+ID4gdXNlZCB0byBlbmFibGUgdGhlIHdhdGNoZG9n
-IGFmdGVyIHJlYm9vdC4NCj4gPiA+DQo+ID4gPiBCZWxvdyBhcmUgdGhlIHNlcXVlbmNlcyBvZiBh
-IHR5cGljYWwgdXNlIGNhc2UuDQo+ID4gPg0KPiA+ID4gICAxLiBVc2VyLXNwYWNlIHRvb2wgdXBn
-cmFkZXMgb25lIGVNTUMgYm9vdCBwYXJ0aXRpb24gYW5kIHJlcXVlc3RzDQo+ID4gPiAgICAgIHRo
-ZSBib290IHBhcnRpdGlvbiBzd2FwcGluZzsNCj4gPiA+DQo+ID4gPiAgIDIuIFRoZSBib290Y3Rs
-IGRyaXZlciBoYW5kbGVzIHN1Y2ggcmVxdWVzdCBhbmQgc2VuZHMgU01DIGNhbGwNCj4gPiA+ICAg
-ICAgdG8gQVRGLiBBVEYgcHJvZ3JhbXMgcmVnaXN0ZXIgQlJFQURDUlVNQjAgd2hpY2ggaGFzIHZh
-bHVlDQo+ID4gPiAgICAgIHByZXNlcnZlZCBkdXJpbmcgc29mdHdhcmUgcmVzZXQuIEl0IGFsc28g
-cHJvZ3JhbXMgZU1NQyB0bw0KPiA+ID4gICAgICBzd2FwIHRoZSBib290IHBhcnRpdGlvbjsNCj4g
-PiA+DQo+ID4gPiAgIDMuIEFmdGVyIHNvZnR3YXJlIHJlc2V0IChyZWJvb3RpbmcpLCBBVEYgQkwx
-IChCb290Um9tKSBjaGVja3MNCj4gPiA+ICAgICAgcmVnaXN0ZXIgQlJFQURDUlVNQjAgdG8gZW5h
-YmxlIHdhdGNoZG9nIGlmIGNvbmZpZ3VyZWQ7DQo+ID4gPg0KPiA+ID4gICA0LiBJZiBib290aW5n
-IGZhaWxzLCB0aGUgd2F0Y2hkb2cgdGltZXIgd2lsbCB0cmlnZ2VyIHJlYm9vdGluZy4NCj4gPiA+
-ICAgICAgSW4gc3VjaCBjYXNlLCBBVEYgQm9vdFJvbSB3aWxsIHN3aXRjaCB0aGUgYm9vdCBwYXJ0
-aXRpb24NCj4gPiA+ICAgICAgdG8gdGhlIHByZXZpb3VzIG9uZS4NCj4gPg0KPiA+IFRoYW5rcyBm
-b3IgYW4gdXBkYXRlLiBNeSBjb21tZW50cyBiZWxvdy4NCj4gPg0KPiA+DQo+ID4gPiBSZXZpZXdl
-ZC1ieTogRGF2aWQgV29vZHMgPGR3b29kc0BtZWxsYW5veC5jb20+DQo+ID4NCj4gPiBJJ20gbm90
-IHN1cmUgSSBzZWUgdGhpcyBndXkgdG8gcmV2aWV3IHYyLiBPZiBjb3Vyc2UgaWYgeW91IGNvbnNp
-ZGVyDQo+ID4gYWxsIGNoYW5nZXMgbWlub3IsIHlvdSBtYXkgbGVhdmUgdGhpcyB0YWcuDQo+IA0K
-PiBIZSBzaXRzIGJlc2lkZXMgbWUgZm9yIGludGVybmFsIHJldmlldy4gSSdsbCB0cnkgdG8gYXNr
-IGhpbSB0byBzZW5kDQo+IGNvbW1lbnRzIHRvIHRoZSBtYWlsaW5nIGxpc3QuDQo+IA0KPiA+DQo+
-ID4gPiBTaWduZWQtb2ZmLWJ5OiBMaW1pbmcgU3VuIDxsc3VuQG1lbGxhbm94LmNvbT4NCj4gPiA+
-IC0tLQ0KPiA+DQo+ID4gSGVyZSBzaG91bGQgYmUgYSBjaGFuZ2Vsb2cgd2hhdCBoYWQgYmVlbiBk
-b25lIGluIG5ldyB2ZXJzaW9uLg0KPiANCj4gV2lsbCBwcm92aWRlIGNoYW5nZWxvZyBpbiB0aGUg
-djMgZW1haWwuDQo+IE9yIHBsZWFzZSBjb3JyZWN0IG1lIGlmIHlvdSBtZWFudCBhZGRpbmcgY2hh
-bmdlbG9nIGluIHRoZSBjb2RlIG9yDQo+IGNvdmVyIGxldHRlci4NCj4gDQo+ID4gPiArLyogVVVJ
-RCB1c2VkIHRvIHByb2JlIEFURiBzZXJ2aWNlLiAqLw0KPiA+DQo+ID4gPiArc3RhdGljIGNvbnN0
-IGNoYXIgKiBjb25zdCBtbHhiZl9ib290Y3RsX3N2Y191dWlkX3N0ciA9DQo+ID4gPiArICAgICAg
-ICI4OWMwMzZiNC1lN2Q3LTExZTYtODc5Ny0wMDFhY2EwMGJmYzQiOw0KPiA+DQo+ID4gc3RhdGlj
-IGNvbnN0IGNoYXIgKnh4eCA9IC4uLjsNCj4gDQo+IFdpbGwgdXBkYXRlIGl0IGluIHYzLg0KPiAN
-Cj4gPg0KPiA+ID4gKy8qDQo+ID4gPiArICogVVVJRCBzdHJ1Y3R1cmUgdXNlZCB0byBtYXRjaCB0
-aGUgcmV0dXJuZWQgdmFsdWUgZnJvbSBBVEYgaW4NCj4gPiA+ICsgKiBmb3VyIDMyLWJpdCB3b3Jk
-cy4gTm8gbmVlZCB0byBkbyBlbmRpYW4gY29udmVyc2lvbiBoZXJlLg0KPiA+ID4gKyAqLw0KPiA+
-ID4gK3VuaW9uIG1seGJmX2Jvb3RjdGxfdXVpZCB7DQo+ID4gPiArICAgICAgIGd1aWRfdCBndWlk
-Ow0KPiA+ID4gKyAgICAgICB1MzIgd29yZHNbNF07DQo+ID4gPiArfTsNCj4gPg0KPiA+IEknbSBu
-b3Qgc3VyZSBpdCdzIHRoZSBiZXN0IHlvdSBjYW4gZG8uIGluc3RlYWQgb2YgdXNpbmcgdW5pb24s
-IGJldHRlcg0KPiA+IHRvIHVzZSBjb252ZXJzaW9uIGZyb20gYW5kIHRvIGNvcnJlc3BvbmRpbmcg
-dXVpZCB0eXBlLg0KPiANCj4gSSdsbCB0cnkgdG8gZmlndXJlIG91dCBhbm90aGVyIHdheSB3aXRo
-b3V0IHRoZSB1bmlvbiB0byBjb21wYXJlIHRoZQ0KPiB1dWlkIGRpcmVjdGx5IHVzaW5nIHV1aWQg
-YXBpLiBXaWxsIHVwZGF0ZSBpdCBpbiB2My4NCj4gDQo+ID4NCj4gPiBUaGUgcmVzdCBJIHdpbGwg
-Y29tbWVudCBvbiB2My4NCj4gPg0KPiA+IC0tDQo+ID4gV2l0aCBCZXN0IFJlZ2FyZHMsDQo+ID4g
-QW5keSBTaGV2Y2hlbmtvDQo=
+Hi,
+
+On Mon, Sep 24, 2018 at 5:37 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> We were relying on the interrupt being shared with the ACPI SCI and the
+> ACPI core calling irq_set_wake. But that does not always happen on
+> Bay Trail devices, so we should do it ourselves.
+>
+> This fixes wake from USB not working on various Bay Trail devices.
+
+This patch breaks suspend on ASUS E202SA (bisecting pointed me to this
+patch, and if I revert it and build 4.20.5 without this patch,
+everything works flawlessly).
+
+This command fails with the following message:
+
+# echo mem > /sys/power/state
+Error while writing to stdout
+write_loop: Device or resource busy
+
+And here is dmesg output:
+
+[  224.077275] PM: suspend entry (deep)
+[  224.077286] PM: Syncing filesystems ... done.
+[  225.495014] Freezing user space processes ... (elapsed 0.003 seconds) done.
+[  225.498540] OOM killer disabled.
+[  225.498543] Freezing remaining freezable tasks ... (elapsed 0.002
+seconds) done.
+[  225.500693] printk: Suspending console(s) (use no_console_suspend to debug)
+[  225.502793] wlp1s0: deauthenticating from 00:03:7f:12:34:56 by
+local choice (Reason: 3=DEAUTH_LEAVING)
+[  225.535333] sd 0:0:0:0: [sda] Synchronizing SCSI cache
+[  225.535882] sd 0:0:0:0: [sda] Stopping disk
+[  226.969070] ACPI: EC: interrupt blocked
+[  227.002156] ACPI: Preparing to enter system sleep state S3
+[  227.007890] ACPI: EC: event blocked
+[  227.007895] ACPI: EC: EC stopped
+[  227.007900] PM: Saving platform NVS memory
+[  227.008264] Disabling non-boot CPUs ...
+[  227.034114] smpboot: CPU 1 is now offline
+[  227.088320] smpboot: CPU 2 is now offline
+[  227.141513] smpboot: CPU 3 is now offline
+[  227.147086] Enabling non-boot CPUs ...
+[  227.147187] x86: Booting SMP configuration:
+[  227.147190] smpboot: Booting Node 0 Processor 1 APIC 0x2
+[  227.147916]  cache: parent cpu1 should not be sleeping
+[  227.148354] CPU1 is up
+[  227.148424] smpboot: Booting Node 0 Processor 2 APIC 0x4
+[  227.149800]  cache: parent cpu2 should not be sleeping
+[  227.151143] CPU2 is up
+[  227.151187] smpboot: Booting Node 0 Processor 3 APIC 0x6
+[  227.152399]  cache: parent cpu3 should not be sleeping
+[  227.153883] CPU3 is up
+[  227.154876] ACPI: EC: EC started
+[  227.155282] ACPI: Waking up from system sleep state S3
+[  227.159874] ACPI: button: The lid device is not compliant to SW_LID.
+[  227.169441] ACPI: EC: interrupt unblocked
+[  228.236790] ACPI: EC: event unblocked
+[  228.241950] rtlwifi: rtlwifi: wireless switch is on
+[  228.251865] sd 0:0:0:0: [sda] Starting disk
+[  228.476637] usb 1-4: reset full-speed USB device number 2 using xhci_hcd
+[  228.562879] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[  228.563924] ata2: SATA link down (SStatus 4 SControl 300)
+[  228.564979] ata1.00: supports DRM functions and may not be fully accessible
+[  228.565493] ata1.00: NCQ Send/Recv Log not supported
+[  228.567649] ata1.00: supports DRM functions and may not be fully accessible
+[  228.568252] ata1.00: NCQ Send/Recv Log not supported
+[  228.570075] ata1.00: configured for UDMA/133
+[  228.580412] ahci 0000:00:13.0: port does not support device sleep
+[  228.639349] Bluetooth: hci0: RTL: rtl: examining hci_ver=06
+hci_rev=0e2f lmp_ver=06 lmp_subver=a041
+
+[  228.639368] Bluetooth: hci0: RTL: rtl: unknown IC info, lmp subver
+a041, hci rev 0e2f, hci ver 0006
+[  228.639742] acpi LNXPOWER:01: Turning OFF
+[  228.640033] OOM killer enabled.
+[  228.640040] Restarting tasks ... done.
+[  228.795406] PM: suspend exit
+[  228.800399] audit: type=1130 audit(1548962671.104:94): pid=1 uid=0
+auid=4294967295 ses=4294967295 msg='unit=systemd-rfkill comm="systemd"
+exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=?
+res=success'
+[  229.067206] wlp1s0: authenticate with 12:34:56:78:90:12
+[  229.067823] wlp1s0: send auth to 12:34:56:78:90:12 (try 1/3)
+[  229.070955] wlp1s0: authenticated
+[  229.072395] wlp1s0: associate with 12:34:56:78:90:12 (try 1/3)
+[  229.074505] wlp1s0: RX AssocResp from 12:34:56:78:90:12 (capab=0x11
+status=0 aid=2)
+[  229.074819] wlp1s0: associated
+[  233.809200] audit: type=1131 audit(1548962676.106:95): pid=1 uid=0
+auid=4294967295 ses=4294967295 msg='unit=systemd-rfkill comm="systemd"
+exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=?
+res=success'
+
+The laptop doesn't go to sleep, the screen turns off, and in a couple
+of seconds it turns on.
+
+Please take a look at this regression. Feel free to ask me for any
+additional information you need.
+
+Thanks,
+Max
+
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/intel_int0002_vgpio.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+> index 987a3b03f225..33c3489f5bc1 100644
+> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+> @@ -106,6 +106,21 @@ static void int0002_irq_mask(struct irq_data *data)
+>         outl(gpe_en_reg, GPE0A_EN_PORT);
+>  }
+>
+> +static int int0002_irq_set_wake(struct irq_data *data, unsigned int on)
+> +{
+> +       struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct platform_device *pdev = to_platform_device(chip->parent);
+> +       int irq = platform_get_irq(pdev, 0);
+> +
+> +       /* Propagate to parent irq */
+> +       if (on)
+> +               enable_irq_wake(irq);
+> +       else
+> +               disable_irq_wake(irq);
+> +
+> +       return 0;
+> +}
+> +
+>  static irqreturn_t int0002_irq(int irq, void *data)
+>  {
+>         struct gpio_chip *chip = data;
+> @@ -128,6 +143,7 @@ static struct irq_chip int0002_irqchip = {
+>         .irq_ack                = int0002_irq_ack,
+>         .irq_mask               = int0002_irq_mask,
+>         .irq_unmask             = int0002_irq_unmask,
+> +       .irq_set_wake           = int0002_irq_set_wake,
+>  };
+>
+>  static int int0002_probe(struct platform_device *pdev)
