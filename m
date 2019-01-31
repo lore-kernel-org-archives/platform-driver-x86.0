@@ -1,90 +1,77 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v1 1/1] platform/mellanox: Add bootctl driver for Mellanox
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] platform/mellanox: Add bootctl driver for Mellanox
  BlueField Soc
-Date: Thu, 31 Jan 2019 16:53:27 +0000
-Message-ID: <DB6PR05MB3223132246F702D41F7399ECA1910@DB6PR05MB3223.eurprd05.prod.outlook.com>
+Date: Thu, 31 Jan 2019 19:02:18 +0200
+Message-ID: <CAHp75Vfr7+NONzthw=E77BqLb06=wgfmNqu7D01fkcNQMqUCsQ@mail.gmail.com>
 References: <0b74e9ad12360b56bc0a3c2ca972798c424f2610.1548790896.git.lsun@mellanox.com>
- <CAHp75VfpmBMmR_zU8JxN3Apb__QyWXyU9wD8e03z0N3TTRpMYg@mail.gmail.com>
- <DB6PR05MB32230728A361BD68D14D7B69A1900@DB6PR05MB3223.eurprd05.prod.outlook.com>
- <CAHp75VcsYsxSfUT6Sc9-59gXaQRXs0ugpPRAvAzFr2+DYJHeCg@mail.gmail.com>
+ <1548953587-12719-1-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcsYsxSfUT6Sc9-59gXaQRXs0ugpPRAvAzFr2+DYJHeCg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1548953587-12719-1-git-send-email-lsun@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Liming Sun <lsun@mellanox.com>
 Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-VGhhbmtzISAgdjIgaGFzIGJlZW4gcG9zdGVkIHRyeWluZyB0byBzb2x2ZSBhbGwgdGhlIGNvbW1l
-bnRzLiBQbGVhc2UgYWxzbyBzZWUgcmVzcG9uc2UgaW5saW5lLg0KDQpSZWdhcmRzLA0KTGltaW5n
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBTaGV2Y2hlbmtv
-IDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIEphbnVhcnkg
-MzAsIDIwMTkgNDoxNyBQTQ0KPiBUbzogTGltaW5nIFN1biA8bHN1bkBtZWxsYW5veC5jb20+DQo+
-IENjOiBBbmR5IFNoZXZjaGVua28gPGFuZHlAaW5mcmFkZWFkLm9yZz47IERhcnJlbiBIYXJ0IDxk
-dmhhcnRAaW5mcmFkZWFkLm9yZz47IFZhZGltIFBhc3Rlcm5hayA8dmFkaW1wQG1lbGxhbm94LmNv
-bT47IERhdmlkDQo+IFdvb2RzIDxkd29vZHNAbWVsbGFub3guY29tPjsgUGxhdGZvcm0gRHJpdmVy
-IDxwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5lbCBNYWls
-aW5nIExpc3QgPGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBS
-ZTogW1BBVENIIHYxIDEvMV0gcGxhdGZvcm0vbWVsbGFub3g6IEFkZCBib290Y3RsIGRyaXZlciBm
-b3IgTWVsbGFub3ggQmx1ZUZpZWxkIFNvYw0KPiANCj4gT24gV2VkLCBKYW4gMzAsIDIwMTkgYXQg
-MTA6NDcgUE0gTGltaW5nIFN1biA8bHN1bkBtZWxsYW5veC5jb20+IHdyb3RlOg0KPiANCj4gPiA+
-IEZpcnN0IG9mIGFsbCwgaXMgaXQgYSByZWFsIHdhdGNoZG9nIHdpdGggYSBkcml2ZXI/IEkgdGhp
-bmsgd2F0Y2hkb2cgaW4NCj4gPiA+IHRoYXQgY2FzZSBzaG91bGQgYmUgc2V0IHVwIHRocm91Z2gg
-c3RhbmRhcmQgd2F0Y2hkb2cgZmFjaWxpdGllcy4NCj4gPg0KPiA+IFRoaXMgaXMgbm90IGEgd2F0
-Y2hkb2cgZHJpdmVyIGl0c2VsZi4gSW5zdGVhZCwgaXQgcHJvdmlkZXMgaW50ZXJmYWNlIHRvDQo+
-ID4gdXNlci1zcGFjZSBhbmQgdXNlIEFSTSBTTUMgY2FsbHMgdG8gQVRGIHRvIGNvbmZpZ3VyZSBy
-ZWdpc3RlcnMgYW5kDQo+ID4gd2F0Y2hkb2cuIEknbGwgdXBkYXRlIHRoZSBjb21taXQgbWVzc2Fn
-ZSBpbiB2MiB0byBjbGFyaWZ5IGl0Lg0KPiANCj4gSG1tLi4uIEZvciBleGFtcGxlIEludGVsIE1J
-RCBwbGF0Zm9ybXMgaGF2ZSBTQ1UgKHN5c3RlbSBjb250cm9sbGVyDQo+IHVuaXQpIHRoYXQgcHJv
-dmlkZXMgYSB3YXRjaGRvZyBmYWNpbGl0eS4gSW4gdGhlIGtlcm5lbCB3ZSBoYXZlIGENCj4gd2F0
-Y2hkb2cgZHJpdmVyIGZvciB0aGF0Lg0KPiBDYW4ndCB5b3UgZG8gc2ltaWxhciBmb3IgeW91ciBj
-YXNlPw0KDQpUaGUgcHJvY2VzcyBtaWdodCBiZSBkaWZmZXJlbnQgdGhhbiB3aGF0J3MgZG9uZSBv
-biB0aGUgQmx1ZUZpZWxkIFNvQy4NCg0KQWZ0ZXIgdGhlIGJvb3QtcGFydGl0aW9uIHN3YXBwaW5n
-LCB0aGUgQVJNIHdhdGNoZG9nIGlzIG5vdCBzdGFydGVkDQpyaWdodCBhd2F5LiBJdCBpcyBzdGFy
-dGVkIGR1cmluZyBuZXh0IHJlYm9vdGluZyBieSB0aGUgQVRGIEJMMSBjb2RlIA0KKHdoaWNoIGlz
-IHRoZSBCb290IFJPTSBjb2RlIHRoYW4gY291bGRuJ3QgY2hhbmdlKS4gVGhlIEJvb3QtUk9NIA0K
-Y2hlY2tzIHNvbWUgcmVnaXN0ZXIgdmFsdWUgd2hpY2ggaXMgcHJlc2VydmVkIGR1cmluZyByZWJv
-b3RpbmcsIGFuZCANCmtub3dzIHRoYXQgYSBib290LXBhcnRpdGlvbiBzd2FwcGluZyBpcyBpbiBw
-cm9jZXNzLCB0aHVzIGVuYWJsZSB0aGUgDQp3YXRjaGRvZyB0aW1lciBpZiBjb25maWd1cmVkLiBB
-dCB0aGlzIHRpbWUsIG5vIFVFRkkgb3IgTGludXggaXMgcnVubmluZywgDQpqdXN0IHRoZSBib290
-IFJPTSBjb2RlIGF0IHRoZSB2ZXJ5IGJlZ2lubmluZy4NCg0KSSdsbCBhZGQgdGhlIHNlcXVlbmNl
-IG9mIHN1Y2ggdXNlIGNhc2UgaW4gdGhlIGNvbW1pdCBtZXNzYWdlIG9mIHYyLg0KDQo+IA0KPiA+
-ID4gPiArICAgICAgIGlmIChtbHhiZl9ib290Y3RsX3NtY19jYWxsMShNTFhCRl9CT09UQ1RMX1NF
-VF9QT1NUX1JFU0VUX1dET0csDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHdhdGNoZG9nKSA8IDApDQo+ID4gPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJ
-TlZBTDsNCj4gPiA+DQo+ID4gPiBJZiB0aGF0IGNhbGwgcmV0dXJucyBhbiBlcnJvciBpdCBzaG91
-bGRuJ3QgYmUgc2hhZG93ZWQgaGVyZS4NCj4gPg0KPiA+IE5vdCBzdXJlIEkgdW5kZXJzdGFuZCB0
-aGlzIGNvbW1lbnQgY29ycmVjdGx5IG9yIG5vdC4NCj4gPiBUaGlzIGZ1bmN0aW9uIGlzIGRlZmlu
-ZWQgYnkgRFJJVkVSX0FUVFJfUlcoKSwgd2hpY2ggYXBwZWFycyB0byBleHBlY3QNCj4gPiBzc2l6
-ZV90IG9yIGFuIGVycm9yIGNvZGUgYXMgcmV0dXJuIHZhbHVlIGFjY29yZGluZyB0byBvdGhlciBl
-eGFtcGxlcyBJIHNhdy4NCj4gDQo+IFdoYXQgaXMgcmV0dXJuZWQgYnkgbWx4Li4uY2FsbDEoKSBz
-aG91bGQgYmUgcHJvcGFnYXRlZCB0byB0aGUgYWN0dWFsIGNhbGxlci4NCj4gU2FtZSBjb21tZW50
-IGZvciBhbGwgc2ltaWxhciBjYXNlcy4NCg0KTWFrZSBzZW5zZSEgVGhhbmtzIGZvciB0aGUgZXhw
-bGFuYXRpb24uIFVwZGF0ZWQgaXQgaW4gdjIuDQoNCj4gDQo+ID4gPiA+ICsgICAgICAgbGNfc3Rh
-dGUgJj0gKE1MWEJGX0JPT1RDVExfU0JfTU9ERV9URVNUX01BU0sgfA0KPiA+ID4gPiArICAgICAg
-ICAgICAgICAgICAgICBNTFhCRl9CT09UQ1RMX1NCX01PREVfU0VDVVJFX01BU0spOw0KPiA+ID4N
-Cj4gPiA+IEJldHRlciB0byBzcGxpdCBsaWtlDQo+ID4gPg0KPiA+ID4geHh4ID0NCj4gPiA+ICAo
-QSB8IEIpOw0KPiA+DQo+ID4gSXQgc2VlbXMgaGFyZCB0byBkbyAiKEEgfCBCKTsiIHdpdGhpbiA4
-MCBjaGFyYWN0ZXJzIHBsdXMgdGhlIGluZGVudHMuDQo+IA0KPiBSZXBlYXRpbmcgbXlzZWxmLCBp
-dCdzIHN0aWxsIGJldHRlciB0aGFuIHlvdXIgdmFyaWFudCBmb3IgcmVhZGFiaWxpdHkuDQoNCkRv
-bmUuIE1hbmFnZWQgdG8gc2hvcnRlbiB0aGUgdmFyaWFibGUgbmFtZSBhIGxpdHRsZSBiaXQuDQpV
-cGRhdGVkIGl0IGluIHYyLg0KDQo+IA0KPiA+ID4gPiArICAgICAgIGlmIChyZXMuYTAgIT0gMHg4
-OWMwMzZiNCB8fCByZXMuYTEgIT0gMHgxMWU2ZTdkNyB8fA0KPiA+ID4gPiArICAgICAgICAgICBy
-ZXMuYTIgIT0gMHgxYTAwOTc4NyB8fCByZXMuYTMgIT0gMHhjNGJmMDBjYSkNCj4gPiA+DQo+ID4g
-PiBXaGF0IGlzIHRoaXM/IQ0KPiA+ID4NCj4gPiA+IENhbiB5b3UgdXNlIFVVSUQgQVBJPw0KPiA+
-DQo+ID4gWWVzLCBpdCBpcyBVVUlEIGNvbXBhcmlzb24uIFRoZSBTTUMgY2FsbCByZXR1cm5zIGZv
-dXIgJ3Vuc2lnbmVkIGxvbmcnIGZyb20gQVRGDQo+ID4gdG8gcmVwcmVzZW50IHRoZSBVVUlELiBU
-aGVyZSBzZWVtcyBubyBleGlzdGluZyBBUElzIGluIHVhcGkvbGludXgvdXVpZC5oIHRvDQo+ID4g
-Y29tcGFyZSBzdWNoIHNwZWNpYWwgZm9ybWF0LiBIb3cgYWJvdXQgcmVwbGFjaW5nIGl0IHdpdGgg
-Y29tbWVudCBhbmQgTUFDUk9zDQo+ID4gaW5zdGVhZCBvZiB0aGUgaGFyZGNvZGVkIHZhbHVlcyB0
-byBtYWtlIGl0IG1vcmUgcmVhZGFibGU/DQo+IA0KPiBTaG91bGQgYmUgbm8gbWFnaWMgbnVtYmVy
-cyBpbnZvbHZlZCBpbnNpZGUgdGhlIGZ1bmN0aW9uIGF0IHRoZSBlbmQuDQo+IFVzZSBkZXNjcmlw
-dGl2ZSBkZWZpbml0aW9ucyBhbmQgSSBzdGlsbCByZWNvbW1lbmQgdG8gZ2l2ZSBhIGxvb2sgYXQN
-Cj4gVVVJRCBBUEkgaG93IGl0IGNhbiBiZSB1dGlsaXplZCBoZXJlLg0KPiAoaGludDogVGh1bmRl
-cmJvbHQgaHcgaXMgb3BlcmF0aW5nIHdpdGggaW50ZWdlcnMsIHRob3VnaCBkcml2ZXIgdXNlcw0K
-PiBVVUlEIEFQSSBhdCB0aGUgZW5kKQ0KPiANCg0KVXBkYXRlZCBpbiB2Mi4gTm93IGl0IHNob3Vs
-ZCBsb29rIGJldHRlciA6KQ0KDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNo
-ZXZjaGVua28NCg==
+On Thu, Jan 31, 2019 at 6:53 PM Liming Sun <lsun@mellanox.com> wrote:
+>
+> This commit adds the bootctl platform driver for Mellanox BlueField
+> Soc, which controls the eMMC boot partition swapping and sends SMC
+> calls to ATF running at exception level EL3 to program some system
+> register. This register is only accessible in secure code and is
+> used to enable the watchdog after reboot.
+>
+> Below are the sequences of a typical use case.
+>
+>   1. User-space tool upgrades one eMMC boot partition and requests
+>      the boot partition swapping;
+>
+>   2. The bootctl driver handles such request and sends SMC call
+>      to ATF. ATF programs register BREADCRUMB0 which has value
+>      preserved during software reset. It also programs eMMC to
+>      swap the boot partition;
+>
+>   3. After software reset (rebooting), ATF BL1 (BootRom) checks
+>      register BREADCRUMB0 to enable watchdog if configured;
+>
+>   4. If booting fails, the watchdog timer will trigger rebooting.
+>      In such case, ATF BootRom will switch the boot partition
+>      to the previous one.
+
+Thanks for an update. My comments below.
+
+
+> Reviewed-by: David Woods <dwoods@mellanox.com>
+
+I'm not sure I see this guy to review v2. Of course if you consider
+all changes minor, you may leave this tag.
+
+> Signed-off-by: Liming Sun <lsun@mellanox.com>
+> ---
+
+Here should be a changelog what had been done in new version.
+> +/* UUID used to probe ATF service. */
+
+> +static const char * const mlxbf_bootctl_svc_uuid_str =
+> +       "89c036b4-e7d7-11e6-8797-001aca00bfc4";
+
+static const char *xxx = ...;
+
+> +/*
+> + * UUID structure used to match the returned value from ATF in
+> + * four 32-bit words. No need to do endian conversion here.
+> + */
+> +union mlxbf_bootctl_uuid {
+> +       guid_t guid;
+> +       u32 words[4];
+> +};
+
+I'm not sure it's the best you can do. instead of using union, better
+to use conversion from and to corresponding uuid type.
+
+The rest I will comment on v3.
+
+-- 
+With Best Regards,
+Andy Shevchenko
