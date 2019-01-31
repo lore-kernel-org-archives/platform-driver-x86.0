@@ -1,65 +1,151 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 2/7] x86, olpc: Use a correct version when making up a
- battery node
-Date: Thu, 31 Jan 2019 13:59:55 +0100
-Message-ID: <20190131125955.GI6749@zn.tnic>
-References: <20190110174005.1202564-1-lkundrak@v3.sk>
- <20190110174005.1202564-3-lkundrak@v3.sk>
- <20190123205627.nbddtfuy6qdo2bgb@earth.universe>
- <0adff00d4c4797fe1f9d593a7ba7c772ac3312c4.camel@v3.sk>
+From: Mattias Jacobsson <2pi@mok.nu>
+Subject: Re: [PATCH v3 3/3] platform/x86: wmi: use MODULE_DEVICE_TABLE()
+ instead of MODULE_ALIAS()
+Date: Thu, 31 Jan 2019 16:24:29 +0100
+Message-ID: <20190131152428.lnoy3ibxipnwlxxu@mok.nu>
+References: <cover.1548860212.git.2pi@mok.nu>
+ <830f6043839606c6ed04dfeaceeb0ce4d9cd1b54.1548860212.git.2pi@mok.nu>
+ <CAHp75VeRVThOnL8Lo2TENB0zdcW1Sd00CL88ha6h+QGceBr7sg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0adff00d4c4797fe1f9d593a7ba7c772ac3312c4.camel@v3.sk>
+In-Reply-To: <CAHp75VeRVThOnL8Lo2TENB0zdcW1Sd00CL88ha6h+QGceBr7sg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, x86@kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mario Limonciello <mario.limonciello@dell.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 2pi@mok.nu
 List-Id: platform-driver-x86.vger.kernel.org
 
-+ the platform maintainers.
+On 2019-01-30, Andy Shevchenko wrote:
+> On Wed, Jan 30, 2019 at 5:15 PM Mattias Jacobsson <2pi@mok.nu> wrote:
+> >
+> > WMI drivers can if they have specified an array of struct wmi_device_id
+> > use the MODULE_DEVICE_TABLE() macro to automatically generate the
+> > appropriate MODULE_ALIAS() output. Thus avoiding to keep both the array
+> > of struct wmi_device_id and the MODULE_ALIAS() declaration(s) in sync.
+> >
+> > Change all drivers that have specified an array of struct wmi_device_id
+> > to use MODULE_DEVICE_TABLE() instead of MODULE_ALIAS().
+> 
+> Please, split this per driver basis. It would help in maintenance phase...
 
-On Thu, Jan 31, 2019 at 01:26:16PM +0100, Lubomir Rintel wrote:
-> Hi,
-> 
-> On Wed, 2019-01-23 at 21:56 +0100, Sebastian Reichel wrote:
-> > Hi,
-> > 
-> > On Thu, Jan 10, 2019 at 06:40:00PM +0100, Lubomir Rintel wrote:
-> > > The XO-1 and XO-1.5 batteries apparently differ in an ability to report
-> > > ambient temperature. Add a different compatible string to the 1.5
-> > > battery.
-> > > 
-> > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > > 
-> > > ---
-> > 
-> > I either need an Acked-by from the x86 platform maintainers, that I
-> > can queue this through power-supply or a pull request for an immutable
-> > branch (probably the better idea).
-> 
-> I'm happy to prepare a branch that could be pulled from. In fact,
-> here's a branch with fixes for issues pointed out by the review that
-> could be pulled from:
-> 
->   git pull https://github.com/hackerspace/olpc-xo175-linux lr/olpc-xo175-battery-for-v5.1
-> 
-> What do really not understand is how does this help. This is probably
-> just my unfamiliarity with the process; but perhaps you could help me
-> get less unfamiliar. Would it somehow help with a potential (though
-> unlikely) conflict resolution? Would an Ack from x86 crowd serve as an
-> altenative way off making sure things in their tree won't conflict with
-> this one?
-> 
-> > -- Sebastian
-> 
-> Thank you
-> Lubo
-> 
+Sure.
 
--- 
-Regards/Gruss,
-    Boris.
+> 
+> > Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+> 
+> > Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+> 
+> ...and AFAIU Mario gave his tag only for Dell related stuff.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Yes, that is correct. I applied the same reasoning as for the Acked-by:
+tag in [1]: "Acked-by: does not necessarily indicate acknowledgement of
+the entire patch.". Was that incorrect?
+
+Anyway, now that we are splitting the patch up;
+
+Mario: which files did you give the tag for? all involved *dell* files?
+
+> 
+> > ---
+> >  drivers/platform/x86/dell-smbios-wmi.c       | 2 +-
+> >  drivers/platform/x86/dell-wmi-descriptor.c   | 2 +-
+> >  drivers/platform/x86/dell-wmi.c              | 4 ++--
+> >  drivers/platform/x86/huawei-wmi.c            | 3 +--
+> >  drivers/platform/x86/intel-wmi-thunderbolt.c | 2 +-
+> >  drivers/platform/x86/wmi-bmof.c              | 2 +-
+> >  6 files changed, 7 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell-smbios-wmi.c
+> > index cf2229ece9ff..c3ed3c8c17b9 100644
+> > --- a/drivers/platform/x86/dell-smbios-wmi.c
+> > +++ b/drivers/platform/x86/dell-smbios-wmi.c
+> > @@ -277,4 +277,4 @@ void exit_dell_smbios_wmi(void)
+> >         wmi_driver_unregister(&dell_smbios_wmi_driver);
+> >  }
+> >
+> > -MODULE_ALIAS("wmi:" DELL_WMI_SMBIOS_GUID);
+> > +MODULE_DEVICE_TABLE(wmi, dell_smbios_wmi_id_table);
+> > diff --git a/drivers/platform/x86/dell-wmi-descriptor.c b/drivers/platform/x86/dell-wmi-descriptor.c
+> > index 072821aa47fc..14ab250b7d5a 100644
+> > --- a/drivers/platform/x86/dell-wmi-descriptor.c
+> > +++ b/drivers/platform/x86/dell-wmi-descriptor.c
+> > @@ -207,7 +207,7 @@ static struct wmi_driver dell_wmi_descriptor_driver = {
+> >
+> >  module_wmi_driver(dell_wmi_descriptor_driver);
+> >
+> > -MODULE_ALIAS("wmi:" DELL_WMI_DESCRIPTOR_GUID);
+> > +MODULE_DEVICE_TABLE(wmi, dell_wmi_descriptor_id_table);
+> >  MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
+> >  MODULE_DESCRIPTION("Dell WMI descriptor driver");
+> >  MODULE_LICENSE("GPL");
+> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> > index 16c7f3d9a335..0602aba62b3f 100644
+> > --- a/drivers/platform/x86/dell-wmi.c
+> > +++ b/drivers/platform/x86/dell-wmi.c
+> > @@ -50,8 +50,6 @@ MODULE_LICENSE("GPL");
+> >
+> >  static bool wmi_requires_smbios_request;
+> >
+> > -MODULE_ALIAS("wmi:"DELL_EVENT_GUID);
+> > -
+> >  struct dell_wmi_priv {
+> >         struct input_dev *input_dev;
+> >         u32 interface_version;
+> > @@ -738,3 +736,5 @@ static void __exit dell_wmi_exit(void)
+> >         wmi_driver_unregister(&dell_wmi_driver);
+> >  }
+> >  module_exit(dell_wmi_exit);
+> > +
+> > +MODULE_DEVICE_TABLE(wmi, dell_wmi_id_table);
+> > diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+> > index 59872f87b741..52fcac5b393a 100644
+> > --- a/drivers/platform/x86/huawei-wmi.c
+> > +++ b/drivers/platform/x86/huawei-wmi.c
+> > @@ -201,8 +201,7 @@ static struct wmi_driver huawei_wmi_driver = {
+> >
+> >  module_wmi_driver(huawei_wmi_driver);
+> >
+> > -MODULE_ALIAS("wmi:"WMI0_EVENT_GUID);
+> > -MODULE_ALIAS("wmi:"AMW0_EVENT_GUID);
+> > +MODULE_DEVICE_TABLE(wmi, huawei_wmi_id_table);
+> >  MODULE_AUTHOR("Ayman Bagabas <ayman.bagabas@gmail.com>");
+> >  MODULE_DESCRIPTION("Huawei WMI hotkeys");
+> >  MODULE_LICENSE("GPL v2");
+> > diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c b/drivers/platform/x86/intel-wmi-thunderbolt.c
+> > index 9ded8e2af312..4dfa61434a76 100644
+> > --- a/drivers/platform/x86/intel-wmi-thunderbolt.c
+> > +++ b/drivers/platform/x86/intel-wmi-thunderbolt.c
+> > @@ -88,7 +88,7 @@ static struct wmi_driver intel_wmi_thunderbolt_driver = {
+> >
+> >  module_wmi_driver(intel_wmi_thunderbolt_driver);
+> >
+> > -MODULE_ALIAS("wmi:" INTEL_WMI_THUNDERBOLT_GUID);
+> > +MODULE_DEVICE_TABLE(wmi, intel_wmi_thunderbolt_id_table);
+> >  MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
+> >  MODULE_DESCRIPTION("Intel WMI Thunderbolt force power driver");
+> >  MODULE_LICENSE("GPL v2");
+> > diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bmof.c
+> > index c4530ba715e8..8751a13134be 100644
+> > --- a/drivers/platform/x86/wmi-bmof.c
+> > +++ b/drivers/platform/x86/wmi-bmof.c
+> > @@ -119,7 +119,7 @@ static struct wmi_driver wmi_bmof_driver = {
+> >
+> >  module_wmi_driver(wmi_bmof_driver);
+> >
+> > -MODULE_ALIAS("wmi:" WMI_BMOF_GUID);
+> > +MODULE_DEVICE_TABLE(wmi, wmi_bmof_id_table);
+> >  MODULE_AUTHOR("Andrew Lutomirski <luto@kernel.org>");
+> >  MODULE_DESCRIPTION("WMI embedded Binary MOF driver");
+> >  MODULE_LICENSE("GPL");
+> > --
+> > 2.20.1
+> >
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+
+Thanks,
+Mattias
