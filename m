@@ -1,65 +1,48 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Subject: [PATCH 02/10] platform/x86: intel_pmc_core: Fix PCH IP sts reading
-Date: Fri,  1 Feb 2019 13:02:26 +0530
-Message-ID: <20190201073234.13280-3-rajneesh.bhardwaj@linux.intel.com>
-References: <20190201073234.13280-1-rajneesh.bhardwaj@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [GIT PULL] ACPI-related Kconfig fixes for v5.0-rc5
+Date: Fri, 1 Feb 2019 11:38:43 +0100
+Message-ID: <CAJZ5v0hCRCMfJS4nXKnLrGJpEf3Jp6tLwkAeqtTOFOFNk4ckjA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190201073234.13280-1-rajneesh.bhardwaj@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-A previous commit "platform/x86: intel_pmc_core: Make the driver PCH
-family agnostic <c977b98bbef5898ed3d30b08ea67622e9e82082a>" provided
-better abstraction to this driver but has some fundamental issues.
+Hi Linus,
 
-e.g. the following condition
+Please pull from the tag
 
-for (index = 0; index < pmcdev->map->ppfear_buckets &&
-	index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-5.0-rc5
 
-is wrong because for CNL, PPFEAR_MAX_NUM_ENTRIES is hardcoded as 5 which
-is _wrong_ and even though ppfear_buckets is 8, the loop fails to read
-all eight registers needed for CNL PCH i.e. PPFEAR0 and PPFEAR1. This
-patch refactors the pfear show logic to correctly read PCH IP power
-gating status for Cannonlake and beyond.
+with top-most commit b473406a06c49d39d6d653e9981b0bd70300485d
 
-Cc: "David E. Box" <david.e.box@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Fixes: c977b98bbef5 ("platform/x86: intel_pmc_core: Make the driver PCH family agnostic")
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
----
- drivers/platform/x86/intel_pmc_core.c | 3 ++-
- drivers/platform/x86/intel_pmc_core.h | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ Merge branch 'acpi-misc'
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 37f605da9333..9f143cdbea05 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -380,7 +380,8 @@ static int pmc_core_ppfear_show(struct seq_file *s, void *unused)
- 	     index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
- 		pf_regs[index] = pmc_core_reg_read_byte(pmcdev, iter);
- 
--	for (index = 0; map[index].name; index++)
-+	for (index = 0; map[index].name &&
-+	     index < pmcdev->map->ppfear_buckets * 8; index++)
- 		pmc_core_display_map(s, index, pf_regs[index / 8], map);
- 
- 	return 0;
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 89554cba5758..1a0104d2cbf0 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -32,7 +32,7 @@
- #define SPT_PMC_SLP_S0_RES_COUNTER_STEP		0x64
- #define PMC_BASE_ADDR_MASK			~(SPT_PMC_MMIO_REG_LEN - 1)
- #define MTPMC_MASK				0xffff0000
--#define PPFEAR_MAX_NUM_ENTRIES			5
-+#define PPFEAR_MAX_NUM_ENTRIES			12
- #define SPT_PPFEAR_NUM_ENTRIES			5
- #define SPT_PMC_READ_DISABLE_BIT		0x16
- #define SPT_PMC_MSG_FULL_STS_BIT		0x18
--- 
-2.17.1
+on top of commit f17b5f06cb92ef2250513a1e154c47b78df07d40
+
+ Linux 5.0-rc4
+
+to receive ACPI-related Kconfig fixes for 5.0-rc5.
+
+These prevent invalid configurations from being created (e.g. by
+randconfig) due to some ACPI-related Kconfig options' dependencies
+that are not specified directly (Sinan Kaya).
+
+Thanks!
+
+
+---------------
+
+Sinan Kaya (3):
+      mfd: Fix unmet dependency warning for MFD_TPS68470
+      platform/x86: Fix unmet dependency warning for ACPI_CMPC
+      platform/x86: Fix unmet dependency warning for SAMSUNG_Q10
+
+---------------
+
+ drivers/mfd/Kconfig          | 2 +-
+ drivers/platform/x86/Kconfig | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
