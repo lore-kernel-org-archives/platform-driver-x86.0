@@ -1,74 +1,53 @@
 From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Subject: [PATCH 05/10] platform/x86: intel_pmc_core: Include Reserved IP for LTR
-Date: Fri,  1 Feb 2019 13:02:29 +0530
-Message-ID: <20190201073234.13280-6-rajneesh.bhardwaj@linux.intel.com>
+Subject: [PATCH 07/10] platform/x86: intel_pmc_core: Convert to INTEL_CPU_FAM6 macro
+Date: Fri,  1 Feb 2019 13:02:31 +0530
+Message-ID: <20190201073234.13280-8-rajneesh.bhardwaj@linux.intel.com>
 References: <20190201073234.13280-1-rajneesh.bhardwaj@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190201073234.13280-1-rajneesh.bhardwaj@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Recently introduced commit "platform/x86: intel_pmc_core: Show Latency
-Tolerance info <51337cd94d18184601ac0fb4cf1a02b8bbabc3d7> skipped the
-LTR from a reserved IP. Though this doesn't cause any functional issue
-but it is needed for the consumers of "ltr_ignore" as the index printing
-for "ltr_show" is missing. For example, w/o this change, a user that wants
-to ignore LTR from ME would do something like
+INTEL_CPU_FAM6() macro provides better abstraction and reduces code size so use
+it instead of custom grown ICPU().
 
-echo 5 > ltr_ignore
-
-but the index for ME is 6. Printing a reserved IP helps to properly
-calculate LTR ignore offsets.
-
-Cc: "David E. Box" <david.e.box@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 ---
- drivers/platform/x86/intel_pmc_core.c | 2 ++
- drivers/platform/x86/intel_pmc_core.h | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/platform/x86/intel_pmc_core.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 125461ca2927..835ed6d333bf 100644
+index 835ed6d333bf..d3752d75075b 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -108,6 +108,7 @@ static const struct pmc_bit_map spt_ltr_show_map[] = {
- 	{"SATA",		SPT_PMC_LTR_SATA},
- 	{"GIGABIT_ETHERNET",	SPT_PMC_LTR_GBE},
- 	{"XHCI",		SPT_PMC_LTR_XHCI},
-+	{"Reserved",		SPT_PMC_LTR_RESERVED},
- 	{"ME",			SPT_PMC_LTR_ME},
- 	/* EVA is Enterprise Value Add, doesn't really exist on PCH */
- 	{"EVA",			SPT_PMC_LTR_EVA},
-@@ -276,6 +277,7 @@ static const struct pmc_bit_map cnp_ltr_show_map[] = {
- 	{"SATA",		CNP_PMC_LTR_SATA},
- 	{"GIGABIT_ETHERNET",	CNP_PMC_LTR_GBE},
- 	{"XHCI",		CNP_PMC_LTR_XHCI},
-+	{"Reserved",		CNP_PMC_LTR_RESERVED},
- 	{"ME",			CNP_PMC_LTR_ME},
- 	/* EVA is Enterprise Value Add, doesn't really exist on PCH */
- 	{"EVA",			CNP_PMC_LTR_EVA},
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 1a0104d2cbf0..0680ca397b57 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -46,6 +46,7 @@
- #define SPT_PMC_LTR_SATA			0x368
- #define SPT_PMC_LTR_GBE				0x36C
- #define SPT_PMC_LTR_XHCI			0x370
-+#define SPT_PMC_LTR_RESERVED			0x374
- #define SPT_PMC_LTR_ME				0x378
- #define SPT_PMC_LTR_EVA				0x37C
- #define SPT_PMC_LTR_SPC				0x380
-@@ -156,6 +157,7 @@ enum ppfear_regs {
- #define CNP_PMC_LTR_SATA			0x1B68
- #define CNP_PMC_LTR_GBE				0x1B6C
- #define CNP_PMC_LTR_XHCI			0x1B70
-+#define CNP_PMC_LTR_RESERVED			0x1B74
- #define CNP_PMC_LTR_ME				0x1B78
- #define CNP_PMC_LTR_EVA				0x1B7C
- #define CNP_PMC_LTR_SPC				0x1B80
+@@ -25,9 +25,6 @@
+ 
+ #include "intel_pmc_core.h"
+ 
+-#define ICPU(model, data) \
+-	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_MWAIT, (kernel_ulong_t)data }
+-
+ static struct pmc_dev pmc;
+ 
+ static const struct pmc_bit_map spt_pll_map[] = {
+@@ -738,11 +735,11 @@ static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+ #endif /* CONFIG_DEBUG_FS */
+ 
+ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+-	ICPU(INTEL_FAM6_SKYLAKE_MOBILE, &spt_reg_map),
+-	ICPU(INTEL_FAM6_SKYLAKE_DESKTOP, &spt_reg_map),
+-	ICPU(INTEL_FAM6_KABYLAKE_MOBILE, &spt_reg_map),
+-	ICPU(INTEL_FAM6_KABYLAKE_DESKTOP, &spt_reg_map),
+-	ICPU(INTEL_FAM6_CANNONLAKE_MOBILE, &cnp_reg_map),
++	INTEL_CPU_FAM6(SKYLAKE_MOBILE, spt_reg_map),
++	INTEL_CPU_FAM6(SKYLAKE_DESKTOP, spt_reg_map),
++	INTEL_CPU_FAM6(KABYLAKE_MOBILE, spt_reg_map),
++	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
++	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+ 	{}
+ };
+ 
 -- 
 2.17.1
