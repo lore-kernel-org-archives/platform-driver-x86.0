@@ -1,7 +1,7 @@
 From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Subject: [PATCH 03/10] platform/x86: intel_pmc_core: Fix PCH IP name
-Date: Fri,  1 Feb 2019 13:02:27 +0530
-Message-ID: <20190201073234.13280-4-rajneesh.bhardwaj@linux.intel.com>
+Subject: [PATCH 04/10] platform/x86: intel_pmc_core: Fix file permissions for ltr_show
+Date: Fri,  1 Feb 2019 13:02:28 +0530
+Message-ID: <20190201073234.13280-5-rajneesh.bhardwaj@linux.intel.com>
 References: <20190201073234.13280-1-rajneesh.bhardwaj@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190201073234.13280-1-rajneesh.bhardwaj@linux.intel.com>
@@ -10,30 +10,30 @@ To: platform-driver-x86@vger.kernel.org
 Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-For Cannonlake and Icelake, the IP name for Res_6 should be SPF i.e.
-South Port F. No functional change is intended other than just renaming
-the IP appropriately.
+File permissions for ltr_show attribute should be similar to other
+debugfs attributes created by this driver. '0644' should be used only
+when there is a write operation desired such as for ltr_ignore.
 
 Cc: "David E. Box" <david.e.box@intel.com>
 Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Fixes: 291101f6a735 ("platform/x86: intel_pmc_core: Add CannonLake PCH support")
+Fixes: 63cde0c16c67 ("platform/x86: intel_pmc_core: Show Latency Tolerance info")
 Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 ---
  drivers/platform/x86/intel_pmc_core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 9f143cdbea05..80936e6bdc61 100644
+index 80936e6bdc61..125461ca2927 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -203,7 +203,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
- 	{"CNVI",                BIT(3)},
- 	{"UFS0",                BIT(4)},
- 	{"EMMC",                BIT(5)},
--	{"Res_6",               BIT(6)},
-+	{"SPF",			BIT(6)},
- 	{"SBR6",                BIT(7)},
+@@ -702,7 +702,7 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 	debugfs_create_file("ltr_ignore", 0644, dir, pmcdev,
+ 			    &pmc_core_ltr_ignore_ops);
  
- 	{"SBR7",                BIT(0)},
+-	debugfs_create_file("ltr_show", 0644, dir, pmcdev, &pmc_core_ltr_fops);
++	debugfs_create_file("ltr_show", 0444, dir, pmcdev, &pmc_core_ltr_fops);
+ 
+ 	if (pmcdev->map->pll_sts)
+ 		debugfs_create_file("pll_status", 0444, dir, pmcdev,
 -- 
 2.17.1
