@@ -1,55 +1,65 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] platform/x86: intel_int0002_vgpio: Implement irq_set_wake
-Date: Sun, 3 Feb 2019 10:43:43 +0100
-Message-ID: <c41941b0-c655-8263-f0a8-b65364515655@redhat.com>
-References: <20180924143719.22191-1-hdegoede@redhat.com>
- <CAKErNvoeMs9cDDAvMfxaGLsKY3-q_JmrjCUB8VK4ZUXUVytwsQ@mail.gmail.com>
- <35cfd1f2-43eb-fc49-4777-a21413bb2d41@redhat.com>
- <CAKErNvptohPtM_Zf8oLk_tgQMNq3ypdrGen6Juv-4veba-pbaQ@mail.gmail.com>
+From: Kai Renzig <k.renzig@gmail.com>
+Subject: [PATCH v2] platform/x86: silead_dmi: Add touchscreen platform data for the Chuwi Hi8 Air tablet
+Date: Sun,  3 Feb 2019 19:34:23 +0100
+Message-ID: <20190203183423.7661-1-k.renzig@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKErNvptohPtM_Zf8oLk_tgQMNq3ypdrGen6Juv-4veba-pbaQ@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxim Mikityanskiy <maxtram95@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Kai Renzig <k.renzig@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+Add touchscreen platform data for the Chuwi Hi8 Air tablet.
 
-On 2/2/19 8:04 PM, Maxim Mikityanskiy wrote:
-> On Sat, Feb 2, 2019 at 12:52 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 1/31/19 8:47 PM, Maxim Mikityanskiy wrote:
->>> Hi,
->>>
->>> On Mon, Sep 24, 2018 at 5:37 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>>>
->>>> We were relying on the interrupt being shared with the ACPI SCI and the
->>>> ACPI core calling irq_set_wake. But that does not always happen on
->>>> Bay Trail devices, so we should do it ourselves.
->>>>
->>>> This fixes wake from USB not working on various Bay Trail devices.
->>>
->>> This patch breaks suspend on ASUS E202SA (bisecting pointed me to this
->>> patch, and if I revert it and build 4.20.5 without this patch,
->>> everything works flawlessly).
->>
->> Thank you for the bug report, can you please test 4.20.5 with the attached
->> patch on top? That should fix it. Once I've confirmation that this fixes
->> things I will submit the patch upstream.
-> 
-> I've tested your patch against both 4.20.5 and 4.20.6, and it works
-> fine. Thank you for such a quick fix.
+Signed-off-by: Kai Renzig <k.renzig@gmail.com>
+---
+Changes in v2:
+ - Fix the firmware filename to match the actual touchscreen controller.
 
-Thank you for the bug-report and for testing the fix. I've submitted
-the patch upstream now, so hopefully it will show up in a 4.20.x
-release soon.
+ drivers/platform/x86/touchscreen_dmi.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 8c5d47c0aea6..1f66405928a9 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -41,6 +41,20 @@ static const struct ts_dmi_data chuwi_hi8_data = {
+ 	.properties     = chuwi_hi8_props,
+ };
+ 
++static const struct property_entry chuwi_hi8_air_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl3676-chuwi-hi8-air.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	{ }
++};
++
++static const struct ts_dmi_data chuwi_hi8_air_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= chuwi_hi8_air_props,
++};
++
+ static const struct property_entry chuwi_hi8_pro_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 6),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
+@@ -497,6 +511,15 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "H1D_S806_206"),
+ 		},
+ 	},
++	{
++		/* Chuwi Hi8 Air (CWI543) */
++		.driver_data = (void *)&chuwi_hi8_air_data,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "Default string"),
++			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Hi8 Air"),
++		},
++	},
+ 	{
+ 		/* Chuwi Hi8 Pro (CWI513) */
+ 		.driver_data = (void *)&chuwi_hi8_pro_data,
+-- 
+2.19.1
