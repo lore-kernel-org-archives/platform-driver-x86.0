@@ -1,76 +1,118 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: silead_dmi: Add touchscreen platform
- data for the Chuwi Hi8 Air tablet
-Date: Tue, 5 Feb 2019 20:18:58 +0200
-Message-ID: <CAHp75Ve5BgpwqRrhfQixZRjMzGR5k6W02q_wFuira3Z0NW6-kw@mail.gmail.com>
-References: <20190203183423.7661-1-k.renzig@gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_int0002_vgpio: Only implement
+ irq_set_wake on Bay Trail
+Date: Tue, 5 Feb 2019 20:19:53 +0200
+Message-ID: <CAHp75Veb-QarB-9mQtNWcrL5qr0-ZeXwgscBeS-O-=cgpOjE_w@mail.gmail.com>
+References: <20190203094233.12177-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190203183423.7661-1-k.renzig@gmail.com>
+In-Reply-To: <20190203094233.12177-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kai Renzig <k.renzig@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Maxim Mikityanskiy <maxtram95@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Feb 3, 2019 at 8:34 PM Kai Renzig <k.renzig@gmail.com> wrote:
+On Sun, Feb 3, 2019 at 11:42 AM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Add touchscreen platform data for the Chuwi Hi8 Air tablet.
+> Commit c3b8e884defa ("platform/x86: intel_int0002_vgpio: Implement
+> irq_set_wake"), was written to fix some wakeup issues on Bay Trail (BYT)
+> devices.
+>
+> We've received a bug report that this causes a suspend regression on some
+> Cherry Trail (CHT) based devices.
+>
+> To fix the issues this causes on CHT devices, this commit modifies the
+> irq_set_wake support so that we only implement irq_set_wake on BYT devices,
 >
 
 Pushed to my review and testing queue, thanks!
 
-> Signed-off-by: Kai Renzig <k.renzig@gmail.com>
+> Fixes: c3b8e884defa ("platform/x86: intel_int0002_vgpio: ... irq_set_wake")
+> Reported-and-tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
-> Changes in v2:
->  - Fix the firmware filename to match the actual touchscreen controller.
+>  drivers/platform/x86/intel_int0002_vgpio.c | 32 ++++++++++++++++++----
+>  1 file changed, 26 insertions(+), 6 deletions(-)
 >
->  drivers/platform/x86/touchscreen_dmi.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+> index 4b8f7305fc8a..78787934b572 100644
+> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+> @@ -51,11 +51,14 @@
+>  #define GPE0A_STS_PORT                 0x420
+>  #define GPE0A_EN_PORT                  0x428
 >
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index 8c5d47c0aea6..1f66405928a9 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -41,6 +41,20 @@ static const struct ts_dmi_data chuwi_hi8_data = {
->         .properties     = chuwi_hi8_props,
+> -#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
+> +#define BAYTRAIL                       0x01
+> +#define CHERRYTRAIL                    0x02
+> +
+> +#define ICPU(model, data) { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, data}
+>
+>  static const struct x86_cpu_id int0002_cpu_ids[] = {
+> -       ICPU(INTEL_FAM6_ATOM_SILVERMONT),       /* Valleyview, Bay Trail  */
+> -       ICPU(INTEL_FAM6_ATOM_AIRMONT),          /* Braswell, Cherry Trail */
+> +       ICPU(INTEL_FAM6_ATOM_SILVERMONT, BAYTRAIL), /* Valleyview, Bay Trail  */
+> +       ICPU(INTEL_FAM6_ATOM_AIRMONT, CHERRYTRAIL), /* Braswell, Cherry Trail */
+>         {}
 >  };
 >
-> +static const struct property_entry chuwi_hi8_air_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
-> +       PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-> +       PROPERTY_ENTRY_STRING("firmware-name", "gsl3676-chuwi-hi8-air.fw"),
-> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +       { }
+> @@ -135,7 +138,7 @@ static irqreturn_t int0002_irq(int irq, void *data)
+>         return IRQ_HANDLED;
+>  }
+>
+> -static struct irq_chip int0002_irqchip = {
+> +static struct irq_chip int0002_byt_irqchip = {
+>         .name                   = DRV_NAME,
+>         .irq_ack                = int0002_irq_ack,
+>         .irq_mask               = int0002_irq_mask,
+> @@ -143,10 +146,22 @@ static struct irq_chip int0002_irqchip = {
+>         .irq_set_wake           = int0002_irq_set_wake,
+>  };
+>
+> +static struct irq_chip int0002_cht_irqchip = {
+> +       .name                   = DRV_NAME,
+> +       .irq_ack                = int0002_irq_ack,
+> +       .irq_mask               = int0002_irq_mask,
+> +       .irq_unmask             = int0002_irq_unmask,
+> +       /*
+> +        * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
+> +        * and we don't want to mess with the ACPI SCI irq settings.
+> +        */
 > +};
 > +
-> +static const struct ts_dmi_data chuwi_hi8_air_data = {
-> +       .acpi_name      = "MSSL1680:00",
-> +       .properties     = chuwi_hi8_air_props,
-> +};
+>  static int int0002_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+>         const struct x86_cpu_id *cpu_id;
+> +       struct irq_chip *irq_chip;
+>         struct gpio_chip *chip;
+>         int irq, ret;
+>
+> @@ -195,14 +210,19 @@ static int int0002_probe(struct platform_device *pdev)
+>                 return ret;
+>         }
+>
+> -       ret = gpiochip_irqchip_add(chip, &int0002_irqchip, 0, handle_edge_irq,
+> +       if (cpu_id->driver_data == BAYTRAIL)
+> +               irq_chip = &int0002_byt_irqchip;
+> +       else
+> +               irq_chip = &int0002_cht_irqchip;
 > +
->  static const struct property_entry chuwi_hi8_pro_props[] = {
->         PROPERTY_ENTRY_U32("touchscreen-min-x", 6),
->         PROPERTY_ENTRY_U32("touchscreen-min-y", 3),
-> @@ -497,6 +511,15 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
->                         DMI_MATCH(DMI_BIOS_VERSION, "H1D_S806_206"),
->                 },
->         },
-> +       {
-> +               /* Chuwi Hi8 Air (CWI543) */
-> +               .driver_data = (void *)&chuwi_hi8_air_data,
-> +               .matches = {
-> +                       DMI_MATCH(DMI_BOARD_VENDOR, "Default string"),
-> +                       DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Hi8 Air"),
-> +               },
-> +       },
->         {
->                 /* Chuwi Hi8 Pro (CWI513) */
->                 .driver_data = (void *)&chuwi_hi8_pro_data,
+> +       ret = gpiochip_irqchip_add(chip, irq_chip, 0, handle_edge_irq,
+>                                    IRQ_TYPE_NONE);
+>         if (ret) {
+>                 dev_err(dev, "Error adding irqchip: %d\n", ret);
+>                 return ret;
+>         }
+>
+> -       gpiochip_set_chained_irqchip(chip, &int0002_irqchip, irq, NULL);
+> +       gpiochip_set_chained_irqchip(chip, irq_chip, irq, NULL);
+>
+>         return 0;
+>  }
 > --
-> 2.19.1
+> 2.20.1
 >
 
 
