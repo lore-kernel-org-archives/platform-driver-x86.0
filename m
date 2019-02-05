@@ -1,49 +1,70 @@
-From: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Subject: Re: [PATCH 06/10] x86/cpu: Add Icelake to Intel family
-Date: Tue, 5 Feb 2019 09:21:13 +0530
-Message-ID: <15d691de-609a-b74c-5cf4-0e78a88bdc60@linux.intel.com>
-References: <20190201073234.13280-1-rajneesh.bhardwaj@linux.intel.com>
- <20190201073234.13280-7-rajneesh.bhardwaj@linux.intel.com>
- <alpine.DEB.2.21.1902041731500.3006@nanos.tec.linutronix.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 2/3] platform/x86: wmi: add WMI support to MODULE_DEVICE_TABLE()
+Date: Tue, 5 Feb 2019 17:45:25 +0200
+Message-ID: <CAHp75Vdtggmg7POfcdvd8RykPW+wZ5wGKBWE8_Y_5qWY_MGL0g@mail.gmail.com>
+References: <cover.1548860212.git.2pi@mok.nu> <ae59210f24d66516a0af38c03fd0da923dd0e7da.1548860212.git.2pi@mok.nu>
+ <CAHp75VcLizx+jtMrbc3Ev-HcJVEjH2naFC0sj=7fX5nZSCGc8Q@mail.gmail.com> <20190203190423.lmsix5la6ioyawwi@mok.nu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.1902041731500.3006@nanos.tec.linutronix.de>
-Content-Language: en-US
+In-Reply-To: <20190203190423.lmsix5la6ioyawwi@mok.nu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: platform-driver-x86@vger.kernel.org, dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, Dave Hansen <dave.hansen@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Mattias Jacobsson <2pi@mok.nu>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, michal.lkml@markovi.net, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Sun, Feb 3, 2019 at 9:04 PM Mattias Jacobsson <2pi@mok.nu> wrote:
+> On 2019-01-30, Andy Shevchenko wrote:
+> > On Wed, Jan 30, 2019 at 5:15 PM Mattias Jacobsson <2pi@mok.nu> wrote:
 
-On 04-Feb-19 11:04 PM, Thomas Gleixner wrote:
-> On Fri, 1 Feb 2019, Rajneesh Bhardwaj wrote:
+> > > +       if (len < 0 || len >= 500) {
+> >
+> > Would it even possible to get a negative number here?
+> > Same for any other number than slightly bigger than 36.
 >
->> Add CPUID of Icelake (ICL) mobile processors to Intel family list. The
->> Information related to ICL CPUID is referenced from below Coreboot
->> project link.
->>
->> https://github.com/coreboot/coreboot/blob/5ebcea3aaaa3cd358bc5bccaa156b13a6ef25df6/src/soc/intel/common/block/include/intelblocks/mp_init.h
-> Coreboot files are hardly authoritive information about CPUIDs.
+> snprintf returns a negative number on error. BTW AFAIU the code from
+> file2alias.c gets dynamically linked against a libc.
 
-It may take a while for it to be published in the SDMs.
+OK.
 
+> > So, what about simple
+> >
+> > {
+> >  DEF_FIELD_ADDR(...);
+> >  size_t len;
+> >
+> >  len = strlen(*guid_string);
+> >  if (len != ...) {
+> >   ...
+> >  }
+> > sprintf(...);
+> > return 1;
+> > }
+> >
+> > ?
 >
->> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
->> index 0dd6b0f4000e..12b65bdb3d80 100644
->> --- a/arch/x86/include/asm/intel-family.h
->> +++ b/arch/x86/include/asm/intel-family.h
->> @@ -52,6 +52,8 @@
->>   
->>   #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
->>   
->> +#define INTEL_FAM6_ICELAKE_MOBILE       0x7E
-> Please use TABs instead of a random number of spaces.
+> Then we are missing the check that we are within the bounds of alias
 
-Sure, I will fix this.
+I don't see how. By checking a length of string we be sure, that the
+result would have a non-arbitrary length.
 
->
-> Thanks,
->
-> 	tglx
+> as well as the negative code from s*printf(). snprintf() does this nicely
+> for us.
+
+This one I agree with, means in the above example we may do
+
+return sprintf(...);
+
+if callers recognize just a sign, or
+
+len = sprintf(...);
+if (len < 0)
+ return len; // -1? 0?
+
+return 1;
+
+otherwise.
+
+-- 
+With Best Regards,
+Andy Shevchenko
