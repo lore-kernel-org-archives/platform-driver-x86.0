@@ -1,182 +1,151 @@
-From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [PATCH 1/2] x86: gpio: AMD G-Series pch gpio platform driver
-Date: Fri, 8 Feb 2019 14:50:24 +0100
-Message-ID: <77668138-71eb-4e4b-ecbc-6fe838e1503a@metux.net>
-References: <1549559639-9447-1-git-send-email-info@metux.net>
- <CAHp75Vdn-3aBOMo1yzGVS-rWOdgiYasK++yfvzi3iSyOL4Mtqg@mail.gmail.com>
+Date: Fri, 8 Feb 2019 15:25:44 +0100
+Message-ID: <CACRpkdaSEZMR7LuLbO1V0k9QEBu4FWxFbq4ZL1pE9dAvNT1z_Q@mail.gmail.com>
+References: <1549588593-4856-1-git-send-email-lkml@metux.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vdn-3aBOMo1yzGVS-rWOdgiYasK++yfvzi3iSyOL4Mtqg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1549588593-4856-1-git-send-email-lkml@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
+To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Enrico Weigelt, metux IT consult" <info@metux.net>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 07.02.19 19:06, Andy Shevchenko wrote:
+Hi Enrico!
 
-Hi,
+Thanks for your patch! I would really like Andy to have a look at it
+too, he's more on top of things in the x86 world.
 
-> Overall I have a feeling that this driver can be replaced with> existing generic one where one register per pin is allocated.>
-Unfortunately, I didn't look deep into this and hope Linus will help> to
-figure this out.
-this also was my first thought, but i recall the generic one copes w/
-devices that have per-flag- instead of per channel-registers
-(IOW: all direction flags in one register, all level flags in another).
-correct me if I'm wrong ..
+On Fri, Feb 8, 2019 at 2:16 AM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
 
-I actually considered writing a generic per-register driver, where one
-just configures which bit does what. But it didn't feel worth the extra
-effort yet. OTOH, if we would have lots of consumers, the situation
-would be different.
+> From: "Enrico Weigelt, metux IT consult" <info@metux.net>
+>
+> GPIO platform driver for the AMD G-series PCH (eg. on GX-412TC)
+>
+> This driver doesn't registers itself automatically, as it needs to
+> be provided with platform specific configuration, provided by some
+> board driver setup code.
+>
+> Didn't implement oftree probing yet, as it's rarely found on x86.
+>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linus.walleij@linaro.org
+> Cc: bgolaszewski@baylibre.com
+> Cc: dvhart@infradead.org
+> Cc: andy@infradead.org
+> Cc: platform-driver-x86@vger.kernel.org
+>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 
->> @@ -0,0 +1,171 @@
->> +/*
->> + * GPIO driver for the AMD G series FCH (eg. GX-412TC)
->> + *
->> + * Copyright (C) 2018 metux IT consult
->> + * Author: Enrico Weigelt <info@metux.net>
->> + *
-> 
->> + * SPDX-License-Identifier: GPL+
-> 
-> SPDX should go as a separate first line in a proper format.
+(...)
 
-Fixed.
-Maybe I should write an automatic check for that ;-)
+> +config GPIO_AMD_FCH
+> +       tristate "GPIO support for AMD Fusion Controller Hub (G-series SOCs)"
+> +       select GPIO_GENERIC
 
-By the way: are there already some tools that actually operate on that ?
+You are selecting GPIO_GENERIC, is this necessary? I thought
+X86 was already selecting this.
 
->> +#define GPIO_BIT_DIR           23
->> +#define GPIO_BIT_WRITE         22
->> +#define GPIO_BIT_READ          16
-> 
-> Oh, namespace issues.
-> What about using BIT() macro?
+> +/*
+> + * GPIO driver for the AMD G series FCH (eg. GX-412TC)
+> + *
+> + * Copyright (C) 2018 metux IT consult
+> + * Author: Enrico Weigelt <info@metux.net>
+> + *
+> + * SPDX-License-Identifier: GPL+
+> + */
 
-Ah, thanks, forgot that.
+I think checkpatch will complain on that SPDX thing.
+Copy something from one of the other drivers, it should be
+on the first line of the file.
 
-By the way: would it be a good idea to define a struct w/ bitfields
-for the registers, instead of directly doing bitmask operations ?
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/platform_data/x86/amd-fch-gpio-pdata.h>
+> +
+> +
+> +#define GPIO_BIT_DIR           23
+> +#define GPIO_BIT_WRITE         22
+> +#define GPIO_BIT_READ          16
+> +
+> +
 
+Cut down the excessive newlines.
 
->> +static uint32_t *amd_fch_gpio_addr(struct gpio_chip *gc, unsigned gpio)
->> +{
->> +       struct amd_fch_gpio_priv *priv = gpiochip_get_data(gc);
->> +
-> 
->> +       if (gpio > priv->pdata->gpio_num) {
->> +               dev_err(&priv->pdev->dev, "gpio number %d out of range\n", gpio);
->> +               return NULL;
->> +       }
-> 
-> On which circumstances it may happen?
+> +static void amd_fch_gpio_dbg_show(struct seq_file *s, struct gpio_chip *gc)
+> +{
+> +       struct amd_fch_gpio_priv *priv = gpiochip_get_data(gc);
+> +       (void)priv;
+> +
+> +       seq_printf(s, "debug info not implemented yet\n");
+> +}
 
-hopefully never, but I'm a bit paranoid ;-)
-Shall I kick out that check ?
+I think you can just skip implementing this then.
 
->> +       return priv->base + priv->pdata->gpio_reg[gpio].reg*sizeof(u32);
->> +}
->> +
->> +static int amd_fch_gpio_direction_input(struct gpio_chip *gc, unsigned offset)
->> +{
-> 
->> +       volatile uint32_t *ptr = amd_fch_gpio_addr(gc, offset);
-> 
-> volatile?!
-> 
-> I think you need to use readl()/writel() (or their _relaxed variants) instead.
+> +static int amd_fch_gpio_request(struct gpio_chip *chip, unsigned gpio_pin)
+> +{
+> +       if (gpio_pin < chip->ngpio)
+> +               return 0;
+> +
+> +       return -EINVAL;
+> +}
 
-I assumed the compiler would already emit the correct code (and not try
-any optimizations) if the field is declared volatile. But I'll change it
-to readl()/writel().
+You can probably skip this too. The core already does this check.
 
-By the way: do we already have helpers for doing such bit operations on
-mmapped registers ? (eg. similar to those in bitops.h)
+> +       priv->gc.owner                  = THIS_MODULE;
+> +       priv->gc.parent                 = &pdev->dev;
+> +       priv->gc.label                  = dev_name(&pdev->dev);
+> +       priv->gc.base                   = priv->pdata->gpio_base;
 
-> Same applies for entire code.
-> 
->> +       if (!ptr) return -EINVAL;
-> 
-> This code has style issues.
-> Check your entire file.
+No please, use priv->gc.base = -1;
 
-Should it be written in two lines - like that ?
+> +       dev_info(&pdev->dev, "initializing on my own II\n");
 
-    if (!ptr)
-        return -EINVAL;
+Drop this.
 
->> +static int amd_fch_gpio_request(struct gpio_chip *chip, unsigned gpio_pin)
->> +{
-> 
->> +       if (gpio_pin < chip->ngpio)
->> +               return 0;
-> 
-> Is it even possible?
+> +       if (IS_ENABLED(CONFIG_DEBUG_FS)) {
+> +               dev_info(&pdev->dev, "enabling debugfs\n");
+> +               priv->gc.dbg_show = amd_fch_gpio_dbg_show;
+> +       }
 
-Not sure. AFAIK, this function should check whether the requested pin is
-available. Feels safer to me having this check.
+I think you can drop this too.
 
->> +static int amd_fch_gpio_probe(struct platform_device *pdev)
->> +{
->> +       struct amd_fch_gpio_priv *priv;
-> 
->> +       struct amd_fch_gpio_pdata *pdata = pdev->dev.platform_data;
-> 
-> We have a helper to get this. platform_get_data() IIRC.
+> +       platform_set_drvdata(pdev, priv);
+> +
+> +       err = devm_gpiochip_add_data(&pdev->dev, &priv->gc, priv);
+> +       dev_info(&pdev->dev, "probe finished\n");
 
-found dev_get_platdata(const struct device *dev).
+If you keep this info, write something more helpful.
 
-but nothing for working on struct platform_device directly - should we
-introduce one ?
+> +/*
+> + * struct amd_fch_gpio_reg - GPIO register definition
+> + * @reg: register index
+> + * @name: signal name
+> + */
+> +struct amd_fch_gpio_reg {
+> +    int         reg;
+> +    const char* name;
+> +};
 
->> +       if (IS_ERR(priv->base = devm_ioremap_resource(&pdev->dev, &priv->pdata->res))) {
-> 
->> +               dev_err(&pdev->dev, "failed to map iomem\n");
-> 
-> Noise (that function will print a message)
-> 
->> +               return -ENXIO;
-> 
-> Shadowed error code.
+Can't you put this in the driver file?
 
-Which one shall I use instead ?
+> +struct amd_fch_gpio_pdata {
+> +    struct resource          res;
+> +    int                      gpio_num;
+> +    struct amd_fch_gpio_reg *gpio_reg;
+> +    int                      gpio_base;
+> +};
 
->> +MODULE_LICENSE("GPL");
-> 
-> License mismatch. I really don't look what 'GPL+' means. OTOH I know
-> this one corresponds to GPL-2.0+.
+Drop gpio_base. We don't hardcode the GPIO base anymore.
+Use the character device instead if you want it because of
+userspace thingies. (See tools/gpio/*)
 
-Typo, should have been GPL-2.0+.
-
->> + * struct amd_fch_gpio_reg - GPIO register definition
->> + * @reg: register index
->> + * @name: signal name
->> + */
->> +struct amd_fch_gpio_reg {
->> +    int         reg;
->> +    const char* name;
->> +};
-> 
-> Isn't this provided by GPIO library? We have so called labels.
-
-hmm, haven't found a proper struct yet.
-
-struct gpio indeed has a label and two int fields. but it doesn't seem
-to be designed for holding register addresses ... using this one here
-feels quite abusive. (and a waste of memory, too).
-
-for consistency, I could rename 'name' to 'label', if you wish.
-
-
-thanks for your review.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Yours,
+Linus Walleij
