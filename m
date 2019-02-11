@@ -1,31 +1,43 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 0/10] Add support for OLPC XO 1.75 Embedded Controller
-Date: Mon, 11 Feb 2019 13:49:55 +0200
-Message-ID: <CAHp75VdUCxx=Hybv8nyd9nTUJ4+8FLeaRM3bCxezAFvdSN0EkQ@mail.gmail.com>
-References: <20190110175845.1203986-1-lkundrak@v3.sk> <16ce7d18e3b9a2232bd30c7d7741873d0d2d855a.camel@v3.sk>
+From: Christoph Hellwig <hch@lst.de>
+Subject: [PATCH] platform/x86: dell_rbu: fix lock imbalance in img_update_realloc
+Date: Mon, 11 Feb 2019 14:09:40 +0100
+Message-ID: <20190211130940.28206-1-hch@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <16ce7d18e3b9a2232bd30c7d7741873d0d2d855a.camel@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+To: stuart.w.hayes@gmail.com, dvhart@infradead.org, andy@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Feb 11, 2019 at 1:46 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
+We need to ensure rbu_data.lock is always held on return.
 
-> Hello Andy & Darren,
->
-> I'm wondering if there's anything more I need to do in order for the
-> patches 01-07 to be queued for 5.1? I believe I addressed the issues
-> that were pointed out and I believe the patch set is already in a good
-> shape.
+Fixes: 289790a3ea94 ("platform/x86: dell_rbu: stop abusing the DMA API")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/platform/x86/dell_rbu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I remember Darren did some review and according to patch work he is in charge.
-
-I dunno what Darren's plans are, but if I need to look at this series,
-it will require some time and may miss v5.1.
-
+diff --git a/drivers/platform/x86/dell_rbu.c b/drivers/platform/x86/dell_rbu.c
+index 8104ca0c44ca..031c68903583 100644
+--- a/drivers/platform/x86/dell_rbu.c
++++ b/drivers/platform/x86/dell_rbu.c
+@@ -436,6 +436,7 @@ static int img_update_realloc(unsigned long size)
+ 	ordernum = get_order(size);
+ 	image_update_buffer =
+ 		(unsigned char *)__get_free_pages(GFP_DMA32, ordernum);
++	spin_lock(&rbu_data.lock);
+ 	if (!image_update_buffer) {
+ 		pr_debug("Not enough memory for image update:"
+ 			"size = %ld\n", size);
+@@ -446,7 +447,6 @@ static int img_update_realloc(unsigned long size)
+ 	if (WARN_ON_ONCE(img_buf_phys_addr > BIOS_SCAN_LIMIT))
+ 		return -EINVAL; /* can't happen per definition */
+ 
+-	spin_lock(&rbu_data.lock);
+ 	rbu_data.image_update_buffer = image_update_buffer;
+ 	rbu_data.image_update_buffer_size = size;
+ 	rbu_data.bios_image_size = rbu_data.image_update_buffer_size;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
