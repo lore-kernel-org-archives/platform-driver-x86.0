@@ -1,183 +1,113 @@
-From: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Subject: Re: [PATCH 09/10] platform/x86: intel_pmc_core: Add Package cstates
- residency info
-Date: Tue, 12 Feb 2019 00:01:38 +0530
-Message-ID: <78e5e6b3-5712-6ef5-283c-83b0f6d3dcc7@linux.intel.com>
-References: <20190201073234.13280-1-rajneesh.bhardwaj@linux.intel.com>
- <20190201073234.13280-10-rajneesh.bhardwaj@linux.intel.com>
- <20190211164118.GA23796@genxfsim-desktop>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+Subject: Re: X450LCP lost abillity to turn the screen off
+Date: Mon, 11 Feb 2019 11:14:23 -0800
+Message-ID: <CAOcMMieCjobcM_d-ojuL88cOWFCFZbo=z5X=QWyqi_q7LZ5xHw@mail.gmail.com>
+References: <20190210192408.GA81989@bebop> <CAHp75Vc_0tLLSeVjiBLFXZXJSw7Evf=vmBrgbtsj11_SWS_rOg@mail.gmail.com>
+ <691cc9a7-e126-a7cf-b3b2-ce5a77eadbeb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190211164118.GA23796@genxfsim-desktop>
-Content-Language: en-US
+In-Reply-To: <691cc9a7-e126-a7cf-b3b2-ce5a77eadbeb@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anshuman Gupta <anshuman.gupta@intel.com>
-Cc: platform-driver-x86@vger.kernel.org, dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, Arjan van de Ven <arjan@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <len.brown@intel.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+To: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 11-Feb-19 10:11 PM, Anshuman Gupta wrote:
-> On Fri, Feb 01, 2019 at 01:02:33PM +0530, Rajneesh Bhardwaj wrote:
->> This patch introduces a new debugfs entry to read current Package
->> cstate residency counters. A similar variant of this patch was discussed
->> earlier "https://patchwork.kernel.org/patch/9908563/" but didn't make it
->> into mainline for various reasons. Current version only adds debugfs
->> entry which is quite useful for S0ix debug but excludes the exported API
->> that was there in initial version. Though there are tools like turbostat
->> and socwatch which can also show this info but sometimes its more
->> practical to have it here as it's hard to switch between various tools for
->> S0ix debug when pmc_core driver is the primary debug tool. Internal and
->> external customers have requested for this patch to be included in the
->> PMC driver on many occasions and Google Chrome OS team has already included
->> it in their builds. This becomes handy when requesting logs from external
->> customers who may not always have above mentioned tools in their integrated
->> kernel builds.
->>
->> Package cstate residency MSRs provide useful debug information about
->> system idle states. In idle states system must enter deeper Package
->> cstates. Package cstates depend not only on Core cstates but also on
->> various IP block's power gating status and LTR values.
->>
->> For Intel Core SoCs Package C10 entry is a must for deeper sleep states
->> such as S0ix. "Suspend-to-idle"  should ideally take this path:
->> PC0 -> PC10 -> S0ix. For S0ix debug, its logical to check for
->> Package C10 residency first if for some reason system fails to enter S0ix.
->>
->> Please refer to this link for MSR details:
->> https://software.intel.com/sites/default/files/managed/22/0d/335592-sdm-vol-4.pdf
->>
->> Usage:
->> cat /sys/kernel/debug/pmc_core/package_cstate_show
->> Package C2       : 0xec2e21735f
->> Package C3       : 0xc30113ba4
->> Package C6       : 0x9ef4be15c5
->> Package C7       : 0x1e011904
->> Package C8       : 0x3c5653cfe5a
->> Package C9       : 0x0
->> Package C10      : 0x16fff4289
->>
->> Cc: Arjan van de Ven <arjan@linux.intel.com>
->> Cc: "David E. Box" <david.e.box@intel.com>
->> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
->> Cc: Anshuman Gupta <anshuman.gupta@intel.com>
->> Cc: Len Brown <len.brown@intel.com>
->> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
->    Tested-by: Anshuman Gupta <anshuman.gupta@intel.com> 	
->    Acked-by: Anshuman Gupta <anshuman.gupta@intel.com> 	
+Hello Marcos,
 
-Thanks Anshuman.
+On Sun, Feb 10, 2019 at 5:05 PM Marcos Paulo de Souza
+<marcos.souza.org@gmail.com> wrote:
+>
+>
+>
+> On 2/10/19 9:45 PM, Andy Shevchenko wrote:
+> > On Sun, Feb 10, 2019 at 9:24 PM Marcos Paulo de Souza
+> > <marcos.souza.org@gmail.com> wrote:
+> >>
+> >> Hi,
+> >>
+> >> Since 5.0.0-rc4 I vefiried that my ASUS laptop
+> >
+> > Can you be more specific, what model, BIOS version, etc (also would be
+> > nice to have dmi strings from it, I guess dmidecode tool would help).
+>
+> dmidecode attached.
+>
+> >> cannot turn the screen of
+> >> anymore. There were several commits in 5.0 merge window touching this
+> >> functionality like:
+> >>
+> >>   71b12beaf12f platform/x86: asus-nb-wmi: Drop mapping of 0x33 and 0x3=
+4 scan codes
+> >>   b3f2f3799a97 platform/x86: asus-nb-wmi: Map 0x35 to KEY_SCREENLOCK
+> >>   78f3ac76d9e5 platform/x86: asus-wmi: Tell the EC the OS will handle =
+the display off hotkey
+> >>
+> >
+> > Can you bisect or just try to revert one-by-one from above and see
+> > which one is a culprit?
+>
+> I already did some primary analysis, and it seems the commit 3f2f3799a97
+> maps the x035 (which is Alt+f7 in my laptop) to SCREENLOCK, which is
+> wrong because alt+f7 should be Screen Toggle. I will try to revert this
+> commit, or remap to KEY_DISPLAYTOGGLE or KEY_DISPLAY_OFF, and test if it
+> works.
+>
 
-Hi Andy, Darren - Can i used Acked-and-tested-by instead of these two?
+User-space does not act on KEY_DISPLAYTOGGLE / KEY_DISPLAY_OFF, these
+values should be used when the hardware is turning the screen
+back-light ON and OFF. According to Asus BIOS engineers, the
+back-light used to be driven by the hardware, but they have changed to
+the this new approach of telling the OS to drive the back-light for a
+while now (no specific dates or BIOS / windows driver versions were
+shared). They we actually surprised when we told the that some
+machines still have a working implementation (and selected by default
+unless told otherwise) of the old behavior, which sounds like it is
+the case for the machine you have at hand.
 
+The new behavior, as defined in their spec is to only notify the OS of
+the keypress with 0x35, and have the OS "close" the screen, with the
+screen being "opened" on mouse or keyboard activity. This closely
+matches the screen lock behavior on Linux platforms, so we are mapping
+it to KEY_SCREENLOCK in the kernel, and it then gets mapped to
+XF86ScreenSaver by xkeyboard-config, and finally gnome-settings-daemon
+uses it as a lock screen shortcut (look for "screensaver" in
+plugins/media-keys/shortcuts-list.h on the gnome-settings-daemon
+repository).
 
->> ---
->>   drivers/platform/x86/intel_pmc_core.c | 38 +++++++++++++++++++++++++++
->>   drivers/platform/x86/intel_pmc_core.h |  1 +
->>   2 files changed, 39 insertions(+)
->>
->> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
->> index 400946b7a3b5..4e7aa1711148 100644
->> --- a/drivers/platform/x86/intel_pmc_core.c
->> +++ b/drivers/platform/x86/intel_pmc_core.c
->> @@ -22,11 +22,24 @@
->>   
->>   #include <asm/cpu_device_id.h>
->>   #include <asm/intel-family.h>
->> +#include <asm/msr.h>
->>   
->>   #include "intel_pmc_core.h"
->>   
->>   static struct pmc_dev pmc;
->>   
->> +/* PKGC MSRs are common across Intel Core SoCs */
->> +static const struct pmc_bit_map msr_map[] = {
->> +	{"Package C2",                  MSR_PKG_C2_RESIDENCY},
->> +	{"Package C3",                  MSR_PKG_C3_RESIDENCY},
->> +	{"Package C6",                  MSR_PKG_C6_RESIDENCY},
->> +	{"Package C7",                  MSR_PKG_C7_RESIDENCY},
->> +	{"Package C8",                  MSR_PKG_C8_RESIDENCY},
->> +	{"Package C9",                  MSR_PKG_C9_RESIDENCY},
->> +	{"Package C10",                 MSR_PKG_C10_RESIDENCY},
->> +	{}
->> +};
->> +
->>   static const struct pmc_bit_map spt_pll_map[] = {
->>   	{"MIPI PLL",			SPT_PMC_BIT_MPHY_CMN_LANE0},
->>   	{"GEN2 USB2PCIE2 PLL",		SPT_PMC_BIT_MPHY_CMN_LANE1},
->> @@ -129,6 +142,7 @@ static const struct pmc_reg_map spt_reg_map = {
->>   	.mphy_sts = spt_mphy_map,
->>   	.pll_sts = spt_pll_map,
->>   	.ltr_show_sts = spt_ltr_show_map,
->> +	.msr_sts = msr_map,
->>   	.slp_s0_offset = SPT_PMC_SLP_S0_RES_COUNTER_OFFSET,
->>   	.ltr_ignore_offset = SPT_PMC_LTR_IGNORE_OFFSET,
->>   	.regmap_length = SPT_PMC_MMIO_REG_LEN,
->> @@ -318,6 +332,7 @@ static const struct pmc_reg_map cnp_reg_map = {
->>   	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
->>   	.slps0_dbg_maps = cnp_slps0_dbg_maps,
->>   	.ltr_show_sts = cnp_ltr_show_map,
->> +	.msr_sts = msr_map,
->>   	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
->>   	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
->>   	.regmap_length = CNP_PMC_MMIO_REG_LEN,
->> @@ -333,6 +348,7 @@ static const struct pmc_reg_map icl_reg_map = {
->>   	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
->>   	.slps0_dbg_maps = cnp_slps0_dbg_maps,
->>   	.ltr_show_sts = cnp_ltr_show_map,
->> +	.msr_sts = msr_map,
->>   	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
->>   	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
->>   	.regmap_length = CNP_PMC_MMIO_REG_LEN,
->> @@ -709,6 +725,25 @@ static int pmc_core_ltr_show(struct seq_file *s, void *unused)
->>   }
->>   DEFINE_SHOW_ATTRIBUTE(pmc_core_ltr);
->>   
->> +static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
->> +{
->> +	struct pmc_dev *pmcdev = s->private;
->> +	const struct pmc_bit_map *map = pmcdev->map->msr_sts;
->> +	u64 pcstate_count;
->> +	int index;
->> +
->> +	for (index = 0; map[index].name ; index++) {
->> +		if (rdmsrl_safe(map[index].bit_mask, &pcstate_count))
->> +			continue;
->> +
->> +		seq_printf(s, "%-8s : 0x%llx\n", map[index].name,
->> +			   pcstate_count);
->> +	}
->> +
->> +	return 0;
->> +}
->> +DEFINE_SHOW_ATTRIBUTE(pmc_core_pkgc);
->> +
->>   static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
->>   {
->>   	debugfs_remove_recursive(pmcdev->dbgfs_dir);
->> @@ -735,6 +770,9 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
->>   
->>   	debugfs_create_file("ltr_show", 0444, dir, pmcdev, &pmc_core_ltr_fops);
->>   
->> +	debugfs_create_file("package_cstate_show", 0444, dir, pmcdev,
->> +			    &pmc_core_pkgc_fops);
->> +
->>   	if (pmcdev->map->pll_sts)
->>   		debugfs_create_file("pll_status", 0444, dir, pmcdev,
->>   				    &pmc_core_pll_fops);
->> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
->> index 78dd4229489d..6f1b64808075 100644
->> --- a/drivers/platform/x86/intel_pmc_core.h
->> +++ b/drivers/platform/x86/intel_pmc_core.h
->> @@ -214,6 +214,7 @@ struct pmc_reg_map {
->>   	const struct pmc_bit_map *pll_sts;
->>   	const struct pmc_bit_map **slps0_dbg_maps;
->>   	const struct pmc_bit_map *ltr_show_sts;
->> +	const struct pmc_bit_map *msr_sts;
->>   	const u32 slp_s0_offset;
->>   	const u32 ltr_ignore_offset;
->>   	const int regmap_length;
->> -- 
->> 2.17.1
->>
+> But yes, I'll do my best to track the problem ASAP at my side. Please
+> let me know if I can provide any additional information.
+>
+
+You can check what is being sent by the kernel with evtest, and what
+is being sent by X with "xinput test <device id>" (and you can find
+the device id with "xinput list"). And you can re-map it without
+having to rebuild the kernel using udev's hwdb. But simply re-mapping
+should not change anything, since userspace does not act on
+KEY_DISPLAYTOGGLE / KEY_DISPLAY_OFF. If you want to switch back to the
+old behavior you need to revert "78f3ac76d9e5 platform/x86: asus-wmi:
+Tell the EC the OS will handle the display off hotkey".
+
+That being said, I believe it would be more productive to figure out
+why your userspace stack is not reacting to 0x35 / XF86ScreenSaver and
+fix that. Which window manager / graphical desktop environment are you
+using?
+
+As a final note, from your dmidecode output I see you are on BIOS
+version X450LCP.207, and there is version 208 available for download
+on Asus website. I'm curious to know if it changes the old behavior
+(with the patches you listed reverted), but I'm not responsible if a
+BIOS update breaks your machine in any way, so just do it if you this
+is something you are comfortable with and understand and assume all
+the risks yourself. We have been reporting machines with the old
+behavior back to Asus, but I don't know what they are doing with that
+information, if anything. I'm adding your machine with the old BIOS
+version to the list, so if you test the new BIOS let me know so I can
+add that as well. But please don't feel any pressure to update the
+BIOS if this is something you would not do otherwise.
+
+Best regards,
+
+--
+Jo=C3=A3o Paulo Rechi Vita
