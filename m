@@ -1,43 +1,36 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH] platform/x86: dell_rbu: fix lock imbalance in img_update_realloc
-Date: Mon, 11 Feb 2019 14:09:40 +0100
-Message-ID: <20190211130940.28206-1-hch@lst.de>
+From: Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] Documentation: fix lg-laptop.rst warnings
+Date: Mon, 11 Feb 2019 08:28:11 -0700
+Message-ID: <20190211082811.3831e35e@lwn.net>
+References: <16ce109c-69a3-1f27-7fd4-9b99c9780565@infradead.org>
+        <CAHp75VeLCFD8EKG+hHGNUyoE9VJrFEgTvv9aD23NH49n6SMOgg@mail.gmail.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VeLCFD8EKG+hHGNUyoE9VJrFEgTvv9aD23NH49n6SMOgg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: stuart.w.hayes@gmail.com, dvhart@infradead.org, andy@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, LKML <linux-kernel@vger.kernel.org>, Matan Ziv-Av <matan@svgalib.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-We need to ensure rbu_data.lock is always held on return.
+On Mon, 11 Feb 2019 13:31:58 +0200
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Fixes: 289790a3ea94 ("platform/x86: dell_rbu: stop abusing the DMA API")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/platform/x86/dell_rbu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > From: Randy Dunlap <rdunlap@infradead.org>
+> >
+> > Fix markup warnings by inserting blank lines.
+> > Also correct one typo.
+> >
+> > Documentation/laptops/lg-laptop.rst:2: WARNING: Explicit markup ends without a blank line; unexpected unindent.
+> > Documentation/laptops/lg-laptop.rst:16: WARNING: Unexpected indentation.
+> > Documentation/laptops/lg-laptop.rst:17: WARNING: Block quote ends without a blank line; unexpected unindent.
+> >  
+> 
+> Thanks!
+> 
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/drivers/platform/x86/dell_rbu.c b/drivers/platform/x86/dell_rbu.c
-index 8104ca0c44ca..031c68903583 100644
---- a/drivers/platform/x86/dell_rbu.c
-+++ b/drivers/platform/x86/dell_rbu.c
-@@ -436,6 +436,7 @@ static int img_update_realloc(unsigned long size)
- 	ordernum = get_order(size);
- 	image_update_buffer =
- 		(unsigned char *)__get_free_pages(GFP_DMA32, ordernum);
-+	spin_lock(&rbu_data.lock);
- 	if (!image_update_buffer) {
- 		pr_debug("Not enough memory for image update:"
- 			"size = %ld\n", size);
-@@ -446,7 +447,6 @@ static int img_update_realloc(unsigned long size)
- 	if (WARN_ON_ONCE(img_buf_phys_addr > BIOS_SCAN_LIMIT))
- 		return -EINVAL; /* can't happen per definition */
- 
--	spin_lock(&rbu_data.lock);
- 	rbu_data.image_update_buffer = image_update_buffer;
- 	rbu_data.image_update_buffer_size = size;
- 	rbu_data.bios_image_size = rbu_data.image_update_buffer_size;
--- 
-2.20.1
+Applied, thanks.
+
+jon
