@@ -1,173 +1,33 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 08/10] platform/x86: intel_pmc_core: Add ICL platform support
-Date: Tue, 12 Feb 2019 12:18:06 +0200
-Message-ID: <CAHp75Ve+Sxes8Zb0AtZ81nJTjPsrKokDzOZnZxSe=C-k_Oo5MQ@mail.gmail.com>
-References: <20190201073234.13280-1-rajneesh.bhardwaj@linux.intel.com>
- <20190201073234.13280-9-rajneesh.bhardwaj@linux.intel.com> <20190212094318.GA8062@genxfsim-desktop>
+Subject: Re: [PATCH 2/2] efi: fix build error redeclaration of enumerator
+Date: Tue, 12 Feb 2019 12:19:53 +0200
+Message-ID: <CAHp75Vd161xYcOgESiA2Ex5gzM39_CSSH11HsVzOyyA+g0rYTw@mail.gmail.com>
+References: <20190212100825.9113-1-anders.roxell@linaro.org>
+ <20190212100825.9113-2-anders.roxell@linaro.org> <CAKv+Gu_y++P259Bi92kJr0XHxw8Tvpag74vvFiPQf34DmJq3uw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212094318.GA8062@genxfsim-desktop>
+In-Reply-To: <CAKv+Gu_y++P259Bi92kJr0XHxw8Tvpag74vvFiPQf34DmJq3uw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anshuman Gupta <anshuman.gupta@intel.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Anders Roxell <anders.roxell@linaro.org>, Mimi Zohar <zohar@linux.ibm.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, linux-integrity <linux-integrity@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, the arch/x86 maintainers <x86@kernel.org>, linux-efi <linux-efi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Feb 12, 2019 at 11:46 AM Anshuman Gupta
-<anshuman.gupta@intel.com> wrote:
-> On Fri, Feb 01, 2019 at 01:02:32PM +0530, Rajneesh Bhardwaj wrote:
-> > Icelake can resue most of the CNL PCH IPs as they are mostly similar.
-> > This patch enables the PMC Core driver for ICL family.
+On Tue, Feb 12, 2019 at 12:16 PM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> On Tue, 12 Feb 2019 at 11:09, Anders Roxell <anders.roxell@linaro.org> wrote:
 > >
-> > It also addresses few other minor issues like upper case conversions and
-> > some tab alignments.
-> >
-> > Cc: "David E. Box" <david.e.box@intel.com>
-> > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> > Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+> > Commit a893ea15d764 ("tpm: move tpm_chip definition to
+> > include/linux/tpm.h") introduced a build error when both ima and efi is
+> > enabled. What happens is that both headers (ima.h and efi.h) defines the
+> > same 'NONE' constant, and it broke when they started getting included
+> > from the same file.
 
->   Acked-and-tested-by: <anshuman.gupta@intel.com>
+> I'd argue that we should apply both patches. 'NONE' is far too
+> generic, so it requires a subsystem prefix if it has a special meaning
+> inside a subsystem.
 
-Thanks.
-
-Can you clarify what patches had been tested?
-As far as I can understand you can't test this one before applying
-previous seven patches.
-
-Rajneesh, when you will be about to send the rest, don't forget to
-append the received tags.
-
-> > ---
-> >  drivers/platform/x86/intel_pmc_core.c | 59 +++++++++++++++++++++------
-> >  drivers/platform/x86/intel_pmc_core.h |  4 ++
-> >  2 files changed, 50 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> > index d3752d75075b..400946b7a3b5 100644
-> > --- a/drivers/platform/x86/intel_pmc_core.c
-> > +++ b/drivers/platform/x86/intel_pmc_core.c
-> > @@ -166,25 +166,26 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
-> >       {"SDX",                 BIT(4)},
-> >       {"SPE",                 BIT(5)},
-> >       {"Fuse",                BIT(6)},
-> > -     {"Res_23",              BIT(7)},
-> > +     /* Reserved for Cannonlake but valid for Icelake */
-> > +     {"SBR8",                BIT(7)},
-> >
-> >       {"CSME_FSC",            BIT(0)},
-> >       {"USB3_OTG",            BIT(1)},
-> >       {"EXI",                 BIT(2)},
-> >       {"CSE",                 BIT(3)},
-> > -     {"csme_kvm",            BIT(4)},
-> > -     {"csme_pmt",            BIT(5)},
-> > -     {"csme_clink",          BIT(6)},
-> > -     {"csme_ptio",           BIT(7)},
-> > -
-> > -     {"csme_usbr",           BIT(0)},
-> > -     {"csme_susram",         BIT(1)},
-> > -     {"csme_smt1",           BIT(2)},
-> > +     {"CSME_KVM",            BIT(4)},
-> > +     {"CSME_PMT",            BIT(5)},
-> > +     {"CSME_CLINK",          BIT(6)},
-> > +     {"CSME_PTIO",           BIT(7)},
-> > +
-> > +     {"CSME_USBR",           BIT(0)},
-> > +     {"CSME_SUSRAM",         BIT(1)},
-> > +     {"CSME_SMT1",           BIT(2)},
-> >       {"CSME_SMT4",           BIT(3)},
-> > -     {"csme_sms2",           BIT(4)},
-> > -     {"csme_sms1",           BIT(5)},
-> > -     {"csme_rtc",            BIT(6)},
-> > -     {"csme_psf",            BIT(7)},
-> > +     {"CSME_SMS2",           BIT(4)},
-> > +     {"CSME_SMS1",           BIT(5)},
-> > +     {"CSME_RTC",            BIT(6)},
-> > +     {"CSME_PSF",            BIT(7)},
-> >
-> >       {"SBR0",                BIT(0)},
-> >       {"SBR1",                BIT(1)},
-> > @@ -209,6 +210,20 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
-> >       {"HDA_PGD4",            BIT(2)},
-> >       {"HDA_PGD5",            BIT(3)},
-> >       {"HDA_PGD6",            BIT(4)},
-> > +     /* Reserved for Cannonlake but valid for Icelake */
-> > +     {"PSF6",                BIT(5)},
-> > +     {"PSF7",                BIT(6)},
-> > +     {"PSF8",                BIT(7)},
-> > +
-> > +     /* Icelake generation onwards only */
-> > +     {"RES_65",              BIT(0)},
-> > +     {"RES_66",              BIT(1)},
-> > +     {"RES_67",              BIT(2)},
-> > +     {"TAM",                 BIT(3)},
-> > +     {"GBETSN",              BIT(4)},
-> > +     {"TBTLSX",              BIT(5)},
-> > +     {"RES_71",              BIT(6)},
-> > +     {"RES_72",              BIT(7)},
-> >       {}
-> >  };
-> >
-> > @@ -290,6 +305,8 @@ static const struct pmc_bit_map cnp_ltr_show_map[] = {
-> >       {"ISH",                 CNP_PMC_LTR_ISH},
-> >       {"UFSX2",               CNP_PMC_LTR_UFSX2},
-> >       {"EMMC",                CNP_PMC_LTR_EMMC},
-> > +     /* Reserved for Cannonlake but valid for Icelake */
-> > +     {"WIGIG",               ICL_PMC_LTR_WIGIG},
-> >       /* Below two cannot be used for LTR_IGNORE */
-> >       {"CURRENT_PLATFORM",    CNP_PMC_LTR_CUR_PLT},
-> >       {"AGGREGATED_SYSTEM",   CNP_PMC_LTR_CUR_ASLT},
-> > @@ -311,6 +328,21 @@ static const struct pmc_reg_map cnp_reg_map = {
-> >       .ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
-> >  };
-> >
-> > +static const struct pmc_reg_map icl_reg_map = {
-> > +     .pfear_sts = cnp_pfear_map,
-> > +     .slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
-> > +     .slps0_dbg_maps = cnp_slps0_dbg_maps,
-> > +     .ltr_show_sts = cnp_ltr_show_map,
-> > +     .slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
-> > +     .ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
-> > +     .regmap_length = CNP_PMC_MMIO_REG_LEN,
-> > +     .ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
-> > +     .ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
-> > +     .pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
-> > +     .pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-> > +     .ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
-> > +};
-> > +
-> >  static inline u8 pmc_core_reg_read_byte(struct pmc_dev *pmcdev, int offset)
-> >  {
-> >       return readb(pmcdev->regbase + offset);
-> > @@ -740,6 +772,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
-> >       INTEL_CPU_FAM6(KABYLAKE_MOBILE, spt_reg_map),
-> >       INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
-> >       INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
-> > +     INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
-> >       {}
-> >  };
-> >
-> > diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-> > index 0680ca397b57..78dd4229489d 100644
-> > --- a/drivers/platform/x86/intel_pmc_core.h
-> > +++ b/drivers/platform/x86/intel_pmc_core.h
-> > @@ -178,6 +178,10 @@ enum ppfear_regs {
-> >  #define LTR_REQ_SNOOP                                BIT(15)
-> >  #define LTR_REQ_NONSNOOP                     BIT(31)
-> >
-> > +#define ICL_PPFEAR_NUM_ENTRIES                       9
-> > +#define ICL_NUM_IP_IGN_ALLOWED                       20
-> > +#define ICL_PMC_LTR_WIGIG                    0x1BFC
-> > +
-> >  struct pmc_bit_map {
-> >       const char *name;
-> >       u32 bit_mask;
-> > --
-> > 2.17.1
-> >
->
-> --
-
-
+I was about to say the same thing.
 
 -- 
 With Best Regards,
