@@ -1,288 +1,162 @@
-From: Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH v2 2/2] efi: fix build error redeclaration of enumerator
-Date: Tue, 12 Feb 2019 12:21:21 +0100
-Message-ID: <20190212112121.32163-2-anders.roxell@linaro.org>
-References: <20190212112121.32163-1-anders.roxell@linaro.org>
+From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+Subject: Re: X450LCP lost abillity to turn the screen off
+Date: Tue, 12 Feb 2019 08:30:38 -0800
+Message-ID: <CAOcMMifw3SZ7hp-ZPAVZeRPOpgYmqi3nkNSwZizWnNgVDBUyEw@mail.gmail.com>
+References: <20190210192408.GA81989@bebop> <CAHp75Vc_0tLLSeVjiBLFXZXJSw7Evf=vmBrgbtsj11_SWS_rOg@mail.gmail.com>
+ <691cc9a7-e126-a7cf-b3b2-ce5a77eadbeb@gmail.com> <CAOcMMieCjobcM_d-ojuL88cOWFCFZbo=z5X=QWyqi_q7LZ5xHw@mail.gmail.com>
+ <e1be4724-38df-ac86-551c-7cfaf8e50b19@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190212112121.32163-1-anders.roxell@linaro.org>
+In-Reply-To: <e1be4724-38df-ac86-551c-7cfaf8e50b19@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com, ard.biesheuvel@linaro.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>
+To: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Commit a893ea15d764 ("tpm: move tpm_chip definition to
-include/linux/tpm.h") introduced a build error when both ima and efi is
-enabled. What happens is that both headers (ima.h and efi.h) defines the
-same 'NONE' constant, and it broke when they started getting included
-from the same file.
+On Mon, Feb 11, 2019 at 6:31 PM Marcos Paulo de Souza
+<marcos.souza.org@gmail.com> wrote:
+>
+> Hello Jo=C3=A3o,
+>
+> On 2/11/19 5:14 PM, Jo=C3=A3o Paulo Rechi Vita wrote:
+> > Hello Marcos,
+> >
+> > On Sun, Feb 10, 2019 at 5:05 PM Marcos Paulo de Souza
+> > <marcos.souza.org@gmail.com> wrote:
+> >>
+> >>
+> >>
+> >> On 2/10/19 9:45 PM, Andy Shevchenko wrote:
+> >>> On Sun, Feb 10, 2019 at 9:24 PM Marcos Paulo de Souza
+> >>> <marcos.souza.org@gmail.com> wrote:
+> >>>>
+> >>>> Hi,
+> >>>>
+> >>>> Since 5.0.0-rc4 I vefiried that my ASUS laptop
+> >>>
+> >>> Can you be more specific, what model, BIOS version, etc (also would b=
+e
+> >>> nice to have dmi strings from it, I guess dmidecode tool would help).
+> >>
+> >> dmidecode attached.
+> >>
+> >>>> cannot turn the screen of
+> >>>> anymore. There were several commits in 5.0 merge window touching thi=
+s
+> >>>> functionality like:
+> >>>>
+> >>>>   71b12beaf12f platform/x86: asus-nb-wmi: Drop mapping of 0x33 and 0=
+x34 scan codes
+> >>>>   b3f2f3799a97 platform/x86: asus-nb-wmi: Map 0x35 to KEY_SCREENLOCK
+> >>>>   78f3ac76d9e5 platform/x86: asus-wmi: Tell the EC the OS will handl=
+e the display off hotkey
+> >>>>
+> >>>
+> >>> Can you bisect or just try to revert one-by-one from above and see
+> >>> which one is a culprit?
+> >>
+> >> I already did some primary analysis, and it seems the commit 3f2f3799a=
+97
+> >> maps the x035 (which is Alt+f7 in my laptop) to SCREENLOCK, which is
+> >> wrong because alt+f7 should be Screen Toggle. I will try to revert thi=
+s
+> >> commit, or remap to KEY_DISPLAYTOGGLE or KEY_DISPLAY_OFF, and test if =
+it
+> >> works.
+> >>
+> >
+> > User-space does not act on KEY_DISPLAYTOGGLE / KEY_DISPLAY_OFF, these
+> > values should be used when the hardware is turning the screen
+> > back-light ON and OFF. According to Asus BIOS engineers, the
+> > back-light used to be driven by the hardware, but they have changed to
+> > the this new approach of telling the OS to drive the back-light for a
+> > while now (no specific dates or BIOS / windows driver versions were
+> > shared). They we actually surprised when we told the that some
+> > machines still have a working implementation (and selected by default
+> > unless told otherwise) of the old behavior, which sounds like it is
+> > the case for the machine you have at hand.
+> >
+> > The new behavior, as defined in their spec is to only notify the OS of
+> > the keypress with 0x35, and have the OS "close" the screen, with the
+> > screen being "opened" on mouse or keyboard activity. This closely
+> > matches the screen lock behavior on Linux platforms, so we are mapping
+> > it to KEY_SCREENLOCK in the kernel, and it then gets mapped to
+> > XF86ScreenSaver by xkeyboard-config, and finally gnome-settings-daemon
+> > uses it as a lock screen shortcut (look for "screensaver" in
+> > plugins/media-keys/shortcuts-list.h on the gnome-settings-daemon
+> > repository).
+>
+> Interesting.
+>
+> >
+> >> But yes, I'll do my best to track the problem ASAP at my side. Please
+> >> let me know if I can provide any additional information.
+> >>
+> >
+> > You can check what is being sent by the kernel with evtest, and what
+> > is being sent by X with "xinput test <device id>" (and you can find
+> > the device id with "xinput list"). And you can re-map it without
+> > having to rebuild the kernel using udev's hwdb. But simply re-mapping
+> > should not change anything, since userspace does not act on
+> > KEY_DISPLAYTOGGLE / KEY_DISPLAY_OFF. If you want to switch back to the
+> > old behavior you need to revert "78f3ac76d9e5 platform/x86: asus-wmi:
+> > Tell the EC the OS will handle the display off hotkey".
+>
+> I tried reverting the patch and only recompiling/reinstalling the
+> platform/x86 modules, but the problem still happens. My next step will
+> be testing agains't 4.20, since my machine was working with 4.12, so I
+> might try the major releases first.
+>
 
-In file included from ../security/integrity/ima/ima_fs.c:30:
-../security/integrity/ima/ima.h:176:7: error: redeclaration of enumerator "NONE"
-  hook(NONE)   \
-       ^~~~
-../security/integrity/ima/ima.h:188:34: note: in definition of macro "__ima_hook_enumify"
- #define __ima_hook_enumify(ENUM) ENUM,
-                                  ^~~~
-../security/integrity/ima/ima.h:191:2: note: in expansion of macro "__ima_hooks"
-  __ima_hooks(__ima_hook_enumify)
-  ^~~~~~~~~~~
-In file included from ../arch/arm64/include/asm/acpi.h:15,
-                 from ../include/acpi/acpi_io.h:7,
-                 from ../include/linux/acpi.h:47,
-                 from ../include/linux/tpm.h:26,
-                 from ../security/integrity/ima/ima.h:25,
-                 from ../security/integrity/ima/ima_fs.c:30:
-../include/linux/efi.h:1723:2: note: previous definition of "NONE" was here
-  NONE,
-  ^~~~
-make[4]: *** [../scripts/Makefile.build:277: security/integrity/ima/ima_fs.o] Error 1
+So maybe your desktop environment (KDE) acts on KEY_DISPLAYTOGGLE /
+KEY_DISPLAY_OFF and this is the only reason why this was working in
+the first place? It would be sad to find out different DEs behave
+differently in this situation, but IMO
+include/uapi/linux/input-event-codes.h is not super clear about
+whether userspace should act on these values or they are just intended
+to notify userspace of a change so desktop notifications (like an OSD)
+can be shown. If that is the case you will need to revert all 3
+commits you listed earlier. Also, make sure to check with evtest which
+values are being sent by the kernel to make sure the correct code is
+being executed.
 
-Rework to prefix the efi enum with 'EFI_*'.
+> >
+> > That being said, I believe it would be more productive to figure out
+> > why your userspace stack is not reacting to 0x35 / XF86ScreenSaver and
+> > fix that. Which window manager / graphical desktop environment are you
+> > using?
+>
+> Well, I'm using KDE Plasma 5 Desktop Environment (20170319-lp150.7.1) of
+> openSUSE Leap 15.0.
+>
+> >
+> > As a final note, from your dmidecode output I see you are on BIOS
+> > version X450LCP.207, and there is version 208 available for download
+> > on Asus website. I'm curious to know if it changes the old behavior
+> > (with the patches you listed reverted), but I'm not responsible if a
+> > BIOS update breaks your machine in any way, so just do it if you this
+> > is something you are comfortable with and understand and assume all
+> > the risks yourself. We have been reporting machines with the old
+> > behavior back to Asus, but I don't know what they are doing with that
+> > information, if anything. I'm adding your machine with the old BIOS
+> > version to the list, so if you test the new BIOS let me know so I can
+> > add that as well. But please don't feel any pressure to update the
+> > BIOS if this is something you would not do otherwise.
+>
+> For now I would like to skip this upgrade, since it is nothing that I
+> can play with now (I use this machine at work). I really hope that Asus
+> could join fwupd, making such upgrades easier to apply on Linux machines.
+>
 
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
+Absolutely, don't worry about the BIOS update.
 
-No changes since v1.
+> Let me know if I can provide more info. I may have news in the next day
+> about testing other kernels...
+>
 
- arch/x86/platform/efi/quirks.c          |  2 +-
- drivers/firmware/efi/runtime-wrappers.c | 48 ++++++++++++-------------
- include/linux/efi.h                     | 26 +++++++-------
- 3 files changed, 38 insertions(+), 38 deletions(-)
+Thanks for your feedback.
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 9ce85e605052..b7c0b04ee6ad 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -742,7 +742,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
- 	 * because this case occurs *very* rarely and hence could be improved
- 	 * on a need by basis.
- 	 */
--	if (efi_rts_work.efi_rts_id == RESET_SYSTEM) {
-+	if (efi_rts_work.efi_rts_id == EFI_RESET_SYSTEM) {
- 		pr_info("efi_reset_system() buggy! Reboot through BIOS\n");
- 		machine_real_restart(MRR_BIOS);
- 		return;
-diff --git a/drivers/firmware/efi/runtime-wrappers.c b/drivers/firmware/efi/runtime-wrappers.c
-index c70df5ae7c4a..28138534643e 100644
---- a/drivers/firmware/efi/runtime-wrappers.c
-+++ b/drivers/firmware/efi/runtime-wrappers.c
-@@ -85,7 +85,7 @@ struct efi_runtime_work efi_rts_work;
- 		pr_err("Failed to queue work to efi_rts_wq.\n");	\
- 									\
- exit:									\
--	efi_rts_work.efi_rts_id = NONE;					\
-+	efi_rts_work.efi_rts_id = EFI_NONE;				\
- 	efi_rts_work.status;						\
- })
- 
-@@ -181,50 +181,50 @@ static void efi_call_rts(struct work_struct *work)
- 	arg5 = efi_rts_work.arg5;
- 
- 	switch (efi_rts_work.efi_rts_id) {
--	case GET_TIME:
-+	case EFI_GET_TIME:
- 		status = efi_call_virt(get_time, (efi_time_t *)arg1,
- 				       (efi_time_cap_t *)arg2);
- 		break;
--	case SET_TIME:
-+	case EFI_SET_TIME:
- 		status = efi_call_virt(set_time, (efi_time_t *)arg1);
- 		break;
--	case GET_WAKEUP_TIME:
-+	case EFI_GET_WAKEUP_TIME:
- 		status = efi_call_virt(get_wakeup_time, (efi_bool_t *)arg1,
- 				       (efi_bool_t *)arg2, (efi_time_t *)arg3);
- 		break;
--	case SET_WAKEUP_TIME:
-+	case EFI_SET_WAKEUP_TIME:
- 		status = efi_call_virt(set_wakeup_time, *(efi_bool_t *)arg1,
- 				       (efi_time_t *)arg2);
- 		break;
--	case GET_VARIABLE:
-+	case EFI_GET_VARIABLE:
- 		status = efi_call_virt(get_variable, (efi_char16_t *)arg1,
- 				       (efi_guid_t *)arg2, (u32 *)arg3,
- 				       (unsigned long *)arg4, (void *)arg5);
- 		break;
--	case GET_NEXT_VARIABLE:
-+	case EFI_GET_NEXT_VARIABLE:
- 		status = efi_call_virt(get_next_variable, (unsigned long *)arg1,
- 				       (efi_char16_t *)arg2,
- 				       (efi_guid_t *)arg3);
- 		break;
--	case SET_VARIABLE:
-+	case EFI_SET_VARIABLE:
- 		status = efi_call_virt(set_variable, (efi_char16_t *)arg1,
- 				       (efi_guid_t *)arg2, *(u32 *)arg3,
- 				       *(unsigned long *)arg4, (void *)arg5);
- 		break;
--	case QUERY_VARIABLE_INFO:
-+	case EFI_QUERY_VARIABLE_INFO:
- 		status = efi_call_virt(query_variable_info, *(u32 *)arg1,
- 				       (u64 *)arg2, (u64 *)arg3, (u64 *)arg4);
- 		break;
--	case GET_NEXT_HIGH_MONO_COUNT:
-+	case EFI_GET_NEXT_HIGH_MONO_COUNT:
- 		status = efi_call_virt(get_next_high_mono_count, (u32 *)arg1);
- 		break;
--	case UPDATE_CAPSULE:
-+	case EFI_UPDATE_CAPSULE:
- 		status = efi_call_virt(update_capsule,
- 				       (efi_capsule_header_t **)arg1,
- 				       *(unsigned long *)arg2,
- 				       *(unsigned long *)arg3);
- 		break;
--	case QUERY_CAPSULE_CAPS:
-+	case EFI_QUERY_CAPSULE_CAPS:
- 		status = efi_call_virt(query_capsule_caps,
- 				       (efi_capsule_header_t **)arg1,
- 				       *(unsigned long *)arg2, (u64 *)arg3,
-@@ -248,7 +248,7 @@ static efi_status_t virt_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_TIME, tm, tc, NULL, NULL, NULL);
-+	status = efi_queue_work(EFI_GET_TIME, tm, tc, NULL, NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
- }
-@@ -259,7 +259,7 @@ static efi_status_t virt_efi_set_time(efi_time_t *tm)
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(SET_TIME, tm, NULL, NULL, NULL, NULL);
-+	status = efi_queue_work(EFI_SET_TIME, tm, NULL, NULL, NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
- }
-@@ -272,7 +272,7 @@ static efi_status_t virt_efi_get_wakeup_time(efi_bool_t *enabled,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_WAKEUP_TIME, enabled, pending, tm, NULL,
-+	status = efi_queue_work(EFI_GET_WAKEUP_TIME, enabled, pending, tm, NULL,
- 				NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -284,7 +284,7 @@ static efi_status_t virt_efi_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(SET_WAKEUP_TIME, &enabled, tm, NULL, NULL,
-+	status = efi_queue_work(EFI_SET_WAKEUP_TIME, &enabled, tm, NULL, NULL,
- 				NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -300,7 +300,7 @@ static efi_status_t virt_efi_get_variable(efi_char16_t *name,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_VARIABLE, name, vendor, attr, data_size,
-+	status = efi_queue_work(EFI_GET_VARIABLE, name, vendor, attr, data_size,
- 				data);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -314,7 +314,7 @@ static efi_status_t virt_efi_get_next_variable(unsigned long *name_size,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_NEXT_VARIABLE, name_size, name, vendor,
-+	status = efi_queue_work(EFI_GET_NEXT_VARIABLE, name_size, name, vendor,
- 				NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -330,7 +330,7 @@ static efi_status_t virt_efi_set_variable(efi_char16_t *name,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(SET_VARIABLE, name, vendor, &attr, &data_size,
-+	status = efi_queue_work(EFI_SET_VARIABLE, name, vendor, &attr, &data_size,
- 				data);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -365,7 +365,7 @@ static efi_status_t virt_efi_query_variable_info(u32 attr,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(QUERY_VARIABLE_INFO, &attr, storage_space,
-+	status = efi_queue_work(EFI_QUERY_VARIABLE_INFO, &attr, storage_space,
- 				remaining_space, max_variable_size, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -397,7 +397,7 @@ static efi_status_t virt_efi_get_next_high_mono_count(u32 *count)
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_NEXT_HIGH_MONO_COUNT, count, NULL, NULL,
-+	status = efi_queue_work(EFI_GET_NEXT_HIGH_MONO_COUNT, count, NULL, NULL,
- 				NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -413,7 +413,7 @@ static void virt_efi_reset_system(int reset_type,
- 			"could not get exclusive access to the firmware\n");
- 		return;
- 	}
--	efi_rts_work.efi_rts_id = RESET_SYSTEM;
-+	efi_rts_work.efi_rts_id = EFI_RESET_SYSTEM;
- 	__efi_call_virt(reset_system, reset_type, status, data_size, data);
- 	up(&efi_runtime_lock);
- }
-@@ -429,7 +429,7 @@ static efi_status_t virt_efi_update_capsule(efi_capsule_header_t **capsules,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(UPDATE_CAPSULE, capsules, &count, &sg_list,
-+	status = efi_queue_work(EFI_UPDATE_CAPSULE, capsules, &count, &sg_list,
- 				NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -447,7 +447,7 @@ static efi_status_t virt_efi_query_capsule_caps(efi_capsule_header_t **capsules,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(QUERY_CAPSULE_CAPS, capsules, &count,
-+	status = efi_queue_work(EFI_QUERY_CAPSULE_CAPS, capsules, &count,
- 				max_size, reset_type, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index a4de93c96907..b3471b6ff92f 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1720,19 +1720,19 @@ extern int efi_tpm_eventlog_init(void);
-  * fault happened while executing an efi runtime service.
-  */
- enum efi_rts_ids {
--	NONE,
--	GET_TIME,
--	SET_TIME,
--	GET_WAKEUP_TIME,
--	SET_WAKEUP_TIME,
--	GET_VARIABLE,
--	GET_NEXT_VARIABLE,
--	SET_VARIABLE,
--	QUERY_VARIABLE_INFO,
--	GET_NEXT_HIGH_MONO_COUNT,
--	RESET_SYSTEM,
--	UPDATE_CAPSULE,
--	QUERY_CAPSULE_CAPS,
-+	EFI_NONE,
-+	EFI_GET_TIME,
-+	EFI_SET_TIME,
-+	EFI_GET_WAKEUP_TIME,
-+	EFI_SET_WAKEUP_TIME,
-+	EFI_GET_VARIABLE,
-+	EFI_GET_NEXT_VARIABLE,
-+	EFI_SET_VARIABLE,
-+	EFI_QUERY_VARIABLE_INFO,
-+	EFI_GET_NEXT_HIGH_MONO_COUNT,
-+	EFI_RESET_SYSTEM,
-+	EFI_UPDATE_CAPSULE,
-+	EFI_QUERY_CAPSULE_CAPS,
- };
- 
- /*
--- 
-2.20.1
+--
+Jo=C3=A3o Paulo Rechi Vita
