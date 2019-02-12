@@ -1,47 +1,47 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 09/10] platform/x86: intel_pmc_core: Add Package cstates
- residency info
-Date: Tue, 12 Feb 2019 12:25:08 +0200
-Message-ID: <CAHp75VeZwgM9KPNahmpsLzzkmOKDN2JeBKQWO9hBK_O=Gk8oFw@mail.gmail.com>
-References: <20190201073234.13280-1-rajneesh.bhardwaj@linux.intel.com>
- <20190201073234.13280-10-rajneesh.bhardwaj@linux.intel.com>
- <20190211164118.GA23796@genxfsim-desktop> <78e5e6b3-5712-6ef5-283c-83b0f6d3dcc7@linux.intel.com>
+Subject: Re: X450LCP lost abillity to turn the screen off
+Date: Tue, 12 Feb 2019 12:30:13 +0200
+Message-ID: <CAHp75Vdbtou6Y0+He9f70kTRYyDiXR=jBATgTS8LK+SWXwTeUg@mail.gmail.com>
+References: <20190210192408.GA81989@bebop> <CAHp75Vc_0tLLSeVjiBLFXZXJSw7Evf=vmBrgbtsj11_SWS_rOg@mail.gmail.com>
+ <691cc9a7-e126-a7cf-b3b2-ce5a77eadbeb@gmail.com> <CAOcMMieCjobcM_d-ojuL88cOWFCFZbo=z5X=QWyqi_q7LZ5xHw@mail.gmail.com>
+ <e1be4724-38df-ac86-551c-7cfaf8e50b19@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <78e5e6b3-5712-6ef5-283c-83b0f6d3dcc7@linux.intel.com>
+In-Reply-To: <e1be4724-38df-ac86-551c-7cfaf8e50b19@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Cc: Anshuman Gupta <anshuman.gupta@intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arjan van de Ven <arjan@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <len.brown@intel.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+To: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Cc: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Feb 11, 2019 at 8:32 PM Bhardwaj, Rajneesh
-<rajneesh.bhardwaj@linux.intel.com> wrote:
-> On 11-Feb-19 10:11 PM, Anshuman Gupta wrote:
-> > On Fri, Feb 01, 2019 at 01:02:33PM +0530, Rajneesh Bhardwaj wrote:
-> >> This patch introduces a new debugfs entry to read current Package
-> >> cstate residency counters. A similar variant of this patch was discussed
-> >> earlier "https://patchwork.kernel.org/patch/9908563/" but didn't make it
-> >> into mainline for various reasons. Current version only adds debugfs
-> >> entry which is quite useful for S0ix debug but excludes the exported API
-> >> that was there in initial version. Though there are tools like turbostat
-> >> and socwatch which can also show this info but sometimes its more
-> >> practical to have it here as it's hard to switch between various tools for
-> >> S0ix debug when pmc_core driver is the primary debug tool. Internal and
-> >> external customers have requested for this patch to be included in the
-> >> PMC driver on many occasions and Google Chrome OS team has already included
-> >> it in their builds. This becomes handy when requesting logs from external
-> >> customers who may not always have above mentioned tools in their integrated
-> >> kernel builds.
+On Tue, Feb 12, 2019 at 4:31 AM Marcos Paulo de Souza
+<marcos.souza.org@gmail.com> wrote:
+> On 2/11/19 5:14 PM, Jo=C3=A3o Paulo Rechi Vita wrote:
+> > Hello Marcos,
+> > On Sun, Feb 10, 2019 at 5:05 PM Marcos Paulo de Souza
+> > <marcos.souza.org@gmail.com> wrote:
 
-> >    Tested-by: Anshuman Gupta <anshuman.gupta@intel.com>
-> >    Acked-by: Anshuman Gupta <anshuman.gupta@intel.com>
+> > You can check what is being sent by the kernel with evtest, and what
+> > is being sent by X with "xinput test <device id>" (and you can find
+> > the device id with "xinput list"). And you can re-map it without
+> > having to rebuild the kernel using udev's hwdb. But simply re-mapping
+> > should not change anything, since userspace does not act on
+> > KEY_DISPLAYTOGGLE / KEY_DISPLAY_OFF. If you want to switch back to the
+> > old behavior you need to revert "78f3ac76d9e5 platform/x86: asus-wmi:
+> > Tell the EC the OS will handle the display off hotkey".
+>
+> I tried reverting the patch and only recompiling/reinstalling the
+> platform/x86 modules, but the problem still happens. My next step will
+> be testing agains't 4.20, since my machine was working with 4.12, so I
+> might try the major releases first.
 
-> Hi Andy, Darren - Can i used Acked-and-tested-by instead of these two?
+When you are going to try older releases, it would be nice to see if
+LTS kernels (v4.14.y, v4.19.y from Linux stable tree [1]) behave
+differently
 
-Better to split. I didn't see in common practice acked-and-tested.
-Rather reviewed-and-tested, or reported-and-tested.
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/
 
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
