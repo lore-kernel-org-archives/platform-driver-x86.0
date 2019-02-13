@@ -1,354 +1,248 @@
-From: "Enrico Weigelt, metux IT consult" <info@metux.net>
-Subject: [PATCH 1/2] gpio: AMD G-Series PCH gpio driver
-Date: Wed, 13 Feb 2019 21:57:27 +0100
-Message-ID: <1550091448-28578-2-git-send-email-info@metux.net>
-References: <1550091448-28578-1-git-send-email-info@metux.net>
+From: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Subject: Re: X450LCP lost abillity to turn the screen off
+Date: Wed, 13 Feb 2019 19:46:36 -0200
+Message-ID: <725242e1-625a-f6bc-ffaa-a22052ae89f0@gmail.com>
+References: <20190210192408.GA81989@bebop>
+ <CAHp75Vc_0tLLSeVjiBLFXZXJSw7Evf=vmBrgbtsj11_SWS_rOg@mail.gmail.com>
+ <691cc9a7-e126-a7cf-b3b2-ce5a77eadbeb@gmail.com>
+ <CAOcMMieCjobcM_d-ojuL88cOWFCFZbo=z5X=QWyqi_q7LZ5xHw@mail.gmail.com>
+ <e1be4724-38df-ac86-551c-7cfaf8e50b19@gmail.com>
+ <CAOcMMifw3SZ7hp-ZPAVZeRPOpgYmqi3nkNSwZizWnNgVDBUyEw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="------------3023058A3D5DEC9AA46C31BC"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550091448-28578-1-git-send-email-info@metux.net>
+In-Reply-To: <CAOcMMifw3SZ7hp-ZPAVZeRPOpgYmqi3nkNSwZizWnNgVDBUyEw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, andy@infradead.org, dvhart@infradead.org, bgolaszewski@baylibre.com, linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+To: =?UTF-8?Q?Jo=c3=a3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, =?UTF-8?Q?Jo=c3=a3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-GPIO platform driver for the AMD G-series PCH (eg. on GX-412TC)
+This is a multi-part message in MIME format.
+--------------3023058A3D5DEC9AA46C31BC
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-This driver doesn't registers itself automatically, as it needs to
-be provided with platform specific configuration, provided by some
-board driver setup code.
+Hello Jo=C3=A3o,
 
-Didn't implement oftree probing yet, as it's rarely found on x86.
+On 2/12/19 2:30 PM, Jo=C3=A3o Paulo Rechi Vita wrote:
+> On Mon, Feb 11, 2019 at 6:31 PM Marcos Paulo de Souza
+> <marcos.souza.org@gmail.com> wrote:
+>>
+>> Hello Jo=C3=A3o,
+>>
+>> On 2/11/19 5:14 PM, Jo=C3=A3o Paulo Rechi Vita wrote:
+>>> Hello Marcos,
+>>>
+>>> On Sun, Feb 10, 2019 at 5:05 PM Marcos Paulo de Souza
+>>> <marcos.souza.org@gmail.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2/10/19 9:45 PM, Andy Shevchenko wrote:
+>>>>> On Sun, Feb 10, 2019 at 9:24 PM Marcos Paulo de Souza
+>>>>> <marcos.souza.org@gmail.com> wrote:
+>>>>>>
+>>>>>> Hi,
+>>>>>>
+>>>>>> Since 5.0.0-rc4 I vefiried that my ASUS laptop
+>>>>>
+>>>>> Can you be more specific, what model, BIOS version, etc (also would=
+ be
+>>>>> nice to have dmi strings from it, I guess dmidecode tool would help=
+).
+>>>>
+>>>> dmidecode attached.
+>>>>
+>>>>>> cannot turn the screen of
+>>>>>> anymore. There were several commits in 5.0 merge window touching t=
+his
+>>>>>> functionality like:
+>>>>>>
+>>>>>>   71b12beaf12f platform/x86: asus-nb-wmi: Drop mapping of 0x33 and=
+ 0x34 scan codes
+>>>>>>   b3f2f3799a97 platform/x86: asus-nb-wmi: Map 0x35 to KEY_SCREENLO=
+CK
+>>>>>>   78f3ac76d9e5 platform/x86: asus-wmi: Tell the EC the OS will han=
+dle the display off hotkey
+>>>>>>
+>>>>>
+>>>>> Can you bisect or just try to revert one-by-one from above and see
+>>>>> which one is a culprit?
+>>>>
+>>>> I already did some primary analysis, and it seems the commit 3f2f379=
+9a97
+>>>> maps the x035 (which is Alt+f7 in my laptop) to SCREENLOCK, which is=
 
-Cc: linux-gpio@vger.kernel.org
-Cc: linus.walleij@linaro.org
-Cc: bgolaszewski@baylibre.com
-Cc: dvhart@infradead.org
-Cc: andy@infradead.org
-Cc: platform-driver-x86@vger.kernel.org
+>>>> wrong because alt+f7 should be Screen Toggle. I will try to revert t=
+his
+>>>> commit, or remap to KEY_DISPLAYTOGGLE or KEY_DISPLAY_OFF, and test i=
+f it
+>>>> works.
+>>>>
+>>>
+>>> User-space does not act on KEY_DISPLAYTOGGLE / KEY_DISPLAY_OFF, these=
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- MAINTAINERS                                     |   7 +
- drivers/gpio/Kconfig                            |  10 ++
- drivers/gpio/Makefile                           |   1 +
- drivers/gpio/gpio-amd-fch.c                     | 205 ++++++++++++++++++++++++
- include/linux/platform_data/gpio/gpio-amd-fch.h |  46 ++++++
- 5 files changed, 269 insertions(+)
- create mode 100644 drivers/gpio/gpio-amd-fch.c
- create mode 100644 include/linux/platform_data/gpio/gpio-amd-fch.h
+>>> values should be used when the hardware is turning the screen
+>>> back-light ON and OFF. According to Asus BIOS engineers, the
+>>> back-light used to be driven by the hardware, but they have changed t=
+o
+>>> the this new approach of telling the OS to drive the back-light for a=
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 41ce5f4..d286e7d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -766,6 +766,13 @@ S:	Supported
- F:	Documentation/hwmon/fam15h_power
- F:	drivers/hwmon/fam15h_power.c
- 
-+AMD FCH GPIO DRIVER
-+M:	Enrico Weigelt, metux IT consult <info@metux.net>
-+L:	linux-gpio@vger.kernel.org
-+S:	Maintained
-+F:	drivers/gpio/gpio-amd-fch.c
-+F:	include/linux/platform_data/gpio/gpio-amd-fch.h
-+
- AMD GEODE CS5536 USB DEVICE CONTROLLER DRIVER
- L:	linux-geode@lists.infradead.org (moderated for non-subscribers)
- S:	Orphan
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b5a2845..a3e47c8 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -654,6 +654,16 @@ config GPIO_LOONGSON1
- 	help
- 	  Say Y or M here to support GPIO on Loongson1 SoCs.
- 
-+config GPIO_AMD_FCH
-+	tristate "GPIO support for AMD Fusion Controller Hub (G-series SOCs)"
-+	select GPIO_GENERIC
-+	help
-+	  This option enables driver for GPIO on AMDs Fusion Controller Hub,
-+	  as found on G-series SOCs (eg. GX-412TC)
-+
-+	  Note: This driver doesn't registers itself automatically, as it
-+	  needs to be provided with platform specific configuration.
-+	  (See eg. CONFIG_PCENGINES_APU2.)
- endmenu
- 
- menu "Port-mapped I/O GPIO drivers"
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 37628f8..bb48fd2 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -27,6 +27,7 @@ obj-$(CONFIG_GPIO_ADP5520)	+= gpio-adp5520.o
- obj-$(CONFIG_GPIO_ADP5588)	+= gpio-adp5588.o
- obj-$(CONFIG_GPIO_ALTERA)  	+= gpio-altera.o
- obj-$(CONFIG_GPIO_ALTERA_A10SR)	+= gpio-altera-a10sr.o
-+obj-$(CONFIG_GPIO_AMD_FCH)	+= gpio-amd-fch.o
- obj-$(CONFIG_GPIO_AMD8111)	+= gpio-amd8111.o
- obj-$(CONFIG_GPIO_AMDPT)	+= gpio-amdpt.o
- obj-$(CONFIG_GPIO_ARIZONA)	+= gpio-arizona.o
-diff --git a/drivers/gpio/gpio-amd-fch.c b/drivers/gpio/gpio-amd-fch.c
-new file mode 100644
-index 0000000..f31a8b4
---- /dev/null
-+++ b/drivers/gpio/gpio-amd-fch.c
-@@ -0,0 +1,205 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+/*
-+ * GPIO driver for the AMD G series FCH (eg. GX-412TC)
-+ *
-+ * Copyright (C) 2018 metux IT consult
-+ * Author: Enrico Weigelt, metux IT consult <info@metux.net>
-+ *
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/platform_data/gpio/gpio-amd-fch.h>
-+
-+#define AMD_FCH_MMIO_BASE		0xFED80000
-+#define AMD_FCH_GPIO_BANK0_BASE		0x1500
-+#define AMD_FCH_GPIO_SIZE		0x0300
-+
-+#define AMD_FCH_GPIO_FLAG_DIRECTION	BIT(23)
-+#define AMD_FCH_GPIO_FLAG_WRITE		BIT(22)
-+#define AMD_FCH_GPIO_FLAG_READ		BIT(16)
-+
-+struct amd_fch_gpio_priv {
-+	struct platform_device		*pdev;
-+	struct gpio_chip		gc;
-+	void __iomem			*base;
-+	struct amd_fch_gpio_pdata	*pdata;
-+};
-+
-+static void *amd_fch_gpio_addr(struct amd_fch_gpio_priv *priv,
-+			       unsigned int gpio)
-+{
-+	if (unlikely(gpio > priv->pdata->gpio_num)) {
-+		dev_err(&priv->pdev->dev,
-+			"gpio number %d out of range\n", gpio);
-+		return NULL;
-+	}
-+
-+	return priv->base + priv->pdata->gpio_reg[gpio]*sizeof(u32);
-+}
-+
-+static int amd_fch_gpio_direction_input(struct gpio_chip *gc,
-+					unsigned int offset)
-+{
-+	unsigned long flags;
-+	struct amd_fch_gpio_priv *priv = gpiochip_get_data(gc);
-+	void *ptr = amd_fch_gpio_addr(priv, offset);
-+
-+	if (unlikely(!ptr))
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-+	writel_relaxed(readl_relaxed(ptr) & ~AMD_FCH_GPIO_FLAG_DIRECTION, ptr);
-+	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-+
-+	return 0;
-+}
-+
-+static int amd_fch_gpio_direction_output(struct gpio_chip *gc,
-+					 unsigned int gpio, int value)
-+{
-+	unsigned long flags;
-+	struct amd_fch_gpio_priv *priv = gpiochip_get_data(gc);
-+	void *ptr = amd_fch_gpio_addr(priv, gpio);
-+
-+	if (unlikely(!ptr))
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-+	writel_relaxed(readl_relaxed(ptr) | AMD_FCH_GPIO_FLAG_DIRECTION, ptr);
-+	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-+
-+	return 0;
-+}
-+
-+static int amd_fch_gpio_get_direction(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	int ret;
-+	unsigned long flags;
-+	struct amd_fch_gpio_priv *priv = gpiochip_get_data(gc);
-+	void *ptr = amd_fch_gpio_addr(priv, gpio);
-+
-+	if (unlikely(!ptr))
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-+	ret = (readl_relaxed(ptr) & AMD_FCH_GPIO_FLAG_DIRECTION);
-+	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-+
-+	return ret;
-+}
-+
-+static void amd_fch_gpio_set(struct gpio_chip *gc,
-+			     unsigned int gpio, int value)
-+{
-+	unsigned long flags;
-+	struct amd_fch_gpio_priv *priv = gpiochip_get_data(gc);
-+	void *ptr = amd_fch_gpio_addr(priv, gpio);
-+
-+	if (unlikely(!ptr))
-+		return;
-+
-+	spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-+
-+	if (value)
-+		writel_relaxed(readl_relaxed(ptr) | AMD_FCH_GPIO_FLAG_WRITE,
-+			       ptr);
-+	else
-+		writel_relaxed(readl_relaxed(ptr) & ~AMD_FCH_GPIO_FLAG_WRITE,
-+			       ptr);
-+
-+	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-+}
-+
-+static int amd_fch_gpio_get(struct gpio_chip *gc,
-+			    unsigned int offset)
-+{
-+	unsigned long flags;
-+	int ret;
-+	struct amd_fch_gpio_priv *priv = gpiochip_get_data(gc);
-+	void *ptr = amd_fch_gpio_addr(priv, offset);
-+
-+	if (unlikely(!ptr))
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-+	ret = (readl_relaxed(ptr) & AMD_FCH_GPIO_FLAG_READ);
-+	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-+
-+	return ret;
-+}
-+
-+static int amd_fch_gpio_request(struct gpio_chip *chip,
-+				unsigned int gpio_pin)
-+{
-+	if (likely(gpio_pin < chip->ngpio))
-+		return 0;
-+
-+	return -EINVAL;
-+}
-+
-+static int amd_fch_gpio_probe(struct platform_device *pdev)
-+{
-+	struct amd_fch_gpio_priv *priv;
-+	struct amd_fch_gpio_pdata *pdata;
-+	struct resource res = DEFINE_RES_MEM_NAMED(
-+				AMD_FCH_MMIO_BASE + AMD_FCH_GPIO_BANK0_BASE,
-+				AMD_FCH_GPIO_SIZE,
-+				"amd-fch-gpio-iomem");
-+
-+	pdata = dev_get_platdata(&pdev->dev);
-+
-+	if (unlikely(pdata == NULL)) {
-+		dev_err(&pdev->dev, "no platform_data\n");
-+		return -ENOENT;
-+	}
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+
-+	if (unlikely(priv == NULL))
-+		return -ENOMEM;
-+
-+	priv->pdata	= pdata;
-+	priv->pdev	= pdev;
-+
-+	priv->gc.owner			= THIS_MODULE;
-+	priv->gc.parent			= &pdev->dev;
-+	priv->gc.label			= dev_name(&pdev->dev);
-+	priv->gc.ngpio			= priv->pdata->gpio_num;
-+	priv->gc.names			= priv->pdata->gpio_names;
-+	priv->gc.request		= amd_fch_gpio_request;
-+	priv->gc.direction_input	= amd_fch_gpio_direction_input;
-+	priv->gc.direction_output	= amd_fch_gpio_direction_output;
-+	priv->gc.get_direction		= amd_fch_gpio_get_direction;
-+	priv->gc.get			= amd_fch_gpio_get;
-+	priv->gc.set			= amd_fch_gpio_set;
-+
-+	spin_lock_init(&priv->gc.bgpio_lock);
-+
-+	priv->base = devm_ioremap_resource(&pdev->dev, &res);
-+	if (IS_ERR(priv->base))
-+		return -ENXIO;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return devm_gpiochip_add_data(&pdev->dev, &priv->gc, priv);
-+}
-+
-+static struct platform_driver amd_fch_gpio_driver = {
-+	.driver = {
-+		.name = AMD_FCH_GPIO_DRIVER_NAME,
-+	},
-+	.probe = amd_fch_gpio_probe,
-+};
-+
-+module_platform_driver(amd_fch_gpio_driver);
-+
-+MODULE_AUTHOR("Enrico Weigelt, metux IT consult <info@metux.net>");
-+MODULE_DESCRIPTION("AMD G-series FCH GPIO driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:" AMD_FCH_GPIO_DRIVER_NAME);
-diff --git a/include/linux/platform_data/gpio/gpio-amd-fch.h b/include/linux/platform_data/gpio/gpio-amd-fch.h
-new file mode 100644
-index 0000000..a867637
---- /dev/null
-+++ b/include/linux/platform_data/gpio/gpio-amd-fch.h
-@@ -0,0 +1,46 @@
-+/* SPDX-License-Identifier: GPL+ */
-+
-+/*
-+ * AMD FCH gpio driver platform-data
-+ *
-+ * Copyright (C) 2018 metux IT consult
-+ * Author: Enrico Weigelt <info@metux.net>
-+ *
-+ */
-+
-+#ifndef __LINUX_PLATFORM_DATA_GPIO_AMD_FCH_H
-+#define __LINUX_PLATFORM_DATA_GPIO_AMD_FCH_H
-+
-+#define AMD_FCH_GPIO_DRIVER_NAME "gpio_amd_fch"
-+
-+/*
-+ * gpio register index definitions
-+ */
-+#define AMD_FCH_GPIO_REG_GPIO49		0x40
-+#define AMD_FCH_GPIO_REG_GPIO50		0x41
-+#define AMD_FCH_GPIO_REG_GPIO51		0x42
-+#define AMD_FCH_GPIO_REG_GPIO59_DEVSLP0	0x43
-+#define AMD_FCH_GPIO_REG_GPIO57		0x44
-+#define AMD_FCH_GPIO_REG_GPIO58		0x45
-+#define AMD_FCH_GPIO_REG_GPIO59_DEVSLP1	0x46
-+#define AMD_FCH_GPIO_REG_GPIO64		0x47
-+#define AMD_FCH_GPIO_REG_GPIO68		0x48
-+#define AMD_FCH_GPIO_REG_GPIO66_SPKR	0x5B
-+#define AMD_FCH_GPIO_REG_GPIO71		0x4D
-+#define AMD_FCH_GPIO_REG_GPIO32_GE1	0x59
-+#define AMD_FCH_GPIO_REG_GPIO33_GE2	0x5A
-+#define AMT_FCH_GPIO_REG_GEVT22		0x09
-+
-+/*
-+ * struct amd_fch_gpio_pdata - GPIO chip platform data
-+ * @gpio_num: number of entries
-+ * @gpio_reg: array of gpio registers
-+ * @gpio_names: array of gpio names
-+ */
-+struct amd_fch_gpio_pdata {
-+	int			gpio_num;
-+	int			*gpio_reg;
-+	const char * const	*gpio_names;
-+};
-+
-+#endif /* __LINUX_PLATFORM_DATA_GPIO_AMD_FCH_H */
--- 
-1.9.1
+>>> while now (no specific dates or BIOS / windows driver versions were
+>>> shared). They we actually surprised when we told the that some
+>>> machines still have a working implementation (and selected by default=
+
+>>> unless told otherwise) of the old behavior, which sounds like it is
+>>> the case for the machine you have at hand.
+>>>
+>>> The new behavior, as defined in their spec is to only notify the OS o=
+f
+>>> the keypress with 0x35, and have the OS "close" the screen, with the
+>>> screen being "opened" on mouse or keyboard activity. This closely
+>>> matches the screen lock behavior on Linux platforms, so we are mappin=
+g
+>>> it to KEY_SCREENLOCK in the kernel, and it then gets mapped to
+>>> XF86ScreenSaver by xkeyboard-config, and finally gnome-settings-daemo=
+n
+>>> uses it as a lock screen shortcut (look for "screensaver" in
+>>> plugins/media-keys/shortcuts-list.h on the gnome-settings-daemon
+>>> repository).
+>>
+>> Interesting.
+>>
+>>>
+>>>> But yes, I'll do my best to track the problem ASAP at my side. Pleas=
+e
+>>>> let me know if I can provide any additional information.
+>>>>
+>>>
+>>> You can check what is being sent by the kernel with evtest, and what
+>>> is being sent by X with "xinput test <device id>" (and you can find
+>>> the device id with "xinput list"). And you can re-map it without
+>>> having to rebuild the kernel using udev's hwdb. But simply re-mapping=
+
+>>> should not change anything, since userspace does not act on
+>>> KEY_DISPLAYTOGGLE / KEY_DISPLAY_OFF. If you want to switch back to th=
+e
+>>> old behavior you need to revert "78f3ac76d9e5 platform/x86: asus-wmi:=
+
+>>> Tell the EC the OS will handle the display off hotkey".
+>>
+>> I tried reverting the patch and only recompiling/reinstalling the
+>> platform/x86 modules, but the problem still happens. My next step will=
+
+>> be testing agains't 4.20, since my machine was working with 4.12, so I=
+
+>> might try the major releases first.
+>>
+>=20
+> So maybe your desktop environment (KDE) acts on KEY_DISPLAYTOGGLE /
+> KEY_DISPLAY_OFF and this is the only reason why this was working in
+> the first place? It would be sad to find out different DEs behave
+> differently in this situation, but IMO
+> include/uapi/linux/input-event-codes.h is not super clear about
+> whether userspace should act on these values or they are just intended
+> to notify userspace of a change so desktop notifications (like an OSD)
+> can be shown. If that is the case you will need to revert all 3
+> commits you listed earlier. Also, make sure to check with evtest which
+> values are being sent by the kernel to make sure the correct code is
+> being executed.
+
+I think you found the issue. Tried GNOME in the same machine, with the
+same kernel, and it works. I can revert those 3 commits and try again
+with a different DE, if you think it would help.
+
+Thanks.
+
+>=20
+>>>
+>>> That being said, I believe it would be more productive to figure out
+>>> why your userspace stack is not reacting to 0x35 / XF86ScreenSaver an=
+d
+>>> fix that. Which window manager / graphical desktop environment are yo=
+u
+>>> using?
+>>
+>> Well, I'm using KDE Plasma 5 Desktop Environment (20170319-lp150.7.1) =
+of
+>> openSUSE Leap 15.0.
+>>
+>>>
+>>> As a final note, from your dmidecode output I see you are on BIOS
+>>> version X450LCP.207, and there is version 208 available for download
+>>> on Asus website. I'm curious to know if it changes the old behavior
+>>> (with the patches you listed reverted), but I'm not responsible if a
+>>> BIOS update breaks your machine in any way, so just do it if you this=
+
+>>> is something you are comfortable with and understand and assume all
+>>> the risks yourself. We have been reporting machines with the old
+>>> behavior back to Asus, but I don't know what they are doing with that=
+
+>>> information, if anything. I'm adding your machine with the old BIOS
+>>> version to the list, so if you test the new BIOS let me know so I can=
+
+>>> add that as well. But please don't feel any pressure to update the
+>>> BIOS if this is something you would not do otherwise.
+>>
+>> For now I would like to skip this upgrade, since it is nothing that I
+>> can play with now (I use this machine at work). I really hope that Asu=
+s
+>> could join fwupd, making such upgrades easier to apply on Linux machin=
+es.
+>>
+>=20
+> Absolutely, don't worry about the BIOS update.
+>=20
+>> Let me know if I can provide more info. I may have news in the next da=
+y
+>> about testing other kernels...
+>>
+>=20
+> Thanks for your feedback.
+>=20
+> --
+> Jo=C3=A3o Paulo Rechi Vita
+>=20
+
+--------------3023058A3D5DEC9AA46C31BC
+Content-Type: application/pgp-keys;
+ name="pEpkey.asc"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="pEpkey.asc"
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQENBFwGdegBCADpmN2M/qgid640GczjjQNKUqNDYr8WXDxZAIjNPNeTeQFNbMeq
+PKCRzmEXD2bCs8Dzss9OOWWMbphb5+jiU9lfuZZMnhh6UL1DzZGU7HpCqb/rWL9K
+gdo/GhN1ZNyc965+VdltiI5dhhsEuoptkvCw9wpcQcL9DpCldD+ix7dO64jz7VgH
+97H0B8jC5nkvnafsnSC+oKN/bIlVnKDjMdvtsUEEkf910APOHswfX8nm0uOIk7In
+8ECT2c/5fkCKBq+Wozc3MCsNShV3KFgs6IrBFcI+eu4xb4PO0OEWn+C1w70jJTuk
+XJXvIJ0Vsshp+ue2ZPMpaQ9oC/eu4JY3I46HABEBAAG0Mk1hcmNvcyBQYXVsbyBk
+ZSBTb3V6YSA8bWFyY29zLnNvdXphLm9yZ0BnbWFpbC5jb20+iQFUBBMBCAA+FiEE
+c1x2fap6ddr/tht1jy9yDsZUoRMFAlwGdegCGwMFCQHhM4AFCwkIBwIGFQoJCAsC
+BBYCAwECHgECF4AACgkQjy9yDsZUoRPv8wf+MdfRcElEJLisTaIoxfqrmDvi7+CB
+76FhFev0q9JXUqzu0Ijgdv+MOnSn5KFmh6bTza7rkMCMC7mj5mYUnmOs2DvsDSYB
+KmUT5/Dc+uuna32Mqz017tzyWKbGpbkI9xVy6lIaQvkGvHox3a6WAWQbvUvf2MRA
+lkhEAHEzdyYVxIc7uqMBFuMh9X9WOlv8ySkgNyNgnMat/d5fHrSx4X2tyBMyR3Xq
+B9UkxlkbvSSjkKYsMmPYj8q5Rv3Hnqr9tgnxJYJ4fZF18nv8PeZnz1hsdEiZYxUz
+HDFrEPrxdLPu7dS6sbYdKUIIPLxfIcyxnv5l1T3rBeF9Ldwv9TxxUTJWR7kBDQRc
+BnXoAQgAyRLO7dO0DA0reOjvoydxE62/gEkMy3hX0D+eLFgBIIvaWyMwgnQR7Vjg
+4AlF62Pp0GYru1otsq6Za+cCK2j3ptLPeAgquT3J5MziPzG1lOtCHUHdDcd4wAXW
+p+0sOPaV/ilmf80ROyt8Ky2wtPZULHFRfdPObyUcdjjFbkRH//tDLVwnE8sqJVwJ
+DyeAkeVlG434Wtr9C+TDnO9sKOeTOB3yfZUEnAr460GmyrfR0tlskMqFF7AgPSGg
+jyez0tS5SVIaLZUL7hXUfthd4x0OOw9gm9jitqRx/HLRP/NrgZ59xqPcJMi5tI0y
+A7J5NZAAKdfZkpD+0BHED5I+wBpGUQARAQABiQE8BBgBCAAmFiEEc1x2fap6ddr/
+tht1jy9yDsZUoRMFAlwGdegCGwwFCQHhM4AACgkQjy9yDsZUoRPZWwf/f1C1afJ+
+FN0afFOpxxLGVjIL//O6z+w666nd+uNfFDHO1PDFUXQiU8u0KkxfjBF3FhKxjewZ
+kO+Nb4Dy6EvdvG5Hm2uU5sNE+FJ4b1h9Ue0Dg4kCe6ZGytCvy6/wP/TXlotejOq6
+US+F4VW6oyldXWjvwYHrTpDRZvza1nhqGypB9fsPGa3JbtvNNGcg+NMliE+YnxhF
+NbN6Dth7f9jLyw13/PtmHL5HZX0rU+vz7JuIW0nm2Zp7NosmfgPevMAF8S53BS9Y
+8vQjqkRcduLTTpArZeaPoXJBtYo5L1Ysn/dUV4xeZYIcxlrmKNGKEx28eXxZ579q
+LbbJ/5zeVzltzQ=3D=3D
+=3D5HUz
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------3023058A3D5DEC9AA46C31BC--
