@@ -1,74 +1,44 @@
 From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Subject: [PATCH v2 05/10] platform/x86: intel_pmc_core: Include Reserved IP for LTR
-Date: Wed, 13 Feb 2019 20:38:05 +0530
-Message-ID: <20190213150810.32750-6-rajneesh.bhardwaj@linux.intel.com>
+Subject: [PATCH v2 06/10] x86/cpu: Add Icelake to Intel family
+Date: Wed, 13 Feb 2019 20:38:06 +0530
+Message-ID: <20190213150810.32750-7-rajneesh.bhardwaj@linux.intel.com>
 References: <20190213150810.32750-1-rajneesh.bhardwaj@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190213150810.32750-1-rajneesh.bhardwaj@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Recently introduced commit "platform/x86: intel_pmc_core: Show Latency
-Tolerance info <51337cd94d18184601ac0fb4cf1a02b8bbabc3d7> skipped the
-LTR from a reserved IP. Though this doesn't cause any functional issue
-but it is needed for the consumers of "ltr_ignore" as the index printing
-for "ltr_show" is missing. For example, w/o this change, a user that wants
-to ignore LTR from ME would do something like
+Add CPUID of Icelake (ICL) mobile processors to Intel family list. The
+information related to ICL CPUID is referenced from below Coreboot
+project link.
 
-echo 5 > ltr_ignore
+https://github.com/coreboot/coreboot/blob/5ebcea3aaaa3cd358bc5bccaa156b13a6ef25df6/src/soc/intel/common/block/include/intelblocks/mp_init.h
 
-but the index for ME is 6. Printing a reserved IP helps to properly
-calculate LTR ignore offsets.
-
+Cc: x86@kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: "David E. Box" <david.e.box@intel.com>
 Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 ---
- drivers/platform/x86/intel_pmc_core.c | 2 ++
- drivers/platform/x86/intel_pmc_core.h | 2 ++
- 2 files changed, 4 insertions(+)
+ arch/x86/include/asm/intel-family.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 125461ca2927..835ed6d333bf 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -108,6 +108,7 @@ static const struct pmc_bit_map spt_ltr_show_map[] = {
- 	{"SATA",		SPT_PMC_LTR_SATA},
- 	{"GIGABIT_ETHERNET",	SPT_PMC_LTR_GBE},
- 	{"XHCI",		SPT_PMC_LTR_XHCI},
-+	{"Reserved",		SPT_PMC_LTR_RESERVED},
- 	{"ME",			SPT_PMC_LTR_ME},
- 	/* EVA is Enterprise Value Add, doesn't really exist on PCH */
- 	{"EVA",			SPT_PMC_LTR_EVA},
-@@ -276,6 +277,7 @@ static const struct pmc_bit_map cnp_ltr_show_map[] = {
- 	{"SATA",		CNP_PMC_LTR_SATA},
- 	{"GIGABIT_ETHERNET",	CNP_PMC_LTR_GBE},
- 	{"XHCI",		CNP_PMC_LTR_XHCI},
-+	{"Reserved",		CNP_PMC_LTR_RESERVED},
- 	{"ME",			CNP_PMC_LTR_ME},
- 	/* EVA is Enterprise Value Add, doesn't really exist on PCH */
- 	{"EVA",			CNP_PMC_LTR_EVA},
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 1a0104d2cbf0..0680ca397b57 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -46,6 +46,7 @@
- #define SPT_PMC_LTR_SATA			0x368
- #define SPT_PMC_LTR_GBE				0x36C
- #define SPT_PMC_LTR_XHCI			0x370
-+#define SPT_PMC_LTR_RESERVED			0x374
- #define SPT_PMC_LTR_ME				0x378
- #define SPT_PMC_LTR_EVA				0x37C
- #define SPT_PMC_LTR_SPC				0x380
-@@ -156,6 +157,7 @@ enum ppfear_regs {
- #define CNP_PMC_LTR_SATA			0x1B68
- #define CNP_PMC_LTR_GBE				0x1B6C
- #define CNP_PMC_LTR_XHCI			0x1B70
-+#define CNP_PMC_LTR_RESERVED			0x1B74
- #define CNP_PMC_LTR_ME				0x1B78
- #define CNP_PMC_LTR_EVA				0x1B7C
- #define CNP_PMC_LTR_SPC				0x1B80
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index d9a9993af882..9f15384c504a 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -52,6 +52,8 @@
+ 
+ #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
+ 
++#define INTEL_FAM6_ICELAKE_MOBILE	0x7E
++
+ /* "Small Core" Processors (Atom) */
+ 
+ #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
 -- 
 2.17.1
