@@ -1,44 +1,53 @@
 From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Subject: [PATCH v2 06/10] x86/cpu: Add Icelake to Intel family
-Date: Wed, 13 Feb 2019 20:38:06 +0530
-Message-ID: <20190213150810.32750-7-rajneesh.bhardwaj@linux.intel.com>
+Subject: [PATCH v2 07/10] platform/x86: intel_pmc_core: Convert to INTEL_CPU_FAM6 macro
+Date: Wed, 13 Feb 2019 20:38:07 +0530
+Message-ID: <20190213150810.32750-8-rajneesh.bhardwaj@linux.intel.com>
 References: <20190213150810.32750-1-rajneesh.bhardwaj@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190213150810.32750-1-rajneesh.bhardwaj@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: platform-driver-x86@vger.kernel.org
-Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add CPUID of Icelake (ICL) mobile processors to Intel family list. The
-information related to ICL CPUID is referenced from below Coreboot
-project link.
+INTEL_CPU_FAM6() macro provides better abstraction and reduces code size so use
+it instead of custom grown ICPU().
 
-https://github.com/coreboot/coreboot/blob/5ebcea3aaaa3cd358bc5bccaa156b13a6ef25df6/src/soc/intel/common/block/include/intelblocks/mp_init.h
-
-Cc: x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "David E. Box" <david.e.box@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 ---
- arch/x86/include/asm/intel-family.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/intel_pmc_core.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index d9a9993af882..9f15384c504a 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -52,6 +52,8 @@
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 835ed6d333bf..d3752d75075b 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -25,9 +25,6 @@
  
- #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
+ #include "intel_pmc_core.h"
  
-+#define INTEL_FAM6_ICELAKE_MOBILE	0x7E
-+
- /* "Small Core" Processors (Atom) */
+-#define ICPU(model, data) \
+-	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_MWAIT, (kernel_ulong_t)data }
+-
+ static struct pmc_dev pmc;
  
- #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
+ static const struct pmc_bit_map spt_pll_map[] = {
+@@ -738,11 +735,11 @@ static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+ #endif /* CONFIG_DEBUG_FS */
+ 
+ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+-	ICPU(INTEL_FAM6_SKYLAKE_MOBILE, &spt_reg_map),
+-	ICPU(INTEL_FAM6_SKYLAKE_DESKTOP, &spt_reg_map),
+-	ICPU(INTEL_FAM6_KABYLAKE_MOBILE, &spt_reg_map),
+-	ICPU(INTEL_FAM6_KABYLAKE_DESKTOP, &spt_reg_map),
+-	ICPU(INTEL_FAM6_CANNONLAKE_MOBILE, &cnp_reg_map),
++	INTEL_CPU_FAM6(SKYLAKE_MOBILE, spt_reg_map),
++	INTEL_CPU_FAM6(SKYLAKE_DESKTOP, spt_reg_map),
++	INTEL_CPU_FAM6(KABYLAKE_MOBILE, spt_reg_map),
++	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
++	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+ 	{}
+ };
+ 
 -- 
 2.17.1
