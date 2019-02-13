@@ -1,179 +1,164 @@
-From: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Subject: Re: [PATCH 08/10] platform/x86: intel_pmc_core: Add ICL platform
- support
-Date: Wed, 13 Feb 2019 20:47:18 +0530
-Message-ID: <49d30940-8520-b4a1-869b-00af8154e9fa@linux.intel.com>
-References: <20190201073234.13280-1-rajneesh.bhardwaj@linux.intel.com>
- <20190201073234.13280-9-rajneesh.bhardwaj@linux.intel.com>
- <20190212094318.GA8062@genxfsim-desktop>
- <CAHp75Ve+Sxes8Zb0AtZ81nJTjPsrKokDzOZnZxSe=C-k_Oo5MQ@mail.gmail.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v2 10/10] platform/x86: intel_pmc_core: Quirk to ignore
+ XTAL shutdown
+Date: Wed, 13 Feb 2019 15:21:03 +0000
+Message-ID: <939c9bf7f0f3443b8cea8b1af7418158@ausx13mpc120.AMER.DELL.COM>
+References: <20190213150810.32750-1-rajneesh.bhardwaj@linux.intel.com>
+ <20190213150810.32750-11-rajneesh.bhardwaj@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve+Sxes8Zb0AtZ81nJTjPsrKokDzOZnZxSe=C-k_Oo5MQ@mail.gmail.com>
+In-Reply-To: <20190213150810.32750-11-rajneesh.bhardwaj@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Anshuman Gupta <anshuman.gupta@intel.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: rajneesh.bhardwaj@linux.intel.com, platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 
-On 12-Feb-19 3:48 PM, Andy Shevchenko wrote:
-> On Tue, Feb 12, 2019 at 11:46 AM Anshuman Gupta
-> <anshuman.gupta@intel.com> wrote:
->> On Fri, Feb 01, 2019 at 01:02:32PM +0530, Rajneesh Bhardwaj wrote:
->>> Icelake can resue most of the CNL PCH IPs as they are mostly similar.
->>> This patch enables the PMC Core driver for ICL family.
->>>
->>> It also addresses few other minor issues like upper case conversions and
->>> some tab alignments.
->>>
->>> Cc: "David E. Box" <david.e.box@intel.com>
->>> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
->>> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
->>    Acked-and-tested-by: <anshuman.gupta@intel.com>
-> Thanks.
->
-> Can you clarify what patches had been tested?
-> As far as I can understand you can't test this one before applying
-> previous seven patches.
->
-> Rajneesh, when you will be about to send the rest, don't forget to
-> append the received tags.
 
-Sure Andy. I have sent the v2, incorporating tags and other suggestions 
-that came over last two weeks.
+> -----Original Message-----
+> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
+> owner@vger.kernel.org> On Behalf Of Rajneesh Bhardwaj
+> Sent: Wednesday, February 13, 2019 9:08 AM
+> To: platform-driver-x86@vger.kernel.org
+> Cc: dvhart@infradead.org; andy@infradead.org; linux-kernel@vger.kernel.or=
+g;
+> Rajneesh Bhardwaj
+> Subject: [PATCH v2 10/10] platform/x86: intel_pmc_core: Quirk to ignore X=
+TAL
+> shutdown
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> On some platforms such as HP Elite-x2-1013-g3, the platform BIOS
+> enforces XTAL to remain off before S0ix state can be achieved. This may
+> not be optimum when we want to enable use cases like Low Power Audio,
+> Wake on Voice etc which always need 24mhz clock.
+>=20
+> This introduces a new quirk to allow S0ix entry when all other
+> conditions except for XTAL clock are good on a given platform. The extra
+> power consumed by XTAL clock is about 2mw but it saves much more
+> platform power compared to the system that remains in just PC10.
+>=20
 
+I wonder are there really any use cases for 24 mhz clock "needing" to stay
+enabled on Linux over a S0ix cycle and factor into the S0ix state decision?
 
->
->>> ---
->>>   drivers/platform/x86/intel_pmc_core.c | 59 +++++++++++++++++++++------
->>>   drivers/platform/x86/intel_pmc_core.h |  4 ++
->>>   2 files changed, 50 insertions(+), 13 deletions(-)
->>>
->>> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
->>> index d3752d75075b..400946b7a3b5 100644
->>> --- a/drivers/platform/x86/intel_pmc_core.c
->>> +++ b/drivers/platform/x86/intel_pmc_core.c
->>> @@ -166,25 +166,26 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
->>>        {"SDX",                 BIT(4)},
->>>        {"SPE",                 BIT(5)},
->>>        {"Fuse",                BIT(6)},
->>> -     {"Res_23",              BIT(7)},
->>> +     /* Reserved for Cannonlake but valid for Icelake */
->>> +     {"SBR8",                BIT(7)},
->>>
->>>        {"CSME_FSC",            BIT(0)},
->>>        {"USB3_OTG",            BIT(1)},
->>>        {"EXI",                 BIT(2)},
->>>        {"CSE",                 BIT(3)},
->>> -     {"csme_kvm",            BIT(4)},
->>> -     {"csme_pmt",            BIT(5)},
->>> -     {"csme_clink",          BIT(6)},
->>> -     {"csme_ptio",           BIT(7)},
->>> -
->>> -     {"csme_usbr",           BIT(0)},
->>> -     {"csme_susram",         BIT(1)},
->>> -     {"csme_smt1",           BIT(2)},
->>> +     {"CSME_KVM",            BIT(4)},
->>> +     {"CSME_PMT",            BIT(5)},
->>> +     {"CSME_CLINK",          BIT(6)},
->>> +     {"CSME_PTIO",           BIT(7)},
->>> +
->>> +     {"CSME_USBR",           BIT(0)},
->>> +     {"CSME_SUSRAM",         BIT(1)},
->>> +     {"CSME_SMT1",           BIT(2)},
->>>        {"CSME_SMT4",           BIT(3)},
->>> -     {"csme_sms2",           BIT(4)},
->>> -     {"csme_sms1",           BIT(5)},
->>> -     {"csme_rtc",            BIT(6)},
->>> -     {"csme_psf",            BIT(7)},
->>> +     {"CSME_SMS2",           BIT(4)},
->>> +     {"CSME_SMS1",           BIT(5)},
->>> +     {"CSME_RTC",            BIT(6)},
->>> +     {"CSME_PSF",            BIT(7)},
->>>
->>>        {"SBR0",                BIT(0)},
->>>        {"SBR1",                BIT(1)},
->>> @@ -209,6 +210,20 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
->>>        {"HDA_PGD4",            BIT(2)},
->>>        {"HDA_PGD5",            BIT(3)},
->>>        {"HDA_PGD6",            BIT(4)},
->>> +     /* Reserved for Cannonlake but valid for Icelake */
->>> +     {"PSF6",                BIT(5)},
->>> +     {"PSF7",                BIT(6)},
->>> +     {"PSF8",                BIT(7)},
->>> +
->>> +     /* Icelake generation onwards only */
->>> +     {"RES_65",              BIT(0)},
->>> +     {"RES_66",              BIT(1)},
->>> +     {"RES_67",              BIT(2)},
->>> +     {"TAM",                 BIT(3)},
->>> +     {"GBETSN",              BIT(4)},
->>> +     {"TBTLSX",              BIT(5)},
->>> +     {"RES_71",              BIT(6)},
->>> +     {"RES_72",              BIT(7)},
->>>        {}
->>>   };
->>>
->>> @@ -290,6 +305,8 @@ static const struct pmc_bit_map cnp_ltr_show_map[] = {
->>>        {"ISH",                 CNP_PMC_LTR_ISH},
->>>        {"UFSX2",               CNP_PMC_LTR_UFSX2},
->>>        {"EMMC",                CNP_PMC_LTR_EMMC},
->>> +     /* Reserved for Cannonlake but valid for Icelake */
->>> +     {"WIGIG",               ICL_PMC_LTR_WIGIG},
->>>        /* Below two cannot be used for LTR_IGNORE */
->>>        {"CURRENT_PLATFORM",    CNP_PMC_LTR_CUR_PLT},
->>>        {"AGGREGATED_SYSTEM",   CNP_PMC_LTR_CUR_ASLT},
->>> @@ -311,6 +328,21 @@ static const struct pmc_reg_map cnp_reg_map = {
->>>        .ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
->>>   };
->>>
->>> +static const struct pmc_reg_map icl_reg_map = {
->>> +     .pfear_sts = cnp_pfear_map,
->>> +     .slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
->>> +     .slps0_dbg_maps = cnp_slps0_dbg_maps,
->>> +     .ltr_show_sts = cnp_ltr_show_map,
->>> +     .slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
->>> +     .ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
->>> +     .regmap_length = CNP_PMC_MMIO_REG_LEN,
->>> +     .ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
->>> +     .ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
->>> +     .pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
->>> +     .pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
->>> +     .ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
->>> +};
->>> +
->>>   static inline u8 pmc_core_reg_read_byte(struct pmc_dev *pmcdev, int offset)
->>>   {
->>>        return readb(pmcdev->regbase + offset);
->>> @@ -740,6 +772,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
->>>        INTEL_CPU_FAM6(KABYLAKE_MOBILE, spt_reg_map),
->>>        INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
->>>        INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
->>> +     INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
->>>        {}
->>>   };
->>>
->>> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
->>> index 0680ca397b57..78dd4229489d 100644
->>> --- a/drivers/platform/x86/intel_pmc_core.h
->>> +++ b/drivers/platform/x86/intel_pmc_core.h
->>> @@ -178,6 +178,10 @@ enum ppfear_regs {
->>>   #define LTR_REQ_SNOOP                                BIT(15)
->>>   #define LTR_REQ_NONSNOOP                     BIT(31)
->>>
->>> +#define ICL_PPFEAR_NUM_ENTRIES                       9
->>> +#define ICL_NUM_IP_IGN_ALLOWED                       20
->>> +#define ICL_PMC_LTR_WIGIG                    0x1BFC
->>> +
->>>   struct pmc_bit_map {
->>>        const char *name;
->>>        u32 bit_mask;
->>> --
->>> 2.17.1
->>>
->> --
->
->
+Is it perhaps better to set this as default behavior and quirk situations t=
+hat it
+may not be needed.
+
+> Link: https://bit.ly/2UmnrFf
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D201579
+> Tested-by: "David E. Box" <david.e.box@linux.intel.com>
+> Reported-and-tested-by: russianneuromancer <russianneuromancer@ya.ru>
+> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_pmc_core.c | 34 +++++++++++++++++++++++++++
+>  drivers/platform/x86/intel_pmc_core.h |  5 ++++
+>  2 files changed, 39 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/intel_pmc_core.c
+> b/drivers/platform/x86/intel_pmc_core.c
+> index 4e7aa1711148..a27574e3e868 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+> +#include <linux/dmi.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> @@ -151,6 +152,7 @@ static const struct pmc_reg_map spt_reg_map =3D {
+>  	.pm_cfg_offset =3D SPT_PMC_PM_CFG_OFFSET,
+>  	.pm_read_disable_bit =3D SPT_PMC_READ_DISABLE_BIT,
+>  	.ltr_ignore_max =3D SPT_NUM_IP_IGN_ALLOWED,
+> +	.pm_vric1_offset =3D SPT_PMC_VRIC1_OFFSET,
+>  };
+>=20
+>  /* Cannonlake: PGD PFET Enable Ack Status Register(s) bitmap */
+> @@ -821,6 +823,37 @@ static const struct pci_device_id pmc_pci_ids[] =3D =
+{
+>  	{ 0, },
+>  };
+>=20
+> +/*
+> + * This quirk can be used on those platforms where
+> + * the platform BIOS enforces 24Mhx Crystal to shutdown
+> + * before PMC can assert SLP_S0#.
+> + */
+> +int quirk_xtal_ignore(const struct dmi_system_id *id)
+> +{
+> +	struct pmc_dev *pmcdev =3D &pmc;
+> +	u32 value;
+> +
+> +	value =3D pmc_core_reg_read(pmcdev, pmcdev->map->pm_vric1_offset);
+> +	/* 24MHz Crystal Shutdown Qualification Disable */
+> +	value |=3D SPT_PMC_VRIC1_XTALSDQDIS;
+> +	/* Low Voltage Mode Enable */
+> +	value &=3D ~SPT_PMC_VRIC1_SLPS0LVEN;
+> +	pmc_core_reg_write(pmcdev, pmcdev->map->pm_vric1_offset, value);
+> +	return 0;
+> +}
+> +
+> +static const struct dmi_system_id pmc_core_dmi_table[]  =3D {
+> +	{
+> +	.callback =3D quirk_xtal_ignore,
+> +	.ident =3D "HP Elite x2 1013 G3",
+> +	.matches =3D {
+> +		DMI_MATCH(DMI_SYS_VENDOR, "HP"),
+> +		DMI_MATCH(DMI_PRODUCT_NAME, "HP Elite x2 1013 G3"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +
+>  static int __init pmc_core_probe(void)
+>  {
+>  	struct pmc_dev *pmcdev =3D &pmc;
+> @@ -862,6 +895,7 @@ static int __init pmc_core_probe(void)
+>  		return err;
+>  	}
+>=20
+> +	dmi_check_system(pmc_core_dmi_table);
+>  	pr_info(" initialized\n");
+>  	return 0;
+>  }
+> diff --git a/drivers/platform/x86/intel_pmc_core.h
+> b/drivers/platform/x86/intel_pmc_core.h
+> index 6f1b64808075..88d9c0653a5f 100644
+> --- a/drivers/platform/x86/intel_pmc_core.h
+> +++ b/drivers/platform/x86/intel_pmc_core.h
+> @@ -25,6 +25,7 @@
+>  #define SPT_PMC_MTPMC_OFFSET			0x20
+>  #define SPT_PMC_MFPMC_OFFSET			0x38
+>  #define SPT_PMC_LTR_IGNORE_OFFSET		0x30C
+> +#define SPT_PMC_VRIC1_OFFSET			0x31c
+>  #define SPT_PMC_MPHY_CORE_STS_0			0x1143
+>  #define SPT_PMC_MPHY_CORE_STS_1			0x1142
+>  #define SPT_PMC_MPHY_COM_STS_0			0x1155
+> @@ -136,6 +137,9 @@ enum ppfear_regs {
+>  #define SPT_PMC_BIT_MPHY_CMN_LANE2		BIT(2)
+>  #define SPT_PMC_BIT_MPHY_CMN_LANE3		BIT(3)
+>=20
+> +#define SPT_PMC_VRIC1_SLPS0LVEN			BIT(13)
+> +#define SPT_PMC_VRIC1_XTALSDQDIS		BIT(22)
+> +
+>  /* Cannonlake Power Management Controller register offsets */
+>  #define CNP_PMC_SLPS0_DBG_OFFSET		0x10B4
+>  #define CNP_PMC_PM_CFG_OFFSET			0x1818
+> @@ -224,6 +228,7 @@ struct pmc_reg_map {
+>  	const int pm_read_disable_bit;
+>  	const u32 slps0_dbg_offset;
+>  	const u32 ltr_ignore_max;
+> +	const u32 pm_vric1_offset;
+>  };
+>=20
+>  /**
+> --
+> 2.17.1
