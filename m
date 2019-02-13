@@ -1,43 +1,50 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2 06/10] x86/cpu: Add Icelake to Intel family
-Date: Wed, 13 Feb 2019 18:18:55 +0100
-Message-ID: <20190213171855.GD1883@zn.tnic>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 00/10] ICL support and other enhancements for PMC Core
+Date: Wed, 13 Feb 2019 19:28:01 +0200
+Message-ID: <CAHp75VdH8G+FfvznZePEG1F5A1Eyh8XF=a-MqpNooLWnBbP+gA@mail.gmail.com>
 References: <20190213150810.32750-1-rajneesh.bhardwaj@linux.intel.com>
- <20190213150810.32750-7-rajneesh.bhardwaj@linux.intel.com>
- <20190213152326.GA1883@zn.tnic>
- <308aa852-b2c3-3336-707f-d54de6ad77b7@linux.intel.com>
- <20190213160405.GC1883@zn.tnic>
- <d1d8a2fb-f8f9-7712-d53f-fac4bb2065a8@linux.intel.com>
- <46ad3b08-b96b-6ef2-a5e4-fb0865865916@intel.com>
- <1836a770-86ce-fc34-f7fd-6d1692fa184a@linux.intel.com>
+ <CAHp75VeTwjbdjAXPZfB5B7oataarjG0epV1SzokdYnCj8xcPhA@mail.gmail.com> <63bb8cc7-4feb-f69c-33be-ba5308c441d1@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1836a770-86ce-fc34-f7fd-6d1692fa184a@linux.intel.com>
+In-Reply-To: <63bb8cc7-4feb-f69c-33be-ba5308c441d1@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, platform-driver-x86@vger.kernel.org, dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Feb 13, 2019 at 10:43:30PM +0530, Bhardwaj, Rajneesh wrote:
-> Hi Borislav, I realize that the link i mentioned is not public. Apologies
-> for creating confusion around that and for the previous top posting.  I will
-> drop references to the coreboot link too in the next version.
+On Wed, Feb 13, 2019 at 5:50 PM Bhardwaj, Rajneesh
+<rajneesh.bhardwaj@linux.intel.com> wrote:
+> On 13-Feb-19 9:03 PM, Andy Shevchenko wrote:
+> > On Wed, Feb 13, 2019 at 5:08 PM Rajneesh Bhardwaj
+> > <rajneesh.bhardwaj@linux.intel.com> wrote:
+> >> This patch series provides Icelake support for PMC Core driver and while
+> >> doing so it introduces the Icelake Mobile to intel-family.h as per the
+> >> CPUID from below Coreboot link
+> >> https://github.com/coreboot/coreboot/blob/5ebcea3aaaa3cd358bc5bccaa156b13a6ef25df6/src/soc/intel/common/block/include/intelblocks/mp_init.h
+> >> and provides some fixes and enhancements to the driver.
+> > It's not applicable to my tree.
+>
+> Hi Andy,  I could apply and test in on latest upstream so i think its
+> probably because you have applied 5 patches from v1 on your tree.
+> https://github.com/dvhart/linux-pdx86/commits/for-next
 
-As we talked on IRC with Dave, those patches don't need to point to an
-official document.
+You need to use latest tip of the subsystem tree always.
 
-If the model number is wrong, we'll learn very soon about it. :-)
+> I sent the whole series again since
+> https://patchwork.kernel.org/patch/10791893 referred to a wrong commit
+> for Fixes:. If you want to address that by rebasing then can you please
+> just consider patches 6-10.
 
-If it is a patchset enabling a feature or an erratum, then this becomes
-a whole different story.
+We don't do rebasing for published changes. Only in rear cases when
+otherwise would be worse.
+Darren didn't respond to my question what he thinks about this case,
+but at least it's not related to the code itself which, in my opinion,
+decreases a severity.
 
-Thx.
+> Please let me know if there is any other issue?
+
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+With Best Regards,
+Andy Shevchenko
