@@ -1,68 +1,78 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: APUv2/v3 board support V2
-Date: Thu, 14 Feb 2019 04:17:07 +0200
-Message-ID: <CAHp75VeZSrxoxd298eFiJj-N_MRsCXa2GEAXry5jCUi6twt_Xg@mail.gmail.com>
-References: <1550091448-28578-1-git-send-email-info@metux.net>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Re: [PATCH 1/2] x86: gpio: AMD G-Series pch gpio platform driver
+Date: Thu, 14 Feb 2019 10:53:04 +0100
+Message-ID: <6f723c65-be90-132d-e714-616a21149fe0@metux.net>
+References: <1549588593-4856-1-git-send-email-lkml@metux.net>
+ <CACRpkdaSEZMR7LuLbO1V0k9QEBu4FWxFbq4ZL1pE9dAvNT1z_Q@mail.gmail.com>
+ <f751539b-d844-9ab1-169b-ce6aa0056de6@metux.net>
+ <CACRpkdbvY1FiqmBHj74x4H9XX8SZW7voTMfj5jq-as73_B071Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550091448-28578-1-git-send-email-info@metux.net>
+In-Reply-To: <CACRpkdbvY1FiqmBHj74x4H9XX8SZW7voTMfj5jq-as73_B071Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Enrico Weigelt, metux IT consult" <info@metux.net>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Feb 13, 2019 at 10:57 PM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
->
-> Hi folks,
->
->
-> this is version 2 of my APUv2/APUv3 series. Heavily reworked,
-> hope I've now addressed all issues of the last one.
+On 13.02.19 10:02, Linus Walleij wrote:
 
-Thanks!
-It looks indeed better.
+Hi,
 
-I dunno how you created this message, I hope you used --cover-letter
-parameter to git-format-patch.
-Just don't forget to add -v<N>, where <N> is version.
+> What we normally do is expose all the lines from a gpio chip> as kernel abstraction.> > This is because at least in theory this chip
+can be used by> several boards.
+I'm afraid it's a bit more complicated. The register set doesn't
+seem to be linear. I have absolutely no idea what the undocumented
+registers do. For the sake of security, I would hate to see them
+accessible from userland.
 
-Also makes sense to do --thread to put proper references to emails.
+> The chip abstraction does have facilities for masking off
+> unavailable lines: in struct gpio_chip there is .valid_mask
+> and even a callback .init_valid_mask() to set it up.
 
-> Major changes are:
->  * using gpiod_lookup_table instead of hardcoded gpio numbers
->  * moved the PCHs gpio register definitions to the gpio drivers'
->    header (but keeping the actual assignments in the board driver,
->    as they're board speficic)
->  * moved IO resource definition from board to gpio driver
->    (the FCHs mmio base address could be changed, but nobody
->    seems to ever do it)
->  * added gpio line names
->  * moved the gpio driver's pdata definitions to::
->    include/linux/platform_data/gpio/gpio-amd-fch.h
->  * reduced some code redundancies and various cleanups
->
-> Possibly debatable:
->  * does is the assigned key code fit well ? (KEY_SETUP seemed the
->    best candidate to me, but I'm open to suggestions)
->  * should the pch gpio become a sub-device of some toplevel PCH
->    device ? (which then could also maintain the base address, etc)
->
-> Note: the keyboard device needs separate patch for gpiod_lookup_table
-> support in gpio-keys-polled driver. I'll sent it separately.
->
->
-> --mtx
->
->
-> --
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
+Okay, but then again I'd need to pass this from the board
+driver into the gpio driver. Feels much easier and safer to
+just pass the registers.
+
+What I perhaps could do: add all documented registers as gpio's
+in the gpio driver and make the board driver a dummy consumer
+for the unused ones.
+
+> So this is what you should use to make existing lines
+> unavailable, do not try to hide them by not exposing
+> registers or line offsets. The abstraction should model
+> the hardware, not the usecase.
+
+According to my information, it is the hardware who dictates that
+non-linear layout. Even the PIN naming is non-linear. And I don't
+like to see this passed to upper layers, or even userland. So,
+at least the gpio driver should only serve the documented gpios
+and present them lineary.
+
+Maybe the holes in the register set are technically also gpios,
+but used by some internal logic and not properly masked out in
+hw - really weird things (possibly damage) could happen.
+
+> FYI there are tons of systems out there that expose a
+> whole range of GPIOs that the developer have no clue
+> where they are connected on the PCB, the most common
+> case is that they are not connected (sometimes not
+> even leaving the chip die) or go to test points. They are
+> very seldom dangerous, in fact I've never seen dangerous
+> GPIOs, just dangerous set-ups of pins already known
+> to be in use for something.
+
+Can't speak about standard ICs/SoCs, but i've seen such things
+in some of my client's fpga designs. For example incomplete
+decoders, gpios attached to internal state machines, etc, etc
+So, I've learned to be *very* cautious with undocumented registers.
 
 
+--mtx
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
