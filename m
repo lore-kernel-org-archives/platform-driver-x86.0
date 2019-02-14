@@ -1,35 +1,77 @@
-From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: Re: APUv2/v3 board support V2
-Date: Thu, 14 Feb 2019 16:04:55 +0100
-Message-ID: <0f952b25-9ba9-b2cb-381b-d51e195e8378@metux.net>
-References: <1550091448-28578-1-git-send-email-info@metux.net>
- <CAHp75VeZSrxoxd298eFiJj-N_MRsCXa2GEAXry5jCUi6twt_Xg@mail.gmail.com>
- <fadb3559-d397-04c9-1bdd-e4d625cce278@metux.net>
- <CAHp75VeL8Z1EE=vh6VG18ecDxp9Zq4XKmnxc=PHZnNxKqc_BMg@mail.gmail.com>
+From: Liming Sun <lsun@mellanox.com>
+Subject: RE: [PATCH v9] platform/mellanox: Add TmFifo driver for Mellanox
+ BlueField Soc
+Date: Thu, 14 Feb 2019 16:25:18 +0000
+Message-ID: <DB6PR05MB3223807EED81DC23B5CC7B06A1670@DB6PR05MB3223.eurprd05.prod.outlook.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+ <1550064437-1363-1-git-send-email-lsun@mellanox.com>
+ <CAHp75VeasVqg0MJ9_WSGLocd16m1iu32xHd9KYvNu0+kQ9MfVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeL8Z1EE=vh6VG18ecDxp9Zq4XKmnxc=PHZnNxKqc_BMg@mail.gmail.com>
+In-Reply-To: <CAHp75VeasVqg0MJ9_WSGLocd16m1iu32xHd9KYvNu0+kQ9MfVA@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Enrico Weigelt, metux IT consult" <info@metux.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Cc: David Woods <dwoods@mellanox.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 14.02.19 13:33, Andy Shevchenko wrote:
-
-> It's there from several releases. But it's not a send-email option,
-> it's format-patch one.
-> send-email passes those commands to format-patch.
-
-oh, wasn't aware of that.
-thx.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+VGhhbmtzIEFuZHkuIFBsZWFzZSBzZWUgbXkgcmVzcG9uc2UgYW5kIHF1ZXN0aW9ucyBvbiBzb21l
+IG9mIHRoZSBjb21tZW50cyBiZWxvdy4NCg0KUmVnYXJkcywNCkxpbWluZw0KDQo+IC0tLS0tT3Jp
+Z2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hl
+bmtvQGdtYWlsLmNvbT4NCj4gU2VudDogV2VkbmVzZGF5LCBGZWJydWFyeSAxMywgMjAxOSAxOjEx
+IFBNDQo+IFRvOiBMaW1pbmcgU3VuIDxsc3VuQG1lbGxhbm94LmNvbT4NCj4gQ2M6IERhdmlkIFdv
+b2RzIDxkd29vZHNAbWVsbGFub3guY29tPjsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVh
+ZC5vcmc+OyBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBWYWRpbQ0KPiBQYXN0
+ZXJuYWsgPHZhZGltcEBtZWxsYW5veC5jb20+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgUGxhdGZvcm0gRHJpdmVyIDxwbGF0Zm9ybS1k
+cml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjld
+IHBsYXRmb3JtL21lbGxhbm94OiBBZGQgVG1GaWZvIGRyaXZlciBmb3IgTWVsbGFub3ggQmx1ZUZp
+ZWxkIFNvYw0KPiANCj4gT24gV2VkLCBGZWIgMTMsIDIwMTkgYXQgMzoyNyBQTSBMaW1pbmcgU3Vu
+IDxsc3VuQG1lbGxhbm94LmNvbT4gd3JvdGU6DQo+ID4NCj4gLi4uDQo+IA0KPiA+ICsvKiBVc2Ug
+YSB1bmlvbiBzdHJ1Y3Rpb24gZm9yIDY0LWJpdCBsaXR0bGUvYmlnIGVuZGlhbi4gKi8NCj4gDQo+
+IFdoYXQgZG9lcyB0aGlzIG1lYW4/DQo+IA0KPiA+ICt1bmlvbiBtbHhiZl90bWZpZm9fZGF0YV82
+NGJpdCB7DQo+ID4gKyAgICAgICB1NjQgZGF0YTsNCj4gPiArICAgICAgIF9fbGU2NCBkYXRhX2xl
+Ow0KPiA+ICt9Ow0KDQpUaGUgcHVycG9zZSBpcyB0byBzZW5kIDggYnl0ZXMgaW50byB0aGUgRklG
+TyB3aXRob3V0IGRhdGEgY2FzdGluZyBpbiB3cml0ZXEoKS4NCg0KQmVsb3cgaXMgdGhlIGV4YW1w
+bGUgd2l0aCB0aGUgY2FzdC4NCg0KdTY0IGRhdGEgPSAweDEyMzQ7DQpfX2xlNjQgZGF0YV9sZTsN
+CmRhdGFfbGUgPSBjcHVfdG9fbGU2NChkYXRhKQ0Kd3JpdGVxKCoodTY0ICopJmRhdGFfbGUsIGZp
+Zm8tPnR4X2Jhc2UgKyBNTFhCRl9UTUZJRk9fVFhfREFUQSk7DQoNCkJlbG93IGlzIHRoZSBhbHRl
+cm5hdGl2ZSB0cnlpbmcgdG8gdXNlIHVuaW9uIHRvIGF2b2lkIHRoZSBjYXN0Lg0KDQptbHhiZl90
+bWZpZm9fZGF0YV82NGJpdCB1Ow0KdS5kYXRhID0gMHgxMjM0Ow0KdS4gZGF0YV9sZSA9IGNwdV90
+b19sZTY0KHUuZGF0YSk7DQp3cml0ZXEodS5kYXRhX2xlLCBmaWZvLT50eF9iYXNlICsgTUxYQkZf
+VE1GSUZPX1RYX0RBVEEpOw0KDQpXaGljaCB3YXkgbWlnaHQgYmUgYmV0dGVyIG9yIGFueSBvdGhl
+ciBzdWdnZXN0aW9ucz8NCg0KPiA+ICsNCj4gPiArLyogTWVzc2FnZSBoZWFkZXIgdXNlZCB0byBk
+ZW11eCBkYXRhIGluIHRoZSBUbUZpZm8uICovDQo+ID4gK3VuaW9uIG1seGJmX3RtZmlmb19tc2df
+aGRyIHsNCj4gPiArICAgICAgIHN0cnVjdCB7DQo+ID4gKyAgICAgICAgICAgICAgIHU4IHR5cGU7
+ICAgICAgICAgICAgICAgIC8qIG1lc3NhZ2UgdHlwZSAqLw0KPiA+ICsgICAgICAgICAgICAgICBf
+X2JlMTYgbGVuOyAgICAgICAgICAgICAvKiBwYXlsb2FkIGxlbmd0aCAqLw0KPiA+ICsgICAgICAg
+ICAgICAgICB1OCB1bnVzZWRbNV07ICAgICAgICAgICAvKiByZXNlcnZlZCwgc2V0IHRvIDAgKi8N
+Cj4gPiArICAgICAgIH0gX19wYWNrZWQ7DQo+IA0KPiBJdCdzIGFscmVhZHkgcGFja2VkLiBObz8N
+Cg0KVGhlICdfX3BhY2tlZCcgaXMgbmVlZGVkIGhlcmUuIFdpdGhvdXQgaXQgdGhlIGNvbXBpbGVy
+IHdpbGwgbWFrZSB0aGUNCnN0cnVjdHVyZSBzaXplIGV4Y2VlZGluZyA4IGJ5dGVzIHdoaWNoIGlz
+IG5vdCBkZXNpcmVkLg0KDQo+Li4uDQo+ID4gKyAgICAgICBpZiAodmRldl9pZCA9PSBWSVJUSU9f
+SURfQ09OU09MRSkNCj4gDQo+ID4gKyAgICAgICAgICAgICAgIHRtX3ZkZXYtPnR4X2J1ZiA9IGRl
+dm1fa21hbGxvYyhkZXYsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBNTFhCRl9UTUZJRk9fQ09OU19UWF9CVUZfU0laRSwNCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEdGUF9LRVJORUwpOw0KPiANCj4g
+QXJlIHlvdSBzdXJlIGRldm1fIHN1aXRzIGhlcmU/DQoNClRoZSAndHhfYnVmJyBhcmUgbm9ybWFs
+IGJ1ZmZlciB0byBob2xkIHRoZSBjb25zb2xlIG91dHB1dC4gDQpJdCBzZWVtcyBvayB0byB1c2Ug
+ZGV2bV9rbWFsbG9jIHNvIGl0IGNvdWxkIGF1dG9tYXRpY2FsbHkgZnJlZWQNCm9uIGRyaXZlciBk
+ZXRhY2guIFBsZWFzZSBjb3JyZWN0IG1lIGlmIEkgYW0gd3JvbmcuDQoNCj4+Li4uDQo+ID4gKw0K
+PiA+ICsgICAgICAgZmlmby0+dHhfYmFzZSA9IGRldm1faW9yZW1hcCgmcGRldi0+ZGV2LCB0eF9y
+ZXMtPnN0YXJ0LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNv
+dXJjZV9zaXplKHR4X3JlcykpOw0KPiA+ICsgICAgICAgaWYgKCFmaWZvLT50eF9iYXNlKQ0KPiA+
+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4gDQo+IFN3aXRjaCB0byBkZXZtX2lv
+cmVtYXBfcmVzb3VyY2UoKS4NCj4gSG93ZXZlciwgSSB0aGluayB5b3UgcHJvYmFibHkgbmVlZCBt
+ZW1yZW1hcCgpLg0KDQpUaGlzIGlzIGRldmljZSByZWdpc3RlcnMgYWNjZXNzZWQgYnkgYXJtNjQg
+Y29yZS4NCkluIGFybTY0L2luY2x1ZGUvYXNtL2lvLmgsIHNldmVyYWwgYXBpcyBhcmUgZGVmaW5l
+ZCB0aGUgc2FtZS4NCg0KI2RlZmluZSBpb3JlbWFwKGFkZHIsIHNpemUpCQlfX2lvcmVtYXAoKGFk
+ZHIpLCAoc2l6ZSksIF9fcGdwcm90KFBST1RfREVWSUNFX25HblJFKSkNCiNkZWZpbmUgaW9yZW1h
+cF9ub2NhY2hlKGFkZHIsIHNpemUpCV9faW9yZW1hcCgoYWRkciksIChzaXplKSwgX19wZ3Byb3Qo
+UFJPVF9ERVZJQ0VfbkduUkUpKQ0KI2RlZmluZSBpb3JlbWFwX3d0KGFkZHIsIHNpemUpCQlfX2lv
+cmVtYXAoKGFkZHIpLCAoc2l6ZSksIF9fcGdwcm90KFBST1RfREVWSUNFX25HblJFKSkNCg0KSG93
+IGFib3V0IHVzaW5nIGRldm1faW9yZW1hcF9ub2NhY2hlKCk/DQpJdCBjb3VsZCB0YWtlIGFkdmFu
+dGFnZSBvZiB0aGUgZGV2bV94eCgpIGFwaS4NCg0KPi4uLg0KPiBJcyBpdCBjb3JyZWN0Pw0KPiAN
+Cj4gLS0NCj4gV2l0aCBCZXN0IFJlZ2FyZHMsDQo+IEFuZHkgU2hldmNoZW5rbw0K
