@@ -1,37 +1,46 @@
-From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: Re: APUv2/v3 board support V2
-Date: Thu, 14 Feb 2019 12:37:29 +0100
-Message-ID: <fadb3559-d397-04c9-1bdd-e4d625cce278@metux.net>
-References: <1550091448-28578-1-git-send-email-info@metux.net>
- <CAHp75VeZSrxoxd298eFiJj-N_MRsCXa2GEAXry5jCUi6twt_Xg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Subject: [PATCH v3 0/5] ICL support and other enhancements for PMC Core
+Date: Thu, 14 Feb 2019 17:27:07 +0530
+Message-ID: <20190214115712.19642-1-rajneesh.bhardwaj@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeZSrxoxd298eFiJj-N_MRsCXa2GEAXry5jCUi6twt_Xg@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: dvhart@infradead.org, andy@infradead.org, linux-kernel@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 14.02.19 03:17, Andy Shevchenko wrote:
+Changes in v3:
+ * Dropped reference to coreboot project as suggested by Thomas and Boris.
+ * Rebased onto "for-next" branch of pdx86 tree and dropped previously
+   accepted five patches from v2 of this series since they are already
+   present there.
+ * Fixed checkpatch complains about 75 char limit for commit messages.
 
-Hi,
+Changes in v2:
+ * Addressed review comments from Thomas
+ * Added tags revieved
+ * Folded in SHA1 suggestions from Stephen Rothwell, though Andy might
+   want to fix it via rebasing
+ * Rebased and tested with Linux v5.0.0-rc6
 
-> I dunno how you created this message, I hope you used --cover-letter
-> parameter to git-format-patch.
-
-I'm using: git send-email --compose <...>
-
-> Just don't forget to add -v<N>, where <N> is version.
-
-hmm, git send-email doesn't seem to have a corresponding flag :(
+This series:
+ - Adds ICL U/Y CPUID to intel-family.h
+ - Enables PMC driver for ICL 
+ - Introduces a new "package cstate show" feature
+ - Fixes a customer issue related to S0ix on latest HP laptops
+ - Fixes some minor bugs  
 
 
---mtx
+Rajneesh Bhardwaj (5):
+  x86/cpu: Add Icelake to Intel family
+  platform/x86: intel_pmc_core: Convert to INTEL_CPU_FAM6 macro
+  platform/x86: intel_pmc_core: Add ICL platform support
+  platform/x86: intel_pmc_core: Add Package cstates residency info
+  platform/x86: intel_pmc_core: Quirk to ignore XTAL shutdown
+
+ arch/x86/include/asm/intel-family.h   |   2 +
+ drivers/platform/x86/intel_pmc_core.c | 144 ++++++++++++++++++++++----
+ drivers/platform/x86/intel_pmc_core.h |  10 ++
+ 3 files changed, 135 insertions(+), 21 deletions(-)
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.17.1
