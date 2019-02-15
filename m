@@ -1,52 +1,57 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: APUv2/v3 board support V3
-Date: Fri, 15 Feb 2019 20:16:00 +0200
-Message-ID: <CAHp75VfgzGQ7O-AjwQ1R=OZTiRwxRx_q9Yo1MOVjko7D-Wz14w@mail.gmail.com>
-References: <1550091448-28578-1-git-send-email-info@metux.net> <1550181897-2596-1-git-send-email-info@metux.net>
+Subject: Re: [PATCH] platform/x86: dell_rbu: fix lock imbalance in img_update_realloc
+Date: Fri, 15 Feb 2019 21:57:51 +0200
+Message-ID: <CAHp75Vc3cBcCb7Rsd1S3LX32_ZrCCPMcrtMtqPioadowrhh-0w@mail.gmail.com>
+References: <20190211130940.28206-1-hch@lst.de> <8d8a1ad0-2192-5293-9073-21d1916778ff@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550181897-2596-1-git-send-email-info@metux.net>
+In-Reply-To: <8d8a1ad0-2192-5293-9073-21d1916778ff@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Dan Carpenter <dan.carpenter@oracle.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Feb 15, 2019 at 12:05 AM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
->
-> Hi folks,
+On Wed, Feb 13, 2019 at 5:56 AM Stuart Hayes <stuart.w.hayes@gmail.com> wrote:
 >
 >
+>
+> On 2/11/2019 7:09 AM, Christoph Hellwig wrote:
+> > We need to ensure rbu_data.lock is always held on return.
+> >
 
-Thanks for an update.
+Pushed to my review and testing queue, thanks!
 
-Linus, this one looks good enough, though some style minors can be addressed:
-- redundant parens (and actually I prefer to see x = readl(); x |=
-...; writel(); in three lines)
-- useless blank lines
-- style of parameters where one per line (it's not needed in this drivers)
-
-In any case, FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> this is version 3 of my APUv2/APUv3 series.
+> > Fixes: 289790a3ea94 ("platform/x86: dell_rbu: stop abusing the DMA API")
+> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  drivers/platform/x86/dell_rbu.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/x86/dell_rbu.c b/drivers/platform/x86/dell_rbu.c
+> > index 8104ca0c44ca..031c68903583 100644
+> > --- a/drivers/platform/x86/dell_rbu.c
+> > +++ b/drivers/platform/x86/dell_rbu.c
+> > @@ -436,6 +436,7 @@ static int img_update_realloc(unsigned long size)
+> >       ordernum = get_order(size);
+> >       image_update_buffer =
+> >               (unsigned char *)__get_free_pages(GFP_DMA32, ordernum);
+> > +     spin_lock(&rbu_data.lock);
+> >       if (!image_update_buffer) {
+> >               pr_debug("Not enough memory for image update:"
+> >                       "size = %ld\n", size);
+> > @@ -446,7 +447,6 @@ static int img_update_realloc(unsigned long size)
+> >       if (WARN_ON_ONCE(img_buf_phys_addr > BIOS_SCAN_LIMIT))
+> >               return -EINVAL; /* can't happen per definition */
+> >
+> > -     spin_lock(&rbu_data.lock);
+> >       rbu_data.image_update_buffer = image_update_buffer;
+> >       rbu_data.image_update_buffer_size = size;
+> >       rbu_data.bios_image_size = rbu_data.image_update_buffer_size;
+> >
 >
-> change in V3:
->
->  * gpio driver
->    * drop unncessary gpio id checks
->    * cleanup amd_fch_gpio_set()
->    * move iores outside probe()
->    * shorter NULL checks and correct error in probe()
->  * apu board driver
->    * drop unneeded init.h
->    * drop unnecessary comments
->    * clean up logging
->    * dont need to depend on KEYBOARD_GPIO
->
->
-> --mtx
+> Acked-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 
 
 
