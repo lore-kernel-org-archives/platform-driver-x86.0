@@ -1,41 +1,140 @@
-From: Rajat Jain <rajatja@google.com>
-Subject: [PATCH] platform/x86: intel_pmc_core: Avoid a u32 overflow
-Date: Fri, 15 Feb 2019 16:19:20 -0800
-Message-ID: <20190216001920.178053-1-rajatja@google.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.20 78/92] x86/platform/UV: Use efi_runtime_lock to serialise BIOS calls
+Date: Mon, 18 Feb 2019 14:43:21 +0100
+Message-ID: <20190218133502.229535774@linuxfoundation.org>
+References: <20190218133454.668268457@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190218133454.668268457@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: rajatxjain@gmail.com, Rajat Jain <rajatja@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Hedi Berriche <hedi.berriche@hpe.com>, Borislav Petkov <bp@suse.de>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>, Mike Travis <mike.travis@hpe.com>, Andy Shevchenko <andy@infradead.org>, Bhupesh Sharma <bhsharma@redhat.com>, Darren Hart <dvhart@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, linux-efi <linux-efi@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>, Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The register (SLP_S0_RES) at offset slp_s0_offset is a 32 bit register.
-The pmc_core_adjust_slp_s0_step() could overflow the u32 value while
-returning it after adjusting the step. Thus change to u64, this is
-already accounted for in debugfs attribute (that wants to output a
-64 bit value).
+4.20-stable review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
+------------------
+
+From: Hedi Berriche <hedi.berriche@hpe.com>
+
+commit f331e766c4be33f4338574f3c9f7f77e98ab4571 upstream.
+
+Calls into UV firmware must be protected against concurrency, expose the
+efi_runtime_lock to the UV platform, and use it to serialise UV BIOS
+calls.
+
+Signed-off-by: Hedi Berriche <hedi.berriche@hpe.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Reviewed-by: Russ Anderson <rja@hpe.com>
+Reviewed-by: Dimitri Sivanich <sivanich@hpe.com>
+Reviewed-by: Mike Travis <mike.travis@hpe.com>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-efi <linux-efi@vger.kernel.org>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: stable@vger.kernel.org # v4.9+
+Cc: Steve Wahl <steve.wahl@hpe.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190213193413.25560-5-hedi.berriche@hpe.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/platform/x86/intel_pmc_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/uv/bios.h          |    8 +++++++-
+ arch/x86/platform/uv/bios_uv.c          |   23 +++++++++++++++++++++--
+ drivers/firmware/efi/runtime-wrappers.c |    7 +++++++
+ 3 files changed, 35 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 22dbf115782e..f90f4dd25151 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -328,9 +328,9 @@ static inline void pmc_core_reg_write(struct pmc_dev *pmcdev, int
- 	writel(val, pmcdev->regbase + reg_offset);
- }
+--- a/arch/x86/include/asm/uv/bios.h
++++ b/arch/x86/include/asm/uv/bios.h
+@@ -48,7 +48,8 @@ enum {
+ 	BIOS_STATUS_SUCCESS		=  0,
+ 	BIOS_STATUS_UNIMPLEMENTED	= -ENOSYS,
+ 	BIOS_STATUS_EINVAL		= -EINVAL,
+-	BIOS_STATUS_UNAVAIL		= -EBUSY
++	BIOS_STATUS_UNAVAIL		= -EBUSY,
++	BIOS_STATUS_ABORT		= -EINTR,
+ };
  
--static inline u32 pmc_core_adjust_slp_s0_step(u32 value)
-+static inline u64 pmc_core_adjust_slp_s0_step(u32 value)
+ /* Address map parameters */
+@@ -167,4 +168,9 @@ extern long system_serial_number;
+ 
+ extern struct kobject *sgi_uv_kobj;	/* /sys/firmware/sgi_uv */
+ 
++/*
++ * EFI runtime lock; cf. firmware/efi/runtime-wrappers.c for details
++ */
++extern struct semaphore __efi_uv_runtime_lock;
++
+ #endif /* _ASM_X86_UV_BIOS_H */
+--- a/arch/x86/platform/uv/bios_uv.c
++++ b/arch/x86/platform/uv/bios_uv.c
+@@ -29,7 +29,8 @@
+ 
+ struct uv_systab *uv_systab;
+ 
+-s64 uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3, u64 a4, u64 a5)
++static s64 __uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
++			u64 a4, u64 a5)
  {
--	return value * SPT_PMC_SLP_S0_RES_COUNTER_STEP;
-+	return (u64)value * SPT_PMC_SLP_S0_RES_COUNTER_STEP;
+ 	struct uv_systab *tab = uv_systab;
+ 	s64 ret;
+@@ -51,6 +52,19 @@ s64 uv_bios_call(enum uv_bios_cmd which,
+ 
+ 	return ret;
+ }
++
++s64 uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3, u64 a4, u64 a5)
++{
++	s64 ret;
++
++	if (down_interruptible(&__efi_uv_runtime_lock))
++		return BIOS_STATUS_ABORT;
++
++	ret = __uv_bios_call(which, a1, a2, a3, a4, a5);
++	up(&__efi_uv_runtime_lock);
++
++	return ret;
++}
+ EXPORT_SYMBOL_GPL(uv_bios_call);
+ 
+ s64 uv_bios_call_irqsave(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
+@@ -59,10 +73,15 @@ s64 uv_bios_call_irqsave(enum uv_bios_cm
+ 	unsigned long bios_flags;
+ 	s64 ret;
+ 
++	if (down_interruptible(&__efi_uv_runtime_lock))
++		return BIOS_STATUS_ABORT;
++
+ 	local_irq_save(bios_flags);
+-	ret = uv_bios_call(which, a1, a2, a3, a4, a5);
++	ret = __uv_bios_call(which, a1, a2, a3, a4, a5);
+ 	local_irq_restore(bios_flags);
+ 
++	up(&__efi_uv_runtime_lock);
++
+ 	return ret;
  }
  
- static int pmc_core_dev_state_get(void *data, u64 *val)
--- 
-2.21.0.rc0.258.g878e2cd30e-goog
+--- a/drivers/firmware/efi/runtime-wrappers.c
++++ b/drivers/firmware/efi/runtime-wrappers.c
+@@ -147,6 +147,13 @@ void efi_call_virt_check_flags(unsigned
+ static DEFINE_SEMAPHORE(efi_runtime_lock);
+ 
+ /*
++ * Expose the EFI runtime lock to the UV platform
++ */
++#ifdef CONFIG_X86_UV
++extern struct semaphore __efi_uv_runtime_lock __alias(efi_runtime_lock);
++#endif
++
++/*
+  * Calls the appropriate efi_runtime_service() with the appropriate
+  * arguments.
+  *
