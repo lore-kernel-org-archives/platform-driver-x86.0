@@ -1,64 +1,85 @@
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] platform/x86: dell-laptop: Mark expected switch
- fall-throughs
-Date: Tue, 19 Feb 2019 10:33:53 -0600
-Message-ID: <4d97e602-6de8-4b4f-86a8-39a835c1c699@embeddedor.com>
-References: <20180705203807.GA10327@embeddedor.com>
- <20181129001533.GA2468@fedora.eng.vmware.com>
+From: Mattias Jacobsson <2pi@mok.nu>
+Subject: [PATCH v4 0/8] platform/x86: wmi: add WMI support to
+Date: Tue, 19 Feb 2019 20:59:48 +0100
+Message-ID: <cover.1550603967.git.2pi@mok.nu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181129001533.GA2468@fedora.eng.vmware.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: andy@infradead.org, dvhart@infradead.org, mario.limonciello@dell.com, michal.lkml@markovi.net, mjg59@srcf.ucam.org, pali.rohar@gmail.com, yamada.masahiro@socionext.com
+Cc: 2pi@mok.nu, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+The kernel provides the macro MODULE_DEVICE_TABLE() which can help
+driver authors to generate the appropriate MODULE_ALIAS() output. The
+WMI device type is currently not supported by MODULE_DEVICE_TABLE().
 
+While using MODULE_DEVICE_TABLE() does increase the complexity as well
+as spreading out the implementation across the kernel, it does come with
+some benefits too;
+* It makes different drivers look more similar; if you can specify the
+  array of device_ids any device type specific input to MODULE_ALIAS()
+  will automatically be generated for you.
+* It helps each driver avoid keeping multiple versions of the same
+  information in sync. That is, both the array of device_ids and the
+  potential multitude of MODULE_ALIAS()'s.
+* Other things eg. [2]
 
-On 11/28/18 6:15 PM, Darren Hart wrote:
-> On Thu, Jul 05, 2018 at 03:38:07PM -0500, Gustavo A. R. Silva wrote:
->> In preparation to enabling -Wimplicit-fallthrough, mark switch cases
->> where we are expecting to fall through.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> I've applied this patch, but not the acer or sony fall through patches
-> due to the pending questions there. Happy to revisit those as needed,
-> but closing these out of the patch queue.
-> 
+This patchset adds WMI support to MODULE_DEVICE_TABLE().
 
-Thanks, Darren.
+[PATCH 1/3]: prepare struct wmi_device_id
+[PATCH 2/3]: add support
+[PATCH 3+/3]: update existing drivers to use MODULE_DEVICE_TABLE()
 
-I'll send separate patches for those that are still pending.  Hopefully,
-I'll get some feedback this time.
+Changes in v4:
+* formatting(declare/assignment, line-breaks) according to comments
+* split "PATCH 3/3" into one patch per driver according to comments
+* depend upon patch [3] (macro ALIAS_SIZE)
 
---
-Gustavo
+Changes in v3:
+* use UUID_STRING_LEN instead of self-defined
+* change loop condition in wmi_dev_match() according to comments
+* change the usage of snprintf return code in do_wmi_entry()
 
->> ---
->>  drivers/platform/x86/dell-laptop.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
->> index f1fa861..1938f11 100644
->> --- a/drivers/platform/x86/dell-laptop.c
->> +++ b/drivers/platform/x86/dell-laptop.c
->> @@ -1565,8 +1565,10 @@ static ssize_t kbd_led_timeout_store(struct device *dev,
->>  		switch (unit) {
->>  		case KBD_TIMEOUT_DAYS:
->>  			value *= 24;
->> +			/* fall through */
->>  		case KBD_TIMEOUT_HOURS:
->>  			value *= 60;
->> +			/* fall through */
->>  		case KBD_TIMEOUT_MINUTES:
->>  			value *= 60;
->>  			unit = KBD_TIMEOUT_SECONDS;
->> -- 
->> 2.7.4
->>
->>
-> 
+Changes in v2:
+* add one Suggested-by and one Reviewed-by tag
+* depend upon patch [1]
+* reword commit message for [PATCH 2/3] and [PATCH 3/3] to document the
+  reasoning behind the changes
+
+[1]: https://lkml.kernel.org/r/20190122200302.19861-1-2pi@mok.nu
+[2]: https://lkml.kernel.org/r/20190126210634.GB13882@wrath
+[3]: https://lore.kernel.org/lkml/20190207123022.7961-1-2pi@mok.nu/
+
+Mattias Jacobsson (8):
+  platform/x86: wmi: move struct wmi_device_id to mod_devicetable.h
+  platform/x86: wmi: add WMI support to MODULE_DEVICE_TABLE()
+  platform/x86: dell-smbios-wmi: use MODULE_DEVICE_TABLE() instead of
+    MODULE_ALIAS()
+  platform/x86: dell-wmi-descriptor: use MODULE_DEVICE_TABLE() instead
+    of MODULE_ALIAS()
+  platform/x86: dell-wmi: use MODULE_DEVICE_TABLE() instead of
+    MODULE_ALIAS()
+  platform/x86: huawei-wmi: use MODULE_DEVICE_TABLE() instead of
+    MODULE_ALIAS()
+  platform/x86: intel-wmi-thunderbolt: use MODULE_DEVICE_TABLE() instead
+    of MODULE_ALIAS()
+  platform/x86: wmi-bmof: use MODULE_DEVICE_TABLE() instead of
+    MODULE_ALIAS()
+
+ drivers/platform/x86/dell-smbios-wmi.c       |  2 +-
+ drivers/platform/x86/dell-wmi-descriptor.c   |  2 +-
+ drivers/platform/x86/dell-wmi.c              |  4 ++--
+ drivers/platform/x86/huawei-wmi.c            |  3 +--
+ drivers/platform/x86/intel-wmi-thunderbolt.c |  2 +-
+ drivers/platform/x86/wmi-bmof.c              |  2 +-
+ drivers/platform/x86/wmi.c                   |  2 +-
+ include/linux/mod_devicetable.h              | 12 ++++++++++
+ include/linux/wmi.h                          |  5 +----
+ scripts/mod/devicetable-offsets.c            |  3 +++
+ scripts/mod/file2alias.c                     | 23 ++++++++++++++++++++
+ 11 files changed, 47 insertions(+), 13 deletions(-)
+
+-- 
+2.20.1
