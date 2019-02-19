@@ -1,140 +1,173 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 53/62] x86/platform/UV: Use efi_runtime_lock to serialise BIOS calls
-Date: Mon, 18 Feb 2019 14:43:59 +0100
-Message-ID: <20190218133510.320971777@linuxfoundation.org>
-References: <20190218133505.801423074@linuxfoundation.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH 2/2] platform/x86: intel_cht_int33fe: Create fwnode for max17047
+Date: Tue, 19 Feb 2019 14:59:59 +0300
+Message-ID: <20190219115959.55553-3-heikki.krogerus@linux.intel.com>
+References: <20190219115959.55553-1-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190218133505.801423074@linuxfoundation.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Hedi Berriche <hedi.berriche@hpe.com>, Borislav Petkov <bp@suse.de>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>, Mike Travis <mike.travis@hpe.com>, Andy Shevchenko <andy@infradead.org>, Bhupesh Sharma <bhsharma@redhat.com>, Darren Hart <dvhart@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, linux-efi <linux-efi@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>, Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190219115959.55553-1-heikki.krogerus@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+Creating a software node for max17047 when ACPI tables don't
+have a device node for it.
 
-------------------
+While here, moving max17047 handling to its own function.
 
-From: Hedi Berriche <hedi.berriche@hpe.com>
-
-commit f331e766c4be33f4338574f3c9f7f77e98ab4571 upstream.
-
-Calls into UV firmware must be protected against concurrency, expose the
-efi_runtime_lock to the UV platform, and use it to serialise UV BIOS
-calls.
-
-Signed-off-by: Hedi Berriche <hedi.berriche@hpe.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reviewed-by: Russ Anderson <rja@hpe.com>
-Reviewed-by: Dimitri Sivanich <sivanich@hpe.com>
-Reviewed-by: Mike Travis <mike.travis@hpe.com>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-efi <linux-efi@vger.kernel.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: stable@vger.kernel.org # v4.9+
-Cc: Steve Wahl <steve.wahl@hpe.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190213193413.25560-5-hedi.berriche@hpe.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- arch/x86/include/asm/uv/bios.h          |    8 +++++++-
- arch/x86/platform/uv/bios_uv.c          |   23 +++++++++++++++++++++--
- drivers/firmware/efi/runtime-wrappers.c |    7 +++++++
- 3 files changed, 35 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel_cht_int33fe.c | 86 +++++++++++++++---------
+ 1 file changed, 53 insertions(+), 33 deletions(-)
 
---- a/arch/x86/include/asm/uv/bios.h
-+++ b/arch/x86/include/asm/uv/bios.h
-@@ -48,7 +48,8 @@ enum {
- 	BIOS_STATUS_SUCCESS		=  0,
- 	BIOS_STATUS_UNIMPLEMENTED	= -ENOSYS,
- 	BIOS_STATUS_EINVAL		= -EINVAL,
--	BIOS_STATUS_UNAVAIL		= -EBUSY
-+	BIOS_STATUS_UNAVAIL		= -EBUSY,
-+	BIOS_STATUS_ABORT		= -EINTR,
+diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+index 4857a57cfff5..81721976b00c 100644
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -34,6 +34,7 @@ struct cht_int33fe_data {
+ 	struct i2c_client *pi3usb30532;
+ 	struct fwnode_handle *port_node;
+ 	struct fwnode_handle *fusb302_node;
++	struct fwnode_handle *max17047_node;
+ 	/* Contain a list-head must be per device */
+ 	struct device_connection connections[4];
+ };
+@@ -66,14 +67,6 @@ static int cht_int33fe_check_for_max17047(struct device *dev, void *data)
+ 	return 1;
+ }
+ 
+-static struct i2c_client *cht_int33fe_find_max17047(void)
+-{
+-	struct i2c_client *max17047 = NULL;
+-
+-	i2c_for_each_dev(&max17047, cht_int33fe_check_for_max17047);
+-	return max17047;
+-}
+-
+ static const char * const max17047_suppliers[] = { "bq24190-charger" };
+ 
+ static const struct property_entry max17047_props[] = {
+@@ -81,6 +74,43 @@ static const struct property_entry max17047_props[] = {
+ 	{ }
  };
  
- /* Address map parameters */
-@@ -167,4 +168,9 @@ extern long system_serial_number;
- 
- extern struct kobject *sgi_uv_kobj;	/* /sys/firmware/sgi_uv */
- 
-+/*
-+ * EFI runtime lock; cf. firmware/efi/runtime-wrappers.c for details
-+ */
-+extern struct semaphore __efi_uv_runtime_lock;
-+
- #endif /* _ASM_X86_UV_BIOS_H */
---- a/arch/x86/platform/uv/bios_uv.c
-+++ b/arch/x86/platform/uv/bios_uv.c
-@@ -29,7 +29,8 @@
- 
- struct uv_systab *uv_systab;
- 
--s64 uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3, u64 a4, u64 a5)
-+static s64 __uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
-+			u64 a4, u64 a5)
- {
- 	struct uv_systab *tab = uv_systab;
- 	s64 ret;
-@@ -51,6 +52,19 @@ s64 uv_bios_call(enum uv_bios_cmd which,
- 
- 	return ret;
- }
-+
-+s64 uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3, u64 a4, u64 a5)
++static int
++cht_int33fe_max17047(struct device *dev, struct cht_int33fe_data *data)
 +{
-+	s64 ret;
++	struct i2c_client *max17047 = NULL;
++	struct i2c_board_info board_info;
++	int ret;
 +
-+	if (down_interruptible(&__efi_uv_runtime_lock))
-+		return BIOS_STATUS_ABORT;
++	i2c_for_each_dev(&max17047, cht_int33fe_check_for_max17047);
++	if (max17047) {
++		/* Pre-existing i2c-client for the max17047, add device-props */
++		ret = device_add_properties(&max17047->dev, max17047_props);
++		if (ret)
++			return ret;
++		/* And re-probe to get the new device-props applied. */
++		ret = device_reprobe(&max17047->dev);
++		if (ret)
++			dev_warn(dev, "Reprobing max17047 error: %d\n", ret);
++		return 0;
++	}
 +
-+	ret = __uv_bios_call(which, a1, a2, a3, a4, a5);
-+	up(&__efi_uv_runtime_lock);
++	data->max17047_node = fwnode_create_software_node(max17047_props, NULL);
++	if (IS_ERR(data->max17047_node))
++		return PTR_ERR(data->max17047_node);
 +
-+	return ret;
++	memset(&board_info, 0, sizeof(board_info));
++	strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
++	board_info.dev_name = "max17047";
++	board_info.fwnode = data->max17047_node;
++	data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
++	if (IS_ERR(data->max17047)) {
++		fwnode_remove_software_node(data->max17047_node);
++		return PTR_ERR(data->max17047);
++	}
++
++	return 0;
 +}
- EXPORT_SYMBOL_GPL(uv_bios_call);
- 
- s64 uv_bios_call_irqsave(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
-@@ -59,10 +73,15 @@ s64 uv_bios_call_irqsave(enum uv_bios_cm
- 	unsigned long bios_flags;
- 	s64 ret;
- 
-+	if (down_interruptible(&__efi_uv_runtime_lock))
-+		return BIOS_STATUS_ABORT;
 +
- 	local_irq_save(bios_flags);
--	ret = uv_bios_call(which, a1, a2, a3, a4, a5);
-+	ret = __uv_bios_call(which, a1, a2, a3, a4, a5);
- 	local_irq_restore(bios_flags);
+ static const struct property_entry fusb302_props[] = {
+ 	PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
+ 	{ }
+@@ -114,7 +144,6 @@ static int cht_int33fe_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct i2c_board_info board_info;
+ 	struct cht_int33fe_data *data;
+-	struct i2c_client *max17047;
+ 	struct regulator *regulator;
+ 	unsigned long long ptyp;
+ 	acpi_status status;
+@@ -174,38 +203,25 @@ static int cht_int33fe_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
  
-+	up(&__efi_uv_runtime_lock);
++	/* Work around BIOS bug, see comment on cht_int33fe_find_max17047 */
++	ret = cht_int33fe_max17047(dev, data);
++	if (ret)
++		return ret;
++
+ 	/* Node for the FUSB302 controller */
+ 	data->fusb302_node = fwnode_create_software_node(fusb302_props, NULL);
+-	if (IS_ERR(data->fusb302_node))
+-		return PTR_ERR(data->fusb302_node);
++	if (IS_ERR(data->fusb302_node)) {
++		ret = PTR_ERR(data->fusb302_node);
++		goto out_remove_max17047_node;
++	}
+ 
+ 	/* Node for the connector (FUSB302 is the parent) */
+ 	data->port_node = fwnode_create_software_node(usb_connector_props,
+ 						      data->fusb302_node);
+ 	if (IS_ERR(data->port_node)) {
+ 		fwnode_remove_software_node(data->fusb302_node);
+-		return PTR_ERR(data->port_node);
+-	}
+-
+-	/* Work around BIOS bug, see comment on cht_int33fe_find_max17047 */
+-	max17047 = cht_int33fe_find_max17047();
+-	if (max17047) {
+-		/* Pre-existing i2c-client for the max17047, add device-props */
+-		ret = device_add_properties(&max17047->dev, max17047_props);
+-		if (ret)
+-			return ret;
+-		/* And re-probe to get the new device-props applied. */
+-		ret = device_reprobe(&max17047->dev);
+-		if (ret)
+-			dev_warn(dev, "Reprobing max17047 error: %d\n", ret);
+-	} else {
+-		memset(&board_info, 0, sizeof(board_info));
+-		strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
+-		board_info.dev_name = "max17047";
+-		board_info.properties = max17047_props;
+-		data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
+-		if (IS_ERR(data->max17047))
+-			return PTR_ERR(data->max17047);
++		ret = PTR_ERR(data->port_node);
++		goto out_remove_max17047_node;
+ 	}
+ 
+ 	data->connections[0].endpoint[0] = "port0";
+@@ -256,6 +272,9 @@ static int cht_int33fe_probe(struct platform_device *pdev)
+ 	fwnode_remove_software_node(data->port_node);
+ 	fwnode_remove_software_node(data->fusb302_node);
+ 
++out_remove_max17047_node:
++	fwnode_remove_software_node(data->max17047_node);
 +
  	return ret;
  }
  
---- a/drivers/firmware/efi/runtime-wrappers.c
-+++ b/drivers/firmware/efi/runtime-wrappers.c
-@@ -50,6 +50,13 @@ void efi_call_virt_check_flags(unsigned
- }
+@@ -270,6 +289,7 @@ static int cht_int33fe_remove(struct platform_device *pdev)
+ 	device_connections_remove(data->connections);
+ 	fwnode_remove_software_node(data->port_node);
+ 	fwnode_remove_software_node(data->fusb302_node);
++	fwnode_remove_software_node(data->max17047_node);
  
- /*
-+ * Expose the EFI runtime lock to the UV platform
-+ */
-+#ifdef CONFIG_X86_UV
-+extern struct semaphore __efi_uv_runtime_lock __alias(efi_runtime_lock);
-+#endif
-+
-+/*
-  * According to section 7.1 of the UEFI spec, Runtime Services are not fully
-  * reentrant, and there are particular combinations of calls that need to be
-  * serialized. (source: UEFI Specification v2.4A)
+ 	return 0;
+ }
+-- 
+2.20.1
