@@ -1,53 +1,34 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 1/2] gpio: AMD G-Series PCH gpio driver
-Date: Wed, 20 Feb 2019 10:45:45 +0100
-Message-ID: <CACRpkdYM6An1gEvw=Kw52WfAEr176oHoUBKquXtjaSvwrMbWrQ@mail.gmail.com>
+Subject: Re: APUv2/v3 board support V3
+Date: Wed, 20 Feb 2019 10:58:29 +0100
+Message-ID: <CACRpkdbSU1R0ZXyPfDrcnd0CYw+mjnPk4pVgbBnWZt-ibdfYaA@mail.gmail.com>
 References: <1550091448-28578-1-git-send-email-info@metux.net>
- <1550181897-2596-1-git-send-email-info@metux.net> <1550181897-2596-2-git-send-email-info@metux.net>
+ <1550181897-2596-1-git-send-email-info@metux.net> <CAHp75VfgzGQ7O-AjwQ1R=OZTiRwxRx_q9Yo1MOVjko7D-Wz14w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1550181897-2596-2-git-send-email-info@metux.net>
+In-Reply-To: <CAHp75VfgzGQ7O-AjwQ1R=OZTiRwxRx_q9Yo1MOVjko7D-Wz14w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Enrico Weigelt, metux IT consult" <info@metux.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Feb 14, 2019 at 11:05 PM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
+On Fri, Feb 15, 2019 at 7:16 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Fri, Feb 15, 2019 at 12:05 AM Enrico Weigelt, metux IT consult
 
-> GPIO platform driver for the AMD G-series PCH (eg. on GX-412TC)
+> Linus, this one looks good enough, though some style minors can be addressed:
+> - redundant parens (and actually I prefer to see x = readl(); x |=
+> ...; writel(); in three lines)
+> - useless blank lines
+> - style of parameters where one per line (it's not needed in this drivers)
 >
-> This driver doesn't registers itself automatically, as it needs to
-> be provided with platform specific configuration, provided by some
-> board driver setup code.
->
-> Didn't implement oftree probing yet, as it's rarely found on x86.
->
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linus.walleij@linaro.org
-> Cc: bgolaszewski@baylibre.com
-> Cc: dvhart@infradead.org
-> Cc: andy@infradead.org
-> Cc: platform-driver-x86@vger.kernel.org
->
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> In any case, FWIW,
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-(...)
-> +config GPIO_AMD_FCH
-> +       tristate "GPIO support for AMD Fusion Controller Hub (G-series SOCs)"
-> +       select GPIO_GENERIC
-
-Now I see that you do this
-
-> +       spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
-(...)
-> +       spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-
-Only to get that spinlock.
-
-That's not what GPIO_GENERIC is for, just put a spinlock in your
-local state container struct amd_fch_gpio_priv instead.
+OK Enrico can you include Andy's Review tag when you respin, fix
+the spinlock issue I pointed out and send out as v4 and I'll apply
+it.
 
 Yours,
 Linus Walleij
