@@ -1,62 +1,51 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: intel_cht_int33fe: Provide fwnode for
- the USB connector
-Date: Thu, 21 Feb 2019 15:23:05 +0200
-Message-ID: <CAHp75Vd5uxVEyv3Wx-Xcv58UHXaS8um6dPDELPz5AdG1nbpFHg@mail.gmail.com>
-References: <20190219115959.55553-1-heikki.krogerus@linux.intel.com>
- <20190219115959.55553-2-heikki.krogerus@linux.intel.com> <CAHp75VcoqwP5VrOW60XtQHLAO1KOmc_Kyn-KQsZC-tsiwpQq3A@mail.gmail.com>
- <20190221093508.GF5054@kuha.fi.intel.com>
+Subject: Re: [PATCH v5 06/10] Platform: OLPC: Add XO-1.75 EC driver
+Date: Thu, 21 Feb 2019 15:28:26 +0200
+Message-ID: <CAHp75VcWMf086oGrJHWOCgYFy-J-KLw+jzFoAwuXaHtS7dgdvA@mail.gmail.com>
+References: <20190110175845.1203986-1-lkundrak@v3.sk>
+ <20190110175845.1203986-7-lkundrak@v3.sk>
+ <20190221012231.GC5838@wrath>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190221093508.GF5054@kuha.fi.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190221012231.GC5838@wrath>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Platform Driver <platform-driver-x86@vger.kernel.org>, Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Feb 21, 2019 at 11:35 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
+On Thu, Feb 21, 2019 at 3:22 AM Darren Hart <dvhart@infradead.org> wrote:
 >
-> On Wed, Feb 20, 2019 at 05:55:21PM +0200, Andy Shevchenko wrote:
-> > On Tue, Feb 19, 2019 at 2:00 PM Heikki Krogerus
-> > <heikki.krogerus@linux.intel.com> wrote:
-> > >
-> > > In ACPI, and now also in DT, the USB connectors usually have
-> > > their own device nodes. In case of USB Type-C, those
-> > > connector (port) nodes are child nodes of the controller or
-> > > PHY device, in our case the fusb302. The software fwnodes
-> > > allow us to create a similar child node for fusb302 that
-> > > represents the connector also on Intel CHT.
-> > >
-> > > This makes it possible replace the fusb302 specific device
-> > > properties which were deprecated with the common USB
-> > > connector properties that tcpm.c is able to use directly.
+> On Thu, Jan 10, 2019 at 06:58:41PM +0100, Lubomir Rintel wrote:
+> > It's based off the driver from the OLPC kernel sources. Somewhat
+> > modernized and cleaned up, for better or worse.
 > >
-> > > +       /* Node for the FUSB302 controller */
-> > > +       data->fusb302_node = fwnode_create_software_node(fusb302_props, NULL);
-> > > +       if (IS_ERR(data->fusb302_node))
-> > > +               return PTR_ERR(data->fusb302_node);
-> > > +
-> > > +       /* Node for the connector (FUSB302 is the parent) */
-> > > +       data->port_node = fwnode_create_software_node(usb_connector_props,
-> > > +                                                     data->fusb302_node);
-> > > +       if (IS_ERR(data->port_node)) {
-> >
-> > > +               fwnode_remove_software_node(data->fusb302_node);
-> >
-> > Sounds like a candidate for
-> > devm_fwnode_create_software_node()
->
-> If you don't mind, let's think about that later.
+> > Modified to plug into the olpc-ec driver infrastructure (so that battery
+> > interface and debugfs could be reused) and the SPI slave framework.
 
-Sure.
-
+> > Basically all of the above is based on the review by Andy Shevchenko.
 >
-> I'm not comfortable at all with the idea of introducing
-> devm_fwnode_create_software_node(). I would like to talk about that
-> separately. It's not going to be a problem to change this driver later
-> even if we decide to add the function.
+> Andy, I am happy to merge this series - but this patch includes a lot of changes
+> driven by your feedback. Are you satisfied with the changes, would you like to
+> add your Reviewed-by?
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+Open minors:
+ - u8 vs. unsigned char in a cases when it's about command to send to
+HW (including unnecessary & 0xff parts)
+ - _TIMEOUT w/o units a bit odd (perhaps _TIMEOUT_MS ?)
+
+I think this may be addressed later on.
 
 -- 
 With Best Regards,
