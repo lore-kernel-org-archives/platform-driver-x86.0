@@ -1,51 +1,145 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 06/10] Platform: OLPC: Add XO-1.75 EC driver
-Date: Thu, 21 Feb 2019 15:28:26 +0200
-Message-ID: <CAHp75VcWMf086oGrJHWOCgYFy-J-KLw+jzFoAwuXaHtS7dgdvA@mail.gmail.com>
-References: <20190110175845.1203986-1-lkundrak@v3.sk>
- <20190110175845.1203986-7-lkundrak@v3.sk>
- <20190221012231.GC5838@wrath>
+Subject: Re: [PATCH 1/2] platform/x86: intel_cht_int33fe: Provide fwnode for
+ the USB connector
+Date: Thu, 21 Feb 2019 15:46:46 +0200
+Message-ID: <CAHp75Vca+yNuNJaAuB_2_5Vgq8+0FvrBWS1VbvqhAr0nq1UYPw@mail.gmail.com>
+References: <20190219115959.55553-1-heikki.krogerus@linux.intel.com> <20190219115959.55553-2-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190221012231.GC5838@wrath>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Platform Driver <platform-driver-x86@vger.kernel.org>, Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Andy Shevchenko <andy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190219115959.55553-2-heikki.krogerus@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Feb 21, 2019 at 3:22 AM Darren Hart <dvhart@infradead.org> wrote:
+On Tue, Feb 19, 2019 at 2:00 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
 >
-> On Thu, Jan 10, 2019 at 06:58:41PM +0100, Lubomir Rintel wrote:
-> > It's based off the driver from the OLPC kernel sources. Somewhat
-> > modernized and cleaned up, for better or worse.
-> >
-> > Modified to plug into the olpc-ec driver infrastructure (so that battery
-> > interface and debugfs could be reused) and the SPI slave framework.
-
-> > Basically all of the above is based on the review by Andy Shevchenko.
+> In ACPI, and now also in DT, the USB connectors usually have
+> their own device nodes. In case of USB Type-C, those
+> connector (port) nodes are child nodes of the controller or
+> PHY device, in our case the fusb302. The software fwnodes
+> allow us to create a similar child node for fusb302 that
+> represents the connector also on Intel CHT.
 >
-> Andy, I am happy to merge this series - but this patch includes a lot of changes
-> driven by your feedback. Are you satisfied with the changes, would you like to
-> add your Reviewed-by?
+> This makes it possible replace the fusb302 specific device
+> properties which were deprecated with the common USB
+> connector properties that tcpm.c is able to use directly.
+>
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+This doesn't apply to our for-next branch.
 
-Open minors:
- - u8 vs. unsigned char in a cases when it's about command to send to
-HW (including unnecessary & 0xff parts)
- - _TIMEOUT w/o units a bit odd (perhaps _TIMEOUT_MS ?)
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_cht_int33fe.c | 48 ++++++++++++++++++++++--
+>  1 file changed, 44 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+> index 6fa3cced6f8e..4857a57cfff5 100644
+> --- a/drivers/platform/x86/intel_cht_int33fe.c
+> +++ b/drivers/platform/x86/intel_cht_int33fe.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/slab.h>
+> +#include <linux/usb/pd.h>
+>
+>  #define EXPECTED_PTYPE         4
+>
+> @@ -31,6 +32,8 @@ struct cht_int33fe_data {
+>         struct i2c_client *max17047;
+>         struct i2c_client *fusb302;
+>         struct i2c_client *pi3usb30532;
+> +       struct fwnode_handle *port_node;
+> +       struct fwnode_handle *fusb302_node;
+>         /* Contain a list-head must be per device */
+>         struct device_connection connections[4];
+>  };
+> @@ -80,9 +83,29 @@ static const struct property_entry max17047_props[] = {
+>
+>  static const struct property_entry fusb302_props[] = {
+>         PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
+> -       PROPERTY_ENTRY_U32("fcs,max-sink-microvolt", 12000000),
+> -       PROPERTY_ENTRY_U32("fcs,max-sink-microamp",   3000000),
+> -       PROPERTY_ENTRY_U32("fcs,max-sink-microwatt", 36000000),
+> +       { }
+> +};
+> +
+> +#define PDO_FIXED_FLAGS \
+> +       (PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP | PDO_FIXED_USB_COMM)
+> +
+> +static const u32 src_pdo[] = {
+> +       PDO_FIXED(5000, 1500, PDO_FIXED_FLAGS),
+> +};
+> +
+> +static const u32 snk_pdo[] = {
+> +       PDO_FIXED(5000, 400, PDO_FIXED_FLAGS),
+> +       PDO_VAR(5000, 12000, 3000),
+> +};
+> +
+> +static const struct property_entry usb_connector_props[] = {
+> +       PROPERTY_ENTRY_STRING("name", "connector"),
+> +       PROPERTY_ENTRY_STRING("data-role", "dual"),
+> +       PROPERTY_ENTRY_STRING("power-role", "dual"),
+> +       PROPERTY_ENTRY_STRING("try-power-role", "sink"),
+> +       PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
+> +       PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
+> +       PROPERTY_ENTRY_U32("op-sink-microwatt", 36000000),
+>         { }
+>  };
+>
+> @@ -151,6 +174,19 @@ static int cht_int33fe_probe(struct platform_device *pdev)
+>         if (!data)
+>                 return -ENOMEM;
+>
+> +       /* Node for the FUSB302 controller */
+> +       data->fusb302_node = fwnode_create_software_node(fusb302_props, NULL);
+> +       if (IS_ERR(data->fusb302_node))
+> +               return PTR_ERR(data->fusb302_node);
+> +
+> +       /* Node for the connector (FUSB302 is the parent) */
+> +       data->port_node = fwnode_create_software_node(usb_connector_props,
+> +                                                     data->fusb302_node);
+> +       if (IS_ERR(data->port_node)) {
+> +               fwnode_remove_software_node(data->fusb302_node);
+> +               return PTR_ERR(data->port_node);
+> +       }
+> +
+>         /* Work around BIOS bug, see comment on cht_int33fe_find_max17047 */
+>         max17047 = cht_int33fe_find_max17047();
+>         if (max17047) {
+> @@ -187,7 +223,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
+>         memset(&board_info, 0, sizeof(board_info));
+>         strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
+>         board_info.dev_name = "fusb302";
+> -       board_info.properties = fusb302_props;
+> +       board_info.fwnode = data->fusb302_node;
+>         board_info.irq = fusb302_irq;
+>
+>         data->fusb302 = i2c_acpi_new_device(dev, 2, &board_info);
+> @@ -217,6 +253,8 @@ static int cht_int33fe_probe(struct platform_device *pdev)
+>         i2c_unregister_device(data->max17047);
+>
+>         device_connections_remove(data->connections);
+> +       fwnode_remove_software_node(data->port_node);
+> +       fwnode_remove_software_node(data->fusb302_node);
+>
+>         return ret;
+>  }
+> @@ -230,6 +268,8 @@ static int cht_int33fe_remove(struct platform_device *pdev)
+>         i2c_unregister_device(data->max17047);
+>
+>         device_connections_remove(data->connections);
+> +       fwnode_remove_software_node(data->port_node);
+> +       fwnode_remove_software_node(data->fusb302_node);
+>
+>         return 0;
+>  }
+> --
+> 2.20.1
+>
 
-I think this may be addressed later on.
 
 -- 
 With Best Regards,
