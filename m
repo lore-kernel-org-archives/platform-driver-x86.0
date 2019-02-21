@@ -1,51 +1,60 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: Avoid a u32 overflow
-Date: Thu, 21 Feb 2019 16:24:52 +0200
-Message-ID: <CAHp75VdHMgfxT-n-4tMqM1pNOH970erGAhajUvg5wUrsf3xH8Q@mail.gmail.com>
-References: <20190216001920.178053-1-rajatja@google.com>
+Subject: Re: [PATCH v3 0/5] ICL support and other enhancements for PMC Core
+Date: Thu, 21 Feb 2019 16:25:10 +0200
+Message-ID: <CAHp75VcdBMVgDxuJKyiw5n9UZr7w0u+zz73GAUnRM6Y9C-=r0w@mail.gmail.com>
+References: <20190214115712.19642-1-rajneesh.bhardwaj@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190216001920.178053-1-rajatja@google.com>
+In-Reply-To: <20190214115712.19642-1-rajneesh.bhardwaj@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajat Jain <rajatja@google.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajat Jain <rajatxjain@gmail.com>
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Feb 16, 2019 at 2:19 AM Rajat Jain <rajatja@google.com> wrote:
+On Thu, Feb 14, 2019 at 1:56 PM Rajneesh Bhardwaj
+<rajneesh.bhardwaj@linux.intel.com> wrote:
 >
-> The register (SLP_S0_RES) at offset slp_s0_offset is a 32 bit register.
-> The pmc_core_adjust_slp_s0_step() could overflow the u32 value while
-> returning it after adjusting the step. Thus change to u64, this is
-> already accounted for in debugfs attribute (that wants to output a
-> 64 bit value).
+> Changes in v3:
+>  * Dropped reference to coreboot project as suggested by Thomas and Boris.
+>  * Rebased onto "for-next" branch of pdx86 tree and dropped previously
+>    accepted five patches from v2 of this series since they are already
+>    present there.
+>  * Fixed checkpatch complains about 75 char limit for commit messages.
+>
+> Changes in v2:
+>  * Addressed review comments from Thomas
+>  * Added tags revieved
+>  * Folded in SHA1 suggestions from Stephen Rothwell, though Andy might
+>    want to fix it via rebasing
+>  * Rebased and tested with Linux v5.0.0-rc6
+>
+> This series:
+>  - Adds ICL U/Y CPUID to intel-family.h
+>  - Enables PMC driver for ICL
+>  - Introduces a new "package cstate show" feature
+>  - Fixes a customer issue related to S0ix on latest HP laptops
+>  - Fixes some minor bugs
+>
 >
 
 Pushed to my review and testing queue, thanks!
 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
->  drivers/platform/x86/intel_pmc_core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+
+> Rajneesh Bhardwaj (5):
+>   x86/cpu: Add Icelake to Intel family
+>   platform/x86: intel_pmc_core: Convert to INTEL_CPU_FAM6 macro
+>   platform/x86: intel_pmc_core: Add ICL platform support
+>   platform/x86: intel_pmc_core: Add Package cstates residency info
+>   platform/x86: intel_pmc_core: Quirk to ignore XTAL shutdown
 >
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index 22dbf115782e..f90f4dd25151 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -328,9 +328,9 @@ static inline void pmc_core_reg_write(struct pmc_dev *pmcdev, int
->         writel(val, pmcdev->regbase + reg_offset);
->  }
+>  arch/x86/include/asm/intel-family.h   |   2 +
+>  drivers/platform/x86/intel_pmc_core.c | 144 ++++++++++++++++++++++----
+>  drivers/platform/x86/intel_pmc_core.h |  10 ++
+>  3 files changed, 135 insertions(+), 21 deletions(-)
 >
-> -static inline u32 pmc_core_adjust_slp_s0_step(u32 value)
-> +static inline u64 pmc_core_adjust_slp_s0_step(u32 value)
->  {
-> -       return value * SPT_PMC_SLP_S0_RES_COUNTER_STEP;
-> +       return (u64)value * SPT_PMC_SLP_S0_RES_COUNTER_STEP;
->  }
->
->  static int pmc_core_dev_state_get(void *data, u64 *val)
 > --
-> 2.21.0.rc0.258.g878e2cd30e-goog
+> 2.17.1
 >
 
 
