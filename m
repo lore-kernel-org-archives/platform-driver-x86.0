@@ -1,52 +1,61 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: intel_cht_int33fe: Provide fwnode for
- the USB connector
-Date: Wed, 20 Feb 2019 17:55:21 +0200
-Message-ID: <CAHp75VcoqwP5VrOW60XtQHLAO1KOmc_Kyn-KQsZC-tsiwpQq3A@mail.gmail.com>
-References: <20190219115959.55553-1-heikki.krogerus@linux.intel.com> <20190219115959.55553-2-heikki.krogerus@linux.intel.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH v5 01/10] dt-bindings: olpc,xo1.75-ec: Add OLPC XO-1.75
+ EC bindings
+Date: Wed, 20 Feb 2019 17:21:30 -0800
+Message-ID: <20190221012130.GB5838@wrath>
+References: <20190110175845.1203986-1-lkundrak@v3.sk>
+ <20190110175845.1203986-2-lkundrak@v3.sk>
+ <20190111143635.GA21484@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190219115959.55553-2-heikki.krogerus@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190111143635.GA21484@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, platform-driver-x86@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, linux-arm-kernel@lists.infradead.org, Pavel Machek <pavel@ucw.cz>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Feb 19, 2019 at 2:00 PM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> In ACPI, and now also in DT, the USB connectors usually have
-> their own device nodes. In case of USB Type-C, those
-> connector (port) nodes are child nodes of the controller or
-> PHY device, in our case the fusb302. The software fwnodes
-> allow us to create a similar child node for fusb302 that
-> represents the connector also on Intel CHT.
->
-> This makes it possible replace the fusb302 specific device
-> properties which were deprecated with the common USB
-> connector properties that tcpm.c is able to use directly.
+On Fri, Jan 11, 2019 at 08:36:35AM -0600, Rob Herring wrote:
+> On Thu, 10 Jan 2019 18:58:36 +0100, Lubomir Rintel wrote:
+> > The OLPC XO-1.75 Embedded Controller is a SPI master that uses extra
+> > signals for handshaking. It needs to know when is the slave (Linux)
+> > side's TX FIFO ready for transfer (the ready-gpio signal on the SPI
+> > controller node) and when does it wish to respond with a command (the
+> > cmd-gpio property).
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > 
+> > ---
+> > Changes since v1:
+> > - s/cmd-gpio/cmd-gpios/
+> > - s/ready-gpio/ready-gpios/ in the documentation paragraph
+> > - Remove status = "okay" from the example
+> > 
+> >  .../bindings/misc/olpc,xo1.75-ec.txt          | 23 +++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt
+> > 
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
 
-
-
-> +       /* Node for the FUSB302 controller */
-> +       data->fusb302_node = fwnode_create_software_node(fusb302_props, NULL);
-> +       if (IS_ERR(data->fusb302_node))
-> +               return PTR_ERR(data->fusb302_node);
-> +
-> +       /* Node for the connector (FUSB302 is the parent) */
-> +       data->port_node = fwnode_create_software_node(usb_connector_props,
-> +                                                     data->fusb302_node);
-> +       if (IS_ERR(data->port_node)) {
-
-> +               fwnode_remove_software_node(data->fusb302_node);
-
-Sounds like a candidate for
-devm_fwnode_create_software_node()
-
-> +               return PTR_ERR(data->port_node);
-> +       }
+Rob, I saw you ack this patch in an earlier version. Based on your comment here,
+is that ack still valid?
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Darren Hart
+VMware Open Source Technology Center
