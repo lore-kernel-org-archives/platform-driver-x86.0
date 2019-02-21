@@ -1,45 +1,53 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: intel_cht_int33fe: Provide fwnode for
- the USB connector
-Date: Thu, 21 Feb 2019 16:21:58 +0200
-Message-ID: <CAHp75VeVKs=Knu-H34qY5EmUgKd61+yQ5QbkOrOGv+3Nv+yW_g@mail.gmail.com>
-References: <20190219115959.55553-1-heikki.krogerus@linux.intel.com>
- <20190219115959.55553-2-heikki.krogerus@linux.intel.com> <CAHp75Vca+yNuNJaAuB_2_5Vgq8+0FvrBWS1VbvqhAr0nq1UYPw@mail.gmail.com>
- <20190221135641.GG5054@kuha.fi.intel.com>
+Subject: Re: [PATCH] platform/x86: intel_pmc_core: Avoid a u32 overflow
+Date: Thu, 21 Feb 2019 16:24:52 +0200
+Message-ID: <CAHp75VdHMgfxT-n-4tMqM1pNOH970erGAhajUvg5wUrsf3xH8Q@mail.gmail.com>
+References: <20190216001920.178053-1-rajatja@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190221135641.GG5054@kuha.fi.intel.com>
+In-Reply-To: <20190216001920.178053-1-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rajat Jain <rajatja@google.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajat Jain <rajatxjain@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Feb 21, 2019 at 3:56 PM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
-> On Thu, Feb 21, 2019 at 03:46:46PM +0200, Andy Shevchenko wrote:
-> > On Tue, Feb 19, 2019 at 2:00 PM Heikki Krogerus
-> > <heikki.krogerus@linux.intel.com> wrote:
-> > >
-> > > In ACPI, and now also in DT, the USB connectors usually have
-> > > their own device nodes. In case of USB Type-C, those
-> > > connector (port) nodes are child nodes of the controller or
-> > > PHY device, in our case the fusb302. The software fwnodes
-> > > allow us to create a similar child node for fusb302 that
-> > > represents the connector also on Intel CHT.
-> > >
-> > > This makes it possible replace the fusb302 specific device
-> > > properties which were deprecated with the common USB
-> > > connector properties that tcpm.c is able to use directly.
-> > >
-> >
-> > This doesn't apply to our for-next branch.
+On Sat, Feb 16, 2019 at 2:19 AM Rajat Jain <rajatja@google.com> wrote:
 >
-> Please read the cover-letter ;-)
+> The register (SLP_S0_RES) at offset slp_s0_offset is a 32 bit register.
+> The pmc_core_adjust_slp_s0_step() could overflow the u32 value while
+> returning it after adjusting the step. Thus change to u64, this is
+> already accounted for in debugfs attribute (that wants to output a
+> 64 bit value).
+>
 
-Ah, sure.
-I did it once and even remove from our patchwork queue, but then
-forgot details. Now it's all clear.
+Pushed to my review and testing queue, thanks!
+
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+>  drivers/platform/x86/intel_pmc_core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index 22dbf115782e..f90f4dd25151 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -328,9 +328,9 @@ static inline void pmc_core_reg_write(struct pmc_dev *pmcdev, int
+>         writel(val, pmcdev->regbase + reg_offset);
+>  }
+>
+> -static inline u32 pmc_core_adjust_slp_s0_step(u32 value)
+> +static inline u64 pmc_core_adjust_slp_s0_step(u32 value)
+>  {
+> -       return value * SPT_PMC_SLP_S0_RES_COUNTER_STEP;
+> +       return (u64)value * SPT_PMC_SLP_S0_RES_COUNTER_STEP;
+>  }
+>
+>  static int pmc_core_dev_state_get(void *data, u64 *val)
+> --
+> 2.21.0.rc0.258.g878e2cd30e-goog
+>
+
 
 -- 
 With Best Regards,
