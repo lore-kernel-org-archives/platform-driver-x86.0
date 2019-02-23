@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 53/72] platform/x86: Fix unmet dependency warning for SAMSUNG_Q10
-Date: Sat, 23 Feb 2019 16:04:03 -0500
-Message-ID: <20190223210422.199966-53-sashal@kernel.org>
-References: <20190223210422.199966-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 49/65] platform/x86: Fix unmet dependency warning for SAMSUNG_Q10
+Date: Sat, 23 Feb 2019 16:06:24 -0500
+Message-ID: <20190223210640.200911-49-sashal@kernel.org>
+References: <20190223210640.200911-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190223210422.199966-1-sashal@kernel.org>
+In-Reply-To: <20190223210640.200911-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Sinan Kaya <okaya@kernel.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
@@ -38,10 +38,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 458f92aac92ec..0430cad6d84ea 100644
+index 96afca4648d54..7563c07e14e41 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -1125,6 +1125,7 @@ config INTEL_OAKTRAIL
+@@ -1078,6 +1078,7 @@ config INTEL_OAKTRAIL
  config SAMSUNG_Q10
  	tristate "Samsung Q10 Extras"
  	depends on ACPI
