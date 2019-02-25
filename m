@@ -1,53 +1,76 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 52/72] platform/x86: Fix unmet dependency warning for ACPI_CMPC
-Date: Sat, 23 Feb 2019 16:04:02 -0500
-Message-ID: <20190223210422.199966-52-sashal@kernel.org>
-References: <20190223210422.199966-1-sashal@kernel.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH 0/2] platform/x86: intel_cht_int33fe: Start using
+ software nodes
+Date: Mon, 25 Feb 2019 17:48:23 +0200
+Message-ID: <20190225154823.GA2808@kuha.fi.intel.com>
+References: <20190219115959.55553-1-heikki.krogerus@linux.intel.com>
+ <d0e10d6f-efb5-0139-d6c9-edb66c97c0b6@redhat.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190223210422.199966-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Sinan Kaya <okaya@kernel.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d0e10d6f-efb5-0139-d6c9-edb66c97c0b6@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Sinan Kaya <okaya@kernel.org>
+On Fri, Feb 22, 2019 at 05:31:32PM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 2/19/19 12:59 PM, Heikki Krogerus wrote:
+> > Hi guys,
+> > 
+> > The software nodes support node hierarchy. By using them with fusb302
+> > we can add a separate fwnode also for the USB connector as a child of
+> > fusb302. We can then use the "standard" USB connector device
+> > properties with the connector node, and stop using the deprecated
+> > fusb302 specific properties.
+> > 
+> > Since the goal is to ultimately move to the software node API from the
+> > old device property API, converting also max17047 in this series.
+> > 
+> > If you test this now (before v5.1-rc1 is out), then the series depends
+> > Greg's latest usb-next:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/log/?h=usb-next
+> > 
+> > and on a patch in Rafael's latest linux-next branch:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?h=linux-next&id=344798206f171c5abea7ab1f9762fa526d7f539d
+> 
+> Interesting series, I like the direction this is heading in.
+> 
+> Question, I currently have this hack to test DP over Type-C on the
+> GPD-pocket / GPD-win:
+> 
+> https://github.com/jwrdegoede/linux-sunxi/commit/f481b7032030dcdda1ccc39875eb59f996d3e775
+> 
+> Do this properly we need to add alt-modes support for usb-c-connector nodes to:
+> Documentation/devicetree/bindings/connector/usb-connector.txt
 
-[ Upstream commit d58bf90a32a33becec78c3034e781735049fcd25 ]
+Yes, this is a topic I wanted to talk about.
 
-Add BACKLIGHT_LCD_SUPPORT for ACPI_CMPC to fix the
-warning: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE.
+> Do you have any ideas for what the binding this should look like, we need to
+> specify a svid, mode and vdo tripple in this case. Maybe use an u32 array
+> with 3, 6, 9, ... entries depending on how much alt-modes the fwnode needs to
+> specify ?
 
-ACPI_CMPC selects BACKLIGHT_CLASS_DEVICE but BACKLIGHT_CLASS_DEVICE
-depends on BACKLIGHT_LCD_SUPPORT.
+My idea was to use sub-nodes, i.e. every alt mode a connector supports
+would need to have its own child node under the connector node. Those
+sub-nodes could then have a device property "svid" and another device
+property "vdo", etc.
 
-Copy BACKLIGHT_LCD_SUPPORT dependency into ACPI_CMPC to fix
+I think that approach would be OK in DT, and we can now support it also
+with the software nodes, and even in ACPI there are now something
+called "data nodes" which can be used for this purpose.
 
-WARNING: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE
-  Depends on [n]: HAS_IOMEM [=y] && BACKLIGHT_LCD_SUPPORT [=n]
-  Selected by [y]:
-  - ACPI_CMPC [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && ACPI [=y] && INPUT [=y] && (RFKILL [=n] || RFKILL [=n]=n)
+There are some questions though. That "USB connector" node description
+relies on OF graph, so should we just extend those "endpoint" nodes
+(which are sub-nodes), or should be still have dedicated sub-nodes for
+the alt modes? I think we may need dedicated nodes for the alt modes
+in any case if we choose to use this approach.
 
-Signed-off-by: Sinan Kaya <okaya@kernel.org>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 54f6a40c75c69..458f92aac92ec 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -901,6 +901,7 @@ config TOSHIBA_WMI
- config ACPI_CMPC
- 	tristate "CMPC Laptop Extras"
- 	depends on ACPI && INPUT
-+	depends on BACKLIGHT_LCD_SUPPORT
- 	depends on RFKILL || RFKILL=n
- 	select BACKLIGHT_CLASS_DEVICE
- 	help
+thanks,
+
 -- 
-2.19.1
+heikki
