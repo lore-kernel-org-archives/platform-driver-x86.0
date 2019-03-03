@@ -1,53 +1,86 @@
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] x86: uv: Fix potential NULL pointer dereference of
- kmalloc_node
-Date: Sat, 2 Mar 2019 15:22:29 -0600
-Message-ID: <8c14879c-891d-db56-2dca-cd3b68afce2d@embeddedor.com>
-References: <20190302210905.13032-1-pakki001@umn.edu>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the CHUWI
+ Hi10 Air tablet
+Date: Sun, 3 Mar 2019 11:55:17 +0100
+Message-ID: <c6b0c2ef-eed9-ffae-e974-92260d5356aa@redhat.com>
+References: <20190301164002.6031-1-me@myself5.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190302210905.13032-1-pakki001@umn.edu>
+In-Reply-To: <20190301164002.6031-1-me@myself5.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aditya Pakki <pakki001@umn.edu>
-Cc: kjlu@umn.edu, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Nicolai Stange <nstange@suse.de>, Kees Cook <keescook@chromium.org>, Andrew Banman <abanman@hpe.com>, Mike Travis <mike.travis@hpe.com>, Colin Ian King <colin.king@canonical.com>, Varsha Rao <rvarsha016@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: me@myself5.de
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Aditya,
+Hi,
 
-On 3/2/19 3:09 PM, Aditya Pakki wrote:
-> kmalloc_node might fail to allocate memory for thp field. This fix
-> attempts to avoid a potential NULL pointer dereference.
->
-
-If this was detected by any static analyzer, please mention the
-tool in the commit log.
-
-Also, notice that this code does not apply to linux-next.
-
-Thanks
---
-Gustavo
-
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> ---
->  arch/x86/platform/uv/tlb_uv.c | 3 +++
->  1 file changed, 3 insertions(+)
+On 01-03-19 17:40, me@myself5.de wrote:
+> From: Christian Oder <me@myself5.de>
 > 
-> diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
-> index a4130b84d1ff..5a6d51e30a36 100644
-> --- a/arch/x86/platform/uv/tlb_uv.c
-> +++ b/arch/x86/platform/uv/tlb_uv.c
-> @@ -2011,6 +2011,9 @@ static void make_per_cpu_thp(struct bau_control *smaster)
->  	size_t hpsz = sizeof(struct hub_and_pnode) * num_possible_cpus();
->  
->  	smaster->thp = kmalloc_node(hpsz, GFP_KERNEL, smaster->osnode);
-> +	if (!smaster->thp)
-> +		return;
+> Add  touchscreen info for the CHUWUI Hi10 Air tablet.
+> 
+> Signed-off-by: Christian Oder <me@myself5.de>
+
+Thank you for the patch, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+> ---
+>   drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
+>   1 file changed, 27 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index 167a156e3cc7..2d56ff7c8230 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -72,6 +72,25 @@ static const struct ts_dmi_data chuwi_hi8_pro_data = {
+>   	.properties	= chuwi_hi8_pro_props,
+>   };
+>   
+> +static const struct property_entry chuwi_hi10_air_props[] = {
+> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1981),
+> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1271),
+> +	PROPERTY_ENTRY_U32("touchscreen-min-x", 99),
+> +	PROPERTY_ENTRY_U32("touchscreen-min-y", 9),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+> +	PROPERTY_ENTRY_U32("touchscreen-fuzz-x", 5),
+> +	PROPERTY_ENTRY_U32("touchscreen-fuzz-y", 4),
+> +	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-hi10-air.fw"),
+> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +	PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +	{ }
+> +};
 > +
->  	memset(smaster->thp, 0, hpsz);
->  	for_each_present_cpu(cpu) {
->  		smaster->thp[cpu].pnode = uv_cpu_hub_info(cpu)->pnode;
+> +static const struct ts_dmi_data chuwi_hi10_air_data = {
+> +	.acpi_name	= "MSSL1680:00",
+> +	.properties	= chuwi_hi10_air_props,
+> +};
+> +
+>   static const struct property_entry chuwi_vi8_props[] = {
+>   	PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
+>   	PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
+> @@ -546,6 +565,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+>   			DMI_MATCH(DMI_PRODUCT_NAME, "X1D3_C806N"),
+>   		},
+>   	},
+> +	{
+> +		/* Chuwi Hi10 Air */
+> +		.driver_data = (void *)&chuwi_hi10_air_data,
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
+> +			DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
+> +		},
+> +	},
+>   	{
+>   		/* Chuwi Vi8 (CWI506) */
+>   		.driver_data = (void *)&chuwi_vi8_data,
 > 
