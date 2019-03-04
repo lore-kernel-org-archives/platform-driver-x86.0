@@ -1,138 +1,40 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_int0002_vgpio: Only implement
- irq_set_wake on Bay Trail
-Date: Mon, 4 Mar 2019 16:33:43 +0200
-Message-ID: <CAHp75VdCzXc4vR0hwZraim1RverguQz0wyvsF4N0SiotxL5DMA@mail.gmail.com>
-References: <20190203094233.12177-1-hdegoede@redhat.com> <CAHp75Veb-QarB-9mQtNWcrL5qr0-ZeXwgscBeS-O-=cgpOjE_w@mail.gmail.com>
- <CAKErNvpXbqOzQRogHEyEnS1WHmJ005YemB33bL54Jx6QDBKHrg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 1/3] x86: apuv2: remove unused variable
+Date: Mon,  4 Mar 2019 21:09:07 +0100
+Message-ID: <20190304200918.1444050-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKErNvpXbqOzQRogHEyEnS1WHmJ005YemB33bL54Jx6QDBKHrg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxim Mikityanskiy <maxtram95@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: "Enrico Weigelt, metux IT consult" <info@metux.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Mar 4, 2019 at 4:09 PM Maxim Mikityanskiy <maxtram95@gmail.com> wrote:
->
-> On Tue, Feb 5, 2019 at 8:20 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> >
-> > On Sun, Feb 3, 2019 at 11:42 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> > >
-> > > Commit c3b8e884defa ("platform/x86: intel_int0002_vgpio: Implement
-> > > irq_set_wake"), was written to fix some wakeup issues on Bay Trail (BYT)
-> > > devices.
-> > >
-> > > We've received a bug report that this causes a suspend regression on some
-> > > Cherry Trail (CHT) based devices.
-> > >
-> > > To fix the issues this causes on CHT devices, this commit modifies the
-> > > irq_set_wake support so that we only implement irq_set_wake on BYT devices,
-> > >
-> >
-> > Pushed to my review and testing queue, thanks!
->
-> Kernel 5.0 was released without this patch, is it still planned to merge it?
+The driver was newly introduced but the version that got merged
+produces a harmless compiler warning:
 
-It will be in 5.1-rc1 and then we may send it to stable trees.
+drivers/platform/x86/pcengines-apuv2.c: In function 'apu_board_init':
+drivers/platform/x86/pcengines-apuv2.c:211:6: error: unused variable 'rc' [-Werror=unused-variable]
 
->
-> > > Fixes: c3b8e884defa ("platform/x86: intel_int0002_vgpio: ... irq_set_wake")
-> > > Reported-and-tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
-> > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > > ---
-> > >  drivers/platform/x86/intel_int0002_vgpio.c | 32 ++++++++++++++++++----
-> > >  1 file changed, 26 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
-> > > index 4b8f7305fc8a..78787934b572 100644
-> > > --- a/drivers/platform/x86/intel_int0002_vgpio.c
-> > > +++ b/drivers/platform/x86/intel_int0002_vgpio.c
-> > > @@ -51,11 +51,14 @@
-> > >  #define GPE0A_STS_PORT                 0x420
-> > >  #define GPE0A_EN_PORT                  0x428
-> > >
-> > > -#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
-> > > +#define BAYTRAIL                       0x01
-> > > +#define CHERRYTRAIL                    0x02
-> > > +
-> > > +#define ICPU(model, data) { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, data}
-> > >
-> > >  static const struct x86_cpu_id int0002_cpu_ids[] = {
-> > > -       ICPU(INTEL_FAM6_ATOM_SILVERMONT),       /* Valleyview, Bay Trail  */
-> > > -       ICPU(INTEL_FAM6_ATOM_AIRMONT),          /* Braswell, Cherry Trail */
-> > > +       ICPU(INTEL_FAM6_ATOM_SILVERMONT, BAYTRAIL), /* Valleyview, Bay Trail  */
-> > > +       ICPU(INTEL_FAM6_ATOM_AIRMONT, CHERRYTRAIL), /* Braswell, Cherry Trail */
-> > >         {}
-> > >  };
-> > >
-> > > @@ -135,7 +138,7 @@ static irqreturn_t int0002_irq(int irq, void *data)
-> > >         return IRQ_HANDLED;
-> > >  }
-> > >
-> > > -static struct irq_chip int0002_irqchip = {
-> > > +static struct irq_chip int0002_byt_irqchip = {
-> > >         .name                   = DRV_NAME,
-> > >         .irq_ack                = int0002_irq_ack,
-> > >         .irq_mask               = int0002_irq_mask,
-> > > @@ -143,10 +146,22 @@ static struct irq_chip int0002_irqchip = {
-> > >         .irq_set_wake           = int0002_irq_set_wake,
-> > >  };
-> > >
-> > > +static struct irq_chip int0002_cht_irqchip = {
-> > > +       .name                   = DRV_NAME,
-> > > +       .irq_ack                = int0002_irq_ack,
-> > > +       .irq_mask               = int0002_irq_mask,
-> > > +       .irq_unmask             = int0002_irq_unmask,
-> > > +       /*
-> > > +        * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
-> > > +        * and we don't want to mess with the ACPI SCI irq settings.
-> > > +        */
-> > > +};
-> > > +
-> > >  static int int0002_probe(struct platform_device *pdev)
-> > >  {
-> > >         struct device *dev = &pdev->dev;
-> > >         const struct x86_cpu_id *cpu_id;
-> > > +       struct irq_chip *irq_chip;
-> > >         struct gpio_chip *chip;
-> > >         int irq, ret;
-> > >
-> > > @@ -195,14 +210,19 @@ static int int0002_probe(struct platform_device *pdev)
-> > >                 return ret;
-> > >         }
-> > >
-> > > -       ret = gpiochip_irqchip_add(chip, &int0002_irqchip, 0, handle_edge_irq,
-> > > +       if (cpu_id->driver_data == BAYTRAIL)
-> > > +               irq_chip = &int0002_byt_irqchip;
-> > > +       else
-> > > +               irq_chip = &int0002_cht_irqchip;
-> > > +
-> > > +       ret = gpiochip_irqchip_add(chip, irq_chip, 0, handle_edge_irq,
-> > >                                    IRQ_TYPE_NONE);
-> > >         if (ret) {
-> > >                 dev_err(dev, "Error adding irqchip: %d\n", ret);
-> > >                 return ret;
-> > >         }
-> > >
-> > > -       gpiochip_set_chained_irqchip(chip, &int0002_irqchip, irq, NULL);
-> > > +       gpiochip_set_chained_irqchip(chip, irq_chip, irq, NULL);
-> > >
-> > >         return 0;
-> > >  }
-> > > --
-> > > 2.20.1
-> > >
-> >
-> >
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
+Remove the evidently useless variable.
 
+Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/pcengines-apuv2.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-
+diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+index dcb084f6b892..c1ca931e1fab 100644
+--- a/drivers/platform/x86/pcengines-apuv2.c
++++ b/drivers/platform/x86/pcengines-apuv2.c
+@@ -208,7 +208,6 @@ static struct platform_device * __init apu_create_pdev(
+ 
+ static int __init apu_board_init(void)
+ {
+-	int rc;
+ 	const struct dmi_system_id *id;
+ 
+ 	id = dmi_first_match(apu_gpio_dmi_table);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.0
