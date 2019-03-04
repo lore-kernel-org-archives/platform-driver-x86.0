@@ -1,13 +1,13 @@
 From: Arnd Bergmann <arnd@arndb.de>
 Subject: [PATCH 1/3] x86: apuv2: remove unused variable
-Date: Mon,  4 Mar 2019 21:09:07 +0100
-Message-ID: <20190304200918.1444050-1-arnd@arndb.de>
+Date: Mon,  4 Mar 2019 21:19:19 +0100
+Message-ID: <20190304201930.1622839-1-arnd@arndb.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "Enrico Weigelt, metux IT consult" <info@metux.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linusw@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-gpio@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 The driver was newly introduced but the version that got merged
