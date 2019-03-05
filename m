@@ -1,56 +1,67 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Add Ideapad 530S-14ARR to
- no_hw_rfkill list
-Date: Tue, 5 Mar 2019 15:48:00 +0200
-Message-ID: <CAHp75VfRGeJnggyMonVaUo-pEZV9zN-JV1rBU+ZtajDtOrAD1w@mail.gmail.com>
-References: <20190305085521.25304-1-kai.heng.feng@canonical.com>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Re: [PATCH 2/3] x86: apuv2: fix input dependencies
+Date: Tue, 5 Mar 2019 14:50:33 +0100
+Message-ID: <54a7d035-155f-c47b-1db1-acb851b3aec6@metux.net>
+References: <20190304201930.1622839-1-arnd@arndb.de>
+ <20190304201930.1622839-2-arnd@arndb.de>
+ <a94c3c6a-481e-96a5-74e1-8c3299c74129@metux.net>
+ <CAK8P3a0vdhCTNTF-K0mXjRWkPvv0qr3nf_52=8n6zTa7p3ELLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190305085521.25304-1-kai.heng.feng@canonical.com>
+In-Reply-To: <CAK8P3a0vdhCTNTF-K0mXjRWkPvv0qr3nf_52=8n6zTa7p3ELLw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Ike Panhc <ike.pan@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linus Walleij <linusw@kernel.org>, Enrico Weigelt <info@metux.net>, Andy Shevchenko <andy.shevchenko@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Mar 5, 2019 at 10:55 AM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> This platform doesn't have hardware switch for rfkill, so add it to
-> no_hw_rfkill list to prevent wireless gets hard-blocked.
->
-> https://bugs.launchpad.net/bugs/1818204
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+On 05.03.19 09:23, Arnd Bergmann wrote:
 
-Pushed to my review and testing queue, thanks!
+(CC'ing kbuild maintainer + list, hoping for better ideas :)
 
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 1589dffab9fa..037970a1800a 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -1090,6 +1090,13 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
->                         DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15ISK"),
->                 },
->         },
-> +       {
-> +               .ident = "Lenovo ideapad 530S-14ARR",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 530S-14ARR"),
-> +               },
-> +       },
->         {
->                 .ident = "Lenovo ideapad Y700-14ISK",
->                 .matches = {
-> --
-> 2.17.1
->
 
+> No, that wouldn't be good here. In effect that means that with INPUT disabled,
+> most of the x86 platform drivers are disabled, until you enable the
+> PCENGINES_APU2 symbol, which then ends up showing all the other
+> symbols at once, and changing them to their default states.
+
+Okay, I didn't consider the defaults.
+
+Maybe we should talk about step by step getting away from these defaults
+(perhaps move them to the defconfigs ?) on a broader scale ... but yeah,
+that's far out of scope now.
+
+So, you've conviced me.
+Add me to Reviewed-By to your patches and forget about mine.
+
+> Another problem is that you likely run into circular dependency chains
+> after trying that. The best practice for select vs. depends are
+
+hmm, if circular deps happen, wouldn't that mean we've got some deeper
+problems in here ? IMHO, dependencies should always form a DAG (except
+for some really rare cases).
+
+Do you recall any actual problem w/ input vs gpio vs. drivers ?
+I'd like to have a closer look at it.
+
+> 1. try to use 'depends on' if you can
+
+Well, this has the unpleasant side effect that we often have to enable
+a lot of things, just to even see the individual driver. For people who
+just wanna configure a kernel for their board, this is a bit nasty.
+
+But, okay, I'm going to do this w/ my own tool - I've written a small
+tool that allows easy kernel reconfiguration on a higher level: you
+can just pick some board templates and enable high level features like
+eth, gpu, etc - it automatically creates a .config for you. I'm going
+announce it on lkml soon.
+
+
+--mtx
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
