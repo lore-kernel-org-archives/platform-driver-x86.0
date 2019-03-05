@@ -1,94 +1,54 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: touchscreen_dmi: Add info for the CHUWI
- Hi10 Air tablet
-Date: Tue, 5 Mar 2019 15:42:23 +0200
-Message-ID: <CAHp75VfHVWj-JBxqDMu1R249M_WpkzHgyX2dQr40JkPUNwNL5A@mail.gmail.com>
-References: <c6b0c2ef-eed9-ffae-e974-92260d5356aa@redhat.com>
- <20190303134727.6680-1-me@myself5.de> <f4937ec1-9dac-0810-7386-a15ec5d306ae@redhat.com>
+Subject: Re: [PATCH 1/3] x86: apuv2: remove unused variable
+Date: Tue, 5 Mar 2019 15:47:05 +0200
+Message-ID: <CAHp75Vf_H8_++QtwPhGAyjnPE1hriU-85_WnmP6PO6D8uM9H5g@mail.gmail.com>
+References: <20190304201930.1622839-1-arnd@arndb.de> <25276a71-2d50-0039-226c-3066a3767c0d@metux.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f4937ec1-9dac-0810-7386-a15ec5d306ae@redhat.com>
+In-Reply-To: <25276a71-2d50-0039-226c-3066a3767c0d@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Christian Oder <me@myself5.de>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, linux-input <linux-input@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc: Arnd Bergmann <arnd@arndb.de>, "Enrico Weigelt, metux IT consult" <info@metux.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linus Walleij <linusw@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Mar 3, 2019 at 3:59 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Tue, Mar 5, 2019 at 2:04 AM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
 >
-> Hi Christian,
+> On 04.03.19 21:19, Arnd Bergmann wrote:
 >
-> On 03-03-19 14:47, Christian Oder wrote:
-> > Add  touchscreen info for the CHUWUI Hi10 Air tablet.
+> > diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+> > index dcb084f6b892..c1ca931e1fab 100644
+> > --- a/drivers/platform/x86/pcengines-apuv2.c
+> > +++ b/drivers/platform/x86/pcengines-apuv2.c
+> > @@ -208,7 +208,6 @@ static struct platform_device * __init apu_create_pdev(
 > >
-> > Signed-off-by: Christian Oder <me@myself5.de>
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> >  static int __init apu_board_init(void)
+> >  {
+> > -     int rc;
+> >       const struct dmi_system_id *id;
+> >
+> >       id = dmi_first_match(apu_gpio_dmi_table);
+> >
+>
+> ACK.
+>
+> Reviewed-By: Enrico Weigelt, metux IT consult <info@metux.net>
 
-Pushed to my review and testing queue, thanks!
+Patches from here presumably should go to v5.1-rc1 or, if Linus would
+do it, through his tree.
 
-> > ---
-> > Changes in v2:
-> > - added review tag
+Linus, I'm fine with what Randy and Arnd sent for fixing this driver.
+
 >
-> A quick note for any patches you may submit in the future, there
-> is no need to send a v2 just to add someones Reviewed-by or Acked-by,
-> these will be picked up automatically by the subsys-maintainer when
-> they add the patch to their tree.
 >
-> Regards,
+> thx
+> --mtx
 >
-> Hans
->
-> >
-> >   drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
-> >   1 file changed, 27 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> > index 167a156e3cc7..2d56ff7c8230 100644
-> > --- a/drivers/platform/x86/touchscreen_dmi.c
-> > +++ b/drivers/platform/x86/touchscreen_dmi.c
-> > @@ -72,6 +72,25 @@ static const struct ts_dmi_data chuwi_hi8_pro_data = {
-> >       .properties     = chuwi_hi8_pro_props,
-> >   };
-> >
-> > +static const struct property_entry chuwi_hi10_air_props[] = {
-> > +     PROPERTY_ENTRY_U32("touchscreen-size-x", 1981),
-> > +     PROPERTY_ENTRY_U32("touchscreen-size-y", 1271),
-> > +     PROPERTY_ENTRY_U32("touchscreen-min-x", 99),
-> > +     PROPERTY_ENTRY_U32("touchscreen-min-y", 9),
-> > +     PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-> > +     PROPERTY_ENTRY_U32("touchscreen-fuzz-x", 5),
-> > +     PROPERTY_ENTRY_U32("touchscreen-fuzz-y", 4),
-> > +     PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-hi10-air.fw"),
-> > +     PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> > +     PROPERTY_ENTRY_BOOL("silead,home-button"),
-> > +     { }
-> > +};
-> > +
-> > +static const struct ts_dmi_data chuwi_hi10_air_data = {
-> > +     .acpi_name      = "MSSL1680:00",
-> > +     .properties     = chuwi_hi10_air_props,
-> > +};
-> > +
-> >   static const struct property_entry chuwi_vi8_props[] = {
-> >       PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
-> >       PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
-> > @@ -546,6 +565,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
-> >                       DMI_MATCH(DMI_PRODUCT_NAME, "X1D3_C806N"),
-> >               },
-> >       },
-> > +     {
-> > +             /* Chuwi Hi10 Air */
-> > +             .driver_data = (void *)&chuwi_hi10_air_data,
-> > +             .matches = {
-> > +                     DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-> > +                     DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
-> > +             },
-> > +     },
-> >       {
-> >               /* Chuwi Vi8 (CWI506) */
-> >               .driver_data = (void *)&chuwi_vi8_data,
-> >
+> --
+> Enrico Weigelt, metux IT consult
+> Free software and Linux embedded engineering
+> info@metux.net -- +49-151-27565287
 
 
 
