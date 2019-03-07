@@ -1,33 +1,61 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: disable bluetooth for some machines
-Date: Thu, 7 Mar 2019 14:41:39 +0200
-Message-ID: <CAHp75VfCfmqZyBs+8Mr9sh2C_y+XanA0C_NA2uhDJD3yQDh6dQ@mail.gmail.com>
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH] platform/x86: thinkpad_acpi: disable bluetooth for some
+ machines
+Date: Thu, 7 Mar 2019 17:00:35 +0000
+Message-ID: <4801d0ea91ac46888b11d924b9508d1e@AcuMS.aculab.com>
 References: <20190307080820.9723-1-jiaxun.yang@flygoat.com>
- <20190307112041.GC13633@kroah.com> <c84c9553-e31b-a175-59a3-aeb35afd0854@flygoat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <c84c9553-e31b-a175-59a3-aeb35afd0854@flygoat.com>
+In-Reply-To: <20190307080820.9723-1-jiaxun.yang@flygoat.com>
+Content-Language: en-US
 Sender: stable-owner@vger.kernel.org
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stable <stable@vger.kernel.org>
+To: 'Jiaxun Yang' <jiaxun.yang@flygoat.com>, "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>
+Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "andy@infradead.org" <andy@infradead.org>, "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Mar 7, 2019 at 2:30 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
-> > On Thu, Mar 07, 2019 at 04:08:20PM +0800, Jiaxun Yang wrote:
-> >> Some AMD based ThinkPads have a firmware bug that calling
-> >> "GBDC" will cause bluetooth on Intel wireless cards blocked.
-> >>
-> >> Probe these models by DMI match and disable bluetooth subdriver
-> >> if specified Intel wireless card exist.
+From: Jiaxun Yang
+> Sent: 07 March 2019 08:08
+...
+> +static int __init have_bt_fwbug(void)
+> +{
+> +	/* Some AMD based ThinkPads have a firmware bug that calling
+> +	 * "GBDC" will cause bluetooth on Intel wireless cards blocked
+> +	 */
+> +	if (dmi_check_system(bt_fwbug_list)) {
+> +		if (pci_get_device(PCI_VENDOR_ID_INTEL, 0x24F3, NULL) || \
 
-> Thanks for remind.
->
-> Should I resend this patch in correct way?
+WTF if that \ ??
 
-It still needs a bit of work, and as I told you, we are now during an
-opened merge window.
+> +		    pci_get_device(PCI_VENDOR_ID_INTEL, 0x24FD, NULL) || \
+> +		    pci_get_device(PCI_VENDOR_ID_INTEL, 0x2526, NULL))
+> +			return 1;
+> +		else
+> +			return 0;
+> +	} else {
+> +			return 0;
+> +	}
+> +}
 
--- 
-With Best Regards,
-Andy Shevchenko
+You don't need 'else' after a 'return'.
+I'd also put the return nearer the test.
+
+While the above could be written:
+	return dmi_check_system(bt_fwbug_list) &&
+		(pci_get_device(PCI_VENDOR_ID_INTEL, 0x24F3, NULL) ||
+		pci_get_device(PCI_VENDOR_ID_INTEL, 0x24FD, NULL) ||
+		pci_get_device(PCI_VENDOR_ID_INTEL, 0x2526, NULL));
+
+I think I'd write:
+	if (!dmi_check_system(bt_fwbug_list))
+		return 0;
+	return pci_get_device(PCI_VENDOR_ID_INTEL, 0x24F3, NULL) ||
+		pci_get_device(PCI_VENDOR_ID_INTEL, 0x24FD, NULL) ||
+		pci_get_device(PCI_VENDOR_ID_INTEL, 0x2526, NULL);
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
