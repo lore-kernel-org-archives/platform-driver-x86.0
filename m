@@ -1,54 +1,58 @@
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: disable bluetooth for some
- machines
-Date: Fri, 8 Mar 2019 09:14:24 +0800
-Message-ID: <a3ad032f-6b03-2e0e-ba3d-89de4cc35ed8@flygoat.com>
-References: <20190307080820.9723-1-jiaxun.yang@flygoat.com>
- <28af3c22ad144cf69284aa6f91ee6565@ausx13mpc124.AMER.DELL.COM>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/3] x86: apuv2: select LEDS_CLASS
+Date: Fri, 8 Mar 2019 10:05:00 +0100
+Message-ID: <CACRpkdad_HeZ9oKGZXmX2Yn2NcD8V+sAje=ELxSXeFeMGGjr8w@mail.gmail.com>
+References: <20190304201930.1622839-1-arnd@arndb.de> <20190304201930.1622839-3-arnd@arndb.de>
+ <24c191e1-f607-1320-2474-3db92383e383@metux.net> <e5f1511e-c750-8fb2-0bfe-c73bc7905b22@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <28af3c22ad144cf69284aa6f91ee6565@ausx13mpc124.AMER.DELL.COM>
-Content-Language: en-US
-Sender: stable-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com, ibm-acpi@hmh.eng.br
-Cc: dvhart@infradead.org, andy@infradead.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e5f1511e-c750-8fb2-0bfe-c73bc7905b22@infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: "Enrico Weigelt, metux IT consult" <lkml@metux.net>, Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linus Walleij <linusw@kernel.org>, Enrico Weigelt <info@metux.net>, Andy Shevchenko <andy.shevchenko@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Tue, Mar 5, 2019 at 1:09 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+> On 3/4/19 4:03 PM, Enrico Weigelt, metux IT consult wrote:
+> > On 04.03.19 21:19, Arnd Bergmann wrote:
+> >> LEDS_GPIO can only be selected when LEDS_CLASS is already enabled:
+> >>
+> >> WARNING: unmet direct dependencies detected for LEDS_GPIO
+> >>   Depends on [m]: NEW_LEDS [=y] && LEDS_CLASS [=m] && (GPIOLIB [=y] || COMPILE_TEST [=y])
+> >>   Selected by [y]:
+> >>   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT_KEYBOARD [=y]
+> >>
+> >> Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
+> >> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> >> ---
+> >>  drivers/platform/x86/Kconfig | 1 +
+> >>  1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> >> index 4d65d37b0c86..d64529352a9c 100644
+> >> --- a/drivers/platform/x86/Kconfig
+> >> +++ b/drivers/platform/x86/Kconfig
+> >> @@ -1308,6 +1308,7 @@ config PCENGINES_APU2
+> >>      depends on INPUT && INPUT_KEYBOARD
+> >>      select GPIO_AMD_FCH
+> >>      select KEYBOARD_GPIO_POLLED
+> >> +    select LEDS_CLASS
+> >>      select LEDS_GPIO
+> >>      help
+> >>        This driver provides support for the front button and LEDs on
+> >>
+> >
+> > ACK. Just was about to post the same :)
+> >
+> > Reviewed-by: Enrico Weigelt, metux It consult <info@metux.net>
+> >
+>
+> Enrico, you were also cc-ed on this patch on Feb.25, 2019:
+>
+> https://marc.info/?l=linux-kernel&m=155113875310485&w=2
 
-ÔÚ 2019/3/8 ÉÏÎç7:14, Mario.Limonciello@dell.com Ð´µÀ:
->   -----Original Message-----
->> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
->> owner@vger.kernel.org> On Behalf Of Jiaxun Yang
->> Sent: Thursday, March 7, 2019 2:08 AM
->> To: ibm-acpi@hmh.eng.br
->> Cc: dvhart@infradead.org; andy@infradead.org; ibm-acpi-
->> devel@lists.sourceforge.net; platform-driver-x86@vger.kernel.org; linux-
->> kernel@vger.kernel.org; stable@vger.kernel.org; Jiaxun Yang
->> Subject: [PATCH] platform/x86: thinkpad_acpi: disable bluetooth for some
->> machines
->>
->>
->> [EXTERNAL EMAIL]
->>
->> Some AMD based ThinkPads have a firmware bug that calling
->> "GBDC" will cause bluetooth on Intel wireless cards blocked.
+I applied Randy's more extensive patch.
 
-Hi,
-
-Thanks for your suggestions.
-
-> Since this is considered a firmware bug; has the OEM (and IBV) been notified?  Is it
-> fixed in a newer version of the firmware?
-No. I've noticed them about the bug but they said these models have no 
-official Linux support so no plan to fix.
-> If so, then this should probably only match particular broken firmware versions.
-Disable bluetooth subdriver on these models should be safe since Intel 
-cards have built-in RFKill and there is no bluetooth hotkey on these 
-machines.
->> Probe these models by DMI match and disable bluetooth subdriver
->> if specified Intel wireless card exist.
->>
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> ---
+Yours,
+Linus Walleij
