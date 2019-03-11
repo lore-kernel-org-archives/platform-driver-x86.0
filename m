@@ -1,33 +1,57 @@
-From: Hedi Berriche <hedi.berriche@hpe.com>
-Subject: Please revert 7212e37cbdf9 from 4.4-stable
-Date: Mon, 11 Mar 2019 13:48:14 +0000
-Message-ID: <20190311134814.GC30367@sarge.linuxathome.me>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 45/52] x86/CPU: Add Icelake model number
+Date: Mon, 11 Mar 2019 15:55:09 -0400
+Message-ID: <20190311195516.137772-45-sashal@kernel.org>
+References: <20190311195516.137772-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, Hedi Berriche <hedi.berriche@hpe.com>, Borislav Petkov <bp@suse.de>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>, Steve Wahl <steve.wahl@hpe.com>, Mike Travis <mike.travis@hpe.com>, Andy Shevchenko <andy@infradead.org>, Bhupesh Sharma <bhsharma@redhat.com>, Darren Hart <dvhart@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, linux-efi <linux-efi@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Borislav Petkov <bp@suse.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, dvhart@infradead.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Greg,
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 
-Could you please revert
+[ Upstream commit 8cd8f0ce0d6aafe661cb3d6781c8b82bc696c04d ]
 
-	7212e37cbdf9 x86/platform/UV: Use efi_runtime_lock to serialise BIOS calls
+Add the CPUID model number of Icelake (ICL) mobile processors to the
+Intel family list. Icelake U/Y series uses model number 0x7E.
 
-from 4.4-stable?
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "David E. Box" <david.e.box@intel.com>
+Cc: dvhart@infradead.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190214115712.19642-2-rajneesh.bhardwaj@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/include/asm/intel-family.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-In 4.4-stable efi_runtime_lock as defined in drivers/firmware/efi/runtime-wrappers.c
-is a spinlock (given it predates commit dce48e351c0d) and commit
-
-	f331e766c4be x86/platform/UV: Use efi_runtime_lock to serialise BIOS calls
-
-which 7212e37cbdf9 is a backport of, needs it to be a semaphore.
-
-Cheers,
-Hedi.
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 0dd6b0f4000e..058b1a1994c4 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -52,6 +52,8 @@
+ 
+ #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
+ 
++#define INTEL_FAM6_ICELAKE_MOBILE	0x7E
++
+ /* "Small Core" Processors (Atom) */
+ 
+ #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
 -- 
-Be careful of reading health books, you might die of a misprint.
-	-- Mark Twain
+2.19.1
