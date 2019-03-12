@@ -1,36 +1,37 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: Re: Please revert 7212e37cbdf9 from 4.4-stable
-Date: Mon, 11 Mar 2019 20:29:44 -0400
-Message-ID: <20190312002944.GL158926@sasha-vm>
-References: <20190311134814.GC30367@sarge.linuxathome.me>
+From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+Subject: [PATCH] drivers/platform/x86/dell-rbtn.c - add missing #include
+Date: Tue, 12 Mar 2019 07:26:06 -0400
+Message-ID: <17631.1552389966@turing-police>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190311134814.GC30367@sarge.linuxathome.me>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Borislav Petkov <bp@suse.de>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>, Steve Wahl <steve.wahl@hpe.com>, Mike Travis <mike.travis@hpe.com>, Andy Shevchenko <andy@infradead.org>, Bhupesh Sharma <bhsharma@redhat.com>, Darren Hart <dvhart@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, linux-efi <linux-efi@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+To: pali.rohar@gmail.com, Darren Hart <dvhart@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Mar 11, 2019 at 01:48:14PM +0000, Hedi Berriche wrote:
->Hi Greg,
->
->Could you please revert
->
->	7212e37cbdf9 x86/platform/UV: Use efi_runtime_lock to serialise BIOS calls
->
->from 4.4-stable?
->
->In 4.4-stable efi_runtime_lock as defined in drivers/firmware/efi/runtime-wrappers.c
->is a spinlock (given it predates commit dce48e351c0d) and commit
->
->	f331e766c4be x86/platform/UV: Use efi_runtime_lock to serialise BIOS calls
->
->which 7212e37cbdf9 is a backport of, needs it to be a semaphore.
+Building with W=1 complains:
+  CC [M]  drivers/platform/x86/dell-rbtn.o
+drivers/platform/x86/dell-rbtn.c:345:5: warning: no previous prototype for 'dell_rbtn_notifier_register' [-Wmissing-prototypes]
+  345 | int dell_rbtn_notifier_register(struct notifier_block *nb)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/platform/x86/dell-rbtn.c:371:5: warning: no previous prototype for 'dell_rbtn_notifier_unregister' [-Wmissing-prototypes]
+  371 | int dell_rbtn_notifier_unregister(struct notifier_block *nb)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+The real problem is a missing include. Add it to keep dell-rbtn.c and .h in sync
 
-I've queued up the revert. I'm not sure how it ended up on 4.4 to begin
-with; sorry about that and thank you.
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
---
-Thanks,
-Sasha
+diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/dell-rbtn.c
+index f3afe778001e..d50ca96d99f0 100644
+--- a/drivers/platform/x86/dell-rbtn.c
++++ b/drivers/platform/x86/dell-rbtn.c
+@@ -17,6 +17,7 @@
+ #include <linux/acpi.h>
+ #include <linux/rfkill.h>
+ #include <linux/input.h>
++#include "dell-rbtn.h"
+ 
+ enum rbtn_type {
+ 	RBTN_UNKNOWN,
