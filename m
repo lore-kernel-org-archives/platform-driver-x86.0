@@ -1,54 +1,80 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 02/12] software node: Increment parent node's ref count
-Date: Fri, 15 Mar 2019 19:57:50 +0300
-Message-ID: <20190315165800.5058-3-heikki.krogerus@linux.intel.com>
-References: <20190315165800.5058-1-heikki.krogerus@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for Myria MY8307 2-in-1
+Date: Fri, 15 Mar 2019 19:33:18 +0200
+Message-ID: <CAHp75VeQ=6zD5tVV_gVE4S3CDWaYgQ0Lpqq57bxjQjqJYerUAQ@mail.gmail.com>
+References: <20190315133113.21215-1-gabriel.lazar@com.utcluj.ro>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190315165800.5058-1-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20190315133113.21215-1-gabriel.lazar@com.utcluj.ro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Gabriel Lazar <gabriel.lazar@com.utcluj.ro>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-If the parent node is removed before its children, release()
-may be called first for the parent instead of the last child
-when the child's ref count reaches zero. Since the nodes
-release their parent's resources in the release callback,
-that would cause NULL pointer dereference to happen. To
-prevent that from ever happening, incrementing the parent
-node's reference count when creating a new child node and
-decrementing it when the child node is "released".
+On Fri, Mar 15, 2019 at 3:31 PM Gabriel Lazar
+<gabriel.lazar@com.utcluj.ro> wrote:
+>
+> Add touchscreen platform data for the Myrya MY8307 2-in-1 laptop.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/base/swnode.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+You sent one patch twice or two patches?
+Please, clarify this by sending v2 with correct subject line(s) and
+amount of patches.
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 3a50a8edd3d3..8d4485d8d0f8 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -560,6 +560,7 @@ static void software_node_release(struct kobject *kobj)
- 	if (swnode->parent) {
- 		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
- 		list_del(&swnode->entry);
-+		kobject_put(&swnode->parent->kobj);
- 	} else {
- 		ida_simple_remove(&swnode_root_ids, swnode->id);
- 	}
-@@ -610,8 +611,10 @@ fwnode_create_software_node(const struct property_entry *properties,
- 	INIT_LIST_HEAD(&swnode->children);
- 	swnode->parent = p;
- 
--	if (p)
-+	if (p) {
-+		kobject_get(&p->kobj);
- 		list_add_tail(&swnode->entry, &p->children);
-+	}
- 
- 	ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
- 				   p ? &p->kobj : NULL, "node%d", swnode->id);
+>
+> Signed-off-by: Gabriel Lazar <gabriel.lazar@com.utcluj.ro>
+> ---
+>  drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index 2d56ff7c8230..3319f0cbb558 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -265,6 +265,23 @@ static const struct ts_dmi_data jumper_ezpad_mini3_data = {
+>         .properties     = jumper_ezpad_mini3_props,
+>  };
+>
+> +static const struct property_entry myria_my8307_props[] = {
+> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1720),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
+> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +       PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+> +       PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-myria-my8307.fw"),
+> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +       { }
+> +};
+> +
+> +static const struct ts_dmi_data myria_my8307_data = {
+> +       .acpi_name      = "MSSL1680:00",
+> +       .properties     = myria_my8307_props,
+> +};
+> +
+>  static const struct property_entry onda_obook_20_plus_props[] = {
+>         PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
+>         PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
+> @@ -690,6 +707,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
+>                 },
+>         },
+> +       {
+> +               /* Myria MY8307 */
+> +               .driver_data = (void *)&myria_my8307_data,
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "Complet Electro Serv"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "MY8307"),
+> +               },
+> +       },
+>         {
+>                 /* Onda oBook 20 Plus */
+>                 .driver_data = (void *)&onda_obook_20_plus_data,
+> --
+> 2.21.0
+>
+
+
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
