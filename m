@@ -1,7 +1,7 @@
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 05/12] ACPI / property: Don't limit named child node matching to data nodes
-Date: Fri, 15 Mar 2019 19:57:53 +0300
-Message-ID: <20190315165800.5058-6-heikki.krogerus@linux.intel.com>
+Subject: [PATCH 03/12] software node: Add support for references
+Date: Fri, 15 Mar 2019 19:57:51 +0300
+Message-ID: <20190315165800.5058-4-heikki.krogerus@linux.intel.com>
 References: <20190315165800.5058-1-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,53 +12,225 @@ To: Hans de Goede <hdegoede@redhat.com>
 Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-There is no reason why we should limit the use of
-fwnode_get_named_child_node() to data nodes only.
+Introducing functions that can be used for adding and
+removing references to other software nodes. The goal is to
+support fwnode_property_get_reference_args() also with
+software nodes, however, get_reference_args fwnode operation
+callback is not yet implemented in this commit for the
+software nodes. This commit will only add support for
+reference addition/removal.
+
+The next example shows how to add references to GPIOs using the
+format described in Documentation/acpi/gpio-properties.txt:
+
+/* Array with two GPIOs */
+static struct fwnode_reference_args gpioargs[] __initdata = {
+	{
+		.nargs = 3,
+		.args[0]= 19, /* index */
+		.args[1]= 0,  /* pin */
+		.args[2]= 0,  /* active_low */
+	},
+	{
+		.nargs = 3,
+		.args[0]= 20, /* index */
+		.args[1]= 0,  /* pin */
+		.args[2]= 0,  /* active_low */
+	},
+	{ }
+};
+
+static int myinit(void)
+{
+	struct software_node_reference *ref;
+	struct fwnode_handle *gpio_node;
+	struct fwnode_handle *my_node;
+
+	/* Creating the nodes */
+	gpio_node = fwnode_create_software_node(gpio_props, NULL);
+	...
+	my_node = fwnode_create_software_node(my_props, NULL);
+	...
+
+	/* gpio_node is associated with a GPIO/Pin controller in this example */
+	...
+
+	/* Assigning the actual node references */
+	gpioargs[0].fwnode = gpio_node;
+	gpioargs[1].fwnode = gpio_node;
+
+	/* my_node will now have a named ("gpios") reference to the two GPIOs */
+	ref = fwnode_create_software_node_reference(my_node, "gpios", gpioargs);
+	...
+	return 0;
+}
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- drivers/acpi/property.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ drivers/base/swnode.c    | 101 +++++++++++++++++++++++++++++++++++++++
+ include/linux/property.h |   8 ++++
+ 2 files changed, 109 insertions(+)
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index 77abe0ec4043..c3fb52c387a6 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -602,15 +602,29 @@ static struct fwnode_handle *
- acpi_fwnode_get_named_child_node(const struct fwnode_handle *fwnode,
- 				 const char *childname)
- {
-+	char name[ACPI_PATH_SEGMENT_LENGTH];
- 	struct fwnode_handle *child;
-+	struct acpi_buffer path;
-+	acpi_status status;
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index 8d4485d8d0f8..591f290d25be 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -11,10 +11,19 @@
+ #include <linux/property.h>
+ #include <linux/slab.h>
  
--	/*
--	 * Find first matching named child node of this fwnode.
--	 * For ACPI this will be a data only sub-node.
--	 */
--	fwnode_for_each_child_node(fwnode, child)
--		if (acpi_data_node_match(child, childname))
-+	path.length = sizeof(name);
-+	path.pointer = name;
++struct software_node_reference {
++	struct list_head list;
++	const char *name;
++	int nrefs;
++	struct fwnode_reference_args *args;
++};
 +
-+	fwnode_for_each_child_node(fwnode, child) {
-+		if (is_acpi_data_node(child)) {
-+			if (acpi_data_node_match(child, childname))
-+				return child;
-+			continue;
-+		}
-+
-+		status = acpi_get_name(ACPI_HANDLE_FWNODE(child),
-+				       ACPI_SINGLE_NAME, &path);
-+		if (ACPI_FAILURE(status))
-+			break;
-+
-+		if (!strncmp(name, childname, ACPI_NAME_SIZE))
- 			return child;
-+	}
+ struct software_node {
+ 	int id;
+ 	struct kobject kobj;
+ 	struct fwnode_handle fwnode;
++	struct list_head references;
++	struct mutex lock; /* node lock */
  
- 	return NULL;
+ 	/* hierarchy */
+ 	struct ida child_ids;
+@@ -606,9 +615,11 @@ fwnode_create_software_node(const struct property_entry *properties,
+ 	swnode->kobj.kset = swnode_kset;
+ 	swnode->fwnode.ops = &software_node_ops;
+ 
++	mutex_init(&swnode->lock);
+ 	ida_init(&swnode->child_ids);
+ 	INIT_LIST_HEAD(&swnode->entry);
+ 	INIT_LIST_HEAD(&swnode->children);
++	INIT_LIST_HEAD(&swnode->references);
+ 	swnode->parent = p;
+ 
+ 	if (p) {
+@@ -641,10 +652,100 @@ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
+ 	if (!swnode)
+ 		return;
+ 
++	mutex_lock(&swnode->lock);
++	WARN(!list_empty(&swnode->references),
++	     "\"%s\" has still references", kobject_name(&swnode->kobj));
++	mutex_unlock(&swnode->lock);
++
+ 	kobject_put(&swnode->kobj);
  }
+ EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
+ 
++/**
++ * fwnode_create_software_node_reference - Create named reference description
++ * @fwnode: The software node to have the references
++ * @name: Name given to reference description
++ * @args: Zero terminated array of software node references with arguments
++ *
++ * Associates software nodes listed in @args with @fwnode. The association is
++ * named @name. The reference count is incremented for the nodes in @args.
++ *
++ * Returns pointer to software node reference description on success, or ERR_PTR
++ * on failure.
++ */
++struct software_node_reference *
++fwnode_create_software_node_reference(const struct fwnode_handle *fwnode,
++				      const char *name,
++				      const struct fwnode_reference_args *args)
++{
++	struct software_node *swnode = to_software_node(fwnode);
++	struct software_node_reference *ref;
++	int n;
++
++	if (!swnode)
++		return ERR_PTR(-EINVAL);
++
++	for (n = 0; args[n].fwnode; n++)
++		if (!is_software_node(args[n].fwnode))
++			return ERR_PTR(-EINVAL);
++
++	ref = kzalloc(sizeof(*ref), GFP_KERNEL);
++	if (!ref)
++		return ERR_PTR(-ENOMEM);
++
++	ref->nrefs = n;
++
++	ref->name = kstrdup(name, GFP_KERNEL);
++	if (!ref->name) {
++		kfree(ref);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	ref->args = kcalloc(ref->nrefs, sizeof(*ref->args), GFP_KERNEL);
++	if (!ref->args) {
++		kfree(ref->name);
++		kfree(ref);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	for (n = 0; n < ref->nrefs; n++) {
++		ref->args[n] = args[n];
++		software_node_get(ref->args[n].fwnode);
++	}
++
++	mutex_lock(&swnode->lock);
++	list_add_tail(&ref->list, &swnode->references);
++	mutex_unlock(&swnode->lock);
++
++	return ref;
++}
++EXPORT_SYMBOL_GPL(fwnode_create_software_node_reference);
++
++/**
++ * fwnode_remove_software_node_reference - Remove named reference description
++ * @ref: Software node reference description
++ *
++ * Remove named reference @ref. Decrements the software node reference count of
++ * each node in @ref, and removes the association that was created in
++ * fwnode_create_software_node_reference().
++ */
++void fwnode_remove_software_node_reference(struct software_node_reference *ref)
++{
++	int n;
++
++	if (IS_ERR_OR_NULL(ref))
++		return;
++
++	for (n = 0; n < ref->nrefs; n++)
++		kobject_put(&to_software_node(ref->args[n].fwnode)->kobj);
++
++	list_del(&ref->list);
++	kfree(ref->args);
++	kfree(ref->name);
++	kfree(ref);
++}
++EXPORT_SYMBOL_GPL(fwnode_remove_software_node_reference);
++
+ int software_node_notify(struct device *dev, unsigned long action)
+ {
+ 	struct fwnode_handle *fwnode = dev_fwnode(dev);
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 65d3420dd5d1..40e12ca43556 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -314,6 +314,8 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
+ /* -------------------------------------------------------------------------- */
+ /* Software fwnode support - when HW description is incomplete or missing */
+ 
++struct sofware_node_reference;
++
+ bool is_software_node(const struct fwnode_handle *fwnode);
+ 
+ int software_node_notify(struct device *dev, unsigned long action);
+@@ -323,4 +325,10 @@ fwnode_create_software_node(const struct property_entry *properties,
+ 			    const struct fwnode_handle *parent);
+ void fwnode_remove_software_node(struct fwnode_handle *fwnode);
+ 
++struct software_node_reference *
++fwnode_create_software_node_reference(const struct fwnode_handle *fwnode,
++				      const char *name,
++				      const struct fwnode_reference_args *args);
++void fwnode_remove_software_node_reference(struct software_node_reference *ref);
++
+ #endif /* _LINUX_PROPERTY_H_ */
 -- 
 2.20.1
