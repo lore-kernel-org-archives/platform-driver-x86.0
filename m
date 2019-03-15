@@ -1,165 +1,63 @@
-From: Rajat Jain <rajatja@google.com>
-Subject: [PATCH 2/2] platform/x86: intel_pmc_core: Allow to dump debug
- registers on S0ix failure
-Date: Wed, 13 Mar 2019 15:21:24 -0700
-Message-ID: <20190313222124.229371-2-rajatja@google.com>
-References: <20190313222124.229371-1-rajatja@google.com>
+From: Gabriel Lazar <gabriel.lazar@com.utcluj.ro>
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for Myria MY8307 2-in-1
+Date: Fri, 15 Mar 2019 15:31:14 +0200
+Message-ID: <20190315133113.21215-1-gabriel.lazar@com.utcluj.ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313222124.229371-1-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Rajat Jain <rajatja@google.com>, furquan@google.com, evgreen@google.com, rajatxjain@gmail.com
+Cc: Gabriel Lazar <gabriel.lazar@com.utcluj.ro>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add a module parameter which when enabled, will check on resume, if the
-last S0ix attempt was successful. If not, the driver would provide
-helpful debug information (which gets latched during the failed suspend
-attempt) to debug the S0ix failure.
+Add touchscreen platform data for the Myrya MY8307 2-in-1 laptop.
 
-This information is very useful to debug S0ix failures. Specially since
-the latched debug information will be lost (over-written) if the system
-attempts to go into runtime (or imminent) S0ix again after that failed
-suspend attempt.
-
-Signed-off-by: Rajat Jain <rajatja@google.com>
+Signed-off-by: Gabriel Lazar <gabriel.lazar@com.utcluj.ro>
 ---
- drivers/platform/x86/intel_pmc_core.c | 86 +++++++++++++++++++++++++++
- drivers/platform/x86/intel_pmc_core.h |  7 +++
- 2 files changed, 93 insertions(+)
+ drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 55578d07610c..b1f4405a27ce 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -20,6 +20,7 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
-+#include <linux/suspend.h>
- #include <linux/uaccess.h>
- 
- #include <asm/cpu_device_id.h>
-@@ -890,9 +891,94 @@ static int pmc_core_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+
-+static bool warn_on_s0ix_failures;
-+module_param(warn_on_s0ix_failures, bool, 0644);
-+MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix failures");
-+
-+static int pmc_core_suspend(struct device *dev)
-+{
-+	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
-+
-+	/* Save PC10 and S0ix residency for checking later */
-+	if (warn_on_s0ix_failures &&
-+	    !rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pmcdev->pc10_counter) &&
-+	    !pmc_core_dev_state_get(pmcdev, &pmcdev->s0ix_counter))
-+		pmcdev->check_counters = true;
-+	else
-+		pmcdev->check_counters = false;
-+
-+	return 0;
-+}
-+
-+static inline bool pc10_failed(struct pmc_dev *pmcdev)
-+{
-+	u64 pc10_counter;
-+
-+	if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pc10_counter) &&
-+	    pc10_counter == pmcdev->pc10_counter)
-+		return true;
-+	else
-+		return false;
-+}
-+
-+static inline bool s0ix_failed(struct pmc_dev *pmcdev)
-+{
-+	u64 s0ix_counter;
-+
-+	if (!pmc_core_dev_state_get(pmcdev, &s0ix_counter) &&
-+	    s0ix_counter == pmcdev->s0ix_counter)
-+		return true;
-+	else
-+		return false;
-+}
-+
-+static int pmc_core_resume(struct device *dev)
-+{
-+	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
-+
-+	if (!pmcdev->check_counters)
-+		return 0;
-+
-+	if (pc10_failed(pmcdev)) {
-+		dev_info(dev, "PC10 entry had failed (PC10 cnt=0x%llx)\n",
-+			 pmcdev->pc10_counter);
-+	} else if (s0ix_failed(pmcdev)) {
-+
-+		const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
-+		const struct pmc_bit_map *map;
-+		int offset = pmcdev->map->slps0_dbg_offset;
-+		u32 data;
-+
-+		dev_warn(dev, "S0ix entry had failed (S0ix cnt=%llu)\n",
-+			 pmcdev->s0ix_counter);
-+		while (*maps) {
-+			map = *maps;
-+			data = pmc_core_reg_read(pmcdev, offset);
-+			offset += 4;
-+			while (map->name) {
-+				dev_warn(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
-+					 map->name,
-+					 data & map->bit_mask ? "Yes" : "No");
-+				++map;
-+			}
-+			++maps;
-+		}
-+	}
-+	return 0;
-+}
-+
-+#endif
-+
-+const struct dev_pm_ops pmc_core_pm_ops = {
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(pmc_core_suspend, pmc_core_resume)
-+};
-+
- static struct platform_driver pmc_core_driver = {
- 	.driver = {
- 		.name = "pmc_core",
-+		.pm = &pmc_core_pm_ops
- 	},
- 	.probe = pmc_core_probe,
- 	.remove = pmc_core_remove,
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 88d9c0653a5f..fdee5772e532 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -241,6 +241,9 @@ struct pmc_reg_map {
-  * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
-  *			used to read MPHY PG and PLL status are available
-  * @mutex_lock:		mutex to complete one transcation
-+ * @check_counters:	On resume, check if counters are getting incremented
-+ * @pc10_counter:	PC10 residency counter
-+ * @s0ix_counter:	S0ix residency (step adjusted)
-  *
-  * pmc_dev contains info about power management controller device.
-  */
-@@ -253,6 +256,10 @@ struct pmc_dev {
- #endif /* CONFIG_DEBUG_FS */
- 	int pmc_xram_read_bit;
- 	struct mutex lock; /* generic mutex lock for PMC Core */
-+
-+	bool check_counters; /* Check for counter increments on resume */
-+	u64 pc10_counter;
-+	u64 s0ix_counter;
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 2d56ff7c8230..3319f0cbb558 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -265,6 +265,23 @@ static const struct ts_dmi_data jumper_ezpad_mini3_data = {
+ 	.properties	= jumper_ezpad_mini3_props,
  };
  
- #endif /* PMC_CORE_H */
++static const struct property_entry myria_my8307_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1720),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-myria-my8307.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
++	{ }
++};
++
++static const struct ts_dmi_data myria_my8307_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= myria_my8307_props,
++};
++
+ static const struct property_entry onda_obook_20_plus_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
+@@ -690,6 +707,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
+ 		},
+ 	},
++	{
++		/* Myria MY8307 */
++		.driver_data = (void *)&myria_my8307_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Complet Electro Serv"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MY8307"),
++		},
++	},
+ 	{
+ 		/* Onda oBook 20 Plus */
+ 		.driver_data = (void *)&onda_obook_20_plus_data,
 -- 
-2.21.0.360.g471c308f928-goog
+2.21.0
