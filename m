@@ -1,7 +1,7 @@
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 09/12] platform/x86: intel_cht_int33fe: Link with external dependencies using fwnodes
-Date: Fri, 15 Mar 2019 19:57:57 +0300
-Message-ID: <20190315165800.5058-10-heikki.krogerus@linux.intel.com>
+Subject: [PATCH 11/12] drm: Add fwnode member to the struct drm_connector
+Date: Fri, 15 Mar 2019 19:57:59 +0300
+Message-ID: <20190315165800.5058-12-heikki.krogerus@linux.intel.com>
 References: <20190315165800.5058-1-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,160 +12,121 @@ To: Hans de Goede <hdegoede@redhat.com>
 Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Supplying also external devices - the DisplayPort connector
-and the USB role switch - software fwnodes. After this the
-driver has access to all the components tied to the USB
-Type-C connector and can start creating software node
-references to actually associate them with the USB Type-C
-connector device.
+If the system firmware supplies nodes that represent the connectors,
+they need to be associated with the connector entries.
+
+ACPI tables at least always supply a device node for every connector
+on integrated video hardware - this is explained in ACPI
+specification's ch. "Appendix B Video Extension". Many drivers appear
+to already deal with those connector firmware nodes "indirectly"
+in order to support custom Operation Regions, _DSM (device specific
+method) and access other resources the nodes supply for the
+connectors.
+
+This commit will only add the fwnode member. It's first up to the
+drivers to assign and take advantage of it. For convenience, the nodes
+are assigned to the device entries that are used for exposing the
+connectors to the user space via sysfs. That makes it possible to see
+the link between the connector and its node also from user space. In
+case of ACPI, the connector's sysfs directory will have a symlink
+named "firmware_node" pointing to the node object directory in sysfs
+if a node is associated with the connector.
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- drivers/platform/x86/intel_cht_int33fe.c | 102 +++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
+ drivers/gpu/drm/drm_sysfs.c | 49 +++++++++++++++++++++++++------------
+ include/drm/drm_connector.h |  2 ++
+ 2 files changed, 36 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-index 44860c748bf5..aa71b97a22e9 100644
---- a/drivers/platform/x86/intel_cht_int33fe.c
-+++ b/drivers/platform/x86/intel_cht_int33fe.c
-@@ -33,6 +33,8 @@ enum {
- 	INT33FE_NODE_FUSB302,
- 	INT33FE_NODE_MAX17047,
- 	INT33FE_NODE_PI3USB30532,
-+	INT33FE_NODE_DISPLAYPORT,
-+	INT33FE_NODE_ROLE_SWITCH,
- 	INT33FE_NODE_USB_CONNECTOR,
- 	INT33FE_NODE_MAX,
- };
-@@ -44,6 +46,7 @@ struct cht_int33fe_data {
- 	/* Contain a list-head must be per device */
- 	struct device_connection connections[4];
- 
-+	struct fwnode_handle *dp;
- 	struct fwnode_handle *node[INT33FE_NODE_MAX];
+diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
+index ecb7b33002bb..7667939ef1c0 100644
+--- a/drivers/gpu/drm/drm_sysfs.c
++++ b/drivers/gpu/drm/drm_sysfs.c
+@@ -264,26 +264,50 @@ static const struct attribute_group *connector_dev_groups[] = {
+ 	NULL
  };
  
-@@ -144,8 +147,81 @@ static const struct property_entry *props[] = {
- 	[INT33FE_NODE_FUSB302]		= fusb302_props,
- 	[INT33FE_NODE_MAX17047]		= NULL,
- 	[INT33FE_NODE_PI3USB30532]	= NULL,
-+	[INT33FE_NODE_DISPLAYPORT]	= NULL,
-+	[INT33FE_NODE_ROLE_SWITCH]	= NULL,
- };
- 
-+static const char *dp_acpi_node_name = "DD02";
-+static const char *mux_platfrom_dev_name = "intel_xhci_usb_sw";
-+static const char *mux_name = "intel_xhci_usb_sw-role-switch";
-+
-+static int cht_int33fe_setup_dp(struct cht_int33fe_data *data)
++static void drm_sysfs_release(struct device *dev)
 +{
-+	struct fwnode_handle *fwnode = data->node[INT33FE_NODE_DISPLAYPORT];
-+	struct pci_dev *pdev;
-+
-+	/* First let's find the GPU PCI device */
-+	pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, NULL);
-+	if (!pdev || (pdev->vendor != PCI_VENDOR_ID_INTEL))
-+		return -ENODEV;
-+
-+	/* Then the DP child device node */
-+	data->dp = device_get_named_child_node(&pdev->dev, dp_acpi_node_name);
-+	pci_dev_put(pdev);
-+	if (!data->dp)
-+		return -ENODEV;
-+
-+	fwnode->secondary = ERR_PTR(-ENODEV);
-+	data->dp->secondary = fwnode;
-+
-+	return 0;
++	kfree(dev);
 +}
 +
-+static int role_switch_match(struct device *dev, void *name)
-+{
-+	return !strcmp(dev_name(dev), name);
-+}
-+
-+static int cht_int33fe_setup_mux(struct cht_int33fe_data *data)
-+{
-+	struct fwnode_handle *fwnode = data->node[INT33FE_NODE_ROLE_SWITCH];
-+	struct pci_dev *pdev;
-+	struct device *dev;
-+	struct device *p;
-+
-+	/* First let's find xHCI PCI device */
-+	pdev = pci_get_class(PCI_CLASS_SERIAL_USB_XHCI, NULL);
-+	if (!pdev || (pdev->vendor != PCI_VENDOR_ID_INTEL))
-+		return -ENODEV;
-+
-+	/* Then the child platform device */
-+	p = device_find_child(&pdev->dev, (void *)mux_platfrom_dev_name,
-+			      role_switch_match);
-+	pci_dev_put(pdev);
-+	if (!p)
-+		return -EPROBE_DEFER;
-+
-+	/* Finally the mux device */
-+	dev = device_find_child(p, (void *)mux_name, role_switch_match);
-+	put_device(p);
-+	if (!dev)
-+		return -EPROBE_DEFER;
-+
-+	/* If there already is a node for the mux, using that one. */
-+	if (dev->fwnode) {
-+		fwnode_handle_get(dev->fwnode);
-+		fwnode_remove_software_node(fwnode);
-+		data->node[INT33FE_NODE_ROLE_SWITCH] = dev->fwnode;
-+	} else {
-+		/* The node can be tied to the lifetime of the device. */
-+		dev->fwnode = fwnode_handle_get(dev->fwnode);
-+	}
-+
-+	put_device(dev);
-+
-+	return 0;
-+}
-+
- static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
+ int drm_sysfs_connector_add(struct drm_connector *connector)
  {
- 	int i;
-@@ -154,6 +230,12 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
- 		fwnode_remove_software_node(data->node[i]);
- 		data->node[i] = NULL;
- 	}
+ 	struct drm_device *dev = connector->dev;
++	struct device *kdev;
++	int ret;
+ 
+ 	if (connector->kdev)
+ 		return 0;
+ 
+-	connector->kdev =
+-		device_create_with_groups(drm_class, dev->primary->kdev, 0,
+-					  connector, connector_dev_groups,
+-					  "card%d-%s", dev->primary->index,
+-					  connector->name);
+-	DRM_DEBUG("adding \"%s\" to sysfs\n",
+-		  connector->name);
++	kdev = kzalloc(sizeof(*kdev), GFP_KERNEL);
++	if (!kdev)
++		return -ENOMEM;
+ 
+-	if (IS_ERR(connector->kdev)) {
+-		DRM_ERROR("failed to register connector device: %ld\n", PTR_ERR(connector->kdev));
+-		return PTR_ERR(connector->kdev);
++	device_initialize(kdev);
++	kdev->class = drm_class;
++	kdev->parent = dev->primary->kdev;
++	kdev->fwnode = connector->fwnode;
++	kdev->groups = connector_dev_groups;
++	kdev->release = drm_sysfs_release;
++	dev_set_drvdata(kdev, connector);
 +
-+	if (data->dp) {
-+		data->dp->secondary = NULL;
-+		fwnode_handle_put(data->dp);
-+		data->dp = NULL;
++	ret = dev_set_name(kdev, "card%d-%s", dev->primary->index,
++			   connector->name);
++	if (ret) {
++		kfree(kdev);
++		return ret;
 +	}
- }
- 
- static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
-@@ -180,6 +262,26 @@ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
++
++	DRM_DEBUG("adding \"%s\" to sysfs\n", connector->name);
++
++	ret = device_add(kdev);
++	if (ret) {
++		DRM_ERROR("failed to register connector device: %d\n", ret);
++		put_device(kdev);
++		return ret;
  	}
- 	data->node[INT33FE_NODE_USB_CONNECTOR] = fwnode;
  
-+	/* The devices that are not created in this driver need extra steps. */
++	connector->kdev = kdev;
 +
-+	/*
-+	 * There is no ACPI device node for the USB role mux, so we need to find
-+	 * the mux device and assign our node directly to it. That means we
-+	 * depend on the mux driver. This function will return -PROBE_DEFER
-+	 * until the mux device is registered.
-+	 */
-+	ret = cht_int33fe_setup_mux(data);
-+	if (ret)
-+		goto err_remove_nodes;
-+
-+	/*
-+	 * The DP connector does have ACPI device node. In this case we can just
-+	 * find that ACPI node and assing our node as the secondary node to it.
-+	 */
-+	ret = cht_int33fe_setup_dp(data);
-+	if (ret)
-+		goto err_remove_nodes;
-+
- 	return 0;
+ 	/* Let userspace know we have a new connector */
+ 	drm_sysfs_hotplug_event(dev);
  
- err_remove_nodes:
+@@ -330,11 +354,6 @@ void drm_sysfs_hotplug_event(struct drm_device *dev)
+ }
+ EXPORT_SYMBOL(drm_sysfs_hotplug_event);
+ 
+-static void drm_sysfs_release(struct device *dev)
+-{
+-	kfree(dev);
+-}
+-
+ struct device *drm_sysfs_minor_alloc(struct drm_minor *minor)
+ {
+ 	const char *minor_str;
+diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+index 8fe22abb1e10..e30b7743e019 100644
+--- a/include/drm/drm_connector.h
++++ b/include/drm/drm_connector.h
+@@ -851,6 +851,8 @@ struct drm_connector {
+ 	struct device *kdev;
+ 	/** @attr: sysfs attributes */
+ 	struct device_attribute *attr;
++	/** @fwnode: associated device node supplied by platform firmware */
++	struct fwnode_handle *fwnode;
+ 
+ 	/**
+ 	 * @head:
 -- 
 2.20.1
