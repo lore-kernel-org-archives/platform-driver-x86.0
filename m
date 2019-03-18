@@ -1,118 +1,174 @@
-From: "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>
-Subject: RE: [PATCH 2/2] platform/x86: intel_pmc_core: Allow to dump debug
- registers on S0ix failure
-Date: Mon, 18 Mar 2019 09:31:05 +0000
-Message-ID: <219AAEFC072D3A42B064BBBC1181F9BF65C25C8E@BGSMSX102.gar.corp.intel.com>
-References: <20190313222124.229371-1-rajatja@google.com>
- <20190313222124.229371-2-rajatja@google.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] platform/x86: Add support for Basin Cove power button
+Date: Mon, 18 Mar 2019 12:53:51 +0300
+Message-ID: <20190318095351.69343-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313222124.229371-2-rajatja@google.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajat Jain <rajatja@google.com>, "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "furquan@google.com" <furquan@google.com>, "evgreen@google.com" <evgreen@google.com>, "rajatxjain@gmail.com" <rajatxjain@gmail.com>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFJhamF0IEphaW4gPHJhamF0
-amFAZ29vZ2xlLmNvbT4NCj5TZW50OiBUaHVyc2RheSwgTWFyY2ggMTQsIDIwMTkgMzo1MSBBTQ0K
-PlRvOiBCaGFyZHdhaiwgUmFqbmVlc2ggPHJham5lZXNoLmJoYXJkd2FqQGludGVsLmNvbT47IFNv
-bWF5YWppLCBWaXNod2FuYXRoDQo+PHZpc2h3YW5hdGguc29tYXlhamlAaW50ZWwuY29tPjsgRGFy
-cmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgQW5keQ0KPlNoZXZjaGVua28gPGFuZHlA
-aW5mcmFkZWFkLm9yZz47IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC0NCj5rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+Q2M6IFJhamF0IEphaW4gPHJhamF0amFAZ29v
-Z2xlLmNvbT47IGZ1cnF1YW5AZ29vZ2xlLmNvbTsNCj5ldmdyZWVuQGdvb2dsZS5jb207IHJhamF0
-eGphaW5AZ21haWwuY29tDQo+U3ViamVjdDogW1BBVENIIDIvMl0gcGxhdGZvcm0veDg2OiBpbnRl
-bF9wbWNfY29yZTogQWxsb3cgdG8gZHVtcCBkZWJ1Zw0KPnJlZ2lzdGVycyBvbiBTMGl4IGZhaWx1
-cmUNCj4NCj5BZGQgYSBtb2R1bGUgcGFyYW1ldGVyIHdoaWNoIHdoZW4gZW5hYmxlZCwgd2lsbCBj
-aGVjayBvbiByZXN1bWUsIGlmIHRoZQ0KPmxhc3QgUzBpeCBhdHRlbXB0IHdhcyBzdWNjZXNzZnVs
-LiBJZiBub3QsIHRoZSBkcml2ZXIgd291bGQgcHJvdmlkZQ0KPmhlbHBmdWwgZGVidWcgaW5mb3Jt
-YXRpb24gKHdoaWNoIGdldHMgbGF0Y2hlZCBkdXJpbmcgdGhlIGZhaWxlZCBzdXNwZW5kDQo+YXR0
-ZW1wdCkgdG8gZGVidWcgdGhlIFMwaXggZmFpbHVyZS4NCj4NCj5UaGlzIGluZm9ybWF0aW9uIGlz
-IHZlcnkgdXNlZnVsIHRvIGRlYnVnIFMwaXggZmFpbHVyZXMuIFNwZWNpYWxseSBzaW5jZQ0KPnRo
-ZSBsYXRjaGVkIGRlYnVnIGluZm9ybWF0aW9uIHdpbGwgYmUgbG9zdCAob3Zlci13cml0dGVuKSBp
-ZiB0aGUgc3lzdGVtDQo+YXR0ZW1wdHMgdG8gZ28gaW50byBydW50aW1lIChvciBpbW1pbmVudCkg
-UzBpeCBhZ2FpbiBhZnRlciB0aGF0IGZhaWxlZA0KPnN1c3BlbmQgYXR0ZW1wdC4NCj4NCj5TaWdu
-ZWQtb2ZmLWJ5OiBSYWphdCBKYWluIDxyYWphdGphQGdvb2dsZS5jb20+DQo+LS0tDQo+IGRyaXZl
-cnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmMgfCA4NiArKysrKysrKysrKysrKysrKysr
-KysrKysrKysNCj4gZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1jX2NvcmUuaCB8ICA3ICsr
-Kw0KPiAyIGZpbGVzIGNoYW5nZWQsIDkzIGluc2VydGlvbnMoKykNCj4NCj5kaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1jX2NvcmUuYw0KPmIvZHJpdmVycy9wbGF0Zm9y
-bS94ODYvaW50ZWxfcG1jX2NvcmUuYw0KPmluZGV4IDU1NTc4ZDA3NjEwYy4uYjFmNDQwNWEyN2Nl
-IDEwMDY0NA0KPi0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmMNCj4r
-KysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfY29yZS5jDQo+QEAgLTIwLDYgKzIw
-LDcgQEANCj4gI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiAjaW5jbHVkZSA8bGludXgvcGNp
-Lmg+DQo+ICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4rI2luY2x1ZGUgPGxp
-bnV4L3N1c3BlbmQuaD4NCj4gI2luY2x1ZGUgPGxpbnV4L3VhY2Nlc3MuaD4NCj4NCj4gI2luY2x1
-ZGUgPGFzbS9jcHVfZGV2aWNlX2lkLmg+DQo+QEAgLTg5MCw5ICs4OTEsOTQgQEAgc3RhdGljIGlu
-dCBwbWNfY29yZV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPipwZGV2KQ0KPiAJcmV0
-dXJuIDA7DQo+IH0NCj4NCj4rI2lmZGVmIENPTkZJR19QTV9TTEVFUA0KPisNCj4rc3RhdGljIGJv
-b2wgd2Fybl9vbl9zMGl4X2ZhaWx1cmVzOw0KPittb2R1bGVfcGFyYW0od2Fybl9vbl9zMGl4X2Zh
-aWx1cmVzLCBib29sLCAwNjQ0KTsNCj4rTU9EVUxFX1BBUk1fREVTQyh3YXJuX29uX3MwaXhfZmFp
-bHVyZXMsICJDaGVjayBhbmQgd2FybiBmb3IgUzBpeA0KPmZhaWx1cmVzIik7DQo+Kw0KPitzdGF0
-aWMgaW50IHBtY19jb3JlX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KPit7DQo+KwlzdHJ1
-Y3QgcG1jX2RldiAqcG1jZGV2ID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQo+Kw0KPisJLyogU2F2
-ZSBQQzEwIGFuZCBTMGl4IHJlc2lkZW5jeSBmb3IgY2hlY2tpbmcgbGF0ZXIgKi8NCj4rCWlmICh3
-YXJuX29uX3MwaXhfZmFpbHVyZXMgJiYNCj4rCSAgICAhcmRtc3JsX3NhZmUoTVNSX1BLR19DMTBf
-UkVTSURFTkNZLCAmcG1jZGV2LT5wYzEwX2NvdW50ZXIpDQo+JiYNCj4rCSAgICAhcG1jX2NvcmVf
-ZGV2X3N0YXRlX2dldChwbWNkZXYsICZwbWNkZXYtPnMwaXhfY291bnRlcikpDQo+KwkJcG1jZGV2
-LT5jaGVja19jb3VudGVycyA9IHRydWU7DQo+KwllbHNlDQo+KwkJcG1jZGV2LT5jaGVja19jb3Vu
-dGVycyA9IGZhbHNlOw0KPisNCj4rCXJldHVybiAwOw0KPit9DQo+Kw0KPitzdGF0aWMgaW5saW5l
-IGJvb2wgcGMxMF9mYWlsZWQoc3RydWN0IHBtY19kZXYgKnBtY2RldikNCj4rew0KPisJdTY0IHBj
-MTBfY291bnRlcjsNCj4rDQo+KwlpZiAoIXJkbXNybF9zYWZlKE1TUl9QS0dfQzEwX1JFU0lERU5D
-WSwgJnBjMTBfY291bnRlcikgJiYNCj4rCSAgICBwYzEwX2NvdW50ZXIgPT0gcG1jZGV2LT5wYzEw
-X2NvdW50ZXIpDQo+KwkJcmV0dXJuIHRydWU7DQo+KwllbHNlDQo+KwkJcmV0dXJuIGZhbHNlOw0K
-Pit9DQo+Kw0KPitzdGF0aWMgaW5saW5lIGJvb2wgczBpeF9mYWlsZWQoc3RydWN0IHBtY19kZXYg
-KnBtY2RldikNCj4rew0KPisJdTY0IHMwaXhfY291bnRlcjsNCj4rDQo+KwlpZiAoIXBtY19jb3Jl
-X2Rldl9zdGF0ZV9nZXQocG1jZGV2LCAmczBpeF9jb3VudGVyKSAmJg0KPisJICAgIHMwaXhfY291
-bnRlciA9PSBwbWNkZXYtPnMwaXhfY291bnRlcikNCj4rCQlyZXR1cm4gdHJ1ZTsNCj4rCWVsc2UN
-Cj4rCQlyZXR1cm4gZmFsc2U7DQo+K30NCj4rDQo+K3N0YXRpYyBpbnQgcG1jX2NvcmVfcmVzdW1l
-KHN0cnVjdCBkZXZpY2UgKmRldikNCj4rew0KPisJc3RydWN0IHBtY19kZXYgKnBtY2RldiA9IGRl
-dl9nZXRfZHJ2ZGF0YShkZXYpOw0KPisNCj4rCWlmICghcG1jZGV2LT5jaGVja19jb3VudGVycykN
-Cj4rCQlyZXR1cm4gMDsNCj4rDQo+KwlpZiAocGMxMF9mYWlsZWQocG1jZGV2KSkgew0KPisJCWRl
-dl9pbmZvKGRldiwgIlBDMTAgZW50cnkgaGFkIGZhaWxlZCAoUEMxMCBjbnQ9MHglbGx4KVxuIiwN
-Cj4rCQkJIHBtY2Rldi0+cGMxMF9jb3VudGVyKTsNCj4rCX0gZWxzZSBpZiAoczBpeF9mYWlsZWQo
-cG1jZGV2KSkgew0KPisNCj4rCQljb25zdCBzdHJ1Y3QgcG1jX2JpdF9tYXAgKiptYXBzID0gcG1j
-ZGV2LT5tYXAtDQo+PnNscHMwX2RiZ19tYXBzOw0KPisJCWNvbnN0IHN0cnVjdCBwbWNfYml0X21h
-cCAqbWFwOw0KPisJCWludCBvZmZzZXQgPSBwbWNkZXYtPm1hcC0+c2xwczBfZGJnX29mZnNldDsN
-Cj4rCQl1MzIgZGF0YTsNCj4rDQo+KwkJZGV2X3dhcm4oZGV2LCAiUzBpeCBlbnRyeSBoYWQgZmFp
-bGVkIChTMGl4IGNudD0lbGx1KVxuIiwNCj4rCQkJIHBtY2Rldi0+czBpeF9jb3VudGVyKTsNCj4r
-CQl3aGlsZSAoKm1hcHMpIHsNCj4rCQkJbWFwID0gKm1hcHM7DQo+KwkJCWRhdGEgPSBwbWNfY29y
-ZV9yZWdfcmVhZChwbWNkZXYsIG9mZnNldCk7DQo+KwkJCW9mZnNldCArPSA0Ow0KPisJCQl3aGls
-ZSAobWFwLT5uYW1lKSB7DQo+KwkJCQlkZXZfd2FybihkZXYsICJTTFBfUzBfREJHOiAlLTMyc1x0
-U3RhdGU6DQo+JXNcbiIsDQo+KwkJCQkJIG1hcC0+bmFtZSwNCj4rCQkJCQkgZGF0YSAmIG1hcC0+
-Yml0X21hc2sgPyAiWWVzIiA6ICJObyIpOw0KPisJCQkJKyttYXA7DQo+KwkJCX0NCj4rCQkJKytt
-YXBzOw0KPisJCX0NCj4rCX0NCj4rCXJldHVybiAwOw0KPit9DQo+Kw0KPisjZW5kaWYNCj4rDQo+
-K2NvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIHBtY19jb3JlX3BtX29wcyA9IHsNCj4rCVNFVF9MQVRF
-X1NZU1RFTV9TTEVFUF9QTV9PUFMocG1jX2NvcmVfc3VzcGVuZCwNCj5wbWNfY29yZV9yZXN1bWUp
-DQpUaGVzZSBQTSBPcHMgcm91dGluZXMgd2lsbCBiZSBjYWxsZWQgbm90IGp1c3QgaW4gczJpZGxl
-IHNjZW5hcmlvLCBidXQgYWxzbyBpbiBvdGhlciBzdXNwZW5kIHNjZW5hcmlvcyBsaWtlIHMycmFt
-LCBzMmRpc2suIEhvd2V2ZXIgYWN0dWFsIGZ1bmN0aW9uYWxpdGllcyBzZXJ2ZWQgYnkgdGhlc2Ug
-cm91dGluZXMgYXJlIHJlbGV2YW50IG9ubHkgZm9yIHMyaWRsZS4NClRoYXQgbWVhbnMgd2Ugd2ls
-bCBlbmQgdXAgaGF2aW5nIGZhbHNlIGVycm9ycyBpbiBzMnJhbS9zMmRpc2sgc2NlbmFyaW9zIGFz
-IFBDMTAvczBpeCBjb3VudGVycyB3b250IGluY3JlbWVudCBpbiB0aG9zZSBzY2VuYXJpb3MuIA0K
-DQpWaXNod2ENCj4rfTsNCj4rDQo+IHN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIHBtY19j
-b3JlX2RyaXZlciA9IHsNCj4gCS5kcml2ZXIgPSB7DQo+IAkJLm5hbWUgPSAicG1jX2NvcmUiLA0K
-PisJCS5wbSA9ICZwbWNfY29yZV9wbV9vcHMNCj4gCX0sDQo+IAkucHJvYmUgPSBwbWNfY29yZV9w
-cm9iZSwNCj4gCS5yZW1vdmUgPSBwbWNfY29yZV9yZW1vdmUsDQo+ZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmgNCj5iL2RyaXZlcnMvcGxhdGZvcm0veDg2
-L2ludGVsX3BtY19jb3JlLmgNCj5pbmRleCA4OGQ5YzA2NTNhNWYuLmZkZWU1NzcyZTUzMiAxMDA2
-NDQNCj4tLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfY29yZS5oDQo+KysrIGIv
-ZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1jX2NvcmUuaA0KPkBAIC0yNDEsNiArMjQxLDkg
-QEAgc3RydWN0IHBtY19yZWdfbWFwIHsNCj4gICogQHBtY194cmFtX3JlYWRfYml0OglmbGFnIHRv
-IGluZGljYXRlIHdoZXRoZXIgUE1DIFhSQU0gc2hhZG93DQo+cmVnaXN0ZXJzDQo+ICAqCQkJdXNl
-ZCB0byByZWFkIE1QSFkgUEcgYW5kIFBMTCBzdGF0dXMgYXJlIGF2YWlsYWJsZQ0KPiAgKiBAbXV0
-ZXhfbG9jazoJCW11dGV4IHRvIGNvbXBsZXRlIG9uZSB0cmFuc2NhdGlvbg0KPisgKiBAY2hlY2tf
-Y291bnRlcnM6CU9uIHJlc3VtZSwgY2hlY2sgaWYgY291bnRlcnMgYXJlIGdldHRpbmcgaW5jcmVt
-ZW50ZWQNCj4rICogQHBjMTBfY291bnRlcjoJUEMxMCByZXNpZGVuY3kgY291bnRlcg0KPisgKiBA
-czBpeF9jb3VudGVyOglTMGl4IHJlc2lkZW5jeSAoc3RlcCBhZGp1c3RlZCkNCj4gICoNCj4gICog
-cG1jX2RldiBjb250YWlucyBpbmZvIGFib3V0IHBvd2VyIG1hbmFnZW1lbnQgY29udHJvbGxlciBk
-ZXZpY2UuDQo+ICAqLw0KPkBAIC0yNTMsNiArMjU2LDEwIEBAIHN0cnVjdCBwbWNfZGV2IHsNCj4g
-I2VuZGlmIC8qIENPTkZJR19ERUJVR19GUyAqLw0KPiAJaW50IHBtY194cmFtX3JlYWRfYml0Ow0K
-PiAJc3RydWN0IG11dGV4IGxvY2s7IC8qIGdlbmVyaWMgbXV0ZXggbG9jayBmb3IgUE1DIENvcmUg
-Ki8NCj4rDQo+Kwlib29sIGNoZWNrX2NvdW50ZXJzOyAvKiBDaGVjayBmb3IgY291bnRlciBpbmNy
-ZW1lbnRzIG9uIHJlc3VtZSAqLw0KPisJdTY0IHBjMTBfY291bnRlcjsNCj4rCXU2NCBzMGl4X2Nv
-dW50ZXI7DQo+IH07DQo+DQo+ICNlbmRpZiAvKiBQTUNfQ09SRV9IICovDQo+LS0NCj4yLjIxLjAu
-MzYwLmc0NzFjMzA4ZjkyOC1nb29nDQoNCg==
+This provides a new input driver for supporting the power button on
+Basin Cove PMIC, found on Intel Merrifield-based devices.
+
+The driver follows the design used in intel_chtdc_ti_pwrbtn.c module.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/Kconfig              |  11 +++
+ drivers/platform/x86/Makefile             |   1 +
+ drivers/platform/x86/intel_mrfld_pwrbtn.c | 107 ++++++++++++++++++++++
+ 3 files changed, 119 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_mrfld_pwrbtn.c
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index a1ed13183559..85b92a95e4c8 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1263,6 +1263,17 @@ config INTEL_CHTDC_TI_PWRBTN
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel_chtdc_ti_pwrbtn.
+ 
++config INTEL_MRFLD_PWRBTN
++	tristate "Intel Merrifield Basin Cove power button driver"
++	depends on INTEL_SOC_PMIC_MRFLD
++	depends on INPUT
++	---help---
++	  This option adds a power button driver for Basin Cove PMIC
++	  on Intel Merrifield devices.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel_mrfld_pwrbtn.
++
+ config I2C_MULTI_INSTANTIATE
+ 	tristate "I2C multi instantiate pseudo device driver"
+ 	depends on I2C && ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 86cb76677bc8..87b0069bd781 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -94,6 +94,7 @@ obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
+ obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
+ obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
+ obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
++obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
+ obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
+ obj-$(CONFIG_INTEL_ATOMISP2_PM)	+= intel_atomisp2_pm.o
+ obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
+diff --git a/drivers/platform/x86/intel_mrfld_pwrbtn.c b/drivers/platform/x86/intel_mrfld_pwrbtn.c
+new file mode 100644
+index 000000000000..b1b367d261cb
+--- /dev/null
++++ b/drivers/platform/x86/intel_mrfld_pwrbtn.c
+@@ -0,0 +1,107 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Power-button driver for Basin Cove PMIC
++ *
++ * Copyright (c) 2018, Intel Corporation.
++ * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
++ */
++
++#include <linux/input.h>
++#include <linux/interrupt.h>
++#include <linux/device.h>
++#include <linux/mfd/intel_soc_pmic.h>
++#include <linux/mfd/intel_soc_pmic_mrfld.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_wakeirq.h>
++#include <linux/slab.h>
++
++#define BCOVE_PBSTATUS		0x27
++#define BCOVE_PBSTATUS_PBLVL	BIT(4)	/* 1 - release, 0 - press */
++
++static irqreturn_t mrfld_pwrbtn_interrupt(int irq, void *dev_id)
++{
++	struct input_dev *input = dev_id;
++	struct device *dev = input->dev.parent;
++	struct regmap *regmap = dev_get_drvdata(dev);
++	unsigned int state;
++	int ret;
++
++	ret = regmap_read(regmap, BCOVE_PBSTATUS, &state);
++	if (ret)
++		return IRQ_NONE;
++
++	dev_dbg(dev, "PBSTATUS=0x%x\n", state);
++	input_report_key(input, KEY_POWER, !(state & BCOVE_PBSTATUS_PBLVL));
++	input_sync(input);
++
++	regmap_update_bits(regmap, BCOVE_MIRQLVL1, BCOVE_LVL1_PWRBTN, 0);
++	return IRQ_HANDLED;
++}
++
++static int mrfld_pwrbtn_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct intel_soc_pmic *pmic = dev_get_drvdata(dev->parent);
++	struct input_dev *input;
++	int irq, ret;
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return irq;
++
++	input = devm_input_allocate_device(dev);
++	if (!input)
++		return -ENOMEM;
++	input->name = pdev->name;
++	input->phys = "power-button/input0";
++	input->id.bustype = BUS_HOST;
++	input->dev.parent = dev;
++	input_set_capability(input, EV_KEY, KEY_POWER);
++	ret = input_register_device(input);
++	if (ret)
++		return ret;
++
++	dev_set_drvdata(dev, pmic->regmap);
++
++	ret = devm_request_threaded_irq(dev, irq, NULL, mrfld_pwrbtn_interrupt,
++					IRQF_ONESHOT | IRQF_SHARED, pdev->name,
++					input);
++	if (ret)
++		return ret;
++
++	regmap_update_bits(pmic->regmap, BCOVE_MIRQLVL1, BCOVE_LVL1_PWRBTN, 0);
++	regmap_update_bits(pmic->regmap, BCOVE_MPBIRQ, BCOVE_PBIRQ_PBTN, 0);
++
++	device_init_wakeup(dev, true);
++	dev_pm_set_wake_irq(dev, irq);
++	return 0;
++}
++
++static int mrfld_pwrbtn_remove(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++
++	dev_pm_clear_wake_irq(dev);
++	device_init_wakeup(dev, false);
++	return 0;
++}
++
++static const struct platform_device_id mrfld_pwrbtn_id_table[] = {
++	{ .name = "mrfld_bcove_pwrbtn" },
++	{}
++};
++MODULE_DEVICE_TABLE(platform, mrfld_pwrbtn_id_table);
++
++static struct platform_driver mrfld_pwrbtn_driver = {
++	.driver = {
++		.name	= KBUILD_MODNAME,
++	},
++	.probe		= mrfld_pwrbtn_probe,
++	.remove		= mrfld_pwrbtn_remove,
++	.id_table	= mrfld_pwrbtn_id_table,
++};
++module_platform_driver(mrfld_pwrbtn_driver);
++
++MODULE_DESCRIPTION("Power-button driver for Basin Cove PMIC");
++MODULE_LICENSE("GPL v2");
+-- 
+2.20.1
