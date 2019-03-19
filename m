@@ -1,117 +1,174 @@
-From: Renato Soma <renatoys08@gmail.com>
-Subject: Re: [PATCH 0/1] platform/x86: dell-wmi: Uncomment events that were
-Date: Mon, 18 Mar 2019 23:21:44 -0300
-Message-ID: <20190319022144.GA14111@rys-Inspiron-5420>
-References: <20190316010942.6448-1-renatoys08@gmail.com>
- <20190316091756.2zfccpnhfnjogktp@pali>
- <20190317183049.GA5989@rys-Inspiron-5420>
- <20190318120032.nynbshqudmlslxxz@pali>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2] platform/x86: Add support for Basin Cove power button
+Date: Tue, 19 Mar 2019 12:59:56 +0200
+Message-ID: <20190319105956.71672-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190318120032.nynbshqudmlslxxz@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>, mistave@countermail.com
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Mar 18, 2019 at 01:00:32PM +0100, Pali Rohár wrote:
-> > =====================================================================
-> > 
-> > ----------------------------------------
-> > Left WMI key: Windows Mobility Center
-> > Press:    'x'
-> > Hold:     -
-> > Release:  -
-> > 
-> > In my machine (Inspiron 5420), whenever I press this key, the key
-> > outputs the character "x". I've seen nothing on dmesg even if I
-> > keep this key pressed for longer amounts of time. I'm still trying
-> > to understand why this is hapenning.
-> 
-> This is strange. Is not also some Alt/Meta/Ctrl or other modifier sent
-> too? Because Meta+X could be some windows shortcut...
-> 
-> > 
-> > ----------------------------------------
-> > Middle WMI key: Dell Audio With Preset Switch
-> > Press:    Key with type 0x0000 and code 0xe02a pressed
-> > Hold:     -
-> > Release:  Key with type 0x0000 and code 0xe02b pressed
-> > 
-> > Differently from what you saw on a Inspiron 7520, I could not
-> > reproduce the behavior that you reported on the first link above.
-> > In my case, when I press the key, the code 0xe02a is shown at dmesg
-> > only once. Also, even though I keep it pressed for longer than ~30
-> > seconds or so, I could not see the entry 0xe02c apper. More on that
-> > behavior later on. When releasing the key, I can see the code 0xe02b
-> > show up at dmesg.
-> > 
-> > ----------------------------------------
-> > Right WMI key: Dell Instant Launch
-> > Press:    -
-> > Hold:     -
-> > Release:  -
-> > 
-> > This key is with a really weird behavior on my machine.
-> > When testing, I would normally press and relase so that the following
-> > messages would pop-up:
-> > 
-> > [ 2830.499420] atkbd serio0: Unknown key pressed (translated set 2,
-> > code 0x60 on isa0060/serio0).
-> > [ 2830.499422] atkbd serio0: Use 'setkeycodes 60 <keycode>'
-> > to make it known.
-> 
-> This means that you have not configured atkbd keycodes yet. Run
-> setkeycodecs and assign some keycode for that scancode 60. After that
-> kernel atkbd (PS/2 keyboard) starts sending events to userspace.
+This provides a new input driver for supporting the power button on
+Basin Cove PMIC, found on Intel Merrifield-based devices.
 
-All right, I'll investigate and try these approaches, thanks!
+The driver follows the design used in intel_chtdc_ti_pwrbtn.c module.
 
-> 
-> There are two ways how Dell firmware can inform operating system that
-> key was pressed. Notebook keyboard is connected to motherboard via
-> classic PS/2 port (of PS/2 port is emulated for OS). So operating system
-> sees PS/2 keyboard and key pressed are received by PS/2 atkbd driver.
-> For some (unknown/strange?) reasons firmware send some keys not via PS/2
-> keyboard port, but via ACPI interface, hence needs for dell_wmi driver
-> which handle them.
-> 
-> So some keypress events come via PS/2, some via ACPI-WMI. Linux kernel
-> then send all keypress events to userspace.
-> 
-> When debugging problems with hot keys, you always need to look at all
-> possible sources...
-> 
-> 
-> dell-wmi.c is a driver for receiving APCI-WMI events; atkbd.c is a PS/2
-> keyboard driver.
-> 
-> In dell-wmi.c is a function dell_wmi_events_set_enabled which is needed
-> to call on some Dell machines to start receiving those ACPI-WMI events.
-> You can try to call it for your laptop, maybe it is needed too.
-> Currently it is called only for two laptop models, see table
-> dell_wmi_smbios_list.
-> 
-> > In the meantime, I'll try to find out why the first button is outputting
-> > an "x" character on my machine.
-> 
-> Check that you caught all keypresses. X11 tools just print keys known to
-> X server, not all which are supported by Linux kernel.
-> 
-> You can use e.g. input-events utility. And also check all input devices,
-> as wrote some keys are send via PS/2 keyboard input device, some via
-> ACPI-WMI input device.
-> 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/Kconfig              |  11 +++
+ drivers/platform/x86/Makefile             |   1 +
+ drivers/platform/x86/intel_mrfld_pwrbtn.c | 107 ++++++++++++++++++++++
+ 3 files changed, 119 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_mrfld_pwrbtn.c
 
-Ok, I was unaware of this, I'll keep this in mind when reasearching.
-
-I think that now I'm going to take my time in order to process all that
-you explained to me and study this issue a little more, then possibly
-start a new thread regarding my findings.
-
-Thanks for your attention and time,
-
-Renato
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index a1ed13183559..85b92a95e4c8 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1263,6 +1263,17 @@ config INTEL_CHTDC_TI_PWRBTN
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel_chtdc_ti_pwrbtn.
+ 
++config INTEL_MRFLD_PWRBTN
++	tristate "Intel Merrifield Basin Cove power button driver"
++	depends on INTEL_SOC_PMIC_MRFLD
++	depends on INPUT
++	---help---
++	  This option adds a power button driver for Basin Cove PMIC
++	  on Intel Merrifield devices.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel_mrfld_pwrbtn.
++
+ config I2C_MULTI_INSTANTIATE
+ 	tristate "I2C multi instantiate pseudo device driver"
+ 	depends on I2C && ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 86cb76677bc8..87b0069bd781 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -94,6 +94,7 @@ obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
+ obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
+ obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
+ obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
++obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
+ obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
+ obj-$(CONFIG_INTEL_ATOMISP2_PM)	+= intel_atomisp2_pm.o
+ obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
+diff --git a/drivers/platform/x86/intel_mrfld_pwrbtn.c b/drivers/platform/x86/intel_mrfld_pwrbtn.c
+new file mode 100644
+index 000000000000..d58fea51747e
+--- /dev/null
++++ b/drivers/platform/x86/intel_mrfld_pwrbtn.c
+@@ -0,0 +1,107 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Power-button driver for Basin Cove PMIC
++ *
++ * Copyright (c) 2019, Intel Corporation.
++ * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
++ */
++
++#include <linux/input.h>
++#include <linux/interrupt.h>
++#include <linux/device.h>
++#include <linux/mfd/intel_soc_pmic.h>
++#include <linux/mfd/intel_soc_pmic_mrfld.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_wakeirq.h>
++#include <linux/slab.h>
++
++#define BCOVE_PBSTATUS		0x27
++#define BCOVE_PBSTATUS_PBLVL	BIT(4)	/* 1 - release, 0 - press */
++
++static irqreturn_t mrfld_pwrbtn_interrupt(int irq, void *dev_id)
++{
++	struct input_dev *input = dev_id;
++	struct device *dev = input->dev.parent;
++	struct regmap *regmap = dev_get_drvdata(dev);
++	unsigned int state;
++	int ret;
++
++	ret = regmap_read(regmap, BCOVE_PBSTATUS, &state);
++	if (ret)
++		return IRQ_NONE;
++
++	dev_dbg(dev, "PBSTATUS=0x%x\n", state);
++	input_report_key(input, KEY_POWER, !(state & BCOVE_PBSTATUS_PBLVL));
++	input_sync(input);
++
++	regmap_update_bits(regmap, BCOVE_MIRQLVL1, BCOVE_LVL1_PWRBTN, 0);
++	return IRQ_HANDLED;
++}
++
++static int mrfld_pwrbtn_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct intel_soc_pmic *pmic = dev_get_drvdata(dev->parent);
++	struct input_dev *input;
++	int irq, ret;
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return irq;
++
++	input = devm_input_allocate_device(dev);
++	if (!input)
++		return -ENOMEM;
++	input->name = pdev->name;
++	input->phys = "power-button/input0";
++	input->id.bustype = BUS_HOST;
++	input->dev.parent = dev;
++	input_set_capability(input, EV_KEY, KEY_POWER);
++	ret = input_register_device(input);
++	if (ret)
++		return ret;
++
++	dev_set_drvdata(dev, pmic->regmap);
++
++	ret = devm_request_threaded_irq(dev, irq, NULL, mrfld_pwrbtn_interrupt,
++					IRQF_ONESHOT | IRQF_SHARED, pdev->name,
++					input);
++	if (ret)
++		return ret;
++
++	regmap_update_bits(pmic->regmap, BCOVE_MIRQLVL1, BCOVE_LVL1_PWRBTN, 0);
++	regmap_update_bits(pmic->regmap, BCOVE_MPBIRQ, BCOVE_PBIRQ_PBTN, 0);
++
++	device_init_wakeup(dev, true);
++	dev_pm_set_wake_irq(dev, irq);
++	return 0;
++}
++
++static int mrfld_pwrbtn_remove(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++
++	dev_pm_clear_wake_irq(dev);
++	device_init_wakeup(dev, false);
++	return 0;
++}
++
++static const struct platform_device_id mrfld_pwrbtn_id_table[] = {
++	{ .name = "mrfld_bcove_pwrbtn" },
++	{}
++};
++MODULE_DEVICE_TABLE(platform, mrfld_pwrbtn_id_table);
++
++static struct platform_driver mrfld_pwrbtn_driver = {
++	.driver = {
++		.name	= "mrfld_bcove_pwrbtn",
++	},
++	.probe		= mrfld_pwrbtn_probe,
++	.remove		= mrfld_pwrbtn_remove,
++	.id_table	= mrfld_pwrbtn_id_table,
++};
++module_platform_driver(mrfld_pwrbtn_driver);
++
++MODULE_DESCRIPTION("Power-button driver for Basin Cove PMIC");
++MODULE_LICENSE("GPL v2");
+-- 
+2.20.1
