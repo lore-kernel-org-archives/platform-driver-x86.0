@@ -1,231 +1,117 @@
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Subject: Re: [PATCH 2/2] platform/x86: intel_pmc_core: Allow to dump debug
- registers on S0ix failure
-Date: Mon, 18 Mar 2019 21:31:06 +0530
-Message-ID: <20190318160106.GA31964@raj-desk2.iind.intel.com>
-References: <20190313222124.229371-1-rajatja@google.com>
- <20190313222124.229371-2-rajatja@google.com>
- <219AAEFC072D3A42B064BBBC1181F9BF65C25C8E@BGSMSX102.gar.corp.intel.com>
- <CAA93t1o=Yd8_kUQ=AjXPBF-vFXEPN_E6ij7EjbC7jAXUrQ+xNw@mail.gmail.com>
+From: Renato Soma <renatoys08@gmail.com>
+Subject: Re: [PATCH 0/1] platform/x86: dell-wmi: Uncomment events that were
+Date: Mon, 18 Mar 2019 23:21:44 -0300
+Message-ID: <20190319022144.GA14111@rys-Inspiron-5420>
+References: <20190316010942.6448-1-renatoys08@gmail.com>
+ <20190316091756.2zfccpnhfnjogktp@pali>
+ <20190317183049.GA5989@rys-Inspiron-5420>
+ <20190318120032.nynbshqudmlslxxz@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAA93t1o=Yd8_kUQ=AjXPBF-vFXEPN_E6ij7EjbC7jAXUrQ+xNw@mail.gmail.com>
+In-Reply-To: <20190318120032.nynbshqudmlslxxz@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajat Jain <rajatxjain@gmail.com>
-Cc: "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, Rajat Jain <rajatja@google.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "furquan@google.com" <furquan@google.com>, "evgreen@google.com" <evgreen@google.com>, rajneesh.bhardwaj@linux.intel.com, srinivas.pandruvada@linux.intel.com, david.e.box@intel.com, rafael.j.wysocki@intel.com
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>, mistave@countermail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Mar 18, 2019 at 08:18:56AM -0700, Rajat Jain wrote:
-> On Mon, Mar 18, 2019 at 2:31 AM Somayaji, Vishwanath
-> <vishwanath.somayaji@intel.com> wrote:
-> >
-> >
-> >
-> > >-----Original Message-----
-> > >From: Rajat Jain <rajatja@google.com>
-> > >Sent: Thursday, March 14, 2019 3:51 AM
-> > >To: Bhardwaj, Rajneesh <rajneesh.bhardwaj@intel.com>; Somayaji, Vishwanath
-> > ><vishwanath.somayaji@intel.com>; Darren Hart <dvhart@infradead.org>; Andy
-> > >Shevchenko <andy@infradead.org>; platform-driver-x86@vger.kernel.org; linux-
-> > >kernel@vger.kernel.org
-> > >Cc: Rajat Jain <rajatja@google.com>; furquan@google.com;
-> > >evgreen@google.com; rajatxjain@gmail.com
-> > >Subject: [PATCH 2/2] platform/x86: intel_pmc_core: Allow to dump debug
-> > >registers on S0ix failure
-> > >
-> > >Add a module parameter which when enabled, will check on resume, if the
-> > >last S0ix attempt was successful. If not, the driver would provide
-> > >helpful debug information (which gets latched during the failed suspend
-> > >attempt) to debug the S0ix failure.
-> > >
-> > >This information is very useful to debug S0ix failures. Specially since
-> > >the latched debug information will be lost (over-written) if the system
-> > >attempts to go into runtime (or imminent) S0ix again after that failed
-> > >suspend attempt.
-> > >
-> > >Signed-off-by: Rajat Jain <rajatja@google.com>
-> > >---
-> > > drivers/platform/x86/intel_pmc_core.c | 86 +++++++++++++++++++++++++++
-> > > drivers/platform/x86/intel_pmc_core.h |  7 +++
-> > > 2 files changed, 93 insertions(+)
-> > >
-> > >diff --git a/drivers/platform/x86/intel_pmc_core.c
-> > >b/drivers/platform/x86/intel_pmc_core.c
-> > >index 55578d07610c..b1f4405a27ce 100644
-> > >--- a/drivers/platform/x86/intel_pmc_core.c
-> > >+++ b/drivers/platform/x86/intel_pmc_core.c
-> > >@@ -20,6 +20,7 @@
-> > > #include <linux/module.h>
-> > > #include <linux/pci.h>
-> > > #include <linux/platform_device.h>
-> > >+#include <linux/suspend.h>
-> > > #include <linux/uaccess.h>
-> > >
-> > > #include <asm/cpu_device_id.h>
-> > >@@ -890,9 +891,94 @@ static int pmc_core_remove(struct platform_device
-> > >*pdev)
-> > >       return 0;
-> > > }
-> > >
-> > >+#ifdef CONFIG_PM_SLEEP
-> > >+
-> > >+static bool warn_on_s0ix_failures;
-> > >+module_param(warn_on_s0ix_failures, bool, 0644);
-> > >+MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix
-> > >failures");
-> > >+
-> > >+static int pmc_core_suspend(struct device *dev)
-> > >+{
-> > >+      struct pmc_dev *pmcdev = dev_get_drvdata(dev);
-> > >+
-> > >+      /* Save PC10 and S0ix residency for checking later */
-> > >+      if (warn_on_s0ix_failures &&
-> > >+          !rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pmcdev->pc10_counter)
-> > >&&
-> > >+          !pmc_core_dev_state_get(pmcdev, &pmcdev->s0ix_counter))
-> > >+              pmcdev->check_counters = true;
-> > >+      else
-> > >+              pmcdev->check_counters = false;
-> > >+
-> > >+      return 0;
-> > >+}
-> > >+
-> > >+static inline bool pc10_failed(struct pmc_dev *pmcdev)
-> > >+{
-> > >+      u64 pc10_counter;
-> > >+
-> > >+      if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pc10_counter) &&
-> > >+          pc10_counter == pmcdev->pc10_counter)
-> > >+              return true;
-> > >+      else
-> > >+              return false;
-> > >+}
-> > >+
-> > >+static inline bool s0ix_failed(struct pmc_dev *pmcdev)
-> > >+{
-> > >+      u64 s0ix_counter;
-> > >+
-> > >+      if (!pmc_core_dev_state_get(pmcdev, &s0ix_counter) &&
-> > >+          s0ix_counter == pmcdev->s0ix_counter)
-> > >+              return true;
-> > >+      else
-> > >+              return false;
-> > >+}
-> > >+
-> > >+static int pmc_core_resume(struct device *dev)
-> > >+{
-> > >+      struct pmc_dev *pmcdev = dev_get_drvdata(dev);
-> > >+
-> > >+      if (!pmcdev->check_counters)
-> > >+              return 0;
-> > >+
-> > >+      if (pc10_failed(pmcdev)) {
-> > >+              dev_info(dev, "PC10 entry had failed (PC10 cnt=0x%llx)\n",
-> > >+                       pmcdev->pc10_counter);
-> > >+      } else if (s0ix_failed(pmcdev)) {
-> > >+
-> > >+              const struct pmc_bit_map **maps = pmcdev->map-
-> > >>slps0_dbg_maps;
-> > >+              const struct pmc_bit_map *map;
-> > >+              int offset = pmcdev->map->slps0_dbg_offset;
-> > >+              u32 data;
-> > >+
-> > >+              dev_warn(dev, "S0ix entry had failed (S0ix cnt=%llu)\n",
-> > >+                       pmcdev->s0ix_counter);
-> > >+              while (*maps) {
-> > >+                      map = *maps;
-> > >+                      data = pmc_core_reg_read(pmcdev, offset);
-> > >+                      offset += 4;
-> > >+                      while (map->name) {
-> > >+                              dev_warn(dev, "SLP_S0_DBG: %-32s\tState:
-> > >%s\n",
-> > >+                                       map->name,
-> > >+                                       data & map->bit_mask ? "Yes" : "No");
-> > >+                              ++map;
-> > >+                      }
-> > >+                      ++maps;
-> > >+              }
-> > >+      }
-> > >+      return 0;
-> > >+}
-> > >+
-> > >+#endif
-> > >+
-> > >+const struct dev_pm_ops pmc_core_pm_ops = {
-> > >+      SET_LATE_SYSTEM_SLEEP_PM_OPS(pmc_core_suspend,
-> > >pmc_core_resume)
-> > These PM Ops routines will be called not just in s2idle scenario, but also in other suspend scenarios like s2ram, s2disk. However actual functionalities served by these routines are relevant only for s2idle.
-> > That means we will end up having false errors in s2ram/s2disk scenarios as PC10/s0ix counters wont increment in those scenarios.
+On Mon, Mar 18, 2019 at 01:00:32PM +0100, Pali Rohár wrote:
+> > =====================================================================
+> > 
+> > ----------------------------------------
+> > Left WMI key: Windows Mobility Center
+> > Press:    'x'
+> > Hold:     -
+> > Release:  -
+> > 
+> > In my machine (Inspiron 5420), whenever I press this key, the key
+> > outputs the character "x". I've seen nothing on dmesg even if I
+> > keep this key pressed for longer amounts of time. I'm still trying
+> > to understand why this is hapenning.
 > 
-> Yes, you are right. Currently there is no API for a driver to know
-> whether the *current suspend* attempt is targeting S0ix or S3. I was
-> hoping that the pm_suspend_via_s2idle() might tell us that but that is
-> not true. Note that this issue is mitigated by the expectation that
-> this parameter (warn_on_s0ix_failures) will only be enabled only on
-> platforms that use S0ix.
+> This is strange. Is not also some Alt/Meta/Ctrl or other modifier sent
+> too? Because Meta+X could be some windows shortcut...
+> 
+> > 
+> > ----------------------------------------
+> > Middle WMI key: Dell Audio With Preset Switch
+> > Press:    Key with type 0x0000 and code 0xe02a pressed
+> > Hold:     -
+> > Release:  Key with type 0x0000 and code 0xe02b pressed
+> > 
+> > Differently from what you saw on a Inspiron 7520, I could not
+> > reproduce the behavior that you reported on the first link above.
+> > In my case, when I press the key, the code 0xe02a is shown at dmesg
+> > only once. Also, even though I keep it pressed for longer than ~30
+> > seconds or so, I could not see the entry 0xe02c apper. More on that
+> > behavior later on. When releasing the key, I can see the code 0xe02b
+> > show up at dmesg.
+> > 
+> > ----------------------------------------
+> > Right WMI key: Dell Instant Launch
+> > Press:    -
+> > Hold:     -
+> > Release:  -
+> > 
+> > This key is with a really weird behavior on my machine.
+> > When testing, I would normally press and relase so that the following
+> > messages would pop-up:
+> > 
+> > [ 2830.499420] atkbd serio0: Unknown key pressed (translated set 2,
+> > code 0x60 on isa0060/serio0).
+> > [ 2830.499422] atkbd serio0: Use 'setkeycodes 60 <keycode>'
+> > to make it known.
+> 
+> This means that you have not configured atkbd keycodes yet. Run
+> setkeycodecs and assign some keycode for that scancode 60. After that
+> kernel atkbd (PS/2 keyboard) starts sending events to userspace.
 
-Maybe we can use ACPI_FADT_LOW_POWER_S0 also as a condition to dump this
-data though callback is best way to check in my opinion.
-
-Adding Srinivas, David and Rafael.
+All right, I'll investigate and try these approaches, thanks!
 
 > 
-> However, if this is a concern and there is a string sentiment around
-> it, I am happy to throw in a patch that adds such an API in the pm
-> core and uses it (I have a patch ready).
-
-
-
-
+> There are two ways how Dell firmware can inform operating system that
+> key was pressed. Notebook keyboard is connected to motherboard via
+> classic PS/2 port (of PS/2 port is emulated for OS). So operating system
+> sees PS/2 keyboard and key pressed are received by PS/2 atkbd driver.
+> For some (unknown/strange?) reasons firmware send some keys not via PS/2
+> keyboard port, but via ACPI interface, hence needs for dell_wmi driver
+> which handle them.
 > 
-> Thanks,
+> So some keypress events come via PS/2, some via ACPI-WMI. Linux kernel
+> then send all keypress events to userspace.
 > 
-> Rajat
+> When debugging problems with hot keys, you always need to look at all
+> possible sources...
 > 
-> >
-> > Vishwa
-> > >+};
-> > >+
-> > > static struct platform_driver pmc_core_driver = {
-> > >       .driver = {
-> > >               .name = "pmc_core",
-> > >+              .pm = &pmc_core_pm_ops
-> > >       },
-> > >       .probe = pmc_core_probe,
-> > >       .remove = pmc_core_remove,
-> > >diff --git a/drivers/platform/x86/intel_pmc_core.h
-> > >b/drivers/platform/x86/intel_pmc_core.h
-> > >index 88d9c0653a5f..fdee5772e532 100644
-> > >--- a/drivers/platform/x86/intel_pmc_core.h
-> > >+++ b/drivers/platform/x86/intel_pmc_core.h
-> > >@@ -241,6 +241,9 @@ struct pmc_reg_map {
-> > >  * @pmc_xram_read_bit:        flag to indicate whether PMC XRAM shadow
-> > >registers
-> > >  *                    used to read MPHY PG and PLL status are available
-> > >  * @mutex_lock:               mutex to complete one transcation
-> > >+ * @check_counters:   On resume, check if counters are getting incremented
-> > >+ * @pc10_counter:     PC10 residency counter
-> > >+ * @s0ix_counter:     S0ix residency (step adjusted)
-> > >  *
-> > >  * pmc_dev contains info about power management controller device.
-> > >  */
-> > >@@ -253,6 +256,10 @@ struct pmc_dev {
-> > > #endif /* CONFIG_DEBUG_FS */
-> > >       int pmc_xram_read_bit;
-> > >       struct mutex lock; /* generic mutex lock for PMC Core */
-> > >+
-> > >+      bool check_counters; /* Check for counter increments on resume */
-> > >+      u64 pc10_counter;
-> > >+      u64 s0ix_counter;
-> > > };
-> > >
-> > > #endif /* PMC_CORE_H */
-> > >--
-> > >2.21.0.360.g471c308f928-goog
-> >
+> 
+> dell-wmi.c is a driver for receiving APCI-WMI events; atkbd.c is a PS/2
+> keyboard driver.
+> 
+> In dell-wmi.c is a function dell_wmi_events_set_enabled which is needed
+> to call on some Dell machines to start receiving those ACPI-WMI events.
+> You can try to call it for your laptop, maybe it is needed too.
+> Currently it is called only for two laptop models, see table
+> dell_wmi_smbios_list.
+> 
+> > In the meantime, I'll try to find out why the first button is outputting
+> > an "x" character on my machine.
+> 
+> Check that you caught all keypresses. X11 tools just print keys known to
+> X server, not all which are supported by Linux kernel.
+> 
+> You can use e.g. input-events utility. And also check all input devices,
+> as wrote some keys are send via PS/2 keyboard input device, some via
+> ACPI-WMI input device.
+> 
 
--- 
-Best Regards,
-Rajneesh
+Ok, I was unaware of this, I'll keep this in mind when reasearching.
+
+I think that now I'm going to take my time in order to process all that
+you explained to me and study this issue a little more, then possibly
+start a new thread regarding my findings.
+
+Thanks for your attention and time,
+
+Renato
