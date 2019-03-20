@@ -1,156 +1,168 @@
 From: Rajat Jain <rajatja@google.com>
-Subject: [PATCH 1/2] platform/x86: intel_pmc_core: Convert to a platform_driver
-Date: Tue, 19 Mar 2019 18:04:30 -0700
-Message-ID: <20190320010431.19833-1-rajatja@google.com>
-References: <20190313222124.229371-1-rajatja@google.com>
+Subject: [PATCH 2/2] platform/x86: intel_pmc_core: Allow to dump debug
+ registers on S0ix failure
+Date: Tue, 19 Mar 2019 18:04:31 -0700
+Message-ID: <20190320010431.19833-2-rajatja@google.com>
+References: <20190313222124.229371-1-rajatja@google.com> <20190320010431.19833-1-rajatja@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190313222124.229371-1-rajatja@google.com>
+In-Reply-To: <20190320010431.19833-1-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Rajat Jain <rajatja@google.com>, furquan@google.com, evgreen@google.com, rajatxjain@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Convert the intel_pmc_core driver to a platform driver. There is no
-functional change. Some code that tried to determine the kind of
-CPU, has been moved from pmc_core_probe() to pmc_core_init().
+Add a module parameter which when enabled, will check on resume, if the
+last S0ix attempt was successful. If not, the driver would warn and provide
+helpful debug information (which gets latched during the failed suspend
+attempt) to debug the S0ix failure.
+
+This information is very useful to debug S0ix failures. Specially since
+the latched debug information will be lost (over-written) if the system
+attempts to go into runtime (or imminent) S0ix again after that failed
+suspend attempt.
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
-v2: Rephrase the commit log. No code changes.
+v2: Use pm_suspend_via_firmware() to enable the check only for S0ix
+    (I think).
 
- drivers/platform/x86/intel_pmc_core.c | 93 ++++++++++++++++++++-------
- 1 file changed, 68 insertions(+), 25 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 86 +++++++++++++++++++++++++++
+ drivers/platform/x86/intel_pmc_core.h |  7 +++
+ 2 files changed, 93 insertions(+)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index f2c621b55f49..55578d07610c 100644
+index 55578d07610c..0ab893fac4bb 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -19,6 +19,7 @@
- #include <linux/io.h>
+@@ -20,6 +20,7 @@
  #include <linux/module.h>
  #include <linux/pci.h>
-+#include <linux/platform_device.h>
+ #include <linux/platform_device.h>
++#include <linux/suspend.h>
  #include <linux/uaccess.h>
  
  #include <asm/cpu_device_id.h>
-@@ -854,12 +855,59 @@ static const struct dmi_system_id pmc_core_dmi_table[]  = {
- 	{}
+@@ -890,9 +891,94 @@ static int pmc_core_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++
++static bool warn_on_s0ix_failures;
++module_param(warn_on_s0ix_failures, bool, 0644);
++MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix failures");
++
++static int pmc_core_suspend(struct device *dev)
++{
++	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
++
++	/* Save PC10 and S0ix residency for checking later */
++	if (warn_on_s0ix_failures && !pm_suspend_via_firmware() &&
++	    !rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pmcdev->pc10_counter) &&
++	    !pmc_core_dev_state_get(pmcdev, &pmcdev->s0ix_counter))
++		pmcdev->check_counters = true;
++	else
++		pmcdev->check_counters = false;
++
++	return 0;
++}
++
++static inline bool pc10_failed(struct pmc_dev *pmcdev)
++{
++	u64 pc10_counter;
++
++	if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pc10_counter) &&
++	    pc10_counter == pmcdev->pc10_counter)
++		return true;
++	else
++		return false;
++}
++
++static inline bool s0ix_failed(struct pmc_dev *pmcdev)
++{
++	u64 s0ix_counter;
++
++	if (!pmc_core_dev_state_get(pmcdev, &s0ix_counter) &&
++	    s0ix_counter == pmcdev->s0ix_counter)
++		return true;
++	else
++		return false;
++}
++
++static int pmc_core_resume(struct device *dev)
++{
++	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
++
++	if (!pmcdev->check_counters)
++		return 0;
++
++	if (pc10_failed(pmcdev)) {
++		dev_info(dev, "PC10 entry had failed (PC10 cnt=0x%llx)\n",
++			 pmcdev->pc10_counter);
++	} else if (s0ix_failed(pmcdev)) {
++
++		const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
++		const struct pmc_bit_map *map;
++		int offset = pmcdev->map->slps0_dbg_offset;
++		u32 data;
++
++		dev_warn(dev, "S0ix entry had failed (S0ix cnt=%llu)\n",
++			 pmcdev->s0ix_counter);
++		while (*maps) {
++			map = *maps;
++			data = pmc_core_reg_read(pmcdev, offset);
++			offset += 4;
++			while (map->name) {
++				dev_warn(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
++					 map->name,
++					 data & map->bit_mask ? "Yes" : "No");
++				++map;
++			}
++			++maps;
++		}
++	}
++	return 0;
++}
++
++#endif
++
++const struct dev_pm_ops pmc_core_pm_ops = {
++	SET_LATE_SYSTEM_SLEEP_PM_OPS(pmc_core_suspend, pmc_core_resume)
++};
++
+ static struct platform_driver pmc_core_driver = {
+ 	.driver = {
+ 		.name = "pmc_core",
++		.pm = &pmc_core_pm_ops
+ 	},
+ 	.probe = pmc_core_probe,
+ 	.remove = pmc_core_remove,
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index 88d9c0653a5f..fdee5772e532 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -241,6 +241,9 @@ struct pmc_reg_map {
+  * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
+  *			used to read MPHY PG and PLL status are available
+  * @mutex_lock:		mutex to complete one transcation
++ * @check_counters:	On resume, check if counters are getting incremented
++ * @pc10_counter:	PC10 residency counter
++ * @s0ix_counter:	S0ix residency (step adjusted)
+  *
+  * pmc_dev contains info about power management controller device.
+  */
+@@ -253,6 +256,10 @@ struct pmc_dev {
+ #endif /* CONFIG_DEBUG_FS */
+ 	int pmc_xram_read_bit;
+ 	struct mutex lock; /* generic mutex lock for PMC Core */
++
++	bool check_counters; /* Check for counter increments on resume */
++	u64 pc10_counter;
++	u64 s0ix_counter;
  };
  
--static int __init pmc_core_probe(void)
-+static int pmc_core_probe(struct platform_device *pdev)
- {
--	struct pmc_dev *pmcdev = &pmc;
-+	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
-+	int err;
-+
-+	pmcdev->regbase = ioremap(pmcdev->base_addr,
-+				  pmcdev->map->regmap_length);
-+	if (!pmcdev->regbase)
-+		return -ENOMEM;
-+
-+	mutex_init(&pmcdev->lock);
-+	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
-+
-+	err = pmc_core_dbgfs_register(pmcdev);
-+	if (err < 0) {
-+		dev_warn(&pdev->dev, "debugfs register failed.\n");
-+		iounmap(pmcdev->regbase);
-+		return err;
-+	}
-+
-+	dmi_check_system(pmc_core_dmi_table);
-+	dev_info(&pdev->dev, " initialized\n");
-+	return 0;
-+}
-+
-+static int pmc_core_remove(struct platform_device *pdev)
-+{
-+	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
-+
-+	pmc_core_dbgfs_unregister(pmcdev);
-+	mutex_destroy(&pmcdev->lock);
-+	iounmap(pmcdev->regbase);
-+	return 0;
-+}
-+
-+static struct platform_driver pmc_core_driver = {
-+	.driver = {
-+		.name = "pmc_core",
-+	},
-+	.probe = pmc_core_probe,
-+	.remove = pmc_core_remove,
-+};
-+
-+static struct platform_device pmc_core_device = {
-+	.name           = "pmc_core",
-+};
-+
-+static int __init pmc_core_init(void)
-+{
-+	int ret;
- 	const struct x86_cpu_id *cpu_id;
-+	struct pmc_dev *pmcdev = &pmc;
- 	u64 slp_s0_addr;
--	int err;
- 
- 	cpu_id = x86_match_cpu(intel_pmc_core_ids);
- 	if (!cpu_id)
-@@ -880,36 +928,31 @@ static int __init pmc_core_probe(void)
- 	else
- 		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
- 
--	pmcdev->regbase = ioremap(pmcdev->base_addr,
--				  pmcdev->map->regmap_length);
--	if (!pmcdev->regbase)
--		return -ENOMEM;
-+	platform_set_drvdata(&pmc_core_device, pmcdev);
- 
--	mutex_init(&pmcdev->lock);
--	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
-+	ret = platform_device_register(&pmc_core_device);
-+	if (ret)
-+		return ret;
- 
--	err = pmc_core_dbgfs_register(pmcdev);
--	if (err < 0) {
--		pr_warn(" debugfs register failed.\n");
--		iounmap(pmcdev->regbase);
--		return err;
--	}
-+	ret = platform_driver_register(&pmc_core_driver);
-+	if (ret)
-+		goto out_remove_dev;
- 
--	dmi_check_system(pmc_core_dmi_table);
--	pr_info(" initialized\n");
- 	return 0;
-+
-+out_remove_dev:
-+	platform_device_unregister(&pmc_core_device);
-+	return ret;
- }
--module_init(pmc_core_probe)
- 
--static void __exit pmc_core_remove(void)
-+static void __init pmc_core_exit(void)
- {
--	struct pmc_dev *pmcdev = &pmc;
--
--	pmc_core_dbgfs_unregister(pmcdev);
--	mutex_destroy(&pmcdev->lock);
--	iounmap(pmcdev->regbase);
-+	platform_driver_unregister(&pmc_core_driver);
-+	platform_device_unregister(&pmc_core_device);
- }
--module_exit(pmc_core_remove)
-+
-+module_init(pmc_core_init);
-+module_exit(pmc_core_exit);
- 
- MODULE_LICENSE("GPL v2");
- MODULE_DESCRIPTION("Intel PMC Core Driver");
+ #endif /* PMC_CORE_H */
 -- 
 2.21.0.225.g810b269d1ac-goog
