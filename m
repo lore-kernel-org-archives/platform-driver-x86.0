@@ -1,174 +1,156 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2] platform/x86: Add support for Basin Cove power button
-Date: Tue, 19 Mar 2019 12:59:56 +0200
-Message-ID: <20190319105956.71672-1-andriy.shevchenko@linux.intel.com>
+From: Rajat Jain <rajatja@google.com>
+Subject: [PATCH 1/2] platform/x86: intel_pmc_core: Convert to a platform_driver
+Date: Tue, 19 Mar 2019 18:04:30 -0700
+Message-ID: <20190320010431.19833-1-rajatja@google.com>
+References: <20190313222124.229371-1-rajatja@google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190313222124.229371-1-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rajat Jain <rajatja@google.com>, furquan@google.com, evgreen@google.com, rajatxjain@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-This provides a new input driver for supporting the power button on
-Basin Cove PMIC, found on Intel Merrifield-based devices.
+Convert the intel_pmc_core driver to a platform driver. There is no
+functional change. Some code that tried to determine the kind of
+CPU, has been moved from pmc_core_probe() to pmc_core_init().
 
-The driver follows the design used in intel_chtdc_ti_pwrbtn.c module.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
- drivers/platform/x86/Kconfig              |  11 +++
- drivers/platform/x86/Makefile             |   1 +
- drivers/platform/x86/intel_mrfld_pwrbtn.c | 107 ++++++++++++++++++++++
- 3 files changed, 119 insertions(+)
- create mode 100644 drivers/platform/x86/intel_mrfld_pwrbtn.c
+v2: Rephrase the commit log. No code changes.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index a1ed13183559..85b92a95e4c8 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1263,6 +1263,17 @@ config INTEL_CHTDC_TI_PWRBTN
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel_chtdc_ti_pwrbtn.
- 
-+config INTEL_MRFLD_PWRBTN
-+	tristate "Intel Merrifield Basin Cove power button driver"
-+	depends on INTEL_SOC_PMIC_MRFLD
-+	depends on INPUT
-+	---help---
-+	  This option adds a power button driver for Basin Cove PMIC
-+	  on Intel Merrifield devices.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called intel_mrfld_pwrbtn.
-+
- config I2C_MULTI_INSTANTIATE
- 	tristate "I2C multi instantiate pseudo device driver"
- 	depends on I2C && ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 86cb76677bc8..87b0069bd781 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -94,6 +94,7 @@ obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
- obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
- obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
- obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
-+obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
- obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
- obj-$(CONFIG_INTEL_ATOMISP2_PM)	+= intel_atomisp2_pm.o
- obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
-diff --git a/drivers/platform/x86/intel_mrfld_pwrbtn.c b/drivers/platform/x86/intel_mrfld_pwrbtn.c
-new file mode 100644
-index 000000000000..d58fea51747e
---- /dev/null
-+++ b/drivers/platform/x86/intel_mrfld_pwrbtn.c
-@@ -0,0 +1,107 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Power-button driver for Basin Cove PMIC
-+ *
-+ * Copyright (c) 2019, Intel Corporation.
-+ * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-+ */
-+
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/device.h>
-+#include <linux/mfd/intel_soc_pmic.h>
-+#include <linux/mfd/intel_soc_pmic_mrfld.h>
-+#include <linux/module.h>
+ drivers/platform/x86/intel_pmc_core.c | 93 ++++++++++++++++++++-------
+ 1 file changed, 68 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index f2c621b55f49..55578d07610c 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -19,6 +19,7 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
 +#include <linux/platform_device.h>
-+#include <linux/pm_wakeirq.h>
-+#include <linux/slab.h>
+ #include <linux/uaccess.h>
+ 
+ #include <asm/cpu_device_id.h>
+@@ -854,12 +855,59 @@ static const struct dmi_system_id pmc_core_dmi_table[]  = {
+ 	{}
+ };
+ 
+-static int __init pmc_core_probe(void)
++static int pmc_core_probe(struct platform_device *pdev)
+ {
+-	struct pmc_dev *pmcdev = &pmc;
++	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
++	int err;
 +
-+#define BCOVE_PBSTATUS		0x27
-+#define BCOVE_PBSTATUS_PBLVL	BIT(4)	/* 1 - release, 0 - press */
-+
-+static irqreturn_t mrfld_pwrbtn_interrupt(int irq, void *dev_id)
-+{
-+	struct input_dev *input = dev_id;
-+	struct device *dev = input->dev.parent;
-+	struct regmap *regmap = dev_get_drvdata(dev);
-+	unsigned int state;
-+	int ret;
-+
-+	ret = regmap_read(regmap, BCOVE_PBSTATUS, &state);
-+	if (ret)
-+		return IRQ_NONE;
-+
-+	dev_dbg(dev, "PBSTATUS=0x%x\n", state);
-+	input_report_key(input, KEY_POWER, !(state & BCOVE_PBSTATUS_PBLVL));
-+	input_sync(input);
-+
-+	regmap_update_bits(regmap, BCOVE_MIRQLVL1, BCOVE_LVL1_PWRBTN, 0);
-+	return IRQ_HANDLED;
-+}
-+
-+static int mrfld_pwrbtn_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct intel_soc_pmic *pmic = dev_get_drvdata(dev->parent);
-+	struct input_dev *input;
-+	int irq, ret;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	input = devm_input_allocate_device(dev);
-+	if (!input)
++	pmcdev->regbase = ioremap(pmcdev->base_addr,
++				  pmcdev->map->regmap_length);
++	if (!pmcdev->regbase)
 +		return -ENOMEM;
-+	input->name = pdev->name;
-+	input->phys = "power-button/input0";
-+	input->id.bustype = BUS_HOST;
-+	input->dev.parent = dev;
-+	input_set_capability(input, EV_KEY, KEY_POWER);
-+	ret = input_register_device(input);
-+	if (ret)
-+		return ret;
 +
-+	dev_set_drvdata(dev, pmic->regmap);
++	mutex_init(&pmcdev->lock);
++	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
 +
-+	ret = devm_request_threaded_irq(dev, irq, NULL, mrfld_pwrbtn_interrupt,
-+					IRQF_ONESHOT | IRQF_SHARED, pdev->name,
-+					input);
-+	if (ret)
-+		return ret;
++	err = pmc_core_dbgfs_register(pmcdev);
++	if (err < 0) {
++		dev_warn(&pdev->dev, "debugfs register failed.\n");
++		iounmap(pmcdev->regbase);
++		return err;
++	}
 +
-+	regmap_update_bits(pmic->regmap, BCOVE_MIRQLVL1, BCOVE_LVL1_PWRBTN, 0);
-+	regmap_update_bits(pmic->regmap, BCOVE_MPBIRQ, BCOVE_PBIRQ_PBTN, 0);
-+
-+	device_init_wakeup(dev, true);
-+	dev_pm_set_wake_irq(dev, irq);
++	dmi_check_system(pmc_core_dmi_table);
++	dev_info(&pdev->dev, " initialized\n");
 +	return 0;
 +}
 +
-+static int mrfld_pwrbtn_remove(struct platform_device *pdev)
++static int pmc_core_remove(struct platform_device *pdev)
 +{
-+	struct device *dev = &pdev->dev;
++	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
 +
-+	dev_pm_clear_wake_irq(dev);
-+	device_init_wakeup(dev, false);
++	pmc_core_dbgfs_unregister(pmcdev);
++	mutex_destroy(&pmcdev->lock);
++	iounmap(pmcdev->regbase);
 +	return 0;
 +}
 +
-+static const struct platform_device_id mrfld_pwrbtn_id_table[] = {
-+	{ .name = "mrfld_bcove_pwrbtn" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(platform, mrfld_pwrbtn_id_table);
-+
-+static struct platform_driver mrfld_pwrbtn_driver = {
++static struct platform_driver pmc_core_driver = {
 +	.driver = {
-+		.name	= "mrfld_bcove_pwrbtn",
++		.name = "pmc_core",
 +	},
-+	.probe		= mrfld_pwrbtn_probe,
-+	.remove		= mrfld_pwrbtn_remove,
-+	.id_table	= mrfld_pwrbtn_id_table,
++	.probe = pmc_core_probe,
++	.remove = pmc_core_remove,
 +};
-+module_platform_driver(mrfld_pwrbtn_driver);
 +
-+MODULE_DESCRIPTION("Power-button driver for Basin Cove PMIC");
-+MODULE_LICENSE("GPL v2");
++static struct platform_device pmc_core_device = {
++	.name           = "pmc_core",
++};
++
++static int __init pmc_core_init(void)
++{
++	int ret;
+ 	const struct x86_cpu_id *cpu_id;
++	struct pmc_dev *pmcdev = &pmc;
+ 	u64 slp_s0_addr;
+-	int err;
+ 
+ 	cpu_id = x86_match_cpu(intel_pmc_core_ids);
+ 	if (!cpu_id)
+@@ -880,36 +928,31 @@ static int __init pmc_core_probe(void)
+ 	else
+ 		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
+ 
+-	pmcdev->regbase = ioremap(pmcdev->base_addr,
+-				  pmcdev->map->regmap_length);
+-	if (!pmcdev->regbase)
+-		return -ENOMEM;
++	platform_set_drvdata(&pmc_core_device, pmcdev);
+ 
+-	mutex_init(&pmcdev->lock);
+-	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
++	ret = platform_device_register(&pmc_core_device);
++	if (ret)
++		return ret;
+ 
+-	err = pmc_core_dbgfs_register(pmcdev);
+-	if (err < 0) {
+-		pr_warn(" debugfs register failed.\n");
+-		iounmap(pmcdev->regbase);
+-		return err;
+-	}
++	ret = platform_driver_register(&pmc_core_driver);
++	if (ret)
++		goto out_remove_dev;
+ 
+-	dmi_check_system(pmc_core_dmi_table);
+-	pr_info(" initialized\n");
+ 	return 0;
++
++out_remove_dev:
++	platform_device_unregister(&pmc_core_device);
++	return ret;
+ }
+-module_init(pmc_core_probe)
+ 
+-static void __exit pmc_core_remove(void)
++static void __init pmc_core_exit(void)
+ {
+-	struct pmc_dev *pmcdev = &pmc;
+-
+-	pmc_core_dbgfs_unregister(pmcdev);
+-	mutex_destroy(&pmcdev->lock);
+-	iounmap(pmcdev->regbase);
++	platform_driver_unregister(&pmc_core_driver);
++	platform_device_unregister(&pmc_core_device);
+ }
+-module_exit(pmc_core_remove)
++
++module_init(pmc_core_init);
++module_exit(pmc_core_exit);
+ 
+ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("Intel PMC Core Driver");
 -- 
-2.20.1
+2.21.0.225.g810b269d1ac-goog
