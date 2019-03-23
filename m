@@ -1,60 +1,273 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 060/280] x86/CPU: Add Icelake model number
-Date: Fri, 22 Mar 2019 12:13:33 +0100
-Message-ID: <20190322111309.636121466@linuxfoundation.org>
-References: <20190322111306.356185024@linuxfoundation.org>
+From: Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH 1/2] platform/x86: intel_pmc_core: Convert to a platform_driver
+Date: Fri, 22 Mar 2019 17:30:05 -0700
+Message-ID: <CACK8Z6HGEeM_0AnM1eJcUgNPwFz6_wsT8oFAG2rkV4UZczDi3g@mail.gmail.com>
+References: <20190313222124.229371-1-rajatja@google.com> <20190316081752.GA21812@raj-desk2.iind.intel.com>
+ <CAA93t1qoQx2B9=KuNpuXL_PvdpgGJPzZk8N-KWqS4XyO8qrS5g@mail.gmail.com> <3fc03e60-492a-e9b5-ac9b-caa17f8a8e27@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190322111306.356185024@linuxfoundation.org>
+In-Reply-To: <3fc03e60-492a-e9b5-ac9b-caa17f8a8e27@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Borislav Petkov <bp@suse.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, dvhart@infradead.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
+To: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
+Cc: Rajat Jain <rajatxjain@gmail.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Furquan Shaikh <furquan@google.com>, Evan Green <evgreen@google.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, "Box, David E" <david.e.box@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+Hi Rajneesh,
 
-------------------
 
-[ Upstream commit 8cd8f0ce0d6aafe661cb3d6781c8b82bc696c04d ]
 
-Add the CPUID model number of Icelake (ICL) mobile processors to the
-Intel family list. Icelake U/Y series uses model number 0x7E.
+On Fri, Mar 22, 2019 at 12:56 PM Bhardwaj, Rajneesh
+<rajneesh.bhardwaj@linux.intel.com> wrote:
+>
+> Some suggestions below
+>
+> On 18-Mar-19 8:36 PM, Rajat Jain wrote:
+>
+> On Sat, Mar 16, 2019 at 1:30 AM Rajneesh Bhardwaj
+> <rajneesh.bhardwaj@intel.com> wrote:
+>
+> On Wed, Mar 13, 2019 at 03:21:23PM -0700, Rajat Jain wrote:
+>
+> Convert the intel_pmc_core driver to a platform driver. There is no
+> functional change. Some code that tries to determine what kind of
+> CPU this is, has been moved code is moved from pmc_core_probe() to
+>
+> Possible typo here.
+>
+> Ummm, you mean grammar error I guess? Sure, I will rephrase.
+>
+> pmc_core_init().
+>
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+>
+> Thanks for sending this. This is certainly useful to support suspend-resume
+> functionality for this driver which is otherwise only possible with PM
+> notifiers otherwise and that is not desirable. Initially this was a PCI
+> driver and after design discussion it was converted to module. I would like
+> to consult Andy and Srinivas for their opinion about binding it to actual
+> platform bus instead of the virtual bus as in its current form. In one of the
+> internal versions, we used a known acpi PNP HID.
+>
+> Sure, if there is an established ACPI PNP HID, then we could bind it
+> using that, on platforms where we are still developing BIOS /
+> coreboot. However, this might not be possible for shipping systems
+> (Kabylake / skylake) where there is no plan to change the BIOS.
+>
+> In one of our internal patches, i had used HID of power engine plugin. IIRC, During my testing it was working on KBL, CNL with UEFI BIOS but i highly recommend testing it.
+>
+> ---8<----8<-----
+>
+> +static const struct acpi_device_id pmc_acpi_ids[] = {
+>
+> +             {"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
+>
+> +             { }
+>
+>  };
 
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "David E. Box" <david.e.box@intel.com>
-Cc: dvhart@infradead.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190214115712.19642-2-rajneesh.bhardwaj@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/include/asm/intel-family.h | 2 ++
- 1 file changed, 2 insertions(+)
+We do not have this device in any of our ACPI tables today. If Intel
+can confirm that this is a well known HID to be used for attaching
+this driver, we can start putting it on our platform's ACPI going
+forward (Whiskeylake, Cometlake, Cannonlake, Icelake ...). But I
+believe we also need to have this driver attach with the device on
+older platforms (Skylake, Kabylake, Amberlake) that are already
+shipping, and running a Non UEFI BIOS (that may not have this HID
+since it is not published).
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 7ed08a7c3398..0ad25cc895ae 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -55,6 +55,8 @@
- 
- #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
- 
-+#define INTEL_FAM6_ICELAKE_MOBILE	0x7E
-+
- /* "Small Core" Processors (Atom) */
- 
- #define INTEL_FAM6_ATOM_PINEVIEW	0x1C
--- 
-2.19.1
+Currently the intel_pmc_core driver attaches itself to the following
+table of CPU families, without regard to whether it has that HID in
+the ACPI or not:
+
+static const struct x86_cpu_id intel_pmc_core_ids[] = {
+        INTEL_CPU_FAM6(SKYLAKE_MOBILE, spt_reg_map),
+        INTEL_CPU_FAM6(SKYLAKE_DESKTOP, spt_reg_map),
+        INTEL_CPU_FAM6(KABYLAKE_MOBILE, spt_reg_map),
+        INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
+        INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+        INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
+        {}
+};
+
+So to avoid a regression, I suggest that we still maintain the above
+table (may be eliminate few entries) and always attach if the CPU is
+among the table, and if the CPU is not among the table, use the ACPI
+HID to attach. I propose to attach to at least Skylake and Kabylake
+systems using the table above, and for Canonlake and Icelake and
+newer, we can rely on BIOS providing the ACPI HID. Of course I do not
+know if all non-Google Canonlake/Icelake platforms will have this HID
+in their BIOS. If we are not sure, we can include Canonlake and
+Icelake also in that list, an. Please let me know what do you think.
+
+Thanks,
+
+Rajat
+
+>
+>
+>
+> -builtin_pci_driver(intel_pmc_core_driver);
+>
+> +static struct platform_driver pmc_plat_driver = {
+>
+> +             .remove = pmc_plat_remove,
+>
+> +             .probe = pmc_plat_probe,
+>
+> +             .driver = {
+>
+> +                             .name = "pmc_core_driver",
+>
+> +                             .acpi_match_table = ACPI_PTR(pmc_acpi_ids),
+>
+> +             },
+>
+> +};
+>
+> ---
+> This is rebased off
+> git://git.infradead.org/linux-platform-drivers-x86.git/for-next
+>
+>  drivers/platform/x86/intel_pmc_core.c | 93 ++++++++++++++++++++-------
+>  1 file changed, 68 insertions(+), 25 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index f2c621b55f49..55578d07610c 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> +#include <linux/platform_device.h>
+>  #include <linux/uaccess.h>
+>
+>  #include <asm/cpu_device_id.h>
+> @@ -854,12 +855,59 @@ static const struct dmi_system_id pmc_core_dmi_table[]  = {
+>       {}
+>  };
+>
+> -static int __init pmc_core_probe(void)
+> +static int pmc_core_probe(struct platform_device *pdev)
+>  {
+> -     struct pmc_dev *pmcdev = &pmc;
+> +     struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
+> +     int err;
+> +
+> +     pmcdev->regbase = ioremap(pmcdev->base_addr,
+> +                               pmcdev->map->regmap_length);
+> +     if (!pmcdev->regbase)
+> +             return -ENOMEM;
+> +
+> +     mutex_init(&pmcdev->lock);
+> +     pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+> +
+> +     err = pmc_core_dbgfs_register(pmcdev);
+> +     if (err < 0) {
+> +             dev_warn(&pdev->dev, "debugfs register failed.\n");
+> +             iounmap(pmcdev->regbase);
+> +             return err;
+> +     }
+> +
+> +     dmi_check_system(pmc_core_dmi_table);
+> +     dev_info(&pdev->dev, " initialized\n");
+> +     return 0;
+> +}
+> +
+> +static int pmc_core_remove(struct platform_device *pdev)
+> +{
+> +     struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
+> +
+> +     pmc_core_dbgfs_unregister(pmcdev);
+> +     mutex_destroy(&pmcdev->lock);
+> +     iounmap(pmcdev->regbase);
+> +     return 0;
+> +}
+> +
+> +static struct platform_driver pmc_core_driver = {
+> +     .driver = {
+> +             .name = "pmc_core",
+> +     },
+> +     .probe = pmc_core_probe,
+> +     .remove = pmc_core_remove,
+> +};
+> +
+> +static struct platform_device pmc_core_device = {
+> +     .name           = "pmc_core",
+> +};
+> +
+> +static int __init pmc_core_init(void)
+> +{
+> +     int ret;
+>
+> Please use reverse x-mas tree style.
+>
+> OK, will do.
+>
+>       const struct x86_cpu_id *cpu_id;
+> +     struct pmc_dev *pmcdev = &pmc;
+>       u64 slp_s0_addr;
+> -     int err;
+>
+>       cpu_id = x86_match_cpu(intel_pmc_core_ids);
+>       if (!cpu_id)
+> @@ -880,36 +928,31 @@ static int __init pmc_core_probe(void)
+>       else
+>               pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
+>
+> -     pmcdev->regbase = ioremap(pmcdev->base_addr,
+> -                               pmcdev->map->regmap_length);
+> -     if (!pmcdev->regbase)
+> -             return -ENOMEM;
+> +     platform_set_drvdata(&pmc_core_device, pmcdev);
+>
+> -     mutex_init(&pmcdev->lock);
+> -     pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+> +     ret = platform_device_register(&pmc_core_device);
+> +     if (ret)
+> +             return ret;
+>
+> -     err = pmc_core_dbgfs_register(pmcdev);
+> -     if (err < 0) {
+> -             pr_warn(" debugfs register failed.\n");
+> -             iounmap(pmcdev->regbase);
+> -             return err;
+> -     }
+> +     ret = platform_driver_register(&pmc_core_driver);
+> +     if (ret)
+> +             goto out_remove_dev;
+>
+> -     dmi_check_system(pmc_core_dmi_table);
+> -     pr_info(" initialized\n");
+>       return 0;
+> +
+> +out_remove_dev:
+> +     platform_device_unregister(&pmc_core_device);
+> +     return ret;
+>  }
+> -module_init(pmc_core_probe)
+>
+> -static void __exit pmc_core_remove(void)
+> +static void __init pmc_core_exit(void)
+>  {
+> -     struct pmc_dev *pmcdev = &pmc;
+> -
+> -     pmc_core_dbgfs_unregister(pmcdev);
+> -     mutex_destroy(&pmcdev->lock);
+> -     iounmap(pmcdev->regbase);
+> +     platform_driver_unregister(&pmc_core_driver);
+> +     platform_device_unregister(&pmc_core_device);
+>  }
+> -module_exit(pmc_core_remove)
+> +
+> +module_init(pmc_core_init);
+> +module_exit(pmc_core_exit);
+>
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_DESCRIPTION("Intel PMC Core Driver");
+> --
+> 2.21.0.360.g471c308f928-goog
+>
+> --
+> Best Regards,
+> Rajneesh
