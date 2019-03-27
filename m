@@ -1,73 +1,74 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 179/262] platform/x86: intel_pmc_core: Fix PCH IP sts reading
-Date: Wed, 27 Mar 2019 14:00:34 -0400
-Message-ID: <20190327180158.10245-179-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 211/262] platform/x86: intel-hid: Missing power button release on some Dell models
+Date: Wed, 27 Mar 2019 14:01:06 -0400
+Message-ID: <20190327180158.10245-211-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: =?UTF-8?q?J=C3=A9r=C3=B4me=20de=20Bretagne?= <jerome.debretagne@gmail.com>, Darren Hart <dvhart@infradead.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+From: Jérôme de Bretagne <jerome.debretagne@gmail.com>
 
-[ Upstream commit 0e68eeea9894feeba2edf7ec63e4551b87f39621 ]
+[ Upstream commit e97a34563d18606ee5db93e495382a967f999cd4 ]
 
-A previous commit "platform/x86: intel_pmc_core: Make the driver PCH
-family agnostic <c977b98bbef5898ed3d30b08ea67622e9e82082a>" provided
-better abstraction to this driver but has some fundamental issues.
+Power button suspend for some Dell models was added in:
 
-e.g. the following condition
+commit 821b85366284 ("platform/x86: intel-hid: Power button suspend on Dell Latitude 7275")
 
-for (index = 0; index < pmcdev->map->ppfear_buckets &&
-	index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
+by checking against the power button press notification (0xCE) to report
+the power button press event. The corresponding power button release
+notification (0xCF) was caught and ignored to stop it from being reported
+as an "unknown event" in the logs.
 
-is wrong because for CNL, PPFEAR_MAX_NUM_ENTRIES is hardcoded as 5 which
-is _wrong_ and even though ppfear_buckets is 8, the loop fails to read
-all eight registers needed for CNL PCH i.e. PPFEAR0 and PPFEAR1. This
-patch refactors the pfear show logic to correctly read PCH IP power
-gating status for Cannonlake and beyond.
+The missing button release event is creating issues on Android-x86, as
+reported on the project mailing list for a Dell Latitude 5175 model, since
+the events are expected in down/up pairs.
 
-Cc: "David E. Box" <david.e.box@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Fixes: c977b98bbef5 ("platform/x86: intel_pmc_core: Make the driver PCH family agnostic")
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Report the power button release event to fix this issue.
+
+Link: https://groups.google.com/forum/#!topic/android-x86/aSwZK9Nf9Ro
+Tested-by: Tristian Celestin <tristian.celestin@outlook.com>
+Tested-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+[dvhart: corrected commit reference format per checkpatch]
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_pmc_core.c | 3 ++-
- drivers/platform/x86/intel_pmc_core.h | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel-hid.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 22dbf115782e..c37e74ee609d 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -380,7 +380,8 @@ static int pmc_core_ppfear_show(struct seq_file *s, void *unused)
- 	     index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
- 		pf_regs[index] = pmc_core_reg_read_byte(pmcdev, iter);
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index e28bcf61b126..bc0d55a59015 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -363,7 +363,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	 * the 5-button array, but still send notifies with power button
+ 	 * event code to this device object on power button actions.
+ 	 *
+-	 * Report the power button press; catch and ignore the button release.
++	 * Report the power button press and release.
+ 	 */
+ 	if (!priv->array) {
+ 		if (event == 0xce) {
+@@ -372,8 +372,11 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 			return;
+ 		}
  
--	for (index = 0; map[index].name; index++)
-+	for (index = 0; map[index].name &&
-+	     index < pmcdev->map->ppfear_buckets * 8; index++)
- 		pmc_core_display_map(s, index, pf_regs[index / 8], map);
+-		if (event == 0xcf)
++		if (event == 0xcf) {
++			input_report_key(priv->input_dev, KEY_POWER, 0);
++			input_sync(priv->input_dev);
+ 			return;
++		}
+ 	}
  
- 	return 0;
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 89554cba5758..1a0104d2cbf0 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -32,7 +32,7 @@
- #define SPT_PMC_SLP_S0_RES_COUNTER_STEP		0x64
- #define PMC_BASE_ADDR_MASK			~(SPT_PMC_MMIO_REG_LEN - 1)
- #define MTPMC_MASK				0xffff0000
--#define PPFEAR_MAX_NUM_ENTRIES			5
-+#define PPFEAR_MAX_NUM_ENTRIES			12
- #define SPT_PPFEAR_NUM_ENTRIES			5
- #define SPT_PMC_READ_DISABLE_BIT		0x16
- #define SPT_PMC_MSG_FULL_STS_BIT		0x18
+ 	/* 0xC0 is for HID events, other values are for 5 button array */
 -- 
 2.19.1
