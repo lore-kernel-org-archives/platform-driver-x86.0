@@ -1,74 +1,68 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 156/192] platform/x86: intel-hid: Missing power button release on some Dell models
-Date: Wed, 27 Mar 2019 14:09:48 -0400
-Message-ID: <20190327181025.13507-156-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 066/192] platform/x86: ideapad-laptop: Fix no_hw_rfkill_list for Lenovo RESCUER R720-15IKBN
+Date: Wed, 27 Mar 2019 14:08:18 -0400
+Message-ID: <20190327181025.13507-66-sashal@kernel.org>
 References: <20190327181025.13507-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: =?UTF-8?q?J=C3=A9r=C3=B4me=20de=20Bretagne?= <jerome.debretagne@gmail.com>, Darren Hart <dvhart@infradead.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Yang Fan <nullptr.cpp@gmail.com>, Darren Hart <dvhart@infradead.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Jérôme de Bretagne <jerome.debretagne@gmail.com>
+From: Yang Fan <nullptr.cpp@gmail.com>
 
-[ Upstream commit e97a34563d18606ee5db93e495382a967f999cd4 ]
+[ Upstream commit 4d9b2864a415fec39150bc13efc730c7eb88711e ]
 
-Power button suspend for some Dell models was added in:
+Commit ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo RESCUER
+R720-15IKBN to no_hw_rfkill_list") added
+    DMI_MATCH(DMI_BOARD_NAME, "80WW")
+for Lenovo RESCUER R720-15IKBN.
 
-commit 821b85366284 ("platform/x86: intel-hid: Power button suspend on Dell Latitude 7275")
+But DMI_BOARD_NAME does not match 80WW on Lenovo RESCUER R720-15IKBN,
+thus cause Wireless LAN still be hard blocked.
 
-by checking against the power button press notification (0xCE) to report
-the power button press event. The corresponding power button release
-notification (0xCF) was caught and ignored to stop it from being reported
-as an "unknown event" in the logs.
+On Lenovo RESCUER R720-15IKBN:
+    ~$ cat /sys/class/dmi/id/sys_vendor
+    LENOVO
+    ~$ cat /sys/class/dmi/id/board_name
+    Provence-5R3
+    ~$ cat /sys/class/dmi/id/product_name
+    80WW
+    ~$ cat /sys/class/dmi/id/product_version
+    Lenovo R720-15IKBN
 
-The missing button release event is creating issues on Android-x86, as
-reported on the project mailing list for a Dell Latitude 5175 model, since
-the events are expected in down/up pairs.
+So on Lenovo RESCUER R720-15IKBN:
+    DMI_SYS_VENDOR should match "LENOVO",
+    DMI_BOARD_NAME should match "Provence-5R3",
+    DMI_PRODUCT_NAME should match "80WW",
+    DMI_PRODUCT_VERSION should match "Lenovo R720-15IKBN".
 
-Report the power button release event to fix this issue.
+Fix it, and in according with other entries in no_hw_rfkill_list,
+use DMI_PRODUCT_VERSION instead of DMI_BOARD_NAME.
 
-Link: https://groups.google.com/forum/#!topic/android-x86/aSwZK9Nf9Ro
-Tested-by: Tristian Celestin <tristian.celestin@outlook.com>
-Tested-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
-Signed-off-by: Jérôme de Bretagne <jerome.debretagne@gmail.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-[dvhart: corrected commit reference format per checkpatch]
+Fixes: ae7c8cba3221 ("platform/x86: ideapad-laptop: add lenovo RESCUER R720-15IKBN to no_hw_rfkill_list")
+Signed-off-by: Yang Fan <nullptr.cpp@gmail.com>
 Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-hid.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/platform/x86/ideapad-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 6cf9b7fa5bf0..3201a83073b5 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -373,7 +373,7 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	 * the 5-button array, but still send notifies with power button
- 	 * event code to this device object on power button actions.
- 	 *
--	 * Report the power button press; catch and ignore the button release.
-+	 * Report the power button press and release.
- 	 */
- 	if (!priv->array) {
- 		if (event == 0xce) {
-@@ -382,8 +382,11 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 			return;
- 		}
- 
--		if (event == 0xcf)
-+		if (event == 0xcf) {
-+			input_report_key(priv->input_dev, KEY_POWER, 0);
-+			input_sync(priv->input_dev);
- 			return;
-+		}
- 	}
- 
- 	/* 0xC0 is for HID events, other values are for 5 button array */
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index d4f1259ff5a2..62d4b94e2531 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -989,7 +989,7 @@ static const struct dmi_system_id no_hw_rfkill_list[] = {
+ 		.ident = "Lenovo RESCUER R720-15IKBN",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_BOARD_NAME, "80WW"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo R720-15IKBN"),
+ 		},
+ 	},
+ 	{
 -- 
 2.19.1
