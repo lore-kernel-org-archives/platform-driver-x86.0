@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 134/262] efi: Fix build error due to enum collision between efi.h and ima.h
-Date: Wed, 27 Mar 2019 13:59:49 -0400
-Message-ID: <20190327180158.10245-134-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 100/262] platform/mellanox: mlxreg-hotplug: Fix KASAN warning
+Date: Wed, 27 Mar 2019 13:59:15 -0400
+Message-ID: <20190327180158.10245-100-sashal@kernel.org>
 References: <20190327180158.10245-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,285 +9,168 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190327180158.10245-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Anders Roxell <anders.roxell@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Vadim Pasternak <vadimp@mellanox.com>, Darren Hart <dvhart@infradead.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Anders Roxell <anders.roxell@linaro.org>
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-[ Upstream commit 5c418dc789a3898717ebf2caa5716ba91a7150b2 ]
+[ Upstream commit e4c275f77624961b56cce397814d9d770a45ac59 ]
 
-The following commit:
+Fix the following KASAN warning produced when booting a 64-bit kernel:
+[   13.334750] BUG: KASAN: stack-out-of-bounds in find_first_bit+0x19/0x70
+[   13.342166] Read of size 8 at addr ffff880235067178 by task kworker/2:1/42
+[   13.342176] CPU: 2 PID: 42 Comm: kworker/2:1 Not tainted 4.20.0-rc1+ #106
+[   13.342179] Hardware name: Mellanox Technologies Ltd. MSN2740/Mellanox x86 SFF board, BIOS 5.6.5 06/07/2016
+[   13.342190] Workqueue: events deferred_probe_work_func
+[   13.342194] Call Trace:
+[   13.342206]  dump_stack+0xc7/0x15b
+[   13.342214]  ? show_regs_print_info+0x5/0x5
+[   13.342220]  ? kmsg_dump_rewind_nolock+0x59/0x59
+[   13.342234]  ? _raw_write_lock_irqsave+0x100/0x100
+[   13.351593]  print_address_description+0x73/0x260
+[   13.351603]  kasan_report+0x260/0x380
+[   13.351611]  ? find_first_bit+0x19/0x70
+[   13.351619]  find_first_bit+0x19/0x70
+[   13.351630]  mlxreg_hotplug_work_handler+0x73c/0x920 [mlxreg_hotplug]
+[   13.351639]  ? __lock_text_start+0x8/0x8
+[   13.351646]  ? _raw_write_lock_irqsave+0x80/0x100
+[   13.351656]  ? mlxreg_hotplug_remove+0x1e0/0x1e0 [mlxreg_hotplug]
+[   13.351663]  ? regmap_volatile+0x40/0xb0
+[   13.351668]  ? regcache_write+0x4c/0x90
+[   13.351676]  ? mlxplat_mlxcpld_reg_write+0x24/0x30 [mlx_platform]
+[   13.351681]  ? _regmap_write+0xea/0x220
+[   13.351688]  ? __mutex_lock_slowpath+0x10/0x10
+[   13.351696]  ? devm_add_action+0x70/0x70
+[   13.351701]  ? mutex_unlock+0x1d/0x40
+[   13.351710]  mlxreg_hotplug_probe+0x82e/0x989 [mlxreg_hotplug]
+[   13.351723]  ? mlxreg_hotplug_work_handler+0x920/0x920 [mlxreg_hotplug]
+[   13.351731]  ? sysfs_do_create_link_sd.isra.2+0xf4/0x190
+[   13.351737]  ? sysfs_rename_link_ns+0xf0/0xf0
+[   13.351743]  ? devres_close_group+0x2b0/0x2b0
+[   13.351749]  ? pinctrl_put+0x20/0x20
+[   13.351755]  ? acpi_dev_pm_attach+0x2c/0xd0
+[   13.351763]  platform_drv_probe+0x70/0xd0
+[   13.351771]  really_probe+0x480/0x6e0
+[   13.351778]  ? device_attach+0x10/0x10
+[   13.351784]  ? __lock_text_start+0x8/0x8
+[   13.351790]  ? _raw_write_lock_irqsave+0x80/0x100
+[   13.351797]  ? _raw_write_lock_irqsave+0x80/0x100
+[   13.351806]  ? __driver_attach+0x190/0x190
+[   13.351812]  driver_probe_device+0x17d/0x1a0
+[   13.351819]  ? __driver_attach+0x190/0x190
+[   13.351825]  bus_for_each_drv+0xd6/0x130
+[   13.351831]  ? bus_rescan_devices+0x20/0x20
+[   13.351837]  ? __mutex_lock_slowpath+0x10/0x10
+[   13.351845]  __device_attach+0x18c/0x230
+[   13.351852]  ? device_bind_driver+0x70/0x70
+[   13.351859]  ? __mutex_lock_slowpath+0x10/0x10
+[   13.351866]  bus_probe_device+0xea/0x110
+[   13.351874]  deferred_probe_work_func+0x1c9/0x290
+[   13.351882]  ? driver_deferred_probe_add+0x1d0/0x1d0
+[   13.351889]  ? preempt_notifier_dec+0x20/0x20
+[   13.351897]  ? read_word_at_a_time+0xe/0x20
+[   13.351904]  ? strscpy+0x151/0x290
+[   13.351912]  ? set_work_pool_and_clear_pending+0x9c/0xf0
+[   13.351918]  ? __switch_to_asm+0x34/0x70
+[   13.351924]  ? __switch_to_asm+0x40/0x70
+[   13.351929]  ? __switch_to_asm+0x34/0x70
+[   13.351935]  ? __switch_to_asm+0x40/0x70
+[   13.351942]  process_one_work+0x5cc/0xa00
+[   13.351952]  ? pwq_dec_nr_in_flight+0x1e0/0x1e0
+[   13.351960]  ? pci_mmcfg_check_reserved+0x80/0xb8
+[   13.351967]  ? run_rebalance_domains+0x250/0x250
+[   13.351980]  ? stack_access_ok+0x35/0x80
+[   13.351986]  ? deref_stack_reg+0xa1/0xe0
+[   13.351994]  ? schedule+0xcd/0x250
+[   13.352000]  ? worker_enter_idle+0x2d6/0x330
+[   13.352006]  ? __schedule+0xeb0/0xeb0
+[   13.352014]  ? fork_usermode_blob+0x130/0x130
+[   13.352019]  ? mutex_lock+0xa7/0x100
+[   13.352026]  ? _raw_spin_lock_irq+0x98/0xf0
+[   13.352032]  ? _raw_read_unlock_irqrestore+0x30/0x30
+[   13.352037] i2c i2c-2: Added multiplexed i2c bus 11
+[   13.352043]  worker_thread+0x181/0xa80
+[   13.352052]  ? __switch_to_asm+0x34/0x70
+[   13.352058]  ? __switch_to_asm+0x40/0x70
+[   13.352064]  ? process_one_work+0xa00/0xa00
+[   13.352070]  ? __switch_to_asm+0x34/0x70
+[   13.352076]  ? __switch_to_asm+0x40/0x70
+[   13.352081]  ? __switch_to_asm+0x34/0x70
+[   13.352086]  ? __switch_to_asm+0x40/0x70
+[   13.352092]  ? __switch_to_asm+0x34/0x70
+[   13.352097]  ? __switch_to_asm+0x40/0x70
+[   13.352105]  ? __schedule+0x3d6/0xeb0
+[   13.352112]  ? migrate_swap_stop+0x470/0x470
+[   13.352119]  ? save_stack+0x89/0xb0
+[   13.352127]  ? kmem_cache_alloc_trace+0xe5/0x570
+[   13.352132]  ? kthread+0x59/0x1d0
+[   13.352138]  ? ret_from_fork+0x35/0x40
+[   13.352154]  ? __schedule+0xeb0/0xeb0
+[   13.352161]  ? remove_wait_queue+0x150/0x150
+[   13.352169]  ? _raw_write_lock_irqsave+0x80/0x100
+[   13.352175]  ? __lock_text_start+0x8/0x8
+[   13.352183]  ? process_one_work+0xa00/0xa00
+[   13.352188]  kthread+0x1a4/0x1d0
+[   13.352195]  ? kthread_create_worker_on_cpu+0xc0/0xc0
+[   13.352202]  ret_from_fork+0x35/0x40
 
-  a893ea15d764 ("tpm: move tpm_chip definition to include/linux/tpm.h")
+[   13.353879] The buggy address belongs to the page:
+[   13.353885] page:ffffea0008d419c0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
+[   13.353890] flags: 0x2ffff8000000000()
+[   13.353897] raw: 02ffff8000000000 ffffea0008d419c8 ffffea0008d419c8 0000000000000000
+[   13.353903] raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+[   13.353905] page dumped because: kasan: bad access detected
 
-introduced a build error when both IMA and EFI are enabled:
+[   13.353908] Memory state around the buggy address:
+[   13.353912]  ffff880235067000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   13.353917]  ffff880235067080: 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1 04
+[   13.353921] >ffff880235067100: f2 f2 f2 f2 f2 f2 f2 04 f2 f2 f2 f2 f2 f2 f2 04
+[   13.353923]                                                                 ^
+[   13.353927]  ffff880235067180: f2 f2 f2 f2 f2 f2 f2 04 f2 f2 f2 00 00 00 00 00
+[   13.353931]  ffff880235067200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   13.353933] ==================================================================
 
-    In file included from ../security/integrity/ima/ima_fs.c:30:
-    ../security/integrity/ima/ima.h:176:7: error: redeclaration of enumerator "NONE"
+The warning is caused by the below loop:
+	for_each_set_bit(bit, (unsigned long *)&asserted, 8) {
+while "asserted" is declared as 'unsigned'.
 
-What happens is that both headers (ima.h and efi.h) defines the same
-'NONE' constant, and it broke when they started getting included from
-the same file:
+The casting of 32-bit unsigned integer pointer to a 64-bit unsigned long
+pointer. There are two problems here.
+It causes the access of four extra byte, which can corrupt memory
+The 32-bit pointer address may not be 64-bit aligned.
 
-Rework to prefix the EFI enum with 'EFI_*'.
+The fix changes variable "asserted" to "unsigned long".
 
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Link: http://lkml.kernel.org/r/20190215165551.12220-2-ard.biesheuvel@linaro.org
-[ Cleaned up the changelog a bit. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 1f976f6978bf ("platform/x86: Move Mellanox platform hotplug driver to platform/mellanox")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/quirks.c          |  4 +--
- drivers/firmware/efi/runtime-wrappers.c | 48 ++++++++++++-------------
- include/linux/efi.h                     | 26 +++++++-------
- 3 files changed, 39 insertions(+), 39 deletions(-)
+ drivers/platform/mellanox/mlxreg-hotplug.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 17456a1d3f04..6c571ae86947 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -717,7 +717,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
- 	 * "efi_mm" cannot be used to check if the page fault had occurred
- 	 * in the firmware context because efi=old_map doesn't use efi_pgd.
- 	 */
--	if (efi_rts_work.efi_rts_id == NONE)
-+	if (efi_rts_work.efi_rts_id == EFI_NONE)
- 		return;
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index b6d44550d98c..eca16d00e310 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -248,7 +248,8 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
+ 			   struct mlxreg_core_item *item)
+ {
+ 	struct mlxreg_core_data *data;
+-	u32 asserted, regval, bit;
++	unsigned long asserted;
++	u32 regval, bit;
+ 	int ret;
  
  	/*
-@@ -742,7 +742,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
- 	 * because this case occurs *very* rarely and hence could be improved
- 	 * on a need by basis.
- 	 */
--	if (efi_rts_work.efi_rts_id == RESET_SYSTEM) {
-+	if (efi_rts_work.efi_rts_id == EFI_RESET_SYSTEM) {
- 		pr_info("efi_reset_system() buggy! Reboot through BIOS\n");
- 		machine_real_restart(MRR_BIOS);
- 		return;
-diff --git a/drivers/firmware/efi/runtime-wrappers.c b/drivers/firmware/efi/runtime-wrappers.c
-index e2abfdb5cee6..698745c249e8 100644
---- a/drivers/firmware/efi/runtime-wrappers.c
-+++ b/drivers/firmware/efi/runtime-wrappers.c
-@@ -85,7 +85,7 @@ struct efi_runtime_work efi_rts_work;
- 		pr_err("Failed to queue work to efi_rts_wq.\n");	\
- 									\
- exit:									\
--	efi_rts_work.efi_rts_id = NONE;					\
-+	efi_rts_work.efi_rts_id = EFI_NONE;				\
- 	efi_rts_work.status;						\
- })
+@@ -281,7 +282,7 @@ mlxreg_hotplug_work_helper(struct mlxreg_hotplug_priv_data *priv,
+ 	asserted = item->cache ^ regval;
+ 	item->cache = regval;
  
-@@ -175,50 +175,50 @@ static void efi_call_rts(struct work_struct *work)
- 	arg5 = efi_rts_work.arg5;
- 
- 	switch (efi_rts_work.efi_rts_id) {
--	case GET_TIME:
-+	case EFI_GET_TIME:
- 		status = efi_call_virt(get_time, (efi_time_t *)arg1,
- 				       (efi_time_cap_t *)arg2);
- 		break;
--	case SET_TIME:
-+	case EFI_SET_TIME:
- 		status = efi_call_virt(set_time, (efi_time_t *)arg1);
- 		break;
--	case GET_WAKEUP_TIME:
-+	case EFI_GET_WAKEUP_TIME:
- 		status = efi_call_virt(get_wakeup_time, (efi_bool_t *)arg1,
- 				       (efi_bool_t *)arg2, (efi_time_t *)arg3);
- 		break;
--	case SET_WAKEUP_TIME:
-+	case EFI_SET_WAKEUP_TIME:
- 		status = efi_call_virt(set_wakeup_time, *(efi_bool_t *)arg1,
- 				       (efi_time_t *)arg2);
- 		break;
--	case GET_VARIABLE:
-+	case EFI_GET_VARIABLE:
- 		status = efi_call_virt(get_variable, (efi_char16_t *)arg1,
- 				       (efi_guid_t *)arg2, (u32 *)arg3,
- 				       (unsigned long *)arg4, (void *)arg5);
- 		break;
--	case GET_NEXT_VARIABLE:
-+	case EFI_GET_NEXT_VARIABLE:
- 		status = efi_call_virt(get_next_variable, (unsigned long *)arg1,
- 				       (efi_char16_t *)arg2,
- 				       (efi_guid_t *)arg3);
- 		break;
--	case SET_VARIABLE:
-+	case EFI_SET_VARIABLE:
- 		status = efi_call_virt(set_variable, (efi_char16_t *)arg1,
- 				       (efi_guid_t *)arg2, *(u32 *)arg3,
- 				       *(unsigned long *)arg4, (void *)arg5);
- 		break;
--	case QUERY_VARIABLE_INFO:
-+	case EFI_QUERY_VARIABLE_INFO:
- 		status = efi_call_virt(query_variable_info, *(u32 *)arg1,
- 				       (u64 *)arg2, (u64 *)arg3, (u64 *)arg4);
- 		break;
--	case GET_NEXT_HIGH_MONO_COUNT:
-+	case EFI_GET_NEXT_HIGH_MONO_COUNT:
- 		status = efi_call_virt(get_next_high_mono_count, (u32 *)arg1);
- 		break;
--	case UPDATE_CAPSULE:
-+	case EFI_UPDATE_CAPSULE:
- 		status = efi_call_virt(update_capsule,
- 				       (efi_capsule_header_t **)arg1,
- 				       *(unsigned long *)arg2,
- 				       *(unsigned long *)arg3);
- 		break;
--	case QUERY_CAPSULE_CAPS:
-+	case EFI_QUERY_CAPSULE_CAPS:
- 		status = efi_call_virt(query_capsule_caps,
- 				       (efi_capsule_header_t **)arg1,
- 				       *(unsigned long *)arg2, (u64 *)arg3,
-@@ -242,7 +242,7 @@ static efi_status_t virt_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_TIME, tm, tc, NULL, NULL, NULL);
-+	status = efi_queue_work(EFI_GET_TIME, tm, tc, NULL, NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
- }
-@@ -253,7 +253,7 @@ static efi_status_t virt_efi_set_time(efi_time_t *tm)
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(SET_TIME, tm, NULL, NULL, NULL, NULL);
-+	status = efi_queue_work(EFI_SET_TIME, tm, NULL, NULL, NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
- }
-@@ -266,7 +266,7 @@ static efi_status_t virt_efi_get_wakeup_time(efi_bool_t *enabled,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_WAKEUP_TIME, enabled, pending, tm, NULL,
-+	status = efi_queue_work(EFI_GET_WAKEUP_TIME, enabled, pending, tm, NULL,
- 				NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -278,7 +278,7 @@ static efi_status_t virt_efi_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(SET_WAKEUP_TIME, &enabled, tm, NULL, NULL,
-+	status = efi_queue_work(EFI_SET_WAKEUP_TIME, &enabled, tm, NULL, NULL,
- 				NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -294,7 +294,7 @@ static efi_status_t virt_efi_get_variable(efi_char16_t *name,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_VARIABLE, name, vendor, attr, data_size,
-+	status = efi_queue_work(EFI_GET_VARIABLE, name, vendor, attr, data_size,
- 				data);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -308,7 +308,7 @@ static efi_status_t virt_efi_get_next_variable(unsigned long *name_size,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_NEXT_VARIABLE, name_size, name, vendor,
-+	status = efi_queue_work(EFI_GET_NEXT_VARIABLE, name_size, name, vendor,
- 				NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -324,7 +324,7 @@ static efi_status_t virt_efi_set_variable(efi_char16_t *name,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(SET_VARIABLE, name, vendor, &attr, &data_size,
-+	status = efi_queue_work(EFI_SET_VARIABLE, name, vendor, &attr, &data_size,
- 				data);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -359,7 +359,7 @@ static efi_status_t virt_efi_query_variable_info(u32 attr,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(QUERY_VARIABLE_INFO, &attr, storage_space,
-+	status = efi_queue_work(EFI_QUERY_VARIABLE_INFO, &attr, storage_space,
- 				remaining_space, max_variable_size, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -391,7 +391,7 @@ static efi_status_t virt_efi_get_next_high_mono_count(u32 *count)
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(GET_NEXT_HIGH_MONO_COUNT, count, NULL, NULL,
-+	status = efi_queue_work(EFI_GET_NEXT_HIGH_MONO_COUNT, count, NULL, NULL,
- 				NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -407,7 +407,7 @@ static void virt_efi_reset_system(int reset_type,
- 			"could not get exclusive access to the firmware\n");
- 		return;
- 	}
--	efi_rts_work.efi_rts_id = RESET_SYSTEM;
-+	efi_rts_work.efi_rts_id = EFI_RESET_SYSTEM;
- 	__efi_call_virt(reset_system, reset_type, status, data_size, data);
- 	up(&efi_runtime_lock);
- }
-@@ -423,7 +423,7 @@ static efi_status_t virt_efi_update_capsule(efi_capsule_header_t **capsules,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(UPDATE_CAPSULE, capsules, &count, &sg_list,
-+	status = efi_queue_work(EFI_UPDATE_CAPSULE, capsules, &count, &sg_list,
- 				NULL, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-@@ -441,7 +441,7 @@ static efi_status_t virt_efi_query_capsule_caps(efi_capsule_header_t **capsules,
- 
- 	if (down_interruptible(&efi_runtime_lock))
- 		return EFI_ABORTED;
--	status = efi_queue_work(QUERY_CAPSULE_CAPS, capsules, &count,
-+	status = efi_queue_work(EFI_QUERY_CAPSULE_CAPS, capsules, &count,
- 				max_size, reset_type, NULL);
- 	up(&efi_runtime_lock);
- 	return status;
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 28604a8d0aa9..a86485ac7c87 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1699,19 +1699,19 @@ extern int efi_tpm_eventlog_init(void);
-  * fault happened while executing an efi runtime service.
-  */
- enum efi_rts_ids {
--	NONE,
--	GET_TIME,
--	SET_TIME,
--	GET_WAKEUP_TIME,
--	SET_WAKEUP_TIME,
--	GET_VARIABLE,
--	GET_NEXT_VARIABLE,
--	SET_VARIABLE,
--	QUERY_VARIABLE_INFO,
--	GET_NEXT_HIGH_MONO_COUNT,
--	RESET_SYSTEM,
--	UPDATE_CAPSULE,
--	QUERY_CAPSULE_CAPS,
-+	EFI_NONE,
-+	EFI_GET_TIME,
-+	EFI_SET_TIME,
-+	EFI_GET_WAKEUP_TIME,
-+	EFI_SET_WAKEUP_TIME,
-+	EFI_GET_VARIABLE,
-+	EFI_GET_NEXT_VARIABLE,
-+	EFI_SET_VARIABLE,
-+	EFI_QUERY_VARIABLE_INFO,
-+	EFI_GET_NEXT_HIGH_MONO_COUNT,
-+	EFI_RESET_SYSTEM,
-+	EFI_UPDATE_CAPSULE,
-+	EFI_QUERY_CAPSULE_CAPS,
- };
- 
- /*
+-	for_each_set_bit(bit, (unsigned long *)&asserted, 8) {
++	for_each_set_bit(bit, &asserted, 8) {
+ 		data = item->data + bit;
+ 		if (regval & BIT(bit)) {
+ 			if (item->inversed)
 -- 
 2.19.1
