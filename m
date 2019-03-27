@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 129/192] platform/x86: intel_pmc_core: Fix PCH IP sts reading
-Date: Wed, 27 Mar 2019 14:09:21 -0400
-Message-ID: <20190327181025.13507-129-sashal@kernel.org>
-References: <20190327181025.13507-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 083/123] platform/x86: intel_pmc_core: Fix PCH IP sts reading
+Date: Wed, 27 Mar 2019 14:15:47 -0400
+Message-ID: <20190327181628.15899-83-sashal@kernel.org>
+References: <20190327181628.15899-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190327181025.13507-1-sashal@kernel.org>
+In-Reply-To: <20190327181628.15899-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
@@ -43,10 +43,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 2d272a3e0176..e0dcdb3cc070 100644
+index 17e08b42b0a9..aaeb0242a99d 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -333,7 +333,8 @@ static int pmc_core_ppfear_sts_show(struct seq_file *s, void *unused)
+@@ -222,7 +222,8 @@ static int pmc_core_ppfear_sts_show(struct seq_file *s, void *unused)
  	     index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
  		pf_regs[index] = pmc_core_reg_read_byte(pmcdev, iter);
  
@@ -57,10 +57,10 @@ index 2d272a3e0176..e0dcdb3cc070 100644
  
  	return 0;
 diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 93a7e99e1f8b..3f9711b03cb4 100644
+index 3d225a9cc09f..1f13426eb61a 100644
 --- a/drivers/platform/x86/intel_pmc_core.h
 +++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -39,7 +39,7 @@
+@@ -38,7 +38,7 @@
  #define SPT_PMC_SLP_S0_RES_COUNTER_STEP		0x64
  #define PMC_BASE_ADDR_MASK			~(SPT_PMC_MMIO_REG_LEN - 1)
  #define MTPMC_MASK				0xffff0000
