@@ -1,14 +1,14 @@
 From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] fix fan-quirk macro for Lenovo P50
-Date: Wed, 27 Mar 2019 21:53:24 +0200
-Message-ID: <CAHp75Vf9bJR6zUvoSsiBnJO4xBfLyaknb1UcyuBGDLW3aVFgSg@mail.gmail.com>
-References: <20190327133530.GL9224@smile.fi.intel.com>
- <20190327192508.349725-1-matthias@wspse.de>
+Subject: Re: Question about thinkpad_acpi
+Date: Thu, 28 Mar 2019 13:46:42 +0200
+Message-ID: <CAHp75VdvML5Z1HK0Jk87Cwkmig7HM8d==HAZsDTXGpyqbZW=DQ@mail.gmail.com>
+References: <f89434fc-18bb-e466-5a1b-841b810fa9aa@gmail.com>
+ <0fe4715e-5244-a42e-3cfe-1e21219cc17d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20190327192508.349725-1-matthias-zx6oZbK/1Go@public.gmane.org>
+In-Reply-To: <0fe4715e-5244-a42e-3cfe-1e21219cc17d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
  <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
@@ -17,52 +17,43 @@ List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@publi
 List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
  <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
 Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Matthias Hensler <matthias-zx6oZbK/1Go@public.gmane.org>
-Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: =?UTF-8?Q?Sebastian_D=C3=B6rner?= <bastidoerner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Mar 27, 2019 at 9:25 PM Matthias Hensler <matthias-zx6oZbK/1Go@public.gmane.org> wrote:
->
-> Commit 846a416b4630fc960c10500b4194ad504bc22d4b changed the
-> quirk-matching for modern thinkpads to use three characters instead of
-> two. Unfortunately that commit did break the fan-quirk matching for the
-> P50. With commit 599eefffcf6b9cff3e8cc2d96fd8eebfadab339c there were
-> some cleanups in the quirk-macros, but still did not fix the wrong
-> matching for the P50.
->
-> Note: I guess the quirk-list needs to be expanded for the P70 and
->       newer models.
-
-You need to put your Signed-off-by tag as well.
-This is according to the process:
-https://www.kernel.org/doc/Documentation/process/submitting-patches.rst
-
-In any case, don't send updated version right now. We still have time
-in this release cycle and I would like to hear Henrique and others
-opinions.
-
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 726341f2b638..575a1ea161f0 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -8721,7 +8721,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
->         TPACPI_QEC_IBM('7', '6', TPACPI_FAN_Q1),
->         TPACPI_QEC_IBM('7', '0', TPACPI_FAN_Q1),
->         TPACPI_QEC_LNV('7', 'M', TPACPI_FAN_2FAN),
-> -       TPACPI_Q_LNV('N', '1', TPACPI_FAN_2FAN),
-> +       TPACPI_Q_LNV3('N', '1', 'E', TPACPI_FAN_2FAN),
->  };
->
->  static int __init fan_init(struct ibm_init_struct *iibm)
-> --
-> 2.20.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+T24gVGh1LCBNYXIgMjEsIDIwMTkgYXQgNDo1OSBQTSBTZWJhc3RpYW4gRMO2cm5lciA8YmFzdGlk
+b2VybmVyQGdtYWlsLmNvbT4gd3JvdGU6Cj4KPiBJIHRvdGFsbHkgZm9yZ290IHRvIG1lbnRpb246
+Cj4gVGhlcmUgYXJlIG5vdCBvbmx5IHdhcm5pbmdzIGluIGpvdXJuYWwsIGl0IHNpbXBseSBkb2Vz
+IG5vdCB3b3JrLgo+IC9wcm9jL2FjcGkvaWJtL2ZhbiBhbHdheXMgc2hvd3MgInN0YXR1czogZGlz
+YWJsZWQiLCBsZXZlbCBhbmQgc3BlZWQgYXJlCj4gMCwgYW5kIGNvbW1hbmRzIHZpYSBlY2hvIGRv
+IG5vdCB3b3JrLi4uCgpUaGFuayB5b3UgZm9yIHRoZSByZXBvcnQuIEkgQ2MnZWQgdGhpcyB0byBw
+dWJsaWMgbWFpbGluZyBsaXN0cyBhbmQKbWFpbnRhaW5lcnMgb2YgdGhlIGRyaXZlciBhbmQgc3Vi
+c3lzdGVtLgoKPiBPbiAyMS4wMy4xOSAxNTo1MywgU2ViYXN0aWFuIETDtnJuZXIgd3JvdGU6Cj4g
+PiBIaSBNci4gU2hldmNoZW5rbywKPiA+Cj4gPiBJJ20gd3JpdGluZyB0byB5b3UgYmVjYXVzZSBJ
+IG5vdGljZWQgdGhhdCB5b3Ugd2VyZSBvbmUgb2YgdGhlIG1vc3QKPiA+IGFjdGl2ZSBjb250cmli
+dXRvcnMgdG8gdGhlIHRoaW5rcGFkX2FjcGkgbGludXggZHJpdmVyIG9uIGdpdGh1YiBsYXN0Cj4g
+PiB5ZWFyLgo+ID4gSSd2ZSBnb3QgYSBxdWVzdGlvbiBhYm91dCB0aGlzIGRyaXZlciBhbmQgd291
+bGQgYmUgaGFwcHkgaWYgeW91J3ZlIGdvdAo+ID4gdGltZSBmb3IgYWR2aWNlLgo+ID4gTXkgcHJv
+YmxlbSBpcywgdGhhdCBteSBuZXcgbGFwdG9wJ3MgZmFuLCBhIFRoaW5rcGFkIFgzODAsIGlzCj4g
+PiBhbm5veWluZ2x5IGxvdWQsIGV2ZW4gaWYgdGhlIG1hY2hpbmUgaXMgaWRsZS4KPiA+IFNvIEkg
+ZmlndXJlZCB0byBtYW5hZ2UgdGhlIGZhbiBzcGVlZCB3aXRoIHRoaW5rZmFuLCB3aGljaCB1c2Vz
+Cj4gPiB0aGlua3BhZF9hY3BpJ3MgL3Byb2MvYWNwaS9pYm0vZmFuIHRvIGNvbnRyb2wgdGhlIGZh
+bi4KPiA+IEJ1dCBlYWNoIHRpbWUgSSB0cnkgdG8gY2F0IGZyb20gb3IgZWNobyB0byAvcHJvYy9h
+Y3BpL2libS9mYW4gSSBnZXQKPiA+IHNldmVyYWwga2VybmVsIEFDUEkgd2FybmluZ3M6Cj4gPiAi
+a2VybmVsOiBBQ1BJOiBcX1NCLlBDSTAuTFBDQi5FQy5FQ1JEOiAxIGFyZ3VtZW50cyB3ZXJlIHBh
+c3NlZCB0byBhCj4gPiBub24tbWV0aG9kIEFDUEkgb2JqZWN0IChSZWdpb25GaWVsZCkgKDIwMTcw
+ODMxL25zYXJndW1lbnRzLTI0MykiCj4gPiBJIHRyaWVkIHRoaXMgd2l0aCB0aGUgbGF0ZXN0IGtl
+cm5lbCAoNS4wLjMpIGFuZCBhY3RpdmF0ZWQgZmFuX2NvbnRyb2wKPiA+IGluIHRoZSB0aGlua3Bh
+ZF9hY3BpIG1vZHVsZS4KPiA+IEkgZ3Vlc3MgdGhpcyBtZWFucyB0aGF0IHNvbWUgQUNQSSBzdHVm
+ZiBiZXR3ZWVuIGtlcm5lbCBhbmQgbWFjaGluZQo+ID4gd2VudCB3cm9uZz8hIGRvbid0IGtub3cg
+bXVjaCBhYm91dCB0aGlzLgo+ID4gU28gbXkgcXVlc3Rpb24gaXM6Cj4gPiBJcyB0aGVyZSBhIHdh
+eSBJIGNhbiBmaXggdGhpcywgZG9uJ3Qga25vdywgYnkgZmlndXJpbmcgb3V0IHRoZSBjb3JyZWN0
+Cj4gPiBmYW4gY29udHJvbCByZWdpc3RlcnMgZm9yIG15IG1hY2hpbmUgYW5kIHRoZW4gcGF0Y2gg
+aXQgb24gbXkgb3duLiBPcgo+ID4gYW0gSSBzY3Jld2VkIHdpdGggdGhpcyBtYWNoaW5lIGFuZCBo
+YXZlIHRvIHdhaXQgZm9yIExlbm92byB0byBwYXRjaCB0aGlzPwo+ID4gWW91IHNlZSB0aGlzIHJl
+YWxseSBidWdzIG1lIDotKSBhbmQgSSdtIGxvb2tpbmcgZm9yd2FyZCB0byB5b3VyIGNvdW5jaWwu
+Cj4gPgo+ID4gR3JlZXRpbmdzLAo+ID4gU2ViYXN0aWFuIETDtnJuZXIKPiA+Cj4KCgotLSAKV2l0
+aCBCZXN0IFJlZ2FyZHMsCkFuZHkgU2hldmNoZW5rbwoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmlibS1hY3BpLWRldmVsIG1haWxpbmcgbGlzdAppYm0t
+YWNwaS1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6Ly9saXN0cy5zb3VyY2Vmb3Jn
+ZS5uZXQvbGlzdHMvbGlzdGluZm8vaWJtLWFjcGktZGV2ZWwK
