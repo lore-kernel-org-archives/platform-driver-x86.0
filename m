@@ -1,223 +1,58 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 27/57] platform/x86: Add Intel AtomISP2 dummy / power-management driver
-Date: Fri, 29 Mar 2019 21:28:20 -0400
-Message-ID: <20190330012854.32212-27-sashal@kernel.org>
-References: <20190330012854.32212-1-sashal@kernel.org>
+From: Matteo Croce <mcroce@redhat.com>
+Subject: [PATCH 0/4] Introduce the aural error reporting framework
+Date: Mon,  1 Apr 2019 12:24:51 +0200
+Message-ID: <20190401102456.11162-1-mcroce@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190330012854.32212-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: x86@kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-sound@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+The Linux kernel has had verbal error reporting since the beginning.
+Different error conditions trigger different error messages, with
+different severity: from a simple warning to the most feared kernel panic.
 
-[ Upstream commit 49ad712afa88c502831d37f7089d98eac441fb80 ]
+While this detailed error reporting is much helpful to developers or end
+users, there are some cases in which it's impossible to notice that an
+error happened.
+The most common case is headless devices, such as home servers without an
+attached display, or routers without an exposed serial port. Needless
+to say, logging into the machine via SSH is not an option after such
+a severe error.
+In other cases the monitor might be attached, but the system is unable to
+display the error, probably because there is an X server running and
+the KMS switch fails. Or simply the user is visually impaired.
 
-The Image Signal Processor found on Cherry Trail devices is brought up in
-D0 state on devices which have camera sensors attached to it. The ISP will
-not enter D3 state again without some massaging of its registers beforehand
-and the ISP not being in D3 state blocks the SoC from entering S0ix modes.
+These are all cases when the aural errors framework comes to help. This
+framework adds to the kernel a generic library to play sounds, which can
+be used to report errors or generic events.
 
-There was a driver for the ISP in drivers/staging but that got removed
-again because it never worked. It does not seem likely that a real
-driver for the ISP will be added to the mainline kernel anytime soon.
+As the sound card driver could, and most probably will, become unusable
+during a kernel crash, the sounds are played via the system buzzer which
+has been around since the dawn of time.
+The buzzer driver is simple, requires just a few register writes to work,
+the hardware is extremely cheap and is already present on most machines.
 
-This commit adds a dummy driver which contains the necessary magic from
-the staging driver to powerdown the ISP, so that Cherry Trail devices where
-the ISP is used will properly use S0ix modes when suspended.
+The first patch introduces the framework functions, the other three make
+use of it in, respectively, kernel panic, warning and oops.
+The last patch, not to be merged, creates a procfs handler useful to test
+the error reporting.
 
-Together with other recent S0ix related fixes this allows S0ix modes to
-be entered on e.g. a Chuwi Hi8 Pro and a HP x2 210.
+Matteo Croce (4):
+  aural error reporting framework
+  panic: use the aural error reporting framework to report panics
+  bug: use the aural error reporting framework to report warnings
+  oops: use the aural error reporting framework to report oopses
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=196915
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Alan Cox <alan@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- MAINTAINERS                              |   6 ++
- drivers/platform/x86/Kconfig             |  12 +++
- drivers/platform/x86/Makefile            |   1 +
- drivers/platform/x86/intel_atomisp2_pm.c | 119 +++++++++++++++++++++++
- 4 files changed, 138 insertions(+)
- create mode 100644 drivers/platform/x86/intel_atomisp2_pm.c
+ arch/x86/lib/Makefile |  1 +
+ arch/x86/lib/play.c   | 75 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/play.h  | 34 ++++++++++++++++++++
+ kernel/panic.c        | 61 +++++++++++++++++++++++++++++++++++
+ lib/Kconfig.debug     | 35 ++++++++++++++++++++
+ 5 files changed, 206 insertions(+)
+ create mode 100644 arch/x86/lib/play.c
+ create mode 100644 include/linux/play.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9e9b19ecf6f7..11a59e82d92e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7320,6 +7320,12 @@ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
- S:	Supported
- F:	sound/soc/intel/
- 
-+INTEL ATOMISP2 DUMMY / POWER-MANAGEMENT DRIVER
-+M:	Hans de Goede <hdegoede@redhat.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/intel_atomisp2_pm.c
-+
- INTEL C600 SERIES SAS CONTROLLER DRIVER
- M:	Intel SCU Linux support <intel-linux-scu@intel.com>
- M:	Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 7563c07e14e4..1e2524de6a63 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1231,6 +1231,18 @@ config I2C_MULTI_INSTANTIATE
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called i2c-multi-instantiate.
- 
-+config INTEL_ATOMISP2_PM
-+	tristate "Intel AtomISP2 dummy / power-management driver"
-+	depends on PCI && IOSF_MBI && PM
-+	help
-+	  Power-management driver for Intel's Image Signal Processor found on
-+	  Bay and Cherry Trail devices. This dummy driver's sole purpose is to
-+	  turn the ISP off (put it in D3) to save power and to allow entering
-+	  of S0ix modes.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called intel_atomisp2_pm.
-+
- endif # X86_PLATFORM_DEVICES
- 
- config PMC_ATOM
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index e6d1becf81ce..dc29af4d8e2f 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -92,3 +92,4 @@ obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
- obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
- obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
- obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
-+obj-$(CONFIG_INTEL_ATOMISP2_PM)	+= intel_atomisp2_pm.o
-diff --git a/drivers/platform/x86/intel_atomisp2_pm.c b/drivers/platform/x86/intel_atomisp2_pm.c
-new file mode 100644
-index 000000000000..9371603a0ac9
---- /dev/null
-+++ b/drivers/platform/x86/intel_atomisp2_pm.c
-@@ -0,0 +1,119 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Dummy driver for Intel's Image Signal Processor found on Bay and Cherry
-+ * Trail devices. The sole purpose of this driver is to allow the ISP to
-+ * be put in D3.
-+ *
-+ * Copyright (C) 2018 Hans de Goede <hdegoede@redhat.com>
-+ *
-+ * Based on various non upstream patches for ISP support:
-+ * Copyright (C) 2010-2017 Intel Corporation. All rights reserved.
-+ * Copyright (c) 2010 Silicon Hive www.siliconhive.com.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/pci.h>
-+#include <linux/pm_runtime.h>
-+#include <asm/iosf_mbi.h>
-+
-+/* PCI configuration regs */
-+#define PCI_INTERRUPT_CTRL		0x9c
-+
-+#define PCI_CSI_CONTROL			0xe8
-+#define PCI_CSI_CONTROL_PORTS_OFF_MASK	0x7
-+
-+/* IOSF BT_MBI_UNIT_PMC regs */
-+#define ISPSSPM0			0x39
-+#define ISPSSPM0_ISPSSC_OFFSET		0
-+#define ISPSSPM0_ISPSSC_MASK		0x00000003
-+#define ISPSSPM0_ISPSSS_OFFSET		24
-+#define ISPSSPM0_ISPSSS_MASK		0x03000000
-+#define ISPSSPM0_IUNIT_POWER_ON		0x0
-+#define ISPSSPM0_IUNIT_POWER_OFF	0x3
-+
-+static int isp_probe(struct pci_dev *dev, const struct pci_device_id *id)
-+{
-+	unsigned long timeout;
-+	u32 val;
-+
-+	pci_write_config_dword(dev, PCI_INTERRUPT_CTRL, 0);
-+
-+	/*
-+	 * MRFLD IUNIT DPHY is located in an always-power-on island
-+	 * MRFLD HW design need all CSI ports are disabled before
-+	 * powering down the IUNIT.
-+	 */
-+	pci_read_config_dword(dev, PCI_CSI_CONTROL, &val);
-+	val |= PCI_CSI_CONTROL_PORTS_OFF_MASK;
-+	pci_write_config_dword(dev, PCI_CSI_CONTROL, val);
-+
-+	/* Write 0x3 to ISPSSPM0 bit[1:0] to power off the IUNIT */
-+	iosf_mbi_modify(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0,
-+			ISPSSPM0_IUNIT_POWER_OFF, ISPSSPM0_ISPSSC_MASK);
-+
-+	/*
-+	 * There should be no IUNIT access while power-down is
-+	 * in progress HW sighting: 4567865
-+	 * Wait up to 50 ms for the IUNIT to shut down.
-+	 */
-+	timeout = jiffies + msecs_to_jiffies(50);
-+	while (1) {
-+		/* Wait until ISPSSPM0 bit[25:24] shows 0x3 */
-+		iosf_mbi_read(BT_MBI_UNIT_PMC, MBI_REG_READ, ISPSSPM0, &val);
-+		val = (val & ISPSSPM0_ISPSSS_MASK) >> ISPSSPM0_ISPSSS_OFFSET;
-+		if (val == ISPSSPM0_IUNIT_POWER_OFF)
-+			break;
-+
-+		if (time_after(jiffies, timeout)) {
-+			dev_err(&dev->dev, "IUNIT power-off timeout.\n");
-+			return -EBUSY;
-+		}
-+		usleep_range(1000, 2000);
-+	}
-+
-+	pm_runtime_allow(&dev->dev);
-+	pm_runtime_put_sync_suspend(&dev->dev);
-+
-+	return 0;
-+}
-+
-+static void isp_remove(struct pci_dev *dev)
-+{
-+	pm_runtime_get_sync(&dev->dev);
-+	pm_runtime_forbid(&dev->dev);
-+}
-+
-+static int isp_pci_suspend(struct device *dev)
-+{
-+	return 0;
-+}
-+
-+static int isp_pci_resume(struct device *dev)
-+{
-+	return 0;
-+}
-+
-+static UNIVERSAL_DEV_PM_OPS(isp_pm_ops, isp_pci_suspend,
-+			    isp_pci_resume, NULL);
-+
-+static const struct pci_device_id isp_id_table[] = {
-+	{ PCI_VDEVICE(INTEL, 0x22b8), },
-+	{ 0, }
-+};
-+MODULE_DEVICE_TABLE(pci, isp_id_table);
-+
-+static struct pci_driver isp_pci_driver = {
-+	.name = "intel_atomisp2_pm",
-+	.id_table = isp_id_table,
-+	.probe = isp_probe,
-+	.remove = isp_remove,
-+	.driver.pm = &isp_pm_ops,
-+};
-+
-+module_pci_driver(isp_pci_driver);
-+
-+MODULE_DESCRIPTION("Intel AtomISP2 dummy / power-management drv (for suspend)");
-+MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-+MODULE_LICENSE("GPL v2");
 -- 
-2.19.1
+2.20.1
