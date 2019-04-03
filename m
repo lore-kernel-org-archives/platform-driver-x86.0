@@ -1,38 +1,56 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 0/4] Introduce the aural error reporting framework
-Date: Tue, 2 Apr 2019 15:21:02 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1904021518170.1676@nanos.tec.linutronix.de>
-References: <20190401102456.11162-1-mcroce@redhat.com> <20190401110329.GA12232@hirez.programming.kicks-ass.net> <alpine.DEB.2.21.1904021045310.1676@nanos.tec.linutronix.de> <CAGnkfhzkS-QDq0uTSF=XEutaZ3ig6NYg5rgcWwQNmH9QM0TMSg@mail.gmail.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH 00/11] Software fwnode references
+Date: Wed,  3 Apr 2019 19:45:26 +0300
+Message-ID: <20190403164537.24643-1-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGnkfhzkS-QDq0uTSF=XEutaZ3ig6NYg5rgcWwQNmH9QM0TMSg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matteo Croce <mcroce@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-sound@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Matteo,
+Hi,
 
-On Tue, 2 Apr 2019, Matteo Croce wrote:
-> On Tue, Apr 2, 2019 at 11:33 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > Aside of that, where is the android-app to customize and decode the
-> > melodies?
-> >
-> > I surely want to have the music theme of 'Once Upon a Time in the West' on
-> > kernel crashes.
-> 
-> I'm a little rusty with Android programming, so I'll share the script
-> I use to convert notes to frequences.
-> With some awk magic it can turn notes into a C array, I hope that you
-> find it useful.
+This series adds support for software fwnode reference handling. In
+practice it means making fwnode_property_get_reference_args() function
+usable in the drivers also with software nodes. I send the series
+originally as RFC [1].
 
-That's great. Just a few nitpicks on the patches themself. You want to
-change msleep() to mdelay() in order to avoid "Scheduling while atomic"
-noise and you want to have global serialization because interleaving "La
-Paloma" from CPU1 and "Once Upon a Time in the West" from CPU2 sounds
-really horrible.
+As the first user for the software node references, I'm converting
+intel_cht_int33fe.c to use them as part of the series.
 
-Thanks,
+[1] https://lkml.org/lkml/2019/3/15/457
 
-	tglx
+thanks,
+
+Heikki Krogerus (11):
+  software node: Allow node creation without properties
+  software node: Simplify software_node_release() function
+  software node: Add support for references
+  software node: Implement .get_reference_args fwnode operation
+  ACPI / property: Don't limit named child node matching to data nodes
+  device connection: Find connections also by checking the references
+  usb: typec: Registering real device entries for the muxes
+  platform/x86: intel_cht_int33fe: Provide software nodes for the
+    devices
+  platform/x86: intel_cht_int33fe: Provide fwnode for the USB connector
+  platform/x86: intel_cht_int33fe: Link with external dependencies using
+    fwnodes
+  platform/x86: intel_cht_int33fe: Replacing the old connections with
+    references
+
+ drivers/acpi/property.c                  |  26 +-
+ drivers/base/devcon.c                    |  28 ++
+ drivers/base/swnode.c                    | 180 +++++++++++-
+ drivers/platform/x86/intel_cht_int33fe.c | 346 ++++++++++++++++++++---
+ drivers/usb/typec/bus.h                  |  15 +
+ drivers/usb/typec/class.c                |  17 +-
+ drivers/usb/typec/mux.c                  | 221 ++++++++++-----
+ drivers/usb/typec/mux/pi3usb30532.c      |  46 +--
+ include/linux/property.h                 |   8 +
+ include/linux/usb/typec_mux.h            |  62 ++--
+ 10 files changed, 765 insertions(+), 184 deletions(-)
+
+-- 
+2.20.1
