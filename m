@@ -1,174 +1,158 @@
-From: Matthew Garrett <matthewgarrett@google.com>
-Subject: [PATCH V32 26/27] debugfs: Restrict debugfs when the kernel is locked down
-Date: Wed,  3 Apr 2019 17:32:48 -0700
-Message-ID: <20190404003249.14356-27-matthewgarrett@google.com>
-References: <20190404003249.14356-1-matthewgarrett@google.com>
+From: Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH 1/2] platform/x86: intel_pmc_core: Convert to a platform_driver
+Date: Wed, 3 Apr 2019 17:59:10 -0700
+Message-ID: <CACK8Z6EMcfLqu=FWky_z+FSfd93t1yk0T6EftOzQkNfJCiAxyg@mail.gmail.com>
+References: <20190313222124.229371-1-rajatja@google.com> <20190316081752.GA21812@raj-desk2.iind.intel.com>
+ <CAA93t1qoQx2B9=KuNpuXL_PvdpgGJPzZk8N-KWqS4XyO8qrS5g@mail.gmail.com>
+ <3fc03e60-492a-e9b5-ac9b-caa17f8a8e27@linux.intel.com> <CACK8Z6HGEeM_0AnM1eJcUgNPwFz6_wsT8oFAG2rkV4UZczDi3g@mail.gmail.com>
+ <c98af2ef-5800-0dee-7b58-3be48f612d07@linux.intel.com> <CACK8Z6HQ1QMRygSVgWabO9kUSA3tTL9Uh0Lhw6wv3Vyb4aaFKA@mail.gmail.com>
+ <30c3eff209246cc184cbddb0ec60e9acd9dd1d6b.camel@linux.intel.com>
+ <CAA93t1p915ofjgzLeW3n+tsKrDWU0wDjf7QXu1fwTao0U-bqLQ@mail.gmail.com> <0fc21af78c41e49aea452f971b5afe1271a09f3f.camel@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190404003249.14356-1-matthewgarrett@google.com>
+In-Reply-To: <0fc21af78c41e49aea452f971b5afe1271a09f3f.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jmorris@namei.org
-Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-api@vger.kernel.org, luto@kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Thomas Gleixner <tglx@linutronix.de>, Matthew Garrett <matthewgarrett@google.com>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Rajat Jain <rajatxjain@gmail.com>, "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Furquan Shaikh <furquan@google.com>, Evan Green <evgreen@google.com>, "Box, David E" <david.e.box@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+On Fri, Mar 29, 2019 at 8:53 AM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> On Thu, 2019-03-28 at 22:29 -0700, Rajat Jain wrote:
+> > Hi Srinivas,
+> >
+> >
+>
+> [...]
+>
+> > So if everyone here thinks we should completely switch to using
+> > > > the
+> > > > ACPI HID "INT33A1" for attaching to the device, sure, we can do
+> > > > that.
+> > > > Yes, for Chromeos, we can put in a work around internally that
+> > > > ensures
+> > > > that shipping chromebooks (Kabylake etc) can work fine without
+> > > > that
+> > > > ACPI ID. What I do not know is if that will cause any regressions
+> > > > outside of Chromeos. Can you discuss with Rafael, Andy, Srinivas
+> > > > internally and let me know on how they'd like to proceed on this.
+> > > >
+> > > > The other option is to apply this patch as-is so we know that
+> > > > there
+> > > > is
+> > > > no "functional change" and thus no possible regression (so the
+> > > > driver
+> > > > continues to attach to those and only those systems that s it
+> > > > used
+> > > > to,
+> > > > before this patch). And then introduce the ACPI ID Change as a
+> > > > new
+> > > > independent patch.
+> > >
+> > > Use INT33A1 to enumerate, if this id doesn't exist then fallback to
+> > > the
+> > > cpuid style.
 
-Disallow opening of debugfs files that might be used to muck around when
-the kernel is locked down as various drivers give raw access to hardware
-through debugfs.  Given the effort of auditing all 2000 or so files and
-manually fixing each one as necessary, I've chosen to apply a heuristic
-instead.  The following changes are made:
+OK, I got to down to implement this and have a few questions.
 
- (1) chmod and chown are disallowed on debugfs objects (though the root dir
-     can be modified by mount and remount, but I'm not worried about that).
+The intel_pmc_driver does need some way to determine whether to choose
+between spt_reg_map / cnp_reg_map / icl_reg_map. How should it choose
+between these?
 
- (2) When the kernel is locked down, only files with the following criteria
-     are permitted to be opened:
+ 1) For ACPI based enumeration, I don't think the ACPI nodes on the
+current systems will have anything to offer to help the driver
+differentiate between these. So it will still need to choose one of
+the above maps based on the CPU model. I assume that is OK. I expect
+something like:
 
-	- The file must have mode 00444
-	- The file must not have ioctl methods
-	- The file must not have mmap
+        switch (boot_cpu_data.x86_model) {
+        case INTEL_FAM6_SKYLAKE_MOBILE:
+        case INTEL_FAM6_SKYLAKE_DESKTOP:
+        case INTEL_FAM6_KABYLAKE_MOBILE:
+        case INTEL_FAM6_KABYLAKE_DESKTOP:
+                pmcdev->map =3D &spt_reg_map;
+                break;
 
- (3) When the kernel is locked down, files may only be opened for reading.
+        case INTEL_FAM6_CANONLAKE_DESKTOP:
+                pmcdev->map =3D &cnp_reg_map;
+                break;
 
-Normal device interaction should be done through configfs, sysfs or a
-miscdev, not debugfs.
+        case INTEL_FAM6_ICELAKE_DESKTOP:
+                pmcdev->map =3D &icl_reg_map;
+                break;
+        default:
+                /* Which map should we use by default? */
+        }
 
-Note that this makes it unnecessary to specifically lock down show_dsts(),
-show_devs() and show_call() in the asus-wmi driver.
 
-I would actually prefer to lock down all files by default and have the
-the files unlocked by the creator.  This is tricky to manage correctly,
-though, as there are 19 creation functions and ~1600 call sites (some of
-them in loops scanning tables).
+ 2) For the ACPI based enumeration, what should be the default map
+chosen by the driver, for CPUs other than what is in that list today
+(Or do we expect to keep adding to this switch/case for new CPU
+models)?
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-cc: acpi4asus-user@lists.sourceforge.net
-cc: platform-driver-x86@vger.kernel.org
-cc: Matthew Garrett <mjg59@srcf.ucam.org>
-cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
----
- fs/debugfs/file.c  | 28 ++++++++++++++++++++++++++++
- fs/debugfs/inode.c | 30 ++++++++++++++++++++++++++++--
- 2 files changed, 56 insertions(+), 2 deletions(-)
+3) For the fallback option, i.e. manually creating platform devices
+using a new file, yes, we can pass a value in platform_data to
+indicate which map to choose from, which is what I think should be
+done. However, I am wondering if all this fallback might be an
+overkill / over engineering. Do we know of any platforms that do not
+have this ACPI device, and still are actually using this
+intel_pmc_core driver? If not, may be we don't need this fallback
+option?
 
-diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-index 4fce1da7db23..2d18e7711fca 100644
---- a/fs/debugfs/file.c
-+++ b/fs/debugfs/file.c
-@@ -136,6 +136,25 @@ void debugfs_file_put(struct dentry *dentry)
- }
- EXPORT_SYMBOL_GPL(debugfs_file_put);
- 
-+/*
-+ * Only permit access to world-readable files when the kernel is locked down.
-+ * We also need to exclude any file that has ways to write or alter it as root
-+ * can bypass the permissions check.
-+ */
-+static bool debugfs_is_locked_down(struct inode *inode,
-+				   struct file *filp,
-+				   const struct file_operations *real_fops)
-+{
-+	if ((inode->i_mode & 07777) == 0444 &&
-+	    !(filp->f_mode & FMODE_WRITE) &&
-+	    !real_fops->unlocked_ioctl &&
-+	    !real_fops->compat_ioctl &&
-+	    !real_fops->mmap)
-+		return false;
-+
-+	return kernel_is_locked_down("debugfs", LOCKDOWN_INTEGRITY);
-+}
-+
- static int open_proxy_open(struct inode *inode, struct file *filp)
- {
- 	struct dentry *dentry = F_DENTRY(filp);
-@@ -147,6 +166,11 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
- 		return r == -EIO ? -ENOENT : r;
- 
- 	real_fops = debugfs_real_fops(filp);
-+
-+	r = -EPERM;
-+	if (debugfs_is_locked_down(inode, filp, real_fops))
-+		goto out;
-+
- 	real_fops = fops_get(real_fops);
- 	if (!real_fops) {
- 		/* Huh? Module did not clean up after itself at exit? */
-@@ -272,6 +296,10 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
- 		return r == -EIO ? -ENOENT : r;
- 
- 	real_fops = debugfs_real_fops(filp);
-+	r = -EPERM;
-+	if (debugfs_is_locked_down(inode, filp, real_fops))
-+		goto out;
-+
- 	real_fops = fops_get(real_fops);
- 	if (!real_fops) {
- 		/* Huh? Module did not cleanup after itself at exit? */
-diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-index 13b01351dd1c..4b877cb1431d 100644
---- a/fs/debugfs/inode.c
-+++ b/fs/debugfs/inode.c
-@@ -32,6 +32,31 @@ static struct vfsmount *debugfs_mount;
- static int debugfs_mount_count;
- static bool debugfs_registered;
- 
-+/*
-+ * Don't allow access attributes to be changed whilst the kernel is locked down
-+ * so that we can use the file mode as part of a heuristic to determine whether
-+ * to lock down individual files.
-+ */
-+static int debugfs_setattr(struct dentry *dentry, struct iattr *ia)
-+{
-+	if ((ia->ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID)) &&
-+	    kernel_is_locked_down("debugfs", LOCKDOWN_INTEGRITY))
-+		return -EPERM;
-+	return simple_setattr(dentry, ia);
-+}
-+
-+static const struct inode_operations debugfs_file_inode_operations = {
-+	.setattr	= debugfs_setattr,
-+};
-+static const struct inode_operations debugfs_dir_inode_operations = {
-+	.lookup		= simple_lookup,
-+	.setattr	= debugfs_setattr,
-+};
-+static const struct inode_operations debugfs_symlink_inode_operations = {
-+	.get_link	= simple_get_link,
-+	.setattr	= debugfs_setattr,
-+};
-+
- static struct inode *debugfs_get_inode(struct super_block *sb)
- {
- 	struct inode *inode = new_inode(sb);
-@@ -356,6 +381,7 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
- 	inode->i_mode = mode;
- 	inode->i_private = data;
- 
-+	inode->i_op = &debugfs_file_inode_operations;
- 	inode->i_fop = proxy_fops;
- 	dentry->d_fsdata = (void *)((unsigned long)real_fops |
- 				DEBUGFS_FSDATA_IS_REAL_FOPS_BIT);
-@@ -513,7 +539,7 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
- 		return failed_creating(dentry);
- 
- 	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
--	inode->i_op = &simple_dir_inode_operations;
-+	inode->i_op = &debugfs_dir_inode_operations;
- 	inode->i_fop = &simple_dir_operations;
- 
- 	/* directory inodes start off with i_nlink == 2 (for "." entry) */
-@@ -608,7 +634,7 @@ struct dentry *debugfs_create_symlink(const char *name, struct dentry *parent,
- 		return failed_creating(dentry);
- 	}
- 	inode->i_mode = S_IFLNK | S_IRWXUGO;
--	inode->i_op = &simple_symlink_inode_operations;
-+	inode->i_op = &debugfs_symlink_inode_operations;
- 	inode->i_link = link;
- 	d_instantiate(dentry, inode);
- 	return end_creating(dentry);
--- 
-2.21.0.392.gf8f6787159e-goog
+Thanks,
+
+Rajat
+
+> > > The aim should be that we don't have to add any more
+> > > CPU
+> > > model to enumerate. But most probably register map will differ so
+> > > we
+> > > still may end up adding some CPU model relationship.
+> >
+> > Thanks for the guidance. Just to reconfirm my understanding of your
+> > suggestion:
+> >
+> > Here is the suggestive code Rajneesh provided, and I intend to do it
+> > similarly:
+> >
+> > +static const struct acpi_device_id pmc_acpi_ids[] =3D {
+> > +             {"INT33A1", 0}, /* _HID for Intel Power Engine, _CID
+> > PNP0D80*/
+> > +             { }
+> > +};
+> >
+> > +static struct platform_driver pmc_plat_driver =3D {
+> > +             .remove =3D pmc_plat_remove,
+> > +             .probe =3D pmc_plat_probe,
+> > +             .driver =3D {
+> > +                             .name =3D "pmc_core_driver",
+> > +                             .acpi_match_table =3D
+> > ACPI_PTR(pmc_acpi_ids),
+> > +             },
+> > +};
+> >
+> > My understanding is that with this, the kernel would use
+> > acpi_match_table to automatically create the platform_device on a
+> > platform where ACPI tables contain the INT33A1 HID, and thus we don't
+> > need to create the platform_device in module_init time on such
+> > platforms.
+> Yes. There will be /sys/bus/platform/devices/INT33A1:00.
+>
+>
+> >  So are you saying that during init, I should check if the
+> > ACPI HID INT33A1 is not present on the platform, then use the cpu_id
+> > table to create the platform_device? Thus newer platforms will not
+> > need an entry in the table.
+> Yes. Preferably in a different file as Andy would like. So the the
+> current driver only implements platform driver for INT33A1. The other dri=
+ver which will enumerate on CPUID and create INT33A1 platform device  if th=
+ere is no ACPI match via acpi_match_device() or similar API, for INT33A1. W=
+hen you create a platform device the pmc driver will be probed.
+>
+> Thanks,
+> Srinivas
+>
+>
