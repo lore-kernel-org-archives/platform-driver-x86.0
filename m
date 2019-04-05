@@ -1,80 +1,57 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Read EC information on newer models
-Date: Fri, 5 Apr 2019 17:38:12 +0300
-Message-ID: <CAHp75VeJgLf7DNVy3=tAqwput3EJ2CqcGwCkNCWt820B3QK0gw@mail.gmail.com>
-References: <20190308131426.10254-1-jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH] platform/x86: intel_pmc_core: Mark local function static
+Date: Fri, 5 Apr 2019 17:45:32 +0300
+Message-ID: <CAHp75VfKYCnYdvpvkGgdjXJNRRKWOW-ps99ROWZZSH_NZAOMLg@mail.gmail.com>
+References: <1553632152-18888-1-git-send-email-linux@roeck-us.net> <4554bd3e-fabb-44aa-fc82-52ec9cbf9b2c@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190308131426.10254-1-jiaxun.yang@flygoat.com>
+In-Reply-To: <4554bd3e-fabb-44aa-fc82-52ec9cbf9b2c@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Mar 8, 2019 at 3:15 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+On Wed, Mar 27, 2019 at 2:47 PM Bhardwaj, Rajneesh
+<rajneesh.bhardwaj@linux.intel.com> wrote:
 >
-> Newer ThinkPads have a totally different EC program information DMI
-> table. And thermal subdriver can't work without correct EC version.
 >
-> Read from this entry if the old method failed to get EC information.
+> On 27-Mar-19 1:59 AM, Guenter Roeck wrote:
+> > 0day reports:
+> >
+> > drivers/platform/x86/intel_pmc_core.c:833:5: sparse:
+> >       symbol 'quirk_xtal_ignore' was not declared. Should it be static?
 >
+> Looks good to me.
 
-Thank you for the patch. See my comments below.
-
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 62 ++++++++++++++++++++++------
->  1 file changed, 49 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 2e24ee42a3c6..17fd2065000b 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -9959,6 +9959,37 @@ static char __init tpacpi_parse_fw_id(const char * const s,
->         return '\0';
->  }
->
-> +static void find_new_ec_fwstr(const struct dmi_header *dm, void *private)
-> +{
-
-Today it's a new one, tomorrow something else might come. Care to use
-versioning instead?
-Something line find_ec_fwstr_vXYZ().
-
-> +}
-
-> -                       tp->ec_version_str = kstrdup(ec_fw_string, GFP_KERNEL);
-> -                       if (!tp->ec_version_str)
-> -                               return -ENOMEM;
+Please, give a corresponding tag.
+Meanwhile I will apply it to my review and testing queue for robots to
+play with, thanks!
 
 >
-> -                       t = tpacpi_parse_fw_id(ec_fw_string,
-> -                                              &tp->ec_model, &tp->ec_release);
-> -                       if (t != 'H') {
-> -                               pr_notice("ThinkPad firmware release %s doesn't match the known patterns\n",
-> -                                         ec_fw_string);
-> -                               pr_notice("please report this to %s\n",
-> -                                         TPACPI_MAIL);
-> -                       }
+> > Mark the function static since it is indeed only called locally.
+> >
+> > Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+> > Fixes: 238f9c11351f ("platform/x86: intel_pmc_core: Quirk to ignore XTAL shutdown")
+> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> > ---
+> >   drivers/platform/x86/intel_pmc_core.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> > index f2c621b55f49..9908d233305e 100644
+> > --- a/drivers/platform/x86/intel_pmc_core.c
+> > +++ b/drivers/platform/x86/intel_pmc_core.c
+> > @@ -828,7 +828,7 @@ static const struct pci_device_id pmc_pci_ids[] = {
+> >    * the platform BIOS enforces 24Mhx Crystal to shutdown
+> >    * before PMC can assert SLP_S0#.
+> >    */
+> > -int quirk_xtal_ignore(const struct dmi_system_id *id)
+> > +static int quirk_xtal_ignore(const struct dmi_system_id *id)
+> >   {
+> >       struct pmc_dev *pmcdev = &pmc;
+> >       u32 value;
 
-Seems to me that this is the same to below. Can you leave indentation
-in place and fix it in a separate (following) patch?
-
-> -                       break;
-> +       if (ec_fw_string[0]) {
-> +               tp->ec_version_str = kstrdup(ec_fw_string, GFP_KERNEL);
-> +               if (!tp->ec_version_str)
-> +                       return -ENOMEM;
-> +
-> +               t = tpacpi_parse_fw_id(ec_fw_string,
-> +                        &tp->ec_model, &tp->ec_release);
-> +               if (t != 'H') {
-> +                       pr_notice("ThinkPad firmware release %s doesn't match the known patterns\n",
-> +                                 ec_fw_string);
-> +                       pr_notice("please report this to %s\n", TPACPI_MAIL);
->                 }
->         }
 
 
 -- 
