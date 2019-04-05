@@ -1,137 +1,174 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v13] platform/mellanox: Add TmFifo driver for Mellanox
- BlueField Soc
-Date: Fri, 5 Apr 2019 19:10:42 +0000
-Message-ID: <DB6PR05MB3223779DDDF815D2F5AFFE6BA1510@DB6PR05MB3223.eurprd05.prod.outlook.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1554406595-3128-1-git-send-email-lsun@mellanox.com>
- <CAHp75VdUwn1NEpSc0_Oc4wEh0TRzCwcE0_tajg3ak8BjfZ_-Mw@mail.gmail.com>
+From: Rajat Jain <rajatja@google.com>
+Subject: [PATCH v3 1/3] platform/x86: intel_pmc_core: Convert to a platform_driver
+Date: Fri,  5 Apr 2019 13:35:56 -0700
+Message-ID: <20190405203558.19160-1-rajatja@google.com>
+References: <20190313222124.229371-1-rajatja@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdUwn1NEpSc0_Oc4wEh0TRzCwcE0_tajg3ak8BjfZ_-Mw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190313222124.229371-1-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: David Woods <dwoods@mellanox.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Wysocki@google.com, Rafael J <rafael.j.wysocki@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Rajat Jain <rajatja@google.com>, furquan@google.com, evgreen@google.com, rajatxjain@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-VGhhbmtzIEFuZHkhIEknbGwgYWRkcmVzcyB0aGUgY29tbWVudHMgaW4gdjE0Lg0KDQpTb21lIHF1
-ZXN0aW9uIGZvciB0aGUgY29tbWVudCBiZWxvdzoNCg0KPiA+ICsgICAgICAgICAgICAgICBzaXpl
-ID0gdnJpbmdfc2l6ZSh2cmluZy0+bnVtLCB2cmluZy0+YWxpZ24pOw0KPiA+ICsgICAgICAgICAg
-ICAgICB2YSA9IGRtYV9hbGxvY19jb2hlcmVudChkZXYtPnBhcmVudCwgc2l6ZSwgJmRtYSwgR0ZQ
-X0tFUk5FTCk7DQo+ID4gKyAgICAgICAgICAgICAgIGlmICghdmEpIHsNCj4gDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgZGV2X2VycihkZXYtPnBhcmVudCwgImRtYV9hbGxvY19jb2hlcmVu
-dCBmYWlsZWRcbiIpOw0KPiA+IEkgZG9uJ3Qgc2VlIGhvdyB0aGlzIHdpbGwgZnJlZSB0aGUgYWxs
-b2NhdGVkIGVudHJpZXMuDQo+IEkgdGhpbmsgSSB0b2xkIGFib3V0IHRoaXMgZWl0aGVyLg0KDQpX
-aGVuIGFuIGVycm9yIGlzIHJldHVybmVkLCBhbGwgdGhlIGFsbG9jYXRlZCBlbnRyaWVzIHdpbGwg
-YmUgcmVsZWFzZWQgYnkgdGhlDQppbiB0aGUgY2FsbGVyIGNvbnRleHQgYnkgY2FsbGluZyBtbHhi
-Zl90bWZpZm9fZnJlZV92cmluZ3MoKSwgbGlrZSB0aGUgbG9naWMgYmVsb3cuDQpPciBkbyB5b3Ug
-cHJlZmVyIHJlbGVhc2luZyB0aGUgZW50cmllcyBpbiBtbHhiZl90bWZpZm9fYWxsb2NfdnJpbmdz
-KCkgaW5zdGVhZD8NCg0KMTA3MyAgICAgICAgIGlmIChtbHhiZl90bWZpZm9fYWxsb2NfdnJpbmdz
-KGZpZm8sIHRtX3ZkZXYpKSB7DQoxMDc0ICAgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgInVu
-YWJsZSB0byBhbGxvY2F0ZSB2cmluZ1xuIik7DQoxMDc1ICAgICAgICAgICAgICAgICByZXQgPSAt
-RU5PTUVNOw0KMTA3NiAgICAgICAgICAgICAgICAgZ290byB2ZGV2X2ZhaWw7DQoxMDc3ICAgICAg
-ICAgfQ0KLi4uDQoxMDk3IHZkZXZfZmFpbDoNCjEwOTggICAgICAgICBtbHhiZl90bWZpZm9fZnJl
-ZV92cmluZ3MoZmlmbywgdG1fdmRldik7DQoNClJlZ2FyZHMsDQpMaW1pbmcNCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNo
-ZW5rb0BnbWFpbC5jb20+DQo+IFNlbnQ6IEZyaWRheSwgQXByaWwgNSwgMjAxOSAxMTo0NCBBTQ0K
-PiBUbzogTGltaW5nIFN1biA8bHN1bkBtZWxsYW5veC5jb20+DQo+IENjOiBEYXZpZCBXb29kcyA8
-ZHdvb2RzQG1lbGxhbm94LmNvbT47IEFuZHkgU2hldmNoZW5rbyA8YW5keUBpbmZyYWRlYWQub3Jn
-PjsgRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgVmFkaW0NCj4gUGFzdGVybmFr
-IDx2YWRpbXBAbWVsbGFub3guY29tPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZz47IFBsYXRmb3JtIERyaXZlciA8cGxhdGZvcm0tZHJpdmVy
-LQ0KPiB4ODZAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxM10gcGxh
-dGZvcm0vbWVsbGFub3g6IEFkZCBUbUZpZm8gZHJpdmVyIGZvciBNZWxsYW5veCBCbHVlRmllbGQg
-U29jDQo+IA0KPiBPbiBUaHUsIEFwciA0LCAyMDE5IGF0IDEwOjM2IFBNIExpbWluZyBTdW4gPGxz
-dW5AbWVsbGFub3guY29tPiB3cm90ZToNCj4gPiBUaGlzIGNvbW1pdCBhZGRzIHRoZSBUbUZpZm8g
-cGxhdGZvcm0gZHJpdmVyIGZvciBNZWxsYW5veCBCbHVlRmllbGQNCj4gPiBTb2MuIFRtRmlmbyBp
-cyBhIHNoYXJlZCBGSUZPIHdoaWNoIGVuYWJsZXMgZXh0ZXJuYWwgaG9zdCBtYWNoaW5lDQo+ID4g
-dG8gZXhjaGFuZ2UgZGF0YSB3aXRoIHRoZSBTb0MgdmlhIFVTQiBvciBQQ0llLiBUaGUgZHJpdmVy
-IGlzIGJhc2VkDQo+ID4gb24gdmlydGlvIGZyYW1ld29yayBhbmQgaGFzIGNvbnNvbGUgYW5kIG5l
-dHdvcmsgYWNjZXNzIGVuYWJsZWQuDQo+IA0KPiBUaGFua3MgZm9yIGFuIHVwZGF0ZS4gQWxtb3N0
-IGdvb2QuDQo+IE15IGNvbW1lbnRzIGJlbG93Lg0KPiANCj4gTWVhbndoaWxlIEkgcHVzaGVkIHRo
-aXMgdG8gbXkgcmV2aWV3IGFuZCB0ZXN0aW5nIHF1ZXVlLCB0aGFua3MhDQo+IA0KPiA+ICsjaW5j
-bHVkZSA8bGludXgvYWNwaS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvYml0ZmllbGQuaD4NCj4g
-PiArI2luY2x1ZGUgPGxpbnV4L2NpcmNfYnVmLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9lZmku
-aD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2lycS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbW9k
-dWxlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tdXRleC5oPg0KPiA+ICsjaW5jbHVkZSA8bGlu
-dXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC90eXBlcy5oPg0KPiAN
-Cj4gUGVyaGFwcyBibGFuayBsaW5lIGhlcmUuIFdvdWxkIGJlIG1vcmUgY2xlYXIgdGhhdCB0aGlz
-IGlzIHV0aWxpemluZw0KPiB2aXJ0aW8gZnJhbWV3b3JrLg0KPiANCj4gPiArI2luY2x1ZGUgPGxp
-bnV4L3ZpcnRpb19jb25maWcuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3ZpcnRpb19jb25zb2xl
-Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC92aXJ0aW9faWRzLmg+DQo+ID4gKyNpbmNsdWRlIDxs
-aW51eC92aXJ0aW9fbmV0Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC92aXJ0aW9fcmluZy5oPg0K
-PiANCj4gPiArLyoqDQo+ID4gKyAqIG1seGJmX3RtZmlmb19tc2dfaGRyIC0gU3RydWN0dXJlIG9m
-IHRoZSBUbUZpZm8gbWVzc2FnZSBoZWFkZXINCj4gPiArICogQHR5cGU6IG1lc3NhZ2UgdHlwZQ0K
-PiA+ICsgKiBAbGVuOiBwYXlsb2FkIGxlbmd0aA0KPiA+ICsgKiBAdTogNjQtYml0IHVuaW9uIGRh
-dGENCj4gPiArICovDQo+ID4gK3VuaW9uIG1seGJmX3RtZmlmb19tc2dfaGRyIHsNCj4gPiArICAg
-ICAgIHN0cnVjdCB7DQo+ID4gKyAgICAgICAgICAgICAgIHU4IHR5cGU7DQo+ID4gKyAgICAgICAg
-ICAgICAgIF9fYmUxNiBsZW47DQo+ID4gKyAgICAgICAgICAgICAgIHU4IHVudXNlZFs1XTsNCj4g
-PiArICAgICAgIH0gX19wYWNrZWQ7DQo+ID4gKyAgICAgICB1NjQgZGF0YTsNCj4gDQo+IEknbSBu
-b3Qgc3VyZSBJIHVuZGVyc3RhbmQgaG93IHlvdSBjYW4gZGlzdGluZ3Vpc2ggd2hpY2ggZmllbGQg
-b2YgdW5pb24gdG8gdXNlPw0KPiBJc24ndCBoZXJlIHNvbWUgdHlwZSBtaXNzZWQ/DQo+IA0KPiA+
-ICt9Ow0KPiANCj4gPiArc3RhdGljIHU4IG1seGJmX3RtZmlmb19uZXRfZGVmYXVsdF9tYWNbRVRI
-X0FMRU5dID0gew0KPiANCj4gPiArICAgICAgIDB4MDAsIDB4MUEsIDB4Q0EsIDB4RkYsIDB4RkYs
-IDB4MDF9Ow0KPiANCj4gVGhpcyBzaG91bGQgYmUgdHdvIGxpbmVzLg0KPiANCj4gPiArLyogU3Vw
-cG9ydGVkIHZpcnRpby1uZXQgZmVhdHVyZXMuICovDQo+ID4gKyNkZWZpbmUgTUxYQkZfVE1GSUZP
-X05FVF9GRUFUVVJFUyAgICAgIChCSVRfVUxMKFZJUlRJT19ORVRfRl9NVFUpIHwgXA0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQklUX1VMTChWSVJUSU9fTkVU
-X0ZfU1RBVFVTKSB8IFwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIEJJVF9VTEwoVklSVElPX05FVF9GX01BQykpDQo+IA0KPiBCZXR0ZXIgdG8gd3JpdGUgYXMN
-Cj4gDQo+ICNkZWZpbmUgRk9PIFwNCj4gKEJJVCh4KSB8IEJJVCh5KSAuLi4pDQo+IA0KPiBJIHRo
-aW5rIEkgdG9sZCB0aGlzIGVhcmxpZXI/DQo+IA0KPiA+ICsvKiBBbGxvY2F0ZSB2cmluZ3MgZm9y
-IHRoZSBmaWZvLiAqLw0KPiANCj4gZmlmbyAtPiBGSUZPIChhbmQgY2hlY2sgYWxsIG9jY3VycmVu
-Y2VzKQ0KPiANCj4gPiArc3RhdGljIGludCBtbHhiZl90bWZpZm9fYWxsb2NfdnJpbmdzKHN0cnVj
-dCBtbHhiZl90bWZpZm8gKmZpZm8sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHN0cnVjdCBtbHhiZl90bWZpZm9fdmRldiAqdG1fdmRldikNCj4gPiArew0KPiA+ICsg
-ICAgICAgc3RydWN0IG1seGJmX3RtZmlmb192cmluZyAqdnJpbmc7DQo+ID4gKyAgICAgICBzdHJ1
-Y3QgZGV2aWNlICpkZXY7DQo+ID4gKyAgICAgICBkbWFfYWRkcl90IGRtYTsNCj4gPiArICAgICAg
-IGludCBpLCBzaXplOw0KPiA+ICsgICAgICAgdm9pZCAqdmE7DQo+ID4gKw0KPiA+ICsgICAgICAg
-Zm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUodG1fdmRldi0+dnJpbmdzKTsgaSsrKSB7DQo+ID4g
-KyAgICAgICAgICAgICAgIHZyaW5nID0gJnRtX3ZkZXYtPnZyaW5nc1tpXTsNCj4gPiArICAgICAg
-ICAgICAgICAgdnJpbmctPmZpZm8gPSBmaWZvOw0KPiA+ICsgICAgICAgICAgICAgICB2cmluZy0+
-bnVtID0gTUxYQkZfVE1GSUZPX1ZSSU5HX1NJWkU7DQo+ID4gKyAgICAgICAgICAgICAgIHZyaW5n
-LT5hbGlnbiA9IFNNUF9DQUNIRV9CWVRFUzsNCj4gPiArICAgICAgICAgICAgICAgdnJpbmctPmlu
-ZGV4ID0gaTsNCj4gPiArICAgICAgICAgICAgICAgdnJpbmctPnZkZXZfaWQgPSB0bV92ZGV2LT52
-ZGV2LmlkLmRldmljZTsNCj4gPiArICAgICAgICAgICAgICAgZGV2ID0gJnRtX3ZkZXYtPnZkZXYu
-ZGV2Ow0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgc2l6ZSA9IHZyaW5nX3NpemUodnJpbmct
-Pm51bSwgdnJpbmctPmFsaWduKTsNCj4gPiArICAgICAgICAgICAgICAgdmEgPSBkbWFfYWxsb2Nf
-Y29oZXJlbnQoZGV2LT5wYXJlbnQsIHNpemUsICZkbWEsIEdGUF9LRVJORUwpOw0KPiA+ICsgICAg
-ICAgICAgICAgICBpZiAoIXZhKSB7DQo+IA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRl
-dl9lcnIoZGV2LT5wYXJlbnQsICJkbWFfYWxsb2NfY29oZXJlbnQgZmFpbGVkXG4iKTsNCj4gDQo+
-IEkgZG9uJ3Qgc2VlIGhvdyB0aGlzIHdpbGwgZnJlZSB0aGUgYWxsb2NhdGVkIGVudHJpZXMuDQo+
-IEkgdGhpbmsgSSB0b2xkIGFib3V0IHRoaXMgZWl0aGVyLg0KPiANCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4gPiArICAgICAgICAgICAgICAgfQ0KPiA+ICsN
-Cj4gPiArICAgICAgICAgICAgICAgdnJpbmctPnZhID0gdmE7DQo+ID4gKyAgICAgICAgICAgICAg
-IHZyaW5nLT5kbWEgPSBkbWE7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0
-dXJuIDA7DQo+ID4gK30NCj4gDQo+ID4gKy8qIEhvdXNlLWtlZXBpbmcgdGltZXIuICovDQo+ID4g
-K3N0YXRpYyB2b2lkIG1seGJmX3RtZmlmb190aW1lcihzdHJ1Y3QgdGltZXJfbGlzdCAqYXJnKQ0K
-PiA+ICt7DQo+IA0KPiA+ICsgICAgICAgc3RydWN0IG1seGJmX3RtZmlmbyAqZmlmbyA9IGNvbnRh
-aW5lcl9vZihhcmcsIHN0cnVjdCBtbHhiZl90bWZpZm8sDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRpbWVyKTsNCj4gDQo+IE9uZSBsaW5lIHdv
-dWxkIGJlIHN0aWxsIGdvb2QgZW5vdWdoLg0KPiANCj4gPiArICAgICAgIGludCBtb3JlOw0KPiA+
-ICsNCj4gPiArICAgICAgIG1vcmUgPSAhdGVzdF9hbmRfc2V0X2JpdChNTFhCRl9UTV9SWF9IV01f
-SVJRLCAmZmlmby0+cGVuZF9ldmVudHMpIHx8DQo+ID4gKyAgICAgICAgICAgICAgICAgICAhdGVz
-dF9hbmRfc2V0X2JpdChNTFhCRl9UTV9UWF9MV01fSVJRLCAmZmlmby0+cGVuZF9ldmVudHMpOw0K
-PiA+ICsNCj4gPiArICAgICAgIGlmIChtb3JlKQ0KPiA+ICsgICAgICAgICAgICAgICBzY2hlZHVs
-ZV93b3JrKCZmaWZvLT53b3JrKTsNCj4gPiArDQo+ID4gKyAgICAgICBtb2RfdGltZXIoJmZpZm8t
-PnRpbWVyLCBqaWZmaWVzICsgTUxYQkZfVE1GSUZPX1RJTUVSX0lOVEVSVkFMKTsNCj4gPiArfQ0K
-PiANCj4gPiArICAgICAgIHN0YXR1cyA9IGVmaS5nZXRfdmFyaWFibGUobWx4YmZfdG1maWZvX2Vm
-aV9uYW1lLCAmZ3VpZCwgTlVMTCwgJnNpemUsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIGJ1Zik7DQo+ID4gKyAgICAgICBpZiAoc3RhdHVzID09IEVGSV9TVUNDRVNTICYm
-IHNpemUgPT0gRVRIX0FMRU4pDQo+ID4gKyAgICAgICAgICAgICAgIGV0aGVyX2FkZHJfY29weSht
-YWMsIGJ1Zik7DQo+ID4gKyAgICAgICBlbHNlDQo+IA0KPiA+ICsgICAgICAgICAgICAgICBtZW1j
-cHkobWFjLCBtbHhiZl90bWZpZm9fbmV0X2RlZmF1bHRfbWFjLCBFVEhfQUxFTik7DQo+IA0KPiBl
-dGhlcl9hZGRyX2NvcHkoKSBhcyB3ZWxsLg0KPiANCj4gPiArfQ0KPiANCj4gPiArICAgICAgIGZp
-Zm8tPnBkZXYgPSBwZGV2Ow0KPiANCj4gRG8geW91IHJlYWxseSBuZWVkIHRvIGtlZXAgcGRldiB0
-aGVyZT8gSXNuJ3Qgc3RydWN0IGRldmljZSBwb2ludGVyIGVub3VnaD8NCj4gDQo+IA0KPiA+ICsg
-ICAgICAgLyogQ3JlYXRlIHRoZSBjb25zb2xlIHZkZXYuICovDQo+ID4gKyAgICAgICByZXQgPSBt
-bHhiZl90bWZpZm9fY3JlYXRlX3ZkZXYoJnBkZXYtPmRldiwgZmlmbywgVklSVElPX0lEX0NPTlNP
-TEUsIDAsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTlVMTCwg
-MCk7DQo+IA0KPiBJZiB5b3UgZGVmaW5lIHRlbXBvcmFyeSB2YXJpYWJsZQ0KPiAgIHN0cnVjdCBk
-ZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+IHRoZXNlIGxpbmVzIGNhbiBiZSBtZXJnZWQgaW50
-byBvbmUuDQo+IA0KPiA+ICsgICAgICAgaWYgKHJldCkNCj4gPiArICAgICAgICAgICAgICAgZ290
-byBmYWlsOw0KPiANCj4gLS0NCj4gV2l0aCBCZXN0IFJlZ2FyZHMsDQo+IEFuZHkgU2hldmNoZW5r
-bw0K
+Convert the intel_pmc_core driver to a platform driver, and attach using
+the ACPI enumeration method (via the ACPI device "INT33A1").
+
+Signed-off-by: Rajat Jain <rajatja@google.com>
+---
+v3: Don't instantiate the platform_device. Use ACPI enumeration.
+v2: Rephrase the commit log. No code changes.
+
+ drivers/platform/x86/intel_pmc_core.c | 92 ++++++++++++++++++---------
+ 1 file changed, 63 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index f2c621b55f49..331889a57f73 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -19,6 +19,7 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
++#include <linux/platform_device.h>
+ #include <linux/uaccess.h>
+ 
+ #include <asm/cpu_device_id.h>
+@@ -806,18 +807,6 @@ static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+ }
+ #endif /* CONFIG_DEBUG_FS */
+ 
+-static const struct x86_cpu_id intel_pmc_core_ids[] = {
+-	INTEL_CPU_FAM6(SKYLAKE_MOBILE, spt_reg_map),
+-	INTEL_CPU_FAM6(SKYLAKE_DESKTOP, spt_reg_map),
+-	INTEL_CPU_FAM6(KABYLAKE_MOBILE, spt_reg_map),
+-	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
+-	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+-	INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
+-	{}
+-};
+-
+-MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
+-
+ static const struct pci_device_id pmc_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID), 0},
+ 	{ 0, },
+@@ -854,26 +843,50 @@ static const struct dmi_system_id pmc_core_dmi_table[]  = {
+ 	{}
+ };
+ 
+-static int __init pmc_core_probe(void)
++static int pmc_core_probe(struct platform_device *pdev)
+ {
++	static bool device_initialized;
+ 	struct pmc_dev *pmcdev = &pmc;
+-	const struct x86_cpu_id *cpu_id;
+ 	u64 slp_s0_addr;
+ 	int err;
+ 
+-	cpu_id = x86_match_cpu(intel_pmc_core_ids);
+-	if (!cpu_id)
++	if (device_initialized)
+ 		return -ENODEV;
+ 
+-	pmcdev->map = (struct pmc_reg_map *)cpu_id->driver_data;
++	switch (boot_cpu_data.x86_model) {
++	case INTEL_FAM6_SKYLAKE_MOBILE:
++	case INTEL_FAM6_SKYLAKE_DESKTOP:
++	case INTEL_FAM6_KABYLAKE_MOBILE:
++	case INTEL_FAM6_KABYLAKE_DESKTOP:
+ 
+-	/*
+-	 * Coffeelake has CPU ID of Kabylake and Cannonlake PCH. So here
+-	 * Sunrisepoint PCH regmap can't be used. Use Cannonlake PCH regmap
+-	 * in this case.
+-	 */
+-	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
++		pmcdev->map = &spt_reg_map;
++
++		/*
++		 * Special case: Coffeelake has CPU ID of Kabylake, but has
++		 * Cannonlake PCH. So need to use cnp_reg_map instead of
++		 * spt_reg_map for this special case. The PMC core PCI device
++		 * on Coffeelake is hidden, so use that as the deciding factor.
++		 */
++		if (!pci_dev_present(pmc_pci_ids))
++			pmcdev->map = &cnp_reg_map;
++
++		break;
++
++	case INTEL_FAM6_CANNONLAKE_MOBILE:
+ 		pmcdev->map = &cnp_reg_map;
++		break;
++
++	case INTEL_FAM6_ICELAKE_MOBILE:
++		pmcdev->map = &icl_reg_map;
++		break;
++	default:
++		/*
++		 * Which map should we use by default? If not specified
++		 * explicitly, assume Icelake by default for now.
++		 */
++		pmcdev->map = &icl_reg_map;
++		break;
++	}
+ 
+ 	if (lpit_read_residency_count_address(&slp_s0_addr))
+ 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+@@ -890,26 +903,47 @@ static int __init pmc_core_probe(void)
+ 
+ 	err = pmc_core_dbgfs_register(pmcdev);
+ 	if (err < 0) {
+-		pr_warn(" debugfs register failed.\n");
++		dev_warn(&pdev->dev, "debugfs register failed.\n");
+ 		iounmap(pmcdev->regbase);
+ 		return err;
+ 	}
+ 
+ 	dmi_check_system(pmc_core_dmi_table);
+-	pr_info(" initialized\n");
++	platform_set_drvdata(pdev, pmcdev);
++
++	dev_info(&pdev->dev, " initialized\n");
++	device_initialized = true;
++
+ 	return 0;
+ }
+-module_init(pmc_core_probe)
+ 
+-static void __exit pmc_core_remove(void)
++static int pmc_core_remove(struct platform_device *pdev)
+ {
+-	struct pmc_dev *pmcdev = &pmc;
++	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
+ 
++	platform_set_drvdata(pdev, NULL);
+ 	pmc_core_dbgfs_unregister(pmcdev);
+ 	mutex_destroy(&pmcdev->lock);
+ 	iounmap(pmcdev->regbase);
++	return 0;
+ }
+-module_exit(pmc_core_remove)
++
++static const struct acpi_device_id pmc_core_acpi_ids[] = {
++	{"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, pmc_core_acpi_ids);
++
++static struct platform_driver pmc_core_driver = {
++	.driver = {
++		.name = "pmc_core",
++		.acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
++	},
++	.probe = pmc_core_probe,
++	.remove = pmc_core_remove,
++};
++
++module_platform_driver(pmc_core_driver);
+ 
+ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("Intel PMC Core Driver");
+-- 
+2.21.0.392.gf8f6787159e-goog
