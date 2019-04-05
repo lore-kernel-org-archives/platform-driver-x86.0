@@ -1,8 +1,8 @@
 From: Rajat Jain <rajatja@google.com>
-Subject: [PATCH v3 2/3] platform/x86: intel_pmc_core: Allow to dump debug
- registers on S0ix failure
-Date: Fri,  5 Apr 2019 13:35:57 -0700
-Message-ID: <20190405203558.19160-2-rajatja@google.com>
+Subject: [PATCH v3 3/3] platform/x86: intel_pmc_core: Instantiate pmc_core
+ device on legacy platforms
+Date: Fri,  5 Apr 2019 13:35:58 -0700
+Message-ID: <20190405203558.19160-3-rajatja@google.com>
 References: <20190313222124.229371-1-rajatja@google.com> <20190405203558.19160-1-rajatja@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -13,160 +13,104 @@ To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwa
 Cc: Rajat Jain <rajatja@google.com>, furquan@google.com, evgreen@google.com, rajatxjain@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add a module parameter which when enabled, will check on resume, if the
-last S0ix attempt was successful. If not, the driver would warn and provide
-helpful debug information (which gets latched during the failed suspend
-attempt) to debug the S0ix failure.
-
-This information is very useful to debug S0ix failures. Specially since
-the latched debug information will be lost (over-written) if the system
-attempts to go into runtime (or imminent) S0ix again after that failed
-suspend attempt.
+Add code to instantiate the pmc_core platform device and thus attach to
+the driver, if the ACPI device for the same ("INT33A1") is not present
+in a system where it should be. This was discussed here:
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966991.html
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
-v3: No changes
-v2: Use pm_suspend_via_firmware() to enable the check only for S0ix
+v3: (first version of *this* patch -to go with rest of v3 patchset)
+v2: (does not exist)
+v1: (does not exist)
 
- drivers/platform/x86/intel_pmc_core.c | 86 +++++++++++++++++++++++++++
- drivers/platform/x86/intel_pmc_core.h |  7 +++
- 2 files changed, 93 insertions(+)
+ drivers/platform/x86/Makefile                 |  2 +-
+ .../platform/x86/intel_pmc_core_plat_init.c   | 64 +++++++++++++++++++
+ 2 files changed, 65 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/platform/x86/intel_pmc_core_plat_init.c
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 331889a57f73..d9561a1c620d 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -20,6 +20,7 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
-+#include <linux/suspend.h>
- #include <linux/uaccess.h>
- 
- #include <asm/cpu_device_id.h>
-@@ -928,6 +929,90 @@ static int pmc_core_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 86cb76677bc8..83d0bb9a14bb 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -89,7 +89,7 @@ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
+ obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
+ 				   intel_telemetry_pltdrv.o \
+ 				   intel_telemetry_debugfs.o
+-obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
++obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o intel_pmc_core_plat_init.o
+ obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
+ obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
+ obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
+diff --git a/drivers/platform/x86/intel_pmc_core_plat_init.c b/drivers/platform/x86/intel_pmc_core_plat_init.c
+new file mode 100644
+index 000000000000..45be89e7586c
+--- /dev/null
++++ b/drivers/platform/x86/intel_pmc_core_plat_init.c
+@@ -0,0 +1,64 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+static bool warn_on_s0ix_failures;
-+module_param(warn_on_s0ix_failures, bool, 0644);
-+MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix failures");
++/*
++ * Intel PMC Core platform init
++ * Copyright (c) 2019, Google Inc.
++ * Author - Rajat Jain
++ *
++ * This code instantiates platform devices for intel_pmc_core driver, only
++ * on supported platforms that may not have the ACPI devices in the ACPI tables.
++ * No new platforms should be added here, because we expect that new platforms
++ * should all have the ACPI device, which is the preferred way of enumeration.
++ */
 +
-+static int pmc_core_suspend(struct device *dev)
-+{
-+	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
++#include <linux/acpi.h>
++#include <linux/platform_device.h>
 +
-+	/* Save PC10 and S0ix residency for checking later */
-+	if (warn_on_s0ix_failures && !pm_suspend_via_firmware() &&
-+	    !rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pmcdev->pc10_counter) &&
-+	    !pmc_core_dev_state_get(pmcdev, &pmcdev->s0ix_counter))
-+		pmcdev->check_counters = true;
-+	else
-+		pmcdev->check_counters = false;
++#include <asm/cpu_device_id.h>
++#include <asm/intel-family.h>
 +
-+	return 0;
-+}
-+
-+static inline bool pc10_failed(struct pmc_dev *pmcdev)
-+{
-+	u64 pc10_counter;
-+
-+	if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pc10_counter) &&
-+	    pc10_counter == pmcdev->pc10_counter)
-+		return true;
-+	else
-+		return false;
-+}
-+
-+static inline bool s0ix_failed(struct pmc_dev *pmcdev)
-+{
-+	u64 s0ix_counter;
-+
-+	if (!pmc_core_dev_state_get(pmcdev, &s0ix_counter) &&
-+	    s0ix_counter == pmcdev->s0ix_counter)
-+		return true;
-+	else
-+		return false;
-+}
-+
-+static int pmc_core_resume(struct device *dev)
-+{
-+	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
-+
-+	if (!pmcdev->check_counters)
-+		return 0;
-+
-+	if (pc10_failed(pmcdev)) {
-+		dev_info(dev, "PC10 entry had failed (PC10 cnt=0x%llx)\n",
-+			 pmcdev->pc10_counter);
-+	} else if (s0ix_failed(pmcdev)) {
-+
-+		const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
-+		const struct pmc_bit_map *map;
-+		int offset = pmcdev->map->slps0_dbg_offset;
-+		u32 data;
-+
-+		dev_warn(dev, "S0ix entry had failed (S0ix cnt=%llu)\n",
-+			 pmcdev->s0ix_counter);
-+		while (*maps) {
-+			map = *maps;
-+			data = pmc_core_reg_read(pmcdev, offset);
-+			offset += 4;
-+			while (map->name) {
-+				dev_warn(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
-+					 map->name,
-+					 data & map->bit_mask ? "Yes" : "No");
-+				++map;
-+			}
-+			++maps;
-+		}
-+	}
-+	return 0;
-+}
-+
-+#endif
-+
-+static const struct dev_pm_ops pmc_core_pm_ops = {
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(pmc_core_suspend, pmc_core_resume)
++static struct platform_device pmc_core_device = {
++	.name = "pmc_core",
 +};
 +
- static const struct acpi_device_id pmc_core_acpi_ids[] = {
- 	{"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
- 	{ }
-@@ -938,6 +1023,7 @@ static struct platform_driver pmc_core_driver = {
- 	.driver = {
- 		.name = "pmc_core",
- 		.acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
-+		.pm = &pmc_core_pm_ops,
- 	},
- 	.probe = pmc_core_probe,
- 	.remove = pmc_core_remove,
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 88d9c0653a5f..fdee5772e532 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -241,6 +241,9 @@ struct pmc_reg_map {
-  * @pmc_xram_read_bit:	flag to indicate whether PMC XRAM shadow registers
-  *			used to read MPHY PG and PLL status are available
-  * @mutex_lock:		mutex to complete one transcation
-+ * @check_counters:	On resume, check if counters are getting incremented
-+ * @pc10_counter:	PC10 residency counter
-+ * @s0ix_counter:	S0ix residency (step adjusted)
-  *
-  * pmc_dev contains info about power management controller device.
-  */
-@@ -253,6 +256,10 @@ struct pmc_dev {
- #endif /* CONFIG_DEBUG_FS */
- 	int pmc_xram_read_bit;
- 	struct mutex lock; /* generic mutex lock for PMC Core */
++static int dummy;
++/*
++ * INTEL_CPU_FAM6 macro won't take NULL for driver_data (uses &driver_data),
++ * thus provide a dummy driver_data.
++ */
++static const struct x86_cpu_id intel_pmc_core_ids[] = {
++	INTEL_CPU_FAM6(SKYLAKE_MOBILE, dummy),
++	INTEL_CPU_FAM6(SKYLAKE_DESKTOP, dummy),
++	INTEL_CPU_FAM6(KABYLAKE_MOBILE, dummy),
++	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, dummy),
++	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, dummy),
++	INTEL_CPU_FAM6(ICELAKE_MOBILE, dummy),
++	{}
++};
++MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
 +
-+	bool check_counters; /* Check for counter increments on resume */
-+	u64 pc10_counter;
-+	u64 s0ix_counter;
- };
- 
- #endif /* PMC_CORE_H */
++static int __init pmc_core_platform_init(void)
++{
++	int ret;
++
++	/* Skip creating the platform device if ACPI already has a device */
++	if (acpi_dev_present("INT33A1", NULL, -1) ||
++	    !x86_match_cpu(intel_pmc_core_ids))
++		return -ENODEV;
++
++	ret = platform_device_register(&pmc_core_device);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static void __exit pmc_core_platform_exit(void)
++{
++	if (!acpi_dev_present("INT33A1", NULL, -1) &&
++	    x86_match_cpu(intel_pmc_core_ids))
++		platform_device_unregister(&pmc_core_device);
++}
++
++module_init(pmc_core_platform_init);
++module_exit(pmc_core_platform_exit);
 -- 
 2.21.0.392.gf8f6787159e-goog
