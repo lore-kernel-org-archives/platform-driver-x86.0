@@ -1,68 +1,90 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] drivers/platform/x86/dell-rbtn.c - add missing #include
-Date: Fri, 5 Apr 2019 17:04:56 +0300
-Message-ID: <CAHp75Vft=SfD0BEsM8hOUuHKVBa_-p_-mk4c6odrFjkbuYtO1A@mail.gmail.com>
-References: <17631.1552389966@turing-police> <20190312224611.elsl2buuhkddecih@pali>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for Myria MY8307 2-in-1
+Date: Fri, 5 Apr 2019 17:22:52 +0300
+Message-ID: <CAHp75VcS=aQCj1D_ecQq3HP=eZFYd3++rdatcMDs5hJxeniTow@mail.gmail.com>
+References: <20190315133113.21215-1-gabriel.lazar@com.utcluj.ro> <12a67eb2-18ff-dd9f-4c48-4d01a01a2aa7@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190312224611.elsl2buuhkddecih@pali>
+In-Reply-To: <12a67eb2-18ff-dd9f-4c48-4d01a01a2aa7@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>
-Cc: =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Gabriel Lazar <gabriel.lazar@com.utcluj.ro>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Mar 13, 2019 at 12:46 AM Pali Roh=C3=A1r <pali.rohar@gmail.com> wro=
-te:
+On Fri, Mar 15, 2019 at 7:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> On Tuesday 12 March 2019 07:26:06 Valdis Kl=C4=93tnieks wrote:
-> > Building with W=3D1 complains:
-> >   CC [M]  drivers/platform/x86/dell-rbtn.o
-> > drivers/platform/x86/dell-rbtn.c:345:5: warning: no previous prototype =
-for 'dell_rbtn_notifier_register' [-Wmissing-prototypes]
-> >   345 | int dell_rbtn_notifier_register(struct notifier_block *nb)
-> >       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > drivers/platform/x86/dell-rbtn.c:371:5: warning: no previous prototype =
-for 'dell_rbtn_notifier_unregister' [-Wmissing-prototypes]
-> >   371 | int dell_rbtn_notifier_unregister(struct notifier_block *nb)
-> >       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> Hi,
 >
-> Can you identify in which commit was introduced this problem? If yes,
-> then Fixes: keyword should be added into commit message.
+> On 3/15/19 2:31 PM, Gabriel Lazar wrote:
+> > Add touchscreen platform data for the Myrya MY8307 2-in-1 laptop.
+> >
+> > Signed-off-by: Gabriel Lazar <gabriel.lazar@com.utcluj.ro>
 >
+> Patch looks good to me:
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Pushed to my review and testing queue, thanks!
 
-P.S. I have added Fixes tag.
-
-> >
-> > The real problem is a missing include. Add it to keep dell-rbtn.c and .=
-h in sync
-> >
-> > Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> >
-> > diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/de=
-ll-rbtn.c
-> > index f3afe778001e..d50ca96d99f0 100644
-> > --- a/drivers/platform/x86/dell-rbtn.c
-> > +++ b/drivers/platform/x86/dell-rbtn.c
-> > @@ -17,6 +17,7 @@
-> >  #include <linux/acpi.h>
-> >  #include <linux/rfkill.h>
-> >  #include <linux/input.h>
-> > +#include "dell-rbtn.h"
-> >
-> >  enum rbtn_type {
-> >       RBTN_UNKNOWN,
-> >
 >
-> --
-> Pali Roh=C3=A1r
-> pali.rohar@gmail.com
+> Regards,
+>
+> Hans
+>
+>
+>
+> > ---
+> >   drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+> >   1 file changed, 25 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> > index 2d56ff7c8230..3319f0cbb558 100644
+> > --- a/drivers/platform/x86/touchscreen_dmi.c
+> > +++ b/drivers/platform/x86/touchscreen_dmi.c
+> > @@ -265,6 +265,23 @@ static const struct ts_dmi_data jumper_ezpad_mini3_data = {
+> >       .properties     = jumper_ezpad_mini3_props,
+> >   };
+> >
+> > +static const struct property_entry myria_my8307_props[] = {
+> > +     PROPERTY_ENTRY_U32("touchscreen-size-x", 1720),
+> > +     PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+> > +     PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
+> > +     PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> > +     PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+> > +     PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-myria-my8307.fw"),
+> > +     PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> > +     PROPERTY_ENTRY_BOOL("silead,home-button"),
+> > +     { }
+> > +};
+> > +
+> > +static const struct ts_dmi_data myria_my8307_data = {
+> > +     .acpi_name      = "MSSL1680:00",
+> > +     .properties     = myria_my8307_props,
+> > +};
+> > +
+> >   static const struct property_entry onda_obook_20_plus_props[] = {
+> >       PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
+> >       PROPERTY_ENTRY_U32("touchscreen-size-y", 1148),
+> > @@ -690,6 +707,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+> >                       DMI_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
+> >               },
+> >       },
+> > +     {
+> > +             /* Myria MY8307 */
+> > +             .driver_data = (void *)&myria_my8307_data,
+> > +             .matches = {
+> > +                     DMI_MATCH(DMI_SYS_VENDOR, "Complet Electro Serv"),
+> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "MY8307"),
+> > +             },
+> > +     },
+> >       {
+> >               /* Onda oBook 20 Plus */
+> >               .driver_data = (void *)&onda_obook_20_plus_data,
+> >
 
 
 
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
