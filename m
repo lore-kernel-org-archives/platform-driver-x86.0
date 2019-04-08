@@ -1,202 +1,155 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 11/11] platform/x86: intel_cht_int33fe: Replacing the old
- connections with references
-Date: Mon, 8 Apr 2019 19:45:13 +0300
-Message-ID: <CAHp75VfKJWXM0=ycdOvn0c1BOS+LevwYbq=6iaCOiQUwk--a-Q@mail.gmail.com>
-References: <20190403164537.24643-1-heikki.krogerus@linux.intel.com> <20190403164537.24643-12-heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v3 1/3] platform/x86: intel_pmc_core: Convert to a platform_driver
+Date: Mon, 8 Apr 2019 19:51:41 +0300
+Message-ID: <CAHp75Vd+_aFxomzPP_-8y5D1p0crbYo6R+=7fGGOKW86D2+=CQ@mail.gmail.com>
+References: <20190313222124.229371-1-rajatja@google.com> <20190405203558.19160-1-rajatja@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190403164537.24643-12-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20190405203558.19160-1-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Rajat Jain <rajatja@google.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wysocki@google.com, Rafael J <rafael.j.wysocki@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, furquan@google.com, evgreen@google.com, Rajat Jain <rajatxjain@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Apr 3, 2019 at 7:46 PM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
+On Fri, Apr 5, 2019 at 11:36 PM Rajat Jain <rajatja@google.com> wrote:
 >
-> Now that the software nodes support references, and the
-> device connection API support parsing fwnode references,
-> replacing the old connection descriptions with software node
-> references. Relying on device names when matching the
-> connection would not have been possible to link the USB
-> Type-C connector and the DisplayPort connector together, but
-> with real references it's not problem.
+> Convert the intel_pmc_core driver to a platform driver, and attach using
+> the ACPI enumeration method (via the ACPI device "INT33A1").
 >
-> The DisplayPort ACPI node is dag up, and the drivers own
-> software node for the DisplayPort is set as the secondary
-> node for it. The USB Type-C connector refers the software
-> node, but it is now tied to the ACPI node, and therefore any
-> device entry (struct drm_connector in practice) that the
-> node combo is assigned to.
->
-> The USB role switch device does not have ACPI node, so we
-> have to wait for the device to appear. Then we can simply
-> assign our software node for the to the device.
->
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> -static const struct x86_cpu_id intel_pmc_core_ids[] = {
+> -       INTEL_CPU_FAM6(SKYLAKE_MOBILE, spt_reg_map),
+> -       INTEL_CPU_FAM6(SKYLAKE_DESKTOP, spt_reg_map),
+> -       INTEL_CPU_FAM6(KABYLAKE_MOBILE, spt_reg_map),
+> -       INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
+> -       INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+> -       INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
+> -       {}
+> -};
+> -
+> -MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
+> -
 
-Though one minor comment below.
+> +static int pmc_core_probe(struct platform_device *pdev)
+>  {
+> +       static bool device_initialized;
+>         struct pmc_dev *pmcdev = &pmc;
+> -       const struct x86_cpu_id *cpu_id;
+>         u64 slp_s0_addr;
+>         int err;
+>
+> -       cpu_id = x86_match_cpu(intel_pmc_core_ids);
+> -       if (!cpu_id)
+> +       if (device_initialized)
+>                 return -ENODEV;
+>
+> -       pmcdev->map = (struct pmc_reg_map *)cpu_id->driver_data;
 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_cht_int33fe.c | 94 +++++++++++++++++++-----
->  1 file changed, 77 insertions(+), 17 deletions(-)
+> +       switch (boot_cpu_data.x86_model) {
+
+I didn't get why this should be boot CPU?
+Otherwise, leave the structure and leave the x86_match_cpu() call.
+
+> +       case INTEL_FAM6_SKYLAKE_MOBILE:
+> +       case INTEL_FAM6_SKYLAKE_DESKTOP:
+> +       case INTEL_FAM6_KABYLAKE_MOBILE:
+> +       case INTEL_FAM6_KABYLAKE_DESKTOP:
 >
-> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-> index ed21aeacec24..f0844a04299b 100644
-> --- a/drivers/platform/x86/intel_cht_int33fe.c
-> +++ b/drivers/platform/x86/intel_cht_int33fe.c
-> @@ -39,15 +39,22 @@ enum {
->         INT33FE_NODE_MAX,
->  };
+> -       /*
+> -        * Coffeelake has CPU ID of Kabylake and Cannonlake PCH. So here
+> -        * Sunrisepoint PCH regmap can't be used. Use Cannonlake PCH regmap
+> -        * in this case.
+> -        */
+> -       if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
+> +               pmcdev->map = &spt_reg_map;
+> +
+> +               /*
+> +                * Special case: Coffeelake has CPU ID of Kabylake, but has
+> +                * Cannonlake PCH. So need to use cnp_reg_map instead of
+> +                * spt_reg_map for this special case. The PMC core PCI device
+> +                * on Coffeelake is hidden, so use that as the deciding factor.
+> +                */
+> +               if (!pci_dev_present(pmc_pci_ids))
+> +                       pmcdev->map = &cnp_reg_map;
+> +
+> +               break;
+> +
+> +       case INTEL_FAM6_CANNONLAKE_MOBILE:
+>                 pmcdev->map = &cnp_reg_map;
+> +               break;
+> +
+> +       case INTEL_FAM6_ICELAKE_MOBILE:
+> +               pmcdev->map = &icl_reg_map;
+> +               break;
+> +       default:
+> +               /*
+> +                * Which map should we use by default? If not specified
+> +                * explicitly, assume Icelake by default for now.
+> +                */
+> +               pmcdev->map = &icl_reg_map;
+> +               break;
+> +       }
 >
-> +enum {
-> +       INT33FE_REF_ORIENTATION,
-> +       INT33FE_REF_MODE_MUX,
-> +       INT33FE_REF_DISPLAYPORT,
-> +       INT33FE_REF_ROLE_SWITCH,
-> +       INT33FE_REF_MAX,
+>         if (lpit_read_residency_count_address(&slp_s0_addr))
+>                 pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+> @@ -890,26 +903,47 @@ static int __init pmc_core_probe(void)
+>
+>         err = pmc_core_dbgfs_register(pmcdev);
+>         if (err < 0) {
+> -               pr_warn(" debugfs register failed.\n");
+> +               dev_warn(&pdev->dev, "debugfs register failed.\n");
+>                 iounmap(pmcdev->regbase);
+>                 return err;
+>         }
+>
+>         dmi_check_system(pmc_core_dmi_table);
+> -       pr_info(" initialized\n");
+> +       platform_set_drvdata(pdev, pmcdev);
+> +
+> +       dev_info(&pdev->dev, " initialized\n");
+> +       device_initialized = true;
+> +
+>         return 0;
+>  }
+> -module_init(pmc_core_probe)
+>
+> -static void __exit pmc_core_remove(void)
+> +static int pmc_core_remove(struct platform_device *pdev)
+>  {
+> -       struct pmc_dev *pmcdev = &pmc;
+> +       struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
+>
+> +       platform_set_drvdata(pdev, NULL);
+>         pmc_core_dbgfs_unregister(pmcdev);
+>         mutex_destroy(&pmcdev->lock);
+>         iounmap(pmcdev->regbase);
+> +       return 0;
+>  }
+> -module_exit(pmc_core_remove)
+> +
+> +static const struct acpi_device_id pmc_core_acpi_ids[] = {
+> +       {"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, pmc_core_acpi_ids);
+> +
+> +static struct platform_driver pmc_core_driver = {
+> +       .driver = {
+> +               .name = "pmc_core",
+> +               .acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
+> +       },
+> +       .probe = pmc_core_probe,
+> +       .remove = pmc_core_remove,
 > +};
 > +
->  struct cht_int33fe_data {
->         struct i2c_client *max17047;
->         struct i2c_client *fusb302;
->         struct i2c_client *pi3usb30532;
-> -       /* Contain a list-head must be per device */
-> -       struct device_connection connections[4];
+> +module_platform_driver(pmc_core_driver);
 >
->         struct fwnode_handle *dp;
->         struct fwnode_handle *node[INT33FE_NODE_MAX];
-> +       struct software_node_reference *ref[INT33FE_REF_MAX];
->  };
->
->  /*
-> @@ -287,6 +294,65 @@ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
->         return ret;
->  }
->
-> +static void cht_int33fe_remove_references(struct cht_int33fe_data *data)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < INT33FE_REF_MAX; i++)
-> +               fwnode_remove_software_node_reference(data->ref[i]);
-> +}
-> +
-> +static int cht_int33fe_add_references(struct cht_int33fe_data *data)
-> +{
-> +       struct fwnode_reference_args args[2] = { };
-> +       struct software_node_reference *ref;
-> +       struct fwnode_handle *con;
-> +
-> +       con = data->node[INT33FE_NODE_USB_CONNECTOR];
-> +
-> +       /* USB Type-C muxes */
-> +       args[0].fwnode = data->node[INT33FE_NODE_PI3USB30532];
-> +       args[1].fwnode = NULL;
-> +
-
-> +       ref = fwnode_create_software_node_reference(con, "orientation-switch",
-> +                                                   args);
-
-Here I really don't care about 80 character limit.
-Ditto for below cases.
-
-> +       if (IS_ERR(ref))
-> +               return PTR_ERR(ref);
-> +       data->ref[INT33FE_REF_ORIENTATION] = ref;
-> +
-> +       ref = fwnode_create_software_node_reference(con, "mode-switch", args);
-> +       if (IS_ERR(ref)) {
-> +               cht_int33fe_remove_references(data);
-> +               return PTR_ERR(ref);
-> +       }
-> +       data->ref[INT33FE_REF_MODE_MUX] = ref;
-> +
-> +       /* USB role switch */
-> +       args[0].fwnode = data->node[INT33FE_NODE_ROLE_SWITCH];
-> +       args[1].fwnode = NULL;
-> +
-> +       ref = fwnode_create_software_node_reference(con, "usb-role-switch",
-> +                                                   args);
-> +       if (IS_ERR(ref)) {
-> +               cht_int33fe_remove_references(data);
-> +               return PTR_ERR(ref);
-> +       }
-> +       data->ref[INT33FE_REF_ROLE_SWITCH] = ref;
-> +
-> +       /* DisplayPort */
-> +       args[0].fwnode = data->node[INT33FE_NODE_DISPLAYPORT];
-> +       args[1].fwnode = NULL;
-> +
-> +       ref = fwnode_create_software_node_reference(con, "displayport", args);
-> +       if (IS_ERR(ref)) {
-> +               cht_int33fe_remove_references(data);
-> +               return PTR_ERR(ref);
-> +       }
-> +       data->ref[INT33FE_REF_DISPLAYPORT] = ref;
-> +
-> +       return 0;
-> +}
-> +
->  static int cht_int33fe_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
-> @@ -355,22 +421,14 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->         if (ret)
->                 return ret;
->
-> -       /* Work around BIOS bug, see comment on cht_int33fe_find_max17047 */
-> -       ret = cht_int33fe_max17047(dev, data);
-> +       ret = cht_int33fe_add_references(data);
->         if (ret)
->                 goto out_remove_nodes;
->
-> -       data->connections[0].endpoint[0] = "port0";
-> -       data->connections[0].endpoint[1] = "i2c-pi3usb30532-switch";
-> -       data->connections[0].id = "orientation-switch";
-> -       data->connections[1].endpoint[0] = "port0";
-> -       data->connections[1].endpoint[1] = "i2c-pi3usb30532-mux";
-> -       data->connections[1].id = "mode-switch";
-> -       data->connections[2].endpoint[0] = "i2c-fusb302";
-> -       data->connections[2].endpoint[1] = "intel_xhci_usb_sw-role-switch";
-> -       data->connections[2].id = "usb-role-switch";
-> -
-> -       device_connections_add(data->connections);
-> +       /* Work around BIOS bug, see comment on cht_int33fe_find_max17047 */
-> +       ret = cht_int33fe_max17047(dev, data);
-> +       if (ret)
-> +               goto out_remove_references;
->
->         memset(&board_info, 0, sizeof(board_info));
->         strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
-> @@ -403,9 +461,11 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->         i2c_unregister_device(data->fusb302);
->
->  out_unregister_max17047:
-> -       device_connections_remove(data->connections);
->         i2c_unregister_device(data->max17047);
->
-> +out_remove_references:
-> +       cht_int33fe_remove_references(data);
-> +
->  out_remove_nodes:
->         cht_int33fe_remove_nodes(data);
->
-> @@ -420,7 +480,7 @@ static int cht_int33fe_remove(struct platform_device *pdev)
->         i2c_unregister_device(data->fusb302);
->         i2c_unregister_device(data->max17047);
->
-> -       device_connections_remove(data->connections);
-> +       cht_int33fe_remove_references(data);
->         cht_int33fe_remove_nodes(data);
->
->         return 0;
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_DESCRIPTION("Intel PMC Core Driver");
 > --
-> 2.20.1
+> 2.21.0.392.gf8f6787159e-goog
 >
 
 
