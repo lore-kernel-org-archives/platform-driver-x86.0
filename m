@@ -1,96 +1,60 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 08/11] platform/x86: intel_cht_int33fe: Provide software
- nodes for the devices
-Date: Tue, 9 Apr 2019 15:41:13 +0300
-Message-ID: <20190409124113.GB20058@kuha.fi.intel.com>
-References: <20190403164537.24643-1-heikki.krogerus@linux.intel.com>
- <20190403164537.24643-9-heikki.krogerus@linux.intel.com>
- <CAHp75VfQK_YHyfryMUO0uG_uwoKcgMn_NUXaRbiOXeXQz6xyYQ@mail.gmail.com>
+From: sathyanarayanan kuppuswamy
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v1 2/4] platform/x86: intel_pmc_ipc: Apply same width for
+ offset definitions
+Date: Tue, 9 Apr 2019 10:09:43 -0700
+Message-ID: <5ca33880-a97f-24b4-1c48-92c1a649558b@linux.intel.com>
+References: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
+ <20190409112515.84725-2-andriy.shevchenko@linux.intel.com>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfQK_YHyfryMUO0uG_uwoKcgMn_NUXaRbiOXeXQz6xyYQ@mail.gmail.com>
+In-Reply-To: <20190409112515.84725-2-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Zha Qipeng <qipeng.zha@intel.com>, junxiao.chang@intel.com, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Apr 08, 2019 at 07:09:15PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 3, 2019 at 7:46 PM Heikki Krogerus
-> <heikki.krogerus@linux.intel.com> wrote:
-> >
-> > Software nodes provide two features that we will need later.
-> > 1) Software nodes can have references to other software nodes.
-> > 2) Software nodes can exist before a device entry is created.
-> 
-> >  #include <linux/platform_device.h>
-> >  #include <linux/regulator/consumer.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/pci.h>
-> 
-> I understand your attitude to ordering here, but we already have it
-> ordered, why not to keep it that way?
+Hi,
 
-Sure. I'll keep the order.
-
-> > -static struct i2c_client *cht_int33fe_find_max17047(void)
-> > -{
-> > -       struct i2c_client *max17047 = NULL;
-> > -
-> > -       i2c_for_each_dev(&max17047, cht_int33fe_check_for_max17047);
-> > -       return max17047;
-> > -}
-> 
-> This sounds like a cleanup patch before actual change.
-> And I'm not sure, do we need to remove this function?
-> 
-> > +static int
-> > +cht_int33fe_max17047(struct device *dev, struct cht_int33fe_data *data)
-> > +{
-> > +       struct fwnode_handle *fwnode = data->node[INT33FE_NODE_MAX17047];
-> > +       struct i2c_client *max17047 = NULL;
-> > +       struct i2c_board_info board_info;
-> > +       int ret;
-> > +
-> > +       i2c_for_each_dev(&max17047, cht_int33fe_check_for_max17047);
-> > +       if (max17047) {
-> > +               /* Pre-existing i2c-client for the max17047, add device-props */
-> > +               max17047->dev.fwnode->secondary = fwnode;
-> > +               /* And re-probe to get the new device-props applied. */
-> > +               ret = device_reprobe(&max17047->dev);
-> > +               if (ret)
-> > +                       dev_warn(dev, "Reprobing max17047 error: %d\n", ret);
-> > +               return 0;
-> > +       }
-> > +
-> > +       memset(&board_info, 0, sizeof(board_info));
-> > +       strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
-> > +       board_info.dev_name = "max17047";
-> > +       board_info.fwnode = fwnode;
-> > +       data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
-> > +       if (IS_ERR(data->max17047))
-> > +               return PTR_ERR(data->max17047);
-> > +
-> > +       return 0;
-> > +}
-> 
-> This looks like a split from the original code with some changes.
-> Perhaps, split patch first.
-> 
-> >         /* Work around BIOS bug, see comment on cht_int33fe_find_max17047 */
-> 
-> After this patch, the comment here become outdated, care to fix?
-> 
-> > +       ret = cht_int33fe_max17047(dev, data);
-> 
-> Seems like the verb is missed in the name of the function.
-
-Yeah, I never meant to rename the function. I'll just keep the
-function name as cht_int33fe_find_max17047.
-
-
-thanks,
+On 4/9/19 4:25 AM, Andy Shevchenko wrote:
+> Apply same width for offset definitions to make code more consistent.
+Looks good.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Kuppuswamy Sathyanarayanan 
+<sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>   drivers/platform/x86/intel_pmc_ipc.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index eb0b342996ca..9007aa717586 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -40,7 +40,7 @@
+>    * The ARC handles the interrupt and services it, writing optional data to
+>    * the IPC1 registers, updates the IPC_STS response register with the status.
+>    */
+> -#define IPC_CMD			0x0
+> +#define IPC_CMD			0x00
+>   #define		IPC_CMD_MSI		BIT(8)
+>   #define		IPC_CMD_SIZE		16
+>   #define		IPC_CMD_SUBCMD		12
+> @@ -101,8 +101,8 @@
+>   #define TELEM_SSRAM_SIZE		240
+>   #define TELEM_PMC_SSRAM_OFFSET		0x1B00
+>   #define TELEM_PUNIT_SSRAM_OFFSET	0x1A00
+> -#define TCO_PMC_OFFSET			0x8
+> -#define TCO_PMC_SIZE			0x4
+> +#define TCO_PMC_OFFSET			0x08
+> +#define TCO_PMC_SIZE			0x04
+>   
+>   /* PMC register bit definitions */
+>   
 
 -- 
-heikki
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
