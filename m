@@ -1,47 +1,121 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/4] platform/x86: intel_pmc_ipc: Apply same width for offset definitions
-Date: Tue,  9 Apr 2019 14:25:13 +0300
-Message-ID: <20190409112515.84725-2-andriy.shevchenko@linux.intel.com>
-References: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH 10/11] platform/x86: intel_cht_int33fe: Link with
+ external dependencies using fwnodes
+Date: Tue, 9 Apr 2019 15:38:20 +0300
+Message-ID: <20190409123820.GA20058@kuha.fi.intel.com>
+References: <20190403164537.24643-1-heikki.krogerus@linux.intel.com>
+ <20190403164537.24643-11-heikki.krogerus@linux.intel.com>
+ <CAHp75VeTUCQax01xVNg7N6oAYKoxadX9vL-X9oEQFHHJ6OSrpg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeTUCQax01xVNg7N6oAYKoxadX9vL-X9oEQFHHJ6OSrpg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, junxiao.chang@intel.com, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Apply same width for offset definitions to make code more consistent.
+On Mon, Apr 08, 2019 at 07:42:52PM +0300, Andy Shevchenko wrote:
+> On Wed, Apr 3, 2019 at 7:46 PM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
+> >
+> > Supplying also external devices - the DisplayPort connector
+> > and the USB role switch - software fwnodes. After this the
+> > driver has access to all the components tied to the USB
+> > Type-C connector and can start creating software node
+> > references to actually associate them with the USB Type-C
+> > connector device.
+> 
+> > +static int role_switch_match(struct device *dev, void *name)
+> > +{
+> > +       return !strcmp(dev_name(dev), name);
+> > +}
+> > +
+> > +static int cht_int33fe_setup_mux(struct cht_int33fe_data *data)
+> > +{
+> 
+> > +       /* First let's find xHCI PCI device */
+> > +       pdev = pci_get_class(PCI_CLASS_SERIAL_USB_XHCI, NULL);
+> > +       if (!pdev || (pdev->vendor != PCI_VENDOR_ID_INTEL))
+> > +               return -ENODEV;
+> > +
+> 
+> > +       /* Then the child platform device */
+> > +       p = device_find_child(&pdev->dev, "intel_xhci_usb_sw",
+> > +                             role_switch_match);
+> 
+> We have already similar code in kernel
+> (drivers/nvdimm/claim.c::namespace_match), perhaps
+> you at least can (locally) introduce
+> 
+> static int match_name(...) // or re-use from drivers/base/bus.c
+> {
+> ...
+> }
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel_pmc_ipc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+OK.
 
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index eb0b342996ca..9007aa717586 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -40,7 +40,7 @@
-  * The ARC handles the interrupt and services it, writing optional data to
-  * the IPC1 registers, updates the IPC_STS response register with the status.
-  */
--#define IPC_CMD			0x0
-+#define IPC_CMD			0x00
- #define		IPC_CMD_MSI		BIT(8)
- #define		IPC_CMD_SIZE		16
- #define		IPC_CMD_SUBCMD		12
-@@ -101,8 +101,8 @@
- #define TELEM_SSRAM_SIZE		240
- #define TELEM_PMC_SSRAM_OFFSET		0x1B00
- #define TELEM_PUNIT_SSRAM_OFFSET	0x1A00
--#define TCO_PMC_OFFSET			0x8
--#define TCO_PMC_SIZE			0x4
-+#define TCO_PMC_OFFSET			0x08
-+#define TCO_PMC_SIZE			0x04
- 
- /* PMC register bit definitions */
- 
+> static device_find_child_by_name(...)
+> {
+> ...
+> }
+> 
+> which we may move to the driver core now or later on.
+> 
+> > +       pci_dev_put(pdev);
+> > +       if (!p)
+> > +               return -EPROBE_DEFER;
+> > +
+> 
+> > +       /* Finally the mux device */
+> > +       dev = device_find_child(p, "intel_xhci_usb_sw-role-switch",
+> > +                               role_switch_match);
+> 
+> Ditto.
+> 
+> > +       put_device(p);
+> > +       if (!dev)
+> > +               return -EPROBE_DEFER;
+> 
+> > +       return 0;
+> 
+> > +}
+> 
+> > +static int cht_int33fe_setup_dp(struct cht_int33fe_data *data)
+> > +{
+> > +       struct fwnode_handle *fwnode = data->node[INT33FE_NODE_DISPLAYPORT];
+> > +       struct pci_dev *pdev;
+> > +
+> > +       /* First let's find the GPU PCI device */
+> > +       pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, NULL);
+> > +       if (!pdev || (pdev->vendor != PCI_VENDOR_ID_INTEL))
+> > +               return -ENODEV;
+> > +
+> > +       /* Then the DP child device node */
+> > +       data->dp = device_get_named_child_node(&pdev->dev, "DD02");
+> > +       pci_dev_put(pdev);
+> > +       if (!data->dp)
+> > +               return -ENODEV;
+> > +
+> 
+> > +       fwnode->secondary = ERR_PTR(-ENODEV);
+> > +       data->dp->secondary = fwnode;
+> 
+> Can't generic helper be in charge of doing this, i.e. chaining fwnodes?
+> 
+> ///
+> void fwnode_chain(parent, new)
+> {
+> ...
+> }
+> ///
+
+We probable should just export set_secondary_fwnode(). I'll add a
+patch for that.
+
+
+thanks Andy,
+
 -- 
-2.20.1
+heikki
