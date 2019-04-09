@@ -1,60 +1,37 @@
-From: sathyanarayanan kuppuswamy
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v1 2/4] platform/x86: intel_pmc_ipc: Apply same width for
- offset definitions
-Date: Tue, 9 Apr 2019 10:09:43 -0700
-Message-ID: <5ca33880-a97f-24b4-1c48-92c1a649558b@linux.intel.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 1/4] platform/x86: intel_pmc_ipc: Use BIT() macro
+Date: Tue, 9 Apr 2019 20:39:39 +0300
+Message-ID: <20190409173939.GY9224@smile.fi.intel.com>
 References: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
- <20190409112515.84725-2-andriy.shevchenko@linux.intel.com>
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
+ <7bb60283-f99f-679d-4efa-45962ccd68f3@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190409112515.84725-2-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <7bb60283-f99f-679d-4efa-45962ccd68f3@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Zha Qipeng <qipeng.zha@intel.com>, junxiao.chang@intel.com, linux-kernel@vger.kernel.org
+To: sathyanarayanan kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Zha Qipeng <qipeng.zha@intel.com>, junxiao.chang@intel.com, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Tue, Apr 09, 2019 at 10:07:35AM -0700, sathyanarayanan kuppuswamy wrote:
+> On 4/9/19 4:25 AM, Andy Shevchenko wrote:
+> > Use BIT() and BIT_MASK() macros for definitions.
+> Looks good to me.
 
-On 4/9/19 4:25 AM, Andy Shevchenko wrote:
-> Apply same width for offset definitions to make code more consistent.
-Looks good.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->   drivers/platform/x86/intel_pmc_ipc.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-> index eb0b342996ca..9007aa717586 100644
-> --- a/drivers/platform/x86/intel_pmc_ipc.c
-> +++ b/drivers/platform/x86/intel_pmc_ipc.c
-> @@ -40,7 +40,7 @@
->    * The ARC handles the interrupt and services it, writing optional data to
->    * the IPC1 registers, updates the IPC_STS response register with the status.
->    */
-> -#define IPC_CMD			0x0
-> +#define IPC_CMD			0x00
->   #define		IPC_CMD_MSI		BIT(8)
->   #define		IPC_CMD_SIZE		16
->   #define		IPC_CMD_SUBCMD		12
-> @@ -101,8 +101,8 @@
->   #define TELEM_SSRAM_SIZE		240
->   #define TELEM_PMC_SSRAM_OFFSET		0x1B00
->   #define TELEM_PUNIT_SSRAM_OFFSET	0x1A00
-> -#define TCO_PMC_OFFSET			0x8
-> -#define TCO_PMC_SIZE			0x4
-> +#define TCO_PMC_OFFSET			0x08
-> +#define TCO_PMC_SIZE			0x04
->   
->   /* PMC register bit definitions */
->   
+Thanks!
+
+> >   /* PMC register bit definitions */
+> >   /* PMC_CFG_REG bit masks */
+> > -#define PMC_CFG_NO_REBOOT_MASK		(1 << 4)
+> > +#define PMC_CFG_NO_REBOOT_MASK		BIT_MASK(4)
+> >   #define PMC_CFG_NO_REBOOT_EN		(1 << 4)
+> >   #define PMC_CFG_NO_REBOOT_DIS		(0 << 4)
+> Do we need 0 << 4 ?
+
+Yes, to explicitly show that this is a value for NO_REBOOT masked bit(s)
+(single bit in this case).
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
+With Best Regards,
+Andy Shevchenko
