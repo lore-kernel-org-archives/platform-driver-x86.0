@@ -1,239 +1,51 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v2 03/12] software node: Add support for references
-Date: Wed, 10 Apr 2019 18:24:56 +0300
-Message-ID: <20190410152505.87041-4-heikki.krogerus@linux.intel.com>
-References: <20190410152505.87041-1-heikki.krogerus@linux.intel.com>
+From: sathyanarayanan kuppuswamy
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v1 1/4] platform/x86: intel_pmc_ipc: Use BIT() macro
+Date: Wed, 10 Apr 2019 10:55:37 -0700
+Message-ID: <f78c610a-7ae7-0a5c-c58c-ec2b597b7e6c@linux.intel.com>
+References: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
+ <7bb60283-f99f-679d-4efa-45962ccd68f3@linux.intel.com>
+ <20190409173939.GY9224@smile.fi.intel.com>
+ <20190410135913.GK9224@smile.fi.intel.com>
+Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190410152505.87041-1-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20190410135913.GK9224@smile.fi.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Zha Qipeng <qipeng.zha@intel.com>, junxiao.chang@intel.com, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Introducing functions that can be used for adding and
-removing references to other software nodes. The goal is to
-support fwnode_property_get_reference_args() also with
-software nodes, however, get_reference_args fwnode operation
-callback is not yet implemented in this commit for the
-software nodes. This commit will only add support for
-reference addition/removal.
 
-The next example shows how to add references to GPIOs using the
-format described in Documentation/acpi/gpio-properties.txt:
-
-/* Array with two GPIOs */
-static struct fwnode_reference_args gpioargs[] __initdata = {
-	{
-		.nargs = 3,
-		.args[0]= 19, /* index */
-		.args[1]= 0,  /* pin */
-		.args[2]= 0,  /* active_low */
-	},
-	{
-		.nargs = 3,
-		.args[0]= 20, /* index */
-		.args[1]= 0,  /* pin */
-		.args[2]= 0,  /* active_low */
-	},
-	{ }
-};
-
-static int myinit(void)
-{
-	struct software_node_reference *ref;
-	struct fwnode_handle *gpio_node;
-	struct fwnode_handle *my_node;
-
-	/* Creating the nodes */
-	gpio_node = fwnode_create_software_node(gpio_props, NULL);
-	...
-	my_node = fwnode_create_software_node(my_props, NULL);
-	...
-
-	/* gpio_node is associated with a GPIO/Pin controller in this example */
-	...
-
-	/* Assigning the actual node references */
-	gpioargs[0].fwnode = gpio_node;
-	gpioargs[1].fwnode = gpio_node;
-
-	/* my_node will now have a named ("gpios") reference to the two GPIOs */
-	ref = fwnode_create_software_node_reference(my_node, "gpios", gpioargs);
-	...
-	return 0;
-}
-
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/base/swnode.c    | 101 +++++++++++++++++++++++++++++++++++++++
- include/linux/property.h |   8 ++++
- 2 files changed, 109 insertions(+)
-
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 7b321bf8424c..39b8f8f35cfe 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -11,10 +11,19 @@
- #include <linux/property.h>
- #include <linux/slab.h>
- 
-+struct software_node_reference {
-+	struct list_head list;
-+	const char *name;
-+	int nrefs;
-+	struct fwnode_reference_args *args;
-+};
-+
- struct software_node {
- 	int id;
- 	struct kobject kobj;
- 	struct fwnode_handle fwnode;
-+	struct list_head references;
-+	struct mutex lock; /* node lock */
- 
- 	/* hierarchy */
- 	struct ida child_ids;
-@@ -598,9 +607,11 @@ fwnode_create_software_node(const struct property_entry *properties,
- 	swnode->kobj.kset = swnode_kset;
- 	swnode->fwnode.ops = &software_node_ops;
- 
-+	mutex_init(&swnode->lock);
- 	ida_init(&swnode->child_ids);
- 	INIT_LIST_HEAD(&swnode->entry);
- 	INIT_LIST_HEAD(&swnode->children);
-+	INIT_LIST_HEAD(&swnode->references);
- 	swnode->parent = p;
- 
- 	ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
-@@ -631,6 +642,11 @@ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
- 	if (!swnode)
- 		return;
- 
-+	mutex_lock(&swnode->lock);
-+	WARN(!list_empty(&swnode->references),
-+	     "\"%s\" has still references", kobject_name(&swnode->kobj));
-+	mutex_unlock(&swnode->lock);
-+
- 	if (swnode->parent) {
- 		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
- 		list_del(&swnode->entry);
-@@ -642,6 +658,91 @@ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
- }
- EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
- 
-+/**
-+ * fwnode_create_software_node_reference - Create named reference description
-+ * @fwnode: The software node to have the references
-+ * @name: Name given to reference description
-+ * @args: Zero terminated array of software node references with arguments
-+ *
-+ * Associates software nodes listed in @args with @fwnode. The association is
-+ * named @name. The reference count is incremented for the nodes in @args.
-+ *
-+ * Returns pointer to software node reference description on success, or ERR_PTR
-+ * on failure.
-+ */
-+struct software_node_reference *
-+fwnode_create_software_node_reference(const struct fwnode_handle *fwnode,
-+				      const char *name,
-+				      const struct fwnode_reference_args *args)
-+{
-+	struct software_node *swnode = to_software_node(fwnode);
-+	struct software_node_reference *ref;
-+	int n;
-+
-+	if (!swnode)
-+		return ERR_PTR(-EINVAL);
-+
-+	for (n = 0; args[n].fwnode; n++)
-+		if (!is_software_node(args[n].fwnode))
-+			return ERR_PTR(-EINVAL);
-+
-+	ref = kzalloc(sizeof(*ref), GFP_KERNEL);
-+	if (!ref)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ref->nrefs = n;
-+
-+	ref->name = kstrdup(name, GFP_KERNEL);
-+	if (!ref->name) {
-+		kfree(ref);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	ref->args = kcalloc(ref->nrefs, sizeof(*ref->args), GFP_KERNEL);
-+	if (!ref->args) {
-+		kfree(ref->name);
-+		kfree(ref);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	for (n = 0; n < ref->nrefs; n++) {
-+		ref->args[n] = args[n];
-+		software_node_get(ref->args[n].fwnode);
-+	}
-+
-+	mutex_lock(&swnode->lock);
-+	list_add_tail(&ref->list, &swnode->references);
-+	mutex_unlock(&swnode->lock);
-+
-+	return ref;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_create_software_node_reference);
-+
-+/**
-+ * fwnode_remove_software_node_reference - Remove named reference description
-+ * @ref: Software node reference description
-+ *
-+ * Remove named reference @ref. Decrements the software node reference count of
-+ * each node in @ref, and removes the association that was created in
-+ * fwnode_create_software_node_reference().
-+ */
-+void fwnode_remove_software_node_reference(struct software_node_reference *ref)
-+{
-+	int n;
-+
-+	if (IS_ERR_OR_NULL(ref))
-+		return;
-+
-+	for (n = 0; n < ref->nrefs; n++)
-+		kobject_put(&to_software_node(ref->args[n].fwnode)->kobj);
-+
-+	list_del(&ref->list);
-+	kfree(ref->args);
-+	kfree(ref->name);
-+	kfree(ref);
-+}
-+EXPORT_SYMBOL_GPL(fwnode_remove_software_node_reference);
-+
- int software_node_notify(struct device *dev, unsigned long action)
- {
- 	struct fwnode_handle *fwnode = dev_fwnode(dev);
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 65d3420dd5d1..40e12ca43556 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -314,6 +314,8 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
- /* -------------------------------------------------------------------------- */
- /* Software fwnode support - when HW description is incomplete or missing */
- 
-+struct sofware_node_reference;
-+
- bool is_software_node(const struct fwnode_handle *fwnode);
- 
- int software_node_notify(struct device *dev, unsigned long action);
-@@ -323,4 +325,10 @@ fwnode_create_software_node(const struct property_entry *properties,
- 			    const struct fwnode_handle *parent);
- void fwnode_remove_software_node(struct fwnode_handle *fwnode);
- 
-+struct software_node_reference *
-+fwnode_create_software_node_reference(const struct fwnode_handle *fwnode,
-+				      const char *name,
-+				      const struct fwnode_reference_args *args);
-+void fwnode_remove_software_node_reference(struct software_node_reference *ref);
-+
- #endif /* _LINUX_PROPERTY_H_ */
+On 4/10/19 6:59 AM, Andy Shevchenko wrote:
+> On Tue, Apr 09, 2019 at 08:39:39PM +0300, Andy Shevchenko wrote:
+>> On Tue, Apr 09, 2019 at 10:07:35AM -0700, sathyanarayanan kuppuswamy wrote:
+>>> On 4/9/19 4:25 AM, Andy Shevchenko wrote:
+>>>> Use BIT() and BIT_MASK() macros for definitions.
+>>> Looks good to me.
+>> Thanks!
+> If you have no further comments, can you provide your tag here?
+Reviewed-by: Kuppuswamy Sathyanarayanan 
+<sathyanarayanan.kuppuswamy@linux.intel.com>
+>
+>>>>    /* PMC register bit definitions */
+>>>>    /* PMC_CFG_REG bit masks */
+>>>> -#define PMC_CFG_NO_REBOOT_MASK		(1 << 4)
+>>>> +#define PMC_CFG_NO_REBOOT_MASK		BIT_MASK(4)
+>>>>    #define PMC_CFG_NO_REBOOT_EN		(1 << 4)
+>>>>    #define PMC_CFG_NO_REBOOT_DIS		(0 << 4)
+>>> Do we need 0 << 4 ?
+>> Yes, to explicitly show that this is a value for NO_REBOOT masked bit(s)
+>> (single bit in this case).
+>>
+>> -- 
+>> With Best Regards,
+>> Andy Shevchenko
+>>
+>>
 -- 
-2.20.1
+Sathyanarayanan Kuppuswamy
+Linux kernel developer
