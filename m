@@ -1,116 +1,77 @@
 From: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Subject: [PATCH 00/11] asus-wmi: Support of ASUS TUF Gaming series laptops
-Date: Wed, 10 Apr 2019 22:11:33 +0200
-Message-ID: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
+Subject: [PATCH 01/11] platform/x86: asus-wmi: Fix hwmon device cleanup
+Date: Wed, 10 Apr 2019 22:20:58 +0200
+Message-ID: <f2822519-c137-560e-fe78-172202e52bfa@gmail.com>
+References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Daniel Drake <drake@endlessm.com>
 Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+The asus-wmi driver does not clean up the hwmon device on exit or error.
+To reproduce the bug, repeat rmmod, insmod to verify that device number
+/sys/devices/platform/asus-nb-wmi/hwmon/hwmon?? grows every time. Add
+pointer to the device in module state and call cleanup on error.
 
-I'm new to kernel development, so first I would like to apologize in
-advance for any mistakes.
+Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+---
+ drivers/platform/x86/asus-wmi.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-The support for this laptop series is currently non-existent, as the
-asus-nb-wmi driver (which is essentially configuration for asus-wmi) fails
-to load and multiple ACPI errors are logged in dmesg. This patch series
-adds pretty comprehenisve support for these relatively new laptops, adds
-some code organization, and fixes couple of bugs in the asus-wmi module.
-
-I have FX565GM (FX505GM) model, but I would guess that the same will
-likely apply to the complete FX505 / FX705 series. I've also tested 
-this on an older K54C model to ensure that it doesn't break support.
-Unfortunately I don't have capacity to test this on more devices.
-
-The patches 1 and 2 are pure bug fixes, but I can not measure relevance
-for stable.
-
-OVERALL DESIGN DECISIONS
-Besides this patch, I've written experimental separate driver [1] for this
-series to make it usable on my system as a DKMS module for 4.18 kernel for
-the time being. One might wonder if it is more reasonable to make a new
-independent module. The things to consider are that: asus-nb-wmi is
-currently loaded by the WMI GUID alias, whereas the original ASUS driver
-does check for the ASUS7000 device in ACPI. One should then choose
-appropriate base driver instead of asus-wmi when asus-nb-wmi is loaded,
-about third of the code gets duplicated in this case and the whole ends up
-ugly.
-
-Another question, does it make sense to embed RGB keyboard backlight
-support in kernel code? There was discussion [2] about exposing WMI to the
-userspace. The same would apply for the fan boost mode support. As I
-understand as of yet it is still preferrable to support hardware features
-in kernel.
-
-NOTE ON HWMON
-One open issue with the result is that hwmon device gets loaded anyway,
-but it does not do anything noticeable. The heavily reduced code for the
-MFUN is present in DSDT, but it either really does nothing or possibly
-call something unnoticeable via DMA.
-
-I've managed to detect that thermal sensor is not present, but the MFUN
-for read fan speed does return 0 and not an error. Taking this as 
-condition for disabling hwmon might intermittently break some existing
-devices if the RPM is really 0 (no idea if that is really possible). One
-might ponder on the better way to detect the presence of manual fan
-control.
-
-NOTE ON QUIRKS
-I would speculate that the queue might be really present in many more
-devices, it just didn't get noticed. Anyway after this is merged one might
-consider if it is reasonable to enable it always and fallback if flush
-fails. The patch does enable the new quirks only for very new models.
-
-Regarding the DSTS force quirk, as I understand the underlying issue is a
-workaround for EEEPC devices and use of DSTS is more conventional. It
-might be reasonable to find a way to detect specific DSTS device ID that
-is present on EEEPC instead, apply same ACPI device detection approach or
-just duplicate the relevant method calls. I don't have access to such
-device or it's DSDT and can't evaluate any of these options myself.
-
-NOTE ON KEYBOARD BACKLIGHT
-When the keyboard backlight is set via 0x50021 DEVID the brightness drops
-slightly compared to brightness after boot. I did not found any way to
-revert this. The method does set some bit in EC RAM, but this address is
-not used anywhere else.  Unfortunately I wiped original OS after two hours
-after unpacking.If someone can verify whether it is identical to behavior
-of the vendor driver it would be appreciated.
-
-NOTE ON UPOWER DAEMON
-If you're testing with GNOME, notice that UPower does hang pretty badly if
-the module is removed at runtime at least on my device. Stop it with
-'systemctl stop upower' before removing the module and then restart it
-again.
-
-[1] https://github.com/hackbnw/faustus
-[2] https://lwn.net/Articles/725725/
-
-Yurii Pavlovskyi (11):
-  platform/x86: asus-wmi: Fix hwmon device cleanup
-  platform/x86: asus-wmi: Fix preserving keyboard backlight intensity on
-    load
-  platform/x86: asus-wmi: Increase input buffer size of WMI methods
-  platform/x86: asus-wmi: Add quirk to force DSTS WMI method detection
-  platform/x86: asus-wmi: Support queued WMI event codes
-  platform/x86: asus-nb-wmi: Add microphone mute key code
-  platform/x86: asus-wmi: Organize code into sections
-  platform/x86: asus-wmi: Enhance detection of thermal data
-  platform/x86: asus-wmi: Control RGB keyboard backlight
-  platform/x86: asus-wmi: Switch fan boost mode
-  platform/x86: asus-wmi: Do not disable keyboard backlight on unload
-
- .../ABI/testing/sysfs-platform-asus-wmi       |  71 ++
- drivers/platform/x86/asus-nb-wmi.c            |   9 +-
- drivers/platform/x86/asus-wmi.c               | 755 +++++++++++++++---
- drivers/platform/x86/asus-wmi.h               |   7 +
- include/linux/platform_data/x86/asus-wmi.h    |   3 +
- 5 files changed, 742 insertions(+), 103 deletions(-)
-
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index ee1fa93708ec..6b736a9375ef 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -145,6 +145,7 @@ struct asus_wmi {
+ 
+ 	struct input_dev *inputdev;
+ 	struct backlight_device *backlight_device;
++	struct device *hwmon_device;
+ 	struct platform_device *platform_device;
+ 
+ 	struct led_classdev wlan_led;
+@@ -1432,9 +1433,19 @@ static int asus_wmi_hwmon_init(struct asus_wmi *asus)
+ 		pr_err("Could not register asus hwmon device\n");
+ 		return PTR_ERR(hwmon);
+ 	}
++
++	asus->hwmon_device = hwmon;
+ 	return 0;
+ }
+ 
++static void asus_wmi_hwmon_exit(struct asus_wmi *asus)
++{
++	if (asus->hwmon_device) {
++		asus_hwmon_fan_set_auto(asus);
++		hwmon_device_unregister(asus->hwmon_device);
++	}
++}
++
+ /*
+  * Backlight
+  */
+@@ -2157,6 +2168,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ fail_rfkill:
+ 	asus_wmi_led_exit(asus);
+ fail_leds:
++	asus_wmi_hwmon_exit(asus);
+ fail_hwmon:
+ 	asus_wmi_input_exit(asus);
+ fail_input:
+@@ -2178,7 +2190,7 @@ static int asus_wmi_remove(struct platform_device *device)
+ 	asus_wmi_rfkill_exit(asus);
+ 	asus_wmi_debugfs_exit(asus);
+ 	asus_wmi_platform_exit(asus);
+-	asus_hwmon_fan_set_auto(asus);
++	asus_wmi_hwmon_exit(asus);
+ 
+ 	kfree(asus);
+ 	return 0;
 -- 
 2.17.1
