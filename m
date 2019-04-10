@@ -1,51 +1,163 @@
 From: sathyanarayanan kuppuswamy
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v1 1/4] platform/x86: intel_pmc_ipc: Use BIT() macro
-Date: Wed, 10 Apr 2019 10:55:37 -0700
-Message-ID: <f78c610a-7ae7-0a5c-c58c-ec2b597b7e6c@linux.intel.com>
+Subject: Re: [PATCH v1 3/4] platform/x86: intel_pmc_ipc: Don't map non-used
+ optional resources
+Date: Wed, 10 Apr 2019 11:05:48 -0700
+Message-ID: <2e160dfa-9c01-28e1-65e3-029cb29c9c62@linux.intel.com>
 References: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
- <7bb60283-f99f-679d-4efa-45962ccd68f3@linux.intel.com>
- <20190409173939.GY9224@smile.fi.intel.com>
- <20190410135913.GK9224@smile.fi.intel.com>
+ <20190409112515.84725-3-andriy.shevchenko@linux.intel.com>
 Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190410135913.GK9224@smile.fi.intel.com>
+In-Reply-To: <20190409112515.84725-3-andriy.shevchenko@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Zha Qipeng <qipeng.zha@intel.com>, junxiao.chang@intel.com, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Zha Qipeng <qipeng.zha@intel.com>, junxiao.chang@intel.com, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+Hi,
 
-On 4/10/19 6:59 AM, Andy Shevchenko wrote:
-> On Tue, Apr 09, 2019 at 08:39:39PM +0300, Andy Shevchenko wrote:
->> On Tue, Apr 09, 2019 at 10:07:35AM -0700, sathyanarayanan kuppuswamy wrote:
->>> On 4/9/19 4:25 AM, Andy Shevchenko wrote:
->>>> Use BIT() and BIT_MASK() macros for definitions.
->>> Looks good to me.
->> Thanks!
-> If you have no further comments, can you provide your tag here?
+On 4/9/19 4:25 AM, Andy Shevchenko wrote:
+> The intel_pmc_ipc driver has a placeholder for all possible resources
+> that may have been provided by ACPI. Since there are few optional ones,
+> the driver still uses them and binds to wrong ranges in resource tree:
+>
+>    # grep intel_punit_ipc /proc/iomem
+>    00000000-00000000 : intel_punit_ipc
+>      00000000-00000000 : intel_punit_ipc
+>        00000000-00000000 : intel_punit_ipc
+>          00000000-00000000 : intel_punit_ipc
+>
+> This leads to issues with resource management during inserting and
+> removing modules, such as intel_pmc_ipc itself, which can't be inserted
+> anymore after first removal.
+>
+> Count the actual resources provided and supply only them to the child device.
+>
+> This is a real fix of the commit 8cc7fb4a6523
+>
+>    ("intel_pmc_ipc: update acpi resource structure for Punit")
+>
+> that also fixes a symptoms described in the commit 6cc8cbbc8868
+>
+>    ("platform/x86: intel_punit_ipc: Fix resource ioremap warning")
+>
+> that is going to be reverted afterwards.
+
+Looks good to me.
+
 Reviewed-by: Kuppuswamy Sathyanarayanan 
 <sathyanarayanan.kuppuswamy@linux.intel.com>
+
 >
->>>>    /* PMC register bit definitions */
->>>>    /* PMC_CFG_REG bit masks */
->>>> -#define PMC_CFG_NO_REBOOT_MASK		(1 << 4)
->>>> +#define PMC_CFG_NO_REBOOT_MASK		BIT_MASK(4)
->>>>    #define PMC_CFG_NO_REBOOT_EN		(1 << 4)
->>>>    #define PMC_CFG_NO_REBOOT_DIS		(0 << 4)
->>> Do we need 0 << 4 ?
->> Yes, to explicitly show that this is a value for NO_REBOOT masked bit(s)
->> (single bit in this case).
->>
->> -- 
->> With Best Regards,
->> Andy Shevchenko
->>
->>
+> Reported-by: Junxiao Chang <junxiao.chang@intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Qipeng Zha <qipeng.zha@intel.com>
+> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>   drivers/platform/x86/intel_pmc_ipc.c | 24 +++++++++++-------------
+>   1 file changed, 11 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+> index 9007aa717586..55037ff258f8 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/platform/x86/intel_pmc_ipc.c
+> @@ -131,6 +131,7 @@ static struct intel_pmc_ipc_dev {
+>   
+>   	/* punit */
+>   	struct platform_device *punit_dev;
+> +	unsigned int punit_res_count;
+>   
+>   	/* Telemetry */
+>   	resource_size_t telem_pmc_ssram_base;
+> @@ -682,7 +683,7 @@ static int ipc_create_punit_device(void)
+>   		.name = PUNIT_DEVICE_NAME,
+>   		.id = -1,
+>   		.res = punit_res_array,
+> -		.num_res = ARRAY_SIZE(punit_res_array),
+> +		.num_res = ipcdev.punit_res_count,
+>   		};
+>   
+>   	pdev = platform_device_register_full(&pdevinfo);
+> @@ -789,7 +790,7 @@ static int ipc_create_pmc_devices(void)
+>   
+>   static int ipc_plat_get_res(struct platform_device *pdev)
+>   {
+> -	struct resource *res, *punit_res;
+> +	struct resource *res, *punit_res = punit_res_array;
+>   	void __iomem *addr;
+>   	int size;
+>   
+> @@ -804,7 +805,8 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+>   	ipcdev.acpi_io_size = size;
+>   	dev_info(&pdev->dev, "io res: %pR\n", res);
+>   
+> -	punit_res = punit_res_array;
+> +	ipcdev.punit_res_count = 0;
+> +
+>   	/* This is index 0 to cover BIOS data register */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>   				    PLAT_RESOURCE_BIOS_DATA_INDEX);
+> @@ -812,7 +814,7 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+>   		dev_err(&pdev->dev, "Failed to get res of punit BIOS data\n");
+>   		return -ENXIO;
+>   	}
+> -	*punit_res = *res;
+> +	punit_res[ipcdev.punit_res_count++] = *res;
+>   	dev_info(&pdev->dev, "punit BIOS data res: %pR\n", res);
+>   
+>   	/* This is index 1 to cover BIOS interface register */
+> @@ -822,42 +824,38 @@ static int ipc_plat_get_res(struct platform_device *pdev)
+>   		dev_err(&pdev->dev, "Failed to get res of punit BIOS iface\n");
+>   		return -ENXIO;
+>   	}
+> -	*++punit_res = *res;
+> +	punit_res[ipcdev.punit_res_count++] = *res;
+>   	dev_info(&pdev->dev, "punit BIOS interface res: %pR\n", res);
+>   
+>   	/* This is index 2 to cover ISP data register, optional */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>   				    PLAT_RESOURCE_ISP_DATA_INDEX);
+> -	++punit_res;
+>   	if (res) {
+> -		*punit_res = *res;
+> +		punit_res[ipcdev.punit_res_count++] = *res;
+>   		dev_info(&pdev->dev, "punit ISP data res: %pR\n", res);
+>   	}
+>   
+>   	/* This is index 3 to cover ISP interface register, optional */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>   				    PLAT_RESOURCE_ISP_IFACE_INDEX);
+> -	++punit_res;
+>   	if (res) {
+> -		*punit_res = *res;
+> +		punit_res[ipcdev.punit_res_count++] = *res;
+>   		dev_info(&pdev->dev, "punit ISP interface res: %pR\n", res);
+>   	}
+>   
+>   	/* This is index 4 to cover GTD data register, optional */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>   				    PLAT_RESOURCE_GTD_DATA_INDEX);
+> -	++punit_res;
+>   	if (res) {
+> -		*punit_res = *res;
+> +		punit_res[ipcdev.punit_res_count++] = *res;
+>   		dev_info(&pdev->dev, "punit GTD data res: %pR\n", res);
+>   	}
+>   
+>   	/* This is index 5 to cover GTD interface register, optional */
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>   				    PLAT_RESOURCE_GTD_IFACE_INDEX);
+> -	++punit_res;
+>   	if (res) {
+> -		*punit_res = *res;
+> +		punit_res[ipcdev.punit_res_count++] = *res;
+>   		dev_info(&pdev->dev, "punit GTD interface res: %pR\n", res);
+>   	}
+>   
+
 -- 
 Sathyanarayanan Kuppuswamy
 Linux kernel developer
