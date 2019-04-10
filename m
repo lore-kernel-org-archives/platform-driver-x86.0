@@ -1,8 +1,8 @@
 From: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Subject: [PATCH 03/11] platform/x86: asus-wmi: Increase input buffer size of
- WMI methods
-Date: Wed, 10 Apr 2019 22:27:38 +0200
-Message-ID: <e2d32e44-5025-a39c-cc42-ec23eeffe6c8@gmail.com>
+Subject: [PATCH 04/11] platform/x86: asus-wmi: Add quirk to force DSTS WMI
+ method detection
+Date: Wed, 10 Apr 2019 22:28:39 +0200
+Message-ID: <d8e0f65c-8c4e-7b60-93bd-3bf90e2da344@gmail.com>
 References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -14,99 +14,143 @@ Sender: linux-kernel-owner@vger.kernel.org
 Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Daniel Drake <drake@endlessm.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The asus-nb-wmi driver is matched by WMI alias but fails to load on TUF
-Gaming series laptops producing multiple ACPI errors in kernel log. Patch
-was tested on TUF Gaming FX505GM and older K54C model.
+The DSTS method detection fails, as nothing is returned if method is not
+defined in WMNB. As a result the control of keyboard backlight is not
+functional for TUF Gaming series laptops (at the time the only
+functionality of the driver on this model implemented with WMI methods).
 
-The input buffer for WMI method invocation size is 2 dwords, whereas
-3 are expected by this model.
+Patch was tested on a newer TUF Gaming FX505GM and older K54C model.
 
 FX505GM:
-..
 Method (WMNB, 3, Serialized)
-{
-    P8XH (Zero, 0x11)
-    CreateDWordField (Arg2, Zero, IIA0)
-    CreateDWordField (Arg2, 0x04, IIA1)
-    CreateDWordField (Arg2, 0x08, IIA2)
-    Local0 = (Arg1 & 0xFFFFFFFF)
+{ ...
+    If ((Local0 == 0x53545344))
+    {
+        ...
+        Return (Zero)
+    }
     ...
+    // No return
+}
 
-Compare with older K54C:
-...
-Method (WMNB, 3, NotSerialized)
-{
-    CreateDWordField (Arg2, 0x00, IIA0)
-    CreateDWordField (Arg2, 0x04, IIA1)
-    Local0 = (Arg1 & 0xFFFFFFFF)
+K54C:
+Method (WMNB, 3, Serialized)
+{ ...
+    If ((Local0 == 0x53545344))
+    {
+        ...
+        Return (0x02)
+    }
     ...
+    Return (0xFFFFFFFE)
+}
 
-Increase buffer size to 3 dwords. No negative consequences of this change
-are expected, as input buffer size is not verified. The original function
-is replaced by a wrapper for a new method passing value 0 for the last
-parameter. The new function will be used to control RGB keyboard
-backlight.
+The non-existing method ASUS_WMI_METHODID_DSTS=0x53544344 (actually it is
+DCTS in little endian ASCII) is selected in asus->dsts.
+
+One way to fix this would be to call both for every known device ID until
+some answers - this would increase module load time.
+
+Another option is to check some device that is known to exist on every
+model - none known at the time.
+
+Last option, which is implemented, is to check for presence of the
+ASUS7000 device in ACPI tree (it is a dummy device), which is the
+condition used for loading the vendor driver for this model. This might
+not fix every affected model ever produced, but it likely does not
+introduce any regressions. The patch introduces a quirk that is enabled
+when ASUS7000 is found.
+
+Scope (_SB)
+{
+    Device (ATK)
+    {
+        Name (_HID, "ASUS7000")  // _HID: Hardware ID
+    }
+}
 
 Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
 ---
-One of current kernel errors:
-ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [IIA2] at bit offset/
-	length 64/32 exceeds size of target Buffer (64 bits)
-	(20190215/dsopcode-203)
-[ 4528.573948] No Local Variables are initialized for Method [WMNB]
-[ 4528.573949] Initialized Arguments for Method [WMNB]:  (3 arguments
-	defined for method invocation)
-[ 4528.573950]   Arg0:   00000000bd1bea5a <Obj>
-	Integer 0000000000000000
-[ 4528.573952]   Arg1:   00000000d414dc53 <Obj>
-	Integer 000000004E464741
-[ 4528.573954]   Arg2:   00000000fcefea4b <Obj>
-	Buffer(8) F0 95 08 00 00 00 00 00
-[ 4528.573959] ACPI Error: Aborting method \_SB.ATKD.WMNB due to previous
-	error (AE_AML_BUFFER_LIMIT) (20190215/psparse-531)
-[ 4528.686425] asus-nb-wmi: probe of asus-nb-wmi failed with error -5
----
- drivers/platform/x86/asus-wmi.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/platform/x86/asus-nb-wmi.c |  5 +++++
+ drivers/platform/x86/asus-wmi.c    | 16 +++++++++++++---
+ drivers/platform/x86/asus-wmi.h    |  5 +++++
+ 3 files changed, 23 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index b6f2ff95c3ed..cc5f0765a8d9 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -28,6 +28,7 @@
+ #include <linux/fb.h>
+ #include <linux/dmi.h>
+ #include <linux/i8042.h>
++#include <linux/acpi.h>
+ 
+ #include "asus-wmi.h"
+ 
+@@ -434,6 +435,10 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
+ 		}
+ 		pr_info("Using i8042 filter function for receiving events\n");
+ 	}
++
++	if (acpi_dev_found("ASUS7000")) {
++		driver->quirks->force_dsts = true;
++	}
+ }
+ 
+ static const struct key_entry asus_nb_wmi_keymap[] = {
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 0fbb947b07c4..cfccfc0b8c2f 100644
+index cfccfc0b8c2f..58890d87d50c 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -95,6 +95,7 @@ static bool ashs_present(void)
- struct bios_args {
- 	u32 arg0;
- 	u32 arg1;
-+	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
- } __packed;
+@@ -24,7 +24,7 @@
+  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
  
- /*
-@@ -220,11 +221,13 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
- 	asus->inputdev = NULL;
- }
+-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++#define PR KBUILD_MODNAME ": "
  
--int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
-+static int asus_wmi_evaluate_method_3dw(u32 method_id, u32 arg0, u32 arg1,
-+		u32 arg2, u32 *retval)
- {
- 	struct bios_args args = {
- 		.arg0 = arg0,
- 		.arg1 = arg1,
-+		.arg2 = arg2
- 	};
- 	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
- 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -256,6 +259,11 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -1885,11 +1885,21 @@ static int asus_wmi_platform_init(struct asus_wmi *asus)
+ 	 * Note, on most Eeepc, there is no way to check if a method exist
+ 	 * or note, while on notebooks, they returns 0xFFFFFFFE on failure,
+ 	 * but once again, SPEC may probably be used for that kind of things.
++	 *
++	 * Additionally at least TUF Gaming series laptops return 0 for unknown
++	 * methods, so the detection in this way is not possible and method must
++	 * be forced. Likely the presence of ACPI device ASUS7000 indicates
++	 * this.
+ 	 */
+-	if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, 0, 0, NULL))
++	if (asus->driver->quirks->force_dsts) {
++		pr_info(PR "DSTS method forced\n");
++		asus->dsts_id = ASUS_WMI_METHODID_DSTS2;
++	} else if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS,
++			0, 0, NULL)) {
+ 		asus->dsts_id = ASUS_WMI_METHODID_DSTS;
+-	else
++	} else {
+ 		asus->dsts_id = ASUS_WMI_METHODID_DSTS2;
++	}
  
- 	return 0;
- }
-+
-+int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
-+{
-+	return asus_wmi_evaluate_method_3dw(method_id, arg0, arg1, 0, retval);
-+}
- EXPORT_SYMBOL_GPL(asus_wmi_evaluate_method);
+ 	/* CWAP allow to define the behavior of the Fn+F2 key,
+ 	 * this method doesn't seems to be present on Eee PCs */
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 6c1311f4b04d..94056da02fde 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -54,6 +54,11 @@ struct quirk_entry {
+ 	 */
+ 	int no_display_toggle;
+ 	u32 xusb2pr;
++	/**
++	 * Force DSTS instead of DSCS and skip detection. Useful if WMNB
++	 * returns nothing on unknown method call.
++	 */
++	bool force_dsts;
  
- static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
+ 	bool (*i8042_filter)(unsigned char data, unsigned char str,
+ 			     struct serio *serio);
 -- 
 2.17.1
