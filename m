@@ -1,48 +1,39 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/4] platform/x86: intel_pmc_ipc: Use BIT() macro
-Date: Wed, 10 Apr 2019 16:59:13 +0300
-Message-ID: <20190410135913.GK9224@smile.fi.intel.com>
-References: <20190409112515.84725-1-andriy.shevchenko@linux.intel.com>
- <7bb60283-f99f-679d-4efa-45962ccd68f3@linux.intel.com>
- <20190409173939.GY9224@smile.fi.intel.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH v2 01/12] software node: Allow node creation without properties
+Date: Wed, 10 Apr 2019 18:24:54 +0300
+Message-ID: <20190410152505.87041-2-heikki.krogerus@linux.intel.com>
+References: <20190410152505.87041-1-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190409173939.GY9224@smile.fi.intel.com>
+In-Reply-To: <20190410152505.87041-1-heikki.krogerus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sathyanarayanan kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Zha Qipeng <qipeng.zha@intel.com>, junxiao.chang@intel.com, linux-kernel@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 09, 2019 at 08:39:39PM +0300, Andy Shevchenko wrote:
-> On Tue, Apr 09, 2019 at 10:07:35AM -0700, sathyanarayanan kuppuswamy wrote:
-> > On 4/9/19 4:25 AM, Andy Shevchenko wrote:
-> > > Use BIT() and BIT_MASK() macros for definitions.
-> > Looks good to me.
-> 
-> Thanks!
+Software nodes are not forced to have device properties.
+Adding check to property_entries_dup() to make it possible
+to create software nodes that don't have any properties.
 
-If you have no further comments, can you provide your tag here?
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/base/swnode.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> 
-> > >   /* PMC register bit definitions */
-> > >   /* PMC_CFG_REG bit masks */
-> > > -#define PMC_CFG_NO_REBOOT_MASK		(1 << 4)
-> > > +#define PMC_CFG_NO_REBOOT_MASK		BIT_MASK(4)
-> > >   #define PMC_CFG_NO_REBOOT_EN		(1 << 4)
-> > >   #define PMC_CFG_NO_REBOOT_DIS		(0 << 4)
-> > Do we need 0 << 4 ?
-> 
-> Yes, to explicitly show that this is a value for NO_REBOOT masked bit(s)
-> (single bit in this case).
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index 7fc5a18e02ad..30077454eb68 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -383,6 +383,9 @@ property_entries_dup(const struct property_entry *properties)
+ 	int i, n = 0;
+ 	int ret;
+ 
++	if (!properties)
++		return NULL;
++
+ 	while (properties[n].name)
+ 		n++;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
