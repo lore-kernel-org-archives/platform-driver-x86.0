@@ -1,115 +1,117 @@
 From: Rajat Jain <rajatja@google.com>
-Subject: [PATCH v4 3/3] platform/x86: intel_pmc_core: Instantiate pmc_core
- device on legacy platforms
-Date: Wed, 10 Apr 2019 17:31:07 -0700
-Message-ID: <20190411003107.52044-3-rajatja@google.com>
-References: <20190313222124.229371-1-rajatja@google.com> <20190411003107.52044-1-rajatja@google.com>
+Subject: [PATCH v5 1/3] platform/x86: intel_pmc_core: Convert to a platform_driver
+Date: Wed, 10 Apr 2019 17:37:36 -0700
+Message-ID: <20190411003738.55073-1-rajatja@google.com>
+References: <20190313222124.229371-1-rajatja@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411003107.52044-1-rajatja@google.com>
+In-Reply-To: <20190313222124.229371-1-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Rafael J <rafael.j.wysocki@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Rafael J Wysocki <rafael.j.wysocki@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Cc: Rajat Jain <rajatja@google.com>, furquan@google.com, evgreen@google.com, rajatxjain@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add code to instantiate the pmc_core platform device and thus attach to
-the driver, if the ACPI device for the same ("INT33A1") is not present
-in a system where it should be. This was discussed here:
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966991.html
+Convert the intel_pmc_core driver to a platform driver, and attach using
+the ACPI enumeration method (via the ACPI device "INT33A1").
 
-Change-Id: I62e0909b010c13614feec36e2c72aed984b61734
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
-v4: Rename file, remove dummy arg, 1 conditional per if statement,
-    simplify init / exit calls..
-v3: (first version of *this* patch -to go with rest of v3 patchset)
-v2: (does not exist)
-v1: (does not exist)
+v5: Remove the gerrit ID from commit log
+v4: put back the x86_match_cpu() method.
+v3: Don't instantiate the platform_device. Use ACPI enumeration.
+v2: Rephrase the commit log. No code changes.
 
- drivers/platform/x86/Makefile                 |  2 +-
- .../platform/x86/intel_pmc_core_plat_drv.c    | 60 +++++++++++++++++++
- 2 files changed, 61 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/x86/intel_pmc_core_plat_drv.c
+ drivers/platform/x86/intel_pmc_core.c | 42 ++++++++++++++++++++++-----
+ 1 file changed, 34 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 86cb76677bc8..7041a88c34c7 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -89,7 +89,7 @@ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
- obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
- 				   intel_telemetry_pltdrv.o \
- 				   intel_telemetry_debugfs.o
--obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
-+obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o intel_pmc_core_plat_drv.o
- obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
- obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
- obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
-diff --git a/drivers/platform/x86/intel_pmc_core_plat_drv.c b/drivers/platform/x86/intel_pmc_core_plat_drv.c
-new file mode 100644
-index 000000000000..7f5af5bd7f1f
---- /dev/null
-+++ b/drivers/platform/x86/intel_pmc_core_plat_drv.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Intel PMC Core platform init
-+ * Copyright (c) 2019, Google Inc.
-+ * Author - Rajat Jain
-+ *
-+ * This code instantiates platform devices for intel_pmc_core driver, only
-+ * on supported platforms that may not have the ACPI devices in the ACPI tables.
-+ * No new platforms should be added here, because we expect that new platforms
-+ * should all have the ACPI device, which is the preferred way of enumeration.
-+ */
-+
-+#include <linux/acpi.h>
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 9908d233305e..8da886e17681 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -19,6 +19,7 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
 +#include <linux/platform_device.h>
-+
-+#include <asm/cpu_device_id.h>
-+#include <asm/intel-family.h>
-+
-+static struct platform_device pmc_core_device = {
-+	.name = "pmc_core",
-+};
-+
-+/*
-+ * intel_pmc_core_platform_ids is the list of platforms where we want to
-+ * instantiate the platform_device if not already instantiated. This is
-+ * different than intel_pmc_core_ids in intel_pmc_core.c which is the
-+ * list of platforms that the driver supports for pmc_core device. The
-+ * other list may grow, but this list should not.
-+ */
-+static const struct x86_cpu_id intel_pmc_core_platform_ids[] = {
-+	INTEL_CPU_FAM6(SKYLAKE_MOBILE, pmc_core_device),
-+	INTEL_CPU_FAM6(SKYLAKE_DESKTOP, pmc_core_device),
-+	INTEL_CPU_FAM6(KABYLAKE_MOBILE, pmc_core_device),
-+	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, pmc_core_device),
-+	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, pmc_core_device),
-+	INTEL_CPU_FAM6(ICELAKE_MOBILE, pmc_core_device),
-+	{}
-+};
-+MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
-+
-+static int __init pmc_core_platform_init(void)
-+{
-+	/* Skip creating the platform device if ACPI already has a device */
-+	if (acpi_dev_present("INT33A1", NULL, -1))
+ #include <linux/uaccess.h>
+ 
+ #include <asm/cpu_device_id.h>
+@@ -854,13 +855,17 @@ static const struct dmi_system_id pmc_core_dmi_table[]  = {
+ 	{}
+ };
+ 
+-static int __init pmc_core_probe(void)
++static int pmc_core_probe(struct platform_device *pdev)
+ {
++	static bool device_initialized;
+ 	struct pmc_dev *pmcdev = &pmc;
+ 	const struct x86_cpu_id *cpu_id;
+ 	u64 slp_s0_addr;
+ 	int err;
+ 
++	if (device_initialized)
 +		return -ENODEV;
 +
-+	if (!x86_match_cpu(intel_pmc_core_platform_ids))
-+		return -ENODEV;
+ 	cpu_id = x86_match_cpu(intel_pmc_core_ids);
+ 	if (!cpu_id)
+ 		return -ENODEV;
+@@ -888,28 +893,49 @@ static int __init pmc_core_probe(void)
+ 	mutex_init(&pmcdev->lock);
+ 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+ 
++	dmi_check_system(pmc_core_dmi_table);
++	platform_set_drvdata(pdev, pmcdev);
 +
-+	return platform_device_register(&pmc_core_device);
-+}
+ 	err = pmc_core_dbgfs_register(pmcdev);
+ 	if (err < 0) {
+-		pr_warn(" debugfs register failed.\n");
++		dev_warn(&pdev->dev, "debugfs register failed.\n");
+ 		iounmap(pmcdev->regbase);
+ 		return err;
+ 	}
+ 
+-	dmi_check_system(pmc_core_dmi_table);
+-	pr_info(" initialized\n");
++	dev_info(&pdev->dev, " initialized\n");
++	device_initialized = true;
 +
-+static void __exit pmc_core_platform_exit(void)
-+{
-+	platform_device_unregister(&pmc_core_device);
-+}
+ 	return 0;
+ }
+-module_init(pmc_core_probe)
+ 
+-static void __exit pmc_core_remove(void)
++static int pmc_core_remove(struct platform_device *pdev)
+ {
+-	struct pmc_dev *pmcdev = &pmc;
++	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
+ 
++	platform_set_drvdata(pdev, NULL);
+ 	pmc_core_dbgfs_unregister(pmcdev);
+ 	mutex_destroy(&pmcdev->lock);
+ 	iounmap(pmcdev->regbase);
++	return 0;
+ }
+-module_exit(pmc_core_remove)
 +
-+module_init(pmc_core_platform_init);
-+module_exit(pmc_core_platform_exit);
++static const struct acpi_device_id pmc_core_acpi_ids[] = {
++	{"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, pmc_core_acpi_ids);
++
++static struct platform_driver pmc_core_driver = {
++	.driver = {
++		.name = "pmc_core",
++		.acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
++	},
++	.probe = pmc_core_probe,
++	.remove = pmc_core_remove,
++};
++
++module_platform_driver(pmc_core_driver);
+ 
+ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("Intel PMC Core Driver");
 -- 
 2.21.0.392.gf8f6787159e-goog
