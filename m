@@ -1,43 +1,27 @@
-From: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Subject: [PATCH v2 11/11] platform/x86: asus-wmi: Do not disable keyboard
- backlight on unload
-Date: Thu, 11 Apr 2019 07:48:19 +0200
-Message-ID: <00efe227-9db9-8709-2de2-d863166c5437@gmail.com>
-References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
- <2b130755-87bb-b7a5-939b-4d0ebd69af68@gmail.com>
+From: Daniel Drake <drake@endlessm.com>
+Subject: Re: [PATCH 01/11] platform/x86: asus-wmi: Fix hwmon device cleanup
+Date: Thu, 11 Apr 2019 16:21:28 +0800
+Message-ID: <CAD8Lp465z=HB5kKZEk7eHd9NVdhSLYhzgiH6Yg45v=j0TCU+SQ@mail.gmail.com>
+References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com> <f2822519-c137-560e-fe78-172202e52bfa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2b130755-87bb-b7a5-939b-4d0ebd69af68@gmail.com>
-Content-Language: en-US
+In-Reply-To: <f2822519-c137-560e-fe78-172202e52bfa@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Daniel Drake <drake@endlessm.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The keyboard backlight is disabled when module is unloaded as it is
-exposed as LED device. Change this behavior to ignore setting 0 brightness
-when the ledclass device is unloading.
+On Thu, Apr 11, 2019 at 4:21 AM Yurii Pavlovskyi
+<yurii.pavlovskyi@gmail.com> wrote:
+>
+> The asus-wmi driver does not clean up the hwmon device on exit or error.
+> To reproduce the bug, repeat rmmod, insmod to verify that device number
+> /sys/devices/platform/asus-nb-wmi/hwmon/hwmon?? grows every time. Add
+> pointer to the device in module state and call cleanup on error.
 
-Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I wonder if this can be fixed more cleanly by using
+devm_hwmon_device_register_with_groups() ?
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index f0e506feb924..f49992fa87b3 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -475,6 +475,10 @@ static void do_kbd_led_set(struct led_classdev *led_cdev, int value)
- static void kbd_led_set(struct led_classdev *led_cdev,
- 			enum led_brightness value)
- {
-+	/* Prevent disabling keyboard backlight on module unregister */
-+	if (led_cdev->flags & LED_UNREGISTERING)
-+		return;
-+
- 	do_kbd_led_set(led_cdev, value);
- }
- 
--- 
-2.17.1
+Thanks
+Daniel
