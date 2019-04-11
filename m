@@ -1,139 +1,90 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 2/3] platform/x86: intel_pmc_core: Allow to dump debug
- registers on S0ix failure
-Date: Thu, 11 Apr 2019 16:40:37 +0300
-Message-ID: <CAHp75Vd9xTB90GMra10VxQkR-fVY7NxxY_w6gGEGvD0XOF_xSA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] platform/x86: intel_pmc_core: Convert to a platform_driver
+Date: Thu, 11 Apr 2019 16:44:40 +0300
+Message-ID: <CAHp75VceZ7w33U=2Ly_qp58E=xEf4vUBEYgfHHHKgvSg2Q+yMw@mail.gmail.com>
 References: <20190313222124.229371-1-rajatja@google.com> <20190411003738.55073-1-rajatja@google.com>
- <20190411003738.55073-2-rajatja@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190411003738.55073-2-rajatja@google.com>
+In-Reply-To: <20190411003738.55073-1-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rajat Jain <rajatja@google.com>
 Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rafael J Wysocki <rafael.j.wysocki@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Furquan Shaikh <furquan@google.com>, Evan Green <evgreen@google.com>, Rajat Jain <rajatxjain@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Apr 11, 2019 at 3:38 AM Rajat Jain <rajatja@google.com> wrote:
+On Thu, Apr 11, 2019 at 3:37 AM Rajat Jain <rajatja@google.com> wrote:
 >
-> Add a module parameter which when enabled, will check on resume, if the
-> last S0ix attempt was successful. If not, the driver would warn and provide
-> helpful debug information (which gets latched during the failed suspend
-> attempt) to debug the S0ix failure.
+> Convert the intel_pmc_core driver to a platform driver, and attach using
+> the ACPI enumeration method (via the ACPI device "INT33A1").
+
+>         cpu_id = x86_match_cpu(intel_pmc_core_ids);
+>         if (!cpu_id)
+>                 return -ENODEV;
+> @@ -888,28 +893,49 @@ static int __init pmc_core_probe(void)
+>         mutex_init(&pmcdev->lock);
+>         pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
 >
-> This information is very useful to debug S0ix failures. Specially since
-> the latched debug information will be lost (over-written) if the system
-> attempts to go into runtime (or imminent) S0ix again after that failed
-> suspend attempt.
+> +       dmi_check_system(pmc_core_dmi_table);
+> +       platform_set_drvdata(pdev, pmcdev);
+> +
+>         err = pmc_core_dbgfs_register(pmcdev);
+>         if (err < 0) {
+> -               pr_warn(" debugfs register failed.\n");
+> +               dev_warn(&pdev->dev, "debugfs register failed.\n");
+>                 iounmap(pmcdev->regbase);
+>                 return err;
+>         }
+>
+> -       dmi_check_system(pmc_core_dmi_table);
+> -       pr_info(" initialized\n");
 
-> +static int pmc_core_suspend(struct device *dev)
-> +{
-> +       struct pmc_dev *pmcdev = dev_get_drvdata(dev);
-> +
-> +       pmcdev->check_counters = false;
-> +
-> +       /* No warnings on S0ix failures */
-> +       if (!warn_on_s0ix_failures)
-> +               return 0;
-> +
-> +       /* Check if the syspend will actually use S0ix */
-> +       if (pm_suspend_via_firmware())
-> +               return 0;
-> +
-> +       /* Save PC10 and S0ix residency for checking later */
+> +       dev_info(&pdev->dev, " initialized\n");
+> +       device_initialized = true;
 
-> +       if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pmcdev->pc10_counter) &&
-> +           !pmc_core_dev_state_get(pmcdev, &pmcdev->s0ix_counter))
+First you do something, then print it's done, and not other way around.
 
-Split it.
-
-> +               pmcdev->check_counters = true;
 > +
+>         return 0;
+>  }
+> -module_init(pmc_core_probe)
+>
+> -static void __exit pmc_core_remove(void)
+> +static int pmc_core_remove(struct platform_device *pdev)
+>  {
+> -       struct pmc_dev *pmcdev = &pmc;
+> +       struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
+>
+> +       platform_set_drvdata(pdev, NULL);
+>         pmc_core_dbgfs_unregister(pmcdev);
+>         mutex_destroy(&pmcdev->lock);
+>         iounmap(pmcdev->regbase);
 > +       return 0;
-> +}
+>  }
+> -module_exit(pmc_core_remove)
 > +
-> +static inline bool pmc_core_is_pc10_failed(struct pmc_dev *pmcdev)
-> +{
-> +       u64 pc10_counter;
+> +static const struct acpi_device_id pmc_core_acpi_ids[] = {
+> +       {"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, pmc_core_acpi_ids);
 > +
-> +       if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pc10_counter) &&
-> +           pc10_counter == pmcdev->pc10_counter)
-> +               return true;
-
-Split this as well.
-
+> +static struct platform_driver pmc_core_driver = {
+> +       .driver = {
+> +               .name = "pmc_core",
+> +               .acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
+> +       },
+> +       .probe = pmc_core_probe,
+> +       .remove = pmc_core_remove,
+> +};
 > +
-> +       return false;
-> +}
-> +
-> +static inline bool pmc_core_is_s0ix_failed(struct pmc_dev *pmcdev)
-> +{
-> +       u64 s0ix_counter;
-> +
-> +       if (!pmc_core_dev_state_get(pmcdev, &s0ix_counter) &&
-> +           s0ix_counter == pmcdev->s0ix_counter)
-> +               return true;
+> +module_platform_driver(pmc_core_driver);
 
-And this.
+So, this patch has a bisectability issue. After it AFAIU some
+platforms will not be able to enumerate the device.
 
-> +
-> +       return false;
-> +}
-> +
-> +static int pmc_core_resume(struct device *dev)
-> +{
-> +       struct pmc_dev *pmcdev = dev_get_drvdata(dev);
-> +
-> +       if (!pmcdev->check_counters)
-> +               return 0;
-> +
-> +       if (pmc_core_is_pc10_failed(pmcdev)) {
-> +               dev_info(dev, "PC10 entry had failed (PC10 cnt=0x%llx)\n",
-> +                        pmcdev->pc10_counter);
-> +       } else if (pmc_core_is_s0ix_failed(pmcdev)) {
-
-> +
-
-Redundant.
-
-> +               const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
-> +               const struct pmc_bit_map *map;
-> +               int offset = pmcdev->map->slps0_dbg_offset;
-> +               u32 data;
-> +
-> +               dev_warn(dev, "S0ix entry had failed (S0ix cnt=%llu)\n",
-> +                        pmcdev->s0ix_counter);
-> +               while (*maps) {
-> +                       map = *maps;
-> +                       data = pmc_core_reg_read(pmcdev, offset);
-> +                       offset += 4;
-> +                       while (map->name) {
-> +                               dev_warn(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
-> +                                        map->name,
-> +                                        data & map->bit_mask ? "Yes" : "No");
-
-> +                               ++map;
-
-map++;
-
-> +                       }
-> +                       ++maps;
-
-maps++;
-
-> +               }
-
-This is quite noisy. You need to print only what is important. I don't
-think polluting dmesg with piles of these kind of messages is a good
-idea.
-Also, it is more likely should be done on debug level (except may be
-one or two messages with really important information).
-
-> +       }
-> +       return 0;
-> +}
-> +
-> +#endif
+To avoid such you have to reconsider logic behind this conversion, i.e.
+1. Split the driver to core part and current initialization mechanism
+2. Add platform driver as a separate module.
 
 -- 
 With Best Regards,
