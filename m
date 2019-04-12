@@ -1,189 +1,71 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 10/13] platform/x86: intel_cht_int33fe: Provide
- software nodes for the devices
-Date: Fri, 12 Apr 2019 18:29:45 +0300
-Message-ID: <CAHp75Vdzegj_s035==TRHcN+ix1h5A3LPiRfNXpj61UShxiOUA@mail.gmail.com>
-References: <20190412134122.82903-1-heikki.krogerus@linux.intel.com> <20190412134122.82903-11-heikki.krogerus@linux.intel.com>
+From: Liming Sun <lsun@mellanox.com>
+Subject: RE: [PATCH v13] platform/mellanox: Add TmFifo driver for Mellanox
+ BlueField Soc
+Date: Fri, 12 Apr 2019 16:15:15 +0000
+Message-ID: <DB6PR05MB32237EF42289A63B53433C14A1280@DB6PR05MB3223.eurprd05.prod.outlook.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+ <1554406595-3128-1-git-send-email-lsun@mellanox.com>
+ <CAHp75VdUwn1NEpSc0_Oc4wEh0TRzCwcE0_tajg3ak8BjfZ_-Mw@mail.gmail.com>
+ <DB6PR05MB3223779DDDF815D2F5AFFE6BA1510@DB6PR05MB3223.eurprd05.prod.outlook.com>
+ <DB6PR05MB3223F6EA9E91F2564C24F5D5A1530@DB6PR05MB3223.eurprd05.prod.outlook.com>
+ <CAHp75Vfqi4Z3OrMsgeTJamJ61b7urAGkU2CKng8+Y-HvOGTvBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412134122.82903-11-heikki.krogerus@linux.intel.com>
+In-Reply-To: <CAHp75Vfqi4Z3OrMsgeTJamJ61b7urAGkU2CKng8+Y-HvOGTvBQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: David Woods <dwoods@mellanox.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Apr 12, 2019 at 4:41 PM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> Software nodes provide two features that we will need later.
-> 1) Software nodes can have references to other software nodes.
-> 2) Software nodes can exist before a device entry is created.
->
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_cht_int33fe.c | 68 +++++++++++++++++++++---
->  1 file changed, 62 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-> index d586bb22d7e8..863a792d9282 100644
-> --- a/drivers/platform/x86/intel_cht_int33fe.c
-> +++ b/drivers/platform/x86/intel_cht_int33fe.c
-> @@ -27,12 +27,21 @@
->
->  #define EXPECTED_PTYPE         4
->
-> +enum {
-> +       INT33FE_NODE_FUSB302,
-> +       INT33FE_NODE_MAX17047,
-> +       INT33FE_NODE_PI3USB30532,
-> +       INT33FE_NODE_MAX,
-> +};
-> +
->  struct cht_int33fe_data {
->         struct i2c_client *max17047;
->         struct i2c_client *fusb302;
->         struct i2c_client *pi3usb30532;
->         /* Contain a list-head must be per device */
->         struct device_connection connections[4];
-> +
-> +       struct fwnode_handle *node[INT33FE_NODE_MAX];
->  };
->
->  /*
-> @@ -73,6 +82,7 @@ static const struct property_entry max17047_props[] = {
->  static int
->  cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
->  {
-> +       struct fwnode_handle *fwnode = data->node[INT33FE_NODE_MAX17047];
->         struct i2c_client *max17047 = NULL;
->         struct i2c_board_info board_info;
->         int ret;
-> @@ -80,9 +90,7 @@ cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
->         i2c_for_each_dev(&max17047, cht_int33fe_check_for_max17047);
->         if (max17047) {
->                 /* Pre-existing i2c-client for the max17047, add device-props */
-> -               ret = device_add_properties(&max17047->dev, max17047_props);
-> -               if (ret)
-> -                       return ret;
-> +               max17047->dev.fwnode->secondary = fwnode;
->                 /* And re-probe to get the new device-props applied. */
->                 ret = device_reprobe(&max17047->dev);
->                 if (ret)
-> @@ -93,7 +101,7 @@ cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
->         memset(&board_info, 0, sizeof(board_info));
->         strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
->         board_info.dev_name = "max17047";
-> -       board_info.properties = max17047_props;
-> +       board_info.fwnode = fwnode;
->         data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
->         if (IS_ERR(data->max17047))
->                 return PTR_ERR(data->max17047);
-> @@ -109,6 +117,45 @@ static const struct property_entry fusb302_props[] = {
->         { }
->  };
->
-> +static const struct property_entry *props[] = {
-> +       [INT33FE_NODE_FUSB302]          = fusb302_props,
-> +       [INT33FE_NODE_MAX17047]         = max17047_props,
-> +       [INT33FE_NODE_PI3USB30532]      = NULL,
-> +};
-> +
-> +static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < INT33FE_NODE_MAX; i++) {
-> +               fwnode_remove_software_node(data->node[i]);
-> +               data->node[i] = NULL;
-> +       }
-> +}
-> +
-> +static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
-> +{
-> +       struct fwnode_handle *fwnode;
-> +       int ret;
-> +       int i;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(props); i++) {
-> +               fwnode = fwnode_create_software_node(props[i], NULL);
-> +               if (IS_ERR(fwnode)) {
-> +                       ret = PTR_ERR(fwnode);
-> +                       goto err_remove_nodes;
-> +               }
-> +               data->node[i] = fwnode;
-> +       }
-> +
-> +       return 0;
-> +
-> +err_remove_nodes:
-> +       cht_int33fe_remove_nodes(data);
-> +
-> +       return ret;
-> +}
-> +
->  static int cht_int33fe_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
-> @@ -173,10 +220,14 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->         if (!data)
->                 return -ENOMEM;
->
-> +       ret = cht_int33fe_add_nodes(data);
-> +       if (ret)
-> +               return ret;
-> +
->         /* Work around BIOS bug, see comment on cht_int33fe_check_for_max17047 */
->         ret = cht_int33fe_register_max17047(dev, data);
->         if (ret)
-> -               return ret;
-> +               goto out_remove_nodes;
->
->         data->connections[0].endpoint[0] = "port0";
->         data->connections[0].endpoint[1] = "i2c-pi3usb30532-switch";
-> @@ -193,7 +244,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->         memset(&board_info, 0, sizeof(board_info));
->         strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
->         board_info.dev_name = "fusb302";
-> -       board_info.properties = fusb302_props;
-> +       board_info.fwnode = data->node[INT33FE_NODE_FUSB302];
->         board_info.irq = fusb302_irq;
->
->         data->fusb302 = i2c_acpi_new_device(dev, 2, &board_info);
-> @@ -204,6 +255,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->
->         memset(&board_info, 0, sizeof(board_info));
->         board_info.dev_name = "pi3usb30532";
-> +       board_info.fwnode = data->node[INT33FE_NODE_PI3USB30532];
->         strlcpy(board_info.type, "pi3usb30532", I2C_NAME_SIZE);
->
->         data->pi3usb30532 = i2c_acpi_new_device(dev, 3, &board_info);
-> @@ -224,6 +276,9 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->
->         device_connections_remove(data->connections);
->
-> +out_remove_nodes:
-> +       cht_int33fe_remove_nodes(data);
-> +
->         return ret;
->  }
->
-> @@ -236,6 +291,7 @@ static int cht_int33fe_remove(struct platform_device *pdev)
->         i2c_unregister_device(data->max17047);
->
->         device_connections_remove(data->connections);
-> +       cht_int33fe_remove_nodes(data);
->
->         return 0;
->  }
-> --
-> 2.20.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+VGhhbmtzIEFuZHkuIFBsZWFzZSBzZWUgbXkgcmVzcG9uc2UgYmVsb3cgZm9yIHRoaXMgZW1haWwg
+YXMgd2VsbC4NCg0KLSBMaW1pbmcNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBG
+cm9tOiBBbmR5IFNoZXZjaGVua28gPGFuZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+DQo+IFNlbnQ6
+IFRodXJzZGF5LCBBcHJpbCAxMSwgMjAxOSAxMDoxMyBBTQ0KPiBUbzogTGltaW5nIFN1biA8bHN1
+bkBtZWxsYW5veC5jb20+DQo+IENjOiBEYXZpZCBXb29kcyA8ZHdvb2RzQG1lbGxhbm94LmNvbT47
+IEFuZHkgU2hldmNoZW5rbyA8YW5keUBpbmZyYWRlYWQub3JnPjsgRGFycmVuIEhhcnQgPGR2aGFy
+dEBpbmZyYWRlYWQub3JnPjsgVmFkaW0NCj4gUGFzdGVybmFrIDx2YWRpbXBAbWVsbGFub3guY29t
+PjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+Zz47IFBsYXRmb3JtIERyaXZlciA8cGxhdGZvcm0tZHJpdmVyLQ0KPiB4ODZAdmdlci5rZXJuZWwu
+b3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxM10gcGxhdGZvcm0vbWVsbGFub3g6IEFkZCBU
+bUZpZm8gZHJpdmVyIGZvciBNZWxsYW5veCBCbHVlRmllbGQgU29jDQo+IA0KPiBPbiBTdW4sIEFw
+ciA3LCAyMDE5IGF0IDU6MDUgQU0gTGltaW5nIFN1biA8bHN1bkBtZWxsYW5veC5jb20+IHdyb3Rl
+Og0KPiANCj4gPiA+ID4gKyAqIG1seGJmX3RtZmlmb19tc2dfaGRyIC0gU3RydWN0dXJlIG9mIHRo
+ZSBUbUZpZm8gbWVzc2FnZSBoZWFkZXINCj4gPiA+ID4gKyAqIEB0eXBlOiBtZXNzYWdlIHR5cGUN
+Cj4gPiA+ID4gKyAqIEBsZW46IHBheWxvYWQgbGVuZ3RoDQo+ID4gPiA+ICsgKiBAdTogNjQtYml0
+IHVuaW9uIGRhdGENCj4gPiA+ID4gKyAqLw0KPiA+ID4gPiArdW5pb24gbWx4YmZfdG1maWZvX21z
+Z19oZHIgew0KPiA+ID4gPiArICAgICAgIHN0cnVjdCB7DQo+ID4gPiA+ICsgICAgICAgICAgICAg
+ICB1OCB0eXBlOw0KPiA+ID4gPiArICAgICAgICAgICAgICAgX19iZTE2IGxlbjsNCj4gPiA+ID4g
+KyAgICAgICAgICAgICAgIHU4IHVudXNlZFs1XTsNCj4gPiA+ID4gKyAgICAgICB9IF9fcGFja2Vk
+Ow0KPiA+ID4gPiArICAgICAgIHU2NCBkYXRhOw0KPiA+ID4NCj4gPiA+IEknbSBub3Qgc3VyZSBJ
+IHVuZGVyc3RhbmQgaG93IHlvdSBjYW4gZGlzdGluZ3Vpc2ggd2hpY2ggZmllbGQgb2YgdW5pb24g
+dG8gdXNlPw0KPiA+ID4gSXNuJ3QgaGVyZSBzb21lIHR5cGUgbWlzc2VkPw0KPiA+DQo+ID4gVXBk
+YXRlZCB0aGUgY29tbWVudCBpbiB2MTQuDQo+ID4NCj4gPiBUaGlzIG1lc3NhZ2UgaGVhZGVyIGlz
+IGEgdW5pb24gb2Ygc3RydWN0IGFuZCB1NjQgZGF0YS4NCj4gPiBUaGUgJ3N0cnVjdCcgaGFzDQo+
+ID4gdHlwZSBhbmQgbGVuZ3RoIGZpZWxkIHdoaWNoIGFyZSB1c2VkIHRvIGVuY29kZSAmIGRlY29k
+ZSB0aGUgbWVzc2FnZS4NCj4gPiBUaGUgJ2RhdGEnIGZpZWxkIGlzIHVzZWQgdG8gcmVhZC93cml0
+ZSB0aGUgbWVzc2FnZSBoZWFkZXIgZnJvbS90byB0aGUgRklGTy4NCj4gDQo+IFNvbWV0aGluZyBm
+aXNoeSBoZXJlLg0KPiANCj4gWW91IGFyZSB1c2luZyBhIHN0cnVjdHVyZSBvZiBkYXRhIHdoaWNo
+IHlvdSB3b3VsZCBsaWtlIHRvIHdyaXRlIHdpdGgNCj4gb25lIGNhbGw/IFBlcmhhcHMgeW91IG5l
+ZWQgdG8gY29uc3RydWN0IHRoaXMgb24tdGhlLWZseS4NCg0KTG9va3MgbGlrZSAidW5pb24gY2F1
+c2VzIGNvbmZ1c2lvbiIuDQpJIHdpbGwgdXBkYXRlIGl0IGluIHYxNSB0byBjb25zdHJ1Y3QgaXQg
+b24tdGhlLWZseSBhcyBzdWdnZXN0ZWQuDQoNCj4gTW9yZW92ZXIsIHRoZSBfX2JlIG1lbWViZXIg
+aXMgdXNlZCBpbiBhIGRhdGEgd2hpY2ggaXMgd3JpdHRlbiBhcyBMRS4NCj4gVGhpcyBuZWVkcyBt
+b3JlIGV4cGxhbmF0aW9uLg0KDQpXaWxsIHVwZGF0ZSB0aGUgY29tbWVudCBmb3IgaXQgaW4gdjE1
+LiAgQmVsb3cgYXJlIHNvbWUgZXhwbGFuYXRpb24gZm9yIGl0Lg0KDQpUaGUgJ0xFJyBpcyBmb3Ig
+dGhlIGxvdy1sZXZlbCBtbWlvIHRyYW5zcG9ydCBsYXllci4gVGhlIFNvQyBzZW5kcyBkYXRhIHN0
+cmVhbQ0KaW50byB0aGUgRklGTywgdGhlIG90aGVyIHNpZGUgcmVhZCBpdC4gVGhlIGJ5dGUtb3Jk
+ZXIgb2YgdGhlIGRhdGEgc3RyZWFtIGtlZXBzDQp0aGUgc2FtZSB3aGVuIHRoZSBvdGhlciBzaWRl
+IHJlYWRzIGl0LiBUaGUgIl9fYmUxNiIgaXMgZm9yIHRoZSBkcml2ZXIgb3IgDQphcHBsaWNhdGlv
+biBvbiBib3RoIHNpZGVzIHRvIGFncmVlIG9uIGhvdyB0byBkZWNvZGUgdGhlICdsZW5ndGgnLg0K
+DQpGb3IgZXhhbXBsZSwgdGhlIFNvQyBzaWRlIChsaXR0bGUgZW5kaWFuKSBzZW5kcyBhIG1lc3Nh
+Z2Ugd2l0aA0KOC1ieXRlIG1lc3NhZ2UgaGVhZGVyICIwMSAwMiAwMyAwNCAwNSAwNiAwNyAwOCIg
+aW50byB0aGUgRklGTy4gVGhlIG90aGVyDQpzaWRlIChhc3N1bWluZyBiaWcgZW5kaWFuIGhvc3Qg
+bWFjaGluZSB1c2luZyBVU0IgYnVsayB0cmFuc2ZlcikgcmVhZHMgdGhlDQpzYW1lIGJ5dGUtc3Ry
+ZWFtIGFuZCB0cnkgdG8gZGVjb2RlIGl0IHdpdGggdGhlIG1seGJmX3RtZmlmb19tc2dfaGRyLg0K
+V2l0aG91dCB0aGUgIl9fYmUxNiIgY29udmVyc2lvbiwgdGhlIFNvQyBzaWRlIHdpbGwgdGhpbmsg
+DQoidHlwZT0xLCBsZW5ndGg9MHgwMzAyIiB3aGlsZSB0aGUgYmlnIGVuZGlhbiBob3N0LXNpZGUg
+d2lsbCB0aGluayANCiJ0eXBlPTEsIGxlbmd0aD0weDAyMDMiLg0KDQo+IA0KPiAtLQ0KPiBXaXRo
+IEJlc3QgUmVnYXJkcywNCj4gQW5keSBTaGV2Y2hlbmtvDQo=
