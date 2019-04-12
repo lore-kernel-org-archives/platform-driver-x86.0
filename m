@@ -1,158 +1,97 @@
 From: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Subject: Re: [PATCH 04/11] platform/x86: asus-wmi: Add quirk to force DSTS WMI
- method detection
-Date: Fri, 12 Apr 2019 22:04:22 +0200
-Message-ID: <99de12d7-ac8d-3bb2-f154-e7fd424e11db@gmail.com>
+Subject: Re: [PATCH v2 05/11] platform/x86: asus-wmi: Support queued WMI event
+ codes
+Date: Fri, 12 Apr 2019 22:32:10 +0200
+Message-ID: <b7b1834f-42e2-b652-9944-eb9b45b81cd0@gmail.com>
 References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
- <d8e0f65c-8c4e-7b60-93bd-3bf90e2da344@gmail.com>
- <CAD8Lp46Xs2QJ521+ameM3793jaYXzEeV=PqLYfW4J2ZRoRKbRw@mail.gmail.com>
+ <777027ac-921e-ee37-493e-974b49242d18@gmail.com>
+ <142fe2e3-b560-6136-32df-b14bb4ac46f7@gmail.com>
+ <CAD8Lp47yHMt-zYd02s3AgBDNQvRA5=Ccp4id8nTVHnQOtT+4_Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD8Lp46Xs2QJ521+ameM3793jaYXzEeV=PqLYfW4J2ZRoRKbRw@mail.gmail.com>
+In-Reply-To: <CAD8Lp47yHMt-zYd02s3AgBDNQvRA5=Ccp4id8nTVHnQOtT+4_Q@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Daniel Drake <drake@endlessm.com>
 Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Endless Linux Upstreaming Team <linux@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Wow that is a great thing you done, thanks a lot for your time and your
-kind words! Your suggestion indeed sounds good judging by your results.
 
-Both of my devices have UID "ATK" (actually FX505 also has two other
-PNP0C14 devices with HIDs SampleDev and TestDev, but I think they are
-disabled by default).
 
-It looks like the driver is loaded already only if ASUS_WMI_MGMT_GUID is
-present, so I guess that could be used for wmi_driver_register. A little
-obstacle is that ACPI device pointer is stored in wmi_block structure,
-which is internal to the wmi.c. This means we would have to add a new
-method to wmi.h / wmi.c for getting the UID of WMI ACPI device.
-
-I guess it might be possible to somehow navigate the device tree back to
-the platform driver of WMI module, but it would definitely be more obscure,
-and searching for the device by HID again is not only slower but generally
-would require a guarantee that it's the same device. So adding a new
-function looks reasonable to me. It might also be useful to someone
-implementing similar things for other vendors in the future.
-
-I'm going to implement this in updated patch.
-
-Thanks,
-Yurii
-
-On 11.04.19 12:55, Daniel Drake wrote:
-> On Thu, Apr 11, 2019 at 4:28 AM Yurii Pavlovskyi
+On 12.04.19 09:48, Daniel Drake wrote:
+> On Thu, Apr 11, 2019 at 1:44 PM Yurii Pavlovskyi
 > <yurii.pavlovskyi@gmail.com> wrote:
->> The DSTS method detection fails, as nothing is returned if method is not
->> defined in WMNB. As a result the control of keyboard backlight is not
->> functional for TUF Gaming series laptops (at the time the only
->> functionality of the driver on this model implemented with WMI methods).
+>> Event codes are expected to be polled from a queue on at least some
+>> models.
+> 
+> Maybe avoid the word "poll" since it suggests something else (at least to me).
+
+Ok, will change this in the code as well.
+
+>>> The fix flushes the old key codes out of the queue on load and after
+>> receiving event the queue is read until either ..FFFF or 1 is encountered.
 >>
->> Patch was tested on a newer TUF Gaming FX505GM and older K54C model.
+>> It might be considered a minor issue and no normal user would likely to
+>> observe this (there is little reason unloading the driver), but it does
+>> significantly frustrate a developer who is unlucky enough to encounter
+>> this.
 >>
->> FX505GM:
->> Method (WMNB, 3, Serialized)
->> { ...
->>     If ((Local0 == 0x53545344))
->>     {
->>         ...
->>         Return (Zero)
->>     }
->>     ...
->>     // No return
->> }
+>> Introduce functionality for flushing and processing queued codes, which is
+>> enabled via quirk flag for ASUS7000. It might be considered if it is
+>> reasonable to enable it everywhere (might introduce regressions) or always
+>> try to flush the queue on module load and try to detect if this quirk is
+>> present in the future.
 >>
->> K54C:
->> Method (WMNB, 3, Serialized)
->> { ...
->>     If ((Local0 == 0x53545344))
->>     {
->>         ...
->>         Return (0x02)
->>     }
->>     ...
->>     Return (0xFFFFFFFE)
->> }
->>
->> The non-existing method ASUS_WMI_METHODID_DSTS=0x53544344 (actually it is
->> DCTS in little endian ASCII) is selected in asus->dsts.
->>
->> One way to fix this would be to call both for every known device ID until
->> some answers - this would increase module load time.
->>
->> Another option is to check some device that is known to exist on every
->> model - none known at the time.
->>
->> Last option, which is implemented, is to check for presence of the
->> ASUS7000 device in ACPI tree (it is a dummy device), which is the
->> condition used for loading the vendor driver for this model. This might
->> not fix every affected model ever produced, but it likely does not
->> introduce any regressions. The patch introduces a quirk that is enabled
->> when ASUS7000 is found.
->>
->> Scope (_SB)
->> {
->>     Device (ATK)
->>     {
->>         Name (_HID, "ASUS7000")  // _HID: Hardware ID
->>     }
->> }
+>> This patch limits the effect to the specific hardware defined by ASUS7000
+>> device that is used for driver detection by vendor driver of Fx505. The
+>> fallback is also implemented in case initial flush fails.
 > 
-> Hmm, tricky! But about time we did something about the DSTS vs DCTS guessing.
+> Which vendor driver are you referring to here?
+
+The ASUS Keyboard hotkeys Driver V2.0.5 which is available to download for
+FX505 has this in his INF file:
+[ATKP.ntamd64]
+
+%DeviceDesc1% = NO_DRV64, ACPI\ASUS7000
+
+But this driver is not generic. It is limited to very specific hardware,
+I'd guess gaming series (for instance K54C does not have this device). It
+was rather a way to avoid breaking anything. I think your suggestion below
+is much better.
+
 > 
-> While we don't have definitive knowledge of the right thing to do
-> here, I think I have enough info available to solidify some
-> assumptions we'd otherwise be afraid to make, and then we can
-> implement a better approach here.
+> Researching more:
+> In our database of 144 Asus models, 142 of them have GANQ.
 > 
-> In our database of 144 Asus DSDTs, 14 of them respond to DCTS:
+> Of those 142, 9 of them return One in the empty-queue case. The other
+> 133 match your FX505GM device exactly. So it seems valid to interpret
+> both 0xffff and 0x1 as queue-end markers.
 > 
-> AS_D520MT
-> D425MC
-> D640SA
-> D320SF-K
-> D415MT
-> D830MT
-> G11DF
-> M32CD4-K
-> V221ID
-> V272UN_SKU3
-> Z240IE
-> ZN220IC-K
-> ZN241IC
-> ZN270IE
+> The 2 devices that do not have GANQ are not laptops. They also do not
+> have the _UID "ATK" WMI device, they only have "ASUSWMI" and their WMI
+> _WED method does not use a queue.
+> There are a few more units that have both ASUSWMI and ATK devices, and
+> the ASUSWMI device appears to never be queued.
+> Another observation is that the ASUSWMI device works with notify code
+> 0xD2, and the ATK device works with 0xFF.
 > 
-> Of those 14, they all additionally respond to DSTS, except for D415MT
-> and AS_D520MT.
+> Nailing this down a bit further, I found a DSDT for EEEPC X101H: that
+> one only has ASUSWMI and it is also not queued.
 > 
-> In all 14 cases, the DCTS handling is done inside a device with _UID
-> ASUSWMI. None of the other 130 products have a device with that _UID.
-> 
-> Furthermore, we recently received access to the ASUS spec, which
-> confirms that the Instance Name for EeePC is "ACPI\PNP0C14\ASUSWMI_0"
-> whereas the Instance Name for other notebooks is "ACPI\PNP0C14\ATK_0".
-> 
-> The 12 devices that respond to both DCTS and DSTS, do it on separate
-> different devices, albeit with the same _WDG UUID. The one with _UID
-> ASUSWMI responds to DCTS, and the one with _UID ATK responds to DSTS.
-> 
-> So that seems fairly convincing. My thinking is that we can check the
-> _UID of the underlying device, and use DCTS for ASUSWMI, DSTS
-> otherwise. To do that, I think you'd have to rework the driver probing
-> so that it happens through wmi_driver_register(). Then from the probe
-> function onwards you will get a wmi_device, and hopefully you can get
-> the _UID through that instance somehow.
-> 
-> There's a separate issue of what happens on those 12 machines where
-> there are two WMI devs, with the same _WDG GUID.
-> drivers/platform/x86/wmi.c drops duplicates, so one of them is being
-> ignored in that case. We'd ideally find a way to ignore the ASUSWMI
-> node and go with ATK in that situation. But I think this can be
-> separated from your work here.
-> 
-> Thanks for these patches and welcome to the world of kernel development!
-> 
+> So I think you should make this queue behaviour applied more
+> generically, but either avoid it when the WMI device _UID is not "ATK"
+> (as discussed in the DCTS/DSTS thread), or avoid it when the notify
+> code is not 0x>
+> Thanks
 > Daniel
-> 
+
+Thanks a lot for your research, it's much appreciated! That seems to
+confirm that these two quirks are actually connected with ATK device. I
+guess it makes sense to combine the detection for both of them. Also to
+flush the queue we need to know the notify code beforehand, because it is
+checked in _WED so checking for ATK seems reasonable to me.
+
+Best regards,
+Yurii
