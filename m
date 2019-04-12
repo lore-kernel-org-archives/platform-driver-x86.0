@@ -1,39 +1,104 @@
-From: Daniel Drake <drake@endlessm.com>
-Subject: Re: [PATCH v2 10/11] platform/x86: asus-wmi: Switch fan boost mode
-Date: Fri, 12 Apr 2019 16:03:17 +0800
-Message-ID: <CAD8Lp45ivFJiW0FZo+ZOyUdpV1JFwPg=o7rx7eyp_YdSAbRRkg@mail.gmail.com>
-References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
- <72b3e0aa-d53a-8a82-1505-f4f00aa2bb46@gmail.com> <fecb4870-7875-a524-bf6d-3108e25af888@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v2 04/12] software node: Implement .get_reference_args
+ fwnode operation
+Date: Fri, 12 Apr 2019 10:48:41 +0200
+Message-ID: <CAJZ5v0jTR6TqMxRoRhBzG8Rf8JgGfriuCLsGKBYxjBOZz_7yBA@mail.gmail.com>
+References: <20190410152505.87041-1-heikki.krogerus@linux.intel.com> <20190410152505.87041-5-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fecb4870-7875-a524-bf6d-3108e25af888@gmail.com>
+In-Reply-To: <20190410152505.87041-5-heikki.krogerus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org, Endless Linux Upstreaming Team <linux@endlessm.com>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Apr 11, 2019 at 1:47 PM Yurii Pavlovskyi
-<yurii.pavlovskyi@gmail.com> wrote:
-> * 0x00 - is normal,
-> * 0x01 - is obviously turbo by the amount of noise, might be useful to
-> avoid CPU frequency throttling on high load,
-> * 0x02 - the meaning is unknown at the time as modes are not named
-> in the vendor documentation, but it does look like a quiet mode as CPU
-> temperature does increase about 10 degrees on maximum load.
+On Wed, Apr 10, 2019 at 5:26 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> This makes it possible to support drivers that use
+> fwnode_property_get_reference_args() function.
+>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+>  drivers/base/swnode.c | 56 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index 39b8f8f35cfe..d6a9b56cb073 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -534,6 +534,61 @@ software_node_get_named_child_node(const struct fwnode_handle *fwnode,
+>         return NULL;
+>  }
+>
+> +static int
+> +software_node_get_reference_args(const struct fwnode_handle *fwnode,
+> +                                const char *propname, const char *nargs_prop,
+> +                                unsigned int nargs, unsigned int index,
+> +                                struct fwnode_reference_args *args)
+> +{
+> +       struct software_node *swnode = to_software_node(fwnode);
+> +       struct software_node_reference *ref;
+> +       const struct property_entry *prop;
+> +       int ret = -ENOENT;
+> +       int i;
+> +
+> +       mutex_lock(&swnode->lock);
+> +
+> +       if (!swnode || list_empty(&swnode->references))
+> +               goto err_unlock;
+> +
+> +       if (nargs_prop) {
+> +               prop = property_entry_get(swnode->properties, nargs_prop);
+> +               if (!prop) {
+> +                       ret = -EINVAL;
+> +                       goto err_unlock;
+> +               }
+> +
+> +               nargs = prop->value.u32_data;
+> +       }
+> +
+> +       if (nargs > NR_FWNODE_REFERENCE_ARGS) {
+> +               ret = -EINVAL;
+> +               goto err_unlock;
+> +       }
+> +
+> +       list_for_each_entry(ref, &swnode->references, list) {
+> +               if (strcmp(ref->name, propname))
+> +                       continue;
+> +
+> +               if (index > (ref->nrefs - 1))
+> +                       break;
+> +
+> +               args->nargs = nargs;
+> +               args->fwnode = software_node_get(ref->args[index].fwnode);
+> +
+> +               for (i = 0; i < nargs; i++)
+> +                       args->args[i] = ref->args[index].args[i];
 
-I'm curious which vendor documentation you're working with here.
+If nargs is provided by the caller, can't it be greater than the
+number of args[index].args[] entries?
 
-From the spec,
-0 = normal
-1 = overboost
-2 = silent
-
-Also you can use DSTS on the 0x00110018 device to check the exact
-capabilities supported, which you should use to refine which modes can
-be cycled through.
-Bit 0 = overboost supported
-Bit 1 = silent supported
-
-Thanks
-Daniel
+> +
+> +               ret = 0;
+> +               break;
+> +       }
+> +
+> +err_unlock:
+> +       mutex_unlock(&swnode->lock);
+> +
+> +       return ret;
+> +}
+> +
+>  static const struct fwnode_operations software_node_ops = {
+>         .get = software_node_get,
+>         .put = software_node_put,
+> @@ -543,6 +598,7 @@ static const struct fwnode_operations software_node_ops = {
+>         .get_parent = software_node_get_parent,
+>         .get_next_child_node = software_node_get_next_child,
+>         .get_named_child_node = software_node_get_named_child_node,
+> +       .get_reference_args = software_node_get_reference_args,
+>  };
+>
+>  /* -------------------------------------------------------------------------- */
