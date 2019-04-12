@@ -1,197 +1,189 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v14] platform/mellanox: Add TmFifo driver for Mellanox
- BlueField Soc
-Date: Fri, 12 Apr 2019 14:23:02 +0000
-Message-ID: <DB6PR05MB3223564ACC297C3358CB5D7BA1280@DB6PR05MB3223.eurprd05.prod.outlook.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1554602585-6853-1-git-send-email-lsun@mellanox.com>
- <CAHp75Vdo2oJ8umHh4J_9a3cFQHO3Nk3ss+HAJpaXUT=kHZhCng@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 10/13] platform/x86: intel_cht_int33fe: Provide
+ software nodes for the devices
+Date: Fri, 12 Apr 2019 18:29:45 +0300
+Message-ID: <CAHp75Vdzegj_s035==TRHcN+ix1h5A3LPiRfNXpj61UShxiOUA@mail.gmail.com>
+References: <20190412134122.82903-1-heikki.krogerus@linux.intel.com> <20190412134122.82903-11-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vdo2oJ8umHh4J_9a3cFQHO3Nk3ss+HAJpaXUT=kHZhCng@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190412134122.82903-11-heikki.krogerus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: David Woods <dwoods@mellanox.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-VGhhbmtzIEFuZHkhIEknbGwgdHJ5IHRvIHBvc3QgdjE1IHRvIGFkZHJlc3MgdGhlc2UgY29tbWVu
-dHMgdGhpcyB3ZWVrZW5kLg0KKFBsZWFzZSBhbHNvIHNlZSByZXNwb25zZXMgdG8gZWFjaCBjb21t
-ZW50cyBiZWxvdykuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5k
-eSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBTZW50OiBUaHVyc2Rh
-eSwgQXByaWwgMTEsIDIwMTkgMTA6MTAgQU0NCj4gVG86IExpbWluZyBTdW4gPGxzdW5AbWVsbGFu
-b3guY29tPg0KPiBDYzogRGF2aWQgV29vZHMgPGR3b29kc0BtZWxsYW5veC5jb20+OyBBbmR5IFNo
-ZXZjaGVua28gPGFuZHlAaW5mcmFkZWFkLm9yZz47IERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFk
-ZWFkLm9yZz47IFZhZGltDQo+IFBhc3Rlcm5hayA8dmFkaW1wQG1lbGxhbm94LmNvbT47IExpbnV4
-IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBQbGF0
-Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2VybmVsLm9yZz4NCj4g
-U3ViamVjdDogUmU6IFtQQVRDSCB2MTRdIHBsYXRmb3JtL21lbGxhbm94OiBBZGQgVG1GaWZvIGRy
-aXZlciBmb3IgTWVsbGFub3ggQmx1ZUZpZWxkIFNvYw0KPiANCj4gT24gU3VuLCBBcHIgNywgMjAx
-OSBhdCA1OjAzIEFNIExpbWluZyBTdW4gPGxzdW5AbWVsbGFub3guY29tPiB3cm90ZToNCj4gPg0K
-PiA+IFRoaXMgY29tbWl0IGFkZHMgdGhlIFRtRmlmbyBwbGF0Zm9ybSBkcml2ZXIgZm9yIE1lbGxh
-bm94IEJsdWVGaWVsZA0KPiA+IFNvYy4gVG1GaWZvIGlzIGEgc2hhcmVkIEZJRk8gd2hpY2ggZW5h
-YmxlcyBleHRlcm5hbCBob3N0IG1hY2hpbmUNCj4gPiB0byBleGNoYW5nZSBkYXRhIHdpdGggdGhl
-IFNvQyB2aWEgVVNCIG9yIFBDSWUuIFRoZSBkcml2ZXIgaXMgYmFzZWQNCj4gPiBvbiB2aXJ0aW8g
-ZnJhbWV3b3JrIGFuZCBoYXMgY29uc29sZSBhbmQgbmV0d29yayBhY2Nlc3MgZW5hYmxlZC4NCj4g
-DQo+IFRoYW5rcyBmb3IgYW4gdXBkYXRlLCBteSBjb21tZW50cyBiZWxvdy4NCg0KVGhhbmtzIGZv
-ciB0aGUgY29tbWVudHMhDQoNCj4gDQo+ID4gKy8qKg0KPiA+ICsgKiBtbHhiZl90bWZpZm9fdmRl
-diAtIFN0cnVjdHVyZSBvZiB0aGUgVG1GaWZvIHZpcnR1YWwgZGV2aWNlDQo+ID4gKyAqIEB2ZGV2
-OiB2aXJ0aW8gZGV2aWNlLCBpbiB3aGljaCB0aGUgdmRldi5pZC5kZXZpY2UgZmllbGQgaGFzIHRo
-ZQ0KPiA+ICsgKiAgICAgICAgVklSVElPX0lEX3h4eCBpZCB0byBkaXN0aW5ndWlzaCB0aGUgdmly
-dHVhbCBkZXZpY2UuDQo+ID4gKyAqIEBzdGF0dXM6IHN0YXR1cyBvZiB0aGUgZGV2aWNlDQo+ID4g
-KyAqIEBmZWF0dXJlczogc3VwcG9ydGVkIGZlYXR1cmVzIG9mIHRoZSBkZXZpY2UNCj4gPiArICog
-QHZyaW5nczogYXJyYXkgb2YgdG1maWZvIHZyaW5ncyBvZiB0aGlzIGRldmljZQ0KPiA+ICsgKiBA
-Y29uZmlnLmNvbnM6IHZpcnR1YWwgY29uc29sZSBjb25maWcgLQ0KPiA+ICsgKiAgICAgICAgICAg
-ICAgIHNlbGVjdCBpZiB2ZGV2LmlkLmRldmljZSBpcyBWSVJUSU9fSURfQ09OU09MRQ0KPiA+ICsg
-KiBAY29uZmlnLm5ldDogdmlydHVhbCBuZXR3b3JrIGNvbmZpZyAtDQo+ID4gKyAqICAgICAgICAg
-ICAgICBzZWxlY3QgaWYgdmRldi5pZC5kZXZpY2UgaXMgVklSVElPX0lEX05FVA0KPiA+ICsgKiBA
-dHhfYnVmOiB0eCBidWZmZXIgdXNlZCB0byBidWZmZXIgZGF0YSBiZWZvcmUgd3JpdGluZyBpbnRv
-IHRoZSBGSUZPDQo+ID4gKyAqLw0KPiA+ICtzdHJ1Y3QgbWx4YmZfdG1maWZvX3ZkZXYgew0KPiA+
-ICsgICAgICAgc3RydWN0IHZpcnRpb19kZXZpY2UgdmRldjsNCj4gPiArICAgICAgIHU4IHN0YXR1
-czsNCj4gPiArICAgICAgIHU2NCBmZWF0dXJlczsNCj4gPiArICAgICAgIHN0cnVjdCBtbHhiZl90
-bWZpZm9fdnJpbmcgdnJpbmdzW01MWEJGX1RNRklGT19WUklOR19NQVhdOw0KPiA+ICsgICAgICAg
-dW5pb24gew0KPiA+ICsgICAgICAgICAgICAgICBzdHJ1Y3QgdmlydGlvX2NvbnNvbGVfY29uZmln
-IGNvbnM7DQo+ID4gKyAgICAgICAgICAgICAgIHN0cnVjdCB2aXJ0aW9fbmV0X2NvbmZpZyBuZXQ7
-DQo+ID4gKyAgICAgICB9IGNvbmZpZzsNCj4gPiArICAgICAgIHN0cnVjdCBjaXJjX2J1ZiB0eF9i
-dWY7DQo+ID4gK307DQo+IA0KPiAoMSkNCj4gDQo+ID4gKy8qKg0KPiA+ICsgKiBtbHhiZl90bWZp
-Zm9fbXNnX2hkciAtIFN0cnVjdHVyZSBvZiB0aGUgVG1GaWZvIG1lc3NhZ2UgaGVhZGVyDQo+ID4g
-KyAqIEB0eXBlOiBtZXNzYWdlIHR5cGUNCj4gPiArICogQGxlbjogcGF5bG9hZCBsZW5ndGgNCj4g
-PiArICogQGRhdGE6IDY0LWJpdCBkYXRhIHVzZWQgdG8gd3JpdGUgdGhlIG1lc3NhZ2UgaGVhZGVy
-IGludG8gdGhlIFRtRmlmbyByZWdpc3Rlci4NCj4gPiArICoNCj4gPiArICogVGhpcyBtZXNzYWdl
-IGhlYWRlciBpcyBhIHVuaW9uIG9mIHN0cnVjdCBhbmQgdTY0IGRhdGEuIFRoZSAnc3RydWN0JyBo
-YXMNCj4gPiArICogdHlwZSBhbmQgbGVuZ3RoIGZpZWxkIHdoaWNoIGFyZSB1c2VkIHRvIGVuY29k
-ZSAmIGRlY29kZSB0aGUgbWVzc2FnZS4gVGhlDQo+ID4gKyAqICdkYXRhJyBmaWVsZCBpcyB1c2Vk
-IHRvIHJlYWQvd3JpdGUgdGhlIG1lc3NhZ2UgaGVhZGVyIGZyb20vdG8gdGhlIEZJRk8uDQo+ID4g
-KyAqLw0KPiA+ICt1bmlvbiBtbHhiZl90bWZpZm9fbXNnX2hkciB7DQo+ID4gKyAgICAgICBzdHJ1
-Y3Qgew0KPiA+ICsgICAgICAgICAgICAgICB1OCB0eXBlOw0KPiA+ICsgICAgICAgICAgICAgICBf
-X2JlMTYgbGVuOw0KPiA+ICsgICAgICAgICAgICAgICB1OCB1bnVzZWRbNV07DQo+ID4gKyAgICAg
-ICB9IF9fcGFja2VkOw0KPiA+ICsgICAgICAgdTY0IGRhdGE7DQo+ID4gK307DQo+IA0KPiBUaGlz
-IHVuaW9uIG1pc3NlcyBhIHR5cGUuIFNlZSwgZm9yIGV4YW1wbGUsIGFib3ZlIHN0cnVjdHVyZSAo
-MSkgd2hlcmUNCj4gdW5pb24gaXMgdXNlZCBjb3JyZWN0bHkuDQoNClRoaXMgdW5pb24gc2VlbXMg
-Y2F1c2luZyBjb25mdXNpb24uIEknbGwgdHJ5IHRvIHJlbW92ZSB0aGUgdW5pb24gaW4gdjE1IA0K
-YW5kICJjb25zdHJ1Y3QgdGhpcyBvbi10aGUtZmx5IiBqdXN0IGxpa2UgeW91IG1lbnRpb25lZCBp
-biBhbm90aGVyIGVtYWlsLiANClNvIGluc3RlYWQgb2YgIiB3cml0ZXEoaGRyLmRhdGEsIC4uLiki
-IHdlIGNvdWxkIHNpbXBseSBkbyANCiJ3cml0ZXEoKih1NjQgKikmaGRyLCAuLi4pIiwgdGh1cyBu
-byBuZWVkIGZvciBhIHVuaW9uLg0KDQo+IA0KPiA+ICsvKiBBbGxvY2F0ZSB2cmluZ3MgZm9yIHRo
-ZSBGSUZPLiAqLw0KPiA+ICtzdGF0aWMgaW50IG1seGJmX3RtZmlmb19hbGxvY192cmluZ3Moc3Ry
-dWN0IG1seGJmX3RtZmlmbyAqZmlmbywNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgc3RydWN0IG1seGJmX3RtZmlmb192ZGV2ICp0bV92ZGV2KQ0KPiA+ICt7DQo+ID4g
-KyAgICAgICBzdHJ1Y3QgbWx4YmZfdG1maWZvX3ZyaW5nICp2cmluZzsNCj4gPiArICAgICAgIHN0
-cnVjdCBkZXZpY2UgKmRldjsNCj4gPiArICAgICAgIGRtYV9hZGRyX3QgZG1hOw0KPiA+ICsgICAg
-ICAgaW50IGksIHNpemU7DQo+ID4gKyAgICAgICB2b2lkICp2YTsNCj4gPiArDQo+ID4gKyAgICAg
-ICBmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRSh0bV92ZGV2LT52cmluZ3MpOyBpKyspIHsNCj4g
-PiArICAgICAgICAgICAgICAgdnJpbmcgPSAmdG1fdmRldi0+dnJpbmdzW2ldOw0KPiA+ICsgICAg
-ICAgICAgICAgICB2cmluZy0+ZmlmbyA9IGZpZm87DQo+ID4gKyAgICAgICAgICAgICAgIHZyaW5n
-LT5udW0gPSBNTFhCRl9UTUZJRk9fVlJJTkdfU0laRTsNCj4gPiArICAgICAgICAgICAgICAgdnJp
-bmctPmFsaWduID0gU01QX0NBQ0hFX0JZVEVTOw0KPiA+ICsgICAgICAgICAgICAgICB2cmluZy0+
-aW5kZXggPSBpOw0KPiA+ICsgICAgICAgICAgICAgICB2cmluZy0+dmRldl9pZCA9IHRtX3ZkZXYt
-PnZkZXYuaWQuZGV2aWNlOw0KPiA+ICsgICAgICAgICAgICAgICBkZXYgPSAmdG1fdmRldi0+dmRl
-di5kZXY7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBzaXplID0gdnJpbmdfc2l6ZSh2cmlu
-Zy0+bnVtLCB2cmluZy0+YWxpZ24pOw0KPiA+ICsgICAgICAgICAgICAgICB2YSA9IGRtYV9hbGxv
-Y19jb2hlcmVudChkZXYtPnBhcmVudCwgc2l6ZSwgJmRtYSwgR0ZQX0tFUk5FTCk7DQo+ID4gKyAg
-ICAgICAgICAgICAgIGlmICghdmEpIHsNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ZGV2X2VycihkZXYtPnBhcmVudCwgImRtYV9hbGxvY19jb2hlcmVudCBmYWlsZWRcbiIpOw0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIG1seGJmX3RtZmlmb19mcmVlX3ZyaW5ncyhmaWZvLCB0
-bV92ZGV2KTsNCj4gDQo+IEZpcnN0IGRvIHRoaW5ncywgdGhlbiByZXBvcnQgYWJvdXQgd2hhdCBo
-YXMgYmVlbiBkb25lLg0KDQpXaWxsIHVwZGF0ZSBpdCBpbiB2MTUuDQoNCj4gDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07DQo+ID4gKyAgICAgICAgICAgICAgIH0N
-Cj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIHZyaW5nLT52YSA9IHZhOw0KPiA+ICsgICAgICAg
-ICAgICAgICB2cmluZy0+ZG1hID0gZG1hOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAg
-ICAgIHJldHVybiAwOw0KPiA+ICt9DQo+IA0KPiA+ICsvKiBJbnRlcnJ1cHQgaGFuZGxlci4gKi8N
-Cj4gPiArc3RhdGljIGlycXJldHVybl90IG1seGJmX3RtZmlmb19pcnFfaGFuZGxlcihpbnQgaXJx
-LCB2b2lkICphcmcpDQo+ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCBtbHhiZl90bWZpZm9faXJx
-X2luZm8gKmlycV9pbmZvID0gYXJnOw0KPiA+ICsNCj4gDQo+ID4gKyAgICAgICBpZiAoaXJxX2lu
-Zm8tPmluZGV4IDwgTUxYQkZfVE1fTUFYX0lSUSAmJg0KPiANCj4gT24gd2hpY2ggY2lyY3Vtc3Rh
-bmNlcyB0aGlzIGlzIHBvc3NpYmxlPw0KDQpZZXMsIE5vdCBuZWVkZWQgYXQgYWxsLiBXaWxsIHVw
-ZGF0ZSBpdCBpbiB2MTUuDQoNCj4gDQo+ID4gKyAgICAgICAgICAgIXRlc3RfYW5kX3NldF9iaXQo
-aXJxX2luZm8tPmluZGV4LCAmaXJxX2luZm8tPmZpZm8tPnBlbmRfZXZlbnRzKSkNCj4gPiArICAg
-ICAgICAgICAgICAgc2NoZWR1bGVfd29yaygmaXJxX2luZm8tPmZpZm8tPndvcmspOw0KPiA+ICsN
-Cj4gPiArICAgICAgIHJldHVybiBJUlFfSEFORExFRDsNCj4gPiArfQ0KPiANCj4gPiArc3RhdGlj
-IHZvaWQgbWx4YmZfdG1maWZvX3JlbGVhc2VfcGVuZGluZ19wa3Qoc3RydWN0IG1seGJmX3RtZmlm
-b192cmluZyAqdnJpbmcpDQo+ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCB2cmluZ19kZXNjICpk
-ZXNjX2hlYWQ7DQo+ID4gKyAgICAgICB1MzIgbGVuID0gMDsNCj4gPiArDQo+ID4gKyAgICAgICBp
-ZiAodnJpbmctPmRlc2NfaGVhZCkgew0KPiA+ICsgICAgICAgICAgICAgICBkZXNjX2hlYWQgPSB2
-cmluZy0+ZGVzY19oZWFkOw0KPiA+ICsgICAgICAgICAgICAgICBsZW4gPSB2cmluZy0+cGt0X2xl
-bjsNCj4gPiArICAgICAgIH0gZWxzZSB7DQo+ID4gKyAgICAgICAgICAgICAgIGRlc2NfaGVhZCA9
-IG1seGJmX3RtZmlmb19nZXRfbmV4dF9kZXNjKHZyaW5nKTsNCj4gDQo+ID4gKyAgICAgICAgICAg
-ICAgIGlmIChkZXNjX2hlYWQpDQo+IA0KPiBSZWR1bmRhbnQuLi4NCg0KV2lsbCB1cGRhdGUgaXQg
-aW4gdjE1Lg0KDQo+IA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGxlbiA9IG1seGJmX3Rt
-Zmlmb19nZXRfcGt0X2xlbih2cmluZywgZGVzY19oZWFkKTsNCj4gDQo+IC4uLnRoaXMgaXMgTlVM
-TC1hd2FyZSBBRkFJQ1MuDQoNClllcywgaXQgaXMuDQoNCj4gDQo+ID4gKyAgICAgICB9DQo+ID4g
-Kw0KPiA+ICsgICAgICAgaWYgKGRlc2NfaGVhZCkNCj4gPiArICAgICAgICAgICAgICAgbWx4YmZf
-dG1maWZvX3JlbGVhc2VfZGVzYyh2cmluZywgZGVzY19oZWFkLCBsZW4pOw0KPiA+ICsNCj4gPiAr
-ICAgICAgIHZyaW5nLT5wa3RfbGVuID0gMDsNCj4gPiArICAgICAgIHZyaW5nLT5kZXNjID0gTlVM
-TDsNCj4gPiArICAgICAgIHZyaW5nLT5kZXNjX2hlYWQgPSBOVUxMOw0KPiA+ICt9DQo+IA0KPiA+
-ICsvKiBUaGUgbm90aWZ5IGZ1bmN0aW9uIGlzIGNhbGxlZCB3aGVuIG5ldyBidWZmZXJzIGFyZSBw
-b3N0ZWQuICovDQo+ID4gK3N0YXRpYyBib29sIG1seGJmX3RtZmlmb192aXJ0aW9fbm90aWZ5KHN0
-cnVjdCB2aXJ0cXVldWUgKnZxKQ0KPiA+ICt7DQo+ID4gKyAgICAgICBzdHJ1Y3QgbWx4YmZfdG1m
-aWZvX3ZyaW5nICp2cmluZyA9IHZxLT5wcml2Ow0KPiA+ICsgICAgICAgc3RydWN0IG1seGJmX3Rt
-Zmlmb192ZGV2ICp0bV92ZGV2Ow0KPiA+ICsgICAgICAgc3RydWN0IG1seGJmX3RtZmlmbyAqZmlm
-bzsNCj4gPiArICAgICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gKw0KPiA+ICsgICAgICAg
-ZmlmbyA9IHZyaW5nLT5maWZvOw0KPiA+ICsNCj4gPiArICAgICAgIC8qDQo+ID4gKyAgICAgICAg
-KiBWaXJ0aW8gbWFpbnRhaW5zIHZyaW5ncyBpbiBwYWlycywgZXZlbiBudW1iZXIgcmluZyBmb3Ig
-UngNCj4gPiArICAgICAgICAqIGFuZCBvZGQgbnVtYmVyIHJpbmcgZm9yIFR4Lg0KPiA+ICsgICAg
-ICAgICovDQo+IA0KPiA+ICsgICAgICAgaWYgKCEodnJpbmctPmluZGV4ICYgQklUKDApKSkgew0K
-PiANCj4gUGVyaGFwcyBwb3NpdGl2ZSBjb25kaXRpb25hbCBpcyBiZXR0ZXIuDQoNCldpbGwgdXBk
-YXRlIGl0IGluIHYxNS4NCg0KPiANCj4gPiArICAgICAgICAgICAgICAgaWYgKHRlc3RfYW5kX3Nl
-dF9iaXQoTUxYQkZfVE1fUlhfSFdNX0lSUSwgJmZpZm8tPnBlbmRfZXZlbnRzKSkNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICByZXR1cm4gdHJ1ZTsNCj4gPiArICAgICAgIH0gZWxzZSB7DQo+
-ID4gKyAgICAgICAgICAgICAgIC8qDQo+ID4gKyAgICAgICAgICAgICAgICAqIENvbnNvbGUgY291
-bGQgbWFrZSBibG9ja2luZyBjYWxsIHdpdGggaW50ZXJydXB0cyBkaXNhYmxlZC4NCj4gPiArICAg
-ICAgICAgICAgICAgICogSW4gc3VjaCBjYXNlLCB0aGUgdnJpbmcgbmVlZHMgdG8gYmUgc2VydmVk
-IHJpZ2h0IGF3YXkuIEZvcg0KPiA+ICsgICAgICAgICAgICAgICAgKiBvdGhlciBjYXNlcywganVz
-dCBzZXQgdGhlIFRYIExXTSBiaXQgdG8gc3RhcnQgVHggaW4gdGhlDQo+ID4gKyAgICAgICAgICAg
-ICAgICAqIHdvcmtlciBoYW5kbGVyLg0KPiA+ICsgICAgICAgICAgICAgICAgKi8NCj4gPiArICAg
-ICAgICAgICAgICAgaWYgKHZyaW5nLT52ZGV2X2lkID09IFZJUlRJT19JRF9DT05TT0xFKSB7DQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgc3Bpbl9sb2NrX2lycXNhdmUoJmZpZm8tPnNwaW5f
-bG9jaywgZmxhZ3MpOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHRtX3ZkZXYgPSBmaWZv
-LT52ZGV2W1ZJUlRJT19JRF9DT05TT0xFXTsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBt
-bHhiZl90bWZpZm9fY29uc29sZV9vdXRwdXQodG1fdmRldiwgdnJpbmcpOw0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIHNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmZpZm8tPnNwaW5fbG9jaywg
-ZmxhZ3MpOw0KPiA+ICsgICAgICAgICAgICAgICB9IGVsc2UgaWYgKHRlc3RfYW5kX3NldF9iaXQo
-TUxYQkZfVE1fVFhfTFdNX0lSUSwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICZmaWZvLT5wZW5kX2V2ZW50cykpIHsNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICByZXR1cm4gdHJ1ZTsNCj4gPiArICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAg
-fQ0KPiA+ICsNCj4gPiArICAgICAgIHNjaGVkdWxlX3dvcmsoJmZpZm8tPndvcmspOw0KPiA+ICsN
-Cj4gPiArICAgICAgIHJldHVybiB0cnVlOw0KPiA+ICt9DQo+IA0KPiA+ICsvKiBSZWFkIHRoZSB2
-YWx1ZSBvZiBhIGNvbmZpZ3VyYXRpb24gZmllbGQuICovDQo+ID4gK3N0YXRpYyB2b2lkIG1seGJm
-X3RtZmlmb192aXJ0aW9fZ2V0KHN0cnVjdCB2aXJ0aW9fZGV2aWNlICp2ZGV2LA0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBvZmZzZXQsDQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdm9pZCAqYnVmLA0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBsZW4pDQo+ID4gK3sN
-Cj4gPiArICAgICAgIHN0cnVjdCBtbHhiZl90bWZpZm9fdmRldiAqdG1fdmRldiA9IG1seGJmX3Zk
-ZXZfdG9fdG1maWZvKHZkZXYpOw0KPiA+ICsNCj4gDQo+ID4gKyAgICAgICBpZiAob2Zmc2V0ICsg
-bGVuID4gc2l6ZW9mKHRtX3ZkZXYtPmNvbmZpZykpDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVy
-bjsNCj4gDQo+IFRoaXMgZG9lc24ndCBwcm90ZWN0IGFnYWluc3QgdG9vIGJpZyBsZW4gYW5kIG9m
-ZnNldC4NCj4gU2FtZSBmb3Igb3RoZXIgc2ltaWxhciBjaGVja3MuDQoNCldpbGwgcmV2aXNlIGl0
-IGluIHYxNSBsaWtlICJpZiAoKHU2NClvZmZzZXQgKyBsZW4gPiBzaXplb2YodG1fdmRldi0+Y29u
-ZmlnKSkiDQoNCj4gDQo+ID4gKw0KPiA+ICsgICAgICAgbWVtY3B5KGJ1ZiwgKHU4ICopJnRtX3Zk
-ZXYtPmNvbmZpZyArIG9mZnNldCwgbGVuKTsNCj4gPiArfQ0KPiANCj4gPiArLyogUmVhZCB0aGUg
-Y29uZmlndXJlZCBuZXR3b3JrIE1BQyBhZGRyZXNzIGZyb20gZWZpIHZhcmlhYmxlLiAqLw0KPiA+
-ICtzdGF0aWMgdm9pZCBtbHhiZl90bWZpZm9fZ2V0X2NmZ19tYWModTggKm1hYykNCj4gPiArew0K
-PiA+ICsgICAgICAgZWZpX2d1aWRfdCBndWlkID0gRUZJX0dMT0JBTF9WQVJJQUJMRV9HVUlEOw0K
-PiA+ICsgICAgICAgdW5zaWduZWQgbG9uZyBzaXplID0gRVRIX0FMRU47DQo+ID4gKyAgICAgICBl
-Zmlfc3RhdHVzX3Qgc3RhdHVzOw0KPiA+ICsgICAgICAgdTggYnVmW0VUSF9BTEVOXTsNCj4gPiAr
-DQo+IA0KPiA+ICsgICAgICAgc3RhdHVzID0gZWZpLmdldF92YXJpYWJsZShtbHhiZl90bWZpZm9f
-ZWZpX25hbWUsICZndWlkLCBOVUxMLCAmc2l6ZSwNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgYnVmKTsNCj4gDQo+IFVzZSBvbmUgbGluZS4NCg0KV2lsbCB1cGRhdGUgaXQg
-aW4gdjE1Lg0KDQo+IA0KPiA+ICsgICAgICAgaWYgKHN0YXR1cyA9PSBFRklfU1VDQ0VTUyAmJiBz
-aXplID09IEVUSF9BTEVOKQ0KPiA+ICsgICAgICAgICAgICAgICBldGhlcl9hZGRyX2NvcHkobWFj
-LCBidWYpOw0KPiA+ICsgICAgICAgZWxzZQ0KPiA+ICsgICAgICAgICAgICAgICBldGhlcl9hZGRy
-X2NvcHkobWFjLCBtbHhiZl90bWZpZm9fbmV0X2RlZmF1bHRfbWFjKTsNCj4gPiArfQ0KPiANCj4g
-PiArLyogUHJvYmUgdGhlIFRNRklGTy4gKi8NCj4gPiArc3RhdGljIGludCBtbHhiZl90bWZpZm9f
-cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiArew0KPiANCj4gPiArICAg
-ICAgIHJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7
-DQo+ID4gKyAgICAgICBmaWZvLT5yeF9iYXNlID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKGRldiwg
-cmVzKTsNCj4gDQo+IFRoZXJlIGlzIG5ldyBoZWxwZXIgZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jl
-c291cmNlKCkuDQo+IFBsZWFzZSwgdXNlIGl0IGluc3RlYWQuDQoNCldpbGwgdXBkYXRlIGl0IGlu
-IHYxNS4NCg0KPiANCj4gPiArICAgICAgIGlmIChJU19FUlIoZmlmby0+cnhfYmFzZSkpDQo+ID4g
-KyAgICAgICAgICAgICAgIHJldHVybiBQVFJfRVJSKGZpZm8tPnJ4X2Jhc2UpOw0KPiANCj4gPiAr
-ICAgICAgIHJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwg
-MSk7DQo+ID4gKyAgICAgICBmaWZvLT50eF9iYXNlID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKGRl
-diwgcmVzKTsNCj4gDQo+IERpdHRvLg0KDQpXaWxsIHVwZGF0ZSBpdCBpbiB2MTUuDQoNCj4gDQo+
-ID4gKyAgICAgICBpZiAoSVNfRVJSKGZpZm8tPnR4X2Jhc2UpKQ0KPiA+ICsgICAgICAgICAgICAg
-ICByZXR1cm4gUFRSX0VSUihmaWZvLT50eF9iYXNlKTsNCj4gDQo+ID4gK30NCj4gDQo+IC0tDQo+
-IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg==
+On Fri, Apr 12, 2019 at 4:41 PM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> Software nodes provide two features that we will need later.
+> 1) Software nodes can have references to other software nodes.
+> 2) Software nodes can exist before a device entry is created.
+>
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel_cht_int33fe.c | 68 +++++++++++++++++++++---
+>  1 file changed, 62 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+> index d586bb22d7e8..863a792d9282 100644
+> --- a/drivers/platform/x86/intel_cht_int33fe.c
+> +++ b/drivers/platform/x86/intel_cht_int33fe.c
+> @@ -27,12 +27,21 @@
+>
+>  #define EXPECTED_PTYPE         4
+>
+> +enum {
+> +       INT33FE_NODE_FUSB302,
+> +       INT33FE_NODE_MAX17047,
+> +       INT33FE_NODE_PI3USB30532,
+> +       INT33FE_NODE_MAX,
+> +};
+> +
+>  struct cht_int33fe_data {
+>         struct i2c_client *max17047;
+>         struct i2c_client *fusb302;
+>         struct i2c_client *pi3usb30532;
+>         /* Contain a list-head must be per device */
+>         struct device_connection connections[4];
+> +
+> +       struct fwnode_handle *node[INT33FE_NODE_MAX];
+>  };
+>
+>  /*
+> @@ -73,6 +82,7 @@ static const struct property_entry max17047_props[] = {
+>  static int
+>  cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
+>  {
+> +       struct fwnode_handle *fwnode = data->node[INT33FE_NODE_MAX17047];
+>         struct i2c_client *max17047 = NULL;
+>         struct i2c_board_info board_info;
+>         int ret;
+> @@ -80,9 +90,7 @@ cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
+>         i2c_for_each_dev(&max17047, cht_int33fe_check_for_max17047);
+>         if (max17047) {
+>                 /* Pre-existing i2c-client for the max17047, add device-props */
+> -               ret = device_add_properties(&max17047->dev, max17047_props);
+> -               if (ret)
+> -                       return ret;
+> +               max17047->dev.fwnode->secondary = fwnode;
+>                 /* And re-probe to get the new device-props applied. */
+>                 ret = device_reprobe(&max17047->dev);
+>                 if (ret)
+> @@ -93,7 +101,7 @@ cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
+>         memset(&board_info, 0, sizeof(board_info));
+>         strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
+>         board_info.dev_name = "max17047";
+> -       board_info.properties = max17047_props;
+> +       board_info.fwnode = fwnode;
+>         data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
+>         if (IS_ERR(data->max17047))
+>                 return PTR_ERR(data->max17047);
+> @@ -109,6 +117,45 @@ static const struct property_entry fusb302_props[] = {
+>         { }
+>  };
+>
+> +static const struct property_entry *props[] = {
+> +       [INT33FE_NODE_FUSB302]          = fusb302_props,
+> +       [INT33FE_NODE_MAX17047]         = max17047_props,
+> +       [INT33FE_NODE_PI3USB30532]      = NULL,
+> +};
+> +
+> +static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < INT33FE_NODE_MAX; i++) {
+> +               fwnode_remove_software_node(data->node[i]);
+> +               data->node[i] = NULL;
+> +       }
+> +}
+> +
+> +static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
+> +{
+> +       struct fwnode_handle *fwnode;
+> +       int ret;
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(props); i++) {
+> +               fwnode = fwnode_create_software_node(props[i], NULL);
+> +               if (IS_ERR(fwnode)) {
+> +                       ret = PTR_ERR(fwnode);
+> +                       goto err_remove_nodes;
+> +               }
+> +               data->node[i] = fwnode;
+> +       }
+> +
+> +       return 0;
+> +
+> +err_remove_nodes:
+> +       cht_int33fe_remove_nodes(data);
+> +
+> +       return ret;
+> +}
+> +
+>  static int cht_int33fe_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+> @@ -173,10 +220,14 @@ static int cht_int33fe_probe(struct platform_device *pdev)
+>         if (!data)
+>                 return -ENOMEM;
+>
+> +       ret = cht_int33fe_add_nodes(data);
+> +       if (ret)
+> +               return ret;
+> +
+>         /* Work around BIOS bug, see comment on cht_int33fe_check_for_max17047 */
+>         ret = cht_int33fe_register_max17047(dev, data);
+>         if (ret)
+> -               return ret;
+> +               goto out_remove_nodes;
+>
+>         data->connections[0].endpoint[0] = "port0";
+>         data->connections[0].endpoint[1] = "i2c-pi3usb30532-switch";
+> @@ -193,7 +244,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
+>         memset(&board_info, 0, sizeof(board_info));
+>         strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
+>         board_info.dev_name = "fusb302";
+> -       board_info.properties = fusb302_props;
+> +       board_info.fwnode = data->node[INT33FE_NODE_FUSB302];
+>         board_info.irq = fusb302_irq;
+>
+>         data->fusb302 = i2c_acpi_new_device(dev, 2, &board_info);
+> @@ -204,6 +255,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
+>
+>         memset(&board_info, 0, sizeof(board_info));
+>         board_info.dev_name = "pi3usb30532";
+> +       board_info.fwnode = data->node[INT33FE_NODE_PI3USB30532];
+>         strlcpy(board_info.type, "pi3usb30532", I2C_NAME_SIZE);
+>
+>         data->pi3usb30532 = i2c_acpi_new_device(dev, 3, &board_info);
+> @@ -224,6 +276,9 @@ static int cht_int33fe_probe(struct platform_device *pdev)
+>
+>         device_connections_remove(data->connections);
+>
+> +out_remove_nodes:
+> +       cht_int33fe_remove_nodes(data);
+> +
+>         return ret;
+>  }
+>
+> @@ -236,6 +291,7 @@ static int cht_int33fe_remove(struct platform_device *pdev)
+>         i2c_unregister_device(data->max17047);
+>
+>         device_connections_remove(data->connections);
+> +       cht_int33fe_remove_nodes(data);
+>
+>         return 0;
+>  }
+> --
+> 2.20.1
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
