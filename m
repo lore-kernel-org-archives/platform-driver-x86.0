@@ -1,44 +1,158 @@
 From: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Subject: Re: [PATCH 01/11] platform/x86: asus-wmi: Fix hwmon device cleanup
-Date: Fri, 12 Apr 2019 19:49:50 +0200
-Message-ID: <3e14cbf9-2cb0-1a5d-9c2f-aa9ca014c660@gmail.com>
+Subject: Re: [PATCH 04/11] platform/x86: asus-wmi: Add quirk to force DSTS WMI
+ method detection
+Date: Fri, 12 Apr 2019 22:04:22 +0200
+Message-ID: <99de12d7-ac8d-3bb2-f154-e7fd424e11db@gmail.com>
 References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
- <f2822519-c137-560e-fe78-172202e52bfa@gmail.com>
- <CAD8Lp465z=HB5kKZEk7eHd9NVdhSLYhzgiH6Yg45v=j0TCU+SQ@mail.gmail.com>
+ <d8e0f65c-8c4e-7b60-93bd-3bf90e2da344@gmail.com>
+ <CAD8Lp46Xs2QJ521+ameM3793jaYXzEeV=PqLYfW4J2ZRoRKbRw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD8Lp465z=HB5kKZEk7eHd9NVdhSLYhzgiH6Yg45v=j0TCU+SQ@mail.gmail.com>
+In-Reply-To: <CAD8Lp46Xs2QJ521+ameM3793jaYXzEeV=PqLYfW4J2ZRoRKbRw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Daniel Drake <drake@endlessm.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Endless Linux Upstreaming Team <linux@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hello Daniel,
+Wow that is a great thing you done, thanks a lot for your time and your
+kind words! Your suggestion indeed sounds good judging by your results.
 
-thank you for the tip. I did not know about this function. It does indeed
-seem to make this complete patch redundant looking at
-6e5f62b9e3651e61 hwmon: (lm90) Use devm_hwmon_device_register_with_groups
+Both of my devices have UID "ATK" (actually FX505 also has two other
+PNP0C14 devices with HIDs SampleDev and TestDev, but I think they are
+disabled by default).
 
-I will surely implement it this way in the next version.
+It looks like the driver is loaded already only if ASUS_WMI_MGMT_GUID is
+present, so I guess that could be used for wmi_driver_register. A little
+obstacle is that ACPI device pointer is stored in wmi_block structure,
+which is internal to the wmi.c. This means we would have to add a new
+method to wmi.h / wmi.c for getting the UID of WMI ACPI device.
 
-Best regards,
+I guess it might be possible to somehow navigate the device tree back to
+the platform driver of WMI module, but it would definitely be more obscure,
+and searching for the device by HID again is not only slower but generally
+would require a guarantee that it's the same device. So adding a new
+function looks reasonable to me. It might also be useful to someone
+implementing similar things for other vendors in the future.
+
+I'm going to implement this in updated patch.
+
+Thanks,
 Yurii
 
-On 11.04.19 10:21, Daniel Drake wrote:
-> On Thu, Apr 11, 2019 at 4:21 AM Yurii Pavlovskyi
+On 11.04.19 12:55, Daniel Drake wrote:
+> On Thu, Apr 11, 2019 at 4:28 AM Yurii Pavlovskyi
 > <yurii.pavlovskyi@gmail.com> wrote:
+>> The DSTS method detection fails, as nothing is returned if method is not
+>> defined in WMNB. As a result the control of keyboard backlight is not
+>> functional for TUF Gaming series laptops (at the time the only
+>> functionality of the driver on this model implemented with WMI methods).
 >>
->> The asus-wmi driver does not clean up the hwmon device on exit or error.
->> To reproduce the bug, repeat rmmod, insmod to verify that device number
->> /sys/devices/platform/asus-nb-wmi/hwmon/hwmon?? grows every time. Add
->> pointer to the device in module state and call cleanup on error.
+>> Patch was tested on a newer TUF Gaming FX505GM and older K54C model.
+>>
+>> FX505GM:
+>> Method (WMNB, 3, Serialized)
+>> { ...
+>>     If ((Local0 == 0x53545344))
+>>     {
+>>         ...
+>>         Return (Zero)
+>>     }
+>>     ...
+>>     // No return
+>> }
+>>
+>> K54C:
+>> Method (WMNB, 3, Serialized)
+>> { ...
+>>     If ((Local0 == 0x53545344))
+>>     {
+>>         ...
+>>         Return (0x02)
+>>     }
+>>     ...
+>>     Return (0xFFFFFFFE)
+>> }
+>>
+>> The non-existing method ASUS_WMI_METHODID_DSTS=0x53544344 (actually it is
+>> DCTS in little endian ASCII) is selected in asus->dsts.
+>>
+>> One way to fix this would be to call both for every known device ID until
+>> some answers - this would increase module load time.
+>>
+>> Another option is to check some device that is known to exist on every
+>> model - none known at the time.
+>>
+>> Last option, which is implemented, is to check for presence of the
+>> ASUS7000 device in ACPI tree (it is a dummy device), which is the
+>> condition used for loading the vendor driver for this model. This might
+>> not fix every affected model ever produced, but it likely does not
+>> introduce any regressions. The patch introduces a quirk that is enabled
+>> when ASUS7000 is found.
+>>
+>> Scope (_SB)
+>> {
+>>     Device (ATK)
+>>     {
+>>         Name (_HID, "ASUS7000")  // _HID: Hardware ID
+>>     }
+>> }
 > 
-> I wonder if this can be fixed more cleanly by using
-> devm_hwmon_device_register_with_groups() ?
+> Hmm, tricky! But about time we did something about the DSTS vs DCTS guessing.
 > 
-> Thanks
+> While we don't have definitive knowledge of the right thing to do
+> here, I think I have enough info available to solidify some
+> assumptions we'd otherwise be afraid to make, and then we can
+> implement a better approach here.
+> 
+> In our database of 144 Asus DSDTs, 14 of them respond to DCTS:
+> 
+> AS_D520MT
+> D425MC
+> D640SA
+> D320SF-K
+> D415MT
+> D830MT
+> G11DF
+> M32CD4-K
+> V221ID
+> V272UN_SKU3
+> Z240IE
+> ZN220IC-K
+> ZN241IC
+> ZN270IE
+> 
+> Of those 14, they all additionally respond to DSTS, except for D415MT
+> and AS_D520MT.
+> 
+> In all 14 cases, the DCTS handling is done inside a device with _UID
+> ASUSWMI. None of the other 130 products have a device with that _UID.
+> 
+> Furthermore, we recently received access to the ASUS spec, which
+> confirms that the Instance Name for EeePC is "ACPI\PNP0C14\ASUSWMI_0"
+> whereas the Instance Name for other notebooks is "ACPI\PNP0C14\ATK_0".
+> 
+> The 12 devices that respond to both DCTS and DSTS, do it on separate
+> different devices, albeit with the same _WDG UUID. The one with _UID
+> ASUSWMI responds to DCTS, and the one with _UID ATK responds to DSTS.
+> 
+> So that seems fairly convincing. My thinking is that we can check the
+> _UID of the underlying device, and use DCTS for ASUSWMI, DSTS
+> otherwise. To do that, I think you'd have to rework the driver probing
+> so that it happens through wmi_driver_register(). Then from the probe
+> function onwards you will get a wmi_device, and hopefully you can get
+> the _UID through that instance somehow.
+> 
+> There's a separate issue of what happens on those 12 machines where
+> there are two WMI devs, with the same _WDG GUID.
+> drivers/platform/x86/wmi.c drops duplicates, so one of them is being
+> ignored in that case. We'd ideally find a way to ignore the ASUSWMI
+> node and go with ATK in that situation. But I think this can be
+> separated from your work here.
+> 
+> Thanks for these patches and welcome to the world of kernel development!
+> 
 > Daniel
 > 
