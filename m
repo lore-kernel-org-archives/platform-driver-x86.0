@@ -1,59 +1,37 @@
-From: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Subject: Re: [PATCH v2 10/11] platform/x86: asus-wmi: Switch fan boost mode
-Date: Fri, 12 Apr 2019 22:50:47 +0200
-Message-ID: <01fca675-29a3-6959-58a6-d5420ace30df@gmail.com>
-References: <a8dd77f3-1e28-6416-5f04-aff44d5bb6d6@gmail.com>
- <72b3e0aa-d53a-8a82-1505-f4f00aa2bb46@gmail.com>
- <fecb4870-7875-a524-bf6d-3108e25af888@gmail.com>
- <CAD8Lp45ivFJiW0FZo+ZOyUdpV1JFwPg=o7rx7eyp_YdSAbRRkg@mail.gmail.com>
+From: Colin King <colin.king@canonical.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: fix spelling mistake "capabilites" -> "capabilities"
+Date: Mon, 15 Apr 2019 13:52:04 +0100
+Message-ID: <20190415125204.7386-1-colin.king@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD8Lp45ivFJiW0FZo+ZOyUdpV1JFwPg=o7rx7eyp_YdSAbRRkg@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Drake <drake@endlessm.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org, Endless Linux Upstreaming Team <linux@endlessm.com>
+To: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 12.04.19 10:03, Daniel Drake wrote:
-> On Thu, Apr 11, 2019 at 1:47 PM Yurii Pavlovskyi
-> <yurii.pavlovskyi@gmail.com> wrote:
->> * 0x00 - is normal,
->> * 0x01 - is obviously turbo by the amount of noise, might be useful to
->> avoid CPU frequency throttling on high load,
->> * 0x02 - the meaning is unknown at the time as modes are not named
->> in the vendor documentation, but it does look like a quiet mode as CPU
->> temperature does increase about 10 degrees on maximum load.
-> 
-> I'm curious which vendor documentation you're working with here.
+From: Colin Ian King <colin.king@canonical.com>
 
-That would be user manual for FX505 series, which is pretty minimalistic.
-It says it has a fan mode switch key and that's it. Following up on your
-comment, I've searched more and actually did found their names hidden in
-marketing web page on the website. You're right, they call them balanced,
-overboost and silent there.
+There is a spelling mistake in a module parameter description. Fix it.
 
-> From the spec,
-> 0 = normal
-> 1 = overboost
-> 2 = silent
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Also you can use DSTS on the 0x00110018 device to check the exact
-> capabilities supported, which you should use to refine which modes can
-> be cycled through.
-> Bit 0 = overboost supported
-> Bit 1 = silent supported
-> 
-> Thanks
-> Daniel
-> 
-
-Thanks! I was guessing that the 3 in DSTS must've meant something.
-
-Appreciate your comments! Will definitely implement them. I'm going to post
-the v3 patch series approximately middle of next week.
-
-Best regards,
-Yurii
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 57d9ae9d8e56..9192b686e9a6 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -10269,7 +10269,7 @@ MODULE_PARM_DESC(volume_mode,
+ 
+ module_param_named(volume_capabilities, volume_capabilities, uint, 0444);
+ MODULE_PARM_DESC(volume_capabilities,
+-		 "Selects the mixer capabilites: 0=auto, 1=volume and mute, 2=mute only");
++		 "Selects the mixer capabilities: 0=auto, 1=volume and mute, 2=mute only");
+ 
+ module_param_named(volume_control, volume_control_allowed, bool, 0444);
+ MODULE_PARM_DESC(volume_control,
+-- 
+2.20.1
