@@ -1,246 +1,189 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v3 13/13] platform/x86: intel_cht_int33fe: Replacing the
- old connections with references
-Date: Tue, 16 Apr 2019 23:35:36 +0200
-Message-ID: <a91a1d75-f224-9c9d-873a-f80467d2fb0c@redhat.com>
-References: <20190412134122.82903-1-heikki.krogerus@linux.intel.com>
- <20190412134122.82903-14-heikki.krogerus@linux.intel.com>
+From: Douglas Gilbert <dgilbert@interlog.com>
+Subject: Re: [PATCH v3 00/26] compat_ioctl: cleanups
+Date: Tue, 16 Apr 2019 18:33:35 -0400
+Message-ID: <c379ed8d-1f33-e391-a1b5-810da77605f2@interlog.com>
+References: <20190416202013.4034148-1-arnd@arndb.de>
+Reply-To: dgilbert@interlog.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412134122.82903-14-heikki.krogerus@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <20190416202013.4034148-1-arnd@arndb.de>
+Content-Language: en-CA
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Arnd Bergmann <arnd@arndb.de>, Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Karsten Keil <isdn@linux-pingi.de>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Marcel Holtmann <marcel@holtmann.org>, netdev@vger.kernel.org, devel@driverdev.osuosl.org, linux-integrity@vger.kernel.org, qat-linux@intel.com, linux-crypto@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux1394-devel@lists.sourceforge.net, amd-gfx@lists.freedesktop.org, linux-input@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-iio@vger.kernel.org, linux-rdma@vge
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-On 12-04-19 15:41, Heikki Krogerus wrote:
-> Now that the software nodes support references, and the
-> device connection API support parsing fwnode references,
-> replacing the old connection descriptions with software node
-> references. Relying on device names when matching the
-> connection would not have been possible to link the USB
-> Type-C connector and the DisplayPort connector together, but
-> with real references it's not problem.
+On 2019-04-16 4:19 p.m., Arnd Bergmann wrote:
+> Hi Al,
 > 
-> The DisplayPort ACPI node is dag up, and the drivers own
-> software node for the DisplayPort is set as the secondary
-> node for it. The USB Type-C connector refers the software
-> node, but it is now tied to the ACPI node, and therefore any
-> device entry (struct drm_connector in practice) that the
-> node combo is assigned to.
+> It took me way longer than I had hoped to revisit this series, see
+> https://lore.kernel.org/lkml/20180912150142.157913-1-arnd@arndb.de/
+> for the previously posted version.
 > 
-> The USB role switch device does not have ACPI node, so we
-> have to wait for the device to appear. Then we can simply
-> assign our software node for the to the device.
+> I've come to the point where all conversion handlers and most
+> COMPATIBLE_IOCTL() entries are gone from this file, but for
+> now, this series only has the parts that have either been reviewed
+> previously, or that are simple enough to include.
 > 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> The main missing piece is the SG_IO/SG_GET_REQUEST_TABLE conversion.
+> I'll post the patches I made for that later, as they need more
+> testing and review from the scsi maintainers.
 
-So as promised I've been testing this series and this commit
-breaks type-c functionality on devices using this driver.
+Perhaps you could look at the document in this url:
+     http://sg.danny.cz/sg/sg_v40.html
 
-The problem is that typec_switch_get() and  typec_mux_get()
-after this both return the same pointer, which is pointing
-to the switch, so typec_mux_get() is returning the wrong
-pointer.
+It is work-in-progress to modernize the SCSI generic driver. It
+extends ioctl(sg_fd, SG_IO, &pt_obj) to additionally accept the sg v4
+interface as defined in include/uapi/linux/bsg.h . Currently only the
+bsg driver uses the sg v4 interface. Since struct sg_io_v4 is all
+explicitly sized integers, I'm guessing it is immune "compat" problems.
+[I can see no reference to bsg nor struct sg_io_v4 in the current
+fs/compat_ioctl.c file.]
 
-This is not surprising since the references for both are
-both pointing to the fwnode attached to the piusb30532 devices:
+Other additions described in the that document are these new ioctls:
+   - SG_IOSUBMIT    ultimately to replace write(sg_fd, ...)
+   - SG_IORECEIVE              to replace read(sg_fd, ...)
+   - SG_IOABORT     abort SCSI cmd in progress; new functionality
+   - SG_SET_GET_EXTENDED   has associated struct sg_extended_info
 
-	args[0].fwnode = data->node[INT33FE_NODE_PI3USB30532];
+The first three take a pointer to a struct sg_io_hdr (v3 interface) or
+a struct sg_io_v4 object. Both objects start with a 32 bit integer:
+'S' identifies the v3 interface while 'Q' identifies the v4 interface.
 
-So the class_find_device here:
+The SG_SET_GET_EXTENDED ioctl takes a pointer to a struct
+sg_extended_info object which contains explicitly sized integers so it
+may also be immune from "compat" problems. The ioctls section (13) of
+that document referenced above has a table showing how many "sets and
+gets" are hiding in the SG_SET_GET_EXTENDED ioctl.
 
-static void *typec_switch_match(struct device_connection *con, int ep,
-                                 void *data)
-{
-         struct device *dev;
-
-         if (con->fwnode) {
-                 if (con->id && !fwnode_property_present(con->fwnode, con->id))
-                         return NULL;
-
-                 dev = class_find_device(&typec_mux_class, NULL, con->fwnode,
-                                         fwnode_match);
-         } else {
-                 dev = class_find_device(&typec_mux_class, NULL,
-                                         con->endpoint[ep], name_match);
-         }
-
-         return dev ? to_typec_switch(dev) : ERR_PTR(-EPROBE_DEFER);
-}
-
-Simply returns the first typec_mux_class device registered.
-
-I see 2 possible solutions to this problem:
-
-1) Use separate typec_mux_class and typec_orientation_switch_class-es
-
-2) Merge struct typec_switch and struct typec_mux into a single struct,
-so that all typec_mux_class devices have the same memory layout, add
-a subclass enum to this new merged struct and use that to identify
-which of the typec_mux_class devices with the same fwnode pointer we
-want.
-
-Any other suggestions?
-
-Regards,
-
-Hans
+BTW No change is proposed for this case:
+     ioctl(normal_block_device, SG_IO, &sg_v3_obj)
+which is handled by block/scsi_ioctl.c
 
 
+This would be a good time for me to address any "compat" concerns in the
+proposed sg driver update.
+
+Doug Gilbert
 
 
-
-> ---
->   drivers/platform/x86/intel_cht_int33fe.c | 93 +++++++++++++++++++-----
->   1 file changed, 76 insertions(+), 17 deletions(-)
+> I hope you can still take these for the coming merge window, unless
+> new problems come up.
 > 
-> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-> index 7711667a3454..e6a1ea7f33af 100644
-> --- a/drivers/platform/x86/intel_cht_int33fe.c
-> +++ b/drivers/platform/x86/intel_cht_int33fe.c
-> @@ -39,15 +39,22 @@ enum {
->   	INT33FE_NODE_MAX,
->   };
->   
-> +enum {
-> +	INT33FE_REF_ORIENTATION,
-> +	INT33FE_REF_MODE_MUX,
-> +	INT33FE_REF_DISPLAYPORT,
-> +	INT33FE_REF_ROLE_SWITCH,
-> +	INT33FE_REF_MAX,
-> +};
-> +
->   struct cht_int33fe_data {
->   	struct i2c_client *max17047;
->   	struct i2c_client *fusb302;
->   	struct i2c_client *pi3usb30532;
-> -	/* Contain a list-head must be per device */
-> -	struct device_connection connections[4];
->   
->   	struct fwnode_handle *dp;
->   	struct fwnode_handle *node[INT33FE_NODE_MAX];
-> +	struct software_node_reference *ref[INT33FE_REF_MAX];
->   };
->   
->   /*
-> @@ -280,6 +287,65 @@ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
->   	return ret;
->   }
->   
-> +static void cht_int33fe_remove_references(struct cht_int33fe_data *data)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < INT33FE_REF_MAX; i++)
-> +		fwnode_remove_software_node_reference(data->ref[i]);
-> +}
-> +
-> +static int cht_int33fe_add_references(struct cht_int33fe_data *data)
-> +{
-> +	struct fwnode_reference_args args[2] = { };
-> +	struct software_node_reference *ref;
-> +	struct fwnode_handle *con;
-> +
-> +	con = data->node[INT33FE_NODE_USB_CONNECTOR];
-> +
-> +	/* USB Type-C muxes */
-> +	args[0].fwnode = data->node[INT33FE_NODE_PI3USB30532];
-> +	args[1].fwnode = NULL;
-> +
-> +	ref = fwnode_create_software_node_reference(con, "orientation-switch",
-> +						    args);
-> +	if (IS_ERR(ref))
-> +		return PTR_ERR(ref);
-> +	data->ref[INT33FE_REF_ORIENTATION] = ref;
-> +
-> +	ref = fwnode_create_software_node_reference(con, "mode-switch", args);
-> +	if (IS_ERR(ref)) {
-> +		cht_int33fe_remove_references(data);
-> +		return PTR_ERR(ref);
-> +	}
-> +	data->ref[INT33FE_REF_MODE_MUX] = ref;
-> +
-> +	/* USB role switch */
-> +	args[0].fwnode = data->node[INT33FE_NODE_ROLE_SWITCH];
-> +	args[1].fwnode = NULL;
-> +
-> +	ref = fwnode_create_software_node_reference(con, "usb-role-switch",
-> +						    args);
-> +	if (IS_ERR(ref)) {
-> +		cht_int33fe_remove_references(data);
-> +		return PTR_ERR(ref);
-> +	}
-> +	data->ref[INT33FE_REF_ROLE_SWITCH] = ref;
-> +
-> +	/* DisplayPort */
-> +	args[0].fwnode = data->node[INT33FE_NODE_DISPLAYPORT];
-> +	args[1].fwnode = NULL;
-> +
-> +	ref = fwnode_create_software_node_reference(con, "displayport", args);
-> +	if (IS_ERR(ref)) {
-> +		cht_int33fe_remove_references(data);
-> +		return PTR_ERR(ref);
-> +	}
-> +	data->ref[INT33FE_REF_DISPLAYPORT] = ref;
-> +
-> +	return 0;
-> +}
-> +
->   static int cht_int33fe_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
-> @@ -348,22 +414,14 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->   	if (ret)
->   		return ret;
->   
-> -	/* Work around BIOS bug, see comment on cht_int33fe_check_for_max17047 */
-> -	ret = cht_int33fe_register_max17047(dev, data);
-> +	ret = cht_int33fe_add_references(data);
->   	if (ret)
->   		goto out_remove_nodes;
->   
-> -	data->connections[0].endpoint[0] = "port0";
-> -	data->connections[0].endpoint[1] = "i2c-pi3usb30532-switch";
-> -	data->connections[0].id = "orientation-switch";
-> -	data->connections[1].endpoint[0] = "port0";
-> -	data->connections[1].endpoint[1] = "i2c-pi3usb30532-mux";
-> -	data->connections[1].id = "mode-switch";
-> -	data->connections[2].endpoint[0] = "i2c-fusb302";
-> -	data->connections[2].endpoint[1] = "intel_xhci_usb_sw-role-switch";
-> -	data->connections[2].id = "usb-role-switch";
-> -
-> -	device_connections_add(data->connections);
-> +	/* Work around BIOS bug, see comment on cht_int33fe_check_for_max17047 */
-> +	ret = cht_int33fe_register_max17047(dev, data);
-> +	if (ret)
-> +		goto out_remove_references;
->   
->   	memset(&board_info, 0, sizeof(board_info));
->   	strlcpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
-> @@ -398,7 +456,8 @@ static int cht_int33fe_probe(struct platform_device *pdev)
->   out_unregister_max17047:
->   	i2c_unregister_device(data->max17047);
->   
-> -	device_connections_remove(data->connections);
-> +out_remove_references:
-> +	cht_int33fe_remove_references(data);
->   
->   out_remove_nodes:
->   	cht_int33fe_remove_nodes(data);
-> @@ -414,7 +473,7 @@ static int cht_int33fe_remove(struct platform_device *pdev)
->   	i2c_unregister_device(data->fusb302);
->   	i2c_unregister_device(data->max17047);
->   
-> -	device_connections_remove(data->connections);
-> +	cht_int33fe_remove_references(data);
->   	cht_int33fe_remove_nodes(data);
->   
->   	return 0;
+>        Arnd
+> 
+> Arnd Bergmann (26):
+>    compat_ioctl: pppoe: fix PPPOEIOCSFWD handling
+>    compat_ioctl: move simple ppp command handling into driver
+>    compat_ioctl: avoid unused function warning for do_ioctl
+>    compat_ioctl: move PPPIOCSCOMPRESS32 to ppp-generic.c
+>    compat_ioctl: move PPPIOCSPASS32/PPPIOCSACTIVE32 to ppp_generic.c
+>    compat_ioctl: handle PPPIOCGIDLE for 64-bit time_t
+>    compat_ioctl: move rtc handling into rtc-dev.c
+>    compat_ioctl: add compat_ptr_ioctl()
+>    compat_ioctl: move drivers to compat_ptr_ioctl
+>    compat_ioctl: use correct compat_ptr() translation in drivers
+>    ceph: fix compat_ioctl for ceph_dir_operations
+>    compat_ioctl: move more drivers to compat_ptr_ioctl
+>    compat_ioctl: move tape handling into drivers
+>    compat_ioctl: move ATYFB_CLK handling to atyfb driver
+>    compat_ioctl: move isdn/capi ioctl translation into driver
+>    compat_ioctl: move rfcomm handlers into driver
+>    compat_ioctl: move hci_sock handlers into driver
+>    compat_ioctl: remove HCIUART handling
+>    compat_ioctl: remove HIDIO translation
+>    compat_ioctl: remove translation for sound ioctls
+>    compat_ioctl: remove IGNORE_IOCTL()
+>    compat_ioctl: remove /dev/random commands
+>    compat_ioctl: remove joystick ioctl translation
+>    compat_ioctl: remove PCI ioctl translation
+>    compat_ioctl: remove /dev/raw ioctl translation
+>    compat_ioctl: remove last RAID handling code
+> 
+>   Documentation/networking/ppp_generic.txt    |   2 +
+>   arch/um/drivers/hostaudio_kern.c            |   1 +
+>   drivers/android/binder.c                    |   2 +-
+>   drivers/char/ppdev.c                        |  12 +-
+>   drivers/char/random.c                       |   1 +
+>   drivers/char/tpm/tpm_vtpm_proxy.c           |  12 +-
+>   drivers/crypto/qat/qat_common/adf_ctl_drv.c |   2 +-
+>   drivers/dma-buf/dma-buf.c                   |   4 +-
+>   drivers/dma-buf/sw_sync.c                   |   2 +-
+>   drivers/dma-buf/sync_file.c                 |   2 +-
+>   drivers/firewire/core-cdev.c                |  12 +-
+>   drivers/gpu/drm/amd/amdkfd/kfd_chardev.c    |   2 +-
+>   drivers/hid/hidraw.c                        |   4 +-
+>   drivers/hid/usbhid/hiddev.c                 |  11 +-
+>   drivers/hwtracing/stm/core.c                |  12 +-
+>   drivers/ide/ide-tape.c                      |  31 +-
+>   drivers/iio/industrialio-core.c             |   2 +-
+>   drivers/infiniband/core/uverbs_main.c       |   4 +-
+>   drivers/isdn/capi/capi.c                    |  31 +
+>   drivers/isdn/i4l/isdn_ppp.c                 |  14 +-
+>   drivers/media/rc/lirc_dev.c                 |   4 +-
+>   drivers/mfd/cros_ec_dev.c                   |   4 +-
+>   drivers/misc/cxl/flash.c                    |   8 +-
+>   drivers/misc/genwqe/card_dev.c              |  23 +-
+>   drivers/misc/mei/main.c                     |  22 +-
+>   drivers/misc/vmw_vmci/vmci_host.c           |   2 +-
+>   drivers/mtd/ubi/cdev.c                      |  36 +-
+>   drivers/net/ppp/ppp_generic.c               |  99 +++-
+>   drivers/net/ppp/pppoe.c                     |   7 +
+>   drivers/net/ppp/pptp.c                      |   3 +
+>   drivers/net/tap.c                           |  12 +-
+>   drivers/nvdimm/bus.c                        |   4 +-
+>   drivers/nvme/host/core.c                    |   2 +-
+>   drivers/pci/switch/switchtec.c              |   2 +-
+>   drivers/platform/x86/wmi.c                  |   2 +-
+>   drivers/rpmsg/rpmsg_char.c                  |   4 +-
+>   drivers/rtc/dev.c                           |  13 +-
+>   drivers/rtc/rtc-vr41xx.c                    |  10 +
+>   drivers/s390/char/tape_char.c               |  41 +-
+>   drivers/sbus/char/display7seg.c             |   2 +-
+>   drivers/sbus/char/envctrl.c                 |   4 +-
+>   drivers/scsi/3w-xxxx.c                      |   4 +-
+>   drivers/scsi/cxlflash/main.c                |   2 +-
+>   drivers/scsi/esas2r/esas2r_main.c           |   2 +-
+>   drivers/scsi/megaraid/megaraid_mm.c         |  28 +-
+>   drivers/scsi/osst.c                         |  34 +-
+>   drivers/scsi/pmcraid.c                      |   4 +-
+>   drivers/scsi/st.c                           |  35 +-
+>   drivers/staging/android/ion/ion.c           |   4 +-
+>   drivers/staging/pi433/pi433_if.c            |  12 +-
+>   drivers/staging/vme/devices/vme_user.c      |   2 +-
+>   drivers/tee/tee_core.c                      |   2 +-
+>   drivers/usb/class/cdc-wdm.c                 |   2 +-
+>   drivers/usb/class/usbtmc.c                  |   4 +-
+>   drivers/usb/core/devio.c                    |  16 +-
+>   drivers/usb/gadget/function/f_fs.c          |  12 +-
+>   drivers/vfio/vfio.c                         |  39 +-
+>   drivers/vhost/net.c                         |  12 +-
+>   drivers/vhost/scsi.c                        |  12 +-
+>   drivers/vhost/test.c                        |  12 +-
+>   drivers/vhost/vsock.c                       |  12 +-
+>   drivers/video/fbdev/aty/atyfb_base.c        |  12 +-
+>   drivers/virt/fsl_hypervisor.c               |   2 +-
+>   fs/btrfs/super.c                            |   2 +-
+>   fs/ceph/dir.c                               |   1 +
+>   fs/ceph/file.c                              |   2 +-
+>   fs/compat_ioctl.c                           | 602 +-------------------
+>   fs/fat/file.c                               |  13 +-
+>   fs/fuse/dev.c                               |   2 +-
+>   fs/notify/fanotify/fanotify_user.c          |   2 +-
+>   fs/userfaultfd.c                            |   2 +-
+>   include/linux/fs.h                          |   7 +
+>   include/linux/if_pppox.h                    |   2 +
+>   include/linux/mtio.h                        |  58 ++
+>   include/uapi/linux/ppp-ioctl.h              |   2 +
+>   include/uapi/linux/ppp_defs.h               |  14 +
+>   net/bluetooth/hci_sock.c                    |  21 +-
+>   net/bluetooth/rfcomm/sock.c                 |  14 +-
+>   net/l2tp/l2tp_ppp.c                         |   3 +
+>   net/rfkill/core.c                           |   2 +-
+>   sound/core/oss/pcm_oss.c                    |   4 +
+>   sound/oss/dmasound/dmasound_core.c          |   2 +
+>   82 files changed, 452 insertions(+), 1034 deletions(-)
+>   create mode 100644 include/linux/mtio.h
 > 
