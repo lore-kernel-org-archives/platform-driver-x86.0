@@ -1,131 +1,133 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 00/26] compat_ioctl: cleanups
-Date: Wed, 17 Apr 2019 11:26:46 +0200
-Message-ID: <CAK8P3a31L4isqsG_qPwjOhNZdxyu2KHLg11p9kFC=gtPNS0_UQ@mail.gmail.com>
-References: <20190416202013.4034148-1-arnd@arndb.de>
- <c379ed8d-1f33-e391-a1b5-810da77605f2@interlog.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v3 13/13] platform/x86: intel_cht_int33fe: Replacing the
+ old connections with references
+Date: Wed, 17 Apr 2019 12:32:52 +0300
+Message-ID: <20190417093252.GO1747@kuha.fi.intel.com>
+References: <20190412134122.82903-1-heikki.krogerus@linux.intel.com>
+ <20190412134122.82903-14-heikki.krogerus@linux.intel.com>
+ <a91a1d75-f224-9c9d-873a-f80467d2fb0c@redhat.com>
+ <20190417063918.GI1747@kuha.fi.intel.com>
+ <76d9ab79-a1d0-f3cd-ba5d-2325740c72ff@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <c379ed8d-1f33-e391-a1b5-810da77605f2@interlog.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dgilbert@interlog.com
-Cc: linux-nvme@lists.infradead.org, linux-iio@vger.kernel.org, linux-remoteproc@vger.kernel.org, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, IDE-ML <linux-ide@vger.kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, sparclinux <sparclinux@vger.kernel.org>, linux1394-devel@lists.sourceforge.net, driverdevel <devel@driverdev.osuosl.org>, linux-s390 <linux-s390@vger.kernel.org>, linux-scsi <linux-scsi@vger.kernel.org>, Bluez mailing list <linux-bluetooth@vger.kernel.org>, y2038 Mailman List <y2038@lists.linaro.org>, qat-linux@intel.com, amd-gfx@lists.freedesktop.org, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-rtc@vger.kernel.org, ALSA
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <76d9ab79-a1d0-f3cd-ba5d-2325740c72ff@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gV2VkLCBBcHIgMTcsIDIwMTkgYXQgMTI6MzMgQU0gRG91Z2xhcyBHaWxiZXJ0IDxkZ2lsYmVy
-dEBpbnRlcmxvZy5jb20+IHdyb3RlOgo+Cj4gT24gMjAxOS0wNC0xNiA0OjE5IHAubS4sIEFybmQg
-QmVyZ21hbm4gd3JvdGU6Cj4gPiBIaSBBbCwKPiA+Cj4gPiBJdCB0b29rIG1lIHdheSBsb25nZXIg
-dGhhbiBJIGhhZCBob3BlZCB0byByZXZpc2l0IHRoaXMgc2VyaWVzLCBzZWUKPiA+IGh0dHBzOi8v
-bG9yZS5rZXJuZWwub3JnL2xrbWwvMjAxODA5MTIxNTAxNDIuMTU3OTEzLTEtYXJuZEBhcm5kYi5k
-ZS8KPiA+IGZvciB0aGUgcHJldmlvdXNseSBwb3N0ZWQgdmVyc2lvbi4KPiA+Cj4gPiBJJ3ZlIGNv
-bWUgdG8gdGhlIHBvaW50IHdoZXJlIGFsbCBjb252ZXJzaW9uIGhhbmRsZXJzIGFuZCBtb3N0Cj4g
-PiBDT01QQVRJQkxFX0lPQ1RMKCkgZW50cmllcyBhcmUgZ29uZSBmcm9tIHRoaXMgZmlsZSwgYnV0
-IGZvcgo+ID4gbm93LCB0aGlzIHNlcmllcyBvbmx5IGhhcyB0aGUgcGFydHMgdGhhdCBoYXZlIGVp
-dGhlciBiZWVuIHJldmlld2VkCj4gPiBwcmV2aW91c2x5LCBvciB0aGF0IGFyZSBzaW1wbGUgZW5v
-dWdoIHRvIGluY2x1ZGUuCj4gPgo+ID4gVGhlIG1haW4gbWlzc2luZyBwaWVjZSBpcyB0aGUgU0df
-SU8vU0dfR0VUX1JFUVVFU1RfVEFCTEUgY29udmVyc2lvbi4KPiA+IEknbGwgcG9zdCB0aGUgcGF0
-Y2hlcyBJIG1hZGUgZm9yIHRoYXQgbGF0ZXIsIGFzIHRoZXkgbmVlZCBtb3JlCj4gPiB0ZXN0aW5n
-IGFuZCByZXZpZXcgZnJvbSB0aGUgc2NzaSBtYWludGFpbmVycy4KPgo+IFBlcmhhcHMgeW91IGNv
-dWxkIGxvb2sgYXQgdGhlIGRvY3VtZW50IGluIHRoaXMgdXJsOgo+ICAgICAgaHR0cDovL3NnLmRh
-bm55LmN6L3NnL3NnX3Y0MC5odG1sCj4KPiBJdCBpcyB3b3JrLWluLXByb2dyZXNzIHRvIG1vZGVy
-bml6ZSB0aGUgU0NTSSBnZW5lcmljIGRyaXZlci4gSXQKPiBleHRlbmRzIGlvY3RsKHNnX2ZkLCBT
-R19JTywgJnB0X29iaikgdG8gYWRkaXRpb25hbGx5IGFjY2VwdCB0aGUgc2cgdjQKPiBpbnRlcmZh
-Y2UgYXMgZGVmaW5lZCBpbiBpbmNsdWRlL3VhcGkvbGludXgvYnNnLmggLiBDdXJyZW50bHkgb25s
-eSB0aGUKPiBic2cgZHJpdmVyIHVzZXMgdGhlIHNnIHY0IGludGVyZmFjZS4gU2luY2Ugc3RydWN0
-IHNnX2lvX3Y0IGlzIGFsbAo+IGV4cGxpY2l0bHkgc2l6ZWQgaW50ZWdlcnMsIEknbSBndWVzc2lu
-ZyBpdCBpcyBpbW11bmUgImNvbXBhdCIgcHJvYmxlbXMuCj4gW0kgY2FuIHNlZSBubyByZWZlcmVu
-Y2UgdG8gYnNnIG5vciBzdHJ1Y3Qgc2dfaW9fdjQgaW4gdGhlIGN1cnJlbnQKPiBmcy9jb21wYXRf
-aW9jdGwuYyBmaWxlLl0KCk9rLCBJJ3ZlIHRha2VuIGEgYnJpZWYgbG9vayBhdCB5b3VyIHNlcmll
-cyBub3cuIFVuZm9ydHVuYXRlbHkgaXQgY2xhc2hlcwpxdWl0ZSBoYXJkIHdpdGggbXkgc2VyaWVz
-LCBidXQgaXQncyBwcm9iYWJseSBmb3IgdGhlIGJldHRlciB0byBoYXZlIHlvdXIKc3R1ZmYgZ2V0
-IG1lcmdlZCBmaXJzdC4KCkEgZmV3ICh1bnNvcnRlZCkgY29tbWVudHMgZnJvbSBnb2luZyB0aHJv
-dWdoIHlvdXIgcGF0Y2hlczoKCi0gdGhlIGFkZGVkIGlvY3RscyBhcmUgYWxsIGNvbXBhdGlibGUg
-d2hlbiB1c2luZyB0aGUgdjQgc3RydWN0dXJlcwogIGFuZCBtb3N0bHkgZG9uJ3QgbmVlZCBoYW5k
-bGVycyBmb3IgY29tcGF0IG1vZGUsIGJ1dCB0aGV5IG5lZWQgdG8gYmUKICBjYWxsZWQgZnJvbSAu
-Y29tcGF0X2lvY3RsIHRvIGFjdHVhbGx5IGJlIHVzYWJsZSBpbiBjb21wYXQgbW9kZS4KICBXaXRo
-IG15IHBhdGNoZXMgeW91IGdldCB0aGF0LgotIE9uZSBleGNlcHRpb24gZm9yIHRoZSB2NCBsYXlv
-dXQgaXMgdGhlIHVzZSBvZiBpb3ZlYyBwb2ludGVycywgYXMKICAnc3RydWN0IGlvdmVjJyBpcyBp
-bmNvbXBhdGlibGUuIFdlIHNob3VsZCBwcm9iYWJseSBtZXJnZSB0aGUKICBnZW5lcmljIGNvbXBh
-dF9pbXBvcnRfaW92ZWMoKSBpbnRvIGltcG9ydF9pb3ZlYygpIHdpdGggYQogICdpbl9jb21wYXRf
-c3lzY2FsbCgpJyBjaGVjaywgd2hpY2ggd291bGQgYmUgaGVscGZ1bCBpbiBnZW5lcmFsLgogIGJz
-Zy5jIGRvZXMgbm90IGlvdmVjLCBzbyBpdCBpcyBub3QgYWZmZWN0ZWQgYnkgdGhpcyBhdCB0aGUg
-bW9tZW50LAogIG1heWJlIGl0IHdvdWxkIGJlIGJldHRlciB0byBzdGF5IGNvbXBhdGlibGUgd2l0
-aCB0aGF0IGFuZCBhbHNvCiAgbm90IHN1cHBvcnQgdGhlbSBpbiBzZy5jPwotIElzIHRoZXJlIGEg
-bmVlZCBmb3IgdGhlIG5ldyBzZ19pb2N0bF9pb3N1Ym1pdC9zZ19pb2N0bF9pb3JlY2VpdmUKICB0
-byBzdXBwb3J0IHRoZSB2MyBzdHJ1Y3R1cmVzPyBUaG9zZSBhcmUgL25vdC8gY29tcGF0aWJsZSwg
-c28KICB5b3UgbmVlZCBleHRyYSBjb2RlIHRvIGhhbmRsZSB0aGUgdjMtY29tcGF0IGxheW91dCBh
-cyB3ZWxsLgogIFN1cHBvcnRpbmcgb25seSB2NCB3b3VsZCBzaW1wbGlmeSB0aGlzLgotIHRoZSBs
-YWNrIG9mIGNoYW5nZXNldCBkZXNjcmlwdGlvbnMgaXMgYSBiaXQgaXJyaXRhdGluZyBhbmQgbWFr
-ZXMKICBpdCBtdWNoIGhhcmRlciB0byB1bmRlcnN0YW5kIHdoYXQgeW91IGFyZSBkb2luZy4KLSB0
-cnkgdG8ga2VlcCBwYXRjaGVzIHRoYXQgbW92ZSBjb2RlIGFyb3VuZCBzZXBhcmF0ZSBmcm9tIHRo
-b3NlCiAgdGhhdCBjaGFuZ2UgaXQgaW4gYW55IG90aGVyIHdheSwgZm9yIGJldHRlciByZXZpZXdp
-bmcuCi0gaW4gInNnOiBwcmVwYXJhdGlvbiBmb3IgcmVxdWVzdCBzaGFyaW5nIiwgeW91IHNlZW0g
-dG8gaW5hZHZlcnRlbnRseQogIGNoYW5nZSB0aGUgc2l6ZSBvZiAic3RydWN0IHNnX2V4dGVuZGVk
-X2luZm8iLCBtYWtpbmcgaXQgNCBieXRlcwogIGxvbmdlciBieSBhZGRpbmcgdHdvIG1lbWJlcnMu
-Ci0gWW91IHNob3VsZCBuZXZlciB1c2UgSVNfRVJSX09SX05VTEwoKSBpbiBub3JtYWwgY29kZSwg
-dGhhdAogIGlzIGp1c3QgYSBzaWduIG9mIGEgYmFkIEFQSS4gTWFrZSBlYWNoIGZ1bmN0aW9uIGhh
-dmUgY29uc2lzdGVudAogIGVycm9yIGJlaGF2aW9yLgotIFRoZSAiI2lmIDAgIC8qIHRlbXBvcmFy
-eSB0byBzaG9ydGVuIGJpZyBwYXRjaCAqLyIgdHJpY2sgYnJlYWtzCiAgYmlzZWN0aW9uLCB0aGF0
-IGlzIHByb2JhYmx5IHdvcnNlIHRoYW4gdGhlIGxhcmdlciBwYXRjaC4KLSBUaGUgc3BsaXQgYWNj
-ZXNzX29rKCkvX19jb3B5X2Zyb21fdXNlcigpIGhhcyBmYWxsZW4gb3V0IG9mCiAgZmF2b3IgYmVj
-YXVzZSBpdCBoYXMgY2F1c2VkIHRvbyBtYW55IGJ1Z3MgaW4gdGhlIHBhc3QsIGp1c3QKICB1c2Ug
-dGhlIGNvbWJpbmVkIGNvcHlfZnJvbV91c2VyKCkgaW5zdGVhZC4KLSBrdGltZV90b19ucyhrdGlt
-ZV9nZXRfd2l0aF9vZmZzZXQoVEtfT0ZGU19CT09UKSkgZm9sbG93ZWQKICBieSBhIDY0LWJpdCBk
-aXZpc2lvbiB3b24ndCB3b3JrIG9uIDMyLWJpdCBtYWNoaW5lcywgdXNlCiAga3RpbWVfZ2V0X2Jv
-b3R0aW1lX3RzNjQoKSBpbnN0ZWFkLgoKPiBPdGhlciBhZGRpdGlvbnMgZGVzY3JpYmVkIGluIHRo
-ZSB0aGF0IGRvY3VtZW50IGFyZSB0aGVzZSBuZXcgaW9jdGxzOgo+ICAgIC0gU0dfSU9TVUJNSVQg
-ICAgdWx0aW1hdGVseSB0byByZXBsYWNlIHdyaXRlKHNnX2ZkLCAuLi4pCj4gICAgLSBTR19JT1JF
-Q0VJVkUgICAgICAgICAgICAgIHRvIHJlcGxhY2UgcmVhZChzZ19mZCwgLi4uKQo+ICAgIC0gU0df
-SU9BQk9SVCAgICAgYWJvcnQgU0NTSSBjbWQgaW4gcHJvZ3Jlc3M7IG5ldyBmdW5jdGlvbmFsaXR5
-Cj4gICAgLSBTR19TRVRfR0VUX0VYVEVOREVEICAgaGFzIGFzc29jaWF0ZWQgc3RydWN0IHNnX2V4
-dGVuZGVkX2luZm8KPgo+IFRoZSBmaXJzdCB0aHJlZSB0YWtlIGEgcG9pbnRlciB0byBhIHN0cnVj
-dCBzZ19pb19oZHIgKHYzIGludGVyZmFjZSkgb3IKPiBhIHN0cnVjdCBzZ19pb192NCBvYmplY3Qu
-IEJvdGggb2JqZWN0cyBzdGFydCB3aXRoIGEgMzIgYml0IGludGVnZXI6Cj4gJ1MnIGlkZW50aWZp
-ZXMgdGhlIHYzIGludGVyZmFjZSB3aGlsZSAnUScgaWRlbnRpZmllcyB0aGUgdjQgaW50ZXJmYWNl
-LgoKSSB0aGluayB0aGUgbWFnaWMgY2hhcmFjdGVyIHdhcyBhIG1pc3Rha2UgaW4gdGhlIG9yaWdp
-bmFsIGRlc2lnbiwKanVzdCBsaWtlIHZlcnNpb25lZCBpbnRlcmZhY2VzIGluIGdlbmVyYWwuIElm
-IHlvdSBhcmUgZXh0ZW5kaW5nIGFuCmludGVyZmFjZSBpbiBhbiBpbmNvbXBhdGlibGUgd2F5LCB0
-aGUgbm9ybWFsIHdheSB3b3VsZCBiZSB0bwpoYXZlIHNlcGFyYXRlIGNvbW1hbmQgY29kZXMsIGxp
-a2UgU0dfSU9SRUNFSVZFX1YzCmFuZCBTR19JT1JFQ0VJVkVfVjQsIGlmIHlvdSBhYnNvbHV0ZWx5
-IGhhdmUgdG8gbWFpbnRhaW4KY29tcGF0aWJsaXR5IHdpdGggdGhlIG9sZCBpbnRlcmZhY2UgKHdo
-aWNoIEkgdGhpbmsgeW91IGRvbid0IGluCmNhc2Ugb2YgU0dfSU9SRUNFSVZFKS4KCkZvciBTR19J
-TywgSSBjYW4gc2VlICB3aHkgeW91IHdhbnQgdG8gc3VwcG9ydCBib3RoIHRoZSB2MwphbmQgdjQg
-c3RydWN0dXJlcyBwbHVzIHRoZSBjb21wYXQtdjMgdmVyc2lvbiwgYnV0IEknZCB0cnkgdG8ga2Vl
-cAp0aGVtIGFzIHNlcGFyYXRlIGFzIHBvc3NpYmxlLCBhbmQgZG8gc29tZXRoaW5nIGxpa2UKCnN0
-YXRpYyBpbnQgIHNnX2N0bF9zZ19pbyhzdHJ1Y3QgZmlsZSAqZmlscCwgc3RydWN0IHNnX2Rldmlj
-ZSAqc2RwLApzdHJ1Y3Qgc2dfZmQgKnNmcCwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgdm9pZCBfX3VzZXIgKnApCnsKICAgICAgIGludCByZXQ7CgogICAgICByZXQgPSBzZ19pb192
-NChmaWxwLCBzZHAsIHNmcCwgKHN0cnVjdCBzZ19pb192NCBfX3VzZXIgKilwKTsKCiAgICAgIGlm
-IChyZXQgIT0gLUVOT0lPQ1RMQ01EIHx8ICFTX0VOQUJMRUQoQ09ORklHX1NHX0lPX1YzKSkKICAg
-ICAgICAgICAgcmV0dXJuIHJldDsKCiAgICAgaWYgKGluX2NvbXBhdF9zeXNjYWxsKCkpCiAgICAg
-ICAgICAgcmV0ID0gc2dfaW9fY29tcGF0XyhmaWxwLCBzZHAsIHNmcCwgKHN0cnVjdApjb21wYXRf
-c2dfaW9faGRyIF9fdXNlciAqKXApOwogICAgIGVsc2UKICAgICAgICAgICByZXQgPSBzZ19pb192
-MyhmaWxwLCBzZHAsIHNmcCwgKHN0cnVjdCBzZ19pb19oZHIgX191c2VyICopcCk7Cn0KCkluIG15
-IHBhdGNoIHNlcmllcywgSSBjb21iaW5lZCB0aGUgbGF0dGVyIHR3byBjYXNlcyBhbmQgdXNlZCBh
-IHNoYXJlZApnZXRfc2dfaW9faGRyKCkvcHV0X3NnX2lvX2hkcigpIGhlbHBlciBhcyB3ZWxsIGFz
-IGEgd3JhcHBlciBmb3IgdGhlIGlvdmVjCmlzc3VlLgoKPiBUaGUgU0dfU0VUX0dFVF9FWFRFTkRF
-RCBpb2N0bCB0YWtlcyBhIHBvaW50ZXIgdG8gYSBzdHJ1Y3QKPiBzZ19leHRlbmRlZF9pbmZvIG9i
-amVjdCB3aGljaCBjb250YWlucyBleHBsaWNpdGx5IHNpemVkIGludGVnZXJzIHNvIGl0Cj4gbWF5
-IGFsc28gYmUgaW1tdW5lIGZyb20gImNvbXBhdCIgcHJvYmxlbXMuIFRoZSBpb2N0bHMgc2VjdGlv
-biAoMTMpIG9mCj4gdGhhdCBkb2N1bWVudCByZWZlcmVuY2VkIGFib3ZlIGhhcyBhIHRhYmxlIHNo
-b3dpbmcgaG93IG1hbnkgInNldHMgYW5kCj4gZ2V0cyIgYXJlIGhpZGluZyBpbiB0aGUgU0dfU0VU
-X0dFVF9FWFRFTkRFRCBpb2N0bC4KCkFncmVlZCwgU0dfU0VUX0dFVF9FWFRFTkRFRCBsb29rcyBm
-aW5lIHRvIG1lIGZyb20gYSBjb21wYXQKcGVyc3BlY3RpdmUuCgpJJ3ZlIHVwbG9hZGVkIG15IHBh
-dGNoZXMgdG8KZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmc6L3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9h
-cm5kL3BsYXlncm91bmQuZ2l0CmNvbXBhdC1pb2N0bC12MwpUaGlzIGNvbnRhaW5zIGJvdGggdGhl
-IHNlcmllcyBJIHBvc3RlZCBoZXJlLCBhbmQgbXkgc2NzaSBpb2N0bCByZXdvcmsuCgpNYXliZSB5
-b3UgY2FuIHRha2UgdGhlIGJpdHMgeW91IG5lZWQgZnJvbSB0aGF0IHRvIGhhbmRsZSB0aGUgdjMt
-Y29tcGF0CnN0cnVjdHVyZXMgYW5kIGludGVncmF0ZSBpdCBpbnRvIHlvdXIgc2VyaWVzPwoKICAg
-ICBBcm5kCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Wed, Apr 17, 2019 at 11:19:28AM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 17-04-19 08:39, Heikki Krogerus wrote:
+> > On Tue, Apr 16, 2019 at 11:35:36PM +0200, Hans de Goede wrote:
+> > > Hi,
+> > > 
+> > > On 12-04-19 15:41, Heikki Krogerus wrote:
+> > > > Now that the software nodes support references, and the
+> > > > device connection API support parsing fwnode references,
+> > > > replacing the old connection descriptions with software node
+> > > > references. Relying on device names when matching the
+> > > > connection would not have been possible to link the USB
+> > > > Type-C connector and the DisplayPort connector together, but
+> > > > with real references it's not problem.
+> > > > 
+> > > > The DisplayPort ACPI node is dag up, and the drivers own
+> > > > software node for the DisplayPort is set as the secondary
+> > > > node for it. The USB Type-C connector refers the software
+> > > > node, but it is now tied to the ACPI node, and therefore any
+> > > > device entry (struct drm_connector in practice) that the
+> > > > node combo is assigned to.
+> > > > 
+> > > > The USB role switch device does not have ACPI node, so we
+> > > > have to wait for the device to appear. Then we can simply
+> > > > assign our software node for the to the device.
+> > > > 
+> > > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > 
+> > > So as promised I've been testing this series and this commit
+> > > breaks type-c functionality on devices using this driver.
+> > > 
+> > > The problem is that typec_switch_get() and  typec_mux_get()
+> > > after this both return the same pointer, which is pointing
+> > > to the switch, so typec_mux_get() is returning the wrong
+> > > pointer.
+> > > 
+> > > This is not surprising since the references for both are
+> > > both pointing to the fwnode attached to the piusb30532 devices:
+> > > 
+> > > 	args[0].fwnode = data->node[INT33FE_NODE_PI3USB30532];
+> > > 
+> > > So the class_find_device here:
+> > > 
+> > > static void *typec_switch_match(struct device_connection *con, int ep,
+> > >                                  void *data)
+> > > {
+> > >          struct device *dev;
+> > > 
+> > >          if (con->fwnode) {
+> > >                  if (con->id && !fwnode_property_present(con->fwnode, con->id))
+> > >                          return NULL;
+> > > 
+> > >                  dev = class_find_device(&typec_mux_class, NULL, con->fwnode,
+> > >                                          fwnode_match);
+> > >          } else {
+> > >                  dev = class_find_device(&typec_mux_class, NULL,
+> > >                                          con->endpoint[ep], name_match);
+> > >          }
+> > > 
+> > >          return dev ? to_typec_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+> > > }
+> > > 
+> > > Simply returns the first typec_mux_class device registered.
+> > > 
+> > > I see 2 possible solutions to this problem:
+> > > 
+> > > 1) Use separate typec_mux_class and typec_orientation_switch_class-es
+> > > 
+> > > 2) Merge struct typec_switch and struct typec_mux into a single struct,
+> > > so that all typec_mux_class devices have the same memory layout, add
+> > > a subclass enum to this new merged struct and use that to identify
+> > > which of the typec_mux_class devices with the same fwnode pointer we
+> > > want.
+> > > 
+> > > Any other suggestions?
+> > 
+> > I think the correct fix is that we supply separate nodes for both
+> > device entries.
+> 
+> That is not going to work since the (virtual) mux / orientation-switch
+> devices are only registered once the driver binds to the piusb30532 i2c
+> device, so when creating the nodes we only have the piusb30532 i2c device.
+
+It's not a problem, that's why we have the software nodes. The nodes
+can be created before the device entires. The node for pi3usb30532
+will just be the parent node for the new nodes we add for the mux and
+switch.
+
+> I've been thinking some more about this and an easy fix is to have separate
+> fwnode_match functions for typec_switch_match and typec_mux_match and have
+> them check that the dev_name ends in "-mux" resp. "-switch" that requires
+> only a very minimal change to "usb: typec: Registering real device entries for the muxes"
+> and then everything should be fine.
+
+I don't want to do anymore device name matching unless we have to, and
+here we don't have to. We can name the nodes for those virtual mux and
+switch, and then just do fwnode_find_named_child_node() in
+pi3usb30532.c for both of them.
+
+> Note that another problem with this series which I noticed while testing
+> is that the usb-role-switch is not being found at all anymore after
+> this ("Replacing the old connections with references") patch. I still need
+> start debugging that.
+
+OK, I'll wait for you results on that.
+
+
+thanks,
+
+-- 
+heikki
