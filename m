@@ -1,137 +1,135 @@
-From: Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH v5 3/3] platform/x86: intel_pmc_core: Instantiate pmc_core
- device on legacy platforms
-Date: Wed, 17 Apr 2019 16:05:37 -0700
-Message-ID: <CACK8Z6EjGSCapBARvPPXuLg-iQ24oKhWpqLskzwV1w6VFhJAWQ@mail.gmail.com>
-References: <20190313222124.229371-1-rajatja@google.com> <20190411003738.55073-1-rajatja@google.com>
- <20190411003738.55073-3-rajatja@google.com> <CAHp75VeSUVzzcRRsrDKg6KnTXptB5_fgQUk_jYiFwziimS8D2A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Chris Chiu <chiu@endlessm.com>
+Subject: [PATCH] platform/x86: asus-wmi: Add fn-lock mode switch support
+Date: Thu, 18 Apr 2019 14:46:48 +0800
+Message-ID: <20190418064648.25706-1-chiu@endlessm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeSUVzzcRRsrDKg6KnTXptB5_fgQUk_jYiFwziimS8D2A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rafael J Wysocki <rafael.j.wysocki@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Furquan Shaikh <furquan@google.com>, Evan Green <evgreen@google.com>, Rajat Jain <rajatxjain@gmail.com>
+To: andriy.shevchenko@linux.intel.com, corentin.chary@gmail.com, dvhart@infradead.org
+Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, Chris Chiu <chiu@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Apr 11, 2019 at 6:46 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, Apr 11, 2019 at 3:38 AM Rajat Jain <rajatja@google.com> wrote:
-> >
-> > Add code to instantiate the pmc_core platform device and thus attach to
-> > the driver, if the ACPI device for the same ("INT33A1") is not present
-> > in a system where it should be. This was discussed here:
-> > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966991.html
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> > v5: Remove the gerrit id from commit log
-> > v4: Rename file, remove dummy arg, 1 conditional per if statement,
-> >     simplify init / exit calls..
-> > v3: (first version of *this* patch -to go with rest of v3 patchset)
-> > v2: (does not exist)
-> > v1: (does not exist)
-> >
-> >  drivers/platform/x86/Makefile                 |  2 +-
-> >  .../platform/x86/intel_pmc_core_plat_drv.c    | 60 +++++++++++++++++++
-> >  2 files changed, 61 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/platform/x86/intel_pmc_core_plat_drv.c
-> >
-> > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> > index 86cb76677bc8..7041a88c34c7 100644
-> > --- a/drivers/platform/x86/Makefile
-> > +++ b/drivers/platform/x86/Makefile
-> > @@ -89,7 +89,7 @@ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)    += intel_bxtwc_tmu.o
-> >  obj-$(CONFIG_INTEL_TELEMETRY)  += intel_telemetry_core.o \
-> >                                    intel_telemetry_pltdrv.o \
-> >                                    intel_telemetry_debugfs.o
-> > -obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
-> > +obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o intel_pmc_core_plat_drv.o
-> >  obj-$(CONFIG_PMC_ATOM)         += pmc_atom.o
-> >  obj-$(CONFIG_MLX_PLATFORM)     += mlx-platform.o
-> >  obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
-> > diff --git a/drivers/platform/x86/intel_pmc_core_plat_drv.c b/drivers/platform/x86/intel_pmc_core_plat_drv.c
-> > new file mode 100644
-> > index 000000000000..7f5af5bd7f1f
-> > --- /dev/null
-> > +++ b/drivers/platform/x86/intel_pmc_core_plat_drv.c
-> > @@ -0,0 +1,60 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +/*
-> > + * Intel PMC Core platform init
-> > + * Copyright (c) 2019, Google Inc.
-> > + * Author - Rajat Jain
-> > + *
-> > + * This code instantiates platform devices for intel_pmc_core driver, only
-> > + * on supported platforms that may not have the ACPI devices in the ACPI tables.
-> > + * No new platforms should be added here, because we expect that new platforms
-> > + * should all have the ACPI device, which is the preferred way of enumeration.
-> > + */
-> > +
-> > +#include <linux/acpi.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#include <asm/cpu_device_id.h>
-> > +#include <asm/intel-family.h>
-> > +
-> > +static struct platform_device pmc_core_device = {
-> > +       .name = "pmc_core",
->
-> This name is too generic. Better to use the current module name, i.e.
-> "intel_pmc_core".
+Some of latest ASUS laptops support new fn-lock mode switching.
+This commit detect whether if the fn-lock option is enabled in
+BIOS setting, and toggle the fn-lock mode via a new WMI DEVID
+0x00100023 when the corresponding notify code captured.
 
-done
+The ASUS fn-lock mode switch is activated by pressing Fn+Esc.
+When on, keys F1 to F12 behave as applicable, with meanings
+defined by the application being used at the time. When off,
+F1 to F12 directly triggers hardware features, well known audio
+volume up/down, brightness up/down...etc, which were triggered
+by holding down Fn key and F-keys.
 
+Because there's no way to retrieve the fn-lock mode via existing
+WMI methods per ASUS spec, driver need to initialize and keep the
+fn-lock mode by itself.
 
->
-> However, see my comment to the first patch in the series.
->
-> > +};
-> > +
-> > +/*
-> > + * intel_pmc_core_platform_ids is the list of platforms where we want to
-> > + * instantiate the platform_device if not already instantiated. This is
-> > + * different than intel_pmc_core_ids in intel_pmc_core.c which is the
-> > + * list of platforms that the driver supports for pmc_core device. The
-> > + * other list may grow, but this list should not.
-> > + */
-> > +static const struct x86_cpu_id intel_pmc_core_platform_ids[] = {
-> > +       INTEL_CPU_FAM6(SKYLAKE_MOBILE, pmc_core_device),
-> > +       INTEL_CPU_FAM6(SKYLAKE_DESKTOP, pmc_core_device),
-> > +       INTEL_CPU_FAM6(KABYLAKE_MOBILE, pmc_core_device),
-> > +       INTEL_CPU_FAM6(KABYLAKE_DESKTOP, pmc_core_device),
-> > +       INTEL_CPU_FAM6(CANNONLAKE_MOBILE, pmc_core_device),
-> > +       INTEL_CPU_FAM6(ICELAKE_MOBILE, pmc_core_device),
-> > +       {}
-> > +};
-> > +MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
-> > +
-> > +static int __init pmc_core_platform_init(void)
-> > +{
-> > +       /* Skip creating the platform device if ACPI already has a device */
-> > +       if (acpi_dev_present("INT33A1", NULL, -1))
-> > +               return -ENODEV;
-> > +
-> > +       if (!x86_match_cpu(intel_pmc_core_platform_ids))
-> > +               return -ENODEV;
-> > +
-> > +       return platform_device_register(&pmc_core_device);
-> > +}
-> > +
-> > +static void __exit pmc_core_platform_exit(void)
-> > +{
-> > +       platform_device_unregister(&pmc_core_device);
-> > +}
-> > +
-> > +module_init(pmc_core_platform_init);
-> > +module_exit(pmc_core_platform_exit);
-> > --
-> > 2.21.0.392.gf8f6787159e-goog
-> >
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+---
+ drivers/platform/x86/asus-wmi.c            | 36 ++++++++++++++++++++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 2 files changed, 37 insertions(+)
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 37b5de541270..5f52b66e40cb 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
+ #define NOTIFY_KBD_BRTUP		0xc4
+ #define NOTIFY_KBD_BRTDWN		0xc5
+ #define NOTIFY_KBD_BRTTOGGLE		0xc7
++#define NOTIFY_FNLOCK_TOGGLE		0x4e
+ 
+ #define ASUS_FAN_DESC			"cpu_fan"
+ #define ASUS_FAN_MFUN			0x13
+@@ -177,6 +178,8 @@ struct asus_wmi {
+ 	struct workqueue_struct *hotplug_workqueue;
+ 	struct work_struct hotplug_work;
+ 
++	bool fnlock_locked;
++
+ 	struct asus_wmi_debug debug;
+ 
+ 	struct asus_wmi_driver *driver;
+@@ -1619,6 +1622,24 @@ static int is_display_toggle(int code)
+ 	return 0;
+ }
+ 
++static bool asus_wmi_has_fnlock_key(struct asus_wmi *asus)
++{
++#define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
++	u32 result;
++
++	asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FNLOCK, &result);
++
++	return (result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
++		!(result & ASUS_WMI_FNLOCK_BIOS_DISABLED);
++}
++
++static void asus_wmi_fnlock_update(struct asus_wmi *asus)
++{
++	int mode = asus->fnlock_locked;
++
++	asus_wmi_set_devstate(ASUS_WMI_DEVID_FNLOCK, mode, NULL);
++}
++
+ static void asus_wmi_notify(u32 value, void *context)
+ {
+ 	struct asus_wmi *asus = context;
+@@ -1680,6 +1701,12 @@ static void asus_wmi_notify(u32 value, void *context)
+ 		goto exit;
+ 	}
+ 
++	if (code == NOTIFY_FNLOCK_TOGGLE) {
++		asus->fnlock_locked = !asus->fnlock_locked;
++		asus_wmi_fnlock_update(asus);
++		goto exit;
++	}
++
+ 	if (is_display_toggle(code) &&
+ 	    asus->driver->quirks->no_display_toggle)
+ 		goto exit;
+@@ -2134,6 +2161,11 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	} else
+ 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
+ 
++	if (asus_wmi_has_fnlock_key(asus)) {
++		asus->fnlock_locked = true;
++		asus_wmi_fnlock_update(asus);
++	}
++
+ 	status = wmi_install_notify_handler(asus->driver->event_guid,
+ 					    asus_wmi_notify, asus);
+ 	if (ACPI_FAILURE(status)) {
+@@ -2213,6 +2245,8 @@ static int asus_hotk_resume(struct device *device)
+ 	if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
+ 		kbd_led_update(asus);
+ 
++	if (asus_wmi_has_fnlock_key(asus))
++		asus_wmi_fnlock_update(asus);
+ 	return 0;
+ }
+ 
+@@ -2249,6 +2283,8 @@ static int asus_hotk_restore(struct device *device)
+ 	if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
+ 		kbd_led_update(asus);
+ 
++	if (asus_wmi_has_fnlock_key(asus))
++		asus_wmi_fnlock_update(asus);
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index 53dfc2541960..bfba245636a7 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -67,6 +67,7 @@
+ /* Input */
+ #define ASUS_WMI_DEVID_TOUCHPAD		0x00100011
+ #define ASUS_WMI_DEVID_TOUCHPAD_LED	0x00100012
++#define ASUS_WMI_DEVID_FNLOCK		0x00100023
+ 
+ /* Fan, Thermal */
+ #define ASUS_WMI_DEVID_THERMAL_CTRL	0x00110011
+-- 
+2.11.0
