@@ -1,7 +1,8 @@
 From: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Subject: [PATCH v3 07/11] platform/x86: asus-wmi: Organize code into sections
-Date: Fri, 19 Apr 2019 12:12:11 +0200
-Message-ID: <9a4351a5-ab04-2ebb-9961-1c50dda9800d@gmail.com>
+Subject: [PATCH v3 03/11] platform/x86: asus-wmi: Increase the input buffer
+ size of WMI methods
+Date: Fri, 19 Apr 2019 12:05:20 +0200
+Message-ID: <5e1a56c3-0448-a648-e331-a2e1d0421b56@gmail.com>
 References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -13,232 +14,98 @@ Sender: linux-kernel-owner@vger.kernel.org
 Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Daniel Drake <drake@endlessm.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The driver has grown pretty big and will grow more, which makes it hard to
-navigate and understand. Add uniform comments to the code and ensure that
-it is sorted into logical sections.
+The asus-nb-wmi driver is matched by WMI alias but fails to load on TUF
+Gaming series laptops producing multiple ACPI errors in the kernel log.
+
+The input buffer for WMI method invocation size is 2 dwords, whereas
+3 are expected by this model.
+
+FX505GM:
+..
+Method (WMNB, 3, Serialized)
+{
+    P8XH (Zero, 0x11)
+    CreateDWordField (Arg2, Zero, IIA0)
+    CreateDWordField (Arg2, 0x04, IIA1)
+    CreateDWordField (Arg2, 0x08, IIA2)
+    Local0 = (Arg1 & 0xFFFFFFFF)
+    ...
+
+Compare with older K54C:
+...
+Method (WMNB, 3, NotSerialized)
+{
+    CreateDWordField (Arg2, 0x00, IIA0)
+    CreateDWordField (Arg2, 0x04, IIA1)
+    Local0 = (Arg1 & 0xFFFFFFFF)
+    ...
+
+Increase buffer size to 3 dwords. No negative consequences of this change
+are expected, as the input buffer size is not verified. The original
+function is replaced by a wrapper for a new method passing value 0 for the
+last parameter. The new function will be used to control RGB keyboard
+backlight.
 
 Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c | 94 ++++++++++++++++-----------------
- 1 file changed, 46 insertions(+), 48 deletions(-)
+One of current kernel errors:
+ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [IIA2] at bit offset/
+	length 64/32 exceeds size of target Buffer (64 bits)
+	(20190215/dsopcode-203)
+[ 4528.573948] No Local Variables are initialized for Method [WMNB]
+[ 4528.573949] Initialized Arguments for Method [WMNB]:  (3 arguments
+	defined for method invocation)
+[ 4528.573950]   Arg0:   00000000bd1bea5a <Obj>
+	Integer 0000000000000000
+[ 4528.573952]   Arg1:   00000000d414dc53 <Obj>
+	Integer 000000004E464741
+[ 4528.573954]   Arg2:   00000000fcefea4b <Obj>
+	Buffer(8) F0 95 08 00 00 00 00 00
+[ 4528.573959] ACPI Error: Aborting method \_SB.ATKD.WMNB due to previous
+	error (AE_AML_BUFFER_LIMIT) (20190215/psparse-531)
+[ 4528.686425] asus-nb-wmi: probe of asus-nb-wmi failed with error -5
+---
+ drivers/platform/x86/asus-wmi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index f782dac4cbe7..e69e55635afb 100644
+index 731ffd382426..ba04737ece0d 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -193,6 +193,8 @@ struct asus_wmi {
- 	struct asus_wmi_driver *driver;
- };
+@@ -95,6 +95,7 @@ static bool ashs_present(void)
+ struct bios_args {
+ 	u32 arg0;
+ 	u32 arg1;
++	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
+ } __packed;
  
-+/* Input **********************************************************************/
-+
- static int asus_wmi_input_init(struct asus_wmi *asus)
- {
- 	int err;
-@@ -230,6 +232,8 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
+ /*
+@@ -219,11 +220,13 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
  	asus->inputdev = NULL;
  }
  
-+/* WMI ************************************************************************/
-+
- static int asus_wmi_evaluate_method_3dw(u32 method_id, u32 arg0, u32 arg1,
- 		u32 arg2, u32 *retval)
+-int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
++static int asus_wmi_evaluate_method_3dw(u32 method_id, u32 arg0, u32 arg1,
++		u32 arg2, u32 *retval)
  {
-@@ -248,7 +252,7 @@ static int asus_wmi_evaluate_method_3dw(u32 method_id, u32 arg0, u32 arg1,
- 				     &input, &output);
- 
- 	if (ACPI_FAILURE(status))
--		goto exit;
-+		return -EIO;
- 
- 	obj = (union acpi_object *)output.pointer;
- 	if (obj && obj->type == ACPI_TYPE_INTEGER)
-@@ -259,10 +263,6 @@ static int asus_wmi_evaluate_method_3dw(u32 method_id, u32 arg0, u32 arg1,
- 
- 	kfree(obj);
- 
--exit:
--	if (ACPI_FAILURE(status))
--		return -EIO;
--
- 	if (tmp == ASUS_WMI_UNSUPPORTED_METHOD)
- 		return -ENODEV;
- 
-@@ -346,9 +346,8 @@ static int asus_wmi_get_devstate_simple(struct asus_wmi *asus, u32 dev_id)
- 					  ASUS_WMI_DSTS_STATUS_BIT);
- }
- 
--/*
-- * LEDs
-- */
-+/* LEDs ***********************************************************************/
-+
- /*
-  * These functions actually update the LED's, and are called from a
-  * workqueue. By doing this as separate work rather than when the LED
-@@ -658,6 +657,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 	return rv;
- }
- 
-+/* RF *************************************************************************/
- 
- /*
-  * PCI hotplug (for wlan rfkill)
-@@ -1080,6 +1080,8 @@ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
- 	return result;
- }
- 
-+/* Quirks *********************************************************************/
-+
- static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
- {
- 	struct pci_dev *xhci_pdev;
-@@ -1112,9 +1114,8 @@ static void asus_wmi_set_als(void)
- 	asus_wmi_set_devstate(ASUS_WMI_DEVID_ALS_ENABLE, 1, NULL);
- }
- 
--/*
-- * Hwmon device
-- */
-+/* Hwmon device ***************************************************************/
-+
- static int asus_hwmon_agfn_fan_speed_read(struct asus_wmi *asus, int fan,
- 					  int *speed)
- {
-@@ -1390,7 +1391,6 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
- 	else if (attr == &dev_attr_temp1_input.attr)
- 		dev_id = ASUS_WMI_DEVID_THERMAL_CTRL;
- 
--
- 	if (attr == &dev_attr_fan1_input.attr
- 	    || attr == &dev_attr_fan1_label.attr
- 	    || attr == &dev_attr_pwm1.attr
-@@ -1453,9 +1453,27 @@ static int asus_wmi_hwmon_init(struct asus_wmi *asus)
- 	return 0;
- }
- 
--/*
-- * Backlight
-- */
-+static int asus_wmi_fan_init(struct asus_wmi *asus)
-+{
-+	int status;
-+
-+	asus->asus_hwmon_pwm = -1;
-+	asus->asus_hwmon_num_fans = -1;
-+	asus->asus_hwmon_fan_manual_mode = false;
-+
-+	status = asus_hwmon_get_fan_number(asus, &asus->asus_hwmon_num_fans);
-+	if (status) {
-+		asus->asus_hwmon_num_fans = 0;
-+		pr_warn("Could not determine number of fans: %d\n", status);
-+		return -ENXIO;
-+	}
-+
-+	pr_info("Number of fans: %d\n", asus->asus_hwmon_num_fans);
-+	return 0;
-+}
-+
-+/* Backlight ******************************************************************/
-+
- static int read_backlight_power(struct asus_wmi *asus)
- {
- 	int ret;
-@@ -1637,6 +1655,8 @@ static int is_display_toggle(int code)
- 	return 0;
- }
- 
-+/* WMI events *****************************************************************/
-+
- static int asus_wmi_get_next_event(u32 value)
- {
+ 	struct bios_args args = {
+ 		.arg0 = arg0,
+ 		.arg1 = arg1,
++		.arg2 = arg2
+ 	};
+ 	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
  	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -1762,9 +1782,8 @@ static int asus_wmi_notify_queue_flush(struct asus_wmi *asus)
- 	return -EIO;
- }
+@@ -255,6 +258,11 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
  
--/*
-- * Sys helpers
-- */
-+/* Sysfs **********************************************************************/
-+
- static int parse_arg(const char *buf, unsigned long count, int *val)
- {
- 	if (!count)
-@@ -1903,9 +1922,8 @@ static int asus_wmi_sysfs_init(struct platform_device *device)
- 	return sysfs_create_group(&device->dev.kobj, &platform_attribute_group);
- }
- 
--/*
-- * Platform device
-- */
-+/* Platform device ************************************************************/
-+
- static int asus_wmi_platform_init(struct asus_wmi *asus)
- {
- 	int rv;
-@@ -1990,9 +2008,8 @@ static void asus_wmi_platform_exit(struct asus_wmi *asus)
- 	asus_wmi_sysfs_exit(asus->platform_device);
- }
- 
--/*
-- * debugfs
-- */
-+/* debugfs ********************************************************************/
-+
- struct asus_wmi_debugfs_node {
- 	struct asus_wmi *asus;
- 	char *name;
-@@ -2139,28 +2156,8 @@ static int asus_wmi_debugfs_init(struct asus_wmi *asus)
- 	return -ENOMEM;
- }
- 
--static int asus_wmi_fan_init(struct asus_wmi *asus)
--{
--	int status;
--
--	asus->asus_hwmon_pwm = -1;
--	asus->asus_hwmon_num_fans = -1;
--	asus->asus_hwmon_fan_manual_mode = false;
--
--	status = asus_hwmon_get_fan_number(asus, &asus->asus_hwmon_num_fans);
--	if (status) {
--		asus->asus_hwmon_num_fans = 0;
--		pr_warn("Could not determine number of fans: %d\n", status);
--		return -ENXIO;
--	}
--
--	pr_info("Number of fans: %d\n", asus->asus_hwmon_num_fans);
--	return 0;
--}
-+/* Init / exit ****************************************************************/
- 
--/*
-- * WMI Driver
-- */
- static int asus_wmi_add(struct platform_device *pdev)
- {
- 	struct platform_driver *pdrv = to_platform_driver(pdev->dev.driver);
-@@ -2288,9 +2285,8 @@ static int asus_wmi_remove(struct platform_device *device)
  	return 0;
  }
- 
--/*
-- * Platform driver - hibernate/resume callbacks
-- */
-+/* Platform driver - hibernate/resume callbacks *******************************/
 +
- static int asus_hotk_thaw(struct device *device)
- {
- 	struct asus_wmi *asus = dev_get_drvdata(device);
-@@ -2362,6 +2358,8 @@ static const struct dev_pm_ops asus_pm_ops = {
- 	.resume = asus_hotk_resume,
- };
++int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
++{
++	return asus_wmi_evaluate_method_3dw(method_id, arg0, arg1, 0, retval);
++}
+ EXPORT_SYMBOL_GPL(asus_wmi_evaluate_method);
  
-+/* Registration ***************************************************************/
-+
- static int asus_wmi_probe(struct platform_device *pdev)
- {
- 	struct platform_driver *pdrv = to_platform_driver(pdev->dev.driver);
+ static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
 -- 
 2.17.1
