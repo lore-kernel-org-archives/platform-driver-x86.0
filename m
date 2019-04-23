@@ -1,181 +1,64 @@
-From: Roger Pau Monne <roger.pau@citrix.com>
-Subject: [PATCH v2 2/2] xen/pvh: correctly setup the PV EFI interface for dom0
-Date: Tue, 23 Apr 2019 15:04:16 +0200
-Message-ID: <20190423130416.68935-2-roger.pau@citrix.com>
-References: <20190423130416.68935-1-roger.pau@citrix.com>
+From: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
+	files to *.rst
+Date: Tue, 23 Apr 2019 09:21:00 -0400
+Message-ID: <20190423132100.GB7132@redhat.com>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
+	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
+	<20190423125519.GA7104@redhat.com>
+	<20190423130132.GT4038@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190423130416.68935-1-roger.pau@citrix.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Roger Pau Monne <roger.pau@citrix.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, xen-devel@lists.xenproject.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190423130132.GT4038-Nxj+rRp3nVydTX5a5knrm8zTDFooKrT+cvkQGrU6aU0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglin
 List-Id: platform-driver-x86.vger.kernel.org
 
-This involves initializing the boot params EFI related fields and the
-efi global variable.
+On Tue, Apr 23 2019 at  9:01am -0400,
+Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
 
-Without this fix a PVH dom0 doesn't detect when booted from EFI, and
-thus doesn't support accessing any of the EFI related data.
+> On Tue, Apr 23, 2019 at 08:55:19AM -0400, Mike Snitzer wrote:
+> > On Tue, Apr 23 2019 at  4:31am -0400,
+> > Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
+> > 
+> > > On Mon, Apr 22, 2019 at 10:27:45AM -0300, Mauro Carvalho Chehab wrote:
+> > > 
+> > > >  .../{atomic_bitops.txt => atomic_bitops.rst}  |  2 +
+> > > 
+> > > What's happend to atomic_t.txt, also NAK, I still occationally touch
+> > > these files.
+> > 
+> > Seems Mauro's point is in the future we need to touch these .rst files
+> > in terms of ReST compatible changes.
+> > 
+> > I'm dreading DM documentation changes in the future.. despite Mauro and
+> > Jon Corbet informing me that ReST is simple, etc.
+> 
+> Well, it _can_ be simple, I've seen examples of rst that were not far
+> from generated HTML contents. And I must give Jon credit for not
+> accepting that atrocious crap.
+> 
+> But yes, I have 0 motivation to learn or abide by rst. It simply doesn't
+> give me anything in return. There is no upside, only worse text files :/
 
-Reported-by: PGNet Dev <pgnet.dev@gmail.com>
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
----
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Cc: xen-devel@lists.xenproject.org
-Cc: platform-driver-x86@vger.kernel.org
----
-Changes since v1:
- - Call xen_efi_init from xen_pvh_init, this avoids having to move the
-   prototype of xen_efi_init to a different header.
----
- arch/x86/platform/pvh/enlighten.c |  8 ++++----
- arch/x86/xen/efi.c                | 12 ++++++------
- arch/x86/xen/enlighten_pv.c       |  2 +-
- arch/x86/xen/enlighten_pvh.c      |  6 +++++-
- arch/x86/xen/xen-ops.h            |  4 ++--
- 5 files changed, 18 insertions(+), 14 deletions(-)
+Right, but these changes aren't meant for our benefit.  They are for
+users who get cleaner web accessible Linux kernel docs.  Seems the
+decision has been made that the users' benefit, and broader
+modernization of Linux docs, outweighs the inconvenience for engineers
+who maintain the content of said documentation.
 
-diff --git a/arch/x86/platform/pvh/enlighten.c b/arch/x86/platform/pvh/enlighten.c
-index 62f5c7045944..1861a2ba0f2b 100644
---- a/arch/x86/platform/pvh/enlighten.c
-+++ b/arch/x86/platform/pvh/enlighten.c
-@@ -44,8 +44,6 @@ void __init __weak mem_map_via_hcall(struct boot_params *ptr __maybe_unused)
- 
- static void __init init_pvh_bootparams(bool xen_guest)
- {
--	memset(&pvh_bootparams, 0, sizeof(pvh_bootparams));
--
- 	if ((pvh_start_info.version > 0) && (pvh_start_info.memmap_entries)) {
- 		struct hvm_memmap_table_entry *ep;
- 		int i;
-@@ -103,7 +101,7 @@ static void __init init_pvh_bootparams(bool xen_guest)
-  * If we are trying to boot a Xen PVH guest, it is expected that the kernel
-  * will have been configured to provide the required override for this routine.
-  */
--void __init __weak xen_pvh_init(void)
-+void __init __weak xen_pvh_init(struct boot_params *boot_params)
- {
- 	xen_raw_printk("Error: Missing xen PVH initialization\n");
- 	BUG();
-@@ -112,7 +110,7 @@ void __init __weak xen_pvh_init(void)
- static void hypervisor_specific_init(bool xen_guest)
- {
- 	if (xen_guest)
--		xen_pvh_init();
-+		xen_pvh_init(&pvh_bootparams);
- }
- 
- /*
-@@ -131,6 +129,8 @@ void __init xen_prepare_pvh(void)
- 		BUG();
- 	}
- 
-+	memset(&pvh_bootparams, 0, sizeof(pvh_bootparams));
-+
- 	hypervisor_specific_init(xen_guest);
- 
- 	init_pvh_bootparams(xen_guest);
-diff --git a/arch/x86/xen/efi.c b/arch/x86/xen/efi.c
-index 1fbb629a9d78..0d3365cb64de 100644
---- a/arch/x86/xen/efi.c
-+++ b/arch/x86/xen/efi.c
-@@ -158,7 +158,7 @@ static enum efi_secureboot_mode xen_efi_get_secureboot(void)
- 	return efi_secureboot_mode_unknown;
- }
- 
--void __init xen_efi_init(void)
-+void __init xen_efi_init(struct boot_params *boot_params)
- {
- 	efi_system_table_t *efi_systab_xen;
- 
-@@ -167,12 +167,12 @@ void __init xen_efi_init(void)
- 	if (efi_systab_xen == NULL)
- 		return;
- 
--	strncpy((char *)&boot_params.efi_info.efi_loader_signature, "Xen",
--			sizeof(boot_params.efi_info.efi_loader_signature));
--	boot_params.efi_info.efi_systab = (__u32)__pa(efi_systab_xen);
--	boot_params.efi_info.efi_systab_hi = (__u32)(__pa(efi_systab_xen) >> 32);
-+	strncpy((char *)&boot_params->efi_info.efi_loader_signature, "Xen",
-+			sizeof(boot_params->efi_info.efi_loader_signature));
-+	boot_params->efi_info.efi_systab = (__u32)__pa(efi_systab_xen);
-+	boot_params->efi_info.efi_systab_hi = (__u32)(__pa(efi_systab_xen) >> 32);
- 
--	boot_params.secure_boot = xen_efi_get_secureboot();
-+	boot_params->secure_boot = xen_efi_get_secureboot();
- 
- 	set_bit(EFI_BOOT, &efi.flags);
- 	set_bit(EFI_PARAVIRT, &efi.flags);
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index c54a493e139a..4722ba2966ac 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -1403,7 +1403,7 @@ asmlinkage __visible void __init xen_start_kernel(void)
- 	/* We need this for printk timestamps */
- 	xen_setup_runstate_info(0);
- 
--	xen_efi_init();
-+	xen_efi_init(&boot_params);
- 
- 	/* Start the world */
- #ifdef CONFIG_X86_32
-diff --git a/arch/x86/xen/enlighten_pvh.c b/arch/x86/xen/enlighten_pvh.c
-index bbffa409e0e8..80a79db72fcf 100644
---- a/arch/x86/xen/enlighten_pvh.c
-+++ b/arch/x86/xen/enlighten_pvh.c
-@@ -13,6 +13,8 @@
- 
- #include <xen/interface/memory.h>
- 
-+#include "xen-ops.h"
-+
- /*
-  * PVH variables.
-  *
-@@ -21,7 +23,7 @@
-  */
- bool xen_pvh __attribute__((section(".data"))) = 0;
- 
--void __init xen_pvh_init(void)
-+void __init xen_pvh_init(struct boot_params *boot_params)
- {
- 	u32 msr;
- 	u64 pfn;
-@@ -33,6 +35,8 @@ void __init xen_pvh_init(void)
- 	msr = cpuid_ebx(xen_cpuid_base() + 2);
- 	pfn = __pa(hypercall_page);
- 	wrmsr_safe(msr, (u32)pfn, (u32)(pfn >> 32));
-+
-+	xen_efi_init(boot_params);
- }
- 
- void __init mem_map_via_hcall(struct boot_params *boot_params_p)
-diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
-index 0e60bd918695..2f111f47ba98 100644
---- a/arch/x86/xen/xen-ops.h
-+++ b/arch/x86/xen/xen-ops.h
-@@ -122,9 +122,9 @@ static inline void __init xen_init_vga(const struct dom0_vga_console_info *info,
- void __init xen_init_apic(void);
- 
- #ifdef CONFIG_XEN_EFI
--extern void xen_efi_init(void);
-+extern void xen_efi_init(struct boot_params *boot_params);
- #else
--static inline void __init xen_efi_init(void)
-+static inline void __init xen_efi_init(struct boot_params *boot_params)
- {
- }
- #endif
--- 
-2.17.2 (Apple Git-113)
+This kind of thing happens a lot these days: pile on engineers, they can
+take it :/
