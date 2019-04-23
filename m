@@ -1,47 +1,44 @@
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-Subject: Re: [PATCH 2/2] xen/pvh: correctly setup the PV EFI interface for
- dom0
-Date: Tue, 23 Apr 2019 11:42:40 +0200
-Message-ID: <20190423094240.ksiq2qtow44tzbmf@Air-de-Roger>
-References: <20190423092829.67915-1-roger.pau@citrix.com>
- <20190423092829.67915-2-roger.pau@citrix.com>
- <ec713432-338e-9d14-f626-759b0f3f94d7@suse.com>
+From: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
+	files to *.rst
+Date: Tue, 23 Apr 2019 08:55:19 -0400
+Message-ID: <20190423125519.GA7104@redhat.com>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
+	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <ec713432-338e-9d14-f626-759b0f3f94d7@suse.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Juergen Gross <jgross@suse.com>
-Cc: linux-kernel@vger.kernel.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Stefano Stabellini <sstabellini@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, xen-devel@lists.xenproject.org, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20190423083135.GA11158-Nxj+rRp3nVydTX5a5knrm8zTDFooKrT+cvkQGrU6aU0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglin
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 23, 2019 at 11:36:10AM +0200, Juergen Gross wrote:
-> On 23/04/2019 11:28, Roger Pau Monne wrote:
-> > diff --git a/include/xen/xen-ops.h b/include/xen/xen-ops.h
-> > index 4969817124a8..51ef98e96d88 100644
-> > --- a/include/xen/xen-ops.h
-> > +++ b/include/xen/xen-ops.h
-> > @@ -209,6 +209,7 @@ int xen_xlate_map_ballooned_pages(xen_pfn_t **pfns, void **vaddr,
-> >  
-> >  bool xen_running_on_version_or_later(unsigned int major, unsigned int minor);
-> >  
-> > +#ifdef CONFIG_XEN_EFI
-> >  efi_status_t xen_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc);
-> >  efi_status_t xen_efi_set_time(efi_time_t *tm);
-> >  efi_status_t xen_efi_get_wakeup_time(efi_bool_t *enabled, efi_bool_t *pending,
-> > @@ -233,7 +234,12 @@ efi_status_t xen_efi_query_capsule_caps(efi_capsule_header_t **capsules,
-> >  					int *reset_type);
-> >  void xen_efi_reset_system(int reset_type, efi_status_t status,
-> >  			  unsigned long data_size, efi_char16_t *data);
-> > -
-> > +extern void xen_efi_init(struct boot_params *boot_params);
-> > +#else
-> > +static inline void __init xen_efi_init(struct boot_params *boot_params)
+On Tue, Apr 23 2019 at  4:31am -0400,
+Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
+
+> On Mon, Apr 22, 2019 at 10:27:45AM -0300, Mauro Carvalho Chehab wrote:
 > 
-> Is struct boot_params defined on ARM?
+> >  .../{atomic_bitops.txt => atomic_bitops.rst}  |  2 +
+> 
+> What's happend to atomic_t.txt, also NAK, I still occationally touch
+> these files.
 
-Seems to be defined for x86 and some mips only, so I will have to find
-another header. Will post v2 shortly.
+Seems Mauro's point is in the future we need to touch these .rst files
+in terms of ReST compatible changes.
 
-Thanks, Roger.
+I'm dreading DM documentation changes in the future.. despite Mauro and
+Jon Corbet informing me that ReST is simple, etc.
+
+Mike
