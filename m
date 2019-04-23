@@ -1,63 +1,64 @@
-From: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
-	files to *.rst
-Date: Tue, 23 Apr 2019 20:21:43 +0200
-Message-ID: <20190423182143.GL12232@hirez.programming.kicks-ass.net>
-References: <cover.1555938375.git.mchehab+samsung@kernel.org>
-	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
-	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
-	<20190423125519.GA7104@redhat.com>
-	<20190423130132.GT4038@hirez.programming.kicks-ass.net>
-	<20190423103053.07cf2149@lwn.net>
-	<20190423171158.GG12232@hirez.programming.kicks-ass.net>
-	<20190423115349.589c3d50@lwn.net>
+From: Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2] platform: uv: fix missing checks for kcalloc
+Date: Tue, 23 Apr 2019 13:02:43 -0700
+Message-ID: <CAGXu5jJ_MdFE_aTc9rFY9SwympdXdJA9WhdaaPJo4UvP9OaqDg@mail.gmail.com>
+References: <20190325125528.GM12016@zn.tnic> <20190325202924.4624-1-kjlu@umn.edu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190423115349.589c3d50-T1hC0tSOHrs@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
-Cc: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190325202924.4624-1-kjlu@umn.edu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kangjie Lu <kjlu@umn.edu>
+Cc: pakki001@umn.edu, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>, Kees Cook <keescook@chromium.org>, Andrew Banman <abanman@hpe.com>, Varsha Rao <rvarsha016@gmail.com>, Colin Ian King <colin.king@canonical.com>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Nicolai Stange <nstange@suse.de>, Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 23, 2019 at 11:53:49AM -0600, Jonathan Corbet wrote:
-> > Look at crap like this:
-> > 
-> > "The memory allocations via :c:func:`kmalloc`, :c:func:`vmalloc`,
-> > :c:func:`kmem_cache_alloc` and"
-> > 
-> > That should've been written like:
-> > 
-> > "The memory allocations via kmalloc(), vmalloc(), kmem_cache_alloc()
-> > and"
-> 
-> Yeah, I get it.  That markup generates cross-references, which can be
-> seriously useful for readers - we want that.
+On Mon, Mar 25, 2019 at 1:29 PM Kangjie Lu <kjlu@umn.edu> wrote:
+>
+> In case kcalloc fails, the patch return an error to avoid
+> potential NULL pointer dereference.
+>
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 
-The funny thing is; that sentence continues (on a new line) like:
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-"friends are traced and the pointers, together with additional"
+-Kees
 
-So while it then has cross-references to a few functions, all 'friends'
-are left dangling. So what's the point of the cross-references?
+>
+> ---
+> v2: reuse existing error path as suggested by
+> Borislav Petkov <bp@alien8.de>
+> ---
+>  arch/x86/platform/uv/tlb_uv.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+> index 2c53b0f19329..7b41b51b9a86 100644
+> --- a/arch/x86/platform/uv/tlb_uv.c
+> +++ b/arch/x86/platform/uv/tlb_uv.c
+> @@ -2133,14 +2133,18 @@ static int __init summarize_uvhub_sockets(int nuvhubs,
+>   */
+>  static int __init init_per_cpu(int nuvhubs, int base_part_pnode)
+>  {
+> -       unsigned char *uvhub_mask;
+>         struct uvhub_desc *uvhub_descs;
+> +       unsigned char *uvhub_mask = NULL;
+>
+>         if (is_uv3_hub() || is_uv2_hub() || is_uv1_hub())
+>                 timeout_us = calculate_destination_timeout();
+>
+>         uvhub_descs = kcalloc(nuvhubs, sizeof(struct uvhub_desc), GFP_KERNEL);
+> +       if (!uvhub_descs)
+> +               goto fail;
+>         uvhub_mask = kzalloc((nuvhubs+7)/8, GFP_KERNEL);
+> +       if (!uvhub_mask)
+> +               goto fail;
+>
+>         if (get_cpu_topology(base_part_pnode, uvhub_descs, uvhub_mask))
+>                 goto fail;
+> --
+> 2.17.1
+>
 
-Also, 'make ctags' and follow tag (ctrl-] for fellow vim users) will get
-you to the function, no magic markup required.
 
-> But I do wonder if we
-> couldn't do it automatically with just a little bit of scripting work.
-> It's not to hard to recognize this_is_a_function(), after all.  I'll look
-> into that, it would definitely help to remove some gunk from the source
-> docs.
-
-That would be good; less markup is more.
+-- 
+Kees Cook
