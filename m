@@ -1,74 +1,146 @@
-From: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
-Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
-	files to *.rst
-Date: Tue, 23 Apr 2019 16:06:40 -0600
-Message-ID: <20190423160640.70c9703f@lwn.net>
-References: <cover.1555938375.git.mchehab+samsung@kernel.org>
-	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
-	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
-	<20190423125519.GA7104@redhat.com>
-	<20190423130132.GT4038@hirez.programming.kicks-ass.net>
-	<20190423103053.07cf2149@lwn.net>
-	<20190423171158.GG12232@hirez.programming.kicks-ass.net>
-	<20190423172006.GD16353@zn.tnic> <20190423170409.7b1370ac@coco.lan>
-	<20190423213816.GE16353@zn.tnic>
+From: Chris Chiu <chiu@endlessm.com>
+Subject: Re: [PATCH] platform/x86: asus-wmi: Add fn-lock mode switch support
+Date: Wed, 24 Apr 2019 08:54:17 +0800
+Message-ID: <CAB4CAwfsbgP9DrYEHs2c9HRc5MS_k-BfZ9EOhmUu7XsJ9pHh4g@mail.gmail.com>
+References: <20190418064648.25706-1-chiu@endlessm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20190423213816.GE16353-Jj63ApZU6fQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190418064648.25706-1-chiu@endlessm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>
+Cc: acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 23 Apr 2019 23:38:16 +0200
-Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> wrote:
+On Thu, Apr 18, 2019 at 2:46 PM Chris Chiu <chiu@endlessm.com> wrote:
+>
+> Some of latest ASUS laptops support new fn-lock mode switching.
+> This commit detect whether if the fn-lock option is enabled in
+> BIOS setting, and toggle the fn-lock mode via a new WMI DEVID
+> 0x00100023 when the corresponding notify code captured.
+>
+> The ASUS fn-lock mode switch is activated by pressing Fn+Esc.
+> When on, keys F1 to F12 behave as applicable, with meanings
+> defined by the application being used at the time. When off,
+> F1 to F12 directly triggers hardware features, well known audio
+> volume up/down, brightness up/down...etc, which were triggered
+> by holding down Fn key and F-keys.
+>
+> Because there's no way to retrieve the fn-lock mode via existing
+> WMI methods per ASUS spec, driver need to initialize and keep the
+> fn-lock mode by itself.
+>
+> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+> ---
+>  drivers/platform/x86/asus-wmi.c            | 36 ++++++++++++++++++++++++++++++
+>  include/linux/platform_data/x86/asus-wmi.h |  1 +
+>  2 files changed, 37 insertions(+)
+>
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 37b5de541270..5f52b66e40cb 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
+>  #define NOTIFY_KBD_BRTUP               0xc4
+>  #define NOTIFY_KBD_BRTDWN              0xc5
+>  #define NOTIFY_KBD_BRTTOGGLE           0xc7
+> +#define NOTIFY_FNLOCK_TOGGLE           0x4e
+>
+>  #define ASUS_FAN_DESC                  "cpu_fan"
+>  #define ASUS_FAN_MFUN                  0x13
+> @@ -177,6 +178,8 @@ struct asus_wmi {
+>         struct workqueue_struct *hotplug_workqueue;
+>         struct work_struct hotplug_work;
+>
+> +       bool fnlock_locked;
+> +
+>         struct asus_wmi_debug debug;
+>
+>         struct asus_wmi_driver *driver;
+> @@ -1619,6 +1622,24 @@ static int is_display_toggle(int code)
+>         return 0;
+>  }
+>
+> +static bool asus_wmi_has_fnlock_key(struct asus_wmi *asus)
+> +{
+> +#define ASUS_WMI_FNLOCK_BIOS_DISABLED  BIT(0)
+> +       u32 result;
+> +
+> +       asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FNLOCK, &result);
+> +
+> +       return (result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
+> +               !(result & ASUS_WMI_FNLOCK_BIOS_DISABLED);
+> +}
+> +
+> +static void asus_wmi_fnlock_update(struct asus_wmi *asus)
+> +{
+> +       int mode = asus->fnlock_locked;
+> +
+> +       asus_wmi_set_devstate(ASUS_WMI_DEVID_FNLOCK, mode, NULL);
+> +}
+> +
+>  static void asus_wmi_notify(u32 value, void *context)
+>  {
+>         struct asus_wmi *asus = context;
+> @@ -1680,6 +1701,12 @@ static void asus_wmi_notify(u32 value, void *context)
+>                 goto exit;
+>         }
+>
+> +       if (code == NOTIFY_FNLOCK_TOGGLE) {
+> +               asus->fnlock_locked = !asus->fnlock_locked;
+> +               asus_wmi_fnlock_update(asus);
+> +               goto exit;
+> +       }
+> +
+>         if (is_display_toggle(code) &&
+>             asus->driver->quirks->no_display_toggle)
+>                 goto exit;
+> @@ -2134,6 +2161,11 @@ static int asus_wmi_add(struct platform_device *pdev)
+>         } else
+>                 err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
+>
+> +       if (asus_wmi_has_fnlock_key(asus)) {
+> +               asus->fnlock_locked = true;
+> +               asus_wmi_fnlock_update(asus);
+> +       }
+> +
+>         status = wmi_install_notify_handler(asus->driver->event_guid,
+>                                             asus_wmi_notify, asus);
+>         if (ACPI_FAILURE(status)) {
+> @@ -2213,6 +2245,8 @@ static int asus_hotk_resume(struct device *device)
+>         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
+>                 kbd_led_update(asus);
+>
+> +       if (asus_wmi_has_fnlock_key(asus))
+> +               asus_wmi_fnlock_update(asus);
+>         return 0;
+>  }
+>
+> @@ -2249,6 +2283,8 @@ static int asus_hotk_restore(struct device *device)
+>         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
+>                 kbd_led_update(asus);
+>
+> +       if (asus_wmi_has_fnlock_key(asus))
+> +               asus_wmi_fnlock_update(asus);
+>         return 0;
+>  }
+>
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 53dfc2541960..bfba245636a7 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -67,6 +67,7 @@
+>  /* Input */
+>  #define ASUS_WMI_DEVID_TOUCHPAD                0x00100011
+>  #define ASUS_WMI_DEVID_TOUCHPAD_LED    0x00100012
+> +#define ASUS_WMI_DEVID_FNLOCK          0x00100023
+>
+>  /* Fan, Thermal */
+>  #define ASUS_WMI_DEVID_THERMAL_CTRL    0x00110011
+> --
+> 2.11.0
+>
 
-> But exactly this - *having* to do rst formatting would mean a lot of
-> getting used to and people writing something which is not necessarily
-> correct rst and someone else fixing up after them.
+Gentle ping. Any comments or suggestions for this are appreciated.
 
-Remember that most of our docs are 99% RST even though they were written
-by people who had never even heard of RST.  I really don't think it's a
-big deal - a far smaller cognitive load than trying to keep up with any
-given subsystem's variable-declaration-ordering rules, for example :)
-
-> Another pain point is changing the file paths. Without cscope I would've
-> been cursing each time I'm looking for kernel-parameters.txt, for
-> example. First of all, it is in Documentation/admin-guide/ now and then
-> there's Documentation/admin-guide/kernel-parameters.rst too.
-
-Moving of files has nothing to do with RST, of course.  That you can
-blame entirely on me trying to bring some order to Documentation/.  As a
-predecessor of mine once put it (https://lkml.org/lkml/2007/7/3/422):
-
-	Documentation/* is a gigantic mess, currently organized based on
-	where random passers-by put things down last.
-
-When other parts of the kernel tree turn out to be organized in
-less-than-useful ways, we move things around.  I'm trying to do the same
-in Documentation/, with an attempt to be sympathetic toward our readers,
-sort things by intended audience, and create (someday) a coherent whole.
-I agree that moving docs is a short-term annoyance, but I'm hoping that
-it brings a long-term benefit.
-
-> So* I'd suggest having as less markup in those files as possible and if
-> it is needed, automate adding the needed markup, as Jon suggested.
-
-Minimal markup is the policy (it's even documented :).  Automating stuff
-that can be automated is an area that has definitely not received
-enough attention; hopefully some things can be done there in the very
-near future.
-
-Thanks,
-
-jon
+Chris
