@@ -1,146 +1,156 @@
-From: Chris Chiu <chiu@endlessm.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Add fn-lock mode switch support
-Date: Wed, 24 Apr 2019 08:54:17 +0800
-Message-ID: <CAB4CAwfsbgP9DrYEHs2c9HRc5MS_k-BfZ9EOhmUu7XsJ9pHh4g@mail.gmail.com>
-References: <20190418064648.25706-1-chiu@endlessm.com>
+From: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
+	files to *.rst
+Date: Wed, 24 Apr 2019 08:52:09 +0200
+Message-ID: <20190424065209.GC4038@hirez.programming.kicks-ass.net>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
+	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
+	<20190423125519.GA7104@redhat.com>
+	<20190423130132.GT4038@hirez.programming.kicks-ass.net>
+	<20190423103053.07cf2149@lwn.net>
+	<20190423171158.GG12232@hirez.programming.kicks-ass.net>
+	<20190423172006.GD16353@zn.tnic> <20190423170409.7b1370ac@coco.lan>
+	<20190423213816.GE16353@zn.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190418064648.25706-1-chiu@endlessm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>
-Cc: acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190423213816.GE16353-Jj63ApZU6fQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Apr 18, 2019 at 2:46 PM Chris Chiu <chiu@endlessm.com> wrote:
->
-> Some of latest ASUS laptops support new fn-lock mode switching.
-> This commit detect whether if the fn-lock option is enabled in
-> BIOS setting, and toggle the fn-lock mode via a new WMI DEVID
-> 0x00100023 when the corresponding notify code captured.
->
-> The ASUS fn-lock mode switch is activated by pressing Fn+Esc.
-> When on, keys F1 to F12 behave as applicable, with meanings
-> defined by the application being used at the time. When off,
-> F1 to F12 directly triggers hardware features, well known audio
-> volume up/down, brightness up/down...etc, which were triggered
-> by holding down Fn key and F-keys.
->
-> Because there's no way to retrieve the fn-lock mode via existing
-> WMI methods per ASUS spec, driver need to initialize and keep the
-> fn-lock mode by itself.
->
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+On Tue, Apr 23, 2019 at 11:38:16PM +0200, Borislav Petkov wrote:
+> If that is all the changes it would need, then I guess that's ok. Btw,
+> those rst-conversion patches don't really show what got changed. Dunno
+> if git can even show that properly. I diffed the two files by hand to
+> see what got changed, see end of mail.
+
+That is not a happy diff; that table has gotten waay worse to read due
+to all that extra table crap.
+
 > ---
->  drivers/platform/x86/asus-wmi.c            | 36 ++++++++++++++++++++++++++++++
->  include/linux/platform_data/x86/asus-wmi.h |  1 +
->  2 files changed, 37 insertions(+)
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 37b5de541270..5f52b66e40cb 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
->  #define NOTIFY_KBD_BRTUP               0xc4
->  #define NOTIFY_KBD_BRTDWN              0xc5
->  #define NOTIFY_KBD_BRTTOGGLE           0xc7
-> +#define NOTIFY_FNLOCK_TOGGLE           0x4e
->
->  #define ASUS_FAN_DESC                  "cpu_fan"
->  #define ASUS_FAN_MFUN                  0x13
-> @@ -177,6 +178,8 @@ struct asus_wmi {
->         struct workqueue_struct *hotplug_workqueue;
->         struct work_struct hotplug_work;
->
-> +       bool fnlock_locked;
-> +
->         struct asus_wmi_debug debug;
->
->         struct asus_wmi_driver *driver;
-> @@ -1619,6 +1622,24 @@ static int is_display_toggle(int code)
->         return 0;
->  }
->
-> +static bool asus_wmi_has_fnlock_key(struct asus_wmi *asus)
-> +{
-> +#define ASUS_WMI_FNLOCK_BIOS_DISABLED  BIT(0)
-> +       u32 result;
-> +
-> +       asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FNLOCK, &result);
-> +
-> +       return (result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
-> +               !(result & ASUS_WMI_FNLOCK_BIOS_DISABLED);
-> +}
-> +
-> +static void asus_wmi_fnlock_update(struct asus_wmi *asus)
-> +{
-> +       int mode = asus->fnlock_locked;
-> +
-> +       asus_wmi_set_devstate(ASUS_WMI_DEVID_FNLOCK, mode, NULL);
-> +}
-> +
->  static void asus_wmi_notify(u32 value, void *context)
->  {
->         struct asus_wmi *asus = context;
-> @@ -1680,6 +1701,12 @@ static void asus_wmi_notify(u32 value, void *context)
->                 goto exit;
->         }
->
-> +       if (code == NOTIFY_FNLOCK_TOGGLE) {
-> +               asus->fnlock_locked = !asus->fnlock_locked;
-> +               asus_wmi_fnlock_update(asus);
-> +               goto exit;
-> +       }
-> +
->         if (is_display_toggle(code) &&
->             asus->driver->quirks->no_display_toggle)
->                 goto exit;
-> @@ -2134,6 +2161,11 @@ static int asus_wmi_add(struct platform_device *pdev)
->         } else
->                 err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
->
-> +       if (asus_wmi_has_fnlock_key(asus)) {
-> +               asus->fnlock_locked = true;
-> +               asus_wmi_fnlock_update(asus);
-> +       }
-> +
->         status = wmi_install_notify_handler(asus->driver->event_guid,
->                                             asus_wmi_notify, asus);
->         if (ACPI_FAILURE(status)) {
-> @@ -2213,6 +2245,8 @@ static int asus_hotk_resume(struct device *device)
->         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
->                 kbd_led_update(asus);
->
-> +       if (asus_wmi_has_fnlock_key(asus))
-> +               asus_wmi_fnlock_update(asus);
->         return 0;
->  }
->
-> @@ -2249,6 +2283,8 @@ static int asus_hotk_restore(struct device *device)
->         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
->                 kbd_led_update(asus);
->
-> +       if (asus_wmi_has_fnlock_key(asus))
-> +               asus_wmi_fnlock_update(asus);
->         return 0;
->  }
->
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 53dfc2541960..bfba245636a7 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -67,6 +67,7 @@
->  /* Input */
->  #define ASUS_WMI_DEVID_TOUCHPAD                0x00100011
->  #define ASUS_WMI_DEVID_TOUCHPAD_LED    0x00100012
-> +#define ASUS_WMI_DEVID_FNLOCK          0x00100023
->
->  /* Fan, Thermal */
->  #define ASUS_WMI_DEVID_THERMAL_CTRL    0x00110011
-> --
-> 2.11.0
->
-
-Gentle ping. Any comments or suggestions for this are appreciated.
-
-Chris
+> --- mm.old	2019-04-23 23:18:55.954335784 +0200
+> +++ mm.new	2019-04-23 23:18:48.122335821 +0200
+> @@ -18,51 +18,68 @@ Notes:
+>     notation than "16 EB", which few will recognize at first sight as 16 exabytes.
+>     It also shows it nicely how incredibly large 64-bit address space is.
+>  
+> -========================================================================================================================
+> -    Start addr    |   Offset   |     End addr     |  Size   | VM area description
+> -========================================================================================================================
+> -                  |            |                  |         |
+> - 0000000000000000 |    0       | 00007fffffffffff |  128 TB | user-space virtual memory, different per mm
+> -__________________|____________|__________________|_________|___________________________________________________________
+> -                  |            |                  |         |
+> - 0000800000000000 | +128    TB | ffff7fffffffffff | ~16M TB | ... huge, almost 64 bits wide hole of non-canonical
+> -                  |            |                  |         |     virtual memory addresses up to the -128 TB
+> -                  |            |                  |         |     starting offset of kernel mappings.
+> -__________________|____________|__________________|_________|___________________________________________________________
+> -                                                            |
+> -                                                            | Kernel-space virtual memory, shared between all processes:
+> -____________________________________________________________|___________________________________________________________
+> -                  |            |                  |         |
+> - ffff800000000000 | -128    TB | ffff87ffffffffff |    8 TB | ... guard hole, also reserved for hypervisor
+> - ffff880000000000 | -120    TB | ffff887fffffffff |  0.5 TB | LDT remap for PTI
+> - ffff888000000000 | -119.5  TB | ffffc87fffffffff |   64 TB | direct mapping of all physical memory (page_offset_base)
+> - ffffc88000000000 |  -55.5  TB | ffffc8ffffffffff |  0.5 TB | ... unused hole
+> - ffffc90000000000 |  -55    TB | ffffe8ffffffffff |   32 TB | vmalloc/ioremap space (vmalloc_base)
+> - ffffe90000000000 |  -23    TB | ffffe9ffffffffff |    1 TB | ... unused hole
+> - ffffea0000000000 |  -22    TB | ffffeaffffffffff |    1 TB | virtual memory map (vmemmap_base)
+> - ffffeb0000000000 |  -21    TB | ffffebffffffffff |    1 TB | ... unused hole
+> - ffffec0000000000 |  -20    TB | fffffbffffffffff |   16 TB | KASAN shadow memory
+> -__________________|____________|__________________|_________|____________________________________________________________
+> -                                                            |
+> -                                                            | Identical layout to the 56-bit one from here on:
+> -____________________________________________________________|____________________________________________________________
+> -                  |            |                  |         |
+> - fffffc0000000000 |   -4    TB | fffffdffffffffff |    2 TB | ... unused hole
+> -                  |            |                  |         | vaddr_end for KASLR
+> - fffffe0000000000 |   -2    TB | fffffe7fffffffff |  0.5 TB | cpu_entry_area mapping
+> - fffffe8000000000 |   -1.5  TB | fffffeffffffffff |  0.5 TB | ... unused hole
+> - ffffff0000000000 |   -1    TB | ffffff7fffffffff |  0.5 TB | %esp fixup stacks
+> - ffffff8000000000 | -512    GB | ffffffeeffffffff |  444 GB | ... unused hole
+> - ffffffef00000000 |  -68    GB | fffffffeffffffff |   64 GB | EFI region mapping space
+> - ffffffff00000000 |   -4    GB | ffffffff7fffffff |    2 GB | ... unused hole
+> - ffffffff80000000 |   -2    GB | ffffffff9fffffff |  512 MB | kernel text mapping, mapped to physical address 0
+> - ffffffff80000000 |-2048    MB |                  |         |
+> - ffffffffa0000000 |-1536    MB | fffffffffeffffff | 1520 MB | module mapping space
+> - ffffffffff000000 |  -16    MB |                  |         |
+> -    FIXADDR_START | ~-11    MB | ffffffffff5fffff | ~0.5 MB | kernel-internal fixmap range, variable size and offset
+> - ffffffffff600000 |  -10    MB | ffffffffff600fff |    4 kB | legacy vsyscall ABI
+> - ffffffffffe00000 |   -2    MB | ffffffffffffffff |    2 MB | ... unused hole
+> -__________________|____________|__________________|_________|___________________________________________________________
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|   Start addr    |   Offset   |     End addr     |  Size   | VM area description                                       |
+> ++=================+============+==================+=========+===========================================================+
+> +|                 |            |                  |         |                                                           |
+> +|0000000000000000 |    0       | 00007fffffffffff |  128 TB | user-space virtual memory, different per mm               |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|                 |            |                  |         |                                                           |
+> +|0000800000000000 | +128    TB | ffff7fffffffffff | ~16M TB | ... huge, almost 64 bits wide hole of non-canonical       |
+> +|                 |            |                  |         | virtual memory addresses up to the -128 TB                |
+> +|                 |            |                  |         | starting offset of kernel mappings.                       |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|                      **Kernel-space virtual memory, shared between all processes:**                                   |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffff800000000000 | -128    TB | ffff87ffffffffff |    8 TB | ... guard hole, also reserved for hypervisor              |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffff880000000000 | -120    TB | ffff887fffffffff |  0.5 TB | LDT remap for PTI                                         |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffff888000000000 | -119.5  TB | ffffc87fffffffff |   64 TB | direct mapping of all physical memory (page_offset_base)  |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffc88000000000 |  -55.5  TB | ffffc8ffffffffff |  0.5 TB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffc90000000000 |  -55    TB | ffffe8ffffffffff |   32 TB | vmalloc/ioremap space (vmalloc_base)                      |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffe90000000000 |  -23    TB | ffffe9ffffffffff |    1 TB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffea0000000000 |  -22    TB | ffffeaffffffffff |    1 TB | virtual memory map (vmemmap_base)                         |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffeb0000000000 |  -21    TB | ffffebffffffffff |    1 TB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffec0000000000 |  -20    TB | fffffbffffffffff |   16 TB | KASAN shadow memory                                       |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|                         **Identical layout to the 56-bit one from here on:**                                          |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|fffffc0000000000 |   -4    TB | fffffdffffffffff |    2 TB | ... unused hole                                           |
+> +|                 |            |                  |         | vaddr_end for KASLR                                       |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|fffffe0000000000 |   -2    TB | fffffe7fffffffff |  0.5 TB | cpu_entry_area mapping                                    |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|fffffe8000000000 |   -1.5  TB | fffffeffffffffff |  0.5 TB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffff0000000000 |   -1    TB | ffffff7fffffffff |  0.5 TB | %esp fixup stacks                                         |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffff8000000000 | -512    GB | ffffffeeffffffff |  444 GB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffef00000000 |  -68    GB | fffffffeffffffff |   64 GB | EFI region mapping space                                  |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffff00000000 |   -4    GB | ffffffff7fffffff |    2 GB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffff80000000 |   -2    GB | ffffffff9fffffff |  512 MB | kernel text mapping, mapped to physical address 0         |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffff80000000 |-2048    MB |                  |         |                                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffffa0000000 |-1536    MB | fffffffffeffffff | 1520 MB | module mapping space                                      |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffffff000000 |  -16    MB |                  |         |                                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|   FIXADDR_START | ~-11    MB | ffffffffff5fffff | ~0.5 MB | kernel-internal fixmap range, variable size and offset    |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffffff600000 |  -10    MB | ffffffffff600fff |    4 kB | legacy vsyscall ABI                                       |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
+> +|ffffffffffe00000 |   -2    MB | ffffffffffffffff |    2 MB | ... unused hole                                           |
+> ++-----------------+------------+------------------+---------+-----------------------------------------------------------+
