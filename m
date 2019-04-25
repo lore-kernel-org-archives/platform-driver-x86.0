@@ -1,59 +1,53 @@
-From: ibm-acpi@hmh.eng.br
-Subject: =?UTF-8?Q?Re:_[PATCH]_platform/x86:_thinkpad=5Facpi:_Mark_expected_switc?=
- =?UTF-8?Q?h_fall-throughs?=
-Date: Wed, 24 Apr 2019 20:55:05 -0400
-Message-ID: <13ba6003-ff33-4e5b-b88e-ef93bc68dc48@www.fastmail.com>
-References: <20190424181543.GA31200@embeddedor>
- <CAGXu5jKRO45m1TRDPA09sv0j+cZCC8e1w+oQty4YfOttKP3FYA@mail.gmail.com>
+From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+Subject: Re: [PATCH v2 2/2] xen/pvh: correctly setup the PV EFI interface for
+ dom0
+Date: Thu, 25 Apr 2019 12:02:59 +0200
+Message-ID: <20190425100259.f2k7ayzlxctucitg@Air-de-Roger>
+References: <20190423130416.68935-1-roger.pau@citrix.com>
+ <20190423130416.68935-2-roger.pau@citrix.com>
+ <2359c97c-1125-cfd2-44c2-7e9ce7972558@oracle.com>
+ <20190424154504.vzkkobxsesc3oval@Air-de-Roger>
+ <131ff20e-5f28-40ef-37a0-422f6508c115@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGXu5jKRO45m1TRDPA09sv0j+cZCC8e1w+oQty4YfOttKP3FYA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <131ff20e-5f28-40ef-37a0-422f6508c115@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kees Cook <keescook@chromium.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, xen-devel@lists.xenproject.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Apr 24, 2019, at 16:05, Kees Cook wrote:
-> On Wed, Apr 24, 2019 at 11:15 AM Gustavo A. R. Silva
-> <gustavo@embeddedor.com> wrote:
+On Wed, Apr 24, 2019 at 11:45:43AM -0400, Boris Ostrovsky wrote:
+> On 4/24/19 11:45 AM, Roger Pau Monné wrote:
+> > On Wed, Apr 24, 2019 at 11:36:41AM -0400, Boris Ostrovsky wrote:
+> >> On 4/23/19 9:04 AM, Roger Pau Monne wrote:
+> >>> This involves initializing the boot params EFI related fields and the
+> >>> efi global variable.
+> >>>
+> >>> Without this fix a PVH dom0 doesn't detect when booted from EFI, and
+> >>> thus doesn't support accessing any of the EFI related data.
+> >>>
+> >>> Reported-by: PGNet Dev <pgnet.dev@gmail.com>
+> >>> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+> >> Hmm.. This seems to be breaking save/restore for me (for domU), and I
+> >> can't see any obvious reasons.
+> >>
+> >> Can you try it?
+> > Sure, thanks for the extra testing! I have to admit I haven't tested
+> > save/restore with this patch applied, it didn't come to mind it might
+> > affect that functionality.
 > >
-> > In preparation to enabling -Wimplicit-fallthrough, mark switch
-> > cases where we are expecting to fall through.
+> > I assume it's save/restore of a PVH domU that's broken (HVM and PV are
+> > fine)?
 > >
-> > This patch fixes the following warnings:
-> >
-> > drivers/platform/x86/thinkpad_acpi.c: In function =E2=80=98thermal_g=
-et_sensor=E2=80=99:
-> > drivers/platform/x86/thinkpad_acpi.c:6316:6: warning: this statement=
- may fall through [-Wimplicit-fallthrough=3D]
-> >    if (idx >=3D 8 && idx <=3D 15) {
-> >       ^
-> > drivers/platform/x86/thinkpad_acpi.c:6322:2: note: here
-> >   case TPACPI_THERMAL_TPEC_8:
-> >   ^~~~
-> > drivers/platform/x86/thinkpad_acpi.c: In function =E2=80=98hotkey_no=
-tify=E2=80=99:
-> > drivers/platform/x86/thinkpad_acpi.c:4208:7: warning: this statement=
- may fall through [-Wimplicit-fallthrough=3D]
-> >     if (tp_features.hotkey_wlsw &&
-> >        ^
-> > drivers/platform/x86/thinkpad_acpi.c:4216:3: note: here
-> >    default:
-> >    ^~~~~~~
-> >
-> > Warning level 3 was used: -Wimplicit-fallthrough=3D3
-> >
-> > Notice that, in this particular case, the code comments are modified=
+> 
+> 
+> PV is fine, I haven't tried HVM.
 
-> > in accordance with what GCC is expecting to find.
-> >
-> > This patch is part of the ongoing efforts to enable
-> > -Wimplicit-fallthrough.
-> >
-> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->=20
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+I've tested live migration and save/restore of this series on top of
+5.1.0-rc5 and seems to work fine for me. On top of which Linux version
+where you testing, and can you paste the guest config file?
 
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Thanks, Roger.
