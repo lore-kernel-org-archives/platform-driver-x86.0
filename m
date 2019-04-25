@@ -1,58 +1,57 @@
-From: Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v3 12/26] compat_ioctl: move more drivers to
- compat_ptr_ioctl
-Date: Thu, 25 Apr 2019 17:42:35 +0100
-Message-ID: <20190425164235.GT2217@ZenIV.linux.org.uk>
-References: <20190416202013.4034148-1-arnd@arndb.de>
- <20190416202701.127745-1-arnd@arndb.de>
- <20190425122153.450fc094@coco.lan>
- <20190425153534.GS2217@ZenIV.linux.org.uk>
- <CAK8P3a2HmiYQJ2FV2FgLiFsD8M9UKteC9Jetx7ja06PQVZWYfA@mail.gmail.com>
+From: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Subject: Re: [PATCH v3 08/11] platform/x86: asus-wmi: Enhance detection of
+ thermal data
+Date: Thu, 25 Apr 2019 20:51:54 +0200
+Message-ID: <a5d5f899-d218-b581-b187-f783759b6afa@gmail.com>
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+ <7595c4f0-3dbb-2fe5-4daf-4b9a266f67d7@gmail.com>
+ <3C3E65E75D9910479323816378A812E7414CDE12@BGSMSX104.gar.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2HmiYQJ2FV2FgLiFsD8M9UKteC9Jetx7ja06PQVZWYfA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>, y2038 Mailman List <y2038@lists.linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgg@mellanox.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Sterba <dsterba@suse.com>, Darren Hart <dvhart@infradead.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, driverdevel <devel@driverdev.osuosl.org>, qat-linux@intel.com, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lis
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3C3E65E75D9910479323816378A812E7414CDE12@BGSMSX104.gar.corp.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Pawnikar, Sumeet R" <sumeet.r.pawnikar@intel.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Daniel Drake <drake@endlessm.com>, "acpi4asus-user@lists.sourceforge.net" <acpi4asus-user@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Apr 25, 2019 at 05:55:23PM +0200, Arnd Bergmann wrote:
-> On Thu, Apr 25, 2019 at 5:35 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > On Thu, Apr 25, 2019 at 12:21:53PM -0300, Mauro Carvalho Chehab wrote:
-> >
-> > > If I understand your patch description well, using compat_ptr_ioctl
-> > > only works if the driver is not for s390, right?
-> >
-> > No; s390 is where "oh, just set ->compat_ioctl same as ->unlocked_ioctl
-> > and be done with that; compat_ptr() is a no-op anyway" breaks.  IOW,
-> > s390 is the reason for having compat_ptr_ioctl() in the first place;
-> > that thing works on all biarch architectures, as long as all stuff
-> > handled by ->ioctl() takes pointer to arch-independent object as
-> > argument.  IOW,
-> >         argument ignored => OK
-> >         any arithmetical type => no go, compat_ptr() would bugger it
-> >         pointer to int => OK
-> >         pointer to string => OK
-> >         pointer to u64 => OK
-> >         pointer to struct {u64 addr; char s[11];} => OK
-> 
-> To be extra pedantic, the 'struct {u64 addr; char s[11];} '
-> case is also broken on x86, because sizeof (obj) is smaller
-> on i386, even though the location of the members are
-> the same. i.e. you can copy_from_user() this, but not
-> copy_to_user(), which overwrites 4 bytes after the end of
-> the 20-byte user structure.
+On 24.04.19 20:25, Pawnikar, Sumeet R wrote:
+>> +	/*
+>> +	 * If the temperature value in deci-Kelvin is near the absolute
+>> +	 * zero temperature, something is clearly wrong.
+>> +	 */
+>> +	if (!value || value == 1)
+>> +		return 0;
+> Do you still need to return 0 in case of wrong/failure case ? 
+> Shouldn't you return error here ? 
 
-D'oh!  FWIW, it might be worth putting into Documentation/ somewhere;
-basically, what is and what isn't biarch-neutral.
+Yes, I think 0 is right there, it's not an error condition in the check
+itself (such as IO or memory error). The function returns two values: check
+result in asus->asus_hwmon_thermal_available and error code.
 
-Or arch-neutral, for that matter - it's very close.  The only real
-exception, IIRC, is an extra twist on m68k, where int behaves
-like x86 long long - its alignment is only half its size, so
-sizeof(struct {char c; int x;}) is 6, not 8 as everywhere
-else.  Irrelevant for biarch, thankfully (until somebody gets insane
-enough to implement 64bit coldfire, kernel port for it *and* biarch
-support for m68k binaries on that thing, that is)...
+This is still a successful negative result. The 0 or 1 (as added in this
+patch) there merely indicates that the temperature measurement is not
+available this way. It is safe to assume that no device that does provide
+temperature will return 0.1 K. The temperature measurement is not critical
+for driver operation so the driver proceeds without it.
+
+One could return ENODEV when the check result is negative, but that would
+just move the actual check and assignment further to asus_wmi_fan_init.
+
+This is how it might look like in DSDT in this case:
+Method (TMPR, 0, NotSerialized)
+{
+    Return (One)
+}
+..
+If ((IIA0 == 0x00110011))
+{
+    Return ((TMPR () & 0xFFFF))
+}
+
+This is indeed the right method ID but it's nothing there.
+
+Regards,
+Yurii
