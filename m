@@ -1,48 +1,65 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 71/79] platform/x86: pmc_atom: Drop __initconst on dmi table
-Date: Fri, 26 Apr 2019 21:38:30 -0400
-Message-ID: <20190427013838.6596-71-sashal@kernel.org>
-References: <20190427013838.6596-1-sashal@kernel.org>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v2] i2c: i801: Register optional lis3lv02d i2c device on
+ Dell machines
+Date: Sat, 27 Apr 2019 08:48:55 +0200
+Message-ID: <20190427064855.omawrv2vmcehsspb@pali>
+References: <20180131120348.azy25aqvn5wrdkeh@pali>
+ <CAHp75Vf=-RQvCtS684Q5+X=YKmZXgP_1kr0to8BGZX0jQAsuZw@mail.gmail.com>
+ <20180212153012.vffvjmz26ifyxbj5@pali>
+ <CAHp75VfF+qwCXcr3yuayE-Z+UG9wuMOKfGzLhdyPk79daEi9gQ@mail.gmail.com>
+ <20180213150004.5d2v7y7wwuure4io@pali>
+ <CAHp75VfxgbFiDxyrqyMRE8s85L1_EzkVvrA1NGYA5_su=5oGVQ@mail.gmail.com>
+ <20180213165023.xmzovx7fd3gdljxw@pali>
+ <20180226203255.lnnzipipjz5l2itz@ninjato>
+ <20180308225330.5ywfokfhxcl5j3ju@pali>
+ <20180418114610.rohdk5mnzv4km4z2@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Stephen Boyd <sboyd@kernel.org>, =?UTF-8?q?David=20M=C3=BCller?= <dave.mueller@gmx.ch>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="mvpru5kfdrmq6sqf"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180418114610.rohdk5mnzv4km4z2@pali>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis Kletnieks <Valdis.Kletnieks@vt.edu>, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario Limonciello <Mario_Limonciello@dell.com>, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c <linux-i2c@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
 
-[ Upstream commit b995dcca7cf12f208cfd95fd9d5768dca7cccec7 ]
+--mvpru5kfdrmq6sqf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It's used by probe and that isn't an init function. Drop this so that we
-don't get a section mismatch.
+On Wednesday 18 April 2018 13:46:10 Pali Roh=C3=A1r wrote:
+> On Thursday 08 March 2018 23:53:30 Pali Roh=C3=A1r wrote:
+> > On Monday 26 February 2018 21:32:55 Wolfram Sang wrote:
+> > >=20
+> > > > I'm not maintainer of i2c-i801.ko, Jean Delvare & Wolfram Sang are.
+> > > > Therefore instructing future contributors would be up to them.
+> > >=20
+> > > This is really Jean's realm.
+> > >=20
+> >=20
+> > Jean, ping.
+>=20
+> Jean, gently ping again. Waiting for your maintainer response/decision
+> on this problem.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Cc: David Müller <dave.mueller@gmx.ch>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Fixes: 7c2e07130090 ("clk: x86: Add system specific quirk to mark clocks as critical")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/pmc_atom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Jean, one year passed without any answer. May you response to this
+thread about this patch?
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index eaec2d306481..c7039f52ad51 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -396,7 +396,7 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
-  * Some systems need one or more of their pmc_plt_clks to be
-  * marked as critical.
-  */
--static const struct dmi_system_id critclk_systems[] __initconst = {
-+static const struct dmi_system_id critclk_systems[] = {
- 	{
- 		.ident = "MPL CEC1x",
- 		.matches = {
--- 
-2.19.1
+--=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--mvpru5kfdrmq6sqf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXMP7VQAKCRCL8Mk9A+RD
+UpvnAKCTDm3RX8cPc1mcZbuH/1GAVEkwlgCgmt/6wZDdcJMcJNBFkEhvi8oD/ig=
+=FtHj
+-----END PGP SIGNATURE-----
+
+--mvpru5kfdrmq6sqf--
