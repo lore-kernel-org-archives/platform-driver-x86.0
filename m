@@ -1,159 +1,150 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: Thinkpad ACPI led -- it keeps blinking
-Date: Fri, 26 Apr 2019 23:42:46 +0200
-Message-ID: <20190426214246.GA24966@amd>
-References: <20190426123513.GA18172@amd>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 68/79] clk: x86: Add system specific quirk to mark clocks as critical
+Date: Fri, 26 Apr 2019 21:38:27 -0400
+Message-ID: <20190427013838.6596-68-sashal@kernel.org>
+References: <20190427013838.6596-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8697371477894435697=="
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20190426123513.GA18172@amd>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190427013838.6596-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: =?UTF-8?q?David=20M=C3=BCller?= <dave.mueller@gmx.ch>, Hans de Goede <hdegoede@redhat.com>, Stephen Boyd <sboyd@kernel.org>, Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+From: David Müller <dave.mueller@gmx.ch>
 
---===============8697371477894435697==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
-Content-Disposition: inline
+[ Upstream commit 7c2e07130090ae001a97a6b65597830d6815e93e ]
 
+Since commit 648e921888ad ("clk: x86: Stop marking clocks as
+CLK_IS_CRITICAL"), the pmc_plt_clocks of the Bay Trail SoC are
+unconditionally gated off. Unfortunately this will break systems where these
+clocks are used for external purposes beyond the kernel's knowledge. Fix it
+by implementing a system specific quirk to mark the necessary pmc_plt_clks as
+critical.
 
---OgqxwSJOaUobr8KG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Signed-off-by: David Müller <dave.mueller@gmx.ch>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/clk/x86/clk-pmc-atom.c                | 14 ++++++++++---
+ drivers/platform/x86/pmc_atom.c               | 21 +++++++++++++++++++
+ .../linux/platform_data/x86/clk-pmc-atom.h    |  3 +++
+ 3 files changed, 35 insertions(+), 3 deletions(-)
 
-Hi!
-
-> Kernel 5.1.0-rc1 + some unrelated bits.
-
-I tried adding
-https://marc.info/?l=3Dlinux-kernel&m=3D151622365715313&q=3Draw as Jacek
-suggested, and it is still broken.
-
-Test code is this: ledtest actually works as expected on first try,
-but keeps blinking on second run. Strange.
-
-								Pavel
-
-#!/usr/bin/python
-# -*- python -*-
-# Copyright Bluez project, GPLv2
-# Adapted from test/monitor-bluetooth
-
-=66rom __future__ import absolute_import, print_function, unicode_literals
-
-import sys
-import time
-import os
-
-import dbus
-import dbus.mainloop.glib
-try:
-  from gi.repository import GObject
-except ImportError:
-  import gobject as GObject
-
-relevant_ifaces =3D [ "org.bluez.Device1" ]
-
-class LED:
-	def __init__(self):
-        	self.path =3D "/sys/class/leds/tpacpi::power/"
-        	#self.path =3D "/sys/class/leds/input5::capslock/"
-                self.brightness =3D self.path + "brightness"
-                self.trigger =3D self.path + "trigger"
-
-        def set(self, name, val):
-        	f =3D open(name, "w")
-                f.write(val)
-                f.close()
-
-        def solid(self, b):
-        	self.set(self.trigger, "none")
-        	self.set(self.brightness, "0")
-        	self.set(self.brightness, str(b))
-
-        def blink(self):
-        	self.set(self.trigger, "timer")
-
-        def as_root(self):
-        	os.chmod(self.trigger, 0777)
-        	os.chmod(self.brightness, 0777)
-
-def led_test():
-	l =3D LED()
-        l.solid(0)
-        time.sleep(2)
-	l.solid(1)
-        time.sleep(2)
-        l.blink()
-        time.sleep(2)
-	l.solid(1)
-
-def handle_params(args):
-        if len(args) < 2 or args[1] =3D=3D "run":
-                LED().blink()
-        	run()
-                return
-        if args[1] =3D=3D "ledtest":
-        	led_test()
-                return
-        if args[1] =3D=3D "stop":
-                LED().solid(0)
-        if args[1] =3D=3D "startup":
-        	LED().as_root()
-                return
-
-        print("Unknown parameters", args)
-
-handle_params(sys.argv)
-
-
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---OgqxwSJOaUobr8KG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzDe1YACgkQMOfwapXb+vLpkwCeMc4XkJPQlhoYAiu2M2NAtZ0A
-SOIAoIOOCQshxvhjWlj520VLZ2mNAJUV
-=PP1+
------END PGP SIGNATURE-----
-
---OgqxwSJOaUobr8KG--
-
-
---===============8697371477894435697==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8697371477894435697==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-ibm-acpi-devel mailing list
-ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel
-
---===============8697371477894435697==--
+diff --git a/drivers/clk/x86/clk-pmc-atom.c b/drivers/clk/x86/clk-pmc-atom.c
+index d977193842df..19174835693b 100644
+--- a/drivers/clk/x86/clk-pmc-atom.c
++++ b/drivers/clk/x86/clk-pmc-atom.c
+@@ -165,7 +165,7 @@ static const struct clk_ops plt_clk_ops = {
+ };
+ 
+ static struct clk_plt *plt_clk_register(struct platform_device *pdev, int id,
+-					void __iomem *base,
++					const struct pmc_clk_data *pmc_data,
+ 					const char **parent_names,
+ 					int num_parents)
+ {
+@@ -184,9 +184,17 @@ static struct clk_plt *plt_clk_register(struct platform_device *pdev, int id,
+ 	init.num_parents = num_parents;
+ 
+ 	pclk->hw.init = &init;
+-	pclk->reg = base + PMC_CLK_CTL_OFFSET + id * PMC_CLK_CTL_SIZE;
++	pclk->reg = pmc_data->base + PMC_CLK_CTL_OFFSET + id * PMC_CLK_CTL_SIZE;
+ 	spin_lock_init(&pclk->lock);
+ 
++	/*
++	 * On some systems, the pmc_plt_clocks already enabled by the
++	 * firmware are being marked as critical to avoid them being
++	 * gated by the clock framework.
++	 */
++	if (pmc_data->critical && plt_clk_is_enabled(&pclk->hw))
++		init.flags |= CLK_IS_CRITICAL;
++
+ 	ret = devm_clk_hw_register(&pdev->dev, &pclk->hw);
+ 	if (ret) {
+ 		pclk = ERR_PTR(ret);
+@@ -332,7 +340,7 @@ static int plt_clk_probe(struct platform_device *pdev)
+ 		return PTR_ERR(parent_names);
+ 
+ 	for (i = 0; i < PMC_CLK_NUM; i++) {
+-		data->clks[i] = plt_clk_register(pdev, i, pmc_data->base,
++		data->clks[i] = plt_clk_register(pdev, i, pmc_data,
+ 						 parent_names, data->nparents);
+ 		if (IS_ERR(data->clks[i])) {
+ 			err = PTR_ERR(data->clks[i]);
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index 8f018b3f3cd4..eaec2d306481 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -17,6 +17,7 @@
+ 
+ #include <linux/debugfs.h>
+ #include <linux/device.h>
++#include <linux/dmi.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/platform_data/x86/clk-pmc-atom.h>
+@@ -391,11 +392,27 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
+ }
+ #endif /* CONFIG_DEBUG_FS */
+ 
++/*
++ * Some systems need one or more of their pmc_plt_clks to be
++ * marked as critical.
++ */
++static const struct dmi_system_id critclk_systems[] __initconst = {
++	{
++		.ident = "MPL CEC1x",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MPL AG"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "CEC10 Family"),
++		},
++	},
++	{ /*sentinel*/ }
++};
++
+ static int pmc_setup_clks(struct pci_dev *pdev, void __iomem *pmc_regmap,
+ 			  const struct pmc_data *pmc_data)
+ {
+ 	struct platform_device *clkdev;
+ 	struct pmc_clk_data *clk_data;
++	const struct dmi_system_id *d = dmi_first_match(critclk_systems);
+ 
+ 	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
+ 	if (!clk_data)
+@@ -403,6 +420,10 @@ static int pmc_setup_clks(struct pci_dev *pdev, void __iomem *pmc_regmap,
+ 
+ 	clk_data->base = pmc_regmap; /* offset is added by client */
+ 	clk_data->clks = pmc_data->clks;
++	if (d) {
++		clk_data->critical = true;
++		pr_info("%s critclks quirk enabled\n", d->ident);
++	}
+ 
+ 	clkdev = platform_device_register_data(&pdev->dev, "clk-pmc-atom",
+ 					       PLATFORM_DEVID_NONE,
+diff --git a/include/linux/platform_data/x86/clk-pmc-atom.h b/include/linux/platform_data/x86/clk-pmc-atom.h
+index 3ab892208343..7a37ac27d0fb 100644
+--- a/include/linux/platform_data/x86/clk-pmc-atom.h
++++ b/include/linux/platform_data/x86/clk-pmc-atom.h
+@@ -35,10 +35,13 @@ struct pmc_clk {
+  *
+  * @base:	PMC clock register base offset
+  * @clks:	pointer to set of registered clocks, typically 0..5
++ * @critical:	flag to indicate if firmware enabled pmc_plt_clks
++ *		should be marked as critial or not
+  */
+ struct pmc_clk_data {
+ 	void __iomem *base;
+ 	const struct pmc_clk *clks;
++	bool critical;
+ };
+ 
+ #endif /* __PLATFORM_DATA_X86_CLK_PMC_ATOM_H */
+-- 
+2.19.1
