@@ -1,52 +1,110 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to critclk_systems DMI table
-Date: Mon, 29 Apr 2019 17:01:35 +0200
-Message-ID: <20190429150135.15070-1-hdegoede@redhat.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: [PATCH] leds: tpacpi: cleanup for Thinkpad ACPI led
+Date: Mon, 29 Apr 2019 17:21:48 +0200
+Message-ID: <20190429152148.GA10501@amd>
+References: <20190426123513.GA18172@amd> <20190426214246.GA24966@amd>
+ <84fac57d-1121-a1da-fb45-16a2521bdef9@gmail.com>
+ <20190427193411.GA9709@amd>
+ <2578a614-beb9-1c9d-9f74-208a8a7ab64f@gmail.com>
+ <20190427223207.GA3585@amd>
+ <d2373c8b-5c66-c875-16c7-0c5a93470793@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Kai Heng Feng <kai.heng.feng@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Semyon Verchenko <semverchenko@factor-ts.ru>
+Content-Type: multipart/mixed; boundary="===============3756806686219069390=="
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <d2373c8b-5c66-c875-16c7-0c5a93470793-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The Lex 3I380D industrial PC has 4 ethernet controllers on board
-which need pmc_plt_clk0 - 3 to function, add it to the critclk_systems
-DMI table, so that drivers/clk/x86/clk-pmc-atom.c will mark the clocks
-as CLK_CRITICAL and they will not get turned off.
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Reported-and-tested-by: Semyon Verchenko <semverchenko@factor-ts.ru>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/pmc_atom.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+--===============3756806686219069390==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
+Content-Disposition: inline
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index 3a635ea09b8a..2910845b7cdd 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -407,12 +407,21 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
-  */
- static const struct dmi_system_id critclk_systems[] = {
- 	{
-+		/* pmc_plt_clk0 is used for an external HSIC USB HUB */
- 		.ident = "MPL CEC1x",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "MPL AG"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "CEC10 Family"),
- 		},
- 	},
-+	{
-+		/* pmc_plt_clk0 - 3 are used for the 4 ethernet controllers */
-+		.ident = "Lex 3I380D",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Lex BayTrail"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "3I380D"),
-+		},
-+	},
- 	{ /*sentinel*/ }
- };
- 
--- 
-2.21.0
+
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+
+Make error returns more consistent... no behaviour change intended.
+   =20
+Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/th=
+inkpad_acpi.c
+index 726341f..7008a7f 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -5808,7 +5808,7 @@ static int led_set_status(const unsigned int led,
+ 			return -EPERM;
+ 		if (!acpi_evalf(led_handle, NULL, NULL, "vdd",
+ 				(1 << led), led_sled_arg1[ledstatus]))
+-			rc =3D -EIO;
++			return -EIO;
+ 		break;
+ 	case TPACPI_LED_OLD:
+ 		/* 600e/x, 770e, 770x, A21e, A2xm/p, T20-22, X20 */
+@@ -5832,10 +5832,10 @@ static int led_set_status(const unsigned int led,
+ 			return -EPERM;
+ 		if (!acpi_evalf(led_handle, NULL, NULL, "vdd",
+ 				led, led_led_arg1[ledstatus]))
+-			rc =3D -EIO;
++			return -EIO;
+ 		break;
+ 	default:
+-		rc =3D -ENXIO;
++		return -ENXIO;
+ 	}
+=20
+ 	if (!rc)
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzHFowACgkQMOfwapXb+vIdRQCgiGtLJhHVOZRshPe06zUPt0y9
+w5EAmwQV9tPYgs8+2yh78fYHkUIlrzHy
+=Z/s3
+-----END PGP SIGNATURE-----
+
+--EeQfGwPcQSOJBaQU--
+
+
+--===============3756806686219069390==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3756806686219069390==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+ibm-acpi-devel mailing list
+ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel
+
+--===============3756806686219069390==--
