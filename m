@@ -1,273 +1,406 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: Thinkpad ACPI led -- it keeps blinking
-Date: Mon, 29 Apr 2019 14:52:22 +0200
-Message-ID: <20190429125222.GA27773@amd>
-References: <20190426123513.GA18172@amd> <20190426214246.GA24966@amd>
- <84fac57d-1121-a1da-fb45-16a2521bdef9@gmail.com>
- <20190427193411.GA9709@amd>
- <2578a614-beb9-1c9d-9f74-208a8a7ab64f@gmail.com>
- <20190427223207.GA3585@amd>
- <d2373c8b-5c66-c875-16c7-0c5a93470793@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: ideapad-laptop: Remove no_hw_rfkill_list
+Date: Mon, 29 Apr 2019 16:38:07 +0200
+Message-ID: <20190429143807.13232-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2209474554128631554=="
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <d2373c8b-5c66-c875-16c7-0c5a93470793-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Kai Heng Feng <kai.heng.feng@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+When the ideapad-laptop driver was first written it was written for laptops
+which had a hardware rfkill switch. So when the first ideapad laptops
+showed up without a hw rfkill switch and it turned out that in this case
+the ideapad firmware interface would always report the wifi being hardware-
+blocked, a DMI id list of models which lack a hw rfkill switch was started
+(by yours truly). Things were done this way to avoid regressing existing
+models with a hw rfkill switch. In hindsight this was a mistake.
 
---===============2209474554128631554==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
-Content-Disposition: inline
+Lenovo releases a lot of ideapad models every year and even the latest
+models still use the "VPC2004" ACPI interface the ideapad-laptop driver
+binds to. Having a hw rfkill switch is quite rare on modern hardware, so
+all these new models need to be added to the no_hw_rfkill_list, leading
+to a never ending game of whack a mole.
 
+Worse the failure mode when not present on the list, is very bad. In this
+case the ideapad-laptop driver will report the wifi as being hw-blocked,
+at which points NetworkManager does not even try to use it and the user
+ends up with non working wifi.
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This leads to various Linux fora on the internet being filled with
+wifi not working on ideapad laptops stories, which does not make Linux
+look good.
 
-Hi!
+The failure mode when we flip the default to assuming that a hw rfkill
+switch is not present OTOH is quite benign. When we properly report the
+wifi as being hw-blocked on ideapads which do have the hw-switch; and it
+is in the wifi-off position, then at least when using NetworkManager +
+GNOME3 the user will get a "wifi disabled in hardware" message when trying
+to connect to the wifi from the UI. If OTOH we assume there is no hardware
+rfkill switch, then the user will get an empty list for the list of
+available networks. Although the empty list vs the "wifi disabled in
+hardware" message is a regression, it is a very minor regression and it
+can easily be fixed on a model by model basis by filling the new
+hw_rfkill_list this commit introduces.
 
-> >This fixes one problem:
+Therefor this commit removes the ever growing no_hw_rfkill_list, flipping
+the default to assuming there is no hw rfkill switch and adding a new
+hw_rfkill_list. Thereby fixing the wifi not working on all the current
+ideapad and yoga models which are not on the list yet and also fixing it
+for all future ideapad and yoga models using the "VPC2004" ACPI interface.
 
-> >Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> >
-> >diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-> >index e3da7c0..d795d8f 100644
-> >--- a/drivers/leds/led-core.c
-> >+++ b/drivers/leds/led-core.c
-> >@@ -164,8 +164,14 @@ static void led_blink_setup(struct led_classdev *le=
-d_cdev,
-> >  		     unsigned long *delay_on,
-> >  		     unsigned long *delay_off)
-> >  {
-> >+	while (work_pending(&led_cdev->set_brightness_work)) {
-> >+		printk("Waiting for brightness set to finish\n");
-> >+		schedule();
-> >+	}
->=20
-> Or even better:
->=20
-> flush_work(&led_cdev->set_brightness_work);
+Note once this patch has been accepted upstream. I plan to write a blog
+post asking for users of ideapads and yoga's with a hw rfkill switch to
+step forward, so that we can populate the new hw_rfkill_list with the few
+older yoga and ideapad models which actually have a hw rfkill switch.
 
-Yup, thanks for a hint.
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1703338
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/ideapad-laptop.c | 321 ++------------------------
+ 1 file changed, 15 insertions(+), 306 deletions(-)
 
-I should have acceptable patch, soon; but no promises I catched all
-similar bugs, that code is quite ... tricky.
-
-So far I have this:
-
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 3c7e348..85848c5 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -57,6 +57,7 @@ static ssize_t brightness_store(struct device *dev,
- 	if (state =3D=3D LED_OFF)
- 		led_trigger_remove(led_cdev);
- 	led_set_brightness(led_cdev, state);
-+	flush_work(&led_cdev->set_brightness_work);
-=20
- 	ret =3D size;
- unlock:
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index e3da7c0..e9ae7f8 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -164,6 +164,11 @@ static void led_blink_setup(struct led_classdev *led_c=
-dev,
- 		     unsigned long *delay_on,
- 		     unsigned long *delay_off)
- {
-+	/*
-+	 * If "set brightness to 0" is pending in workqueue, we don't
-+	 * want that to be reordered after blink_set()
-+	 */
-+	flush_work(&led_cdev->set_brightness_work);
- 	if (!test_bit(LED_BLINK_ONESHOT, &led_cdev->work_flags) &&
- 	    led_cdev->blink_set &&
- 	    !led_cdev->blink_set(led_cdev, delay_on, delay_off))
-diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-index 2d451b6..ddfd2dd 100644
---- a/drivers/leds/led-triggers.c
-+++ b/drivers/leds/led-triggers.c
-@@ -65,6 +65,7 @@ ssize_t led_trigger_store(struct device *dev, struct devi=
-ce_attribute *attr,
- 	up_read(&triggers_list_lock);
-=20
- unlock:
-+	flush_work(&led_cdev->set_brightness_work);
- 	mutex_unlock(&led_cdev->led_access);
- 	return ret;
- }
-diff --git a/drivers/leds/trigger/ledtrig-timer.c b/drivers/leds/trigger/le=
-dtrig-timer.c
-index ca898c1..0b061bb5 100644
---- a/drivers/leds/trigger/ledtrig-timer.c
-+++ b/drivers/leds/trigger/ledtrig-timer.c
-@@ -104,6 +104,7 @@ static void pattern_init(struct led_classdev *led_cdev)
-=20
- static int timer_trig_activate(struct led_classdev *led_cdev)
- {
-+	printk("timer_trig_activate\n");
- 	if (led_cdev->flags & LED_INIT_DEFAULT_TRIGGER) {
- 		pattern_init(led_cdev);
- 		/*
-@@ -115,14 +116,18 @@ static int timer_trig_activate(struct led_classdev *l=
-ed_cdev)
-=20
- 	led_blink_set(led_cdev, &led_cdev->blink_delay_on,
- 		      &led_cdev->blink_delay_off);
-+	printk("timer_trig_activate done\n");
-=20
- 	return 0;
- }
-=20
- static void timer_trig_deactivate(struct led_classdev *led_cdev)
- {
-+	printk("timer_trig_deactivate\n");
- 	/* Stop blinking */
- 	led_set_brightness(led_cdev, LED_OFF);
-+
-+	printk("timer_trig_deactivate done\n");
- }
-=20
- static struct led_trigger timer_led_trigger =3D {
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 3a4402a..b3fa9c9 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -363,11 +363,11 @@ int mmc_of_parse_voltage(struct device_node *np, u32 =
-*mask)
- 	int num_ranges, i;
-=20
- 	voltage_ranges =3D of_get_property(np, "voltage-ranges", &num_ranges);
--	num_ranges =3D num_ranges / sizeof(*voltage_ranges) / 2;
- 	if (!voltage_ranges) {
- 		pr_debug("%pOF: voltage-ranges unspecified\n", np);
- 		return 0;
- 	}
-+	num_ranges =3D num_ranges / sizeof(*voltage_ranges) / 2;
- 	if (!num_ranges) {
- 		pr_err("%pOF: voltage-ranges empty\n", np);
- 		return -EINVAL;
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/th=
-inkpad_acpi.c
-index 57d9ae9..3580bab 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -5867,6 +5867,8 @@ static int led_set_status(const unsigned int led,
-=20
- 	int rc =3D 0;
-=20
-+	printk("LED set %d to %d\n", led, ledstatus);
-+
- 	switch (led_supported) {
- 	case TPACPI_LED_570:
- 		/* 570 */
-@@ -5876,7 +5878,7 @@ static int led_set_status(const unsigned int led,
- 			return -EPERM;
- 		if (!acpi_evalf(led_handle, NULL, NULL, "vdd",
- 				(1 << led), led_sled_arg1[ledstatus]))
--			rc =3D -EIO;
-+			return -EIO;
- 		break;
- 	case TPACPI_LED_OLD:
- 		/* 600e/x, 770e, 770x, A21e, A2xm/p, T20-22, X20 */
-@@ -5900,12 +5902,14 @@ static int led_set_status(const unsigned int led,
- 			return -EPERM;
- 		if (!acpi_evalf(led_handle, NULL, NULL, "vdd",
- 				led, led_led_arg1[ledstatus]))
--			rc =3D -EIO;
-+			return -EIO;
- 		break;
- 	default:
--		rc =3D -ENXIO;
-+		return -ENXIO;
- 	}
-=20
-+	printk("LED set %d to %d... %d\n", led, ledstatus, rc);
-+
- 	if (!rc)
- 		tpacpi_led_state_cache[led] =3D ledstatus;
-=20
-@@ -5919,6 +5923,8 @@ static int led_sysfs_set(struct led_classdev *led_cde=
-v,
- 			     struct tpacpi_led_classdev, led_classdev);
- 	enum led_status_t new_state;
-=20
-+	printk("sysfs_set %d\n", brightness);
-+
- 	if (brightness =3D=3D LED_OFF)
- 		new_state =3D TPACPI_LED_OFF;
- 	else if (tpacpi_led_state_cache[data->led] !=3D TPACPI_LED_BLINK)
-@@ -5935,6 +5941,8 @@ static int led_sysfs_blink_set(struct led_classdev *l=
-ed_cdev,
- 	struct tpacpi_led_classdev *data =3D container_of(led_cdev,
- 			     struct tpacpi_led_classdev, led_classdev);
-=20
-+	printk("sysfs_blink_set\n");
-+
- 	/* Can we choose the flash rate? */
- 	if (*delay_on =3D=3D 0 && *delay_off =3D=3D 0) {
- 		/* yes. set them to the hardware blink rate (1 Hz) */
-@@ -5943,6 +5951,7 @@ static int led_sysfs_blink_set(struct led_classdev *l=
-ed_cdev,
- 	} else if ((*delay_on !=3D 500) || (*delay_off !=3D 500))
- 		return -EINVAL;
-=20
-+	printk("sysfs_blink_set: hardware can do it\n");
- 	return led_set_status(data->led, TPACPI_LED_BLINK);
- }
-=20
-
-								Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzG84YACgkQMOfwapXb+vIrwACfZdATje91plL9po8urcJdlcvT
-npoAoJ/MiOGZLU7YEjAsCmBuyLBJy6QZ
-=wRai
------END PGP SIGNATURE-----
-
---G4iJoqBmSsgzjUCe--
-
-
---===============2209474554128631554==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2209474554128631554==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-ibm-acpi-devel mailing list
-ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel
-
---===============2209474554128631554==--
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index c53ae86b59c7..2d94536dea88 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -980,312 +980,21 @@ static void ideapad_wmi_notify(u32 value, void *context)
+ #endif
+ 
+ /*
+- * Some ideapads don't have a hardware rfkill switch, reading VPCCMD_R_RF
+- * always results in 0 on these models, causing ideapad_laptop to wrongly
+- * report all radios as hardware-blocked.
++ * Some ideapads have a hardware rfkill switch, but most do not have one.
++ * Reading VPCCMD_R_RF always results in 0 on models without a hardware rfkill,
++ * switch causing ideapad_laptop to wrongly report all radios as hw-blocked.
++ * There used to be a long list of DMI ids for models without a hw rfkill
++ * switch here, but that resulted in playing whack a mole.
++ * More importantly wrongly reporting the wifi radio as hw-blocked, results in
++ * non working wifi. Whereas not reporting it hw-blocked, when it actually is
++ * hw-blocked results in an empty SSID list, which is a much more benign
++ * failure mode.
++ * So the default now is the much safer option of assuming there is no
++ * hardware rfkill switch. This default also actually matches most hardware,
++ * since having a hw rfkill switch is quite rare on modern hardware, so this
++ * also leads to a much shorter list.
+  */
+-static const struct dmi_system_id no_hw_rfkill_list[] = {
+-	{
+-		.ident = "Lenovo RESCUER R720-15IKBN",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo R720-15IKBN"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo G40-30",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G40-30"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo G50-30",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G50-30"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo V310-14IKB",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-14IKB"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo V310-14ISK",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-14ISK"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo V310-15IKB",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-15IKB"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo V310-15ISK",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-15ISK"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo V510-15IKB",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V510-15IKB"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad 300-15IBR",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300-15IBR"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad 300-15IKB",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300-15IKB"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad 300S-11IBR",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300S-11BR"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad 310-15ABR",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15ABR"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad 310-15IAP",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IAP"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad 310-15IKB",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IKB"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad 310-15ISK",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15ISK"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad 330-15ICH",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 330-15ICH"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad 530S-14ARR",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 530S-14ARR"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad S130-14IGM",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad S130-14IGM"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad Y700-14ISK",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-14ISK"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad Y700-15ACZ",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-15ACZ"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad Y700-15ISK",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-15ISK"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad Y700 Touch-15ISK",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700 Touch-15ISK"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad Y700-17ISK",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-17ISK"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo ideapad MIIX 720-12IKB",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "MIIX 720-12IKB"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Legion Y520-15IKB",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y520-15IKB"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Y520-15IKBM",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y520-15IKBM"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Legion Y530-15ICH",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Legion Y530-15ICH"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Legion Y530-15ICH-1060",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Legion Y530-15ICH-1060"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Legion Y720-15IKB",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y720-15IKB"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Legion Y720-15IKBN",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y720-15IKBN"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Y720-15IKBM",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y720-15IKBM"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 2"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Yoga 2 11 / 13 / Pro",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Yoga 2 13",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Yoga 2 13"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Yoga 3 1170 / 1470",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 3"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Yoga 3 Pro 1370",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Yoga 700",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 700"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Yoga 900",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 900"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Yoga 900",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_BOARD_NAME, "VIUU4"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo YOGA 910-13IKB",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 910-13IKB"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo YOGA 920-13IKB",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 920-13IKB"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo YOGA C930-13IKB",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA C930-13IKB"),
+-		},
+-	},
+-	{
+-		.ident = "Lenovo Zhaoyang E42-80",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "ZHAOYANG E42-80"),
+-		},
+-	},
++static const struct dmi_system_id hw_rfkill_list[] = {
+ 	{}
+ };
+ 
+@@ -1311,7 +1020,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	priv->cfg = cfg;
+ 	priv->adev = adev;
+ 	priv->platform_device = pdev;
+-	priv->has_hw_rfkill_switch = !dmi_check_system(no_hw_rfkill_list);
++	priv->has_hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
+ 
+ 	ret = ideapad_sysfs_init(priv);
+ 	if (ret)
+-- 
+2.21.0
