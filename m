@@ -1,64 +1,73 @@
-From: <linux-kernel-dev@beckhoff.com>
-Subject: [PATCH 1/1] platform/x86: pmc_atom: Add several Beckhoff Automation boards to critclk_systems DMI table
-Date: Thu, 2 May 2019 15:03:51 +0200
-Message-ID: <20190502130351.5341-2-linux-kernel-dev@beckhoff.com>
-References: <20190502130351.5341-1-linux-kernel-dev@beckhoff.com>
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] leds: avoid races with workqueue
+Date: Thu, 2 May 2019 20:29:18 +0200
+Message-ID: <9337b5fb-0ff8-9925-29e6-a781884af861@gmail.com>
+References: <20190426123513.GA18172@amd> <20190426214246.GA24966@amd>
+ <84fac57d-1121-a1da-fb45-16a2521bdef9@gmail.com> <20190427193411.GA9709@amd>
+ <2578a614-beb9-1c9d-9f74-208a8a7ab64f@gmail.com> <20190427223207.GA3585@amd>
+ <d2373c8b-5c66-c875-16c7-0c5a93470793@gmail.com> <20190429152259.GB10501@amd>
+ <36e1fdd7-a220-4b0d-d558-829f522b0841@gmail.com> <20190501183600.GA20452@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190502130351.5341-1-linux-kernel-dev@beckhoff.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>, Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20190501183600.GA20452@amd>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+Hi Pavel,
 
-There are several Beckhoff Automation industrial PC boards which use
-pmc_plt_clk* clocks for ethernet controllers. This adds affected boards
-to critclk_systems DMI table so the clocks are marked as CLK_CRITICAL and
-not turned off.
+On 5/1/19 8:36 PM, Pavel Machek wrote:
+> Hi!
+> 
+>>> There are races between "main" thread and workqueue. They manifest
+>>> themselves on Thinkpad X60:
+>>> This should result in LED blinking, but it turns it off instead:
+>>>      root@amd:/data/pavel# cd /sys/class/leds/tpacpi\:\:power
+>>>      root@amd:/sys/class/leds/tpacpi::power# echo timer > trigger
+>>>      root@amd:/sys/class/leds/tpacpi::power# echo timer > trigger
+>>>      root@amd:/sys/class/leds/tpacpi::power#
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Signed-off-by: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
----
- drivers/platform/x86/pmc_atom.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+I believe this line is redundant, so I removed it.
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index a311f48ce7c9..b1d804376237 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -413,6 +413,30 @@ static const struct dmi_system_id critclk_systems[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "3I380D"),
- 		},
- 	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB3163",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB3163"),
-+		},
-+	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB6263",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB6263"),
-+		},
-+	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB6363",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB6363"),
-+		},
-+	},
- 	{ /*sentinel*/ }
- };
- 
+>>> It should be possible to transition from blinking to solid on by echo
+>>> 0 > brightness; echo 1 > brightness... but that does not work, either,
+>>> if done too quickly.
+>>> Synchronization of the workqueue fixes both.
+>>> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+>>>
+>>> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+>>> index 68aa923..dcb59c8 100644
+>>> --- a/drivers/leds/led-class.c
+>>> +++ b/drivers/leds/led-class.c
+>>> @@ -57,6 +57,7 @@ static ssize_t brightness_store(struct device *dev,
+>>>   	if (state == LED_OFF)
+>>>   		led_trigger_remove(led_cdev);
+>>>   	led_set_brightness(led_cdev, state);
+>>> +	flush_work(&led_cdev->set_brightness_work);
+>>
+>> Is this really required here? It creates non-uniform brightness
+>> setting behavior depending on whether it is set from sysfs or
+>> by in-kernel call to led_set_brightness().
+> 
+> This fixes the echo 0 > brightness; echo 1 > brightness. It has to be
+> at a place where we can sleep.
+> 
+> If you have better idea, it is welcome, but it would be good to fix
+> the bug.
+
+Currently not, so I applied the patch in this shape.
+
 -- 
-2.21.0
+Best regards,
+Jacek Anaszewski
