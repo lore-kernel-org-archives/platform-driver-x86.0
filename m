@@ -1,58 +1,74 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to
- critclk_systems DMI table
-Date: Mon, 6 May 2019 17:05:42 +0200
-Message-ID: <568ba27d-a6a5-b158-bab1-f22cd8ccb34e@redhat.com>
-References: <20190429150135.15070-1-hdegoede@redhat.com>
- <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
- <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com>
- <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] leds: tpacpi: cleanup for Thinkpad
+ ACPI led
+Date: Mon, 6 May 2019 18:20:22 +0300
+Message-ID: <CAHp75VcrW_9pyiG6N75CWkxc1S7mKknfDT_W87vSQNnzjf2uRw@mail.gmail.com>
+References: <20190426123513.GA18172@amd> <20190426214246.GA24966@amd>
+ <84fac57d-1121-a1da-fb45-16a2521bdef9@gmail.com> <20190427193411.GA9709@amd>
+ <2578a614-beb9-1c9d-9f74-208a8a7ab64f@gmail.com> <20190427223207.GA3585@amd>
+ <d2373c8b-5c66-c875-16c7-0c5a93470793@gmail.com> <20190429152148.GA10501@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Kai Heng Feng <kai.heng.feng@canonical.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Semyon Verchenko <semverchenko@factor-ts.ru>
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20190429152148.GA10501@amd>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Thinkpad-acpi devel ML <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Mon, Apr 29, 2019 at 6:22 PM Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> wrote:
+>
+>
+> Make error returns more consistent... no behaviour change intended.
+>
 
-On 06-05-19 16:59, Andy Shevchenko wrote:
-> On Mon, May 6, 2019 at 5:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 06-05-19 14:38, Andy Shevchenko wrote:
->>> On Mon, Apr 29, 2019 at 6:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>>>
->>>> The Lex 3I380D industrial PC has 4 ethernet controllers on board
->>>> which need pmc_plt_clk0 - 3 to function, add it to the critclk_systems
->>>> DMI table, so that drivers/clk/x86/clk-pmc-atom.c will mark the clocks
->>>> as CLK_CRITICAL and they will not get turned off.
->>>>
->>>
->>> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>> supposedly to go via CLK tree.
->>>
->>> P.S. If you want it through PDx86, I need immutable branch / tag from CLK.
->>
->> Stephen added the patches this depends on to his fixes branch, so they
->> are in the 5.1 / Torvald's master branch, since we are now in the 5.2 merge
->> window, you should be able to cleanly apply this directly.
-> 
-> We don't do back merges, so, our base is v5.1-rc1. Does it mean the
-> commit in question is in v5.1-rc1?
-> AFAICS it was appeared in v5.1-rc5.
+Pushed to my review and testing queue, thanks!
 
-Ah, I see, my bad.
+P.S. I fixed prefix accordingly.
 
-Stephen can you pick up this patch and the
-"[PATCH 1/1] Add several Beckhoff Automation boards to critclk_systems DMI table"
-patch then?
+> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+>
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 726341f..7008a7f 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -5808,7 +5808,7 @@ static int led_set_status(const unsigned int led,
+>                         return -EPERM;
+>                 if (!acpi_evalf(led_handle, NULL, NULL, "vdd",
+>                                 (1 << led), led_sled_arg1[ledstatus]))
+> -                       rc = -EIO;
+> +                       return -EIO;
+>                 break;
+>         case TPACPI_LED_OLD:
+>                 /* 600e/x, 770e, 770x, A21e, A2xm/p, T20-22, X20 */
+> @@ -5832,10 +5832,10 @@ static int led_set_status(const unsigned int led,
+>                         return -EPERM;
+>                 if (!acpi_evalf(led_handle, NULL, NULL, "vdd",
+>                                 led, led_led_arg1[ledstatus]))
+> -                       rc = -EIO;
+> +                       return -EIO;
+>                 break;
+>         default:
+> -               rc = -ENXIO;
+> +               return -ENXIO;
+>         }
+>
+>         if (!rc)
+>
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
-Regards,
 
-Hans
+
+-- 
+With Best Regards,
+Andy Shevchenko
