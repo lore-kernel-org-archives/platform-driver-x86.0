@@ -1,83 +1,69 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for 'jumper ezpad
- 6 pro b' touchscreen
-Date: Mon, 6 May 2019 15:30:06 +0300
-Message-ID: <CAHp75VdcZOP2dYYtsfk3jcnESRBjxkE49GkDGPTp=XW+5Sbrgg@mail.gmail.com>
-References: <20190429154657.26797-1-hdegoede@redhat.com>
+Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to
+ critclk_systems DMI table
+Date: Mon, 6 May 2019 15:38:50 +0300
+Message-ID: <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
+References: <20190429150135.15070-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190429154657.26797-1-hdegoede@redhat.com>
+In-Reply-To: <20190429150135.15070-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Kai Heng Feng <kai.heng.feng@canonical.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Renz <appswert@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Kai Heng Feng <kai.heng.feng@canonical.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Semyon Verchenko <semverchenko@factor-ts.ru>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Apr 29, 2019 at 6:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Mon, Apr 29, 2019 at 6:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> From: Benjamin Renz <appswert@gmail.com>
->
-> Add touchscreen platform data for the 'jumper ezpad 6 pro b' touchscreen.
+> The Lex 3I380D industrial PC has 4 ethernet controllers on board
+> which need pmc_plt_clk0 - 3 to function, add it to the critclk_systems
+> DMI table, so that drivers/clk/x86/clk-pmc-atom.c will mark the clocks
+> as CLK_CRITICAL and they will not get turned off.
 >
 
-Pushed to my review and testing queue, thanks!
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+supposedly to go via CLK tree.
 
-> Signed-off-by: Benjamin Renz <appswert@gmail.com>
-> [hdegoede@redhat.com: Cleanup commit msg, fix some checkpatch warnings]
+P.S. If you want it through PDx86, I need immutable branch / tag from CLK.
+
+> Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+> Reported-and-tested-by: Semyon Verchenko <semverchenko@factor-ts.ru>
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/platform/x86/touchscreen_dmi.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+>  drivers/platform/x86/pmc_atom.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 >
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index 3319f0cbb558..bd0856d2e825 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -249,6 +249,21 @@ static const struct ts_dmi_data jumper_ezpad_6_pro_data = {
->         .properties     = jumper_ezpad_6_pro_props,
->  };
->
-> +static const struct property_entry jumper_ezpad_6_pro_b_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-> +       PROPERTY_ENTRY_STRING("firmware-name", "gsl3692-jumper-ezpad-6-pro-b.fw"),
-> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
-> +       { }
-> +};
-> +
-> +static const struct ts_dmi_data jumper_ezpad_6_pro_b_data = {
-> +       .acpi_name      = "MSSL1680:00",
-> +       .properties     = jumper_ezpad_6_pro_b_props,
-> +};
-> +
->  static const struct property_entry jumper_ezpad_mini3_props[] = {
->         PROPERTY_ENTRY_U32("touchscreen-min-x", 23),
->         PROPERTY_ENTRY_U32("touchscreen-min-y", 16),
-> @@ -690,6 +705,17 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
->                         DMI_MATCH(DMI_BIOS_DATE, "08/18/2017"),
+> diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+> index 3a635ea09b8a..2910845b7cdd 100644
+> --- a/drivers/platform/x86/pmc_atom.c
+> +++ b/drivers/platform/x86/pmc_atom.c
+> @@ -407,12 +407,21 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
+>   */
+>  static const struct dmi_system_id critclk_systems[] = {
+>         {
+> +               /* pmc_plt_clk0 is used for an external HSIC USB HUB */
+>                 .ident = "MPL CEC1x",
+>                 .matches = {
+>                         DMI_MATCH(DMI_SYS_VENDOR, "MPL AG"),
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "CEC10 Family"),
 >                 },
 >         },
 > +       {
-> +               /* Jumper EZpad 6 Pro B */
-> +               .driver_data = (void *)&jumper_ezpad_6_pro_b_data,
+> +               /* pmc_plt_clk0 - 3 are used for the 4 ethernet controllers */
+> +               .ident = "Lex 3I380D",
 > +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "Jumper"),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "EZpad"),
-> +                       DMI_MATCH(DMI_BIOS_VERSION, "5.12"),
-> +                       /* Above matches are too generic, add bios-date match */
-> +                       DMI_MATCH(DMI_BIOS_DATE, "04/24/2018"),
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "Lex BayTrail"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "3I380D"),
 > +               },
 > +       },
->         {
->                 /* Jumper EZpad mini3 */
->                 .driver_data = (void *)&jumper_ezpad_mini3_data,
+>         { /*sentinel*/ }
+>  };
+>
 > --
 > 2.21.0
 >
 
 
---
+-- 
 With Best Regards,
 Andy Shevchenko
