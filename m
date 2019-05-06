@@ -1,53 +1,21 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Mark expected switch fall-throughs
-Date: Mon, 6 May 2019 15:22:40 +0300
-Message-ID: <CAHp75Vep5tYDrcgNWFepj-GgbaCcRbHcDHyQ4mD=+yX7Jftt+Q@mail.gmail.com>
-References: <20190424181543.GA31200@embeddedor> <CAGXu5jKRO45m1TRDPA09sv0j+cZCC8e1w+oQty4YfOttKP3FYA@mail.gmail.com>
- <13ba6003-ff33-4e5b-b88e-ef93bc68dc48@www.fastmail.com> <e1199dfe-86fe-0e42-74c7-15adf0b54406@embeddedor.com>
+Subject: Re: [PATCH] platform/x86: sony-laptop: Fix unintentional fall-through
+Date: Mon, 6 May 2019 15:23:05 +0300
+Message-ID: <CAHp75VddRrLjahX0O4-q9=VLeUAAj6rOmnJ=W2Sg65OyUkVDqQ@mail.gmail.com>
+References: <20190424180934.GA29307@embeddedor> <cd02e064-1172-a8a2-14af-1f20e09a0738@embeddedor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e1199dfe-86fe-0e42-74c7-15adf0b54406@embeddedor.com>
+In-Reply-To: <cd02e064-1172-a8a2-14af-1f20e09a0738@embeddedor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Kees Cook <keescook@chromium.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: Mattia Dongili <malattia@linux.it>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kees Cook <keescook@chromium.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, May 1, 2019 at 11:44 PM Gustavo A. R. Silva
+On Wed, May 1, 2019 at 11:42 PM Gustavo A. R. Silva
 <gustavo@embeddedor.com> wrote:
 >
->
->
-> On 4/24/19 7:55 PM, ibm-acpi@hmh.eng.br wrote:
-> > On Wed, Apr 24, 2019, at 16:05, Kees Cook wrote:
-> >> On Wed, Apr 24, 2019 at 11:15 AM Gustavo A. R. Silva
-> >> <gustavo@embeddedor.com> wrote:
-> >>>
-> >>> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> >>> cases where we are expecting to fall through.
-> >>>
-> >>> This patch fixes the following warnings:
-> >>>
->
-> [..]
->
-> >>>
-> >>> Warning level 3 was used: -Wimplicit-fallthrough=3
-> >>>
-> >>> Notice that, in this particular case, the code comments are modified
-> >>> in accordance with what GCC is expecting to find.
-> >>>
-> >>> This patch is part of the ongoing efforts to enable
-> >>> -Wimplicit-fallthrough.
-> >>>
-> >>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> >>
-> >> Reviewed-by: Kees Cook <keescook@chromium.org>
-> >
-> > Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-> >
->
-> Thank you both, Kees and Henrique.
+> Hi all,
 >
 > Friendly ping:
 >
@@ -55,13 +23,59 @@ On Wed, May 1, 2019 at 11:44 PM Gustavo A. R. Silva
 
 Pushed to my review and testing queue, thanks!
 
+
 >
 > Thanks
 > --
 > Gustavo
+>
+> On 4/24/19 1:09 PM, Gustavo A. R. Silva wrote:
+> > It seems that the default case should return AE_CTRL_TERMINATE, instead
+> > of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
+> > otherwise the line of code at the end of the function is unreachable and
+> > makes no sense:
+> >
+> > return AE_CTRL_TERMINATE;
+> >
+> > This fix is based on the following thread of discussion:
+> >
+> > https://lore.kernel.org/patchwork/patch/959782/
+> >
+> > Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> > ---
+> >  drivers/platform/x86/sony-laptop.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+> > index 4bfbfa3f78e6..2058445fc456 100644
+> > --- a/drivers/platform/x86/sony-laptop.c
+> > +++ b/drivers/platform/x86/sony-laptop.c
+> > @@ -4424,14 +4424,16 @@ sony_pic_read_possible_resource(struct acpi_resource *resource, void *context)
+> >                       }
+> >                       return AE_OK;
+> >               }
+> > +
+> > +     case ACPI_RESOURCE_TYPE_END_TAG:
+> > +             return AE_OK;
+> > +
+> >       default:
+> >               dprintk("Resource %d isn't an IRQ nor an IO port\n",
+> >                       resource->type);
+> > +             return AE_CTRL_TERMINATE;
+> >
+> > -     case ACPI_RESOURCE_TYPE_END_TAG:
+> > -             return AE_OK;
+> >       }
+> > -     return AE_CTRL_TERMINATE;
+> >  }
+> >
+> >  static int sony_pic_possible_resources(struct acpi_device *device)
+> >
 
 
 
---
+-- 
 With Best Regards,
 Andy Shevchenko
