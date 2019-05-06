@@ -1,51 +1,43 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH next 20/25] platform/x86: asus-wmi: Use dev_get_drvdata()
-Date: Mon, 6 May 2019 12:01:41 +0300
-Message-ID: <CAHp75VcmM0mx7-3P96n092cz0mfV22OK+jB_Gvqsrhv2PsqEFQ@mail.gmail.com>
-References: <20190423075020.173734-1-wangkefeng.wang@huawei.com> <20190423075020.173734-21-wangkefeng.wang@huawei.com>
+Subject: Re: [PATCH v3 00/26] compat_ioctl: cleanups
+Date: Mon, 6 May 2019 12:03:42 +0300
+Message-ID: <CAHp75Vc2-zzRYk0vpdPQm5duZwW+v=svEndTPV4Sr59QrGcMHg@mail.gmail.com>
+References: <20190416202013.4034148-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190423075020.173734-21-wangkefeng.wang@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190416202013.4034148-1-arnd@arndb.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>, linux-iio <linux-iio@vger.kernel.org>, linux-remoteproc@vger.kernel.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-ide@vger.kernel.org, "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>, sparclinux@vger.kernel.org, linux1394-devel@lists.sourceforge.net, devel@driverdev.osuosl.org, linux-s390@vger.kernel.org, linux-scsi <linux-scsi@vger.kernel.org>, linux-bluetooth@vger.kernel.org, y2038@lists.linaro.org, qat-linux@intel.com, amd-gfx@lists.freedesktop.org, linux-input <linux-input@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.o>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 23, 2019 at 10:40 AM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
->
-> Using dev_get_drvdata directly.
->
-
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  drivers/platform/x86/asus-wmi.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index ee1fa93708ec..fb9e4e02c068 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1361,8 +1361,7 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
->                                           struct attribute *attr, int idx)
->  {
->         struct device *dev = container_of(kobj, struct device, kobj);
-> -       struct platform_device *pdev = to_platform_device(dev->parent);
-> -       struct asus_wmi *asus = platform_get_drvdata(pdev);
-> +       struct asus_wmi *asus = dev_get_drvdata(dev->parent);
->         int dev_id = -1;
->         int fan_attr = -1;
->         u32 value = ASUS_WMI_UNSUPPORTED_METHOD;
-> --
-> 2.20.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+T24gVHVlLCBBcHIgMTYsIDIwMTkgYXQgMTE6MjMgUE0gQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5k
+Yi5kZT4gd3JvdGU6Cj4KPiBIaSBBbCwKPgo+IEl0IHRvb2sgbWUgd2F5IGxvbmdlciB0aGFuIEkg
+aGFkIGhvcGVkIHRvIHJldmlzaXQgdGhpcyBzZXJpZXMsIHNlZQo+IGh0dHBzOi8vbG9yZS5rZXJu
+ZWwub3JnL2xrbWwvMjAxODA5MTIxNTAxNDIuMTU3OTEzLTEtYXJuZEBhcm5kYi5kZS8KPiBmb3Ig
+dGhlIHByZXZpb3VzbHkgcG9zdGVkIHZlcnNpb24uCj4KPiBJJ3ZlIGNvbWUgdG8gdGhlIHBvaW50
+IHdoZXJlIGFsbCBjb252ZXJzaW9uIGhhbmRsZXJzIGFuZCBtb3N0Cj4gQ09NUEFUSUJMRV9JT0NU
+TCgpIGVudHJpZXMgYXJlIGdvbmUgZnJvbSB0aGlzIGZpbGUsIGJ1dCBmb3IKPiBub3csIHRoaXMg
+c2VyaWVzIG9ubHkgaGFzIHRoZSBwYXJ0cyB0aGF0IGhhdmUgZWl0aGVyIGJlZW4gcmV2aWV3ZWQK
+PiBwcmV2aW91c2x5LCBvciB0aGF0IGFyZSBzaW1wbGUgZW5vdWdoIHRvIGluY2x1ZGUuCj4KPiBU
+aGUgbWFpbiBtaXNzaW5nIHBpZWNlIGlzIHRoZSBTR19JTy9TR19HRVRfUkVRVUVTVF9UQUJMRSBj
+b252ZXJzaW9uLgo+IEknbGwgcG9zdCB0aGUgcGF0Y2hlcyBJIG1hZGUgZm9yIHRoYXQgbGF0ZXIs
+IGFzIHRoZXkgbmVlZCBtb3JlCj4gdGVzdGluZyBhbmQgcmV2aWV3IGZyb20gdGhlIHNjc2kgbWFp
+bnRhaW5lcnMuCj4KPiBJIGhvcGUgeW91IGNhbiBzdGlsbCB0YWtlIHRoZXNlIGZvciB0aGUgY29t
+aW5nIG1lcmdlIHdpbmRvdywgdW5sZXNzCj4gbmV3IHByb2JsZW1zIGNvbWUgdXAuCgo+ICBkcml2
+ZXJzL3BsYXRmb3JtL3g4Ni93bWkuYyAgICAgICAgICAgICAgICAgIHwgICAyICstCgpBY2tlZC1i
+eTogQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPgoKLS0gCldpdGgg
+QmVzdCBSZWdhcmRzLApBbmR5IFNoZXZjaGVua28KX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVs
