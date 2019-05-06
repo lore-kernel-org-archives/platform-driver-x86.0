@@ -1,65 +1,82 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 0/1] Add several Beckhoff Automation boards to
+Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to
  critclk_systems DMI table
-Date: Mon, 6 May 2019 16:50:59 +0200
-Message-ID: <21677236-b7fc-c51b-958a-269b5e65af54@redhat.com>
-References: <20190502130351.5341-1-linux-kernel-dev@beckhoff.com>
- <CAHp75Vc4xWbnGoaS8tRDV4_F-Qifh7K1hoFn0V-OObun2Sd0DA@mail.gmail.com>
+Date: Mon, 6 May 2019 16:47:26 +0200
+Message-ID: <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com>
+References: <20190429150135.15070-1-hdegoede@redhat.com>
+ <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vc4xWbnGoaS8tRDV4_F-Qifh7K1hoFn0V-OObun2Sd0DA@mail.gmail.com>
+In-Reply-To: <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, linux-kernel-dev@beckhoff.com, Stephen Boyd <sboyd@kernel.org>
-Cc: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Kai Heng Feng <kai.heng.feng@canonical.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Semyon Verchenko <semverchenko@factor-ts.ru>
 List-Id: platform-driver-x86.vger.kernel.org
 
 Hi,
 
-On 06-05-19 14:40, Andy Shevchenko wrote:
-> On Thu, May 2, 2019 at 4:04 PM <linux-kernel-dev@beckhoff.com> wrote:
+On 06-05-19 14:38, Andy Shevchenko wrote:
+> On Mon, Apr 29, 2019 at 6:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >>
->> From: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+>> The Lex 3I380D industrial PC has 4 ethernet controllers on board
+>> which need pmc_plt_clk0 - 3 to function, add it to the critclk_systems
+>> DMI table, so that drivers/clk/x86/clk-pmc-atom.c will mark the clocks
+>> as CLK_CRITICAL and they will not get turned off.
 >>
->> There are several Beckhoff Automation industrial PC boards which use
->> pmc_plt_clk* clocks for ethernet controllers. The patch adds affected boards
->> to critclk_systems DMI table so the clocks are marked as CLK_CRITICAL and
->> not turned off.
->> This should be applied on top of another patch as both change
->> the same table:
->> [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to critclk_systems DMI table
 > 
-> Yes, that's why it either should go via CLK tree, or I need an
-> immutable tag or branch from them.
 > Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> supposedly to go via CLK tree.
+> 
+> P.S. If you want it through PDx86, I need immutable branch / tag from CLK.
 
-As I just mentioned in your reply to the "[PATCH] platform/x86: pmc_atom:
-Add Lex 3I380D industrial PC to critclk_systems DMI table":
-
-"Stephen added the patches this depends on to his fixes branch, so they
+Stephen added the patches this depends on to his fixes branch, so they
 are in the 5.1 / Torvald's master branch, since we are now in the 5.2 merge
-window, you should be able to cleanly apply this directly."
-
-So both that patch and this patch should be able to go through the d-p-x86 tree
-unless I'm missing something?
+window, you should be able to cleanly apply this directly.
 
 Regards,
 
 Hans
 
+
 > 
+>> Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+>> Reported-and-tested-by: Semyon Verchenko <semverchenko@factor-ts.ru>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/platform/x86/pmc_atom.c | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
 >>
->> Steffen Dirkwinkel (1):
->>    platform/x86: pmc_atom: Add several Beckhoff Automation boards to
->>      critclk_systems DMI table
->>
->>   drivers/platform/x86/pmc_atom.c | 24 ++++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
+>> diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+>> index 3a635ea09b8a..2910845b7cdd 100644
+>> --- a/drivers/platform/x86/pmc_atom.c
+>> +++ b/drivers/platform/x86/pmc_atom.c
+>> @@ -407,12 +407,21 @@ static int pmc_dbgfs_register(struct pmc_dev *pmc)
+>>    */
+>>   static const struct dmi_system_id critclk_systems[] = {
+>>          {
+>> +               /* pmc_plt_clk0 is used for an external HSIC USB HUB */
+>>                  .ident = "MPL CEC1x",
+>>                  .matches = {
+>>                          DMI_MATCH(DMI_SYS_VENDOR, "MPL AG"),
+>>                          DMI_MATCH(DMI_PRODUCT_NAME, "CEC10 Family"),
+>>                  },
+>>          },
+>> +       {
+>> +               /* pmc_plt_clk0 - 3 are used for the 4 ethernet controllers */
+>> +               .ident = "Lex 3I380D",
+>> +               .matches = {
+>> +                       DMI_MATCH(DMI_SYS_VENDOR, "Lex BayTrail"),
+>> +                       DMI_MATCH(DMI_PRODUCT_NAME, "3I380D"),
+>> +               },
+>> +       },
+>>          { /*sentinel*/ }
+>>   };
 >>
 >> --
 >> 2.21.0
-> 
+>>
 > 
 > 
