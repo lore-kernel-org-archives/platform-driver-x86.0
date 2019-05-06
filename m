@@ -1,433 +1,115 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Remove no_hw_rfkill_list
-Date: Mon, 6 May 2019 19:28:35 +0200
-Message-ID: <d758c48f-d77d-713b-4b10-da0bc02fc56c@redhat.com>
-References: <20190429143807.13232-1-hdegoede@redhat.com>
- <CAHp75Ve7kvm9NAv74_=BvPbC9GtaAQ+Ps07qNt=iSQ99++C3gg@mail.gmail.com>
+From: Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
+	files to *.rst
+Date: Mon, 6 May 2019 16:50:59 -0300
+Message-ID: <20190506165059.51eb2959@coco.lan>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+	<cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
+	<20190423083135.GA11158@hirez.programming.kicks-ass.net>
+	<20190423125519.GA7104@redhat.com>
+	<20190423130132.GT4038@hirez.programming.kicks-ass.net>
+	<20190423103053.07cf2149@lwn.net>
+	<20190423171158.GG12232@hirez.programming.kicks-ass.net>
+	<20190423172006.GD16353@zn.tnic> <20190423170409.7b1370ac@coco.lan>
+	<20190423213816.GE16353@zn.tnic>
+	<20190424065209.GC4038@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve7kvm9NAv74_=BvPbC9GtaAQ+Ps07qNt=iSQ99++C3gg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Kai Heng Feng <kai.heng.feng@canonical.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20190424065209.GC4038-Nxj+rRp3nVydTX5a5knrm8zTDFooKrT+cvkQGrU6aU0@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Linux Doc Mailing List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Mike Snitzer <snitzer-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Farhan Ali <alifm-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, kernel-hardening-ZwoEplunGu1jrUoiu81ncdBPR1lH4CV8@public.gmane.org, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, James Morris <jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org>, Halil Pasic <pasic-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Boqun Feng <boqun.feng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicholas Piggin <npiggin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-wireless@v
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+Em Wed, 24 Apr 2019 08:52:09 +0200
+Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> escreveu:
 
-On 06-05-19 14:12, Andy Shevchenko wrote:
-> On Mon, Apr 29, 2019 at 5:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> When the ideapad-laptop driver was first written it was written for laptops
->> which had a hardware rfkill switch. So when the first ideapad laptops
->> showed up without a hw rfkill switch and it turned out that in this case
->> the ideapad firmware interface would always report the wifi being hardware-
->> blocked, a DMI id list of models which lack a hw rfkill switch was started
->> (by yours truly). Things were done this way to avoid regressing existing
->> models with a hw rfkill switch. In hindsight this was a mistake.
->>
->> Lenovo releases a lot of ideapad models every year and even the latest
->> models still use the "VPC2004" ACPI interface the ideapad-laptop driver
->> binds to. Having a hw rfkill switch is quite rare on modern hardware, so
->> all these new models need to be added to the no_hw_rfkill_list, leading
->> to a never ending game of whack a mole.
->>
->> Worse the failure mode when not present on the list, is very bad. In this
->> case the ideapad-laptop driver will report the wifi as being hw-blocked,
->> at which points NetworkManager does not even try to use it and the user
->> ends up with non working wifi.
->>
->> This leads to various Linux fora on the internet being filled with
->> wifi not working on ideapad laptops stories, which does not make Linux
->> look good.
->>
->> The failure mode when we flip the default to assuming that a hw rfkill
->> switch is not present OTOH is quite benign. When we properly report the
->> wifi as being hw-blocked on ideapads which do have the hw-switch; and it
->> is in the wifi-off position, then at least when using NetworkManager +
->> GNOME3 the user will get a "wifi disabled in hardware" message when trying
->> to connect to the wifi from the UI. If OTOH we assume there is no hardware
->> rfkill switch, then the user will get an empty list for the list of
->> available networks. Although the empty list vs the "wifi disabled in
->> hardware" message is a regression, it is a very minor regression and it
->> can easily be fixed on a model by model basis by filling the new
->> hw_rfkill_list this commit introduces.
->>
->> Therefor this commit removes the ever growing no_hw_rfkill_list, flipping
->> the default to assuming there is no hw rfkill switch and adding a new
->> hw_rfkill_list. Thereby fixing the wifi not working on all the current
->> ideapad and yoga models which are not on the list yet and also fixing it
->> for all future ideapad and yoga models using the "VPC2004" ACPI interface.
->>
->> Note once this patch has been accepted upstream. I plan to write a blog
->> post asking for users of ideapads and yoga's with a hw rfkill switch to
->> step forward, so that we can populate the new hw_rfkill_list with the few
->> older yoga and ideapad models which actually have a hw rfkill switch.
->>
+> On Tue, Apr 23, 2019 at 11:38:16PM +0200, Borislav Petkov wrote:
+> > If that is all the changes it would need, then I guess that's ok. Btw,
+> > those rst-conversion patches don't really show what got changed. Dunno
+> > if git can even show that properly. I diffed the two files by hand to
+> > see what got changed, see end of mail.  
 > 
-> Pushed to my review and testing queue, thanks!
+> That is not a happy diff; that table has gotten waay worse to read due
+> to all that extra table crap.
 
-Thank you, now that this is accepted / queued I will do the promised blog
-post to try and get the list of devices which do actually have a hardware
-rfkill switch populated.
+Not that I'm proposing such change, but, as a reference, I just discovered 
+today that there's a way to make it even lighter than it is while still
+showing it as a table:
 
-Regards,
+=================  ======== ==   ================  ===== ==  ===========================================================
+    Start addr        Offset        End addr         Size    VM area description
+-----------------  -----------   ----------------  --------  -----------------------------------------------------------
+ 0000000000000000      0         00007fffffffffff    128 TB   user-space virtual memory, different per mm
 
-Hans
+ 0000800000000000   +128    TB   ffff7fffffffffff   ~16M TB   ... huge, almost 64 bits wide hole of non-canonical
+                                                                  virtual memory addresses up to the -128 TB
+                                                                  starting offset of kernel mappings.
+
+-----------------  -------- --   ----------------  ----- --  -----------------------------------------------------------
+-                                                            Kernel-space virtual memory, shared between all processes:
+-----------------  -----------   ----------------  --------  -----------------------------------------------------------
+
+ ffff800000000000   -128    TB   ffff87ffffffffff      8 TB   ... guard hole, also reserved for hypervisor
+ ffff880000000000   -120    TB   ffff887fffffffff    0.5 TB   LDT remap for PTI
+ ffff888000000000   -119.5  TB   ffffc87fffffffff     64 TB   direct mapping of all physical memory (page_offset_base)
+ ffffc88000000000    -55.5  TB   ffffc8ffffffffff    0.5 TB   ... unused hole
+ ffffc90000000000    -55    TB   ffffe8ffffffffff     32 TB   vmalloc/ioremap space (vmalloc_base)
+ ffffe90000000000    -23    TB   ffffe9ffffffffff      1 TB   ... unused hole
+ ffffea0000000000    -22    TB   ffffeaffffffffff      1 TB   virtual memory map (vmemmap_base)
+ ffffeb0000000000    -21    TB   ffffebffffffffff      1 TB   ... unused hole
+ ffffec0000000000    -20    TB   fffffbffffffffff     16 TB   KASAN shadow memory
+-----------------  -------- --   ----------------  ----- --  -----------------------------------------------------------
+-                                                            Identical layout to the 56-bit one from here on:
+-----------------  -----------   ----------------  --------  -----------------------------------------------------------
+
+ fffffc0000000000     -4    TB   fffffdffffffffff      2 TB   ... unused hole
+                                                              vaddr_end for KASLR
+ fffffe0000000000     -2    TB   fffffe7fffffffff    0.5 TB   cpu_entry_area mapping
+ fffffe8000000000     -1.5  TB   fffffeffffffffff    0.5 TB   ... unused hole
+ ffffff0000000000     -1    TB   ffffff7fffffffff    0.5 TB   %esp fixup stacks
+ ffffff8000000000   -512    GB   ffffffeeffffffff    444 GB   ... unused hole
+ ffffffef00000000    -68    GB   fffffffeffffffff     64 GB   EFI region mapping space
+ ffffffff00000000     -4    GB   ffffffff7fffffff      2 GB   ... unused hole
+ ffffffff80000000     -2    GB   ffffffff9fffffff    512 MB   kernel text mapping, mapped to physical address 0
+ ffffffff80000000  -2048    MB
+ ffffffffa0000000  -1536    MB   fffffffffeffffff   1520 MB   module mapping space
+ ffffffffff000000    -16    MB
+    FIXADDR_START   ~-11    MB   ffffffffff5fffff   ~0.5 MB   kernel-internal fixmap range, variable size and offset
+ ffffffffff600000    -10    MB   ffffffffff600fff      4 kB   legacy vsyscall ABI
+ ffffffffffe00000     -2    MB   ffffffffffffffff      2 MB   ... unused hole
+=================  ======== ==   ================  ===== ==  ===========================================================
+
+If one wants the table headers as such, an extra line is required:
 
 
+=================  ======== ==   ================  ===== ==  ===========================================================
+    Start addr        Offset        End addr         Size    VM area description
+-----------------  -----------   ----------------  --------  -----------------------------------------------------------
+=================  ======== ==   ================  ===== ==  ===========================================================
 
-> 
->> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1703338
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/platform/x86/ideapad-laptop.c | 321 ++------------------------
->>   1 file changed, 15 insertions(+), 306 deletions(-)
->>
->> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
->> index c53ae86b59c7..2d94536dea88 100644
->> --- a/drivers/platform/x86/ideapad-laptop.c
->> +++ b/drivers/platform/x86/ideapad-laptop.c
->> @@ -980,312 +980,21 @@ static void ideapad_wmi_notify(u32 value, void *context)
->>   #endif
->>
->>   /*
->> - * Some ideapads don't have a hardware rfkill switch, reading VPCCMD_R_RF
->> - * always results in 0 on these models, causing ideapad_laptop to wrongly
->> - * report all radios as hardware-blocked.
->> + * Some ideapads have a hardware rfkill switch, but most do not have one.
->> + * Reading VPCCMD_R_RF always results in 0 on models without a hardware rfkill,
->> + * switch causing ideapad_laptop to wrongly report all radios as hw-blocked.
->> + * There used to be a long list of DMI ids for models without a hw rfkill
->> + * switch here, but that resulted in playing whack a mole.
->> + * More importantly wrongly reporting the wifi radio as hw-blocked, results in
->> + * non working wifi. Whereas not reporting it hw-blocked, when it actually is
->> + * hw-blocked results in an empty SSID list, which is a much more benign
->> + * failure mode.
->> + * So the default now is the much safer option of assuming there is no
->> + * hardware rfkill switch. This default also actually matches most hardware,
->> + * since having a hw rfkill switch is quite rare on modern hardware, so this
->> + * also leads to a much shorter list.
->>    */
->> -static const struct dmi_system_id no_hw_rfkill_list[] = {
->> -       {
->> -               .ident = "Lenovo RESCUER R720-15IKBN",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo R720-15IKBN"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo G40-30",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G40-30"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo G50-30",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo G50-30"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo V310-14IKB",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-14IKB"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo V310-14ISK",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-14ISK"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo V310-15IKB",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-15IKB"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo V310-15ISK",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V310-15ISK"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo V510-15IKB",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo V510-15IKB"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad 300-15IBR",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300-15IBR"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad 300-15IKB",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300-15IKB"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad 300S-11IBR",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 300S-11BR"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad 310-15ABR",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15ABR"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad 310-15IAP",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IAP"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad 310-15IKB",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15IKB"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad 310-15ISK",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 310-15ISK"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad 330-15ICH",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 330-15ICH"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad 530S-14ARR",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad 530S-14ARR"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad S130-14IGM",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad S130-14IGM"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad Y700-14ISK",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-14ISK"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad Y700-15ACZ",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-15ACZ"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad Y700-15ISK",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-15ISK"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad Y700 Touch-15ISK",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700 Touch-15ISK"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad Y700-17ISK",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo ideapad Y700-17ISK"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo ideapad MIIX 720-12IKB",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "MIIX 720-12IKB"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Legion Y520-15IKB",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y520-15IKB"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Y520-15IKBM",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y520-15IKBM"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Legion Y530-15ICH",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Legion Y530-15ICH"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Legion Y530-15ICH-1060",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Legion Y530-15ICH-1060"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Legion Y720-15IKB",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y720-15IKB"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Legion Y720-15IKBN",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y720-15IKBN"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Y720-15IKBM",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Y720-15IKBM"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Yoga 2 11 / 13 / Pro",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 2"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Yoga 2 11 / 13 / Pro",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_BOARD_NAME, "Yoga2"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Yoga 2 13",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Yoga 2 13"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Yoga 3 1170 / 1470",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Yoga 3"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Yoga 3 Pro 1370",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 3"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Yoga 700",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 700"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Yoga 900",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 900"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Yoga 900",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_BOARD_NAME, "VIUU4"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo YOGA 910-13IKB",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 910-13IKB"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo YOGA 920-13IKB",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA 920-13IKB"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo YOGA C930-13IKB",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo YOGA C930-13IKB"),
->> -               },
->> -       },
->> -       {
->> -               .ident = "Lenovo Zhaoyang E42-80",
->> -               .matches = {
->> -                       DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
->> -                       DMI_MATCH(DMI_PRODUCT_VERSION, "ZHAOYANG E42-80"),
->> -               },
->> -       },
->> +static const struct dmi_system_id hw_rfkill_list[] = {
->>          {}
->>   };
->>
->> @@ -1311,7 +1020,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
->>          priv->cfg = cfg;
->>          priv->adev = adev;
->>          priv->platform_device = pdev;
->> -       priv->has_hw_rfkill_switch = !dmi_check_system(no_hw_rfkill_list);
->> +       priv->has_hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
->>
->>          ret = ideapad_sysfs_init(priv);
->>          if (ret)
->> --
->> 2.21.0
->>
-> 
-> 
+<snip/>
+
+=================  ======== ==   ================  ===== ==  ===========================================================
+
+
+The output using this approach and a markup to use mono-spaced cells
+e. g. either using ..raw or using .. cssclass as commented before in
+this thread is at:
+
+	https://www.infradead.org/~mchehab/rst_conversion/x86/x86_64/mm_alternative.html
+
+Just converted the first table, keeping the other as a literal block.
+
+Thanks,
+Mauro
