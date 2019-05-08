@@ -1,102 +1,102 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH] platform/x86: acer-wmi: Mark expected switch
- fall-throughs
-Date: Wed, 8 May 2019 16:06:46 -0700
-Message-ID: <20190508230645.GB32286@wrath>
-References: <20190508164934.GA20064@embeddedor>
+From: Rajat Jain <rajatja@google.com>
+Subject: Re: linux-next: Tree for May 8 (drivers/platform/x86/intel_pmc_core_plat_drv.c)
+Date: Wed, 8 May 2019 16:15:21 -0700
+Message-ID: <CACK8Z6F2v8nyUYcnOrkp81WfK2D2NEmK=pcWybn1annrtqRwew@mail.gmail.com>
+References: <20190508173403.6088d0db@canb.auug.org.au> <fa0e68b2-b839-b187-150c-13391c197b99@infradead.org>
+ <CAHp75Veq2=XA124rG8urt3eVE3pcaUm0VdsV7Mxr9zjMpa7mjg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190508164934.GA20064@embeddedor>
+In-Reply-To: <CAHp75Veq2=XA124rG8urt3eVE3pcaUm0VdsV7Mxr9zjMpa7mjg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "Lee, Chun-Yi" <jlee@suse.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Linux Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, May 08, 2019 at 11:49:34AM -0500, Gustavo A. R. Silva wrote:
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
-> 
-> This patch fixes the following warnings:
-> 
-> drivers/platform/x86/acer-wmi.c: In function ‘set_u32’:
-> drivers/platform/x86/acer-wmi.c:1378:33: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     if (cap == ACER_CAP_WIRELESS ||
->                                  ^
-> drivers/platform/x86/acer-wmi.c:1386:3: note: here
->    case ACER_WMID:
->    ^~~~
-> drivers/platform/x86/acer-wmi.c:1393:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->     else if (wmi_has_guid(WMID_GUID2))
->             ^
-> drivers/platform/x86/acer-wmi.c:1395:3: note: here
->    default:
->    ^~~~~~~
-> drivers/platform/x86/acer-wmi.c: In function ‘get_u32’:
-> drivers/platform/x86/acer-wmi.c:1340:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (cap == ACER_CAP_MAILLED) {
->       ^
-> drivers/platform/x86/acer-wmi.c:1344:2: note: here
->   case ACER_WMID:
->   ^~~~
-> drivers/platform/x86/acer-wmi.c: In function ‘WMID_get_u32’:
-> drivers/platform/x86/acer-wmi.c:1013:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->    if (quirks->mailled == 1) {
->       ^
-> drivers/platform/x86/acer-wmi.c:1018:2: note: here
->   default:
->   ^~~~~~~
-> 
-> Warning level 3 was used: -Wimplicit-fallthrough=3
-> 
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/platform/x86/acer-wmi.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index fcfeadd1301f..bd87f9037f95 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -1015,6 +1015,7 @@ static acpi_status WMID_get_u32(u32 *value, u32 cap)
->  			*value = tmp & 0x1;
->  			return 0;
->  		}
-> +		/* fall through */
->  	default:
->  		return AE_ERROR;
->  	}
-> @@ -1341,6 +1342,7 @@ static acpi_status get_u32(u32 *value, u32 cap)
->  			status = AMW0_get_u32(value, cap);
->  			break;
->  		}
-> +		/* fall through */
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, May 8, 2019 at 2:22 PM
+To: Randy Dunlap
+Cc: Stephen Rothwell, Linux Next Mailing List, Linux Kernel Mailing
+List, Rajat Jain, Platform Driver, Rajneesh Bhardwaj, Vishwanath
+Somayaji
 
-This doesn't strike me as obviously the right thing to do here. If the interface
-type is AMW0_V2, why is it the right thing to do to use WMID_get_u32 if the cap
-isn't ACER_CAP_MAILLED?
+> On Wed, May 8, 2019 at 11:45 PM Randy Dunlap <rdunlap@infradead.org> wrot=
+e:
+> >
+> > On 5/8/19 12:34 AM, Stephen Rothwell wrote:
+> > > Hi all,
+> > >
+> > > Changes since 20190507:
+> > >
+> > > The ubifs tree gained a conflict against Linus' tree.
+> > >
+> >
+> > on i386 or x86_64:
+>
+> Thank you for report. Can you provide what is the config option for
+> this module? I suppose it's built-in.
+> Rajat, I will drop this from the repo, because I don't see it would
+> have a chance to be tested in time.
 
->  	case ACER_WMID:
->  		status = WMID_get_u32(value, cap);
->  		break;
-> @@ -1383,6 +1385,7 @@ static acpi_status set_u32(u32 value, u32 cap)
->  
->  				return AMW0_set_u32(value, cap);
->  			}
-> +			/* fall through */
 
-Similarly here.
+OK, NP. Just to be sure I understand,
 
-Are we documenting intended behavior, or covering up a bug.
+1) Please let me know if I should send in a fix (it would be
+#include/linux/module.h and also add MODULE_LICENSE() I believe)?
+2) Would this be lined up for next version though?
 
->  		case ACER_WMID:
->  			return WMID_set_u32(value, cap);
+Thanks,
+Rajat
 
--- 
-Darren Hart
-VMware Open Source Technology Center
+
+>
+>
+> >
+> >
+> >   CC      drivers/platform/x86/intel_pmc_core_plat_drv.o
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:40:1: warning: data d=
+efinition has no type or storage class [enabled by default]
+> >  MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
+> >  ^
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:40:1: error: type def=
+aults to =E2=80=98int=E2=80=99 in declaration of =E2=80=98MODULE_DEVICE_TAB=
+LE=E2=80=99 [-Werror=3Dimplicit-int]
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:40:1: warning: parame=
+ter names (without types) in function declaration [enabled by default]
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:59:1: warning: data d=
+efinition has no type or storage class [enabled by default]
+> >  module_init(pmc_core_platform_init);
+> >  ^
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:59:1: error: type def=
+aults to =E2=80=98int=E2=80=99 in declaration of =E2=80=98module_init=E2=80=
+=99 [-Werror=3Dimplicit-int]
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:59:1: warning: parame=
+ter names (without types) in function declaration [enabled by default]
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:60:1: warning: data d=
+efinition has no type or storage class [enabled by default]
+> >  module_exit(pmc_core_platform_exit);
+> >  ^
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:60:1: error: type def=
+aults to =E2=80=98int=E2=80=99 in declaration of =E2=80=98module_exit=E2=80=
+=99 [-Werror=3Dimplicit-int]
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:60:1: warning: parame=
+ter names (without types) in function declaration [enabled by default]
+> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:42:19: warning: =E2=
+=80=98pmc_core_platform_init=E2=80=99 defined but not used [-Wunused-functi=
+on]
+> >  static int __init pmc_core_platform_init(void)
+> >                    ^
+> >
+> > and
+> > WARNING: modpost: missing MODULE_LICENSE() in drivers/platform/x86/inte=
+l_pmc_core_plat_drv.o
+> >
+> > --
+> > ~Randy
+>
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
