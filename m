@@ -1,102 +1,63 @@
-From: Rajat Jain <rajatja@google.com>
-Subject: Re: linux-next: Tree for May 8 (drivers/platform/x86/intel_pmc_core_plat_drv.c)
-Date: Wed, 8 May 2019 16:15:21 -0700
-Message-ID: <CACK8Z6F2v8nyUYcnOrkp81WfK2D2NEmK=pcWybn1annrtqRwew@mail.gmail.com>
-References: <20190508173403.6088d0db@canb.auug.org.au> <fa0e68b2-b839-b187-150c-13391c197b99@infradead.org>
- <CAHp75Veq2=XA124rG8urt3eVE3pcaUm0VdsV7Mxr9zjMpa7mjg@mail.gmail.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to
+ critclk_systems DMI table
+Date: Wed, 8 May 2019 16:23:56 -0700
+Message-ID: <20190508232356.GA33357@wrath>
+References: <20190429150135.15070-1-hdegoede@redhat.com>
+ <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
+ <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com>
+ <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
+ <568ba27d-a6a5-b158-bab1-f22cd8ccb34e@redhat.com>
+ <155726027056.14659.1724431433952718602@swboyd.mtv.corp.google.com>
+ <10c8864c-6ee7-4dfd-6274-b1996e767653@redhat.com>
+ <CAHp75VdnxRQi3X6J9hLGUjGsOYTkjoPN5MakJc=mUSumoC+wag@mail.gmail.com>
+ <e9c92d24-9044-c37d-3f18-4884d97047d5@redhat.com>
+ <20190508225522.GA32286@wrath>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Veq2=XA124rG8urt3eVE3pcaUm0VdsV7Mxr9zjMpa7mjg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190508225522.GA32286@wrath>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Linux Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Stephen Boyd <sboyd@kernel.org>, Andy Shevchenko <andy@infradead.org>, Kai Heng Feng <kai.heng.feng@canonical.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Semyon Verchenko <semverchenko@factor-ts.ru>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, May 8, 2019 at 2:22 PM
-To: Randy Dunlap
-Cc: Stephen Rothwell, Linux Next Mailing List, Linux Kernel Mailing
-List, Rajat Jain, Platform Driver, Rajneesh Bhardwaj, Vishwanath
-Somayaji
+On Wed, May 08, 2019 at 03:55:22PM -0700, Darren Hart wrote:
+> On Wed, May 08, 2019 at 11:20:52AM +0200, Hans de Goede wrote:
+> > Hi,
+> > 
+> > On 08-05-19 10:42, Andy Shevchenko wrote:
+> > > On Wed, May 8, 2019 at 10:48 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> > > > On 07-05-19 22:17, Stephen Boyd wrote:
+> > > > > Quoting Hans de Goede (2019-05-06 08:05:42)
+> > > 
+> > > > > I guess this is urgent?
+> > > > 
+> > > > Somewhat, getting this into e.g. rc2 would be fine too, waiting till 5.3
+> > > > would be bad.
+> > > 
+> > > So, I can do it as a fixes for rc2, just ping me after merge window.
+> > 
+> > Ok, will do.
+> 
+> Andy, what is the issue here? If the dependency is in v5.1 we can do a "merge
+> --ff-only v5.1" in our for-next branch in order to pull it in, that would be the
+> same as an immutable branch basically.
+> 
 
-> On Wed, May 8, 2019 at 11:45 PM Randy Dunlap <rdunlap@infradead.org> wrot=
-e:
-> >
-> > On 5/8/19 12:34 AM, Stephen Rothwell wrote:
-> > > Hi all,
-> > >
-> > > Changes since 20190507:
-> > >
-> > > The ubifs tree gained a conflict against Linus' tree.
-> > >
-> >
-> > on i386 or x86_64:
->
-> Thank you for report. Can you provide what is the config option for
-> this module? I suppose it's built-in.
-> Rajat, I will drop this from the repo, because I don't see it would
-> have a chance to be tested in time.
+A simpler solution for this case would be to issue two PRs to Linus from two
+different branches. Other subsystems send topic branches, so this isn't out of
+the ordinary.
 
+I have merged the two patches in question from Hans and Steffen to for-next-2.
 
-OK, NP. Just to be sure I understand,
+We could send two PRs back to back, with a note to Linus why this is a bit
+different than usual, and then come back together in our for-next and fixes
+branches once both are merged and continue as usual.
 
-1) Please let me know if I should send in a fix (it would be
-#include/linux/module.h and also add MODULE_LICENSE() I believe)?
-2) Would this be lined up for next version though?
+Any concerns with this approach?
 
-Thanks,
-Rajat
-
-
->
->
-> >
-> >
-> >   CC      drivers/platform/x86/intel_pmc_core_plat_drv.o
-> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:40:1: warning: data d=
-efinition has no type or storage class [enabled by default]
-> >  MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
-> >  ^
-> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:40:1: error: type def=
-aults to =E2=80=98int=E2=80=99 in declaration of =E2=80=98MODULE_DEVICE_TAB=
-LE=E2=80=99 [-Werror=3Dimplicit-int]
-> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:40:1: warning: parame=
-ter names (without types) in function declaration [enabled by default]
-> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:59:1: warning: data d=
-efinition has no type or storage class [enabled by default]
-> >  module_init(pmc_core_platform_init);
-> >  ^
-> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:59:1: error: type def=
-aults to =E2=80=98int=E2=80=99 in declaration of =E2=80=98module_init=E2=80=
-=99 [-Werror=3Dimplicit-int]
-> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:59:1: warning: parame=
-ter names (without types) in function declaration [enabled by default]
-> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:60:1: warning: data d=
-efinition has no type or storage class [enabled by default]
-> >  module_exit(pmc_core_platform_exit);
-> >  ^
-> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:60:1: error: type def=
-aults to =E2=80=98int=E2=80=99 in declaration of =E2=80=98module_exit=E2=80=
-=99 [-Werror=3Dimplicit-int]
-> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:60:1: warning: parame=
-ter names (without types) in function declaration [enabled by default]
-> > ../drivers/platform/x86/intel_pmc_core_plat_drv.c:42:19: warning: =E2=
-=80=98pmc_core_platform_init=E2=80=99 defined but not used [-Wunused-functi=
-on]
-> >  static int __init pmc_core_platform_init(void)
-> >                    ^
-> >
-> > and
-> > WARNING: modpost: missing MODULE_LICENSE() in drivers/platform/x86/inte=
-l_pmc_core_plat_drv.o
-> >
-> > --
-> > ~Randy
->
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+-- 
+Darren Hart
+VMware Open Source Technology Center
