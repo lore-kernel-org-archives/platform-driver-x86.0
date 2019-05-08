@@ -1,43 +1,91 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 05/11] platform/x86: asus-wmi: Support WMI event queue
-Date: Wed, 8 May 2019 16:47:12 +0300
-Message-ID: <CAHp75VdRE8C=ZODLuKC0JktKv4rbw_Y4fOA4J5wBYKPU+URK+A@mail.gmail.com>
-References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com> <22dc9bfe-af2f-7ea9-e5bc-95647d5411a8@gmail.com>
+Subject: Re: [PATCH v3 08/11] platform/x86: asus-wmi: Enhance detection of
+ thermal data
+Date: Wed, 8 May 2019 16:58:47 +0300
+Message-ID: <CAHp75VdE7MBjyLj=9bS6oc5jc8+BC_hftWUJgZGG02iDd=saiQ@mail.gmail.com>
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com> <7595c4f0-3dbb-2fe5-4daf-4b9a266f67d7@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <22dc9bfe-af2f-7ea9-e5bc-95647d5411a8@gmail.com>
+In-Reply-To: <7595c4f0-3dbb-2fe5-4daf-4b9a266f67d7@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
 Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Daniel Drake <drake@endlessm.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Apr 19, 2019 at 1:10 PM Yurii Pavlovskyi
+On Fri, Apr 19, 2019 at 1:12 PM Yurii Pavlovskyi
 <yurii.pavlovskyi@gmail.com> wrote:
 >
-> Event codes are expected to be retrieved from a queue on at least some
-> models. Specifically, very likely the ACPI WMI devices with _UID ATK are
-> queued whereas those with ASUSWMI are not [1].
+> The obviously wrong value 1 for temperature device ID in this driver is
+> returned by at least some devices, including TUF Gaming series laptops,
+> instead of 0 as expected previously. Observable effect is that a
+> temp1_input in hwmon reads temperature near absolute zero.
 >
-> The WMI event codes are pushed into a circular buffer queue. After the INIT
-> method is called, ACPI code is allowed to push events into this buffer.
-> The INIT method cannot be reverted. If the module is unloaded and an event
-> (such as hotkey press) gets emitted before inserting it back the events get
-> processed delayed by one or if the queue overflows, additionally delayed by
-> about 3 seconds.
->
-> It might be considered a minor issue and no normal user would likely
-> observe this (there is little reason unloading the driver), but it does
-> significantly frustrate a developer who is unlucky enough to encounter
-> this. Therefore, the fallback to unqueued behavior occurs whenever
-> something unexpected happens.
->
-> The fix flushes the old key codes out of the queue on load. After receiving
-> event the queue is read until either ..FFFF or 1 is encountered. Also as
-> noted in [1] it is checked whether notify code is equal to 0xFF before
-> enabling queue processing in WMI notify handler.
+> * Consider 0.1 K an erroneous value in addition to 0 K.
+> * Refactor detection of thermal input availability to a separate function.
 
-It's rather a big change. Can it be split to smaller pieces?
+
+> +static int asus_hwmon_check_thermal_available(struct asus_wmi *asus)
+> +{
+> +       u32 value = ASUS_WMI_UNSUPPORTED_METHOD;
+> +       int err;
+> +
+> +       asus->asus_hwmon_thermal_available = false;
+
+> +       err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_THERMAL_CTRL, &value);
+
+> +
+
+The blank line probably should go before a call, but definitely not here.
+
+> +       if (err < 0) {
+
+This needs comment why -ENODEV considered as non-fatal.
+> +               if (err == -ENODEV)
+> +                       return 0;
+
+> +
+> +               return err;
+> +       }
+
+> +
+> +       /*
+> +        * If the temperature value in deci-Kelvin is near the absolute
+> +        * zero temperature, something is clearly wrong.
+> +        */
+> +       if (!value || value == 1)
+> +               return 0;
+> +
+> +       asus->asus_hwmon_thermal_available = true;
+> +       return 0;
+> +}
+
+>         if (attr == &dev_attr_pwm1.attr)
+>                 dev_id = ASUS_WMI_DEVID_FAN_CTRL;
+
+> -       else if (attr == &dev_attr_temp1_input.attr)
+> -               dev_id = ASUS_WMI_DEVID_THERMAL_CTRL;
+
+I don't see how this change affects the user output or driver
+behaviour. Why is it done?
+
+> -               if (value == ASUS_WMI_UNSUPPORTED_METHOD || value & 0xFFF80000
+> +               if (value == ASUS_WMI_UNSUPPORTED_METHOD || (value & 0xFFF80000)
+
+Seems like a bug fix and thus should be a separate commit predecessing
+the series.
+
+> -       } else if (dev_id == ASUS_WMI_DEVID_THERMAL_CTRL) {
+
+> +       } else if (attr == &dev_attr_temp1_input.attr) {
+
+So, I don't see why you change this line.
+
+> +               pr_warn("Could not check if thermal available: %d\n", status);
+
+> +       pr_info("Thermal available: %d\n", asus->asus_hwmon_thermal_available);
+
+dev_*() ?
 
 -- 
 With Best Regards,
