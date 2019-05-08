@@ -1,27 +1,31 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] fix double fetch in wmi_ioctl.
-Date: Wed, 8 May 2019 11:40:30 +0300
-Message-ID: <CAHp75VeZgWxEvrVGajiosPCZNMwobYV9OjC4sVyW_pajK5B3Zw@mail.gmail.com>
-References: <20190508082319.GA8817@hjy-HP-Notebook>
+Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to
+ critclk_systems DMI table
+Date: Wed, 8 May 2019 11:42:09 +0300
+Message-ID: <CAHp75VdnxRQi3X6J9hLGUjGsOYTkjoPN5MakJc=mUSumoC+wag@mail.gmail.com>
+References: <20190429150135.15070-1-hdegoede@redhat.com> <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
+ <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com> <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
+ <568ba27d-a6a5-b158-bab1-f22cd8ccb34e@redhat.com> <155726027056.14659.1724431433952718602@swboyd.mtv.corp.google.com>
+ <10c8864c-6ee7-4dfd-6274-b1996e767653@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190508082319.GA8817@hjy-HP-Notebook>
+In-Reply-To: <10c8864c-6ee7-4dfd-6274-b1996e767653@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: JingYi Hou <houjingyi647@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Kai Heng Feng <kai.heng.feng@canonical.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Semyon Verchenko <semverchenko@factor-ts.ru>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, May 8, 2019 at 11:23 AM JingYi Hou <houjingyi647@gmail.com> wrote:
-> There is a double fetch problem in function wmi_ioctl.
-> After second fetch overwrite the length to avoid this.
-> buf->length is not used now,but it may in the future.
-> It is good to get it fixed up.
+On Wed, May 8, 2019 at 10:48 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 07-05-19 22:17, Stephen Boyd wrote:
+> > Quoting Hans de Goede (2019-05-06 08:05:42)
 
-So, there is no issue right now.
-Patch is not needed then.
+> > I guess this is urgent?
+>
+> Somewhat, getting this into e.g. rc2 would be fine too, waiting till 5.3
+> would be bad.
 
-Thanks!
+So, I can do it as a fixes for rc2, just ping me after merge window.
 
 -- 
 With Best Regards,
