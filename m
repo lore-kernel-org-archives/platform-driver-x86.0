@@ -1,125 +1,34 @@
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] platform/x86: acer-wmi: Mark expected switch
- fall-throughs
-Date: Wed, 8 May 2019 20:48:43 -0500
-Message-ID: <b1869c7f-0927-9a30-a195-a188719c748c@embeddedor.com>
-References: <20190508164934.GA20064@embeddedor> <20190508230645.GB32286@wrath>
+From: Daniel Drake <drake@endlessm.com>
+Subject: Re: [PATCH v3 04/11] platform/x86: asus-wmi: Improve DSTS WMI method
+ ID detection
+Date: Thu, 9 May 2019 14:08:38 +0800
+Message-ID: <CAD8Lp46tCfi3ZCmmXZv3-ZDbon+6P8qC4GPR9Bt3uFFr=Sn4Cw@mail.gmail.com>
+References: <7acd57fe-604a-a96a-4ca2-a25bc88d6405@gmail.com>
+ <d6ee51cc-eb0f-2bb9-fef9-f8b4bf849076@gmail.com> <CAHp75VfMXAyUpWTrEHnv1NcQcHch+RHehWYTjk6KMTbXbtppPg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190508230645.GB32286@wrath>
-Content-Language: en-US
+In-Reply-To: <CAHp75VfMXAyUpWTrEHnv1NcQcHch+RHehWYTjk6KMTbXbtppPg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: "Lee, Chun-Yi" <jlee@suse.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Darren,
+> > -#define ASUS_WMI_METHODID_DSTS         0x53544344 /* Device STatuS */
+> > -#define ASUS_WMI_METHODID_DSTS2                0x53545344 /* Device STatuS #2*/
+>
+> > +#define ASUS_WMI_METHODID_DSTS         0x53544344 /* Device STatuS (DCTS) */
+>
+> It's not clear from the description what 'C' stands for.
+> Is there any specification which describes the difference and actual
+> abbreviations?
 
-Please, see my comments below...
+The (recent) spec I have here doesn't mention 0x53544344 (DCTS).
+However the spec changelog does mention that EEEPC stuff was removed
+from the spec a while ago.
+The spec does mention 0x53545344 (DSTS), labelled as "Get device status".
 
-On 5/8/19 6:06 PM, Darren Hart wrote:
-> On Wed, May 08, 2019 at 11:49:34AM -0500, Gustavo A. R. Silva wrote:
->> In preparation to enabling -Wimplicit-fallthrough, mark switch
->> cases where we are expecting to fall through.
->>
->> This patch fixes the following warnings:
->>
->> drivers/platform/x86/acer-wmi.c: In function ‘set_u32’:
->> drivers/platform/x86/acer-wmi.c:1378:33: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>     if (cap == ACER_CAP_WIRELESS ||
->>                                  ^
->> drivers/platform/x86/acer-wmi.c:1386:3: note: here
->>    case ACER_WMID:
->>    ^~~~
->> drivers/platform/x86/acer-wmi.c:1393:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>     else if (wmi_has_guid(WMID_GUID2))
->>             ^
->> drivers/platform/x86/acer-wmi.c:1395:3: note: here
->>    default:
->>    ^~~~~~~
->> drivers/platform/x86/acer-wmi.c: In function ‘get_u32’:
->> drivers/platform/x86/acer-wmi.c:1340:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>    if (cap == ACER_CAP_MAILLED) {
->>       ^
->> drivers/platform/x86/acer-wmi.c:1344:2: note: here
->>   case ACER_WMID:
->>   ^~~~
->> drivers/platform/x86/acer-wmi.c: In function ‘WMID_get_u32’:
->> drivers/platform/x86/acer-wmi.c:1013:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>    if (quirks->mailled == 1) {
->>       ^
->> drivers/platform/x86/acer-wmi.c:1018:2: note: here
->>   default:
->>   ^~~~~~~
->>
->> Warning level 3 was used: -Wimplicit-fallthrough=3
->>
->> This patch is part of the ongoing efforts to enable
->> -Wimplicit-fallthrough.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  drivers/platform/x86/acer-wmi.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
->> index fcfeadd1301f..bd87f9037f95 100644
->> --- a/drivers/platform/x86/acer-wmi.c
->> +++ b/drivers/platform/x86/acer-wmi.c
->> @@ -1015,6 +1015,7 @@ static acpi_status WMID_get_u32(u32 *value, u32 cap)
->>  			*value = tmp & 0x1;
->>  			return 0;
->>  		}
->> +		/* fall through */
->>  	default:
->>  		return AE_ERROR;
->>  	}
->> @@ -1341,6 +1342,7 @@ static acpi_status get_u32(u32 *value, u32 cap)
->>  			status = AMW0_get_u32(value, cap);
->>  			break;
->>  		}
->> +		/* fall through */
-> 
-> This doesn't strike me as obviously the right thing to do here. If the interface
-> type is AMW0_V2, why is it the right thing to do to use WMID_get_u32 if the cap
-> isn't ACER_CAP_MAILLED?
-> 
-In commit commit 745a5d2126926808295742932d0e36d485efa485 case ACER_AMW0_V2 falls
-through to case ACER_WMID deliberately in function set_u32(), without reporting
-any error or warning. So, I thought it was fair to assume that the fall-through
-is intentional in both functions get_u32() and set_u32(). Otherwise I would
-expect to see a message indicating that interface ACER_AMW0_V2 is unavailable
-in function set_u32().
+For clarity I think the constants could be renamed as
+ASUS_WMI_METHODID_DCTS and ASUS_WMI_METHODID_DSTS.
 
-This is also complemented by the following...
-
->>  	case ACER_WMID:
->>  		status = WMID_get_u32(value, cap);
->>  		break;
->> @@ -1383,6 +1385,7 @@ static acpi_status set_u32(u32 value, u32 cap)
->>  
->>  				return AMW0_set_u32(value, cap);
->>  			}
->> +			/* fall through */
-> 
-> Similarly here.
-> 
-> Are we documenting intended behavior, or covering up a bug.
-> 
-
-Commit 5c742b45dd5fbbb6cf74d3378341704f4b23c5e8 mentions that "This was fixed
-in acer_acpi some time ago, but I forgot to port the patch over to acer-wmi
-when it was merged." Notice that this driver (acer-wmi) is based on the
-no-longer existing acer_acpi driver. But after googling for a while I could
-found the fix the original author talks about:
-
-https://repo.or.cz/acer_acpi.git/commitdiff/74c08a38875ffa9989c3100947650ac8a388c189
-
-So, the fix is indeed similar and contains the same fall-throughs from case
-ACER_AMW0_V2 to case ACER_WMID in both functions get_u32() and set_u32().
-
-Thanks
---
-Gustavo
+Daniel
