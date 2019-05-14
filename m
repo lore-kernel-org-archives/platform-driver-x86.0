@@ -1,69 +1,85 @@
-From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [PATCH v1 2/2] sound: Enable micmute led for Huawei laptops
-Date: Mon, 13 May 2019 16:30:06 -0400
-Message-ID: <20190513203009.28686-3-ayman.bagabas@gmail.com>
-References: <20190513203009.28686-1-ayman.bagabas@gmail.com>
+From: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Subject: [PATCH v4 00/13] Support of ASUS TUF Gaming series laptops
+Date: Tue, 14 May 2019 20:47:23 +0200
+Message-ID: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190513203009.28686-1-ayman.bagabas@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Kailang Yang <kailang@realtek.com>, Jian-Hong Pan <jian-hong@endlessm.com>, Daniel Drake <drake@endlessm.com>, Chris Chiu <chiu@endlessm.com>, Hui Wang <hui.wang@canonical.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: ayman.bagabas@gmail.com
+Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Daniel Drake <drake@endlessm.com>, Chris Chiu <chiu@endlessm.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Since this LED is found on huawei laptops, we can hook it to
-huawei-wmi platform driver which uses the common WMI interface present
-in these laptops to control the LED.
+Hi,
 
-I've also made some renames and used product name instead of common name
-to avoid confusion.
+this is the fourth version of the patch series. 
 
-Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
----
- sound/pci/hda/patch_realtek.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Changelog:
+v4:
+  * Rebase on for-next branch
+  * Extract local variable in patch 01
+  * Rename new method to "..._method3" and keep comma in struct declaration
+    in patch 03 (NOTE: the arg2 does not fit on same line by 1 character)
+  * Patch "Improve DSTS WMI method ID detection":
+    - sort local variables
+    - use dev_info
+    - separate changes to wmi module in an own patch
+    - rename method ID constants and fix comment capitalization
+  * "Support WMI event queue": split into separate refactoring and new
+    functionality patches, use dev_info as well
+  * "Organize code into sections": split out error handling refactoring
+  * "Enhance detection of thermal data": remove unreasonable refactoring
+    and just change the currently used condition
+  * "Control RGB keyboard backlight": removed, will be posted afterwards.
+    I will follow on the status of the multicolor framework, it does look
+    promising for this.
+  * Mark URL references with "Link:"
+  * Minor corrections to commit messages
+v3: 
+  * Use devm_* function in patch 01
+  * Detect DSTS/DCTS using _UID in patch 04
+  * Detect event queue by _UID as well in patch 05
+  * Rename poll function in patch 05
+  * Fix terminology in patches 09 and 10
+  * Correct commit messages
+v2:
+  * Fix logging
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 42cd3945e0de..3661470766ba 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5684,7 +5684,7 @@ enum {
- 	ALC298_FIXUP_TPT470_DOCK,
- 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
- 	ALC255_FIXUP_DELL_HEADSET_MIC,
--	ALC256_FIXUP_HUAWEI_MBXP_PINS,
-+	ALC256_FIXUP_HUAWEI_MACH_WX9_PINS,
- 	ALC295_FIXUP_HP_X360,
- 	ALC221_FIXUP_HP_HEADSET_MIC,
- 	ALC285_FIXUP_LENOVO_HEADPHONE_NOISE,
-@@ -5975,7 +5975,7 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MIC
- 	},
--	[ALC256_FIXUP_HUAWEI_MBXP_PINS] = {
-+	[ALC256_FIXUP_HUAWEI_MACH_WX9_PINS] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
- 			{0x12, 0x90a60130},
-@@ -6996,9 +6996,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x511f, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x3bf8, "Quanta FL1", ALC269_FIXUP_PCM_44K),
- 	SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", ALC269_FIXUP_LENOVO_EAPD),
--	SND_PCI_QUIRK(0x19e5, 0x3200, "Huawei MBX", ALC255_FIXUP_MIC_MUTE_LED),
--	SND_PCI_QUIRK(0x19e5, 0x3201, "Huawei MBX", ALC255_FIXUP_MIC_MUTE_LED),
--	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MBXP", ALC256_FIXUP_HUAWEI_MBXP_PINS),
-+	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MACH-WX9", ALC256_FIXUP_HUAWEI_MACH_WX9_PINS),
- 	SND_PCI_QUIRK(0x1b7d, 0xa831, "Ordissimo EVE2 ", ALC269VB_FIXUP_ORDISSIMO_EVE2), /* Also known as Malata PC-B1303 */
- 
- #if 0
-@@ -7057,6 +7055,7 @@ static const struct snd_pci_quirk alc269_fixup_vendor_tbl[] = {
- 	SND_PCI_QUIRK_VENDOR(0x103c, "HP", ALC269_FIXUP_HP_MUTE_LED),
- 	SND_PCI_QUIRK_VENDOR(0x104d, "Sony VAIO", ALC269_FIXUP_SONY_VAIO),
- 	SND_PCI_QUIRK_VENDOR(0x17aa, "Thinkpad", ALC269_FIXUP_THINKPAD_ACPI),
-+	SND_PCI_QUIRK_VENDOR(0x19e5, "Huawei Matebook", ALC255_FIXUP_MIC_MUTE_LED),
- 	{}
- };
- 
+INTRODUCTION
+The support for this laptop series is currently non-existent, as the
+asus-nb-wmi driver (which is essentially configuration for asus-wmi) fails
+to load and multiple ACPI errors are logged in dmesg. This patch series
+adds pretty comprehensive support for these relatively new laptops, adds
+some code organization, and fixes a couple of bugs in the asus-wmi module.
+
+Thread for V1/V2: https://lkml.org/lkml/2019/4/10/973
+Thread for V3: https://lkml.org/lkml/2019/4/19/178
+
+Yurii Pavlovskyi (13):
+  platform/x86: asus-wmi: Fix hwmon device cleanup
+  platform/x86: asus-wmi: Fix preserving keyboard backlight intensity on
+    load
+  platform/x86: asus-wmi: Increase input buffer size of WMI methods
+  platform/x86: wmi: Add function to get _UID of WMI device
+  platform/x86: asus-wmi: Improve DSTS WMI method ID detection
+  platform/x86: asus-wmi: Refactor WMI event handling
+  platform/x86: asus-wmi: Support WMI event queue
+  platform/x86: asus-nb-wmi: Add microphone mute key code
+  platform/x86: asus-wmi: Refactor error handling
+  platform/x86: asus-wmi: Organize code into sections
+  platform/x86: asus-wmi: Enhance detection of thermal data
+  platform/x86: asus-wmi: Switch fan boost mode
+  platform/x86: asus-wmi: Do not disable keyboard backlight on unloading
+
+ .../ABI/testing/sysfs-platform-asus-wmi       |  10 +
+ drivers/hid/hid-asus.c                        |   2 +-
+ drivers/platform/x86/asus-nb-wmi.c            |   3 +-
+ drivers/platform/x86/asus-wmi.c               | 427 ++++++++++++++----
+ drivers/platform/x86/wmi.c                    |  19 +
+ include/linux/acpi.h                          |   1 +
+ include/linux/platform_data/x86/asus-wmi.h    |   5 +-
+ 7 files changed, 374 insertions(+), 93 deletions(-)
+
 -- 
-2.20.1
+2.17.1
