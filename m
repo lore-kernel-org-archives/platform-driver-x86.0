@@ -1,76 +1,76 @@
-From: Jett Rink <jettrink@chromium.org>
-Subject: Re: [PATCH v2] platform/x86: intel-vbtn: Report switch events when
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v2] platform/x86: intel-vbtn: Report switch events when
  event wakes device
-Date: Tue, 21 May 2019 07:37:13 -0600
-Message-ID: <CAK+PMK47_OE-BgOYD_TD0kwxD4RG+nS9Wstg4ydUy7yV9nVmHQ@mail.gmail.com>
+Date: Tue, 21 May 2019 13:42:00 +0000
+Message-ID: <a7a23cbea93d46b48f7c9bd4e4cd4314@AUSX13MPC105.AMER.DELL.COM>
 References: <20190520224124.153005-1-mathewk@chromium.org>
+ <CAK+PMK47_OE-BgOYD_TD0kwxD4RG+nS9Wstg4ydUy7yV9nVmHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190520224124.153005-1-mathewk@chromium.org>
+In-Reply-To: <CAK+PMK47_OE-BgOYD_TD0kwxD4RG+nS9Wstg4ydUy7yV9nVmHQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathew King <mathewk@chromium.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, AceLan Kao <acelan.kao@canonical.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Mario.Limonciello@dell.com
+To: jettrink@chromium.org, mathewk@chromium.org
+Cc: linux-kernel@vger.kernel.org, acelan.kao@canonical.com, andy@infradead.org, dvhart@infradead.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, May 20, 2019 at 4:41 PM Mathew King <mathewk@chromium.org> wrote:
->
-> When a switch event, such as tablet mode/laptop mode or docked/undocked,
-> wakes a device make sure that the value of the swich is reported.
-> Without when a device is put in tablet mode from laptop mode when it is
-> suspended or vice versa the device will wake up but mode will be
-> incorrect.
->
-> Tested by suspending a device in laptop mode and putting it in tablet
-> mode, the device resumes and is in tablet mode. When suspending the
-> device in tablet mode and putting it in laptop mode the device resumes
-> and is in laptop mode.
->
-> Signed-off-by: Mathew King <mathewk@chromium.org>
->
-> ---
-> Changes in v2:
->   - Added comment explaining why switch events are reported
->   - Format so that checkpatch is happy
-> ---
->  drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-> index 06cd7e818ed5..a0d0cecff55f 100644
-> --- a/drivers/platform/x86/intel-vbtn.c
-> +++ b/drivers/platform/x86/intel-vbtn.c
-> @@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
->         struct platform_device *device = context;
->         struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
->         unsigned int val = !(event & 1); /* Even=press, Odd=release */
-> -       const struct key_entry *ke_rel;
-> +       const struct key_entry *ke, *ke_rel;
->         bool autorelease;
->
->         if (priv->wakeup_mode) {
-> -               if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
-> +               ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
-> +               if (ke) {
->                         pm_wakeup_hard_event(&device->dev);
-> +
-> +                       /*
-> +                        * Switch events like tablet mode will wake the device
-> +                        * and report the new switch position to the input
-> +                        * subsystem.
-> +                        */
-Thanks for adding the comment; This looks good to me.
-
-> +                       if (ke->type == KE_SW)
-> +                               sparse_keymap_report_event(priv->input_dev,
-> +                                                          event,
-> +                                                          val,
-> +                                                          0);
->                         return;
->                 }
->                 goto out_unknown;
-> --
-> 2.21.0.1020.gf2820cf01a-goog
->
-
-Reviewed-by: Jett Rink <jettrink@chromium.org>
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKZXR0IFJpbmsgPGpldHRyaW5r
+QGNocm9taXVtLm9yZz4NCj4gU2VudDogVHVlc2RheSwgTWF5IDIxLCAyMDE5IDg6MzcgQU0NCj4g
+VG86IE1hdGhldyBLaW5nDQo+IENjOiBsaW51eC1rZXJuZWw7IEFjZUxhbiBLYW87IEFuZHkgU2hl
+dmNoZW5rbzsgRGFycmVuIEhhcnQ7IHBsYXRmb3JtLWRyaXZlci0NCj4geDg2QHZnZXIua2VybmVs
+Lm9yZzsgTGltb25jaWVsbG8sIE1hcmlvDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjJdIHBsYXRm
+b3JtL3g4NjogaW50ZWwtdmJ0bjogUmVwb3J0IHN3aXRjaCBldmVudHMgd2hlbiBldmVudA0KPiB3
+YWtlcyBkZXZpY2UNCj4gDQo+IA0KPiBbRVhURVJOQUwgRU1BSUxdDQo+IA0KPiBPbiBNb24sIE1h
+eSAyMCwgMjAxOSBhdCA0OjQxIFBNIE1hdGhldyBLaW5nIDxtYXRoZXdrQGNocm9taXVtLm9yZz4N
+Cj4gd3JvdGU6DQo+ID4NCj4gPiBXaGVuIGEgc3dpdGNoIGV2ZW50LCBzdWNoIGFzIHRhYmxldCBt
+b2RlL2xhcHRvcCBtb2RlIG9yIGRvY2tlZC91bmRvY2tlZCwNCj4gPiB3YWtlcyBhIGRldmljZSBt
+YWtlIHN1cmUgdGhhdCB0aGUgdmFsdWUgb2YgdGhlIHN3aWNoIGlzIHJlcG9ydGVkLg0KPiA+IFdp
+dGhvdXQgd2hlbiBhIGRldmljZSBpcyBwdXQgaW4gdGFibGV0IG1vZGUgZnJvbSBsYXB0b3AgbW9k
+ZSB3aGVuIGl0IGlzDQo+ID4gc3VzcGVuZGVkIG9yIHZpY2UgdmVyc2EgdGhlIGRldmljZSB3aWxs
+IHdha2UgdXAgYnV0IG1vZGUgd2lsbCBiZQ0KPiA+IGluY29ycmVjdC4NCj4gPg0KPiA+IFRlc3Rl
+ZCBieSBzdXNwZW5kaW5nIGEgZGV2aWNlIGluIGxhcHRvcCBtb2RlIGFuZCBwdXR0aW5nIGl0IGlu
+IHRhYmxldA0KPiA+IG1vZGUsIHRoZSBkZXZpY2UgcmVzdW1lcyBhbmQgaXMgaW4gdGFibGV0IG1v
+ZGUuIFdoZW4gc3VzcGVuZGluZyB0aGUNCj4gPiBkZXZpY2UgaW4gdGFibGV0IG1vZGUgYW5kIHB1
+dHRpbmcgaXQgaW4gbGFwdG9wIG1vZGUgdGhlIGRldmljZSByZXN1bWVzDQo+ID4gYW5kIGlzIGlu
+IGxhcHRvcCBtb2RlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWF0aGV3IEtpbmcgPG1hdGhl
+d2tAY2hyb21pdW0ub3JnPg0KPiA+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiAg
+IC0gQWRkZWQgY29tbWVudCBleHBsYWluaW5nIHdoeSBzd2l0Y2ggZXZlbnRzIGFyZSByZXBvcnRl
+ZA0KPiA+ICAgLSBGb3JtYXQgc28gdGhhdCBjaGVja3BhdGNoIGlzIGhhcHB5DQo+ID4gLS0tDQo+
+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLXZidG4uYyB8IDE2ICsrKysrKysrKysrKysr
+LS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
+DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtdmJ0bi5j
+IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtdmJ0bi5jDQo+ID4gaW5kZXggMDZjZDdlODE4
+ZWQ1Li5hMGQwY2VjZmY1NWYgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYv
+aW50ZWwtdmJ0bi5jDQo+ID4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtdmJ0bi5j
+DQo+ID4gQEAgLTc2LDEyICs3NiwyNCBAQCBzdGF0aWMgdm9pZCBub3RpZnlfaGFuZGxlcihhY3Bp
+X2hhbmRsZSBoYW5kbGUsIHUzMg0KPiBldmVudCwgdm9pZCAqY29udGV4dCkNCj4gPiAgICAgICAg
+IHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmRldmljZSA9IGNvbnRleHQ7DQo+ID4gICAgICAgICBz
+dHJ1Y3QgaW50ZWxfdmJ0bl9wcml2ICpwcml2ID0gZGV2X2dldF9kcnZkYXRhKCZkZXZpY2UtPmRl
+dik7DQo+ID4gICAgICAgICB1bnNpZ25lZCBpbnQgdmFsID0gIShldmVudCAmIDEpOyAvKiBFdmVu
+PXByZXNzLCBPZGQ9cmVsZWFzZSAqLw0KPiA+IC0gICAgICAgY29uc3Qgc3RydWN0IGtleV9lbnRy
+eSAqa2VfcmVsOw0KPiA+ICsgICAgICAgY29uc3Qgc3RydWN0IGtleV9lbnRyeSAqa2UsICprZV9y
+ZWw7DQo+ID4gICAgICAgICBib29sIGF1dG9yZWxlYXNlOw0KPiA+DQo+ID4gICAgICAgICBpZiAo
+cHJpdi0+d2FrZXVwX21vZGUpIHsNCj4gPiAtICAgICAgICAgICAgICAgaWYgKHNwYXJzZV9rZXlt
+YXBfZW50cnlfZnJvbV9zY2FuY29kZShwcml2LT5pbnB1dF9kZXYsIGV2ZW50KSkgew0KPiA+ICsg
+ICAgICAgICAgICAgICBrZSA9IHNwYXJzZV9rZXltYXBfZW50cnlfZnJvbV9zY2FuY29kZShwcml2
+LT5pbnB1dF9kZXYsIGV2ZW50KTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKGtlKSB7DQo+ID4g
+ICAgICAgICAgICAgICAgICAgICAgICAgcG1fd2FrZXVwX2hhcmRfZXZlbnQoJmRldmljZS0+ZGV2
+KTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgLyoNCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgKiBTd2l0Y2ggZXZlbnRzIGxpa2UgdGFibGV0IG1vZGUgd2lsbCB3YWtl
+IHRoZSBkZXZpY2UNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgKiBhbmQgcmVwb3J0IHRo
+ZSBuZXcgc3dpdGNoIHBvc2l0aW9uIHRvIHRoZSBpbnB1dA0KPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAqIHN1YnN5c3RlbS4NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgKi8NCj4g
+VGhhbmtzIGZvciBhZGRpbmcgdGhlIGNvbW1lbnQ7IFRoaXMgbG9va3MgZ29vZCB0byBtZS4NCj4g
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaWYgKGtlLT50eXBlID09IEtFX1NXKQ0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3BhcnNlX2tleW1hcF9yZXBvcnRfZXZl
+bnQocHJpdi0+aW5wdXRfZGV2LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgZXZlbnQsDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWwsDQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwKTsN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm47DQo+ID4gICAgICAgICAgICAgICAg
+IH0NCj4gPiAgICAgICAgICAgICAgICAgZ290byBvdXRfdW5rbm93bjsNCj4gPiAtLQ0KPiA+IDIu
+MjEuMC4xMDIwLmdmMjgyMGNmMDFhLWdvb2cNCj4gPg0KPiANCj4gUmV2aWV3ZWQtYnk6IEpldHQg
+UmluayA8amV0dHJpbmtAY2hyb21pdW0ub3JnPg0KDQpSZXZpZXdlZC1ieTogTWFyaW8gTGltb25j
+aWVsbG8gPG1hcmlvLmxpbW9uY2llbGxvQGRlbGwuY29tPg0K
