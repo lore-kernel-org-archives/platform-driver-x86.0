@@ -1,109 +1,85 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] platform/x86: asus-wmi: Only Tell EC the OS will handle display hotkeys from asus_nb_wmi
-Date: Tue, 21 May 2019 08:28:37 +0200
-Message-ID: <20190521062837.3887-1-hdegoede@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 1/2] platform/mellanox: Add bootctl driver for Mellanox
+ BlueField Soc
+Date: Tue, 21 May 2019 09:58:38 +0200
+Message-ID: <CAK8P3a0AfEo8+EDBoOS8PfOeKGZUhgXoT7xz+pG9YNUDPdfR_A@mail.gmail.com>
+References: <0b74e9ad12360b56bc0a3c2ca972798c424f2610.1548790896.git.lsun@mellanox.com>
+ <1558115345-32476-1-git-send-email-lsun@mellanox.com> <20190520155658.GA14165@kroah.com>
+ <DB6PR05MB32232CA5DD05D1A923A28215A1060@DB6PR05MB3223.eurprd05.prod.outlook.com>
+ <20190520191209.GA29776@kroah.com> <DB6PR05MB3223F25A2E2B78053FE96D5BA1060@DB6PR05MB3223.eurprd05.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DB6PR05MB3223F25A2E2B78053FE96D5BA1060@DB6PR05MB3223.eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
+To: Liming Sun <lsun@mellanox.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Commit 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will
-handle the display off hotkey") causes the backlight to be permanently off
-on various EeePC laptop models using the eeepc-wmi driver (Asus EeePC
-1015BX, Asus EeePC 1025C).
+On Mon, May 20, 2019 at 10:44 PM Liming Sun <lsun@mellanox.com> wrote:
+> > -----Original Message-----
+> > From: Greg KH <gregkh@linuxfoundation.org>
+> > Sent: Monday, May 20, 2019 3:12 PM
+> > To: Liming Sun <lsun@mellanox.com>
+> > Cc: Andy Shevchenko <andy@infradead.org>; Darren Hart <dvhart@infradead.org>; Vadim Pasternak <vadimp@mellanox.com>; David
+> > Woods <dwoods@mellanox.com>; platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH v5 1/2] platform/mellanox: Add bootctl driver for Mellanox BlueField Soc
+> >
+> > On Mon, May 20, 2019 at 06:07:44PM +0000, Liming Sun wrote:
+> > > > > +static struct platform_driver mlxbf_bootctl_driver = {
+> > > > > +       .probe = mlxbf_bootctl_probe,
+> > > > > +       .driver = {
+> > > > > +               .name = "mlxbf-bootctl",
+> > > > > +               .groups = mlxbf_bootctl_groups,
+> > > > > +               .acpi_match_table = mlxbf_bootctl_acpi_ids,
+> > > >
+> > > > Why is an acpi driver a platform driver?  Isn't there a "real" acpi
+> > > > driver interface you should be tieing into instead?
+> > > >
+> > > > Only use a platform driver as an absolute last resort.  I don't think
+> > > > that is the case here.
+> > >
+> > > The driver is trying to configure boot-swapping and display secure state,
+> > > and is defined/initiated in ACPI table in UEFI. It seems a little hard to
+> > > categorize this driver to any existing subsystem. Any suggestion
+> > > where it might be a better fit (like drivers/misc, drivers/firmware, etc)?
+> > > Please correct me if I misunderstand the comments. Thanks!.
+> >
+> > The comment was asking why an acpi driver is a platform driver, but then
+> > I went and looked now at a bunch of acpi drivers, and they all are
+> > platform drivers :(
+> >
+> > Anyway, drivers/acpi/ seems like the best place for this file, right?
+>
+> My understanding is that the "drivers/acpi" is mainly for the acpi common code.
+> The vendor or platform specific drivers are spread in other various directories,
+> most of which are 'platform' drivers.
 
-The asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL) call added
-by that commit is made conditional in this commit and only enabled in
-the quirk_entry structs in the asus-nb-wmi driver fixing the broken
-display / backlight on various EeePC laptop models.
+It depends on how closely you are following the acpi specification.
+If you just implement access to a standard ACPI feature, or you have
+added your interface to the ACPI specification, then the driver
+should work on any system that supports this feature.
 
-Cc: João Paulo Rechi Vita <jprvita@endlessm.com>
-Fixes: 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/asus-nb-wmi.c | 8 ++++++++
- drivers/platform/x86/asus-wmi.c    | 2 +-
- drivers/platform/x86/asus-wmi.h    | 1 +
- 3 files changed, 10 insertions(+), 1 deletion(-)
+> For this driver, we didn't find better sub-component for it, thus put it under
+> 'drivers/platform/mellanox' which is vendor specific driver by its name.
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index b6f2ff95c3ed..59f3a37a44d7 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -78,10 +78,12 @@ static bool asus_q500a_i8042_filter(unsigned char data, unsigned char str,
- 
- static struct quirk_entry quirk_asus_unknown = {
- 	.wapf = 0,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- static struct quirk_entry quirk_asus_q500a = {
- 	.i8042_filter = asus_q500a_i8042_filter,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- /*
-@@ -92,26 +94,32 @@ static struct quirk_entry quirk_asus_q500a = {
- static struct quirk_entry quirk_asus_x55u = {
- 	.wapf = 4,
- 	.wmi_backlight_power = true,
-+	.wmi_backlight_set_devstate = true,
- 	.no_display_toggle = true,
- };
- 
- static struct quirk_entry quirk_asus_wapf4 = {
- 	.wapf = 4,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- static struct quirk_entry quirk_asus_x200ca = {
- 	.wapf = 2,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- static struct quirk_entry quirk_asus_ux303ub = {
- 	.wmi_backlight_native = true,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- static struct quirk_entry quirk_asus_x550lb = {
-+	.wmi_backlight_set_devstate = true,
- 	.xusb2pr = 0x01D9,
- };
- 
- static struct quirk_entry quirk_asus_forceals = {
-+	.wmi_backlight_set_devstate = true,
- 	.wmi_force_als_set = true,
- };
- 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index ee1fa93708ec..a66e99500c12 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2131,7 +2131,7 @@ static int asus_wmi_add(struct platform_device *pdev)
- 		err = asus_wmi_backlight_init(asus);
- 		if (err && err != -ENODEV)
- 			goto fail_backlight;
--	} else
-+	} else if (asus->driver->quirks->wmi_backlight_set_devstate)
- 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
- 
- 	status = wmi_install_notify_handler(asus->driver->event_guid,
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 6c1311f4b04d..57a79bddb286 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -44,6 +44,7 @@ struct quirk_entry {
- 	bool store_backlight_power;
- 	bool wmi_backlight_power;
- 	bool wmi_backlight_native;
-+	bool wmi_backlight_set_devstate;
- 	bool wmi_force_als_set;
- 	int wapf;
- 	/*
--- 
-2.21.0
+drivers/platform/mellanox/ would be a good place for drivers running on
+a host platform with a bluefield accelerator card as an add-on, but as I
+understand, this is a driver that actually just runs in Linux on the bluefield
+itself, so it should go in a different place.
+
+We use drivers/soc/ for things that are specific to one SoC, and that
+are typically used by other drivers, but that don't have (and should not
+have) a generic abstraction, which probably is not the case here either.
+
+What we do have in drivers/power/reset is a couple of drivers that
+set the "reboot reason", communicating that to the firmware for the
+next boot, using the reboot_mode_register() interface. I don't
+know too much about that interface, but maybe you can use that
+instead of adding another sysfs interface?
+
+If you have a complex firmware on the system that you can talk
+to, there is also drivers/firmware/ as another option to put
+abstractions into.
+
+         Arnd
