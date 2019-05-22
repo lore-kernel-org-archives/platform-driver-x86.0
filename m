@@ -1,7 +1,7 @@
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v4 15/16] platform/x86: intel_cht_int33fe: Supply fwnodes for the external dependencies
-Date: Wed, 22 May 2019 13:51:12 +0300
-Message-ID: <20190522105113.11153-16-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v4 09/16] device connection: Find connections also by checking the references
+Date: Wed, 22 May 2019 13:51:06 +0300
+Message-ID: <20190522105113.11153-10-heikki.krogerus@linux.intel.com>
 References: <20190522105113.11153-1-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,203 +12,72 @@ To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hans de Goede <hdegoede@redhat.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Supplying also external devices, the DisplayPort connector
-and the USB role switch, software fwnodes. After this the
-driver has access to all the components tied to the USB
-Type-C connector and can start creating software node
-references to actually associate them with the USB Type-C
-connector device.
+We can also use this API to find named references that the
+device nodes have by using fwnode_property_get_reference_args()
+function.
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/platform/x86/intel_cht_int33fe.c | 128 ++++++++++++++++++++++-
- 1 file changed, 125 insertions(+), 3 deletions(-)
+ drivers/base/devcon.c     | 26 ++++++++++++++++++++++++++
+ drivers/usb/roles/class.c |  2 +-
+ 2 files changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
-index 34bc2d178760..e5c0b6573618 100644
---- a/drivers/platform/x86/intel_cht_int33fe.c
-+++ b/drivers/platform/x86/intel_cht_int33fe.c
-@@ -21,6 +21,7 @@
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-+#include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
-@@ -32,6 +33,8 @@ enum {
- 	INT33FE_NODE_FUSB302,
- 	INT33FE_NODE_MAX17047,
- 	INT33FE_NODE_PI3USB30532,
-+	INT33FE_NODE_DISPLAYPORT,
-+	INT33FE_NODE_ROLE_SWITCH,
- 	INT33FE_NODE_USB_CONNECTOR,
- 	INT33FE_NODE_MAX,
- };
-@@ -42,6 +45,9 @@ struct cht_int33fe_data {
- 	struct i2c_client *pi3usb30532;
- 	/* Contain a list-head must be per device */
- 	struct device_connection connections[4];
-+
-+	struct fwnode_handle *dp;
-+	struct fwnode_handle *mux;
- };
- 
- /*
-@@ -110,10 +116,126 @@ static const struct software_node nodes[] = {
- 	{ "fusb302", NULL, fusb302_props },
- 	{ "max17047", NULL, max17047_props },
- 	{ "pi3usb30532" },
-+	{ "displayport" },
-+	{ "usb-role-switch" },
- 	{ "connector", &nodes[0], usb_connector_props },
- 	{ }
- };
- 
-+static int cht_int33fe_setup_mux(struct cht_int33fe_data *data)
-+{
-+	struct fwnode_handle *fwnode;
-+	struct device *dev;
-+	struct device *p;
-+
-+	fwnode = software_node_fwnode(&nodes[INT33FE_NODE_ROLE_SWITCH]);
-+	if (!fwnode)
-+		return -ENODEV;
-+
-+	/* First finding the platform device */
-+	p = bus_find_device_by_name(&platform_bus_type, NULL,
-+				    "intel_xhci_usb_sw");
-+	if (!p)
-+		return -EPROBE_DEFER;
-+
-+	/* Then the mux child device */
-+	dev = device_find_child_by_name(p, "intel_xhci_usb_sw-role-switch");
-+	put_device(p);
-+	if (!dev)
-+		return -EPROBE_DEFER;
-+
-+	/* If there already is a node for the mux, using that one. */
-+	if (dev->fwnode)
-+		fwnode_remove_software_node(fwnode);
-+	else
-+		dev->fwnode = fwnode;
-+
-+	data->mux = fwnode_handle_get(dev->fwnode);
-+	put_device(dev);
-+
-+	return 0;
-+}
-+
-+static int cht_int33fe_setup_dp(struct cht_int33fe_data *data)
-+{
-+	struct fwnode_handle *fwnode;
-+	struct pci_dev *pdev;
-+
-+	fwnode = software_node_fwnode(&nodes[INT33FE_NODE_DISPLAYPORT]);
-+	if (!fwnode)
-+		return -ENODEV;
-+
-+	/* First let's find the GPU PCI device */
-+	pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, NULL);
-+	if (!pdev || pdev->vendor != PCI_VENDOR_ID_INTEL) {
-+		pci_dev_put(pdev);
-+		return -ENODEV;
-+	}
-+
-+	/* Then the DP child device node */
-+	data->dp = device_get_named_child_node(&pdev->dev, "DD02");
-+	pci_dev_put(pdev);
-+	if (!data->dp)
-+		return -ENODEV;
-+
-+	fwnode->secondary = ERR_PTR(-ENODEV);
-+	data->dp->secondary = fwnode;
-+
-+	return 0;
-+}
-+
-+static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
-+{
-+	software_node_unregister_nodes(nodes);
-+
-+	if (data->mux) {
-+		fwnode_handle_put(data->mux);
-+		data->mux = NULL;
-+	}
-+
-+	if (data->dp) {
-+		data->dp->secondary = NULL;
-+		fwnode_handle_put(data->dp);
-+		data->dp = NULL;
-+	}
-+}
-+
-+static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
-+{
-+	int ret;
-+
-+	ret = software_node_register_nodes(nodes);
-+	if (ret)
-+		return ret;
-+
-+	/* The devices that are not created in this driver need extra steps. */
-+
-+	/*
-+	 * There is no ACPI device node for the USB role mux, so we need to find
-+	 * the mux device and assign our node directly to it. That means we
-+	 * depend on the mux driver. This function will return -PROBE_DEFER
-+	 * until the mux device is registered.
-+	 */
-+	ret = cht_int33fe_setup_mux(data);
-+	if (ret)
-+		goto err_remove_nodes;
-+
-+	/*
-+	 * The DP connector does have ACPI device node. In this case we can just
-+	 * find that ACPI node and assing our node as the secondary node to it.
-+	 */
-+	ret = cht_int33fe_setup_dp(data);
-+	if (ret)
-+		goto err_remove_nodes;
-+
-+	return 0;
-+
-+err_remove_nodes:
-+	cht_int33fe_remove_nodes(data);
-+
-+	return ret;
-+}
-+
- static int
- cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
- {
-@@ -211,7 +333,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
- 
--	ret = software_node_register_nodes(nodes);
-+	ret = cht_int33fe_add_nodes(data);
- 	if (ret)
- 		return ret;
- 
-@@ -280,7 +402,7 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 	device_connections_remove(data->connections);
- 
- out_remove_nodes:
--	software_node_unregister_nodes(nodes);
-+	cht_int33fe_remove_nodes(data);
- 
- 	return ret;
+diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
+index 04db9ae235e4..f7035fc12b92 100644
+--- a/drivers/base/devcon.c
++++ b/drivers/base/devcon.c
+@@ -38,6 +38,28 @@ fwnode_graph_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
+ 	return NULL;
  }
-@@ -294,7 +416,7 @@ static int cht_int33fe_remove(struct platform_device *pdev)
- 	i2c_unregister_device(data->max17047);
  
- 	device_connections_remove(data->connections);
--	software_node_unregister_nodes(nodes);
-+	cht_int33fe_remove_nodes(data);
++static void *
++fwnode_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
++		    void *data, devcon_match_fn_t match)
++{
++	struct device_connection con = { };
++	void *ret;
++	int i;
++
++	for (i = 0; ; i++) {
++		con.fwnode = fwnode_find_reference(fwnode, con_id, i);
++		if (IS_ERR(con.fwnode))
++			break;
++
++		ret = match(&con, -1, data);
++		fwnode_handle_put(con.fwnode);
++		if (ret)
++			return ret;
++	}
++
++	return NULL;
++}
++
+ /**
+  * device_connection_find_match - Find physical connection to a device
+  * @dev: Device with the connection
+@@ -65,6 +87,10 @@ void *device_connection_find_match(struct device *dev, const char *con_id,
+ 		ret = fwnode_graph_devcon_match(fwnode, con_id, data, match);
+ 		if (ret)
+ 			return ret;
++
++		ret = fwnode_devcon_match(fwnode, con_id, data, match);
++		if (ret)
++			return ret;
+ 	}
  
- 	return 0;
- }
+ 	mutex_lock(&devcon_lock);
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index f45d8df5cfb8..86defca6623e 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -101,7 +101,7 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
+ 	struct device *dev;
+ 
+ 	if (con->fwnode) {
+-		if (!fwnode_property_present(con->fwnode, con->id))
++		if (con->id && !fwnode_property_present(con->fwnode, con->id))
+ 			return NULL;
+ 
+ 		dev = class_find_device(role_class, NULL, con->fwnode,
 -- 
 2.20.1
