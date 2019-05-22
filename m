@@ -1,7 +1,7 @@
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v4 02/16] software node: Simplify software_node_release() function
-Date: Wed, 22 May 2019 13:50:59 +0300
-Message-ID: <20190522105113.11153-3-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v4 05/16] software node: Add software_node_get_reference_args()
+Date: Wed, 22 May 2019 13:51:02 +0300
+Message-ID: <20190522105113.11153-6-heikki.krogerus@linux.intel.com>
 References: <20190522105113.11153-1-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,66 +12,128 @@ To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hans de Goede <hdegoede@redhat.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-It's possible to release the node ID immediately when
-fwnode_remove_software_node() is called, no need to wait for
-software_node_release() with that.
+This makes it possible to support drivers that use
+fwnode_property_get_reference_args() function.
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- drivers/base/swnode.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/base/swnode.c    | 47 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/property.h | 28 ++++++++++++++++++++++++
+ 2 files changed, 75 insertions(+)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 30077454eb68..7b321bf8424c 100644
+index 2d925fc2255f..e7b3aa3bd55a 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -557,13 +557,6 @@ static void software_node_release(struct kobject *kobj)
- {
- 	struct software_node *swnode = kobj_to_swnode(kobj);
- 
--	if (swnode->parent) {
--		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
--		list_del(&swnode->entry);
--	} else {
--		ida_simple_remove(&swnode_root_ids, swnode->id);
--	}
--
- 	ida_destroy(&swnode->child_ids);
- 	property_entries_free(swnode->properties);
- 	kfree(swnode);
-@@ -610,9 +603,6 @@ fwnode_create_software_node(const struct property_entry *properties,
- 	INIT_LIST_HEAD(&swnode->children);
- 	swnode->parent = p;
- 
--	if (p)
--		list_add_tail(&swnode->entry, &p->children);
--
- 	ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
- 				   p ? &p->kobj : NULL, "node%d", swnode->id);
- 	if (ret) {
-@@ -626,6 +616,9 @@ fwnode_create_software_node(const struct property_entry *properties,
- 		return ERR_PTR(ret);
- 	}
- 
-+	if (p)
-+		list_add_tail(&swnode->entry, &p->children);
-+
- 	kobject_uevent(&swnode->kobj, KOBJ_ADD);
- 	return &swnode->fwnode;
+@@ -560,6 +560,52 @@ software_node_get_named_child_node(const struct fwnode_handle *fwnode,
+ 	return NULL;
  }
-@@ -638,6 +631,13 @@ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
- 	if (!swnode)
- 		return;
  
-+	if (swnode->parent) {
-+		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
-+		list_del(&swnode->entry);
-+	} else {
-+		ida_simple_remove(&swnode_root_ids, swnode->id);
++static int
++software_node_get_reference_args(const struct fwnode_handle *fwnode,
++				 const char *propname, const char *nargs_prop,
++				 unsigned int nargs, unsigned int index,
++				 struct fwnode_reference_args *args)
++{
++	struct swnode *swnode = to_swnode(fwnode);
++	const struct software_node_reference *ref;
++	const struct property_entry *prop;
++	struct fwnode_handle *refnode;
++	int i;
++
++	if (!swnode || !swnode->node->references)
++		return -ENOENT;
++
++	for (ref = swnode->node->references; ref->name; ref++)
++		if (!strcmp(ref->name, propname))
++			break;
++
++	if (!ref->name || index > (ref->nrefs - 1))
++		return -ENOENT;
++
++	refnode = software_node_fwnode(ref->refs[index].node);
++	if (!refnode)
++		return -ENOENT;
++
++	if (nargs_prop) {
++		prop = property_entry_get(swnode->node->properties, nargs_prop);
++		if (!prop)
++			return -EINVAL;
++
++		nargs = prop->value.u32_data;
 +	}
 +
- 	kobject_put(&swnode->kobj);
- }
- EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
++	if (nargs > NR_FWNODE_REFERENCE_ARGS)
++		return -EINVAL;
++
++	args->fwnode = software_node_get(refnode);
++	args->nargs = nargs;
++
++	for (i = 0; i < nargs; i++)
++		args->args[i] = ref->refs[index].args[i];
++
++	return 0;
++}
++
+ static const struct fwnode_operations software_node_ops = {
+ 	.get = software_node_get,
+ 	.put = software_node_put,
+@@ -569,6 +615,7 @@ static const struct fwnode_operations software_node_ops = {
+ 	.get_parent = software_node_get_parent,
+ 	.get_next_child_node = software_node_get_next_child,
+ 	.get_named_child_node = software_node_get_named_child_node,
++	.get_reference_args = software_node_get_reference_args
+ };
+ 
+ /* -------------------------------------------------------------------------- */
+diff --git a/include/linux/property.h b/include/linux/property.h
+index a3813ded52ea..abcde2f236a0 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -332,16 +332,44 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
+ /* -------------------------------------------------------------------------- */
+ /* Software fwnode support - when HW description is incomplete or missing */
+ 
++struct software_node;
++
++/**
++ * struct software_node_ref_args - Reference with additional arguments
++ * @node: Reference to a software node
++ * @nargs: Number of elements in @args array
++ * @args: Integer arguments
++ */
++struct software_node_ref_args {
++	const struct software_node *node;
++	unsigned int nargs;
++	u64 args[NR_FWNODE_REFERENCE_ARGS];
++};
++
++/**
++ * struct software_node_reference - Named software node reference property
++ * @name: Name of the property
++ * @nrefs: Number of elements in @refs array
++ * @refs: Array of references with optional arguments
++ */
++struct software_node_reference {
++	const char *name;
++	unsigned int nrefs;
++	const struct software_node_ref_args *refs;
++};
++
+ /**
+  * struct software_node - Software node description
+  * @name: Name of the software node
+  * @parent: Parent of the software node
+  * @properties: Array of device properties
++ * @references: Array of software node reference properties
+  */
+ struct software_node {
+ 	const char *name;
+ 	const struct software_node *parent;
+ 	const struct property_entry *properties;
++	const struct software_node_reference *references;
+ };
+ 
+ bool is_software_node(const struct fwnode_handle *fwnode);
 -- 
 2.20.1
