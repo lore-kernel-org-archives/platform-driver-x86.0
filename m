@@ -1,49 +1,97 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] input: silead: Add MSSL0017 to acpi_device_id.
-Date: Wed, 22 May 2019 12:12:47 +0200
-Message-ID: <6c18472f-bedd-6e6d-121c-8a311495c3c3@redhat.com>
-References: <20190522045455.15769-1-danct12@disroot.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH v4 00/16] Software fwnode references
+Date: Wed, 22 May 2019 13:50:57 +0300
+Message-ID: <20190522105113.11153-1-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190522045455.15769-1-danct12@disroot.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Danct12 <danct12@disroot.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hans de Goede <hdegoede@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 Hi,
 
-On 22-05-19 06:54, Danct12 wrote:
-> On Chuwi Hi10 Plus, the Silead device id is MSSL0017.
-> 
-> Signed-off-by: Danct12 <danct12@disroot.org>
+I'm not splitting this series in two after all. After thinking about
+this for some time, I decided to add support for static software
+nodes. I did not want to support them because I don't want to make it
+easy to maintain board files, but in end they make the use of the
+software nodes so much more easier compared to if we always had to
+dynamically allocate them that it's a no-brainer. The references can
+now be also described statically. Actually, those can now only be
+described statically.
 
-Patch looks good to me:
+Hans! I applied (hopefully) all of the fixes you proposed in v3. I
+hope you have time to test these.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Here's the cover letter from v3:
 
-Regards,
+This is the third version of my proposal to add reference handling to
+the software node code. In this version I renamed ACPI_NAME_SIZE to
+ACPI_NAMESEG_SIZE in 6/13, and slit patch 9/13 in two separate patches
+(9/13 and 10/13) as suggested by Andy. Patch 9/13 will now only move
+the registration of max17047 out of probe, and 10/13 will introduce
+the software nodes.
 
-Hans
+v2 cover letter:
 
+This is the second version of this series. In this version I'm
+introducing a new helper device_find_child_by_name() as proposed
+by Andy. Andy requested also another helper that could be used for
+chaining the fwnodes, but I decided not to add that now. I would like
+to still think about how we should handle exceptions like if there
+already is a secondary node assigned for a node.
 
-> ---
->   drivers/input/touchscreen/silead.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-> index 09241d4cdebc..06f0eb04a8fd 100644
-> --- a/drivers/input/touchscreen/silead.c
-> +++ b/drivers/input/touchscreen/silead.c
-> @@ -617,6 +617,7 @@ static const struct acpi_device_id silead_ts_acpi_match[] = {
->   	{ "MSSL1680", 0 },
->   	{ "MSSL0001", 0 },
->   	{ "MSSL0002", 0 },
-> +	{ "MSSL0017", 0 },
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(acpi, silead_ts_acpi_match);
-> 
+v1 cover letter:
+
+This series adds support for software fwnode reference handling. In
+practice it means making fwnode_property_get_reference_args() function
+usable in the drivers also with software nodes. I send the series
+originally as RFC [1].
+
+As the first user for the software node references, I'm converting
+intel_cht_int33fe.c to use them as part of the series.
+
+[1] https://lkml.org/lkml/2019/3/15/457
+
+thanks,
+
+Heikki Krogerus (16):
+  software node: Allow node creation without properties
+  software node: Simplify software_node_release() function
+  software node: Add support for static node descriptors
+  software node: Use kobject name when finding child nodes by name
+  software node: Add software_node_get_reference_args()
+  driver core: Add helper device_find_child_by_name()
+  ACPI / property: Don't limit named child node matching to data nodes
+  device property: Introduce fwnode_find_reference()
+  device connection: Find connections also by checking the references
+  usb: typec: Registering real device entries for the muxes
+  platform/x86: intel_cht_int33fe: Register max17047 in its own function
+  platform/x86: intel_cht_int33fe: Remove unused fusb302 device property
+  platform/x86: intel_cht_int33fe: Provide software nodes for the
+    devices
+  platform/x86: intel_cht_int33fe: Provide fwnode for the USB connector
+  platform/x86: intel_cht_int33fe: Supply fwnodes for the external
+    dependencies
+  platform/x86: intel_cht_int33fe: Replacing the old connections with
+    references
+
+ drivers/acpi/property.c                  |  26 +-
+ drivers/base/core.c                      |  28 ++
+ drivers/base/devcon.c                    |  26 ++
+ drivers/base/property.c                  |  24 ++
+ drivers/base/swnode.c                    | 324 +++++++++++++++++------
+ drivers/platform/x86/intel_cht_int33fe.c | 290 ++++++++++++++++----
+ drivers/usb/roles/class.c                |   2 +-
+ drivers/usb/typec/bus.h                  |  15 ++
+ drivers/usb/typec/class.c                |  17 +-
+ drivers/usb/typec/mux.c                  | 238 ++++++++++++-----
+ drivers/usb/typec/mux/pi3usb30532.c      |  46 ++--
+ include/linux/device.h                   |   2 +
+ include/linux/property.h                 |  51 ++++
+ include/linux/usb/typec_mux.h            |  62 ++---
+ 14 files changed, 902 insertions(+), 249 deletions(-)
+
+-- 
+2.20.1
