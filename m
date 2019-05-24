@@ -1,77 +1,44 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the CHUWI
- Hi10 Plus tablet.
-Date: Fri, 24 May 2019 19:49:12 +0300
-Message-ID: <CAHp75Vdh=ny16mEnDw0pMfUzyOcrA97AnXKfyW+BcEcZ-W1ryQ@mail.gmail.com>
-References: <20190523190913.5801-1-danct12@disroot.org>
+Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to
+ critclk_systems DMI table
+Date: Fri, 24 May 2019 19:50:04 +0300
+Message-ID: <CAHp75VfVfig-R1mVhdMdWrbfpA92VV3hc55SXgopmWT+kn6rnQ@mail.gmail.com>
+References: <20190429150135.15070-1-hdegoede@redhat.com> <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
+ <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com> <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
+ <568ba27d-a6a5-b158-bab1-f22cd8ccb34e@redhat.com> <155726027056.14659.1724431433952718602@swboyd.mtv.corp.google.com>
+ <10c8864c-6ee7-4dfd-6274-b1996e767653@redhat.com> <CAHp75VdnxRQi3X6J9hLGUjGsOYTkjoPN5MakJc=mUSumoC+wag@mail.gmail.com>
+ <c5546043-4f2d-979a-3718-a46f72bae20b@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190523190913.5801-1-danct12@disroot.org>
+In-Reply-To: <c5546043-4f2d-979a-3718-a46f72bae20b@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Smith <danct12@disroot.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Kai Heng Feng <kai.heng.feng@canonical.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Semyon Verchenko <semverchenko@factor-ts.ru>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, May 23, 2019 at 10:12 PM Daniel Smith <danct12@disroot.org> wrote:
+On Wed, May 22, 2019 at 3:32 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Added touch screen info for CHUWI Hi10 Plus tablet.
+> Hi
 >
+> On 08-05-19 10:42, Andy Shevchenko wrote:
+> > On Wed, May 8, 2019 at 10:48 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> >> On 07-05-19 22:17, Stephen Boyd wrote:
+> >>> Quoting Hans de Goede (2019-05-06 08:05:42)
+> >
+> >>> I guess this is urgent?
+> >>
+> >> Somewhat, getting this into e.g. rc2 would be fine too, waiting till 5.3
+> >> would be bad.
+> >
+> > So, I can do it as a fixes for rc2, just ping me after merge window.
+>
+> The merge window is done now, can you please get the patch from this
+> thread and the
+> "PATCH 1/1] platform/x86: pmc_atom: Add several Beckhoff Automation boards to critclk_systems DMI table"
+> patch queued up as fixes for 5.2 now ?
 
-Pushed to my review and testing queue, thanks!
-
-> Signed-off-by: Daniel Smith <danct12@disroot.org>
-> ---
->  drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index bd0856d2e825..1dbb53c3f1e7 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -91,6 +91,22 @@ static const struct ts_dmi_data chuwi_hi10_air_data = {
->         .properties     = chuwi_hi10_air_props,
->  };
->
-> +static const struct property_entry chuwi_hi10_plus_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 0),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 5),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1914),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1283),
-> +       PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-hi10plus.fw"),
-> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
-> +       { }
-> +};
-> +
-> +static const struct ts_dmi_data chuwi_hi10_plus_data = {
-> +       .acpi_name      = "MSSL0017:00",
-> +       .properties     = chuwi_hi10_plus_props,
-> +};
-> +
->  static const struct property_entry chuwi_vi8_props[] = {
->         PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
->         PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
-> @@ -605,6 +621,15 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
->                         DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
->                 },
->         },
-> +       {
-> +               /* Chuwi Hi10 Plus (CWI527) */
-> +               .driver_data = (void *)&chuwi_hi10_plus_data,
-> +               .matches = {
-> +                       DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Hi10 plus tablet"),
-> +                       DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-> +               },
-> +       },
->         {
->                 /* Chuwi Vi8 (CWI506) */
->                 .driver_data = (void *)&chuwi_vi8_data,
-> --
-> 2.21.0
->
-
+PR had been sent couple of hours ago, thanks!
 
 -- 
 With Best Regards,
