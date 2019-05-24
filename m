@@ -1,35 +1,77 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Add Lenovo PrivacyGuard feature found
- in T480s, T490, T490s
-Date: Fri, 24 May 2019 19:45:51 +0300
-Message-ID: <CAHp75VfaDqCe7R2ZWTXs4j4i5v+B56Od0zVLANtMJd8-JgyUPw@mail.gmail.com>
-References: <E1hSOxT-00005q-An@tuxpaddy.alexanderweb.homeip.net>
- <3756fda2-7270-e3b2-fac8-3c0c0be633fa@alexanderweb.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the CHUWI
+ Hi10 Plus tablet.
+Date: Fri, 24 May 2019 19:49:12 +0300
+Message-ID: <CAHp75Vdh=ny16mEnDw0pMfUzyOcrA97AnXKfyW+BcEcZ-W1ryQ@mail.gmail.com>
+References: <20190523190913.5801-1-danct12@disroot.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <3756fda2-7270-e3b2-fac8-3c0c0be633fa-y2PnNNZjvYf3t9wD0PK9CA@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Alexander Schremmer <alex-y2PnNNZjvYf3t9wD0PK9CA@public.gmane.org>
-Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thinkpad-acpi devel ML <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190523190913.5801-1-danct12@disroot.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Smith <danct12@disroot.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 21, 2019 at 3:56 PM Alexander Schremmer
-<alex-y2PnNNZjvYf3t9wD0PK9CA@public.gmane.org> wrote:
-> I wonder whether you have received my kernel patch, referenced below. It
-> might have been caught by the spam filter.
+On Thu, May 23, 2019 at 10:12 PM Daniel Smith <danct12@disroot.org> wrote:
+>
+> Added touch screen info for CHUWI Hi10 Plus tablet.
+>
 
-Yes, you may always consult with patchwork [1]. If it's they, it won't be lost.
+Pushed to my review and testing queue, thanks!
 
-[1]: https://patchwork.kernel.org/project/platform-driver-x86/list/
+> Signed-off-by: Daniel Smith <danct12@disroot.org>
+> ---
+>  drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index bd0856d2e825..1dbb53c3f1e7 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -91,6 +91,22 @@ static const struct ts_dmi_data chuwi_hi10_air_data = {
+>         .properties     = chuwi_hi10_air_props,
+>  };
+>
+> +static const struct property_entry chuwi_hi10_plus_props[] = {
+> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 0),
+> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 5),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1914),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1283),
+> +       PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-hi10plus.fw"),
+> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +       { }
+> +};
+> +
+> +static const struct ts_dmi_data chuwi_hi10_plus_data = {
+> +       .acpi_name      = "MSSL0017:00",
+> +       .properties     = chuwi_hi10_plus_props,
+> +};
+> +
+>  static const struct property_entry chuwi_vi8_props[] = {
+>         PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
+>         PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
+> @@ -605,6 +621,15 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+>                         DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
+>                 },
+>         },
+> +       {
+> +               /* Chuwi Hi10 Plus (CWI527) */
+> +               .driver_data = (void *)&chuwi_hi10_plus_data,
+> +               .matches = {
+> +                       DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Hi10 plus tablet"),
+> +                       DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+> +               },
+> +       },
+>         {
+>                 /* Chuwi Vi8 (CWI506) */
+>                 .driver_data = (void *)&chuwi_vi8_data,
+> --
+> 2.21.0
+>
+
 
 -- 
 With Best Regards,
