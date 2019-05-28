@@ -1,7 +1,7 @@
 From: Harry Pan <harry.pan@intel.com>
-Subject: [PATCH] platform/x86: intel_pmc_core: transform Pkg C-state residency from TSC ticks into microseconds
-Date: Tue, 28 May 2019 10:53:17 +0800
-Message-ID: <20190528025317.5872-1-harry.pan@intel.com>
+Subject: [PATCH v2] platform/x86: intel_pmc_core: transform Pkg C-state residency from TSC ticks into microseconds
+Date: Tue, 28 May 2019 10:57:27 +0800
+Message-ID: <20190528025727.6014-1-harry.pan@intel.com>
 References: <20190527130811.450-1-harry.pan@intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
