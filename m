@@ -1,43 +1,58 @@
-From: Mattias Jacobsson <2pi@mok.nu>
-Subject: [PATCH 0/3] platform/x86: wmi: add Xiaomi WMI key driver
-Date: Mon, 27 May 2019 18:21:28 +0200
-Message-ID: <cover.1558968964.git.2pi@mok.nu>
+From: Harry Pan <harry.pan@intel.com>
+Subject: [PATCH] platform/x86: intel_pmc_core: transform Pkg C-state residency from TSC ticks into microseconds
+Date: Tue, 28 May 2019 10:53:17 +0800
+Message-ID: <20190528025317.5872-1-harry.pan@intel.com>
+References: <20190527130811.450-1-harry.pan@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190527130811.450-1-harry.pan@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy@infradead.org, mario.limonciello@dell.com, mjg59@srcf.ucam.org, pali.rohar@gmail.com
-Cc: 2pi@mok.nu, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: gs0622@gmail.com, Harry Pan <harry.pan@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Darren Hart <dvhart@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patchset adds a WMI key driver for Xiaomi notebooks. To be able to
-do this while using the struct wmi_driver a context field has been added
-to struct wmi_device_id.
+Refer to the Intel SDM Vol.4, the package C-state residency counters
+of modern IA micro-architecture are all ticking in TSC frequency,
+hence we can apply simple math to transform the ticks into microseconds.
+i.e.,
+residency (ms) = count / tsc_khz
+residency (us) = count / tsc_khz * 1000
 
-[PATCH 1/3]: Add field to struct wmi_device_id and add a helper function
-[PATCH 2/3]: Add new parameter to the probe function
-[PATCH 3/3]: Add new driver
+This also aligns to other sysfs debug entries of residency counter in
+the same metric in microseconds, benefits reading and scripting.
 
-Mattias Jacobsson (3):
-  platform/x86: wmi: add context pointer field to struct wmi_device_id
-  platform/x86: wmi: add context argument to the probe function
-  platform/x86: wmi: add Xiaomi WMI key driver
+v2: restore the accidentally deleted newline, no function change.
 
- drivers/platform/x86/Kconfig                 | 10 +++
- drivers/platform/x86/Makefile                |  1 +
- drivers/platform/x86/dell-smbios-wmi.c       |  2 +-
- drivers/platform/x86/dell-wmi-descriptor.c   |  3 +-
- drivers/platform/x86/dell-wmi.c              |  2 +-
- drivers/platform/x86/huawei-wmi.c            |  2 +-
- drivers/platform/x86/intel-wmi-thunderbolt.c |  3 +-
- drivers/platform/x86/wmi-bmof.c              |  2 +-
- drivers/platform/x86/wmi.c                   | 25 +++++-
- drivers/platform/x86/xiaomi-wmi.c            | 94 ++++++++++++++++++++
- include/linux/mod_devicetable.h              |  1 +
- include/linux/wmi.h                          |  2 +-
- 12 files changed, 139 insertions(+), 8 deletions(-)
- create mode 100644 drivers/platform/x86/xiaomi-wmi.c
+Signed-off-by: Harry Pan <harry.pan@intel.com>
 
+---
+
+ drivers/platform/x86/intel_pmc_core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index f2c621b55f49..c78918a7e731 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -24,6 +24,7 @@
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
+ #include <asm/msr.h>
++#include <asm/tsc.h>
+ 
+ #include "intel_pmc_core.h"
+ 
+@@ -738,8 +739,8 @@ static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
+ 		if (rdmsrl_safe(map[index].bit_mask, &pcstate_count))
+ 			continue;
+ 
+-		seq_printf(s, "%-8s : 0x%llx\n", map[index].name,
+-			   pcstate_count);
++		seq_printf(s, "%-8s : %llu\n", map[index].name,
++			   pcstate_count * 1000 / tsc_khz);
+ 	}
+ 
+ 	return 0;
 -- 
-2.21.0
+2.20.1
