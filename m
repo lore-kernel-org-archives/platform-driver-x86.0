@@ -1,41 +1,70 @@
-From: Young Xiao <92siuyang@gmail.com>
-Subject: [PATCH] intel_menlow: avoid null pointer deference error
-Date: Wed, 29 May 2019 09:55:51 +0800
-Message-ID: <1559094951-25391-1-git-send-email-92siuyang@gmail.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: linux-next: Tree for May 28 (platform/olpc/olpc-xo175-ec)
+Date: Wed, 29 May 2019 08:27:45 +0200
+Message-ID: <d8518bc65fd909723904637b19332760768f73e7.camel@v3.sk>
+References: <20190528145838.23b73e25@canb.auug.org.au>
+         <68b2b71a-970b-8e0e-1ee3-e05a51c3bdf2@infradead.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <68b2b71a-970b-8e0e-1ee3-e05a51c3bdf2@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sujith.thomas@intel.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Young Xiao <92siuyang@gmail.com>
+To: Randy Dunlap <rdunlap@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Lennert Buytenhek <buytenh@wantstofly.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Fix a null pointer deference by acpi_driver_data() if device is
-null (dereference before check). We should only set cdev and check
-this is OK after we are sure device is not null.
+On Tue, 2019-05-28 at 11:05 -0700, Randy Dunlap wrote:
+> On 5/27/19 9:58 PM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20190524:
+> > 
+> 
+> on x86, there are some issues with drivers/platform/olpc/olpc-xo175-ec.c:
+> 
+> a. when CONFIG_SPI is not set/enabled:
+> 
+> WARNING: unmet direct dependencies detected for SPI_SLAVE
+>   Depends on [n]: SPI [=n]
+>   Selected by [y]:
+>   - OLPC_XO175_EC [=y] && (ARCH_MMP || COMPILE_TEST [=y])
+> 
+> ld: drivers/platform/olpc/olpc-xo175-ec.o: in function `olpc_xo175_ec_remove':
+> olpc-xo175-ec.c:(.text+0x79): undefined reference to `spi_slave_abort'
+> ld: drivers/platform/olpc/olpc-xo175-ec.o: in function `olpc_xo175_ec_send_command':
+> olpc-xo175-ec.c:(.text+0x24d): undefined reference to `spi_async'
+> ld: drivers/platform/olpc/olpc-xo175-ec.o: in function `olpc_xo175_ec_cmd':
+> olpc-xo175-ec.c:(.text+0xb3c): undefined reference to `spi_slave_abort'
+> ld: drivers/platform/olpc/olpc-xo175-ec.o: in function `olpc_xo175_ec_spi_driver_init':
+> olpc-xo175-ec.c:(.init.text+0xa): undefined reference to `__spi_register_driver'
+> 
+> b. when CONFIG_INPUT is not set/enabled:
+> 
+> ERROR: "input_register_device" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+> ERROR: "input_set_capability" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+> ERROR: "devm_input_allocate_device" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+> ERROR: "input_event" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+> 
+> c. when some power mgt. Kconfig symbol is not set/enabled:
+> 
+> ERROR: "power_supply_put" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+> ERROR: "power_supply_changed" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+> ERROR: "power_supply_get_by_name" [drivers/platform/olpc/olpc-xo175-ec.ko] undefined!
+> 
+> d. drivers/platform/olpc/Kconfig needs to use "menuconfig" like all of the other
+>    Kconfig files in drivers/platform/ so that its menu is listed in the correct
+>    place in *config interfaces.
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
----
- drivers/platform/x86/intel_menlow.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Hi
 
-diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel_menlow.c
-index 77eb870..28feb5c 100644
---- a/drivers/platform/x86/intel_menlow.c
-+++ b/drivers/platform/x86/intel_menlow.c
-@@ -180,9 +180,13 @@ static int intel_menlow_memory_add(struct acpi_device *device)
- 
- static int intel_menlow_memory_remove(struct acpi_device *device)
- {
--	struct thermal_cooling_device *cdev = acpi_driver_data(device);
-+	struct thermal_cooling_device *cdev;
-+
-+	if (!device)
-+		return -EINVAL;
- 
--	if (!device || !cdev)
-+	cdev = acpi_driver_data(device);
-+	if (!cdev)
- 		return -EINVAL;
- 
- 	sysfs_remove_link(&device->dev.kobj, "thermal_cooling");
--- 
-2.7.4
+Thanks for the heads up.
+
+I think YueHaibing <yuehaibing@huawei.com> sent in patches for a. and
+b. -- I'll follow up with the fixes for the rest.
+
+> :(
+
+:(
+
+Lubo
