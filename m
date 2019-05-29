@@ -1,153 +1,145 @@
-From: =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Only Tell EC the OS will handle
- display hotkeys from asus_nb_wmi
-Date: Wed, 29 May 2019 10:37:46 -0700
-Message-ID: <CAOcMMid6p8_1i=NpD+GHDV4c6WmwWs=FseC345USaF_etj956A@mail.gmail.com>
-References: <20190521062837.3887-1-hdegoede@redhat.com> <CAOcMMifdq8PcnwANKxGtAmB+5nNOv-aEW3aFJyfPNngXeYCK5A@mail.gmail.com>
- <1026f860-e961-cefe-3695-aaeaa8896597@redhat.com>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 09/22] docs: mark orphan documents as such
+Date: Wed, 29 May 2019 20:23:40 -0300
+Message-ID: <e0bf4e767dd5de9189e5993fbec2f4b1bafd2064.1559171394.git.mchehab+samsung@kernel.org>
+References: <cover.1559171394.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1026f860-e961-cefe-3695-aaeaa8896597@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1559171394.git.mchehab+samsung@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc: kvm@vger.kernel.org, =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Alexandre Torgue <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, David Airlie <airlied@linux.ie>, Andrew Donnellan <ajd@linux.ibm.com>, linux-pm@vger.kernel.org, Matan Ziv-Av <matan@svgalib.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Frederic Barrat <fbarrat@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, linuxppc-dev@lists.ozlabs.org, Georgi
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, May 29, 2019 at 1:55 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi Jo=C3=A3o,
->
-> On 5/28/19 11:22 PM, Jo=C3=A3o Paulo Rechi Vita wrote:
-> > On Mon, May 20, 2019 at 11:28 PM Hans de Goede <hdegoede@redhat.com> wr=
-ote:
-> >>
-> >> Commit 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will
-> >> handle the display off hotkey") causes the backlight to be permanently=
- off
-> >> on various EeePC laptop models using the eeepc-wmi driver (Asus EeePC
-> >> 1015BX, Asus EeePC 1025C).
-> >>
-> >> The asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL) call adde=
-d
-> >> by that commit is made conditional in this commit and only enabled in
-> >> the quirk_entry structs in the asus-nb-wmi driver fixing the broken
-> >> display / backlight on various EeePC laptop models.
-> >>
-> >> Cc: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
-> >> Fixes: 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will =
-handle the display off hotkey")
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >> ---
-> >>   drivers/platform/x86/asus-nb-wmi.c | 8 ++++++++
-> >>   drivers/platform/x86/asus-wmi.c    | 2 +-
-> >>   drivers/platform/x86/asus-wmi.h    | 1 +
-> >>   3 files changed, 10 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86=
-/asus-nb-wmi.c
-> >> index b6f2ff95c3ed..59f3a37a44d7 100644
-> >> --- a/drivers/platform/x86/asus-nb-wmi.c
-> >> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> >> @@ -78,10 +78,12 @@ static bool asus_q500a_i8042_filter(unsigned char =
-data, unsigned char str,
-> >>
-> >>   static struct quirk_entry quirk_asus_unknown =3D {
-> >>          .wapf =3D 0,
-> >> +       .wmi_backlight_set_devstate =3D true,
-> >>   };
-> >>
-> >>   static struct quirk_entry quirk_asus_q500a =3D {
-> >>          .i8042_filter =3D asus_q500a_i8042_filter,
-> >> +       .wmi_backlight_set_devstate =3D true,
-> >>   };
-> >>
-> >>   /*
-> >> @@ -92,26 +94,32 @@ static struct quirk_entry quirk_asus_q500a =3D {
-> >>   static struct quirk_entry quirk_asus_x55u =3D {
-> >>          .wapf =3D 4,
-> >>          .wmi_backlight_power =3D true,
-> >> +       .wmi_backlight_set_devstate =3D true,
-> >>          .no_display_toggle =3D true,
-> >>   };
-> >>
-> >>   static struct quirk_entry quirk_asus_wapf4 =3D {
-> >>          .wapf =3D 4,
-> >> +       .wmi_backlight_set_devstate =3D true,
-> >>   };
-> >>
-> >>   static struct quirk_entry quirk_asus_x200ca =3D {
-> >>          .wapf =3D 2,
-> >> +       .wmi_backlight_set_devstate =3D true,
-> >>   };
-> >>
-> >>   static struct quirk_entry quirk_asus_ux303ub =3D {
-> >>          .wmi_backlight_native =3D true,
-> >> +       .wmi_backlight_set_devstate =3D true,
-> >>   };
-> >>
-> >>   static struct quirk_entry quirk_asus_x550lb =3D {
-> >> +       .wmi_backlight_set_devstate =3D true,
-> >>          .xusb2pr =3D 0x01D9,
-> >>   };
-> >>
-> >>   static struct quirk_entry quirk_asus_forceals =3D {
-> >> +       .wmi_backlight_set_devstate =3D true,
-> >>          .wmi_force_als_set =3D true,
-> >>   };
-> >>
-> >> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/as=
-us-wmi.c
-> >> index ee1fa93708ec..a66e99500c12 100644
-> >> --- a/drivers/platform/x86/asus-wmi.c
-> >> +++ b/drivers/platform/x86/asus-wmi.c
-> >> @@ -2131,7 +2131,7 @@ static int asus_wmi_add(struct platform_device *=
-pdev)
-> >>                  err =3D asus_wmi_backlight_init(asus);
-> >>                  if (err && err !=3D -ENODEV)
-> >>                          goto fail_backlight;
-> >> -       } else
-> >> +       } else if (asus->driver->quirks->wmi_backlight_set_devstate)
-> >>                  err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGH=
-T, 2, NULL);
-> >>
-> >>          status =3D wmi_install_notify_handler(asus->driver->event_gui=
-d,
-> >> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/as=
-us-wmi.h
-> >> index 6c1311f4b04d..57a79bddb286 100644
-> >> --- a/drivers/platform/x86/asus-wmi.h
-> >> +++ b/drivers/platform/x86/asus-wmi.h
-> >> @@ -44,6 +44,7 @@ struct quirk_entry {
-> >>          bool store_backlight_power;
-> >>          bool wmi_backlight_power;
-> >>          bool wmi_backlight_native;
-> >> +       bool wmi_backlight_set_devstate;
-> >
-> > Wouldn't it be better to add this field to struct asus_wmi_driver
-> > instead, and set it in asus_nb_wmi_driver only? This way we wouldn't
-> > need to make sure it is present in all quirk entries from this driver,
-> > current and future.
-> >
-> > I've tested both the original patch and my suggestion above and in
-> > both cases the "turn off backlight" hotkey continued to work fine on a
-> > machine where asus-nb-wmi is used (I don't have access to any machine
-> > using the eeepc driver).
->
-> I deliberately put in the quirks struct so that if necessary we can
-> enable / disable it easily on a per model (rather then per driver)
-> case in the future.
->
-
-You are right that it will be easier to change it if we ever need to,
-although I don't expect it to happen in the near future (famous last
-words). It would be nice to not have to add it to every quirk entry,
-current and new though. But I do not have another suggestion atm, so
-I'm fine with your original approach.
-
-Reviewed-by: Jo=C3=A3o Paulo Rechi Vita <jprvita@endlessm.com>
-
-...........................................................................=
-...........
-Jo=C3=A3o Paulo Rechi Vita  |  Endless
+U3BoaW54IGRvZXNuJ3QgbGlrZSBvcnBoYW4gZG9jdW1lbnRzOgoKICAgIERvY3VtZW50YXRpb24v
+YWNjZWxlcmF0b3JzL29jeGwucnN0OiBXQVJOSU5HOiBkb2N1bWVudCBpc24ndCBpbmNsdWRlZCBp
+biBhbnkgdG9jdHJlZQogICAgRG9jdW1lbnRhdGlvbi9hcm0vc3RtMzIvb3ZlcnZpZXcucnN0OiBX
+QVJOSU5HOiBkb2N1bWVudCBpc24ndCBpbmNsdWRlZCBpbiBhbnkgdG9jdHJlZQogICAgRG9jdW1l
+bnRhdGlvbi9hcm0vc3RtMzIvc3RtMzJmNDI5LW92ZXJ2aWV3LnJzdDogV0FSTklORzogZG9jdW1l
+bnQgaXNuJ3QgaW5jbHVkZWQgaW4gYW55IHRvY3RyZWUKICAgIERvY3VtZW50YXRpb24vYXJtL3N0
+bTMyL3N0bTMyZjc0Ni1vdmVydmlldy5yc3Q6IFdBUk5JTkc6IGRvY3VtZW50IGlzbid0IGluY2x1
+ZGVkIGluIGFueSB0b2N0cmVlCiAgICBEb2N1bWVudGF0aW9uL2FybS9zdG0zMi9zdG0zMmY3Njkt
+b3ZlcnZpZXcucnN0OiBXQVJOSU5HOiBkb2N1bWVudCBpc24ndCBpbmNsdWRlZCBpbiBhbnkgdG9j
+dHJlZQogICAgRG9jdW1lbnRhdGlvbi9hcm0vc3RtMzIvc3RtMzJoNzQzLW92ZXJ2aWV3LnJzdDog
+V0FSTklORzogZG9jdW1lbnQgaXNuJ3QgaW5jbHVkZWQgaW4gYW55IHRvY3RyZWUKICAgIERvY3Vt
+ZW50YXRpb24vYXJtL3N0bTMyL3N0bTMybXAxNTctb3ZlcnZpZXcucnN0OiBXQVJOSU5HOiBkb2N1
+bWVudCBpc24ndCBpbmNsdWRlZCBpbiBhbnkgdG9jdHJlZQogICAgRG9jdW1lbnRhdGlvbi9ncHUv
+bXNtLWNyYXNoLWR1bXAucnN0OiBXQVJOSU5HOiBkb2N1bWVudCBpc24ndCBpbmNsdWRlZCBpbiBh
+bnkgdG9jdHJlZQogICAgRG9jdW1lbnRhdGlvbi9pbnRlcmNvbm5lY3QvaW50ZXJjb25uZWN0LnJz
+dDogV0FSTklORzogZG9jdW1lbnQgaXNuJ3QgaW5jbHVkZWQgaW4gYW55IHRvY3RyZWUKICAgIERv
+Y3VtZW50YXRpb24vbGFwdG9wcy9sZy1sYXB0b3AucnN0OiBXQVJOSU5HOiBkb2N1bWVudCBpc24n
+dCBpbmNsdWRlZCBpbiBhbnkgdG9jdHJlZQogICAgRG9jdW1lbnRhdGlvbi9wb3dlcnBjL2lzYS12
+ZXJzaW9ucy5yc3Q6IFdBUk5JTkc6IGRvY3VtZW50IGlzbid0IGluY2x1ZGVkIGluIGFueSB0b2N0
+cmVlCiAgICBEb2N1bWVudGF0aW9uL3ZpcnR1YWwva3ZtL2FtZC1tZW1vcnktZW5jcnlwdGlvbi5y
+c3Q6IFdBUk5JTkc6IGRvY3VtZW50IGlzbid0IGluY2x1ZGVkIGluIGFueSB0b2N0cmVlCiAgICBE
+b2N1bWVudGF0aW9uL3ZpcnR1YWwva3ZtL3ZjcHUtcmVxdWVzdHMucnN0OiBXQVJOSU5HOiBkb2N1
+bWVudCBpc24ndCBpbmNsdWRlZCBpbiBhbnkgdG9jdHJlZQoKU28sIHdoaWxlIHRoZXkgYXJlbid0
+IG9uIGFueSB0b2N0cmVlLCBhZGQgOm9ycGhhbjogdG8gdGhlbSwgaW4gb3JkZXIKdG8gc2lsZW50
+IHRoaXMgd2FybmluZy4KClNpZ25lZC1vZmYtYnk6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bWNo
+ZWhhYitzYW1zdW5nQGtlcm5lbC5vcmc+Ci0tLQogRG9jdW1lbnRhdGlvbi9hY2NlbGVyYXRvcnMv
+b2N4bC5yc3QgICAgICAgICAgICAgICAgIHwgMiArKwogRG9jdW1lbnRhdGlvbi9hcm0vc3RtMzIv
+b3ZlcnZpZXcucnN0ICAgICAgICAgICAgICAgIHwgMiArKwogRG9jdW1lbnRhdGlvbi9hcm0vc3Rt
+MzIvc3RtMzJmNDI5LW92ZXJ2aWV3LnJzdCAgICAgIHwgMiArKwogRG9jdW1lbnRhdGlvbi9hcm0v
+c3RtMzIvc3RtMzJmNzQ2LW92ZXJ2aWV3LnJzdCAgICAgIHwgMiArKwogRG9jdW1lbnRhdGlvbi9h
+cm0vc3RtMzIvc3RtMzJmNzY5LW92ZXJ2aWV3LnJzdCAgICAgIHwgMiArKwogRG9jdW1lbnRhdGlv
+bi9hcm0vc3RtMzIvc3RtMzJoNzQzLW92ZXJ2aWV3LnJzdCAgICAgIHwgMiArKwogRG9jdW1lbnRh
+dGlvbi9hcm0vc3RtMzIvc3RtMzJtcDE1Ny1vdmVydmlldy5yc3QgICAgIHwgMiArKwogRG9jdW1l
+bnRhdGlvbi9ncHUvbXNtLWNyYXNoLWR1bXAucnN0ICAgICAgICAgICAgICAgIHwgMiArKwogRG9j
+dW1lbnRhdGlvbi9pbnRlcmNvbm5lY3QvaW50ZXJjb25uZWN0LnJzdCAgICAgICAgIHwgMiArKwog
+RG9jdW1lbnRhdGlvbi9sYXB0b3BzL2xnLWxhcHRvcC5yc3QgICAgICAgICAgICAgICAgIHwgMiAr
+KwogRG9jdW1lbnRhdGlvbi9wb3dlcnBjL2lzYS12ZXJzaW9ucy5yc3QgICAgICAgICAgICAgIHwg
+MiArKwogRG9jdW1lbnRhdGlvbi92aXJ0dWFsL2t2bS9hbWQtbWVtb3J5LWVuY3J5cHRpb24ucnN0
+IHwgMiArKwogRG9jdW1lbnRhdGlvbi92aXJ0dWFsL2t2bS92Y3B1LXJlcXVlc3RzLnJzdCAgICAg
+ICAgIHwgMiArKwogMTMgZmlsZXMgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vYWNjZWxlcmF0b3JzL29jeGwucnN0IGIvRG9jdW1lbnRhdGlvbi9h
+Y2NlbGVyYXRvcnMvb2N4bC5yc3QKaW5kZXggMTRjZWZjMDIwZTJkLi5iMWNlYTE5YTkwZjUgMTAw
+NjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vYWNjZWxlcmF0b3JzL29jeGwucnN0CisrKyBiL0RvY3Vt
+ZW50YXRpb24vYWNjZWxlcmF0b3JzL29jeGwucnN0CkBAIC0xLDMgKzEsNSBAQAorOm9ycGhhbjoK
+KwogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT0KIE9wZW5DQVBJIChPcGVuIENvaGVyZW50IEFjY2VsZXJhdG9yIFByb2Nlc3NvciBJbnRlcmZh
+Y2UpCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9hcm0vc3RtMzIvb3ZlcnZpZXcucnN0IGIv
+RG9jdW1lbnRhdGlvbi9hcm0vc3RtMzIvb3ZlcnZpZXcucnN0CmluZGV4IDg1Y2ZjODQxMDc5OC4u
+ZjdlNzM0MTUzODYwIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2FybS9zdG0zMi9vdmVydmll
+dy5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9hcm0vc3RtMzIvb3ZlcnZpZXcucnN0CkBAIC0xLDMg
+KzEsNSBAQAorOm9ycGhhbjoKKwogPT09PT09PT09PT09PT09PT09PT09PT09CiBTVE0zMiBBUk0g
+TGludXggT3ZlcnZpZXcKID09PT09PT09PT09PT09PT09PT09PT09PQpkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9hcm0vc3RtMzIvc3RtMzJmNDI5LW92ZXJ2aWV3LnJzdCBiL0RvY3VtZW50YXRp
+b24vYXJtL3N0bTMyL3N0bTMyZjQyOS1vdmVydmlldy5yc3QKaW5kZXggMThmZWRhOTdmNDgzLi42
+NWJiYjFjM2I0MjMgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vYXJtL3N0bTMyL3N0bTMyZjQy
+OS1vdmVydmlldy5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9hcm0vc3RtMzIvc3RtMzJmNDI5LW92
+ZXJ2aWV3LnJzdApAQCAtMSwzICsxLDUgQEAKKzpvcnBoYW46CisKIFNUTTMyRjQyOSBPdmVydmll
+dwogPT09PT09PT09PT09PT09PT09CiAKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vYXJtL3N0
+bTMyL3N0bTMyZjc0Ni1vdmVydmlldy5yc3QgYi9Eb2N1bWVudGF0aW9uL2FybS9zdG0zMi9zdG0z
+MmY3NDYtb3ZlcnZpZXcucnN0CmluZGV4IGI1ZjRiNmNlNzY1Ni4uNDJkNTkzMDg1MDE1IDEwMDY0
+NAotLS0gYS9Eb2N1bWVudGF0aW9uL2FybS9zdG0zMi9zdG0zMmY3NDYtb3ZlcnZpZXcucnN0Cisr
+KyBiL0RvY3VtZW50YXRpb24vYXJtL3N0bTMyL3N0bTMyZjc0Ni1vdmVydmlldy5yc3QKQEAgLTEs
+MyArMSw1IEBACis6b3JwaGFuOgorCiBTVE0zMkY3NDYgT3ZlcnZpZXcKID09PT09PT09PT09PT09
+PT09PQogCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2FybS9zdG0zMi9zdG0zMmY3Njktb3Zl
+cnZpZXcucnN0IGIvRG9jdW1lbnRhdGlvbi9hcm0vc3RtMzIvc3RtMzJmNzY5LW92ZXJ2aWV3LnJz
+dAppbmRleCAyMjg2NTZjZWQyZmUuLmY2YWRhYzg2MmIxNyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRh
+dGlvbi9hcm0vc3RtMzIvc3RtMzJmNzY5LW92ZXJ2aWV3LnJzdAorKysgYi9Eb2N1bWVudGF0aW9u
+L2FybS9zdG0zMi9zdG0zMmY3Njktb3ZlcnZpZXcucnN0CkBAIC0xLDMgKzEsNSBAQAorOm9ycGhh
+bjoKKwogU1RNMzJGNzY5IE92ZXJ2aWV3CiA9PT09PT09PT09PT09PT09PT0KIApkaWZmIC0tZ2l0
+IGEvRG9jdW1lbnRhdGlvbi9hcm0vc3RtMzIvc3RtMzJoNzQzLW92ZXJ2aWV3LnJzdCBiL0RvY3Vt
+ZW50YXRpb24vYXJtL3N0bTMyL3N0bTMyaDc0My1vdmVydmlldy5yc3QKaW5kZXggMzQ1OGRjMDAw
+OTVkLi5jNTI1ODM1ZTc0NzMgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vYXJtL3N0bTMyL3N0
+bTMyaDc0My1vdmVydmlldy5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9hcm0vc3RtMzIvc3RtMzJo
+NzQzLW92ZXJ2aWV3LnJzdApAQCAtMSwzICsxLDUgQEAKKzpvcnBoYW46CisKIFNUTTMySDc0MyBP
+dmVydmlldwogPT09PT09PT09PT09PT09PT09CiAKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+YXJtL3N0bTMyL3N0bTMybXAxNTctb3ZlcnZpZXcucnN0IGIvRG9jdW1lbnRhdGlvbi9hcm0vc3Rt
+MzIvc3RtMzJtcDE1Ny1vdmVydmlldy5yc3QKaW5kZXggNjJlMTc2ZDQ3Y2E3Li4yYzUyY2QwMjA2
+MDEgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vYXJtL3N0bTMyL3N0bTMybXAxNTctb3ZlcnZp
+ZXcucnN0CisrKyBiL0RvY3VtZW50YXRpb24vYXJtL3N0bTMyL3N0bTMybXAxNTctb3ZlcnZpZXcu
+cnN0CkBAIC0xLDMgKzEsNSBAQAorOm9ycGhhbjoKKwogU1RNMzJNUDE1NyBPdmVydmlldwogPT09
+PT09PT09PT09PT09PT09PQogCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2dwdS9tc20tY3Jh
+c2gtZHVtcC5yc3QgYi9Eb2N1bWVudGF0aW9uL2dwdS9tc20tY3Jhc2gtZHVtcC5yc3QKaW5kZXgg
+NzU3Y2QyNTdlMGQ4Li4yNDBlZjIwMGY3NmMgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZ3B1
+L21zbS1jcmFzaC1kdW1wLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2dwdS9tc20tY3Jhc2gtZHVt
+cC5yc3QKQEAgLTEsMyArMSw1IEBACis6b3JwaGFuOgorCiA9PT09PT09PT09PT09PT09PT09PT0K
+IE1TTSBDcmFzaCBEdW1wIEZvcm1hdAogPT09PT09PT09PT09PT09PT09PT09CmRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2ludGVyY29ubmVjdC9pbnRlcmNvbm5lY3QucnN0IGIvRG9jdW1lbnRh
+dGlvbi9pbnRlcmNvbm5lY3QvaW50ZXJjb25uZWN0LnJzdAppbmRleCBjM2UwMDQ4OTM3OTYuLjU2
+ZTMzMWRhYjcwZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9pbnRlcmNvbm5lY3QvaW50ZXJj
+b25uZWN0LnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2ludGVyY29ubmVjdC9pbnRlcmNvbm5lY3Qu
+cnN0CkBAIC0xLDUgKzEsNyBAQAogLi4gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAK
+IAorOm9ycGhhbjoKKwogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQogR0VO
+RVJJQyBTWVNURU0gSU5URVJDT05ORUNUIFNVQlNZU1RFTQogPT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9sYXB0b3BzL2xnLWxh
+cHRvcC5yc3QgYi9Eb2N1bWVudGF0aW9uL2xhcHRvcHMvbGctbGFwdG9wLnJzdAppbmRleCBhYTUw
+M2VlOWIzYmMuLmYyYzJmZmUzMTEwMSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9sYXB0b3Bz
+L2xnLWxhcHRvcC5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9sYXB0b3BzL2xnLWxhcHRvcC5yc3QK
+QEAgLTEsNSArMSw3IEBACiAuLiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCsKIAor
+Om9ycGhhbjoKKwogTEcgR3JhbSBsYXB0b3AgZXh0cmEgZmVhdHVyZXMKID09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09CiAKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vcG93ZXJwYy9pc2Et
+dmVyc2lvbnMucnN0IGIvRG9jdW1lbnRhdGlvbi9wb3dlcnBjL2lzYS12ZXJzaW9ucy5yc3QKaW5k
+ZXggODEyZTIwY2M4OThjLi42NmMyNDE0MGViZjEgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24v
+cG93ZXJwYy9pc2EtdmVyc2lvbnMucnN0CisrKyBiL0RvY3VtZW50YXRpb24vcG93ZXJwYy9pc2Et
+dmVyc2lvbnMucnN0CkBAIC0xLDMgKzEsNSBAQAorOm9ycGhhbjoKKwogQ1BVIHRvIElTQSBWZXJz
+aW9uIE1hcHBpbmcKID09PT09PT09PT09PT09PT09PT09PT09PT09CiAKZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vdmlydHVhbC9rdm0vYW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdCBiL0RvY3Vt
+ZW50YXRpb24vdmlydHVhbC9rdm0vYW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdAppbmRleCA2NTli
+YmMwOTNiNTIuLjMzZDY5N2FiOGE1OCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi92aXJ0dWFs
+L2t2bS9hbWQtbWVtb3J5LWVuY3J5cHRpb24ucnN0CisrKyBiL0RvY3VtZW50YXRpb24vdmlydHVh
+bC9rdm0vYW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdApAQCAtMSwzICsxLDUgQEAKKzpvcnBoYW46
+CisKID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CiBTZWN1cmUgRW5jcnlw
+dGVkIFZpcnR1YWxpemF0aW9uIChTRVYpCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi92aXJ0dWFsL2t2bS92Y3B1LXJlcXVl
+c3RzLnJzdCBiL0RvY3VtZW50YXRpb24vdmlydHVhbC9rdm0vdmNwdS1yZXF1ZXN0cy5yc3QKaW5k
+ZXggNWZlYjM3MDZhN2FlLi5jMTgwN2ExYjkyZTYgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24v
+dmlydHVhbC9rdm0vdmNwdS1yZXF1ZXN0cy5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi92aXJ0dWFs
+L2t2bS92Y3B1LXJlcXVlc3RzLnJzdApAQCAtMSwzICsxLDUgQEAKKzpvcnBoYW46CisKID09PT09
+PT09PT09PT09PT09CiBLVk0gVkNQVSBSZXF1ZXN0cwogPT09PT09PT09PT09PT09PT0KLS0gCjIu
+MjEuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
