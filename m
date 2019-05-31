@@ -1,7 +1,7 @@
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v5 05/16] software node: Add software_node_get_reference_args()
-Date: Fri, 31 May 2019 17:15:36 +0300
-Message-ID: <20190531141547.22728-6-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v5 01/16] software node: Allow node creation without properties
+Date: Fri, 31 May 2019 17:15:32 +0300
+Message-ID: <20190531141547.22728-2-heikki.krogerus@linux.intel.com>
 References: <20190531141547.22728-1-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,129 +12,29 @@ To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Cc: Hans de Goede <hdegoede@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This makes it possible to support drivers that use
-fwnode_property_get_reference_args() function.
+Software nodes are not forced to have device properties.
+Adding check to property_entries_dup() to make it possible
+to create software nodes that don't have any properties.
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Tested-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/base/swnode.c    | 47 ++++++++++++++++++++++++++++++++++++++++
- include/linux/property.h | 28 ++++++++++++++++++++++++
- 2 files changed, 75 insertions(+)
+ drivers/base/swnode.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 2d925fc2255f..e7b3aa3bd55a 100644
+index 7fc5a18e02ad..30077454eb68 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -560,6 +560,52 @@ software_node_get_named_child_node(const struct fwnode_handle *fwnode,
- 	return NULL;
- }
+@@ -383,6 +383,9 @@ property_entries_dup(const struct property_entry *properties)
+ 	int i, n = 0;
+ 	int ret;
  
-+static int
-+software_node_get_reference_args(const struct fwnode_handle *fwnode,
-+				 const char *propname, const char *nargs_prop,
-+				 unsigned int nargs, unsigned int index,
-+				 struct fwnode_reference_args *args)
-+{
-+	struct swnode *swnode = to_swnode(fwnode);
-+	const struct software_node_reference *ref;
-+	const struct property_entry *prop;
-+	struct fwnode_handle *refnode;
-+	int i;
++	if (!properties)
++		return NULL;
 +
-+	if (!swnode || !swnode->node->references)
-+		return -ENOENT;
-+
-+	for (ref = swnode->node->references; ref->name; ref++)
-+		if (!strcmp(ref->name, propname))
-+			break;
-+
-+	if (!ref->name || index > (ref->nrefs - 1))
-+		return -ENOENT;
-+
-+	refnode = software_node_fwnode(ref->refs[index].node);
-+	if (!refnode)
-+		return -ENOENT;
-+
-+	if (nargs_prop) {
-+		prop = property_entry_get(swnode->node->properties, nargs_prop);
-+		if (!prop)
-+			return -EINVAL;
-+
-+		nargs = prop->value.u32_data;
-+	}
-+
-+	if (nargs > NR_FWNODE_REFERENCE_ARGS)
-+		return -EINVAL;
-+
-+	args->fwnode = software_node_get(refnode);
-+	args->nargs = nargs;
-+
-+	for (i = 0; i < nargs; i++)
-+		args->args[i] = ref->refs[index].args[i];
-+
-+	return 0;
-+}
-+
- static const struct fwnode_operations software_node_ops = {
- 	.get = software_node_get,
- 	.put = software_node_put,
-@@ -569,6 +615,7 @@ static const struct fwnode_operations software_node_ops = {
- 	.get_parent = software_node_get_parent,
- 	.get_next_child_node = software_node_get_next_child,
- 	.get_named_child_node = software_node_get_named_child_node,
-+	.get_reference_args = software_node_get_reference_args
- };
+ 	while (properties[n].name)
+ 		n++;
  
- /* -------------------------------------------------------------------------- */
-diff --git a/include/linux/property.h b/include/linux/property.h
-index a3813ded52ea..abcde2f236a0 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -332,16 +332,44 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
- /* -------------------------------------------------------------------------- */
- /* Software fwnode support - when HW description is incomplete or missing */
- 
-+struct software_node;
-+
-+/**
-+ * struct software_node_ref_args - Reference with additional arguments
-+ * @node: Reference to a software node
-+ * @nargs: Number of elements in @args array
-+ * @args: Integer arguments
-+ */
-+struct software_node_ref_args {
-+	const struct software_node *node;
-+	unsigned int nargs;
-+	u64 args[NR_FWNODE_REFERENCE_ARGS];
-+};
-+
-+/**
-+ * struct software_node_reference - Named software node reference property
-+ * @name: Name of the property
-+ * @nrefs: Number of elements in @refs array
-+ * @refs: Array of references with optional arguments
-+ */
-+struct software_node_reference {
-+	const char *name;
-+	unsigned int nrefs;
-+	const struct software_node_ref_args *refs;
-+};
-+
- /**
-  * struct software_node - Software node description
-  * @name: Name of the software node
-  * @parent: Parent of the software node
-  * @properties: Array of device properties
-+ * @references: Array of software node reference properties
-  */
- struct software_node {
- 	const char *name;
- 	const struct software_node *parent;
- 	const struct property_entry *properties;
-+	const struct software_node_reference *references;
- };
- 
- bool is_software_node(const struct fwnode_handle *fwnode);
 -- 
 2.20.1
