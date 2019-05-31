@@ -1,40 +1,35 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v5 01/16] software node: Allow node creation without properties
-Date: Fri, 31 May 2019 17:15:32 +0300
-Message-ID: <20190531141547.22728-2-heikki.krogerus@linux.intel.com>
-References: <20190531141547.22728-1-heikki.krogerus@linux.intel.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Qian Cai <cai@lca.pw>
+Subject: [PATCH] x86/efi: fix a -Wtype-limits compilation warning
+Date: Fri, 31 May 2019 12:05:34 -0400
+Message-ID: <1559318734-27591-1-git-send-email-cai@lca.pw>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190531141547.22728-1-heikki.krogerus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Hans de Goede <hdegoede@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: ard.biesheuvel@linaro.org
+Cc: dvhart@infradead.org, andy@infradead.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Software nodes are not forced to have device properties.
-Adding check to property_entries_dup() to make it possible
-to create software nodes that don't have any properties.
+Compiling a kernel with W=1 generates this warning,
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
+arch/x86/platform/efi/quirks.c:731:16: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- drivers/base/swnode.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/platform/efi/quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 7fc5a18e02ad..30077454eb68 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -383,6 +383,9 @@ property_entries_dup(const struct property_entry *properties)
- 	int i, n = 0;
- 	int ret;
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index feb77777c8b8..ed88c95f9daf 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -725,7 +725,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
+ 	 * Address range 0x0000 - 0x0fff is always mapped in the efi_pgd, so
+ 	 * page faulting on these addresses isn't expected.
+ 	 */
+-	if (phys_addr >= 0x0000 && phys_addr <= 0x0fff)
++	if (phys_addr <= 0x0fff)
+ 		return;
  
-+	if (!properties)
-+		return NULL;
-+
- 	while (properties[n].name)
- 		n++;
- 
+ 	/*
 -- 
-2.20.1
+1.8.3.1
