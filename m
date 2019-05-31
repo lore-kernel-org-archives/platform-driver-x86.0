@@ -1,7 +1,7 @@
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v5 02/16] software node: Simplify software_node_release() function
-Date: Fri, 31 May 2019 17:15:33 +0300
-Message-ID: <20190531141547.22728-3-heikki.krogerus@linux.intel.com>
+Subject: [PATCH v5 04/16] software node: Use kobject name when finding child nodes by name
+Date: Fri, 31 May 2019 17:15:35 +0300
+Message-ID: <20190531141547.22728-5-heikki.krogerus@linux.intel.com>
 References: <20190531141547.22728-1-heikki.krogerus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,67 +12,37 @@ To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Cc: Hans de Goede <hdegoede@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-It's possible to release the node ID immediately when
-fwnode_remove_software_node() is called, no need to wait for
-software_node_release() with that.
+Using the kobject name of the node instead of a device
+property "name" in software_node_get_named_child_node().
 
 Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Tested-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/base/swnode.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/base/swnode.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 30077454eb68..7b321bf8424c 100644
+index ef1a48fec718..2d925fc2255f 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -557,13 +557,6 @@ static void software_node_release(struct kobject *kobj)
+@@ -546,17 +546,13 @@ software_node_get_named_child_node(const struct fwnode_handle *fwnode,
+ 				   const char *childname)
  {
- 	struct software_node *swnode = kobj_to_swnode(kobj);
+ 	struct swnode *swnode = to_swnode(fwnode);
+-	const struct property_entry *prop;
+ 	struct swnode *child;
  
--	if (swnode->parent) {
--		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
--		list_del(&swnode->entry);
--	} else {
--		ida_simple_remove(&swnode_root_ids, swnode->id);
--	}
--
- 	ida_destroy(&swnode->child_ids);
- 	property_entries_free(swnode->properties);
- 	kfree(swnode);
-@@ -610,9 +603,6 @@ fwnode_create_software_node(const struct property_entry *properties,
- 	INIT_LIST_HEAD(&swnode->children);
- 	swnode->parent = p;
+ 	if (!swnode || list_empty(&swnode->children))
+ 		return NULL;
  
--	if (p)
--		list_add_tail(&swnode->entry, &p->children);
--
- 	ret = kobject_init_and_add(&swnode->kobj, &software_node_type,
- 				   p ? &p->kobj : NULL, "node%d", swnode->id);
- 	if (ret) {
-@@ -626,6 +616,9 @@ fwnode_create_software_node(const struct property_entry *properties,
- 		return ERR_PTR(ret);
- 	}
- 
-+	if (p)
-+		list_add_tail(&swnode->entry, &p->children);
-+
- 	kobject_uevent(&swnode->kobj, KOBJ_ADD);
- 	return &swnode->fwnode;
- }
-@@ -638,6 +631,13 @@ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
- 	if (!swnode)
- 		return;
- 
-+	if (swnode->parent) {
-+		ida_simple_remove(&swnode->parent->child_ids, swnode->id);
-+		list_del(&swnode->entry);
-+	} else {
-+		ida_simple_remove(&swnode_root_ids, swnode->id);
-+	}
-+
- 	kobject_put(&swnode->kobj);
- }
- EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
+ 	list_for_each_entry(child, &swnode->children, entry) {
+-		prop = property_entry_get(child->node->properties, "name");
+-		if (!prop)
+-			continue;
+-		if (!strcmp(childname, prop->value.str)) {
++		if (!strcmp(childname, kobject_name(&child->kobj))) {
+ 			kobject_get(&child->kobj);
+ 			return &child->fwnode;
+ 		}
 -- 
 2.20.1
