@@ -1,35 +1,43 @@
-From: Qian Cai <cai@lca.pw>
-Subject: [PATCH] x86/efi: fix a -Wtype-limits compilation warning
-Date: Fri, 31 May 2019 12:05:34 -0400
-Message-ID: <1559318734-27591-1-git-send-email-cai@lca.pw>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: How to inject fwnode/oftree/acpi data by platform driver ?
+Date: Sat, 1 Jun 2019 16:14:09 +0200
+Message-ID: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: ard.biesheuvel@linaro.org
-Cc: dvhart@infradead.org, andy@infradead.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+To: LKML <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Compiling a kernel with W=1 generates this warning,
+Hi folks,
 
-arch/x86/platform/efi/quirks.c:731:16: warning: comparison of unsigned
-expression >= 0 is always true [-Wtype-limits]
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- arch/x86/platform/efi/quirks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm looking for a way to inject fwnode data from a platform driver,
+in order to initialize generic drivers w/ board specific configuration.
+The idea is getting rid of passing driver specific pdata structs
+(which, IIRC, seem to be deprecated).
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index feb77777c8b8..ed88c95f9daf 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -725,7 +725,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
- 	 * Address range 0x0000 - 0x0fff is always mapped in the efi_pgd, so
- 	 * page faulting on these addresses isn't expected.
- 	 */
--	if (phys_addr >= 0x0000 && phys_addr <= 0x0fff)
-+	if (phys_addr <= 0x0fff)
- 		return;
- 
- 	/*
+An example usecase is the APUv2/3 board, which have things like gpios
+wired to buttons and LEDs. The board can only be detected via DMI
+string, no way to probe the platform devices - have to be initialized
+explicitly (that's how I'm already doing it now).
+
+The nicest way, IMHO, would be if I could just write some piece of DTS
+and some fancy magic all the rest under the hood. Such thing doesn't
+seem to exist yet. Does it make sense to implement that ? How could
+we do it ?
+
+Which other options do we have ?
+
+Or should we just leave everything as it is and stick w/ pdata structs ?
+
+
+thx
+--mtx
+
 -- 
-1.8.3.1
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
