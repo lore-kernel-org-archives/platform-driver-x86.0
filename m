@@ -1,54 +1,196 @@
-From: Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [RFC 0/2] Support for buttons on newer MS Surface devices
-Date: Sat, 1 Jun 2019 21:07:19 +0200
-Message-ID: <a0f93af3-c587-40d5-2a85-fdc0f9e6b79f@gmail.com>
-References: <20190516142523.117978-1-luzmaximilian@gmail.com>
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: [PATCH v3] i2c: i801: Register optional lis3lv02d i2c device on Dell machines
+Date: Sun,  2 Jun 2019 15:20:03 +0200
+Message-ID: <20190602132003.1911-1-pali.rohar@gmail.com>
+References: <20180127133209.28995-1-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190516142523.117978-1-luzmaximilian@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180127133209.28995-1-pali.rohar@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+To: Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>, =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis.Kletnieks@vt.edu, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+Dell platform team told us that some (DMI whitelisted) Dell Latitude
+machines have ST microelectronics accelerometer at i2c address 0x29.
 
-any comments on this?
+Presence of that ST microelectronics accelerometer is verified by existence
+of SMO88xx ACPI device which represent that accelerometer. Unfortunately
+ACPI device does not specify i2c address.
 
-I should also mention that this has been tested via
-https://github.com/jakeday/linux-surface.
+This patch registers lis3lv02d device for selected Dell Latitude machines
+at i2c address 0x29 after detection. And for Dell Vostro V131 machine at
+i2c address 0x1d which was manually detected.
 
-Maximilian
+Finally commit a7ae81952cda ("i2c: i801: Allow ACPI SystemIO OpRegion to
+conflict with PCI BAR") allowed to use i2c-i801 driver on Dell machines so
+lis3lv02d correctly initialize accelerometer.
 
+Tested on Dell Latitude E6440.
 
-On 5/16/19 4:25 PM, Maximilian Luz wrote:
-> This series adds suport for power and volume buttons on 5th and 6th
-> generation Microsoft Surface devices. Specifically, it adds support for
-> the power-button on the Surface Laptop 1 and Laptop 2, as well as
-> support for power- and (on-device) volume-buttons on the Surface Pro 5
-> (2017), Pro 6, and Book 2.
-> 
-> These devices use the same MSHW0040 device as on the Surface Pro 4,
-> however, whereas the Pro 4 uses an ACPI notify handler, the newer
-> devices use GPIO interrupts to signal these events.
-> 
-> The first patch of this series ensures that the surfacepro3_button
-> driver, used for MSHW0040 on the Pro 4, does not probe for the newer
-> devices. The second patch adapts soc_button_array to implement the
-> actual button support.
-> 
-> I think the changes to soc_button_array in the second patch warrant a
-> thorough review. I've tried to make things a bit more generic to be able
-> to integrate arbitrary ACPI GPIO power-/volume-button devices more
-> easily, I'm not sure if there may be reasons against this.
-> 
-> Maximilian Luz (2):
->    platform: Fix device check for surfacepro3_button
->    input: soc_button_array for newer surface devices
-> 
->   drivers/input/misc/soc_button_array.c     | 134 ++++++++++++++++++++--
->   drivers/platform/x86/surfacepro3_button.c |  38 ++++++
->   2 files changed, 160 insertions(+), 12 deletions(-)
-> 
+Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+
+---
+Changes since v2:
+ * Use explicit list of SMOxx ACPI devices
+
+Changes since v1:
+ * Added Dell Vostro V131 based on Michał Kępień testing
+ * Changed DMI product structure to include also i2c address
+---
+ drivers/i2c/busses/i2c-i801.c       | 118 ++++++++++++++++++++++++++++++++++++
+ drivers/platform/x86/dell-smo8800.c |   1 +
+ 2 files changed, 119 insertions(+)
+
+diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+index ac7f7817dc89..2ac8ff41cc24 100644
+--- a/drivers/i2c/busses/i2c-i801.c
++++ b/drivers/i2c/busses/i2c-i801.c
+@@ -1134,6 +1134,121 @@ static void dmi_check_onboard_devices(const struct dmi_header *dm, void *adap)
+ 	}
+ }
+ 
++/* NOTE: Keep this list in sync with drivers/platform/x86/dell-smo8800.c */
++static const struct acpi_device_id acpi_smo8800_ids[] = {
++	{ "SMO8800", 0 },
++	{ "SMO8801", 0 },
++	{ "SMO8810", 0 },
++	{ "SMO8811", 0 },
++	{ "SMO8820", 0 },
++	{ "SMO8821", 0 },
++	{ "SMO8830", 0 },
++	{ "SMO8831", 0 },
++};
++
++static acpi_status check_acpi_smo88xx_device(acpi_handle obj_handle,
++					     u32 nesting_level,
++					     void *context,
++					     void **return_value)
++{
++	struct acpi_device_info *info;
++	acpi_status status;
++	char *hid;
++	int i;
++
++	status = acpi_get_object_info(obj_handle, &info);
++	if (!ACPI_SUCCESS(status) || !(info->valid & ACPI_VALID_HID))
++		return AE_OK;
++
++	hid = info->hardware_id.string;
++	if (!hid)
++		return AE_OK;
++
++	for (i = 0; i < ARRAY_SIZE(acpi_smo8800_ids); ++i) {
++		if (strcmp(hid, acpi_smo8800_ids[i].id) == 0) {
++			*((bool *)return_value) = true;
++			return AE_CTRL_TERMINATE;
++		}
++	}
++
++	return AE_OK;
++
++}
++
++static bool is_dell_system_with_lis3lv02d(void)
++{
++	bool found;
++	acpi_status status;
++	const char *vendor;
++
++	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
++	if (strcmp(vendor, "Dell Inc.") != 0)
++		return false;
++
++	/*
++	 * Check that ACPI device SMO88xx exists and is enabled. That ACPI
++	 * device represent our ST microelectronics lis3lv02d accelerometer but
++	 * unfortunately without any other information (like i2c address).
++	 */
++	found = false;
++	status = acpi_get_devices(NULL, check_acpi_smo88xx_device, NULL,
++				  (void **)&found);
++	if (!ACPI_SUCCESS(status) || !found)
++		return false;
++
++	return true;
++}
++
++/*
++ * Accelerometer's i2c address is not specified in DMI nor ACPI,
++ * so it is needed to define mapping table based on DMI product names.
++ */
++static struct {
++	const char *dmi_product_name;
++	unsigned short i2c_addr;
++} dell_lis3lv02d_devices[] = {
++	/*
++	 * Dell platform team told us that these Latitude devices have
++	 * ST microelectronics accelerometer at i2c address 0x29.
++	 */
++	{ "Latitude E5250",     0x29 },
++	{ "Latitude E5450",     0x29 },
++	{ "Latitude E5550",     0x29 },
++	{ "Latitude E6440",     0x29 },
++	{ "Latitude E6440 ATG", 0x29 },
++	{ "Latitude E6540",     0x29 },
++	/*
++	 * Additional individual entries were added after verification.
++	 */
++	{ "Vostro V131",        0x1d },
++};
++
++static void register_dell_lis3lv02d_i2c_device(struct i801_priv *priv)
++{
++	struct i2c_board_info info;
++	const char *dmi_product_name;
++	int i;
++
++	dmi_product_name = dmi_get_system_info(DMI_PRODUCT_NAME);
++	for (i = 0; i < ARRAY_SIZE(dell_lis3lv02d_devices); ++i) {
++		if (strcmp(dmi_product_name,
++			   dell_lis3lv02d_devices[i].dmi_product_name) == 0)
++			break;
++	}
++
++	if (i == ARRAY_SIZE(dell_lis3lv02d_devices)) {
++		dev_warn(&priv->pci_dev->dev,
++			 "Accelerometer lis3lv02d is present on i2c bus but its"
++			 " i2c address is unknown, skipping registration...\n");
++		return;
++	}
++
++	memset(&info, 0, sizeof(struct i2c_board_info));
++	info.addr = dell_lis3lv02d_devices[i].i2c_addr;
++	strlcpy(info.type, "lis3lv02d", I2C_NAME_SIZE);
++	i2c_new_device(&priv->adapter, &info);
++}
++
+ /* Register optional slaves */
+ static void i801_probe_optional_slaves(struct i801_priv *priv)
+ {
+@@ -1152,6 +1267,9 @@ static void i801_probe_optional_slaves(struct i801_priv *priv)
+ 
+ 	if (dmi_name_in_vendors("FUJITSU"))
+ 		dmi_walk(dmi_check_onboard_devices, &priv->adapter);
++
++	if (is_dell_system_with_lis3lv02d())
++		register_dell_lis3lv02d_i2c_device(priv);
+ }
+ #else
+ static void __init input_apanel_init(void) {}
+diff --git a/drivers/platform/x86/dell-smo8800.c b/drivers/platform/x86/dell-smo8800.c
+index 5cdb09cba077..bfcc1d1b9b96 100644
+--- a/drivers/platform/x86/dell-smo8800.c
++++ b/drivers/platform/x86/dell-smo8800.c
+@@ -198,6 +198,7 @@ static int smo8800_remove(struct acpi_device *device)
+ 	return 0;
+ }
+ 
++/* NOTE: Keep this list in sync with drivers/i2c/busses/i2c-i801.c */
+ static const struct acpi_device_id smo8800_ids[] = {
+ 	{ "SMO8800", 0 },
+ 	{ "SMO8801", 0 },
+-- 
+2.11.0
