@@ -1,196 +1,199 @@
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
-Subject: [PATCH v3] i2c: i801: Register optional lis3lv02d i2c device on Dell machines
-Date: Sun,  2 Jun 2019 15:20:03 +0200
-Message-ID: <20190602132003.1911-1-pali.rohar@gmail.com>
-References: <20180127133209.28995-1-pali.rohar@gmail.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: Re: [PATCH 09/22] docs: mark orphan documents as such
+Date: Mon, 3 Jun 2019 09:32:54 +0200
+Message-ID: <2891a08c-50b1-db33-0e96-740d45c5235f@c-s.fr>
+References: <cover.1559171394.git.mchehab+samsung@kernel.org>
+ <e0bf4e767dd5de9189e5993fbec2f4b1bafd2064.1559171394.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180127133209.28995-1-pali.rohar@gmail.com>
+In-Reply-To: <e0bf4e767dd5de9189e5993fbec2f4b1bafd2064.1559171394.git.mchehab+samsung@kernel.org>
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean Delvare <jdelvare@suse.com>, Wolfram Sang <wsa@the-dreams.de>, =?UTF-8?q?Micha=C5=82=20K=C4=99pie=C5=84?= <kernel@kempniu.pl>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis.Kletnieks@vt.edu, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc: kvm@vger.kernel.org, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Paul Mackerras <paulus@samba.org>, linux-stm32@st-md-mailman.stormreply.com, Alexandre Torgue <alexandre.torgue@st.com>, Jonathan Corbet <corbet@lwn.net>, David Airlie <airlied@linux.ie>, Andrew Donnellan <ajd@linux.ibm.com>, linux-pm@vger.kernel.org, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Matan Ziv-Av <matan@svgalib.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Frederic
 List-Id: platform-driver-x86.vger.kernel.org
 
-Dell platform team told us that some (DMI whitelisted) Dell Latitude
-machines have ST microelectronics accelerometer at i2c address 0x29.
 
-Presence of that ST microelectronics accelerometer is verified by existence
-of SMO88xx ACPI device which represent that accelerometer. Unfortunately
-ACPI device does not specify i2c address.
 
-This patch registers lis3lv02d device for selected Dell Latitude machines
-at i2c address 0x29 after detection. And for Dell Vostro V131 machine at
-i2c address 0x1d which was manually detected.
+Le 30/05/2019 à 01:23, Mauro Carvalho Chehab a écrit :
+> Sphinx doesn't like orphan documents:
+> 
+>      Documentation/accelerators/ocxl.rst: WARNING: document isn't included in any toctree
+>      Documentation/arm/stm32/overview.rst: WARNING: document isn't included in any toctree
+>      Documentation/arm/stm32/stm32f429-overview.rst: WARNING: document isn't included in any toctree
+>      Documentation/arm/stm32/stm32f746-overview.rst: WARNING: document isn't included in any toctree
+>      Documentation/arm/stm32/stm32f769-overview.rst: WARNING: document isn't included in any toctree
+>      Documentation/arm/stm32/stm32h743-overview.rst: WARNING: document isn't included in any toctree
+>      Documentation/arm/stm32/stm32mp157-overview.rst: WARNING: document isn't included in any toctree
+>      Documentation/gpu/msm-crash-dump.rst: WARNING: document isn't included in any toctree
+>      Documentation/interconnect/interconnect.rst: WARNING: document isn't included in any toctree
+>      Documentation/laptops/lg-laptop.rst: WARNING: document isn't included in any toctree
+>      Documentation/powerpc/isa-versions.rst: WARNING: document isn't included in any toctree
+>      Documentation/virtual/kvm/amd-memory-encryption.rst: WARNING: document isn't included in any toctree
+>      Documentation/virtual/kvm/vcpu-requests.rst: WARNING: document isn't included in any toctree
+> 
+> So, while they aren't on any toctree, add :orphan: to them, in order
+> to silent this warning.
 
-Finally commit a7ae81952cda ("i2c: i801: Allow ACPI SystemIO OpRegion to
-conflict with PCI BAR") allowed to use i2c-i801 driver on Dell machines so
-lis3lv02d correctly initialize accelerometer.
+Are those files really not meant to be included in a toctree ?
 
-Tested on Dell Latitude E6440.
+Shouldn't we include them in the relevant toctree instead of just 
+shutting up Sphinx warnings ?
 
-Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+Christophe
 
----
-Changes since v2:
- * Use explicit list of SMOxx ACPI devices
-
-Changes since v1:
- * Added Dell Vostro V131 based on Michał Kępień testing
- * Changed DMI product structure to include also i2c address
----
- drivers/i2c/busses/i2c-i801.c       | 118 ++++++++++++++++++++++++++++++++++++
- drivers/platform/x86/dell-smo8800.c |   1 +
- 2 files changed, 119 insertions(+)
-
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index ac7f7817dc89..2ac8ff41cc24 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -1134,6 +1134,121 @@ static void dmi_check_onboard_devices(const struct dmi_header *dm, void *adap)
- 	}
- }
- 
-+/* NOTE: Keep this list in sync with drivers/platform/x86/dell-smo8800.c */
-+static const struct acpi_device_id acpi_smo8800_ids[] = {
-+	{ "SMO8800", 0 },
-+	{ "SMO8801", 0 },
-+	{ "SMO8810", 0 },
-+	{ "SMO8811", 0 },
-+	{ "SMO8820", 0 },
-+	{ "SMO8821", 0 },
-+	{ "SMO8830", 0 },
-+	{ "SMO8831", 0 },
-+};
-+
-+static acpi_status check_acpi_smo88xx_device(acpi_handle obj_handle,
-+					     u32 nesting_level,
-+					     void *context,
-+					     void **return_value)
-+{
-+	struct acpi_device_info *info;
-+	acpi_status status;
-+	char *hid;
-+	int i;
-+
-+	status = acpi_get_object_info(obj_handle, &info);
-+	if (!ACPI_SUCCESS(status) || !(info->valid & ACPI_VALID_HID))
-+		return AE_OK;
-+
-+	hid = info->hardware_id.string;
-+	if (!hid)
-+		return AE_OK;
-+
-+	for (i = 0; i < ARRAY_SIZE(acpi_smo8800_ids); ++i) {
-+		if (strcmp(hid, acpi_smo8800_ids[i].id) == 0) {
-+			*((bool *)return_value) = true;
-+			return AE_CTRL_TERMINATE;
-+		}
-+	}
-+
-+	return AE_OK;
-+
-+}
-+
-+static bool is_dell_system_with_lis3lv02d(void)
-+{
-+	bool found;
-+	acpi_status status;
-+	const char *vendor;
-+
-+	vendor = dmi_get_system_info(DMI_SYS_VENDOR);
-+	if (strcmp(vendor, "Dell Inc.") != 0)
-+		return false;
-+
-+	/*
-+	 * Check that ACPI device SMO88xx exists and is enabled. That ACPI
-+	 * device represent our ST microelectronics lis3lv02d accelerometer but
-+	 * unfortunately without any other information (like i2c address).
-+	 */
-+	found = false;
-+	status = acpi_get_devices(NULL, check_acpi_smo88xx_device, NULL,
-+				  (void **)&found);
-+	if (!ACPI_SUCCESS(status) || !found)
-+		return false;
-+
-+	return true;
-+}
-+
-+/*
-+ * Accelerometer's i2c address is not specified in DMI nor ACPI,
-+ * so it is needed to define mapping table based on DMI product names.
-+ */
-+static struct {
-+	const char *dmi_product_name;
-+	unsigned short i2c_addr;
-+} dell_lis3lv02d_devices[] = {
-+	/*
-+	 * Dell platform team told us that these Latitude devices have
-+	 * ST microelectronics accelerometer at i2c address 0x29.
-+	 */
-+	{ "Latitude E5250",     0x29 },
-+	{ "Latitude E5450",     0x29 },
-+	{ "Latitude E5550",     0x29 },
-+	{ "Latitude E6440",     0x29 },
-+	{ "Latitude E6440 ATG", 0x29 },
-+	{ "Latitude E6540",     0x29 },
-+	/*
-+	 * Additional individual entries were added after verification.
-+	 */
-+	{ "Vostro V131",        0x1d },
-+};
-+
-+static void register_dell_lis3lv02d_i2c_device(struct i801_priv *priv)
-+{
-+	struct i2c_board_info info;
-+	const char *dmi_product_name;
-+	int i;
-+
-+	dmi_product_name = dmi_get_system_info(DMI_PRODUCT_NAME);
-+	for (i = 0; i < ARRAY_SIZE(dell_lis3lv02d_devices); ++i) {
-+		if (strcmp(dmi_product_name,
-+			   dell_lis3lv02d_devices[i].dmi_product_name) == 0)
-+			break;
-+	}
-+
-+	if (i == ARRAY_SIZE(dell_lis3lv02d_devices)) {
-+		dev_warn(&priv->pci_dev->dev,
-+			 "Accelerometer lis3lv02d is present on i2c bus but its"
-+			 " i2c address is unknown, skipping registration...\n");
-+		return;
-+	}
-+
-+	memset(&info, 0, sizeof(struct i2c_board_info));
-+	info.addr = dell_lis3lv02d_devices[i].i2c_addr;
-+	strlcpy(info.type, "lis3lv02d", I2C_NAME_SIZE);
-+	i2c_new_device(&priv->adapter, &info);
-+}
-+
- /* Register optional slaves */
- static void i801_probe_optional_slaves(struct i801_priv *priv)
- {
-@@ -1152,6 +1267,9 @@ static void i801_probe_optional_slaves(struct i801_priv *priv)
- 
- 	if (dmi_name_in_vendors("FUJITSU"))
- 		dmi_walk(dmi_check_onboard_devices, &priv->adapter);
-+
-+	if (is_dell_system_with_lis3lv02d())
-+		register_dell_lis3lv02d_i2c_device(priv);
- }
- #else
- static void __init input_apanel_init(void) {}
-diff --git a/drivers/platform/x86/dell-smo8800.c b/drivers/platform/x86/dell-smo8800.c
-index 5cdb09cba077..bfcc1d1b9b96 100644
---- a/drivers/platform/x86/dell-smo8800.c
-+++ b/drivers/platform/x86/dell-smo8800.c
-@@ -198,6 +198,7 @@ static int smo8800_remove(struct acpi_device *device)
- 	return 0;
- }
- 
-+/* NOTE: Keep this list in sync with drivers/i2c/busses/i2c-i801.c */
- static const struct acpi_device_id smo8800_ids[] = {
- 	{ "SMO8800", 0 },
- 	{ "SMO8801", 0 },
--- 
-2.11.0
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>   Documentation/accelerators/ocxl.rst                 | 2 ++
+>   Documentation/arm/stm32/overview.rst                | 2 ++
+>   Documentation/arm/stm32/stm32f429-overview.rst      | 2 ++
+>   Documentation/arm/stm32/stm32f746-overview.rst      | 2 ++
+>   Documentation/arm/stm32/stm32f769-overview.rst      | 2 ++
+>   Documentation/arm/stm32/stm32h743-overview.rst      | 2 ++
+>   Documentation/arm/stm32/stm32mp157-overview.rst     | 2 ++
+>   Documentation/gpu/msm-crash-dump.rst                | 2 ++
+>   Documentation/interconnect/interconnect.rst         | 2 ++
+>   Documentation/laptops/lg-laptop.rst                 | 2 ++
+>   Documentation/powerpc/isa-versions.rst              | 2 ++
+>   Documentation/virtual/kvm/amd-memory-encryption.rst | 2 ++
+>   Documentation/virtual/kvm/vcpu-requests.rst         | 2 ++
+>   13 files changed, 26 insertions(+)
+> 
+> diff --git a/Documentation/accelerators/ocxl.rst b/Documentation/accelerators/ocxl.rst
+> index 14cefc020e2d..b1cea19a90f5 100644
+> --- a/Documentation/accelerators/ocxl.rst
+> +++ b/Documentation/accelerators/ocxl.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   ========================================================
+>   OpenCAPI (Open Coherent Accelerator Processor Interface)
+>   ========================================================
+> diff --git a/Documentation/arm/stm32/overview.rst b/Documentation/arm/stm32/overview.rst
+> index 85cfc8410798..f7e734153860 100644
+> --- a/Documentation/arm/stm32/overview.rst
+> +++ b/Documentation/arm/stm32/overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   ========================
+>   STM32 ARM Linux Overview
+>   ========================
+> diff --git a/Documentation/arm/stm32/stm32f429-overview.rst b/Documentation/arm/stm32/stm32f429-overview.rst
+> index 18feda97f483..65bbb1c3b423 100644
+> --- a/Documentation/arm/stm32/stm32f429-overview.rst
+> +++ b/Documentation/arm/stm32/stm32f429-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   STM32F429 Overview
+>   ==================
+>   
+> diff --git a/Documentation/arm/stm32/stm32f746-overview.rst b/Documentation/arm/stm32/stm32f746-overview.rst
+> index b5f4b6ce7656..42d593085015 100644
+> --- a/Documentation/arm/stm32/stm32f746-overview.rst
+> +++ b/Documentation/arm/stm32/stm32f746-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   STM32F746 Overview
+>   ==================
+>   
+> diff --git a/Documentation/arm/stm32/stm32f769-overview.rst b/Documentation/arm/stm32/stm32f769-overview.rst
+> index 228656ced2fe..f6adac862b17 100644
+> --- a/Documentation/arm/stm32/stm32f769-overview.rst
+> +++ b/Documentation/arm/stm32/stm32f769-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   STM32F769 Overview
+>   ==================
+>   
+> diff --git a/Documentation/arm/stm32/stm32h743-overview.rst b/Documentation/arm/stm32/stm32h743-overview.rst
+> index 3458dc00095d..c525835e7473 100644
+> --- a/Documentation/arm/stm32/stm32h743-overview.rst
+> +++ b/Documentation/arm/stm32/stm32h743-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   STM32H743 Overview
+>   ==================
+>   
+> diff --git a/Documentation/arm/stm32/stm32mp157-overview.rst b/Documentation/arm/stm32/stm32mp157-overview.rst
+> index 62e176d47ca7..2c52cd020601 100644
+> --- a/Documentation/arm/stm32/stm32mp157-overview.rst
+> +++ b/Documentation/arm/stm32/stm32mp157-overview.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   STM32MP157 Overview
+>   ===================
+>   
+> diff --git a/Documentation/gpu/msm-crash-dump.rst b/Documentation/gpu/msm-crash-dump.rst
+> index 757cd257e0d8..240ef200f76c 100644
+> --- a/Documentation/gpu/msm-crash-dump.rst
+> +++ b/Documentation/gpu/msm-crash-dump.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   =====================
+>   MSM Crash Dump Format
+>   =====================
+> diff --git a/Documentation/interconnect/interconnect.rst b/Documentation/interconnect/interconnect.rst
+> index c3e004893796..56e331dab70e 100644
+> --- a/Documentation/interconnect/interconnect.rst
+> +++ b/Documentation/interconnect/interconnect.rst
+> @@ -1,5 +1,7 @@
+>   .. SPDX-License-Identifier: GPL-2.0
+>   
+> +:orphan:
+> +
+>   =====================================
+>   GENERIC SYSTEM INTERCONNECT SUBSYSTEM
+>   =====================================
+> diff --git a/Documentation/laptops/lg-laptop.rst b/Documentation/laptops/lg-laptop.rst
+> index aa503ee9b3bc..f2c2ffe31101 100644
+> --- a/Documentation/laptops/lg-laptop.rst
+> +++ b/Documentation/laptops/lg-laptop.rst
+> @@ -1,5 +1,7 @@
+>   .. SPDX-License-Identifier: GPL-2.0+
+>   
+> +:orphan:
+> +
+>   LG Gram laptop extra features
+>   =============================
+>   
+> diff --git a/Documentation/powerpc/isa-versions.rst b/Documentation/powerpc/isa-versions.rst
+> index 812e20cc898c..66c24140ebf1 100644
+> --- a/Documentation/powerpc/isa-versions.rst
+> +++ b/Documentation/powerpc/isa-versions.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   CPU to ISA Version Mapping
+>   ==========================
+>   
+> diff --git a/Documentation/virtual/kvm/amd-memory-encryption.rst b/Documentation/virtual/kvm/amd-memory-encryption.rst
+> index 659bbc093b52..33d697ab8a58 100644
+> --- a/Documentation/virtual/kvm/amd-memory-encryption.rst
+> +++ b/Documentation/virtual/kvm/amd-memory-encryption.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   ======================================
+>   Secure Encrypted Virtualization (SEV)
+>   ======================================
+> diff --git a/Documentation/virtual/kvm/vcpu-requests.rst b/Documentation/virtual/kvm/vcpu-requests.rst
+> index 5feb3706a7ae..c1807a1b92e6 100644
+> --- a/Documentation/virtual/kvm/vcpu-requests.rst
+> +++ b/Documentation/virtual/kvm/vcpu-requests.rst
+> @@ -1,3 +1,5 @@
+> +:orphan:
+> +
+>   =================
+>   KVM VCPU Requests
+>   =================
+> 
