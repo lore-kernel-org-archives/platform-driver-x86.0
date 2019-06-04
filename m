@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 35/60] platform/x86: pmc_atom: Add several Beckhoff Automation boards to critclk_systems DMI table
-Date: Tue,  4 Jun 2019 19:21:45 -0400
-Message-ID: <20190604232212.6753-35-sashal@kernel.org>
-References: <20190604232212.6753-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 23/36] platform/x86: pmc_atom: Add several Beckhoff Automation boards to critclk_systems DMI table
+Date: Tue,  4 Jun 2019 19:23:18 -0400
+Message-ID: <20190604232333.7185-23-sashal@kernel.org>
+References: <20190604232333.7185-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190604232333.7185-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
