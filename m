@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 22/36] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to critclk_systems DMI table
-Date: Tue,  4 Jun 2019 19:23:17 -0400
-Message-ID: <20190604232333.7185-22-sashal@kernel.org>
-References: <20190604232333.7185-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 34/60] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to critclk_systems DMI table
+Date: Tue,  4 Jun 2019 19:21:44 -0400
+Message-ID: <20190604232212.6753-34-sashal@kernel.org>
+References: <20190604232212.6753-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190604232333.7185-1-sashal@kernel.org>
+In-Reply-To: <20190604232212.6753-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Hans de Goede <hdegoede@redhat.com>, Semyon Verchenko <semverchenko@factor-ts.ru>, Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
