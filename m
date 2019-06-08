@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 17/49] efi/x86/Add missing error handling to old_memmap 1:1 mapping code
-Date: Sat,  8 Jun 2019 07:41:58 -0400
-Message-ID: <20190608114232.8731-17-sashal@kernel.org>
-References: <20190608114232.8731-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 25/70] efi/x86/Add missing error handling to old_memmap 1:1 mapping code
+Date: Sat,  8 Jun 2019 07:39:04 -0400
+Message-ID: <20190608113950.8033-25-sashal@kernel.org>
+References: <20190608113950.8033-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
+In-Reply-To: <20190608113950.8033-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Gen Zhang <blackgod016574@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Rob Bradford <robert.bradford@intel.com>, Thomas Gleixner <tglx@linutronix.de>, linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
@@ -48,10 +48,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 9061babfbc83..353019d4e6c9 100644
+index e1cb01a22fa8..a7189a3b4d70 100644
 --- a/arch/x86/platform/efi/efi.c
 +++ b/arch/x86/platform/efi/efi.c
-@@ -86,6 +86,8 @@ static efi_status_t __init phys_efi_set_virtual_address_map(
+@@ -85,6 +85,8 @@ static efi_status_t __init phys_efi_set_virtual_address_map(
  	pgd_t *save_pgd;
  
  	save_pgd = efi_call_phys_prolog();
@@ -61,7 +61,7 @@ index 9061babfbc83..353019d4e6c9 100644
  	/* Disable interrupts around EFI calls: */
  	local_irq_save(flags);
 diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index ee5d08f25ce4..dfc809b31c7c 100644
+index cf0347f61b21..08ce8177c3af 100644
 --- a/arch/x86/platform/efi/efi_64.c
 +++ b/arch/x86/platform/efi/efi_64.c
 @@ -84,13 +84,15 @@ pgd_t * __init efi_call_phys_prolog(void)
