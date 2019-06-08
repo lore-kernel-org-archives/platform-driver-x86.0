@@ -1,69 +1,99 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v5] i2c: i801: Register optional lis3lv02d I2C device on
- Dell machines
-Date: Sat, 8 Jun 2019 00:15:58 +0200
-Message-ID: <20190607221558.GB869@kunai>
-References: <20190606181845.14091-1-pali.rohar@gmail.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 17/49] efi/x86/Add missing error handling to old_memmap 1:1 mapping code
+Date: Sat,  8 Jun 2019 07:41:58 -0400
+Message-ID: <20190608114232.8731-17-sashal@kernel.org>
+References: <20190608114232.8731-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="A6N2fC+uXW/VQSAv"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190606181845.14091-1-pali.rohar@gmail.com>
+In-Reply-To: <20190608114232.8731-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Jean Delvare <jdelvare@suse.com>, =?utf-8?B?TWljaGHFgiBLxJlwaWXFhA==?= <kernel@kempniu.pl>, Steven Honeyman <stevenhoneyman@gmail.com>, Valdis.Kletnieks@vt.edu, Jochen Eisinger <jochen@penguin-breeder.org>, Gabriele Mazzotta <gabriele.mzt@gmail.com>, Andy Lutomirski <luto@kernel.org>, Mario_Limonciello@dell.com, Alex Hung <alex.hung@canonical.com>, Takashi Iwai <tiwai@suse.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Gen Zhang <blackgod016574@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Rob Bradford <robert.bradford@intel.com>, Thomas Gleixner <tglx@linutronix.de>, linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+From: Gen Zhang <blackgod016574@gmail.com>
 
---A6N2fC+uXW/VQSAv
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 4e78921ba4dd0aca1cc89168f45039add4183f8e ]
 
-On Thu, Jun 06, 2019 at 08:18:45PM +0200, Pali Roh=C3=A1r wrote:
-> Dell platform team told us that some (DMI whitelisted) Dell Latitude
-> machines have ST microelectronics accelerometer at I2C address 0x29.
->=20
-> Presence of that ST microelectronics accelerometer is verified by existen=
-ce
-> of SMO88xx ACPI device which represent that accelerometer. Unfortunately
-> ACPI device does not specify I2C address.
->=20
-> This patch registers lis3lv02d device for selected Dell Latitude machines
-> at I2C address 0x29 after detection. And for Dell Vostro V131 machine at
-> I2C address 0x1d which was manually detected.
->=20
-> Finally commit a7ae81952cda ("i2c: i801: Allow ACPI SystemIO OpRegion to
-> conflict with PCI BAR") allowed to use i2c-i801 driver on Dell machines so
-> lis3lv02d correctly initialize accelerometer.
->=20
-> Tested on Dell Latitude E6440.
->=20
-> Signed-off-by: Pali Roh=C3=A1r <pali.rohar@gmail.com>
->=20
+The old_memmap flow in efi_call_phys_prolog() performs numerous memory
+allocations, and either does not check for failure at all, or it does
+but fails to propagate it back to the caller, which may end up calling
+into the firmware with an incomplete 1:1 mapping.
 
-Applied to for-next, thanks for keeping at it!
+So let's fix this by returning NULL from efi_call_phys_prolog() on
+memory allocation failures only, and by handling this condition in the
+caller. Also, clean up any half baked sets of page tables that we may
+have created before returning with a NULL return value.
 
+Note that any failure at this level will trigger a panic() two levels
+up, so none of this makes a huge difference, but it is a nice cleanup
+nonetheless.
 
---A6N2fC+uXW/VQSAv
-Content-Type: application/pgp-signature; name="signature.asc"
+[ardb: update commit log, add efi_call_phys_epilog() call on error path]
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rob Bradford <robert.bradford@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190525112559.7917-2-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/platform/efi/efi.c    | 2 ++
+ arch/x86/platform/efi/efi_64.c | 9 ++++++---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlz64h4ACgkQFA3kzBSg
-KbYD+g//aii1FojuiA4U0z0/JO99KdQT+W2HhcekFjKUQnnnsgLBw18QuP9AuaMC
-NG9HPCOP5o+7Q4kp85NEEKtbtLjNavO7vnfKydPbijv/ekNapQ+ZghA85ZEKmdX2
-b+D1vTQuHCcIueVJhJEnMCfWUo+MOKTyeXQL01piA8r8JvcQcbp3I9JWs4ul/ihN
-ggNnS3uJreXwMyM/Aulbhj3Ql9CVYZuhOswSI1BnMEtPdN9j/Y27yceWUF6lB7jw
-5QgBBmmFTvNTgQ2Rv7gZt+gr7jO+kYSkfMSXf0gMOzSFhjXsbHmSks7hNUuWVmkL
-L6VB9Lg1Iyl0Km1atYD2q7nA/8WCQuE/8AyidUQV+HxvEebypCdlj3y+baT33nbr
-VD16iosdzxGqNZpTalSzG/+QHvfrMQiem1tovZjhj/icW/o5khK53AGiLN1TFZVh
-S/o9R1SqiV5eLrShMZJp9RJSsVvoFOw3HG8mWjTZltYLwwfefmmITGJ8TDsjH3oV
-nyIQv2Ypo/6HCZGQ63x3TbK+OaQpdZJ1z3Rmbts6yKwJpE+nLPu6pZ0afFIYh39k
-ur0RZbSnvjAtHLNgQ1nU/84T+O+Fxn7K1qw/KpLZJaQkQM/qpxTsYPJNwk1F718/
-D30urkkl+PFQq68JZ3MU7wx3UxP+7V6wAd1B48Nvj9vFnPfif8E=
-=Ntf9
------END PGP SIGNATURE-----
-
---A6N2fC+uXW/VQSAv--
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 9061babfbc83..353019d4e6c9 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -86,6 +86,8 @@ static efi_status_t __init phys_efi_set_virtual_address_map(
+ 	pgd_t *save_pgd;
+ 
+ 	save_pgd = efi_call_phys_prolog();
++	if (!save_pgd)
++		return EFI_ABORTED;
+ 
+ 	/* Disable interrupts around EFI calls: */
+ 	local_irq_save(flags);
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index ee5d08f25ce4..dfc809b31c7c 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -84,13 +84,15 @@ pgd_t * __init efi_call_phys_prolog(void)
+ 
+ 	if (!efi_enabled(EFI_OLD_MEMMAP)) {
+ 		efi_switch_mm(&efi_mm);
+-		return NULL;
++		return efi_mm.pgd;
+ 	}
+ 
+ 	early_code_mapping_set_exec(1);
+ 
+ 	n_pgds = DIV_ROUND_UP((max_pfn << PAGE_SHIFT), PGDIR_SIZE);
+ 	save_pgd = kmalloc_array(n_pgds, sizeof(*save_pgd), GFP_KERNEL);
++	if (!save_pgd)
++		return NULL;
+ 
+ 	/*
+ 	 * Build 1:1 identity mapping for efi=old_map usage. Note that
+@@ -138,10 +140,11 @@ pgd_t * __init efi_call_phys_prolog(void)
+ 		pgd_offset_k(pgd * PGDIR_SIZE)->pgd &= ~_PAGE_NX;
+ 	}
+ 
+-out:
+ 	__flush_tlb_all();
+-
+ 	return save_pgd;
++out:
++	efi_call_phys_epilog(save_pgd);
++	return NULL;
+ }
+ 
+ void __init efi_call_phys_epilog(pgd_t *save_pgd)
+-- 
+2.20.1
