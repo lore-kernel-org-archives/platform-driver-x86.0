@@ -1,110 +1,42 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH AUTOSEL 4.19 17/49] efi/x86/Add missing error handling to
- old_memmap 1:1 mapping code
-Date: Sun, 9 Jun 2019 20:14:29 +0200
-Message-ID: <CAKv+Gu9ZJ42=NJWDX4+DgkMWaSEakNw-yYiUtsUE48D-V6=7-w@mail.gmail.com>
-References: <20190608114232.8731-1-sashal@kernel.org> <20190608114232.8731-17-sashal@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 06/20] docs: mark orphan documents as such
+Date: Tue, 11 Jun 2019 19:52:04 +0300
+Message-ID: <CAHp75VfTNJOGZx-PoUXLRvzghqf6bVUdJ+yFjE9hNtDLCQ1=UA@mail.gmail.com>
+References: <ff457774d46d96e8fe56b45409aba39d87a8672a.1559933665.git.mchehab+samsung@kernel.org>
+ <0bea1c7c4fc06c7edabbf3185c0cbbc6e85eafd0.1559933665.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190608114232.8731-17-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Sasha Levin <sashal@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Gen Zhang <blackgod016574@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Rob Bradford <robert.bradford@intel.com>, Thomas Gleixner <tglx@linutronix.de>, linux-efi <linux-efi@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, platform-driver-x86@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0bea1c7c4fc06c7edabbf3185c0cbbc6e85eafd0.1559933665.git.mchehab+samsung@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Frederic Barrat <fbarrat@linux.ibm.com>, Andrew Donnellan <ajd@linux.ibm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Georgi Djakov <georgi.djakov@linaro.org>, Matan Ziv-Av <matan@svgalib.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, 8 Jun 2019 at 13:43, Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Gen Zhang <blackgod016574@gmail.com>
->
-> [ Upstream commit 4e78921ba4dd0aca1cc89168f45039add4183f8e ]
->
-> The old_memmap flow in efi_call_phys_prolog() performs numerous memory
-> allocations, and either does not check for failure at all, or it does
-> but fails to propagate it back to the caller, which may end up calling
-> into the firmware with an incomplete 1:1 mapping.
->
-> So let's fix this by returning NULL from efi_call_phys_prolog() on
-> memory allocation failures only, and by handling this condition in the
-> caller. Also, clean up any half baked sets of page tables that we may
-> have created before returning with a NULL return value.
->
-> Note that any failure at this level will trigger a panic() two levels
-> up, so none of this makes a huge difference, but it is a nice cleanup
-> nonetheless.
->
-> [ardb: update commit log, add efi_call_phys_epilog() call on error path]
->
-> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Rob Bradford <robert.bradford@intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-efi@vger.kernel.org
-> Link: http://lkml.kernel.org/r/20190525112559.7917-2-ard.biesheuvel@linaro.org
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+On Fri, Jun 7, 2019 at 10:04 PM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
+> Sphinx doesn't like orphan documents:
 
-This was already discussed in the thread that proposed this patch for
-stable: please don't queue this right now, the patches are more likely
-to harm than hurt, and they certainly don't fix a security
-vulnerability, as has been claimed.
+>     Documentation/laptops/lg-laptop.rst: WARNING: document isn't included in any toctree
 
+>  Documentation/laptops/lg-laptop.rst             | 2 ++
 
-> ---
->  arch/x86/platform/efi/efi.c    | 2 ++
->  arch/x86/platform/efi/efi_64.c | 9 ++++++---
->  2 files changed, 8 insertions(+), 3 deletions(-)
+> diff --git a/Documentation/laptops/lg-laptop.rst b/Documentation/laptops/lg-laptop.rst
+> index aa503ee9b3bc..f2c2ffe31101 100644
+> --- a/Documentation/laptops/lg-laptop.rst
+> +++ b/Documentation/laptops/lg-laptop.rst
+> @@ -1,5 +1,7 @@
+>  .. SPDX-License-Identifier: GPL-2.0+
 >
-> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> index 9061babfbc83..353019d4e6c9 100644
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -86,6 +86,8 @@ static efi_status_t __init phys_efi_set_virtual_address_map(
->         pgd_t *save_pgd;
+> +:orphan:
+> +
+>  LG Gram laptop extra features
+>  =============================
 >
->         save_pgd = efi_call_phys_prolog();
-> +       if (!save_pgd)
-> +               return EFI_ABORTED;
->
->         /* Disable interrupts around EFI calls: */
->         local_irq_save(flags);
-> diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-> index ee5d08f25ce4..dfc809b31c7c 100644
-> --- a/arch/x86/platform/efi/efi_64.c
-> +++ b/arch/x86/platform/efi/efi_64.c
-> @@ -84,13 +84,15 @@ pgd_t * __init efi_call_phys_prolog(void)
->
->         if (!efi_enabled(EFI_OLD_MEMMAP)) {
->                 efi_switch_mm(&efi_mm);
-> -               return NULL;
-> +               return efi_mm.pgd;
->         }
->
->         early_code_mapping_set_exec(1);
->
->         n_pgds = DIV_ROUND_UP((max_pfn << PAGE_SHIFT), PGDIR_SIZE);
->         save_pgd = kmalloc_array(n_pgds, sizeof(*save_pgd), GFP_KERNEL);
-> +       if (!save_pgd)
-> +               return NULL;
->
->         /*
->          * Build 1:1 identity mapping for efi=old_map usage. Note that
-> @@ -138,10 +140,11 @@ pgd_t * __init efi_call_phys_prolog(void)
->                 pgd_offset_k(pgd * PGDIR_SIZE)->pgd &= ~_PAGE_NX;
->         }
->
-> -out:
->         __flush_tlb_all();
-> -
->         return save_pgd;
-> +out:
-> +       efi_call_phys_epilog(save_pgd);
-> +       return NULL;
->  }
->
->  void __init efi_call_phys_epilog(pgd_t *save_pgd)
-> --
-> 2.20.1
->
+
+Can we rather create a toc tree there?
+It was a first document in reST format in that folder.
+
+-- 
+With Best Regards,
+Andy Shevchenko
