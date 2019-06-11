@@ -1,55 +1,28 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: How to inject fwnode/oftree/acpi data by platform driver ?
-Date: Tue, 11 Jun 2019 21:44:23 +0300
-Message-ID: <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
-References: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
+Subject: Re: linux-next: Tree for May 8 (drivers/platform/x86/intel_pmc_core_plat_drv.c)
+Date: Tue, 11 Jun 2019 22:06:15 +0300
+Message-ID: <CAHp75Ver=TNKxh8rdJs1xQYSLNsRLfEoFtcGG6hViug=cF6s_g@mail.gmail.com>
+References: <20190508173403.6088d0db@canb.auug.org.au> <fa0e68b2-b839-b187-150c-13391c197b99@infradead.org>
+ <CAHp75Veq2=XA124rG8urt3eVE3pcaUm0VdsV7Mxr9zjMpa7mjg@mail.gmail.com> <CACK8Z6F2v8nyUYcnOrkp81WfK2D2NEmK=pcWybn1annrtqRwew@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
+In-Reply-To: <CACK8Z6F2v8nyUYcnOrkp81WfK2D2NEmK=pcWybn1annrtqRwew@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>, "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Rajat Jain <rajatja@google.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Linux Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-+Cc: Heikki.
-Heikki, can you help here with swnodes?
+On Thu, May 9, 2019 at 2:15 AM Rajat Jain <rajatja@google.com> wrote:
 
-On Sat, Jun 1, 2019 at 5:17 PM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
+> OK, NP. Just to be sure I understand,
 >
-> Hi folks,
->
->
-> I'm looking for a way to inject fwnode data from a platform driver,
-> in order to initialize generic drivers w/ board specific configuration.
-> The idea is getting rid of passing driver specific pdata structs
-> (which, IIRC, seem to be deprecated).
->
-> An example usecase is the APUv2/3 board, which have things like gpios
-> wired to buttons and LEDs. The board can only be detected via DMI
-> string, no way to probe the platform devices - have to be initialized
-> explicitly (that's how I'm already doing it now).
->
-> The nicest way, IMHO, would be if I could just write some piece of DTS
-> and some fancy magic all the rest under the hood. Such thing doesn't
-> seem to exist yet. Does it make sense to implement that ? How could
-> we do it ?
->
-> Which other options do we have ?
->
-> Or should we just leave everything as it is and stick w/ pdata structs ?
->
->
-> thx
-> --mtx
->
-> --
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
+> 1) Please let me know if I should send in a fix (it would be
+> #include/linux/module.h and also add MODULE_LICENSE() I believe)?
+> 2) Would this be lined up for next version though?
 
-
+Resend a complete series based on the latest stuff we have in our
+for-next branch.
 
 -- 
 With Best Regards,
