@@ -1,37 +1,41 @@
-From: Christian Oder <me@myself5.de>
-Subject: [PATCH] platform/x86: touchscreen_dmi: Update Hi10 Air filter
-Date: Wed, 12 Jun 2019 14:40:53 +0200
-Message-ID: <20190612124053.119182-1-me@myself5.de>
+From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [Patch v2] x86/cpu: Add Ice Lake NNPI to Intel family
+Date: Wed, 12 Jun 2019 07:51:26 -0700
+Message-ID: <73eb1ba5-dc29-53ee-487d-d22700b874a1@intel.com>
+References: <20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com>
+ <20190612095233.GE9224@smile.fi.intel.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190612095233.GE9224@smile.fi.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Christian Oder <me@myself5.de>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, bp@suse.de, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux PM <linux-pm@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Turns out the Hi10 Air is built by multiple companies so using Hampoo
-as a filter is not enough to cover all variants.
+On 6/12/19 2:52 AM, Andy Shevchenko wrote:
+>>  #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
+>> +#define INTEL_FAM6_ICELAKE_NNPI		0x9D
+> What "I" stands for?
+> 
+> For me sounds like it's redundant here or something like NNP_DLI would be
+> better (because somewhere we have _NP as for Network Processor).
 
-This has been verified as working on the Hampoo and Morshow version.
+Let's not bikeshed this too much.  These things aren't used that widely
+and mostly they're just used for figuring out the processor generation.
+ It's exceedingly rare to have something like:
 
-Signed-off-by: Christian Oder <me@myself5.de>
----
- drivers/platform/x86/touchscreen_dmi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index b662cb2d7cd5..61e7c4987d0d 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -597,7 +597,8 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
- 		/* Chuwi Hi10 Air */
- 		.driver_data = (void *)&chuwi_hi10_air_data,
- 		.matches = {
--			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-+			DMI_MATCH(DMI_SYS_VENDOR, "CHUWI INNOVATION AND TECHNOLOGY(SHENZHEN)CO.LTD"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
- 			DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
- 		},
- 	},
--- 
-2.21.0
+	if (model == INTEL_FAM6_ICELAKE_MOBILE)
+		foo();
+	else if (model == INTEL_FAM6_ICELAKE_NNPI)
+		bar();
+
+where what you suggest would matter.
+
+Preserving the ability to google "ice lake nnpi" is pretty important, so
+preserving the Intel name makes a lot of sense here when possible.
+
+Do we *HAVE* an Ice Lake network processor?
