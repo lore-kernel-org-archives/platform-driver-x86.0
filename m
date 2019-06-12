@@ -1,109 +1,93 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH resend] platform/x86: asus-wmi: Only Tell EC the OS will handle display hotkeys from asus_nb_wmi
-Date: Wed, 12 Jun 2019 09:02:02 +0200
-Message-ID: <20190612070202.17502-1-hdegoede@redhat.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: How to inject fwnode/oftree/acpi data by platform driver ?
+Date: Wed, 12 Jun 2019 11:01:18 +0300
+Message-ID: <20190612080118.GA18301@kuha.fi.intel.com>
+References: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
+ <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc: LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Commit 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will
-handle the display off hotkey") causes the backlight to be permanently off
-on various EeePC laptop models using the eeepc-wmi driver (Asus EeePC
-1015BX, Asus EeePC 1025C).
+Hi,
 
-The asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL) call added
-by that commit is made conditional in this commit and only enabled in
-the quirk_entry structs in the asus-nb-wmi driver fixing the broken
-display / backlight on various EeePC laptop models.
+On Tue, Jun 11, 2019 at 09:44:23PM +0300, Andy Shevchenko wrote:
+> +Cc: Heikki.
+> Heikki, can you help here with swnodes?
+> 
+> On Sat, Jun 1, 2019 at 5:17 PM Enrico Weigelt, metux IT consult
+> <lkml@metux.net> wrote:
+> >
+> > Hi folks,
+> >
+> >
+> > I'm looking for a way to inject fwnode data from a platform driver,
+> > in order to initialize generic drivers w/ board specific configuration.
+> > The idea is getting rid of passing driver specific pdata structs
+> > (which, IIRC, seem to be deprecated).
+> >
+> > An example usecase is the APUv2/3 board, which have things like gpios
+> > wired to buttons and LEDs. The board can only be detected via DMI
+> > string, no way to probe the platform devices - have to be initialized
+> > explicitly (that's how I'm already doing it now).
+> >
+> > The nicest way, IMHO, would be if I could just write some piece of DTS
+> > and some fancy magic all the rest under the hood. Such thing doesn't
+> > seem to exist yet. Does it make sense to implement that ? How could
+> > we do it ?
+> >
+> > Which other options do we have ?
+> >
+> > Or should we just leave everything as it is and stick w/ pdata structs ?
 
-Cc: João Paulo Rechi Vita <jprvita@endlessm.com>
-Fixes: 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/asus-nb-wmi.c | 8 ++++++++
- drivers/platform/x86/asus-wmi.c    | 2 +-
- drivers/platform/x86/asus-wmi.h    | 1 +
- 3 files changed, 10 insertions(+), 1 deletion(-)
+The software nodes (drivers/base/swnode.c) were designed to supply
+fwnodes that describe devices in the same way DT does. The goal I had
+with the software nodes was exaclty to get rid of pdata, so they do
+sound like the thing you are looking for. If you check Rafael's latest
+linux-next branch [1], drivers/platform/x86/intel_cht_int33fe.c can be
+used as an example how to use the software nodes.
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 81642102bf65..8d9e30dbb5af 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -65,10 +65,12 @@ static bool asus_q500a_i8042_filter(unsigned char data, unsigned char str,
- 
- static struct quirk_entry quirk_asus_unknown = {
- 	.wapf = 0,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- static struct quirk_entry quirk_asus_q500a = {
- 	.i8042_filter = asus_q500a_i8042_filter,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- /*
-@@ -79,26 +81,32 @@ static struct quirk_entry quirk_asus_q500a = {
- static struct quirk_entry quirk_asus_x55u = {
- 	.wapf = 4,
- 	.wmi_backlight_power = true,
-+	.wmi_backlight_set_devstate = true,
- 	.no_display_toggle = true,
- };
- 
- static struct quirk_entry quirk_asus_wapf4 = {
- 	.wapf = 4,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- static struct quirk_entry quirk_asus_x200ca = {
- 	.wapf = 2,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- static struct quirk_entry quirk_asus_ux303ub = {
- 	.wmi_backlight_native = true,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- static struct quirk_entry quirk_asus_x550lb = {
-+	.wmi_backlight_set_devstate = true,
- 	.xusb2pr = 0x01D9,
- };
- 
- static struct quirk_entry quirk_asus_forceals = {
-+	.wmi_backlight_set_devstate = true,
- 	.wmi_force_als_set = true,
- };
- 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 3e4336025e8f..9b18a184e0aa 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2146,7 +2146,7 @@ static int asus_wmi_add(struct platform_device *pdev)
- 		err = asus_wmi_backlight_init(asus);
- 		if (err && err != -ENODEV)
- 			goto fail_backlight;
--	} else
-+	} else if (asus->driver->quirks->wmi_backlight_set_devstate)
- 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
- 
- 	if (asus_wmi_has_fnlock_key(asus)) {
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 0930be770688..4f31b68642a0 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -31,6 +31,7 @@ struct quirk_entry {
- 	bool store_backlight_power;
- 	bool wmi_backlight_power;
- 	bool wmi_backlight_native;
-+	bool wmi_backlight_set_devstate;
- 	bool wmi_force_als_set;
- 	int wapf;
- 	/*
+I think it's time to add documentation for the software nodes to the
+kernel, but I'll list here the features the software nodes have:
+
+- The software nodes are created independently from device entries.
+- Software nodes support hierarchy. Every software node has a pointer
+  to a parent software node.
+- Software nodes can have device properties.
+- Software nodes can have reference pointers to other software nodes
+  (outside of the hierarchy).
+
+Creating the software nodes from static description (struct
+software_node - available from Linux kernel v5.3 onwards) is
+straightforward. Once you have them, when you create your device
+entries (struct device), you can associate a software node with a
+device just like like any other fwnode:
+
+        device_initialize(&my_dev);
+        my_dev.parent = parent;
+        my_dev.fwnode = software_node_fwnode(&my_node);
+        ...
+        device_add(&my_device);
+
+After that, you can access all the information the software nodes
+supply to the device by using fwnode_* APIs from your driver, just
+like with ACPI or DT. Basically the entire fwnode_* API is now
+supported with softwarw nodes, except the device graph (fwnode_graph*)
+API.
+
+One final note. The hardware description must always primarily come
+from the system firmware. You only use software nodes if it's too
+late to influence what goes to the ACPI tables, or if using DTS is not
+an option.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=linux-next
+
+thanks,
+
 -- 
-2.21.0
+heikki
