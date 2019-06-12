@@ -1,71 +1,54 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 3/8] platform: x86: dell-laptop: no need to check return
- value of debugfs_create functions
-Date: Wed, 12 Jun 2019 14:47:13 +0200
-Message-ID: <20190612124713.GA27788@kroah.com>
-References: <20190612121258.19535-1-gregkh@linuxfoundation.org>
- <20190612121258.19535-3-gregkh@linuxfoundation.org>
- <20190612122105.miyyfkmae24kddwt@pali>
- <20190612123604.GB25718@kroah.com>
- <20190612124411.nbjslftjtc72a25v@pali>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Update Hi10 Air filter
+Date: Wed, 12 Jun 2019 14:55:18 +0200
+Message-ID: <736848fd-1c45-0bd9-bfd1-747c716bd953@redhat.com>
+References: <20190612124053.119182-1-me@myself5.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190612124411.nbjslftjtc72a25v@pali>
+In-Reply-To: <20190612124053.119182-1-me@myself5.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: dvhart@infradead.org, andy@infradead.org, Matthew Garrett <mjg59@srcf.ucam.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Christian Oder <me@myself5.de>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 12, 2019 at 02:44:11PM +0200, Pali Rohár wrote:
-> On Wednesday 12 June 2019 14:36:04 Greg Kroah-Hartman wrote:
-> > On Wed, Jun 12, 2019 at 02:21:05PM +0200, Pali Rohár wrote:
-> > > On Wednesday 12 June 2019 14:12:53 Greg Kroah-Hartman wrote:
-> > > > When calling debugfs functions, there is no need to ever check the
-> > > > return value.  The function can work or not, but the code logic should
-> > > > never do something different based on this.
-> > > > 
-> > > > Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-> > > > Cc: "Pali Rohár" <pali.rohar@gmail.com>
-> > > > Cc: Darren Hart <dvhart@infradead.org>
-> > > > Cc: Andy Shevchenko <andy@infradead.org>
-> > > > Cc: platform-driver-x86@vger.kernel.org
-> > > > Cc: linux-kernel@vger.kernel.org
-> > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > ---
-> > > >  drivers/platform/x86/dell-laptop.c | 5 ++---
-> > > >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-> > > > index a561f653cf13..94a2f259031c 100644
-> > > > --- a/drivers/platform/x86/dell-laptop.c
-> > > > +++ b/drivers/platform/x86/dell-laptop.c
-> > > > @@ -2176,9 +2176,8 @@ static int __init dell_init(void)
-> > > >  	kbd_led_init(&platform_device->dev);
-> > > >  
-> > > >  	dell_laptop_dir = debugfs_create_dir("dell_laptop", NULL);
-> > > > -	if (dell_laptop_dir != NULL)
-> > > > -		debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
-> > > > -				    &dell_debugfs_fops);
-> > > > +	debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
-> > > > +			    &dell_debugfs_fops);
-> > > 
-> > > Hi!
-> > > 
-> > > So... debugfs_create_dir() can return NULL, right?
-> > 
-> > Nope.
-> 
-> Yea, now I see implementation. It does not return NULL on error, but
-> rather ERR_PTR.
-> 
-> So dell_laptop_dir is always not-NULL. And that check was wrong.
-> 
-> You can add my
-> Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Hi,
 
-Thanks!
+On 12-06-19 14:40, Christian Oder wrote:
+> Turns out the Hi10 Air is built by multiple companies so using Hampoo
+> as a filter is not enough to cover all variants.
+> 
+> This has been verified as working on the Hampoo and Morshow version.
+> 
+> Signed-off-by: Christian Oder <me@myself5.de>
 
-greg k-h
+Patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+> ---
+>   drivers/platform/x86/touchscreen_dmi.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index b662cb2d7cd5..61e7c4987d0d 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -597,7 +597,8 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+>   		/* Chuwi Hi10 Air */
+>   		.driver_data = (void *)&chuwi_hi10_air_data,
+>   		.matches = {
+> -			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
+> +			DMI_MATCH(DMI_SYS_VENDOR, "CHUWI INNOVATION AND TECHNOLOGY(SHENZHEN)CO.LTD"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+>   			DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
+>   		},
+>   	},
+> 
