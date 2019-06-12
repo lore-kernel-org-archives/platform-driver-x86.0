@@ -1,93 +1,32 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: How to inject fwnode/oftree/acpi data by platform driver ?
-Date: Wed, 12 Jun 2019 11:01:18 +0300
-Message-ID: <20190612080118.GA18301@kuha.fi.intel.com>
-References: <c15a9872-4ad4-1b7e-e34f-14549b5b55eb@metux.net>
- <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [Patch v2] x86/cpu: Add Ice Lake NNPI to Intel family
+Date: Wed, 12 Jun 2019 12:52:33 +0300
+Message-ID: <20190612095233.GE9224@smile.fi.intel.com>
+References: <20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vc_FnSaqq_Xu_Y3uXBYY=HbGsthVOAqyt4c-dH7sRGVVw@mail.gmail.com>
+In-Reply-To: <20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc: LKML <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, bp@suse.de, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux PM <linux-pm@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Thu, Jun 06, 2019 at 06:54:19AM +0530, Rajneesh Bhardwaj wrote:
+> Add the CPUID model number of Ice Lake Neural Network Processor for Deep
+> Learning Inference (ICL-NNPI) to the Intel family list. Ice Lake NNPI uses
+> model number 0x9D and this will be documented in a future version of Intel
+> Software Development Manual.
 
-On Tue, Jun 11, 2019 at 09:44:23PM +0300, Andy Shevchenko wrote:
-> +Cc: Heikki.
-> Heikki, can you help here with swnodes?
-> 
-> On Sat, Jun 1, 2019 at 5:17 PM Enrico Weigelt, metux IT consult
-> <lkml@metux.net> wrote:
-> >
-> > Hi folks,
-> >
-> >
-> > I'm looking for a way to inject fwnode data from a platform driver,
-> > in order to initialize generic drivers w/ board specific configuration.
-> > The idea is getting rid of passing driver specific pdata structs
-> > (which, IIRC, seem to be deprecated).
-> >
-> > An example usecase is the APUv2/3 board, which have things like gpios
-> > wired to buttons and LEDs. The board can only be detected via DMI
-> > string, no way to probe the platform devices - have to be initialized
-> > explicitly (that's how I'm already doing it now).
-> >
-> > The nicest way, IMHO, would be if I could just write some piece of DTS
-> > and some fancy magic all the rest under the hood. Such thing doesn't
-> > seem to exist yet. Does it make sense to implement that ? How could
-> > we do it ?
-> >
-> > Which other options do we have ?
-> >
-> > Or should we just leave everything as it is and stick w/ pdata structs ?
+>  #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
+> +#define INTEL_FAM6_ICELAKE_NNPI		0x9D
 
-The software nodes (drivers/base/swnode.c) were designed to supply
-fwnodes that describe devices in the same way DT does. The goal I had
-with the software nodes was exaclty to get rid of pdata, so they do
-sound like the thing you are looking for. If you check Rafael's latest
-linux-next branch [1], drivers/platform/x86/intel_cht_int33fe.c can be
-used as an example how to use the software nodes.
+What "I" stands for?
 
-I think it's time to add documentation for the software nodes to the
-kernel, but I'll list here the features the software nodes have:
-
-- The software nodes are created independently from device entries.
-- Software nodes support hierarchy. Every software node has a pointer
-  to a parent software node.
-- Software nodes can have device properties.
-- Software nodes can have reference pointers to other software nodes
-  (outside of the hierarchy).
-
-Creating the software nodes from static description (struct
-software_node - available from Linux kernel v5.3 onwards) is
-straightforward. Once you have them, when you create your device
-entries (struct device), you can associate a software node with a
-device just like like any other fwnode:
-
-        device_initialize(&my_dev);
-        my_dev.parent = parent;
-        my_dev.fwnode = software_node_fwnode(&my_node);
-        ...
-        device_add(&my_device);
-
-After that, you can access all the information the software nodes
-supply to the device by using fwnode_* APIs from your driver, just
-like with ACPI or DT. Basically the entire fwnode_* API is now
-supported with softwarw nodes, except the device graph (fwnode_graph*)
-API.
-
-One final note. The hardware description must always primarily come
-from the system firmware. You only use software nodes if it's too
-late to influence what goes to the ACPI tables, or if using DTS is not
-an option.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=linux-next
-
-thanks,
+For me sounds like it's redundant here or something like NNP_DLI would be
+better (because somewhere we have _NP as for Network Processor).
 
 -- 
-heikki
+With Best Regards,
+Andy Shevchenko
