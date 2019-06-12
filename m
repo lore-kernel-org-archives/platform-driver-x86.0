@@ -1,7 +1,7 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 6/8] platform: x86: pmc_atom: no need to check return value of debugfs_create functions
-Date: Wed, 12 Jun 2019 14:12:56 +0200
-Message-ID: <20190612121258.19535-6-gregkh@linuxfoundation.org>
+Subject: [PATCH 7/8] platform: x86: intel_pmc: no need to check return value of debugfs_create functions
+Date: Wed, 12 Jun 2019 14:12:57 +0200
+Message-ID: <20190612121258.19535-7-gregkh@linuxfoundation.org>
 References: <20190612121258.19535-1-gregkh@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,91 +9,80 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190612121258.19535-1-gregkh@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dvhart@infradead.org, andy@infradead.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 When calling debugfs functions, there is no need to ever check the
 return value.  The function can work or not, but the code logic should
 never do something different based on this.
 
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: Vishwanath Somayaji <vishwanath.somayaji@intel.com>
 Cc: Darren Hart <dvhart@infradead.org>
 Cc: Andy Shevchenko <andy@infradead.org>
 Cc: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/platform/x86/pmc_atom.c | 43 ++++++++-------------------------
- 1 file changed, 10 insertions(+), 33 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 18 +++---------------
+ 1 file changed, 3 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index b1d804376237..2104e1ad38d9 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -350,45 +350,24 @@ static int pmc_sleep_tmr_show(struct seq_file *s, void *unused)
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 1d902230ba61..27d6470e43ec 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -753,14 +753,11 @@ static void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+ 	debugfs_remove_recursive(pmcdev->dbgfs_dir);
+ }
  
- DEFINE_SHOW_ATTRIBUTE(pmc_sleep_tmr);
- 
--static void pmc_dbgfs_unregister(struct pmc_dev *pmc)
-+static void pmc_dbgfs_register(struct pmc_dev *pmc)
+-static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
++static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
  {
--	debugfs_remove_recursive(pmc->dbgfs_dir);
--}
--
--static int pmc_dbgfs_register(struct pmc_dev *pmc)
--{
--	struct dentry *dir, *f;
-+	struct dentry *dir;
+ 	struct dentry *dir;
  
- 	dir = debugfs_create_dir("pmc_atom", NULL);
+ 	dir = debugfs_create_dir("pmc_core", NULL);
 -	if (!dir)
 -		return -ENOMEM;
- 
- 	pmc->dbgfs_dir = dir;
- 
--	f = debugfs_create_file("dev_state", S_IFREG | S_IRUGO,
--				dir, pmc, &pmc_dev_state_fops);
--	if (!f)
--		goto err;
 -
--	f = debugfs_create_file("pss_state", S_IFREG | S_IRUGO,
--				dir, pmc, &pmc_pss_state_fops);
--	if (!f)
--		goto err;
--
--	f = debugfs_create_file("sleep_state", S_IFREG | S_IRUGO,
--				dir, pmc, &pmc_sleep_tmr_fops);
--	if (!f)
--		goto err;
+ 	pmcdev->dbgfs_dir = dir;
+ 
+ 	debugfs_create_file("slp_s0_residency_usec", 0444, dir, pmcdev,
+@@ -794,13 +791,10 @@ static int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 		debugfs_create_bool("slp_s0_dbg_latch", 0644,
+ 				    dir, &slps0_dbg_latch);
+ 	}
 -
 -	return 0;
--err:
--	pmc_dbgfs_unregister(pmc);
--	return -ENODEV;
-+	debugfs_create_file("dev_state", S_IFREG | S_IRUGO, dir, pmc,
-+			    &pmc_dev_state_fops);
-+	debugfs_create_file("pss_state", S_IFREG | S_IRUGO, dir, pmc,
-+			    &pmc_pss_state_fops);
-+	debugfs_create_file("sleep_state", S_IFREG | S_IRUGO, dir, pmc,
-+			    &pmc_sleep_tmr_fops);
  }
  #else
--static int pmc_dbgfs_register(struct pmc_dev *pmc)
-+static void pmc_dbgfs_register(struct pmc_dev *pmc)
+-static inline int pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
++static inline void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
  {
 -	return 0;
  }
- #endif /* CONFIG_DEBUG_FS */
  
-@@ -500,9 +479,7 @@ static int pmc_setup_dev(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	/* PMC hardware registers setup */
- 	pmc_hw_reg_setup(pmc);
+ static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+@@ -862,7 +856,6 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	struct pmc_dev *pmcdev = &pmc;
+ 	const struct x86_cpu_id *cpu_id;
+ 	u64 slp_s0_addr;
+-	int err;
  
--	ret = pmc_dbgfs_register(pmc);
--	if (ret)
--		dev_warn(&pdev->dev, "debugfs register failed\n");
-+	pmc_dbgfs_register(pmc);
+ 	if (device_initialized)
+ 		return -ENODEV;
+@@ -896,12 +889,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+ 	dmi_check_system(pmc_core_dmi_table);
  
- 	/* Register platform clocks - PMC_PLT_CLK [0..5] */
- 	ret = pmc_setup_clks(pdev, pmc->regmap, data);
+-	err = pmc_core_dbgfs_register(pmcdev);
+-	if (err < 0) {
+-		dev_warn(&pdev->dev, "debugfs register failed.\n");
+-		iounmap(pmcdev->regbase);
+-		return err;
+-	}
++	pmc_core_dbgfs_register(pmcdev);
+ 
+ 	device_initialized = true;
+ 	dev_info(&pdev->dev, " initialized\n");
 -- 
 2.22.0
