@@ -1,7 +1,7 @@
 From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [PATCH v2 7/8] platform/x86: huawei-wmi: add sysfs interface support
-Date: Wed, 12 Jun 2019 23:04:14 -0400
-Message-ID: <20190613030416.25807-9-ayman.bagabas@gmail.com>
+Subject: [PATCH v2 6/8] platform/x86: huawei-wmi: add fn-lock support
+Date: Wed, 12 Jun 2019 23:04:13 -0400
+Message-ID: <20190613030416.25807-8-ayman.bagabas@gmail.com>
 References: <20190613030416.25807-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,137 +12,76 @@ To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, pl
 Cc: ayman.bagabas@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Battery charging thresholds and fn-lock are implemented as sysfs
-attributes. Both have R/W permissions and set with root permission.
-Although using Huawei Management Software in Windows gives access to
-these features without admin privileges, user could use something like a
-udev rule to change writing permissions of these attributes.
+The behavior of hotkeys is not the same among all models. Some models
+require fn-lock to do things like `Ctrl-Ins` or `Alt-PrtSc`. By default,
+hotkeys behave as special keys (media keys, Ins, etc), but if a modifier
+is used (ctrl, alt, shift) these keys behave as F1-F12 keys. If the Fn
+key is toggled on, the hotkeys with or without a modifier, behave as
+F1-F12 keys. This makes it impossible to use a modifier and `PrtSc` or
+`Ins`.
+
+Now, some models fix this by excluding `PrtSc` and `Ins` keys from
+being treated as F11 and F12 keys with the use of a modifier. However,
+some models do not, and fixes this by the so called fn-lock.
+
+Fn-lock inverts the behavior of the top row from special keys to F1-F12
+keys. So a modifier and a special key would be possible which make
+things like `Alt-Ins` possible. Now, with fn-lock we would have 4 modes:
+* Fn-key off & fn-lock off - hotkeys treated as special keys using a
+  modifier gives F1-F12 keys.
+* Fn-key on & fn-lock off - hotkeys treated as F1-F12 keys and using a
+  modifier gives F1-F12.
+* Fn-key off & fn-lock on - hotkeys are treated as F1-F12 keys and using
+  a modifier gives special keys.
+* Fn-key on & fn-lock on - hotkeys are treated as special keys and using
+  a modifier gives special keys.
 
 Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
- drivers/platform/x86/huawei-wmi.c | 87 +++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+ drivers/platform/x86/huawei-wmi.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index aac9b80f9976..cc6745ff1bad 100644
+index 06d83e613504..aac9b80f9976 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -14,6 +14,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/platform_device.h>
-+#include <linux/sysfs.h>
- #include <linux/wmi.h>
- 
- /*
-@@ -388,6 +389,80 @@ static int huawei_wmi_fn_lock_set(struct device *dev, int on)
- 	return huawei_wmi_cmd(dev, *(u64 *)arg, NULL, NULL);
+@@ -357,6 +357,37 @@ static int huawei_wmi_battery_set(struct device *dev, int low, int high)
+ 	return err;
  }
  
-+/* sysfs */
++/* Fn lock */
 +
-+static ssize_t charge_thresholds_show(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
++static int huawei_wmi_fn_lock_get(struct device *dev, int *on)
 +{
-+	int err, low, high;
++	u8 ret[0x100] = { 0 };
++	int err, i;
 +
-+	err = huawei_wmi_battery_get(dev, &low, &high);
-+	if (err)
++	err = huawei_wmi_cmd(dev, FN_LOCK_GET, ret, 0x100);
++	if (err) {
 +		return err;
++	}
 +
-+	return sprintf(buf, "%d %d\n", low, high);
++	/* Find the first non-zero value. Return status is ignored. */
++	i = 1;
++	do {
++		*on = ret[i] - 1; // -1 undefined, 0 off, 1 on.
++	} while (i < 0x100 && !ret[i++]);
++
++	return 0;
 +}
 +
-+static ssize_t charge_thresholds_store(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf, size_t size)
++static int huawei_wmi_fn_lock_set(struct device *dev, int on)
 +{
-+	int low, high, err;
++	u8 arg[8];
 +
-+	if (sscanf(buf, "%d %d", &low, &high) != 2 ||
-+			low < 0 || high > 100 ||
-+			low > high)
-+		return -EINVAL;
++	*(u64 *)arg = FN_LOCK_SET;
++	arg[2] = on + 1; // 0 undefined, 1 off, 2 on.
 +
-+	err = huawei_wmi_battery_set(dev, low, high);
-+	if (err)
-+		return err;
-+
-+	return size;
++	return huawei_wmi_cmd(dev, *(u64 *)arg, NULL, NULL);
 +}
-+
-+static ssize_t fn_lock_state_show(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	int err, on;
-+
-+	err = huawei_wmi_fn_lock_get(dev, &on);
-+	if (err)
-+		return err;
-+
-+	return sprintf(buf, "%d\n", on);
-+}
-+
-+static ssize_t fn_lock_state_store(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf, size_t size)
-+{
-+	int on, err;
-+
-+	if (kstrtoint(buf, 10, &on) ||
-+			on < 0 || on > 1)
-+		return -EINVAL;
-+
-+	err = huawei_wmi_fn_lock_set(dev, on);
-+	if (err)
-+		return err;
-+
-+	return size;
-+}
-+
-+static DEVICE_ATTR_RW(charge_thresholds);
-+static DEVICE_ATTR_RW(fn_lock_state);
-+
-+static struct attribute *huawei_wmi_attrs[] = {
-+	&dev_attr_charge_thresholds.attr,
-+	&dev_attr_fn_lock_state.attr,
-+	NULL
-+};
-+
-+ATTRIBUTE_GROUPS(huawei_wmi);
 +
  /* Input */
  
  static void huawei_wmi_process_key(struct input_dev *idev, int code)
-@@ -509,8 +584,16 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 	}
- 
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
-+
- 		mutex_init(&huawei->wmi_lock);
- 		mutex_init(&huawei->battery_lock);
-+
-+		err = sysfs_create_group(&pdev->dev.kobj, &huawei_wmi_group);
-+		if (err) {
-+			dev_err(&pdev->dev, "Failed to create sysfs interface\n");
-+			return err;
-+		}
-+
- 		err = huawei_wmi_leds_setup(&pdev->dev);
- 		if (err)
- 			dev_err(&pdev->dev, "Failed to setup leds\n");
-@@ -526,6 +609,10 @@ static int huawei_wmi_remove(struct platform_device *pdev)
- 	if (wmi_has_guid(HWMI_EVENT_GUID))
- 		wmi_remove_notify_handler(HWMI_EVENT_GUID);
- 
-+	if (wmi_has_guid(HWMI_METHOD_GUID)) {
-+		sysfs_remove_group(&pdev->dev.kobj, &huawei_wmi_group);
-+	}
-+
- 	return 0;
- }
- 
 -- 
 2.20.1
