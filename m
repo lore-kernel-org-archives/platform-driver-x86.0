@@ -1,7 +1,7 @@
 From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [PATCH v2 6/8] platform/x86: huawei-wmi: add fn-lock support
-Date: Wed, 12 Jun 2019 23:04:13 -0400
-Message-ID: <20190613030416.25807-8-ayman.bagabas@gmail.com>
+Subject: [PATCH v2 5/8] platform/x86: huawei-wmi: add battery charging protection support
+Date: Wed, 12 Jun 2019 23:04:12 -0400
+Message-ID: <20190613030416.25807-7-ayman.bagabas@gmail.com>
 References: <20190613030416.25807-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,76 +12,103 @@ To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, pl
 Cc: ayman.bagabas@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-The behavior of hotkeys is not the same among all models. Some models
-require fn-lock to do things like `Ctrl-Ins` or `Alt-PrtSc`. By default,
-hotkeys behave as special keys (media keys, Ins, etc), but if a modifier
-is used (ctrl, alt, shift) these keys behave as F1-F12 keys. If the Fn
-key is toggled on, the hotkeys with or without a modifier, behave as
-F1-F12 keys. This makes it impossible to use a modifier and `PrtSc` or
-`Ins`.
-
-Now, some models fix this by excluding `PrtSc` and `Ins` keys from
-being treated as F11 and F12 keys with the use of a modifier. However,
-some models do not, and fixes this by the so called fn-lock.
-
-Fn-lock inverts the behavior of the top row from special keys to F1-F12
-keys. So a modifier and a special key would be possible which make
-things like `Alt-Ins` possible. Now, with fn-lock we would have 4 modes:
-* Fn-key off & fn-lock off - hotkeys treated as special keys using a
-  modifier gives F1-F12 keys.
-* Fn-key on & fn-lock off - hotkeys treated as F1-F12 keys and using a
-  modifier gives F1-F12.
-* Fn-key off & fn-lock on - hotkeys are treated as F1-F12 keys and using
-  a modifier gives special keys.
-* Fn-key on & fn-lock on - hotkeys are treated as special keys and using
-  a modifier gives special keys.
+Some models that implement the new WMI management interface can control
+battery charging thresholds where it limits charging the battery once it
+reaches certain thresholds. This feature is not present in MateBook X
+(2017).
 
 Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
- drivers/platform/x86/huawei-wmi.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/platform/x86/huawei-wmi.c | 56 +++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 06d83e613504..aac9b80f9976 100644
+index 358d9d168300..06d83e613504 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -357,6 +357,37 @@ static int huawei_wmi_battery_set(struct device *dev, int low, int high)
- 	return err;
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/acpi.h>
++#include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+@@ -48,6 +49,7 @@ struct huawei_wmi {
+ 	struct led_classdev cdev;
+ 	struct input_dev *idev[2];
+ 	struct mutex wmi_lock;
++	struct mutex battery_lock;
+ 	struct platform_device *pdev;
+ };
+ 
+@@ -302,6 +304,59 @@ static int huawei_wmi_leds_setup(struct device *dev)
+ 	return devm_led_classdev_register(dev, &huawei->cdev);
  }
  
-+/* Fn lock */
++/* Battery protection */
 +
-+static int huawei_wmi_fn_lock_get(struct device *dev, int *on)
++static int huawei_wmi_battery_get(struct device *dev, int *low, int *high)
 +{
-+	u8 ret[0x100] = { 0 };
++	struct huawei_wmi *huawei = dev_get_drvdata(dev);
++	u8 ret[0x100];
 +	int err, i;
 +
-+	err = huawei_wmi_cmd(dev, FN_LOCK_GET, ret, 0x100);
++	mutex_lock(&huawei->battery_lock);
++	err = huawei_wmi_cmd(dev, BATTERY_THRESH_GET, ret, 0x100);
++	mutex_unlock(&huawei->battery_lock);
 +	if (err) {
 +		return err;
 +	}
 +
-+	/* Find the first non-zero value. Return status is ignored. */
-+	i = 1;
++	/* Find the last two non-zero values. Return status is ignored. */
++	i = 0x100;
 +	do {
-+		*on = ret[i] - 1; // -1 undefined, 0 off, 1 on.
-+	} while (i < 0x100 && !ret[i++]);
++		*low = ret[i-1];
++		*high = ret[i];
++	} while (i > 2 && !ret[i--]);
 +
 +	return 0;
 +}
 +
-+static int huawei_wmi_fn_lock_set(struct device *dev, int on)
++static int huawei_wmi_battery_set(struct device *dev, int low, int high)
 +{
++	struct huawei_wmi *huawei = dev_get_drvdata(dev);
 +	u8 arg[8];
++	int err;
 +
-+	*(u64 *)arg = FN_LOCK_SET;
-+	arg[2] = on + 1; // 0 undefined, 1 off, 2 on.
++	*(u64 *)arg = BATTERY_THRESH_SET;
++	arg[2] = low;
++	arg[3] = high;
 +
-+	return huawei_wmi_cmd(dev, *(u64 *)arg, NULL, NULL);
++	/* This is an edge case were some models turn battery protection
++	 * off without changing their thresholds values. We clear the
++	 * values before turning off protection. Sometimes we need a sleep delay to
++	 * make sure these values make their way to EC memory.
++	 */
++	if (low == 0 && high == 100) {
++		huawei_wmi_battery_set(dev, 0, 0);
++	}
++
++	mutex_lock(&huawei->battery_lock);
++	err = huawei_wmi_cmd(dev, *(u64 *)arg, NULL, NULL);
++	if (quirks && quirks->battery_sleep)
++		msleep(1000);
++	mutex_unlock(&huawei->battery_lock);
++
++	return err;
 +}
 +
  /* Input */
  
  static void huawei_wmi_process_key(struct input_dev *idev, int code)
+@@ -424,6 +479,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
+ 
+ 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
+ 		mutex_init(&huawei->wmi_lock);
++		mutex_init(&huawei->battery_lock);
+ 		err = huawei_wmi_leds_setup(&pdev->dev);
+ 		if (err)
+ 			dev_err(&pdev->dev, "Failed to setup leds\n");
 -- 
 2.20.1
