@@ -1,113 +1,39 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Subject: Re: [PATCH 1/8] platform: x86: acer-wmi: no need to check return
  value of debugfs_create functions
-Date: Fri, 14 Jun 2019 09:48:04 +0300
-Message-ID: <CAHp75VeQy9o6tHtqKEE3o9ijBE4c11cWcc00+RqCj+P1FOky1w@mail.gmail.com>
+Date: Fri, 14 Jun 2019 08:53:39 +0200
+Message-ID: <20190614065339.GB21447@kroah.com>
 References: <20190612121258.19535-1-gregkh@linuxfoundation.org>
+ <CAHp75VeQy9o6tHtqKEE3o9ijBE4c11cWcc00+RqCj+P1FOky1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190612121258.19535-1-gregkh@linuxfoundation.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeQy9o6tHtqKEE3o9ijBE4c11cWcc00+RqCj+P1FOky1w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Lee, Chun-Yi" <jlee@suse.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 12, 2019 at 3:13 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
->
-> Also, because there is no need to save the file dentry, remove the
-> variable that was saving it and just recursively delete the whole
-> directory.
->
+On Fri, Jun 14, 2019 at 09:48:04AM +0300, Andy Shevchenko wrote:
+> On Wed, Jun 12, 2019 at 3:13 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > When calling debugfs functions, there is no need to ever check the
+> > return value.  The function can work or not, but the code logic should
+> > never do something different based on this.
+> >
+> > Also, because there is no need to save the file dentry, remove the
+> > variable that was saving it and just recursively delete the whole
+> > directory.
+> >
+> 
+> Through which tree you want to proceed this?
 
-Through which tree you want to proceed this?
+What ever is easier for you, I can take it through mine, as I have a lot
+of other patches like this queued up already, or it can go through
+yours.
 
-> Cc: "Lee, Chun-Yi" <jlee@suse.com>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/platform/x86/acer-wmi.c | 29 +++++------------------------
->  1 file changed, 5 insertions(+), 24 deletions(-)
->
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 521b526cd467..f8f0e98b1f0b 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -259,7 +259,6 @@ struct acer_data {
->
->  struct acer_debug {
->         struct dentry *root;
-> -       struct dentry *devices;
->         u32 wmid_devices;
->  };
->
-> @@ -2148,29 +2147,15 @@ static struct platform_device *acer_platform_device;
->
->  static void remove_debugfs(void)
->  {
-> -       debugfs_remove(interface->debug.devices);
-> -       debugfs_remove(interface->debug.root);
-> +       debugfs_remove_recursive(interface->debug.root);
->  }
->
-> -static int __init create_debugfs(void)
-> +static void __init create_debugfs(void)
->  {
->         interface->debug.root = debugfs_create_dir("acer-wmi", NULL);
-> -       if (!interface->debug.root) {
-> -               pr_err("Failed to create debugfs directory");
-> -               return -ENOMEM;
-> -       }
->
-> -       interface->debug.devices = debugfs_create_u32("devices", S_IRUGO,
-> -                                       interface->debug.root,
-> -                                       &interface->debug.wmid_devices);
-> -       if (!interface->debug.devices)
-> -               goto error_debugfs;
-> -
-> -       return 0;
-> -
-> -error_debugfs:
-> -       remove_debugfs();
-> -       return -ENOMEM;
-> +       debugfs_create_u32("devices", S_IRUGO, interface->debug.root,
-> +                          &interface->debug.wmid_devices);
->  }
->
->  static int __init acer_wmi_init(void)
-> @@ -2300,9 +2285,7 @@ static int __init acer_wmi_init(void)
->
->         if (wmi_has_guid(WMID_GUID2)) {
->                 interface->debug.wmid_devices = get_wmid_devices();
-> -               err = create_debugfs();
-> -               if (err)
-> -                       goto error_create_debugfs;
-> +               create_debugfs();
->         }
->
->         /* Override any initial settings with values from the commandline */
-> @@ -2310,8 +2293,6 @@ static int __init acer_wmi_init(void)
->
->         return 0;
->
-> -error_create_debugfs:
-> -       platform_device_del(acer_platform_device);
->  error_device_add:
->         platform_device_put(acer_platform_device);
->  error_device_alloc:
-> --
-> 2.22.0
->
+thanks,
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+greg k-h
