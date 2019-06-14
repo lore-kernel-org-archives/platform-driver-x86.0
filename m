@@ -1,39 +1,37 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 1/8] platform: x86: acer-wmi: no need to check return
- value of debugfs_create functions
-Date: Fri, 14 Jun 2019 08:53:39 +0200
-Message-ID: <20190614065339.GB21447@kroah.com>
-References: <20190612121258.19535-1-gregkh@linuxfoundation.org>
- <CAHp75VeQy9o6tHtqKEE3o9ijBE4c11cWcc00+RqCj+P1FOky1w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Subject: [PATCH] platform/x86: intel_pmc_core: Add ICL-NNPI support to PMC Core
+Date: Fri, 14 Jun 2019 13:39:40 +0530
+Message-ID: <20190614080940.13640-1-rajneesh.bhardwaj@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeQy9o6tHtqKEE3o9ijBE4c11cWcc00+RqCj+P1FOky1w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Lee, Chun-Yi" <jlee@suse.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: vishwanath.somayaji@intel.com, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 14, 2019 at 09:48:04AM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 12, 2019 at 3:13 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > When calling debugfs functions, there is no need to ever check the
-> > return value.  The function can work or not, but the code logic should
-> > never do something different based on this.
-> >
-> > Also, because there is no need to save the file dentry, remove the
-> > variable that was saving it and just recursively delete the whole
-> > directory.
-> >
-> 
-> Through which tree you want to proceed this?
+Ice Lake Neural Network Processor for deep learning inference a.k.a.
+ICL-NNPI can re-use Ice Lake Mobile regmap to enable Intel PMC Core
+driver on it.
 
-What ever is easier for you, I can take it through mine, as I have a lot
-of other patches like this queued up already, or it can go through
-yours.
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Link: https://lkml.org/lkml/2019/6/5/1034
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+---
+ drivers/platform/x86/intel_pmc_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-thanks,
-
-greg k-h
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 1d902230ba61..be6cda89dcf5 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -815,6 +815,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
+ 	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
++	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
+ 	{}
+ };
+ 
+-- 
+2.17.1
