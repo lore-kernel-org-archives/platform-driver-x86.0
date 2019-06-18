@@ -1,45 +1,62 @@
-From: <linux-kernel-dev@beckhoff.com>
-Subject: [PATCH] platform/x86: pmc_atom: Add CB4063 Beckhoff Automation board to critclk_systems DMI table
-Date: Tue, 18 Jun 2019 15:31:02 +0200
-Message-ID: <20190618133102.8083-1-linux-kernel-dev@beckhoff.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: platform: convert
+ x86-laptop-drivers.txt to reST
+Date: Tue, 18 Jun 2019 09:04:36 -0600
+Message-ID: <8aeb222a-ee44-4125-45fd-ce9a741e7ecc@linuxfoundation.org>
+References: <20190618053227.31678-1-puranjay12@gmail.com>
+ <20190618054158.GA3713@kroah.com> <20190618071717.2132a1b7@lwn.net>
+ <20190618133948.GB5416@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190618133948.GB5416@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, cezary.jackiewicz@gmail.com, Darren Hart <dvhart@infradead.org>, andy@infradead.org, Shuah Khan <skhan@linuxfoundation.org>
+Cc: Puranjay Mohan <puranjay12@gmail.com>, linux-doc@vger.kernel.org, linux-kernel-mentees@lists.linuxfoundation.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+On 6/18/19 7:39 AM, Greg KH wrote:
+> On Tue, Jun 18, 2019 at 07:17:17AM -0600, Jonathan Corbet wrote:
+>> On Tue, 18 Jun 2019 07:41:58 +0200
+>> Greg KH <gregkh@linuxfoundation.org> wrote:
+>>
+>>> On Tue, Jun 18, 2019 at 11:02:27AM +0530, Puranjay Mohan wrote:
+>>>> This converts the plain text documentation to reStructuredText format.
+>>>> No essential content change.
+>>>>
+>>>> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+>>>> ---
+>>>>   Documentation/platform/x86-laptop-drivers.rst | 23 +++++++++++++++++++
+>>>>   Documentation/platform/x86-laptop-drivers.txt | 18 ---------------
+>>>>   2 files changed, 23 insertions(+), 18 deletions(-)
+>>>>   create mode 100644 Documentation/platform/x86-laptop-drivers.rst
+>>>>   delete mode 100644 Documentation/platform/x86-laptop-drivers.txt
+>>>
+>>> Don't you also need to hook it up to the documentation build process
+>>> when doing this?
+>>
+>> Hooking it into the TOC tree is a good thing, but I think it's also good
+>> to think about the exercise in general.  This is a document dropped into
+>> place five years ago and never touched again.  It's a short list of
+>> seemingly ancient laptops with no explanation of what it means.  So the
+>> real question, IMO, is whether this document is useful to anybody and, if
+>> not, whether it should just be deleted instead.
+> 
+> I bet it should be deleted, but we should ask the platform driver
+> maintainers first before we do that :)
+> 
 
-The CB4063 board uses pmc_plt_clk* clocks for ethernet controllers. This
-adds it to the critclk_systems DMI table so the clocks are marked as
-CLK_CRITICAL and not turned off.
+Adding Platform driver maintainers Darren Hart and Andy Shevchenko, and
+Compal laptop maintainer Cezary Jackiewicz to the discussion.
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Signed-off-by: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
----
- drivers/platform/x86/pmc_atom.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
++ platform-driver-x86@vger.kernel.org
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index be802fd2182d..551ed44dd361 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -412,6 +412,14 @@ static const struct dmi_system_id critclk_systems[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "CB3163"),
- 		},
- 	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB4063",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB4063"),
-+		},
-+	},
- 	{
- 		/* pmc_plt_clk* - are used for ethernet controllers */
- 		.ident = "Beckhoff CB6263",
--- 
-2.22.0
+Hi Darren, Andy, and Cezary,
+
+Would it be okay to remove the x86-laptop-drivers.txt or should it be
+converted to .rst and kept around?
+
+thanks,
+-- Shuah
