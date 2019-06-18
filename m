@@ -1,2338 +1,1605 @@
 From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH v2 21/29] docs: laptops: convert to ReST
-Date: Tue, 18 Jun 2019 17:53:39 -0300
-Message-ID: <2d5a615aa1f970225543302940ca23c7e560a159.1560890801.git.mchehab+samsung@kernel.org>
-References: <cover.1560890800.git.mchehab+samsung@kernel.org>
+Subject: [PATCH v1 12/22] docs: driver-api: add .rst files from the main dir
+Date: Tue, 18 Jun 2019 17:53:17 -0300
+Message-ID: <b0d24e805d5368719cc64e8104d64ee9b5b89dd0.1560890772.git.mchehab+samsung@kernel.org>
+References: <cover.1560890771.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1560890800.git.mchehab+samsung@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1560890771.git.mchehab+samsung@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Farhan Ali <alifm@linux.ibm.com>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Jaroslav Kysela <perex@perex.cz>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Evgeniy Polyakov <zbr@ioremap.net>, linux-arch@vger.kernel.org, kernel-hardening@lists.openwall.com, Halil Pasic <pasic@linux.ibm.com>, Alan Stern <stern@rowland.harvard.edu>, Jiri Slaby <jslaby@suse.com>, Guenter Roeck <linux@roeck-us.net>, Ohad Ben-Cohen <ohad@wizery.com>, Marc Zyngier <marc.zyngier@arm.com>, Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, Alex Williamson <alex.williamson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Sean Paul <sean@poorly.run>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-fbdev@vg
 List-Id: platform-driver-x86.vger.kernel.org
 
-Rename the laptops documentation files to ReST, add an
-index for them and adjust in order to produce a nice html
-output via the Sphinx build system.
-
-At its new index.rst, let's add a :orphan: while this is not linked to
-the main index.rst file, in order to avoid build warnings.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- Documentation/ABI/testing/sysfs-block-device  |   2 +-
- .../ABI/testing/sysfs-platform-asus-laptop    |   2 +-
- .../admin-guide/kernel-parameters.txt         |   2 +-
- .../{asus-laptop.txt => asus-laptop.rst}      |  92 ++--
- ...otection.txt => disk-shock-protection.rst} |  32 +-
- Documentation/laptops/index.rst               |  17 +
- .../{laptop-mode.txt => laptop-mode.rst}      | 509 +++++++++---------
- .../{sony-laptop.txt => sony-laptop.rst}      |  58 +-
- .../laptops/{sonypi.txt => sonypi.rst}        |  28 +-
- .../{thinkpad-acpi.txt => thinkpad-acpi.rst}  | 363 ++++++++-----
- .../{toshiba_haps.txt => toshiba_haps.rst}    |  47 +-
- Documentation/sysctl/vm.txt                   |   4 +-
- MAINTAINERS                                   |   2 +-
- drivers/char/Kconfig                          |   2 +-
- drivers/platform/x86/Kconfig                  |   4 +-
- 15 files changed, 660 insertions(+), 504 deletions(-)
- rename Documentation/laptops/{asus-laptop.txt => asus-laptop.rst} (84%)
- rename Documentation/laptops/{disk-shock-protection.txt => disk-shock-protection.rst} (91%)
- create mode 100644 Documentation/laptops/index.rst
- rename Documentation/laptops/{laptop-mode.txt => laptop-mode.rst} (62%)
- rename Documentation/laptops/{sony-laptop.txt => sony-laptop.rst} (85%)
- rename Documentation/laptops/{sonypi.txt => sonypi.rst} (87%)
- rename Documentation/laptops/{thinkpad-acpi.txt => thinkpad-acpi.rst} (89%)
- rename Documentation/laptops/{toshiba_haps.txt => toshiba_haps.rst} (60%)
-
-diff --git a/Documentation/ABI/testing/sysfs-block-device b/Documentation/ABI/testing/sysfs-block-device
-index 82ef6eab042d..0d57bbb4fddc 100644
---- a/Documentation/ABI/testing/sysfs-block-device
-+++ b/Documentation/ABI/testing/sysfs-block-device
-@@ -45,7 +45,7 @@ Description:
- 		- Values below -2 are rejected with -EINVAL
- 
- 		For more information, see
--		Documentation/laptops/disk-shock-protection.txt
-+		Documentation/laptops/disk-shock-protection.rst
- 
- 
- What:		/sys/block/*/device/ncq_prio_enable
-diff --git a/Documentation/ABI/testing/sysfs-platform-asus-laptop b/Documentation/ABI/testing/sysfs-platform-asus-laptop
-index cd9d667c3da2..d67fa4bafa70 100644
---- a/Documentation/ABI/testing/sysfs-platform-asus-laptop
-+++ b/Documentation/ABI/testing/sysfs-platform-asus-laptop
-@@ -31,7 +31,7 @@ Description:
- 		To control the LED display, use the following :
- 		    echo 0x0T000DDD > /sys/devices/platform/asus_laptop/
- 		where T control the 3 letters display, and DDD the 3 digits display.
--		The DDD table can be found in Documentation/laptops/asus-laptop.txt
-+		The DDD table can be found in Documentation/laptops/asus-laptop.rst
- 
- What:		/sys/devices/platform/asus_laptop/bluetooth
- Date:		January 2007
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 3faf37b8b001..7abe677f8c5e 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4356,7 +4356,7 @@
- 			Format: <integer>
- 
- 	sonypi.*=	[HW] Sony Programmable I/O Control Device driver
--			See Documentation/laptops/sonypi.txt
-+			See Documentation/laptops/sonypi.rst
- 
- 	spectre_v2=	[X86] Control mitigation of Spectre variant 2
- 			(indirect branch speculation) vulnerability.
-diff --git a/Documentation/laptops/asus-laptop.txt b/Documentation/laptops/asus-laptop.rst
-similarity index 84%
-rename from Documentation/laptops/asus-laptop.txt
-rename to Documentation/laptops/asus-laptop.rst
-index 5f2858712aa0..95176321a25a 100644
---- a/Documentation/laptops/asus-laptop.txt
-+++ b/Documentation/laptops/asus-laptop.rst
-@@ -1,6 +1,9 @@
-+==================
- Asus Laptop Extras
-+==================
- 
- Version 0.1
-+
- August 6, 2009
- 
- Corentin Chary <corentincj@iksaif.net>
-@@ -10,11 +13,12 @@ http://acpi4asus.sf.net/
-  It may also support some MEDION, JVC or VICTOR laptops (such as MEDION 9675 or
-  VICTOR XP7210 for example). It makes all the extra buttons generate input
-  events (like keyboards).
-+
-  On some models adds support for changing the display brightness and output,
-  switching the LCD backlight on and off, and most importantly, allows you to
-  blink those fancy LEDs intended for reporting mail and wireless status.
- 
--This driver supercedes the old asus_acpi driver.
-+This driver supersedes the old asus_acpi driver.
- 
- Requirements
- ------------
-@@ -49,7 +53,7 @@ Usage
-   see some lines like this :
- 
-       Asus Laptop Extras version 0.42
--        L2D model detected.
-+        - L2D model detected.
- 
-   If it is not the output you have on your laptop, send it (and the laptop's
-   DSDT) to me.
-@@ -68,9 +72,12 @@ Usage
- LEDs
- ----
- 
--  You can modify LEDs be echoing values to /sys/class/leds/asus::*/brightness :
-+  You can modify LEDs be echoing values to `/sys/class/leds/asus/*/brightness`::
-+
-     echo 1 >  /sys/class/leds/asus::mail/brightness
-+
-   will switch the mail LED on.
-+
-   You can also know if they are on/off by reading their content and use
-   kernel triggers like disk-activity or heartbeat.
- 
-@@ -81,7 +88,7 @@ Backlight
-   /sys/class/backlight/asus-laptop/. Brightness Values are between 0 and 15.
- 
- Wireless devices
-----------------
-+----------------
- 
-   You can turn the internal Bluetooth adapter on/off with the bluetooth entry
-   (only on models with Bluetooth). This usually controls the associated LED.
-@@ -93,18 +100,20 @@ Display switching
-   Note: the display switching code is currently considered EXPERIMENTAL.
- 
-   Switching works for the following models:
--    L3800C
--    A2500H
--    L5800C
--    M5200N
--    W1000N (albeit with some glitches)
--    M6700R
--    A6JC
--    F3J
-+
-+    - L3800C
-+    - A2500H
-+    - L5800C
-+    - M5200N
-+    - W1000N (albeit with some glitches)
-+    - M6700R
-+    - A6JC
-+    - F3J
- 
-   Switching doesn't work for the following:
--    M3700N
--    L2X00D (locks the laptop under certain conditions)
-+
-+    - M3700N
-+    - L2X00D (locks the laptop under certain conditions)
- 
-   To switch the displays, echo values from 0 to 15 to
-   /sys/devices/platform/asus-laptop/display. The significance of those values
-@@ -113,48 +122,51 @@ Display switching
-   +-------+-----+-----+-----+-----+-----+
-   | Bin   | Val | DVI | TV  | CRT | LCD |
-   +-------+-----+-----+-----+-----+-----+
--  + 0000  +   0 +     +     +     +     +
-+  | 0000  |   0 |     |     |     |     |
-   +-------+-----+-----+-----+-----+-----+
--  + 0001  +   1 +     +     +     +  X  +
-+  | 0001  |   1 |     |     |     |  X  |
-   +-------+-----+-----+-----+-----+-----+
--  + 0010  +   2 +     +     +  X  +     +
-+  | 0010  |   2 |     |     |  X  |     |
-   +-------+-----+-----+-----+-----+-----+
--  + 0011  +   3 +     +     +  X  +  X  +
-+  | 0011  |   3 |     |     |  X  |  X  |
-   +-------+-----+-----+-----+-----+-----+
--  + 0100  +   4 +     +  X  +     +     +
-+  | 0100  |   4 |     |  X  |     |     |
-   +-------+-----+-----+-----+-----+-----+
--  + 0101  +   5 +     +  X  +     + X   +
-+  | 0101  |   5 |     |  X  |     | X   |
-   +-------+-----+-----+-----+-----+-----+
--  + 0110  +   6 +     +  X  +  X  +     +
-+  | 0110  |   6 |     |  X  |  X  |     |
-   +-------+-----+-----+-----+-----+-----+
--  + 0111  +   7 +     +  X  +  X  +  X  +
-+  | 0111  |   7 |     |  X  |  X  |  X  |
-   +-------+-----+-----+-----+-----+-----+
--  + 1000  +   8 +  X  +     +     +     +
-+  | 1000  |   8 |  X  |     |     |     |
-   +-------+-----+-----+-----+-----+-----+
--  + 1001  +   9 +  X  +     +     +  X  +
-+  | 1001  |   9 |  X  |     |     |  X  |
-   +-------+-----+-----+-----+-----+-----+
--  + 1010  +  10 +  X  +     +  X  +     +
-+  | 1010  |  10 |  X  |     |  X  |     |
-   +-------+-----+-----+-----+-----+-----+
--  + 1011  +  11 +  X  +     +  X  +  X  +
-+  | 1011  |  11 |  X  |     |  X  |  X  |
-   +-------+-----+-----+-----+-----+-----+
--  + 1100  +  12 +  X  +  X  +     +     +
-+  | 1100  |  12 |  X  |  X  |     |     |
-   +-------+-----+-----+-----+-----+-----+
--  + 1101  +  13 +  X  +  X  +     +  X  +
-+  | 1101  |  13 |  X  |  X  |     |  X  |
-   +-------+-----+-----+-----+-----+-----+
--  + 1110  +  14 +  X  +  X  +  X  +     +
-+  | 1110  |  14 |  X  |  X  |  X  |     |
-   +-------+-----+-----+-----+-----+-----+
--  + 1111  +  15 +  X  +  X  +  X  +  X  +
-+  | 1111  |  15 |  X  |  X  |  X  |  X  |
-   +-------+-----+-----+-----+-----+-----+
- 
-   In most cases, the appropriate displays must be plugged in for the above
-   combinations to work. TV-Out may need to be initialized at boot time.
- 
-   Debugging:
-+
-   1) Check whether the Fn+F8 key:
-+
-      a) does not lock the laptop (try a boot with noapic / nolapic if it does)
-      b) generates events (0x6n, where n is the value corresponding to the
-         configuration above)
-      c) actually works
-+
-      Record the disp value at every configuration.
-   2) Echo values from 0 to 15 to /sys/devices/platform/asus-laptop/display.
-      Record its value, note any change. If nothing changes, try a broader range,
-@@ -164,7 +176,7 @@ Display switching
- 
-   Note: on some machines (e.g. L3C), after the module has been loaded, only 0x6n
-   events are generated and no actual switching occurs. In such a case, a line
--  like:
-+  like::
- 
-     echo $((10#$arg-60)) > /sys/devices/platform/asus-laptop/display
- 
-@@ -180,15 +192,16 @@ LED display
-   several items of information.
- 
-   LED display works for the following models:
--    W1000N
--    W1J
- 
--  To control the LED display, use the following :
-+    - W1000N
-+    - W1J
-+
-+  To control the LED display, use the following::
- 
-     echo 0x0T000DDD > /sys/devices/platform/asus-laptop/
- 
-   where T control the 3 letters display, and DDD the 3 digits display,
--  according to the tables below.
-+  according to the tables below::
- 
-          DDD (digits)
-          000 to 999 = display digits
-@@ -208,8 +221,8 @@ LED display
-   For example "echo 0x01000001 >/sys/devices/platform/asus-laptop/ledd"
-   would display "DVD001".
- 
--Driver options:
-----------------
-+Driver options
-+--------------
- 
-  Options can be passed to the asus-laptop driver using the standard
-  module argument syntax (<param>=<value> when passing the option to the
-@@ -219,6 +232,7 @@ Driver options:
- 	     wapf: WAPF defines the behavior of the Fn+Fx wlan key
- 		   The significance of values is yet to be found, but
- 		   most of the time:
-+
- 		   - 0x0 should do nothing
- 		   - 0x1 should allow to control the device with Fn+Fx key.
- 		   - 0x4 should send an ACPI event (0x88) while pressing the Fn+Fx key
-@@ -237,7 +251,7 @@ Unsupported models
-  - ASUS L7300G
-  - ASUS L8400
- 
--Patches, Errors, Questions:
-+Patches, Errors, Questions
- --------------------------
- 
-  I appreciate any success or failure
-@@ -253,5 +267,5 @@ Patches, Errors, Questions:
-  Any other comments or patches are also more than welcome.
- 
-  acpi4asus-user@lists.sourceforge.net
-+
-  http://sourceforge.net/projects/acpi4asus
--
-diff --git a/Documentation/laptops/disk-shock-protection.txt b/Documentation/laptops/disk-shock-protection.rst
-similarity index 91%
-rename from Documentation/laptops/disk-shock-protection.txt
-rename to Documentation/laptops/disk-shock-protection.rst
-index 0e6ba2663834..e97c5f78d8c3 100644
---- a/Documentation/laptops/disk-shock-protection.txt
-+++ b/Documentation/laptops/disk-shock-protection.rst
-@@ -1,17 +1,18 @@
-+==========================
- Hard disk shock protection
- ==========================
- 
- Author: Elias Oltmanns <eo@nebensachen.de>
-+
- Last modified: 2008-10-03
- 
- 
--0. Contents
-------------
-+.. 0. Contents
- 
--1. Intro
--2. The interface
--3. References
--4. CREDITS
-+   1. Intro
-+   2. The interface
-+   3. References
-+   4. CREDITS
- 
- 
- 1. Intro
-@@ -36,8 +37,8 @@ that).
- ----------------
- 
- For each ATA device, the kernel exports the file
--block/*/device/unload_heads in sysfs (here assumed to be mounted under
--/sys). Access to /sys/block/*/device/unload_heads is denied with
-+`block/*/device/unload_heads` in sysfs (here assumed to be mounted under
-+/sys). Access to `/sys/block/*/device/unload_heads` is denied with
- -EOPNOTSUPP if the device does not support the unload feature.
- Otherwise, writing an integer value to this file will take the heads
- of the respective drive off the platter and block all I/O operations
-@@ -54,18 +55,18 @@ cancel a previously set timeout and resume normal operation
- immediately by specifying a timeout of 0. Values below -2 are rejected
- with -EINVAL (see below for the special meaning of -1 and -2). If the
- timeout specified for a recent head park request has not yet expired,
--reading from /sys/block/*/device/unload_heads will report the number
-+reading from `/sys/block/*/device/unload_heads` will report the number
- of milliseconds remaining until normal operation will be resumed;
- otherwise, reading the unload_heads attribute will return 0.
- 
- For example, do the following in order to park the heads of drive
--/dev/sda and stop all I/O operations for five seconds:
-+/dev/sda and stop all I/O operations for five seconds::
- 
--# echo 5000 > /sys/block/sda/device/unload_heads
-+	# echo 5000 > /sys/block/sda/device/unload_heads
- 
--A simple
-+A simple::
- 
--# cat /sys/block/sda/device/unload_heads
-+	# cat /sys/block/sda/device/unload_heads
- 
- will show you how many milliseconds are left before normal operation
- will be resumed.
-@@ -112,9 +113,9 @@ unload_heads attribute. If you know that your device really does
- support the unload feature (for instance, because the vendor of your
- laptop or the hard drive itself told you so), then you can tell the
- kernel to enable the usage of this feature for that drive by writing
--the special value -1 to the unload_heads attribute:
-+the special value -1 to the unload_heads attribute::
- 
--# echo -1 > /sys/block/sda/device/unload_heads
-+	# echo -1 > /sys/block/sda/device/unload_heads
- 
- will enable the feature for /dev/sda, and giving -2 instead of -1 will
- disable it again.
-@@ -135,6 +136,7 @@ for use. Please feel free to add projects that have been the victims
- of my ignorance.
- 
- - http://www.thinkwiki.org/wiki/HDAPS
-+
-   See this page for information about Linux support of the hard disk
-   active protection system as implemented in IBM/Lenovo Thinkpads.
- 
-diff --git a/Documentation/laptops/index.rst b/Documentation/laptops/index.rst
-new file mode 100644
-index 000000000000..001a30910d09
---- /dev/null
-+++ b/Documentation/laptops/index.rst
-@@ -0,0 +1,17 @@
-+:orphan:
-+
-+==============
-+Laptop Drivers
-+==============
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   asus-laptop
-+   disk-shock-protection
-+   laptop-mode
-+   lg-laptop
-+   sony-laptop
-+   sonypi
-+   thinkpad-acpi
-+   toshiba_haps
-diff --git a/Documentation/laptops/laptop-mode.txt b/Documentation/laptops/laptop-mode.rst
-similarity index 62%
-rename from Documentation/laptops/laptop-mode.txt
-rename to Documentation/laptops/laptop-mode.rst
-index 1c707fc9b141..c984c4262f2e 100644
---- a/Documentation/laptops/laptop-mode.txt
-+++ b/Documentation/laptops/laptop-mode.rst
-@@ -1,8 +1,11 @@
-+===============================================
- How to conserve battery power using laptop-mode
-------------------------------------------------
-+===============================================
- 
- Document Author: Bart Samwel (bart@samwel.tk)
-+
- Date created: January 2, 2004
-+
- Last modified: December 06, 2004
- 
- Introduction
-@@ -12,17 +15,16 @@ Laptop mode is used to minimize the time that the hard disk needs to be spun up,
- to conserve battery power on laptops. It has been reported to cause significant
- power savings.
- 
--Contents
----------
-+.. Contents
- 
--* Introduction
--* Installation
--* Caveats
--* The Details
--* Tips & Tricks
--* Control script
--* ACPI integration
--* Monitoring tool
-+   * Introduction
-+   * Installation
-+   * Caveats
-+   * The Details
-+   * Tips & Tricks
-+   * Control script
-+   * ACPI integration
-+   * Monitoring tool
- 
- 
- Installation
-@@ -33,7 +35,7 @@ or anything. Simply install all the files included in this document, and
- laptop mode will automatically be started when you're on battery. For
- your convenience, a tarball containing an installer can be downloaded at:
- 
--http://www.samwel.tk/laptop_mode/laptop_mode/
-+	http://www.samwel.tk/laptop_mode/laptop_mode/
- 
- To configure laptop mode, you need to edit the configuration file, which is
- located in /etc/default/laptop-mode on Debian-based systems, or in
-@@ -209,7 +211,7 @@ Tips & Tricks
-   this on powerbooks too. I hope that this is a piece of information that
-   might be useful to the Laptop Mode patch or its users."
- 
--* In syslog.conf, you can prefix entries with a dash ``-'' to omit syncing the
-+* In syslog.conf, you can prefix entries with a dash `-` to omit syncing the
-   file after every logging. When you're using laptop-mode and your disk doesn't
-   spin down, this is a likely culprit.
- 
-@@ -233,83 +235,82 @@ configuration file
- It should be installed as /etc/default/laptop-mode on Debian, and as
- /etc/sysconfig/laptop-mode on Red Hat, SUSE, Mandrake, and other work-alikes.
- 
----------------------CONFIG FILE BEGIN-------------------------------------------
--# Maximum time, in seconds, of hard drive spindown time that you are
--# comfortable with. Worst case, it's possible that you could lose this
--# amount of work if your battery fails you while in laptop mode.
--#MAX_AGE=600
-+Config file::
- 
--# Automatically disable laptop mode when the number of minutes of battery
--# that you have left goes below this threshold.
--MINIMUM_BATTERY_MINUTES=10
-+  # Maximum time, in seconds, of hard drive spindown time that you are
-+  # comfortable with. Worst case, it's possible that you could lose this
-+  # amount of work if your battery fails you while in laptop mode.
-+  #MAX_AGE=600
- 
--# Read-ahead, in 512-byte sectors. You can spin down the disk while playing MP3/OGG
--# by setting the disk readahead to 8MB (READAHEAD=16384). Effectively, the disk
--# will read a complete MP3 at once, and will then spin down while the MP3/OGG is
--# playing.
--#READAHEAD=4096
-+  # Automatically disable laptop mode when the number of minutes of battery
-+  # that you have left goes below this threshold.
-+  MINIMUM_BATTERY_MINUTES=10
- 
--# Shall we remount journaled fs. with appropriate commit interval? (1=yes)
--#DO_REMOUNTS=1
-+  # Read-ahead, in 512-byte sectors. You can spin down the disk while playing MP3/OGG
-+  # by setting the disk readahead to 8MB (READAHEAD=16384). Effectively, the disk
-+  # will read a complete MP3 at once, and will then spin down while the MP3/OGG is
-+  # playing.
-+  #READAHEAD=4096
- 
--# And shall we add the "noatime" option to that as well? (1=yes)
--#DO_REMOUNT_NOATIME=1
-+  # Shall we remount journaled fs. with appropriate commit interval? (1=yes)
-+  #DO_REMOUNTS=1
- 
--# Dirty synchronous ratio.  At this percentage of dirty pages the process
--# which
--# calls write() does its own writeback
--#DIRTY_RATIO=40
-+  # And shall we add the "noatime" option to that as well? (1=yes)
-+  #DO_REMOUNT_NOATIME=1
- 
--#
--# Allowed dirty background ratio, in percent.  Once DIRTY_RATIO has been
--# exceeded, the kernel will wake flusher threads which will then reduce the
--# amount of dirty memory to dirty_background_ratio.  Set this nice and low,
--# so once some writeout has commenced, we do a lot of it.
--#
--#DIRTY_BACKGROUND_RATIO=5
-+  # Dirty synchronous ratio.  At this percentage of dirty pages the process
-+  # which
-+  # calls write() does its own writeback
-+  #DIRTY_RATIO=40
- 
--# kernel default dirty buffer age
--#DEF_AGE=30
--#DEF_UPDATE=5
--#DEF_DIRTY_BACKGROUND_RATIO=10
--#DEF_DIRTY_RATIO=40
--#DEF_XFS_AGE_BUFFER=15
--#DEF_XFS_SYNC_INTERVAL=30
--#DEF_XFS_BUFD_INTERVAL=1
-+  #
-+  # Allowed dirty background ratio, in percent.  Once DIRTY_RATIO has been
-+  # exceeded, the kernel will wake flusher threads which will then reduce the
-+  # amount of dirty memory to dirty_background_ratio.  Set this nice and low,
-+  # so once some writeout has commenced, we do a lot of it.
-+  #
-+  #DIRTY_BACKGROUND_RATIO=5
- 
--# This must be adjusted manually to the value of HZ in the running kernel
--# on 2.4, until the XFS people change their 2.4 external interfaces to work in
--# centisecs. This can be automated, but it's a work in progress that still
--# needs# some fixes. On 2.6 kernels, XFS uses USER_HZ instead of HZ for
--# external interfaces, and that is currently always set to 100. So you don't
--# need to change this on 2.6.
--#XFS_HZ=100
-+  # kernel default dirty buffer age
-+  #DEF_AGE=30
-+  #DEF_UPDATE=5
-+  #DEF_DIRTY_BACKGROUND_RATIO=10
-+  #DEF_DIRTY_RATIO=40
-+  #DEF_XFS_AGE_BUFFER=15
-+  #DEF_XFS_SYNC_INTERVAL=30
-+  #DEF_XFS_BUFD_INTERVAL=1
- 
--# Should the maximum CPU frequency be adjusted down while on battery?
--# Requires CPUFreq to be setup.
--# See Documentation/admin-guide/pm/cpufreq.rst for more info
--#DO_CPU=0
-+  # This must be adjusted manually to the value of HZ in the running kernel
-+  # on 2.4, until the XFS people change their 2.4 external interfaces to work in
-+  # centisecs. This can be automated, but it's a work in progress that still
-+  # needs# some fixes. On 2.6 kernels, XFS uses USER_HZ instead of HZ for
-+  # external interfaces, and that is currently always set to 100. So you don't
-+  # need to change this on 2.6.
-+  #XFS_HZ=100
- 
--# When on battery what is the maximum CPU speed that the system should
--# use? Legal values are "slowest" for the slowest speed that your
--# CPU is able to operate at, or a value listed in:
--# /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies
--# Only applicable if DO_CPU=1.
--#CPU_MAXFREQ=slowest
-+  # Should the maximum CPU frequency be adjusted down while on battery?
-+  # Requires CPUFreq to be setup.
-+  # See Documentation/admin-guide/pm/cpufreq.rst for more info
-+  #DO_CPU=0
- 
--# Idle timeout for your hard drive (man hdparm for valid values, -S option)
--# Default is 2 hours on AC (AC_HD=244) and 20 seconds for battery (BATT_HD=4).
--#AC_HD=244
--#BATT_HD=4
-+  # When on battery what is the maximum CPU speed that the system should
-+  # use? Legal values are "slowest" for the slowest speed that your
-+  # CPU is able to operate at, or a value listed in:
-+  # /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies
-+  # Only applicable if DO_CPU=1.
-+  #CPU_MAXFREQ=slowest
- 
--# The drives for which to adjust the idle timeout. Separate them by a space,
--# e.g. HD="/dev/hda /dev/hdb".
--#HD="/dev/hda"
-+  # Idle timeout for your hard drive (man hdparm for valid values, -S option)
-+  # Default is 2 hours on AC (AC_HD=244) and 20 seconds for battery (BATT_HD=4).
-+  #AC_HD=244
-+  #BATT_HD=4
- 
--# Set the spindown timeout on a hard drive?
--#DO_HD=1
-+  # The drives for which to adjust the idle timeout. Separate them by a space,
-+  # e.g. HD="/dev/hda /dev/hdb".
-+  #HD="/dev/hda"
- 
----------------------CONFIG FILE END---------------------------------------------
-+  # Set the spindown timeout on a hard drive?
-+  #DO_HD=1
- 
- 
- Control script
-@@ -318,125 +319,126 @@ Control script
- Please note that this control script works for the Linux 2.4 and 2.6 series (thanks
- to Kiko Piris).
- 
----------------------CONTROL SCRIPT BEGIN----------------------------------------
--#!/bin/bash
-+Control script::
- 
--# start or stop laptop_mode, best run by a power management daemon when
--# ac gets connected/disconnected from a laptop
--#
--# install as /sbin/laptop_mode
--#
--# Contributors to this script:   Kiko Piris
--#				 Bart Samwel
--#				 Micha Feigin
--#				 Andrew Morton
--#				 Herve Eychenne
--#				 Dax Kelson
--#
--# Original Linux 2.4 version by: Jens Axboe
-+  #!/bin/bash
- 
--#############################################################################
-+  # start or stop laptop_mode, best run by a power management daemon when
-+  # ac gets connected/disconnected from a laptop
-+  #
-+  # install as /sbin/laptop_mode
-+  #
-+  # Contributors to this script:   Kiko Piris
-+  #				 Bart Samwel
-+  #				 Micha Feigin
-+  #				 Andrew Morton
-+  #				 Herve Eychenne
-+  #				 Dax Kelson
-+  #
-+  # Original Linux 2.4 version by: Jens Axboe
- 
--# Source config
--if [ -f /etc/default/laptop-mode ] ; then
-+  #############################################################################
-+
-+  # Source config
-+  if [ -f /etc/default/laptop-mode ] ; then
- 	# Debian
- 	. /etc/default/laptop-mode
--elif [ -f /etc/sysconfig/laptop-mode ] ; then
-+  elif [ -f /etc/sysconfig/laptop-mode ] ; then
- 	# Others
--        . /etc/sysconfig/laptop-mode
--fi
-+          . /etc/sysconfig/laptop-mode
-+  fi
- 
--# Don't raise an error if the config file is incomplete
--# set defaults instead:
-+  # Don't raise an error if the config file is incomplete
-+  # set defaults instead:
- 
--# Maximum time, in seconds, of hard drive spindown time that you are
--# comfortable with. Worst case, it's possible that you could lose this
--# amount of work if your battery fails you while in laptop mode.
--MAX_AGE=${MAX_AGE:-'600'}
-+  # Maximum time, in seconds, of hard drive spindown time that you are
-+  # comfortable with. Worst case, it's possible that you could lose this
-+  # amount of work if your battery fails you while in laptop mode.
-+  MAX_AGE=${MAX_AGE:-'600'}
- 
--# Read-ahead, in kilobytes
--READAHEAD=${READAHEAD:-'4096'}
-+  # Read-ahead, in kilobytes
-+  READAHEAD=${READAHEAD:-'4096'}
- 
--# Shall we remount journaled fs. with appropriate commit interval? (1=yes)
--DO_REMOUNTS=${DO_REMOUNTS:-'1'}
-+  # Shall we remount journaled fs. with appropriate commit interval? (1=yes)
-+  DO_REMOUNTS=${DO_REMOUNTS:-'1'}
- 
--# And shall we add the "noatime" option to that as well? (1=yes)
--DO_REMOUNT_NOATIME=${DO_REMOUNT_NOATIME:-'1'}
-+  # And shall we add the "noatime" option to that as well? (1=yes)
-+  DO_REMOUNT_NOATIME=${DO_REMOUNT_NOATIME:-'1'}
- 
--# Shall we adjust the idle timeout on a hard drive?
--DO_HD=${DO_HD:-'1'}
-+  # Shall we adjust the idle timeout on a hard drive?
-+  DO_HD=${DO_HD:-'1'}
- 
--# Adjust idle timeout on which hard drive?
--HD="${HD:-'/dev/hda'}"
-+  # Adjust idle timeout on which hard drive?
-+  HD="${HD:-'/dev/hda'}"
- 
--# spindown time for HD (hdparm -S values)
--AC_HD=${AC_HD:-'244'}
--BATT_HD=${BATT_HD:-'4'}
-+  # spindown time for HD (hdparm -S values)
-+  AC_HD=${AC_HD:-'244'}
-+  BATT_HD=${BATT_HD:-'4'}
- 
--# Dirty synchronous ratio.  At this percentage of dirty pages the process which
--# calls write() does its own writeback
--DIRTY_RATIO=${DIRTY_RATIO:-'40'}
-+  # Dirty synchronous ratio.  At this percentage of dirty pages the process which
-+  # calls write() does its own writeback
-+  DIRTY_RATIO=${DIRTY_RATIO:-'40'}
- 
--# cpu frequency scaling
--# See Documentation/admin-guide/pm/cpufreq.rst for more info
--DO_CPU=${CPU_MANAGE:-'0'}
--CPU_MAXFREQ=${CPU_MAXFREQ:-'slowest'}
-+  # cpu frequency scaling
-+  # See Documentation/admin-guide/pm/cpufreq.rst for more info
-+  DO_CPU=${CPU_MANAGE:-'0'}
-+  CPU_MAXFREQ=${CPU_MAXFREQ:-'slowest'}
- 
--#
--# Allowed dirty background ratio, in percent.  Once DIRTY_RATIO has been
--# exceeded, the kernel will wake flusher threads which will then reduce the
--# amount of dirty memory to dirty_background_ratio.  Set this nice and low,
--# so once some writeout has commenced, we do a lot of it.
--#
--DIRTY_BACKGROUND_RATIO=${DIRTY_BACKGROUND_RATIO:-'5'}
-+  #
-+  # Allowed dirty background ratio, in percent.  Once DIRTY_RATIO has been
-+  # exceeded, the kernel will wake flusher threads which will then reduce the
-+  # amount of dirty memory to dirty_background_ratio.  Set this nice and low,
-+  # so once some writeout has commenced, we do a lot of it.
-+  #
-+  DIRTY_BACKGROUND_RATIO=${DIRTY_BACKGROUND_RATIO:-'5'}
- 
--# kernel default dirty buffer age
--DEF_AGE=${DEF_AGE:-'30'}
--DEF_UPDATE=${DEF_UPDATE:-'5'}
--DEF_DIRTY_BACKGROUND_RATIO=${DEF_DIRTY_BACKGROUND_RATIO:-'10'}
--DEF_DIRTY_RATIO=${DEF_DIRTY_RATIO:-'40'}
--DEF_XFS_AGE_BUFFER=${DEF_XFS_AGE_BUFFER:-'15'}
--DEF_XFS_SYNC_INTERVAL=${DEF_XFS_SYNC_INTERVAL:-'30'}
--DEF_XFS_BUFD_INTERVAL=${DEF_XFS_BUFD_INTERVAL:-'1'}
-+  # kernel default dirty buffer age
-+  DEF_AGE=${DEF_AGE:-'30'}
-+  DEF_UPDATE=${DEF_UPDATE:-'5'}
-+  DEF_DIRTY_BACKGROUND_RATIO=${DEF_DIRTY_BACKGROUND_RATIO:-'10'}
-+  DEF_DIRTY_RATIO=${DEF_DIRTY_RATIO:-'40'}
-+  DEF_XFS_AGE_BUFFER=${DEF_XFS_AGE_BUFFER:-'15'}
-+  DEF_XFS_SYNC_INTERVAL=${DEF_XFS_SYNC_INTERVAL:-'30'}
-+  DEF_XFS_BUFD_INTERVAL=${DEF_XFS_BUFD_INTERVAL:-'1'}
- 
--# This must be adjusted manually to the value of HZ in the running kernel
--# on 2.4, until the XFS people change their 2.4 external interfaces to work in
--# centisecs. This can be automated, but it's a work in progress that still needs
--# some fixes. On 2.6 kernels, XFS uses USER_HZ instead of HZ for external
--# interfaces, and that is currently always set to 100. So you don't need to
--# change this on 2.6.
--XFS_HZ=${XFS_HZ:-'100'}
-+  # This must be adjusted manually to the value of HZ in the running kernel
-+  # on 2.4, until the XFS people change their 2.4 external interfaces to work in
-+  # centisecs. This can be automated, but it's a work in progress that still needs
-+  # some fixes. On 2.6 kernels, XFS uses USER_HZ instead of HZ for external
-+  # interfaces, and that is currently always set to 100. So you don't need to
-+  # change this on 2.6.
-+  XFS_HZ=${XFS_HZ:-'100'}
- 
--#############################################################################
-+  #############################################################################
- 
--KLEVEL="$(uname -r |
--             {
-+  KLEVEL="$(uname -r |
-+               {
- 	       IFS='.' read a b c
- 	       echo $a.$b
- 	     }
--)"
--case "$KLEVEL" in
-+  )"
-+  case "$KLEVEL" in
- 	"2.4"|"2.6")
- 		;;
- 	*)
- 		echo "Unhandled kernel version: $KLEVEL ('uname -r' = '$(uname -r)')" >&2
- 		exit 1
- 		;;
--esac
-+  esac
- 
--if [ ! -e /proc/sys/vm/laptop_mode ] ; then
-+  if [ ! -e /proc/sys/vm/laptop_mode ] ; then
- 	echo "Kernel is not patched with laptop_mode patch." >&2
- 	exit 1
--fi
-+  fi
- 
--if [ ! -w /proc/sys/vm/laptop_mode ] ; then
-+  if [ ! -w /proc/sys/vm/laptop_mode ] ; then
- 	echo "You do not have enough privileges to enable laptop_mode." >&2
- 	exit 1
--fi
-+  fi
- 
--# Remove an option (the first parameter) of the form option=<number> from
--# a mount options string (the rest of the parameters).
--parse_mount_opts () {
-+  # Remove an option (the first parameter) of the form option=<number> from
-+  # a mount options string (the rest of the parameters).
-+  parse_mount_opts () {
- 	OPT="$1"
- 	shift
- 	echo ",$*," | sed		\
-@@ -444,11 +446,11 @@ parse_mount_opts () {
- 	 -e 's/,,*/,/g'			\
- 	 -e 's/^,//'			\
- 	 -e 's/,$//'
--}
-+  }
- 
--# Remove an option (the first parameter) without any arguments from
--# a mount option string (the rest of the parameters).
--parse_nonumber_mount_opts () {
-+  # Remove an option (the first parameter) without any arguments from
-+  # a mount option string (the rest of the parameters).
-+  parse_nonumber_mount_opts () {
- 	OPT="$1"
- 	shift
- 	echo ",$*," | sed		\
-@@ -456,20 +458,20 @@ parse_nonumber_mount_opts () {
- 	 -e 's/,,*/,/g'			\
- 	 -e 's/^,//'			\
- 	 -e 's/,$//'
--}
-+  }
- 
--# Find out the state of a yes/no option (e.g. "atime"/"noatime") in
--# fstab for a given filesystem, and use this state to replace the
--# value of the option in another mount options string. The device
--# is the first argument, the option name the second, and the default
--# value the third. The remainder is the mount options string.
--#
--# Example:
--# parse_yesno_opts_wfstab /dev/hda1 atime atime defaults,noatime
--#
--# If fstab contains, say, "rw" for this filesystem, then the result
--# will be "defaults,atime".
--parse_yesno_opts_wfstab () {
-+  # Find out the state of a yes/no option (e.g. "atime"/"noatime") in
-+  # fstab for a given filesystem, and use this state to replace the
-+  # value of the option in another mount options string. The device
-+  # is the first argument, the option name the second, and the default
-+  # value the third. The remainder is the mount options string.
-+  #
-+  # Example:
-+  # parse_yesno_opts_wfstab /dev/hda1 atime atime defaults,noatime
-+  #
-+  # If fstab contains, say, "rw" for this filesystem, then the result
-+  # will be "defaults,atime".
-+  parse_yesno_opts_wfstab () {
- 	L_DEV="$1"
- 	OPT="$2"
- 	DEF_OPT="$3"
-@@ -491,21 +493,21 @@ parse_yesno_opts_wfstab () {
- 		# option not specified in fstab -- choose the default.
- 		echo "$PARSEDOPTS1,$DEF_OPT"
- 	fi
--}
-+  }
- 
--# Find out the state of a numbered option (e.g. "commit=NNN") in
--# fstab for a given filesystem, and use this state to replace the
--# value of the option in another mount options string. The device
--# is the first argument, and the option name the second. The
--# remainder is the mount options string in which the replacement
--# must be done.
--#
--# Example:
--# parse_mount_opts_wfstab /dev/hda1 commit defaults,commit=7
--#
--# If fstab contains, say, "commit=3,rw" for this filesystem, then the
--# result will be "rw,commit=3".
--parse_mount_opts_wfstab () {
-+  # Find out the state of a numbered option (e.g. "commit=NNN") in
-+  # fstab for a given filesystem, and use this state to replace the
-+  # value of the option in another mount options string. The device
-+  # is the first argument, and the option name the second. The
-+  # remainder is the mount options string in which the replacement
-+  # must be done.
-+  #
-+  # Example:
-+  # parse_mount_opts_wfstab /dev/hda1 commit defaults,commit=7
-+  #
-+  # If fstab contains, say, "commit=3,rw" for this filesystem, then the
-+  # result will be "rw,commit=3".
-+  parse_mount_opts_wfstab () {
- 	L_DEV="$1"
- 	OPT="$2"
- 	shift 2
-@@ -523,9 +525,9 @@ parse_mount_opts_wfstab () {
- 		# option not specified in fstab: set it to 0
- 		echo "$PARSEDOPTS1,$OPT=0"
- 	fi
--}
-+  }
- 
--deduce_fstype () {
-+  deduce_fstype () {
- 	MP="$1"
- 	# My root filesystem unfortunately has
- 	# type "unknown" in /etc/mtab. If we encounter
-@@ -538,13 +540,13 @@ deduce_fstype () {
- 			exit 0
- 		fi
- 	done
--}
-+  }
- 
--if [ $DO_REMOUNT_NOATIME -eq 1 ] ; then
-+  if [ $DO_REMOUNT_NOATIME -eq 1 ] ; then
- 	NOATIME_OPT=",noatime"
--fi
-+  fi
- 
--case "$1" in
-+  case "$1" in
- 	start)
- 		AGE=$((100*$MAX_AGE))
- 		XFS_AGE=$(($XFS_HZ*$MAX_AGE))
-@@ -687,10 +689,9 @@ case "$1" in
- 		exit 1
- 		;;
- 
--esac
-+  esac
- 
--exit 0
----------------------CONTROL SCRIPT END------------------------------------------
-+  exit 0
- 
- 
- ACPI integration
-@@ -701,78 +702,76 @@ kick off the laptop_mode script and run hdparm. The part that
- automatically disables laptop mode when the battery is low was
- written by Jan Topinski.
- 
-------------------/etc/acpi/events/ac_adapter BEGIN------------------------------
--event=ac_adapter
--action=/etc/acpi/actions/ac.sh %e
------------------/etc/acpi/events/ac_adapter END---------------------------------
-+/etc/acpi/events/ac_adapter::
- 
-+	event=ac_adapter
-+	action=/etc/acpi/actions/ac.sh %e
- 
-------------------/etc/acpi/events/battery BEGIN---------------------------------
--event=battery.*
--action=/etc/acpi/actions/battery.sh %e
------------------/etc/acpi/events/battery END------------------------------------
-+/etc/acpi/events/battery::
- 
-+	event=battery.*
-+	action=/etc/acpi/actions/battery.sh %e
- 
------------------/etc/acpi/actions/ac.sh BEGIN-----------------------------------
--#!/bin/bash
-+/etc/acpi/actions/ac.sh::
- 
--# ac on/offline event handler
-+  #!/bin/bash
- 
--status=`awk '/^state: / { print $2 }' /proc/acpi/ac_adapter/$2/state`
-+  # ac on/offline event handler
- 
--case $status in
--        "on-line")
--                /sbin/laptop_mode stop
--                exit 0
--        ;;
--        "off-line")
--                /sbin/laptop_mode start
--                exit 0
--        ;;
--esac
-----------------------------/etc/acpi/actions/ac.sh END--------------------------
-+  status=`awk '/^state: / { print $2 }' /proc/acpi/ac_adapter/$2/state`
- 
-+  case $status in
-+          "on-line")
-+                  /sbin/laptop_mode stop
-+                  exit 0
-+          ;;
-+          "off-line")
-+                  /sbin/laptop_mode start
-+                  exit 0
-+          ;;
-+  esac
- 
-----------------------------/etc/acpi/actions/battery.sh BEGIN-------------------
--#! /bin/bash
- 
--# Automatically disable laptop mode when the battery almost runs out.
-+/etc/acpi/actions/battery.sh::
- 
--BATT_INFO=/proc/acpi/battery/$2/state
-+  #! /bin/bash
- 
--if [[ -f /proc/sys/vm/laptop_mode ]]
--then
--   LM=`cat /proc/sys/vm/laptop_mode`
--   if [[ $LM -gt 0 ]]
--   then
--     if [[ -f $BATT_INFO ]]
-+  # Automatically disable laptop mode when the battery almost runs out.
-+
-+  BATT_INFO=/proc/acpi/battery/$2/state
-+
-+  if [[ -f /proc/sys/vm/laptop_mode ]]
-+  then
-+     LM=`cat /proc/sys/vm/laptop_mode`
-+     if [[ $LM -gt 0 ]]
-      then
--        # Source the config file only now that we know we need
--        if [ -f /etc/default/laptop-mode ] ; then
--                # Debian
--                . /etc/default/laptop-mode
--        elif [ -f /etc/sysconfig/laptop-mode ] ; then
--                # Others
--                . /etc/sysconfig/laptop-mode
--        fi
--        MINIMUM_BATTERY_MINUTES=${MINIMUM_BATTERY_MINUTES:-'10'}
-+       if [[ -f $BATT_INFO ]]
-+       then
-+          # Source the config file only now that we know we need
-+          if [ -f /etc/default/laptop-mode ] ; then
-+                  # Debian
-+                  . /etc/default/laptop-mode
-+          elif [ -f /etc/sysconfig/laptop-mode ] ; then
-+                  # Others
-+                  . /etc/sysconfig/laptop-mode
-+          fi
-+          MINIMUM_BATTERY_MINUTES=${MINIMUM_BATTERY_MINUTES:-'10'}
- 
--        ACTION="`cat $BATT_INFO | grep charging | cut -c 26-`"
--        if [[ ACTION -eq "discharging" ]]
--        then
--           PRESENT_RATE=`cat $BATT_INFO | grep "present rate:" | sed  "s/.* \([0-9][0-9]* \).*/\1/" `
--           REMAINING=`cat $BATT_INFO | grep "remaining capacity:" | sed  "s/.* \([0-9][0-9]* \).*/\1/" `
--        fi
--        if (($REMAINING * 60 / $PRESENT_RATE < $MINIMUM_BATTERY_MINUTES))
--        then
--           /sbin/laptop_mode stop
--        fi
--     else
--       logger -p daemon.warning "You are using laptop mode and your battery interface $BATT_INFO is missing. This may lead to loss of data when the battery runs out. Check kernel ACPI support and /proc/acpi/battery folder, and edit /etc/acpi/battery.sh to set BATT_INFO to the correct path."
-+          ACTION="`cat $BATT_INFO | grep charging | cut -c 26-`"
-+          if [[ ACTION -eq "discharging" ]]
-+          then
-+             PRESENT_RATE=`cat $BATT_INFO | grep "present rate:" | sed  "s/.* \([0-9][0-9]* \).*/\1/" `
-+             REMAINING=`cat $BATT_INFO | grep "remaining capacity:" | sed  "s/.* \([0-9][0-9]* \).*/\1/" `
-+          fi
-+          if (($REMAINING * 60 / $PRESENT_RATE < $MINIMUM_BATTERY_MINUTES))
-+          then
-+             /sbin/laptop_mode stop
-+          fi
-+       else
-+         logger -p daemon.warning "You are using laptop mode and your battery interface $BATT_INFO is missing. This may lead to loss of data when the battery runs out. Check kernel ACPI support and /proc/acpi/battery folder, and edit /etc/acpi/battery.sh to set BATT_INFO to the correct path."
-+       fi
-      fi
--   fi
--fi
-----------------------------/etc/acpi/actions/battery.sh END--------------------
-+  fi
- 
- 
- Monitoring tool
-diff --git a/Documentation/laptops/sony-laptop.txt b/Documentation/laptops/sony-laptop.rst
-similarity index 85%
-rename from Documentation/laptops/sony-laptop.txt
-rename to Documentation/laptops/sony-laptop.rst
-index 978b1e615155..9edcc7f6612f 100644
---- a/Documentation/laptops/sony-laptop.txt
-+++ b/Documentation/laptops/sony-laptop.rst
-@@ -1,7 +1,9 @@
-+=========================================
- Sony Notebook Control Driver (SNC) Readme
-------------------------------------------
--	Copyright (C) 2004- 2005 Stelian Pop <stelian@popies.net>
--	Copyright (C) 2007 Mattia Dongili <malattia@linux.it>
-+=========================================
-+
-+	- Copyright (C) 2004- 2005 Stelian Pop <stelian@popies.net>
-+	- Copyright (C) 2007 Mattia Dongili <malattia@linux.it>
- 
- This mini-driver drives the SNC and SPIC device present in the ACPI BIOS of the
- Sony Vaio laptops. This driver mixes both devices functions under the same
-@@ -10,6 +12,7 @@ obsoleted by sony-laptop now.
- 
- Fn keys (hotkeys):
- ------------------
-+
- Some models report hotkeys through the SNC or SPIC devices, such events are
- reported both through the ACPI subsystem as acpi events and through the INPUT
- subsystem. See the logs of /proc/bus/input/devices to find out what those
-@@ -28,11 +31,14 @@ If your laptop model supports it, you will find sysfs files in the
- /sys/class/backlight/sony/
- directory. You will be able to query and set the current screen
- brightness:
-+
-+	======================	=========================================
- 	brightness		get/set screen brightness (an integer
- 				between 0 and 7)
- 	actual_brightness	reading from this file will query the HW
- 				to get real brightness value
- 	max_brightness		the maximum brightness value
-+	======================	=========================================
- 
- 
- Platform specific:
-@@ -45,6 +51,8 @@ You then read/write integer values from/to those files by using
- standard UNIX tools.
- 
- The files are:
-+
-+	======================	==========================================
- 	brightness_default	screen brightness which will be set
- 				when the laptop will be rebooted
- 	cdpower			power on/off the internal CD drive
-@@ -53,21 +61,39 @@ The files are:
- 				(only in debug mode)
- 	bluetoothpower		power on/off the internal bluetooth device
- 	fanspeed		get/set the fan speed
-+	======================	==========================================
- 
- Note that some files may be missing if they are not supported
- by your particular laptop model.
- 
--Example usage:
-+Example usage::
-+
- 	# echo "1" > /sys/devices/platform/sony-laptop/brightness_default
--sets the lowest screen brightness for the next and later reboots,
-+
-+sets the lowest screen brightness for the next and later reboots
-+
-+::
-+
- 	# echo "8" > /sys/devices/platform/sony-laptop/brightness_default
--sets the highest screen brightness for the next and later reboots,
-+
-+sets the highest screen brightness for the next and later reboots
-+
-+::
-+
- 	# cat /sys/devices/platform/sony-laptop/brightness_default
--retrieves the value.
-+
-+retrieves the value
-+
-+::
- 
- 	# echo "0" > /sys/devices/platform/sony-laptop/audiopower
--powers off the sound card,
-+
-+powers off the sound card
-+
-+::
-+
- 	# echo "1" > /sys/devices/platform/sony-laptop/audiopower
-+
- powers on the sound card.
- 
- 
-@@ -76,7 +102,8 @@ RFkill control:
- More recent Vaio models expose a consistent set of ACPI methods to
- control radio frequency emitting devices. If you are a lucky owner of
- such a laptop you will find the necessary rfkill devices under
--/sys/class/rfkill. Check those starting with sony-* in
-+/sys/class/rfkill. Check those starting with sony-* in::
-+
- 	# grep . /sys/class/rfkill/*/{state,name}
- 
- 
-@@ -88,26 +115,29 @@ you are not afraid of any side effects doing strange things with
- your ACPI BIOS could have on your laptop), load the driver and
- pass the option 'debug=1'.
- 
--REPEAT: DON'T DO THIS IF YOU DON'T LIKE RISKY BUSINESS.
-+REPEAT:
-+	**DON'T DO THIS IF YOU DON'T LIKE RISKY BUSINESS.**
- 
- In your kernel logs you will find the list of all ACPI methods
- the SNC device has on your laptop.
- 
- * For new models you will see a long list of meaningless method names,
--reading the DSDT table source should reveal that:
-+  reading the DSDT table source should reveal that:
-+
- (1) the SNC device uses an internal capability lookup table
- (2) SN00 is used to find values in the lookup table
- (3) SN06 and SN07 are used to call into the real methods based on
-     offsets you can obtain iterating the table using SN00
- (4) SN02 used to enable events.
-+
- Some values in the capability lookup table are more or less known, see
- the code for all sony_call_snc_handle calls, others are more obscure.
- 
- * For old models you can see the GCDP/GCDP methods used to pwer on/off
--the CD drive, but there are others and they are usually different from
--model to model.
-+  the CD drive, but there are others and they are usually different from
-+  model to model.
- 
--I HAVE NO IDEA WHAT THOSE METHODS DO.
-+**I HAVE NO IDEA WHAT THOSE METHODS DO.**
- 
- The sony-laptop driver creates, for some of those methods (the most
- current ones found on several Vaio models), an entry under
-diff --git a/Documentation/laptops/sonypi.txt b/Documentation/laptops/sonypi.rst
-similarity index 87%
-rename from Documentation/laptops/sonypi.txt
-rename to Documentation/laptops/sonypi.rst
-index 606bdb9ce036..2a1975ed7ee4 100644
---- a/Documentation/laptops/sonypi.txt
-+++ b/Documentation/laptops/sonypi.rst
-@@ -1,11 +1,13 @@
-+==================================================
- Sony Programmable I/O Control Device Driver Readme
----------------------------------------------------
--	Copyright (C) 2001-2004 Stelian Pop <stelian@popies.net>
--	Copyright (C) 2001-2002 Alcôve <www.alcove.com>
--	Copyright (C) 2001 Michael Ashley <m.ashley@unsw.edu.au>
--	Copyright (C) 2001 Junichi Morita <jun1m@mars.dti.ne.jp>
--	Copyright (C) 2000 Takaya Kinjo <t-kinjo@tc4.so-net.ne.jp>
--	Copyright (C) 2000 Andrew Tridgell <tridge@samba.org>
-+==================================================
-+
-+	- Copyright (C) 2001-2004 Stelian Pop <stelian@popies.net>
-+	- Copyright (C) 2001-2002 Alcôve <www.alcove.com>
-+	- Copyright (C) 2001 Michael Ashley <m.ashley@unsw.edu.au>
-+	- Copyright (C) 2001 Junichi Morita <jun1m@mars.dti.ne.jp>
-+	- Copyright (C) 2000 Takaya Kinjo <t-kinjo@tc4.so-net.ne.jp>
-+	- Copyright (C) 2000 Andrew Tridgell <tridge@samba.org>
- 
- This driver enables access to the Sony Programmable I/O Control Device which
- can be found in many Sony Vaio laptops. Some newer Sony laptops (seems to be
-@@ -14,6 +16,7 @@ sonypi device and are not supported at all by this driver.
- 
- It will give access (through a user space utility) to some events those laptops
- generate, like:
-+
- 	- jogdial events (the small wheel on the side of Vaios)
- 	- capture button events (only on Vaio Picturebook series)
- 	- Fn keys
-@@ -49,6 +52,7 @@ module argument syntax (<param>=<value> when passing the option to the
- module or sonypi.<param>=<value> on the kernel boot line when sonypi is
- statically linked into the kernel). Those options are:
- 
-+	=============== =======================================================
- 	minor: 		minor number of the misc device /dev/sonypi,
- 			default is -1 (automatic allocation, see /proc/misc
- 			or kernel logs)
-@@ -86,6 +90,8 @@ statically linked into the kernel). Those options are:
- 			will be tried. You can use the following bits to
- 			construct your own event mask (from
- 			drivers/char/sonypi.h):
-+
-+				========================	======
- 				SONYPI_JOGGER_MASK 		0x0001
- 				SONYPI_CAPTURE_MASK 		0x0002
- 				SONYPI_FNKEY_MASK 		0x0004
-@@ -100,22 +106,24 @@ statically linked into the kernel). Those options are:
- 				SONYPI_MEMORYSTICK_MASK		0x0800
- 				SONYPI_BATTERY_MASK		0x1000
- 				SONYPI_WIRELESS_MASK		0x2000
-+				========================	======
- 
- 	useinput:	if set (which is the default) two input devices are
- 			created, one which interprets the jogdial events as
- 			mouse events, the other one which acts like a
- 			keyboard reporting the pressing of the special keys.
-+	=============== =======================================================
- 
- Module use:
- -----------
- 
- In order to automatically load the sonypi module on use, you can put those
--lines a configuration file in /etc/modprobe.d/:
-+lines a configuration file in /etc/modprobe.d/::
- 
- 	alias char-major-10-250 sonypi
- 	options sonypi minor=250
- 
--This supposes the use of minor 250 for the sonypi device:
-+This supposes the use of minor 250 for the sonypi device::
- 
- 	# mknod /dev/sonypi c 10 250
- 
-@@ -148,5 +156,5 @@ Bugs:
- 	  http://www.acc.umu.se/~erikw/program/smartdimmer-0.1.tar.bz2
- 
- 	- since all development was done by reverse engineering, there is
--	  _absolutely no guarantee_ that this driver will not crash your
-+	  *absolutely no guarantee* that this driver will not crash your
- 	  laptop. Permanently.
-diff --git a/Documentation/laptops/thinkpad-acpi.txt b/Documentation/laptops/thinkpad-acpi.rst
-similarity index 89%
-rename from Documentation/laptops/thinkpad-acpi.txt
-rename to Documentation/laptops/thinkpad-acpi.rst
-index 75ef063622d2..19d52fc3c5e9 100644
---- a/Documentation/laptops/thinkpad-acpi.txt
-+++ b/Documentation/laptops/thinkpad-acpi.rst
-@@ -1,12 +1,15 @@
--		     ThinkPad ACPI Extras Driver
-+===========================
-+ThinkPad ACPI Extras Driver
-+===========================
- 
--                            Version 0.25
--                        October 16th,  2013
-+Version 0.25
- 
--               Borislav Deianov <borislav@users.sf.net>
--             Henrique de Moraes Holschuh <hmh@hmh.eng.br>
--                      http://ibm-acpi.sf.net/
-+October 16th,  2013
- 
-+- Borislav Deianov <borislav@users.sf.net>
-+- Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-+
-+http://ibm-acpi.sf.net/
- 
- This is a Linux driver for the IBM and Lenovo ThinkPad laptops. It
- supports various features of these laptops which are accessible
-@@ -91,7 +94,8 @@ yet ready or stabilized, it is expected that this interface will change,
- and any and all userspace programs must deal with it.
- 
- 
--Notes about the sysfs interface:
-+Notes about the sysfs interface
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- Unlike what was done with the procfs interface, correctness when talking
- to the sysfs interfaces will be enforced, as will correctness in the
-@@ -129,6 +133,7 @@ Driver version
- --------------
- 
- procfs: /proc/acpi/ibm/driver
-+
- sysfs driver attribute: version
- 
- The driver name and version. No commands can be written to this file.
-@@ -141,9 +146,13 @@ sysfs driver attribute: interface_version
- 
- Version of the thinkpad-acpi sysfs interface, as an unsigned long
- (output in hex format: 0xAAAABBCC), where:
--	AAAA - major revision
--	BB - minor revision
--	CC - bugfix revision
-+
-+	AAAA
-+	  - major revision
-+	BB
-+	  - minor revision
-+	CC
-+	  - bugfix revision
- 
- The sysfs interface version changelog for the driver can be found at the
- end of this document.  Changes to the sysfs interface done by the kernel
-@@ -170,6 +179,7 @@ Hot keys
- --------
- 
- procfs: /proc/acpi/ibm/hotkey
-+
- sysfs device attribute: hotkey_*
- 
- In a ThinkPad, the ACPI HKEY handler is responsible for communicating
-@@ -181,7 +191,7 @@ firmware will behave in many situations.
- The driver enables the HKEY ("hot key") event reporting automatically
- when loaded, and disables it when it is removed.
- 
--The driver will report HKEY events in the following format:
-+The driver will report HKEY events in the following format::
- 
- 	ibm/hotkey HKEY 00000080 0000xxxx
- 
-@@ -217,9 +227,10 @@ ThinkPads, it is still possible to support some extra hotkeys by
- polling the "CMOS NVRAM" at least 10 times per second.  The driver
- attempts to enables this functionality automatically when required.
- 
--procfs notes:
-+procfs notes
-+^^^^^^^^^^^^
- 
--The following commands can be written to the /proc/acpi/ibm/hotkey file:
-+The following commands can be written to the /proc/acpi/ibm/hotkey file::
- 
- 	echo 0xffffffff > /proc/acpi/ibm/hotkey -- enable all hot keys
- 	echo 0 > /proc/acpi/ibm/hotkey -- disable all possible hot keys
-@@ -227,7 +238,7 @@ The following commands can be written to the /proc/acpi/ibm/hotkey file:
- 	echo reset > /proc/acpi/ibm/hotkey -- restore the recommended mask
- 
- The following commands have been deprecated and will cause the kernel
--to log a warning:
-+to log a warning::
- 
- 	echo enable > /proc/acpi/ibm/hotkey -- does nothing
- 	echo disable > /proc/acpi/ibm/hotkey -- returns an error
-@@ -237,7 +248,8 @@ maintain maximum bug-to-bug compatibility, it does not report any masks,
- nor does it allow one to manipulate the hot key mask when the firmware
- does not support masks at all, even if NVRAM polling is in use.
- 
--sysfs notes:
-+sysfs notes
-+^^^^^^^^^^^
- 
- 	hotkey_bios_enabled:
- 		DEPRECATED, WILL BE REMOVED SOON.
-@@ -349,7 +361,8 @@ sysfs notes:
- 
- 		This attribute has poll()/select() support.
- 
--input layer notes:
-+input layer notes
-+^^^^^^^^^^^^^^^^^
- 
- A Hot key is mapped to a single input layer EV_KEY event, possibly
- followed by an EV_MSC MSC_SCAN event that shall contain that key's scan
-@@ -362,11 +375,13 @@ remapping KEY_UNKNOWN keys.
- 
- The events are available in an input device, with the following id:
- 
--	Bus:		BUS_HOST
--	vendor:		0x1014 (PCI_VENDOR_ID_IBM)  or
-+	==============  ==============================
-+	Bus		BUS_HOST
-+	vendor		0x1014 (PCI_VENDOR_ID_IBM)  or
- 			0x17aa (PCI_VENDOR_ID_LENOVO)
--	product:	0x5054 ("TP")
--	version:	0x4101
-+	product		0x5054 ("TP")
-+	version		0x4101
-+	==============  ==============================
- 
- The version will have its LSB incremented if the keymap changes in a
- backwards-compatible way.  The MSB shall always be 0x41 for this input
-@@ -380,9 +395,10 @@ backwards-compatible change for this input device.
- 
- Thinkpad-acpi Hot Key event map (version 0x4101):
- 
-+=======	=======	==============	==============================================
- ACPI	Scan
- event	code	Key		Notes
--
-+=======	=======	==============	==============================================
- 0x1001	0x00	FN+F1		-
- 
- 0x1002	0x01	FN+F2		IBM: battery (rare)
-@@ -426,7 +442,9 @@ event	code	Key		Notes
- 				or toggle screen expand
- 
- 0x1009	0x08	FN+F9		-
--	..	..		..
-+
-+...	...	...		...
-+
- 0x100B	0x0A	FN+F11		-
- 
- 0x100C	0x0B	FN+F12		Sleep to disk.  You are always
-@@ -480,8 +498,11 @@ event	code	Key		Notes
- 0x1018	0x17	THINKPAD	ThinkPad/Access IBM/Lenovo key
- 
- 0x1019	0x18	unknown
--..	..	..
-+
-+...	...	...
-+
- 0x1020	0x1F	unknown
-+=======	=======	==============	==============================================
- 
- The ThinkPad firmware does not allow one to differentiate when most hot
- keys are pressed or released (either that, or we don't know how to, yet).
-@@ -499,14 +520,17 @@ generate input device EV_KEY events.
- In addition to the EV_KEY events, thinkpad-acpi may also issue EV_SW
- events for switches:
- 
-+==============	==============================================
- SW_RFKILL_ALL	T60 and later hardware rfkill rocker switch
- SW_TABLET_MODE	Tablet ThinkPads HKEY events 0x5009 and 0x500A
-+==============	==============================================
- 
--Non hotkey ACPI HKEY event map:
---------------------------------
-+Non hotkey ACPI HKEY event map
-+------------------------------
- 
- Events that are never propagated by the driver:
- 
-+======		==================================================
- 0x2304		System is waking up from suspend to undock
- 0x2305		System is waking up from suspend to eject bay
- 0x2404		System is waking up from hibernation to undock
-@@ -519,10 +543,12 @@ Events that are never propagated by the driver:
- 0x6000		KEYBOARD: Numlock key pressed
- 0x6005		KEYBOARD: Fn key pressed (TO BE VERIFIED)
- 0x7000		Radio Switch may have changed state
-+======		==================================================
- 
- 
- Events that are propagated by the driver to userspace:
- 
-+======		=====================================================
- 0x2313		ALARM: System is waking up from suspend because
- 		the battery is nearly empty
- 0x2413		ALARM: System is waking up from hibernation because
-@@ -544,6 +570,7 @@ Events that are propagated by the driver to userspace:
- 0x6040		Nvidia Optimus/AC adapter related (TO BE VERIFIED)
- 0x60C0		X1 Yoga 2016, Tablet mode status changed
- 0x60F0		Thermal Transformation changed (GMTS, Windows)
-+======		=====================================================
- 
- Battery nearly empty alarms are a last resort attempt to get the
- operating system to hibernate or shutdown cleanly (0x2313), or shutdown
-@@ -562,7 +589,8 @@ cycle, or a system shutdown.  Obviously, something is very wrong if this
- happens.
- 
- 
--Brightness hotkey notes:
-+Brightness hotkey notes
-+^^^^^^^^^^^^^^^^^^^^^^^
- 
- Don't mess with the brightness hotkeys in a Thinkpad.  If you want
- notifications for OSD, use the sysfs backlight class event support.
-@@ -579,7 +607,9 @@ Bluetooth
- ---------
- 
- procfs: /proc/acpi/ibm/bluetooth
-+
- sysfs device attribute: bluetooth_enable (deprecated)
-+
- sysfs rfkill class: switch "tpacpi_bluetooth_sw"
- 
- This feature shows the presence and current state of a ThinkPad
-@@ -588,22 +618,25 @@ Bluetooth device in the internal ThinkPad CDC slot.
- If the ThinkPad supports it, the Bluetooth state is stored in NVRAM,
- so it is kept across reboots and power-off.
- 
--Procfs notes:
-+Procfs notes
-+^^^^^^^^^^^^
- 
--If Bluetooth is installed, the following commands can be used:
-+If Bluetooth is installed, the following commands can be used::
- 
- 	echo enable > /proc/acpi/ibm/bluetooth
- 	echo disable > /proc/acpi/ibm/bluetooth
- 
--Sysfs notes:
-+Sysfs notes
-+^^^^^^^^^^^
- 
- 	If the Bluetooth CDC card is installed, it can be enabled /
- 	disabled through the "bluetooth_enable" thinkpad-acpi device
- 	attribute, and its current status can also be queried.
- 
- 	enable:
--		0: disables Bluetooth / Bluetooth is disabled
--		1: enables Bluetooth / Bluetooth is enabled.
-+
-+		- 0: disables Bluetooth / Bluetooth is disabled
-+		- 1: enables Bluetooth / Bluetooth is enabled.
- 
- 	Note: this interface has been superseded by the	generic rfkill
- 	class.  It has been deprecated, and it will be removed in year
-@@ -617,7 +650,7 @@ Video output control -- /proc/acpi/ibm/video
- --------------------------------------------
- 
- This feature allows control over the devices used for video output -
--LCD, CRT or DVI (if available). The following commands are available:
-+LCD, CRT or DVI (if available). The following commands are available::
- 
- 	echo lcd_enable > /proc/acpi/ibm/video
- 	echo lcd_disable > /proc/acpi/ibm/video
-@@ -630,9 +663,10 @@ LCD, CRT or DVI (if available). The following commands are available:
- 	echo expand_toggle > /proc/acpi/ibm/video
- 	echo video_switch > /proc/acpi/ibm/video
- 
--NOTE: Access to this feature is restricted to processes owning the
--CAP_SYS_ADMIN capability for safety reasons, as it can interact badly
--enough with some versions of X.org to crash it.
-+NOTE:
-+  Access to this feature is restricted to processes owning the
-+  CAP_SYS_ADMIN capability for safety reasons, as it can interact badly
-+  enough with some versions of X.org to crash it.
- 
- Each video output device can be enabled or disabled individually.
- Reading /proc/acpi/ibm/video shows the status of each device.
-@@ -665,18 +699,21 @@ ThinkLight control
- ------------------
- 
- procfs: /proc/acpi/ibm/light
-+
- sysfs attributes: as per LED class, for the "tpacpi::thinklight" LED
- 
--procfs notes:
-+procfs notes
-+^^^^^^^^^^^^
- 
- The ThinkLight status can be read and set through the procfs interface.  A
- few models which do not make the status available will show the ThinkLight
--status as "unknown". The available commands are:
-+status as "unknown". The available commands are::
- 
- 	echo on  > /proc/acpi/ibm/light
- 	echo off > /proc/acpi/ibm/light
- 
--sysfs notes:
-+sysfs notes
-+^^^^^^^^^^^
- 
- The ThinkLight sysfs interface is documented by the LED class
- documentation, in Documentation/leds/leds-class.rst.  The ThinkLight LED name
-@@ -691,6 +728,7 @@ CMOS/UCMS control
- -----------------
- 
- procfs: /proc/acpi/ibm/cmos
-+
- sysfs device attribute: cmos_command
- 
- This feature is mostly used internally by the ACPI firmware to keep the legacy
-@@ -707,16 +745,16 @@ The range of valid cmos command numbers is 0 to 21, but not all have an
- effect and the behavior varies from model to model.  Here is the behavior
- on the X40 (tpb is the ThinkPad Buttons utility):
- 
--	0 - Related to "Volume down" key press
--	1 - Related to "Volume up" key press
--	2 - Related to "Mute on" key press
--	3 - Related to "Access IBM" key press
--	4 - Related to "LCD brightness up" key press
--	5 - Related to "LCD brightness down" key press
--	11 - Related to "toggle screen expansion" key press/function
--	12 - Related to "ThinkLight on"
--	13 - Related to "ThinkLight off"
--	14 - Related to "ThinkLight" key press (toggle ThinkLight)
-+	- 0 - Related to "Volume down" key press
-+	- 1 - Related to "Volume up" key press
-+	- 2 - Related to "Mute on" key press
-+	- 3 - Related to "Access IBM" key press
-+	- 4 - Related to "LCD brightness up" key press
-+	- 5 - Related to "LCD brightness down" key press
-+	- 11 - Related to "toggle screen expansion" key press/function
-+	- 12 - Related to "ThinkLight on"
-+	- 13 - Related to "ThinkLight off"
-+	- 14 - Related to "ThinkLight" key press (toggle ThinkLight)
- 
- The cmos command interface is prone to firmware split-brain problems, as
- in newer ThinkPads it is just a compatibility layer.  Do not use it, it is
-@@ -748,9 +786,10 @@ are aware of the consequences are welcome to enabling it.
- Audio mute and microphone mute LEDs are supported, but currently not
- visible to userspace. They are used by the snd-hda-intel audio driver.
- 
--procfs notes:
-+procfs notes
-+^^^^^^^^^^^^
- 
--The available commands are:
-+The available commands are::
- 
- 	echo '<LED number> on' >/proc/acpi/ibm/led
- 	echo '<LED number> off' >/proc/acpi/ibm/led
-@@ -760,23 +799,24 @@ The <LED number> range is 0 to 15. The set of LEDs that can be
- controlled varies from model to model. Here is the common ThinkPad
- mapping:
- 
--	0 - power
--	1 - battery (orange)
--	2 - battery (green)
--	3 - UltraBase/dock
--	4 - UltraBay
--	5 - UltraBase battery slot
--	6 - (unknown)
--	7 - standby
--	8 - dock status 1
--	9 - dock status 2
--	10, 11 - (unknown)
--	12 - thinkvantage
--	13, 14, 15 - (unknown)
-+	- 0 - power
-+	- 1 - battery (orange)
-+	- 2 - battery (green)
-+	- 3 - UltraBase/dock
-+	- 4 - UltraBay
-+	- 5 - UltraBase battery slot
-+	- 6 - (unknown)
-+	- 7 - standby
-+	- 8 - dock status 1
-+	- 9 - dock status 2
-+	- 10, 11 - (unknown)
-+	- 12 - thinkvantage
-+	- 13, 14, 15 - (unknown)
- 
- All of the above can be turned on and off and can be made to blink.
- 
--sysfs notes:
-+sysfs notes
-+^^^^^^^^^^^
- 
- The ThinkPad LED sysfs interface is described in detail by the LED class
- documentation, in Documentation/leds/leds-class.rst.
-@@ -815,7 +855,7 @@ The BEEP method is used internally by the ACPI firmware to provide
- audible alerts in various situations. This feature allows the same
- sounds to be triggered manually.
- 
--The commands are non-negative integer numbers:
-+The commands are non-negative integer numbers::
- 
- 	echo <number> >/proc/acpi/ibm/beep
- 
-@@ -823,25 +863,26 @@ The valid <number> range is 0 to 17. Not all numbers trigger sounds
- and the sounds vary from model to model. Here is the behavior on the
- X40:
- 
--	0 - stop a sound in progress (but use 17 to stop 16)
--	2 - two beeps, pause, third beep ("low battery")
--	3 - single beep
--	4 - high, followed by low-pitched beep ("unable")
--	5 - single beep
--	6 - very high, followed by high-pitched beep ("AC/DC")
--	7 - high-pitched beep
--	9 - three short beeps
--	10 - very long beep
--	12 - low-pitched beep
--	15 - three high-pitched beeps repeating constantly, stop with 0
--	16 - one medium-pitched beep repeating constantly, stop with 17
--	17 - stop 16
-+	- 0 - stop a sound in progress (but use 17 to stop 16)
-+	- 2 - two beeps, pause, third beep ("low battery")
-+	- 3 - single beep
-+	- 4 - high, followed by low-pitched beep ("unable")
-+	- 5 - single beep
-+	- 6 - very high, followed by high-pitched beep ("AC/DC")
-+	- 7 - high-pitched beep
-+	- 9 - three short beeps
-+	- 10 - very long beep
-+	- 12 - low-pitched beep
-+	- 15 - three high-pitched beeps repeating constantly, stop with 0
-+	- 16 - one medium-pitched beep repeating constantly, stop with 17
-+	- 17 - stop 16
- 
- 
- Temperature sensors
- -------------------
- 
- procfs: /proc/acpi/ibm/thermal
-+
- sysfs device attributes: (hwmon "thinkpad") temp*_input
- 
- Most ThinkPads include six or more separate temperature sensors but only
-@@ -850,10 +891,14 @@ feature shows readings from up to eight different sensors on older
- ThinkPads, and up to sixteen different sensors on newer ThinkPads.
- 
- For example, on the X40, a typical output may be:
--temperatures:   42 42 45 41 36 -128 33 -128
-+
-+temperatures:
-+	42 42 45 41 36 -128 33 -128
- 
- On the T43/p, a typical output may be:
--temperatures:   48 48 36 52 38 -128 31 -128 48 52 48 -128 -128 -128 -128 -128
-+
-+temperatures:
-+	48 48 36 52 38 -128 31 -128 48 52 48 -128 -128 -128 -128 -128
- 
- The mapping of thermal sensors to physical locations varies depending on
- system-board model (and thus, on ThinkPad model).
-@@ -863,46 +908,53 @@ tries to track down these locations for various models.
- 
- Most (newer?) models seem to follow this pattern:
- 
--1:  CPU
--2:  (depends on model)
--3:  (depends on model)
--4:  GPU
--5:  Main battery: main sensor
--6:  Bay battery: main sensor
--7:  Main battery: secondary sensor
--8:  Bay battery: secondary sensor
--9-15: (depends on model)
-+- 1:  CPU
-+- 2:  (depends on model)
-+- 3:  (depends on model)
-+- 4:  GPU
-+- 5:  Main battery: main sensor
-+- 6:  Bay battery: main sensor
-+- 7:  Main battery: secondary sensor
-+- 8:  Bay battery: secondary sensor
-+- 9-15: (depends on model)
- 
- For the R51 (source: Thomas Gruber):
--2:  Mini-PCI
--3:  Internal HDD
-+
-+- 2:  Mini-PCI
-+- 3:  Internal HDD
- 
- For the T43, T43/p (source: Shmidoax/Thinkwiki.org)
- http://thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_T43.2C_T43p
--2:  System board, left side (near PCMCIA slot), reported as HDAPS temp
--3:  PCMCIA slot
--9:  MCH (northbridge) to DRAM Bus
--10: Clock-generator, mini-pci card and ICH (southbridge), under Mini-PCI
--    card, under touchpad
--11: Power regulator, underside of system board, below F2 key
-+
-+- 2:  System board, left side (near PCMCIA slot), reported as HDAPS temp
-+- 3:  PCMCIA slot
-+- 9:  MCH (northbridge) to DRAM Bus
-+- 10: Clock-generator, mini-pci card and ICH (southbridge), under Mini-PCI
-+      card, under touchpad
-+- 11: Power regulator, underside of system board, below F2 key
- 
- The A31 has a very atypical layout for the thermal sensors
- (source: Milos Popovic, http://thinkwiki.org/wiki/Thermal_Sensors#ThinkPad_A31)
--1:  CPU
--2:  Main Battery: main sensor
--3:  Power Converter
--4:  Bay Battery: main sensor
--5:  MCH (northbridge)
--6:  PCMCIA/ambient
--7:  Main Battery: secondary sensor
--8:  Bay Battery: secondary sensor
- 
-+- 1:  CPU
-+- 2:  Main Battery: main sensor
-+- 3:  Power Converter
-+- 4:  Bay Battery: main sensor
-+- 5:  MCH (northbridge)
-+- 6:  PCMCIA/ambient
-+- 7:  Main Battery: secondary sensor
-+- 8:  Bay Battery: secondary sensor
-+
-+
-+Procfs notes
-+^^^^^^^^^^^^
- 
--Procfs notes:
- 	Readings from sensors that are not available return -128.
- 	No commands can be written to this file.
- 
--Sysfs notes:
-+Sysfs notes
-+^^^^^^^^^^^
-+
- 	Sensors that are not available return the ENXIO error.  This
- 	status may change at runtime, as there are hotplug thermal
- 	sensors, like those inside the batteries and docks.
-@@ -921,6 +973,7 @@ ftp://ftp.suse.com/pub/people/trenn/sources/ec
- 
- Use it to determine the register holding the fan
- speed on some models. To do that, do the following:
-+
- 	- make sure the battery is fully charged
- 	- make sure the fan is running
- 	- use above mentioned tool to read out the EC
-@@ -941,6 +994,7 @@ LCD brightness control
- ----------------------
- 
- procfs: /proc/acpi/ibm/brightness
-+
- sysfs backlight device "thinkpad_screen"
- 
- This feature allows software control of the LCD brightness on ThinkPad
-@@ -985,15 +1039,17 @@ brightness_enable=0 forces it to be disabled.  brightness_enable=1
- forces it to be enabled when available, even if the standard ACPI
- interface is also available.
- 
--Procfs notes:
-+Procfs notes
-+^^^^^^^^^^^^
- 
--	The available commands are:
-+The available commands are::
- 
- 	echo up   >/proc/acpi/ibm/brightness
- 	echo down >/proc/acpi/ibm/brightness
- 	echo 'level <level>' >/proc/acpi/ibm/brightness
- 
--Sysfs notes:
-+Sysfs notes
-+^^^^^^^^^^^
- 
- The interface is implemented through the backlight sysfs class, which is
- poorly documented at this time.
-@@ -1038,6 +1094,7 @@ Volume control (Console Audio control)
- --------------------------------------
- 
- procfs: /proc/acpi/ibm/volume
-+
- ALSA: "ThinkPad Console Audio Control", default ID: "ThinkPadEC"
- 
- NOTE: by default, the volume control interface operates in read-only
-@@ -1053,7 +1110,8 @@ Software volume control should be done only in the main AC97/HDA
- mixer.
- 
- 
--About the ThinkPad Console Audio control:
-+About the ThinkPad Console Audio control
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- ThinkPads have a built-in amplifier and muting circuit that drives the
- console headphone and speakers.  This circuit is after the main AC97
-@@ -1092,13 +1150,14 @@ normal key presses to the operating system (thinkpad-acpi is not
- involved).
- 
- 
--The ThinkPad-ACPI volume control:
-+The ThinkPad-ACPI volume control
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
- The preferred way to interact with the Console Audio control is the
- ALSA interface.
- 
- The legacy procfs interface allows one to read the current state,
--and if volume control is enabled, accepts the following commands:
-+and if volume control is enabled, accepts the following commands::
- 
- 	echo up   >/proc/acpi/ibm/volume
- 	echo down >/proc/acpi/ibm/volume
-@@ -1137,13 +1196,15 @@ Fan control and monitoring: fan speed, fan enable/disable
- ---------------------------------------------------------
- 
- procfs: /proc/acpi/ibm/fan
--sysfs device attributes: (hwmon "thinkpad") fan1_input, pwm1,
--			  pwm1_enable, fan2_input
-+
-+sysfs device attributes: (hwmon "thinkpad") fan1_input, pwm1, pwm1_enable, fan2_input
-+
- sysfs hwmon driver attributes: fan_watchdog
- 
--NOTE NOTE NOTE: fan control operations are disabled by default for
--safety reasons.  To enable them, the module parameter "fan_control=1"
--must be given to thinkpad-acpi.
-+NOTE NOTE NOTE:
-+   fan control operations are disabled by default for
-+   safety reasons.  To enable them, the module parameter "fan_control=1"
-+   must be given to thinkpad-acpi.
- 
- This feature attempts to show the current fan speed, control mode and
- other fan data that might be available.  The speed is read directly
-@@ -1154,7 +1215,8 @@ value on other models.
- Some Lenovo ThinkPads support a secondary fan.  This fan cannot be
- controlled separately, it shares the main fan control.
- 
--Fan levels:
-+Fan levels
-+^^^^^^^^^^
- 
- Most ThinkPad fans work in "levels" at the firmware interface.  Level 0
- stops the fan.  The higher the level, the higher the fan speed, although
-@@ -1209,9 +1271,10 @@ therefore, not suitable to protect against fan mode changes made through
- means other than the "enable", "disable", and "level" procfs fan
- commands, or the hwmon fan control sysfs interface.
- 
--Procfs notes:
-+Procfs notes
-+^^^^^^^^^^^^
- 
--The fan may be enabled or disabled with the following commands:
-+The fan may be enabled or disabled with the following commands::
- 
- 	echo enable  >/proc/acpi/ibm/fan
- 	echo disable >/proc/acpi/ibm/fan
-@@ -1219,7 +1282,7 @@ The fan may be enabled or disabled with the following commands:
- Placing a fan on level 0 is the same as disabling it.  Enabling a fan
- will try to place it in a safe level if it is too slow or disabled.
- 
--The fan level can be controlled with the command:
-+The fan level can be controlled with the command::
- 
- 	echo 'level <level>' > /proc/acpi/ibm/fan
- 
-@@ -1231,7 +1294,7 @@ compatibility.
- 
- On the X31 and X40 (and ONLY on those models), the fan speed can be
- controlled to a certain degree.  Once the fan is running, it can be
--forced to run faster or slower with the following command:
-+forced to run faster or slower with the following command::
- 
- 	echo 'speed <speed>' > /proc/acpi/ibm/fan
- 
-@@ -1241,13 +1304,14 @@ effect or the fan speed eventually settles somewhere in that range.  The
- fan cannot be stopped or started with this command.  This functionality
- is incomplete, and not available through the sysfs interface.
- 
--To program the safety watchdog, use the "watchdog" command.
-+To program the safety watchdog, use the "watchdog" command::
- 
- 	echo 'watchdog <interval in seconds>' > /proc/acpi/ibm/fan
- 
- If you want to disable the watchdog, use 0 as the interval.
- 
--Sysfs notes:
-+Sysfs notes
-+^^^^^^^^^^^
- 
- The sysfs interface follows the hwmon subsystem guidelines for the most
- part, and the exception is the fan safety watchdog.
-@@ -1261,10 +1325,10 @@ to the firmware).
- Features not yet implemented by the driver return ENOSYS.
- 
- hwmon device attribute pwm1_enable:
--	0: PWM offline (fan is set to full-speed mode)
--	1: Manual PWM control (use pwm1 to set fan level)
--	2: Hardware PWM control (EC "auto" mode)
--	3: reserved (Software PWM control, not implemented yet)
-+	- 0: PWM offline (fan is set to full-speed mode)
-+	- 1: Manual PWM control (use pwm1 to set fan level)
-+	- 2: Hardware PWM control (EC "auto" mode)
-+	- 3: reserved (Software PWM control, not implemented yet)
- 
- 	Modes 0 and 2 are not supported by all ThinkPads, and the
- 	driver is not always able to detect this.  If it does know a
-@@ -1304,7 +1368,9 @@ WAN
- ---
- 
- procfs: /proc/acpi/ibm/wan
-+
- sysfs device attribute: wwan_enable (deprecated)
-+
- sysfs rfkill class: switch "tpacpi_wwan_sw"
- 
- This feature shows the presence and current state of the built-in
-@@ -1316,22 +1382,24 @@ so it is kept across reboots and power-off.
- It was tested on a Lenovo ThinkPad X60. It should probably work on other
- ThinkPad models which come with this module installed.
- 
--Procfs notes:
-+Procfs notes
-+^^^^^^^^^^^^
- 
--If the W-WAN card is installed, the following commands can be used:
-+If the W-WAN card is installed, the following commands can be used::
- 
- 	echo enable > /proc/acpi/ibm/wan
- 	echo disable > /proc/acpi/ibm/wan
- 
--Sysfs notes:
-+Sysfs notes
-+^^^^^^^^^^^
- 
- 	If the W-WAN card is installed, it can be enabled /
- 	disabled through the "wwan_enable" thinkpad-acpi device
- 	attribute, and its current status can also be queried.
- 
- 	enable:
--		0: disables WWAN card / WWAN card is disabled
--		1: enables WWAN card / WWAN card is enabled.
-+		- 0: disables WWAN card / WWAN card is disabled
-+		- 1: enables WWAN card / WWAN card is enabled.
- 
- 	Note: this interface has been superseded by the	generic rfkill
- 	class.  It has been deprecated, and it will be removed in year
-@@ -1354,7 +1422,8 @@ sysfs rfkill class: switch "tpacpi_uwb_sw"
- This feature exports an rfkill controller for the UWB device, if one is
- present and enabled in the BIOS.
- 
--Sysfs notes:
-+Sysfs notes
-+^^^^^^^^^^^
- 
- 	rfkill controller switch "tpacpi_uwb_sw": refer to
- 	Documentation/rfkill.txt for details.
-@@ -1368,11 +1437,11 @@ This sysfs attribute controls the keyboard "face" that will be shown on the
- Lenovo X1 Carbon 2nd gen (2014)'s adaptive keyboard. The value can be read
- and set.
- 
--1 = Home mode
--2 = Web-browser mode
--3 = Web-conference mode
--4 = Function mode
--5 = Layflat mode
-+- 1 = Home mode
-+- 2 = Web-browser mode
-+- 3 = Web-conference mode
-+- 4 = Function mode
-+- 5 = Layflat mode
- 
- For more details about which buttons will appear depending on the mode, please
- review the laptop's user guide:
-@@ -1382,13 +1451,13 @@ Multiple Commands, Module Parameters
- ------------------------------------
- 
- Multiple commands can be written to the proc files in one shot by
--separating them with commas, for example:
-+separating them with commas, for example::
- 
- 	echo enable,0xffff > /proc/acpi/ibm/hotkey
- 	echo lcd_disable,crt_enable > /proc/acpi/ibm/video
- 
- Commands can also be specified when loading the thinkpad-acpi module,
--for example:
-+for example::
- 
- 	modprobe thinkpad_acpi hotkey=enable,0xffff video=auto_disable
- 
-@@ -1397,14 +1466,16 @@ Enabling debugging output
- -------------------------
- 
- The module takes a debug parameter which can be used to selectively
--enable various classes of debugging output, for example:
-+enable various classes of debugging output, for example::
- 
- 	 modprobe thinkpad_acpi debug=0xffff
- 
- will enable all debugging output classes.  It takes a bitmask, so
- to enable more than one output class, just add their values.
- 
-+	=============		======================================
- 	Debug bitmask		Description
-+	=============		======================================
- 	0x8000			Disclose PID of userspace programs
- 				accessing some functions of the driver
- 	0x0001			Initialization and probing
-@@ -1415,6 +1486,7 @@ to enable more than one output class, just add their values.
- 	0x0010			Fan control
- 	0x0020			Backlight brightness
- 	0x0040			Audio mixer/volume control
-+	=============		======================================
- 
- There is also a kernel build option to enable more debugging
- information, which may be necessary to debug driver problems.
-@@ -1432,8 +1504,10 @@ the module parameter force_load=1.  Regardless of whether this works or
- not, please contact ibm-acpi-devel@lists.sourceforge.net with a report.
- 
- 
--Sysfs interface changelog:
-+Sysfs interface changelog
-+^^^^^^^^^^^^^^^^^^^^^^^^^
- 
-+=========	===============================================================
- 0x000100:	Initial sysfs support, as a single platform driver and
- 		device.
- 0x000200:	Hot key support for 32 hot keys, and radio slider switch
-@@ -1485,3 +1559,4 @@ Sysfs interface changelog:
- 0x030000:	Thermal and fan sysfs attributes were moved to the hwmon
- 		device instead of being attached to the backing platform
- 		device.
-+=========	===============================================================
-diff --git a/Documentation/laptops/toshiba_haps.txt b/Documentation/laptops/toshiba_haps.rst
-similarity index 60%
-rename from Documentation/laptops/toshiba_haps.txt
-rename to Documentation/laptops/toshiba_haps.rst
-index 0c1d88dedbde..11dfc428c080 100644
---- a/Documentation/laptops/toshiba_haps.txt
-+++ b/Documentation/laptops/toshiba_haps.rst
-@@ -1,18 +1,19 @@
--Kernel driver toshiba_haps
-+====================================
- Toshiba HDD Active Protection Sensor
- ====================================
- 
-+Kernel driver: toshiba_haps
-+
- Author: Azael Avalos <coproscefalo@gmail.com>
- 
- 
--0. Contents
-------------
-+.. 0. Contents
- 
--1. Description
--2. Interface
--3. Accelerometer axes
--4. Supported devices
--5. Usage
-+   1. Description
-+   2. Interface
-+   3. Accelerometer axes
-+   4. Supported devices
-+   5. Usage
- 
- 
- 1. Description
-@@ -32,17 +33,20 @@ file to set the desired protection level or sensor sensibility.
- ------------
- 
- This device comes with 3 methods:
--_STA -  Checks existence of the device, returning Zero if the device does not
-+
-+====	=====================================================================
-+_STA    Checks existence of the device, returning Zero if the device does not
- 	exists or is not supported.
--PTLV -  Sets the desired protection level.
--RSSS -  Shuts down the HDD protection interface for a few seconds,
-+PTLV    Sets the desired protection level.
-+RSSS    Shuts down the HDD protection interface for a few seconds,
- 	then restores normal operation.
-+====	=====================================================================
- 
- Note:
--The presence of Solid State Drives (SSD) can make this driver to fail loading,
--given the fact that such drives have no movable parts, and thus, not requiring
--any "protection" as well as failing during the evaluation of the _STA method
--found under this device.
-+  The presence of Solid State Drives (SSD) can make this driver to fail loading,
-+  given the fact that such drives have no movable parts, and thus, not requiring
-+  any "protection" as well as failing during the evaluation of the _STA method
-+  found under this device.
- 
- 
- 3. Accelerometer axes
-@@ -66,11 +70,18 @@ conventional HDD and not only SSD, or a combination of both HDD and SSD.
- --------
- 
- The sysfs files under /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/ are:
--protection_level - The protection_level is readable and writeable, and
-+
-+================   ============================================================
-+protection_level   The protection_level is readable and writeable, and
- 		   provides a way to let userspace query the current protection
- 		   level, as well as set the desired protection level, the
- 		   available protection levels are:
--		   0 - Disabled | 1 - Low | 2 - Medium | 3 - High
--reset_protection - The reset_protection entry is writeable only, being "1"
-+
-+		   ============   =======   ==========   ========
-+		   0 - Disabled   1 - Low   2 - Medium   3 - High
-+		   ============   =======   ==========   ========
-+
-+reset_protection   The reset_protection entry is writeable only, being "1"
- 		   the only parameter it accepts, it is used to trigger
- 		   a reset of the protection interface.
-+================   ============================================================
-diff --git a/Documentation/sysctl/vm.txt b/Documentation/sysctl/vm.txt
-index 749322060f10..c5f0d44433a2 100644
---- a/Documentation/sysctl/vm.txt
-+++ b/Documentation/sysctl/vm.txt
-@@ -102,7 +102,7 @@ Changing this takes effect whenever an application requests memory.
- block_dump
- 
- block_dump enables block I/O debugging when set to a nonzero value. More
--information on block I/O debugging is in Documentation/laptops/laptop-mode.txt.
-+information on block I/O debugging is in Documentation/laptops/laptop-mode.rst.
- 
- ==============================================================
- 
-@@ -286,7 +286,7 @@ shared memory segment using hugetlb page.
- laptop_mode
- 
- laptop_mode is a knob that controls "laptop mode". All the things that are
--controlled by this knob are discussed in Documentation/laptops/laptop-mode.txt.
-+controlled by this knob are discussed in Documentation/laptops/laptop-mode.rst.
- 
- ==============================================================
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b7d5faf95e25..58e103015dea 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14756,7 +14756,7 @@ M:	Mattia Dongili <malattia@linux.it>
- L:	platform-driver-x86@vger.kernel.org
- W:	http://www.linux.it/~malattia/wiki/index.php/Sony_drivers
- S:	Maintained
--F:	Documentation/laptops/sony-laptop.txt
-+F:	Documentation/laptops/sony-laptop.rst
- F:	drivers/char/sonypi.c
- F:	drivers/platform/x86/sony-laptop.c
- F:	include/linux/sony-laptop.h
-diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
-index 466ebd84ad17..bb734066075f 100644
---- a/drivers/char/Kconfig
-+++ b/drivers/char/Kconfig
-@@ -382,7 +382,7 @@ config SONYPI
- 	  Device which can be found in many (all ?) Sony Vaio laptops.
- 
- 	  If you have one of those laptops, read
--	  <file:Documentation/laptops/sonypi.txt>, and say Y or M here.
-+	  <file:Documentation/laptops/sonypi.rst>, and say Y or M here.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called sonypi.
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index bd15b47abcb4..abae73f72e75 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -451,7 +451,7 @@ config SONY_LAPTOP
- 	  screen brightness control, Fn keys and allows powering on/off some
- 	  devices.
- 
--	  Read <file:Documentation/laptops/sony-laptop.txt> for more information.
-+	  Read <file:Documentation/laptops/sony-laptop.rst> for more information.
- 
- config SONYPI_COMPAT
- 	bool "Sonypi compatibility"
-@@ -503,7 +503,7 @@ config THINKPAD_ACPI
- 	  support for Fn-Fx key combinations, Bluetooth control, video
- 	  output switching, ThinkLight control, UltraBay eject and more.
- 	  For more information about this driver see
--	  <file:Documentation/laptops/thinkpad-acpi.txt> and
-+	  <file:Documentation/laptops/thinkpad-acpi.rst> and
- 	  <http://ibm-acpi.sf.net/> .
- 
- 	  This driver was formerly known as ibm-acpi.
--- 
-2.21.0
+VGhvc2UgZmlsZXMgYmVsb25nIHRvIHRoZSBkcml2ZXItYXBpIGd1aWRlLiBBZGQgdGhlbSB0byB0
+aGUKZHJpdmVyLWFwaSBib29rLgoKU2lnbmVkLW9mZi1ieTogTWF1cm8gQ2FydmFsaG8gQ2hlaGFi
+IDxtY2hlaGFiK3NhbXN1bmdAa2VybmVsLm9yZz4KLS0tCiBEb2N1bWVudGF0aW9uL0FCSS9yZW1v
+dmVkL3N5c2ZzLWNsYXNzLXJma2lsbCAgfCAgMiArLQogRG9jdW1lbnRhdGlvbi9BQkkvc3RhYmxl
+L3N5c2ZzLWNsYXNzLXJma2lsbCAgIHwgIDIgKy0KIC4uLi9BQkkvdGVzdGluZy9zeXNmcy1jbGFz
+cy1zd2l0Y2h0ZWMgICAgICAgICB8ICAyICstCiBEb2N1bWVudGF0aW9uL1BDSS9wY2kucnN0ICAg
+ICAgICAgICAgICAgICAgICAgfCAgMiArLQogRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9ody12
+dWxuL2wxdGYucnN0ICAgIHwgIDIgKy0KIC4uLi9hZG1pbi1ndWlkZS9rZXJuZWwtcGFyYW1ldGVy
+cy50eHQgICAgICAgICB8ICA0ICstCiAuLi4vYWRtaW4tZ3VpZGUva2VybmVsLXBlci1jcHUta3Ro
+cmVhZHMucnN0ICAgfCAgMiArLQogLi4uL3sgPT4gZHJpdmVyLWFwaX0vYXRvbWljX2JpdG9wcy5y
+c3QgICAgICAgIHwgIDIgLQogRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L2J0OHh4Z3Bp
+by5yc3QgIHwgIDIgLQogLi4uL2J1cy12aXJ0LXBoeXMtbWFwcGluZy5yc3QgICAgICAgICAgICAg
+ICAgIHwgIDIgLQogLi4uL3tjb25uZWN0b3IgPT4gZHJpdmVyLWFwaX0vY29ubmVjdG9yLnJzdCAg
+IHwgIDIgLQogLi4uL3tjb25zb2xlID0+IGRyaXZlci1hcGl9L2NvbnNvbGUucnN0ICAgICAgIHwg
+IDIgLQogRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L2NyYzMyLnJzdCAgICAgIHwgIDIg
+LQogRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L2RjZGJhcy5yc3QgICAgIHwgIDIgLQog
+Li4uL3sgPT4gZHJpdmVyLWFwaX0vZGVidWdnaW5nLW1vZHVsZXMucnN0ICAgIHwgIDIgLQogLi4u
+L2RlYnVnZ2luZy12aWEtb2hjaTEzOTQucnN0ICAgICAgICAgICAgICAgIHwgIDIgLQogRG9jdW1l
+bnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L2RlbGxfcmJ1LnJzdCAgIHwgIDIgLQogRG9jdW1lbnRh
+dGlvbi97ID0+IGRyaXZlci1hcGl9L2RpZ3NpZy5yc3QgICAgIHwgIDIgLQogLi4uL3tFRElEL2hv
+d3RvLnJzdCA9PiBkcml2ZXItYXBpL2VkaWQucnN0fSAgIHwgIDIgLQogRG9jdW1lbnRhdGlvbi97
+ID0+IGRyaXZlci1hcGl9L2Vpc2EucnN0ICAgICAgIHwgIDIgLQogLi4uL3sgPT4gZHJpdmVyLWFw
+aX0vZnV0ZXgtcmVxdWV1ZS1waS5yc3QgICAgIHwgIDIgLQogLi4uL3sgPT4gZHJpdmVyLWFwaX0v
+Z2NjLXBsdWdpbnMucnN0ICAgICAgICAgIHwgIDIgLQogRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZl
+ci1hcGl9L2h3c3BpbmxvY2sucnN0IHwgIDIgLQogRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2lu
+ZGV4LnJzdCAgICAgICAgICAgIHwgNjYgKysrKysrKysrKysrKysrKysrKwogRG9jdW1lbnRhdGlv
+bi97ID0+IGRyaXZlci1hcGl9L2lvLW1hcHBpbmcucnN0IHwgIDIgLQogLi4uL3sgPT4gZHJpdmVy
+LWFwaX0vaW9fb3JkZXJpbmcucnN0ICAgICAgICAgIHwgIDIgLQogLi4uL3tJUE1JLnJzdCA9PiBk
+cml2ZXItYXBpL2lwbWkucnN0fSAgICAgICAgIHwgIDIgLQogLi4uL2lycS1hZmZpbml0eS5yc3R9
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgLQogLi4uL2lycS1kb21haW4ucnN0fSAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgIDIgLQogRG9jdW1lbnRhdGlvbi97SVJRLnJzdCA9PiBk
+cml2ZXItYXBpL2lycS5yc3R9IHwgIDIgLQogLi4uL3sgPT4gZHJpdmVyLWFwaX0vaXJxZmxhZ3Mt
+dHJhY2luZy5yc3QgICAgIHwgIDIgLQogRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L2lz
+YS5yc3QgICAgICAgIHwgIDIgLQogRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L2lzYXBu
+cC5yc3QgICAgIHwgIDIgLQogRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L2tvYmplY3Qu
+cnN0ICAgIHwgIDQgKy0KIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9rcHJvYmVzLnJz
+dCAgICB8ICAyIC0KIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9rcmVmLnJzdCAgICAg
+ICB8ICAyIC0KIC4uLi9wYmxrLnR4dCA9PiBkcml2ZXItYXBpL2xpZ2h0bnZtLXBibGsucnN0fSB8
+ICAwCiBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vbHpvLnJzdCAgICAgICAgfCAgMiAt
+CiBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vbWFpbGJveC5yc3QgICAgfCAgMiAtCiAu
+Li4veyA9PiBkcml2ZXItYXBpfS9tZW4tY2hhbWVsZW9uLWJ1cy5yc3QgICAgfCAgMiAtCiBEb2N1
+bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vbm9tbXUtbW1hcC5yc3QgfCAgMiAtCiBEb2N1bWVu
+dGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vbnRiLnJzdCAgICAgICAgfCAgMiAtCiBEb2N1bWVudGF0
+aW9uL3tudm1lbSA9PiBkcml2ZXItYXBpfS9udm1lbS5yc3QgfCAgMiAtCiBEb2N1bWVudGF0aW9u
+L3sgPT4gZHJpdmVyLWFwaX0vcGFkYXRhLnJzdCAgICAgfCAgMiAtCiAuLi4veyA9PiBkcml2ZXIt
+YXBpfS9wYXJwb3J0LWxvd2xldmVsLnJzdCAgICAgfCAgMiAtCiAuLi4veyA9PiBkcml2ZXItYXBp
+fS9wZXJjcHUtcnctc2VtYXBob3JlLnJzdCAgfCAgMiAtCiBEb2N1bWVudGF0aW9uL3sgPT4gZHJp
+dmVyLWFwaX0vcGktZnV0ZXgucnN0ICAgfCAgMiAtCiBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkv
+cHBzLnJzdCAgICAgICAgICAgICAgfCAgMiAtCiAuLi4veyA9PiBkcml2ZXItYXBpfS9wcmVlbXB0
+LWxvY2tpbmcucnN0ICAgICAgfCAgMiAtCiAuLi4ve3B0aSA9PiBkcml2ZXItYXBpfS9wdGlfaW50
+ZWxfbWlkLnJzdCAgICAgfCAgMiAtCiBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcHRwLnJzdCAg
+ICAgICAgICAgICAgfCAgMiAtCiBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vcHdtLnJz
+dCAgICAgICAgfCAgMiAtCiBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vcmJ0cmVlLnJz
+dCAgICAgfCAgMiAtCiBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vcmVtb3RlcHJvYy5y
+c3QgfCAgNCArLQogRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L3Jma2lsbC5yc3QgICAg
+IHwgIDIgLQogLi4uL3sgPT4gZHJpdmVyLWFwaX0vcm9idXN0LWZ1dGV4LUFCSS5yc3QgICAgIHwg
+IDIgLQogLi4uL3sgPT4gZHJpdmVyLWFwaX0vcm9idXN0LWZ1dGV4ZXMucnN0ICAgICAgIHwgIDIg
+LQogRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L3JwbXNnLnJzdCAgICAgIHwgIDIgLQog
+RG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L3NnaS1pb2M0LnJzdCAgIHwgIDIgLQogLi4u
+L3tTTTUwMS5yc3QgPT4gZHJpdmVyLWFwaS9zbTUwMS5yc3R9ICAgICAgIHwgIDIgLQogLi4uL3sg
+PT4gZHJpdmVyLWFwaX0vc21zY19lY2UxMDk5LnJzdCAgICAgICAgIHwgIDIgLQogLi4uL3sgPT4g
+ZHJpdmVyLWFwaX0vc3BlY3VsYXRpb24ucnN0ICAgICAgICAgIHwgIDggKy0tCiAuLi4veyA9PiBk
+cml2ZXItYXBpfS9zdGF0aWMta2V5cy5yc3QgICAgICAgICAgfCAgMiAtCiBEb2N1bWVudGF0aW9u
+L3sgPT4gZHJpdmVyLWFwaX0vc3dpdGNodGVjLnJzdCAgfCAgNCArLQogRG9jdW1lbnRhdGlvbi97
+ID0+IGRyaXZlci1hcGl9L3N5bmNfZmlsZS5yc3QgIHwgIDIgLQogRG9jdW1lbnRhdGlvbi97ID0+
+IGRyaXZlci1hcGl9L3RlZS5yc3QgICAgICAgIHwgIDIgLQogLi4uL3sgPT4gZHJpdmVyLWFwaX0v
+dGhpc19jcHVfb3BzLnJzdCAgICAgICAgIHwgIDIgLQogLi4uL3VuYWxpZ25lZC1tZW1vcnktYWNj
+ZXNzLnJzdCAgICAgICAgICAgICAgIHwgIDIgLQogLi4uL3sgPT4gZHJpdmVyLWFwaX0vdmZpby1t
+ZWRpYXRlZC1kZXZpY2UucnN0IHwgIDQgKy0KIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBp
+fS92ZmlvLnJzdCAgICAgICB8ICAyIC0KIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS94
+aWxseWJ1cy5yc3QgICB8ICAyIC0KIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS94ei5y
+c3QgICAgICAgICB8ICAyIC0KIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS96b3Jyby5y
+c3QgICAgICB8ICAyIC0KIERvY3VtZW50YXRpb24vZHJpdmVyLW1vZGVsL2RldmljZS5yc3QgICAg
+ICAgICB8ICAyICstCiBEb2N1bWVudGF0aW9uL2ZiL2ZiY29uLnJzdCAgICAgICAgICAgICAgICAg
+ICAgfCAgNCArLQogRG9jdW1lbnRhdGlvbi9maWxlc3lzdGVtcy9zeXNmcy50eHQgICAgICAgICAg
+IHwgIDIgKy0KIERvY3VtZW50YXRpb24vZ3B1L2RybS1tbS5yc3QgICAgICAgICAgICAgICAgICB8
+ICAyICstCiBEb2N1bWVudGF0aW9uL2lhNjQvaXJxLXJlZGlyLnJzdCAgICAgICAgICAgICAgfCAg
+MiArLQogRG9jdW1lbnRhdGlvbi9sYXB0b3BzL3RoaW5rcGFkLWFjcGkucnN0ICAgICAgIHwgIDYg
+Ky0KIERvY3VtZW50YXRpb24vbG9ja2luZy9ydC1tdXRleC5yc3QgICAgICAgICAgICB8ICAyICst
+CiBEb2N1bWVudGF0aW9uL25ldHdvcmtpbmcvc2NhbGluZy5yc3QgICAgICAgICAgfCAgNCArLQog
+RG9jdW1lbnRhdGlvbi9zMzkwL3ZmaW8tY2N3LnJzdCAgICAgICAgICAgICAgIHwgIDYgKy0KIERv
+Y3VtZW50YXRpb24vc3lzY3RsL2tlcm5lbC5yc3QgICAgICAgICAgICAgICB8ICAyICstCiBEb2N1
+bWVudGF0aW9uL3N5c2N0bC92bS5yc3QgICAgICAgICAgICAgICAgICAgfCAgMiArLQogRG9jdW1l
+bnRhdGlvbi90cmFjZS9rcHJvYmV0cmFjZS5yc3QgICAgICAgICAgIHwgIDIgKy0KIERvY3VtZW50
+YXRpb24vdHJhbnNsYXRpb25zL3poX0NOL0lSUS50eHQgICAgICB8ICA0ICstCiAuLi4vdHJhbnNs
+YXRpb25zL3poX0NOL2ZpbGVzeXN0ZW1zL3N5c2ZzLnR4dCAgfCAgMiArLQogLi4uL3RyYW5zbGF0
+aW9ucy96aF9DTi9pb19vcmRlcmluZy50eHQgICAgICAgIHwgIDQgKy0KIERvY3VtZW50YXRpb24v
+dzEvdzEubmV0bGluayAgICAgICAgICAgICAgICAgICB8ICAyICstCiBEb2N1bWVudGF0aW9uL3dh
+dGNoZG9nL2hwd2R0LnJzdCAgICAgICAgICAgICAgfCAgMiArLQogTUFJTlRBSU5FUlMgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgNDYgKysrKysrLS0tLS0tLQogYXJjaC9LY29u
+ZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDQgKy0KIGFyY2gvdW5pY29y
+ZTMyL2luY2x1ZGUvYXNtL2lvLmggICAgICAgICAgICAgICB8ICAyICstCiBkcml2ZXJzL2Jhc2Uv
+Y29yZS5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogZHJpdmVycy9jaGFyL2lw
+bWkvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KIGRyaXZlcnMvY2hhci9pcG1p
+L2lwbWlfc2lfaG90bW9kLmMgICAgICAgICAgICB8ICAyICstCiBkcml2ZXJzL2NoYXIvaXBtaS9p
+cG1pX3NpX2ludGYuYyAgICAgICAgICAgICAgfCAgMiArLQogZHJpdmVycy9kbWEtYnVmL0tjb25m
+aWcgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KIGRyaXZlcnMvZ3Bpby9LY29uZmlnICAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCiBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogZHJpdmVycy9wY2kvc3dpdGNoL0tjb25maWcg
+ICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KIGRyaXZlcnMvcGxhdGZvcm0veDg2L0tjb25maWcg
+ICAgICAgICAgICAgICAgICB8ICA0ICstCiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kY2RiYXMuYyAg
+ICAgICAgICAgICAgICAgfCAgMiArLQogZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbF9yYnUuYyAg
+ICAgICAgICAgICAgIHwgIDIgKy0KIGRyaXZlcnMvcG5wL2lzYXBucC9LY29uZmlnICAgICAgICAg
+ICAgICAgICAgICB8ICAyICstCiBkcml2ZXJzL3R0eS9LY29uZmlnICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfCAgMiArLQogZHJpdmVycy92ZmlvL0tjb25maWcgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgIDIgKy0KIGRyaXZlcnMvdmZpby9tZGV2L0tjb25maWcgICAgICAgICAgICAgICAg
+ICAgICB8ICAyICstCiBkcml2ZXJzL3cxL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgMiArLQogaW5jbHVkZS9hc20tZ2VuZXJpYy9iaXRvcHMvYXRvbWljLmggICAgICAgICAg
+IHwgIDIgKy0KIGluY2x1ZGUvbGludXgvaW8tbWFwcGluZy5oICAgICAgICAgICAgICAgICAgICB8
+ICAyICstCiBpbmNsdWRlL2xpbnV4L2p1bXBfbGFiZWwuaCAgICAgICAgICAgICAgICAgICAgfCAg
+MiArLQogaW5jbHVkZS9saW51eC9rb2JqZWN0LmggICAgICAgICAgICAgICAgICAgICAgIHwgIDIg
+Ky0KIGluY2x1ZGUvbGludXgva29iamVjdF9ucy5oICAgICAgICAgICAgICAgICAgICB8ICAyICst
+CiBpbmNsdWRlL2xpbnV4L3JidHJlZS5oICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQog
+aW5jbHVkZS9saW51eC9yYnRyZWVfYXVnbWVudGVkLmggICAgICAgICAgICAgIHwgIDIgKy0KIGlu
+aXQvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCiBrZXJu
+ZWwvcGFkYXRhLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogbGliL0tj
+b25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KIGxpYi9LY29u
+ZmlnLmRlYnVnICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCiBsaWIvY3JjMzIu
+YyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogbGliL2tvYmplY3Qu
+YyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDQgKy0KIGxpYi9sem8vbHpvMXhf
+ZGVjb21wcmVzc19zYWZlLmMgICAgICAgICAgICAgICB8ICAyICstCiBsaWIveHovS2NvbmZpZyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogbW0vS2NvbmZpZyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KIG1tL25vbW11LmMgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCiBzYW1wbGVzL0tjb25maWcgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfCAgMiArLQogc2FtcGxlcy9rcHJvYmVzL2twcm9iZV9l
+eGFtcGxlLmMgICAgICAgICAgICAgIHwgIDIgKy0KIHNhbXBsZXMva3Byb2Jlcy9rcmV0cHJvYmVf
+ZXhhbXBsZS5jICAgICAgICAgICB8ICAyICstCiBzY3JpcHRzL2djYy1wbHVnaW5zL0tjb25maWcg
+ICAgICAgICAgICAgICAgICAgfCAgMiArLQogdG9vbHMvaW5jbHVkZS9saW51eC9yYnRyZWUuaCAg
+ICAgICAgICAgICAgICAgIHwgIDIgKy0KIHRvb2xzL2luY2x1ZGUvbGludXgvcmJ0cmVlX2F1Z21l
+bnRlZC5oICAgICAgICB8ICAyICstCiAxMzIgZmlsZXMgY2hhbmdlZCwgMTczIGluc2VydGlvbnMo
+KyksIDIzNSBkZWxldGlvbnMoLSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFw
+aX0vYXRvbWljX2JpdG9wcy5yc3QgKDk5JSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL3sgPT4gZHJp
+dmVyLWFwaX0vYnQ4eHhncGlvLnJzdCAoOTklKQogcmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBk
+cml2ZXItYXBpfS9idXMtdmlydC1waHlzLW1hcHBpbmcucnN0ICg5OSUpCiByZW5hbWUgRG9jdW1l
+bnRhdGlvbi97Y29ubmVjdG9yID0+IGRyaXZlci1hcGl9L2Nvbm5lY3Rvci5yc3QgKDk5JSkKIHJl
+bmFtZSBEb2N1bWVudGF0aW9uL3tjb25zb2xlID0+IGRyaXZlci1hcGl9L2NvbnNvbGUucnN0ICg5
+OSUpCiByZW5hbWUgRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L2NyYzMyLnJzdCAoOTkl
+KQogcmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9kY2RiYXMucnN0ICg5OSUp
+CiByZW5hbWUgRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L2RlYnVnZ2luZy1tb2R1bGVz
+LnJzdCAoOTglKQogcmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9kZWJ1Z2dp
+bmctdmlhLW9oY2kxMzk0LnJzdCAoOTklKQogcmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBkcml2
+ZXItYXBpfS9kZWxsX3JidS5yc3QgKDk5JSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL3sgPT4gZHJp
+dmVyLWFwaX0vZGlnc2lnLnJzdCAoOTklKQogcmVuYW1lIERvY3VtZW50YXRpb24ve0VESUQvaG93
+dG8ucnN0ID0+IGRyaXZlci1hcGkvZWRpZC5yc3R9ICg5OSUpCiByZW5hbWUgRG9jdW1lbnRhdGlv
+bi97ID0+IGRyaXZlci1hcGl9L2Vpc2EucnN0ICg5OSUpCiByZW5hbWUgRG9jdW1lbnRhdGlvbi97
+ID0+IGRyaXZlci1hcGl9L2Z1dGV4LXJlcXVldWUtcGkucnN0ICg5OSUpCiByZW5hbWUgRG9jdW1l
+bnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L2djYy1wbHVnaW5zLnJzdCAoOTklKQogcmVuYW1lIERv
+Y3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9od3NwaW5sb2NrLnJzdCAoOTklKQogcmVuYW1l
+IERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9pby1tYXBwaW5nLnJzdCAoOTklKQogcmVu
+YW1lIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9pb19vcmRlcmluZy5yc3QgKDk5JSkK
+IHJlbmFtZSBEb2N1bWVudGF0aW9uL3tJUE1JLnJzdCA9PiBkcml2ZXItYXBpL2lwbWkucnN0fSAo
+OTklKQogcmVuYW1lIERvY3VtZW50YXRpb24ve0lSUS1hZmZpbml0eS5yc3QgPT4gZHJpdmVyLWFw
+aS9pcnEtYWZmaW5pdHkucnN0fSAoOTklKQogcmVuYW1lIERvY3VtZW50YXRpb24ve0lSUS1kb21h
+aW4ucnN0ID0+IGRyaXZlci1hcGkvaXJxLWRvbWFpbi5yc3R9ICg5OSUpCiByZW5hbWUgRG9jdW1l
+bnRhdGlvbi97SVJRLnJzdCA9PiBkcml2ZXItYXBpL2lycS5yc3R9ICg5OSUpCiByZW5hbWUgRG9j
+dW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L2lycWZsYWdzLXRyYWNpbmcucnN0ICg5OSUpCiBy
+ZW5hbWUgRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L2lzYS5yc3QgKDk5JSkKIHJlbmFt
+ZSBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vaXNhcG5wLnJzdCAoOTglKQogcmVuYW1l
+IERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9rb2JqZWN0LnJzdCAoOTklKQogcmVuYW1l
+IERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9rcHJvYmVzLnJzdCAoOTklKQogcmVuYW1l
+IERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9rcmVmLnJzdCAoOTklKQogcmVuYW1lIERv
+Y3VtZW50YXRpb24ve2xpZ2h0bnZtL3BibGsudHh0ID0+IGRyaXZlci1hcGkvbGlnaHRudm0tcGJs
+ay5yc3R9ICgxMDAlKQogcmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9sem8u
+cnN0ICg5OSUpCiByZW5hbWUgRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L21haWxib3gu
+cnN0ICg5OSUpCiByZW5hbWUgRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L21lbi1jaGFt
+ZWxlb24tYnVzLnJzdCAoOTklKQogcmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBp
+fS9ub21tdS1tbWFwLnJzdCAoOTklKQogcmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXIt
+YXBpfS9udGIucnN0ICg5OSUpCiByZW5hbWUgRG9jdW1lbnRhdGlvbi97bnZtZW0gPT4gZHJpdmVy
+LWFwaX0vbnZtZW0ucnN0ICg5OSUpCiByZW5hbWUgRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1h
+cGl9L3BhZGF0YS5yc3QgKDk5JSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFw
+aX0vcGFycG9ydC1sb3dsZXZlbC5yc3QgKDk5JSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL3sgPT4g
+ZHJpdmVyLWFwaX0vcGVyY3B1LXJ3LXNlbWFwaG9yZS5yc3QgKDk5JSkKIHJlbmFtZSBEb2N1bWVu
+dGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vcGktZnV0ZXgucnN0ICg5OSUpCiByZW5hbWUgRG9jdW1l
+bnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L3ByZWVtcHQtbG9ja2luZy5yc3QgKDk5JSkKIHJlbmFt
+ZSBEb2N1bWVudGF0aW9uL3twdGkgPT4gZHJpdmVyLWFwaX0vcHRpX2ludGVsX21pZC5yc3QgKDk5
+JSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vcHdtLnJzdCAoOTklKQog
+cmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9yYnRyZWUucnN0ICg5OSUpCiBy
+ZW5hbWUgRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L3JlbW90ZXByb2MucnN0ICg5OSUp
+CiByZW5hbWUgRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L3Jma2lsbC5yc3QgKDk5JSkK
+IHJlbmFtZSBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vcm9idXN0LWZ1dGV4LUFCSS5y
+c3QgKDk5JSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vcm9idXN0LWZ1
+dGV4ZXMucnN0ICg5OSUpCiByZW5hbWUgRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L3Jw
+bXNnLnJzdCAoOTklKQogcmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS9zZ2kt
+aW9jNC5yc3QgKDk5JSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL3tTTTUwMS5yc3QgPT4gZHJpdmVy
+LWFwaS9zbTUwMS5yc3R9ICg5OSUpCiByZW5hbWUgRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1h
+cGl9L3Ntc2NfZWNlMTA5OS5yc3QgKDk5JSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL3sgPT4gZHJp
+dmVyLWFwaX0vc3BlY3VsYXRpb24ucnN0ICg5OSUpCiByZW5hbWUgRG9jdW1lbnRhdGlvbi97ID0+
+IGRyaXZlci1hcGl9L3N0YXRpYy1rZXlzLnJzdCAoOTklKQogcmVuYW1lIERvY3VtZW50YXRpb24v
+eyA9PiBkcml2ZXItYXBpfS9zd2l0Y2h0ZWMucnN0ICg5NyUpCiByZW5hbWUgRG9jdW1lbnRhdGlv
+bi97ID0+IGRyaXZlci1hcGl9L3N5bmNfZmlsZS5yc3QgKDk5JSkKIHJlbmFtZSBEb2N1bWVudGF0
+aW9uL3sgPT4gZHJpdmVyLWFwaX0vdGVlLnJzdCAoOTklKQogcmVuYW1lIERvY3VtZW50YXRpb24v
+eyA9PiBkcml2ZXItYXBpfS90aGlzX2NwdV9vcHMucnN0ICg5OSUpCiByZW5hbWUgRG9jdW1lbnRh
+dGlvbi97ID0+IGRyaXZlci1hcGl9L3VuYWxpZ25lZC1tZW1vcnktYWNjZXNzLnJzdCAoOTklKQog
+cmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS92ZmlvLW1lZGlhdGVkLWRldmlj
+ZS5yc3QgKDk5JSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0vdmZpby5y
+c3QgKDk5JSkKIHJlbmFtZSBEb2N1bWVudGF0aW9uL3sgPT4gZHJpdmVyLWFwaX0veGlsbHlidXMu
+cnN0ICg5OSUpCiByZW5hbWUgRG9jdW1lbnRhdGlvbi97ID0+IGRyaXZlci1hcGl9L3h6LnJzdCAo
+OTklKQogcmVuYW1lIERvY3VtZW50YXRpb24veyA9PiBkcml2ZXItYXBpfS96b3Jyby5yc3QgKDk5
+JSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL0FCSS9yZW1vdmVkL3N5c2ZzLWNsYXNzLXJm
+a2lsbCBiL0RvY3VtZW50YXRpb24vQUJJL3JlbW92ZWQvc3lzZnMtY2xhc3MtcmZraWxsCmluZGV4
+IDE2NTJiMjM4MWRkYS4uOWMwOGM3Zjk4ZmZiIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL0FC
+SS9yZW1vdmVkL3N5c2ZzLWNsYXNzLXJma2lsbAorKysgYi9Eb2N1bWVudGF0aW9uL0FCSS9yZW1v
+dmVkL3N5c2ZzLWNsYXNzLXJma2lsbApAQCAtMSw2ICsxLDYgQEAKIHJma2lsbCAtIHJhZGlvIGZy
+ZXF1ZW5jeSAoUkYpIGNvbm5lY3RvciBraWxsIHN3aXRjaCBzdXBwb3J0CiAKLUZvciBkZXRhaWxz
+IHRvIHRoaXMgc3Vic3lzdGVtIGxvb2sgYXQgRG9jdW1lbnRhdGlvbi9yZmtpbGwucnN0LgorRm9y
+IGRldGFpbHMgdG8gdGhpcyBzdWJzeXN0ZW0gbG9vayBhdCBEb2N1bWVudGF0aW9uL2RyaXZlci1h
+cGkvcmZraWxsLnJzdC4KIAogV2hhdDoJCS9zeXMvY2xhc3MvcmZraWxsL3Jma2lsbFswLTldKy9j
+bGFpbQogRGF0ZToJCTA5LUp1bC0yMDA3CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL0FCSS9z
+dGFibGUvc3lzZnMtY2xhc3MtcmZraWxsIGIvRG9jdW1lbnRhdGlvbi9BQkkvc3RhYmxlL3N5c2Zz
+LWNsYXNzLXJma2lsbAppbmRleCA2OGZkMGFmZGFkMGQuLjViMTU0ZjkyMjY0MyAxMDA2NDQKLS0t
+IGEvRG9jdW1lbnRhdGlvbi9BQkkvc3RhYmxlL3N5c2ZzLWNsYXNzLXJma2lsbAorKysgYi9Eb2N1
+bWVudGF0aW9uL0FCSS9zdGFibGUvc3lzZnMtY2xhc3MtcmZraWxsCkBAIC0xLDYgKzEsNiBAQAog
+cmZraWxsIC0gcmFkaW8gZnJlcXVlbmN5IChSRikgY29ubmVjdG9yIGtpbGwgc3dpdGNoIHN1cHBv
+cnQKIAotRm9yIGRldGFpbHMgdG8gdGhpcyBzdWJzeXN0ZW0gbG9vayBhdCBEb2N1bWVudGF0aW9u
+L3Jma2lsbC5yc3QuCitGb3IgZGV0YWlscyB0byB0aGlzIHN1YnN5c3RlbSBsb29rIGF0IERvY3Vt
+ZW50YXRpb24vZHJpdmVyLWFwaS9yZmtpbGwucnN0LgogCiBGb3IgdGhlIGRlcHJlY2F0ZWQgL3N5
+cy9jbGFzcy9yZmtpbGwvKi9jbGFpbSBrbm9icyBvZiB0aGlzIGludGVyZmFjZSBsb29rIGluCiBE
+b2N1bWVudGF0aW9uL0FCSS9yZW1vdmVkL3N5c2ZzLWNsYXNzLXJma2lsbC4KZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vQUJJL3Rlc3Rpbmcvc3lzZnMtY2xhc3Mtc3dpdGNodGVjIGIvRG9jdW1l
+bnRhdGlvbi9BQkkvdGVzdGluZy9zeXNmcy1jbGFzcy1zd2l0Y2h0ZWMKaW5kZXggYzhkODBkYjFl
+MzJjLi43NmM3YTY2MWE1OTUgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vQUJJL3Rlc3Rpbmcv
+c3lzZnMtY2xhc3Mtc3dpdGNodGVjCisrKyBiL0RvY3VtZW50YXRpb24vQUJJL3Rlc3Rpbmcvc3lz
+ZnMtY2xhc3Mtc3dpdGNodGVjCkBAIC0xLDYgKzEsNiBAQAogc3dpdGNodGVjIC0gTWljcm9zZW1p
+IFN3aXRjaHRlYyBQQ0kgU3dpdGNoIE1hbmFnZW1lbnQgRW5kcG9pbnQKIAotRm9yIGRldGFpbHMg
+b24gdGhpcyBzdWJzeXN0ZW0gbG9vayBhdCBEb2N1bWVudGF0aW9uL3N3aXRjaHRlYy5yc3QuCitG
+b3IgZGV0YWlscyBvbiB0aGlzIHN1YnN5c3RlbSBsb29rIGF0IERvY3VtZW50YXRpb24vZHJpdmVy
+LWFwaS9zd2l0Y2h0ZWMucnN0LgogCiBXaGF0OiAJCS9zeXMvY2xhc3Mvc3dpdGNodGVjCiBEYXRl
+OgkJMDUtSmFuLTIwMTcKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vUENJL3BjaS5yc3QgYi9E
+b2N1bWVudGF0aW9uL1BDSS9wY2kucnN0CmluZGV4IDg0MGNiZjVmMzdhNy4uMGY1MmQxNzJjOWFj
+IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL1BDSS9wY2kucnN0CisrKyBiL0RvY3VtZW50YXRp
+b24vUENJL3BjaS5yc3QKQEAgLTIzOSw3ICsyMzksNyBAQCBmcm9tIHRoZSBQQ0kgZGV2aWNlIGNv
+bmZpZyBzcGFjZS4gVXNlIHRoZSB2YWx1ZXMgaW4gdGhlIHBjaV9kZXYgc3RydWN0dXJlCiBhcyB0
+aGUgUENJICJidXMgYWRkcmVzcyIgbWlnaHQgaGF2ZSBiZWVuIHJlbWFwcGVkIHRvIGEgImhvc3Qg
+cGh5c2ljYWwiCiBhZGRyZXNzIGJ5IHRoZSBhcmNoL2NoaXAtc2V0IHNwZWNpZmljIGtlcm5lbCBz
+dXBwb3J0LgogCi1TZWUgRG9jdW1lbnRhdGlvbi9pby1tYXBwaW5nLnJzdCBmb3IgaG93IHRvIGFj
+Y2VzcyBkZXZpY2UgcmVnaXN0ZXJzCitTZWUgRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2lvLW1h
+cHBpbmcucnN0IGZvciBob3cgdG8gYWNjZXNzIGRldmljZSByZWdpc3RlcnMKIG9yIGRldmljZSBt
+ZW1vcnkuCiAKIFRoZSBkZXZpY2UgZHJpdmVyIG5lZWRzIHRvIGNhbGwgcGNpX3JlcXVlc3RfcmVn
+aW9uKCkgdG8gdmVyaWZ5CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2h3
+LXZ1bG4vbDF0Zi5yc3QgYi9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2h3LXZ1bG4vbDF0Zi5y
+c3QKaW5kZXggOWIxZTZhYWZlYTFmLi4yOTQ0OWJhNzc3M2MgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50
+YXRpb24vYWRtaW4tZ3VpZGUvaHctdnVsbi9sMXRmLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2Fk
+bWluLWd1aWRlL2h3LXZ1bG4vbDF0Zi5yc3QKQEAgLTI2OCw3ICsyNjgsNyBAQCBHdWVzdCBtaXRp
+Z2F0aW9uIG1lY2hhbmlzbXMKICAgIC9wcm9jL2lycS8kTlIvc21wX2FmZmluaXR5W19saXN0XSBm
+aWxlcy4gTGltaXRlZCBkb2N1bWVudGF0aW9uIGlzCiAgICBhdmFpbGFibGUgYXQ6CiAKLSAgIGh0
+dHBzOi8vd3d3Lmtlcm5lbC5vcmcvZG9jL0RvY3VtZW50YXRpb24vSVJRLWFmZmluaXR5LnJzdAor
+ICAgaHR0cHM6Ly93d3cua2VybmVsLm9yZy9kb2MvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2ly
+cS1hZmZpbml0eS5yc3QKIAogLi4gX3NtdF9jb250cm9sOgogCmRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2FkbWluLWd1aWRlL2tlcm5lbC1wYXJhbWV0ZXJzLnR4dCBiL0RvY3VtZW50YXRpb24v
+YWRtaW4tZ3VpZGUva2VybmVsLXBhcmFtZXRlcnMudHh0CmluZGV4IDk1ODg1NzI2Nzc4Yy4uMmY4
+NzUxMzIzZjZkIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tlcm5lbC1w
+YXJhbWV0ZXJzLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tlcm5lbC1wYXJh
+bWV0ZXJzLnR4dApAQCAtOTMwLDcgKzkzMCw3IEBACiAJCQllZGlkLzE2ODB4MTA1MC5iaW4sIG9y
+IGVkaWQvMTkyMHgxMDgwLmJpbiBpcyBnaXZlbgogCQkJYW5kIG5vIGZpbGUgd2l0aCB0aGUgc2Ft
+ZSBuYW1lIGV4aXN0cy4gRGV0YWlscyBhbmQKIAkJCWluc3RydWN0aW9ucyBob3cgdG8gYnVpbGQg
+eW91ciBvd24gRURJRCBkYXRhIGFyZQotCQkJYXZhaWxhYmxlIGluIERvY3VtZW50YXRpb24vRURJ
+RC9ob3d0by5yc3QuIEFuIEVESUQKKwkJCWF2YWlsYWJsZSBpbiBEb2N1bWVudGF0aW9uL2RyaXZl
+ci1hcGkvZWRpZC5yc3QuIEFuIEVESUQKIAkJCWRhdGEgc2V0IHdpbGwgb25seSBiZSB1c2VkIGZv
+ciBhIHBhcnRpY3VsYXIgY29ubmVjdG9yLAogCQkJaWYgaXRzIG5hbWUgYW5kIGEgY29sb24gYXJl
+IHByZXBlbmRlZCB0byB0aGUgRURJRAogCQkJbmFtZS4gRWFjaCBjb25uZWN0b3IgbWF5IHVzZSBh
+IHVuaXF1ZSBFRElEIGRhdGEKQEAgLTMxNjIsNyArMzE2Miw3IEBACiAJCQlTZWUgRG9jdW1lbnRh
+dGlvbi9zeXNjdGwvdm0ucnN0IGZvciBkZXRhaWxzLgogCiAJb2hjaTEzOTRfZG1hPWVhcmx5CVtI
+V10gZW5hYmxlIGRlYnVnZ2luZyB2aWEgdGhlIG9oY2kxMzk0IGRyaXZlci4KLQkJCVNlZSBEb2N1
+bWVudGF0aW9uL2RlYnVnZ2luZy12aWEtb2hjaTEzOTQucnN0IGZvciBtb3JlCisJCQlTZWUgRG9j
+dW1lbnRhdGlvbi9kcml2ZXItYXBpL2RlYnVnZ2luZy12aWEtb2hjaTEzOTQucnN0IGZvciBtb3Jl
+CiAJCQlpbmZvLgogCiAJb2xwY19lY190aW1lb3V0PSBbT0xQQ10gbXMgZGVsYXkgd2hlbiBpc3N1
+aW5nIEVDIGNvbW1hbmRzCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tl
+cm5lbC1wZXItY3B1LWt0aHJlYWRzLnJzdCBiL0RvY3VtZW50YXRpb24vYWRtaW4tZ3VpZGUva2Vy
+bmVsLXBlci1jcHUta3RocmVhZHMucnN0CmluZGV4IGQ0MzAwNDhhMDMwNy4uOTQyYjc4MzViOWY2
+IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tlcm5lbC1wZXItY3B1LWt0
+aHJlYWRzLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tlcm5lbC1wZXItY3B1
+LWt0aHJlYWRzLnJzdApAQCAtMTAsNyArMTAsNyBAQCB0aGVtIHRvIGEgImhvdXNla2VlcGluZyIg
+Q1BVIGRlZGljYXRlZCB0byBzdWNoIHdvcmsuCiBSZWZlcmVuY2VzCiA9PT09PT09PT09CiAKLS0J
+RG9jdW1lbnRhdGlvbi9JUlEtYWZmaW5pdHkucnN0OiAgQmluZGluZyBpbnRlcnJ1cHRzIHRvIHNl
+dHMgb2YgQ1BVcy4KKy0JRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2lycS1hZmZpbml0eS5yc3Q6
+ICBCaW5kaW5nIGludGVycnVwdHMgdG8gc2V0cyBvZiBDUFVzLgogCiAtCURvY3VtZW50YXRpb24v
+YWRtaW4tZ3VpZGUvY2dyb3VwLXYxOiAgVXNpbmcgY2dyb3VwcyB0byBiaW5kIHRhc2tzIHRvIHNl
+dHMgb2YgQ1BVcy4KIApkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9hdG9taWNfYml0b3BzLnJz
+dCBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9hdG9taWNfYml0b3BzLnJzdApzaW1pbGFyaXR5
+IGluZGV4IDk5JQpyZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9uL2F0b21pY19iaXRvcHMucnN0CnJl
+bmFtZSB0byBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvYXRvbWljX2JpdG9wcy5yc3QKaW5kZXgg
+YjY4M2JjYjcxMTg1Li43YzdkMzNlZTY0ZjcgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vYXRv
+bWljX2JpdG9wcy5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2F0b21pY19iaXRv
+cHMucnN0CkBAIC0xLDUgKzEsMyBAQAotOm9ycGhhbjoKLQogPT09PT09PT09PT09PQogQXRvbWlj
+IGJpdG9wcwogPT09PT09PT09PT09PQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9idDh4eGdw
+aW8ucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2J0OHh4Z3Bpby5yc3QKc2ltaWxhcml0
+eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9idDh4eGdwaW8ucnN0CnJlbmFt
+ZSB0byBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvYnQ4eHhncGlvLnJzdAppbmRleCAwOTM4NzVl
+MWIwYWEuLjRmOTM3YmVhZDUyYyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9idDh4eGdwaW8u
+cnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9idDh4eGdwaW8ucnN0CkBAIC0xLDUg
+KzEsMyBAQAotOm9ycGhhbjoKLQogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQogQSBkcml2ZXIgZm9yIGEgc2VsZm1hZGUg
+Y2hlYXAgQlQ4eHggYmFzZWQgUENJIEdQSU8tY2FyZCAoYnQ4eHhncGlvKQogPT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9idXMtdmlydC1waHlzLW1hcHBpbmcucnN0IGIvRG9j
+dW1lbnRhdGlvbi9kcml2ZXItYXBpL2J1cy12aXJ0LXBoeXMtbWFwcGluZy5yc3QKc2ltaWxhcml0
+eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9idXMtdmlydC1waHlzLW1hcHBp
+bmcucnN0CnJlbmFtZSB0byBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvYnVzLXZpcnQtcGh5cy1t
+YXBwaW5nLnJzdAppbmRleCBlZWZiMGFlOTliYTguLjgwOTcyOTE2ZTg4YyAxMDA2NDQKLS0tIGEv
+RG9jdW1lbnRhdGlvbi9idXMtdmlydC1waHlzLW1hcHBpbmcucnN0CisrKyBiL0RvY3VtZW50YXRp
+b24vZHJpdmVyLWFwaS9idXMtdmlydC1waHlzLW1hcHBpbmcucnN0CkBAIC0xLDUgKzEsMyBAQAot
+Om9ycGhhbjoKLQogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PQogSG93IHRvIGFjY2VzcyBJL08gbWFwcGVkIG1lbW9yeSBmcm9tIHdpdGhp
+biBkZXZpY2UgZHJpdmVycwogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9jb25uZWN0b3Iv
+Y29ubmVjdG9yLnJzdCBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9jb25uZWN0b3IucnN0CnNp
+bWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vY29ubmVjdG9yL2Nv
+bm5lY3Rvci5yc3QKcmVuYW1lIHRvIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9jb25uZWN0b3Iu
+cnN0CmluZGV4IDI0ZTI2ZGMyMmRiZi4uMmNmOWI1YWRmZTJhIDEwMDY0NAotLS0gYS9Eb2N1bWVu
+dGF0aW9uL2Nvbm5lY3Rvci9jb25uZWN0b3IucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVy
+LWFwaS9jb25uZWN0b3IucnN0CkBAIC0xLDUgKzEsMyBAQAotOm9ycGhhbjoKLQogPT09PT09PT09
+PT09PT09PQogS2VybmVsIENvbm5lY3RvcgogPT09PT09PT09PT09PT09PQpkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9jb25zb2xlL2NvbnNvbGUucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL2NvbnNvbGUucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3VtZW50
+YXRpb24vY29uc29sZS9jb25zb2xlLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL2NvbnNvbGUucnN0CmluZGV4IGIzNzQxNDFiMDI3ZS4uOGIwMjA1ZDI3YTcxIDEwMDY0NAot
+LS0gYS9Eb2N1bWVudGF0aW9uL2NvbnNvbGUvY29uc29sZS5yc3QKKysrIGIvRG9jdW1lbnRhdGlv
+bi9kcml2ZXItYXBpL2NvbnNvbGUucnN0CkBAIC0xLDUgKzEsMyBAQAotOm9ycGhhbjoKLQogPT09
+PT09PT09PT09PT09CiBDb25zb2xlIERyaXZlcnMKID09PT09PT09PT09PT09PQpkaWZmIC0tZ2l0
+IGEvRG9jdW1lbnRhdGlvbi9jcmMzMi5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvY3Jj
+MzIucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vY3Jj
+MzIucnN0CnJlbmFtZSB0byBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvY3JjMzIucnN0CmluZGV4
+IGY3YzczZDcxM2EzNS4uOGE2ODYwZjMzYjRlIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2Ny
+YzMyLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvY3JjMzIucnN0CkBAIC0xLDUg
+KzEsMyBAQAotOm9ycGhhbjoKLQogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CiBi
+cmllZiB0dXRvcmlhbCBvbiBDUkMgY29tcHV0YXRpb24KID09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kY2RiYXMucnN0IGIvRG9jdW1l
+bnRhdGlvbi9kcml2ZXItYXBpL2RjZGJhcy5yc3QKc2ltaWxhcml0eSBpbmRleCA5OSUKcmVuYW1l
+IGZyb20gRG9jdW1lbnRhdGlvbi9kY2RiYXMucnN0CnJlbmFtZSB0byBEb2N1bWVudGF0aW9uL2Ry
+aXZlci1hcGkvZGNkYmFzLnJzdAppbmRleCBhYmJjMmJmZDU4YTcuLjMwOWNjNTdhN2MxYyAxMDA2
+NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kY2RiYXMucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJp
+dmVyLWFwaS9kY2RiYXMucnN0CkBAIC0xLDUgKzEsMyBAQAotOm9ycGhhbjoKLQogPT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT0KIERlbGwgU3lzdGVtcyBNYW5hZ2VtZW50IEJhc2Ug
+RHJpdmVyCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZWJ1Z2dpbmctbW9kdWxlcy5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZl
+ci1hcGkvZGVidWdnaW5nLW1vZHVsZXMucnN0CnNpbWlsYXJpdHkgaW5kZXggOTglCnJlbmFtZSBm
+cm9tIERvY3VtZW50YXRpb24vZGVidWdnaW5nLW1vZHVsZXMucnN0CnJlbmFtZSB0byBEb2N1bWVu
+dGF0aW9uL2RyaXZlci1hcGkvZGVidWdnaW5nLW1vZHVsZXMucnN0CmluZGV4IDk5NGY0YjAyMWE4
+MS4uMTcyYWQ0YWVjNDkzIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RlYnVnZ2luZy1tb2R1
+bGVzLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvZGVidWdnaW5nLW1vZHVsZXMu
+cnN0CkBAIC0xLDUgKzEsMyBAQAotOm9ycGhhbjoKLQogRGVidWdnaW5nIE1vZHVsZXMgYWZ0ZXIg
+Mi42LjMKIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAKZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGVidWdnaW5nLXZpYS1vaGNpMTM5NC5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZl
+ci1hcGkvZGVidWdnaW5nLXZpYS1vaGNpMTM5NC5yc3QKc2ltaWxhcml0eSBpbmRleCA5OSUKcmVu
+YW1lIGZyb20gRG9jdW1lbnRhdGlvbi9kZWJ1Z2dpbmctdmlhLW9oY2kxMzk0LnJzdApyZW5hbWUg
+dG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2RlYnVnZ2luZy12aWEtb2hjaTEzOTQucnN0Cmlu
+ZGV4IGVhZDAxOTZkOTRiNy4uOTgxYWQ0Zjg5ZmQzIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9u
+L2RlYnVnZ2luZy12aWEtb2hjaTEzOTQucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFw
+aS9kZWJ1Z2dpbmctdmlhLW9oY2kxMzk0LnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0K
+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PQogVXNpbmcgcGh5c2ljYWwgRE1BIHByb3ZpZGVkIGJ5IE9IQ0kt
+MTM5NCBGaXJlV2lyZSBjb250cm9sbGVycyBmb3IgZGVidWdnaW5nCiA9PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGVsbF9yYnUucnN0IGIvRG9jdW1lbnRhdGlv
+bi9kcml2ZXItYXBpL2RlbGxfcmJ1LnJzdApzaW1pbGFyaXR5IGluZGV4IDk5JQpyZW5hbWUgZnJv
+bSBEb2N1bWVudGF0aW9uL2RlbGxfcmJ1LnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2
+ZXItYXBpL2RlbGxfcmJ1LnJzdAppbmRleCA0NWNkMThhYmQ5OGYuLmYzYmZhMWExNzk2MSAxMDA2
+NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZWxsX3JidS5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9k
+cml2ZXItYXBpL2RlbGxfcmJ1LnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
+IFVzYWdlIG9mIHRoZSBuZXcgb3BlbiBzb3VyY2VkIHJidSAoUmVtb3RlIEJJT1MgVXBkYXRlKSBk
+cml2ZXIKID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGlnc2lnLnJzdCBiL0RvY3Vt
+ZW50YXRpb24vZHJpdmVyLWFwaS9kaWdzaWcucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFt
+ZSBmcm9tIERvY3VtZW50YXRpb24vZGlnc2lnLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9k
+cml2ZXItYXBpL2RpZ3NpZy5yc3QKaW5kZXggMzU5NzcxMWQwZGYxLi5mNmE4OTAyZDNlZjcgMTAw
+NjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGlnc2lnLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2Ry
+aXZlci1hcGkvZGlnc2lnLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT0KIERpZ2l0YWwgU2lnbmF0dXJlIFZlcmlmaWNhdGlv
+biBBUEkKID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vRURJRC9ob3d0by5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvZWRp
+ZC5yc3QKc2ltaWxhcml0eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9FRElE
+L2hvd3RvLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2VkaWQucnN0Cmlu
+ZGV4IDcyNWZkNDlhODhjYS4uOWE5YjUxMmUwYWM5IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9u
+L0VESUQvaG93dG8ucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9lZGlkLnJzdApA
+QCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT0KIEVESUQKID09PT0KZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZWlzYS5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvZWlzYS5y
+c3QKc2ltaWxhcml0eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9laXNhLnJz
+dApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2Vpc2EucnN0CmluZGV4IGQ5ODk0
+OTkwODQwNS4uZjM4ODU0NWE4NWE3IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2Vpc2EucnN0
+CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9laXNhLnJzdApAQCAtMSw1ICsxLDMgQEAK
+LTpvcnBoYW46Ci0KID09PT09PT09PT09PT09PT0KIEVJU0EgYnVzIHN1cHBvcnQKID09PT09PT09
+PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZnV0ZXgtcmVxdWV1ZS1waS5yc3Qg
+Yi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvZnV0ZXgtcmVxdWV1ZS1waS5yc3QKc2ltaWxhcml0
+eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9mdXRleC1yZXF1ZXVlLXBpLnJz
+dApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2Z1dGV4LXJlcXVldWUtcGkucnN0
+CmluZGV4IGE5MGRiZmYyNjYyOS4uMTRhYjU3ODdiOWE3IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0
+aW9uL2Z1dGV4LXJlcXVldWUtcGkucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9m
+dXRleC1yZXF1ZXVlLXBpLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09
+PT09PT09PT0KIEZ1dGV4IFJlcXVldWUgUEkKID09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZ2NjLXBsdWdpbnMucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBp
+L2djYy1wbHVnaW5zLnJzdApzaW1pbGFyaXR5IGluZGV4IDk5JQpyZW5hbWUgZnJvbSBEb2N1bWVu
+dGF0aW9uL2djYy1wbHVnaW5zLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBp
+L2djYy1wbHVnaW5zLnJzdAppbmRleCBlMDhkMDEzYzZkZTIuLjg1MDJmMjQzOTZmYiAxMDA2NDQK
+LS0tIGEvRG9jdW1lbnRhdGlvbi9nY2MtcGx1Z2lucy5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9k
+cml2ZXItYXBpL2djYy1wbHVnaW5zLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09
+PT09PT09PT09PT09PT09PT09PT09PT0KIEdDQyBwbHVnaW4gaW5mcmFzdHJ1Y3R1cmUKID09PT09
+PT09PT09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vaHdzcGlubG9j
+ay5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaHdzcGlubG9jay5yc3QKc2ltaWxhcml0
+eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9od3NwaW5sb2NrLnJzdApyZW5h
+bWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2h3c3BpbmxvY2sucnN0CmluZGV4IDY4Mjk3
+NDczNjQ3Yy4uZWQ2NDBhMjc4MTg1IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2h3c3Bpbmxv
+Y2sucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9od3NwaW5sb2NrLnJzdApAQCAt
+MSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09PT09PT09PT09PT09PT09PQogSGFy
+ZHdhcmUgU3BpbmxvY2sgRnJhbWV3b3JrCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT0KZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9pbmRleC5yc3QgYi9Eb2N1bWVudGF0
+aW9uL2RyaXZlci1hcGkvaW5kZXgucnN0CmluZGV4IGM3NmExMDFjMmE2Yi4uYmIyNjIxYjE3MjEy
+IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaW5kZXgucnN0CisrKyBiL0Rv
+Y3VtZW50YXRpb24vZHJpdmVyLWFwaS9pbmRleC5yc3QKQEAgLTYwLDYgKzYwLDcyIEBAIGF2YWls
+YWJsZSBzdWJzZWN0aW9ucyBjYW4gYmUgc2VlbiBiZWxvdy4KICAgIGFjcGkvaW5kZXgKICAgIGdl
+bmVyaWMtY291bnRlcgogCisgICBhdG9taWNfYml0b3BzCisgICBidDh4eGdwaW8KKyAgIGJ1cy12
+aXJ0LXBoeXMtbWFwcGluZworICAgY29ubmVjdG9yCisgICBjb25zb2xlCisgICBjcmMzMgorICAg
+ZGNkYmFzCisgICBkZWJ1Z2dpbmctbW9kdWxlcworICAgZGVidWdnaW5nLXZpYS1vaGNpMTM5NAor
+ICAgZGVsbF9yYnUKKyAgIGRpZ3NpZworICAgZWRpZAorICAgZWlzYQorICAgZnV0ZXgtcmVxdWV1
+ZS1waQorICAgZ2NjLXBsdWdpbnMKKyAgIGh3c3BpbmxvY2sKKyAgIGlvLW1hcHBpbmcKKyAgIGlv
+X29yZGVyaW5nCisgICBpcG1pCisgICBpcnEKKyAgIGlycS1hZmZpbml0eQorICAgaXJxLWRvbWFp
+bgorICAgaXJxZmxhZ3MtdHJhY2luZworICAgaXNhCisgICBpc2FwbnAKKyAgIGtvYmplY3QKKyAg
+IGtwcm9iZXMKKyAgIGtyZWYKKyAgIGxpZ2h0bnZtLXBibGsKKyAgIGx6bworICAgbWFpbGJveAor
+ICAgbWVuLWNoYW1lbGVvbi1idXMKKyAgIG5vbW11LW1tYXAKKyAgIG50YgorICAgbnZtZW0KKyAg
+IHBhZGF0YQorICAgcGFycG9ydC1sb3dsZXZlbAorICAgcGVyY3B1LXJ3LXNlbWFwaG9yZQorICAg
+cGktZnV0ZXgKKyAgIHBwcworICAgcHJlZW1wdC1sb2NraW5nCisgICBwdGlfaW50ZWxfbWlkCisg
+ICBwdHAKKyAgIHB3bQorICAgcmJ0cmVlCisgICByZW1vdGVwcm9jCisgICByZmtpbGwKKyAgIHJv
+YnVzdC1mdXRleC1BQkkKKyAgIHJvYnVzdC1mdXRleGVzCisgICBycG1zZworICAgc2dpLWlvYzQK
+KyAgIHNtNTAxCisgICBzbXNjX2VjZTEwOTkKKyAgIHNwZWN1bGF0aW9uCisgICBzdGF0aWMta2V5
+cworICAgc3dpdGNodGVjCisgICBzeW5jX2ZpbGUKKyAgIHRlZQorICAgdGhpc19jcHVfb3BzCisg
+ICB1bmFsaWduZWQtbWVtb3J5LWFjY2VzcworICAgdmZpbworICAgdmZpby1tZWRpYXRlZC1kZXZp
+Y2UKKyAgIHhpbGx5YnVzCisgICB4egorICAgem9ycm8KKwogLi4gb25seTo6ICBzdWJwcm9qZWN0
+IGFuZCBodG1sCiAKICAgIEluZGljZXMKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vaW8tbWFw
+cGluZy5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaW8tbWFwcGluZy5yc3QKc2ltaWxh
+cml0eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9pby1tYXBwaW5nLnJzdApy
+ZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2lvLW1hcHBpbmcucnN0CmluZGV4IDgy
+YTJjYWNmOWEyOS4uYTk2NjIzOWYwNGU0IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2lvLW1h
+cHBpbmcucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9pby1tYXBwaW5nLnJzdApA
+QCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09PT09PT09PT09PT09PQogVGhl
+IGlvX21hcHBpbmcgZnVuY3Rpb25zCiA9PT09PT09PT09PT09PT09PT09PT09PT0KZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vaW9fb3JkZXJpbmcucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL2lvX29yZGVyaW5nLnJzdApzaW1pbGFyaXR5IGluZGV4IDk5JQpyZW5hbWUgZnJvbSBEb2N1
+bWVudGF0aW9uL2lvX29yZGVyaW5nLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL2lvX29yZGVyaW5nLnJzdAppbmRleCAxOGVmODg5YzEwMGUuLjJhYjMwM2NlOWEwZCAxMDA2
+NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9pb19vcmRlcmluZy5yc3QKKysrIGIvRG9jdW1lbnRhdGlv
+bi9kcml2ZXItYXBpL2lvX29yZGVyaW5nLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0K
+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KIE9yZGVyaW5n
+IEkvTyB3cml0ZXMgdG8gbWVtb3J5LW1hcHBlZCBhZGRyZXNzZXMKID09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+SVBNSS5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXBtaS5yc3QKc2ltaWxhcml0eSBp
+bmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9JUE1JLnJzdApyZW5hbWUgdG8gRG9j
+dW1lbnRhdGlvbi9kcml2ZXItYXBpL2lwbWkucnN0CmluZGV4IGY2YzJkMTE3MTBmZS4uNWVmMTA0
+N2UyZTY2IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL0lQTUkucnN0CisrKyBiL0RvY3VtZW50
+YXRpb24vZHJpdmVyLWFwaS9pcG1pLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09
+PT09PT09PT09PT09PT09PT09PQogVGhlIExpbnV4IElQTUkgRHJpdmVyCiA9PT09PT09PT09PT09
+PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vSVJRLWFmZmluaXR5LnJzdCBiL0Rv
+Y3VtZW50YXRpb24vZHJpdmVyLWFwaS9pcnEtYWZmaW5pdHkucnN0CnNpbWlsYXJpdHkgaW5kZXgg
+OTklCnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vSVJRLWFmZmluaXR5LnJzdApyZW5hbWUgdG8g
+RG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2lycS1hZmZpbml0eS5yc3QKaW5kZXggNDliYTI3MTM0
+OWQ2Li4yOWRhNTAwMDgzNmEgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vSVJRLWFmZmluaXR5
+LnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXJxLWFmZmluaXR5LnJzdApAQCAt
+MSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09PT09PT0KIFNNUCBJUlEgYWZmaW5p
+dHkKID09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vSVJRLWRvbWFp
+bi5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXJxLWRvbWFpbi5yc3QKc2ltaWxhcml0
+eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9JUlEtZG9tYWluLnJzdApyZW5h
+bWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2lycS1kb21haW4ucnN0CmluZGV4IGE2MTBh
+OGVhOWE5Mi4uNTA3Nzc1Y2NlNzUzIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL0lSUS1kb21h
+aW4ucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9pcnEtZG9tYWluLnJzdApAQCAt
+MSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09CiBUaGUgaXJxX2RvbWFpbiBpbnRlcnJ1cHQgbnVtYmVyIG1hcHBpbmcg
+bGlicmFyeQogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vSVJRLnJzdCBiL0RvY3VtZW50YXRpb24vZHJpdmVy
+LWFwaS9pcnEucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3VtZW50YXRp
+b24vSVJRLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2lycS5yc3QKaW5k
+ZXggYTlmM2UxOTJjMmNiLi40MjczODA2YTYwNmIgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24v
+SVJRLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXJxLnJzdApAQCAtMSw1ICsx
+LDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09PT09PQogV2hhdCBpcyBhbiBJUlE/CiA9PT09
+PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vaXJxZmxhZ3MtdHJhY2luZy5y
+c3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXJxZmxhZ3MtdHJhY2luZy5yc3QKc2ltaWxh
+cml0eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9pcnFmbGFncy10cmFjaW5n
+LnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2lycWZsYWdzLXRyYWNpbmcu
+cnN0CmluZGV4IGEyZmJiYjFhNjJiOS4uMjdkMGQ1YTlkNmI0IDEwMDY0NAotLS0gYS9Eb2N1bWVu
+dGF0aW9uL2lycWZsYWdzLXRyYWNpbmcucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFw
+aS9pcnFmbGFncy10cmFjaW5nLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09
+PT09PT09PT09PT09PT09PT09CiBJUlEtZmxhZ3Mgc3RhdGUgdHJhY2luZwogPT09PT09PT09PT09
+PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vaXNhLnJzdCBiL0RvY3VtZW50
+YXRpb24vZHJpdmVyLWFwaS9pc2EucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9t
+IERvY3VtZW50YXRpb24vaXNhLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBp
+L2lzYS5yc3QKaW5kZXggZjNhNDEyZDI2NmIwLi5kZWY0YTdiNjkwYjUgMTAwNjQ0Ci0tLSBhL0Rv
+Y3VtZW50YXRpb24vaXNhLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXNhLnJz
+dApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09CiBJU0EgRHJpdmVycwog
+PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vaXNhcG5wLnJzdCBiL0RvY3Vt
+ZW50YXRpb24vZHJpdmVyLWFwaS9pc2FwbnAucnN0CnNpbWlsYXJpdHkgaW5kZXggOTglCnJlbmFt
+ZSBmcm9tIERvY3VtZW50YXRpb24vaXNhcG5wLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9k
+cml2ZXItYXBpL2lzYXBucC5yc3QKaW5kZXggMTM2YTVlOTJiZTI3Li44ZDA4NDBhYzg0N2IgMTAw
+NjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vaXNhcG5wLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2Ry
+aXZlci1hcGkvaXNhcG5wLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KIElTQSBQ
+bHVnICYgUGxheSBzdXBwb3J0IGJ5IEphcm9zbGF2IEt5c2VsYSA8cGVyZXhAc3VzZS5jej4KID09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24va29iamVjdC5yc3QgYi9Eb2N1bWVudGF0aW9uL2Ry
+aXZlci1hcGkva29iamVjdC5yc3QKc2ltaWxhcml0eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9j
+dW1lbnRhdGlvbi9rb2JqZWN0LnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBp
+L2tvYmplY3QucnN0CmluZGV4IDYxMTcxOTJiZjNlNi4uOWY4YzQyYjQ4ODY3IDEwMDY0NAotLS0g
+YS9Eb2N1bWVudGF0aW9uL2tvYmplY3QucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFw
+aS9rb2JqZWN0LnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQog
+RXZlcnl0aGluZyB5b3UgbmV2ZXIgd2FudGVkIHRvIGtub3cgYWJvdXQga29iamVjdHMsIGtzZXRz
+LCBhbmQga3R5cGVzCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT0KQEAgLTIxMiw3ICsyMTAsNyBAQCBzdGF0aWNhbGx5
+IGFuZCB3aWxsIHdhcm4gdGhlIGRldmVsb3BlciBvZiB0aGlzIGltcHJvcGVyIHVzYWdlLgogSWYg
+YWxsIHRoYXQgeW91IHdhbnQgdG8gdXNlIGEga29iamVjdCBmb3IgaXMgdG8gcHJvdmlkZSBhIHJl
+ZmVyZW5jZSBjb3VudGVyCiBmb3IgeW91ciBzdHJ1Y3R1cmUsIHBsZWFzZSB1c2UgdGhlIHN0cnVj
+dCBrcmVmIGluc3RlYWQ7IGEga29iamVjdCB3b3VsZCBiZQogb3ZlcmtpbGwuICBGb3IgbW9yZSBp
+bmZvcm1hdGlvbiBvbiBob3cgdG8gdXNlIHN0cnVjdCBrcmVmLCBwbGVhc2Ugc2VlIHRoZQotZmls
+ZSBEb2N1bWVudGF0aW9uL2tyZWYucnN0IGluIHRoZSBMaW51eCBrZXJuZWwgc291cmNlIHRyZWUu
+CitmaWxlIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9rcmVmLnJzdCBpbiB0aGUgTGludXgga2Vy
+bmVsIHNvdXJjZSB0cmVlLgogCiAKIENyZWF0aW5nICJzaW1wbGUiIGtvYmplY3RzCmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2twcm9iZXMucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBp
+L2twcm9iZXMucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3VtZW50YXRp
+b24va3Byb2Jlcy5yc3QKcmVuYW1lIHRvIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9rcHJvYmVz
+LnJzdAppbmRleCA2YzAwMTE3NTVlNjguLmE0NGNiNWY0OTg0NiAxMDA2NDQKLS0tIGEvRG9jdW1l
+bnRhdGlvbi9rcHJvYmVzLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkva3Byb2Jl
+cy5yc3QKQEAgLTEsNSArMSwzIEBACi06b3JwaGFuOgotCiA9PT09PT09PT09PT09PT09PT09PT09
+PQogS2VybmVsIFByb2JlcyAoS3Byb2JlcykKID09PT09PT09PT09PT09PT09PT09PT09CmRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2tyZWYucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBp
+L2tyZWYucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24v
+a3JlZi5yc3QKcmVuYW1lIHRvIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9rcmVmLnJzdAppbmRl
+eCA0NzBlM2MxYmFjZGMuLjNhZjM4NDE1NmQ3ZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9r
+cmVmLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkva3JlZi5yc3QKQEAgLTEsNSAr
+MSwzIEBACi06b3JwaGFuOgotCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT0KIEFkZGluZyByZWZlcmVuY2UgY291bnRlcnMgKGtyZWZzKSB0byBrZXJu
+ZWwgb2JqZWN0cwogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2xpZ2h0bnZtL3BibGsudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kcml2ZXItYXBpL2xpZ2h0bnZtLXBibGsucnN0CnNpbWlsYXJpdHkgaW5kZXgg
+MTAwJQpyZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9uL2xpZ2h0bnZtL3BibGsudHh0CnJlbmFtZSB0
+byBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvbGlnaHRudm0tcGJsay5yc3QKZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vbHpvLnJzdCBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9sem8ucnN0
+CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vbHpvLnJzdApy
+ZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2x6by5yc3QKaW5kZXggMzY5NjVkYjc4
+NWFmLi5jYTk4MzMyODk3NmIgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vbHpvLnJzdAorKysg
+Yi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvbHpvLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBo
+YW46Ci0KID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09CiBMWk8gc3RyZWFtIGZvcm1hdCBhcyB1bmRlcnN0b29kIGJ5IExpbnV4J3MgTFpP
+IGRlY29tcHJlc3NvcgogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vbWFpbGJveC5yc3Qg
+Yi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvbWFpbGJveC5yc3QKc2ltaWxhcml0eSBpbmRleCA5
+OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9tYWlsYm94LnJzdApyZW5hbWUgdG8gRG9jdW1l
+bnRhdGlvbi9kcml2ZXItYXBpL21haWxib3gucnN0CmluZGV4IDAyZTc1NGRiMzU2Ny4uMGVkOTUw
+MDljYzMwIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL21haWxib3gucnN0CisrKyBiL0RvY3Vt
+ZW50YXRpb24vZHJpdmVyLWFwaS9tYWlsYm94LnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46
+Ci0KID09PT09PT09PT09PT09PT09PT09PT09PT09PT0KIFRoZSBDb21tb24gTWFpbGJveCBGcmFt
+ZXdvcmsKID09PT09PT09PT09PT09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vbWVuLWNoYW1lbGVvbi1idXMucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL21l
+bi1jaGFtZWxlb24tYnVzLnJzdApzaW1pbGFyaXR5IGluZGV4IDk5JQpyZW5hbWUgZnJvbSBEb2N1
+bWVudGF0aW9uL21lbi1jaGFtZWxlb24tYnVzLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9k
+cml2ZXItYXBpL21lbi1jaGFtZWxlb24tYnVzLnJzdAppbmRleCAyZDYxNzUyMjllNTguLjFiMWYw
+NDhhYTc0OCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9tZW4tY2hhbWVsZW9uLWJ1cy5yc3QK
+KysrIGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL21lbi1jaGFtZWxlb24tYnVzLnJzdApAQCAt
+MSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09PT09PT09CiBNRU4gQ2hhbWVsZW9u
+IEJ1cwogPT09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vbm9tbXUt
+bW1hcC5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvbm9tbXUtbW1hcC5yc3QKc2ltaWxh
+cml0eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9ub21tdS1tbWFwLnJzdApy
+ZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL25vbW11LW1tYXAucnN0CmluZGV4IGY3
+Zjc1ODEzZGM5Yy4uNTMwZmVkMDhkZTJjIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL25vbW11
+LW1tYXAucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9ub21tdS1tbWFwLnJzdApA
+QCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+CiBOby1NTVUgbWVtb3J5IG1hcHBpbmcgc3VwcG9ydAogPT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vbnRiLnJzdCBiL0RvY3VtZW50YXRpb24v
+ZHJpdmVyLWFwaS9udGIucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3Vt
+ZW50YXRpb24vbnRiLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL250Yi5y
+c3QKaW5kZXggYTI1ZTc4MTRiODk4Li44N2QxMzcyZGE4NzkgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50
+YXRpb24vbnRiLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvbnRiLnJzdApAQCAt
+MSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09CiBOVEIgRHJpdmVycwogPT09PT09
+PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vbnZtZW0vbnZtZW0ucnN0IGIvRG9jdW1l
+bnRhdGlvbi9kcml2ZXItYXBpL252bWVtLnJzdApzaW1pbGFyaXR5IGluZGV4IDk5JQpyZW5hbWUg
+ZnJvbSBEb2N1bWVudGF0aW9uL252bWVtL252bWVtLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlv
+bi9kcml2ZXItYXBpL252bWVtLnJzdAppbmRleCAzODY2YjZlMDY2ZDUuLmM5M2E5YzZjZDg3OCAx
+MDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9udm1lbS9udm1lbS5yc3QKKysrIGIvRG9jdW1lbnRh
+dGlvbi9kcml2ZXItYXBpL252bWVtLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09
+PT09PT09PT09PT09PQogTlZNRU0gU3Vic3lzdGVtCiA9PT09PT09PT09PT09PT0KZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vcGFkYXRhLnJzdCBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9w
+YWRhdGEucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24v
+cGFkYXRhLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3BhZGF0YS5yc3QK
+aW5kZXggZjgzNjlkMThjODQ2Li5iMTAzZDBjODIwMDAgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRp
+b24vcGFkYXRhLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcGFkYXRhLnJzdApA
+QCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PQogVGhlIHBhZGF0YSBwYXJhbGxlbCBleGVjdXRpb24gbWVjaGFuaXNtCiA9PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vcGFycG9ydC1sb3dsZXZlbC5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcGFy
+cG9ydC1sb3dsZXZlbC5yc3QKc2ltaWxhcml0eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1l
+bnRhdGlvbi9wYXJwb3J0LWxvd2xldmVsLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2
+ZXItYXBpL3BhcnBvcnQtbG93bGV2ZWwucnN0CmluZGV4IGI4NTc0ZDgzZDMyOC4uMDYzM2Q3MGZm
+ZGE3IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL3BhcnBvcnQtbG93bGV2ZWwucnN0CisrKyBi
+L0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9wYXJwb3J0LWxvd2xldmVsLnJzdApAQCAtMSw1ICsx
+LDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KIFBBUlBP
+UlQgaW50ZXJmYWNlIGRvY3VtZW50YXRpb24KID09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vcGVyY3B1LXJ3LXNlbWFwaG9yZS5yc3QgYi9E
+b2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcGVyY3B1LXJ3LXNlbWFwaG9yZS5yc3QKc2ltaWxhcml0
+eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9wZXJjcHUtcnctc2VtYXBob3Jl
+LnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3BlcmNwdS1ydy1zZW1hcGhv
+cmUucnN0CmluZGV4IDVjMzljODhkMzcxOS4uMjQ3ZGU2NDEwODU1IDEwMDY0NAotLS0gYS9Eb2N1
+bWVudGF0aW9uL3BlcmNwdS1ydy1zZW1hcGhvcmUucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJp
+dmVyLWFwaS9wZXJjcHUtcnctc2VtYXBob3JlLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46
+Ci0KID09PT09PT09PT09PT09PT09PT09CiBQZXJjcHUgcncgc2VtYXBob3JlcwogPT09PT09PT09
+PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vcGktZnV0ZXgucnN0IGIvRG9j
+dW1lbnRhdGlvbi9kcml2ZXItYXBpL3BpLWZ1dGV4LnJzdApzaW1pbGFyaXR5IGluZGV4IDk5JQpy
+ZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9uL3BpLWZ1dGV4LnJzdApyZW5hbWUgdG8gRG9jdW1lbnRh
+dGlvbi9kcml2ZXItYXBpL3BpLWZ1dGV4LnJzdAppbmRleCA4ODRiYTdmMmFhMTAuLmMzM2JhMmJl
+ZmJmOCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9waS1mdXRleC5yc3QKKysrIGIvRG9jdW1l
+bnRhdGlvbi9kcml2ZXItYXBpL3BpLWZ1dGV4LnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46
+Ci0KID09PT09PT09PT09PT09PT09PT09PT0KIExpZ2h0d2VpZ2h0IFBJLWZ1dGV4ZXMKID09PT09
+PT09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9w
+cHMucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3Bwcy5yc3QKaW5kZXggMTQ1NmQyYzMy
+ZWJkLi4yNjIxNTFhNmRhZDUgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9w
+cHMucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9wcHMucnN0CkBAIC0xLDUgKzEs
+MyBAQAotOm9ycGhhbjoKLQogPT09PT09PT09PT09PT09PT09PT09PQogUFBTIC0gUHVsc2UgUGVy
+IFNlY29uZAogPT09PT09PT09PT09PT09PT09PT09PQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9wcmVlbXB0LWxvY2tpbmcucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3ByZWVtcHQt
+bG9ja2luZy5yc3QKc2ltaWxhcml0eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlv
+bi9wcmVlbXB0LWxvY2tpbmcucnN0CnJlbmFtZSB0byBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkv
+cHJlZW1wdC1sb2NraW5nLnJzdAppbmRleCA0ZGZhMTUxMmE3NWIuLjI5MWMyYTQ1YjNlOCAxMDA2
+NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9wcmVlbXB0LWxvY2tpbmcucnN0CisrKyBiL0RvY3VtZW50
+YXRpb24vZHJpdmVyLWFwaS9wcmVlbXB0LWxvY2tpbmcucnN0CkBAIC0xLDUgKzEsMyBAQAotOm9y
+cGhhbjoKLQogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09CiBQcm9wZXIgTG9ja2luZyBVbmRlciBhIFByZWVt
+cHRpYmxlIEtlcm5lbDogS2VlcGluZyBLZXJuZWwgQ29kZSBQcmVlbXB0LVNhZmUKID09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9wdGkvcHRpX2ludGVsX21pZC5y
+c3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcHRpX2ludGVsX21pZC5yc3QKc2ltaWxhcml0
+eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9wdGkvcHRpX2ludGVsX21pZC5y
+c3QKcmVuYW1lIHRvIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9wdGlfaW50ZWxfbWlkLnJzdApp
+bmRleCBlYTA1NzI1MTc0Y2IuLmE2NzQzMTc3OTBiYSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlv
+bi9wdGkvcHRpX2ludGVsX21pZC5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3B0
+aV9pbnRlbF9taWQucnN0CkBAIC0xLDUgKzEsMyBAQAotOm9ycGhhbjoKLQogPT09PT09PT09PT09
+PQogSW50ZWwgTUlEIFBUSQogPT09PT09PT09PT09PQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kcml2ZXItYXBpL3B0cC5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcHRwLnJzdApp
+bmRleCBiNmU2NWQ2NmQzN2EuLjY1Yzg0YTcyZTlmYyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlv
+bi9kcml2ZXItYXBpL3B0cC5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3B0cC5y
+c3QKQEAgLTEsNSArMSwzIEBACi06b3JwaGFuOgotCiA9PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09CiBQVFAgaGFyZHdhcmUgY2xvY2sgaW5mcmFzdHJ1Y3R1cmUgZm9y
+IExpbnV4CiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CmRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL3B3bS5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkv
+cHdtLnJzdApzaW1pbGFyaXR5IGluZGV4IDk5JQpyZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9uL3B3
+bS5yc3QKcmVuYW1lIHRvIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9wd20ucnN0CmluZGV4IDc4
+ZDA2YjdmNTQyNy4uOGZiZjBhYTNiYTJkIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL3B3bS5y
+c3QKKysrIGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3B3bS5yc3QKQEAgLTEsNSArMSwzIEBA
+Ci06b3JwaGFuOgotCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQogUHVs
+c2UgV2lkdGggTW9kdWxhdGlvbiAoUFdNKSBpbnRlcmZhY2UKID09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3JidHJlZS5yc3Qg
+Yi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcmJ0cmVlLnJzdApzaW1pbGFyaXR5IGluZGV4IDk5
+JQpyZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9uL3JidHJlZS5yc3QKcmVuYW1lIHRvIERvY3VtZW50
+YXRpb24vZHJpdmVyLWFwaS9yYnRyZWUucnN0CmluZGV4IGMwY2JkYTQwODA1MC4uOGJiZmNhYzhk
+YjQ2IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL3JidHJlZS5yc3QKKysrIGIvRG9jdW1lbnRh
+dGlvbi9kcml2ZXItYXBpL3JidHJlZS5yc3QKQEAgLTEsNSArMSwzIEBACi06b3JwaGFuOgotCiA9
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KIFJlZC1ibGFjayBUcmVlcyAocmJ0cmVl
+KSBpbiBMaW51eAogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CmRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL3JlbW90ZXByb2MucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBp
+L3JlbW90ZXByb2MucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3VtZW50
+YXRpb24vcmVtb3RlcHJvYy5yc3QKcmVuYW1lIHRvIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9y
+ZW1vdGVwcm9jLnJzdAppbmRleCA3MWViNzcyOGZjZjMuLjJmNTI1YjAwZjhlNyAxMDA2NDQKLS0t
+IGEvRG9jdW1lbnRhdGlvbi9yZW1vdGVwcm9jLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZl
+ci1hcGkvcmVtb3RlcHJvYy5yc3QKQEAgLTEsNSArMSwzIEBACi06b3JwaGFuOgotCiA9PT09PT09
+PT09PT09PT09PT09PT09PT09PQogUmVtb3RlIFByb2Nlc3NvciBGcmFtZXdvcmsKID09PT09PT09
+PT09PT09PT09PT09PT09PT09CkBAIC0yNCw3ICsyMiw3IEBAIGZvciByZW1vdGUgcHJvY2Vzc29y
+cyB0aGF0IHN1cHBvcnRzIHRoaXMga2luZCBvZiBjb21tdW5pY2F0aW9uLiBUaGlzIHdheSwKIHBs
+YXRmb3JtLXNwZWNpZmljIHJlbW90ZXByb2MgZHJpdmVycyBvbmx5IG5lZWQgdG8gcHJvdmlkZSBh
+IGZldyBsb3ctbGV2ZWwKIGhhbmRsZXJzLCBhbmQgdGhlbiBhbGwgcnBtc2cgZHJpdmVycyB3aWxs
+IHRoZW4ganVzdCB3b3JrCiAoZm9yIG1vcmUgaW5mb3JtYXRpb24gYWJvdXQgdGhlIHZpcnRpby1i
+YXNlZCBycG1zZyBidXMgYW5kIGl0cyBkcml2ZXJzLAotcGxlYXNlIHJlYWQgRG9jdW1lbnRhdGlv
+bi9ycG1zZy5yc3QpLgorcGxlYXNlIHJlYWQgRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3JwbXNn
+LnJzdCkuCiBSZWdpc3RyYXRpb24gb2Ygb3RoZXIgdHlwZXMgb2YgdmlydGlvIGRldmljZXMgaXMg
+bm93IGFsc28gcG9zc2libGUuIEZpcm13YXJlcwoganVzdCBuZWVkIHRvIHB1Ymxpc2ggd2hhdCBr
+aW5kIG9mIHZpcnRpbyBkZXZpY2VzIGRvIHRoZXkgc3VwcG9ydCwgYW5kIHRoZW4KIHJlbW90ZXBy
+b2Mgd2lsbCBhZGQgdGhvc2UgZGV2aWNlcy4gVGhpcyBtYWtlcyBpdCBwb3NzaWJsZSB0byByZXVz
+ZSB0aGUKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vcmZraWxsLnJzdCBiL0RvY3VtZW50YXRp
+b24vZHJpdmVyLWFwaS9yZmtpbGwucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9t
+IERvY3VtZW50YXRpb24vcmZraWxsLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL3Jma2lsbC5yc3QKaW5kZXggNGRhOTk5NGU5YmI0Li43ZDM2ODRlODFkZjYgMTAwNjQ0Ci0t
+LSBhL0RvY3VtZW50YXRpb24vcmZraWxsLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1h
+cGkvcmZraWxsLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT0KIHJma2lsbCAtIFJGIGtpbGwgc3dpdGNoIHN1cHBvcnQKID09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vcm9i
+dXN0LWZ1dGV4LUFCSS5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcm9idXN0LWZ1dGV4
+LUFCSS5yc3QKc2ltaWxhcml0eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9y
+b2J1c3QtZnV0ZXgtQUJJLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3Jv
+YnVzdC1mdXRleC1BQkkucnN0CmluZGV4IDZkMzU5YjQ2NjEwYy4uOGE1ZDM0YWJmNzI2IDEwMDY0
+NAotLS0gYS9Eb2N1bWVudGF0aW9uL3JvYnVzdC1mdXRleC1BQkkucnN0CisrKyBiL0RvY3VtZW50
+YXRpb24vZHJpdmVyLWFwaS9yb2J1c3QtZnV0ZXgtQUJJLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpv
+cnBoYW46Ci0KID09PT09PT09PT09PT09PT09PT09CiBUaGUgcm9idXN0IGZ1dGV4IEFCSQogPT09
+PT09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vcm9idXN0LWZ1dGV4
+ZXMucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3JvYnVzdC1mdXRleGVzLnJzdApzaW1p
+bGFyaXR5IGluZGV4IDk5JQpyZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9uL3JvYnVzdC1mdXRleGVz
+LnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3JvYnVzdC1mdXRleGVzLnJz
+dAppbmRleCAyMGJlZWY3NzU5N2EuLjYzNjFmYjAxYzljMSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRh
+dGlvbi9yb2J1c3QtZnV0ZXhlcy5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3Jv
+YnVzdC1mdXRleGVzLnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KIEEgZGVzY3JpcHRpb24gb2Ygd2hhdCByb2J1
+c3QgZnV0ZXhlcyBhcmUKID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vcnBtc2cucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2
+ZXItYXBpL3JwbXNnLnJzdApzaW1pbGFyaXR5IGluZGV4IDk5JQpyZW5hbWUgZnJvbSBEb2N1bWVu
+dGF0aW9uL3JwbXNnLnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3JwbXNn
+LnJzdAppbmRleCBhZDUzOTMxZjNlNDMuLjI0YjdhOWUxYTVmOSAxMDA2NDQKLS0tIGEvRG9jdW1l
+bnRhdGlvbi9ycG1zZy5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3JwbXNnLnJz
+dApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09CiBSZW1vdGUgUHJvY2Vzc29yIE1lc3NhZ2luZyAocnBtc2cpIEZy
+YW1ld29yawogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vc2dpLWlvYzQucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2
+ZXItYXBpL3NnaS1pb2M0LnJzdApzaW1pbGFyaXR5IGluZGV4IDk5JQpyZW5hbWUgZnJvbSBEb2N1
+bWVudGF0aW9uL3NnaS1pb2M0LnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBp
+L3NnaS1pb2M0LnJzdAppbmRleCBlNmVkMmU5YjA1NWIuLjcyNzA5MjIyZDNjMCAxMDA2NDQKLS0t
+IGEvRG9jdW1lbnRhdGlvbi9zZ2ktaW9jNC5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL3NnaS1pb2M0LnJzdApAQCAtMSw1ICsxLDMgQEAKLTpvcnBoYW46Ci0KID09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PQogU0dJIElPQzQgUENJIChtdWx0aSBmdW5jdGlvbikg
+ZGV2aWNlCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vU001MDEucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3NtNTAx
+LnJzdApzaW1pbGFyaXR5IGluZGV4IDk5JQpyZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9uL1NNNTAx
+LnJzdApyZW5hbWUgdG8gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3NtNTAxLnJzdAppbmRleCA3
+NzJhOWI1YzdkNDkuLjg4MjUwNzQ1M2JhNCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9TTTUw
+MS5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3NtNTAxLnJzdApAQCAtMSw1ICsx
+LDMgQEAKLTpvcnBoYW46Ci0KIC4uIGluY2x1ZGU6OiA8aXNvbnVtLnR4dD4KIAogPT09PT09PT09
+PT09CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3Ntc2NfZWNlMTA5OS5yc3QgYi9Eb2N1bWVu
+dGF0aW9uL2RyaXZlci1hcGkvc21zY19lY2UxMDk5LnJzdApzaW1pbGFyaXR5IGluZGV4IDk5JQpy
+ZW5hbWUgZnJvbSBEb2N1bWVudGF0aW9uL3Ntc2NfZWNlMTA5OS5yc3QKcmVuYW1lIHRvIERvY3Vt
+ZW50YXRpb24vZHJpdmVyLWFwaS9zbXNjX2VjZTEwOTkucnN0CmluZGV4IGE0MDNmY2Q3YzY0ZC4u
+MDc5Mjc3NDIxZWFmIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL3Ntc2NfZWNlMTA5OS5yc3QK
+KysrIGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3Ntc2NfZWNlMTA5OS5yc3QKQEAgLTEsNSAr
+MSwzIEBACi06b3JwaGFuOgotCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09CiBNc2MgS2V5Ym9hcmQgU2NhbiBFeHBhbnNpb24vR1BJTyBFeHBhbnNpb24g
+ZGV2aWNlCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3NwZWN1bGF0aW9uLnJzdCBiL0RvY3VtZW50YXRp
+b24vZHJpdmVyLWFwaS9zcGVjdWxhdGlvbi5yc3QKc2ltaWxhcml0eSBpbmRleCA5OSUKcmVuYW1l
+IGZyb20gRG9jdW1lbnRhdGlvbi9zcGVjdWxhdGlvbi5yc3QKcmVuYW1lIHRvIERvY3VtZW50YXRp
+b24vZHJpdmVyLWFwaS9zcGVjdWxhdGlvbi5yc3QKaW5kZXggZTI0MGYwMWIwOTgzLi40N2Y4YWQz
+MDA2OTUgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vc3BlY3VsYXRpb24ucnN0CisrKyBiL0Rv
+Y3VtZW50YXRpb24vZHJpdmVyLWFwaS9zcGVjdWxhdGlvbi5yc3QKQEAgLTEsMTIgKzEsMTAgQEAK
+LTpvcnBoYW46Cis9PT09PT09PT09PQorU3BlY3VsYXRpb24KKz09PT09PT09PT09CiAKIFRoaXMg
+ZG9jdW1lbnQgZXhwbGFpbnMgcG90ZW50aWFsIGVmZmVjdHMgb2Ygc3BlY3VsYXRpb24sIGFuZCBo
+b3cgdW5kZXNpcmFibGUKIGVmZmVjdHMgY2FuIGJlIG1pdGlnYXRlZCBwb3J0YWJseSB1c2luZyBj
+b21tb24gQVBJcy4KIAotPT09PT09PT09PT0KLVNwZWN1bGF0aW9uCi09PT09PT09PT09PQotCiBU
+byBpbXByb3ZlIHBlcmZvcm1hbmNlIGFuZCBtaW5pbWl6ZSBhdmVyYWdlIGxhdGVuY2llcywgbWFu
+eSBjb250ZW1wb3JhcnkgQ1BVcwogZW1wbG95IHNwZWN1bGF0aXZlIGV4ZWN1dGlvbiB0ZWNobmlx
+dWVzIHN1Y2ggYXMgYnJhbmNoIHByZWRpY3Rpb24sIHBlcmZvcm1pbmcKIHdvcmsgd2hpY2ggbWF5
+IGJlIGRpc2NhcmRlZCBhdCBhIGxhdGVyIHN0YWdlLgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9zdGF0aWMta2V5cy5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvc3RhdGljLWtleXMu
+cnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vc3RhdGlj
+LWtleXMucnN0CnJlbmFtZSB0byBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvc3RhdGljLWtleXMu
+cnN0CmluZGV4IGJkZjU0NWUzYTM3Zi4uOTgwM2UxNDYzOWJmIDEwMDY0NAotLS0gYS9Eb2N1bWVu
+dGF0aW9uL3N0YXRpYy1rZXlzLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvc3Rh
+dGljLWtleXMucnN0CkBAIC0xLDUgKzEsMyBAQAotOm9ycGhhbjoKLQogPT09PT09PT09PT0KIFN0
+YXRpYyBLZXlzCiA9PT09PT09PT09PQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9zd2l0Y2h0
+ZWMucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3N3aXRjaHRlYy5yc3QKc2ltaWxhcml0
+eSBpbmRleCA5NyUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9zd2l0Y2h0ZWMucnN0CnJlbmFt
+ZSB0byBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvc3dpdGNodGVjLnJzdAppbmRleCA2ODc5Yzky
+ZGU4ZTIuLjc2MTFmZGM1M2UxOSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9zd2l0Y2h0ZWMu
+cnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9zd2l0Y2h0ZWMucnN0CkBAIC0xLDUg
+KzEsMyBAQAotOm9ycGhhbjoKLQogPT09PT09PT09PT09PT09PT09PT09PT09CiBMaW51eCBTd2l0
+Y2h0ZWMgU3VwcG9ydAogPT09PT09PT09PT09PT09PT09PT09PT09CkBAIC05OSw2ICs5Nyw2IEBA
+IHRoZSBmb2xsb3dpbmcgY29uZmlndXJhdGlvbiBzZXR0aW5nczoKIE5UIEVQIEJBUiAyIHdpbGwg
+YmUgZHluYW1pY2FsbHkgY29uZmlndXJlZCBhcyBhIERpcmVjdCBXaW5kb3csIGFuZAogdGhlIGNv
+bmZpZ3VyYXRpb24gZmlsZSBkb2VzIG5vdCBuZWVkIHRvIGNvbmZpZ3VyZSBpdCBleHBsaWNpdGx5
+LgogCi1QbGVhc2UgcmVmZXIgdG8gRG9jdW1lbnRhdGlvbi9udGIucnN0IGluIExpbnV4IHNvdXJj
+ZSB0cmVlIGZvciBhbiBvdmVyYWxsCitQbGVhc2UgcmVmZXIgdG8gRG9jdW1lbnRhdGlvbi9kcml2
+ZXItYXBpL250Yi5yc3QgaW4gTGludXggc291cmNlIHRyZWUgZm9yIGFuIG92ZXJhbGwKIHVuZGVy
+c3RhbmRpbmcgb2YgdGhlIExpbnV4IE5UQiBzdGFjay4gbnRiX2h3X3N3aXRjaHRlYyB3b3JrcyBh
+cyBhbiBOVEIKIEhhcmR3YXJlIERyaXZlciBpbiB0aGlzIHN0YWNrLgpkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9zeW5jX2ZpbGUucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3N5bmNf
+ZmlsZS5yc3QKc2ltaWxhcml0eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi9z
+eW5jX2ZpbGUucnN0CnJlbmFtZSB0byBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvc3luY19maWxl
+LnJzdAppbmRleCBhNjVhNjdjYzA2ZmEuLjQ5NmZiMmMzYjNlNiAxMDA2NDQKLS0tIGEvRG9jdW1l
+bnRhdGlvbi9zeW5jX2ZpbGUucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9zeW5j
+X2ZpbGUucnN0CkBAIC0xLDUgKzEsMyBAQAotOm9ycGhhbjoKLQogPT09PT09PT09PT09PT09PT09
+PQogU3luYyBGaWxlIEFQSSBHdWlkZQogPT09PT09PT09PT09PT09PT09PQpkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi90ZWUucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3RlZS5yc3QK
+c2ltaWxhcml0eSBpbmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi90ZWUucnN0CnJl
+bmFtZSB0byBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvdGVlLnJzdAppbmRleCA1ZWFjZmZiODIz
+YjUuLmFmYWNkZjJmZDFkZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi90ZWUucnN0CisrKyBi
+L0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS90ZWUucnN0CkBAIC0xLDUgKzEsMyBAQAotOm9ycGhh
+bjoKLQogPT09PT09PT09PT09PQogVEVFIHN1YnN5c3RlbQogPT09PT09PT09PT09PQpkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi90aGlzX2NwdV9vcHMucnN0IGIvRG9jdW1lbnRhdGlvbi9kcml2
+ZXItYXBpL3RoaXNfY3B1X29wcy5yc3QKc2ltaWxhcml0eSBpbmRleCA5OSUKcmVuYW1lIGZyb20g
+RG9jdW1lbnRhdGlvbi90aGlzX2NwdV9vcHMucnN0CnJlbmFtZSB0byBEb2N1bWVudGF0aW9uL2Ry
+aXZlci1hcGkvdGhpc19jcHVfb3BzLnJzdAppbmRleCBhNDg5ZDI1ZmY1NDkuLjVjYjhiODgzYWU4
+MyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi90aGlzX2NwdV9vcHMucnN0CisrKyBiL0RvY3Vt
+ZW50YXRpb24vZHJpdmVyLWFwaS90aGlzX2NwdV9vcHMucnN0CkBAIC0xLDUgKzEsMyBAQAotOm9y
+cGhhbjoKLQogPT09PT09PT09PT09PT09PT09PQogdGhpc19jcHUgb3BlcmF0aW9ucwogPT09PT09
+PT09PT09PT09PT09PQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi91bmFsaWduZWQtbWVtb3J5
+LWFjY2Vzcy5yc3QgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvdW5hbGlnbmVkLW1lbW9yeS1h
+Y2Nlc3MucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24v
+dW5hbGlnbmVkLW1lbW9yeS1hY2Nlc3MucnN0CnJlbmFtZSB0byBEb2N1bWVudGF0aW9uL2RyaXZl
+ci1hcGkvdW5hbGlnbmVkLW1lbW9yeS1hY2Nlc3MucnN0CmluZGV4IDg0ODAxM2E4YmMxMC4uMWVl
+ODI0MTlkOGFhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL3VuYWxpZ25lZC1tZW1vcnktYWNj
+ZXNzLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvdW5hbGlnbmVkLW1lbW9yeS1h
+Y2Nlc3MucnN0CkBAIC0xLDUgKzEsMyBAQAotOm9ycGhhbjoKLQogPT09PT09PT09PT09PT09PT09
+PT09PT09PQogVW5hbGlnbmVkIE1lbW9yeSBBY2Nlc3NlcwogPT09PT09PT09PT09PT09PT09PT09
+PT09PQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi92ZmlvLW1lZGlhdGVkLWRldmljZS5yc3Qg
+Yi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvdmZpby1tZWRpYXRlZC1kZXZpY2UucnN0CnNpbWls
+YXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vdmZpby1tZWRpYXRlZC1k
+ZXZpY2UucnN0CnJlbmFtZSB0byBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvdmZpby1tZWRpYXRl
+ZC1kZXZpY2UucnN0CmluZGV4IDBlYTU3NDI3ZTdlNi4uMjVlYjdkNWI4MzRiIDEwMDY0NAotLS0g
+YS9Eb2N1bWVudGF0aW9uL3ZmaW8tbWVkaWF0ZWQtZGV2aWNlLnJzdAorKysgYi9Eb2N1bWVudGF0
+aW9uL2RyaXZlci1hcGkvdmZpby1tZWRpYXRlZC1kZXZpY2UucnN0CkBAIC0xLDUgKzEsMyBAQAot
+Om9ycGhhbjoKLQogLi4gaW5jbHVkZTo6IDxpc29udW0udHh0PgogCiA9PT09PT09PT09PT09PT09
+PT09PT0KQEAgLTQxMCw3ICs0MDgsNyBAQCBjYXJkLgogUmVmZXJlbmNlcwogPT09PT09PT09PQog
+Ci0xLiBTZWUgRG9jdW1lbnRhdGlvbi92ZmlvLnJzdCBmb3IgbW9yZSBpbmZvcm1hdGlvbiBvbiBW
+RklPLgorMS4gU2VlIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS92ZmlvLnJzdCBmb3IgbW9yZSBp
+bmZvcm1hdGlvbiBvbiBWRklPLgogMi4gc3RydWN0IG1kZXZfZHJpdmVyIGluIGluY2x1ZGUvbGlu
+dXgvbWRldi5oCiAzLiBzdHJ1Y3QgbWRldl9wYXJlbnRfb3BzIGluIGluY2x1ZGUvbGludXgvbWRl
+di5oCiA0LiBzdHJ1Y3QgdmZpb19pb21tdV9kcml2ZXJfb3BzIGluIGluY2x1ZGUvbGludXgvdmZp
+by5oCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3ZmaW8ucnN0IGIvRG9jdW1lbnRhdGlvbi9k
+cml2ZXItYXBpL3ZmaW8ucnN0CnNpbWlsYXJpdHkgaW5kZXggOTklCnJlbmFtZSBmcm9tIERvY3Vt
+ZW50YXRpb24vdmZpby5yc3QKcmVuYW1lIHRvIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS92Zmlv
+LnJzdAppbmRleCA4YTNmYmQ3ZDk2ZjAuLmYxYTRkM2MzYmEwYiAxMDA2NDQKLS0tIGEvRG9jdW1l
+bnRhdGlvbi92ZmlvLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvdmZpby5yc3QK
+QEAgLTEsNSArMSwzIEBACi06b3JwaGFuOgotCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09CiBWRklPIC0gIlZpcnR1YWwgRnVuY3Rpb24gSS9PIiBbMV1fCiA9PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3hpbGx5YnVz
+LnJzdCBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS94aWxseWJ1cy5yc3QKc2ltaWxhcml0eSBp
+bmRleCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi94aWxseWJ1cy5yc3QKcmVuYW1lIHRv
+IERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS94aWxseWJ1cy5yc3QKaW5kZXggZDk5ZjRhMzdlOGI2
+Li4yNDQ2ZWUzMDNjMDkgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24veGlsbHlidXMucnN0Cisr
+KyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS94aWxseWJ1cy5yc3QKQEAgLTEsNSArMSwzIEBA
+Ci06b3JwaGFuOgotCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
+IFhpbGx5YnVzIGRyaXZlciBmb3IgZ2VuZXJpYyBGUEdBIGludGVyZmFjZQogPT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L3h6LnJzdCBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS94ei5yc3QKc2ltaWxhcml0eSBpbmRl
+eCA5OSUKcmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi94ei5yc3QKcmVuYW1lIHRvIERvY3VtZW50
+YXRpb24vZHJpdmVyLWFwaS94ei5yc3QKaW5kZXggMjA1ZWRjNjY0NmQ1Li5iMjIyMGQwM2FhNTAg
+MTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24veHoucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJp
+dmVyLWFwaS94ei5yc3QKQEAgLTEsNSArMSwzIEBACi06b3JwaGFuOgotCiA9PT09PT09PT09PT09
+PT09PT09PT09PT09PT09CiBYWiBkYXRhIGNvbXByZXNzaW9uIGluIExpbnV4CiA9PT09PT09PT09
+PT09PT09PT09PT09PT09PT09CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3pvcnJvLnJzdCBi
+L0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS96b3Jyby5yc3QKc2ltaWxhcml0eSBpbmRleCA5OSUK
+cmVuYW1lIGZyb20gRG9jdW1lbnRhdGlvbi96b3Jyby5yc3QKcmVuYW1lIHRvIERvY3VtZW50YXRp
+b24vZHJpdmVyLWFwaS96b3Jyby5yc3QKaW5kZXggN2NkNTA5ZjMxZDU3Li41OWZiMTYzNGQ5MDMg
+MTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vem9ycm8ucnN0CisrKyBiL0RvY3VtZW50YXRpb24v
+ZHJpdmVyLWFwaS96b3Jyby5yc3QKQEAgLTEsNSArMSwzIEBACi06b3JwaGFuOgotCiA9PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CiBXcml0aW5nIERldmljZSBEcml2ZXJz
+IGZvciBab3JybyBEZXZpY2VzCiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RyaXZlci1tb2RlbC9kZXZpY2UucnN0IGIv
+RG9jdW1lbnRhdGlvbi9kcml2ZXItbW9kZWwvZGV2aWNlLnJzdAppbmRleCAxN2JjYzQ4M2M0YjEu
+LmIwNzM0Y2FmNmI4ZiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kcml2ZXItbW9kZWwvZGV2
+aWNlLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1tb2RlbC9kZXZpY2UucnN0CkBAIC01
+Myw3ICs1Myw3IEBAIEF0dHJpYnV0ZXMgb2YgZGV2aWNlcyBjYW4gYmUgZXhwb3J0ZWQgYnkgYSBk
+ZXZpY2UgZHJpdmVyIHRocm91Z2ggc3lzZnMuCiBQbGVhc2Ugc2VlIERvY3VtZW50YXRpb24vZmls
+ZXN5c3RlbXMvc3lzZnMudHh0IGZvciBtb3JlIGluZm9ybWF0aW9uCiBvbiBob3cgc3lzZnMgd29y
+a3MuCiAKLUFzIGV4cGxhaW5lZCBpbiBEb2N1bWVudGF0aW9uL2tvYmplY3QucnN0LCBkZXZpY2Ug
+YXR0cmlidXRlcyBtdXN0IGJlCitBcyBleHBsYWluZWQgaW4gRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL2tvYmplY3QucnN0LCBkZXZpY2UgYXR0cmlidXRlcyBtdXN0IGJlCiBjcmVhdGVkIGJlZm9y
+ZSB0aGUgS09CSl9BREQgdWV2ZW50IGlzIGdlbmVyYXRlZC4gVGhlIG9ubHkgd2F5IHRvIHJlYWxp
+emUKIHRoYXQgaXMgYnkgZGVmaW5pbmcgYW4gYXR0cmlidXRlIGdyb3VwLgogCmRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2ZiL2ZiY29uLnJzdCBiL0RvY3VtZW50YXRpb24vZmIvZmJjb24ucnN0
+CmluZGV4IDIyMTEyNzE4ZGQ1ZC4uYjlhYWZiNzMzZGI5IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0
+aW9uL2ZiL2ZiY29uLnJzdAorKysgYi9Eb2N1bWVudGF0aW9uL2ZiL2ZiY29uLnJzdApAQCAtMTg3
+LDcgKzE4Nyw3IEBAIHRoZSBoYXJkd2FyZS4gVGh1cywgaW4gYSBWR0EgY29uc29sZTo6CiBBc3N1
+bWluZyB0aGUgVkdBIGRyaXZlciBjYW4gYmUgdW5sb2FkZWQsIG9uZSBtdXN0IGZpcnN0IHVuYmlu
+ZCB0aGUgVkdBIGRyaXZlcgogZnJvbSB0aGUgY29uc29sZSBsYXllciBiZWZvcmUgdW5sb2FkaW5n
+IHRoZSBkcml2ZXIuICBUaGUgVkdBIGRyaXZlciBjYW5ub3QgYmUKIHVubG9hZGVkIGlmIGl0IGlz
+IHN0aWxsIGJvdW5kIHRvIHRoZSBjb25zb2xlIGxheWVyLiAoU2VlCi1Eb2N1bWVudGF0aW9uL2Nv
+bnNvbGUvY29uc29sZS5yc3QgZm9yIG1vcmUgaW5mb3JtYXRpb24pLgorRG9jdW1lbnRhdGlvbi9k
+cml2ZXItYXBpL2NvbnNvbGUucnN0IGZvciBtb3JlIGluZm9ybWF0aW9uKS4KIAogVGhpcyBpcyBt
+b3JlIGNvbXBsaWNhdGVkIGluIHRoZSBjYXNlIG9mIHRoZSBmcmFtZWJ1ZmZlciBjb25zb2xlIChm
+YmNvbiksCiBiZWNhdXNlIGZiY29uIGlzIGFuIGludGVybWVkaWF0ZSBsYXllciBiZXR3ZWVuIHRo
+ZSBjb25zb2xlIGFuZCB0aGUgZHJpdmVyczo6CkBAIC0yMDQsNyArMjA0LDcgQEAgZmJjb24uIFRo
+dXMsIHRoZXJlIGlzIG5vIG5lZWQgdG8gZXhwbGljaXRseSB1bmJpbmQgdGhlIGZiZGV2IGRyaXZl
+cnMgZnJvbQogZmJjb24uCiAKIFNvLCBob3cgZG8gd2UgdW5iaW5kIGZiY29uIGZyb20gdGhlIGNv
+bnNvbGU/IFBhcnQgb2YgdGhlIGFuc3dlciBpcyBpbgotRG9jdW1lbnRhdGlvbi9jb25zb2xlL2Nv
+bnNvbGUucnN0LiBUbyBzdW1tYXJpemU6CitEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvY29uc29s
+ZS5yc3QuIFRvIHN1bW1hcml6ZToKIAogRWNobyBhIHZhbHVlIHRvIHRoZSBiaW5kIGZpbGUgdGhh
+dCByZXByZXNlbnRzIHRoZSBmcmFtZWJ1ZmZlciBjb25zb2xlCiBkcml2ZXIuIFNvIGFzc3VtaW5n
+IHZ0Y29uMSByZXByZXNlbnRzIGZiY29uLCB0aGVuOjoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZmlsZXN5c3RlbXMvc3lzZnMudHh0IGIvRG9jdW1lbnRhdGlvbi9maWxlc3lzdGVtcy9zeXNm
+cy50eHQKaW5kZXggZDE1OTgyNmM1Y2YzLi4yMGFiOTI5YzBlMGMgMTAwNjQ0Ci0tLSBhL0RvY3Vt
+ZW50YXRpb24vZmlsZXN5c3RlbXMvc3lzZnMudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZmlsZXN5
+c3RlbXMvc3lzZnMudHh0CkBAIC0xNiw3ICsxNiw3IEBAIGEgbWVhbnMgdG8gZXhwb3J0IGtlcm5l
+bCBkYXRhIHN0cnVjdHVyZXMsIHRoZWlyIGF0dHJpYnV0ZXMsIGFuZCB0aGUKIGxpbmthZ2VzIGJl
+dHdlZW4gdGhlbSB0byB1c2Vyc3BhY2UuIAogCiBzeXNmcyBpcyB0aWVkIGluaGVyZW50bHkgdG8g
+dGhlIGtvYmplY3QgaW5mcmFzdHJ1Y3R1cmUuIFBsZWFzZSByZWFkCi1Eb2N1bWVudGF0aW9uL2tv
+YmplY3QucnN0IGZvciBtb3JlIGluZm9ybWF0aW9uIGNvbmNlcm5pbmcgdGhlIGtvYmplY3QKK0Rv
+Y3VtZW50YXRpb24vZHJpdmVyLWFwaS9rb2JqZWN0LnJzdCBmb3IgbW9yZSBpbmZvcm1hdGlvbiBj
+b25jZXJuaW5nIHRoZSBrb2JqZWN0CiBpbnRlcmZhY2UuIAogCiAKZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZ3B1L2RybS1tbS5yc3QgYi9Eb2N1bWVudGF0aW9uL2dwdS9kcm0tbW0ucnN0Cmlu
+ZGV4IGZhMzBkZmNmYzNjOC4uYjBmOTQ4ZDg3MzNiIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9u
+L2dwdS9kcm0tbW0ucnN0CisrKyBiL0RvY3VtZW50YXRpb24vZ3B1L2RybS1tbS5yc3QKQEAgLTMy
+MCw3ICszMjAsNyBAQCBzdHJ1Y3QgOmM6dHlwZTpgc3RydWN0IGZpbGVfb3BlcmF0aW9ucyA8Zmls
+ZV9vcGVyYXRpb25zPmAgZ2V0X3VubWFwcGVkX2FyZWEKIGZpZWxkIHdpdGggYSBwb2ludGVyIG9u
+IDpjOmZ1bmM6YGRybV9nZW1fY21hX2dldF91bm1hcHBlZF9hcmVhYC4KIAogTW9yZSBkZXRhaWxl
+ZCBpbmZvcm1hdGlvbiBhYm91dCBnZXRfdW5tYXBwZWRfYXJlYSBjYW4gYmUgZm91bmQgaW4KLURv
+Y3VtZW50YXRpb24vbm9tbXUtbW1hcC5yc3QKK0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9ub21t
+dS1tbWFwLnJzdAogCiBNZW1vcnkgQ29oZXJlbmN5CiAtLS0tLS0tLS0tLS0tLS0tCmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2lhNjQvaXJxLXJlZGlyLnJzdCBiL0RvY3VtZW50YXRpb24vaWE2
+NC9pcnEtcmVkaXIucnN0CmluZGV4IDBhYmM3YjM1ZjZjMC4uMGNkN2JhMWIwYjA4IDEwMDY0NAot
+LS0gYS9Eb2N1bWVudGF0aW9uL2lhNjQvaXJxLXJlZGlyLnJzdAorKysgYi9Eb2N1bWVudGF0aW9u
+L2lhNjQvaXJxLXJlZGlyLnJzdApAQCAtNyw3ICs3LDcgQEAgSVJRIGFmZmluaXR5IG9uIElBNjQg
+cGxhdGZvcm1zCiAKIEJ5IHdyaXRpbmcgdG8gL3Byb2MvaXJxL0lSUSMvc21wX2FmZmluaXR5IHRo
+ZSBpbnRlcnJ1cHQgcm91dGluZyBjYW4gYmUKIGNvbnRyb2xsZWQuIFRoZSBiZWhhdmlvciBvbiBJ
+QTY0IHBsYXRmb3JtcyBpcyBzbGlnaHRseSBkaWZmZXJlbnQgZnJvbQotdGhhdCBkZXNjcmliZWQg
+aW4gRG9jdW1lbnRhdGlvbi9JUlEtYWZmaW5pdHkucnN0IGZvciBpMzg2IHN5c3RlbXMuCit0aGF0
+IGRlc2NyaWJlZCBpbiBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXJxLWFmZmluaXR5LnJzdCBm
+b3IgaTM4NiBzeXN0ZW1zLgogCiBCZWNhdXNlIG9mIHRoZSB1c2FnZSBvZiBTQVBJQyBtb2RlIGFu
+ZCBwaHlzaWNhbCBkZXN0aW5hdGlvbiBtb2RlIHRoZQogSVJRIHRhcmdldCBpcyBvbmUgcGFydGlj
+dWxhciBDUFUgYW5kIGNhbm5vdCBiZSBhIG1hc2sgb2Ygc2V2ZXJhbApkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9sYXB0b3BzL3RoaW5rcGFkLWFjcGkucnN0IGIvRG9jdW1lbnRhdGlvbi9sYXB0
+b3BzL3RoaW5rcGFkLWFjcGkucnN0CmluZGV4IGQwZjBkMTZjMjFiOS4uYWRlYTBiZjJhY2M1IDEw
+MDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2xhcHRvcHMvdGhpbmtwYWQtYWNwaS5yc3QKKysrIGIv
+RG9jdW1lbnRhdGlvbi9sYXB0b3BzL3RoaW5rcGFkLWFjcGkucnN0CkBAIC02NDMsNyArNjQzLDcg
+QEAgU3lzZnMgbm90ZXMKIAkyMDEwLgogCiAJcmZraWxsIGNvbnRyb2xsZXIgc3dpdGNoICJ0cGFj
+cGlfYmx1ZXRvb3RoX3N3IjogcmVmZXIgdG8KLQlEb2N1bWVudGF0aW9uL3Jma2lsbC5yc3QgZm9y
+IGRldGFpbHMuCisJRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3Jma2lsbC5yc3QgZm9yIGRldGFp
+bHMuCiAKIAogVmlkZW8gb3V0cHV0IGNvbnRyb2wgLS0gL3Byb2MvYWNwaS9pYm0vdmlkZW8KQEAg
+LTE0MDYsNyArMTQwNiw3IEBAIFN5c2ZzIG5vdGVzCiAJMjAxMC4KIAogCXJma2lsbCBjb250cm9s
+bGVyIHN3aXRjaCAidHBhY3BpX3d3YW5fc3ciOiByZWZlciB0bwotCURvY3VtZW50YXRpb24vcmZr
+aWxsLnJzdCBmb3IgZGV0YWlscy4KKwlEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcmZraWxsLnJz
+dCBmb3IgZGV0YWlscy4KIAogCiBFWFBFUklNRU5UQUw6IFVXQgpAQCAtMTQyNiw3ICsxNDI2LDcg
+QEAgU3lzZnMgbm90ZXMKIF5eXl5eXl5eXl5eCiAKIAlyZmtpbGwgY29udHJvbGxlciBzd2l0Y2gg
+InRwYWNwaV91d2Jfc3ciOiByZWZlciB0bwotCURvY3VtZW50YXRpb24vcmZraWxsLnJzdCBmb3Ig
+ZGV0YWlscy4KKwlEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcmZraWxsLnJzdCBmb3IgZGV0YWls
+cy4KIAogQWRhcHRpdmUga2V5Ym9hcmQKIC0tLS0tLS0tLS0tLS0tLS0tCmRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2xvY2tpbmcvcnQtbXV0ZXgucnN0IGIvRG9jdW1lbnRhdGlvbi9sb2NraW5n
+L3J0LW11dGV4LnJzdAppbmRleCA2ZTNkY2ZmODAyZjkuLjE4YjVmMGYwNDE4ZSAxMDA2NDQKLS0t
+IGEvRG9jdW1lbnRhdGlvbi9sb2NraW5nL3J0LW11dGV4LnJzdAorKysgYi9Eb2N1bWVudGF0aW9u
+L2xvY2tpbmcvcnQtbXV0ZXgucnN0CkBAIC00LDcgKzQsNyBAQCBSVC1tdXRleCBzdWJzeXN0ZW0g
+d2l0aCBQSSBzdXBwb3J0CiAKIFJULW11dGV4ZXMgd2l0aCBwcmlvcml0eSBpbmhlcml0YW5jZSBh
+cmUgdXNlZCB0byBzdXBwb3J0IFBJLWZ1dGV4ZXMsCiB3aGljaCBlbmFibGUgcHRocmVhZF9tdXRl
+eF90IHByaW9yaXR5IGluaGVyaXRhbmNlIGF0dHJpYnV0ZXMKLShQVEhSRUFEX1BSSU9fSU5IRVJJ
+VCkuIFtTZWUgRG9jdW1lbnRhdGlvbi9waS1mdXRleC5yc3QgZm9yIG1vcmUgZGV0YWlscworKFBU
+SFJFQURfUFJJT19JTkhFUklUKS4gW1NlZSBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcGktZnV0
+ZXgucnN0IGZvciBtb3JlIGRldGFpbHMKIGFib3V0IFBJLWZ1dGV4ZXMuXQogCiBUaGlzIHRlY2hu
+b2xvZ3kgd2FzIGRldmVsb3BlZCBpbiB0aGUgLXJ0IHRyZWUgYW5kIHN0cmVhbWxpbmVkIGZvcgpk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9uZXR3b3JraW5nL3NjYWxpbmcucnN0IGIvRG9jdW1l
+bnRhdGlvbi9uZXR3b3JraW5nL3NjYWxpbmcucnN0CmluZGV4IDA1ZjBmZWI5OTMyMC4uYTIwMzI1
+YWExMzMwIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL25ldHdvcmtpbmcvc2NhbGluZy5yc3QK
+KysrIGIvRG9jdW1lbnRhdGlvbi9uZXR3b3JraW5nL3NjYWxpbmcucnN0CkBAIC04MSw3ICs4MSw3
+IEBAIG9mIHF1ZXVlcyB0byBJUlFzIGNhbiBiZSBkZXRlcm1pbmVkIGZyb20gL3Byb2MvaW50ZXJy
+dXB0cy4gQnkgZGVmYXVsdCwKIGFuIElSUSBtYXkgYmUgaGFuZGxlZCBvbiBhbnkgQ1BVLiBCZWNh
+dXNlIGEgbm9uLW5lZ2xpZ2libGUgcGFydCBvZiBwYWNrZXQKIHByb2Nlc3NpbmcgdGFrZXMgcGxh
+Y2UgaW4gcmVjZWl2ZSBpbnRlcnJ1cHQgaGFuZGxpbmcsIGl0IGlzIGFkdmFudGFnZW91cwogdG8g
+c3ByZWFkIHJlY2VpdmUgaW50ZXJydXB0cyBiZXR3ZWVuIENQVXMuIFRvIG1hbnVhbGx5IGFkanVz
+dCB0aGUgSVJRCi1hZmZpbml0eSBvZiBlYWNoIGludGVycnVwdCBzZWUgRG9jdW1lbnRhdGlvbi9J
+UlEtYWZmaW5pdHkucnN0LiBTb21lIHN5c3RlbXMKK2FmZmluaXR5IG9mIGVhY2ggaW50ZXJydXB0
+IHNlZSBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXJxLWFmZmluaXR5LnJzdC4gU29tZSBzeXN0
+ZW1zCiB3aWxsIGJlIHJ1bm5pbmcgaXJxYmFsYW5jZSwgYSBkYWVtb24gdGhhdCBkeW5hbWljYWxs
+eSBvcHRpbWl6ZXMgSVJRCiBhc3NpZ25tZW50cyBhbmQgYXMgYSByZXN1bHQgbWF5IG92ZXJyaWRl
+IGFueSBtYW51YWwgc2V0dGluZ3MuCiAKQEAgLTE2MCw3ICsxNjAsNyBAQCBjYW4gYmUgY29uZmln
+dXJlZCBmb3IgZWFjaCByZWNlaXZlIHF1ZXVlIHVzaW5nIGEgc3lzZnMgZmlsZSBlbnRyeTo6CiAK
+IFRoaXMgZmlsZSBpbXBsZW1lbnRzIGEgYml0bWFwIG9mIENQVXMuIFJQUyBpcyBkaXNhYmxlZCB3
+aGVuIGl0IGlzIHplcm8KICh0aGUgZGVmYXVsdCksIGluIHdoaWNoIGNhc2UgcGFja2V0cyBhcmUg
+cHJvY2Vzc2VkIG9uIHRoZSBpbnRlcnJ1cHRpbmcKLUNQVS4gRG9jdW1lbnRhdGlvbi9JUlEtYWZm
+aW5pdHkucnN0IGV4cGxhaW5zIGhvdyBDUFVzIGFyZSBhc3NpZ25lZCB0bworQ1BVLiBEb2N1bWVu
+dGF0aW9uL2RyaXZlci1hcGkvaXJxLWFmZmluaXR5LnJzdCBleHBsYWlucyBob3cgQ1BVcyBhcmUg
+YXNzaWduZWQgdG8KIHRoZSBiaXRtYXAuCiAKIApkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9z
+MzkwL3ZmaW8tY2N3LnJzdCBiL0RvY3VtZW50YXRpb24vczM5MC92ZmlvLWNjdy5yc3QKaW5kZXgg
+ODdiNWJiNDliMmYzLi4xZTIxMGM2YWZhODggMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vczM5
+MC92ZmlvLWNjdy5yc3QKKysrIGIvRG9jdW1lbnRhdGlvbi9zMzkwL3ZmaW8tY2N3LnJzdApAQCAt
+MzgsNyArMzgsNyBAQCBldmVyeSBkZXRhaWwuIE1vcmUgaW5mb3JtYXRpb24vcmVmZXJlbmNlIGNv
+dWxkIGJlIGZvdW5kIGhlcmU6CiAgIHFlbXUvaHcvczM5MHgvY3NzLmMKIAogRm9yIHZmaW8gbWVk
+aWF0ZWQgZGV2aWNlIGZyYW1ld29yazoKLS0gRG9jdW1lbnRhdGlvbi92ZmlvLW1lZGlhdGVkLWRl
+dmljZS5yc3QKKy0gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3ZmaW8tbWVkaWF0ZWQtZGV2aWNl
+LnJzdAogCiBNb3RpdmF0aW9uIG9mIHZmaW8tY2N3CiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tCkBA
+IC0zMjIsNSArMzIyLDUgQEAgUmVmZXJlbmNlCiAyLiBFU0EvMzkwIENvbW1vbiBJL08gRGV2aWNl
+IENvbW1hbmRzIG1hbnVhbCAoSUJNIEZvcm0uIE5vLiBTQTIyLTcyMDQpCiAzLiBodHRwczovL2Vu
+Lndpa2lwZWRpYS5vcmcvd2lraS9DaGFubmVsX0kvTwogNC4gRG9jdW1lbnRhdGlvbi9zMzkwL2Nk
+cy5yc3QKLTUuIERvY3VtZW50YXRpb24vdmZpby5yc3QKLTYuIERvY3VtZW50YXRpb24vdmZpby1t
+ZWRpYXRlZC1kZXZpY2UucnN0Cis1LiBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvdmZpby5yc3QK
+KzYuIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS92ZmlvLW1lZGlhdGVkLWRldmljZS5yc3QKZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vc3lzY3RsL2tlcm5lbC5yc3QgYi9Eb2N1bWVudGF0aW9u
+L3N5c2N0bC9rZXJuZWwucnN0CmluZGV4IDkzMjRjM2IxYWEzZS4uNmU5MTQ0YmZiYTljIDEwMDY0
+NAotLS0gYS9Eb2N1bWVudGF0aW9uL3N5c2N0bC9rZXJuZWwucnN0CisrKyBiL0RvY3VtZW50YXRp
+b24vc3lzY3RsL2tlcm5lbC5yc3QKQEAgLTUwLDcgKzUwLDcgQEAgc2hvdyB1cCBpbiAvcHJvYy9z
+eXMva2VybmVsOgogLSBrZXhlY19sb2FkX2Rpc2FibGVkCiAtIGtwdHJfcmVzdHJpY3QKIC0gbDJj
+ciAgICAgICAgICAgICAgICAgICAgICAgIFsgUFBDIG9ubHkgXQotLSBtb2Rwcm9iZSAgICAgICAg
+ICAgICAgICAgICAgPT0+IERvY3VtZW50YXRpb24vZGVidWdnaW5nLW1vZHVsZXMucnN0CistIG1v
+ZHByb2JlICAgICAgICAgICAgICAgICAgICA9PT4gRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2Rl
+YnVnZ2luZy1tb2R1bGVzLnJzdAogLSBtb2R1bGVzX2Rpc2FibGVkCiAtIG1zZ19uZXh0X2lkCQkg
+ICAgICBbIHN5c3YgaXBjIF0KIC0gbXNnbWF4CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3N5
+c2N0bC92bS5yc3QgYi9Eb2N1bWVudGF0aW9uL3N5c2N0bC92bS5yc3QKaW5kZXggNDNkNTk0ODc3
+ZGY3Li40OTQwYWI2MTBlYjcgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vc3lzY3RsL3ZtLnJz
+dAorKysgYi9Eb2N1bWVudGF0aW9uL3N5c2N0bC92bS5yc3QKQEAgLTU4MCw3ICs1ODAsNyBAQCB0
+cmltbWluZyBvZiBhbGxvY2F0aW9ucyBpcyBpbml0aWF0ZWQuCiAKIFRoZSBkZWZhdWx0IHZhbHVl
+IGlzIDEuCiAKLVNlZSBEb2N1bWVudGF0aW9uL25vbW11LW1tYXAucnN0IGZvciBtb3JlIGluZm9y
+bWF0aW9uLgorU2VlIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9ub21tdS1tbWFwLnJzdCBmb3Ig
+bW9yZSBpbmZvcm1hdGlvbi4KIAogCiBudW1hX3pvbmVsaXN0X29yZGVyCmRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL3RyYWNlL2twcm9iZXRyYWNlLnJzdCBiL0RvY3VtZW50YXRpb24vdHJhY2Uv
+a3Byb2JldHJhY2UucnN0CmluZGV4IDc0ZjY5OGFmZmVhMS4uY2FhMGE4YmEwODFlIDEwMDY0NAot
+LS0gYS9Eb2N1bWVudGF0aW9uL3RyYWNlL2twcm9iZXRyYWNlLnJzdAorKysgYi9Eb2N1bWVudGF0
+aW9uL3RyYWNlL2twcm9iZXRyYWNlLnJzdApAQCAtNDAsNyArNDAsNyBAQCBTeW5vcHNpcyBvZiBr
+cHJvYmVfZXZlbnRzCiAgTUVNQUREUgk6IEFkZHJlc3Mgd2hlcmUgdGhlIHByb2JlIGlzIGluc2Vy
+dGVkLgogIE1BWEFDVElWRQk6IE1heGltdW0gbnVtYmVyIG9mIGluc3RhbmNlcyBvZiB0aGUgc3Bl
+Y2lmaWVkIGZ1bmN0aW9uIHRoYXQKIAkJICBjYW4gYmUgcHJvYmVkIHNpbXVsdGFuZW91c2x5LCBv
+ciAwIGZvciB0aGUgZGVmYXVsdCB2YWx1ZQotCQkgIGFzIGRlZmluZWQgaW4gRG9jdW1lbnRhdGlv
+bi9rcHJvYmVzLnJzdCBzZWN0aW9uIDEuMy4xLgorCQkgIGFzIGRlZmluZWQgaW4gRG9jdW1lbnRh
+dGlvbi9kcml2ZXItYXBpL2twcm9iZXMucnN0IHNlY3Rpb24gMS4zLjEuCiAKICBGRVRDSEFSR1MJ
+OiBBcmd1bWVudHMuIEVhY2ggcHJvYmUgY2FuIGhhdmUgdXAgdG8gMTI4IGFyZ3MuCiAgICVSRUcJ
+CTogRmV0Y2ggcmVnaXN0ZXIgUkVHCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL3RyYW5zbGF0
+aW9ucy96aF9DTi9JUlEudHh0IGIvRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMvemhfQ04vSVJR
+LnR4dAppbmRleCAwZDllYzE0MmUxODUuLmM2ZTc3YTFiMTRlNyAxMDA2NDQKLS0tIGEvRG9jdW1l
+bnRhdGlvbi90cmFuc2xhdGlvbnMvemhfQ04vSVJRLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL3Ry
+YW5zbGF0aW9ucy96aF9DTi9JUlEudHh0CkBAIC0xLDQgKzEsNCBAQAotQ2hpbmVzZSB0cmFuc2xh
+dGVkIHZlcnNpb24gb2YgRG9jdW1lbnRhdGlvbi9JUlEucnN0CitDaGluZXNlIHRyYW5zbGF0ZWQg
+dmVyc2lvbiBvZiBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXJxLnJzdAogCiBJZiB5b3UgaGF2
+ZSBhbnkgY29tbWVudCBvciB1cGRhdGUgdG8gdGhlIGNvbnRlbnQsIHBsZWFzZSBjb250YWN0IHRo
+ZQogb3JpZ2luYWwgZG9jdW1lbnQgbWFpbnRhaW5lciBkaXJlY3RseS4gIEhvd2V2ZXIsIGlmIHlv
+dSBoYXZlIGEgcHJvYmxlbQpAQCAtOSw3ICs5LDcgQEAgb3IgaWYgdGhlcmUgaXMgYSBwcm9ibGVt
+IHdpdGggdGhlIHRyYW5zbGF0aW9uLgogTWFpbnRhaW5lcjogRXJpYyBXLiBCaWVkZXJtYW4gPGVi
+aWVkZXJtYW5AeG1pc3Npb24uY29tPgogQ2hpbmVzZSBtYWludGFpbmVyOiBGdSBXZWkgPHRla2th
+bWFubmluamFAZ21haWwuY29tPgogLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1Eb2N1bWVudGF0aW9uL0lSUS5yc3Qg
+55qE5Lit5paH57+76K+RCitEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXJxLnJzdCDnmoTkuK3m
+lofnv7vor5EKIAog5aaC5p6c5oOz6K+E6K665oiW5pu05paw5pys5paH55qE5YaF5a6577yM6K+3
+55u05o6l6IGU57O75Y6f5paH5qGj55qE57u05oqk6ICF44CC5aaC5p6c5L2g5L2/55So6Iux5paH
+CiDkuqTmtYHmnInlm7Dpmr7nmoTor53vvIzkuZ/lj6/ku6XlkJHkuK3mlofniYjnu7TmiqTogIXm
+sYLliqnjgILlpoLmnpzmnKznv7vor5Hmm7TmlrDkuI3lj4rml7bmiJbogIXnv7sKZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vdHJhbnNsYXRpb25zL3poX0NOL2ZpbGVzeXN0ZW1zL3N5c2ZzLnR4
+dCBiL0RvY3VtZW50YXRpb24vdHJhbnNsYXRpb25zL3poX0NOL2ZpbGVzeXN0ZW1zL3N5c2ZzLnR4
+dAppbmRleCBmNTQ4MmUwODIzOTkuLjBlMGM2ZDNkNDEyOSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRh
+dGlvbi90cmFuc2xhdGlvbnMvemhfQ04vZmlsZXN5c3RlbXMvc3lzZnMudHh0CisrKyBiL0RvY3Vt
+ZW50YXRpb24vdHJhbnNsYXRpb25zL3poX0NOL2ZpbGVzeXN0ZW1zL3N5c2ZzLnR4dApAQCAtNDAs
+NyArNDAsNyBAQCBzeXNmcyDmmK/kuIDkuKrmnIDliJ3ln7rkuo4gcmFtZnMg5LiU5L2N5LqO5YaF
+5a2Y55qE5paH5Lu257O757uf44CC5a6D5o+Q5L6b5a+8CiDmlbDmja7nu5PmnoTlj4rlhbblsZ7m
+gKfvvIzku6Xlj4rlroPku6zkuYvpl7TnmoTlhbPogZTliLDnlKjmiLfnqbrpl7TnmoTmlrnms5Xj
+gIIKIAogc3lzZnMg5aeL57uI5LiOIGtvYmplY3Qg55qE5bqV5bGC57uT5p6E57Sn5a+G55u45YWz
+44CC6K+36ZiF6K+7Ci1Eb2N1bWVudGF0aW9uL2tvYmplY3QucnN0IOaWh+aho+S7peiOt+W+l+ab
+tOWkmuWFs+S6jiBrb2JqZWN0IOaOpeWPo+eahAorRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2tv
+YmplY3QucnN0IOaWh+aho+S7peiOt+W+l+abtOWkmuWFs+S6jiBrb2JqZWN0IOaOpeWPo+eahAog
+5L+h5oGv44CCCiAKIApkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMvemhf
+Q04vaW9fb3JkZXJpbmcudHh0IGIvRG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMvemhfQ04vaW9f
+b3JkZXJpbmcudHh0CmluZGV4IDRlOTcyNzk5MGMxMC4uN2JiMzA4NjIyN2FlIDEwMDY0NAotLS0g
+YS9Eb2N1bWVudGF0aW9uL3RyYW5zbGF0aW9ucy96aF9DTi9pb19vcmRlcmluZy50eHQKKysrIGIv
+RG9jdW1lbnRhdGlvbi90cmFuc2xhdGlvbnMvemhfQ04vaW9fb3JkZXJpbmcudHh0CkBAIC0xLDQg
+KzEsNCBAQAotQ2hpbmVzZSB0cmFuc2xhdGVkIHZlcnNpb24gb2YgRG9jdW1lbnRhdGlvbi9pb19v
+cmRlcmluZy5yc3QKK0NoaW5lc2UgdHJhbnNsYXRlZCB2ZXJzaW9uIG9mIERvY3VtZW50YXRpb24v
+ZHJpdmVyLWFwaS9pb19vcmRlcmluZy5yc3QKIAogSWYgeW91IGhhdmUgYW55IGNvbW1lbnQgb3Ig
+dXBkYXRlIHRvIHRoZSBjb250ZW50LCBwbGVhc2UgY29udGFjdCB0aGUKIG9yaWdpbmFsIGRvY3Vt
+ZW50IG1haW50YWluZXIgZGlyZWN0bHkuICBIb3dldmVyLCBpZiB5b3UgaGF2ZSBhIHByb2JsZW0K
+QEAgLTgsNyArOCw3IEBAIG9yIGlmIHRoZXJlIGlzIGEgcHJvYmxlbSB3aXRoIHRoZSB0cmFuc2xh
+dGlvbi4KIAogQ2hpbmVzZSBtYWludGFpbmVyOiBMaW4gWW9uZ3RpbmcgPGxpbnlvbmd0aW5nQGdt
+YWlsLmNvbT4KIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQotRG9jdW1lbnRhdGlvbi9pb19vcmRlcmluZy5yc3Qg55qE
+5Lit5paH57+76K+RCitEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaW9fb3JkZXJpbmcucnN0IOea
+hOS4reaWh+e/u+ivkQogCiDlpoLmnpzmg7Por4TorrrmiJbmm7TmlrDmnKzmlofnmoTlhoXlrrnv
+vIzor7fnm7TmjqXogZTns7vljp/mlofmoaPnmoTnu7TmiqTogIXjgILlpoLmnpzkvaDkvb/nlKjo
+i7HmlocKIOS6pOa1geacieWbsOmavueahOivne+8jOS5n+WPr+S7peWQkeS4reaWh+eJiOe7tOaK
+pOiAheaxguWKqeOAguWmguaenOacrOe/u+ivkeabtOaWsOS4jeWPiuaXtuaIluiAhee/uwpkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi93MS93MS5uZXRsaW5rIGIvRG9jdW1lbnRhdGlvbi93MS93
+MS5uZXRsaW5rCmluZGV4IGVmMjcyNzE5MmQ2OS4uOTRhZDRjNDIwODI4IDEwMDY0NAotLS0gYS9E
+b2N1bWVudGF0aW9uL3cxL3cxLm5ldGxpbmsKKysrIGIvRG9jdW1lbnRhdGlvbi93MS93MS5uZXRs
+aW5rCkBAIC0xODMsNyArMTgzLDcgQEAgYWNrbm93bGVkZ2UgbnVtYmVyIGlzIHNldCB0byBzZXEr
+MS4KIEFkZGl0aW9uYWwgZG9jdW1hbnRpb24sIHNvdXJjZSBjb2RlIGV4YW1wbGVzLgogPT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KIAotMS4gRG9jdW1lbnRhdGlv
+bi9jb25uZWN0b3IKKzEuIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9jb25uZWN0b3IucnN0CiAy
+LiBodHRwOi8vd3d3LmlvcmVtYXAubmV0L2FyY2hpdmUvdzEKIFRoaXMgYXJjaGl2ZSBpbmNsdWRl
+cyB1c2Vyc3BhY2UgYXBwbGljYXRpb24gdzFkLmMgd2hpY2ggdXNlcwogcmVhZC93cml0ZS9zZWFy
+Y2ggY29tbWFuZHMgZm9yIGFsbCBtYXN0ZXIvc2xhdmUgZGV2aWNlcyBmb3VuZCBvbiB0aGUgYnVz
+LgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi93YXRjaGRvZy9ocHdkdC5yc3QgYi9Eb2N1bWVu
+dGF0aW9uL3dhdGNoZG9nL2hwd2R0LnJzdAppbmRleCBmNGJhMzI5ZjAxMWYuLjQzNzQ1NmJkOTFh
+NCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi93YXRjaGRvZy9ocHdkdC5yc3QKKysrIGIvRG9j
+dW1lbnRhdGlvbi93YXRjaGRvZy9ocHdkdC5yc3QKQEAgLTQ0LDcgKzQ0LDcgQEAgTGFzdCByZXZp
+ZXdlZDogMDgvMjAvMjAxOAogIE5PVEU6CiAgICAgICAgTW9yZSBpbmZvcm1hdGlvbiBhYm91dCB3
+YXRjaGRvZyBkcml2ZXJzIGluIGdlbmVyYWwsIGluY2x1ZGluZyB0aGUgaW9jdGwKICAgICAgICBp
+bnRlcmZhY2UgdG8gL2Rldi93YXRjaGRvZyBjYW4gYmUgZm91bmQgaW4KLSAgICAgICBEb2N1bWVu
+dGF0aW9uL3dhdGNoZG9nL3dhdGNoZG9nLWFwaS5yc3QgYW5kIERvY3VtZW50YXRpb24vSVBNSS5y
+c3QuCisgICAgICAgRG9jdW1lbnRhdGlvbi93YXRjaGRvZy93YXRjaGRvZy1hcGkucnN0IGFuZCBE
+b2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXBtaS5yc3QuCiAKICBEdWUgdG8gbGltaXRhdGlvbnMg
+aW4gdGhlIGlMTyBoYXJkd2FyZSwgdGhlIE5NSSBwcmV0aW1lb3V0IGlmIGVuYWJsZWQsCiAgY2Fu
+IG9ubHkgYmUgc2V0IHRvIDkgc2Vjb25kcy4gIEF0dGVtcHRzIHRvIHNldCBwcmV0aW1lb3V0IHRv
+IG90aGVyCmRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCmluZGV4IDk4NzIz
+YWZkYmYwYi4uODVhNmYwOTBjY2MwIDEwMDY0NAotLS0gYS9NQUlOVEFJTkVSUworKysgYi9NQUlO
+VEFJTkVSUwpAQCAtNDU4OCw3ICs0NTg4LDcgQEAgREVMTCBTWVNURU1TIE1BTkFHRU1FTlQgQkFT
+RSBEUklWRVIgKGRjZGJhcykKIE06CVN0dWFydCBIYXllcyA8c3R1YXJ0LncuaGF5ZXNAZ21haWwu
+Y29tPgogTDoJcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmcKIFM6CU1haW50YWlu
+ZWQKLUY6CURvY3VtZW50YXRpb24vZGNkYmFzLnJzdAorRjoJRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL2RjZGJhcy5yc3QKIEY6CWRyaXZlcnMvcGxhdGZvcm0veDg2L2RjZGJhcy4qCiAKIERFTEwg
+V01JIE5PVElGSUNBVElPTlMgRFJJVkVSCkBAIC00OTY2LDcgKzQ5NjYsNyBAQCBNOglHcmVnIEty
+b2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPgogUjoJIlJhZmFlbCBKLiBX
+eXNvY2tpIiA8cmFmYWVsQGtlcm5lbC5vcmc+CiBUOglnaXQgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcv
+cHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2dyZWdraC9kcml2ZXItY29yZS5naXQKIFM6CVN1cHBv
+cnRlZAotRjoJRG9jdW1lbnRhdGlvbi9rb2JqZWN0LnJzdAorRjoJRG9jdW1lbnRhdGlvbi9kcml2
+ZXItYXBpL2tvYmplY3QucnN0CiBGOglkcml2ZXJzL2Jhc2UvCiBGOglmcy9kZWJ1Z2ZzLwogRjoJ
+ZnMvc3lzZnMvCkBAIC02NTg0LDcgKzY1ODQsNyBAQCBGOglpbmNsdWRlL2xpbnV4L2Z1dGV4LmgK
+IEY6CWluY2x1ZGUvdWFwaS9saW51eC9mdXRleC5oCiBGOgl0b29scy90ZXN0aW5nL3NlbGZ0ZXN0
+cy9mdXRleC8KIEY6CXRvb2xzL3BlcmYvYmVuY2gvZnV0ZXgqCi1GOglEb2N1bWVudGF0aW9uLypm
+dXRleCoKK0Y6CURvY3VtZW50YXRpb24vZHJpdmVyLWFwaS8qZnV0ZXgqCiAKIEdDQyBQTFVHSU5T
+CiBNOglLZWVzIENvb2sgPGtlZXNjb29rQGNocm9taXVtLm9yZz4KQEAgLTY1OTQsNyArNjU5NCw3
+IEBAIFM6CU1haW50YWluZWQKIEY6CXNjcmlwdHMvZ2NjLXBsdWdpbnMvCiBGOglzY3JpcHRzL2dj
+Yy1wbHVnaW4uc2gKIEY6CXNjcmlwdHMvTWFrZWZpbGUuZ2NjLXBsdWdpbnMKLUY6CURvY3VtZW50
+YXRpb24vZ2NjLXBsdWdpbnMucnN0CitGOglEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvZ2NjLXBs
+dWdpbnMucnN0CiAKIEdBU0tFVCBEUklWRVIgRlJBTUVXT1JLCiBNOglSb2IgU3ByaW5nZXIgPHJz
+cHJpbmdlckBnb29nbGUuY29tPgpAQCAtNzAyMiw3ICs3MDIyLDcgQEAgTDoJbGludXgtcmVtb3Rl
+cHJvY0B2Z2VyLmtlcm5lbC5vcmcKIFM6CU1haW50YWluZWQKIFQ6CWdpdCBnaXQ6Ly9naXQua2Vy
+bmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvb2hhZC9od3NwaW5sb2NrLmdpdAogRjoJ
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2h3bG9jay8KLUY6CURvY3VtZW50YXRp
+b24vaHdzcGlubG9jay5yc3QKK0Y6CURvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9od3NwaW5sb2Nr
+LnJzdAogRjoJZHJpdmVycy9od3NwaW5sb2NrLwogRjoJaW5jbHVkZS9saW51eC9od3NwaW5sb2Nr
+LmgKIApAQCAtODI5Miw3ICs4MjkyLDcgQEAgTDoJb3BlbmlwbWktZGV2ZWxvcGVyQGxpc3RzLnNv
+dXJjZWZvcmdlLm5ldCAobW9kZXJhdGVkIGZvciBub24tc3Vic2NyaWJlcnMpCiBXOglodHRwOi8v
+b3BlbmlwbWkuc291cmNlZm9yZ2UubmV0LwogUzoJU3VwcG9ydGVkCiBGOglEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvaXBtaS8KLUY6CURvY3VtZW50YXRpb24vSVBNSS5yc3QKK0Y6
+CURvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9pcG1pLnJzdAogRjoJZHJpdmVycy9jaGFyL2lwbWkv
+CiBGOglpbmNsdWRlL2xpbnV4L2lwbWkqCiBGOglpbmNsdWRlL3VhcGkvbGludXgvaXBtaSoKQEAg
+LTgzMzMsNyArODMzMyw3IEBAIElSUSBET01BSU5TIChJUlEgTlVNQkVSIE1BUFBJTkcgTElCUkFS
+WSkKIE06CU1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+CiBTOglNYWludGFpbmVk
+CiBUOglnaXQgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3Rp
+cC90aXAuZ2l0IGlycS9jb3JlCi1GOglEb2N1bWVudGF0aW9uL0lSUS1kb21haW4ucnN0CitGOglE
+b2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXJxLWRvbWFpbi5yc3QKIEY6CWluY2x1ZGUvbGludXgv
+aXJxZG9tYWluLmgKIEY6CWtlcm5lbC9pcnEvaXJxZG9tYWluLmMKIEY6CWtlcm5lbC9pcnEvbXNp
+LmMKQEAgLTgzNTgsNyArODM1OCw3IEBAIEY6CWRyaXZlcnMvaXJxY2hpcC8KIElTQQogTToJV2ls
+bGlhbSBCcmVhdGhpdHQgR3JheSA8dmlsaGVsbS5ncmF5QGdtYWlsLmNvbT4KIFM6CU1haW50YWlu
+ZWQKLUY6CURvY3VtZW50YXRpb24vaXNhLnJzdAorRjoJRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBp
+L2lzYS5yc3QKIEY6CWRyaXZlcnMvYmFzZS9pc2EuYwogRjoJaW5jbHVkZS9saW51eC9pc2EuaAog
+CkBAIC04MzczLDcgKzgzNzMsNyBAQCBGOglkcml2ZXJzL21lZGlhL3JhZGlvL3JhZGlvLWlzYSoK
+IElTQVBOUAogTToJSmFyb3NsYXYgS3lzZWxhIDxwZXJleEBwZXJleC5jej4KIFM6CU1haW50YWlu
+ZWQKLUY6CURvY3VtZW50YXRpb24vaXNhcG5wLnJzdAorRjoJRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL2lzYXBucC5yc3QKIEY6CWRyaXZlcnMvcG5wL2lzYXBucC8KIEY6CWluY2x1ZGUvbGludXgv
+aXNhcG5wLmgKIApAQCAtODgyMyw3ICs4ODIzLDcgQEAgTToJQW5pbCBTIEtlc2hhdmFtdXJ0aHkg
+PGFuaWwucy5rZXNoYXZhbXVydGh5QGludGVsLmNvbT4KIE06CSJEYXZpZCBTLiBNaWxsZXIiIDxk
+YXZlbUBkYXZlbWxvZnQubmV0PgogTToJTWFzYW1pIEhpcmFtYXRzdSA8bWhpcmFtYXRAa2VybmVs
+Lm9yZz4KIFM6CU1haW50YWluZWQKLUY6CURvY3VtZW50YXRpb24va3Byb2Jlcy5yc3QKK0Y6CURv
+Y3VtZW50YXRpb24vZHJpdmVyLWFwaS9rcHJvYmVzLnJzdAogRjoJaW5jbHVkZS9saW51eC9rcHJv
+YmVzLmgKIEY6CWluY2x1ZGUvYXNtLWdlbmVyaWMva3Byb2Jlcy5oCiBGOglrZXJuZWwva3Byb2Jl
+cy5jCkBAIC05MTgyLDcgKzkxODIsNyBAQCBMOglsaW51eC1hcmNoQHZnZXIua2VybmVsLm9yZwog
+UzoJU3VwcG9ydGVkCiBUOglnaXQgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9r
+ZXJuZWwvZ2l0L3BhdWxtY2svbGludXgtcmN1LmdpdCBkZXYKIEY6CXRvb2xzL21lbW9yeS1tb2Rl
+bC8KLUY6CURvY3VtZW50YXRpb24vYXRvbWljX2JpdG9wcy5yc3QKK0Y6CURvY3VtZW50YXRpb24v
+ZHJpdmVyLWFwaS9hdG9taWNfYml0b3BzLnJzdAogRjoJRG9jdW1lbnRhdGlvbi9hdG9taWNfdC50
+eHQKIEY6CURvY3VtZW50YXRpb24vY29yZS1hcGkvYXRvbWljX29wcy5yc3QKIEY6CURvY3VtZW50
+YXRpb24vY29yZS1hcGkvcmVmY291bnQtdnMtYXRvbWljLnJzdApAQCAtMTAyNDAsNyArMTAyNDAs
+NyBAQCBNOglKb2hhbm5lcyBUaHVtc2hpcm4gPG1vcmJpZHJzYUBnbWFpbC5jb20+CiBTOglNYWlu
+dGFpbmVkCiBGOglkcml2ZXJzL21jYi8KIEY6CWluY2x1ZGUvbGludXgvbWNiLmgKLUY6CURvY3Vt
+ZW50YXRpb24vbWVuLWNoYW1lbGVvbi1idXMucnN0CitGOglEb2N1bWVudGF0aW9uL2RyaXZlci1h
+cGkvbWVuLWNoYW1lbGVvbi1idXMucnN0CiAKIE1FTiBGMjFCTUMgKEJvYXJkIE1hbmFnZW1lbnQg
+Q29udHJvbGxlcikKIE06CUFuZHJlYXMgV2VybmVyIDxhbmRyZWFzLndlcm5lckBtZW4uZGU+CkBA
+IC0xMTkyMyw3ICsxMTkyMyw3IEBAIEw6CWxpbnV4LWNyeXB0b0B2Z2VyLmtlcm5lbC5vcmcKIFM6
+CU1haW50YWluZWQKIEY6CWtlcm5lbC9wYWRhdGEuYwogRjoJaW5jbHVkZS9saW51eC9wYWRhdGEu
+aAotRjoJRG9jdW1lbnRhdGlvbi9wYWRhdGEucnN0CitGOglEb2N1bWVudGF0aW9uL2RyaXZlci1h
+cGkvcGFkYXRhLnJzdAogCiBQQU5BU09OSUMgTEFQVE9QIEFDUEkgRVhUUkFTIERSSVZFUgogTToJ
+SGFyYWxkIFdlbHRlIDxsYWZvcmdlQGdudW1vbmtzLm9yZz4KQEAgLTExOTQ3LDcgKzExOTQ3LDcg
+QEAgRjoJZHJpdmVycy9wYXJwb3J0LwogRjoJaW5jbHVkZS9saW51eC9wYXJwb3J0Ki5oCiBGOglk
+cml2ZXJzL2NoYXIvcHBkZXYuYwogRjoJaW5jbHVkZS91YXBpL2xpbnV4L3BwZGV2LmgKLUY6CURv
+Y3VtZW50YXRpb24vcGFycG9ydCoucnN0CitGOglEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcGFy
+cG9ydCoucnN0CiAKIFBBUkFWSVJUX09QUyBJTlRFUkZBQ0UKIE06CUp1ZXJnZW4gR3Jvc3MgPGpn
+cm9zc0BzdXNlLmNvbT4KQEAgLTEyMTIyLDcgKzEyMTIyLDcgQEAgTToJS3VydCBTY2h3ZW1tZXIg
+PGt1cnQuc2Nod2VtbWVyQG1pY3Jvc2VtaS5jb20+CiBNOglMb2dhbiBHdW50aG9ycGUgPGxvZ2Fu
+Z0BkZWx0YXRlZS5jb20+CiBMOglsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnCiBTOglNYWludGFp
+bmVkCi1GOglEb2N1bWVudGF0aW9uL3N3aXRjaHRlYy5yc3QKK0Y6CURvY3VtZW50YXRpb24vZHJp
+dmVyLWFwaS9zd2l0Y2h0ZWMucnN0CiBGOglEb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2Zz
+LWNsYXNzLXN3aXRjaHRlYwogRjoJZHJpdmVycy9wY2kvc3dpdGNoL3N3aXRjaHRlYyoKIEY6CWlu
+Y2x1ZGUvdWFwaS9saW51eC9zd2l0Y2h0ZWNfaW9jdGwuaApAQCAtMTI4ODQsNyArMTI4ODQsNyBA
+QCBNOglUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgogTDoJbGludXgt
+cHdtQHZnZXIua2VybmVsLm9yZwogUzoJTWFpbnRhaW5lZAogVDoJZ2l0IGdpdDovL2dpdC5rZXJu
+ZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90aGllcnJ5LnJlZGluZy9saW51eC1wd20u
+Z2l0Ci1GOglEb2N1bWVudGF0aW9uL3B3bS5yc3QKK0Y6CURvY3VtZW50YXRpb24vZHJpdmVyLWFw
+aS9wd20ucnN0CiBGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtLwogRjoJ
+aW5jbHVkZS9saW51eC9wd20uaAogRjoJZHJpdmVycy9wd20vCkBAIC0xMzQwNSw3ICsxMzQwNSw3
+IEBAIFQ6CWdpdCBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQv
+b2hhZC9yZW1vdGVwcm9jLmdpdAogUzoJTWFpbnRhaW5lZAogRjoJRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3JlbW90ZXByb2MvCiBGOglEb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5n
+L3N5c2ZzLWNsYXNzLXJlbW90ZXByb2MKLUY6CURvY3VtZW50YXRpb24vcmVtb3RlcHJvYy5yc3QK
+K0Y6CURvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9yZW1vdGVwcm9jLnJzdAogRjoJZHJpdmVycy9y
+ZW1vdGVwcm9jLwogRjoJaW5jbHVkZS9saW51eC9yZW1vdGVwcm9jLmgKIEY6CWluY2x1ZGUvbGlu
+dXgvcmVtb3RlcHJvYy8KQEAgLTEzNDE3LDcgKzEzNDE3LDcgQEAgTDoJbGludXgtcmVtb3RlcHJv
+Y0B2Z2VyLmtlcm5lbC5vcmcKIFQ6CWdpdCBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xp
+bnV4L2tlcm5lbC9naXQvb2hhZC9ycG1zZy5naXQKIFM6CU1haW50YWluZWQKIEY6CWRyaXZlcnMv
+cnBtc2cvCi1GOglEb2N1bWVudGF0aW9uL3JwbXNnLnJzdAorRjoJRG9jdW1lbnRhdGlvbi9kcml2
+ZXItYXBpL3JwbXNnLnJzdAogRjoJRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGluZy9zeXNmcy1idXMt
+cnBtc2cKIEY6CWluY2x1ZGUvbGludXgvcnBtc2cuaAogRjoJaW5jbHVkZS9saW51eC9ycG1zZy8K
+QEAgLTEzNTAzLDcgKzEzNTAzLDcgQEAgVzoJaHR0cDovL3dpcmVsZXNzLmtlcm5lbC5vcmcvCiBU
+OglnaXQgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2piZXJn
+L21hYzgwMjExLmdpdAogVDoJZ2l0IGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgv
+a2VybmVsL2dpdC9qYmVyZy9tYWM4MDIxMS1uZXh0LmdpdAogUzoJTWFpbnRhaW5lZAotRjoJRG9j
+dW1lbnRhdGlvbi9yZmtpbGwucnN0CitGOglEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvcmZraWxs
+LnJzdAogRjoJRG9jdW1lbnRhdGlvbi9BQkkvc3RhYmxlL3N5c2ZzLWNsYXNzLXJma2lsbAogRjoJ
+bmV0L3Jma2lsbC8KIEY6CWluY2x1ZGUvbGludXgvcmZraWxsLmgKQEAgLTE1MjExLDcgKzE1MjEx
+LDcgQEAgRjoJZHJpdmVycy9kbWEtYnVmL2RtYS1mZW5jZSoKIEY6CWRyaXZlcnMvZG1hLWJ1Zi9z
+d19zeW5jLmMKIEY6CWluY2x1ZGUvbGludXgvc3luY19maWxlLmgKIEY6CWluY2x1ZGUvdWFwaS9s
+aW51eC9zeW5jX2ZpbGUuaAotRjoJRG9jdW1lbnRhdGlvbi9zeW5jX2ZpbGUucnN0CitGOglEb2N1
+bWVudGF0aW9uL2RyaXZlci1hcGkvc3luY19maWxlLnJzdAogVDoJZ2l0IGdpdDovL2Fub25naXQu
+ZnJlZWRlc2t0b3Aub3JnL2RybS9kcm0tbWlzYwogCiBTWU5PUFNZUyBBUkMgQVJDSElURUNUVVJF
+CkBAIC0xNTUzNyw3ICsxNTUzNyw3IEBAIFM6CU1haW50YWluZWQKIEY6CWluY2x1ZGUvbGludXgv
+dGVlX2Rydi5oCiBGOglpbmNsdWRlL3VhcGkvbGludXgvdGVlLmgKIEY6CWRyaXZlcnMvdGVlLwot
+RjoJRG9jdW1lbnRhdGlvbi90ZWUucnN0CitGOglEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvdGVl
+LnJzdAogCiBURUdSQSBBUkNISVRFQ1RVUkUgU1VQUE9SVAogTToJVGhpZXJyeSBSZWRpbmcgPHRo
+aWVycnkucmVkaW5nQGdtYWlsLmNvbT4KQEAgLTE2NzA2LDcgKzE2NzA2LDcgQEAgUjoJQ29ybmVs
+aWEgSHVjayA8Y29odWNrQHJlZGhhdC5jb20+CiBMOglrdm1Admdlci5rZXJuZWwub3JnCiBUOgln
+aXQgZ2l0Oi8vZ2l0aHViLmNvbS9hd2lsbGlhbS9saW51eC12ZmlvLmdpdAogUzoJTWFpbnRhaW5l
+ZAotRjoJRG9jdW1lbnRhdGlvbi92ZmlvLnJzdAorRjoJRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBp
+L3ZmaW8ucnN0CiBGOglkcml2ZXJzL3ZmaW8vCiBGOglpbmNsdWRlL2xpbnV4L3ZmaW8uaAogRjoJ
+aW5jbHVkZS91YXBpL2xpbnV4L3ZmaW8uaApAQCAtMTY3MTUsNyArMTY3MTUsNyBAQCBWRklPIE1F
+RElBVEVEIERFVklDRSBEUklWRVJTCiBNOglLaXJ0aSBXYW5raGVkZSA8a3dhbmtoZWRlQG52aWRp
+YS5jb20+CiBMOglrdm1Admdlci5rZXJuZWwub3JnCiBTOglNYWludGFpbmVkCi1GOglEb2N1bWVu
+dGF0aW9uL3ZmaW8tbWVkaWF0ZWQtZGV2aWNlLnJzdAorRjoJRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL3ZmaW8tbWVkaWF0ZWQtZGV2aWNlLnJzdAogRjoJZHJpdmVycy92ZmlvL21kZXYvCiBGOglp
+bmNsdWRlL2xpbnV4L21kZXYuaAogRjoJc2FtcGxlcy92ZmlvLW1kZXYvCmRpZmYgLS1naXQgYS9h
+cmNoL0tjb25maWcgYi9hcmNoL0tjb25maWcKaW5kZXggYzJmMmJlZTViMTdiLi5iZmMzNzIyMDg2
+MDkgMTAwNjQ0Ci0tLSBhL2FyY2gvS2NvbmZpZworKysgYi9hcmNoL0tjb25maWcKQEAgLTE0MSw3
+ICsxNDEsNyBAQCBjb25maWcgSEFWRV82NEJJVF9BTElHTkVEX0FDQ0VTUwogCSAgYWNjZXNzZXMg
+YXJlIHJlcXVpcmVkIHRvIGJlIDY0IGJpdCBhbGlnbmVkIGluIHRoaXMgd2F5IGV2ZW4KIAkgIHRo
+b3VnaCBpdCBpcyBub3QgYSA2NCBiaXQgYXJjaGl0ZWN0dXJlLgogCi0JICBTZWUgRG9jdW1lbnRh
+dGlvbi91bmFsaWduZWQtbWVtb3J5LWFjY2Vzcy5yc3QgZm9yIG1vcmUKKwkgIFNlZSBEb2N1bWVu
+dGF0aW9uL2RyaXZlci1hcGkvdW5hbGlnbmVkLW1lbW9yeS1hY2Nlc3MucnN0IGZvciBtb3JlCiAJ
+ICBpbmZvcm1hdGlvbiBvbiB0aGUgdG9waWMgb2YgdW5hbGlnbmVkIG1lbW9yeSBhY2Nlc3Nlcy4K
+IAogY29uZmlnIEhBVkVfRUZGSUNJRU5UX1VOQUxJR05FRF9BQ0NFU1MKQEAgLTE2MCw3ICsxNjAs
+NyBAQCBjb25maWcgSEFWRV9FRkZJQ0lFTlRfVU5BTElHTkVEX0FDQ0VTUwogCSAgcHJvYmxlbXMg
+d2l0aCByZWNlaXZlZCBwYWNrZXRzIGlmIGRvaW5nIHNvIHdvdWxkIG5vdCBoZWxwCiAJICBtdWNo
+LgogCi0JICBTZWUgRG9jdW1lbnRhdGlvbi91bmFsaWduZWQtbWVtb3J5LWFjY2Vzcy5yc3QgZm9y
+IG1vcmUKKwkgIFNlZSBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvdW5hbGlnbmVkLW1lbW9yeS1h
+Y2Nlc3MucnN0IGZvciBtb3JlCiAJICBpbmZvcm1hdGlvbiBvbiB0aGUgdG9waWMgb2YgdW5hbGln
+bmVkIG1lbW9yeSBhY2Nlc3Nlcy4KIAogY29uZmlnIEFSQ0hfVVNFX0JVSUxUSU5fQlNXQVAKZGlm
+ZiAtLWdpdCBhL2FyY2gvdW5pY29yZTMyL2luY2x1ZGUvYXNtL2lvLmggYi9hcmNoL3VuaWNvcmUz
+Mi9pbmNsdWRlL2FzbS9pby5oCmluZGV4IDg2ODc3ZGY0YjFlZS4uZTM5NmQ0ZjY1OGY5IDEwMDY0
+NAotLS0gYS9hcmNoL3VuaWNvcmUzMi9pbmNsdWRlL2FzbS9pby5oCisrKyBiL2FyY2gvdW5pY29y
+ZTMyL2luY2x1ZGUvYXNtL2lvLmgKQEAgLTMxLDcgKzMxLDcgQEAgZXh0ZXJuIHZvaWQgX191YzMy
+X2lvdW5tYXAodm9sYXRpbGUgdm9pZCBfX2lvbWVtICphZGRyKTsKICAqIGlvcmVtYXAgYW5kIGZy
+aWVuZHMuCiAgKgogICogaW9yZW1hcCB0YWtlcyBhIFBDSSBtZW1vcnkgYWRkcmVzcywgYXMgc3Bl
+Y2lmaWVkIGluCi0gKiBEb2N1bWVudGF0aW9uL2lvLW1hcHBpbmcucnN0LgorICogRG9jdW1lbnRh
+dGlvbi9kcml2ZXItYXBpL2lvLW1hcHBpbmcucnN0LgogICoKICAqLwogI2RlZmluZSBpb3JlbWFw
+KGNvb2tpZSwgc2l6ZSkJCV9fdWMzMl9pb3JlbWFwKGNvb2tpZSwgc2l6ZSkKZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvYmFzZS9jb3JlLmMgYi9kcml2ZXJzL2Jhc2UvY29yZS5jCmluZGV4IGY5OGIzM2U5
+ZWMxOS4uZTQwZTRhMTcxY2RkIDEwMDY0NAotLS0gYS9kcml2ZXJzL2Jhc2UvY29yZS5jCisrKyBi
+L2RyaXZlcnMvYmFzZS9jb3JlLmMKQEAgLTEwNjMsNyArMTA2Myw3IEBAIHN0YXRpYyB2b2lkIGRl
+dmljZV9yZWxlYXNlKHN0cnVjdCBrb2JqZWN0ICprb2JqKQogCWVsc2UgaWYgKGRldi0+Y2xhc3Mg
+JiYgZGV2LT5jbGFzcy0+ZGV2X3JlbGVhc2UpCiAJCWRldi0+Y2xhc3MtPmRldl9yZWxlYXNlKGRl
+dik7CiAJZWxzZQotCQlXQVJOKDEsIEtFUk5fRVJSICJEZXZpY2UgJyVzJyBkb2VzIG5vdCBoYXZl
+IGEgcmVsZWFzZSgpIGZ1bmN0aW9uLCBpdCBpcyBicm9rZW4gYW5kIG11c3QgYmUgZml4ZWQuIFNl
+ZSBEb2N1bWVudGF0aW9uL2tvYmplY3QucnN0LlxuIiwKKwkJV0FSTigxLCBLRVJOX0VSUiAiRGV2
+aWNlICclcycgZG9lcyBub3QgaGF2ZSBhIHJlbGVhc2UoKSBmdW5jdGlvbiwgaXQgaXMgYnJva2Vu
+IGFuZCBtdXN0IGJlIGZpeGVkLiBTZWUgRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2tvYmplY3Qu
+cnN0LlxuIiwKIAkJCWRldl9uYW1lKGRldikpOwogCWtmcmVlKHApOwogfQpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9jaGFyL2lwbWkvS2NvbmZpZyBiL2RyaXZlcnMvY2hhci9pcG1pL0tjb25maWcKaW5k
+ZXggZTU5ZWU4MWJjMjJmLi5kN2Y4OWNjZTY1NmYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY2hhci9p
+cG1pL0tjb25maWcKKysrIGIvZHJpdmVycy9jaGFyL2lwbWkvS2NvbmZpZwpAQCAtMTQsNyArMTQs
+NyBAQCBtZW51Y29uZmlnIElQTUlfSEFORExFUgogICAgICAgICAgSVBNSSBpcyBhIHN0YW5kYXJk
+IGZvciBtYW5hZ2luZyBzZW5zb3JzICh0ZW1wZXJhdHVyZSwKICAgICAgICAgIHZvbHRhZ2UsIGV0
+Yy4pIGluIGEgc3lzdGVtLgogCi0gICAgICAgICBTZWUgPGZpbGU6RG9jdW1lbnRhdGlvbi9JUE1J
+LnJzdD4gZm9yIG1vcmUgZGV0YWlscyBvbiB0aGUgZHJpdmVyLgorICAgICAgICAgU2VlIDxmaWxl
+OkRvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9pcG1pLnJzdD4gZm9yIG1vcmUgZGV0YWlscyBvbiB0
+aGUgZHJpdmVyLgogCiAJIElmIHVuc3VyZSwgc2F5IE4uCiAKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Y2hhci9pcG1pL2lwbWlfc2lfaG90bW9kLmMgYi9kcml2ZXJzL2NoYXIvaXBtaS9pcG1pX3NpX2hv
+dG1vZC5jCmluZGV4IDIwMzJmNGFjNTJhYy4uNGZiYjRlMThiYWUyIDEwMDY0NAotLS0gYS9kcml2
+ZXJzL2NoYXIvaXBtaS9pcG1pX3NpX2hvdG1vZC5jCisrKyBiL2RyaXZlcnMvY2hhci9pcG1pL2lw
+bWlfc2lfaG90bW9kLmMKQEAgLTE4LDcgKzE4LDcgQEAgc3RhdGljIGludCBob3Rtb2RfaGFuZGxl
+cihjb25zdCBjaGFyICp2YWwsIGNvbnN0IHN0cnVjdCBrZXJuZWxfcGFyYW0gKmtwKTsKIAogbW9k
+dWxlX3BhcmFtX2NhbGwoaG90bW9kLCBob3Rtb2RfaGFuZGxlciwgTlVMTCwgTlVMTCwgMDIwMCk7
+CiBNT0RVTEVfUEFSTV9ERVNDKGhvdG1vZCwgIkFkZCBhbmQgcmVtb3ZlIGludGVyZmFjZXMuICBT
+ZWUiCi0JCSAiIERvY3VtZW50YXRpb24vSVBNSS5yc3QgaW4gdGhlIGtlcm5lbCBzb3VyY2VzIGZv
+ciB0aGUiCisJCSAiIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9pcG1pLnJzdCBpbiB0aGUga2Vy
+bmVsIHNvdXJjZXMgZm9yIHRoZSIKIAkJICIgZ29yeSBkZXRhaWxzLiIpOwogCiAvKgpkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9jaGFyL2lwbWkvaXBtaV9zaV9pbnRmLmMgYi9kcml2ZXJzL2NoYXIvaXBt
+aS9pcG1pX3NpX2ludGYuYwppbmRleCA3ZjcyOTYwOTk3OWMuLjRhMDI1OGY4ODZjZiAxMDA2NDQK
+LS0tIGEvZHJpdmVycy9jaGFyL2lwbWkvaXBtaV9zaV9pbnRmLmMKKysrIGIvZHJpdmVycy9jaGFy
+L2lwbWkvaXBtaV9zaV9pbnRmLmMKQEAgLTk3Nyw3ICs5NzcsNyBAQCBzdGF0aWMgaW5saW5lIGlu
+dCBpcG1pX3RocmVhZF9idXN5X3dhaXQoZW51bSBzaV9zbV9yZXN1bHQgc21pX3Jlc3VsdCwKICAq
+IHRoYXQgYXJlIG5vdCBCVCBhbmQgZG8gbm90IGhhdmUgaW50ZXJydXB0cy4gIEl0IHN0YXJ0cyBz
+cGlubmluZwogICogd2hlbiBhbiBvcGVyYXRpb24gaXMgY29tcGxldGUgb3IgdW50aWwgbWF4X2J1
+c3kgdGVsbHMgaXQgdG8gc3RvcAogICogKGlmIHRoYXQgaXMgZW5hYmxlZCkuICBTZWUgdGhlIHBh
+cmFncmFwaCBvbiBraW1pZF9tYXhfYnVzeV91cyBpbgotICogRG9jdW1lbnRhdGlvbi9JUE1JLnJz
+dCBmb3IgZGV0YWlscy4KKyAqIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9pcG1pLnJzdCBmb3Ig
+ZGV0YWlscy4KICAqLwogc3RhdGljIGludCBpcG1pX3RocmVhZCh2b2lkICpkYXRhKQogewpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9kbWEtYnVmL0tjb25maWcgYi9kcml2ZXJzL2RtYS1idWYvS2NvbmZp
+ZwppbmRleCA5YWZjN2JiNjM4YzMuLmI2YTljMmYxYmM0MSAxMDA2NDQKLS0tIGEvZHJpdmVycy9k
+bWEtYnVmL0tjb25maWcKKysrIGIvZHJpdmVycy9kbWEtYnVmL0tjb25maWcKQEAgLTE1LDcgKzE1
+LDcgQEAgY29uZmlnIFNZTkNfRklMRQogCSAgYXNzb2NpYXRlZCB3aXRoIGEgYnVmZmVyLiBXaGVu
+IGEgam9iIGlzIHN1Ym1pdHRlZCB0byB0aGUgR1BVIGEgZmVuY2UKIAkgIGlzIGF0dGFjaGVkIHRv
+IHRoZSBidWZmZXIgYW5kIGlzIHRyYW5zZmVycmVkIHZpYSB1c2Vyc3BhY2UsIHVzaW5nIFN5bmMK
+IAkgIEZpbGVzIGZkcywgdG8gdGhlIERSTSBkcml2ZXIgZm9yIGV4YW1wbGUuIE1vcmUgZGV0YWls
+cyBhdAotCSAgRG9jdW1lbnRhdGlvbi9zeW5jX2ZpbGUucnN0LgorCSAgRG9jdW1lbnRhdGlvbi9k
+cml2ZXItYXBpL3N5bmNfZmlsZS5yc3QuCiAKIGNvbmZpZyBTV19TWU5DCiAJYm9vbCAiU3luYyBG
+aWxlIFZhbGlkYXRpb24gRnJhbWV3b3JrIgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncGlvL0tjb25m
+aWcgYi9kcml2ZXJzL2dwaW8vS2NvbmZpZwppbmRleCA4NWNlY2Y1OGJjZjUuLjQ5ZjA0NjIxMjc5
+YyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncGlvL0tjb25maWcKKysrIGIvZHJpdmVycy9ncGlvL0tj
+b25maWcKQEAgLTEzMDAsNyArMTMwMCw3IEBAIGNvbmZpZyBHUElPX0JUOFhYCiAJICBUaGUgY2Fy
+ZCBuZWVkcyB0byBiZSBwaHlzaWNhbGx5IGFsdGVyZWQgZm9yIHVzaW5nIGl0IGFzIGEKIAkgIEdQ
+SU8gY2FyZC4gRm9yIG1vcmUgaW5mb3JtYXRpb24gb24gaG93IHRvIGJ1aWxkIGEgR1BJTyBjYXJk
+CiAJICBmcm9tIGEgQlQ4eHggVFYgY2FyZCwgc2VlIHRoZSBkb2N1bWVudGF0aW9uIGZpbGUgYXQK
+LQkgIERvY3VtZW50YXRpb24vYnQ4eHhncGlvLnJzdAorCSAgRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL2J0OHh4Z3Bpby5yc3QKIAogCSAgSWYgdW5zdXJlLCBzYXkgTi4KIApkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZwppbmRleCBj
+M2E2ZGQyODRjOTEuLjNjMmNkM2JmOWZmYyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL0tj
+b25maWcKKysrIGIvZHJpdmVycy9ncHUvZHJtL0tjb25maWcKQEAgLTE0MSw3ICsxNDEsNyBAQCBj
+b25maWcgRFJNX0xPQURfRURJRF9GSVJNV0FSRQogCSAgbW9uaXRvciBhcmUgdW5hYmxlIHRvIHBy
+b3ZpZGUgYXBwcm9wcmlhdGUgRURJRCBkYXRhLiBTaW5jZSB0aGlzCiAJICBmZWF0dXJlIGlzIHBy
+b3ZpZGVkIGFzIGEgd29ya2Fyb3VuZCBmb3IgYnJva2VuIGhhcmR3YXJlLCB0aGUKIAkgIGRlZmF1
+bHQgY2FzZSBpcyBOLiBEZXRhaWxzIGFuZCBpbnN0cnVjdGlvbnMgaG93IHRvIGJ1aWxkIHlvdXIg
+b3duCi0JICBFRElEIGRhdGEgYXJlIGdpdmVuIGluIERvY3VtZW50YXRpb24vRURJRC9ob3d0by5y
+c3QuCisJICBFRElEIGRhdGEgYXJlIGdpdmVuIGluIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9l
+ZGlkLnJzdC4KIAogY29uZmlnIERSTV9EUF9DRUMKIAlib29sICJFbmFibGUgRGlzcGxheVBvcnQg
+Q0VDLVR1bm5lbGluZy1vdmVyLUFVWCBIRE1JIHN1cHBvcnQiCmRpZmYgLS1naXQgYS9kcml2ZXJz
+L3BjaS9zd2l0Y2gvS2NvbmZpZyBiL2RyaXZlcnMvcGNpL3N3aXRjaC9LY29uZmlnCmluZGV4IGMx
+ZjUyMjZjZDBlNS4uZDM3MGY0Y2UwNDkyIDEwMDY0NAotLS0gYS9kcml2ZXJzL3BjaS9zd2l0Y2gv
+S2NvbmZpZworKysgYi9kcml2ZXJzL3BjaS9zd2l0Y2gvS2NvbmZpZwpAQCAtOSw3ICs5LDcgQEAg
+Y29uZmlnIFBDSV9TV19TV0lUQ0hURUMKIAkgRW5hYmxlcyBzdXBwb3J0IGZvciB0aGUgbWFuYWdl
+bWVudCBpbnRlcmZhY2UgZm9yIHRoZSBNaWNyb1NlbWkKIAkgU3dpdGNodGVjIHNlcmllcyBvZiBQ
+Q0llIHN3aXRjaGVzLiBTdXBwb3J0cyB1c2Vyc3BhY2UgYWNjZXNzCiAJIHRvIHN1Ym1pdCBNUlBD
+IGNvbW1hbmRzIHRvIHRoZSBzd2l0Y2ggdmlhIC9kZXYvc3dpdGNodGVjWAotCSBkZXZpY2VzLiBT
+ZWUgPGZpbGU6RG9jdW1lbnRhdGlvbi9zd2l0Y2h0ZWMucnN0PiBmb3IgbW9yZQorCSBkZXZpY2Vz
+LiBTZWUgPGZpbGU6RG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL3N3aXRjaHRlYy5yc3Q+IGZvciBt
+b3JlCiAJIGluZm9ybWF0aW9uLgogCiBlbmRtZW51CmRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9LY29uZmlnIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvS2NvbmZpZwppbmRleCA2Y2Q0
+YTYyMDExNWQuLjlkODY2YjY3NTNmZSAxMDA2NDQKLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYv
+S2NvbmZpZworKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9LY29uZmlnCkBAIC0xMTgsNyArMTE4
+LDcgQEAgY29uZmlnIERDREJBUwogCSAgSW50ZXJydXB0cyAoU01JcykgYW5kIEhvc3QgQ29udHJv
+bCBBY3Rpb25zIChzeXN0ZW0gcG93ZXIgY3ljbGUgb3IKIAkgIHBvd2VyIG9mZiBhZnRlciBPUyBz
+aHV0ZG93bikgb24gY2VydGFpbiBEZWxsIHN5c3RlbXMuCiAKLQkgIFNlZSA8ZmlsZTpEb2N1bWVu
+dGF0aW9uL2RjZGJhcy5yc3Q+IGZvciBtb3JlIGRldGFpbHMgb24gdGhlIGRyaXZlcgorCSAgU2Vl
+IDxmaWxlOkRvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9kY2RiYXMucnN0PiBmb3IgbW9yZSBkZXRh
+aWxzIG9uIHRoZSBkcml2ZXIKIAkgIGFuZCB0aGUgRGVsbCBzeXN0ZW1zIG9uIHdoaWNoIERlbGwg
+c3lzdGVtcyBtYW5hZ2VtZW50IHNvZnR3YXJlIG1ha2VzCiAJICB1c2Ugb2YgdGhpcyBkcml2ZXIu
+CiAKQEAgLTI1OSw3ICsyNTksNyBAQCBjb25maWcgREVMTF9SQlUKIAkgREVMTCBzeXN0ZW0uIE5v
+dGUgeW91IG5lZWQgYSBEZWxsIE9wZW5NYW5hZ2Ugb3IgRGVsbCBVcGRhdGUgcGFja2FnZSAoRFVQ
+KQogCSBzdXBwb3J0aW5nIGFwcGxpY2F0aW9uIHRvIGNvbW11bmljYXRlIHdpdGggdGhlIEJJT1Mg
+cmVnYXJkaW5nIHRoZSBuZXcKIAkgaW1hZ2UgZm9yIHRoZSBpbWFnZSB1cGRhdGUgdG8gdGFrZSBl
+ZmZlY3QuCi0JIFNlZSA8ZmlsZTpEb2N1bWVudGF0aW9uL2RlbGxfcmJ1LnJzdD4gZm9yIG1vcmUg
+ZGV0YWlscyBvbiB0aGUgZHJpdmVyLgorCSBTZWUgPGZpbGU6RG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL2RlbGxfcmJ1LnJzdD4gZm9yIG1vcmUgZGV0YWlscyBvbiB0aGUgZHJpdmVyLgogCiAKIGNv
+bmZpZyBGVUpJVFNVX0xBUFRPUApkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGNk
+YmFzLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kY2RiYXMuYwppbmRleCBiYThkZmYzNTExZWMu
+Ljg0ZjRjYzgzOWNjMyAxMDA2NDQKLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGNkYmFzLmMK
+KysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGNkYmFzLmMKQEAgLTcsNyArNyw3IEBACiAgKiAg
+YW5kIEhvc3QgQ29udHJvbCBBY3Rpb25zIChwb3dlciBjeWNsZSBvciBwb3dlciBvZmYgYWZ0ZXIg
+T1Mgc2h1dGRvd24pIG9uCiAgKiAgRGVsbCBzeXN0ZW1zLgogICoKLSAqICBTZWUgRG9jdW1lbnRh
+dGlvbi9kY2RiYXMucnN0IGZvciBtb3JlIGluZm9ybWF0aW9uLgorICogIFNlZSBEb2N1bWVudGF0
+aW9uL2RyaXZlci1hcGkvZGNkYmFzLnJzdCBmb3IgbW9yZSBpbmZvcm1hdGlvbi4KICAqCiAgKiAg
+Q29weXJpZ2h0IChDKSAxOTk1LTIwMDYgRGVsbCBJbmMuCiAgKi8KZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvcGxhdGZvcm0veDg2L2RlbGxfcmJ1LmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsX3Ji
+dS5jCmluZGV4IDE4NDAwYmIzOGUwOS4uMzY5MTM5MWZlYTZiIDEwMDY0NAotLS0gYS9kcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9kZWxsX3JidS5jCisrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGxf
+cmJ1LmMKQEAgLTI0LDcgKzI0LDcgQEAKICAqIG9uIGV2ZXJ5IHRpbWUgdGhlIHBhY2tldCBkYXRh
+IGlzIHdyaXR0ZW4uIFRoaXMgZHJpdmVyIHJlcXVpcmVzIGFuCiAgKiBhcHBsaWNhdGlvbiB0byBi
+cmVhayB0aGUgQklPUyBpbWFnZSBpbiB0byBmaXhlZCBzaXplZCBwYWNrZXQgY2h1bmtzLgogICoK
+LSAqIFNlZSBEb2N1bWVudGF0aW9uL2RlbGxfcmJ1LnJzdCBmb3IgbW9yZSBpbmZvLgorICogU2Vl
+IERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9kZWxsX3JidS5yc3QgZm9yIG1vcmUgaW5mby4KICAq
+LwogI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4KICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvcG5wL2lzYXBucC9LY29uZmlnIGIvZHJpdmVycy9wbnAvaXNhcG5w
+L0tjb25maWcKaW5kZXggYzRkZGY0MWM3ZmI4Li5kMDQ3OWE1NjMxMjMgMTAwNjQ0Ci0tLSBhL2Ry
+aXZlcnMvcG5wL2lzYXBucC9LY29uZmlnCisrKyBiL2RyaXZlcnMvcG5wL2lzYXBucC9LY29uZmln
+CkBAIC03LDYgKzcsNiBAQCBjb25maWcgSVNBUE5QCiAJZGVwZW5kcyBvbiBJU0EgfHwgQ09NUElM
+RV9URVNUCiAJaGVscAogCSAgU2F5IFkgaGVyZSBpZiB5b3Ugd291bGQgbGlrZSBzdXBwb3J0IGZv
+ciBJU0EgUGx1ZyBhbmQgUGxheSBkZXZpY2VzLgotCSAgU29tZSBpbmZvcm1hdGlvbiBpcyBpbiA8
+ZmlsZTpEb2N1bWVudGF0aW9uL2lzYXBucC5yc3Q+LgorCSAgU29tZSBpbmZvcm1hdGlvbiBpcyBp
+biA8ZmlsZTpEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaXNhcG5wLnJzdD4uCiAKIAkgIElmIHVu
+c3VyZSwgc2F5IFkuCmRpZmYgLS1naXQgYS9kcml2ZXJzL3R0eS9LY29uZmlnIGIvZHJpdmVycy90
+dHkvS2NvbmZpZwppbmRleCAxY2I1MGYxOWQ1OGMuLmVlNTFiOTUxNDIyNSAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy90dHkvS2NvbmZpZworKysgYi9kcml2ZXJzL3R0eS9LY29uZmlnCkBAIC05Myw3ICs5
+Myw3IEBAIGNvbmZpZyBWVF9IV19DT05TT0xFX0JJTkRJTkcKICAgICAgICAgIHNlbGVjdCB0aGUg
+Y29uc29sZSBkcml2ZXIgdGhhdCB3aWxsIHNlcnZlIGFzIHRoZSBiYWNrZW5kIGZvciB0aGUKICAg
+ICAgICAgIHZpcnR1YWwgdGVybWluYWxzLgogCi0JIFNlZSA8ZmlsZTpEb2N1bWVudGF0aW9uL2Nv
+bnNvbGUvY29uc29sZS5yc3Q+IGZvciBtb3JlCisJIFNlZSA8ZmlsZTpEb2N1bWVudGF0aW9uL2Ry
+aXZlci1hcGkvY29uc29sZS5yc3Q+IGZvciBtb3JlCiAJIGluZm9ybWF0aW9uLiBGb3IgZnJhbWVi
+dWZmZXIgY29uc29sZSB1c2VycywgcGxlYXNlIHJlZmVyIHRvCiAJIDxmaWxlOkRvY3VtZW50YXRp
+b24vZmIvZmJjb24ucnN0Pi4KIApkaWZmIC0tZ2l0IGEvZHJpdmVycy92ZmlvL0tjb25maWcgYi9k
+cml2ZXJzL3ZmaW8vS2NvbmZpZwppbmRleCA1ZDYxNTEzOTI1NzEuLmZkMTdkYjliNDMyZiAxMDA2
+NDQKLS0tIGEvZHJpdmVycy92ZmlvL0tjb25maWcKKysrIGIvZHJpdmVycy92ZmlvL0tjb25maWcK
+QEAgLTI1LDcgKzI1LDcgQEAgbWVudWNvbmZpZyBWRklPCiAJc2VsZWN0IFZGSU9fSU9NTVVfVFlQ
+RTEgaWYgKFg4NiB8fCBTMzkwIHx8IEFSTSB8fCBBUk02NCkKIAloZWxwCiAJICBWRklPIHByb3Zp
+ZGVzIGEgZnJhbWV3b3JrIGZvciBzZWN1cmUgdXNlcnNwYWNlIGRldmljZSBkcml2ZXJzLgotCSAg
+U2VlIERvY3VtZW50YXRpb24vdmZpby5yc3QgZm9yIG1vcmUgZGV0YWlscy4KKwkgIFNlZSBEb2N1
+bWVudGF0aW9uL2RyaXZlci1hcGkvdmZpby5yc3QgZm9yIG1vcmUgZGV0YWlscy4KIAogCSAgSWYg
+eW91IGRvbid0IGtub3cgd2hhdCB0byBkbyBoZXJlLCBzYXkgTi4KIApkaWZmIC0tZ2l0IGEvZHJp
+dmVycy92ZmlvL21kZXYvS2NvbmZpZyBiL2RyaXZlcnMvdmZpby9tZGV2L0tjb25maWcKaW5kZXgg
+MTBlYzQwNGFjYmZjLi41ZGEyN2YyMTAwZjkgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvdmZpby9tZGV2
+L0tjb25maWcKKysrIGIvZHJpdmVycy92ZmlvL21kZXYvS2NvbmZpZwpAQCAtNiw3ICs2LDcgQEAg
+Y29uZmlnIFZGSU9fTURFVgogCWRlZmF1bHQgbgogCWhlbHAKIAkgIFByb3ZpZGVzIGEgZnJhbWV3
+b3JrIHRvIHZpcnR1YWxpemUgZGV2aWNlcy4KLQkgIFNlZSBEb2N1bWVudGF0aW9uL3ZmaW8tbWVk
+aWF0ZWQtZGV2aWNlLnJzdCBmb3IgbW9yZSBkZXRhaWxzLgorCSAgU2VlIERvY3VtZW50YXRpb24v
+ZHJpdmVyLWFwaS92ZmlvLW1lZGlhdGVkLWRldmljZS5yc3QgZm9yIG1vcmUgZGV0YWlscy4KIAog
+CSAgSWYgeW91IGRvbid0IGtub3cgd2hhdCBkbyBoZXJlLCBzYXkgTi4KIApkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy93MS9LY29uZmlnIGIvZHJpdmVycy93MS9LY29uZmlnCmluZGV4IDE2MDA1M2MwYmFl
+YS4uM2U3YWQ3YjIzMmZlIDEwMDY0NAotLS0gYS9kcml2ZXJzL3cxL0tjb25maWcKKysrIGIvZHJp
+dmVycy93MS9LY29uZmlnCkBAIC0xOSw3ICsxOSw3IEBAIGNvbmZpZyBXMV9DT04KIAlkZWZhdWx0
+IHkKIAktLS1oZWxwLS0tCiAJICBUaGlzIGFsbG93cyB0byBjb21tdW5pY2F0ZSB3aXRoIHVzZXJz
+cGFjZSB1c2luZyBjb25uZWN0b3IuIEZvciBtb3JlCi0JICBpbmZvcm1hdGlvbiBzZWUgPGZpbGU6
+RG9jdW1lbnRhdGlvbi9jb25uZWN0b3IvY29ubmVjdG9yLnJzdD4uCisJICBpbmZvcm1hdGlvbiBz
+ZWUgPGZpbGU6RG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2Nvbm5lY3Rvci5yc3Q+LgogCSAgVGhl
+cmUgYXJlIHRocmVlIHR5cGVzIG9mIG1lc3NhZ2VzIGJldHdlZW4gdzEgY29yZSBhbmQgdXNlcnNw
+YWNlOgogCSAgMS4gRXZlbnRzLiBUaGV5IGFyZSBnZW5lcmF0ZWQgZWFjaCB0aW1lIG5ldyBtYXN0
+ZXIgb3Igc2xhdmUgZGV2aWNlIGZvdW5kCiAJCWVpdGhlciBkdWUgdG8gYXV0b21hdGljIG9yIHJl
+cXVlc3RlZCBzZWFyY2guCmRpZmYgLS1naXQgYS9pbmNsdWRlL2FzbS1nZW5lcmljL2JpdG9wcy9h
+dG9taWMuaCBiL2luY2x1ZGUvYXNtLWdlbmVyaWMvYml0b3BzL2F0b21pYy5oCmluZGV4IDZlZTEx
+NzE3YmI2NS4uMGFmZTkzMGVlYzcyIDEwMDY0NAotLS0gYS9pbmNsdWRlL2FzbS1nZW5lcmljL2Jp
+dG9wcy9hdG9taWMuaAorKysgYi9pbmNsdWRlL2FzbS1nZW5lcmljL2JpdG9wcy9hdG9taWMuaApA
+QCAtOCw3ICs4LDcgQEAKIAogLyoKICAqIEltcGxlbWVudGF0aW9uIG9mIGF0b21pYyBiaXRvcHMg
+dXNpbmcgYXRvbWljLWZldGNoIG9wcy4KLSAqIFNlZSBEb2N1bWVudGF0aW9uL2F0b21pY19iaXRv
+cHMucnN0IGZvciBkZXRhaWxzLgorICogU2VlIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9hdG9t
+aWNfYml0b3BzLnJzdCBmb3IgZGV0YWlscy4KICAqLwogCiBzdGF0aWMgaW5saW5lIHZvaWQgc2V0
+X2JpdCh1bnNpZ25lZCBpbnQgbnIsIHZvbGF0aWxlIHVuc2lnbmVkIGxvbmcgKnApCmRpZmYgLS1n
+aXQgYS9pbmNsdWRlL2xpbnV4L2lvLW1hcHBpbmcuaCBiL2luY2x1ZGUvbGludXgvaW8tbWFwcGlu
+Zy5oCmluZGV4IGI5MGM1NDA2OTZhNC4uYzhiZjQ4NTJiMzUyIDEwMDY0NAotLS0gYS9pbmNsdWRl
+L2xpbnV4L2lvLW1hcHBpbmcuaAorKysgYi9pbmNsdWRlL2xpbnV4L2lvLW1hcHBpbmcuaApAQCAt
+MjgsNyArMjgsNyBAQAogICogVGhlIGlvX21hcHBpbmcgbWVjaGFuaXNtIHByb3ZpZGVzIGFuIGFi
+c3RyYWN0aW9uIGZvciBtYXBwaW5nCiAgKiBpbmRpdmlkdWFsIHBhZ2VzIGZyb20gYW4gaW8gZGV2
+aWNlIHRvIHRoZSBDUFUgaW4gYW4gZWZmaWNpZW50IGZhc2hpb24uCiAgKgotICogU2VlIERvY3Vt
+ZW50YXRpb24vaW8tbWFwcGluZy5yc3QKKyAqIFNlZSBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkv
+aW8tbWFwcGluZy5yc3QKICAqLwogCiBzdHJ1Y3QgaW9fbWFwcGluZyB7CmRpZmYgLS1naXQgYS9p
+bmNsdWRlL2xpbnV4L2p1bXBfbGFiZWwuaCBiL2luY2x1ZGUvbGludXgvanVtcF9sYWJlbC5oCmlu
+ZGV4IGMzOTQ3Y2FiMmQyNy4uMzJiZGNlODk1NDg3IDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4
+L2p1bXBfbGFiZWwuaAorKysgYi9pbmNsdWRlL2xpbnV4L2p1bXBfbGFiZWwuaApAQCAtNjgsNyAr
+NjgsNyBAQAogICogTGFja2luZyB0b29sY2hhaW4gYW5kIG9yIGFyY2hpdGVjdHVyZSBzdXBwb3J0
+LCBzdGF0aWMga2V5cyBmYWxsIGJhY2sgdG8gYQogICogc2ltcGxlIGNvbmRpdGlvbmFsIGJyYW5j
+aC4KICAqCi0gKiBBZGRpdGlvbmFsIGJhYmJsaW5nIGluOiBEb2N1bWVudGF0aW9uL3N0YXRpYy1r
+ZXlzLnJzdAorICogQWRkaXRpb25hbCBiYWJibGluZyBpbjogRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL3N0YXRpYy1rZXlzLnJzdAogICovCiAKICNpZm5kZWYgX19BU1NFTUJMWV9fCmRpZmYgLS1n
+aXQgYS9pbmNsdWRlL2xpbnV4L2tvYmplY3QuaCBiL2luY2x1ZGUvbGludXgva29iamVjdC5oCmlu
+ZGV4IDE2ZjY2ZmUyOGVjMi4uZDMyNzIwNzQzMDA0IDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4
+L2tvYmplY3QuaAorKysgYi9pbmNsdWRlL2xpbnV4L2tvYmplY3QuaApAQCAtNyw3ICs3LDcgQEAK
+ICAqIENvcHlyaWdodCAoYykgMjAwNi0yMDA4IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ0Brcm9h
+aC5jb20+CiAgKiBDb3B5cmlnaHQgKGMpIDIwMDYtMjAwOCBOb3ZlbGwgSW5jLgogICoKLSAqIFBs
+ZWFzZSByZWFkIERvY3VtZW50YXRpb24va29iamVjdC5yc3QgYmVmb3JlIHVzaW5nIHRoZSBrb2Jq
+ZWN0CisgKiBQbGVhc2UgcmVhZCBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkva29iamVjdC5yc3Qg
+YmVmb3JlIHVzaW5nIHRoZSBrb2JqZWN0CiAgKiBpbnRlcmZhY2UsIEVTUEVDSUFMTFkgdGhlIHBh
+cnRzIGFib3V0IHJlZmVyZW5jZSBjb3VudHMgYW5kIG9iamVjdAogICogZGVzdHJ1Y3RvcnMuCiAg
+Ki8KZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgva29iamVjdF9ucy5oIGIvaW5jbHVkZS9saW51
+eC9rb2JqZWN0X25zLmgKaW5kZXggOGM4NmM0NjQxNzM5Li5iNWI3ZDM4N2Q2M2QgMTAwNjQ0Ci0t
+LSBhL2luY2x1ZGUvbGludXgva29iamVjdF9ucy5oCisrKyBiL2luY2x1ZGUvbGludXgva29iamVj
+dF9ucy5oCkBAIC04LDcgKzgsNyBAQAogICoKICAqIFNwbGl0IGZyb20ga29iamVjdC5oIGJ5IERh
+dmlkIEhvd2VsbHMgKGRob3dlbGxzQHJlZGhhdC5jb20pCiAgKgotICogUGxlYXNlIHJlYWQgRG9j
+dW1lbnRhdGlvbi9rb2JqZWN0LnJzdCBiZWZvcmUgdXNpbmcgdGhlIGtvYmplY3QKKyAqIFBsZWFz
+ZSByZWFkIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9rb2JqZWN0LnJzdCBiZWZvcmUgdXNpbmcg
+dGhlIGtvYmplY3QKICAqIGludGVyZmFjZSwgRVNQRUNJQUxMWSB0aGUgcGFydHMgYWJvdXQgcmVm
+ZXJlbmNlIGNvdW50cyBhbmQgb2JqZWN0CiAgKiBkZXN0cnVjdG9ycy4KICAqLwpkaWZmIC0tZ2l0
+IGEvaW5jbHVkZS9saW51eC9yYnRyZWUuaCBiL2luY2x1ZGUvbGludXgvcmJ0cmVlLmgKaW5kZXgg
+MmM1NzliNjAwMGE1Li5kNDlmNzhhOGJlMzcgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvcmJ0
+cmVlLmgKKysrIGIvaW5jbHVkZS9saW51eC9yYnRyZWUuaApAQCAtMTEsNyArMTEsNyBAQAogICBJ
+IGtub3cgaXQncyBub3QgdGhlIGNsZWFuZXIgd2F5LCAgYnV0IGluIEMgKG5vdCBpbiBDKyspIHRv
+IGdldAogICBwZXJmb3JtYW5jZXMgYW5kIGdlbmVyaWNpdHkuLi4KIAotICBTZWUgRG9jdW1lbnRh
+dGlvbi9yYnRyZWUucnN0IGZvciBkb2N1bWVudGF0aW9uIGFuZCBzYW1wbGVzLgorICBTZWUgRG9j
+dW1lbnRhdGlvbi9kcml2ZXItYXBpL3JidHJlZS5yc3QgZm9yIGRvY3VtZW50YXRpb24gYW5kIHNh
+bXBsZXMuCiAqLwogCiAjaWZuZGVmCV9MSU5VWF9SQlRSRUVfSApkaWZmIC0tZ2l0IGEvaW5jbHVk
+ZS9saW51eC9yYnRyZWVfYXVnbWVudGVkLmggYi9pbmNsdWRlL2xpbnV4L3JidHJlZV9hdWdtZW50
+ZWQuaAppbmRleCBiM2Y2NGEyOTM1YWUuLjVmMzFhZjBkYTBhOSAxMDA2NDQKLS0tIGEvaW5jbHVk
+ZS9saW51eC9yYnRyZWVfYXVnbWVudGVkLmgKKysrIGIvaW5jbHVkZS9saW51eC9yYnRyZWVfYXVn
+bWVudGVkLmgKQEAgLTIxLDcgKzIxLDcgQEAKICAqIHJiX2luc2VydF9hdWdtZW50ZWQoKSBhbmQg
+cmJfZXJhc2VfYXVnbWVudGVkKCkgYXJlIGludGVuZGVkIHRvIGJlIHB1YmxpYy4KICAqIFRoZSBy
+ZXN0IGFyZSBpbXBsZW1lbnRhdGlvbiBkZXRhaWxzIHlvdSBhcmUgbm90IGV4cGVjdGVkIHRvIGRl
+cGVuZCBvbi4KICAqCi0gKiBTZWUgRG9jdW1lbnRhdGlvbi9yYnRyZWUucnN0IGZvciBkb2N1bWVu
+dGF0aW9uIGFuZCBzYW1wbGVzLgorICogU2VlIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9yYnRy
+ZWUucnN0IGZvciBkb2N1bWVudGF0aW9uIGFuZCBzYW1wbGVzLgogICovCiAKIHN0cnVjdCByYl9h
+dWdtZW50X2NhbGxiYWNrcyB7CmRpZmYgLS1naXQgYS9pbml0L0tjb25maWcgYi9pbml0L0tjb25m
+aWcKaW5kZXggZTAyY2ZhZTczY2U1Li5iOWNmZWYxNDUyZTMgMTAwNjQ0Ci0tLSBhL2luaXQvS2Nv
+bmZpZworKysgYi9pbml0L0tjb25maWcKQEAgLTE4MDcsNyArMTgwNyw3IEBAIGNvbmZpZyBNTUFQ
+X0FMTE9XX1VOSU5JVElBTElaRUQKIAkgIHVzZXJzcGFjZS4gIFNpbmNlIHRoYXQgaXNuJ3QgZ2Vu
+ZXJhbGx5IGEgcHJvYmxlbSBvbiBuby1NTVUgc3lzdGVtcywKIAkgIGl0IGlzIG5vcm1hbGx5IHNh
+ZmUgdG8gc2F5IFkgaGVyZS4KIAotCSAgU2VlIERvY3VtZW50YXRpb24vbm9tbXUtbW1hcC5yc3Qg
+Zm9yIG1vcmUgaW5mb3JtYXRpb24uCisJICBTZWUgRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL25v
+bW11LW1tYXAucnN0IGZvciBtb3JlIGluZm9ybWF0aW9uLgogCiBjb25maWcgU1lTVEVNX0RBVEFf
+VkVSSUZJQ0FUSU9OCiAJZGVmX2Jvb2wgbgpkaWZmIC0tZ2l0IGEva2VybmVsL3BhZGF0YS5jIGIv
+a2VybmVsL3BhZGF0YS5jCmluZGV4IGE1Njc5NzNiYjFiYS4uZmEzZmIzYjQ3MDVlIDEwMDY0NAot
+LS0gYS9rZXJuZWwvcGFkYXRhLmMKKysrIGIva2VybmVsL3BhZGF0YS5jCkBAIC0yLDcgKzIsNyBA
+QAogLyoKICAqIHBhZGF0YS5jIC0gZ2VuZXJpYyBpbnRlcmZhY2UgdG8gcHJvY2VzcyBkYXRhIHN0
+cmVhbXMgaW4gcGFyYWxsZWwKICAqCi0gKiBTZWUgRG9jdW1lbnRhdGlvbi9wYWRhdGEucnN0IGZv
+ciBhbiBhcGkgZG9jdW1lbnRhdGlvbi4KKyAqIFNlZSBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkv
+cGFkYXRhLnJzdCBmb3IgYW4gYXBpIGRvY3VtZW50YXRpb24uCiAgKgogICogQ29weXJpZ2h0IChD
+KSAyMDA4LCAyMDA5IHNlY3VuZXQgU2VjdXJpdHkgTmV0d29ya3MgQUcKICAqIENvcHlyaWdodCAo
+QykgMjAwOCwgMjAwOSBTdGVmZmVuIEtsYXNzZXJ0IDxzdGVmZmVuLmtsYXNzZXJ0QHNlY3VuZXQu
+Y29tPgpkaWZmIC0tZ2l0IGEvbGliL0tjb25maWcgYi9saWIvS2NvbmZpZwppbmRleCA1OGU5ZGFl
+NmY0MjQuLmY0Nzg1YWZiZmQxMCAxMDA2NDQKLS0tIGEvbGliL0tjb25maWcKKysrIGIvbGliL0tj
+b25maWcKQEAgLTQyMCw3ICs0MjAsNyBAQCBjb25maWcgSU5URVJWQUxfVFJFRQogCiAJICBTZWU6
+CiAKLQkJRG9jdW1lbnRhdGlvbi9yYnRyZWUucnN0CisJCURvY3VtZW50YXRpb24vZHJpdmVyLWFw
+aS9yYnRyZWUucnN0CiAKIAkgIGZvciBtb3JlIGluZm9ybWF0aW9uLgogCmRpZmYgLS1naXQgYS9s
+aWIvS2NvbmZpZy5kZWJ1ZyBiL2xpYi9LY29uZmlnLmRlYnVnCmluZGV4IGNlNDdlZmE1ZjRlNC4u
+NDcwNzJkNjdmY2ExIDEwMDY0NAotLS0gYS9saWIvS2NvbmZpZy5kZWJ1ZworKysgYi9saWIvS2Nv
+bmZpZy5kZWJ1ZwpAQCAtMTY4Miw3ICsxNjgyLDcgQEAgY29uZmlnIFBST1ZJREVfT0hDSTEzOTRf
+RE1BX0lOSVQKIAkgIFRoaXMgY29kZSAofjFrKSBpcyBmcmVlZCBhZnRlciBib290LiBCeSB0aGVu
+LCB0aGUgZmlyZXdpcmUgc3RhY2sKIAkgIGluIGNoYXJnZSBvZiB0aGUgT0hDSS0xMzk0IGNvbnRy
+b2xsZXJzIHNob3VsZCBiZSB1c2VkIGluc3RlYWQuCiAKLQkgIFNlZSBEb2N1bWVudGF0aW9uL2Rl
+YnVnZ2luZy12aWEtb2hjaTEzOTQucnN0IGZvciBtb3JlIGluZm9ybWF0aW9uLgorCSAgU2VlIERv
+Y3VtZW50YXRpb24vZHJpdmVyLWFwaS9kZWJ1Z2dpbmctdmlhLW9oY2kxMzk0LnJzdCBmb3IgbW9y
+ZSBpbmZvcm1hdGlvbi4KIAogbWVudWNvbmZpZyBSVU5USU1FX1RFU1RJTkdfTUVOVQogCWJvb2wg
+IlJ1bnRpbWUgVGVzdGluZyIKZGlmZiAtLWdpdCBhL2xpYi9jcmMzMi5jIGIvbGliL2NyYzMyLmMK
+aW5kZXggMGRlMzdjY2M3MGRkLi43OGQ0Y2Q4YjcwOWUgMTAwNjQ0Ci0tLSBhL2xpYi9jcmMzMi5j
+CisrKyBiL2xpYi9jcmMzMi5jCkBAIC0yNCw3ICsyNCw3IEBACiAgKiBWZXJzaW9uIDIuICBTZWUg
+dGhlIGZpbGUgQ09QWUlORyBmb3IgbW9yZSBkZXRhaWxzLgogICovCiAKLS8qIHNlZTogRG9jdW1l
+bnRhdGlvbi9jcmMzMi5yc3QgZm9yIGEgZGVzY3JpcHRpb24gb2YgYWxnb3JpdGhtcyAqLworLyog
+c2VlOiBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvY3JjMzIucnN0IGZvciBhIGRlc2NyaXB0aW9u
+IG9mIGFsZ29yaXRobXMgKi8KIAogI2luY2x1ZGUgPGxpbnV4L2NyYzMyLmg+CiAjaW5jbHVkZSA8
+bGludXgvY3JjMzJwb2x5Lmg+CmRpZmYgLS1naXQgYS9saWIva29iamVjdC5jIGIvbGliL2tvYmpl
+Y3QuYwppbmRleCAwMzE1N2ZmODg0OTUuLmZlMDFlZDA1MDRlMiAxMDA2NDQKLS0tIGEvbGliL2tv
+YmplY3QuYworKysgYi9saWIva29iamVjdC5jCkBAIC02LDcgKzYsNyBAQAogICogQ29weXJpZ2h0
+IChjKSAyMDA2LTIwMDcgR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVnQGtyb2FoLmNvbT4KICAqIENv
+cHlyaWdodCAoYykgMjAwNi0yMDA3IE5vdmVsbCBJbmMuCiAgKgotICogUGxlYXNlIHNlZSB0aGUg
+ZmlsZSBEb2N1bWVudGF0aW9uL2tvYmplY3QucnN0IGZvciBjcml0aWNhbCBpbmZvcm1hdGlvbgor
+ICogUGxlYXNlIHNlZSB0aGUgZmlsZSBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkva29iamVjdC5y
+c3QgZm9yIGNyaXRpY2FsIGluZm9ybWF0aW9uCiAgKiBhYm91dCB1c2luZyB0aGUga29iamVjdCBp
+bnRlcmZhY2UuCiAgKi8KIApAQCAtNjY4LDcgKzY2OCw3IEBAIHN0YXRpYyB2b2lkIGtvYmplY3Rf
+Y2xlYW51cChzdHJ1Y3Qga29iamVjdCAqa29iaikKIAkJIGtvYmplY3RfbmFtZShrb2JqKSwga29i
+aiwgX19mdW5jX18sIGtvYmotPnBhcmVudCk7CiAKIAlpZiAodCAmJiAhdC0+cmVsZWFzZSkKLQkJ
+cHJfZGVidWcoImtvYmplY3Q6ICclcycgKCVwKTogZG9lcyBub3QgaGF2ZSBhIHJlbGVhc2UoKSBm
+dW5jdGlvbiwgaXQgaXMgYnJva2VuIGFuZCBtdXN0IGJlIGZpeGVkLiBTZWUgRG9jdW1lbnRhdGlv
+bi9rb2JqZWN0LnJzdC5cbiIsCisJCXByX2RlYnVnKCJrb2JqZWN0OiAnJXMnICglcCk6IGRvZXMg
+bm90IGhhdmUgYSByZWxlYXNlKCkgZnVuY3Rpb24sIGl0IGlzIGJyb2tlbiBhbmQgbXVzdCBiZSBm
+aXhlZC4gU2VlIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9rb2JqZWN0LnJzdC5cbiIsCiAJCQkg
+a29iamVjdF9uYW1lKGtvYmopLCBrb2JqKTsKIAogCS8qIHNlbmQgInJlbW92ZSIgaWYgdGhlIGNh
+bGxlciBkaWQgbm90IGRvIGl0IGJ1dCBzZW50ICJhZGQiICovCmRpZmYgLS1naXQgYS9saWIvbHpv
+L2x6bzF4X2RlY29tcHJlc3Nfc2FmZS5jIGIvbGliL2x6by9sem8xeF9kZWNvbXByZXNzX3NhZmUu
+YwppbmRleCAxNjQyYzI4ZTY2MjcuLjI3NDAxODA2YzM1NSAxMDA2NDQKLS0tIGEvbGliL2x6by9s
+em8xeF9kZWNvbXByZXNzX3NhZmUuYworKysgYi9saWIvbHpvL2x6bzF4X2RlY29tcHJlc3Nfc2Fm
+ZS5jCkBAIC0zMiw3ICszMiw3IEBACiAgKiBkZXBlbmRpbmcgb24gdGhlIGJhc2UgY291bnQuIFNp
+bmNlIHRoZSBiYXNlIGNvdW50IGlzIHRha2VuIGZyb20gYSB1OAogICogYW5kIGEgZmV3IGJpdHMs
+IGl0IGlzIHNhZmUgdG8gYXNzdW1lIHRoYXQgaXQgd2lsbCBhbHdheXMgYmUgbG93ZXIgdGhhbgog
+ICogb3IgZXF1YWwgdG8gMioyNTUsIHRodXMgd2UgY2FuIGFsd2F5cyBwcmV2ZW50IGFueSBvdmVy
+ZmxvdyBieSBhY2NlcHRpbmcKLSAqIHR3byBsZXNzIDI1NSBzdGVwcy4gU2VlIERvY3VtZW50YXRp
+b24vbHpvLnJzdCBmb3IgbW9yZSBpbmZvcm1hdGlvbi4KKyAqIHR3byBsZXNzIDI1NSBzdGVwcy4g
+U2VlIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9sem8ucnN0IGZvciBtb3JlIGluZm9ybWF0aW9u
+LgogICovCiAjZGVmaW5lIE1BWF8yNTVfQ09VTlQgICAgICAoKCgoc2l6ZV90KX4wKSAvIDI1NSkg
+LSAyKQogCmRpZmYgLS1naXQgYS9saWIveHovS2NvbmZpZyBiL2xpYi94ei9LY29uZmlnCmluZGV4
+IDMxNGE4OWMxMzU0NS4uOWQ4YTY2ZmRlYTliIDEwMDY0NAotLS0gYS9saWIveHovS2NvbmZpZwor
+KysgYi9saWIveHovS2NvbmZpZwpAQCAtNSw3ICs1LDcgQEAgY29uZmlnIFhaX0RFQwogCWhlbHAK
+IAkgIExaTUEyIGNvbXByZXNzaW9uIGFsZ29yaXRobSBhbmQgQkNKIGZpbHRlcnMgYXJlIHN1cHBv
+cnRlZCB1c2luZwogCSAgdGhlIC54eiBmaWxlIGZvcm1hdCBhcyB0aGUgY29udGFpbmVyLiBGb3Ig
+aW50ZWdyaXR5IGNoZWNraW5nLAotCSAgQ1JDMzIgaXMgc3VwcG9ydGVkLiBTZWUgRG9jdW1lbnRh
+dGlvbi94ei5yc3QgZm9yIG1vcmUgaW5mb3JtYXRpb24uCisJICBDUkMzMiBpcyBzdXBwb3J0ZWQu
+IFNlZSBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkveHoucnN0IGZvciBtb3JlIGluZm9ybWF0aW9u
+LgogCiBpZiBYWl9ERUMKIApkaWZmIC0tZ2l0IGEvbW0vS2NvbmZpZyBiL21tL0tjb25maWcKaW5k
+ZXggZWQ1ZmU2ODU5MGY0Li45YTBiYmJlYWZiNTggMTAwNjQ0Ci0tLSBhL21tL0tjb25maWcKKysr
+IGIvbW0vS2NvbmZpZwpAQCAtMzY5LDcgKzM2OSw3IEBAIGNvbmZpZyBOT01NVV9JTklUSUFMX1RS
+SU1fRVhDRVNTCiAJICBUaGlzIG9wdGlvbiBzcGVjaWZpZXMgdGhlIGluaXRpYWwgdmFsdWUgb2Yg
+dGhpcyBvcHRpb24uICBUaGUgZGVmYXVsdAogCSAgb2YgMSBzYXlzIHRoYXQgYWxsIGV4Y2VzcyBw
+YWdlcyBzaG91bGQgYmUgdHJpbW1lZC4KIAotCSAgU2VlIERvY3VtZW50YXRpb24vbm9tbXUtbW1h
+cC5yc3QgZm9yIG1vcmUgaW5mb3JtYXRpb24uCisJICBTZWUgRG9jdW1lbnRhdGlvbi9kcml2ZXIt
+YXBpL25vbW11LW1tYXAucnN0IGZvciBtb3JlIGluZm9ybWF0aW9uLgogCiBjb25maWcgVFJBTlNQ
+QVJFTlRfSFVHRVBBR0UKIAlib29sICJUcmFuc3BhcmVudCBIdWdlcGFnZSBTdXBwb3J0IgpkaWZm
+IC0tZ2l0IGEvbW0vbm9tbXUuYyBiL21tL25vbW11LmMKaW5kZXggMzBhMDcxYmE4MzhkLi5kNDQ5
+NDQ1MTJmMDcgMTAwNjQ0Ci0tLSBhL21tL25vbW11LmMKKysrIGIvbW0vbm9tbXUuYwpAQCAtNSw3
+ICs1LDcgQEAKICAqICBSZXBsYWNlbWVudCBjb2RlIGZvciBtbSBmdW5jdGlvbnMgdG8gc3VwcG9y
+dCBDUFUncyB0aGF0IGRvbid0CiAgKiAgaGF2ZSBhbnkgZm9ybSBvZiBtZW1vcnkgbWFuYWdlbWVu
+dCB1bml0ICh0aHVzIG5vIHZpcnR1YWwgbWVtb3J5KS4KICAqCi0gKiAgU2VlIERvY3VtZW50YXRp
+b24vbm9tbXUtbW1hcC5yc3QKKyAqICBTZWUgRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL25vbW11
+LW1tYXAucnN0CiAgKgogICogIENvcHlyaWdodCAoYykgMjAwNC0yMDA4IERhdmlkIEhvd2VsbHMg
+PGRob3dlbGxzQHJlZGhhdC5jb20+CiAgKiAgQ29weXJpZ2h0IChjKSAyMDAwLTIwMDMgRGF2aWQg
+TWNDdWxsb3VnaCA8ZGF2aWRtQHNuYXBnZWFyLmNvbT4KZGlmZiAtLWdpdCBhL3NhbXBsZXMvS2Nv
+bmZpZyBiL3NhbXBsZXMvS2NvbmZpZwppbmRleCA5ZWM1MjRiMmUwMDMuLjJiMWI0ZDI0MWU0NyAx
+MDA2NDQKLS0tIGEvc2FtcGxlcy9LY29uZmlnCisrKyBiL3NhbXBsZXMvS2NvbmZpZwpAQCAtMTAw
+LDcgKzEwMCw3IEBAIGNvbmZpZyBTQU1QTEVfQ09OTkVDVE9SCiAJICBXaGVuIGVuYWJsZWQsIHRo
+aXMgYnVpbGRzIGJvdGggYSBzYW1wbGUga2VybmVsIG1vZHVsZSBmb3IKIAkgIHRoZSBjb25uZWN0
+b3IgaW50ZXJmYWNlIGFuZCBhIHVzZXIgc3BhY2UgdG9vbCB0byBjb21tdW5pY2F0ZQogCSAgd2l0
+aCBpdC4KLQkgIFNlZSBhbHNvIERvY3VtZW50YXRpb24vY29ubmVjdG9yL2Nvbm5lY3Rvci5yc3QK
+KwkgIFNlZSBhbHNvIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9jb25uZWN0b3IucnN0CiAKIGNv
+bmZpZyBTQU1QTEVfU0VDQ09NUAogCWJvb2wgIkJ1aWxkIHNlY2NvbXAgc2FtcGxlIGNvZGUiCmRp
+ZmYgLS1naXQgYS9zYW1wbGVzL2twcm9iZXMva3Byb2JlX2V4YW1wbGUuYyBiL3NhbXBsZXMva3By
+b2Jlcy9rcHJvYmVfZXhhbXBsZS5jCmluZGV4IGQ3NmZkMDUzMDRhNS4uMTkyOGNlZjI3ZmQxIDEw
+MDY0NAotLS0gYS9zYW1wbGVzL2twcm9iZXMva3Byb2JlX2V4YW1wbGUuYworKysgYi9zYW1wbGVz
+L2twcm9iZXMva3Byb2JlX2V4YW1wbGUuYwpAQCAtNSw3ICs1LDcgQEAKICAqIHN0YWNrIHRyYWNl
+IGFuZCBzZWxlY3RlZCByZWdpc3RlcnMgd2hlbiBfZG9fZm9yaygpIGlzIGNhbGxlZC4KICAqCiAg
+KiBGb3IgbW9yZSBpbmZvcm1hdGlvbiBvbiB0aGVvcnkgb2Ygb3BlcmF0aW9uIG9mIGtwcm9iZXMs
+IHNlZQotICogRG9jdW1lbnRhdGlvbi9rcHJvYmVzLnJzdAorICogRG9jdW1lbnRhdGlvbi9kcml2
+ZXItYXBpL2twcm9iZXMucnN0CiAgKgogICogWW91IHdpbGwgc2VlIHRoZSB0cmFjZSBkYXRhIGlu
+IC92YXIvbG9nL21lc3NhZ2VzIGFuZCBvbiB0aGUgY29uc29sZQogICogd2hlbmV2ZXIgX2RvX2Zv
+cmsoKSBpcyBpbnZva2VkIHRvIGNyZWF0ZSBhIG5ldyBwcm9jZXNzLgpkaWZmIC0tZ2l0IGEvc2Ft
+cGxlcy9rcHJvYmVzL2tyZXRwcm9iZV9leGFtcGxlLmMgYi9zYW1wbGVzL2twcm9iZXMva3JldHBy
+b2JlX2V4YW1wbGUuYwppbmRleCA5YTIyMzRhZTAyODYuLmQwMDdmZWFhOTJkNCAxMDA2NDQKLS0t
+IGEvc2FtcGxlcy9rcHJvYmVzL2tyZXRwcm9iZV9leGFtcGxlLmMKKysrIGIvc2FtcGxlcy9rcHJv
+YmVzL2tyZXRwcm9iZV9leGFtcGxlLmMKQEAgLTExLDcgKzExLDcgQEAKICAqIElmIG5vIGZ1bmNf
+bmFtZSBpcyBzcGVjaWZpZWQsIF9kb19mb3JrIGlzIGluc3RydW1lbnRlZAogICoKICAqIEZvciBt
+b3JlIGluZm9ybWF0aW9uIG9uIHRoZW9yeSBvZiBvcGVyYXRpb24gb2Yga3JldHByb2Jlcywgc2Vl
+Ci0gKiBEb2N1bWVudGF0aW9uL2twcm9iZXMucnN0CisgKiBEb2N1bWVudGF0aW9uL2RyaXZlci1h
+cGkva3Byb2Jlcy5yc3QKICAqCiAgKiBCdWlsZCBhbmQgaW5zZXJ0IHRoZSBrZXJuZWwgbW9kdWxl
+IGFzIGRvbmUgaW4gdGhlIGtwcm9iZSBleGFtcGxlLgogICogWW91IHdpbGwgc2VlIHRoZSB0cmFj
+ZSBkYXRhIGluIC92YXIvbG9nL21lc3NhZ2VzIGFuZCBvbiB0aGUgY29uc29sZQpkaWZmIC0tZ2l0
+IGEvc2NyaXB0cy9nY2MtcGx1Z2lucy9LY29uZmlnIGIvc2NyaXB0cy9nY2MtcGx1Z2lucy9LY29u
+ZmlnCmluZGV4IGI0ZGM1YjExNmJmZS4uNGE1NjgwNjk3MjhkIDEwMDY0NAotLS0gYS9zY3JpcHRz
+L2djYy1wbHVnaW5zL0tjb25maWcKKysrIGIvc2NyaXB0cy9nY2MtcGx1Z2lucy9LY29uZmlnCkBA
+IC0yMyw3ICsyMyw3IEBAIGNvbmZpZyBHQ0NfUExVR0lOUwogCSAgR0NDIHBsdWdpbnMgYXJlIGxv
+YWRhYmxlIG1vZHVsZXMgdGhhdCBwcm92aWRlIGV4dHJhIGZlYXR1cmVzIHRvIHRoZQogCSAgY29t
+cGlsZXIuIFRoZXkgYXJlIHVzZWZ1bCBmb3IgcnVudGltZSBpbnN0cnVtZW50YXRpb24gYW5kIHN0
+YXRpYyBhbmFseXNpcy4KIAotCSAgU2VlIERvY3VtZW50YXRpb24vZ2NjLXBsdWdpbnMucnN0IGZv
+ciBkZXRhaWxzLgorCSAgU2VlIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9nY2MtcGx1Z2lucy5y
+c3QgZm9yIGRldGFpbHMuCiAKIG1lbnUgIkdDQyBwbHVnaW5zIgogCWRlcGVuZHMgb24gR0NDX1BM
+VUdJTlMKZGlmZiAtLWdpdCBhL3Rvb2xzL2luY2x1ZGUvbGludXgvcmJ0cmVlLmggYi90b29scy9p
+bmNsdWRlL2xpbnV4L3JidHJlZS5oCmluZGV4IGU5NmQ3MTIwY2UyYi4uMGEzNmM4MDdmNjVkIDEw
+MDY0NAotLS0gYS90b29scy9pbmNsdWRlL2xpbnV4L3JidHJlZS5oCisrKyBiL3Rvb2xzL2luY2x1
+ZGUvbGludXgvcmJ0cmVlLmgKQEAgLTExLDcgKzExLDcgQEAKICAgSSBrbm93IGl0J3Mgbm90IHRo
+ZSBjbGVhbmVyIHdheSwgIGJ1dCBpbiBDIChub3QgaW4gQysrKSB0byBnZXQKICAgcGVyZm9ybWFu
+Y2VzIGFuZCBnZW5lcmljaXR5Li4uCiAKLSAgU2VlIERvY3VtZW50YXRpb24vcmJ0cmVlLnJzdCBm
+b3IgZG9jdW1lbnRhdGlvbiBhbmQgc2FtcGxlcy4KKyAgU2VlIERvY3VtZW50YXRpb24vZHJpdmVy
+LWFwaS9yYnRyZWUucnN0IGZvciBkb2N1bWVudGF0aW9uIGFuZCBzYW1wbGVzLgogKi8KIAogI2lm
+bmRlZiBfX1RPT0xTX0xJTlVYX1BFUkZfUkJUUkVFX0gKZGlmZiAtLWdpdCBhL3Rvb2xzL2luY2x1
+ZGUvbGludXgvcmJ0cmVlX2F1Z21lbnRlZC5oIGIvdG9vbHMvaW5jbHVkZS9saW51eC9yYnRyZWVf
+YXVnbWVudGVkLmgKaW5kZXggYzI1MWJiMTZmMmU5Li4yMDFhODczYzIxMTEgMTAwNjQ0Ci0tLSBh
+L3Rvb2xzL2luY2x1ZGUvbGludXgvcmJ0cmVlX2F1Z21lbnRlZC5oCisrKyBiL3Rvb2xzL2luY2x1
+ZGUvbGludXgvcmJ0cmVlX2F1Z21lbnRlZC5oCkBAIC0yMyw3ICsyMyw3IEBACiAgKiByYl9pbnNl
+cnRfYXVnbWVudGVkKCkgYW5kIHJiX2VyYXNlX2F1Z21lbnRlZCgpIGFyZSBpbnRlbmRlZCB0byBi
+ZSBwdWJsaWMuCiAgKiBUaGUgcmVzdCBhcmUgaW1wbGVtZW50YXRpb24gZGV0YWlscyB5b3UgYXJl
+IG5vdCBleHBlY3RlZCB0byBkZXBlbmQgb24uCiAgKgotICogU2VlIERvY3VtZW50YXRpb24vcmJ0
+cmVlLnJzdCBmb3IgZG9jdW1lbnRhdGlvbiBhbmQgc2FtcGxlcy4KKyAqIFNlZSBEb2N1bWVudGF0
+aW9uL2RyaXZlci1hcGkvcmJ0cmVlLnJzdCBmb3IgZG9jdW1lbnRhdGlvbiBhbmQgc2FtcGxlcy4K
+ICAqLwogCiBzdHJ1Y3QgcmJfYXVnbWVudF9jYWxsYmFja3MgewotLSAKMi4yMS4wCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
