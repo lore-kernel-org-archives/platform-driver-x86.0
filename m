@@ -1,70 +1,39 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] platform/x86: intel_int0002_vgpio: Get rid of custom ICPU() macro
-Date: Wed, 19 Jun 2019 17:50:50 +0300
-Message-ID: <20190619145050.13876-1-andriy.shevchenko@linux.intel.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] x86/efi: fix a -Wtype-limits compilation warning
+Date: Wed, 19 Jun 2019 13:47:44 -0400
+Message-ID: <1560966464-27644-1-git-send-email-cai@lca.pw>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: bp@alien8.de
+Cc: ard.biesheuvel@linaro.org, akpm@linux-foundation.org, dvhart@infradead.org, andy@infradead.org, tglx@linutronix.de, mingo@redhat.com, sai.praneeth.prakhya@intel.com, hpa@zytor.com, x86@kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Replace custom grown macro with generic INTEL_CPU_FAM6() one.
+Compiling a kernel with W=1 generates this warning,
 
-No functional change intended.
+arch/x86/platform/efi/quirks.c:731:16: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 3425d934fc03 ("efi/x86: Handle page faults occurring while running EFI runtime services")
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- drivers/platform/x86/intel_int0002_vgpio.c | 22 +++++++---------------
- 1 file changed, 7 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
-index 1694a9aec77c..d9542c661ddc 100644
---- a/drivers/platform/x86/intel_int0002_vgpio.c
-+++ b/drivers/platform/x86/intel_int0002_vgpio.c
-@@ -51,17 +51,6 @@
- #define GPE0A_STS_PORT			0x420
- #define GPE0A_EN_PORT			0x428
- 
--#define BAYTRAIL			0x01
--#define CHERRYTRAIL			0x02
--
--#define ICPU(model, data) { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, data }
--
--static const struct x86_cpu_id int0002_cpu_ids[] = {
--	ICPU(INTEL_FAM6_ATOM_SILVERMONT, BAYTRAIL), /* Valleyview, Bay Trail  */
--	ICPU(INTEL_FAM6_ATOM_AIRMONT, CHERRYTRAIL), /* Braswell, Cherry Trail */
--	{}
--};
--
- /*
-  * As this is not a real GPIO at all, but just a hack to model an event in
-  * ACPI the get / set functions are dummy functions.
-@@ -157,6 +146,12 @@ static struct irq_chip int0002_cht_irqchip = {
+v2: Add a "Fixes" tag.
+
+ arch/x86/platform/efi/quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 632b83885867..3b9fd679cea9 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -728,7 +728,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
+ 	 * Address range 0x0000 - 0x0fff is always mapped in the efi_pgd, so
+ 	 * page faulting on these addresses isn't expected.
  	 */
- };
+-	if (phys_addr >= 0x0000 && phys_addr <= 0x0fff)
++	if (phys_addr <= 0x0fff)
+ 		return;
  
-+static const struct x86_cpu_id int0002_cpu_ids[] = {
-+	INTEL_CPU_FAM6(ATOM_SILVERMONT, int0002_byt_irqchip),	/* Valleyview, Bay Trail  */
-+	INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_cht_irqchip),	/* Braswell, Cherry Trail */
-+	{}
-+};
-+
- static int int0002_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -210,10 +205,7 @@ static int int0002_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	if (cpu_id->driver_data == BAYTRAIL)
--		irq_chip = &int0002_byt_irqchip;
--	else
--		irq_chip = &int0002_cht_irqchip;
-+	irq_chip = (struct irq_chip *)cpu_id->driver_data;
- 
- 	ret = gpiochip_irqchip_add(chip, irq_chip, 0, handle_edge_irq,
- 				   IRQ_TYPE_NONE);
+ 	/*
 -- 
-2.20.1
+1.8.3.1
