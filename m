@@ -1,45 +1,44 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: platform: convert
- x86-laptop-drivers.txt to reST
-Date: Thu, 20 Jun 2019 09:19:25 +0300
-Message-ID: <CAHp75Vf__EtLVTOf0XvA3w7RPj+bnoQOud3gCXr1Fya0b_o4cw@mail.gmail.com>
-References: <20190618053227.31678-1-puranjay12@gmail.com> <20190618054158.GA3713@kroah.com>
- <20190618071717.2132a1b7@lwn.net> <20190618133948.GB5416@kroah.com> <8aeb222a-ee44-4125-45fd-ce9a741e7ecc@linuxfoundation.org>
+From: Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH 0/2] Support for buttons on newer MS Surface devices
+Date: Thu, 20 Jun 2019 13:50:54 +0200
+Message-ID: <20190620115056.4169-1-luzmaximilian@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8aeb222a-ee44-4125-45fd-ce9a741e7ecc@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Puranjay Mohan <puranjay12@gmail.com>, Linux Documentation List <linux-doc@vger.kernel.org>, linux-kernel-mentees@lists.linuxfoundation.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Maximilian Luz <luzmaximilian@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jun 18, 2019 at 6:06 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
-> On 6/18/19 7:39 AM, Greg KH wrote:
-> > On Tue, Jun 18, 2019 at 07:17:17AM -0600, Jonathan Corbet wrote:
-> >> On Tue, 18 Jun 2019 07:41:58 +0200
-> >> Greg KH <gregkh@linuxfoundation.org> wrote:
-> >>> On Tue, Jun 18, 2019 at 11:02:27AM +0530, Puranjay Mohan wrote:
+This series adds suport for power and volume buttons on 5th and 6th
+generation Microsoft Surface devices. Specifically, it adds support for
+the power-button on the Surface Laptop 1 and Laptop 2, as well as
+support for power- and (on-device) volume-buttons on the Surface Pro 5
+(2017), Pro 6, and Book 2.
 
-> > I bet it should be deleted, but we should ask the platform driver
-> > maintainers first before we do that :)
+These devices use the same MSHW0040 device as on the Surface Pro 4,
+however, whereas the Pro 4 uses an ACPI notify handler, the newer
+devices use GPIO interrupts to signal these events.
 
-> Adding Platform driver maintainers Darren Hart and Andy Shevchenko, and
-> Compal laptop maintainer Cezary Jackiewicz to the discussion.
->
-> + platform-driver-x86@vger.kernel.org
->
-> Hi Darren, Andy, and Cezary,
->
-> Would it be okay to remove the x86-laptop-drivers.txt or should it be
-> converted to .rst and kept around?
+The first patch of this series ensures that the surfacepro3_button
+driver, used for MSHW0040 on the Pro 4, does not probe for the newer
+devices. The second patch adapts soc_button_array to implement the
+actual button support.
 
-Shuan, thanks for heads up.
-The list of laptops supported by drivers in PDx86 subsystem is quite
-big and growing. The mentioned file contains less than per cent out of
-it and I don't think there is sense to make it up to date with
-thousands lines. Agree on removal.
+I think the changes to soc_button_array in the second patch warrant a
+thorough review. I've tried to make things a bit more generic to be able
+to integrate arbitrary ACPI GPIO power-/volume-button devices more
+easily, I'm not sure if there may be reasons against this.
+
+These patches have also been tested on various Surface devices via the
+github.com/jakeday/linux-surface patchset.
+
+Maximilian Luz (2):
+  platform: Fix device check for surfacepro3_button
+  input: soc_button_array for newer surface devices
+
+ drivers/input/misc/soc_button_array.c     | 134 ++++++++++++++++++++--
+ drivers/platform/x86/surfacepro3_button.c |  38 ++++++
+ 2 files changed, 160 insertions(+), 12 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.22.0
