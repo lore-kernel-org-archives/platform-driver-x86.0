@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 02/10] platform/x86: ISST: Add common API to register and handle ioctls
-Date: Wed, 26 Jun 2019 15:38:43 -0700
-Message-ID: <20190626223851.19138-3-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 05/10] platform/x86: ISST: Add Intel Speed Select mmio interface
+Date: Wed, 26 Jun 2019 15:38:46 -0700
+Message-ID: <20190626223851.19138-6-srinivas.pandruvada@linux.intel.com>
 References: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
@@ -10,398 +10,251 @@ To: dvhart@infradead.org, andy@infradead.org, andriy.shevchenko@intel.com, corbe
 Cc: rjw@rjwysocki.net, alan@linux.intel.com, lenb@kernel.org, prarit@redhat.com, darcari@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Encapsulate common functions which all Intel Speed Select Technology
-interface drivers can use. This creates API to register misc device for
-user kernel communication and handle all common IOCTLs. As part of the
-registry it allows a callback which is to handle domain specific ioctl
-processing.
+Added MMIO interface to read/write specific offsets in PUNIT PCI device
+which export core priortization. This MMIO interface can be used using
+ioctl interface on /dev/isst_interface using IOCTL ISST_IF_IO_CMD.
 
-There can be multiple drivers register for services, which can be built
-as modules. So this driver handle contention during registry and as well
-as during removal. Once user space opened the misc device, the registered
-driver will be prevented from removal. Also once misc device is opened by
-the user space new client driver can't register, till the misc device is
-closed.
-
-There are two types of client drivers, one to handle mail box interface
-and the other is to allow direct read/write to some specific MMIO space.
-
-This common driver implements IOCTL ISST_IF_GET_PLATFORM_INFO.
+This MMIO interface is used by the intel-speed-select tool under
+tools/x86/power to enumerate and set core priority. The MMIO offsets and
+semantics of the message can be checked from the source code of the tool.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- drivers/platform/x86/Kconfig                  |   2 +
- drivers/platform/x86/Makefile                 |   1 +
- .../x86/intel_speed_select_if/Kconfig         |  17 ++
- .../x86/intel_speed_select_if/Makefile        |   7 +
- .../intel_speed_select_if/isst_if_common.c    | 182 ++++++++++++++++++
- .../intel_speed_select_if/isst_if_common.h    |  60 ++++++
- include/uapi/linux/isst_if.h                  |  41 ++++
- 7 files changed, 310 insertions(+)
- create mode 100644 drivers/platform/x86/intel_speed_select_if/Kconfig
- create mode 100644 drivers/platform/x86/intel_speed_select_if/Makefile
- create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_common.c
- create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_common.h
- create mode 100644 include/uapi/linux/isst_if.h
+ .../x86/intel_speed_select_if/Makefile        |   1 +
+ .../intel_speed_select_if/isst_if_common.c    |   6 +
+ .../intel_speed_select_if/isst_if_common.h    |   2 +
+ .../x86/intel_speed_select_if/isst_if_mmio.c  | 131 ++++++++++++++++++
+ include/uapi/linux/isst_if.h                  |  33 +++++
+ 5 files changed, 173 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 85b92a95e4c8..24c9aa4ad3d4 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1328,6 +1328,8 @@ config PCENGINES_APU2
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pcengines-apuv2.
- 
-+source "drivers/platform/x86/intel_speed_select_if/Kconfig"
-+
- endif # X86_PLATFORM_DEVICES
- 
- config PMC_ATOM
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 87b0069bd781..c43117d17fd8 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -98,3 +98,4 @@ obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
- obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
- obj-$(CONFIG_INTEL_ATOMISP2_PM)	+= intel_atomisp2_pm.o
- obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
-+obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE) += intel_speed_select_if/
-diff --git a/drivers/platform/x86/intel_speed_select_if/Kconfig b/drivers/platform/x86/intel_speed_select_if/Kconfig
-new file mode 100644
-index 000000000000..7fc1165ad4c9
---- /dev/null
-+++ b/drivers/platform/x86/intel_speed_select_if/Kconfig
-@@ -0,0 +1,17 @@
-+menu "Intel Speed Select Technology interface support"
-+	depends on PCI
-+	depends on X86_64 || COMPILE_TEST
-+
-+config INTEL_SPEED_SELECT_INTERFACE
-+	tristate "Intel(R) Speed Select Technology interface drivers"
-+	help
-+	  This config enables the Intel(R) Speed Select Technology interface
-+	  drivers. The Intel(R) speed select technology features are non
-+	  architectural and only supported on specific Xeon(R) servers.
-+	  These drivers provide interface to directly communicate with hardware
-+	  via MMIO and Mail boxes to enumerate and control all the speed select
-+	  features.
-+
-+	  Enable this config, if there is a need to enable and control the
-+	  Intel(R) Speed Select Technology features from the user space.
-+endmenu
 diff --git a/drivers/platform/x86/intel_speed_select_if/Makefile b/drivers/platform/x86/intel_speed_select_if/Makefile
-new file mode 100644
-index 000000000000..c12687672fc9
---- /dev/null
+index c12687672fc9..7e94919208d3 100644
+--- a/drivers/platform/x86/intel_speed_select_if/Makefile
 +++ b/drivers/platform/x86/intel_speed_select_if/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile - Intel Speed Select Interface drivers
-+# Copyright (c) 2019, Intel Corporation.
-+#
-+
-+obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE) += isst_if_common.o
+@@ -5,3 +5,4 @@
+ #
+ 
+ obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE) += isst_if_common.o
++obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE) += isst_if_mmio.o
 diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-new file mode 100644
-index 000000000000..ab2bb4862dc8
---- /dev/null
+index 72e74d72724b..3f96a3925bc6 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
 +++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-@@ -0,0 +1,182 @@
+@@ -206,6 +206,7 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
+ {
+ 	void __user *argp = (void __user *)arg;
+ 	struct isst_if_cmd_cb cmd_cb;
++	struct isst_if_cmd_cb *cb;
+ 	long ret = -ENOTTY;
+ 
+ 	switch (cmd) {
+@@ -218,6 +219,11 @@ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
+ 		cmd_cb.cmd_callback = isst_if_proc_phyid_req;
+ 		ret = isst_if_exec_multi_cmd(argp, &cmd_cb);
+ 		break;
++	case ISST_IF_IO_CMD:
++		cb = &punit_callbacks[ISST_IF_DEV_MMIO];
++		if (cb->registered)
++			ret = isst_if_exec_multi_cmd(argp, cb);
++		break;
+ 	default:
+ 		break;
+ 	}
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
+index dade77c58b22..cdc7d019748a 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
+@@ -10,6 +10,8 @@
+ #ifndef __ISST_IF_COMMON_H
+ #define __ISST_IF_COMMON_H
+ 
++#define INTEL_RAPL_PRIO_DEVID_0	0x3451
++
+ /*
+  * Validate maximum commands in a single request.
+  * This is enough to handle command to every core in one ioctl, or all
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
+new file mode 100644
+index 000000000000..1c25a1235b9e
+--- /dev/null
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
+@@ -0,0 +1,131 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Intel Speed Select Interface: Common functions
++ * Intel Speed Select Interface: MMIO Interface
 + * Copyright (c) 2019, Intel Corporation.
 + * All rights reserved.
 + *
 + * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 + */
 +
-+#include <linux/fs.h>
-+#include <linux/miscdevice.h>
 +#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/sched/signal.h>
 +#include <linux/uaccess.h>
 +#include <uapi/linux/isst_if.h>
 +
 +#include "isst_if_common.h"
 +
-+static struct isst_if_cmd_cb punit_callbacks[ISST_IF_DEV_MAX];
-+
-+static int isst_if_get_platform_info(void __user *argp)
-+{
-+	struct isst_if_platform_info info;
-+
-+	info.api_version = ISST_IF_API_VERSION,
-+	info.driver_version = ISST_IF_DRIVER_VERSION,
-+	info.max_cmds_per_ioctl = ISST_IF_CMD_LIMIT,
-+	info.mbox_supported = punit_callbacks[ISST_IF_DEV_MBOX].registered;
-+	info.mmio_supported = punit_callbacks[ISST_IF_DEV_MMIO].registered;
-+
-+	if (copy_to_user(argp, &info, sizeof(info)))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
-+static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
-+			      unsigned long arg)
-+{
-+	void __user *argp = (void __user *)arg;
-+	long ret = -ENOTTY;
-+
-+	switch (cmd) {
-+	case ISST_IF_GET_PLATFORM_INFO:
-+		ret = isst_if_get_platform_info(argp);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static DEFINE_MUTEX(punit_misc_dev_lock);
-+static int misc_usage_count;
-+static int misc_device_ret;
-+static int misc_device_open;
-+
-+static int isst_if_open(struct inode *inode, struct file *file)
-+{
-+	int i, ret = 0;
-+
-+	/* Fail open, if a module is going away */
-+	mutex_lock(&punit_misc_dev_lock);
-+	for (i = 0; i < ISST_IF_DEV_MAX; ++i) {
-+		struct isst_if_cmd_cb *cb = &punit_callbacks[i];
-+
-+		if (cb->registered && !try_module_get(cb->owner)) {
-+			ret = -ENODEV;
-+			break;
-+		}
-+	}
-+	if (ret) {
-+		int j;
-+
-+		for (j = 0; j < i; ++j) {
-+			struct isst_if_cmd_cb *cb;
-+
-+			cb = &punit_callbacks[j];
-+			if (cb->registered)
-+				module_put(cb->owner);
-+		}
-+	} else {
-+		misc_device_open++;
-+	}
-+	mutex_unlock(&punit_misc_dev_lock);
-+
-+	return ret;
-+}
-+
-+static int isst_if_relase(struct inode *inode, struct file *f)
-+{
-+	int i;
-+
-+	mutex_lock(&punit_misc_dev_lock);
-+	misc_device_open--;
-+	for (i = 0; i < ISST_IF_DEV_MAX; ++i) {
-+		struct isst_if_cmd_cb *cb = &punit_callbacks[i];
-+
-+		if (cb->registered)
-+			module_put(cb->owner);
-+	}
-+	mutex_unlock(&punit_misc_dev_lock);
-+
-+	return 0;
-+}
-+
-+static const struct file_operations isst_if_char_driver_ops = {
-+	.open = isst_if_open,
-+	.unlocked_ioctl = isst_if_def_ioctl,
-+	.release = isst_if_relase,
++struct isst_if_device {
++	void __iomem *punit_mmio;
++	struct mutex mutex;
 +};
 +
-+static struct miscdevice isst_if_char_driver = {
-+	.minor		= MISC_DYNAMIC_MINOR,
-+	.name		= "isst_interface",
-+	.fops		= &isst_if_char_driver_ops,
-+};
-+
-+/**
-+ * isst_if_cdev_register() - Register callback for IOCTL
-+ * @device_type: The device type this callback handling.
-+ * @cb:	Callback structure.
-+ *
-+ * This function registers a callback to device type. On very first call
-+ * it will register a misc device, which is used for user kernel interface.
-+ * Other calls simply increment ref count. Registry will fail, if the user
-+ * already opened misc device for operation. Also if the misc device
-+ * creation failed, then it will not try again and all callers will get
-+ * failure code.
-+ *
-+ * Return: Return the return value from the misc creation device or -EINVAL
-+ * for unsupported device type.
-+ */
-+int isst_if_cdev_register(int device_type, struct isst_if_cmd_cb *cb)
++static long isst_if_mmio_rd_wr(u8 *cmd_ptr, int *write_only, int resume)
 +{
-+	if (misc_device_ret)
-+		return misc_device_ret;
++	struct isst_if_device *punit_dev;
++	struct isst_if_io_reg *io_reg;
++	struct pci_dev *pdev;
 +
-+	if (device_type >= ISST_IF_DEV_MAX)
++	io_reg = (struct isst_if_io_reg *)cmd_ptr;
++	if (io_reg->reg < 0x04 || io_reg->reg > 0xD0)
 +		return -EINVAL;
 +
-+	mutex_lock(&punit_misc_dev_lock);
-+	if (misc_device_open) {
-+		mutex_unlock(&punit_misc_dev_lock);
-+		return -EAGAIN;
-+	}
-+	if (!misc_usage_count) {
-+		misc_device_ret = misc_register(&isst_if_char_driver);
-+		if (misc_device_ret)
-+			goto unlock_exit;
-+	}
-+	memcpy(&punit_callbacks[device_type], cb, sizeof(*cb));
-+	punit_callbacks[device_type].registered = 1;
-+	misc_usage_count++;
-+unlock_exit:
-+	mutex_unlock(&punit_misc_dev_lock);
++	if (io_reg->read_write && !capable(CAP_SYS_ADMIN))
++		return -EPERM;
 +
-+	return misc_device_ret;
++	pdev = isst_if_get_pci_dev(io_reg->logical_cpu, 0, 0, 1);
++	if (!pdev)
++		return -EINVAL;
++
++	punit_dev = pci_get_drvdata(pdev);
++	if (!punit_dev)
++		return -EINVAL;
++
++	/*
++	 * Ensure that operation is complete on a PCI device to avoid read
++	 * write race by using per PCI device mutex.
++	 */
++	mutex_lock(&punit_dev->mutex);
++	if (io_reg->read_write) {
++		writel(io_reg->value, punit_dev->punit_mmio+io_reg->reg);
++		*write_only = 1;
++	} else {
++		io_reg->value = readl(punit_dev->punit_mmio+io_reg->reg);
++		*write_only = 0;
++	}
++	mutex_unlock(&punit_dev->mutex);
++
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(isst_if_cdev_register);
 +
-+/**
-+ * isst_if_cdev_unregister() - Unregister callback for IOCTL
-+ * @device_type: The device type to unregister.
-+ *
-+ * This function unregisters the previously registered callback. If this
-+ * is the last callback unregistering, then misc device is removed.
-+ *
-+ * Return: None.
-+ */
-+void isst_if_cdev_unregister(int device_type)
++static const struct pci_device_id isst_if_ids[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_0)},
++	{ 0 },
++};
++MODULE_DEVICE_TABLE(pci, isst_if_ids);
++
++static int isst_if_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 +{
-+	mutex_lock(&punit_misc_dev_lock);
-+	misc_usage_count--;
-+	punit_callbacks[device_type].registered = 0;
-+	if (!misc_usage_count && !misc_device_ret)
-+		misc_deregister(&isst_if_char_driver);
-+	mutex_unlock(&punit_misc_dev_lock);
++	struct isst_if_device *punit_dev;
++	struct isst_if_cmd_cb cb;
++	u32 mmio_base, pcu_base;
++	u64 base_addr;
++	int ret;
++
++	punit_dev = devm_kzalloc(&pdev->dev, sizeof(*punit_dev), GFP_KERNEL);
++	if (!punit_dev)
++		return -ENOMEM;
++
++	ret = pcim_enable_device(pdev);
++	if (ret)
++		return ret;
++
++	ret = pci_read_config_dword(pdev, 0xD0, &mmio_base);
++	if (ret)
++		return ret;
++
++	ret = pci_read_config_dword(pdev, 0xFC, &pcu_base);
++	if (ret)
++		return ret;
++
++	pcu_base &= GENMASK(10, 0);
++	base_addr = (u64)mmio_base << 23 | (u64) pcu_base << 12;
++	punit_dev->punit_mmio = devm_ioremap(&pdev->dev, base_addr, 256);
++	if (!punit_dev->punit_mmio)
++		return -ENOMEM;
++
++	mutex_init(&punit_dev->mutex);
++	pci_set_drvdata(pdev, punit_dev);
++
++	memset(&cb, 0, sizeof(cb));
++	cb.cmd_size = sizeof(struct isst_if_io_reg);
++	cb.offset = offsetof(struct isst_if_io_regs, io_reg);
++	cb.cmd_callback = isst_if_mmio_rd_wr;
++	cb.owner = THIS_MODULE;
++	ret = isst_if_cdev_register(ISST_IF_DEV_MMIO, &cb);
++	if (ret)
++		mutex_destroy(&punit_dev->mutex);
++
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(isst_if_cdev_unregister);
++
++static void isst_if_remove(struct pci_dev *pdev)
++{
++	struct isst_if_device *punit_dev;
++
++	punit_dev = pci_get_drvdata(pdev);
++	isst_if_cdev_unregister(ISST_IF_DEV_MBOX);
++	mutex_destroy(&punit_dev->mutex);
++}
++
++static struct pci_driver isst_if_pci_driver = {
++	.name			= "isst_if_pci",
++	.id_table		= isst_if_ids,
++	.probe			= isst_if_probe,
++	.remove			= isst_if_remove,
++};
++
++module_pci_driver(isst_if_pci_driver);
 +
 +MODULE_LICENSE("GPL v2");
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-new file mode 100644
-index 000000000000..11f339226fb4
---- /dev/null
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-@@ -0,0 +1,60 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Intel Speed Select Interface: Drivers Internal defines
-+ * Copyright (c) 2019, Intel Corporation.
-+ * All rights reserved.
-+ *
-+ * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-+ */
-+
-+#ifndef __ISST_IF_COMMON_H
-+#define __ISST_IF_COMMON_H
-+
-+/*
-+ * Validate maximum commands in a single request.
-+ * This is enough to handle command to every core in one ioctl, or all
-+ * possible message id to one CPU. Limit is also helpful for resonse time
-+ * per IOCTL request, as PUNIT may take different times to process each
-+ * request and may hold for long for too many commands.
-+ */
-+#define ISST_IF_CMD_LIMIT	64
-+
-+#define ISST_IF_API_VERSION	0x01
-+#define ISST_IF_DRIVER_VERSION	0x01
-+
-+#define ISST_IF_DEV_MBOX	0
-+#define ISST_IF_DEV_MMIO	1
-+#define ISST_IF_DEV_MAX		2
-+
-+/**
-+ * struct isst_if_cmd_cb - Used to register a IOCTL handler
-+ * @registered:	Used by the common code to store registry. Caller don't
-+ *		to touch this field
-+ * @cmd_size:	The command size of the individual command in IOCTL
-+ * @offset:	Offset to the first valid member in command structure.
-+ *		This will be the offset of the start of the command
-+ *		after command count field
-+ * @cmd_callback: Callback function to handle IOCTL. The callback has the
-+ *		command pointer with data for command. There is a pointer
-+ *		called write_only, which when set, will not copy the
-+ *		response to user ioctl buffer. The "resume" argument
-+ *		can be used to avoid storing the command for replay
-+ *		during system resume
-+ *
-+ * This structure is used to register an handler for IOCTL. To avoid
-+ * code duplication common code handles all the IOCTL command read/write
-+ * including handling multiple command in single IOCTL. The caller just
-+ * need to execute a command via the registered callback.
-+ */
-+struct isst_if_cmd_cb {
-+	int registered;
-+	int cmd_size;
-+	int offset;
-+	struct module *owner;
-+	long (*cmd_callback)(u8 *ptr, int *write_only, int resume);
-+};
-+
-+/* Internal interface functions */
-+int isst_if_cdev_register(int type, struct isst_if_cmd_cb *cb);
-+void isst_if_cdev_unregister(int type);
-+#endif
++MODULE_DESCRIPTION("Intel speed select interface mmio driver");
 diff --git a/include/uapi/linux/isst_if.h b/include/uapi/linux/isst_if.h
-new file mode 100644
-index 000000000000..fa94480b5f74
---- /dev/null
+index 15d1f286a830..fe2492ade078 100644
+--- a/include/uapi/linux/isst_if.h
 +++ b/include/uapi/linux/isst_if.h
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Intel Speed Select Interface: OS to hardware Interface
-+ * Copyright (c) 2019, Intel Corporation.
-+ * All rights reserved.
-+ *
-+ * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-+ */
-+
-+#ifndef __ISST_IF_H
-+#define __ISST_IF_H
-+
-+#include <linux/types.h>
-+
+@@ -63,7 +63,40 @@ struct isst_if_cpu_maps {
+ 	struct isst_if_cpu_map cpu_map[1];
+ };
+ 
 +/**
-+ * struct isst_if_platform_info - Define platform information
-+ * @api_version:	Version of the firmware document, which this driver
-+ *			can communicate
-+ * @driver_version:	Driver version, which will help user to send right
-+ *			commands. Even if the firmware is capable, driver may
-+ *			not be ready
-+ * @max_cmds_per_ioctl:	Returns the maximum number of commands driver will
-+ *			accept in a single ioctl
-+ * @mbox_supported:	Support of mail box interface
-+ * @mmio_supported:	Support of mmio interface for core-power feature
++ * struct isst_if_io_reg - Read write PUNIT IO register
++ * @read_write:		Value 0: Read, 1: Write
++ * @logical_cpu:	Logical CPU number to get target PCI device.
++ * @reg:		PUNIT register offset
++ * @value:		For write operation value to write and for
++ *			for read placeholder read value
 + *
-+ * Used to return output of IOCTL ISST_IF_GET_PLATFORM_INFO. This
-+ * information can be used by the user space, to get the driver, firmware
-+ * support and also number of commands to send in a single IOCTL request.
++ * Structure to specify read/write data to PUNIT registers.
 + */
-+struct isst_if_platform_info {
-+	__u16 api_version;
-+	__u16 driver_version;
-+	__u16 max_cmds_per_ioctl;
-+	__u8 mbox_supported;
-+	__u8 mmio_supported;
++struct isst_if_io_reg {
++	__u32 read_write; /* Read:0, Write:1 */
++	__u32 logical_cpu;
++	__u32 reg;
++	__u32 value;
 +};
 +
-+#define ISST_IF_MAGIC			0xFE
-+#define ISST_IF_GET_PLATFORM_INFO	_IOR(ISST_IF_MAGIC, 0, struct isst_if_platform_info *)
-+#endif
++/**
++ * struct isst_if_io_regs - structure for IO register commands
++ * @cmd_count:	Number of io reg commands in io_reg[]
++ * @io_reg[]:	Holds one or more io_reg command structure
++ *
++ * This structure used with ioctl ISST_IF_IO_CMD to send
++ * one or more read/write commands to PUNIT. Here IOCTL return value
++ * indicates number of requests sent or error number if no requests have
++ * been sent.
++ */
++struct isst_if_io_regs {
++	__u32 req_count;
++	struct isst_if_io_reg io_reg[1];
++};
++
+ #define ISST_IF_MAGIC			0xFE
+ #define ISST_IF_GET_PLATFORM_INFO	_IOR(ISST_IF_MAGIC, 0, struct isst_if_platform_info *)
+ #define ISST_IF_GET_PHY_ID		_IOWR(ISST_IF_MAGIC, 1, struct isst_if_cpu_map *)
++#define ISST_IF_IO_CMD		_IOW(ISST_IF_MAGIC, 2, struct isst_if_io_regs *)
+ #endif
 -- 
 2.17.2
