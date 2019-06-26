@@ -1,101 +1,71 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 43/51] platform/mellanox: mlxreg-hotplug: Add devm_free_irq call to remove flow
-Date: Tue, 25 Jun 2019 23:40:59 -0400
-Message-ID: <20190626034117.23247-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 41/51] platform/x86: intel-vbtn: Report switch events when event wakes device
+Date: Tue, 25 Jun 2019 23:40:57 -0400
+Message-ID: <20190626034117.23247-41-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Vadim Pasternak <vadimp@mellanox.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Mathew King <mathewk@chromium.org>, Jett Rink <jettrink@chromium.org>, Mario Limonciello <mario.limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Vadim Pasternak <vadimp@mellanox.com>
+From: Mathew King <mathewk@chromium.org>
 
-[ Upstream commit 8c2eb7b6468ad4aa5600aed01aa0715f921a3f8b ]
+[ Upstream commit cb1921b17adbe6509538098ac431033378cd7165 ]
 
-Add devm_free_irq() call to mlxreg-hotplug remove() for clean release
-of devices irq resource. Fix debugobjects warning triggered by rmmod
-It prevents of use-after-free memory, related to
-mlxreg_hotplug_work_handler.
+When a switch event, such as tablet mode/laptop mode or docked/undocked,
+wakes a device make sure that the value of the swich is reported.
+Without when a device is put in tablet mode from laptop mode when it is
+suspended or vice versa the device will wake up but mode will be
+incorrect.
 
-Issue has been reported as debugobjects warning triggered by
-'rmmod mlxtreg-hotplug' flow, while running kernel with
-CONFIG_DEBUG_OBJECTS* options.
+Tested by suspending a device in laptop mode and putting it in tablet
+mode, the device resumes and is in tablet mode. When suspending the
+device in tablet mode and putting it in laptop mode the device resumes
+and is in laptop mode.
 
-[ 2489.623551] ODEBUG: free active (active state 0) object type: work_struct hint: mlxreg_hotplug_work_handler+0x0/0x7f0 [mlxreg_hotplug]
-[ 2489.637097] WARNING: CPU: 5 PID: 3924 at lib/debugobjects.c:328 debug_print_object+0xfe/0x180
-[ 2489.637165] RIP: 0010:debug_print_object+0xfe/0x180
-?
-[ 2489.637214] Call Trace:
-[ 2489.637225]  __debug_check_no_obj_freed+0x25e/0x320
-[ 2489.637231]  kfree+0x82/0x110
-[ 2489.637238]  release_nodes+0x33c/0x4e0
-[ 2489.637242]  ? devres_remove_group+0x1b0/0x1b0
-[ 2489.637247]  device_release_driver_internal+0x146/0x270
-[ 2489.637251]  driver_detach+0x73/0xe0
-[ 2489.637254]  bus_remove_driver+0xa1/0x170
-[ 2489.637261]  __x64_sys_delete_module+0x29e/0x320
-[ 2489.637265]  ? __ia32_sys_delete_module+0x320/0x320
-[ 2489.637268]  ? blkcg_exit_queue+0x20/0x20
-[ 2489.637273]  ? task_work_run+0x7d/0x100
-[ 2489.637278]  ? exit_to_usermode_loop+0x5b/0xf0
-[ 2489.637281]  do_syscall_64+0x73/0x160
-[ 2489.637287]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 2489.637290] RIP: 0033:0x7f95c3596fd7
-
-The difference in release flow with and with no devm_free_irq is listed
-below:
-
-bus: 'platform': remove driver mlxreg-hotplug
- mlxreg_hotplug_remove(start)
-					-> devm_free_irq (with new code)
- mlxreg_hotplug_remove (end)
- release_nodes (start)
-  mlxreg-hotplug: DEVRES REL devm_hwmon_release (8 bytes)
-  device: 'hwmon3': device_unregister
-  PM: Removing info for No Bus:hwmon3
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (88 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (6 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_irq_release (16 bytes) (no new code)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (1376 bytes)
-   ------------[ cut here ]------------ (no new code):
-   ODEBUG: free active (active state 0) object type: work_struct hint: mlxreg_hotplug_work_handler
-
- release_nodes(end)
-driver: 'mlxreg-hotplug': driver_release
-
-Fixes: 1f976f6978bf ("platform/x86: Move Mellanox platform hotplug driver to platform/mellanox")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Mathew King <mathewk@chromium.org>
+Reviewed-by: Jett Rink <jettrink@chromium.org>
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/mellanox/mlxreg-hotplug.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index 687ce6817d0d..f85a1b9d129b 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -694,6 +694,7 @@ static int mlxreg_hotplug_remove(struct platform_device *pdev)
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 06cd7e818ed5..a0d0cecff55f 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	struct platform_device *device = context;
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+ 	unsigned int val = !(event & 1); /* Even=press, Odd=release */
+-	const struct key_entry *ke_rel;
++	const struct key_entry *ke, *ke_rel;
+ 	bool autorelease;
  
- 	/* Clean interrupts setup. */
- 	mlxreg_hotplug_unset_irq(priv);
-+	devm_free_irq(&pdev->dev, priv->irq, priv);
- 
- 	return 0;
- }
+ 	if (priv->wakeup_mode) {
+-		if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
++		ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
++		if (ke) {
+ 			pm_wakeup_hard_event(&device->dev);
++
++			/*
++			 * Switch events like tablet mode will wake the device
++			 * and report the new switch position to the input
++			 * subsystem.
++			 */
++			if (ke->type == KE_SW)
++				sparse_keymap_report_event(priv->input_dev,
++							   event,
++							   val,
++							   0);
+ 			return;
+ 		}
+ 		goto out_unknown;
 -- 
 2.20.1
