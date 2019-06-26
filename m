@@ -1,34 +1,138 @@
-From: Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v2] Documentation: platform: Delete
- x86-laptop-drivers.txt
-Date: Wed, 26 Jun 2019 11:41:40 -0600
-Message-ID: <20190626114140.52af4bb5@lwn.net>
-References: <20190620183827.23704-1-puranjay12@gmail.com>
-        <CAHp75Ve+v7o=Ar=5Vc7yZndCxUNf3sn8YwpCHXMwdeJxuLKMoA@mail.gmail.com>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 00/10] Intel(R) Speed Select Technology
+Date: Wed, 26 Jun 2019 15:38:41 -0700
+Message-ID: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve+v7o=Ar=5Vc7yZndCxUNf3sn8YwpCHXMwdeJxuLKMoA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Puranjay Mohan <puranjay12@gmail.com>, Shuah Khan <skhan@linuxfoundation.org>, Greg KH <gregkh@linuxfoundation.org>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Linux Documentation List <linux-doc@vger.kernel.org>, linux-kernel-mentees@lists.linuxfoundation.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: dvhart@infradead.org, andy@infradead.org, andriy.shevchenko@intel.com, corbet@lwn.net
+Cc: rjw@rjwysocki.net, alan@linux.intel.com, lenb@kernel.org, prarit@redhat.com, darcari@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 20 Jun 2019 22:50:17 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Intel® Speed Select Technology (Intel® SST) — A powerful new collection of
+features giving more granular control over CPU performance for optimized total
+cost of ownership and performance. With Intel® SST, one server can be configured 
+for power and performance for variety of diverse workload requirements. In the 
+Linux submission code. we are using ISST to specify Intel® SST to avoid confusion 
+with existing use of SST for "Smart Sound Technology".
 
-> On Thu, Jun 20, 2019 at 9:38 PM Puranjay Mohan <puranjay12@gmail.com> wrote:
-> >
-> > The list of laptops supported by drivers in PDx86 subsystem is quite
-> > big and growing. x86-laptop-drivers.txt contains details of very few
-> > laptop models. Remove it because it does not  serve any purpose.
-> >  
-> 
-> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> > Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+Refer to these links for overview of the technology released with some Intel® Xeon®
+Scalable processor (5218N, 6230N, and 6252N):
+https://www.intel.com/content/www/us/en/architecture-and-technology/speed-select-technology-article.html
+https://builders.intel.com/docs/networkbuilders/intel-speed-select-technology-base-frequency-enhancing-performance.pdf
 
-I have applied this, thanks.
+The next generation of Intel® Xeon® processors are adding more features to the
+Intel® Speed Select Technology and allow dynamic configuration of these features
+from OS-software level instead from BIOS. This submission is adding new features
+and dynamic configuration capabilities .
 
-jon
+
+Intel SST Features:
+
+Intel® SST—Performance Profile (PP or perf-profile):
+This feature allows one server to be configured for different workload requirements
+instead of deploying different servers based on the workload requirement reducing total
+cost of ownership. With a single server deployed, the same server can be reconfigured
+dynamically to one of the supported profiles to suit the specific workload requirements.
+This feature introduces a mechanism that allows multiple optimized performance profiles 
+per system via static and/or dynamic adjustment of TDP level and other performance
+parameters.
+
+Intel® SST—Core power (CP or core-power):
+An Interface that allows user to define per core priority. This defines a mechanism
+to distribute power among cores when there is a power constrained scenario. This defines
+a class of service configuration. Each CPU core can be tied to a class of service and hence
+an associated priority.
+
+Intel® SST—Base Frequency (BF or base-freq):
+The Intel® SST-BF feature lets user control and direct base frequency. If some critical
+workload threads demand constant high guaranteed performance, then this feature can be
+used to execute the thread at higher base frequency on specific set of CPUs.
+
+Intel® SST—Turbo frequency (TF or turbo-freq):
+Enables the ability to set different all core turbo ratio limits to cores based on the priority.
+Using this features some cores can be configured to get higher turbo frequency by designating
+them as high priority at the cost of lower or no turbo frequency on the low priority cores.
+
+Implementation
+
+The Intel® SST features are implemented in the firmware executing in the the power
+management unit (we are calling PUNIT here for short). The mechanism to control these
+features are specific to firmware implementation for Intel® Xeon® CPUs and are not architectural
+features. The interface mechanism and semantics of the messages can change in future Xeon 
+CPUs. Hence there is minimal kernel implementation by offering direct communication
+to PUNIT via set of IOCTLs. The actual messages which can be sent to PUNIT are specified
+in the following document link:
+
+https://github.com/intel/CommsPowerManagement/blob/master/intel_sst_os_interface/mailbox.md
+
+The idea here is that user space software like cloud orchestration software based on their workload
+requirement configure the system. There is a full featured "Intel Speed Select" utility
+submitted to kernel power tools, which can be used to validate and exercise the features.
+
+Types of PUNIT interfaces
+There are two types of interfaces. One using Mail box communications, which is facilitated
+by a PCI device or in some Xeon® CPUs using MSRs; and other using an MMIO interface, which is
+used primarily for core prioritization. For hiding details a single character device is created
+to handle IOCTLs. The following block diagram shows the implementation overview.
+
+
+User		User Space tool(intel-speed-select)/Cloud Orchestration software
+					   IOCTLs	
+---------------------------------------character device------------------------------
+kernel				Common driver handling IOCTLs
+			Mail Box drivers(PCI & MSR)	PCI MMIO driver 
+--------------------------------------------------------------------------
+Hardware				    PUNIT
+
+
+
+Srinivas Pandruvada (10):
+  platform/x86: ISST: Update ioctl-number.txt for Intel Speed Select
+    interface
+  platform/x86: ISST: Add common API to register and handle ioctls
+  platform/x86: ISST: Store per CPU information
+  platform/x86: ISST: Add IOCTL to Translate Linux logical CPU to PUNIT
+    CPU number
+  platform/x86: ISST: Add Intel Speed Select mmio interface
+  platform/x86: ISST: Add Intel Speed Select mailbox interface via PCI
+  platform/x86: ISST: Add Intel Speed Select mailbox interface via MSRs
+  platform/x86: ISST: Add Intel Speed Select PUNIT MSR interface
+  platform/x86: ISST: Restore state on resume
+  tools/power/x86: A tool to validate Intel Speed Select commands
+
+ Documentation/ioctl/ioctl-number.txt          |    1 +
+ drivers/platform/x86/Kconfig                  |    2 +
+ drivers/platform/x86/Makefile                 |    1 +
+ .../x86/intel_speed_select_if/Kconfig         |   17 +
+ .../x86/intel_speed_select_if/Makefile        |   10 +
+ .../intel_speed_select_if/isst_if_common.c    |  672 +++++++
+ .../intel_speed_select_if/isst_if_common.h    |   69 +
+ .../intel_speed_select_if/isst_if_mbox_msr.c  |  216 +++
+ .../intel_speed_select_if/isst_if_mbox_pci.c  |  214 +++
+ .../x86/intel_speed_select_if/isst_if_mmio.c  |  180 ++
+ include/uapi/linux/isst_if.h                  |  172 ++
+ tools/power/x86/intel_speed_select/Makefile   |   31 +
+ tools/power/x86/intel_speed_select/isst.h     |  231 +++
+ .../x86/intel_speed_select/isst_config.c      | 1607 +++++++++++++++++
+ .../power/x86/intel_speed_select/isst_core.c  |  721 ++++++++
+ .../x86/intel_speed_select/isst_display.c     |  479 +++++
+ 16 files changed, 4623 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/Kconfig
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/Makefile
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_common.h
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_mbox_msr.c
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
+ create mode 100644 include/uapi/linux/isst_if.h
+ create mode 100644 tools/power/x86/intel_speed_select/Makefile
+ create mode 100644 tools/power/x86/intel_speed_select/isst.h
+ create mode 100644 tools/power/x86/intel_speed_select/isst_config.c
+ create mode 100644 tools/power/x86/intel_speed_select/isst_core.c
+ create mode 100644 tools/power/x86/intel_speed_select/isst_display.c
+
+-- 
+2.17.2
