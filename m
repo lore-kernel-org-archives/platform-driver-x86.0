@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 01/10] platform/x86: ISST: Update ioctl-number.txt for Intel Speed Select interface
-Date: Wed, 26 Jun 2019 15:38:42 -0700
-Message-ID: <20190626223851.19138-2-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 04/10] platform/x86: ISST: Add IOCTL to Translate Linux logical CPU to PUNIT CPU number
+Date: Wed, 26 Jun 2019 15:38:45 -0700
+Message-ID: <20190626223851.19138-5-srinivas.pandruvada@linux.intel.com>
 References: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
@@ -10,22 +10,148 @@ To: dvhart@infradead.org, andy@infradead.org, andriy.shevchenko@intel.com, corbe
 Cc: rjw@rjwysocki.net, alan@linux.intel.com, lenb@kernel.org, prarit@redhat.com, darcari@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Reserve ioctl numbers for intel Speed Select Technology interface
-drivers.
+Add processing for IOCTL command ISST_IF_GET_PHY_ID. This converts from the
+Linux logical CPU to PUNIT CPU numbering scheme.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- Documentation/ioctl/ioctl-number.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../intel_speed_select_if/isst_if_common.c    | 74 +++++++++++++++++++
+ include/uapi/linux/isst_if.h                  | 28 +++++++
+ 2 files changed, 102 insertions(+)
 
-diff --git a/Documentation/ioctl/ioctl-number.txt b/Documentation/ioctl/ioctl-number.txt
-index c9558146ac58..ab0b3f686454 100644
---- a/Documentation/ioctl/ioctl-number.txt
-+++ b/Documentation/ioctl/ioctl-number.txt
-@@ -348,3 +348,4 @@ Code  Seq#(hex)	Include File		Comments
- 0xF6	all	LTTng			Linux Trace Toolkit Next Generation
- 					<mailto:mathieu.desnoyers@efficios.com>
- 0xFD	all	linux/dm-ioctl.h
-+0xFE	all	linux/isst_if.h
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+index 0e16cbf685d0..72e74d72724b 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+@@ -134,16 +134,90 @@ static void isst_if_cpu_info_exit(void)
+ 	kfree(isst_cpu_info);
+ };
+ 
++static long isst_if_proc_phyid_req(u8 *cmd_ptr, int *write_only, int resume)
++{
++	struct isst_if_cpu_map *cpu_map;
++
++	cpu_map = (struct isst_if_cpu_map *)cmd_ptr;
++	if (cpu_map->logical_cpu >= nr_cpu_ids ||
++	    cpu_map->logical_cpu >= num_possible_cpus())
++		return -EINVAL;
++
++	*write_only = 0;
++	cpu_map->physical_cpu = isst_cpu_info[cpu_map->logical_cpu].punit_cpu_id;
++
++	return 0;
++}
++
++static long isst_if_exec_multi_cmd(void __user *argp, struct isst_if_cmd_cb *cb)
++{
++	unsigned char __user *ptr;
++	u32 cmd_count;
++	u8 *cmd_ptr;
++	long ret;
++	int i;
++
++	/* Each multi command has u32 command count as the first field */
++	if (copy_from_user(&cmd_count, argp, sizeof(cmd_count)))
++		return -EFAULT;
++
++	if (!cmd_count || cmd_count > ISST_IF_CMD_LIMIT)
++		return -EINVAL;
++
++	cmd_ptr = kmalloc(cb->cmd_size, GFP_KERNEL);
++	if (!cmd_ptr)
++		return -ENOMEM;
++
++	/* cb->offset points to start of the command after the command count */
++	ptr = argp + cb->offset;
++
++	for (i = 0; i < cmd_count; ++i) {
++		int wr_only;
++
++		if (signal_pending(current)) {
++			ret = -EINTR;
++			break;
++		}
++
++		if (copy_from_user(cmd_ptr, ptr, cb->cmd_size)) {
++			ret = -EFAULT;
++			break;
++		}
++
++		ret = cb->cmd_callback(cmd_ptr, &wr_only, 0);
++		if (ret)
++			break;
++
++		if (!wr_only && copy_to_user(ptr, cmd_ptr, cb->cmd_size)) {
++			ret = -EFAULT;
++			break;
++		}
++
++		ptr += cb->cmd_size;
++	}
++
++	kfree(cmd_ptr);
++
++	return i ? i : ret;
++}
++
+ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
+ 			      unsigned long arg)
+ {
+ 	void __user *argp = (void __user *)arg;
++	struct isst_if_cmd_cb cmd_cb;
+ 	long ret = -ENOTTY;
+ 
+ 	switch (cmd) {
+ 	case ISST_IF_GET_PLATFORM_INFO:
+ 		ret = isst_if_get_platform_info(argp);
+ 		break;
++	case ISST_IF_GET_PHY_ID:
++		cmd_cb.cmd_size = sizeof(struct isst_if_cpu_map);
++		cmd_cb.offset = offsetof(struct isst_if_cpu_maps, cpu_map);
++		cmd_cb.cmd_callback = isst_if_proc_phyid_req;
++		ret = isst_if_exec_multi_cmd(argp, &cmd_cb);
++		break;
+ 	default:
+ 		break;
+ 	}
+diff --git a/include/uapi/linux/isst_if.h b/include/uapi/linux/isst_if.h
+index fa94480b5f74..15d1f286a830 100644
+--- a/include/uapi/linux/isst_if.h
++++ b/include/uapi/linux/isst_if.h
+@@ -36,6 +36,34 @@ struct isst_if_platform_info {
+ 	__u8 mmio_supported;
+ };
+ 
++/**
++ * struct isst_if_cpu_map - CPU mapping between logical and physical CPU
++ * @logical_cpu:	Linux logical CPU number
++ * @physical_cpu:	PUNIT CPU number
++ *
++ * Used to convert from Linux logical CPU to PUNIT CPU numbering scheme.
++ * The PUNIT CPU number is different than APIC ID based CPU numbering.
++ */
++struct isst_if_cpu_map {
++	__u32 logical_cpu;
++	__u32 physical_cpu;
++};
++
++/**
++ * struct isst_if_cpu_maps - structure for CPU map IOCTL
++ * @cmd_count:	Number of CPU mapping command in cpu_map[]
++ * @cpu_map[]:	Holds one or more CPU map data structure
++ *
++ * This structure used with ioctl ISST_IF_GET_PHY_ID to send
++ * one or more CPU mapping commands. Here IOCTL return value indicates
++ * number of commands sent or error number if no commands have been sent.
++ */
++struct isst_if_cpu_maps {
++	__u32 cmd_count;
++	struct isst_if_cpu_map cpu_map[1];
++};
++
+ #define ISST_IF_MAGIC			0xFE
+ #define ISST_IF_GET_PLATFORM_INFO	_IOR(ISST_IF_MAGIC, 0, struct isst_if_platform_info *)
++#define ISST_IF_GET_PHY_ID		_IOWR(ISST_IF_MAGIC, 1, struct isst_if_cpu_map *)
+ #endif
 -- 
 2.17.2
