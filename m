@@ -1,52 +1,54 @@
-From: Rajat Jain <rajatja@google.com>
-Subject: Re: linux-next: Tree for May 8 (drivers/platform/x86/intel_pmc_core_plat_drv.c)
-Date: Thu, 27 Jun 2019 20:37:33 -0700
-Message-ID: <CACK8Z6FN62e041-dwri6S+-34wSOxSsTAPjRmSw44uVJhtRz-A@mail.gmail.com>
-References: <20190508173403.6088d0db@canb.auug.org.au> <fa0e68b2-b839-b187-150c-13391c197b99@infradead.org>
- <CAHp75Veq2=XA124rG8urt3eVE3pcaUm0VdsV7Mxr9zjMpa7mjg@mail.gmail.com>
- <CACK8Z6F2v8nyUYcnOrkp81WfK2D2NEmK=pcWybn1annrtqRwew@mail.gmail.com> <CAHp75Ver=TNKxh8rdJs1xQYSLNsRLfEoFtcGG6hViug=cF6s_g@mail.gmail.com>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 0/9] Some doc fixes
+Date: Fri, 28 Jun 2019 09:12:22 -0300
+Message-ID: <cover.1561723736.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ver=TNKxh8rdJs1xQYSLNsRLfEoFtcGG6hViug=cF6s_g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Linux Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ajay Gupta <ajayg@nvidia.com>, =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, linux-i2c@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-leds@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Maxime Ripard <maxime.ripard@bootlin.com>, Darren Hart <dvhart@infradead.org>, devicetree@vger.kernel.org, intel-gfx@lists.freedesktop.org, Mauro Carvalho Chehab <mchehab@infradead.org>, Rob Herring <robh+dt@kernel.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, Andy
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Andy,
-
-On Tue, Jun 11, 2019 at 12:06 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, May 9, 2019 at 2:15 AM Rajat Jain <rajatja@google.com> wrote:
->
-> > OK, NP. Just to be sure I understand,
-> >
-> > 1) Please let me know if I should send in a fix (it would be
-> > #include/linux/module.h and also add MODULE_LICENSE() I believe)?
-> > 2) Would this be lined up for next version though?
->
-> Resend a complete series based on the latest stuff we have in our
-> for-next branch.
-
-My apologies for the delay in resending. I just sent a v7 of the patch
-that was dropped:
-https://lkml.org/lkml/2019/6/27/1264
-
-Only 2 changes from the v6:
-
-#include <linux/module.h>
-
-and
-
-MODULE_LICENSE()
-
-Thanks & Best Regards,
-
-Rajat
-
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+VGhpcyBwYXRjaCBzZXJpZXMgaXMgYWdhaW5zdCBsaW51eC1uZXh0IChuZXh0LTIwMTkwNjI3KS4g
+SSBkb3VidCB0aG9zZQp3b3VsZCBhcHBseSBjbGVhbmx5IGFnYWluc3QgZG9jcyBuZXh0IHRyZWUu
+CgpTbywgcGxlYXNlIGFwcGx5IGl0IHZpYSB0aGUgc3Vic3lzdGVtIHRyZWVzLiBPdGhlcndpc2Us
+IHRoZXkgY291bGQKYmUgcHVzaGVkIGJ5IHRoZSBlbmQgb2YgdGhlIG1lcmdlIHdpbmRvdyBvciBm
+b3IgLXJjMSB2aWEgYSBkb2NzIHRyZWUuCgpNb3N0LCBpZiBub3QgYWxsIHdlcmUgSSBhbHJlYWR5
+IHNlbnQuCgoKTWF1cm8gQ2FydmFsaG8gQ2hlaGFiICg5KToKICBocnRpbWVyOiBVc2UgYSBidWxs
+ZXQgZm9yIHRoZSByZXR1cm5zIGJ1bGxldCBsaXN0CiAgZG9jczogdHJhY2U6IGZpeCBhIGJyb2tl
+biBsYWJlbAogIGRvY3M6IHNpZ25hbDogZml4IGEga2VybmVsLWRvYyBtYXJrdXAKICBkdDogbGVk
+cy1sbTM2Mjc0LnR4dDogZml4IGEgYnJva2VuIHJlZmVyZW5jZSB0byB0aS1sbXUudHh0CiAgZG9j
+czogZml4IHNvbWUgYnJva2VuIHJlZmVyZW5jZXMgZHVlIHRvIHR4dC0+cnN0IHJlbmFtZXMKICBk
+b2NzOiB2aXJ0dWFsOiB0aGVyZSBhcmUgdHdvIG9ycGhhbiBkb2NzIHRoZXJlCiAgZG9jczogZ3B1
+OiBhZGQgbXNtLWNyYXNoLWR1bXAucnN0IHRvIHRoZSBpbmRleC5yc3QgZmlsZQogIGRybTogZml4
+IGEgcmVmZXJlbmNlIGZvciBhIHJlbmFtZWQgZmlsZTogZmIvbW9kZWRiLnJzdAogIHBsYXRmb3Jt
+OiB4ODY6IGdldCByaWQgb2YgYSBub24tZXhpc3RlbnQgZG9jdW1lbnQKCiBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2lkbGUtc3RhdGVzLnR4dCAgIHwgMiArLQogRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvbGVkcy1sbTM2Mjc0LnR4dCB8IDIgKy0K
+IERvY3VtZW50YXRpb24vZ3B1L2RyaXZlcnMucnN0ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAxICsKIERvY3VtZW50YXRpb24vZ3B1L21zbS1jcmFzaC1kdW1wLnJzdCAgICAgICAgICAgICAg
+ICAgICAgfCAyIC0tCiBEb2N1bWVudGF0aW9uL3RyYWNlL2twcm9iZXRyYWNlLnJzdCAgICAgICAg
+ICAgICAgICAgICAgIHwgMSArCiBEb2N1bWVudGF0aW9uL3ZpcnR1YWwva3ZtL2FtZC1tZW1vcnkt
+ZW5jcnlwdGlvbi5yc3QgICAgIHwgMiArKwogRG9jdW1lbnRhdGlvbi92aXJ0dWFsL2t2bS92Y3B1
+LXJlcXVlc3RzLnJzdCAgICAgICAgICAgICB8IDIgKysKIGRyaXZlcnMvZ3B1L2RybS9kcm1fbW9k
+ZXMuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAyICstCiBkcml2ZXJzL2dwdS9kcm0v
+aTkxNS9pbnRlbF9ydW50aW1lX3BtLmggICAgICAgICAgICAgICAgIHwgMiArLQogZHJpdmVycy9p
+MmMvYnVzc2VzL2kyYy1udmlkaWEtZ3B1LmMgICAgICAgICAgICAgICAgICAgICB8IDIgKy0KIGRy
+aXZlcnMvcGxhdGZvcm0veDg2L0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAz
+IC0tLQoga2VybmVsL3NpZ25hbC5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB8IDIgKy0KIGtlcm5lbC90aW1lL2hydGltZXIuYyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCA3ICsrKystLS0KIDEzIGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlvbnMo
+KyksIDE0IGRlbGV0aW9ucygtKQoKLS0gCjIuMjEuMAoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
