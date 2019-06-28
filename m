@@ -1,246 +1,475 @@
 From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 0/5] Convert misc-devices, i2c, w1, spi and some markdown files to ReST
-Date: Fri, 28 Jun 2019 18:23:11 -0300
-Message-ID: <cover.1561756511.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 2/5] docs: misc-devices: convert files without extension to ReST
+Date: Fri, 28 Jun 2019 18:23:13 -0300
+Message-ID: <b7dc829809673bd8cffe0e7bbe9c9308681c6fe2.1561756511.git.mchehab+samsung@kernel.org>
+References: <cover.1561756511.git.mchehab+samsung@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1561756511.git.mchehab+samsung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@infradead.org>, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-spi@vger.kernel.org, Seth Heasley <seth.heasley@intel.com>, Ajay Gupta <ajayg@nvidia.com>, Jim Cromie <jim.cromie@gmail.com>, Neil Horman <nhorman@tuxdriver.com>, Rudolf Marek <r.marek@assembler.cz>, Andreas Werner <andreas.werner@men.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter Rosin <peda@axentia.se>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Brown <broonie@kernel.org>, linux-rtc@vger.kerne
+Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Jean Delvare <jdelvare@suse.com>, Eric Piel <eric.piel@tremplin-utc.net>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-There are some files under Documentation/ that don't end with .txt but
-as plain text files. If I did the math right, ~140 of such files make sense
-to convert, IMO. 
+Those files are also text files. Convert them to ReST and add
+to the misc-files index.rst.
 
-This series convert most of them. After this series, there will be around
-30-40 files without any extension to be converted.
-
-The results of this conversion (applied after my big conversion series)
-can be seen at:
-
-	https://www.infradead.org/~mchehab/rst_conversion/
-
-In order to make easier to merge, I'm placing one patch per subsystem,
-plus a patch for the markdown->ReST conversion.
-
-Mauro Carvalho Chehab (5):
-  docs: convert markdown documents to ReST
-  docs: misc-devices: convert files without extension to ReST
-  docs: i2c: convert to ReST and add to driver-api bookset
-  docs: w1: convert to ReST and add to the kAPI group of docs
-  docs: spi: convert to ReST and add it to the kABI bookset
-
- Documentation/ABI/stable/sysfs-bus-w1         |   2 +-
- .../ABI/stable/sysfs-driver-w1_ds28e04        |   4 +-
- .../ABI/stable/sysfs-driver-w1_ds28ea00       |   2 +-
- Documentation/IPMB.txt                        |   2 +-
- .../devicetree/bindings/i2c/i2c-mux-gpmux.txt |   2 +-
- Documentation/devicetree/writing-schema.md    | 130 ------------
- Documentation/devicetree/writing-schema.rst   | 153 ++++++++++++++
- ...entication.md => ubifs-authentication.rst} |  70 ++++---
- Documentation/hwmon/adm1021.rst               |   2 +-
- Documentation/hwmon/adm1275.rst               |   2 +-
- Documentation/hwmon/hih6130.rst               |   2 +-
- Documentation/hwmon/ibm-cffps.rst             |   2 +-
- Documentation/hwmon/lm25066.rst               |   2 +-
- Documentation/hwmon/max16064.rst              |   2 +-
- Documentation/hwmon/max16065.rst              |   2 +-
- Documentation/hwmon/max20751.rst              |   2 +-
- Documentation/hwmon/max34440.rst              |   2 +-
- Documentation/hwmon/max6650.rst               |   2 +-
- Documentation/hwmon/max8688.rst               |   2 +-
- Documentation/hwmon/menf21bmc.rst             |   2 +-
- Documentation/hwmon/pcf8591.rst               |   2 +-
- Documentation/hwmon/sht3x.rst                 |   2 +-
- Documentation/hwmon/shtc1.rst                 |   2 +-
- Documentation/hwmon/tmp103.rst                |   2 +-
- Documentation/hwmon/tps40422.rst              |   2 +-
- Documentation/hwmon/ucd9000.rst               |   2 +-
- Documentation/hwmon/ucd9200.rst               |   2 +-
- Documentation/hwmon/via686a.rst               |   2 +-
- Documentation/hwmon/zl6100.rst                |   2 +-
- .../busses/{i2c-ali1535 => i2c-ali1535.rst}   |  13 +-
- .../busses/{i2c-ali1563 => i2c-ali1563.rst}   |   3 +
- .../busses/{i2c-ali15x3 => i2c-ali15x3.rst}   |  63 +++---
- Documentation/i2c/busses/i2c-amd-mp2          |  23 ---
- Documentation/i2c/busses/i2c-amd-mp2.rst      |  25 +++
- .../i2c/busses/{i2c-amd756 => i2c-amd756.rst} |   8 +-
- .../busses/{i2c-amd8111 => i2c-amd8111.rst}   |  14 +-
- .../{i2c-diolan-u2c => i2c-diolan-u2c.rst}    |   3 +
- .../i2c/busses/{i2c-i801 => i2c-i801.rst}     |  31 ++-
- .../i2c/busses/{i2c-ismt => i2c-ismt.rst}     |  20 +-
- .../busses/{i2c-mlxcpld => i2c-mlxcpld.rst}   |   6 +
- .../busses/{i2c-nforce2 => i2c-nforce2.rst}   |  23 ++-
- .../{i2c-nvidia-gpu => i2c-nvidia-gpu.rst}    |   6 +-
- .../i2c/busses/{i2c-ocores => i2c-ocores.rst} |  22 +-
- Documentation/i2c/busses/i2c-parport          | 178 ----------------
- ...2c-parport-light => i2c-parport-light.rst} |   2 +
- Documentation/i2c/busses/i2c-parport.rst      | 190 +++++++++++++++++
- .../busses/{i2c-pca-isa => i2c-pca-isa.rst}   |   9 +-
- .../i2c/busses/{i2c-piix4 => i2c-piix4.rst}   |  14 +-
- .../busses/{i2c-sis5595 => i2c-sis5595.rst}   |  18 +-
- Documentation/i2c/busses/i2c-sis630           |  58 ------
- Documentation/i2c/busses/i2c-sis630.rst       |  64 ++++++
- .../i2c/busses/{i2c-sis96x => i2c-sis96x.rst} |  28 ++-
- .../busses/{i2c-taos-evm => i2c-taos-evm.rst} |   8 +-
- .../i2c/busses/{i2c-via => i2c-via.rst}       |  20 +-
- .../i2c/busses/{i2c-viapro => i2c-viapro.rst} |  12 +-
- Documentation/i2c/busses/index.rst            |  33 +++
- .../i2c/busses/{scx200_acb => scx200_acb.rst} |   9 +-
- .../i2c/{dev-interface => dev-interface.rst}  |  94 +++++----
- ...-considerations => dma-considerations.rst} |   0
- .../i2c/{fault-codes => fault-codes.rst}      |   4 +
- .../i2c/{functionality => functionality.rst}  |  18 +-
- ...ult-injection => gpio-fault-injection.rst} |  12 +-
- .../i2c/{i2c-protocol => i2c-protocol.rst}    |  28 ++-
- Documentation/i2c/{i2c-stub => i2c-stub.rst}  |  19 +-
- .../i2c/{i2c-topology => i2c-topology.rst}    |  68 +++---
- Documentation/i2c/index.rst                   |  38 ++++
- ...ting-devices => instantiating-devices.rst} |  45 ++--
- .../muxes/{i2c-mux-gpio => i2c-mux-gpio.rst}  |  26 +--
- ...e-parameters => old-module-parameters.rst} |  27 ++-
- ...eprom-backend => slave-eeprom-backend.rst} |   3 +-
- .../{slave-interface => slave-interface.rst}  |  32 +--
- .../{smbus-protocol => smbus-protocol.rst}    |  74 ++++---
- Documentation/i2c/{summary => summary.rst}    |   4 +-
- ...en-bit-addresses => ten-bit-addresses.rst} |   5 +
- ...pgrading-clients => upgrading-clients.rst} | 194 +++++++++---------
- .../{writing-clients => writing-clients.rst}  |  94 +++++----
- Documentation/index.rst                       |   3 +
- .../misc-devices/{eeprom => eeprom.rst}       |  43 ++--
- .../{ics932s401 => ics932s401.rst}            |   7 +-
- Documentation/misc-devices/index.rst          |   5 +
- .../misc-devices/{isl29003 => isl29003.rst}   |  15 +-
- .../misc-devices/{lis3lv02d => lis3lv02d.rst} |  20 +-
- .../misc-devices/{max6875 => max6875.rst}     |  52 +++--
- .../spi/{butterfly => butterfly.rst}          |  44 ++--
- Documentation/spi/index.rst                   |  23 +++
- Documentation/spi/{pxa2xx => pxa2xx.rst}      |  94 +++++----
- .../spi/{spi-lm70llp => spi-lm70llp.rst}      |  17 +-
- .../spi/{spi-sc18is602 => spi-sc18is602.rst}  |   5 +-
- .../spi/{spi-summary => spi-summary.rst}      | 103 ++++++----
- Documentation/spi/{spidev => spidev.rst}      |  30 ++-
- Documentation/w1/index.rst                    |  22 ++
- .../w1/masters/{ds2482 => ds2482.rst}         |  17 +-
- .../w1/masters/{ds2490 => ds2490.rst}         |   6 +-
- Documentation/w1/masters/index.rst            |  14 ++
- Documentation/w1/masters/mxc-w1               |  12 --
- Documentation/w1/masters/mxc-w1.rst           |  17 ++
- .../w1/masters/{omap-hdq => omap-hdq.rst}     |  12 +-
- .../w1/masters/{w1-gpio => w1-gpio.rst}       |  21 +-
- Documentation/w1/slaves/index.rst             |  16 ++
- .../w1/slaves/{w1_ds2406 => w1_ds2406.rst}    |   2 +
- .../w1/slaves/{w1_ds2413 => w1_ds2413.rst}    |   9 +
- Documentation/w1/slaves/w1_ds2423             |  47 -----
- Documentation/w1/slaves/w1_ds2423.rst         |  54 +++++
- .../w1/slaves/{w1_ds2438 => w1_ds2438.rst}    |  10 +-
- .../w1/slaves/{w1_ds28e04 => w1_ds28e04.rst}  |   5 +
- .../w1/slaves/{w1_ds28e17 => w1_ds28e17.rst}  |  15 +-
- .../w1/slaves/{w1_therm => w1_therm.rst}      |  11 +-
- .../w1/{w1.generic => w1-generic.rst}         |  88 ++++----
- .../w1/{w1.netlink => w1-netlink.rst}         |  83 ++++----
- MAINTAINERS                                   |  52 ++---
- Next/merge.log                                |   6 +-
- drivers/hwmon/atxp1.c                         |   2 +-
- drivers/hwmon/smm665.c                        |   2 +-
- drivers/i2c/Kconfig                           |   4 +-
- drivers/i2c/busses/Kconfig                    |   2 +-
- drivers/i2c/busses/i2c-i801.c                 |   2 +-
- drivers/i2c/busses/i2c-taos-evm.c             |   2 +-
- drivers/i2c/i2c-core-base.c                   |   4 +-
- drivers/iio/dummy/iio_simple_dummy.c          |   4 +-
- drivers/misc/isl29003.c                       |   2 +-
- drivers/platform/x86/Kconfig                  |   2 +-
- drivers/rtc/rtc-ds1374.c                      |   2 +-
- drivers/spi/Kconfig                           |   2 +-
- drivers/spi/spi-butterfly.c                   |   2 +-
- drivers/spi/spi-lm70llp.c                     |   2 +-
- include/linux/i2c.h                           |   2 +-
- include/linux/platform_data/sc18is602.h       |   2 +-
- 127 files changed, 1874 insertions(+), 1239 deletions(-)
- delete mode 100644 Documentation/devicetree/writing-schema.md
- create mode 100644 Documentation/devicetree/writing-schema.rst
- rename Documentation/filesystems/{ubifs-authentication.md => ubifs-authentication.rst} (95%)
- rename Documentation/i2c/busses/{i2c-ali1535 => i2c-ali1535.rst} (82%)
- rename Documentation/i2c/busses/{i2c-ali1563 => i2c-ali1563.rst} (93%)
- rename Documentation/i2c/busses/{i2c-ali15x3 => i2c-ali15x3.rst} (72%)
- delete mode 100644 Documentation/i2c/busses/i2c-amd-mp2
- create mode 100644 Documentation/i2c/busses/i2c-amd-mp2.rst
- rename Documentation/i2c/busses/{i2c-amd756 => i2c-amd756.rst} (79%)
- rename Documentation/i2c/busses/{i2c-amd8111 => i2c-amd8111.rst} (66%)
- rename Documentation/i2c/busses/{i2c-diolan-u2c => i2c-diolan-u2c.rst} (91%)
- rename Documentation/i2c/busses/{i2c-i801 => i2c-i801.rst} (89%)
- rename Documentation/i2c/busses/{i2c-ismt => i2c-ismt.rst} (81%)
- rename Documentation/i2c/busses/{i2c-mlxcpld => i2c-mlxcpld.rst} (88%)
- rename Documentation/i2c/busses/{i2c-nforce2 => i2c-nforce2.rst} (68%)
- rename Documentation/i2c/busses/{i2c-nvidia-gpu => i2c-nvidia-gpu.rst} (63%)
- rename Documentation/i2c/busses/{i2c-ocores => i2c-ocores.rst} (82%)
- delete mode 100644 Documentation/i2c/busses/i2c-parport
- rename Documentation/i2c/busses/{i2c-parport-light => i2c-parport-light.rst} (92%)
- create mode 100644 Documentation/i2c/busses/i2c-parport.rst
- rename Documentation/i2c/busses/{i2c-pca-isa => i2c-pca-isa.rst} (72%)
- rename Documentation/i2c/busses/{i2c-piix4 => i2c-piix4.rst} (92%)
- rename Documentation/i2c/busses/{i2c-sis5595 => i2c-sis5595.rst} (74%)
- delete mode 100644 Documentation/i2c/busses/i2c-sis630
- create mode 100644 Documentation/i2c/busses/i2c-sis630.rst
- rename Documentation/i2c/busses/{i2c-sis96x => i2c-sis96x.rst} (75%)
- rename Documentation/i2c/busses/{i2c-taos-evm => i2c-taos-evm.rst} (91%)
- rename Documentation/i2c/busses/{i2c-via => i2c-via.rst} (61%)
- rename Documentation/i2c/busses/{i2c-viapro => i2c-viapro.rst} (87%)
- create mode 100644 Documentation/i2c/busses/index.rst
- rename Documentation/i2c/busses/{scx200_acb => scx200_acb.rst} (86%)
- rename Documentation/i2c/{dev-interface => dev-interface.rst} (71%)
- rename Documentation/i2c/{DMA-considerations => dma-considerations.rst} (100%)
- rename Documentation/i2c/{fault-codes => fault-codes.rst} (98%)
- rename Documentation/i2c/{functionality => functionality.rst} (91%)
- rename Documentation/i2c/{gpio-fault-injection => gpio-fault-injection.rst} (97%)
- rename Documentation/i2c/{i2c-protocol => i2c-protocol.rst} (83%)
- rename Documentation/i2c/{i2c-stub => i2c-stub.rst} (93%)
- rename Documentation/i2c/{i2c-topology => i2c-topology.rst} (89%)
- create mode 100644 Documentation/i2c/index.rst
- rename Documentation/i2c/{instantiating-devices => instantiating-devices.rst} (93%)
- rename Documentation/i2c/muxes/{i2c-mux-gpio => i2c-mux-gpio.rst} (85%)
- rename Documentation/i2c/{old-module-parameters => old-module-parameters.rst} (75%)
- rename Documentation/i2c/{slave-eeprom-backend => slave-eeprom-backend.rst} (90%)
- rename Documentation/i2c/{slave-interface => slave-interface.rst} (94%)
- rename Documentation/i2c/{smbus-protocol => smbus-protocol.rst} (84%)
- rename Documentation/i2c/{summary => summary.rst} (96%)
- rename Documentation/i2c/{ten-bit-addresses => ten-bit-addresses.rst} (95%)
- rename Documentation/i2c/{upgrading-clients => upgrading-clients.rst} (56%)
- rename Documentation/i2c/{writing-clients => writing-clients.rst} (91%)
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ .../misc-devices/{eeprom => eeprom.rst}       | 43 +++++++++------
+ .../{ics932s401 => ics932s401.rst}            |  7 ++-
+ Documentation/misc-devices/index.rst          |  5 ++
+ .../misc-devices/{isl29003 => isl29003.rst}   | 15 +++++-
+ .../misc-devices/{lis3lv02d => lis3lv02d.rst} | 20 ++++---
+ .../misc-devices/{max6875 => max6875.rst}     | 52 ++++++++++++++-----
+ MAINTAINERS                                   |  4 +-
+ drivers/misc/isl29003.c                       |  2 +-
+ drivers/platform/x86/Kconfig                  |  2 +-
+ 9 files changed, 108 insertions(+), 42 deletions(-)
  rename Documentation/misc-devices/{eeprom => eeprom.rst} (76%)
  rename Documentation/misc-devices/{ics932s401 => ics932s401.rst} (94%)
  rename Documentation/misc-devices/{isl29003 => isl29003.rst} (77%)
  rename Documentation/misc-devices/{lis3lv02d => lis3lv02d.rst} (90%)
  rename Documentation/misc-devices/{max6875 => max6875.rst} (83%)
- rename Documentation/spi/{butterfly => butterfly.rst} (71%)
- create mode 100644 Documentation/spi/index.rst
- rename Documentation/spi/{pxa2xx => pxa2xx.rst} (83%)
- rename Documentation/spi/{spi-lm70llp => spi-lm70llp.rst} (88%)
- rename Documentation/spi/{spi-sc18is602 => spi-sc18is602.rst} (92%)
- rename Documentation/spi/{spi-summary => spi-summary.rst} (93%)
- rename Documentation/spi/{spidev => spidev.rst} (90%)
- create mode 100644 Documentation/w1/index.rst
- rename Documentation/w1/masters/{ds2482 => ds2482.rst} (71%)
- rename Documentation/w1/masters/{ds2490 => ds2490.rst} (98%)
- create mode 100644 Documentation/w1/masters/index.rst
- delete mode 100644 Documentation/w1/masters/mxc-w1
- create mode 100644 Documentation/w1/masters/mxc-w1.rst
- rename Documentation/w1/masters/{omap-hdq => omap-hdq.rst} (90%)
- rename Documentation/w1/masters/{w1-gpio => w1-gpio.rst} (75%)
- create mode 100644 Documentation/w1/slaves/index.rst
- rename Documentation/w1/slaves/{w1_ds2406 => w1_ds2406.rst} (97%)
- rename Documentation/w1/slaves/{w1_ds2413 => w1_ds2413.rst} (81%)
- delete mode 100644 Documentation/w1/slaves/w1_ds2423
- create mode 100644 Documentation/w1/slaves/w1_ds2423.rst
- rename Documentation/w1/slaves/{w1_ds2438 => w1_ds2438.rst} (93%)
- rename Documentation/w1/slaves/{w1_ds28e04 => w1_ds28e04.rst} (93%)
- rename Documentation/w1/slaves/{w1_ds28e17 => w1_ds28e17.rst} (88%)
- rename Documentation/w1/slaves/{w1_therm => w1_therm.rst} (95%)
- rename Documentation/w1/{w1.generic => w1-generic.rst} (59%)
- rename Documentation/w1/{w1.netlink => w1-netlink.rst} (79%)
 
+diff --git a/Documentation/misc-devices/eeprom b/Documentation/misc-devices/eeprom.rst
+similarity index 76%
+rename from Documentation/misc-devices/eeprom
+rename to Documentation/misc-devices/eeprom.rst
+index ba692011f221..008249675ccc 100644
+--- a/Documentation/misc-devices/eeprom
++++ b/Documentation/misc-devices/eeprom.rst
+@@ -1,11 +1,17 @@
++====================
+ Kernel driver eeprom
+ ====================
+ 
+ Supported chips:
++
+   * Any EEPROM chip in the designated address range
++
+     Prefix: 'eeprom'
++
+     Addresses scanned: I2C 0x50 - 0x57
++
+     Datasheets: Publicly available from:
++
+                 Atmel (www.atmel.com),
+                 Catalyst (www.catsemi.com),
+                 Fairchild (www.fairchildsemi.com),
+@@ -16,7 +22,9 @@ Supported chips:
+                 Xicor (www.xicor.com),
+                 and others.
+ 
+-        Chip     Size (bits)    Address
++        ========= ============= ============================================
++        Chip      Size (bits)   Address
++        ========= ============= ============================================
+         24C01     1K            0x50 (shadows at 0x51 - 0x57)
+         24C01A    1K            0x50 - 0x57 (Typical device on DIMMs)
+         24C02     2K            0x50 - 0x57
+@@ -24,7 +32,7 @@ Supported chips:
+                                 (additional data at 0x51, 0x53, 0x55, 0x57)
+         24C08     8K            0x50, 0x54 (additional data at 0x51, 0x52,
+                                 0x53, 0x55, 0x56, 0x57)
+-        24C16    16K            0x50 (additional data at 0x51 - 0x57)
++        24C16     16K           0x50 (additional data at 0x51 - 0x57)
+         Sony      2K            0x57
+ 
+         Atmel     34C02B  2K    0x50 - 0x57, SW write protect at 0x30-37
+@@ -33,14 +41,15 @@ Supported chips:
+         Fairchild 34W02   2K    0x50 - 0x57, SW write protect at 0x30-37
+         Microchip 24AA52  2K    0x50 - 0x57, SW write protect at 0x30-37
+         ST        M34C02  2K    0x50 - 0x57, SW write protect at 0x30-37
++        ========= ============= ============================================
+ 
+ 
+ Authors:
+-        Frodo Looijaard <frodol@dds.nl>,
+-        Philip Edelbrock <phil@netroedge.com>,
+-        Jean Delvare <jdelvare@suse.de>,
+-        Greg Kroah-Hartman <greg@kroah.com>,
+-        IBM Corp.
++        - Frodo Looijaard <frodol@dds.nl>,
++        - Philip Edelbrock <phil@netroedge.com>,
++        - Jean Delvare <jdelvare@suse.de>,
++        - Greg Kroah-Hartman <greg@kroah.com>,
++        - IBM Corp.
+ 
+ Description
+ -----------
+@@ -74,23 +83,25 @@ this address will write protect the memory array permanently, and the
+ device will no longer respond at the 0x30-37 address. The eeprom driver
+ does not support this register.
+ 
+-Lacking functionality:
++Lacking functionality
++---------------------
+ 
+ * Full support for larger devices (24C04, 24C08, 24C16). These are not
+-typically found on a PC. These devices will appear as separate devices at
+-multiple addresses.
++  typically found on a PC. These devices will appear as separate devices at
++  multiple addresses.
+ 
+ * Support for really large devices (24C32, 24C64, 24C128, 24C256, 24C512).
+-These devices require two-byte address fields and are not supported.
++  These devices require two-byte address fields and are not supported.
+ 
+ * Enable Writing. Again, no technical reason why not, but making it easy
+-to change the contents of the EEPROMs (on DIMMs anyway) also makes it easy
+-to disable the DIMMs (potentially preventing the computer from booting)
+-until the values are restored somehow.
++  to change the contents of the EEPROMs (on DIMMs anyway) also makes it easy
++  to disable the DIMMs (potentially preventing the computer from booting)
++  until the values are restored somehow.
+ 
+-Use:
++Use
++---
+ 
+ After inserting the module (and any other required SMBus/i2c modules), you
+-should have some EEPROM directories in /sys/bus/i2c/devices/* of names such
++should have some EEPROM directories in ``/sys/bus/i2c/devices/*`` of names such
+ as "0-0050". Inside each of these is a series of files, the eeprom file
+ contains the binary data from EEPROM.
+diff --git a/Documentation/misc-devices/ics932s401 b/Documentation/misc-devices/ics932s401.rst
+similarity index 94%
+rename from Documentation/misc-devices/ics932s401
+rename to Documentation/misc-devices/ics932s401.rst
+index bdac67ff6e3f..613ee54a9c21 100644
+--- a/Documentation/misc-devices/ics932s401
++++ b/Documentation/misc-devices/ics932s401.rst
+@@ -1,10 +1,15 @@
++========================
+ Kernel driver ics932s401
+-======================
++========================
+ 
+ Supported chips:
++
+   * IDT ICS932S401
++
+     Prefix: 'ics932s401'
++
+     Addresses scanned: I2C 0x69
++
+     Datasheet: Publicly available at the IDT website
+ 
+ Author: Darrick J. Wong
+diff --git a/Documentation/misc-devices/index.rst b/Documentation/misc-devices/index.rst
+index dfd1f45a3127..a57f92dfe49a 100644
+--- a/Documentation/misc-devices/index.rst
++++ b/Documentation/misc-devices/index.rst
+@@ -14,4 +14,9 @@ fit into other categories.
+ .. toctree::
+    :maxdepth: 2
+ 
++   eeprom
+    ibmvmc
++   ics932s401
++   isl29003
++   lis3lv02d
++   max6875
+diff --git a/Documentation/misc-devices/isl29003 b/Documentation/misc-devices/isl29003.rst
+similarity index 77%
+rename from Documentation/misc-devices/isl29003
+rename to Documentation/misc-devices/isl29003.rst
+index 80b952fd32ff..0cc38aed6c00 100644
+--- a/Documentation/misc-devices/isl29003
++++ b/Documentation/misc-devices/isl29003.rst
+@@ -1,10 +1,15 @@
++======================
+ Kernel driver isl29003
+-=====================
++======================
+ 
+ Supported chips:
++
+ * Intersil ISL29003
++
+ Prefix: 'isl29003'
++
+ Addresses scanned: none
++
+ Datasheet:
+ http://www.intersil.com/data/fn/fn7464.pdf
+ 
+@@ -37,25 +42,33 @@ Sysfs entries
+ -------------
+ 
+ range:
++        == ===========================
+ 	0: 0 lux to 1000 lux (default)
+ 	1: 0 lux to 4000 lux
+ 	2: 0 lux to 16,000 lux
+ 	3: 0 lux to 64,000 lux
++        == ===========================
+ 
+ resolution:
++        == =====================
+ 	0: 2^16 cycles (default)
+ 	1: 2^12 cycles
+ 	2: 2^8 cycles
+ 	3: 2^4 cycles
++        == =====================
+ 
+ mode:
++        == =================================================
+ 	0: diode1's current (unsigned 16bit) (default)
+ 	1: diode1's current (unsigned 16bit)
+ 	2: difference between diodes (l1 - l2, signed 15bit)
++        == =================================================
+ 
+ power_state:
++        == =================================================
+ 	0: device is disabled (default)
+ 	1: device is enabled
++        == =================================================
+ 
+ lux (read only):
+ 	returns the value from the last sensor reading
+diff --git a/Documentation/misc-devices/lis3lv02d b/Documentation/misc-devices/lis3lv02d.rst
+similarity index 90%
+rename from Documentation/misc-devices/lis3lv02d
+rename to Documentation/misc-devices/lis3lv02d.rst
+index f89960a0ff95..959bd2b822cf 100644
+--- a/Documentation/misc-devices/lis3lv02d
++++ b/Documentation/misc-devices/lis3lv02d.rst
+@@ -1,3 +1,4 @@
++=======================
+ Kernel driver lis3lv02d
+ =======================
+ 
+@@ -8,8 +9,8 @@ Supported chips:
+     LIS331DLH (16 bits)
+ 
+ Authors:
+-        Yan Burman <burman.yan@gmail.com>
+-	Eric Piel <eric.piel@tremplin-utc.net>
++        - Yan Burman <burman.yan@gmail.com>
++	- Eric Piel <eric.piel@tremplin-utc.net>
+ 
+ 
+ Description
+@@ -25,11 +26,15 @@ neverball). The accelerometer data is readable via
+ to mg values (1/1000th of earth gravity).
+ 
+ Sysfs attributes under /sys/devices/platform/lis3lv02d/:
+-position - 3D position that the accelerometer reports. Format: "(x,y,z)"
+-rate - read reports the sampling rate of the accelerometer device in HZ.
++
++position
++      - 3D position that the accelerometer reports. Format: "(x,y,z)"
++rate
++      - read reports the sampling rate of the accelerometer device in HZ.
+ 	write changes sampling rate of the accelerometer device.
+ 	Only values which are supported by HW are accepted.
+-selftest - performs selftest for the chip as specified by chip manufacturer.
++selftest
++      - performs selftest for the chip as specified by chip manufacturer.
+ 
+ This driver also provides an absolute input class device, allowing
+ the laptop to act as a pinball machine-esque joystick. Joystick device can be
+@@ -69,11 +74,12 @@ Axes orientation
+ For better compatibility between the various laptops. The values reported by
+ the accelerometer are converted into a "standard" organisation of the axes
+ (aka "can play neverball out of the box"):
++
+  * When the laptop is horizontal the position reported is about 0 for X and Y
+-	and a positive value for Z
++   and a positive value for Z
+  * If the left side is elevated, X increases (becomes positive)
+  * If the front side (where the touchpad is) is elevated, Y decreases
+-	(becomes negative)
++   (becomes negative)
+  * If the laptop is put upside-down, Z becomes negative
+ 
+ If your laptop model is not recognized (cf "dmesg"), you can send an
+diff --git a/Documentation/misc-devices/max6875 b/Documentation/misc-devices/max6875.rst
+similarity index 83%
+rename from Documentation/misc-devices/max6875
+rename to Documentation/misc-devices/max6875.rst
+index 2f2bd0b17b5d..ad419ac22a5b 100644
+--- a/Documentation/misc-devices/max6875
++++ b/Documentation/misc-devices/max6875.rst
+@@ -1,12 +1,16 @@
++=====================
+ Kernel driver max6875
+ =====================
+ 
+ Supported chips:
++
+   * Maxim MAX6874, MAX6875
++
+     Prefix: 'max6875'
++
+     Addresses scanned: None (see below)
+-    Datasheet:
+-        http://pdfserv.maxim-ic.com/en/ds/MAX6874-MAX6875.pdf
++
++    Datasheet: http://pdfserv.maxim-ic.com/en/ds/MAX6874-MAX6875.pdf
+ 
+ Author: Ben Gardner <bgardner@wabtec.com>
+ 
+@@ -24,9 +28,13 @@ registers.
+ 
+ The Maxim MAX6874 is a similar, mostly compatible device, with more inputs
+ and outputs:
+-             vin     gpi    vout
++
++===========  ===     ===    ====
++-            vin     gpi    vout
++===========  ===     ===    ====
+ MAX6874        6       4       8
+ MAX6875        4       3       5
++===========  ===     ===    ====
+ 
+ See the datasheet for more information.
+ 
+@@ -41,13 +49,16 @@ General Remarks
+ ---------------
+ 
+ Valid addresses for the MAX6875 are 0x50 and 0x52.
++
+ Valid addresses for the MAX6874 are 0x50, 0x52, 0x54 and 0x56.
++
+ The driver does not probe any address, so you explicitly instantiate the
+ devices.
+ 
+-Example:
+-$ modprobe max6875
+-$ echo max6875 0x50 > /sys/bus/i2c/devices/i2c-0/new_device
++Example::
++
++  $ modprobe max6875
++  $ echo max6875 0x50 > /sys/bus/i2c/devices/i2c-0/new_device
+ 
+ The MAX6874/MAX6875 ignores address bit 0, so this driver attaches to multiple
+ addresses.  For example, for address 0x50, it also reserves 0x51.
+@@ -58,52 +69,67 @@ Programming the chip using i2c-dev
+ ----------------------------------
+ 
+ Use the i2c-dev interface to access and program the chips.
++
+ Reads and writes are performed differently depending on the address range.
+ 
+ The configuration registers are at addresses 0x00 - 0x45.
++
+ Use i2c_smbus_write_byte_data() to write a register and
+ i2c_smbus_read_byte_data() to read a register.
++
+ The command is the register number.
+ 
+ Examples:
+-To write a 1 to register 0x45:
++
++To write a 1 to register 0x45::
++
+   i2c_smbus_write_byte_data(fd, 0x45, 1);
+ 
+-To read register 0x45:
++To read register 0x45::
++
+   value = i2c_smbus_read_byte_data(fd, 0x45);
+ 
+ 
+ The configuration EEPROM is at addresses 0x8000 - 0x8045.
++
+ The user EEPROM is at addresses 0x8100 - 0x82ff.
+ 
+ Use i2c_smbus_write_word_data() to write a byte to EEPROM.
+ 
+ The command is the upper byte of the address: 0x80, 0x81, or 0x82.
+-The data word is the lower part of the address or'd with data << 8.
++The data word is the lower part of the address or'd with data << 8::
++
+   cmd = address >> 8;
+   val = (address & 0xff) | (data << 8);
+ 
+ Example:
+-To write 0x5a to address 0x8003:
++
++To write 0x5a to address 0x8003::
++
+   i2c_smbus_write_word_data(fd, 0x80, 0x5a03);
+ 
+ 
+ Reading data from the EEPROM is a little more complicated.
++
+ Use i2c_smbus_write_byte_data() to set the read address and then
+ i2c_smbus_read_byte() or i2c_smbus_read_i2c_block_data() to read the data.
+ 
+ Example:
+-To read data starting at offset 0x8100, first set the address:
++
++To read data starting at offset 0x8100, first set the address::
++
+   i2c_smbus_write_byte_data(fd, 0x81, 0x00);
+ 
+-And then read the data
++And then read the data::
++
+   value = i2c_smbus_read_byte(fd);
+ 
+-  or
++or::
+ 
+   count = i2c_smbus_read_i2c_block_data(fd, 0x84, 16, buffer);
+ 
+ The block read should read 16 bytes.
++
+ 0x84 is the block read command.
+ 
+ See the datasheet for more details.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a49698b3becd..5d4da1035a03 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8956,7 +8956,7 @@ F:	include/linux/leds.h
+ LEGACY EEPROM DRIVER
+ M:	Jean Delvare <jdelvare@suse.com>
+ S:	Maintained
+-F:	Documentation/misc-devices/eeprom
++F:	Documentation/misc-devices/eeprom.rst
+ F:	drivers/misc/eeprom/eeprom.c
+ 
+ LEGO MINDSTORMS EV3
+@@ -9242,7 +9242,7 @@ F:	Documentation/memory-barriers.txt
+ LIS3LV02D ACCELEROMETER DRIVER
+ M:	Eric Piel <eric.piel@tremplin-utc.net>
+ S:	Maintained
+-F:	Documentation/misc-devices/lis3lv02d
++F:	Documentation/misc-devices/lis3lv02d.rst
+ F:	drivers/misc/lis3lv02d/
+ F:	drivers/platform/x86/hp_accel.c
+ 
+diff --git a/drivers/misc/isl29003.c b/drivers/misc/isl29003.c
+index 5d0d0c3bad85..c12406f610d5 100644
+--- a/drivers/misc/isl29003.c
++++ b/drivers/misc/isl29003.c
+@@ -3,7 +3,7 @@
+  *  isl29003.c - Linux kernel module for
+  * 	Intersil ISL29003 ambient light sensor
+  *
+- *  See file:Documentation/misc-devices/isl29003
++ *  See file:Documentation/misc-devices/isl29003.rst
+  *
+  *  Copyright (c) 2009 Daniel Mack <daniel@caiaq.de>
+  *
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index e09aa0087024..7fdfe107fe33 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -341,7 +341,7 @@ config HP_ACCEL
+ 
+ 	  Support for a led indicating disk protection will be provided as
+ 	  hp::hddprotect. For more information on the feature, refer to
+-	  Documentation/misc-devices/lis3lv02d.
++	  Documentation/misc-devices/lis3lv02d.rst.
+ 
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called hp_accel.
 -- 
 2.21.0
