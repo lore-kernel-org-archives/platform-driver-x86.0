@@ -1,212 +1,183 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 03/10] platform/x86: ISST: Store per CPU information
-Date: Wed, 26 Jun 2019 15:38:44 -0700
-Message-ID: <20190626223851.19138-4-srinivas.pandruvada@linux.intel.com>
-References: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
+From: Rajat Jain <rajatja@google.com>
+Subject: [PATCH v7] platform/x86: intel_pmc_core: Attach using APCI HID "INT33A1"
+Date: Thu, 27 Jun 2019 20:34:13 -0700
+Message-ID: <20190628033413.8058-1-rajatja@google.com>
+References: <CAHp75Ver=TNKxh8rdJs1xQYSLNsRLfEoFtcGG6hViug=cF6s_g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <CAHp75Ver=TNKxh8rdJs1xQYSLNsRLfEoFtcGG6hViug=cF6s_g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy@infradead.org, andriy.shevchenko@intel.com, corbet@lwn.net
-Cc: rjw@rjwysocki.net, alan@linux.intel.com, lenb@kernel.org, prarit@redhat.com, darcari@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Rafael J Wysocki <rafael.j.wysocki@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Rajat Jain <rajatja@google.com>, furquan@google.com, evgreen@google.com, rajatxjain@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-There are two per CPU data needs to be stored and cached to avoid repeated
-MSR readings for accessing them later:
+Most modern platforms already have the ACPI device "INT33A1" that could
+be used to attach to the driver. Switch the driver to using that and
+thus make the intel_pmc_core.c a pure platform_driver.
 
-- Physical to logical CPU conversion
-The PUNIT uses a different CPU numbering scheme which is not APIC id based.
-So we need to establish relationship between PUNIT CPU number and Linux
-logical CPU numbering which is based on APIC id. There is an MSR 0x53
-(MSR_THREAD_ID), which gets physical CPU number for the local CPU where it
-is read. Also the CPU mask in some messages will inform which CPUs needs
-to be online/offline for a TDP level. During TDP switch if user offlined
-some CPUs, then the physical CPU mask can't be converted as we can't
-read MSR on an offlined CPU to go to a lower TDP level by onlining more
-CPUs. So the mapping needs to be established at the boot up time.
+Some of the legacy platforms though, may still not have this ACPI device
+in their ACPI tables. Thus for such platforms, move the code to manually
+instantiate a platform_device into a new file of its own. This would
+instantiate the intel_pmc_core platform device and thus attach to
+the driver, if the ACPI device for the same ("INT33A1") is not present
+in a system where it should be. This was discussed here:
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966991.html
 
-- Bus number corresponding to a CPU
-A group of CPUs are in a control of a PUNIT. The PUNIT device is exported
-as PCI device. To do operation on a PUNIT for a CPU, we need to find out
-to which PCI device it is related to. This is done by reading MSR 0x128
-(MSR_CPU_BUS_NUMBER).
-
-So during CPU online stages the above MSRs are read and stored. Later
-this stored information is used to process IOCTLs request from the user
-space.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
- .../intel_speed_select_if/isst_if_common.c    | 114 +++++++++++++++++-
- .../intel_speed_select_if/isst_if_common.h    |   1 +
- 2 files changed, 114 insertions(+), 1 deletion(-)
+v7: Include module.h and add MODULE_LICENSE()
+v6: was here: https://patchwork.kernel.org/patch/10906387/
+    (The patchset was accepted, but this particular patch was later
+     dropped becasue it created some warnings in certain kernel
+     configurations: https://www.spinics.net/lists/linux-next/msg47611.html)
 
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-index ab2bb4862dc8..0e16cbf685d0 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-@@ -7,14 +7,22 @@
-  * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-  */
+ drivers/platform/x86/Makefile                 |  2 +-
+ drivers/platform/x86/intel_pmc_core.c         | 40 +++---------
+ .../platform/x86/intel_pmc_core_plat_drv.c    | 62 +++++++++++++++++++
+ 3 files changed, 71 insertions(+), 33 deletions(-)
+ create mode 100644 drivers/platform/x86/intel_pmc_core_plat_drv.c
+
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 87b0069bd781..4ba707111c27 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -89,7 +89,7 @@ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
+ obj-$(CONFIG_INTEL_TELEMETRY)	+= intel_telemetry_core.o \
+ 				   intel_telemetry_pltdrv.o \
+ 				   intel_telemetry_debugfs.o
+-obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
++obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o intel_pmc_core_plat_drv.o
+ obj-$(CONFIG_PMC_ATOM)		+= pmc_atom.o
+ obj-$(CONFIG_MLX_PLATFORM)	+= mlx-platform.o
+ obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 1d902230ba61..f20d08ad39ea 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -1023,47 +1023,23 @@ static const struct dev_pm_ops pmc_core_pm_ops = {
+ 	SET_LATE_SYSTEM_SLEEP_PM_OPS(pmc_core_suspend, pmc_core_resume)
+ };
  
-+#include <linux/cpufeature.h>
-+#include <linux/cpuhotplug.h>
- #include <linux/fs.h>
- #include <linux/miscdevice.h>
- #include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/sched/signal.h>
-+#include <linux/slab.h>
- #include <linux/uaccess.h>
- #include <uapi/linux/isst_if.h>
- 
- #include "isst_if_common.h"
- 
-+#define MSR_THREAD_ID_INFO	0x53
-+#define MSR_CPU_BUS_NUMBER	0x128
-+
- static struct isst_if_cmd_cb punit_callbacks[ISST_IF_DEV_MAX];
- 
- static int isst_if_get_platform_info(void __user *argp)
-@@ -33,6 +41,99 @@ static int isst_if_get_platform_info(void __user *argp)
- 	return 0;
- }
- 
-+
-+struct isst_if_cpu_info {
-+	/* For BUS 0 and BUS 1 only, which we need for PUNIT interface */
-+	int bus_info[2];
-+	int punit_cpu_id;
++static const struct acpi_device_id pmc_core_acpi_ids[] = {
++	{"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
++	{ }
 +};
++MODULE_DEVICE_TABLE(acpi, pmc_core_acpi_ids);
 +
-+static struct isst_if_cpu_info *isst_cpu_info;
+ static struct platform_driver pmc_core_driver = {
+ 	.driver = {
+ 		.name = "intel_pmc_core",
++		.acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
+ 		.pm = &pmc_core_pm_ops,
+ 	},
+ 	.probe = pmc_core_probe,
+ 	.remove = pmc_core_remove,
+ };
+ 
+-static struct platform_device pmc_core_device = {
+-	.name = "intel_pmc_core",
+-};
+-
+-static int __init pmc_core_init(void)
+-{
+-	int ret;
+-
+-	if (!x86_match_cpu(intel_pmc_core_ids))
+-		return -ENODEV;
+-
+-	ret = platform_driver_register(&pmc_core_driver);
+-	if (ret)
+-		return ret;
+-
+-	ret = platform_device_register(&pmc_core_device);
+-	if (ret) {
+-		platform_driver_unregister(&pmc_core_driver);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+-static void __exit pmc_core_exit(void)
+-{
+-	platform_device_unregister(&pmc_core_device);
+-	platform_driver_unregister(&pmc_core_driver);
+-}
+-
+-module_init(pmc_core_init)
+-module_exit(pmc_core_exit)
++module_platform_driver(pmc_core_driver);
+ 
+ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("Intel PMC Core Driver");
+diff --git a/drivers/platform/x86/intel_pmc_core_plat_drv.c b/drivers/platform/x86/intel_pmc_core_plat_drv.c
+new file mode 100644
+index 000000000000..a8754a6db1b8
+--- /dev/null
++++ b/drivers/platform/x86/intel_pmc_core_plat_drv.c
+@@ -0,0 +1,62 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+/**
-+ * isst_if_get_pci_dev() - Get the PCI device instance for a CPU
-+ * @cpu: Logical CPU number.
-+ * @bus_number: The bus number assigned by the hardware.
-+ * @dev: The device number assigned by the hardware.
-+ * @fn: The function number assigned by the hardware.
++/*
++ * Intel PMC Core platform init
++ * Copyright (c) 2019, Google Inc.
++ * Author - Rajat Jain
 + *
-+ * Using cached bus information, find out the PCI device for a bus number,
-+ * device and function.
-+ *
-+ * Return: Return pci_dev pointer or NULL.
++ * This code instantiates platform devices for intel_pmc_core driver, only
++ * on supported platforms that may not have the ACPI devices in the ACPI tables.
++ * No new platforms should be added here, because we expect that new platforms
++ * should all have the ACPI device, which is the preferred way of enumeration.
 + */
-+struct pci_dev *isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
-+{
-+	int bus_number;
 +
-+	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
-+	    cpu >= num_possible_cpus())
-+		return NULL;
++#include <linux/acpi.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
 +
-+	bus_number = isst_cpu_info[cpu].bus_info[bus_no];
-+	if (bus_number < 0)
-+		return NULL;
++#include <asm/cpu_device_id.h>
++#include <asm/intel-family.h>
 +
-+	return pci_get_domain_bus_and_slot(0, bus_number, PCI_DEVFN(dev, fn));
-+}
-+EXPORT_SYMBOL_GPL(isst_if_get_pci_dev);
-+
-+static int isst_if_cpu_online(unsigned int cpu)
-+{
-+	u64 data;
-+	int ret;
-+
-+	ret = rdmsrl_safe(MSR_CPU_BUS_NUMBER, &data);
-+	if (ret) {
-+		/* This is not a fatal error on MSR mailbox only I/F */
-+		isst_cpu_info[cpu].bus_info[0] = -1;
-+		isst_cpu_info[cpu].bus_info[1] = -1;
-+	} else {
-+		isst_cpu_info[cpu].bus_info[0] = data & 0xff;
-+		isst_cpu_info[cpu].bus_info[1] = (data >> 8) & 0xff;
-+	}
-+
-+	ret = rdmsrl_safe(MSR_THREAD_ID_INFO, &data);
-+	if (ret) {
-+		isst_cpu_info[cpu].punit_cpu_id = -1;
-+		return ret;
-+	}
-+	isst_cpu_info[cpu].punit_cpu_id = data;
-+
-+	return 0;
-+}
-+
-+static int isst_if_online_id;
-+
-+static int isst_if_cpu_info_init(void)
-+{
-+	int ret;
-+
-+	isst_cpu_info = kcalloc(num_possible_cpus(),
-+				sizeof(*isst_cpu_info),
-+				GFP_KERNEL);
-+	if (!isst_cpu_info)
-+		return -ENOMEM;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
-+				"platform/x86/isst-if:online",
-+				isst_if_cpu_online, NULL);
-+	if (ret < 0) {
-+		kfree(isst_cpu_info);
-+		return ret;
-+	}
-+
-+	isst_if_online_id = ret;
-+
-+	return 0;
-+}
-+
-+static void isst_if_cpu_info_exit(void)
-+{
-+	cpuhp_remove_state(isst_if_online_id);
-+	kfree(isst_cpu_info);
++static struct platform_device pmc_core_device = {
++	.name = "intel_pmc_core",
 +};
 +
- static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
- 			      unsigned long arg)
- {
-@@ -145,9 +246,18 @@ int isst_if_cdev_register(int device_type, struct isst_if_cmd_cb *cb)
- 		return -EAGAIN;
- 	}
- 	if (!misc_usage_count) {
-+		int ret;
++/*
++ * intel_pmc_core_platform_ids is the list of platforms where we want to
++ * instantiate the platform_device if not already instantiated. This is
++ * different than intel_pmc_core_ids in intel_pmc_core.c which is the
++ * list of platforms that the driver supports for pmc_core device. The
++ * other list may grow, but this list should not.
++ */
++static const struct x86_cpu_id intel_pmc_core_platform_ids[] = {
++	INTEL_CPU_FAM6(SKYLAKE_MOBILE, pmc_core_device),
++	INTEL_CPU_FAM6(SKYLAKE_DESKTOP, pmc_core_device),
++	INTEL_CPU_FAM6(KABYLAKE_MOBILE, pmc_core_device),
++	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, pmc_core_device),
++	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, pmc_core_device),
++	INTEL_CPU_FAM6(ICELAKE_MOBILE, pmc_core_device),
++	{}
++};
++MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
 +
- 		misc_device_ret = misc_register(&isst_if_char_driver);
- 		if (misc_device_ret)
- 			goto unlock_exit;
++static int __init pmc_core_platform_init(void)
++{
++	/* Skip creating the platform device if ACPI already has a device */
++	if (acpi_dev_present("INT33A1", NULL, -1))
++		return -ENODEV;
 +
-+		ret = isst_if_cpu_info_init();
-+		if (ret) {
-+			misc_deregister(&isst_if_char_driver);
-+			misc_device_ret = ret;
-+			goto unlock_exit;
-+		}
- 	}
- 	memcpy(&punit_callbacks[device_type], cb, sizeof(*cb));
- 	punit_callbacks[device_type].registered = 1;
-@@ -173,8 +283,10 @@ void isst_if_cdev_unregister(int device_type)
- 	mutex_lock(&punit_misc_dev_lock);
- 	misc_usage_count--;
- 	punit_callbacks[device_type].registered = 0;
--	if (!misc_usage_count && !misc_device_ret)
-+	if (!misc_usage_count && !misc_device_ret) {
- 		misc_deregister(&isst_if_char_driver);
-+		isst_if_cpu_info_exit();
-+	}
- 	mutex_unlock(&punit_misc_dev_lock);
- }
- EXPORT_SYMBOL_GPL(isst_if_cdev_unregister);
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-index 11f339226fb4..dade77c58b22 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-@@ -57,4 +57,5 @@ struct isst_if_cmd_cb {
- /* Internal interface functions */
- int isst_if_cdev_register(int type, struct isst_if_cmd_cb *cb);
- void isst_if_cdev_unregister(int type);
-+struct pci_dev *isst_if_get_pci_dev(int cpu, int bus, int dev, int fn);
- #endif
++	if (!x86_match_cpu(intel_pmc_core_platform_ids))
++		return -ENODEV;
++
++	return platform_device_register(&pmc_core_device);
++}
++
++static void __exit pmc_core_platform_exit(void)
++{
++	platform_device_unregister(&pmc_core_device);
++}
++
++module_init(pmc_core_platform_init);
++module_exit(pmc_core_platform_exit);
++MODULE_LICENSE("GPL v2");
 -- 
-2.17.2
+2.22.0.410.gd8fdbe21b5-goog
