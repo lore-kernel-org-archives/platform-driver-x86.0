@@ -1,68 +1,55 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3] platform/x86: intel_pmc_core: transform Pkg C-state
- residency from TSC ticks into microseconds
-Date: Sat, 29 Jun 2019 16:24:11 +0300
-Message-ID: <CAHp75VdnL1CHvbo+JWwKVhCaqnT45GVVjtLKppnvnbOPfvbURw@mail.gmail.com>
-References: <20190528025727.6014-1-harry.pan@intel.com> <20190619082801.21699-1-harry.pan@intel.com>
+Subject: Re: [PATCH 0/2] Support for buttons on newer MS Surface devices
+Date: Sat, 29 Jun 2019 17:18:26 +0300
+Message-ID: <CAHp75VcSDvjnS57mS2HyEvUyBRGv68yxXt7wCbJHK3pw98UiOg@mail.gmail.com>
+References: <20190620115056.4169-1-luzmaximilian@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190619082801.21699-1-harry.pan@intel.com>
+In-Reply-To: <20190620115056.4169-1-luzmaximilian@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Harry Pan <harry.pan@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, gs0622@gmail.com, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Darren Hart <dvhart@infradead.org>
+To: Maximilian Luz <luzmaximilian@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 19, 2019 at 11:29 AM Harry Pan <harry.pan@intel.com> wrote:
+On Thu, Jun 20, 2019 at 2:51 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
 >
-> Refer to the Intel SDM Vol.4, the package C-state residency counters
-> of modern IA micro-architecture are all ticking in TSC frequency,
-> hence we can apply simple math to transform the ticks into microseconds.
-> i.e.,
-> residency (ms) = count / tsc_khz
-> residency (us) = count / tsc_khz * 1000
+> This series adds suport for power and volume buttons on 5th and 6th
+> generation Microsoft Surface devices. Specifically, it adds support for
+> the power-button on the Surface Laptop 1 and Laptop 2, as well as
+> support for power- and (on-device) volume-buttons on the Surface Pro 5
+> (2017), Pro 6, and Book 2.
 >
-> This also aligns to other sysfs debug entries of residency counter in
-> the same metric in microseconds, benefits reading and scripting.
+> These devices use the same MSHW0040 device as on the Surface Pro 4,
+> however, whereas the Pro 4 uses an ACPI notify handler, the newer
+> devices use GPIO interrupts to signal these events.
 >
-> v2: restore the accidentally deleted newline, no function change.
-> v3: apply kernel do_div() macro to calculate division
+> The first patch of this series ensures that the surfacepro3_button
+> driver, used for MSHW0040 on the Pro 4, does not probe for the newer
+> devices. The second patch adapts soc_button_array to implement the
+> actual button support.
 >
-> Signed-off-by: Harry Pan <harry.pan@intel.com>
+> I think the changes to soc_button_array in the second patch warrant a
+> thorough review. I've tried to make things a bit more generic to be able
+> to integrate arbitrary ACPI GPIO power-/volume-button devices more
+> easily, I'm not sure if there may be reasons against this.
+>
+> These patches have also been tested on various Surface devices via the
+> github.com/jakeday/linux-surface patchset.
 >
 
 Pushed to my review and testing queue, thanks!
 
-> ---
+> Maximilian Luz (2):
+>   platform: Fix device check for surfacepro3_button
+>   input: soc_button_array for newer surface devices
 >
->  drivers/platform/x86/intel_pmc_core.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index f2c621b55f49..ab798efacc85 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -24,6 +24,7 @@
->  #include <asm/cpu_device_id.h>
->  #include <asm/intel-family.h>
->  #include <asm/msr.h>
-> +#include <asm/tsc.h>
->
->  #include "intel_pmc_core.h"
->
-> @@ -738,7 +739,9 @@ static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
->                 if (rdmsrl_safe(map[index].bit_mask, &pcstate_count))
->                         continue;
->
-> -               seq_printf(s, "%-8s : 0x%llx\n", map[index].name,
-> +               pcstate_count *= 1000;
-> +               do_div(pcstate_count, tsc_khz);
-> +               seq_printf(s, "%-8s : %llu\n", map[index].name,
->                            pcstate_count);
->         }
+>  drivers/input/misc/soc_button_array.c     | 134 ++++++++++++++++++++--
+>  drivers/platform/x86/surfacepro3_button.c |  38 ++++++
+>  2 files changed, 160 insertions(+), 12 deletions(-)
 >
 > --
-> 2.20.1
+> 2.22.0
 >
 
 
