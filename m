@@ -1,62 +1,69 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Update Hi10 Air filter
-Date: Sat, 29 Jun 2019 16:20:44 +0300
-Message-ID: <CAHp75VcxiKMWnXe_oFu-9JCfDuXa9hOUi2Qy6bNQiREH_i621Q@mail.gmail.com>
-References: <20190612124053.119182-1-me@myself5.de> <736848fd-1c45-0bd9-bfd1-747c716bd953@redhat.com>
+Subject: Re: [PATCH v3] platform/x86: intel_pmc_core: transform Pkg C-state
+ residency from TSC ticks into microseconds
+Date: Sat, 29 Jun 2019 16:24:11 +0300
+Message-ID: <CAHp75VdnL1CHvbo+JWwKVhCaqnT45GVVjtLKppnvnbOPfvbURw@mail.gmail.com>
+References: <20190528025727.6014-1-harry.pan@intel.com> <20190619082801.21699-1-harry.pan@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <736848fd-1c45-0bd9-bfd1-747c716bd953@redhat.com>
+In-Reply-To: <20190619082801.21699-1-harry.pan@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Christian Oder <me@myself5.de>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Harry Pan <harry.pan@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, gs0622@gmail.com, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Darren Hart <dvhart@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 12, 2019 at 3:55 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Wed, Jun 19, 2019 at 11:29 AM Harry Pan <harry.pan@intel.com> wrote:
 >
-> Hi,
+> Refer to the Intel SDM Vol.4, the package C-state residency counters
+> of modern IA micro-architecture are all ticking in TSC frequency,
+> hence we can apply simple math to transform the ticks into microseconds.
+> i.e.,
+> residency (ms) = count / tsc_khz
+> residency (us) = count / tsc_khz * 1000
 >
-> On 12-06-19 14:40, Christian Oder wrote:
-> > Turns out the Hi10 Air is built by multiple companies so using Hampoo
-> > as a filter is not enough to cover all variants.
-> >
-> > This has been verified as working on the Hampoo and Morshow version.
-> >
-> > Signed-off-by: Christian Oder <me@myself5.de>
+> This also aligns to other sysfs debug entries of residency counter in
+> the same metric in microseconds, benefits reading and scripting.
 >
-> Patch looks good to me:
+> v2: restore the accidentally deleted newline, no function change.
+> v3: apply kernel do_div() macro to calculate division
 >
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Harry Pan <harry.pan@intel.com>
 >
 
-I have pushed it, though I forget about this issue, it went without
-this tag, sorry.
+Pushed to my review and testing queue, thanks!
 
-> Regards,
+> ---
 >
-> Hans
+>  drivers/platform/x86/intel_pmc_core.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 >
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index f2c621b55f49..ab798efacc85 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -24,6 +24,7 @@
+>  #include <asm/cpu_device_id.h>
+>  #include <asm/intel-family.h>
+>  #include <asm/msr.h>
+> +#include <asm/tsc.h>
 >
-> > ---
-> >   drivers/platform/x86/touchscreen_dmi.c | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> > index b662cb2d7cd5..61e7c4987d0d 100644
-> > --- a/drivers/platform/x86/touchscreen_dmi.c
-> > +++ b/drivers/platform/x86/touchscreen_dmi.c
-> > @@ -597,7 +597,8 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
-> >               /* Chuwi Hi10 Air */
-> >               .driver_data = (void *)&chuwi_hi10_air_data,
-> >               .matches = {
-> > -                     DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-> > +                     DMI_MATCH(DMI_SYS_VENDOR, "CHUWI INNOVATION AND TECHNOLOGY(SHENZHEN)CO.LTD"),
-> > +                     DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-> >                       DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
-> >               },
-> >       },
-> >
-
+>  #include "intel_pmc_core.h"
+>
+> @@ -738,7 +739,9 @@ static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
+>                 if (rdmsrl_safe(map[index].bit_mask, &pcstate_count))
+>                         continue;
+>
+> -               seq_printf(s, "%-8s : 0x%llx\n", map[index].name,
+> +               pcstate_count *= 1000;
+> +               do_div(pcstate_count, tsc_khz);
+> +               seq_printf(s, "%-8s : %llu\n", map[index].name,
+>                            pcstate_count);
+>         }
+>
+> --
+> 2.20.1
+>
 
 
 -- 
