@@ -1,175 +1,182 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 3/3] platform/x86: wmi: add Xiaomi WMI key driver
-Date: Sat, 29 Jun 2019 16:15:55 +0300
-Message-ID: <CAHp75VewdbB7xStMOaomf2FVKrTeZVVhFyrBWYL=MJ4HOYKTWQ@mail.gmail.com>
-References: <cover.1558968964.git.2pi@mok.nu> <eb57957045495464539c8b4896a8d83b5d87377b.1558968964.git.2pi@mok.nu>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Add Lenovo PrivacyGuard feature found
+ in T480s, T490, T490s
+Date: Sat, 29 Jun 2019 16:15:28 +0300
+Message-ID: <CAHp75VdzPvs0x_gT4HAMFj8KRYcQgk+ZXgC4yCPA25mS6qFFiQ@mail.gmail.com>
+References: <E1hSOxT-00005q-An@tuxpaddy.alexanderweb.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <eb57957045495464539c8b4896a8d83b5d87377b.1558968964.git.2pi@mok.nu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mattias Jacobsson <2pi@mok.nu>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <E1hSOxT-00005q-An-Ge/G1gX3VYWV12a/G1tSrpgwCeU9h5aQWxvtqLHQ6Q4@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Alexander Schremmer <alex-y2PnNNZjvYf3t9wD0PK9CA@public.gmane.org>
+Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thinkpad-acpi devel ML <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, May 27, 2019 at 7:22 PM Mattias Jacobsson <2pi@mok.nu> wrote:
+On Sun, May 19, 2019 at 7:46 PM Alexander Schremmer
+<alex-y2PnNNZjvYf3t9wD0PK9CA@public.gmane.org> wrote:
 >
-> Some function keys on the built in keyboard on Xiaomi's notebooks does
-> not produce any key events when pressed in combination with the function
-> key. Some of these keys do report that they are being pressed via WMI
-> events.
+> From 6bfe30cae2be3f4fbe9f9990a4e83302569ff7e9 Mon Sep 17 00:00:00 2001
+> From: Alexander Schremmer <alex-y2PnNNZjvYf3t9wD0PK9CA@public.gmane.org>
+> Date: Sun, 19 May 2019 18:13:05 +0200
+> Subject: [PATCH] platform/x86: Add Lenovo ThinkPad PrivacyGuard.
 >
-> This driver reports key events for Fn+F7 and double tap on Fn.
+> This feature is found optionally in T480s, T490, T490s.
 >
-> Other WMI events that are reported by the hardware but not utilized by
-> this driver are Caps Lock(which already work) and Fn lock/unlock.
+> The feature is called lcdshadow and visible via
+> /proc/acpi/ibm/lcdshadow.
 >
+> The ACPI methods \_SB.PCI0.LPCB.EC.HKEY.{GSSS,SSSS,TSSS,CSSS} are
+> available in these machines. They get, set, toggle or change the state
+> apparently.
+>
+> The patch was tested on a 5.0 series kernel on a T480s.
 
-Pushed to my review and testing queue, thanks!
+While being in my review and testing queue it doesn't produce any
+warnings the ABI extension lacks of documentation part.
 
-> Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+>
+> Signed-off-by: Alexander Schremmer <alex-y2PnNNZjvYf3t9wD0PK9CA@public.gmane.org>
 > ---
->  drivers/platform/x86/Kconfig      | 10 ++++
->  drivers/platform/x86/Makefile     |  1 +
->  drivers/platform/x86/xiaomi-wmi.c | 94 +++++++++++++++++++++++++++++++
->  3 files changed, 105 insertions(+)
->  create mode 100644 drivers/platform/x86/xiaomi-wmi.c
+>  drivers/platform/x86/thinkpad_acpi.c | 108 +++++++++++++++++++++++++++
+>  1 file changed, 108 insertions(+)
 >
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 5d5cc6111081..257a99134b64 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -781,6 +781,16 @@ config INTEL_WMI_THUNDERBOLT
->           To compile this driver as a module, choose M here: the module will
->           be called intel-wmi-thunderbolt.
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 71cfaf26efd1..f2603643b067 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -9729,6 +9729,110 @@ static struct ibm_struct battery_driver_data = {
+>         .exit = tpacpi_battery_exit,
+>  };
 >
-> +config XIAOMI_WMI
-> +         tristate "Xiaomi WMI key driver"
-> +         depends on ACPI_WMI
-> +         depends on INPUT
-> +         help
-> +         Say Y here if you want to support WMI-based keys on Xiaomi notebooks.
-> +
-> +         To compile this driver as a module, choose M here: the module will
-> +         be called xiaomi-wmi.
-> +
->  config MSI_WMI
->         tristate "MSI WMI extras"
->         depends on ACPI_WMI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 87b0069bd781..f64445d69f99 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -51,6 +51,7 @@ obj-$(CONFIG_SURFACE3_WMI)    += surface3-wmi.o
->  obj-$(CONFIG_TOPSTAR_LAPTOP)   += topstar-laptop.o
->  obj-$(CONFIG_WMI_BMOF)         += wmi-bmof.o
->  obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)    += intel-wmi-thunderbolt.o
-> +obj-$(CONFIG_XIAOMI_WMI)       += xiaomi-wmi.o
->
->  # toshiba_acpi must link after wmi to ensure that wmi devices are found
->  # before toshiba_acpi initializes
-> diff --git a/drivers/platform/x86/xiaomi-wmi.c b/drivers/platform/x86/xiaomi-wmi.c
-> new file mode 100644
-> index 000000000000..4ff9df5eb88f
-> --- /dev/null
-> +++ b/drivers/platform/x86/xiaomi-wmi.c
-> @@ -0,0 +1,94 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * WMI driver for Xiaomi Laptops
-> + *
+> +/*************************************************************************
+> + * LCD Shadow subdriver, for the Lenovo PrivacyGuard feature
 > + */
 > +
-> +#include <linux/acpi.h>
-> +#include <linux/input.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
-> +#include <uapi/linux/input-event-codes.h>
 > +
-> +#define XIAOMI_KEY_FN_ESC_0    "A2095CCE-0491-44E7-BA27-F8ED8F88AA86"
-> +#define XIAOMI_KEY_FN_ESC_1    "7BBE8E39-B486-473D-BA13-66F75C5805CD"
-> +#define XIAOMI_KEY_FN_FN       "409B028D-F06B-4C7C-8BBB-EE133A6BD87E"
-> +#define XIAOMI_KEY_CAPSLOCK    "83FE7607-053A-4644-822A-21532C621FC7"
-> +#define XIAOMI_KEY_FN_F7       "76E9027C-95D0-4180-8692-DA6747DD1C2D"
+> +static int lcdshadow_state;
 > +
-> +#define XIAOMI_DEVICE(guid, key)               \
-> +       .guid_string = (guid),                  \
-> +       .context = &(const unsigned int){key}
-> +
-> +struct xiaomi_wmi {
-> +       struct input_dev *input_dev;
-> +       unsigned int key_code;
-> +};
-> +
-> +int xiaomi_wmi_probe(struct wmi_device *wdev, const void *context)
+> +static int lcdshadow_on_off(bool state)
 > +{
-> +       struct xiaomi_wmi *data;
+> +       acpi_handle set_shadow_handle;
+> +       int output;
 > +
-> +       if (wdev == NULL || context == NULL)
+> +       if (ACPI_FAILURE(acpi_get_handle(
+> +                                       hkey_handle,
+> +                                       "SSSS",
+> +                                       &set_shadow_handle))) {
+> +               pr_warn("Thinkpad ACPI has no %s interface.\n", "SSSS");
+> +               return -EIO;
+> +       }
+> +
+> +       if (!acpi_evalf(set_shadow_handle, &output, NULL, "dd", (int)state))
+> +               return -EIO;
+> +
+> +       lcdshadow_state = state;
+> +       return 0;
+> +}
+> +
+> +static int lcdshadow_set(bool on)
+> +{
+> +       if (lcdshadow_state < 0 || lcdshadow_state == on)
+> +               return lcdshadow_state;
+> +       return lcdshadow_on_off(on);
+> +}
+> +
+> +static int tpacpi_lcdshadow_init(struct ibm_init_struct *iibm)
+> +{
+> +       acpi_handle get_shadow_handle;
+> +       int output;
+> +
+> +       if (ACPI_FAILURE(acpi_get_handle(
+> +                                       hkey_handle,
+> +                                       "GSSS",
+> +                                       &get_shadow_handle))) {
+> +               lcdshadow_state = -ENODEV;
+> +               return 0;
+> +       }
+> +
+> +       if (!acpi_evalf(get_shadow_handle, &output, NULL, "dd", 0))
+> +               return -EIO;
+> +       if (!(output & 0x10000)) {
+> +               lcdshadow_state = -ENODEV;
+> +               return 0;
+> +       }
+> +       lcdshadow_state = output & 0x1;
+> +
+> +       return 0;
+> +}
+> +
+> +static void lcdshadow_resume(void)
+> +{
+> +       if (lcdshadow_state >= 0)
+> +               lcdshadow_on_off(lcdshadow_state);
+> +}
+> +
+> +static int lcdshadow_read(struct seq_file *m)
+> +{
+> +       if (lcdshadow_state < 0) {
+> +               seq_puts(m, "status:\t\tnot supported\n");
+> +       } else {
+> +               seq_printf(m, "status:\t\t%d\n", lcdshadow_state);
+> +               seq_puts(m, "commands:\t0, 1\n");
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int lcdshadow_write(char *buf)
+> +{
+> +       char *cmd;
+> +       int state = -1;
+> +
+> +       if (lcdshadow_state < 0)
+> +               return -ENODEV;
+> +
+> +       while ((cmd = next_cmd(&buf))) {
+> +               if (strlencmp(cmd, "0") == 0)
+> +                       state = 0;
+> +               else if (strlencmp(cmd, "1") == 0)
+> +                       state = 1;
+> +       }
+> +
+> +       if (state == -1)
 > +               return -EINVAL;
 > +
-> +       data = devm_kzalloc(&wdev->dev, sizeof(struct xiaomi_wmi), GFP_KERNEL);
-> +       if (data == NULL)
-> +               return -ENOMEM;
-> +       dev_set_drvdata(&wdev->dev, data);
-> +
-> +       data->input_dev = devm_input_allocate_device(&wdev->dev);
-> +       if (data->input_dev == NULL)
-> +               return -ENOMEM;
-> +       data->input_dev->name = "Xiaomi WMI keys";
-> +       data->input_dev->phys = "wmi/input0";
-> +
-> +       data->key_code = *((const unsigned int *)context);
-> +       set_bit(EV_KEY, data->input_dev->evbit);
-> +       set_bit(data->key_code, data->input_dev->keybit);
-> +
-> +       return input_register_device(data->input_dev);
+> +       return lcdshadow_set(state);
 > +}
 > +
-> +void xiaomi_wmi_notify(struct wmi_device *wdev, union acpi_object *_)
-> +{
-> +       struct xiaomi_wmi *data;
-> +
-> +       if (wdev == NULL)
-> +               return;
-> +
-> +       data = dev_get_drvdata(&wdev->dev);
-> +       if (data == NULL)
-> +               return;
-> +
-> +       input_report_key(data->input_dev, data->key_code, 1);
-> +       input_sync(data->input_dev);
-> +       input_report_key(data->input_dev, data->key_code, 0);
-> +       input_sync(data->input_dev);
-> +}
-> +
-> +static const struct wmi_device_id xiaomi_wmi_id_table[] = {
-> +       // { XIAOMI_DEVICE(XIAOMI_KEY_FN_ESC_0, KEY_FN_ESC) },
-> +       // { XIAOMI_DEVICE(XIAOMI_KEY_FN_ESC_1, KEY_FN_ESC) },
-> +       { XIAOMI_DEVICE(XIAOMI_KEY_FN_FN, KEY_PROG1) },
-> +       // { XIAOMI_DEVICE(XIAOMI_KEY_CAPSLOCK, KEY_CAPSLOCK) },
-> +       { XIAOMI_DEVICE(XIAOMI_KEY_FN_F7, KEY_CUT) },
-> +
-> +       /* Terminating entry */
-> +       { }
+> +static struct ibm_struct lcdshadow_driver_data = {
+> +       .name = "lcdshadow",
+> +       .resume = lcdshadow_resume,
+> +       .read = lcdshadow_read,
+> +       .write = lcdshadow_write,
 > +};
 > +
-> +static struct wmi_driver xiaomi_wmi_driver = {
-> +       .driver = {
-> +               .name = "xiaomi-wmi",
+>  /****************************************************************************
+>   ****************************************************************************
+>   *
+> @@ -10210,6 +10314,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+>                 .init = tpacpi_battery_init,
+>                 .data = &battery_driver_data,
+>         },
+> +       {
+> +               .init = tpacpi_lcdshadow_init,
+> +               .data = &lcdshadow_driver_data,
 > +       },
-> +       .id_table = xiaomi_wmi_id_table,
-> +       .probe = xiaomi_wmi_probe,
-> +       .notify = xiaomi_wmi_notify,
-> +};
-> +module_wmi_driver(xiaomi_wmi_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, xiaomi_wmi_id_table);
-> +MODULE_AUTHOR("Mattias Jacobsson");
-> +MODULE_DESCRIPTION("Xiaomi WMI driver");
-> +MODULE_LICENSE("GPL v2");
+>  };
+>
+>  static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
 > --
-> 2.21.0
+> 2.20.1
 >
 
 
