@@ -1,53 +1,52 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] intel_menlow: avoid null pointer deference error
-Date: Sat, 29 Jun 2019 16:17:01 +0300
-Message-ID: <CAHp75Vc1gMowXgBPFaTo9_B_4B443+F2XDn_2xGj6chahk1wOg@mail.gmail.com>
-References: <1559094951-25391-1-git-send-email-92siuyang@gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_pmc_core: Add ICL-NNPI support to PMC Core
+Date: Sat, 29 Jun 2019 16:18:45 +0300
+Message-ID: <CAHp75VfMdKqpC3_gF-VzcJQqiWM9E0irORr60KLXyu8HuQg9KA@mail.gmail.com>
+References: <20190614080940.13640-1-rajneesh.bhardwaj@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1559094951-25391-1-git-send-email-92siuyang@gmail.com>
+In-Reply-To: <20190614080940.13640-1-rajneesh.bhardwaj@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Young Xiao <92siuyang@gmail.com>
-Cc: Sujith Thomas <sujith.thomas@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, May 29, 2019 at 4:55 AM Young Xiao <92siuyang@gmail.com> wrote:
+On Fri, Jun 14, 2019 at 11:14 AM Rajneesh Bhardwaj
+<rajneesh.bhardwaj@linux.intel.com> wrote:
 >
-> Fix a null pointer deference by acpi_driver_data() if device is
-> null (dereference before check). We should only set cdev and check
-> this is OK after we are sure device is not null.
+> Ice Lake Neural Network Processor for deep learning inference a.k.a.
+> ICL-NNPI can re-use Ice Lake Mobile regmap to enable Intel PMC Core
+> driver on it.
 >
 
-Pushed to my review and testing queue, thanks!
+This will be postponed till next cycle since the CPU model will not
+appear before merge window.
+So, please, resend than (I guess somewhat in a month).
 
-> Signed-off-by: Young Xiao <92siuyang@gmail.com>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Andy Shevchenko <andy@infradead.org>
+> Cc: platform-driver-x86@vger.kernel.org
+> Link: https://lkml.org/lkml/2019/6/5/1034
+> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 > ---
->  drivers/platform/x86/intel_menlow.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/intel_pmc_core.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel_menlow.c
-> index 77eb870..28feb5c 100644
-> --- a/drivers/platform/x86/intel_menlow.c
-> +++ b/drivers/platform/x86/intel_menlow.c
-> @@ -180,9 +180,13 @@ static int intel_menlow_memory_add(struct acpi_device *device)
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index 1d902230ba61..be6cda89dcf5 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -815,6 +815,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>         INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
+>         INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+>         INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
+> +       INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
+>         {}
+>  };
 >
->  static int intel_menlow_memory_remove(struct acpi_device *device)
->  {
-> -       struct thermal_cooling_device *cdev = acpi_driver_data(device);
-> +       struct thermal_cooling_device *cdev;
-> +
-> +       if (!device)
-> +               return -EINVAL;
->
-> -       if (!device || !cdev)
-> +       cdev = acpi_driver_data(device);
-> +       if (!cdev)
->                 return -EINVAL;
->
->         sysfs_remove_link(&device->dev.kobj, "thermal_cooling");
 > --
-> 2.7.4
+> 2.17.1
 >
 
 
