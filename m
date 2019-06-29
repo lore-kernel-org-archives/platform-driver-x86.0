@@ -1,53 +1,62 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: Add ICL-NNPI support to PMC Core
-Date: Sat, 29 Jun 2019 16:18:45 +0300
-Message-ID: <CAHp75VfMdKqpC3_gF-VzcJQqiWM9E0irORr60KLXyu8HuQg9KA@mail.gmail.com>
-References: <20190614080940.13640-1-rajneesh.bhardwaj@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Update Hi10 Air filter
+Date: Sat, 29 Jun 2019 16:20:44 +0300
+Message-ID: <CAHp75VcxiKMWnXe_oFu-9JCfDuXa9hOUi2Qy6bNQiREH_i621Q@mail.gmail.com>
+References: <20190612124053.119182-1-me@myself5.de> <736848fd-1c45-0bd9-bfd1-747c716bd953@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190614080940.13640-1-rajneesh.bhardwaj@linux.intel.com>
+In-Reply-To: <736848fd-1c45-0bd9-bfd1-747c716bd953@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Christian Oder <me@myself5.de>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 14, 2019 at 11:14 AM Rajneesh Bhardwaj
-<rajneesh.bhardwaj@linux.intel.com> wrote:
+On Wed, Jun 12, 2019 at 3:55 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Ice Lake Neural Network Processor for deep learning inference a.k.a.
-> ICL-NNPI can re-use Ice Lake Mobile regmap to enable Intel PMC Core
-> driver on it.
+> Hi,
+>
+> On 12-06-19 14:40, Christian Oder wrote:
+> > Turns out the Hi10 Air is built by multiple companies so using Hampoo
+> > as a filter is not enough to cover all variants.
+> >
+> > This has been verified as working on the Hampoo and Morshow version.
+> >
+> > Signed-off-by: Christian Oder <me@myself5.de>
+>
+> Patch looks good to me:
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 >
 
-This will be postponed till next cycle since the CPU model will not
-appear before merge window.
-So, please, resend than (I guess somewhat in a month).
+I have pushed it, though I forget about this issue, it went without
+this tag, sorry.
 
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> Link: https://lkml.org/lkml/2019/6/5/1034
-> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_pmc_core.c | 1 +
->  1 file changed, 1 insertion(+)
+> Regards,
 >
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index 1d902230ba61..be6cda89dcf5 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -815,6 +815,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
->         INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
->         INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
->         INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
-> +       INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
->         {}
->  };
+> Hans
 >
-> --
-> 2.17.1
 >
+> > ---
+> >   drivers/platform/x86/touchscreen_dmi.c | 3 ++-
+> >   1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> > index b662cb2d7cd5..61e7c4987d0d 100644
+> > --- a/drivers/platform/x86/touchscreen_dmi.c
+> > +++ b/drivers/platform/x86/touchscreen_dmi.c
+> > @@ -597,7 +597,8 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+> >               /* Chuwi Hi10 Air */
+> >               .driver_data = (void *)&chuwi_hi10_air_data,
+> >               .matches = {
+> > -                     DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
+> > +                     DMI_MATCH(DMI_SYS_VENDOR, "CHUWI INNOVATION AND TECHNOLOGY(SHENZHEN)CO.LTD"),
+> > +                     DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+> >                       DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
+> >               },
+> >       },
+> >
+
 
 
 -- 
