@@ -1,56 +1,57 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/2] Support for buttons on newer MS Surface devices
-Date: Sat, 29 Jun 2019 17:18:26 +0300
-Message-ID: <CAHp75VcSDvjnS57mS2HyEvUyBRGv68yxXt7wCbJHK3pw98UiOg@mail.gmail.com>
-References: <20190620115056.4169-1-luzmaximilian@gmail.com>
+Subject: Re: [PATCH] platform/x86: pmc_atom: Add CB4063 Beckhoff Automation
+ board to critclk_systems DMI table
+Date: Sat, 29 Jun 2019 17:18:44 +0300
+Message-ID: <CAHp75VfT6NvAv8C-bNKu36_9R=H1f05QRQppNA19R7O=1qhzRQ@mail.gmail.com>
+References: <20190618133102.8083-1-linux-kernel-dev@beckhoff.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190620115056.4169-1-luzmaximilian@gmail.com>
+In-Reply-To: <20190618133102.8083-1-linux-kernel-dev@beckhoff.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To: linux-kernel-dev@beckhoff.com
+Cc: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 20, 2019 at 2:51 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+On Tue, Jun 18, 2019 at 4:34 PM <linux-kernel-dev@beckhoff.com> wrote:
 >
-> This series adds suport for power and volume buttons on 5th and 6th
-> generation Microsoft Surface devices. Specifically, it adds support for
-> the power-button on the Surface Laptop 1 and Laptop 2, as well as
-> support for power- and (on-device) volume-buttons on the Surface Pro 5
-> (2017), Pro 6, and Book 2.
+> From: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
 >
-> These devices use the same MSHW0040 device as on the Surface Pro 4,
-> however, whereas the Pro 4 uses an ACPI notify handler, the newer
-> devices use GPIO interrupts to signal these events.
->
-> The first patch of this series ensures that the surfacepro3_button
-> driver, used for MSHW0040 on the Pro 4, does not probe for the newer
-> devices. The second patch adapts soc_button_array to implement the
-> actual button support.
->
-> I think the changes to soc_button_array in the second patch warrant a
-> thorough review. I've tried to make things a bit more generic to be able
-> to integrate arbitrary ACPI GPIO power-/volume-button devices more
-> easily, I'm not sure if there may be reasons against this.
->
-> These patches have also been tested on various Surface devices via the
-> github.com/jakeday/linux-surface patchset.
+> The CB4063 board uses pmc_plt_clk* clocks for ethernet controllers. This
+> adds it to the critclk_systems DMI table so the clocks are marked as
+> CLK_CRITICAL and not turned off.
 >
 
 Pushed to my review and testing queue, thanks!
 
-> Maximilian Luz (2):
->   platform: Fix device check for surfacepro3_button
->   input: soc_button_array for newer surface devices
+> Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+> Signed-off-by: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+> ---
+>  drivers/platform/x86/pmc_atom.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >
->  drivers/input/misc/soc_button_array.c     | 134 ++++++++++++++++++++--
->  drivers/platform/x86/surfacepro3_button.c |  38 ++++++
->  2 files changed, 160 insertions(+), 12 deletions(-)
->
+> diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+> index be802fd2182d..551ed44dd361 100644
+> --- a/drivers/platform/x86/pmc_atom.c
+> +++ b/drivers/platform/x86/pmc_atom.c
+> @@ -412,6 +412,14 @@ static const struct dmi_system_id critclk_systems[] = {
+>                         DMI_MATCH(DMI_BOARD_NAME, "CB3163"),
+>                 },
+>         },
+> +       {
+> +               /* pmc_plt_clk* - are used for ethernet controllers */
+> +               .ident = "Beckhoff CB4063",
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
+> +                       DMI_MATCH(DMI_BOARD_NAME, "CB4063"),
+> +               },
+> +       },
+>         {
+>                 /* pmc_plt_clk* - are used for ethernet controllers */
+>                 .ident = "Beckhoff CB6263",
 > --
 > 2.22.0
->
+
 
 
 -- 
