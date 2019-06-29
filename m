@@ -1,95 +1,175 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 00/13] Support of ASUS TUF Gaming series laptops
-Date: Sat, 29 Jun 2019 16:13:41 +0300
-Message-ID: <CAHp75Vd4mYrwT__DgogRJdSUSOZXU+b6KX_50-O=zS_oSxwE8w@mail.gmail.com>
-References: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
+Subject: Re: [PATCH 3/3] platform/x86: wmi: add Xiaomi WMI key driver
+Date: Sat, 29 Jun 2019 16:15:55 +0300
+Message-ID: <CAHp75VewdbB7xStMOaomf2FVKrTeZVVhFyrBWYL=MJ4HOYKTWQ@mail.gmail.com>
+References: <cover.1558968964.git.2pi@mok.nu> <eb57957045495464539c8b4896a8d83b5d87377b.1558968964.git.2pi@mok.nu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
+In-Reply-To: <eb57957045495464539c8b4896a8d83b5d87377b.1558968964.git.2pi@mok.nu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Daniel Drake <drake@endlessm.com>, Chris Chiu <chiu@endlessm.com>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Mattias Jacobsson <2pi@mok.nu>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 14, 2019 at 9:47 PM Yurii Pavlovskyi
-<yurii.pavlovskyi@gmail.com> wrote:
+On Mon, May 27, 2019 at 7:22 PM Mattias Jacobsson <2pi@mok.nu> wrote:
 >
-> Hi,
+> Some function keys on the built in keyboard on Xiaomi's notebooks does
+> not produce any key events when pressed in combination with the function
+> key. Some of these keys do report that they are being pressed via WMI
+> events.
 >
-> this is the fourth version of the patch series.
+> This driver reports key events for Fn+F7 and double tap on Fn.
+>
+> Other WMI events that are reported by the hardware but not utilized by
+> this driver are Caps Lock(which already work) and Fn lock/unlock.
 >
 
 Pushed to my review and testing queue, thanks!
 
-> Changelog:
-> v4:
->   * Rebase on for-next branch
->   * Extract local variable in patch 01
->   * Rename new method to "..._method3" and keep comma in struct declaration
->     in patch 03 (NOTE: the arg2 does not fit on same line by 1 character)
->   * Patch "Improve DSTS WMI method ID detection":
->     - sort local variables
->     - use dev_info
->     - separate changes to wmi module in an own patch
->     - rename method ID constants and fix comment capitalization
->   * "Support WMI event queue": split into separate refactoring and new
->     functionality patches, use dev_info as well
->   * "Organize code into sections": split out error handling refactoring
->   * "Enhance detection of thermal data": remove unreasonable refactoring
->     and just change the currently used condition
->   * "Control RGB keyboard backlight": removed, will be posted afterwards.
->     I will follow on the status of the multicolor framework, it does look
->     promising for this.
->   * Mark URL references with "Link:"
->   * Minor corrections to commit messages
-> v3:
->   * Use devm_* function in patch 01
->   * Detect DSTS/DCTS using _UID in patch 04
->   * Detect event queue by _UID as well in patch 05
->   * Rename poll function in patch 05
->   * Fix terminology in patches 09 and 10
->   * Correct commit messages
-> v2:
->   * Fix logging
+> Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+> ---
+>  drivers/platform/x86/Kconfig      | 10 ++++
+>  drivers/platform/x86/Makefile     |  1 +
+>  drivers/platform/x86/xiaomi-wmi.c | 94 +++++++++++++++++++++++++++++++
+>  3 files changed, 105 insertions(+)
+>  create mode 100644 drivers/platform/x86/xiaomi-wmi.c
 >
-> INTRODUCTION
-> The support for this laptop series is currently non-existent, as the
-> asus-nb-wmi driver (which is essentially configuration for asus-wmi) fails
-> to load and multiple ACPI errors are logged in dmesg. This patch series
-> adds pretty comprehensive support for these relatively new laptops, adds
-> some code organization, and fixes a couple of bugs in the asus-wmi module.
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 5d5cc6111081..257a99134b64 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -781,6 +781,16 @@ config INTEL_WMI_THUNDERBOLT
+>           To compile this driver as a module, choose M here: the module will
+>           be called intel-wmi-thunderbolt.
 >
-> Thread for V1/V2: https://lkml.org/lkml/2019/4/10/973
-> Thread for V3: https://lkml.org/lkml/2019/4/19/178
+> +config XIAOMI_WMI
+> +         tristate "Xiaomi WMI key driver"
+> +         depends on ACPI_WMI
+> +         depends on INPUT
+> +         help
+> +         Say Y here if you want to support WMI-based keys on Xiaomi notebooks.
+> +
+> +         To compile this driver as a module, choose M here: the module will
+> +         be called xiaomi-wmi.
+> +
+>  config MSI_WMI
+>         tristate "MSI WMI extras"
+>         depends on ACPI_WMI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 87b0069bd781..f64445d69f99 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -51,6 +51,7 @@ obj-$(CONFIG_SURFACE3_WMI)    += surface3-wmi.o
+>  obj-$(CONFIG_TOPSTAR_LAPTOP)   += topstar-laptop.o
+>  obj-$(CONFIG_WMI_BMOF)         += wmi-bmof.o
+>  obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)    += intel-wmi-thunderbolt.o
+> +obj-$(CONFIG_XIAOMI_WMI)       += xiaomi-wmi.o
 >
-> Yurii Pavlovskyi (13):
->   platform/x86: asus-wmi: Fix hwmon device cleanup
->   platform/x86: asus-wmi: Fix preserving keyboard backlight intensity on
->     load
->   platform/x86: asus-wmi: Increase input buffer size of WMI methods
->   platform/x86: wmi: Add function to get _UID of WMI device
->   platform/x86: asus-wmi: Improve DSTS WMI method ID detection
->   platform/x86: asus-wmi: Refactor WMI event handling
->   platform/x86: asus-wmi: Support WMI event queue
->   platform/x86: asus-nb-wmi: Add microphone mute key code
->   platform/x86: asus-wmi: Refactor error handling
->   platform/x86: asus-wmi: Organize code into sections
->   platform/x86: asus-wmi: Enhance detection of thermal data
->   platform/x86: asus-wmi: Switch fan boost mode
->   platform/x86: asus-wmi: Do not disable keyboard backlight on unloading
->
->  .../ABI/testing/sysfs-platform-asus-wmi       |  10 +
->  drivers/hid/hid-asus.c                        |   2 +-
->  drivers/platform/x86/asus-nb-wmi.c            |   3 +-
->  drivers/platform/x86/asus-wmi.c               | 427 ++++++++++++++----
->  drivers/platform/x86/wmi.c                    |  19 +
->  include/linux/acpi.h                          |   1 +
->  include/linux/platform_data/x86/asus-wmi.h    |   5 +-
->  7 files changed, 374 insertions(+), 93 deletions(-)
->
+>  # toshiba_acpi must link after wmi to ensure that wmi devices are found
+>  # before toshiba_acpi initializes
+> diff --git a/drivers/platform/x86/xiaomi-wmi.c b/drivers/platform/x86/xiaomi-wmi.c
+> new file mode 100644
+> index 000000000000..4ff9df5eb88f
+> --- /dev/null
+> +++ b/drivers/platform/x86/xiaomi-wmi.c
+> @@ -0,0 +1,94 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * WMI driver for Xiaomi Laptops
+> + *
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/input.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+> +#include <uapi/linux/input-event-codes.h>
+> +
+> +#define XIAOMI_KEY_FN_ESC_0    "A2095CCE-0491-44E7-BA27-F8ED8F88AA86"
+> +#define XIAOMI_KEY_FN_ESC_1    "7BBE8E39-B486-473D-BA13-66F75C5805CD"
+> +#define XIAOMI_KEY_FN_FN       "409B028D-F06B-4C7C-8BBB-EE133A6BD87E"
+> +#define XIAOMI_KEY_CAPSLOCK    "83FE7607-053A-4644-822A-21532C621FC7"
+> +#define XIAOMI_KEY_FN_F7       "76E9027C-95D0-4180-8692-DA6747DD1C2D"
+> +
+> +#define XIAOMI_DEVICE(guid, key)               \
+> +       .guid_string = (guid),                  \
+> +       .context = &(const unsigned int){key}
+> +
+> +struct xiaomi_wmi {
+> +       struct input_dev *input_dev;
+> +       unsigned int key_code;
+> +};
+> +
+> +int xiaomi_wmi_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +       struct xiaomi_wmi *data;
+> +
+> +       if (wdev == NULL || context == NULL)
+> +               return -EINVAL;
+> +
+> +       data = devm_kzalloc(&wdev->dev, sizeof(struct xiaomi_wmi), GFP_KERNEL);
+> +       if (data == NULL)
+> +               return -ENOMEM;
+> +       dev_set_drvdata(&wdev->dev, data);
+> +
+> +       data->input_dev = devm_input_allocate_device(&wdev->dev);
+> +       if (data->input_dev == NULL)
+> +               return -ENOMEM;
+> +       data->input_dev->name = "Xiaomi WMI keys";
+> +       data->input_dev->phys = "wmi/input0";
+> +
+> +       data->key_code = *((const unsigned int *)context);
+> +       set_bit(EV_KEY, data->input_dev->evbit);
+> +       set_bit(data->key_code, data->input_dev->keybit);
+> +
+> +       return input_register_device(data->input_dev);
+> +}
+> +
+> +void xiaomi_wmi_notify(struct wmi_device *wdev, union acpi_object *_)
+> +{
+> +       struct xiaomi_wmi *data;
+> +
+> +       if (wdev == NULL)
+> +               return;
+> +
+> +       data = dev_get_drvdata(&wdev->dev);
+> +       if (data == NULL)
+> +               return;
+> +
+> +       input_report_key(data->input_dev, data->key_code, 1);
+> +       input_sync(data->input_dev);
+> +       input_report_key(data->input_dev, data->key_code, 0);
+> +       input_sync(data->input_dev);
+> +}
+> +
+> +static const struct wmi_device_id xiaomi_wmi_id_table[] = {
+> +       // { XIAOMI_DEVICE(XIAOMI_KEY_FN_ESC_0, KEY_FN_ESC) },
+> +       // { XIAOMI_DEVICE(XIAOMI_KEY_FN_ESC_1, KEY_FN_ESC) },
+> +       { XIAOMI_DEVICE(XIAOMI_KEY_FN_FN, KEY_PROG1) },
+> +       // { XIAOMI_DEVICE(XIAOMI_KEY_CAPSLOCK, KEY_CAPSLOCK) },
+> +       { XIAOMI_DEVICE(XIAOMI_KEY_FN_F7, KEY_CUT) },
+> +
+> +       /* Terminating entry */
+> +       { }
+> +};
+> +
+> +static struct wmi_driver xiaomi_wmi_driver = {
+> +       .driver = {
+> +               .name = "xiaomi-wmi",
+> +       },
+> +       .id_table = xiaomi_wmi_id_table,
+> +       .probe = xiaomi_wmi_probe,
+> +       .notify = xiaomi_wmi_notify,
+> +};
+> +module_wmi_driver(xiaomi_wmi_driver);
+> +
+> +MODULE_DEVICE_TABLE(wmi, xiaomi_wmi_id_table);
+> +MODULE_AUTHOR("Mattias Jacobsson");
+> +MODULE_DESCRIPTION("Xiaomi WMI driver");
+> +MODULE_LICENSE("GPL v2");
 > --
-> 2.17.1
+> 2.21.0
 >
 
 
