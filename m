@@ -1,8 +1,8 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 Subject: Re: [PATCH 10/10] tools/power/x86: A tool to validate Intel Speed
  Select commands
-Date: Sat, 29 Jun 2019 19:00:49 +0300
-Message-ID: <CAHp75VfZLjtAKwFWYp32YgPc_Nq6nCGpNwrXYCp-=m38+2r-Mg@mail.gmail.com>
+Date: Sat, 29 Jun 2019 19:03:40 +0300
+Message-ID: <CAHp75VduxgJ6k4J2bB83Xbif0D0AGkxyDAdwvN64ybxdxXHXcw@mail.gmail.com>
 References: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
  <20190626223851.19138-11-srinivas.pandruvada@linux.intel.com>
  <CAHp75VfMDpKyYnZkZw51dwcEt5neQwGuZUaB7yEFQW6fjRYCqg@mail.gmail.com> <1c4238f7d18d316df82d3ba1618fecdcf014f98a.camel@linux.intel.com>
@@ -21,56 +21,21 @@ On Sat, Jun 29, 2019 at 5:53 PM Srinivas Pandruvada
 > > On Thu, Jun 27, 2019 at 1:39 AM Srinivas Pandruvada
 > > <srinivas.pandruvada@linux.intel.com> wrote:
 
-> > > +++ b/tools/power/x86/intel_speed_select/Makefile
-> >
-> > My experience with some tools are not good in order of their build
-> > process.
-> > Can this one use tools build infrastructure from the day 1?
-> Can you give some pointers?
+> > I need an Ack from tools/power maintainer(s) for this.
+> > Also see below.
+> MAINTAINER file doesn't call for any special name in this folder.
 
-Sure.
+And this tells me perhaps this driver needs a MAINTAINER record?
 
-At least simple ones are under tools/gpio, tools/iio, etc.
-
-You may compare them to see what's different and what's common and
-base Makefile here on that.
-
-I dunno if there is any tool under tools/power to use that, it might
-give an example of `descend` feature in Makefile.
-
-> > > @@ -0,0 +1,31 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +CC             = $(CROSS_COMPILE)gcc
-> > > +BUILD_OUTPUT   := $(CURDIR)
-> > > +PREFIX         ?= /usr
-> > > +DESTDIR                ?=
-> > > +
-> > > +override CFLAGS += -D__EXPORTED_HEADERS__ -Wall -D_GNU_SOURCE
-> > > +override CFLAGS += -I$(CURDIR)/../../../../include/uapi/
-> > > +override CFLAGS += -I$(CURDIR)/../../../../include/
-> > > +
-> > > +%: %.c
-> > > +       @mkdir -p $(BUILD_OUTPUT)
-> > > +       $(CC) $(CFLAGS) $< -o $(BUILD_OUTPUT)/$@ $(LDFLAGS)
-> > > +
-> > > +DEPS = isst.h
-> > > +OBJ = isst_config.o isst_core.o isst_display.o
-> > > +
-> > > +%.o: %.c $(DEPS)
-> > > +       $(CC) -c -o $(BUILD_OUTPUT)/$@ $< $(CFLAGS)
-> > > +
-> > > +intel-speed-select: $(OBJ)
-> > > +       $(CC) -o $(BUILD_OUTPUT)/$@ $^ $(CFLAGS)
-> > > +
-> > > +.PHONY : clean
-> > > +clean :
-> > > +       @rm -f $(BUILD_OUTPUT)/intel-speed-select
-> > > +       @rm -f $(BUILD_OUTPUT)/*.o
-> > > +
-> > > +install : intel-speed-select
-> > > +       install -d $(DESTDIR)$(PREFIX)/sbin
-> > > +       install $(BUILD_OUTPUT)/intel-speed-select
-> > > $(DESTDIR)$(PREFIX)/sbin/intel-speed-select
+> $./scripts/get_maintainer.pl 0010-tools-power-x86-A-tool-to-validate-
+> Intel-Speed-Selec.patch
+> Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> (commit_signer:1/1=100%,authored:1/1=100%,added_lines:31/31=100%,added_
+> lines:231/231=100%,added_lines:1607/1607=100%,added_lines:721/721=100%,
+> added_lines:479/479=100%)
+> linux-kernel@vger.kernel.org (open list)
+>
+> Len and Rafael can you ACK this tool patch?
 
 -- 
 With Best Regards,
