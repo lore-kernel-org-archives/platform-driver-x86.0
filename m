@@ -1,121 +1,78 @@
 From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [RFC 0/9] platform/x86: Huawei WMI laptop extras driver
-Date: Sun, 30 Jun 2019 01:40:59 -0400
-Message-ID: <20190630054108.19205-1-ayman.bagabas@gmail.com>
+Subject: [RFC 1/9] platform/x86: huawei-wmi: Rename guid and driver name
+Date: Sun, 30 Jun 2019 01:41:00 -0400
+Message-ID: <20190630054108.19205-2-ayman.bagabas@gmail.com>
+References: <20190630054108.19205-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190630054108.19205-1-ayman.bagabas@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: ayman.bagabas@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patch series introduce changes to huawei-wmi driver that includes:
-* Move to platform driver
-* Implement WMI management interface
-* Add micmute LED support through WMI
-* Add battery charging protection support through WMI
-* Add fn-lock support through WMI
-* Implement driver quirks and parameters
-* Add a debugfs interface to WMI
+Use WMI device UID, AMW0 has a UID of HWMI. WMI0 is the device name
+and doesn't have a UID so keep it as it is.
 
-# Move to platform driver
+Change module description to reflect the upcoming changes.
 
-The current driver offers hotkeys and micmute led support only. With
-these changes, a platform driver makes more sense since it handles these
-changes pretty nicely.
+Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
+---
+ drivers/platform/x86/huawei-wmi.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-# Implement WMI management interface
-
-Huawei Matebook laptops come with two WMI interfaces. The first being
-WMI0 which is considered "legacy" and AFAIK only found on the Matebook X
-released in 2017. The second has a UID of "HWMI" and is found in pretty
-much all models with a slight difference in implementation except for
-the Matebook X (2017). Since this model has two interfaces, some aspects
-are controlled through the legacy interface and some through the other
-interface. Currently, the legacy interface is not fully implemented and
-is only used for hotkeys and further debugging has to be done.
-
-The WMI interface takes a 64 bit integer, although uses 32 bits most of
-the time, and returns a 256-260 bytes buffer consists of either one ACPI
-buffer of 260 bytes, in the case of Matebook X (2017), or one ACPI
-package of two buffers, one with 4 bytes, and the other with 256 bytes.
-We only care about the latter 256 buffer in both cases since the 4 bytes
-always return zeros. The first byte of this 256 buffer always has the
-return status where 1 indicated error. Some models require calling the
-WMI interface twice to execute a command.
-
-# Add micmute LED support through WMI
-
-After implementing the WMI interface, micmute LED can be controlled
-easily. Models with the legacy interface fall back to ACPI EC method
-control since the legacy interface is not implemented.
-
-# Add battery charging protection support through WMI
-
-Most models, that has the WMI interface, are capable of battery
-protection where it can control battery charging thresholds and limits
-charging the battery to certain values.
-
-# Add fn-lock support through WMI
-
-The behavior of hotkeys is not the same among all models. Some models
-require fn-lock to do things like `Ctrl-Ins` or `Alt-PrtSc`. By default,
-hotkeys behave as special keys (media keys, Ins, etc), but if a modifier
-is used (ctrl, alt, shift) these keys behave as F1-F12 keys. If the Fn
-key is toggled on, the hotkeys with or without a modifier, behave as
-F1-F12 keys. This makes it impossible to use a modifier and `PrtSc` or
-`Ins`.
-
-Now, some models fix this by excluding `PrtSc` and `Ins` keys from being
-treated as F11 and F12 keys with the use of a modifier. However, some
-models do not, and fixes this by the so called fn-lock.
-
-Fn-lock inverts the behavior of the top row from special keys to F1-F12
-keys. So a modifier and a special key would be possible which make
-things like `Alt-Ins` possible. Now, with fn-lock we would have 4 modes:
-
-* Fn-key off & fn-lock off - hotkeys treated as special keys using a
-  modifier gives F1-F12 keys.
-* Fn-key on & fn-lock off - hotkeys treated as F1-F12 keys and using a
-  modifier gives F1-F12.
-* Fn-key off & fn-lock on - hotkeys are treated as F1-F12 keys and using
-  a modifier gives special keys.
-* Fn-key on & fn-lock on - hotkeys are treated as special keys and using
-  a modifier gives special keys.
-
-# Implement driver quirks and parameters
-
-The driver introduces 3 quirks and 2 parameters that can change the
-driver's behavior. These quirks being as:
-1. Fixes reporting brightness keys twice since it's already handled by
-   acpi-video.
-2. Some models need a short delay when setting battery thresholds to
-   prevent a race condition when two processes read/write.
-3. Matebook X (2017) handles micmute led through the "legacy" interface
-   which is not currently implemented. Use ACPI EC method to control
-   this led.
-
-and the 2 parameters can enforce the behavior of quirk 1 & 2.
-
-# Add a debugfs interface to WMI
-
-An interface to the WMI management interface that allows easier
-debugging.
-
-Ayman Bagabas (9):
-  platform/x86: huawei-wmi: rename guid and driver name
-  platform/x86: huawei-wmi: move to platform driver
-  platform/x86: huawei-wmi: implement huawei wmi management interface
-  platform/x86: huawei-wmi: add quirks and module parameters
-  platform/x86: huawei-wmi: control micmute led through wmi interface
-  platform/x86: huawei-wmi: add battery charging thresholds
-  platform/x86: huawei-wmi: add fn-lock support
-  platform/x86: huawei-wmi: add sysfs interface support
-  platform/x86: huawei-wmi: add debugfs support
-
- drivers/platform/x86/huawei-wmi.c | 710 ++++++++++++++++++++++++++----
- 1 file changed, 629 insertions(+), 81 deletions(-)
-
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 52fcac5b393a..a1159850a16c 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- *  Huawei WMI hotkeys
++ *  Huawei WMI laptop extras driver
+  *
+  *  Copyright (C) 2018	      Ayman Bagabas <ayman.bagabas@gmail.com>
+  */
+@@ -15,10 +15,12 @@
+ /*
+  * Huawei WMI GUIDs
+  */
+-#define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
+-#define AMW0_EVENT_GUID "ABBC0F5C-8EA1-11D1-A000-C90629100000"
++#define HWMI_EVENT_GUID "ABBC0F5C-8EA1-11D1-A000-C90629100000"
+ 
++/* Legacy GUIDs */
+ #define WMI0_EXPENSIVE_GUID "39142400-C6A3-40fa-BADB-8A2652834100"
++#define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
++
+ 
+ struct huawei_wmi_priv {
+ 	struct input_dev *idev;
+@@ -37,7 +39,7 @@ static const struct key_entry huawei_wmi_keymap[] = {
+ 	{ KE_KEY,    0x289, { KEY_WLAN } },
+ 	// Huawei |M| key
+ 	{ KE_KEY,    0x28a, { KEY_CONFIG } },
+-	// Keyboard backlight
++	// Keyboard backlit
+ 	{ KE_IGNORE, 0x293, { KEY_KBDILLUMTOGGLE } },
+ 	{ KE_IGNORE, 0x294, { KEY_KBDILLUMUP } },
+ 	{ KE_IGNORE, 0x295, { KEY_KBDILLUMUP } },
+@@ -186,7 +188,7 @@ static int huawei_wmi_probe(struct wmi_device *wdev)
+ 
+ static const struct wmi_device_id huawei_wmi_id_table[] = {
+ 	{ .guid_string = WMI0_EVENT_GUID },
+-	{ .guid_string = AMW0_EVENT_GUID },
++	{ .guid_string = HWMI_EVENT_GUID },
+ 	{  }
+ };
+ 
+@@ -203,5 +205,5 @@ module_wmi_driver(huawei_wmi_driver);
+ 
+ MODULE_DEVICE_TABLE(wmi, huawei_wmi_id_table);
+ MODULE_AUTHOR("Ayman Bagabas <ayman.bagabas@gmail.com>");
+-MODULE_DESCRIPTION("Huawei WMI hotkeys");
++MODULE_DESCRIPTION("Huawei WMI laptop extras driver");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
