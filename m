@@ -1,7 +1,7 @@
 From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [RFC 1/9] platform/x86: huawei-wmi: Rename guid and driver name
-Date: Sun, 30 Jun 2019 01:41:00 -0400
-Message-ID: <20190630054108.19205-2-ayman.bagabas@gmail.com>
+Subject: [RFC 3/9] platform/x86: huawei-wmi: Implement huawei wmi management interface
+Date: Sun, 30 Jun 2019 01:41:02 -0400
+Message-ID: <20190630054108.19205-4-ayman.bagabas@gmail.com>
 References: <20190630054108.19205-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,67 +12,204 @@ To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, pl
 Cc: ayman.bagabas@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Use WMI device UID, AMW0 has a UID of HWMI. WMI0 is the device name
-and doesn't have a UID so keep it as it is.
+Huawei Matebook laptops come with a WMI management interface that can
+control various aspects of the device. This interface is also found on
+the old Matebook X released in 2017.
 
-Change module description to reflect the upcoming changes.
+Implement basic functionality of this interface along with supported
+command IDs that are implemented in this series.
 
 Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
- drivers/platform/x86/huawei-wmi.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/platform/x86/huawei-wmi.c | 130 ++++++++++++++++++++++++++++++
+ 1 file changed, 130 insertions(+)
 
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 52fcac5b393a..a1159850a16c 100644
+index 12cae450fc1f..27520b0f8956 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- *  Huawei WMI hotkeys
-+ *  Huawei WMI laptop extras driver
-  *
-  *  Copyright (C) 2018	      Ayman Bagabas <ayman.bagabas@gmail.com>
-  */
-@@ -15,10 +15,12 @@
+@@ -10,24 +10,36 @@
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/leds.h>
+ #include <linux/module.h>
++#include <linux/mutex.h>
+ #include <linux/platform_device.h>
+ #include <linux/wmi.h>
+ 
  /*
   * Huawei WMI GUIDs
   */
--#define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
--#define AMW0_EVENT_GUID "ABBC0F5C-8EA1-11D1-A000-C90629100000"
-+#define HWMI_EVENT_GUID "ABBC0F5C-8EA1-11D1-A000-C90629100000"
++#define HWMI_METHOD_GUID "ABBC0F5B-8EA1-11D1-A000-C90629100000"
+ #define HWMI_EVENT_GUID "ABBC0F5C-8EA1-11D1-A000-C90629100000"
  
-+/* Legacy GUIDs */
+ /* Legacy GUIDs */
  #define WMI0_EXPENSIVE_GUID "39142400-C6A3-40fa-BADB-8A2652834100"
-+#define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
+ #define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
+ 
++/* HWMI commands */
 +
++enum {
++	BATTERY_THRESH_GET		= 0x00001103, /* \GBTT */
++	BATTERY_THRESH_SET		= 0x00001003, /* \SBTT */
++	FN_LOCK_GET			= 0x00000604, /* \GFRS */
++	FN_LOCK_SET			= 0x00000704, /* \SFRS */
++	MICMUTE_LED_SET			= 0x00000b04, /* \SMLS */
++};
  
  struct huawei_wmi_priv {
- 	struct input_dev *idev;
-@@ -37,7 +39,7 @@ static const struct key_entry huawei_wmi_keymap[] = {
- 	{ KE_KEY,    0x289, { KEY_WLAN } },
- 	// Huawei |M| key
- 	{ KE_KEY,    0x28a, { KEY_CONFIG } },
--	// Keyboard backlight
-+	// Keyboard backlit
- 	{ KE_IGNORE, 0x293, { KEY_KBDILLUMTOGGLE } },
- 	{ KE_IGNORE, 0x294, { KEY_KBDILLUMUP } },
- 	{ KE_IGNORE, 0x295, { KEY_KBDILLUMUP } },
-@@ -186,7 +188,7 @@ static int huawei_wmi_probe(struct wmi_device *wdev)
- 
- static const struct wmi_device_id huawei_wmi_id_table[] = {
- 	{ .guid_string = WMI0_EVENT_GUID },
--	{ .guid_string = AMW0_EVENT_GUID },
-+	{ .guid_string = HWMI_EVENT_GUID },
- 	{  }
+ 	struct input_dev *idev[2];
+ 	struct led_classdev cdev;
+ 	acpi_handle handle;
+ 	char *acpi_method;
++	struct mutex wmi_lock;
+ 	struct platform_device *pdev;
  };
  
-@@ -203,5 +205,5 @@ module_wmi_driver(huawei_wmi_driver);
+@@ -50,6 +62,116 @@ static const struct key_entry huawei_wmi_keymap[] = {
+ 	{ KE_END,	 0 }
+ };
  
- MODULE_DEVICE_TABLE(wmi, huawei_wmi_id_table);
++/* Utils */
++
++static int huawei_wmi_call(struct device *dev, struct acpi_buffer *in,
++		struct acpi_buffer *out)
++{
++	struct huawei_wmi_priv *priv = dev_get_drvdata(dev);
++	acpi_status status;
++
++	mutex_lock(&priv->wmi_lock);
++	status = wmi_evaluate_method(HWMI_METHOD_GUID, 0, 1, in, out);
++	mutex_unlock(&priv->wmi_lock);
++	if (ACPI_FAILURE(status)) {
++		dev_err(dev, "Failed to evaluate wmi method\n");
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
++/* HWMI takes a 64 bit input and returns either a package with 2 buffers, one of
++ * 4 bytes and the other of 256 bytes, or one buffer of size 0x104 (260) bytes.
++ * The first 4 bytes are ignored, we ignore the first 4 bytes buffer if we got a
++ * package, or skip the first 4 if a buffer of 0x104 is used. The first byte of
++ * the remaining 0x100 sized buffer has the return status of every call. In case
++ * the return status is non-zero, we return -ENODEV but still copy the returned
++ * buffer to the given buffer parameter (buf).
++ */
++static int huawei_wmi_cmd(struct device *dev, u64 arg, u8 *buf, size_t buflen)
++{
++	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
++	struct acpi_buffer in;
++	union acpi_object *obj;
++	size_t len;
++	int err, i;
++
++	in.length = sizeof(arg);
++	in.pointer = &arg;
++
++	/* Some models require calling HWMI twice to execute a command. We evaluate
++	 * HWMI and if we get a non-zero return status we evaluate it again.
++	 */
++	for (i = 0; i < 2; i++) {
++		err = huawei_wmi_call(dev,  &in, &out);
++		if (err)
++			goto fail_cmd;
++
++		obj = out.pointer;
++		if (!obj) {
++			err = -EIO;
++			goto fail_cmd;
++		}
++
++		switch (obj->type) {
++		/* Models that implement both "legacy" and HWMI tend to return a 0x104
++		 * sized buffer instead of a package of 0x4 and 0x100 buffers.
++		 */
++		case ACPI_TYPE_BUFFER:
++			if (obj->buffer.length == 0x104) {
++				// Skip the first 4 bytes.
++				obj->buffer.pointer += 4;
++				len = 0x100;
++			} else {
++				dev_err(dev, "Bad buffer length, got %d\n", obj->buffer.length);
++				err = -EIO;
++				goto fail_cmd;
++			}
++
++			break;
++		/* HWMI returns a package with 2 buffer elements, one of 4 bytes and the
++		 * other is 256 bytes.
++		 */
++		case ACPI_TYPE_PACKAGE:
++			if (obj->package.count != 2) {
++				dev_err(dev, "Bad package count, got %d\n", obj->package.count);
++				err = -EIO;
++				goto fail_cmd;
++			}
++
++			obj = &obj->package.elements[1];
++			if (obj->type != ACPI_TYPE_BUFFER) {
++				dev_err(dev, "Bad package element type, got %d\n", obj->type);
++				err = -EIO;
++				goto fail_cmd;
++			}
++			len = obj->buffer.length;
++
++			break;
++		/* Shouldn't get here! */
++		default:
++			dev_err(dev, "Unexpected obj type, got: %d\n", obj->type);
++			err = -EIO;
++			goto fail_cmd;
++		}
++
++		if (!*obj->buffer.pointer)
++			break;
++	}
++
++	err = (*obj->buffer.pointer) ? -ENODEV : 0;
++
++	if (buf) {
++		len = min(buflen, len);
++		memcpy(buf, obj->buffer.pointer, len);
++	}
++
++fail_cmd:
++	kfree(out.pointer);
++	return err;
++}
++
+ /* LEDs */
+ 
+ static int huawei_wmi_micmute_led_set(struct led_classdev *led_cdev,
+@@ -222,6 +344,10 @@ static int huawei_wmi_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	if (wmi_has_guid(HWMI_METHOD_GUID)) {
++		mutex_init(&priv->wmi_lock);
++	}
++
+ 	return huawei_wmi_leds_setup(&pdev->dev);
+ }
+ 
+@@ -233,6 +359,9 @@ static int huawei_wmi_remove(struct platform_device *pdev)
+ 	if (wmi_has_guid(HWMI_EVENT_GUID))
+ 		wmi_remove_notify_handler(HWMI_EVENT_GUID);
+ 
++	if (wmi_has_guid(HWMI_METHOD_GUID)) {
++	}
++
+ 	return 0;
+ }
+ 
+@@ -272,6 +401,7 @@ module_exit(huawei_wmi_exit);
+ 
+ MODULE_ALIAS("wmi:"WMI0_EVENT_GUID);
+ MODULE_ALIAS("wmi:"HWMI_EVENT_GUID);
++MODULE_ALIAS("wmi:"HWMI_METHOD_GUID);
  MODULE_AUTHOR("Ayman Bagabas <ayman.bagabas@gmail.com>");
--MODULE_DESCRIPTION("Huawei WMI hotkeys");
-+MODULE_DESCRIPTION("Huawei WMI laptop extras driver");
+ MODULE_DESCRIPTION("Huawei WMI laptop extras driver");
  MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
