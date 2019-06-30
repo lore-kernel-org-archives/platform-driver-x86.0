@@ -1,7 +1,7 @@
 From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [RFC 5/9] platform/x86: huawei-wmi: Control micmute led through wmi interface
-Date: Sun, 30 Jun 2019 01:41:04 -0400
-Message-ID: <20190630054108.19205-6-ayman.bagabas@gmail.com>
+Subject: [RFC 6/9] platform/x86: huawei-wmi: Add battery charging thresholds
+Date: Sun, 30 Jun 2019 01:41:05 -0400
+Message-ID: <20190630054108.19205-7-ayman.bagabas@gmail.com>
 References: <20190630054108.19205-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,138 +12,115 @@ To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, pl
 Cc: ayman.bagabas@gmail.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Now that huawei WMI management interface is implemented, micmute LED can
-be controlled easily through this interface. Exception is the Matebook X
-(2017) which continue to uses ACPI EC method to control the LED. This
-model can control the LED through the legacy WMI interface which is not
-implemented ATM.
+Implement battery charging thresholds functionality to be used with
+sysfs interface support that is implemented in this series.
+
+Setting battery charging thresholds can introduce a race condition where
+two are trying to read/write values from/to EC memory. Even though a
+mutex is used, this doesn't guarantee that these values will make it to
+EC so a blocking sleep is necessary.
+
+This sleep is enforced on the MACH-WX9 model since turning off battery
+protection using (0,100) doesn't change the values in the EC memory,
+instead it only disables the protection. So a workaround is to set the
+thresholds to (0,0) before setting it to (0,100). This will ensure
+that we update these values in EC memory and then turning it off with
+(0,100). Thus, the msleep(1000).
 
 Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
- drivers/platform/x86/huawei-wmi.c | 86 ++++++++++++++++++-------------
- 1 file changed, 49 insertions(+), 37 deletions(-)
+In huawei_wmi_battery_get and later in huawei_wmi_fn_lock_get, 256 bytes
+buffer is allocated dynamically on the stack. Now I know this is
+discouraged, should it be changed to use kmalloc?
+
+ drivers/platform/x86/huawei-wmi.c | 54 +++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 8f918138053a..9013a05d2832 100644
+index 9013a05d2832..da3986cd0428 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -46,8 +46,6 @@ static struct quirk_entry *quirks;
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/acpi.h>
++#include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+@@ -46,6 +47,7 @@ static struct quirk_entry *quirks;
  struct huawei_wmi_priv {
  	struct input_dev *idev[2];
  	struct led_classdev cdev;
--	acpi_handle handle;
--	char *acpi_method;
++	struct mutex battery_lock;
  	struct mutex wmi_lock;
  	struct platform_device *pdev;
  };
-@@ -238,49 +236,57 @@ static int huawei_wmi_cmd(struct device *dev, u64 arg, u8 *buf, size_t buflen)
- static int huawei_wmi_micmute_led_set(struct led_classdev *led_cdev,
- 		enum led_brightness brightness)
- {
--	struct huawei_wmi_priv *priv = dev_get_drvdata(led_cdev->dev->parent);
--	acpi_status status;
--	union acpi_object args[3];
--	struct acpi_object_list arg_list = {
--		.pointer = args,
--		.count = ARRAY_SIZE(args),
--	};
--
--	args[0].type = args[1].type = args[2].type = ACPI_TYPE_INTEGER;
--	args[1].integer.value = 0x04;
--
--	if (strcmp(priv->acpi_method, "SPIN") == 0) {
--		args[0].integer.value = 0;
--		args[2].integer.value = brightness ? 1 : 0;
--	} else if (strcmp(priv->acpi_method, "WPIN") == 0) {
--		args[0].integer.value = 1;
--		args[2].integer.value = brightness ? 0 : 1;
-+	/* This is a workaround until the "legacy" interface is implemented. */
-+	if (quirks && quirks->ec_micmute) {
-+		char *acpi_method;
-+		acpi_handle handle;
-+		acpi_status status;
-+		union acpi_object args[3];
-+		struct acpi_object_list arg_list = {
-+			.pointer = args,
-+			.count = ARRAY_SIZE(args),
-+		};
-+
-+		handle = ec_get_handle();
-+		if (!handle) {
-+			dev_err(led_cdev->dev->parent, "Failed to get EC handle\n");
-+			return -ENODEV;
-+		}
-+
-+		args[0].type = args[1].type = args[2].type = ACPI_TYPE_INTEGER;
-+		args[1].integer.value = 0x04;
-+
-+		if (acpi_has_method(handle, "SPIN")) {
-+			acpi_method = "SPIN";
-+			args[0].integer.value = 0;
-+			args[2].integer.value = brightness ? 1 : 0;
-+		} else if (acpi_has_method(handle, "WPIN")) {
-+			acpi_method = "WPIN";
-+			args[0].integer.value = 1;
-+			args[2].integer.value = brightness ? 0 : 1;
-+		} else {
-+			return -ENODEV;
-+		}
-+
-+		status = acpi_evaluate_object(handle, acpi_method, &arg_list, NULL);
-+		if (ACPI_FAILURE(status))
-+			return -ENODEV;
-+
-+		return 0;
- 	} else {
--		return -EINVAL;
--	}
-+		u8 arg[8];
- 
--	status = acpi_evaluate_object(priv->handle, priv->acpi_method, &arg_list, NULL);
--	if (ACPI_FAILURE(status))
--		return -ENXIO;
-+		*(u64 *)arg = MICMUTE_LED_SET;
-+		arg[2] = brightness;
- 
--	return 0;
-+		return huawei_wmi_cmd(led_cdev->dev->parent, *(u64 *)arg, NULL, NULL);
-+	}
+@@ -298,6 +300,57 @@ static int huawei_wmi_leds_setup(struct device *dev)
+ 	return devm_led_classdev_register(dev, &priv->cdev);
  }
  
- static int huawei_wmi_leds_setup(struct device *dev)
- {
- 	struct huawei_wmi_priv *priv = dev_get_drvdata(dev);
++/* Battery protection */
++
++static int huawei_wmi_battery_get(struct device *dev, int *low, int *high)
++{
++	struct huawei_wmi_priv *priv = dev_get_drvdata(dev);
++	u8 ret[0x100];
++	int err, i;
++
++	mutex_lock(&priv->battery_lock);
++	err = huawei_wmi_cmd(dev, BATTERY_THRESH_GET, ret, 0x100);
++	mutex_unlock(&priv->battery_lock);
++	if (err)
++		return err;
++
++	/* Find the last two non-zero values. Return status is ignored. */
++	i = 0x100;
++	do {
++		*low = ret[i-1];
++		*high = ret[i];
++	} while (i > 2 && !ret[i--]);
++
++	return 0;
++}
++
++static int huawei_wmi_battery_set(struct device *dev, int low, int high)
++{
++	struct huawei_wmi_priv *priv = dev_get_drvdata(dev);
++	u8 arg[8];
++	int err;
++
++	*(u64 *)arg = BATTERY_THRESH_SET;
++	arg[2] = low;
++	arg[3] = high;
++
++	/* This is an edge case were some models turn battery protection
++	 * off without changing their thresholds values. We clear the
++	 * values before turning off protection. Sometimes we need a sleep delay to
++	 * make sure these values make their way to EC memory.
++	 */
++	if (low == 0 && high == 100)
++		huawei_wmi_battery_set(dev, 0, 0);
++
++	mutex_lock(&priv->battery_lock);
++	err = huawei_wmi_cmd(dev, *(u64 *)arg, NULL, NULL);
++	if (quirks && quirks->battery_sleep)
++		msleep(1000);
++	mutex_unlock(&priv->battery_lock);
++
++	return err;
++}
++
+ /* Input */
  
--	priv->handle = ec_get_handle();
--	if (!priv->handle)
--		return 0;
--
--	if (acpi_has_method(priv->handle, "SPIN"))
--		priv->acpi_method = "SPIN";
--	else if (acpi_has_method(priv->handle, "WPIN"))
--		priv->acpi_method = "WPIN";
--	else
--		return 0;
--
- 	priv->cdev.name = "platform::micmute";
- 	priv->cdev.max_brightness = 1;
- 	priv->cdev.brightness_set_blocking = huawei_wmi_micmute_led_set;
-@@ -412,9 +418,15 @@ static int huawei_wmi_probe(struct platform_device *pdev)
+ static void huawei_wmi_process_key(struct input_dev *idev, int code)
+@@ -418,6 +471,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
  
  	if (wmi_has_guid(HWMI_METHOD_GUID)) {
  		mutex_init(&priv->wmi_lock);
-+
-+		err = huawei_wmi_leds_setup(&pdev->dev);
-+		if (err) {
-+			dev_err(&pdev->dev, "Failed to setup leds\n");
-+			return err;
-+		}
- 	}
++		mutex_init(&priv->battery_lock);
  
--	return huawei_wmi_leds_setup(&pdev->dev);
-+	return 0;
- }
- 
- static int huawei_wmi_remove(struct platform_device *pdev)
+ 		err = huawei_wmi_leds_setup(&pdev->dev);
+ 		if (err) {
 -- 
 2.20.1
