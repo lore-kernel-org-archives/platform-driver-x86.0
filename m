@@ -1,32 +1,65 @@
-From: Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH 4/4] platform: x86: Use dev_get_drvdata()
-Date: Mon,  1 Jul 2019 11:24:26 +0800
-Message-ID: <20190701032426.26127-1-huangfq.daxian@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [UPDATE][PATCH 10/10] tools/power/x86: A tool to validate Intel
+ Speed Select commands
+Date: Mon, 1 Jul 2019 14:32:59 +0300
+Message-ID: <CAHp75Vf-p3O10_Ns_NY4JoWBS1S34z-NW0jVJdCdqszdGVmoQw@mail.gmail.com>
+References: <20190630171408.8673-1-srinivas.pandruvada@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190630171408.8673-1-srinivas.pandruvada@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Fuqian Huang <huangfq.daxian@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Andriy Shevchenko <andriy.shevchenko@intel.com>, Jonathan Corbet <corbet@lwn.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Alan Cox <alan@linux.intel.com>, Len Brown <lenb@kernel.org>, prarit@redhat.com, darcari@redhat.com, Linux Documentation List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Using dev_get_drvdata directly.
+On Sun, Jun 30, 2019 at 8:14 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> The Intel(R) Speed select technologies contains four features.
+>
+> Performance profile:An non architectural mechanism that allows multiple
+> optimized performance profiles per system via static and/or dynamic
+> adjustment of core count, workload, Tjmax, and TDP, etc. aka ISS
+> in the documentation.
+>
+> Base Frequency: Enables users to increase guaranteed base frequency on
+> certain cores (high priority cores) in exchange for lower base frequency
+> on remaining cores (low priority cores). aka PBF in the documenation.
+>
+> Turbo frequency: Enables the ability to set different turbo ratio limits
+> to cores based on priority. aka FACT in the documentation.
+>
+> Core power: An Interface that allows user to define per core/tile
+> priority.
+>
+> There is a multi level help for commands and options. This can be used
+> to check required arguments for each feature and commands for the
+> feature.
+>
+> To start navigating the features start with
+>
+> $sudo intel-speed-select --help
+>
+> For help on a specific feature for example
+> $sudo intel-speed-select perf-profile --help
+>
+> To get help for a command for a feature for example
+> $sudo intel-speed-select perf-profile get-lock-status --help
+>
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+> Updates:
+> - Copied Makefile from tools/gpio and moified the Makefile here
+> - Added entry to tools/build/Makefile
+> - Rename directory to match the executable name
+> - Fix one error message
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Thanks!
+I pushed to my review and testing queue, while still waiting for some ACKs.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 9b18a184e0aa..49049b02a015 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1353,8 +1353,7 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
- 					  struct attribute *attr, int idx)
- {
- 	struct device *dev = container_of(kobj, struct device, kobj);
--	struct platform_device *pdev = to_platform_device(dev->parent);
--	struct asus_wmi *asus = platform_get_drvdata(pdev);
-+	struct asus_wmi *asus = dev_get_drvdata(dev->parent);
- 	int dev_id = -1;
- 	int fan_attr = -1;
- 	u32 value = ASUS_WMI_UNSUPPORTED_METHOD;
+It seems I can promote the driver itself now,w/o tools, if you want me to do so.
+
 -- 
-2.11.0
+With Best Regards,
+Andy Shevchenko
