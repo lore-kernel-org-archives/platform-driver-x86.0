@@ -1,67 +1,67 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 10/10] tools/power/x86: A tool to validate Intel Speed
- Select commands
-Date: Tue, 2 Jul 2019 18:39:29 +0300
-Message-ID: <CAHp75VfY+u4L85VncaLYFcoFwa0OzTo__ZKZGboRXmyQ50mCOA@mail.gmail.com>
-References: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
- <20190626223851.19138-11-srinivas.pandruvada@linux.intel.com>
- <CAHp75VfMDpKyYnZkZw51dwcEt5neQwGuZUaB7yEFQW6fjRYCqg@mail.gmail.com> <CAJvTdK=S1vPGg9HZjUxJN2aXSfSXBDyYYLawONA0PP_yKvf19A@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Support for buttons on newer MS Surface devices
+Date: Tue, 2 Jul 2019 20:13:27 +0300
+Message-ID: <CAHp75Ve-f-piRxwG2u2djWGt2fUKkvZSDJ+XkjGKLmMZeLEYsw@mail.gmail.com>
+References: <20190702003740.75970-1-luzmaximilian@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJvTdK=S1vPGg9HZjUxJN2aXSfSXBDyYYLawONA0PP_yKvf19A@mail.gmail.com>
+In-Reply-To: <20190702003740.75970-1-luzmaximilian@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Len Brown <lenb@kernel.org>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Andriy Shevchenko <andriy.shevchenko@intel.com>, Jonathan Corbet <corbet@lwn.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Alan Cox <alan@linux.intel.com>, Prarit Bhargava <prarit@redhat.com>, David Arcari <darcari@redhat.com>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Maximilian Luz <luzmaximilian@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jul 2, 2019 at 5:42 PM Len Brown <lenb@kernel.org> wrote:
+On Tue, Jul 2, 2019 at 3:38 AM Maximilian Luz <luzmaximilian@gmail.com> wrote:
 >
-> Acked-by: Len Brown <len.brown@intel.com>
+> This series adds suport for power and volume buttons on 5th and 6th
+> generation Microsoft Surface devices. Specifically, it adds support for
+> the power-button on the Surface Laptop 1 and Laptop 2, as well as
+> support for power- and (on-device) volume-buttons on the Surface Pro 5
+> (2017), Pro 6, and Book 2.
+>
+> These devices use the same MSHW0040 device as on the Surface Pro 4,
+> however, whereas the Pro 4 uses an ACPI notify handler, the newer
+> devices use GPIO interrupts to signal these events.
+>
+> The first patch of this series ensures that the surfacepro3_button
+> driver, used for MSHW0040 on the Pro 4, does not probe for the newer
+> devices. The second patch adapts soc_button_array to implement the
+> actual button support.
+>
+> I think the changes to soc_button_array in the second patch warrant a
+> thorough review. I've tried to make things a bit more generic to be able
+> to integrate arbitrary ACPI GPIO power-/volume-button devices more
+> easily, I'm not sure if there may be reasons against this.
+>
+> These patches have also been tested on various Surface devices via the
+> github.com/jakeday/linux-surface patchset.
 >
 
-Thanks!
-I hope this is applicable for v2.
+> Changes since v1:
+>   - [PATCH 1/2] platform: Fix device check for surfacepro3_button
+>     No changes.
+>
+>   - [PATCH 2/2] input: soc_button_array for newer surface devices
+>     Ensure the patch compiles without CONFIG_ACPI.
 
-> On Sat, Jun 29, 2019 at 10:31 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> >
-> > On Thu, Jun 27, 2019 at 1:39 AM Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com> wrote:
-> > >
-> > > The Intel(R) Speed select technologies contains four features.
-> > >
-> > > Performance profile:An non architectural mechanism that allows multiple
-> > > optimized performance profiles per system via static and/or dynamic
-> > > adjustment of core count, workload, Tjmax, and TDP, etc. aka ISS
-> > > in the documentation.
-> > >
-> > > Base Frequency: Enables users to increase guaranteed base frequency on
-> > > certain cores (high priority cores) in exchange for lower base frequency
-> > > on remaining cores (low priority cores). aka PBF in the documenation.
-> > >
-> > > Turbo frequency: Enables the ability to set different turbo ratio limits
-> > > to cores based on priority. aka FACT in the documentation.
-> > >
-> > > Core power: An Interface that allows user to define per core/tile
-> > > priority.
-> > >
-> > > There is a multi level help for commands and options. This can be used
-> > > to check required arguments for each feature and commands for the
-> > > feature.
-> > >
-> > > To start navigating the features start with
-> > >
-> > > $sudo intel-speed-select --help
-> > >
-> > > For help on a specific feature for example
-> > > $sudo intel-speed-select perf-profile --help
-> > >
-> > > To get help for a command for a feature for example
-> > > $sudo intel-speed-select perf-profile get-lock-status --help
-> > >
-> >
-> > I need an Ack from tools/power maintainer(s) for this.
+I re-pushed to my queue, though if you are going to send a new
+version, check my repository for the titles of the patches (you need
+to use correct templates for the subsystems).
+
+>
+> Maximilian Luz (2):
+>   platform: Fix device check for surfacepro3_button
+>   input: soc_button_array for newer surface devices
+>
+>  drivers/input/misc/soc_button_array.c     | 145 ++++++++++++++++++++--
+>  drivers/platform/x86/surfacepro3_button.c |  38 ++++++
+>  2 files changed, 171 insertions(+), 12 deletions(-)
+>
+> --
+> 2.22.0
+>
+
 
 -- 
 With Best Regards,
