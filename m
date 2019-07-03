@@ -1,38 +1,47 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] MAINTAINERS: Update for Intel Speed Select Technology
-Date: Tue,  2 Jul 2019 18:53:31 -0700
-Message-ID: <20190703015331.5449-1-srinivas.pandruvada@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy@infradead.org, andriy.shevchenko@intel.com, corbet@lwn.net
-Cc: rjw@rjwysocki.net, alan@linux.intel.com, lenb@kernel.org, prarit@redhat.com, darcari@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 14/39] x86/efi: fix a -Wtype-limits compilation warning
+Date: Tue,  2 Jul 2019 22:14:49 -0400
+Message-ID: <20190703021514.17727-14-sashal@kernel.org>
+References: <20190703021514.17727-1-sashal@kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190703021514.17727-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Qian Cai <cai@lca.pw>, "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Added myself as the maintainer.
+From: Qian Cai <cai@lca.pw>
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+[ Upstream commit 919aef44d73d5d0c04213cb1bc31149cc074e65e ]
+
+Compiling a kernel with W=1 generates this warning,
+
+arch/x86/platform/efi/quirks.c:731:16: warning: comparison of unsigned
+expression >= 0 is always true [-Wtype-limits]
+
+Fixes: 3425d934fc03 ("efi/x86: Handle page faults occurring while running ...")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/platform/efi/quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5cfbea4ce575..b6ed7958372d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8101,6 +8101,14 @@ S:	Supported
- F:	drivers/infiniband/hw/i40iw/
- F:	include/uapi/rdma/i40iw-abi.h
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index a25a9fd987a9..529522c62d89 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -724,7 +724,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
+ 	 * Address range 0x0000 - 0x0fff is always mapped in the efi_pgd, so
+ 	 * page faulting on these addresses isn't expected.
+ 	 */
+-	if (phys_addr >= 0x0000 && phys_addr <= 0x0fff)
++	if (phys_addr <= 0x0fff)
+ 		return;
  
-+INTEL SPEED SELECT TECHNOLOGY
-+M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/intel_speed_select_if/
-+F:	tools/power/x86/intel-speed-select/
-+F:	include/uapi/linux/isst_if.h
-+
- INTEL TELEMETRY DRIVER
- M:	Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
- M:	"David E. Box" <david.e.box@linux.intel.com>
+ 	/*
 -- 
-2.17.2
+2.20.1
