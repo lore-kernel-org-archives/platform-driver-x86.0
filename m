@@ -1,26 +1,38 @@
-From: Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH 0/2] Support for buttons on newer MS Surface devices
-Date: Tue, 2 Jul 2019 19:26:27 +0200
-Message-ID: <c50dbd58-c0d4-1a93-b292-68df209749b9@gmail.com>
-References: <20190702003740.75970-1-luzmaximilian@gmail.com>
- <CAHp75Ve-f-piRxwG2u2djWGt2fUKkvZSDJ+XkjGKLmMZeLEYsw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] MAINTAINERS: Update for Intel Speed Select Technology
+Date: Tue,  2 Jul 2019 18:53:31 -0700
+Message-ID: <20190703015331.5449-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve-f-piRxwG2u2djWGt2fUKkvZSDJ+XkjGKLmMZeLEYsw@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To: dvhart@infradead.org, andy@infradead.org, andriy.shevchenko@intel.com, corbet@lwn.net
+Cc: rjw@rjwysocki.net, alan@linux.intel.com, lenb@kernel.org, prarit@redhat.com, darcari@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 7/2/19 7:13 PM, Andy Shevchenko wrote:
-> I re-pushed to my queue, though if you are going to send a new
-> version, check my repository for the titles of the patches (you need
-> to use correct templates for the subsystems).
+Added myself as the maintainer.
 
-Got it, sorry for the inconvenience.
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Thank you!
-Maximilian
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5cfbea4ce575..b6ed7958372d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8101,6 +8101,14 @@ S:	Supported
+ F:	drivers/infiniband/hw/i40iw/
+ F:	include/uapi/rdma/i40iw-abi.h
+ 
++INTEL SPEED SELECT TECHNOLOGY
++M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/intel_speed_select_if/
++F:	tools/power/x86/intel-speed-select/
++F:	include/uapi/linux/isst_if.h
++
+ INTEL TELEMETRY DRIVER
+ M:	Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+ M:	"David E. Box" <david.e.box@linux.intel.com>
+-- 
+2.17.2
