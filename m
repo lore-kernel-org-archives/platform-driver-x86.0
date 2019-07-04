@@ -1,125 +1,64 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 06/11] platform: x86: hp-wmi: convert platform driver to use dev_groups
-Date: Thu,  4 Jul 2019 10:46:12 +0200
-Message-ID: <20190704084617.3602-7-gregkh@linuxfoundation.org>
-References: <20190704084617.3602-1-gregkh@linuxfoundation.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Florian Eckert <fe@dev.tdt.de>
+Subject: [PATCH 1/3] platform/x86/pcengines-apuv2: add mpcie reset gpio export
+Date: Thu,  4 Jul 2019 11:02:03 +0200
+Message-ID: <20190704090205.19400-2-fe@dev.tdt.de>
+References: <20190704090205.19400-1-fe@dev.tdt.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190704084617.3602-1-gregkh@linuxfoundation.org>
+In-Reply-To: <20190704090205.19400-1-fe@dev.tdt.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org
+To: Eckert.Florian@googlemail.com, info@metux.net, dvhart@infradead.org, andy@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Eckert <fe@dev.tdt.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Platform drivers now have the option to have the platform core create
-and remove any needed sysfs attribute files.  So take advantage of that
-and do not register "by hand" a bunch of sysfs files.
+On APUx we have also mpcie2/mpcie3 reset pins. To make it possible to reset
+the ports from the userspace, add the definition to this platform
+device. The gpio can then be exported by the legancy gpio subsystem to
+toggle the mpcie reset pin.
 
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Cc: platform-driver-x86@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Florian Eckert <fe@dev.tdt.de>
 ---
- drivers/platform/x86/hp-wmi.c | 47 +++++++++--------------------------
- 1 file changed, 12 insertions(+), 35 deletions(-)
+ drivers/platform/x86/pcengines-apuv2.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 2521e45280b8..b4ed5902737a 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -502,6 +502,17 @@ static DEVICE_ATTR_RO(dock);
- static DEVICE_ATTR_RO(tablet);
- static DEVICE_ATTR_RW(postcode);
+diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+index c1ca931e1fab..f6d8ed100cab 100644
+--- a/drivers/platform/x86/pcengines-apuv2.c
++++ b/drivers/platform/x86/pcengines-apuv2.c
+@@ -32,6 +32,8 @@
+ #define APU2_GPIO_REG_LED3		AMD_FCH_GPIO_REG_GPIO59_DEVSLP1
+ #define APU2_GPIO_REG_MODESW		AMD_FCH_GPIO_REG_GPIO32_GE1
+ #define APU2_GPIO_REG_SIMSWAP		AMD_FCH_GPIO_REG_GPIO33_GE2
++#define APU2_GPIO_REG_MPCIE2		AMD_FCH_GPIO_REG_GPIO59_DEVSLP0
++#define APU2_GPIO_REG_MPCIE3		AMD_FCH_GPIO_REG_GPIO51
  
-+static struct attribute *hp_wmi_attrs[] = {
-+	&dev_attr_display.attr,
-+	&dev_attr_hddtemp.attr,
-+	&dev_attr_als.attr,
-+	&dev_attr_dock.attr,
-+	&dev_attr_tablet.attr,
-+	&dev_attr_postcode.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(hp_wmi);
-+
- static void hp_wmi_notify(u32 value, void *context)
- {
- 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -678,16 +689,6 @@ static void hp_wmi_input_destroy(void)
- 	input_unregister_device(hp_wmi_input_dev);
- }
+ /* order in which the gpio lines are defined in the register list */
+ #define APU2_GPIO_LINE_LED1		0
+@@ -39,6 +41,8 @@
+ #define APU2_GPIO_LINE_LED3		2
+ #define APU2_GPIO_LINE_MODESW		3
+ #define APU2_GPIO_LINE_SIMSWAP		4
++#define APU2_GPIO_LINE_MPCIE2		5
++#define APU2_GPIO_LINE_MPCIE3		6
  
--static void cleanup_sysfs(struct platform_device *device)
--{
--	device_remove_file(&device->dev, &dev_attr_display);
--	device_remove_file(&device->dev, &dev_attr_hddtemp);
--	device_remove_file(&device->dev, &dev_attr_als);
--	device_remove_file(&device->dev, &dev_attr_dock);
--	device_remove_file(&device->dev, &dev_attr_tablet);
--	device_remove_file(&device->dev, &dev_attr_postcode);
--}
--
- static int __init hp_wmi_rfkill_setup(struct platform_device *device)
- {
- 	int err, wireless;
-@@ -858,8 +859,6 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ /* gpio device */
  
- static int __init hp_wmi_bios_setup(struct platform_device *device)
- {
--	int err;
--
- 	/* clear detected rfkill devices */
- 	wifi_rfkill = NULL;
- 	bluetooth_rfkill = NULL;
-@@ -869,35 +868,12 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- 	if (hp_wmi_rfkill_setup(device))
- 		hp_wmi_rfkill2_setup(device);
- 
--	err = device_create_file(&device->dev, &dev_attr_display);
--	if (err)
--		goto add_sysfs_error;
--	err = device_create_file(&device->dev, &dev_attr_hddtemp);
--	if (err)
--		goto add_sysfs_error;
--	err = device_create_file(&device->dev, &dev_attr_als);
--	if (err)
--		goto add_sysfs_error;
--	err = device_create_file(&device->dev, &dev_attr_dock);
--	if (err)
--		goto add_sysfs_error;
--	err = device_create_file(&device->dev, &dev_attr_tablet);
--	if (err)
--		goto add_sysfs_error;
--	err = device_create_file(&device->dev, &dev_attr_postcode);
--	if (err)
--		goto add_sysfs_error;
- 	return 0;
--
--add_sysfs_error:
--	cleanup_sysfs(device);
--	return err;
- }
- 
- static int __exit hp_wmi_bios_remove(struct platform_device *device)
- {
- 	int i;
--	cleanup_sysfs(device);
- 
- 	for (i = 0; i < rfkill2_count; i++) {
- 		rfkill_unregister(rfkill2[i].rfkill);
-@@ -968,6 +944,7 @@ static struct platform_driver hp_wmi_driver = {
- 		.pm = &hp_wmi_pm_ops,
- 	},
- 	.remove = __exit_p(hp_wmi_bios_remove),
-+	.dev_groups = hp_wmi_groups,
+@@ -48,6 +52,8 @@ static int apu2_gpio_regs[] = {
+ 	[APU2_GPIO_LINE_LED3]		= APU2_GPIO_REG_LED3,
+ 	[APU2_GPIO_LINE_MODESW]		= APU2_GPIO_REG_MODESW,
+ 	[APU2_GPIO_LINE_SIMSWAP]	= APU2_GPIO_REG_SIMSWAP,
++	[APU2_GPIO_LINE_MPCIE2]		= APU2_GPIO_REG_MPCIE2,
++	[APU2_GPIO_LINE_MPCIE3]		= APU2_GPIO_REG_MPCIE3,
  };
  
- static int __init hp_wmi_init(void)
+ static const char * const apu2_gpio_names[] = {
+@@ -56,6 +62,8 @@ static const char * const apu2_gpio_names[] = {
+ 	[APU2_GPIO_LINE_LED3]		= "front-led3",
+ 	[APU2_GPIO_LINE_MODESW]		= "front-button",
+ 	[APU2_GPIO_LINE_SIMSWAP]	= "simswap",
++	[APU2_GPIO_LINE_MPCIE2]		= "mpcie2_reset",
++	[APU2_GPIO_LINE_MPCIE3]		= "mpcie3_reset",
+ };
+ 
+ static const struct amd_fch_gpio_pdata board_apu2 = {
 -- 
-2.22.0
+2.11.0
