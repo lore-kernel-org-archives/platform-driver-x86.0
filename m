@@ -1,38 +1,48 @@
-From: Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [Patch v2 10/10] platform/x86/asus-wmi: using dev_get_drvdata directly
-Date: Thu,  4 Jul 2019 10:36:47 +0800
-Message-ID: <20190704023647.4873-1-huangfq.daxian@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] platform/x86: Fix PCENGINES_APU2 Kconfig warning
+Date: Thu, 4 Jul 2019 14:27:25 +0800
+Message-ID: <20190704062725.50400-1-yuehaibing@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Fuqian Huang <huangfq.daxian@gmail.com>
+To: dvhart@infradead.org, andy@infradead.org, linus.walleij@linaro.org, rdunlap@infradead.org, info@metux.net
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Several drivers cast a struct device pointer to a struct
-platform_device pointer only to then call platform_get_drvdata().
-To improve readability, these constructs can be simplified
-by using dev_get_drvdata() directly.
+Fix Kconfig warning for PCENGINES_APU2 symbol:
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+WARNING: unmet direct dependencies detected for GPIO_AMD_FCH
+  Depends on [n]: GPIOLIB [=n] && HAS_IOMEM [=y]
+  Selected by [y]:
+  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
+
+WARNING: unmet direct dependencies detected for KEYBOARD_GPIO_POLLED
+  Depends on [n]: !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && GPIOLIB [=n]
+  Selected by [y]:
+  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
+
+Add GPIOLIB dependency to fix it.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
-Changes in v2:
-  - Make the commit message more clearly.
+ drivers/platform/x86/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/platform/x86/asus-wmi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 9b18a184e0aa..49049b02a015 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1353,8 +1353,7 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
- 					  struct attribute *attr, int idx)
- {
- 	struct device *dev = container_of(kobj, struct device, kobj);
--	struct platform_device *pdev = to_platform_device(dev->parent);
--	struct asus_wmi *asus = platform_get_drvdata(pdev);
-+	struct asus_wmi *asus = dev_get_drvdata(dev->parent);
- 	int dev_id = -1;
- 	int fan_attr = -1;
- 	u32 value = ASUS_WMI_UNSUPPORTED_METHOD;
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 8c8bd45..2409d26 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1322,7 +1322,7 @@ config HUAWEI_WMI
+ 
+ config PCENGINES_APU2
+ 	tristate "PC Engines APUv2/3 front button and LEDs driver"
+-	depends on INPUT && INPUT_KEYBOARD
++	depends on INPUT && INPUT_KEYBOARD && GPIOLIB
+ 	depends on LEDS_CLASS
+ 	select GPIO_AMD_FCH
+ 	select KEYBOARD_GPIO_POLLED
 -- 
-2.11.0
+2.7.4
