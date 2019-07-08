@@ -1,50 +1,32 @@
 From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: Re: [PATCH] platform/x86: Fix PCENGINES_APU2 Kconfig warning
-Date: Mon, 8 Jul 2019 12:43:24 +0200
-Message-ID: <603661e6-8694-4787-6cee-61cc6ba61fc2@metux.net>
-References: <20190704062725.50400-1-yuehaibing@huawei.com>
+Subject: Re: [PATCH 3/3] platform//x86/pcengines-apuv2: update gpio button
+ definition
+Date: Mon, 8 Jul 2019 21:27:57 +0200
+Message-ID: <add03c08-da1c-20f4-8d07-8ba2ecaf605c@metux.net>
+References: <20190704090205.19400-1-fe@dev.tdt.de>
+ <20190704090205.19400-4-fe@dev.tdt.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190704062725.50400-1-yuehaibing@huawei.com>
+In-Reply-To: <20190704090205.19400-4-fe@dev.tdt.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: YueHaibing <yuehaibing@huawei.com>, dvhart@infradead.org, andy@infradead.org, linus.walleij@linaro.org, rdunlap@infradead.org, info@metux.net
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Florian Eckert <fe@dev.tdt.de>, Eckert.Florian@googlemail.com, info@metux.net, dvhart@infradead.org, andy@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 04.07.19 08:27, YueHaibing wrote:
-> Fix Kconfig warning for PCENGINES_APU2 symbol:
-> 
-> WARNING: unmet direct dependencies detected for GPIO_AMD_FCH
->   Depends on [n]: GPIOLIB [=n] && HAS_IOMEM [=y]
->   Selected by [y]:
->   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
-> 
-> WARNING: unmet direct dependencies detected for KEYBOARD_GPIO_POLLED
->   Depends on [n]: !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && GPIOLIB [=n]
->   Selected by [y]:
->   - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
-> 
-> Add GPIOLIB dependency to fix it.
+On 04.07.19 11:02, Florian Eckert wrote:
+> * Add the gpio number, so the button subsystem can find the right gpio.
+> * Change also the keycode from KEY_SETUP to KEY_RESTART, because it
+>   seems more expressive to me and in the Alix-Board, which is the
+>   predecessor, there isthis keycode defined too. I think this is also
+>   intended by Pcengines. Also many embedded systems defined in the kernel
+>   use this key code as well.
 
-hmm, I'm not really happy w/ the kernel config system at that point:
-
-If the select on the gpio driver would just subsequently enable gpiolib,
-everything would be fine. But that contradicts how subsystems are
-currently handled - you first have to enable gpio subsystem before
-choosing anything that depends on it :(
-
-Could it make sense to refactor gpiolib in a way that pieces directly
-needed by gpio consumers or drivers (hmm, perhaps have separate
-dependency symbols for consumer vs driver) can be selected directly,
-even if the big gpio subsystem knob is disabled ? (but the other things
-like userland interfaces would remain disabled) ?
-
-OTOH, for this particular patch:
-
-Ack-By: Enrico Weigelt <info@metux.net>
+In general, I'm not opposed to that, but I'll first have to check trough
+various userland code to make sure that it doesn't break
+anything in the field, before I can give my ack.
 
 
 --mtx
