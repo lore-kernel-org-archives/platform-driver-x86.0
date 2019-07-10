@@ -1,98 +1,53 @@
-From: Florian Eckert <fe@dev.tdt.de>
-Subject: Re: [PATCH 0/3] Update pcengines-apuv2 platform device
-Date: Wed, 10 Jul 2019 14:54:03 +0200
-Message-ID: <cc5bbcd7148ece53a075948f240bc66b@dev.tdt.de>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Re: [PATCH 2/3] platform/x86/pcengines-apuv2: add legacy leds gpio
+ definitions
+Date: Wed, 10 Jul 2019 15:07:12 +0200
+Message-ID: <b029d90c-06b6-a261-5cde-8034de052d7c@metux.net>
 References: <20190704090205.19400-1-fe@dev.tdt.de>
- <CAHp75Vcocs=9AwX32ouOWFc+wAduCFv2DT_p4JYPUVV0BumjqA@mail.gmail.com>
- <4b43316c-3e05-0ce9-3ada-db22996205b9@metux.net>
+ <20190704090205.19400-3-fe@dev.tdt.de>
+ <bf9c82c3-bc6e-b701-afd4-b4e657cb09be@metux.net>
+ <e4583be44ddaa1453c0caea37d73d57d@dev.tdt.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4b43316c-3e05-0ce9-3ada-db22996205b9@metux.net>
+In-Reply-To: <e4583be44ddaa1453c0caea37d73d57d@dev.tdt.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Eckert.Florian@googlemail.com, "Enrico Weigelt, metux IT consult" <info@metux.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Florian Eckert <fe@dev.tdt.de>
+Cc: Eckert.Florian@googlemail.com, info@metux.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 2019-07-08 21:45, Enrico Weigelt, metux IT consult wrote:
-> On 04.07.19 15:39, Andy Shevchenko wrote:
->> On Thu, Jul 4, 2019 at 12:02 PM Florian Eckert <fe@dev.tdt.de> wrote:
->>> 
->>> This patchset adds the following changes to this pcengines-apuv2
->>> platform device.
->>> 
->> 
->> Before doing anything to this driver, what is the plan for previously
->> upstreamed:
->> 
->> drivers/leds/leds-apu.c
+On 10.07.19 14:03, Florian Eckert wrote:
+
+> I have back ported your pcengines-apuv2 device and gpio-amd-fch GPIO
+> driver to the kernel version 4.19 on OpenWrt.
+> If I compile and load this without the change no LEDs are visible in
+> "/sys/class/leds"!
+
+Maybe this old kernel just ignored all entries w/o gpio ID. Note that
+these IDs are deprecated for quite a while and shouldn't be used in new
+code anymore.
+
+> From my point of view the connection between the GPIO and the LEDs
+> subsystem is missing.
+> How should the LED subsystem know which GPIO to use?
+
+See gpiod_lookup_table.
+
+> If I add the change to the pcengines-apuv2 device then the LEDs will be
+> visilbe under "/sys/class/leds"
+> and could be used, by OpenWrt userland.
 > 
-> Only supports the three front LEDs, nothing else. (we've got more gpios
-> that are not LEDs, eg. the front button, simsw, ...)
-> 
->> arch/x86/platform/geode/alix.c
-> 
-> completely unrelated - very different chipset.
-> 
-> 
-> --mtx
+> Mybe I miss something.
 
-I'm going to sum it all what we have
+Your patch is only valid for your backport onto this old kernel, not for
+recent mainline.
 
-ALIX family boards (https://www.pcengines.ch/alix.htm):
-CPU -> AMD Geode LX CPU
-Stays as it is different because it has a different CPU
 
-APU family boards (https://www.pcengines.ch/apu.htm):
-CPU -> AMD G series T40E APU
-Remove the related APU2 family stuff from the LEDs driver
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/leds/leds-apu.c
-this will be handled in the future by the platform device
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/pcengines-apuv2.c
-The other GPIOs are not supported by this platform. Only LEDs are 
-supported for now.
+--mtx
 
-APU2 family boards (https://www.pcengines.ch/apu2.htm):
-CPU -> AMD Embedded G series GX-412TC
-Add the additional mpcie reset pins and add additional board 
-descriptions to
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/pcengines-apuv2.c?h=v5.2#n61
-so we can distinguish between the APU2,APU3 and APU4 boards of the APU2 
-board family.
-
-My research in the pcengines documentation shows the following GPIO pins 
-for the individual boards which we can support.
-
-APU2:
-front-led1
-front-led2
-front-led3
-front-button
-mpcie2_reset
-mpcie3_reset
-
-APU3:
-front-led1
-front-led2
-front-led3
-front-button
-mpcie2_reset
-mpcie3_reset
-simswap
-
-APU4:
-front-led1
-front-led2
-front-led3
-front-button
-mpcie2_reset
-mpcie3_reset
-
-Until now we support aAPU2 and APU3 and treat it the same way. But the 
-APU2 does not have a simswap.
-
-Kind regards
-
-Florian
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
