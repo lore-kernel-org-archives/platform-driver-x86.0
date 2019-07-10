@@ -1,24 +1,31 @@
-From: pr-tracker-bot@kernel.org
-Subject: Re: [GIT PULL] Device properties framework updates for v5.3-rc1
-Date: Tue, 09 Jul 2019 18:05:13 +0000
-Message-ID: <156269551313.14383.5369373802013265503.pr-tracker-bot@kernel.org>
-References: <CAJZ5v0g8O+XLjSarCiZcj0LnSZYnCqGE3D6tfFD30wOZjprb2g@mail.gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] platform/x86: hp_accel: Add support for HP ZBook 17 G5
+Date: Wed, 10 Jul 2019 13:33:26 +0800
+Message-ID: <20190710053326.26247-1-kai.heng.feng@canonical.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0g8O+XLjSarCiZcj0LnSZYnCqGE3D6tfFD30wOZjprb2g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: eric.piel@tremplin-utc.net, dvhart@infradead.org, andy@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The pull request you sent on Mon, 8 Jul 2019 23:39:24 +0200:
+HP ZBook 17 G5 needs a non-standard mapping, x_inverted.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git devprop-5.3-rc1
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/platform/x86/hp_accel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0415052db4f92b7e272fc15802ad8b8be672deea
-
-Thank you!
-
+diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
+index f61b8a176e20..cfc0e36a7a5e 100644
+--- a/drivers/platform/x86/hp_accel.c
++++ b/drivers/platform/x86/hp_accel.c
+@@ -239,6 +239,7 @@ static const struct dmi_system_id lis3lv02d_dmi_ids[] = {
+ 	AXIS_DMI_MATCH("HPB64xx", "HP EliteBook 84", xy_swap),
+ 	AXIS_DMI_MATCH("HPB65xx", "HP ProBook 65", x_inverted),
+ 	AXIS_DMI_MATCH("HPZBook15", "HP ZBook 15", x_inverted),
++	AXIS_DMI_MATCH("HPZBook17G5", "HP ZBook 17 G5", x_inverted),
+ 	AXIS_DMI_MATCH("HPZBook17", "HP ZBook 17", xy_swap_yz_inverted),
+ 	{ NULL, }
+ /* Laptop models without axis info (yet):
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.17.1
