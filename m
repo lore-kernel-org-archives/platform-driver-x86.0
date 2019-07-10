@@ -1,31 +1,40 @@
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH] platform/x86: hp_accel: Add support for HP ZBook 17 G5
-Date: Wed, 10 Jul 2019 13:33:26 +0800
-Message-ID: <20190710053326.26247-1-kai.heng.feng@canonical.com>
+From: Florian Eckert <fe@dev.tdt.de>
+Subject: Re: [PATCH 2/3] platform/x86/pcengines-apuv2: add legacy leds gpio
+ definitions
+Date: Wed, 10 Jul 2019 14:03:40 +0200
+Message-ID: <e4583be44ddaa1453c0caea37d73d57d@dev.tdt.de>
+References: <20190704090205.19400-1-fe@dev.tdt.de>
+ <20190704090205.19400-3-fe@dev.tdt.de>
+ <bf9c82c3-bc6e-b701-afd4-b4e657cb09be@metux.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <bf9c82c3-bc6e-b701-afd4-b4e657cb09be@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: eric.piel@tremplin-utc.net, dvhart@infradead.org, andy@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
+To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc: Eckert.Florian@googlemail.com, info@metux.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-HP ZBook 17 G5 needs a non-standard mapping, x_inverted.
+On 2019-07-08 21:42, Enrico Weigelt, metux IT consult wrote:
+> On 04.07.19 11:02, Florian Eckert wrote:
+>> Extend the apu2_leds definition to make the leds exportable via the
+>> legacy gpio subsystem.
+> 
+> What for ? The gpios are bound to LED devices as that's exactly what
+> they are: LEDs.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/platform/x86/hp_accel.c | 1 +
- 1 file changed, 1 insertion(+)
+I have back ported your pcengines-apuv2 device and gpio-amd-fch GPIO 
+driver to the kernel version 4.19 on OpenWrt.
+If I compile and load this without the change no LEDs are visible in 
+"/sys/class/leds"!
 
-diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
-index f61b8a176e20..cfc0e36a7a5e 100644
---- a/drivers/platform/x86/hp_accel.c
-+++ b/drivers/platform/x86/hp_accel.c
-@@ -239,6 +239,7 @@ static const struct dmi_system_id lis3lv02d_dmi_ids[] = {
- 	AXIS_DMI_MATCH("HPB64xx", "HP EliteBook 84", xy_swap),
- 	AXIS_DMI_MATCH("HPB65xx", "HP ProBook 65", x_inverted),
- 	AXIS_DMI_MATCH("HPZBook15", "HP ZBook 15", x_inverted),
-+	AXIS_DMI_MATCH("HPZBook17G5", "HP ZBook 17 G5", x_inverted),
- 	AXIS_DMI_MATCH("HPZBook17", "HP ZBook 17", xy_swap_yz_inverted),
- 	{ NULL, }
- /* Laptop models without axis info (yet):
--- 
-2.17.1
+ From my point of view the connection between the GPIO and the LEDs 
+subsystem is missing.
+How should the LED subsystem know which GPIO to use?
+If I add the change to the pcengines-apuv2 device then the LEDs will be 
+visilbe under "/sys/class/leds"
+and could be used, by OpenWrt userland.
+
+Mybe I miss something.
