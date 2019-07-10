@@ -1,53 +1,35 @@
-From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: Re: [PATCH 2/3] platform/x86/pcengines-apuv2: add legacy leds gpio
- definitions
-Date: Wed, 10 Jul 2019 15:07:12 +0200
-Message-ID: <b029d90c-06b6-a261-5cde-8034de052d7c@metux.net>
-References: <20190704090205.19400-1-fe@dev.tdt.de>
- <20190704090205.19400-3-fe@dev.tdt.de>
- <bf9c82c3-bc6e-b701-afd4-b4e657cb09be@metux.net>
- <e4583be44ddaa1453c0caea37d73d57d@dev.tdt.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [RESEND][PATCH v2] tools/power/x86/intel-speed-select: Add .gitignore file
+Date: Wed, 10 Jul 2019 10:23:00 -0700
+Message-ID: <20190710172300.70367-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e4583be44ddaa1453c0caea37d73d57d@dev.tdt.de>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Eckert <fe@dev.tdt.de>
-Cc: Eckert.Florian@googlemail.com, info@metux.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: dvhart@infradead.org, andy@infradead.org, andriy.shevchenko@intel.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, David Arcari <darcari@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 10.07.19 14:03, Florian Eckert wrote:
+From: Prarit Bhargava <prarit@redhat.com>
 
-> I have back ported your pcengines-apuv2 device and gpio-amd-fch GPIO
-> driver to the kernel version 4.19 on OpenWrt.
-> If I compile and load this without the change no LEDs are visible in
-> "/sys/class/leds"!
+Add a .gitignore file for build include/ and final binary.
 
-Maybe this old kernel just ignored all entries w/o gpio ID. Note that
-these IDs are deprecated for quite a while and shouldn't be used in new
-code anymore.
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: David Arcari <darcari@redhat.com>
+---
+ tools/power/x86/intel-speed-select/.gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
+ create mode 100644 tools/power/x86/intel-speed-select/.gitignore
 
-> From my point of view the connection between the GPIO and the LEDs
-> subsystem is missing.
-> How should the LED subsystem know which GPIO to use?
-
-See gpiod_lookup_table.
-
-> If I add the change to the pcengines-apuv2 device then the LEDs will be
-> visilbe under "/sys/class/leds"
-> and could be used, by OpenWrt userland.
-> 
-> Mybe I miss something.
-
-Your patch is only valid for your backport onto this old kernel, not for
-recent mainline.
-
-
---mtx
-
+diff --git a/tools/power/x86/intel-speed-select/.gitignore b/tools/power/x86/intel-speed-select/.gitignore
+new file mode 100644
+index 000000000000..f61145925ce9
+--- /dev/null
++++ b/tools/power/x86/intel-speed-select/.gitignore
+@@ -0,0 +1,2 @@
++include/
++intel-speed-select
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.17.2
