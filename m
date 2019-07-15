@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 099/249] x86/cpu: Add Ice Lake NNPI to Intel family
-Date: Mon, 15 Jul 2019 09:44:24 -0400
-Message-ID: <20190715134655.4076-99-sashal@kernel.org>
-References: <20190715134655.4076-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 087/219] x86/cpu: Add Ice Lake NNPI to Intel family
+Date: Mon, 15 Jul 2019 10:01:28 -0400
+Message-ID: <20190715140341.6443-87-sashal@kernel.org>
+References: <20190715140341.6443-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190715140341.6443-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, bp@suse.de, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Sasha Levin <sashal@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
