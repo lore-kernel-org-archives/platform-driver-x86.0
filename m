@@ -1,57 +1,41 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 065/158] x86/cpu: Add Ice Lake NNPI to Intel family
-Date: Mon, 15 Jul 2019 10:16:36 -0400
-Message-ID: <20190715141809.8445-65-sashal@kernel.org>
-References: <20190715141809.8445-1-sashal@kernel.org>
+From: Florian Eckert <fe@dev.tdt.de>
+Subject: Re: [PATCH 1/3] platform/x86/pcengines-apuv2: add mpcie reset gpio
+ export
+Date: Mon, 15 Jul 2019 16:38:51 +0200
+Message-ID: <10c574cd0dfb1c607536c68fc1c60c06@dev.tdt.de>
+References: <20190704090205.19400-1-fe@dev.tdt.de>
+ <20190704090205.19400-2-fe@dev.tdt.de>
+ <3e98bbd8-c051-4996-fc5a-88a58a2fa2d4@metux.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, bp@suse.de, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3e98bbd8-c051-4996-fc5a-88a58a2fa2d4@metux.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc: Eckert.Florian@googlemail.com, info@metux.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 
-[ Upstream commit e32d045cd4ba06b59878323e434bad010e78e658 ]
+>> On APUx we have also mpcie2/mpcie3 reset pins. To make it possible to 
+>> reset
+>> the ports from the userspace, add the definition to this platform
+>> device. The gpio can then be exported by the legancy gpio subsystem to
+>> toggle the mpcie reset pin.
+>> 
+> 
+> Just tested your patch on an apu3. The driver itself seems to work,
+> but the pins don't seem to actually do anything.
+> 
+> How exactly did you test it ? Do you have some test case ?
 
-Add the CPUID model number of Ice Lake Neural Network Processor for Deep
-Learning Inference (ICL-NNPI) to the Intel family list. Ice Lake NNPI uses
-model number 0x9D and this will be documented in a future version of Intel
-Software Development Manual.
-
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@suse.de
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/include/asm/intel-family.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 2e38fb82b91d..aebedbaf5260 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -56,6 +56,7 @@
- #define INTEL_FAM6_ICELAKE_XEON_D	0x6C
- #define INTEL_FAM6_ICELAKE_DESKTOP	0x7D
- #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
-+#define INTEL_FAM6_ICELAKE_NNPI		0x9D
- 
- /* "Small Core" Processors (Atom) */
- 
--- 
-2.20.1
+I plugged in a mpcie  usb modem.
+In my test case it was a EC25 from Quectel in mpcie2 port.
+After that I did a reboot and exported the gpio via "/sys/class/gpio"
+Then I executed the command "echo 0 > /sys/class/gpio/<name>/value" and 
+"echo 1 > /sys/class/gpio/<name>/value".
+Then I have seen the log message in the kernel that the device did an 
+unregistration/registration
+.
+-- Florian
