@@ -1,44 +1,47 @@
-From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: Re: [PATCH 1/3] platform/x86/pcengines-apuv2: add mpcie reset gpio
- export
-Date: Tue, 16 Jul 2019 20:23:59 +0200
-Message-ID: <83ada4a1-c18b-95b4-0891-62ba3f3aa276@metux.net>
-References: <20190704090205.19400-1-fe@dev.tdt.de>
- <20190704090205.19400-2-fe@dev.tdt.de>
- <3e98bbd8-c051-4996-fc5a-88a58a2fa2d4@metux.net>
- <10c574cd0dfb1c607536c68fc1c60c06@dev.tdt.de>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 2/2] input: soc_button_array for newer surface devices
+Date: Tue, 16 Jul 2019 22:18:07 +0200
+Message-ID: <20190716201807.GA584@penguin>
+References: <20190702003740.75970-1-luzmaximilian@gmail.com>
+ <20190702003740.75970-3-luzmaximilian@gmail.com>
+ <20190716072135.GA806@penguin>
+ <92e13b01-7353-1430-fb38-b5098d509da2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <10c574cd0dfb1c607536c68fc1c60c06@dev.tdt.de>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <92e13b01-7353-1430-fb38-b5098d509da2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Eckert <fe@dev.tdt.de>
-Cc: Eckert.Florian@googlemail.com, info@metux.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Maximilian Luz <luzmaximilian@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 15.07.19 16:38, Florian Eckert wrote:
+On Tue, Jul 16, 2019 at 08:19:04PM +0200, Maximilian Luz wrote:
+> 
+> Hi,
+> 
+> On 7/16/19 9:21 AM, Dmitry Torokhov wrote:
+> > When you are saying that Pro 4 and later models use different
+> > notifications, does this mean that Pro 4 does not define any GPIOs?
+> 
+> Unfortunately, at least the Surface Book (first generation, buttons are
+> handled the same way as on the Pro 4) has GPIOs defined in MSHW0040, but
+> they are for different use. Specifically: They can detect if the
+> clipboard (screen part of the device, the device basically has two parts
+> that can be separated: clipboard and base) is being removed. Relying on
+> the GPIOs was my first idea too, but that has been reported to shut down
+> the Book 1 when the clipboard is detached.
+> 
+> As far as I know, the OEM platform revision check is the easiest way to
+> differentiate between those devices.
 
-> I plugged in a mpcie  usb modem.
-> In my test case it was a EC25 from Quectel in mpcie2 port.
-> After that I did a reboot and exported the gpio via "/sys/class/gpio"
-> Then I executed the command "echo 0 > /sys/class/gpio/<name>/value" and
-> "echo 1 > /sys/class/gpio/<name>/value".
-> Then I have seen the log message in the kernel that the device did an
-> unregistration/registration
+OK, fair enough. By the way, I see you are adding some #ifdef
+CONFIG_ACPI and stubbing out new functions, but the driver does not
+really work without ACPI (acpi_match_device() will fail in this case I
+would think and that will cause probe() to abort). So maybe we just add
+depends on ACPI to the driver's Kconfig entry?
 
-hmm, did the same, tried both gpios (mpcie2_reset, mpcie3_reset), but
-nothin happened.
-
-But strange: I'm missing some hw, modem doesn't appear ... I'll have to
-check again whether i've got unstable hw or missing some kernel config.
-
-
---mtx
-
+Thanks.
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Dmitry
