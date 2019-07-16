@@ -1,53 +1,44 @@
-From: Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH v2 2/2] input: soc_button_array for newer surface devices
-Date: Tue, 16 Jul 2019 20:19:04 +0200
-Message-ID: <92e13b01-7353-1430-fb38-b5098d509da2@gmail.com>
-References: <20190702003740.75970-1-luzmaximilian@gmail.com>
- <20190702003740.75970-3-luzmaximilian@gmail.com>
- <20190716072135.GA806@penguin>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Re: [PATCH 1/3] platform/x86/pcengines-apuv2: add mpcie reset gpio
+ export
+Date: Tue, 16 Jul 2019 20:23:59 +0200
+Message-ID: <83ada4a1-c18b-95b4-0891-62ba3f3aa276@metux.net>
+References: <20190704090205.19400-1-fe@dev.tdt.de>
+ <20190704090205.19400-2-fe@dev.tdt.de>
+ <3e98bbd8-c051-4996-fc5a-88a58a2fa2d4@metux.net>
+ <10c574cd0dfb1c607536c68fc1c60c06@dev.tdt.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190716072135.GA806@penguin>
+In-Reply-To: <10c574cd0dfb1c607536c68fc1c60c06@dev.tdt.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To: Florian Eckert <fe@dev.tdt.de>
+Cc: Eckert.Florian@googlemail.com, info@metux.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+On 15.07.19 16:38, Florian Eckert wrote:
 
-Hi,
+> I plugged in a mpcie  usb modem.
+> In my test case it was a EC25 from Quectel in mpcie2 port.
+> After that I did a reboot and exported the gpio via "/sys/class/gpio"
+> Then I executed the command "echo 0 > /sys/class/gpio/<name>/value" and
+> "echo 1 > /sys/class/gpio/<name>/value".
+> Then I have seen the log message in the kernel that the device did an
+> unregistration/registration
 
-On 7/16/19 9:21 AM, Dmitry Torokhov wrote:
-> When you are saying that Pro 4 and later models use different
-> notifications, does this mean that Pro 4 does not define any GPIOs?
+hmm, did the same, tried both gpios (mpcie2_reset, mpcie3_reset), but
+nothin happened.
 
-Unfortunately, at least the Surface Book (first generation, buttons are
-handled the same way as on the Pro 4) has GPIOs defined in MSHW0040, but
-they are for different use. Specifically: They can detect if the
-clipboard (screen part of the device, the device basically has two parts
-that can be separated: clipboard and base) is being removed. Relying on
-the GPIOs was my first idea too, but that has been reported to shut down
-the Book 1 when the clipboard is detached.
+But strange: I'm missing some hw, modem doesn't appear ... I'll have to
+check again whether i've got unstable hw or missing some kernel config.
 
-As far as I know, the OEM platform revision check is the easiest way to
-differentiate between those devices.
 
-> I do not believe -EAGAIN has any special meaning in the driver core;
+--mtx
 
-I think I got the -EAGAIN from an outdated LWN article when I first
-started working on this, thanks for confirming.
 
-> also when the GPIO controller is not ready gpiod_get() will return
-> -EPROBE_DEFER, which is the prober way if signalling that some resource
-> is not yet available and probe should be retries at a later time.
->
-> Moreover, I do not believe that gpiod_count() needs GPIO controller to
-> be ready, the count is taken from board firmware or static board file
-> definition, so if gpiod_count() returns 0 it should be clear indication
-> that the driver should not be used with the device.
-
-Thank you for this insight, I will update the patch accordingly.
-
-Maximilian
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
