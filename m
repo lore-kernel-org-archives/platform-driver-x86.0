@@ -1,227 +1,79 @@
-From: James Morris <jmorris@namei.org>
-Subject: Re: [PATCH V35 26/29] debugfs: Restrict debugfs when the kernel is
- locked down
-Date: Tue, 16 Jul 2019 09:17:27 +1000 (AEST)
-Message-ID: <alpine.LRH.2.21.1907160915280.25034@namei.org>
-References: <20190715195946.223443-1-matthewgarrett@google.com> <20190715195946.223443-27-matthewgarrett@google.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 2/2] input: soc_button_array for newer surface devices
+Date: Tue, 16 Jul 2019 09:21:35 +0200
+Message-ID: <20190716072135.GA806@penguin>
+References: <20190702003740.75970-1-luzmaximilian@gmail.com>
+ <20190702003740.75970-3-luzmaximilian@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190715195946.223443-27-matthewgarrett@google.com>
+Content-Disposition: inline
+In-Reply-To: <20190702003740.75970-3-luzmaximilian@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <matthewgarrett@google.com>, Greg KH <greg@kroah.com>, rafael@kernel.org
-Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, David Howells <dhowells@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Thomas Gleixner <tglx@linutronix.de>
+To: Maximilian Luz <luzmaximilian@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 15 Jul 2019, Matthew Garrett wrote:
+Hi Maximilian,
 
-> From: David Howells <dhowells@redhat.com>
+On Tue, Jul 02, 2019 at 02:37:40AM +0200, Maximilian Luz wrote:
+> Power and volume button support for 5th and 6th genration Microsoft
+> Surface devices via soc_button_array.
 > 
-> Disallow opening of debugfs files that might be used to muck around when
-> the kernel is locked down as various drivers give raw access to hardware
-> through debugfs.  Given the effort of auditing all 2000 or so files and
-> manually fixing each one as necessary, I've chosen to apply a heuristic
-> instead.  The following changes are made:
+> Note that these devices use the same MSHW0040 device as on the Surface
+> Pro 4, however the implementation is different (GPIOs vs. ACPI
+> notifications). Thus some checking is required to ensure we only load
+> this driver on the correct devices.
 
-Adding the debugfs maintainers.
+When you are saying that Pro 4 and later models use different
+notifications, does this mean that Pro 4 does not define any GPIOs? If
+so can we use their presence as indicator whether we should be using
+this driver or not. I would like to avoid repeating the ACPI parsing
+code that you have in the platform driver.
 
-> 
->  (1) chmod and chown are disallowed on debugfs objects (though the root dir
->      can be modified by mount and remount, but I'm not worried about that).
-> 
->  (2) When the kernel is locked down, only files with the following criteria
->      are permitted to be opened:
-> 
-> 	- The file must have mode 00444
-> 	- The file must not have ioctl methods
-> 	- The file must not have mmap
-> 
->  (3) When the kernel is locked down, files may only be opened for reading.
-> 
-> Normal device interaction should be done through configfs, sysfs or a
-> miscdev, not debugfs.
-> 
-> Note that this makes it unnecessary to specifically lock down show_dsts(),
-> show_devs() and show_call() in the asus-wmi driver.
-> 
-> I would actually prefer to lock down all files by default and have the
-> the files unlocked by the creator.  This is tricky to manage correctly,
-> though, as there are 19 creation functions and ~1600 call sites (some of
-> them in loops scanning tables).
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> cc: acpi4asus-user@lists.sourceforge.net
-> cc: platform-driver-x86@vger.kernel.org
-> cc: Matthew Garrett <mjg59@srcf.ucam.org>
-> cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
-> ---
->  fs/debugfs/file.c            | 30 ++++++++++++++++++++++++++++++
->  fs/debugfs/inode.c           | 32 ++++++++++++++++++++++++++++++--
->  include/linux/security.h     |  1 +
->  security/lockdown/lockdown.c |  1 +
->  4 files changed, 62 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-> index 93e4ca6b2ad7..87846aad594b 100644
-> --- a/fs/debugfs/file.c
-> +++ b/fs/debugfs/file.c
-> @@ -19,6 +19,7 @@
->  #include <linux/atomic.h>
->  #include <linux/device.h>
->  #include <linux/poll.h>
-> +#include <linux/security.h>
->  
->  #include "internal.h"
->  
-> @@ -136,6 +137,25 @@ void debugfs_file_put(struct dentry *dentry)
->  }
->  EXPORT_SYMBOL_GPL(debugfs_file_put);
->  
-> +/*
-> + * Only permit access to world-readable files when the kernel is locked down.
-> + * We also need to exclude any file that has ways to write or alter it as root
-> + * can bypass the permissions check.
-> + */
-> +static bool debugfs_is_locked_down(struct inode *inode,
-> +				   struct file *filp,
-> +				   const struct file_operations *real_fops)
+> +static int soc_device_check_MSHW0040(struct device *dev)
 > +{
-> +	if ((inode->i_mode & 07777) == 0444 &&
-> +	    !(filp->f_mode & FMODE_WRITE) &&
-> +	    !real_fops->unlocked_ioctl &&
-> +	    !real_fops->compat_ioctl &&
-> +	    !real_fops->mmap)
-> +		return false;
+> +	acpi_handle handle = ACPI_HANDLE(dev);
+> +	union acpi_object *result;
+> +	u64 oem_platform_rev = 0;
+> +	int gpios;
 > +
-> +	return security_locked_down(LOCKDOWN_DEBUGFS);
-> +}
+> +	// get OEM platform revision
+> +	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
+> +					 MSHW0040_DSM_REVISION,
+> +					 MSHW0040_DSM_GET_OMPR, NULL,
+> +					 ACPI_TYPE_INTEGER);
 > +
->  static int open_proxy_open(struct inode *inode, struct file *filp)
->  {
->  	struct dentry *dentry = F_DENTRY(filp);
-> @@ -147,6 +167,11 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
->  		return r == -EIO ? -ENOENT : r;
->  
->  	real_fops = debugfs_real_fops(filp);
+> +	if (result) {
+> +		oem_platform_rev = result->integer.value;
+> +		ACPI_FREE(result);
+> +	}
 > +
-> +	r = debugfs_is_locked_down(inode, filp, real_fops);
-> +	if (r)
-> +		goto out;
+> +	if (oem_platform_rev == 0)
+> +		return -ENODEV;
 > +
->  	real_fops = fops_get(real_fops);
->  	if (!real_fops) {
->  		/* Huh? Module did not clean up after itself at exit? */
-> @@ -272,6 +297,11 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
->  		return r == -EIO ? -ENOENT : r;
->  
->  	real_fops = debugfs_real_fops(filp);
+> +	dev_dbg(dev, "OEM Platform Revision %llu\n", oem_platform_rev);
 > +
-> +	r = debugfs_is_locked_down(inode, filp, real_fops);
-> +	if (r)
-> +		goto out;
-> +
->  	real_fops = fops_get(real_fops);
->  	if (!real_fops) {
->  		/* Huh? Module did not cleanup after itself at exit? */
-> diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-> index 042b688ed124..7b975dbb2bb4 100644
-> --- a/fs/debugfs/inode.c
-> +++ b/fs/debugfs/inode.c
-> @@ -26,6 +26,7 @@
->  #include <linux/parser.h>
->  #include <linux/magic.h>
->  #include <linux/slab.h>
-> +#include <linux/security.h>
->  
->  #include "internal.h"
->  
-> @@ -35,6 +36,32 @@ static struct vfsmount *debugfs_mount;
->  static int debugfs_mount_count;
->  static bool debugfs_registered;
->  
-> +/*
-> + * Don't allow access attributes to be changed whilst the kernel is locked down
-> + * so that we can use the file mode as part of a heuristic to determine whether
-> + * to lock down individual files.
-> + */
-> +static int debugfs_setattr(struct dentry *dentry, struct iattr *ia)
-> +{
-> +	int ret = security_locked_down(LOCKDOWN_DEBUGFS);
-> +
-> +	if (ret && (ia->ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID)))
-> +		return ret;
-> +	return simple_setattr(dentry, ia);
-> +}
-> +
-> +static const struct inode_operations debugfs_file_inode_operations = {
-> +	.setattr	= debugfs_setattr,
-> +};
-> +static const struct inode_operations debugfs_dir_inode_operations = {
-> +	.lookup		= simple_lookup,
-> +	.setattr	= debugfs_setattr,
-> +};
-> +static const struct inode_operations debugfs_symlink_inode_operations = {
-> +	.get_link	= simple_get_link,
-> +	.setattr	= debugfs_setattr,
-> +};
-> +
->  static struct inode *debugfs_get_inode(struct super_block *sb)
->  {
->  	struct inode *inode = new_inode(sb);
-> @@ -369,6 +396,7 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
->  	inode->i_mode = mode;
->  	inode->i_private = data;
->  
-> +	inode->i_op = &debugfs_file_inode_operations;
->  	inode->i_fop = proxy_fops;
->  	dentry->d_fsdata = (void *)((unsigned long)real_fops |
->  				DEBUGFS_FSDATA_IS_REAL_FOPS_BIT);
-> @@ -532,7 +560,7 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
->  	}
->  
->  	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
-> -	inode->i_op = &simple_dir_inode_operations;
-> +	inode->i_op = &debugfs_dir_inode_operations;
->  	inode->i_fop = &simple_dir_operations;
->  
->  	/* directory inodes start off with i_nlink == 2 (for "." entry) */
-> @@ -632,7 +660,7 @@ struct dentry *debugfs_create_symlink(const char *name, struct dentry *parent,
->  		return failed_creating(dentry);
->  	}
->  	inode->i_mode = S_IFLNK | S_IRWXUGO;
-> -	inode->i_op = &simple_symlink_inode_operations;
-> +	inode->i_op = &debugfs_symlink_inode_operations;
->  	inode->i_link = link;
->  	d_instantiate(dentry, inode);
->  	return end_creating(dentry);
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 8ef366de70b0..d92323b44a3f 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -115,6 +115,7 @@ enum lockdown_reason {
->  	LOCKDOWN_TIOCSSERIAL,
->  	LOCKDOWN_MODULE_PARAMETERS,
->  	LOCKDOWN_MMIOTRACE,
-> +	LOCKDOWN_DEBUGFS,
->  	LOCKDOWN_INTEGRITY_MAX,
->  	LOCKDOWN_KCORE,
->  	LOCKDOWN_KPROBES,
-> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-> index e43c9d001e49..37ef46320ef4 100644
-> --- a/security/lockdown/lockdown.c
-> +++ b/security/lockdown/lockdown.c
-> @@ -30,6 +30,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
->  	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
->  	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
->  	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
-> +	[LOCKDOWN_DEBUGFS] = "debugfs access",
->  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
->  	[LOCKDOWN_KCORE] = "/proc/kcore access",
->  	[LOCKDOWN_KPROBES] = "use of kprobes",
-> 
+> +	/*
+> +	 * We are _really_ expecting GPIOs here. If we do not get any, this
+> +	 * means the GPIO driver has not been loaded yet (which can happen).
+> +	 * Try again later.
+> +	 */
+> +	gpios = gpiod_count(dev, NULL);
+> +	if (gpios < 0)
+> +		return -EAGAIN;
+
+I do not believe -EAGAIN has any special meaning in the driver core;
+also when the GPIO controller is not ready gpiod_get() will return
+-EPROBE_DEFER, which is the prober way if signalling that some resource
+is not yet available and probe should be retries at a later time.
+
+Moreover, I do not believe that gpiod_count() needs GPIO controller to
+be ready, the count is taken from board firmware or static board file
+definition, so if gpiod_count() returns 0 it should be clear indication
+that the driver should not be used with the device.
+
+Thanks.
 
 -- 
-James Morris
-<jmorris@namei.org>
+Dmitry
