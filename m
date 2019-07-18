@@ -1,105 +1,220 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 1/2] platform: Fix device check for surfacepro3_button
-Date: Thu, 18 Jul 2019 20:43:18 +0300
-Message-ID: <CAHp75Ve2rPnocQ6RhdqOwEVSGdQ3v1cFoAc=KFfq2-2sDqji2A@mail.gmail.com>
-References: <20190702003740.75970-1-luzmaximilian@gmail.com> <20190702003740.75970-2-luzmaximilian@gmail.com>
+From: Matthew Garrett <matthewgarrett@google.com>
+Subject: [PATCH V36 26/29] debugfs: Restrict debugfs when the kernel is locked down
+Date: Thu, 18 Jul 2019 12:44:12 -0700
+Message-ID: <20190718194415.108476-27-matthewgarrett@google.com>
+References: <20190718194415.108476-1-matthewgarrett@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702003740.75970-2-luzmaximilian@gmail.com>
+In-Reply-To: <20190718194415.108476-1-matthewgarrett@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To: jmorris@namei.org
+Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, David Howells <dhowells@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Thomas Gleixner <tglx@linutronix.de>, Greg KH <greg@kroah.com>, "Rafael J . Wysocki" <rafael@kernel.org>, Matthew Garrett <matthewgarrett@google.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jul 2, 2019 at 3:38 AM Maximilian Luz <luzmaximilian@gmail.com> wrote:
->
-> Do not use the surfacepro3_button driver on newer Microsoft Surface
-> models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
-> and possibly future generations) use the same device as the Surface Pro
-> 4 to represent their volume and power buttons (MSHW0040), but their
-> acutal implementation is significantly different. This patch ensures
-> that the surfacepro3_button driver is only used on the Pro 3 and 4
-> models, allowing a different driver to bind on other models.
->
+From: David Howells <dhowells@redhat.com>
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Disallow opening of debugfs files that might be used to muck around when
+the kernel is locked down as various drivers give raw access to hardware
+through debugfs.  Given the effort of auditing all 2000 or so files and
+manually fixing each one as necessary, I've chosen to apply a heuristic
+instead.  The following changes are made:
 
-Assuming it will go thru Input subsystem.
+ (1) chmod and chown are disallowed on debugfs objects (though the root dir
+     can be modified by mount and remount, but I'm not worried about that).
 
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-> ---
->  drivers/platform/x86/surfacepro3_button.c | 38 +++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->
-> diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
-> index 47c6d000465a..0e2c7dfafd9f 100644
-> --- a/drivers/platform/x86/surfacepro3_button.c
-> +++ b/drivers/platform/x86/surfacepro3_button.c
-> @@ -20,6 +20,12 @@
->  #define SURFACE_BUTTON_OBJ_NAME                "VGBI"
->  #define SURFACE_BUTTON_DEVICE_NAME     "Surface Pro 3/4 Buttons"
->
-> +#define MSHW0040_DSM_REVISION          0x01
-> +#define MSHW0040_DSM_GET_OMPR          0x02    // get OEM Platform Revision
-> +static const guid_t MSHW0040_DSM_UUID =
-> +       GUID_INIT(0x6fd05c69, 0xcde3, 0x49f4, 0x95, 0xed, 0xab, 0x16, 0x65,
-> +                 0x49, 0x80, 0x35);
-> +
->  #define SURFACE_BUTTON_NOTIFY_TABLET_MODE      0xc8
->
->  #define SURFACE_BUTTON_NOTIFY_PRESS_POWER      0xc6
-> @@ -142,6 +148,34 @@ static int surface_button_resume(struct device *dev)
->  }
->  #endif
->
-> +/*
-> + * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
-> + * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
-> + * device by checking for the _DSM method and OEM Platform Revision.
-> + */
-> +static int surface_button_check_MSHW0040(struct acpi_device *dev)
-> +{
-> +       acpi_handle handle = dev->handle;
-> +       union acpi_object *result;
-> +       u64 oem_platform_rev = 0;
-> +
-> +       // get OEM platform revision
-> +       result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
-> +                                        MSHW0040_DSM_REVISION,
-> +                                        MSHW0040_DSM_GET_OMPR,
-> +                                        NULL, ACPI_TYPE_INTEGER);
-> +
-> +       if (result) {
-> +               oem_platform_rev = result->integer.value;
-> +               ACPI_FREE(result);
-> +       }
-> +
-> +       dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
-> +
-> +       return oem_platform_rev == 0 ? 0 : -ENODEV;
-> +}
-> +
-> +
->  static int surface_button_add(struct acpi_device *device)
->  {
->         struct surface_button *button;
-> @@ -154,6 +188,10 @@ static int surface_button_add(struct acpi_device *device)
->             strlen(SURFACE_BUTTON_OBJ_NAME)))
->                 return -ENODEV;
->
-> +       error = surface_button_check_MSHW0040(device);
-> +       if (error)
-> +               return error;
-> +
->         button = kzalloc(sizeof(struct surface_button), GFP_KERNEL);
->         if (!button)
->                 return -ENOMEM;
-> --
-> 2.22.0
->
+ (2) When the kernel is locked down, only files with the following criteria
+     are permitted to be opened:
 
+	- The file must have mode 00444
+	- The file must not have ioctl methods
+	- The file must not have mmap
 
+ (3) When the kernel is locked down, files may only be opened for reading.
+
+Normal device interaction should be done through configfs, sysfs or a
+miscdev, not debugfs.
+
+Note that this makes it unnecessary to specifically lock down show_dsts(),
+show_devs() and show_call() in the asus-wmi driver.
+
+I would actually prefer to lock down all files by default and have the
+the files unlocked by the creator.  This is tricky to manage correctly,
+though, as there are 19 creation functions and ~1600 call sites (some of
+them in loops scanning tables).
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+cc: acpi4asus-user@lists.sourceforge.net
+cc: platform-driver-x86@vger.kernel.org
+cc: Matthew Garrett <mjg59@srcf.ucam.org>
+cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Greg KH <greg@kroah.com>
+Cc: Rafael J. Wysocki <rafael@kernel.org>
+Signed-off-by: Matthew Garrett <matthewgarrett@google.com>
+---
+ fs/debugfs/file.c            | 30 ++++++++++++++++++++++++++++++
+ fs/debugfs/inode.c           | 32 ++++++++++++++++++++++++++++++--
+ include/linux/security.h     |  1 +
+ security/lockdown/lockdown.c |  1 +
+ 4 files changed, 62 insertions(+), 2 deletions(-)
+
+diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+index 93e4ca6b2ad7..87846aad594b 100644
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -19,6 +19,7 @@
+ #include <linux/atomic.h>
+ #include <linux/device.h>
+ #include <linux/poll.h>
++#include <linux/security.h>
+ 
+ #include "internal.h"
+ 
+@@ -136,6 +137,25 @@ void debugfs_file_put(struct dentry *dentry)
+ }
+ EXPORT_SYMBOL_GPL(debugfs_file_put);
+ 
++/*
++ * Only permit access to world-readable files when the kernel is locked down.
++ * We also need to exclude any file that has ways to write or alter it as root
++ * can bypass the permissions check.
++ */
++static bool debugfs_is_locked_down(struct inode *inode,
++				   struct file *filp,
++				   const struct file_operations *real_fops)
++{
++	if ((inode->i_mode & 07777) == 0444 &&
++	    !(filp->f_mode & FMODE_WRITE) &&
++	    !real_fops->unlocked_ioctl &&
++	    !real_fops->compat_ioctl &&
++	    !real_fops->mmap)
++		return false;
++
++	return security_locked_down(LOCKDOWN_DEBUGFS);
++}
++
+ static int open_proxy_open(struct inode *inode, struct file *filp)
+ {
+ 	struct dentry *dentry = F_DENTRY(filp);
+@@ -147,6 +167,11 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
+ 		return r == -EIO ? -ENOENT : r;
+ 
+ 	real_fops = debugfs_real_fops(filp);
++
++	r = debugfs_is_locked_down(inode, filp, real_fops);
++	if (r)
++		goto out;
++
+ 	real_fops = fops_get(real_fops);
+ 	if (!real_fops) {
+ 		/* Huh? Module did not clean up after itself at exit? */
+@@ -272,6 +297,11 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
+ 		return r == -EIO ? -ENOENT : r;
+ 
+ 	real_fops = debugfs_real_fops(filp);
++
++	r = debugfs_is_locked_down(inode, filp, real_fops);
++	if (r)
++		goto out;
++
+ 	real_fops = fops_get(real_fops);
+ 	if (!real_fops) {
+ 		/* Huh? Module did not cleanup after itself at exit? */
+diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
+index 042b688ed124..7b975dbb2bb4 100644
+--- a/fs/debugfs/inode.c
++++ b/fs/debugfs/inode.c
+@@ -26,6 +26,7 @@
+ #include <linux/parser.h>
+ #include <linux/magic.h>
+ #include <linux/slab.h>
++#include <linux/security.h>
+ 
+ #include "internal.h"
+ 
+@@ -35,6 +36,32 @@ static struct vfsmount *debugfs_mount;
+ static int debugfs_mount_count;
+ static bool debugfs_registered;
+ 
++/*
++ * Don't allow access attributes to be changed whilst the kernel is locked down
++ * so that we can use the file mode as part of a heuristic to determine whether
++ * to lock down individual files.
++ */
++static int debugfs_setattr(struct dentry *dentry, struct iattr *ia)
++{
++	int ret = security_locked_down(LOCKDOWN_DEBUGFS);
++
++	if (ret && (ia->ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID)))
++		return ret;
++	return simple_setattr(dentry, ia);
++}
++
++static const struct inode_operations debugfs_file_inode_operations = {
++	.setattr	= debugfs_setattr,
++};
++static const struct inode_operations debugfs_dir_inode_operations = {
++	.lookup		= simple_lookup,
++	.setattr	= debugfs_setattr,
++};
++static const struct inode_operations debugfs_symlink_inode_operations = {
++	.get_link	= simple_get_link,
++	.setattr	= debugfs_setattr,
++};
++
+ static struct inode *debugfs_get_inode(struct super_block *sb)
+ {
+ 	struct inode *inode = new_inode(sb);
+@@ -369,6 +396,7 @@ static struct dentry *__debugfs_create_file(const char *name, umode_t mode,
+ 	inode->i_mode = mode;
+ 	inode->i_private = data;
+ 
++	inode->i_op = &debugfs_file_inode_operations;
+ 	inode->i_fop = proxy_fops;
+ 	dentry->d_fsdata = (void *)((unsigned long)real_fops |
+ 				DEBUGFS_FSDATA_IS_REAL_FOPS_BIT);
+@@ -532,7 +560,7 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
+ 	}
+ 
+ 	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
+-	inode->i_op = &simple_dir_inode_operations;
++	inode->i_op = &debugfs_dir_inode_operations;
+ 	inode->i_fop = &simple_dir_operations;
+ 
+ 	/* directory inodes start off with i_nlink == 2 (for "." entry) */
+@@ -632,7 +660,7 @@ struct dentry *debugfs_create_symlink(const char *name, struct dentry *parent,
+ 		return failed_creating(dentry);
+ 	}
+ 	inode->i_mode = S_IFLNK | S_IRWXUGO;
+-	inode->i_op = &simple_symlink_inode_operations;
++	inode->i_op = &debugfs_symlink_inode_operations;
+ 	inode->i_link = link;
+ 	d_instantiate(dentry, inode);
+ 	return end_creating(dentry);
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 8ef366de70b0..d92323b44a3f 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -115,6 +115,7 @@ enum lockdown_reason {
+ 	LOCKDOWN_TIOCSSERIAL,
+ 	LOCKDOWN_MODULE_PARAMETERS,
+ 	LOCKDOWN_MMIOTRACE,
++	LOCKDOWN_DEBUGFS,
+ 	LOCKDOWN_INTEGRITY_MAX,
+ 	LOCKDOWN_KCORE,
+ 	LOCKDOWN_KPROBES,
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index fb437a7ef5f2..88064ce1c844 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -30,6 +30,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+ 	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
+ 	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
+ 	[LOCKDOWN_MMIOTRACE] = "unsafe mmio",
++	[LOCKDOWN_DEBUGFS] = "debugfs access",
+ 	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
+ 	[LOCKDOWN_KCORE] = "/proc/kcore access",
+ 	[LOCKDOWN_KPROBES] = "use of kprobes",
 -- 
-With Best Regards,
-Andy Shevchenko
+2.22.0.510.g264f2c817a-goog
