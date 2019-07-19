@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 122/141] platform/x86: Fix PCENGINES_APU2 Kconfig warning
-Date: Fri, 19 Jul 2019 00:02:27 -0400
-Message-ID: <20190719040246.15945-122-sashal@kernel.org>
-References: <20190719040246.15945-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 151/171] platform/x86: Fix PCENGINES_APU2 Kconfig warning
+Date: Thu, 18 Jul 2019 23:56:22 -0400
+Message-ID: <20190719035643.14300-151-sashal@kernel.org>
+References: <20190719035643.14300-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
@@ -40,10 +40,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index a1ed13183559..74df4d183755 100644
+index 5d5cc6111081..7c2fd1d72e18 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -1305,7 +1305,7 @@ config HUAWEI_WMI
+@@ -1317,7 +1317,7 @@ config HUAWEI_WMI
  
  config PCENGINES_APU2
  	tristate "PC Engines APUv2/3 front button and LEDs driver"
