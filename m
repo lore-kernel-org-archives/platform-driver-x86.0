@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 063/171] platform/x86: asus-wmi: Increase input buffer size of WMI methods
-Date: Thu, 18 Jul 2019 23:54:54 -0400
-Message-ID: <20190719035643.14300-63-sashal@kernel.org>
-References: <20190719035643.14300-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 046/141] platform/x86: asus-wmi: Increase input buffer size of WMI methods
+Date: Fri, 19 Jul 2019 00:01:11 -0400
+Message-ID: <20190719040246.15945-46-sashal@kernel.org>
+References: <20190719040246.15945-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190719040246.15945-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>, Daniel Drake <drake@endlessm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
@@ -57,10 +57,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 9b18a184e0aa..abfa99d18fea 100644
+index a66e99500c12..79c9a3f98dce 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -85,6 +85,7 @@ static bool ashs_present(void)
+@@ -95,6 +95,7 @@ static bool ashs_present(void)
  struct bios_args {
  	u32 arg0;
  	u32 arg1;
@@ -68,7 +68,7 @@ index 9b18a184e0aa..abfa99d18fea 100644
  } __packed;
  
  /*
-@@ -211,11 +212,13 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
+@@ -219,11 +220,13 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
  	asus->inputdev = NULL;
  }
  
@@ -83,7 +83,7 @@ index 9b18a184e0aa..abfa99d18fea 100644
  	};
  	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
  	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -247,6 +250,11 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
+@@ -255,6 +258,11 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
  
  	return 0;
  }
