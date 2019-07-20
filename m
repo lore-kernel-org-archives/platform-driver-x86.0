@@ -1,56 +1,100 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 151/171] platform/x86: Fix PCENGINES_APU2 Kconfig warning
-Date: Thu, 18 Jul 2019 23:56:22 -0400
-Message-ID: <20190719035643.14300-151-sashal@kernel.org>
-References: <20190719035643.14300-1-sashal@kernel.org>
+From: Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH v3 1/2] platform/x86: surfacepro3_button: Fix device check
+Date: Sat, 20 Jul 2019 17:05:10 +0200
+Message-ID: <20190720150511.95076-2-luzmaximilian@gmail.com>
+References: <20190720150511.95076-1-luzmaximilian@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190720150511.95076-1-luzmaximilian@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Maximilian Luz <luzmaximilian@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+Do not use the surfacepro3_button driver on newer Microsoft Surface
+models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
+and possibly future generations) use the same device as the Surface Pro
+4 to represent their volume and power buttons (MSHW0040), but their
+actual implementation is significantly different. This patch ensures
+that the surfacepro3_button driver is only used on the Pro 3 and 4
+models, allowing a different driver to bind on other models.
 
-[ Upstream commit 7d67c8ac25fbc66ee254aa3e33329d1c9bc152ce ]
-
-Fix Kconfig warning for PCENGINES_APU2 symbol:
-
-WARNING: unmet direct dependencies detected for GPIO_AMD_FCH
-  Depends on [n]: GPIOLIB [=n] && HAS_IOMEM [=y]
-  Selected by [y]:
-  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
-
-WARNING: unmet direct dependencies detected for KEYBOARD_GPIO_POLLED
-  Depends on [n]: !UML && INPUT [=y] && INPUT_KEYBOARD [=y] && GPIOLIB [=n]
-  Selected by [y]:
-  - PCENGINES_APU2 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && INPUT [=y] && INPUT_KEYBOARD [=y] && LEDS_CLASS [=y]
-
-Add GPIOLIB dependency to fix it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 ---
- drivers/platform/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/surfacepro3_button.c | 47 +++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 5d5cc6111081..7c2fd1d72e18 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1317,7 +1317,7 @@ config HUAWEI_WMI
+diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
+index 47c6d000465a..ec515223f654 100644
+--- a/drivers/platform/x86/surfacepro3_button.c
++++ b/drivers/platform/x86/surfacepro3_button.c
+@@ -20,6 +20,12 @@
+ #define SURFACE_BUTTON_OBJ_NAME		"VGBI"
+ #define SURFACE_BUTTON_DEVICE_NAME	"Surface Pro 3/4 Buttons"
  
- config PCENGINES_APU2
- 	tristate "PC Engines APUv2/3 front button and LEDs driver"
--	depends on INPUT && INPUT_KEYBOARD
-+	depends on INPUT && INPUT_KEYBOARD && GPIOLIB
- 	depends on LEDS_CLASS
- 	select GPIO_AMD_FCH
- 	select KEYBOARD_GPIO_POLLED
++#define MSHW0040_DSM_REVISION		0x01
++#define MSHW0040_DSM_GET_OMPR		0x02	// get OEM Platform Revision
++static const guid_t MSHW0040_DSM_UUID =
++	GUID_INIT(0x6fd05c69, 0xcde3, 0x49f4, 0x95, 0xed, 0xab, 0x16, 0x65,
++		  0x49, 0x80, 0x35);
++
+ #define SURFACE_BUTTON_NOTIFY_TABLET_MODE	0xc8
+ 
+ #define SURFACE_BUTTON_NOTIFY_PRESS_POWER	0xc6
+@@ -142,6 +148,44 @@ static int surface_button_resume(struct device *dev)
+ }
+ #endif
+ 
++/*
++ * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
++ * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
++ * device by checking for the _DSM method and OEM Platform Revision.
++ *
++ * Returns true if the driver should bind to this device, i.e. the device is
++ * either MSWH0028 (Pro 3) or MSHW0040 on a Pro 4 or Book 1.
++ */
++static bool surface_button_check_MSHW0040(struct acpi_device *dev)
++{
++	acpi_handle handle = dev->handle;
++	union acpi_object *result;
++	u64 oem_platform_rev = 0;	// valid revisions are nonzero
++
++	// get OEM platform revision
++	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
++					 MSHW0040_DSM_REVISION,
++					 MSHW0040_DSM_GET_OMPR,
++					 NULL, ACPI_TYPE_INTEGER);
++
++	/*
++	 * If evaluating the _DSM fails, the method is not present. This means
++	 * that we have either MSHW0028 or MSHW0040 on Pro 4 or Book 1, so we
++	 * should use this driver. We use revision 0 indicating it is
++	 * unavailable.
++	 */
++
++	if (result) {
++		oem_platform_rev = result->integer.value;
++		ACPI_FREE(result);
++	}
++
++	dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
++
++	return oem_platform_rev == 0;
++}
++
++
+ static int surface_button_add(struct acpi_device *device)
+ {
+ 	struct surface_button *button;
+@@ -154,6 +198,9 @@ static int surface_button_add(struct acpi_device *device)
+ 	    strlen(SURFACE_BUTTON_OBJ_NAME)))
+ 		return -ENODEV;
+ 
++	if (!surface_button_check_MSHW0040(device))
++		return -ENODEV;
++
+ 	button = kzalloc(sizeof(struct surface_button), GFP_KERNEL);
+ 	if (!button)
+ 		return -ENOMEM;
 -- 
-2.20.1
+2.22.0
