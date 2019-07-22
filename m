@@ -1,41 +1,36 @@
-From: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Subject: [PATCH] platform: x86: Remove acpi_has_method() call in wmi.c
-Date: Sun, 21 Jul 2019 21:11:58 -0600
-Message-ID: <20190722031158.70311-1-skunberg.kelsey@gmail.com>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Re: [PATCH v3 2/2] Input: soc_button_array - Add support for newer
+ surface devices
+Date: Mon, 22 Jul 2019 10:00:14 +0200
+Message-ID: <a2f75544-54ce-abce-56a4-ca226dbed51f@metux.net>
+References: <20190720150511.95076-1-luzmaximilian@gmail.com>
+ <20190720150511.95076-3-luzmaximilian@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190720150511.95076-3-luzmaximilian@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: bjorn@helgaas.com, rjw@rjwysocki.net, skunberg.kelsey@gmail.com, skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
+To: Maximilian Luz <luzmaximilian@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-acpi_has_method() is unnecessary within __query_block() and should be
-removed to avoid extra work.
+On 20.07.19 17:05, Maximilian Luz wrote:
+> Power and volume button support for 5th and 6th generation Microsoft
+> Surface devices via soc_button_array.
+> 
+> Note that these devices use the same MSHW0040 device as on the Surface
+> Pro 4, however the implementation is different (GPIOs vs. ACPI
+> notifications). Thus some checking is required to ensure we only load
+> this driver on the correct devices.
 
-wc_status is initialized to AE_ERROR before the acpi_has_method() call.
-acpi_has_method() and acpi_execute_simple_method() failing due to the
-method not existing will result in the same outcome from __query_block().
+Could this also used on the older (pre pro4) devices (also using the
+gpios directly, and leave off acpi notifications) ?
 
-Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
----
- drivers/platform/x86/wmi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+--mtx
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 784cea8572c2..59e9aa0f9643 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -340,9 +340,7 @@ static acpi_status __query_block(struct wmi_block *wblock, u8 instance,
- 		 * expensive, but have no corresponding WCxx method. So we
- 		 * should not fail if this happens.
- 		 */
--		if (acpi_has_method(handle, wc_method))
--			wc_status = acpi_execute_simple_method(handle,
--								wc_method, 1);
-+		wc_status = acpi_execute_simple_method(handle, wc_method, 1);
- 	}
- 
- 	strcpy(method, "WQ");
 -- 
-2.20.1
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
