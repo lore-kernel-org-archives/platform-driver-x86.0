@@ -1,42 +1,39 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH] Platform: OLPC: add SPI MODULE_DEVICE_TABLE
-Date: Tue, 23 Jul 2019 11:20:22 +0200
-Message-ID: <20190723092022.1758072-1-lkundrak@v3.sk>
+From: Maximilian Luz <luzmaximilian@gmail.com>
+Subject: Re: [PATCH v3 2/2] Input: soc_button_array - Add support for newer
+ surface devices
+Date: Tue, 23 Jul 2019 13:29:27 +0200
+Message-ID: <901b9b74-4c59-9c6a-ce41-404d8885cb83@gmail.com>
+References: <20190720150511.95076-1-luzmaximilian@gmail.com>
+ <20190720150511.95076-3-luzmaximilian@gmail.com>
+ <a2f75544-54ce-abce-56a4-ca226dbed51f@metux.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a2f75544-54ce-abce-56a4-ca226dbed51f@metux.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The SPI bus creates a device with the modalias of "xo1.75-ec". This
-fixes XO-1.75 EC driver autoloading
+On 7/22/19 10:00 AM, Enrico Weigelt, metux IT consult wrote:
+> On 20.07.19 17:05, Maximilian Luz wrote:
+>> Power and volume button support for 5th and 6th generation Microsoft
+>> Surface devices via soc_button_array.
+>>
+>> Note that these devices use the same MSHW0040 device as on the Surface
+>> Pro 4, however the implementation is different (GPIOs vs. ACPI
+>> notifications). Thus some checking is required to ensure we only load
+>> this driver on the correct devices.
+> 
+> Could this also used on the older (pre pro4) devices (also using the
+> gpios directly, and leave off acpi notifications) ?
 
-Fixes: 0c3d931b3ab9 ("Platform: OLPC: Add XO-1.75 EC driver")
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/platform/olpc/olpc-xo175-ec.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+As far as I can tell, no. The Pro 4 and Pro 3 don't have any GPIOs on
+MSHW0028/MSHW0040. Book 1 has GPIOs but for a different purpose. The Pro
+2 has a standard PNP0C0C power button (no idea how the volume buttons
+are handled there, but also seems to be different from what I can gather
+from DSDT). I can't say anything for the Pro 1 and non-Pro devices.
 
-diff --git a/drivers/platform/olpc/olpc-xo175-ec.c b/drivers/platform/olp=
-c/olpc-xo175-ec.c
-index aee8975bea90d..8ec9092af0bed 100644
---- a/drivers/platform/olpc/olpc-xo175-ec.c
-+++ b/drivers/platform/olpc/olpc-xo175-ec.c
-@@ -749,6 +749,12 @@ static const struct of_device_id olpc_xo175_ec_of_ma=
-tch[] =3D {
- };
- MODULE_DEVICE_TABLE(of, olpc_xo175_ec_of_match);
-=20
-+static const struct spi_device_id olpc_xo175_ec_id_table[] =3D {
-+	{ "xo1.75-ec", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(spi, olpc_xo175_ec_id_table);
-+
- static struct spi_driver olpc_xo175_ec_spi_driver =3D {
- 	.driver =3D {
- 		.name	=3D "olpc-xo175-ec",
---=20
-2.21.0
+Maximilian
