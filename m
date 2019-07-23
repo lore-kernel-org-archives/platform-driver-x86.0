@@ -1,39 +1,91 @@
-From: Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH v3 2/2] Input: soc_button_array - Add support for newer
- surface devices
-Date: Tue, 23 Jul 2019 13:29:27 +0200
-Message-ID: <901b9b74-4c59-9c6a-ce41-404d8885cb83@gmail.com>
-References: <20190720150511.95076-1-luzmaximilian@gmail.com>
- <20190720150511.95076-3-luzmaximilian@gmail.com>
- <a2f75544-54ce-abce-56a4-ca226dbed51f@metux.net>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] platform/x86: acer-wmi: Switch to acpi_dev_get_first_match_dev()
+Date: Tue, 23 Jul 2019 23:34:11 +0300
+Message-ID: <20190723203411.71448-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a2f75544-54ce-abce-56a4-ca226dbed51f@metux.net>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Chun-Yi Lee <jlee@suse.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 7/22/19 10:00 AM, Enrico Weigelt, metux IT consult wrote:
-> On 20.07.19 17:05, Maximilian Luz wrote:
->> Power and volume button support for 5th and 6th generation Microsoft
->> Surface devices via soc_button_array.
->>
->> Note that these devices use the same MSHW0040 device as on the Surface
->> Pro 4, however the implementation is different (GPIOs vs. ACPI
->> notifications). Thus some checking is required to ensure we only load
->> this driver on the correct devices.
-> 
-> Could this also used on the older (pre pro4) devices (also using the
-> gpios directly, and leave off acpi notifications) ?
+The acpi_dev_get_first_match_dev() helper will find and return
+an ACPI device pointer of the first registered device in the system
+by its HID.
 
-As far as I can tell, no. The Pro 4 and Pro 3 don't have any GPIOs on
-MSHW0028/MSHW0040. Book 1 has GPIOs but for a different purpose. The Pro
-2 has a standard PNP0C0C power button (no idea how the volume buttons
-are handled there, but also seems to be different from what I can gather
-from DSDT). I can't say anything for the Pro 1 and non-Pro devices.
+Use it instead of open coded variant.
 
-Maximilian
+Cc: Chun-Yi Lee <jlee@suse.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+- Chun-Yi, please, test it if possible
+ drivers/platform/x86/acer-wmi.c | 49 +++++----------------------------
+ 1 file changed, 7 insertions(+), 42 deletions(-)
+
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 62b54e137231..60c18f21588d 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -1881,52 +1881,17 @@ static int __init acer_wmi_enable_rf_button(void)
+ 	return status;
+ }
+ 
+-#define ACER_WMID_ACCEL_HID	"BST0001"
+-
+-static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
+-						void *ctx, void **retval)
+-{
+-	struct acpi_device *dev;
+-
+-	if (!strcmp(ctx, "SENR")) {
+-		if (acpi_bus_get_device(ah, &dev))
+-			return AE_OK;
+-		if (strcmp(ACER_WMID_ACCEL_HID, acpi_device_hid(dev)))
+-			return AE_OK;
+-	} else
+-		return AE_OK;
+-
+-	*(acpi_handle *)retval = ah;
+-
+-	return AE_CTRL_TERMINATE;
+-}
+-
+-static int __init acer_wmi_get_handle(const char *name, const char *prop,
+-					acpi_handle *ah)
+-{
+-	acpi_status status;
+-	acpi_handle handle;
+-
+-	BUG_ON(!name || !ah);
+-
+-	handle = NULL;
+-	status = acpi_get_devices(prop, acer_wmi_get_handle_cb,
+-					(void *)name, &handle);
+-	if (ACPI_SUCCESS(status) && handle) {
+-		*ah = handle;
+-		return 0;
+-	} else {
+-		return -ENODEV;
+-	}
+-}
+-
+ static int __init acer_wmi_accel_setup(void)
+ {
++	struct acpi_device *adev;
+ 	int err;
+ 
+-	err = acer_wmi_get_handle("SENR", ACER_WMID_ACCEL_HID, &gsensor_handle);
+-	if (err)
+-		return err;
++	adev = acpi_dev_get_first_match_dev("BST0001", NULL, -1);
++	if (!adev)
++		return -ENODEV;
++
++	gsensor_handle = acpi_device_handle(adev);
++	acpi_dev_put(adev);
+ 
+ 	interface->capability |= ACER_CAP_ACCEL;
+ 
+-- 
+2.20.1
