@@ -1,91 +1,34 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] platform/x86: acer-wmi: Switch to acpi_dev_get_first_match_dev()
-Date: Tue, 23 Jul 2019 23:34:11 +0300
-Message-ID: <20190723203411.71448-1-andriy.shevchenko@linux.intel.com>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Re: [PATCH 3/3] platform//x86/pcengines-apuv2: update gpio button
+ definition
+Date: Wed, 24 Jul 2019 01:00:19 +0200
+Message-ID: <ab15f31b-e585-15c2-877a-5fcc13e85e14@metux.net>
+References: <20190704090205.19400-1-fe@dev.tdt.de>
+ <20190704090205.19400-4-fe@dev.tdt.de>
+ <cca95ba1-6ac0-a2eb-9ae6-914a8783c1ad@metux.net>
+ <CALPCC5wH_uAGYaHeM_d_yxxUZEd3f-MfhT7jdZSt9ythd08S9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CALPCC5wH_uAGYaHeM_d_yxxUZEd3f-MfhT7jdZSt9ythd08S9w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Chun-Yi Lee <jlee@suse.com>
+To: Florian Eckert <eckert.florian@googlemail.com>
+Cc: Florian Eckert <fe@dev.tdt.de>, info@metux.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The acpi_dev_get_first_match_dev() helper will find and return
-an ACPI device pointer of the first registered device in the system
-by its HID.
+On 23.07.19 09:06, Florian Eckert wrote:
+>> I'd like to ack only the keycode change, but not the deprecated .gpio
+>> field. I'll post a separate patch for the keycode change only.
+> 
+> I am fine if we only change the keycode.
+> Do I have to send a v2 patch set?
+> 
 
-Use it instead of open coded variant.
+already sent one.
 
-Cc: Chun-Yi Lee <jlee@suse.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-- Chun-Yi, please, test it if possible
- drivers/platform/x86/acer-wmi.c | 49 +++++----------------------------
- 1 file changed, 7 insertions(+), 42 deletions(-)
-
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 62b54e137231..60c18f21588d 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1881,52 +1881,17 @@ static int __init acer_wmi_enable_rf_button(void)
- 	return status;
- }
- 
--#define ACER_WMID_ACCEL_HID	"BST0001"
--
--static acpi_status __init acer_wmi_get_handle_cb(acpi_handle ah, u32 level,
--						void *ctx, void **retval)
--{
--	struct acpi_device *dev;
--
--	if (!strcmp(ctx, "SENR")) {
--		if (acpi_bus_get_device(ah, &dev))
--			return AE_OK;
--		if (strcmp(ACER_WMID_ACCEL_HID, acpi_device_hid(dev)))
--			return AE_OK;
--	} else
--		return AE_OK;
--
--	*(acpi_handle *)retval = ah;
--
--	return AE_CTRL_TERMINATE;
--}
--
--static int __init acer_wmi_get_handle(const char *name, const char *prop,
--					acpi_handle *ah)
--{
--	acpi_status status;
--	acpi_handle handle;
--
--	BUG_ON(!name || !ah);
--
--	handle = NULL;
--	status = acpi_get_devices(prop, acer_wmi_get_handle_cb,
--					(void *)name, &handle);
--	if (ACPI_SUCCESS(status) && handle) {
--		*ah = handle;
--		return 0;
--	} else {
--		return -ENODEV;
--	}
--}
--
- static int __init acer_wmi_accel_setup(void)
- {
-+	struct acpi_device *adev;
- 	int err;
- 
--	err = acer_wmi_get_handle("SENR", ACER_WMID_ACCEL_HID, &gsensor_handle);
--	if (err)
--		return err;
-+	adev = acpi_dev_get_first_match_dev("BST0001", NULL, -1);
-+	if (!adev)
-+		return -ENODEV;
-+
-+	gsensor_handle = acpi_device_handle(adev);
-+	acpi_dev_put(adev);
- 
- 	interface->capability |= ACER_CAP_ACCEL;
- 
 -- 
-2.20.1
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
