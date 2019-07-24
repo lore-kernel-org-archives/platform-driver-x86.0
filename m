@@ -1,14 +1,14 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.1 089/371] x86/cpu: Add Ice Lake NNPI to Intel family
-Date: Wed, 24 Jul 2019 21:17:21 +0200
-Message-ID: <20190724191731.532979487@linuxfoundation.org>
-References: <20190724191724.382593077@linuxfoundation.org>
+Subject: [PATCH 4.19 067/271] x86/cpu: Add Ice Lake NNPI to Intel family
+Date: Wed, 24 Jul 2019 21:18:56 +0200
+Message-ID: <20190724191700.928300974@linuxfoundation.org>
+References: <20190724191655.268628197@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, bp@suse.de, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Sasha Levin <sashal@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
@@ -41,7 +41,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 310118805f57..f60ddd655c78 100644
+index 2e38fb82b91d..aebedbaf5260 100644
 --- a/arch/x86/include/asm/intel-family.h
 +++ b/arch/x86/include/asm/intel-family.h
 @@ -56,6 +56,7 @@
