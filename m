@@ -1,13 +1,13 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 096/413] x86/cpu: Add Ice Lake NNPI to Intel family
-Date: Wed, 24 Jul 2019 21:16:27 +0200
-Message-ID: <20190724191741.925587451@linuxfoundation.org>
-References: <20190724191735.096702571@linuxfoundation.org>
+Subject: [PATCH 5.1 089/371] x86/cpu: Add Ice Lake NNPI to Intel family
+Date: Wed, 24 Jul 2019 21:17:21 +0200
+Message-ID: <20190724191731.532979487@linuxfoundation.org>
+References: <20190724191724.382593077@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724191735.096702571@linuxfoundation.org>
+In-Reply-To: <20190724191724.382593077@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, bp@suse.de, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Sasha Levin <sashal@kernel.org>
