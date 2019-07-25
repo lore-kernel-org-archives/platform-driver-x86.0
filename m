@@ -1,40 +1,133 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: Add ICL-NNPI support to PMC Core
-Date: Thu, 25 Jul 2019 20:23:50 +0300
-Message-ID: <CAHp75VdEZ_VMEk3GjYYtgvSCOOOAMhZj-98B-+t__UdB207T8Q@mail.gmail.com>
-References: <20190614080940.13640-1-rajneesh.bhardwaj@linux.intel.com>
- <CAHp75VfMdKqpC3_gF-VzcJQqiWM9E0irORr60KLXyu8HuQg9KA@mail.gmail.com> <37653b30-7a76-0896-ecb7-2fbeab4308ec@linux.intel.com>
+Subject: Re: [RFC 0/9] platform/x86: Huawei WMI laptop extras driver
+Date: Thu, 25 Jul 2019 20:33:25 +0300
+Message-ID: <CAHp75VdKCms0ZsqCcq2wWaMFYE3G+kT8FFDQuw=CZKeyDov8pg@mail.gmail.com>
+References: <20190630054108.19205-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <37653b30-7a76-0896-ecb7-2fbeab4308ec@linux.intel.com>
+In-Reply-To: <20190630054108.19205-1-ayman.bagabas@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Ayman Bagabas <ayman.bagabas@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jul 25, 2019 at 11:02 AM Bhardwaj, Rajneesh
-<rajneesh.bhardwaj@linux.intel.com> wrote:
+On Sun, Jun 30, 2019 at 8:41 AM Ayman Bagabas <ayman.bagabas@gmail.com> wrote:
 >
-> Hi Andy
+> This patch series introduce changes to huawei-wmi driver that includes:
+> * Move to platform driver
+> * Implement WMI management interface
+> * Add micmute LED support through WMI
+> * Add battery charging protection support through WMI
+> * Add fn-lock support through WMI
+> * Implement driver quirks and parameters
+> * Add a debugfs interface to WMI
 >
-> On 29-Jun-19 6:48 PM, Andy Shevchenko wrote:
-> > On Fri, Jun 14, 2019 at 11:14 AM Rajneesh Bhardwaj
-> > <rajneesh.bhardwaj@linux.intel.com> wrote:
-> >> Ice Lake Neural Network Processor for deep learning inference a.k.a.
-> >> ICL-NNPI can re-use Ice Lake Mobile regmap to enable Intel PMC Core
-> >> driver on it.
-> >>
-> > This will be postponed till next cycle since the CPU model will not
-> > appear before merge window.
-> > So, please, resend than (I guess somewhat in a month).
+> # Move to platform driver
 >
+> The current driver offers hotkeys and micmute led support only. With
+> these changes, a platform driver makes more sense since it handles these
+> changes pretty nicely.
 >
-> The dependent CPUID Patch is now upstream,
-> https://github.com/torvalds/linux/blob/bed38c3e2dca01b358a62b5e73b46e875742fd75/arch/x86/include/asm/intel-family.h#L59
-> so can you please apply this one?
+> # Implement WMI management interface
+>
+> Huawei Matebook laptops come with two WMI interfaces. The first being
+> WMI0 which is considered "legacy" and AFAIK only found on the Matebook X
+> released in 2017. The second has a UID of "HWMI" and is found in pretty
+> much all models with a slight difference in implementation except for
+> the Matebook X (2017). Since this model has two interfaces, some aspects
+> are controlled through the legacy interface and some through the other
+> interface. Currently, the legacy interface is not fully implemented and
+> is only used for hotkeys and further debugging has to be done.
+>
+> The WMI interface takes a 64 bit integer, although uses 32 bits most of
+> the time, and returns a 256-260 bytes buffer consists of either one ACPI
+> buffer of 260 bytes, in the case of Matebook X (2017), or one ACPI
+> package of two buffers, one with 4 bytes, and the other with 256 bytes.
+> We only care about the latter 256 buffer in both cases since the 4 bytes
+> always return zeros. The first byte of this 256 buffer always has the
+> return status where 1 indicated error. Some models require calling the
+> WMI interface twice to execute a command.
+>
+> # Add micmute LED support through WMI
+>
+> After implementing the WMI interface, micmute LED can be controlled
+> easily. Models with the legacy interface fall back to ACPI EC method
+> control since the legacy interface is not implemented.
+>
+> # Add battery charging protection support through WMI
+>
+> Most models, that has the WMI interface, are capable of battery
+> protection where it can control battery charging thresholds and limits
+> charging the battery to certain values.
+>
+> # Add fn-lock support through WMI
+>
+> The behavior of hotkeys is not the same among all models. Some models
+> require fn-lock to do things like `Ctrl-Ins` or `Alt-PrtSc`. By default,
+> hotkeys behave as special keys (media keys, Ins, etc), but if a modifier
+> is used (ctrl, alt, shift) these keys behave as F1-F12 keys. If the Fn
+> key is toggled on, the hotkeys with or without a modifier, behave as
+> F1-F12 keys. This makes it impossible to use a modifier and `PrtSc` or
+> `Ins`.
+>
+> Now, some models fix this by excluding `PrtSc` and `Ins` keys from being
+> treated as F11 and F12 keys with the use of a modifier. However, some
+> models do not, and fixes this by the so called fn-lock.
+>
+> Fn-lock inverts the behavior of the top row from special keys to F1-F12
+> keys. So a modifier and a special key would be possible which make
+> things like `Alt-Ins` possible. Now, with fn-lock we would have 4 modes:
+>
+> * Fn-key off & fn-lock off - hotkeys treated as special keys using a
+>   modifier gives F1-F12 keys.
+> * Fn-key on & fn-lock off - hotkeys treated as F1-F12 keys and using a
+>   modifier gives F1-F12.
+> * Fn-key off & fn-lock on - hotkeys are treated as F1-F12 keys and using
+>   a modifier gives special keys.
+> * Fn-key on & fn-lock on - hotkeys are treated as special keys and using
+>   a modifier gives special keys.
+>
+> # Implement driver quirks and parameters
+>
+> The driver introduces 3 quirks and 2 parameters that can change the
+> driver's behavior. These quirks being as:
+> 1. Fixes reporting brightness keys twice since it's already handled by
+>    acpi-video.
+> 2. Some models need a short delay when setting battery thresholds to
+>    prevent a race condition when two processes read/write.
+> 3. Matebook X (2017) handles micmute led through the "legacy" interface
+>    which is not currently implemented. Use ACPI EC method to control
+>    this led.
+>
+> and the 2 parameters can enforce the behavior of quirk 1 & 2.
+>
+> # Add a debugfs interface to WMI
+>
+> An interface to the WMI management interface that allows easier
+> debugging.
+>
 
-Yes, it's in plan for rc2.
+It doesn't apply to current for-next.
+
+> Ayman Bagabas (9):
+>   platform/x86: huawei-wmi: rename guid and driver name
+>   platform/x86: huawei-wmi: move to platform driver
+>   platform/x86: huawei-wmi: implement huawei wmi management interface
+>   platform/x86: huawei-wmi: add quirks and module parameters
+>   platform/x86: huawei-wmi: control micmute led through wmi interface
+>   platform/x86: huawei-wmi: add battery charging thresholds
+>   platform/x86: huawei-wmi: add fn-lock support
+>   platform/x86: huawei-wmi: add sysfs interface support
+>   platform/x86: huawei-wmi: add debugfs support
+>
+>  drivers/platform/x86/huawei-wmi.c | 710 ++++++++++++++++++++++++++----
+>  1 file changed, 629 insertions(+), 81 deletions(-)
+>
+> --
+> 2.20.1
+>
+
 
 -- 
 With Best Regards,
