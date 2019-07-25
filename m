@@ -1,111 +1,52 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 1/2] platform/x86: surfacepro3_button: Fix device check
-Date: Thu, 25 Jul 2019 20:57:53 +0300
-Message-ID: <CAHp75Ve+3c-TFeN3Dh-DB75Rjft8mY2DA8vNkrFyp7JK-ZOjDA@mail.gmail.com>
-References: <20190720150511.95076-1-luzmaximilian@gmail.com> <20190720150511.95076-2-luzmaximilian@gmail.com>
+Subject: Re: [PATCH] platform: x86: Remove acpi_has_method() call in wmi.c
+Date: Thu, 25 Jul 2019 20:58:43 +0300
+Message-ID: <CAHp75Vc4qSNs6Kx6BdO163fi=fYNfPNHy+m3XVpO5v755pu2DA@mail.gmail.com>
+References: <20190722031158.70311-1-skunberg.kelsey@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190720150511.95076-2-luzmaximilian@gmail.com>
+In-Reply-To: <20190722031158.70311-1-skunberg.kelsey@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, bjorn@helgaas.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Shuah Khan <skhan@linuxfoundation.org>, linux-kernel-mentees@lists.linuxfoundation.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Jul 20, 2019 at 6:05 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+On Mon, Jul 22, 2019 at 6:13 AM Kelsey Skunberg
+<skunberg.kelsey@gmail.com> wrote:
 >
-> Do not use the surfacepro3_button driver on newer Microsoft Surface
-> models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
-> and possibly future generations) use the same device as the Surface Pro
-> 4 to represent their volume and power buttons (MSHW0040), but their
-> actual implementation is significantly different. This patch ensures
-> that the surfacepro3_button driver is only used on the Pro 3 and 4
-> models, allowing a different driver to bind on other models.
+> acpi_has_method() is unnecessary within __query_block() and should be
+> removed to avoid extra work.
+>
+> wc_status is initialized to AE_ERROR before the acpi_has_method() call.
+> acpi_has_method() and acpi_execute_simple_method() failing due to the
+> method not existing will result in the same outcome from __query_block().
 >
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Pushed to my review and testing queue, thanks!
 
-assuming it will go thru Input subsystem.
-
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 > ---
->  drivers/platform/x86/surfacepro3_button.c | 47 +++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
+>  drivers/platform/x86/wmi.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 >
-> diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
-> index 47c6d000465a..ec515223f654 100644
-> --- a/drivers/platform/x86/surfacepro3_button.c
-> +++ b/drivers/platform/x86/surfacepro3_button.c
-> @@ -20,6 +20,12 @@
->  #define SURFACE_BUTTON_OBJ_NAME                "VGBI"
->  #define SURFACE_BUTTON_DEVICE_NAME     "Surface Pro 3/4 Buttons"
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 784cea8572c2..59e9aa0f9643 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -340,9 +340,7 @@ static acpi_status __query_block(struct wmi_block *wblock, u8 instance,
+>                  * expensive, but have no corresponding WCxx method. So we
+>                  * should not fail if this happens.
+>                  */
+> -               if (acpi_has_method(handle, wc_method))
+> -                       wc_status = acpi_execute_simple_method(handle,
+> -                                                               wc_method, 1);
+> +               wc_status = acpi_execute_simple_method(handle, wc_method, 1);
+>         }
 >
-> +#define MSHW0040_DSM_REVISION          0x01
-> +#define MSHW0040_DSM_GET_OMPR          0x02    // get OEM Platform Revision
-> +static const guid_t MSHW0040_DSM_UUID =
-> +       GUID_INIT(0x6fd05c69, 0xcde3, 0x49f4, 0x95, 0xed, 0xab, 0x16, 0x65,
-> +                 0x49, 0x80, 0x35);
-> +
->  #define SURFACE_BUTTON_NOTIFY_TABLET_MODE      0xc8
->
->  #define SURFACE_BUTTON_NOTIFY_PRESS_POWER      0xc6
-> @@ -142,6 +148,44 @@ static int surface_button_resume(struct device *dev)
->  }
->  #endif
->
-> +/*
-> + * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
-> + * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
-> + * device by checking for the _DSM method and OEM Platform Revision.
-> + *
-> + * Returns true if the driver should bind to this device, i.e. the device is
-> + * either MSWH0028 (Pro 3) or MSHW0040 on a Pro 4 or Book 1.
-> + */
-> +static bool surface_button_check_MSHW0040(struct acpi_device *dev)
-> +{
-> +       acpi_handle handle = dev->handle;
-> +       union acpi_object *result;
-> +       u64 oem_platform_rev = 0;       // valid revisions are nonzero
-> +
-> +       // get OEM platform revision
-> +       result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
-> +                                        MSHW0040_DSM_REVISION,
-> +                                        MSHW0040_DSM_GET_OMPR,
-> +                                        NULL, ACPI_TYPE_INTEGER);
-> +
-> +       /*
-> +        * If evaluating the _DSM fails, the method is not present. This means
-> +        * that we have either MSHW0028 or MSHW0040 on Pro 4 or Book 1, so we
-> +        * should use this driver. We use revision 0 indicating it is
-> +        * unavailable.
-> +        */
-> +
-> +       if (result) {
-> +               oem_platform_rev = result->integer.value;
-> +               ACPI_FREE(result);
-> +       }
-> +
-> +       dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
-> +
-> +       return oem_platform_rev == 0;
-> +}
-> +
-> +
->  static int surface_button_add(struct acpi_device *device)
->  {
->         struct surface_button *button;
-> @@ -154,6 +198,9 @@ static int surface_button_add(struct acpi_device *device)
->             strlen(SURFACE_BUTTON_OBJ_NAME)))
->                 return -ENODEV;
->
-> +       if (!surface_button_check_MSHW0040(device))
-> +               return -ENODEV;
-> +
->         button = kzalloc(sizeof(struct surface_button), GFP_KERNEL);
->         if (!button)
->                 return -ENOMEM;
+>         strcpy(method, "WQ");
 > --
-> 2.22.0
+> 2.20.1
 >
 
 
