@@ -1,73 +1,44 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 21/35] platform/x86/thinkpad: Use kmemdup rather than
- duplicating its implementation
-Date: Thu, 25 Jul 2019 20:43:59 +0300
-Message-ID: <CAHp75Vefj9dBFHYn84ZHMteWgGEAq5bvAuvgbO8XRZcn_UdXHA@mail.gmail.com>
-References: <20190703163000.315-1-huangfq.daxian@gmail.com>
+Subject: Re: [PATCH] platform/x86: hp_accel: Add support for HP ZBook 17 G5
+Date: Thu, 25 Jul 2019 20:44:13 +0300
+Message-ID: <CAHp75VdO01EmsYXPjXdjyzqa4vvs26H3yJ0C+fhxmY1hrgg+Xg@mail.gmail.com>
+References: <20190710053326.26247-1-kai.heng.feng@canonical.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190703163000.315-1-huangfq.daxian@gmail.com>
+In-Reply-To: <20190710053326.26247-1-kai.heng.feng@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fuqian Huang <huangfq.daxian@gmail.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: Eric Piel <eric.piel@tremplin-utc.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jul 3, 2019 at 7:30 PM Fuqian Huang <huangfq.daxian@gmail.com> wrote:
+On Wed, Jul 10, 2019 at 8:33 AM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
 >
-> kmemdup is introduced to duplicate a region of memory in a neat way.
-> Rather than kmalloc/kzalloc + memcpy, which the programmer needs to
-> write the size twice (sometimes lead to mistakes), kmemdup improves
-> readability, leads to smaller code and also reduce the chances of mistakes.
-> Suggestion to use kmemdup rather than using kmalloc/kzalloc + memcpy.
+> HP ZBook 17 G5 needs a non-standard mapping, x_inverted.
 >
 
 Pushed to my review and testing queue, thanks!
 
-> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
-> Changes in v2:
->   - Fix a typo in commit message (memset -> memcpy)
+>  drivers/platform/x86/hp_accel.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
->  drivers/platform/x86/thinkpad_acpi.c | 17 +++++++----------
->  1 file changed, 7 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 7bde4640ef34..d379bdf98a0f 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -3647,22 +3647,19 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
->                 goto err_exit;
->
->         /* Set up key map */
-> -       hotkey_keycode_map = kmalloc(TPACPI_HOTKEY_MAP_SIZE,
-> -                                       GFP_KERNEL);
-> -       if (!hotkey_keycode_map) {
-> -               pr_err("failed to allocate memory for key map\n");
-> -               res = -ENOMEM;
-> -               goto err_exit;
-> -       }
-> -
->         keymap_id = tpacpi_check_quirks(tpacpi_keymap_qtable,
->                                         ARRAY_SIZE(tpacpi_keymap_qtable));
->         BUG_ON(keymap_id >= ARRAY_SIZE(tpacpi_keymaps));
->         dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_HKEY,
->                    "using keymap number %lu\n", keymap_id);
->
-> -       memcpy(hotkey_keycode_map, &tpacpi_keymaps[keymap_id],
-> -               TPACPI_HOTKEY_MAP_SIZE);
-> +       hotkey_keycode_map = kmemdup(&tpacpi_keymaps[keymap_id],
-> +                       TPACPI_HOTKEY_MAP_SIZE, GFP_KERNEL);
-> +       if (!hotkey_keycode_map) {
-> +               pr_err("failed to allocate memory for key map\n");
-> +               res = -ENOMEM;
-> +               goto err_exit;
-> +       }
->
->         input_set_capability(tpacpi_inputdev, EV_MSC, MSC_SCAN);
->         tpacpi_inputdev->keycodesize = TPACPI_HOTKEY_MAP_TYPESIZE;
+> diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
+> index f61b8a176e20..cfc0e36a7a5e 100644
+> --- a/drivers/platform/x86/hp_accel.c
+> +++ b/drivers/platform/x86/hp_accel.c
+> @@ -239,6 +239,7 @@ static const struct dmi_system_id lis3lv02d_dmi_ids[] = {
+>         AXIS_DMI_MATCH("HPB64xx", "HP EliteBook 84", xy_swap),
+>         AXIS_DMI_MATCH("HPB65xx", "HP ProBook 65", x_inverted),
+>         AXIS_DMI_MATCH("HPZBook15", "HP ZBook 15", x_inverted),
+> +       AXIS_DMI_MATCH("HPZBook17G5", "HP ZBook 17 G5", x_inverted),
+>         AXIS_DMI_MATCH("HPZBook17", "HP ZBook 17", xy_swap_yz_inverted),
+>         { NULL, }
+>  /* Laptop models without axis info (yet):
 > --
-> 2.11.0
+> 2.17.1
 >
 
 
