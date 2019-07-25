@@ -1,56 +1,68 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 067/271] x86/cpu: Add Ice Lake NNPI to Intel family
-Date: Wed, 24 Jul 2019 21:18:56 +0200
-Message-ID: <20190724191700.928300974@linuxfoundation.org>
-References: <20190724191655.268628197@linuxfoundation.org>
+From: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: intel_pmc_core: Add ICL-NNPI support to PMC
+ Core
+Date: Thu, 25 Jul 2019 13:32:15 +0530
+Message-ID: <37653b30-7a76-0896-ecb7-2fbeab4308ec@linux.intel.com>
+References: <20190614080940.13640-1-rajneesh.bhardwaj@linux.intel.com>
+ <CAHp75VfMdKqpC3_gF-VzcJQqiWM9E0irORr60KLXyu8HuQg9KA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190724191655.268628197@linuxfoundation.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, bp@suse.de, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, platform-driver-x86@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VfMdKqpC3_gF-VzcJQqiWM9E0irORr60KLXyu8HuQg9KA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-[ Upstream commit e32d045cd4ba06b59878323e434bad010e78e658 ]
+Hi Andy
 
-Add the CPUID model number of Ice Lake Neural Network Processor for Deep
-Learning Inference (ICL-NNPI) to the Intel family list. Ice Lake NNPI uses
-model number 0x9D and this will be documented in a future version of Intel
-Software Development Manual.
+On 29-Jun-19 6:48 PM, Andy Shevchenko wrote:
+> On Fri, Jun 14, 2019 at 11:14 AM Rajneesh Bhardwaj
+> <rajneesh.bhardwaj@linux.intel.com> wrote:
+>> Ice Lake Neural Network Processor for deep learning inference a.k.a.
+>> ICL-NNPI can re-use Ice Lake Mobile regmap to enable Intel PMC Core
+>> driver on it.
+>>
+> This will be postponed till next cycle since the CPU model will not
+> appear before merge window.
+> So, please, resend than (I guess somewhat in a month).
 
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@suse.de
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20190606012419.13250-1-rajneesh.bhardwaj@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/include/asm/intel-family.h | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 2e38fb82b91d..aebedbaf5260 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -56,6 +56,7 @@
- #define INTEL_FAM6_ICELAKE_XEON_D	0x6C
- #define INTEL_FAM6_ICELAKE_DESKTOP	0x7D
- #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
-+#define INTEL_FAM6_ICELAKE_NNPI		0x9D
- 
- /* "Small Core" Processors (Atom) */
- 
--- 
-2.20.1
+The dependent CPUID Patch is now upstream, 
+https://github.com/torvalds/linux/blob/bed38c3e2dca01b358a62b5e73b46e875742fd75/arch/x86/include/asm/intel-family.h#L59 
+so can you please apply this one?
+
+
+Thank you
+
+Rajneesh
+
+
+>
+>> Cc: Darren Hart <dvhart@infradead.org>
+>> Cc: Andy Shevchenko <andy@infradead.org>
+>> Cc: platform-driver-x86@vger.kernel.org
+>> Link: https://lkml.org/lkml/2019/6/5/1034
+>> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+>> ---
+>>   drivers/platform/x86/intel_pmc_core.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+>> index 1d902230ba61..be6cda89dcf5 100644
+>> --- a/drivers/platform/x86/intel_pmc_core.c
+>> +++ b/drivers/platform/x86/intel_pmc_core.c
+>> @@ -815,6 +815,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+>>          INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
+>>          INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+>>          INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
+>> +       INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
+>>          {}
+>>   };
+>>
+>> --
+>> 2.17.1
+>>
+>
