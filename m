@@ -1,29 +1,113 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/3] Update pcengines-apuv2 platform device
-Date: Thu, 25 Jul 2019 20:49:21 +0300
-Message-ID: <CAHp75Vct4O+P62vUo02e5iJy9JMFBDjijFf-JUxjRrMhf1XTEg@mail.gmail.com>
-References: <20190704090205.19400-1-fe@dev.tdt.de> <CAHp75Vcocs=9AwX32ouOWFc+wAduCFv2DT_p4JYPUVV0BumjqA@mail.gmail.com>
- <4b43316c-3e05-0ce9-3ada-db22996205b9@metux.net> <cc5bbcd7148ece53a075948f240bc66b@dev.tdt.de>
+Subject: Re: [PATCH v3 1/2] platform/x86: surfacepro3_button: Fix device check
+Date: Thu, 25 Jul 2019 20:57:53 +0300
+Message-ID: <CAHp75Ve+3c-TFeN3Dh-DB75Rjft8mY2DA8vNkrFyp7JK-ZOjDA@mail.gmail.com>
+References: <20190720150511.95076-1-luzmaximilian@gmail.com> <20190720150511.95076-2-luzmaximilian@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cc5bbcd7148ece53a075948f240bc66b@dev.tdt.de>
+In-Reply-To: <20190720150511.95076-2-luzmaximilian@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Eckert <fe@dev.tdt.de>
-Cc: "Enrico Weigelt, metux IT consult" <lkml@metux.net>, Eckert.Florian@googlemail.com, "Enrico Weigelt, metux IT consult" <info@metux.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Maximilian Luz <luzmaximilian@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jul 10, 2019 at 3:54 PM Florian Eckert <fe@dev.tdt.de> wrote:
+On Sat, Jul 20, 2019 at 6:05 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
 >
-> On 2019-07-08 21:45, Enrico Weigelt, metux IT consult wrote:
-> > On 04.07.19 15:39, Andy Shevchenko wrote:
-> >> On Thu, Jul 4, 2019 at 12:02 PM Florian Eckert <fe@dev.tdt.de> wrote:
-> >>>
-> >>> This patchset adds the following changes to this pcengines-apuv2
-> >>> platform device.
+> Do not use the surfacepro3_button driver on newer Microsoft Surface
+> models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
+> and possibly future generations) use the same device as the Surface Pro
+> 4 to represent their volume and power buttons (MSHW0040), but their
+> actual implementation is significantly different. This patch ensures
+> that the surfacepro3_button driver is only used on the Pro 3 and 4
+> models, allowing a different driver to bind on other models.
+>
 
-Guys, I'm lost with this series.
-So, for now I dropped them from queue, if needed, please resend a new version.
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+assuming it will go thru Input subsystem.
+
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> ---
+>  drivers/platform/x86/surfacepro3_button.c | 47 +++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>
+> diff --git a/drivers/platform/x86/surfacepro3_button.c b/drivers/platform/x86/surfacepro3_button.c
+> index 47c6d000465a..ec515223f654 100644
+> --- a/drivers/platform/x86/surfacepro3_button.c
+> +++ b/drivers/platform/x86/surfacepro3_button.c
+> @@ -20,6 +20,12 @@
+>  #define SURFACE_BUTTON_OBJ_NAME                "VGBI"
+>  #define SURFACE_BUTTON_DEVICE_NAME     "Surface Pro 3/4 Buttons"
+>
+> +#define MSHW0040_DSM_REVISION          0x01
+> +#define MSHW0040_DSM_GET_OMPR          0x02    // get OEM Platform Revision
+> +static const guid_t MSHW0040_DSM_UUID =
+> +       GUID_INIT(0x6fd05c69, 0xcde3, 0x49f4, 0x95, 0xed, 0xab, 0x16, 0x65,
+> +                 0x49, 0x80, 0x35);
+> +
+>  #define SURFACE_BUTTON_NOTIFY_TABLET_MODE      0xc8
+>
+>  #define SURFACE_BUTTON_NOTIFY_PRESS_POWER      0xc6
+> @@ -142,6 +148,44 @@ static int surface_button_resume(struct device *dev)
+>  }
+>  #endif
+>
+> +/*
+> + * Surface Pro 4 and Surface Book 2 / Surface Pro 2017 use the same device
+> + * ID (MSHW0040) for the power/volume buttons. Make sure this is the right
+> + * device by checking for the _DSM method and OEM Platform Revision.
+> + *
+> + * Returns true if the driver should bind to this device, i.e. the device is
+> + * either MSWH0028 (Pro 3) or MSHW0040 on a Pro 4 or Book 1.
+> + */
+> +static bool surface_button_check_MSHW0040(struct acpi_device *dev)
+> +{
+> +       acpi_handle handle = dev->handle;
+> +       union acpi_object *result;
+> +       u64 oem_platform_rev = 0;       // valid revisions are nonzero
+> +
+> +       // get OEM platform revision
+> +       result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
+> +                                        MSHW0040_DSM_REVISION,
+> +                                        MSHW0040_DSM_GET_OMPR,
+> +                                        NULL, ACPI_TYPE_INTEGER);
+> +
+> +       /*
+> +        * If evaluating the _DSM fails, the method is not present. This means
+> +        * that we have either MSHW0028 or MSHW0040 on Pro 4 or Book 1, so we
+> +        * should use this driver. We use revision 0 indicating it is
+> +        * unavailable.
+> +        */
+> +
+> +       if (result) {
+> +               oem_platform_rev = result->integer.value;
+> +               ACPI_FREE(result);
+> +       }
+> +
+> +       dev_dbg(&dev->dev, "OEM Platform Revision %llu\n", oem_platform_rev);
+> +
+> +       return oem_platform_rev == 0;
+> +}
+> +
+> +
+>  static int surface_button_add(struct acpi_device *device)
+>  {
+>         struct surface_button *button;
+> @@ -154,6 +198,9 @@ static int surface_button_add(struct acpi_device *device)
+>             strlen(SURFACE_BUTTON_OBJ_NAME)))
+>                 return -ENODEV;
+>
+> +       if (!surface_button_check_MSHW0040(device))
+> +               return -ENODEV;
+> +
+>         button = kzalloc(sizeof(struct surface_button), GFP_KERNEL);
+>         if (!button)
+>                 return -ENOMEM;
+> --
+> 2.22.0
+>
+
 
 -- 
 With Best Regards,
