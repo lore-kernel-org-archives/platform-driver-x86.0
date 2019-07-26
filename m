@@ -1,81 +1,77 @@
-From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: Re: [PATCH v2 1/1] platform/x86/pcengines-apuv2: add mpcie reset gpio
- export
-Date: Fri, 26 Jul 2019 12:49:56 +0200
-Message-ID: <d35c844e-4202-9710-dbe6-f10bebf75e3a@metux.net>
-References: <20190726062115.16231-1-fe@dev.tdt.de>
+From: Gerhard Wiesinger <lists@wiesinger.com>
+Subject: platform/x86/pcengines-apuv2: Missing apu4
+Date: Fri, 26 Jul 2019 17:25:34 +0200
+Message-ID: <2f22106f-4d13-f3a7-0862-3a71762d62ab@wiesinger.com>
+References: <02b34d18-27bc-cb48-f698-03df61df7d91@wiesinger.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190726062115.16231-1-fe@dev.tdt.de>
+In-Reply-To: <02b34d18-27bc-cb48-f698-03df61df7d91@wiesinger.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Florian Eckert <fe@dev.tdt.de>, Eckert.Florian@googlemail.com, info@metux.net, dvhart@infradead.org, andy@infradead.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 26.07.19 08:21, Florian Eckert wrote:
-> On APUx we have also mpcie2/mpcie3 reset pins. To make it possible to reset
-> the ports from the userspace, add the definition to this platform
-> device. The gpio can then be exported by the legancy gpio subsystem to
-> toggle the mpcie reset pin.
-> 
-> Signed-off-by: Florian Eckert <fe@dev.tdt.de>
-> ---
-> 
-> v2:
->    Noting changed for this patch. Only resend because other patches of
->    the series where dropped or updated and resend by other people
-> 
->   drivers/platform/x86/pcengines-apuv2.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-> index c1ca931e1fab..f6d8ed100cab 100644
-> --- a/drivers/platform/x86/pcengines-apuv2.c
-> +++ b/drivers/platform/x86/pcengines-apuv2.c
-> @@ -32,6 +32,8 @@
->   #define APU2_GPIO_REG_LED3		AMD_FCH_GPIO_REG_GPIO59_DEVSLP1
->   #define APU2_GPIO_REG_MODESW		AMD_FCH_GPIO_REG_GPIO32_GE1
->   #define APU2_GPIO_REG_SIMSWAP		AMD_FCH_GPIO_REG_GPIO33_GE2
-> +#define APU2_GPIO_REG_MPCIE2		AMD_FCH_GPIO_REG_GPIO59_DEVSLP0
-> +#define APU2_GPIO_REG_MPCIE3		AMD_FCH_GPIO_REG_GPIO51
->   
->   /* order in which the gpio lines are defined in the register list */
->   #define APU2_GPIO_LINE_LED1		0
-> @@ -39,6 +41,8 @@
->   #define APU2_GPIO_LINE_LED3		2
->   #define APU2_GPIO_LINE_MODESW		3
->   #define APU2_GPIO_LINE_SIMSWAP		4
-> +#define APU2_GPIO_LINE_MPCIE2		5
-> +#define APU2_GPIO_LINE_MPCIE3		6
->   
->   /* gpio device */
->   
-> @@ -48,6 +52,8 @@ static int apu2_gpio_regs[] = {
->   	[APU2_GPIO_LINE_LED3]		= APU2_GPIO_REG_LED3,
->   	[APU2_GPIO_LINE_MODESW]		= APU2_GPIO_REG_MODESW,
->   	[APU2_GPIO_LINE_SIMSWAP]	= APU2_GPIO_REG_SIMSWAP,
-> +	[APU2_GPIO_LINE_MPCIE2]		= APU2_GPIO_REG_MPCIE2,
-> +	[APU2_GPIO_LINE_MPCIE3]		= APU2_GPIO_REG_MPCIE3,
->   };
->   
->   static const char * const apu2_gpio_names[] = {
-> @@ -56,6 +62,8 @@ static const char * const apu2_gpio_names[] = {
->   	[APU2_GPIO_LINE_LED3]		= "front-led3",
->   	[APU2_GPIO_LINE_MODESW]		= "front-button",
->   	[APU2_GPIO_LINE_SIMSWAP]	= "simswap",
-> +	[APU2_GPIO_LINE_MPCIE2]		= "mpcie2_reset",
-> +	[APU2_GPIO_LINE_MPCIE3]		= "mpcie3_reset",
->   };
->   
->   static const struct amd_fch_gpio_pdata board_apu2 = {
-> 
+Hello,
 
-Acked-by: Enrico Weigelt <info@metux.net>
+I saw that the apu4 board is completly missing (also on 5.3rc1). Can you 
+please add it. Should be very easy, see below.
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/platform/x86/pcengines-apuv2.c?h=v5.1.20
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/pcengines-apuv2.c?h=v5.3-rc1
+
+
+For further rference:
+
+https://www.pcengines.ch/apu2.htm
+
+https://www.pcengines.ch/apu4c2.htm
+
+https://www.pcengines.ch/apu4c4.htm
+
+Please backport it also to 5.1.x and 5.2.x.
+
+
+Thnx.
+
+Ciao,
+
+Gerhard
+
+
+     /* APU4 w/ legacy bios < 4.0.8 */
+     {
+         .ident        = "apu4",
+         .matches    = {
+             DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
+             DMI_MATCH(DMI_BOARD_NAME, "APU4")
+         },
+         .driver_data = (void *)&board_apu2,
+     },
+     /* APU4 w/ legacy bios >= 4.0.8 */
+     {
+         .ident       = "apu4",
+         .matches     = {
+             DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
+             DMI_MATCH(DMI_BOARD_NAME, "apu4)
+         },
+         .driver_data = (void *)&board_apu2,
+     },
+     /* APU4 w/ mainline bios */
+     {
+         .ident       = "apu4",
+         .matches     = {
+             DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
+             DMI_MATCH(DMI_BOARD_NAME, "PC Engines apu4")
+         },
+         .driver_data = (void *)&board_apu2,
+     },
+
+
+|
+
+MODULE_DESCRIPTION("PC Engines APUv2/APUv3/APUv4 board GPIO/LED/keys 
+driver"); |
