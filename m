@@ -1,31 +1,67 @@
-From: Yu Chen <yu.c.chen@intel.com>
-Subject: Re: [PATCH v3 1/2] platform/x86: surfacepro3_button: Fix device check
-Date: Fri, 26 Jul 2019 09:48:52 +0800
-Message-ID: <20190726014851.GA15416@chenyu-office.sh.intel.com>
-References: <20190720150511.95076-1-luzmaximilian@gmail.com>
- <20190720150511.95076-2-luzmaximilian@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Florian Eckert <fe@dev.tdt.de>
+Subject: [PATCH v2 1/1] platform/x86/pcengines-apuv2: add mpcie reset gpio export
+Date: Fri, 26 Jul 2019 08:21:15 +0200
+Message-ID: <20190726062115.16231-1-fe@dev.tdt.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190720150511.95076-2-luzmaximilian@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To: Eckert.Florian@googlemail.com, info@metux.net, dvhart@infradead.org, andy@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Eckert <fe@dev.tdt.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Jul 20, 2019 at 05:05:10PM +0200, Maximilian Luz wrote:
-> Do not use the surfacepro3_button driver on newer Microsoft Surface
-> models, only use it on the Surface Pro 3 and 4. Newer models (5th, 6th
-> and possibly future generations) use the same device as the Surface Pro
-> 4 to represent their volume and power buttons (MSHW0040), but their
-> actual implementation is significantly different. This patch ensures
-> that the surfacepro3_button driver is only used on the Pro 3 and 4
-> models, allowing a different driver to bind on other models.
-> 
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-> ---
-Acked-by: Chen Yu <yu.c.chen@intel.com>
+On APUx we have also mpcie2/mpcie3 reset pins. To make it possible to reset
+the ports from the userspace, add the definition to this platform
+device. The gpio can then be exported by the legancy gpio subsystem to
+toggle the mpcie reset pin.
 
-Thanks,
-Chenyu
+Signed-off-by: Florian Eckert <fe@dev.tdt.de>
+---
+
+v2:
+  Noting changed for this patch. Only resend because other patches of
+  the series where dropped or updated and resend by other people
+
+ drivers/platform/x86/pcengines-apuv2.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+index c1ca931e1fab..f6d8ed100cab 100644
+--- a/drivers/platform/x86/pcengines-apuv2.c
++++ b/drivers/platform/x86/pcengines-apuv2.c
+@@ -32,6 +32,8 @@
+ #define APU2_GPIO_REG_LED3		AMD_FCH_GPIO_REG_GPIO59_DEVSLP1
+ #define APU2_GPIO_REG_MODESW		AMD_FCH_GPIO_REG_GPIO32_GE1
+ #define APU2_GPIO_REG_SIMSWAP		AMD_FCH_GPIO_REG_GPIO33_GE2
++#define APU2_GPIO_REG_MPCIE2		AMD_FCH_GPIO_REG_GPIO59_DEVSLP0
++#define APU2_GPIO_REG_MPCIE3		AMD_FCH_GPIO_REG_GPIO51
+ 
+ /* order in which the gpio lines are defined in the register list */
+ #define APU2_GPIO_LINE_LED1		0
+@@ -39,6 +41,8 @@
+ #define APU2_GPIO_LINE_LED3		2
+ #define APU2_GPIO_LINE_MODESW		3
+ #define APU2_GPIO_LINE_SIMSWAP		4
++#define APU2_GPIO_LINE_MPCIE2		5
++#define APU2_GPIO_LINE_MPCIE3		6
+ 
+ /* gpio device */
+ 
+@@ -48,6 +52,8 @@ static int apu2_gpio_regs[] = {
+ 	[APU2_GPIO_LINE_LED3]		= APU2_GPIO_REG_LED3,
+ 	[APU2_GPIO_LINE_MODESW]		= APU2_GPIO_REG_MODESW,
+ 	[APU2_GPIO_LINE_SIMSWAP]	= APU2_GPIO_REG_SIMSWAP,
++	[APU2_GPIO_LINE_MPCIE2]		= APU2_GPIO_REG_MPCIE2,
++	[APU2_GPIO_LINE_MPCIE3]		= APU2_GPIO_REG_MPCIE3,
+ };
+ 
+ static const char * const apu2_gpio_names[] = {
+@@ -56,6 +62,8 @@ static const char * const apu2_gpio_names[] = {
+ 	[APU2_GPIO_LINE_LED3]		= "front-led3",
+ 	[APU2_GPIO_LINE_MODESW]		= "front-button",
+ 	[APU2_GPIO_LINE_SIMSWAP]	= "simswap",
++	[APU2_GPIO_LINE_MPCIE2]		= "mpcie2_reset",
++	[APU2_GPIO_LINE_MPCIE3]		= "mpcie3_reset",
+ };
+ 
+ static const struct amd_fch_gpio_pdata board_apu2 = {
+-- 
+2.11.0
