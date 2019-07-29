@@ -1,39 +1,31 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3 2/2] Input: soc_button_array - Add support for newer
- surface devices
-Date: Sun, 28 Jul 2019 13:01:38 +0300
-Message-ID: <20190728100138.GC775@penguin>
-References: <20190720150511.95076-1-luzmaximilian@gmail.com>
- <20190720150511.95076-3-luzmaximilian@gmail.com>
- <20190727091443.GC795@penguin>
- <fb53b082-4d83-83a6-1ae6-b9fae9dc750f@gmail.com>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Re: platform/x86/pcengines-apuv2: Missing apu4
+Date: Mon, 29 Jul 2019 10:35:24 +0200
+Message-ID: <343400be-bd86-b59c-cfa0-862780493450@metux.net>
+References: <02b34d18-27bc-cb48-f698-03df61df7d91@wiesinger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <fb53b082-4d83-83a6-1ae6-b9fae9dc750f@gmail.com>
+In-Reply-To: <02b34d18-27bc-cb48-f698-03df61df7d91@wiesinger.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen Yu <yu.c.chen@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To: Gerhard Wiesinger <lists@wiesinger.com>, Florian Eckert <fe@dev.tdt.de>, Eckert.Florian@googlemail.com, info@metux.net, dvhart@infradead.org, andy@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Jul 27, 2019 at 02:01:26PM +0200, Maximilian Luz wrote:
-> On 7/27/19 11:14 AM, Dmitry Torokhov wrote:
-> > On Sat, Jul 20, 2019 at 05:05:11PM +0200, Maximilian Luz wrote:
-> > > -
-> > > -	error = gpiod_count(dev, NULL);
-> > > -	if (error < 0) {
-> > > -		dev_dbg(dev, "no GPIO attached, ignoring...\n");
-> > > -		return -ENODEV;
-> > 
-> > I do not think we need to move this into individual "check" functions.
-> > It is needed in all cases so we should keep it here.
-> > 
-> > How about version below?
+On 26.07.19 16:56, Gerhard Wiesinger wrote:
+> Hello,
 > 
-> Makes sense, looks good to me!
+> I saw that the apu4 board is completly missing (also on 5.3rc1). Can you 
+> please add it. Should be very easy, see below.
 
-OK, great, applied.
+Still in the pipeline - don't have an apu4 board for testing yet.
+
+
+--mtx
 
 -- 
-Dmitry
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
