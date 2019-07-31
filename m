@@ -1,7 +1,7 @@
 From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [RFC 4/9] platform/x86: huawei-wmi: Add quirks and module parameters
-Date: Wed, 31 Jul 2019 13:52:50 -0400
-Message-ID: <20190731175255.25676-5-ayman.bagabas@gmail.com>
+Subject: [RFC 5/9] platform/x86: huawei-wmi: Control micmute led through wmi interface
+Date: Wed, 31 Jul 2019 13:52:51 -0400
+Message-ID: <20190731175255.25676-6-ayman.bagabas@gmail.com>
 References: <20190731175255.25676-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,132 +12,138 @@ To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, pl
 Cc: Ayman Bagabas <ayman.bagabas@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Introduce quirks and module parameters. 3 quirks are added:
-1. Fixes reporting brightness keys twice since it's already handled by
-   acpi-video.
-2. Some models need a short delay when setting battery thresholds to
-   prevent a race condition when two processes read/write.
-3. Matebook X (2017) handles micmute led through the "legacy" interface
-   which is not currently implemented. Use ACPI EC method to control
-   this led.
-
-2 module parameters are added to enable this short delay and/or report
-  brightness keys through this driver.
+Now that huawei WMI management interface is implemented, micmute LED can
+be controlled easily through this interface. Exception is the Matebook X
+(2017) which continue to uses ACPI EC method to control the LED. This
+model can control the LED through the legacy WMI interface which is not
+implemented ATM.
 
 Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
- drivers/platform/x86/huawei-wmi.c | 71 +++++++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+ drivers/platform/x86/huawei-wmi.c | 86 ++++++++++++++++++-------------
+ 1 file changed, 49 insertions(+), 37 deletions(-)
 
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 27520b0f8956..8f918138053a 100644
+index 8f918138053a..9013a05d2832 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/dmi.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
- #include <linux/leds.h>
-@@ -34,6 +35,14 @@ enum {
- 	MICMUTE_LED_SET			= 0x00000b04, /* \SMLS */
- };
- 
-+struct quirk_entry {
-+	bool battery_sleep;
-+	bool ec_micmute;
-+	bool report_brightness;
-+};
-+
-+static struct quirk_entry *quirks;
-+
+@@ -46,8 +46,6 @@ static struct quirk_entry *quirks;
  struct huawei_wmi_priv {
  	struct input_dev *idev[2];
  	struct led_classdev cdev;
-@@ -62,6 +71,58 @@ static const struct key_entry huawei_wmi_keymap[] = {
- 	{ KE_END,	 0 }
+-	acpi_handle handle;
+-	char *acpi_method;
+ 	struct mutex wmi_lock;
+ 	struct platform_device *pdev;
  };
+@@ -238,49 +236,57 @@ static int huawei_wmi_cmd(struct device *dev, u64 arg, u8 *buf, size_t buflen)
+ static int huawei_wmi_micmute_led_set(struct led_classdev *led_cdev,
+ 		enum led_brightness brightness)
+ {
+-	struct huawei_wmi_priv *priv = dev_get_drvdata(led_cdev->dev->parent);
+-	acpi_status status;
+-	union acpi_object args[3];
+-	struct acpi_object_list arg_list = {
+-		.pointer = args,
+-		.count = ARRAY_SIZE(args),
+-	};
+-
+-	args[0].type = args[1].type = args[2].type = ACPI_TYPE_INTEGER;
+-	args[1].integer.value = 0x04;
+-
+-	if (strcmp(priv->acpi_method, "SPIN") == 0) {
+-		args[0].integer.value = 0;
+-		args[2].integer.value = brightness ? 1 : 0;
+-	} else if (strcmp(priv->acpi_method, "WPIN") == 0) {
+-		args[0].integer.value = 1;
+-		args[2].integer.value = brightness ? 0 : 1;
++	/* This is a workaround until the "legacy" interface is implemented. */
++	if (quirks && quirks->ec_micmute) {
++		char *acpi_method;
++		acpi_handle handle;
++		acpi_status status;
++		union acpi_object args[3];
++		struct acpi_object_list arg_list = {
++			.pointer = args,
++			.count = ARRAY_SIZE(args),
++		};
++
++		handle = ec_get_handle();
++		if (!handle) {
++			dev_err(led_cdev->dev->parent, "Failed to get EC handle\n");
++			return -ENODEV;
++		}
++
++		args[0].type = args[1].type = args[2].type = ACPI_TYPE_INTEGER;
++		args[1].integer.value = 0x04;
++
++		if (acpi_has_method(handle, "SPIN")) {
++			acpi_method = "SPIN";
++			args[0].integer.value = 0;
++			args[2].integer.value = brightness ? 1 : 0;
++		} else if (acpi_has_method(handle, "WPIN")) {
++			acpi_method = "WPIN";
++			args[0].integer.value = 1;
++			args[2].integer.value = brightness ? 0 : 1;
++		} else {
++			return -ENODEV;
++		}
++
++		status = acpi_evaluate_object(handle, acpi_method, &arg_list, NULL);
++		if (ACPI_FAILURE(status))
++			return -ENODEV;
++
++		return 0;
+ 	} else {
+-		return -EINVAL;
+-	}
++		u8 arg[8];
  
-+static bool battery_sleep;
-+static bool report_brightness;
-+
-+module_param(battery_sleep, bool, 0444);
-+MODULE_PARM_DESC(battery_sleep,
-+		"Delay after setting battery charging thresholds.");
-+module_param(report_brightness, bool, 0444);
-+MODULE_PARM_DESC(report_brightness,
-+		"Report brightness keys.");
-+
-+/* Quirks */
-+
-+static int __init dmi_matched(const struct dmi_system_id *dmi)
-+{
-+	quirks = dmi->driver_data;
-+	return 1;
-+}
-+
-+static struct quirk_entry quirk_unknown = {
-+};
-+
-+static struct quirk_entry quirk_battery_sleep = {
-+	.battery_sleep = true,
-+};
-+
-+static struct quirk_entry quirk_matebook_x = {
-+	.ec_micmute = true,
-+	.report_brightness = true,
-+};
-+
-+static const struct dmi_system_id huawei_quirks[] = {
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Huawei MACH-WX9",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "HUAWEI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MACH-WX9"),
-+		},
-+		.driver_data = &quirk_battery_sleep
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Huawei MateBook X",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "HUAWEI"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HUAWEI MateBook X")
-+		},
-+		.driver_data = &quirk_matebook_x
-+	},
-+	{  }
-+};
-+
- /* Utils */
+-	status = acpi_evaluate_object(priv->handle, priv->acpi_method, &arg_list, NULL);
+-	if (ACPI_FAILURE(status))
+-		return -ENXIO;
++		*(u64 *)arg = MICMUTE_LED_SET;
++		arg[2] = brightness;
  
- static int huawei_wmi_call(struct device *dev, struct acpi_buffer *in,
-@@ -264,6 +325,11 @@ static void huawei_wmi_process_key(struct input_dev *idev, int code)
- 		return;
- 	}
- 
-+	if (quirks && !quirks->report_brightness &&
-+			(key->sw.code == KEY_BRIGHTNESSDOWN ||
-+			key->sw.code == KEY_BRIGHTNESSUP))
-+		return;
-+
- 	sparse_keymap_report_entry(idev, key, 1, true);
+-	return 0;
++		return huawei_wmi_cmd(led_cdev->dev->parent, *(u64 *)arg, NULL, NULL);
++	}
  }
  
-@@ -377,6 +443,11 @@ static __init int huawei_wmi_init(void)
+ static int huawei_wmi_leds_setup(struct device *dev)
  {
- 	int err;
+ 	struct huawei_wmi_priv *priv = dev_get_drvdata(dev);
  
-+	quirks = &quirk_unknown;
-+	dmi_check_system(huawei_quirks);
-+	quirks->battery_sleep |= battery_sleep;
-+	quirks->report_brightness |= report_brightness;
+-	priv->handle = ec_get_handle();
+-	if (!priv->handle)
+-		return 0;
+-
+-	if (acpi_has_method(priv->handle, "SPIN"))
+-		priv->acpi_method = "SPIN";
+-	else if (acpi_has_method(priv->handle, "WPIN"))
+-		priv->acpi_method = "WPIN";
+-	else
+-		return 0;
+-
+ 	priv->cdev.name = "platform::micmute";
+ 	priv->cdev.max_brightness = 1;
+ 	priv->cdev.brightness_set_blocking = huawei_wmi_micmute_led_set;
+@@ -412,9 +418,15 @@ static int huawei_wmi_probe(struct platform_device *pdev)
+ 
+ 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
+ 		mutex_init(&priv->wmi_lock);
 +
- 	err = platform_driver_register(&huawei_wmi_driver);
- 	if (err)
- 		return err;
++		err = huawei_wmi_leds_setup(&pdev->dev);
++		if (err) {
++			dev_err(&pdev->dev, "Failed to setup leds\n");
++			return err;
++		}
+ 	}
+ 
+-	return huawei_wmi_leds_setup(&pdev->dev);
++	return 0;
+ }
+ 
+ static int huawei_wmi_remove(struct platform_device *pdev)
 -- 
 2.20.1
