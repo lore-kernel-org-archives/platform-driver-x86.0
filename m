@@ -1,53 +1,32 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups
- easily
-Date: Wed, 31 Jul 2019 16:38:40 +0300
-Message-ID: <20190731133840.GN23480@smile.fi.intel.com>
-References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
- <20190731131045.GB147138@dtor-ws>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Re: [PATCH] platform/x86/pcengines-apuv2: add mpcie reset gpio export
+Date: Wed, 31 Jul 2019 15:43:24 +0200
+Message-ID: <b0a41728-7f7b-f91a-2eb8-9a1d713729ad@metux.net>
+References: <1564557670-10849-1-git-send-email-info@metux.net>
+ <CAHp75VfoVr8wjeNj5KBUsexgREaCJYcr=1dPLDcQNN=VUAtdTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190731131045.GB147138@dtor-ws>
+In-Reply-To: <CAHp75VfoVr8wjeNj5KBUsexgREaCJYcr=1dPLDcQNN=VUAtdTw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Richard Gong <richard.gong@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Borislav Petkov <bp@alien8.de>, Darren Hart <dvhart@infradead.org>, Florian Fainelli <f.fainelli@gmail.com>, Ingo Molnar <mingo@redhat.com>, Sudeep Holla <sudeep.holla@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Tony Prisk <linux@prisktech.co.nz>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, x86@kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jul 31, 2019 at 06:10:45AM -0700, Dmitry Torokhov wrote:
-> On Wed, Jul 31, 2019 at 02:43:39PM +0200, Greg Kroah-Hartman wrote:
-> > This patch originally started out just as a way for platform drivers to
-> > easily add a sysfs group in a race-free way, but thanks to Dmitry's
-> > patch, this series now is for all drivers in the kernel (hey, a unified
-> > driver model works!!!)
-> > 
-> > I've only converted a few platform drivers here in this series to show
-> > how it works, but other busses can be converted after the first patch
-> > goes into the tree.
-> > 
-> > Here's the original 00 message, for people to get an idea of what is
-> > going on here:
-> > 
-> > If a platform driver wants to add a sysfs group, it has to do so in a
-> > racy way, adding it after the driver is bound.  To resolve this issue,
-> > have the platform driver core do this for the driver, making the
-> > individual drivers logic smaller and simpler, and solving the race at
-> > the same time.
-> > 
-> > All of these patches depend on the first patch.  I'll take the first one
-> > through my driver-core tree, and any subsystem maintainer can either ack
-> > their individul patch and I will be glad to also merge it, or they can
-> > wait until after 5.4-rc1 when the core patch hits Linus's tree and then
-> > take it, it's up to them.
-> 
-> Maybe make an immutable branch off 5.2 with just patch 1/10 so that
-> subsystems (and the driver core tree itself) could pull it in at their
-> leisure into their "*-next" branches and did not have to wait till 5.4
-> or risk merge clashes?
+On 31.07.19 11:42, Andy Shevchenko wrote:
 
-Isn't cherry-pick enough for one patch?
+> I'm not sure why you resend this, where is the changelog, where is the
+> version bump?..
+
+I've just resent Florian's patch from my queue, as he didn't respond for
+several days and I've already acked it.
+
+
+--mtx
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
