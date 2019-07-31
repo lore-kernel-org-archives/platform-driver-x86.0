@@ -1,71 +1,84 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2 00/10] drivers, provide a way to add sysfs groups easily
-Date: Wed, 31 Jul 2019 14:43:39 +0200
-Message-ID: <20190731124349.4474-1-gregkh@linuxfoundation.org>
+Subject: [PATCH v2 06/10] olpc: x01: convert platform driver to use dev_groups
+Date: Wed, 31 Jul 2019 14:43:45 +0200
+Message-ID: <20190731124349.4474-7-gregkh@linuxfoundation.org>
+References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190731124349.4474-1-gregkh@linuxfoundation.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, Richard Gong <richard.gong@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-fbdev@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sudeep Holla <sudeep.holla@arm.com>, x86@kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-arm-kernel@lists.infradead.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-VGhpcyBwYXRjaCBvcmlnaW5hbGx5IHN0YXJ0ZWQgb3V0IGp1c3QgYXMgYSB3YXkgZm9yIHBsYXRm
-b3JtIGRyaXZlcnMgdG8KZWFzaWx5IGFkZCBhIHN5c2ZzIGdyb3VwIGluIGEgcmFjZS1mcmVlIHdh
-eSwgYnV0IHRoYW5rcyB0byBEbWl0cnkncwpwYXRjaCwgdGhpcyBzZXJpZXMgbm93IGlzIGZvciBh
-bGwgZHJpdmVycyBpbiB0aGUga2VybmVsIChoZXksIGEgdW5pZmllZApkcml2ZXIgbW9kZWwgd29y
-a3MhISEpCgpJJ3ZlIG9ubHkgY29udmVydGVkIGEgZmV3IHBsYXRmb3JtIGRyaXZlcnMgaGVyZSBp
-biB0aGlzIHNlcmllcyB0byBzaG93CmhvdyBpdCB3b3JrcywgYnV0IG90aGVyIGJ1c3NlcyBjYW4g
-YmUgY29udmVydGVkIGFmdGVyIHRoZSBmaXJzdCBwYXRjaApnb2VzIGludG8gdGhlIHRyZWUuCgpI
-ZXJlJ3MgdGhlIG9yaWdpbmFsIDAwIG1lc3NhZ2UsIGZvciBwZW9wbGUgdG8gZ2V0IGFuIGlkZWEg
-b2Ygd2hhdCBpcwpnb2luZyBvbiBoZXJlOgoKSWYgYSBwbGF0Zm9ybSBkcml2ZXIgd2FudHMgdG8g
-YWRkIGEgc3lzZnMgZ3JvdXAsIGl0IGhhcyB0byBkbyBzbyBpbiBhCnJhY3kgd2F5LCBhZGRpbmcg
-aXQgYWZ0ZXIgdGhlIGRyaXZlciBpcyBib3VuZC4gIFRvIHJlc29sdmUgdGhpcyBpc3N1ZSwKaGF2
-ZSB0aGUgcGxhdGZvcm0gZHJpdmVyIGNvcmUgZG8gdGhpcyBmb3IgdGhlIGRyaXZlciwgbWFraW5n
-IHRoZQppbmRpdmlkdWFsIGRyaXZlcnMgbG9naWMgc21hbGxlciBhbmQgc2ltcGxlciwgYW5kIHNv
-bHZpbmcgdGhlIHJhY2UgYXQKdGhlIHNhbWUgdGltZS4KCkFsbCBvZiB0aGVzZSBwYXRjaGVzIGRl
-cGVuZCBvbiB0aGUgZmlyc3QgcGF0Y2guICBJJ2xsIHRha2UgdGhlIGZpcnN0IG9uZQp0aHJvdWdo
-IG15IGRyaXZlci1jb3JlIHRyZWUsIGFuZCBhbnkgc3Vic3lzdGVtIG1haW50YWluZXIgY2FuIGVp
-dGhlciBhY2sKdGhlaXIgaW5kaXZpZHVsIHBhdGNoIGFuZCBJIHdpbGwgYmUgZ2xhZCB0byBhbHNv
-IG1lcmdlIGl0LCBvciB0aGV5IGNhbgp3YWl0IHVudGlsIGFmdGVyIDUuNC1yYzEgd2hlbiB0aGUg
-Y29yZSBwYXRjaCBoaXRzIExpbnVzJ3MgdHJlZSBhbmQgdGhlbgp0YWtlIGl0LCBpdCdzIHVwIHRv
-IHRoZW0uCgpUaGFuayB0byBSaWNoYXJkIEdvbmcgZm9yIHRoZSBpZGVhIGFuZCB0aGUgdGVzdGlu
-ZyBvZiB0aGUgcGxhdGZvcm0KZHJpdmVyIHBhdGNoIGFuZCB0byBEbWl0cnkgVG9yb2tob3YgZm9y
-IHJld3JpdGluZyB0aGUgZmlyc3QgcGF0Y2ggdG8Kd29yayB3ZWxsIGZvciBhbGwgYnVzc2VzLgoK
-LS0tLS0KClYyIC0gd29yayBmb3IgYWxsIGJ1c3NlcyBhbmQgbm90IGp1c3QgcGxhdGZvcm0gZHJp
-dmVycy4KCgpEbWl0cnkgVG9yb2tob3YgKDEpOgogIGRyaXZlciBjb3JlOiBhZGQgZGV2X2dyb3Vw
-cyB0byBhbGwgZHJpdmVycwoKR3JlZyBLcm9haC1IYXJ0bWFuICg5KToKICB1aW86IHVpb19mc2xf
-ZWxiY19ncGNtOiBjb252ZXJ0IHBsYXRmb3JtIGRyaXZlciB0byB1c2UgZGV2X2dyb3VwcwogIGlu
-cHV0OiBrZXlib2FyZDogZ3Bpb19rZXlzOiBjb252ZXJ0IHBsYXRmb3JtIGRyaXZlciB0byB1c2Ug
-ZGV2X2dyb3VwcwogIGlucHV0OiBheHAyMHgtcGVrOiBjb252ZXJ0IHBsYXRmb3JtIGRyaXZlciB0
-byB1c2UgZGV2X2dyb3VwcwogIGZpcm13YXJlOiBhcm1fc2NwaTogY29udmVydCBwbGF0Zm9ybSBk
-cml2ZXIgdG8gdXNlIGRldl9ncm91cHMKICBvbHBjOiB4MDE6IGNvbnZlcnQgcGxhdGZvcm0gZHJp
-dmVyIHRvIHVzZSBkZXZfZ3JvdXBzCiAgcGxhdGZvcm06IHg4NjogaHAtd21pOiBjb252ZXJ0IHBs
-YXRmb3JtIGRyaXZlciB0byB1c2UgZGV2X2dyb3VwcwogIHZpZGVvOiBmYmRldjogd204NTA1ZmI6
-IGNvbnZlcnQgcGxhdGZvcm0gZHJpdmVyIHRvIHVzZSBkZXZfZ3JvdXBzCiAgdmlkZW86IGZiZGV2
-OiB3MTAwZmI6IGNvbnZlcnQgcGxhdGZvcm0gZHJpdmVyIHRvIHVzZSBkZXZfZ3JvdXBzCiAgdmlk
-ZW86IGZiZGV2OiBzbTUwMWZiOiBjb252ZXJ0IHBsYXRmb3JtIGRyaXZlciB0byB1c2UgZGV2X2dy
-b3VwcwoKIGFyY2gveDg2L3BsYXRmb3JtL29scGMvb2xwYy14bzEtc2NpLmMgfCAxNyArKysrLS0t
-LS0tCiBkcml2ZXJzL2Jhc2UvZGQuYyAgICAgICAgICAgICAgICAgICAgIHwgMTQgKysrKysrKysK
-IGRyaXZlcnMvZmlybXdhcmUvYXJtX3NjcGkuYyAgICAgICAgICAgfCAgNSArLS0KIGRyaXZlcnMv
-aW5wdXQva2V5Ym9hcmQvZ3Bpb19rZXlzLmMgICAgfCAxMyArKy0tLS0tLQogZHJpdmVycy9pbnB1
-dC9taXNjL2F4cDIweC1wZWsuYyAgICAgICB8IDE1ICsrLS0tLS0tLQogZHJpdmVycy9wbGF0Zm9y
-bS94ODYvaHAtd21pLmMgICAgICAgICB8IDQ3ICsrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLQog
-ZHJpdmVycy91aW8vdWlvX2ZzbF9lbGJjX2dwY20uYyAgICAgICB8IDIzICsrKysrLS0tLS0tLS0K
-IGRyaXZlcnMvdmlkZW8vZmJkZXYvc201MDFmYi5jICAgICAgICAgfCAzNyArKysrKy0tLS0tLS0t
-LS0tLS0tLS0KIGRyaXZlcnMvdmlkZW8vZmJkZXYvdzEwMGZiLmMgICAgICAgICAgfCAyMyArKysr
-KystLS0tLS0tCiBkcml2ZXJzL3ZpZGVvL2ZiZGV2L3dtODUwNWZiLmMgICAgICAgIHwgMTMgKysr
-Ky0tLS0KIGluY2x1ZGUvbGludXgvZGV2aWNlLmggICAgICAgICAgICAgICAgfCAgMyArKwogMTEg
-ZmlsZXMgY2hhbmdlZCwgNzYgaW5zZXJ0aW9ucygrKSwgMTM0IGRlbGV0aW9ucygtKQoKLS0gCjIu
-MjIuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Platform drivers now have the option to have the platform core create
+and remove any needed sysfs attribute files.  So take advantage of that
+and do not register "by hand" a lid sysfs file.
+
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: platform-driver-x86@vger.kernel.org
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/x86/platform/olpc/olpc-xo1-sci.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/platform/olpc/olpc-xo1-sci.c b/arch/x86/platform/olpc/olpc-xo1-sci.c
+index 25ce1b3b0732..99a28ce2244c 100644
+--- a/arch/x86/platform/olpc/olpc-xo1-sci.c
++++ b/arch/x86/platform/olpc/olpc-xo1-sci.c
+@@ -157,6 +157,12 @@ static ssize_t lid_wake_mode_set(struct device *dev,
+ static DEVICE_ATTR(lid_wake_mode, S_IWUSR | S_IRUGO, lid_wake_mode_show,
+ 		   lid_wake_mode_set);
+ 
++static struct attribute *lid_attrs[] = {
++	&dev_attr_lid_wake_mode.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(lid);
++
+ /*
+  * Process all items in the EC's SCI queue.
+  *
+@@ -510,17 +516,8 @@ static int setup_lid_switch(struct platform_device *pdev)
+ 		goto err_register;
+ 	}
+ 
+-	r = device_create_file(&lid_switch_idev->dev, &dev_attr_lid_wake_mode);
+-	if (r) {
+-		dev_err(&pdev->dev, "failed to create wake mode attr: %d\n", r);
+-		goto err_create_attr;
+-	}
+-
+ 	return 0;
+ 
+-err_create_attr:
+-	input_unregister_device(lid_switch_idev);
+-	lid_switch_idev = NULL;
+ err_register:
+ 	input_free_device(lid_switch_idev);
+ 	return r;
+@@ -528,7 +525,6 @@ static int setup_lid_switch(struct platform_device *pdev)
+ 
+ static void free_lid_switch(void)
+ {
+-	device_remove_file(&lid_switch_idev->dev, &dev_attr_lid_wake_mode);
+ 	input_unregister_device(lid_switch_idev);
+ }
+ 
+@@ -624,6 +620,7 @@ static int xo1_sci_remove(struct platform_device *pdev)
+ static struct platform_driver xo1_sci_driver = {
+ 	.driver = {
+ 		.name = "olpc-xo1-sci-acpi",
++		.dev_groups = lid_groups,
+ 	},
+ 	.probe = xo1_sci_probe,
+ 	.remove = xo1_sci_remove,
+-- 
+2.22.0
