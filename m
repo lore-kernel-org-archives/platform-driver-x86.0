@@ -1,125 +1,50 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2 07/10] platform: x86: hp-wmi: convert platform driver to use dev_groups
-Date: Wed, 31 Jul 2019 14:43:46 +0200
-Message-ID: <20190731124349.4474-8-gregkh@linuxfoundation.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups
+ easily
+Date: Wed, 31 Jul 2019 06:10:45 -0700
+Message-ID: <20190731131045.GB147138@dtor-ws>
 References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20190731124349.4474-1-gregkh@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Richard Gong <richard.gong@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, Richard Gong <richard.gong@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Borislav Petkov <bp@alien8.de>, Darren Hart <dvhart@infradead.org>, Florian Fainelli <f.fainelli@gmail.com>, Ingo Molnar <mingo@redhat.com>, Sudeep Holla <sudeep.holla@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Tony Prisk <linux@prisktech.co.nz>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, x86@kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Platform drivers now have the option to have the platform core create
-and remove any needed sysfs attribute files.  So take advantage of that
-and do not register "by hand" a bunch of sysfs files.
+On Wed, Jul 31, 2019 at 02:43:39PM +0200, Greg Kroah-Hartman wrote:
+> This patch originally started out just as a way for platform drivers to
+> easily add a sysfs group in a race-free way, but thanks to Dmitry's
+> patch, this series now is for all drivers in the kernel (hey, a unified
+> driver model works!!!)
+> 
+> I've only converted a few platform drivers here in this series to show
+> how it works, but other busses can be converted after the first patch
+> goes into the tree.
+> 
+> Here's the original 00 message, for people to get an idea of what is
+> going on here:
+> 
+> If a platform driver wants to add a sysfs group, it has to do so in a
+> racy way, adding it after the driver is bound.  To resolve this issue,
+> have the platform driver core do this for the driver, making the
+> individual drivers logic smaller and simpler, and solving the race at
+> the same time.
+> 
+> All of these patches depend on the first patch.  I'll take the first one
+> through my driver-core tree, and any subsystem maintainer can either ack
+> their individul patch and I will be glad to also merge it, or they can
+> wait until after 5.4-rc1 when the core patch hits Linus's tree and then
+> take it, it's up to them.
 
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Cc: platform-driver-x86@vger.kernel.org
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/platform/x86/hp-wmi.c | 47 +++++++++--------------------------
- 1 file changed, 12 insertions(+), 35 deletions(-)
+Maybe make an immutable branch off 5.2 with just patch 1/10 so that
+subsystems (and the driver core tree itself) could pull it in at their
+leisure into their "*-next" branches and did not have to wait till 5.4
+or risk merge clashes?
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 2521e45280b8..6bcbbb375401 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -502,6 +502,17 @@ static DEVICE_ATTR_RO(dock);
- static DEVICE_ATTR_RO(tablet);
- static DEVICE_ATTR_RW(postcode);
- 
-+static struct attribute *hp_wmi_attrs[] = {
-+	&dev_attr_display.attr,
-+	&dev_attr_hddtemp.attr,
-+	&dev_attr_als.attr,
-+	&dev_attr_dock.attr,
-+	&dev_attr_tablet.attr,
-+	&dev_attr_postcode.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(hp_wmi);
-+
- static void hp_wmi_notify(u32 value, void *context)
- {
- 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -678,16 +689,6 @@ static void hp_wmi_input_destroy(void)
- 	input_unregister_device(hp_wmi_input_dev);
- }
- 
--static void cleanup_sysfs(struct platform_device *device)
--{
--	device_remove_file(&device->dev, &dev_attr_display);
--	device_remove_file(&device->dev, &dev_attr_hddtemp);
--	device_remove_file(&device->dev, &dev_attr_als);
--	device_remove_file(&device->dev, &dev_attr_dock);
--	device_remove_file(&device->dev, &dev_attr_tablet);
--	device_remove_file(&device->dev, &dev_attr_postcode);
--}
--
- static int __init hp_wmi_rfkill_setup(struct platform_device *device)
- {
- 	int err, wireless;
-@@ -858,8 +859,6 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
- 
- static int __init hp_wmi_bios_setup(struct platform_device *device)
- {
--	int err;
--
- 	/* clear detected rfkill devices */
- 	wifi_rfkill = NULL;
- 	bluetooth_rfkill = NULL;
-@@ -869,35 +868,12 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- 	if (hp_wmi_rfkill_setup(device))
- 		hp_wmi_rfkill2_setup(device);
- 
--	err = device_create_file(&device->dev, &dev_attr_display);
--	if (err)
--		goto add_sysfs_error;
--	err = device_create_file(&device->dev, &dev_attr_hddtemp);
--	if (err)
--		goto add_sysfs_error;
--	err = device_create_file(&device->dev, &dev_attr_als);
--	if (err)
--		goto add_sysfs_error;
--	err = device_create_file(&device->dev, &dev_attr_dock);
--	if (err)
--		goto add_sysfs_error;
--	err = device_create_file(&device->dev, &dev_attr_tablet);
--	if (err)
--		goto add_sysfs_error;
--	err = device_create_file(&device->dev, &dev_attr_postcode);
--	if (err)
--		goto add_sysfs_error;
- 	return 0;
--
--add_sysfs_error:
--	cleanup_sysfs(device);
--	return err;
- }
- 
- static int __exit hp_wmi_bios_remove(struct platform_device *device)
- {
- 	int i;
--	cleanup_sysfs(device);
- 
- 	for (i = 0; i < rfkill2_count; i++) {
- 		rfkill_unregister(rfkill2[i].rfkill);
-@@ -966,6 +942,7 @@ static struct platform_driver hp_wmi_driver = {
- 	.driver = {
- 		.name = "hp-wmi",
- 		.pm = &hp_wmi_pm_ops,
-+		.dev_groups = hp_wmi_groups,
- 	},
- 	.remove = __exit_p(hp_wmi_bios_remove),
- };
+Thanks.
+
 -- 
-2.22.0
+Dmitry
