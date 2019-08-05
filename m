@@ -1,66 +1,50 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the Irbis TW90 tablet
-Date: Sun,  4 Aug 2019 15:40:23 +0200
-Message-ID: <20190804134023.3495-1-hdegoede@redhat.com>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Re: [PATCH v2] platform/x86/pcengines-apuv2: use KEY_RESTART for
+ front button
+Date: Mon, 5 Aug 2019 14:06:32 +0200
+Message-ID: <0b2802f8-5732-52e9-0a95-b28d23239ecd@metux.net>
+References: <1564081563-28322-1-git-send-email-info@metux.net>
+ <CAHp75Vem8QZVGx6x0p3JgxA6kH3pG+1_zU=cgiDUDSC5p2ODDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vem8QZVGx6x0p3JgxA6kH3pG+1_zU=cgiDUDSC5p2ODDQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, russianneuromancer@ya.ru
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add touchscreen info for the Irbis TW90 tablet.
+On 01.08.19 17:00, Andy Shevchenko wrote:
 
-Reported-by: russianneuromancer@ya.ru
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/touchscreen_dmi.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Hi,
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 83dd6df674e8..20a943f519dd 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -273,6 +273,24 @@ static const struct ts_dmi_data gp_electronic_t701_data = {
- 	.properties	= gp_electronic_t701_props,
- };
- 
-+static const struct property_entry irbis_tw90_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1720),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1138),
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 8),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 14),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-irbis_tw90.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data irbis_tw90_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= irbis_tw90_props,
-+};
-+
- static const struct property_entry itworks_tw891_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
- 	PROPERTY_ENTRY_U32("touchscreen-min-y", 5),
-@@ -780,6 +798,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_BIOS_VERSION, "itWORKS.G.WI71C.JGBMRB"),
- 		},
- 	},
-+	{
-+		/* Irbis TW90 */
-+		.driver_data = (void *)&irbis_tw90_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "IRBIS"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "TW90"),
-+		},
-+	},
- 	{
- 		/* I.T.Works TW891 */
- 		.driver_data = (void *)&itworks_tw891_data,
+> On Thu, Jul 25, 2019 at 10:06 PM Enrico Weigelt, metux IT consult
+> <info@metux.net> wrote:
+>>
+>> From: Enrico Weigelt <info@metux.net>
+>>
+>> The keycode KEY_RESTART is more appropriate for the front button,
+>> as most people use it for things like restart or factory reset.
+>>
+> 
+> Applied, thanks!
+
+thx.
+
+> 
+>> Signed-off-by: Enrico Weigelt <info@metux.net>
+>> Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe ("x86: pcengines apuv2 gpio/leds/keys platform driver")
+> 
+> Please, use allowed minimum (12 nowadays) characters of hash.
+
+hmm, do you happen to know how to configure tig to show the short hash ?
+
+
+--mtx
+
 -- 
-2.22.0
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
