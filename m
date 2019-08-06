@@ -1,50 +1,47 @@
-From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: Re: [PATCH v2] platform/x86/pcengines-apuv2: use KEY_RESTART for
- front button
-Date: Mon, 5 Aug 2019 14:06:32 +0200
-Message-ID: <0b2802f8-5732-52e9-0a95-b28d23239ecd@metux.net>
-References: <1564081563-28322-1-git-send-email-info@metux.net>
- <CAHp75Vem8QZVGx6x0p3JgxA6kH3pG+1_zU=cgiDUDSC5p2ODDQ@mail.gmail.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 09/59] platform/x86: intel_pmc_core: Add ICL-NNPI support to PMC Core
+Date: Tue,  6 Aug 2019 17:32:29 -0400
+Message-ID: <20190806213319.19203-9-sashal@kernel.org>
+References: <20190806213319.19203-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vem8QZVGx6x0p3JgxA6kH3pG+1_zU=cgiDUDSC5p2ODDQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190806213319.19203-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 01.08.19 17:00, Andy Shevchenko wrote:
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 
-Hi,
+[ Upstream commit 66013e8ec6850f9c62df6aea555fe7668e84dc3c ]
 
-> On Thu, Jul 25, 2019 at 10:06 PM Enrico Weigelt, metux IT consult
-> <info@metux.net> wrote:
->>
->> From: Enrico Weigelt <info@metux.net>
->>
->> The keycode KEY_RESTART is more appropriate for the front button,
->> as most people use it for things like restart or factory reset.
->>
-> 
-> Applied, thanks!
+Ice Lake Neural Network Processor for deep learning inference a.k.a.
+ICL-NNPI can re-use Ice Lake Mobile regmap to enable Intel PMC Core
+driver on it.
 
-thx.
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org
+Link: https://lkml.org/lkml/2019/6/5/1034
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/intel_pmc_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
->> Signed-off-by: Enrico Weigelt <info@metux.net>
->> Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe ("x86: pcengines apuv2 gpio/leds/keys platform driver")
-> 
-> Please, use allowed minimum (12 nowadays) characters of hash.
-
-hmm, do you happen to know how to configure tig to show the short hash ?
-
-
---mtx
-
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 1d902230ba611..be6cda89dcf5b 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -815,6 +815,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
+ 	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
++	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
+ 	{}
+ };
+ 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.20.1
