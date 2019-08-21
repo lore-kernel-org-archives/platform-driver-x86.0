@@ -1,58 +1,47 @@
-From: "Enrico Weigelt, metux IT consult" <info@metux.net>
-Subject: [PATCH] platform: x86: pcengines-apuv2: detect apuv4 board
-Date: Tue, 20 Aug 2019 11:56:32 +0200
-Message-ID: <1566294992-703-1-git-send-email-info@metux.net>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH] tools/power: intel-speed-select:  Fix a read overflow in
+ isst_set_tdp_level_msr()
+Date: Wed, 21 Aug 2019 10:14:03 +0300
+Message-ID: <20190821071403.GG26957@mwanda>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: info@metux.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-GPIO stuff on APUv4 seems to be the same as on APUv2, so we just
-need to match on DMI data.
+The isst_send_msr_command() function will read 8 bytes but we are
+passing an address to an int (4 bytes) so it results in a read overflow.
 
-Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe
+Fixes: 3fb4f7cd472c ("tools/power/x86: A tool to validate Intel Speed Select commands")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/platform/x86/pcengines-apuv2.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ tools/power/x86/intel-speed-select/isst-core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-index e4c68ef..ea0c6bb 100644
---- a/drivers/platform/x86/pcengines-apuv2.c
-+++ b/drivers/platform/x86/pcengines-apuv2.c
-@@ -178,6 +178,33 @@
- 		},
- 		.driver_data = (void *)&board_apu2,
- 	},
-+	/* APU4 w/ legacy bios < 4.0.8 */
-+	{
-+		.ident        = "apu4",
-+		.matches    = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "APU4")
-+		},
-+		.driver_data = (void *)&board_apu2,
-+	},
-+	/* APU4 w/ legacy bios >= 4.0.8 */
-+	{
-+		.ident       = "apu4",
-+		.matches     = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "apu4")
-+		},
-+		.driver_data = (void *)&board_apu2,
-+	},
-+	/* APU4 w/ mainline bios */
-+	{
-+		.ident       = "apu4",
-+		.matches     = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "PC Engines apu4")
-+		},
-+		.driver_data = (void *)&board_apu2,
-+	},
- 	{}
- };
+diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
+index 8de4ac39a008..f724322856ed 100644
+--- a/tools/power/x86/intel-speed-select/isst-core.c
++++ b/tools/power/x86/intel-speed-select/isst-core.c
+@@ -190,6 +190,7 @@ int isst_get_get_trl(int cpu, int level, int avx_level, int *trl)
+ 
+ int isst_set_tdp_level_msr(int cpu, int tdp_level)
+ {
++	unsigned long long level = tdp_level;
+ 	int ret;
+ 
+ 	debug_printf("cpu: tdp_level via MSR %d\n", cpu, tdp_level);
+@@ -202,8 +203,7 @@ int isst_set_tdp_level_msr(int cpu, int tdp_level)
+ 	if (tdp_level > 2)
+ 		return -1; /* invalid value */
+ 
+-	ret = isst_send_msr_command(cpu, 0x64b, 1,
+-				    (unsigned long long *)&tdp_level);
++	ret = isst_send_msr_command(cpu, 0x64b, 1, &level);
+ 	if (ret)
+ 		return ret;
  
 -- 
-1.9.1
+2.20.1
