@@ -1,47 +1,30 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 044/135] platform/x86: intel_pmc_core: Add ICL-NNPI support to PMC Core
-Date: Thu, 22 Aug 2019 13:06:40 -0400
-Message-ID: <20190822170811.13303-45-sashal@kernel.org>
-References: <20190822170811.13303-1-sashal@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform: x86: pcengines-apuv2: detect apuv4 board
+Date: Thu, 22 Aug 2019 22:47:05 +0300
+Message-ID: <CAHp75VfFf7y5iLHSgS+mXa4cE78BC=maF6PWtwEGfgyi2pXKCg@mail.gmail.com>
+References: <1566294992-703-1-git-send-email-info@metux.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
+In-Reply-To: <1566294992-703-1-git-send-email-info@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>
+To: "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+On Tue, Aug 20, 2019 at 12:56 PM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
+>
+> GPIO stuff on APUv4 seems to be the same as on APUv2, so we just
+> need to match on DMI data.
+>
 
-[ Upstream commit 66013e8ec6850f9c62df6aea555fe7668e84dc3c ]
+> Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe
 
-Ice Lake Neural Network Processor for deep learning inference a.k.a.
-ICL-NNPI can re-use Ice Lake Mobile regmap to enable Intel PMC Core
-driver on it.
+Wrong format.
 
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Link: https://lkml.org/lkml/2019/6/5/1034
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/intel_pmc_core.c | 1 +
- 1 file changed, 1 insertion(+)
+W/o SoB tag I can't take it.
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 1d902230ba611..be6cda89dcf5b 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -815,6 +815,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	INTEL_CPU_FAM6(KABYLAKE_DESKTOP, spt_reg_map),
- 	INTEL_CPU_FAM6(CANNONLAKE_MOBILE, cnp_reg_map),
- 	INTEL_CPU_FAM6(ICELAKE_MOBILE, icl_reg_map),
-+	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
- 	{}
- };
- 
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
