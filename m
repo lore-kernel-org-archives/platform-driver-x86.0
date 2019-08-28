@@ -1,61 +1,35 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 2/2] platform/x86: intel_int0002_vgpio: Use device_init_wakeup
-Date: Fri, 23 Aug 2019 19:48:15 +0200
-Message-ID: <20190823174815.27861-2-hdegoede@redhat.com>
-References: <20190823174815.27861-1-hdegoede@redhat.com>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Re: [PATCH] platform: x86: pcengines-apuv2: detect apuv4 board
+Date: Wed, 28 Aug 2019 13:37:05 +0200
+Message-ID: <8e9ee2a1-3731-9427-bd04-2d4327913aa3@metux.net>
+References: <1566294992-703-1-git-send-email-info@metux.net>
+ <CAHp75VfFf7y5iLHSgS+mXa4cE78BC=maF6PWtwEGfgyi2pXKCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823174815.27861-1-hdegoede@redhat.com>
+In-Reply-To: <CAHp75VfFf7y5iLHSgS+mXa4cE78BC=maF6PWtwEGfgyi2pXKCg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Use device_init_wakeup and pm_wakeup_hard_event instead of directly
-calling pm_system_wakeup(). This is the preferred way to do this and
-this will allow the user to disable wakeup through INT0002 events
-through sysfs.
+On 22.08.19 21:47, Andy Shevchenko wrote:
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/intel_int0002_vgpio.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+>> Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe
+> 
+> Wrong format.
+> 
+> W/o SoB tag I can't take it.
 
-diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
-index 9ea1a2a19f86..f9fee682a8a2 100644
---- a/drivers/platform/x86/intel_int0002_vgpio.c
-+++ b/drivers/platform/x86/intel_int0002_vgpio.c
-@@ -122,7 +122,7 @@ static irqreturn_t int0002_irq(int irq, void *data)
- 	generic_handle_irq(irq_find_mapping(chip->irq.domain,
- 					    GPE0A_PME_B0_VIRT_GPIO_PIN));
- 
--	pm_system_wakeup();
-+	pm_wakeup_hard_event(chip->parent);
- 
- 	return IRQ_HANDLED;
- }
-@@ -217,6 +217,13 @@ static int int0002_probe(struct platform_device *pdev)
- 
- 	gpiochip_set_chained_irqchip(chip, irq_chip, irq, NULL);
- 
-+	device_init_wakeup(dev, true);
-+	return 0;
-+}
-+
-+static int int0002_remove(struct platform_device *pdev)
-+{
-+	device_init_wakeup(&pdev->dev, false);
- 	return 0;
- }
- 
-@@ -232,6 +239,7 @@ static struct platform_driver int0002_driver = {
- 		.acpi_match_table	= int0002_acpi_ids,
- 	},
- 	.probe	= int0002_probe,
-+	.remove	= int0002_remove,
- };
- 
- module_platform_driver(int0002_driver);
+What's the correct format (what command shall I use to
+create it correctly ?)
+
+
+--mtx
+
 -- 
-2.22.0
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
