@@ -1,35 +1,33 @@
-From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: Re: [PATCH] platform: x86: pcengines-apuv2: detect apuv4 board
-Date: Wed, 28 Aug 2019 13:37:05 +0200
-Message-ID: <8e9ee2a1-3731-9427-bd04-2d4327913aa3@metux.net>
-References: <1566294992-703-1-git-send-email-info@metux.net>
- <CAHp75VfFf7y5iLHSgS+mXa4cE78BC=maF6PWtwEGfgyi2pXKCg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Yizhuo <yzhai003@ucr.edu>
+Subject: [PATCH] compal-laptop: Variable "value" in function ec_read_u8() could be uninitialized
+Date: Mon,  2 Sep 2019 12:52:49 -0700
+Message-ID: <20190902195249.18221-1-yzhai003@ucr.edu>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfFf7y5iLHSgS+mXa4cE78BC=maF6PWtwEGfgyi2pXKCg@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Cc: csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 22.08.19 21:47, Andy Shevchenko wrote:
+In function ec_read_u8(), variable "value" could be uninitialized
+if ec_read() fails. However, "value" is returned directly and used
+in its callers. This is potentially unsafe.
 
->> Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe
-> 
-> Wrong format.
-> 
-> W/o SoB tag I can't take it.
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+---
+ drivers/platform/x86/compal-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-What's the correct format (what command shall I use to
-create it correctly ?)
-
-
---mtx
-
+diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
+index 09dfa6f48a1a..ab610376fdad 100644
+--- a/drivers/platform/x86/compal-laptop.c
++++ b/drivers/platform/x86/compal-laptop.c
+@@ -226,7 +226,7 @@ static const unsigned char pwm_lookup_table[256] = {
+ /* General access */
+ static u8 ec_read_u8(u8 addr)
+ {
+-	u8 value;
++	u8 value = 0;
+ 	ec_read(addr, &value);
+ 	return value;
+ }
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.17.1
