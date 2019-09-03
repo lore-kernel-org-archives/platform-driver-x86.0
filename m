@@ -1,7 +1,7 @@
 From: Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH 2/8] tools/power/x86/intel-speed-select: Fix help option typo
-Date: Tue,  3 Sep 2019 11:37:28 -0400
-Message-ID: <20190903153734.11904-3-prarit@redhat.com>
+Subject: [PATCH 8/8] tools/power/x86/intel-speed-select: Output success/failed for command output
+Date: Tue,  3 Sep 2019 11:37:34 -0400
+Message-ID: <20190903153734.11904-9-prarit@redhat.com>
 References: <20190903153734.11904-1-prarit@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,28 +12,42 @@ To: platform-driver-x86@vger.kernel.org
 Cc: Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, David Arcari <darcari@redhat.com>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Help is -h, not --h.
+Command output has confusing data, returning "0" on success.  For example
+
+|# ./intel-speed-select -c 14 turbo-freq enable
+Intel(R) Speed Select Technology
+Executing on CPU model:106[0x6a]
+ package-1
+   die-0
+     cpu-14
+       turbo-freq
+         enable:0
+
+To avoid confusion change the command output to 'success' or 'failed'.
 
 Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Cc: David Arcari <darcari@redhat.com>
 Cc: linux-kernel@vger.kernel.org
 ---
- tools/power/x86/intel-speed-select/isst-config.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/power/x86/intel-speed-select/isst-display.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 91c5ad1685a1..d32af8210427 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1491,7 +1491,7 @@ static void usage(void)
- 	printf("intel-speed-select [OPTIONS] FEATURE COMMAND COMMAND_ARGUMENTS\n");
- 	printf("\nUse this tool to enumerate and control the Intel Speed Select Technology features,\n");
- 	printf("\nFEATURE : [perf-profile|base-freq|turbo-freq|core-power]\n");
--	printf("\nFor help on each feature, use --h|--help\n");
-+	printf("\nFor help on each feature, use -h|--help\n");
- 	printf("\tFor example:  intel-speed-select perf-profile -h\n");
+diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
+index 890a01bfee4b..8500cf2997a6 100644
+--- a/tools/power/x86/intel-speed-select/isst-display.c
++++ b/tools/power/x86/intel-speed-select/isst-display.c
+@@ -519,7 +519,10 @@ void isst_display_result(int cpu, FILE *outf, char *feature, char *cmd,
+ 	snprintf(header, sizeof(header), "%s", feature);
+ 	format_and_print(outf, 4, header, NULL);
+ 	snprintf(header, sizeof(header), "%s", cmd);
+-	snprintf(value, sizeof(value), "%d", result);
++	if (!result)
++		snprintf(value, sizeof(value), "success");
++	else
++		snprintf(value, sizeof(value), "failed(error %d)", result);
+ 	format_and_print(outf, 5, header, value);
  
- 	printf("\nFor additional help on each command for a feature, use --h|--help\n");
+ 	format_and_print(outf, 1, NULL, NULL);
 -- 
 2.21.0
