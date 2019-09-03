@@ -1,7 +1,7 @@
 From: Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH 6/8] tools/power/x86/intel-speed-select: Change turbo ratio output to maximum turbo frequency
-Date: Tue,  3 Sep 2019 11:37:32 -0400
-Message-ID: <20190903153734.11904-7-prarit@redhat.com>
+Subject: [PATCH 3/8] tools/power/x86/intel-speed-select: Fix cpu-count output
+Date: Tue,  3 Sep 2019 11:37:29 -0400
+Message-ID: <20190903153734.11904-4-prarit@redhat.com>
 References: <20190903153734.11904-1-prarit@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,63 +12,31 @@ To: platform-driver-x86@vger.kernel.org
 Cc: Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, David Arcari <darcari@redhat.com>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The intel-speed-select tool currently outputs the turbo ratio for every
-bucket.  Make the output more user-friendly by changing the output to the
-maximum turbo frequency.
+I have a system with 28 threads/socket but intel-speed-select reports
+a cpu-count of 29.
+
+Fix an off-by-one error in the cpu_count() function.
 
 Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Cc: David Arcari <darcari@redhat.com>
 Cc: linux-kernel@vger.kernel.org
 ---
- .../x86/intel-speed-select/isst-display.c      | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 4ec1924ff7a9..cfeee0beb78d 100644
---- a/tools/power/x86/intel-speed-select/isst-display.c
-+++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -336,9 +336,11 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 			snprintf(value, sizeof(value), "%d", j);
- 			format_and_print(outf, base_level + 6, header, value);
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index d32af8210427..f81a28c6b586 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -304,7 +304,7 @@ static void set_cpu_present_cpu_mask(void)
+ int get_cpu_count(int pkg_id, int die_id)
+ {
+ 	if (pkg_id < MAX_PACKAGE_COUNT && die_id < MAX_DIE_PER_PACKAGE)
+-		return cpu_cnt[pkg_id][die_id] + 1;
++		return cpu_cnt[pkg_id][die_id];
  
--			snprintf(header, sizeof(header), "turbo-ratio");
-+			snprintf(header, sizeof(header),
-+				"max-turbo-frequency(MHz)");
- 			snprintf(value, sizeof(value), "%d",
--				 ctdp_level->trl_sse_active_cores[j]);
-+				 ctdp_level->trl_sse_active_cores[j] *
-+				  DISP_FREQ_MULTIPLIER);
- 			format_and_print(outf, base_level + 6, header, value);
- 		}
- 		snprintf(header, sizeof(header), "turbo-ratio-limits-avx");
-@@ -351,9 +353,11 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 			snprintf(value, sizeof(value), "%d", j);
- 			format_and_print(outf, base_level + 6, header, value);
- 
--			snprintf(header, sizeof(header), "turbo-ratio");
-+			snprintf(header, sizeof(header),
-+				"max-turbo-frequency(MHz)");
- 			snprintf(value, sizeof(value), "%d",
--				 ctdp_level->trl_avx_active_cores[j]);
-+				 ctdp_level->trl_avx_active_cores[j] *
-+				  DISP_FREQ_MULTIPLIER);
- 			format_and_print(outf, base_level + 6, header, value);
- 		}
- 
-@@ -367,9 +371,11 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 			snprintf(value, sizeof(value), "%d", j);
- 			format_and_print(outf, base_level + 6, header, value);
- 
--			snprintf(header, sizeof(header), "turbo-ratio");
-+			snprintf(header, sizeof(header),
-+				"max-turbo-frequency(MHz)");
- 			snprintf(value, sizeof(value), "%d",
--				 ctdp_level->trl_avx_512_active_cores[j]);
-+				 ctdp_level->trl_avx_512_active_cores[j] *
-+				  DISP_FREQ_MULTIPLIER);
- 			format_and_print(outf, base_level + 6, header, value);
- 		}
- 		if (ctdp_level->pbf_support)
+ 	return 0;
+ }
 -- 
 2.21.0
