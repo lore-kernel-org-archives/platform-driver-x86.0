@@ -1,33 +1,66 @@
-From: Yizhuo <yzhai003@ucr.edu>
-Subject: [PATCH] compal-laptop: Variable "value" in function ec_read_u8() could be uninitialized
-Date: Mon,  2 Sep 2019 12:52:49 -0700
-Message-ID: <20190902195249.18221-1-yzhai003@ucr.edu>
+From: Prarit Bhargava <prarit@redhat.com>
+Subject: [PATCH 1/8] tools/power/x86/intel-speed-select: Fix package typo
+Date: Tue,  3 Sep 2019 11:37:27 -0400
+Message-ID: <20190903153734.11904-2-prarit@redhat.com>
+References: <20190903153734.11904-1-prarit@redhat.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190903153734.11904-1-prarit@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>, Cezary Jackiewicz <cezary.jackiewicz@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, David Arcari <darcari@redhat.com>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-In function ec_read_u8(), variable "value" could be uninitialized
-if ec_read() fails. However, "value" is returned directly and used
-in its callers. This is potentially unsafe.
+packag_ should be package_.
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: David Arcari <darcari@redhat.com>
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/platform/x86/compal-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/power/x86/intel-speed-select/isst-display.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/compal-laptop.c b/drivers/platform/x86/compal-laptop.c
-index 09dfa6f48a1a..ab610376fdad 100644
---- a/drivers/platform/x86/compal-laptop.c
-+++ b/drivers/platform/x86/compal-laptop.c
-@@ -226,7 +226,7 @@ static const unsigned char pwm_lookup_table[256] = {
- /* General access */
- static u8 ec_read_u8(u8 addr)
- {
--	u8 value;
-+	u8 value = 0;
- 	ec_read(addr, &value);
- 	return value;
+diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
+index f368b8323742..0d9a53a5da2d 100644
+--- a/tools/power/x86/intel-speed-select/isst-display.c
++++ b/tools/power/x86/intel-speed-select/isst-display.c
+@@ -133,7 +133,7 @@ static void format_and_print(FILE *outf, int level, char *header, char *value)
+ 	last_level = level;
  }
+ 
+-static void print_packag_info(int cpu, FILE *outf)
++static void print_package_info(int cpu, FILE *outf)
+ {
+ 	char header[256];
+ 
+@@ -261,7 +261,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 	char value[256];
+ 	int i, base_level = 1;
+ 
+-	print_packag_info(cpu, outf);
++	print_package_info(cpu, outf);
+ 
+ 	for (i = 0; i <= pkg_dev->levels; ++i) {
+ 		struct isst_pkg_ctdp_level_info *ctdp_level;
+@@ -397,7 +397,7 @@ void isst_ctdp_display_information_end(FILE *outf)
+ void isst_pbf_display_information(int cpu, FILE *outf, int level,
+ 				  struct isst_pbf_info *pbf_info)
+ {
+-	print_packag_info(cpu, outf);
++	print_package_info(cpu, outf);
+ 	_isst_pbf_display_information(cpu, outf, level, pbf_info, 4);
+ 	format_and_print(outf, 1, NULL, NULL);
+ }
+@@ -406,7 +406,7 @@ void isst_fact_display_information(int cpu, FILE *outf, int level,
+ 				   int fact_bucket, int fact_avx,
+ 				   struct isst_fact_info *fact_info)
+ {
+-	print_packag_info(cpu, outf);
++	print_package_info(cpu, outf);
+ 	_isst_fact_display_information(cpu, outf, level, fact_bucket, fact_avx,
+ 				       fact_info, 4);
+ 	format_and_print(outf, 1, NULL, NULL);
 -- 
-2.17.1
+2.21.0
