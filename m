@@ -1,7 +1,8 @@
 From: Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [PATCH] platform/x86: pmc_atom: Add Siemens SIMATIC IPC227E to
-Date: Wed, 4 Sep 2019 08:18:03 +0200
-Message-ID: <ddaeca63-eae8-e466-5c30-6e194b251bbb@siemens.com>
+Subject: [PATCH v2] platform/x86: pmc_atom: Add Siemens SIMATIC IPC227E to
+ critclk_systems DMI table
+Date: Wed, 4 Sep 2019 08:42:30 +0200
+Message-ID: <c090302a-da38-5764-2a84-399ed6b333f5@siemens.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
@@ -21,6 +22,9 @@ to the critical systems list.
 Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
 Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 ---
+
+Changes in v2:
+ - fixed cut-off subject line (local tooling bug...)
 
 Should go into stable as well, down to 4.19.
 
