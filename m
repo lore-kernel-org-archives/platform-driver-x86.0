@@ -1,70 +1,55 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH 8/8] tools/power/x86/intel-speed-select: Output
- success/failed for command output
-Date: Tue, 03 Sep 2019 15:18:43 -0700
-Message-ID: <1da2a58548277dfd8086be02b8467cc903ed7932.camel@linux.intel.com>
-References: <20190903153734.11904-1-prarit@redhat.com>
-         <20190903153734.11904-9-prarit@redhat.com>
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Subject: [PATCH] platform/x86: pmc_atom: Add Siemens SIMATIC IPC227E to
+Date: Wed, 4 Sep 2019 08:18:03 +0200
+Message-ID: <ddaeca63-eae8-e466-5c30-6e194b251bbb@siemens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190903153734.11904-9-prarit@redhat.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Prarit Bhargava <prarit@redhat.com>, platform-driver-x86@vger.kernel.org
-Cc: David Arcari <darcari@redhat.com>, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 2019-09-03 at 11:37 -0400, Prarit Bhargava wrote:
-> Command output has confusing data, returning "0" on success.  For
-> example
-> 
-> > # ./intel-speed-select -c 14 turbo-freq enable
-> 
-> Intel(R) Speed Select Technology
-> Executing on CPU model:106[0x6a]
->  package-1
->    die-0
->      cpu-14
->        turbo-freq
->          enable:0
-> 
-> To avoid confusion change the command output to 'success' or
-> 'failed'.
-We need to fix also help in the function usage() to match new
-implementation
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
-"        printf("\t\t\tFor Set commands, status is 0 for success and
-rest for failures\n");
-"
+The SIMATIC IPC227E uses the PMC clock for on-board components and gets
+stuck during boot if the clock is disabled. Therefore, add this device
+to the critical systems list.
 
-Thanks,
-Srinivas
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+---
 
-> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Cc: David Arcari <darcari@redhat.com>
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  tools/power/x86/intel-speed-select/isst-display.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/power/x86/intel-speed-select/isst-display.c
-> b/tools/power/x86/intel-speed-select/isst-display.c
-> index 890a01bfee4b..8500cf2997a6 100644
-> --- a/tools/power/x86/intel-speed-select/isst-display.c
-> +++ b/tools/power/x86/intel-speed-select/isst-display.c
-> @@ -519,7 +519,10 @@ void isst_display_result(int cpu, FILE *outf,
-> char *feature, char *cmd,
->  	snprintf(header, sizeof(header), "%s", feature);
->  	format_and_print(outf, 4, header, NULL);
->  	snprintf(header, sizeof(header), "%s", cmd);
-> -	snprintf(value, sizeof(value), "%d", result);
-> +	if (!result)
-> +		snprintf(value, sizeof(value), "success");
-> +	else
-> +		snprintf(value, sizeof(value), "failed(error %d)",
-> result);
->  	format_and_print(outf, 5, header, value);
->  
->  	format_and_print(outf, 1, NULL, NULL);
+Should go into stable as well, down to 4.19.
+
+ drivers/platform/x86/pmc_atom.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index aa53648a2214..9aca5e7ce6d0 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -415,6 +415,13 @@ static const struct dmi_system_id critclk_systems[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "CB6363"),
+ 		},
+ 	},
++	{
++		.ident = "SIMATIC IPC227E",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "6ES7647-8B"),
++		},
++	},
+ 	{ /*sentinel*/ }
+ };
+ 
+-- 
+
+2.16.4
+
+
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
