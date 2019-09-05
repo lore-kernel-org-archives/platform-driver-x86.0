@@ -1,7 +1,7 @@
 From: Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH v2 5/9] tools/power/x86/intel-speed-select: Switch output to MHz
-Date: Thu,  5 Sep 2019 08:03:07 -0400
-Message-ID: <20190905120311.15286-6-prarit@redhat.com>
+Subject: [PATCH v2 9/9] tools/power/x86/intel-speed-select: Fix memory leak
+Date: Thu,  5 Sep 2019 08:03:11 -0400
+Message-ID: <20190905120311.15286-10-prarit@redhat.com>
 References: <20190905120311.15286-1-prarit@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,108 +12,61 @@ To: platform-driver-x86@vger.kernel.org
 Cc: andriy.shevchenko@intel.com, Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, David Arcari <darcari@redhat.com>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-These features are introduced on new processors that will never operate
-in the KHz range.
+cpumasks are allocated by calling the alloc_cpu_mask() function and are
+never free'd.  They should be free'd after the commands have run.
 
-Save some zeros and switch the output to MHz.
+Fix the memory leaks by calling free_cpu_set().
 
 Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Cc: David Arcari <darcari@redhat.com>
 Cc: linux-kernel@vger.kernel.org
 ---
- .../x86/intel-speed-select/isst-display.c     | 20 +++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 3ae693efceaa..4ec1924ff7a9 100644
---- a/tools/power/x86/intel-speed-select/isst-display.c
-+++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -6,7 +6,7 @@
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index 78f0cebda1da..59753b3917bb 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -603,6 +603,10 @@ static int isst_fill_platform_info(void)
  
- #include "isst.h"
+ 	close(fd);
  
--#define DISP_FREQ_MULTIPLIER 100000
-+#define DISP_FREQ_MULTIPLIER 100
++	if (isst_platform_info.api_version > supported_api_ver) {
++		printf("Incompatible API versions; Upgrade of tool is required\n");
++		return -1;
++	}
+ 	return 0;
+ }
  
- static void printcpumask(int str_len, char *str, int mask_size,
- 			 cpu_set_t *cpu_mask)
-@@ -156,7 +156,7 @@ static void _isst_pbf_display_information(int cpu, FILE *outf, int level,
- 	snprintf(header, sizeof(header), "speed-select-base-freq");
- 	format_and_print(outf, disp_level, header, NULL);
+@@ -1528,6 +1532,7 @@ static void cmdline(int argc, char **argv)
+ {
+ 	int opt;
+ 	int option_index = 0;
++	int ret;
  
--	snprintf(header, sizeof(header), "high-priority-base-frequency(KHz)");
-+	snprintf(header, sizeof(header), "high-priority-base-frequency(MHz)");
- 	snprintf(value, sizeof(value), "%d",
- 		 pbf_info->p1_high * DISP_FREQ_MULTIPLIER);
- 	format_and_print(outf, disp_level + 1, header, value);
-@@ -166,7 +166,7 @@ static void _isst_pbf_display_information(int cpu, FILE *outf, int level,
- 		     pbf_info->core_cpumask);
- 	format_and_print(outf, disp_level + 1, header, value);
+ 	static struct option long_options[] = {
+ 		{ "cpu", required_argument, 0, 'c' },
+@@ -1589,13 +1594,14 @@ static void cmdline(int argc, char **argv)
+ 	set_max_cpu_num();
+ 	set_cpu_present_cpu_mask();
+ 	set_cpu_target_cpu_mask();
+-	isst_fill_platform_info();
+-	if (isst_platform_info.api_version > supported_api_ver) {
+-		printf("Incompatible API versions; Upgrade of tool is required\n");
+-		exit(0);
+-	}
++	ret = isst_fill_platform_info();
++	if (ret)
++		goto out;
  
--	snprintf(header, sizeof(header), "low-priority-base-frequency(KHz)");
-+	snprintf(header, sizeof(header), "low-priority-base-frequency(MHz)");
- 	snprintf(value, sizeof(value), "%d",
- 		 pbf_info->p1_low * DISP_FREQ_MULTIPLIER);
- 	format_and_print(outf, disp_level + 1, header, value);
-@@ -209,7 +209,7 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
+ 	process_command(argc, argv);
++out:
++	free_cpu_set(present_cpumask);
++	free_cpu_set(target_cpumask);
+ }
  
- 		if (fact_avx & 0x01) {
- 			snprintf(header, sizeof(header),
--				 "high-priority-max-frequency(KHz)");
-+				 "high-priority-max-frequency(MHz)");
- 			snprintf(value, sizeof(value), "%d",
- 				 bucket_info[j].sse_trl * DISP_FREQ_MULTIPLIER);
- 			format_and_print(outf, base_level + 2, header, value);
-@@ -217,7 +217,7 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
- 
- 		if (fact_avx & 0x02) {
- 			snprintf(header, sizeof(header),
--				 "high-priority-max-avx2-frequency(KHz)");
-+				 "high-priority-max-avx2-frequency(MHz)");
- 			snprintf(value, sizeof(value), "%d",
- 				 bucket_info[j].avx_trl * DISP_FREQ_MULTIPLIER);
- 			format_and_print(outf, base_level + 2, header, value);
-@@ -225,7 +225,7 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
- 
- 		if (fact_avx & 0x04) {
- 			snprintf(header, sizeof(header),
--				 "high-priority-max-avx512-frequency(KHz)");
-+				 "high-priority-max-avx512-frequency(MHz)");
- 			snprintf(value, sizeof(value), "%d",
- 				 bucket_info[j].avx512_trl *
- 					 DISP_FREQ_MULTIPLIER);
-@@ -235,19 +235,19 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
- 	snprintf(header, sizeof(header),
- 		 "speed-select-turbo-freq-clip-frequencies");
- 	format_and_print(outf, base_level + 1, header, NULL);
--	snprintf(header, sizeof(header), "low-priority-max-frequency(KHz)");
-+	snprintf(header, sizeof(header), "low-priority-max-frequency(MHz)");
- 	snprintf(value, sizeof(value), "%d",
- 		 fact_info->lp_clipping_ratio_license_sse *
- 			 DISP_FREQ_MULTIPLIER);
- 	format_and_print(outf, base_level + 2, header, value);
- 	snprintf(header, sizeof(header),
--		 "low-priority-max-avx2-frequency(KHz)");
-+		 "low-priority-max-avx2-frequency(MHz)");
- 	snprintf(value, sizeof(value), "%d",
- 		 fact_info->lp_clipping_ratio_license_avx2 *
- 			 DISP_FREQ_MULTIPLIER);
- 	format_and_print(outf, base_level + 2, header, value);
- 	snprintf(header, sizeof(header),
--		 "low-priority-max-avx512-frequency(KHz)");
-+		 "low-priority-max-avx512-frequency(MHz)");
- 	snprintf(value, sizeof(value), "%d",
- 		 fact_info->lp_clipping_ratio_license_avx512 *
- 			 DISP_FREQ_MULTIPLIER);
-@@ -291,7 +291,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 		snprintf(value, sizeof(value), "%d", ctdp_level->tdp_ratio);
- 		format_and_print(outf, base_level + 4, header, value);
- 
--		snprintf(header, sizeof(header), "base-frequency(KHz)");
-+		snprintf(header, sizeof(header), "base-frequency(MHz)");
- 		snprintf(value, sizeof(value), "%d",
- 			 ctdp_level->tdp_ratio * DISP_FREQ_MULTIPLIER);
- 		format_and_print(outf, base_level + 4, header, value);
+ int main(int argc, char **argv)
 -- 
 2.21.0
