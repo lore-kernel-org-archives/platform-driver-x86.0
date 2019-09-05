@@ -1,7 +1,7 @@
 From: Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH v2 8/9] tools/power/x86/intel-speed-select: Output success/failed for command output
-Date: Thu,  5 Sep 2019 08:03:10 -0400
-Message-ID: <20190905120311.15286-9-prarit@redhat.com>
+Subject: [PATCH v2 5/9] tools/power/x86/intel-speed-select: Switch output to MHz
+Date: Thu,  5 Sep 2019 08:03:07 -0400
+Message-ID: <20190905120311.15286-6-prarit@redhat.com>
 References: <20190905120311.15286-1-prarit@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,57 +12,108 @@ To: platform-driver-x86@vger.kernel.org
 Cc: andriy.shevchenko@intel.com, Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, David Arcari <darcari@redhat.com>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Command output has confusing data, returning "0" on success.  For example
+These features are introduced on new processors that will never operate
+in the KHz range.
 
-|# ./intel-speed-select -c 14 turbo-freq enable
-Intel(R) Speed Select Technology
-Executing on CPU model:106[0x6a]
- package-1
-   die-0
-     cpu-14
-       turbo-freq
-         enable:0
-
-To avoid confusion change the command output to 'success' or 'failed'.
-
-v2: Remove help output line.
+Save some zeros and switch the output to MHz.
 
 Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Cc: David Arcari <darcari@redhat.com>
 Cc: linux-kernel@vger.kernel.org
 ---
- tools/power/x86/intel-speed-select/isst-config.c  | 1 -
- tools/power/x86/intel-speed-select/isst-display.c | 5 ++++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ .../x86/intel-speed-select/isst-display.c     | 20 +++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index f81a28c6b586..78f0cebda1da 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1514,7 +1514,6 @@ static void usage(void)
- 	printf("\tResult display uses a common format for each command:\n");
- 	printf("\tResults are formatted in text/JSON with\n");
- 	printf("\t\tPackage, Die, CPU, and command specific results.\n");
--	printf("\t\t\tFor Set commands, status is 0 for success and rest for failures\n");
- 	exit(1);
- }
- 
 diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 890a01bfee4b..8500cf2997a6 100644
+index 3ae693efceaa..4ec1924ff7a9 100644
 --- a/tools/power/x86/intel-speed-select/isst-display.c
 +++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -519,7 +519,10 @@ void isst_display_result(int cpu, FILE *outf, char *feature, char *cmd,
- 	snprintf(header, sizeof(header), "%s", feature);
- 	format_and_print(outf, 4, header, NULL);
- 	snprintf(header, sizeof(header), "%s", cmd);
--	snprintf(value, sizeof(value), "%d", result);
-+	if (!result)
-+		snprintf(value, sizeof(value), "success");
-+	else
-+		snprintf(value, sizeof(value), "failed(error %d)", result);
- 	format_and_print(outf, 5, header, value);
+@@ -6,7 +6,7 @@
  
- 	format_and_print(outf, 1, NULL, NULL);
+ #include "isst.h"
+ 
+-#define DISP_FREQ_MULTIPLIER 100000
++#define DISP_FREQ_MULTIPLIER 100
+ 
+ static void printcpumask(int str_len, char *str, int mask_size,
+ 			 cpu_set_t *cpu_mask)
+@@ -156,7 +156,7 @@ static void _isst_pbf_display_information(int cpu, FILE *outf, int level,
+ 	snprintf(header, sizeof(header), "speed-select-base-freq");
+ 	format_and_print(outf, disp_level, header, NULL);
+ 
+-	snprintf(header, sizeof(header), "high-priority-base-frequency(KHz)");
++	snprintf(header, sizeof(header), "high-priority-base-frequency(MHz)");
+ 	snprintf(value, sizeof(value), "%d",
+ 		 pbf_info->p1_high * DISP_FREQ_MULTIPLIER);
+ 	format_and_print(outf, disp_level + 1, header, value);
+@@ -166,7 +166,7 @@ static void _isst_pbf_display_information(int cpu, FILE *outf, int level,
+ 		     pbf_info->core_cpumask);
+ 	format_and_print(outf, disp_level + 1, header, value);
+ 
+-	snprintf(header, sizeof(header), "low-priority-base-frequency(KHz)");
++	snprintf(header, sizeof(header), "low-priority-base-frequency(MHz)");
+ 	snprintf(value, sizeof(value), "%d",
+ 		 pbf_info->p1_low * DISP_FREQ_MULTIPLIER);
+ 	format_and_print(outf, disp_level + 1, header, value);
+@@ -209,7 +209,7 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
+ 
+ 		if (fact_avx & 0x01) {
+ 			snprintf(header, sizeof(header),
+-				 "high-priority-max-frequency(KHz)");
++				 "high-priority-max-frequency(MHz)");
+ 			snprintf(value, sizeof(value), "%d",
+ 				 bucket_info[j].sse_trl * DISP_FREQ_MULTIPLIER);
+ 			format_and_print(outf, base_level + 2, header, value);
+@@ -217,7 +217,7 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
+ 
+ 		if (fact_avx & 0x02) {
+ 			snprintf(header, sizeof(header),
+-				 "high-priority-max-avx2-frequency(KHz)");
++				 "high-priority-max-avx2-frequency(MHz)");
+ 			snprintf(value, sizeof(value), "%d",
+ 				 bucket_info[j].avx_trl * DISP_FREQ_MULTIPLIER);
+ 			format_and_print(outf, base_level + 2, header, value);
+@@ -225,7 +225,7 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
+ 
+ 		if (fact_avx & 0x04) {
+ 			snprintf(header, sizeof(header),
+-				 "high-priority-max-avx512-frequency(KHz)");
++				 "high-priority-max-avx512-frequency(MHz)");
+ 			snprintf(value, sizeof(value), "%d",
+ 				 bucket_info[j].avx512_trl *
+ 					 DISP_FREQ_MULTIPLIER);
+@@ -235,19 +235,19 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
+ 	snprintf(header, sizeof(header),
+ 		 "speed-select-turbo-freq-clip-frequencies");
+ 	format_and_print(outf, base_level + 1, header, NULL);
+-	snprintf(header, sizeof(header), "low-priority-max-frequency(KHz)");
++	snprintf(header, sizeof(header), "low-priority-max-frequency(MHz)");
+ 	snprintf(value, sizeof(value), "%d",
+ 		 fact_info->lp_clipping_ratio_license_sse *
+ 			 DISP_FREQ_MULTIPLIER);
+ 	format_and_print(outf, base_level + 2, header, value);
+ 	snprintf(header, sizeof(header),
+-		 "low-priority-max-avx2-frequency(KHz)");
++		 "low-priority-max-avx2-frequency(MHz)");
+ 	snprintf(value, sizeof(value), "%d",
+ 		 fact_info->lp_clipping_ratio_license_avx2 *
+ 			 DISP_FREQ_MULTIPLIER);
+ 	format_and_print(outf, base_level + 2, header, value);
+ 	snprintf(header, sizeof(header),
+-		 "low-priority-max-avx512-frequency(KHz)");
++		 "low-priority-max-avx512-frequency(MHz)");
+ 	snprintf(value, sizeof(value), "%d",
+ 		 fact_info->lp_clipping_ratio_license_avx512 *
+ 			 DISP_FREQ_MULTIPLIER);
+@@ -291,7 +291,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 		snprintf(value, sizeof(value), "%d", ctdp_level->tdp_ratio);
+ 		format_and_print(outf, base_level + 4, header, value);
+ 
+-		snprintf(header, sizeof(header), "base-frequency(KHz)");
++		snprintf(header, sizeof(header), "base-frequency(MHz)");
+ 		snprintf(value, sizeof(value), "%d",
+ 			 ctdp_level->tdp_ratio * DISP_FREQ_MULTIPLIER);
+ 		format_and_print(outf, base_level + 4, header, value);
 -- 
 2.21.0
