@@ -1,8 +1,8 @@
 From: Prarit Bhargava <prarit@redhat.com>
 Subject: Re: [PATCH v2 9/9] tools/power/x86/intel-speed-select: Fix memory
  leak
-Date: Thu, 5 Sep 2019 16:56:07 -0400
-Message-ID: <46751746-283c-1aa0-7858-b3ca106dad49@redhat.com>
+Date: Thu, 5 Sep 2019 17:00:13 -0400
+Message-ID: <13983f13-098e-4390-c014-43b59c4e2f27@redhat.com>
 References: <20190905120311.15286-1-prarit@redhat.com>
  <20190905120311.15286-10-prarit@redhat.com>
  <f12560e59427ce7e038334a3b59bf084a748d998.camel@linux.intel.com>
@@ -28,13 +28,13 @@ On 9/5/19 3:42 PM, Srinivas Pandruvada wrote:
 >> Fix the memory leaks by calling free_cpu_set().
 > Good to fix this. But after one command execution the process will
 > exit.
+> 
 
-Oh ... I didn't realize it was possible to execute multiple commands in one
-call.  I'll go off and fix that and send a v3.
+I'm sorry, I misunderstood your comment.  Yes, the process will exit after one
+command :)
 
 P.
 
-> 
 > Thanks,
 > Srinivas
 > 
