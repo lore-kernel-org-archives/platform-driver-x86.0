@@ -1,7 +1,7 @@
 From: Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH v2 1/9] tools/power/x86/intel-speed-select: Fix package typo
-Date: Thu,  5 Sep 2019 08:03:03 -0400
-Message-ID: <20190905120311.15286-2-prarit@redhat.com>
+Subject: [PATCH v2 4/9] tools/power/x86/intel-speed-select: Simplify output for turbo-freq and base-freq
+Date: Thu,  5 Sep 2019 08:03:06 -0400
+Message-ID: <20190905120311.15286-5-prarit@redhat.com>
 References: <20190905120311.15286-1-prarit@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,55 +12,68 @@ To: platform-driver-x86@vger.kernel.org
 Cc: andriy.shevchenko@intel.com, Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, David Arcari <darcari@redhat.com>, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-packag_ should be package_.
+The current output of 'intel-speed-select -c 53 perf-profile info -l 0'
+shows
+
+        speed-select-turbo-freq-support:1
+        speed-select-base-freq-support:1
+        speed-select-base-freq-enabled:0
+        speed-select-turbo-freq-enabled:0
+
+Simplify the output to single lines displaying status of disabled,
+enabled, and unsupported.
 
 Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Cc: David Arcari <darcari@redhat.com>
 Cc: linux-kernel@vger.kernel.org
 ---
- tools/power/x86/intel-speed-select/isst-display.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../x86/intel-speed-select/isst-display.c     | 30 ++++++++++---------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index f368b8323742..0d9a53a5da2d 100644
+index 0d9a53a5da2d..3ae693efceaa 100644
 --- a/tools/power/x86/intel-speed-select/isst-display.c
 +++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -133,7 +133,7 @@ static void format_and_print(FILE *outf, int level, char *header, char *value)
- 	last_level = level;
- }
+@@ -297,23 +297,25 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 		format_and_print(outf, base_level + 4, header, value);
  
--static void print_packag_info(int cpu, FILE *outf)
-+static void print_package_info(int cpu, FILE *outf)
- {
- 	char header[256];
+ 		snprintf(header, sizeof(header),
+-			 "speed-select-turbo-freq-support");
+-		snprintf(value, sizeof(value), "%d", ctdp_level->fact_support);
++			 "speed-select-turbo-freq");
++		if (ctdp_level->fact_support) {
++			if (ctdp_level->fact_enabled)
++				snprintf(value, sizeof(value), "enabled");
++			else
++				snprintf(value, sizeof(value), "disabled");
++		} else
++			snprintf(value, sizeof(value), "unsupported");
+ 		format_and_print(outf, base_level + 4, header, value);
  
-@@ -261,7 +261,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 	char value[256];
- 	int i, base_level = 1;
+ 		snprintf(header, sizeof(header),
+-			 "speed-select-base-freq-support");
+-		snprintf(value, sizeof(value), "%d", ctdp_level->pbf_support);
+-		format_and_print(outf, base_level + 4, header, value);
+-
+-		snprintf(header, sizeof(header),
+-			 "speed-select-base-freq-enabled");
+-		snprintf(value, sizeof(value), "%d", ctdp_level->pbf_enabled);
+-		format_and_print(outf, base_level + 4, header, value);
+-
+-		snprintf(header, sizeof(header),
+-			 "speed-select-turbo-freq-enabled");
+-		snprintf(value, sizeof(value), "%d", ctdp_level->fact_enabled);
++			 "speed-select-base-freq");
++		if (ctdp_level->pbf_support) {
++			if (ctdp_level->pbf_enabled)
++				snprintf(value, sizeof(value), "enabled");
++			else
++				snprintf(value, sizeof(value), "disabled");
++		} else
++			snprintf(value, sizeof(value), "unsupported");
+ 		format_and_print(outf, base_level + 4, header, value);
  
--	print_packag_info(cpu, outf);
-+	print_package_info(cpu, outf);
- 
- 	for (i = 0; i <= pkg_dev->levels; ++i) {
- 		struct isst_pkg_ctdp_level_info *ctdp_level;
-@@ -397,7 +397,7 @@ void isst_ctdp_display_information_end(FILE *outf)
- void isst_pbf_display_information(int cpu, FILE *outf, int level,
- 				  struct isst_pbf_info *pbf_info)
- {
--	print_packag_info(cpu, outf);
-+	print_package_info(cpu, outf);
- 	_isst_pbf_display_information(cpu, outf, level, pbf_info, 4);
- 	format_and_print(outf, 1, NULL, NULL);
- }
-@@ -406,7 +406,7 @@ void isst_fact_display_information(int cpu, FILE *outf, int level,
- 				   int fact_bucket, int fact_avx,
- 				   struct isst_fact_info *fact_info)
- {
--	print_packag_info(cpu, outf);
-+	print_package_info(cpu, outf);
- 	_isst_fact_display_information(cpu, outf, level, fact_bucket, fact_avx,
- 				       fact_info, 4);
- 	format_and_print(outf, 1, NULL, NULL);
+ 		snprintf(header, sizeof(header), "thermal-design-power(W)");
 -- 
 2.21.0
