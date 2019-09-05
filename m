@@ -1,63 +1,41 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH v2 0/9] tools-power-x86-intel-speed-select: Fixes and
- updates for output
-Date: Thu, 05 Sep 2019 16:05:55 -0700
-Message-ID: <e02287479ad936142a21cbd7c6c00947ca0c5088.camel@linux.intel.com>
-References: <20190905120311.15286-1-prarit@redhat.com>
+From: Austin Kim <austindh.kim@gmail.com>
+Subject: [PATCH] x86/platform/uv: move kmalloc() NULL check routine
+Date: Fri, 6 Sep 2019 08:29:51 +0900
+Message-ID: <20190905232951.GA28779@LGEARND20B15>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190905120311.15286-1-prarit@redhat.com>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Prarit Bhargava <prarit@redhat.com>, platform-driver-x86@vger.kernel.org
-Cc: andriy.shevchenko@intel.com, David Arcari <darcari@redhat.com>, linux-kernel@vger.kernel.org
+To: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc: dvhart@infradead.org, andy@infradead.org, hpa@zytor.com, x86@kernel.org, gregkh@linuxfoundation.org, allison@lohutok.net, armijn@tjaldur.nl, kjlu@umn.edu, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 2019-09-05 at 08:03 -0400, Prarit Bhargava wrote:
-> Some general fixes and updates for intel-speed-select.  Fixes include
-> some
-> typos as well as an off-by-one cpu count reporting error.  Updates
-> for the
-> output are
-> 
-> - switching to MHz as a standard
-> - reporting CPU frequencies instead of ratios as a standard
-> - viewing a human-readable CPU list.
-> - avoiding reporting "0|1" as success|fail as these can be confusing
-> for a
->   user.
-> 
-> v2: Add additional patch to fix memory leak and remove help text in
-> 8/9.
+The result of kmalloc should have been checked ahead of below statement:
+	pqp = (struct bau_pq_entry *)vp;
 
-For the series
+Move BUG_ON(!vp) before above statement.
 
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+---
+ arch/x86/platform/uv/tlb_uv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Cc: David Arcari <darcari@redhat.com>
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Prarit Bhargava (9):
->   tools/power/x86/intel-speed-select: Fix package typo
->   tools/power/x86/intel-speed-select: Fix help option typo
->   tools/power/x86/intel-speed-select: Fix cpu-count output
->   tools/power/x86/intel-speed-select: Simplify output for turbo-freq
-> and
->     base-freq
->   tools/power/x86/intel-speed-select: Switch output to MHz
->   tools/power/x86/intel-speed-select: Change turbo ratio output to
->     maximum turbo frequency
->   tools/power/x86/intel-speed-select: Output human readable CPU list
->   tools/power/x86/intel-speed-select: Output success/failed for
-> command
->     output
->   tools/power/x86/intel-speed-select: Fix memory leak
-> 
->  .../x86/intel-speed-select/isst-config.c      |  21 +--
->  .../x86/intel-speed-select/isst-display.c     | 120 +++++++++++++---
-> --
->  2 files changed, 98 insertions(+), 43 deletions(-)
-> 
+diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+index 20c389a..5f0a96bf 100644
+--- a/arch/x86/platform/uv/tlb_uv.c
++++ b/arch/x86/platform/uv/tlb_uv.c
+@@ -1804,9 +1804,9 @@ static void pq_init(int node, int pnode)
+ 
+ 	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
+ 	vp = kmalloc_node(plsize, GFP_KERNEL, node);
+-	pqp = (struct bau_pq_entry *)vp;
+-	BUG_ON(!pqp);
++	BUG_ON(!vp);
+ 
++	pqp = (struct bau_pq_entry *)vp;
+ 	cp = (char *)pqp + 31;
+ 	pqp = (struct bau_pq_entry *)(((unsigned long)cp >> 5) << 5);
+ 
+-- 
+2.6.2
