@@ -1,107 +1,117 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 2/2] tools/power/x86/intel-speed-select: Display core count for bucket
-Date: Thu,  5 Sep 2019 16:37:48 -0700
-Message-ID: <20190905233748.6822-2-srinivas.pandruvada@linux.intel.com>
-References: <20190905233748.6822-1-srinivas.pandruvada@linux.intel.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 2/3] platform/x86: intel_cht_int33fe: use inline reference properties
+Date: Thu,  5 Sep 2019 21:38:08 -0700
+Message-ID: <20190906043809.18990-2-dmitry.torokhov@gmail.com>
+References: <20190906043809.18990-1-dmitry.torokhov@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190905233748.6822-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20190906043809.18990-1-dmitry.torokhov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andriy.shevchenko@intel.com
-Cc: prarit@redhat.com, darcari@redhat.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Read the bucket and core count relationship via MSR and display
-when displaying turbo ratio limits.
+Now that static device properties allow defining reference properties
+together with all other types of properties, instead of managing them
+separately, let's adjust the driver.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- .../power/x86/intel-speed-select/isst-core.c  | 22 +++++++++++++++++++
- .../x86/intel-speed-select/isst-display.c     |  6 ++---
- tools/power/x86/intel-speed-select/isst.h     |  1 +
- 3 files changed, 26 insertions(+), 3 deletions(-)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
-index 8de4ac39a008..2f864c4b994d 100644
---- a/tools/power/x86/intel-speed-select/isst-core.c
-+++ b/tools/power/x86/intel-speed-select/isst-core.c
-@@ -188,6 +188,24 @@ int isst_get_get_trl(int cpu, int level, int avx_level, int *trl)
+Heikki, I do not have this hardware, so if you could try this out
+it would be really great.
+
+ drivers/platform/x86/intel_cht_int33fe.c | 46 ++++++++++++------------
+ 1 file changed, 22 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+index 4fbdff48a4b5..91f3c8840fd8 100644
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -50,28 +50,8 @@ struct cht_int33fe_data {
+ 
+ static const struct software_node nodes[];
+ 
+-static const struct software_node_ref_args pi3usb30532_ref = {
+-	&nodes[INT33FE_NODE_PI3USB30532]
+-};
+-
+-static const struct software_node_ref_args dp_ref = {
+-	&nodes[INT33FE_NODE_DISPLAYPORT]
+-};
+-
+ static struct software_node_ref_args mux_ref;
+ 
+-static const struct software_node_reference usb_connector_refs[] = {
+-	{ "orientation-switch", 1, &pi3usb30532_ref},
+-	{ "mode-switch", 1, &pi3usb30532_ref},
+-	{ "displayport", 1, &dp_ref},
+-	{ }
+-};
+-
+-static const struct software_node_reference fusb302_refs[] = {
+-	{ "usb-role-switch", 1, &mux_ref},
+-	{ }
+-};
+-
+ /*
+  * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
+  * the max17047 both through the INT33FE ACPI device (it is right there
+@@ -107,7 +87,13 @@ static const struct property_entry max17047_props[] = {
+ 	{ }
+ };
+ 
+-static const struct property_entry fusb302_props[] = {
++/* Not const because we need to update "usb-role-switch" property. */
++static struct property_entry fusb302_props[] = {
++	/*
++	 * usb-role-switch property must be first as we rely on fixed
++	 * position to adjust it once we know the real node.
++	 */
++	PROPERTY_ENTRY_REF("usb-role-switch", NULL),
+ 	PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
+ 	{ }
+ };
+@@ -131,16 +117,22 @@ static const struct property_entry usb_connector_props[] = {
+ 	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
+ 	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
+ 	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500000),
++	PROPERTY_ENTRY_REF("orientation-switch",
++			   &nodes[INT33FE_NODE_PI3USB30532]),
++	PROPERTY_ENTRY_REF("mode-switch",
++			   &nodes[INT33FE_NODE_PI3USB30532]),
++	PROPERTY_ENTRY_REF("displayport",
++			   &nodes[INT33FE_NODE_DISPLAYPORT]),
+ 	{ }
+ };
+ 
+ static const struct software_node nodes[] = {
+-	{ "fusb302", NULL, fusb302_props, fusb302_refs },
++	{ "fusb302", NULL, fusb302_props },
+ 	{ "max17047", NULL, max17047_props },
+ 	{ "pi3usb30532" },
+ 	{ "displayport" },
+ 	{ "usb-role-switch" },
+-	{ "connector", &nodes[0], usb_connector_props, usb_connector_refs },
++	{ "connector", &nodes[0], usb_connector_props },
+ 	{ }
+ };
+ 
+@@ -174,7 +166,13 @@ static int cht_int33fe_setup_mux(struct cht_int33fe_data *data)
+ 
+ 	data->mux = fwnode_handle_get(dev->fwnode);
+ 	put_device(dev);
+-	mux_ref.node = to_software_node(data->mux);
++
++	/*
++	 * Update "usb-role-switch" property with real node. Note that we
++	 * rely on software_node_register_nodes() to use the original
++	 * instance of properties instead of copying them.
++	 */
++	fusb302_props[0].value.ref.node = to_software_node(data->mux);
+ 
  	return 0;
  }
- 
-+int isst_get_trl_bucket_info(int cpu, unsigned long long *buckets_info)
-+{
-+	int ret;
-+
-+	debug_printf("cpu:%d bucket info via MSR\n", cpu);
-+
-+	*buckets_info = 0;
-+
-+	ret = isst_send_msr_command(cpu, 0x1ae, 0, buckets_info);
-+	if (ret)
-+		return ret;
-+
-+	debug_printf("cpu:%d bucket info via MSR successful 0x%llx\n", cpu,
-+		     *buckets_info);
-+
-+	return 0;
-+}
-+
- int isst_set_tdp_level_msr(int cpu, int tdp_level)
- {
- 	int ret;
-@@ -563,6 +581,10 @@ int isst_get_process_ctdp(int cpu, int tdp_level, struct isst_pkg_ctdp *pkg_dev)
- 		if (ret)
- 			return ret;
- 
-+		ret = isst_get_trl_bucket_info(cpu, &ctdp_level->buckets_info);
-+		if (ret)
-+			return ret;
-+
- 		ret = isst_get_get_trl(cpu, i, 0,
- 				       ctdp_level->trl_sse_active_cores);
- 		if (ret)
-diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 8500cf2997a6..df4aa99c4e92 100644
---- a/tools/power/x86/intel-speed-select/isst-display.c
-+++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -372,7 +372,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 			format_and_print(outf, base_level + 5, header, NULL);
- 
- 			snprintf(header, sizeof(header), "core-count");
--			snprintf(value, sizeof(value), "%d", j);
-+			snprintf(value, sizeof(value), "%llu", (ctdp_level->buckets_info >> (j * 8)) & 0xff);
- 			format_and_print(outf, base_level + 6, header, value);
- 
- 			snprintf(header, sizeof(header),
-@@ -389,7 +389,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 			format_and_print(outf, base_level + 5, header, NULL);
- 
- 			snprintf(header, sizeof(header), "core-count");
--			snprintf(value, sizeof(value), "%d", j);
-+			snprintf(value, sizeof(value), "%llu", (ctdp_level->buckets_info >> (j * 8)) & 0xff);
- 			format_and_print(outf, base_level + 6, header, value);
- 
- 			snprintf(header, sizeof(header),
-@@ -407,7 +407,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 			format_and_print(outf, base_level + 5, header, NULL);
- 
- 			snprintf(header, sizeof(header), "core-count");
--			snprintf(value, sizeof(value), "%d", j);
-+			snprintf(value, sizeof(value), "%llu", (ctdp_level->buckets_info >> (j * 8)) & 0xff);
- 			format_and_print(outf, base_level + 6, header, value);
- 
- 			snprintf(header, sizeof(header),
-diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
-index 221881761609..2f7f62765eb6 100644
---- a/tools/power/x86/intel-speed-select/isst.h
-+++ b/tools/power/x86/intel-speed-select/isst.h
-@@ -134,6 +134,7 @@ struct isst_pkg_ctdp_level_info {
- 	size_t core_cpumask_size;
- 	cpu_set_t *core_cpumask;
- 	int cpu_count;
-+	unsigned long long buckets_info;
- 	int trl_sse_active_cores[ISST_TRL_MAX_ACTIVE_CORES];
- 	int trl_avx_active_cores[ISST_TRL_MAX_ACTIVE_CORES];
- 	int trl_avx_512_active_cores[ISST_TRL_MAX_ACTIVE_CORES];
 -- 
-2.17.2
+2.23.0.187.g17f5b7556c-goog
