@@ -1,57 +1,40 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] x86/platform/uv: move kmalloc() NULL check routine
-Date: Fri, 6 Sep 2019 12:53:52 +0200
-Message-ID: <20190906105352.GA8656@kroah.com>
-References: <20190905232951.GA28779@LGEARND20B15>
- <20190906093252.GB16843@kroah.com>
- <20190906104341.GW2349@hirez.programming.kicks-ass.net>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH 1/3] software node: implement reference properties
+Date: Fri, 6 Sep 2019 14:17:44 +0300
+Message-ID: <20190906111744.GA30048@kuha.fi.intel.com>
+References: <20190906043809.18990-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190906104341.GW2349@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190906043809.18990-1-dmitry.torokhov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Austin Kim <austindh.kim@gmail.com>, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, dvhart@infradead.org, andy@infradead.org, hpa@zytor.com, allison@lohutok.net, armijn@tjaldur.nl, kjlu@umn.edu, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Sep 06, 2019 at 12:43:41PM +0200, Peter Zijlstra wrote:
-> On Fri, Sep 06, 2019 at 11:32:52AM +0200, Greg KH wrote:
-> > On Fri, Sep 06, 2019 at 08:29:51AM +0900, Austin Kim wrote:
-> > > The result of kmalloc should have been checked ahead of below statement:
-> > > 	pqp = (struct bau_pq_entry *)vp;
-> > > 
-> > > Move BUG_ON(!vp) before above statement.
-> > > 
-> > > Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-> > > ---
-> > >  arch/x86/platform/uv/tlb_uv.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
-> > > index 20c389a..5f0a96bf 100644
-> > > --- a/arch/x86/platform/uv/tlb_uv.c
-> > > +++ b/arch/x86/platform/uv/tlb_uv.c
-> > > @@ -1804,9 +1804,9 @@ static void pq_init(int node, int pnode)
-> > >  
-> > >  	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
-> > >  	vp = kmalloc_node(plsize, GFP_KERNEL, node);
-> > > -	pqp = (struct bau_pq_entry *)vp;
-> > > -	BUG_ON(!pqp);
-> > > +	BUG_ON(!vp);
-> > 
-> > Ick!  Don't crash the whole machine if you are out of memory, that's a
-> > totally lazy and broken driver.  Fix this up properly please.
+On Thu, Sep 05, 2019 at 09:38:07PM -0700, Dmitry Torokhov wrote:
+> It is possible to store references to software nodes in the same fashion as
+> other static properties, so that users do not need to define separate
+> structures:
 > 
-> This is boot time init; if memory allocation fails, we're in trouble, no
-> way forward no way back.
+> const struct software_node gpio_bank_b_node = {
+> 	.name = "B",
+> };
 > 
-> It is not uncommon to have BUG_ON() for alloc failing during boot.
+> const struct property_entry simone_key_enter_props[] __initconst = {
+> 	PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
+> 	PROPERTY_ENTRY_STRING("label", "enter"),
+> 	PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
+> 	{ }
+> };
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Hey, how come you get to get away with this here, and in the tty layer I
-had to do all sorts of foolish things just for the same "impossible"
-thing because syzbot found a way to emulate such lunacy?
+This looks really good to me. I'll wait for Andy's comments on the
+idea, but to me it makes sense.
 
-Just you wait until the fuzzers get ahold of this code...  :)
+Thanks Dmitry!
 
-greg k-h
+-- 
+heikki
