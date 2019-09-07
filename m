@@ -1,41 +1,72 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7] platform/x86: intel_pmc_core: Attach using APCI HID "INT33A1"
-Date: Sat, 7 Sep 2019 20:41:57 +0300
-Message-ID: <CAHp75VdPY83U5dWJbca_ZCJwT6z8L+V4R+fY0aZTOkM=vNweYQ@mail.gmail.com>
-References: <CAHp75Ver=TNKxh8rdJs1xQYSLNsRLfEoFtcGG6hViug=cF6s_g@mail.gmail.com>
- <20190628033413.8058-1-rajatja@google.com> <CACK8Z6GYwPhz-+7zxxe-aG673Tbin=GYUvVZyL9cTgjqk_EXqA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] platform/x86: intel_int0002_vgpio: Use device_init_wakeup
+Date: Sat, 7 Sep 2019 20:45:07 +0300
+Message-ID: <CAHp75VeJ9Ur9Z4o-pxNApdkb22Zb4sj2AJYRxWO6UFjN292DiA@mail.gmail.com>
+References: <20190823174815.27861-1-hdegoede@redhat.com> <20190823174815.27861-2-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACK8Z6GYwPhz-+7zxxe-aG673Tbin=GYUvVZyL9cTgjqk_EXqA@mail.gmail.com>
+In-Reply-To: <20190823174815.27861-2-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajat Jain <rajatja@google.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rafael J Wysocki <rafael.j.wysocki@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Furquan Shaikh <furquan@google.com>, Evan Green <evgreen@google.com>, Rajat Jain <rajatxjain@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Aug 23, 2019 at 1:44 AM Rajat Jain <rajatja@google.com> wrote:
+On Fri, Aug 23, 2019 at 8:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> On Thu, Jun 27, 2019 at 8:34 PM Rajat Jain <rajatja@google.com> wrote:
-> >
-> > Most modern platforms already have the ACPI device "INT33A1" that could
-> > be used to attach to the driver. Switch the driver to using that and
-> > thus make the intel_pmc_core.c a pure platform_driver.
-> >
-> > Some of the legacy platforms though, may still not have this ACPI device
-> > in their ACPI tables. Thus for such platforms, move the code to manually
-> > instantiate a platform_device into a new file of its own. This would
-> > instantiate the intel_pmc_core platform device and thus attach to
-> > the driver, if the ACPI device for the same ("INT33A1") is not present
-> > in a system where it should be. This was discussed here:
-> > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966991.html
+> Use device_init_wakeup and pm_wakeup_hard_event instead of directly
+> calling pm_system_wakeup(). This is the preferred way to do this and
+> this will allow the user to disable wakeup through INT0002 events
+> through sysfs.
 >
->
-> HI Andy, Rajneesh, this seems to have fallen through the cracks. Any
-> comments here on this patch?
 
-% git tag --list v5.3* --contains b02f6a2ef0a1
-v5.3-rc1
+Pushed to my review and testing queue, thanks!
 
--- 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/intel_int0002_vgpio.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+> index 9ea1a2a19f86..f9fee682a8a2 100644
+> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+> @@ -122,7 +122,7 @@ static irqreturn_t int0002_irq(int irq, void *data)
+>         generic_handle_irq(irq_find_mapping(chip->irq.domain,
+>                                             GPE0A_PME_B0_VIRT_GPIO_PIN));
+>
+> -       pm_system_wakeup();
+> +       pm_wakeup_hard_event(chip->parent);
+>
+>         return IRQ_HANDLED;
+>  }
+> @@ -217,6 +217,13 @@ static int int0002_probe(struct platform_device *pdev)
+>
+>         gpiochip_set_chained_irqchip(chip, irq_chip, irq, NULL);
+>
+> +       device_init_wakeup(dev, true);
+> +       return 0;
+> +}
+> +
+> +static int int0002_remove(struct platform_device *pdev)
+> +{
+> +       device_init_wakeup(&pdev->dev, false);
+>         return 0;
+>  }
+>
+> @@ -232,6 +239,7 @@ static struct platform_driver int0002_driver = {
+>                 .acpi_match_table       = int0002_acpi_ids,
+>         },
+>         .probe  = int0002_probe,
+> +       .remove = int0002_remove,
+>  };
+>
+>  module_platform_driver(int0002_driver);
+> --
+> 2.22.0
+>
+
+
+--
 With Best Regards,
 Andy Shevchenko
