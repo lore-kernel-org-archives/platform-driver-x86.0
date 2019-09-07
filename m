@@ -1,83 +1,41 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 1/3] software node: implement reference properties
-Date: Sat, 7 Sep 2019 10:37:24 -0700
-Message-ID: <20190907173724.GA145199@dtor-ws>
-References: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
- <20190907160819.GH2680@smile.fi.intel.com>
- <20190907163240.GA27112@dtor-ws>
- <20190907171251.GL2680@smile.fi.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7] platform/x86: intel_pmc_core: Attach using APCI HID "INT33A1"
+Date: Sat, 7 Sep 2019 20:41:57 +0300
+Message-ID: <CAHp75VdPY83U5dWJbca_ZCJwT6z8L+V4R+fY0aZTOkM=vNweYQ@mail.gmail.com>
+References: <CAHp75Ver=TNKxh8rdJs1xQYSLNsRLfEoFtcGG6hViug=cF6s_g@mail.gmail.com>
+ <20190628033413.8058-1-rajatja@google.com> <CACK8Z6GYwPhz-+7zxxe-aG673Tbin=GYUvVZyL9cTgjqk_EXqA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190907171251.GL2680@smile.fi.intel.com>
+In-Reply-To: <CACK8Z6GYwPhz-+7zxxe-aG673Tbin=GYUvVZyL9cTgjqk_EXqA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Rajat Jain <rajatja@google.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rafael J Wysocki <rafael.j.wysocki@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Furquan Shaikh <furquan@google.com>, Evan Green <evgreen@google.com>, Rajat Jain <rajatxjain@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Sep 07, 2019 at 08:12:51PM +0300, Andy Shevchenko wrote:
-> On Sat, Sep 07, 2019 at 09:32:40AM -0700, Dmitry Torokhov wrote:
-> > On Sat, Sep 07, 2019 at 07:08:19PM +0300, Andy Shevchenko wrote:
-> > > On Fri, Sep 06, 2019 at 03:26:09PM -0700, Dmitry Torokhov wrote:
-> 
-> > > > +	} else if (src->type == DEV_PROP_REF) {
-> > > > +		/* All reference properties must be arrays */
-> > > > +		return -EINVAL;
-> > > 
-> > > Hmm... What about to duplicate pointer under value union and use is_array to
-> > > distinguish which one to use? Because...
-> > 
-> > Then we have to special-case copying this entry, similar to the pains we
-> > are going with the strings.
-> 
-> I can't see it as a pain. Simple do the same kmemdup() for the case when
-> is_array = false and DEV_TYPE_REF?
+On Fri, Aug 23, 2019 at 1:44 AM Rajat Jain <rajatja@google.com> wrote:
+>
+> On Thu, Jun 27, 2019 at 8:34 PM Rajat Jain <rajatja@google.com> wrote:
+> >
+> > Most modern platforms already have the ACPI device "INT33A1" that could
+> > be used to attach to the driver. Switch the driver to using that and
+> > thus make the intel_pmc_core.c a pure platform_driver.
+> >
+> > Some of the legacy platforms though, may still not have this ACPI device
+> > in their ACPI tables. Thus for such platforms, move the code to manually
+> > instantiate a platform_device into a new file of its own. This would
+> > instantiate the intel_pmc_core platform device and thus attach to
+> > the driver, if the ACPI device for the same ("INT33A1") is not present
+> > in a system where it should be. This was discussed here:
+> > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966991.html
+>
+>
+> HI Andy, Rajneesh, this seems to have fallen through the cracks. Any
+> comments here on this patch?
 
-And then you need to make sure it is freed on error paths and when we
-remove property entries. This requires more checks and code. In contrast
-we already know how to handle out of line objects of arbitrary size.
-
-The only reason we have inline strings is because for shorter strings we
-save 4/8 bytes.
-
-> 
-> By the way, don't we need to update property_entry_{get,set}_pointer()?
-
-I do not see these, where are they?
-
-> 
-> > > > +	.is_array = true,						\
-> > > 
-> > > I really don't like this "cheating".
-> > 
-> > This is not cheating. Any single value can be represented as an array of
-> > one element. Actually, the only reason we have this "is_array" business
-> > is because for scalar values and short strings it is much cheaper to
-> > store single value in-line instead of out of line + pointer, especially
-> > on 64 bit arches.
-> 
-> Yes, and this is a lot of benefit!
-
-Yes, nobody argues against it. Here however we are dealing with a larger
-structure. There is absolutely no benefit of trying to separate single
-value vs array here.
-
-> 
-> > If you want we can change is_array into is_inline.
-> 
-> Nope, is_array is exactly what it tells us about the content. Its functional
-> load is to distinguish which union (value vs. pointer) we are using.
-
-No, it signifies whether the value is stored within property entry or
-outside. I can fit probably 8 bytes arrays into property entry
-structure, in which case is_array will definitely not reflect the data
-type.
-
-It is the type-specific accessors that know how to parse and fetch data
-from properties.
-
-Thanks.
+% git tag --list v5.3* --contains b02f6a2ef0a1
+v5.3-rc1
 
 -- 
-Dmitry
+With Best Regards,
+Andy Shevchenko
