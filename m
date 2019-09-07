@@ -1,84 +1,99 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 1/3] software node: implement reference properties
-Date: Sat, 7 Sep 2019 09:32:40 -0700
-Message-ID: <20190907163240.GA27112@dtor-ws>
-References: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
- <20190907160819.GH2680@smile.fi.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_pmc_core_pltdrv: Module removal
+ warning fix
+Date: Sat, 7 Sep 2019 19:53:06 +0300
+Message-ID: <CAHp75VcTEJAO2Be08D22mJ7nmXBcf1gL04MG4uUV3FvzOa-vdA@mail.gmail.com>
+References: <20190816014140.10687-1-m.v.b@runbox.com> <20190816014140.10687-2-m.v.b@runbox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190907160819.GH2680@smile.fi.intel.com>
+In-Reply-To: <20190816014140.10687-2-m.v.b@runbox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: "M. Vefa Bicakci" <m.v.b@runbox.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Sep 07, 2019 at 07:08:19PM +0300, Andy Shevchenko wrote:
-> On Fri, Sep 06, 2019 at 03:26:09PM -0700, Dmitry Torokhov wrote:
-> > It is possible to store references to software nodes in the same fashion as
-> > other static properties, so that users do not need to define separate
-> > structures:
-> > 
-> > static const struct software_node gpio_bank_b_node = {
-> > 	.name = "B",
-> > };
-> > 
-> > static const struct property_entry simone_key_enter_props[] = {
-> > 	PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
-> > 	PROPERTY_ENTRY_STRING("label", "enter"),
-> > 	PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
-> > 	{ }
-> > };
-> > 
-> 
-> Thanks for an update, my comments below.
-> 
-> > +	} else if (src->type == DEV_PROP_REF) {
-> > +		/* All reference properties must be arrays */
-> > +		return -EINVAL;
-> 
-> Hmm... What about to duplicate pointer under value union and use is_array to
-> distinguish which one to use? Because...
+On Fri, Aug 16, 2019 at 4:42 AM M. Vefa Bicakci <m.v.b@runbox.com> wrote:
+>
+> Prior to this commit, removing the intel_pmc_core_pltdrv module
+> would cause the following warning:
+>
+>   ------------[ cut here ]------------
+>   Device 'intel_pmc_core.0' does not have a release() function, \
+>     it is broken and must be fixed. See Documentation/kobject.txt.
+>   WARNING: CPU: 0 PID: 2202 at drivers/base/core.c:1238 device_release+0x6f/0x80
+>   Modules linked in: fuse intel_rapl_msr ip6table_filter ip6_tables ipt_REJECT \
+>     nf_reject_ipv4 xt_conntrack iptable_filter xt_MASQUERADE iptable_nat nf_nat \
+>     nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c intel_rapl_common \
+>     intel_pmc_core_pltdrv(-) xen_netfront intel_pmc_core crct10dif_pclmul \
+>     crc32_pclmul crc32c_intel ghash_clmulni_intel intel_rapl_perf pcspkr binfmt_misc \
+>     u2mfn(O) xenfs xen_gntdev xen_gntalloc xen_blkback xen_privcmd xen_evtchn \
+>     ip_tables overlay xen_blkfront
+>   CPU: 0 PID: 2202 Comm: rmmod Tainted: G        W  O      5.3.0-rc3-next-20190809-1 #2
+>   RIP: 0010:device_release+0x6f/0x80
+>   Code: 48 8b 85 c0 02 00 00 48 85 c0 74 09 48 8b 40 40 48 85 c0 75 c6 48 8b 75 50 48 85 f6 74 10 48 c7 c7 58 68 12 82 e8 5f 62 a9 ff <0f> 0b eb b5 48 8b 75 00 eb ea 0f 1f 80 00 00 00 00 0f 1f 44 00 00
+>   RSP: 0018:ffffc90000763ea8 EFLAGS: 00010286
+>   RAX: 0000000000000000 RBX: ffffffff822da080 RCX: 0000000000000006
+>   RDX: 0000000000000007 RSI: 0000000000000082 RDI: ffff88813ba17540
+>   RBP: ffffffffc0107010 R08: 0000000000000195 R09: 000000000000000d
+>   R10: 000000000000000a R11: ffffc90000763d65 R12: ffff88800c9e9000
+>   R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+>   FS:  000071250bf142c0(0000) GS:ffff88813ba00000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 000060ab8fd82d49 CR3: 00000001273ba004 CR4: 00000000003606f0
+>   Call Trace:
+>    kobject_put+0x85/0x1b0
+>    __x64_sys_delete_module+0x14b/0x270
+>    do_syscall_64+0x5f/0x1a0
+>    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>   RIP: 0033:0x71250c031c6b
+>   Code: 73 01 c3 48 8b 0d 1d 42 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ed 41 0c 00 f7 d8 64 89 01 48
+>   RSP: 002b:00007ffec29e6038 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
+>   RAX: ffffffffffffffda RBX: 00006040bc3e07b0 RCX: 000071250c031c6b
+>   RDX: 000000000000000a RSI: 0000000000000800 RDI: 00006040bc3e0818
+>   RBP: 00007ffec29e6088 R08: 1999999999999999 R09: 0000000000000000
+>   R10: 000071250c0a6ac0 R11: 0000000000000206 R12: 00007ffec29e6250
+>   R13: 00007ffec29e67b7 R14: 00006040bc3e0260 R15: 00007ffec29e6090
+>   ---[ end trace 5e5421608729d6f5 ]---
+>
+> This commit hence adds an empty release function for the driver.
+>
 
-Then we have to special-case copying this entry, similar to the pains we
-are going with the strings.
+Pushed to my review and testing queue, thanks!
 
-> 
-> 
-> > @@ -240,6 +254,7 @@ struct property_entry {
-> >  			const u32 *u32_data;
-> >  			const u64 *u64_data;
-> >  			const char * const *str;
-> > +			const struct software_node_ref_args *ref;
-> >  		} pointer;
-> 
-> > +#define PROPERTY_ENTRY_REF(_name_, _ref_, ...)				\
-> > +(struct property_entry) {						\
-> > +	.name = _name_,							\
-> 
-> > +	.length = sizeof(struct software_node_ref_args),		\
-> 
-> Is it correct?
+P.S. I cut unnecessary output off.
 
-Yes, we length is element size * number of elements.
+> Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
+> ---
+>  drivers/platform/x86/intel_pmc_core_pltdrv.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/platform/x86/intel_pmc_core_pltdrv.c b/drivers/platform/x86/intel_pmc_core_pltdrv.c
+> index a8754a6db1b8..186540014c48 100644
+> --- a/drivers/platform/x86/intel_pmc_core_pltdrv.c
+> +++ b/drivers/platform/x86/intel_pmc_core_pltdrv.c
+> @@ -18,8 +18,16 @@
+>  #include <asm/cpu_device_id.h>
+>  #include <asm/intel-family.h>
+>
+> +static void intel_pmc_core_release(struct device *dev)
+> +{
+> +       /* Nothing to do. */
+> +}
+> +
+>  static struct platform_device pmc_core_device = {
+>         .name = "intel_pmc_core",
+> +       .dev  = {
+> +               .release = intel_pmc_core_release,
+> +       },
+>  };
+>
+>  /*
+> --
+> 2.21.0
+>
 
-> 
-> > +	.type = DEV_PROP_REF,						\
-> 
-> > +	.is_array = true,						\
-> 
-> I really don't like this "cheating".
-
-This is not cheating. Any single value can be represented as an array of
-one element. Actually, the only reason we have this "is_array" business
-is because for scalar values and short strings it is much cheaper to
-store single value in-line instead of out of line + pointer, especially
-on 64 bit arches.
-
-If you want we can change is_array into is_inline.
-
-Thanks.
 
 -- 
-Dmitry
+With Best Regards,
+Andy Shevchenko
