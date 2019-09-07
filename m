@@ -1,39 +1,83 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform: x86: pcengines-apuv2: detect apuv4 board
-Date: Sat, 7 Sep 2019 20:31:44 +0300
-Message-ID: <CAHp75Vd_fW7Vb39u2efjt02+M50MDfvOJTrqkJ98CGwmSQORRw@mail.gmail.com>
-References: <1566294992-703-1-git-send-email-info@metux.net>
- <CAHp75VfFf7y5iLHSgS+mXa4cE78BC=maF6PWtwEGfgyi2pXKCg@mail.gmail.com> <8e9ee2a1-3731-9427-bd04-2d4327913aa3@metux.net>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 1/3] software node: implement reference properties
+Date: Sat, 7 Sep 2019 10:37:24 -0700
+Message-ID: <20190907173724.GA145199@dtor-ws>
+References: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
+ <20190907160819.GH2680@smile.fi.intel.com>
+ <20190907163240.GA27112@dtor-ws>
+ <20190907171251.GL2680@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8e9ee2a1-3731-9427-bd04-2d4327913aa3@metux.net>
+Content-Disposition: inline
+In-Reply-To: <20190907171251.GL2680@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc: "Enrico Weigelt, metux IT consult" <info@metux.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Aug 28, 2019 at 2:37 PM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
->
-> On 22.08.19 21:47, Andy Shevchenko wrote:
->
-> >> Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe
-> >
-> > Wrong format.
-> >
-> > W/o SoB tag I can't take it.
->
-> What's the correct format (what command shall I use to
-> create it correctly ?)
+On Sat, Sep 07, 2019 at 08:12:51PM +0300, Andy Shevchenko wrote:
+> On Sat, Sep 07, 2019 at 09:32:40AM -0700, Dmitry Torokhov wrote:
+> > On Sat, Sep 07, 2019 at 07:08:19PM +0300, Andy Shevchenko wrote:
+> > > On Fri, Sep 06, 2019 at 03:26:09PM -0700, Dmitry Torokhov wrote:
+> 
+> > > > +	} else if (src->type == DEV_PROP_REF) {
+> > > > +		/* All reference properties must be arrays */
+> > > > +		return -EINVAL;
+> > > 
+> > > Hmm... What about to duplicate pointer under value union and use is_array to
+> > > distinguish which one to use? Because...
+> > 
+> > Then we have to special-case copying this entry, similar to the pains we
+> > are going with the strings.
+> 
+> I can't see it as a pain. Simple do the same kmemdup() for the case when
+> is_array = false and DEV_TYPE_REF?
 
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+And then you need to make sure it is freed on error paths and when we
+remove property entries. This requires more checks and code. In contrast
+we already know how to handle out of line objects of arbitrary size.
 
-Section 11
+The only reason we have inline strings is because for shorter strings we
+save 4/8 bytes.
 
-And for this one Fixes is not needed. The APUv4 never worked before, correct?
+> 
+> By the way, don't we need to update property_entry_{get,set}_pointer()?
 
+I do not see these, where are they?
+
+> 
+> > > > +	.is_array = true,						\
+> > > 
+> > > I really don't like this "cheating".
+> > 
+> > This is not cheating. Any single value can be represented as an array of
+> > one element. Actually, the only reason we have this "is_array" business
+> > is because for scalar values and short strings it is much cheaper to
+> > store single value in-line instead of out of line + pointer, especially
+> > on 64 bit arches.
+> 
+> Yes, and this is a lot of benefit!
+
+Yes, nobody argues against it. Here however we are dealing with a larger
+structure. There is absolutely no benefit of trying to separate single
+value vs array here.
+
+> 
+> > If you want we can change is_array into is_inline.
+> 
+> Nope, is_array is exactly what it tells us about the content. Its functional
+> load is to distinguish which union (value vs. pointer) we are using.
+
+No, it signifies whether the value is stored within property entry or
+outside. I can fit probably 8 bytes arrays into property entry
+structure, in which case is_array will definitely not reflect the data
+type.
+
+It is the type-specific accessors that know how to parse and fetch data
+from properties.
+
+Thanks.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Dmitry
