@@ -1,75 +1,89 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 0/9] tools-power-x86-intel-speed-select: Fixes and
- updates for output
-Date: Sat, 7 Sep 2019 21:13:45 +0300
-Message-ID: <CAHp75Vf3KWLue_2UfNTNhDrXBX0YA+FRindbfX0sOzjhUcwKTg@mail.gmail.com>
-References: <20190905120311.15286-1-prarit@redhat.com> <e02287479ad936142a21cbd7c6c00947ca0c5088.camel@linux.intel.com>
+Subject: Re: [PATCH 2/2] tools/power/x86/intel-speed-select: Display core
+ count for bucket
+Date: Sat, 7 Sep 2019 21:18:13 +0300
+Message-ID: <CAHp75Vc9xMPW38Toh2jKv9YYYNV16837aAcXKMP6WaM-L8zcSQ@mail.gmail.com>
+References: <20190905233748.6822-1-srinivas.pandruvada@linux.intel.com>
+ <20190905233748.6822-2-srinivas.pandruvada@linux.intel.com>
+ <780a3faf-9e44-64f4-a354-bdee39af3af5@redhat.com> <20190906134655.GU2680@smile.fi.intel.com>
+ <6b576770a4bbe6c24ea524083dec5a16bf3c9e94.camel@linux.intel.com> <b8c7bd1204f7b4f75a5bccec4d7c41b1225928f7.camel@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e02287479ad936142a21cbd7c6c00947ca0c5088.camel@linux.intel.com>
+In-Reply-To: <b8c7bd1204f7b4f75a5bccec4d7c41b1225928f7.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Prarit Bhargava <prarit@redhat.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Andriy Shevchenko <andriy.shevchenko@intel.com>, David Arcari <darcari@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Prarit Bhargava <prarit@redhat.com>, David Arcari <darcari@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Sep 6, 2019 at 10:58 AM Srinivas Pandruvada
+On Fri, Sep 6, 2019 at 10:47 PM Srinivas Pandruvada
 <srinivas.pandruvada@linux.intel.com> wrote:
 >
-> On Thu, 2019-09-05 at 08:03 -0400, Prarit Bhargava wrote:
-> > Some general fixes and updates for intel-speed-select.  Fixes include
-> > some
-> > typos as well as an off-by-one cpu count reporting error.  Updates
-> > for the
-> > output are
+> On Fri, 2019-09-06 at 07:50 -0700, Srinivas Pandruvada wrote:
+> > On Fri, 2019-09-06 at 16:46 +0300, Andy Shevchenko wrote:
+> > > On Fri, Sep 06, 2019 at 05:39:54AM -0400, Prarit Bhargava wrote:
+> > > > On 9/5/19 7:37 PM, Srinivas Pandruvada wrote:
+> > > > > Read the bucket and core count relationship via MSR and display
+> > > > > when displaying turbo ratio limits.
+> > > > > +       ret = isst_send_msr_command(cpu, 0x1ae, 0,
+> > > > > buckets_info);
+> > > >
+> > > > ^^^ you can get rid of the magic number 0x1ae by doing (sorry for
+> > > > the cut-and-paste)
+> > > >
+> > > > diff --git a/tools/power/x86/intel-speed-select/Makefile
+> > > > b/tools/power/x86/intel
+> > > > index 12c6939dca2a..087d802ad844 100644
+> > > > --- a/tools/power/x86/intel-speed-select/Makefile
+> > > > +++ b/tools/power/x86/intel-speed-select/Makefile
+> > > > @@ -15,6 +15,8 @@ endif
+> > > >  MAKEFLAGS += -r
+> > > >
+> > > >  override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+> > > > +override CFLAGS += -I../../../include
+> > > > +override CFLAGS +=
+> > > > -DMSRHEADER='"../../../../arch/x86/include/asm/msr-index.h"'
 > >
-> > - switching to MHz as a standard
-> > - reporting CPU frequencies instead of ratios as a standard
-> > - viewing a human-readable CPU list.
-> > - avoiding reporting "0|1" as success|fail as these can be confusing
-> > for a
-> >   user.
-> >
-> > v2: Add additional patch to fix memory leak and remove help text in
-> > 8/9.
+> > No, we can't use msr_index.
+> This comment was meant for use of /dev/cpu/X/msr not msr_index.
+> I didn't want to bring in dependency on msr-index.h for couple of 2
+> MSRs and the names in msr-index.h doesn't really reflect the actual
+> processing, they are doing. For example MSR_TURBO_RATIO_LIMIT1 for
+> 0x1ae. The definition of 0x1AE is different on cpu model 0x55 and
+> beyond.
 >
-> For the series
->
-> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
->
-
-Pushed to my review and testing queue, thanks!
-
-
 > >
-> > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> > Cc: David Arcari <darcari@redhat.com>
-> > Cc: linux-kernel@vger.kernel.org
+
+It seems not applicable on top of tools patch series I had applied before.
+
+> > >
+> > > I guess it can be done in more neat way.
+> > >
+> > > > As I've been looking at this code I have been wondering why
+> > > > didn't
+> > > > you just use
+> > > > the standard /dev/cpu/X/msr interface that other x86 power
+> > > > utilities (turbostat,
+> > > > x86_energy_perf_policy) use?  Implementing msr_read() is trivial
+> > > > (warning
+> > > > untested and uncompiled code)
 > >
-> > Prarit Bhargava (9):
-> >   tools/power/x86/intel-speed-select: Fix package typo
-> >   tools/power/x86/intel-speed-select: Fix help option typo
-> >   tools/power/x86/intel-speed-select: Fix cpu-count output
-> >   tools/power/x86/intel-speed-select: Simplify output for turbo-freq
+> > No. We can't. The MSR interface is disabled on several distribution
 > > and
-> >     base-freq
-> >   tools/power/x86/intel-speed-select: Switch output to MHz
-> >   tools/power/x86/intel-speed-select: Change turbo ratio output to
-> >     maximum turbo frequency
-> >   tools/power/x86/intel-speed-select: Output human readable CPU list
-> >   tools/power/x86/intel-speed-select: Output success/failed for
-> > command
-> >     output
-> >   tools/power/x86/intel-speed-select: Fix memory leak
+> > platforms with secured boot. So some special MSRs are only allowed
+> > via
+> > this IOCTL interface.
 > >
-> >  .../x86/intel-speed-select/isst-config.c      |  21 +--
-> >  .../x86/intel-speed-select/isst-display.c     | 120 +++++++++++++---
-> > --
-> >  2 files changed, 98 insertions(+), 43 deletions(-)
+> > Thanks,
+> > Srinivas
 > >
+> >
+> > >
+> > > Actually good point!
+> > >
 >
 
 
---
+-- 
 With Best Regards,
 Andy Shevchenko
