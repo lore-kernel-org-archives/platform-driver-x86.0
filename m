@@ -1,72 +1,89 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86: intel_int0002_vgpio: Use device_init_wakeup
-Date: Sat, 7 Sep 2019 20:45:07 +0300
-Message-ID: <CAHp75VeJ9Ur9Z4o-pxNApdkb22Zb4sj2AJYRxWO6UFjN292DiA@mail.gmail.com>
-References: <20190823174815.27861-1-hdegoede@redhat.com> <20190823174815.27861-2-hdegoede@redhat.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 1/3] software node: implement reference properties
+Date: Sat, 7 Sep 2019 21:03:48 +0300
+Message-ID: <20190907180348.GM2680@smile.fi.intel.com>
+References: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
+ <20190907160819.GH2680@smile.fi.intel.com>
+ <20190907163240.GA27112@dtor-ws>
+ <20190907171251.GL2680@smile.fi.intel.com>
+ <20190907173724.GA145199@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823174815.27861-2-hdegoede@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20190907173724.GA145199@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Aug 23, 2019 at 8:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Use device_init_wakeup and pm_wakeup_hard_event instead of directly
-> calling pm_system_wakeup(). This is the preferred way to do this and
-> this will allow the user to disable wakeup through INT0002 events
-> through sysfs.
->
+On Sat, Sep 07, 2019 at 10:37:24AM -0700, Dmitry Torokhov wrote:
+> On Sat, Sep 07, 2019 at 08:12:51PM +0300, Andy Shevchenko wrote:
+> > On Sat, Sep 07, 2019 at 09:32:40AM -0700, Dmitry Torokhov wrote:
+> > > On Sat, Sep 07, 2019 at 07:08:19PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, Sep 06, 2019 at 03:26:09PM -0700, Dmitry Torokhov wrote:
+> > 
+> > > > > +	} else if (src->type == DEV_PROP_REF) {
+> > > > > +		/* All reference properties must be arrays */
+> > > > > +		return -EINVAL;
+> > > > 
+> > > > Hmm... What about to duplicate pointer under value union and use is_array to
+> > > > distinguish which one to use? Because...
+> > > 
+> > > Then we have to special-case copying this entry, similar to the pains we
+> > > are going with the strings.
+> > 
+> > I can't see it as a pain. Simple do the same kmemdup() for the case when
+> > is_array = false and DEV_TYPE_REF?
+> 
+> And then you need to make sure it is freed on error paths and when we
+> remove property entries. This requires more checks and code. In contrast
+> we already know how to handle out of line objects of arbitrary size.
 
-Pushed to my review and testing queue, thanks!
+We can put it one level up to be a sibling to value / pointer unions.
+In that case is_array can be anything (we just don't care).
 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/intel_int0002_vgpio.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
-> index 9ea1a2a19f86..f9fee682a8a2 100644
-> --- a/drivers/platform/x86/intel_int0002_vgpio.c
-> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
-> @@ -122,7 +122,7 @@ static irqreturn_t int0002_irq(int irq, void *data)
->         generic_handle_irq(irq_find_mapping(chip->irq.domain,
->                                             GPE0A_PME_B0_VIRT_GPIO_PIN));
->
-> -       pm_system_wakeup();
-> +       pm_wakeup_hard_event(chip->parent);
->
->         return IRQ_HANDLED;
->  }
-> @@ -217,6 +217,13 @@ static int int0002_probe(struct platform_device *pdev)
->
->         gpiochip_set_chained_irqchip(chip, irq_chip, irq, NULL);
->
-> +       device_init_wakeup(dev, true);
-> +       return 0;
-> +}
-> +
-> +static int int0002_remove(struct platform_device *pdev)
-> +{
-> +       device_init_wakeup(&pdev->dev, false);
->         return 0;
->  }
->
-> @@ -232,6 +239,7 @@ static struct platform_driver int0002_driver = {
->                 .acpi_match_table       = int0002_acpi_ids,
->         },
->         .probe  = int0002_probe,
-> +       .remove = int0002_remove,
->  };
->
->  module_platform_driver(int0002_driver);
-> --
-> 2.22.0
->
+Actually strings aren't inlined.
 
+> > By the way, don't we need to update property_entry_{get,set}_pointer()?
+> 
+> I do not see these, where are they?
 
---
+swnode.c. I meant property_{get,set}_pointer().
+
+> > > > > +	.is_array = true,						\
+> > > > 
+> > > > I really don't like this "cheating".
+> > > 
+> > > This is not cheating. Any single value can be represented as an array of
+> > > one element. Actually, the only reason we have this "is_array" business
+> > > is because for scalar values and short strings it is much cheaper to
+> > > store single value in-line instead of out of line + pointer, especially
+> > > on 64 bit arches.
+> > 
+> > Yes, and this is a lot of benefit!
+> 
+> Yes, nobody argues against it. Here however we are dealing with a larger
+> structure. There is absolutely no benefit of trying to separate single
+> value vs array here.
+
+Thus, moving to upper layer makes more sense. Right?
+
+> > > If you want we can change is_array into is_inline.
+> > 
+> > Nope, is_array is exactly what it tells us about the content. Its functional
+> > load is to distinguish which union (value vs. pointer) we are using.
+> 
+> No, it signifies whether the value is stored within property entry or
+> outside. I can fit probably 8 bytes arrays into property entry
+> structure, in which case is_array will definitely not reflect the data
+> type.
+
+Nope, since strings are not inlined AFAICS.
+
+> It is the type-specific accessors that know how to parse and fetch data
+> from properties.
+
+-- 
 With Best Regards,
 Andy Shevchenko
