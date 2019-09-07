@@ -1,153 +1,84 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 3/3] software node: remove separate handling of
- references
-Date: Sat, 7 Sep 2019 19:13:43 +0300
-Message-ID: <20190907161343.GJ2680@smile.fi.intel.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 1/3] software node: implement reference properties
+Date: Sat, 7 Sep 2019 09:32:40 -0700
+Message-ID: <20190907163240.GA27112@dtor-ws>
 References: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
- <20190906222611.223532-3-dmitry.torokhov@gmail.com>
+ <20190907160819.GH2680@smile.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190906222611.223532-3-dmitry.torokhov@gmail.com>
+In-Reply-To: <20190907160819.GH2680@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Sep 06, 2019 at 03:26:11PM -0700, Dmitry Torokhov wrote:
-> Now that all users of references have moved to reference properties,
-> we can remove separate handling of references.
+On Sat, Sep 07, 2019 at 07:08:19PM +0300, Andy Shevchenko wrote:
+> On Fri, Sep 06, 2019 at 03:26:09PM -0700, Dmitry Torokhov wrote:
+> > It is possible to store references to software nodes in the same fashion as
+> > other static properties, so that users do not need to define separate
+> > structures:
+> > 
+> > static const struct software_node gpio_bank_b_node = {
+> > 	.name = "B",
+> > };
+> > 
+> > static const struct property_entry simone_key_enter_props[] = {
+> > 	PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
+> > 	PROPERTY_ENTRY_STRING("label", "enter"),
+> > 	PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
+> > 	{ }
+> > };
+> > 
 > 
+> Thanks for an update, my comments below.
+> 
+> > +	} else if (src->type == DEV_PROP_REF) {
+> > +		/* All reference properties must be arrays */
+> > +		return -EINVAL;
+> 
+> Hmm... What about to duplicate pointer under value union and use is_array to
+> distinguish which one to use? Because...
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Then we have to special-case copying this entry, similar to the pains we
+are going with the strings.
 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
 > 
-> v1->v2:
 > 
-> - dropped rename of struct software_node_ref_args ->
-> 	struct software_node_reference
+> > @@ -240,6 +254,7 @@ struct property_entry {
+> >  			const u32 *u32_data;
+> >  			const u64 *u64_data;
+> >  			const char * const *str;
+> > +			const struct software_node_ref_args *ref;
+> >  		} pointer;
 > 
->  drivers/base/swnode.c    | 44 +++++++++++++++-------------------------
->  include/linux/property.h | 14 -------------
->  2 files changed, 16 insertions(+), 42 deletions(-)
+> > +#define PROPERTY_ENTRY_REF(_name_, _ref_, ...)				\
+> > +(struct property_entry) {						\
+> > +	.name = _name_,							\
 > 
-> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index bd720d995123..5dc113de0cae 100644
-> --- a/drivers/base/swnode.c
-> +++ b/drivers/base/swnode.c
-> @@ -570,8 +570,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
->  				 struct fwnode_reference_args *args)
->  {
->  	struct swnode *swnode = to_swnode(fwnode);
-> -	const struct software_node_reference *ref;
-> -	const struct software_node_ref_args *ref_args;
-> +	const struct software_node_ref_args *ref;
->  	const struct property_entry *prop;
->  	struct fwnode_handle *refnode;
->  	int i;
-> @@ -580,36 +579,25 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
->  		return -ENOENT;
->  
->  	prop = property_entry_get(swnode->node->properties, propname);
-> -	if (prop) {
-> -		if (prop->type != DEV_PROP_REF)
-> -			return -EINVAL;
-> -
-> -		/*
-> -		 * We expect all references to be stored as arrays via
-> -		 * a pointer, even single ones.
-> -		 */
-> -		if (!prop->is_array)
-> -			return -EINVAL;
-> -
-> -		if (index * sizeof(*ref_args) >= prop->length)
-> -			return -ENOENT;
-> +	if (!prop)
-> +		return -ENOENT;
->  
-> -		ref_args = &prop->pointer.ref[index];
-> -	} else {
-> -		if (!swnode->node->references)
-> -			return -ENOENT;
-> +	if (prop->type != DEV_PROP_REF)
-> +		return -EINVAL;
->  
-> -		for (ref = swnode->node->references; ref->name; ref++)
-> -			if (!strcmp(ref->name, propname))
-> -				break;
-> +	/*
-> +	 * We expect all references to be stored as arrays via
-> +	 * a pointer, even single ones.
-> +	 */
-> +	if (!prop->is_array)
-> +		return -EINVAL;
->  
-> -		if (!ref->name || index > (ref->nrefs - 1))
-> -			return -ENOENT;
-> +	if (index * sizeof(*ref) >= prop->length)
-> +		return -ENOENT;
->  
-> -		ref_args = &ref->refs[index];
-> -	}
-> +	ref = &prop->pointer.ref[index];
->  
-> -	refnode = software_node_fwnode(ref_args->node);
-> +	refnode = software_node_fwnode(ref->node);
->  	if (!refnode)
->  		return -ENOENT;
->  
-> @@ -628,7 +616,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
->  	args->nargs = nargs;
->  
->  	for (i = 0; i < nargs; i++)
-> -		args->args[i] = ref_args->args[i];
-> +		args->args[i] = ref->args[i];
->  
->  	return 0;
->  }
-> diff --git a/include/linux/property.h b/include/linux/property.h
-> index 6658403f6fa9..5e4adccd6404 100644
-> --- a/include/linux/property.h
-> +++ b/include/linux/property.h
-> @@ -415,30 +415,16 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
->  /* -------------------------------------------------------------------------- */
->  /* Software fwnode support - when HW description is incomplete or missing */
->  
-> -/**
-> - * struct software_node_reference - Named software node reference property
-> - * @name: Name of the property
-> - * @nrefs: Number of elements in @refs array
-> - * @refs: Array of references with optional arguments
-> - */
-> -struct software_node_reference {
-> -	const char *name;
-> -	unsigned int nrefs;
-> -	const struct software_node_ref_args *refs;
-> -};
-> -
->  /**
->   * struct software_node - Software node description
->   * @name: Name of the software node
->   * @parent: Parent of the software node
->   * @properties: Array of device properties
-> - * @references: Array of software node reference properties
->   */
->  struct software_node {
->  	const char *name;
->  	const struct software_node *parent;
->  	const struct property_entry *properties;
-> -	const struct software_node_reference *references;
->  };
->  
->  bool is_software_node(const struct fwnode_handle *fwnode);
-> -- 
-> 2.23.0.187.g17f5b7556c-goog
+> > +	.length = sizeof(struct software_node_ref_args),		\
 > 
+> Is it correct?
+
+Yes, we length is element size * number of elements.
+
+> 
+> > +	.type = DEV_PROP_REF,						\
+> 
+> > +	.is_array = true,						\
+> 
+> I really don't like this "cheating".
+
+This is not cheating. Any single value can be represented as an array of
+one element. Actually, the only reason we have this "is_array" business
+is because for scalar values and short strings it is much cheaper to
+store single value in-line instead of out of line + pointer, especially
+on 64 bit arches.
+
+If you want we can change is_array into is_inline.
+
+Thanks.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Dmitry
