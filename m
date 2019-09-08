@@ -1,104 +1,51 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH 2/2] tools/power/x86/intel-speed-select: Display core
- count for bucket
-Date: Sun, 08 Sep 2019 07:43:14 -0700
-Message-ID: <c6e4cedc4886fd689b3ff1df413ce62aa52cc544.camel@linux.intel.com>
-References: <20190905233748.6822-1-srinivas.pandruvada@linux.intel.com>
-         <20190905233748.6822-2-srinivas.pandruvada@linux.intel.com>
-         <780a3faf-9e44-64f4-a354-bdee39af3af5@redhat.com>
-         <20190906134655.GU2680@smile.fi.intel.com>
-         <6b576770a4bbe6c24ea524083dec5a16bf3c9e94.camel@linux.intel.com>
-         <b8c7bd1204f7b4f75a5bccec4d7c41b1225928f7.camel@linux.intel.com>
-         <CAHp75Vc9xMPW38Toh2jKv9YYYNV16837aAcXKMP6WaM-L8zcSQ@mail.gmail.com>
+From: Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v7] platform/x86: intel_pmc_core: Attach using APCI HID "INT33A1"
+Date: Sun, 8 Sep 2019 13:06:47 -0700
+Message-ID: <CACK8Z6F5wjT0CE2ftjaB0_zEhK+P8UTSmzmzWZS3LD1688kgRw@mail.gmail.com>
+References: <CAHp75Ver=TNKxh8rdJs1xQYSLNsRLfEoFtcGG6hViug=cF6s_g@mail.gmail.com>
+ <20190628033413.8058-1-rajatja@google.com> <CACK8Z6GYwPhz-+7zxxe-aG673Tbin=GYUvVZyL9cTgjqk_EXqA@mail.gmail.com>
+ <CAHp75VdPY83U5dWJbca_ZCJwT6z8L+V4R+fY0aZTOkM=vNweYQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vc9xMPW38Toh2jKv9YYYNV16837aAcXKMP6WaM-L8zcSQ@mail.gmail.com>
+In-Reply-To: <CAHp75VdPY83U5dWJbca_ZCJwT6z8L+V4R+fY0aZTOkM=vNweYQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Prarit Bhargava <prarit@redhat.com>, David Arcari <darcari@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rafael J Wysocki <rafael.j.wysocki@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Furquan Shaikh <furquan@google.com>, Evan Green <evgreen@google.com>, Rajat Jain <rajatxjain@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, 2019-09-07 at 21:18 +0300, Andy Shevchenko wrote:
-> On Fri, Sep 6, 2019 at 10:47 PM Srinivas Pandruvada
-> <srinivas.pandruvada@linux.intel.com> wrote:
-> > 
-> > On Fri, 2019-09-06 at 07:50 -0700, Srinivas Pandruvada wrote:
-> > > On Fri, 2019-09-06 at 16:46 +0300, Andy Shevchenko wrote:
-> > > > On Fri, Sep 06, 2019 at 05:39:54AM -0400, Prarit Bhargava
-> > > > wrote:
-> > > > > On 9/5/19 7:37 PM, Srinivas Pandruvada wrote:
-> > > > > > Read the bucket and core count relationship via MSR and
-> > > > > > display
-> > > > > > when displaying turbo ratio limits.
-> > > > > > +       ret = isst_send_msr_command(cpu, 0x1ae, 0,
-> > > > > > buckets_info);
-> > > > > 
-> > > > > ^^^ you can get rid of the magic number 0x1ae by doing (sorry
-> > > > > for
-> > > > > the cut-and-paste)
-> > > > > 
-> > > > > diff --git a/tools/power/x86/intel-speed-select/Makefile
-> > > > > b/tools/power/x86/intel
-> > > > > index 12c6939dca2a..087d802ad844 100644
-> > > > > --- a/tools/power/x86/intel-speed-select/Makefile
-> > > > > +++ b/tools/power/x86/intel-speed-select/Makefile
-> > > > > @@ -15,6 +15,8 @@ endif
-> > > > >  MAKEFLAGS += -r
-> > > > > 
-> > > > >  override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE
-> > > > > -I$(OUTPUT)include
-> > > > > +override CFLAGS += -I../../../include
-> > > > > +override CFLAGS +=
-> > > > > -DMSRHEADER='"../../../../arch/x86/include/asm/msr-index.h"'
-> > > 
-> > > No, we can't use msr_index.
-> > 
-> > This comment was meant for use of /dev/cpu/X/msr not msr_index.
-> > I didn't want to bring in dependency on msr-index.h for couple of 2
-> > MSRs and the names in msr-index.h doesn't really reflect the actual
-> > processing, they are doing. For example MSR_TURBO_RATIO_LIMIT1 for
-> > 0x1ae. The definition of 0x1AE is different on cpu model 0x55 and
-> > beyond.
-> > 
-> > > 
-> 
-> It seems not applicable on top of tools patch series I had applied
-> before.
-I have rebased on the top of your review branch and resent.
+On Sat, Sep 7, 2019 at 10:42 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Fri, Aug 23, 2019 at 1:44 AM Rajat Jain <rajatja@google.com> wrote:
+> >
+> > On Thu, Jun 27, 2019 at 8:34 PM Rajat Jain <rajatja@google.com> wrote:
+> > >
+> > > Most modern platforms already have the ACPI device "INT33A1" that could
+> > > be used to attach to the driver. Switch the driver to using that and
+> > > thus make the intel_pmc_core.c a pure platform_driver.
+> > >
+> > > Some of the legacy platforms though, may still not have this ACPI device
+> > > in their ACPI tables. Thus for such platforms, move the code to manually
+> > > instantiate a platform_device into a new file of its own. This would
+> > > instantiate the intel_pmc_core platform device and thus attach to
+> > > the driver, if the ACPI device for the same ("INT33A1") is not present
+> > > in a system where it should be. This was discussed here:
+> > > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966991.html
+> >
+> >
+> > HI Andy, Rajneesh, this seems to have fallen through the cracks. Any
+> > comments here on this patch?
+>
+> % git tag --list v5.3* --contains b02f6a2ef0a1
+> v5.3-rc1
+
+Oops, my apologies, I failed to notice it.
 
 Thanks,
-Srinivas
 
-> 
-> > > > 
-> > > > I guess it can be done in more neat way.
-> > > > 
-> > > > > As I've been looking at this code I have been wondering why
-> > > > > didn't
-> > > > > you just use
-> > > > > the standard /dev/cpu/X/msr interface that other x86 power
-> > > > > utilities (turbostat,
-> > > > > x86_energy_perf_policy) use?  Implementing msr_read() is
-> > > > > trivial
-> > > > > (warning
-> > > > > untested and uncompiled code)
-> > > 
-> > > No. We can't. The MSR interface is disabled on several
-> > > distribution
-> > > and
-> > > platforms with secured boot. So some special MSRs are only
-> > > allowed
-> > > via
-> > > this IOCTL interface.
-> > > 
-> > > Thanks,
-> > > Srinivas
-> > > 
-> > > 
-> > > > 
-> > > > Actually good point!
-> > > > 
-> 
-> 
+Rajat
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
