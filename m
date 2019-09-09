@@ -1,78 +1,37 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 1/3] software node: implement reference properties
-Date: Mon, 9 Sep 2019 13:09:18 +0300
-Message-ID: <20190909100918.GS2680@smile.fi.intel.com>
-References: <20190906222611.223532-1-dmitry.torokhov@gmail.com>
- <20190907160819.GH2680@smile.fi.intel.com>
- <20190907163240.GA27112@dtor-ws>
- <20190907171251.GL2680@smile.fi.intel.com>
- <20190907173724.GA145199@dtor-ws>
- <20190907180348.GM2680@smile.fi.intel.com>
- <20190907182335.GB145199@dtor-ws>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3 03/13] software node: get rid of property_set_pointer()
+Date: Mon, 9 Sep 2019 03:15:55 -0700
+Message-ID: <20190909101555.GC145199@dtor-ws>
+References: <20190909081557.93766-1-dmitry.torokhov@gmail.com>
+ <20190909081557.93766-4-dmitry.torokhov@gmail.com>
+ <20190909095505.GQ2680@smile.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190907182335.GB145199@dtor-ws>
+In-Reply-To: <20190909095505.GQ2680@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Sep 07, 2019 at 11:23:35AM -0700, Dmitry Torokhov wrote:
-> On Sat, Sep 07, 2019 at 09:03:48PM +0300, Andy Shevchenko wrote:
-> > On Sat, Sep 07, 2019 at 10:37:24AM -0700, Dmitry Torokhov wrote:
-> > > On Sat, Sep 07, 2019 at 08:12:51PM +0300, Andy Shevchenko wrote:
-> > > > On Sat, Sep 07, 2019 at 09:32:40AM -0700, Dmitry Torokhov wrote:
-> > > > > On Sat, Sep 07, 2019 at 07:08:19PM +0300, Andy Shevchenko wrote:
-> > > > > > On Fri, Sep 06, 2019 at 03:26:09PM -0700, Dmitry Torokhov wrote:
-> > > > 
-> > > > > > > +	} else if (src->type == DEV_PROP_REF) {
-> > > > > > > +		/* All reference properties must be arrays */
-> > > > > > > +		return -EINVAL;
-> > > > > > 
-> > > > > > Hmm... What about to duplicate pointer under value union and use is_array to
-> > > > > > distinguish which one to use? Because...
-> > > > > 
-> > > > > Then we have to special-case copying this entry, similar to the pains we
-> > > > > are going with the strings.
-> > > > 
-> > > > I can't see it as a pain. Simple do the same kmemdup() for the case when
-> > > > is_array = false and DEV_TYPE_REF?
-> > > 
-> > > And then you need to make sure it is freed on error paths and when we
-> > > remove property entries. This requires more checks and code. In contrast
-> > > we already know how to handle out of line objects of arbitrary size.
+On Mon, Sep 09, 2019 at 12:55:05PM +0300, Andy Shevchenko wrote:
+> On Mon, Sep 09, 2019 at 01:15:47AM -0700, Dmitry Torokhov wrote:
+> > Instead of explicitly setting values of integer types when copying property
+> > entries lets just copy entire value union when processing non-array values.
 > > 
-> > We can put it one level up to be a sibling to value / pointer unions.
-> > In that case is_array can be anything (we just don't care).
+> > When handling array values assign the pointer there using the newly introduced
+> > "raw" pointer union member. This allows us to remove property_set_pointer().
 > 
-> I think it would be better if you sketched out your proposed data
-> structure(s) so we are talking about the same things. But please note
-> that when you are dealing with property arrays we need to keep the easy
-> way of defining them, which means we should not be splitting individual
-> entries.
+> Is this reincarnation of 318a19718261?
+> Have you read 63dcc7090137?
 
-This one:
+Okay, I think if I squash this and the followup patch to
+property_get_data() then we'll only go through the "raw" pointer to get
+to the non-inline data and therefore we will not have the union aliasing
+issue.
 
-        union {
-                union {
-                        const u8 *u8_data;
-                        const u16 *u16_data;
-                        const u32 *u32_data;
-                        const u64 *u64_data;
-                        const char * const *str;
-                } pointer;
-                union {
-                        u8 u8_data;
-                        u16 u16_data;
-                        u32 u32_data;
-                        u64 u64_data;
-                        const char *str;
-                } value;
-		struct ... *ref;
-        };
+The in-line values never change their type when storing/accessing.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Dmitry
