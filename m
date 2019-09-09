@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v3 04/13] software node: simplify property_get_pointer()
-Date: Mon,  9 Sep 2019 01:15:48 -0700
-Message-ID: <20190909081557.93766-5-dmitry.torokhov@gmail.com>
+Subject: [PATCH v3 05/13] software node: remove property_entry_read_uNN_array functions
+Date: Mon,  9 Sep 2019 01:15:49 -0700
+Message-ID: <20190909081557.93766-6-dmitry.torokhov@gmail.com>
 References: <20190909081557.93766-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,54 +12,120 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-We do not need to handle each data type separately, we can simply return either
-the raw pointer or pointer to values union.
+There is absolutely no reason to have them as we can handle it all nicely in
+property_entry_read_int_array().
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c | 29 ++++++-----------------------
- 1 file changed, 6 insertions(+), 23 deletions(-)
+ drivers/base/swnode.c | 85 +++++++------------------------------------
+ 1 file changed, 14 insertions(+), 71 deletions(-)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index a8d12046105e..bedc26189bed 100644
+index bedc26189bed..a0629365972d 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -105,30 +105,13 @@ property_entry_get(const struct property_entry *prop, const char *name)
- 
- static const void *property_get_pointer(const struct property_entry *prop)
- {
--	switch (prop->type) {
--	case DEV_PROP_U8:
--		if (prop->is_array)
--			return prop->pointer.u8_data;
--		return &prop->value.u8_data;
--	case DEV_PROP_U16:
--		if (prop->is_array)
--			return prop->pointer.u16_data;
--		return &prop->value.u16_data;
--	case DEV_PROP_U32:
--		if (prop->is_array)
--			return prop->pointer.u32_data;
--		return &prop->value.u32_data;
--	case DEV_PROP_U64:
--		if (prop->is_array)
--			return prop->pointer.u64_data;
--		return &prop->value.u64_data;
--	case DEV_PROP_STRING:
--		if (prop->is_array)
--			return prop->pointer.str;
--		return &prop->value.str;
--	default:
-+	if (!prop->length)
- 		return NULL;
--	}
-+
-+	if (prop->is_array)
-+		return prop->pointer.raw;
-+
-+	return &prop->value;
+@@ -131,66 +131,6 @@ static const void *property_entry_find(const struct property_entry *props,
+ 	return pointer;
  }
  
- static const void *property_entry_find(const struct property_entry *props,
+-static int property_entry_read_u8_array(const struct property_entry *props,
+-					const char *propname,
+-					u8 *values, size_t nval)
+-{
+-	const void *pointer;
+-	size_t length = nval * sizeof(*values);
+-
+-	pointer = property_entry_find(props, propname, length);
+-	if (IS_ERR(pointer))
+-		return PTR_ERR(pointer);
+-
+-	memcpy(values, pointer, length);
+-	return 0;
+-}
+-
+-static int property_entry_read_u16_array(const struct property_entry *props,
+-					 const char *propname,
+-					 u16 *values, size_t nval)
+-{
+-	const void *pointer;
+-	size_t length = nval * sizeof(*values);
+-
+-	pointer = property_entry_find(props, propname, length);
+-	if (IS_ERR(pointer))
+-		return PTR_ERR(pointer);
+-
+-	memcpy(values, pointer, length);
+-	return 0;
+-}
+-
+-static int property_entry_read_u32_array(const struct property_entry *props,
+-					 const char *propname,
+-					 u32 *values, size_t nval)
+-{
+-	const void *pointer;
+-	size_t length = nval * sizeof(*values);
+-
+-	pointer = property_entry_find(props, propname, length);
+-	if (IS_ERR(pointer))
+-		return PTR_ERR(pointer);
+-
+-	memcpy(values, pointer, length);
+-	return 0;
+-}
+-
+-static int property_entry_read_u64_array(const struct property_entry *props,
+-					 const char *propname,
+-					 u64 *values, size_t nval)
+-{
+-	const void *pointer;
+-	size_t length = nval * sizeof(*values);
+-
+-	pointer = property_entry_find(props, propname, length);
+-	if (IS_ERR(pointer))
+-		return PTR_ERR(pointer);
+-
+-	memcpy(values, pointer, length);
+-	return 0;
+-}
+-
+ static int
+ property_entry_count_elems_of_size(const struct property_entry *props,
+ 				   const char *propname, size_t length)
+@@ -209,21 +149,24 @@ static int property_entry_read_int_array(const struct property_entry *props,
+ 					 unsigned int elem_size, void *val,
+ 					 size_t nval)
+ {
++	const void *pointer;
++	size_t length;
++
+ 	if (!val)
+ 		return property_entry_count_elems_of_size(props, name,
+ 							  elem_size);
+-	switch (elem_size) {
+-	case sizeof(u8):
+-		return property_entry_read_u8_array(props, name, val, nval);
+-	case sizeof(u16):
+-		return property_entry_read_u16_array(props, name, val, nval);
+-	case sizeof(u32):
+-		return property_entry_read_u32_array(props, name, val, nval);
+-	case sizeof(u64):
+-		return property_entry_read_u64_array(props, name, val, nval);
+-	}
+ 
+-	return -ENXIO;
++	if (!is_power_of_2(elem_size) || elem_size > sizeof(u64))
++		return -ENXIO;
++
++	length = nval * elem_size;
++
++	pointer = property_entry_find(props, name, length);
++	if (IS_ERR(pointer))
++		return PTR_ERR(pointer);
++
++	memcpy(val, pointer, length);
++	return 0;
+ }
+ 
+ static int property_entry_read_string_array(const struct property_entry *props,
 -- 
 2.23.0.187.g17f5b7556c-goog
