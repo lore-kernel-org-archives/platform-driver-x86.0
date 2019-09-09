@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v3 13/13] software node: remove separate handling of references
-Date: Mon,  9 Sep 2019 01:15:57 -0700
-Message-ID: <20190909081557.93766-14-dmitry.torokhov@gmail.com>
+Subject: [PATCH v3 12/13] platform/x86: intel_cht_int33fe: use inline reference properties
+Date: Mon,  9 Sep 2019 01:15:56 -0700
+Message-ID: <20190909081557.93766-13-dmitry.torokhov@gmail.com>
 References: <20190909081557.93766-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,123 +12,158 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Now that all users of references have moved to reference properties,
-we can remove separate handling of references.
+Now that static device properties allow defining reference properties
+together with all other types of properties, instead of managing them
+separately, let's adjust the driver.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c    | 44 +++++++++++++++-------------------------
- include/linux/property.h | 14 -------------
- 2 files changed, 16 insertions(+), 42 deletions(-)
+ drivers/platform/x86/intel_cht_int33fe.c | 81 ++++++++++++------------
+ 1 file changed, 41 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 4aaad0c7b1eb..8085b39e23b4 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -452,8 +452,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 				 struct fwnode_reference_args *args)
- {
- 	struct swnode *swnode = to_swnode(fwnode);
--	const struct software_node_reference *ref;
--	const struct software_node_ref_args *ref_args;
-+	const struct software_node_ref_args *ref;
- 	const struct property_entry *prop;
- 	struct fwnode_handle *refnode;
- 	int i;
-@@ -462,36 +461,25 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 		return -ENOENT;
- 
- 	prop = property_entry_get(swnode->node->properties, propname);
--	if (prop) {
--		if (prop->type != DEV_PROP_REF)
--			return -EINVAL;
--
--		/*
--		 * We expect that references are never stored inline, even
--		 * single ones, as they are too big.
--		 */
--		if (prop->is_inline)
--			return -EINVAL;
--
--		if (index * sizeof(*ref_args) >= prop->length)
--			return -ENOENT;
-+	if (!prop)
-+		return -ENOENT;
- 
--		ref_args = &prop->pointer.ref[index];
--	} else {
--		if (!swnode->node->references)
--			return -ENOENT;
-+	if (prop->type != DEV_PROP_REF)
-+		return -EINVAL;
- 
--		for (ref = swnode->node->references; ref->name; ref++)
--			if (!strcmp(ref->name, propname))
--				break;
-+	/*
-+	 * We expect that references are never stored inline, even
-+	 * single ones, as they are too big.
-+	 */
-+	if (prop->is_inline)
-+		return -EINVAL;
- 
--		if (!ref->name || index > (ref->nrefs - 1))
--			return -ENOENT;
-+	if (index * sizeof(*ref) >= prop->length)
-+		return -ENOENT;
- 
--		ref_args = &ref->refs[index];
--	}
-+	ref = &prop->pointer.ref[index];
- 
--	refnode = software_node_fwnode(ref_args->node);
-+	refnode = software_node_fwnode(ref->node);
- 	if (!refnode)
- 		return -ENOENT;
- 
-@@ -510,7 +498,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 	args->nargs = nargs;
- 
- 	for (i = 0; i < nargs; i++)
--		args->args[i] = ref_args->args[i];
-+		args->args[i] = ref->args[i];
- 
- 	return 0;
- }
-diff --git a/include/linux/property.h b/include/linux/property.h
-index c9234fc43917..67cd38936c1e 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -419,30 +419,16 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
- /* -------------------------------------------------------------------------- */
- /* Software fwnode support - when HW description is incomplete or missing */
- 
--/**
-- * struct software_node_reference - Named software node reference property
-- * @name: Name of the property
-- * @nrefs: Number of elements in @refs array
-- * @refs: Array of references with optional arguments
-- */
--struct software_node_reference {
--	const char *name;
--	unsigned int nrefs;
--	const struct software_node_ref_args *refs;
--};
--
- /**
-  * struct software_node - Software node description
-  * @name: Name of the software node
-  * @parent: Parent of the software node
-  * @properties: Array of device properties
-- * @references: Array of software node reference properties
-  */
- struct software_node {
- 	const char *name;
- 	const struct software_node *parent;
- 	const struct property_entry *properties;
--	const struct software_node_reference *references;
+diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+index 1d5d877b9582..4177c5424931 100644
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -46,30 +46,6 @@ struct cht_int33fe_data {
+ 	struct fwnode_handle *dp;
  };
  
- bool is_software_node(const struct fwnode_handle *fwnode);
+-static const struct software_node nodes[];
+-
+-static const struct software_node_ref_args pi3usb30532_ref = {
+-	&nodes[INT33FE_NODE_PI3USB30532]
+-};
+-
+-static const struct software_node_ref_args dp_ref = {
+-	&nodes[INT33FE_NODE_DISPLAYPORT]
+-};
+-
+-static struct software_node_ref_args mux_ref;
+-
+-static const struct software_node_reference usb_connector_refs[] = {
+-	{ "orientation-switch", 1, &pi3usb30532_ref},
+-	{ "mode-switch", 1, &pi3usb30532_ref},
+-	{ "displayport", 1, &dp_ref},
+-	{ }
+-};
+-
+-static const struct software_node_reference fusb302_refs[] = {
+-	{ "usb-role-switch", 1, &mux_ref},
+-	{ }
+-};
+-
+ /*
+  * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
+  * the max17047 both through the INT33FE ACPI device (it is right there
+@@ -105,8 +81,18 @@ static const struct property_entry max17047_props[] = {
+ 	{ }
+ };
+ 
++/*
++ * We are not using inline property here because those are constant,
++ * and we need to adjust this one at runtime to point to real
++ * software node.
++ */
++static struct software_node_ref_args fusb302_mux_refs[] = {
++	{ .node = NULL },
++};
++
+ static const struct property_entry fusb302_props[] = {
+ 	PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
++	PROPERTY_ENTRY_REF_ARRAY("usb-role-switch", fusb302_mux_refs),
+ 	{ }
+ };
+ 
+@@ -122,6 +108,8 @@ static const u32 snk_pdo[] = {
+ 	PDO_VAR(5000, 12000, 3000),
+ };
+ 
++static const struct software_node nodes[];
++
+ static const struct property_entry usb_connector_props[] = {
+ 	PROPERTY_ENTRY_STRING("data-role", "dual"),
+ 	PROPERTY_ENTRY_STRING("power-role", "dual"),
+@@ -129,15 +117,21 @@ static const struct property_entry usb_connector_props[] = {
+ 	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
+ 	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
+ 	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500000),
++	PROPERTY_ENTRY_REF("orientation-switch",
++			   &nodes[INT33FE_NODE_PI3USB30532]),
++	PROPERTY_ENTRY_REF("mode-switch",
++			   &nodes[INT33FE_NODE_PI3USB30532]),
++	PROPERTY_ENTRY_REF("displayport",
++			   &nodes[INT33FE_NODE_DISPLAYPORT]),
+ 	{ }
+ };
+ 
+ static const struct software_node nodes[] = {
+-	{ "fusb302", NULL, fusb302_props, fusb302_refs },
++	{ "fusb302", NULL, fusb302_props },
+ 	{ "max17047", NULL, max17047_props },
+ 	{ "pi3usb30532" },
+ 	{ "displayport" },
+-	{ "connector", &nodes[0], usb_connector_props, usb_connector_refs },
++	{ "connector", &nodes[0], usb_connector_props },
+ 	{ }
+ };
+ 
+@@ -173,9 +167,10 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
+ {
+ 	software_node_unregister_nodes(nodes);
+ 
+-	if (mux_ref.node) {
+-		fwnode_handle_put(software_node_fwnode(mux_ref.node));
+-		mux_ref.node = NULL;
++	if (fusb302_mux_refs[0].node) {
++		fwnode_handle_put(
++			software_node_fwnode(fusb302_mux_refs[0].node));
++		fusb302_mux_refs[0].node = NULL;
+ 	}
+ 
+ 	if (data->dp) {
+@@ -187,25 +182,31 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
+ 
+ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
+ {
++	const struct software_node *mux_ref_node;
+ 	int ret;
+ 
+-	ret = software_node_register_nodes(nodes);
+-	if (ret)
+-		return ret;
+-
+-	/* The devices that are not created in this driver need extra steps. */
+-
+ 	/*
+ 	 * There is no ACPI device node for the USB role mux, so we need to wait
+ 	 * until the mux driver has created software node for the mux device.
+ 	 * It means we depend on the mux driver. This function will return
+ 	 * -EPROBE_DEFER until the mux device is registered.
+ 	 */
+-	mux_ref.node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
+-	if (!mux_ref.node) {
+-		ret = -EPROBE_DEFER;
+-		goto err_remove_nodes;
+-	}
++	mux_ref_node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
++	if (!mux_ref_node)
++		return -EPROBE_DEFER;
++
++	/*
++	 * Update node used in "usb-role-switch" property. Note that we
++	 * rely on software_node_register_nodes() to use the original
++	 * instance of properties instead of copying them.
++	 */
++	fusb302_mux_refs[0].node = mux_ref_node;
++
++	ret = software_node_register_nodes(nodes);
++	if (ret)
++		return ret;
++
++	/* The devices that are not created in this driver need extra steps. */
+ 
+ 	/*
+ 	 * The DP connector does have ACPI device node. In this case we can just
 -- 
 2.23.0.187.g17f5b7556c-goog
