@@ -1,131 +1,47 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v3 05/13] software node: remove property_entry_read_uNN_array functions
-Date: Mon,  9 Sep 2019 01:15:49 -0700
-Message-ID: <20190909081557.93766-6-dmitry.torokhov@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v3 01/13] software node: remove DEV_PROP_MAX
+Date: Mon, 9 Sep 2019 12:46:29 +0300
+Message-ID: <20190909094629.GP2680@smile.fi.intel.com>
 References: <20190909081557.93766-1-dmitry.torokhov@gmail.com>
+ <20190909081557.93766-2-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190909081557.93766-1-dmitry.torokhov@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190909081557.93766-2-dmitry.torokhov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-There is absolutely no reason to have them as we can handle it all nicely in
-property_entry_read_int_array().
+On Mon, Sep 09, 2019 at 01:15:45AM -0700, Dmitry Torokhov wrote:
+> This definition is not used anywhere, let's remove it.
+> 
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/base/swnode.c | 85 +++++++------------------------------------
- 1 file changed, 14 insertions(+), 71 deletions(-)
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index bedc26189bed..a0629365972d 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -131,66 +131,6 @@ static const void *property_entry_find(const struct property_entry *props,
- 	return pointer;
- }
- 
--static int property_entry_read_u8_array(const struct property_entry *props,
--					const char *propname,
--					u8 *values, size_t nval)
--{
--	const void *pointer;
--	size_t length = nval * sizeof(*values);
--
--	pointer = property_entry_find(props, propname, length);
--	if (IS_ERR(pointer))
--		return PTR_ERR(pointer);
--
--	memcpy(values, pointer, length);
--	return 0;
--}
--
--static int property_entry_read_u16_array(const struct property_entry *props,
--					 const char *propname,
--					 u16 *values, size_t nval)
--{
--	const void *pointer;
--	size_t length = nval * sizeof(*values);
--
--	pointer = property_entry_find(props, propname, length);
--	if (IS_ERR(pointer))
--		return PTR_ERR(pointer);
--
--	memcpy(values, pointer, length);
--	return 0;
--}
--
--static int property_entry_read_u32_array(const struct property_entry *props,
--					 const char *propname,
--					 u32 *values, size_t nval)
--{
--	const void *pointer;
--	size_t length = nval * sizeof(*values);
--
--	pointer = property_entry_find(props, propname, length);
--	if (IS_ERR(pointer))
--		return PTR_ERR(pointer);
--
--	memcpy(values, pointer, length);
--	return 0;
--}
--
--static int property_entry_read_u64_array(const struct property_entry *props,
--					 const char *propname,
--					 u64 *values, size_t nval)
--{
--	const void *pointer;
--	size_t length = nval * sizeof(*values);
--
--	pointer = property_entry_find(props, propname, length);
--	if (IS_ERR(pointer))
--		return PTR_ERR(pointer);
--
--	memcpy(values, pointer, length);
--	return 0;
--}
--
- static int
- property_entry_count_elems_of_size(const struct property_entry *props,
- 				   const char *propname, size_t length)
-@@ -209,21 +149,24 @@ static int property_entry_read_int_array(const struct property_entry *props,
- 					 unsigned int elem_size, void *val,
- 					 size_t nval)
- {
-+	const void *pointer;
-+	size_t length;
-+
- 	if (!val)
- 		return property_entry_count_elems_of_size(props, name,
- 							  elem_size);
--	switch (elem_size) {
--	case sizeof(u8):
--		return property_entry_read_u8_array(props, name, val, nval);
--	case sizeof(u16):
--		return property_entry_read_u16_array(props, name, val, nval);
--	case sizeof(u32):
--		return property_entry_read_u32_array(props, name, val, nval);
--	case sizeof(u64):
--		return property_entry_read_u64_array(props, name, val, nval);
--	}
- 
--	return -ENXIO;
-+	if (!is_power_of_2(elem_size) || elem_size > sizeof(u64))
-+		return -ENXIO;
-+
-+	length = nval * elem_size;
-+
-+	pointer = property_entry_find(props, name, length);
-+	if (IS_ERR(pointer))
-+		return PTR_ERR(pointer);
-+
-+	memcpy(val, pointer, length);
-+	return 0;
- }
- 
- static int property_entry_read_string_array(const struct property_entry *props,
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  include/linux/property.h | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index 9b3d4ca3a73a..44c1704f7163 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -22,7 +22,6 @@ enum dev_prop_type {
+>  	DEV_PROP_U32,
+>  	DEV_PROP_U64,
+>  	DEV_PROP_STRING,
+> -	DEV_PROP_MAX,
+>  };
+>  
+>  enum dev_dma_attr {
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
+
 -- 
-2.23.0.187.g17f5b7556c-goog
+With Best Regards,
+Andy Shevchenko
