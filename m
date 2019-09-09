@@ -1,37 +1,35 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3 03/13] software node: get rid of property_set_pointer()
-Date: Mon, 9 Sep 2019 03:15:55 -0700
-Message-ID: <20190909101555.GC145199@dtor-ws>
-References: <20190909081557.93766-1-dmitry.torokhov@gmail.com>
- <20190909081557.93766-4-dmitry.torokhov@gmail.com>
- <20190909095505.GQ2680@smile.fi.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/2] tools/power/x86/intel-speed-select: Display core
+ count for bucket
+Date: Mon, 9 Sep 2019 13:24:27 +0300
+Message-ID: <CAHp75VfzyyAXscYdSm7BoAZ9ViFiX7fpYkA_pPaTh3Q+Mn9fHA@mail.gmail.com>
+References: <20190905233748.6822-1-srinivas.pandruvada@linux.intel.com>
+ <20190905233748.6822-2-srinivas.pandruvada@linux.intel.com>
+ <780a3faf-9e44-64f4-a354-bdee39af3af5@redhat.com> <20190906134655.GU2680@smile.fi.intel.com>
+ <6b576770a4bbe6c24ea524083dec5a16bf3c9e94.camel@linux.intel.com>
+ <b8c7bd1204f7b4f75a5bccec4d7c41b1225928f7.camel@linux.intel.com>
+ <CAHp75Vc9xMPW38Toh2jKv9YYYNV16837aAcXKMP6WaM-L8zcSQ@mail.gmail.com> <c6e4cedc4886fd689b3ff1df413ce62aa52cc544.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190909095505.GQ2680@smile.fi.intel.com>
+In-Reply-To: <c6e4cedc4886fd689b3ff1df413ce62aa52cc544.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Prarit Bhargava <prarit@redhat.com>, David Arcari <darcari@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Sep 09, 2019 at 12:55:05PM +0300, Andy Shevchenko wrote:
-> On Mon, Sep 09, 2019 at 01:15:47AM -0700, Dmitry Torokhov wrote:
-> > Instead of explicitly setting values of integer types when copying property
-> > entries lets just copy entire value union when processing non-array values.
-> > 
-> > When handling array values assign the pointer there using the newly introduced
-> > "raw" pointer union member. This allows us to remove property_set_pointer().
-> 
-> Is this reincarnation of 318a19718261?
-> Have you read 63dcc7090137?
+On Sun, Sep 8, 2019 at 5:43 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+> On Sat, 2019-09-07 at 21:18 +0300, Andy Shevchenko wrote:
+> > On Fri, Sep 6, 2019 at 10:47 PM Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com> wrote:
 
-Okay, I think if I squash this and the followup patch to
-property_get_data() then we'll only go through the "raw" pointer to get
-to the non-inline data and therefore we will not have the union aliasing
-issue.
+> > It seems not applicable on top of tools patch series I had applied
+> > before.
+> I have rebased on the top of your review branch and resent.
 
-The in-line values never change their type when storing/accessing.
+Pushed to my review and testing queue, thanks!
 
 -- 
-Dmitry
+With Best Regards,
+Andy Shevchenko
