@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v4 06/14] software node: get rid of property_set_pointer()
-Date: Tue, 10 Sep 2019 22:12:23 -0700
-Message-ID: <20190911051231.148032-7-dmitry.torokhov@gmail.com>
+Subject: [PATCH v4 09/14] software node: simplify property_entry_read_string_array()
+Date: Tue, 10 Sep 2019 22:12:26 -0700
+Message-ID: <20190911051231.148032-10-dmitry.torokhov@gmail.com>
 References: <20190911051231.148032-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,206 +12,53 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Instead of explicitly setting values of integer types when copying
-property entries lets just copy entire value union when processing
-non-array values.
-
-When handling array values assign the pointer there using the newly
-introduced "raw" pointer union member. This allows us to remove
-property_set_pointer().
-
-In property_get_pointer() we do not need to handle each data type
-separately, we can simply return either the raw pointer or pointer to
-values union.
+There is no need to treat string arrays and single strings separately, we can go
+exclusively by the element length in relation to data type size.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c    | 90 +++++++++-------------------------------
- include/linux/property.h | 12 ++----
- 2 files changed, 22 insertions(+), 80 deletions(-)
+ drivers/base/swnode.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 7bad41a8f65d..726195d334e4 100644
+index a019b5e90d3b..9c3e566c753e 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -103,71 +103,15 @@ property_entry_get(const struct property_entry *prop, const char *name)
- 	return NULL;
- }
- 
--static void
--property_set_pointer(struct property_entry *prop, const void *pointer)
--{
--	switch (prop->type) {
--	case DEV_PROP_U8:
--		if (prop->is_array)
--			prop->pointer.u8_data = pointer;
--		else
--			prop->value.u8_data = *((u8 *)pointer);
--		break;
--	case DEV_PROP_U16:
--		if (prop->is_array)
--			prop->pointer.u16_data = pointer;
--		else
--			prop->value.u16_data = *((u16 *)pointer);
--		break;
--	case DEV_PROP_U32:
--		if (prop->is_array)
--			prop->pointer.u32_data = pointer;
--		else
--			prop->value.u32_data = *((u32 *)pointer);
--		break;
--	case DEV_PROP_U64:
--		if (prop->is_array)
--			prop->pointer.u64_data = pointer;
--		else
--			prop->value.u64_data = *((u64 *)pointer);
--		break;
--	case DEV_PROP_STRING:
--		if (prop->is_array)
--			prop->pointer.str = pointer;
--		else
--			prop->value.str = pointer;
--		break;
--	default:
--		break;
--	}
--}
--
- static const void *property_get_pointer(const struct property_entry *prop)
+@@ -173,28 +173,21 @@ static int property_entry_read_string_array(const struct property_entry *props,
+ 					    const char *propname,
+ 					    const char **strings, size_t nval)
  {
--	switch (prop->type) {
--	case DEV_PROP_U8:
--		if (prop->is_array)
--			return prop->pointer.u8_data;
--		return &prop->value.u8_data;
--	case DEV_PROP_U16:
--		if (prop->is_array)
--			return prop->pointer.u16_data;
--		return &prop->value.u16_data;
--	case DEV_PROP_U32:
--		if (prop->is_array)
--			return prop->pointer.u32_data;
--		return &prop->value.u32_data;
--	case DEV_PROP_U64:
--		if (prop->is_array)
--			return prop->pointer.u64_data;
--		return &prop->value.u64_data;
--	case DEV_PROP_STRING:
--		if (prop->is_array)
--			return prop->pointer.str;
--		return &prop->value.str;
--	default:
-+	if (!prop->length)
- 		return NULL;
--	}
-+
-+	if (prop->is_array)
-+		return prop->pointer;
-+
-+	return &prop->value;
- }
+-	const struct property_entry *prop;
+ 	const void *pointer;
+-	size_t array_len, length;
++	size_t length;
++	int array_len;
  
- static const void *property_entry_find(const struct property_entry *props,
-@@ -322,13 +266,15 @@ static int property_entry_read_string_array(const struct property_entry *props,
- static void property_entry_free_data(const struct property_entry *p)
- {
- 	const void *pointer = property_get_pointer(p);
-+	const char * const *src_str;
- 	size_t i, nval;
- 
- 	if (p->is_array) {
--		if (p->type == DEV_PROP_STRING && p->pointer.str) {
-+		if (p->type == DEV_PROP_STRING && p->pointer) {
-+			src_str = p->pointer;
- 			nval = p->length / sizeof(const char *);
- 			for (i = 0; i < nval; i++)
--				kfree(p->pointer.str[i]);
-+				kfree(src_str[i]);
- 		}
- 		kfree(pointer);
- 	} else if (p->type == DEV_PROP_STRING) {
-@@ -341,6 +287,7 @@ static const char * const *
- property_copy_string_array(const struct property_entry *src)
- {
- 	const char **d;
-+	const char * const *src_str = src->pointer;
- 	size_t nval = src->length / sizeof(*d);
- 	int i;
- 
-@@ -349,8 +296,8 @@ property_copy_string_array(const struct property_entry *src)
- 		return NULL;
- 
- 	for (i = 0; i < nval; i++) {
--		d[i] = kstrdup(src->pointer.str[i], GFP_KERNEL);
--		if (!d[i] && src->pointer.str[i]) {
-+		d[i] = kstrdup(src_str[i], GFP_KERNEL);
-+		if (!d[i] && src_str[i]) {
- 			while (--i >= 0)
- 				kfree(d[i]);
- 			kfree(d);
-@@ -380,20 +327,21 @@ static int property_entry_copy_data(struct property_entry *dst,
- 			if (!new)
- 				return -ENOMEM;
- 		}
-+
-+		dst->is_array = true;
-+		dst->pointer = new;
- 	} else if (src->type == DEV_PROP_STRING) {
- 		new = kstrdup(src->value.str, GFP_KERNEL);
- 		if (!new && src->value.str)
- 			return -ENOMEM;
-+
-+		dst->value.str = new;
- 	} else {
--		new = pointer;
-+		dst->value = src->value;
- 	}
- 
- 	dst->length = src->length;
--	dst->is_array = src->is_array;
- 	dst->type = src->type;
+ 	/* Find out the array length. */
+-	prop = property_entry_get(props, propname);
+-	if (!prop)
+-		return -EINVAL;
 -
--	property_set_pointer(dst, new);
--
- 	dst->name = kstrdup(src->name, GFP_KERNEL);
- 	if (!dst->name)
- 		goto out_free_data;
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 2c9d4d209296..ec8f84d564a8 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -233,13 +233,7 @@ struct property_entry {
- 	bool is_array;
- 	enum dev_prop_type type;
- 	union {
--		union {
--			const u8 *u8_data;
--			const u16 *u16_data;
--			const u32 *u32_data;
--			const u64 *u64_data;
--			const char * const *str;
--		} pointer;
-+		const void *pointer;
- 		union {
- 			u8 u8_data;
- 			u16 u16_data;
-@@ -262,7 +256,7 @@ struct property_entry {
- 	.length = (_len_) * sizeof(_type_),				\
- 	.is_array = true,						\
- 	.type = DEV_PROP_##_Type_,					\
--	{ .pointer = { ._type_##_data = _val_ } },			\
-+	{ .pointer = _val_ },						\
- }
+-	if (prop->is_array)
+-		/* Find the length of an array. */
+-		array_len = property_entry_count_elems_of_size(props, propname,
+-							  sizeof(const char *));
+-	else
+-		/* The array length for a non-array string property is 1. */
+-		array_len = 1;
++	array_len = property_entry_count_elems_of_size(props, propname,
++						       sizeof(const char *));
++	if (array_len < 0)
++		return array_len;
  
- #define PROPERTY_ENTRY_U8_ARRAY_LEN(_name_, _val_, _len_)		\
-@@ -280,7 +274,7 @@ struct property_entry {
- 	.length = (_len_) * sizeof(const char *),			\
- 	.is_array = true,						\
- 	.type = DEV_PROP_STRING,					\
--	{ .pointer = { .str = _val_ } },				\
-+	{ .pointer = _val_ },						\
- }
+ 	/* Return how many there are if strings is NULL. */
+ 	if (!strings)
+ 		return array_len;
  
- #define PROPERTY_ENTRY_U8_ARRAY(_name_, _val_)				\
+-	array_len = min(nval, array_len);
++	array_len = min_t(size_t, nval, array_len);
+ 	length = array_len * sizeof(*strings);
+ 
+ 	pointer = property_entry_find(props, propname, length);
 -- 
 2.23.0.162.g0b9fbb3734-goog
