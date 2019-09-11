@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v4 14/14] software node: remove separate handling of references
-Date: Tue, 10 Sep 2019 22:12:31 -0700
-Message-ID: <20190911051231.148032-15-dmitry.torokhov@gmail.com>
+Subject: [PATCH v4 07/14] software node: remove property_entry_read_uNN_array functions
+Date: Tue, 10 Sep 2019 22:12:24 -0700
+Message-ID: <20190911051231.148032-8-dmitry.torokhov@gmail.com>
 References: <20190911051231.148032-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,126 +12,120 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Now that all users of references have moved to reference properties,
-we can remove separate handling of references.
+There is absolutely no reason to have them as we can handle it all nicely in
+property_entry_read_int_array().
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c    | 46 +++++++++++++++-------------------------
- include/linux/property.h | 14 ------------
- 2 files changed, 17 insertions(+), 43 deletions(-)
+ drivers/base/swnode.c | 85 +++++++------------------------------------
+ 1 file changed, 14 insertions(+), 71 deletions(-)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 07e1325789d2..ef38ea9f730b 100644
+index 726195d334e4..a019b5e90d3b 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -465,9 +465,8 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 				 struct fwnode_reference_args *args)
- {
- 	struct swnode *swnode = to_swnode(fwnode);
--	const struct software_node_reference *ref;
- 	const struct software_node_ref_args *ref_array;
--	const struct software_node_ref_args *ref_args;
-+	const struct software_node_ref_args *ref;
- 	const struct property_entry *prop;
- 	struct fwnode_handle *refnode;
- 	int i;
-@@ -476,37 +475,26 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 		return -ENOENT;
- 
- 	prop = property_entry_get(swnode->node->properties, propname);
--	if (prop) {
--		if (prop->type != DEV_PROP_REF)
--			return -EINVAL;
--
--		/*
--		 * We expect that references are never stored inline, even
--		 * single ones, as they are too big.
--		 */
--		if (prop->is_inline)
--			return -EINVAL;
--
--		if (index * sizeof(*ref_args) >= prop->length)
--			return -ENOENT;
-+	if (!prop)
-+		return -ENOENT;
- 
--		ref_array = prop->pointer;
--		ref_args = &ref_array[index];
--	} else {
--		if (!swnode->node->references)
--			return -ENOENT;
-+	if (prop->type != DEV_PROP_REF)
-+		return -EINVAL;
- 
--		for (ref = swnode->node->references; ref->name; ref++)
--			if (!strcmp(ref->name, propname))
--				break;
-+	/*
-+	 * We expect that references are never stored inline, even
-+	 * single ones, as they are too big.
-+	 */
-+	if (prop->is_inline)
-+		return -EINVAL;
- 
--		if (!ref->name || index > (ref->nrefs - 1))
--			return -ENOENT;
-+	if (index * sizeof(*ref) >= prop->length)
-+		return -ENOENT;
- 
--		ref_args = &ref->refs[index];
--	}
-+	ref_array = prop->pointer;
-+	ref = &ref_array[index];
- 
--	refnode = software_node_fwnode(ref_args->node);
-+	refnode = software_node_fwnode(ref->node);
- 	if (!refnode)
- 		return -ENOENT;
- 
-@@ -525,7 +513,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 	args->nargs = nargs;
- 
- 	for (i = 0; i < nargs; i++)
--		args->args[i] = ref_args->args[i];
-+		args->args[i] = ref->args[i];
- 
- 	return 0;
+@@ -131,66 +131,6 @@ static const void *property_entry_find(const struct property_entry *props,
+ 	return pointer;
  }
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 08d3e9d126ef..fa5a2ddc0c7b 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -412,30 +412,16 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
- /* -------------------------------------------------------------------------- */
- /* Software fwnode support - when HW description is incomplete or missing */
  
--/**
-- * struct software_node_reference - Named software node reference property
-- * @name: Name of the property
-- * @nrefs: Number of elements in @refs array
-- * @refs: Array of references with optional arguments
-- */
--struct software_node_reference {
--	const char *name;
--	unsigned int nrefs;
--	const struct software_node_ref_args *refs;
--};
+-static int property_entry_read_u8_array(const struct property_entry *props,
+-					const char *propname,
+-					u8 *values, size_t nval)
+-{
+-	const void *pointer;
+-	size_t length = nval * sizeof(*values);
 -
- /**
-  * struct software_node - Software node description
-  * @name: Name of the software node
-  * @parent: Parent of the software node
-  * @properties: Array of device properties
-- * @references: Array of software node reference properties
-  */
- struct software_node {
- 	const char *name;
- 	const struct software_node *parent;
- 	const struct property_entry *properties;
--	const struct software_node_reference *references;
- };
+-	pointer = property_entry_find(props, propname, length);
+-	if (IS_ERR(pointer))
+-		return PTR_ERR(pointer);
+-
+-	memcpy(values, pointer, length);
+-	return 0;
+-}
+-
+-static int property_entry_read_u16_array(const struct property_entry *props,
+-					 const char *propname,
+-					 u16 *values, size_t nval)
+-{
+-	const void *pointer;
+-	size_t length = nval * sizeof(*values);
+-
+-	pointer = property_entry_find(props, propname, length);
+-	if (IS_ERR(pointer))
+-		return PTR_ERR(pointer);
+-
+-	memcpy(values, pointer, length);
+-	return 0;
+-}
+-
+-static int property_entry_read_u32_array(const struct property_entry *props,
+-					 const char *propname,
+-					 u32 *values, size_t nval)
+-{
+-	const void *pointer;
+-	size_t length = nval * sizeof(*values);
+-
+-	pointer = property_entry_find(props, propname, length);
+-	if (IS_ERR(pointer))
+-		return PTR_ERR(pointer);
+-
+-	memcpy(values, pointer, length);
+-	return 0;
+-}
+-
+-static int property_entry_read_u64_array(const struct property_entry *props,
+-					 const char *propname,
+-					 u64 *values, size_t nval)
+-{
+-	const void *pointer;
+-	size_t length = nval * sizeof(*values);
+-
+-	pointer = property_entry_find(props, propname, length);
+-	if (IS_ERR(pointer))
+-		return PTR_ERR(pointer);
+-
+-	memcpy(values, pointer, length);
+-	return 0;
+-}
+-
+ static int
+ property_entry_count_elems_of_size(const struct property_entry *props,
+ 				   const char *propname, size_t length)
+@@ -209,21 +149,24 @@ static int property_entry_read_int_array(const struct property_entry *props,
+ 					 unsigned int elem_size, void *val,
+ 					 size_t nval)
+ {
++	const void *pointer;
++	size_t length;
++
+ 	if (!val)
+ 		return property_entry_count_elems_of_size(props, name,
+ 							  elem_size);
+-	switch (elem_size) {
+-	case sizeof(u8):
+-		return property_entry_read_u8_array(props, name, val, nval);
+-	case sizeof(u16):
+-		return property_entry_read_u16_array(props, name, val, nval);
+-	case sizeof(u32):
+-		return property_entry_read_u32_array(props, name, val, nval);
+-	case sizeof(u64):
+-		return property_entry_read_u64_array(props, name, val, nval);
+-	}
  
- bool is_software_node(const struct fwnode_handle *fwnode);
+-	return -ENXIO;
++	if (!is_power_of_2(elem_size) || elem_size > sizeof(u64))
++		return -ENXIO;
++
++	length = nval * elem_size;
++
++	pointer = property_entry_find(props, name, length);
++	if (IS_ERR(pointer))
++		return PTR_ERR(pointer);
++
++	memcpy(val, pointer, length);
++	return 0;
+ }
+ 
+ static int property_entry_read_string_array(const struct property_entry *props,
 -- 
 2.23.0.162.g0b9fbb3734-goog
