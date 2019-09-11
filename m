@@ -1,55 +1,91 @@
-From: Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH 2/2] x86/efi: Fix memory leak for EFI memmap reservations
-Date: Wed, 25 Sep 2019 17:20:06 +0800
-Message-ID: <26d637af-480b-e874-ee84-9b2abe43630b@huawei.com>
-References: <775bcf46-0f4e-a1a9-5a40-05f833cd7a1a@huawei.com>
+From: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
+Subject: [PATCH v2] platform/x86: dell-laptop: fix broken kbd backlight on Inspiron 10xx
+Date: Thu, 12 Sep 2019 00:07:45 +0200
+Message-ID: <156940489220.8635.14349142383780268583@WARFSTATION>
+References: <20190925082149.yjhmmb64i4h6sddi@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <775bcf46-0f4e-a1a9-5a40-05f833cd7a1a@huawei.com>
-Content-Language: en-US
+In-Reply-To: <20190925082149.yjhmmb64i4h6sddi@pali>
+Date: Wed, 25 Sep 2019 11:48:12 +0200
 Sender: linux-kernel-owner@vger.kernel.org
-To: "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, dvhart@infradead.org, andy@infradead.org, "tglx@linutronix.de" <tglx@linutronix.de>, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org
-Cc: linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Mario Limonciello <Mario.Limonciello@dell.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-There are some memory leaks in failure path after efi_memmap_alloc().
-add efi_memmap_free() for this situation.
+This patch adds a quirk disabling keyboard backlight support for the
+Dell Inspiron 1012 and 1018.
 
-Fixes: 816e76129ed5 ("efi: Allow drivers to reserve boot services forever")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Those models wrongly report supporting keyboard backlight control
+features (through SMBIOS tokens) even though they're not equipped with
+a backlit keyboard. This led to broken controls being exposed
+through sysfs by this driver which froze the system when used.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D107651
+Signed-off-by: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
 ---
- arch/x86/platform/efi/quirks.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/platform/x86/dell-laptop.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 3b9fd67..a755f35 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -285,6 +285,7 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
-
- 	new = early_memremap(new_phys, new_size);
- 	if (!new) {
-+		efi_memmap_free(new_phys, num_entries);
- 		pr_err("Failed to map new boot services memmap\n");
- 		return;
- 	}
-@@ -470,6 +471,7 @@ void __init efi_free_boot_services(void)
-
- 	new = memremap(new_phys, new_size, MEMREMAP_WB);
- 	if (!new) {
-+		efi_memmap_free(new_phys, num_entries);
- 		pr_err("Failed to map new EFI memmap\n");
- 		return;
- 	}
-@@ -493,6 +495,7 @@ void __init efi_free_boot_services(void)
- 	memunmap(new);
-
- 	if (efi_memmap_install(new_phys, num_entries)) {
-+		efi_memmap_free(new_phys, num_entries);
- 		pr_err("Could not install new EFI memmap\n");
- 		return;
- 	}
--- 
-1.8.3.1
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell=
+-laptop.c
+index d27be2836bc2..ffe5abbdadda 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -33,6 +33,7 @@
+=20
+ struct quirk_entry {
+ 	bool touchpad_led;
++	bool kbd_broken_backlight;
+ 	bool kbd_led_levels_off_1;
+ 	bool kbd_missing_ac_tag;
+=20
+@@ -73,6 +74,10 @@ static struct quirk_entry quirk_dell_latitude_e6410 =3D {
+ 	.kbd_led_levels_off_1 =3D true,
+ };
+=20
++static struct quirk_entry quirk_dell_inspiron_1012 =3D {
++	.kbd_broken_backlight =3D true,
++};
++
+ static struct platform_driver platform_driver =3D {
+ 	.driver =3D {
+ 		.name =3D "dell-laptop",
+@@ -310,6 +315,24 @@ static const struct dmi_system_id dell_quirks[] __init=
+const =3D {
+ 		},
+ 		.driver_data =3D &quirk_dell_latitude_e6410,
+ 	},
++	{
++		.callback =3D dmi_matched,
++		.ident =3D "Dell Inspiron 1012",
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1012"),
++		},
++		.driver_data =3D &quirk_dell_inspiron_1012,
++	},
++	{
++		.callback =3D dmi_matched,
++		.ident =3D "Dell Inspiron 1018",
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1018"),
++		},
++		.driver_data =3D &quirk_dell_inspiron_1012,
++	},
+ 	{ }
+ };
+=20
+@@ -2040,6 +2063,9 @@ static int __init kbd_led_init(struct device *dev)
+ {
+ 	int ret;
+=20
++	if (quirks && quirks->kbd_broken_backlight)
++		return -ENODEV;
++
+ 	kbd_init();
+ 	if (!kbd_led_present)
+ 		return -ENODEV;
+--=20
+2.19.2
