@@ -1,52 +1,37 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 06/14] software node: get rid of property_set_pointer()
-Date: Wed, 11 Sep 2019 12:21:42 +0300
-Message-ID: <20190911092142.GL2680@smile.fi.intel.com>
-References: <20190911051231.148032-1-dmitry.torokhov@gmail.com>
- <20190911051231.148032-7-dmitry.torokhov@gmail.com>
- <CAHp75Ve5NvhzOQ96OgbPh1LdsAtvk+A=aVu-oXKdhnB4PpL_og@mail.gmail.com>
- <20190911083725.GF145199@dtor-ws>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlight on
+ Inspiron 10xx
+Date: Thu, 12 Sep 2019 09:33:58 +0200
+Message-ID: <20190912073358.n5bxqosowhky5uhb@pali>
+References: <156824368856.28378.14511879419677114177@WARFSTATION>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190911083725.GF145199@dtor-ws>
+In-Reply-To: <156824368856.28378.14511879419677114177@WARFSTATION>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Sep 11, 2019 at 01:37:25AM -0700, Dmitry Torokhov wrote:
-> On Wed, Sep 11, 2019 at 11:29:10AM +0300, Andy Shevchenko wrote:
-> > On Wed, Sep 11, 2019 at 8:15 AM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
-> > >
-> > > Instead of explicitly setting values of integer types when copying
-> > > property entries lets just copy entire value union when processing
-> > > non-array values.
-> > >
-> > > When handling array values assign the pointer there using the newly
-> > > introduced "raw" pointer union member. This allows us to remove
-> > > property_set_pointer().
-> > >
-> > > In property_get_pointer() we do not need to handle each data type
-> > > separately, we can simply return either the raw pointer or pointer to
-> > > values union.
-> > 
-> > Same as before, typechecking is good thing to have for my point of view.
-> > Others may have different opinions.
+On Thursday 12 September 2019 01:14:48 Pacien TRAN-GIRARD wrote:
+> This patch registers a quirk disabling keyboard backlight support
+> for the Dell Inspiron 1012 and 1018.
 > 
-> OK, I'll just point out that typechecking is a red herring here as
-> everything was and still is accessed through void pointers, and we
-> trusted the type set on property. Users of static properties should use
-> PROPERTY_ENTRY_XXX() for initialization and do not poke into struct
-> property_entry directly.
+> Those models wrongly report supporting the KBD_LED_OFF_TOKEN and
+> KBD_LED_ON_TOKEN SMBIOS tokens, exposing keyboard brightness controls
+> through sysfs which freeze the system when used.
 > 
-> I suppose it is up to Rafael to decide here.
+> The associated SMBIOS calls never return and cause the system to
+> hang, notably at boot when systemd-backlight tries to restore
+> previous brightness settings.
 
-Yes, and perhaps Mika as they were the main authors of the idea and
-implementation.
+Hi! This sounds like a firmware bug. Have you already reported it to Dell?
+
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=107651
+> Signed-off-by: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Pali Rohár
+pali.rohar@gmail.com
