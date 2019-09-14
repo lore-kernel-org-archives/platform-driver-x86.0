@@ -1,38 +1,49 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2 0/5] tools/power/x86/intel-speed-select: New command and
-Date: Sat, 14 Sep 2019 12:45:42 -0700
-Message-ID: <20190914194547.24271-1-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v2 1/5] tools/power/x86/intel-speed-select: Fix high priority core mask over count
+Date: Sat, 14 Sep 2019 12:45:43 -0700
+Message-ID: <20190914194547.24271-2-srinivas.pandruvada@linux.intel.com>
+References: <20190914194547.24271-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190914194547.24271-1-srinivas.pandruvada@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: andy.shevchenko@gmail.com, andriy.shevchenko@intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, prarit@redhat.com, darcari@redhat.com, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, prarit@redhat.com, darcari@redhat.com, Youquan Song <youquan.song@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This series contains some minor fixes, when firmware mask is including
-invalid CPU in the perf-profile mask. Also add some commands to
-better manage core-power feature.
+From: Youquan Song <youquan.song@intel.com>
 
-v2:
-Add exit(0) for invalid argument when -c/--cpu not specified for new
-clos commands.
-Fix online/offline based on TDP change to only do for local die or
-package.
+If the CPU package has the less logical CPU than topo_max_cpus, but un-present
+CPU's punit_cpu_core will be initiated to 0 and they will be count to core 0
 
-Srinivas Pandruvada (4):
-  tools/power/x86/intel-speed-select: Allow online/offline based on tdp
-  tools/power/x86/intel-speed-select: Format get-assoc information
-  tools/power/x86/intel-speed-select: Fix some debug prints
-  tools/power/x86/intel-speed-select: Extend core-power command set
+Like below, there are only 10 high priority cores (20 logical CPUs) in the CPU
+package, but it count to 27 logic CPUs.
 
-Youquan Song (1):
-  tools/power/x86/intel-speed-select: Fix high priority core mask over
-    count
+./intel-speed-select base-freq info -l 0 | grep mask
+        high-priority-cpu-mask:7f000179,f000179f
 
- .../x86/intel-speed-select/isst-config.c      | 118 ++++++++++++++++--
- .../power/x86/intel-speed-select/isst-core.c  |  25 ++++
- .../x86/intel-speed-select/isst-display.c     |  51 ++++++++
- tools/power/x86/intel-speed-select/isst.h     |   9 +-
- 4 files changed, 190 insertions(+), 13 deletions(-)
+With the fix patch:
+./intel-speed-select base-freq info -l 0
+        high-priority-cpu-mask:00000179,f000179f
 
+Signed-off-by: Youquan Song <youquan.song@intel.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ tools/power/x86/intel-speed-select/isst-config.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index 59753b3917bb..83ac72902b36 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -402,6 +402,9 @@ void set_cpu_mask_from_punit_coremask(int cpu, unsigned long long core_mask,
+ 			int j;
+ 
+ 			for (j = 0; j < topo_max_cpus; ++j) {
++				if (!CPU_ISSET_S(j, present_cpumask_size, present_cpumask))
++					continue;
++
+ 				if (cpu_map[j].pkg_id == pkg_id &&
+ 				    cpu_map[j].die_id == die_id &&
+ 				    cpu_map[j].punit_cpu_core == i) {
 -- 
 2.17.2
