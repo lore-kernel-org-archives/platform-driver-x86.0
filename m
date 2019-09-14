@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2 4/5] tools/power/x86/intel-speed-select: Fix some debug prints
-Date: Sat, 14 Sep 2019 12:45:46 -0700
-Message-ID: <20190914194547.24271-5-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v2 3/5] tools/power/x86/intel-speed-select: Format get-assoc information
+Date: Sat, 14 Sep 2019 12:45:45 -0700
+Message-ID: <20190914194547.24271-4-srinivas.pandruvada@linux.intel.com>
 References: <20190914194547.24271-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190914194547.24271-1-srinivas.pandruvada@linux.intel.com>
@@ -10,34 +10,105 @@ To: andy.shevchenko@gmail.com, andriy.shevchenko@intel.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, prarit@redhat.com, darcari@redhat.com, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Fix wrong debug print for cpu, which is displayed as CLOS. Also
-avoid printing clos id, when user is specify clos as parameter.
+Format the get-assoc command output consistant with other commands.
+For example:
+
+Intel(R) Speed Select Technology
+Executing on CPU model:142[0x8e]
+ package-0
+  die-0
+    cpu-0
+      get-assoc
+        clos:0
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- tools/power/x86/intel-speed-select/isst-config.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ .../x86/intel-speed-select/isst-config.c      | 14 +++++++----
+ .../x86/intel-speed-select/isst-display.c     | 23 +++++++++++++++++++
+ tools/power/x86/intel-speed-select/isst.h     |  2 +-
+ 3 files changed, 33 insertions(+), 6 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index c2892d86be36..889396d676cb 100644
+index e505aaf2beef..c2892d86be36 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -508,7 +508,7 @@ int isst_send_mbox_command(unsigned int cpu, unsigned char command,
- 		int write = 0;
- 		int clos_id, core_id, ret = 0;
+@@ -1249,7 +1249,7 @@ static void get_clos_assoc_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 	if (ret)
+ 		perror("isst_clos_get_assoc_status");
+ 	else
+-		isst_display_result(cpu, outf, "core-power", "get-assoc", clos);
++		isst_clos_display_assoc_information(cpu, outf, clos);
+ }
  
--		debug_printf("CLOS %d\n", cpu);
-+		debug_printf("CPU %d\n", cpu);
+ static void get_clos_assoc(void)
+@@ -1259,13 +1259,17 @@ static void get_clos_assoc(void)
+ 		fprintf(stderr, "\tSpecify targeted cpu id with [--cpu|-c]\n");
+ 		exit(0);
+ 	}
+-	if (max_target_cpus)
+-		for_each_online_target_cpu_in_set(get_clos_assoc_for_cpu, NULL,
+-						  NULL, NULL, NULL);
+-	else {
++
++	if (!max_target_cpus) {
+ 		fprintf(stderr,
+ 			"Invalid target cpu. Specify with [-c|--cpu]\n");
++		exit(0);
+ 	}
++
++	isst_ctdp_display_information_start(outf);
++	for_each_online_target_cpu_in_set(get_clos_assoc_for_cpu, NULL,
++					  NULL, NULL, NULL);
++	isst_ctdp_display_information_end(outf);
+ }
  
- 		if (parameter & BIT(MBOX_CMD_WRITE_BIT)) {
- 			value = req_data;
-@@ -1421,7 +1421,6 @@ static void parse_cmd_args(int argc, int start, char **argv)
- 		/* CLOS related */
- 		case 'c':
- 			current_clos = atoi(optarg);
--			printf("clos %d\n", current_clos);
- 			break;
- 		case 'd':
- 			clos_desired = atoi(optarg);
+ static struct process_cmd_struct isst_cmds[] = {
+diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
+index df4aa99c4e92..bd7aaf27e4de 100644
+--- a/tools/power/x86/intel-speed-select/isst-display.c
++++ b/tools/power/x86/intel-speed-select/isst-display.c
+@@ -503,6 +503,29 @@ void isst_clos_display_information(int cpu, FILE *outf, int clos,
+ 	format_and_print(outf, 1, NULL, NULL);
+ }
+ 
++void isst_clos_display_assoc_information(int cpu, FILE *outf, int clos)
++{
++	char header[256];
++	char value[256];
++
++	snprintf(header, sizeof(header), "package-%d",
++		 get_physical_package_id(cpu));
++	format_and_print(outf, 1, header, NULL);
++	snprintf(header, sizeof(header), "die-%d", get_physical_die_id(cpu));
++	format_and_print(outf, 2, header, NULL);
++	snprintf(header, sizeof(header), "cpu-%d", cpu);
++	format_and_print(outf, 3, header, NULL);
++
++	snprintf(header, sizeof(header), "get-assoc");
++	format_and_print(outf, 4, header, NULL);
++
++	snprintf(header, sizeof(header), "clos");
++	snprintf(value, sizeof(value), "%d", clos);
++	format_and_print(outf, 5, header, value);
++
++	format_and_print(outf, 1, NULL, NULL);
++}
++
+ void isst_display_result(int cpu, FILE *outf, char *feature, char *cmd,
+ 			 int result)
+ {
+diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
+index 668f914d077f..48655d0dee2d 100644
+--- a/tools/power/x86/intel-speed-select/isst.h
++++ b/tools/power/x86/intel-speed-select/isst.h
+@@ -225,7 +225,7 @@ extern int isst_clos_associate(int cpu, int clos);
+ extern int isst_clos_get_assoc_status(int cpu, int *clos_id);
+ extern void isst_clos_display_information(int cpu, FILE *outf, int clos,
+ 					  struct isst_clos_config *clos_config);
+-
++extern void isst_clos_display_assoc_information(int cpu, FILE *outf, int clos);
+ extern int isst_read_reg(unsigned short reg, unsigned int *val);
+ extern int isst_write_reg(int reg, unsigned int val);
+ 
 -- 
 2.17.2
