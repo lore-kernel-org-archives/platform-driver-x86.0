@@ -1,40 +1,45 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 1/1] platform/x86/intel_cht_int33fe: Split code to USB
- TypeB and TypeC variants
-Date: Wed, 18 Sep 2019 16:07:15 +0300
-Message-ID: <CAHp75Vc1puy01=Ki6EiJfZTGPtgkWiar9GhEb7EX0OF7CmNo7w@mail.gmail.com>
-References: <20190917194507.14771-1-jekhor@gmail.com> <20190917194507.14771-2-jekhor@gmail.com>
+From: Yauhen Kharuzhy <jekhor@gmail.com>
+Subject: [PATCH v3 0/1] intel_cht_int33fe: Split code to USB Micro-B and Type-C variants
+Date: Wed, 18 Sep 2019 18:27:04 +0300
+Message-ID: <20190918152705.3267-1-jekhor@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190917194507.14771-2-jekhor@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yauhen Kharuzhy <jekhor@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, Yauhen Kharuzhy <jekhor@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Sep 17, 2019 at 10:45 PM Yauhen Kharuzhy <jekhor@gmail.com> wrote:
->
-> Existing intel_cht_int33fe ACPI pseudo-device driver assumes that
-> hardware has TypeC connector and register related devices described as
-> I2C connections in the _CRS resource.
->
-> There is at least one hardware (Lenovo Yoga Book YB1-91L/F) with micro
-> USB B connector exists. It has INT33FE device in the DSDT table but
-> there are only two I2C connection described: PMIC and BQ27452 battery
-> fuel gauge.
->
-> Splitting existing INT33FE driver allow to maintain code for USB type B
-> (AB) connector variant separately and make it simpler.
->
-> Split driver to intel_cht_int33fe_common.c and
-> intel_cht_int33fe_{typeb,typec}.c. Compile all this source to one .ko
-> module to make user experience easier.
+Patch to support INT33FE ACPI pseudo-device on hardware with USB Micro-B
+connector.
 
-Before sending new version also check that you spell correctly
-"Type-C" everywhere (except variable / function names).
+v3:
+- Rename TypeB variant to Micro-B (we have only one such device for now and it
+  has Micro-B connector)
+- Rebase on current linus/master
+- Remove empty lines and replace "TypeC" by "Type-C"
 
+v2:
+Instead of defining two separated modules with two separated config
+options, compile {common,typeb,typec} sources into one .ko module.
+Call needed variant-specific probe function based after of hardware type
+detection in common code.
+
+Yauhen Kharuzhy (1):
+  platform/x86/intel_cht_int33fe: Split code to USB Micro-B and Type-C
+    variants
+
+ drivers/platform/x86/Kconfig                  |  12 +-
+ drivers/platform/x86/Makefile                 |   4 +
+ .../platform/x86/intel_cht_int33fe_common.c   | 147 ++++++++++++++++++
+ .../platform/x86/intel_cht_int33fe_common.h   |  41 +++++
+ .../platform/x86/intel_cht_int33fe_microb.c   |  63 ++++++++
+ ...ht_int33fe.c => intel_cht_int33fe_typec.c} |  78 +---------
+ 6 files changed, 272 insertions(+), 73 deletions(-)
+ create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.c
+ create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.h
+ create mode 100644 drivers/platform/x86/intel_cht_int33fe_microb.c
+ rename drivers/platform/x86/{intel_cht_int33fe.c => intel_cht_int33fe_typec.c} (82%)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.23.0.rc1
