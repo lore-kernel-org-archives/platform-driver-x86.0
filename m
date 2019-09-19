@@ -1,78 +1,49 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 1/1] platform/x86/intel_cht_int33fe: Split code to USB
- Micro-B and Type-C variants
-Date: Thu, 19 Sep 2019 09:27:14 +0300
-Message-ID: <CAHp75Ve1mifO9iJJUo=zdFYi3X20ye=w1p0Z+-GmjQEpnmiS4Q@mail.gmail.com>
-References: <20190918225337.9860-1-jekhor@gmail.com> <20190918225337.9860-2-jekhor@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Srikanth Krishnakar <skrishnakar@gmail.com>
+Subject: [PATCH] platform/x86: pmc_atom: Add Siemens SIMATIC IPC2x7E to critclk_systems DMI table
+Date: Thu, 19 Sep 2019 13:15:56 +0530
+Message-ID: <20190919074556.25691-1-Srikanth_Krishnakar@mentor.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190918225337.9860-2-jekhor@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yauhen Kharuzhy <jekhor@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, dvhart@infradead.org, andy@infradead.org
+Cc: Cedric_Hombourger@mentor.com, Srikanth_Krishnakar@mentor.com, jan.kiszka@siemens.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Sep 19, 2019 at 1:53 AM Yauhen Kharuzhy <jekhor@gmail.com> wrote:
->
+The SIMATIC IPC227E and IPC277E uses the PMC clock for on-board components
+and gets stuck during boot if the clock is disabled. Therefore, add this
+device to the critical systems list.
 
-You so fast with new versions that I had no chance to comment on.
-Finally here mine.
+The Board revision does vary in some instances and hence use PRODUCT_NAME
+to allow the boards to boot with identical names.
 
-> Existing intel_cht_int33fe ACPI pseudo-device driver assumes that
-> hardware has Type-C connector and register related devices described as
-> I2C connections in the _CRS resource.
->
-> There is at least one hardware (Lenovo Yoga Book YB1-91L/F) with Micro-B
-> USB connector exists. It has INT33FE device in the DSDT table but
-> there are only two I2C connection described: PMIC and BQ27452 battery
-> fuel gauge.
->
-> Splitting existing INT33FE driver allow to maintain code for USB Micro-B
-> (AB) connector variant separately and make it simpler.
+Tested on SIMATIC IPC227E and IPC277E.
 
-I didn't get what (AB) means in this context?
-Did you mean "(or AB)"?
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+CC: Jan Kiszka <jan.kiszka@siemens.com>
+CC: Cedric Hombourger <Cedric_Hombourger@mentor.com>
+Signed-off-by: Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>
+---
+ drivers/platform/x86/pmc_atom.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-> Split driver to intel_cht_int33fe_common.c and
-> intel_cht_int33fe_{typeb,typec}.c. Compile all this sources to one .ko
-> module to make user experience easier.
-
-You forgot to replace typeb here.
-
-> -       ---help---
-> +       help
-
-This is unneeded churn
-
-
-
-> +         CONFIG_BATTERY_BQ27XXX=m and CONFIG_BATTERY_BQ27XXX_I2C=m for Micro-B
-> +         device and CONFIG_TYPEC_FUSB302=m and CONFIG_BATTERY_MAX17042=m
-
-First s/and/or/.
-
-> +         for Type-C device.
-
-> + * 1. The Whiskey Cove pmic, which is also described by the INT34D3 ACPI device
-
-pmic -> PMIC
-
-> +       if (IS_ERR(data->battery_fg)) {
-> +               int err = PTR_ERR(data->battery_fg);
-> +
-> +               if (err != -EPROBE_DEFER)
-> +                       dev_err(dev,
-> +                               "Failed to register battery fuel gauge: %d\n",
-> +                               err);
-> +               return err;
-> +       }
-> +
-> +       return 0;
-
-I would rather replace this altogether by return PTR_ERR_OR_ZERO()
-like it's done in the other function in the original driver.
-
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index 9aca5e7ce6d0..1e48c2ec684e 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -419,7 +419,14 @@ static const struct dmi_system_id critclk_systems[] = {
+ 		.ident = "SIMATIC IPC227E",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
+-			DMI_MATCH(DMI_PRODUCT_VERSION, "6ES7647-8B"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "SIMATIC IPC227E"),
++		},
++	},
++	{
++		.ident = "SIMATIC IPC277E",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "SIMATIC IPC277E"),
+ 		},
+ 	},
+ 	{ /*sentinel*/ }
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
