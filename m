@@ -1,7 +1,7 @@
 From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [PATCH v2 5/6] platform/x86: huawei-wmi: Add fn-lock support
-Date: Wed, 18 Sep 2019 20:54:57 -0400
-Message-ID: <20190919005505.23822-6-ayman.bagabas@gmail.com>
+Subject: [PATCH v2 6/6] platform/x86: huawei-wmi: Add debugfs support
+Date: Wed, 18 Sep 2019 20:54:58 -0400
+Message-ID: <20190919005505.23822-7-ayman.bagabas@gmail.com>
 References: <20190919005505.23822-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -11,131 +11,136 @@ Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Takashi Iwai <tiwai@suse.de>, Mattias Jacobsson <2pi@mok.nu>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Huawei Matebook laptops uses Fn key and toggle to access F1-F12 keys.
-Along with that, there is this feature called fn-lock that inverts the
-behavior of this Fn key and the F1-F12 row.
+Add a debugfs interface that can be used to call the WMI management
+interface function if available.
 
 Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
- drivers/platform/x86/huawei-wmi.c | 85 +++++++++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
+ drivers/platform/x86/huawei-wmi.c | 91 +++++++++++++++++++++++++++++++
+ 1 file changed, 91 insertions(+)
 
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 231b5cce00db..48be55c6027e 100644
+index 48be55c6027e..9ae2ecadeb10 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -59,6 +59,7 @@ struct huawei_wmi_debug {
+@@ -6,6 +6,7 @@
+  */
  
- struct huawei_wmi {
- 	bool battery_available;
-+	bool fn_lock_available;
- 
- 	struct huawei_wmi_debug debug;
- 	struct input_dev *idev[2];
-@@ -515,6 +516,88 @@ static void huawei_wmi_battery_exit(struct device *dev)
- 	}
+ #include <linux/acpi.h>
++#include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/input.h>
+@@ -598,6 +599,94 @@ static void huawei_wmi_fn_lock_exit(struct device *dev)
+ 		device_remove_file(dev, &dev_attr_fn_lock_state);
  }
  
-+/* Fn lock */
++/* debugfs */
 +
-+static int huawei_wmi_fn_lock_get(int *on)
++static void huawei_wmi_debugfs_call_dump(struct seq_file *m, void *data,
++		union acpi_object *obj)
 +{
-+	u8 ret[0x100] = { 0 };
-+	int err, i;
++	struct huawei_wmi *huawei = m->private;
++	int i;
 +
-+	err = huawei_wmi_cmd(FN_LOCK_GET, ret, 0x100);
++	switch (obj->type) {
++	case ACPI_TYPE_INTEGER:
++		seq_printf(m, "0x%llx", obj->integer.value);
++		break;
++	case ACPI_TYPE_STRING:
++		seq_printf(m, "\"%*s\"", obj->string.length, obj->string.pointer);
++		break;
++	case ACPI_TYPE_BUFFER:
++		seq_puts(m, "{");
++		for (i = 0; i < obj->buffer.length; i++) {
++			seq_printf(m, "0x%02x", obj->buffer.pointer[i]);
++			if (i < obj->buffer.length - 1)
++				seq_puts(m, ",");
++		}
++		seq_puts(m, "}");
++		break;
++	case ACPI_TYPE_PACKAGE:
++		seq_puts(m, "[");
++		for (i = 0; i < obj->package.count; i++) {
++			huawei_wmi_debugfs_call_dump(m, huawei, &obj->package.elements[i]);
++			if (i < obj->package.count - 1)
++				seq_puts(m, ",");
++		}
++		seq_puts(m, "]");
++		break;
++	default:
++		dev_err(&huawei->pdev->dev, "Unexpected obj type, got %d\n", obj->type);
++		return;
++	}
++}
++
++static int huawei_wmi_debugfs_call_show(struct seq_file *m, void *data)
++{
++	struct huawei_wmi *huawei = m->private;
++	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
++	struct acpi_buffer in;
++	union acpi_object *obj;
++	int err;
++
++	in.length = sizeof(u64);
++	in.pointer = &huawei->debug.arg;
++
++	err = huawei_wmi_call(&in, &out);
 +	if (err)
 +		return err;
 +
-+	/* Find the first non-zero value. Return status is ignored. */
-+	i = 1;
-+	do {
-+		if (on)
-+			*on = ret[i] - 1; // -1 undefined, 0 off, 1 on.
-+	} while (i < 0x100 && !ret[i++]);
++	obj = out.pointer;
++	if (!obj) {
++		err = -EIO;
++		goto fail_debugfs_call;
++	}
 +
-+	return 0;
++	huawei_wmi_debugfs_call_dump(m, huawei, obj);
++
++fail_debugfs_call:
++	kfree(out.pointer);
++	return err;
 +}
 +
-+static int huawei_wmi_fn_lock_set(int on)
-+{
-+	union hwmi_arg arg;
++DEFINE_SHOW_ATTRIBUTE(huawei_wmi_debugfs_call);
 +
-+	arg.cmd = FN_LOCK_SET;
-+	arg.args[2] = on + 1; // 0 undefined, 1 off, 2 on.
-+
-+	return huawei_wmi_cmd(arg.cmd, NULL, NULL);
-+}
-+
-+static ssize_t fn_lock_state_show(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	int err, on;
-+
-+	err = huawei_wmi_fn_lock_get(&on);
-+	if (err)
-+		return err;
-+
-+	return sprintf(buf, "%d\n", on);
-+}
-+
-+static ssize_t fn_lock_state_store(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf, size_t size)
-+{
-+	int on, err;
-+
-+	if (kstrtoint(buf, 10, &on) ||
-+			on < 0 || on > 1)
-+		return -EINVAL;
-+
-+	err = huawei_wmi_fn_lock_set(on);
-+	if (err)
-+		return err;
-+
-+	return size;
-+}
-+
-+static DEVICE_ATTR_RW(fn_lock_state);
-+
-+static void huawei_wmi_fn_lock_setup(struct device *dev)
++static void huawei_wmi_debugfs_setup(struct device *dev)
 +{
 +	struct huawei_wmi *huawei = dev_get_drvdata(dev);
 +
-+	huawei->fn_lock_available = true;
-+	if (huawei_wmi_fn_lock_get(NULL)) {
-+		huawei->fn_lock_available = false;
-+		return;
-+	}
++	huawei->debug.root = debugfs_create_dir("huawei-wmi", NULL);
 +
-+	device_create_file(dev, &dev_attr_fn_lock_state);
++	debugfs_create_x64("arg", 0644, huawei->debug.root,
++		&huawei->debug.arg);
++	debugfs_create_file("call", 0400,
++		huawei->debug.root, huawei, &huawei_wmi_debugfs_call_fops);
 +}
 +
-+static void huawei_wmi_fn_lock_exit(struct device *dev)
++static void huawei_wmi_debugfs_exit(struct device *dev)
 +{
-+	if (huawei_wmi->fn_lock_available)
-+		device_remove_file(dev, &dev_attr_fn_lock_state);
++	struct huawei_wmi *huawei = dev_get_drvdata(dev);
++
++	debugfs_remove_recursive(huawei->debug.root);
 +}
 +
  /* Input */
  
  static void huawei_wmi_process_key(struct input_dev *idev, int code)
-@@ -638,6 +721,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 		mutex_init(&huawei_wmi->battery_lock);
- 
+@@ -723,6 +812,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
  		huawei_wmi_leds_setup(&pdev->dev);
-+		huawei_wmi_fn_lock_setup(&pdev->dev);
+ 		huawei_wmi_fn_lock_setup(&pdev->dev);
  		huawei_wmi_battery_setup(&pdev->dev);
- 	}
- 
-@@ -657,6 +741,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
- 
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
- 		huawei_wmi_battery_exit(&pdev->dev);
-+		huawei_wmi_fn_lock_exit(&pdev->dev);
++		huawei_wmi_debugfs_setup(&pdev->dev);
  	}
  
  	return 0;
+@@ -740,6 +830,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
+ 	}
+ 
+ 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
++		huawei_wmi_debugfs_exit(&pdev->dev);
+ 		huawei_wmi_battery_exit(&pdev->dev);
+ 		huawei_wmi_fn_lock_exit(&pdev->dev);
+ 	}
 -- 
 2.21.0
