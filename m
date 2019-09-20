@@ -1,303 +1,139 @@
 From: Ayman Bagabas <ayman.bagabas@gmail.com>
-Subject: [PATCH v4 4/6] platform/x86: huawei-wmi: Add battery charging thresholds
-Date: Fri, 20 Sep 2019 12:02:37 -0400
-Message-ID: <20190920160250.12510-5-ayman.bagabas@gmail.com>
+Subject: [PATCH v4 5/6] platform/x86: huawei-wmi: Add fn-lock support
+Date: Fri, 20 Sep 2019 12:02:38 -0400
+Message-ID: <20190920160250.12510-6-ayman.bagabas@gmail.com>
 References: <20190920160250.12510-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190920160250.12510-1-ayman.bagabas@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Sinan Kaya <okaya@kernel.org>, Takashi Iwai <tiwai@suse.de>, Ayman Bagabas <ayman.bagabas@gmail.com>, Stuart Hayes <stuart.w.hayes@gmail.com>, Matan Ziv-Av <matan@svgalib.org>, "Enrico Weigelt, metux IT consult" <info@metux.net>, Hans de Goede <hdegoede@redhat.com>, Peng Hao <peng.hao2@zte.com.cn>, Krzysztof Kozlowski <krzk@kernel.org>, Mattias Jacobsson <2pi@mok.nu>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Sinan Kaya <okaya@kernel.org>, Takashi Iwai <tiwai@suse.de>, Ayman Bagabas <ayman.bagabas@gmail.com>, Stuart Hayes <stuart.w.hayes@gmail.com>, Matan Ziv-Av <matan@svgalib.org>, Hans de Goede <hdegoede@redhat.com>, "Enrico Weigelt, metux IT consult" <info@metux.net>, Peng Hao <peng.hao2@zte.com.cn>, Krzysztof Kozlowski <krzk@kernel.org>, Mattias Jacobsson <2pi@mok.nu>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Control battery charge thresholds through the battery API and driver's
-attributes.
-
-Setting battery charging thresholds can introduce a race condition with
-MACH-WX9 where two or more threads are trying to read/write values
-from/to EC memory.
+Huawei Matebook laptops uses Fn key and toggle to access F1-F12 keys.
+Along with that, there is this feature called fn-lock that inverts the
+behavior of this Fn key and the F1-F12 row.
 
 Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 ---
- drivers/platform/x86/Kconfig      |   1 +
- drivers/platform/x86/huawei-wmi.c | 212 ++++++++++++++++++++++++++++++
- 2 files changed, 213 insertions(+)
+ drivers/platform/x86/huawei-wmi.c | 85 +++++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 61bf180d25c7..0659589e46bb 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1305,6 +1305,7 @@ config INTEL_ATOMISP2_PM
- 
- config HUAWEI_WMI
- 	tristate "Huawei WMI laptop extras driver"
-+	depends on ACPI_BATTERY
- 	depends on ACPI_WMI
- 	depends on INPUT
- 	select INPUT_SPARSEKMAP
 diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
-index 41904b1cc284..e577786e6306 100644
+index e577786e6306..56697d49377d 100644
 --- a/drivers/platform/x86/huawei-wmi.c
 +++ b/drivers/platform/x86/huawei-wmi.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/delay.h>
- #include <linux/dmi.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
-@@ -13,7 +14,10 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/platform_device.h>
-+#include <linux/power_supply.h>
-+#include <linux/sysfs.h>
- #include <linux/wmi.h>
-+#include <acpi/battery.h>
- 
- /*
-  * Huawei WMI GUIDs
-@@ -49,10 +53,13 @@ struct quirk_entry {
- static struct quirk_entry *quirks;
+@@ -54,6 +54,7 @@ static struct quirk_entry *quirks;
  
  struct huawei_wmi {
-+	bool battery_available;
-+
+ 	bool battery_available;
++	bool fn_lock_available;
+ 
  	struct input_dev *idev[2];
  	struct led_classdev cdev;
- 	struct platform_device *pdev;
- 
-+	struct mutex battery_lock;
- 	struct mutex wmi_lock;
- };
- 
-@@ -300,6 +307,208 @@ static void huawei_wmi_leds_setup(struct device *dev)
- 	devm_led_classdev_register(dev, &huawei->cdev);
+@@ -509,6 +510,88 @@ static void huawei_wmi_battery_exit(struct device *dev)
+ 	}
  }
  
-+/* Battery protection */
++/* Fn lock */
 +
-+static int huawei_wmi_battery_get(int *start, int *end)
++static int huawei_wmi_fn_lock_get(int *on)
 +{
-+	u8 ret[0x100];
++	u8 ret[0x100] = { 0 };
 +	int err, i;
 +
-+	err = huawei_wmi_cmd(BATTERY_THRESH_GET, ret, 0x100);
++	err = huawei_wmi_cmd(FN_LOCK_GET, ret, 0x100);
 +	if (err)
 +		return err;
 +
-+	/* Find the last two non-zero values. Return status is ignored. */
-+	i = 0x100;
++	/* Find the first non-zero value. Return status is ignored. */
++	i = 1;
 +	do {
-+		if (start)
-+			*start = ret[i-1];
-+		if (end)
-+			*end = ret[i];
-+	} while (i > 2 && !ret[i--]);
++		if (on)
++			*on = ret[i] - 1; // -1 undefined, 0 off, 1 on.
++	} while (i < 0x100 && !ret[i++]);
 +
 +	return 0;
 +}
 +
-+static int huawei_wmi_battery_set(int start, int end)
++static int huawei_wmi_fn_lock_set(int on)
 +{
 +	union hwmi_arg arg;
-+	int err;
 +
-+	if (start < 0 || end > 100)
-+		return -EINVAL;
++	arg.cmd = FN_LOCK_SET;
++	arg.args[2] = on + 1; // 0 undefined, 1 off, 2 on.
 +
-+	arg.cmd = BATTERY_THRESH_SET;
-+	arg.args[2] = start;
-+	arg.args[3] = end;
-+
-+	/* This is an edge case were some models turn battery protection
-+	 * off without changing their thresholds values. We clear the
-+	 * values before turning off protection. Sometimes we need a sleep delay to
-+	 * make sure these values make their way to EC memory.
-+	 */
-+	if (quirks && quirks->battery_reset && start == 0 && end == 100) {
-+		err = huawei_wmi_battery_set(0, 0);
-+		if (err)
-+			return err;
-+
-+		msleep(1000);
-+	}
-+
-+	err = huawei_wmi_cmd(arg.cmd, NULL, 0);
-+
-+	return err;
++	return huawei_wmi_cmd(arg.cmd, NULL, 0);
 +}
 +
-+static ssize_t charge_control_start_threshold_show(struct device *dev,
++static ssize_t fn_lock_state_show(struct device *dev,
 +		struct device_attribute *attr,
 +		char *buf)
 +{
-+	int err, start;
++	int err, on;
 +
-+	err = huawei_wmi_battery_get(&start, NULL);
++	err = huawei_wmi_fn_lock_get(&on);
 +	if (err)
 +		return err;
 +
-+	return sprintf(buf, "%d\n", start);
++	return sprintf(buf, "%d\n", on);
 +}
 +
-+static ssize_t charge_control_end_threshold_show(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	int err, end;
-+
-+	err = huawei_wmi_battery_get(NULL, &end);
-+	if (err)
-+		return err;
-+
-+	return sprintf(buf, "%d\n", end);
-+}
-+
-+static ssize_t charge_control_thresholds_show(struct device *dev,
-+		struct device_attribute *attr,
-+		char *buf)
-+{
-+	int err, start, end;
-+
-+	err = huawei_wmi_battery_get(&start, &end);
-+	if (err)
-+		return err;
-+
-+	return sprintf(buf, "%d %d\n", start, end);
-+}
-+
-+static ssize_t charge_control_start_threshold_store(struct device *dev,
++static ssize_t fn_lock_state_store(struct device *dev,
 +		struct device_attribute *attr,
 +		const char *buf, size_t size)
 +{
-+	int err, start, end;
++	int on, err;
 +
-+	err = huawei_wmi_battery_get(NULL, &end);
-+	if (err)
-+		return err;
-+
-+	if (sscanf(buf, "%d", &start) != 1)
++	if (kstrtoint(buf, 10, &on) ||
++			on < 0 || on > 1)
 +		return -EINVAL;
 +
-+	err = huawei_wmi_battery_set(start, end);
++	err = huawei_wmi_fn_lock_set(on);
 +	if (err)
 +		return err;
 +
 +	return size;
 +}
 +
-+static ssize_t charge_control_end_threshold_store(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf, size_t size)
-+{
-+	int err, start, end;
++static DEVICE_ATTR_RW(fn_lock_state);
 +
-+	err = huawei_wmi_battery_get(&start, NULL);
-+	if (err)
-+		return err;
-+
-+	if (sscanf(buf, "%d", &end) != 1)
-+		return -EINVAL;
-+
-+	err = huawei_wmi_battery_set(start, end);
-+	if (err)
-+		return err;
-+
-+	return size;
-+}
-+
-+static ssize_t charge_control_thresholds_store(struct device *dev,
-+		struct device_attribute *attr,
-+		const char *buf, size_t size)
-+{
-+	int err, start, end;
-+
-+	if (sscanf(buf, "%d %d", &start, &end) != 2)
-+		return -EINVAL;
-+
-+	err = huawei_wmi_battery_set(start, end);
-+	if (err)
-+		return err;
-+
-+	return size;
-+}
-+
-+static DEVICE_ATTR_RW(charge_control_start_threshold);
-+static DEVICE_ATTR_RW(charge_control_end_threshold);
-+static DEVICE_ATTR_RW(charge_control_thresholds);
-+
-+static int huawei_wmi_battery_add(struct power_supply *battery)
-+{
-+	/* Huawei laptops come with one battery only */
-+	if (strcmp(battery->desc->name, "BAT") != 1)
-+		return -ENODEV;
-+
-+	device_create_file(&battery->dev, &dev_attr_charge_control_start_threshold);
-+	device_create_file(&battery->dev, &dev_attr_charge_control_end_threshold);
-+
-+	return 0;
-+}
-+
-+static int huawei_wmi_battery_remove(struct power_supply *battery)
-+{
-+	device_remove_file(&battery->dev, &dev_attr_charge_control_start_threshold);
-+	device_remove_file(&battery->dev, &dev_attr_charge_control_end_threshold);
-+
-+	return 0;
-+}
-+
-+static struct acpi_battery_hook huawei_wmi_battery_hook = {
-+	.add_battery = huawei_wmi_battery_add,
-+	.remove_battery = huawei_wmi_battery_remove,
-+	.name = "Huawei Battery Extension"
-+};
-+
-+static void huawei_wmi_battery_setup(struct device *dev)
++static void huawei_wmi_fn_lock_setup(struct device *dev)
 +{
 +	struct huawei_wmi *huawei = dev_get_drvdata(dev);
 +
-+	huawei->battery_available = true;
-+	if (huawei_wmi_battery_get(NULL, NULL)) {
-+		huawei->battery_available = false;
++	huawei->fn_lock_available = true;
++	if (huawei_wmi_fn_lock_get(NULL)) {
++		huawei->fn_lock_available = false;
 +		return;
 +	}
 +
-+	battery_hook_register(&huawei_wmi_battery_hook);
-+	device_create_file(dev, &dev_attr_charge_control_thresholds);
++	device_create_file(dev, &dev_attr_fn_lock_state);
 +}
 +
-+static void huawei_wmi_battery_exit(struct device *dev)
++static void huawei_wmi_fn_lock_exit(struct device *dev)
 +{
-+	struct huawei_wmi *huawei = dev_get_drvdata(dev);
-+
-+	if (huawei->battery_available) {
-+		battery_hook_unregister(&huawei_wmi_battery_hook);
-+		device_remove_file(dev, &dev_attr_charge_control_thresholds);
-+	}
++	if (huawei_wmi->fn_lock_available)
++		device_remove_file(dev, &dev_attr_fn_lock_state);
 +}
 +
  /* Input */
  
  static void huawei_wmi_process_key(struct input_dev *idev, int code)
-@@ -420,8 +629,10 @@ static int huawei_wmi_probe(struct platform_device *pdev)
- 
- 	if (wmi_has_guid(HWMI_METHOD_GUID)) {
- 		mutex_init(&huawei_wmi->wmi_lock);
-+		mutex_init(&huawei_wmi->battery_lock);
+@@ -632,6 +715,7 @@ static int huawei_wmi_probe(struct platform_device *pdev)
+ 		mutex_init(&huawei_wmi->battery_lock);
  
  		huawei_wmi_leds_setup(&pdev->dev);
-+		huawei_wmi_battery_setup(&pdev->dev);
++		huawei_wmi_fn_lock_setup(&pdev->dev);
+ 		huawei_wmi_battery_setup(&pdev->dev);
  	}
  
- 	return 0;
-@@ -439,6 +650,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
- 	}
+@@ -651,6 +735,7 @@ static int huawei_wmi_remove(struct platform_device *pdev)
  
  	if (wmi_has_guid(HWMI_METHOD_GUID)) {
-+		huawei_wmi_battery_exit(&pdev->dev);
+ 		huawei_wmi_battery_exit(&pdev->dev);
++		huawei_wmi_fn_lock_exit(&pdev->dev);
  	}
  
  	return 0;
