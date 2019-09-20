@@ -1,90 +1,50 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v3 2/6] platform/x86: huawei-wmi: Add quirks and module
- parameters
-Date: Fri, 20 Sep 2019 09:35:16 +0200
-Message-ID: <58e11827-cb9c-3ca9-c2a6-636453958382@redhat.com>
-References: <20190920003938.21617-1-ayman.bagabas@gmail.com>
- <20190920003938.21617-3-ayman.bagabas@gmail.com>
- <20190920060812.GB473898@kroah.com>
- <30a363e5-5691-e008-e1e5-55936fa3cd92@redhat.com>
- <s5hlfujo27x.wl-tiwai@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+From: Srikanth Krishnakar <skrishnakar@gmail.com>
+Subject: [PATCH v2] platform/x86: pmc_atom: Add Siemens SIMATIC IPC277E to critclk_systems DMI table
+Date: Fri, 20 Sep 2019 15:01:56 +0530
+Message-ID: <20190920093156.18885-1-Srikanth_Krishnakar@mentor.com>
+References: <972f063e-e1da-7248-90ab-e9b12481641d@siemens.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <s5hlfujo27x.wl-tiwai@suse.de>
-Content-Language: en-US
+In-Reply-To: <972f063e-e1da-7248-90ab-e9b12481641d@siemens.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Sinan Kaya <okaya@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Stuart Hayes <stuart.w.hayes@gmail.com>, Matan Ziv-Av <matan@svgalib.org>, "Enrico Weigelt, metux IT consult" <info@metux.net>, Peng Hao <peng.hao2@zte.com.cn>, Krzysztof Kozlowski <krzk@kernel.org>, Mattias Jacobsson <2pi@mok.nu>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, dvhart@infradead.org, andy@infradead.org, jan.kiszka@siemens.com
+Cc: Cedric_Hombourger@mentor.com, volker.edenhofer@siemens.com, Srikanth_Krishnakar@mentor.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+The SIMATIC IPC277E uses the PMC clock for on-board components
+and gets stuck during boot if the clock is disabled. Therefore,
+add this device to the critical systems list.
 
-On 20-09-2019 09:29, Takashi Iwai wrote:
-> On Fri, 20 Sep 2019 09:24:08 +0200,
-> Hans de Goede wrote:
->>
->> Hi,
->>
->> On 20-09-2019 08:08, Greg Kroah-Hartman wrote:
->>> On Thu, Sep 19, 2019 at 08:39:07PM -0400, Ayman Bagabas wrote:
->>>> Introduce quirks and module parameters. 3 quirks are added:
->>>> 1. Fixes reporting brightness keys twice since it's already handled by
->>>>      acpi-video.
->>>> 2. Some models need a short delay when setting battery thresholds to
->>>>      prevent a race condition when two processes read/write. (will be =
-used later)
->>>> 3. Matebook X (2017) handles micmute led through the "legacy" interfac=
-e
->>>>      which is not currently implemented. Use ACPI EC method to control
->>>>      this led. (will be used later)
->>>>
->>>> 2 module parameters are added to enable this short delay and/or report
->>>>     brightness keys through this driver.
->>>
->>> module parameters are a pain to manage and handle over time.  Is there
->>> any way you can "automatically" figure this out, or use a sysfs file
->>> instead?
->>
->> The patch also adds dmi matches to set the quirks, so the module params
->> are there to override those and/or to easily test which are the right op=
-tions
->> with new modules. The normal / expected use-case for everything to be se=
-t
->> automatically based on the DMI table.
+Tested on SIMATIC IPC277E.
 
-Ugh lots of typos / missing words I need to learn to re-read before hitting=
- send ...
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Cedric Hombourger <Cedric_Hombourger@mentor.com>
+Signed-off-by: Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>
+---
 
-"modules" -> "models"
-"use-case" -> "use-case is"
+Suggested for linux-stable v4.14.x and above.
+Depends on ad0d315b4d4e ("platform/x86: pmc_atom: Add Siemens SIMATIC IPC227E to critclk_systems DMI table")
 
->>
->> With that said, the module-params should really always override the dmi =
-values,
->> so I would like to suggest to make the module-params int-s instead of bo=
-ol-s
->> and to do something like this:
->>
->> static int battery_reset =3D -1;
->> static int report_brightness =3D -1;
->>
->> =09quirks =3D &quirk_unknown;
->> =09dmi_check_system(huawei_quirks);
->> =09/* If set the module options override the vale from the DMI table */
+ drivers/platform/x86/pmc_atom.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-"vale" here should be "values" of course.
-
->> =09if (battery_reset !=3D -1)
->> =09=09quirks->battery_reset =3D battery_reset;
->> =09if (report_brightness !=3D -1)
->> =09=09quirks->report_brightness =3D report_brightness;
->=20
-> ... and use "bint" for module_param() type.
-
-Ack.
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index 9aca5e7ce6d0..07d1b911e72f 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -422,6 +422,13 @@ static const struct dmi_system_id critclk_systems[] = {
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "6ES7647-8B"),
+ 		},
+ 	},
++	{
++		.ident = "SIMATIC IPC277E",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "6AV7882-0"),
++		},
++	},
+ 	{ /*sentinel*/ }
+ };
+ 
+-- 
+2.17.1
