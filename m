@@ -1,69 +1,128 @@
-From: Jan Kiszka <jan.kiszka@siemens.com>
-Subject: Re: [PATCH] platform/x86: pmc_atom: Add Siemens SIMATIC IPC2x7E to
- critclk_systems DMI table
-Date: Thu, 19 Sep 2019 09:56:08 +0200
-Message-ID: <0e511b90-314d-1724-a046-d2efe26b3b96@siemens.com>
-References: <20190919074556.25691-1-Srikanth_Krishnakar@mentor.com>
+From: Ayman Bagabas <ayman.bagabas@gmail.com>
+Subject: [PATCH v3 0/6] platform/x86: Huawei WMI laptop extras driver
+Date: Thu, 19 Sep 2019 20:39:05 -0400
+Message-ID: <20190920003938.21617-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190919074556.25691-1-Srikanth_Krishnakar@mentor.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srikanth Krishnakar <skrishnakar@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, dvhart@infradead.org, andy@infradead.org
-Cc: Cedric_Hombourger@mentor.com, Srikanth_Krishnakar@mentor.com
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Sinan Kaya <okaya@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Takashi Iwai <tiwai@suse.de>, Stuart Hayes <stuart.w.hayes@gmail.com>, Matan Ziv-Av <matan@svgalib.org>, "Enrico Weigelt, metux IT consult" <info@metux.net>, Hans de Goede <hdegoede@redhat.com>, Peng Hao <peng.hao2@zte.com.cn>, Krzysztof Kozlowski <krzk@kernel.org>, Mattias Jacobsson <2pi@mok.nu>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 19.09.19 09:45, Srikanth Krishnakar wrote:
-> The SIMATIC IPC227E and IPC277E uses the PMC clock for on-board components
-> and gets stuck during boot if the clock is disabled. Therefore, add this
-> device to the critical systems list.
-> 
-> The Board revision does vary in some instances and hence use PRODUCT_NAME
-> to allow the boards to boot with identical names.
-> 
-> Tested on SIMATIC IPC227E and IPC277E.
-> 
-> Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-> CC: Jan Kiszka <jan.kiszka@siemens.com>
-> CC: Cedric Hombourger <Cedric_Hombourger@mentor.com>
-> Signed-off-by: Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>
-> ---
->   drivers/platform/x86/pmc_atom.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-> index 9aca5e7ce6d0..1e48c2ec684e 100644
-> --- a/drivers/platform/x86/pmc_atom.c
-> +++ b/drivers/platform/x86/pmc_atom.c
-> @@ -419,7 +419,14 @@ static const struct dmi_system_id critclk_systems[] = {
->   		.ident = "SIMATIC IPC227E",
->   		.matches = {
->   			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
-> -			DMI_MATCH(DMI_PRODUCT_VERSION, "6ES7647-8B"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "SIMATIC IPC227E"),
+Changes in v3:
+* Kconfig changes
+* Fix NULL cast to int warning.
+* Add ACPI_BATTERY as a dependency.
 
-NACK, this is breaking platform variant detection.
+Changes in v2:
+* Use battery charge control API.
 
-> +		},
-> +	},
-> +	{
-> +		.ident = "SIMATIC IPC277E",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "SIMATIC IPC277E"),
+This patch series introduce changes to huawei-wmi driver that includes:
+* Move to platform driver
+* Implement driver quirks and parameters
+* Implement WMI management interface
+* Add micmute LED support through WMI
+* Add battery charging protection support through WMI
+* Add fn-lock support through WMI
+* Add a debugfs interface to WMI
 
-Let us clarify internally if we need to match on the same substring length as 
-for the 227E.
+# Move to platform driver
 
-Jan
+The current driver offers hotkeys and micmute led support only. With
+these changes, a platform driver makes more sense since it handles these
+changes pretty nicely.
 
->   		},
->   	},
->   	{ /*sentinel*/ }
-> 
+# Implement WMI management interface
 
+Huawei Matebook laptops come with two WMI interfaces. The first being
+WMI0 which is considered "legacy" and AFAIK only found on the Matebook X
+released in 2017. The second has a UID of "HWMI" and is found in pretty
+much all models with a slight difference in implementation except for
+the Matebook X (2017). Since this model has two interfaces, some aspects
+are controlled through the legacy interface and some through the other
+interface. Currently, the legacy interface is not fully implemented and
+is only used for hotkeys and further debugging has to be done.
+
+The WMI interface takes a 64 bit integer, although uses 32 bits most of
+the time, and returns a 256-260 bytes buffer consists of either one ACPI
+buffer of 260 bytes, in the case of Matebook X (2017), or one ACPI
+package of two buffers, one with 4 bytes, and the other with 256 bytes.
+We only care about the latter 256 buffer in both cases since the 4 bytes
+always return zeros. The first byte of this 256 buffer always has the
+return status where 1 indicated error. Some models require calling the
+WMI interface twice to execute a command.
+
+# Add micmute LED support through WMI
+
+After implementing the WMI interface, micmute LED can be controlled
+easily. Models with the legacy interface fall back to ACPI EC method
+control since the legacy interface is not implemented.
+
+# Add battery charging protection support through WMI
+
+Most models, that has the WMI interface, are capable of battery
+protection where it can control battery charging thresholds and limits
+charging the battery to certain values.
+
+# Add fn-lock support through WMI
+
+The behavior of hotkeys is not the same among all models. Some models
+require fn-lock to do things like `Ctrl-Ins` or `Alt-PrtSc`. By default,
+hotkeys behave as special keys (media keys, Ins, etc), but if a modifier
+is used (ctrl, alt, shift) these keys behave as F1-F12 keys. If the Fn
+key is toggled on, the hotkeys with or without a modifier, behave as
+F1-F12 keys. This makes it impossible to use a modifier and `PrtSc` or
+`Ins`.
+
+Now, some models fix this by excluding `PrtSc` and `Ins` keys from being
+treated as F11 and F12 keys with the use of a modifier. However, some
+models do not, and fixes this by the so called fn-lock.
+
+Fn-lock inverts the behavior of the top row from special keys to F1-F12
+keys. So a modifier and a special key would be possible which make
+things like `Alt-Ins` possible. Now, with fn-lock we would have 4 modes:
+
+* Fn-key off & fn-lock off - hotkeys treated as special keys using a
+  modifier gives F1-F12 keys.
+* Fn-key on & fn-lock off - hotkeys treated as F1-F12 keys and using a
+  modifier gives F1-F12.
+* Fn-key off & fn-lock on - hotkeys are treated as F1-F12 keys and using
+  a modifier gives special keys.
+* Fn-key on & fn-lock on - hotkeys are treated as special keys and using
+  a modifier gives special keys.
+
+# Implement driver quirks and parameters
+
+The driver introduces 3 quirks and 2 parameters that can change the
+driver's behavior. These quirks being as:
+1. Fixes reporting brightness keys twice since it's already handled by
+   acpi-video.
+2. Some models need a short delay when setting battery thresholds to
+   prevent a race condition when two processes read/write.
+3. Matebook X (2017) handles micmute led through the "legacy" interface
+   which is not currently implemented. Use ACPI EC method to control
+   this led.
+
+and the 2 parameters can enforce the behavior of quirk 1 & 2.
+
+# Add a debugfs interface to WMI
+
+An interface to the WMI management interface that allows easier
+debugging.
+
+Ayman Bagabas (6):
+  platform/x86: huawei-wmi: Move to platform driver
+  platform/x86: huawei-wmi: Add quirks and module parameters
+  platform/x86: huawei-wmi: Implement huawei wmi management
+  platform/x86: huawei-wmi: Add battery charging thresholds
+  platform/x86: huawei-wmi: Add fn-lock support
+  platform/x86: huawei-wmi: Add debugfs support
+
+ drivers/platform/x86/Kconfig      |   1 +
+ drivers/platform/x86/huawei-wmi.c | 872 ++++++++++++++++++++++++++----
+ 2 files changed, 781 insertions(+), 92 deletions(-)
+
+
+base-commit: 288b9117de5cc1b7fb80f54b7c17deed6f018641
 -- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+2.21.0
