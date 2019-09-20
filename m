@@ -1,65 +1,131 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] platform/x86: i2c-multi-instantiate: Derive the device
- name from parent
-Date: Fri, 20 Sep 2019 12:32:22 +0200
-Message-ID: <cde45562-af19-77e9-b3c9-7b3eb7dcd459@redhat.com>
-References: <20190920100233.12829-1-heikki.krogerus@linux.intel.com>
+From: Ayman Bagabas <ayman.bagabas@gmail.com>
+Subject: [PATCH v4 0/6] platform/x86: Huawei WMI laptop extras driver
+Date: Fri, 20 Sep 2019 12:02:33 -0400
+Message-ID: <20190920160250.12510-1-ayman.bagabas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190920100233.12829-1-heikki.krogerus@linux.intel.com>
-Content-Language: en-US
-Sender: stable-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andy@infradead.org>
-Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Sinan Kaya <okaya@kernel.org>, Takashi Iwai <tiwai@suse.de>, Ayman Bagabas <ayman.bagabas@gmail.com>, Stuart Hayes <stuart.w.hayes@gmail.com>, Matan Ziv-Av <matan@svgalib.org>, "Enrico Weigelt, metux IT consult" <info@metux.net>, Hans de Goede <hdegoede@redhat.com>, Peng Hao <peng.hao2@zte.com.cn>, Krzysztof Kozlowski <krzk@kernel.org>, Mattias Jacobsson <2pi@mok.nu>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+Changes in v4:
+* Use int and bint for module params.
 
-On 9/20/19 12:02 PM, Heikki Krogerus wrote:
-> When naming the new devices, instead of using the ACPI ID in
-> the name as base, using the parent device's name. That makes
-> it possible to support multiple multi-instance i2c devices
-> of the same type in the same system.
->=20
-> This fixes an issue seen on some Intel Kaby Lake based
-> boards:
->=20
-> sysfs: cannot create duplicate filename '/devices/pci0000:00/0000:00:15.0=
-/i2c_designware.0/i2c-0/i2c-INT3515-tps6598x.0'
->=20
-> Fixes: 2336dfadfb1e ("platform/x86: i2c-multi-instantiate: Allow to have =
-same slaves")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Changes in v3:
+* Kconfig changes
+* Fix NULL cast to int warning.
+* Add ACPI_BATTERY as a dependency.
 
-Patch looks good to me:
+Changes in v2:
+* Use battery charge control API.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+This patch series introduce changes to huawei-wmi driver that includes:
+* Move to platform driver
+* Implement driver quirks and parameters
+* Implement WMI management interface
+* Add micmute LED support through WMI
+* Add battery charging protection support through WMI
+* Add fn-lock support through WMI
+* Add a debugfs interface to WMI
 
-Regards,
+# Move to platform driver
 
-Hans
+The current driver offers hotkeys and micmute led support only. With
+these changes, a platform driver makes more sense since it handles these
+changes pretty nicely.
+
+# Implement WMI management interface
+
+Huawei Matebook laptops come with two WMI interfaces. The first being
+WMI0 which is considered "legacy" and AFAIK only found on the Matebook X
+released in 2017. The second has a UID of "HWMI" and is found in pretty
+much all models with a slight difference in implementation except for
+the Matebook X (2017). Since this model has two interfaces, some aspects
+are controlled through the legacy interface and some through the other
+interface. Currently, the legacy interface is not fully implemented and
+is only used for hotkeys and further debugging has to be done.
+
+The WMI interface takes a 64 bit integer, although uses 32 bits most of
+the time, and returns a 256-260 bytes buffer consists of either one ACPI
+buffer of 260 bytes, in the case of Matebook X (2017), or one ACPI
+package of two buffers, one with 4 bytes, and the other with 256 bytes.
+We only care about the latter 256 buffer in both cases since the 4 bytes
+always return zeros. The first byte of this 256 buffer always has the
+return status where 1 indicated error. Some models require calling the
+WMI interface twice to execute a command.
+
+# Add micmute LED support through WMI
+
+After implementing the WMI interface, micmute LED can be controlled
+easily. Models with the legacy interface fall back to ACPI EC method
+control since the legacy interface is not implemented.
+
+# Add battery charging protection support through WMI
+
+Most models, that has the WMI interface, are capable of battery
+protection where it can control battery charging thresholds and limits
+charging the battery to certain values.
+
+# Add fn-lock support through WMI
+
+The behavior of hotkeys is not the same among all models. Some models
+require fn-lock to do things like `Ctrl-Ins` or `Alt-PrtSc`. By default,
+hotkeys behave as special keys (media keys, Ins, etc), but if a modifier
+is used (ctrl, alt, shift) these keys behave as F1-F12 keys. If the Fn
+key is toggled on, the hotkeys with or without a modifier, behave as
+F1-F12 keys. This makes it impossible to use a modifier and `PrtSc` or
+`Ins`.
+
+Now, some models fix this by excluding `PrtSc` and `Ins` keys from being
+treated as F11 and F12 keys with the use of a modifier. However, some
+models do not, and fixes this by the so called fn-lock.
+
+Fn-lock inverts the behavior of the top row from special keys to F1-F12
+keys. So a modifier and a special key would be possible which make
+things like `Alt-Ins` possible. Now, with fn-lock we would have 4 modes:
+
+* Fn-key off & fn-lock off - hotkeys treated as special keys using a
+  modifier gives F1-F12 keys.
+* Fn-key on & fn-lock off - hotkeys treated as F1-F12 keys and using a
+  modifier gives F1-F12.
+* Fn-key off & fn-lock on - hotkeys are treated as F1-F12 keys and using
+  a modifier gives special keys.
+* Fn-key on & fn-lock on - hotkeys are treated as special keys and using
+  a modifier gives special keys.
+
+# Implement driver quirks and parameters
+
+The driver introduces 3 quirks and 2 parameters that can change the
+driver's behavior. These quirks being as:
+1. Fixes reporting brightness keys twice since it's already handled by
+   acpi-video.
+2. Some models need a short delay when setting battery thresholds to
+   prevent a race condition when two processes read/write.
+3. Matebook X (2017) handles micmute led through the "legacy" interface
+   which is not currently implemented. Use ACPI EC method to control
+   this led.
+
+and the 2 parameters can enforce the behavior of quirk 1 & 2.
+
+# Add a debugfs interface to WMI
+
+An interface to the WMI management interface that allows easier
+debugging.
+
+Ayman Bagabas (6):
+  platform/x86: huawei-wmi: Move to platform driver
+  platform/x86: huawei-wmi: Add quirks and module parameters
+  platform/x86: huawei-wmi: Implement huawei wmi management
+  platform/x86: huawei-wmi: Add battery charging thresholds
+  platform/x86: huawei-wmi: Add fn-lock support
+  platform/x86: huawei-wmi: Add debugfs support
+
+ drivers/platform/x86/Kconfig      |   8 +-
+ drivers/platform/x86/huawei-wmi.c | 874 ++++++++++++++++++++++++++----
+ 2 files changed, 786 insertions(+), 96 deletions(-)
 
 
-> ---
->   drivers/platform/x86/i2c-multi-instantiate.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platf=
-orm/x86/i2c-multi-instantiate.c
-> index 61fe341a85aa..ea68f6ed66ae 100644
-> --- a/drivers/platform/x86/i2c-multi-instantiate.c
-> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
-> @@ -90,7 +90,7 @@ static int i2c_multi_inst_probe(struct platform_device =
-*pdev)
->   =09for (i =3D 0; i < multi->num_clients && inst_data[i].type; i++) {
->   =09=09memset(&board_info, 0, sizeof(board_info));
->   =09=09strlcpy(board_info.type, inst_data[i].type, I2C_NAME_SIZE);
-> -=09=09snprintf(name, sizeof(name), "%s-%s.%d", match->id,
-> +=09=09snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev),
->   =09=09=09 inst_data[i].type, i);
->   =09=09board_info.dev_name =3D name;
->   =09=09switch (inst_data[i].flags & IRQ_RESOURCE_TYPE) {
->=20
+base-commit: 288b9117de5cc1b7fb80f54b7c17deed6f018641
+-- 
+2.21.0
