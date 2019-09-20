@@ -1,50 +1,44 @@
-From: Srikanth Krishnakar <skrishnakar@gmail.com>
-Subject: [PATCH v2] platform/x86: pmc_atom: Add Siemens SIMATIC IPC277E to critclk_systems DMI table
-Date: Fri, 20 Sep 2019 15:01:56 +0530
-Message-ID: <20190920093156.18885-1-Srikanth_Krishnakar@mentor.com>
-References: <972f063e-e1da-7248-90ab-e9b12481641d@siemens.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <972f063e-e1da-7248-90ab-e9b12481641d@siemens.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, dvhart@infradead.org, andy@infradead.org, jan.kiszka@siemens.com
-Cc: Cedric_Hombourger@mentor.com, volker.edenhofer@siemens.com, Srikanth_Krishnakar@mentor.com
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH] platform/x86: i2c-multi-instantiate: Derive the device name from parent
+Date: Fri, 20 Sep 2019 13:02:33 +0300
+Message-ID: <20190920100233.12829-1-heikki.krogerus@linux.intel.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@infradead.org>
+Cc: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The SIMATIC IPC277E uses the PMC clock for on-board components
-and gets stuck during boot if the clock is disabled. Therefore,
-add this device to the critical systems list.
+When naming the new devices, instead of using the ACPI ID in
+the name as base, using the parent device's name. That makes
+it possible to support multiple multi-instance i2c devices
+of the same type in the same system.
 
-Tested on SIMATIC IPC277E.
+This fixes an issue seen on some Intel Kaby Lake based
+boards:
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Cedric Hombourger <Cedric_Hombourger@mentor.com>
-Signed-off-by: Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>
+sysfs: cannot create duplicate filename '/devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-0/i2c-INT3515-tps6598x.0'
+
+Fixes: 2336dfadfb1e ("platform/x86: i2c-multi-instantiate: Allow to have same slaves")
+Cc: stable@vger.kernel.org
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
+ drivers/platform/x86/i2c-multi-instantiate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Suggested for linux-stable v4.14.x and above.
-Depends on ad0d315b4d4e ("platform/x86: pmc_atom: Add Siemens SIMATIC IPC227E to critclk_systems DMI table")
-
- drivers/platform/x86/pmc_atom.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index 9aca5e7ce6d0..07d1b911e72f 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -422,6 +422,13 @@ static const struct dmi_system_id critclk_systems[] = {
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "6ES7647-8B"),
- 		},
- 	},
-+	{
-+		.ident = "SIMATIC IPC277E",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "6AV7882-0"),
-+		},
-+	},
- 	{ /*sentinel*/ }
- };
- 
+diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+index 61fe341a85aa..ea68f6ed66ae 100644
+--- a/drivers/platform/x86/i2c-multi-instantiate.c
++++ b/drivers/platform/x86/i2c-multi-instantiate.c
+@@ -90,7 +90,7 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
+ 	for (i = 0; i < multi->num_clients && inst_data[i].type; i++) {
+ 		memset(&board_info, 0, sizeof(board_info));
+ 		strlcpy(board_info.type, inst_data[i].type, I2C_NAME_SIZE);
+-		snprintf(name, sizeof(name), "%s-%s.%d", match->id,
++		snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev),
+ 			 inst_data[i].type, i);
+ 		board_info.dev_name = name;
+ 		switch (inst_data[i].flags & IRQ_RESOURCE_TYPE) {
 -- 
-2.17.1
+2.23.0
