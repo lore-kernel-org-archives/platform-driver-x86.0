@@ -1,71 +1,67 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 156/185] platform/x86: intel_pmc_core: Do not ioremap RAM
-Date: Sun, 22 Sep 2019 14:48:54 -0400
-Message-ID: <20190922184924.32534-156-sashal@kernel.org>
-References: <20190922184924.32534-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 109/128] x86/platform/uv: Fix kmalloc() NULL check routine
+Date: Sun, 22 Sep 2019 14:53:59 -0400
+Message-ID: <20190922185418.2158-109-sashal@kernel.org>
+References: <20190922185418.2158-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
+In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
 Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: "M. Vefa Bicakci" <m.v.b@runbox.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Austin Kim <austindh.kim@gmail.com>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, Hedi Berriche <hedi.berriche@hpe.com>, Linus Torvalds <torvalds@linux-foundation.org>, Mike Travis <mike.travis@hpe.com>, Peter Zijlstra <peterz@infradead.org>, Russ Anderson <russ.anderson@hpe.com>, Steve Wahl <steve.wahl@hpe.com>, Thomas Gleixner <tglx@linutronix.de>, allison@lohutok.net, andy@infradead.org, armijn@tjaldur.nl, bp@alien8.de, dvhart@infradead.org, gregkh@linuxfoundation.org, hpa@zytor.com, kjlu@umn.edu, platform-driver-x86@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: "M. Vefa Bicakci" <m.v.b@runbox.com>
+From: Austin Kim <austindh.kim@gmail.com>
 
-[ Upstream commit 7d505758b1e556cdf65a5e451744fe0ae8063d17 ]
+[ Upstream commit 864b23f0169d5bff677e8443a7a90dfd6b090afc ]
 
-On a Xen-based PVH virtual machine with more than 4 GiB of RAM,
-intel_pmc_core fails initialization with the following warning message
-from the kernel, indicating that the driver is attempting to ioremap
-RAM:
+The result of kmalloc() should have been checked ahead of below statement:
 
-  ioremap on RAM at 0x00000000fe000000 - 0x00000000fe001fff
-  WARNING: CPU: 1 PID: 434 at arch/x86/mm/ioremap.c:186 __ioremap_caller.constprop.0+0x2aa/0x2c0
-...
-  Call Trace:
-   ? pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
-   pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
+	pqp = (struct bau_pq_entry *)vp;
 
-This issue appears to manifest itself because of the following fallback
-mechanism in the driver:
+Move BUG_ON(!vp) before above statement.
 
-	if (lpit_read_residency_count_address(&slp_s0_addr))
-		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
-
-The validity of address PMC_BASE_ADDR_DEFAULT (i.e., 0xFE000000) is not
-verified by the driver, which is what this patch introduces. With this
-patch, if address PMC_BASE_ADDR_DEFAULT is in RAM, then the driver will
-not attempt to ioremap the aforementioned address.
-
-Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+Cc: Hedi Berriche <hedi.berriche@hpe.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Travis <mike.travis@hpe.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Russ Anderson <russ.anderson@hpe.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: allison@lohutok.net
+Cc: andy@infradead.org
+Cc: armijn@tjaldur.nl
+Cc: bp@alien8.de
+Cc: dvhart@infradead.org
+Cc: gregkh@linuxfoundation.org
+Cc: hpa@zytor.com
+Cc: kjlu@umn.edu
+Cc: platform-driver-x86@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190905232951.GA28779@LGEARND20B15
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_pmc_core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/platform/uv/tlb_uv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index be6cda89dcf5b..01a530e2f8017 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -882,10 +882,14 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
- 		pmcdev->map = &cnp_reg_map;
+diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+index a4130b84d1ff5..3a693e7c7434f 100644
+--- a/arch/x86/platform/uv/tlb_uv.c
++++ b/arch/x86/platform/uv/tlb_uv.c
+@@ -1817,9 +1817,9 @@ static void pq_init(int node, int pnode)
  
--	if (lpit_read_residency_count_address(&slp_s0_addr))
-+	if (lpit_read_residency_count_address(&slp_s0_addr)) {
- 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
--	else
-+
-+		if (page_is_ram(PHYS_PFN(pmcdev->base_addr)))
-+			return -ENODEV;
-+	} else {
- 		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
-+	}
+ 	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
+ 	vp = kmalloc_node(plsize, GFP_KERNEL, node);
+-	pqp = (struct bau_pq_entry *)vp;
+-	BUG_ON(!pqp);
++	BUG_ON(!vp);
  
- 	pmcdev->regbase = ioremap(pmcdev->base_addr,
- 				  pmcdev->map->regmap_length);
++	pqp = (struct bau_pq_entry *)vp;
+ 	cp = (char *)pqp + 31;
+ 	pqp = (struct bau_pq_entry *)(((unsigned long)cp >> 5) << 5);
+ 
 -- 
 2.20.1
