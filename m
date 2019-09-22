@@ -1,83 +1,71 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlight on
- Inspiron 10xx
-Date: Sun, 22 Sep 2019 15:43:23 +0200
-Message-ID: <20190922134323.mowwoyeuqoalpwsg@pali>
-References: <156824368856.28378.14511879419677114177@WARFSTATION>
- <20190912073358.n5bxqosowhky5uhb@pali>
- <156882055514.9370.16951540573597044820@WARFSTATION>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 171/203] platform/x86: intel_pmc_core: Do not ioremap RAM
+Date: Sun, 22 Sep 2019 14:43:17 -0400
+Message-ID: <20190922184350.30563-171-sashal@kernel.org>
+References: <20190922184350.30563-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="hve2rdbpgwpt5hzd"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <156882055514.9370.16951540573597044820@WARFSTATION>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mario.limonciello@dell.com
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: "M. Vefa Bicakci" <m.v.b@runbox.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+From: "M. Vefa Bicakci" <m.v.b@runbox.com>
 
---hve2rdbpgwpt5hzd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 7d505758b1e556cdf65a5e451744fe0ae8063d17 ]
 
-On Wednesday 18 September 2019 17:29:15 Pacien TRAN-GIRARD wrote:
-> Quoting Pali Roh=C3=A1r (2019-09-12 09:33:58)
-> > On Thursday 12 September 2019 01:14:48 Pacien TRAN-GIRARD wrote:
-> > > This patch registers a quirk disabling keyboard backlight support
-> > > for the Dell Inspiron 1012 and 1018.
-> > >=20
-> > > Those models wrongly report supporting the KBD_LED_OFF_TOKEN and
-> > > KBD_LED_ON_TOKEN SMBIOS tokens, exposing keyboard brightness controls
-> > > through sysfs which freeze the system when used.
-> > >=20
-> > > The associated SMBIOS calls never return and cause the system to
-> > > hang, notably at boot when systemd-backlight tries to restore
-> > > previous brightness settings.
-> >=20
-> > Hi! This sounds like a firmware bug. Have you already reported it to De=
-ll?
->=20
-> Yes, the issue has been reported to Dell's technical support, which didn't
-> provide a satisfying answer.
+On a Xen-based PVH virtual machine with more than 4 GiB of RAM,
+intel_pmc_core fails initialization with the following warning message
+from the kernel, indicating that the driver is attempting to ioremap
+RAM:
 
-There were already some firmware problems with keyboard backlight and
-Mario posted this comment about Linux support:
-https://github.com/dell/libsmbios/issues/48#issuecomment-391328501
+  ioremap on RAM at 0x00000000fe000000 - 0x00000000fe001fff
+  WARNING: CPU: 1 PID: 434 at arch/x86/mm/ioremap.c:186 __ioremap_caller.constprop.0+0x2aa/0x2c0
+...
+  Call Trace:
+   ? pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
+   pmc_core_probe+0x87/0x2d0 [intel_pmc_core]
 
-Can you try to use libsmbios tools and if they do not work too, report
-problem also there?
+This issue appears to manifest itself because of the following fallback
+mechanism in the driver:
 
-> I'm not familiar with Dell's policy, but I doubt that they would issue a
-> BIOS update for discontinued models from 2010.
+	if (lpit_read_residency_count_address(&slp_s0_addr))
+		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
 
-We need to wait what Mario wrote about this particular problem.
+The validity of address PMC_BASE_ADDR_DEFAULT (i.e., 0xFE000000) is not
+verified by the driver, which is what this patch introduces. With this
+patch, if address PMC_BASE_ADDR_DEFAULT is in RAM, then the driver will
+not attempt to ioremap the aforementioned address.
 
-> >=20
-> > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D107651
-> > > Signed-off-by: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
-> >=20
-> > --=20
-> > Pali Rohr
-> > pali.rohar@gmail.com
->=20
-> --
-> Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
+Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/intel_pmc_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---hve2rdbpgwpt5hzd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXYd6eQAKCRCL8Mk9A+RD
-UvCfAJ9OGlR6Lvdo/g0uHuS1xjs+xY+qYACdHJqEhlTHrOq7NT4TwVs7GLVSol4=
-=6851
------END PGP SIGNATURE-----
-
---hve2rdbpgwpt5hzd--
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index c510d0d724759..3b6b8dcc47678 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -878,10 +878,14 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
+ 		pmcdev->map = &cnp_reg_map;
+ 
+-	if (lpit_read_residency_count_address(&slp_s0_addr))
++	if (lpit_read_residency_count_address(&slp_s0_addr)) {
+ 		pmcdev->base_addr = PMC_BASE_ADDR_DEFAULT;
+-	else
++
++		if (page_is_ram(PHYS_PFN(pmcdev->base_addr)))
++			return -ENODEV;
++	} else {
+ 		pmcdev->base_addr = slp_s0_addr - pmcdev->map->slp_s0_offset;
++	}
+ 
+ 	pmcdev->regbase = ioremap(pmcdev->base_addr,
+ 				  pmcdev->map->regmap_length);
+-- 
+2.20.1
