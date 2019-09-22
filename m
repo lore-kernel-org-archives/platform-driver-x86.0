@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 76/89] x86/platform/uv: Fix kmalloc() NULL check routine
-Date: Sun, 22 Sep 2019 14:57:04 -0400
-Message-ID: <20190922185717.3412-76-sashal@kernel.org>
-References: <20190922185717.3412-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 51/60] x86/platform/uv: Fix kmalloc() NULL check routine
+Date: Sun, 22 Sep 2019 14:59:24 -0400
+Message-ID: <20190922185934.4305-51-sashal@kernel.org>
+References: <20190922185934.4305-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
+In-Reply-To: <20190922185934.4305-1-sashal@kernel.org>
 Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Austin Kim <austindh.kim@gmail.com>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, Hedi Berriche <hedi.berriche@hpe.com>, Linus Torvalds <torvalds@linux-foundation.org>, Mike Travis <mike.travis@hpe.com>, Peter Zijlstra <peterz@infradead.org>, Russ Anderson <russ.anderson@hpe.com>, Steve Wahl <steve.wahl@hpe.com>, Thomas Gleixner <tglx@linutronix.de>, allison@lohutok.net, andy@infradead.org, armijn@tjaldur.nl, bp@alien8.de, dvhart@infradead.org, gregkh@linuxfoundation.org, hpa@zytor.com, kjlu@umn.edu, platform-driver-x86@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
@@ -48,10 +48,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
-index 34f9a9ce62360..36ea9f88d63a7 100644
+index 16d4967d59ea2..814b01d4e519e 100644
 --- a/arch/x86/platform/uv/tlb_uv.c
 +++ b/arch/x86/platform/uv/tlb_uv.c
-@@ -1818,9 +1818,9 @@ static void pq_init(int node, int pnode)
+@@ -1816,9 +1816,9 @@ static void pq_init(int node, int pnode)
  
  	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
  	vp = kmalloc_node(plsize, GFP_KERNEL, node);
