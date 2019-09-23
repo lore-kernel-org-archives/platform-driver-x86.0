@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 2/3] tools/power/x86/intel-speed-select: Turbo-freq feature auto mode
-Date: Mon, 23 Sep 2019 11:59:05 -0700
-Message-ID: <20190923185906.76032-3-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 3/3] tools/power/x86/intel-speed-select: Refuse to disable core-power when getting used
+Date: Mon, 23 Sep 2019 11:59:06 -0700
+Message-ID: <20190923185906.76032-4-srinivas.pandruvada@linux.intel.com>
 References: <20190923185906.76032-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190923185906.76032-1-srinivas.pandruvada@linux.intel.com>
@@ -10,149 +10,51 @@ To: andriy.shevchenko@intel.com
 Cc: prarit@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Introduce --auto|-a option to turbo-freq enable feature, so that it
-does in one step for users who are OK by setting all passed target cores
-as high priority and set in CLOS 0 and remaining in CLOS 3. In this way,
-users don't have to take multiple steps to enable turbo-freq feature. For
-users who want more fine grain control, they can always use core-power
-feature to set custom CLOS configuration and assignment.
+The turbo-freq feature is dependent on the core-power feature. If the
+core-power feature is disabled while the turbo-freq feature is enabled,
+this will break the turbo-freq feature. This is a firmware limitation,
+where they can't return error under this scenario.
 
-While here also print the error to output when clos configuration fails.
-
-For example
-intel-speed-select -c 0-4 turbo-freq enable --auto
-
-The above command will enable turbo-freq and core-power feature. Also
-mark CPU 0 to CPU 4 as high priority.
+So when trying to disable core-power, make sure that the turbo-freq
+feature is not enabled. If it enabled, return error if user is trying to
+disable the core-power feature.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../x86/intel-speed-select/isst-config.c      | 79 ++++++++++++++++---
- 1 file changed, 69 insertions(+), 10 deletions(-)
+ .../power/x86/intel-speed-select/isst-core.c  | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 5da59ff47306..edc4c50853bd 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1163,19 +1163,24 @@ static void set_fact_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 			isst_set_trl_from_current_tdp(cpu, fact_trl);
- 			isst_display_result(cpu, outf, "turbo-freq", "disable",
- 					    ret);
-+			if (auto_mode)
-+				isst_pm_qos_config(cpu, 0, 0);
- 		}
- 	}
- }
+diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
+index 6dee5332c9d3..67d32f2b9bea 100644
+--- a/tools/power/x86/intel-speed-select/isst-core.c
++++ b/tools/power/x86/intel-speed-select/isst-core.c
+@@ -649,6 +649,27 @@ int isst_pm_qos_config(int cpu, int enable_clos, int priority_type)
+ 	unsigned int req, resp;
+ 	int ret;
  
- static void set_fact_enable(void)
- {
--	int status = 1;
-+	int status = 1, i, j, ret;
- 
- 	if (cmd_help) {
- 		fprintf(stderr,
- 			"Enable Intel Speed Select Technology Turbo frequency feature\n");
- 		fprintf(stderr,
- 			"Optional: -t|--trl : Specify turbo ratio limit\n");
-+		fprintf(stderr,
-+			"\tOptional Arguments: -a|--auto : Designate specified target CPUs with");
-+		fprintf(stderr, "-C|--cpu option as as high priority using core-power feature\n");
- 		exit(0);
- 	}
- 
-@@ -1187,6 +1192,59 @@ static void set_fact_enable(void)
- 		for_each_online_package_in_set(set_fact_for_cpu, NULL, NULL,
- 					       NULL, &status);
- 	isst_ctdp_display_information_end(outf);
++	if (!enable_clos) {
++		struct isst_pkg_ctdp pkg_dev;
++		struct isst_pkg_ctdp_level_info ctdp_level;
 +
-+	if (auto_mode) {
-+		for (i = 0; i < get_topo_max_cpus(); ++i) {
-+			int clos;
-+
-+			if (!CPU_ISSET_S(i, present_cpumask_size, present_cpumask))
-+				continue;
-+
-+			ret = set_clos_param(i, 0, 0, 0, 0, 0xff);
-+			if (ret)
-+				goto error_disp;
-+
-+			ret = set_clos_param(i, 1, 15, 0, 0, 0xff);
-+			if (ret)
-+				goto error_disp;
-+
-+			ret = set_clos_param(i, 2, 15, 0, 0, 0xff);
-+			if (ret)
-+				goto error_disp;
-+
-+			ret = set_clos_param(i, 3, 15, 0, 0, 0xff);
-+			if (ret)
-+				goto error_disp;
-+
-+			if (CPU_ISSET_S(i, target_cpumask_size, target_cpumask))
-+				clos = 0;
-+			else
-+				clos = 3;
-+
-+			ret = isst_pm_qos_config(i, 1, 1);
-+			if (ret)
-+				goto error_disable;
-+
-+			debug_printf("Associate cpu: %d clos: %d\n", i, clos);
-+			ret = isst_clos_associate(i, clos);
-+			if (ret)
-+				goto error_disp;
++		ret = isst_get_ctdp_levels(cpu, &pkg_dev);
++		if (ret) {
++			debug_printf("isst_get_ctdp_levels\n");
++			return ret;
 +		}
-+		isst_display_result(i, outf, "turbo-freq --auto", "enable", 0);
++
++		ret = isst_get_ctdp_control(cpu, pkg_dev.current_level,
++					    &ctdp_level);
++		if (ret)
++			return ret;
++
++		if (ctdp_level.fact_enabled) {
++			debug_printf("Turbo-freq feature must be disabled first\n");
++			return -EINVAL;
++		}
 +	}
 +
-+	return;
-+
-+error_disable:
-+	for (j = 0; j < i; ++j) {
-+		if (!CPU_ISSET_S(j, present_cpumask_size, present_cpumask))
-+				continue;
-+
-+		isst_pm_qos_config(j, 0, 0);
-+	}
-+error_disp:
-+	isst_display_result(i, outf, "turbo-freq --auto", "enable", ret);
-+
- }
- 
- static void set_fact_disable(void)
-@@ -1198,6 +1256,8 @@ static void set_fact_disable(void)
- 			"Disable Intel Speed Select Technology turbo frequency feature\n");
- 		fprintf(stderr,
- 			"Optional: -t|--trl : Specify turbo ratio limit\n");
-+		fprintf(stderr,
-+			"\tOptional Arguments: -a|--auto : Also disable core-power associations\n");
- 		exit(0);
- 	}
- 
-@@ -1218,16 +1278,15 @@ static void enable_clos_qos_config(int cpu, void *arg1, void *arg2, void *arg3,
- 	int status = *(int *)arg4;
- 
- 	ret = isst_pm_qos_config(cpu, status, clos_priority_type);
--	if (ret) {
-+	if (ret)
- 		perror("isst_pm_qos_config");
--	} else {
--		if (status)
--			isst_display_result(cpu, outf, "core-power", "enable",
--					    ret);
--		else
--			isst_display_result(cpu, outf, "core-power", "disable",
--					    ret);
--	}
-+
-+	if (status)
-+		isst_display_result(cpu, outf, "core-power", "enable",
-+				    ret);
-+	else
-+		isst_display_result(cpu, outf, "core-power", "disable",
-+				    ret);
- }
- 
- static void set_clos_enable(void)
+ 	ret = isst_send_mbox_command(cpu, CONFIG_CLOS, CLOS_PM_QOS_CONFIG, 0, 0,
+ 				     &resp);
+ 	if (ret)
 -- 
 2.17.2
