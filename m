@@ -1,60 +1,44 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 3/3] tools/power/x86/intel-speed-select: Refuse to disable core-power when getting used
-Date: Mon, 23 Sep 2019 11:59:06 -0700
-Message-ID: <20190923185906.76032-4-srinivas.pandruvada@linux.intel.com>
-References: <20190923185906.76032-1-srinivas.pandruvada@linux.intel.com>
+From: Gabriel C <nix.or.die@gmail.com>
+Subject: acer_wmi: Unknown function(s) on Acer Nitro 5 (AN515-43-R8BF)
+Date: Mon, 23 Sep 2019 21:45:05 +0200
+Message-ID: <CAEJqkgjSes-4bSKbyfbNhXfcQwdEMzp8X4f72_SS=NpBoBtWmQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190923185906.76032-1-srinivas.pandruvada@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andriy.shevchenko@intel.com
-Cc: prarit@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, "Lee, Chun-Yi" <jlee@suse.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The turbo-freq feature is dependent on the core-power feature. If the
-core-power feature is disabled while the turbo-freq feature is enabled,
-this will break the turbo-freq feature. This is a firmware limitation,
-where they can't return error under this scenario.
+Hi guys,
 
-So when trying to disable core-power, make sure that the turbo-freq
-feature is not enabled. If it enabled, return error if user is trying to
-disable the core-power feature.
+I noticed some warning in dmesg on this Laptop.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../power/x86/intel-speed-select/isst-core.c  | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Fn+right, Fn+left is BrightnessDown/Up and produce the following warning:
 
-diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
-index 6dee5332c9d3..67d32f2b9bea 100644
---- a/tools/power/x86/intel-speed-select/isst-core.c
-+++ b/tools/power/x86/intel-speed-select/isst-core.c
-@@ -649,6 +649,27 @@ int isst_pm_qos_config(int cpu, int enable_clos, int priority_type)
- 	unsigned int req, resp;
- 	int ret;
- 
-+	if (!enable_clos) {
-+		struct isst_pkg_ctdp pkg_dev;
-+		struct isst_pkg_ctdp_level_info ctdp_level;
-+
-+		ret = isst_get_ctdp_levels(cpu, &pkg_dev);
-+		if (ret) {
-+			debug_printf("isst_get_ctdp_levels\n");
-+			return ret;
-+		}
-+
-+		ret = isst_get_ctdp_control(cpu, pkg_dev.current_level,
-+					    &ctdp_level);
-+		if (ret)
-+			return ret;
-+
-+		if (ctdp_level.fact_enabled) {
-+			debug_printf("Turbo-freq feature must be disabled first\n");
-+			return -EINVAL;
-+		}
-+	}
-+
- 	ret = isst_send_mbox_command(cpu, CONFIG_CLOS, CLOS_PM_QOS_CONFIG, 0, 0,
- 				     &resp);
- 	if (ret)
--- 
-2.17.2
+acer_wmi: Unknown function number - 4 - 0
+
+The brightness has some other issue on this Laptop but not sure
+who to blame on this. Probably amdgpu.?
+
+/sys/class/backlight/amdgpu_bl1/brightness <-> actual_brightness
+seems to mismatch.  EG: when brightness is 0 actual_brightness is still 5140.
+
+Unplugging the AC gives the following warning:
+
+acer_wmi: Unknown function number - 8 - 0
+
+When plugging the AC back I see;
+
+acer_wmi: Unknown function number - 8 - 1.
+
+I uploaded a dump of the acpi tables and dmidecode of the box.
+
+https://www.frugalware.org/~crazy/nitro5/ACPI
+https://www.frugalware.org/~crazy/nitro5/DMI
+
+Please let me know if you need any other informations.
+
+Best Regards,
+
+Gabriel C
