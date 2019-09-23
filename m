@@ -1,67 +1,174 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v4 4/6] platform/x86: huawei-wmi: Add battery charging
- thresholds
-Date: Mon, 23 Sep 2019 14:06:43 +0800
-Message-ID: <20190923060643.GE15734@shao2-debian>
-References: <20190920160250.12510-5-ayman.bagabas@gmail.com>
+From: Prarit Bhargava <prarit@redhat.com>
+Subject: [PATCH 2/2] intel-speed-select: Display turbo frequencies in a table
+Date: Mon, 23 Sep 2019 09:16:38 -0400
+Message-ID: <20190923131638.6668-3-prarit@redhat.com>
+References: <20190923131638.6668-1-prarit@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190920160250.12510-5-ayman.bagabas@gmail.com>
+In-Reply-To: <20190923131638.6668-1-prarit@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Sinan Kaya <okaya@kernel.org>, Takashi Iwai <tiwai@suse.de>, Ayman Bagabas <ayman.bagabas@gmail.com>, Stuart Hayes <stuart.w.hayes@gmail.com>, Matan Ziv-Av <matan@svgalib.org>, "Enrico Weigelt, metux IT consult" <info@metux.net>, Hans de Goede <hdegoede@redhat.com>, Peng Hao <peng.hao2@zte.com.cn>, Krzysztof Kozlowski <krzk@kernel.org>, Mattias Jacobsson <2pi@mok.nu>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Ayman,
+The output of turbo frequencies is also long (each bucket has
+3 lines and the headers).  This can be shrunk down into a table that is
+easier to consume for both scripts and humans.
 
-Thank you for the patch! Perhaps something to improve:
+Display the turbo and clip frequencies in a table.
 
-[auto build test WARNING on next-20190918]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Ayman-Bagabas/platform-x86-Huawei-WMI-laptop-extras-driver/20190921-072831
-base:   next-20190918
-:::::: branch date: 31 hours ago
-:::::: commit date: 31 hours ago
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-smatch warnings:
-drivers/platform/x86/huawei-wmi.c:327 huawei_wmi_battery_get() error: buffer overflow 'ret' 256 <= 256
-
-# https://github.com/0day-ci/linux/commit/2b04f79aef9a86ecb9483dd27a82498fa56bc0c9
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 2b04f79aef9a86ecb9483dd27a82498fa56bc0c9
-vim +/ret +327 drivers/platform/x86/huawei-wmi.c
-
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  311  
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  312  static int huawei_wmi_battery_get(int *start, int *end)
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  313  {
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  314  	u8 ret[0x100];
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  315  	int err, i;
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  316  
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  317  	err = huawei_wmi_cmd(BATTERY_THRESH_GET, ret, 0x100);
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  318  	if (err)
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  319  		return err;
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  320  
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  321  	/* Find the last two non-zero values. Return status is ignored. */
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  322  	i = 0x100;
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  323  	do {
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  324  		if (start)
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  325  			*start = ret[i-1];
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  326  		if (end)
-2b04f79aef9a86 Ayman Bagabas 2019-09-20 @327  			*end = ret[i];
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  328  	} while (i > 2 && !ret[i--]);
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  329  
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  330  	return 0;
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  331  }
-2b04f79aef9a86 Ayman Bagabas 2019-09-20  332  
-
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ .../x86/intel-speed-select/isst-display.c     | 116 ++++++++++--------
+ 1 file changed, 63 insertions(+), 53 deletions(-)
+
+diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
+index 9b0ae0831a60..16843e0f78f0 100644
+--- a/tools/power/x86/intel-speed-select/isst-display.c
++++ b/tools/power/x86/intel-speed-select/isst-display.c
+@@ -213,6 +213,52 @@ static void _isst_pbf_display_information(int cpu, FILE *outf, int level,
+ 	format_and_print(outf, disp_level + 1, header, value);
+ }
+ 
++static void _isst_fact_display_frequencies(FILE *outf, int fact_avx, int level,
++					   char *description, int bucket,
++					   int core_count, int sse,
++					   int avx, int avx512)
++{
++	char header[256];
++	int ret;
++	void *header_ptr;
++	int header_size;
++
++	header_ptr = header;
++	if (core_count > 0)
++		ret = snprintf(header_ptr, sizeof(header), "%s%d %6d ",
++			       description, bucket, core_count);
++	else
++		ret = snprintf(header_ptr, sizeof(header), "%s%6s ",
++			       description, "-");
++
++
++	header_ptr += ret;
++	header_size = header_ptr - (void *) header;
++	if (fact_avx & 0x01)
++		ret = snprintf(header_ptr, header_size, "%12d ",
++			       sse * DISP_FREQ_MULTIPLIER);
++	else
++		ret = snprintf(header_ptr, header_size, "%12s ", "- ");
++
++	header_ptr += ret;
++	header_size = header_ptr - (void *) header;
++	if (fact_avx & 0x02)
++		ret = snprintf(header_ptr, header_size, "%12d ",
++			       avx * DISP_FREQ_MULTIPLIER);
++	else
++		ret = snprintf(header_ptr, header_size, "%12s ", "- ");
++
++	header_ptr += ret;
++	header_size = header_ptr - (void *) header;
++	if (fact_avx & 0x04)
++		ret = snprintf(header_ptr, header_size, "%12d",
++			       avx512 * DISP_FREQ_MULTIPLIER);
++	else
++		ret = snprintf(header_ptr, header_size, "%12s", "-");
++
++	format_and_print(outf, level + 1, header, NULL);
++}
++
+ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
+ 					   int fact_bucket, int fact_avx,
+ 					   struct isst_fact_info *fact_info,
+@@ -220,11 +266,14 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
+ {
+ 	struct isst_fact_bucket_info *bucket_info = fact_info->bucket_info;
+ 	char header[256];
+-	char value[256];
+ 	int j;
+ 
+ 	snprintf(header, sizeof(header), "speed-select-turbo-freq");
+ 	format_and_print(outf, base_level, header, NULL);
++	snprintf(header, sizeof(header),"%11s %s %s %s %s",
++		 "", "core-count", "max-sse(MHz)" , "max-avx2(MHz)", "max-avx512(MHz)");
++	format_and_print(outf, base_level + 1, header, NULL);
++
+ 	for (j = 0; j < ISST_FACT_MAX_BUCKETS; ++j) {
+ 		if (fact_bucket != 0xff && fact_bucket != j)
+ 			continue;
+@@ -232,59 +281,20 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
+ 		if (!bucket_info[j].high_priority_cores_count)
+ 			break;
+ 
+-		snprintf(header, sizeof(header), "bucket-%d", j);
+-		format_and_print(outf, base_level + 1, header, NULL);
+-
+-		snprintf(header, sizeof(header), "high-priority-cores-count");
+-		snprintf(value, sizeof(value), "%d",
+-			 bucket_info[j].high_priority_cores_count);
+-		format_and_print(outf, base_level + 2, header, value);
+-
+-		if (fact_avx & 0x01) {
+-			snprintf(header, sizeof(header),
+-				 "high-priority-max-frequency(MHz)");
+-			snprintf(value, sizeof(value), "%d",
+-				 bucket_info[j].sse_trl * DISP_FREQ_MULTIPLIER);
+-			format_and_print(outf, base_level + 2, header, value);
+-		}
+-
+-		if (fact_avx & 0x02) {
+-			snprintf(header, sizeof(header),
+-				 "high-priority-max-avx2-frequency(MHz)");
+-			snprintf(value, sizeof(value), "%d",
+-				 bucket_info[j].avx_trl * DISP_FREQ_MULTIPLIER);
+-			format_and_print(outf, base_level + 2, header, value);
+-		}
+-
+-		if (fact_avx & 0x04) {
+-			snprintf(header, sizeof(header),
+-				 "high-priority-max-avx512-frequency(MHz)");
+-			snprintf(value, sizeof(value), "%d",
+-				 bucket_info[j].avx512_trl *
+-					 DISP_FREQ_MULTIPLIER);
+-			format_and_print(outf, base_level + 2, header, value);
+-		}
++		_isst_fact_display_frequencies(
++			outf, fact_avx, base_level + 1, "bucket-", j,
++			bucket_info[j].high_priority_cores_count,
++			bucket_info[j].sse_trl,
++			bucket_info[j].avx_trl,
++			bucket_info[j].avx512_trl);
+ 	}
+-	snprintf(header, sizeof(header),
+-		 "speed-select-turbo-freq-clip-frequencies");
+-	format_and_print(outf, base_level + 1, header, NULL);
+-	snprintf(header, sizeof(header), "low-priority-max-frequency(MHz)");
+-	snprintf(value, sizeof(value), "%d",
+-		 fact_info->lp_clipping_ratio_license_sse *
+-			 DISP_FREQ_MULTIPLIER);
+-	format_and_print(outf, base_level + 2, header, value);
+-	snprintf(header, sizeof(header),
+-		 "low-priority-max-avx2-frequency(MHz)");
+-	snprintf(value, sizeof(value), "%d",
+-		 fact_info->lp_clipping_ratio_license_avx2 *
+-			 DISP_FREQ_MULTIPLIER);
+-	format_and_print(outf, base_level + 2, header, value);
+-	snprintf(header, sizeof(header),
+-		 "low-priority-max-avx512-frequency(MHz)");
+-	snprintf(value, sizeof(value), "%d",
+-		 fact_info->lp_clipping_ratio_license_avx512 *
+-			 DISP_FREQ_MULTIPLIER);
+-	format_and_print(outf, base_level + 2, header, value);
++
++	_isst_fact_display_frequencies(
++			outf, fact_avx, base_level + 1, "clip-freq", 1,
++			-1, /* no core-count */
++			fact_info->lp_clipping_ratio_license_sse,
++			fact_info->lp_clipping_ratio_license_avx2,
++			fact_info->lp_clipping_ratio_license_avx512);
+ }
+ 
+ static void isst_turbo_ratio_limits(FILE *outf, char *header_name,
+-- 
+2.21.0
