@@ -1,61 +1,42 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlight on
- Inspiron 10xx
-Date: Mon, 23 Sep 2019 13:24:40 +0000
-Message-ID: <baba1f72c68f4699955d2b7a52df65e1@AUSX13MPC105.AMER.DELL.COM>
-References: <156824368856.28378.14511879419677114177@WARFSTATION>
- <20190912073358.n5bxqosowhky5uhb@pali>
- <156882055514.9370.16951540573597044820@WARFSTATION>
- <20190922134323.mowwoyeuqoalpwsg@pali>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH 0/2] intel-speed-select: Convert output to tables
+Date: Mon, 23 Sep 2019 11:18:30 -0700
+Message-ID: <44b6fd7a71d9e9f7dd82ac51473f45b48fa4679d.camel@linux.intel.com>
+References: <20190923131638.6668-1-prarit@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190922134323.mowwoyeuqoalpwsg@pali>
-Content-Language: en-US
+In-Reply-To: <20190923131638.6668-1-prarit@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: pali.rohar@gmail.com, pacien.trangirard@pacien.net
-Cc: mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Prarit Bhargava <prarit@redhat.com>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciA8cGFsaS5y
-b2hhckBnbWFpbC5jb20+DQo+IFNlbnQ6IFN1bmRheSwgU2VwdGVtYmVyIDIyLCAyMDE5IDg6NDMg
-QU0NCj4gVG86IFBhY2llbiBUUkFOLUdJUkFSRA0KPiBDYzogTWF0dGhldyBHYXJyZXR0OyBEYXJy
-ZW4gSGFydDsgQW5keSBTaGV2Y2hlbmtvOyBwbGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtl
-cm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IExpbW9uY2llbGxvLCBNYXJp
-bw0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBwbGF0Zm9ybS94ODY6IGRlbGwtbGFwdG9wOiBmaXgg
-cGhhbnRvbSBrYmQgYmFja2xpZ2h0IG9uDQo+IEluc3Bpcm9uIDEweHgNCj4gDQo+IE9uIFdlZG5l
-c2RheSAxOCBTZXB0ZW1iZXIgMjAxOSAxNzoyOToxNSBQYWNpZW4gVFJBTi1HSVJBUkQgd3JvdGU6
-DQo+ID4gUXVvdGluZyBQYWxpIFJvaMOhciAoMjAxOS0wOS0xMiAwOTozMzo1OCkNCj4gPiA+IE9u
-IFRodXJzZGF5IDEyIFNlcHRlbWJlciAyMDE5IDAxOjE0OjQ4IFBhY2llbiBUUkFOLUdJUkFSRCB3
-cm90ZToNCj4gPiA+ID4gVGhpcyBwYXRjaCByZWdpc3RlcnMgYSBxdWlyayBkaXNhYmxpbmcga2V5
-Ym9hcmQgYmFja2xpZ2h0IHN1cHBvcnQNCj4gPiA+ID4gZm9yIHRoZSBEZWxsIEluc3Bpcm9uIDEw
-MTIgYW5kIDEwMTguDQo+ID4gPiA+DQo+ID4gPiA+IFRob3NlIG1vZGVscyB3cm9uZ2x5IHJlcG9y
-dCBzdXBwb3J0aW5nIHRoZSBLQkRfTEVEX09GRl9UT0tFTiBhbmQNCj4gPiA+ID4gS0JEX0xFRF9P
-Tl9UT0tFTiBTTUJJT1MgdG9rZW5zLCBleHBvc2luZyBrZXlib2FyZCBicmlnaHRuZXNzDQo+ID4g
-PiA+IGNvbnRyb2xzIHRocm91Z2ggc3lzZnMgd2hpY2ggZnJlZXplIHRoZSBzeXN0ZW0gd2hlbiB1
-c2VkLg0KPiA+ID4gPg0KPiA+ID4gPiBUaGUgYXNzb2NpYXRlZCBTTUJJT1MgY2FsbHMgbmV2ZXIg
-cmV0dXJuIGFuZCBjYXVzZSB0aGUgc3lzdGVtIHRvDQo+ID4gPiA+IGhhbmcsIG5vdGFibHkgYXQg
-Ym9vdCB3aGVuIHN5c3RlbWQtYmFja2xpZ2h0IHRyaWVzIHRvIHJlc3RvcmUNCj4gPiA+ID4gcHJl
-dmlvdXMgYnJpZ2h0bmVzcyBzZXR0aW5ncy4NCj4gPiA+DQo+ID4gPiBIaSEgVGhpcyBzb3VuZHMg
-bGlrZSBhIGZpcm13YXJlIGJ1Zy4gSGF2ZSB5b3UgYWxyZWFkeSByZXBvcnRlZCBpdCB0byBEZWxs
-Pw0KPiA+DQo+ID4gWWVzLCB0aGUgaXNzdWUgaGFzIGJlZW4gcmVwb3J0ZWQgdG8gRGVsbCdzIHRl
-Y2huaWNhbCBzdXBwb3J0LCB3aGljaA0KPiA+IGRpZG4ndCBwcm92aWRlIGEgc2F0aXNmeWluZyBh
-bnN3ZXIuDQo+IA0KPiBUaGVyZSB3ZXJlIGFscmVhZHkgc29tZSBmaXJtd2FyZSBwcm9ibGVtcyB3
-aXRoIGtleWJvYXJkIGJhY2tsaWdodCBhbmQgTWFyaW8NCj4gcG9zdGVkIHRoaXMgY29tbWVudCBh
-Ym91dCBMaW51eCBzdXBwb3J0Og0KPiBodHRwczovL2dpdGh1Yi5jb20vZGVsbC9saWJzbWJpb3Mv
-aXNzdWVzLzQ4I2lzc3VlY29tbWVudC0zOTEzMjg1MDENCj4gDQo+IENhbiB5b3UgdHJ5IHRvIHVz
-ZSBsaWJzbWJpb3MgdG9vbHMgYW5kIGlmIHRoZXkgZG8gbm90IHdvcmsgdG9vLCByZXBvcnQgcHJv
-YmxlbQ0KPiBhbHNvIHRoZXJlPw0KPiANCj4gPiBJJ20gbm90IGZhbWlsaWFyIHdpdGggRGVsbCdz
-IHBvbGljeSwgYnV0IEkgZG91YnQgdGhhdCB0aGV5IHdvdWxkIGlzc3VlDQo+ID4gYSBCSU9TIHVw
-ZGF0ZSBmb3IgZGlzY29udGludWVkIG1vZGVscyBmcm9tIDIwMTAuDQo+IA0KPiBXZSBuZWVkIHRv
-IHdhaXQgd2hhdCBNYXJpbyB3cm90ZSBhYm91dCB0aGlzIHBhcnRpY3VsYXIgcHJvYmxlbS4NCj4g
-DQoNCkkgYWdyZWUgYW4gSW5zcGlyb24gaXMgdW5saWtlbHkgdG8gYmUgdXBkYXRlZCA5IHllYXJz
-IGxhdGVyLiAgSSB0aGluayB0aGUgcmlnaHQgdGhpbmcNCnRvIGRvIGluIHRoaXMgaW5zdGFuY2Ug
-aXMgdG8gYmxhY2tsaXN0IHRoaXMgcGFydGljdWxhciBwbGF0Zm9ybSBpbiBrZXJuZWwgZHJpdmVy
-Lg0KDQo+ID4gPg0KPiA+ID4gPiBCdWd6aWxsYTogaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3Jn
-L3Nob3dfYnVnLmNnaT9pZD0xMDc2NTENCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogUGFjaWVuIFRS
-QU4tR0lSQVJEIDxwYWNpZW4udHJhbmdpcmFyZEBwYWNpZW4ubmV0Pg0KPiA+ID4NCj4gPiA+IC0t
-DQo+ID4gPiBQYWxpIFJvaHINCj4gPiA+IHBhbGkucm9oYXJAZ21haWwuY29tDQo+ID4NCj4gPiAt
-LQ0KPiA+IFBhY2llbiBUUkFOLUdJUkFSRCA8cGFjaWVuLnRyYW5naXJhcmRAcGFjaWVuLm5ldD4N
-Cj4gDQo+IC0tDQo+IFBhbGkgUm9ow6FyDQo+IHBhbGkucm9oYXJAZ21haWwuY29tDQo=
+On Mon, 2019-09-23 at 09:16 -0400, Prarit Bhargava wrote:
+> The turbo ratio limits and turbo frequencies add a large amount of
+> lines to the output.  The output can be truncated into human and
+> machine readable tables to reduce the number of lines of output.
+> 
+Unfortunately this breaks json output. The idea is that the software
+should be able to parse json output using available json libraries and
+consume information, without developing complex parser.
+For example:
+#intel-speed-select -o out.json -f json perf-profile info
+Copy paste contents of out.json in any online json editor/tools, itshouldn't give error. 
+
+Thanks,
+Srinivas
+
+
+> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> 
+> Prarit Bhargava (2):
+>   intel-speed-select: Display turbo-ratio-limits as a table
+>   intel-speed-select: Display turbo frequencies in a table
+> 
+>  .../x86/intel-speed-select/isst-display.c     | 196 +++++++++-------
+> --
+>  1 file changed, 94 insertions(+), 102 deletions(-)
+> 
