@@ -1,42 +1,29 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH 0/2] intel-speed-select: Convert output to tables
-Date: Mon, 23 Sep 2019 11:18:30 -0700
-Message-ID: <44b6fd7a71d9e9f7dd82ac51473f45b48fa4679d.camel@linux.intel.com>
-References: <20190923131638.6668-1-prarit@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH 0/3] Auto configuration mode and error
+Date: Mon, 23 Sep 2019 11:59:03 -0700
+Message-ID: <20190923185906.76032-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190923131638.6668-1-prarit@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Prarit Bhargava <prarit@redhat.com>, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: linux-kernel@vger.kernel.org
+To: andriy.shevchenko@intel.com
+Cc: prarit@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 2019-09-23 at 09:16 -0400, Prarit Bhargava wrote:
-> The turbo ratio limits and turbo frequencies add a large amount of
-> lines to the output.  The output can be truncated into human and
-> machine readable tables to reduce the number of lines of output.
-> 
-Unfortunately this breaks json output. The idea is that the software
-should be able to parse json output using available json libraries and
-consume information, without developing complex parser.
-For example:
-#intel-speed-select -o out.json -f json perf-profile info
-Copy paste contents of out.json in any online json editor/tools, itshouldn't give error. 
+These are some changes, which help users to use the base-freq and
+turbo-freq features without going through multiple steps for
+basic configuration. Also add some error when user is trying
+to disable core-power feature while it is getting used.
 
-Thanks,
-Srinivas
+None of these patches are urgent and can wait for kernel version v5.5.
 
+Srinivas Pandruvada (3):
+  tools/power/x86/intel-speed-select: Base-freq feature auto mode
+  tools/power/x86/intel-speed-select: Turbo-freq feature auto mode
+  tools/power/x86/intel-speed-select: Refuse to disable core-power when
+    getting used
 
-> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> 
-> Prarit Bhargava (2):
->   intel-speed-select: Display turbo-ratio-limits as a table
->   intel-speed-select: Display turbo frequencies in a table
-> 
->  .../x86/intel-speed-select/isst-display.c     | 196 +++++++++-------
-> --
->  1 file changed, 94 insertions(+), 102 deletions(-)
-> 
+ .../x86/intel-speed-select/isst-config.c      | 275 +++++++++++++++++-
+ .../power/x86/intel-speed-select/isst-core.c  |  21 ++
+ 2 files changed, 281 insertions(+), 15 deletions(-)
+
+-- 
+2.17.2
