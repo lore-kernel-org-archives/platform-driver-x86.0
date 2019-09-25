@@ -1,62 +1,42 @@
-From: Joey Lee <JLee@suse.com>
-Subject: Re: acer_wmi: Unknown function(s) on Acer Nitro 5 (AN515-43-R8BF)
-Date: Wed, 25 Sep 2019 07:50:36 +0000
-Message-ID: <20190925075026.GY3878@linux-l9pv.suse>
-References: <CAEJqkgjSes-4bSKbyfbNhXfcQwdEMzp8X4f72_SS=NpBoBtWmQ@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlight on
+ Inspiron 10xx
+Date: Wed, 25 Sep 2019 11:07:35 +0300
+Message-ID: <CAHp75VfjhuFzTRg7X_ici6ACj54sQKH0mR8x9M-XAYk5cbTQ7g@mail.gmail.com>
+References: <156824368856.28378.14511879419677114177@WARFSTATION>
+ <20190912073358.n5bxqosowhky5uhb@pali> <156882055514.9370.16951540573597044820@WARFSTATION>
+ <20190922134323.mowwoyeuqoalpwsg@pali> <baba1f72c68f4699955d2b7a52df65e1@AUSX13MPC105.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEJqkgjSes-4bSKbyfbNhXfcQwdEMzp8X4f72_SS=NpBoBtWmQ@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <E5B6AC137F0D9645BF47A0B0835B6F54@namprd18.prod.outlook.com>
+In-Reply-To: <baba1f72c68f4699955d2b7a52df65e1@AUSX13MPC105.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel C <nix.or.die@gmail.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Gabriel,
+On Mon, Sep 23, 2019 at 4:24 PM <Mario.Limonciello@dell.com> wrote:
+> > From: Pali Roh=C3=A1r <pali.rohar@gmail.com>
+> > Sent: Sunday, September 22, 2019 8:43 AM
+> > To: Pacien TRAN-GIRARD
+> > Cc: Matthew Garrett; Darren Hart; Andy Shevchenko; platform-driver-
+> > x86@vger.kernel.org; linux-kernel@vger.kernel.org; Limonciello, Mario
+> > Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlig=
+ht on
+> > Inspiron 10xx
 
-On Mon, Sep 23, 2019 at 09:45:05PM +0200, Gabriel C wrote:
-> Hi guys,
-> 
-> I noticed some warning in dmesg on this Laptop.
-> 
-> Fn+right, Fn+left is BrightnessDown/Up and produce the following warning:
-> 
-> acer_wmi: Unknown function number - 4 - 0
-> 
-> The brightness has some other issue on this Laptop but not sure
-> who to blame on this. Probably amdgpu.?
-> 
-> /sys/class/backlight/amdgpu_bl1/brightness <-> actual_brightness
-> seems to mismatch.  EG: when brightness is 0 actual_brightness is still 5140.
+> > We need to wait what Mario wrote about this particular problem.
+> >
 >
+> I agree an Inspiron is unlikely to be updated 9 years later.  I think the=
+ right thing
+> to do in this instance is to blacklist this particular platform in kernel=
+ driver.
 
-Base on _BCM and _BQC in your DSDT. The backlight control is handled by EC.
-But, in some Acer machines that the _BCM is broken. You can try to modify
-brighess by echo to sys/class/backlight/acpi_video0/brightness
- 
-> Unplugging the AC gives the following warning:
-> 
-> acer_wmi: Unknown function number - 8 - 0
-> 
-> When plugging the AC back I see;
-> 
-> acer_wmi: Unknown function number - 8 - 1.
-> 
-> I uploaded a dump of the acpi tables and dmidecode of the box.
-> 
-> https://www.frugalware.org/~crazy/nitro5/ACPI
-> https://www.frugalware.org/~crazy/nitro5/DMI
-> 
-> Please let me know if you need any other informations.
->
+Does it mean you are okay with the proposed patch? Can you give your tag th=
+en?
 
-Thanks for your report the behavior for the function 4 and function 8.
-Maybe we can use the platform event to do something. e.g. expose key code
-to userland. Unfortunately my working list is too long that I do not have
-time for it currently.
-
-Thanks a lot!
-Joey Lee 
+--=20
+With Best Regards,
+Andy Shevchenko
