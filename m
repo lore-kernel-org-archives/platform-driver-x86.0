@@ -1,45 +1,62 @@
-From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Subject: Portege Z930 extra keys and leds
-Date: Tue, 24 Sep 2019 14:55:19 +0200
-Message-ID: <09e715a0-08d2-100d-4bc3-c4f6c87f2a98@metux.net>
+From: Joey Lee <JLee@suse.com>
+Subject: Re: acer_wmi: Unknown function(s) on Acer Nitro 5 (AN515-43-R8BF)
+Date: Wed, 25 Sep 2019 07:50:36 +0000
+Message-ID: <20190925075026.GY3878@linux-l9pv.suse>
+References: <CAEJqkgjSes-4bSKbyfbNhXfcQwdEMzp8X4f72_SS=NpBoBtWmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAEJqkgjSes-4bSKbyfbNhXfcQwdEMzp8X4f72_SS=NpBoBtWmQ@mail.gmail.com>
 Content-Language: en-US
+Content-ID: <E5B6AC137F0D9645BF47A0B0835B6F54@namprd18.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Gabriel C <nix.or.die@gmail.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hello folks,
+Hi Gabriel,
 
+On Mon, Sep 23, 2019 at 09:45:05PM +0200, Gabriel C wrote:
+> Hi guys,
+> 
+> I noticed some warning in dmesg on this Laptop.
+> 
+> Fn+right, Fn+left is BrightnessDown/Up and produce the following warning:
+> 
+> acer_wmi: Unknown function number - 4 - 0
+> 
+> The brightness has some other issue on this Laptop but not sure
+> who to blame on this. Probably amdgpu.?
+> 
+> /sys/class/backlight/amdgpu_bl1/brightness <-> actual_brightness
+> seems to mismatch.  EG: when brightness is 0 actual_brightness is still 5140.
+>
 
-does anybody happen to know how to drive the extra keys and leds
-of Toshiba Portege Z930 notebook ?
+Base on _BCM and _BQC in your DSDT. The backlight control is handled by EC.
+But, in some Acer machines that the _BCM is broken. You can try to modify
+brighess by echo to sys/class/backlight/acpi_video0/brightness
+ 
+> Unplugging the AC gives the following warning:
+> 
+> acer_wmi: Unknown function number - 8 - 0
+> 
+> When plugging the AC back I see;
+> 
+> acer_wmi: Unknown function number - 8 - 1.
+> 
+> I uploaded a dump of the acpi tables and dmidecode of the box.
+> 
+> https://www.frugalware.org/~crazy/nitro5/ACPI
+> https://www.frugalware.org/~crazy/nitro5/DMI
+> 
+> Please let me know if you need any other informations.
+>
 
-It has two extra keys above the keyboard (right next to the power
-button) and some indicator leds underneath the touch panel buttons.
+Thanks for your report the behavior for the function 4 and function 8.
+Maybe we can use the platform event to do something. e.g. expose key code
+to userland. Unfortunately my working list is too long that I do not have
+time for it currently.
 
-Toshiba originally ships the notebook with some strange Windows software
-(for some mysterious "ECO" mode) that reacts on these two buttons and
-drives at least the rightmost LED directly - so there has to be *some*
-way to control them by software.
-
-When in a terminal (on the console only when /dev/input/event10 -
-"Toshiba input device" is opened), both keys seem to generate an "x"
-keypress, but nothing coming in in the event device.
-
-Does anybody have an idea how to catch these key press events or
-how to drive this myserious ("ECO") led ?
-
-
-thx
---mtx
-
-
-PS: tried on an older 4.14 kernel - haven't had a chance to upgrade
-the notebook to something more recent :o
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Thanks a lot!
+Joey Lee 
