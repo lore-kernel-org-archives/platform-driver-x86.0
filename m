@@ -1,82 +1,44 @@
-From: Gabriel C <nix.or.die@gmail.com>
-Subject: Re: acer_wmi: Unknown function(s) on Acer Nitro 5 (AN515-43-R8BF)
-Date: Wed, 25 Sep 2019 22:10:55 +0200
-Message-ID: <CAEJqkgiZo6jyrpRnUYGUXY_hdtPQ1nmCXFkUQ0uyG4RKvV+W+w@mail.gmail.com>
-References: <CAEJqkgjSes-4bSKbyfbNhXfcQwdEMzp8X4f72_SS=NpBoBtWmQ@mail.gmail.com>
- <20190925075026.GY3878@linux-l9pv.suse>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 1/1] platform/x86/intel_cht_int33fe: Split code to USB
+ Micro-B and Type-C variants
+Date: Wed, 25 Sep 2019 23:36:30 +0300
+Message-ID: <CAHp75VeeVb5oaAGohLFHcT==fSr5M9tssbU7oY6FgfzRkq=yjg@mail.gmail.com>
+References: <20190920223356.6622-1-jekhor@gmail.com> <20190920223356.6622-2-jekhor@gmail.com>
+ <1cca117d-1951-0335-1aef-ac994c3c757b@redhat.com> <CAHp75VcoS2OFr8kwM7vq0iCqf6BpyJ4SO7peAUHKxAXdgA7CMA@mail.gmail.com>
+ <20190925162712.GA3653@jeknote.loshitsa1.net> <CAHp75VfL0RUgMhZk=gesxBcBfRkfV8kC1zsN9TNg53qpUNVU0w@mail.gmail.com>
+ <20190925195617.GA8666@jeknote.loshitsa1.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190925075026.GY3878@linux-l9pv.suse>
+In-Reply-To: <20190925195617.GA8666@jeknote.loshitsa1.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joey Lee <JLee@suse.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, LKML <linux-kernel@vger.kernel.org>
+To: Yauhen Kharuzhy <jekhor@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Am Mi., 25. Sept. 2019 um 09:53 Uhr schrieb Joey Lee <JLee@suse.com>:
+On Wed, Sep 25, 2019 at 10:56 PM Yauhen Kharuzhy <jekhor@gmail.com> wrote:
 >
-> Hi Gabriel,
+> On Wed, Sep 25, 2019 at 08:42:03PM +0300, Andy Shevchenko wrote:
+> > On Wed, Sep 25, 2019 at 7:27 PM Yauhen Kharuzhy <jekhor@gmail.com> wrote:
+> > > On Wed, Sep 25, 2019 at 06:02:22PM +0300, Andy Shevchenko wrote:
+> > > > On Sat, Sep 21, 2019 at 9:31 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >
+> > > > By some reason it doesn't apply.
+> > >
+> > > I have checked, and have no issues when applying this patch to the current
+> > > torvalds/master and linux-next/master branches (351c8a09b00b and 9e88347dedd8
+> > > commit IDs).
+> >
+> > It doesn't apply to the subsystem tree (for-next or my review branch)
 >
-> On Mon, Sep 23, 2019 at 09:45:05PM +0200, Gabriel C wrote:
-> > Hi guys,
-> >
-> > I noticed some warning in dmesg on this Laptop.
-> >
-> > Fn+right, Fn+left is BrightnessDown/Up and produce the following warning:
-> >
-> > acer_wmi: Unknown function number - 4 - 0
-> >
-> > The brightness has some other issue on this Laptop but not sure
-> > who to blame on this. Probably amdgpu.?
-> >
-> > /sys/class/backlight/amdgpu_bl1/brightness <-> actual_brightness
-> > seems to mismatch.  EG: when brightness is 0 actual_brightness is still 5140.
-> >
+> Yes, it doesn't apply because this subsystem tree doesn't contain commit
 >
-> Base on _BCM and _BQC in your DSDT. The backlight control is handled by EC.
-> But, in some Acer machines that the _BCM is broken. You can try to modify
-> brighess by echo to sys/class/backlight/acpi_video0/brightness
-
-Unfortunately, the only thing in /sys/class/backlight is amdgpu_bl1.
-Basically I should have 2 , acpi_video0 & acpi_video1 however none there.
-
+> "78cd4bf53635 platform/x86: intel_cht_int33fe: Use new API to gain access to the role switch"
 >
-> > Unplugging the AC gives the following warning:
-> >
-> > acer_wmi: Unknown function number - 8 - 0
-> >
-> > When plugging the AC back I see;
-> >
-> > acer_wmi: Unknown function number - 8 - 1.
-> >
-> > I uploaded a dump of the acpi tables and dmidecode of the box.
-> >
-> > https://www.frugalware.org/~crazy/nitro5/ACPI
-> > https://www.frugalware.org/~crazy/nitro5/DMI
-> >
-> > Please let me know if you need any other informations.
-> >
->
-> Thanks for your report the behavior for the function 4 and function 8.
-> Maybe we can use the platform event to do something. e.g. expose key code
-> to userland. Unfortunately my working list is too long that I do not have
-> time for it currently.
->
+> which was accepted to torvalds/master tree already.
 
-Is fine, no worry. Take your time. Things are working more or less so no rush.
+I see. Please, resend this after rc1 is out.
 
-Just one thing. While it is fine to report the Unknow functions/keys by default
-once reported upstream the user may want to silence these until implemented.
-In my case using the keys for the brightness floods the dmesg with
-these messages.
-
-Would be  maybe is possible to have some 'do_not_bug_me' module
-parameter to silence the
-Unknow functions/keys messages?
-
-> Thanks a lot!
-> Joey Lee
-
-BR,
-
-Gabriel C
+-- 
+With Best Regards,
+Andy Shevchenko
