@@ -1,52 +1,115 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlight on
- Inspiron 10xx
-Date: Wed, 25 Sep 2019 10:21:49 +0200
-Message-ID: <20190925082149.yjhmmb64i4h6sddi@pali>
-References: <156824368856.28378.14511879419677114177@WARFSTATION>
- <20190912073358.n5bxqosowhky5uhb@pali>
- <156882055514.9370.16951540573597044820@WARFSTATION>
- <20190922134323.mowwoyeuqoalpwsg@pali>
- <baba1f72c68f4699955d2b7a52df65e1@AUSX13MPC105.AMER.DELL.COM>
- <CAHp75VfjhuFzTRg7X_ici6ACj54sQKH0mR8x9M-XAYk5cbTQ7g@mail.gmail.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH 1/2] efi: Add efi_memmap_free() to free EFI memory map
+Date: Wed, 25 Sep 2019 17:17:34 +0800
+Message-ID: <775bcf46-0f4e-a1a9-5a40-05f833cd7a1a@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfjhuFzTRg7X_ici6ACj54sQKH0mR8x9M-XAYk5cbTQ7g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, dvhart@infradead.org, andy@infradead.org, "tglx@linutronix.de" <tglx@linutronix.de>, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org
+Cc: linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wednesday 25 September 2019 11:07:35 Andy Shevchenko wrote:
-> On Mon, Sep 23, 2019 at 4:24 PM <Mario.Limonciello@dell.com> wrote:
-> > > From: Pali Rohár <pali.rohar@gmail.com>
-> > > Sent: Sunday, September 22, 2019 8:43 AM
-> > > To: Pacien TRAN-GIRARD
-> > > Cc: Matthew Garrett; Darren Hart; Andy Shevchenko; platform-driver-
-> > > x86@vger.kernel.org; linux-kernel@vger.kernel.org; Limonciello, Mario
-> > > Subject: Re: [PATCH] platform/x86: dell-laptop: fix phantom kbd backlight on
-> > > Inspiron 10xx
-> 
-> > > We need to wait what Mario wrote about this particular problem.
-> > >
-> >
-> > I agree an Inspiron is unlikely to be updated 9 years later.  I think the right thing
-> > to do in this instance is to blacklist this particular platform in kernel driver.
-> 
-> Does it mean you are okay with the proposed patch? Can you give your tag then?
+In efi_fake_memmap(), the commit 20b1e22d01a4 ("x86/efi: Don't allocate
+memmap through memblock after mm_init()") replace memblock_alloc() with
+efi_memmap_alloc(), but there is no matching modification of
+memblock_free() when early_memremap() fail.
 
-I would rather use different name as kbd_phantom_backlight. E.g.
-lbd_broken_backlight or something which indicates non-working / disabled
-support.
+Fix this by adding efi_memmap_free() to instead of memblock_free().
 
-Also in commit message is written that problem is with KBD_LED_OFF_TOKEN
-and KBD_LED_ON_TOKEN tokens, but proposed patch does not blacklist these
-tokens, but rather turn off whole kbd functionality. So proposed patch
-does not patch commit message, nor explain it.
+Fixes: 20b1e22d01a4 ("x86/efi: Don't allocate memmap through memblock after mm_init()")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+ drivers/firmware/efi/fake_mem.c |  2 +-
+ drivers/firmware/efi/memmap.c   | 34 ++++++++++++++++++++++++++++++++++
+ include/linux/efi.h             |  1 +
+ 3 files changed, 36 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
+index 9501edc..c2f69f6 100644
+--- a/drivers/firmware/efi/fake_mem.c
++++ b/drivers/firmware/efi/fake_mem.c
+@@ -65,7 +65,7 @@ void __init efi_fake_memmap(void)
+ 	new_memmap = early_memremap(new_memmap_phy,
+ 				    efi.memmap.desc_size * new_nr_map);
+ 	if (!new_memmap) {
+-		memblock_free(new_memmap_phy, efi.memmap.desc_size * new_nr_map);
++		efi_memmap_free(new_memmap_phy, new_nr_map);
+ 		return;
+ 	}
+
+diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
+index 38b686c..35dc189 100644
+--- a/drivers/firmware/efi/memmap.c
++++ b/drivers/firmware/efi/memmap.c
+@@ -18,6 +18,11 @@ static phys_addr_t __init __efi_memmap_alloc_early(unsigned long size)
+ 	return memblock_phys_alloc(size, SMP_CACHE_BYTES);
+ }
+
++static void __init __efi_memmap_free_early(phys_addr_t addr, unsigned long size)
++{
++	memblock_free(addr, size);
++}
++
+ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
+ {
+ 	unsigned int order = get_order(size);
+@@ -29,6 +34,15 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
+ 	return PFN_PHYS(page_to_pfn(p));
+ }
+
++static void __init __efi_memmap_free_late(phys_addr_t addr, unsigned long size)
++{
++	unsigned int order = get_order(size);
++	struct page *p = pfn_to_page(PHYS_PFN(addr));
++
++	if (p)
++		__free_pages(p, order);
++}
++
+ /**
+  * efi_memmap_alloc - Allocate memory for the EFI memory map
+  * @num_entries: Number of entries in the allocated map.
+@@ -50,6 +64,26 @@ phys_addr_t __init efi_memmap_alloc(unsigned int num_entries)
+ }
+
+ /**
++ * efi_memmap_free - Free memory for the EFI memory map
++ * @addr: Physical address of the EFI memory map to be freed.
++ * @num_entries: Number of the EFI memory map entries.
++ *
++ * Depending on whether mm_init() has already been invoked or not,
++ * either memblock or "normal" page free is used.
++ */
++void __init efi_memmap_free(phys_addr_t addr, unsigned int num_entries)
++{
++	unsigned long size = num_entries * efi.memmap.desc_size;
++
++	if (slab_is_available()) {
++		__efi_memmap_free_late(addr, size);
++
++		return;
++	}
++	__efi_memmap_free_early(addr, size);
++}
++
++/**
+  * __efi_memmap_init - Common code for mapping the EFI memory map
+  * @data: EFI memory map data
+  * @late: Use early or late mapping function?
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index bd38370..8bb741a 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1057,6 +1057,7 @@ static inline efi_status_t efi_query_variable_store(u32 attributes,
+ extern void __iomem *efi_lookup_mapped_addr(u64 phys_addr);
+
+ extern phys_addr_t __init efi_memmap_alloc(unsigned int num_entries);
++extern void __init efi_memmap_free(phys_addr_t addr, unsigned int num_entries);
+ extern int __init efi_memmap_init_early(struct efi_memory_map_data *data);
+ extern int __init efi_memmap_init_late(phys_addr_t addr, unsigned long size);
+ extern void __init efi_memmap_unmap(void);
 -- 
-Pali Rohár
-pali.rohar@gmail.com
+1.8.3.1
