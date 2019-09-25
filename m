@@ -1,91 +1,68 @@
-From: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
-Subject: [PATCH v2] platform/x86: dell-laptop: fix broken kbd backlight on Inspiron 10xx
-Date: Thu, 12 Sep 2019 00:07:45 +0200
-Message-ID: <156940489220.8635.14349142383780268583@WARFSTATION>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v2] platform/x86: dell-laptop: fix broken kbd backlight on
+ Inspiron 10xx
+Date: Wed, 25 Sep 2019 13:18:19 +0000
+Message-ID: <eef6a31812074e648f8b409a5dc492af@AUSX13MPC105.AMER.DELL.COM>
 References: <20190925082149.yjhmmb64i4h6sddi@pali>
+ <156940489220.8635.14349142383780268583@WARFSTATION>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190925082149.yjhmmb64i4h6sddi@pali>
-Date: Wed, 25 Sep 2019 11:48:12 +0200
+In-Reply-To: <156940489220.8635.14349142383780268583@WARFSTATION>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Mario Limonciello <Mario.Limonciello@dell.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: pacien.trangirard@pacien.net
+Cc: pali.rohar@gmail.com, mjg59@srcf.ucam.org, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patch adds a quirk disabling keyboard backlight support for the
-Dell Inspiron 1012 and 1018.
-
-Those models wrongly report supporting keyboard backlight control
-features (through SMBIOS tokens) even though they're not equipped with
-a backlit keyboard. This led to broken controls being exposed
-through sysfs by this driver which froze the system when used.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D107651
-Signed-off-by: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
----
- drivers/platform/x86/dell-laptop.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell=
--laptop.c
-index d27be2836bc2..ffe5abbdadda 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -33,6 +33,7 @@
-=20
- struct quirk_entry {
- 	bool touchpad_led;
-+	bool kbd_broken_backlight;
- 	bool kbd_led_levels_off_1;
- 	bool kbd_missing_ac_tag;
-=20
-@@ -73,6 +74,10 @@ static struct quirk_entry quirk_dell_latitude_e6410 =3D {
- 	.kbd_led_levels_off_1 =3D true,
- };
-=20
-+static struct quirk_entry quirk_dell_inspiron_1012 =3D {
-+	.kbd_broken_backlight =3D true,
-+};
-+
- static struct platform_driver platform_driver =3D {
- 	.driver =3D {
- 		.name =3D "dell-laptop",
-@@ -310,6 +315,24 @@ static const struct dmi_system_id dell_quirks[] __init=
-const =3D {
- 		},
- 		.driver_data =3D &quirk_dell_latitude_e6410,
- 	},
-+	{
-+		.callback =3D dmi_matched,
-+		.ident =3D "Dell Inspiron 1012",
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1012"),
-+		},
-+		.driver_data =3D &quirk_dell_inspiron_1012,
-+	},
-+	{
-+		.callback =3D dmi_matched,
-+		.ident =3D "Dell Inspiron 1018",
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1018"),
-+		},
-+		.driver_data =3D &quirk_dell_inspiron_1012,
-+	},
- 	{ }
- };
-=20
-@@ -2040,6 +2063,9 @@ static int __init kbd_led_init(struct device *dev)
- {
- 	int ret;
-=20
-+	if (quirks && quirks->kbd_broken_backlight)
-+		return -ENODEV;
-+
- 	kbd_init();
- 	if (!kbd_led_present)
- 		return -ENODEV;
---=20
-2.19.2
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWNpZW4gVFJBTi1HSVJBUkQg
+PHBhY2llbi50cmFuZ2lyYXJkQHBhY2llbi5uZXQ+DQo+IFNlbnQ6IFdlZG5lc2RheSwgU2VwdGVt
+YmVyIDI1LCAyMDE5IDQ6NDggQU0NCj4gQ2M6IFBhbGkgUm9ow6FyOyBMaW1vbmNpZWxsbywgTWFy
+aW87IE1hdHRoZXcgR2FycmV0dDsgRGFycmVuIEhhcnQ7IEFuZHkNCj4gU2hldmNoZW5rbzsgUGxh
+dGZvcm0gRHJpdmVyOyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0DQo+IFN1YmplY3Q6IFtQQVRD
+SCB2Ml0gcGxhdGZvcm0veDg2OiBkZWxsLWxhcHRvcDogZml4IGJyb2tlbiBrYmQgYmFja2xpZ2h0
+IG9uDQo+IEluc3Bpcm9uIDEweHgNCj4gDQo+IA0KPiBbRVhURVJOQUwgRU1BSUxdDQo+IA0KPiBU
+aGlzIHBhdGNoIGFkZHMgYSBxdWlyayBkaXNhYmxpbmcga2V5Ym9hcmQgYmFja2xpZ2h0IHN1cHBv
+cnQgZm9yIHRoZQ0KPiBEZWxsIEluc3Bpcm9uIDEwMTIgYW5kIDEwMTguDQo+IA0KPiBUaG9zZSBt
+b2RlbHMgd3JvbmdseSByZXBvcnQgc3VwcG9ydGluZyBrZXlib2FyZCBiYWNrbGlnaHQgY29udHJv
+bA0KPiBmZWF0dXJlcyAodGhyb3VnaCBTTUJJT1MgdG9rZW5zKSBldmVuIHRob3VnaCB0aGV5J3Jl
+IG5vdCBlcXVpcHBlZCB3aXRoDQo+IGEgYmFja2xpdCBrZXlib2FyZC4gVGhpcyBsZWQgdG8gYnJv
+a2VuIGNvbnRyb2xzIGJlaW5nIGV4cG9zZWQNCj4gdGhyb3VnaCBzeXNmcyBieSB0aGlzIGRyaXZl
+ciB3aGljaCBmcm96ZSB0aGUgc3lzdGVtIHdoZW4gdXNlZC4NCj4gDQo+IEJ1Z3ppbGxhOiBodHRw
+czovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTEwNzY1MQ0KPiBTaWduZWQt
+b2ZmLWJ5OiBQYWNpZW4gVFJBTi1HSVJBUkQgPHBhY2llbi50cmFuZ2lyYXJkQHBhY2llbi5uZXQ+
+DQo+IC0tLQ0KPiAgZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC1sYXB0b3AuYyB8IDI2ICsrKysr
+KysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygr
+KQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtbGFwdG9wLmMg
+Yi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLQ0KPiBsYXB0b3AuYw0KPiBpbmRleCBkMjdiZTI4
+MzZiYzIuLmZmZTVhYmJkYWRkYSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYv
+ZGVsbC1sYXB0b3AuYw0KPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLWxhcHRvcC5j
+DQo+IEBAIC0zMyw2ICszMyw3IEBADQo+IA0KPiAgc3RydWN0IHF1aXJrX2VudHJ5IHsNCj4gIAli
+b29sIHRvdWNocGFkX2xlZDsNCj4gKwlib29sIGtiZF9icm9rZW5fYmFja2xpZ2h0Ow0KPiAgCWJv
+b2wga2JkX2xlZF9sZXZlbHNfb2ZmXzE7DQo+ICAJYm9vbCBrYmRfbWlzc2luZ19hY190YWc7DQo+
+IA0KPiBAQCAtNzMsNiArNzQsMTAgQEAgc3RhdGljIHN0cnVjdCBxdWlya19lbnRyeSBxdWlya19k
+ZWxsX2xhdGl0dWRlX2U2NDEwID0gew0KPiAgCS5rYmRfbGVkX2xldmVsc19vZmZfMSA9IHRydWUs
+DQo+ICB9Ow0KPiANCj4gK3N0YXRpYyBzdHJ1Y3QgcXVpcmtfZW50cnkgcXVpcmtfZGVsbF9pbnNw
+aXJvbl8xMDEyID0gew0KPiArCS5rYmRfYnJva2VuX2JhY2tsaWdodCA9IHRydWUsDQo+ICt9Ow0K
+PiArDQo+ICBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBwbGF0Zm9ybV9kcml2ZXIgPSB7
+DQo+ICAJLmRyaXZlciA9IHsNCj4gIAkJLm5hbWUgPSAiZGVsbC1sYXB0b3AiLA0KPiBAQCAtMzEw
+LDYgKzMxNSwyNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRtaV9zeXN0ZW1faWQgZGVsbF9xdWly
+a3NbXQ0KPiBfX2luaXRjb25zdCA9IHsNCj4gIAkJfSwNCj4gIAkJLmRyaXZlcl9kYXRhID0gJnF1
+aXJrX2RlbGxfbGF0aXR1ZGVfZTY0MTAsDQo+ICAJfSwNCj4gKwl7DQo+ICsJCS5jYWxsYmFjayA9
+IGRtaV9tYXRjaGVkLA0KPiArCQkuaWRlbnQgPSAiRGVsbCBJbnNwaXJvbiAxMDEyIiwNCj4gKwkJ
+Lm1hdGNoZXMgPSB7DQo+ICsJCQlETUlfTUFUQ0goRE1JX1NZU19WRU5ET1IsICJEZWxsIEluYy4i
+KSwNCj4gKwkJCURNSV9NQVRDSChETUlfUFJPRFVDVF9OQU1FLCAiSW5zcGlyb24gMTAxMiIpLA0K
+PiArCQl9LA0KPiArCQkuZHJpdmVyX2RhdGEgPSAmcXVpcmtfZGVsbF9pbnNwaXJvbl8xMDEyLA0K
+PiArCX0sDQo+ICsJew0KPiArCQkuY2FsbGJhY2sgPSBkbWlfbWF0Y2hlZCwNCj4gKwkJLmlkZW50
+ID0gIkRlbGwgSW5zcGlyb24gMTAxOCIsDQo+ICsJCS5tYXRjaGVzID0gew0KPiArCQkJRE1JX01B
+VENIKERNSV9TWVNfVkVORE9SLCAiRGVsbCBJbmMuIiksDQo+ICsJCQlETUlfTUFUQ0goRE1JX1BS
+T0RVQ1RfTkFNRSwgIkluc3Bpcm9uIDEwMTgiKSwNCj4gKwkJfSwNCj4gKwkJLmRyaXZlcl9kYXRh
+ID0gJnF1aXJrX2RlbGxfaW5zcGlyb25fMTAxMiwNCj4gKwl9LA0KPiAgCXsgfQ0KPiAgfTsNCj4g
+DQo+IEBAIC0yMDQwLDYgKzIwNjMsOSBAQCBzdGF0aWMgaW50IF9faW5pdCBrYmRfbGVkX2luaXQo
+c3RydWN0IGRldmljZSAqZGV2KQ0KPiAgew0KPiAgCWludCByZXQ7DQo+IA0KPiArCWlmIChxdWly
+a3MgJiYgcXVpcmtzLT5rYmRfYnJva2VuX2JhY2tsaWdodCkNCj4gKwkJcmV0dXJuIC1FTk9ERVY7
+DQo+ICsNCj4gIAlrYmRfaW5pdCgpOw0KPiAgCWlmICgha2JkX2xlZF9wcmVzZW50KQ0KPiAgCQly
+ZXR1cm4gLUVOT0RFVjsNCj4gLS0NCj4gMi4xOS4yDQoNCkxvb2tzIGZpbmUgdG8gbWUsIHRoYW5r
+cy4NCg0KUmV2aWV3ZWQtYnk6IE1hcmlvIExpbW9uY2llbGxvIDxtYXJpby5saW1vbmNpZWxsb0Bk
+ZWxsLmNvbT4NCg0K
