@@ -1,7 +1,7 @@
 From: Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH 5/7] intel-speed-select: Implement CascadeLake-N help and command functions structures
-Date: Thu, 26 Sep 2019 08:54:59 -0400
-Message-ID: <20190926125501.1616-6-prarit@redhat.com>
+Subject: [PATCH 7/7] intel-speed-select: Implement base-freq commands on CascadeLake-N
+Date: Thu, 26 Sep 2019 08:55:01 -0400
+Message-ID: <20190926125501.1616-8-prarit@redhat.com>
 References: <20190926125501.1616-1-prarit@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,88 +12,159 @@ To: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-CascadeLake-N only supports SST-BF and needs some of the perf-profile
-commands, and the base-freq commands.
+Add functionality for base-freq info|enable|disable info on CascadeLake-N.
 
-Add help functions, and create an empty command structures (the functions
-will be implemented later in this patchset).  Call these functions
-when running on CascadeLake-N.
+The enable command always returns success, and the disable command always
+returns failed because SST-BF cannot be enabled or disabled from the OS on
+CascadeLake-N.
 
 Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../x86/intel-speed-select/isst-config.c      | 37 ++++++++++++++-----
- 1 file changed, 27 insertions(+), 10 deletions(-)
+ .../x86/intel-speed-select/isst-config.c      | 56 ++++++++++++++-----
+ .../x86/intel-speed-select/isst-display.c     |  6 +-
+ tools/power/x86/intel-speed-select/isst.h     |  3 +-
+ 3 files changed, 49 insertions(+), 16 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 33f328d971d3..a82005825990 100644
+index 0c66012fc5a1..24e6084a36b4 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1373,6 +1373,10 @@ static void get_clos_assoc(int arg)
+@@ -940,6 +940,18 @@ static void set_tdp_level(int arg)
  	isst_ctdp_display_information_end(outf);
  }
  
-+static struct process_cmd_struct cn_cmds[] = {
-+	{ NULL, NULL, NULL, 0 }
-+};
++static void cn_dump_pbf_config_for_cpu(int cpu, void *arg1, void *arg2,
++				       void *arg3, void *arg4)
++{
++	struct isst_pbf_info *pbf_info;
++	struct isst_pkg_ctdp_level_info *ctdp_level;
 +
- static struct process_cmd_struct isst_cmds[] = {
- 	{ "perf-profile", "get-lock-status", get_tdp_locked, 0 },
- 	{ "perf-profile", "get-config-levels", get_tdp_levels, 0 },
-@@ -1557,12 +1561,15 @@ static void isst_help(void)
- 		TDP, etc.\n");
- 	printf("\nCommands : For feature=perf-profile\n");
- 	printf("\tinfo\n");
--	printf("\tget-lock-status\n");
--	printf("\tget-config-levels\n");
--	printf("\tget-config-version\n");
--	printf("\tget-config-enabled\n");
--	printf("\tget-config-current-level\n");
--	printf("\tset-config-level\n");
++	ctdp_level = &cn_pkg_dev.ctdp_level[0];
++	pbf_info = &ctdp_level->pbf_info;
 +
-+	if (cpu_model != 0x55) {
-+		printf("\tget-lock-status\n");
-+		printf("\tget-config-levels\n");
-+		printf("\tget-config-version\n");
-+		printf("\tget-config-enabled\n");
-+		printf("\tget-config-current-level\n");
-+		printf("\tset-config-level\n");
-+	}
++	isst_pbf_display_information(cpu, outf, tdp_level, pbf_info, cpu_model);
++}
++
+ static void dump_pbf_config_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 				    void *arg4)
+ {
+@@ -950,13 +962,16 @@ static void dump_pbf_config_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 	if (ret) {
+ 		perror("isst_get_pbf_info");
+ 	} else {
+-		isst_pbf_display_information(cpu, outf, tdp_level, &pbf_info);
++		isst_pbf_display_information(cpu, outf, tdp_level, &pbf_info,
++					     cpu_model);
+ 		isst_get_pbf_info_complete(&pbf_info);
+ 	}
  }
  
- static void pbf_help(void)
-@@ -1612,6 +1619,12 @@ static struct process_cmd_help_struct isst_help_cmds[] = {
- 	{ NULL, NULL }
+ static void dump_pbf_config(int arg)
+ {
++	void *fn;
++
+ 	if (cmd_help) {
+ 		fprintf(stderr,
+ 			"Print Intel(R) Speed Select Technology base frequency configuration for a TDP level\n");
+@@ -970,13 +985,18 @@ static void dump_pbf_config(int arg)
+ 		exit(1);
+ 	}
+ 
++	if (cpu_model != 0x55)
++		fn = dump_pbf_config_for_cpu;
++	else
++		fn = cn_dump_pbf_config_for_cpu;
++
+ 	isst_ctdp_display_information_start(outf);
++
+ 	if (max_target_cpus)
+-		for_each_online_target_cpu_in_set(dump_pbf_config_for_cpu, NULL,
+-						  NULL, NULL, NULL);
++		for_each_online_target_cpu_in_set(fn, NULL, NULL, NULL, NULL);
+ 	else
+-		for_each_online_package_in_set(dump_pbf_config_for_cpu, NULL,
+-					       NULL, NULL, NULL);
++		for_each_online_package_in_set(fn, NULL, NULL, NULL, NULL);
++
+ 	isst_ctdp_display_information_end(outf);
+ }
+ 
+@@ -986,17 +1006,24 @@ static void set_pbf_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 	int ret;
+ 	int status = *(int *)arg4;
+ 
+-	ret = isst_set_pbf_fact_status(cpu, 1, status);
+-	if (ret) {
+-		perror("isst_set_pbf");
++	if (cpu_model != 0x55) {
++		ret = isst_set_pbf_fact_status(cpu, 1, status);
++		if (ret) {
++			perror("isst_set_pbf");
++			return;
++		}
++
+ 	} else {
+-		if (status)
+-			isst_display_result(cpu, outf, "base-freq", "enable",
+-					    ret);
++		if (status == 0)
++			ret = -1;
+ 		else
+-			isst_display_result(cpu, outf, "base-freq", "disable",
+-					    ret);
++			ret = 0;
+ 	}
++
++	if (status)
++		isst_display_result(cpu, outf, "base-freq", "enable", ret);
++	else
++		isst_display_result(cpu, outf, "base-freq", "disable", ret);
+ }
+ 
+ static void set_pbf_enable(int arg)
+@@ -1388,6 +1415,9 @@ static void get_clos_assoc(int arg)
+ 
+ static struct process_cmd_struct cn_cmds[] = {
+ 	{ "perf-profile", "info", dump_isst_config, 0 },
++	{ "base-freq", "info", dump_pbf_config, 0 },
++	{ "base-freq", "enable", set_pbf_enable, 1 },
++	{ "base-freq", "disable", set_pbf_enable, 0 },
+ 	{ NULL, NULL, NULL, 0 }
  };
  
-+static struct process_cmd_help_struct cn_help_cmds[] = {
-+	{ "perf-profile", isst_help },
-+	{ "base-freq", pbf_help },
-+	{ NULL, NULL }
-+};
-+
- void process_command(int argc, char **argv,
- 		     struct process_cmd_help_struct *help_cmds,
- 		     struct process_cmd_struct *cmds)
-@@ -1768,11 +1781,15 @@ static void cmdline(int argc, char **argv)
- 	set_max_cpu_num();
- 	set_cpu_present_cpu_mask();
- 	set_cpu_target_cpu_mask();
--	ret = isst_fill_platform_info();
--	if (ret)
--		goto out;
+diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
+index 7d91a5de1b85..8cc8d963a55e 100644
+--- a/tools/power/x86/intel-speed-select/isst-display.c
++++ b/tools/power/x86/intel-speed-select/isst-display.c
+@@ -474,10 +474,12 @@ void isst_ctdp_display_information_end(FILE *outf)
+ }
  
--	process_command(argc, argv, isst_help_cmds, isst_cmds);
-+	if (cpu_model != 0x55) {
-+		ret = isst_fill_platform_info();
-+		if (ret)
-+			goto out;
-+		process_command(argc, argv, isst_help_cmds, isst_cmds);
-+	} else {
-+		process_command(argc, argv, cn_help_cmds, cn_cmds);
-+	}
- out:
- 	free_cpu_set(present_cpumask);
- 	free_cpu_set(target_cpumask);
+ void isst_pbf_display_information(int cpu, FILE *outf, int level,
+-				  struct isst_pbf_info *pbf_info)
++				  struct isst_pbf_info *pbf_info,
++				  int cpu_model)
+ {
+ 	print_package_info(cpu, outf);
+-	_isst_pbf_display_information(cpu, outf, level, pbf_info, 4, 0);
++	_isst_pbf_display_information(cpu, outf, level, pbf_info, 4,
++				      cpu_model);
+ 	format_and_print(outf, 1, NULL, NULL);
+ }
+ 
+diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
+index 35b0fec44d35..d94b46272ce2 100644
+--- a/tools/power/x86/intel-speed-select/isst.h
++++ b/tools/power/x86/intel-speed-select/isst.h
+@@ -203,7 +203,8 @@ extern void isst_ctdp_display_core_info(int cpu, FILE *outf, char *prefix,
+ extern void isst_ctdp_display_information_start(FILE *outf);
+ extern void isst_ctdp_display_information_end(FILE *outf);
+ extern void isst_pbf_display_information(int cpu, FILE *outf, int level,
+-					 struct isst_pbf_info *info);
++					 struct isst_pbf_info *info,
++					 int cpu_model);
+ extern int isst_set_tdp_level(int cpu, int tdp_level);
+ extern int isst_set_tdp_level_msr(int cpu, int tdp_level);
+ extern int isst_set_pbf_fact_status(int cpu, int pbf, int enable);
 -- 
 2.21.0
