@@ -1,7 +1,7 @@
 From: Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH 3/7] intel-speed-select: Add check for CascadeLake-N models
-Date: Thu, 26 Sep 2019 08:54:57 -0400
-Message-ID: <20190926125501.1616-4-prarit@redhat.com>
+Subject: [PATCH 6/7] intel-speed-select: Implement 'perf-profile info' on CascadeLake-N
+Date: Thu, 26 Sep 2019 08:55:00 -0400
+Message-ID: <20190926125501.1616-7-prarit@redhat.com>
 References: <20190926125501.1616-1-prarit@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,73 +12,163 @@ To: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Three CascadeLake-N models (6252N, 6230N, and 5218N) have SST-PBF support.
-
-Return an error if the CascadeLake processor is not one of these specific
-models.
+Add functionality for perf-profile info on CascadeLake-N.
 
 Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../x86/intel-speed-select/isst-config.c      | 32 +++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
+ .../x86/intel-speed-select/isst-config.c      | 24 +++++++++++++++----
+ .../x86/intel-speed-select/isst-display.c     | 22 +++++++++++++----
+ tools/power/x86/intel-speed-select/isst.h     |  3 ++-
+ 3 files changed, 39 insertions(+), 10 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index bb6f8f5986c9..ae8e3b5153ad 100644
+index a82005825990..0c66012fc5a1 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -71,7 +71,7 @@ void debug_printf(const char *format, ...)
- 	va_end(args);
+@@ -823,6 +823,13 @@ static void cascadelaken_config(void)
+ 	ctdp_level->fact_enabled = 0;
  }
  
--static void update_cpu_model(void)
-+static int update_cpu_model(void)
++static void dump_cn_config_for_cpu(int cpu, void *arg1, void *arg2,
++				   void *arg3, void *arg4)
++{
++	isst_ctdp_display_information(cpu, outf, tdp_level, &cn_pkg_dev,
++				      cpu_model);
++}
++
+ static void dump_isst_config_for_cpu(int cpu, void *arg1, void *arg2,
+ 				     void *arg3, void *arg4)
  {
- 	unsigned int ebx, ecx, edx;
- 	unsigned int fms, family;
-@@ -81,6 +81,32 @@ static void update_cpu_model(void)
- 	cpu_model = (fms >> 4) & 0xf;
- 	if (family == 6 || family == 0xf)
- 		cpu_model += ((fms >> 16) & 0xf) << 4;
-+
-+	/* only three CascadeLake-N models are supported */
-+	if (cpu_model == 0x55) {
-+		FILE *fp;
-+		size_t n;
-+		char *line;
-+		int ret = 1;
-+
-+		fp = fopen("/proc/cpuinfo", "r");
-+		if (!fp)
-+			err(-1, "cannot open /proc/cpuinfo\n");
-+
-+		while (getline(&line, &n, fp) > 0) {
-+			if (strstr(line, "model name")) {
-+				if (strstr(line, "6252N") ||
-+				    strstr(line, "6230N") ||
-+				    strstr(line, "5218N"))
-+					ret = 0;
-+				break;
-+			}
-+		}
-+		free(line);
-+		fclose(fp);
-+		return ret;
-+	}
-+	return 0;
+@@ -834,13 +841,16 @@ static void dump_isst_config_for_cpu(int cpu, void *arg1, void *arg2,
+ 	if (ret) {
+ 		perror("isst_get_process_ctdp");
+ 	} else {
+-		isst_ctdp_display_information(cpu, outf, tdp_level, &pkg_dev);
++		isst_ctdp_display_information(cpu, outf, tdp_level, &pkg_dev,
++					      cpu_model);
+ 		isst_get_process_ctdp_complete(cpu, &pkg_dev);
+ 	}
  }
  
- /* Open a file, and exit on failure */
-@@ -1638,7 +1664,9 @@ static void cmdline(int argc, char **argv)
- 		fprintf(stderr, "Feature name and|or command not specified\n");
+ static void dump_isst_config(int arg)
+ {
++	void *fn;
++
+ 	if (cmd_help) {
+ 		fprintf(stderr,
+ 			"Print Intel(R) Speed Select Technology Performance profile configuration\n");
+@@ -852,14 +862,17 @@ static void dump_isst_config(int arg)
  		exit(0);
  	}
--	update_cpu_model();
-+	ret = update_cpu_model();
-+	if (ret)
-+		err(-1, "Invalid CPU model (%d)\n", cpu_model);
- 	printf("Intel(R) Speed Select Technology\n");
- 	printf("Executing on CPU model:%d[0x%x]\n", cpu_model, cpu_model);
- 	set_max_cpu_num();
+ 
++	if (cpu_model != 0x55)
++		fn = dump_isst_config_for_cpu;
++	else
++		fn = dump_cn_config_for_cpu;
++
+ 	isst_ctdp_display_information_start(outf);
+ 
+ 	if (max_target_cpus)
+-		for_each_online_target_cpu_in_set(dump_isst_config_for_cpu,
+-						  NULL, NULL, NULL, NULL);
++		for_each_online_target_cpu_in_set(fn, NULL, NULL, NULL, NULL);
+ 	else
+-		for_each_online_package_in_set(dump_isst_config_for_cpu, NULL,
+-					       NULL, NULL, NULL);
++		for_each_online_package_in_set(fn, NULL, NULL, NULL, NULL);
+ 
+ 	isst_ctdp_display_information_end(outf);
+ }
+@@ -1374,6 +1387,7 @@ static void get_clos_assoc(int arg)
+ }
+ 
+ static struct process_cmd_struct cn_cmds[] = {
++	{ "perf-profile", "info", dump_isst_config, 0 },
+ 	{ NULL, NULL, NULL, 0 }
+ };
+ 
+diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
+index 1caa7ae25245..7d91a5de1b85 100644
+--- a/tools/power/x86/intel-speed-select/isst-display.c
++++ b/tools/power/x86/intel-speed-select/isst-display.c
+@@ -173,7 +173,7 @@ static void print_package_info(int cpu, FILE *outf)
+ 
+ static void _isst_pbf_display_information(int cpu, FILE *outf, int level,
+ 					  struct isst_pbf_info *pbf_info,
+-					  int disp_level)
++					  int disp_level, int cpu_model)
+ {
+ 	char header[256];
+ 	char value[256];
+@@ -202,6 +202,9 @@ static void _isst_pbf_display_information(int cpu, FILE *outf, int level,
+ 		 pbf_info->p1_low * DISP_FREQ_MULTIPLIER);
+ 	format_and_print(outf, disp_level + 1, header, value);
+ 
++	if (cpu_model == 0x55)
++		return;
++
+ 	snprintf(header, sizeof(header), "tjunction-temperature(C)");
+ 	snprintf(value, sizeof(value), "%d", pbf_info->t_prochot);
+ 	format_and_print(outf, disp_level + 1, header, value);
+@@ -306,7 +309,7 @@ void isst_ctdp_display_core_info(int cpu, FILE *outf, char *prefix,
+ }
+ 
+ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+-				   struct isst_pkg_ctdp *pkg_dev)
++				   struct isst_pkg_ctdp *pkg_dev, int cpu_model)
+ {
+ 	char header[256];
+ 	char value[256];
+@@ -375,6 +378,16 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 			snprintf(value, sizeof(value), "unsupported");
+ 		format_and_print(outf, base_level + 4, header, value);
+ 
++		if (cpu_model == 0x55) {
++			if (ctdp_level->pbf_support)
++				_isst_pbf_display_information(cpu, outf,
++							      tdp_level,
++							  &ctdp_level->pbf_info,
++							      base_level + 4,
++							      cpu_model);
++			continue;
++		}
++
+ 		snprintf(header, sizeof(header), "thermal-design-power(W)");
+ 		snprintf(value, sizeof(value), "%d", ctdp_level->pkg_tdp);
+ 		format_and_print(outf, base_level + 4, header, value);
+@@ -438,7 +451,8 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 		if (ctdp_level->pbf_support)
+ 			_isst_pbf_display_information(cpu, outf, i,
+ 						      &ctdp_level->pbf_info,
+-						      base_level + 4);
++						      base_level + 4,
++						      cpu_model);
+ 		if (ctdp_level->fact_support)
+ 			_isst_fact_display_information(cpu, outf, i, 0xff, 0xff,
+ 						       &ctdp_level->fact_info,
+@@ -463,7 +477,7 @@ void isst_pbf_display_information(int cpu, FILE *outf, int level,
+ 				  struct isst_pbf_info *pbf_info)
+ {
+ 	print_package_info(cpu, outf);
+-	_isst_pbf_display_information(cpu, outf, level, pbf_info, 4);
++	_isst_pbf_display_information(cpu, outf, level, pbf_info, 4, 0);
+ 	format_and_print(outf, 1, NULL, NULL);
+ }
+ 
+diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
+index 0dcae17b3945..35b0fec44d35 100644
+--- a/tools/power/x86/intel-speed-select/isst.h
++++ b/tools/power/x86/intel-speed-select/isst.h
+@@ -196,7 +196,8 @@ extern int isst_get_process_ctdp(int cpu, int tdp_level,
+ extern void isst_get_process_ctdp_complete(int cpu,
+ 					   struct isst_pkg_ctdp *pkg_dev);
+ extern void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+-					  struct isst_pkg_ctdp *pkg_dev);
++					  struct isst_pkg_ctdp *pkg_dev,
++					  int cpu_model);
+ extern void isst_ctdp_display_core_info(int cpu, FILE *outf, char *prefix,
+ 					unsigned int val);
+ extern void isst_ctdp_display_information_start(FILE *outf);
 -- 
 2.21.0
