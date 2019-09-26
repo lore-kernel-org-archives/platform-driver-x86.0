@@ -1,53 +1,46 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH] x86/efi: Don't require non-blocking EFI callbacks
-Date: Thu, 26 Sep 2019 17:47:47 +0200
-Message-ID: <CAKv+Gu_j=Nb_Q92vVcqyE_FBos76ZG0=hGZwSNuG2sL1ZYsxXw@mail.gmail.com>
-References: <20190926141234.8271-1-ross.lagerwall@citrix.com>
- <CAKv+Gu8ok=v6WaKWW1AmhPgf1-n7p=4h8Tkno9YNW6H8p4fg8w@mail.gmail.com> <be816ae1-b802-f477-20d0-16e5be15a2b8@citrix.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Gayatri Kammela <gayatri.kammela@intel.com>
+Subject: [PATCH v1 0/5] Add Tiger Lake/Elkhart Lake support to pmc_core driver
+Date: Thu, 26 Sep 2019 12:25:58 -0700
+Message-ID: <20190926192603.18647-1-gayatri.kammela@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <be816ae1-b802-f477-20d0-16e5be15a2b8@citrix.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ross Lagerwall <ross.lagerwall@citrix.com>
-Cc: linux-efi <linux-efi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, the arch/x86 maintainers <x86@kernel.org>, platform-driver-x86@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Sai Praneeth <sai.praneeth.prakhya@intel.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: vishwanath.somayaji@intel.com, dvhart@infradead.org, linux-kernel@vger.kernel.org, charles.d.prestopine@intel.com, Gayatri Kammela <gayatri.kammela@intel.com>, Peter Zijlstra <peterz@infradead.org>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kan Liang <kan.liang@intel.com>, "David E . Box" <david.e.box@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Tony Luck <tony.luck@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 26 Sep 2019 at 17:47, Ross Lagerwall <ross.lagerwall@citrix.com> wrote:
->
-> On 9/26/19 4:29 PM, Ard Biesheuvel wrote:
-> > On Thu, 26 Sep 2019 at 16:12, Ross Lagerwall <ross.lagerwall@citrix.com> wrote:
-> >>
-> >> If a backend does not implement non-blocking EFI operations, it implies
-> >> that the normal operations are non-blocking.
-> >
-> > Is that documented anywhere?
->
-> Sort of. From commit 6d80dba1c9fe "efi: Provide a non-blocking
-> SetVariable() operation"
->
-> """
-> Introduce ->set_variable_nonblocking() for this use case. It is an
-> optional EFI backend operation, and need only be implemented by those
-> backends that usually acquire locks to serialize access to EFI
-> variables, as is the case for virt_efi_set_variable() where we now grab
-> the EFI runtime spinlock.
-> """
->
-> >
-> >> Instead of crashing
-> >> dereferencing a NULL pointer, fallback to the normal operations since it
-> >> is safe to do so.
-> >>
-> >
-> > I agree that crashing is never the right thing to do, but I wonder
-> > whether we shouldn't just bail instead. If the provided default
-> > operation is non-blocking, the platform can populate the function
-> > pointer with a reference to the default implementation.
->
-> If you would prefer it that platforms are always required to implement
-> the non-blocking functions, then I will just send a simple patch fixing
-> up the Xen implementation.
->
+Hi,
 
-Yes, please, that sounds like a safer option to me.
+Patch 1: Cleans up termination lines
+Patch 2: Refactor driver for ease of adding new SoCs
+Patch 3: Refactor debugfs entry for PCH IPs power gating status
+Patch 4: Add Tiger Lake legacy support to pmc_core
+Patch 5: Add Elkhart Lake legacy support to pmc_core
+
+All the information regarding the PCH IPs and names of IPs will be available
+in *future* Intel's Platform Controller Hub (PCH) External Design Specification
+(EDS) document.
+
+Gayatri Kammela (5):
+  x86/intel_pmc_core: Clean up: Remove comma after the termination line
+  x86/intel_pmc_core: Create platform dependent pmc bitmap structs
+  x86/intel_pmc_core: Make debugfs entry for pch_ip_power_gating_status
+    conditional
+  platform/x86: Add Tiger Lake(TGL) platform support to intel_pmc_core
+    driver
+  platform/x86: Add Atom based Elkhart Lake(EHL) platform support to
+    intel_pmc_core driver
+
+ drivers/platform/x86/intel_pmc_core.c | 108 +++++++++++++++++++++-----
+ drivers/platform/x86/intel_pmc_core.h |   2 +-
+ 2 files changed, 88 insertions(+), 22 deletions(-)
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: David E. Box <david.e.box@intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+-- 
+2.17.1
