@@ -1,177 +1,66 @@
-From: Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH 4/7] intel-speed-select: Add configuration for CascadeLake-N
-Date: Thu, 26 Sep 2019 08:54:58 -0400
-Message-ID: <20190926125501.1616-5-prarit@redhat.com>
-References: <20190926125501.1616-1-prarit@redhat.com>
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
+Subject: [PATCH] x86/efi: Don't require non-blocking EFI callbacks
+Date: Thu, 26 Sep 2019 15:12:34 +0100
+Message-ID: <20190926141234.8271-1-ross.lagerwall@citrix.com>
 Mime-Version: 1.0
+Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190926125501.1616-1-prarit@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: linux-efi@vger.kernel.org
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Sai Praneeth <sai.praneeth.prakhya@intel.com>, Ross Lagerwall <ross.lagerwall@citrix.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Create a 'dummy' pkg_dev struct for use by CascadeLake-N processors.  This
-struct will be used in later patches to implement info and status calls
-for CascadeLake-N SST-BF.
+If a backend does not implement non-blocking EFI operations, it implies
+that the normal operations are non-blocking. Instead of crashing
+dereferencing a NULL pointer, fallback to the normal operations since it
+is safe to do so.
 
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Fixes: 5a58bc1b1edc ("efi/x86: Use non-blocking SetVariable() for efi_delete_dummy_variable()")
+Fixes: ca0e30dcaa53 ("efi: Add nonblocking option to efi_query_variable_store()")
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
 ---
- .../x86/intel-speed-select/isst-config.c      | 98 ++++++++++++++++++-
- .../x86/intel-speed-select/isst-display.c     |  2 -
- tools/power/x86/intel-speed-select/isst.h     |  2 +
- 3 files changed, 99 insertions(+), 3 deletions(-)
+ arch/x86/platform/efi/quirks.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index ae8e3b5153ad..33f328d971d3 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -735,6 +735,94 @@ _get_tdp_level("get-config-current_level", levels, current_level,
- 	       "Current TDP Level");
- _get_tdp_level("get-lock-status", levels, locked, "TDP lock status");
- 
-+struct isst_pkg_ctdp cn_pkg_dev;
-+
-+static int cn_get_base_ratio(void)
-+{
-+	FILE *fp;
-+	char *begin, *end, *line;
-+	char number[5];
-+	float value = 0;
-+	size_t n;
-+
-+	fp = fopen("/proc/cpuinfo", "r");
-+	if (!fp)
-+		err(-1, "cannot open /proc/cpuinfo\n");
-+
-+	while (getline(&line, &n, fp) > 0) {
-+		if (strstr(line, "model name")) {
-+			/* this is true for CascadeLake-N */
-+			begin = strstr(line, "@ ") + 2;
-+			end = strstr(line, "GHz");
-+			strncpy(number, begin, end - begin);
-+			value = atof(number) * 10;
-+			break;
-+		}
-+	}
-+	free(line);
-+	fclose(fp);
-+
-+	return (int)(value);
-+}
-+
-+static void cascadelaken_config(void)
-+{
-+	int i;
-+	unsigned long cpu_bf;
-+	struct isst_pkg_ctdp_level_info *ctdp_level;
-+	struct isst_pbf_info *pbf_info;
-+
-+	ctdp_level = &cn_pkg_dev.ctdp_level[0];
-+	pbf_info = &ctdp_level->pbf_info;
-+
-+	/* find the frequency base ratio */
-+	ctdp_level->tdp_ratio = cn_get_base_ratio();
-+	if (ctdp_level->tdp_ratio == 0)
-+		err(-1, "cn base ratio is zero\n");
-+
-+	/* find the high and low priority frequencies */
-+	pbf_info->p1_high = 0;
-+	pbf_info->p1_low = ~0;
-+	for (i = 0; i < topo_max_cpus; i++) {
-+		cpu_bf = parse_int_file(1,
-+			"/sys/devices/system/cpu/cpu%d/cpufreq/base_frequency",
-+					i);
-+		if (cpu_bf > pbf_info->p1_high)
-+			pbf_info->p1_high = cpu_bf;
-+		if (cpu_bf < pbf_info->p1_low)
-+			pbf_info->p1_low = cpu_bf;
-+	}
-+
-+	if (pbf_info->p1_high == ~0UL)
-+		err(-1, "maximum base frequency not set\n");
-+
-+	if (pbf_info->p1_low == 0)
-+		err(-1, "minimum base frequency not set\n");
-+
-+	/* convert frequencies back to ratios */
-+	pbf_info->p1_high = pbf_info->p1_high / DISP_FREQ_MULTIPLIER;
-+	pbf_info->p1_low = pbf_info->p1_low / DISP_FREQ_MULTIPLIER;
-+
-+	/* create high priority cpu mask */
-+	pbf_info->core_cpumask_size = alloc_cpu_set(&pbf_info->core_cpumask);
-+	for (i = 0; i < topo_max_cpus; i++) {
-+		cpu_bf = parse_int_file(1,
-+			"/sys/devices/system/cpu/cpu%d/cpufreq/base_frequency",
-+					i);
-+		cpu_bf = cpu_bf / DISP_FREQ_MULTIPLIER;
-+		if (cpu_bf == pbf_info->p1_high)
-+			CPU_SET_S(i, pbf_info->core_cpumask_size,
-+				  pbf_info->core_cpumask);
-+	}
-+
-+	/* extra ctdp & pbf struct parameters */
-+	ctdp_level->processed = 1;
-+	ctdp_level->pbf_support = 1; /* PBF is always supported and enabled */
-+	ctdp_level->pbf_enabled = 1;
-+	ctdp_level->fact_support = 0; /* FACT is never supported */
-+	ctdp_level->fact_enabled = 0;
-+}
-+
- static void dump_isst_config_for_cpu(int cpu, void *arg1, void *arg2,
- 				     void *arg3, void *arg4)
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 3b9fd679cea9..4167f5e8f3e8 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -106,11 +106,13 @@ early_param("efi_no_storage_paranoia", setup_storage_paranoia);
+ */
+ void efi_delete_dummy_variable(void)
  {
-@@ -1546,7 +1634,10 @@ void process_command(int argc, char **argv,
- 		}
- 	}
- 
--	create_cpu_map();
-+	if (cpu_model != 0x55)
-+		create_cpu_map();
-+	else
-+		cascadelaken_config();
- 
- 	i = 0;
- 	while (cmds[i].feature) {
-@@ -1562,6 +1653,11 @@ void process_command(int argc, char **argv,
- 
- 	if (!matched)
- 		fprintf(stderr, "Invalid command\n");
+-	efi.set_variable_nonblocking((efi_char16_t *)efi_dummy_name,
+-				     &EFI_DUMMY_GUID,
+-				     EFI_VARIABLE_NON_VOLATILE |
+-				     EFI_VARIABLE_BOOTSERVICE_ACCESS |
+-				     EFI_VARIABLE_RUNTIME_ACCESS, 0, NULL);
++	efi_set_variable_t *set_variable = efi.set_variable_nonblocking ?:
++					   efi.set_variable;
 +
-+	if (cpu_model != 0x55) {
-+		/* this was allocated in cascadelaken_config() */
-+		free_cpu_set(cn_pkg_dev.ctdp_level[0].pbf_info.core_cpumask);
-+	}
++	set_variable((efi_char16_t *)efi_dummy_name, &EFI_DUMMY_GUID,
++		     EFI_VARIABLE_NON_VOLATILE |
++		     EFI_VARIABLE_BOOTSERVICE_ACCESS |
++		     EFI_VARIABLE_RUNTIME_ACCESS, 0, NULL);
  }
  
- static void usage(void)
-diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 40346d534f78..1caa7ae25245 100644
---- a/tools/power/x86/intel-speed-select/isst-display.c
-+++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -6,8 +6,6 @@
- 
- #include "isst.h"
- 
--#define DISP_FREQ_MULTIPLIER 100
--
- static void printcpulist(int str_len, char *str, int mask_size,
- 			 cpu_set_t *cpu_mask)
+ /*
+@@ -127,10 +129,12 @@ query_variable_store_nonblocking(u32 attributes, unsigned long size)
  {
-diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
-index d280b27d600d..0dcae17b3945 100644
---- a/tools/power/x86/intel-speed-select/isst.h
-+++ b/tools/power/x86/intel-speed-select/isst.h
-@@ -69,6 +69,8 @@
- #define PM_CLOS_OFFSET				0x08
- #define PQR_ASSOC_OFFSET			0x20
+ 	efi_status_t status;
+ 	u64 storage_size, remaining_size, max_size;
++	efi_query_variable_info_t *query_variable_info =
++		efi.query_variable_info_nonblocking ?:
++		efi.query_variable_info;
  
-+#define DISP_FREQ_MULTIPLIER 100
-+
- struct isst_clos_config {
- 	int pkg_id;
- 	int die_id;
+-	status = efi.query_variable_info_nonblocking(attributes, &storage_size,
+-						     &remaining_size,
+-						     &max_size);
++	status = query_variable_info(attributes, &storage_size,
++				     &remaining_size, &max_size);
+ 	if (status != EFI_SUCCESS)
+ 		return status;
+ 
 -- 
 2.21.0
