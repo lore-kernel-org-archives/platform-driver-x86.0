@@ -1,7 +1,7 @@
 From: Gayatri Kammela <gayatri.kammela@intel.com>
-Subject: [PATCH v1 3/5] x86/intel_pmc_core: Make debugfs entry for pch_ip_power_gating_status conditional
-Date: Thu, 26 Sep 2019 12:26:01 -0700
-Message-ID: <20190926192603.18647-4-gayatri.kammela@intel.com>
+Subject: [PATCH v1 4/5] platform/x86: Add Tiger Lake(TGL) platform support to intel_pmc_core driver
+Date: Thu, 26 Sep 2019 12:26:02 -0700
+Message-ID: <20190926192603.18647-5-gayatri.kammela@intel.com>
 References: <20190926192603.18647-1-gayatri.kammela@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190926192603.18647-1-gayatri.kammela@intel.com>
@@ -10,8 +10,12 @@ To: platform-driver-x86@vger.kernel.org
 Cc: vishwanath.somayaji@intel.com, dvhart@infradead.org, linux-kernel@vger.kernel.org, charles.d.prestopine@intel.com, Gayatri Kammela <gayatri.kammela@intel.com>, Peter Zijlstra <peterz@infradead.org>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kan Liang <kan.liang@intel.com>, "David E . Box" <david.e.box@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Tony Luck <tony.luck@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Check if the platform supports and only then add a debugfs entry for PCH
-IP power gating status.
+Add Tiger Lake to the list of the platforms that intel_pmc_core driver
+supports for the pmc_core device.
+
+Just like ICL, TGL can also reuse all the CNL PCH IPs. Since TGL has
+almost the same number of PCH IPs as ICL, reuse ICL's PPFEAR_NUM_ENTRIES
+instead of defining a new macro.
 
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
@@ -23,24 +27,87 @@ Cc: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
 ---
- drivers/platform/x86/intel_pmc_core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 40 +++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index c6a0c29d3476..ea43a5989c96 100644
+index ea43a5989c96..aef8f6d8bddb 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -788,8 +788,9 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
- 	debugfs_create_file("slp_s0_residency_usec", 0444, dir, pmcdev,
- 			    &pmc_core_dev_state);
+@@ -190,7 +190,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"SDX",                 BIT(4)},
+ 	{"SPE",                 BIT(5)},
+ 	{"Fuse",                BIT(6)},
+-	/* Reserved for Cannonlake but valid for Icelake */
++	/* Reserved for Cannonlake but valid for Icelake and Tigerlake */
+ 	{"SBR8",		BIT(7)},
  
--	debugfs_create_file("pch_ip_power_gating_status", 0444, dir, pmcdev,
--			    &pmc_core_ppfear_fops);
-+	if (pmcdev->map->pfear_sts)
-+		debugfs_create_file("pch_ip_power_gating_status", 0444, dir,
-+				    pmcdev, &pmc_core_ppfear_fops);
+ 	{"CSME_FSC",            BIT(0)},
+@@ -234,7 +234,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"HDA_PGD4",            BIT(2)},
+ 	{"HDA_PGD5",            BIT(3)},
+ 	{"HDA_PGD6",            BIT(4)},
+-	/* Reserved for Cannonlake but valid for Icelake */
++	/* Reserved for Cannonlake but valid for Icelake and Tigerlake */
+ 	{"PSF6",		BIT(5)},
+ 	{"PSF7",		BIT(6)},
+ 	{"PSF8",		BIT(7)},
+@@ -265,6 +265,24 @@ static const struct pmc_bit_map *ext_icl_pfear_map[] = {
+ 	NULL
+ };
  
- 	debugfs_create_file("ltr_ignore", 0644, dir, pmcdev,
- 			    &pmc_core_ltr_ignore_ops);
++static const struct pmc_bit_map tgl_pfear_map[] = {
++	/* Tigerlake generation onwards only */
++	{"PSF9",		BIT(0)},
++	{"RES_66",		BIT(1)},
++	{"RES_67",		BIT(2)},
++	{"RES_68",		BIT(3)},
++	{"RES_69",		BIT(4)},
++	{"RES_70",		BIT(5)},
++	{"TBTLSX",		BIT(6)},
++	{}
++};
++
++static const struct pmc_bit_map *ext_tgl_pfear_map[] = {
++	cnp_pfear_map,
++	tgl_pfear_map,
++	NULL
++};
++
+ static const struct pmc_bit_map cnp_slps0_dbg0_map[] = {
+ 	{"AUDIO_D3",		BIT(0)},
+ 	{"OTG_D3",		BIT(1)},
+@@ -383,6 +401,22 @@ static const struct pmc_reg_map icl_reg_map = {
+ 	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
+ };
+ 
++static const struct pmc_reg_map tgl_reg_map = {
++	.pfear_sts = ext_tgl_pfear_map,
++	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
++	.slps0_dbg_maps = cnp_slps0_dbg_maps,
++	.ltr_show_sts = cnp_ltr_show_map,
++	.msr_sts = msr_map,
++	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
++	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
++	.regmap_length = CNP_PMC_MMIO_REG_LEN,
++	.ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
++	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
++	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
++	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
++};
++
+ static inline u8 pmc_core_reg_read_byte(struct pmc_dev *pmcdev, int offset)
+ {
+ 	return readb(pmcdev->regbase + offset);
+@@ -836,6 +870,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	INTEL_CPU_FAM6(CANNONLAKE_L, cnp_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_L, icl_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
++	INTEL_CPU_FAM6(TIGERLAKE_L, tgl_reg_map),
++	INTEL_CPU_FAM6(TIGERLAKE, tgl_reg_map),
+ 	{}
+ };
+ 
 -- 
 2.17.1
