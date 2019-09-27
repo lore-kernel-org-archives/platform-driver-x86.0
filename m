@@ -1,48 +1,45 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1 0/5] Add Tiger Lake/Elkhart Lake support to pmc_core driver
-Date: Fri, 27 Sep 2019 09:06:04 +0300
-Message-ID: <CAHp75VfwpYLVn2qWBMK11eR3D5VwnGf7VeYE=cQfq_y78ct75A@mail.gmail.com>
-References: <20190926192603.18647-1-gayatri.kammela@intel.com> <CAHp75Vcrp2ffDCE=tm2dwSEhwfPCPWGhb-Nw0v-7ga2y=_dL8w@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: Portege Z930 extra keys and leds
+Date: Fri, 27 Sep 2019 15:53:13 +0200
+Message-ID: <20190927135313.GC3557@bug>
+References: <09e715a0-08d2-100d-4bc3-c4f6c87f2a98@metux.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vcrp2ffDCE=tm2dwSEhwfPCPWGhb-Nw0v-7ga2y=_dL8w@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <09e715a0-08d2-100d-4bc3-c4f6c87f2a98@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gayatri Kammela <gayatri.kammela@intel.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, charles.d.prestopine@intel.com, Peter Zijlstra <peterz@infradead.org>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kan Liang <kan.liang@intel.com>, "David E . Box" <david.e.box@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Tony Luck <tony.luck@intel.com>
+To: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Sep 27, 2019 at 9:01 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Thu, Sep 26, 2019 at 9:43 PM Gayatri Kammela
-> <gayatri.kammela@intel.com> wrote:
->
-> Thank you for the series, I'll comment them later.
->
-> For now, check how to properly setup prefix for all patches. The Title
-> all broken.
->
+Hi!
 
-On top of that the fully inconsistent SoC naming through the existing
-code / new additions.
+> does anybody happen to know how to drive the extra keys and leds
+> of Toshiba Portege Z930 notebook ?
+> 
+> It has two extra keys above the keyboard (right next to the power
+> button) and some indicator leds underneath the touch panel buttons.
+> 
+> Toshiba originally ships the notebook with some strange Windows software
+> (for some mysterious "ECO" mode) that reacts on these two buttons and
+> drives at least the rightmost LED directly - so there has to be *some*
+> way to control them by software.
+> 
+> When in a terminal (on the console only when /dev/input/event10 -
+> "Toshiba input device" is opened), both keys seem to generate an "x"
+> keypress, but nothing coming in in the event device.
 
-I'm pretty sure you need to spell platforms as Tiger Lake, Elkhart
-Lake and so on everywhere.
+You may want to play with evtest.
 
-Fix this, but do not send new version till I look at the code here.
+And you may want to dump the ACPI tables, I'd expect it would be driven from
+there.
 
-> > Patch 1: Cleans up termination lines
-> > Patch 2: Refactor driver for ease of adding new SoCs
-> > Patch 3: Refactor debugfs entry for PCH IPs power gating status
-> > Patch 4: Add Tiger Lake legacy support to pmc_core
-> > Patch 5: Add Elkhart Lake legacy support to pmc_core
-> >
-> > All the information regarding the PCH IPs and names of IPs will be available
-> > in *future* Intel's Platform Controller Hub (PCH) External Design Specification
-> > (EDS) document.
->
-> When?
+You may also want to search drivers/platform/x86 (or something like that) on
+the latest kernel...
 
+Best regards,
+								Pavel
 -- 
-With Best Regards,
-Andy Shevchenko
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
