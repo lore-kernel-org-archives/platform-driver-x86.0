@@ -1,64 +1,55 @@
-From: yu kuai <yukuai3@huawei.com>
-Subject: [PATCH] classmate-laptop: remove unused variable
-Date: Sun, 29 Sep 2019 21:42:49 +0800
-Message-ID: <1569764569-9177-1-git-send-email-yukuai3@huawei.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 40/49] tools/power/x86/intel-speed-select: Fix high priority core mask over count
+Date: Sun, 29 Sep 2019 13:30:40 -0400
+Message-ID: <20190929173053.8400-40-sashal@kernel.org>
+References: <20190929173053.8400-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: cascardo@holoscopio.com, don@syst.com.br, dvhart@infradead.org, andy@infradead.org
-Cc: yukuai3@huawei.com, zhengbin13@huawei.com, yi.zhang@huawei.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Youquan Song <youquan.song@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+From: Youquan Song <youquan.song@intel.com>
 
-drivers/platform/x86/classmate-laptop.c: In function cmpc_accel_remove_v4:
-drivers/platform/x86/classmate-laptop.c:424:21: warning: variable accel
-set but not used [-Wunused-but-set-variable]
-drivers/platform/x86/classmate-laptop.c: In function cmpc_accel_remove:
-drivers/platform/x86/classmate-laptop.c:660:21: warning: variable accel
-set but not used [-Wunused-but-set-variable]
+[ Upstream commit 44460efe44e05eae2f21e57d06d542bbbb792e65 ]
 
-In function cmpc_accel_remove_v4 and cmpc_accel_remove, variable accel is
-set but not used, so it can be removed. In that case, variable inputdev is
-set but not used and can be removed.
+If the CPU package has the less logical CPU than topo_max_cpus, but un-present
+CPU's punit_cpu_core will be initiated to 0 and they will be count to core 0
 
-Fixes: 7125587df4e8 ("classmate-laptop: Add support for Classmate V4 accelerometer.")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: yu kuai <yukuai3@huawei.com>
+Like below, there are only 10 high priority cores (20 logical CPUs) in the CPU
+package, but it count to 27 logic CPUs.
+
+./intel-speed-select base-freq info -l 0 | grep mask
+        high-priority-cpu-mask:7f000179,f000179f
+
+With the fix patch:
+./intel-speed-select base-freq info -l 0
+        high-priority-cpu-mask:00000179,f000179f
+
+Signed-off-by: Youquan Song <youquan.song@intel.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/classmate-laptop.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
-index 86cc2cc..af063f6 100644
---- a/drivers/platform/x86/classmate-laptop.c
-+++ b/drivers/platform/x86/classmate-laptop.c
-@@ -420,12 +420,6 @@ static int cmpc_accel_add_v4(struct acpi_device *acpi)
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index 91c5ad1685a15..a6b1487b5f0f6 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -402,6 +402,9 @@ void set_cpu_mask_from_punit_coremask(int cpu, unsigned long long core_mask,
+ 			int j;
  
- static int cmpc_accel_remove_v4(struct acpi_device *acpi)
- {
--	struct input_dev *inputdev;
--	struct cmpc_accel *accel;
--
--	inputdev = dev_get_drvdata(&acpi->dev);
--	accel = dev_get_drvdata(&inputdev->dev);
--
- 	device_remove_file(&acpi->dev, &cmpc_accel_sensitivity_attr_v4);
- 	device_remove_file(&acpi->dev, &cmpc_accel_g_select_attr_v4);
- 	return cmpc_remove_acpi_notify_device(acpi);
-@@ -656,12 +650,6 @@ static int cmpc_accel_add(struct acpi_device *acpi)
- 
- static int cmpc_accel_remove(struct acpi_device *acpi)
- {
--	struct input_dev *inputdev;
--	struct cmpc_accel *accel;
--
--	inputdev = dev_get_drvdata(&acpi->dev);
--	accel = dev_get_drvdata(&inputdev->dev);
--
- 	device_remove_file(&acpi->dev, &cmpc_accel_sensitivity_attr);
- 	return cmpc_remove_acpi_notify_device(acpi);
- }
+ 			for (j = 0; j < topo_max_cpus; ++j) {
++				if (!CPU_ISSET_S(j, present_cpumask_size, present_cpumask))
++					continue;
++
+ 				if (cpu_map[j].pkg_id == pkg_id &&
+ 				    cpu_map[j].die_id == die_id &&
+ 				    cpu_map[j].punit_cpu_core == i) {
 -- 
-2.7.4
+2.20.1
