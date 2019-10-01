@@ -1,184 +1,165 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH] platform/x86: asus-laptop: switch to using polled mode of
- input devices
-Date: Tue, 1 Oct 2019 11:29:05 -0700
-Message-ID: <20191001182905.GA260106@dtor-ws>
+Subject: [PATCH] platform/x86: peaq-wmi: switch to using polled mode of input
+ devices
+Date: Tue, 1 Oct 2019 11:31:19 -0700
+Message-ID: <20191001183119.GA261696@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Corentin Chary <corentin.chary@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 We have added polled mode to the normal input devices with the intent of
-retiring input_polled_dev. This converts Asus laptop driver to use the
+retiring input_polled_dev. This converts peaq-wmi driver to use the
 polling mode of standard input devices and removes dependency on
 INPUT_POLLDEV.
 
-Also removed no longed needed set_bit(EV_ABS, ...) as
-input_set_abs_params() does it for us.
+Because the new polling coded does not allow peeking inside the poller
+structure to get the poll interval, we change the "debounce" process to
+operate on the time basis, instead of counting events.
+
+We also fix error handling during initialization, as previously we leaked
+input device structure when we failed to register it.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/platform/x86/Kconfig       |  1 -
- drivers/platform/x86/asus-laptop.c | 70 +++++++++++++++---------------
- 2 files changed, 35 insertions(+), 36 deletions(-)
+ drivers/platform/x86/Kconfig    |  1 -
+ drivers/platform/x86/peaq-wmi.c | 64 +++++++++++++++++++++------------
+ 2 files changed, 41 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 1b67bb578f9f..f0a93f630455 100644
+index f0a93f630455..c703c78c59f3 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -94,7 +94,6 @@ config ASUS_LAPTOP
- 	depends on RFKILL || RFKILL = n
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
- 	select INPUT_SPARSEKMAP
+@@ -804,7 +804,6 @@ config PEAQ_WMI
+ 	tristate "PEAQ 2-in-1 WMI hotkey driver"
+ 	depends on ACPI_WMI
+ 	depends on INPUT
 -	select INPUT_POLLDEV
- 	---help---
- 	  This is a driver for Asus laptops, Lenovo SL and the Pegatron
- 	  Lucid tablet. It may also support some MEDION, JVC or VICTOR
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 472af7edf0af..537e5f6f16d3 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -244,7 +244,7 @@ struct asus_laptop {
+ 	help
+ 	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
  
- 	struct input_dev *inputdev;
- 	struct key_entry *keymap;
--	struct input_polled_dev *pega_accel_poll;
-+	struct input_dev *pega_accel_poll;
+diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
+index fdeb3624c529..0861d8a00aa0 100644
+--- a/drivers/platform/x86/peaq-wmi.c
++++ b/drivers/platform/x86/peaq-wmi.c
+@@ -18,8 +18,7 @@
  
- 	struct asus_led wled;
- 	struct asus_led bled;
-@@ -446,9 +446,9 @@ static int pega_acc_axis(struct asus_laptop *asus, int curr, char *method)
- 	return clamp_val((short)val, -PEGA_ACC_CLAMP, PEGA_ACC_CLAMP);
- }
+ MODULE_ALIAS("wmi:"PEAQ_DOLBY_BUTTON_GUID);
  
--static void pega_accel_poll(struct input_polled_dev *ipd)
-+static void pega_accel_poll(struct input_dev *input)
+-static unsigned int peaq_ignore_events_counter;
+-static struct input_polled_dev *peaq_poll_dev;
++static struct input_dev *peaq_poll_dev;
+ 
+ /*
+  * The Dolby button (yes really a Dolby button) causes an ACPI variable to get
+@@ -28,8 +27,10 @@ static struct input_polled_dev *peaq_poll_dev;
+  * (if polling after the release) or twice (polling between press and release).
+  * We ignore events for 0.5s after the first event to avoid reporting 2 presses.
+  */
+-static void peaq_wmi_poll(struct input_polled_dev *dev)
++static void peaq_wmi_poll(struct input_dev *input_dev)
  {
--	struct device *parent = ipd->input->dev.parent;
-+	struct device *parent = input->dev.parent;
- 	struct asus_laptop *asus = dev_get_drvdata(parent);
++	static unsigned long last_event_time;
++	static bool had_events;
+ 	union acpi_object obj;
+ 	acpi_status status;
+ 	u32 dummy = 0;
+@@ -44,22 +45,25 @@ static void peaq_wmi_poll(struct input_polled_dev *dev)
+ 		return;
  
- 	/* In some cases, the very first call to poll causes a
-@@ -457,10 +457,10 @@ static void pega_accel_poll(struct input_polled_dev *ipd)
- 	 * device, and perhaps a firmware bug. Fake the first report. */
- 	if (!asus->pega_acc_live) {
- 		asus->pega_acc_live = true;
--		input_report_abs(ipd->input, ABS_X, 0);
--		input_report_abs(ipd->input, ABS_Y, 0);
--		input_report_abs(ipd->input, ABS_Z, 0);
--		input_sync(ipd->input);
-+		input_report_abs(input, ABS_X, 0);
-+		input_report_abs(input, ABS_Y, 0);
-+		input_report_abs(input, ABS_Z, 0);
-+		input_sync(input);
+ 	if (obj.type != ACPI_TYPE_INTEGER) {
+-		dev_err(&peaq_poll_dev->input->dev,
++		dev_err(&input_dev->dev,
+ 			"Error WMBC did not return an integer\n");
  		return;
  	}
  
-@@ -471,25 +471,24 @@ static void pega_accel_poll(struct input_polled_dev *ipd)
- 	/* Note transform, convert to "right/up/out" in the native
- 	 * landscape orientation (i.e. the vector is the direction of
- 	 * "real up" in the device's cartiesian coordinates). */
--	input_report_abs(ipd->input, ABS_X, -asus->pega_acc_x);
--	input_report_abs(ipd->input, ABS_Y, -asus->pega_acc_y);
--	input_report_abs(ipd->input, ABS_Z,  asus->pega_acc_z);
--	input_sync(ipd->input);
-+	input_report_abs(input, ABS_X, -asus->pega_acc_x);
-+	input_report_abs(input, ABS_Y, -asus->pega_acc_y);
-+	input_report_abs(input, ABS_Z,  asus->pega_acc_z);
-+	input_sync(input);
+-	if (peaq_ignore_events_counter && peaq_ignore_events_counter--)
++	if (!obj.integer.value)
+ 		return;
+ 
+-	if (obj.integer.value) {
+-		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 1);
+-		input_sync(peaq_poll_dev->input);
+-		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 0);
+-		input_sync(peaq_poll_dev->input);
+-		peaq_ignore_events_counter = max(1u,
+-			PEAQ_POLL_IGNORE_MS / peaq_poll_dev->poll_interval);
+-	}
++	if (had_events && time_before(jiffies, last_event_time +
++					msecs_to_jiffies(PEAQ_POLL_IGNORE_MS)))
++		return;
++
++	input_event(input_dev, EV_KEY, KEY_SOUND, 1);
++	input_sync(input_dev);
++	input_event(input_dev, EV_KEY, KEY_SOUND, 0);
++	input_sync(input_dev);
++
++	last_event_time = jiffies;
++	had_events = true;
  }
  
- static void pega_accel_exit(struct asus_laptop *asus)
- {
- 	if (asus->pega_accel_poll) {
--		input_unregister_polled_device(asus->pega_accel_poll);
--		input_free_polled_device(asus->pega_accel_poll);
-+		input_unregister_device(asus->pega_accel_poll);
-+		asus->pega_accel_poll = NULL;
- 	}
--	asus->pega_accel_poll = NULL;
- }
+ /* Some other devices (Shuttle XS35) use the same WMI GUID for other purposes */
+@@ -75,6 +79,8 @@ static const struct dmi_system_id peaq_dmi_table[] __initconst = {
  
- static int pega_accel_init(struct asus_laptop *asus)
+ static int __init peaq_wmi_init(void)
  {
- 	int err;
--	struct input_polled_dev *ipd;
-+	struct input_dev *input;
- 
- 	if (!asus->is_pega_lucid)
++	int err;
++
+ 	/* WMI GUID is not unique, also check for a DMI match */
+ 	if (!dmi_check_system(peaq_dmi_table))
  		return -ENODEV;
-@@ -499,37 +498,39 @@ static int pega_accel_init(struct asus_laptop *asus)
- 	    acpi_check_handle(asus->handle, METHOD_XLRZ, NULL))
+@@ -82,24 +88,36 @@ static int __init peaq_wmi_init(void)
+ 	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
  		return -ENODEV;
  
--	ipd = input_allocate_polled_device();
--	if (!ipd)
-+	input = input_allocate_device();
-+	if (!input)
+-	peaq_poll_dev = input_allocate_polled_device();
++	peaq_poll_dev = input_allocate_device();
+ 	if (!peaq_poll_dev)
  		return -ENOMEM;
  
--	ipd->poll = pega_accel_poll;
--	ipd->poll_interval = 125;
--	ipd->poll_interval_min = 50;
--	ipd->poll_interval_max = 2000;
--
--	ipd->input->name = PEGA_ACCEL_DESC;
--	ipd->input->phys = PEGA_ACCEL_NAME "/input0";
--	ipd->input->dev.parent = &asus->platform_device->dev;
--	ipd->input->id.bustype = BUS_HOST;
-+	input->name = PEGA_ACCEL_DESC;
-+	input->phys = PEGA_ACCEL_NAME "/input0";
-+	input->dev.parent = &asus->platform_device->dev;
-+	input->id.bustype = BUS_HOST;
- 
--	set_bit(EV_ABS, ipd->input->evbit);
--	input_set_abs_params(ipd->input, ABS_X,
-+	input_set_abs_params(input, ABS_X,
- 			     -PEGA_ACC_CLAMP, PEGA_ACC_CLAMP, 0, 0);
--	input_set_abs_params(ipd->input, ABS_Y,
-+	input_set_abs_params(input, ABS_Y,
- 			     -PEGA_ACC_CLAMP, PEGA_ACC_CLAMP, 0, 0);
--	input_set_abs_params(ipd->input, ABS_Z,
-+	input_set_abs_params(input, ABS_Z,
- 			     -PEGA_ACC_CLAMP, PEGA_ACC_CLAMP, 0, 0);
- 
--	err = input_register_polled_device(ipd);
-+	err = input_setup_polling(input, pega_accel_poll);
- 	if (err)
- 		goto exit;
- 
--	asus->pega_accel_poll = ipd;
-+	input_set_poll_interval(input, 125);
-+	input_set_min_poll_interval(input, 50);
-+	input_set_max_poll_interval(input, 2000);
+-	peaq_poll_dev->poll = peaq_wmi_poll;
+-	peaq_poll_dev->poll_interval = PEAQ_POLL_INTERVAL_MS;
+-	peaq_poll_dev->poll_interval_max = PEAQ_POLL_MAX_MS;
+-	peaq_poll_dev->input->name = "PEAQ WMI hotkeys";
+-	peaq_poll_dev->input->phys = "wmi/input0";
+-	peaq_poll_dev->input->id.bustype = BUS_HOST;
+-	input_set_capability(peaq_poll_dev->input, EV_KEY, KEY_SOUND);
++	peaq_poll_dev->name = "PEAQ WMI hotkeys";
++	peaq_poll_dev->phys = "wmi/input0";
++	peaq_poll_dev->id.bustype = BUS_HOST;
++	input_set_capability(peaq_poll_dev, EV_KEY, KEY_SOUND);
 +
-+	err = input_register_device(input);
++	err = input_setup_polling(peaq_poll_dev, peaq_wmi_poll);
 +	if (err)
-+		goto exit;
++		goto err_out;
 +
-+	asus->pega_accel_poll = input;
- 	return 0;
++	input_set_poll_interval(peaq_poll_dev, PEAQ_POLL_INTERVAL_MS);
++	input_set_max_poll_interval(peaq_poll_dev, PEAQ_POLL_MAX_MS);
++
++	err = input_register_device(peaq_poll_dev);
++	if (err)
++		goto err_out;
++
++	return 0;
  
- exit:
--	input_free_polled_device(ipd);
-+	input_free_device(input);
- 	return err;
+-	return input_register_polled_device(peaq_poll_dev);
++err_out:
++	input_free_device(peaq_poll_dev);
++	return err;
  }
  
-@@ -1550,8 +1551,7 @@ static void asus_acpi_notify(struct acpi_device *device, u32 event)
+ static void __exit peaq_wmi_exit(void)
+ {
+-	input_unregister_polled_device(peaq_poll_dev);
++	input_unregister_device(peaq_poll_dev);
+ }
  
- 	/* Accelerometer "coarse orientation change" event */
- 	if (asus->pega_accel_poll && event == 0xEA) {
--		kobject_uevent(&asus->pega_accel_poll->input->dev.kobj,
--			       KOBJ_CHANGE);
-+		kobject_uevent(&asus->pega_accel_poll->dev.kobj, KOBJ_CHANGE);
- 		return ;
- 	}
- 
+ module_init(peaq_wmi_init);
 -- 
 2.23.0.444.g18eeb5a265-goog
 
