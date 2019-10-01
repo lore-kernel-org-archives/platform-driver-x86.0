@@ -1,165 +1,137 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH] platform/x86: peaq-wmi: switch to using polled mode of input
+Subject: [PATCH] platform/x86: hdaps: switch to using polled mode of input
  devices
-Date: Tue, 1 Oct 2019 11:31:19 -0700
-Message-ID: <20191001183119.GA261696@dtor-ws>
+Date: Tue, 1 Oct 2019 11:32:53 -0700
+Message-ID: <20191001183253.GA2344@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Frank Seidel <frank@f-seidel.de>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 We have added polled mode to the normal input devices with the intent of
-retiring input_polled_dev. This converts peaq-wmi driver to use the
+retiring input_polled_dev. This converts hdaps driver to use the
 polling mode of standard input devices and removes dependency on
 INPUT_POLLDEV.
 
-Because the new polling coded does not allow peeking inside the poller
-structure to get the poll interval, we change the "debounce" process to
-operate on the time basis, instead of counting events.
-
-We also fix error handling during initialization, as previously we leaked
-input device structure when we failed to register it.
-
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/platform/x86/Kconfig    |  1 -
- drivers/platform/x86/peaq-wmi.c | 64 +++++++++++++++++++++------------
- 2 files changed, 41 insertions(+), 24 deletions(-)
+ drivers/platform/x86/Kconfig |  1 -
+ drivers/platform/x86/hdaps.c | 38 +++++++++++++++++-------------------
+ 2 files changed, 18 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index f0a93f630455..c703c78c59f3 100644
+index c703c78c59f3..8690e311f407 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -804,7 +804,6 @@ config PEAQ_WMI
- 	tristate "PEAQ 2-in-1 WMI hotkey driver"
- 	depends on ACPI_WMI
+@@ -622,7 +622,6 @@ config THINKPAD_ACPI_HOTKEY_POLL
+ config SENSORS_HDAPS
+ 	tristate "Thinkpad Hard Drive Active Protection System (hdaps)"
  	depends on INPUT
 -	select INPUT_POLLDEV
  	help
- 	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
+ 	  This driver provides support for the IBM Hard Drive Active Protection
+ 	  System (hdaps), which provides an accelerometer and other misc. data.
+diff --git a/drivers/platform/x86/hdaps.c b/drivers/platform/x86/hdaps.c
+index 3adcb0de0193..84d3d0af4e40 100644
+--- a/drivers/platform/x86/hdaps.c
++++ b/drivers/platform/x86/hdaps.c
+@@ -59,7 +59,7 @@
+ #define HDAPS_BOTH_AXES		(HDAPS_X_AXIS | HDAPS_Y_AXIS)
  
-diff --git a/drivers/platform/x86/peaq-wmi.c b/drivers/platform/x86/peaq-wmi.c
-index fdeb3624c529..0861d8a00aa0 100644
---- a/drivers/platform/x86/peaq-wmi.c
-+++ b/drivers/platform/x86/peaq-wmi.c
-@@ -18,8 +18,7 @@
+ static struct platform_device *pdev;
+-static struct input_polled_dev *hdaps_idev;
++static struct input_dev *hdaps_idev;
+ static unsigned int hdaps_invert;
+ static u8 km_activity;
+ static int rest_x;
+@@ -318,9 +318,8 @@ static void hdaps_calibrate(void)
+ 	__hdaps_read_pair(HDAPS_PORT_XPOS, HDAPS_PORT_YPOS, &rest_x, &rest_y);
+ }
  
- MODULE_ALIAS("wmi:"PEAQ_DOLBY_BUTTON_GUID);
- 
--static unsigned int peaq_ignore_events_counter;
--static struct input_polled_dev *peaq_poll_dev;
-+static struct input_dev *peaq_poll_dev;
- 
- /*
-  * The Dolby button (yes really a Dolby button) causes an ACPI variable to get
-@@ -28,8 +27,10 @@ static struct input_polled_dev *peaq_poll_dev;
-  * (if polling after the release) or twice (polling between press and release).
-  * We ignore events for 0.5s after the first event to avoid reporting 2 presses.
-  */
--static void peaq_wmi_poll(struct input_polled_dev *dev)
-+static void peaq_wmi_poll(struct input_dev *input_dev)
+-static void hdaps_mousedev_poll(struct input_polled_dev *dev)
++static void hdaps_mousedev_poll(struct input_dev *input_dev)
  {
-+	static unsigned long last_event_time;
-+	static bool had_events;
- 	union acpi_object obj;
- 	acpi_status status;
- 	u32 dummy = 0;
-@@ -44,22 +45,25 @@ static void peaq_wmi_poll(struct input_polled_dev *dev)
- 		return;
+-	struct input_dev *input_dev = dev->input;
+ 	int x, y;
  
- 	if (obj.type != ACPI_TYPE_INTEGER) {
--		dev_err(&peaq_poll_dev->input->dev,
-+		dev_err(&input_dev->dev,
- 			"Error WMBC did not return an integer\n");
- 		return;
+ 	mutex_lock(&hdaps_mtx);
+@@ -531,7 +530,6 @@ static const struct dmi_system_id hdaps_whitelist[] __initconst = {
+ 
+ static int __init hdaps_init(void)
+ {
+-	struct input_dev *idev;
+ 	int ret;
+ 
+ 	if (!dmi_check_system(hdaps_whitelist)) {
+@@ -559,31 +557,32 @@ static int __init hdaps_init(void)
+ 	if (ret)
+ 		goto out_device;
+ 
+-	hdaps_idev = input_allocate_polled_device();
++	hdaps_idev = input_allocate_device();
+ 	if (!hdaps_idev) {
+ 		ret = -ENOMEM;
+ 		goto out_group;
  	}
  
--	if (peaq_ignore_events_counter && peaq_ignore_events_counter--)
-+	if (!obj.integer.value)
- 		return;
+-	hdaps_idev->poll = hdaps_mousedev_poll;
+-	hdaps_idev->poll_interval = HDAPS_POLL_INTERVAL;
+-
+ 	/* initial calibrate for the input device */
+ 	hdaps_calibrate();
  
--	if (obj.integer.value) {
--		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 1);
--		input_sync(peaq_poll_dev->input);
--		input_event(peaq_poll_dev->input, EV_KEY, KEY_SOUND, 0);
--		input_sync(peaq_poll_dev->input);
--		peaq_ignore_events_counter = max(1u,
--			PEAQ_POLL_IGNORE_MS / peaq_poll_dev->poll_interval);
--	}
-+	if (had_events && time_before(jiffies, last_event_time +
-+					msecs_to_jiffies(PEAQ_POLL_IGNORE_MS)))
-+		return;
+ 	/* initialize the input class */
+-	idev = hdaps_idev->input;
+-	idev->name = "hdaps";
+-	idev->phys = "isa1600/input0";
+-	idev->id.bustype = BUS_ISA;
+-	idev->dev.parent = &pdev->dev;
+-	idev->evbit[0] = BIT_MASK(EV_ABS);
+-	input_set_abs_params(idev, ABS_X,
++	hdaps_idev->name = "hdaps";
++	hdaps_idev->phys = "isa1600/input0";
++	hdaps_idev->id.bustype = BUS_ISA;
++	hdaps_idev->dev.parent = &pdev->dev;
++	input_set_abs_params(hdaps_idev, ABS_X,
+ 			-256, 256, HDAPS_INPUT_FUZZ, HDAPS_INPUT_FLAT);
+-	input_set_abs_params(idev, ABS_Y,
++	input_set_abs_params(hdaps_idev, ABS_Y,
+ 			-256, 256, HDAPS_INPUT_FUZZ, HDAPS_INPUT_FLAT);
+ 
+-	ret = input_register_polled_device(hdaps_idev);
++	ret = input_setup_polling(hdaps_idev, hdaps_mousedev_poll);
++	if (ret)
++		goto out_idev;
 +
-+	input_event(input_dev, EV_KEY, KEY_SOUND, 1);
-+	input_sync(input_dev);
-+	input_event(input_dev, EV_KEY, KEY_SOUND, 0);
-+	input_sync(input_dev);
++	input_set_poll_interval(hdaps_idev, HDAPS_POLL_INTERVAL);
 +
-+	last_event_time = jiffies;
-+	had_events = true;
- }
++	ret = input_register_device(hdaps_idev);
+ 	if (ret)
+ 		goto out_idev;
  
- /* Some other devices (Shuttle XS35) use the same WMI GUID for other purposes */
-@@ -75,6 +79,8 @@ static const struct dmi_system_id peaq_dmi_table[] __initconst = {
+@@ -591,7 +590,7 @@ static int __init hdaps_init(void)
+ 	return 0;
  
- static int __init peaq_wmi_init(void)
+ out_idev:
+-	input_free_polled_device(hdaps_idev);
++	input_free_device(hdaps_idev);
+ out_group:
+ 	sysfs_remove_group(&pdev->dev.kobj, &hdaps_attribute_group);
+ out_device:
+@@ -607,8 +606,7 @@ static int __init hdaps_init(void)
+ 
+ static void __exit hdaps_exit(void)
  {
-+	int err;
-+
- 	/* WMI GUID is not unique, also check for a DMI match */
- 	if (!dmi_check_system(peaq_dmi_table))
- 		return -ENODEV;
-@@ -82,24 +88,36 @@ static int __init peaq_wmi_init(void)
- 	if (!wmi_has_guid(PEAQ_DOLBY_BUTTON_GUID))
- 		return -ENODEV;
- 
--	peaq_poll_dev = input_allocate_polled_device();
-+	peaq_poll_dev = input_allocate_device();
- 	if (!peaq_poll_dev)
- 		return -ENOMEM;
- 
--	peaq_poll_dev->poll = peaq_wmi_poll;
--	peaq_poll_dev->poll_interval = PEAQ_POLL_INTERVAL_MS;
--	peaq_poll_dev->poll_interval_max = PEAQ_POLL_MAX_MS;
--	peaq_poll_dev->input->name = "PEAQ WMI hotkeys";
--	peaq_poll_dev->input->phys = "wmi/input0";
--	peaq_poll_dev->input->id.bustype = BUS_HOST;
--	input_set_capability(peaq_poll_dev->input, EV_KEY, KEY_SOUND);
-+	peaq_poll_dev->name = "PEAQ WMI hotkeys";
-+	peaq_poll_dev->phys = "wmi/input0";
-+	peaq_poll_dev->id.bustype = BUS_HOST;
-+	input_set_capability(peaq_poll_dev, EV_KEY, KEY_SOUND);
-+
-+	err = input_setup_polling(peaq_poll_dev, peaq_wmi_poll);
-+	if (err)
-+		goto err_out;
-+
-+	input_set_poll_interval(peaq_poll_dev, PEAQ_POLL_INTERVAL_MS);
-+	input_set_max_poll_interval(peaq_poll_dev, PEAQ_POLL_MAX_MS);
-+
-+	err = input_register_device(peaq_poll_dev);
-+	if (err)
-+		goto err_out;
-+
-+	return 0;
- 
--	return input_register_polled_device(peaq_poll_dev);
-+err_out:
-+	input_free_device(peaq_poll_dev);
-+	return err;
- }
- 
- static void __exit peaq_wmi_exit(void)
- {
--	input_unregister_polled_device(peaq_poll_dev);
-+	input_unregister_device(peaq_poll_dev);
- }
- 
- module_init(peaq_wmi_init);
+-	input_unregister_polled_device(hdaps_idev);
+-	input_free_polled_device(hdaps_idev);
++	input_unregister_device(hdaps_idev);
+ 	sysfs_remove_group(&pdev->dev.kobj, &hdaps_attribute_group);
+ 	platform_device_unregister(pdev);
+ 	platform_driver_unregister(&hdaps_driver);
 -- 
 2.23.0.444.g18eeb5a265-goog
 
