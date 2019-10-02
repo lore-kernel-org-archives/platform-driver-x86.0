@@ -1,43 +1,76 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: peaq-wmi: switch to using polled mode of
- input devices
-Date: Tue, 1 Oct 2019 22:13:53 +0300
-Message-ID: <CAHp75VedN8BCgkFHx599LRU-mFqm451Lz5OJtOU_x5rQWMSKPQ@mail.gmail.com>
-References: <20191001185822.GA48020@dtor-ws>
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH AUTOSEL 5.3 169/203] x86/platform/uv: Fix kmalloc() NULL
+ check routine
+Date: Wed, 2 Oct 2019 08:34:08 +0000
+Message-ID: <ea163ee8ba4446978732c2c6607bd6da@AcuMS.aculab.com>
+References: <20190922184350.30563-1-sashal@kernel.org>
+ <20190922184350.30563-169-sashal@kernel.org>
+ <20190922202544.GA2719513@kroah.com> <20191001160601.GX8171@sasha-vm>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191001185822.GA48020@dtor-ws>
+In-Reply-To: <20191001160601.GX8171@sasha-vm>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: 'Sasha Levin' <sashal@kernel.org>, Greg KH <gregkh@linuxfoundation.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>, Austin Kim <austindh.kim@gmail.com>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, Hedi Berriche <hedi.berriche@hpe.com>, Linus Torvalds <torvalds@linux-foundation.org>, Mike Travis <mike.travis@hpe.com>, Peter Zijlstra <peterz@infradead.org>, Russ Anderson <russ.anderson@hpe.com>, Steve Wahl <steve.wahl@hpe.com>, Thomas Gleixner <tglx@linutronix.de>, "allison@lohutok.net" <allison@lohutok.net>, "andy@infradead.org" <andy@infradead.org>, "armijn@tjaldur.nl" <armijn@tjaldur.nl>, "bp@alien8.de" <bp@alien8.de>, "dvhart@infradead.org" <dvhart@infradead.org>, "hpa@zytor.com" <hpa@zytor.com>, "kjlu@umn.edu" <kjlu@umn.edu>, platform-driver
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Oct 1, 2019 at 9:58 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> We have added polled mode to the normal input devices with the intent of
-> retiring input_polled_dev. This converts peaq-wmi driver to use the
-> polling mode of standard input devices and removes dependency on
-> INPUT_POLLDEV.
->
-> Because the new polling coded does not allow peeking inside the poller
-> structure to get the poll interval, we change the "debounce" process to
-> operate on the time basis, instead of counting events.
->
-> We also fix error handling during initialization, as previously we leaked
-> input device structure when we failed to register it.
+From: Sasha Levin
+> Sent: 01 October 2019 17:06
+> Subject: Re: [PATCH AUTOSEL 5.3 169/203] x86/platform/uv: Fix kmalloc() NULL check routine
+> 
+> On Sun, Sep 22, 2019 at 10:25:44PM +0200, Greg KH wrote:
+> >On Sun, Sep 22, 2019 at 02:43:15PM -0400, Sasha Levin wrote:
+> >> From: Austin Kim <austindh.kim@gmail.com>
+> >>
+> >> [ Upstream commit 864b23f0169d5bff677e8443a7a90dfd6b090afc ]
+> >>
+> >> The result of kmalloc() should have been checked ahead of below statement:
+> >>
+> >> 	pqp = (struct bau_pq_entry *)vp;
+> >>
+> >> Move BUG_ON(!vp) before above statement.
+> >>
+> >> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+...
+> >> ---
+> >>  arch/x86/platform/uv/tlb_uv.c | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+> >> index 20c389a91b803..5f0a96bf27a1f 100644
+> >> --- a/arch/x86/platform/uv/tlb_uv.c
+> >> +++ b/arch/x86/platform/uv/tlb_uv.c
+> >> @@ -1804,9 +1804,9 @@ static void pq_init(int node, int pnode)
+> >>
+> >>  	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
+> >>  	vp = kmalloc_node(plsize, GFP_KERNEL, node);
+> >> -	pqp = (struct bau_pq_entry *)vp;
+> >> -	BUG_ON(!pqp);
+> >> +	BUG_ON(!vp);
+> >>
+> >> +	pqp = (struct bau_pq_entry *)vp;
+> >>  	cp = (char *)pqp + 31;
+> >>  	pqp = (struct bau_pq_entry *)(((unsigned long)cp >> 5) << 5);
+> >>
+> >
+> >How did this even get merged in the first place?  I thought a number of
+> >us complained about it.
+> >
+> >This isn't any change in code, and the original is just fine, the author
+> >didn't realize how C works :(
 
->         if (obj.type != ACPI_TYPE_INTEGER) {
-> -               dev_err(&peaq_poll_dev->input->dev,
-> +               dev_err(&input_dev->dev,
->                         "Error WMBC did not return an integer\n");
+Mind you, the code itself if pretty horrid.
+Looks like it is aligning to 32 bytes, easier done by:
+	pqp = (void *)((unsigned long)vp + 31 & ~31);
+(and there's a roundup macro to obfuscate it somewhere.)
+But I'd also expect to see a matching '+ 31' in the size passed to kmalloc().
+Not to mention a comment!
 
-It seems it can be one line now.
+	David
 
->                 return;
->         }
-
--- 
-With Best Regards,
-Andy Shevchenko
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
