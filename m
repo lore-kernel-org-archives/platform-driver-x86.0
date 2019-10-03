@@ -1,7 +1,7 @@
 From: Prarit Bhargava <prarit@redhat.com>
-Subject: [PATCH v2 1/7] intel-speed-select: Add int argument to command functions
-Date: Thu,  3 Oct 2019 08:11:06 -0400
-Message-ID: <20191003121112.25870-2-prarit@redhat.com>
+Subject: [PATCH v2 4/7] intel-speed-select: Add configuration for CascadeLake-N
+Date: Thu,  3 Oct 2019 08:11:09 -0400
+Message-ID: <20191003121112.25870-5-prarit@redhat.com>
 References: <20191003121112.25870-1-prarit@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,399 +12,165 @@ To: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, srinivas.pandruvada@linux.intel.com, Prarit Bhargava <prarit@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The current code structure has similar but separate command functions for
-the enable and disable operations.  This can be improved by adding an int
-argument to the command function structure, and interpreting 1 as enable
-and 0 as disable.  This change results in the removal of the disable
-command functions.
-
-Add int argument to the command function structure.
+Create a 'dummy' pkg_dev struct for use by CascadeLake-N processors.  This
+struct will be used in later patches to implement info and status calls
+for CascadeLake-N SST-BF.
 
 Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 ---
- .../x86/intel-speed-select/isst-config.c      | 216 +++++++-----------
- 1 file changed, 88 insertions(+), 128 deletions(-)
+ .../x86/intel-speed-select/isst-config.c      | 98 ++++++++++++++++++-
+ .../x86/intel-speed-select/isst-display.c     |  2 -
+ tools/power/x86/intel-speed-select/isst.h     |  2 +
+ 3 files changed, 99 insertions(+), 3 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index edc4c50853bd..1b2899706857 100644
+index 734a7960458c..164c4e5e6ccb 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -11,7 +11,8 @@
- struct process_cmd_struct {
- 	char *feature;
- 	char *command;
--	void (*process_fn)(void);
-+	void (*process_fn)(int arg);
-+	int arg;
- };
+@@ -748,6 +748,94 @@ _get_tdp_level("get-config-current_level", levels, current_level,
+ 	       "Current TDP Level");
+ _get_tdp_level("get-lock-status", levels, locked, "TDP lock status");
  
- static const char *version_str = "v1.0";
-@@ -679,7 +680,7 @@ static void exec_on_get_ctdp_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- }
- 
- #define _get_tdp_level(desc, suffix, object, help)                                \
--	static void get_tdp_##object(void)                                        \
-+	static void get_tdp_##object(int arg)                                    \
- 	{                                                                         \
- 		struct isst_pkg_ctdp ctdp;                                        \
- \
-@@ -725,7 +726,7 @@ static void dump_isst_config_for_cpu(int cpu, void *arg1, void *arg2,
- 	}
- }
- 
--static void dump_isst_config(void)
-+static void dump_isst_config(int arg)
- {
- 	if (cmd_help) {
- 		fprintf(stderr,
-@@ -788,7 +789,7 @@ static void set_tdp_level_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 	}
- }
- 
--static void set_tdp_level(void)
-+static void set_tdp_level(int arg)
- {
- 	if (cmd_help) {
- 		fprintf(stderr, "Set Config TDP level\n");
-@@ -828,7 +829,7 @@ static void dump_pbf_config_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 	}
- }
- 
--static void dump_pbf_config(void)
-+static void dump_pbf_config(int arg)
- {
- 	if (cmd_help) {
- 		fprintf(stderr,
-@@ -1045,51 +1046,36 @@ static void set_pbf_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 	}
- }
- 
--static void set_pbf_enable(void)
-+static void set_pbf_enable(int arg)
- {
--	int status = 1;
-+	int enable = arg;
- 
- 	if (cmd_help) {
--		fprintf(stderr,
--			"Enable Intel Speed Select Technology base frequency feature\n");
--		fprintf(stderr,
--			"\tOptional Arguments: -a|--auto : Use priority of cores to set core-power associations\n");
--
--		exit(0);
--	}
--
--	isst_ctdp_display_information_start(outf);
--	if (max_target_cpus)
--		for_each_online_target_cpu_in_set(set_pbf_for_cpu, NULL, NULL,
--						  NULL, &status);
--	else
--		for_each_online_package_in_set(set_pbf_for_cpu, NULL, NULL,
--					       NULL, &status);
--	isst_ctdp_display_information_end(outf);
--}
--
--static void set_pbf_disable(void)
--{
--	int status = 0;
-+		if (enable) {
-+			fprintf(stderr,
-+				"Enable Intel Speed Select Technology base frequency feature\n");
-+			fprintf(stderr,
-+				"\tOptional Arguments: -a|--auto : Use priority of cores to set core-power associations\n");
-+		} else {
- 
--	if (cmd_help) {
--		fprintf(stderr,
--			"Disable Intel Speed Select Technology base frequency feature\n");
--		fprintf(stderr,
--			"\tOptional Arguments: -a|--auto : Also disable core-power associations\n");
-+			fprintf(stderr,
-+				"Disable Intel Speed Select Technology base frequency feature\n");
-+			fprintf(stderr,
-+				"\tOptional Arguments: -a|--auto : Also disable core-power associations\n");
++struct isst_pkg_ctdp clx_n_pkg_dev;
++
++static int clx_n_get_base_ratio(void)
++{
++	FILE *fp;
++	char *begin, *end, *line;
++	char number[5];
++	float value = 0;
++	size_t n;
++
++	fp = fopen("/proc/cpuinfo", "r");
++	if (!fp)
++		err(-1, "cannot open /proc/cpuinfo\n");
++
++	while (getline(&line, &n, fp) > 0) {
++		if (strstr(line, "model name")) {
++			/* this is true for CascadeLake-N */
++			begin = strstr(line, "@ ") + 2;
++			end = strstr(line, "GHz");
++			strncpy(number, begin, end - begin);
++			value = atof(number) * 10;
++			break;
 +		}
- 		exit(0);
- 	}
- 
- 	isst_ctdp_display_information_start(outf);
- 	if (max_target_cpus)
- 		for_each_online_target_cpu_in_set(set_pbf_for_cpu, NULL, NULL,
--						  NULL, &status);
-+						  NULL, &enable);
- 	else
- 		for_each_online_package_in_set(set_pbf_for_cpu, NULL, NULL,
--					       NULL, &status);
-+					       NULL, &enable);
- 	isst_ctdp_display_information_end(outf);
- 
--	if (auto_mode)
-+	if (!enable && auto_mode)
- 		reset_cpufreq_scaling_min();
- }
- 
-@@ -1107,7 +1093,7 @@ static void dump_fact_config_for_cpu(int cpu, void *arg1, void *arg2,
- 					      fact_avx, &fact_info);
- }
- 
--static void dump_fact_config(void)
-+static void dump_fact_config(int arg)
++	}
++	free(line);
++	fclose(fp);
++
++	return (int)(value);
++}
++
++static void clx_n_config(void)
++{
++	int i;
++	unsigned long cpu_bf;
++	struct isst_pkg_ctdp_level_info *ctdp_level;
++	struct isst_pbf_info *pbf_info;
++
++	ctdp_level = &clx_n_pkg_dev.ctdp_level[0];
++	pbf_info = &ctdp_level->pbf_info;
++
++	/* find the frequency base ratio */
++	ctdp_level->tdp_ratio = clx_n_get_base_ratio();
++	if (ctdp_level->tdp_ratio == 0)
++		err(-1, "cn base ratio is zero\n");
++
++	/* find the high and low priority frequencies */
++	pbf_info->p1_high = 0;
++	pbf_info->p1_low = ~0;
++	for (i = 0; i < topo_max_cpus; i++) {
++		cpu_bf = parse_int_file(1,
++			"/sys/devices/system/cpu/cpu%d/cpufreq/base_frequency",
++					i);
++		if (cpu_bf > pbf_info->p1_high)
++			pbf_info->p1_high = cpu_bf;
++		if (cpu_bf < pbf_info->p1_low)
++			pbf_info->p1_low = cpu_bf;
++	}
++
++	if (pbf_info->p1_high == ~0UL)
++		err(-1, "maximum base frequency not set\n");
++
++	if (pbf_info->p1_low == 0)
++		err(-1, "minimum base frequency not set\n");
++
++	/* convert frequencies back to ratios */
++	pbf_info->p1_high = pbf_info->p1_high / DISP_FREQ_MULTIPLIER;
++	pbf_info->p1_low = pbf_info->p1_low / DISP_FREQ_MULTIPLIER;
++
++	/* create high priority cpu mask */
++	pbf_info->core_cpumask_size = alloc_cpu_set(&pbf_info->core_cpumask);
++	for (i = 0; i < topo_max_cpus; i++) {
++		cpu_bf = parse_int_file(1,
++			"/sys/devices/system/cpu/cpu%d/cpufreq/base_frequency",
++					i);
++		cpu_bf = cpu_bf / DISP_FREQ_MULTIPLIER;
++		if (cpu_bf == pbf_info->p1_high)
++			CPU_SET_S(i, pbf_info->core_cpumask_size,
++				  pbf_info->core_cpumask);
++	}
++
++	/* extra ctdp & pbf struct parameters */
++	ctdp_level->processed = 1;
++	ctdp_level->pbf_support = 1; /* PBF is always supported and enabled */
++	ctdp_level->pbf_enabled = 1;
++	ctdp_level->fact_support = 0; /* FACT is never supported */
++	ctdp_level->fact_enabled = 0;
++}
++
+ static void dump_isst_config_for_cpu(int cpu, void *arg1, void *arg2,
+ 				     void *arg3, void *arg4)
  {
- 	if (cmd_help) {
- 		fprintf(stderr,
-@@ -1169,31 +1155,42 @@ static void set_fact_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 	}
- }
- 
--static void set_fact_enable(void)
-+static void set_fact_enable(int arg)
- {
--	int status = 1, i, j, ret;
-+	int i, j, ret;
-+	int enable = arg;
- 
- 	if (cmd_help) {
--		fprintf(stderr,
--			"Enable Intel Speed Select Technology Turbo frequency feature\n");
--		fprintf(stderr,
--			"Optional: -t|--trl : Specify turbo ratio limit\n");
--		fprintf(stderr,
--			"\tOptional Arguments: -a|--auto : Designate specified target CPUs with");
--		fprintf(stderr, "-C|--cpu option as as high priority using core-power feature\n");
-+		if (enable) {
-+			fprintf(stderr,
-+				"Enable Intel Speed Select Technology Turbo frequency feature\n");
-+			fprintf(stderr,
-+				"Optional: -t|--trl : Specify turbo ratio limit\n");
-+			fprintf(stderr,
-+				"\tOptional Arguments: -a|--auto : Designate specified target CPUs with");
-+			fprintf(stderr,
-+				"-C|--cpu option as as high priority using core-power feature\n");
-+		} else {
-+			fprintf(stderr,
-+				"Disable Intel Speed Select Technology turbo frequency feature\n");
-+			fprintf(stderr,
-+				"Optional: -t|--trl : Specify turbo ratio limit\n");
-+			fprintf(stderr,
-+				"\tOptional Arguments: -a|--auto : Also disable core-power associations\n");
-+		}
- 		exit(0);
- 	}
- 
- 	isst_ctdp_display_information_start(outf);
- 	if (max_target_cpus)
- 		for_each_online_target_cpu_in_set(set_fact_for_cpu, NULL, NULL,
--						  NULL, &status);
-+						  NULL, &enable);
- 	else
- 		for_each_online_package_in_set(set_fact_for_cpu, NULL, NULL,
--					       NULL, &status);
-+					       NULL, &enable);
- 	isst_ctdp_display_information_end(outf);
- 
--	if (auto_mode) {
-+	if (enable && auto_mode) {
- 		for (i = 0; i < get_topo_max_cpus(); ++i) {
- 			int clos;
- 
-@@ -1247,30 +1244,6 @@ static void set_fact_enable(void)
- 
- }
- 
--static void set_fact_disable(void)
--{
--	int status = 0;
--
--	if (cmd_help) {
--		fprintf(stderr,
--			"Disable Intel Speed Select Technology turbo frequency feature\n");
--		fprintf(stderr,
--			"Optional: -t|--trl : Specify turbo ratio limit\n");
--		fprintf(stderr,
--			"\tOptional Arguments: -a|--auto : Also disable core-power associations\n");
--		exit(0);
--	}
--
--	isst_ctdp_display_information_start(outf);
--	if (max_target_cpus)
--		for_each_online_target_cpu_in_set(set_fact_for_cpu, NULL, NULL,
--						  NULL, &status);
--	else
--		for_each_online_package_in_set(set_fact_for_cpu, NULL, NULL,
--					       NULL, &status);
--	isst_ctdp_display_information_end(outf);
--}
--
- static void enable_clos_qos_config(int cpu, void *arg1, void *arg2, void *arg3,
- 				   void *arg4)
- {
-@@ -1289,19 +1262,25 @@ static void enable_clos_qos_config(int cpu, void *arg1, void *arg2, void *arg3,
- 				    ret);
- }
- 
--static void set_clos_enable(void)
-+static void set_clos_enable(int arg)
- {
--	int status = 1;
-+	int enable = arg;
- 
- 	if (cmd_help) {
--		fprintf(stderr, "Enable core-power for a package/die\n");
--		fprintf(stderr,
--			"\tClos Enable: Specify priority type with [--priority|-p]\n");
--		fprintf(stderr, "\t\t 0: Proportional, 1: Ordered\n");
-+		if (enable) {
-+			fprintf(stderr,
-+				"Enable core-power for a package/die\n");
-+			fprintf(stderr,
-+				"\tClos Enable: Specify priority type with [--priority|-p]\n");
-+			fprintf(stderr, "\t\t 0: Proportional, 1: Ordered\n");
-+		} else {
-+			fprintf(stderr,
-+				"Disable core-power: [No command arguments are required]\n");
-+		}
- 		exit(0);
- 	}
- 
--	if (cpufreq_sysfs_present()) {
-+	if (enable && cpufreq_sysfs_present()) {
- 		fprintf(stderr,
- 			"cpufreq subsystem and core-power enable will interfere with each other!\n");
- 	}
-@@ -1309,30 +1288,10 @@ static void set_clos_enable(void)
- 	isst_ctdp_display_information_start(outf);
- 	if (max_target_cpus)
- 		for_each_online_target_cpu_in_set(enable_clos_qos_config, NULL,
--						  NULL, NULL, &status);
--	else
--		for_each_online_package_in_set(enable_clos_qos_config, NULL,
--					       NULL, NULL, &status);
--	isst_ctdp_display_information_end(outf);
--}
--
--static void set_clos_disable(void)
--{
--	int status = 0;
--
--	if (cmd_help) {
--		fprintf(stderr,
--			"Disable core-power: [No command arguments are required]\n");
--		exit(0);
--	}
--
--	isst_ctdp_display_information_start(outf);
--	if (max_target_cpus)
--		for_each_online_target_cpu_in_set(enable_clos_qos_config, NULL,
--						  NULL, NULL, &status);
-+						  NULL, NULL, &enable);
- 	else
- 		for_each_online_package_in_set(enable_clos_qos_config, NULL,
--					       NULL, NULL, &status);
-+					       NULL, NULL, &enable);
- 	isst_ctdp_display_information_end(outf);
- }
- 
-@@ -1350,7 +1309,7 @@ static void dump_clos_config_for_cpu(int cpu, void *arg1, void *arg2,
- 					      &clos_config);
- }
- 
--static void dump_clos_config(void)
-+static void dump_clos_config(int arg)
- {
- 	if (cmd_help) {
- 		fprintf(stderr,
-@@ -1386,7 +1345,7 @@ static void get_clos_info_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 		isst_clos_display_clos_information(cpu, outf, enable, prio_type);
- }
- 
--static void dump_clos_info(void)
-+static void dump_clos_info(int arg)
- {
- 	if (cmd_help) {
- 		fprintf(stderr,
-@@ -1429,7 +1388,7 @@ static void set_clos_config_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 		isst_display_result(cpu, outf, "core-power", "config", ret);
- }
- 
--static void set_clos_config(void)
-+static void set_clos_config(int arg)
- {
- 	if (cmd_help) {
- 		fprintf(stderr,
-@@ -1493,7 +1452,7 @@ static void set_clos_assoc_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 		isst_display_result(cpu, outf, "core-power", "assoc", ret);
- }
- 
--static void set_clos_assoc(void)
-+static void set_clos_assoc(int arg)
- {
- 	if (cmd_help) {
- 		fprintf(stderr, "Associate a clos id to a CPU\n");
-@@ -1527,7 +1486,7 @@ static void get_clos_assoc_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 		isst_clos_display_assoc_information(cpu, outf, clos);
- }
- 
--static void get_clos_assoc(void)
-+static void get_clos_assoc(int arg)
- {
- 	if (cmd_help) {
- 		fprintf(stderr, "Get associate clos id to a CPU\n");
-@@ -1548,26 +1507,27 @@ static void get_clos_assoc(void)
- }
- 
- static struct process_cmd_struct isst_cmds[] = {
--	{ "perf-profile", "get-lock-status", get_tdp_locked },
--	{ "perf-profile", "get-config-levels", get_tdp_levels },
--	{ "perf-profile", "get-config-version", get_tdp_version },
--	{ "perf-profile", "get-config-enabled", get_tdp_enabled },
--	{ "perf-profile", "get-config-current-level", get_tdp_current_level },
--	{ "perf-profile", "set-config-level", set_tdp_level },
--	{ "perf-profile", "info", dump_isst_config },
--	{ "base-freq", "info", dump_pbf_config },
--	{ "base-freq", "enable", set_pbf_enable },
--	{ "base-freq", "disable", set_pbf_disable },
--	{ "turbo-freq", "info", dump_fact_config },
--	{ "turbo-freq", "enable", set_fact_enable },
--	{ "turbo-freq", "disable", set_fact_disable },
--	{ "core-power", "info", dump_clos_info },
--	{ "core-power", "enable", set_clos_enable },
--	{ "core-power", "disable", set_clos_disable },
--	{ "core-power", "config", set_clos_config },
--	{ "core-power", "get-config", dump_clos_config },
--	{ "core-power", "assoc", set_clos_assoc },
--	{ "core-power", "get-assoc", get_clos_assoc },
-+	{ "perf-profile", "get-lock-status", get_tdp_locked, 0 },
-+	{ "perf-profile", "get-config-levels", get_tdp_levels, 0 },
-+	{ "perf-profile", "get-config-version", get_tdp_version, 0 },
-+	{ "perf-profile", "get-config-enabled", get_tdp_enabled, 0 },
-+	{ "perf-profile", "get-config-current-level", get_tdp_current_level,
-+	 0 },
-+	{ "perf-profile", "set-config-level", set_tdp_level, 0 },
-+	{ "perf-profile", "info", dump_isst_config, 0 },
-+	{ "base-freq", "info", dump_pbf_config, 0 },
-+	{ "base-freq", "enable", set_pbf_enable, 1 },
-+	{ "base-freq", "disable", set_pbf_enable, 0 },
-+	{ "turbo-freq", "info", dump_fact_config, 0 },
-+	{ "turbo-freq", "enable", set_fact_enable, 1 },
-+	{ "turbo-freq", "disable", set_fact_enable, 0 },
-+	{ "core-power", "info", dump_clos_info, 0 },
-+	{ "core-power", "enable", set_clos_enable, 1 },
-+	{ "core-power", "disable", set_clos_enable, 0 },
-+	{ "core-power", "config", set_clos_config, 0 },
-+	{ "core-power", "get-config", dump_clos_config, 0 },
-+	{ "core-power", "assoc", set_clos_assoc, 0 },
-+	{ "core-power", "get-assoc", get_clos_assoc, 0 },
- 	{ NULL, NULL, NULL }
- };
- 
-@@ -1816,7 +1776,7 @@ void process_command(int argc, char **argv)
- 		if (!strcmp(isst_cmds[i].feature, feature) &&
- 		    !strcmp(isst_cmds[i].command, cmd)) {
- 			parse_cmd_args(argc, optind + 1, argv);
--			isst_cmds[i].process_fn();
-+			isst_cmds[i].process_fn(isst_cmds[i].arg);
- 			matched = 1;
- 			break;
+@@ -1809,7 +1897,10 @@ void process_command(int argc, char **argv,
  		}
+ 	}
+ 
+-	create_cpu_map();
++	if (!is_clx_n_platform())
++		create_cpu_map();
++	else
++		clx_n_config();
+ 
+ 	i = 0;
+ 	while (cmds[i].feature) {
+@@ -1825,6 +1916,11 @@ void process_command(int argc, char **argv,
+ 
+ 	if (!matched)
+ 		fprintf(stderr, "Invalid command\n");
++
++	if (!is_clx_n_platform()) {
++		/* this was allocated in clx_n_config() */
++		free_cpu_set(clx_n_pkg_dev.ctdp_level[0].pbf_info.core_cpumask);
++	}
+ }
+ 
+ static void usage(void)
+diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
+index 40346d534f78..1caa7ae25245 100644
+--- a/tools/power/x86/intel-speed-select/isst-display.c
++++ b/tools/power/x86/intel-speed-select/isst-display.c
+@@ -6,8 +6,6 @@
+ 
+ #include "isst.h"
+ 
+-#define DISP_FREQ_MULTIPLIER 100
+-
+ static void printcpulist(int str_len, char *str, int mask_size,
+ 			 cpu_set_t *cpu_mask)
+ {
+diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
+index d280b27d600d..0dcae17b3945 100644
+--- a/tools/power/x86/intel-speed-select/isst.h
++++ b/tools/power/x86/intel-speed-select/isst.h
+@@ -69,6 +69,8 @@
+ #define PM_CLOS_OFFSET				0x08
+ #define PQR_ASSOC_OFFSET			0x20
+ 
++#define DISP_FREQ_MULTIPLIER 100
++
+ struct isst_clos_config {
+ 	int pkg_id;
+ 	int die_id;
 -- 
 2.18.1
