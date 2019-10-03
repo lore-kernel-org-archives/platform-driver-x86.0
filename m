@@ -1,37 +1,37 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v4 00/14] software node: add support for reference properties
-Date: Thu, 3 Oct 2019 10:39:24 +0200
-Message-ID: <CAJZ5v0jF5vafYFSJ=p3ew_tCbj1T1zRznZDoPTL47Pdj9-rrCg@mail.gmail.com>
-References: <20190911051231.148032-1-dmitry.torokhov@gmail.com> <20191003003227.GA246700@dtor-ws>
+From: Prarit Bhargava <prarit@redhat.com>
+Subject: [PATCH v2 0/7] Add CascadeLake-N Support
+Date: Thu,  3 Oct 2019 08:11:05 -0400
+Message-ID: <20191003121112.25870-1-prarit@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191003003227.GA246700@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, srinivas.pandruvada@linux.intel.com, Prarit Bhargava <prarit@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Oct 3, 2019 at 2:32 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Rafael,
->
-> On Tue, Sep 10, 2019 at 10:12:17PM -0700, Dmitry Torokhov wrote:
-> > These series implement "references" properties for software nodes as true
-> > properties, instead of managing them completely separately.
-> >
-> > The first 10 patches are generic cleanups and consolidation and unification
-> > of the existing code; patch #11 implements PROPERTY_EMTRY_REF() and friends;
-> > patch #12 converts the user of references to the property syntax, and patch
-> > #13 removes the remains of references as entities that are managed
-> > separately.
->
-> Now that merge window is over could you please take a look at the
-> series?
+Add support for SST-BF on CascadeLake-N support.  The CascadeLake-N
+processor only support SST-BF and not other SST functionality.
 
-I will.
+v2: Updated with comments from Srinivas (use common clx_n_* function names,
+common is_clx_n_platform() function call to identify CascadeLake-N)
 
-It would help to resend the whole series with a CC to linux-acpi, though.
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 
-Thanks!
+Prarit Bhargava (7):
+  intel-speed-select: Add int argument to command functions
+  intel-speed-select: Make process_command generic
+  intel-speed-select: Add check for CascadeLake-N models
+  intel-speed-select: Add configuration for CascadeLake-N
+  intel-speed-select: Implement CascadeLake-N help and command functions
+    structures
+  intel-speed-select: Implement 'perf-profile info' on CascadeLake-N
+  intel-speed-select: Implement base-freq commands on CascadeLake-N
+
+ .../x86/intel-speed-select/isst-config.c      | 493 ++++++++++++------
+ .../x86/intel-speed-select/isst-display.c     |  14 +-
+ tools/power/x86/intel-speed-select/isst.h     |   3 +
+ 3 files changed, 339 insertions(+), 171 deletions(-)
+
+-- 
+2.18.1
