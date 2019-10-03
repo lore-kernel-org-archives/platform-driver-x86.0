@@ -1,39 +1,35 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH] platform/x86: toshiba_acpi: do not select INPUT_POLLDEV
-Date: Wed, 2 Oct 2019 10:40:52 -0700
-Message-ID: <20191002174052.GA37723@dtor-ws>
+Subject: Re: [PATCH v4 00/14] software node: add support for reference
+ properties
+Date: Wed, 2 Oct 2019 17:32:27 -0700
+Message-ID: <20191003003227.GA246700@dtor-ws>
+References: <20190911051231.148032-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
+In-Reply-To: <20190911051231.148032-1-dmitry.torokhov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Azael Avalos <coproscefalo@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The driver does not use polling mode of input devices, and this config
-option is going away, so let's not reference it.
+Hi Rafael,
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/platform/x86/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+On Tue, Sep 10, 2019 at 10:12:17PM -0700, Dmitry Torokhov wrote:
+> These series implement "references" properties for software nodes as true
+> properties, instead of managing them completely separately.
+> 
+> The first 10 patches are generic cleanups and consolidation and unification
+> of the existing code; patch #11 implements PROPERTY_EMTRY_REF() and friends;
+> patch #12 converts the user of references to the property syntax, and patch
+> #13 removes the remains of references as entities that are managed
+> separately.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 8690e311f407..9ecb02226be8 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -830,7 +830,6 @@ config ACPI_TOSHIBA
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
- 	depends on RFKILL || RFKILL = n
- 	depends on IIO
--	select INPUT_POLLDEV
- 	select INPUT_SPARSEKMAP
- 	---help---
- 	  This driver adds support for access to certain system settings
--- 
-2.23.0.444.g18eeb5a265-goog
+Now that merge window is over could you please take a look at the
+series?
 
+Thanks!
 
 -- 
 Dmitry
