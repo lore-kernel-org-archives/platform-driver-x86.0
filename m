@@ -1,132 +1,163 @@
-From: Prarit Bhargava <prarit@redhat.com>
-Subject: Re: [PATCH v2 3/7] intel-speed-select: Add check for CascadeLake-N
- models
-Date: Fri, 4 Oct 2019 13:18:55 -0400
-Message-ID: <8c831fa0-bb42-76bf-a624-12b063cf8e8b@redhat.com>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v2 6/7] intel-speed-select: Implement 'perf-profile
+ info' on CascadeLake-N
+Date: Fri, 04 Oct 2019 10:23:59 -0700
+Message-ID: <dbda91d07e656ada3a01e19bedef1a447a1a5470.camel@linux.intel.com>
 References: <20191003121112.25870-1-prarit@redhat.com>
- <20191003121112.25870-4-prarit@redhat.com>
- <b1895913e2adaff4daf7be6b919e50714b418fe8.camel@linux.intel.com>
+         <20191003121112.25870-7-prarit@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b1895913e2adaff4daf7be6b919e50714b418fe8.camel@linux.intel.com>
-Content-Language: en-GB
+In-Reply-To: <20191003121112.25870-7-prarit@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Prarit Bhargava <prarit@redhat.com>, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-
-
-On 10/4/19 1:15 PM, Srinivas Pandruvada wrote:
-> On Thu, 2019-10-03 at 08:11 -0400, Prarit Bhargava wrote:
->> Three CascadeLake-N models (6252N, 6230N, and 5218N) have SST-PBF
->> support.
->>
->> Return an error if the CascadeLake processor is not one of these
->> specific
->> models.
->>
-> This patch sigfaults immediately on CLX.>
->> v2: Add is_clx_n_platform()
->>
->> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
->> ---
->>  .../x86/intel-speed-select/isst-config.c      | 44
->> ++++++++++++++++++-
->>  1 file changed, 42 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/power/x86/intel-speed-select/isst-config.c
->> b/tools/power/x86/intel-speed-select/isst-config.c
->> index f4a23678416e..734a7960458c 100644
->> --- a/tools/power/x86/intel-speed-select/isst-config.c
->> +++ b/tools/power/x86/intel-speed-select/isst-config.c
->> @@ -23,6 +23,7 @@ static int debug_flag;
->>  static FILE *outf;
->>  
->>  static int cpu_model;
->> +static int cpu_stepping;
->>  
->>  #define MAX_CPUS_IN_ONE_REQ 64
->>  static short max_target_cpus;
->> @@ -72,7 +73,16 @@ void debug_printf(const char *format, ...)
->>  	va_end(args);
->>  }
->>  
->> -static void update_cpu_model(void)
->> +
->> +int is_clx_n_platform(void)
->> +{
->> +	if (cpu_model == 0x55)
->> +		if (cpu_stepping == 0x6 || cpu_stepping == 0x7)
->> +			return 1;
->> +	return 0;
->> +}
->> +
->> +static int update_cpu_model(void)
->>  {
->>  	unsigned int ebx, ecx, edx;
->>  	unsigned int fms, family;
->> @@ -82,6 +92,34 @@ static void update_cpu_model(void)
->>  	cpu_model = (fms >> 4) & 0xf;
->>  	if (family == 6 || family == 0xf)
->>  		cpu_model += ((fms >> 16) & 0xf) << 4;
->> +
->> +	cpu_stepping = fms & 0xf;
->> +
->> +	/* only three CascadeLake-N models are supported */
->> +	if (is_clx_n_platform()) {
->> +		FILE *fp;
->> +		size_t n;
->> +		char *line;
-> Need n = 0 and *line = NULL here as getline() will require if it has to
-> allocate.
-
-Odd, I ran multiple tests and never hit the segfault :(.  Thanks for fixing.
-
-P.
-
-> 
-> Anyway I will update the patchset and post after test.
+On Thu, 2019-10-03 at 08:11 -0400, Prarit Bhargava wrote:
+> Add functionality for perf-profile info on CascadeLake-N.
 > 
 
-> Thanks,
-> Srinivas
->> +		int ret = 1;
->> +
->> +		fp = fopen("/proc/cpuinfo", "r");
->> +		if (!fp)
->> +			err(-1, "cannot open /proc/cpuinfo\n");
->> +
->> +		while (getline(&line, &n, fp) > 0) {
->> +			if (strstr(line, "model name")) {
->> +				if (strstr(line, "6252N") ||
->> +				    strstr(line, "6230N") ||
->> +				    strstr(line, "5218N"))
->> +					ret = 0;
->> +				break;
->> +			}
->> +		}
->> +		free(line);
->> +		fclose(fp);
->> +		return ret;
->> +	}
->> +	return 0;
->>  }
->>  
->>  /* Open a file, and exit on failure */
->> @@ -1889,7 +1927,9 @@ static void cmdline(int argc, char **argv)
->>  		fprintf(stderr, "Feature name and|or command not
->> specified\n");
->>  		exit(0);
->>  	}
->> -	update_cpu_model();
->> +	ret = update_cpu_model();
->> +	if (ret)
->> +		err(-1, "Invalid CPU model (%d)\n", cpu_model);
->>  	printf("Intel(R) Speed Select Technology\n");
->>  	printf("Executing on CPU model:%d[0x%x]\n", cpu_model,
->> cpu_model);
->>  	set_max_cpu_num();
+This results in 
+#intel-speed-select perf-profile info
+Intel(R) Speed Select Technology
+Executing on CPU model:85[0x55]
+intel-speed-select:
+/sys/devices/system/cpu/cpu40/cpufreq/base_frequency: open failed: No
+such file or directory
+
+Let me fix this.
+
+Also the previous crash was also for this v2 series.
+
+Thanks,
+Srinivas
+
+> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+> ---
+>  .../x86/intel-speed-select/isst-config.c      | 20 +++++++++++++++
+> ----
+>  .../x86/intel-speed-select/isst-display.c     | 12 +++++++++++
+>  tools/power/x86/intel-speed-select/isst.h     |  1 +
+>  3 files changed, 29 insertions(+), 4 deletions(-)
 > 
+> diff --git a/tools/power/x86/intel-speed-select/isst-config.c
+> b/tools/power/x86/intel-speed-select/isst-config.c
+> index 3ab0edade5ec..d9b580139a07 100644
+> --- a/tools/power/x86/intel-speed-select/isst-config.c
+> +++ b/tools/power/x86/intel-speed-select/isst-config.c
+> @@ -836,6 +836,12 @@ static void clx_n_config(void)
+>  	ctdp_level->fact_enabled = 0;
+>  }
+>  
+> +static void dump_cn_config_for_cpu(int cpu, void *arg1, void *arg2,
+> +				   void *arg3, void *arg4)
+> +{
+> +	isst_ctdp_display_information(cpu, outf, tdp_level,
+> &clx_n_pkg_dev);
+> +}
+> +
+>  static void dump_isst_config_for_cpu(int cpu, void *arg1, void
+> *arg2,
+>  				     void *arg3, void *arg4)
+>  {
+> @@ -854,6 +860,8 @@ static void dump_isst_config_for_cpu(int cpu,
+> void *arg1, void *arg2,
+>  
+>  static void dump_isst_config(int arg)
+>  {
+> +	void *fn;
+> +
+>  	if (cmd_help) {
+>  		fprintf(stderr,
+>  			"Print Intel(R) Speed Select Technology
+> Performance profile configuration\n");
+> @@ -865,14 +873,17 @@ static void dump_isst_config(int arg)
+>  		exit(0);
+>  	}
+>  
+> +	if (!is_clx_n_platform())
+> +		fn = dump_isst_config_for_cpu;
+> +	else
+> +		fn = dump_cn_config_for_cpu;
+> +
+>  	isst_ctdp_display_information_start(outf);
+>  
+>  	if (max_target_cpus)
+> -		for_each_online_target_cpu_in_set(dump_isst_config_for_
+> cpu,
+> -						  NULL, NULL, NULL,
+> NULL);
+> +		for_each_online_target_cpu_in_set(fn, NULL, NULL, NULL,
+> NULL);
+>  	else
+> -		for_each_online_package_in_set(dump_isst_config_for_cpu
+> , NULL,
+> -					       NULL, NULL, NULL);
+> +		for_each_online_package_in_set(fn, NULL, NULL, NULL,
+> NULL);
+>  
+>  	isst_ctdp_display_information_end(outf);
+>  }
+> @@ -1633,6 +1644,7 @@ static void get_clos_assoc(int arg)
+>  }
+>  
+>  static struct process_cmd_struct clx_n_cmds[] = {
+> +	{ "perf-profile", "info", dump_isst_config, 0 },
+>  	{ NULL, NULL, NULL, 0 }
+>  };
+>  
+> diff --git a/tools/power/x86/intel-speed-select/isst-display.c
+> b/tools/power/x86/intel-speed-select/isst-display.c
+> index 1caa7ae25245..8309810e7425 100644
+> --- a/tools/power/x86/intel-speed-select/isst-display.c
+> +++ b/tools/power/x86/intel-speed-select/isst-display.c
+> @@ -202,6 +202,9 @@ static void _isst_pbf_display_information(int
+> cpu, FILE *outf, int level,
+>  		 pbf_info->p1_low * DISP_FREQ_MULTIPLIER);
+>  	format_and_print(outf, disp_level + 1, header, value);
+>  
+> +	if (is_clx_n_platform())
+> +		return;
+> +
+>  	snprintf(header, sizeof(header), "tjunction-temperature(C)");
+>  	snprintf(value, sizeof(value), "%d", pbf_info->t_prochot);
+>  	format_and_print(outf, disp_level + 1, header, value);
+> @@ -375,6 +378,15 @@ void isst_ctdp_display_information(int cpu, FILE
+> *outf, int tdp_level,
+>  			snprintf(value, sizeof(value), "unsupported");
+>  		format_and_print(outf, base_level + 4, header, value);
+>  
+> +		if (is_clx_n_platform()) {
+> +			if (ctdp_level->pbf_support)
+> +				_isst_pbf_display_information(cpu,
+> outf,
+> +							      tdp_level
+> ,
+> +							  &ctdp_level-
+> >pbf_info,
+> +							      base_leve
+> l + 4);
+> +			continue;
+> +		}
+> +
+>  		snprintf(header, sizeof(header), "thermal-design-
+> power(W)");
+>  		snprintf(value, sizeof(value), "%d", ctdp_level-
+> >pkg_tdp);
+>  		format_and_print(outf, base_level + 4, header, value);
+> diff --git a/tools/power/x86/intel-speed-select/isst.h
+> b/tools/power/x86/intel-speed-select/isst.h
+> index 0dcae17b3945..bef27bd6138e 100644
+> --- a/tools/power/x86/intel-speed-select/isst.h
+> +++ b/tools/power/x86/intel-speed-select/isst.h
+> @@ -239,4 +239,5 @@ extern void isst_display_result(int cpu, FILE
+> *outf, char *feature, char *cmd,
+>  extern int isst_clos_get_clos_information(int cpu, int *enable, int
+> *type);
+>  extern void isst_clos_display_clos_information(int cpu, FILE *outf,
+>  					       int clos_enable, int
+> type);
+> +extern int is_clx_n_platform(void);
+>  #endif
