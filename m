@@ -1,52 +1,54 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 5.4 regression fix] Input: soc_button_array - partial
- revert of support for newer surface devices
-Date: Sat, 5 Oct 2019 22:14:51 +0200
-Message-ID: <ef31abf6-b3f2-f3aa-1536-3ecd5fc819e1@redhat.com>
-References: <20191005105551.353273-1-hdegoede@redhat.com>
- <222c364a-bc2b-5960-3fe4-7d1ce222e3e2@gmail.com>
- <96cea5be-d285-8323-1ab2-9c8e87993165@redhat.com>
- <65b265d2-f7a8-bcd7-e63f-f8efb7349324@gmail.com>
+From: Yauhen Kharuzhy <jekhor@gmail.com>
+Subject: [PATCH RESEND v5 0/1] intel_cht_int33fe: Split code to USB Micro-B and Type-C variants
+Date: Sat,  5 Oct 2019 23:42:54 +0300
+Message-ID: <20191005204255.25371-1-jekhor@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <65b265d2-f7a8-bcd7-e63f-f8efb7349324@gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maximilian Luz <luzmaximilian@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andy Shevchenko <andy@infradead.org>
-Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>, Yauhen Kharuzhy <jekhor@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+Patch to support INT33FE ACPI pseudo-device on hardware with USB Micro-B
+connector.
 
-On 05-10-2019 17:01, Maximilian Luz wrote:
-> Hi, again
->=20
-> On 10/5/19 3:20 PM, Hans de Goede wrote:
->> Ok, on x86 the GPIO drivers really should all be builtin because
->> various ACPI methods including device D0 / D3 (power-on/off) methods
->> may depend on them. So normally this should never happen.
->>
->> If this (-EPROBE_DEFER on surface devices) somehow still is happening
->> please let me know and we will figure something out.
->=20
-> I have never personally experienced this, only received reports which
-> indicated this and that the change (as well as manually reloading
-> soc_button_array) fixed it. I will come back to you if I hear anything
-> in regards to this again.
->=20
-> I have now also tested your patch on the Surface Book 2. Does not cause
-> any issues as far as I can tell.
->=20
-> Tested-by: Maximilian Luz <luzmaximilian@gmail.com>
->=20
-> And if that is needed/wanted
->=20
-> Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
+v5:
+- Spelling corrections in Kconfig, commit description and comments;
+- Micro-B code: Remove warning at fuel gauge registration failure and
+  use PTR_ERR_OR_ZERO() for simplicity.
 
-Great, thank you.
+v4:
+- Micro-B variant: Don't print error to the kernel log if i2c_acpi_new_device()
+  has returned -EPROBE_DEFER.
 
-Regards,
+v3:
+- Rename TypeB variant to Micro-B (we have only one such device for now and it
+  has Micro-B connector)
+- Rebase on current linus/master
+- Remove empty lines and replace "TypeC" by "Type-C"
 
-Hans
+v2:
+Instead of defining two separated modules with two separated config
+options, compile {common,typeb,typec} sources into one .ko module.
+Call needed variant-specific probe function based after of hardware type
+detection in common code.
+
+Yauhen Kharuzhy (1):
+  platform/x86/intel_cht_int33fe: Split code to USB Micro-B and Type-C
+    variants
+
+ drivers/platform/x86/Kconfig                  |  10 +-
+ drivers/platform/x86/Makefile                 |   4 +
+ .../platform/x86/intel_cht_int33fe_common.c   | 147 ++++++++++++++++++
+ .../platform/x86/intel_cht_int33fe_common.h   |  41 +++++
+ .../platform/x86/intel_cht_int33fe_microb.c   |  57 +++++++
+ ...ht_int33fe.c => intel_cht_int33fe_typec.c} |  78 +---------
+ 6 files changed, 265 insertions(+), 72 deletions(-)
+ create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.c
+ create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.h
+ create mode 100644 drivers/platform/x86/intel_cht_int33fe_microb.c
+ rename drivers/platform/x86/{intel_cht_int33fe.c => intel_cht_int33fe_typec.c} (82%)
+
+-- 
+2.23.0.rc1
