@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v3 4/6] tools/power/x86/intel-speed-select: Implement CascadeLake-N help and command functions structures
-Date: Mon,  7 Oct 2019 12:30:58 -0700
-Message-ID: <20191007193100.36934-5-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v3 3/6] tools/power/x86/intel-speed-select: Add check for CascadeLake-N models
+Date: Mon,  7 Oct 2019 12:30:57 -0700
+Message-ID: <20191007193100.36934-4-srinivas.pandruvada@linux.intel.com>
 References: <20191007193100.36934-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191007193100.36934-1-srinivas.pandruvada@linux.intel.com>
@@ -12,88 +12,91 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 From: Prarit Bhargava <prarit@redhat.com>
 
-CascadeLake-N only supports SST-BF and needs some of the perf-profile
-commands, and the base-freq commands.
+Three CascadeLake-N models (6252N, 6230N, and 5218N) have SST-PBF support.
 
-Add help functions, and create an empty command structures (the functions
-will be implemented later in this patchset).  Call these functions
-when running on CascadeLake-N.
+Return an error if the CascadeLake processor is not one of these specific
+models.
 
 Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../x86/intel-speed-select/isst-config.c      | 37 ++++++++++++++-----
- 1 file changed, 27 insertions(+), 10 deletions(-)
+ .../x86/intel-speed-select/isst-config.c      | 43 ++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 2 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 67a866e2dac4..449025c6ea46 100644
+index 907b79e16c68..67a866e2dac4 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1610,6 +1610,10 @@ static void get_clos_assoc(int arg)
- 	isst_ctdp_display_information_end(outf);
+@@ -23,6 +23,7 @@ static int debug_flag;
+ static FILE *outf;
+ 
+ static int cpu_model;
++static int cpu_stepping;
+ 
+ #define MAX_CPUS_IN_ONE_REQ 64
+ static short max_target_cpus;
+@@ -72,7 +73,16 @@ void debug_printf(const char *format, ...)
+ 	va_end(args);
  }
  
-+static struct process_cmd_struct clx_n_cmds[] = {
-+	{ NULL, NULL, NULL, 0 }
-+};
+-static void update_cpu_model(void)
 +
- static struct process_cmd_struct isst_cmds[] = {
- 	{ "perf-profile", "get-lock-status", get_tdp_locked, 0 },
- 	{ "perf-profile", "get-config-levels", get_tdp_levels, 0 },
-@@ -1798,12 +1802,15 @@ static void isst_help(void)
- 		TDP, etc.\n");
- 	printf("\nCommands : For feature=perf-profile\n");
- 	printf("\tinfo\n");
--	printf("\tget-lock-status\n");
--	printf("\tget-config-levels\n");
--	printf("\tget-config-version\n");
--	printf("\tget-config-enabled\n");
--	printf("\tget-config-current-level\n");
--	printf("\tset-config-level\n");
++int is_clx_n_platform(void)
++{
++	if (cpu_model == 0x55)
++		if (cpu_stepping == 0x6 || cpu_stepping == 0x7)
++			return 1;
++	return 0;
++}
 +
-+	if (!is_clx_n_platform()) {
-+		printf("\tget-lock-status\n");
-+		printf("\tget-config-levels\n");
-+		printf("\tget-config-version\n");
-+		printf("\tget-config-enabled\n");
-+		printf("\tget-config-current-level\n");
-+		printf("\tset-config-level\n");
++static int update_cpu_model(void)
+ {
+ 	unsigned int ebx, ecx, edx;
+ 	unsigned int fms, family;
+@@ -82,6 +92,33 @@ static void update_cpu_model(void)
+ 	cpu_model = (fms >> 4) & 0xf;
+ 	if (family == 6 || family == 0xf)
+ 		cpu_model += ((fms >> 16) & 0xf) << 4;
++
++	cpu_stepping = fms & 0xf;
++	/* only three CascadeLake-N models are supported */
++	if (is_clx_n_platform()) {
++		FILE *fp;
++		size_t n = 0;
++		char *line = NULL;
++		int ret = 1;
++
++		fp = fopen("/proc/cpuinfo", "r");
++		if (!fp)
++			err(-1, "cannot open /proc/cpuinfo\n");
++
++		while (getline(&line, &n, fp) > 0) {
++			if (strstr(line, "model name")) {
++				if (strstr(line, "6252N") ||
++				    strstr(line, "6230N") ||
++				    strstr(line, "5218N"))
++					ret = 0;
++				break;
++			}
++		}
++		free(line);
++		fclose(fp);
++		return ret;
 +	}
++	return 0;
  }
  
- static void pbf_help(void)
-@@ -1853,6 +1860,12 @@ static struct process_cmd_help_struct isst_help_cmds[] = {
- 	{ NULL, NULL }
- };
- 
-+static struct process_cmd_help_struct clx_n_help_cmds[] = {
-+	{ "perf-profile", isst_help },
-+	{ "base-freq", pbf_help },
-+	{ NULL, NULL }
-+};
-+
- void process_command(int argc, char **argv,
- 		     struct process_cmd_help_struct *help_cmds,
- 		     struct process_cmd_struct *cmds)
-@@ -2001,11 +2014,15 @@ static void cmdline(int argc, char **argv)
+ /* Open a file, and exit on failure */
+@@ -1956,7 +1993,9 @@ static void cmdline(int argc, char **argv)
+ 		fprintf(stderr, "Feature name and|or command not specified\n");
+ 		exit(0);
+ 	}
+-	update_cpu_model();
++	ret = update_cpu_model();
++	if (ret)
++		err(-1, "Invalid CPU model (%d)\n", cpu_model);
+ 	printf("Intel(R) Speed Select Technology\n");
+ 	printf("Executing on CPU model:%d[0x%x]\n", cpu_model, cpu_model);
  	set_max_cpu_num();
- 	set_cpu_present_cpu_mask();
- 	set_cpu_target_cpu_mask();
--	ret = isst_fill_platform_info();
--	if (ret)
--		goto out;
- 
--	process_command(argc, argv, isst_help_cmds, isst_cmds);
-+	if (!is_clx_n_platform()) {
-+		ret = isst_fill_platform_info();
-+		if (ret)
-+			goto out;
-+		process_command(argc, argv, isst_help_cmds, isst_cmds);
-+	} else {
-+		process_command(argc, argv, clx_n_help_cmds, clx_n_cmds);
-+	}
- out:
- 	free_cpu_set(present_cpumask);
- 	free_cpu_set(target_cpumask);
 -- 
 2.17.2
