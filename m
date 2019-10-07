@@ -1,234 +1,99 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2 2/3] tools/power/x86/intel-speed-select: Turbo-freq feature auto mode
-Date: Mon,  7 Oct 2019 10:29:58 -0700
-Message-ID: <20191007172959.25912-3-srinivas.pandruvada@linux.intel.com>
-References: <20191007172959.25912-1-srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v2 3/7] intel-speed-select: Add check for CascadeLake-N
+ models
+Date: Mon, 07 Oct 2019 12:18:00 -0700
+Message-ID: <00b61947ffe509d02383903a059067517dd2605c.camel@linux.intel.com>
+References: <20191003121112.25870-1-prarit@redhat.com>
+         <20191003121112.25870-4-prarit@redhat.com>
+         <b1895913e2adaff4daf7be6b919e50714b418fe8.camel@linux.intel.com>
+         <20191007100313.GP32742@smile.fi.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007172959.25912-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20191007100313.GP32742@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andriy.shevchenko@intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, prarit@redhat.com, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Prarit Bhargava <prarit@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Introduce --auto|-a option to turbo-freq enable feature, so that it
-does in one step for users who are OK by setting all passed target cores
-as high priority and set in CLOS 0 and remaining in CLOS 3. In this way,
-users don't have to take multiple steps to enable turbo-freq feature. For
-users who want more fine grain control, they can always use core-power
-feature to set custom CLOS configuration and assignment.
+On Mon, 2019-10-07 at 13:03 +0300, Andy Shevchenko wrote:
+> On Fri, Oct 04, 2019 at 10:15:21AM -0700, Srinivas Pandruvada wrote:
+> > On Thu, 2019-10-03 at 08:11 -0400, Prarit Bhargava wrote:
+> > > +	/* only three CascadeLake-N models are supported */
+> > > +	if (is_clx_n_platform()) {
+> > > +		FILE *fp;
+> > > +		size_t n;
+> > > +		char *line;
+> > 
+> > Need n = 0 and *line = NULL here as getline() will require if it
+> > has to
+> > allocate.
+> 
+> Good catch and thus...
+> 
+> > > +		int ret = 1;
+> > > +
+> > > +		fp = fopen("/proc/cpuinfo", "r");
+> > > +		if (!fp)
+> > > +			err(-1, "cannot open /proc/cpuinfo\n");
+> > > +
+> > > +		while (getline(&line, &n, fp) > 0) {
+> > > +			if (strstr(line, "model name")) {
+> > > +				if (strstr(line, "6252N") ||
+> > > +				    strstr(line, "6230N") ||
+> > > +				    strstr(line, "5218N"))
+> > > +					ret = 0;
+> > > +				break;
+> > > +			}
+> 
+> Missed free(line) here.
+This may not be required. After the first call geline() allocated a
+buffer and will reuse it during next call. If it is not enough it will
+realloc even if the buffer is passed by user via malloc().
 
-While here also print the error to output when clos configuration fails.
+From man page:
 
-For example
-intel-speed-select -c 0-4 turbo-freq enable --auto
+"
+If *lineptr is set to NULL and *n is set 0 before the call, then
+       getline() will allocate a buffer for storing the line.  This
+buffer
+       should be freed by the user program even if getline() failed.
 
-The above command will enable turbo-freq and core-power feature. Also
-mark CPU 0 to CPU 4 as high priority.
+       Alternatively, before calling getline(), *lineptr can contain a
+       pointer to a malloc(3)-allocated buffer *n bytes in size.  If
+the
+       buffer is not large enough to hold the line, getline() resizes
+it
+       with realloc(3), updating *lineptr and *n as necessary.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../x86/intel-speed-select/isst-config.c      | 152 ++++++++++++++----
- 1 file changed, 124 insertions(+), 28 deletions(-)
+       In either case, on a successful call, *lineptr and *n will be
+updated
+       to reflect the buffer address and allocated size respectively.
+"
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 82502a38446e..e1ca7c5b8037 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1173,40 +1173,58 @@ static void set_fact_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 	int ret;
- 	int status = *(int *)arg4;
- 
-+	if (auto_mode) {
-+		if (status) {
-+			ret = isst_pm_qos_config(cpu, 1, 1);
-+			if (ret)
-+				goto disp_results;
-+		} else {
-+			isst_pm_qos_config(cpu, 0, 0);
-+		}
-+	}
-+
- 	ret = isst_set_pbf_fact_status(cpu, 0, status);
--	if (ret)
-+	if (ret) {
- 		perror("isst_set_fact");
--	else {
--		if (status) {
--			struct isst_pkg_ctdp pkg_dev;
-+		if (auto_mode)
-+			isst_pm_qos_config(cpu, 0, 0);
- 
--			ret = isst_get_ctdp_levels(cpu, &pkg_dev);
--			if (ret) {
--				isst_display_result(cpu, outf, "turbo-freq",
--						    "enable", ret);
--				return;
--			}
-+		goto disp_results;
-+	}
-+
-+	/* Set TRL */
-+	if (status) {
-+		struct isst_pkg_ctdp pkg_dev;
-+
-+		ret = isst_get_ctdp_levels(cpu, &pkg_dev);
-+		if (!ret)
- 			ret = isst_set_trl(cpu, fact_trl);
--			isst_display_result(cpu, outf, "turbo-freq", "enable",
--					    ret);
--		} else {
--			/* Since we modified TRL during Fact enable, restore it */
--			isst_set_trl_from_current_tdp(cpu, fact_trl);
--			isst_display_result(cpu, outf, "turbo-freq", "disable",
--					    ret);
--		}
-+		if (ret && auto_mode)
-+			isst_pm_qos_config(cpu, 0, 0);
-+	}
-+
-+disp_results:
-+	if (status) {
-+		isst_display_result(cpu, outf, "turbo-freq", "enable", ret);
-+	} else {
-+		/* Since we modified TRL during Fact enable, restore it */
-+		isst_set_trl_from_current_tdp(cpu, fact_trl);
-+		isst_display_result(cpu, outf, "turbo-freq", "disable", ret);
- 	}
- }
- 
- static void set_fact_enable(void)
- {
--	int status = 1;
-+	int status = 1, i, ret;
- 
- 	if (cmd_help) {
- 		fprintf(stderr,
- 			"Enable Intel Speed Select Technology Turbo frequency feature\n");
- 		fprintf(stderr,
- 			"Optional: -t|--trl : Specify turbo ratio limit\n");
-+		fprintf(stderr,
-+			"\tOptional Arguments: -a|--auto : Designate specified target CPUs with");
-+		fprintf(stderr, "-C|--cpu option as as high priority using core-power feature\n");
- 		exit(0);
- 	}
- 
-@@ -1218,6 +1236,83 @@ static void set_fact_enable(void)
- 		for_each_online_package_in_set(set_fact_for_cpu, NULL, NULL,
- 					       NULL, &status);
- 	isst_ctdp_display_information_end(outf);
-+
-+	if (auto_mode) {
-+		/*
-+		 * When we adjust CLOS param, we have to set for siblings also.
-+		 * So for the each user specified CPU, also add the sibling
-+		 * in the present_cpu_mask.
-+		 */
-+		for (i = 0; i < get_topo_max_cpus(); ++i) {
-+			char buffer[128], sibling_list[128], *cpu_str;
-+			int fd, len;
-+
-+			if (!CPU_ISSET_S(i, target_cpumask_size, target_cpumask))
-+				continue;
-+
-+			snprintf(buffer, sizeof(buffer),
-+				 "/sys/devices/system/cpu/cpu%d/topology/thread_siblings_list", i);
-+
-+			fd = open(buffer, O_RDONLY);
-+			if (fd < 0)
-+				continue;
-+
-+			len = read(fd, sibling_list, sizeof(sibling_list));
-+			close(fd);
-+
-+			if (len < 0)
-+				continue;
-+
-+			cpu_str = strtok(sibling_list, ",");
-+			while (cpu_str != NULL) {
-+				int cpu;
-+
-+				sscanf(cpu_str, "%d", &cpu);
-+				CPU_SET_S(cpu, target_cpumask_size, target_cpumask);
-+				cpu_str = strtok(NULL, ",");
-+			}
-+		}
-+
-+		for (i = 0; i < get_topo_max_cpus(); ++i) {
-+			int clos;
-+
-+			if (!CPU_ISSET_S(i, present_cpumask_size, present_cpumask))
-+				continue;
-+
-+			ret = set_clos_param(i, 0, 0, 0, 0, 0xff);
-+			if (ret)
-+				goto error_disp;
-+
-+			ret = set_clos_param(i, 1, 15, 0, 0, 0xff);
-+			if (ret)
-+				goto error_disp;
-+
-+			ret = set_clos_param(i, 2, 15, 0, 0, 0xff);
-+			if (ret)
-+				goto error_disp;
-+
-+			ret = set_clos_param(i, 3, 15, 0, 0, 0xff);
-+			if (ret)
-+				goto error_disp;
-+
-+			if (CPU_ISSET_S(i, target_cpumask_size, target_cpumask))
-+				clos = 0;
-+			else
-+				clos = 3;
-+
-+			debug_printf("Associate cpu: %d clos: %d\n", i, clos);
-+			ret = isst_clos_associate(i, clos);
-+			if (ret)
-+				goto error_disp;
-+		}
-+		isst_display_result(i, outf, "turbo-freq --auto", "enable", 0);
-+	}
-+
-+	return;
-+
-+error_disp:
-+	isst_display_result(i, outf, "turbo-freq --auto", "enable", ret);
-+
- }
- 
- static void set_fact_disable(void)
-@@ -1229,6 +1324,8 @@ static void set_fact_disable(void)
- 			"Disable Intel Speed Select Technology turbo frequency feature\n");
- 		fprintf(stderr,
- 			"Optional: -t|--trl : Specify turbo ratio limit\n");
-+		fprintf(stderr,
-+			"\tOptional Arguments: -a|--auto : Also disable core-power associations\n");
- 		exit(0);
- 	}
- 
-@@ -1249,16 +1346,15 @@ static void enable_clos_qos_config(int cpu, void *arg1, void *arg2, void *arg3,
- 	int status = *(int *)arg4;
- 
- 	ret = isst_pm_qos_config(cpu, status, clos_priority_type);
--	if (ret) {
-+	if (ret)
- 		perror("isst_pm_qos_config");
--	} else {
--		if (status)
--			isst_display_result(cpu, outf, "core-power", "enable",
--					    ret);
--		else
--			isst_display_result(cpu, outf, "core-power", "disable",
--					    ret);
--	}
-+
-+	if (status)
-+		isst_display_result(cpu, outf, "core-power", "enable",
-+				    ret);
-+	else
-+		isst_display_result(cpu, outf, "core-power", "disable",
-+				    ret);
- }
- 
- static void set_clos_enable(void)
--- 
-2.17.2
+> 
+> > > +		}
+> > > +		free(line);
+> > > +		fclose(fp);
+> > > +		return ret;
+> > > +	}
+> > > +	return 0;
+> > >  }
+> > >  
+> > >  /* Open a file, and exit on failure */
+> > > @@ -1889,7 +1927,9 @@ static void cmdline(int argc, char **argv)
+> > >  		fprintf(stderr, "Feature name and|or command not
+> > > specified\n");
+> > >  		exit(0);
+> > >  	}
+> > > -	update_cpu_model();
+> > > +	ret = update_cpu_model();
+> > > +	if (ret)
+> > > +		err(-1, "Invalid CPU model (%d)\n", cpu_model);
+> > >  	printf("Intel(R) Speed Select Technology\n");
+> > >  	printf("Executing on CPU model:%d[0x%x]\n", cpu_model,
+> > > cpu_model);
+> > >  	set_max_cpu_num();
+> 
+> 
