@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [RESEND][PATCH 06/10] tools/power/x86/intel-speed-select: Make process_command generic
-Date: Thu, 10 Oct 2019 13:29:41 -0700
-Message-ID: <20191010202945.73616-7-srinivas.pandruvada@linux.intel.com>
+Subject: [RESEND][PATCH 04/10] tools/power/x86/intel-speed-select: Refuse to disable core-power when getting used
+Date: Thu, 10 Oct 2019 13:29:39 -0700
+Message-ID: <20191010202945.73616-5-srinivas.pandruvada@linux.intel.com>
 References: <20191010202945.73616-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191010202945.73616-1-srinivas.pandruvada@linux.intel.com>
@@ -10,69 +10,51 @@ To: andriy.shevchenko@intel.com
 Cc: prarit@redhat.com, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Prarit Bhargava <prarit@redhat.com>
+The turbo-freq feature is dependent on the core-power feature. If the
+core-power feature is disabled while the turbo-freq feature is enabled,
+this will break the turbo-freq feature. This is a firmware limitation,
+where they can't return error under this scenario.
 
-Make the process_command take any help command and command list.  This
-will make it easier to help commands and a command list for CascadeLake-N.
+So when trying to disable core-power, make sure that the turbo-freq
+feature is not enabled. If it enabled, return error if user is trying to
+disable the core-power feature.
 
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../x86/intel-speed-select/isst-config.c      | 20 ++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ .../power/x86/intel-speed-select/isst-core.c  | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 4927aebee306..907b79e16c68 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1816,7 +1816,9 @@ static struct process_cmd_help_struct isst_help_cmds[] = {
- 	{ NULL, NULL }
- };
+diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
+index 6dee5332c9d3..67d32f2b9bea 100644
+--- a/tools/power/x86/intel-speed-select/isst-core.c
++++ b/tools/power/x86/intel-speed-select/isst-core.c
+@@ -649,6 +649,27 @@ int isst_pm_qos_config(int cpu, int enable_clos, int priority_type)
+ 	unsigned int req, resp;
+ 	int ret;
  
--void process_command(int argc, char **argv)
-+void process_command(int argc, char **argv,
-+		     struct process_cmd_help_struct *help_cmds,
-+		     struct process_cmd_struct *cmds)
- {
- 	int i = 0, matched = 0;
- 	char *feature = argv[optind];
-@@ -1827,9 +1829,9 @@ void process_command(int argc, char **argv)
- 
- 	debug_printf("feature name [%s] command [%s]\n", feature, cmd);
- 	if (!strcmp(cmd, "-h") || !strcmp(cmd, "--help")) {
--		while (isst_help_cmds[i].feature) {
--			if (!strcmp(isst_help_cmds[i].feature, feature)) {
--				isst_help_cmds[i].process_fn();
-+		while (help_cmds[i].feature) {
-+			if (!strcmp(help_cmds[i].feature, feature)) {
-+				help_cmds[i].process_fn();
- 				exit(0);
- 			}
- 			++i;
-@@ -1839,11 +1841,11 @@ void process_command(int argc, char **argv)
- 	create_cpu_map();
- 
- 	i = 0;
--	while (isst_cmds[i].feature) {
--		if (!strcmp(isst_cmds[i].feature, feature) &&
--		    !strcmp(isst_cmds[i].command, cmd)) {
-+	while (cmds[i].feature) {
-+		if (!strcmp(cmds[i].feature, feature) &&
-+		    !strcmp(cmds[i].command, cmd)) {
- 			parse_cmd_args(argc, optind + 1, argv);
--			isst_cmds[i].process_fn(isst_cmds[i].arg);
-+			cmds[i].process_fn(cmds[i].arg);
- 			matched = 1;
- 			break;
- 		}
-@@ -1964,7 +1966,7 @@ static void cmdline(int argc, char **argv)
++	if (!enable_clos) {
++		struct isst_pkg_ctdp pkg_dev;
++		struct isst_pkg_ctdp_level_info ctdp_level;
++
++		ret = isst_get_ctdp_levels(cpu, &pkg_dev);
++		if (ret) {
++			debug_printf("isst_get_ctdp_levels\n");
++			return ret;
++		}
++
++		ret = isst_get_ctdp_control(cpu, pkg_dev.current_level,
++					    &ctdp_level);
++		if (ret)
++			return ret;
++
++		if (ctdp_level.fact_enabled) {
++			debug_printf("Turbo-freq feature must be disabled first\n");
++			return -EINVAL;
++		}
++	}
++
+ 	ret = isst_send_mbox_command(cpu, CONFIG_CLOS, CLOS_PM_QOS_CONFIG, 0, 0,
+ 				     &resp);
  	if (ret)
- 		goto out;
- 
--	process_command(argc, argv);
-+	process_command(argc, argv, isst_help_cmds, isst_cmds);
- out:
- 	free_cpu_set(present_cpumask);
- 	free_cpu_set(target_cpumask);
 -- 
 2.17.2
