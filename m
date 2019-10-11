@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v5 04/14] software node: mark internal macros with double underscores
-Date: Fri, 11 Oct 2019 16:07:11 -0700
-Message-ID: <20191011230721.206646-5-dmitry.torokhov@gmail.com>
+Subject: [PATCH v5 13/14] platform/x86: intel_cht_int33fe: use inline reference properties
+Date: Fri, 11 Oct 2019 16:07:20 -0700
+Message-ID: <20191011230721.206646-14-dmitry.torokhov@gmail.com>
 References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,71 +12,158 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Let's mark PROPERTY_ENTRY_* macros that are internal with double leading
-underscores so users are not tempted to use them.
+Now that static device properties allow defining reference properties
+together with all other types of properties, instead of managing them
+separately, let's adjust the driver.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- include/linux/property.h | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/platform/x86/intel_cht_int33fe.c | 81 ++++++++++++------------
+ 1 file changed, 41 insertions(+), 40 deletions(-)
 
-diff --git a/include/linux/property.h b/include/linux/property.h
-index f89b930ca4b7..2c9d4d209296 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -256,7 +256,7 @@ struct property_entry {
-  * and structs.
-  */
+diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+index 1d5d877b9582..4177c5424931 100644
+--- a/drivers/platform/x86/intel_cht_int33fe.c
++++ b/drivers/platform/x86/intel_cht_int33fe.c
+@@ -46,30 +46,6 @@ struct cht_int33fe_data {
+ 	struct fwnode_handle *dp;
+ };
  
--#define PROPERTY_ENTRY_ARRAY_LEN(_name_, _type_, _Type_, _val_, _len_)	\
-+#define __PROPERTY_ENTRY_ARRAY_LEN(_name_, _type_, _Type_, _val_, _len_)\
- (struct property_entry) {						\
- 	.name = _name_,							\
- 	.length = (_len_) * sizeof(_type_),				\
-@@ -266,13 +266,13 @@ struct property_entry {
- }
+-static const struct software_node nodes[];
+-
+-static const struct software_node_ref_args pi3usb30532_ref = {
+-	&nodes[INT33FE_NODE_PI3USB30532]
+-};
+-
+-static const struct software_node_ref_args dp_ref = {
+-	&nodes[INT33FE_NODE_DISPLAYPORT]
+-};
+-
+-static struct software_node_ref_args mux_ref;
+-
+-static const struct software_node_reference usb_connector_refs[] = {
+-	{ "orientation-switch", 1, &pi3usb30532_ref},
+-	{ "mode-switch", 1, &pi3usb30532_ref},
+-	{ "displayport", 1, &dp_ref},
+-	{ }
+-};
+-
+-static const struct software_node_reference fusb302_refs[] = {
+-	{ "usb-role-switch", 1, &mux_ref},
+-	{ }
+-};
+-
+ /*
+  * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
+  * the max17047 both through the INT33FE ACPI device (it is right there
+@@ -105,8 +81,18 @@ static const struct property_entry max17047_props[] = {
+ 	{ }
+ };
  
- #define PROPERTY_ENTRY_U8_ARRAY_LEN(_name_, _val_, _len_)		\
--	PROPERTY_ENTRY_ARRAY_LEN(_name_, u8, U8, _val_, _len_)
-+	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u8, U8, _val_, _len_)
- #define PROPERTY_ENTRY_U16_ARRAY_LEN(_name_, _val_, _len_)		\
--	PROPERTY_ENTRY_ARRAY_LEN(_name_, u16, U16, _val_, _len_)
-+	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u16, U16, _val_, _len_)
- #define PROPERTY_ENTRY_U32_ARRAY_LEN(_name_, _val_, _len_)		\
--	PROPERTY_ENTRY_ARRAY_LEN(_name_, u32, U32, _val_, _len_)
-+	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u32, U32, _val_, _len_)
- #define PROPERTY_ENTRY_U64_ARRAY_LEN(_name_, _val_, _len_)		\
--	PROPERTY_ENTRY_ARRAY_LEN(_name_, u64, U64, _val_, _len_)
-+	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u64, U64, _val_, _len_)
++/*
++ * We are not using inline property here because those are constant,
++ * and we need to adjust this one at runtime to point to real
++ * software node.
++ */
++static struct software_node_ref_args fusb302_mux_refs[] = {
++	{ .node = NULL },
++};
++
+ static const struct property_entry fusb302_props[] = {
+ 	PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
++	PROPERTY_ENTRY_REF_ARRAY("usb-role-switch", fusb302_mux_refs),
+ 	{ }
+ };
  
- #define PROPERTY_ENTRY_STRING_ARRAY_LEN(_name_, _val_, _len_)		\
- (struct property_entry) {						\
-@@ -294,7 +294,7 @@ struct property_entry {
- #define PROPERTY_ENTRY_STRING_ARRAY(_name_, _val_)			\
- 	PROPERTY_ENTRY_STRING_ARRAY_LEN(_name_, _val_, ARRAY_SIZE(_val_))
+@@ -122,6 +108,8 @@ static const u32 snk_pdo[] = {
+ 	PDO_VAR(5000, 12000, 3000),
+ };
  
--#define PROPERTY_ENTRY_INTEGER(_name_, _type_, _Type_, _val_)	\
-+#define __PROPERTY_ENTRY_INTEGER(_name_, _type_, _Type_, _val_)	\
- (struct property_entry) {					\
- 	.name = _name_,						\
- 	.length = sizeof(_type_),				\
-@@ -303,13 +303,13 @@ struct property_entry {
- }
++static const struct software_node nodes[];
++
+ static const struct property_entry usb_connector_props[] = {
+ 	PROPERTY_ENTRY_STRING("data-role", "dual"),
+ 	PROPERTY_ENTRY_STRING("power-role", "dual"),
+@@ -129,15 +117,21 @@ static const struct property_entry usb_connector_props[] = {
+ 	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
+ 	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
+ 	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500000),
++	PROPERTY_ENTRY_REF("orientation-switch",
++			   &nodes[INT33FE_NODE_PI3USB30532]),
++	PROPERTY_ENTRY_REF("mode-switch",
++			   &nodes[INT33FE_NODE_PI3USB30532]),
++	PROPERTY_ENTRY_REF("displayport",
++			   &nodes[INT33FE_NODE_DISPLAYPORT]),
+ 	{ }
+ };
  
- #define PROPERTY_ENTRY_U8(_name_, _val_)		\
--	PROPERTY_ENTRY_INTEGER(_name_, u8, U8, _val_)
-+	__PROPERTY_ENTRY_INTEGER(_name_, u8, U8, _val_)
- #define PROPERTY_ENTRY_U16(_name_, _val_)		\
--	PROPERTY_ENTRY_INTEGER(_name_, u16, U16, _val_)
-+	__PROPERTY_ENTRY_INTEGER(_name_, u16, U16, _val_)
- #define PROPERTY_ENTRY_U32(_name_, _val_)		\
--	PROPERTY_ENTRY_INTEGER(_name_, u32, U32, _val_)
-+	__PROPERTY_ENTRY_INTEGER(_name_, u32, U32, _val_)
- #define PROPERTY_ENTRY_U64(_name_, _val_)		\
--	PROPERTY_ENTRY_INTEGER(_name_, u64, U64, _val_)
-+	__PROPERTY_ENTRY_INTEGER(_name_, u64, U64, _val_)
+ static const struct software_node nodes[] = {
+-	{ "fusb302", NULL, fusb302_props, fusb302_refs },
++	{ "fusb302", NULL, fusb302_props },
+ 	{ "max17047", NULL, max17047_props },
+ 	{ "pi3usb30532" },
+ 	{ "displayport" },
+-	{ "connector", &nodes[0], usb_connector_props, usb_connector_refs },
++	{ "connector", &nodes[0], usb_connector_props },
+ 	{ }
+ };
  
- #define PROPERTY_ENTRY_STRING(_name_, _val_)		\
- (struct property_entry) {				\
+@@ -173,9 +167,10 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
+ {
+ 	software_node_unregister_nodes(nodes);
+ 
+-	if (mux_ref.node) {
+-		fwnode_handle_put(software_node_fwnode(mux_ref.node));
+-		mux_ref.node = NULL;
++	if (fusb302_mux_refs[0].node) {
++		fwnode_handle_put(
++			software_node_fwnode(fusb302_mux_refs[0].node));
++		fusb302_mux_refs[0].node = NULL;
+ 	}
+ 
+ 	if (data->dp) {
+@@ -187,25 +182,31 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
+ 
+ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
+ {
++	const struct software_node *mux_ref_node;
+ 	int ret;
+ 
+-	ret = software_node_register_nodes(nodes);
+-	if (ret)
+-		return ret;
+-
+-	/* The devices that are not created in this driver need extra steps. */
+-
+ 	/*
+ 	 * There is no ACPI device node for the USB role mux, so we need to wait
+ 	 * until the mux driver has created software node for the mux device.
+ 	 * It means we depend on the mux driver. This function will return
+ 	 * -EPROBE_DEFER until the mux device is registered.
+ 	 */
+-	mux_ref.node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
+-	if (!mux_ref.node) {
+-		ret = -EPROBE_DEFER;
+-		goto err_remove_nodes;
+-	}
++	mux_ref_node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
++	if (!mux_ref_node)
++		return -EPROBE_DEFER;
++
++	/*
++	 * Update node used in "usb-role-switch" property. Note that we
++	 * rely on software_node_register_nodes() to use the original
++	 * instance of properties instead of copying them.
++	 */
++	fusb302_mux_refs[0].node = mux_ref_node;
++
++	ret = software_node_register_nodes(nodes);
++	if (ret)
++		return ret;
++
++	/* The devices that are not created in this driver need extra steps. */
+ 
+ 	/*
+ 	 * The DP connector does have ACPI device node. In this case we can just
 -- 
 2.23.0.700.g56cf767bdb-goog
