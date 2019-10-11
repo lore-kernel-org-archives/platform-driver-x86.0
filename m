@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v5 11/14] software node: move small properties inline when copying
-Date: Fri, 11 Oct 2019 16:07:18 -0700
-Message-ID: <20191011230721.206646-12-dmitry.torokhov@gmail.com>
+Subject: [PATCH v5 10/14] software node: rename is_array to is_inline
+Date: Fri, 11 Oct 2019 16:07:17 -0700
+Message-ID: <20191011230721.206646-11-dmitry.torokhov@gmail.com>
 References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,41 +12,107 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-When copying/duplicating set of properties, move smaller properties that
-were stored separately directly inside property entry structures. We can
-move:
-
-- up to 8 bytes from U8 arrays
-- up to 4 words
-- up to 2 double words
-- one U64 value
-- one or 2 strings.
+We do not need a special flag to know if we are dealing with an array,
+as we can get that data from ratio between element length and the data
+size, however we do need a flag to know whether the data is stored
+directly inside property_entry or separately.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/base/swnode.c    |  9 +++++----
+ include/linux/property.h | 12 +++++++-----
+ 2 files changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index ae4b24ee2a54..546fc1b20095 100644
+index 8826c9040c80..ae4b24ee2a54 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -277,6 +277,16 @@ static int property_entry_copy_data(struct property_entry *dst,
+@@ -108,7 +108,7 @@ static const void *property_get_pointer(const struct property_entry *prop)
+ 	if (!prop->length)
+ 		return NULL;
+ 
+-	if (prop->is_array)
++	if (!prop->is_inline)
+ 		return prop->pointer;
+ 
+ 	return &prop->value;
+@@ -205,7 +205,7 @@ static void property_entry_free_data(const struct property_entry *p)
+ 	const char * const *src_str;
+ 	size_t i, nval;
+ 
+-	if (p->is_array) {
++	if (!p->is_inline) {
+ 		if (p->type == DEV_PROP_STRING && p->pointer) {
+ 			src_str = p->pointer;
+ 			nval = p->length / sizeof(const char *);
+@@ -250,7 +250,7 @@ static int property_entry_copy_data(struct property_entry *dst,
+ 	const void *pointer = property_get_pointer(src);
+ 	const void *new;
+ 
+-	if (src->is_array) {
++	if (!src->is_inline) {
+ 		if (!src->length)
+ 			return -ENODATA;
+ 
+@@ -264,15 +264,16 @@ static int property_entry_copy_data(struct property_entry *dst,
+ 				return -ENOMEM;
+ 		}
+ 
+-		dst->is_array = true;
+ 		dst->pointer = new;
+ 	} else if (src->type == DEV_PROP_STRING) {
+ 		new = kstrdup(src->value.str, GFP_KERNEL);
+ 		if (!new && src->value.str)
+ 			return -ENOMEM;
+ 
++		dst->is_inline = true;
+ 		dst->value.str = new;
+ 	} else {
++		dst->is_inline = true;
  		dst->value = src->value;
  	}
  
-+	if (!dst->is_inline && dst->length <= sizeof(dst->value)) {
-+		/* We have an opportunity to move the data inline */
-+		const void *tmp = dst->pointer;
-+
-+		memcpy(&dst->value, tmp, dst->length);
-+		dst->is_inline = true;
-+
-+		kfree(tmp);
-+	}
-+
- 	dst->length = src->length;
- 	dst->type = src->type;
- 	dst->name = kstrdup(src->name, GFP_KERNEL);
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 238e1507925f..ac7823d58cfe 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -222,15 +222,17 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
+  * struct property_entry - "Built-in" device property representation.
+  * @name: Name of the property.
+  * @length: Length of data making up the value.
+- * @is_array: True when the property is an array.
++ * @is_inline: True when the property value is stored directly in
++ *     &struct property_entry instance.
+  * @type: Type of the data in unions.
+- * @pointer: Pointer to the property (an array of items of the given type).
+- * @value: Value of the property (when it is a single item of the given type).
++ * @pointer: Pointer to the property when it is stored separately from
++ *     the &struct property_entry instance.
++ * @value: Value of the property when it is stored inline.
+  */
+ struct property_entry {
+ 	const char *name;
+ 	size_t length;
+-	bool is_array;
++	bool is_inline;
+ 	enum dev_prop_type type;
+ 	union {
+ 		const void *pointer;
+@@ -257,7 +259,6 @@ struct property_entry {
+ (struct property_entry) {						\
+ 	.name = _name_,							\
+ 	.length = (_len_) * __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),	\
+-	.is_array = true,						\
+ 	.type = DEV_PROP_##_Type_,					\
+ 	{ .pointer = _val_ },						\
+ }
+@@ -288,6 +289,7 @@ struct property_entry {
+ (struct property_entry) {						\
+ 	.name = _name_,							\
+ 	.length = __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),		\
++	.is_inline = true,						\
+ 	.type = DEV_PROP_##_Type_,					\
+ 	{ .value = { ._elem_ = _val_ } },				\
+ }
 -- 
 2.23.0.700.g56cf767bdb-goog
