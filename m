@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v5 03/14] efi/apple-properties: use PROPERTY_ENTRY_U8_ARRAY_LEN
-Date: Fri, 11 Oct 2019 16:07:10 -0700
-Message-ID: <20191011230721.206646-4-dmitry.torokhov@gmail.com>
+Subject: [PATCH v5 05/14] software node: clean up property_copy_string_array()
+Date: Fri, 11 Oct 2019 16:07:12 -0700
+Message-ID: <20191011230721.206646-6-dmitry.torokhov@gmail.com>
 References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,52 +12,77 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Let's switch to using PROPERTY_ENTRY_U8_ARRAY_LEN() to initialize
-property entries. Also, when dumping data, rely on local variables
-instead of poking into the property entry structure directly.
+Because property_copy_string_array() stores the newly allocated pointer in the
+destination property, we have an awkward code in property_entry_copy_data()
+where we fetch the new pointer from dst.
+
+Let's change property_copy_string_array() to return pointer and rely on the
+common path in property_entry_copy_data() to store it in destination structure.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/firmware/efi/apple-properties.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ drivers/base/swnode.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/firmware/efi/apple-properties.c b/drivers/firmware/efi/apple-properties.c
-index 0e206c9e0d7a..5ccf39986a14 100644
---- a/drivers/firmware/efi/apple-properties.c
-+++ b/drivers/firmware/efi/apple-properties.c
-@@ -53,7 +53,8 @@ static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index a1f3f0994f9f..2f2248c9003c 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -337,8 +337,8 @@ static void property_entry_free_data(const struct property_entry *p)
+ 	kfree(p->name);
+ }
  
- 	for (i = 0; i < dev_header->prop_count; i++) {
- 		int remaining = dev_header->len - (ptr - (void *)dev_header);
--		u32 key_len, val_len;
-+		u32 key_len, val_len, entry_len;
-+		const u8 *entry_data;
- 		char *key;
+-static int property_copy_string_array(struct property_entry *dst,
+-				      const struct property_entry *src)
++static const char * const *
++property_copy_string_array(const struct property_entry *src)
+ {
+ 	const char **d;
+ 	size_t nval = src->length / sizeof(*d);
+@@ -346,7 +346,7 @@ static int property_copy_string_array(struct property_entry *dst,
  
- 		if (sizeof(key_len) > remaining)
-@@ -85,17 +86,14 @@ static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
- 		ucs2_as_utf8(key, ptr + sizeof(key_len),
- 			     key_len - sizeof(key_len));
+ 	d = kcalloc(nval, sizeof(*d), GFP_KERNEL);
+ 	if (!d)
+-		return -ENOMEM;
++		return NULL;
  
--		entry[i].name = key;
--		entry[i].length = val_len - sizeof(val_len);
--		entry[i].is_array = !!entry[i].length;
--		entry[i].type = DEV_PROP_U8;
--		entry[i].pointer.u8_data = ptr + key_len + sizeof(val_len);
--
-+		entry_data = ptr + key_len + sizeof(val_len);
-+		entry_len = val_len - sizeof(val_len);
-+		entry[i] = PROPERTY_ENTRY_U8_ARRAY_LEN(key, entry_data,
-+						       entry_len);
- 		if (dump_properties) {
--			dev_info(dev, "property: %s\n", entry[i].name);
-+			dev_info(dev, "property: %s\n", key);
- 			print_hex_dump(KERN_INFO, pr_fmt(), DUMP_PREFIX_OFFSET,
--				16, 1, entry[i].pointer.u8_data,
--				entry[i].length, true);
-+				16, 1, entry_data, entry_len, true);
+ 	for (i = 0; i < nval; i++) {
+ 		d[i] = kstrdup(src->pointer.str[i], GFP_KERNEL);
+@@ -354,12 +354,11 @@ static int property_copy_string_array(struct property_entry *dst,
+ 			while (--i >= 0)
+ 				kfree(d[i]);
+ 			kfree(d);
+-			return -ENOMEM;
++			return NULL;
  		}
+ 	}
  
- 		ptr += key_len + val_len;
+-	dst->pointer.str = d;
+-	return 0;
++	return d;
+ }
+ 
+ static int property_entry_copy_data(struct property_entry *dst,
+@@ -367,17 +366,15 @@ static int property_entry_copy_data(struct property_entry *dst,
+ {
+ 	const void *pointer = property_get_pointer(src);
+ 	const void *new;
+-	int error;
+ 
+ 	if (src->is_array) {
+ 		if (!src->length)
+ 			return -ENODATA;
+ 
+ 		if (src->type == DEV_PROP_STRING) {
+-			error = property_copy_string_array(dst, src);
+-			if (error)
+-				return error;
+-			new = dst->pointer.str;
++			new = property_copy_string_array(src);
++			if (!new)
++				return -ENOMEM;
+ 		} else {
+ 			new = kmemdup(pointer, src->length, GFP_KERNEL);
+ 			if (!new)
 -- 
 2.23.0.700.g56cf767bdb-goog
