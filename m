@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v5 05/14] software node: clean up property_copy_string_array()
-Date: Fri, 11 Oct 2019 16:07:12 -0700
-Message-ID: <20191011230721.206646-6-dmitry.torokhov@gmail.com>
+Subject: [PATCH v5 04/14] software node: mark internal macros with double underscores
+Date: Fri, 11 Oct 2019 16:07:11 -0700
+Message-ID: <20191011230721.206646-5-dmitry.torokhov@gmail.com>
 References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,77 +12,71 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Because property_copy_string_array() stores the newly allocated pointer in the
-destination property, we have an awkward code in property_entry_copy_data()
-where we fetch the new pointer from dst.
-
-Let's change property_copy_string_array() to return pointer and rely on the
-common path in property_entry_copy_data() to store it in destination structure.
+Let's mark PROPERTY_ENTRY_* macros that are internal with double leading
+underscores so users are not tempted to use them.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ include/linux/property.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index a1f3f0994f9f..2f2248c9003c 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -337,8 +337,8 @@ static void property_entry_free_data(const struct property_entry *p)
- 	kfree(p->name);
+diff --git a/include/linux/property.h b/include/linux/property.h
+index f89b930ca4b7..2c9d4d209296 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -256,7 +256,7 @@ struct property_entry {
+  * and structs.
+  */
+ 
+-#define PROPERTY_ENTRY_ARRAY_LEN(_name_, _type_, _Type_, _val_, _len_)	\
++#define __PROPERTY_ENTRY_ARRAY_LEN(_name_, _type_, _Type_, _val_, _len_)\
+ (struct property_entry) {						\
+ 	.name = _name_,							\
+ 	.length = (_len_) * sizeof(_type_),				\
+@@ -266,13 +266,13 @@ struct property_entry {
  }
  
--static int property_copy_string_array(struct property_entry *dst,
--				      const struct property_entry *src)
-+static const char * const *
-+property_copy_string_array(const struct property_entry *src)
- {
- 	const char **d;
- 	size_t nval = src->length / sizeof(*d);
-@@ -346,7 +346,7 @@ static int property_copy_string_array(struct property_entry *dst,
+ #define PROPERTY_ENTRY_U8_ARRAY_LEN(_name_, _val_, _len_)		\
+-	PROPERTY_ENTRY_ARRAY_LEN(_name_, u8, U8, _val_, _len_)
++	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u8, U8, _val_, _len_)
+ #define PROPERTY_ENTRY_U16_ARRAY_LEN(_name_, _val_, _len_)		\
+-	PROPERTY_ENTRY_ARRAY_LEN(_name_, u16, U16, _val_, _len_)
++	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u16, U16, _val_, _len_)
+ #define PROPERTY_ENTRY_U32_ARRAY_LEN(_name_, _val_, _len_)		\
+-	PROPERTY_ENTRY_ARRAY_LEN(_name_, u32, U32, _val_, _len_)
++	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u32, U32, _val_, _len_)
+ #define PROPERTY_ENTRY_U64_ARRAY_LEN(_name_, _val_, _len_)		\
+-	PROPERTY_ENTRY_ARRAY_LEN(_name_, u64, U64, _val_, _len_)
++	__PROPERTY_ENTRY_ARRAY_LEN(_name_, u64, U64, _val_, _len_)
  
- 	d = kcalloc(nval, sizeof(*d), GFP_KERNEL);
- 	if (!d)
--		return -ENOMEM;
-+		return NULL;
+ #define PROPERTY_ENTRY_STRING_ARRAY_LEN(_name_, _val_, _len_)		\
+ (struct property_entry) {						\
+@@ -294,7 +294,7 @@ struct property_entry {
+ #define PROPERTY_ENTRY_STRING_ARRAY(_name_, _val_)			\
+ 	PROPERTY_ENTRY_STRING_ARRAY_LEN(_name_, _val_, ARRAY_SIZE(_val_))
  
- 	for (i = 0; i < nval; i++) {
- 		d[i] = kstrdup(src->pointer.str[i], GFP_KERNEL);
-@@ -354,12 +354,11 @@ static int property_copy_string_array(struct property_entry *dst,
- 			while (--i >= 0)
- 				kfree(d[i]);
- 			kfree(d);
--			return -ENOMEM;
-+			return NULL;
- 		}
- 	}
- 
--	dst->pointer.str = d;
--	return 0;
-+	return d;
+-#define PROPERTY_ENTRY_INTEGER(_name_, _type_, _Type_, _val_)	\
++#define __PROPERTY_ENTRY_INTEGER(_name_, _type_, _Type_, _val_)	\
+ (struct property_entry) {					\
+ 	.name = _name_,						\
+ 	.length = sizeof(_type_),				\
+@@ -303,13 +303,13 @@ struct property_entry {
  }
  
- static int property_entry_copy_data(struct property_entry *dst,
-@@ -367,17 +366,15 @@ static int property_entry_copy_data(struct property_entry *dst,
- {
- 	const void *pointer = property_get_pointer(src);
- 	const void *new;
--	int error;
+ #define PROPERTY_ENTRY_U8(_name_, _val_)		\
+-	PROPERTY_ENTRY_INTEGER(_name_, u8, U8, _val_)
++	__PROPERTY_ENTRY_INTEGER(_name_, u8, U8, _val_)
+ #define PROPERTY_ENTRY_U16(_name_, _val_)		\
+-	PROPERTY_ENTRY_INTEGER(_name_, u16, U16, _val_)
++	__PROPERTY_ENTRY_INTEGER(_name_, u16, U16, _val_)
+ #define PROPERTY_ENTRY_U32(_name_, _val_)		\
+-	PROPERTY_ENTRY_INTEGER(_name_, u32, U32, _val_)
++	__PROPERTY_ENTRY_INTEGER(_name_, u32, U32, _val_)
+ #define PROPERTY_ENTRY_U64(_name_, _val_)		\
+-	PROPERTY_ENTRY_INTEGER(_name_, u64, U64, _val_)
++	__PROPERTY_ENTRY_INTEGER(_name_, u64, U64, _val_)
  
- 	if (src->is_array) {
- 		if (!src->length)
- 			return -ENODATA;
- 
- 		if (src->type == DEV_PROP_STRING) {
--			error = property_copy_string_array(dst, src);
--			if (error)
--				return error;
--			new = dst->pointer.str;
-+			new = property_copy_string_array(src);
-+			if (!new)
-+				return -ENOMEM;
- 		} else {
- 			new = kmemdup(pointer, src->length, GFP_KERNEL);
- 			if (!new)
+ #define PROPERTY_ENTRY_STRING(_name_, _val_)		\
+ (struct property_entry) {				\
 -- 
 2.23.0.700.g56cf767bdb-goog
