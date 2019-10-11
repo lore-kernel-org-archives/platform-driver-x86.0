@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v5 14/14] software node: remove separate handling of references
-Date: Fri, 11 Oct 2019 16:07:21 -0700
-Message-ID: <20191011230721.206646-15-dmitry.torokhov@gmail.com>
+Subject: [PATCH v5 09/14] software node: simplify property_entry_read_string_array()
+Date: Fri, 11 Oct 2019 16:07:16 -0700
+Message-ID: <20191011230721.206646-10-dmitry.torokhov@gmail.com>
 References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,126 +12,53 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Now that all users of references have moved to reference properties,
-we can remove separate handling of references.
+There is no need to treat string arrays and single strings separately, we can go
+exclusively by the element length in relation to data type size.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c    | 46 +++++++++++++++-------------------------
- include/linux/property.h | 14 ------------
- 2 files changed, 17 insertions(+), 43 deletions(-)
+ drivers/base/swnode.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index a5b592a4e956..4cb62cd105db 100644
+index b11cc4dbff08..8826c9040c80 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -465,9 +465,8 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 				 struct fwnode_reference_args *args)
+@@ -173,28 +173,21 @@ static int property_entry_read_string_array(const struct property_entry *props,
+ 					    const char *propname,
+ 					    const char **strings, size_t nval)
  {
- 	struct swnode *swnode = to_swnode(fwnode);
--	const struct software_node_reference *ref;
- 	const struct software_node_ref_args *ref_array;
--	const struct software_node_ref_args *ref_args;
-+	const struct software_node_ref_args *ref;
- 	const struct property_entry *prop;
- 	struct fwnode_handle *refnode;
- 	int i;
-@@ -476,37 +475,26 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 		return -ENOENT;
+-	const struct property_entry *prop;
+ 	const void *pointer;
+-	size_t array_len, length;
++	size_t length;
++	int array_len;
  
- 	prop = property_entry_get(swnode->node->properties, propname);
--	if (prop) {
--		if (prop->type != DEV_PROP_REF)
--			return -EINVAL;
+ 	/* Find out the array length. */
+-	prop = property_entry_get(props, propname);
+-	if (!prop)
+-		return -EINVAL;
 -
--		/*
--		 * We expect that references are never stored inline, even
--		 * single ones, as they are too big.
--		 */
--		if (prop->is_inline)
--			return -EINVAL;
--
--		if (index * sizeof(*ref_args) >= prop->length)
--			return -ENOENT;
-+	if (!prop)
-+		return -ENOENT;
+-	if (prop->is_array)
+-		/* Find the length of an array. */
+-		array_len = property_entry_count_elems_of_size(props, propname,
+-							  sizeof(const char *));
+-	else
+-		/* The array length for a non-array string property is 1. */
+-		array_len = 1;
++	array_len = property_entry_count_elems_of_size(props, propname,
++						       sizeof(const char *));
++	if (array_len < 0)
++		return array_len;
  
--		ref_array = prop->pointer;
--		ref_args = &ref_array[index];
--	} else {
--		if (!swnode->node->references)
--			return -ENOENT;
-+	if (prop->type != DEV_PROP_REF)
-+		return -EINVAL;
+ 	/* Return how many there are if strings is NULL. */
+ 	if (!strings)
+ 		return array_len;
  
--		for (ref = swnode->node->references; ref->name; ref++)
--			if (!strcmp(ref->name, propname))
--				break;
-+	/*
-+	 * We expect that references are never stored inline, even
-+	 * single ones, as they are too big.
-+	 */
-+	if (prop->is_inline)
-+		return -EINVAL;
+-	array_len = min(nval, array_len);
++	array_len = min_t(size_t, nval, array_len);
+ 	length = array_len * sizeof(*strings);
  
--		if (!ref->name || index > (ref->nrefs - 1))
--			return -ENOENT;
-+	if (index * sizeof(*ref) >= prop->length)
-+		return -ENOENT;
- 
--		ref_args = &ref->refs[index];
--	}
-+	ref_array = prop->pointer;
-+	ref = &ref_array[index];
- 
--	refnode = software_node_fwnode(ref_args->node);
-+	refnode = software_node_fwnode(ref->node);
- 	if (!refnode)
- 		return -ENOENT;
- 
-@@ -525,7 +513,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 	args->nargs = nargs;
- 
- 	for (i = 0; i < nargs; i++)
--		args->args[i] = ref_args->args[i];
-+		args->args[i] = ref->args[i];
- 
- 	return 0;
- }
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 08d3e9d126ef..fa5a2ddc0c7b 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -412,30 +412,16 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
- /* -------------------------------------------------------------------------- */
- /* Software fwnode support - when HW description is incomplete or missing */
- 
--/**
-- * struct software_node_reference - Named software node reference property
-- * @name: Name of the property
-- * @nrefs: Number of elements in @refs array
-- * @refs: Array of references with optional arguments
-- */
--struct software_node_reference {
--	const char *name;
--	unsigned int nrefs;
--	const struct software_node_ref_args *refs;
--};
--
- /**
-  * struct software_node - Software node description
-  * @name: Name of the software node
-  * @parent: Parent of the software node
-  * @properties: Array of device properties
-- * @references: Array of software node reference properties
-  */
- struct software_node {
- 	const char *name;
- 	const struct software_node *parent;
- 	const struct property_entry *properties;
--	const struct software_node_reference *references;
- };
- 
- bool is_software_node(const struct fwnode_handle *fwnode);
+ 	pointer = property_entry_find(props, propname, length);
 -- 
 2.23.0.700.g56cf767bdb-goog
