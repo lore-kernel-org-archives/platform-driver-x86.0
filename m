@@ -1,104 +1,52 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/4] docs: admin-guide: Move Dell RBU document from driver-api
-Date: Sun, 13 Oct 2019 09:23:42 +0300
-Message-ID: <CAHp75VfJLDd315SUx+s6WN6-mp-gUSZmhDbydU91_oe0pLbYwg@mail.gmail.com>
-References: <20191012171114.6589-1-j.neuschaefer@gmx.net> <20191012171114.6589-2-j.neuschaefer@gmx.net>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 10/14] software node: rename is_array to is_inline
+Date: Mon, 14 Oct 2019 10:37:20 +0300
+Message-ID: <20191014073720.GH32742@smile.fi.intel.com>
+References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
+ <20191011230721.206646-11-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191012171114.6589-2-j.neuschaefer@gmx.net>
+Content-Disposition: inline
+In-Reply-To: <20191011230721.206646-11-dmitry.torokhov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc: Linux Documentation List <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Stuart Hayes <stuart.w.hayes@gmail.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Logan Gunthorpe <logang@deltatee.com>, Cornelia Huck <cohuck@redhat.com>, "Darrick J. Wong" <darrick.wong@oracle.com>, Shobhit Kukreti <shobhitkukreti@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Sinan Kaya <okaya@kernel.org>, Takashi Iwai <tiwai@suse.de>, Ayman Bagabas <ayman.bagabas@gmail.com>, Matan Ziv-Av <matan@svgalib.org>, Hans de Goede <hdegoede@redhat.com>, Enrico Weigelt, metux IT consul
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Oct 12, 2019 at 8:17 PM Jonathan Neusch=C3=A4fer
-<j.neuschaefer@gmx.net> wrote:
->
-> This document describes how an admin can use the dell_rbu driver, rather
-> than any in-kernel API details.
+On Fri, Oct 11, 2019 at 04:07:17PM -0700, Dmitry Torokhov wrote:
+> We do not need a special flag to know if we are dealing with an array,
+> as we can get that data from ratio between element length and the data
+> size, however we do need a flag to know whether the data is stored
+> directly inside property_entry or separately.
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> -	if (prop->is_array)
+> +	if (!prop->is_inline)
 
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> ---
->  Documentation/{driver-api =3D> admin-guide}/dell_rbu.rst | 0
->  Documentation/admin-guide/index.rst                    | 1 +
->  Documentation/driver-api/index.rst                     | 1 -
->  drivers/platform/x86/Kconfig                           | 2 +-
->  drivers/platform/x86/dell_rbu.c                        | 2 +-
->  5 files changed, 3 insertions(+), 3 deletions(-)
->  rename Documentation/{driver-api =3D> admin-guide}/dell_rbu.rst (100%)
->
-> diff --git a/Documentation/driver-api/dell_rbu.rst b/Documentation/admin-=
-guide/dell_rbu.rst
-> similarity index 100%
-> rename from Documentation/driver-api/dell_rbu.rst
-> rename to Documentation/admin-guide/dell_rbu.rst
-> diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-gu=
-ide/index.rst
-> index 545ea26364b7..4405b7485312 100644
-> --- a/Documentation/admin-guide/index.rst
-> +++ b/Documentation/admin-guide/index.rst
-> @@ -72,6 +72,7 @@ configure specific aspects of kernel behavior to your l=
-iking.
->     clearing-warn-once
->     cpu-load
->     cputopology
-> +   dell_rbu
->     device-mapper/index
->     efi-stub
->     ext4
-> diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-ap=
-i/index.rst
-> index 2b3b6949381e..6a3ac50f51f0 100644
-> --- a/Documentation/driver-api/index.rst
-> +++ b/Documentation/driver-api/index.rst
-> @@ -72,7 +72,6 @@ available subsections can be seen below.
->     connector
->     console
->     dcdbas
-> -   dell_rbu
->     edid
->     eisa
->     ipmb
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index ae21d08c65e8..a890f47fbeec 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -259,7 +259,7 @@ config DELL_RBU
->          DELL system. Note you need a Dell OpenManage or Dell Update pack=
-age (DUP)
->          supporting application to communicate with the BIOS regarding th=
-e new
->          image for the image update to take effect.
-> -        See <file:Documentation/driver-api/dell_rbu.rst> for more detail=
-s on the driver.
-> +        See <file:Documentation/admin-guide/dell_rbu.rst> for more detai=
-ls on the driver.
->
->
->  config FUJITSU_LAPTOP
-> diff --git a/drivers/platform/x86/dell_rbu.c b/drivers/platform/x86/dell_=
-rbu.c
-> index 3691391fea6b..7d5453326b43 100644
-> --- a/drivers/platform/x86/dell_rbu.c
-> +++ b/drivers/platform/x86/dell_rbu.c
-> @@ -24,7 +24,7 @@
->   * on every time the packet data is written. This driver requires an
->   * application to break the BIOS image in to fixed sized packet chunks.
->   *
-> - * See Documentation/driver-api/dell_rbu.rst for more info.
-> + * See Documentation/admin-guide/dell_rbu.rst for more info.
->   */
->  #include <linux/init.h>
->  #include <linux/module.h>
-> --
-> 2.20.1
->
+> -	if (p->is_array) {
+> +	if (!p->is_inline) {
 
+> -	if (src->is_array) {
+> +	if (!src->is_inline) {
 
---=20
+May we have positive conditionals instead?
+
+> + * @is_inline: True when the property value is stored directly in
+
+I think word 'directly' is superfluous here.
+Or, perhaps, 'stored directly' -> 'embedded'
+
+> + *     &struct property_entry instance.
+
+> + * @pointer: Pointer to the property when it is stored separately from
+> + *     the &struct property_entry instance.
+
+'separately from' -> 'outside' ?
+
+> + * @value: Value of the property when it is stored inline.
+
+'stored inline' -> 'embedded in the &struct...' ?
+
+-- 
 With Best Regards,
 Andy Shevchenko
