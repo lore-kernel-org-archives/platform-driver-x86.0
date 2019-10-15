@@ -1,47 +1,47 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 11/14] software node: move small properties inline
- when copying
-Date: Tue, 15 Oct 2019 15:20:28 +0300
-Message-ID: <20191015122028.GI32742@smile.fi.intel.com>
-References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
- <20191011230721.206646-12-dmitry.torokhov@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] platform/x86: huawei-wmi: make validation stricter in
+ huawei_wmi_battery_set()
+Date: Tue, 15 Oct 2019 15:46:23 +0300
+Message-ID: <20191015124623.GF21344@kadam>
+References: <20191015083837.GA29104@mwanda>
+ <CAB3uXr63uUwxBjkeeoftZ6HYm_hmN+E5EUhu15_Mta2qruOugA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191011230721.206646-12-dmitry.torokhov@gmail.com>
+In-Reply-To: <CAB3uXr63uUwxBjkeeoftZ6HYm_hmN+E5EUhu15_Mta2qruOugA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Ayman Bagabas <ayman.bagabas@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Takashi Iwai <tiwai@suse.de>, Mattias Jacobsson <2pi@mok.nu>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Oct 11, 2019 at 04:07:18PM -0700, Dmitry Torokhov wrote:
-> When copying/duplicating set of properties, move smaller properties that
-> were stored separately directly inside property entry structures. We can
-> move:
+On Tue, Oct 15, 2019 at 08:21:59AM -0400, Ayman Bagabas wrote:
+> Hi Dan
 > 
-> - up to 8 bytes from U8 arrays
-> - up to 4 words
-> - up to 2 double words
-> - one U64 value
-> - one or 2 strings.
+> On Tue, Oct 15, 2019, 4:39 AM Dan Carpenter <dan.carpenter@oracle.com>
+> wrote:
+> 
+> > I don't think it makes sense for "end" to be negative or for even for it
+> > to be less than "start".  That also means that "start" can't be more
+> > than 100 which is good.
+> >
+> 
+> While this makes sense, you run into issues where you cannot set "start"
+> before "end" and vice versa.
+> 
+> Take this scenario, you have start=70 and end=90, now you want to set these
+> to start=40 and end=60, you would have to set "start" first before you can
+> change the value of "end" otherwise you will run into EINVAL. Now imagine
+> you wanna go the opposite direction, you would have to set "end" before you
+> can change "start".
+> I think having a little wiggle room is fine for such scenarios.
+> 
 
-Can you show where you extract such values?
+I haven't tested this code...  What you're describing sounds really
+very weird to me, but I will accept that you know more about your
+use cases than I do.
 
-> +	if (!dst->is_inline && dst->length <= sizeof(dst->value)) {
-> +		/* We have an opportunity to move the data inline */
-> +		const void *tmp = dst->pointer;
-> +
+My other concern is that right now you can set start > 100 or end < 0.
 
-> +		memcpy(&dst->value, tmp, dst->length);
-
-...because this is strange trick.
-
-> +		dst->is_inline = true;
-> +
-> +		kfree(tmp);
-> +	}
-
--- 
-With Best Regards,
-Andy Shevchenko
+regards,
+dan carpenter
