@@ -1,87 +1,70 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v5 10/14] software node: rename is_array to is_inline
-Date: Wed, 16 Oct 2019 09:54:30 -0700
-Message-ID: <20191016165430.GD35946@dtor-ws>
+Subject: Re: [PATCH v5 05/14] software node: clean up
+ property_copy_string_array()
+Date: Wed, 16 Oct 2019 10:00:59 -0700
+Message-ID: <20191016170059.GE35946@dtor-ws>
 References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
- <20191011230721.206646-11-dmitry.torokhov@gmail.com>
- <20191014073720.GH32742@smile.fi.intel.com>
- <20191015182206.GF105649@dtor-ws>
- <20191016075940.GP32742@smile.fi.intel.com>
+ <20191011230721.206646-6-dmitry.torokhov@gmail.com>
+ <20191015120726.GG32742@smile.fi.intel.com>
+ <20191015181211.GD105649@dtor-ws>
+ <20191016075300.GO32742@smile.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191016075940.GP32742@smile.fi.intel.com>
+In-Reply-To: <20191016075300.GO32742@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Oct 16, 2019 at 10:59:40AM +0300, Andy Shevchenko wrote:
-> On Tue, Oct 15, 2019 at 11:22:06AM -0700, Dmitry Torokhov wrote:
-> > On Mon, Oct 14, 2019 at 10:37:20AM +0300, Andy Shevchenko wrote:
-> > > On Fri, Oct 11, 2019 at 04:07:17PM -0700, Dmitry Torokhov wrote:
-> > > > We do not need a special flag to know if we are dealing with an array,
-> > > > as we can get that data from ratio between element length and the data
-> > > > size, however we do need a flag to know whether the data is stored
-> > > > directly inside property_entry or separately.
+On Wed, Oct 16, 2019 at 10:53:00AM +0300, Andy Shevchenko wrote:
+> On Tue, Oct 15, 2019 at 11:12:11AM -0700, Dmitry Torokhov wrote:
+> > On Tue, Oct 15, 2019 at 03:07:26PM +0300, Andy Shevchenko wrote:
+> > > On Fri, Oct 11, 2019 at 04:07:12PM -0700, Dmitry Torokhov wrote:
+> > > > Because property_copy_string_array() stores the newly allocated pointer in the
+> > > > destination property, we have an awkward code in property_entry_copy_data()
+> > > > where we fetch the new pointer from dst.
 > > > 
-> > > > -	if (prop->is_array)
-> > > > +	if (!prop->is_inline)
+> > > I don't see a problem in this function.
 > > > 
-> > > > -	if (p->is_array) {
-> > > > +	if (!p->is_inline) {
-> > > 
-> > > > -	if (src->is_array) {
-> > > > +	if (!src->is_inline) {
-> > > 
-> > > May we have positive conditionals instead?
+> > > Rather 'awkward code' is a result of use property_set_pointer() which relies on
+> > > data type.
 > > 
-> > I was trying to limit the context churn. I can definitely change
-> > property_get_pointer(), but the other 2 I think are better in the
-> > current form.
-> > 
-> > > 
-> > > > + * @is_inline: True when the property value is stored directly in
-> > > 
-> > > I think word 'directly' is superfluous here.
-> > > Or, perhaps, 'stored directly' -> 'embedded'
-> > 
-> > I'm OK with "embedded".
-> > 
-> > > 
-> > > > + *     &struct property_entry instance.
-> > > 
-> > > > + * @pointer: Pointer to the property when it is stored separately from
-> > > > + *     the &struct property_entry instance.
-> > > 
-> > > 'separately from' -> 'outside' ?
-> > 
-> > Umm, I think I prefer "separately" actually.
-> > 
-> > > 
-> > > > + * @value: Value of the property when it is stored inline.
-> > > 
-> > > 'stored inline' -> 'embedded in the &struct...' ?
-> > 
-> > I was trying to have a link "stored inline" -> "is_inline".
-> > 
-> > Do we want to change the flag to be "is_embedded"?
+> > No, the awkwardness is that we set the pointer once in
+> > property_copy_string_array(), then fetch it in
+> > property_entry_copy_data() only to set it again via
+> > property_set_pointer().
 > 
-> In dictionaries I have
+> Yes, since property_set_pointer is called independently
+> on the type of the value.
+
+We still call property_set_pointer() independently of the type of the
+value even with this patch. The point is that we do not set the pointer
+in property_copy_string_array(), so we only set the pointer once.
+
+We used to have essentially for string arrays:
+
+	copy data
+	set pointer in dst
+	get pointer from dst
+	set pointer in dst
+
+With this patch we have:
+
+	copy data
+	set pointer in dst
+
 > 
-> embedded <-> unilateral
+> 
+> > This is confising and awkward and I believe it
+> > is cleaner for property_copy_string_array() to give a pointer to a copy
+> > of a string array, and then property_entry_copy_data() use it when
+> > handling the destination structure.
+> 
+> We probably need a 3rd opinion here.
 
-Are you trying to show synonym or antonym here? But I am pretty sure
-"unilateral" is either.
-
-Antonyms for our use of "embedded" are likely "detached" or
-"disconnected".
-
-> inline <-> ???
-
-"out of line" but I still believe "stored separately" explains precisely
-what we have here.
+I think I can still convince you ;)
 
 Thanks.
 
