@@ -1,60 +1,87 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v5 11/14] software node: move small properties inline
- when copying
-Date: Wed, 16 Oct 2019 09:44:50 -0700
-Message-ID: <20191016164450.GC35946@dtor-ws>
+Subject: Re: [PATCH v5 10/14] software node: rename is_array to is_inline
+Date: Wed, 16 Oct 2019 09:54:30 -0700
+Message-ID: <20191016165430.GD35946@dtor-ws>
 References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
- <20191011230721.206646-12-dmitry.torokhov@gmail.com>
- <20191015122028.GI32742@smile.fi.intel.com>
- <20191015182553.GG105649@dtor-ws>
- <20191016074857.GN32742@smile.fi.intel.com>
- <20191016160126.GB35946@dtor-ws>
- <20191016161845.GX32742@smile.fi.intel.com>
- <20191016162308.GY32742@smile.fi.intel.com>
+ <20191011230721.206646-11-dmitry.torokhov@gmail.com>
+ <20191014073720.GH32742@smile.fi.intel.com>
+ <20191015182206.GF105649@dtor-ws>
+ <20191016075940.GP32742@smile.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191016162308.GY32742@smile.fi.intel.com>
+In-Reply-To: <20191016075940.GP32742@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Oct 16, 2019 at 07:23:08PM +0300, Andy Shevchenko wrote:
-> On Wed, Oct 16, 2019 at 07:18:45PM +0300, Andy Shevchenko wrote:
-> > On Wed, Oct 16, 2019 at 09:01:26AM -0700, Dmitry Torokhov wrote:
-> > > On Wed, Oct 16, 2019 at 10:48:57AM +0300, Andy Shevchenko wrote:
-> > > > On Tue, Oct 15, 2019 at 11:25:53AM -0700, Dmitry Torokhov wrote:
+On Wed, Oct 16, 2019 at 10:59:40AM +0300, Andy Shevchenko wrote:
+> On Tue, Oct 15, 2019 at 11:22:06AM -0700, Dmitry Torokhov wrote:
+> > On Mon, Oct 14, 2019 at 10:37:20AM +0300, Andy Shevchenko wrote:
+> > > On Fri, Oct 11, 2019 at 04:07:17PM -0700, Dmitry Torokhov wrote:
+> > > > We do not need a special flag to know if we are dealing with an array,
+> > > > as we can get that data from ratio between element length and the data
+> > > > size, however we do need a flag to know whether the data is stored
+> > > > directly inside property_entry or separately.
+> > > 
+> > > > -	if (prop->is_array)
+> > > > +	if (!prop->is_inline)
+> > > 
+> > > > -	if (p->is_array) {
+> > > > +	if (!p->is_inline) {
+> > > 
+> > > > -	if (src->is_array) {
+> > > > +	if (!src->is_inline) {
+> > > 
+> > > May we have positive conditionals instead?
 > > 
-> > > > You store a value as union, but going to read as a member of union?
-> > > > I'm pretty sure it breaks standard rules.
-> > > 
-> > > No, I move the values _in place_ of the union, and the data is always
-> > > fetched via void pointers. And copying data via char * or memcpy() is
-> > > allowed even in C99 and C11.
-> > > 
-> > > But I am wondering why are we actually worrying about all of this? The
-> > > kernel is gnu89 and I think is going to stay this way because we use
-> > > initializers with a cast in a lot of places:
-> > > 
-> > > #define __RAW_SPIN_LOCK_UNLOCKED(lockname)      \
-> > >         (raw_spinlock_t) __RAW_SPIN_LOCK_INITIALIZER(lockname)
-> > > 
-> > > and C99 and gnu99 do not allow this. See
-> > > https://lore.kernel.org/lkml/20141019231031.GB9319@node.dhcp.inet.fi/
+> > I was trying to limit the context churn. I can definitely change
+> > property_get_pointer(), but the other 2 I think are better in the
+> > current form.
 > > 
-> > This is simple not a cast.
+> > > 
+> > > > + * @is_inline: True when the property value is stored directly in
+> > > 
+> > > I think word 'directly' is superfluous here.
+> > > Or, perhaps, 'stored directly' -> 'embedded'
+> > 
+> > I'm OK with "embedded".
+> > 
+> > > 
+> > > > + *     &struct property_entry instance.
+> > > 
+> > > > + * @pointer: Pointer to the property when it is stored separately from
+> > > > + *     the &struct property_entry instance.
+> > > 
+> > > 'separately from' -> 'outside' ?
+> > 
+> > Umm, I think I prefer "separately" actually.
+> > 
+> > > 
+> > > > + * @value: Value of the property when it is stored inline.
+> > > 
+> > > 'stored inline' -> 'embedded in the &struct...' ?
+> > 
+> > I was trying to have a link "stored inline" -> "is_inline".
+> > 
+> > Do we want to change the flag to be "is_embedded"?
 > 
-> 4.62 Compound literals in C99
-> ISO C99 supports compound literals. A compound literal looks like a cast
-> followed by an initializer. Its value is an object of the type specified in the
-> cast, containing the elements specified in the initializer. It is an lvalue.
+> In dictionaries I have
+> 
+> embedded <-> unilateral
 
-Yes, these are compound literals. And they can not be used as
-initializers:
+Are you trying to show synonym or antonym here? But I am pretty sure
+"unilateral" is either.
 
-https://lore.kernel.org/lkml/CAHk-=wgXBV57mz46ZB5XivjiSBGkM0cjuvnU2OWyfRF=+41NPQ@mail.gmail.com/
+Antonyms for our use of "embedded" are likely "detached" or
+"disconnected".
+
+> inline <-> ???
+
+"out of line" but I still believe "stored separately" explains precisely
+what we have here.
 
 Thanks.
 
