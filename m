@@ -1,60 +1,75 @@
-From: Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH v7 0/8] efi/firmware/platform-x86: Add EFI embedded fw
- support
-Date: Wed, 16 Oct 2019 12:45:43 +0000
-Message-ID: <20191016124543.GF16384@42.do-not-panic.com>
-References: <20191004145056.43267-1-hdegoede@redhat.com>
- <20191011141036.GK16384@42.do-not-panic.com>
- <7fed4882-efa7-18d0-1ef6-9138fbdddfc4@redhat.com>
- <20191011153823.GS16384@42.do-not-panic.com>
- <20191011163819.GA1295750@kroah.com>
- <20191014092216.GA16384@42.do-not-panic.com>
- <20191014092929.GA3050866@kroah.com>
- <20191014103150.GB16384@42.do-not-panic.com>
- <20191014105754.GA34057@kroah.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 11/14] software node: move small properties inline
+ when copying
+Date: Wed, 16 Oct 2019 09:01:26 -0700
+Message-ID: <20191016160126.GB35946@dtor-ws>
+References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
+ <20191011230721.206646-12-dmitry.torokhov@gmail.com>
+ <20191015122028.GI32742@smile.fi.intel.com>
+ <20191015182553.GG105649@dtor-ws>
+ <20191016074857.GN32742@smile.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191014105754.GA34057@kroah.com>
+In-Reply-To: <20191016074857.GN32742@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Oct 14, 2019 at 12:57:54PM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Oct 14, 2019 at 10:31:50AM +0000, Luis Chamberlain wrote:
-> > On Mon, Oct 14, 2019 at 11:29:29AM +0200, Greg Kroah-Hartman wrote:
-> > > On Mon, Oct 14, 2019 at 09:22:16AM +0000, Luis Chamberlain wrote:
-> > > > On Fri, Oct 11, 2019 at 06:38:19PM +0200, Greg Kroah-Hartman wrote:
-> > > > > On Fri, Oct 11, 2019 at 03:38:23PM +0000, Luis Chamberlain wrote:
-> > > > > > On Fri, Oct 11, 2019 at 04:31:26PM +0200, Hans de Goede wrote:
-> > > > > > > Hi,
-> > > > > > > 
-> > > > > > > On 10/11/19 4:10 PM, Luis Chamberlain wrote:
-> > > > > > > > Hey Hans, thanks for staying on top of this and follow up! For some
-> > > > > > > > reason the universe conspired against your first and last patch ([1/8],
-> > > > > > > > [8/8]), and I never got them. Could you bounce these or resend in case
-> > > > > > > > others confirm they also didn't get it?
-> > > > > > > 
-> > > > > > > I have received feedback from others on the first patch, so at least
-> > > > > > > that one has reached others. I've bounced patches 1 and 8 to you.
-> > > > > > 
-> > > > > > Thanks, can you also bounce the feedback received?
-> > > > > 
-> > > > > That is what lore.kernel.org is for...
+On Wed, Oct 16, 2019 at 10:48:57AM +0300, Andy Shevchenko wrote:
+> On Tue, Oct 15, 2019 at 11:25:53AM -0700, Dmitry Torokhov wrote:
+> > On Tue, Oct 15, 2019 at 03:20:28PM +0300, Andy Shevchenko wrote:
+> > > On Fri, Oct 11, 2019 at 04:07:18PM -0700, Dmitry Torokhov wrote:
+> > > > When copying/duplicating set of properties, move smaller properties that
+> > > > were stored separately directly inside property entry structures. We can
+> > > > move:
 > > > > 
-> > > > If I have feedback on an email which I did not get I cannot easily reply to it.
+> > > > - up to 8 bytes from U8 arrays
+> > > > - up to 4 words
+> > > > - up to 2 double words
+> > > > - one U64 value
+> > > > - one or 2 strings.
 > > > 
-> > > I meant, use lore.kernel.org to download the mbox of the thread and then
-> > > use your email client to respond to whatever you need there.  This all
-> > > is public, no need to ask anyone else to bounce emails to you.
+> > > Can you show where you extract such values?
 > > 
-> > Last I looked it didn't allow you to downlaod an mbox of a thread...
+> > the "value" union's largest member is u64, which is 8 bytes. Strings are
+> > pointers, so on 32-bit arches you can stuff 2 pointers into 8 bytes,
+> > while on 64-bits you have space for only one.
+> > 
+> > > 
+> > > > +	if (!dst->is_inline && dst->length <= sizeof(dst->value)) {
+> > > > +		/* We have an opportunity to move the data inline */
+> > > > +		const void *tmp = dst->pointer;
+> > > > +
+> > > 
+> > > > +		memcpy(&dst->value, tmp, dst->length);
+> > > 
+> > > ...because this is strange trick.
+> > 
+> > Not sure what is so strange about it. You just take data that is stored
+> > separately and move it into the structure, provided that it is not too
+> > big (i.e. it does not exceed sizeof(value union) size).
 > 
-> It can, from the front page of "all" threads, or on the thread itself,
-> at the bottom of the page.  Search for "download" on the page.
+> You store a value as union, but going to read as a member of union?
+> I'm pretty sure it breaks standard rules.
 
-Sweet! <insert sound of discovering an item in Legend of Zelda>
+No, I move the values _in place_ of the union, and the data is always
+fetched via void pointers. And copying data via char * or memcpy() is
+allowed even in C99 and C11.
 
-  Luis
+But I am wondering why are we actually worrying about all of this? The
+kernel is gnu89 and I think is going to stay this way because we use
+initializers with a cast in a lot of places:
+
+#define __RAW_SPIN_LOCK_UNLOCKED(lockname)      \
+        (raw_spinlock_t) __RAW_SPIN_LOCK_INITIALIZER(lockname)
+
+and C99 and gnu99 do not allow this. See
+https://lore.kernel.org/lkml/20141019231031.GB9319@node.dhcp.inet.fi/
+
+Thanks.
+
+-- 
+Dmitry
