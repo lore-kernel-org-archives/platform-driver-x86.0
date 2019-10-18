@@ -1,63 +1,72 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v5 11/14] software node: move small properties inline
- when copying
-Date: Thu, 17 Oct 2019 09:04:36 -0700
-Message-ID: <20191017160436.GH35946@dtor-ws>
-References: <20191011230721.206646-1-dmitry.torokhov@gmail.com>
- <20191011230721.206646-12-dmitry.torokhov@gmail.com>
+From: "tip-bot2 for Jiri Slaby" <tip-bot2@linutronix.de>
+Subject: [tip: x86/asm] xen/pvh: Annotate data appropriately
+Date: Fri, 18 Oct 2019 16:30:30 -0000
+Message-ID: <157141623045.29376.2755641744903920106.tip-bot2@tip-bot2>
+References: <20191011115108.12392-15-jslaby@suse.cz>
+Reply-To: linux-kernel@vger.kernel.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191011230721.206646-12-dmitry.torokhov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
+In-Reply-To: <20191011115108.12392-15-jslaby@suse.cz>
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+To: linux-tip-commits@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>, linux-arch@vger.kernel.org, Stefano Stabellini <sstabellini@kernel.org>, xen-devel@lists.xenproject.org, Ingo Molnar <mingo@kernel.org>, x86-ml <x86@kernel.org>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Borislav Petkov <bp@suse.de>, Jiri Slaby <jslaby@suse.cz>, Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Oct 11, 2019 at 04:07:18PM -0700, Dmitry Torokhov wrote:
-> When copying/duplicating set of properties, move smaller properties that
-> were stored separately directly inside property entry structures. We can
-> move:
-> 
-> - up to 8 bytes from U8 arrays
-> - up to 4 words
-> - up to 2 double words
-> - one U64 value
-> - one or 2 strings.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/base/swnode.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index ae4b24ee2a54..546fc1b20095 100644
-> --- a/drivers/base/swnode.c
-> +++ b/drivers/base/swnode.c
-> @@ -277,6 +277,16 @@ static int property_entry_copy_data(struct property_entry *dst,
->  		dst->value = src->value;
->  	}
->  
-> +	if (!dst->is_inline && dst->length <= sizeof(dst->value)) {
-> +		/* We have an opportunity to move the data inline */
-> +		const void *tmp = dst->pointer;
-> +
-> +		memcpy(&dst->value, tmp, dst->length);
-> +		dst->is_inline = true;
-> +
-> +		kfree(tmp);
-> +	}
-
-This chunk needs to be moved to after dst->length is assigned.  I'll
-send updated version after I get more feedback.
-
-> +
->  	dst->length = src->length;
->  	dst->type = src->type;
->  	dst->name = kstrdup(src->name, GFP_KERNEL);
-
-Thanks.
-
--- 
-Dmitry
+VGhlIGZvbGxvd2luZyBjb21taXQgaGFzIGJlZW4gbWVyZ2VkIGludG8gdGhlIHg4Ni9hc20gYnJh
+bmNoIG9mIHRpcDoKCkNvbW1pdC1JRDogICAgIDFkZTViZGNlMGMzZjgyOTRkMGFhYmM0OGZiNTQ5
+NzgxNDU4OTQyMmYKR2l0d2ViOiAgICAgICAgaHR0cHM6Ly9naXQua2VybmVsLm9yZy90aXAvMWRl
+NWJkY2UwYzNmODI5NGQwYWFiYzQ4ZmI1NDk3ODE0NTg5NDIyZgpBdXRob3I6ICAgICAgICBKaXJp
+IFNsYWJ5IDxqc2xhYnlAc3VzZS5jej4KQXV0aG9yRGF0ZTogICAgRnJpLCAxMSBPY3QgMjAxOSAx
+Mzo1MDo1NCArMDI6MDAKQ29tbWl0dGVyOiAgICAgQm9yaXNsYXYgUGV0a292IDxicEBzdXNlLmRl
+PgpDb21taXR0ZXJEYXRlOiBGcmksIDE4IE9jdCAyMDE5IDEwOjQ2OjA2ICswMjowMAoKeGVuL3B2
+aDogQW5ub3RhdGUgZGF0YSBhcHByb3ByaWF0ZWx5CgpVc2UgdGhlIG5ldyBTWU1fREFUQV9TVEFS
+VF9MT0NBTCwgYW5kIFNZTV9EQVRBX0VORCogbWFjcm9zIHRvIGdldDoKCiAgMDAwMCAgICAgOCBP
+QkpFQ1QgIExPQ0FMICBERUZBVUxUICAgIDYgZ2R0CiAgMDAwOCAgICAzMiBPQkpFQ1QgIExPQ0FM
+ICBERUZBVUxUICAgIDYgZ2R0X3N0YXJ0CiAgMDAyOCAgICAgMCBPQkpFQ1QgIExPQ0FMICBERUZB
+VUxUICAgIDYgZ2R0X2VuZAogIDAwMjggICAyNTYgT0JKRUNUICBMT0NBTCAgREVGQVVMVCAgICA2
+IGVhcmx5X3N0YWNrCiAgMDEyOCAgICAgMCBPQkpFQ1QgIExPQ0FMICBERUZBVUxUICAgIDYgZWFy
+bHlfc3RhY2sKClNpZ25lZC1vZmYtYnk6IEppcmkgU2xhYnkgPGpzbGFieUBzdXNlLmN6PgpTaWdu
+ZWQtb2ZmLWJ5OiBCb3Jpc2xhdiBQZXRrb3YgPGJwQHN1c2UuZGU+ClJldmlld2VkLWJ5OiBCb3Jp
+cyBPc3Ryb3Zza3kgPGJvcmlzLm9zdHJvdnNreUBvcmFjbGUuY29tPgpDYzogQW5keSBTaGV2Y2hl
+bmtvIDxhbmR5QGluZnJhZGVhZC5vcmc+CkNjOiBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVh
+ZC5vcmc+CkNjOiAiSC4gUGV0ZXIgQW52aW4iIDxocGFAenl0b3IuY29tPgpDYzogSW5nbyBNb2xu
+YXIgPG1pbmdvQHJlZGhhdC5jb20+CkNjOiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+
+CkNjOiBsaW51eC1hcmNoQHZnZXIua2VybmVsLm9yZwpDYzogcGxhdGZvcm0tZHJpdmVyLXg4NkB2
+Z2VyLmtlcm5lbC5vcmcKQ2M6IFN0ZWZhbm8gU3RhYmVsbGluaSA8c3N0YWJlbGxpbmlAa2VybmVs
+Lm9yZz4KQ2M6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPgpDYzogeDg2LW1s
+IDx4ODZAa2VybmVsLm9yZz4KQ2M6IHhlbi1kZXZlbEBsaXN0cy54ZW5wcm9qZWN0Lm9yZwpMaW5r
+OiBodHRwczovL2xrbWwua2VybmVsLm9yZy9yLzIwMTkxMDExMTE1MTA4LjEyMzkyLTE1LWpzbGFi
+eUBzdXNlLmN6Ci0tLQogYXJjaC94ODYvcGxhdGZvcm0vcHZoL2hlYWQuUyB8IDE0ICsrKysrKyst
+LS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQoK
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L3BsYXRmb3JtL3B2aC9oZWFkLlMgYi9hcmNoL3g4Ni9wbGF0
+Zm9ybS9wdmgvaGVhZC5TCmluZGV4IDFmODgyNWIuLjRlNjM0ODAgMTAwNjQ0Ci0tLSBhL2FyY2gv
+eDg2L3BsYXRmb3JtL3B2aC9oZWFkLlMKKysrIGIvYXJjaC94ODYvcGxhdGZvcm0vcHZoL2hlYWQu
+UwpAQCAtMTUwLDExICsxNTAsMTIgQEAgRU5EKHB2aF9zdGFydF94ZW4pCiAKIAkuc2VjdGlvbiAi
+LmluaXQuZGF0YSIsImF3IgogCS5iYWxpZ24gOAotZ2R0OgorU1lNX0RBVEFfU1RBUlRfTE9DQUwo
+Z2R0KQogCS53b3JkIGdkdF9lbmQgLSBnZHRfc3RhcnQKIAkubG9uZyBfcGEoZ2R0X3N0YXJ0KQog
+CS53b3JkIDAKLWdkdF9zdGFydDoKK1NZTV9EQVRBX0VORChnZHQpCitTWU1fREFUQV9TVEFSVF9M
+T0NBTChnZHRfc3RhcnQpCiAJLnF1YWQgMHgwMDAwMDAwMDAwMDAwMDAwICAgICAgICAgICAgLyog
+TlVMTCBkZXNjcmlwdG9yICovCiAjaWZkZWYgQ09ORklHX1g4Nl82NAogCS5xdWFkIEdEVF9FTlRS
+WSgweGEwOWEsIDAsIDB4ZmZmZmYpIC8qIFBWSF9DU19TRUwgKi8KQEAgLTE2MywxNSArMTY0LDE0
+IEBAIGdkdF9zdGFydDoKICNlbmRpZgogCS5xdWFkIEdEVF9FTlRSWSgweGMwOTIsIDAsIDB4ZmZm
+ZmYpIC8qIFBWSF9EU19TRUwgKi8KIAkucXVhZCBHRFRfRU5UUlkoMHg0MDkwLCAwLCAweDE4KSAg
+ICAvKiBQVkhfQ0FOQVJZX1NFTCAqLwotZ2R0X2VuZDoKK1NZTV9EQVRBX0VORF9MQUJFTChnZHRf
+c3RhcnQsIFNZTV9MX0xPQ0FMLCBnZHRfZW5kKQogCiAJLmJhbGlnbiAxNgotY2FuYXJ5OgotCS5m
+aWxsIDQ4LCAxLCAwCitTWU1fREFUQV9MT0NBTChjYW5hcnksIC5maWxsIDQ4LCAxLCAwKQogCi1l
+YXJseV9zdGFjazoKK1NZTV9EQVRBX1NUQVJUX0xPQ0FMKGVhcmx5X3N0YWNrKQogCS5maWxsIEJP
+T1RfU1RBQ0tfU0laRSwgMSwgMAotZWFybHlfc3RhY2tfZW5kOgorU1lNX0RBVEFfRU5EX0xBQkVM
+KGVhcmx5X3N0YWNrLCBTWU1fTF9MT0NBTCwgZWFybHlfc3RhY2tfZW5kKQogCiAJRUxGTk9URShY
+ZW4sIFhFTl9FTEZOT1RFX1BIWVMzMl9FTlRSWSwKIAkgICAgICAgICAgICAgX0FTTV9QVFIgKHB2
+aF9zdGFydF94ZW4gLSBfX1NUQVJUX0tFUk5FTF9tYXApKQoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVsIG1haWxpbmcgbGlzdApYZW4tZGV2
+ZWxAbGlzdHMueGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0cy54ZW5wcm9qZWN0Lm9yZy9tYWls
+bWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
