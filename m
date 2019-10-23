@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v6 14/15] software node: remove separate handling of references
-Date: Wed, 23 Oct 2019 13:02:32 -0700
-Message-ID: <20191023200233.86616-15-dmitry.torokhov@gmail.com>
+Subject: [PATCH v6 11/15] software node: move small properties inline when copying
+Date: Wed, 23 Oct 2019 13:02:29 -0700
+Message-ID: <20191023200233.86616-12-dmitry.torokhov@gmail.com>
 References: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,126 +12,41 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Now that all users of references have moved to reference properties,
-we can remove separate handling of references.
+When copying/duplicating set of properties, move smaller properties that
+were stored separately directly inside property entry structures. We can
+move:
+
+- up to 8 bytes from U8 arrays
+- up to 4 words
+- up to 2 double words
+- one U64 value
+- one or 2 strings.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c    | 46 +++++++++++++++-------------------------
- include/linux/property.h | 14 ------------
- 2 files changed, 17 insertions(+), 43 deletions(-)
+ drivers/base/swnode.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 8fb4dd532433..87c715648eb6 100644
+index 18a30fb3cc58..49e1108aa4b7 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -497,9 +497,8 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 				 struct fwnode_reference_args *args)
- {
- 	struct swnode *swnode = to_swnode(fwnode);
--	const struct software_node_reference *ref;
- 	const struct software_node_ref_args *ref_array;
--	const struct software_node_ref_args *ref_args;
-+	const struct software_node_ref_args *ref;
- 	const struct property_entry *prop;
- 	struct fwnode_handle *refnode;
- 	int i;
-@@ -508,37 +507,26 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 		return -ENOENT;
+@@ -280,6 +280,16 @@ static int property_entry_copy_data(struct property_entry *dst,
+ 	if (!dst->name)
+ 		goto out_free_data;
  
- 	prop = property_entry_get(swnode->node->properties, propname);
--	if (prop) {
--		if (prop->type != DEV_PROP_REF)
--			return -EINVAL;
--
--		/*
--		 * We expect that references are never stored inline, even
--		 * single ones, as they are too big.
--		 */
--		if (prop->is_inline)
--			return -EINVAL;
--
--		if (index * sizeof(*ref_args) >= prop->length)
--			return -ENOENT;
-+	if (!prop)
-+		return -ENOENT;
- 
--		ref_array = prop->pointer;
--		ref_args = &ref_array[index];
--	} else {
--		if (!swnode->node->references)
--			return -ENOENT;
-+	if (prop->type != DEV_PROP_REF)
-+		return -EINVAL;
- 
--		for (ref = swnode->node->references; ref->name; ref++)
--			if (!strcmp(ref->name, propname))
--				break;
-+	/*
-+	 * We expect that references are never stored inline, even
-+	 * single ones, as they are too big.
-+	 */
-+	if (prop->is_inline)
-+		return -EINVAL;
- 
--		if (!ref->name || index > (ref->nrefs - 1))
--			return -ENOENT;
-+	if (index * sizeof(*ref) >= prop->length)
-+		return -ENOENT;
- 
--		ref_args = &ref->refs[index];
--	}
-+	ref_array = prop->pointer;
-+	ref = &ref_array[index];
- 
--	refnode = software_node_fwnode(ref_args->node);
-+	refnode = software_node_fwnode(ref->node);
- 	if (!refnode)
- 		return -ENOENT;
- 
-@@ -557,7 +545,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
- 	args->nargs = nargs;
- 
- 	for (i = 0; i < nargs; i++)
--		args->args[i] = ref_args->args[i];
-+		args->args[i] = ref->args[i];
- 
++	if (!dst->is_inline && dst->length <= sizeof(dst->value)) {
++		/* We have an opportunity to move the data inline */
++		const void *tmp = dst->pointer;
++
++		memcpy(&dst->value, tmp, dst->length);
++		dst->is_inline = true;
++
++		kfree(tmp);
++	}
++
  	return 0;
- }
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 68655c094b39..b315fdc0ec28 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -418,30 +418,16 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
- /* -------------------------------------------------------------------------- */
- /* Software fwnode support - when HW description is incomplete or missing */
  
--/**
-- * struct software_node_reference - Named software node reference property
-- * @name: Name of the property
-- * @nrefs: Number of elements in @refs array
-- * @refs: Array of references with optional arguments
-- */
--struct software_node_reference {
--	const char *name;
--	unsigned int nrefs;
--	const struct software_node_ref_args *refs;
--};
--
- /**
-  * struct software_node - Software node description
-  * @name: Name of the software node
-  * @parent: Parent of the software node
-  * @properties: Array of device properties
-- * @references: Array of software node reference properties
-  */
- struct software_node {
- 	const char *name;
- 	const struct software_node *parent;
- 	const struct property_entry *properties;
--	const struct software_node_reference *references;
- };
- 
- bool is_software_node(const struct fwnode_handle *fwnode);
+ out_free_data:
 -- 
 2.23.0.866.gb869b98d4c-goog
