@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v6 07/15] software node: remove property_entry_read_uNN_array functions
-Date: Wed, 23 Oct 2019 13:02:25 -0700
-Message-ID: <20191023200233.86616-8-dmitry.torokhov@gmail.com>
+Subject: [PATCH v6 10/15] software node: rename is_array to is_inline
+Date: Wed, 23 Oct 2019 13:02:28 -0700
+Message-ID: <20191023200233.86616-11-dmitry.torokhov@gmail.com>
 References: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,120 +12,118 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-There is absolutely no reason to have them as we can handle it all nicely in
-property_entry_read_int_array().
+We do not need a special flag to know if we are dealing with an array,
+as we can get that data from ratio between element length and the data
+size, however we do need a flag to know whether the data is stored
+directly inside property_entry or separately.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c | 85 +++++++------------------------------------
- 1 file changed, 14 insertions(+), 71 deletions(-)
+ drivers/base/swnode.c    | 12 +++++-------
+ include/linux/property.h | 13 ++++++++-----
+ 2 files changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index fd667a73a201..f59dfd01725f 100644
+index d8d0dc0ca5ac..18a30fb3cc58 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -131,66 +131,6 @@ static const void *property_entry_find(const struct property_entry *props,
- 	return pointer;
+@@ -108,10 +108,7 @@ static const void *property_get_pointer(const struct property_entry *prop)
+ 	if (!prop->length)
+ 		return NULL;
+ 
+-	if (prop->is_array)
+-		return prop->pointer;
+-
+-	return &prop->value;
++	return prop->is_inline ? &prop->value : prop->pointer;
  }
  
--static int property_entry_read_u8_array(const struct property_entry *props,
--					const char *propname,
--					u8 *values, size_t nval)
--{
--	const void *pointer;
--	size_t length = nval * sizeof(*values);
--
--	pointer = property_entry_find(props, propname, length);
--	if (IS_ERR(pointer))
--		return PTR_ERR(pointer);
--
--	memcpy(values, pointer, length);
--	return 0;
--}
--
--static int property_entry_read_u16_array(const struct property_entry *props,
--					 const char *propname,
--					 u16 *values, size_t nval)
--{
--	const void *pointer;
--	size_t length = nval * sizeof(*values);
--
--	pointer = property_entry_find(props, propname, length);
--	if (IS_ERR(pointer))
--		return PTR_ERR(pointer);
--
--	memcpy(values, pointer, length);
--	return 0;
--}
--
--static int property_entry_read_u32_array(const struct property_entry *props,
--					 const char *propname,
--					 u32 *values, size_t nval)
--{
--	const void *pointer;
--	size_t length = nval * sizeof(*values);
--
--	pointer = property_entry_find(props, propname, length);
--	if (IS_ERR(pointer))
--		return PTR_ERR(pointer);
--
--	memcpy(values, pointer, length);
--	return 0;
--}
--
--static int property_entry_read_u64_array(const struct property_entry *props,
--					 const char *propname,
--					 u64 *values, size_t nval)
--{
--	const void *pointer;
--	size_t length = nval * sizeof(*values);
--
--	pointer = property_entry_find(props, propname, length);
--	if (IS_ERR(pointer))
--		return PTR_ERR(pointer);
--
--	memcpy(values, pointer, length);
--	return 0;
--}
--
- static int
- property_entry_count_elems_of_size(const struct property_entry *props,
- 				   const char *propname, size_t length)
-@@ -209,21 +149,24 @@ static int property_entry_read_int_array(const struct property_entry *props,
- 					 unsigned int elem_size, void *val,
- 					 size_t nval)
- {
-+	const void *pointer;
-+	size_t length;
-+
- 	if (!val)
- 		return property_entry_count_elems_of_size(props, name,
- 							  elem_size);
--	switch (elem_size) {
--	case sizeof(u8):
--		return property_entry_read_u8_array(props, name, val, nval);
--	case sizeof(u16):
--		return property_entry_read_u16_array(props, name, val, nval);
--	case sizeof(u32):
--		return property_entry_read_u32_array(props, name, val, nval);
--	case sizeof(u64):
--		return property_entry_read_u64_array(props, name, val, nval);
--	}
+ static const void *property_entry_find(const struct property_entry *props,
+@@ -205,7 +202,7 @@ static void property_entry_free_data(const struct property_entry *p)
+ 	const char * const *src_str;
+ 	size_t i, nval;
  
--	return -ENXIO;
-+	if (!is_power_of_2(elem_size) || elem_size > sizeof(u64))
-+		return -ENXIO;
-+
-+	length = nval * elem_size;
-+
-+	pointer = property_entry_find(props, name, length);
-+	if (IS_ERR(pointer))
-+		return PTR_ERR(pointer);
-+
-+	memcpy(val, pointer, length);
-+	return 0;
+-	if (p->is_array) {
++	if (!p->is_inline) {
+ 		if (p->type == DEV_PROP_STRING && p->pointer) {
+ 			src_str = p->pointer;
+ 			nval = p->length / sizeof(const char *);
+@@ -250,7 +247,7 @@ static int property_entry_copy_data(struct property_entry *dst,
+ 	const void *pointer = property_get_pointer(src);
+ 	const void *new;
+ 
+-	if (src->is_array) {
++	if (!src->is_inline) {
+ 		if (!src->length)
+ 			return -ENODATA;
+ 
+@@ -264,15 +261,16 @@ static int property_entry_copy_data(struct property_entry *dst,
+ 				return -ENOMEM;
+ 		}
+ 
+-		dst->is_array = true;
+ 		dst->pointer = new;
+ 	} else if (src->type == DEV_PROP_STRING) {
+ 		new = kstrdup(src->value.str, GFP_KERNEL);
+ 		if (!new && src->value.str)
+ 			return -ENOMEM;
+ 
++		dst->is_inline = true;
+ 		dst->value.str = new;
+ 	} else {
++		dst->is_inline = true;
+ 		dst->value = src->value;
+ 	}
+ 
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 48335288c2a9..dad0ad11b55e 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -227,15 +227,17 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
+  * struct property_entry - "Built-in" device property representation.
+  * @name: Name of the property.
+  * @length: Length of data making up the value.
+- * @is_array: True when the property is an array.
++ * @is_inline: True when the property value is embedded in
++ *	&struct property_entry instance.
+  * @type: Type of the data in unions.
+- * @pointer: Pointer to the property (an array of items of the given type).
+- * @value: Value of the property (when it is a single item of the given type).
++ * @pointer: Pointer to the property when it is stored separately from
++ *	the &struct property_entry instance.
++ * @value: Value of the property when it is stored inline.
+  */
+ struct property_entry {
+ 	const char *name;
+ 	size_t length;
+-	bool is_array;
++	bool is_inline;
+ 	enum dev_prop_type type;
+ 	union {
+ 		const void *pointer;
+@@ -262,7 +264,6 @@ struct property_entry {
+ (struct property_entry) {						\
+ 	.name = _name_,							\
+ 	.length = (_len_) * __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),	\
+-	.is_array = true,						\
+ 	.type = DEV_PROP_##_Type_,					\
+ 	{ .pointer = _val_ },						\
+ }
+@@ -293,6 +294,7 @@ struct property_entry {
+ (struct property_entry) {						\
+ 	.name = _name_,							\
+ 	.length = __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),		\
++	.is_inline = true,						\
+ 	.type = DEV_PROP_##_Type_,					\
+ 	{ .value = { ._elem_ = _val_ } },				\
+ }
+@@ -311,6 +313,7 @@ struct property_entry {
+ #define PROPERTY_ENTRY_BOOL(_name_)		\
+ (struct property_entry) {			\
+ 	.name = _name_,				\
++	.is_inline = true,			\
  }
  
- static int property_entry_read_string_array(const struct property_entry *props,
+ struct property_entry *
 -- 
 2.23.0.866.gb869b98d4c-goog
