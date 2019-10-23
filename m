@@ -1,90 +1,82 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH resend] Add touchscreen platform data for the Schneider
- SCT101CTM tablet
-Date: Wed, 23 Oct 2019 22:08:10 +0300
-Message-ID: <CAHp75VfhKzXfJEwHLdkwJHPXmL6bCRMtvo-0aCSQxdiHQyXHHQ@mail.gmail.com>
-References: <20191023185323.13552-1-hdegoede@redhat.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH v6 00/15] software node: add support for reference properties
+Date: Wed, 23 Oct 2019 13:02:18 -0700
+Message-ID: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191023185323.13552-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Gorbea Ainz <danielgorbea@hotmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Oct 23, 2019 at 9:53 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> From: Daniel Gorbea Ainz <danielgorbea@hotmail.com>
->
-> Add touchscreen platform data for the Schneider SCT101CTM tablet
+These series implement "references" properties for software nodes as true
+properties, instead of managing them completely separately.
 
-Thanks, now patchwork sees it.
+The first 10 patches are generic cleanups and consolidation and
+unification of the existing code; patch #11 implements moving of small
+properties inline when copying property entries; patch #12 implements
+PROPERTY_ENTRY_REF() and friends; patch #13 converts the user of
+references to the property syntax, and patch #14 removes the remains of
+references as entities that are managed separately.
 
-> Signed-off-by: Daniel Gorbea <danielgorbea@hotmail.com>
+Patch #15 adds unit tests to verify that the handling of property
+entries is correct.
 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Changes in v6:
+- rebased onto next-20191023
+- fixed patch moving small properties inline
+- fixed handling boolean properties after is_array -> is_inline
+  conversion
+- changed comments around is_inline "stored directly" vs embedded
+  in one place (Andy)
+- added unit tests for property entries based on KUnit framework
+- added Any's reviewed-by/acked-by
 
-I'm not sure you need to put Rb when you have your SoB.
-Do you think it's fine if I remove Rb when applying?
+Changes in v5:
+- rebased onto next-20191011
 
-> ---
-> hdegoede: Resend from my email address as vger.kernel.org does not like
-> Daniel's emails
-> ---
->  drivers/platform/x86/touchscreen_dmi.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index 8bfef880e216..ba494ace83d4 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -549,6 +549,24 @@ static const struct ts_dmi_data pov_mobii_wintab_p1006w_v10_data = {
->         .properties     = pov_mobii_wintab_p1006w_v10_props,
->  };
->
-> +static const struct property_entry schneider_sct101ctm_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
-> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
-> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-> +       PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-> +       PROPERTY_ENTRY_STRING("firmware-name",
-> +                             "gsl1680-schneider-sct101ctm.fw"),
-> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
-> +       { }
-> +};
-> +
-> +static const struct ts_dmi_data schneider_sct101ctm_data = {
-> +       .acpi_name      = "MSSL1680:00",
-> +       .properties     = schneider_sct101ctm_props,
-> +};
-> +
->  static const struct property_entry teclast_x3_plus_props[] = {
->         PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
->         PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-> @@ -968,6 +986,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
->                         DMI_EXACT_MATCH(DMI_BOARD_NAME, "0E57"),
->                 },
->         },
-> +       {
-> +               /* Schneider SCT101CTM */
-> +               .driver_data = (void *)&schneider_sct101ctm_data,
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "Default string"),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "SCT101CTM"),
-> +               },
-> +       },
->         {
->                 /* Teclast X3 Plus */
->                 .driver_data = (void *)&teclast_x3_plus_data,
-> --
-> 2.23.0
->
+Changes in v4:
+- dealt with union aliasing concerns
+- inline small properties on copy
 
+Changes in v3:
+- added various cleanups before implementing reference properties
+
+Changes in v2:
+- reworked code so that even single-entry reference properties are
+  stored as arrays (i.e. the software_node_ref_args instances are
+  not part of property_entry structure) to avoid size increase.
+  From user's POV nothing is changed, one can still use PROPERTY_ENTRY_REF
+  macro to define reference "inline".
+- dropped unused DEV_PROP_MAX
+- rebased on linux-next
+
+Dmitry Torokhov (15):
+  software node: remove DEV_PROP_MAX
+  software node: introduce PROPERTY_ENTRY_ARRAY_XXX_LEN()
+  efi/apple-properties: use PROPERTY_ENTRY_U8_ARRAY_LEN
+  software node: mark internal macros with double underscores
+  software node: clean up property_copy_string_array()
+  software node: get rid of property_set_pointer()
+  software node: remove property_entry_read_uNN_array functions
+  software node: unify PROPERTY_ENTRY_XXX macros
+  software node: simplify property_entry_read_string_array()
+  software node: rename is_array to is_inline
+  software node: move small properties inline when copying
+  software node: implement reference properties
+  platform/x86: intel_cht_int33fe: use inline reference properties
+  software node: remove separate handling of references
+  software node: add basic tests for property entries
+
+ drivers/base/swnode.c                         | 263 ++++------
+ drivers/base/test/Makefile                    |   2 +
+ drivers/base/test/property-entry-test.c       | 472 ++++++++++++++++++
+ drivers/firmware/efi/apple-properties.c       |  18 +-
+ .../platform/x86/intel_cht_int33fe_typec.c    |  81 +--
+ include/linux/property.h                      | 178 +++----
+ 6 files changed, 702 insertions(+), 312 deletions(-)
+ create mode 100644 drivers/base/test/property-entry-test.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.23.0.866.gb869b98d4c-goog
