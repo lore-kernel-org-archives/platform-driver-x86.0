@@ -1,64 +1,108 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v6 03/15] efi/apple-properties: use PROPERTY_ENTRY_U8_ARRAY_LEN
-Date: Wed, 23 Oct 2019 13:02:21 -0700
-Message-ID: <20191023200233.86616-4-dmitry.torokhov@gmail.com>
-References: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH resend] Add touchscreen platform data for the Schneider
+ SCT101CTM tablet
+Date: Thu, 24 Oct 2019 10:09:41 +0200
+Message-ID: <1274f8b7-234b-1af4-0715-b47018d96946@redhat.com>
+References: <20191023185323.13552-1-hdegoede@redhat.com>
+ <CAHp75VfhKzXfJEwHLdkwJHPXmL6bCRMtvo-0aCSQxdiHQyXHHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
+In-Reply-To: <CAHp75VfhKzXfJEwHLdkwJHPXmL6bCRMtvo-0aCSQxdiHQyXHHQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Gorbea Ainz <danielgorbea@hotmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Let's switch to using PROPERTY_ENTRY_U8_ARRAY_LEN() to initialize
-property entries. Also, when dumping data, rely on local variables
-instead of poking into the property entry structure directly.
+Hi,
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/firmware/efi/apple-properties.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+On 23-10-2019 21:08, Andy Shevchenko wrote:
+> On Wed, Oct 23, 2019 at 9:53 PM Hans de Goede <hdegoede@redhat.com> wrote=
+:
+>>
+>> From: Daniel Gorbea Ainz <danielgorbea@hotmail.com>
+>>
+>> Add touchscreen platform data for the Schneider SCT101CTM tablet
+>=20
+> Thanks, now patchwork sees it.
+>=20
+>> Signed-off-by: Daniel Gorbea <danielgorbea@hotmail.com>
+>=20
+>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>=20
+> I'm not sure you need to put Rb when you have your SoB.
+> Do you think it's fine if I remove Rb when applying?
 
-diff --git a/drivers/firmware/efi/apple-properties.c b/drivers/firmware/efi/apple-properties.c
-index 0e206c9e0d7a..5ccf39986a14 100644
---- a/drivers/firmware/efi/apple-properties.c
-+++ b/drivers/firmware/efi/apple-properties.c
-@@ -53,7 +53,8 @@ static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
- 
- 	for (i = 0; i < dev_header->prop_count; i++) {
- 		int remaining = dev_header->len - (ptr - (void *)dev_header);
--		u32 key_len, val_len;
-+		u32 key_len, val_len, entry_len;
-+		const u8 *entry_data;
- 		char *key;
- 
- 		if (sizeof(key_len) > remaining)
-@@ -85,17 +86,14 @@ static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
- 		ucs2_as_utf8(key, ptr + sizeof(key_len),
- 			     key_len - sizeof(key_len));
- 
--		entry[i].name = key;
--		entry[i].length = val_len - sizeof(val_len);
--		entry[i].is_array = !!entry[i].length;
--		entry[i].type = DEV_PROP_U8;
--		entry[i].pointer.u8_data = ptr + key_len + sizeof(val_len);
--
-+		entry_data = ptr + key_len + sizeof(val_len);
-+		entry_len = val_len - sizeof(val_len);
-+		entry[i] = PROPERTY_ENTRY_U8_ARRAY_LEN(key, entry_data,
-+						       entry_len);
- 		if (dump_properties) {
--			dev_info(dev, "property: %s\n", entry[i].name);
-+			dev_info(dev, "property: %s\n", key);
- 			print_hex_dump(KERN_INFO, pr_fmt(), DUMP_PREFIX_OFFSET,
--				16, 1, entry[i].pointer.u8_data,
--				entry[i].length, true);
-+				16, 1, entry_data, entry_len, true);
- 		}
- 
- 		ptr += key_len + val_len;
--- 
-2.23.0.866.gb869b98d4c-goog
+I believe having a r-b here is fine, but if you want to remove
+it that is fine with me too.
+
+Regards,
+
+Hans
+
+
+
+
+>=20
+>> ---
+>> hdegoede: Resend from my email address as vger.kernel.org does not like
+>> Daniel's emails
+>> ---
+>>   drivers/platform/x86/touchscreen_dmi.c | 26 ++++++++++++++++++++++++++
+>>   1 file changed, 26 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x=
+86/touchscreen_dmi.c
+>> index 8bfef880e216..ba494ace83d4 100644
+>> --- a/drivers/platform/x86/touchscreen_dmi.c
+>> +++ b/drivers/platform/x86/touchscreen_dmi.c
+>> @@ -549,6 +549,24 @@ static const struct ts_dmi_data pov_mobii_wintab_p1=
+006w_v10_data =3D {
+>>          .properties     =3D pov_mobii_wintab_p1006w_v10_props,
+>>   };
+>>
+>> +static const struct property_entry schneider_sct101ctm_props[] =3D {
+>> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
+>> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+>> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
+>> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+>> +       PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+>> +       PROPERTY_ENTRY_STRING("firmware-name",
+>> +                             "gsl1680-schneider-sct101ctm.fw"),
+>> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+>> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
+>> +       { }
+>> +};
+>> +
+>> +static const struct ts_dmi_data schneider_sct101ctm_data =3D {
+>> +       .acpi_name      =3D "MSSL1680:00",
+>> +       .properties     =3D schneider_sct101ctm_props,
+>> +};
+>> +
+>>   static const struct property_entry teclast_x3_plus_props[] =3D {
+>>          PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
+>>          PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
+>> @@ -968,6 +986,14 @@ const struct dmi_system_id touchscreen_dmi_table[] =
+=3D {
+>>                          DMI_EXACT_MATCH(DMI_BOARD_NAME, "0E57"),
+>>                  },
+>>          },
+>> +       {
+>> +               /* Schneider SCT101CTM */
+>> +               .driver_data =3D (void *)&schneider_sct101ctm_data,
+>> +               .matches =3D {
+>> +                       DMI_MATCH(DMI_SYS_VENDOR, "Default string"),
+>> +                       DMI_MATCH(DMI_PRODUCT_NAME, "SCT101CTM"),
+>> +               },
+>> +       },
+>>          {
+>>                  /* Teclast X3 Plus */
+>>                  .driver_data =3D (void *)&teclast_x3_plus_data,
+>> --
+>> 2.23.0
+>>
+>=20
+>=20
