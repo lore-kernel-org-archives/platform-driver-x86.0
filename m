@@ -1,108 +1,69 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH resend] Add touchscreen platform data for the Schneider
- SCT101CTM tablet
-Date: Thu, 24 Oct 2019 10:09:41 +0200
-Message-ID: <1274f8b7-234b-1af4-0715-b47018d96946@redhat.com>
-References: <20191023185323.13552-1-hdegoede@redhat.com>
- <CAHp75VfhKzXfJEwHLdkwJHPXmL6bCRMtvo-0aCSQxdiHQyXHHQ@mail.gmail.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] platform/x86: Add Lenovo ThinkPad
+ PrivacyGuard.
+Date: Fri, 25 Oct 2019 13:33:30 +0200
+Message-ID: <20191025113330.6wmi5lcm7mzlkl5a@pali>
+References: <CAHp75VdMZMxGJpmi6wQMa8FJdzpkPq7nA=kFf4pUSrskrTtFeA@mail.gmail.com>
+ <20190822114833.29885-1-alex@alexanderweb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfhKzXfJEwHLdkwJHPXmL6bCRMtvo-0aCSQxdiHQyXHHQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Gorbea Ainz <danielgorbea@hotmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190822114833.29885-1-alex-y2PnNNZjvYf3t9wD0PK9CA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Alexander Schremmer <alex-y2PnNNZjvYf3t9wD0PK9CA@public.gmane.org>
+Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-On 23-10-2019 21:08, Andy Shevchenko wrote:
-> On Wed, Oct 23, 2019 at 9:53 PM Hans de Goede <hdegoede@redhat.com> wrote=
-:
->>
->> From: Daniel Gorbea Ainz <danielgorbea@hotmail.com>
->>
->> Add touchscreen platform data for the Schneider SCT101CTM tablet
->=20
-> Thanks, now patchwork sees it.
->=20
->> Signed-off-by: Daniel Gorbea <danielgorbea@hotmail.com>
->=20
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->=20
-> I'm not sure you need to put Rb when you have your SoB.
-> Do you think it's fine if I remove Rb when applying?
-
-I believe having a r-b here is fine, but if you want to remove
-it that is fine with me too.
-
-Regards,
-
-Hans
-
-
-
-
->=20
->> ---
->> hdegoede: Resend from my email address as vger.kernel.org does not like
->> Daniel's emails
->> ---
->>   drivers/platform/x86/touchscreen_dmi.c | 26 ++++++++++++++++++++++++++
->>   1 file changed, 26 insertions(+)
->>
->> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x=
-86/touchscreen_dmi.c
->> index 8bfef880e216..ba494ace83d4 100644
->> --- a/drivers/platform/x86/touchscreen_dmi.c
->> +++ b/drivers/platform/x86/touchscreen_dmi.c
->> @@ -549,6 +549,24 @@ static const struct ts_dmi_data pov_mobii_wintab_p1=
-006w_v10_data =3D {
->>          .properties     =3D pov_mobii_wintab_p1006w_v10_props,
->>   };
->>
->> +static const struct property_entry schneider_sct101ctm_props[] =3D {
->> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
->> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
->> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
->> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
->> +       PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
->> +       PROPERTY_ENTRY_STRING("firmware-name",
->> +                             "gsl1680-schneider-sct101ctm.fw"),
->> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
->> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
->> +       { }
->> +};
->> +
->> +static const struct ts_dmi_data schneider_sct101ctm_data =3D {
->> +       .acpi_name      =3D "MSSL1680:00",
->> +       .properties     =3D schneider_sct101ctm_props,
->> +};
->> +
->>   static const struct property_entry teclast_x3_plus_props[] =3D {
->>          PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
->>          PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
->> @@ -968,6 +986,14 @@ const struct dmi_system_id touchscreen_dmi_table[] =
-=3D {
->>                          DMI_EXACT_MATCH(DMI_BOARD_NAME, "0E57"),
->>                  },
->>          },
->> +       {
->> +               /* Schneider SCT101CTM */
->> +               .driver_data =3D (void *)&schneider_sct101ctm_data,
->> +               .matches =3D {
->> +                       DMI_MATCH(DMI_SYS_VENDOR, "Default string"),
->> +                       DMI_MATCH(DMI_PRODUCT_NAME, "SCT101CTM"),
->> +               },
->> +       },
->>          {
->>                  /* Teclast X3 Plus */
->>                  .driver_data =3D (void *)&teclast_x3_plus_data,
->> --
->> 2.23.0
->>
->=20
->=20
+T24gVGh1cnNkYXkgMjIgQXVndXN0IDIwMTkgMTM6NDg6MzMgQWxleGFuZGVyIFNjaHJlbW1lciB3
+cm90ZToKPiBUaGlzIGZlYXR1cmUgaXMgZm91bmQgb3B0aW9uYWxseSBpbiBUNDgwcywgVDQ5MCwg
+VDQ5MHMuCj4gCj4gVGhlIGZlYXR1cmUgaXMgY2FsbGVkIGxjZHNoYWRvdyBhbmQgdmlzaWJsZSB2
+aWEKPiAvcHJvYy9hY3BpL2libS9sY2RzaGFkb3cuCj4gCj4gVGhlIEFDUEkgbWV0aG9kcyBcX1NC
+LlBDSTAuTFBDQi5FQy5IS0VZLntHU1NTLFNTU1MsVFNTUyxDU1NTfSBhcmUKPiBhdmFpbGFibGUg
+aW4gdGhlc2UgbWFjaGluZXMuIFRoZXkgZ2V0LCBzZXQsIHRvZ2dsZSBvciBjaGFuZ2UgdGhlIHN0
+YXRlCj4gYXBwYXJlbnRseS4KPiAKPiBUaGUgcGF0Y2ggd2FzIHRlc3RlZCBvbiBhIDUuMCBzZXJp
+ZXMga2VybmVsIG9uIGEgVDQ4MHMuCj4gCj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZGVyIFNjaHJl
+bW1lciA8YWxleEBhbGV4YW5kZXJ3ZWIuZGU+Cj4gLS0tCj4gIC4uLi9hZG1pbi1ndWlkZS9sYXB0
+b3BzL3RoaW5rcGFkLWFjcGkucnN0ICAgICB8ICAyMyArKysrCj4gIGRyaXZlcnMvcGxhdGZvcm0v
+eDg2L3RoaW5rcGFkX2FjcGkuYyAgICAgICAgICB8IDExMiArKysrKysrKysrKysrKysrKysKPiAg
+MiBmaWxlcyBjaGFuZ2VkLCAxMzUgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2FkbWluLWd1aWRlL2xhcHRvcHMvdGhpbmtwYWQtYWNwaS5yc3QgYi9Eb2N1bWVu
+dGF0aW9uL2FkbWluLWd1aWRlL2xhcHRvcHMvdGhpbmtwYWQtYWNwaS5yc3QKPiBpbmRleCBhZGVh
+MGJmMmFjYzUuLjgyMjkwN2RjYzg0NSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2FkbWlu
+LWd1aWRlL2xhcHRvcHMvdGhpbmtwYWQtYWNwaS5yc3QKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Fk
+bWluLWd1aWRlL2xhcHRvcHMvdGhpbmtwYWQtYWNwaS5yc3QKPiBAQCAtNDksNiArNDksNyBAQCBk
+ZXRhaWxlZCBkZXNjcmlwdGlvbik6Cj4gIAktIEZhbiBjb250cm9sIGFuZCBtb25pdG9yaW5nOiBm
+YW4gc3BlZWQsIGZhbiBlbmFibGUvZGlzYWJsZQo+ICAJLSBXQU4gZW5hYmxlIGFuZCBkaXNhYmxl
+Cj4gIAktIFVXQiBlbmFibGUgYW5kIGRpc2FibGUKPiArCS0gTENEIFNoYWRvdyAoUHJpdmFjeUd1
+YXJkKSBlbmFibGUgYW5kIGRpc2FibGUKPiAgCj4gIEEgY29tcGF0aWJpbGl0eSB0YWJsZSBieSBt
+b2RlbCBhbmQgZmVhdHVyZSBpcyBtYWludGFpbmVkIG9uIHRoZSB3ZWIKPiAgc2l0ZSwgaHR0cDov
+L2libS1hY3BpLnNmLm5ldC8uIEkgYXBwcmVjaWF0ZSBhbnkgc3VjY2VzcyBvciBmYWlsdXJlCj4g
+QEAgLTE0MDksNiArMTQxMCwyOCBAQCBTeXNmcyBub3Rlcwo+ICAJRG9jdW1lbnRhdGlvbi9kcml2
+ZXItYXBpL3Jma2lsbC5yc3QgZm9yIGRldGFpbHMuCj4gIAo+ICAKPiArTENEIFNoYWRvdyBjb250
+cm9sCj4gKy0tLS0tLS0tLS0tLS0tLS0tLQo+ICsKPiArcHJvY2ZzOiAvcHJvYy9hY3BpL2libS9s
+Y2RzaGFkb3cKPiArCj4gK1NvbWUgbmV3ZXIgVDQ4MHMgYW5kIFQ0OTBzIFRoaW5rUGFkcyBwcm92
+aWRlIGEgZmVhdHVyZSBjYWxsZWQKPiArUHJpdmFjeUd1YXJkLiBCeSB0dXJuaW5nIHRoaXMgZmVh
+dHVyZSBvbiwgdGhlIHVzYWJsZSB2ZXJ0aWNhbCBhbmQKPiAraG9yaXpvbnRhbCB2aWV3aW5nIGFu
+Z2xlcyBvZiB0aGUgTENEIGNhbiBiZSBsaW1pdGVkIChhcyBpZiBzb21lIHByaXZhY3kKPiArc2Ny
+ZWVuIHdhcyBhcHBsaWVkIG1hbnVhbGx5IGluIGZyb250IG9mIHRoZSBkaXNwbGF5KS4KPiArCj4g
+K3Byb2NmcyBub3Rlcwo+ICteXl5eXl5eXl5eXl4KPiArCj4gK1RoZSBhdmFpbGFibGUgY29tbWFu
+ZHMgYXJlOjoKPiArCj4gKwllY2hvICcwJyA+L3Byb2MvYWNwaS9pYm0vbGNkc2hhZG93Cj4gKwll
+Y2hvICcxJyA+L3Byb2MvYWNwaS9pYm0vbGNkc2hhZG93Cj4gKwo+ICtUaGUgZmlyc3QgY29tbWFu
+ZCBlbnN1cmVzIHRoZSBiZXN0IHZpZXdpbmcgYW5nbGUgYW5kIHRoZSBsYXR0ZXIgb25lIHR1cm5z
+Cj4gK29uIHRoZSBmZWF0dXJlLCByZXN0cmljdGluZyB0aGUgdmlld2luZyBhbmdsZXMuCj4gKwo+
+ICsKPiAgRVhQRVJJTUVOVEFMOiBVV0IKPiAgLS0tLS0tLS0tLS0tLS0tLS0KCkhlbGxvISBJcyBu
+b3QgdGhlIHdob2xlIC9wcm9jL2FwY2kvaWJtIEFQSSBmb3IgbmV3IHRoaW5ncyBvYnNvbGV0ZWQg
+b3IgZGVwcmVjYXRlZD8KQW5kIHNob3VsZCBub3QgcmF0aGVyIGl0IHVzZSBwbGF0Zm9ybSBkcml2
+ZXIgaW4gL3N5cy8gKGNsYXNzPykgbmFtZXNwYWNlPwoKLS0gClBhbGkgUm9ow6FyCnBhbGkucm9o
+YXJAZ21haWwuY29tCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KaWJtLWFjcGktZGV2ZWwgbWFpbGluZyBsaXN0CmlibS1hY3BpLWRldmVsQGxpc3RzLnNv
+dXJjZWZvcmdlLm5ldApodHRwczovL2xpc3RzLnNvdXJjZWZvcmdlLm5ldC9saXN0cy9saXN0aW5m
+by9pYm0tYWNwaS1kZXZlbAo=
