@@ -1,46 +1,54 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] platform/x86: Add Lenovo ThinkPad
- PrivacyGuard.
-Date: Fri, 25 Oct 2019 18:14:51 +0300
-Message-ID: <CAHp75VeTQ_nxTH14k8DDO+_STK-JTq=O1dhrNr4pURCgw0nQNA@mail.gmail.com>
-References: <CAHp75VdMZMxGJpmi6wQMa8FJdzpkPq7nA=kFf4pUSrskrTtFeA@mail.gmail.com>
- <20190822114833.29885-1-alex@alexanderweb.de>
- <20191025113330.6wmi5lcm7mzlkl5a@pali>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 63/99] platform/x86: i2c-multi-instantiate: Fail the probe if no IRQ provided
+Date: Sat, 26 Oct 2019 09:15:24 -0400
+Message-ID: <20191026131600.2507-63-sashal@kernel.org>
+References: <20191026131600.2507-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20191025113330.6wmi5lcm7mzlkl5a@pali>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thinkpad-acpi devel ML <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexander Schremmer <alex-y2PnNNZjvYf3t9wD0PK9CA@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Ammy Yi <ammy.yi@intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-T24gRnJpLCBPY3QgMjUsIDIwMTkgYXQgMjozMyBQTSBQYWxpIFJvaMOhciA8cGFsaS5yb2hhckBn
-bWFpbC5jb20+IHdyb3RlOgo+IE9uIFRodXJzZGF5IDIyIEF1Z3VzdCAyMDE5IDEzOjQ4OjMzIEFs
-ZXhhbmRlciBTY2hyZW1tZXIgd3JvdGU6Cj4gPiBUaGlzIGZlYXR1cmUgaXMgZm91bmQgb3B0aW9u
-YWxseSBpbiBUNDgwcywgVDQ5MCwgVDQ5MHMuCj4gPgo+ID4gVGhlIGZlYXR1cmUgaXMgY2FsbGVk
-IGxjZHNoYWRvdyBhbmQgdmlzaWJsZSB2aWEKPiA+IC9wcm9jL2FjcGkvaWJtL2xjZHNoYWRvdy4K
-PiA+Cj4gPiBUaGUgQUNQSSBtZXRob2RzIFxfU0IuUENJMC5MUENCLkVDLkhLRVkue0dTU1MsU1NT
-UyxUU1NTLENTU1N9IGFyZQo+ID4gYXZhaWxhYmxlIGluIHRoZXNlIG1hY2hpbmVzLiBUaGV5IGdl
-dCwgc2V0LCB0b2dnbGUgb3IgY2hhbmdlIHRoZSBzdGF0ZQo+ID4gYXBwYXJlbnRseS4KPiA+Cj4g
-PiBUaGUgcGF0Y2ggd2FzIHRlc3RlZCBvbiBhIDUuMCBzZXJpZXMga2VybmVsIG9uIGEgVDQ4MHMu
-Cgo+ID4gKyAgICAgZWNobyAnMCcgPi9wcm9jL2FjcGkvaWJtL2xjZHNoYWRvdwo+ID4gKyAgICAg
-ZWNobyAnMScgPi9wcm9jL2FjcGkvaWJtL2xjZHNoYWRvdwoKPiBIZWxsbyEgSXMgbm90IHRoZSB3
-aG9sZSAvcHJvYy9hcGNpL2libSBBUEkgZm9yIG5ldyB0aGluZ3Mgb2Jzb2xldGVkIG9yIGRlcHJl
-Y2F0ZWQ/Cj4gQW5kIHNob3VsZCBub3QgcmF0aGVyIGl0IHVzZSBwbGF0Zm9ybSBkcml2ZXIgaW4g
-L3N5cy8gKGNsYXNzPykgbmFtZXNwYWNlPwoKVGhlcmUgaXMgYW4gb25nb2luZyBkaXNjdXNzaW9u
-IGFib3V0IEFQSSB0byB0aGlzIGtpbmQgb2YgZGV2aWNlcwpzb21ld2hlcmUgaW4gR1BVIG1haWxp
-bmcgbGlzdHMuClRoaXMgaW50ZXJmYWNlIGlzIGN1c3RvbSBhbmQgcHJvYmFibHkgc2hhbGwgbmV2
-ZXIgaGF2ZSBiZWVuIGFwcGVhcmVkLgpIb3dldmVyIG5vLW9uZSBwcmV2ZW50ZWQgdGhpcyBmcm9t
-IGhhcHBlbmluZy4KCi0tIApXaXRoIEJlc3QgUmVnYXJkcywKQW5keSBTaGV2Y2hlbmtvCgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaWJtLWFjcGktZGV2
-ZWwgbWFpbGluZyBsaXN0CmlibS1hY3BpLWRldmVsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApodHRw
-czovL2xpc3RzLnNvdXJjZWZvcmdlLm5ldC9saXN0cy9saXN0aW5mby9pYm0tYWNwaS1kZXZlbAo=
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+[ Upstream commit 832392db9747b9c95724d37fc6a5dadd3d4ec514 ]
+
+For APIC case of interrupt we don't fail a ->probe() of the driver,
+which makes kernel to print a lot of warnings from the children.
+
+We have two options here:
+- switch to platform_get_irq_optional(), though it won't stop children
+  to be probed and failed
+- fail the ->probe() of i2c-multi-instantiate
+
+Since the in reality we never had devices in the wild where IRQ resource
+is optional, the latter solution suits the best.
+
+Fixes: 799d3379a672 ("platform/x86: i2c-multi-instantiate: Introduce IOAPIC IRQ support")
+Reported-by: Ammy Yi <ammy.yi@intel.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/i2c-multi-instantiate.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+index 70efa3d298253..b66e5aa6bf588 100644
+--- a/drivers/platform/x86/i2c-multi-instantiate.c
++++ b/drivers/platform/x86/i2c-multi-instantiate.c
+@@ -110,6 +110,7 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
+ 			if (ret < 0) {
+ 				dev_dbg(dev, "Error requesting irq at index %d: %d\n",
+ 					inst_data[i].irq_idx, ret);
++				goto error;
+ 			}
+ 			board_info.irq = ret;
+ 			break;
+-- 
+2.20.1
