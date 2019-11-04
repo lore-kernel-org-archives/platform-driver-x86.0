@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 01/10] tools/power/x86/intel-speed-select: Extend command set for perf-profile
-Date: Mon,  4 Nov 2019 03:02:37 -0800
-Message-ID: <20191104110246.70465-2-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 09/10] tools/power/x86/intel-speed-select: Use core count for base-freq mask
+Date: Mon,  4 Nov 2019 03:02:45 -0800
+Message-ID: <20191104110246.70465-10-srinivas.pandruvada@linux.intel.com>
 References: <20191104110246.70465-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191104110246.70465-1-srinivas.pandruvada@linux.intel.com>
@@ -10,153 +10,99 @@ To: andriy.shevchenko@intel.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, prarit@redhat.com, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add support for uncore P0, uncore P1, P1 for base and AVX levels and
-memory frequency. These commands are optional, so continue on
-failure.
+Some firmware implementation gives error when a command is sent get mask
+for core count 32-61. So use core count to decide.
+
+But there is no function to get core count. So introduce one function to
+get core count.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../power/x86/intel-speed-select/isst-core.c  | 67 +++++++++++++++++++
- .../x86/intel-speed-select/isst-display.c     | 39 ++++++++++-
- 2 files changed, 105 insertions(+), 1 deletion(-)
+ .../x86/intel-speed-select/isst-config.c      | 23 ++++++++++++++++++-
+ .../power/x86/intel-speed-select/isst-core.c  |  7 ++++--
+ tools/power/x86/intel-speed-select/isst.h     |  1 +
+ 3 files changed, 28 insertions(+), 3 deletions(-)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
-index 67d32f2b9bea..ca3bd5b2cf45 100644
---- a/tools/power/x86/intel-speed-select/isst-core.c
-+++ b/tools/power/x86/intel-speed-select/isst-core.c
-@@ -95,6 +95,69 @@ int isst_get_pwr_info(int cpu, int config_index,
- 	return 0;
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index 2dffb67d3194..e0bad43697dc 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -338,6 +338,7 @@ void free_cpu_set(cpu_set_t *cpu_set)
  }
  
-+void isst_get_uncore_p0_p1_info(int cpu, int config_index,
-+				struct isst_pkg_ctdp_level_info *ctdp_level)
-+{
-+	unsigned int resp;
-+	int ret;
-+	ret = isst_send_mbox_command(cpu, CONFIG_TDP,
-+				     CONFIG_TDP_GET_UNCORE_P0_P1_INFO, 0,
-+				     config_index, &resp);
-+	if (ret) {
-+		ctdp_level->uncore_p0 = 0;
-+		ctdp_level->uncore_p1 = 0;
-+		return;
-+	}
-+
-+	ctdp_level->uncore_p0 = resp & GENMASK(7, 0);
-+	ctdp_level->uncore_p1 = (resp & GENMASK(15, 8)) >> 8;
-+	debug_printf(
-+		"cpu:%d ctdp:%d CONFIG_TDP_GET_UNCORE_P0_P1_INFO resp:%x uncore p0:%d uncore p1:%d\n",
-+		cpu, config_index, resp, ctdp_level->uncore_p0,
-+		ctdp_level->uncore_p1);
-+}
-+
-+void isst_get_p1_info(int cpu, int config_index,
-+		      struct isst_pkg_ctdp_level_info *ctdp_level)
-+{
-+	unsigned int resp;
-+	int ret;
-+	ret = isst_send_mbox_command(cpu, CONFIG_TDP, CONFIG_TDP_GET_P1_INFO, 0,
-+				     config_index, &resp);
-+	if (ret) {
-+		ctdp_level->sse_p1 = 0;
-+		ctdp_level->avx2_p1 = 0;
-+		ctdp_level->avx512_p1 = 0;
-+		return;
-+	}
-+
-+	ctdp_level->sse_p1 = resp & GENMASK(7, 0);
-+	ctdp_level->avx2_p1 = (resp & GENMASK(15, 8)) >> 8;
-+	ctdp_level->avx512_p1 = (resp & GENMASK(23, 16)) >> 16;
-+	debug_printf(
-+		"cpu:%d ctdp:%d CONFIG_TDP_GET_P1_INFO resp:%x sse_p1:%d avx2_p1:%d avx512_p1:%d\n",
-+		cpu, config_index, resp, ctdp_level->sse_p1,
-+		ctdp_level->avx2_p1, ctdp_level->avx512_p1);
-+}
-+
-+void isst_get_uncore_mem_freq(int cpu, int config_index,
-+			      struct isst_pkg_ctdp_level_info *ctdp_level)
-+{
-+	unsigned int resp;
-+	int ret;
-+	ret = isst_send_mbox_command(cpu, CONFIG_TDP, CONFIG_TDP_GET_MEM_FREQ,
-+				     0, config_index, &resp);
-+	if (ret) {
-+		ctdp_level->mem_freq = 0;
-+		return;
-+	}
-+
-+	ctdp_level->mem_freq = resp & GENMASK(7, 0);
-+	debug_printf(
-+		"cpu:%d ctdp:%d CONFIG_TDP_GET_MEM_FREQ resp:%x uncore mem_freq:%d\n",
-+		cpu, config_index, resp, ctdp_level->mem_freq);
-+}
-+
- int isst_get_tjmax_info(int cpu, int config_index,
- 			struct isst_pkg_ctdp_level_info *ctdp_level)
+ static int cpu_cnt[MAX_PACKAGE_COUNT][MAX_DIE_PER_PACKAGE];
++static long long core_mask[MAX_PACKAGE_COUNT][MAX_DIE_PER_PACKAGE];
+ static void set_cpu_present_cpu_mask(void)
  {
-@@ -600,6 +663,10 @@ int isst_get_process_ctdp(int cpu, int tdp_level, struct isst_pkg_ctdp *pkg_dev)
- 		if (ret)
- 			return ret;
+ 	size_t size;
+@@ -362,13 +363,33 @@ static void set_cpu_present_cpu_mask(void)
  
-+		isst_get_uncore_p0_p1_info(cpu, i, ctdp_level);
-+		isst_get_p1_info(cpu, i, ctdp_level);
-+		isst_get_uncore_mem_freq(cpu, i, ctdp_level);
+ 			pkg_id = get_physical_package_id(i);
+ 			if (pkg_id < MAX_PACKAGE_COUNT &&
+-			    die_id < MAX_DIE_PER_PACKAGE)
++			    die_id < MAX_DIE_PER_PACKAGE) {
++				int core_id = get_physical_core_id(i);
 +
- 		if (ctdp_level->pbf_support) {
- 			ret = isst_get_pbf_info(cpu, i, &ctdp_level->pbf_info);
- 			if (!ret)
-diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 8309810e7425..d330f7a90c76 100644
---- a/tools/power/x86/intel-speed-select/isst-display.c
-+++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -352,10 +352,47 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 		format_and_print(outf, base_level + 4, header, value);
+ 				cpu_cnt[pkg_id][die_id]++;
++				core_mask[pkg_id][die_id] |= (1ULL << core_id);
++			}
+ 		}
+ 		closedir(dir);
+ 	}
+ }
  
- 		snprintf(header, sizeof(header), "base-frequency(MHz)");
-+		if (!ctdp_level->sse_p1)
-+			ctdp_level->sse_p1 = ctdp_level->tdp_ratio;
- 		snprintf(value, sizeof(value), "%d",
--			 ctdp_level->tdp_ratio * DISP_FREQ_MULTIPLIER);
-+			  ctdp_level->sse_p1 * DISP_FREQ_MULTIPLIER);
- 		format_and_print(outf, base_level + 4, header, value);
++int get_core_count(int pkg_id, int die_id)
++{
++	int cnt = 0;
++
++	if (pkg_id < MAX_PACKAGE_COUNT && die_id < MAX_DIE_PER_PACKAGE) {
++		int i;
++
++		for (i = 0; i < sizeof(long long) * 8; ++i) {
++			if (core_mask[pkg_id][die_id] & (1ULL << i))
++				cnt++;
++		}
++	}
++
++	return cnt;
++}
++
+ int get_cpu_count(int pkg_id, int die_id)
+ {
+ 	if (pkg_id < MAX_PACKAGE_COUNT && die_id < MAX_DIE_PER_PACKAGE)
+diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
+index 8b3e1c7abb42..52698553de92 100644
+--- a/tools/power/x86/intel-speed-select/isst-core.c
++++ b/tools/power/x86/intel-speed-select/isst-core.c
+@@ -335,12 +335,15 @@ int isst_set_tdp_level(int cpu, int tdp_level)
  
-+		if (ctdp_level->avx2_p1) {
-+			snprintf(header, sizeof(header), "base-frequency-avx2(MHz)");
-+			snprintf(value, sizeof(value), "%d",
-+				 ctdp_level->avx2_p1 * DISP_FREQ_MULTIPLIER);
-+			format_and_print(outf, base_level + 4, header, value);
-+		}
+ int isst_get_pbf_info(int cpu, int level, struct isst_pbf_info *pbf_info)
+ {
++	int i, ret, core_cnt, max;
+ 	unsigned int req, resp;
+-	int i, ret;
+ 
+ 	pbf_info->core_cpumask_size = alloc_cpu_set(&pbf_info->core_cpumask);
+ 
+-	for (i = 0; i < 2; ++i) {
++	core_cnt = get_core_count(get_physical_package_id(cpu), get_physical_die_id(cpu));
++	max = core_cnt > 32 ? 2 : 1;
 +
-+		if (ctdp_level->avx512_p1) {
-+			snprintf(header, sizeof(header), "base-frequency-avx512(MHz)");
-+			snprintf(value, sizeof(value), "%d",
-+				 ctdp_level->avx512_p1 * DISP_FREQ_MULTIPLIER);
-+			format_and_print(outf, base_level + 4, header, value);
-+		}
-+
-+		if (ctdp_level->uncore_p1) {
-+			snprintf(header, sizeof(header), "uncore-frequency-min(MHz)");
-+			snprintf(value, sizeof(value), "%d",
-+				 ctdp_level->uncore_p1 * DISP_FREQ_MULTIPLIER);
-+			format_and_print(outf, base_level + 4, header, value);
-+		}
-+
-+		if (ctdp_level->uncore_p0) {
-+			snprintf(header, sizeof(header), "uncore-frequency-max(MHz)");
-+			snprintf(value, sizeof(value), "%d",
-+				 ctdp_level->uncore_p0 * DISP_FREQ_MULTIPLIER);
-+			format_and_print(outf, base_level + 4, header, value);
-+		}
-+
-+		if (ctdp_level->mem_freq) {
-+			snprintf(header, sizeof(header), "mem-frequency(MHz)");
-+			snprintf(value, sizeof(value), "%d",
-+				 ctdp_level->mem_freq * DISP_FREQ_MULTIPLIER);
-+			format_and_print(outf, base_level + 4, header, value);
-+		}
-+
- 		snprintf(header, sizeof(header),
- 			 "speed-select-turbo-freq");
- 		if (ctdp_level->fact_support) {
++	for (i = 0; i < max; ++i) {
+ 		unsigned long long mask;
+ 		int count;
+ 
+diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
+index 84f56a468f82..cdf0f8a6dbbf 100644
+--- a/tools/power/x86/intel-speed-select/isst.h
++++ b/tools/power/x86/intel-speed-select/isst.h
+@@ -163,6 +163,7 @@ struct isst_pkg_ctdp {
+ 
+ extern int get_topo_max_cpus(void);
+ extern int get_cpu_count(int pkg_id, int die_id);
++extern int get_core_count(int pkg_id, int die_id);
+ 
+ /* Common interfaces */
+ extern void debug_printf(const char *format, ...);
 -- 
 2.17.2
