@@ -1,61 +1,35 @@
-From: Leon Maxx <leonmaxx@gmail.com>
-Subject: [RFC PATCH 3/3] platform/x86: asus_wmi: Set default fan boost mode to normal
-Date: Mon, 4 Nov 2019 12:55:44 +0200
-Message-ID: <CAPW-Pu3a7UjhW3wZ7jMLMEwj5goabqgHp2Vf7tQyzT3XwZr8cg@mail.gmail.com>
-References: <CAPW-Pu0KuxqbKSQ2JQaxh5AHbdZdNQZJfOgxoe_XZSxow+9e3A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 00/10] tools/power/x86/intel-speed-select: New version
+Date: Mon,  4 Nov 2019 03:02:36 -0800
+Message-ID: <20191104110246.70465-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPW-Pu0KuxqbKSQ2JQaxh5AHbdZdNQZJfOgxoe_XZSxow+9e3A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com, Daniel Drake <drake@endlessm.com>, yurii.pavlovskyi@gmail.com
+To: andriy.shevchenko@intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, prarit@redhat.com, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Set default fan boost mode to normal for multiple reasons:
+This adds support for the new version of Intel(R) Speed select
+implementation. Also some fixes for CLX-N platform.
 
-1) existing code assumes that laptop started in normal mode and that is
-not always true.
-2) FX705DY/FX505DY starts in silent mode and under heavy CPU load it
-overheats and drops CPU frequency to 399MHz [1]. Setting fan mode to
-normal avoids overheating.
+Srinivas Pandruvada (10):
+  tools/power/x86/intel-speed-select: Extend command set for
+    perf-profile
+  tools/power/x86/intel-speed-select: Change display of "avx" to "avx2"
+  tools/power/x86/intel-speed-select: Correct CLX-N frequency units
+  tools/power/x86/intel-speed-select: Auto mode for CLX
+  tools/power/x86/intel-speed-select: Use mailbox for CLOS_PM_QOS_CONFIG
+  tools/power/x86/intel-speed-select: Make CLOS frequency in MHz
+  tools/power/x86/intel-speed-select: Use Frequency weight for CLOS
+  tools/power/x86/intel-speed-select: Support platform with limited
+    Intel(R) Speed Select
+  tools/power/x86/intel-speed-select: Use core count for base-freq mask
+  tools/power/x86/intel-speed-select: Increment version
 
-[1] Link: https://bugzilla.kernel.org/show_bug.cgi?id=203733
+ .../x86/intel-speed-select/isst-config.c      | 178 ++++++++++++++----
+ .../power/x86/intel-speed-select/isst-core.c  | 146 ++++++++++++--
+ .../x86/intel-speed-select/isst-display.c     | 139 +++++++++-----
+ tools/power/x86/intel-speed-select/isst.h     |   2 +
+ 4 files changed, 366 insertions(+), 99 deletions(-)
 
-Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index f4e5840..70c5fbb 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1674,6 +1674,18 @@ static int fan_boost_mode_write(struct asus_wmi *asus)
-  return 0;
- }
-
-+static int fan_boost_mode_set_default(struct asus_wmi *asus)
-+{
-+ int result = 0;
-+
-+ if (asus->fan_boost_mode_available) {
-+ asus->fan_boost_mode = ASUS_FAN_BOOST_MODE_NORMAL;
-+ result = fan_boost_mode_write(asus);
-+ }
-+
-+ return result;
-+}
-+
- static int fan_boost_mode_switch_next(struct asus_wmi *asus)
- {
-  u8 mask = asus->fan_boost_mode_mask;
-@@ -2450,6 +2462,7 @@ static int asus_wmi_add(struct platform_device *pdev)
-  err = fan_boost_mode_check_present(asus);
-  if (err)
-  goto fail_fan_boost_mode;
-+ fan_boost_mode_set_default(asus);
-
-  err = asus_wmi_sysfs_init(asus->platform_device);
-  if (err)
 -- 
-1.8.3.1
+2.17.2
