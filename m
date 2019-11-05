@@ -1,40 +1,45 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [RESEND][PATCH 00/10] intel-speed-select tool updates targetted
- for 5.5
-Date: Tue, 05 Nov 2019 11:21:02 -0800
-Message-ID: <3c81a1af52a4bff13ed166cf73ae34bcdd17f08d.camel@linux.intel.com>
-References: <20191010202945.73616-1-srinivas.pandruvada@linux.intel.com>
-         <905ec7d0-bc1b-987c-a9db-e898d7ba7e96@redhat.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v6 00/15] software node: add support for reference properties
+Date: Tue, 5 Nov 2019 23:09:34 +0100
+Message-ID: <CAJZ5v0iihCMCc9xozdafrxjwH7cXYDMu_Vfx1snYfOEYTYRJVQ@mail.gmail.com>
+References: <20191023200233.86616-1-dmitry.torokhov@gmail.com> <20191030224304.GH57214@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <905ec7d0-bc1b-987c-a9db-e898d7ba7e96@redhat.com>
+In-Reply-To: <20191030224304.GH57214@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Prarit Bhargava <prarit@redhat.com>, andriy.shevchenko@intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 2019-11-05 at 13:21 -0500, Prarit Bhargava wrote:
-> 
-> On 10/10/19 4:29 PM, Srinivas Pandruvada wrote:
-> > There are no new patches in this series. This is just for clean
-> > apply on
-> > 5.4-rc1 for Andriy.
-> > 
-> 
-> Andriy, what is the location of your "next" tree?
-> 
+On Wed, Oct 30, 2019 at 11:43 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> Hi Rafael,
+>
+> On Wed, Oct 23, 2019 at 01:02:18PM -0700, Dmitry Torokhov wrote:
+> > These series implement "references" properties for software nodes as true
+> > properties, instead of managing them completely separately.
+> >
+> > The first 10 patches are generic cleanups and consolidation and
+> > unification of the existing code; patch #11 implements moving of small
+> > properties inline when copying property entries; patch #12 implements
+> > PROPERTY_ENTRY_REF() and friends; patch #13 converts the user of
+> > references to the property syntax, and patch #14 removes the remains of
+> > references as entities that are managed separately.
+> >
+> > Patch #15 adds unit tests to verify that the handling of property
+> > entries is correct.
+>
+> Do you have any concerns with the series? I think Andy did all the
+> reviewing that he could...
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/tools/power/x86/intel-speed-select?h=next-20191105
+Yes, he did, and he is unconvinced.
 
-They include all patches, except which I sent yesterday.
+I basically have no problems with patches [1-9/15], so I'm going to
+queue them up for 5.5.
 
-Thanks,
-Srinivas
+Patch [10/15] by itself is kind of pointless IMO, so it'll depend on
+what happens to the rest.
 
-
-> Thanks,
-> 
-> P.
-> 
+Patch [11/15] kind of causes brows to rise, so let me reply to it directly.
