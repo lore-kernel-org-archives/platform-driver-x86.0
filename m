@@ -1,82 +1,51 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v6 11/15] software node: move small properties inline
- when copying
-Date: Tue, 5 Nov 2019 15:56:56 -0800
-Message-ID: <20191105235656.GW57214@dtor-ws>
-References: <20191023200233.86616-1-dmitry.torokhov@gmail.com>
- <20191023200233.86616-12-dmitry.torokhov@gmail.com>
- <47671501.dVG71sAca0@kreacher>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 3/3] platform/x86: asus_wmi: Set default fan boost mode
+ to normal
+Date: Wed, 6 Nov 2019 09:03:17 +0200
+Message-ID: <CAHp75VfgTAa8TgTYn99gr_F4mmVuJZgEu=JcDE+bOnAO-pqqxA@mail.gmail.com>
+References: <20191104213417.18036-1-leonmaxx@gmail.com> <20191104213907.18413-1-leonmaxx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <47671501.dVG71sAca0@kreacher>
+In-Reply-To: <20191104213907.18413-1-leonmaxx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Leonid Maksymchuk <leonmaxx@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Chris Chiu <chiu@endlessm.com>, Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>, Kristian Klausen <kristian@klausen.dk>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Rafael,
+On Mon, Nov 4, 2019 at 11:39 PM Leonid Maksymchuk <leonmaxx@gmail.com> wrote:
+>
+> Set default fan boost mode to normal for multiple reasons:
+>
+> 1) existing code assumes that laptop started in normal mode and that is
+>    not always correct.
+> 2) FX705DY/FX505DY starts in silent mode and under heavy CPU load it
+>    overheats and drops CPU frequency to 399MHz [1]. Setting fan mode to
+>    normal avoids overheating.
+>
+> [1] Link: https://bugzilla.kernel.org/show_bug.cgi?id=203733
+>
+> Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
 
-On Wed, Nov 06, 2019 at 12:42:02AM +0100, Rafael J. Wysocki wrote:
-> On Wednesday, October 23, 2019 10:02:29 PM CET Dmitry Torokhov wrote:
-> > When copying/duplicating set of properties, move smaller properties that
-> > were stored separately directly inside property entry structures. We can
-> > move:
-> > 
-> > - up to 8 bytes from U8 arrays
-> > - up to 4 words
-> > - up to 2 double words
-> > - one U64 value
-> > - one or 2 strings.
-> 
-> Yes, we can do that, but how much of a difference does this really make?
+> +static int fan_boost_mode_set_default(struct asus_wmi *asus)
+> +{
+> +       int result = 0;
+> +
+> +       if (asus->fan_boost_mode_available) {
+> +               asus->fan_boost_mode = ASUS_FAN_BOOST_MODE_NORMAL;
+> +               result = fan_boost_mode_write(asus);
+> +       }
+> +
+> +       return result;
+> +}
 
-Arguably not much I think, but it was pretty cheap to do.
+This can be refactored
 
-> 
-> Also, how can one distinguish between a single-value property and an inline
-> array which this change?  By looking at the length?
-
-We do not really need to distinguish between the 2. The device
-properties API is typically wrap single values around arrays (i.e. it is
-perfectly fine to use scalar API to fetch first element of array and use
-array API to fetch a scalar). So we have property of certain type with
-certain number of elements, and it can either be stored inside
-property_entry structure, or outside of it. They are 2 orthogonal
-concepts.
-
-> 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > ---
-> >  drivers/base/swnode.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> > index 18a30fb3cc58..49e1108aa4b7 100644
-> > --- a/drivers/base/swnode.c
-> > +++ b/drivers/base/swnode.c
-> > @@ -280,6 +280,16 @@ static int property_entry_copy_data(struct property_entry *dst,
-> >  	if (!dst->name)
-> >  		goto out_free_data;
-> >  
-> > +	if (!dst->is_inline && dst->length <= sizeof(dst->value)) {
-> > +		/* We have an opportunity to move the data inline */
-> > +		const void *tmp = dst->pointer;
-> > +
-> > +		memcpy(&dst->value, tmp, dst->length);
-> > +		dst->is_inline = true;
-> > +
-> > +		kfree(tmp);
-> 
-> This would have been more useful if we had been able to avoid making the
-> allocation altogether.
-
-OK, I can do that and re-send this patch and the one with the tests. In
-the mean time, can you please consider patches 12-14? They can be
-applied even if you temporarily drop this one (#11).
-
-Thanks.
+if (!foo)
+  return 0;
+...
+return bar(asus);
 
 -- 
-Dmitry
+With Best Regards,
+Andy Shevchenko
