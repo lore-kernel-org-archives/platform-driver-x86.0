@@ -1,31 +1,40 @@
 From: Leonid Maksymchuk <leonmaxx@gmail.com>
-Subject: [PATCH v3 0/3] asus_wmi: Support of ASUS TUF laptops on Ryzen CPUs
-Date: Fri,  8 Nov 2019 01:01:05 +0200
-Message-ID: <20191107230105.30574-1-leonmaxx@gmail.com>
+Subject: [PATCH v3 1/3] asus_wmi: Fix return value of fan_boost_mode_store
+Date: Fri,  8 Nov 2019 01:03:10 +0200
+Message-ID: <20191107230310.30754-1-leonmaxx@gmail.com>
+References: <20191107230105.30574-1-leonmaxx@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191107230105.30574-1-leonmaxx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com, yurii.pavlovskyi@gmail.com, kristian@klausen.dk, andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com, Leonid Maksymchuk <leonmaxx@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+Function fan_boost_mode_store should return number of bytes written
+but instead it returns return value of kstrtou8 which is 0 if
+conversion is succefull. This leads to infinite loop after any
+write to it's SysFS entry.
 
-this patch series adds support of ASUS TUF laptops on Ryzen CPUs to existing
-asus_wmi platform driver and also fixes minor bug.
+Fixes: b096f626a682 ("platform/x86: asus-wmi: Switch fan boost mode")
+Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
+---
+ drivers/platform/x86/asus-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v2: fixed indentation.
-v3: patches 2/3 and 3/3 are refactored.
-
-Leonid Maksymchuk (3):
-  asus_wmi: Fix return value of fan_boost_mode_store
-  asus_wmi: Support fan boost mode on FX505DY/FX705DY
-  asus_wmi: Set default fan boost mode to normal
-
- drivers/platform/x86/asus-wmi.c            | 55 ++++++++++++++++------
- include/linux/platform_data/x86/asus-wmi.h |  1 +
- 2 files changed, 42 insertions(+), 14 deletions(-)
-
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 821b08e01635..723aa4d969dc 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1718,7 +1718,7 @@ static ssize_t fan_boost_mode_store(struct device *dev,
+ 	asus->fan_boost_mode = new_mode;
+ 	fan_boost_mode_write(asus);
+ 
+-	return result;
++	return count;
+ }
+ 
+ // Fan boost mode: 0 - normal, 1 - overboost, 2 - silent
 -- 
 2.23.0
