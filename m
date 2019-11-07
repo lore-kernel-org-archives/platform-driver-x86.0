@@ -1,55 +1,31 @@
 From: Leonid Maksymchuk <leonmaxx@gmail.com>
-Subject: Re: [PATCH v2 2/3] platform/x86: asus_wmi: Support fan boost mode on FX505DY/FX705DY
-Date: Thu, 7 Nov 2019 20:31:04 +0200
-Message-ID: <CAPW-Pu17tMrUA7oSf8V7S1y2+3JYO2buq3yY+FO8dZUu6uqMxA@mail.gmail.com>
-References: <20191104213417.18036-1-leonmaxx@gmail.com> <20191104213828.18278-1-leonmaxx@gmail.com>
- <CAHp75VfNu_G7zzaCV9JF+Ua9otSTftJgtgr9N4qhQNR0o+QHtA@mail.gmail.com>
+Subject: [PATCH v3 0/3] asus_wmi: Support of ASUS TUF laptops on Ryzen CPUs
+Date: Fri,  8 Nov 2019 01:01:05 +0200
+Message-ID: <20191107230105.30574-1-leonmaxx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfNu_G7zzaCV9JF+Ua9otSTftJgtgr9N4qhQNR0o+QHtA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Chris Chiu <chiu@endlessm.com>, Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>, Kristian Klausen <kristian@klausen.dk>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com, yurii.pavlovskyi@gmail.com, kristian@klausen.dk, andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com, Leonid Maksymchuk <leonmaxx@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Thanks for review, I will do suggested changes.
+Hi,
 
-> > +       if (err == 0 &&
-> > +                       (result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
-> > +                       (result & ASUS_FAN_BOOST_MODES_MASK)) {
-> > +               asus->fan_boost_mode_available = 1;
-> > +               asus->fan_boost_mode_mask = result & ASUS_FAN_BOOST_MODES_MASK;
-> > +               return 0;
-> >         }
-> >
-> > -       if ((result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
-> > +       err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FAN_BOOST_MODE_2,
-> > +                                   &result);
-> > +
-> > +       if (err == 0 &&
-> > +                       (result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
-> >                         (result & ASUS_FAN_BOOST_MODES_MASK)) {
-> > -               asus->fan_boost_mode_available = true;
-> > +               asus->fan_boost_mode_available = 2;
-> >                 asus->fan_boost_mode_mask = result & ASUS_FAN_BOOST_MODES_MASK;
-> >         }
->
-> The above differs only in one value to give and one value to set, I
-> suppose you may introduce an additional helper to it
+this patch series adds support of ASUS TUF laptops on Ryzen CPUs to existing
+asus_wmi platform driver and also fixes minor bug.
 
-Maybe it's better to add additional argument with index to
-fan_boost_mode_check_present and
-call it twice?
+v2: fixed indentation.
+v3: patches 2/3 and 3/3 are refactored.
 
-> > +       if (err == -ENODEV)
-> > +               return 0;
->
-> This should be explained or even separated to another patch. It
-> changes behaviour of the original code, why?
->
+Leonid Maksymchuk (3):
+  asus_wmi: Fix return value of fan_boost_mode_store
+  asus_wmi: Support fan boost mode on FX505DY/FX705DY
+  asus_wmi: Set default fan boost mode to normal
 
-Original code also have this check to continue module initialization
-when fan_boost_mode device
-is not present. It's return value is checked in asus_wmi_add()
-function and it'll fail module probing.
+ drivers/platform/x86/asus-wmi.c            | 55 ++++++++++++++++------
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 2 files changed, 42 insertions(+), 14 deletions(-)
+
+-- 
+2.23.0
