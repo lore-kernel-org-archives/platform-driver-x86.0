@@ -1,50 +1,49 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1 0/5] Add Tiger Lake/Elkhart Lake support to pmc_core driver
-Date: Thu, 7 Nov 2019 17:27:17 +0200
-Message-ID: <CAHp75Vc=+ZLLqv0_w6NzW5j8BLhCBVoNzFtQ7856c6WsogYTUg@mail.gmail.com>
-References: <20190926192603.18647-1-gayatri.kammela@intel.com>
- <CAHp75Vcrp2ffDCE=tm2dwSEhwfPCPWGhb-Nw0v-7ga2y=_dL8w@mail.gmail.com>
- <BL0PR11MB31709BA9A5F4E4F5455D913CF2820@BL0PR11MB3170.namprd11.prod.outlook.com>
- <MN2PR11MB37113F569E63A2CF3D2AC70BF2660@MN2PR11MB3711.namprd11.prod.outlook.com>
+Subject: Re: [PATCH v2] platform/x86: pmc_atom: Add Siemens SIMATIC IPC227E to
+ critclk_systems DMI table
+Date: Thu, 7 Nov 2019 19:06:42 +0200
+Message-ID: <CAHp75VfBS9tjDSaoN2AoBshyQR+x781Zyw61bVSKheNVtNi8rg@mail.gmail.com>
+References: <c090302a-da38-5764-2a84-399ed6b333f5@siemens.com> <16119dad-9597-ecdc-a0e7-e386030659ce@siemens.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <MN2PR11MB37113F569E63A2CF3D2AC70BF2660@MN2PR11MB3711.namprd11.prod.outlook.com>
+In-Reply-To: <16119dad-9597-ecdc-a0e7-e386030659ce@siemens.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Peter Zijlstra <peterz@infradead.org>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Liang, Kan" <kan.liang@intel.com>, "Box, David E" <david.e.box@intel.com>, "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>, "Luck, Tony" <tony.luck@intel.com>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>, Henning Schild <henning.schild@siemens.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Oct 28, 2019 at 6:41 PM Kammela, Gayatri
-<gayatri.kammela@intel.com> wrote:
+On Mon, Nov 4, 2019 at 6:21 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
 >
-> > -----Original Message-----
-> > From: Kammela, Gayatri
-> > Sent: Monday, September 30, 2019 11:24 AM
-> > To: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Cc: Platform Driver <platform-driver-x86@vger.kernel.org>; Somayaji,
-> > Vishwanath <vishwanath.somayaji@intel.com>; Darren Hart
-> > <dvhart@infradead.org>; Linux Kernel Mailing List <linux-
-> > kernel@vger.kernel.org>; Prestopine, Charles D
-> > <charles.d.prestopine@intel.com>; Peter Zijlstra <peterz@infradead.org>;
-> > Pandruvada, Srinivas <srinivas.pandruvada@intel.com>; Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com>; Liang, Kan <kan.liang@intel.com>;
-> > Box, David E <david.e.box@intel.com>; Bhardwaj, Rajneesh
-> > <rajneesh.bhardwaj@intel.com>; Luck, Tony <tony.luck@intel.com>
-> > Subject: RE: [PATCH v1 0/5] Add Tiger Lake/Elkhart Lake support to pmc_core
-> > driver
+> On 04.09.19 08:42, Jan Kiszka wrote:
+> > From: Jan Kiszka <jan.kiszka@siemens.com>
 > >
-> > > On Thu, Sep 26, 2019 at 9:43 PM Gayatri Kammela
-> > > <gayatri.kammela@intel.com> wrote:
-> > >
-> > > Thank you for the series, I'll comment them later.
-> > Thank you Andy!
-> > >
+> > The SIMATIC IPC227E uses the PMC clock for on-board components and gets
+> > stuck during boot if the clock is disabled. Therefore, add this device
+> > to the critical systems list.
+> >
+> > Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+> > Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> > ---
+> >
+> > Changes in v2:
+> >  - fixed cut-off subject line (local tooling bug...)
+> >
+> > Should go into stable as well, down to 4.19.
 >
-> Hi Andy! I'm wondering if you have any comments for this patch series. Thanks!
+> This one is in 5.4-rc now (as ad0d315b4d4e). Is it also queued somewhere
+> for stable kernels? IIRC, it's generally the privilege of the subsystem
+> maintainer to propose formally to stable.
 
-Please, address above mentioned comments and send a v2. I'll push it
-to review branch.
+Anybody can resend for stable putting maintainer to Cc as long as the
+original commit is in upstream.
+
+Nevertheless, I just resend it.
+
+> I've received reports from users down at 4.14 with the need for it (4.9
+> is unaffected). And the same applies to f110d252ae79 ("platform/x86:
+> pmc_atom: Add Siemens SIMATIC IPC277E to critclk_systems DMI table").
+
 
 -- 
 With Best Regards,
