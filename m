@@ -1,49 +1,66 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: pmc_atom: Add Siemens SIMATIC IPC227E to
- critclk_systems DMI table
-Date: Thu, 7 Nov 2019 19:06:42 +0200
-Message-ID: <CAHp75VfBS9tjDSaoN2AoBshyQR+x781Zyw61bVSKheNVtNi8rg@mail.gmail.com>
-References: <c090302a-da38-5764-2a84-399ed6b333f5@siemens.com> <16119dad-9597-ecdc-a0e7-e386030659ce@siemens.com>
+Subject: Re: [PATCH v2 2/3] platform/x86: asus_wmi: Support fan boost mode on FX505DY/FX705DY
+Date: Thu, 7 Nov 2019 19:15:28 +0200
+Message-ID: <CAHp75VfNu_G7zzaCV9JF+Ua9otSTftJgtgr9N4qhQNR0o+QHtA@mail.gmail.com>
+References: <20191104213417.18036-1-leonmaxx@gmail.com> <20191104213828.18278-1-leonmaxx@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <16119dad-9597-ecdc-a0e7-e386030659ce@siemens.com>
+In-Reply-To: <20191104213828.18278-1-leonmaxx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>, Henning Schild <henning.schild@siemens.com>
+To: Leonid Maksymchuk <leonmaxx@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Chris Chiu <chiu@endlessm.com>, Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>, Kristian Klausen <kristian@klausen.dk>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Nov 4, 2019 at 6:21 PM Jan Kiszka <jan.kiszka@siemens.com> wrote:
+On Mon, Nov 4, 2019 at 11:38 PM Leonid Maksymchuk <leonmaxx@gmail.com> wrote:
+> On ASUS FX505DY/FX705DY laptops fan boost mode is same as in other
+> TUF laptop models but have different ACPI device ID and different key
+> code.
+
+> +       if (err == 0 &&
+> +                       (result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
+> +                       (result & ASUS_FAN_BOOST_MODES_MASK)) {
+> +               asus->fan_boost_mode_available = 1;
+> +               asus->fan_boost_mode_mask = result & ASUS_FAN_BOOST_MODES_MASK;
+> +               return 0;
+>         }
 >
-> On 04.09.19 08:42, Jan Kiszka wrote:
-> > From: Jan Kiszka <jan.kiszka@siemens.com>
-> >
-> > The SIMATIC IPC227E uses the PMC clock for on-board components and gets
-> > stuck during boot if the clock is disabled. Therefore, add this device
-> > to the critical systems list.
-> >
-> > Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-> > Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> > ---
-> >
-> > Changes in v2:
-> >  - fixed cut-off subject line (local tooling bug...)
-> >
-> > Should go into stable as well, down to 4.19.
->
-> This one is in 5.4-rc now (as ad0d315b4d4e). Is it also queued somewhere
-> for stable kernels? IIRC, it's generally the privilege of the subsystem
-> maintainer to propose formally to stable.
+> -       if ((result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
+> +       err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FAN_BOOST_MODE_2,
+> +                                   &result);
+> +
+> +       if (err == 0 &&
+> +                       (result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
+>                         (result & ASUS_FAN_BOOST_MODES_MASK)) {
+> -               asus->fan_boost_mode_available = true;
+> +               asus->fan_boost_mode_available = 2;
+>                 asus->fan_boost_mode_mask = result & ASUS_FAN_BOOST_MODES_MASK;
+>         }
 
-Anybody can resend for stable putting maintainer to Cc as long as the
-original commit is in upstream.
+The above differs only in one value to give and one value to set, I
+suppose you may introduce an additional helper to it
 
-Nevertheless, I just resend it.
+> +       if (err == -ENODEV)
+> +               return 0;
 
-> I've received reports from users down at 4.14 with the need for it (4.9
-> is unaffected). And the same applies to f110d252ae79 ("platform/x86:
-> pmc_atom: Add Siemens SIMATIC IPC277E to critclk_systems DMI table").
+This should be explained or even separated to another patch. It
+changes behaviour of the original code, why?
 
+> +       u32 dev_id = asus->fan_boost_mode_available == 1 ?
+> +                       ASUS_WMI_DEVID_FAN_BOOST_MODE :
+> +                       ASUS_WMI_DEVID_FAN_BOOST_MODE_2;
+
+I would prefer to see
+ if (...)
+  call with mode
+else
+  call with mode_2
+
+below.
+
+> -       err = asus_wmi_set_devstate(ASUS_WMI_DEVID_FAN_BOOST_MODE, value,
+> -                                   &retval);
+> +       err = asus_wmi_set_devstate(dev_id, value, &retval);
 
 -- 
 With Best Regards,
