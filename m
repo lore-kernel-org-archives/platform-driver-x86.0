@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v7 2/6] software node: allow embedding of small arrays into property_entry
-Date: Thu,  7 Nov 2019 16:17:59 -0800
-Message-ID: <20191108001803.191541-3-dmitry.torokhov@gmail.com>
+Subject: [PATCH v7 4/6] platform/x86: intel_cht_int33fe: use inline reference properties
+Date: Thu,  7 Nov 2019 16:18:01 -0800
+Message-ID: <20191108001803.191541-5-dmitry.torokhov@gmail.com>
 References: <20191108001803.191541-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,173 +12,159 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-We should not conflate whether a property data is an array or a single
-value with where it is stored (embedded into property_entry structure or
-out-of-line). All single-value properties are in effect 1-element
-arrays, and we can figure the amount of data stored in a property by
-examining its length and the data type. And arrays can be as easily
-stored in property entry instances as single values are, provided that
-we have enough space (we have up to 8 bytes). We can embed:
+Now that static device properties allow defining reference properties
+together with all other types of properties, instead of managing them
+separately, let's adjust the driver.
 
-- up to 8 bytes from U8 arrays
-- up to 4 words
-- up to 2 double words
-- one U64 value
-- one (on 64 bit architectures) or 2 (on 32 bit) strings.
-
-This change also has an effect of switching properties with small amount
-of data to embed it instead of keeping it separate when copying such
-properties.
-
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c | 103 +++++++++++++++++++-----------------------
- 1 file changed, 47 insertions(+), 56 deletions(-)
+ .../platform/x86/intel_cht_int33fe_typec.c    | 81 ++++++++++---------
+ 1 file changed, 41 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 18a30fb3cc588..ce7f202b2455e 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -198,93 +198,84 @@ static int property_entry_read_string_array(const struct property_entry *props,
+diff --git a/drivers/platform/x86/intel_cht_int33fe_typec.c b/drivers/platform/x86/intel_cht_int33fe_typec.c
+index 2d097fc2dd465..04138215956bf 100644
+--- a/drivers/platform/x86/intel_cht_int33fe_typec.c
++++ b/drivers/platform/x86/intel_cht_int33fe_typec.c
+@@ -36,30 +36,6 @@ enum {
+ 	INT33FE_NODE_MAX,
+ };
  
- static void property_entry_free_data(const struct property_entry *p)
- {
--	const void *pointer = property_get_pointer(p);
- 	const char * const *src_str;
- 	size_t i, nval;
+-static const struct software_node nodes[];
+-
+-static const struct software_node_ref_args pi3usb30532_ref = {
+-	&nodes[INT33FE_NODE_PI3USB30532]
+-};
+-
+-static const struct software_node_ref_args dp_ref = {
+-	&nodes[INT33FE_NODE_DISPLAYPORT]
+-};
+-
+-static struct software_node_ref_args mux_ref;
+-
+-static const struct software_node_reference usb_connector_refs[] = {
+-	{ "orientation-switch", 1, &pi3usb30532_ref},
+-	{ "mode-switch", 1, &pi3usb30532_ref},
+-	{ "displayport", 1, &dp_ref},
+-	{ }
+-};
+-
+-static const struct software_node_reference fusb302_refs[] = {
+-	{ "usb-role-switch", 1, &mux_ref},
+-	{ }
+-};
+-
+ /*
+  * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
+  * the max17047 both through the INT33FE ACPI device (it is right there
+@@ -95,8 +71,18 @@ static const struct property_entry max17047_props[] = {
+ 	{ }
+ };
  
--	if (!p->is_inline) {
--		if (p->type == DEV_PROP_STRING && p->pointer) {
--			src_str = p->pointer;
--			nval = p->length / sizeof(const char *);
--			for (i = 0; i < nval; i++)
--				kfree(src_str[i]);
--		}
--		kfree(pointer);
--	} else if (p->type == DEV_PROP_STRING) {
--		kfree(p->value.str);
-+	if (p->type == DEV_PROP_STRING) {
-+		src_str = property_get_pointer(p);
-+		nval = p->length / sizeof(*src_str);
-+		for (i = 0; i < nval; i++)
-+			kfree(src_str[i]);
- 	}
++/*
++ * We are not using inline property here because those are constant,
++ * and we need to adjust this one at runtime to point to real
++ * software node.
++ */
++static struct software_node_ref_args fusb302_mux_refs[] = {
++	{ .node = NULL },
++};
 +
-+	if (!p->is_inline)
-+		kfree(p->pointer);
+ static const struct property_entry fusb302_props[] = {
+ 	PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
++	PROPERTY_ENTRY_REF_ARRAY("usb-role-switch", fusb302_mux_refs),
+ 	{ }
+ };
+ 
+@@ -112,6 +98,8 @@ static const u32 snk_pdo[] = {
+ 	PDO_VAR(5000, 12000, 3000),
+ };
+ 
++static const struct software_node nodes[];
 +
- 	kfree(p->name);
- }
+ static const struct property_entry usb_connector_props[] = {
+ 	PROPERTY_ENTRY_STRING("data-role", "dual"),
+ 	PROPERTY_ENTRY_STRING("power-role", "dual"),
+@@ -119,15 +107,21 @@ static const struct property_entry usb_connector_props[] = {
+ 	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
+ 	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
+ 	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500000),
++	PROPERTY_ENTRY_REF("orientation-switch",
++			   &nodes[INT33FE_NODE_PI3USB30532]),
++	PROPERTY_ENTRY_REF("mode-switch",
++			   &nodes[INT33FE_NODE_PI3USB30532]),
++	PROPERTY_ENTRY_REF("displayport",
++			   &nodes[INT33FE_NODE_DISPLAYPORT]),
+ 	{ }
+ };
  
--static const char * const *
--property_copy_string_array(const struct property_entry *src)
-+static bool property_copy_string_array(const char **dst_ptr,
-+				       const char * const *src_ptr,
-+				       size_t nval)
+ static const struct software_node nodes[] = {
+-	{ "fusb302", NULL, fusb302_props, fusb302_refs },
++	{ "fusb302", NULL, fusb302_props },
+ 	{ "max17047", NULL, max17047_props },
+ 	{ "pi3usb30532" },
+ 	{ "displayport" },
+-	{ "connector", &nodes[0], usb_connector_props, usb_connector_refs },
++	{ "connector", &nodes[0], usb_connector_props },
+ 	{ }
+ };
+ 
+@@ -163,9 +157,10 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
  {
--	const char **d;
--	const char * const *src_str = src->pointer;
--	size_t nval = src->length / sizeof(*d);
- 	int i;
+ 	software_node_unregister_nodes(nodes);
  
--	d = kcalloc(nval, sizeof(*d), GFP_KERNEL);
--	if (!d)
--		return NULL;
--
- 	for (i = 0; i < nval; i++) {
--		d[i] = kstrdup(src_str[i], GFP_KERNEL);
--		if (!d[i] && src_str[i]) {
-+		dst_ptr[i] = kstrdup(src_ptr[i], GFP_KERNEL);
-+		if (!dst_ptr[i] && src_ptr[i]) {
- 			while (--i >= 0)
--				kfree(d[i]);
--			kfree(d);
--			return NULL;
-+				kfree(dst_ptr[i]);
-+			return false;
- 		}
+-	if (mux_ref.node) {
+-		fwnode_handle_put(software_node_fwnode(mux_ref.node));
+-		mux_ref.node = NULL;
++	if (fusb302_mux_refs[0].node) {
++		fwnode_handle_put(
++			software_node_fwnode(fusb302_mux_refs[0].node));
++		fusb302_mux_refs[0].node = NULL;
  	}
  
--	return d;
-+	return true;
- }
+ 	if (data->dp) {
+@@ -177,25 +172,31 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
  
- static int property_entry_copy_data(struct property_entry *dst,
- 				    const struct property_entry *src)
+ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
  {
- 	const void *pointer = property_get_pointer(src);
--	const void *new;
++	const struct software_node *mux_ref_node;
+ 	int ret;
+ 
+-	ret = software_node_register_nodes(nodes);
+-	if (ret)
+-		return ret;
 -
--	if (!src->is_inline) {
--		if (!src->length)
--			return -ENODATA;
+-	/* The devices that are not created in this driver need extra steps. */
 -
--		if (src->type == DEV_PROP_STRING) {
--			new = property_copy_string_array(src);
--			if (!new)
--				return -ENOMEM;
--		} else {
--			new = kmemdup(pointer, src->length, GFP_KERNEL);
--			if (!new)
--				return -ENOMEM;
--		}
--
--		dst->pointer = new;
--	} else if (src->type == DEV_PROP_STRING) {
--		new = kstrdup(src->value.str, GFP_KERNEL);
--		if (!new && src->value.str)
-+	void *dst_ptr;
-+	size_t nval;
+ 	/*
+ 	 * There is no ACPI device node for the USB role mux, so we need to wait
+ 	 * until the mux driver has created software node for the mux device.
+ 	 * It means we depend on the mux driver. This function will return
+ 	 * -EPROBE_DEFER until the mux device is registered.
+ 	 */
+-	mux_ref.node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
+-	if (!mux_ref.node) {
+-		ret = -EPROBE_DEFER;
+-		goto err_remove_nodes;
+-	}
++	mux_ref_node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
++	if (!mux_ref_node)
++		return -EPROBE_DEFER;
 +
 +	/*
-+	 * Properties with no data should not be marked as stored
-+	 * out of line.
++	 * Update node used in "usb-role-switch" property. Note that we
++	 * rely on software_node_register_nodes() to use the original
++	 * instance of properties instead of copying them.
 +	 */
-+	if (!src->is_inline && !src->length)
-+		return -ENODATA;
++	fusb302_mux_refs[0].node = mux_ref_node;
 +
-+	if (src->length <= sizeof(dst->value)) {
-+		dst_ptr = &dst->value;
-+		dst->is_inline = true;
-+	} else {
-+		dst_ptr = kmalloc(src->length, GFP_KERNEL);
-+		if (!dst_ptr)
- 			return -ENOMEM;
-+		dst->pointer = dst_ptr;
-+	}
++	ret = software_node_register_nodes(nodes);
++	if (ret)
++		return ret;
++
++	/* The devices that are not created in this driver need extra steps. */
  
--		dst->is_inline = true;
--		dst->value.str = new;
-+	if (src->type == DEV_PROP_STRING) {
-+		nval = src->length / sizeof(const char *);
-+		if (!property_copy_string_array(dst_ptr, pointer, nval)) {
-+			if (!dst->is_inline)
-+				kfree(dst->pointer);
-+			return -ENOMEM;
-+		}
- 	} else {
--		dst->is_inline = true;
--		dst->value = src->value;
-+		memcpy(dst_ptr, pointer, src->length);
- 	}
- 
- 	dst->length = src->length;
- 	dst->type = src->type;
- 	dst->name = kstrdup(src->name, GFP_KERNEL);
--	if (!dst->name)
--		goto out_free_data;
-+	if (!dst->name) {
-+		property_entry_free_data(dst);
-+		return -ENOMEM;
-+	}
- 
- 	return 0;
--
--out_free_data:
--	property_entry_free_data(dst);
--	return -ENOMEM;
- }
- 
- /**
+ 	/*
+ 	 * The DP connector does have ACPI device node. In this case we can just
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
