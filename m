@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v8 1/6] software node: rename is_array to is_inline
-Date: Thu,  7 Nov 2019 20:22:20 -0800
-Message-ID: <20191108042225.45391-2-dmitry.torokhov@gmail.com>
+Subject: [PATCH v8 5/6] software node: remove separate handling of references
+Date: Thu,  7 Nov 2019 20:22:24 -0800
+Message-ID: <20191108042225.45391-6-dmitry.torokhov@gmail.com>
 References: <20191108042225.45391-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,118 +12,127 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-We do not need a special flag to know if we are dealing with an array,
-as we can get that data from ratio between element length and the data
-size, however we do need a flag to know whether the data is stored
-directly inside property_entry or separately.
+Now that all users of references have moved to reference properties,
+we can remove separate handling of references.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c    | 12 +++++-------
- include/linux/property.h | 13 ++++++++-----
- 2 files changed, 13 insertions(+), 12 deletions(-)
+ drivers/base/swnode.c    | 48 +++++++++++++++-------------------------
+ include/linux/property.h | 14 ------------
+ 2 files changed, 18 insertions(+), 44 deletions(-)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index d8d0dc0ca5acf..18a30fb3cc588 100644
+index 604d7327bba79..0b081dee1e95c 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -108,10 +108,7 @@ static const void *property_get_pointer(const struct property_entry *prop)
- 	if (!prop->length)
- 		return NULL;
+@@ -479,9 +479,8 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+ 				 struct fwnode_reference_args *args)
+ {
+ 	struct swnode *swnode = to_swnode(fwnode);
+-	const struct software_node_reference *ref;
+ 	const struct software_node_ref_args *ref_array;
+-	const struct software_node_ref_args *ref_args;
++	const struct software_node_ref_args *ref;
+ 	const struct property_entry *prop;
+ 	struct fwnode_handle *refnode;
+ 	u32 nargs_prop_val;
+@@ -492,37 +491,26 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+ 		return -ENOENT;
  
--	if (prop->is_array)
--		return prop->pointer;
+ 	prop = property_entry_get(swnode->node->properties, propname);
+-	if (prop) {
+-		if (prop->type != DEV_PROP_REF)
+-			return -EINVAL;
 -
--	return &prop->value;
-+	return prop->is_inline ? &prop->value : prop->pointer;
+-		/*
+-		 * We expect that references are never stored inline, even
+-		 * single ones, as they are too big.
+-		 */
+-		if (prop->is_inline)
+-			return -EINVAL;
+-
+-		if (index * sizeof(*ref_args) >= prop->length)
+-			return -ENOENT;
+-
+-		ref_array = prop->pointer;
+-		ref_args = &ref_array[index];
+-	} else {
+-		if (!swnode->node->references)
+-			return -ENOENT;
++	if (!prop)
++		return -ENOENT;
++
++	if (prop->type != DEV_PROP_REF)
++		return -EINVAL;
+ 
+-		for (ref = swnode->node->references; ref->name; ref++)
+-			if (!strcmp(ref->name, propname))
+-				break;
++	/*
++	 * We expect that references are never stored inline, even
++	 * single ones, as they are too big.
++	 */
++	if (prop->is_inline)
++		return -EINVAL;
+ 
+-		if (!ref->name || index > (ref->nrefs - 1))
+-			return -ENOENT;
++	if (index * sizeof(*ref) >= prop->length)
++		return -ENOENT;
+ 
+-		ref_args = &ref->refs[index];
+-	}
++	ref_array = prop->pointer;
++	ref = &ref_array[index];
+ 
+-	refnode = software_node_fwnode(ref_args->node);
++	refnode = software_node_fwnode(ref->node);
+ 	if (!refnode)
+ 		return -ENOENT;
+ 
+@@ -543,7 +531,7 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
+ 	args->nargs = nargs;
+ 
+ 	for (i = 0; i < nargs; i++)
+-		args->args[i] = ref_args->args[i];
++		args->args[i] = ref->args[i];
+ 
+ 	return 0;
  }
- 
- static const void *property_entry_find(const struct property_entry *props,
-@@ -205,7 +202,7 @@ static void property_entry_free_data(const struct property_entry *p)
- 	const char * const *src_str;
- 	size_t i, nval;
- 
--	if (p->is_array) {
-+	if (!p->is_inline) {
- 		if (p->type == DEV_PROP_STRING && p->pointer) {
- 			src_str = p->pointer;
- 			nval = p->length / sizeof(const char *);
-@@ -250,7 +247,7 @@ static int property_entry_copy_data(struct property_entry *dst,
- 	const void *pointer = property_get_pointer(src);
- 	const void *new;
- 
--	if (src->is_array) {
-+	if (!src->is_inline) {
- 		if (!src->length)
- 			return -ENODATA;
- 
-@@ -264,15 +261,16 @@ static int property_entry_copy_data(struct property_entry *dst,
- 				return -ENOMEM;
- 		}
- 
--		dst->is_array = true;
- 		dst->pointer = new;
- 	} else if (src->type == DEV_PROP_STRING) {
- 		new = kstrdup(src->value.str, GFP_KERNEL);
- 		if (!new && src->value.str)
- 			return -ENOMEM;
- 
-+		dst->is_inline = true;
- 		dst->value.str = new;
- 	} else {
-+		dst->is_inline = true;
- 		dst->value = src->value;
- 	}
- 
 diff --git a/include/linux/property.h b/include/linux/property.h
-index 48335288c2a96..dad0ad11b55e2 100644
+index 19b9dcc322763..b28c81af7bb68 100644
 --- a/include/linux/property.h
 +++ b/include/linux/property.h
-@@ -227,15 +227,17 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
-  * struct property_entry - "Built-in" device property representation.
-  * @name: Name of the property.
-  * @length: Length of data making up the value.
-- * @is_array: True when the property is an array.
-+ * @is_inline: True when the property value is embedded in
-+ *	&struct property_entry instance.
-  * @type: Type of the data in unions.
-- * @pointer: Pointer to the property (an array of items of the given type).
-- * @value: Value of the property (when it is a single item of the given type).
-+ * @pointer: Pointer to the property when it is stored separately from
-+ *	the &struct property_entry instance.
-+ * @value: Value of the property when it is stored inline.
-  */
- struct property_entry {
- 	const char *name;
- 	size_t length;
--	bool is_array;
-+	bool is_inline;
- 	enum dev_prop_type type;
- 	union {
- 		const void *pointer;
-@@ -262,7 +264,6 @@ struct property_entry {
- (struct property_entry) {						\
- 	.name = _name_,							\
- 	.length = (_len_) * __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),	\
--	.is_array = true,						\
- 	.type = DEV_PROP_##_Type_,					\
- 	{ .pointer = _val_ },						\
- }
-@@ -293,6 +294,7 @@ struct property_entry {
- (struct property_entry) {						\
- 	.name = _name_,							\
- 	.length = __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),		\
-+	.is_inline = true,						\
- 	.type = DEV_PROP_##_Type_,					\
- 	{ .value = { ._elem_ = _val_ } },				\
- }
-@@ -311,6 +313,7 @@ struct property_entry {
- #define PROPERTY_ENTRY_BOOL(_name_)		\
- (struct property_entry) {			\
- 	.name = _name_,				\
-+	.is_inline = true,			\
- }
+@@ -418,30 +418,16 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
+ /* -------------------------------------------------------------------------- */
+ /* Software fwnode support - when HW description is incomplete or missing */
  
- struct property_entry *
+-/**
+- * struct software_node_reference - Named software node reference property
+- * @name: Name of the property
+- * @nrefs: Number of elements in @refs array
+- * @refs: Array of references with optional arguments
+- */
+-struct software_node_reference {
+-	const char *name;
+-	unsigned int nrefs;
+-	const struct software_node_ref_args *refs;
+-};
+-
+ /**
+  * struct software_node - Software node description
+  * @name: Name of the software node
+  * @parent: Parent of the software node
+  * @properties: Array of device properties
+- * @references: Array of software node reference properties
+  */
+ struct software_node {
+ 	const char *name;
+ 	const struct software_node *parent;
+ 	const struct property_entry *properties;
+-	const struct software_node_reference *references;
+ };
+ 
+ bool is_software_node(const struct fwnode_handle *fwnode);
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
