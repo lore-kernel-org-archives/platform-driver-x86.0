@@ -1,7 +1,7 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v7 1/6] software node: rename is_array to is_inline
-Date: Thu,  7 Nov 2019 16:17:58 -0800
-Message-ID: <20191108001803.191541-2-dmitry.torokhov@gmail.com>
+Subject: [PATCH v7 2/6] software node: allow embedding of small arrays into property_entry
+Date: Thu,  7 Nov 2019 16:17:59 -0800
+Message-ID: <20191108001803.191541-3-dmitry.torokhov@gmail.com>
 References: <20191108001803.191541-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,118 +12,173 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@li
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-We do not need a special flag to know if we are dealing with an array,
-as we can get that data from ratio between element length and the data
-size, however we do need a flag to know whether the data is stored
-directly inside property_entry or separately.
+We should not conflate whether a property data is an array or a single
+value with where it is stored (embedded into property_entry structure or
+out-of-line). All single-value properties are in effect 1-element
+arrays, and we can figure the amount of data stored in a property by
+examining its length and the data type. And arrays can be as easily
+stored in property entry instances as single values are, provided that
+we have enough space (we have up to 8 bytes). We can embed:
+
+- up to 8 bytes from U8 arrays
+- up to 4 words
+- up to 2 double words
+- one U64 value
+- one (on 64 bit architectures) or 2 (on 32 bit) strings.
+
+This change also has an effect of switching properties with small amount
+of data to embed it instead of keeping it separate when copying such
+properties.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/base/swnode.c    | 12 +++++-------
- include/linux/property.h | 13 ++++++++-----
- 2 files changed, 13 insertions(+), 12 deletions(-)
+ drivers/base/swnode.c | 103 +++++++++++++++++++-----------------------
+ 1 file changed, 47 insertions(+), 56 deletions(-)
 
 diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index d8d0dc0ca5acf..18a30fb3cc588 100644
+index 18a30fb3cc588..ce7f202b2455e 100644
 --- a/drivers/base/swnode.c
 +++ b/drivers/base/swnode.c
-@@ -108,10 +108,7 @@ static const void *property_get_pointer(const struct property_entry *prop)
- 	if (!prop->length)
- 		return NULL;
+@@ -198,93 +198,84 @@ static int property_entry_read_string_array(const struct property_entry *props,
  
--	if (prop->is_array)
--		return prop->pointer;
--
--	return &prop->value;
-+	return prop->is_inline ? &prop->value : prop->pointer;
- }
- 
- static const void *property_entry_find(const struct property_entry *props,
-@@ -205,7 +202,7 @@ static void property_entry_free_data(const struct property_entry *p)
+ static void property_entry_free_data(const struct property_entry *p)
+ {
+-	const void *pointer = property_get_pointer(p);
  	const char * const *src_str;
  	size_t i, nval;
  
--	if (p->is_array) {
-+	if (!p->is_inline) {
- 		if (p->type == DEV_PROP_STRING && p->pointer) {
- 			src_str = p->pointer;
- 			nval = p->length / sizeof(const char *);
-@@ -250,7 +247,7 @@ static int property_entry_copy_data(struct property_entry *dst,
- 	const void *pointer = property_get_pointer(src);
- 	const void *new;
+-	if (!p->is_inline) {
+-		if (p->type == DEV_PROP_STRING && p->pointer) {
+-			src_str = p->pointer;
+-			nval = p->length / sizeof(const char *);
+-			for (i = 0; i < nval; i++)
+-				kfree(src_str[i]);
+-		}
+-		kfree(pointer);
+-	} else if (p->type == DEV_PROP_STRING) {
+-		kfree(p->value.str);
++	if (p->type == DEV_PROP_STRING) {
++		src_str = property_get_pointer(p);
++		nval = p->length / sizeof(*src_str);
++		for (i = 0; i < nval; i++)
++			kfree(src_str[i]);
+ 	}
++
++	if (!p->is_inline)
++		kfree(p->pointer);
++
+ 	kfree(p->name);
+ }
  
--	if (src->is_array) {
-+	if (!src->is_inline) {
- 		if (!src->length)
- 			return -ENODATA;
+-static const char * const *
+-property_copy_string_array(const struct property_entry *src)
++static bool property_copy_string_array(const char **dst_ptr,
++				       const char * const *src_ptr,
++				       size_t nval)
+ {
+-	const char **d;
+-	const char * const *src_str = src->pointer;
+-	size_t nval = src->length / sizeof(*d);
+ 	int i;
  
-@@ -264,15 +261,16 @@ static int property_entry_copy_data(struct property_entry *dst,
- 				return -ENOMEM;
+-	d = kcalloc(nval, sizeof(*d), GFP_KERNEL);
+-	if (!d)
+-		return NULL;
+-
+ 	for (i = 0; i < nval; i++) {
+-		d[i] = kstrdup(src_str[i], GFP_KERNEL);
+-		if (!d[i] && src_str[i]) {
++		dst_ptr[i] = kstrdup(src_ptr[i], GFP_KERNEL);
++		if (!dst_ptr[i] && src_ptr[i]) {
+ 			while (--i >= 0)
+-				kfree(d[i]);
+-			kfree(d);
+-			return NULL;
++				kfree(dst_ptr[i]);
++			return false;
  		}
- 
--		dst->is_array = true;
- 		dst->pointer = new;
- 	} else if (src->type == DEV_PROP_STRING) {
- 		new = kstrdup(src->value.str, GFP_KERNEL);
- 		if (!new && src->value.str)
- 			return -ENOMEM;
- 
-+		dst->is_inline = true;
- 		dst->value.str = new;
- 	} else {
-+		dst->is_inline = true;
- 		dst->value = src->value;
  	}
  
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 48335288c2a96..dad0ad11b55e2 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -227,15 +227,17 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
-  * struct property_entry - "Built-in" device property representation.
-  * @name: Name of the property.
-  * @length: Length of data making up the value.
-- * @is_array: True when the property is an array.
-+ * @is_inline: True when the property value is embedded in
-+ *	&struct property_entry instance.
-  * @type: Type of the data in unions.
-- * @pointer: Pointer to the property (an array of items of the given type).
-- * @value: Value of the property (when it is a single item of the given type).
-+ * @pointer: Pointer to the property when it is stored separately from
-+ *	the &struct property_entry instance.
-+ * @value: Value of the property when it is stored inline.
-  */
- struct property_entry {
- 	const char *name;
- 	size_t length;
--	bool is_array;
-+	bool is_inline;
- 	enum dev_prop_type type;
- 	union {
- 		const void *pointer;
-@@ -262,7 +264,6 @@ struct property_entry {
- (struct property_entry) {						\
- 	.name = _name_,							\
- 	.length = (_len_) * __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),	\
--	.is_array = true,						\
- 	.type = DEV_PROP_##_Type_,					\
- 	{ .pointer = _val_ },						\
- }
-@@ -293,6 +294,7 @@ struct property_entry {
- (struct property_entry) {						\
- 	.name = _name_,							\
- 	.length = __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),		\
-+	.is_inline = true,						\
- 	.type = DEV_PROP_##_Type_,					\
- 	{ .value = { ._elem_ = _val_ } },				\
- }
-@@ -311,6 +313,7 @@ struct property_entry {
- #define PROPERTY_ENTRY_BOOL(_name_)		\
- (struct property_entry) {			\
- 	.name = _name_,				\
-+	.is_inline = true,			\
+-	return d;
++	return true;
  }
  
- struct property_entry *
+ static int property_entry_copy_data(struct property_entry *dst,
+ 				    const struct property_entry *src)
+ {
+ 	const void *pointer = property_get_pointer(src);
+-	const void *new;
+-
+-	if (!src->is_inline) {
+-		if (!src->length)
+-			return -ENODATA;
+-
+-		if (src->type == DEV_PROP_STRING) {
+-			new = property_copy_string_array(src);
+-			if (!new)
+-				return -ENOMEM;
+-		} else {
+-			new = kmemdup(pointer, src->length, GFP_KERNEL);
+-			if (!new)
+-				return -ENOMEM;
+-		}
+-
+-		dst->pointer = new;
+-	} else if (src->type == DEV_PROP_STRING) {
+-		new = kstrdup(src->value.str, GFP_KERNEL);
+-		if (!new && src->value.str)
++	void *dst_ptr;
++	size_t nval;
++
++	/*
++	 * Properties with no data should not be marked as stored
++	 * out of line.
++	 */
++	if (!src->is_inline && !src->length)
++		return -ENODATA;
++
++	if (src->length <= sizeof(dst->value)) {
++		dst_ptr = &dst->value;
++		dst->is_inline = true;
++	} else {
++		dst_ptr = kmalloc(src->length, GFP_KERNEL);
++		if (!dst_ptr)
+ 			return -ENOMEM;
++		dst->pointer = dst_ptr;
++	}
+ 
+-		dst->is_inline = true;
+-		dst->value.str = new;
++	if (src->type == DEV_PROP_STRING) {
++		nval = src->length / sizeof(const char *);
++		if (!property_copy_string_array(dst_ptr, pointer, nval)) {
++			if (!dst->is_inline)
++				kfree(dst->pointer);
++			return -ENOMEM;
++		}
+ 	} else {
+-		dst->is_inline = true;
+-		dst->value = src->value;
++		memcpy(dst_ptr, pointer, src->length);
+ 	}
+ 
+ 	dst->length = src->length;
+ 	dst->type = src->type;
+ 	dst->name = kstrdup(src->name, GFP_KERNEL);
+-	if (!dst->name)
+-		goto out_free_data;
++	if (!dst->name) {
++		property_entry_free_data(dst);
++		return -ENOMEM;
++	}
+ 
+ 	return 0;
+-
+-out_free_data:
+-	property_entry_free_data(dst);
+-	return -ENOMEM;
+ }
+ 
+ /**
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
