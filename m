@@ -1,170 +1,107 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v8 4/6] platform/x86: intel_cht_int33fe: use inline reference properties
-Date: Thu,  7 Nov 2019 20:22:23 -0800
-Message-ID: <20191108042225.45391-5-dmitry.torokhov@gmail.com>
-References: <20191108042225.45391-1-dmitry.torokhov@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v8 1/6] software node: rename is_array to is_inline
+Date: Fri, 8 Nov 2019 10:49:38 +0100
+Message-ID: <CAJZ5v0ghf58k_-dVZZGygQRBiVZuFfKUpFUsNK_0D15jvftRMw@mail.gmail.com>
+References: <20191108042225.45391-1-dmitry.torokhov@gmail.com> <20191108042225.45391-2-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191108042225.45391-1-dmitry.torokhov@gmail.com>
+In-Reply-To: <20191108042225.45391-2-dmitry.torokhov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Now that static device properties allow defining reference properties
-together with all other types of properties, instead of managing them
-separately, let's adjust the driver.
+On Fri, Nov 8, 2019 at 5:22 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> We do not need a special flag to know if we are dealing with an array,
+> as we can get that data from ratio between element length and the data
+> size, however we do need a flag to know whether the data is stored
+> directly inside property_entry or separately.
 
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- .../platform/x86/intel_cht_int33fe_typec.c    | 81 ++++++++++---------
- 1 file changed, 41 insertions(+), 40 deletions(-)
+So the subject is slightly misleading, because it is not a rename.  I
+would say "replace x with y" instead.
 
-diff --git a/drivers/platform/x86/intel_cht_int33fe_typec.c b/drivers/platform/x86/intel_cht_int33fe_typec.c
-index 2d097fc2dd465..04138215956bf 100644
---- a/drivers/platform/x86/intel_cht_int33fe_typec.c
-+++ b/drivers/platform/x86/intel_cht_int33fe_typec.c
-@@ -36,30 +36,6 @@ enum {
- 	INT33FE_NODE_MAX,
- };
- 
--static const struct software_node nodes[];
--
--static const struct software_node_ref_args pi3usb30532_ref = {
--	&nodes[INT33FE_NODE_PI3USB30532]
--};
--
--static const struct software_node_ref_args dp_ref = {
--	&nodes[INT33FE_NODE_DISPLAYPORT]
--};
--
--static struct software_node_ref_args mux_ref;
--
--static const struct software_node_reference usb_connector_refs[] = {
--	{ "orientation-switch", 1, &pi3usb30532_ref},
--	{ "mode-switch", 1, &pi3usb30532_ref},
--	{ "displayport", 1, &dp_ref},
--	{ }
--};
--
--static const struct software_node_reference fusb302_refs[] = {
--	{ "usb-role-switch", 1, &mux_ref},
--	{ }
--};
--
- /*
-  * Grrr I severly dislike buggy BIOS-es. At least one BIOS enumerates
-  * the max17047 both through the INT33FE ACPI device (it is right there
-@@ -95,8 +71,18 @@ static const struct property_entry max17047_props[] = {
- 	{ }
- };
- 
-+/*
-+ * We are not using inline property here because those are constant,
-+ * and we need to adjust this one at runtime to point to real
-+ * software node.
-+ */
-+static struct software_node_ref_args fusb302_mux_refs[] = {
-+	{ .node = NULL },
-+};
-+
- static const struct property_entry fusb302_props[] = {
- 	PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
-+	PROPERTY_ENTRY_REF_ARRAY("usb-role-switch", fusb302_mux_refs),
- 	{ }
- };
- 
-@@ -112,6 +98,8 @@ static const u32 snk_pdo[] = {
- 	PDO_VAR(5000, 12000, 3000),
- };
- 
-+static const struct software_node nodes[];
-+
- static const struct property_entry usb_connector_props[] = {
- 	PROPERTY_ENTRY_STRING("data-role", "dual"),
- 	PROPERTY_ENTRY_STRING("power-role", "dual"),
-@@ -119,15 +107,21 @@ static const struct property_entry usb_connector_props[] = {
- 	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
- 	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
- 	PROPERTY_ENTRY_U32("op-sink-microwatt", 2500000),
-+	PROPERTY_ENTRY_REF("orientation-switch",
-+			   &nodes[INT33FE_NODE_PI3USB30532]),
-+	PROPERTY_ENTRY_REF("mode-switch",
-+			   &nodes[INT33FE_NODE_PI3USB30532]),
-+	PROPERTY_ENTRY_REF("displayport",
-+			   &nodes[INT33FE_NODE_DISPLAYPORT]),
- 	{ }
- };
- 
- static const struct software_node nodes[] = {
--	{ "fusb302", NULL, fusb302_props, fusb302_refs },
-+	{ "fusb302", NULL, fusb302_props },
- 	{ "max17047", NULL, max17047_props },
- 	{ "pi3usb30532" },
- 	{ "displayport" },
--	{ "connector", &nodes[0], usb_connector_props, usb_connector_refs },
-+	{ "connector", &nodes[0], usb_connector_props },
- 	{ }
- };
- 
-@@ -163,9 +157,10 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
- {
- 	software_node_unregister_nodes(nodes);
- 
--	if (mux_ref.node) {
--		fwnode_handle_put(software_node_fwnode(mux_ref.node));
--		mux_ref.node = NULL;
-+	if (fusb302_mux_refs[0].node) {
-+		fwnode_handle_put(
-+			software_node_fwnode(fusb302_mux_refs[0].node));
-+		fusb302_mux_refs[0].node = NULL;
- 	}
- 
- 	if (data->dp) {
-@@ -177,25 +172,31 @@ static void cht_int33fe_remove_nodes(struct cht_int33fe_data *data)
- 
- static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
- {
-+	const struct software_node *mux_ref_node;
- 	int ret;
- 
--	ret = software_node_register_nodes(nodes);
--	if (ret)
--		return ret;
--
--	/* The devices that are not created in this driver need extra steps. */
--
- 	/*
- 	 * There is no ACPI device node for the USB role mux, so we need to wait
- 	 * until the mux driver has created software node for the mux device.
- 	 * It means we depend on the mux driver. This function will return
- 	 * -EPROBE_DEFER until the mux device is registered.
- 	 */
--	mux_ref.node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
--	if (!mux_ref.node) {
--		ret = -EPROBE_DEFER;
--		goto err_remove_nodes;
--	}
-+	mux_ref_node = software_node_find_by_name(NULL, "intel-xhci-usb-sw");
-+	if (!mux_ref_node)
-+		return -EPROBE_DEFER;
-+
-+	/*
-+	 * Update node used in "usb-role-switch" property. Note that we
-+	 * rely on software_node_register_nodes() to use the original
-+	 * instance of properties instead of copying them.
-+	 */
-+	fusb302_mux_refs[0].node = mux_ref_node;
-+
-+	ret = software_node_register_nodes(nodes);
-+	if (ret)
-+		return ret;
-+
-+	/* The devices that are not created in this driver need extra steps. */
- 
- 	/*
- 	 * The DP connector does have ACPI device node. In this case we can just
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+[Arguably I can change that when applying the patch, but since we are
+going to wait for the dependencies to go in, it should not be a big
+deal to send an update of this patch alone?]
+
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/base/swnode.c    | 12 +++++-------
+>  include/linux/property.h | 13 ++++++++-----
+>  2 files changed, 13 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index d8d0dc0ca5acf..18a30fb3cc588 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -108,10 +108,7 @@ static const void *property_get_pointer(const struct property_entry *prop)
+>         if (!prop->length)
+>                 return NULL;
+>
+> -       if (prop->is_array)
+> -               return prop->pointer;
+> -
+> -       return &prop->value;
+> +       return prop->is_inline ? &prop->value : prop->pointer;
+>  }
+>
+>  static const void *property_entry_find(const struct property_entry *props,
+> @@ -205,7 +202,7 @@ static void property_entry_free_data(const struct property_entry *p)
+>         const char * const *src_str;
+>         size_t i, nval;
+>
+> -       if (p->is_array) {
+> +       if (!p->is_inline) {
+>                 if (p->type == DEV_PROP_STRING && p->pointer) {
+>                         src_str = p->pointer;
+>                         nval = p->length / sizeof(const char *);
+> @@ -250,7 +247,7 @@ static int property_entry_copy_data(struct property_entry *dst,
+>         const void *pointer = property_get_pointer(src);
+>         const void *new;
+>
+> -       if (src->is_array) {
+> +       if (!src->is_inline) {
+>                 if (!src->length)
+>                         return -ENODATA;
+>
+> @@ -264,15 +261,16 @@ static int property_entry_copy_data(struct property_entry *dst,
+>                                 return -ENOMEM;
+>                 }
+>
+> -               dst->is_array = true;
+>                 dst->pointer = new;
+>         } else if (src->type == DEV_PROP_STRING) {
+>                 new = kstrdup(src->value.str, GFP_KERNEL);
+>                 if (!new && src->value.str)
+>                         return -ENOMEM;
+>
+> +               dst->is_inline = true;
+>                 dst->value.str = new;
+>         } else {
+> +               dst->is_inline = true;
+>                 dst->value = src->value;
+>         }
+>
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index 48335288c2a96..dad0ad11b55e2 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -227,15 +227,17 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
+>   * struct property_entry - "Built-in" device property representation.
+>   * @name: Name of the property.
+>   * @length: Length of data making up the value.
+> - * @is_array: True when the property is an array.
+> + * @is_inline: True when the property value is embedded in
+> + *     &struct property_entry instance.
+>   * @type: Type of the data in unions.
+> - * @pointer: Pointer to the property (an array of items of the given type).
+> - * @value: Value of the property (when it is a single item of the given type).
+> + * @pointer: Pointer to the property when it is stored separately from
+> + *     the &struct property_entry instance.
+> + * @value: Value of the property when it is stored inline.
+
+And while at it, can you please try to make the comments shorter so
+they each take one line?
