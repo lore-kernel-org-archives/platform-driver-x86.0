@@ -1,84 +1,129 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v7 0/6] software node: add support for reference properties
-Date: Thu,  7 Nov 2019 16:17:57 -0800
-Message-ID: <20191108001803.191541-1-dmitry.torokhov@gmail.com>
+Subject: [PATCH v7 1/6] software node: rename is_array to is_inline
+Date: Thu,  7 Nov 2019 16:17:58 -0800
+Message-ID: <20191108001803.191541-2-dmitry.torokhov@gmail.com>
+References: <20191108001803.191541-1-dmitry.torokhov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191108001803.191541-1-dmitry.torokhov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-These series implement "references" properties for software nodes as true
-properties, instead of managing them completely separately.
+We do not need a special flag to know if we are dealing with an array,
+as we can get that data from ratio between element length and the data
+size, however we do need a flag to know whether the data is stored
+directly inside property_entry or separately.
 
-The first 2 patches do away with separate handling of arrays vs
-single-value properties, and treat everything as arrays (which really
-matches how we handle OF or ACPI properties). Instead we recognize that
-data, if it is small enough, may be embedded into property_entry
-structure. As a side effect, properties can be converted from having their
-data stored separately to embedding their data when they are being copied.
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/base/swnode.c    | 12 +++++-------
+ include/linux/property.h | 13 ++++++++-----
+ 2 files changed, 13 insertions(+), 12 deletions(-)
 
-Patch #3 implements PROPERTY_ENTRY_REF() and friends; patch #4 converts
-the user of references to the property syntax, and patch #5 removes the
-remains of references as entities that are managed separately.
-
-Patch #6 adds unit tests to verify that the handling of property
-entries is correct.
-
-Changed in v7:
-- rebased onto next-20191107
-- dropped already applied patches
-- reworked patch that moved small properties inline on copying to
-  avoid temporary allocation
-- cleaned up logic for embedding vs storing values out-of-line
-- fixed handling of embedded 2-element string array on x32
-
-Changes in v6:
-- rebased onto next-20191023
-- fixed patch moving small properties inline
-- fixed handling boolean properties after is_array -> is_inline
-  conversion
-- changed comments around is_inline "stored directly" vs embedded
-  in one place (Andy)
-- added unit tests for property entries based on KUnit framework
-- added Any's reviewed-by/acked-by
-
-Changes in v5:
-- rebased onto next-20191011
-
-Changes in v4:
-- dealt with union aliasing concerns
-- inline small properties on copy
-
-Changes in v3:
-- added various cleanups before implementing reference properties
-
-Changes in v2:
-- reworked code so that even single-entry reference properties are
-  stored as arrays (i.e. the software_node_ref_args instances are
-  not part of property_entry structure) to avoid size increase.
-  From user's POV nothing is changed, one can still use PROPERTY_ENTRY_REF
-  macro to define reference "inline".
-- dropped unused DEV_PROP_MAX
-- rebased on linux-next
-
-Dmitry Torokhov (6):
-  software node: rename is_array to is_inline
-  software node: allow embedding of small arrays into property_entry
-  software node: implement reference properties
-  platform/x86: intel_cht_int33fe: use inline reference properties
-  software node: remove separate handling of references
-  software node: add basic tests for property entries
-
- drivers/base/swnode.c                         | 142 +++---
- drivers/base/test/Makefile                    |   2 +
- drivers/base/test/property-entry-test.c       | 472 ++++++++++++++++++
- .../platform/x86/intel_cht_int33fe_typec.c    |  81 +--
- include/linux/property.h                      |  84 ++--
- 5 files changed, 640 insertions(+), 141 deletions(-)
- create mode 100644 drivers/base/test/property-entry-test.c
-
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index d8d0dc0ca5acf..18a30fb3cc588 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -108,10 +108,7 @@ static const void *property_get_pointer(const struct property_entry *prop)
+ 	if (!prop->length)
+ 		return NULL;
+ 
+-	if (prop->is_array)
+-		return prop->pointer;
+-
+-	return &prop->value;
++	return prop->is_inline ? &prop->value : prop->pointer;
+ }
+ 
+ static const void *property_entry_find(const struct property_entry *props,
+@@ -205,7 +202,7 @@ static void property_entry_free_data(const struct property_entry *p)
+ 	const char * const *src_str;
+ 	size_t i, nval;
+ 
+-	if (p->is_array) {
++	if (!p->is_inline) {
+ 		if (p->type == DEV_PROP_STRING && p->pointer) {
+ 			src_str = p->pointer;
+ 			nval = p->length / sizeof(const char *);
+@@ -250,7 +247,7 @@ static int property_entry_copy_data(struct property_entry *dst,
+ 	const void *pointer = property_get_pointer(src);
+ 	const void *new;
+ 
+-	if (src->is_array) {
++	if (!src->is_inline) {
+ 		if (!src->length)
+ 			return -ENODATA;
+ 
+@@ -264,15 +261,16 @@ static int property_entry_copy_data(struct property_entry *dst,
+ 				return -ENOMEM;
+ 		}
+ 
+-		dst->is_array = true;
+ 		dst->pointer = new;
+ 	} else if (src->type == DEV_PROP_STRING) {
+ 		new = kstrdup(src->value.str, GFP_KERNEL);
+ 		if (!new && src->value.str)
+ 			return -ENOMEM;
+ 
++		dst->is_inline = true;
+ 		dst->value.str = new;
+ 	} else {
++		dst->is_inline = true;
+ 		dst->value = src->value;
+ 	}
+ 
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 48335288c2a96..dad0ad11b55e2 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -227,15 +227,17 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
+  * struct property_entry - "Built-in" device property representation.
+  * @name: Name of the property.
+  * @length: Length of data making up the value.
+- * @is_array: True when the property is an array.
++ * @is_inline: True when the property value is embedded in
++ *	&struct property_entry instance.
+  * @type: Type of the data in unions.
+- * @pointer: Pointer to the property (an array of items of the given type).
+- * @value: Value of the property (when it is a single item of the given type).
++ * @pointer: Pointer to the property when it is stored separately from
++ *	the &struct property_entry instance.
++ * @value: Value of the property when it is stored inline.
+  */
+ struct property_entry {
+ 	const char *name;
+ 	size_t length;
+-	bool is_array;
++	bool is_inline;
+ 	enum dev_prop_type type;
+ 	union {
+ 		const void *pointer;
+@@ -262,7 +264,6 @@ struct property_entry {
+ (struct property_entry) {						\
+ 	.name = _name_,							\
+ 	.length = (_len_) * __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),	\
+-	.is_array = true,						\
+ 	.type = DEV_PROP_##_Type_,					\
+ 	{ .pointer = _val_ },						\
+ }
+@@ -293,6 +294,7 @@ struct property_entry {
+ (struct property_entry) {						\
+ 	.name = _name_,							\
+ 	.length = __PROPERTY_ENTRY_ELEMENT_SIZE(_elem_),		\
++	.is_inline = true,						\
+ 	.type = DEV_PROP_##_Type_,					\
+ 	{ .value = { ._elem_ = _val_ } },				\
+ }
+@@ -311,6 +313,7 @@ struct property_entry {
+ #define PROPERTY_ENTRY_BOOL(_name_)		\
+ (struct property_entry) {			\
+ 	.name = _name_,				\
++	.is_inline = true,			\
+ }
+ 
+ struct property_entry *
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
