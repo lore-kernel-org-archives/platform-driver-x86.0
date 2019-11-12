@@ -1,115 +1,31 @@
-From: Gayatri Kammela <gayatri.kammela@intel.com>
-Subject: [PATCH v2 5/6] platform/x86: Add Tiger Lake (TGL) platform support to intel_pmc_core driver
-Date: Mon, 11 Nov 2019 20:06:30 -0800
-Message-ID: <2aeaffd3e053d20ec93df407b3b9f7f8a68ffe08.1573529092.git.gayatri.kammela@intel.com>
-References: <cover.1573529092.git.gayatri.kammela@intel.com>
+From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Subject: RE: [PATCH v1 0/5] Add Tiger Lake/Elkhart Lake support to pmc_core
+ driver
+Date: Tue, 12 Nov 2019 04:08:00 +0000
+Message-ID: <MN2PR11MB371171B63CAA8272596DC2DDF2770@MN2PR11MB3711.namprd11.prod.outlook.com>
+References: <20190926192603.18647-1-gayatri.kammela@intel.com>
+ <CAHp75Vcrp2ffDCE=tm2dwSEhwfPCPWGhb-Nw0v-7ga2y=_dL8w@mail.gmail.com>
+ <BL0PR11MB31709BA9A5F4E4F5455D913CF2820@BL0PR11MB3170.namprd11.prod.outlook.com>
+ <MN2PR11MB37113F569E63A2CF3D2AC70BF2660@MN2PR11MB3711.namprd11.prod.outlook.com>
+ <CAHp75Vc=+ZLLqv0_w6NzW5j8BLhCBVoNzFtQ7856c6WsogYTUg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1573529092.git.gayatri.kammela@intel.com>
-In-Reply-To: <cover.1573529092.git.gayatri.kammela@intel.com>
-References: <cover.1573529092.git.gayatri.kammela@intel.com>
+In-Reply-To: <CAHp75Vc=+ZLLqv0_w6NzW5j8BLhCBVoNzFtQ7856c6WsogYTUg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: vishwanath.somayaji@intel.com, dvhart@infradead.org, linux-kernel@vger.kernel.org, charles.d.prestopine@intel.com, Gayatri Kammela <gayatri.kammela@intel.com>, Peter Zijlstra <peterz@infradead.org>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kan Liang <kan.liang@intel.com>, "David E . Box" <david.e.box@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Tony Luck <tony.luck@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Peter Zijlstra <peterz@infradead.org>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Liang, Kan" <kan.liang@intel.com>, "Box, David E" <david.e.box@intel.com>, "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>, "Luck, Tony" <tony.luck@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add Tiger Lake to the list of the platforms that intel_pmc_core driver
-supports for the pmc_core device.
-
-Just like Ice Lake, Tiger Lake can also reuse all the Cannon Lake PCH
-IPs. Since Tiger Lake has almost the same number of PCH IPs as Ice Lake,
-reuse Ice Lake's PPFEAR_NUM_ENTRIES instead of defining a new macro.
-
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: David E. Box <david.e.box@intel.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
----
- drivers/platform/x86/intel_pmc_core.c | 40 +++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index fa91f3127460..b708c04db752 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -190,7 +190,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
- 	{"SDX",                 BIT(4)},
- 	{"SPE",                 BIT(5)},
- 	{"Fuse",                BIT(6)},
--	/* Reserved for Cannon Lake but valid for Ice Lake */
-+	/* Reserved for Cannon Lake but valid for Ice Lake and Tiger Lake */
- 	{"SBR8",		BIT(7)},
- 
- 	{"CSME_FSC",            BIT(0)},
-@@ -234,7 +234,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
- 	{"HDA_PGD4",            BIT(2)},
- 	{"HDA_PGD5",            BIT(3)},
- 	{"HDA_PGD6",            BIT(4)},
--	/* Reserved for Cannon Lake but valid for Ice Lake */
-+	/* Reserved for Cannon Lake but valid for Ice Lake and Tiger Lake */
- 	{"PSF6",		BIT(5)},
- 	{"PSF7",		BIT(6)},
- 	{"PSF8",		BIT(7)},
-@@ -265,6 +265,24 @@ static const struct pmc_bit_map *ext_icl_pfear_map[] = {
- 	NULL
- };
- 
-+static const struct pmc_bit_map tgl_pfear_map[] = {
-+	/* Tiger Lake generation onwards only */
-+	{"PSF9",		BIT(0)},
-+	{"RES_66",		BIT(1)},
-+	{"RES_67",		BIT(2)},
-+	{"RES_68",		BIT(3)},
-+	{"RES_69",		BIT(4)},
-+	{"RES_70",		BIT(5)},
-+	{"TBTLSX",		BIT(6)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map *ext_tgl_pfear_map[] = {
-+	cnp_pfear_map,
-+	tgl_pfear_map,
-+	NULL
-+};
-+
- static const struct pmc_bit_map cnp_slps0_dbg0_map[] = {
- 	{"AUDIO_D3",		BIT(0)},
- 	{"OTG_D3",		BIT(1)},
-@@ -383,6 +401,22 @@ static const struct pmc_reg_map icl_reg_map = {
- 	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
- };
- 
-+static const struct pmc_reg_map tgl_reg_map = {
-+	.pfear_sts = ext_tgl_pfear_map,
-+	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
-+	.slps0_dbg_maps = cnp_slps0_dbg_maps,
-+	.ltr_show_sts = cnp_ltr_show_map,
-+	.msr_sts = msr_map,
-+	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
-+	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
-+	.regmap_length = CNP_PMC_MMIO_REG_LEN,
-+	.ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
-+	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
-+	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
-+	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
-+	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
-+};
-+
- static inline u8 pmc_core_reg_read_byte(struct pmc_dev *pmcdev, int offset)
- {
- 	return readb(pmcdev->regbase + offset);
-@@ -836,6 +870,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	INTEL_CPU_FAM6(CANNONLAKE_L, cnp_reg_map),
- 	INTEL_CPU_FAM6(ICELAKE_L, icl_reg_map),
- 	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
-+	INTEL_CPU_FAM6(TIGERLAKE_L, tgl_reg_map),
-+	INTEL_CPU_FAM6(TIGERLAKE, tgl_reg_map),
- 	{}
- };
- 
--- 
-2.17.1
+PiA+ID4gU3ViamVjdDogUkU6IFtQQVRDSCB2MSAwLzVdIEFkZCBUaWdlciBMYWtlL0Vsa2hhcnQg
+TGFrZSBzdXBwb3J0IHRvDQo+ID4gPiBwbWNfY29yZSBkcml2ZXINCj4gPiA+DQo+ID4gPiA+IE9u
+IFRodSwgU2VwIDI2LCAyMDE5IGF0IDk6NDMgUE0gR2F5YXRyaSBLYW1tZWxhDQo+ID4gPiA+IDxn
+YXlhdHJpLmthbW1lbGFAaW50ZWwuY29tPiB3cm90ZToNCj4gPiA+ID4NCj4gPiA+ID4gVGhhbmsg
+eW91IGZvciB0aGUgc2VyaWVzLCBJJ2xsIGNvbW1lbnQgdGhlbSBsYXRlci4NCj4gPiA+IFRoYW5r
+IHlvdSBBbmR5IQ0KPiA+ID4gPg0KPiA+DQo+ID4gSGkgQW5keSEgSSdtIHdvbmRlcmluZyBpZiB5
+b3UgaGF2ZSBhbnkgY29tbWVudHMgZm9yIHRoaXMgcGF0Y2ggc2VyaWVzLg0KPiBUaGFua3MhDQo+
+IA0KPiBQbGVhc2UsIGFkZHJlc3MgYWJvdmUgbWVudGlvbmVkIGNvbW1lbnRzIGFuZCBzZW5kIGEg
+djIuIEknbGwgcHVzaCBpdCB0bw0KPiByZXZpZXcgYnJhbmNoLg0KDQpUaGFuayB5b3UgQW5keSEg
+U29ycnkgZm9yIHRoZSBkZWxheS4gSSBzZW50IHYyIG9mIHRoZSBzZXJpZXMuIFRoYW5rcyENCg==
