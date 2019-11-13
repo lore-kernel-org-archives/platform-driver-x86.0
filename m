@@ -1,61 +1,70 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [PATCH v1] platform/mellanox: Add Mellanox TRIO driver
-Date: Tue, 12 Nov 2019 14:44:32 +0000
-Message-ID: <AM6PR05MB522463C06CB3E7528F18281FA2770@AM6PR05MB5224.eurprd05.prod.outlook.com>
-References: <cover.1573460910.git.sramani@mellanox.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 121/209] Input: silead - try firmware reload after unsuccessful resume
+Date: Tue, 12 Nov 2019 20:48:57 -0500
+Message-ID: <20191113015025.9685-121-sashal@kernel.org>
+References: <20191113015025.9685-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1573460910.git.sramani@mellanox.com>
-Content-Language: en-US
+In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
-Cc: Liming Sun <lsun@mellanox.com>, Shravan Ramani <sramani@mellanox.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Julian Sax <jsbc@gmx.de>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+From: Julian Sax <jsbc@gmx.de>
 
+[ Upstream commit dde27443211062e841806feaf690674b7c3a599f ]
 
-> -----Original Message-----
-> From: Shravan Kumar Ramani <sramani@mellanox.com>
-> Sent: Monday, November 11, 2019 4:35 PM
-> To: Andy Shevchenko <andy@infradead.org>; Darren Hart
-> <dvhart@infradead.org>; Vadim Pasternak <vadimp@mellanox.com>
-> Cc: Liming Sun <lsun@mellanox.com>; Shravan Ramani
-> <sramani@mellanox.com>; platform-driver-x86@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: [PATCH v1] platform/mellanox: Add Mellanox TRIO driver
->=20
-> This patch adds support for Mellanox BlueField TRIO PCIe host controller.
-> The driver supports multiple TRIO instances and provides a sysfs interfac=
-e to
-> allow the user to read/set the L3 cache profile for transactions going th=
-rough
-> the TRIO. It also provides an interrupt handler for the TRIO blocks.
+A certain silead controller (Chip ID: 0x56810000) loses its firmware
+after suspend, causing the resume to fail. This patch tries to load
+the firmware, should a resume error occur and retries the resuming.
 
-Hi Shravan,
+Signed-off-by: Julian Sax <jsbc@gmx.de>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/touchscreen/silead.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Could you, please, explain what TRIO PCIe host controller?
-What is TRIO, is it some internal name or it's some standard terminology?
-If it's internal, please, explain for what it stands for.
-
-Same for TRIO instances. Are there some host side PCI instances?
-What are the purpose of them?
-
-Could you, please, also explain the system configuration?
-
-
->=20
-> Shravan Kumar Ramani (1):
->   platform/mellanox: Add Mellanox TRIO driver
->=20
->  MAINTAINERS                            |   5 +
->  drivers/platform/mellanox/Kconfig      |   8 +
->  drivers/platform/mellanox/Makefile     |   1 +
->  drivers/platform/mellanox/mlxbf-trio.c | 624
-> +++++++++++++++++++++++++++++++++
->  4 files changed, 638 insertions(+)
->  create mode 100644 drivers/platform/mellanox/mlxbf-trio.c
->=20
-> --
-> 2.1.2
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index e5c3b066bd2a1..06f0eb04a8fd4 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -558,20 +558,33 @@ static int __maybe_unused silead_ts_suspend(struct device *dev)
+ static int __maybe_unused silead_ts_resume(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
++	bool second_try = false;
+ 	int error, status;
+ 
+ 	silead_ts_set_power(client, SILEAD_POWER_ON);
+ 
++ retry:
+ 	error = silead_ts_reset(client);
+ 	if (error)
+ 		return error;
+ 
++	if (second_try) {
++		error = silead_ts_load_fw(client);
++		if (error)
++			return error;
++	}
++
+ 	error = silead_ts_startup(client);
+ 	if (error)
+ 		return error;
+ 
+ 	status = silead_ts_get_status(client);
+ 	if (status != SILEAD_STATUS_OK) {
++		if (!second_try) {
++			second_try = true;
++			dev_dbg(dev, "Reloading firmware after unsuccessful resume\n");
++			goto retry;
++		}
+ 		dev_err(dev, "Resume error, status: 0x%02x\n", status);
+ 		return -ENODEV;
+ 	}
+-- 
+2.20.1
