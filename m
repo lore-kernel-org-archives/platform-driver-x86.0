@@ -1,70 +1,58 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 40/68] Input: silead - try firmware reload after unsuccessful resume
-Date: Tue, 12 Nov 2019 20:59:04 -0500
-Message-ID: <20191113015932.12655-40-sashal@kernel.org>
-References: <20191113015932.12655-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 147/209] platform/x86: mlx-platform: Properly use mlxplat_mlxcpld_msn201x_items
+Date: Tue, 12 Nov 2019 20:49:23 -0500
+Message-ID: <20191113015025.9685-147-sashal@kernel.org>
+References: <20191113015025.9685-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
+In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Julian Sax <jsbc@gmx.de>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: Nathan Chancellor <natechancellor@gmail.com>, Vadim Pasternak <vadimp@mellanox.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org, clang-built-linux@googlegroups.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Julian Sax <jsbc@gmx.de>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit dde27443211062e841806feaf690674b7c3a599f ]
+[ Upstream commit 8289c4b6f2e53750de78bd38cecb6bce4d7a988c ]
 
-A certain silead controller (Chip ID: 0x56810000) loses its firmware
-after suspend, causing the resume to fail. This patch tries to load
-the firmware, should a resume error occur and retries the resuming.
+Clang warns that mlxplat_mlxcpld_msn201x_items is not going to be
+emitted in the final assembly because it's only used in ARRAY_SIZE right
+now, which is a compile time evaluation since the array's size is known.
 
-Signed-off-by: Julian Sax <jsbc@gmx.de>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+drivers/platform/x86/mlx-platform.c:555:32: warning: variable
+'mlxplat_mlxcpld_msn201x_items' is not needed and will not be emitted
+[-Wunneeded-internal-declaration]
+static struct mlxreg_core_item mlxplat_mlxcpld_msn201x_items[] = {
+                               ^
+1 warning generated.
+
+It appears this was a copy and paste mistake from when this item was
+first added. Use the definition in mlxplat_mlxcpld_msn201x_data so that
+Clang no longer warns.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/141
+Fixes: a49a41482f61 ("platform/x86: mlx-platform: Add support for new msn201x system type")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/silead.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/platform/x86/mlx-platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-index f502c8488be86..867772878c0c8 100644
---- a/drivers/input/touchscreen/silead.c
-+++ b/drivers/input/touchscreen/silead.c
-@@ -504,20 +504,33 @@ static int __maybe_unused silead_ts_suspend(struct device *dev)
- static int __maybe_unused silead_ts_resume(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
-+	bool second_try = false;
- 	int error, status;
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 742a0c2179256..d17db140cb1fc 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -575,7 +575,7 @@ static struct mlxreg_core_item mlxplat_mlxcpld_msn201x_items[] = {
  
- 	silead_ts_set_power(client, SILEAD_POWER_ON);
- 
-+ retry:
- 	error = silead_ts_reset(client);
- 	if (error)
- 		return error;
- 
-+	if (second_try) {
-+		error = silead_ts_load_fw(client);
-+		if (error)
-+			return error;
-+	}
-+
- 	error = silead_ts_startup(client);
- 	if (error)
- 		return error;
- 
- 	status = silead_ts_get_status(client);
- 	if (status != SILEAD_STATUS_OK) {
-+		if (!second_try) {
-+			second_try = true;
-+			dev_dbg(dev, "Reloading firmware after unsuccessful resume\n");
-+			goto retry;
-+		}
- 		dev_err(dev, "Resume error, status: 0x%02x\n", status);
- 		return -ENODEV;
- 	}
+ static
+ struct mlxreg_core_hotplug_platform_data mlxplat_mlxcpld_msn201x_data = {
+-	.items = mlxplat_mlxcpld_msn21xx_items,
++	.items = mlxplat_mlxcpld_msn201x_items,
+ 	.counter = ARRAY_SIZE(mlxplat_mlxcpld_msn201x_items),
+ 	.cell = MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET,
+ 	.mask = MLXPLAT_CPLD_AGGR_MASK_DEF,
 -- 
 2.20.1
