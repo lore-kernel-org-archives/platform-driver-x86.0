@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 070/115] Input: silead - try firmware reload after unsuccessful resume
-Date: Tue, 12 Nov 2019 20:55:37 -0500
-Message-ID: <20191113015622.11592-70-sashal@kernel.org>
-References: <20191113015622.11592-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 40/68] Input: silead - try firmware reload after unsuccessful resume
+Date: Tue, 12 Nov 2019 20:59:04 -0500
+Message-ID: <20191113015932.12655-40-sashal@kernel.org>
+References: <20191113015932.12655-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
+In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Julian Sax <jsbc@gmx.de>, Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
@@ -29,10 +29,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 13 insertions(+)
 
 diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-index 0dbcf105f7db3..7c0eeef29b3cb 100644
+index f502c8488be86..867772878c0c8 100644
 --- a/drivers/input/touchscreen/silead.c
 +++ b/drivers/input/touchscreen/silead.c
-@@ -534,20 +534,33 @@ static int __maybe_unused silead_ts_suspend(struct device *dev)
+@@ -504,20 +504,33 @@ static int __maybe_unused silead_ts_suspend(struct device *dev)
  static int __maybe_unused silead_ts_resume(struct device *dev)
  {
  	struct i2c_client *client = to_i2c_client(dev);
