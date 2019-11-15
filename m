@@ -1,86 +1,75 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v8 8/8] platform/x86: touchscreen_dmi: Add info for the Chuwi Vi8 Plus tablet
-Date: Fri, 15 Nov 2019 16:35:29 +0100
-Message-ID: <20191115153529.215244-9-hdegoede@redhat.com>
-References: <20191115153529.215244-1-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] tools/power/x86/intel-speed-select: Ignore missing config level
+Date: Fri, 15 Nov 2019 12:35:22 -0800
+Message-ID: <20191115203522.54170-1-srinivas.pandruvada@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191115153529.215244-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: andriy.shevchenko@intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, prarit@redhat.com, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add touchscreen info for the Chuwi Vi8 Plus tablet. This tablet uses a
-Chipone ICN8505 touchscreen controller, with the firmware used by the
-touchscreen embedded in the EFI firmware.
+It is possible that certain config levels are not available, even
+if the max level includes the level. There can be missing levels in
+some platforms. So ignore the level when called for information dump
+for all levels and fail if specifically ask for the missing level.
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Here the changes is to continue reading information about other levels
+even if we fail to get information for the current level. But use the
+"processed" flag to indicate the failure. When the "processed" flag is
+not set, don't dump information about that level.
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
-Changes in v7:
-- Remove PROPERTY_ENTRY_BOOL("efi-embedded-firmware") properties entry,
-  as this is no longer necessary
+ tools/power/x86/intel-speed-select/isst-core.c    | 8 ++++----
+ tools/power/x86/intel-speed-select/isst-display.c | 3 ++-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-Changes in v6:
-- Switch from crc sums to SHA256 hashes for the firmware hash
----
- drivers/platform/x86/touchscreen_dmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/=
-touchscreen_dmi.c
-index 4449e4c0b26b..4a09b479cda5 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -132,6 +132,18 @@ static const struct ts_dmi_data chuwi_vi8_data =3D {
- =09.properties     =3D chuwi_vi8_props,
- };
-=20
-+static const struct ts_dmi_data chuwi_vi8_plus_data =3D {
-+=09.embedded_fw =3D {
-+=09=09.name=09=3D "chipone/icn8505-HAMP0002.fw",
-+=09=09.prefix =3D { 0xb0, 0x07, 0x00, 0x00, 0xe4, 0x07, 0x00, 0x00 },
-+=09=09.length=09=3D 35012,
-+=09=09.sha256=09=3D { 0x93, 0xe5, 0x49, 0xe0, 0xb6, 0xa2, 0xb4, 0xb3,
-+=09=09=09    0x88, 0x96, 0x34, 0x97, 0x5e, 0xa8, 0x13, 0x78,
-+=09=09=09    0x72, 0x98, 0xb8, 0x29, 0xeb, 0x5c, 0xa7, 0xf1,
-+=09=09=09    0x25, 0x13, 0x43, 0xf4, 0x30, 0x7c, 0xfc, 0x7c },
-+=09},
-+};
+diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
+index 52698553de92..aa19c9998e6c 100644
+--- a/tools/power/x86/intel-speed-select/isst-core.c
++++ b/tools/power/x86/intel-speed-select/isst-core.c
+@@ -646,7 +646,6 @@ int isst_get_process_ctdp(int cpu, int tdp_level, struct isst_pkg_ctdp *pkg_dev)
+ 			     i);
+ 		ctdp_level = &pkg_dev->ctdp_level[i];
+ 
+-		ctdp_level->processed = 1;
+ 		ctdp_level->level = i;
+ 		ctdp_level->control_cpu = cpu;
+ 		ctdp_level->pkg_id = get_physical_package_id(cpu);
+@@ -654,7 +653,10 @@ int isst_get_process_ctdp(int cpu, int tdp_level, struct isst_pkg_ctdp *pkg_dev)
+ 
+ 		ret = isst_get_ctdp_control(cpu, i, ctdp_level);
+ 		if (ret)
+-			return ret;
++			continue;
 +
- static const struct property_entry chuwi_vi10_props[] =3D {
- =09PROPERTY_ENTRY_U32("touchscreen-min-x", 0),
- =09PROPERTY_ENTRY_U32("touchscreen-min-y", 4),
-@@ -743,6 +755,15 @@ const struct dmi_system_id touchscreen_dmi_table[] =3D=
- {
- =09=09=09DMI_MATCH(DMI_BIOS_VERSION, "CHUWI.D86JLBNR"),
- =09=09},
- =09},
-+=09{
-+=09=09/* Chuwi Vi8 Plus (CWI519) */
-+=09=09.driver_data =3D (void *)&chuwi_vi8_plus_data,
-+=09=09.matches =3D {
-+=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Hampoo"),
-+=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "D2D3_Vi8A1"),
-+=09=09=09DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-+=09=09},
-+=09},
- =09{
- =09=09/* Chuwi Vi10 (CWI505) */
- =09=09.driver_data =3D (void *)&chuwi_vi10_data,
-@@ -1137,6 +1158,9 @@ static int __init ts_dmi_init(void)
- =09=09return 0; /* Not an error */
-=20
- =09ts_data =3D dmi_id->driver_data;
-+=09/* Some dmi table entries only provide an efi_embedded_fw_desc */
-+=09if (!ts_data->properties)
-+=09=09return 0;
-=20
- =09error =3D bus_register_notifier(&i2c_bus_type, &ts_dmi_notifier);
- =09if (error)
---=20
-2.23.0
++		pkg_dev->processed = 1;
++		ctdp_level->processed = 1;
+ 
+ 		if (ctdp_level->pbf_support) {
+ 			ret = isst_get_pbf_info(cpu, i, &ctdp_level->pbf_info);
+@@ -724,8 +726,6 @@ int isst_get_process_ctdp(int cpu, int tdp_level, struct isst_pkg_ctdp *pkg_dev)
+ 		isst_get_uncore_mem_freq(cpu, i, ctdp_level);
+ 	}
+ 
+-	pkg_dev->processed = 1;
+-
+ 	return 0;
+ }
+ 
+diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
+index c976bfe9b503..040dd09d5eee 100644
+--- a/tools/power/x86/intel-speed-select/isst-display.c
++++ b/tools/power/x86/intel-speed-select/isst-display.c
+@@ -315,7 +315,8 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 	char value[256];
+ 	int i, base_level = 1;
+ 
+-	print_package_info(cpu, outf);
++	if (pkg_dev->processed)
++		print_package_info(cpu, outf);
+ 
+ 	for (i = 0; i <= pkg_dev->levels; ++i) {
+ 		struct isst_pkg_ctdp_level_info *ctdp_level;
+-- 
+2.17.2
