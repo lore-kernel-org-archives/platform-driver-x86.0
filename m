@@ -1,43 +1,75 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1] platform/mellanox: Add Mellanox TRIO driver
-Date: Mon, 18 Nov 2019 12:47:11 +0200
-Message-ID: <CAHp75VdWM8Y7TAbVYNoo9vV2N+ZYDZWWGHtgvt8WjD5KiFfZRA@mail.gmail.com>
-References: <cover.1573460910.git.sramani@mellanox.com>
+Subject: Re: [PATCH v3 0/7] x86/intel_pmc_core: Add Tiger Lake, Elkhart Lake
+Date: Mon, 18 Nov 2019 12:50:25 +0200
+Message-ID: <CAHp75Vfrd-BAZ7H_LuQfz32yaap1X3gEnqZ2-9EPQ+j_b0f93g@mail.gmail.com>
+References: <cover.1573750525.git.gayatri.kammela@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1573460910.git.sramani@mellanox.com>
+In-Reply-To: <cover.1573750525.git.gayatri.kammela@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shravan Kumar Ramani <sramani@mellanox.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, Liming Sun <lsun@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Gayatri Kammela <gayatri.kammela@intel.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Peter Zijlstra <peterz@infradead.org>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kan Liang <kan.liang@intel.com>, "David E . Box" <david.e.box@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Tony Luck <tony.luck@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Nov 11, 2019 at 4:35 PM Shravan Kumar Ramani
-<sramani@mellanox.com> wrote:
+On Thu, Nov 14, 2019 at 7:02 PM Gayatri Kammela
+<gayatri.kammela@intel.com> wrote:
 >
-> This patch adds support for Mellanox BlueField TRIO PCIe host controller.
-> The driver supports multiple TRIO instances and provides a sysfs interface
-> to allow the user to read/set the L3 cache profile for transactions going
-> through the TRIO. It also provides an interrupt handler for the TRIO blocks.
+> Hi,
+>
+> Patch 1: Fix SoC naming inconsistency
+> Patch 2: Cleans up termination lines
+> Patch 3: Refactor driver for ease of adding new SoCs
+> Patch 4: Add debugfs entry for PCH IPs only if platform supports
+> Patch 5: Add Tiger Lake legacy support to pmc_core
+> Patch 6: Add Elkhart Lake legacy support to pmc_core
+> patch 7: Add Comet Lake legacy support to pmc_core
+>
+> All the information regarding the PCH IPs and names of IPs will be
+> available in Intel's Platform Controller Hub (PCH) External Design
+> Specification (EDS) document expected to be released in 2020 before
+> product launch.
 
-Besides on-going review, this doesn't apply. So, please check that you
-rebase it on top of our for-next branch, thanks!
+Thanks, though you forgot to fix all prefixes in the mails. We have
+platform/x86: $DRIVER_NAME: ...
 
-P.S. I'll wait for v2 with Vadim's comments being addressed.
+Also consider Mario's comment (I didn't hear back from you on it).
 
 >
-> Shravan Kumar Ramani (1):
->   platform/mellanox: Add Mellanox TRIO driver
+> Changes since v1:
+> 1) Added a patch that fixes the naming inconsistency.
+> 2) Fixed the prefix of all the patches.
 >
->  MAINTAINERS                            |   5 +
->  drivers/platform/mellanox/Kconfig      |   8 +
->  drivers/platform/mellanox/Makefile     |   1 +
->  drivers/platform/mellanox/mlxbf-trio.c | 624 +++++++++++++++++++++++++++++++++
->  4 files changed, 638 insertions(+)
->  create mode 100644 drivers/platform/mellanox/mlxbf-trio.c
+> Changes since v2:
+> 1) Add Comet Lake legacy support to pmc_core up on Dell's request
+>
+> Gayatri Kammela (7):
+>   x86/intel_pmc_core: Fix the SoC naming inconsistency
+>   x86/intel_pmc_core: Clean up: Remove comma after the termination line
+>   x86/intel_pmc_core: Create platform dependent pmc bitmap structs
+>   x86/intel_pmc_core: Make debugfs entry for pch_ip_power_gating_status
+>     conditional
+>   platform/x86: Add Tiger Lake (TGL) platform support to intel_pmc_core
+>     driver
+>   platform/x86: Add Atom based Elkhart Lake (EHL) platform support to
+>     intel_pmc_core driver
+>   platform/x86: Add Comet Lake (CML) platform support to intel_pmc_core
+>     driver
+>
+>  drivers/platform/x86/intel_pmc_core.c | 121 ++++++++++++++++++++------
+>  drivers/platform/x86/intel_pmc_core.h |   2 +-
+>  2 files changed, 96 insertions(+), 27 deletions(-)
+>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Kan Liang <kan.liang@intel.com>
+> Cc: David E. Box <david.e.box@intel.com>
+> Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+> Cc: Tony Luck <tony.luck@intel.com>
 >
 > --
-> 2.1.2
+> 2.17.1
 >
 
 
