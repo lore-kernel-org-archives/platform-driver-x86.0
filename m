@@ -1,88 +1,93 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH 00/12] treewide: break dependencies on x86's RM header
-Date: Tue, 19 Nov 2019 13:33:09 +0100
-Message-ID: <CAKv+Gu8XY_VCyi0bRqf2E7g_PXyHU83w-e+JvzeCBc+X1Xcrbg@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] x86/platform/intel/quark: Explicitly include linux/io.h
+ for virt_to_phys()
+Date: Tue, 19 Nov 2019 14:38:51 +0200
+Message-ID: <CAHp75VeYXonBT9eYhqvS9qyOogdaCu8ERv0XMg12hrVBYt6hnw@mail.gmail.com>
 References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
- <20191119111012.GA109842@gmail.com> <CAKv+Gu9C132peF9_j2rRwRh4s+aWZBY82rgjqmwaE_X=_6y4Zw@mail.gmail.com>
- <20191119122217.GA24878@gmail.com>
+ <20191119111012.GA109842@gmail.com> <20191119120655.GA31444@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191119122217.GA24878@gmail.com>
+In-Reply-To: <20191119120655.GA31444@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, the arch/x86 maintainers <x86@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dv>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, 19 Nov 2019 at 13:22, Ingo Molnar <mingo@kernel.org> wrote:
+On Tue, Nov 19, 2019 at 2:07 PM Ingo Molnar <mingo@kernel.org> wrote:
 >
 >
-> * Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> * Ingo Molnar <mingo@kernel.org> wrote:
 >
-> > On Tue, 19 Nov 2019 at 12:10, Ingo Molnar <mingo@kernel.org> wrote:
-> > >
-> > >
-> > > * Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > >
-> > > > x86's asm/realmode.h, which defines low level structures, variables and
-> > > > helpers used to bring up APs during SMP boot, ends up getting included in
-> > > > practically every nook and cranny of the kernel because the address used
-> > > > by ACPI for resuming from S3 also happens to be stored in the real mode
-> > > > header, and ACPI bleeds the dependency into its widely included headers.
-> > > >
-> > > > As a result, modifying realmode.h for even the most trivial change to the
-> > > > boot code triggers a full kernel rebuild, which is frustrating to say the
-> > > > least as it some of the most difficult code to get exactly right *and* is
-> > > > also some of the most functionally isolated code in the kernel.
-> > > >
-> > > > To break the kernel's widespread dependency on realmode.h, add a wrapper
-> > > > in the aforementioned ACPI S3 code to access the real mode header instead
-> > > > of derefencing the header directly in asm/acpi.h and thereby exposing it
-> > > > to the world via linux/acpi.h.
-> > > >
-> > > > Build tested on x86 with allyesconfig and allmodconfig, so hopefully there
-> > > > aren't more build issues lurking, but at this point it wouldn't surprise
-> > > > me in the least if this somehow manages to break the build.
-> > > >
-> > > > Based on tip/master, commit ceceaf1f12ba ("Merge branch 'WIP.x86/cleanups'").
-> > > >
-> > > > Patch Synopsis:
-> > > >   - Patches 01-09 fix a variety of build errors that arise when patch 12
-> > > >     drops realmode.h from asm/acpi.h.  Most of the errors are quite absurb
-> > > >     as they have no relation whatsoever to x86's RM boot code, but occur
-> > > >     because realmode.h happens to include asm/io.h.
-> > >
-> > > Yeah, these kind of parasitic header dependencies are the main driving
-> > > force behind kernel header spaghetti hell: it's super easy to add a new
-> > > header, but very hard to remove them...
-> > >
-> > > Hence they practically only accumulate.
-> > >
-> > > As a result header removal patches get priority, from me at least. :-)
-> > >
-> > > >   - Patch 10 removes a spurious include of realmode.h from an ACPI header.
-> > > >
-> > > >   - Patches 11 and 12 implement the wrapper and move it out of acpi.h.
-> > >
-> > > So if the ACPI maintainers are fine with -tip carrying patches #11 and #12
-> > > then I'd be glad to route these patches upstream.
-> > >
-> > > I've applied them to tip:WIP.core/headers as a work-in-progress tree, and
-> > > I'm testing them on randconfigs to make sure there's no broken
-> > > dependencies. I'll wait for the ACPI acks.
-> > >
-> > > I edited the title of patch 12 slightly, to:
-> > >
-> > >    c8bceb321209: x86/ACPI/sleep: Move acpi_wakeup_address() definition into sleep.c, remove <asm/realmode.h> from <asm/acpi.h>
-> > >
-> > > to make sure the big header dependency change is obvious at first sight.
-> > >
-> >
-> > I'm fine with the patches but can we drop the fixes headers please?
-> > This doesn't actually fix anything, and touching early boot stuff for
-> > no good reason should be avoided imo.
+> > I've applied them to tip:WIP.core/headers as a work-in-progress tree,
+> > and I'm testing them on randconfigs to make sure there's no broken
+> > dependencies. I'll wait for the ACPI acks.
 >
-> Agreed and done.
+> One more fix was needed, for the intel-quark driver that is only built on
+> 32-bit configs:
+>
+> ==================>
+> From: Ingo Molnar <mingo@kernel.org>
+> Date: Tue, 19 Nov 2019 12:51:56 +0100
+> Subject: [PATCH] x86/platform/intel/quark: Explicitly include linux/io.h for virt_to_phys()
+>
+> Similarly to the previous patches by Sean Christopherson:
+>
+>  "Through a labyrinthian sequence of includes, usage of virt_to_phys() is
+>   dependent on the include of asm/io.h in x86's asm/realmode.h, which is
+>   included in x86's asm/acpi.h and thus by linux/acpi.h.  Explicitly
+>   include linux/io.h to break the dependency on realmode.h so that a
+>   future patch can remove the realmode.h include from acpi.h without
+>   breaking the build."
 >
 
-Thanks Ingo
+LGTM,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> ---
+>  arch/x86/platform/intel-quark/imr.c          | 2 ++
+>  arch/x86/platform/intel-quark/imr_selftest.c | 2 ++
+>  2 files changed, 4 insertions(+)
+>
+> diff --git a/arch/x86/platform/intel-quark/imr.c b/arch/x86/platform/intel-quark/imr.c
+> index 6dd25dc5f027..e9d97d52475e 100644
+> --- a/arch/x86/platform/intel-quark/imr.c
+> +++ b/arch/x86/platform/intel-quark/imr.c
+> @@ -29,6 +29,8 @@
+>  #include <asm/cpu_device_id.h>
+>  #include <asm/imr.h>
+>  #include <asm/iosf_mbi.h>
+> +#include <asm/io.h>
+
+A nit: perhaps put it after imr.h.
+
+> +
+>  #include <linux/debugfs.h>
+>  #include <linux/init.h>
+>  #include <linux/mm.h>
+> diff --git a/arch/x86/platform/intel-quark/imr_selftest.c b/arch/x86/platform/intel-quark/imr_selftest.c
+> index 42f879b75f9b..4307830e1b6f 100644
+> --- a/arch/x86/platform/intel-quark/imr_selftest.c
+> +++ b/arch/x86/platform/intel-quark/imr_selftest.c
+> @@ -14,6 +14,8 @@
+>  #include <asm-generic/sections.h>
+>  #include <asm/cpu_device_id.h>
+>  #include <asm/imr.h>
+> +#include <asm/io.h>
+> +
+>  #include <linux/init.h>
+>  #include <linux/mm.h>
+>  #include <linux/types.h>
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
