@@ -1,39 +1,74 @@
-From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 01/12] x86/efi: Explicitly include realmode.h to handle RM trampoline quirk
-Date: Mon, 18 Nov 2019 16:21:10 -0800
-Message-ID: <20191119002121.4107-2-sean.j.christopherson@intel.com>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 00/12] treewide: break dependencies on x86's RM header
+Date: Tue, 19 Nov 2019 12:10:12 +0100
+Message-ID: <20191119111012.GA109842@gmail.com>
 References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20191119002121.4107-1-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
-Cc: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <namit@vmware.com>, "VMware, Inc." <pv-drivers@vmware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Cezary Rojewski <cezary.rojewski@intel.com>, Pierre-Louis Bossart <pierre>
+To: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <namit@vmware.com>, VMware,
 List-Id: platform-driver-x86.vger.kernel.org
 
-Explicitly include asm/realmode.h, which is needed to handle a real mode
-trampoline quirk in efi_free_boot_services(), instead of picking it up
-by way of linux/acpi.h.  acpi.h will soon stop including realmode.h so
-that changing realmode.h doesn't require a full kernel rebuild.
 
-Fixes: 5bc653b731821 ("x86/efi: Allocate a trampoline if needed in efi_free_boot_services()")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/platform/efi/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+* Sean Christopherson <sean.j.christopherson@intel.com> wrote:
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 3b9fd679cea9..f9ef5c5346ca 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -16,6 +16,7 @@
- #include <asm/efi.h>
- #include <asm/uv/uv.h>
- #include <asm/cpu_device_id.h>
-+#include <asm/realmode.h>
- #include <asm/reboot.h>
- 
- #define EFI_MIN_RESERVE 5120
--- 
-2.24.0
+> x86's asm/realmode.h, which defines low level structures, variables and
+> helpers used to bring up APs during SMP boot, ends up getting included in
+> practically every nook and cranny of the kernel because the address used
+> by ACPI for resuming from S3 also happens to be stored in the real mode
+> header, and ACPI bleeds the dependency into its widely included headers.
+> 
+> As a result, modifying realmode.h for even the most trivial change to the
+> boot code triggers a full kernel rebuild, which is frustrating to say the
+> least as it some of the most difficult code to get exactly right *and* is
+> also some of the most functionally isolated code in the kernel.
+> 
+> To break the kernel's widespread dependency on realmode.h, add a wrapper
+> in the aforementioned ACPI S3 code to access the real mode header instead
+> of derefencing the header directly in asm/acpi.h and thereby exposing it
+> to the world via linux/acpi.h.
+> 
+> Build tested on x86 with allyesconfig and allmodconfig, so hopefully there
+> aren't more build issues lurking, but at this point it wouldn't surprise
+> me in the least if this somehow manages to break the build.
+> 
+> Based on tip/master, commit ceceaf1f12ba ("Merge branch 'WIP.x86/cleanups'").
+> 
+> Patch Synopsis:
+>   - Patches 01-09 fix a variety of build errors that arise when patch 12
+>     drops realmode.h from asm/acpi.h.  Most of the errors are quite absurb
+>     as they have no relation whatsoever to x86's RM boot code, but occur
+>     because realmode.h happens to include asm/io.h.
+
+Yeah, these kind of parasitic header dependencies are the main driving 
+force behind kernel header spaghetti hell: it's super easy to add a new 
+header, but very hard to remove them...
+
+Hence they practically only accumulate.
+
+As a result header removal patches get priority, from me at least. :-)
+
+>   - Patch 10 removes a spurious include of realmode.h from an ACPI header.
+> 
+>   - Patches 11 and 12 implement the wrapper and move it out of acpi.h.
+
+So if the ACPI maintainers are fine with -tip carrying patches #11 and #12
+then I'd be glad to route these patches upstream.
+
+I've applied them to tip:WIP.core/headers as a work-in-progress tree, and 
+I'm testing them on randconfigs to make sure there's no broken 
+dependencies. I'll wait for the ACPI acks.
+
+I edited the title of patch 12 slightly, to:
+
+   c8bceb321209: x86/ACPI/sleep: Move acpi_wakeup_address() definition into sleep.c, remove <asm/realmode.h> from <asm/acpi.h>
+
+to make sure the big header dependency change is obvious at first sight.
+
+Thanks,
+
+	Ingo
