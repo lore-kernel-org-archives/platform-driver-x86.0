@@ -1,7 +1,7 @@
 From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 06/12] efi/capsule-loader: Explicitly include linux/io.h for page_to_phys()
-Date: Mon, 18 Nov 2019 16:21:15 -0800
-Message-ID: <20191119002121.4107-7-sean.j.christopherson@intel.com>
+Subject: [PATCH 08/12] vmw_balloon: Explicitly include linux/io.h for virt_to_phys()
+Date: Mon, 18 Nov 2019 16:21:17 -0800
+Message-ID: <20191119002121.4107-9-sean.j.christopherson@intel.com>
 References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,7 +12,7 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <namit@vmware.com>, "VMware, Inc." <pv-drivers@vmware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Cezary Rojewski <cezary.rojewski@intel.com>, Pierre-Louis Bossart <pierre>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Through a labyrinthian sequence of includes, usage of page_to_phys() is
+iThrough a labyrinthian sequence of includes, usage of virt_to_phys() is
 dependent on the include of asm/io.h in x86's asm/realmode.h, which is
 included in x86's asm/acpi.h and thus by linux/acpi.h.  Explicitly
 include linux/io.h to break the dependency on realmode.h so that a
@@ -21,20 +21,20 @@ breaking the build.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- drivers/firmware/efi/capsule-loader.c | 1 +
+ drivers/misc/vmw_balloon.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/firmware/efi/capsule-loader.c b/drivers/firmware/efi/capsule-loader.c
-index b1395133389e..d3067cbd5114 100644
---- a/drivers/firmware/efi/capsule-loader.c
-+++ b/drivers/firmware/efi/capsule-loader.c
-@@ -11,6 +11,7 @@
- #include <linux/module.h>
- #include <linux/miscdevice.h>
- #include <linux/highmem.h>
+diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
+index 5e6be1527571..b837e7eba5f7 100644
+--- a/drivers/misc/vmw_balloon.c
++++ b/drivers/misc/vmw_balloon.c
+@@ -17,6 +17,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/types.h>
 +#include <linux/io.h>
- #include <linux/slab.h>
- #include <linux/mutex.h>
- #include <linux/efi.h>
+ #include <linux/kernel.h>
+ #include <linux/mm.h>
+ #include <linux/vmalloc.h>
 -- 
 2.24.0
