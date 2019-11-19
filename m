@@ -1,7 +1,7 @@
 From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 05/12] perf/x86/intel: Explicitly include asm/io.h to use virt_to_phys()
-Date: Mon, 18 Nov 2019 16:21:14 -0800
-Message-ID: <20191119002121.4107-6-sean.j.christopherson@intel.com>
+Subject: [PATCH 01/12] x86/efi: Explicitly include realmode.h to handle RM trampoline quirk
+Date: Mon, 18 Nov 2019 16:21:10 -0800
+Message-ID: <20191119002121.4107-2-sean.j.christopherson@intel.com>
 References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,28 +12,28 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <namit@vmware.com>, "VMware, Inc." <pv-drivers@vmware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Cezary Rojewski <cezary.rojewski@intel.com>, Pierre-Louis Bossart <pierre>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Through a labyrinthian sequence of includes, usage of virt_to_phys() is
-dependent on the include of asm/io.h in asm/realmode.h via asm/acpi.h.
-Explicitly include asm/io.h to break the dependency on realmode.h so
-that a future patch can remove the realmode.h include from acpi.h
-without breaking the build.
+Explicitly include asm/realmode.h, which is needed to handle a real mode
+trampoline quirk in efi_free_boot_services(), instead of picking it up
+by way of linux/acpi.h.  acpi.h will soon stop including realmode.h so
+that changing realmode.h doesn't require a full kernel rebuild.
 
+Fixes: 5bc653b731821 ("x86/efi: Allocate a trampoline if needed in efi_free_boot_services()")
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/events/intel/ds.c | 1 +
+ arch/x86/platform/efi/quirks.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index ce83950036c5..4b94ae4ae369 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -7,6 +7,7 @@
- #include <asm/perf_event.h>
- #include <asm/tlbflush.h>
- #include <asm/insn.h>
-+#include <asm/io.h>
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 3b9fd679cea9..f9ef5c5346ca 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -16,6 +16,7 @@
+ #include <asm/efi.h>
+ #include <asm/uv/uv.h>
+ #include <asm/cpu_device_id.h>
++#include <asm/realmode.h>
+ #include <asm/reboot.h>
  
- #include "../perf_event.h"
- 
+ #define EFI_MIN_RESERVE 5120
 -- 
 2.24.0
