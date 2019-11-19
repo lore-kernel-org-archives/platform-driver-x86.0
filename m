@@ -1,74 +1,49 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 00/12] treewide: break dependencies on x86's RM header
-Date: Tue, 19 Nov 2019 12:10:12 +0100
-Message-ID: <20191119111012.GA109842@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 09/12] ASoC: Intel: Skylake: Explicitly include
+ linux/io.h for virt_to_phys()
+Date: Tue, 19 Nov 2019 12:00:53 +0000
+Message-ID: <20191119120053.GA3634@sirena.org.uk>
 References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+ <20191119002121.4107-10-sean.j.christopherson@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+In-Reply-To: <20191119002121.4107-10-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sean Christopherson <sean.j.christopherson@intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <namit@vmware.com>, VMware,
 List-Id: platform-driver-x86.vger.kernel.org
 
 
-* Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+--4Ckj6UjgE2iN1+kY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> x86's asm/realmode.h, which defines low level structures, variables and
-> helpers used to bring up APs during SMP boot, ends up getting included in
-> practically every nook and cranny of the kernel because the address used
-> by ACPI for resuming from S3 also happens to be stored in the real mode
-> header, and ACPI bleeds the dependency into its widely included headers.
-> 
-> As a result, modifying realmode.h for even the most trivial change to the
-> boot code triggers a full kernel rebuild, which is frustrating to say the
-> least as it some of the most difficult code to get exactly right *and* is
-> also some of the most functionally isolated code in the kernel.
-> 
-> To break the kernel's widespread dependency on realmode.h, add a wrapper
-> in the aforementioned ACPI S3 code to access the real mode header instead
-> of derefencing the header directly in asm/acpi.h and thereby exposing it
-> to the world via linux/acpi.h.
-> 
-> Build tested on x86 with allyesconfig and allmodconfig, so hopefully there
-> aren't more build issues lurking, but at this point it wouldn't surprise
-> me in the least if this somehow manages to break the build.
-> 
-> Based on tip/master, commit ceceaf1f12ba ("Merge branch 'WIP.x86/cleanups'").
-> 
-> Patch Synopsis:
->   - Patches 01-09 fix a variety of build errors that arise when patch 12
->     drops realmode.h from asm/acpi.h.  Most of the errors are quite absurb
->     as they have no relation whatsoever to x86's RM boot code, but occur
->     because realmode.h happens to include asm/io.h.
+On Mon, Nov 18, 2019 at 04:21:18PM -0800, Sean Christopherson wrote:
+> Through a labyrinthian sequence of includes, usage of virt_to_phys() is
+> dependent on the include of asm/io.h in x86's asm/realmode.h, which is
+> included in x86's asm/acpi.h and thus by linux/acpi.h.  Explicitly
+> include linux/io.h to break the dependency on realmode.h so that a
+> future patch can remove the realmode.h include from acpi.h without
+> breaking the build.
 
-Yeah, these kind of parasitic header dependencies are the main driving 
-force behind kernel header spaghetti hell: it's super easy to add a new 
-header, but very hard to remove them...
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Hence they practically only accumulate.
+--4Ckj6UjgE2iN1+kY
+Content-Type: application/pgp-signature; name="signature.asc"
 
-As a result header removal patches get priority, from me at least. :-)
+-----BEGIN PGP SIGNATURE-----
 
->   - Patch 10 removes a spurious include of realmode.h from an ACPI header.
-> 
->   - Patches 11 and 12 implement the wrapper and move it out of acpi.h.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3T2XIACgkQJNaLcl1U
+h9Ag5gf8CXRFNxgU/ospZfWpWqo31BrJS3TLJbiQogFQrYt6MzUt/rehd+5DN1bH
+rRAsHldAHpkPGu0ZDj4QRiH29Oc0G1xQAPyMbMnG3afcORJp9DkaBs8mLBd4Xh4r
+S4bPP4Lr+GeOJepjK6LOz948KigmvpZVDzgGiwqaRZfxT36f92BS3dXnTUoe3Khx
+q1z6+agCYbpIS9NtBzVBpuJ1b4opTj4/7G8POfaPbYyGxaI0Mr8mwkwMdwvtXz4V
+04C5nyfw5qQmjWqpMQuolxXEPW7DvIpobAYnFHL/qrf5DzSd9Yc5bPUx3Y61swla
+VoEhYM6CbdD6hpBeVhY8lbGgINd/1g==
+=zPtj
+-----END PGP SIGNATURE-----
 
-So if the ACPI maintainers are fine with -tip carrying patches #11 and #12
-then I'd be glad to route these patches upstream.
-
-I've applied them to tip:WIP.core/headers as a work-in-progress tree, and 
-I'm testing them on randconfigs to make sure there's no broken 
-dependencies. I'll wait for the ACPI acks.
-
-I edited the title of patch 12 slightly, to:
-
-   c8bceb321209: x86/ACPI/sleep: Move acpi_wakeup_address() definition into sleep.c, remove <asm/realmode.h> from <asm/acpi.h>
-
-to make sure the big header dependency change is obvious at first sight.
-
-Thanks,
-
-	Ingo
+--4Ckj6UjgE2iN1+kY--
