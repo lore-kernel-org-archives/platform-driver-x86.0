@@ -1,7 +1,7 @@
 From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 02/12] x86/boot: Explicitly include realmode.h to handle RM reservations
-Date: Mon, 18 Nov 2019 16:21:11 -0800
-Message-ID: <20191119002121.4107-3-sean.j.christopherson@intel.com>
+Subject: [PATCH 03/12] x86/ftrace: Explicitly include vmalloc.h for set_vm_flush_reset_perms()
+Date: Mon, 18 Nov 2019 16:21:12 -0800
+Message-ID: <20191119002121.4107-4-sean.j.christopherson@intel.com>
 References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,28 +12,29 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <namit@vmware.com>, "VMware, Inc." <pv-drivers@vmware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Cezary Rojewski <cezary.rojewski@intel.com>, Pierre-Louis Bossart <pierre>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Explicitly include asm/realmode.h, which provides reserve_real_mode(),
-instead of picking it up by an indirect include of asm/acpi.h.  acpi.h
-will soon stop including realmode.h so that changing realmode.h doesn't
-require a full kernel rebuild.
+The inclusion of linux/vmalloc.h, which is required for its definition
+of set_vm_flush_reset_perms(), is somehow dependent on asm/realmode.h
+being included by asm/acpi.h.  Explicitly include linux/vmalloc.h so
+that a future patch can drop the realmode.h include from asm/acpi.h
+without breaking the build.
 
-Fixes: c1877650f3c9 ("x86/setup: Clean up the header portion of setup.c")
+Fixes: 7fdfe1e40b225 ("x86/ftrace: Use vmalloc special flag")
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kernel/setup.c | 1 +
+ arch/x86/kernel/ftrace.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 559764a4af5f..b6d7301b1037 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -33,6 +33,7 @@
- #include <asm/kaslr.h>
- #include <asm/mce.h>
- #include <asm/mtrr.h>
-+#include <asm/realmode.h>
- #include <asm/olpc_ofw.h>
- #include <asm/pci-direct.h>
- #include <asm/prom.h>
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 2a179fb35cd1..681eae0fb64d 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -23,6 +23,7 @@
+ #include <linux/list.h>
+ #include <linux/module.h>
+ #include <linux/memory.h>
++#include <linux/vmalloc.h>
+ 
+ #include <trace/syscall.h>
+ 
 -- 
 2.24.0
