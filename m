@@ -1,7 +1,7 @@
 From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 03/12] x86/ftrace: Explicitly include vmalloc.h for set_vm_flush_reset_perms()
-Date: Mon, 18 Nov 2019 16:21:12 -0800
-Message-ID: <20191119002121.4107-4-sean.j.christopherson@intel.com>
+Subject: [PATCH 04/12] x86/kprobes: Explicitly include vmalloc.h for set_vm_flush_reset_perms()
+Date: Mon, 18 Nov 2019 16:21:13 -0800
+Message-ID: <20191119002121.4107-5-sean.j.christopherson@intel.com>
 References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -18,23 +18,23 @@ being included by asm/acpi.h.  Explicitly include linux/vmalloc.h so
 that a future patch can drop the realmode.h include from asm/acpi.h
 without breaking the build.
 
-Fixes: 7fdfe1e40b225 ("x86/ftrace: Use vmalloc special flag")
+Fixes: 241a1f2238064 ("x86/kprobes: Use vmalloc special flag")
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kernel/ftrace.c | 1 +
+ arch/x86/kernel/kprobes/core.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 2a179fb35cd1..681eae0fb64d 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -23,6 +23,7 @@
- #include <linux/list.h>
- #include <linux/module.h>
- #include <linux/memory.h>
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index 4f13af7cbcdb..a0c223ab7264 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -40,6 +40,7 @@
+ #include <linux/frame.h>
+ #include <linux/kasan.h>
+ #include <linux/moduleloader.h>
 +#include <linux/vmalloc.h>
  
- #include <trace/syscall.h>
- 
+ #include <asm/text-patching.h>
+ #include <asm/cacheflush.h>
 -- 
 2.24.0
