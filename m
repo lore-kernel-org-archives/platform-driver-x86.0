@@ -1,97 +1,44 @@
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 11/12] ACPI/sleep: Convert acpi_wakeup_address into a function
-Date: Wed, 20 Nov 2019 11:58:31 +0100
-Message-ID: <7338293.UcAxln0NAJ@kreacher>
-References: <20191119002121.4107-1-sean.j.christopherson@intel.com> <20191119002121.4107-12-sean.j.christopherson@intel.com>
+Subject: Re: [PATCH 10/12] x86/ACPI/sleep: Remove an unnecessary include of asm/realmode.h
+Date: Wed, 20 Nov 2019 11:59:27 +0100
+Message-ID: <3809579.i0RzbxhyKc@kreacher>
+References: <20191119002121.4107-1-sean.j.christopherson@intel.com> <20191119002121.4107-11-sean.j.christopherson@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191119002121.4107-12-sean.j.christopherson@intel.com>
+In-Reply-To: <20191119002121.4107-11-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sean Christopherson <sean.j.christopherson@intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <namit@vmware.com>, "VMware, Inc." <pv-drivers@vmware.com>, Arnd
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tuesday, November 19, 2019 1:21:20 AM CET Sean Christopherson wrote:
-> Convert acpi_wakeup_address from a raw variable into a function so that
-> x86 can wrap its dereference of the real mode boot header in a function
-> instead of broadcasting it to the world via a #define.  This sets the
-> stage for a future patch to move the definition of acpi_wakeup_address()
-> out of asm/acpi.h and thus break acpi.h's dependency on asm/realmode.h.
+On Tuesday, November 19, 2019 1:21:19 AM CET Sean Christopherson wrote:
+> None of the declarations in x86's acpi/sleep.h are in any way dependent
+> on the real mode boot code.  Remove sleep.h's include of asm/realmode.h
+> to limit the dependencies on realmode.h to code that actually interacts
+> with the boot code.
 > 
-> No functional change intended.
-> 
+> Fixes: c9b77ccb52a5c ("x86, realmode: Move ACPI wakeup to unified realmode code")
 > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
 > ---
->  arch/ia64/include/asm/acpi.h | 5 ++++-
->  arch/ia64/kernel/acpi.c      | 2 --
->  arch/x86/include/asm/acpi.h  | 5 ++++-
->  drivers/acpi/sleep.c         | 4 ++--
->  4 files changed, 10 insertions(+), 6 deletions(-)
+>  arch/x86/kernel/acpi/sleep.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/ia64/include/asm/acpi.h b/arch/ia64/include/asm/acpi.h
-> index f886d4dc9d55..36d7003eee71 100644
-> --- a/arch/ia64/include/asm/acpi.h
-> +++ b/arch/ia64/include/asm/acpi.h
-> @@ -38,7 +38,10 @@ int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
->  /* Low-level suspend routine. */
->  extern int acpi_suspend_lowlevel(void);
+> diff --git a/arch/x86/kernel/acpi/sleep.h b/arch/x86/kernel/acpi/sleep.h
+> index fbb60ca4255c..d06c2079b6c1 100644
+> --- a/arch/x86/kernel/acpi/sleep.h
+> +++ b/arch/x86/kernel/acpi/sleep.h
+> @@ -3,7 +3,7 @@
+>   *	Variables and functions used by the code in sleep.c
+>   */
 >  
-> -extern unsigned long acpi_wakeup_address;
-> +static inline unsigned long acpi_wakeup_address(void)
-> +{
-> +	return 0;
-> +}
+> -#include <asm/realmode.h>
+> +#include <linux/linkage.h>
 >  
->  /*
->   * Record the cpei override flag and current logical cpu. This is
-> diff --git a/arch/ia64/kernel/acpi.c b/arch/ia64/kernel/acpi.c
-> index 70d1587ddcd4..a5636524af76 100644
-> --- a/arch/ia64/kernel/acpi.c
-> +++ b/arch/ia64/kernel/acpi.c
-> @@ -42,8 +42,6 @@ int acpi_lapic;
->  unsigned int acpi_cpei_override;
->  unsigned int acpi_cpei_phys_cpuid;
->  
-> -unsigned long acpi_wakeup_address = 0;
-> -
->  #define ACPI_MAX_PLATFORM_INTERRUPTS	256
->  
->  /* Array to record platform interrupt vectors for generic interrupt routing. */
-> diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
-> index bc9693c9107e..57788ec6fa82 100644
-> --- a/arch/x86/include/asm/acpi.h
-> +++ b/arch/x86/include/asm/acpi.h
-> @@ -62,7 +62,10 @@ static inline void acpi_disable_pci(void)
->  extern int (*acpi_suspend_lowlevel)(void);
->  
->  /* Physical address to resume after wakeup */
-> -#define acpi_wakeup_address ((unsigned long)(real_mode_header->wakeup_start))
-> +static inline unsigned long acpi_wakeup_address(void)
-> +{
-> +	return ((unsigned long)(real_mode_header->wakeup_start));
-> +}
->  
->  /*
->   * Check if the CPU can handle C2 and deeper
-> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
-> index 2af937a8b1c5..9e66c4109556 100644
-> --- a/drivers/acpi/sleep.c
-> +++ b/drivers/acpi/sleep.c
-> @@ -63,9 +63,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
->  #ifdef CONFIG_ACPI_SLEEP
->  	/* do we have a wakeup address for S2 and S3? */
->  	if (acpi_state == ACPI_STATE_S3) {
-> -		if (!acpi_wakeup_address)
-> +		if (!acpi_wakeup_address())
->  			return -EFAULT;
-> -		acpi_set_waking_vector(acpi_wakeup_address);
-> +		acpi_set_waking_vector(acpi_wakeup_address());
->  
->  	}
->  	ACPI_FLUSH_CPU_CACHE();
+>  extern unsigned long saved_video_mode;
+>  extern long saved_magic;
 > 
