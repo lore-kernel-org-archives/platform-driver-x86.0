@@ -1,79 +1,127 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 12/12] x86/ACPI/sleep: Move acpi_wakeup_address() definition into sleep.c
-Date: Wed, 20 Nov 2019 12:00:48 +0100
-Message-ID: <1707133.c5szpGgj5A@kreacher>
-References: <20191119002121.4107-1-sean.j.christopherson@intel.com> <20191119002121.4107-13-sean.j.christopherson@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] platform/x86: Fix Kconfig indentation
+Date: Wed, 20 Nov 2019 21:36:50 +0800
+Message-ID: <20191120133650.11770-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191119002121.4107-13-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <namit@vmware.com>, "VMware, Inc." <pv-drivers@vmware.com>, Arnd
+To: linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tuesday, November 19, 2019 1:21:21 AM CET Sean Christopherson wrote:
-> Move the definition of acpi_wakeup_address() into sleep.c to break
-> linux/acpi.h's dependency (by way of asm/acpi.h) on asm/realmode.h.
-> Everyone and their mother includes linux/acpi.h, i.e. modifying
-> realmode.h results in a full kernel rebuild, which makes the already
-> inscrutable real mode boot code even more difficult to understand and is
-> positively rage inducing when trying to make changes to x86's boot flow.
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/platform/x86/Kconfig | 48 ++++++++++++++++++------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
-> ---
->  arch/x86/include/asm/acpi.h  |  6 +-----
->  arch/x86/kernel/acpi/sleep.c | 11 +++++++++++
->  2 files changed, 12 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
-> index 57788ec6fa82..0cae3f773d44 100644
-> --- a/arch/x86/include/asm/acpi.h
-> +++ b/arch/x86/include/asm/acpi.h
-> @@ -13,7 +13,6 @@
->  #include <asm/processor.h>
->  #include <asm/mmu.h>
->  #include <asm/mpspec.h>
-> -#include <asm/realmode.h>
->  #include <asm/x86_init.h>
->  
->  #ifdef CONFIG_ACPI_APEI
-> @@ -62,10 +61,7 @@ static inline void acpi_disable_pci(void)
->  extern int (*acpi_suspend_lowlevel)(void);
->  
->  /* Physical address to resume after wakeup */
-> -static inline unsigned long acpi_wakeup_address(void)
-> -{
-> -	return ((unsigned long)(real_mode_header->wakeup_start));
-> -}
-> +unsigned long acpi_wakeup_address(void);
->  
->  /*
->   * Check if the CPU can handle C2 and deeper
-> diff --git a/arch/x86/kernel/acpi/sleep.c b/arch/x86/kernel/acpi/sleep.c
-> index ca13851f0570..44d3fb1a1de3 100644
-> --- a/arch/x86/kernel/acpi/sleep.c
-> +++ b/arch/x86/kernel/acpi/sleep.c
-> @@ -26,6 +26,17 @@ unsigned long acpi_realmode_flags;
->  static char temp_stack[4096];
->  #endif
->  
-> +/**
-> + * acpi_wakeup_address - provide physical address for S3 wakeup
-> + *
-> + * Returns the physical address where the kernel should be resumed after the
-> + * system awakes from S3, e.g. for programming into the firmware waking vector.
-> + */
-> +unsigned long acpi_wakeup_address(void)
-> +{
-> +	return ((unsigned long)(real_mode_header->wakeup_start));
-> +}
-> +
->  /**
->   * x86_acpi_enter_sleep_state - enter sleep state
->   * @state: Sleep state to enter.
-> 
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 27d5b40fb717..ef49c8258ce6 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -28,7 +28,7 @@ config ACER_WMI
+ 	depends on ACPI_WMI
+ 	select INPUT_SPARSEKMAP
+ 	# Acer WMI depends on ACPI_VIDEO when ACPI is enabled
+-        select ACPI_VIDEO if ACPI
++	select ACPI_VIDEO if ACPI
+ 	---help---
+ 	  This is a driver for newer Acer (and Wistron) laptops. It adds
+ 	  wireless radio and bluetooth control, and on some laptops,
+@@ -38,18 +38,18 @@ config ACER_WMI
+ 	  here.
+ 
+ config ACER_WIRELESS
+-        tristate "Acer Wireless Radio Control Driver"
+-        depends on ACPI
+-        depends on INPUT
+-        ---help---
+-          The Acer Wireless Radio Control handles the airplane mode hotkey
+-          present on new Acer laptops.
++	tristate "Acer Wireless Radio Control Driver"
++	depends on ACPI
++	depends on INPUT
++	---help---
++	  The Acer Wireless Radio Control handles the airplane mode hotkey
++	  present on new Acer laptops.
+ 
+-          Say Y or M here if you have an Acer notebook with an airplane mode
+-          hotkey.
++	  Say Y or M here if you have an Acer notebook with an airplane mode
++	  hotkey.
+ 
+-          If you choose to compile this driver as a module the module will be
+-          called acer-wireless.
++	  If you choose to compile this driver as a module the module will be
++	  called acer-wireless.
+ 
+ config ACERHDF
+ 	tristate "Acer Aspire One temperature and fan driver"
+@@ -285,17 +285,17 @@ config FUJITSU_TABLET
+        depends on ACPI
+        depends on INPUT
+        ---help---
+-         This is a driver for tablets built by Fujitsu:
++	 This is a driver for tablets built by Fujitsu:
+ 
+-           * Lifebook P1510/P1610/P1620/Txxxx
+-           * Stylistic ST5xxx
+-           * Possibly other Fujitsu tablet models
++	   * Lifebook P1510/P1610/P1620/Txxxx
++	   * Stylistic ST5xxx
++	   * Possibly other Fujitsu tablet models
+ 
+-         It adds support for the panel buttons, docking station detection,
+-         tablet/notebook mode detection for convertible and
+-         orientation detection for docked slates.
++	 It adds support for the panel buttons, docking station detection,
++	 tablet/notebook mode detection for convertible and
++	 orientation detection for docked slates.
+ 
+-         If you have a Fujitsu convertible or slate, say Y or M here.
++	 If you have a Fujitsu convertible or slate, say Y or M here.
+ 
+ config AMILO_RFKILL
+ 	tristate "Fujitsu-Siemens Amilo rfkill support"
+@@ -1015,8 +1015,8 @@ config INTEL_MFLD_THERMAL
+        tristate "Thermal driver for Intel Medfield platform"
+        depends on MFD_INTEL_MSIC && THERMAL
+        help
+-         Say Y here to enable thermal driver support for the  Intel Medfield
+-         platform.
++	 Say Y here to enable thermal driver support for the  Intel Medfield
++	 platform.
+ 
+ config INTEL_IPS
+ 	tristate "Intel Intelligent Power Sharing"
+@@ -1123,7 +1123,7 @@ config MXM_WMI
+        tristate "WMI support for MXM Laptop Graphics"
+        depends on ACPI_WMI
+        ---help---
+-          MXM is a standard for laptop graphics cards, the WMI interface
++	  MXM is a standard for laptop graphics cards, the WMI interface
+ 	  is required for switchable nvidia graphics machines
+ 
+ config INTEL_OAKTRAIL
+@@ -1158,7 +1158,7 @@ config APPLE_GMUX
+ 	  control is supported by the driver.
+ 
+ config INTEL_RST
+-        tristate "Intel Rapid Start Technology Driver"
++	tristate "Intel Rapid Start Technology Driver"
+ 	depends on ACPI
+ 	---help---
+ 	  This driver provides support for modifying paramaters on systems
+@@ -1170,7 +1170,7 @@ config INTEL_RST
+ 	  as usual.
+ 
+ config INTEL_SMARTCONNECT
+-        tristate "Intel Smart Connect disabling driver"
++	tristate "Intel Smart Connect disabling driver"
+ 	depends on ACPI
+ 	---help---
+ 	  Intel Smart Connect is a technology intended to permit devices to
+-- 
+2.17.1
