@@ -1,58 +1,102 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 028/219] platform/x86: mlx-platform: Fix LED configuration
-Date: Fri, 22 Nov 2019 00:46:00 -0500
-Message-ID: <20191122054911.1750-21-sashal@kernel.org>
-References: <20191122054911.1750-1-sashal@kernel.org>
+From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+Subject: Re: [PATCH] Revert "platform/x86: wmi: Destroy on cleanup rather than unregister"
+Date: Fri, 22 Nov 2019 12:38:47 +0100
+Message-ID: <87blt45eew.fsf@miraculix.mork.no>
+References: <20191115052710.46880-1-yongxin.liu@windriver.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Vadim Pasternak <vadimp@mellanox.com>, Darren Hart <dvhart@infradead.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191115052710.46880-1-yongxin.liu@windriver.com> (Yongxin Liu's
+        message of "Fri, 15 Nov 2019 13:27:10 +0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yongxin Liu <yongxin.liu@windriver.com>
+Cc: andy@infradead.org, dvhart@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, mario.limonciello@dell.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Vadim Pasternak <vadimp@mellanox.com>
+Yongxin Liu <yongxin.liu@windriver.com> writes:
 
-[ Upstream commit 440f343df1996302d9a3904647ff11b689bf27bc ]
+> This reverts commit 7b11e8989618581bc0226ad313264cdc05d48d86.
+>
+> Consider the following hardware setting.
+>
+> |-PNP0C14:00
+> |  |-- device #1
+> |-PNP0C14:01
+> |  |-- device #2
+>
+> When unloading wmi driver module, device #2 will be first unregistered.
+> But device_destroy() using MKDEV(0, 0) will locate PNP0C14:00 first
+> and unregister it. This is incorrect. Should use device_unregister() to
+> unregister the real parent device.
+>
+> Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
+> ---
+>  drivers/platform/x86/wmi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 59e9aa0f9643..e16f660aa117 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -1347,7 +1347,7 @@ static int acpi_wmi_remove(struct platform_device *=
+device)
+>  	acpi_remove_address_space_handler(acpi_device->handle,
+>  				ACPI_ADR_SPACE_EC, &acpi_wmi_ec_space_handler);
+>  	wmi_free_devices(acpi_device);
+> -	device_destroy(&wmi_bus_class, MKDEV(0, 0));
+> +	device_unregister((struct device *)dev_get_drvdata(&device->dev));
+>=20=20
+>  	return 0;
+>  }
+> @@ -1401,7 +1401,7 @@ static int acpi_wmi_probe(struct platform_device *d=
+evice)
+>  	return 0;
+>=20=20
+>  err_remove_busdev:
+> -	device_destroy(&wmi_bus_class, MKDEV(0, 0));
+> +	device_unregister(wmi_bus_dev);
+>=20=20
+>  err_remove_notify_handler:
+>  	acpi_remove_notify_handler(acpi_device->handle, ACPI_DEVICE_NOTIFY,
 
-Exchange LED configuration between msn201x and next generation systems
-types.
 
-Bug was introduced when LED driver activation was added to mlx-platform.
-LED configuration for the three new system MQMB7, MSN37, MSN34 was
-assigned to MSN21 and vice versa. This bug affects MSN21 only and
-likely requires backport to v4.19.
+Definitely!  Good catch!
 
-Fixes: 1189456b1cce ("platform/x86: mlx-platform: Add LED platform driver activation")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/mlx-platform.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+device_create() will allow registering multiple devices with a zero
+major.  Using device_destroy() with MKDEV(0, 0) will unregister an
+arbitrary one of them.
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 742a0c2179256..ab1aedd72d340 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -1421,7 +1421,7 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
- 	mlxplat_hotplug = &mlxplat_mlxcpld_msn201x_data;
- 	mlxplat_hotplug->deferred_nr =
- 		mlxplat_default_channels[i - 1][MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
--	mlxplat_led = &mlxplat_default_ng_led_data;
-+	mlxplat_led = &mlxplat_msn21xx_led_data;
- 	mlxplat_regs_io = &mlxplat_msn21xx_regs_io_data;
- 
- 	return 1;
-@@ -1439,7 +1439,7 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
- 	mlxplat_hotplug = &mlxplat_mlxcpld_default_ng_data;
- 	mlxplat_hotplug->deferred_nr =
- 		mlxplat_msn21xx_channels[MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
--	mlxplat_led = &mlxplat_msn21xx_led_data;
-+	mlxplat_led = &mlxplat_default_ng_led_data;
- 	mlxplat_fan = &mlxplat_default_fan_data;
- 
- 	return 1;
--- 
-2.20.1
+I believe all of these should be reviewed and fixed up:
+
+drivers/nvme/host/fabrics.c:    device_destroy(nvmf_class, MKDEV(0, 0));
+drivers/nvme/host/fabrics.c:    device_destroy(nvmf_class, MKDEV(0, 0));
+drivers/nvme/host/fc.c: device_destroy(&fc_class, MKDEV(0, 0));
+drivers/nvme/host/fc.c: device_destroy(&fc_class, MKDEV(0, 0));
+drivers/nvme/target/fcloop.c:   device_destroy(fcloop_class, MKDEV(0, 0));
+drivers/platform/x86/wmi.c:     device_destroy(&wmi_bus_class, MKDEV(0, 0));
+drivers/platform/x86/wmi.c:     device_destroy(&wmi_bus_class, MKDEV(0, 0));
+drivers/staging/comedi/drivers/comedi_test.c:   device_destroy(ctcls, MKDEV=
+(0, 0));
+drivers/staging/comedi/drivers/comedi_test.c:           device_destroy(ctcl=
+s, MKDEV(0, 0));
+drivers/video/fbdev/core/fbcon.c:       device_destroy(fb_class, MKDEV(0, 0=
+));
+net/netfilter/xt_IDLETIMER.c:   device_destroy(idletimer_tg_class, MKDEV(0,=
+ 0));
+net/netfilter/xt_IDLETIMER.c:   device_destroy(idletimer_tg_class, MKDEV(0,=
+ 0));
+
+
+Note that most of these probably are not bugs.  yet...
+
+But there is no reason to look up the device by dev_t for drivers
+allowing only one device anyway. Using device_unregister() directly
+makes the code easier to follow and prevents future bugs in case
+someone decides to support more devices.
+
+Maybe we should add a WARN_ON(!MAJOR(devt)) or similar to
+device_destroy() to prevent similar future problems?
+
+
+Bj=C3=B8rn
