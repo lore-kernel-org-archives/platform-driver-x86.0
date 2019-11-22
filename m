@@ -1,49 +1,58 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 04/12] x86/kprobes: Explicitly include vmalloc.h for
- set_vm_flush_reset_perms()
-Date: Thu, 21 Nov 2019 21:12:24 -0500
-Message-ID: <20191121211224.15f006b4@oasis.local.home>
-References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
-        <20191119002121.4107-5-sean.j.christopherson@intel.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 028/219] platform/x86: mlx-platform: Fix LED configuration
+Date: Fri, 22 Nov 2019 00:46:00 -0500
+Message-ID: <20191122054911.1750-21-sashal@kernel.org>
+References: <20191122054911.1750-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191119002121.4107-5-sean.j.christopherson@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <namit@vmware.com>, "VMware, Inc." <pv-drivers@vmware.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Vadim Pasternak <vadimp@mellanox.com>, Darren Hart <dvhart@infradead.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 18 Nov 2019 16:21:13 -0800
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-> The inclusion of linux/vmalloc.h, which is required for its definition
-> of set_vm_flush_reset_perms(), is somehow dependent on asm/realmode.h
-> being included by asm/acpi.h.  Explicitly include linux/vmalloc.h so
-> that a future patch can drop the realmode.h include from asm/acpi.h
-> without breaking the build.
-> 
-> Fixes: 241a1f2238064 ("x86/kprobes: Use vmalloc special flag")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+[ Upstream commit 440f343df1996302d9a3904647ff11b689bf27bc ]
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Exchange LED configuration between msn201x and next generation systems
+types.
 
--- Steve
+Bug was introduced when LED driver activation was added to mlx-platform.
+LED configuration for the three new system MQMB7, MSN37, MSN34 was
+assigned to MSN21 and vice versa. This bug affects MSN21 only and
+likely requires backport to v4.19.
 
-> ---
->  arch/x86/kernel/kprobes/core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-> index 4f13af7cbcdb..a0c223ab7264 100644
-> --- a/arch/x86/kernel/kprobes/core.c
-> +++ b/arch/x86/kernel/kprobes/core.c
-> @@ -40,6 +40,7 @@
->  #include <linux/frame.h>
->  #include <linux/kasan.h>
->  #include <linux/moduleloader.h>
-> +#include <linux/vmalloc.h>
->  
->  #include <asm/text-patching.h>
->  #include <asm/cacheflush.h>
+Fixes: 1189456b1cce ("platform/x86: mlx-platform: Add LED platform driver activation")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/mlx-platform.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 742a0c2179256..ab1aedd72d340 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -1421,7 +1421,7 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_hotplug = &mlxplat_mlxcpld_msn201x_data;
+ 	mlxplat_hotplug->deferred_nr =
+ 		mlxplat_default_channels[i - 1][MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
+-	mlxplat_led = &mlxplat_default_ng_led_data;
++	mlxplat_led = &mlxplat_msn21xx_led_data;
+ 	mlxplat_regs_io = &mlxplat_msn21xx_regs_io_data;
+ 
+ 	return 1;
+@@ -1439,7 +1439,7 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_hotplug = &mlxplat_mlxcpld_default_ng_data;
+ 	mlxplat_hotplug->deferred_nr =
+ 		mlxplat_msn21xx_channels[MLXPLAT_CPLD_GRP_CHNL_NUM - 1];
+-	mlxplat_led = &mlxplat_msn21xx_led_data;
++	mlxplat_led = &mlxplat_default_ng_led_data;
+ 	mlxplat_fan = &mlxplat_default_fan_data;
+ 
+ 	return 1;
+-- 
+2.20.1
