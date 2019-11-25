@@ -1,31 +1,60 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform: x86: pcengines-apuv2: detect apuv4 board
-Date: Mon, 25 Nov 2019 13:15:16 +0200
-Message-ID: <CAHp75Vfh5PhGDFCZ0RZuvYwT_4A3nnfJhqnhThEXr=Dq6ie7ZA@mail.gmail.com>
-References: <20191121155743.28755-1-info@metux.net>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH 11/12] ACPI/sleep: Convert acpi_wakeup_address into a
+ function
+Date: Mon, 25 Nov 2019 09:00:34 -0800
+Message-ID: <20191125170034.GB12178@linux.intel.com>
+References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+ <20191119002121.4107-12-sean.j.christopherson@intel.com>
+ <7338293.UcAxln0NAJ@kreacher>
+ <20191125104803.v6goacte2vjakx64@ucw.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191121155743.28755-1-info@metux.net>
+Content-Disposition: inline
+In-Reply-To: <20191125104803.v6goacte2vjakx64@ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, Len Brown <len.brown@intel.com>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <namit@vmware.com>, "VMware, Inc." <pv-drivers@vmware.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Nov 21, 2019 at 5:58 PM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
->
-> GPIO stuff on APUv4 seems to be the same as on APUv2, so we just
-> need to match on DMI data.
->
-> Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe
+On Mon, Nov 25, 2019 at 11:48:03AM +0100, Pavel Machek wrote:
+> > On Tuesday, November 19, 2019 1:21:20 AM CET Sean Christopherson wrote:
+> > > Convert acpi_wakeup_address from a raw variable into a function so that
+> > > x86 can wrap its dereference of the real mode boot header in a function
+> > > instead of broadcasting it to the world via a #define.  This sets the
+> > > stage for a future patch to move the definition of acpi_wakeup_address()
+> > > out of asm/acpi.h and thus break acpi.h's dependency on asm/realmode.h.
+> > > 
+> > > No functional change intended.
+> > > 
+> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > 
+> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > 
+> > > --- a/drivers/acpi/sleep.c
+> > > +++ b/drivers/acpi/sleep.c
+> > > @@ -63,9 +63,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
+> > >  #ifdef CONFIG_ACPI_SLEEP
+> > >  	/* do we have a wakeup address for S2 and S3? */
+> > >  	if (acpi_state == ACPI_STATE_S3) {
+> > > -		if (!acpi_wakeup_address)
+> > > +		if (!acpi_wakeup_address())
+> > >  			return -EFAULT;
+> > > -		acpi_set_waking_vector(acpi_wakeup_address);
+> > > +		acpi_set_waking_vector(acpi_wakeup_address());
+> > >  
+> 
+> You might want to store result in a variable... especially since you are
+> turning inline function into real one in a next patch.
+> 
+> And maybe function should be called get_acip_wakeup_address or
+> something? This way it is easy to mistake actual wakeup address from
+> function that gets it...
 
-The Fixes tag format is wrong.
-You are not first time contributor...
+Agreed on both counts.
 
-Also the question why do you have it here? Do we have any regression
-(something worked and stopped working)?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Ingo,
+
+Would you prefer a v2 of the entire series (with Acks and removal of Fixes),
+or a v2 that includes only the last two patches?
