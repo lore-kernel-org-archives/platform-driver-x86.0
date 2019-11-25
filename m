@@ -1,82 +1,30 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 1/2] platform/x86 asus_wmi: Support throttle thermal policy
-Date: Mon, 25 Nov 2019 13:12:43 +0200
-Message-ID: <CAHp75VcVj5=DQ8faTtC2CWk86-VMPGroQ+aCK+tLpkFEyPe-MQ@mail.gmail.com>
-References: <20191124140625.20736-1-leonmaxx@gmail.com> <20191124140744.20830-1-leonmaxx@gmail.com>
+Subject: Re: [PATCH] platform: x86: pcengines-apuv2: detect apuv4 board
+Date: Mon, 25 Nov 2019 13:15:16 +0200
+Message-ID: <CAHp75Vfh5PhGDFCZ0RZuvYwT_4A3nnfJhqnhThEXr=Dq6ie7ZA@mail.gmail.com>
+References: <20191121155743.28755-1-info@metux.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191124140744.20830-1-leonmaxx@gmail.com>
+In-Reply-To: <20191121155743.28755-1-info@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonid Maksymchuk <leonmaxx@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Chris Chiu <chiu@endlessm.com>, Kristian Klausen <kristian@klausen.dk>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
+To: "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Nov 24, 2019 at 4:07 PM Leonid Maksymchuk <leonmaxx@gmail.com> wrote:
+On Thu, Nov 21, 2019 at 5:58 PM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
 >
-> Throttle thermal policy ACPI device is used to control CPU cooling and
+> GPIO stuff on APUv4 seems to be the same as on APUv2, so we just
+> need to match on DMI data.
+>
+> Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe
 
-> throttling. This patch adds sysfs entry for setting current mode and
-> Fn+F5 hotkey that switches to next.
+The Fixes tag format is wrong.
+You are not first time contributor...
 
-sysfs means ABI. ABI must be documented.
-
-> Policy modes:
-> * 0x00 - default
-> * 0x01 - overboost
-> * 0x02 - silent
-
-> +static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
-> +{
-> +       u32 result;
-> +       int err;
-> +
-> +       asus->throttle_thermal_policy_available = false;
-> +
-> +       err = asus_wmi_get_devstate(asus,
-> +                                   ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
-> +                                   &result);
-> +       if (err) {
-> +               if (err == -ENODEV)
-> +                       return 0;
-
-> +               else
-
-Redundant.
-
-> +                       return err;
-> +       }
-> +
-
-> +       if ((result & ASUS_WMI_DSTS_PRESENCE_BIT))
-
-Too many parentheses.
-
-> +               asus->throttle_thermal_policy_available = true;
-> +
-> +       return 0;
-> +}
-
-> +       pr_info("Set throttle thermal policy: %u\n", value);
-
-Do we really need this message?
-
-> +       return scnprintf(buf, PAGE_SIZE, "%d\n",
-> +                        asus->throttle_thermal_policy_mode);
-
-Can it be one line?
-
-> +       result = kstrtou8(buf, 10, &new_mode);
-> +       if (result < 0) {
-
-> +               pr_warn("Trying to store invalid value\n");
-
-Redundant. By error code user space will get a message.
-
-> +               return result;
-> +       }
-
-
+Also the question why do you have it here? Do we have any regression
+(something worked and stopped working)?
 
 -- 
 With Best Regards,
