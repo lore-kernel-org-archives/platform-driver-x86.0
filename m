@@ -1,55 +1,47 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 11/12] ACPI/sleep: Convert acpi_wakeup_address into a
- function
-Date: Mon, 25 Nov 2019 11:48:03 +0100
-Message-ID: <20191125104803.v6goacte2vjakx64@ucw.cz>
-References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
- <20191119002121.4107-12-sean.j.christopherson@intel.com>
- <7338293.UcAxln0NAJ@kreacher>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 0/2] platform/x86 asus_wmi: Support of ASUS TUF laptops
+ on Ryzen CPUs
+Date: Mon, 25 Nov 2019 13:09:08 +0200
+Message-ID: <CAHp75VeD4bKLrhnWw6vPa_K7QQXGsvyD3COZb9FwripOVAawvQ@mail.gmail.com>
+References: <20191124140625.20736-1-leonmaxx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7338293.UcAxln0NAJ@kreacher>
+In-Reply-To: <20191124140625.20736-1-leonmaxx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, Len Brown <len.brown@intel.com>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <namit@vmware.com>, "VMware, Inc." <pv-drive>
+To: Leonid Maksymchuk <leonmaxx@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Chris Chiu <chiu@endlessm.com>, Kristian Klausen <kristian@klausen.dk>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-> On Tuesday, November 19, 2019 1:21:20 AM CET Sean Christopherson wrote:
-> > Convert acpi_wakeup_address from a raw variable into a function so that
-> > x86 can wrap its dereference of the real mode boot header in a function
-> > instead of broadcasting it to the world via a #define.  This sets the
-> > stage for a future patch to move the definition of acpi_wakeup_address()
-> > out of asm/acpi.h and thus break acpi.h's dependency on asm/realmode.h.
-> > 
-> > No functional change intended.
-> > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> 
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> > --- a/drivers/acpi/sleep.c
-> > +++ b/drivers/acpi/sleep.c
-> > @@ -63,9 +63,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
-> >  #ifdef CONFIG_ACPI_SLEEP
-> >  	/* do we have a wakeup address for S2 and S3? */
-> >  	if (acpi_state == ACPI_STATE_S3) {
-> > -		if (!acpi_wakeup_address)
-> > +		if (!acpi_wakeup_address())
-> >  			return -EFAULT;
-> > -		acpi_set_waking_vector(acpi_wakeup_address);
-> > +		acpi_set_waking_vector(acpi_wakeup_address());
-> >  
+On Sun, Nov 24, 2019 at 4:07 PM Leonid Maksymchuk <leonmaxx@gmail.com> wrote:
+>
+> Hi,
+>
+> this patch series adds support of Throttle themal policy ACPI device to
+> existing asus_wmi platform driver. Support of this device is required
+> for ASUS TUF laptops on Ryzen CPUs to properly work on Linux.
+>
 
-You might want to store result in a variable... especially since you are
-turning inline function into real one in a next patch.
+In both patches you forgot a colon after platform/x86 prefix.
 
-And maybe function should be called get_acip_wakeup_address or
-something? This way it is easy to mistake actual wakeup address from
-function that gets it...
+> v2: fixed indentation.
+> v3: patches 2/3 and 3/3 are refactored.
+> v4: patch 2/3 are simplified.
+> v5: add new device instead of merging with fan boost mode
+>
+> Leonid Maksymchuk (2):
+>   platform/x86 asus_wmi: Support throttle thermal policy
+>   platform/x86 asus_wmi: Set throttle thermal policy to default
+>
+>  drivers/platform/x86/asus-wmi.c            | 128 +++++++++++++++++++++++++++++
+>  include/linux/platform_data/x86/asus-wmi.h |   1 +
+>  2 files changed, 129 insertions(+)
+>
+> --
+> 1.8.3.1
+>
 
-Best regards,
-									Pavel
-> 
-> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
