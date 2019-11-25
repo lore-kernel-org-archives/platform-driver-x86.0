@@ -1,57 +1,55 @@
-From: Leonid Maksymchuk <leonmaxx@gmail.com>
-Subject: [PATCH v5 2/2] platform/x86 asus_wmi: Set throttle thermal policy to default
-Date: Sun, 24 Nov 2019 16:08:41 +0200
-Message-ID: <20191124140841.20929-1-leonmaxx@gmail.com>
-References: <20191124140625.20736-1-leonmaxx@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 11/12] ACPI/sleep: Convert acpi_wakeup_address into a
+ function
+Date: Mon, 25 Nov 2019 11:48:03 +0100
+Message-ID: <20191125104803.v6goacte2vjakx64@ucw.cz>
+References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+ <20191119002121.4107-12-sean.j.christopherson@intel.com>
+ <7338293.UcAxln0NAJ@kreacher>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191124140625.20736-1-leonmaxx@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <7338293.UcAxln0NAJ@kreacher>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com, kristian@klausen.dk, andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com, Leonid Maksymchuk <leonmaxx@gmail.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, Len Brown <len.brown@intel.com>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <namit@vmware.com>, "VMware, Inc." <pv-drive>
 List-Id: platform-driver-x86.vger.kernel.org
 
-ASUS TUF FX705DY/FX505DY starts in silent mode and under heavy
-CPU load it overheats and drops CPU frequency to 399MHz and stays
-at it until reboot [1]. Set throttle thermal policy to default
-to avoid overheating and throttlig.
+> On Tuesday, November 19, 2019 1:21:20 AM CET Sean Christopherson wrote:
+> > Convert acpi_wakeup_address from a raw variable into a function so that
+> > x86 can wrap its dereference of the real mode boot header in a function
+> > instead of broadcasting it to the world via a #define.  This sets the
+> > stage for a future patch to move the definition of acpi_wakeup_address()
+> > out of asm/acpi.h and thus break acpi.h's dependency on asm/realmode.h.
+> > 
+> > No functional change intended.
+> > 
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> 
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> > --- a/drivers/acpi/sleep.c
+> > +++ b/drivers/acpi/sleep.c
+> > @@ -63,9 +63,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
+> >  #ifdef CONFIG_ACPI_SLEEP
+> >  	/* do we have a wakeup address for S2 and S3? */
+> >  	if (acpi_state == ACPI_STATE_S3) {
+> > -		if (!acpi_wakeup_address)
+> > +		if (!acpi_wakeup_address())
+> >  			return -EFAULT;
+> > -		acpi_set_waking_vector(acpi_wakeup_address);
+> > +		acpi_set_waking_vector(acpi_wakeup_address());
+> >  
 
-[1] Link: https://bugzilla.kernel.org/show_bug.cgi?id=203733
+You might want to store result in a variable... especially since you are
+turning inline function into real one in a next patch.
 
-Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+And maybe function should be called get_acip_wakeup_address or
+something? This way it is easy to mistake actual wakeup address from
+function that gets it...
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 88faea6..fe571d1 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1782,6 +1782,15 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
- 	return 0;
- }
- 
-+static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
-+{
-+	if (!asus->throttle_thermal_policy_available)
-+		return 0;
-+
-+	asus->throttle_thermal_policy_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-+	return throttle_thermal_policy_write(asus);
-+}
-+
- static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
- {
- 	u8 new_mode = asus->throttle_thermal_policy_mode + 1;
-@@ -2552,6 +2561,8 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	err = throttle_thermal_policy_check_present(asus);
- 	if (err)
- 		goto fail_throttle_thermal_policy;
-+	else
-+		throttle_thermal_policy_set_default(asus);
- 
- 	err = asus_wmi_sysfs_init(asus->platform_device);
- 	if (err)
--- 
-1.8.3.1
+Best regards,
+									Pavel
+> 
+> 
