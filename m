@@ -1,7 +1,7 @@
 From: Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH v2 08/12] vmw_balloon: Explicitly include linux/io.h for virt_to_phys()
-Date: Tue, 26 Nov 2019 08:54:13 -0800
-Message-ID: <20191126165417.22423-9-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 10/12] x86/ACPI/sleep: Remove an unnecessary include of asm/realmode.h
+Date: Tue, 26 Nov 2019 08:54:15 -0800
+Message-ID: <20191126165417.22423-11-sean.j.christopherson@intel.com>
 References: <20191126165417.22423-1-sean.j.christopherson@intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,29 +12,29 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <nadav.amit@gmail.com>, "VMware, Inc." <pv-drivers@vmware.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Cezary Rojewski <cezary.rojewski@intel.com>, Pierre-Louis
 List-Id: platform-driver-x86.vger.kernel.org
 
-Through a labyrinthian sequence of includes, usage of virt_to_phys() is
-dependent on the include of asm/io.h in x86's asm/realmode.h, which is
-included in x86's asm/acpi.h and thus by linux/acpi.h.  Explicitly
-include linux/io.h to break the dependency on realmode.h so that a
-future patch can remove the realmode.h include from acpi.h without
-breaking the build.
+None of the declarations in x86's acpi/sleep.h are in any way dependent
+on the real mode boot code.  Remove sleep.h's include of asm/realmode.h
+to limit the dependencies on realmode.h to code that actually interacts
+with the boot code.
 
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- drivers/misc/vmw_balloon.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/acpi/sleep.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
-index 5e6be1527571..b837e7eba5f7 100644
---- a/drivers/misc/vmw_balloon.c
-+++ b/drivers/misc/vmw_balloon.c
-@@ -17,6 +17,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/arch/x86/kernel/acpi/sleep.h b/arch/x86/kernel/acpi/sleep.h
+index fbb60ca4255c..d06c2079b6c1 100644
+--- a/arch/x86/kernel/acpi/sleep.h
++++ b/arch/x86/kernel/acpi/sleep.h
+@@ -3,7 +3,7 @@
+  *	Variables and functions used by the code in sleep.c
+  */
  
- #include <linux/types.h>
-+#include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/mm.h>
- #include <linux/vmalloc.h>
+-#include <asm/realmode.h>
++#include <linux/linkage.h>
+ 
+ extern unsigned long saved_video_mode;
+ extern long saved_magic;
 -- 
 2.24.0
