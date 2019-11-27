@@ -1,38 +1,167 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v2 00/12] treewide: break dependencies on x86's RM header
-Date: Wed, 27 Nov 2019 18:25:28 +0100
-Message-ID: <20191127172528.GB10957@gmail.com>
-References: <20191126165417.22423-1-sean.j.christopherson@intel.com>
- <20191127072057.GB94748@gmail.com>
- <20191127144703.GA18530@linux.intel.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 012/132] platform/x86: asus-wmi: Filter buggy scan codes on ASUS Q500A
+Date: Wed, 27 Nov 2019 21:30:03 +0100
+Message-ID: <20191127202909.678527786@linuxfoundation.org>
+References: <20191127202857.270233486@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191127144703.GA18530@linux.intel.com>
+In-Reply-To: <20191127202857.270233486@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <nadav.amit@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Oleksij Rempel <linux@rempel-privat.de>, Alex Henrie <alexhenrie24@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Corentin Chary <corentin.chary@gmail.com>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@linux.intel.com>, Sasha Levin <sashal@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+From: Oleksij Rempel <linux@rempel-privat.de>
 
-* Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+[ Upstream commit b5643539b82559b858b8efe3fc8343f66cf9a0b5 ]
 
-> > You didn't include every patch from v1 though, such us my fix to 
-> > Quark:
-> > 
-> >   [PATCH] x86/platform/intel/quark: Explicitly include linux/io.h for virt_to_phys()
-> > 
-> > I've applied that one too and your updated patches, and it's now all 
-> > pushed out into tip:WIP.core/headers.
-> 
-> Sorry, it wasn't clear to me whether or not to include that one.  Next 
-> time I'll ask.
+Some revisions of the ASUS Q500A series have a keyboard related
+issue which is reproducible only after Windows with installed ASUS
+tools is started.
 
-No problem - in general it's best to include all, because in general it's 
-much easier for maintainers to leave out something than to remember to 
-add it back in. ;-)
+In this case the Linux side will have a blocked keyboard or
+report incorrect or incomplete hotkey events.
 
-Thanks,
+To make Linux work properly again, a complete power down
+(unplug power supply and remove battery) is needed.
 
-	Ingo
+Linux/atkbd after a clean start will get the following code on VOLUME_UP
+key: {0xe0, 0x30, 0xe0, 0xb0}. After Windows, the same key will generate
+this codes: {0xe1, 0x23, 0xe0, 0x30, 0xe0, 0xb0}. As result atkdb will
+be confused by buggy codes.
+
+This patch is filtering this buggy code out.
+
+https://bugzilla.kernel.org/show_bug.cgi?id=119391
+
+Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+Cc: Alex Henrie <alexhenrie24@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Corentin Chary <corentin.chary@gmail.com>
+Cc: acpi4asus-user@lists.sourceforge.net
+Cc: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+[dvhart: Add return after pr_warn to avoid false confirmation of filter]
+
+Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 45 ++++++++++++++++++++++++++++++
+ drivers/platform/x86/asus-wmi.h    |  4 +++
+ 2 files changed, 49 insertions(+)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 734f95c09508f..904e28d4db528 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -27,6 +27,7 @@
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/fb.h>
+ #include <linux/dmi.h>
++#include <linux/i8042.h>
+ 
+ #include "asus-wmi.h"
+ 
+@@ -55,10 +56,34 @@ MODULE_PARM_DESC(wapf, "WAPF value");
+ 
+ static struct quirk_entry *quirks;
+ 
++static bool asus_q500a_i8042_filter(unsigned char data, unsigned char str,
++			      struct serio *port)
++{
++	static bool extended;
++	bool ret = false;
++
++	if (str & I8042_STR_AUXDATA)
++		return false;
++
++	if (unlikely(data == 0xe1)) {
++		extended = true;
++		ret = true;
++	} else if (unlikely(extended)) {
++		extended = false;
++		ret = true;
++	}
++
++	return ret;
++}
++
+ static struct quirk_entry quirk_asus_unknown = {
+ 	.wapf = 0,
+ };
+ 
++static struct quirk_entry quirk_asus_q500a = {
++	.i8042_filter = asus_q500a_i8042_filter,
++};
++
+ /*
+  * For those machines that need software to control bt/wifi status
+  * and can't adjust brightness through ACPI interface
+@@ -94,6 +119,15 @@ static int dmi_matched(const struct dmi_system_id *dmi)
+ }
+ 
+ static const struct dmi_system_id asus_quirks[] = {
++	{
++		.callback = dmi_matched,
++		.ident = "ASUSTeK COMPUTER INC. Q500A",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Q500A"),
++		},
++		.driver_data = &quirk_asus_q500a,
++	},
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "ASUSTeK COMPUTER INC. U32U",
+@@ -365,6 +399,8 @@ static const struct dmi_system_id asus_quirks[] = {
+ 
+ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
+ {
++	int ret;
++
+ 	quirks = &quirk_asus_unknown;
+ 	dmi_check_system(asus_quirks);
+ 
+@@ -376,6 +412,15 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
+ 		quirks->wapf = wapf;
+ 	else
+ 		wapf = quirks->wapf;
++
++	if (quirks->i8042_filter) {
++		ret = i8042_install_filter(quirks->i8042_filter);
++		if (ret) {
++			pr_warn("Unable to install key filter\n");
++			return;
++		}
++		pr_info("Using i8042 filter function for receiving events\n");
++	}
+ }
+ 
+ static const struct key_entry asus_nb_wmi_keymap[] = {
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 5de1df510ebd8..dd2e6cc0f3d48 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -28,6 +28,7 @@
+ #define _ASUS_WMI_H_
+ 
+ #include <linux/platform_device.h>
++#include <linux/i8042.h>
+ 
+ #define ASUS_WMI_KEY_IGNORE (-1)
+ #define ASUS_WMI_BRN_DOWN	0x20
+@@ -51,6 +52,9 @@ struct quirk_entry {
+ 	 * and let the ACPI interrupt to send out the key event.
+ 	 */
+ 	int no_display_toggle;
++
++	bool (*i8042_filter)(unsigned char data, unsigned char str,
++			     struct serio *serio);
+ };
+ 
+ struct asus_wmi_driver {
+-- 
+2.20.1
