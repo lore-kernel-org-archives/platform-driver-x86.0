@@ -1,58 +1,42 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v2 11/12] ACPI/sleep: Convert acpi_wakeup_address into a
- function
-Date: Wed, 27 Nov 2019 22:30:37 +0100
-Message-ID: <20191127213037.GB20612@amd>
-References: <20191126165417.22423-1-sean.j.christopherson@intel.com>
- <20191126165417.22423-12-sean.j.christopherson@intel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
+From: Michael Haener <michael.haener@siemens.com>
+Subject: [PATCH] platform/x86: pmc_atom: Add Siemens CONNECT X300 to critclk_systems DMI table
+Date: Fri, 29 Nov 2019 10:16:49 +0100
+Message-ID: <20191129091650.4765-1-michael.haener@siemens.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191126165417.22423-12-sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Nadav Amit <nadav.amit@gmail.com>, "VMware, Inc." <pv-drive>
+To: andy@infradead.org
+Cc: Michael Haener <michael.haener@siemens.com>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+The CONNECT X300 uses the PMC clock for on-board components and gets
+stuck during boot if the clock is disabled. Therefore, add this
+device to the critical systems list.
+Tested on CONNECT X300.
 
---ZfOjI3PrQbgiZnxM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Signed-off-by: Michael Haener <michael.haener@siemens.com>
+---
+ drivers/platform/x86/pmc_atom.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-On Tue 2019-11-26 08:54:16, Sean Christopherson wrote:
-> Convert acpi_wakeup_address from a raw variable into a function so that
-> x86 can wrap its dereference of the real mode boot header in a function
-> instead of broadcasting it to the world via a #define.  This sets the
-> stage for a future patch to move x86's definition of the new function,
-> acpi_get_wakeup_address(), out of asm/acpi.h and thus break acpi.h's
-> dependency on asm/realmode.h.
->=20
-> No functional change intended.
->=20
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-
-Thanks!
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ZfOjI3PrQbgiZnxM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3e6v0ACgkQMOfwapXb+vIvKgCgj+csmgRVJU3LjSgRtQ9xs4OL
-1n8An0cFCD4JerAugYVERVISU8Tw+N8s
-=cvdZ
------END PGP SIGNATURE-----
-
---ZfOjI3PrQbgiZnxM--
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
+index 07d1b911e72f..57f06ca114a6 100644
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -429,6 +429,14 @@ static const struct dmi_system_id critclk_systems[] = {
+ 			DMI_MATCH(DMI_PRODUCT_VERSION, "6AV7882-0"),
+ 		},
+ 	},
++	{
++		.ident = "CONNECT X300",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "A5E45074588")
++		},
++	},
++
+ 	{ /*sentinel*/ }
+ };
+ 
+-- 
+2.11.0
