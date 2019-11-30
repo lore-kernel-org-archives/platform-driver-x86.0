@@ -1,61 +1,57 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: pmc_atom: Add Siemens CONNECT X300 to
+From: "Haener, Michael" <michael.haener@siemens.com>
+Subject: RE: [PATCH] platform/x86: pmc_atom: Add Siemens CONNECT X300 to
  critclk_systems DMI table
-Date: Fri, 29 Nov 2019 12:15:38 +0200
-Message-ID: <CAHp75Vc5A8pX1az+vH1E-d_4awKnyh60=KUYFbyT2ahEsQTkGQ@mail.gmail.com>
+Date: Sat, 30 Nov 2019 06:41:29 +0000
+Message-ID: <VI1PR10MB25580BD5E67CF718E6D06B1083410@VI1PR10MB2558.EURPRD10.PROD.OUTLOOK.COM>
 References: <20191129091650.4765-1-michael.haener@siemens.com>
+ <CAHp75Vc5A8pX1az+vH1E-d_4awKnyh60=KUYFbyT2ahEsQTkGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191129091650.4765-1-michael.haener@siemens.com>
+In-Reply-To: <CAHp75Vc5A8pX1az+vH1E-d_4awKnyh60=KUYFbyT2ahEsQTkGQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Haener <michael.haener@siemens.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Nov 29, 2019 at 11:19 AM Michael Haener
-<michael.haener@siemens.com> wrote:
->
-> The CONNECT X300 uses the PMC clock for on-board components and gets
-> stuck during boot if the clock is disabled. Therefore, add this
-> device to the critical systems list.
-> Tested on CONNECT X300.
-
-Thank you for your patch!
-Can you be more specific about the clock (which one? For example plt2)
-and if possible type of hardware IP which is connected to it (for
-example, Realtek Ethernet)?
-
-> Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-> Signed-off-by: Michael Haener <michael.haener@siemens.com>
-> ---
->  drivers/platform/x86/pmc_atom.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-> index 07d1b911e72f..57f06ca114a6 100644
-> --- a/drivers/platform/x86/pmc_atom.c
-> +++ b/drivers/platform/x86/pmc_atom.c
-> @@ -429,6 +429,14 @@ static const struct dmi_system_id critclk_systems[] = {
->                         DMI_MATCH(DMI_PRODUCT_VERSION, "6AV7882-0"),
->                 },
->         },
-> +       {
-> +               .ident = "CONNECT X300",
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
-> +                       DMI_MATCH(DMI_PRODUCT_VERSION, "A5E45074588")
-> +               },
-> +       },
-> +
->         { /*sentinel*/ }
->  };
->
-> --
-> 2.11.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+DQo+IEZyb206IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4NCj4g
+U2VudDogRnJlaXRhZywgMjkuIE5vdmVtYmVyIDIwMTkgMTE6MTYNCj4gVG86IEjDpG5lciwgTWlj
+aGFlbCAoU0kgQlAgUiZEIFpHIEZXIENDUCkgPG1pY2hhZWwuaGFlbmVyQHNpZW1lbnMuY29tPg0K
+PiBDYzogQW5keSBTaGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVhZC5vcmc+OyBEYXJyZW4gSGFydA0K
+PiA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZl
+ci0NCj4geDg2QHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxp
+bnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBw
+bGF0Zm9ybS94ODY6IHBtY19hdG9tOiBBZGQgU2llbWVucyBDT05ORUNUIFgzMDANCj4gdG8gY3Jp
+dGNsa19zeXN0ZW1zIERNSSB0YWJsZQ0KPiANCj4gT24gRnJpLCBOb3YgMjksIDIwMTkgYXQgMTE6
+MTkgQU0gTWljaGFlbCBIYWVuZXINCj4gPG1pY2hhZWwuaGFlbmVyQHNpZW1lbnMuY29tPiB3cm90
+ZToNCj4gPg0KPiA+IFRoZSBDT05ORUNUIFgzMDAgdXNlcyB0aGUgUE1DIGNsb2NrIGZvciBvbi1i
+b2FyZCBjb21wb25lbnRzIGFuZCBnZXRzDQo+ID4gc3R1Y2sgZHVyaW5nIGJvb3QgaWYgdGhlIGNs
+b2NrIGlzIGRpc2FibGVkLiBUaGVyZWZvcmUsIGFkZCB0aGlzDQo+ID4gZGV2aWNlIHRvIHRoZSBj
+cml0aWNhbCBzeXN0ZW1zIGxpc3QuDQo+ID4gVGVzdGVkIG9uIENPTk5FQ1QgWDMwMC4NCj4gDQo+
+IFRoYW5rIHlvdSBmb3IgeW91ciBwYXRjaCENCj4gQ2FuIHlvdSBiZSBtb3JlIHNwZWNpZmljIGFi
+b3V0IHRoZSBjbG9jayAod2hpY2ggb25lPyBGb3IgZXhhbXBsZSBwbHQyKQ0KPiBhbmQgaWYgcG9z
+c2libGUgdHlwZSBvZiBoYXJkd2FyZSBJUCB3aGljaCBpcyBjb25uZWN0ZWQgdG8gaXQgKGZvcg0K
+PiBleGFtcGxlLCBSZWFsdGVrIEV0aGVybmV0KT8NCg0KSSdtIHNvcnJ5LCBJIGRvbid0IGhhdmUg
+bW9yZSBkZXRhaWxlZCBpbmZvcm1hdGlvbi4gSSBvbmx5IGlkZW50aWZpZWQgdGhlIGJ1ZyANCmJ5
+IGdpdCBiaXNlY3QuDQoNCj4gDQo+ID4gRml4ZXM6IDY0OGU5MjE4ODhhZCAoImNsazogeDg2OiBT
+dG9wIG1hcmtpbmcgY2xvY2tzIGFzIENMS19JU19DUklUSUNBTCIpDQo+ID4gU2lnbmVkLW9mZi1i
+eTogTWljaGFlbCBIYWVuZXIgPG1pY2hhZWwuaGFlbmVyQHNpZW1lbnMuY29tPg0KPiA+IC0tLQ0K
+PiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9wbWNfYXRvbS5jIHwgOCArKysrKysrKw0KPiA+ICAx
+IGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9wbGF0Zm9ybS94ODYvcG1jX2F0b20uYw0KPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L3Bt
+Y19hdG9tLmMNCj4gPiBpbmRleCAwN2QxYjkxMWU3MmYuLjU3ZjA2Y2ExMTRhNiAxMDA2NDQNCj4g
+PiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9wbWNfYXRvbS5jDQo+ID4gKysrIGIvZHJpdmVy
+cy9wbGF0Zm9ybS94ODYvcG1jX2F0b20uYw0KPiA+IEBAIC00MjksNiArNDI5LDE0IEBAIHN0YXRp
+YyBjb25zdCBzdHJ1Y3QgZG1pX3N5c3RlbV9pZCBjcml0Y2xrX3N5c3RlbXNbXQ0KPiA9IHsNCj4g
+PiAgICAgICAgICAgICAgICAgICAgICAgICBETUlfTUFUQ0goRE1JX1BST0RVQ1RfVkVSU0lPTiwg
+IjZBVjc4ODItMCIpLA0KPiA+ICAgICAgICAgICAgICAgICB9LA0KPiA+ICAgICAgICAgfSwNCj4g
+PiArICAgICAgIHsNCj4gPiArICAgICAgICAgICAgICAgLmlkZW50ID0gIkNPTk5FQ1QgWDMwMCIs
+DQo+ID4gKyAgICAgICAgICAgICAgIC5tYXRjaGVzID0gew0KPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIERNSV9NQVRDSChETUlfU1lTX1ZFTkRPUiwgIlNJRU1FTlMgQUciKSwNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICBETUlfTUFUQ0goRE1JX1BST0RVQ1RfVkVSU0lPTiwgIkE1RTQ1
+MDc0NTg4IikNCj4gPiArICAgICAgICAgICAgICAgfSwNCj4gPiArICAgICAgIH0sDQo+ID4gKw0K
+PiA+ICAgICAgICAgeyAvKnNlbnRpbmVsKi8gfQ0KPiA+ICB9Ow0KPiA+DQo+ID4gLS0NCj4gPiAy
+LjExLjANCj4gPg0KPiANCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNo
+ZXZjaGVua28NCldpdGggQmVzdCBSZWdhcmRzLA0KTWljaGFlbCBIYWVuZXINCg==
