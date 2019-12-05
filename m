@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v9 07/10] Input: silead - Switch to firmware_request_platform for retreiving the fw
-Date: Thu,  5 Dec 2019 19:44:19 +0100
-Message-ID: <20191205184422.7316-8-hdegoede@redhat.com>
+Subject: [PATCH v9 08/10] Input: icn8505 - Switch to firmware_request_platform for retreiving the fw
+Date: Thu,  5 Dec 2019 19:44:20 +0100
+Message-ID: <20191205184422.7316-9-hdegoede@redhat.com>
 References: <20191205184422.7316-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -14,14 +14,14 @@ Cc: Hans de Goede <hdegoede@redhat.com>, Peter Jones <pjones@redhat.com>, Dave O
 List-Id: platform-driver-x86.vger.kernel.org
 
 Unfortunately sofar we have been unable to get permission to redistribute
-Silead touchscreen firmwares in linux-firmware. This means that people
+icn8505 touchscreen firmwares in linux-firmware. This means that people
 need to find and install the firmware themselves before the touchscreen
 will work
 
-Some UEFI/x86 tablets with a Silead touchscreen have a copy of the fw
+Some UEFI/x86 tablets with an icn8505 touchscreen have a copy of the fw
 embedded in their UEFI boot-services code.
 
-This commit makes the silead driver use the new firmware_request_platform
+This commit makes the icn8505 driver use the new firmware_request_platform
 function, which will fallback to looking for such an embedded copy when
 direct filesystem lookup fails. This will make the touchscreen work OOTB
 on devices where there is a fw copy embedded in the UEFI code.
@@ -29,20 +29,21 @@ on devices where there is a fw copy embedded in the UEFI code.
 Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/input/touchscreen/silead.c | 2 +-
+ drivers/input/touchscreen/chipone_icn8505.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen=
-/silead.c
-index ad8b6a2bfd36..8fa2f3b7cfd8 100644
---- a/drivers/input/touchscreen/silead.c
-+++ b/drivers/input/touchscreen/silead.c
-@@ -288,7 +288,7 @@ static int silead_ts_load_fw(struct i2c_client *client)
-=20
- =09dev_dbg(dev, "Firmware file name: %s", data->fw_name);
-=20
--=09error =3D request_firmware(&fw, data->fw_name, dev);
-+=09error =3D firmware_request_platform(&fw, data->fw_name, dev);
+diff --git a/drivers/input/touchscreen/chipone_icn8505.c b/drivers/input/to=
+uchscreen/chipone_icn8505.c
+index c768186ce856..f9ca5502ac8c 100644
+--- a/drivers/input/touchscreen/chipone_icn8505.c
++++ b/drivers/input/touchscreen/chipone_icn8505.c
+@@ -288,7 +288,7 @@ static int icn8505_upload_fw(struct icn8505_data *icn85=
+05)
+ =09 * we may need it at resume. Having loaded it once will make the
+ =09 * firmware class code cache it at suspend/resume.
+ =09 */
+-=09error =3D request_firmware(&fw, icn8505->firmware_name, dev);
++=09error =3D firmware_request_platform(&fw, icn8505->firmware_name, dev);
  =09if (error) {
  =09=09dev_err(dev, "Firmware request error %d\n", error);
  =09=09return error;
