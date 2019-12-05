@@ -1,57 +1,141 @@
-From: "Haener, Michael" <michael.haener@siemens.com>
-Subject: RE: [PATCH] platform/x86: pmc_atom: Add Siemens CONNECT X300 to
- critclk_systems DMI table
-Date: Sat, 30 Nov 2019 06:41:29 +0000
-Message-ID: <VI1PR10MB25580BD5E67CF718E6D06B1083410@VI1PR10MB2558.EURPRD10.PROD.OUTLOOK.COM>
-References: <20191129091650.4765-1-michael.haener@siemens.com>
- <CAHp75Vc5A8pX1az+vH1E-d_4awKnyh60=KUYFbyT2ahEsQTkGQ@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v9 00/10]  efi/firmware/platform-x86: Add EFI embedded fw support
+Date: Thu,  5 Dec 2019 19:44:12 +0100
+Message-ID: <20191205184422.7316-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vc5A8pX1az+vH1E-d_4awKnyh60=KUYFbyT2ahEsQTkGQ@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-DQo+IEZyb206IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4NCj4g
-U2VudDogRnJlaXRhZywgMjkuIE5vdmVtYmVyIDIwMTkgMTE6MTYNCj4gVG86IEjDpG5lciwgTWlj
-aGFlbCAoU0kgQlAgUiZEIFpHIEZXIENDUCkgPG1pY2hhZWwuaGFlbmVyQHNpZW1lbnMuY29tPg0K
-PiBDYzogQW5keSBTaGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVhZC5vcmc+OyBEYXJyZW4gSGFydA0K
-PiA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBQbGF0Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZl
-ci0NCj4geDg2QHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxp
-bnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBw
-bGF0Zm9ybS94ODY6IHBtY19hdG9tOiBBZGQgU2llbWVucyBDT05ORUNUIFgzMDANCj4gdG8gY3Jp
-dGNsa19zeXN0ZW1zIERNSSB0YWJsZQ0KPiANCj4gT24gRnJpLCBOb3YgMjksIDIwMTkgYXQgMTE6
-MTkgQU0gTWljaGFlbCBIYWVuZXINCj4gPG1pY2hhZWwuaGFlbmVyQHNpZW1lbnMuY29tPiB3cm90
-ZToNCj4gPg0KPiA+IFRoZSBDT05ORUNUIFgzMDAgdXNlcyB0aGUgUE1DIGNsb2NrIGZvciBvbi1i
-b2FyZCBjb21wb25lbnRzIGFuZCBnZXRzDQo+ID4gc3R1Y2sgZHVyaW5nIGJvb3QgaWYgdGhlIGNs
-b2NrIGlzIGRpc2FibGVkLiBUaGVyZWZvcmUsIGFkZCB0aGlzDQo+ID4gZGV2aWNlIHRvIHRoZSBj
-cml0aWNhbCBzeXN0ZW1zIGxpc3QuDQo+ID4gVGVzdGVkIG9uIENPTk5FQ1QgWDMwMC4NCj4gDQo+
-IFRoYW5rIHlvdSBmb3IgeW91ciBwYXRjaCENCj4gQ2FuIHlvdSBiZSBtb3JlIHNwZWNpZmljIGFi
-b3V0IHRoZSBjbG9jayAod2hpY2ggb25lPyBGb3IgZXhhbXBsZSBwbHQyKQ0KPiBhbmQgaWYgcG9z
-c2libGUgdHlwZSBvZiBoYXJkd2FyZSBJUCB3aGljaCBpcyBjb25uZWN0ZWQgdG8gaXQgKGZvcg0K
-PiBleGFtcGxlLCBSZWFsdGVrIEV0aGVybmV0KT8NCg0KSSdtIHNvcnJ5LCBJIGRvbid0IGhhdmUg
-bW9yZSBkZXRhaWxlZCBpbmZvcm1hdGlvbi4gSSBvbmx5IGlkZW50aWZpZWQgdGhlIGJ1ZyANCmJ5
-IGdpdCBiaXNlY3QuDQoNCj4gDQo+ID4gRml4ZXM6IDY0OGU5MjE4ODhhZCAoImNsazogeDg2OiBT
-dG9wIG1hcmtpbmcgY2xvY2tzIGFzIENMS19JU19DUklUSUNBTCIpDQo+ID4gU2lnbmVkLW9mZi1i
-eTogTWljaGFlbCBIYWVuZXIgPG1pY2hhZWwuaGFlbmVyQHNpZW1lbnMuY29tPg0KPiA+IC0tLQ0K
-PiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9wbWNfYXRvbS5jIHwgOCArKysrKysrKw0KPiA+ICAx
-IGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9wbGF0Zm9ybS94ODYvcG1jX2F0b20uYw0KPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L3Bt
-Y19hdG9tLmMNCj4gPiBpbmRleCAwN2QxYjkxMWU3MmYuLjU3ZjA2Y2ExMTRhNiAxMDA2NDQNCj4g
-PiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9wbWNfYXRvbS5jDQo+ID4gKysrIGIvZHJpdmVy
-cy9wbGF0Zm9ybS94ODYvcG1jX2F0b20uYw0KPiA+IEBAIC00MjksNiArNDI5LDE0IEBAIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgZG1pX3N5c3RlbV9pZCBjcml0Y2xrX3N5c3RlbXNbXQ0KPiA9IHsNCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICBETUlfTUFUQ0goRE1JX1BST0RVQ1RfVkVSU0lPTiwg
-IjZBVjc4ODItMCIpLA0KPiA+ICAgICAgICAgICAgICAgICB9LA0KPiA+ICAgICAgICAgfSwNCj4g
-PiArICAgICAgIHsNCj4gPiArICAgICAgICAgICAgICAgLmlkZW50ID0gIkNPTk5FQ1QgWDMwMCIs
-DQo+ID4gKyAgICAgICAgICAgICAgIC5tYXRjaGVzID0gew0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIERNSV9NQVRDSChETUlfU1lTX1ZFTkRPUiwgIlNJRU1FTlMgQUciKSwNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICBETUlfTUFUQ0goRE1JX1BST0RVQ1RfVkVSU0lPTiwgIkE1RTQ1
-MDc0NTg4IikNCj4gPiArICAgICAgICAgICAgICAgfSwNCj4gPiArICAgICAgIH0sDQo+ID4gKw0K
-PiA+ICAgICAgICAgeyAvKnNlbnRpbmVsKi8gfQ0KPiA+ICB9Ow0KPiA+DQo+ID4gLS0NCj4gPiAy
-LjExLjANCj4gPg0KPiANCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNo
-ZXZjaGVua28NCldpdGggQmVzdCBSZWdhcmRzLA0KTWljaGFlbCBIYWVuZXINCg==
+Hi All,
+
+Here is v9 of my patch-set to add support for EFI embedded fw to the kernel=
+.
+
+The main new feature in this version is the addition of some selftests for
+the new firmware_request_platform api (patch 5 and 6, both new). My plan
+was to send the patches adding the selftests out as a follow up series.
+
+But during unrelated testing of my personal tree I found a small but nasty
+bug in the "efi: Add embedded peripheral firmware support" patch, the minor
+refactoring done in v8 exposed a bug which causes a hard crash on boot for
+devices which have a DMI match in the touchscreen_dmi_table but do not use
+EFI-embedded fw, this is fixed in this new version.
+
+Assuming the 2 new patches adding the selftests are ok, I believe that
+this series is ready for merging now.  I believe it would be best to merge
+patches 1-8 through Greg's driver-core tree where firmware-loader changes g=
+o.
+The non firmware patches already have Acked-by-s from the maintainers of
+the EFI/input trees.
+
+Patches 9-10 touch a quirks file under drivers/platform/x86 which sees
+multipe updates each cycle. So my proposal is that once 1-8 has landed
+Greg creates an immutable branch with those changes and then
+Andy and/or Darren can merge in that branch and then apply 9 and 10.
+
+Regards,
+
+Hans
+
+
+Changes in v9:
+- Add 2 new patches adding selftests
+- At least touchscreen_dmi.c uses the same dmi_table for its own private
+  data and the fw_desc structs, putting the fw_desc struct first in the
+  data driver_data points to so that the dmi_table can be shared with
+  efi_check_for_embedded_firmwares(). But not all entries there have
+  embedded-fw so in some cases the fw_desc is empty (zero-ed out).
+  This can lead to a possible crash because fw_desc->length now is
+  less then 8, so if the segment size is close enough to a multiple of the
+  page_size, then the memcmp to check the prefix my segfault. Crashing the
+  machine. v9 checks for and skips these empty fw_desc entries avoiding thi=
+s.
+- Add static inline wrapper for firmware_request_platform() to firmware.h,
+  for when CONFIG_FW_LOADER is not set
+
+Changes in v8:
+- Add pr_warn if there are mode then EFI_DEBUGFS_MAX_BLOBS boot service seg=
+ments
+- Document how the EFI debugfs boot_service_code? files can be used to chec=
+k for
+  embedded firmware
+- Properly deal with the case of an EFI segment being smaller then the fw w=
+e
+  are looking for
+- Log a warning when efi_get_embedded_fw get called while we did not (yet)
+  check for embedded firmwares
+- Only build fallback_platform.c if CONFIG_EFI_EMBEDDED_FIRMWARE is defined=
+,
+  otherwise make firmware_fallback_platform() a static inline stub
+
+Changes in v7:
+- Split drivers/firmware/efi and drivers/base/firmware_loader changes into
+  2 patches
+- Use new, standalone, lib/crypto/sha256.c code
+- Address kdoc comments from Randy Dunlap
+- Add new FW_OPT_FALLBACK_PLATFORM flag and firmware_request_platform()
+  _request_firmware() wrapper, as requested by Luis R. Rodriguez
+- Stop using "efi-embedded-firmware" device-property, now that drivers need=
+ to
+  use the new firmware_request_platform() to enable fallback to a device fw
+  copy embedded in the platform's main firmware, we no longer need a proper=
+ty
+  on the device to trigger this behavior
+- Use security_kernel_load_data instead of calling
+  security_kernel_read_file with a NULL file pointer argument
+- Move the docs to Documentation/driver-api/firmware/fallback-mechanisms.rs=
+t
+- Document the new firmware_request_platform() function in
+  Documentation/driver-api/firmware/request_firmware.rst
+- Add 2 new patches for the silead and chipone-icn8505 touchscreen drivers
+  to use the new firmware_request_platform() method
+- Rebased on top of 5.4-rc1
+
+Changes in v6:
+-Rework code to remove casts from if (prefix =3D=3D mem) comparison
+-Use SHA256 hashes instead of crc32 sums
+-Add new READING_FIRMWARE_EFI_EMBEDDED read_file_id and use it
+-Call security_kernel_read_file(NULL, READING_FIRMWARE_EFI_EMBEDDED)
+ to check if this is allowed before looking at EFI embedded fw
+-Document why we are not using the PI Firmware Volume protocol
+
+Changes in v5:
+-Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
+
+Changes in v4:
+-Drop note in docs about EFI_FIRMWARE_VOLUME_PROTOCOL, it is not part of
+ UEFI proper, so the EFI maintainers don't want us referring people to it
+-Use new EFI_BOOT_SERVICES flag
+-Put the new fw_get_efi_embedded_fw() function in its own fallback_efi.c
+ file which only gets built when EFI_EMBEDDED_FIRMWARE is selected
+-Define an empty stub for fw_get_efi_embedded_fw() in fallback.h hwen
+ EFI_EMBEDDED_FIRMWARE is not selected, to avoid the need for #ifdefs
+ in firmware_loader/main.c
+-Properly call security_kernel_post_read_file() on the firmware returned
+ by efi_get_embedded_fw() to make sure that we are allowed to use it
+
+Changes in v2:
+-Rebased on driver-core/driver-core-next
+-Add documentation describing the EFI embedded firmware mechanism to:
+ Documentation/driver-api/firmware/request_firmware.rst
+-Add a new EFI_EMBEDDED_FIRMWARE Kconfig bool and only build the embedded
+ fw support if this is set. This is an invisible option which should be
+ selected by drivers which need this
+-Remove the efi_embedded_fw_desc and dmi_system_id-s for known devices
+ from the efi-embedded-fw code, instead drivers using this are expected to
+ export a dmi_system_id array, with each entries' driver_data pointing to a
+ efi_embedded_fw_desc struct and register this with the efi-embedded-fw cod=
+e
+-Use kmemdup to make a copy instead of efi_mem_reserve()-ing the firmware,
+ this avoids us messing with the EFI memmap and avoids the need to make
+ changes to efi_mem_desc_lookup()
+-Make the firmware-loader code only fallback to efi_get_embedded_fw() if th=
+e
+ passed in device has the "efi-embedded-firmware" device-property bool set
+-Skip usermodehelper fallback when "efi-embedded-firmware" device-property
+ is set
