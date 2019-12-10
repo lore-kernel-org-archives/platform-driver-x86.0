@@ -1,48 +1,121 @@
-From: Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] x86/platform/goldfish: add a check for platform_device_register_simple
-Date: Tue, 10 Dec 2019 11:15:59 +0800
-Message-ID: <20191210031559.18715-1-hslester96@gmail.com>
+From: Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH 5/6] mm, memory_hotplug: Provide argument for the
+ pgprot_t in arch_add_memory()
+Date: Tue, 10 Dec 2019 10:56:15 +0100
+Message-ID: <20191210095615.GB10404@dhcp22.suse.cz>
+References: <20191209191346.5197-1-logang@deltatee.com>
+ <20191209191346.5197-6-logang@deltatee.com>
+ <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
+ <f34a4c52-cc95-15ed-8a72-c05ab4fd6d33@deltatee.com>
+ <20191209204128.GC7658@dhcp22.suse.cz>
+ <e0f9c1e1-4968-f48f-ec09-853fc8fc779b@deltatee.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e0f9c1e1-4968-f48f-ec09-853fc8fc779b@deltatee.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@linux.intel.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+To: Logan Gunthorpe <logang@deltatee.com>
+Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>, Dan Williams <dan.j.williams@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-goldfish_init() misses a check for platform_device_register_simple().
-Add a check to fix it.
+On Mon 09-12-19 14:24:22, Logan Gunthorpe wrote:
+> 
+> 
+> On 2019-12-09 1:41 p.m., Michal Hocko wrote:
+> > On Mon 09-12-19 13:24:19, Logan Gunthorpe wrote:
+> >>
+> >>
+> >> On 2019-12-09 12:23 p.m., David Hildenbrand wrote:
+> >>> On 09.12.19 20:13, Logan Gunthorpe wrote:
+> >>>> devm_memremap_pages() is currently used by the PCI P2PDMA code to create
+> >>>> struct page mappings for IO memory. At present, these mappings are created
+> >>>> with PAGE_KERNEL which implies setting the PAT bits to be WB. However, on
+> >>>> x86, an mtrr register will typically override this and force the cache
+> >>>> type to be UC-. In the case firmware doesn't set this register it is
+> >>>> effectively WB and will typically result in a machine check exception
+> >>>> when it's accessed.
+> >>>>
+> >>>> Other arches are not currently likely to function correctly seeing they
+> >>>> don't have any MTRR registers to fall back on.
+> >>>>
+> >>>> To solve this, add an argument to arch_add_memory() to explicitly
+> >>>> set the pgprot value to a specific value.
+> >>>>
+> >>>> Of the arches that support MEMORY_HOTPLUG: x86_64, s390 and arm64 is a
+> >>>> simple change to pass the pgprot_t down to their respective functions
+> >>>> which set up the page tables. For x86_32, set the page tables explicitly
+> >>>> using _set_memory_prot() (seeing they are already mapped). For sh, reject
+> >>>> anything but PAGE_KERNEL settings -- this should be fine, for now, seeing
+> >>>> sh doesn't support ZONE_DEVICE anyway.
+> >>>>
+> >>>> Cc: Dan Williams <dan.j.williams@intel.com>
+> >>>> Cc: David Hildenbrand <david@redhat.com>
+> >>>> Cc: Michal Hocko <mhocko@suse.com>
+> >>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> >>>> ---
+> >>>>  arch/arm64/mm/mmu.c            | 4 ++--
+> >>>>  arch/ia64/mm/init.c            | 5 ++++-
+> >>>>  arch/powerpc/mm/mem.c          | 4 ++--
+> >>>>  arch/s390/mm/init.c            | 4 ++--
+> >>>>  arch/sh/mm/init.c              | 5 ++++-
+> >>>>  arch/x86/mm/init_32.c          | 7 ++++++-
+> >>>>  arch/x86/mm/init_64.c          | 4 ++--
+> >>>>  include/linux/memory_hotplug.h | 2 +-
+> >>>>  mm/memory_hotplug.c            | 2 +-
+> >>>>  mm/memremap.c                  | 2 +-
+> >>>>  10 files changed, 25 insertions(+), 14 deletions(-)
+> >>>>
+> >>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> >>>> index 60c929f3683b..48b65272df15 100644
+> >>>> --- a/arch/arm64/mm/mmu.c
+> >>>> +++ b/arch/arm64/mm/mmu.c
+> >>>> @@ -1050,7 +1050,7 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
+> >>>>  }
+> >>>>  
+> >>>>  #ifdef CONFIG_MEMORY_HOTPLUG
+> >>>> -int arch_add_memory(int nid, u64 start, u64 size,
+> >>>> +int arch_add_memory(int nid, u64 start, u64 size, pgprot_t prot,
+> >>>>  			struct mhp_restrictions *restrictions)
+> >>>
+> >>> Can we fiddle that into "struct mhp_restrictions" instead?
+> >>
+> >> Yes, if that's what people want, it's pretty trivial to do. I chose not
+> >> to do it that way because it doesn't get passed down to add_pages() and
+> >> it's not really a "restriction". If I don't hear any objections, I will
+> >> do that for v2.
+> > 
+> > I do agree that restriction is not the best fit. But I consider prot
+> > argument to complicate the API to all users even though it is not really
+> > clear whether we are going to have many users really benefiting from it.
+> > Look at the vmalloc API and try to find how many users of __vmalloc do
+> > not use PAGE_KERNEL.
+> > 
+> > So I can see two options. One of them is to add arch_add_memory_prot
+> > that would allow to have give and extra prot argument or simply call
+> > an arch independent API to change the protection after arch_add_memory.
+> > The later sounds like much less code. The memory shouldn't be in use by
+> > anybody at that stage yet AFAIU. Maybe there even is an API like that.
+> 
+> Yes, well, we tried something like this by calling set_memory_wc()
+> inside memremap_pages(); but on large bars (tens of GB) it was too slow
+> (taking several seconds to complete) and on some hosts actually hit CPU
+> watchdog errors.
 
-Fixes: ddd70cf93d78 ("goldfish: platform device for x86")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Use PLATFORM_DEVID_NONE instead of -1.
-  - Use PTR_ERR_OR_ZERO() to simplify the code.
+Which looks like something to fix independently.
 
- arch/x86/platform/goldfish/goldfish.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+> So at the very least we'd have to add some cpu_relax() calls to that
+> path. And it's also the case that set_memory_wc() is x86 only right now.
+> So we'd have to create a new general interface to walk and fixup page
+> tables for all arches.
+> 
+> But, in my opinion, setting up all those page tables twice is too large
+> of an overhead and it's better to just add them correctly the first
+> time. The changes I propose to do this aren't really a lot of code and
+> probably less than creating a new interface for all arches.
 
-diff --git a/arch/x86/platform/goldfish/goldfish.c b/arch/x86/platform/goldfish/goldfish.c
-index 6b6f8b4360dd..736f3fba234d 100644
---- a/arch/x86/platform/goldfish/goldfish.c
-+++ b/arch/x86/platform/goldfish/goldfish.c
-@@ -44,11 +44,14 @@ __setup("goldfish", goldfish_setup);
- 
- static int __init goldfish_init(void)
- {
-+	struct platform_device *pdev;
-+
- 	if (!goldfish_enable)
- 		return -ENODEV;
- 
--	platform_device_register_simple("goldfish_pdev_bus", -1,
--					goldfish_pdev_bus_resources, 2);
--	return 0;
-+	pdev =  platform_device_register_simple("goldfish_pdev_bus",
-+					 PLATFORM_DEVID_NONE,
-+					 goldfish_pdev_bus_resources, 2);
-+	return PTR_ERR_OR_ZERO(pdev);
- }
- device_initcall(goldfish_init);
+OK, fair enough. Then I would suggest going with arch_add_memory_prot
+then unless there is a wider disagreement witht that.
 -- 
-2.24.0
+Michal Hocko
+SUSE Labs
