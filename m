@@ -1,26 +1,29 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 103/134] platform/x86: intel_pmc_core: Add Comet Lake (CML) platform support to intel_pmc_core driver
-Date: Wed, 11 Dec 2019 10:11:19 -0500
-Message-ID: <20191211151150.19073-103-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 102/134] platform/x86: intel_pmc_core: Fix the SoC naming inconsistency
+Date: Wed, 11 Dec 2019 10:11:18 -0500
+Message-ID: <20191211151150.19073-102-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Gayatri Kammela <gayatri.kammela@intel.com>, Mario Limonciello <mario.limonciello@dell.com>, Peter Zijlstra <peterz@infradead.org>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kan Liang <kan.liang@intel.com>, "David E . Box" <david.e.box@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Tony Luck <tony.luck@intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 From: Gayatri Kammela <gayatri.kammela@intel.com>
 
-[ Upstream commit 5406327d43edd9a171bd260f49c752d148727eaf ]
+[ Upstream commit 43e82d8aa92503d264309fb648b251b2d85caf1a ]
 
-Add Comet Lake to the list of the platforms that intel_pmc_core driver
-supports for pmc_core device.
+Intel's SoCs follow a naming convention which spells out the SoC name as
+two words instead of one word (E.g: Cannon Lake vs Cannonlake). Thus fix
+the naming inconsistency across the intel_pmc_core driver, so future
+SoCs can follow the naming consistency as below.
 
-Just like Ice Lake, Comet Lake can also reuse all the Cannon Lake PCH
-IPs. No additional effort is needed to enable but to simply reuse them.
+Cometlake -> Comet Lake
+Tigerlake -> Tiger Lake
+Elkhartlake -> Elkhart Lake
 
 Cc: Mario Limonciello <mario.limonciello@dell.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -30,51 +33,70 @@ Cc: Kan Liang <kan.liang@intel.com>
 Cc: David E. Box <david.e.box@intel.com>
 Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
 Cc: Tony Luck <tony.luck@intel.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_pmc_core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 6b6edc30f8359..571b4754477c5 100644
+index 94a008efb09b8..6b6edc30f8359 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -160,6 +160,7 @@ static const struct pmc_reg_map spt_reg_map = {
+@@ -158,7 +158,7 @@ static const struct pmc_reg_map spt_reg_map = {
+ 	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
+ };
  
- /* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
+-/* Cannonlake: PGD PFET Enable Ack Status Register(s) bitmap */
++/* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
  static const struct pmc_bit_map cnp_pfear_map[] = {
-+	/* Reserved for Cannon Lake but valid for Comet Lake */
  	{"PMC",                 BIT(0)},
  	{"OPI-DMI",             BIT(1)},
- 	{"SPI/eSPI",            BIT(2)},
-@@ -185,7 +186,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+@@ -185,7 +185,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
  	{"SDX",                 BIT(4)},
  	{"SPE",                 BIT(5)},
  	{"Fuse",                BIT(6)},
--	/* Reserved for Cannon Lake but valid for Ice Lake */
-+	/* Reserved for Cannon Lake but valid for Ice Lake and Comet Lake */
+-	/* Reserved for Cannonlake but valid for Icelake */
++	/* Reserved for Cannon Lake but valid for Ice Lake */
  	{"SBR8",		BIT(7)},
  
  	{"CSME_FSC",            BIT(0)},
-@@ -229,7 +230,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+@@ -229,12 +229,12 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
  	{"HDA_PGD4",            BIT(2)},
  	{"HDA_PGD5",            BIT(3)},
  	{"HDA_PGD6",            BIT(4)},
--	/* Reserved for Cannon Lake but valid for Ice Lake */
-+	/* Reserved for Cannon Lake but valid for Ice Lake and Comet Lake */
+-	/* Reserved for Cannonlake but valid for Icelake */
++	/* Reserved for Cannon Lake but valid for Ice Lake */
  	{"PSF6",		BIT(5)},
  	{"PSF7",		BIT(6)},
  	{"PSF8",		BIT(7)},
-@@ -813,6 +814,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
- 	INTEL_CPU_FAM6(CANNONLAKE_L, cnp_reg_map),
- 	INTEL_CPU_FAM6(ICELAKE_L, icl_reg_map),
- 	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
-+	INTEL_CPU_FAM6(COMETLAKE, cnp_reg_map),
-+	INTEL_CPU_FAM6(COMETLAKE_L, cnp_reg_map),
- 	{}
- };
  
+-	/* Icelake generation onwards only */
++	/* Ice Lake generation onwards only */
+ 	{"RES_65",		BIT(0)},
+ 	{"RES_66",		BIT(1)},
+ 	{"RES_67",		BIT(2)},
+@@ -324,7 +324,7 @@ static const struct pmc_bit_map cnp_ltr_show_map[] = {
+ 	{"ISH",			CNP_PMC_LTR_ISH},
+ 	{"UFSX2",		CNP_PMC_LTR_UFSX2},
+ 	{"EMMC",		CNP_PMC_LTR_EMMC},
+-	/* Reserved for Cannonlake but valid for Icelake */
++	/* Reserved for Cannon Lake but valid for Ice Lake */
+ 	{"WIGIG",		ICL_PMC_LTR_WIGIG},
+ 	/* Below two cannot be used for LTR_IGNORE */
+ 	{"CURRENT_PLATFORM",	CNP_PMC_LTR_CUR_PLT},
+@@ -871,8 +871,8 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	pmcdev->map = (struct pmc_reg_map *)cpu_id->driver_data;
+ 
+ 	/*
+-	 * Coffeelake has CPU ID of Kabylake and Cannonlake PCH. So here
+-	 * Sunrisepoint PCH regmap can't be used. Use Cannonlake PCH regmap
++	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
++	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
+ 	 * in this case.
+ 	 */
+ 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
 -- 
 2.20.1
