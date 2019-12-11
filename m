@@ -1,62 +1,80 @@
-From: Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 5/6] mm, memory_hotplug: Provide argument for the
- pgprot_t in arch_add_memory()
-Date: Wed, 11 Dec 2019 09:37:45 +0100
-Message-ID: <20191211083745.GA14655@dhcp22.suse.cz>
-References: <20191209191346.5197-1-logang@deltatee.com>
- <20191209191346.5197-6-logang@deltatee.com>
- <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
- <f34a4c52-cc95-15ed-8a72-c05ab4fd6d33@deltatee.com>
- <CAPcyv4hpXCZxV5p7WaeGgE7ceujBBa5NOz9Z8fepDHOt6zHO2A@mail.gmail.com>
- <20191210100432.GC10404@dhcp22.suse.cz>
- <6da2b279-6a6d-d89c-a34c-962ed021d91d@redhat.com>
- <20191210103452.GF10404@dhcp22.suse.cz>
- <a9d6cfe8-39fb-accf-acdc-7cce5578bf2f@redhat.com>
- <297b7cc0-c5bc-a4c6-83eb-afc008395234@deltatee.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 103/134] platform/x86: intel_pmc_core: Add Comet Lake (CML) platform support to intel_pmc_core driver
+Date: Wed, 11 Dec 2019 10:11:19 -0500
+Message-ID: <20191211151150.19073-103-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <297b7cc0-c5bc-a4c6-83eb-afc008395234@deltatee.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Logan Gunthorpe <logang@deltatee.com>
-Cc: linux-s390 <linux-s390@vger.kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, linux-ia64@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Will Deacon <will@kernel.org>, David Hildenbrand <david@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Linux-sh <linux-sh@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Andy Lutomirski <luto@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Borislav Petkov <bp@alien8.de>, Dan Williams <dan.j.williams@intel.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Christoph Hellwig <hch@lst.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Gayatri Kammela <gayatri.kammela@intel.com>, Mario Limonciello <mario.limonciello@dell.com>, Peter Zijlstra <peterz@infradead.org>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kan Liang <kan.liang@intel.com>, "David E . Box" <david.e.box@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Tony Luck <tony.luck@intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue 10-12-19 16:52:31, Logan Gunthorpe wrote:
-[...]
-> In my opinion, having a coder and reviewer see PAGE_KERNEL and ask if
-> that makes sense is a benefit. Having it hidden because we don't want
-> people to think about it is worse, harder to understand and results in
-> bugs that are more difficult to spot.
+From: Gayatri Kammela <gayatri.kammela@intel.com>
 
-My experience would disagree here. We have several examples in the MM
-where an overly complex and versatile APIs led to suble bugs, a lot of
-copy&pasting and cargo cult programing (just look at the page allocator
-as a shiny example - e.g. gfp_flags). So I am always trying to be
-carefull here.
+[ Upstream commit 5406327d43edd9a171bd260f49c752d148727eaf ]
 
-> Though, we may be overthinking this: arch_add_memory() is a low level
-> non-exported API that's currently used in exactly two places.
+Add Comet Lake to the list of the platforms that intel_pmc_core driver
+supports for pmc_core device.
 
-This is a fair argument. Most users are and should be using
-add_memory().
+Just like Ice Lake, Comet Lake can also reuse all the Cannon Lake PCH
+IPs. No additional effort is needed to enable but to simply reuse them.
 
-> I don't
-> think there's going to be many, if any, valid new use cases coming up
-> for it in the future. That's more what memremap_pages() is for.
+Cc: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: David E. Box <david.e.box@intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/intel_pmc_core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-OK, fair enough. If this is indeed the simplest way forward then I will
-not stand in the way.
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 6b6edc30f8359..571b4754477c5 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -160,6 +160,7 @@ static const struct pmc_reg_map spt_reg_map = {
+ 
+ /* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
+ static const struct pmc_bit_map cnp_pfear_map[] = {
++	/* Reserved for Cannon Lake but valid for Comet Lake */
+ 	{"PMC",                 BIT(0)},
+ 	{"OPI-DMI",             BIT(1)},
+ 	{"SPI/eSPI",            BIT(2)},
+@@ -185,7 +186,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"SDX",                 BIT(4)},
+ 	{"SPE",                 BIT(5)},
+ 	{"Fuse",                BIT(6)},
+-	/* Reserved for Cannon Lake but valid for Ice Lake */
++	/* Reserved for Cannon Lake but valid for Ice Lake and Comet Lake */
+ 	{"SBR8",		BIT(7)},
+ 
+ 	{"CSME_FSC",            BIT(0)},
+@@ -229,7 +230,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"HDA_PGD4",            BIT(2)},
+ 	{"HDA_PGD5",            BIT(3)},
+ 	{"HDA_PGD6",            BIT(4)},
+-	/* Reserved for Cannon Lake but valid for Ice Lake */
++	/* Reserved for Cannon Lake but valid for Ice Lake and Comet Lake */
+ 	{"PSF6",		BIT(5)},
+ 	{"PSF7",		BIT(6)},
+ 	{"PSF8",		BIT(7)},
+@@ -813,6 +814,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	INTEL_CPU_FAM6(CANNONLAKE_L, cnp_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_L, icl_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
++	INTEL_CPU_FAM6(COMETLAKE, cnp_reg_map),
++	INTEL_CPU_FAM6(COMETLAKE_L, cnp_reg_map),
+ 	{}
+ };
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
