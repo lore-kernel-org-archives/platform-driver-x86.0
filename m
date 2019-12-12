@@ -1,59 +1,62 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v8 1/6] software node: rename is_array to is_inline
-Date: Thu, 12 Dec 2019 17:41:21 +0100
-Message-ID: <CAJZ5v0i3dSOSa37yWLM+zDVnMKVTkOxbyKD4vo0KVwj_uFB26Q@mail.gmail.com>
-References: <20191108042225.45391-1-dmitry.torokhov@gmail.com>
- <20191108042225.45391-2-dmitry.torokhov@gmail.com> <CGME20191212111237eucas1p1a278d2d5d2437e3219896367e82604cc@eucas1p1.samsung.com>
- <b3f6ca8b-dbdf-0cec-aa8f-47ffcc5c5307@samsung.com> <20191212112825.GK32742@smile.fi.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Gayatri Kammela <gayatri.kammela@intel.com>
+Subject: [PATCH v4 0/5] platform/x86: intel_pmc_core: Add Tiger Lake and
+Date: Thu, 12 Dec 2019 10:38:42 -0800
+Message-ID: <cover.1576105486.git.gayatri.kammela@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191212112825.GK32742@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Felipe Balbi <balbi@kernel.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>
+To: platform-driver-x86@vger.kernel.org
+Cc: vishwanath.somayaji@intel.com, dvhart@infradead.org, linux-kernel@vger.kernel.org, mika.westerberg@intel.com, charles.d.prestopine@intel.com, Gayatri Kammela <gayatri.kammela@intel.com>, Peter Zijlstra <peterz@infradead.org>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kan Liang <kan.liang@intel.com>, "David E . Box" <david.e.box@intel.com>, Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, Tony Luck <tony.luck@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Dec 12, 2019 at 12:28 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Dec 12, 2019 at 12:12:36PM +0100, Marek Szyprowski wrote:
-> > Dear All,
-> >
-> > On 08.11.2019 05:22, Dmitry Torokhov wrote:
-> > > We do not need a special flag to know if we are dealing with an array,
-> > > as we can get that data from ratio between element length and the data
-> > > size, however we do need a flag to know whether the data is stored
-> > > directly inside property_entry or separately.
-> > >
-> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> >
-> > Today I've noticed that this patch got merged to linux-next as commit
-> > e6bff4665c595b5a4aff173848851ed49ac3bfad. Sadly it breaks DWC3/xHCI
-> > driver operation on Samsung Exynos5 SoCs (and probably on other SoCs
-> > which use DWC3 in host mode too). I get the following errors during boot:
-> >
-> > dwc3 12000000.dwc3: failed to add properties to xHCI
-> > dwc3 12000000.dwc3: failed to initialize host
-> > dwc3: probe of 12000000.dwc3 failed with error -61
-> >
-> > Here is a full kernel log from Exynos5250-based Snow Chromebook on KernelCI:
-> >
-> > https://storage.kernelci.org/next/master/next-20191212/arm/exynos_defconfig/gcc-8/lab-collabora/boot-exynos5250-snow.txt
-> >
-> > (lack of 'ref' clk is not related nor fatal to the driver operation).
-> >
-> > The code which fails after this patch is located in
-> > drivers/usb/dwc3/host.c. Let me know if I can help more in locating the bug.
->
-> Thank you for report.
->
-> I think we should not have that patch in the fist place... I used to have
-> a bad feeling about it and then forgot about it existence.
+Hi,
 
-Well, I think you mean the [2/6].
+Patch 1: Cleans up termination lines
+Patch 2: Refactor driver for ease of adding new SoCs
+Patch 3: Add debugfs entry for PCH IPs only if platform supports
+Patch 4: Add Tiger Lake legacy support to pmc_core
+Patch 5: Add Elkhart Lake legacy support to pmc_core
 
-The $subject one really shouldn't change functionality, we must have
-missed something here.
+All the information regarding the PCH IPs and names of IPs will be
+available in Intel's Platform Controller Hub (PCH) External Design
+Specification (EDS) document expected to be released in 2020 before
+product launch.
 
-Anyway, I'll drop this branch from the linux-next one for now.
+Changes since v1:
+1) Added a patch that fixes the naming inconsistency.
+2) Fixed the prefix of all the patches.
+
+Changes since v2:
+1) Add Comet Lake legacy support to pmc_core up on Dell's request.
+
+Changes since v3:
+1) Removed both "SoC naming inconsistency" patch and "Add Comet Lake legacy
+support to pmc_core" patch from this series and sent them as a series which
+was made upstream.
+2) Updated LTR IGNORE Max offset for Tiger Lake and Elkhart Lake by defining a
+macro as they are platform specific.
+
+Gayatri Kammela (5):
+  platform/x86: intel_pmc_core: Clean up: Remove comma after the
+    termination line
+  platform/x86: intel_pmc_core: Create platform dependent pmc bitmap
+    structs
+  platform/x86: intel_pmc_core: Make debugfs entry for
+    pch_ip_power_gating_status conditional
+  platform/x86: intel_pmc_core: Add Tiger Lake (TGL) platform support to
+    intel_pmc_core driver
+  platform/x86: intel_pmc_core: Add Atom based Elkhart Lake (EHL)
+    platform support to intel_pmc_core driver
+
+ drivers/platform/x86/intel_pmc_core.c | 108 +++++++++++++++++++++-----
+ drivers/platform/x86/intel_pmc_core.h |   4 +-
+ 2 files changed, 90 insertions(+), 22 deletions(-)
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: David E. Box <david.e.box@intel.com>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Cc: Tony Luck <tony.luck@intel.com>
+-- 
+2.17.1
