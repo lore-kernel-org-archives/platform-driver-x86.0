@@ -1,7 +1,7 @@
 From: Gayatri Kammela <gayatri.kammela@intel.com>
-Subject: [PATCH v4 2/5] platform/x86: intel_pmc_core: Create platform dependent pmc bitmap structs
-Date: Thu, 12 Dec 2019 10:38:44 -0800
-Message-ID: <b7f470de22a073d935a24d4161dde2f59d826508.1576105486.git.gayatri.kammela@intel.com>
+Subject: [PATCH v4 4/5] platform/x86: intel_pmc_core: Add Tiger Lake (TGL) platform support to intel_pmc_core driver
+Date: Thu, 12 Dec 2019 10:38:46 -0800
+Message-ID: <bb86c6cd394651363a40bdd5a8185b364079c0c3.1576105486.git.gayatri.kammela@intel.com>
 References: <cover.1576105486.git.gayatri.kammela@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1576105486.git.gayatri.kammela@intel.com>
@@ -12,162 +12,124 @@ To: platform-driver-x86@vger.kernel.org
 Cc: vishwanath.somayaji@intel.com, dvhart@infradead.org, linux-kernel@vger.kernel.org, mika.westerberg@intel.com, charles.d.prestopine@intel.com, Gayatri Kammela <gayatri.kammela@intel.com>, Peter Zijlstra <peterz@infradead.org>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kan Liang <kan.liang@intel.com>, "David E . Box" <david.e.box@intel.com>, Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, Tony Luck <tony.luck@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The current implementation of pmc_core driver allows to reuse, but does
-not reflect the exact number and names of IPs for a newer platform which
-does not necessarily support all the IPs in the entries. The names and
-number of these IPs might differ from its previous platforms. The number
-of PCH IPs per platform is calculated based on PPFEAR_NUM_ENTRIES
-defined, where each entry represents a bucket (8 bits). The platform can
-support 'n' entries, but not necessarily all 'n*8' IPs.
+Add Tiger Lake to the list of the platforms that intel_pmc_core driver
+supports for the pmc_core device.
 
-Create platform dependent bitmap structures to specify the exact number,
-names of IPs while reusing the existing IPs.
-
-The changes in this patch are preparatory to accommodate future SoCs
-that might reuse the CNL/ICL PCH IPs, and to reflect the exact number of
-IPs with its names.
+Just like Ice Lake, Tiger Lake can also reuse all the Cannon Lake PCH
+IPs. Since Tiger Lake has almost the same number of PCH IPs as Ice Lake,
+reuse Ice Lake's PPFEAR_NUM_ENTRIES instead of defining a new macro.
 
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: David E. Box <david.e.box@intel.com>
-Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>             
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
 Cc: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
 ---
- drivers/platform/x86/intel_pmc_core.c | 46 ++++++++++++++++++++-------
- drivers/platform/x86/intel_pmc_core.h |  2 +-
- 2 files changed, 35 insertions(+), 13 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 46 +++++++++++++++++++++++++--
+ drivers/platform/x86/intel_pmc_core.h |  2 ++
+ 2 files changed, 46 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index f7256168bb8f..2449756434db 100644
+index 1ff28199b599..b18782e48a5d 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -116,6 +116,11 @@ static const struct pmc_bit_map spt_pfear_map[] = {
- 	{}
- };
+@@ -191,7 +191,10 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"SDX",                 BIT(4)},
+ 	{"SPE",                 BIT(5)},
+ 	{"Fuse",                BIT(6)},
+-	/* Reserved for Cannon Lake but valid for Ice Lake and Comet Lake */
++	/*
++	 * Reserved for Cannon Lake but valid for Ice Lake, Comet Lake
++	 * and Tiger Lake.
++	 */
+ 	{"SBR8",		BIT(7)},
  
-+static const struct pmc_bit_map *ext_spt_pfear_map[] = {
-+	spt_pfear_map,
-+	NULL
-+};
-+
- static const struct pmc_bit_map spt_ltr_show_map[] = {
- 	{"SOUTHPORT_A",		SPT_PMC_LTR_SPA},
- 	{"SOUTHPORT_B",		SPT_PMC_LTR_SPB},
-@@ -142,7 +147,7 @@ static const struct pmc_bit_map spt_ltr_show_map[] = {
- };
- 
- static const struct pmc_reg_map spt_reg_map = {
--	.pfear_sts = spt_pfear_map,
-+	.pfear_sts = ext_spt_pfear_map,
- 	.mphy_sts = spt_mphy_map,
- 	.pll_sts = spt_pll_map,
- 	.ltr_show_sts = spt_ltr_show_map,
-@@ -234,7 +239,15 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"CSME_FSC",            BIT(0)},
+@@ -235,7 +238,10 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"HDA_PGD4",            BIT(2)},
+ 	{"HDA_PGD5",            BIT(3)},
+ 	{"HDA_PGD6",            BIT(4)},
+-	/* Reserved for Cannon Lake but valid for Ice Lake and Comet Lake */
++	/*
++	 * Reserved for Cannon Lake but valid for Ice Lake, Comet Lake
++	 * and Tiger Lake.
++	 */
  	{"PSF6",		BIT(5)},
  	{"PSF7",		BIT(6)},
  	{"PSF8",		BIT(7)},
+@@ -266,6 +272,24 @@ static const struct pmc_bit_map *ext_icl_pfear_map[] = {
+ 	NULL
+ };
+ 
++static const struct pmc_bit_map tgl_pfear_map[] = {
++	/* Tiger Lake generation onwards only */
++	{"PSF9",		BIT(0)},
++	{"RES_66",		BIT(1)},
++	{"RES_67",		BIT(2)},
++	{"RES_68",		BIT(3)},
++	{"RES_69",		BIT(4)},
++	{"RES_70",		BIT(5)},
++	{"TBTLSX",		BIT(6)},
 +	{}
 +};
 +
-+static const struct pmc_bit_map *ext_cnp_pfear_map[] = {
++static const struct pmc_bit_map *ext_tgl_pfear_map[] = {
 +	cnp_pfear_map,
-+	NULL
-+};
- 
-+static const struct pmc_bit_map icl_pfear_map[] = {
- 	/* Ice Lake generation onwards only */
- 	{"RES_65",		BIT(0)},
- 	{"RES_66",		BIT(1)},
-@@ -247,6 +260,12 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
- 	{}
- };
- 
-+static const struct pmc_bit_map *ext_icl_pfear_map[] = {
-+	cnp_pfear_map,
-+	icl_pfear_map,
++	tgl_pfear_map,
 +	NULL
 +};
 +
  static const struct pmc_bit_map cnp_slps0_dbg0_map[] = {
  	{"AUDIO_D3",		BIT(0)},
  	{"OTG_D3",		BIT(1)},
-@@ -334,7 +353,7 @@ static const struct pmc_bit_map cnp_ltr_show_map[] = {
+@@ -384,6 +408,22 @@ static const struct pmc_reg_map icl_reg_map = {
+ 	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
  };
  
- static const struct pmc_reg_map cnp_reg_map = {
--	.pfear_sts = cnp_pfear_map,
-+	.pfear_sts = ext_cnp_pfear_map,
- 	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
- 	.slps0_dbg_maps = cnp_slps0_dbg_maps,
- 	.ltr_show_sts = cnp_ltr_show_map,
-@@ -350,7 +369,7 @@ static const struct pmc_reg_map cnp_reg_map = {
++static const struct pmc_reg_map tgl_reg_map = {
++	.pfear_sts = ext_tgl_pfear_map,
++	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
++	.slps0_dbg_maps = cnp_slps0_dbg_maps,
++	.ltr_show_sts = cnp_ltr_show_map,
++	.msr_sts = msr_map,
++	.slps0_dbg_offset = CNP_PMC_SLPS0_DBG_OFFSET,
++	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
++	.regmap_length = CNP_PMC_MMIO_REG_LEN,
++	.ppfear0_offset = CNP_PMC_HOST_PPFEAR0A,
++	.ppfear_buckets = ICL_PPFEAR_NUM_ENTRIES,
++	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
++	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.ltr_ignore_max = TGL_NUM_IP_IGN_ALLOWED,
++};
++
+ static inline u8 pmc_core_reg_read_byte(struct pmc_dev *pmcdev, int offset)
+ {
+ 	return readb(pmcdev->regbase + offset);
+@@ -839,6 +879,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
+ 	INTEL_CPU_FAM6(COMETLAKE, cnp_reg_map),
+ 	INTEL_CPU_FAM6(COMETLAKE_L, cnp_reg_map),
++	INTEL_CPU_FAM6(TIGERLAKE_L, tgl_reg_map),
++	INTEL_CPU_FAM6(TIGERLAKE, tgl_reg_map),
+ 	{}
  };
  
- static const struct pmc_reg_map icl_reg_map = {
--	.pfear_sts = cnp_pfear_map,
-+	.pfear_sts = ext_icl_pfear_map,
- 	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
- 	.slps0_dbg_maps = cnp_slps0_dbg_maps,
- 	.ltr_show_sts = cnp_ltr_show_map,
-@@ -412,20 +431,20 @@ static int pmc_core_check_read_lock_bit(void)
- #if IS_ENABLED(CONFIG_DEBUG_FS)
- static bool slps0_dbg_latch;
- 
--static void pmc_core_display_map(struct seq_file *s, int index,
--				 u8 pf_reg, const struct pmc_bit_map *pf_map)
-+static void pmc_core_display_map(struct seq_file *s, int index, int idx, int ip,
-+				 u8 pf_reg, const struct pmc_bit_map **pf_map)
- {
- 	seq_printf(s, "PCH IP: %-2d - %-32s\tState: %s\n",
--		   index, pf_map[index].name,
--		   pf_map[index].bit_mask & pf_reg ? "Off" : "On");
-+		   ip, pf_map[idx][index].name,
-+		   pf_map[idx][index].bit_mask & pf_reg ? "Off" : "On");
- }
- 
- static int pmc_core_ppfear_show(struct seq_file *s, void *unused)
- {
- 	struct pmc_dev *pmcdev = s->private;
--	const struct pmc_bit_map *map = pmcdev->map->pfear_sts;
-+	const struct pmc_bit_map **maps = pmcdev->map->pfear_sts;
- 	u8 pf_regs[PPFEAR_MAX_NUM_ENTRIES];
--	int index, iter;
-+	int index, iter, idx, ip = 0;
- 
- 	iter = pmcdev->map->ppfear0_offset;
- 
-@@ -433,9 +452,12 @@ static int pmc_core_ppfear_show(struct seq_file *s, void *unused)
- 	     index < PPFEAR_MAX_NUM_ENTRIES; index++, iter++)
- 		pf_regs[index] = pmc_core_reg_read_byte(pmcdev, iter);
- 
--	for (index = 0; map[index].name &&
--	     index < pmcdev->map->ppfear_buckets * 8; index++)
--		pmc_core_display_map(s, index, pf_regs[index / 8], map);
-+	for (idx = 0; maps[idx]; idx++) {
-+		for (index = 0; maps[idx][index].name &&
-+		     index < pmcdev->map->ppfear_buckets * 8; ip++, index++)
-+			pmc_core_display_map(s, index, idx, ip,
-+					     pf_regs[index / 8], maps);
-+	}
- 
- 	return 0;
- }
 diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index fdee5772e532..4b9f9ad6b692 100644
+index 4b9f9ad6b692..99acdc051342 100644
 --- a/drivers/platform/x86/intel_pmc_core.h
 +++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -213,7 +213,7 @@ struct pmc_bit_map {
-  * captures them to have a common implementation.
-  */
- struct pmc_reg_map {
--	const struct pmc_bit_map *pfear_sts;
-+	const struct pmc_bit_map **pfear_sts;
- 	const struct pmc_bit_map *mphy_sts;
- 	const struct pmc_bit_map *pll_sts;
- 	const struct pmc_bit_map **slps0_dbg_maps;
+@@ -186,6 +186,8 @@ enum ppfear_regs {
+ #define ICL_NUM_IP_IGN_ALLOWED			20
+ #define ICL_PMC_LTR_WIGIG			0x1BFC
+ 
++#define TGL_NUM_IP_IGN_ALLOWED			22
++
+ struct pmc_bit_map {
+ 	const char *name;
+ 	u32 bit_mask;
 -- 
 2.17.1
