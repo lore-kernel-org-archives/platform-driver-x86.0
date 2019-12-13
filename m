@@ -1,31 +1,28 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 4/4] thermal: int340x_thermal: Add new Tiger Lake
- hardware IDs to support thermal driver
-Date: Fri, 13 Dec 2019 11:35:47 +0200
-Message-ID: <20191213093547.GR32742@smile.fi.intel.com>
-References: <cover.1576189376.git.gayatri.kammela@intel.com>
- <38c00cdcff470563b238da953b66532f08b83b25.1576189376.git.gayatri.kammela@intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v1 1/1] platform/mellanox: fix the mlx-bootctl sysfs
+Date: Fri, 13 Dec 2019 12:21:20 +0200
+Message-ID: <CAHp75VcY9syYZoaOLWUHQQ6n5CXwvUnarDJPovLtyLTyZE_ifw@mail.gmail.com>
+References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <38c00cdcff470563b238da953b66532f08b83b25.1576189376.git.gayatri.kammela@intel.com>
+In-Reply-To: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gayatri Kammela <gayatri.kammela@intel.com>
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, alex.hung@canonical.com, linux-acpi@vger.kernel.org, lenb@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org, amit.kucheria@verdurent.com, charles.d.prestopine@intel.com, dvhart@infradead.org, Zhang rui <rui.zhang@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+To: Liming Sun <lsun@mellanox.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Dec 12, 2019 at 02:37:20PM -0800, Gayatri Kammela wrote:
-> Tiger Lake has a new unique hardware IDs to support thermal driver.
-> Hence, add them.
+On Mon, Dec 9, 2019 at 9:24 PM Liming Sun <lsun@mellanox.com> wrote:
+>
+> This is a follow-up commit for the sysfs attributes to change
+> from DRIVER_ATTR to DEVICE_ATTR according to some initial comments.
+> In such case, it's better to point the sysfs path to the device
+> itself instead of the driver. This commit adds the missing
+> sysfs_create_group() so the attributes can be created under the
+> device. The ABI document is also updated.
+>
 
->  	{"INT3400", 0},
-> +	{"INT1040", 0},
-
->  	{"INT3403", 0},
-> +	{"INT1043", 0},
-
-And here
+Fixes tag, please.
 
 -- 
 With Best Regards,
