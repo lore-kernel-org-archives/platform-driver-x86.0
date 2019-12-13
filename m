@@ -1,37 +1,44 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v1 1/1] platform/mellanox: fix the mlx-bootctl sysfs
-Date: Fri, 13 Dec 2019 15:22:22 +0000
-Message-ID: <DB6PR05MB3223B0F68E3E4EE3A20AD193A1540@DB6PR05MB3223.eurprd05.prod.outlook.com>
-References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
- <CAHp75VcY9syYZoaOLWUHQQ6n5CXwvUnarDJPovLtyLTyZE_ifw@mail.gmail.com>
+From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Subject: RE: [PATCH v1 1/4] acpi: dptf: Add new Tiger Lake hardware IDs to
+ support DPTF drivers in acpi
+Date: Fri, 13 Dec 2019 17:54:07 +0000
+Message-ID: <DM5PR11MB1274745919B8F1A51B60BE98F2540@DM5PR11MB1274.namprd11.prod.outlook.com>
+References: <cover.1576189376.git.gayatri.kammela@intel.com>
+ <baaa3d7d1d1129a31c5a000578d1ad8198ca3881.1576189376.git.gayatri.kammela@intel.com>
+ <20191213093437.GO32742@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcY9syYZoaOLWUHQQ6n5CXwvUnarDJPovLtyLTyZE_ifw@mail.gmail.com>
+In-Reply-To: <20191213093437.GO32742@smile.fi.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "alex.hung@canonical.com" <alex.hung@canonical.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Zhang, Rui" <rui.zhang@intel.com>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-VGhhbmtzISBVcGRhdGVkIGluIHYyLg0KDQotIExpbWluZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVz
-c2FnZS0tLS0tDQo+IEZyb206IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWls
-LmNvbT4NCj4gU2VudDogRnJpZGF5LCBEZWNlbWJlciAxMywgMjAxOSA1OjIxIEFNDQo+IFRvOiBM
-aW1pbmcgU3VuIDxsc3VuQG1lbGxhbm94LmNvbT4NCj4gQ2M6IEFuZHkgU2hldmNoZW5rbyA8YW5k
-eUBpbmZyYWRlYWQub3JnPjsgRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgVmFk
-aW0gUGFzdGVybmFrIDx2YWRpbXBAbWVsbGFub3guY29tPjsgRGF2aWQNCj4gV29vZHMgPGR3b29k
-c0BtZWxsYW5veC5jb20+OyBQbGF0Zm9ybSBEcml2ZXIgPHBsYXRmb3JtLWRyaXZlci14ODZAdmdl
-ci5rZXJuZWwub3JnPjsgTGludXggS2VybmVsIE1haWxpbmcgTGlzdCA8bGludXgtDQo+IGtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjEgMS8xXSBwbGF0Zm9y
-bS9tZWxsYW5veDogZml4IHRoZSBtbHgtYm9vdGN0bCBzeXNmcw0KPiANCj4gT24gTW9uLCBEZWMg
-OSwgMjAxOSBhdCA5OjI0IFBNIExpbWluZyBTdW4gPGxzdW5AbWVsbGFub3guY29tPiB3cm90ZToN
-Cj4gPg0KPiA+IFRoaXMgaXMgYSBmb2xsb3ctdXAgY29tbWl0IGZvciB0aGUgc3lzZnMgYXR0cmli
-dXRlcyB0byBjaGFuZ2UNCj4gPiBmcm9tIERSSVZFUl9BVFRSIHRvIERFVklDRV9BVFRSIGFjY29y
-ZGluZyB0byBzb21lIGluaXRpYWwgY29tbWVudHMuDQo+ID4gSW4gc3VjaCBjYXNlLCBpdCdzIGJl
-dHRlciB0byBwb2ludCB0aGUgc3lzZnMgcGF0aCB0byB0aGUgZGV2aWNlDQo+ID4gaXRzZWxmIGlu
-c3RlYWQgb2YgdGhlIGRyaXZlci4gVGhpcyBjb21taXQgYWRkcyB0aGUgbWlzc2luZw0KPiA+IHN5
-c2ZzX2NyZWF0ZV9ncm91cCgpIHNvIHRoZSBhdHRyaWJ1dGVzIGNhbiBiZSBjcmVhdGVkIHVuZGVy
-IHRoZQ0KPiA+IGRldmljZS4gVGhlIEFCSSBkb2N1bWVudCBpcyBhbHNvIHVwZGF0ZWQuDQo+ID4N
-Cj4gDQo+IEZpeGVzIHRhZywgcGxlYXNlLg0KPiANCj4gLS0NCj4gV2l0aCBCZXN0IFJlZ2FyZHMs
-DQo+IEFuZHkgU2hldmNoZW5rbw0K
+> On Thu, Dec 12, 2019 at 02:37:17PM -0800, Gayatri Kammela wrote:
+> > Tiger Lake has new unique hardware IDs that are needed to support DPTF
+> > drivers. Hence, add them.
+>=20
+> >  	{"INT3407", 0},
+> > +	{"INT1047", 0},
+>=20
+> Can we keep them in sorted order?
+Thanks Andy! I will keep them in sorted order for all the patches in the se=
+ries in v2
+>=20
+> >  	{"INT3409"},
+> >  	{"INT340A"},
+> >  	{"INT340B"},
+> > +	{"INT1040"},
+> > +	{"INT1043"},
+> > +	{"INT1044"},
+> > +	{"INT1047"},
+>=20
+> Ditto.
+>=20
+> --
+> With Best Regards,
+> Andy Shevchenko
+>=20
