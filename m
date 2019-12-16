@@ -1,32 +1,47 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v3 0/5] drivers: Add Tiger Lake hardware IDs to support ACPI,
-Date: Mon, 16 Dec 2019 22:35:34 +0100
-Message-ID: <CAJZ5v0g2UHJcnczekgegX6_7kzHrmXNS_e3KRCC2d4LQ1+RceA@mail.gmail.com>
+From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Subject: RE: [PATCH v3 0/5] drivers: Add Tiger Lake hardware IDs to support
+ ACPI,
+Date: Mon, 16 Dec 2019 21:56:55 +0000
+Message-ID: <MWHPR11MB1278E9E06FBB5847444B11F3F2510@MWHPR11MB1278.namprd11.prod.outlook.com>
 References: <cover.1576520244.git.gayatri.kammela@intel.com>
+ <CAJZ5v0g2UHJcnczekgegX6_7kzHrmXNS_e3KRCC2d4LQ1+RceA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1576520244.git.gayatri.kammela@intel.com>
+In-Reply-To: <CAJZ5v0g2UHJcnczekgegX6_7kzHrmXNS_e3KRCC2d4LQ1+RceA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gayatri Kammela <gayatri.kammela@intel.com>
-Cc: Linux PM <linux-pm@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Darren Hart <dvhart@infradead.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Zhang, Rui" <rui.zhang@intel.com>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Dec 16, 2019 at 7:33 PM Gayatri Kammela
-<gayatri.kammela@intel.com> wrote:
->
-> Hi,
->
-> Tiger Lake supports devices whose hardware IDs are changed for various
-> drivers. Hence, add the new hardware IDs.
->
-> Patch 1: Add Tiger Lake support to DPTF driver
-> Patch 2: Add Tiger Lake support to fan driver
-> Patch 3: Add Tiger Lake support to device_pm
-> Patch 4: Add Tiger Lake support to Intel's HID driver
-> Patch 5: Add Tiger Lake support to thermal driver
-
-I'm going to apply the whole series (for 5.6) if nobody has any issues
-with that.
-
-Thanks!
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFmYWVsIEouIFd5c29j
+a2kgPHJhZmFlbEBrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIERlY2VtYmVyIDE2LCAyMDE5
+IDE6MzYgUE0NCj4gVG86IEthbW1lbGEsIEdheWF0cmkgPGdheWF0cmkua2FtbWVsYUBpbnRlbC5j
+b20+DQo+IENjOiBMaW51eCBQTSA8bGludXgtcG1Admdlci5rZXJuZWwub3JnPjsgUGxhdGZvcm0g
+RHJpdmVyIDxwbGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmc+OyBBbGV4IEh1
+bmcgPGFsZXguaHVuZ0BjYW5vbmljYWwuY29tPjsgQUNQSSBEZXZlbA0KPiBNYWxpbmcgTGlzdCA8
+bGludXgtYWNwaUB2Z2VyLmtlcm5lbC5vcmc+OyBMZW4gQnJvd24gPGxlbmJAa2VybmVsLm9yZz47
+DQo+IFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3eXNvY2tpLm5ldD47IExpbnV4IEtlcm5lbCBN
+YWlsaW5nIExpc3QgPGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgRGFuaWVsIExl
+emNhbm8gPGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+OyBBbWl0DQo+IEt1Y2hlcmlhIDxhbWl0
+Lmt1Y2hlcmlhQHZlcmR1cmVudC5jb20+OyBQcmVzdG9waW5lLCBDaGFybGVzIEQNCj4gPGNoYXJs
+ZXMuZC5wcmVzdG9waW5lQGludGVsLmNvbT47IERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFk
+Lm9yZz47DQo+IFJhZmFlbCBKIC4gV3lzb2NraSA8cmFmYWVsQGtlcm5lbC5vcmc+OyBBbmR5IFNo
+ZXZjaGVua28NCj4gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbT47IFpoYW5nLCBS
+dWkgPHJ1aS56aGFuZ0BpbnRlbC5jb20+Ow0KPiBQYW5kcnV2YWRhLCBTcmluaXZhcyA8c3Jpbml2
+YXMucGFuZHJ1dmFkYUBpbnRlbC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMC81XSBk
+cml2ZXJzOiBBZGQgVGlnZXIgTGFrZSBoYXJkd2FyZSBJRHMgdG8gc3VwcG9ydA0KPiBBQ1BJLA0K
+PiANCj4gT24gTW9uLCBEZWMgMTYsIDIwMTkgYXQgNzozMyBQTSBHYXlhdHJpIEthbW1lbGENCj4g
+PGdheWF0cmkua2FtbWVsYUBpbnRlbC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gSGksDQo+ID4NCj4g
+PiBUaWdlciBMYWtlIHN1cHBvcnRzIGRldmljZXMgd2hvc2UgaGFyZHdhcmUgSURzIGFyZSBjaGFu
+Z2VkIGZvciB2YXJpb3VzDQo+ID4gZHJpdmVycy4gSGVuY2UsIGFkZCB0aGUgbmV3IGhhcmR3YXJl
+IElEcy4NCj4gPg0KPiA+IFBhdGNoIDE6IEFkZCBUaWdlciBMYWtlIHN1cHBvcnQgdG8gRFBURiBk
+cml2ZXIgUGF0Y2ggMjogQWRkIFRpZ2VyIExha2UNCj4gPiBzdXBwb3J0IHRvIGZhbiBkcml2ZXIg
+UGF0Y2ggMzogQWRkIFRpZ2VyIExha2Ugc3VwcG9ydCB0byBkZXZpY2VfcG0NCj4gPiBQYXRjaCA0
+OiBBZGQgVGlnZXIgTGFrZSBzdXBwb3J0IHRvIEludGVsJ3MgSElEIGRyaXZlciBQYXRjaCA1OiBB
+ZGQNCj4gPiBUaWdlciBMYWtlIHN1cHBvcnQgdG8gdGhlcm1hbCBkcml2ZXINCj4gDQo+IEknbSBn
+b2luZyB0byBhcHBseSB0aGUgd2hvbGUgc2VyaWVzIChmb3IgNS42KSBpZiBub2JvZHkgaGFzIGFu
+eSBpc3N1ZXMgd2l0aA0KPiB0aGF0Lg0KPiANCj4gVGhhbmtzIQ0KDQpUaGFuayB5b3UgUmFmYWVs
+IQ0K
