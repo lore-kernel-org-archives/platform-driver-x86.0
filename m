@@ -1,57 +1,47 @@
-From: Leonid Maksymchuk <leonmaxx@gmail.com>
-Subject: [PATCH v6 2/2] platform/x86: asus_wmi: Set throttle thermal policy to default
-Date: Sun, 15 Dec 2019 16:27:24 +0200
-Message-ID: <20191215142724.13986-1-leonmaxx@gmail.com>
-References: <20191215142527.13780-1-leonmaxx@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v2 2/4] acpi: fan: Add new Tiger Lake hardware ID to
+ support fan driver in acpi
+Date: Mon, 16 Dec 2019 09:58:27 +0100
+Message-ID: <CAJZ5v0hysFS+tVKz3fJ0yoOTqaGpx+4oD2Nh98HCzT86=hXawA@mail.gmail.com>
+References: <cover.1576260216.git.gayatri.kammela@intel.com> <3c1ed2c9964c63fc956ec249d7bfce8d49f53fee.1576260216.git.gayatri.kammela@intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191215142527.13780-1-leonmaxx@gmail.com>
+In-Reply-To: <3c1ed2c9964c63fc956ec249d7bfce8d49f53fee.1576260216.git.gayatri.kammela@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, linux-api@vger.kernel.org, acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com, yurii.pavlovskyi@gmail.com, kristian@klausen.dk, andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com, Leonid Maksymchuk <leonmaxx@gmail.com>
+To: Gayatri Kammela <gayatri.kammela@intel.com>
+Cc: Linux PM <linux-pm@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Zhang Rui <rui.zhang@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-ASUS TUF FX705DY/FX505DY starts in silent mode and under heavy
-CPU load it overheats and drops CPU frequency to 399MHz and stays
-at it until reboot [1]. Set throttle thermal policy to default
-to avoid overheating and throttlig.
+On Fri, Dec 13, 2019 at 9:40 PM Gayatri Kammela
+<gayatri.kammela@intel.com> wrote:
+>
+> Tiger Lake has a new unique hardware ID to support fan driver. Hence,
+> add it.
+>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+> Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+> ---
+>  drivers/acpi/fan.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/acpi/fan.c b/drivers/acpi/fan.c
+> index 816b0803f7fb..13708fb48038 100644
+> --- a/drivers/acpi/fan.c
+> +++ b/drivers/acpi/fan.c
+> @@ -25,6 +25,7 @@ static int acpi_fan_remove(struct platform_device *pdev);
+>
+>  static const struct acpi_device_id fan_device_ids[] = {
+>         {"PNP0C0B", 0},
+> +       {"INT1044", 0},
 
-[1] Link: https://bugzilla.kernel.org/show_bug.cgi?id=203733
+This has to go into device_pm.c:acpi_dev_pm_attach() too, see commit
 
-Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+b9ea0bae260f ACPI: PM: Avoid attaching ACPI PM domain to certain devices
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index f10ec9d745e5..469f1a852719 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1780,6 +1780,15 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
- 	return 0;
- }
- 
-+static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
-+{
-+	if (!asus->throttle_thermal_policy_available)
-+		return 0;
-+
-+	asus->throttle_thermal_policy_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-+	return throttle_thermal_policy_write(asus);
-+}
-+
- static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
- {
- 	u8 new_mode = asus->throttle_thermal_policy_mode + 1;
-@@ -2548,6 +2557,8 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	err = throttle_thermal_policy_check_present(asus);
- 	if (err)
- 		goto fail_throttle_thermal_policy;
-+	else
-+		throttle_thermal_policy_set_default(asus);
- 
- 	err = asus_wmi_sysfs_init(asus->platform_device);
- 	if (err)
--- 
-2.24.0
+>         {"INT3404", 0},
+>         {"", 0},
+>  };
+> --
