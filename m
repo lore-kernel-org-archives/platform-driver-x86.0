@@ -1,47 +1,65 @@
-From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Subject: RE: [PATCH v3 0/5] drivers: Add Tiger Lake hardware IDs to support
- ACPI,
-Date: Mon, 16 Dec 2019 21:56:55 +0000
-Message-ID: <MWHPR11MB1278E9E06FBB5847444B11F3F2510@MWHPR11MB1278.namprd11.prod.outlook.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH v3 5/5] thermal: int340x_thermal: Add new Tiger Lake
+ hardware IDs to support thermal driver
+Date: Tue, 17 Dec 2019 09:37:09 +0800
+Message-ID: <2dcde56646eea0a8d8002d0b07b1702d64284034.camel@intel.com>
 References: <cover.1576520244.git.gayatri.kammela@intel.com>
- <CAJZ5v0g2UHJcnczekgegX6_7kzHrmXNS_e3KRCC2d4LQ1+RceA@mail.gmail.com>
+         <354062a481f1b8b207fa7035abb50fcb80e8ce32.1576520244.git.gayatri.kammela@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0g2UHJcnczekgegX6_7kzHrmXNS_e3KRCC2d4LQ1+RceA@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <354062a481f1b8b207fa7035abb50fcb80e8ce32.1576520244.git.gayatri.kammela@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Zhang, Rui" <rui.zhang@intel.com>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+To: Gayatri Kammela <gayatri.kammela@intel.com>, linux-pm@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, alex.hung@canonical.com, linux-acpi@vger.kernel.org, lenb@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org, amit.kucheria@verdurent.com, charles.d.prestopine@intel.com, dvhart@infradead.org, "Rafael J . Wysocki" <rafael@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFmYWVsIEouIFd5c29j
-a2kgPHJhZmFlbEBrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIERlY2VtYmVyIDE2LCAyMDE5
-IDE6MzYgUE0NCj4gVG86IEthbW1lbGEsIEdheWF0cmkgPGdheWF0cmkua2FtbWVsYUBpbnRlbC5j
-b20+DQo+IENjOiBMaW51eCBQTSA8bGludXgtcG1Admdlci5rZXJuZWwub3JnPjsgUGxhdGZvcm0g
-RHJpdmVyIDxwbGF0Zm9ybS1kcml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmc+OyBBbGV4IEh1
-bmcgPGFsZXguaHVuZ0BjYW5vbmljYWwuY29tPjsgQUNQSSBEZXZlbA0KPiBNYWxpbmcgTGlzdCA8
-bGludXgtYWNwaUB2Z2VyLmtlcm5lbC5vcmc+OyBMZW4gQnJvd24gPGxlbmJAa2VybmVsLm9yZz47
-DQo+IFJhZmFlbCBKLiBXeXNvY2tpIDxyandAcmp3eXNvY2tpLm5ldD47IExpbnV4IEtlcm5lbCBN
-YWlsaW5nIExpc3QgPGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgRGFuaWVsIExl
-emNhbm8gPGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+OyBBbWl0DQo+IEt1Y2hlcmlhIDxhbWl0
-Lmt1Y2hlcmlhQHZlcmR1cmVudC5jb20+OyBQcmVzdG9waW5lLCBDaGFybGVzIEQNCj4gPGNoYXJs
-ZXMuZC5wcmVzdG9waW5lQGludGVsLmNvbT47IERhcnJlbiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFk
-Lm9yZz47DQo+IFJhZmFlbCBKIC4gV3lzb2NraSA8cmFmYWVsQGtlcm5lbC5vcmc+OyBBbmR5IFNo
-ZXZjaGVua28NCj4gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbT47IFpoYW5nLCBS
-dWkgPHJ1aS56aGFuZ0BpbnRlbC5jb20+Ow0KPiBQYW5kcnV2YWRhLCBTcmluaXZhcyA8c3Jpbml2
-YXMucGFuZHJ1dmFkYUBpbnRlbC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMC81XSBk
-cml2ZXJzOiBBZGQgVGlnZXIgTGFrZSBoYXJkd2FyZSBJRHMgdG8gc3VwcG9ydA0KPiBBQ1BJLA0K
-PiANCj4gT24gTW9uLCBEZWMgMTYsIDIwMTkgYXQgNzozMyBQTSBHYXlhdHJpIEthbW1lbGENCj4g
-PGdheWF0cmkua2FtbWVsYUBpbnRlbC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gSGksDQo+ID4NCj4g
-PiBUaWdlciBMYWtlIHN1cHBvcnRzIGRldmljZXMgd2hvc2UgaGFyZHdhcmUgSURzIGFyZSBjaGFu
-Z2VkIGZvciB2YXJpb3VzDQo+ID4gZHJpdmVycy4gSGVuY2UsIGFkZCB0aGUgbmV3IGhhcmR3YXJl
-IElEcy4NCj4gPg0KPiA+IFBhdGNoIDE6IEFkZCBUaWdlciBMYWtlIHN1cHBvcnQgdG8gRFBURiBk
-cml2ZXIgUGF0Y2ggMjogQWRkIFRpZ2VyIExha2UNCj4gPiBzdXBwb3J0IHRvIGZhbiBkcml2ZXIg
-UGF0Y2ggMzogQWRkIFRpZ2VyIExha2Ugc3VwcG9ydCB0byBkZXZpY2VfcG0NCj4gPiBQYXRjaCA0
-OiBBZGQgVGlnZXIgTGFrZSBzdXBwb3J0IHRvIEludGVsJ3MgSElEIGRyaXZlciBQYXRjaCA1OiBB
-ZGQNCj4gPiBUaWdlciBMYWtlIHN1cHBvcnQgdG8gdGhlcm1hbCBkcml2ZXINCj4gDQo+IEknbSBn
-b2luZyB0byBhcHBseSB0aGUgd2hvbGUgc2VyaWVzIChmb3IgNS42KSBpZiBub2JvZHkgaGFzIGFu
-eSBpc3N1ZXMgd2l0aA0KPiB0aGF0Lg0KPiANCj4gVGhhbmtzIQ0KDQpUaGFuayB5b3UgUmFmYWVs
-IQ0K
+On Mon, 2019-12-16 at 10:31 -0800, Gayatri Kammela wrote:
+> Tiger Lake has a new unique hardware IDs to support thermal driver.
+> Hence, add them.
+> 
+> Cc: Rafael J. Wysocki <rafael@kernel.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Zhang rui <rui.zhang@intel.com>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+> Reviewed-by: Pandruvada, Srinivas <srinivas.pandruvada@intel.com>
+> Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+
+Acked-by: Zhang Rui <rui.zhang@intel.com>
+
+thanks,
+rui
+> ---
+>  drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 1 +
+>  drivers/thermal/intel/int340x_thermal/int3403_thermal.c | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> index 3517883b5cdb..efae0c02d898 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> @@ -369,6 +369,7 @@ static int int3400_thermal_remove(struct
+> platform_device *pdev)
+>  }
+>  
+>  static const struct acpi_device_id int3400_thermal_match[] = {
+> +	{"INT1040", 0},
+>  	{"INT3400", 0},
+>  	{}
+>  };
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+> b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+> index a7bbd8584ae2..aeece1e136a5 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
+> @@ -282,6 +282,7 @@ static int int3403_remove(struct platform_device
+> *pdev)
+>  }
+>  
+>  static const struct acpi_device_id int3403_device_ids[] = {
+> +	{"INT1043", 0},
+>  	{"INT3403", 0},
+>  	{"", 0},
+>  };
