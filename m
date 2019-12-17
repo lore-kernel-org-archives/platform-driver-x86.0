@@ -1,65 +1,47 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH v3 5/5] thermal: int340x_thermal: Add new Tiger Lake
- hardware IDs to support thermal driver
-Date: Tue, 17 Dec 2019 09:37:09 +0800
-Message-ID: <2dcde56646eea0a8d8002d0b07b1702d64284034.camel@intel.com>
-References: <cover.1576520244.git.gayatri.kammela@intel.com>
-         <354062a481f1b8b207fa7035abb50fcb80e8ce32.1576520244.git.gayatri.kammela@intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: hp-wmi: Make buffer for HPWMI_FEATURE2_QUERY 128 bytes
+Date: Tue, 17 Dec 2019 20:06:04 +0100
+Message-ID: <20191217190604.638467-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <354062a481f1b8b207fa7035abb50fcb80e8ce32.1576520244.git.gayatri.kammela@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gayatri Kammela <gayatri.kammela@intel.com>, linux-pm@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, alex.hung@canonical.com, linux-acpi@vger.kernel.org, lenb@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org, amit.kucheria@verdurent.com, charles.d.prestopine@intel.com, dvhart@infradead.org, "Rafael J . Wysocki" <rafael@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 2019-12-16 at 10:31 -0800, Gayatri Kammela wrote:
-> Tiger Lake has a new unique hardware IDs to support thermal driver.
-> Hence, add them.
-> 
-> Cc: Rafael J. Wysocki <rafael@kernel.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Zhang rui <rui.zhang@intel.com>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-> Reviewed-by: Pandruvada, Srinivas <srinivas.pandruvada@intel.com>
-> Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+At least on the HP Envy x360 15-cp0xxx model the WMI interface
+for HPWMI_FEATURE2_QUERY requires an outsize of at least 128 bytes,
+otherwise it fails with an error code 5 (HPWMI_RET_INVALID_PARAMETERS):
 
-Acked-by: Zhang Rui <rui.zhang@intel.com>
+Dec 06 00:59:38 kernel: hp_wmi: query 0xd returned error 0x5
 
-thanks,
-rui
-> ---
->  drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 1 +
->  drivers/thermal/intel/int340x_thermal/int3403_thermal.c | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> index 3517883b5cdb..efae0c02d898 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> @@ -369,6 +369,7 @@ static int int3400_thermal_remove(struct
-> platform_device *pdev)
->  }
->  
->  static const struct acpi_device_id int3400_thermal_match[] = {
-> +	{"INT1040", 0},
->  	{"INT3400", 0},
->  	{}
->  };
-> diff --git a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-> b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-> index a7bbd8584ae2..aeece1e136a5 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-> +++ b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-> @@ -282,6 +282,7 @@ static int int3403_remove(struct platform_device
-> *pdev)
->  }
->  
->  static const struct acpi_device_id int3403_device_ids[] = {
-> +	{"INT1043", 0},
->  	{"INT3403", 0},
->  	{"", 0},
->  };
+We do not care about the contents of the buffer, we just want to know
+if the HPWMI_FEATURE2_QUERY command is supported.
+
+This commits bumps the buffer size, fixing the error.
+
+Cc: stable@vger.kernel.org
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=3D1520703
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/hp-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.=
+c
+index 9579a706fc08..a881b709af25 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -300,7 +300,7 @@ static int __init hp_wmi_bios_2008_later(void)
+=20
+ static int __init hp_wmi_bios_2009_later(void)
+ {
+-	int state =3D 0;
++	u8 state[128];
+ 	int ret =3D hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &sta=
+te,
+ 				       sizeof(state), sizeof(state));
+ 	if (!ret)
+--=20
+2.23.0
