@@ -1,48 +1,33 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/mellanox: fix the mlx-bootctl sysfs
-Date: Wed, 18 Dec 2019 15:00:59 +0200
-Message-ID: <CAHp75VfVL8fs_VXQgL85QPnW2N+zsLq4dWYkhs3xdMAjcfRgTg@mail.gmail.com>
-References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
- <1576250484-27291-1-git-send-email-lsun@mellanox.com>
+Subject: Re: [PATCH] platform/x86: hp-wmi: Make buffer for HPWMI_FEATURE2_QUERY
+ 128 bytes
+Date: Wed, 18 Dec 2019 17:08:15 +0200
+Message-ID: <CAHp75Ve7wsd96yn97JihBq1QpLkKLtuhqKvcp-o8yeviCTvkwA@mail.gmail.com>
+References: <20191217190604.638467-1-hdegoede@redhat.com> <CAHp75Vf8CDwW731uD4OMzB69P-D1AN3PzCMFBGGD4fvBFccpLg@mail.gmail.com>
+ <92800c93-9d03-ab26-e71f-ce40df1ad3bc@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1576250484-27291-1-git-send-email-lsun@mellanox.com>
+In-Reply-To: <92800c93-9d03-ab26-e71f-ce40df1ad3bc@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stable <stable@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Dec 13, 2019 at 5:21 PM Liming Sun <lsun@mellanox.com> wrote:
+On Wed, Dec 18, 2019 at 1:18 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 18-12-2019 11:17, Andy Shevchenko wrote:
+> > On Tue, Dec 17, 2019 at 9:06 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-> +       ret = sysfs_create_group(&dev->kobj, &mlxbf_bootctl_group);
-> +       if (ret) {
-> +               dev_err(dev, "failed to create attributes, err=%d\n", ret);
-> +               return ret;
-> +       }
-> +
->         /* Ensure we have the UUID we expect for this service. */
->         arm_smccc_smc(MLXBF_BOOTCTL_SIP_SVC_UID, 0, 0, 0, 0, 0, 0, 0, &res);
->         guid_parse(mlxbf_bootctl_svc_uuid_str, &guid);
-> @@ -305,8 +312,16 @@ static int mlxbf_bootctl_probe(struct platform_device *pdev)
->         return 0;
->  }
+> > Fixes tag?
 >
-> +static int mlxbf_bootctl_remove(struct platform_device *pdev)
-> +{
-> +       sysfs_remove_group(&pdev->dev.kobj, &mlxbf_bootctl_group);
-> +
-> +       return 0;
-> +}
-> +
->  static struct platform_driver mlxbf_bootctl_driver = {
->         .probe = mlxbf_bootctl_probe,
-> +       .remove = mlxbf_bootctl_remove,
->         .driver = {
->                 .name = "mlxbf-bootctl",
->                 .groups = mlxbf_bootctl_groups,
+> The HPWMI_FEATURE2_QUERY call was introduced in 8a1513b4932, so I guess
+> this should have a:
+>
+> Fixes: 8a1513b4932 ("hp-wmi: limit hotkey enable")
+>
+> Tag, shall I send a v2 with this, or can you add it while applying the patch?
 
-Please, use dev_groups member of the struct driver instead of above approach.
+I added it.
 
 -- 
 With Best Regards,
