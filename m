@@ -1,113 +1,51 @@
 From: Liming Sun <lsun@mellanox.com>
-Subject: [PATCH v3] platform/mellanox: fix the mlx-bootctl sysfs
-Date: Wed, 18 Dec 2019 10:24:36 -0500
-Message-ID: <1576682676-31957-1-git-send-email-lsun@mellanox.com>
+Subject: RE: [PATCH v2] platform/mellanox: fix the mlx-bootctl sysfs
+Date: Wed, 18 Dec 2019 15:26:23 +0000
+Message-ID: <DB6PR05MB3223ED6CFF01AE972F608B6EA1530@DB6PR05MB3223.eurprd05.prod.outlook.com>
 References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
+ <1576250484-27291-1-git-send-email-lsun@mellanox.com>
+ <CAHp75VfVL8fs_VXQgL85QPnW2N+zsLq4dWYkhs3xdMAjcfRgTg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
+In-Reply-To: <CAHp75VfVL8fs_VXQgL85QPnW2N+zsLq4dWYkhs3xdMAjcfRgTg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>
-Cc: Liming Sun <lsun@mellanox.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This is a follow-up commit for the sysfs attributes to change
-from DRIVER_ATTR to DEVICE_ATTR according to some initial comments.
-In such case, it's better to point the sysfs path to the device
-itself instead of the driver. The ABI document is also updated.
-
-Fixes: 79e29cb8fbc5 ("platform/mellanox: Add bootctl driver for Mellanox BlueField Soc")
-Signed-off-by: Liming Sun <lsun@mellanox.com>
----
-v2->v3:
-    Fixes for comments from Andy
-    - Convert to use dev_groups;
-v1->v2:
-    Fixes for comments from Andy
-    - Added the Fixes tag;
-v1: Initial version.
----
- Documentation/ABI/testing/sysfs-platform-mellanox-bootctl | 10 +++++-----
- drivers/platform/mellanox/mlxbf-bootctl.c                 | 11 +++++++++--
- 2 files changed, 14 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-index c65a805..401d202 100644
---- a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-+++ b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-@@ -1,4 +1,4 @@
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/lifecycle_state
-+What:		/sys/bus/platform/devices/MLNXBF04:00/lifecycle_state
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -10,7 +10,7 @@ Description:
- 		  GA Non-Secured - Non-Secure chip and not able to change state
- 		  RMA - Return Merchandise Authorization
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/post_reset_wdog
-+What:		/sys/bus/platform/devices/MLNXBF04:00/post_reset_wdog
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -19,7 +19,7 @@ Description:
- 		to reboot the chip and recover it to the old state if the new
- 		boot partition fails.
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/reset_action
-+What:		/sys/bus/platform/devices/MLNXBF04:00/reset_action
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -30,7 +30,7 @@ Description:
- 		  emmc - boot from the onchip eMMC
- 		  emmc_legacy - boot from the onchip eMMC in legacy (slow) mode
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/second_reset_action
-+What:		/sys/bus/platform/devices/MLNXBF04:00/second_reset_action
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-@@ -44,7 +44,7 @@ Description:
- 		  swap_emmc - swap the primary / secondary boot partition
- 		  none - cancel the action
- 
--What:		/sys/bus/platform/devices/MLNXBF04:00/driver/secure_boot_fuse_state
-+What:		/sys/bus/platform/devices/MLNXBF04:00/secure_boot_fuse_state
- Date:		Oct 2019
- KernelVersion:	5.5
- Contact:	"Liming Sun <lsun@mellanox.com>"
-diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
-index 61753b6..472dc74 100644
---- a/drivers/platform/mellanox/mlxbf-bootctl.c
-+++ b/drivers/platform/mellanox/mlxbf-bootctl.c
-@@ -259,7 +259,9 @@ static ssize_t secure_boot_fuse_state_show(struct device *dev,
- 	NULL
- };
- 
--ATTRIBUTE_GROUPS(mlxbf_bootctl);
-+static const struct attribute_group mlxbf_bootctl_group = {
-+	.attrs	= mlxbf_bootctl_attrs,
-+};
- 
- static const struct acpi_device_id mlxbf_bootctl_acpi_ids[] = {
- 	{"MLNXBF04", 0},
-@@ -305,11 +307,16 @@ static int mlxbf_bootctl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct attribute_group *mlxbf_bootctl_dev_groups[] = {
-+	&mlxbf_bootctl_group,
-+	NULL
-+};
-+
- static struct platform_driver mlxbf_bootctl_driver = {
- 	.probe = mlxbf_bootctl_probe,
- 	.driver = {
- 		.name = "mlxbf-bootctl",
--		.groups = mlxbf_bootctl_groups,
-+		.dev_groups = mlxbf_bootctl_dev_groups,
- 		.acpi_match_table = mlxbf_bootctl_acpi_ids,
- 	}
- };
--- 
-1.8.3.1
+VGhhbmtzIEFuZHkgZm9yIHRoZSBjb21tZW50cy4gdjMgaGFzIGJlZW4gcG9zdGVkIHdpdGggdGhl
+IHVwZGF0ZXMuDQoNCi0gTGltaW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
+RnJvbTogQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBTZW50
+OiBXZWRuZXNkYXksIERlY2VtYmVyIDE4LCAyMDE5IDg6MDEgQU0NCj4gVG86IExpbWluZyBTdW4g
+PGxzdW5AbWVsbGFub3guY29tPg0KPiBDYzogQW5keSBTaGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVh
+ZC5vcmc+OyBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBWYWRpbSBQYXN0ZXJu
+YWsgPHZhZGltcEBtZWxsYW5veC5jb20+OyBEYXZpZA0KPiBXb29kcyA8ZHdvb2RzQG1lbGxhbm94
+LmNvbT47IFBsYXRmb3JtIERyaXZlciA8cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5v
+cmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC0NCj4ga2VybmVsQHZnZXIua2Vy
+bmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2Ml0gcGxhdGZvcm0vbWVsbGFub3g6IGZp
+eCB0aGUgbWx4LWJvb3RjdGwgc3lzZnMNCj4gDQo+IE9uIEZyaSwgRGVjIDEzLCAyMDE5IGF0IDU6
+MjEgUE0gTGltaW5nIFN1biA8bHN1bkBtZWxsYW5veC5jb20+IHdyb3RlOg0KPiANCj4gPiArICAg
+ICAgIHJldCA9IHN5c2ZzX2NyZWF0ZV9ncm91cCgmZGV2LT5rb2JqLCAmbWx4YmZfYm9vdGN0bF9n
+cm91cCk7DQo+ID4gKyAgICAgICBpZiAocmV0KSB7DQo+ID4gKyAgICAgICAgICAgICAgIGRldl9l
+cnIoZGV2LCAiZmFpbGVkIHRvIGNyZWF0ZSBhdHRyaWJ1dGVzLCBlcnI9JWRcbiIsIHJldCk7DQo+
+ID4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+
+ICAgICAgICAgLyogRW5zdXJlIHdlIGhhdmUgdGhlIFVVSUQgd2UgZXhwZWN0IGZvciB0aGlzIHNl
+cnZpY2UuICovDQo+ID4gICAgICAgICBhcm1fc21jY2Nfc21jKE1MWEJGX0JPT1RDVExfU0lQX1NW
+Q19VSUQsIDAsIDAsIDAsIDAsIDAsIDAsIDAsICZyZXMpOw0KPiA+ICAgICAgICAgZ3VpZF9wYXJz
+ZShtbHhiZl9ib290Y3RsX3N2Y191dWlkX3N0ciwgJmd1aWQpOw0KPiA+IEBAIC0zMDUsOCArMzEy
+LDE2IEBAIHN0YXRpYyBpbnQgbWx4YmZfYm9vdGN0bF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlICpwZGV2KQ0KPiA+ICAgICAgICAgcmV0dXJuIDA7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0
+aWMgaW50IG1seGJmX2Jvb3RjdGxfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
+DQo+ID4gK3sNCj4gPiArICAgICAgIHN5c2ZzX3JlbW92ZV9ncm91cCgmcGRldi0+ZGV2LmtvYmos
+ICZtbHhiZl9ib290Y3RsX2dyb3VwKTsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gMDsNCj4g
+PiArfQ0KPiA+ICsNCj4gPiAgc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgbWx4YmZfYm9v
+dGN0bF9kcml2ZXIgPSB7DQo+ID4gICAgICAgICAucHJvYmUgPSBtbHhiZl9ib290Y3RsX3Byb2Jl
+LA0KPiA+ICsgICAgICAgLnJlbW92ZSA9IG1seGJmX2Jvb3RjdGxfcmVtb3ZlLA0KPiA+ICAgICAg
+ICAgLmRyaXZlciA9IHsNCj4gPiAgICAgICAgICAgICAgICAgLm5hbWUgPSAibWx4YmYtYm9vdGN0
+bCIsDQo+ID4gICAgICAgICAgICAgICAgIC5ncm91cHMgPSBtbHhiZl9ib290Y3RsX2dyb3VwcywN
+Cj4gDQo+IFBsZWFzZSwgdXNlIGRldl9ncm91cHMgbWVtYmVyIG9mIHRoZSBzdHJ1Y3QgZHJpdmVy
+IGluc3RlYWQgb2YgYWJvdmUgYXBwcm9hY2guDQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJk
+cywNCj4gQW5keSBTaGV2Y2hlbmtvDQo=
