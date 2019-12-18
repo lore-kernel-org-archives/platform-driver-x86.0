@@ -1,34 +1,113 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: hp-wmi: Make buffer for HPWMI_FEATURE2_QUERY
- 128 bytes
-Date: Wed, 18 Dec 2019 17:08:15 +0200
-Message-ID: <CAHp75Ve7wsd96yn97JihBq1QpLkKLtuhqKvcp-o8yeviCTvkwA@mail.gmail.com>
-References: <20191217190604.638467-1-hdegoede@redhat.com> <CAHp75Vf8CDwW731uD4OMzB69P-D1AN3PzCMFBGGD4fvBFccpLg@mail.gmail.com>
- <92800c93-9d03-ab26-e71f-ce40df1ad3bc@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Liming Sun <lsun@mellanox.com>
+Subject: [PATCH v3] platform/mellanox: fix the mlx-bootctl sysfs
+Date: Wed, 18 Dec 2019 10:24:36 -0500
+Message-ID: <1576682676-31957-1-git-send-email-lsun@mellanox.com>
+References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <92800c93-9d03-ab26-e71f-ce40df1ad3bc@redhat.com>
+In-Reply-To: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stable <stable@vger.kernel.org>
+To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>
+Cc: Liming Sun <lsun@mellanox.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Dec 18, 2019 at 1:18 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 18-12-2019 11:17, Andy Shevchenko wrote:
-> > On Tue, Dec 17, 2019 at 9:06 PM Hans de Goede <hdegoede@redhat.com> wrote:
+This is a follow-up commit for the sysfs attributes to change
+from DRIVER_ATTR to DEVICE_ATTR according to some initial comments.
+In such case, it's better to point the sysfs path to the device
+itself instead of the driver. The ABI document is also updated.
 
-> > Fixes tag?
->
-> The HPWMI_FEATURE2_QUERY call was introduced in 8a1513b4932, so I guess
-> this should have a:
->
-> Fixes: 8a1513b4932 ("hp-wmi: limit hotkey enable")
->
-> Tag, shall I send a v2 with this, or can you add it while applying the patch?
+Fixes: 79e29cb8fbc5 ("platform/mellanox: Add bootctl driver for Mellanox BlueField Soc")
+Signed-off-by: Liming Sun <lsun@mellanox.com>
+---
+v2->v3:
+    Fixes for comments from Andy
+    - Convert to use dev_groups;
+v1->v2:
+    Fixes for comments from Andy
+    - Added the Fixes tag;
+v1: Initial version.
+---
+ Documentation/ABI/testing/sysfs-platform-mellanox-bootctl | 10 +++++-----
+ drivers/platform/mellanox/mlxbf-bootctl.c                 | 11 +++++++++--
+ 2 files changed, 14 insertions(+), 7 deletions(-)
 
-I added it.
-
+diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+index c65a805..401d202 100644
+--- a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
++++ b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+@@ -1,4 +1,4 @@
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/lifecycle_state
++What:		/sys/bus/platform/devices/MLNXBF04:00/lifecycle_state
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+@@ -10,7 +10,7 @@ Description:
+ 		  GA Non-Secured - Non-Secure chip and not able to change state
+ 		  RMA - Return Merchandise Authorization
+ 
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/post_reset_wdog
++What:		/sys/bus/platform/devices/MLNXBF04:00/post_reset_wdog
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+@@ -19,7 +19,7 @@ Description:
+ 		to reboot the chip and recover it to the old state if the new
+ 		boot partition fails.
+ 
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/reset_action
++What:		/sys/bus/platform/devices/MLNXBF04:00/reset_action
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+@@ -30,7 +30,7 @@ Description:
+ 		  emmc - boot from the onchip eMMC
+ 		  emmc_legacy - boot from the onchip eMMC in legacy (slow) mode
+ 
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/second_reset_action
++What:		/sys/bus/platform/devices/MLNXBF04:00/second_reset_action
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+@@ -44,7 +44,7 @@ Description:
+ 		  swap_emmc - swap the primary / secondary boot partition
+ 		  none - cancel the action
+ 
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/secure_boot_fuse_state
++What:		/sys/bus/platform/devices/MLNXBF04:00/secure_boot_fuse_state
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
+index 61753b6..472dc74 100644
+--- a/drivers/platform/mellanox/mlxbf-bootctl.c
++++ b/drivers/platform/mellanox/mlxbf-bootctl.c
+@@ -259,7 +259,9 @@ static ssize_t secure_boot_fuse_state_show(struct device *dev,
+ 	NULL
+ };
+ 
+-ATTRIBUTE_GROUPS(mlxbf_bootctl);
++static const struct attribute_group mlxbf_bootctl_group = {
++	.attrs	= mlxbf_bootctl_attrs,
++};
+ 
+ static const struct acpi_device_id mlxbf_bootctl_acpi_ids[] = {
+ 	{"MLNXBF04", 0},
+@@ -305,11 +307,16 @@ static int mlxbf_bootctl_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct attribute_group *mlxbf_bootctl_dev_groups[] = {
++	&mlxbf_bootctl_group,
++	NULL
++};
++
+ static struct platform_driver mlxbf_bootctl_driver = {
+ 	.probe = mlxbf_bootctl_probe,
+ 	.driver = {
+ 		.name = "mlxbf-bootctl",
+-		.groups = mlxbf_bootctl_groups,
++		.dev_groups = mlxbf_bootctl_dev_groups,
+ 		.acpi_match_table = mlxbf_bootctl_acpi_ids,
+ 	}
+ };
 -- 
-With Best Regards,
-Andy Shevchenko
+1.8.3.1
