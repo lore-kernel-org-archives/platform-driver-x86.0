@@ -1,51 +1,107 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v2] platform/mellanox: fix the mlx-bootctl sysfs
-Date: Wed, 18 Dec 2019 15:26:23 +0000
-Message-ID: <DB6PR05MB3223ED6CFF01AE972F608B6EA1530@DB6PR05MB3223.eurprd05.prod.outlook.com>
-References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
- <1576250484-27291-1-git-send-email-lsun@mellanox.com>
- <CAHp75VfVL8fs_VXQgL85QPnW2N+zsLq4dWYkhs3xdMAjcfRgTg@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/2] admin guide/pm: Admin guide for Intel Uncore
+ Frequency limits
+Date: Wed, 18 Dec 2019 18:50:22 +0200
+Message-ID: <CAHp75Vf_X-aTNtrNpC1feKTLEUTvZVT2LA9535i+QXCwNzv=xw@mail.gmail.com>
+References: <20191214001408.4878-1-srinivas.pandruvada@linux.intel.com> <20191214001408.4878-2-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfVL8fs_VXQgL85QPnW2N+zsLq4dWYkhs3xdMAjcfRgTg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20191214001408.4878-2-srinivas.pandruvada@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jonathan Corbet <corbet@lwn.net>, Linux Documentation List <linux-doc@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
 List-Id: platform-driver-x86.vger.kernel.org
 
-VGhhbmtzIEFuZHkgZm9yIHRoZSBjb21tZW50cy4gdjMgaGFzIGJlZW4gcG9zdGVkIHdpdGggdGhl
-IHVwZGF0ZXMuDQoNCi0gTGltaW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
-RnJvbTogQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBTZW50
-OiBXZWRuZXNkYXksIERlY2VtYmVyIDE4LCAyMDE5IDg6MDEgQU0NCj4gVG86IExpbWluZyBTdW4g
-PGxzdW5AbWVsbGFub3guY29tPg0KPiBDYzogQW5keSBTaGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVh
-ZC5vcmc+OyBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBWYWRpbSBQYXN0ZXJu
-YWsgPHZhZGltcEBtZWxsYW5veC5jb20+OyBEYXZpZA0KPiBXb29kcyA8ZHdvb2RzQG1lbGxhbm94
-LmNvbT47IFBsYXRmb3JtIERyaXZlciA8cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5v
-cmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC0NCj4ga2VybmVsQHZnZXIua2Vy
-bmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2Ml0gcGxhdGZvcm0vbWVsbGFub3g6IGZp
-eCB0aGUgbWx4LWJvb3RjdGwgc3lzZnMNCj4gDQo+IE9uIEZyaSwgRGVjIDEzLCAyMDE5IGF0IDU6
-MjEgUE0gTGltaW5nIFN1biA8bHN1bkBtZWxsYW5veC5jb20+IHdyb3RlOg0KPiANCj4gPiArICAg
-ICAgIHJldCA9IHN5c2ZzX2NyZWF0ZV9ncm91cCgmZGV2LT5rb2JqLCAmbWx4YmZfYm9vdGN0bF9n
-cm91cCk7DQo+ID4gKyAgICAgICBpZiAocmV0KSB7DQo+ID4gKyAgICAgICAgICAgICAgIGRldl9l
-cnIoZGV2LCAiZmFpbGVkIHRvIGNyZWF0ZSBhdHRyaWJ1dGVzLCBlcnI9JWRcbiIsIHJldCk7DQo+
-ID4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+
-ICAgICAgICAgLyogRW5zdXJlIHdlIGhhdmUgdGhlIFVVSUQgd2UgZXhwZWN0IGZvciB0aGlzIHNl
-cnZpY2UuICovDQo+ID4gICAgICAgICBhcm1fc21jY2Nfc21jKE1MWEJGX0JPT1RDVExfU0lQX1NW
-Q19VSUQsIDAsIDAsIDAsIDAsIDAsIDAsIDAsICZyZXMpOw0KPiA+ICAgICAgICAgZ3VpZF9wYXJz
-ZShtbHhiZl9ib290Y3RsX3N2Y191dWlkX3N0ciwgJmd1aWQpOw0KPiA+IEBAIC0zMDUsOCArMzEy
-LDE2IEBAIHN0YXRpYyBpbnQgbWx4YmZfYm9vdGN0bF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2KQ0KPiA+ICAgICAgICAgcmV0dXJuIDA7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0
-aWMgaW50IG1seGJmX2Jvb3RjdGxfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
-DQo+ID4gK3sNCj4gPiArICAgICAgIHN5c2ZzX3JlbW92ZV9ncm91cCgmcGRldi0+ZGV2LmtvYmos
-ICZtbHhiZl9ib290Y3RsX2dyb3VwKTsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gMDsNCj4g
-PiArfQ0KPiA+ICsNCj4gPiAgc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgbWx4YmZfYm9v
-dGN0bF9kcml2ZXIgPSB7DQo+ID4gICAgICAgICAucHJvYmUgPSBtbHhiZl9ib290Y3RsX3Byb2Jl
-LA0KPiA+ICsgICAgICAgLnJlbW92ZSA9IG1seGJmX2Jvb3RjdGxfcmVtb3ZlLA0KPiA+ICAgICAg
-ICAgLmRyaXZlciA9IHsNCj4gPiAgICAgICAgICAgICAgICAgLm5hbWUgPSAibWx4YmYtYm9vdGN0
-bCIsDQo+ID4gICAgICAgICAgICAgICAgIC5ncm91cHMgPSBtbHhiZl9ib290Y3RsX2dyb3VwcywN
-Cj4gDQo+IFBsZWFzZSwgdXNlIGRldl9ncm91cHMgbWVtYmVyIG9mIHRoZSBzdHJ1Y3QgZHJpdmVy
-IGluc3RlYWQgb2YgYWJvdmUgYXBwcm9hY2guDQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJk
-cywNCj4gQW5keSBTaGV2Y2hlbmtvDQo=
+On Sat, Dec 14, 2019 at 2:15 AM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> Added documentation for the attributes to control uncore frequency
+> selection.
+>
+
+I need either Ack for this one, or take mine for patch 1.
+
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  Documentation/admin-guide/pm/intel_uncore.rst | 23 +++++++++++++++++++
+>  .../admin-guide/pm/working-state.rst          |  1 +
+>  2 files changed, 24 insertions(+)
+>  create mode 100644 Documentation/admin-guide/pm/intel_uncore.rst
+>
+> diff --git a/Documentation/admin-guide/pm/intel_uncore.rst b/Documentatio=
+n/admin-guide/pm/intel_uncore.rst
+> new file mode 100644
+> index 000000000000..0986d9ab59d6
+> --- /dev/null
+> +++ b/Documentation/admin-guide/pm/intel_uncore.rst
+> @@ -0,0 +1,23 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+> +Intel=C2=AE Uncore Frequency Selection
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +The uncore frequency in the Intel(R) hardware is selected based on inter=
+nal heuristics, which uses the current selected performance state and vario=
+us system power constraints. In majority of the cases this selection is the=
+ most optimal, so there is no need for placing external constraints from th=
+e Operating System.
+> +
+> +But there are some customers who wants less jitters from dynamic uncore =
+frequency selection. For them, power saving is much lower priority than con=
+sistent performance. Currently these customers uses MSR 0x620, to place har=
+d limits on the maximum and the minimum uncore frequency. They can now use =
+Linux sysfs to place these limits and also have additional capability to pl=
+ace hard limits under power constraint scenario.
+> +
+> +The Uncore frequency section attributes are present under "/sys/devices/=
+system/cpu/intel_uncore_frequency".
+> +The scope of these attributes is per die in multi-die systems or package=
+ wide in non multi-die systems. There is a unique folder for each die or pa=
+ckage. For example:
+> +"package_00_die_00" for package 0 and die 0.
+> +
+> +Attributes:
+> +
+> +power_up_max_freq_khz (READ ONLY): This is the power up value of the max=
+imum uncore frequency in KHz. This is sampled during the driver initializat=
+ion time. This is not the absolute maximum uncore frequency as there is no =
+capability for the Operating System to read that. This can be used as a ref=
+erence to roll back settings once user changed this limit.
+> +
+> +power_up_min_freq_khz (READ ONLY): This is the power up value of the min=
+imum uncore frequency in KHz. This is not the absolute minimum uncore frequ=
+ency. This can be used as a reference to roll back settings once user chang=
+ed this limit.
+> +
+> +max_freq_khz (READ, WRITE): This presents current maximum uncore frequen=
+cy. User can modify this attribute to change to a new maximum uncore freque=
+ncy in KHz.
+> +
+> +min_freq_khz (READ, WRITE): This presents current minimum uncore frequen=
+cy. User can modify this attribute to change to a new minimum uncore freque=
+ncy in KHz.
+> diff --git a/Documentation/admin-guide/pm/working-state.rst b/Documentati=
+on/admin-guide/pm/working-state.rst
+> index fc298eb1234b..15094cf0a234 100644
+> --- a/Documentation/admin-guide/pm/working-state.rst
+> +++ b/Documentation/admin-guide/pm/working-state.rst
+> @@ -11,3 +11,4 @@ Working-State Power Management
+>     cpufreq
+>     intel_pstate
+>     intel_epb
+> +   intel_uncore
+> --
+> 2.17.2
+>
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
