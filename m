@@ -1,45 +1,96 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3] platform/mellanox: fix the mlx-bootctl sysfs
-Date: Wed, 18 Dec 2019 19:59:43 +0200
-Message-ID: <CAHp75VfYwxviATZnmYcgzkKKGw47ki=BZQYw4xRmUrfNqsiBww@mail.gmail.com>
+From: Liming Sun <lsun@mellanox.com>
+Subject: [PATCH v4] platform/mellanox: fix the mlx-bootctl sysfs
+Date: Wed, 18 Dec 2019 13:35:27 -0500
+Message-ID: <1576694127-163542-1-git-send-email-lsun@mellanox.com>
 References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
- <1576682676-31957-1-git-send-email-lsun@mellanox.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1576682676-31957-1-git-send-email-lsun@mellanox.com>
+In-Reply-To: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>
+Cc: Liming Sun <lsun@mellanox.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Dec 18, 2019 at 5:25 PM Liming Sun <lsun@mellanox.com> wrote:
->
-> This is a follow-up commit for the sysfs attributes to change
-> from DRIVER_ATTR to DEVICE_ATTR according to some initial comments.
-> In such case, it's better to point the sysfs path to the device
-> itself instead of the driver. The ABI document is also updated.
->
-> Fixes: 79e29cb8fbc5 ("platform/mellanox: Add bootctl driver for Mellanox BlueField Soc")
-> Signed-off-by: Liming Sun <lsun@mellanox.com>
+This is a follow-up commit for the sysfs attributes to change
+from DRIVER_ATTR to DEVICE_ATTR according to some initial comments.
+In such case, it's better to point the sysfs path to the device
+itself instead of the driver. The ABI document is also updated.
 
-...
+Fixes: 79e29cb8fbc5 ("platform/mellanox: Add bootctl driver for Mellanox BlueField Soc")
+Signed-off-by: Liming Sun <lsun@mellanox.com>
+---
+v3->v4:
+    Fixes for comments from Andy
+    - Simplify the change with ATTRIBUTE_GROUPS();
+v2->v3:
+    Fixes for comments from Andy
+    - Convert to use dev_groups;
+v1->v2:
+    Fixes for comments from Andy
+    - Added the Fixes tag;
+v1: Initial version.
+---
+ Documentation/ABI/testing/sysfs-platform-mellanox-bootctl | 10 +++++-----
+ drivers/platform/mellanox/mlxbf-bootctl.c                 |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-> -ATTRIBUTE_GROUPS(mlxbf_bootctl);
-
-What's wrong with above macro?
-
-> +static const struct attribute_group mlxbf_bootctl_group = {
-> +       .attrs  = mlxbf_bootctl_attrs,
-> +};
-
-...
-
-> +static const struct attribute_group *mlxbf_bootctl_dev_groups[] = {
-> +       &mlxbf_bootctl_group,
-> +       NULL
-> +};
-
+diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+index c65a805..401d202 100644
+--- a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
++++ b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+@@ -1,4 +1,4 @@
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/lifecycle_state
++What:		/sys/bus/platform/devices/MLNXBF04:00/lifecycle_state
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+@@ -10,7 +10,7 @@ Description:
+ 		  GA Non-Secured - Non-Secure chip and not able to change state
+ 		  RMA - Return Merchandise Authorization
+ 
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/post_reset_wdog
++What:		/sys/bus/platform/devices/MLNXBF04:00/post_reset_wdog
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+@@ -19,7 +19,7 @@ Description:
+ 		to reboot the chip and recover it to the old state if the new
+ 		boot partition fails.
+ 
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/reset_action
++What:		/sys/bus/platform/devices/MLNXBF04:00/reset_action
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+@@ -30,7 +30,7 @@ Description:
+ 		  emmc - boot from the onchip eMMC
+ 		  emmc_legacy - boot from the onchip eMMC in legacy (slow) mode
+ 
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/second_reset_action
++What:		/sys/bus/platform/devices/MLNXBF04:00/second_reset_action
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+@@ -44,7 +44,7 @@ Description:
+ 		  swap_emmc - swap the primary / secondary boot partition
+ 		  none - cancel the action
+ 
+-What:		/sys/bus/platform/devices/MLNXBF04:00/driver/secure_boot_fuse_state
++What:		/sys/bus/platform/devices/MLNXBF04:00/secure_boot_fuse_state
+ Date:		Oct 2019
+ KernelVersion:	5.5
+ Contact:	"Liming Sun <lsun@mellanox.com>"
+diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
+index 61753b6..5d21c6a 100644
+--- a/drivers/platform/mellanox/mlxbf-bootctl.c
++++ b/drivers/platform/mellanox/mlxbf-bootctl.c
+@@ -309,7 +309,7 @@ static int mlxbf_bootctl_probe(struct platform_device *pdev)
+ 	.probe = mlxbf_bootctl_probe,
+ 	.driver = {
+ 		.name = "mlxbf-bootctl",
+-		.groups = mlxbf_bootctl_groups,
++		.dev_groups = mlxbf_bootctl_groups,
+ 		.acpi_match_table = mlxbf_bootctl_acpi_ids,
+ 	}
+ };
 -- 
-With Best Regards,
-Andy Shevchenko
+1.8.3.1
