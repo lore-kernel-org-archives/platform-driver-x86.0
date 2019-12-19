@@ -1,45 +1,52 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v3] platform/mellanox: fix the mlx-bootctl sysfs
-Date: Wed, 18 Dec 2019 18:36:25 +0000
-Message-ID: <DB6PR05MB3223550D527DC5C37FCF9720A1530@DB6PR05MB3223.eurprd05.prod.outlook.com>
-References: <94727fab054309cd98c876748fd27b130ce5031f.1575918870.git.lsun@mellanox.com>
- <1576682676-31957-1-git-send-email-lsun@mellanox.com>
- <CAHp75VfYwxviATZnmYcgzkKKGw47ki=BZQYw4xRmUrfNqsiBww@mail.gmail.com>
+From: Nishad Kamdar <nishadkamdar@gmail.com>
+Subject: [PATCH] platform/x86: intel-ips: Use the correct style for SPDX
+ License Identifier
+Date: Thu, 19 Dec 2019 20:00:01 +0530
+Message-ID: <20191219142958.GA3594@nishad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfYwxviATZnmYcgzkKKGw47ki=BZQYw4xRmUrfNqsiBww@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, David Woods <dwoods@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-U29ycnkgSSBtaXN1bmRlcnN0b29kIHRoZSBsYXN0IGNvbW1lbnQuIFZlcmlmaWVkIGFuZCBwb3N0
-ZWQgdjQuDQoNCi0gTGltaW5nDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJv
-bTogQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBTZW50OiBX
-ZWRuZXNkYXksIERlY2VtYmVyIDE4LCAyMDE5IDE6MDAgUE0NCj4gVG86IExpbWluZyBTdW4gPGxz
-dW5AbWVsbGFub3guY29tPg0KPiBDYzogQW5keSBTaGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVhZC5v
-cmc+OyBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBWYWRpbSBQYXN0ZXJuYWsg
-PHZhZGltcEBtZWxsYW5veC5jb20+OyBEYXZpZA0KPiBXb29kcyA8ZHdvb2RzQG1lbGxhbm94LmNv
-bT47IFBsYXRmb3JtIERyaXZlciA8cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc+
-OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVs
-Lm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2M10gcGxhdGZvcm0vbWVsbGFub3g6IGZpeCB0
-aGUgbWx4LWJvb3RjdGwgc3lzZnMNCj4gDQo+IE9uIFdlZCwgRGVjIDE4LCAyMDE5IGF0IDU6MjUg
-UE0gTGltaW5nIFN1biA8bHN1bkBtZWxsYW5veC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gVGhpcyBp
-cyBhIGZvbGxvdy11cCBjb21taXQgZm9yIHRoZSBzeXNmcyBhdHRyaWJ1dGVzIHRvIGNoYW5nZQ0K
-PiA+IGZyb20gRFJJVkVSX0FUVFIgdG8gREVWSUNFX0FUVFIgYWNjb3JkaW5nIHRvIHNvbWUgaW5p
-dGlhbCBjb21tZW50cy4NCj4gPiBJbiBzdWNoIGNhc2UsIGl0J3MgYmV0dGVyIHRvIHBvaW50IHRo
-ZSBzeXNmcyBwYXRoIHRvIHRoZSBkZXZpY2UNCj4gPiBpdHNlbGYgaW5zdGVhZCBvZiB0aGUgZHJp
-dmVyLiBUaGUgQUJJIGRvY3VtZW50IGlzIGFsc28gdXBkYXRlZC4NCj4gPg0KPiA+IEZpeGVzOiA3
-OWUyOWNiOGZiYzUgKCJwbGF0Zm9ybS9tZWxsYW5veDogQWRkIGJvb3RjdGwgZHJpdmVyIGZvciBN
-ZWxsYW5veCBCbHVlRmllbGQgU29jIikNCj4gPiBTaWduZWQtb2ZmLWJ5OiBMaW1pbmcgU3VuIDxs
-c3VuQG1lbGxhbm94LmNvbT4NCj4gDQo+IC4uLg0KPiANCj4gPiAtQVRUUklCVVRFX0dST1VQUyht
-bHhiZl9ib290Y3RsKTsNCj4gDQo+IFdoYXQncyB3cm9uZyB3aXRoIGFib3ZlIG1hY3JvPw0KPiAN
-Cj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBhdHRyaWJ1dGVfZ3JvdXAgbWx4YmZfYm9vdGN0bF9n
-cm91cCA9IHsNCj4gPiArICAgICAgIC5hdHRycyAgPSBtbHhiZl9ib290Y3RsX2F0dHJzLA0KPiA+
-ICt9Ow0KPiANCj4gLi4uDQo+IA0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGF0dHJpYnV0ZV9n
-cm91cCAqbWx4YmZfYm9vdGN0bF9kZXZfZ3JvdXBzW10gPSB7DQo+ID4gKyAgICAgICAmbWx4YmZf
-Ym9vdGN0bF9ncm91cCwNCj4gPiArICAgICAgIE5VTEwNCj4gPiArfTsNCj4gDQo+IC0tDQo+IFdp
-dGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg==
+This patch corrects the SPDX License Identifier style in
+header files related to x86 Platform Specific Drivers.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used).
+
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
+
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/platform/x86/intel_ips.h      | 2 +-
+ drivers/platform/x86/intel_pmc_core.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_ips.h b/drivers/platform/x86/intel_ips.h
+index 512ad234ad0d..35ed9711c7b9 100644
+--- a/drivers/platform/x86/intel_ips.h
++++ b/drivers/platform/x86/intel_ips.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2010 Intel Corporation
+  */
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index fdee5772e532..8203ae38dc46 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Intel Core SoC Power Management Controller Header File
+  *
+-- 
+2.17.1
