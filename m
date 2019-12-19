@@ -1,52 +1,61 @@
-From: Nishad Kamdar <nishadkamdar@gmail.com>
-Subject: [PATCH] platform/x86: intel-ips: Use the correct style for SPDX
- License Identifier
-Date: Thu, 19 Dec 2019 20:00:01 +0530
-Message-ID: <20191219142958.GA3594@nishad>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v3 0/5] drivers: Add Tiger Lake hardware IDs to support ACPI,
+Date: Thu, 19 Dec 2019 22:55:43 +0100
+Message-ID: <CAJZ5v0ji2f7XsR2__t5Fw8Vi1hB2XXHbp-LCZABN29yQ4VOyKw@mail.gmail.com>
+References: <cover.1576520244.git.gayatri.kammela@intel.com>
+ <CAJZ5v0g2UHJcnczekgegX6_7kzHrmXNS_e3KRCC2d4LQ1+RceA@mail.gmail.com> <MWHPR11MB1278E9E06FBB5847444B11F3F2510@MWHPR11MB1278.namprd11.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <MWHPR11MB1278E9E06FBB5847444B11F3F2510@MWHPR11MB1278.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joe Perches <joe@perches.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Alex Hung <alex.hung@canonical.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Zhang, Rui" <rui.zhang@intel.com>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This patch corrects the SPDX License Identifier style in
-header files related to x86 Platform Specific Drivers.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used).
+On Mon, Dec 16, 2019 at 10:57 PM Kammela, Gayatri
+<gayatri.kammela@intel.com> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Rafael J. Wysocki <rafael@kernel.org>
+> > Sent: Monday, December 16, 2019 1:36 PM
+> > To: Kammela, Gayatri <gayatri.kammela@intel.com>
+> > Cc: Linux PM <linux-pm@vger.kernel.org>; Platform Driver <platform-driver-
+> > x86@vger.kernel.org>; Alex Hung <alex.hung@canonical.com>; ACPI Devel
+> > Maling List <linux-acpi@vger.kernel.org>; Len Brown <lenb@kernel.org>;
+> > Rafael J. Wysocki <rjw@rjwysocki.net>; Linux Kernel Mailing List <linux-
+> > kernel@vger.kernel.org>; Daniel Lezcano <daniel.lezcano@linaro.org>; Amit
+> > Kucheria <amit.kucheria@verdurent.com>; Prestopine, Charles D
+> > <charles.d.prestopine@intel.com>; Darren Hart <dvhart@infradead.org>;
+> > Rafael J . Wysocki <rafael@kernel.org>; Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com>; Zhang, Rui <rui.zhang@intel.com>;
+> > Pandruvada, Srinivas <srinivas.pandruvada@intel.com>
+> > Subject: Re: [PATCH v3 0/5] drivers: Add Tiger Lake hardware IDs to support
+> > ACPI,
+> >
+> > On Mon, Dec 16, 2019 at 7:33 PM Gayatri Kammela
+> > <gayatri.kammela@intel.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > Tiger Lake supports devices whose hardware IDs are changed for various
+> > > drivers. Hence, add the new hardware IDs.
+> > >
+> > > Patch 1: Add Tiger Lake support to DPTF driver Patch 2: Add Tiger Lake
+> > > support to fan driver Patch 3: Add Tiger Lake support to device_pm
+> > > Patch 4: Add Tiger Lake support to Intel's HID driver Patch 5: Add
+> > > Tiger Lake support to thermal driver
+> >
+> > I'm going to apply the whole series (for 5.6) if nobody has any issues with
+> > that.
+> >
+> > Thanks!
+>
+> Thank you Rafael!
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+So applying as 5.6 material with rewritten subjects and changelogs and
+with patches [2/5] and [3/5] folded together.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/platform/x86/intel_ips.h      | 2 +-
- drivers/platform/x86/intel_pmc_core.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_ips.h b/drivers/platform/x86/intel_ips.h
-index 512ad234ad0d..35ed9711c7b9 100644
---- a/drivers/platform/x86/intel_ips.h
-+++ b/drivers/platform/x86/intel_ips.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2010 Intel Corporation
-  */
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index fdee5772e532..8203ae38dc46 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Intel Core SoC Power Management Controller Header File
-  *
--- 
-2.17.1
+Thanks!
