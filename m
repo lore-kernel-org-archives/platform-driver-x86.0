@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 08/37] platform/x86: intel_scu_ipc: Drop unused prototype intel_scu_ipc_fw_update()
-Date: Mon, 23 Dec 2019 17:16:47 +0300
-Message-ID: <20191223141716.13727-9-mika.westerberg@linux.intel.com>
+Subject: [PATCH 09/37] platform/x86: intel_scu_ipc: Drop unused macros
+Date: Mon, 23 Dec 2019 17:16:48 +0300
+Message-ID: <20191223141716.13727-10-mika.westerberg@linux.intel.com>
 References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,26 +12,29 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-There is no implementation for that anymore so drop the prototype.
+These macros are not used anywhere in the driver so drop them.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/intel_scu_ipc.h | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index d7bbebf4b729..b2dde96e0611 100644
---- a/arch/x86/include/asm/intel_scu_ipc.h
-+++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -53,9 +53,6 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
- 			      u32 *out, int outlen, u32 dptr, u32 sptr);
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 8db0644900a3..997fdac920c6 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -26,11 +26,7 @@
+ #include <asm/intel_scu_ipc.h>
  
--/* Update FW version */
--int intel_scu_ipc_fw_update(u8 *buffer, u32 length);
--
- extern struct blocking_notifier_head intel_scu_notifier;
+ /* IPC defines the following message types */
+-#define IPCMSG_WATCHDOG_TIMER 0xF8 /* Set Kernel Watchdog Threshold */
+-#define IPCMSG_BATTERY        0xEF /* Coulomb Counter Accumulator */
+-#define IPCMSG_FW_UPDATE      0xFE /* Firmware update */
+-#define IPCMSG_PCNTRL         0xFF /* Power controller unit read/write */
+-#define IPCMSG_FW_REVISION    0xF4 /* Get firmware revision */
++#define IPCMSG_PCNTRL         0xff /* Power controller unit read/write */
  
- static inline void intel_scu_notifier_add(struct notifier_block *nb)
+ /* Command id associated with message IPCMSG_PCNTRL */
+ #define IPC_CMD_PCNTRL_W      0 /* Register write */
 -- 
 2.24.0
