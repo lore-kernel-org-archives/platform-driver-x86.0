@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 09/37] platform/x86: intel_scu_ipc: Drop unused macros
-Date: Mon, 23 Dec 2019 17:16:48 +0300
-Message-ID: <20191223141716.13727-10-mika.westerberg@linux.intel.com>
+Subject: [PATCH 04/37] platform/x86: intel_scu_ipc: Remove Lincroft support
+Date: Mon, 23 Dec 2019 17:16:43 +0300
+Message-ID: <20191223141716.13727-5-mika.westerberg@linux.intel.com>
 References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,29 +12,47 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-These macros are not used anywhere in the driver so drop them.
+Moorestown support was removed years ago with by the commit 1a8359e411eb
+("x86/mid: Remove Intel Moorestown"). Lincroft is the CPU side chip of
+Moorestown and not supported anymore so remove the code from the driver.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 8db0644900a3..997fdac920c6 100644
+index a8be5bcb9832..6c44fe5e55b5 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -26,11 +26,7 @@
- #include <asm/intel_scu_ipc.h>
+@@ -58,7 +58,6 @@
+ #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
+ #define IPC_IOC	          0x100		/* IPC command register IOC bit */
  
- /* IPC defines the following message types */
--#define IPCMSG_WATCHDOG_TIMER 0xF8 /* Set Kernel Watchdog Threshold */
--#define IPCMSG_BATTERY        0xEF /* Coulomb Counter Accumulator */
--#define IPCMSG_FW_UPDATE      0xFE /* Firmware update */
--#define IPCMSG_PCNTRL         0xFF /* Power controller unit read/write */
--#define IPCMSG_FW_REVISION    0xF4 /* Get firmware revision */
-+#define IPCMSG_PCNTRL         0xff /* Power controller unit read/write */
+-#define PCI_DEVICE_ID_LINCROFT		0x082a
+ #define PCI_DEVICE_ID_PENWELL		0x080e
+ #define PCI_DEVICE_ID_CLOVERVIEW	0x08ea
+ #define PCI_DEVICE_ID_TANGIER		0x11a0
+@@ -70,12 +69,6 @@ struct intel_scu_ipc_pdata_t {
+ 	u8 irq_mode;
+ };
  
- /* Command id associated with message IPCMSG_PCNTRL */
- #define IPC_CMD_PCNTRL_W      0 /* Register write */
+-static const struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
+-	.i2c_base = 0xff12b000,
+-	.i2c_len = 0x10,
+-	.irq_mode = 0,
+-};
+-
+ /* Penwell and Cloverview */
+ static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
+ 	.i2c_base = 0xff12b000,
+@@ -677,7 +670,6 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ #define SCU_DEVICE(id, pdata)	{PCI_VDEVICE(INTEL, id), (kernel_ulong_t)&pdata}
+ 
+ static const struct pci_device_id pci_ids[] = {
+-	SCU_DEVICE(PCI_DEVICE_ID_LINCROFT,	intel_scu_ipc_lincroft_pdata),
+ 	SCU_DEVICE(PCI_DEVICE_ID_PENWELL,	intel_scu_ipc_penwell_pdata),
+ 	SCU_DEVICE(PCI_DEVICE_ID_CLOVERVIEW,	intel_scu_ipc_penwell_pdata),
+ 	SCU_DEVICE(PCI_DEVICE_ID_TANGIER,	intel_scu_ipc_tangier_pdata),
 -- 
 2.24.0
