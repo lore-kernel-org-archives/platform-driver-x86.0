@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 18/37] platform/x86: intel_pmc_ipc: Make intel_pmc_gcr_update() static
-Date: Mon, 23 Dec 2019 17:16:57 +0300
-Message-ID: <20191223141716.13727-19-mika.westerberg@linux.intel.com>
+Subject: [PATCH 37/37] MAINTAINERS: Update entry for Intel Broxton PMC driver
+Date: Mon, 23 Dec 2019 17:17:16 +0300
+Message-ID: <20191223141716.13727-38-mika.westerberg@linux.intel.com>
 References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,59 +12,48 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This function is not called outside of intel_pmc_ipc.c so we can make it
-static instead.
+The driver lives now under MFD so split the current entry into two parts
+and add me as co-maintainer of the Intel Broxton PMC driver. While there
+correct formatting of Zha Qipeng's email address.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/intel_pmc_ipc.h | 6 ------
- drivers/platform/x86/intel_pmc_ipc.c | 3 +--
- 2 files changed, 1 insertion(+), 8 deletions(-)
+ MAINTAINERS | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index 9e7adcdbe031..3b2e8b461520 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -40,7 +40,6 @@ int intel_pmc_s0ix_counter_read(u64 *data);
- int intel_pmc_gcr_read(u32 offset, u32 *data);
- int intel_pmc_gcr_read64(u32 offset, u64 *data);
- int intel_pmc_gcr_write(u32 offset, u32 data);
--int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ffa3371bc750..939a86db2f34 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8277,6 +8277,13 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/intel_atomisp2_pm.c
  
- #else
++INTEL BROXTON PMC DRIVER
++M:	Mika Westerberg <mika.westerberg@linux.intel.com>
++M:	Zha Qipeng <qipeng.zha@intel.com>
++S:	Maintained
++F:	drivers/mfd/intel_pmc_bxt.c
++F:	include/linux/mfd/intel_pmc_bxt.h
++
+ INTEL C600 SERIES SAS CONTROLLER DRIVER
+ M:	Intel SCU Linux support <intel-linux-scu@intel.com>
+ M:	Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+@@ -8485,13 +8492,11 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/intel_pmc_core*
  
-@@ -81,11 +80,6 @@ static inline int intel_pmc_gcr_write(u32 offset, u32 data)
- 	return -EINVAL;
- }
+-INTEL PMC/P-Unit IPC DRIVER
+-M:	Zha Qipeng<qipeng.zha@intel.com>
++INTEL P-Unit IPC DRIVER
++M:	Zha Qipeng <qipeng.zha@intel.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/intel_pmc_ipc.c
+ F:	drivers/platform/x86/intel_punit_ipc.c
+-F:	arch/x86/include/asm/intel_pmc_ipc.h
+ F:	arch/x86/include/asm/intel_punit_ipc.h
  
--static inline int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
--{
--	return -EINVAL;
--}
--
- #endif /*CONFIG_INTEL_PMC_IPC*/
- 
- #endif
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 5c1da2bb1435..9229c7a16536 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -309,7 +309,7 @@ EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
-  *
-  * Return:	negative value on error or 0 on success.
-  */
--int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
-+static int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
- {
- 	u32 new_val;
- 	int ret = 0;
-@@ -339,7 +339,6 @@ int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
- 	spin_unlock(&ipcdev.gcr_lock);
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(intel_pmc_gcr_update);
- 
- static int update_no_reboot_bit(void *priv, bool set)
- {
+ INTEL PMIC GPIO DRIVERS
 -- 
 2.24.0
