@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 17/37] platform/x86: intel_scu_ipcutil: Convert to use new SCU IPC API
-Date: Mon, 23 Dec 2019 17:16:56 +0300
-Message-ID: <20191223141716.13727-18-mika.westerberg@linux.intel.com>
+Subject: [PATCH 21/37] platform/x86: intel_pmc_ipc: Drop intel_pmc_gcr_read() and intel_pmc_gcr_write()
+Date: Mon, 23 Dec 2019 17:17:00 +0300
+Message-ID: <20191223141716.13727-22-mika.westerberg@linux.intel.com>
 References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,85 +12,126 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Convert the IPC util to use the new SCU IPC API where the SCU IPC
-instance is passed to the functions.
+These functions are not used anywhere so drop them completely.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipcutil.c | 43 +++++++++++++++++++++---
- 1 file changed, 39 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/intel_pmc_ipc.h | 12 ------
+ drivers/platform/x86/intel_pmc_ipc.c | 59 ----------------------------
+ 2 files changed, 71 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_scu_ipcutil.c b/drivers/platform/x86/intel_scu_ipcutil.c
-index 8afe6fa06d7b..b7c10c15a3d6 100644
---- a/drivers/platform/x86/intel_scu_ipcutil.c
-+++ b/drivers/platform/x86/intel_scu_ipcutil.c
-@@ -22,6 +22,9 @@
+diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+index 966ff2171ff9..e6da1ce26256 100644
+--- a/arch/x86/include/asm/intel_pmc_ipc.h
++++ b/arch/x86/include/asm/intel_pmc_ipc.h
+@@ -34,9 +34,7 @@
+ int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+ 		u32 *out, u32 outlen);
+ int intel_pmc_s0ix_counter_read(u64 *data);
+-int intel_pmc_gcr_read(u32 offset, u32 *data);
+ int intel_pmc_gcr_read64(u32 offset, u64 *data);
+-int intel_pmc_gcr_write(u32 offset, u32 data);
  
- static int major;
+ #else
  
-+struct intel_scu_ipc_dev *scu;
-+static DEFINE_MUTEX(scu_lock);
-+
- /* IOCTL commands */
- #define	INTE_SCU_IPC_REGISTER_READ	0
- #define INTE_SCU_IPC_REGISTER_WRITE	1
-@@ -52,12 +55,12 @@ static int scu_reg_access(u32 cmd, struct scu_ipc_data  *data)
+@@ -51,21 +49,11 @@ static inline int intel_pmc_s0ix_counter_read(u64 *data)
+ 	return -EINVAL;
+ }
  
- 	switch (cmd) {
- 	case INTE_SCU_IPC_REGISTER_READ:
--		return intel_scu_ipc_readv(data->addr, data->data, count);
-+		return intel_scu_ipc_dev_readv(scu, data->addr, data->data, count);
- 	case INTE_SCU_IPC_REGISTER_WRITE:
--		return intel_scu_ipc_writev(data->addr, data->data, count);
-+		return intel_scu_ipc_dev_writev(scu, data->addr, data->data, count);
- 	case INTE_SCU_IPC_REGISTER_UPDATE:
--		return intel_scu_ipc_update_register(data->addr[0],
--						    data->data[0], data->mask);
-+		return intel_scu_ipc_dev_update(scu, data->addr[0], data->data[0],
-+						data->mask);
- 	default:
- 		return -ENOTTY;
- 	}
-@@ -91,8 +94,40 @@ static long scu_ipc_ioctl(struct file *fp, unsigned int cmd,
+-static inline int intel_pmc_gcr_read(u32 offset, u32 *data)
+-{
+-	return -EINVAL;
+-}
+-
+ static inline int intel_pmc_gcr_read64(u32 offset, u64 *data)
+ {
+ 	return -EINVAL;
+ }
+ 
+-static inline int intel_pmc_gcr_write(u32 offset, u32 data)
+-{
+-	return -EINVAL;
+-}
+-
+ #endif /*CONFIG_INTEL_PMC_IPC*/
+ 
+ #endif
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 83f47df1c4a5..677ed470e14e 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -210,35 +210,6 @@ static inline int is_gcr_valid(u32 offset)
  	return 0;
  }
  
-+static int scu_ipc_open(struct inode *inode, struct file *file)
-+{
-+	int ret = 0;
-+
-+	/* Only single open at the time */
-+	mutex_lock(&scu_lock);
-+	if (scu) {
-+		ret = -EBUSY;
-+		goto unlock;
-+	}
-+
-+	scu = intel_scu_ipc_dev_get();
-+	if (!scu)
-+		ret = -ENODEV;
-+
-+unlock:
-+	mutex_unlock(&scu_lock);
-+	return ret;
-+}
-+
-+static int scu_ipc_release(struct inode *inode, struct file *file)
-+{
-+	mutex_lock(&scu_lock);
-+	intel_scu_ipc_dev_put(scu);
-+	scu = NULL;
-+	mutex_unlock(&scu_lock);
-+
-+	return 0;
-+}
-+
- static const struct file_operations scu_ipc_fops = {
- 	.unlocked_ioctl = scu_ipc_ioctl,
-+	.open = scu_ipc_open,
-+	.release = scu_ipc_release,
- };
+-/**
+- * intel_pmc_gcr_read() - Read a 32-bit PMC GCR register
+- * @offset:	offset of GCR register from GCR address base
+- * @data:	data pointer for storing the register output
+- *
+- * Reads the 32-bit PMC GCR register at given offset.
+- *
+- * Return:	negative value on error or 0 on success.
+- */
+-int intel_pmc_gcr_read(u32 offset, u32 *data)
+-{
+-	int ret;
+-
+-	spin_lock(&ipcdev.gcr_lock);
+-
+-	ret = is_gcr_valid(offset);
+-	if (ret < 0) {
+-		spin_unlock(&ipcdev.gcr_lock);
+-		return ret;
+-	}
+-
+-	*data = readl(ipcdev.gcr_mem_base + offset);
+-
+-	spin_unlock(&ipcdev.gcr_lock);
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(intel_pmc_gcr_read);
+-
+ /**
+  * intel_pmc_gcr_read64() - Read a 64-bit PMC GCR register
+  * @offset:	offset of GCR register from GCR address base
+@@ -268,36 +239,6 @@ int intel_pmc_gcr_read64(u32 offset, u64 *data)
+ }
+ EXPORT_SYMBOL_GPL(intel_pmc_gcr_read64);
  
- static int __init ipc_module_init(void)
+-/**
+- * intel_pmc_gcr_write() - Write PMC GCR register
+- * @offset:	offset of GCR register from GCR address base
+- * @data:	register update value
+- *
+- * Writes the PMC GCR register of given offset with given
+- * value.
+- *
+- * Return:	negative value on error or 0 on success.
+- */
+-int intel_pmc_gcr_write(u32 offset, u32 data)
+-{
+-	int ret;
+-
+-	spin_lock(&ipcdev.gcr_lock);
+-
+-	ret = is_gcr_valid(offset);
+-	if (ret < 0) {
+-		spin_unlock(&ipcdev.gcr_lock);
+-		return ret;
+-	}
+-
+-	writel(data, ipcdev.gcr_mem_base + offset);
+-
+-	spin_unlock(&ipcdev.gcr_lock);
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
+-
+ /**
+  * intel_pmc_gcr_update() - Update PMC GCR register bits
+  * @offset:	offset of GCR register from GCR address base
 -- 
 2.24.0
