@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 19/37] platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_simple_command() static
-Date: Mon, 23 Dec 2019 17:16:58 +0300
-Message-ID: <20191223141716.13727-20-mika.westerberg@linux.intel.com>
+Subject: [PATCH 20/37] platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_raw_cmd() static
+Date: Mon, 23 Dec 2019 17:16:59 +0300
+Message-ID: <20191223141716.13727-21-mika.westerberg@linux.intel.com>
 References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -17,54 +17,58 @@ static instead.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/intel_pmc_ipc.h | 6 ------
- drivers/platform/x86/intel_pmc_ipc.c | 3 +--
- 2 files changed, 1 insertion(+), 8 deletions(-)
+ arch/x86/include/asm/intel_pmc_ipc.h | 8 --------
+ drivers/platform/x86/intel_pmc_ipc.c | 5 ++---
+ 2 files changed, 2 insertions(+), 11 deletions(-)
 
 diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index 3b2e8b461520..b4f804877651 100644
+index b4f804877651..966ff2171ff9 100644
 --- a/arch/x86/include/asm/intel_pmc_ipc.h
 +++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -31,7 +31,6 @@
+@@ -31,8 +31,6 @@
  
  #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
  
--int intel_pmc_ipc_simple_command(int cmd, int sub);
- int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
- 		u32 *out, u32 outlen, u32 dptr, u32 sptr);
+-int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+-		u32 *out, u32 outlen, u32 dptr, u32 sptr);
  int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
-@@ -43,11 +42,6 @@ int intel_pmc_gcr_write(u32 offset, u32 data);
+ 		u32 *out, u32 outlen);
+ int intel_pmc_s0ix_counter_read(u64 *data);
+@@ -42,12 +40,6 @@ int intel_pmc_gcr_write(u32 offset, u32 data);
  
  #else
  
--static inline int intel_pmc_ipc_simple_command(int cmd, int sub)
+-static inline int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+-		u32 *out, u32 outlen, u32 dptr, u32 sptr)
 -{
 -	return -EINVAL;
 -}
 -
- static inline int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
- 		u32 *out, u32 outlen, u32 dptr, u32 sptr)
+ static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+ 		u32 *out, u32 outlen)
  {
 diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 9229c7a16536..53551f5474a7 100644
+index 53551f5474a7..83f47df1c4a5 100644
 --- a/drivers/platform/x86/intel_pmc_ipc.c
 +++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -404,7 +404,7 @@ static int intel_pmc_ipc_check_status(void)
+@@ -435,8 +435,8 @@ static int intel_pmc_ipc_simple_command(int cmd, int sub)
   *
   * Return:	an IPC error code or 0 on success.
   */
--int intel_pmc_ipc_simple_command(int cmd, int sub)
-+static int intel_pmc_ipc_simple_command(int cmd, int sub)
+-int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *out,
+-			  u32 outlen, u32 dptr, u32 sptr)
++static int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *out,
++				 u32 outlen, u32 dptr, u32 sptr)
  {
+ 	u32 wbuf[4] = { 0 };
  	int ret;
- 
-@@ -419,7 +419,6 @@ int intel_pmc_ipc_simple_command(int cmd, int sub)
+@@ -468,7 +468,6 @@ int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *out,
  
  	return ret;
  }
--EXPORT_SYMBOL_GPL(intel_pmc_ipc_simple_command);
+-EXPORT_SYMBOL_GPL(intel_pmc_ipc_raw_cmd);
  
  /**
-  * intel_pmc_ipc_raw_cmd() - IPC command with data and pointers
+  * intel_pmc_ipc_command() -  IPC command with input/output data
 -- 
 2.24.0
