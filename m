@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 31/37] x86/platform/intel-mid: Add empty stubs for intel_scu_devices_[create|destroy]()
-Date: Mon, 23 Dec 2019 17:17:10 +0300
-Message-ID: <20191223141716.13727-32-mika.westerberg@linux.intel.com>
+Subject: [PATCH 23/37] platform/x86: intel_pmc_ipc: Get rid of unnecessary includes
+Date: Mon, 23 Dec 2019 17:17:02 +0300
+Message-ID: <20191223141716.13727-24-mika.westerberg@linux.intel.com>
 References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,45 +12,41 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This allows to call the functions even when CONFIG_X86_INTEL_MID is not
-enabled.
+There is no point including headers that are not needed in the driver so
+drop them.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/intel-mid.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
-index 8e5af119dc2d..de58391bdee0 100644
---- a/arch/x86/include/asm/intel-mid.h
-+++ b/arch/x86/include/asm/intel-mid.h
-@@ -88,11 +88,17 @@ static inline bool intel_mid_has_msic(void)
- 	return (intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_PENWELL);
- }
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 83b106f66fa6..8527327d88c7 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -12,23 +12,13 @@
+  */
  
-+extern void intel_scu_devices_create(void);
-+extern void intel_scu_devices_destroy(void);
-+
- #else /* !CONFIG_X86_INTEL_MID */
+ #include <linux/acpi.h>
+-#include <linux/atomic.h>
+-#include <linux/bitops.h>
+ #include <linux/delay.h>
+-#include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/interrupt.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+-#include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/notifier.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
+-#include <linux/pm.h>
+-#include <linux/pm_qos.h>
+-#include <linux/sched.h>
+-#include <linux/spinlock.h>
+-#include <linux/suspend.h>
  
- #define intel_mid_identify_cpu()	0
- #define intel_mid_has_msic()		0
+ #include <asm/intel_pmc_ipc.h>
  
-+static inline void intel_scu_devices_create(void) { }
-+static inline void intel_scu_devices_destroy(void) { }
-+
- #endif /* !CONFIG_X86_INTEL_MID */
- 
- enum intel_mid_timer_options {
-@@ -115,9 +121,6 @@ extern enum intel_mid_timer_options intel_mid_timer_options;
- #define SFI_MTMR_MAX_NUM		8
- #define SFI_MRTC_MAX			8
- 
--extern void intel_scu_devices_create(void);
--extern void intel_scu_devices_destroy(void);
--
- /* VRTC timer */
- #define MRST_VRTC_MAP_SZ		1024
- /* #define MRST_VRTC_PGOFFSET		0xc00 */
 -- 
 2.24.0
