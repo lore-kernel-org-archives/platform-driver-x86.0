@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 04/37] platform/x86: intel_scu_ipc: Remove Lincroft support
-Date: Mon, 23 Dec 2019 17:16:43 +0300
-Message-ID: <20191223141716.13727-5-mika.westerberg@linux.intel.com>
+Subject: [PATCH 01/37] platform/x86: intel_mid_powerbtn: Take a copy of ddata
+Date: Mon, 23 Dec 2019 17:16:40 +0300
+Message-ID: <20191223141716.13727-2-mika.westerberg@linux.intel.com>
 References: <20191223141716.13727-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,47 +12,34 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Moorestown support was removed years ago with by the commit 1a8359e411eb
-("x86/mid: Remove Intel Moorestown"). Lincroft is the CPU side chip of
-Moorestown and not supported anymore so remove the code from the driver.
+The driver gets driver_data from memory that is marked as const (which
+is probably put to read-only memory) and it then modifies it. This
+likely causes some sort of fault to happen.
 
+Fix this by taking a copy of the structure.
+
+Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 8 --------
- 1 file changed, 8 deletions(-)
+ drivers/platform/x86/intel_mid_powerbtn.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index a8be5bcb9832..6c44fe5e55b5 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -58,7 +58,6 @@
- #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
- #define IPC_IOC	          0x100		/* IPC command register IOC bit */
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 292bace83f1e..6f436836fe50 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -146,9 +146,10 @@ static int mid_pb_probe(struct platform_device *pdev)
  
--#define PCI_DEVICE_ID_LINCROFT		0x082a
- #define PCI_DEVICE_ID_PENWELL		0x080e
- #define PCI_DEVICE_ID_CLOVERVIEW	0x08ea
- #define PCI_DEVICE_ID_TANGIER		0x11a0
-@@ -70,12 +69,6 @@ struct intel_scu_ipc_pdata_t {
- 	u8 irq_mode;
- };
+ 	input_set_capability(input, EV_KEY, KEY_POWER);
  
--static const struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
--	.i2c_base = 0xff12b000,
--	.i2c_len = 0x10,
--	.irq_mode = 0,
--};
--
- /* Penwell and Cloverview */
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
- 	.i2c_base = 0xff12b000,
-@@ -677,7 +670,6 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- #define SCU_DEVICE(id, pdata)	{PCI_VDEVICE(INTEL, id), (kernel_ulong_t)&pdata}
+-	ddata = (struct mid_pb_ddata *)id->driver_data;
++	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
++			     sizeof(*ddata), GFP_KERNEL);
+ 	if (!ddata)
+-		return -ENODATA;
++		return -ENOMEM;
  
- static const struct pci_device_id pci_ids[] = {
--	SCU_DEVICE(PCI_DEVICE_ID_LINCROFT,	intel_scu_ipc_lincroft_pdata),
- 	SCU_DEVICE(PCI_DEVICE_ID_PENWELL,	intel_scu_ipc_penwell_pdata),
- 	SCU_DEVICE(PCI_DEVICE_ID_CLOVERVIEW,	intel_scu_ipc_penwell_pdata),
- 	SCU_DEVICE(PCI_DEVICE_ID_TANGIER,	intel_scu_ipc_tangier_pdata),
+ 	ddata->dev = &pdev->dev;
+ 	ddata->irq = irq;
 -- 
 2.24.0
