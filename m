@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 10/84] x86/efi: Update e820 with reserved EFI boot services data to fix kexec breakage
-Date: Fri, 27 Dec 2019 12:42:38 -0500
-Message-ID: <20191227174352.6264-10-sashal@kernel.org>
-References: <20191227174352.6264-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 06/57] x86/efi: Update e820 with reserved EFI boot services data to fix kexec breakage
+Date: Fri, 27 Dec 2019 13:01:31 -0500
+Message-ID: <20191227180222.7076-6-sashal@kernel.org>
+References: <20191227180222.7076-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Dave Young <dyoung@redhat.com>, Michael Weiser <michael@weiser.dinsnail.net>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Borislav Petkov <bp@alien8.de>, "Eric W . Biederman" <ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, kexec@lists.infradead.org, linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org, x86@kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
@@ -66,10 +66,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 844d31cb8a0c..c9873c9168ad 100644
+index 5b513ccffde4..cadd7fd290fa 100644
 --- a/arch/x86/platform/efi/quirks.c
 +++ b/arch/x86/platform/efi/quirks.c
-@@ -259,10 +259,6 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+@@ -257,10 +257,6 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
  		return;
  	}
  
@@ -80,7 +80,7 @@ index 844d31cb8a0c..c9873c9168ad 100644
  	size += addr % EFI_PAGE_SIZE;
  	size = round_up(size, EFI_PAGE_SIZE);
  	addr = round_down(addr, EFI_PAGE_SIZE);
-@@ -292,6 +288,8 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+@@ -290,6 +286,8 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
  	early_memunmap(new, new_size);
  
  	efi_memmap_install(new_phys, num_entries);
