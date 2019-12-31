@@ -1,143 +1,230 @@
-From: Daniel Drake <drake@endlessm.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Fix keyboard brightness cannot be
- set to 0
-Date: Tue, 31 Dec 2019 14:53:37 +0800
-Message-ID: <CAD8Lp45Le=s=1Q9oi0JCJTPepNmX002hK7W6UwKztTq09QBUgw@mail.gmail.com>
-References: <20191230083044.11582-1-jian-hong@endlessm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [PATCH platform-next v1 1/9] platform/x86: mlx-platform: Add more definitions for system attributes
+Date: Tue, 31 Dec 2019 10:29:09 +0000
+Message-ID: <20191231102917.24181-2-vadimp@mellanox.com>
+References: <20191231102917.24181-1-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191230083044.11582-1-jian-hong@endlessm.com>
+In-Reply-To: <20191231102917.24181-1-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jian-Hong Pan <jian-hong@endlessm.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, nweibley@gmail.com
+To: andy@infradead.org, dvhart@infradead.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Dec 30, 2019 at 4:32 PM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
->
-> Some of ASUS laptops like UX431FL keyboard backlight cannot be set to
-> brightness 0. According to ASUS' information, the brightness should be
-> 0x80 ~ 0x83. This patch fixes it by following the logic.
->
-> Fixes: e9809c0b9670 ("asus-wmi: add keyboard backlight support")
+Add new attributes for "next-generation" type systems:
+- Reset cause indication, when system reset has been caused by the
+  platform reset request through CPLD, by AC power failure,
+  by software power off request through CPLD. by signal asserted by SOC
+  through ACPI register. It introduces more reset causes, which can
+  be monitored after the reboots.
+- Setting and removing system VPD (EEPROM) hardware write protection.
+  It allows to access VPD during production cycle and prevents VPD
+  corruption on system in field.
+- Voltage regulator devices configuration update status and version. It
+  allows to monitor configuration update status and current active
+  version for such sort of devices.
+- PCIe ASIC reset disable - when set ASIC will go down upon PCIe
+  root complex reset, otherwise ASIC will stay up during PCIe root
+  complex reset.
+- System configuration Ids to provide system static topology
+  identification, like system's static I2C topology, number and type of
+  FPGA devices within the system and so on.
 
-The spec says says bit 7 is Set light on, and bits 0~3 are level,
-similar to the comment being removed. But indeed it isn't entirely
-clear about how to turn it off (since what does Light on but level 0
-mean?).
+Add the existing attribute for "iio" bank selection for system type
+"msn21xx".
 
-This code goes back to 2011, so there's a risk of inversely affecting
-old models with this change.
+All the above attributes are exposed through "sysfs" by "mlxreg-io"
+driver.
 
-I checked our DSDT collection and the behaviour is quite inconsistent.
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+---
+ drivers/platform/x86/mlx-platform.c | 84 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
 
-On the UX431FLC that you fixed with this patch, we reach:
-
-        Method (SLKI, 1, NotSerialized)
-        {
-            Local0 = (Arg0 & 0x80)
-            If (Local0)
-            {
-                Local1 = (Arg0 & 0x7F)
-                If ((Local1 >= 0x04))
-                {
-                    Local1 = Zero
-                }
-
-                \_SB.PCI0.LPCB.H_EC.KBLL = Local1
-                KBLV = Local1
-            }
-
-            Return (Local0)
-        }
-
-Nothing will happen unless bit 0x80 is set. So that's why your patch
-fixes the problem in this case. But In 81 DSDTs examined this is the
-only model that exhibits this behaviour. Perhaps it is the very latest
-revision that will be rolled out from this point.
-
-Many other models have this:
-
-        Name (PWKB, Buffer (0x04)
-        {
-             0x00, 0x55, 0xAA, 0xFF                           // .U..
-        })
-        Method (SLKB, 1, NotSerialized)
-        {
-            KBLV = (Arg0 & 0x7F)
-            If ((Arg0 & 0x80))
-            {
-                Local0 = DerefOf (PWKB [KBLV])
-            }
-            Else
-            {
-                Local0 = Zero
-            }
-
-            ST9E (0x1F, 0xFF, Local0)
-            Return (One)
-        }
-
-for which your patch is also OK. You can follow it through and see
-that value 0x0 and 0x80 both result in the same single register write
-of value 0.
-
-But there are 30 models (e.g. UX331UN) that will see a behaviour
-change via this patch:
-
-        Method (SLKB, 1, NotSerialized)
-        {
-            KBLV = (Arg0 & 0x7F)
-            If ((Arg0 & 0x80))
-            {
-                Local0 = 0x0900
-                Local0 += 0xF0
-                WRAM (Local0, KBLV)
-                Local0 = DerefOf (PWKB [KBLV])
-            }
-            Else
-            {
-                Local0 = Zero
-            }
-
-            ST9E (0x1F, 0xFF, Local0)
-            Return (One)
-        }
-
-Here, writing 0x80 to turn off the keyboard LED will result in an
-additional WRAM(0x9f0, 0) call that was not there before. I think we
-should double check this detail.
-
-Let's see if we can borrow one of the affected models and double check
-this patch there before proceeding. I'll follow up internally.
-
-(I also checked eeepc, but it seems like they don't have a keyboard backlight)
-
-
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> ---
->  drivers/platform/x86/asus-wmi.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 821b08e01635..982f0cc8270c 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -512,13 +512,7 @@ static void kbd_led_update(struct asus_wmi *asus)
->  {
->         int ctrl_param = 0;
->
-> -       /*
-> -        * bits 0-2: level
-> -        * bit 7: light on/off
-> -        */
-> -       if (asus->kbd_led_wk > 0)
-> -               ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
-> -
-> +       ctrl_param = 0x80 | (asus->kbd_led_wk & 0x7F);
->         asus_wmi_set_devstate(ASUS_WMI_DEVID_KBD_BACKLIGHT, ctrl_param, NULL);
->  }
->
-> --
-> 2.20.1
->
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 8fe51e43f1bc..aed6ac18074e 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -35,6 +35,8 @@
+ #define MLXPLAT_CPLD_LPC_REG_LED4_OFFSET	0x23
+ #define MLXPLAT_CPLD_LPC_REG_LED5_OFFSET	0x24
+ #define MLXPLAT_CPLD_LPC_REG_FAN_DIRECTION	0x2a
++#define MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET	0x2b
++#define MLXPLAT_CPLD_LPC_REG_GP0_OFFSET		0x2e
+ #define MLXPLAT_CPLD_LPC_REG_GP1_OFFSET		0x30
+ #define MLXPLAT_CPLD_LPC_REG_WP1_OFFSET		0x31
+ #define MLXPLAT_CPLD_LPC_REG_GP2_OFFSET		0x32
+@@ -68,6 +70,7 @@
+ #define MLXPLAT_CPLD_LPC_REG_WD3_TMR_OFFSET	0xd1
+ #define MLXPLAT_CPLD_LPC_REG_WD3_TLEFT_OFFSET	0xd2
+ #define MLXPLAT_CPLD_LPC_REG_WD3_ACT_OFFSET	0xd3
++#define MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET	0xe2
+ #define MLXPLAT_CPLD_LPC_REG_PWM1_OFFSET	0xe3
+ #define MLXPLAT_CPLD_LPC_REG_TACHO1_OFFSET	0xe4
+ #define MLXPLAT_CPLD_LPC_REG_TACHO2_OFFSET	0xe5
+@@ -85,6 +88,8 @@
+ #define MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET	0xf6
+ #define MLXPLAT_CPLD_LPC_REG_FAN_DRW_CAP_OFFSET	0xf7
+ #define MLXPLAT_CPLD_LPC_REG_TACHO_SPEED_OFFSET	0xf8
++#define MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET	0xfb
++#define MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET	0xfc
+ #define MLXPLAT_CPLD_LPC_IO_RANGE		0x100
+ #define MLXPLAT_CPLD_LPC_I2C_CH1_OFF		0xdb
+ #define MLXPLAT_CPLD_LPC_I2C_CH2_OFF		0xda
+@@ -117,6 +122,7 @@
+ #define MLXPLAT_CPLD_FAN_NG_MASK	GENMASK(5, 0)
+ #define MLXPLAT_CPLD_LED_LO_NIBBLE_MASK	GENMASK(7, 4)
+ #define MLXPLAT_CPLD_LED_HI_NIBBLE_MASK	GENMASK(3, 0)
++#define MLXPLAT_CPLD_VOLTREG_UPD_MASK	GENMASK(5, 4)
+ 
+ /* Default I2C parent bus number */
+ #define MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR	1
+@@ -1157,6 +1163,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_msn21xx_regs_io_data[] = {
+ 		.mode = 0200,
+ 	},
+ 	{
++		.label = "select_iio",
++		.reg = MLXPLAT_CPLD_LPC_REG_GP2_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(6),
++		.mode = 0644,
++	},
++	{
+ 		.label = "asic_health",
+ 		.reg = MLXPLAT_CPLD_LPC_REG_ASIC_HEALTH_OFFSET,
+ 		.mask = MLXPLAT_CPLD_ASIC_MASK,
+@@ -1245,6 +1257,18 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
+ 		.mode = 0444,
+ 	},
+ 	{
++		.label = "reset_platform",
++		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(4),
++		.mode = 0444,
++	},
++	{
++		.label = "reset_soc",
++		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(5),
++		.mode = 0444,
++	},
++	{
+ 		.label = "reset_comex_wd",
+ 		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
+ 		.mask = GENMASK(7, 0) & ~BIT(6),
+@@ -1263,6 +1287,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
+ 		.mode = 0444,
+ 	},
+ 	{
++		.label = "reset_sw_pwr_off",
++		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(2),
++		.mode = 0444,
++	},
++	{
+ 		.label = "reset_comex_thermal",
+ 		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
+ 		.mask = GENMASK(7, 0) & ~BIT(3),
+@@ -1275,6 +1305,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
+ 		.mode = 0444,
+ 	},
+ 	{
++		.label = "reset_ac_pwr_fail",
++		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(6),
++		.mode = 0444,
++	},
++	{
+ 		.label = "psu1_on",
+ 		.reg = MLXPLAT_CPLD_LPC_REG_GP1_OFFSET,
+ 		.mask = GENMASK(7, 0) & ~BIT(0),
+@@ -1317,6 +1353,43 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
+ 		.bit = GENMASK(7, 0),
+ 		.mode = 0444,
+ 	},
++	{
++		.label = "voltreg_update_status",
++		.reg = MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET,
++		.mask = MLXPLAT_CPLD_VOLTREG_UPD_MASK,
++		.bit = 5,
++		.mode = 0444,
++	},
++	{
++		.label = "vpd_wp",
++		.reg = MLXPLAT_CPLD_LPC_REG_GP0_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(3),
++		.mode = 0644,
++	},
++	{
++		.label = "pcie_asic_reset_dis",
++		.reg = MLXPLAT_CPLD_LPC_REG_GP0_OFFSET,
++		.mask = GENMASK(7, 0) & ~BIT(4),
++		.mode = 0644,
++	},
++	{
++		.label = "config1",
++		.reg = MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "config2",
++		.reg = MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
++	{
++		.label = "ufm_version",
++		.reg = MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET,
++		.bit = GENMASK(7, 0),
++		.mode = 0444,
++	},
+ };
+ 
+ static struct mlxreg_core_platform_data mlxplat_default_ng_regs_io_data = {
+@@ -1575,6 +1648,7 @@ static bool mlxplat_mlxcpld_writeable_reg(struct device *dev, unsigned int reg)
+ 	case MLXPLAT_CPLD_LPC_REG_LED3_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_LED4_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_LED5_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_GP0_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_GP1_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_WP1_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_GP2_OFFSET:
+@@ -1621,6 +1695,8 @@ static bool mlxplat_mlxcpld_readable_reg(struct device *dev, unsigned int reg)
+ 	case MLXPLAT_CPLD_LPC_REG_LED4_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_LED5_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_FAN_DIRECTION:
++	case MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_GP0_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_GP1_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_WP1_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_GP2_OFFSET:
+@@ -1671,6 +1747,9 @@ static bool mlxplat_mlxcpld_readable_reg(struct device *dev, unsigned int reg)
+ 	case MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_FAN_DRW_CAP_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_TACHO_SPEED_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET:
+ 		return true;
+ 	}
+ 	return false;
+@@ -1692,6 +1771,8 @@ static bool mlxplat_mlxcpld_volatile_reg(struct device *dev, unsigned int reg)
+ 	case MLXPLAT_CPLD_LPC_REG_LED4_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_LED5_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_FAN_DIRECTION:
++	case MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_GP0_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_GP1_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_GP2_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET:
+@@ -1734,6 +1815,9 @@ static bool mlxplat_mlxcpld_volatile_reg(struct device *dev, unsigned int reg)
+ 	case MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_FAN_DRW_CAP_OFFSET:
+ 	case MLXPLAT_CPLD_LPC_REG_TACHO_SPEED_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET:
++	case MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET:
+ 		return true;
+ 	}
+ 	return false;
+-- 
+2.11.0
