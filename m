@@ -1,125 +1,56 @@
 From: Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH v10 05/10] test_firmware: add support for
- firmware_request_platform
-Date: Mon, 6 Jan 2020 21:33:43 +0000
-Message-ID: <20200106213343.GV11244@42.do-not-panic.com>
+Subject: Re: [PATCH v10 00/10] efi/firmware/platform-x86: Add EFI embedded fw
+ support
+Date: Mon, 6 Jan 2020 21:35:05 +0000
+Message-ID: <20200106213505.GW11244@42.do-not-panic.com>
 References: <20191210115117.303935-1-hdegoede@redhat.com>
- <20191210115117.303935-6-hdegoede@redhat.com>
+ <66f45932-756d-0bb0-d7a8-330d61785663@redhat.com>
+ <CAKv+Gu_X+UM95MJJMjT69upL9zN3H9BnUkv8s9TjcpevANbYEw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191210115117.303935-6-hdegoede@redhat.com>
+In-Reply-To: <CAKv+Gu_X+UM95MJJMjT69upL9zN3H9BnUkv8s9TjcpevANbYEw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Ingo Molnar <mingo@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, the arch/x86 maintainers <x86@kernel.org>, platform-driver-x86@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-input@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Dec 10, 2019 at 12:51:12PM +0100, Hans de Goede wrote:
-> Add support for testing firmware_request_platform through a new
-> trigger_request_platform trigger.
+On Fri, Jan 03, 2020 at 12:36:04PM +0100, Ard Biesheuvel wrote:
+> On Fri, 3 Jan 2020 at 12:27, Hans de Goede <hdegoede@redhat.com> wrote:
+> >
+> > Hi All,
+> >
+> > Since I send this out, efi-next has seen some changes causing the first
+> > 2 patches to no longer cleanly apply. So it looks like we need to
+> > merge this one bit at a time with immutable branches.
+> >
+> > Ard, the first 2 patches in this series should be merged through your
+> > efi tree. AFAIK everyone is happy with them in their current state
+> > so they are ready for merging. Can you create an immutable branch
+> > with these 2 patches and merge that into your efi-next branch?
+> >
+> > Note if you do the immutable branch on 5.5-rc1 + just these 2 patches,
+> > there will be a conflict when you merge this into efi-next, but it is
+> > trivial to resolve.
+> >
 > 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  lib/test_firmware.c | 68 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
+> I will need to defer to Ingo here, as he usually applies the EFI
+> changes piecemeal rather than merging my branches directly.
 > 
-> diff --git a/lib/test_firmware.c b/lib/test_firmware.c
-> index 251213c872b5..9af00cfc8979 100644
-> --- a/lib/test_firmware.c
-> +++ b/lib/test_firmware.c
-> @@ -24,6 +24,7 @@
->  #include <linux/delay.h>
->  #include <linux/kthread.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/efi_embedded_fw.h>
->  
->  #define TEST_FIRMWARE_NAME	"test-firmware.bin"
->  #define TEST_FIRMWARE_NUM_REQS	4
-> @@ -507,12 +508,76 @@ static ssize_t trigger_request_store(struct device *dev,
->  }
->  static DEVICE_ATTR_WO(trigger_request);
->  
-> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
-> +static ssize_t trigger_request_platform_store(struct device *dev,
-> +					      struct device_attribute *attr,
-> +					      const char *buf, size_t count)
-> +{
-> +	static const u8 test_data[] = {
-> +		0x55, 0xaa, 0x55, 0xaa, 0x01, 0x02, 0x03, 0x04,
-> +		0x55, 0xaa, 0x55, 0xaa, 0x05, 0x06, 0x07, 0x08,
-> +		0x55, 0xaa, 0x55, 0xaa, 0x10, 0x20, 0x30, 0x40,
-> +		0x55, 0xaa, 0x55, 0xaa, 0x50, 0x60, 0x70, 0x80
-> +	};
-> +	struct efi_embedded_fw fw;
-> +	int rc;
-> +	char *name;
-> +
-> +	name = kstrndup(buf, count, GFP_KERNEL);
-> +	if (!name)
-> +		return -ENOSPC;
-> +
-> +	pr_info("inserting test platform fw '%s'\n", name);
-> +	fw.name = name;
-> +	fw.data = (void *)test_data;
-> +	fw.length = sizeof(test_data);
-> +	list_add(&fw.list, &efi_embedded_fw_list);
-> +
-> +	pr_info("loading '%s'\n", name);
-> +
-> +	mutex_lock(&test_fw_mutex);
-> +	release_firmware(test_firmware);
-> +	test_firmware = NULL;
+> I'd be fine with just annotating the conflict in the pull request if
+> it is trivial, though, but it is really up to Luis and Ingo to align
+> here.
 
-Seems odd to have the above two lines here before the request, why not
-after as noted below.
+I don't have a tree, and firmware goes Greg's driver core tree so
+actually its up to Greg and Ingo on how this gets merged. But it seems
+you just have one issue to fix:
 
-> +	rc = firmware_request_platform(&test_firmware, name, dev);
-> +	if (rc) {
-> +		pr_info("load of '%s' failed: %d\n", name, rc);
-> +		goto out;
-> +	}
-> +	if (test_firmware->size != sizeof(test_data) ||
-> +	    memcmp(test_firmware->data, test_data, sizeof(test_data)) != 0) {
-> +		pr_info("firmware contents mismatch for '%s'\n", name);
-> +		rc = -EINVAL;
-> +		goto out;
-> +	}
-> +	pr_info("loaded: %zu\n", test_firmware->size);
-> +	rc = count;
+[PATCH v10 05/10] test_firmware: add support for firmware_request_platform
 
-Here.
+There is a few set of empty lines added and I had one comment on the
+release of the firmware.
 
-> +
-> +out:
-> +	mutex_unlock(&test_fw_mutex);
-> +
-> +	list_del(&fw.list);
-> +	kfree(name);
-> +
-> +	return rc;
-> +}
-> +static DEVICE_ATTR_WO(trigger_request_platform);
-> +#endif
-> +
->  static DECLARE_COMPLETION(async_fw_done);
->  
->  static void trigger_async_request_cb(const struct firmware *fw, void *context)
->  {
->  	test_firmware = fw;
->  	complete(&async_fw_done);
-> +
-> +
-> +
-> +
-> +
-> +
-> +
-> +
-> +
->  }
-
-Ummm, new empty lines without any code added... did you forget
-something?  Please address this.
+Other than this, I agree this seems ready to be merged.
 
   Luis
