@@ -1,44 +1,125 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 2/2] platform/x86: GPD pocket fan: Allow somewhat lower/higher temperature limits
-Date: Mon,  6 Jan 2020 15:42:19 +0100
-Message-ID: <20200106144219.525215-2-hdegoede@redhat.com>
-References: <20200106144219.525215-1-hdegoede@redhat.com>
+From: Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH v10 05/10] test_firmware: add support for
+ firmware_request_platform
+Date: Mon, 6 Jan 2020 21:33:43 +0000
+Message-ID: <20200106213343.GV11244@42.do-not-panic.com>
+References: <20191210115117.303935-1-hdegoede@redhat.com>
+ <20191210115117.303935-6-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200106144219.525215-1-hdegoede@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20191210115117.303935-6-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Anderson <jasona.594@gmail.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Allow the user to configure the fan to turn on / speed-up at lower
-thresholds then before (20 degrees Celcius as minimum instead of 40) and
-likewise also allow the user to delay the fan speeding-up till the
-temperature hits 90 degrees Celcius (was 70).
+On Tue, Dec 10, 2019 at 12:51:12PM +0100, Hans de Goede wrote:
+> Add support for testing firmware_request_platform through a new
+> trigger_request_platform trigger.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  lib/test_firmware.c | 68 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/lib/test_firmware.c b/lib/test_firmware.c
+> index 251213c872b5..9af00cfc8979 100644
+> --- a/lib/test_firmware.c
+> +++ b/lib/test_firmware.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/kthread.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/efi_embedded_fw.h>
+>  
+>  #define TEST_FIRMWARE_NAME	"test-firmware.bin"
+>  #define TEST_FIRMWARE_NUM_REQS	4
+> @@ -507,12 +508,76 @@ static ssize_t trigger_request_store(struct device *dev,
+>  }
+>  static DEVICE_ATTR_WO(trigger_request);
+>  
+> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+> +static ssize_t trigger_request_platform_store(struct device *dev,
+> +					      struct device_attribute *attr,
+> +					      const char *buf, size_t count)
+> +{
+> +	static const u8 test_data[] = {
+> +		0x55, 0xaa, 0x55, 0xaa, 0x01, 0x02, 0x03, 0x04,
+> +		0x55, 0xaa, 0x55, 0xaa, 0x05, 0x06, 0x07, 0x08,
+> +		0x55, 0xaa, 0x55, 0xaa, 0x10, 0x20, 0x30, 0x40,
+> +		0x55, 0xaa, 0x55, 0xaa, 0x50, 0x60, 0x70, 0x80
+> +	};
+> +	struct efi_embedded_fw fw;
+> +	int rc;
+> +	char *name;
+> +
+> +	name = kstrndup(buf, count, GFP_KERNEL);
+> +	if (!name)
+> +		return -ENOSPC;
+> +
+> +	pr_info("inserting test platform fw '%s'\n", name);
+> +	fw.name = name;
+> +	fw.data = (void *)test_data;
+> +	fw.length = sizeof(test_data);
+> +	list_add(&fw.list, &efi_embedded_fw_list);
+> +
+> +	pr_info("loading '%s'\n", name);
+> +
+> +	mutex_lock(&test_fw_mutex);
+> +	release_firmware(test_firmware);
+> +	test_firmware = NULL;
 
-Cc: Jason Anderson <jasona.594@gmail.com>
-Reported-by: Jason Anderson <jasona.594@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/gpd-pocket-fan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Seems odd to have the above two lines here before the request, why not
+after as noted below.
 
-diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86=
-/gpd-pocket-fan.c
-index 1e6a42f2ea8a..0ffcbf9bc18e 100644
---- a/drivers/platform/x86/gpd-pocket-fan.c
-+++ b/drivers/platform/x86/gpd-pocket-fan.c
-@@ -126,7 +126,7 @@ static int gpd_pocket_fan_probe(struct platform_devic=
-e *pdev)
- 	int i;
-=20
- 	for (i =3D 0; i < ARRAY_SIZE(temp_limits); i++) {
--		if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
-+		if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
- 			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and=
- 70000)\n",
- 				temp_limits[i]);
- 			temp_limits[0] =3D TEMP_LIMIT0_DEFAULT;
---=20
-2.24.1
+> +	rc = firmware_request_platform(&test_firmware, name, dev);
+> +	if (rc) {
+> +		pr_info("load of '%s' failed: %d\n", name, rc);
+> +		goto out;
+> +	}
+> +	if (test_firmware->size != sizeof(test_data) ||
+> +	    memcmp(test_firmware->data, test_data, sizeof(test_data)) != 0) {
+> +		pr_info("firmware contents mismatch for '%s'\n", name);
+> +		rc = -EINVAL;
+> +		goto out;
+> +	}
+> +	pr_info("loaded: %zu\n", test_firmware->size);
+> +	rc = count;
+
+Here.
+
+> +
+> +out:
+> +	mutex_unlock(&test_fw_mutex);
+> +
+> +	list_del(&fw.list);
+> +	kfree(name);
+> +
+> +	return rc;
+> +}
+> +static DEVICE_ATTR_WO(trigger_request_platform);
+> +#endif
+> +
+>  static DECLARE_COMPLETION(async_fw_done);
+>  
+>  static void trigger_async_request_cb(const struct firmware *fw, void *context)
+>  {
+>  	test_firmware = fw;
+>  	complete(&async_fw_done);
+> +
+> +
+> +
+> +
+> +
+> +
+> +
+> +
+> +
+>  }
+
+Ummm, new empty lines without any code added... did you forget
+something?  Please address this.
+
+  Luis
