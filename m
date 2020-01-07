@@ -1,56 +1,128 @@
-From: Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH v10 00/10] efi/firmware/platform-x86: Add EFI embedded fw
- support
-Date: Mon, 6 Jan 2020 21:35:05 +0000
-Message-ID: <20200106213505.GW11244@42.do-not-panic.com>
-References: <20191210115117.303935-1-hdegoede@redhat.com>
- <66f45932-756d-0bb0-d7a8-330d61785663@redhat.com>
- <CAKv+Gu_X+UM95MJJMjT69upL9zN3H9BnUkv8s9TjcpevANbYEw@mail.gmail.com>
+From: Logan Gunthorpe <logang@deltatee.com>
+Subject: [PATCH v2 6/8] s390/mm: Thread pgprot_t through vmem_add_mapping()
+Date: Tue,  7 Jan 2020 13:59:57 -0700
+Message-ID: <20200107205959.7575-7-logang@deltatee.com>
+References: <20200107205959.7575-1-logang@deltatee.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_X+UM95MJJMjT69upL9zN3H9BnUkv8s9TjcpevANbYEw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Ingo Molnar <mingo@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, the arch/x86 maintainers <x86@kernel.org>, platform-driver-x86@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-input@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20200107205959.7575-1-logang@deltatee.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Eric Badger <ebadger@gigaio.com>, Vasily Gorbik <gor@linux.ibm.com>, Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Logan Gunthorpe <logang@deltatee.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jan 03, 2020 at 12:36:04PM +0100, Ard Biesheuvel wrote:
-> On Fri, 3 Jan 2020 at 12:27, Hans de Goede <hdegoede@redhat.com> wrote:
-> >
-> > Hi All,
-> >
-> > Since I send this out, efi-next has seen some changes causing the first
-> > 2 patches to no longer cleanly apply. So it looks like we need to
-> > merge this one bit at a time with immutable branches.
-> >
-> > Ard, the first 2 patches in this series should be merged through your
-> > efi tree. AFAIK everyone is happy with them in their current state
-> > so they are ready for merging. Can you create an immutable branch
-> > with these 2 patches and merge that into your efi-next branch?
-> >
-> > Note if you do the immutable branch on 5.5-rc1 + just these 2 patches,
-> > there will be a conflict when you merge this into efi-next, but it is
-> > trivial to resolve.
-> >
-> 
-> I will need to defer to Ingo here, as he usually applies the EFI
-> changes piecemeal rather than merging my branches directly.
-> 
-> I'd be fine with just annotating the conflict in the pull request if
-> it is trivial, though, but it is really up to Luis and Ingo to align
-> here.
+In prepartion to support a pgprot_t argument for arch_add_memory().
 
-I don't have a tree, and firmware goes Greg's driver core tree so
-actually its up to Greg and Ingo on how this gets merged. But it seems
-you just have one issue to fix:
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ arch/s390/include/asm/pgtable.h |  3 ++-
+ arch/s390/mm/extmem.c           |  3 ++-
+ arch/s390/mm/init.c             |  2 +-
+ arch/s390/mm/vmem.c             | 10 +++++-----
+ 4 files changed, 10 insertions(+), 8 deletions(-)
 
-[PATCH v10 05/10] test_firmware: add support for firmware_request_platform
-
-There is a few set of empty lines added and I had one comment on the
-release of the firmware.
-
-Other than this, I agree this seems ready to be merged.
-
-  Luis
+diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
+index 7b03037a8475..e667a1a96879 100644
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -1640,7 +1640,8 @@ static inline swp_entry_t __swp_entry(unsigned long type, unsigned long offset)
+ 
+ #define kern_addr_valid(addr)   (1)
+ 
+-extern int vmem_add_mapping(unsigned long start, unsigned long size);
++extern int vmem_add_mapping(unsigned long start, unsigned long size,
++			    pgprot_t prot);
+ extern int vmem_remove_mapping(unsigned long start, unsigned long size);
+ extern int s390_enable_sie(void);
+ extern int s390_enable_skey(void);
+diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
+index fd0dae9d10f4..6cf7029a7b35 100644
+--- a/arch/s390/mm/extmem.c
++++ b/arch/s390/mm/extmem.c
+@@ -313,7 +313,8 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
+ 		goto out_free;
+ 	}
+ 
+-	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
++	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1,
++			      PAGE_KERNEL);
+ 
+ 	if (rc)
+ 		goto out_free;
+diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+index a0c88c1c9ad0..ef19522ddad2 100644
+--- a/arch/s390/mm/init.c
++++ b/arch/s390/mm/init.c
+@@ -277,7 +277,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 	if (WARN_ON_ONCE(modifiers->altmap))
+ 		return -EINVAL;
+ 
+-	rc = vmem_add_mapping(start, size);
++	rc = vmem_add_mapping(start, size, PAGE_KERNEL);
+ 	if (rc)
+ 		return rc;
+ 
+diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
+index b403fa14847d..8a5e95f184a2 100644
+--- a/arch/s390/mm/vmem.c
++++ b/arch/s390/mm/vmem.c
+@@ -66,7 +66,7 @@ pte_t __ref *vmem_pte_alloc(void)
+ /*
+  * Add a physical memory range to the 1:1 mapping.
+  */
+-static int vmem_add_mem(unsigned long start, unsigned long size)
++static int vmem_add_mem(unsigned long start, unsigned long size, pgprot_t prot)
+ {
+ 	unsigned long pgt_prot, sgt_prot, r3_prot;
+ 	unsigned long pages4k, pages1m, pages2g;
+@@ -79,7 +79,7 @@ static int vmem_add_mem(unsigned long start, unsigned long size)
+ 	pte_t *pt_dir;
+ 	int ret = -ENOMEM;
+ 
+-	pgt_prot = pgprot_val(PAGE_KERNEL);
++	pgt_prot = pgprot_val(prot);
+ 	sgt_prot = pgprot_val(SEGMENT_KERNEL);
+ 	r3_prot = pgprot_val(REGION3_KERNEL);
+ 	if (!MACHINE_HAS_NX) {
+@@ -362,7 +362,7 @@ int vmem_remove_mapping(unsigned long start, unsigned long size)
+ 	return ret;
+ }
+ 
+-int vmem_add_mapping(unsigned long start, unsigned long size)
++int vmem_add_mapping(unsigned long start, unsigned long size, pgprot_t prot)
+ {
+ 	struct memory_segment *seg;
+ 	int ret;
+@@ -379,7 +379,7 @@ int vmem_add_mapping(unsigned long start, unsigned long size)
+ 	if (ret)
+ 		goto out_free;
+ 
+-	ret = vmem_add_mem(start, size);
++	ret = vmem_add_mem(start, size, prot);
+ 	if (ret)
+ 		goto out_remove;
+ 	goto out;
+@@ -403,7 +403,7 @@ void __init vmem_map_init(void)
+ 	struct memblock_region *reg;
+ 
+ 	for_each_memblock(memory, reg)
+-		vmem_add_mem(reg->base, reg->size);
++		vmem_add_mem(reg->base, reg->size, PAGE_KERNEL);
+ 	__set_memory((unsigned long)_stext,
+ 		     (unsigned long)(_etext - _stext) >> PAGE_SHIFT,
+ 		     SET_MEMORY_RO | SET_MEMORY_X);
+-- 
+2.20.1
