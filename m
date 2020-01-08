@@ -1,108 +1,379 @@
-From: Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v2 6/8] s390/mm: Thread pgprot_t through
- vmem_add_mapping()
-Date: Wed, 8 Jan 2020 10:20:00 -0700
-Message-ID: <9226e0e4-832b-d873-f433-f29a7853f11e@deltatee.com>
-References: <20200107205959.7575-1-logang@deltatee.com>
- <20200107205959.7575-7-logang@deltatee.com>
- <a5501f2a-ff8d-cea2-1540-1a70ea6bc2d2@redhat.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 12/36] platform/x86: intel_scu_ipc: Split out SCU IPC
+ functionality from the SCU driver
+Date: Wed, 8 Jan 2020 19:22:17 +0200
+Message-ID: <20200108172217.GU32742@smile.fi.intel.com>
+References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-13-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a5501f2a-ff8d-cea2-1540-1a70ea6bc2d2@redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20200108114201.27908-13-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Michal Hocko <mhocko@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Eric Badger <ebadger@gigaio.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-
-
-On 2020-01-08 5:43 a.m., David Hildenbrand wrote:
-> On 07.01.20 21:59, Logan Gunthorpe wrote:
->> In prepartion to support a pgprot_t argument for arch_add_memory().
->>
->> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
->> Cc: Vasily Gorbik <gor@linux.ibm.com>
->> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->> ---
->>  arch/s390/include/asm/pgtable.h |  3 ++-
->>  arch/s390/mm/extmem.c           |  3 ++-
->>  arch/s390/mm/init.c             |  2 +-
->>  arch/s390/mm/vmem.c             | 10 +++++-----
->>  4 files changed, 10 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
->> index 7b03037a8475..e667a1a96879 100644
->> --- a/arch/s390/include/asm/pgtable.h
->> +++ b/arch/s390/include/asm/pgtable.h
->> @@ -1640,7 +1640,8 @@ static inline swp_entry_t __swp_entry(unsigned long type, unsigned long offset)
->>  
->>  #define kern_addr_valid(addr)   (1)
->>  
->> -extern int vmem_add_mapping(unsigned long start, unsigned long size);
->> +extern int vmem_add_mapping(unsigned long start, unsigned long size,
->> +			    pgprot_t prot);
->>  extern int vmem_remove_mapping(unsigned long start, unsigned long size);
->>  extern int s390_enable_sie(void);
->>  extern int s390_enable_skey(void);
->> diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
->> index fd0dae9d10f4..6cf7029a7b35 100644
->> --- a/arch/s390/mm/extmem.c
->> +++ b/arch/s390/mm/extmem.c
->> @@ -313,7 +313,8 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
->>  		goto out_free;
->>  	}
->>  
->> -	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
->> +	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1,
->> +			      PAGE_KERNEL);
->>  
->>  	if (rc)
->>  		goto out_free;
->> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
->> index a0c88c1c9ad0..ef19522ddad2 100644
->> --- a/arch/s390/mm/init.c
->> +++ b/arch/s390/mm/init.c
->> @@ -277,7 +277,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
->>  	if (WARN_ON_ONCE(modifiers->altmap))
->>  		return -EINVAL;
->>  
->> -	rc = vmem_add_mapping(start, size);
->> +	rc = vmem_add_mapping(start, size, PAGE_KERNEL);
->>  	if (rc)
->>  		return rc;
->>  
->> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
->> index b403fa14847d..8a5e95f184a2 100644
->> --- a/arch/s390/mm/vmem.c
->> +++ b/arch/s390/mm/vmem.c
->> @@ -66,7 +66,7 @@ pte_t __ref *vmem_pte_alloc(void)
->>  /*
->>   * Add a physical memory range to the 1:1 mapping.
->>   */
->> -static int vmem_add_mem(unsigned long start, unsigned long size)
->> +static int vmem_add_mem(unsigned long start, unsigned long size, pgprot_t prot)
->>  {
->>  	unsigned long pgt_prot, sgt_prot, r3_prot;
->>  	unsigned long pages4k, pages1m, pages2g;
->> @@ -79,7 +79,7 @@ static int vmem_add_mem(unsigned long start, unsigned long size)
->>  	pte_t *pt_dir;
->>  	int ret = -ENOMEM;
->>  
->> -	pgt_prot = pgprot_val(PAGE_KERNEL);
->> +	pgt_prot = pgprot_val(prot);
->>  	sgt_prot = pgprot_val(SEGMENT_KERNEL);
->>  	r3_prot = pgprot_val(REGION3_KERNEL);
+On Wed, Jan 08, 2020 at 02:41:37PM +0300, Mika Westerberg wrote:
+> The SCU IPC functionality is usable outside of Intel MID devices. For
+> example modern Intel CPUs include the same thing but now it is called
+> PMC (Power Management Controller) instead of SCU. To make the IPC
+> available for those split the driver into library part (intel_scu_ipc.c)
+> and the SCU PCI driver part (intel_scu_pcidrv.c) which then calls the
+> former before it goes and creates rest of the SCU devices.
 > 
-> So, if we map as huge/gigantic pages, the protection would be discarded?
-> That looks wrong.
+> We also split the Kconfig symbols so that INTEL_SCU_IPC enables the SCU
+> IPC library and INTEL_SCU_PCI the SCU driver and convert the users
+> accordingly. While there remove default y from the INTEL_SCU_PCI symbol
+> as it is already selected by X86_INTEL_MID.
+
+After addressing at least Kconfig related comment (the rest is up to you)
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
 > 
-> s390x does not support ZONE_DEVICE yet. Maybe simply bail out for s390x
-> as you do for sh to make your life easier?
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  arch/x86/Kconfig                        |  2 +-
+>  arch/x86/include/asm/intel_scu_ipc.h    | 15 +++++
+>  drivers/mfd/Kconfig                     |  4 +-
+>  drivers/platform/x86/Kconfig            | 26 ++++++---
+>  drivers/platform/x86/Makefile           |  1 +
+>  drivers/platform/x86/intel_scu_ipc.c    | 77 +++++++++----------------
+>  drivers/platform/x86/intel_scu_pcidrv.c | 61 ++++++++++++++++++++
+>  7 files changed, 125 insertions(+), 61 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel_scu_pcidrv.c
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 5e8949953660..aca17d1583c4 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -594,7 +594,7 @@ config X86_INTEL_MID
+>  	select I2C
+>  	select DW_APB_TIMER
+>  	select APB_TIMER
+> -	select INTEL_SCU_IPC
+> +	select INTEL_SCU_PCI
+>  	select MFD_INTEL_MSIC
+>  	---help---
+>  	  Select to build a kernel capable of supporting Intel MID (Mobile
+> diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
+> index 2a1442ba6e78..405c47bf0965 100644
+> --- a/arch/x86/include/asm/intel_scu_ipc.h
+> +++ b/arch/x86/include/asm/intel_scu_ipc.h
+> @@ -19,6 +19,21 @@
+>  	#define IPC_CMD_VRTC_SETTIME      1 /* Set time */
+>  	#define IPC_CMD_VRTC_SETALARM     2 /* Set alarm */
+>  
+> +struct device;
+> +
+> +/**
+> + * struct intel_scu_ipc_pdata - Platform data for SCU IPC
+> + * @ipc_regs: IPC regs MMIO address
+> + * @irq: The IRQ number used for SCU (optional)
+> + */
+> +struct intel_scu_ipc_pdata {
+> +	void __iomem *ipc_regs;
+> +	int irq;
+> +};
+> +
 
-Yeah, ok, makes sense to me; I'll change it for v3.
+> +int intel_scu_ipc_probe(struct device *dev,
+> +			const struct intel_scu_ipc_pdata *pdata);
 
-Logan
+Perhaps one line?
+
+> +
+>  /* Read single register */
+>  int intel_scu_ipc_ioread8(u16 addr, u8 *data);
+>  
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 420900852166..59515142438e 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -593,7 +593,7 @@ config INTEL_SOC_PMIC_MRFLD
+>  	tristate "Support for Intel Merrifield Basin Cove PMIC"
+>  	depends on GPIOLIB
+>  	depends on ACPI
+> -	depends on INTEL_SCU_IPC
+> +	depends on INTEL_SCU
+>  	select MFD_CORE
+>  	select REGMAP_IRQ
+>  	help
+> @@ -625,7 +625,7 @@ config MFD_INTEL_LPSS_PCI
+>  
+>  config MFD_INTEL_MSIC
+>  	bool "Intel MSIC"
+> -	depends on INTEL_SCU_IPC
+> +	depends on INTEL_SCU
+>  	select MFD_CORE
+>  	help
+>  	  Select this option to enable access to Intel MSIC (Avatele
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index dd4326736d11..e9ba81fc1770 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -986,25 +986,33 @@ config INTEL_VBTN
+>  	  be called intel_vbtn.
+>  
+>  config INTEL_SCU_IPC
+> -	bool "Intel SCU IPC Support"
+> +	bool
+> +
+> +config INTEL_SCU
+> +	bool
+> +	select INTEL_SCU_IPC
+> +
+> +config INTEL_SCU_PCI
+> +	bool "Intel SCU PCI driver"
+>  	depends on X86_INTEL_MID
+> -	default y
+> -	---help---
+> -	  IPC is used to bridge the communications between kernel and SCU on
+> -	  some embedded Intel x86 platforms. This is not needed for PC-type
+> -	  machines.
+> +	select INTEL_SCU
+> +	help
+
+> +	  SCU is used to bridge the communications between kernel and
+
+I guess you meant
+	SCU -> This driver
+here or alike, otherwise it sounds awkward.
+
+> +	  SCU on some embedded Intel x86 platforms. It also creates
+> +	  devices that are connected to the SoC through the SCU. This is
+> +	  not needed for PC-type machines.
+>  
+>  config INTEL_SCU_IPC_UTIL
+>  	tristate "Intel SCU IPC utility driver"
+> -	depends on INTEL_SCU_IPC
+> -	---help---
+> +	depends on INTEL_SCU
+> +	help
+>  	  The IPC Util driver provides an interface with the SCU enabling
+>  	  low level access for debug work and updating the firmware. Say
+>  	  N unless you will be doing this on an Intel MID platform.
+>  
+>  config INTEL_MID_POWER_BUTTON
+>  	tristate "power button driver for Intel MID platforms"
+> -	depends on INTEL_SCU_IPC && INPUT
+> +	depends on INTEL_SCU && INPUT
+>  	help
+>  	  This driver handles the power button on the Intel MID platforms.
+>  
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 42d85a00be4e..c7a42feaa521 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -68,6 +68,7 @@ intel_cht_int33fe-objs		:= intel_cht_int33fe_common.o \
+>  obj-$(CONFIG_INTEL_INT0002_VGPIO) += intel_int0002_vgpio.o
+>  obj-$(CONFIG_INTEL_HID_EVENT)	+= intel-hid.o
+>  obj-$(CONFIG_INTEL_VBTN)	+= intel-vbtn.o
+> +obj-$(CONFIG_INTEL_SCU_PCI)	+= intel_scu_pcidrv.o
+>  obj-$(CONFIG_INTEL_SCU_IPC)	+= intel_scu_ipc.o
+>  obj-$(CONFIG_INTEL_SCU_IPC_UTIL) += intel_scu_ipcutil.o
+>  obj-$(CONFIG_INTEL_MFLD_THERMAL) += intel_mid_thermal.o
+> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+> index 93a810fa6c8a..e3f658f1b40a 100644
+> --- a/drivers/platform/x86/intel_scu_ipc.c
+> +++ b/drivers/platform/x86/intel_scu_ipc.c
+> @@ -18,11 +18,8 @@
+>  #include <linux/errno.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+> -#include <linux/pci.h>
+> -#include <linux/pm.h>
+> -#include <linux/sfi.h>
+> +#include <linux/io.h>
+>  
+> -#include <asm/intel-mid.h>
+>  #include <asm/intel_scu_ipc.h>
+>  
+>  /* IPC defines the following message types */
+> @@ -58,7 +55,7 @@ struct intel_scu_ipc_dev {
+>  	struct device *dev;
+>  	void __iomem *ipc_base;
+>  	struct completion cmd_complete;
+> -	u8 irq_mode;
+> +	int irq;
+>  };
+>  
+>  static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+> @@ -166,7 +163,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
+>  
+>  static int intel_scu_ipc_check_status(struct intel_scu_ipc_dev *scu)
+>  {
+> -	return scu->irq_mode ? ipc_wait_for_interrupt(scu) : busy_loop(scu);
+> +	return scu->irq > 0 ? ipc_wait_for_interrupt(scu) : busy_loop(scu);
+>  }
+>  
+>  /* Read/Write power control(PMIC in Langwell, MSIC in PenWell) registers */
+> @@ -402,60 +399,42 @@ static irqreturn_t ioc(int irq, void *dev_id)
+>  }
+>  
+>  /**
+> - *	ipc_probe	-	probe an Intel SCU IPC
+> - *	@pdev: the PCI device matching
+> - *	@id: entry in the match table
+> + * intel_scu_ipc_probe() - Initializes SCU IPC mechanism
+> + * @dev: SCU device
+> + * @pdata: Platform specific data
+>   *
+> - *	Enable and install an intel SCU IPC. This appears in the PCI space
+> - *	but uses some hard coded addresses as well.
+> + * Call this function to initialize SCU IPC mechanism. It is removed
+> + * automatically when the calling driver is unbound from @dev.
+>   */
+> -static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+
+> +int intel_scu_ipc_probe(struct device *dev,
+> +			const struct intel_scu_ipc_pdata *pdata)
+
+Perhaps one line?
+
+>  {
+>  	int err;
+>  	struct intel_scu_ipc_dev *scu = &ipcdev;
+>  
+> -	if (scu->dev)		/* We support only one SCU */
+> +	mutex_lock(&ipclock);
+> +	/* We support only one IPC */
+> +	if (scu->dev) {
+> +		mutex_unlock(&ipclock);
+>  		return -EBUSY;
+> +	}
+>  
+> -	err = pcim_enable_device(pdev);
+> -	if (err)
+> -		return err;
+> -
+> -	err = pcim_iomap_regions(pdev, 1 << 0, pci_name(pdev));
+> -	if (err)
+> -		return err;
+> -
+> +	scu->ipc_base = pdata->ipc_regs;
+> +	scu->irq = pdata->irq;
+>  	init_completion(&scu->cmd_complete);
+>  
+> -	scu->ipc_base = pcim_iomap_table(pdev)[0];
+> -
+> -	err = devm_request_irq(&pdev->dev, pdev->irq, ioc, 0, "intel_scu_ipc",
+> -			       scu);
+> -	if (err)
+> -		return err;
+> +	if (scu->irq > 0) {
+
+> +		err = devm_request_irq(dev, scu->irq, ioc, 0, "intel_scu_ipc",
+> +				       scu);
+
+One line?
+
+> +		if (err)
+> +			goto unlock;
+> +	}
+>  
+>  	/* Assign device at last */
+> -	scu->dev = &pdev->dev;
+> -
+> -	intel_scu_devices_create();
+> +	scu->dev = dev;
+>  
+> -	pci_set_drvdata(pdev, scu);
+> -	return 0;
+> +unlock:
+> +	mutex_unlock(&ipclock);
+> +	return err;
+>  }
+> -
+> -static const struct pci_device_id pci_ids[] = {
+> -	{ PCI_VDEVICE(INTEL, 0x080e) },
+> -	{ PCI_VDEVICE(INTEL, 0x08ea) },
+> -	{ PCI_VDEVICE(INTEL, 0x11a0) },
+> -	{ }
+> -};
+> -
+> -static struct pci_driver ipc_driver = {
+> -	.driver = {
+> -		.suppress_bind_attrs = true,
+> -	},
+> -	.name = "intel_scu_ipc",
+> -	.id_table = pci_ids,
+> -	.probe = ipc_probe,
+> -};
+> -builtin_pci_driver(ipc_driver);
+> +EXPORT_SYMBOL_GPL(intel_scu_ipc_probe);
+> diff --git a/drivers/platform/x86/intel_scu_pcidrv.c b/drivers/platform/x86/intel_scu_pcidrv.c
+> new file mode 100644
+> index 000000000000..47dd4d85bf2a
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_scu_pcidrv.c
+> @@ -0,0 +1,61 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCI driver for the Intel SCU.
+> + *
+> + * Copyright (C) 2008-2010, 2015, 2020 Intel Corporation
+> + * Authors: Sreedhara DS (sreedhara.ds@intel.com)
+> + *	    Mika Westerberg <mika.westerberg@linux.intel.com>
+> + */
+> +
+> +#include <linux/errno.h>
+> +#include <linux/init.h>
+> +#include <linux/pci.h>
+> +
+> +#include <asm/intel-mid.h>
+> +#include <asm/intel_scu_ipc.h>
+> +
+> +static int intel_scu_pci_probe(struct pci_dev *pdev,
+> +			       const struct pci_device_id *id)
+> +{
+> +	struct intel_scu_ipc_pdata *pdata;
+> +	int ret;
+> +
+> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return -ENOMEM;
+> +
+> +	ret = pcim_enable_device(pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = pcim_iomap_regions(pdev, 1 << 0, pci_name(pdev));
+> +	if (ret)
+> +		return ret;
+> +
+> +	pdata->ipc_regs = pcim_iomap_table(pdev)[0];
+> +	pdata->irq = pdev->irq;
+> +
+> +	ret = intel_scu_ipc_probe(&pdev->dev, pdata);
+> +	if (ret)
+> +		return ret;
+> +
+> +	intel_scu_devices_create();
+> +	return 0;
+> +}
+> +
+> +static const struct pci_device_id pci_ids[] = {
+> +	{ PCI_VDEVICE(INTEL, 0x080e) },
+> +	{ PCI_VDEVICE(INTEL, 0x08ea) },
+> +	{ PCI_VDEVICE(INTEL, 0x11a0) },
+> +	{}
+> +};
+> +
+> +static struct pci_driver intel_scu_pci_driver = {
+> +	.driver = {
+> +		.suppress_bind_attrs = true,
+> +	},
+> +	.name = "intel_scu",
+> +	.id_table = pci_ids,
+> +	.probe = intel_scu_pci_probe,
+> +};
+> +builtin_pci_driver(intel_scu_pci_driver);
+> -- 
+> 2.24.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
