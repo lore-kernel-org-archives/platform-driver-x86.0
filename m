@@ -1,73 +1,64 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 28/36] mfd: intel_soc_pmic_mrfld: Convert to use new
- SCU IPC API
-Date: Wed, 8 Jan 2020 19:35:40 +0200
-Message-ID: <20200108173540.GA32742@smile.fi.intel.com>
+Subject: Re: [PATCH v2 31/36] x86/platform/intel-mid: Add empty stubs for
+ intel_scu_devices_[create|destroy]()
+Date: Wed, 8 Jan 2020 19:36:57 +0200
+Message-ID: <20200108173657.GB32742@smile.fi.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-29-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-32-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-29-mika.westerberg@linux.intel.com>
+In-Reply-To: <20200108114201.27908-32-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:53PM +0300, Mika Westerberg wrote:
-> This converts the Intel Merrifield PMIC driver over the new SCU IPC API
-> where the SCU IPC instance is passed to the functions.
+On Wed, Jan 08, 2020 at 02:41:56PM +0300, Mika Westerberg wrote:
+> This allows to call the functions even when CONFIG_X86_INTEL_MID is not
+> enabled.
 
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 > 
 > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > ---
->  drivers/mfd/intel_soc_pmic_mrfld.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  arch/x86/include/asm/intel-mid.h | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/mfd/intel_soc_pmic_mrfld.c b/drivers/mfd/intel_soc_pmic_mrfld.c
-> index 26a1551c5faf..bd94c989d232 100644
-> --- a/drivers/mfd/intel_soc_pmic_mrfld.c
-> +++ b/drivers/mfd/intel_soc_pmic_mrfld.c
-> @@ -74,10 +74,11 @@ static const struct mfd_cell bcove_dev[] = {
->  static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
->  				    unsigned int *val)
->  {
-> +	struct intel_soc_pmic *pmic = context;
->  	u8 ipc_out;
->  	int ret;
+> diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
+> index 8e5af119dc2d..de58391bdee0 100644
+> --- a/arch/x86/include/asm/intel-mid.h
+> +++ b/arch/x86/include/asm/intel-mid.h
+> @@ -88,11 +88,17 @@ static inline bool intel_mid_has_msic(void)
+>  	return (intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_PENWELL);
+>  }
 >  
-> -	ret = intel_scu_ipc_ioread8(reg, &ipc_out);
-> +	ret = intel_scu_ipc_dev_ioread8(pmic->scu, reg, &ipc_out);
->  	if (ret)
->  		return ret;
->  
-> @@ -88,10 +89,11 @@ static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
->  static int bcove_ipc_byte_reg_write(void *context, unsigned int reg,
->  				     unsigned int val)
->  {
-> +	struct intel_soc_pmic *pmic = context;
->  	u8 ipc_in = val;
->  	int ret;
->  
-> -	ret = intel_scu_ipc_iowrite8(reg, ipc_in);
-> +	ret = intel_scu_ipc_dev_iowrite8(pmic->scu, reg, ipc_in);
->  	if (ret)
->  		return ret;
->  
-> @@ -117,6 +119,10 @@ static int bcove_probe(struct platform_device *pdev)
->  	if (!pmic)
->  		return -ENOMEM;
->  
-> +	pmic->scu = devm_intel_scu_ipc_dev_get(dev);
-> +	if (!pmic->scu)
-> +		return -ENOMEM;
+> +extern void intel_scu_devices_create(void);
+> +extern void intel_scu_devices_destroy(void);
 > +
->  	platform_set_drvdata(pdev, pmic);
->  	pmic->dev = &pdev->dev;
+>  #else /* !CONFIG_X86_INTEL_MID */
 >  
+>  #define intel_mid_identify_cpu()	0
+>  #define intel_mid_has_msic()		0
+>  
+> +static inline void intel_scu_devices_create(void) { }
+> +static inline void intel_scu_devices_destroy(void) { }
+> +
+>  #endif /* !CONFIG_X86_INTEL_MID */
+>  
+>  enum intel_mid_timer_options {
+> @@ -115,9 +121,6 @@ extern enum intel_mid_timer_options intel_mid_timer_options;
+>  #define SFI_MTMR_MAX_NUM		8
+>  #define SFI_MRTC_MAX			8
+>  
+> -extern void intel_scu_devices_create(void);
+> -extern void intel_scu_devices_destroy(void);
+> -
+>  /* VRTC timer */
+>  #define MRST_VRTC_MAP_SZ		1024
+>  /* #define MRST_VRTC_PGOFFSET		0xc00 */
 > -- 
 > 2.24.1
 > 
