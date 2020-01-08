@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v2 06/36] platform/x86: intel_scu_ipc: Fix interrupt support
-Date: Wed,  8 Jan 2020 14:41:31 +0300
-Message-ID: <20200108114201.27908-7-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 28/36] mfd: intel_soc_pmic_mrfld: Convert to use new SCU IPC API
+Date: Wed,  8 Jan 2020 14:41:53 +0300
+Message-ID: <20200108114201.27908-29-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,114 +12,54 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Currently the driver has disabled interrupt support for Tangier but
-actually interrupt works just fine if the command is not written twice
-in a row. Also we need to ack the interrupt in the handler.
+This converts the Intel Merrifield PMIC driver over the new SCU IPC API
+where the SCU IPC instance is passed to the functions.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 48 ++++++----------------------
- 1 file changed, 10 insertions(+), 38 deletions(-)
+ drivers/mfd/intel_soc_pmic_mrfld.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index b39680b53387..43eaf9400c67 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -58,24 +58,6 @@
- #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
- #define IPC_IOC	          0x100		/* IPC command register IOC bit */
- 
--#define PCI_DEVICE_ID_PENWELL		0x080e
--#define PCI_DEVICE_ID_CLOVERVIEW	0x08ea
--#define PCI_DEVICE_ID_TANGIER		0x11a0
--
--/* intel scu ipc driver data */
--struct intel_scu_ipc_pdata_t {
--	u8 irq_mode;
--};
--
--/* Penwell and Cloverview */
--static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
--	.irq_mode = 1,
--};
--
--static const struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
--	.irq_mode = 0,
--};
--
- struct intel_scu_ipc_dev {
- 	struct device *dev;
- 	void __iomem *ipc_base;
-@@ -86,6 +68,7 @@ struct intel_scu_ipc_dev {
- static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
- 
- #define IPC_STATUS		0x04
-+#define IPC_STATUS_IRQ		BIT(2)
- #define IPC_STATUS_ERR		BIT(1)
- #define IPC_STATUS_BUSY		BIT(0)
- 
-@@ -107,11 +90,8 @@ static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
-  */
- static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
+diff --git a/drivers/mfd/intel_soc_pmic_mrfld.c b/drivers/mfd/intel_soc_pmic_mrfld.c
+index 26a1551c5faf..bd94c989d232 100644
+--- a/drivers/mfd/intel_soc_pmic_mrfld.c
++++ b/drivers/mfd/intel_soc_pmic_mrfld.c
+@@ -74,10 +74,11 @@ static const struct mfd_cell bcove_dev[] = {
+ static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
+ 				    unsigned int *val)
  {
--	if (scu->irq_mode) {
--		reinit_completion(&scu->cmd_complete);
--		writel(cmd | IPC_IOC, scu->ipc_base);
--	}
--	writel(cmd, scu->ipc_base);
-+	reinit_completion(&scu->cmd_complete);
-+	writel(cmd | IPC_IOC, scu->ipc_base);
- }
++	struct intel_soc_pmic *pmic = context;
+ 	u8 ipc_out;
+ 	int ret;
  
- /*
-@@ -549,9 +529,10 @@ EXPORT_SYMBOL_GPL(intel_scu_ipc_raw_command);
- static irqreturn_t ioc(int irq, void *dev_id)
+-	ret = intel_scu_ipc_ioread8(reg, &ipc_out);
++	ret = intel_scu_ipc_dev_ioread8(pmic->scu, reg, &ipc_out);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -88,10 +89,11 @@ static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
+ static int bcove_ipc_byte_reg_write(void *context, unsigned int reg,
+ 				     unsigned int val)
  {
- 	struct intel_scu_ipc_dev *scu = dev_id;
-+	int status = ipc_read_status(scu);
++	struct intel_soc_pmic *pmic = context;
+ 	u8 ipc_in = val;
+ 	int ret;
  
--	if (scu->irq_mode)
--		complete(&scu->cmd_complete);
-+	writel(status | IPC_STATUS_IRQ, scu->ipc_base + IPC_STATUS);
-+	complete(&scu->cmd_complete);
+-	ret = intel_scu_ipc_iowrite8(reg, ipc_in);
++	ret = intel_scu_ipc_dev_iowrite8(pmic->scu, reg, ipc_in);
+ 	if (ret)
+ 		return ret;
  
- 	return IRQ_HANDLED;
- }
-@@ -568,17 +549,10 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	int err;
- 	struct intel_scu_ipc_dev *scu = &ipcdev;
--	struct intel_scu_ipc_pdata_t *pdata;
+@@ -117,6 +119,10 @@ static int bcove_probe(struct platform_device *pdev)
+ 	if (!pmic)
+ 		return -ENOMEM;
  
- 	if (scu->dev)		/* We support only one SCU */
- 		return -EBUSY;
++	pmic->scu = devm_intel_scu_ipc_dev_get(dev);
++	if (!pmic->scu)
++		return -ENOMEM;
++
+ 	platform_set_drvdata(pdev, pmic);
+ 	pmic->dev = &pdev->dev;
  
--	pdata = (struct intel_scu_ipc_pdata_t *)id->driver_data;
--	if (!pdata)
--		return -ENODEV;
--
--	scu->irq_mode = pdata->irq_mode;
--
- 	err = pcim_enable_device(pdev);
- 	if (err)
- 		return err;
-@@ -605,13 +579,11 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	return 0;
- }
- 
--#define SCU_DEVICE(id, pdata)	{PCI_VDEVICE(INTEL, id), (kernel_ulong_t)&pdata}
--
- static const struct pci_device_id pci_ids[] = {
--	SCU_DEVICE(PCI_DEVICE_ID_PENWELL,	intel_scu_ipc_penwell_pdata),
--	SCU_DEVICE(PCI_DEVICE_ID_CLOVERVIEW,	intel_scu_ipc_penwell_pdata),
--	SCU_DEVICE(PCI_DEVICE_ID_TANGIER,	intel_scu_ipc_tangier_pdata),
--	{}
-+	{ PCI_VDEVICE(INTEL, 0x080e) },
-+	{ PCI_VDEVICE(INTEL, 0x08ea) },
-+	{ PCI_VDEVICE(INTEL, 0x11a0) },
-+	{ }
- };
- 
- static struct pci_driver ipc_driver = {
 -- 
 2.24.1
