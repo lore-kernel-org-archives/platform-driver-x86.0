@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v2 05/36] platform/x86: intel_scu_ipc: Drop intel_scu_ipc_i2c_cntrl()
-Date: Wed,  8 Jan 2020 14:41:30 +0300
-Message-ID: <20200108114201.27908-6-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 16/36] watchdog: intel-mid_wdt: Convert to use new SCU IPC API
+Date: Wed,  8 Jan 2020 14:41:41 +0300
+Message-ID: <20200108114201.27908-17-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,137 +12,141 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-There are no existing users for this functionality so drop it from the
-driver completely.
+This converts the Intel MID watchdog driver over the new SCU IPC API
+where the SCU IPC instance is passed to the functions.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/intel_scu_ipc.h |  3 --
- drivers/platform/x86/intel_scu_ipc.c | 62 ----------------------------
- 2 files changed, 65 deletions(-)
+ drivers/watchdog/intel-mid_wdt.c | 53 ++++++++++++++++++++++----------
+ 1 file changed, 37 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index 4a8c6e817398..d7bbebf4b729 100644
---- a/arch/x86/include/asm/intel_scu_ipc.h
-+++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -53,9 +53,6 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
- 			      u32 *out, int outlen, u32 dptr, u32 sptr);
- 
--/* I2C control api */
--int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data);
--
- /* Update FW version */
- int intel_scu_ipc_fw_update(u8 *buffer, u32 length);
- 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 6c44fe5e55b5..b39680b53387 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -64,28 +64,21 @@
- 
- /* intel scu ipc driver data */
- struct intel_scu_ipc_pdata_t {
--	u32 i2c_base;
--	u32 i2c_len;
- 	u8 irq_mode;
+diff --git a/drivers/watchdog/intel-mid_wdt.c b/drivers/watchdog/intel-mid_wdt.c
+index 470213abfd3d..1ae03b64ef8b 100644
+--- a/drivers/watchdog/intel-mid_wdt.c
++++ b/drivers/watchdog/intel-mid_wdt.c
+@@ -33,14 +33,24 @@ enum {
+ 	SCU_WATCHDOG_KEEPALIVE,
  };
  
- /* Penwell and Cloverview */
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
--	.i2c_base = 0xff12b000,
--	.i2c_len = 0x10,
- 	.irq_mode = 1,
- };
- 
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
--	.i2c_base  = 0xff00d000,
--	.i2c_len = 0x10,
- 	.irq_mode = 0,
- };
- 
- struct intel_scu_ipc_dev {
- 	struct device *dev;
- 	void __iomem *ipc_base;
--	void __iomem *i2c_base;
- 	struct completion cmd_complete;
- 	u8 irq_mode;
- };
-@@ -103,9 +96,6 @@ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
- #define IPC_WRITE_BUFFER	0x80
- #define IPC_READ_BUFFER		0x90
- 
--#define IPC_I2C_CNTRL_ADDR	0
--#define I2C_DATA_ADDR		0x04
--
- static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
- 
- /*
-@@ -549,54 +539,6 @@ int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
+-static inline int wdt_command(int sub, u32 *in, int inlen)
++struct mid_wdt {
++	struct watchdog_device wd;
++	struct device *dev;
++	struct intel_scu_ipc_dev *scu;
++};
++
++static inline int
++wdt_command(struct mid_wdt *mid, int sub, const void *in, size_t inlen, size_t size)
+ {
+-	return intel_scu_ipc_command(IPC_WATCHDOG, sub, in, inlen, NULL, 0);
++	struct intel_scu_ipc_dev *scu = mid->scu;
++
++	return intel_scu_ipc_dev_command_with_size(scu, IPC_WATCHDOG, sub, in,
++						   inlen, size, NULL, 0);
  }
- EXPORT_SYMBOL_GPL(intel_scu_ipc_raw_command);
  
--/* I2C commands */
--#define IPC_I2C_WRITE 1 /* I2C Write command */
--#define IPC_I2C_READ  2 /* I2C Read command */
--
--/**
-- *	intel_scu_ipc_i2c_cntrl		-	I2C read/write operations
-- *	@addr: I2C address + command bits
-- *	@data: data to read/write
-- *
-- *	Perform an an I2C read/write operation via the SCU. All locking is
-- *	handled for the caller. This function may sleep.
-- *
-- *	Returns an error code or 0 on success.
-- *
-- *	This has to be in the IPC driver for the locking.
-- */
--int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data)
--{
--	struct intel_scu_ipc_dev *scu = &ipcdev;
--	u32 cmd = 0;
--
--	mutex_lock(&ipclock);
--	if (scu->dev == NULL) {
--		mutex_unlock(&ipclock);
--		return -ENODEV;
--	}
--	cmd = (addr >> 24) & 0xFF;
--	if (cmd == IPC_I2C_READ) {
--		writel(addr, scu->i2c_base + IPC_I2C_CNTRL_ADDR);
--		/* Write not getting updated without delay */
--		usleep_range(1000, 2000);
--		*data = readl(scu->i2c_base + I2C_DATA_ADDR);
--	} else if (cmd == IPC_I2C_WRITE) {
--		writel(*data, scu->i2c_base + I2C_DATA_ADDR);
--		usleep_range(1000, 2000);
--		writel(addr, scu->i2c_base + IPC_I2C_CNTRL_ADDR);
--	} else {
--		dev_err(scu->dev,
--			"intel_scu_ipc: I2C INVALID_CMD = 0x%x\n", cmd);
--
--		mutex_unlock(&ipclock);
--		return -EIO;
--	}
--	mutex_unlock(&ipclock);
--	return 0;
--}
--EXPORT_SYMBOL(intel_scu_ipc_i2c_cntrl);
--
- /*
-  * Interrupt handler gets called when ioc bit of IPC_COMMAND_REG set to 1
-  * When ioc bit is set to 1, caller api must wait for interrupt handler called
-@@ -649,10 +591,6 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ static int wdt_start(struct watchdog_device *wd)
+ {
+-	struct device *dev = watchdog_get_drvdata(wd);
++	struct mid_wdt *mid = watchdog_get_drvdata(wd);
+ 	int ret, in_size;
+ 	int timeout = wd->timeout;
+ 	struct ipc_wd_start {
+@@ -49,38 +59,41 @@ static int wdt_start(struct watchdog_device *wd)
+ 	} ipc_wd_start = { timeout - MID_WDT_PRETIMEOUT, timeout };
  
- 	scu->ipc_base = pcim_iomap_table(pdev)[0];
+ 	/*
+-	 * SCU expects the input size for watchdog IPC to
+-	 * be based on 4 bytes
++	 * SCU expects the input size for watchdog IPC to be 2 which is the
++	 * size of the structure in dwords. SCU IPC normally takes bytes
++	 * but this is a special case where we specify size to be different
++	 * than inlen.
+ 	 */
+ 	in_size = DIV_ROUND_UP(sizeof(ipc_wd_start), 4);
  
--	scu->i2c_base = ioremap_nocache(pdata->i2c_base, pdata->i2c_len);
--	if (!scu->i2c_base)
--		return -ENOMEM;
--
- 	err = devm_request_irq(&pdev->dev, pdev->irq, ioc, 0, "intel_scu_ipc",
- 			       scu);
- 	if (err)
+-	ret = wdt_command(SCU_WATCHDOG_START, (u32 *)&ipc_wd_start, in_size);
++	ret = wdt_command(mid, SCU_WATCHDOG_START, &ipc_wd_start,
++			  sizeof(ipc_wd_start), in_size);
+ 	if (ret)
+-		dev_crit(dev, "error starting watchdog: %d\n", ret);
++		dev_crit(mid->dev, "error starting watchdog: %d\n", ret);
+ 
+ 	return ret;
+ }
+ 
+ static int wdt_ping(struct watchdog_device *wd)
+ {
+-	struct device *dev = watchdog_get_drvdata(wd);
++	struct mid_wdt *mid = watchdog_get_drvdata(wd);
+ 	int ret;
+ 
+-	ret = wdt_command(SCU_WATCHDOG_KEEPALIVE, NULL, 0);
++	ret = wdt_command(mid, SCU_WATCHDOG_KEEPALIVE, NULL, 0, 0);
+ 	if (ret)
+-		dev_crit(dev, "Error executing keepalive: %d\n", ret);
++		dev_crit(mid->dev, "Error executing keepalive: %d\n", ret);
+ 
+ 	return ret;
+ }
+ 
+ static int wdt_stop(struct watchdog_device *wd)
+ {
+-	struct device *dev = watchdog_get_drvdata(wd);
++	struct mid_wdt *mid = watchdog_get_drvdata(wd);
+ 	int ret;
+ 
+-	ret = wdt_command(SCU_WATCHDOG_STOP, NULL, 0);
++	ret = wdt_command(mid, SCU_WATCHDOG_STOP, NULL, 0, 0);
+ 	if (ret)
+-		dev_crit(dev, "Error stopping watchdog: %d\n", ret);
++		dev_crit(mid->dev, "Error stopping watchdog: %d\n", ret);
+ 
+ 	return ret;
+ }
+@@ -110,6 +123,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct watchdog_device *wdt_dev;
+ 	struct intel_mid_wdt_pdata *pdata = dev->platform_data;
++	struct mid_wdt *mid;
+ 	int ret;
+ 
+ 	if (!pdata) {
+@@ -123,10 +137,13 @@ static int mid_wdt_probe(struct platform_device *pdev)
+ 			return ret;
+ 	}
+ 
+-	wdt_dev = devm_kzalloc(dev, sizeof(*wdt_dev), GFP_KERNEL);
+-	if (!wdt_dev)
++	mid = devm_kzalloc(dev, sizeof(*mid), GFP_KERNEL);
++	if (!mid)
+ 		return -ENOMEM;
+ 
++	mid->dev = dev;
++	wdt_dev = &mid->wd;
++
+ 	wdt_dev->info = &mid_wdt_info;
+ 	wdt_dev->ops = &mid_wdt_ops;
+ 	wdt_dev->min_timeout = MID_WDT_TIMEOUT_MIN;
+@@ -135,7 +152,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
+ 	wdt_dev->parent = dev;
+ 
+ 	watchdog_set_nowayout(wdt_dev, WATCHDOG_NOWAYOUT);
+-	watchdog_set_drvdata(wdt_dev, dev);
++	watchdog_set_drvdata(wdt_dev, mid);
+ 
+ 	ret = devm_request_irq(dev, pdata->irq, mid_wdt_irq,
+ 			       IRQF_SHARED | IRQF_NO_SUSPEND, "watchdog",
+@@ -145,6 +162,10 @@ static int mid_wdt_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	mid->scu = devm_intel_scu_ipc_dev_get(dev);
++	if (!mid->scu)
++		return -EPROBE_DEFER;
++
+ 	/*
+ 	 * The firmware followed by U-Boot leaves the watchdog running
+ 	 * with the default threshold which may vary. When we get here
 -- 
 2.24.1
