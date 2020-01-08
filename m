@@ -1,15 +1,15 @@
 From: David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v2 1/8] mm/memory_hotplug: Drop the flags field from
- struct mhp_restrictions
-Date: Wed, 8 Jan 2020 13:27:14 +0100
-Message-ID: <c3c3c475-f828-13f7-b5c9-f691ef0fe1ff@redhat.com>
+Subject: Re: [PATCH v2 2/8] mm/memory_hotplug: Rename mhp_restrictions to
+ mhp_modifiers
+Date: Wed, 8 Jan 2020 13:28:55 +0100
+Message-ID: <3e432695-e3a9-2aae-e9f5-1b6454886c06@redhat.com>
 References: <20200107205959.7575-1-logang@deltatee.com>
- <20200107205959.7575-2-logang@deltatee.com>
+ <20200107205959.7575-3-logang@deltatee.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20200107205959.7575-2-logang@deltatee.com>
+In-Reply-To: <20200107205959.7575-3-logang@deltatee.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -25,35 +25,13 @@ Cc: Eric Badger <ebadger@gigaio.com>, Peter Zijlstra <peterz@infradead.org>, Cat
 List-Id: platform-driver-x86.vger.kernel.org
 
 On 07.01.20 21:59, Logan Gunthorpe wrote:
-> This variable is not used anywhere and should therefore be removed
-> from the structure.
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->  include/linux/memory_hotplug.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index ba0dca6aac6e..e47a29761088 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -55,11 +55,9 @@ enum {
->  
->  /*
->   * Restrictions for the memory hotplug:
-> - * flags:  MHP_ flags
->   * altmap: alternative allocator for memmap array
->   */
->  struct mhp_restrictions {
-> -	unsigned long flags;
->  	struct vmem_altmap *altmap;
->  };
+> The mhp_restrictions struct really doesn't specify anything resembling
+> a restriction anymore so rename it to be mhp_modifiers.
 
-We wanted to use that for the "vmemmap on added memory" config knob. But
-that might still take some time and we might actually realize it using
-the altmap instead (hopefully :) ).
+I wonder if something like "mhp_params" would be even better. It's
+essentially just a way to avoid changing call chains rough-out all archs
+whenever we want to add a new parameter.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Thanks,
