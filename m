@@ -1,53 +1,44 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 01/36] platform/x86: intel_mid_powerbtn: Take a copy
- of ddata
-Date: Wed, 8 Jan 2020 18:37:56 +0200
-Message-ID: <20200108163756.GU32742@smile.fi.intel.com>
+Subject: Re: [PATCH v2 02/36] platform/x86: intel_scu_ipcutil: Remove default
+ y from Kconfig
+Date: Wed, 8 Jan 2020 18:38:07 +0200
+Message-ID: <20200108163807.GV32742@smile.fi.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-2-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-3-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-2-mika.westerberg@linux.intel.com>
+In-Reply-To: <20200108114201.27908-3-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:26PM +0300, Mika Westerberg wrote:
-> The driver gets driver_data from memory that is marked as const (which
-> is probably put to read-only memory) and it then modifies it. This
-> likely causes some sort of fault to happen.
-> 
-> Fix this by taking a copy of the structure.
-> 
+On Wed, Jan 08, 2020 at 02:41:27PM +0300, Mika Westerberg wrote:
+> This driver is by no means essential for system to boot up so remove
+> default y from it.
 
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
+> 
 > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > ---
->  drivers/platform/x86/intel_mid_powerbtn.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-> index 292bace83f1e..6f436836fe50 100644
-> --- a/drivers/platform/x86/intel_mid_powerbtn.c
-> +++ b/drivers/platform/x86/intel_mid_powerbtn.c
-> @@ -146,9 +146,10 @@ static int mid_pb_probe(struct platform_device *pdev)
->  
->  	input_set_capability(input, EV_KEY, KEY_POWER);
->  
-> -	ddata = (struct mid_pb_ddata *)id->driver_data;
-> +	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
-> +			     sizeof(*ddata), GFP_KERNEL);
->  	if (!ddata)
-> -		return -ENODATA;
-> +		return -ENOMEM;
->  
->  	ddata->dev = &pdev->dev;
->  	ddata->irq = irq;
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 27d5b40fb717..dd4326736d11 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -997,7 +997,6 @@ config INTEL_SCU_IPC
+>  config INTEL_SCU_IPC_UTIL
+>  	tristate "Intel SCU IPC utility driver"
+>  	depends on INTEL_SCU_IPC
+> -	default y
+>  	---help---
+>  	  The IPC Util driver provides an interface with the SCU enabling
+>  	  low level access for debug work and updating the firmware. Say
 > -- 
 > 2.24.1
 > 
