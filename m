@@ -1,160 +1,57 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 16/36] watchdog: intel-mid_wdt: Convert to use new SCU
- IPC API
-Date: Wed, 8 Jan 2020 07:37:16 -0800
-Message-ID: <20200108153716.GC28530@roeck-us.net>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 01/36] platform/x86: intel_mid_powerbtn: Take a copy
+ of ddata
+Date: Wed, 8 Jan 2020 18:37:56 +0200
+Message-ID: <20200108163756.GU32742@smile.fi.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-17-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-2-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-17-mika.westerberg@linux.intel.com>
+In-Reply-To: <20200108114201.27908-2-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:41PM +0300, Mika Westerberg wrote:
-> This converts the Intel MID watchdog driver over the new SCU IPC API
-> where the SCU IPC instance is passed to the functions.
+On Wed, Jan 08, 2020 at 02:41:26PM +0300, Mika Westerberg wrote:
+> The driver gets driver_data from memory that is marked as const (which
+> is probably put to read-only memory) and it then modifies it. This
+> likely causes some sort of fault to happen.
 > 
+> Fix this by taking a copy of the structure.
+> 
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
 > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-
 > ---
->  drivers/watchdog/intel-mid_wdt.c | 53 ++++++++++++++++++++++----------
->  1 file changed, 37 insertions(+), 16 deletions(-)
+>  drivers/platform/x86/intel_mid_powerbtn.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/watchdog/intel-mid_wdt.c b/drivers/watchdog/intel-mid_wdt.c
-> index 470213abfd3d..1ae03b64ef8b 100644
-> --- a/drivers/watchdog/intel-mid_wdt.c
-> +++ b/drivers/watchdog/intel-mid_wdt.c
-> @@ -33,14 +33,24 @@ enum {
->  	SCU_WATCHDOG_KEEPALIVE,
->  };
+> diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+> index 292bace83f1e..6f436836fe50 100644
+> --- a/drivers/platform/x86/intel_mid_powerbtn.c
+> +++ b/drivers/platform/x86/intel_mid_powerbtn.c
+> @@ -146,9 +146,10 @@ static int mid_pb_probe(struct platform_device *pdev)
 >  
-> -static inline int wdt_command(int sub, u32 *in, int inlen)
-> +struct mid_wdt {
-> +	struct watchdog_device wd;
-> +	struct device *dev;
-> +	struct intel_scu_ipc_dev *scu;
-> +};
-> +
-> +static inline int
-> +wdt_command(struct mid_wdt *mid, int sub, const void *in, size_t inlen, size_t size)
->  {
-> -	return intel_scu_ipc_command(IPC_WATCHDOG, sub, in, inlen, NULL, 0);
-> +	struct intel_scu_ipc_dev *scu = mid->scu;
-> +
-> +	return intel_scu_ipc_dev_command_with_size(scu, IPC_WATCHDOG, sub, in,
-> +						   inlen, size, NULL, 0);
->  }
+>  	input_set_capability(input, EV_KEY, KEY_POWER);
 >  
->  static int wdt_start(struct watchdog_device *wd)
->  {
-> -	struct device *dev = watchdog_get_drvdata(wd);
-> +	struct mid_wdt *mid = watchdog_get_drvdata(wd);
->  	int ret, in_size;
->  	int timeout = wd->timeout;
->  	struct ipc_wd_start {
-> @@ -49,38 +59,41 @@ static int wdt_start(struct watchdog_device *wd)
->  	} ipc_wd_start = { timeout - MID_WDT_PRETIMEOUT, timeout };
+> -	ddata = (struct mid_pb_ddata *)id->driver_data;
+> +	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
+> +			     sizeof(*ddata), GFP_KERNEL);
+>  	if (!ddata)
+> -		return -ENODATA;
+> +		return -ENOMEM;
 >  
->  	/*
-> -	 * SCU expects the input size for watchdog IPC to
-> -	 * be based on 4 bytes
-> +	 * SCU expects the input size for watchdog IPC to be 2 which is the
-> +	 * size of the structure in dwords. SCU IPC normally takes bytes
-> +	 * but this is a special case where we specify size to be different
-> +	 * than inlen.
->  	 */
->  	in_size = DIV_ROUND_UP(sizeof(ipc_wd_start), 4);
->  
-> -	ret = wdt_command(SCU_WATCHDOG_START, (u32 *)&ipc_wd_start, in_size);
-> +	ret = wdt_command(mid, SCU_WATCHDOG_START, &ipc_wd_start,
-> +			  sizeof(ipc_wd_start), in_size);
->  	if (ret)
-> -		dev_crit(dev, "error starting watchdog: %d\n", ret);
-> +		dev_crit(mid->dev, "error starting watchdog: %d\n", ret);
->  
->  	return ret;
->  }
->  
->  static int wdt_ping(struct watchdog_device *wd)
->  {
-> -	struct device *dev = watchdog_get_drvdata(wd);
-> +	struct mid_wdt *mid = watchdog_get_drvdata(wd);
->  	int ret;
->  
-> -	ret = wdt_command(SCU_WATCHDOG_KEEPALIVE, NULL, 0);
-> +	ret = wdt_command(mid, SCU_WATCHDOG_KEEPALIVE, NULL, 0, 0);
->  	if (ret)
-> -		dev_crit(dev, "Error executing keepalive: %d\n", ret);
-> +		dev_crit(mid->dev, "Error executing keepalive: %d\n", ret);
->  
->  	return ret;
->  }
->  
->  static int wdt_stop(struct watchdog_device *wd)
->  {
-> -	struct device *dev = watchdog_get_drvdata(wd);
-> +	struct mid_wdt *mid = watchdog_get_drvdata(wd);
->  	int ret;
->  
-> -	ret = wdt_command(SCU_WATCHDOG_STOP, NULL, 0);
-> +	ret = wdt_command(mid, SCU_WATCHDOG_STOP, NULL, 0, 0);
->  	if (ret)
-> -		dev_crit(dev, "Error stopping watchdog: %d\n", ret);
-> +		dev_crit(mid->dev, "Error stopping watchdog: %d\n", ret);
->  
->  	return ret;
->  }
-> @@ -110,6 +123,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct watchdog_device *wdt_dev;
->  	struct intel_mid_wdt_pdata *pdata = dev->platform_data;
-> +	struct mid_wdt *mid;
->  	int ret;
->  
->  	if (!pdata) {
-> @@ -123,10 +137,13 @@ static int mid_wdt_probe(struct platform_device *pdev)
->  			return ret;
->  	}
->  
-> -	wdt_dev = devm_kzalloc(dev, sizeof(*wdt_dev), GFP_KERNEL);
-> -	if (!wdt_dev)
-> +	mid = devm_kzalloc(dev, sizeof(*mid), GFP_KERNEL);
-> +	if (!mid)
->  		return -ENOMEM;
->  
-> +	mid->dev = dev;
-> +	wdt_dev = &mid->wd;
-> +
->  	wdt_dev->info = &mid_wdt_info;
->  	wdt_dev->ops = &mid_wdt_ops;
->  	wdt_dev->min_timeout = MID_WDT_TIMEOUT_MIN;
-> @@ -135,7 +152,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
->  	wdt_dev->parent = dev;
->  
->  	watchdog_set_nowayout(wdt_dev, WATCHDOG_NOWAYOUT);
-> -	watchdog_set_drvdata(wdt_dev, dev);
-> +	watchdog_set_drvdata(wdt_dev, mid);
->  
->  	ret = devm_request_irq(dev, pdata->irq, mid_wdt_irq,
->  			       IRQF_SHARED | IRQF_NO_SUSPEND, "watchdog",
-> @@ -145,6 +162,10 @@ static int mid_wdt_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	mid->scu = devm_intel_scu_ipc_dev_get(dev);
-> +	if (!mid->scu)
-> +		return -EPROBE_DEFER;
-> +
->  	/*
->  	 * The firmware followed by U-Boot leaves the watchdog running
->  	 * with the default threshold which may vary. When we get here
+>  	ddata->dev = &pdev->dev;
+>  	ddata->irq = irq;
 > -- 
 > 2.24.1
 > 
+
+-- 
+With Best Regards,
+Andy Shevchenko
