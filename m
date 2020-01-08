@@ -1,76 +1,160 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 2/2] platform/x86: GPD pocket fan: Allow somewhat
- lower/higher temperature limits
-Date: Wed, 8 Jan 2020 14:05:49 +0100
-Message-ID: <2df70a79-10e1-ea9e-0425-dcc46c1e28bc@redhat.com>
-References: <20200106144219.525215-1-hdegoede@redhat.com>
- <20200106144219.525215-2-hdegoede@redhat.com>
- <CAHp75Ve5XF-UZw6D-OUCkgOPMYH0DgT1L5uVNGRuLmZ6Cjd1KA@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 16/36] watchdog: intel-mid_wdt: Convert to use new SCU
+ IPC API
+Date: Wed, 8 Jan 2020 07:37:16 -0800
+Message-ID: <20200108153716.GC28530@roeck-us.net>
+References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-17-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve5XF-UZw6D-OUCkgOPMYH0DgT1L5uVNGRuLmZ6Cjd1KA@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20200108114201.27908-17-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jason Anderson <jasona.594@gmail.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-On 08-01-2020 13:23, Andy Shevchenko wrote:
-> On Mon, Jan 6, 2020 at 4:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Allow the user to configure the fan to turn on / speed-up at lower
->> thresholds then before (20 degrees Celcius as minimum instead of 40) and
->> likewise also allow the user to delay the fan speeding-up till the
->> temperature hits 90 degrees Celcius (was 70).
->>
->> Cc: Jason Anderson <jasona.594@gmail.com>
+On Wed, Jan 08, 2020 at 02:41:41PM +0300, Mika Westerberg wrote:
+> This converts the Intel MID watchdog driver over the new SCU IPC API
+> where the SCU IPC instance is passed to the functions.
 > 
->> Reported-by: Jason Anderson <jasona.594@gmail.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  drivers/watchdog/intel-mid_wdt.c | 53 ++++++++++++++++++++++----------
+>  1 file changed, 37 insertions(+), 16 deletions(-)
 > 
-> My understanding of this tag that the report assumes a bug to fix
-> followed up with a corresponding Fixes tag.
-
-Well in a way the old min/max for the limits being to strict a bug
-and Jason pointed this out so I want to give him credit for that.
-
-OTHO Fixes: feels a little bit to strong, even without a Cc: stable
-tag, commits with Fixes: in there are almost guaranteed to be picked
-up for the stable series and in this case that seems unnecessary to me.
-
-If you do want to add a Fixes: tag then adding the one from patch 1/2
-makes the most sense.
-
-Regards,
-
-Hans
-
-
-
-> 
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/platform/x86/gpd-pocket-fan.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
->> index 1e6a42f2ea8a..0ffcbf9bc18e 100644
->> --- a/drivers/platform/x86/gpd-pocket-fan.c
->> +++ b/drivers/platform/x86/gpd-pocket-fan.c
->> @@ -126,7 +126,7 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
->>          int i;
->>
->>          for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
->> -               if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
->> +               if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
->>                          dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
->>                                  temp_limits[i]);
->>                          temp_limits[0] = TEMP_LIMIT0_DEFAULT;
->> --
->> 2.24.1
->>
-> 
+> diff --git a/drivers/watchdog/intel-mid_wdt.c b/drivers/watchdog/intel-mid_wdt.c
+> index 470213abfd3d..1ae03b64ef8b 100644
+> --- a/drivers/watchdog/intel-mid_wdt.c
+> +++ b/drivers/watchdog/intel-mid_wdt.c
+> @@ -33,14 +33,24 @@ enum {
+>  	SCU_WATCHDOG_KEEPALIVE,
+>  };
+>  
+> -static inline int wdt_command(int sub, u32 *in, int inlen)
+> +struct mid_wdt {
+> +	struct watchdog_device wd;
+> +	struct device *dev;
+> +	struct intel_scu_ipc_dev *scu;
+> +};
+> +
+> +static inline int
+> +wdt_command(struct mid_wdt *mid, int sub, const void *in, size_t inlen, size_t size)
+>  {
+> -	return intel_scu_ipc_command(IPC_WATCHDOG, sub, in, inlen, NULL, 0);
+> +	struct intel_scu_ipc_dev *scu = mid->scu;
+> +
+> +	return intel_scu_ipc_dev_command_with_size(scu, IPC_WATCHDOG, sub, in,
+> +						   inlen, size, NULL, 0);
+>  }
+>  
+>  static int wdt_start(struct watchdog_device *wd)
+>  {
+> -	struct device *dev = watchdog_get_drvdata(wd);
+> +	struct mid_wdt *mid = watchdog_get_drvdata(wd);
+>  	int ret, in_size;
+>  	int timeout = wd->timeout;
+>  	struct ipc_wd_start {
+> @@ -49,38 +59,41 @@ static int wdt_start(struct watchdog_device *wd)
+>  	} ipc_wd_start = { timeout - MID_WDT_PRETIMEOUT, timeout };
+>  
+>  	/*
+> -	 * SCU expects the input size for watchdog IPC to
+> -	 * be based on 4 bytes
+> +	 * SCU expects the input size for watchdog IPC to be 2 which is the
+> +	 * size of the structure in dwords. SCU IPC normally takes bytes
+> +	 * but this is a special case where we specify size to be different
+> +	 * than inlen.
+>  	 */
+>  	in_size = DIV_ROUND_UP(sizeof(ipc_wd_start), 4);
+>  
+> -	ret = wdt_command(SCU_WATCHDOG_START, (u32 *)&ipc_wd_start, in_size);
+> +	ret = wdt_command(mid, SCU_WATCHDOG_START, &ipc_wd_start,
+> +			  sizeof(ipc_wd_start), in_size);
+>  	if (ret)
+> -		dev_crit(dev, "error starting watchdog: %d\n", ret);
+> +		dev_crit(mid->dev, "error starting watchdog: %d\n", ret);
+>  
+>  	return ret;
+>  }
+>  
+>  static int wdt_ping(struct watchdog_device *wd)
+>  {
+> -	struct device *dev = watchdog_get_drvdata(wd);
+> +	struct mid_wdt *mid = watchdog_get_drvdata(wd);
+>  	int ret;
+>  
+> -	ret = wdt_command(SCU_WATCHDOG_KEEPALIVE, NULL, 0);
+> +	ret = wdt_command(mid, SCU_WATCHDOG_KEEPALIVE, NULL, 0, 0);
+>  	if (ret)
+> -		dev_crit(dev, "Error executing keepalive: %d\n", ret);
+> +		dev_crit(mid->dev, "Error executing keepalive: %d\n", ret);
+>  
+>  	return ret;
+>  }
+>  
+>  static int wdt_stop(struct watchdog_device *wd)
+>  {
+> -	struct device *dev = watchdog_get_drvdata(wd);
+> +	struct mid_wdt *mid = watchdog_get_drvdata(wd);
+>  	int ret;
+>  
+> -	ret = wdt_command(SCU_WATCHDOG_STOP, NULL, 0);
+> +	ret = wdt_command(mid, SCU_WATCHDOG_STOP, NULL, 0, 0);
+>  	if (ret)
+> -		dev_crit(dev, "Error stopping watchdog: %d\n", ret);
+> +		dev_crit(mid->dev, "Error stopping watchdog: %d\n", ret);
+>  
+>  	return ret;
+>  }
+> @@ -110,6 +123,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct watchdog_device *wdt_dev;
+>  	struct intel_mid_wdt_pdata *pdata = dev->platform_data;
+> +	struct mid_wdt *mid;
+>  	int ret;
+>  
+>  	if (!pdata) {
+> @@ -123,10 +137,13 @@ static int mid_wdt_probe(struct platform_device *pdev)
+>  			return ret;
+>  	}
+>  
+> -	wdt_dev = devm_kzalloc(dev, sizeof(*wdt_dev), GFP_KERNEL);
+> -	if (!wdt_dev)
+> +	mid = devm_kzalloc(dev, sizeof(*mid), GFP_KERNEL);
+> +	if (!mid)
+>  		return -ENOMEM;
+>  
+> +	mid->dev = dev;
+> +	wdt_dev = &mid->wd;
+> +
+>  	wdt_dev->info = &mid_wdt_info;
+>  	wdt_dev->ops = &mid_wdt_ops;
+>  	wdt_dev->min_timeout = MID_WDT_TIMEOUT_MIN;
+> @@ -135,7 +152,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
+>  	wdt_dev->parent = dev;
+>  
+>  	watchdog_set_nowayout(wdt_dev, WATCHDOG_NOWAYOUT);
+> -	watchdog_set_drvdata(wdt_dev, dev);
+> +	watchdog_set_drvdata(wdt_dev, mid);
+>  
+>  	ret = devm_request_irq(dev, pdata->irq, mid_wdt_irq,
+>  			       IRQF_SHARED | IRQF_NO_SUSPEND, "watchdog",
+> @@ -145,6 +162,10 @@ static int mid_wdt_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	mid->scu = devm_intel_scu_ipc_dev_get(dev);
+> +	if (!mid->scu)
+> +		return -EPROBE_DEFER;
+> +
+>  	/*
+>  	 * The firmware followed by U-Boot leaves the watchdog running
+>  	 * with the default threshold which may vary. When we get here
+> -- 
+> 2.24.1
 > 
