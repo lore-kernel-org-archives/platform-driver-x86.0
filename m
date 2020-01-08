@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v2 27/36] mfd: intel_soc_pmic_bxtwc: Convert to use new SCU IPC API
-Date: Wed,  8 Jan 2020 14:41:52 +0300
-Message-ID: <20200108114201.27908-28-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 07/36] platform/x86: intel_scu_ipc: Sleeping is fine when polling
+Date: Wed,  8 Jan 2020 14:41:32 +0300
+Message-ID: <20200108114201.27908-8-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,93 +12,76 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Convert the Intel Broxton Whiskey Cover PMIC driver to use the new SCU
-IPC API. This allows us to get rid of the PMC IPC implementation which
-is now covered in SCU IPC driver.
+There is no reason why the driver would need to block other threads from
+running the CPU while it is waiting for the SCU IPC to complete its
+work. For this reason switch the driver to use usleep_range() instead
+with a bit more relaxed polling loop.
 
-Also move PMIC specific IPC message constants to the PMIC driver from
-the intel_pmc_ipc.h header.
+Also add constant for the timeout and use the same value for both
+polling and interrupt modes.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/intel_pmc_ipc.h |  3 ---
- drivers/mfd/intel_soc_pmic_bxtwc.c   | 22 +++++++++++++++-------
- 2 files changed, 15 insertions(+), 10 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 29 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index e6da1ce26256..b438a488f613 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -3,9 +3,6 @@
- #define  _ASM_X86_INTEL_PMC_IPC_H_
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 43eaf9400c67..8db0644900a3 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -79,6 +79,9 @@ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+ #define IPC_WRITE_BUFFER	0x80
+ #define IPC_READ_BUFFER		0x90
  
- /* Commands */
--#define PMC_IPC_PMIC_ACCESS		0xFF
--#define		PMC_IPC_PMIC_ACCESS_READ	0x0
--#define		PMC_IPC_PMIC_ACCESS_WRITE	0x1
- #define PMC_IPC_USB_PWR_CTRL		0xF0
- #define PMC_IPC_PMIC_BLACKLIST_SEL	0xEF
- #define PMC_IPC_PHY_CONFIG		0xEE
-diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
-index 739cfb5b69fe..60aba2a1561c 100644
---- a/drivers/mfd/intel_soc_pmic_bxtwc.c
-+++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
-@@ -15,7 +15,7 @@
- #include <linux/mfd/intel_soc_pmic_bxtwc.h>
- #include <linux/module.h>
- 
--#include <asm/intel_pmc_ipc.h>
-+#include <asm/intel_scu_ipc.h>
- 
- /* PMIC device registers */
- #define REG_ADDR_MASK		0xFF00
-@@ -58,6 +58,10 @@
- /* Whiskey Cove PMIC share same ACPI ID between different platforms */
- #define BROXTON_PMIC_WC_HRV	4
- 
-+#define PMC_PMIC_ACCESS		0xFF
-+#define PMC_PMIC_READ		0x0
-+#define PMC_PMIC_WRITE		0x1
++/* Timeout in jiffies */
++#define IPC_TIMEOUT		(3 * HZ)
 +
- enum bxtwc_irqs {
- 	BXTWC_PWRBTN_LVL1_IRQ = 0,
- 	BXTWC_TMU_LVL1_IRQ,
-@@ -288,9 +292,9 @@ static int regmap_ipc_byte_reg_read(void *context, unsigned int reg,
+ static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
  
- 	ipc_in[0] = reg;
- 	ipc_in[1] = i2c_addr;
--	ret = intel_pmc_ipc_command(PMC_IPC_PMIC_ACCESS,
--			PMC_IPC_PMIC_ACCESS_READ,
--			ipc_in, sizeof(ipc_in), (u32 *)ipc_out, 1);
-+	ret = intel_scu_ipc_dev_command(pmic->scu, PMC_PMIC_ACCESS,
-+					PMC_PMIC_READ, ipc_in, sizeof(ipc_in),
-+					ipc_out, sizeof(ipc_out));
- 	if (ret) {
- 		dev_err(pmic->dev, "Failed to read from PMIC\n");
- 		return ret;
-@@ -321,9 +325,9 @@ static int regmap_ipc_byte_reg_write(void *context, unsigned int reg,
- 	ipc_in[0] = reg;
- 	ipc_in[1] = i2c_addr;
- 	ipc_in[2] = val;
--	ret = intel_pmc_ipc_command(PMC_IPC_PMIC_ACCESS,
--			PMC_IPC_PMIC_ACCESS_WRITE,
--			ipc_in, sizeof(ipc_in), NULL, 0);
-+	ret = intel_scu_ipc_dev_command(pmic->scu, PMC_PMIC_ACCESS,
-+					PMC_PMIC_WRITE, ipc_in, sizeof(ipc_in),
-+					NULL, 0);
- 	if (ret) {
- 		dev_err(pmic->dev, "Failed to write to PMIC\n");
- 		return ret;
-@@ -457,6 +461,10 @@ static int bxtwc_probe(struct platform_device *pdev)
- 	dev_set_drvdata(&pdev->dev, pmic);
- 	pmic->dev = &pdev->dev;
+ /*
+@@ -132,24 +135,20 @@ static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
+ /* Wait till scu status is busy */
+ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
+ {
+-	u32 status = ipc_read_status(scu);
+-	u32 loop_count = 100000;
++	unsigned long end = jiffies + msecs_to_jiffies(IPC_TIMEOUT);
  
-+	pmic->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
-+	if (!pmic->scu)
-+		return -EPROBE_DEFER;
-+
- 	pmic->regmap = devm_regmap_init(&pdev->dev, NULL, pmic,
- 					&bxtwc_regmap_config);
- 	if (IS_ERR(pmic->regmap)) {
+-	/* break if scu doesn't reset busy bit after huge retry */
+-	while ((status & IPC_STATUS_BUSY) && --loop_count) {
+-		udelay(1); /* scu processing time is in few u secods */
+-		status = ipc_read_status(scu);
+-	}
++	do {
++		u32 status;
+ 
+-	if (status & IPC_STATUS_BUSY) {
+-		dev_err(scu->dev, "IPC timed out");
+-		return -ETIMEDOUT;
+-	}
++		status = ipc_read_status(scu);
++		if (!(status & IPC_STATUS_BUSY))
++			return (status & IPC_STATUS_ERR) ? -EIO : 0;
+ 
+-	if (status & IPC_STATUS_ERR)
+-		return -EIO;
++		usleep_range(50, 100);
++	} while (time_before(jiffies, end));
+ 
+-	return 0;
++	dev_err(scu->dev, "IPC timed out");
++	return -ETIMEDOUT;
+ }
+ 
+ /* Wait till ipc ioc interrupt is received or timeout in 3 HZ */
+@@ -157,7 +156,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
+ {
+ 	int status;
+ 
+-	if (!wait_for_completion_timeout(&scu->cmd_complete, 3 * HZ)) {
++	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT)) {
+ 		dev_err(scu->dev, "IPC timed out\n");
+ 		return -ETIMEDOUT;
+ 	}
 -- 
 2.24.1
