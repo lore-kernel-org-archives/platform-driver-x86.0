@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v2 07/36] platform/x86: intel_scu_ipc: Sleeping is fine when polling
-Date: Wed,  8 Jan 2020 14:41:32 +0300
-Message-ID: <20200108114201.27908-8-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 04/36] platform/x86: intel_scu_ipc: Remove Lincroft support
+Date: Wed,  8 Jan 2020 14:41:29 +0300
+Message-ID: <20200108114201.27908-5-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,76 +12,47 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-There is no reason why the driver would need to block other threads from
-running the CPU while it is waiting for the SCU IPC to complete its
-work. For this reason switch the driver to use usleep_range() instead
-with a bit more relaxed polling loop.
-
-Also add constant for the timeout and use the same value for both
-polling and interrupt modes.
+Moorestown support was removed years ago with by the commit 1a8359e411eb
+("x86/mid: Remove Intel Moorestown"). Lincroft is the CPU side chip of
+Moorestown and not supported anymore so remove the code from the driver.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 29 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 15 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 43eaf9400c67..8db0644900a3 100644
+index a8be5bcb9832..6c44fe5e55b5 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -79,6 +79,9 @@ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
- #define IPC_WRITE_BUFFER	0x80
- #define IPC_READ_BUFFER		0x90
+@@ -58,7 +58,6 @@
+ #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
+ #define IPC_IOC	          0x100		/* IPC command register IOC bit */
  
-+/* Timeout in jiffies */
-+#define IPC_TIMEOUT		(3 * HZ)
-+
- static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
+-#define PCI_DEVICE_ID_LINCROFT		0x082a
+ #define PCI_DEVICE_ID_PENWELL		0x080e
+ #define PCI_DEVICE_ID_CLOVERVIEW	0x08ea
+ #define PCI_DEVICE_ID_TANGIER		0x11a0
+@@ -70,12 +69,6 @@ struct intel_scu_ipc_pdata_t {
+ 	u8 irq_mode;
+ };
  
- /*
-@@ -132,24 +135,20 @@ static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
- /* Wait till scu status is busy */
- static inline int busy_loop(struct intel_scu_ipc_dev *scu)
- {
--	u32 status = ipc_read_status(scu);
--	u32 loop_count = 100000;
-+	unsigned long end = jiffies + msecs_to_jiffies(IPC_TIMEOUT);
+-static const struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
+-	.i2c_base = 0xff12b000,
+-	.i2c_len = 0x10,
+-	.irq_mode = 0,
+-};
+-
+ /* Penwell and Cloverview */
+ static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
+ 	.i2c_base = 0xff12b000,
+@@ -677,7 +670,6 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ #define SCU_DEVICE(id, pdata)	{PCI_VDEVICE(INTEL, id), (kernel_ulong_t)&pdata}
  
--	/* break if scu doesn't reset busy bit after huge retry */
--	while ((status & IPC_STATUS_BUSY) && --loop_count) {
--		udelay(1); /* scu processing time is in few u secods */
--		status = ipc_read_status(scu);
--	}
-+	do {
-+		u32 status;
- 
--	if (status & IPC_STATUS_BUSY) {
--		dev_err(scu->dev, "IPC timed out");
--		return -ETIMEDOUT;
--	}
-+		status = ipc_read_status(scu);
-+		if (!(status & IPC_STATUS_BUSY))
-+			return (status & IPC_STATUS_ERR) ? -EIO : 0;
- 
--	if (status & IPC_STATUS_ERR)
--		return -EIO;
-+		usleep_range(50, 100);
-+	} while (time_before(jiffies, end));
- 
--	return 0;
-+	dev_err(scu->dev, "IPC timed out");
-+	return -ETIMEDOUT;
- }
- 
- /* Wait till ipc ioc interrupt is received or timeout in 3 HZ */
-@@ -157,7 +156,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
- {
- 	int status;
- 
--	if (!wait_for_completion_timeout(&scu->cmd_complete, 3 * HZ)) {
-+	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT)) {
- 		dev_err(scu->dev, "IPC timed out\n");
- 		return -ETIMEDOUT;
- 	}
+ static const struct pci_device_id pci_ids[] = {
+-	SCU_DEVICE(PCI_DEVICE_ID_LINCROFT,	intel_scu_ipc_lincroft_pdata),
+ 	SCU_DEVICE(PCI_DEVICE_ID_PENWELL,	intel_scu_ipc_penwell_pdata),
+ 	SCU_DEVICE(PCI_DEVICE_ID_CLOVERVIEW,	intel_scu_ipc_penwell_pdata),
+ 	SCU_DEVICE(PCI_DEVICE_ID_TANGIER,	intel_scu_ipc_tangier_pdata),
 -- 
 2.24.1
