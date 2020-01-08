@@ -1,112 +1,136 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 27/36] mfd: intel_soc_pmic_bxtwc: Convert to use new
- SCU IPC API
-Date: Wed, 8 Jan 2020 19:32:46 +0200
-Message-ID: <20200108173246.GY32742@smile.fi.intel.com>
+Subject: Re: [PATCH v2 00/36] platform/x86: Rework intel_scu_ipc and
+ intel_pmc_ipc drivers
+Date: Wed, 8 Jan 2020 19:34:44 +0200
+Message-ID: <20200108173444.GZ32742@smile.fi.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-28-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-28-mika.westerberg@linux.intel.com>
+In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:52PM +0300, Mika Westerberg wrote:
-> Convert the Intel Broxton Whiskey Cover PMIC driver to use the new SCU
-> IPC API. This allows us to get rid of the PMC IPC implementation which
-> is now covered in SCU IPC driver.
+On Wed, Jan 08, 2020 at 02:41:25PM +0300, Mika Westerberg wrote:
+> Hi,
 > 
-> Also move PMIC specific IPC message constants to the PMIC driver from
-> the intel_pmc_ipc.h header.
+> Currently both intel_scu_ipc.c and intel_pmc_ipc.c implement the same SCU
+> IPC communications with minor differences. This duplication does not make
+> much sense so this series reworks the two drivers so that there is only a
+> single implementation of the SCU IPC. In addition to that the API will be
+> updated to take SCU instance pointer as an argument, and most of the
+> callers will be converted to this new API. The old API is left there but
+> the plan is to get rid the callers and then the old API as well (this is
+> something we are working with Andy Shevchenko).
+> 
+> The intel_pmc_ipc.c is then moved under MFD which suits better for this
+> kind of a driver that pretty much sets up the SCU IPC and then creates a
+> bunch of platform devices for the things sitting behind the PMC. The driver
+> is renamed to intel_pmc_bxt.c which should follow the existing conventions
+> under drivers/mfd (and it is only meant for Intel Broxton derivatives).
+> 
+> Previous version of the series:
+> 
+>   https://www.spinics.net/lists/platform-driver-x86/msg20359.html
+> 
+> Changes from the previous version:
+> 
+>   * Update changelog of patch 16 according to what the patch actually does.
+>   * Add kernel-doc for struct intel_soc_pmic.
+>   * Move octal permission patch to be before MFD conversion.
+>   * Convert the intel_pmc_bxt.c to MFD APIs whilst it is being moved under
+>     drivers/mfd.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hmm... I didn't see you appended Lee's ACKs.
 
 > 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  arch/x86/include/asm/intel_pmc_ipc.h |  3 ---
->  drivers/mfd/intel_soc_pmic_bxtwc.c   | 22 +++++++++++++++-------
->  2 files changed, 15 insertions(+), 10 deletions(-)
+> I'm including all x86 maintainers just to be sure they are aware of this as
+> I'm not sure if x86@kernel.org reaches them all. Let me know if you have
+> issues with this series.
 > 
-> diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-> index e6da1ce26256..b438a488f613 100644
-> --- a/arch/x86/include/asm/intel_pmc_ipc.h
-> +++ b/arch/x86/include/asm/intel_pmc_ipc.h
-> @@ -3,9 +3,6 @@
->  #define  _ASM_X86_INTEL_PMC_IPC_H_
->  
->  /* Commands */
-> -#define PMC_IPC_PMIC_ACCESS		0xFF
-> -#define		PMC_IPC_PMIC_ACCESS_READ	0x0
-> -#define		PMC_IPC_PMIC_ACCESS_WRITE	0x1
->  #define PMC_IPC_USB_PWR_CTRL		0xF0
->  #define PMC_IPC_PMIC_BLACKLIST_SEL	0xEF
->  #define PMC_IPC_PHY_CONFIG		0xEE
-> diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
-> index 739cfb5b69fe..60aba2a1561c 100644
-> --- a/drivers/mfd/intel_soc_pmic_bxtwc.c
-> +++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
-> @@ -15,7 +15,7 @@
->  #include <linux/mfd/intel_soc_pmic_bxtwc.h>
->  #include <linux/module.h>
->  
-> -#include <asm/intel_pmc_ipc.h>
-> +#include <asm/intel_scu_ipc.h>
->  
->  /* PMIC device registers */
->  #define REG_ADDR_MASK		0xFF00
-> @@ -58,6 +58,10 @@
->  /* Whiskey Cove PMIC share same ACPI ID between different platforms */
->  #define BROXTON_PMIC_WC_HRV	4
->  
-> +#define PMC_PMIC_ACCESS		0xFF
-> +#define PMC_PMIC_READ		0x0
-> +#define PMC_PMIC_WRITE		0x1
-> +
->  enum bxtwc_irqs {
->  	BXTWC_PWRBTN_LVL1_IRQ = 0,
->  	BXTWC_TMU_LVL1_IRQ,
-> @@ -288,9 +292,9 @@ static int regmap_ipc_byte_reg_read(void *context, unsigned int reg,
->  
->  	ipc_in[0] = reg;
->  	ipc_in[1] = i2c_addr;
-> -	ret = intel_pmc_ipc_command(PMC_IPC_PMIC_ACCESS,
-> -			PMC_IPC_PMIC_ACCESS_READ,
-> -			ipc_in, sizeof(ipc_in), (u32 *)ipc_out, 1);
-> +	ret = intel_scu_ipc_dev_command(pmic->scu, PMC_PMIC_ACCESS,
-> +					PMC_PMIC_READ, ipc_in, sizeof(ipc_in),
-> +					ipc_out, sizeof(ipc_out));
->  	if (ret) {
->  		dev_err(pmic->dev, "Failed to read from PMIC\n");
->  		return ret;
-> @@ -321,9 +325,9 @@ static int regmap_ipc_byte_reg_write(void *context, unsigned int reg,
->  	ipc_in[0] = reg;
->  	ipc_in[1] = i2c_addr;
->  	ipc_in[2] = val;
-> -	ret = intel_pmc_ipc_command(PMC_IPC_PMIC_ACCESS,
-> -			PMC_IPC_PMIC_ACCESS_WRITE,
-> -			ipc_in, sizeof(ipc_in), NULL, 0);
-> +	ret = intel_scu_ipc_dev_command(pmic->scu, PMC_PMIC_ACCESS,
-> +					PMC_PMIC_WRITE, ipc_in, sizeof(ipc_in),
-> +					NULL, 0);
->  	if (ret) {
->  		dev_err(pmic->dev, "Failed to write to PMIC\n");
->  		return ret;
-> @@ -457,6 +461,10 @@ static int bxtwc_probe(struct platform_device *pdev)
->  	dev_set_drvdata(&pdev->dev, pmic);
->  	pmic->dev = &pdev->dev;
->  
-> +	pmic->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
-> +	if (!pmic->scu)
-> +		return -EPROBE_DEFER;
-> +
->  	pmic->regmap = devm_regmap_init(&pdev->dev, NULL, pmic,
->  					&bxtwc_regmap_config);
->  	if (IS_ERR(pmic->regmap)) {
+> I would prefer this to be merged through platform/x86 or MFD trees assuming
+> there are no objections.
+
+I'm almost reviewed it (few patches left which I plan to do soon), I'm fine if
+it goes via other tree.
+
+> 
+> I have tested this on Intel Edison (Merrifield) and Joule (Broxton-M).
+> 
+> Mika Westerberg (36):
+>   platform/x86: intel_mid_powerbtn: Take a copy of ddata
+>   platform/x86: intel_scu_ipcutil: Remove default y from Kconfig
+>   platform/x86: intel_scu_ipc: Add constants for register offsets
+>   platform/x86: intel_scu_ipc: Remove Lincroft support
+>   platform/x86: intel_scu_ipc: Drop intel_scu_ipc_i2c_cntrl()
+>   platform/x86: intel_scu_ipc: Fix interrupt support
+>   platform/x86: intel_scu_ipc: Sleeping is fine when polling
+>   platform/x86: intel_scu_ipc: Drop unused prototype intel_scu_ipc_fw_update()
+>   platform/x86: intel_scu_ipc: Drop unused macros
+>   platform/x86: intel_scu_ipc: Drop intel_scu_ipc_io[read|write][8|16]()
+>   platform/x86: intel_scu_ipc: Drop intel_scu_ipc_raw_command()
+>   platform/x86: intel_scu_ipc: Split out SCU IPC functionality from the SCU driver
+>   platform/x86: intel_scu_ipc: Reformat kernel-doc comments of exported functions
+>   platform/x86: intel_scu_ipc: Introduce new SCU IPC API
+>   platform/x86: intel_mid_powerbtn: Convert to use new SCU IPC API
+>   watchdog: intel-mid_wdt: Convert to use new SCU IPC API
+>   platform/x86: intel_scu_ipcutil: Convert to use new SCU IPC API
+>   platform/x86: intel_pmc_ipc: Make intel_pmc_gcr_update() static
+>   platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_simple_command() static
+>   platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_raw_cmd() static
+>   platform/x86: intel_pmc_ipc: Drop intel_pmc_gcr_read() and intel_pmc_gcr_write()
+>   platform/x86: intel_pmc_ipc: Drop ipc_data_readb()
+>   platform/x86: intel_pmc_ipc: Get rid of unnecessary includes
+>   platform/x86: intel_scu_ipc: Add function to remove SCU IPC
+>   platform/x86: intel_pmc_ipc: Start using SCU IPC
+>   mfd: intel_soc_pmic: Add SCU IPC member to struct intel_soc_pmic
+>   mfd: intel_soc_pmic_bxtwc: Convert to use new SCU IPC API
+>   mfd: intel_soc_pmic_mrfld: Convert to use new SCU IPC API
+>   platform/x86: intel_telemetry: Convert to use new SCU IPC API
+>   platform/x86: intel_pmc_ipc: Drop intel_pmc_ipc_command()
+>   x86/platform/intel-mid: Add empty stubs for intel_scu_devices_[create|destroy]()
+>   platform/x86: intel_pmc_ipc: Move PCI IDs to intel_scu_pcidrv.c
+>   platform/x86: intel_pmc_ipc: Use octal permissions in sysfs attributes
+>   platform/x86: intel_pmc_ipc: Convert to MFD
+>   mfd: intel_pmc_bxt: Switch to use driver->dev_groups
+>   MAINTAINERS: Update entry for Intel Broxton PMC driver
+> 
+>  MAINTAINERS                                   |   13 +-
+>  arch/x86/Kconfig                              |    2 +-
+>  arch/x86/include/asm/intel-mid.h              |    9 +-
+>  arch/x86/include/asm/intel_pmc_ipc.h          |   91 --
+>  arch/x86/include/asm/intel_scu_ipc.h          |  104 +-
+>  arch/x86/include/asm/intel_scu_ipc_legacy.h   |   76 ++
+>  arch/x86/include/asm/intel_telemetry.h        |    3 +
+>  drivers/mfd/Kconfig                           |   18 +-
+>  drivers/mfd/Makefile                          |    1 +
+>  drivers/mfd/intel_pmc_bxt.c                   |  539 +++++++++
+>  drivers/mfd/intel_soc_pmic_bxtwc.c            |   22 +-
+>  drivers/mfd/intel_soc_pmic_mrfld.c            |   10 +-
+>  drivers/platform/x86/Kconfig                  |   49 +-
+>  drivers/platform/x86/Makefile                 |    2 +-
+>  drivers/platform/x86/intel_mid_powerbtn.c     |   20 +-
+>  drivers/platform/x86/intel_pmc_ipc.c          | 1031 -----------------
+>  drivers/platform/x86/intel_scu_ipc.c          |  681 +++++------
+>  drivers/platform/x86/intel_scu_ipcutil.c      |   43 +-
+>  drivers/platform/x86/intel_scu_pcidrv.c       |   75 ++
+>  .../platform/x86/intel_telemetry_debugfs.c    |    2 +-
+>  drivers/platform/x86/intel_telemetry_pltdrv.c |  101 +-
+>  drivers/usb/typec/tcpm/Kconfig                |    2 +-
+>  drivers/watchdog/intel-mid_wdt.c              |   53 +-
+>  include/linux/mfd/intel_pmc_bxt.h             |   50 +
+>  include/linux/mfd/intel_soc_pmic.h            |   15 +
+>  25 files changed, 1319 insertions(+), 1693 deletions(-)
+>  delete mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
+>  create mode 100644 arch/x86/include/asm/intel_scu_ipc_legacy.h
+>  create mode 100644 drivers/mfd/intel_pmc_bxt.c
+>  delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
+>  create mode 100644 drivers/platform/x86/intel_scu_pcidrv.c
+>  create mode 100644 include/linux/mfd/intel_pmc_bxt.h
+> 
 > -- 
 > 2.24.1
 > 
