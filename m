@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v2 35/36] mfd: intel_pmc_bxt: Switch to use driver->dev_groups
-Date: Wed,  8 Jan 2020 14:42:00 +0300
-Message-ID: <20200108114201.27908-36-mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 36/36] MAINTAINERS: Update entry for Intel Broxton PMC driver
+Date: Wed,  8 Jan 2020 14:42:01 +0300
+Message-ID: <20200108114201.27908-37-mika.westerberg@linux.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,68 +12,48 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The driver core provides support for adding additional attributes for
-devices via new ->dev_groups member of struct device_driver. Convert the
-driver to use that instead of adding the attributes manually.
+The driver lives now under MFD so split the current entry into two parts
+and add me as co-maintainer of the Intel Broxton PMC driver. While there
+correct formatting of Zha Qipeng's email address.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/mfd/intel_pmc_bxt.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ MAINTAINERS | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mfd/intel_pmc_bxt.c b/drivers/mfd/intel_pmc_bxt.c
-index 76f166c1455b..9f2eb75bdf78 100644
---- a/drivers/mfd/intel_pmc_bxt.c
-+++ b/drivers/mfd/intel_pmc_bxt.c
-@@ -244,6 +244,11 @@ static const struct attribute_group intel_pmc_group = {
- 	.attrs = intel_pmc_attrs,
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8982c6e013b3..11b8bb4e2867 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8280,6 +8280,13 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/intel_atomisp2_pm.c
  
-+static const struct attribute_group *intel_pmc_groups[] = {
-+	&intel_pmc_group,
-+	NULL,
-+};
++INTEL BROXTON PMC DRIVER
++M:	Mika Westerberg <mika.westerberg@linux.intel.com>
++M:	Zha Qipeng <qipeng.zha@intel.com>
++S:	Maintained
++F:	drivers/mfd/intel_pmc_bxt.c
++F:	include/linux/mfd/intel_pmc_bxt.h
 +
- static int pmc_create_punit_device(void)
- {
- 	struct mfd_cell punit = {
-@@ -492,27 +497,14 @@ static int intel_pmc_probe(struct platform_device *pdev)
- 	ret = pmc_create_devices();
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to create pmc devices\n");
--		goto err_ipc;
--	}
--
--	ret = sysfs_create_group(&pdev->dev.kobj, &intel_pmc_group);
--	if (ret) {
--		dev_err(&pdev->dev, "Failed to create sysfs group %d\n",
--			ret);
--		goto err_ipc;
-+		intel_scu_ipc_remove(scu);
- 	}
+ INTEL C600 SERIES SAS CONTROLLER DRIVER
+ M:	Intel SCU Linux support <intel-linux-scu@intel.com>
+ M:	Artur Paszkiewicz <artur.paszkiewicz@intel.com>
+@@ -8488,13 +8495,11 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/intel_pmc_core*
  
--	return 0;
--
--err_ipc:
--	intel_scu_ipc_remove(scu);
--
- 	return ret;
- }
+-INTEL PMC/P-Unit IPC DRIVER
+-M:	Zha Qipeng<qipeng.zha@intel.com>
++INTEL P-Unit IPC DRIVER
++M:	Zha Qipeng <qipeng.zha@intel.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/intel_pmc_ipc.c
+ F:	drivers/platform/x86/intel_punit_ipc.c
+-F:	arch/x86/include/asm/intel_pmc_ipc.h
+ F:	arch/x86/include/asm/intel_punit_ipc.h
  
- static int intel_pmc_remove(struct platform_device *pdev)
- {
--	sysfs_remove_group(&pdev->dev.kobj, &intel_pmc_group);
- 	intel_scu_ipc_remove(platform_get_drvdata(pdev));
- 	pmcdev.dev = NULL;
- 	return 0;
-@@ -524,6 +516,7 @@ static struct platform_driver intel_pmc_driver = {
- 	.driver = {
- 		.name = "intel_pmc_bxt",
- 		.acpi_match_table = ACPI_PTR(intel_pmc_acpi_ids),
-+		.dev_groups = intel_pmc_groups,
- 	},
- };
- 
+ INTEL PMIC GPIO DRIVERS
 -- 
 2.24.1
