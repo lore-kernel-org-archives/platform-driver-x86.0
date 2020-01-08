@@ -1,114 +1,76 @@
-From: David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v2 6/8] s390/mm: Thread pgprot_t through vmem_add_mapping()
-Date: Wed, 8 Jan 2020 13:43:51 +0100
-Message-ID: <a5501f2a-ff8d-cea2-1540-1a70ea6bc2d2@redhat.com>
-References: <20200107205959.7575-1-logang@deltatee.com>
- <20200107205959.7575-7-logang@deltatee.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 2/2] platform/x86: GPD pocket fan: Allow somewhat
+ lower/higher temperature limits
+Date: Wed, 8 Jan 2020 14:05:49 +0100
+Message-ID: <2df70a79-10e1-ea9e-0425-dcc46c1e28bc@redhat.com>
+References: <20200106144219.525215-1-hdegoede@redhat.com>
+ <20200106144219.525215-2-hdegoede@redhat.com>
+ <CAHp75Ve5XF-UZw6D-OUCkgOPMYH0DgT1L5uVNGRuLmZ6Cjd1KA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20200107205959.7575-7-logang@deltatee.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Ve5XF-UZw6D-OUCkgOPMYH0DgT1L5uVNGRuLmZ6Cjd1KA@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Logan Gunthorpe <logang@deltatee.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Michal Hocko <mhocko@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Eric Badger <ebadger@gigaio.com>, Vasily Gorbik <gor@linux.ibm.com>, Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jason Anderson <jasona.594@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 07.01.20 21:59, Logan Gunthorpe wrote:
-> In prepartion to support a pgprot_t argument for arch_add_memory().
+Hi,
+
+On 08-01-2020 13:23, Andy Shevchenko wrote:
+> On Mon, Jan 6, 2020 at 4:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Allow the user to configure the fan to turn on / speed-up at lower
+>> thresholds then before (20 degrees Celcius as minimum instead of 40) and
+>> likewise also allow the user to delay the fan speeding-up till the
+>> temperature hits 90 degrees Celcius (was 70).
+>>
+>> Cc: Jason Anderson <jasona.594@gmail.com>
 > 
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->  arch/s390/include/asm/pgtable.h |  3 ++-
->  arch/s390/mm/extmem.c           |  3 ++-
->  arch/s390/mm/init.c             |  2 +-
->  arch/s390/mm/vmem.c             | 10 +++++-----
->  4 files changed, 10 insertions(+), 8 deletions(-)
+>> Reported-by: Jason Anderson <jasona.594@gmail.com>
 > 
-> diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-> index 7b03037a8475..e667a1a96879 100644
-> --- a/arch/s390/include/asm/pgtable.h
-> +++ b/arch/s390/include/asm/pgtable.h
-> @@ -1640,7 +1640,8 @@ static inline swp_entry_t __swp_entry(unsigned long type, unsigned long offset)
->  
->  #define kern_addr_valid(addr)   (1)
->  
-> -extern int vmem_add_mapping(unsigned long start, unsigned long size);
-> +extern int vmem_add_mapping(unsigned long start, unsigned long size,
-> +			    pgprot_t prot);
->  extern int vmem_remove_mapping(unsigned long start, unsigned long size);
->  extern int s390_enable_sie(void);
->  extern int s390_enable_skey(void);
-> diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
-> index fd0dae9d10f4..6cf7029a7b35 100644
-> --- a/arch/s390/mm/extmem.c
-> +++ b/arch/s390/mm/extmem.c
-> @@ -313,7 +313,8 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
->  		goto out_free;
->  	}
->  
-> -	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
-> +	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1,
-> +			      PAGE_KERNEL);
->  
->  	if (rc)
->  		goto out_free;
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index a0c88c1c9ad0..ef19522ddad2 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -277,7 +277,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
->  	if (WARN_ON_ONCE(modifiers->altmap))
->  		return -EINVAL;
->  
-> -	rc = vmem_add_mapping(start, size);
-> +	rc = vmem_add_mapping(start, size, PAGE_KERNEL);
->  	if (rc)
->  		return rc;
->  
-> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
-> index b403fa14847d..8a5e95f184a2 100644
-> --- a/arch/s390/mm/vmem.c
-> +++ b/arch/s390/mm/vmem.c
-> @@ -66,7 +66,7 @@ pte_t __ref *vmem_pte_alloc(void)
->  /*
->   * Add a physical memory range to the 1:1 mapping.
->   */
-> -static int vmem_add_mem(unsigned long start, unsigned long size)
-> +static int vmem_add_mem(unsigned long start, unsigned long size, pgprot_t prot)
->  {
->  	unsigned long pgt_prot, sgt_prot, r3_prot;
->  	unsigned long pages4k, pages1m, pages2g;
-> @@ -79,7 +79,7 @@ static int vmem_add_mem(unsigned long start, unsigned long size)
->  	pte_t *pt_dir;
->  	int ret = -ENOMEM;
->  
-> -	pgt_prot = pgprot_val(PAGE_KERNEL);
-> +	pgt_prot = pgprot_val(prot);
->  	sgt_prot = pgprot_val(SEGMENT_KERNEL);
->  	r3_prot = pgprot_val(REGION3_KERNEL);
+> My understanding of this tag that the report assumes a bug to fix
+> followed up with a corresponding Fixes tag.
 
-So, if we map as huge/gigantic pages, the protection would be discarded?
-That looks wrong.
+Well in a way the old min/max for the limits being to strict a bug
+and Jason pointed this out so I want to give him credit for that.
 
-s390x does not support ZONE_DEVICE yet. Maybe simply bail out for s390x
-as you do for sh to make your life easier?
+OTHO Fixes: feels a little bit to strong, even without a Cc: stable
+tag, commits with Fixes: in there are almost guaranteed to be picked
+up for the stable series and in this case that seems unnecessary to me.
 
-[...]
+If you do want to add a Fixes: tag then adding the one from patch 1/2
+makes the most sense.
 
--- 
-Thanks,
+Regards,
 
-David / dhildenb
+Hans
+
+
+
+> 
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/platform/x86/gpd-pocket-fan.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
+>> index 1e6a42f2ea8a..0ffcbf9bc18e 100644
+>> --- a/drivers/platform/x86/gpd-pocket-fan.c
+>> +++ b/drivers/platform/x86/gpd-pocket-fan.c
+>> @@ -126,7 +126,7 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
+>>          int i;
+>>
+>>          for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
+>> -               if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
+>> +               if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
+>>                          dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
+>>                                  temp_limits[i]);
+>>                          temp_limits[0] = TEMP_LIMIT0_DEFAULT;
+>> --
+>> 2.24.1
+>>
+> 
+> 
