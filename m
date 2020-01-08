@@ -1,107 +1,61 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: GPD pocket fan: Use default values when
- wrong modparams are given
-Date: Wed, 8 Jan 2020 14:23:53 +0200
-Message-ID: <CAHp75Vdqd9GQ8eM9mk+4jr54MojySH+ZKGZSJ7mNBHy567XGPQ@mail.gmail.com>
-References: <20200106144219.525215-1-hdegoede@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v2 1/8] mm/memory_hotplug: Drop the flags field from
+ struct mhp_restrictions
+Date: Wed, 8 Jan 2020 13:27:14 +0100
+Message-ID: <c3c3c475-f828-13f7-b5c9-f691ef0fe1ff@redhat.com>
+References: <20200107205959.7575-1-logang@deltatee.com>
+ <20200107205959.7575-2-logang@deltatee.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200106144219.525215-1-hdegoede@redhat.com>
-Sender: stable-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stable <stable@vger.kernel.org>, Jason Anderson <jasona.594@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20200107205959.7575-2-logang@deltatee.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Logan Gunthorpe <logang@deltatee.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Michal Hocko <mhocko@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Eric Badger <ebadger@gigaio.com>, Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 6, 2020 at 4:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Use our default values when wrong module-parameters are given, instead of
-> refusing to load. Refusing to load leaves the fan at the BIOS default
-> setting, which is "Off". The CPU's thermal throttling should protect the
-> system from damage, but not-loading is really not the best fallback in this
-> case.
->
-> This commit fixes this by re-setting module-parameter values to their
-> defaults if they are out of range, instead of failing the probe with
-> -EINVAL.
->
-> Cc: stable@vger.kernel.org
-> Cc: Jason Anderson <jasona.594@gmail.com>
-> Reported-by: Jason Anderson <jasona.594@gmail.com>
-> Fixes: 594ce6db326e ("platform/x86: GPD pocket fan: Use a min-speed of 2 while charging")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On 07.01.20 21:59, Logan Gunthorpe wrote:
+> This variable is not used anywhere and should therefore be removed
+> from the structure.
+> 
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 > ---
->  drivers/platform/x86/gpd-pocket-fan.c | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
-> index be85ed966bf3..1e6a42f2ea8a 100644
-> --- a/drivers/platform/x86/gpd-pocket-fan.c
-> +++ b/drivers/platform/x86/gpd-pocket-fan.c
-> @@ -16,17 +16,26 @@
->
->  #define MAX_SPEED 3
->
-> -static int temp_limits[3] = { 55000, 60000, 65000 };
-> +#define TEMP_LIMIT0_DEFAULT    55000
-> +#define TEMP_LIMIT1_DEFAULT    60000
-> +#define TEMP_LIMIT2_DEFAULT    65000
-> +
-> +#define HYSTERESIS_DEFAULT     3000
-> +
-> +#define SPEED_ON_AC_DEFAULT    2
-> +
-> +static int temp_limits[3] = {
-> +       TEMP_LIMIT0_DEFAULT, TEMP_LIMIT1_DEFAULT, TEMP_LIMIT2_DEFAULT };
+>  include/linux/memory_hotplug.h | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index ba0dca6aac6e..e47a29761088 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -55,11 +55,9 @@ enum {
+>  
+>  /*
+>   * Restrictions for the memory hotplug:
+> - * flags:  MHP_ flags
+>   * altmap: alternative allocator for memmap array
+>   */
+>  struct mhp_restrictions {
+> -	unsigned long flags;
+>  	struct vmem_altmap *altmap;
+>  };
 
-I would rather put }; on the next line.
-But okay, I'll do it myself when applying.
+We wanted to use that for the "vmemmap on added memory" config knob. But
+that might still take some time and we might actually realize it using
+the altmap instead (hopefully :) ).
 
->  module_param_array(temp_limits, int, NULL, 0444);
->  MODULE_PARM_DESC(temp_limits,
->                  "Millicelsius values above which the fan speed increases");
->
-> -static int hysteresis = 3000;
-> +static int hysteresis = HYSTERESIS_DEFAULT;
->  module_param(hysteresis, int, 0444);
->  MODULE_PARM_DESC(hysteresis,
->                  "Hysteresis in millicelsius before lowering the fan speed");
->
-> -static int speed_on_ac = 2;
-> +static int speed_on_ac = SPEED_ON_AC_DEFAULT;
->  module_param(speed_on_ac, int, 0444);
->  MODULE_PARM_DESC(speed_on_ac,
->                  "minimum fan speed to allow when system is powered by AC");
-> @@ -120,18 +129,21 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
->                 if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
->                         dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
->                                 temp_limits[i]);
-> -                       return -EINVAL;
-> +                       temp_limits[0] = TEMP_LIMIT0_DEFAULT;
-> +                       temp_limits[1] = TEMP_LIMIT1_DEFAULT;
-> +                       temp_limits[2] = TEMP_LIMIT2_DEFAULT;
-> +                       break;
->                 }
->         }
->         if (hysteresis < 1000 || hysteresis > 10000) {
->                 dev_err(&pdev->dev, "Invalid hysteresis %d (must be between 1000 and 10000)\n",
->                         hysteresis);
-> -               return -EINVAL;
-> +               hysteresis = HYSTERESIS_DEFAULT;
->         }
->         if (speed_on_ac < 0 || speed_on_ac > MAX_SPEED) {
->                 dev_err(&pdev->dev, "Invalid speed_on_ac %d (must be between 0 and 3)\n",
->                         speed_on_ac);
-> -               return -EINVAL;
-> +               speed_on_ac = SPEED_ON_AC_DEFAULT;
->         }
->
->         fan = devm_kzalloc(&pdev->dev, sizeof(*fan), GFP_KERNEL);
-> --
-> 2.24.1
->
-
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+
+David / dhildenb
