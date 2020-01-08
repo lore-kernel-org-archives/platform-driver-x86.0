@@ -1,96 +1,67 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 35/36] mfd: intel_pmc_bxt: Switch to use
- driver->dev_groups
-Date: Wed, 8 Jan 2020 19:30:48 +0200
-Message-ID: <20200108173048.GW32742@smile.fi.intel.com>
+Subject: Re: [PATCH v2 26/36] mfd: intel_soc_pmic: Add SCU IPC member to
+ struct intel_soc_pmic
+Date: Wed, 8 Jan 2020 19:31:21 +0200
+Message-ID: <20200108173121.GX32742@smile.fi.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-36-mika.westerberg@linux.intel.com>
+ <20200108114201.27908-27-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200108114201.27908-36-mika.westerberg@linux.intel.com>
+In-Reply-To: <20200108114201.27908-27-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:42:00PM +0300, Mika Westerberg wrote:
-> The driver core provides support for adding additional attributes for
-> devices via new ->dev_groups member of struct device_driver.
-
-I'm wondering if we can also do this before converting to MFD.
-
-> Convert the
-> driver to use that instead of adding the attributes manually.
+On Wed, Jan 08, 2020 at 02:41:51PM +0300, Mika Westerberg wrote:
+> Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
+> be using this field going forward to access the SCU IPC instance.
+> 
+> While there add kernel-doc for the intel_soc_pmic structure.
 > 
 
-After addressing above and below comments,
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > ---
->  drivers/mfd/intel_pmc_bxt.c | 21 +++++++--------------
->  1 file changed, 7 insertions(+), 14 deletions(-)
+>  include/linux/mfd/intel_soc_pmic.h | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> diff --git a/drivers/mfd/intel_pmc_bxt.c b/drivers/mfd/intel_pmc_bxt.c
-> index 76f166c1455b..9f2eb75bdf78 100644
-> --- a/drivers/mfd/intel_pmc_bxt.c
-> +++ b/drivers/mfd/intel_pmc_bxt.c
-> @@ -244,6 +244,11 @@ static const struct attribute_group intel_pmc_group = {
->  	.attrs = intel_pmc_attrs,
+> diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+> index bfecd6bd4990..bda22d750be6 100644
+> --- a/include/linux/mfd/intel_soc_pmic.h
+> +++ b/include/linux/mfd/intel_soc_pmic.h
+> @@ -13,6 +13,20 @@
+>  
+>  #include <linux/regmap.h>
+>  
+> +/**
+> + * struct intel_soc_pmic - Intel SoC PMIC data
+> + * @irq: Interrupt number
+> + * @regmap: Pointer to the regmap structure
+> + * @irq_chip_data: IRQ chip data for the PMIC itself
+> + * @irq_chip_data_pwrbtn: Chained IRQ chip data for the power button
+> + * @irq_chip_data_tmu: Chained IRQ chip data for the TMU
+> + * @irq_chip_data_bcu: Chained IRQ chip data for the BCU
+> + * @irq_chip_data_adc: Chained IRQ chip data for the ADC
+> + * @irq_chip_data_chgr: Chained IRQ chip data for the CHGR
+> + * @irq_chip_data_crit: Chained IRQ chip data for the CRIT
+> + * @dev: Pointer to the PMIC device
+> + * @scu: SCU IPC pointer used for IPC operations
+> + */
+>  struct intel_soc_pmic {
+>  	int irq;
+>  	struct regmap *regmap;
+> @@ -24,6 +38,7 @@ struct intel_soc_pmic {
+>  	struct regmap_irq_chip_data *irq_chip_data_chgr;
+>  	struct regmap_irq_chip_data *irq_chip_data_crit;
+>  	struct device *dev;
+> +	struct intel_scu_ipc_dev *scu;
 >  };
 >  
-> +static const struct attribute_group *intel_pmc_groups[] = {
-> +	&intel_pmc_group,
-
-> +	NULL,
-
-Comma is not needed for terminator lines.
-
-> +};
-> +
->  static int pmc_create_punit_device(void)
->  {
->  	struct mfd_cell punit = {
-> @@ -492,27 +497,14 @@ static int intel_pmc_probe(struct platform_device *pdev)
->  	ret = pmc_create_devices();
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to create pmc devices\n");
-> -		goto err_ipc;
-> -	}
-> -
-> -	ret = sysfs_create_group(&pdev->dev.kobj, &intel_pmc_group);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "Failed to create sysfs group %d\n",
-> -			ret);
-> -		goto err_ipc;
-> +		intel_scu_ipc_remove(scu);
->  	}
->  
-> -	return 0;
-> -
-> -err_ipc:
-> -	intel_scu_ipc_remove(scu);
-> -
->  	return ret;
->  }
->  
->  static int intel_pmc_remove(struct platform_device *pdev)
->  {
-> -	sysfs_remove_group(&pdev->dev.kobj, &intel_pmc_group);
->  	intel_scu_ipc_remove(platform_get_drvdata(pdev));
->  	pmcdev.dev = NULL;
->  	return 0;
-> @@ -524,6 +516,7 @@ static struct platform_driver intel_pmc_driver = {
->  	.driver = {
->  		.name = "intel_pmc_bxt",
->  		.acpi_match_table = ACPI_PTR(intel_pmc_acpi_ids),
-> +		.dev_groups = intel_pmc_groups,
->  	},
->  };
->  
+>  int intel_soc_pmic_exec_mipi_pmic_seq_element(u16 i2c_address, u32 reg_address,
 > -- 
 > 2.24.1
 > 
