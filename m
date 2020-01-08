@@ -1,72 +1,125 @@
-From: Logan Gunthorpe <logang@deltatee.com>
-Subject: [PATCH v2 4/8] x86/mm: Introduce _set_memory_prot()
-Date: Tue,  7 Jan 2020 13:59:55 -0700
-Message-ID: <20200107205959.7575-5-logang@deltatee.com>
-References: <20200107205959.7575-1-logang@deltatee.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH v2 06/36] platform/x86: intel_scu_ipc: Fix interrupt support
+Date: Wed,  8 Jan 2020 14:41:31 +0300
+Message-ID: <20200108114201.27908-7-mika.westerberg@linux.intel.com>
+References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20200107205959.7575-1-logang@deltatee.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Eric Badger <ebadger@gigaio.com>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Logan Gunthorpe <logang@deltatee.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-For use in the 32bit arch_add_memory() to set the pgprot type of the
-memory to add.
+Currently the driver has disabled interrupt support for Tangier but
+actually interrupt works just fine if the command is not written twice
+in a row. Also we need to ack the interrupt in the handler.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- arch/x86/include/asm/set_memory.h | 1 +
- arch/x86/mm/pageattr.c            | 7 +++++++
- 2 files changed, 8 insertions(+)
+ drivers/platform/x86/intel_scu_ipc.c | 48 ++++++----------------------
+ 1 file changed, 10 insertions(+), 38 deletions(-)
 
-diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-index 2ee8e469dcf5..d728c2f3ad96 100644
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -34,6 +34,7 @@
-  * The caller is required to take care of these.
-  */
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index b39680b53387..43eaf9400c67 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -58,24 +58,6 @@
+ #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
+ #define IPC_IOC	          0x100		/* IPC command register IOC bit */
  
-+int _set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
- int _set_memory_uc(unsigned long addr, int numpages);
- int _set_memory_wc(unsigned long addr, int numpages);
- int _set_memory_wt(unsigned long addr, int numpages);
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 1b99ad05b117..2f1934d7b8d9 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -1781,6 +1781,13 @@ static inline int cpa_clear_pages_array(struct page **pages, int numpages,
- 		CPA_PAGES_ARRAY, pages);
+-#define PCI_DEVICE_ID_PENWELL		0x080e
+-#define PCI_DEVICE_ID_CLOVERVIEW	0x08ea
+-#define PCI_DEVICE_ID_TANGIER		0x11a0
+-
+-/* intel scu ipc driver data */
+-struct intel_scu_ipc_pdata_t {
+-	u8 irq_mode;
+-};
+-
+-/* Penwell and Cloverview */
+-static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
+-	.irq_mode = 1,
+-};
+-
+-static const struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
+-	.irq_mode = 0,
+-};
+-
+ struct intel_scu_ipc_dev {
+ 	struct device *dev;
+ 	void __iomem *ipc_base;
+@@ -86,6 +68,7 @@ struct intel_scu_ipc_dev {
+ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+ 
+ #define IPC_STATUS		0x04
++#define IPC_STATUS_IRQ		BIT(2)
+ #define IPC_STATUS_ERR		BIT(1)
+ #define IPC_STATUS_BUSY		BIT(0)
+ 
+@@ -107,11 +90,8 @@ static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
+  */
+ static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
+ {
+-	if (scu->irq_mode) {
+-		reinit_completion(&scu->cmd_complete);
+-		writel(cmd | IPC_IOC, scu->ipc_base);
+-	}
+-	writel(cmd, scu->ipc_base);
++	reinit_completion(&scu->cmd_complete);
++	writel(cmd | IPC_IOC, scu->ipc_base);
  }
  
-+int _set_memory_prot(unsigned long addr, int numpages, pgprot_t prot)
-+{
-+	return change_page_attr_set_clr(&addr, numpages, prot,
-+					__pgprot(~pgprot_val(prot)), 0, 0,
-+					NULL);
-+}
-+
- int _set_memory_uc(unsigned long addr, int numpages)
+ /*
+@@ -549,9 +529,10 @@ EXPORT_SYMBOL_GPL(intel_scu_ipc_raw_command);
+ static irqreturn_t ioc(int irq, void *dev_id)
  {
- 	/*
+ 	struct intel_scu_ipc_dev *scu = dev_id;
++	int status = ipc_read_status(scu);
+ 
+-	if (scu->irq_mode)
+-		complete(&scu->cmd_complete);
++	writel(status | IPC_STATUS_IRQ, scu->ipc_base + IPC_STATUS);
++	complete(&scu->cmd_complete);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -568,17 +549,10 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+ 	int err;
+ 	struct intel_scu_ipc_dev *scu = &ipcdev;
+-	struct intel_scu_ipc_pdata_t *pdata;
+ 
+ 	if (scu->dev)		/* We support only one SCU */
+ 		return -EBUSY;
+ 
+-	pdata = (struct intel_scu_ipc_pdata_t *)id->driver_data;
+-	if (!pdata)
+-		return -ENODEV;
+-
+-	scu->irq_mode = pdata->irq_mode;
+-
+ 	err = pcim_enable_device(pdev);
+ 	if (err)
+ 		return err;
+@@ -605,13 +579,11 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	return 0;
+ }
+ 
+-#define SCU_DEVICE(id, pdata)	{PCI_VDEVICE(INTEL, id), (kernel_ulong_t)&pdata}
+-
+ static const struct pci_device_id pci_ids[] = {
+-	SCU_DEVICE(PCI_DEVICE_ID_PENWELL,	intel_scu_ipc_penwell_pdata),
+-	SCU_DEVICE(PCI_DEVICE_ID_CLOVERVIEW,	intel_scu_ipc_penwell_pdata),
+-	SCU_DEVICE(PCI_DEVICE_ID_TANGIER,	intel_scu_ipc_tangier_pdata),
+-	{}
++	{ PCI_VDEVICE(INTEL, 0x080e) },
++	{ PCI_VDEVICE(INTEL, 0x08ea) },
++	{ PCI_VDEVICE(INTEL, 0x11a0) },
++	{ }
+ };
+ 
+ static struct pci_driver ipc_driver = {
 -- 
-2.20.1
+2.24.1
