@@ -1,50 +1,102 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86: GPD pocket fan: Allow somewhat
- lower/higher temperature limits
-Date: Wed, 8 Jan 2020 14:23:11 +0200
-Message-ID: <CAHp75Ve5XF-UZw6D-OUCkgOPMYH0DgT1L5uVNGRuLmZ6Cjd1KA@mail.gmail.com>
-References: <20200106144219.525215-1-hdegoede@redhat.com> <20200106144219.525215-2-hdegoede@redhat.com>
+Subject: Re: [PATCH 1/2] platform/x86: GPD pocket fan: Use default values when
+ wrong modparams are given
+Date: Wed, 8 Jan 2020 14:23:53 +0200
+Message-ID: <CAHp75Vdqd9GQ8eM9mk+4jr54MojySH+ZKGZSJ7mNBHy567XGPQ@mail.gmail.com>
+References: <20200106144219.525215-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200106144219.525215-2-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20200106144219.525215-1-hdegoede@redhat.com>
+Sender: stable-owner@vger.kernel.org
 To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jason Anderson <jasona.594@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stable <stable@vger.kernel.org>, Jason Anderson <jasona.594@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
 On Mon, Jan 6, 2020 at 4:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Allow the user to configure the fan to turn on / speed-up at lower
-> thresholds then before (20 degrees Celcius as minimum instead of 40) and
-> likewise also allow the user to delay the fan speeding-up till the
-> temperature hits 90 degrees Celcius (was 70).
+> Use our default values when wrong module-parameters are given, instead of
+> refusing to load. Refusing to load leaves the fan at the BIOS default
+> setting, which is "Off". The CPU's thermal throttling should protect the
+> system from damage, but not-loading is really not the best fallback in this
+> case.
 >
+> This commit fixes this by re-setting module-parameter values to their
+> defaults if they are out of range, instead of failing the probe with
+> -EINVAL.
+>
+> Cc: stable@vger.kernel.org
 > Cc: Jason Anderson <jasona.594@gmail.com>
-
 > Reported-by: Jason Anderson <jasona.594@gmail.com>
-
-My understanding of this tag that the report assumes a bug to fix
-followed up with a corresponding Fixes tag.
-
+> Fixes: 594ce6db326e ("platform/x86: GPD pocket fan: Use a min-speed of 2 while charging")
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/platform/x86/gpd-pocket-fan.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/platform/x86/gpd-pocket-fan.c | 24 ++++++++++++++++++------
+>  1 file changed, 18 insertions(+), 6 deletions(-)
 >
 > diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
-> index 1e6a42f2ea8a..0ffcbf9bc18e 100644
+> index be85ed966bf3..1e6a42f2ea8a 100644
 > --- a/drivers/platform/x86/gpd-pocket-fan.c
 > +++ b/drivers/platform/x86/gpd-pocket-fan.c
-> @@ -126,7 +126,7 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
->         int i;
+> @@ -16,17 +16,26 @@
 >
->         for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
-> -               if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
-> +               if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
+>  #define MAX_SPEED 3
+>
+> -static int temp_limits[3] = { 55000, 60000, 65000 };
+> +#define TEMP_LIMIT0_DEFAULT    55000
+> +#define TEMP_LIMIT1_DEFAULT    60000
+> +#define TEMP_LIMIT2_DEFAULT    65000
+> +
+> +#define HYSTERESIS_DEFAULT     3000
+> +
+> +#define SPEED_ON_AC_DEFAULT    2
+> +
+> +static int temp_limits[3] = {
+> +       TEMP_LIMIT0_DEFAULT, TEMP_LIMIT1_DEFAULT, TEMP_LIMIT2_DEFAULT };
+
+I would rather put }; on the next line.
+But okay, I'll do it myself when applying.
+
+>  module_param_array(temp_limits, int, NULL, 0444);
+>  MODULE_PARM_DESC(temp_limits,
+>                  "Millicelsius values above which the fan speed increases");
+>
+> -static int hysteresis = 3000;
+> +static int hysteresis = HYSTERESIS_DEFAULT;
+>  module_param(hysteresis, int, 0444);
+>  MODULE_PARM_DESC(hysteresis,
+>                  "Hysteresis in millicelsius before lowering the fan speed");
+>
+> -static int speed_on_ac = 2;
+> +static int speed_on_ac = SPEED_ON_AC_DEFAULT;
+>  module_param(speed_on_ac, int, 0444);
+>  MODULE_PARM_DESC(speed_on_ac,
+>                  "minimum fan speed to allow when system is powered by AC");
+> @@ -120,18 +129,21 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
+>                 if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
 >                         dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
 >                                 temp_limits[i]);
->                         temp_limits[0] = TEMP_LIMIT0_DEFAULT;
+> -                       return -EINVAL;
+> +                       temp_limits[0] = TEMP_LIMIT0_DEFAULT;
+> +                       temp_limits[1] = TEMP_LIMIT1_DEFAULT;
+> +                       temp_limits[2] = TEMP_LIMIT2_DEFAULT;
+> +                       break;
+>                 }
+>         }
+>         if (hysteresis < 1000 || hysteresis > 10000) {
+>                 dev_err(&pdev->dev, "Invalid hysteresis %d (must be between 1000 and 10000)\n",
+>                         hysteresis);
+> -               return -EINVAL;
+> +               hysteresis = HYSTERESIS_DEFAULT;
+>         }
+>         if (speed_on_ac < 0 || speed_on_ac > MAX_SPEED) {
+>                 dev_err(&pdev->dev, "Invalid speed_on_ac %d (must be between 0 and 3)\n",
+>                         speed_on_ac);
+> -               return -EINVAL;
+> +               speed_on_ac = SPEED_ON_AC_DEFAULT;
+>         }
+>
+>         fan = devm_kzalloc(&pdev->dev, sizeof(*fan), GFP_KERNEL);
 > --
 > 2.24.1
 >
