@@ -1,55 +1,68 @@
-From: Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v2 2/8] mm/memory_hotplug: Rename mhp_restrictions to
- mhp_modifiers
-Date: Wed, 8 Jan 2020 12:29:00 -0700
-Message-ID: <1786a855-de7e-f9f9-d9b1-9dbe081e7360@deltatee.com>
-References: <CAPcyv4hdpMs5om4_VrYUz98aWDJ9eRhj7WJr312Jwn6LCmAm9Q@mail.gmail.com>
- <5D5ED235-EB67-4072-8CCA-C046B7EC031C@redhat.com>
- <CAPcyv4jJgBm6rhLn2685HN3DnBKB1FO2ONXC1=Aftspu1hiqmA@mail.gmail.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v2 00/36] platform/x86: Rework intel_scu_ipc and
+ intel_pmc_ipc drivers
+Date: Thu, 9 Jan 2020 08:13:16 +0200
+Message-ID: <20200109061316.GB2838@lahna.fi.intel.com>
+References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
+ <20200108173444.GZ32742@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPcyv4jJgBm6rhLn2685HN3DnBKB1FO2ONXC1=Aftspu1hiqmA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dan Williams <dan.j.williams@intel.com>, David Hildenbrand <david@redhat.com>
-Cc: linux-s390 <linux-s390@vger.kernel.org>, Eric Badger <ebadger@gigaio.com>, linux-ia64@vger.kernel.org, Will Deacon <will@kernel.org>, Linux-sh <linux-sh@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Andy Lutomirski <luto@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Christoph Hellwig <hch@lst.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200108173444.GZ32742@smile.fi.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-CgpPbiAyMDIwLTAxLTA4IDEyOjEzIHAubS4sIERhbiBXaWxsaWFtcyB3cm90ZToKPiBPbiBXZWQs
-IEphbiA4LCAyMDIwIGF0IDExOjA4IEFNIERhdmlkIEhpbGRlbmJyYW5kIDxkYXZpZEByZWRoYXQu
-Y29tPiB3cm90ZToKPj4KPj4KPj4KPj4+IEFtIDA4LjAxLjIwMjAgdW0gMjA6MDAgc2NocmllYiBE
-YW4gV2lsbGlhbXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT46Cj4+Pgo+Pj4g77u/T24gV2Vk
-LCBKYW4gOCwgMjAyMCBhdCA5OjE3IEFNIExvZ2FuIEd1bnRob3JwZSA8bG9nYW5nQGRlbHRhdGVl
-LmNvbT4gd3JvdGU6Cj4+Pj4KPj4+Pgo+Pj4+Cj4+Pj4+IE9uIDIwMjAtMDEtMDggNToyOCBhLm0u
-LCBEYXZpZCBIaWxkZW5icmFuZCB3cm90ZToKPj4+Pj4gT24gMDcuMDEuMjAgMjE6NTksIExvZ2Fu
-IEd1bnRob3JwZSB3cm90ZToKPj4+Pj4+IFRoZSBtaHBfcmVzdHJpY3Rpb25zIHN0cnVjdCByZWFs
-bHkgZG9lc24ndCBzcGVjaWZ5IGFueXRoaW5nIHJlc2VtYmxpbmcKPj4+Pj4+IGEgcmVzdHJpY3Rp
-b24gYW55bW9yZSBzbyByZW5hbWUgaXQgdG8gYmUgbWhwX21vZGlmaWVycy4KPj4+Pj4KPj4+Pj4g
-SSB3b25kZXIgaWYgc29tZXRoaW5nIGxpa2UgIm1ocF9wYXJhbXMiIHdvdWxkIGJlIGV2ZW4gYmV0
-dGVyLiBJdCdzCj4+Pj4+IGVzc2VudGlhbGx5IGp1c3QgYSB3YXkgdG8gYXZvaWQgY2hhbmdpbmcg
-Y2FsbCBjaGFpbnMgcm91Z2gtb3V0IGFsbCBhcmNocwo+Pj4+PiB3aGVuZXZlciB3ZSB3YW50IHRv
-IGFkZCBhIG5ldyBwYXJhbWV0ZXIuCj4+Pj4KPj4+PiBTdXJlLCB0aGF0IGRvZXMgc291bmQgYSBi
-aXQgbmljZXIgdG8gbWUuIEkgY2FuIGNoYW5nZSBpdCBmb3IgdjMuCj4+Pgo+Pj4gT2gsIEkgd2Fz
-IGp1c3QgYWJvdXQgdG8gY2hpbWUgaW4gdG8gc3VwcG9ydCAibW9kaWZpZXJzIiBiZWNhdXNlIEkK
-Pj4+IHdvdWxkIGV4cGVjdCBhbGwgcGFyYW1ldGVycyB0byBmb2xkZWQgaW50byBhICJwYXJhbXMi
-IHN0cnVjdC4gVGhlCj4+PiBtb2RpZmllcnMgc2VlbSB0byBiZSBsaW1pdGVkIHRvIHRoZSBzZXQg
-b2YgaXRlbXMgdGhhdCBhcmUgb25seQo+Pj4gY29uc2lkZXJlZCBpbiBhIG5vbi1kZWZhdWx0IC8g
-ZXhwZXJ0IG1lbW9yeSBob3RwbHVnIHVzZSBjYXNlcy4KCj4+Cj4+IEl04oCYcyBhIHNldCBvZiBl
-eHRlbmRlZCBwYXJhbWV0ZXJzIEnigJhkIHNheS4KCj4gU3VyZSwgd2UgY2FuIGNhbGwgdGhlbSAi
-bWhwX3BhcmFtcyIgYW5kIGp1c3QgY2xhcmlmeSB0aGF0IHRoZXkgYXJlCj4gb3B0aW9uYWwgLyBl
-eHRlbmRlZCBpbiB0aGUga2VybmVsLWRvYy4KCldlbGwgcGdwcm90IGlzbid0IGdvaW5nIHRvIGJl
-IG9wdGlvbmFsLi4uIEJ1dCBJJ2xsIGFkZCBzb21ldGhpbmcgdG8gdGhlCmtlcm5lbF9kb2MuCgpM
-b2dhbgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+On Wed, Jan 08, 2020 at 07:34:44PM +0200, Andy Shevchenko wrote:
+> On Wed, Jan 08, 2020 at 02:41:25PM +0300, Mika Westerberg wrote:
+> > Hi,
+> > 
+> > Currently both intel_scu_ipc.c and intel_pmc_ipc.c implement the same SCU
+> > IPC communications with minor differences. This duplication does not make
+> > much sense so this series reworks the two drivers so that there is only a
+> > single implementation of the SCU IPC. In addition to that the API will be
+> > updated to take SCU instance pointer as an argument, and most of the
+> > callers will be converted to this new API. The old API is left there but
+> > the plan is to get rid the callers and then the old API as well (this is
+> > something we are working with Andy Shevchenko).
+> > 
+> > The intel_pmc_ipc.c is then moved under MFD which suits better for this
+> > kind of a driver that pretty much sets up the SCU IPC and then creates a
+> > bunch of platform devices for the things sitting behind the PMC. The driver
+> > is renamed to intel_pmc_bxt.c which should follow the existing conventions
+> > under drivers/mfd (and it is only meant for Intel Broxton derivatives).
+> > 
+> > Previous version of the series:
+> > 
+> >   https://www.spinics.net/lists/platform-driver-x86/msg20359.html
+> > 
+> > Changes from the previous version:
+> > 
+> >   * Update changelog of patch 16 according to what the patch actually does.
+> >   * Add kernel-doc for struct intel_soc_pmic.
+> >   * Move octal permission patch to be before MFD conversion.
+> >   * Convert the intel_pmc_bxt.c to MFD APIs whilst it is being moved under
+> >     drivers/mfd.
+> 
+> Hmm... I didn't see you appended Lee's ACKs.
+
+I thought those were for his own reference:
+
+  For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+I can add them if that's not the case.
+
+> > I'm including all x86 maintainers just to be sure they are aware of this as
+> > I'm not sure if x86@kernel.org reaches them all. Let me know if you have
+> > issues with this series.
+> > 
+> > I would prefer this to be merged through platform/x86 or MFD trees assuming
+> > there are no objections.
+> 
+> I'm almost reviewed it (few patches left which I plan to do soon), I'm fine if
+> it goes via other tree.
+
+Thanks a lot for the review!
