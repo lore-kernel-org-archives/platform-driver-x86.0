@@ -1,68 +1,88 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2 00/36] platform/x86: Rework intel_scu_ipc and
- intel_pmc_ipc drivers
-Date: Thu, 9 Jan 2020 08:13:16 +0200
-Message-ID: <20200109061316.GB2838@lahna.fi.intel.com>
-References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108173444.GZ32742@smile.fi.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: liuyang34 <yangliuxm34@gmail.com>
+Subject: [PATCH] x86: event, use scnprintf instead of snprintf
+Date: Thu,  9 Jan 2020 14:36:26 +0800
+Message-ID: <5fc0611a37b6c73fb524b8469cced8fd4cefc6a1.1578550730.git.liuyang34@xiaomi.com>
+References: <cover.1578550730.git.liuyang34@xiaomi.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200108173444.GZ32742@smile.fi.intel.com>
+In-Reply-To: <cover.1578550730.git.liuyang34@xiaomi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Richard Fontana <rfontana@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Allison Randal <allison@lohutok.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: liuyang34 <liuyang34@xiaomi.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jan 08, 2020 at 07:34:44PM +0200, Andy Shevchenko wrote:
-> On Wed, Jan 08, 2020 at 02:41:25PM +0300, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > Currently both intel_scu_ipc.c and intel_pmc_ipc.c implement the same SCU
-> > IPC communications with minor differences. This duplication does not make
-> > much sense so this series reworks the two drivers so that there is only a
-> > single implementation of the SCU IPC. In addition to that the API will be
-> > updated to take SCU instance pointer as an argument, and most of the
-> > callers will be converted to this new API. The old API is left there but
-> > the plan is to get rid the callers and then the old API as well (this is
-> > something we are working with Andy Shevchenko).
-> > 
-> > The intel_pmc_ipc.c is then moved under MFD which suits better for this
-> > kind of a driver that pretty much sets up the SCU IPC and then creates a
-> > bunch of platform devices for the things sitting behind the PMC. The driver
-> > is renamed to intel_pmc_bxt.c which should follow the existing conventions
-> > under drivers/mfd (and it is only meant for Intel Broxton derivatives).
-> > 
-> > Previous version of the series:
-> > 
-> >   https://www.spinics.net/lists/platform-driver-x86/msg20359.html
-> > 
-> > Changes from the previous version:
-> > 
-> >   * Update changelog of patch 16 according to what the patch actually does.
-> >   * Add kernel-doc for struct intel_soc_pmic.
-> >   * Move octal permission patch to be before MFD conversion.
-> >   * Convert the intel_pmc_bxt.c to MFD APIs whilst it is being moved under
-> >     drivers/mfd.
-> 
-> Hmm... I didn't see you appended Lee's ACKs.
+the return size will low than PAGE_SIZE but maybe over 40 in show_sysctl_tfa,
+so use scnprintf instead of snprintf to get real size
 
-I thought those were for his own reference:
+Signed-off-by: liuyang34 <liuyang34@xiaomi.com>
+---
+ arch/x86/events/intel/core.c    | 6 +++---
+ arch/x86/events/intel/pt.c      | 2 +-
+ arch/x86/platform/uv/uv_sysfs.c | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-  For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
-I can add them if that's not the case.
-
-> > I'm including all x86 maintainers just to be sure they are aware of this as
-> > I'm not sure if x86@kernel.org reaches them all. Let me know if you have
-> > issues with this series.
-> > 
-> > I would prefer this to be merged through platform/x86 or MFD trees assuming
-> > there are no objections.
-> 
-> I'm almost reviewed it (few patches left which I plan to do soon), I'm fine if
-> it goes via other tree.
-
-Thanks a lot for the review!
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 3be51aa..bf287b4 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4372,7 +4372,7 @@ static ssize_t show_sysctl_tfa(struct device *cdev,
+ 			      struct device_attribute *attr,
+ 			      char *buf)
+ {
+-	return snprintf(buf, 40, "%d\n", allow_tsx_force_abort);
++	return scnprintf(buf, 40, "%d\n", allow_tsx_force_abort);
+ }
+ 
+ static ssize_t set_sysctl_tfa(struct device *cdev,
+@@ -4406,7 +4406,7 @@ static ssize_t branches_show(struct device *cdev,
+ 			     struct device_attribute *attr,
+ 			     char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
+ }
+ 
+ static DEVICE_ATTR_RO(branches);
+@@ -4422,7 +4422,7 @@ static ssize_t pmu_name_show(struct device *cdev,
+ 			     struct device_attribute *attr,
+ 			     char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%s\n", pmu_name_str);
++	return scnprintf(buf, PAGE_SIZE, "%s\n", pmu_name_str);
+ }
+ 
+ static DEVICE_ATTR_RO(pmu_name);
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 1db7a51..4ca7ed9 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -92,7 +92,7 @@ static ssize_t pt_cap_show(struct device *cdev,
+ 		container_of(attr, struct dev_ext_attribute, attr);
+ 	enum pt_capabilities cap = (long)ea->var;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%x\n", intel_pt_validate_hw_cap(cap));
++	return scnprintf(buf, PAGE_SIZE, "%x\n", intel_pt_validate_hw_cap(cap));
+ }
+ 
+ static struct attribute_group pt_cap_group __ro_after_init = {
+diff --git a/arch/x86/platform/uv/uv_sysfs.c b/arch/x86/platform/uv/uv_sysfs.c
+index 6221473..aa44c82 100644
+--- a/arch/x86/platform/uv/uv_sysfs.c
++++ b/arch/x86/platform/uv/uv_sysfs.c
+@@ -15,13 +15,13 @@ struct kobject *sgi_uv_kobj;
+ static ssize_t partition_id_show(struct kobject *kobj,
+ 			struct kobj_attribute *attr, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%ld\n", sn_partition_id);
++	return scnprintf(buf, PAGE_SIZE, "%ld\n", sn_partition_id);
+ }
+ 
+ static ssize_t coherence_id_show(struct kobject *kobj,
+ 			struct kobj_attribute *attr, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%ld\n", uv_partition_coherence_id());
++	return scnprintf(buf, PAGE_SIZE, "%ld\n", uv_partition_coherence_id());
+ }
+ 
+ static struct kobj_attribute partition_id_attr =
+-- 
+2.7.4
