@@ -1,13 +1,12 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH platform-next v1 2/9] Documentation/ABI: Fix attributes
- for mlxreg-io sysfs interfaces
-Date: Thu, 9 Jan 2020 17:14:18 +0200
-Message-ID: <CAHp75Veu7PhR0FiufXM2R=dU4vLmeL5sf3kuVi2g=NZSw3L6OA@mail.gmail.com>
-References: <20191231102917.24181-1-vadimp@mellanox.com> <20191231102917.24181-3-vadimp@mellanox.com>
+Subject: Re: [PATCH platform-next v1 4/9] platform/x86: mlx-platform: Cosmetic changes
+Date: Thu, 9 Jan 2020 17:16:13 +0200
+Message-ID: <CAHp75VfJL8o1=5tVkicnMXUJ+Ry9q2r3oGD1x-B7Om_5Dvnkig@mail.gmail.com>
+References: <20191231102917.24181-1-vadimp@mellanox.com> <20191231102917.24181-5-vadimp@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191231102917.24181-3-vadimp@mellanox.com>
+In-Reply-To: <20191231102917.24181-5-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vadim Pasternak <vadimp@mellanox.com>
 Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
@@ -15,57 +14,67 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 On Tue, Dec 31, 2019 at 12:29 PM Vadim Pasternak <vadimp@mellanox.com> wrote:
 >
-> Fix attribute name from "jtag_enable" to "cpld3_version" and
-> extend description for "cpld3_version" attribute.
->
-> Add missed "cpld4_version" attribute.
+> Remove redundant semicolons at the end of few functions.
 >
 
-From this commit message it's still unclear if we have had the ABI
-change or Documentation inconsistency.
+Sounds like this can be patch in the beginning of the series.
+(Taking into account any bug fixes that have to prepend all the rest,
+like Documentation fix)
 
 > Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 > ---
->  Documentation/ABI/stable/sysfs-driver-mlxreg-io | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/mlx-platform.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 >
-> diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> index 8ca498447aeb..fe30fe505c9b 100644
-> --- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> +++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-> @@ -29,13 +29,13 @@ Description:        This file shows the system fans direction:
+> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+> index aed6ac18074e..7e92dc52071f 100644
+> --- a/drivers/platform/x86/mlx-platform.c
+> +++ b/drivers/platform/x86/mlx-platform.c
+> @@ -1918,7 +1918,7 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
+>         mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
 >
->                 The files are read only.
+>         return 1;
+> -};
+> +}
 >
-> -What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld3_version
+>  static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
+>  {
+> @@ -1937,7 +1937,7 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
+>         mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
 >
->  Date:          November 2018
->  KernelVersion: 5.0
->  Contact:       Vadim Pasternak <vadimpmellanox.com>
->  Description:   These files show with which CPLD versions have been burned
-> -               on LED board.
-> +               on LED or Gearbox board.
+>         return 1;
+> -};
+> +}
 >
->                 The files are read only.
+>  static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
+>  {
+> @@ -1956,7 +1956,7 @@ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
+>         mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
 >
-> @@ -121,6 +121,16 @@ Description:       These files show the system reset cause, as following: ComEx
+>         return 1;
+> -};
+> +}
 >
->                 The files are read only.
+>  static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
+>  {
+> @@ -1975,7 +1975,7 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
+>         mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
 >
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld4_version
-> +
-> +Date:          November 2018
-> +KernelVersion: 5.0
-> +Contact:       Vadim Pasternak <vadimpmellanox.com>
-> +Description:   These files show with which CPLD versions have been burned
-> +               on LED board.
-> +
-> +               The files are read only.
-> +
->  Date:          June 2019
->  KernelVersion: 5.3
->  Contact:       Vadim Pasternak <vadimpmellanox.com>
+>         return 1;
+> -};
+> +}
+>
+>  static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+>  {
+> @@ -1998,7 +1998,7 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+>         mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng;
+>
+>         return 1;
+> -};
+> +}
+>
+>  static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
+>         {
 > --
 > 2.11.0
 >
