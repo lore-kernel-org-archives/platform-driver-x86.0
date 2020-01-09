@@ -1,582 +1,905 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v2 14/36] platform/x86: intel_scu_ipc: Introduce new SCU
- IPC API
-Date: Thu, 9 Jan 2020 13:39:26 +0200
-Message-ID: <20200109113926.GE2838@lahna.fi.intel.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 34/36] platform/x86: intel_pmc_ipc: Convert to MFD
+Date: Thu, 9 Jan 2020 13:43:54 +0200
+Message-ID: <20200109114354.GP32742@smile.fi.intel.com>
 References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
- <20200108114201.27908-15-mika.westerberg@linux.intel.com>
- <20200109113015.GO32742@smile.fi.intel.com>
+ <20200108114201.27908-35-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200109113015.GO32742@smile.fi.intel.com>
+In-Reply-To: <20200108114201.27908-35-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jan 09, 2020 at 01:30:15PM +0200, Andy Shevchenko wrote:
-> On Wed, Jan 08, 2020 at 02:41:39PM +0300, Mika Westerberg wrote:
-> > The current SCU IPC API has been operating on a single instance and
-> > there has been no way to pin the providing module in place when the SCU
-> > IPC is in use.
-> > 
-> > This implements a new API that takes the SCU IPC instance as first
-> > parameter (NULL means the single instance is being used). The SCU IPC
-> > instance can be retrieved by calling new function
-> > intel_scu_ipc_dev_get() that take care of pinning the providing module
-> > in place as long as intel_scu_ipc_dev_put() is not called.
-> > 
-> > The old API is left there to support existing users which cannot be
-> > converted easily but it is put to a separate header that is subject to
-> > be removed eventually. Subsequent patches will convert most of the users
-> > to the new API.
+On Wed, Jan 08, 2020 at 02:41:59PM +0300, Mika Westerberg wrote:
+> This driver only creates a bunch of platform devices sharing resources
+> belonging to the PMC device. This is pretty much what MFD subsystem is
+> for so move the driver there, renaming it to intel_pmc_bxt.c which
+> should be more clear what it is.
 > 
-> Few minor comments below. After addressing them,
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> MFD subsystem provides nice helper APIs for subdevice creation so
+> convert the driver to use those. Unfortunately the ACPI device includes
+> separate resources for most of the subdevices so we cannot simply call
+> mfd_add_devices() to create all of them but instead we need to call it
+> separately for each device.
 
-Thanks!
+Comments below, after addressing,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> > 
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > ---
-> >  arch/x86/include/asm/intel_scu_ipc.h        |  74 +++----
-> >  arch/x86/include/asm/intel_scu_ipc_legacy.h |  76 +++++++
-> >  drivers/platform/x86/intel_scu_ipc.c        | 228 +++++++++++++++-----
-> >  drivers/platform/x86/intel_scu_pcidrv.c     |   7 +-
-> >  4 files changed, 291 insertions(+), 94 deletions(-)
-> >  create mode 100644 arch/x86/include/asm/intel_scu_ipc_legacy.h
-> > 
-> > diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-> > index 405c47bf0965..9895b60386c5 100644
-> > --- a/arch/x86/include/asm/intel_scu_ipc.h
-> > +++ b/arch/x86/include/asm/intel_scu_ipc.h
-> > @@ -1,8 +1,6 @@
-> >  /* SPDX-License-Identifier: GPL-2.0 */
-> >  #ifndef _ASM_X86_INTEL_SCU_IPC_H_
-> > -#define  _ASM_X86_INTEL_SCU_IPC_H_
-> > -
-> > -#include <linux/notifier.h>
-> > +#define _ASM_X86_INTEL_SCU_IPC_H_
-> >  
-> >  #define IPCMSG_INDIRECT_READ	0x02
-> >  #define IPCMSG_INDIRECT_WRITE	0x05
-> > @@ -20,6 +18,7 @@
-> >  	#define IPC_CMD_VRTC_SETALARM     2 /* Set alarm */
-> >  
-> >  struct device;
-> > +struct intel_scu_ipc_dev;
-> >  
-> >  /**
-> >   * struct intel_scu_ipc_pdata - Platform data for SCU IPC
-> > @@ -31,47 +30,38 @@ struct intel_scu_ipc_pdata {
-> >  	int irq;
-> >  };
-> >  
-> > -int intel_scu_ipc_probe(struct device *dev,
-> > -			const struct intel_scu_ipc_pdata *pdata);
-> > -
-> > -/* Read single register */
-> > -int intel_scu_ipc_ioread8(u16 addr, u8 *data);
-> > -
-> > -/* Read a vector */
-> > -int intel_scu_ipc_readv(u16 *addr, u8 *data, int len);
-> > -
-> > -/* Write single register */
-> > -int intel_scu_ipc_iowrite8(u16 addr, u8 data);
-> > -
-> > -/* Write a vector */
-> > -int intel_scu_ipc_writev(u16 *addr, u8 *data, int len);
-> > -
-> > -/* Update single register based on the mask */
-> > -int intel_scu_ipc_update_register(u16 addr, u8 data, u8 mask);
-> > -
-> > -/* Issue commands to the SCU with or without data */
-> > -int intel_scu_ipc_simple_command(int cmd, int sub);
-> > -int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
-> > -			  u32 *out, int outlen);
-> > -
-> > -extern struct blocking_notifier_head intel_scu_notifier;
-> > -
-> > -static inline void intel_scu_notifier_add(struct notifier_block *nb)
-> > -{
-> > -	blocking_notifier_chain_register(&intel_scu_notifier, nb);
-> > -}
-> > -
-> > -static inline void intel_scu_notifier_remove(struct notifier_block *nb)
-> > -{
-> > -	blocking_notifier_chain_unregister(&intel_scu_notifier, nb);
-> > -}
-> > -
-> > -static inline int intel_scu_notifier_post(unsigned long v, void *p)
-> > +struct intel_scu_ipc_dev *
-> > +intel_scu_ipc_probe(struct device *dev, const struct intel_scu_ipc_pdata *pdata);
-> > +
-> > +struct intel_scu_ipc_dev *intel_scu_ipc_dev_get(void);
-> > +void intel_scu_ipc_dev_put(struct intel_scu_ipc_dev *scu);
-> > +struct intel_scu_ipc_dev *devm_intel_scu_ipc_dev_get(struct device *dev);
-> > +
-> > +int intel_scu_ipc_dev_ioread8(struct intel_scu_ipc_dev *scu, u16 addr,
-> > +			      u8 *data);
-> > +int intel_scu_ipc_dev_iowrite8(struct intel_scu_ipc_dev *scu, u16 addr,
-> > +			       u8 data);
-> > +int intel_scu_ipc_dev_readv(struct intel_scu_ipc_dev *scu, u16 *addr,
-> > +			    u8 *data, size_t len);
-> > +int intel_scu_ipc_dev_writev(struct intel_scu_ipc_dev *scu, u16 *addr,
-> > +			     u8 *data, size_t len);
 > 
-> + blank line?
-
-OK
-
-> > +int intel_scu_ipc_dev_update(struct intel_scu_ipc_dev *scu, u16 addr, u8 data,
-> > +			     u8 mask);
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/mfd/Kconfig                           |  14 +-
+>  drivers/mfd/Makefile                          |   1 +
+>  .../intel_pmc_ipc.c => mfd/intel_pmc_bxt.c}   | 394 +++++++-----------
+>  drivers/platform/x86/Kconfig                  |  16 +-
+>  drivers/platform/x86/Makefile                 |   1 -
+>  .../platform/x86/intel_telemetry_debugfs.c    |   2 +-
+>  drivers/usb/typec/tcpm/Kconfig                |   2 +-
+>  .../linux/mfd/intel_pmc_bxt.h                 |  11 +-
+>  8 files changed, 171 insertions(+), 270 deletions(-)
+>  rename drivers/{platform/x86/intel_pmc_ipc.c => mfd/intel_pmc_bxt.c} (50%)
+>  rename arch/x86/include/asm/intel_pmc_ipc.h => include/linux/mfd/intel_pmc_bxt.h (83%)
 > 
-> Perhaps move u8 data on the next line to be (slightly) consistent with above.
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 59515142438e..04542feffe25 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -551,7 +551,7 @@ config INTEL_SOC_PMIC
+>  
+>  config INTEL_SOC_PMIC_BXTWC
+>  	tristate "Support for Intel Broxton Whiskey Cove PMIC"
+> -	depends on INTEL_PMC_IPC
+> +	depends on MFD_INTEL_PMC_BXT
+>  	select MFD_CORE
+>  	select REGMAP_IRQ
+>  	help
+> @@ -632,6 +632,18 @@ config MFD_INTEL_MSIC
+>  	  Passage) chip. This chip embeds audio, battery, GPIO, etc.
+>  	  devices used in Intel Medfield platforms.
+>  
+> +config MFD_INTEL_PMC_BXT
+> +	tristate "Intel PMC Driver for Broxton"
 
-OK
+> +	depends on X86 && X86_PLATFORM_DEVICES && ACPI
 
-> > +
-> > +int intel_scu_ipc_dev_simple_command(struct intel_scu_ipc_dev *scu, int cmd,
-> > +				     int sub);
-> > +int intel_scu_ipc_dev_command_with_size(struct intel_scu_ipc_dev *scu, int cmd,
-> > +					int sub, const void *in, size_t inlen,
-> > +					size_t size, void *out, size_t outlen);
-> > +
-> > +static inline int intel_scu_ipc_dev_command(struct intel_scu_ipc_dev *scu, int cmd,
-> > +					    int sub, const void *in, size_t inlen,
-> > +					    void *out, size_t outlen)
-> >  {
-> > -	return blocking_notifier_call_chain(&intel_scu_notifier, v, p);
-> > +	return intel_scu_ipc_dev_command_with_size(scu, cmd, sub, in, inlen,
-> > +						   inlen, out, outlen);
-> >  }
-> >  
-> > -#define		SCU_AVAILABLE		1
-> > -#define		SCU_DOWN		2
-> > +#include <asm/intel_scu_ipc_legacy.h>
-> >  
-> >  #endif
-> > diff --git a/arch/x86/include/asm/intel_scu_ipc_legacy.h b/arch/x86/include/asm/intel_scu_ipc_legacy.h
-> > new file mode 100644
-> > index 000000000000..3399ea8eea48
-> > --- /dev/null
-> > +++ b/arch/x86/include/asm/intel_scu_ipc_legacy.h
-> > @@ -0,0 +1,76 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _ASM_X86_INTEL_SCU_IPC_LEGACY_H_
-> > +#define _ASM_X86_INTEL_SCU_IPC_LEGACY_H_
-> > +
-> > +#include <linux/notifier.h>
-> > +
-> > +/* Don't call these in new code - they will be removed eventually */
-> > +
-> > +/* Read single register */
-> > +static inline int intel_scu_ipc_ioread8(u16 addr, u8 *data)
-> > +{
-> > +	return intel_scu_ipc_dev_ioread8(NULL, addr, data);
-> > +}
-> > +
-> > +/* Read a vector */
-> > +static inline int intel_scu_ipc_readv(u16 *addr, u8 *data, int len)
-> > +{
-> > +	return intel_scu_ipc_dev_readv(NULL, addr, data, len);
-> > +}
-> > +
-> > +/* Write single register */
-> > +static inline int intel_scu_ipc_iowrite8(u16 addr, u8 data)
-> > +{
-> > +	return intel_scu_ipc_dev_iowrite8(NULL, addr, data);
-> > +}
-> > +
-> > +/* Write a vector */
-> > +static inline int intel_scu_ipc_writev(u16 *addr, u8 *data, int len)
-> > +{
-> > +	return intel_scu_ipc_dev_writev(NULL, addr, data, len);
-> > +}
-> > +
-> > +/* Update single register based on the mask */
-> > +static inline int intel_scu_ipc_update_register(u16 addr, u8 data, u8 mask)
-> > +{
-> > +	return intel_scu_ipc_dev_update(NULL, addr, data, mask);
-> > +}
-> > +
-> > +/* Issue commands to the SCU with or without data */
-> > +static inline int intel_scu_ipc_simple_command(int cmd, int sub)
-> > +{
-> > +	return intel_scu_ipc_dev_simple_command(NULL, cmd, sub);
-> > +}
-> > +
-> > +static inline int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
-> > +					u32 *out, int outlen)
-> > +{
-> > +	/* New API takes both inlen and outlen as bytes so convert here */
-> > +	size_t inbytes = inlen * sizeof(u32);
-> > +	size_t outbytes = outlen * sizeof(u32);
-> > +
-> > +	return intel_scu_ipc_dev_command_with_size(NULL, cmd, sub, in, inbytes,
-> > +						   inlen, out, outbytes);
-> > +}
-> > +
-> > +extern struct blocking_notifier_head intel_scu_notifier;
-> > +
-> > +static inline void intel_scu_notifier_add(struct notifier_block *nb)
-> > +{
-> > +	blocking_notifier_chain_register(&intel_scu_notifier, nb);
-> > +}
-> > +
-> > +static inline void intel_scu_notifier_remove(struct notifier_block *nb)
-> > +{
-> > +	blocking_notifier_chain_unregister(&intel_scu_notifier, nb);
-> > +}
-> > +
-> > +static inline int intel_scu_notifier_post(unsigned long v, void *p)
-> > +{
-> > +	return blocking_notifier_call_chain(&intel_scu_notifier, v, p);
-> > +}
-> > +
-> > +#define		SCU_AVAILABLE		1
-> > +#define		SCU_DOWN		2
-> > +
-> > +#endif
-> > diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-> > index b1ac381bb7dd..cc29f504adcf 100644
-> > --- a/drivers/platform/x86/intel_scu_ipc.c
-> > +++ b/drivers/platform/x86/intel_scu_ipc.c
-> > @@ -19,6 +19,7 @@
-> >  #include <linux/init.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/io.h>
-> > +#include <linux/module.h>
-> >  
-> >  #include <asm/intel_scu_ipc.h>
-> >  
-> > @@ -77,6 +78,99 @@ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
-> >  
-> >  static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
-> >  
-> > +/**
-> > + * intel_scu_ipc_dev_get() - Get SCU IPC instance
-> > + *
-> > + * The recommended new API takes SCU IPC instance as parameter and this
-> > + * function can be called by driver to get the instance. This also makes
-> > + * sure the driver providing the IPC functionality cannot be unloaded
-> > + * while the caller has the intance.
-> > + *
-> > + * Call intel_scu_ipc_dev_put() to release the instance.
-> > + *
-> > + * Returns %NULL if SCU IPC is not currently available.
-> > + */
-> > +struct intel_scu_ipc_dev *intel_scu_ipc_dev_get(void)
-> > +{
-> > +	struct intel_scu_ipc_dev *scu = &ipcdev;
-> > +
-> > +	mutex_lock(&ipclock);
-> > +	if (!scu->dev)
-> > +		goto err_unlock;
-> > +	if (!try_module_get(scu->dev->driver->owner))
-> > +		goto err_unlock;
-> > +	mutex_unlock(&ipclock);
-> > +	return scu;
-> > +
-> > +err_unlock:
-> > +	mutex_unlock(&ipclock);
-> > +	return NULL;
-> > +}
-> > +EXPORT_SYMBOL_GPL(intel_scu_ipc_dev_get);
-> > +
-> > +/**
-> > + * intel_scu_ipc_dev_put() - Put SCU IPC instance
-> > + * @scu: SCU IPC instance
-> > + *
-> > + * This function releases the SCU IPC instance retrieved from
-> > + * intel_scu_ipc_dev_get() and allows the driver providing IPC to be
-> > + * unloaded.
-> > + */
-> > +void intel_scu_ipc_dev_put(struct intel_scu_ipc_dev *scu)
-> > +{
-> > +	mutex_lock(&ipclock);
-> > +	if (scu->dev)
-> > +		module_put(scu->dev->driver->owner);
-> > +	mutex_unlock(&ipclock);
-> > +}
-> > +EXPORT_SYMBOL_GPL(intel_scu_ipc_dev_put);
-> > +
-> > +struct intel_scu_ipc_devres {
-> > +	struct intel_scu_ipc_dev *scu;
-> > +};
-> > +
-> > +static void devm_intel_scu_ipc_dev_release(struct device *dev, void *res)
-> > +{
-> > +	struct intel_scu_ipc_devres *devres = res;
-> > +	struct intel_scu_ipc_dev *scu = devres->scu;
-> > +
-> > +	intel_scu_ipc_dev_put(scu);
-> > +}
-> > +
-> > +/**
-> > + * devm_intel_scu_ipc_dev_get() - Allocate managed SCU IPC device
-> > + * @dev: Device requesting the SCU IPC device
-> > + *
-> > + * The recommended new API takes SCU IPC instance as parameter and this
-> > + * function can be called by driver to get the instance. This also makes
-> > + * sure the driver providing the IPC functionality cannot be unloaded
-> > + * while the caller has the intance.
-> > + *
-> > + * Returns %NULL if SCU IPC is not currently available.
-> > + */
-> > +struct intel_scu_ipc_dev *devm_intel_scu_ipc_dev_get(struct device *dev)
-> > +{
-> > +	struct intel_scu_ipc_devres *devres;
-> > +	struct intel_scu_ipc_dev *scu;
-> > +
-> > +	devres = devres_alloc(devm_intel_scu_ipc_dev_release, sizeof(*devres),
-> > +			      GFP_KERNEL);
-> > +	if (!devres)
-> > +		return NULL;
-> > +
-> > +	scu = intel_scu_ipc_dev_get();
-> > +	if (!scu) {
-> > +		devres_free(devres);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	devres->scu = scu;
-> > +	devres_add(dev, devres);
-> > +
-> > +	return scu;
-> > +}
-> > +EXPORT_SYMBOL_GPL(devm_intel_scu_ipc_dev_get);
-> > +
-> >  /*
-> >   * Send ipc command
-> >   * Command Register (Write Only):
-> > @@ -167,15 +261,18 @@ static int intel_scu_ipc_check_status(struct intel_scu_ipc_dev *scu)
-> >  }
-> >  
-> >  /* Read/Write power control(PMIC in Langwell, MSIC in PenWell) registers */
-> > -static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
-> > +static int pwr_reg_rdwr(struct intel_scu_ipc_dev *scu, u16 *addr, u8 *data,
-> > +			u32 count, u32 op, u32 id)
-> >  {
-> > -	struct intel_scu_ipc_dev *scu = &ipcdev;
-> >  	int nc;
-> >  	u32 offset = 0;
-> >  	int err;
-> >  	u8 cbuf[IPC_WWBUF_SIZE];
-> >  	u32 *wbuf = (u32 *)&cbuf;
-> >  
-> > +	if (!scu)
-> > +		scu = &ipcdev;
-> > +
-> >  	memset(cbuf, 0, sizeof(cbuf));
-> >  
-> >  	mutex_lock(&ipclock);
-> > @@ -219,7 +316,8 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
-> >  }
-> >  
-> >  /**
-> > - * intel_scu_ipc_ioread8		-	read a word via the SCU
-> > + * intel_scu_ipc_dev_ioread8() - Read a byte via the SCU
-> > + * @scu: Optional SCU IPC instance
-> >   * @addr: Register on SCU
-> >   * @data: Return pointer for read byte
-> >   *
-> > @@ -228,14 +326,15 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
-> >   *
-> >   * This function may sleep.
-> >   */
-> > -int intel_scu_ipc_ioread8(u16 addr, u8 *data)
-> > +int intel_scu_ipc_dev_ioread8(struct intel_scu_ipc_dev *scu, u16 addr, u8 *data)
-> >  {
-> > -	return pwr_reg_rdwr(&addr, data, 1, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_R);
-> > +	return pwr_reg_rdwr(scu, &addr, data, 1, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_R);
-> >  }
-> > -EXPORT_SYMBOL(intel_scu_ipc_ioread8);
-> > +EXPORT_SYMBOL(intel_scu_ipc_dev_ioread8);
-> >  
-> >  /**
-> > - * intel_scu_ipc_iowrite8		-	write a byte via the SCU
-> > + * intel_scu_ipc_dev_iowrite8() - Write a byte via the SCU
-> > + * @scu: Optional SCU IPC instance
-> >   * @addr: Register on SCU
-> >   * @data: Byte to write
-> >   *
-> > @@ -244,14 +343,15 @@ EXPORT_SYMBOL(intel_scu_ipc_ioread8);
-> >   *
-> >   * This function may sleep.
-> >   */
-> > -int intel_scu_ipc_iowrite8(u16 addr, u8 data)
-> > +int intel_scu_ipc_dev_iowrite8(struct intel_scu_ipc_dev *scu, u16 addr, u8 data)
-> >  {
-> > -	return pwr_reg_rdwr(&addr, &data, 1, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_W);
-> > +	return pwr_reg_rdwr(scu, &addr, &data, 1, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_W);
-> >  }
-> > -EXPORT_SYMBOL(intel_scu_ipc_iowrite8);
-> > +EXPORT_SYMBOL(intel_scu_ipc_dev_iowrite8);
-> >  
-> >  /**
-> > - * intel_scu_ipc_readvv		-	read a set of registers
-> > + * intel_scu_ipc_dev_readv() - Read a set of registers
-> > + * @scu: Optional SCU IPC instance
-> >   * @addr: Register list
-> >   * @data: Bytes to return
-> >   * @len: Length of array
-> > @@ -263,14 +363,16 @@ EXPORT_SYMBOL(intel_scu_ipc_iowrite8);
-> >   *
-> >   * This function may sleep.
-> >   */
-> > -int intel_scu_ipc_readv(u16 *addr, u8 *data, int len)
-> > +int intel_scu_ipc_dev_readv(struct intel_scu_ipc_dev *scu, u16 *addr, u8 *data,
-> > +			    size_t len)
-> >  {
-> > -	return pwr_reg_rdwr(addr, data, len, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_R);
-> > +	return pwr_reg_rdwr(scu, addr, data, len, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_R);
-> >  }
-> > -EXPORT_SYMBOL(intel_scu_ipc_readv);
-> > +EXPORT_SYMBOL(intel_scu_ipc_dev_readv);
-> >  
-> >  /**
-> > - * intel_scu_ipc_writev		-	write a set of registers
-> > + * intel_scu_ipc_dev_writev() - Write a set of registers
-> > + * @scu: Optional SCU IPC instance
-> >   * @addr: Register list
-> >   * @data: Bytes to write
-> >   * @len: Length of array
-> > @@ -282,14 +384,16 @@ EXPORT_SYMBOL(intel_scu_ipc_readv);
-> >   *
-> >   * This function may sleep.
-> >   */
-> > -int intel_scu_ipc_writev(u16 *addr, u8 *data, int len)
-> > +int intel_scu_ipc_dev_writev(struct intel_scu_ipc_dev *scu, u16 *addr, u8 *data,
-> > +			     size_t len)
-> >  {
-> > -	return pwr_reg_rdwr(addr, data, len, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_W);
-> > +	return pwr_reg_rdwr(scu, addr, data, len, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_W);
-> >  }
-> > -EXPORT_SYMBOL(intel_scu_ipc_writev);
-> > +EXPORT_SYMBOL(intel_scu_ipc_dev_writev);
-> >  
-> >  /**
-> > - * intel_scu_ipc_update_register	-	r/m/w a register
-> > + * intel_scu_ipc_dev_update() - Update a register
-> > + * @scu: Optional SCU IPC instance
-> >   * @addr: Register address
-> >   * @bits: Bits to update
-> >   * @mask: Mask of bits to update
-> > @@ -302,15 +406,17 @@ EXPORT_SYMBOL(intel_scu_ipc_writev);
-> >   * This function may sleep. Locking between SCU accesses is handled
-> >   * for the caller.
-> >   */
-> > -int intel_scu_ipc_update_register(u16 addr, u8 bits, u8 mask)
+Is the X86_PLATFORM_DEVICES dependency compulsory?
+Quick grep shows that none of drivers (except nouveau) relies on it.
+
+For the rest two I think we might split one per line to be consistent with
+existing example(s) in  drivers/mfd/Kconfig.
+
+> +	select INTEL_SCU_IPC
+> +	select MFD_CORE
+> +	help
+> +	  This driver provides support for PMC (Power Management
+> +	  Controller) on Intel Broxton and Apollo Lake. PMC is a
+> +	  multi-function device that exposes IPC, General Control
+> +	  Register and P-unit access. In addition this creates devices
+> +	  for iTCO watchdog and telemetry that are part of the PMC.
+> +
+>  config MFD_IPAQ_MICRO
+>  	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
+>  	depends on SA1100_H3100 || SA1100_H3600
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index aed99f08739f..34563a6a047b 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -211,6 +211,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS)	+= intel-lpss.o
+>  obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
+>  obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
+>  obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
+> +obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+= intel_pmc_bxt.o
+>  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
+>  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+>  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
+> diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/mfd/intel_pmc_bxt.c
+> similarity index 50%
+> rename from drivers/platform/x86/intel_pmc_ipc.c
+> rename to drivers/mfd/intel_pmc_bxt.c
+> index 20a4bb72aeac..76f166c1455b 100644
+> --- a/drivers/platform/x86/intel_pmc_ipc.c
+> +++ b/drivers/mfd/intel_pmc_bxt.c
+> @@ -1,8 +1,8 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * Driver for the Intel PMC IPC mechanism
+> + * Driver for the Intel Broxton PMC
+>   *
+> - * (C) Copyright 2014-2015 Intel Corporation
+> + * (C) Copyright 2014-2015, 2020 Intel Corporation
+>   *
+>   * This driver is based on Intel SCU IPC driver(intel_scu_ipc.c) by
+>   *     Sreedhara DS <sreedhara.ds@intel.com>
+> @@ -16,10 +16,11 @@
+>  #include <linux/errno.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/intel_pmc_bxt.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  
+> -#include <asm/intel_pmc_ipc.h>
+>  #include <asm/intel_scu_ipc.h>
+>  
+>  #include <linux/platform_data/itco_wdt.h>
+> @@ -62,8 +63,6 @@
+>  #define TELEM_SSRAM_SIZE		240
+>  #define TELEM_PMC_SSRAM_OFFSET		0x1B00
+>  #define TELEM_PUNIT_SSRAM_OFFSET	0x1A00
+> -#define TCO_PMC_OFFSET			0x08
+> -#define TCO_PMC_SIZE			0x04
+>  
+>  /* PMC register bit definitions */
+>  
+> @@ -72,40 +71,32 @@
+>  #define PMC_CFG_NO_REBOOT_EN		(1 << 4)
+>  #define PMC_CFG_NO_REBOOT_DIS		(0 << 4)
+>  
+> -static struct intel_pmc_ipc_dev {
+> +static struct intel_pmc_dev {
+>  	struct device *dev;
+>  
+> -	/* The following PMC BARs share the same ACPI device with the IPC */
+> -	resource_size_t acpi_io_base;
+> -	int acpi_io_size;
+> -	struct platform_device *tco_dev;
+> +	/* iTCO */
+> +	struct resource tco_res[2];
+>  
+>  	/* gcr */
+>  	void __iomem *gcr_mem_base;
+> -	bool has_gcr_regs;
+>  	spinlock_t gcr_lock;
+>  
+>  	/* punit */
+> -	struct platform_device *punit_dev;
+> +	struct resource punit_res[6];
+>  	unsigned int punit_res_count;
+>  
+>  	/* Telemetry */
+> -	resource_size_t telem_pmc_ssram_base;
+> -	resource_size_t telem_punit_ssram_base;
+> -	int telem_pmc_ssram_size;
+> -	int telem_punit_ssram_size;
+> -	u8 telem_res_inval;
+> -	struct platform_device *telemetry_dev;
+> -} ipcdev;
+> +	struct resource *telem_base;
+> +} pmcdev;
+>  
+>  static inline u64 gcr_data_readq(u32 offset)
+>  {
+> -	return readq(ipcdev.gcr_mem_base + offset);
+> +	return readq(pmcdev.gcr_mem_base + offset);
+>  }
+>  
+>  static inline int is_gcr_valid(u32 offset)
+>  {
+> -	if (!ipcdev.has_gcr_regs)
+> +	if (!pmcdev.gcr_mem_base)
+>  		return -EACCES;
+>  
+>  	if (offset > PLAT_RESOURCE_GCR_SIZE)
+> @@ -127,17 +118,17 @@ int intel_pmc_gcr_read64(u32 offset, u64 *data)
+>  {
+>  	int ret;
+>  
+> -	spin_lock(&ipcdev.gcr_lock);
+> +	spin_lock(&pmcdev.gcr_lock);
+>  
+>  	ret = is_gcr_valid(offset);
+>  	if (ret < 0) {
+> -		spin_unlock(&ipcdev.gcr_lock);
+> +		spin_unlock(&pmcdev.gcr_lock);
+>  		return ret;
+>  	}
+>  
+> -	*data = readq(ipcdev.gcr_mem_base + offset);
+> +	*data = readq(pmcdev.gcr_mem_base + offset);
+>  
+> -	spin_unlock(&ipcdev.gcr_lock);
+> +	spin_unlock(&pmcdev.gcr_lock);
+>  
+>  	return 0;
+>  }
+> @@ -159,29 +150,29 @@ static int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+>  	u32 new_val;
+>  	int ret = 0;
+>  
+> -	spin_lock(&ipcdev.gcr_lock);
+> +	spin_lock(&pmcdev.gcr_lock);
+>  
+>  	ret = is_gcr_valid(offset);
+>  	if (ret < 0)
+> -		goto gcr_ipc_unlock;
+> +		goto gcr_unlock;
+>  
+> -	new_val = readl(ipcdev.gcr_mem_base + offset);
+> +	new_val = readl(pmcdev.gcr_mem_base + offset);
+>  
+>  	new_val &= ~mask;
+>  	new_val |= val & mask;
+>  
+> -	writel(new_val, ipcdev.gcr_mem_base + offset);
+> +	writel(new_val, pmcdev.gcr_mem_base + offset);
+>  
+> -	new_val = readl(ipcdev.gcr_mem_base + offset);
+> +	new_val = readl(pmcdev.gcr_mem_base + offset);
+>  
+>  	/* check whether the bit update is successful */
+>  	if ((new_val & mask) != (val & mask)) {
+>  		ret = -EIO;
+> -		goto gcr_ipc_unlock;
+> +		goto gcr_unlock;
+>  	}
+>  
+> -gcr_ipc_unlock:
+> -	spin_unlock(&ipcdev.gcr_lock);
+> +gcr_unlock:
+> +	spin_unlock(&pmcdev.gcr_lock);
+>  	return ret;
+>  }
+>  
+> @@ -193,9 +184,9 @@ static int update_no_reboot_bit(void *priv, bool set)
+>  				    PMC_CFG_NO_REBOOT_MASK, value);
+>  }
+>  
+> -static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
+> -					      struct device_attribute *attr,
+> -					      const char *buf, size_t count)
+> +static ssize_t intel_pmc_simple_cmd_store(struct device *dev,
+> +					  struct device_attribute *attr,
+> +					  const char *buf, size_t count)
+>  {
+>  	struct intel_scu_ipc_dev *scu = dev_get_drvdata(dev);
+>  	int subcmd;
+> @@ -215,11 +206,11 @@ static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
+>  	}
+>  	return (ssize_t)count;
+>  }
+> -static DEVICE_ATTR(simplecmd, 0200, NULL, intel_pmc_ipc_simple_cmd_store);
+> +static DEVICE_ATTR(simplecmd, 0200, NULL, intel_pmc_simple_cmd_store);
+>  
+> -static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
+> -					     struct device_attribute *attr,
+> -					     const char *buf, size_t count)
+> +static ssize_t intel_pmc_northpeak_store(struct device *dev,
+> +					 struct device_attribute *attr,
+> +					 const char *buf, size_t count)
+>  {
+>  	struct intel_scu_ipc_dev *scu = dev_get_drvdata(dev);
+>  	unsigned long val;
+> @@ -241,264 +232,183 @@ static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
+>  	}
+>  	return (ssize_t)count;
+>  }
+> -static DEVICE_ATTR(northpeak, 0200, NULL, intel_pmc_ipc_northpeak_store);
+> +static DEVICE_ATTR(northpeak, 0200, NULL, intel_pmc_northpeak_store);
+>  
+> -static struct attribute *intel_ipc_attrs[] = {
+> +static struct attribute *intel_pmc_attrs[] = {
+>  	&dev_attr_northpeak.attr,
+>  	&dev_attr_simplecmd.attr,
+>  	NULL
+>  };
+>  
+> -static const struct attribute_group intel_ipc_group = {
+> -	.attrs = intel_ipc_attrs,
+> +static const struct attribute_group intel_pmc_group = {
+> +	.attrs = intel_pmc_attrs,
+>  };
+>  
+> -static struct resource punit_res_array[] = {
+> -	/* Punit BIOS */
+> -	{
+> -		.flags = IORESOURCE_MEM,
+> -	},
+> -	{
+> -		.flags = IORESOURCE_MEM,
+> -	},
+> -	/* Punit ISP */
+> -	{
+> -		.flags = IORESOURCE_MEM,
+> -	},
+> -	{
+> -		.flags = IORESOURCE_MEM,
+> -	},
+> -	/* Punit GTD */
+> -	{
+> -		.flags = IORESOURCE_MEM,
+> -	},
+> -	{
+> -		.flags = IORESOURCE_MEM,
+> -	},
+> -};
+> -
+> -#define TCO_RESOURCE_ACPI_IO		0
+> -#define TCO_RESOURCE_SMI_EN_IO		1
+> -#define TCO_RESOURCE_GCR_MEM		2
+> -static struct resource tco_res[] = {
+> -	/* ACPI - TCO */
+> -	{
+> -		.flags = IORESOURCE_IO,
+> -	},
+> -	/* ACPI - SMI */
+> -	{
+> -		.flags = IORESOURCE_IO,
+> -	},
+> -};
+> -
+> -static struct itco_wdt_platform_data tco_info = {
+> -	.name = "Apollo Lake SoC",
+> -	.version = 5,
+> -	.no_reboot_priv = &ipcdev,
+> -	.update_no_reboot_bit = update_no_reboot_bit,
+> -};
+> -
+> -#define TELEMETRY_RESOURCE_PUNIT_SSRAM	0
+> -#define TELEMETRY_RESOURCE_PMC_SSRAM	1
+> -static struct resource telemetry_res[] = {
+> -	/*Telemetry*/
+> -	{
+> -		.flags = IORESOURCE_MEM,
+> -	},
+> -	{
+> -		.flags = IORESOURCE_MEM,
+> -	},
+> -};
+> -
+> -static int ipc_create_punit_device(void)
+> +static int pmc_create_punit_device(void)
+>  {
+> -	struct platform_device *pdev;
+> -	const struct platform_device_info pdevinfo = {
+> -		.parent = ipcdev.dev,
+> +	struct mfd_cell punit = {
+>  		.name = PUNIT_DEVICE_NAME,
+> -		.id = -1,
+> -		.res = punit_res_array,
+> -		.num_res = ipcdev.punit_res_count,
+> -		};
+> +		.resources = pmcdev.punit_res,
+> +		.num_resources = pmcdev.punit_res_count,
+> +	};
+>  
+> -	pdev = platform_device_register_full(&pdevinfo);
+> -	if (IS_ERR(pdev))
+> -		return PTR_ERR(pdev);
+> +	if (!pmcdev.punit_res_count)
+> +		return 0;
+>  
+> -	ipcdev.punit_dev = pdev;
+> -
+> -	return 0;
+> +	return devm_mfd_add_devices(pmcdev.dev, PLATFORM_DEVID_AUTO, &punit, 1,
+> +				    NULL, 0, NULL);
+>  }
+>  
+> -static int ipc_create_tco_device(void)
+> +static int pmc_create_tco_device(void)
+>  {
+> -	struct platform_device *pdev;
+> -	struct resource *res;
+> -	const struct platform_device_info pdevinfo = {
+> -		.parent = ipcdev.dev,
+> +	struct itco_wdt_platform_data tco_info = {
+> +		.name = "Apollo Lake SoC",
+> +		.version = 5,
+> +		.no_reboot_priv = &pmcdev,
+> +		.update_no_reboot_bit = update_no_reboot_bit,
+> +	};
+> +	struct mfd_cell tco = {
+>  		.name = TCO_DEVICE_NAME,
+> -		.id = -1,
+> -		.res = tco_res,
+> -		.num_res = ARRAY_SIZE(tco_res),
+> -		.data = &tco_info,
+> -		.size_data = sizeof(tco_info),
+> -		};
+> -
+> -	res = tco_res + TCO_RESOURCE_ACPI_IO;
+> -	res->start = ipcdev.acpi_io_base + TCO_BASE_OFFSET;
+> -	res->end = res->start + TCO_REGS_SIZE - 1;
+> -
+> -	res = tco_res + TCO_RESOURCE_SMI_EN_IO;
+> -	res->start = ipcdev.acpi_io_base + SMI_EN_OFFSET;
+> -	res->end = res->start + SMI_EN_SIZE - 1;
+> -
+> -	pdev = platform_device_register_full(&pdevinfo);
+> -	if (IS_ERR(pdev))
+> -		return PTR_ERR(pdev);
+> -
+> -	ipcdev.tco_dev = pdev;
+> -
+> -	return 0;
+> +		.ignore_resource_conflicts = true,
+> +		.platform_data = &tco_info,
+> +		.pdata_size = sizeof(tco_info),
+> +		.resources = pmcdev.tco_res,
+> +		.num_resources = ARRAY_SIZE(pmcdev.tco_res),
+> +	};
+> +
+> +	if (!pmcdev.tco_res[0].start)
+> +		return 0;
+> +
+> +	return devm_mfd_add_devices(pmcdev.dev, PLATFORM_DEVID_AUTO, &tco, 1,
+> +				    NULL, 0, NULL);
+>  }
+>  
+> -static int ipc_create_telemetry_device(void)
+> +static int pmc_create_telemetry_device(void)
+>  {
+> -	struct platform_device *pdev;
+> -	struct resource *res;
+> -	const struct platform_device_info pdevinfo = {
+> -		.parent = ipcdev.dev,
+> +	struct resource telem_res[] = {
+> +		DEFINE_RES_MEM(TELEM_PUNIT_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
+> +		DEFINE_RES_MEM(TELEM_PMC_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
+> +	};
+> +	struct mfd_cell telem  = {
+>  		.name = TELEMETRY_DEVICE_NAME,
+> -		.id = -1,
+> -		.res = telemetry_res,
+> -		.num_res = ARRAY_SIZE(telemetry_res),
+> -		};
+> -
+> -	res = telemetry_res + TELEMETRY_RESOURCE_PUNIT_SSRAM;
+> -	res->start = ipcdev.telem_punit_ssram_base;
+> -	res->end = res->start + ipcdev.telem_punit_ssram_size - 1;
+> +		.resources = telem_res,
+> +		.num_resources = ARRAY_SIZE(telem_res),
+> +	};
+>  
+> -	res = telemetry_res + TELEMETRY_RESOURCE_PMC_SSRAM;
+> -	res->start = ipcdev.telem_pmc_ssram_base;
+> -	res->end = res->start + ipcdev.telem_pmc_ssram_size - 1;
+> +	if (!pmcdev.telem_base)
+> +		return 0;
+>  
+> -	pdev = platform_device_register_full(&pdevinfo);
+> -	if (IS_ERR(pdev))
+> -		return PTR_ERR(pdev);
+> -
+> -	ipcdev.telemetry_dev = pdev;
+> -
+> -	return 0;
+> +	return devm_mfd_add_devices(pmcdev.dev, PLATFORM_DEVID_AUTO, &telem, 1,
+> +				    pmcdev.telem_base, 0, NULL);
+>  }
+>  
+> -static int ipc_create_pmc_devices(void)
+> +static int pmc_create_devices(void)
+>  {
+>  	int ret;
+>  
+>  	/* If we have ACPI based watchdog use that instead */
+>  	if (!acpi_has_watchdog()) {
+> -		ret = ipc_create_tco_device();
+> +		ret = pmc_create_tco_device();
+>  		if (ret) {
+> -			dev_err(ipcdev.dev, "Failed to add tco platform device\n");
+> +			dev_err(pmcdev.dev, "Failed to add tco platform device\n");
+>  			return ret;
+>  		}
+>  	}
+>  
+> -	ret = ipc_create_punit_device();
+> +	ret = pmc_create_punit_device();
+>  	if (ret) {
+> -		dev_err(ipcdev.dev, "Failed to add punit platform device\n");
+> -		platform_device_unregister(ipcdev.tco_dev);
+> +		dev_err(pmcdev.dev, "Failed to add punit platform device\n");
+>  		return ret;
+>  	}
+>  
+> -	if (!ipcdev.telem_res_inval) {
+> -		ret = ipc_create_telemetry_device();
+> -		if (ret) {
+> -			dev_warn(ipcdev.dev,
+> -				"Failed to add telemetry platform device\n");
+> -			platform_device_unregister(ipcdev.punit_dev);
+> -			platform_device_unregister(ipcdev.tco_dev);
+> -		}
+> -	}
+> +	ret = pmc_create_telemetry_device();
+> +	if (ret)
+> +		dev_warn(pmcdev.dev, "Failed to add telemetry platform device\n");
+>  
+>  	return ret;
+>  }
+>  
+> -static int ipc_plat_get_res(struct platform_device *pdev,
+> +static int pmc_plat_get_res(struct platform_device *pdev,
+>  			    struct intel_scu_ipc_pdata *pdata)
+>  {
+> -	struct resource *res, *punit_res = punit_res_array;
+> +	struct resource *res, *punit_res = pmcdev.punit_res;
+> +	struct resource *tco_res = pmcdev.tco_res;
+>  	void __iomem *addr;
+>  	int size;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_IO,
+>  				    PLAT_RESOURCE_ACPI_IO_INDEX);
+>  	if (!res) {
+> -		dev_err(&pdev->dev, "Failed to get io resource\n");
+> +		dev_err(&pdev->dev, "Failed to get IO resource\n");
+>  		return -ENXIO;
+> +
+>  	}
+> -	size = resource_size(res);
+> -	ipcdev.acpi_io_base = res->start;
+> -	ipcdev.acpi_io_size = size;
+> -	dev_info(&pdev->dev, "io res: %pR\n", res);
+> +	tco_res[0].flags = IORESOURCE_IO;
+> +	tco_res[0].start = res->start + TCO_BASE_OFFSET;
+> +	tco_res[0].end = tco_res[0].start + TCO_REGS_SIZE - 1;
+> +	tco_res[1].flags = IORESOURCE_IO;
+> +	tco_res[1].start = res->start + SMI_EN_OFFSET;
+> +	tco_res[1].end = tco_res[1].start + SMI_EN_SIZE - 1;
+> +	dev_dbg(&pdev->dev, "IO: %pR\n", res);
+>  
+> -	ipcdev.punit_res_count = 0;
+> +	pmcdev.punit_res_count = 0;
+>  
+>  	/* This is index 0 to cover BIOS data register */
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>  				    PLAT_RESOURCE_BIOS_DATA_INDEX);
+>  	if (!res) {
+> -		dev_err(&pdev->dev, "Failed to get res of punit BIOS data\n");
+> +		dev_err(&pdev->dev, "Failed to get res of P-unit BIOS data\n");
+>  		return -ENXIO;
+>  	}
+> -	punit_res[ipcdev.punit_res_count++] = *res;
+> -	dev_info(&pdev->dev, "punit BIOS data res: %pR\n", res);
+> +	punit_res[pmcdev.punit_res_count++] = *res;
+> +	dev_dbg(&pdev->dev, "P-unit BIOS data: %pR\n", res);
+>  
+>  	/* This is index 1 to cover BIOS interface register */
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>  				    PLAT_RESOURCE_BIOS_IFACE_INDEX);
+>  	if (!res) {
+> -		dev_err(&pdev->dev, "Failed to get res of punit BIOS iface\n");
+> +		dev_err(&pdev->dev, "Failed to get res of P-unit BIOS iface\n");
+>  		return -ENXIO;
+>  	}
+> -	punit_res[ipcdev.punit_res_count++] = *res;
+> -	dev_info(&pdev->dev, "punit BIOS interface res: %pR\n", res);
+> +	punit_res[pmcdev.punit_res_count++] = *res;
+> +	dev_dbg(&pdev->dev, "P-unit BIOS interface: %pR\n", res);
+>  
+>  	/* This is index 2 to cover ISP data register, optional */
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>  				    PLAT_RESOURCE_ISP_DATA_INDEX);
+>  	if (res) {
+> -		punit_res[ipcdev.punit_res_count++] = *res;
+> -		dev_info(&pdev->dev, "punit ISP data res: %pR\n", res);
+> +		punit_res[pmcdev.punit_res_count++] = *res;
+> +		dev_dbg(&pdev->dev, "P-unit ISP data: %pR\n", res);
+>  	}
+>  
+>  	/* This is index 3 to cover ISP interface register, optional */
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>  				    PLAT_RESOURCE_ISP_IFACE_INDEX);
+>  	if (res) {
+> -		punit_res[ipcdev.punit_res_count++] = *res;
+> -		dev_info(&pdev->dev, "punit ISP interface res: %pR\n", res);
+> +		punit_res[pmcdev.punit_res_count++] = *res;
+> +		dev_dbg(&pdev->dev, "P-unit ISP interface: %pR\n", res);
+>  	}
+>  
+>  	/* This is index 4 to cover GTD data register, optional */
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>  				    PLAT_RESOURCE_GTD_DATA_INDEX);
+>  	if (res) {
+> -		punit_res[ipcdev.punit_res_count++] = *res;
+> -		dev_info(&pdev->dev, "punit GTD data res: %pR\n", res);
+> +		punit_res[pmcdev.punit_res_count++] = *res;
+> +		dev_dbg(&pdev->dev, "P-unit GTD data: %pR\n", res);
+>  	}
+>  
+>  	/* This is index 5 to cover GTD interface register, optional */
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>  				    PLAT_RESOURCE_GTD_IFACE_INDEX);
+>  	if (res) {
+> -		punit_res[ipcdev.punit_res_count++] = *res;
+> -		dev_info(&pdev->dev, "punit GTD interface res: %pR\n", res);
+> +		punit_res[pmcdev.punit_res_count++] = *res;
+> +		dev_dbg(&pdev->dev, "P-unit GTD interface: %pR\n", res);
+>  	}
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>  				    PLAT_RESOURCE_IPC_INDEX);
+>  	if (!res) {
+> -		dev_err(&pdev->dev, "Failed to get ipc resource\n");
+> +		dev_err(&pdev->dev, "Failed to get IPC resource\n");
+>  		return -ENXIO;
+>  	}
+>  	size = PLAT_RESOURCE_IPC_SIZE + PLAT_RESOURCE_GCR_SIZE;
+> @@ -510,23 +420,16 @@ static int ipc_plat_get_res(struct platform_device *pdev,
+>  
+>  	pdata->ipc_regs = addr;
+>  
+> -	ipcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
+> -	dev_info(&pdev->dev, "ipc res: %pR\n", res);
+> +	pmcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
+> +	dev_dbg(&pdev->dev, "IPC: %pR\n", res);
+>  
+> -	ipcdev.telem_res_inval = 0;
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM,
+>  				    PLAT_RESOURCE_TELEM_SSRAM_INDEX);
+>  	if (!res) {
+> -		dev_err(&pdev->dev, "Failed to get telemetry ssram resource\n");
+> -		ipcdev.telem_res_inval = 1;
+> +		dev_err(&pdev->dev, "Failed to get telemetry SSRAM resource\n");
+>  	} else {
+> -		ipcdev.telem_punit_ssram_base = res->start +
+> -						TELEM_PUNIT_SSRAM_OFFSET;
+> -		ipcdev.telem_punit_ssram_size = TELEM_SSRAM_SIZE;
+> -		ipcdev.telem_pmc_ssram_base = res->start +
+> -						TELEM_PMC_SSRAM_OFFSET;
+> -		ipcdev.telem_pmc_ssram_size = TELEM_SSRAM_SIZE;
+> -		dev_info(&pdev->dev, "telemetry ssram res: %pR\n", res);
+> +		dev_dbg(&pdev->dev, "Telemetry SSRAM: %pR\n", res);
+> +		pmcdev.telem_base = res;
+>  	}
+>  
+>  	return 0;
+> @@ -542,7 +445,7 @@ int intel_pmc_s0ix_counter_read(u64 *data)
+>  {
+>  	u64 deep, shlw;
+>  
+> -	if (!ipcdev.has_gcr_regs)
+> +	if (!pmcdev.gcr_mem_base)
+>  		return -EACCES;
+>  
+>  	deep = gcr_data_readq(PMC_GCR_TELEM_DEEP_S0IX_REG);
+> @@ -554,15 +457,13 @@ int intel_pmc_s0ix_counter_read(u64 *data)
+>  }
+>  EXPORT_SYMBOL_GPL(intel_pmc_s0ix_counter_read);
+>  
+> -#ifdef CONFIG_ACPI
+> -static const struct acpi_device_id ipc_acpi_ids[] = {
+> +static const struct acpi_device_id intel_pmc_acpi_ids[] = {
+>  	{ "INT34D2", 0},
+>  	{ }
+>  };
+> -MODULE_DEVICE_TABLE(acpi, ipc_acpi_ids);
+> -#endif
+> +MODULE_DEVICE_TABLE(acpi, intel_pmc_acpi_ids);
+>  
+> -static int ipc_plat_probe(struct platform_device *pdev)
+> +static int intel_pmc_probe(struct platform_device *pdev)
+>  {
+>  	struct intel_scu_ipc_pdata pdata;
+>  	struct intel_scu_ipc_dev *scu;
+> @@ -573,10 +474,10 @@ static int ipc_plat_probe(struct platform_device *pdev)
+>  	if (pdata.irq < 0)
+>  		return -EINVAL;
+>  
+> -	ipcdev.dev = &pdev->dev;
+> -	spin_lock_init(&ipcdev.gcr_lock);
+> +	pmcdev.dev = &pdev->dev;
+> +	spin_lock_init(&pmcdev.gcr_lock);
+>  
+> -	ret = ipc_plat_get_res(pdev, &pdata);
+> +	ret = pmc_plat_get_res(pdev, &pdata);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Failed to request resource\n");
+>  		return ret;
+> @@ -588,67 +489,58 @@ static int ipc_plat_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, scu);
+>  
+> -	ret = ipc_create_pmc_devices();
+> +	ret = pmc_create_devices();
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Failed to create pmc devices\n");
+>  		goto err_ipc;
+>  	}
+>  
+> -	ret = sysfs_create_group(&pdev->dev.kobj, &intel_ipc_group);
+> +	ret = sysfs_create_group(&pdev->dev.kobj, &intel_pmc_group);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Failed to create sysfs group %d\n",
+>  			ret);
+> -		goto err_devs;
+> +		goto err_ipc;
+>  	}
+>  
+> -	ipcdev.has_gcr_regs = true;
+> -
+>  	return 0;
+>  
+>  err_ipc:
+>  	intel_scu_ipc_remove(scu);
+> -err_devs:
+> -	platform_device_unregister(ipcdev.tco_dev);
+> -	platform_device_unregister(ipcdev.punit_dev);
+> -	platform_device_unregister(ipcdev.telemetry_dev);
+>  
+>  	return ret;
+>  }
+>  
+> -static int ipc_plat_remove(struct platform_device *pdev)
+> +static int intel_pmc_remove(struct platform_device *pdev)
+>  {
+> -	sysfs_remove_group(&pdev->dev.kobj, &intel_ipc_group);
+> -	platform_device_unregister(ipcdev.tco_dev);
+> -	platform_device_unregister(ipcdev.punit_dev);
+> -	platform_device_unregister(ipcdev.telemetry_dev);
+> +	sysfs_remove_group(&pdev->dev.kobj, &intel_pmc_group);
+>  	intel_scu_ipc_remove(platform_get_drvdata(pdev));
+> -	ipcdev.dev = NULL;
+> +	pmcdev.dev = NULL;
+>  	return 0;
+>  }
+>  
+> -static struct platform_driver ipc_plat_driver = {
+> -	.remove = ipc_plat_remove,
+> -	.probe = ipc_plat_probe,
+> +static struct platform_driver intel_pmc_driver = {
+> +	.remove = intel_pmc_remove,
+> +	.probe = intel_pmc_probe,
+>  	.driver = {
+> -		.name = "pmc-ipc-plat",
+> -		.acpi_match_table = ACPI_PTR(ipc_acpi_ids),
+> +		.name = "intel_pmc_bxt",
+> +		.acpi_match_table = ACPI_PTR(intel_pmc_acpi_ids),
+>  	},
+>  };
+>  
+> -static int __init intel_pmc_ipc_init(void)
+> +static int __init intel_pmc_init(void)
+>  {
+> -	return platform_driver_register(&ipc_plat_driver);
+> +	return platform_driver_register(&intel_pmc_driver);
+>  }
+>  
+> -static void __exit intel_pmc_ipc_exit(void)
+> +static void __exit intel_pmc_exit(void)
+>  {
+> -	platform_driver_unregister(&ipc_plat_driver);
+> +	platform_driver_unregister(&intel_pmc_driver);
+>  }
+>  
+>  MODULE_AUTHOR("Zha Qipeng <qipeng.zha@intel.com>");
+> -MODULE_DESCRIPTION("Intel PMC IPC driver");
+> +MODULE_DESCRIPTION("Intel Broxton PMC driver");
+>  MODULE_LICENSE("GPL v2");
+>  
+>  /* Some modules are dependent on this, so init earlier */
+> -fs_initcall(intel_pmc_ipc_init);
+> -module_exit(intel_pmc_ipc_exit);
+> +fs_initcall(intel_pmc_init);
+> +module_exit(intel_pmc_exit);
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 1c5afb9e4965..e01aba797656 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1195,19 +1195,11 @@ config INTEL_SMARTCONNECT
+>  	  This driver checks to determine whether the device has Intel Smart
+>  	  Connect enabled, and if so disables it.
+>  
+> -config INTEL_PMC_IPC
+> -	tristate "Intel PMC IPC Driver"
+> -	depends on ACPI
+> -	select INTEL_SCU_IPC
+> -	---help---
+> -	This driver provides support for PMC control on some Intel platforms.
+> -	The PMC is an ARC processor which defines IPC commands for communication
+> -	with other entities in the CPU.
+> -
+>  config INTEL_BXTWC_PMIC_TMU
+>  	tristate "Intel BXT Whiskey Cove TMU Driver"
+>  	depends on REGMAP
+> -	depends on INTEL_SOC_PMIC_BXTWC && INTEL_PMC_IPC
+> +	depends on MFD_INTEL_PMC_BXT
+> +	depends on INTEL_SOC_PMIC_BXTWC
+>  	---help---
+>  	  Select this driver to use Intel BXT Whiskey Cove PMIC TMU feature.
+>  	  This driver enables the alarm wakeup functionality in the TMU unit
+> @@ -1233,7 +1225,9 @@ config INTEL_PUNIT_IPC
+>  
+>  config INTEL_TELEMETRY
+>  	tristate "Intel SoC Telemetry Driver"
+> -	depends on INTEL_PMC_IPC && INTEL_PUNIT_IPC && X86_64
+> +	depends on X86_64
+> +	depends on MFD_INTEL_PMC_BXT
+> +	depends on INTEL_PUNIT_IPC
+>  	---help---
+>  	  This driver provides interfaces to configure and use
+>  	  telemetry for INTEL SoC from APL onwards. It is also
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index c7a42feaa521..f1abce3e1720 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -86,7 +86,6 @@ obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
+>  obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
+>  
+>  obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
+> -obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
+>  obj-$(CONFIG_TOUCHSCREEN_DMI)	+= touchscreen_dmi.o
+>  obj-$(CONFIG_SURFACE_PRO3_BUTTON)	+= surfacepro3_button.o
+>  obj-$(CONFIG_SURFACE_3_BUTTON)	+= surface3_button.o
+> diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
+> index e84d3e983e0c..7b7a766a6cb8 100644
+> --- a/drivers/platform/x86/intel_telemetry_debugfs.c
+> +++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+> @@ -16,13 +16,13 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+> +#include <linux/mfd/intel_pmc_bxt.h>
+>  #include <linux/pci.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/suspend.h>
+>  
+>  #include <asm/cpu_device_id.h>
+>  #include <asm/intel-family.h>
+> -#include <asm/intel_pmc_ipc.h>
+>  #include <asm/intel_telemetry.h>
+>  
+>  #define DRIVER_NAME			"telemetry_soc_debugfs"
+> diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
+> index 5b986d6c801d..fa3f39336246 100644
+> --- a/drivers/usb/typec/tcpm/Kconfig
+> +++ b/drivers/usb/typec/tcpm/Kconfig
+> @@ -41,8 +41,8 @@ config TYPEC_FUSB302
+>  config TYPEC_WCOVE
+>  	tristate "Intel WhiskeyCove PMIC USB Type-C PHY driver"
+>  	depends on ACPI
+> +	depends on MFD_INTEL_PMC_BXT
+>  	depends on INTEL_SOC_PMIC
+> -	depends on INTEL_PMC_IPC
+>  	depends on BXT_WC_PMIC_OPREGION
+>  	help
+>  	  This driver adds support for USB Type-C on Intel Broxton platforms
+> diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/include/linux/mfd/intel_pmc_bxt.h
+> similarity index 83%
+> rename from arch/x86/include/asm/intel_pmc_ipc.h
+> rename to include/linux/mfd/intel_pmc_bxt.h
+> index 22848df5faaf..f03a80df0728 100644
+> --- a/arch/x86/include/asm/intel_pmc_ipc.h
+> +++ b/include/linux/mfd/intel_pmc_bxt.h
+> @@ -1,6 +1,9 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef _ASM_X86_INTEL_PMC_IPC_H_
+> -#define  _ASM_X86_INTEL_PMC_IPC_H_
+> +#ifndef MFD_INTEL_PMC_BXT_H
+> +#define MFD_INTEL_PMC_BXT_H
+> +
+> +#include <linux/errno.h>
+> +#include <linux/types.h>
+>  
+>  /* Commands */
+>  #define PMC_IPC_USB_PWR_CTRL		0xF0
+> @@ -25,7 +28,7 @@
+>  #define PMC_GCR_TELEM_DEEP_S0IX_REG	0x78
+>  #define PMC_GCR_TELEM_SHLW_S0IX_REG	0x80
+>  
+> -#if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
+> +#if IS_ENABLED(CONFIG_MFD_INTEL_PMC_BXT)
+>  
+>  int intel_pmc_s0ix_counter_read(u64 *data);
+>  int intel_pmc_gcr_read64(u32 offset, u64 *data);
+> @@ -42,6 +45,6 @@ static inline int intel_pmc_gcr_read64(u32 offset, u64 *data)
+>  	return -EINVAL;
+>  }
+>  
+> -#endif /*CONFIG_INTEL_PMC_IPC*/
+> +#endif /* CONFIG_MFD_INTEL_PMC_BXT */
+>  
+>  #endif
+> -- 
+> 2.24.1
 > 
-> > +int intel_scu_ipc_dev_update(struct intel_scu_ipc_dev *scu, u16 addr, u8 bits,
-> > +			     u8 mask)
-> 
-> In header you have 'u8 data'. Can we be consistent with a name?
 
-Sure.
-
-> >  {
-> >  	u8 data[2] = { bits, mask };
-> > -	return pwr_reg_rdwr(&addr, data, 1, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_M);
-> > +	return pwr_reg_rdwr(scu, &addr, data, 1, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_M);
-> >  }
-> > -EXPORT_SYMBOL(intel_scu_ipc_update_register);
-> > +EXPORT_SYMBOL(intel_scu_ipc_dev_update);
-> >  
-> >  /**
-> > - * intel_scu_ipc_simple_command	-	send a simple command
-> > + * intel_scu_ipc_dev_simple_command() - Send a simple command
-> > + * @scu: Optional SCU IPC instance
-> >   * @cmd: Command
-> >   * @sub: Sub type
-> >   *
-> > @@ -321,11 +427,14 @@ EXPORT_SYMBOL(intel_scu_ipc_update_register);
-> >   * This function may sleep. Locking for SCU accesses is handled for the
-> >   * caller.
-> >   */
-> > -int intel_scu_ipc_simple_command(int cmd, int sub)
-> > +int intel_scu_ipc_dev_simple_command(struct intel_scu_ipc_dev *scu, int cmd,
-> > +				     int sub)
-> >  {
-> > -	struct intel_scu_ipc_dev *scu = &ipcdev;
-> >  	int err;
-> >  
-> > +	if (!scu)
-> > +		scu = &ipcdev;
-> > +
-> >  	mutex_lock(&ipclock);
-> >  	if (scu->dev == NULL) {
-> >  		mutex_unlock(&ipclock);
-> > @@ -336,47 +445,65 @@ int intel_scu_ipc_simple_command(int cmd, int sub)
-> >  	mutex_unlock(&ipclock);
-> >  	return err;
-> >  }
-> > -EXPORT_SYMBOL(intel_scu_ipc_simple_command);
-> > +EXPORT_SYMBOL(intel_scu_ipc_dev_simple_command);
-> >  
-> >  /**
-> > - * intel_scu_ipc_command	-	command with data
-> > + * intel_scu_ipc_command_with_size() - Command with data
-> > + * @scu: Optional SCU IPC instance
-> >   * @cmd: Command
-> >   * @sub: Sub type
-> >   * @in: Input data
-> > - * @inlen: Input length in dwords
-> > + * @inlen: Input length in bytes
-> > + * @size: Input size written to the IPC command register in whatever
-> > + *	  units (dword, byte) the particular firmware requires. Normally
-> > + *	  should be the same as @inlen.
-> >   * @out: Output data
-> > - * @outlen: Output length in dwords
-> > + * @outlen: Output length in bytes
-> >   *
-> >   * Issue a command to the SCU which involves data transfers. Do the
-> >   * data copies under the lock but leave it for the caller to interpret.
-> >   */
-> > -int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
-> > -			  u32 *out, int outlen)
-> > +int intel_scu_ipc_dev_command_with_size(struct intel_scu_ipc_dev *scu, int cmd,
-> > +					int sub, const void *in, size_t inlen,
-> > +					size_t size, void *out, size_t outlen)
-> >  {
-> > -	struct intel_scu_ipc_dev *scu = &ipcdev;
-> > +	size_t outbuflen = DIV_ROUND_UP(outlen, sizeof(u32));
-> > +	size_t inbuflen = DIV_ROUND_UP(inlen, sizeof(u32));
-> > +	u32 inbuf[4] = {};
-> >  	int i, err;
-> >  
-> > +	if (inbuflen > 4 || outbuflen > 4)
-> > +		return -EINVAL;
-> > +
-> > +	if (!scu)
-> > +		scu = &ipcdev;
-> > +
-> >  	mutex_lock(&ipclock);
-> >  	if (scu->dev == NULL) {
-> >  		mutex_unlock(&ipclock);
-> >  		return -ENODEV;
-> >  	}
-> >  
-> > -	for (i = 0; i < inlen; i++)
-> > -		ipc_data_writel(scu, *in++, 4 * i);
-> > +	memcpy(inbuf, in, inlen);
-> > +	for (i = 0; i < inbuflen; i++)
-> > +		ipc_data_writel(scu, inbuf[i], 4 * i);
-> >  
-> > -	ipc_command(scu, (inlen << 16) | (sub << 12) | cmd);
-> > +	ipc_command(scu, (size << 16) | (sub << 12) | cmd);
-> >  	err = intel_scu_ipc_check_status(scu);
-> >  
-> > -	if (!err) {
-> > -		for (i = 0; i < outlen; i++)
-> > -			*out++ = ipc_data_readl(scu, 4 * i);
-> 
-> > +	if (!err && outlen) {
-> 
-> Do we need the 'outlen' test here? In any case if it's zero the following
-> will be no-op.
-
-Right, it is not needed. I'll remove the check.
+-- 
+With Best Regards,
+Andy Shevchenko
