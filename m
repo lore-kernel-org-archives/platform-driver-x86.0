@@ -1,193 +1,145 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH platform-next v1 5/9] platform/x86: mlx-platform: Set
- system mux configuration based on system type
-Date: Thu, 9 Jan 2020 17:19:48 +0200
-Message-ID: <CAHp75VfYzy9jq3c2YjszJpCb33EWYh-fvuZv_vAenfKLGDEY0A@mail.gmail.com>
-References: <20191231102917.24181-1-vadimp@mellanox.com> <20191231102917.24181-6-vadimp@mellanox.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v10 05/10] test_firmware: add support for
+ firmware_request_platform
+Date: Fri, 10 Jan 2020 20:48:53 +0100
+Message-ID: <071db8c5-4be1-c6d1-0ccb-a2268cd5b347@redhat.com>
+References: <20191210115117.303935-1-hdegoede@redhat.com>
+ <20191210115117.303935-6-hdegoede@redhat.com>
+ <20200106213343.GV11244@42.do-not-panic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191231102917.24181-6-vadimp@mellanox.com>
+In-Reply-To: <20200106213343.GV11244@42.do-not-panic.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Dec 31, 2019 at 12:29 PM Vadim Pasternak <vadimp@mellanox.com> wrote:
->
-> Separate assignment for systems mux configuration based on system type,
-> instead of setting the same configuration for the all.
-> The motivation is to allow introduction of new systems types with the
-> different mux topology.
->
-> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-> ---
->  drivers/platform/x86/mlx-platform.c | 46 ++++++++++++++++++++++++++-----------
->  1 file changed, 33 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-> index 7e92dc52071f..0a41668b1587 100644
-> --- a/drivers/platform/x86/mlx-platform.c
-> +++ b/drivers/platform/x86/mlx-platform.c
-> @@ -219,7 +219,7 @@ static const int mlxplat_default_channels[][MLXPLAT_CPLD_GRP_CHNL_NUM] = {
->  static const int mlxplat_msn21xx_channels[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
->
->  /* Platform mux data */
-> -static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
-> +static struct i2c_mux_reg_platform_data mlxplat_default_mux_data[] = {
->         {
->                 .parent = 1,
->                 .base_nr = MLXPLAT_CPLD_CH1,
-> @@ -239,6 +239,11 @@ static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
->
->  };
->
-> +/* Platform mux configuration variables */
-> +static int mlxplat_max_adap_num;
-> +static int mlxplat_mux_num;
-> +static struct i2c_mux_reg_platform_data *mlxplat_mux_data;
-> +
->  /* Platform hotplug devices */
->  static struct i2c_board_info mlxplat_mlxcpld_psu[] = {
->         {
-> @@ -1905,7 +1910,10 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
->  {
->         int i;
->
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
-> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
-> +       mlxplat_mux_data = mlxplat_default_mux_data;
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 mlxplat_mux_data[i].values = mlxplat_default_channels[i];
->                 mlxplat_mux_data[i].n_values =
->                                 ARRAY_SIZE(mlxplat_default_channels[i]);
-> @@ -1924,7 +1932,10 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
->  {
->         int i;
->
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
-> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
-> +       mlxplat_mux_data = mlxplat_default_mux_data;
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
->                 mlxplat_mux_data[i].n_values =
->                                 ARRAY_SIZE(mlxplat_msn21xx_channels);
-> @@ -1943,7 +1954,10 @@ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
->  {
->         int i;
->
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
-> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
-> +       mlxplat_mux_data = mlxplat_default_mux_data;
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
->                 mlxplat_mux_data[i].n_values =
->                                 ARRAY_SIZE(mlxplat_msn21xx_channels);
-> @@ -1962,7 +1976,10 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
->  {
->         int i;
->
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
-> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
-> +       mlxplat_mux_data = mlxplat_default_mux_data;
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
->                 mlxplat_mux_data[i].n_values =
->                                 ARRAY_SIZE(mlxplat_msn21xx_channels);
-> @@ -1981,7 +1998,10 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
->  {
->         int i;
->
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
-> +       mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
-> +       mlxplat_mux_data = mlxplat_default_mux_data;
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
->                 mlxplat_mux_data[i].n_values =
->                                 ARRAY_SIZE(mlxplat_msn21xx_channels);
-> @@ -1998,7 +2018,7 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
->         mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng;
->
->         return 1;
-> -}
-> +};
+Hi,
 
-And this, how does it happen?
+On 1/6/20 10:33 PM, Luis Chamberlain wrote:
+> On Tue, Dec 10, 2019 at 12:51:12PM +0100, Hans de Goede wrote:
+>> Add support for testing firmware_request_platform through a new
+>> trigger_request_platform trigger.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   lib/test_firmware.c | 68 +++++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 68 insertions(+)
+>>
+>> diff --git a/lib/test_firmware.c b/lib/test_firmware.c
+>> index 251213c872b5..9af00cfc8979 100644
+>> --- a/lib/test_firmware.c
+>> +++ b/lib/test_firmware.c
+>> @@ -24,6 +24,7 @@
+>>   #include <linux/delay.h>
+>>   #include <linux/kthread.h>
+>>   #include <linux/vmalloc.h>
+>> +#include <linux/efi_embedded_fw.h>
+>>   
+>>   #define TEST_FIRMWARE_NAME	"test-firmware.bin"
+>>   #define TEST_FIRMWARE_NUM_REQS	4
+>> @@ -507,12 +508,76 @@ static ssize_t trigger_request_store(struct device *dev,
+>>   }
+>>   static DEVICE_ATTR_WO(trigger_request);
+>>   
+>> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+>> +static ssize_t trigger_request_platform_store(struct device *dev,
+>> +					      struct device_attribute *attr,
+>> +					      const char *buf, size_t count)
+>> +{
+>> +	static const u8 test_data[] = {
+>> +		0x55, 0xaa, 0x55, 0xaa, 0x01, 0x02, 0x03, 0x04,
+>> +		0x55, 0xaa, 0x55, 0xaa, 0x05, 0x06, 0x07, 0x08,
+>> +		0x55, 0xaa, 0x55, 0xaa, 0x10, 0x20, 0x30, 0x40,
+>> +		0x55, 0xaa, 0x55, 0xaa, 0x50, 0x60, 0x70, 0x80
+>> +	};
+>> +	struct efi_embedded_fw fw;
+>> +	int rc;
+>> +	char *name;
+>> +
+>> +	name = kstrndup(buf, count, GFP_KERNEL);
+>> +	if (!name)
+>> +		return -ENOSPC;
+>> +
+>> +	pr_info("inserting test platform fw '%s'\n", name);
+>> +	fw.name = name;
+>> +	fw.data = (void *)test_data;
+>> +	fw.length = sizeof(test_data);
+>> +	list_add(&fw.list, &efi_embedded_fw_list);
+>> +
+>> +	pr_info("loading '%s'\n", name);
+>> +
+>> +	mutex_lock(&test_fw_mutex);
+>> +	release_firmware(test_firmware);
+>> +	test_firmware = NULL;
+> 
+> Seems odd to have the above two lines here before the request, why not
+> after as noted below.
 
->
->  static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
->         {
-> @@ -2127,7 +2147,7 @@ static int mlxplat_mlxcpld_verify_bus_topology(int *nr)
->         /* Scan adapters from expected id to verify it is free. */
->         *nr = MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR;
->         for (i = MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR; i <
+I modelled this after trigger_request_store which keeps the
+test_firmware around after it has been called so that its contents can be
+read back from the char misc device which the test_firmware module registers.
 
-> -            MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM; i++) {
-> +            mlxplat_max_adap_num; i++) {
+Since e.g. trigger_request_store which keeps the test_firmware around
+we must check and free it before assigning a new firmware to it using
+firmware_request_platform, which is why this is done before and not
+after the request.
 
-I'm wondering why 'i <; is left on previous line, or, otherwise, the
-limit is on next one.
+> 
+>> +	rc = firmware_request_platform(&test_firmware, name, dev);
+>> +	if (rc) {
+>> +		pr_info("load of '%s' failed: %d\n", name, rc);
+>> +		goto out;
+>> +	}
+>> +	if (test_firmware->size != sizeof(test_data) ||
+>> +	    memcmp(test_firmware->data, test_data, sizeof(test_data)) != 0) {
+>> +		pr_info("firmware contents mismatch for '%s'\n", name);
+>> +		rc = -EINVAL;
+>> +		goto out;
+>> +	}
+>> +	pr_info("loaded: %zu\n", test_firmware->size);
+>> +	rc = count;
+> 
+> Here.
+> 
+>> +
+>> +out:
+>> +	mutex_unlock(&test_fw_mutex);
+>> +
+>> +	list_del(&fw.list);
+>> +	kfree(name);
+>> +
+>> +	return rc;
+>> +}
+>> +static DEVICE_ATTR_WO(trigger_request_platform);
+>> +#endif
+>> +
+>>   static DECLARE_COMPLETION(async_fw_done);
+>>   
+>>   static void trigger_async_request_cb(const struct firmware *fw, void *context)
+>>   {
+>>   	test_firmware = fw;
+>>   	complete(&async_fw_done);
+>> +
+>> +
+>> +
+>> +
+>> +
+>> +
+>> +
+>> +
+>> +
+>>   }
+> 
+> Ummm, new empty lines without any code added... did you forget
+> something?  Please address this.
 
->                 search_adap = i2c_get_adapter(i);
->                 if (search_adap) {
->                         i2c_put_adapter(search_adap);
-> @@ -2141,12 +2161,12 @@ static int mlxplat_mlxcpld_verify_bus_topology(int *nr)
->         }
->
->         /* Return with error if free id for adapter is not found. */
-> -       if (i == MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM)
-> +       if (i == mlxplat_max_adap_num)
->                 return -ENODEV;
->
->         /* Shift adapter ids, since expected parent adapter is not free. */
->         *nr = i;
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 shift = *nr - mlxplat_mux_data[i].parent;
->                 mlxplat_mux_data[i].parent = *nr;
->                 mlxplat_mux_data[i].base_nr += shift;
-> @@ -2202,7 +2222,7 @@ static int __init mlxplat_init(void)
->         if (nr < 0)
->                 goto fail_alloc;
->
-> -       nr = (nr == MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM) ? -1 : nr;
-> +       nr = (nr == mlxplat_max_adap_num) ? -1 : nr;
->         if (mlxplat_i2c)
->                 mlxplat_i2c->regmap = priv->regmap;
->         priv->pdev_i2c = platform_device_register_resndata(
-> @@ -2215,7 +2235,7 @@ static int __init mlxplat_init(void)
->                 goto fail_alloc;
->         }
->
-> -       for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-> +       for (i = 0; i < mlxplat_mux_num; i++) {
->                 priv->pdev_mux[i] = platform_device_register_resndata(
->                                                 &priv->pdev_i2c->dev,
->                                                 "i2c-mux-reg", i, NULL,
-> @@ -2349,7 +2369,7 @@ static void __exit mlxplat_exit(void)
->         platform_device_unregister(priv->pdev_led);
->         platform_device_unregister(priv->pdev_hotplug);
->
-> -       for (i = ARRAY_SIZE(mlxplat_mux_data) - 1; i >= 0 ; i--)
+This is a left over from an earlier version of the patch, my bad, I will remove
+this and send out a new version.
 
-> +       for (i = mlxplat_mux_num - 1; i >= 0 ; i--)
+Regards,
 
-It is basically
-  while (i--)
-
->                 platform_device_unregister(priv->pdev_mux[i]);
->
->         platform_device_unregister(priv->pdev_i2c);
-> --
-> 2.11.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Hans
