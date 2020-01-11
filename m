@@ -1,118 +1,186 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v11 03/10] firmware: Rename FW_OPT_NOFALLBACK to FW_OPT_NOFALLBACK_SYSFS
-Date: Sat, 11 Jan 2020 15:56:56 +0100
-Message-ID: <20200111145703.533809-4-hdegoede@redhat.com>
+Subject: [PATCH v11 09/10] platform/x86: touchscreen_dmi: Add EFI embedded firmware info support
+Date: Sat, 11 Jan 2020 15:57:02 +0100
+Message-ID: <20200111145703.533809-10-hdegoede@redhat.com>
 References: <20200111145703.533809-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <20200111145703.533809-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
 To: Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This is a preparation patch for adding a new platform fallback mechanism,
-which will have its own enable/disable FW_OPT_xxx option.
+Sofar we have been unable to get permission from the vendors to put the
+firmware for touchscreens listed in touchscreen_dmi in linux-firmware.
 
-Note this also fixes a typo in one of the re-wordwrapped comments:
-enfoce -> enforce.
+Some of the tablets with such a touchscreen have a touchscreen driver, an=
+d
+thus a copy of the firmware, as part of their EFI code.
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+This commit adds the necessary info for the new EFI embedded-firmware cod=
+e
+to extract these firmwares, making the touchscreen work OOTB without the
+user needing to manually add the firmware.
+
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/base/firmware_loader/fallback.c | 11 ++++++-----
- drivers/base/firmware_loader/firmware.h | 16 ++++++++--------
- drivers/base/firmware_loader/main.c     |  2 +-
- 3 files changed, 15 insertions(+), 14 deletions(-)
+Changes in v7:
+- Remove adding of PROPERTY_ENTRY_BOOL("efi-embedded-firmware"), to touch=
+screen
+  props, as this is no longer necessary
 
-diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmw=
-are_loader/fallback.c
-index 62ee90b4db56..8704e1bae175 100644
---- a/drivers/base/firmware_loader/fallback.c
-+++ b/drivers/base/firmware_loader/fallback.c
-@@ -606,7 +606,7 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_fla=
-gs)
- 		return false;
- 	}
+Changes in v6:
+- Switch from crc sums to SHA256 hashes for the firmware hashes
+---
+ drivers/firmware/efi/embedded-firmware.c |  3 ++
+ drivers/platform/x86/Kconfig             |  1 +
+ drivers/platform/x86/touchscreen_dmi.c   | 41 +++++++++++++++++++++++-
+ include/linux/efi_embedded_fw.h          |  2 ++
+ 4 files changed, 46 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/efi/embedded-firmware.c b/drivers/firmware/=
+efi/embedded-firmware.c
+index 6668ad48133f..9592c6d12840 100644
+--- a/drivers/firmware/efi/embedded-firmware.c
++++ b/drivers/firmware/efi/embedded-firmware.c
+@@ -21,6 +21,9 @@ EXPORT_SYMBOL_GPL(efi_embedded_fw_list);
+ static bool checked_for_fw;
 =20
--	if ((opt_flags & FW_OPT_NOFALLBACK))
-+	if ((opt_flags & FW_OPT_NOFALLBACK_SYSFS))
- 		return false;
-=20
- 	/* Also permit LSMs and IMA to fail firmware sysfs fallback */
-@@ -630,10 +630,11 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_f=
-lags)
-  * interface. Userspace is in charge of loading the firmware through the=
- sysfs
-  * loading interface. This sysfs fallback mechanism may be disabled comp=
-letely
-  * on a system by setting the proc sysctl value ignore_sysfs_fallback to=
- true.
-- * If this false we check if the internal API caller set the @FW_OPT_NOF=
-ALLBACK
-- * flag, if so it would also disable the fallback mechanism. A system ma=
-y want
-- * to enfoce the sysfs fallback mechanism at all times, it can do this b=
-y
-- * setting ignore_sysfs_fallback to false and force_sysfs_fallback to tr=
-ue.
-+ * If this is false we check if the internal API caller set the
-+ * @FW_OPT_NOFALLBACK_SYSFS flag, if so it would also disable the fallba=
-ck
-+ * mechanism. A system may want to enforce the sysfs fallback mechanism =
-at all
-+ * times, it can do this by setting ignore_sysfs_fallback to false and
-+ * force_sysfs_fallback to true.
-  * Enabling force_sysfs_fallback is functionally equivalent to build a k=
-ernel
-  * with CONFIG_FW_LOADER_USER_HELPER_FALLBACK.
-  **/
-diff --git a/drivers/base/firmware_loader/firmware.h b/drivers/base/firmw=
-are_loader/firmware.h
-index 7ecd590e67fe..8656e5239a80 100644
---- a/drivers/base/firmware_loader/firmware.h
-+++ b/drivers/base/firmware_loader/firmware.h
-@@ -27,16 +27,16 @@
-  *	firmware file lookup on storage is avoided. Used for calls where the
-  *	file may be too big, or where the driver takes charge of its own
-  *	firmware caching mechanism.
-- * @FW_OPT_NOFALLBACK: Disable the fallback mechanism. Takes precedence =
-over
-- *	&FW_OPT_UEVENT and &FW_OPT_USERHELPER.
-+ * @FW_OPT_NOFALLBACK_SYSFS: Disable the sysfs fallback mechanism. Takes
-+ *	precedence over &FW_OPT_UEVENT and &FW_OPT_USERHELPER.
-  */
- enum fw_opt {
--	FW_OPT_UEVENT =3D         BIT(0),
--	FW_OPT_NOWAIT =3D         BIT(1),
--	FW_OPT_USERHELPER =3D     BIT(2),
--	FW_OPT_NO_WARN =3D        BIT(3),
--	FW_OPT_NOCACHE =3D        BIT(4),
--	FW_OPT_NOFALLBACK =3D     BIT(5),
-+	FW_OPT_UEVENT			=3D BIT(0),
-+	FW_OPT_NOWAIT			=3D BIT(1),
-+	FW_OPT_USERHELPER		=3D BIT(2),
-+	FW_OPT_NO_WARN			=3D BIT(3),
-+	FW_OPT_NOCACHE			=3D BIT(4),
-+	FW_OPT_NOFALLBACK_SYSFS		=3D BIT(5),
+ static const struct dmi_system_id * const embedded_fw_table[] =3D {
++#ifdef CONFIG_TOUCHSCREEN_DMI
++	touchscreen_dmi_table,
++#endif
+ 	NULL
  };
 =20
- enum fw_status {
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_=
-loader/main.c
-index 249add8c5e05..57133a9dad09 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -877,7 +877,7 @@ int request_firmware_direct(const struct firmware **f=
-irmware_p,
- 	__module_get(THIS_MODULE);
- 	ret =3D _request_firmware(firmware_p, name, device, NULL, 0,
- 				FW_OPT_UEVENT | FW_OPT_NO_WARN |
--				FW_OPT_NOFALLBACK);
-+				FW_OPT_NOFALLBACK_SYSFS);
- 	module_put(THIS_MODULE);
- 	return ret;
- }
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 27d5b40fb717..a65f4ffb289a 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1253,6 +1253,7 @@ config INTEL_TURBO_MAX_3
+ config TOUCHSCREEN_DMI
+ 	bool "DMI based touchscreen configuration info"
+ 	depends on ACPI && DMI && I2C=3Dy && TOUCHSCREEN_SILEAD
++	select EFI_EMBEDDED_FIRMWARE if EFI
+ 	---help---
+ 	  Certain ACPI based tablets with e.g. Silead or Chipone touchscreens
+ 	  do not have enough data in ACPI tables for the touchscreen driver to
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x8=
+6/touchscreen_dmi.c
+index 72205771d03d..4449e4c0b26b 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -11,12 +11,15 @@
+ #include <linux/acpi.h>
+ #include <linux/device.h>
+ #include <linux/dmi.h>
++#include <linux/efi_embedded_fw.h>
+ #include <linux/i2c.h>
+ #include <linux/notifier.h>
+ #include <linux/property.h>
+ #include <linux/string.h>
+=20
+ struct ts_dmi_data {
++	/* The EFI embedded-fw code expects this to be the first member! */
++	struct efi_embedded_fw_desc embedded_fw;
+ 	const char *acpi_name;
+ 	const struct property_entry *properties;
+ };
+@@ -64,6 +67,15 @@ static const struct property_entry chuwi_hi8_pro_props=
+[] =3D {
+ };
+=20
+ static const struct ts_dmi_data chuwi_hi8_pro_data =3D {
++	.embedded_fw =3D {
++		.name	=3D "silead/gsl3680-chuwi-hi8-pro.fw",
++		.prefix =3D { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
++		.length	=3D 39864,
++		.sha256	=3D { 0xc0, 0x88, 0xc5, 0xef, 0xd1, 0x70, 0x77, 0x59,
++			    0x4e, 0xe9, 0xc4, 0xd8, 0x2e, 0xcd, 0xbf, 0x95,
++			    0x32, 0xd9, 0x03, 0x28, 0x0d, 0x48, 0x9f, 0x92,
++			    0x35, 0x37, 0xf6, 0x8b, 0x2a, 0xe4, 0x73, 0xff },
++	},
+ 	.acpi_name	=3D "MSSL1680:00",
+ 	.properties	=3D chuwi_hi8_pro_props,
+ };
+@@ -181,6 +193,15 @@ static const struct property_entry cube_iwork8_air_p=
+rops[] =3D {
+ };
+=20
+ static const struct ts_dmi_data cube_iwork8_air_data =3D {
++	.embedded_fw =3D {
++		.name	=3D "silead/gsl3670-cube-iwork8-air.fw",
++		.prefix =3D { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
++		.length	=3D 38808,
++		.sha256	=3D { 0xff, 0x62, 0x2d, 0xd1, 0x8a, 0x78, 0x04, 0x7b,
++			    0x33, 0x06, 0xb0, 0x4f, 0x7f, 0x02, 0x08, 0x9c,
++			    0x96, 0xd4, 0x9f, 0x04, 0xe1, 0x47, 0x25, 0x25,
++			    0x60, 0x77, 0x41, 0x33, 0xeb, 0x12, 0x82, 0xfc },
++	},
+ 	.acpi_name	=3D "MSSL1680:00",
+ 	.properties	=3D cube_iwork8_air_props,
+ };
+@@ -390,6 +411,15 @@ static const struct property_entry onda_v80_plus_v3_=
+props[] =3D {
+ };
+=20
+ static const struct ts_dmi_data onda_v80_plus_v3_data =3D {
++	.embedded_fw =3D {
++		.name	=3D "silead/gsl3676-onda-v80-plus-v3.fw",
++		.prefix =3D { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
++		.length	=3D 37224,
++		.sha256	=3D { 0x8f, 0xbd, 0x8f, 0x0c, 0x6b, 0xba, 0x5b, 0xf5,
++			    0xa3, 0xc7, 0xa3, 0xc0, 0x4f, 0xcd, 0xdf, 0x32,
++			    0xcc, 0xe4, 0x70, 0xd6, 0x46, 0x9c, 0xd7, 0xa7,
++			    0x4b, 0x82, 0x3f, 0xab, 0xc7, 0x90, 0xea, 0x23 },
++	},
+ 	.acpi_name	=3D "MSSL1680:00",
+ 	.properties	=3D onda_v80_plus_v3_props,
+ };
+@@ -456,6 +486,15 @@ static const struct property_entry pipo_w2s_props[] =
+=3D {
+ };
+=20
+ static const struct ts_dmi_data pipo_w2s_data =3D {
++	.embedded_fw =3D {
++		.name	=3D "silead/gsl1680-pipo-w2s.fw",
++		.prefix =3D { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
++		.length	=3D 39072,
++		.sha256	=3D { 0xd0, 0x58, 0xc4, 0x7d, 0x55, 0x2d, 0x62, 0x18,
++			    0xd1, 0x6a, 0x71, 0x73, 0x0b, 0x3f, 0xbe, 0x60,
++			    0xbb, 0x45, 0x8c, 0x52, 0x27, 0xb7, 0x18, 0xf4,
++			    0x31, 0x00, 0x6a, 0x49, 0x76, 0xd8, 0x7c, 0xd3 },
++	},
+ 	.acpi_name	=3D "MSSL1680:00",
+ 	.properties	=3D pipo_w2s_props,
+ };
+@@ -642,7 +681,7 @@ static const struct ts_dmi_data trekstor_surftab_wint=
+ron70_data =3D {
+ };
+=20
+ /* NOTE: Please keep this table sorted alphabetically */
+-static const struct dmi_system_id touchscreen_dmi_table[] =3D {
++const struct dmi_system_id touchscreen_dmi_table[] =3D {
+ 	{
+ 		/* Chuwi Hi8 */
+ 		.driver_data =3D (void *)&chuwi_hi8_data,
+diff --git a/include/linux/efi_embedded_fw.h b/include/linux/efi_embedded=
+_fw.h
+index 5a8ae662911b..c4737fd07e33 100644
+--- a/include/linux/efi_embedded_fw.h
++++ b/include/linux/efi_embedded_fw.h
+@@ -34,6 +34,8 @@ struct efi_embedded_fw_desc {
+ 	u8 sha256[32];
+ };
+=20
++extern const struct dmi_system_id touchscreen_dmi_table[];
++
+ int efi_get_embedded_fw(const char *name, void **dat, size_t *sz);
+=20
+ #endif
 --=20
 2.24.1
