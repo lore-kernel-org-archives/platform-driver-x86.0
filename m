@@ -1,164 +1,50 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v11 00/10] efi/firmware/platform-x86: Add EFI embedded fw support
-Date: Sat, 11 Jan 2020 15:56:53 +0100
-Message-ID: <20200111145703.533809-1-hdegoede@redhat.com>
+Subject: [PATCH v11 07/10] Input: silead - Switch to firmware_request_platform for retreiving the fw
+Date: Sat, 11 Jan 2020 15:57:00 +0100
+Message-ID: <20200111145703.533809-8-hdegoede@redhat.com>
+References: <20200111145703.533809-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200111145703.533809-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc: Hans de Goede <hdegoede@redhat.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi All,
+Unfortunately sofar we have been unable to get permission to redistribute
+Silead touchscreen firmwares in linux-firmware. This means that people
+need to find and install the firmware themselves before the touchscreen
+will work
 
-Here is v11 of my patch-set to add support for EFI embedded fw to the
-kernel. This version has been rebased on Ardb's latest efi/next branch to
-fix a (trivial) conflict caused by the
-"efi/libstub: Remove 'sys_table_arg' from all function prototypes" commit=
- in
-efi/next. The only other change in v11 is dropping a few empty lines whic=
-h
-snuck into the "test_firmware: add support for firmware_request_platform"
-patch.
+Some UEFI/x86 tablets with a Silead touchscreen have a copy of the fw
+embedded in their UEFI boot-services code.
 
-I believe that this series is ready for merging now, patches 3-8
-and patches 9-10 depend on the first 2 patches, so we need to get those
-merged first.
+This commit makes the silead driver use the new firmware_request_platform
+function, which will fallback to looking for such an embedded copy when
+direct filesystem lookup fails. This will make the touchscreen work OOTB
+on devices where there is a fw copy embedded in the UEFI code.
 
-Ingo, can you create an immutable branch targetting 5.6 for Greg /
-the driver-platform-x86 maintainers with these 2 patches in it ?
-
-Note as mentioned I've based this version on Ard's efi/next branch so
-if you decide to do the immutable-branch directly on yop of 5.5-rc1 you n=
-eed
-to manually fixup a conflict (or I can send you a version based on 5.5-rc=
-1).
-
-Once the immutable-branch is in place then Greg can merge 3-8 through his
-driver core tree and 9 and 10 can be merged through the drivers-platform-=
-x86
-tree (there are no compile time dependencies between these 2 sets).
-
-Regards,
-
-Hans
-
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
+ drivers/input/touchscreen/silead.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v11:
-- Rebase on top of Ardb's efi/next
-- Drop a couple of empty lines which snuck into:
-  "test_firmware: add support for firmware_request_platform"
-
-Changes in v10:
-- Rebase on top of 5.5-rc1
-
-Changes in v9:
-- Add 2 new patches adding selftests
-- At least touchscreen_dmi.c uses the same dmi_table for its own private
-  data and the fw_desc structs, putting the fw_desc struct first in the
-  data driver_data points to so that the dmi_table can be shared with
-  efi_check_for_embedded_firmwares(). But not all entries there have
-  embedded-fw so in some cases the fw_desc is empty (zero-ed out).
-  This can lead to a possible crash because fw_desc->length now is
-  less then 8, so if the segment size is close enough to a multiple of th=
-e
-  page_size, then the memcmp to check the prefix my segfault. Crashing th=
-e
-  machine. v9 checks for and skips these empty fw_desc entries avoiding t=
-his.
-- Add static inline wrapper for firmware_request_platform() to firmware.h=
-,
-  for when CONFIG_FW_LOADER is not set
-
-Changes in v8:
-- Add pr_warn if there are mode then EFI_DEBUGFS_MAX_BLOBS boot service s=
-egments
-- Document how the EFI debugfs boot_service_code? files can be used to ch=
-eck for
-  embedded firmware
-- Properly deal with the case of an EFI segment being smaller then the fw=
- we
-  are looking for
-- Log a warning when efi_get_embedded_fw get called while we did not (yet=
-)
-  check for embedded firmwares
-- Only build fallback_platform.c if CONFIG_EFI_EMBEDDED_FIRMWARE is defin=
-ed,
-  otherwise make firmware_fallback_platform() a static inline stub
-
-Changes in v7:
-- Split drivers/firmware/efi and drivers/base/firmware_loader changes int=
-o
-  2 patches
-- Use new, standalone, lib/crypto/sha256.c code
-- Address kdoc comments from Randy Dunlap
-- Add new FW_OPT_FALLBACK_PLATFORM flag and firmware_request_platform()
-  _request_firmware() wrapper, as requested by Luis R. Rodriguez
-- Stop using "efi-embedded-firmware" device-property, now that drivers ne=
-ed to
-  use the new firmware_request_platform() to enable fallback to a device =
-fw
-  copy embedded in the platform's main firmware, we no longer need a prop=
-erty
-  on the device to trigger this behavior
-- Use security_kernel_load_data instead of calling
-  security_kernel_read_file with a NULL file pointer argument
-- Move the docs to Documentation/driver-api/firmware/fallback-mechanisms.=
-rst
-- Document the new firmware_request_platform() function in
-  Documentation/driver-api/firmware/request_firmware.rst
-- Add 2 new patches for the silead and chipone-icn8505 touchscreen driver=
-s
-  to use the new firmware_request_platform() method
-- Rebased on top of 5.4-rc1
-
-Changes in v6:
--Rework code to remove casts from if (prefix =3D=3D mem) comparison
--Use SHA256 hashes instead of crc32 sums
--Add new READING_FIRMWARE_EFI_EMBEDDED read_file_id and use it
--Call security_kernel_read_file(NULL, READING_FIRMWARE_EFI_EMBEDDED)
- to check if this is allowed before looking at EFI embedded fw
--Document why we are not using the PI Firmware Volume protocol
-
-Changes in v5:
--Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
-
-Changes in v4:
--Drop note in docs about EFI_FIRMWARE_VOLUME_PROTOCOL, it is not part of
- UEFI proper, so the EFI maintainers don't want us referring people to it
--Use new EFI_BOOT_SERVICES flag
--Put the new fw_get_efi_embedded_fw() function in its own fallback_efi.c
- file which only gets built when EFI_EMBEDDED_FIRMWARE is selected
--Define an empty stub for fw_get_efi_embedded_fw() in fallback.h hwen
- EFI_EMBEDDED_FIRMWARE is not selected, to avoid the need for #ifdefs
- in firmware_loader/main.c
--Properly call security_kernel_post_read_file() on the firmware returned
- by efi_get_embedded_fw() to make sure that we are allowed to use it
-
-Changes in v2:
--Rebased on driver-core/driver-core-next
--Add documentation describing the EFI embedded firmware mechanism to:
- Documentation/driver-api/firmware/request_firmware.rst
--Add a new EFI_EMBEDDED_FIRMWARE Kconfig bool and only build the embedded
- fw support if this is set. This is an invisible option which should be
- selected by drivers which need this
--Remove the efi_embedded_fw_desc and dmi_system_id-s for known devices
- from the efi-embedded-fw code, instead drivers using this are expected t=
-o
- export a dmi_system_id array, with each entries' driver_data pointing to=
- a
- efi_embedded_fw_desc struct and register this with the efi-embedded-fw c=
-ode
--Use kmemdup to make a copy instead of efi_mem_reserve()-ing the firmware=
-,
- this avoids us messing with the EFI memmap and avoids the need to make
- changes to efi_mem_desc_lookup()
--Make the firmware-loader code only fallback to efi_get_embedded_fw() if =
-the
- passed in device has the "efi-embedded-firmware" device-property bool se=
-t
--Skip usermodehelper fallback when "efi-embedded-firmware" device-propert=
-y
- is set
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscre=
+en/silead.c
+index ad8b6a2bfd36..8fa2f3b7cfd8 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -288,7 +288,7 @@ static int silead_ts_load_fw(struct i2c_client *clien=
+t)
+=20
+ 	dev_dbg(dev, "Firmware file name: %s", data->fw_name);
+=20
+-	error =3D request_firmware(&fw, data->fw_name, dev);
++	error =3D firmware_request_platform(&fw, data->fw_name, dev);
+ 	if (error) {
+ 		dev_err(dev, "Firmware request error %d\n", error);
+ 		return error;
+--=20
+2.24.1
