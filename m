@@ -1,7 +1,7 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v2 04/10] platform/x86: mlx-platform: Add more definitions for system attributes
-Date: Sun, 12 Jan 2020 12:18:43 +0000
-Message-ID: <20200112121849.7056-5-vadimp@mellanox.com>
+Subject: [PATCH platform-next v2 09/10] platform/mellanox: mlxreg-hotplug: Add support for new capability register
+Date: Sun, 12 Jan 2020 12:18:48 +0000
+Message-ID: <20200112121849.7056-10-vadimp@mellanox.com>
 References: <20200112121849.7056-1-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200112121849.7056-1-vadimp@mellanox.com>
@@ -10,221 +10,65 @@ To: andy@infradead.org, dvhart@infradead.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add new attributes for "next-generation" type systems:
-- Reset cause indication, when system reset has been caused by the
-  platform reset request through CPLD, by AC power failure,
-  by software power off request through CPLD. by signal asserted by SOC
-  through ACPI register. It introduces more reset causes, which can
-  be monitored after the reboots.
-- Setting and removing system VPD (EEPROM) hardware write protection.
-  It allows to access VPD during production cycle and prevents VPD
-  corruption on system in field.
-- Voltage regulator devices configuration update status and version. It
-  allows to monitor configuration update status and current active
-  version for such sort of devices.
-- PCIe ASIC reset disable - when set ASIC will go down upon PCIe
-  root complex reset, otherwise ASIC will stay up during PCIe root
-  complex reset.
-- System configuration Ids to provide system static topology
-  identification, like system's static I2C topology, number and type of
-  FPGA devices within the system and so on.
-
-Add the existing attribute for "iio" bank selection for system type
-"msn21xx".
-
-All the above attributes are exposed through "sysfs" by "mlxreg-io"
-driver.
+Add support for capability register, which is used for detection of the
+actual number of interrupt capable components within the particular
+group, supported by the specific system.
+Such components could be for example the number of power units and
+interrupts related to these units.
+The motivation is to avoid adding a new code in the future in order to
+distinct between the systems type supported different number of the
+components like power supplies, FANs, ASICs, line cards.
 
 Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 ---
- drivers/platform/x86/mlx-platform.c | 84 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+ drivers/platform/mellanox/mlxreg-hotplug.c | 14 ++++++++++++++
+ include/linux/platform_data/mlxreg.h       |  2 ++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 565a67a65554..7e92dc52071f 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -35,6 +35,8 @@
- #define MLXPLAT_CPLD_LPC_REG_LED4_OFFSET	0x23
- #define MLXPLAT_CPLD_LPC_REG_LED5_OFFSET	0x24
- #define MLXPLAT_CPLD_LPC_REG_FAN_DIRECTION	0x2a
-+#define MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET	0x2b
-+#define MLXPLAT_CPLD_LPC_REG_GP0_OFFSET		0x2e
- #define MLXPLAT_CPLD_LPC_REG_GP1_OFFSET		0x30
- #define MLXPLAT_CPLD_LPC_REG_WP1_OFFSET		0x31
- #define MLXPLAT_CPLD_LPC_REG_GP2_OFFSET		0x32
-@@ -68,6 +70,7 @@
- #define MLXPLAT_CPLD_LPC_REG_WD3_TMR_OFFSET	0xd1
- #define MLXPLAT_CPLD_LPC_REG_WD3_TLEFT_OFFSET	0xd2
- #define MLXPLAT_CPLD_LPC_REG_WD3_ACT_OFFSET	0xd3
-+#define MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET	0xe2
- #define MLXPLAT_CPLD_LPC_REG_PWM1_OFFSET	0xe3
- #define MLXPLAT_CPLD_LPC_REG_TACHO1_OFFSET	0xe4
- #define MLXPLAT_CPLD_LPC_REG_TACHO2_OFFSET	0xe5
-@@ -85,6 +88,8 @@
- #define MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET	0xf6
- #define MLXPLAT_CPLD_LPC_REG_FAN_DRW_CAP_OFFSET	0xf7
- #define MLXPLAT_CPLD_LPC_REG_TACHO_SPEED_OFFSET	0xf8
-+#define MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET	0xfb
-+#define MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET	0xfc
- #define MLXPLAT_CPLD_LPC_IO_RANGE		0x100
- #define MLXPLAT_CPLD_LPC_I2C_CH1_OFF		0xdb
- #define MLXPLAT_CPLD_LPC_I2C_CH2_OFF		0xda
-@@ -117,6 +122,7 @@
- #define MLXPLAT_CPLD_FAN_NG_MASK	GENMASK(5, 0)
- #define MLXPLAT_CPLD_LED_LO_NIBBLE_MASK	GENMASK(7, 4)
- #define MLXPLAT_CPLD_LED_HI_NIBBLE_MASK	GENMASK(3, 0)
-+#define MLXPLAT_CPLD_VOLTREG_UPD_MASK	GENMASK(5, 4)
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index 706207d192ae..77be37a1fbcf 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -504,6 +504,20 @@ static int mlxreg_hotplug_set_irq(struct mlxreg_hotplug_priv_data *priv)
+ 	item = pdata->items;
  
- /* Default I2C parent bus number */
- #define MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR	1
-@@ -1157,6 +1163,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_msn21xx_regs_io_data[] = {
- 		.mode = 0200,
- 	},
- 	{
-+		.label = "select_iio",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(6),
-+		.mode = 0644,
-+	},
-+	{
- 		.label = "asic_health",
- 		.reg = MLXPLAT_CPLD_LPC_REG_ASIC_HEALTH_OFFSET,
- 		.mask = MLXPLAT_CPLD_ASIC_MASK,
-@@ -1245,6 +1257,18 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.mode = 0444,
- 	},
- 	{
-+		.label = "reset_platform",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(4),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_soc",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(5),
-+		.mode = 0444,
-+	},
-+	{
- 		.label = "reset_comex_wd",
- 		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
- 		.mask = GENMASK(7, 0) & ~BIT(6),
-@@ -1263,6 +1287,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.mode = 0444,
- 	},
- 	{
-+		.label = "reset_sw_pwr_off",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(2),
-+		.mode = 0444,
-+	},
-+	{
- 		.label = "reset_comex_thermal",
- 		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
- 		.mask = GENMASK(7, 0) & ~BIT(3),
-@@ -1275,6 +1305,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.mode = 0444,
- 	},
- 	{
-+		.label = "reset_ac_pwr_fail",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(6),
-+		.mode = 0444,
-+	},
-+	{
- 		.label = "psu1_on",
- 		.reg = MLXPLAT_CPLD_LPC_REG_GP1_OFFSET,
- 		.mask = GENMASK(7, 0) & ~BIT(0),
-@@ -1317,6 +1353,43 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.bit = GENMASK(7, 0),
- 		.mode = 0444,
- 	},
-+	{
-+		.label = "voltreg_update_status",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET,
-+		.mask = MLXPLAT_CPLD_VOLTREG_UPD_MASK,
-+		.bit = 5,
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "vpd_wp",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(3),
-+		.mode = 0644,
-+	},
-+	{
-+		.label = "pcie_asic_reset_dis",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(4),
-+		.mode = 0644,
-+	},
-+	{
-+		.label = "config1",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "config2",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "ufm_version",
-+		.reg = MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
- };
- 
- static struct mlxreg_core_platform_data mlxplat_default_ng_regs_io_data = {
-@@ -1575,6 +1648,7 @@ static bool mlxplat_mlxcpld_writeable_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_LED3_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_LED4_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_LED5_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_GP0_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_GP1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_WP1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_GP2_OFFSET:
-@@ -1621,6 +1695,8 @@ static bool mlxplat_mlxcpld_readable_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_LED4_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_LED5_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_FAN_DIRECTION:
-+	case MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_GP0_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_GP1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_WP1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_GP2_OFFSET:
-@@ -1671,6 +1747,9 @@ static bool mlxplat_mlxcpld_readable_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_FAN_DRW_CAP_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_TACHO_SPEED_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET:
- 		return true;
- 	}
- 	return false;
-@@ -1692,6 +1771,8 @@ static bool mlxplat_mlxcpld_volatile_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_LED4_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_LED5_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_FAN_DIRECTION:
-+	case MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_GP0_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_GP1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_GP2_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET:
-@@ -1734,6 +1815,9 @@ static bool mlxplat_mlxcpld_volatile_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_FAN_DRW_CAP_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_TACHO_SPEED_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET:
- 		return true;
- 	}
- 	return false;
+ 	for (i = 0; i < pdata->counter; i++, item++) {
++		if (item->capability) {
++			/*
++			 * Read group capability register to get actual number
++			 * of interrupt capable components and set group mask
++			 * accordingly.
++			 */
++			ret = regmap_read(priv->regmap, item->capability,
++					  &regval);
++			if (ret)
++				goto out;
++
++			item->mask = GENMASK((regval & item->mask) - 1, 0);
++		}
++
+ 		/* Clear group presense event. */
+ 		ret = regmap_write(priv->regmap, item->reg +
+ 				   MLXREG_HOTPLUG_EVENT_OFF, 0);
+diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
+index 6d54fe3bcac9..b8da8aef2446 100644
+--- a/include/linux/platform_data/mlxreg.h
++++ b/include/linux/platform_data/mlxreg.h
+@@ -101,6 +101,7 @@ struct mlxreg_core_data {
+  * @aggr_mask: group aggregation mask;
+  * @reg: group interrupt status register;
+  * @mask: group interrupt mask;
++ * @capability: group capability register;
+  * @cache: last status value for elements fro the same group;
+  * @count: number of available elements in the group;
+  * @ind: element's index inside the group;
+@@ -112,6 +113,7 @@ struct mlxreg_core_item {
+ 	u32 aggr_mask;
+ 	u32 reg;
+ 	u32 mask;
++	u32 capability;
+ 	u32 cache;
+ 	u8 count;
+ 	u8 ind;
 -- 
 2.11.0
