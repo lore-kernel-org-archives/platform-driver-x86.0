@@ -1,74 +1,209 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v2 01/10] platform/x86: mlx-platform: Cosmetic changes
-Date: Sun, 12 Jan 2020 12:18:40 +0000
-Message-ID: <20200112121849.7056-2-vadimp@mellanox.com>
-References: <20200112121849.7056-1-vadimp@mellanox.com>
+From: Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v11 02/10] efi: Add embedded peripheral firmware support
+Date: Sun, 12 Jan 2020 14:45:09 -0800
+Message-ID: <CALCETrUz4gdVOH=5X+MkB56ST=DNcHKicRST1j1ff0kU1yXWzw@mail.gmail.com>
+References: <20200111145703.533809-1-hdegoede@redhat.com> <20200111145703.533809-3-hdegoede@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200112121849.7056-1-vadimp@mellanox.com>
+In-Reply-To: <20200111145703.533809-3-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy@infradead.org, dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-efi <linux-efi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>"open list:HID CORE LAYER" <li>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Remove redundant semicolons at the end of few functions.
+On Sat, Jan 11, 2020 at 6:57 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Just like with PCI options ROMs, which we save in the setup_efi_pci*
+> functions from arch/x86/boot/compressed/eboot.c, the EFI code / ROM itself
+> sometimes may contain data which is useful/necessary for peripheral drivers
+> to have access to.
+>
+> Specifically the EFI code may contain an embedded copy of firmware which
+> needs to be (re)loaded into the peripheral. Normally such firmware would be
+> part of linux-firmware, but in some cases this is not feasible, for 2
+> reasons:
+>
+> 1) The firmware is customized for a specific use-case of the chipset / use
+> with a specific hardware model, so we cannot have a single firmware file
+> for the chipset. E.g. touchscreen controller firmwares are compiled
+> specifically for the hardware model they are used with, as they are
+> calibrated for a specific model digitizer.
+>
+> 2) Despite repeated attempts we have failed to get permission to
+> redistribute the firmware. This is especially a problem with customized
+> firmwares, these get created by the chip vendor for a specific ODM and the
+> copyright may partially belong with the ODM, so the chip vendor cannot
+> give a blanket permission to distribute these.
+>
+> This commit adds support for finding peripheral firmware embedded in the
+> EFI code and makes the found firmware available through the new
+> efi_get_embedded_fw() function.
+>
+> Support for loading these firmwares through the standard firmware loading
+> mechanism is added in a follow-up commit in this patch-series.
+>
+> Note we check the EFI_BOOT_SERVICES_CODE for embedded firmware near the end
+> of start_kernel(), just before calling rest_init(), this is on purpose
+> because the typical EFI_BOOT_SERVICES_CODE memory-segment is too large for
+> early_memremap(), so the check must be done after mm_init(). This relies
+> on EFI_BOOT_SERVICES_CODE not being free-ed until efi_free_boot_services()
+> is called, which means that this will only work on x86 for now.
+>
 
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
----
-v1-v2:
- Comments pointed out by Andy:
- - Move this patch to be the first in series.
----
- drivers/platform/x86/mlx-platform.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+A couple general comments:
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 8fe51e43f1bc..565a67a65554 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -1834,7 +1834,7 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
- 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
- 
- 	return 1;
--};
-+}
- 
- static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
- {
-@@ -1853,7 +1853,7 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
- 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
- 
- 	return 1;
--};
-+}
- 
- static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
- {
-@@ -1872,7 +1872,7 @@ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
- 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
- 
- 	return 1;
--};
-+}
- 
- static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
- {
-@@ -1891,7 +1891,7 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
- 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
- 
- 	return 1;
--};
-+}
- 
- static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
- {
-@@ -1914,7 +1914,7 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
- 	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng;
- 
- 	return 1;
--};
-+}
- 
- static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
- 	{
--- 
-2.11.0
+How does this interact with modules?  It looks like you're referencing
+the dmi table from otherwise modular or potentially modular code in
+early EFI code, which seems like it will either prevent modular builds
+or will actually fail at compile time depending on config.  Perhaps
+you should have a single collection of EFI firmware references in a
+separate place in the kernel tree and reference *that* from the EFI
+code.
+
+In the event you have many DMI matches (e.g. if anyone ends up using
+this in a case where the DMI match has to match very broad things),
+you'll iterate over the EFI code and data multiple times and
+performance will suck.  It would be much better to iterate once and
+search for everything.
+
+I suspect that a rolling hash would be better than the prefix you're
+using, but this could be changed later, assuming someone can actually
+find all the firmware needed.
+
+> +static int __init efi_check_md_for_embedded_firmware(
+> +       efi_memory_desc_t *md, const struct efi_embedded_fw_desc *desc)
+> +{
+> +       const u64 prefix = *((u64 *)desc->prefix);
+> +       struct sha256_state sctx;
+> +       struct efi_embedded_fw *fw;
+> +       u8 sha256[32];
+> +       u64 i, size;
+> +       void *map;
+> +
+> +       size = md->num_pages << EFI_PAGE_SHIFT;
+> +       map = memremap(md->phys_addr, size, MEMREMAP_WB);
+> +       if (!map) {
+> +               pr_err("Error mapping EFI mem at %#llx\n", md->phys_addr);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       for (i = 0; (i + desc->length) <= size; i += 8) {
+> +               u64 *mem = map + i;
+> +
+> +               if (*mem != prefix)
+> +                       continue;
+
+This is very ugly.  You're casting a pointer to a bunch of bytes to
+u64* and then dereferencing it like it's an integer.  This has major
+endian issues with are offset by the similar endianness issues when
+you type-pun prefix to u64.  You should instead just memcmp the
+pointer with the data.  This will get rid of all the type punning in
+this function.  You will also fail to detect firmware that isn't
+8-byte-aligned.
+
+So perhaps just use memmem() to replace this whole mess?
+
+> +
+> +               sha256_init(&sctx);
+> +               sha256_update(&sctx, map + i, desc->length);
+> +               sha256_final(&sctx, sha256);
+> +               if (memcmp(sha256, desc->sha256, 32) == 0)
+> +                       break;
+> +       }
+> +       if ((i + desc->length) > size) {
+> +               memunmap(map);
+> +               return -ENOENT;
+> +       }
+> +
+> +       pr_info("Found EFI embedded fw '%s'\n", desc->name);
+> +
+
+It might be nice to also log which EFI section it was in?
+
+> +       fw = kmalloc(sizeof(*fw), GFP_KERNEL);
+> +       if (!fw) {
+> +               memunmap(map);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       fw->data = kmemdup(map + i, desc->length, GFP_KERNEL);
+> +       memunmap(map);
+> +       if (!fw->data) {
+> +               kfree(fw);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       fw->name = desc->name;
+> +       fw->length = desc->length;
+> +       list_add(&fw->list, &efi_embedded_fw_list);
+> +
+
+If you actually copy the firmware name instead of just a pointer to
+it, then you could potentially free the list of EFI firmwares.
+
+Why are you copying the firmware into linear (kmemdup) memory here
+just to copy it to vmalloc space down below...
+
+> +       return 0;
+> +}
+> +
+> +void __init efi_check_for_embedded_firmwares(void)
+> +{
+> +       const struct efi_embedded_fw_desc *fw_desc;
+> +       const struct dmi_system_id *dmi_id;
+> +       efi_memory_desc_t *md;
+> +       int i, r;
+> +
+> +       for (i = 0; embedded_fw_table[i]; i++) {
+> +               dmi_id = dmi_first_match(embedded_fw_table[i]);
+> +               if (!dmi_id)
+> +                       continue;
+> +
+> +               fw_desc = dmi_id->driver_data;
+> +
+> +               /*
+> +                * In some drivers the struct driver_data contains may contain
+> +                * other driver specific data after the fw_desc struct; and
+> +                * the fw_desc struct itself may be empty, skip these.
+> +                */
+> +               if (!fw_desc->name)
+> +                       continue;
+> +
+> +               for_each_efi_memory_desc(md) {
+> +                       if (md->type != EFI_BOOT_SERVICES_CODE)
+> +                               continue;
+> +
+> +                       r = efi_check_md_for_embedded_firmware(md, fw_desc);
+> +                       if (r == 0)
+> +                               break;
+> +               }
+> +       }
+> +
+> +       checked_for_fw = true;
+> +}
+
+Have you measured how long this takes on a typical system per matching DMI id?
+
+> +
+> +int efi_get_embedded_fw(const char *name, void **data, size_t *size)
+> +{
+> +       struct efi_embedded_fw *iter, *fw = NULL;
+> +       void *buf = *data;
+> +
+> +       if (!checked_for_fw) {
+
+WARN_ON_ONCE?  A stack dump would be quite nice here.
+
+> +       buf = vmalloc(fw->length);
+> +       if (!buf)
+> +               return -ENOMEM;
+> +
+> +       memcpy(buf, fw->data, fw->length);
+> +       *size = fw->length;
+> +       *data = buf;
+
+See above.  What's vmalloc() for?  Where's the vfree()?
+
+BTW, it would be very nice to have a straightforward way
+(/sys/kernel/debug/efi_firmware/[name]?) to dump all found firmwares.
