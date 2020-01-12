@@ -1,42 +1,49 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v2 03/10] Documentation/ABI: Add missed attribute for mlxreg-io sysfs interfaces
-Date: Sun, 12 Jan 2020 12:18:42 +0000
-Message-ID: <20200112121849.7056-4-vadimp@mellanox.com>
-References: <20200112121849.7056-1-vadimp@mellanox.com>
+Subject: [PATCH platform-next v2 00/10] platform/x86: Mellanox new system classes and new features
+Date: Sun, 12 Jan 2020 12:18:39 +0000
+Message-ID: <20200112121849.7056-1-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200112121849.7056-1-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: andy@infradead.org, dvhart@infradead.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add missed "cpld4_version" attribute.
+The patchset adds new features for the existing Mellanox systems
+and introduces two new system classes.
 
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
----
- Documentation/ABI/stable/sysfs-driver-mlxreg-io | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Patch #1 contains cosmetic changes.
+Patch #2 fixes wrong attribute name in documentation.
+Patch #3 adds missed attribute name in documentation.
+Patch #4 adds more definitions for system attributes
+Patches #5 extends documentation.
+Patches #6-#7 introduce new system class for the systems equipped with
+Spectrum 1 (32x100GbE Ethernet switch) device and Switch-IB/Switch-IB2
+devices (36x100Gbe InfiniBand switch).
+Patches #7-#8 add support for new group capability register
+Patches #10 introduces new system class for the systems equipped
+with new switch device Spectrum 3 (32x400GbE/64x200G/128x100G Ethernet
+switch).
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-index 8b1461fa3538..fe30fe505c9b 100644
---- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-+++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-@@ -121,6 +121,16 @@ Description:	These files show the system reset cause, as following: ComEx
- 
- 		The files are read only.
- 
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld4_version
-+
-+Date:		November 2018
-+KernelVersion:	5.0
-+Contact:	Vadim Pasternak <vadimpmellanox.com>
-+Description:	These files show with which CPLD versions have been burned
-+		on LED board.
-+
-+		The files are read only.
-+
- Date:		June 2019
- KernelVersion:	5.3
- Contact:	Vadim Pasternak <vadimpmellanox.com>
+Vadim Pasternak (10):
+  platform/x86: mlx-platform: Cosmetic changes
+  Documentation/ABI: Fix documentation inconsistency for mlxreg-io sysfs
+    interfaces
+  Documentation/ABI: Add missed attribute for mlxreg-io sysfs interfaces
+  platform/x86: mlx-platform: Add more definitions for system attributes
+  Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
+  platform/x86: mlx-platform: Set system mux configuration based on
+    system type
+  platform/x86: mlx-platform: Add support for new system type
+  platform/x86: mlx-platform: Add support for new capability register
+  platform/mellanox: mlxreg-hotplug: Add support for new capability
+    register
+  platform/x86: mlx-platform: Add support for next generation systems
+
+ Documentation/ABI/stable/sysfs-driver-mlxreg-io |  83 +++-
+ drivers/platform/mellanox/mlxreg-hotplug.c      |  14 +
+ drivers/platform/x86/mlx-platform.c             | 564 +++++++++++++++++++++++-
+ include/linux/platform_data/mlxreg.h            |   2 +
+ 4 files changed, 643 insertions(+), 20 deletions(-)
+
 -- 
 2.11.0
