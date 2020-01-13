@@ -1,31 +1,40 @@
-From: Daniel Drake <drake@endlessm.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Fix keyboard brightness cannot be
- set to 0
-Date: Mon, 13 Jan 2020 11:47:25 +0800
-Message-ID: <CAD8Lp44Vd6Moi+UmbdZDsQx-e_CHoHbgtZHpf8sV_yuHwzRrBA@mail.gmail.com>
-References: <20191230083044.11582-1-jian-hong@endlessm.com> <CAD8Lp45Le=s=1Q9oi0JCJTPepNmX002hK7W6UwKztTq09QBUgw@mail.gmail.com>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v2 2/2] MAINTAINERS: Update for the intel uncore frequency control
+Date: Sun, 12 Jan 2020 19:59:17 -0800
+Message-ID: <20200113035917.1419452-2-srinivas.pandruvada@linux.intel.com>
+References: <20200113035917.1419452-1-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD8Lp45Le=s=1Q9oi0JCJTPepNmX002hK7W6UwKztTq09QBUgw@mail.gmail.com>
+In-Reply-To: <20200113035917.1419452-1-srinivas.pandruvada@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jian-Hong Pan <jian-hong@endlessm.com>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, nweibley@gmail.com
+To: andy@infradead.org, dvhart@infradead.org, lenb@kernel.org, andy@kernel.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Dec 31, 2019 at 2:53 PM Daniel Drake <drake@endlessm.com> wrote:
-> Here, writing 0x80 to turn off the keyboard LED will result in an
-> additional WRAM(0x9f0, 0) call that was not there before. I think we
-> should double check this detail.
->
-> Let's see if we can borrow one of the affected models and double check
-> this patch there before proceeding. I'll follow up internally.
+Add an entry for drivers/platform/x86/intel-uncore-frequency.c.
 
-Asus were unable to find a product sample with the affected behaviour.
-They did provide us with one from the list I had made, but with a
-newer BIOS version where that behaviour has been eliminated. They also
-advised that always setting bit 7 is the way they do it on Windows. So
-I don't think we have the opportunity for extra verification, but it
-should be safe.
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Reviewed-by: Daniel Drake <drake@endlessm.com>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4017e6b760be..dbdadb369082 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8562,6 +8562,12 @@ S:	Maintained
+ F:	arch/x86/include/asm/intel_telemetry.h
+ F:	drivers/platform/x86/intel_telemetry*
+ 
++INTEL UNCORE FREQUENCY CONTROL
++M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/intel-uncore-frequency.c
++
+ INTEL VIRTUAL BUTTON DRIVER
+ M:	AceLan Kao <acelan.kao@canonical.com>
+ L:	platform-driver-x86@vger.kernel.org
+-- 
+2.24.1
