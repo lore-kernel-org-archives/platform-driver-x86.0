@@ -1,7 +1,7 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v3 04/11] Documentation/ABI: Style changes
-Date: Mon, 13 Jan 2020 16:28:32 +0000
-Message-ID: <20200113162839.18103-5-vadimp@mellanox.com>
+Subject: [PATCH platform-next v3 07/11] platform/x86: mlx-platform: Set system mux configuration based on system type
+Date: Mon, 13 Jan 2020 16:28:35 +0000
+Message-ID: <20200113162839.18103-8-vadimp@mellanox.com>
 References: <20200113162839.18103-1-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200113162839.18103-1-vadimp@mellanox.com>
@@ -10,79 +10,155 @@ To: andy@infradead.org, dvhart@infradead.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Remove blank lines between "What" and "Date" keywords.
-Start each section with "What" keyword.
+Separate assignment for systems mux configuration based on system type,
+instead of setting the same configuration for the all.
+The motivation is to allow introduction of new systems types with the
+different mux topology.
 
 Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 ---
- Documentation/ABI/stable/sysfs-driver-mlxreg-io | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+v1-v2:
+ Comments pointed out by Andy:
+ Drop semicolon after mlxplat_dmi_qmb7xx_matched().
+---
+ drivers/platform/x86/mlx-platform.c | 44 +++++++++++++++++++++++++++----------
+ 1 file changed, 32 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-index 05601a90a9b6..eb6db7382ae3 100644
---- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-+++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-@@ -1,5 +1,4 @@
- What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/asic_health
--
- Date:		June 2018
- KernelVersion:	4.19
- Contact:	Vadim Pasternak <vadimpmellanox.com>
-@@ -19,7 +18,6 @@ Description:	These files show with which CPLD versions have been burned
- 		The files are read only.
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 7e92dc52071f..53c23a99e182 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -219,7 +219,7 @@ static const int mlxplat_default_channels[][MLXPLAT_CPLD_GRP_CHNL_NUM] = {
+ static const int mlxplat_msn21xx_channels[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
  
- What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/fan_dir
--
- Date:		December 2018
- KernelVersion:	5.0
- Contact:	Vadim Pasternak <vadimpmellanox.com>
-@@ -30,7 +28,6 @@ Description:	This file shows the system fans direction:
- 		The files are read only.
+ /* Platform mux data */
+-static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
++static struct i2c_mux_reg_platform_data mlxplat_default_mux_data[] = {
+ 	{
+ 		.parent = 1,
+ 		.base_nr = MLXPLAT_CPLD_CH1,
+@@ -239,6 +239,11 @@ static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
  
- What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld3_version
--
- Date:		November 2018
- KernelVersion:	5.0
- Contact:	Vadim Pasternak <vadimpmellanox.com>
-@@ -40,7 +37,6 @@ Description:	These files show with which CPLD versions have been burned
- 		The files are read only.
+ };
  
- What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
--
- Date:		November 2018
- KernelVersion:	5.0
- Contact:	Vadim Pasternak <vadimpmellanox.com>
-@@ -108,7 +104,6 @@ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_pwr_fail
- What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_from_comex
- What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_system
- What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_voltmon_upgrade_fail
--
- Date:		November 2018
- KernelVersion:	5.0
- Contact:	Vadim Pasternak <vadimpmellanox.com>
-@@ -130,6 +125,12 @@ Description:	These files show with which CPLD versions have been burned
++/* Platform mux configuration variables */
++static int mlxplat_max_adap_num;
++static int mlxplat_mux_num;
++static struct i2c_mux_reg_platform_data *mlxplat_mux_data;
++
+ /* Platform hotplug devices */
+ static struct i2c_board_info mlxplat_mlxcpld_psu[] = {
+ 	{
+@@ -1905,7 +1910,10 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
+ {
+ 	int i;
  
- 		The files are read only.
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
++	mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
++	mlxplat_mux_data = mlxplat_default_mux_data;
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		mlxplat_mux_data[i].values = mlxplat_default_channels[i];
+ 		mlxplat_mux_data[i].n_values =
+ 				ARRAY_SIZE(mlxplat_default_channels[i]);
+@@ -1924,7 +1932,10 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
+ {
+ 	int i;
  
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_thermal
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_wd
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_from_asic
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_reload_bios
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_sff_wd
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_swb_wd
- Date:		June 2019
- KernelVersion:	5.3
- Contact:	Vadim Pasternak <vadimpmellanox.com>
-@@ -142,10 +143,3 @@ Description:	These files show the system reset cause, as following:
- 		only last reset cause.
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
++	mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
++	mlxplat_mux_data = mlxplat_default_mux_data;
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
+ 		mlxplat_mux_data[i].n_values =
+ 				ARRAY_SIZE(mlxplat_msn21xx_channels);
+@@ -1943,7 +1954,10 @@ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
+ {
+ 	int i;
  
- 		The files are read only.
--
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_thermal
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_wd
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_from_asic
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_reload_bios
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_sff_wd
--What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_swb_wd
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
++	mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
++	mlxplat_mux_data = mlxplat_default_mux_data;
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
+ 		mlxplat_mux_data[i].n_values =
+ 				ARRAY_SIZE(mlxplat_msn21xx_channels);
+@@ -1962,7 +1976,10 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
++	mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
++	mlxplat_mux_data = mlxplat_default_mux_data;
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
+ 		mlxplat_mux_data[i].n_values =
+ 				ARRAY_SIZE(mlxplat_msn21xx_channels);
+@@ -1981,7 +1998,10 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
++	mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
++	mlxplat_mux_data = mlxplat_default_mux_data;
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
+ 		mlxplat_mux_data[i].n_values =
+ 				ARRAY_SIZE(mlxplat_msn21xx_channels);
+@@ -2127,7 +2147,7 @@ static int mlxplat_mlxcpld_verify_bus_topology(int *nr)
+ 	/* Scan adapters from expected id to verify it is free. */
+ 	*nr = MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR;
+ 	for (i = MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR; i <
+-	     MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM; i++) {
++	     mlxplat_max_adap_num; i++) {
+ 		search_adap = i2c_get_adapter(i);
+ 		if (search_adap) {
+ 			i2c_put_adapter(search_adap);
+@@ -2141,12 +2161,12 @@ static int mlxplat_mlxcpld_verify_bus_topology(int *nr)
+ 	}
+ 
+ 	/* Return with error if free id for adapter is not found. */
+-	if (i == MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM)
++	if (i == mlxplat_max_adap_num)
+ 		return -ENODEV;
+ 
+ 	/* Shift adapter ids, since expected parent adapter is not free. */
+ 	*nr = i;
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		shift = *nr - mlxplat_mux_data[i].parent;
+ 		mlxplat_mux_data[i].parent = *nr;
+ 		mlxplat_mux_data[i].base_nr += shift;
+@@ -2202,7 +2222,7 @@ static int __init mlxplat_init(void)
+ 	if (nr < 0)
+ 		goto fail_alloc;
+ 
+-	nr = (nr == MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM) ? -1 : nr;
++	nr = (nr == mlxplat_max_adap_num) ? -1 : nr;
+ 	if (mlxplat_i2c)
+ 		mlxplat_i2c->regmap = priv->regmap;
+ 	priv->pdev_i2c = platform_device_register_resndata(
+@@ -2215,7 +2235,7 @@ static int __init mlxplat_init(void)
+ 		goto fail_alloc;
+ 	}
+ 
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		priv->pdev_mux[i] = platform_device_register_resndata(
+ 						&priv->pdev_i2c->dev,
+ 						"i2c-mux-reg", i, NULL,
+@@ -2349,7 +2369,7 @@ static void __exit mlxplat_exit(void)
+ 	platform_device_unregister(priv->pdev_led);
+ 	platform_device_unregister(priv->pdev_hotplug);
+ 
+-	for (i = ARRAY_SIZE(mlxplat_mux_data) - 1; i >= 0 ; i--)
++	for (i = mlxplat_mux_num - 1; i >= 0 ; i--)
+ 		platform_device_unregister(priv->pdev_mux[i]);
+ 
+ 	platform_device_unregister(priv->pdev_i2c);
 -- 
 2.11.0
