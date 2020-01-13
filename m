@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v3 09/36] platform/x86: intel_scu_ipc: Drop unused macros
-Date: Mon, 13 Jan 2020 16:55:56 +0300
-Message-ID: <20200113135623.56286-10-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 07/36] platform/x86: intel_scu_ipc: Sleeping is fine when polling
+Date: Mon, 13 Jan 2020 16:55:54 +0300
+Message-ID: <20200113135623.56286-8-mika.westerberg@linux.intel.com>
 References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,30 +12,77 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-These macros are not used anywhere in the driver so drop them.
+There is no reason why the driver would need to block other threads from
+running the CPU while it is waiting for the SCU IPC to complete its
+work. For this reason switch the driver to use usleep_range() instead
+with a bit more relaxed polling loop.
+
+Also add constant for the timeout and use the same value for both
+polling and interrupt modes.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 29 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 8db0644900a3..997fdac920c6 100644
+index 43eaf9400c67..8db0644900a3 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -26,11 +26,7 @@
- #include <asm/intel_scu_ipc.h>
+@@ -79,6 +79,9 @@ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+ #define IPC_WRITE_BUFFER	0x80
+ #define IPC_READ_BUFFER		0x90
  
- /* IPC defines the following message types */
--#define IPCMSG_WATCHDOG_TIMER 0xF8 /* Set Kernel Watchdog Threshold */
--#define IPCMSG_BATTERY        0xEF /* Coulomb Counter Accumulator */
--#define IPCMSG_FW_UPDATE      0xFE /* Firmware update */
--#define IPCMSG_PCNTRL         0xFF /* Power controller unit read/write */
--#define IPCMSG_FW_REVISION    0xF4 /* Get firmware revision */
-+#define IPCMSG_PCNTRL         0xff /* Power controller unit read/write */
++/* Timeout in jiffies */
++#define IPC_TIMEOUT		(3 * HZ)
++
+ static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
  
- /* Command id associated with message IPCMSG_PCNTRL */
- #define IPC_CMD_PCNTRL_W      0 /* Register write */
+ /*
+@@ -132,24 +135,20 @@ static inline u32 ipc_data_readl(struct intel_scu_ipc_dev *scu, u32 offset)
+ /* Wait till scu status is busy */
+ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
+ {
+-	u32 status = ipc_read_status(scu);
+-	u32 loop_count = 100000;
++	unsigned long end = jiffies + msecs_to_jiffies(IPC_TIMEOUT);
+ 
+-	/* break if scu doesn't reset busy bit after huge retry */
+-	while ((status & IPC_STATUS_BUSY) && --loop_count) {
+-		udelay(1); /* scu processing time is in few u secods */
+-		status = ipc_read_status(scu);
+-	}
++	do {
++		u32 status;
+ 
+-	if (status & IPC_STATUS_BUSY) {
+-		dev_err(scu->dev, "IPC timed out");
+-		return -ETIMEDOUT;
+-	}
++		status = ipc_read_status(scu);
++		if (!(status & IPC_STATUS_BUSY))
++			return (status & IPC_STATUS_ERR) ? -EIO : 0;
+ 
+-	if (status & IPC_STATUS_ERR)
+-		return -EIO;
++		usleep_range(50, 100);
++	} while (time_before(jiffies, end));
+ 
+-	return 0;
++	dev_err(scu->dev, "IPC timed out");
++	return -ETIMEDOUT;
+ }
+ 
+ /* Wait till ipc ioc interrupt is received or timeout in 3 HZ */
+@@ -157,7 +156,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
+ {
+ 	int status;
+ 
+-	if (!wait_for_completion_timeout(&scu->cmd_complete, 3 * HZ)) {
++	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT)) {
+ 		dev_err(scu->dev, "IPC timed out\n");
+ 		return -ETIMEDOUT;
+ 	}
 -- 
 2.24.1
