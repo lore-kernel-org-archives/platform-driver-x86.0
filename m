@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v3 22/36] platform/x86: intel_pmc_ipc: Drop ipc_data_readb()
-Date: Mon, 13 Jan 2020 16:56:09 +0300
-Message-ID: <20200113135623.56286-23-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 24/36] platform/x86: intel_scu_ipc: Add function to remove SCU IPC
+Date: Mon, 13 Jan 2020 16:56:11 +0300
+Message-ID: <20200113135623.56286-25-mika.westerberg@linux.intel.com>
 References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,29 +12,54 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This function is not used anywhere so drop it completely.
+Drivers such as intel_pmc_ipc.c can be unloaded as well so in order to
+support those in this driver add a new function that can be called to
+remove the SCU IPC if the driver is unloaded.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_pmc_ipc.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/x86/include/asm/intel_scu_ipc.h |  1 +
+ drivers/platform/x86/intel_scu_ipc.c | 18 ++++++++++++++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 677ed470e14e..83b106f66fa6 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -184,11 +184,6 @@ static inline void ipc_data_writel(u32 data, u32 offset)
- 	writel(data, ipcdev.ipc_base + IPC_WRITE_BUFFER + offset);
- }
+diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
+index 1a76e874657e..bde7dc87c00c 100644
+--- a/arch/x86/include/asm/intel_scu_ipc.h
++++ b/arch/x86/include/asm/intel_scu_ipc.h
+@@ -32,6 +32,7 @@ struct intel_scu_ipc_pdata {
  
--static inline u8 __maybe_unused ipc_data_readb(u32 offset)
--{
--	return readb(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
--}
--
- static inline u32 ipc_data_readl(u32 offset)
- {
- 	return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
+ struct intel_scu_ipc_dev *
+ intel_scu_ipc_probe(struct device *dev, const struct intel_scu_ipc_pdata *pdata);
++void intel_scu_ipc_remove(struct intel_scu_ipc_dev *scu);
+ 
+ struct intel_scu_ipc_dev *intel_scu_ipc_dev_get(void);
+ void intel_scu_ipc_dev_put(struct intel_scu_ipc_dev *scu);
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index a729319fd708..b66320f0050c 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -565,3 +565,21 @@ intel_scu_ipc_probe(struct device *dev, const struct intel_scu_ipc_pdata *pdata)
+ 	return scu;
+ }
+ EXPORT_SYMBOL_GPL(intel_scu_ipc_probe);
++
++/**
++ * intel_scu_ipc_remove() - Remove SCU IPC
++ * @scu: SCU IPC handle
++ *
++ * This unregisters the SCU IPC device and releases the interrupt.
++ */
++void intel_scu_ipc_remove(struct intel_scu_ipc_dev *scu)
++{
++	mutex_lock(&ipclock);
++	if (!WARN_ON(!scu->dev)) {
++		if (scu->irq > 0)
++			devm_free_irq(scu->dev, scu->irq, scu);
++		scu->dev = NULL;
++	}
++	mutex_unlock(&ipclock);
++}
++EXPORT_SYMBOL_GPL(intel_scu_ipc_remove);
 -- 
 2.24.1
