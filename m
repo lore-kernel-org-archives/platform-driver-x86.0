@@ -1,7 +1,7 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v3 01/11] platform/x86: mlx-platform: Cosmetic changes
-Date: Mon, 13 Jan 2020 16:28:29 +0000
-Message-ID: <20200113162839.18103-2-vadimp@mellanox.com>
+Subject: [PATCH platform-next v3 04/11] Documentation/ABI: Style changes
+Date: Mon, 13 Jan 2020 16:28:32 +0000
+Message-ID: <20200113162839.18103-5-vadimp@mellanox.com>
 References: <20200113162839.18103-1-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200113162839.18103-1-vadimp@mellanox.com>
@@ -10,65 +10,79 @@ To: andy@infradead.org, dvhart@infradead.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Remove redundant semicolons at the end of few functions.
+Remove blank lines between "What" and "Date" keywords.
+Start each section with "What" keyword.
 
 Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 ---
-v1-v2:
- Comments pointed out by Andy:
- - Move this patch to be the first in series.
----
- drivers/platform/x86/mlx-platform.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ Documentation/ABI/stable/sysfs-driver-mlxreg-io | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 8fe51e43f1bc..565a67a65554 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -1834,7 +1834,7 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
- 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
+diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+index 05601a90a9b6..eb6db7382ae3 100644
+--- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
++++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+@@ -1,5 +1,4 @@
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/asic_health
+-
+ Date:		June 2018
+ KernelVersion:	4.19
+ Contact:	Vadim Pasternak <vadimpmellanox.com>
+@@ -19,7 +18,6 @@ Description:	These files show with which CPLD versions have been burned
+ 		The files are read only.
  
- 	return 1;
--};
-+}
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/fan_dir
+-
+ Date:		December 2018
+ KernelVersion:	5.0
+ Contact:	Vadim Pasternak <vadimpmellanox.com>
+@@ -30,7 +28,6 @@ Description:	This file shows the system fans direction:
+ 		The files are read only.
  
- static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
- {
-@@ -1853,7 +1853,7 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
- 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld3_version
+-
+ Date:		November 2018
+ KernelVersion:	5.0
+ Contact:	Vadim Pasternak <vadimpmellanox.com>
+@@ -40,7 +37,6 @@ Description:	These files show with which CPLD versions have been burned
+ 		The files are read only.
  
- 	return 1;
--};
-+}
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
+-
+ Date:		November 2018
+ KernelVersion:	5.0
+ Contact:	Vadim Pasternak <vadimpmellanox.com>
+@@ -108,7 +104,6 @@ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_pwr_fail
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_from_comex
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_system
+ What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_voltmon_upgrade_fail
+-
+ Date:		November 2018
+ KernelVersion:	5.0
+ Contact:	Vadim Pasternak <vadimpmellanox.com>
+@@ -130,6 +125,12 @@ Description:	These files show with which CPLD versions have been burned
  
- static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
- {
-@@ -1872,7 +1872,7 @@ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
- 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
+ 		The files are read only.
  
- 	return 1;
--};
-+}
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_thermal
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_wd
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_from_asic
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_reload_bios
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_sff_wd
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_swb_wd
+ Date:		June 2019
+ KernelVersion:	5.3
+ Contact:	Vadim Pasternak <vadimpmellanox.com>
+@@ -142,10 +143,3 @@ Description:	These files show the system reset cause, as following:
+ 		only last reset cause.
  
- static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
- {
-@@ -1891,7 +1891,7 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
- 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
- 
- 	return 1;
--};
-+}
- 
- static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
- {
-@@ -1914,7 +1914,7 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
- 	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng;
- 
- 	return 1;
--};
-+}
- 
- static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
- 	{
+ 		The files are read only.
+-
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_thermal
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_comex_wd
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_from_asic
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_reload_bios
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_sff_wd
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/reset_swb_wd
 -- 
 2.11.0
