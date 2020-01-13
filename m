@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v3 18/36] platform/x86: intel_pmc_ipc: Make intel_pmc_gcr_update() static
-Date: Mon, 13 Jan 2020 16:56:05 +0300
-Message-ID: <20200113135623.56286-19-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 15/36] platform/x86: intel_mid_powerbtn: Convert to use new SCU IPC API
+Date: Mon, 13 Jan 2020 16:56:02 +0300
+Message-ID: <20200113135623.56286-16-mika.westerberg@linux.intel.com>
 References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,60 +12,66 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This function is not called outside of intel_pmc_ipc.c so we can make it
-static instead.
+This converts the power button driver to use the new SCU IPC API where
+the SCU IPC instance is passed to the functions.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_pmc_ipc.h | 6 ------
- drivers/platform/x86/intel_pmc_ipc.c | 3 +--
- 2 files changed, 1 insertion(+), 8 deletions(-)
+ drivers/platform/x86/intel_mid_powerbtn.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index 9e7adcdbe031..3b2e8b461520 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -40,7 +40,6 @@ int intel_pmc_s0ix_counter_read(u64 *data);
- int intel_pmc_gcr_read(u32 offset, u32 *data);
- int intel_pmc_gcr_read64(u32 offset, u64 *data);
- int intel_pmc_gcr_write(u32 offset, u32 data);
--int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val);
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 6f436836fe50..1fdcdef1d89f 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -46,6 +46,7 @@ struct mid_pb_ddata {
+ 	unsigned short mirqlvl1_addr;
+ 	unsigned short pbstat_addr;
+ 	u8 pbstat_mask;
++	struct intel_scu_ipc_dev *scu;
+ 	int (*setup)(struct mid_pb_ddata *ddata);
+ };
  
- #else
+@@ -55,7 +56,8 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
+ 	int ret;
+ 	u8 pbstat;
  
-@@ -81,11 +80,6 @@ static inline int intel_pmc_gcr_write(u32 offset, u32 data)
- 	return -EINVAL;
+-	ret = intel_scu_ipc_ioread8(ddata->pbstat_addr, &pbstat);
++	ret = intel_scu_ipc_dev_ioread8(ddata->scu, ddata->pbstat_addr,
++					&pbstat);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -67,14 +69,15 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
+ 
+ static int mid_irq_ack(struct mid_pb_ddata *ddata)
+ {
+-	return intel_scu_ipc_update_register(ddata->mirqlvl1_addr, 0, MSIC_PWRBTNM);
++	return intel_scu_ipc_dev_update(ddata->scu, ddata->mirqlvl1_addr, 0,
++					MSIC_PWRBTNM);
  }
  
--static inline int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
--{
--	return -EINVAL;
--}
--
- #endif /*CONFIG_INTEL_PMC_IPC*/
- 
- #endif
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 5c1da2bb1435..9229c7a16536 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -309,7 +309,7 @@ EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
-  *
-  * Return:	negative value on error or 0 on success.
-  */
--int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
-+static int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+ static int mrfld_setup(struct mid_pb_ddata *ddata)
  {
- 	u32 new_val;
- 	int ret = 0;
-@@ -339,7 +339,6 @@ int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
- 	spin_unlock(&ipcdev.gcr_lock);
- 	return ret;
+ 	/* Unmask the PBIRQ and MPBIRQ on Tangier */
+-	intel_scu_ipc_update_register(BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
+-	intel_scu_ipc_update_register(BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
+ 
+ 	return 0;
  }
--EXPORT_SYMBOL_GPL(intel_pmc_gcr_update);
+@@ -161,6 +164,10 @@ static int mid_pb_probe(struct platform_device *pdev)
+ 			return error;
+ 	}
  
- static int update_no_reboot_bit(void *priv, bool set)
- {
++	ddata->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
++	if (!ddata->scu)
++		return -EPROBE_DEFER;
++
+ 	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mid_pb_isr,
+ 					  IRQF_ONESHOT, DRIVER_NAME, ddata);
+ 	if (error) {
 -- 
 2.24.1
