@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v3 04/36] platform/x86: intel_scu_ipc: Remove Lincroft support
-Date: Mon, 13 Jan 2020 16:55:51 +0300
-Message-ID: <20200113135623.56286-5-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 31/36] x86/platform/intel-mid: Add empty stubs for intel_scu_devices_[create|destroy]()
+Date: Mon, 13 Jan 2020 16:56:18 +0300
+Message-ID: <20200113135623.56286-32-mika.westerberg@linux.intel.com>
 References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,48 +12,46 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Moorestown support was removed years ago with by the commit 1a8359e411eb
-("x86/mid: Remove Intel Moorestown"). Lincroft is the CPU side chip of
-Moorestown and not supported anymore so remove the code from the driver.
+This allows to call the functions even when CONFIG_X86_INTEL_MID is not
+enabled.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 8 --------
- 1 file changed, 8 deletions(-)
+ arch/x86/include/asm/intel-mid.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index a8be5bcb9832..6c44fe5e55b5 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -58,7 +58,6 @@
- #define IPC_RWBUF_SIZE    20		/* IPC Read buffer Size */
- #define IPC_IOC	          0x100		/* IPC command register IOC bit */
+diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
+index 8e5af119dc2d..de58391bdee0 100644
+--- a/arch/x86/include/asm/intel-mid.h
++++ b/arch/x86/include/asm/intel-mid.h
+@@ -88,11 +88,17 @@ static inline bool intel_mid_has_msic(void)
+ 	return (intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_PENWELL);
+ }
  
--#define PCI_DEVICE_ID_LINCROFT		0x082a
- #define PCI_DEVICE_ID_PENWELL		0x080e
- #define PCI_DEVICE_ID_CLOVERVIEW	0x08ea
- #define PCI_DEVICE_ID_TANGIER		0x11a0
-@@ -70,12 +69,6 @@ struct intel_scu_ipc_pdata_t {
- 	u8 irq_mode;
- };
++extern void intel_scu_devices_create(void);
++extern void intel_scu_devices_destroy(void);
++
+ #else /* !CONFIG_X86_INTEL_MID */
  
--static const struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
--	.i2c_base = 0xff12b000,
--	.i2c_len = 0x10,
--	.irq_mode = 0,
--};
+ #define intel_mid_identify_cpu()	0
+ #define intel_mid_has_msic()		0
+ 
++static inline void intel_scu_devices_create(void) { }
++static inline void intel_scu_devices_destroy(void) { }
++
+ #endif /* !CONFIG_X86_INTEL_MID */
+ 
+ enum intel_mid_timer_options {
+@@ -115,9 +121,6 @@ extern enum intel_mid_timer_options intel_mid_timer_options;
+ #define SFI_MTMR_MAX_NUM		8
+ #define SFI_MRTC_MAX			8
+ 
+-extern void intel_scu_devices_create(void);
+-extern void intel_scu_devices_destroy(void);
 -
- /* Penwell and Cloverview */
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
- 	.i2c_base = 0xff12b000,
-@@ -677,7 +670,6 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- #define SCU_DEVICE(id, pdata)	{PCI_VDEVICE(INTEL, id), (kernel_ulong_t)&pdata}
- 
- static const struct pci_device_id pci_ids[] = {
--	SCU_DEVICE(PCI_DEVICE_ID_LINCROFT,	intel_scu_ipc_lincroft_pdata),
- 	SCU_DEVICE(PCI_DEVICE_ID_PENWELL,	intel_scu_ipc_penwell_pdata),
- 	SCU_DEVICE(PCI_DEVICE_ID_CLOVERVIEW,	intel_scu_ipc_penwell_pdata),
- 	SCU_DEVICE(PCI_DEVICE_ID_TANGIER,	intel_scu_ipc_tangier_pdata),
+ /* VRTC timer */
+ #define MRST_VRTC_MAP_SZ		1024
+ /* #define MRST_VRTC_PGOFFSET		0xc00 */
 -- 
 2.24.1
