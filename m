@@ -1,7 +1,7 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v3 10/11] platform/mellanox: mlxreg-hotplug: Add support for new capability register
-Date: Mon, 13 Jan 2020 16:28:38 +0000
-Message-ID: <20200113162839.18103-11-vadimp@mellanox.com>
+Subject: [PATCH platform-next v3 01/11] platform/x86: mlx-platform: Cosmetic changes
+Date: Mon, 13 Jan 2020 16:28:29 +0000
+Message-ID: <20200113162839.18103-2-vadimp@mellanox.com>
 References: <20200113162839.18103-1-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200113162839.18103-1-vadimp@mellanox.com>
@@ -10,65 +10,65 @@ To: andy@infradead.org, dvhart@infradead.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add support for capability register, which is used for detection of the
-actual number of interrupt capable components within the particular
-group, supported by the specific system.
-Such components could be for example the number of power units and
-interrupts related to these units.
-The motivation is to avoid adding a new code in the future in order to
-distinct between the systems type supported different number of the
-components like power supplies, FANs, ASICs, line cards.
+Remove redundant semicolons at the end of few functions.
 
 Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 ---
- drivers/platform/mellanox/mlxreg-hotplug.c | 14 ++++++++++++++
- include/linux/platform_data/mlxreg.h       |  2 ++
- 2 files changed, 16 insertions(+)
+v1-v2:
+ Comments pointed out by Andy:
+ - Move this patch to be the first in series.
+---
+ drivers/platform/x86/mlx-platform.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index 706207d192ae..77be37a1fbcf 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -504,6 +504,20 @@ static int mlxreg_hotplug_set_irq(struct mlxreg_hotplug_priv_data *priv)
- 	item = pdata->items;
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 8fe51e43f1bc..565a67a65554 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -1834,7 +1834,7 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
  
- 	for (i = 0; i < pdata->counter; i++, item++) {
-+		if (item->capability) {
-+			/*
-+			 * Read group capability register to get actual number
-+			 * of interrupt capable components and set group mask
-+			 * accordingly.
-+			 */
-+			ret = regmap_read(priv->regmap, item->capability,
-+					  &regval);
-+			if (ret)
-+				goto out;
-+
-+			item->mask = GENMASK((regval & item->mask) - 1, 0);
-+		}
-+
- 		/* Clear group presense event. */
- 		ret = regmap_write(priv->regmap, item->reg +
- 				   MLXREG_HOTPLUG_EVENT_OFF, 0);
-diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
-index 6d54fe3bcac9..b8da8aef2446 100644
---- a/include/linux/platform_data/mlxreg.h
-+++ b/include/linux/platform_data/mlxreg.h
-@@ -101,6 +101,7 @@ struct mlxreg_core_data {
-  * @aggr_mask: group aggregation mask;
-  * @reg: group interrupt status register;
-  * @mask: group interrupt mask;
-+ * @capability: group capability register;
-  * @cache: last status value for elements fro the same group;
-  * @count: number of available elements in the group;
-  * @ind: element's index inside the group;
-@@ -112,6 +113,7 @@ struct mlxreg_core_item {
- 	u32 aggr_mask;
- 	u32 reg;
- 	u32 mask;
-+	u32 capability;
- 	u32 cache;
- 	u8 count;
- 	u8 ind;
+ 	return 1;
+-};
++}
+ 
+ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
+ {
+@@ -1853,7 +1853,7 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
+ 
+ 	return 1;
+-};
++}
+ 
+ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
+ {
+@@ -1872,7 +1872,7 @@ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
+ 
+ 	return 1;
+-};
++}
+ 
+ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
+ {
+@@ -1891,7 +1891,7 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_wd_data[0] = &mlxplat_mlxcpld_wd_set_type1[0];
+ 
+ 	return 1;
+-};
++}
+ 
+ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+ {
+@@ -1914,7 +1914,7 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+ 	mlxplat_regmap_config = &mlxplat_mlxcpld_regmap_config_ng;
+ 
+ 	return 1;
+-};
++}
+ 
+ static const struct dmi_system_id mlxplat_dmi_table[] __initconst = {
+ 	{
 -- 
 2.11.0
