@@ -1,41 +1,64 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Fix keyboard brightness cannot be
- set to 0
-Date: Mon, 13 Jan 2020 11:47:12 +0200
-Message-ID: <CAHp75VcPuhRJ8q4x7UUrJV5AMEGV2iMm6_KrVaH8+GtE3AjaOQ@mail.gmail.com>
-References: <20191230083044.11582-1-jian-hong@endlessm.com>
- <CAD8Lp45Le=s=1Q9oi0JCJTPepNmX002hK7W6UwKztTq09QBUgw@mail.gmail.com> <CAD8Lp44Vd6Moi+UmbdZDsQx-e_CHoHbgtZHpf8sV_yuHwzRrBA@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 00/36] platform/x86: Rework intel_scu_ipc and
+ intel_pmc_ipc drivers
+Date: Mon, 13 Jan 2020 10:38:07 +0000
+Message-ID: <20200113103807.GA5414@dell>
+References: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD8Lp44Vd6Moi+UmbdZDsQx-e_CHoHbgtZHpf8sV_yuHwzRrBA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20200108114201.27908-1-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Drake <drake@endlessm.com>
-Cc: Jian-Hong Pan <jian-hong@endlessm.com>, Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>, nweibley@gmail.com
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 13, 2020 at 5:47 AM Daniel Drake <drake@endlessm.com> wrote:
->
-> On Tue, Dec 31, 2019 at 2:53 PM Daniel Drake <drake@endlessm.com> wrote:
-> > Here, writing 0x80 to turn off the keyboard LED will result in an
-> > additional WRAM(0x9f0, 0) call that was not there before. I think we
-> > should double check this detail.
-> >
-> > Let's see if we can borrow one of the affected models and double check
-> > this patch there before proceeding. I'll follow up internally.
->
-> Asus were unable to find a product sample with the affected behaviour.
-> They did provide us with one from the list I had made, but with a
-> newer BIOS version where that behaviour has been eliminated. They also
-> advised that always setting bit 7 is the way they do it on Windows. So
-> I don't think we have the opportunity for extra verification, but it
-> should be safe.
->
+On Wed, 08 Jan 2020, Mika Westerberg wrote:
 
-> Reviewed-by: Daniel Drake <drake@endlessm.com>
+> Hi,
+> 
+> Currently both intel_scu_ipc.c and intel_pmc_ipc.c implement the same SCU
+> IPC communications with minor differences. This duplication does not make
+> much sense so this series reworks the two drivers so that there is only a
+> single implementation of the SCU IPC. In addition to that the API will be
+> updated to take SCU instance pointer as an argument, and most of the
+> callers will be converted to this new API. The old API is left there but
+> the plan is to get rid the callers and then the old API as well (this is
+> something we are working with Andy Shevchenko).
+> 
+> The intel_pmc_ipc.c is then moved under MFD which suits better for this
+> kind of a driver that pretty much sets up the SCU IPC and then creates a
+> bunch of platform devices for the things sitting behind the PMC. The driver
+> is renamed to intel_pmc_bxt.c which should follow the existing conventions
+> under drivers/mfd (and it is only meant for Intel Broxton derivatives).
+> 
+> Previous version of the series:
+> 
+>   https://www.spinics.net/lists/platform-driver-x86/msg20359.html
+> 
+> Changes from the previous version:
+> 
+>   * Update changelog of patch 16 according to what the patch actually does.
+>   * Add kernel-doc for struct intel_soc_pmic.
+>   * Move octal permission patch to be before MFD conversion.
+>   * Convert the intel_pmc_bxt.c to MFD APIs whilst it is being moved under
+>     drivers/mfd.
+> 
+> I'm including all x86 maintainers just to be sure they are aware of this as
+> I'm not sure if x86@kernel.org reaches them all. Let me know if you have
+> issues with this series.
+> 
+> I would prefer this to be merged through platform/x86 or MFD trees assuming
+> there are no objections.
+> 
+> I have tested this on Intel Edison (Merrifield) and Joule (Broxton-M).
 
-Thank you, Daniel! I'll queue it soon to my tree.
+FYI, I'm waiting until v3 before I conduct my review.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
