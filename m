@@ -1,47 +1,40 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v3 03/11] Documentation/ABI: Add missed attribute for mlxreg-io sysfs interfaces
-Date: Mon, 13 Jan 2020 16:28:31 +0000
-Message-ID: <20200113162839.18103-4-vadimp@mellanox.com>
-References: <20200113162839.18103-1-vadimp@mellanox.com>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v3 2/2] MAINTAINERS: Update for the intel uncore frequency control
+Date: Mon, 13 Jan 2020 10:00:15 -0800
+Message-ID: <20200113180015.503314-3-srinivas.pandruvada@linux.intel.com>
+References: <20200113180015.503314-1-srinivas.pandruvada@linux.intel.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200113162839.18103-1-vadimp@mellanox.com>
+In-Reply-To: <20200113180015.503314-1-srinivas.pandruvada@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy@infradead.org, dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
+To: yu.chen.surf@gmail.com, andy@infradead.org, dvhart@infradead.org, andy@kernel.org, lenb@kernel.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add missed "cpld4_version" attribute.
+Add an entry for drivers/platform/x86/intel-uncore-frequency.c.
 
-Fixes: 52675da1d087 ("Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
-v2->v3:
- Comments pointed out by Andy:
- - add "Fixes" tag.
- - Drop blank line between "What" and "Date".
----
- Documentation/ABI/stable/sysfs-driver-mlxreg-io | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-index 8b1461fa3538..05601a90a9b6 100644
---- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-+++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
-@@ -121,6 +121,15 @@ Description:	These files show the system reset cause, as following: ComEx
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4017e6b760be..dbdadb369082 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8562,6 +8562,12 @@ S:	Maintained
+ F:	arch/x86/include/asm/intel_telemetry.h
+ F:	drivers/platform/x86/intel_telemetry*
  
- 		The files are read only.
- 
-+What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld4_version
-+Date:		November 2018
-+KernelVersion:	5.0
-+Contact:	Vadim Pasternak <vadimpmellanox.com>
-+Description:	These files show with which CPLD versions have been burned
-+		on LED board.
++INTEL UNCORE FREQUENCY CONTROL
++M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/intel-uncore-frequency.c
 +
-+		The files are read only.
-+
- Date:		June 2019
- KernelVersion:	5.3
- Contact:	Vadim Pasternak <vadimpmellanox.com>
+ INTEL VIRTUAL BUTTON DRIVER
+ M:	AceLan Kao <acelan.kao@canonical.com>
+ L:	platform-driver-x86@vger.kernel.org
 -- 
-2.11.0
+2.24.1
