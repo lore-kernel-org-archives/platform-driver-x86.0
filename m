@@ -1,51 +1,48 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v3 00/11] platform/x86: Mellanox new system classes and new features
-Date: Mon, 13 Jan 2020 16:28:28 +0000
-Message-ID: <20200113162839.18103-1-vadimp@mellanox.com>
+Subject: [PATCH platform-next v3 02/11] Documentation/ABI: Fix documentation inconsistency for mlxreg-io sysfs interfaces
+Date: Mon, 13 Jan 2020 16:28:30 +0000
+Message-ID: <20200113162839.18103-3-vadimp@mellanox.com>
+References: <20200113162839.18103-1-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200113162839.18103-1-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: andy@infradead.org, dvhart@infradead.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The patchset adds new features for the existing Mellanox systems
-and introduces two new system classes.
+Fix attribute name from "jtag_enable", which described twice to
+"cpld3_version", which is expected to be instead of second appearance
+of "jtag_enable".
 
-Patch #1 contains cosmetic changes.
-Patch #2 fixes wrong attribute name in documentation.
-Patch #3 adds missed attribute name in documentation.
-Patch #4 provides style changes in documentation.
-Patch #5 adds more definitions for system attributes
-Patches #6 extends documentation.
-Patches #7-#8 introduce new system class for the systems equipped with
-Spectrum 1 (32x100GbE Ethernet switch) device and Switch-IB/Switch-IB2
-devices (36x100Gbe InfiniBand switch).
-Patches #9-#10 add support for new group capability register
-Patches #11 introduces new system class for the systems equipped
-with new switch device Spectrum 3 (32x400GbE/64x200G/128x100G Ethernet
-switch).
+Fixes: 2752e34442b5 ("Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+---
+v1-v2:
+ Comments pointed out by Andy:
+ - Explain that patch fixes documentation inconsistency.
+---
+ Documentation/ABI/stable/sysfs-driver-mlxreg-io | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Vadim Pasternak (11):
-  platform/x86: mlx-platform: Cosmetic changes
-  Documentation/ABI: Fix documentation inconsistency for mlxreg-io sysfs
-    interfaces
-  Documentation/ABI: Add missed attribute for mlxreg-io sysfs interfaces
-  Documentation/ABI: Style changes
-  platform/x86: mlx-platform: Add more definitions for system attributes
-  Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
-  platform/x86: mlx-platform: Set system mux configuration based on
-    system type
-  platform/x86: mlx-platform: Add support for new system type
-  platform/x86: mlx-platform: Add support for new capability register
-  platform/mellanox: mlxreg-hotplug: Add support for new capability
-    register
-  platform/x86: mlx-platform: Add support for next generation systems
-
- Documentation/ABI/stable/sysfs-driver-mlxreg-io |  92 +++-
- drivers/platform/mellanox/mlxreg-hotplug.c      |  14 +
- drivers/platform/x86/mlx-platform.c             | 564 +++++++++++++++++++++++-
- include/linux/platform_data/mlxreg.h            |   2 +
- 4 files changed, 641 insertions(+), 31 deletions(-)
-
+diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+index 8ca498447aeb..8b1461fa3538 100644
+--- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
++++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+@@ -29,13 +29,13 @@ Description:	This file shows the system fans direction:
+ 
+ 		The files are read only.
+ 
+-What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/jtag_enable
++What:		/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld3_version
+ 
+ Date:		November 2018
+ KernelVersion:	5.0
+ Contact:	Vadim Pasternak <vadimpmellanox.com>
+ Description:	These files show with which CPLD versions have been burned
+-		on LED board.
++		on LED or Gearbox board.
+ 
+ 		The files are read only.
+ 
 -- 
 2.11.0
