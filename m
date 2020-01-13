@@ -1,13 +1,13 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH platform-next v2 03/10] Documentation/ABI: Add missed
+Subject: Re: [PATCH platform-next v2 05/10] Documentation/ABI: Add new
  attribute for mlxreg-io sysfs interfaces
-Date: Mon, 13 Jan 2020 16:12:50 +0200
-Message-ID: <CAHp75VdFV5OZ=U8yiuDLsff8+swET8dtikrQo_8N6ZdvhC9Q=g@mail.gmail.com>
-References: <20200112121849.7056-1-vadimp@mellanox.com> <20200112121849.7056-4-vadimp@mellanox.com>
+Date: Mon, 13 Jan 2020 16:13:46 +0200
+Message-ID: <CAHp75VdTfZHFNrMq4pAVFY6OZWHDXMnEwa4pqWcG2v05MWVzvA@mail.gmail.com>
+References: <20200112121849.7056-1-vadimp@mellanox.com> <20200112121849.7056-6-vadimp@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200112121849.7056-4-vadimp@mellanox.com>
+In-Reply-To: <20200112121849.7056-6-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vadim Pasternak <vadimp@mellanox.com>
 Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
@@ -15,39 +15,19 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 On Sun, Jan 12, 2020 at 2:19 PM Vadim Pasternak <vadimp@mellanox.com> wrote:
 >
-> Add missed "cpld4_version" attribute.
+> Add documentation for the new attributes for:
+> - Exposing reset causes types asserted by: platform reset, SoC reset,
+>   AC power failure, software power off request.
+> - Setting and removing system VPD (EEPROM) hardware write protection.
+> - Voltage regulator devices configuration update status and firmware
+>   version.
+> - Setting PCIe ASIC reset to disable or enable state during PCIe root
+>   complex reset.
+> - System static topology identification, like system's static I2C
+>   topology, number and type of FPGA devices within the system and so on.
 >
 
-Fixes tag?
-Also see below.
-
-...
-
-> +What:          /sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/cpld4_version
-
-> +
-
-Can we get some consistency here, i.e. drop blank lines between What
-and Date everywhere?
-(Separate patch)
-
-> +Date:          November 2018
-> +KernelVersion: 5.0
-> +Contact:       Vadim Pasternak <vadimpmellanox.com>
-> +Description:   These files show with which CPLD versions have been burned
-> +               on LED board.
-> +
-> +               The files are read only.
-> +
-
-...following by the starting each section with What keyword.
-
-(Separate patch)
-
->  Date:          June 2019
->  KernelVersion: 5.3
->  Contact:       Vadim Pasternak <vadimpmellanox.com>
-
+Same comments as per previous patch (style related)
 
 -- 
 With Best Regards,
