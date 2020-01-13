@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v3 24/36] platform/x86: intel_scu_ipc: Add function to remove SCU IPC
-Date: Mon, 13 Jan 2020 16:56:11 +0300
-Message-ID: <20200113135623.56286-25-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 23/36] platform/x86: intel_pmc_ipc: Get rid of unnecessary includes
+Date: Mon, 13 Jan 2020 16:56:10 +0300
+Message-ID: <20200113135623.56286-24-mika.westerberg@linux.intel.com>
 References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,54 +12,42 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Drivers such as intel_pmc_ipc.c can be unloaded as well so in order to
-support those in this driver add a new function that can be called to
-remove the SCU IPC if the driver is unloaded.
+There is no point including headers that are not needed in the driver so
+drop them.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_scu_ipc.h |  1 +
- drivers/platform/x86/intel_scu_ipc.c | 18 ++++++++++++++++++
- 2 files changed, 19 insertions(+)
+ drivers/platform/x86/intel_pmc_ipc.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index 1a76e874657e..bde7dc87c00c 100644
---- a/arch/x86/include/asm/intel_scu_ipc.h
-+++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -32,6 +32,7 @@ struct intel_scu_ipc_pdata {
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 83b106f66fa6..8527327d88c7 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -12,23 +12,13 @@
+  */
  
- struct intel_scu_ipc_dev *
- intel_scu_ipc_probe(struct device *dev, const struct intel_scu_ipc_pdata *pdata);
-+void intel_scu_ipc_remove(struct intel_scu_ipc_dev *scu);
+ #include <linux/acpi.h>
+-#include <linux/atomic.h>
+-#include <linux/bitops.h>
+ #include <linux/delay.h>
+-#include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/interrupt.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+-#include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/notifier.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
+-#include <linux/pm.h>
+-#include <linux/pm_qos.h>
+-#include <linux/sched.h>
+-#include <linux/spinlock.h>
+-#include <linux/suspend.h>
  
- struct intel_scu_ipc_dev *intel_scu_ipc_dev_get(void);
- void intel_scu_ipc_dev_put(struct intel_scu_ipc_dev *scu);
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index a729319fd708..b66320f0050c 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -565,3 +565,21 @@ intel_scu_ipc_probe(struct device *dev, const struct intel_scu_ipc_pdata *pdata)
- 	return scu;
- }
- EXPORT_SYMBOL_GPL(intel_scu_ipc_probe);
-+
-+/**
-+ * intel_scu_ipc_remove() - Remove SCU IPC
-+ * @scu: SCU IPC handle
-+ *
-+ * This unregisters the SCU IPC device and releases the interrupt.
-+ */
-+void intel_scu_ipc_remove(struct intel_scu_ipc_dev *scu)
-+{
-+	mutex_lock(&ipclock);
-+	if (!WARN_ON(!scu->dev)) {
-+		if (scu->irq > 0)
-+			devm_free_irq(scu->dev, scu->irq, scu);
-+		scu->dev = NULL;
-+	}
-+	mutex_unlock(&ipclock);
-+}
-+EXPORT_SYMBOL_GPL(intel_scu_ipc_remove);
+ #include <asm/intel_pmc_ipc.h>
+ 
 -- 
 2.24.1
