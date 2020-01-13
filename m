@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v3 08/36] platform/x86: intel_scu_ipc: Drop unused prototype intel_scu_ipc_fw_update()
-Date: Mon, 13 Jan 2020 16:55:55 +0300
-Message-ID: <20200113135623.56286-9-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 20/36] platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_raw_cmd() static
+Date: Mon, 13 Jan 2020 16:56:07 +0300
+Message-ID: <20200113135623.56286-21-mika.westerberg@linux.intel.com>
 References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,27 +12,64 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-There is no implementation for that anymore so drop the prototype.
+This function is not called outside of intel_pmc_ipc.c so we can make it
+static instead.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_scu_ipc.h | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/x86/include/asm/intel_pmc_ipc.h | 8 --------
+ drivers/platform/x86/intel_pmc_ipc.c | 5 ++---
+ 2 files changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index d7bbebf4b729..b2dde96e0611 100644
---- a/arch/x86/include/asm/intel_scu_ipc.h
-+++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -53,9 +53,6 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
- 			      u32 *out, int outlen, u32 dptr, u32 sptr);
+diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+index b4f804877651..966ff2171ff9 100644
+--- a/arch/x86/include/asm/intel_pmc_ipc.h
++++ b/arch/x86/include/asm/intel_pmc_ipc.h
+@@ -31,8 +31,6 @@
  
--/* Update FW version */
--int intel_scu_ipc_fw_update(u8 *buffer, u32 length);
+ #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
+ 
+-int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+-		u32 *out, u32 outlen, u32 dptr, u32 sptr);
+ int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+ 		u32 *out, u32 outlen);
+ int intel_pmc_s0ix_counter_read(u64 *data);
+@@ -42,12 +40,6 @@ int intel_pmc_gcr_write(u32 offset, u32 data);
+ 
+ #else
+ 
+-static inline int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+-		u32 *out, u32 outlen, u32 dptr, u32 sptr)
+-{
+-	return -EINVAL;
+-}
 -
- extern struct blocking_notifier_head intel_scu_notifier;
+ static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+ 		u32 *out, u32 outlen)
+ {
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 53551f5474a7..83f47df1c4a5 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -435,8 +435,8 @@ static int intel_pmc_ipc_simple_command(int cmd, int sub)
+  *
+  * Return:	an IPC error code or 0 on success.
+  */
+-int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *out,
+-			  u32 outlen, u32 dptr, u32 sptr)
++static int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *out,
++				 u32 outlen, u32 dptr, u32 sptr)
+ {
+ 	u32 wbuf[4] = { 0 };
+ 	int ret;
+@@ -468,7 +468,6 @@ int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *out,
  
- static inline void intel_scu_notifier_add(struct notifier_block *nb)
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(intel_pmc_ipc_raw_cmd);
+ 
+ /**
+  * intel_pmc_ipc_command() -  IPC command with input/output data
 -- 
 2.24.1
