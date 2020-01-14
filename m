@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 5/5] tools/power/x86/intel-speed-select: Update version
-Date: Tue, 14 Jan 2020 11:22:17 -0800
-Message-ID: <20200114192217.580364-6-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 1/5] platform/x86: ISST: Allow additional core-power mailbox commands
+Date: Tue, 14 Jan 2020 11:22:13 -0800
+Message-ID: <20200114192217.580364-2-srinivas.pandruvada@linux.intel.com>
 References: <20200114192217.580364-1-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,25 +12,34 @@ To: andriy.shevchenko@intel.com, prarit@redhat.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-As we added new set of mailbox commands, increment version.
+To discover core-power capability, some new mailbox commands are added. Allow
+those commands to execute.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- tools/power/x86/intel-speed-select/isst-config.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/intel_speed_select_if/isst_if_common.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 84baba34d311..2b2b8167c65b 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -15,7 +15,7 @@ struct process_cmd_struct {
- 	int arg;
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+index 3de5a3c66529..0c2aa22c7a12 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+@@ -50,6 +50,8 @@ static const struct isst_valid_cmd_ranges isst_valid_cmds[] = {
+ 	{0x7F, 0x00, 0x0B},
+ 	{0x7F, 0x10, 0x12},
+ 	{0x7F, 0x20, 0x23},
++	{0x94, 0x03, 0x03},
++	{0x95, 0x03, 0x03},
  };
  
--static const char *version_str = "v1.1";
-+static const char *version_str = "v1.2";
- static const int supported_api_ver = 1;
- static struct isst_if_platform_info isst_platform_info;
- static char *progname;
+ static const struct isst_cmd_set_req_type isst_cmd_set_reqs[] = {
+@@ -59,6 +61,7 @@ static const struct isst_cmd_set_req_type isst_cmd_set_reqs[] = {
+ 	{0xD0, 0x03, 0x08},
+ 	{0x7F, 0x02, 0x00},
+ 	{0x7F, 0x08, 0x00},
++	{0x95, 0x03, 0x03},
+ };
+ 
+ struct isst_cmd {
 -- 
 2.24.1
