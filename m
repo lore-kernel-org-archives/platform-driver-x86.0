@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 4/5] tools/power/x86/intel-speed-select: Change the order for clos disable
-Date: Tue, 14 Jan 2020 11:22:16 -0800
-Message-ID: <20200114192217.580364-5-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 5/5] tools/power/x86/intel-speed-select: Update version
+Date: Tue, 14 Jan 2020 11:22:17 -0800
+Message-ID: <20200114192217.580364-6-srinivas.pandruvada@linux.intel.com>
 References: <20200114192217.580364-1-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,75 +12,25 @@ To: andriy.shevchenko@intel.com, prarit@redhat.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-In turbo-freq or base-freq auto mode, for disable, first disable the feature and
-then disable clos.
+As we added new set of mailbox commands, increment version.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../x86/intel-speed-select/isst-config.c      | 30 +++++++++----------
- 1 file changed, 14 insertions(+), 16 deletions(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index e22a694e6410..84baba34d311 100644
+index 84baba34d311..2b2b8167c65b 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1384,14 +1384,10 @@ static void set_pbf_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 		goto disp_result;
- 	}
+@@ -15,7 +15,7 @@ struct process_cmd_struct {
+ 	int arg;
+ };
  
--	if (auto_mode) {
--		if (status) {
--			ret = set_pbf_core_power(cpu);
--			if (ret)
--				goto disp_result;
--		} else {
--			isst_pm_qos_config(cpu, 0, 0);
--		}
-+	if (auto_mode && status) {
-+		ret = set_pbf_core_power(cpu);
-+		if (ret)
-+			goto disp_result;
- 	}
- 
- 	ret = isst_set_pbf_fact_status(cpu, 1, status);
-@@ -1408,6 +1404,9 @@ static void set_pbf_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 		}
- 	}
- 
-+	if (auto_mode && !status)
-+		isst_pm_qos_config(cpu, 0, 0);
-+
- disp_result:
- 	if (status)
- 		isst_display_result(cpu, outf, "base-freq", "enable",
-@@ -1496,14 +1495,10 @@ static void set_fact_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 	int ret;
- 	int status = *(int *)arg4;
- 
--	if (auto_mode) {
--		if (status) {
--			ret = isst_pm_qos_config(cpu, 1, 1);
--			if (ret)
--				goto disp_results;
--		} else {
--			isst_pm_qos_config(cpu, 0, 0);
--		}
-+	if (auto_mode && status) {
-+		ret = isst_pm_qos_config(cpu, 1, 1);
-+		if (ret)
-+			goto disp_results;
- 	}
- 
- 	ret = isst_set_pbf_fact_status(cpu, 0, status);
-@@ -1524,6 +1519,9 @@ static void set_fact_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 			ret = isst_set_trl(cpu, fact_trl);
- 		if (ret && auto_mode)
- 			isst_pm_qos_config(cpu, 0, 0);
-+	} else {
-+		if (auto_mode)
-+			isst_pm_qos_config(cpu, 0, 0);
- 	}
- 
- disp_results:
+-static const char *version_str = "v1.1";
++static const char *version_str = "v1.2";
+ static const int supported_api_ver = 1;
+ static struct isst_if_platform_info isst_platform_info;
+ static char *progname;
 -- 
 2.24.1
