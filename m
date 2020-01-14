@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 3/5] tools/power/x86/intel-speed-select: Fix result display for turbo-freq auto mode
-Date: Tue, 14 Jan 2020 11:22:15 -0800
-Message-ID: <20200114192217.580364-4-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 4/5] tools/power/x86/intel-speed-select: Change the order for clos disable
+Date: Tue, 14 Jan 2020 11:22:16 -0800
+Message-ID: <20200114192217.580364-5-srinivas.pandruvada@linux.intel.com>
 References: <20200114192217.580364-1-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,86 +12,75 @@ To: andriy.shevchenko@intel.com, prarit@redhat.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The turbo-freq enable with auto mode, prints result for the last possible
-CPU, which is not correct when either CPU is not present or user wants
-command to be limited to a single die/package. For example, in the
-below command user wants to limit to die/package 0, but the
-"turbo-freq --auto" result is displayed using the other package.
-
-$ sudo intel-speed-select -c 0 turbo-freq enable -a
-Intel(R) Speed Select Technology
- package-0
-  die-0
-    cpu-0
-      turbo-freq
-        enable:success
- package--1
-  die-0
-    cpu-31
-      turbo-freq --auto
-        enable:success
-
-Since we do have to traverse all CPUs, don't display CPU info for
-"turbo-freq --auto", as we already displayed the result for
-turbo-freq enable with the CPU information.
-
-With the fix, the same command results in:
-
-$ sudo intel-speed-select -c 0 turbo-freq enable -a
-Intel(R) Speed Select Technology
-package-0
-  die-0
-    cpu-0
-      turbo-freq
-        enable:success
-      turbo-freq --auto
-        enable:success
+In turbo-freq or base-freq auto mode, for disable, first disable the feature and
+then disable clos.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- tools/power/x86/intel-speed-select/isst-config.c |  2 +-
- .../power/x86/intel-speed-select/isst-display.c  | 16 +++++++++-------
- 2 files changed, 10 insertions(+), 8 deletions(-)
+ .../x86/intel-speed-select/isst-config.c      | 30 +++++++++----------
+ 1 file changed, 14 insertions(+), 16 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 944183f9ed5a..e22a694e6410 100644
+index e22a694e6410..84baba34d311 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1638,7 +1638,7 @@ static void set_fact_enable(int arg)
- 			if (ret)
- 				goto error_disp;
- 		}
--		isst_display_result(i, outf, "turbo-freq --auto", "enable", 0);
-+		isst_display_result(-1, outf, "turbo-freq --auto", "enable", 0);
+@@ -1384,14 +1384,10 @@ static void set_pbf_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 		goto disp_result;
  	}
  
- 	return;
-diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 1d1439036c12..4fb0c1d49d64 100644
---- a/tools/power/x86/intel-speed-select/isst-display.c
-+++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -645,13 +645,15 @@ void isst_display_result(int cpu, FILE *outf, char *feature, char *cmd,
- 	char header[256];
- 	char value[256];
+-	if (auto_mode) {
+-		if (status) {
+-			ret = set_pbf_core_power(cpu);
+-			if (ret)
+-				goto disp_result;
+-		} else {
+-			isst_pm_qos_config(cpu, 0, 0);
+-		}
++	if (auto_mode && status) {
++		ret = set_pbf_core_power(cpu);
++		if (ret)
++			goto disp_result;
+ 	}
  
--	snprintf(header, sizeof(header), "package-%d",
--		 get_physical_package_id(cpu));
--	format_and_print(outf, 1, header, NULL);
--	snprintf(header, sizeof(header), "die-%d", get_physical_die_id(cpu));
--	format_and_print(outf, 2, header, NULL);
--	snprintf(header, sizeof(header), "cpu-%d", cpu);
--	format_and_print(outf, 3, header, NULL);
-+	if (cpu >= 0) {
-+		snprintf(header, sizeof(header), "package-%d",
-+			 get_physical_package_id(cpu));
-+		format_and_print(outf, 1, header, NULL);
-+		snprintf(header, sizeof(header), "die-%d", get_physical_die_id(cpu));
-+		format_and_print(outf, 2, header, NULL);
-+		snprintf(header, sizeof(header), "cpu-%d", cpu);
-+		format_and_print(outf, 3, header, NULL);
-+	}
- 	snprintf(header, sizeof(header), "%s", feature);
- 	format_and_print(outf, 4, header, NULL);
- 	snprintf(header, sizeof(header), "%s", cmd);
+ 	ret = isst_set_pbf_fact_status(cpu, 1, status);
+@@ -1408,6 +1404,9 @@ static void set_pbf_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 		}
+ 	}
+ 
++	if (auto_mode && !status)
++		isst_pm_qos_config(cpu, 0, 0);
++
+ disp_result:
+ 	if (status)
+ 		isst_display_result(cpu, outf, "base-freq", "enable",
+@@ -1496,14 +1495,10 @@ static void set_fact_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 	int ret;
+ 	int status = *(int *)arg4;
+ 
+-	if (auto_mode) {
+-		if (status) {
+-			ret = isst_pm_qos_config(cpu, 1, 1);
+-			if (ret)
+-				goto disp_results;
+-		} else {
+-			isst_pm_qos_config(cpu, 0, 0);
+-		}
++	if (auto_mode && status) {
++		ret = isst_pm_qos_config(cpu, 1, 1);
++		if (ret)
++			goto disp_results;
+ 	}
+ 
+ 	ret = isst_set_pbf_fact_status(cpu, 0, status);
+@@ -1524,6 +1519,9 @@ static void set_fact_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 			ret = isst_set_trl(cpu, fact_trl);
+ 		if (ret && auto_mode)
+ 			isst_pm_qos_config(cpu, 0, 0);
++	} else {
++		if (auto_mode)
++			isst_pm_qos_config(cpu, 0, 0);
+ 	}
+ 
+ disp_results:
 -- 
 2.24.1
