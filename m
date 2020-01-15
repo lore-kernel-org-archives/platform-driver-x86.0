@@ -1,80 +1,159 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 12/36] platform/x86: intel_scu_ipc: Split out SCU IPC
- functionality from the SCU driver
-Date: Wed, 15 Jan 2020 08:35:41 +0000
-Message-ID: <20200115083541.GF325@dell>
-References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
- <20200113135623.56286-13-mika.westerberg@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v12 00/10] efi/firmware/platform-x86: Add EFI embedded fw support
+Date: Wed, 15 Jan 2020 17:35:44 +0100
+Message-ID: <20200115163554.101315-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200113135623.56286-13-mika.westerberg@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 13 Jan 2020, Mika Westerberg wrote:
+Hi All,
 
-> The SCU IPC functionality is usable outside of Intel MID devices. For
-> example modern Intel CPUs include the same thing but now it is called
-> PMC (Power Management Controller) instead of SCU. To make the IPC
-> available for those split the driver into library part (intel_scu_ipc.c)
-> and the SCU PCI driver part (intel_scu_pcidrv.c) which then calls the
-> former before it goes and creates rest of the SCU devices.
-> 
-> We also split the Kconfig symbols so that INTEL_SCU_IPC enables the SCU
-> IPC library and INTEL_SCU_PCI the SCU driver and convert the users
-> accordingly. While there remove default y from the INTEL_SCU_PCI symbol
-> as it is already selected by X86_INTEL_MID.
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  arch/x86/Kconfig                        |  2 +-
->  arch/x86/include/asm/intel_scu_ipc.h    | 14 +++++
+Here is v12 of my patch-set to add support for EFI embedded fw to the
+kernel.
 
->  drivers/mfd/Kconfig                     |  4 +-
+This version addresses Luis' review remarks for the test_firmware stuff
+and addresses some of Andy Lutomirski's remarks (while for some others
+I've explained why I've done things a certain way).
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+It would be nice if we could at least get patches 1 and 2 merged for
+5.6 (assuming Andy is ok with them now), then we can get the rest merged
+once 5.6-rc1 is out.
 
->  drivers/platform/x86/Kconfig            | 26 ++++++---
->  drivers/platform/x86/Makefile           |  1 +
->  drivers/platform/x86/intel_scu_ipc.c    | 75 +++++++++----------------
->  drivers/platform/x86/intel_scu_pcidrv.c | 61 ++++++++++++++++++++
->  7 files changed, 122 insertions(+), 61 deletions(-)
->  create mode 100644 drivers/platform/x86/intel_scu_pcidrv.c
+As mentioned in the v11 cover letter, I've based this version on Ard's
+efi/next branch to avoid conflict with some changes already there.
 
-[...]
+Regards,
 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 420900852166..59515142438e 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -593,7 +593,7 @@ config INTEL_SOC_PMIC_MRFLD
->  	tristate "Support for Intel Merrifield Basin Cove PMIC"
->  	depends on GPIOLIB
->  	depends on ACPI
-> -	depends on INTEL_SCU_IPC
-> +	depends on INTEL_SCU
->  	select MFD_CORE
->  	select REGMAP_IRQ
->  	help
-> @@ -625,7 +625,7 @@ config MFD_INTEL_LPSS_PCI
->  
->  config MFD_INTEL_MSIC
->  	bool "Intel MSIC"
-> -	depends on INTEL_SCU_IPC
-> +	depends on INTEL_SCU
->  	select MFD_CORE
->  	help
->  	  Select this option to enable access to Intel MSIC (Avatele
+Hans
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+---
+Changes in v12:
+- Use memcmp to check the prefix in efi_check_for_embedded_firmwares()
+- Move the vmalloc (vmemdup) for the firmware copy owned by the firmare
+  subsys from efi_get_embedded_fw() to firmware_fallback_platform(), so
+  that it is is in the same subsys as the vfree which eventually frees it=
+.
+- Use local / private firmware variable for the test instead of the
+  global test_firmware variable and drop the mutex lock + unlock needed
+  for accessing the global test_firmware variable
+
+Changes in v11:
+- Rebase on top of Ardb's efi/next
+- Drop a couple of empty lines which snuck into:
+  "test_firmware: add support for firmware_request_platform"
+
+Changes in v10:
+- Rebase on top of 5.5-rc1
+
+Changes in v9:
+- Add 2 new patches adding selftests
+- At least touchscreen_dmi.c uses the same dmi_table for its own private
+  data and the fw_desc structs, putting the fw_desc struct first in the
+  data driver_data points to so that the dmi_table can be shared with
+  efi_check_for_embedded_firmwares(). But not all entries there have
+  embedded-fw so in some cases the fw_desc is empty (zero-ed out).
+  This can lead to a possible crash because fw_desc->length now is
+  less then 8, so if the segment size is close enough to a multiple of th=
+e
+  page_size, then the memcmp to check the prefix my segfault. Crashing th=
+e
+  machine. v9 checks for and skips these empty fw_desc entries avoiding t=
+his.
+- Add static inline wrapper for firmware_request_platform() to firmware.h=
+,
+  for when CONFIG_FW_LOADER is not set
+
+Changes in v8:
+- Add pr_warn if there are mode then EFI_DEBUGFS_MAX_BLOBS boot service s=
+egments
+- Document how the EFI debugfs boot_service_code? files can be used to ch=
+eck for
+  embedded firmware
+- Properly deal with the case of an EFI segment being smaller then the fw=
+ we
+  are looking for
+- Log a warning when efi_get_embedded_fw get called while we did not (yet=
+)
+  check for embedded firmwares
+- Only build fallback_platform.c if CONFIG_EFI_EMBEDDED_FIRMWARE is defin=
+ed,
+  otherwise make firmware_fallback_platform() a static inline stub
+
+Changes in v7:
+- Split drivers/firmware/efi and drivers/base/firmware_loader changes int=
+o
+  2 patches
+- Use new, standalone, lib/crypto/sha256.c code
+- Address kdoc comments from Randy Dunlap
+- Add new FW_OPT_FALLBACK_PLATFORM flag and firmware_request_platform()
+  _request_firmware() wrapper, as requested by Luis R. Rodriguez
+- Stop using "efi-embedded-firmware" device-property, now that drivers ne=
+ed to
+  use the new firmware_request_platform() to enable fallback to a device =
+fw
+  copy embedded in the platform's main firmware, we no longer need a prop=
+erty
+  on the device to trigger this behavior
+- Use security_kernel_load_data instead of calling
+  security_kernel_read_file with a NULL file pointer argument
+- Move the docs to Documentation/driver-api/firmware/fallback-mechanisms.=
+rst
+- Document the new firmware_request_platform() function in
+  Documentation/driver-api/firmware/request_firmware.rst
+- Add 2 new patches for the silead and chipone-icn8505 touchscreen driver=
+s
+  to use the new firmware_request_platform() method
+- Rebased on top of 5.4-rc1
+
+Changes in v6:
+-Rework code to remove casts from if (prefix =3D=3D mem) comparison
+-Use SHA256 hashes instead of crc32 sums
+-Add new READING_FIRMWARE_EFI_EMBEDDED read_file_id and use it
+-Call security_kernel_read_file(NULL, READING_FIRMWARE_EFI_EMBEDDED)
+ to check if this is allowed before looking at EFI embedded fw
+-Document why we are not using the PI Firmware Volume protocol
+
+Changes in v5:
+-Rename the EFI_BOOT_SERVICES flag to EFI_PRESERVE_BS_REGIONS
+
+Changes in v4:
+-Drop note in docs about EFI_FIRMWARE_VOLUME_PROTOCOL, it is not part of
+ UEFI proper, so the EFI maintainers don't want us referring people to it
+-Use new EFI_BOOT_SERVICES flag
+-Put the new fw_get_efi_embedded_fw() function in its own fallback_efi.c
+ file which only gets built when EFI_EMBEDDED_FIRMWARE is selected
+-Define an empty stub for fw_get_efi_embedded_fw() in fallback.h hwen
+ EFI_EMBEDDED_FIRMWARE is not selected, to avoid the need for #ifdefs
+ in firmware_loader/main.c
+-Properly call security_kernel_post_read_file() on the firmware returned
+ by efi_get_embedded_fw() to make sure that we are allowed to use it
+
+Changes in v2:
+-Rebased on driver-core/driver-core-next
+-Add documentation describing the EFI embedded firmware mechanism to:
+ Documentation/driver-api/firmware/request_firmware.rst
+-Add a new EFI_EMBEDDED_FIRMWARE Kconfig bool and only build the embedded
+ fw support if this is set. This is an invisible option which should be
+ selected by drivers which need this
+-Remove the efi_embedded_fw_desc and dmi_system_id-s for known devices
+ from the efi-embedded-fw code, instead drivers using this are expected t=
+o
+ export a dmi_system_id array, with each entries' driver_data pointing to=
+ a
+ efi_embedded_fw_desc struct and register this with the efi-embedded-fw c=
+ode
+-Use kmemdup to make a copy instead of efi_mem_reserve()-ing the firmware=
+,
+ this avoids us messing with the EFI memmap and avoids the need to make
+ changes to efi_mem_desc_lookup()
+-Make the firmware-loader code only fallback to efi_get_embedded_fw() if =
+the
+ passed in device has the "efi-embedded-firmware" device-property bool se=
+t
+-Skip usermodehelper fallback when "efi-embedded-firmware" device-propert=
+y
+ is set
