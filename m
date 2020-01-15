@@ -1,16 +1,16 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 26/36] mfd: intel_soc_pmic: Add SCU IPC member to
- struct intel_soc_pmic
-Date: Wed, 15 Jan 2020 08:44:10 +0000
-Message-ID: <20200115084410.GG325@dell>
+Subject: Re: [PATCH v3 12/36] platform/x86: intel_scu_ipc: Split out SCU IPC
+ functionality from the SCU driver
+Date: Wed, 15 Jan 2020 08:35:41 +0000
+Message-ID: <20200115083541.GF325@dell>
 References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
- <20200113135623.56286-27-mika.westerberg@linux.intel.com>
+ <20200113135623.56286-13-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200113135623.56286-27-mika.westerberg@linux.intel.com>
+In-Reply-To: <20200113135623.56286-13-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -18,75 +18,60 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 On Mon, 13 Jan 2020, Mika Westerberg wrote:
 
-> Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
-> be using this field going forward to access the SCU IPC instance.
+> The SCU IPC functionality is usable outside of Intel MID devices. For
+> example modern Intel CPUs include the same thing but now it is called
+> PMC (Power Management Controller) instead of SCU. To make the IPC
+> available for those split the driver into library part (intel_scu_ipc.c)
+> and the SCU PCI driver part (intel_scu_pcidrv.c) which then calls the
+> former before it goes and creates rest of the SCU devices.
 > 
-> While there add kernel-doc for the intel_soc_pmic structure.
+> We also split the Kconfig symbols so that INTEL_SCU_IPC enables the SCU
+> IPC library and INTEL_SCU_PCI the SCU driver and convert the users
+> accordingly. While there remove default y from the INTEL_SCU_PCI symbol
+> as it is already selected by X86_INTEL_MID.
 > 
 > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  include/linux/mfd/intel_soc_pmic.h | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
-> index bfecd6bd4990..bda22d750be6 100644
-> --- a/include/linux/mfd/intel_soc_pmic.h
-> +++ b/include/linux/mfd/intel_soc_pmic.h
-> @@ -13,6 +13,20 @@
+>  arch/x86/Kconfig                        |  2 +-
+>  arch/x86/include/asm/intel_scu_ipc.h    | 14 +++++
+
+>  drivers/mfd/Kconfig                     |  4 +-
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+>  drivers/platform/x86/Kconfig            | 26 ++++++---
+>  drivers/platform/x86/Makefile           |  1 +
+>  drivers/platform/x86/intel_scu_ipc.c    | 75 +++++++++----------------
+>  drivers/platform/x86/intel_scu_pcidrv.c | 61 ++++++++++++++++++++
+>  7 files changed, 122 insertions(+), 61 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel_scu_pcidrv.c
+
+[...]
+
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 420900852166..59515142438e 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -593,7 +593,7 @@ config INTEL_SOC_PMIC_MRFLD
+>  	tristate "Support for Intel Merrifield Basin Cove PMIC"
+>  	depends on GPIOLIB
+>  	depends on ACPI
+> -	depends on INTEL_SCU_IPC
+> +	depends on INTEL_SCU
+>  	select MFD_CORE
+>  	select REGMAP_IRQ
+>  	help
+> @@ -625,7 +625,7 @@ config MFD_INTEL_LPSS_PCI
 >  
->  #include <linux/regmap.h>
->  
-> +/**
-> + * struct intel_soc_pmic - Intel SoC PMIC data
-> + * @irq: Interrupt number
-
-Whose IRQ is this?  I guess the parent's/PMIC's?
-
-> + * @regmap: Pointer to the regmap structure
-
-Whose Regmap is this?  I guess the parent's/PMIC's?
-
-> + * @irq_chip_data: IRQ chip data for the PMIC itself
-> + * @irq_chip_data_pwrbtn: Chained IRQ chip data for the power button
-> + * @irq_chip_data_tmu: Chained IRQ chip data for the TMU
-> + * @irq_chip_data_bcu: Chained IRQ chip data for the BCU
-> + * @irq_chip_data_adc: Chained IRQ chip data for the ADC
-> + * @irq_chip_data_chgr: Chained IRQ chip data for the CHGR
-> + * @irq_chip_data_crit: Chained IRQ chip data for the CRIT
-
-Documentation is an ideal place to expand out these abbreviations.
-
-> + * @dev: Pointer to the PMIC device
-> + * @scu: SCU IPC pointer used for IPC operations
-
-By this description I would have expected to find a struct of ops
-(operations [call-backs]), but instead I found this:
-
- struct intel_scu_ipc_dev {
-         struct device *dev;
-         void __iomem *ipc_base;
-         void __iomem *i2c_base;
-         struct completion cmd_complete;
-         u8 irq_mode;
- };
-
-Probably better to describe it as a "pointer to SCU (whatever that
-means) IPC (slightly more common, but still better to expand I think)
-device data structure".
-
-> + */
->  struct intel_soc_pmic {
->  	int irq;
->  	struct regmap *regmap;
-> @@ -24,6 +38,7 @@ struct intel_soc_pmic {
->  	struct regmap_irq_chip_data *irq_chip_data_chgr;
->  	struct regmap_irq_chip_data *irq_chip_data_crit;
->  	struct device *dev;
-> +	struct intel_scu_ipc_dev *scu;
->  };
->  
->  int intel_soc_pmic_exec_mipi_pmic_seq_element(u16 i2c_address, u32 reg_address,
+>  config MFD_INTEL_MSIC
+>  	bool "Intel MSIC"
+> -	depends on INTEL_SCU_IPC
+> +	depends on INTEL_SCU
+>  	select MFD_CORE
+>  	help
+>  	  Select this option to enable access to Intel MSIC (Avatele
 
 -- 
 Lee Jones [李琼斯]
