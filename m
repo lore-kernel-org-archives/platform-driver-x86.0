@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v12 05/10] test_firmware: add support for firmware_request_platform
-Date: Wed, 15 Jan 2020 17:35:49 +0100
-Message-ID: <20200115163554.101315-6-hdegoede@redhat.com>
+Subject: [PATCH v12 09/10] platform/x86: touchscreen_dmi: Add EFI embedded firmware info support
+Date: Wed, 15 Jan 2020 17:35:53 +0100
+Message-ID: <20200115163554.101315-10-hdegoede@redhat.com>
 References: <20200115163554.101315-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -9,109 +9,178 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200115163554.101315-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add support for testing firmware_request_platform through a new
-trigger_request_platform trigger.
+Sofar we have been unable to get permission from the vendors to put the
+firmware for touchscreens listed in touchscreen_dmi in linux-firmware.
 
+Some of the tablets with such a touchscreen have a touchscreen driver, an=
+d
+thus a copy of the firmware, as part of their EFI code.
+
+This commit adds the necessary info for the new EFI embedded-firmware cod=
+e
+to extract these firmwares, making the touchscreen work OOTB without the
+user needing to manually add the firmware.
+
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v12:
-- Use local / private firmware variable for the test instead of the
-  global test_firmware variable and drop the mutex lock + unlock needed
-  for accessing the global test_firmware variable
+Changes in v7:
+- Remove adding of PROPERTY_ENTRY_BOOL("efi-embedded-firmware"), to touch=
+screen
+  props, as this is no longer necessary
 
-Changes in v11:
-- Drop a few empty lines which were accidentally introduced
-
-Changes in v10:
-- New patch in v10 of this patch-set
+Changes in v6:
+- Switch from crc sums to SHA256 hashes for the firmware hashes
 ---
- lib/test_firmware.c | 55 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+ drivers/firmware/efi/embedded-firmware.c |  3 ++
+ drivers/platform/x86/Kconfig             |  1 +
+ drivers/platform/x86/touchscreen_dmi.c   | 41 +++++++++++++++++++++++-
+ include/linux/efi_embedded_fw.h          |  2 ++
+ 4 files changed, 46 insertions(+), 1 deletion(-)
 
-diff --git a/lib/test_firmware.c b/lib/test_firmware.c
-index 251213c872b5..0c7fbcf07ac5 100644
---- a/lib/test_firmware.c
-+++ b/lib/test_firmware.c
-@@ -24,6 +24,7 @@
- #include <linux/delay.h>
- #include <linux/kthread.h>
- #include <linux/vmalloc.h>
+diff --git a/drivers/firmware/efi/embedded-firmware.c b/drivers/firmware/=
+efi/embedded-firmware.c
+index 1bc9cdae2eed..a1b199de9006 100644
+--- a/drivers/firmware/efi/embedded-firmware.c
++++ b/drivers/firmware/efi/embedded-firmware.c
+@@ -21,6 +21,9 @@ EXPORT_SYMBOL_GPL(efi_embedded_fw_list);
+ static bool checked_for_fw;
+=20
+ static const struct dmi_system_id * const embedded_fw_table[] =3D {
++#ifdef CONFIG_TOUCHSCREEN_DMI
++	touchscreen_dmi_table,
++#endif
+ 	NULL
+ };
+=20
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 27d5b40fb717..a65f4ffb289a 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1253,6 +1253,7 @@ config INTEL_TURBO_MAX_3
+ config TOUCHSCREEN_DMI
+ 	bool "DMI based touchscreen configuration info"
+ 	depends on ACPI && DMI && I2C=3Dy && TOUCHSCREEN_SILEAD
++	select EFI_EMBEDDED_FIRMWARE if EFI
+ 	---help---
+ 	  Certain ACPI based tablets with e.g. Silead or Chipone touchscreens
+ 	  do not have enough data in ACPI tables for the touchscreen driver to
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x8=
+6/touchscreen_dmi.c
+index 72205771d03d..4449e4c0b26b 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -11,12 +11,15 @@
+ #include <linux/acpi.h>
+ #include <linux/device.h>
+ #include <linux/dmi.h>
 +#include <linux/efi_embedded_fw.h>
+ #include <linux/i2c.h>
+ #include <linux/notifier.h>
+ #include <linux/property.h>
+ #include <linux/string.h>
 =20
- #define TEST_FIRMWARE_NAME	"test-firmware.bin"
- #define TEST_FIRMWARE_NUM_REQS	4
-@@ -507,6 +508,57 @@ static ssize_t trigger_request_store(struct device *=
-dev,
- }
- static DEVICE_ATTR_WO(trigger_request);
+ struct ts_dmi_data {
++	/* The EFI embedded-fw code expects this to be the first member! */
++	struct efi_embedded_fw_desc embedded_fw;
+ 	const char *acpi_name;
+ 	const struct property_entry *properties;
+ };
+@@ -64,6 +67,15 @@ static const struct property_entry chuwi_hi8_pro_props=
+[] =3D {
+ };
 =20
-+#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
-+static ssize_t trigger_request_platform_store(struct device *dev,
-+					      struct device_attribute *attr,
-+					      const char *buf, size_t count)
-+{
-+	static const u8 test_data[] =3D {
-+		0x55, 0xaa, 0x55, 0xaa, 0x01, 0x02, 0x03, 0x04,
-+		0x55, 0xaa, 0x55, 0xaa, 0x05, 0x06, 0x07, 0x08,
-+		0x55, 0xaa, 0x55, 0xaa, 0x10, 0x20, 0x30, 0x40,
-+		0x55, 0xaa, 0x55, 0xaa, 0x50, 0x60, 0x70, 0x80
-+	};
-+	struct efi_embedded_fw efi_embedded_fw;
-+	const struct firmware *firmware =3D NULL;
-+	char *name;
-+	int rc;
-+
-+	name =3D kstrndup(buf, count, GFP_KERNEL);
-+	if (!name)
-+		return -ENOSPC;
-+
-+	pr_info("inserting test platform fw '%s'\n", name);
-+	efi_embedded_fw.name =3D name;
-+	efi_embedded_fw.data =3D (void *)test_data;
-+	efi_embedded_fw.length =3D sizeof(test_data);
-+	list_add(&efi_embedded_fw.list, &efi_embedded_fw_list);
-+
-+	pr_info("loading '%s'\n", name);
-+	rc =3D firmware_request_platform(&firmware, name, dev);
-+	if (rc) {
-+		pr_info("load of '%s' failed: %d\n", name, rc);
-+		goto out;
-+	}
-+	if (firmware->size !=3D sizeof(test_data) ||
-+	    memcmp(firmware->data, test_data, sizeof(test_data)) !=3D 0) {
-+		pr_info("firmware contents mismatch for '%s'\n", name);
-+		rc =3D -EINVAL;
-+		goto out;
-+	}
-+	pr_info("loaded: %zu\n", firmware->size);
-+	rc =3D count;
-+
-+out:
-+	release_firmware(firmware);
-+	list_del(&efi_embedded_fw.list);
-+	kfree(name);
-+
-+	return rc;
-+}
-+static DEVICE_ATTR_WO(trigger_request_platform);
-+#endif
-+
- static DECLARE_COMPLETION(async_fw_done);
+ static const struct ts_dmi_data chuwi_hi8_pro_data =3D {
++	.embedded_fw =3D {
++		.name	=3D "silead/gsl3680-chuwi-hi8-pro.fw",
++		.prefix =3D { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
++		.length	=3D 39864,
++		.sha256	=3D { 0xc0, 0x88, 0xc5, 0xef, 0xd1, 0x70, 0x77, 0x59,
++			    0x4e, 0xe9, 0xc4, 0xd8, 0x2e, 0xcd, 0xbf, 0x95,
++			    0x32, 0xd9, 0x03, 0x28, 0x0d, 0x48, 0x9f, 0x92,
++			    0x35, 0x37, 0xf6, 0x8b, 0x2a, 0xe4, 0x73, 0xff },
++	},
+ 	.acpi_name	=3D "MSSL1680:00",
+ 	.properties	=3D chuwi_hi8_pro_props,
+ };
+@@ -181,6 +193,15 @@ static const struct property_entry cube_iwork8_air_p=
+rops[] =3D {
+ };
 =20
- static void trigger_async_request_cb(const struct firmware *fw, void *co=
-ntext)
-@@ -903,6 +955,9 @@ static struct attribute *test_dev_attrs[] =3D {
- 	TEST_FW_DEV_ATTR(trigger_request),
- 	TEST_FW_DEV_ATTR(trigger_async_request),
- 	TEST_FW_DEV_ATTR(trigger_custom_fallback),
-+#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
-+	TEST_FW_DEV_ATTR(trigger_request_platform),
-+#endif
+ static const struct ts_dmi_data cube_iwork8_air_data =3D {
++	.embedded_fw =3D {
++		.name	=3D "silead/gsl3670-cube-iwork8-air.fw",
++		.prefix =3D { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
++		.length	=3D 38808,
++		.sha256	=3D { 0xff, 0x62, 0x2d, 0xd1, 0x8a, 0x78, 0x04, 0x7b,
++			    0x33, 0x06, 0xb0, 0x4f, 0x7f, 0x02, 0x08, 0x9c,
++			    0x96, 0xd4, 0x9f, 0x04, 0xe1, 0x47, 0x25, 0x25,
++			    0x60, 0x77, 0x41, 0x33, 0xeb, 0x12, 0x82, 0xfc },
++	},
+ 	.acpi_name	=3D "MSSL1680:00",
+ 	.properties	=3D cube_iwork8_air_props,
+ };
+@@ -390,6 +411,15 @@ static const struct property_entry onda_v80_plus_v3_=
+props[] =3D {
+ };
 =20
- 	/* These use the config and can use the test_result */
- 	TEST_FW_DEV_ATTR(trigger_batched_requests),
+ static const struct ts_dmi_data onda_v80_plus_v3_data =3D {
++	.embedded_fw =3D {
++		.name	=3D "silead/gsl3676-onda-v80-plus-v3.fw",
++		.prefix =3D { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
++		.length	=3D 37224,
++		.sha256	=3D { 0x8f, 0xbd, 0x8f, 0x0c, 0x6b, 0xba, 0x5b, 0xf5,
++			    0xa3, 0xc7, 0xa3, 0xc0, 0x4f, 0xcd, 0xdf, 0x32,
++			    0xcc, 0xe4, 0x70, 0xd6, 0x46, 0x9c, 0xd7, 0xa7,
++			    0x4b, 0x82, 0x3f, 0xab, 0xc7, 0x90, 0xea, 0x23 },
++	},
+ 	.acpi_name	=3D "MSSL1680:00",
+ 	.properties	=3D onda_v80_plus_v3_props,
+ };
+@@ -456,6 +486,15 @@ static const struct property_entry pipo_w2s_props[] =
+=3D {
+ };
+=20
+ static const struct ts_dmi_data pipo_w2s_data =3D {
++	.embedded_fw =3D {
++		.name	=3D "silead/gsl1680-pipo-w2s.fw",
++		.prefix =3D { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
++		.length	=3D 39072,
++		.sha256	=3D { 0xd0, 0x58, 0xc4, 0x7d, 0x55, 0x2d, 0x62, 0x18,
++			    0xd1, 0x6a, 0x71, 0x73, 0x0b, 0x3f, 0xbe, 0x60,
++			    0xbb, 0x45, 0x8c, 0x52, 0x27, 0xb7, 0x18, 0xf4,
++			    0x31, 0x00, 0x6a, 0x49, 0x76, 0xd8, 0x7c, 0xd3 },
++	},
+ 	.acpi_name	=3D "MSSL1680:00",
+ 	.properties	=3D pipo_w2s_props,
+ };
+@@ -642,7 +681,7 @@ static const struct ts_dmi_data trekstor_surftab_wint=
+ron70_data =3D {
+ };
+=20
+ /* NOTE: Please keep this table sorted alphabetically */
+-static const struct dmi_system_id touchscreen_dmi_table[] =3D {
++const struct dmi_system_id touchscreen_dmi_table[] =3D {
+ 	{
+ 		/* Chuwi Hi8 */
+ 		.driver_data =3D (void *)&chuwi_hi8_data,
+diff --git a/include/linux/efi_embedded_fw.h b/include/linux/efi_embedded=
+_fw.h
+index 3d066c6370c6..57eac5241303 100644
+--- a/include/linux/efi_embedded_fw.h
++++ b/include/linux/efi_embedded_fw.h
+@@ -36,6 +36,8 @@ struct efi_embedded_fw_desc {
+ 	u8 sha256[32];
+ };
+=20
++extern const struct dmi_system_id touchscreen_dmi_table[];
++
+ int efi_get_embedded_fw(const char *name, const u8 **dat, size_t *sz);
+=20
+ #endif
 --=20
 2.24.1
