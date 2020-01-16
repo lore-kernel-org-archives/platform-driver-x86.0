@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 088/174] platform/x86: alienware-wmi: printing the wrong error code
-Date: Thu, 16 Jan 2020 12:41:25 -0500
-Message-ID: <20200116174251.24326-88-sashal@kernel.org>
-References: <20200116174251.24326-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 136/251] platform/x86: alienware-wmi: printing the wrong error code
+Date: Thu, 16 Jan 2020 12:34:45 -0500
+Message-ID: <20200116173641.22137-96-sashal@kernel.org>
+References: <20200116173641.22137-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
+In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Dan Carpenter <dan.carpenter@oracle.com>, Mario Limonciello <mario.limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
@@ -30,10 +30,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index 3df47c1b04ec..f5585740a765 100644
+index fe419935041c..bee2115ecf10 100644
 --- a/drivers/platform/x86/alienware-wmi.c
 +++ b/drivers/platform/x86/alienware-wmi.c
-@@ -511,7 +511,7 @@ static ssize_t show_hdmi_source(struct device *dev,
+@@ -570,7 +570,7 @@ static ssize_t show_hdmi_source(struct device *dev,
  			return scnprintf(buf, PAGE_SIZE,
  					 "input [gpu] unknown\n");
  	}
