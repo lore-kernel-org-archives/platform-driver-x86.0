@@ -1,46 +1,50 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 195/371] platform/x86: alienware-wmi: printing the wrong error code
-Date: Thu, 16 Jan 2020 12:21:07 -0500
-Message-ID: <20200116172403.18149-138-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 120/371] platform/x86: wmi: fix potential null pointer dereference
+Date: Thu, 16 Jan 2020 12:19:52 -0500
+Message-ID: <20200116172403.18149-63-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Dan Carpenter <dan.carpenter@oracle.com>, Mario Limonciello <mario.limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Mattias Jacobsson <2pi@mok.nu>, Darren Hart <dvhart@infradead.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Mattias Jacobsson <2pi@mok.nu>
 
-[ Upstream commit 6d1f8b3d75419a8659ac916a1e9543bb3513a882 ]
+[ Upstream commit c355ec651a8941864549f2586f969d0eb7bf499a ]
 
-The "out_data" variable is uninitialized at the point.  Originally, this
-used to print "status" instead and that seems like the correct thing to
-print.
+In the function wmi_dev_match() the variable id is dereferenced without
+first performing a NULL check. The variable can for example be NULL if
+a WMI driver is registered without specifying the id_table field in
+struct wmi_driver.
 
-Fixes: bc2ef884320b ("alienware-wmi: For WMAX HDMI method, introduce a way to query HDMI cable status")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Add a NULL check and return that the driver can't handle the device if
+the variable is NULL.
+
+Fixes: 844af950da94 ("platform/x86: wmi: Turn WMI into a bus driver")
+Signed-off-by: Mattias Jacobsson <2pi@mok.nu>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/alienware-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/wmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/alienware-wmi.c
-index cbd84e2e3bd4..2c82188f8486 100644
---- a/drivers/platform/x86/alienware-wmi.c
-+++ b/drivers/platform/x86/alienware-wmi.c
-@@ -570,7 +570,7 @@ static ssize_t show_hdmi_source(struct device *dev,
- 			return scnprintf(buf, PAGE_SIZE,
- 					 "input [gpu] unknown\n");
- 	}
--	pr_err("alienware-wmi: unknown HDMI source status: %d\n", out_data);
-+	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
- 	return scnprintf(buf, PAGE_SIZE, "input gpu [unknown]\n");
- }
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 7f8fa42a1084..a56e997816b2 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -748,6 +748,9 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 	const struct wmi_device_id *id = wmi_driver->id_table;
+ 
++	if (id == NULL)
++		return 0;
++
+ 	while (id->guid_string) {
+ 		uuid_le driver_guid;
  
 -- 
 2.20.1
