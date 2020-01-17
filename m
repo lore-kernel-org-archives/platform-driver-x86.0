@@ -1,302 +1,242 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3 35/36] platform/x86: intel_pmc_ipc: Convert to MFD
-Date: Fri, 17 Jan 2020 16:27:50 +0200
-Message-ID: <20200117142750.GP2838@lahna.fi.intel.com>
-References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
- <20200113135623.56286-36-mika.westerberg@linux.intel.com>
- <20200116132108.GH325@dell>
- <20200116143730.GE2838@lahna.fi.intel.com>
- <20200117113202.GH15507@dell>
+From: Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v11 02/10] efi: Add embedded peripheral firmware support
+Date: Fri, 17 Jan 2020 12:06:03 -0800
+Message-ID: <CALCETrWtf3iEdZS8zu=k60cnZtokbxRaH5dfkWoM7JokkhAL2w@mail.gmail.com>
+References: <20200111145703.533809-1-hdegoede@redhat.com> <20200111145703.533809-3-hdegoede@redhat.com>
+ <CALCETrUz4gdVOH=5X+MkB56ST=DNcHKicRST1j1ff0kU1yXWzw@mail.gmail.com> <9b5b8304-74bc-4e5c-5030-98bd6e12eaf0@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200117113202.GH15507@dell>
+In-Reply-To: <9b5b8304-74bc-4e5c-5030-98bd6e12eaf0@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-efi <linux-efi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.o>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jan 17, 2020 at 11:32:02AM +0000, Lee Jones wrote:
-> On Thu, 16 Jan 2020, Mika Westerberg wrote:
-> > On Thu, Jan 16, 2020 at 01:21:08PM +0000, Lee Jones wrote:
-> > > On Mon, 13 Jan 2020, Mika Westerberg wrote:
-> > > 
-> > > > This driver only creates a bunch of platform devices sharing resources
-> > > > belonging to the PMC device. This is pretty much what MFD subsystem is
-> > > > for so move the driver there, renaming it to intel_pmc_bxt.c which
-> > > > should be more clear what it is.
-> > > > 
-> > > > MFD subsystem provides nice helper APIs for subdevice creation so
-> > > > convert the driver to use those. Unfortunately the ACPI device includes
-> > > > separate resources for most of the subdevices so we cannot simply call
-> > > > mfd_add_devices() to create all of them but instead we need to call it
-> > > > separately for each device.
-> > > > 
-> > > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > ---
-> > > >  drivers/mfd/Kconfig                           |  16 +-
-> > > >  drivers/mfd/Makefile                          |   1 +
-> > > >  drivers/mfd/intel_pmc_bxt.c                   | 543 +++++++++++++++
-> > > >  drivers/platform/x86/Kconfig                  |  16 +-
-> > > >  drivers/platform/x86/Makefile                 |   1 -
-> > > >  drivers/platform/x86/intel_pmc_ipc.c          | 650 ------------------
-> > > >  .../platform/x86/intel_telemetry_debugfs.c    |   2 +-
-> > > >  drivers/usb/typec/tcpm/Kconfig                |   2 +-
-> > > >  .../linux/mfd/intel_pmc_bxt.h                 |  11 +-
-> > > >  9 files changed, 573 insertions(+), 669 deletions(-)
-> > > >  create mode 100644 drivers/mfd/intel_pmc_bxt.c
-> > > >  delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
-> > > >  rename arch/x86/include/asm/intel_pmc_ipc.h => include/linux/mfd/intel_pmc_bxt.h (83%)
-> 
-> [...]
-> 
-> > > > +#include <linux/acpi.h>
-> > > > +#include <linux/delay.h>
-> > > > +#include <linux/errno.h>
-> > > > +#include <linux/interrupt.h>
-> > > > +#include <linux/io-64-nonatomic-lo-hi.h>
-> > > > +#include <linux/mfd/core.h>
-> > > > +#include <linux/mfd/intel_pmc_bxt.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +
-> > > > +#include <asm/intel_scu_ipc.h>
-> > > > +
-> > > > +#include <linux/platform_data/itco_wdt.h>
-> > > 
-> > > Why are these 2 header files separated form the rest?
-> > 
-> > This was like that in the original driver. I did not want to touch
-> > non-functional parts too much during the conversion.
-> 
-> Although not a deal breaker in this instance, we need to think of this
-> as a new driver since the expectations between Platform and MFD may
-> well be different.
+> On Jan 14, 2020, at 4:25 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> =EF=BB=BFHi Andy,
+>
 
-OK
+> Even if we get more use of this the chances of 1 device model using
+> more then 1 embedded fw are small. Where as if we first map the
+> EFI_BOOT_SERVICES_CODE segment before doing the DMI match then we
+> do this for all EFI_BOOT_SERVICES_CODE segments on all hardware.
+> The current implementation is very much optimized to do as little
+> work as possible when there is no DMI match, which will be true
+> on almost all devices out there.
 
-> > > > +/* Residency with clock rate at 19.2MHz to usecs */
-> > > > +#define S0IX_RESIDENCY_IN_USECS(d, s)		\
-> > > > +({						\
-> > > > +	u64 result = 10ull * ((d) + (s));	\
-> > > > +	do_div(result, 192);			\
-> > > > +	result;					\
-> > > 
-> > > OOI, what does this line do?
-> > 
-> > result becomes value of the whole expression, see:
-> > 
-> >   https://gcc.gnu.org/onlinedocs/gcc-9.2.0/gcc/Statement-Exprs.html#Statement-Exprs
-> 
-> Thank you.
-> 
-> [...]
-> 
-> > > > +static struct intel_pmc_dev {
-> > > > +	struct device *dev;
-> > > > +
-> > > > +	/* iTCO */
-> > > 
-> > > Not sure these are required, the variables are clear enough.
-> > 
-> > OK
-> > 
-> > > > +	struct resource tco_res[2];
-> > > > +
-> > > > +	/* gcr */
-> > > > +	void __iomem *gcr_mem_base;
-> > > > +	spinlock_t gcr_lock;
-> > > > +
-> > > > +	/* punit */
-> > > > +	struct resource punit_res[6];
-> > > > +	unsigned int punit_res_count;
-> > > > +
-> > > > +	/* Telemetry */
-> > > > +	struct resource *telem_base;
-> > > > +} pmcdev;
-> > > 
-> > > Why not create this dynamically?
-> > 
-> > This is also from the original driver probably due to reasons that there
-> > can be only a single PMC in a system.
-> > 
-> > I don't think anything prevents this to be created dynamically though.
-> 
-> Great.  That would help bring the driver into line with other drivers
-> currently residing in MFD.
-> 
-> [...]
-> 
-> > > Looks like Regmap could save you the trouble here.
-> > 
-> > Agreed.
-> 
-> Great.
-> 
-> [...]
-> 
-> > > > +static int update_no_reboot_bit(void *priv, bool set)
-> > > > +{
-> > > > +	u32 value = set ? PMC_CFG_NO_REBOOT_EN : PMC_CFG_NO_REBOOT_DIS;
-> > > > +
-> > > > +	return intel_pmc_gcr_update(PMC_GCR_PMC_CFG_REG,
-> > > > +				    PMC_CFG_NO_REBOOT_MASK, value);
-> > > > +}
-> > > 
-> > > Only used by the Watchdog?  Maybe move in there?
-> > 
-> > Yes, this is only used by watchdog. 
-> > 
-> > We pass this function as part of itco_wdt_platform_data so that it does
-> > not need to know the details about how to access the PMC.
-> 
-> Maybe Regmap will solve this too.
-> 
-> [...]
-> 
-> > > > +static DEVICE_ATTR(simplecmd, 0200, NULL, intel_pmc_simple_cmd_store);
-> > > 
-> > > I assume you've drafted some documentation for this?
-> > 
-> > I don't think there is documentation about this yet. This is from the
-> > original driver. I can add it though.
-> > 
-> > > If not, you need to.
-> > 
-> > Yup.
-> 
-> SYSFS entries require documenting in Documentation.
+Fine with me.
 
-Yup, I'm aware of that :)
 
-> [...]
-> 
-> > > Is that a good idea?  No security implications for doing so?
-> > 
-> > No don't think it is a good idea to be honest. I would like to get rid
-> > of both of these but the problem is that these are part of userspace ABI
-> > (that was exposed by to original driver) so changing it may break
-> > something.
-> 
-> Hmm... that is an issue.  However, since it's not changing any
-> existing behaviour, I won't make it an issue for *this* set of
-> changes.  Please justify it in the commit log though please.
+> If we hit firmware which is not 8 byte aligned, then yes that would be
+> a good idea, but for now I feel that that would just cause a slowdown
+> in the scanning without any benefits.
+>
 
-I will.
+It would shorten the code and remove a comment :). Also, a good memmem
+implementation should be very fast, potentially faster than your loop.
+I suspect the latter is only true in user code where SSE would get
+used, but still.
 
-> [...]
-> 
-> > > > +	ret = pmc_create_telemetry_device();
-> > > > +	if (ret)
-> > > > +		dev_warn(pmcdev.dev, "Failed to add telemetry platform device\n");
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > 
-> > > Once you have split out the 'struct mfd_cells' from the functions
-> > > above, you can move the devm_mfd_add_devices() calls into probe() and
-> > > do away with all of these functions which will greatly simplify the
-> > > driver as a whole.
-> > 
-> > OK, but there is one catch. Some of these addresses need to be filled
-> > dynamically when we parse the device resources which means that we need
-> > to take copy of that static structure to avoid modifying it. For example
-> > if the driver is unbound and then bind back from sysfs the old values
-> > are still there).
-> 
-> Not sure I understand.  If the driver is unbound then rebound, the
-> device resources will be re-parsed, no?
+it would also be unfortunate if some firmware update switches to
+4-byte alignment and touchscreens stop working with no explanation.
 
-Yes they are but I mean that when we fill those resources we change the
-static struct mfd_cell contents. Now when the driver is unbound from
-sysfs that stuff is left in the structure (as the module is not
-unloaded). Probably not an issue anyway since next bind it will be
-overwritten (or alternatively I'll just take a copy of that stuff).
 
-> [...]
-> 
-> > > > +		return -ENXIO;
-> > > 
-> > > Is "No such device or address" the correct response for this?
-> > 
-> > That was in the original code. Maybe -ENOMEM is better in this case?
-> 
-> No, that's not correct either, since we haven't run out of memory.
-> 
-> -EINVAL and -ENODEV are common.
-
-OK
-
-> > > > +	tco_res[0].flags = IORESOURCE_IO;
-> > > > +	tco_res[0].start = res->start + TCO_BASE_OFFSET;
-> > > > +	tco_res[0].end = tco_res[0].start + TCO_REGS_SIZE - 1;
-> > > > +	tco_res[1].flags = IORESOURCE_IO;
-> > > > +	tco_res[1].start = res->start + SMI_EN_OFFSET;
-> > > > +	tco_res[1].end = tco_res[1].start + SMI_EN_SIZE - 1;
-> > > > +
-> > > > +	dev_dbg(&pdev->dev, "IO: %pR\n", res);
-> > > 
-> > > Do all of these dev_dgb() prints really still serve a purpose?
-> > 
-> > No, just for seeing what the resources are. I can remove them.
-> 
-> Thanks.
-> 
-> [...]
-> 
-> > > > +	pmcdev.gcr_mem_base = addr + PLAT_RESOURCE_GCR_OFFSET;
-> > > > +	dev_dbg(&pdev->dev, "IPC: %pR\n", res);
-> > > > +
-> > > > +	res = platform_get_resource(pdev, IORESOURCE_MEM,
-> > > > +				    PLAT_RESOURCE_TELEM_SSRAM_INDEX);
-> > > > +	if (!res) {
-> > > > +		dev_err(&pdev->dev, "Failed to get telemetry SSRAM resource\n");
-> > > 
-> > > Is this actually an error?  If so, it should return an error code.
-> > 
-> > I don't think this is an error. I can lower this to dev_dbg().
-> 
-> Maybe consider dev_warn() and change the working to make it not seem
-> like a failure.
-
-OK
-
-> > > > +	} else {
-> > > > +		dev_dbg(&pdev->dev, "Telemetry SSRAM: %pR\n", res);
-> > > > +		pmcdev.telem_base = res;
-> > > > +	}
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +/**
-> > > > + * intel_pmc_s0ix_counter_read() - Read S0ix residency.
-> > > 
-> > > What is residency?
-> > 
-> > Here it means amount of time the system has been in S0ix (low power mode
-> > in intel CPUs).
-> 
-> Could you clarify that in the comments please?
-
-Sure.
-
-> [...]
-> 
-> > > > +	scu = intel_scu_ipc_probe(&pdev->dev, &pdata);
-> > > 
-> > > This is a parent or child device?
-> > 
-> > The SCU IPC is a library so here it is just the device that has the SCU
-> > IPC registers the library can use.
-> 
-> "probing" a library doesn't sound right.
-> 
-> Looking at the code, I think this should be a device.
-
-Well, by "library" I mean that the SCU IPC itself does not bind to
-anything but instead it gets called by different drivers such as this
-one passing the device pointer that is the SCU IPC device. Here for
-example it is the platfrom device created from an ACPI description.
+>>> +
+>>> +               sha256_init(&sctx);
+>>> +               sha256_update(&sctx, map + i, desc->length);
+>>> +               sha256_final(&sctx, sha256);
+>>> +               if (memcmp(sha256, desc->sha256, 32) =3D=3D 0)
+>>> +                       break;
+>>> +       }
+>>> +       if ((i + desc->length) > size) {
+>>> +               memunmap(map);
+>>> +               return -ENOENT;
+>>> +       }
+>>> +
+>>> +       pr_info("Found EFI embedded fw '%s'\n", desc->name);
+>>> +
+>> It might be nice to also log which EFI section it was in?
+>
+> The EFI sections do not have names, so all I could is log
+> the section number which does not really feel useful?
+>
+>>> +       fw =3D kmalloc(sizeof(*fw), GFP_KERNEL);
+>>> +       if (!fw) {
+>>> +               memunmap(map);
+>>> +               return -ENOMEM;
+>>> +       }
+>>> +
+>>> +       fw->data =3D kmemdup(map + i, desc->length, GFP_KERNEL);
+>>> +       memunmap(map);
+>>> +       if (!fw->data) {
+>>> +               kfree(fw);
+>>> +               return -ENOMEM;
+>>> +       }
+>>> +
+>>> +       fw->name =3D desc->name;
+>>> +       fw->length =3D desc->length;
+>>> +       list_add(&fw->list, &efi_embedded_fw_list);
+>>> +
+>> If you actually copy the firmware name instead of just a pointer to
+>> it, then you could potentially free the list of EFI firmwares.
+>
+> If we move to having a separate dmi_system_id table for this then
+> that would be true. ATM the dmi_system_id from
+> drivers/platform/x86/touchscreen_dmi.c
+> is not freed as it is referenced from a bus-notifier.
+>
+>> Why are you copying the firmware into linear (kmemdup) memory here
+>
+> The kmemdup is because the EFI_BOOT_SERVICES_CODE section is
+> free-ed almost immediately after we run.
+>
+>> just to copy it to vmalloc space down below...
+>
+> The vmalloc is because the efi_get_embedded_fw() function is
+> a helper for later implementing firmware_Request_platform
+> which returns a struct firmware *fw and release_firmware()
+> uses vfree() to free the firmware contents.
+>
+> I guess we could have efi_get_embedded_fw() return an const u8 *
+> and have the firmware code do the vmalloc + memcpy but it boils
+> down to the same thing.
+>
+>
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +void __init efi_check_for_embedded_firmwares(void)
+>>> +{
+>>> +       const struct efi_embedded_fw_desc *fw_desc;
+>>> +       const struct dmi_system_id *dmi_id;
+>>> +       efi_memory_desc_t *md;
+>>> +       int i, r;
+>>> +
+>>> +       for (i =3D 0; embedded_fw_table[i]; i++) {
+>>> +               dmi_id =3D dmi_first_match(embedded_fw_table[i]);
+>>> +               if (!dmi_id)
+>>> +                       continue;
+>>> +
+>>> +               fw_desc =3D dmi_id->driver_data;
+>>> +
+>>> +               /*
+>>> +                * In some drivers the struct driver_data contains may =
+contain
+>>> +                * other driver specific data after the fw_desc struct;=
+ and
+>>> +                * the fw_desc struct itself may be empty, skip these.
+>>> +                */
+>>> +               if (!fw_desc->name)
+>>> +                       continue;
+>>> +
+>>> +               for_each_efi_memory_desc(md) {
+>>> +                       if (md->type !=3D EFI_BOOT_SERVICES_CODE)
+>>> +                               continue;
+>>> +
+>>> +                       r =3D efi_check_md_for_embedded_firmware(md, fw=
+_desc);
+>>> +                       if (r =3D=3D 0)
+>>> +                               break;
+>>> +               }
+>>> +       }
+>>> +
+>>> +       checked_for_fw =3D true;
+>>> +}
+>> Have you measured how long this takes on a typical system per matching D=
+MI id?
+>
+> I originally wrote this approx. 18 months ago, it has been on hold for a =
+while
+> since it needed a sha256 method which would work before subsys_initcall-s
+> run so I couldn't use the standard crypto_alloc_shash() stuff. In the end
+> I ended up merging the duplicate purgatory and crypto/sha256_generic.c
+> generic C SHA256 implementation into a set of new directly callable lib
+> functions in lib/crypto/sha256.c, just so that I could move forward with
+> this...
+>
+> Anyways the reason for this background info is that because this is a whi=
+le
+> ago I do not remember exactly how, but yes I did measure this (but not
+> very scientifically) and there was no discernible difference in boot
+> to init (from the initrd) with this in place vs without this.
+>
+>>> +
+>>> +int efi_get_embedded_fw(const char *name, void **data, size_t *size)
+>>> +{
+>>> +       struct efi_embedded_fw *iter, *fw =3D NULL;
+>>> +       void *buf =3D *data;
+>>> +
+>>> +       if (!checked_for_fw) {
+>> WARN_ON_ONCE?  A stack dump would be quite nice here.
+>
+> As discussed when this check was added (discussion in v7 of
+> the set I guess, check added in v8) we can also hit this without
+> it being a bug, e.g. when booted through kexec the whole
+> efi_check_for_embedded_firmwares() call we be skipped, hence the
+> pr_warn.
+>
+>
+>>> +       buf =3D vmalloc(fw->length);
+>>> +       if (!buf)
+>>> +               return -ENOMEM;
+>>> +
+>>> +       memcpy(buf, fw->data, fw->length);
+>>> +       *size =3D fw->length;
+>>> +       *data =3D buf;
+>> See above.  What's vmalloc() for?  Where's the vfree()?
+>
+> See above for my answer. I'm fine with moving this into the
+> firmware code, since that is where the matching vfree is, please
+> let me know how you want to proceed with this.
+>
+>> BTW, it would be very nice to have a straightforward way
+>> (/sys/kernel/debug/efi_firmware/[name]?) to dump all found firmwares.
+>
+> That is an interesting idea, we could add a subsys_init call or
+> some such to add this to debugfs (efi_check_for_embedded_firmwares runs
+> too early).
+>
+> But given how long this patch-set has been in the making I would really
+> like to get this (or at least the first 2 patches as a start) upstream,
+> so for now I would like to keep the changes to a minimum. Are you ok
+> with me adding the debugfs support with a follow-up patch ?
+>
+> Let me also reply to your summary comment elsewhere in the thread here:
+>
+> > Early in boot, you check a bunch of firmware descriptors, bundled with
+> > drivers, to search EFI code and data for firmware before you free said
+> > code and data.  You catalogue it by name.  Later on, you use this list
+> > as a fallback, again catalogued by name.  I think it would be rather
+> > nicer if you simply had a list in a single file containing all these
+> > descriptors rather than commingling it with the driver's internal dmi
+> > data.  This gets rid of all the ifdeffery and module issues.  It also
+> > avoids any potential nastiness when you have a dmi entry that contains
+> > driver_data that points into the driver when the driver is a module.
+> >
+> > And you can mark the entire list __initdata.  And you can easily (now
+> > or later on) invert the code flow so you map each EFI region exactly
+> > once and then search for all the firmware in it.
+>
+> I believe we have mostly discussed this above. At least for the
+> X86 touchscreen case, which is the only user of this for now, I
+> believe that re-using the table from drivers/platform/x86/touchscreen_dmi=
+.c
+> is better as it avoids duplication of DMI strings and it keeps all
+> the info in one place (also avoiding churn in 2 files / 2 different
+> trees when new models are added).
+>
+> I agree that when looking at this as a generic mechanism which may be
+> used elsewhere, your suggestion makes a lot of sense. But even though
+> this is very much written so that it can be used as a generic mechanism
+> I'm not sure if other users will appear. So for now, with only the X86
+> touchscreen use-case actually using this I believe the current
+> implementation is best, but I'm definitely open to changing this around
+> if more users show up.
+>
+> Regards,
+>
+> Hans
+>
