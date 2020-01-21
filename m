@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v4 16/38] watchdog: intel-mid_wdt: Convert to use new SCU IPC API
-Date: Tue, 21 Jan 2020 19:00:52 +0300
-Message-ID: <20200121160114.60007-17-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 03/38] platform/x86: intel_scu_ipc: Add constants for register offsets
+Date: Tue, 21 Jan 2020 19:00:39 +0300
+Message-ID: <20200121160114.60007-4-mika.westerberg@linux.intel.com>
 References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,143 +12,85 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Brown <broonie@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This converts the Intel MID watchdog driver over the new SCU IPC API
-where the SCU IPC instance is passed to the functions.
+This makes the code more readable. These are taken from intel_pmc_ipc.c
+which implements the same thing.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/watchdog/intel-mid_wdt.c | 53 ++++++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 16 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/watchdog/intel-mid_wdt.c b/drivers/watchdog/intel-mid_wdt.c
-index 470213abfd3d..1ae03b64ef8b 100644
---- a/drivers/watchdog/intel-mid_wdt.c
-+++ b/drivers/watchdog/intel-mid_wdt.c
-@@ -33,14 +33,24 @@ enum {
- 	SCU_WATCHDOG_KEEPALIVE,
- };
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index cdab916fbf92..a8be5bcb9832 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -99,11 +99,15 @@ struct intel_scu_ipc_dev {
  
--static inline int wdt_command(int sub, u32 *in, int inlen)
-+struct mid_wdt {
-+	struct watchdog_device wd;
-+	struct device *dev;
-+	struct intel_scu_ipc_dev *scu;
-+};
+ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+ 
++#define IPC_STATUS		0x04
++#define IPC_STATUS_ERR		BIT(1)
++#define IPC_STATUS_BUSY		BIT(0)
 +
-+static inline int
-+wdt_command(struct mid_wdt *mid, int sub, const void *in, size_t inlen, size_t size)
+ /*
+- * IPC Read Buffer (Read Only):
+- * 16 byte buffer for receiving data from SCU, if IPC command
+- * processing results in response data
++ * IPC Write/Read Buffers:
++ * 16 byte buffer for sending and receiving data to and from SCU.
+  */
++#define IPC_WRITE_BUFFER	0x80
+ #define IPC_READ_BUFFER		0x90
+ 
+ #define IPC_I2C_CNTRL_ADDR	0
+@@ -135,7 +139,7 @@ static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
+  */
+ static inline void ipc_data_writel(struct intel_scu_ipc_dev *scu, u32 data, u32 offset)
  {
--	return intel_scu_ipc_command(IPC_WATCHDOG, sub, in, inlen, NULL, 0);
-+	struct intel_scu_ipc_dev *scu = mid->scu;
-+
-+	return intel_scu_ipc_dev_command_with_size(scu, IPC_WATCHDOG, sub, in,
-+						   inlen, size, NULL, 0);
+-	writel(data, scu->ipc_base + 0x80 + offset);
++	writel(data, scu->ipc_base + IPC_WRITE_BUFFER + offset);
  }
  
- static int wdt_start(struct watchdog_device *wd)
+ /*
+@@ -147,7 +151,7 @@ static inline void ipc_data_writel(struct intel_scu_ipc_dev *scu, u32 data, u32
+  */
+ static inline u8 ipc_read_status(struct intel_scu_ipc_dev *scu)
  {
--	struct device *dev = watchdog_get_drvdata(wd);
-+	struct mid_wdt *mid = watchdog_get_drvdata(wd);
- 	int ret, in_size;
- 	int timeout = wd->timeout;
- 	struct ipc_wd_start {
-@@ -49,38 +59,41 @@ static int wdt_start(struct watchdog_device *wd)
- 	} ipc_wd_start = { timeout - MID_WDT_PRETIMEOUT, timeout };
- 
- 	/*
--	 * SCU expects the input size for watchdog IPC to
--	 * be based on 4 bytes
-+	 * SCU expects the input size for watchdog IPC to be 2 which is the
-+	 * size of the structure in dwords. SCU IPC normally takes bytes
-+	 * but this is a special case where we specify size to be different
-+	 * than inlen.
- 	 */
- 	in_size = DIV_ROUND_UP(sizeof(ipc_wd_start), 4);
- 
--	ret = wdt_command(SCU_WATCHDOG_START, (u32 *)&ipc_wd_start, in_size);
-+	ret = wdt_command(mid, SCU_WATCHDOG_START, &ipc_wd_start,
-+			  sizeof(ipc_wd_start), in_size);
- 	if (ret)
--		dev_crit(dev, "error starting watchdog: %d\n", ret);
-+		dev_crit(mid->dev, "error starting watchdog: %d\n", ret);
- 
- 	return ret;
+-	return __raw_readl(scu->ipc_base + 0x04);
++	return __raw_readl(scu->ipc_base + IPC_STATUS);
  }
  
- static int wdt_ping(struct watchdog_device *wd)
- {
--	struct device *dev = watchdog_get_drvdata(wd);
-+	struct mid_wdt *mid = watchdog_get_drvdata(wd);
- 	int ret;
+ /* Read ipc byte data */
+@@ -169,17 +173,17 @@ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
+ 	u32 loop_count = 100000;
  
--	ret = wdt_command(SCU_WATCHDOG_KEEPALIVE, NULL, 0);
-+	ret = wdt_command(mid, SCU_WATCHDOG_KEEPALIVE, NULL, 0, 0);
- 	if (ret)
--		dev_crit(dev, "Error executing keepalive: %d\n", ret);
-+		dev_crit(mid->dev, "Error executing keepalive: %d\n", ret);
- 
- 	return ret;
- }
- 
- static int wdt_stop(struct watchdog_device *wd)
- {
--	struct device *dev = watchdog_get_drvdata(wd);
-+	struct mid_wdt *mid = watchdog_get_drvdata(wd);
- 	int ret;
- 
--	ret = wdt_command(SCU_WATCHDOG_STOP, NULL, 0);
-+	ret = wdt_command(mid, SCU_WATCHDOG_STOP, NULL, 0, 0);
- 	if (ret)
--		dev_crit(dev, "Error stopping watchdog: %d\n", ret);
-+		dev_crit(mid->dev, "Error stopping watchdog: %d\n", ret);
- 
- 	return ret;
- }
-@@ -110,6 +123,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct watchdog_device *wdt_dev;
- 	struct intel_mid_wdt_pdata *pdata = dev->platform_data;
-+	struct mid_wdt *mid;
- 	int ret;
- 
- 	if (!pdata) {
-@@ -123,10 +137,13 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 			return ret;
+ 	/* break if scu doesn't reset busy bit after huge retry */
+-	while ((status & BIT(0)) && --loop_count) {
++	while ((status & IPC_STATUS_BUSY) && --loop_count) {
+ 		udelay(1); /* scu processing time is in few u secods */
+ 		status = ipc_read_status(scu);
  	}
  
--	wdt_dev = devm_kzalloc(dev, sizeof(*wdt_dev), GFP_KERNEL);
--	if (!wdt_dev)
-+	mid = devm_kzalloc(dev, sizeof(*mid), GFP_KERNEL);
-+	if (!mid)
- 		return -ENOMEM;
- 
-+	mid->dev = dev;
-+	wdt_dev = &mid->wd;
-+
- 	wdt_dev->info = &mid_wdt_info;
- 	wdt_dev->ops = &mid_wdt_ops;
- 	wdt_dev->min_timeout = MID_WDT_TIMEOUT_MIN;
-@@ -135,7 +152,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 	wdt_dev->parent = dev;
- 
- 	watchdog_set_nowayout(wdt_dev, WATCHDOG_NOWAYOUT);
--	watchdog_set_drvdata(wdt_dev, dev);
-+	watchdog_set_drvdata(wdt_dev, mid);
- 
- 	ret = devm_request_irq(dev, pdata->irq, mid_wdt_irq,
- 			       IRQF_SHARED | IRQF_NO_SUSPEND, "watchdog",
-@@ -145,6 +162,10 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 		return ret;
+-	if (status & BIT(0)) {
++	if (status & IPC_STATUS_BUSY) {
+ 		dev_err(scu->dev, "IPC timed out");
+ 		return -ETIMEDOUT;
  	}
  
-+	mid->scu = devm_intel_scu_ipc_dev_get(dev);
-+	if (!mid->scu)
-+		return -EPROBE_DEFER;
-+
- 	/*
- 	 * The firmware followed by U-Boot leaves the watchdog running
- 	 * with the default threshold which may vary. When we get here
+-	if (status & BIT(1))
++	if (status & IPC_STATUS_ERR)
+ 		return -EIO;
+ 
+ 	return 0;
+@@ -196,7 +200,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
+ 	}
+ 
+ 	status = ipc_read_status(scu);
+-	if (status & BIT(1))
++	if (status & IPC_STATUS_ERR)
+ 		return -EIO;
+ 
+ 	return 0;
 -- 
 2.24.1
