@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v4 30/38] platform/x86: intel_pmc_ipc: Drop intel_pmc_ipc_command()
-Date: Tue, 21 Jan 2020 19:01:06 +0300
-Message-ID: <20200121160114.60007-31-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 02/38] platform/x86: intel_scu_ipcutil: Remove default y from Kconfig
+Date: Tue, 21 Jan 2020 19:00:38 +0300
+Message-ID: <20200121160114.60007-3-mika.westerberg@linux.intel.com>
 References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,70 +12,26 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Brown <broonie@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Now that all callers have been converted over to the SCU IPC API we can
-drop intel_pmc_ipc_command().
+This driver is by no means essential for system to boot up so remove
+default y from it.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_pmc_ipc.h |  8 --------
- drivers/platform/x86/intel_pmc_ipc.c | 20 --------------------
- 2 files changed, 28 deletions(-)
+ drivers/platform/x86/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index ddc964b9c78c..22848df5faaf 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -27,19 +27,11 @@
- 
- #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
- 
--int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
--		u32 *out, u32 outlen);
- int intel_pmc_s0ix_counter_read(u64 *data);
- int intel_pmc_gcr_read64(u32 offset, u64 *data);
- 
- #else
- 
--static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
--		u32 *out, u32 outlen)
--{
--	return -EINVAL;
--}
--
- static inline int intel_pmc_s0ix_counter_read(u64 *data)
- {
- 	return -EINVAL;
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 4d9c9fd082ad..6970ca2eab77 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -194,26 +194,6 @@ static int update_no_reboot_bit(void *priv, bool set)
- 				    PMC_CFG_NO_REBOOT_MASK, value);
- }
- 
--/**
-- * intel_pmc_ipc_command() -  IPC command with input/output data
-- * @cmd:	IPC command code.
-- * @sub:	IPC command sub type.
-- * @in:		input data of this IPC command.
-- * @inlen:	input data length in bytes.
-- * @out:	output data of this IPC command.
-- * @outlen:	output data length in dwords.
-- *
-- * Send an IPC command to PMC with input/output data.
-- *
-- * Return:	an IPC error code or 0 on success.
-- */
--int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
--			  u32 *out, u32 outlen)
--{
--	return intel_scu_ipc_dev_command(NULL, cmd, sub, in, inlen, out, outlen);
--}
--EXPORT_SYMBOL_GPL(intel_pmc_ipc_command);
--
- static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct intel_pmc_ipc_dev *pmc = &ipcdev;
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 27d5b40fb717..dd4326736d11 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -997,7 +997,6 @@ config INTEL_SCU_IPC
+ config INTEL_SCU_IPC_UTIL
+ 	tristate "Intel SCU IPC utility driver"
+ 	depends on INTEL_SCU_IPC
+-	default y
+ 	---help---
+ 	  The IPC Util driver provides an interface with the SCU enabling
+ 	  low level access for debug work and updating the firmware. Say
 -- 
 2.24.1
