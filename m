@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v4 24/38] platform/x86: intel_scu_ipc: Add managed function to register SCU IPC
-Date: Tue, 21 Jan 2020 19:01:00 +0300
-Message-ID: <20200121160114.60007-25-mika.westerberg@linux.intel.com>
+Subject: [PATCH v4 18/38] platform/x86: intel_pmc_ipc: Make intel_pmc_gcr_update() static
+Date: Tue, 21 Jan 2020 19:00:54 +0300
+Message-ID: <20200121160114.60007-19-mika.westerberg@linux.intel.com>
 References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,105 +12,60 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Brown <broonie@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Drivers such as intel_pmc_ipc.c can be unloaded as well so in order to
-support those in this driver add a new function that can be called to
-unregister the SCU IPC when it is not needed anymore.
-
-We also add a managed version of the intel_scu_ipc_register() that takes
-care of calling intel_scu_ipc_unregister() automatically when the driver
-is unbound.
+This function is not called outside of intel_pmc_ipc.c so we can make it
+static instead.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_scu_ipc.h |  3 ++
- drivers/platform/x86/intel_scu_ipc.c | 63 ++++++++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
+ arch/x86/include/asm/intel_pmc_ipc.h | 6 ------
+ drivers/platform/x86/intel_pmc_ipc.c | 3 +--
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index ce2ad516f0f9..23990b08c913 100644
---- a/arch/x86/include/asm/intel_scu_ipc.h
-+++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -34,6 +34,9 @@ struct intel_scu_ipc_pdata {
+diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+index 9e7adcdbe031..3b2e8b461520 100644
+--- a/arch/x86/include/asm/intel_pmc_ipc.h
++++ b/arch/x86/include/asm/intel_pmc_ipc.h
+@@ -40,7 +40,6 @@ int intel_pmc_s0ix_counter_read(u64 *data);
+ int intel_pmc_gcr_read(u32 offset, u32 *data);
+ int intel_pmc_gcr_read64(u32 offset, u64 *data);
+ int intel_pmc_gcr_write(u32 offset, u32 data);
+-int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val);
  
- struct intel_scu_ipc_dev *
- intel_scu_ipc_register(struct device *dev, const struct intel_scu_ipc_pdata *pdata);
-+void intel_scu_ipc_unregister(struct intel_scu_ipc_dev *scu);
-+struct intel_scu_ipc_dev *
-+devm_intel_scu_ipc_register(struct device *dev, const struct intel_scu_ipc_pdata *pdata);
+ #else
  
- struct intel_scu_ipc_dev *intel_scu_ipc_dev_get(void);
- void intel_scu_ipc_dev_put(struct intel_scu_ipc_dev *scu);
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 391b65a4789e..3df2efa19d77 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -584,3 +584,66 @@ intel_scu_ipc_register(struct device *dev, const struct intel_scu_ipc_pdata *pda
- 	return ERR_PTR(err);
+@@ -81,11 +80,6 @@ static inline int intel_pmc_gcr_write(u32 offset, u32 data)
+ 	return -EINVAL;
  }
- EXPORT_SYMBOL_GPL(intel_scu_ipc_register);
-+
-+/**
-+ * intel_scu_ipc_unregister() - Unregister SCU IPC
-+ * @scu: SCU IPC handle
-+ *
-+ * This unregisters the SCU IPC device and releases the acquired
-+ * resources.
-+ */
-+void intel_scu_ipc_unregister(struct intel_scu_ipc_dev *scu)
-+{
-+	mutex_lock(&ipclock);
-+	if (!WARN_ON(!scu->dev)) {
-+		if (scu->irq > 0)
-+			free_irq(scu->irq, scu);
-+		iounmap(scu->ipc_base);
-+		release_mem_region(scu->mem.start, resource_size(&scu->mem));
-+		scu->dev = NULL;
-+	}
-+	mutex_unlock(&ipclock);
-+}
-+EXPORT_SYMBOL_GPL(intel_scu_ipc_unregister);
-+
-+static void devm_intel_scu_ipc_unregister(struct device *dev, void *res)
-+{
-+	struct intel_scu_ipc_devres *devres = res;
-+	struct intel_scu_ipc_dev *scu = devres->scu;
-+
-+	intel_scu_ipc_unregister(scu);
-+}
-+
-+/**
-+ * devm_intel_scu_ipc_register() - Register managed SCU IPC device
-+ * @dev: SCU device
-+ * @pdata: Platform specific data
-+ *
-+ * Call this function to initialize managed SCU IPC mechanism for @dev.
-+ * Returns SCU IPC instance or ERR_PTR() if there was an error. The caller
-+ * may use the returned instance if it needs to do SCU IPC calls itself.
-+ */
-+struct intel_scu_ipc_dev *
-+devm_intel_scu_ipc_register(struct device *dev,
-+			    const struct intel_scu_ipc_pdata *pdata)
-+{
-+	struct intel_scu_ipc_devres *devres;
-+	struct intel_scu_ipc_dev *scu;
-+
-+	devres = devres_alloc(devm_intel_scu_ipc_unregister, sizeof(*devres),
-+			      GFP_KERNEL);
-+	if (!devres)
-+		return NULL;
-+
-+	scu = intel_scu_ipc_register(dev, pdata);
-+	if (IS_ERR(scu)) {
-+		devres_free(devres);
-+		return scu;
-+	}
-+
-+	devres->scu = scu;
-+	devres_add(dev, devres);
-+
-+	return scu;
-+}
-+EXPORT_SYMBOL_GPL(devm_intel_scu_ipc_register);
+ 
+-static inline int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+-{
+-	return -EINVAL;
+-}
+-
+ #endif /*CONFIG_INTEL_PMC_IPC*/
+ 
+ #endif
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 5c1da2bb1435..9229c7a16536 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -309,7 +309,7 @@ EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
+  *
+  * Return:	negative value on error or 0 on success.
+  */
+-int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
++static int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+ {
+ 	u32 new_val;
+ 	int ret = 0;
+@@ -339,7 +339,6 @@ int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+ 	spin_unlock(&ipcdev.gcr_lock);
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(intel_pmc_gcr_update);
+ 
+ static int update_no_reboot_bit(void *priv, bool set)
+ {
 -- 
 2.24.1
