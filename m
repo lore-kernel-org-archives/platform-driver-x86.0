@@ -1,55 +1,257 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3 35/36] platform/x86: intel_pmc_ipc: Convert to MFD
-Date: Mon, 20 Jan 2020 15:07:19 +0200
-Message-ID: <20200120130719.GO2665@lahna.fi.intel.com>
-References: <20200113135623.56286-36-mika.westerberg@linux.intel.com>
- <20200116132108.GH325@dell>
- <20200116143730.GE2838@lahna.fi.intel.com>
- <20200117113202.GH15507@dell>
- <20200117142750.GP2838@lahna.fi.intel.com>
- <20200120081246.GS15507@dell>
- <20200120091258.GH2665@lahna.fi.intel.com>
- <20200120111450.GE15507@dell>
- <20200120112634.GN2665@lahna.fi.intel.com>
- <20200120125059.GF15507@dell>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v11 02/10] efi: Add embedded peripheral firmware support
+Date: Tue, 21 Jan 2020 12:10:19 +0100
+Message-ID: <a2d34c73-6a83-94a0-94a3-dcbbf68b25ff@redhat.com>
+References: <20200111145703.533809-1-hdegoede@redhat.com>
+ <20200111145703.533809-3-hdegoede@redhat.com>
+ <CALCETrUz4gdVOH=5X+MkB56ST=DNcHKicRST1j1ff0kU1yXWzw@mail.gmail.com>
+ <9b5b8304-74bc-4e5c-5030-98bd6e12eaf0@redhat.com>
+ <CALCETrWtf3iEdZS8zu=k60cnZtokbxRaH5dfkWoM7JokkhAL2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200120125059.GF15507@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CALCETrWtf3iEdZS8zu=k60cnZtokbxRaH5dfkWoM7JokkhAL2w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Andy Lutomirski <luto@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, X86 ML <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-efi <linux-efi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>"open list:HID CORE LAYER" <li>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jan 20, 2020 at 12:50:59PM +0000, Lee Jones wrote:
-> On Mon, 20 Jan 2020, Mika Westerberg wrote:
-> > On Mon, Jan 20, 2020 at 11:14:50AM +0000, Lee Jones wrote:
-> > > On Mon, 20 Jan 2020, Mika Westerberg wrote:
-> > > 
-> > > > On Mon, Jan 20, 2020 at 08:12:46AM +0000, Lee Jones wrote:
-> > > > > > Well, by "library" I mean that the SCU IPC itself does not bind to
-> > > > > > anything but instead it gets called by different drivers such as this
-> > > > > > one passing the device pointer that is the SCU IPC device. Here for
-> > > > > > example it is the platfrom device created from an ACPI description.
-> > > > > 
-> > > > > Not keen on that at all.  Why can it not be a platform device?
-> > > > 
-> > > > We also call the same library from a PCI driver (intel_scu_pcidrv.c in
-> > > > this series) where the device is of type struct pci_dev.
-> > > 
-> > > Not sure I understand the issue.
-> > 
-> > You are asking why it cannot be a platform device. It cannot be because
-> > we are calling the same library from a PCI driver where there is no
-> > platform device available (only struct pci_dev).
+Hi Andy,
+
+On 17-01-2020 21:06, Andy Lutomirski wrote:
+>> On Jan 14, 2020, at 4:25 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> ﻿Hi Andy,
+>>
 > 
-> I'm asking why it needs to be called at all.  Why can't it be probed
-> using the Device Driver API, like most other drivers?
+>> Even if we get more use of this the chances of 1 device model using
+>> more then 1 embedded fw are small. Where as if we first map the
+>> EFI_BOOT_SERVICES_CODE segment before doing the DMI match then we
+>> do this for all EFI_BOOT_SERVICES_CODE segments on all hardware.
+>> The current implementation is very much optimized to do as little
+>> work as possible when there is no DMI match, which will be true
+>> on almost all devices out there.
+> 
+> Fine with me.
+> 
+> 
+>> If we hit firmware which is not 8 byte aligned, then yes that would be
+>> a good idea, but for now I feel that that would just cause a slowdown
+>> in the scanning without any benefits.
+>>
+> 
+> It would shorten the code and remove a comment :). Also, a good memmem
+> implementation should be very fast, potentially faster than your loop.
+> I suspect the latter is only true in user code where SSE would get
+> used, but still.
+> 
+> it would also be unfortunate if some firmware update switches to
+> 4-byte alignment and touchscreens stop working with no explanation.
 
-The PMC is a single device (either ACPI or PCI) that includes SCU IPC
-and zero or more child devices sharing the resources (hence I'm
-converting it to MFD in the first place).
+So I was thinking sure, fine lets replace the loop with memmem,
+but the kernel has no memmem, it has memscan but that takes an
+int to search for, and reducing the prefix to an int seems likely
+to cause more false positives and unnecessary sha256summing.
 
-I want to use the same SCU IPC implementation from both the PCI driver
-(intel_scu_pcidrv.c) and the MFD driver (intel_pmc_bxt.c).
+So I believe it is best to keep this as is for now, we can always
+change the alignment requirement later, now that we use memcmp
+to check the prefix changing it is just a matter of changing the
+i += 8 to e.g. i += 4.
+
+Regards,
+
+Hans
+
+
+>>>> +
+>>>> +               sha256_init(&sctx);
+>>>> +               sha256_update(&sctx, map + i, desc->length);
+>>>> +               sha256_final(&sctx, sha256);
+>>>> +               if (memcmp(sha256, desc->sha256, 32) == 0)
+>>>> +                       break;
+>>>> +       }
+>>>> +       if ((i + desc->length) > size) {
+>>>> +               memunmap(map);
+>>>> +               return -ENOENT;
+>>>> +       }
+>>>> +
+>>>> +       pr_info("Found EFI embedded fw '%s'\n", desc->name);
+>>>> +
+>>> It might be nice to also log which EFI section it was in?
+>>
+>> The EFI sections do not have names, so all I could is log
+>> the section number which does not really feel useful?
+>>
+>>>> +       fw = kmalloc(sizeof(*fw), GFP_KERNEL);
+>>>> +       if (!fw) {
+>>>> +               memunmap(map);
+>>>> +               return -ENOMEM;
+>>>> +       }
+>>>> +
+>>>> +       fw->data = kmemdup(map + i, desc->length, GFP_KERNEL);
+>>>> +       memunmap(map);
+>>>> +       if (!fw->data) {
+>>>> +               kfree(fw);
+>>>> +               return -ENOMEM;
+>>>> +       }
+>>>> +
+>>>> +       fw->name = desc->name;
+>>>> +       fw->length = desc->length;
+>>>> +       list_add(&fw->list, &efi_embedded_fw_list);
+>>>> +
+>>> If you actually copy the firmware name instead of just a pointer to
+>>> it, then you could potentially free the list of EFI firmwares.
+>>
+>> If we move to having a separate dmi_system_id table for this then
+>> that would be true. ATM the dmi_system_id from
+>> drivers/platform/x86/touchscreen_dmi.c
+>> is not freed as it is referenced from a bus-notifier.
+>>
+>>> Why are you copying the firmware into linear (kmemdup) memory here
+>>
+>> The kmemdup is because the EFI_BOOT_SERVICES_CODE section is
+>> free-ed almost immediately after we run.
+>>
+>>> just to copy it to vmalloc space down below...
+>>
+>> The vmalloc is because the efi_get_embedded_fw() function is
+>> a helper for later implementing firmware_Request_platform
+>> which returns a struct firmware *fw and release_firmware()
+>> uses vfree() to free the firmware contents.
+>>
+>> I guess we could have efi_get_embedded_fw() return an const u8 *
+>> and have the firmware code do the vmalloc + memcpy but it boils
+>> down to the same thing.
+>>
+>>
+>>>> +       return 0;
+>>>> +}
+>>>> +
+>>>> +void __init efi_check_for_embedded_firmwares(void)
+>>>> +{
+>>>> +       const struct efi_embedded_fw_desc *fw_desc;
+>>>> +       const struct dmi_system_id *dmi_id;
+>>>> +       efi_memory_desc_t *md;
+>>>> +       int i, r;
+>>>> +
+>>>> +       for (i = 0; embedded_fw_table[i]; i++) {
+>>>> +               dmi_id = dmi_first_match(embedded_fw_table[i]);
+>>>> +               if (!dmi_id)
+>>>> +                       continue;
+>>>> +
+>>>> +               fw_desc = dmi_id->driver_data;
+>>>> +
+>>>> +               /*
+>>>> +                * In some drivers the struct driver_data contains may contain
+>>>> +                * other driver specific data after the fw_desc struct; and
+>>>> +                * the fw_desc struct itself may be empty, skip these.
+>>>> +                */
+>>>> +               if (!fw_desc->name)
+>>>> +                       continue;
+>>>> +
+>>>> +               for_each_efi_memory_desc(md) {
+>>>> +                       if (md->type != EFI_BOOT_SERVICES_CODE)
+>>>> +                               continue;
+>>>> +
+>>>> +                       r = efi_check_md_for_embedded_firmware(md, fw_desc);
+>>>> +                       if (r == 0)
+>>>> +                               break;
+>>>> +               }
+>>>> +       }
+>>>> +
+>>>> +       checked_for_fw = true;
+>>>> +}
+>>> Have you measured how long this takes on a typical system per matching DMI id?
+>>
+>> I originally wrote this approx. 18 months ago, it has been on hold for a while
+>> since it needed a sha256 method which would work before subsys_initcall-s
+>> run so I couldn't use the standard crypto_alloc_shash() stuff. In the end
+>> I ended up merging the duplicate purgatory and crypto/sha256_generic.c
+>> generic C SHA256 implementation into a set of new directly callable lib
+>> functions in lib/crypto/sha256.c, just so that I could move forward with
+>> this...
+>>
+>> Anyways the reason for this background info is that because this is a while
+>> ago I do not remember exactly how, but yes I did measure this (but not
+>> very scientifically) and there was no discernible difference in boot
+>> to init (from the initrd) with this in place vs without this.
+>>
+>>>> +
+>>>> +int efi_get_embedded_fw(const char *name, void **data, size_t *size)
+>>>> +{
+>>>> +       struct efi_embedded_fw *iter, *fw = NULL;
+>>>> +       void *buf = *data;
+>>>> +
+>>>> +       if (!checked_for_fw) {
+>>> WARN_ON_ONCE?  A stack dump would be quite nice here.
+>>
+>> As discussed when this check was added (discussion in v7 of
+>> the set I guess, check added in v8) we can also hit this without
+>> it being a bug, e.g. when booted through kexec the whole
+>> efi_check_for_embedded_firmwares() call we be skipped, hence the
+>> pr_warn.
+>>
+>>
+>>>> +       buf = vmalloc(fw->length);
+>>>> +       if (!buf)
+>>>> +               return -ENOMEM;
+>>>> +
+>>>> +       memcpy(buf, fw->data, fw->length);
+>>>> +       *size = fw->length;
+>>>> +       *data = buf;
+>>> See above.  What's vmalloc() for?  Where's the vfree()?
+>>
+>> See above for my answer. I'm fine with moving this into the
+>> firmware code, since that is where the matching vfree is, please
+>> let me know how you want to proceed with this.
+>>
+>>> BTW, it would be very nice to have a straightforward way
+>>> (/sys/kernel/debug/efi_firmware/[name]?) to dump all found firmwares.
+>>
+>> That is an interesting idea, we could add a subsys_init call or
+>> some such to add this to debugfs (efi_check_for_embedded_firmwares runs
+>> too early).
+>>
+>> But given how long this patch-set has been in the making I would really
+>> like to get this (or at least the first 2 patches as a start) upstream,
+>> so for now I would like to keep the changes to a minimum. Are you ok
+>> with me adding the debugfs support with a follow-up patch ?
+>>
+>> Let me also reply to your summary comment elsewhere in the thread here:
+>>
+>>> Early in boot, you check a bunch of firmware descriptors, bundled with
+>>> drivers, to search EFI code and data for firmware before you free said
+>>> code and data.  You catalogue it by name.  Later on, you use this list
+>>> as a fallback, again catalogued by name.  I think it would be rather
+>>> nicer if you simply had a list in a single file containing all these
+>>> descriptors rather than commingling it with the driver's internal dmi
+>>> data.  This gets rid of all the ifdeffery and module issues.  It also
+>>> avoids any potential nastiness when you have a dmi entry that contains
+>>> driver_data that points into the driver when the driver is a module.
+>>>
+>>> And you can mark the entire list __initdata.  And you can easily (now
+>>> or later on) invert the code flow so you map each EFI region exactly
+>>> once and then search for all the firmware in it.
+>>
+>> I believe we have mostly discussed this above. At least for the
+>> X86 touchscreen case, which is the only user of this for now, I
+>> believe that re-using the table from drivers/platform/x86/touchscreen_dmi.c
+>> is better as it avoids duplication of DMI strings and it keeps all
+>> the info in one place (also avoiding churn in 2 files / 2 different
+>> trees when new models are added).
+>>
+>> I agree that when looking at this as a generic mechanism which may be
+>> used elsewhere, your suggestion makes a lot of sense. But even though
+>> this is very much written so that it can be used as a generic mechanism
+>> I'm not sure if other users will appear. So for now, with only the X86
+>> touchscreen use-case actually using this I believe the current
+>> implementation is best, but I'm definitely open to changing this around
+>> if more users show up.
+>>
+>> Regards,
+>>
+>> Hans
+>>
+> 
