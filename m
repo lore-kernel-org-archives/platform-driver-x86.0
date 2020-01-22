@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 6/9] platform/x86: intel_pmc_ipc: Get rid of unnecessary includes
-Date: Wed, 22 Jan 2020 19:46:16 +0300
-Message-ID: <20200122164619.73563-7-mika.westerberg@linux.intel.com>
+Subject: [PATCH 3/9] platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_raw_cmd() static
+Date: Wed, 22 Jan 2020 19:46:13 +0300
+Message-ID: <20200122164619.73563-4-mika.westerberg@linux.intel.com>
 References: <20200122164619.73563-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,42 +12,64 @@ To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-There is no point including headers that are not needed in the driver so
-drop them.
+This function is not called outside of intel_pmc_ipc.c so we can make it
+static instead.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_pmc_ipc.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ arch/x86/include/asm/intel_pmc_ipc.h | 8 --------
+ drivers/platform/x86/intel_pmc_ipc.c | 5 ++---
+ 2 files changed, 2 insertions(+), 11 deletions(-)
 
+diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+index b4f804877651..966ff2171ff9 100644
+--- a/arch/x86/include/asm/intel_pmc_ipc.h
++++ b/arch/x86/include/asm/intel_pmc_ipc.h
+@@ -31,8 +31,6 @@
+ 
+ #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
+ 
+-int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+-		u32 *out, u32 outlen, u32 dptr, u32 sptr);
+ int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+ 		u32 *out, u32 outlen);
+ int intel_pmc_s0ix_counter_read(u64 *data);
+@@ -42,12 +40,6 @@ int intel_pmc_gcr_write(u32 offset, u32 data);
+ 
+ #else
+ 
+-static inline int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+-		u32 *out, u32 outlen, u32 dptr, u32 sptr)
+-{
+-	return -EINVAL;
+-}
+-
+ static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+ 		u32 *out, u32 outlen)
+ {
 diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 83b106f66fa6..8527327d88c7 100644
+index 53551f5474a7..83f47df1c4a5 100644
 --- a/drivers/platform/x86/intel_pmc_ipc.c
 +++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -12,23 +12,13 @@
+@@ -435,8 +435,8 @@ static int intel_pmc_ipc_simple_command(int cmd, int sub)
+  *
+  * Return:	an IPC error code or 0 on success.
   */
+-int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *out,
+-			  u32 outlen, u32 dptr, u32 sptr)
++static int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *out,
++				 u32 outlen, u32 dptr, u32 sptr)
+ {
+ 	u32 wbuf[4] = { 0 };
+ 	int ret;
+@@ -468,7 +468,6 @@ int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen, u32 *out,
  
- #include <linux/acpi.h>
--#include <linux/atomic.h>
--#include <linux/bitops.h>
- #include <linux/delay.h>
--#include <linux/device.h>
- #include <linux/errno.h>
- #include <linux/interrupt.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
--#include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/notifier.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
--#include <linux/pm.h>
--#include <linux/pm_qos.h>
--#include <linux/sched.h>
--#include <linux/spinlock.h>
--#include <linux/suspend.h>
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(intel_pmc_ipc_raw_cmd);
  
- #include <asm/intel_pmc_ipc.h>
- 
+ /**
+  * intel_pmc_ipc_command() -  IPC command with input/output data
 -- 
 2.24.1
