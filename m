@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 1/9] platform/x86: intel_pmc_ipc: Make intel_pmc_gcr_update() static
-Date: Wed, 22 Jan 2020 19:46:11 +0300
-Message-ID: <20200122164619.73563-2-mika.westerberg@linux.intel.com>
+Subject: [PATCH 2/9] platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_simple_command() static
+Date: Wed, 22 Jan 2020 19:46:12 +0300
+Message-ID: <20200122164619.73563-3-mika.westerberg@linux.intel.com>
 References: <20200122164619.73563-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -23,49 +23,49 @@ Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
  2 files changed, 1 insertion(+), 8 deletions(-)
 
 diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index 9e7adcdbe031..3b2e8b461520 100644
+index 3b2e8b461520..b4f804877651 100644
 --- a/arch/x86/include/asm/intel_pmc_ipc.h
 +++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -40,7 +40,6 @@ int intel_pmc_s0ix_counter_read(u64 *data);
- int intel_pmc_gcr_read(u32 offset, u32 *data);
- int intel_pmc_gcr_read64(u32 offset, u64 *data);
- int intel_pmc_gcr_write(u32 offset, u32 data);
--int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val);
+@@ -31,7 +31,6 @@
+ 
+ #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
+ 
+-int intel_pmc_ipc_simple_command(int cmd, int sub);
+ int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+ 		u32 *out, u32 outlen, u32 dptr, u32 sptr);
+ int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+@@ -43,11 +42,6 @@ int intel_pmc_gcr_write(u32 offset, u32 data);
  
  #else
  
-@@ -81,11 +80,6 @@ static inline int intel_pmc_gcr_write(u32 offset, u32 data)
- 	return -EINVAL;
- }
- 
--static inline int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+-static inline int intel_pmc_ipc_simple_command(int cmd, int sub)
 -{
 -	return -EINVAL;
 -}
 -
- #endif /*CONFIG_INTEL_PMC_IPC*/
- 
- #endif
+ static inline int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
+ 		u32 *out, u32 outlen, u32 dptr, u32 sptr)
+ {
 diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 5c1da2bb1435..9229c7a16536 100644
+index 9229c7a16536..53551f5474a7 100644
 --- a/drivers/platform/x86/intel_pmc_ipc.c
 +++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -309,7 +309,7 @@ EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
+@@ -404,7 +404,7 @@ static int intel_pmc_ipc_check_status(void)
   *
-  * Return:	negative value on error or 0 on success.
+  * Return:	an IPC error code or 0 on success.
   */
--int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
-+static int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+-int intel_pmc_ipc_simple_command(int cmd, int sub)
++static int intel_pmc_ipc_simple_command(int cmd, int sub)
  {
- 	u32 new_val;
- 	int ret = 0;
-@@ -339,7 +339,6 @@ int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
- 	spin_unlock(&ipcdev.gcr_lock);
+ 	int ret;
+ 
+@@ -419,7 +419,6 @@ int intel_pmc_ipc_simple_command(int cmd, int sub)
+ 
  	return ret;
  }
--EXPORT_SYMBOL_GPL(intel_pmc_gcr_update);
+-EXPORT_SYMBOL_GPL(intel_pmc_ipc_simple_command);
  
- static int update_no_reboot_bit(void *priv, bool set)
- {
+ /**
+  * intel_pmc_ipc_raw_cmd() - IPC command with data and pointers
 -- 
 2.24.1
