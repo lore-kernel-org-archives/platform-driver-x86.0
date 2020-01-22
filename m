@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 10/10] platform/x86: intel_scu_ipc: Reformat kernel-doc comments of exported functions
-Date: Wed, 22 Jan 2020 19:28:13 +0300
-Message-ID: <20200122162813.26070-11-mika.westerberg@linux.intel.com>
+Subject: [PATCH 08/10] platform/x86: intel_scu_ipc: Drop intel_scu_ipc_io[read|write][8|16]()
+Date: Wed, 22 Jan 2020 19:28:11 +0300
+Message-ID: <20200122162813.26070-9-mika.westerberg@linux.intel.com>
 References: <20200122162813.26070-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,197 +12,129 @@ To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Format kernel-doc comments of the exported functions to follow the
-typical format that does not have tab indentation. Also capitalize
-parameter descriptions and add a missing period.
-
-No functional changes intended.
+There are no users for these so we can remove them.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipc.c | 112 +++++++++++++--------------
- 1 file changed, 55 insertions(+), 57 deletions(-)
+ arch/x86/include/asm/intel_scu_ipc.h | 12 -----
+ drivers/platform/x86/intel_scu_ipc.c | 68 ----------------------------
+ 2 files changed, 80 deletions(-)
 
+diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
+index b2dde96e0611..b59afa59a4cb 100644
+--- a/arch/x86/include/asm/intel_scu_ipc.h
++++ b/arch/x86/include/asm/intel_scu_ipc.h
+@@ -22,24 +22,12 @@
+ /* Read single register */
+ int intel_scu_ipc_ioread8(u16 addr, u8 *data);
+ 
+-/* Read two sequential registers */
+-int intel_scu_ipc_ioread16(u16 addr, u16 *data);
+-
+-/* Read four sequential registers */
+-int intel_scu_ipc_ioread32(u16 addr, u32 *data);
+-
+ /* Read a vector */
+ int intel_scu_ipc_readv(u16 *addr, u8 *data, int len);
+ 
+ /* Write single register */
+ int intel_scu_ipc_iowrite8(u16 addr, u8 data);
+ 
+-/* Write two sequential registers */
+-int intel_scu_ipc_iowrite16(u16 addr, u16 data);
+-
+-/* Write four sequential registers */
+-int intel_scu_ipc_iowrite32(u16 addr, u32 data);
+-
+ /* Write a vector */
+ int intel_scu_ipc_writev(u16 *addr, u8 *data, int len);
+ 
 diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 0a722a844583..3d7da5266136 100644
+index baf7679e1cde..8958f3b823b7 100644
 --- a/drivers/platform/x86/intel_scu_ipc.c
 +++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -222,14 +222,14 @@ static int pwr_reg_rdwr(u16 *addr, u8 *data, u32 count, u32 op, u32 id)
+@@ -237,40 +237,6 @@ int intel_scu_ipc_ioread8(u16 addr, u8 *data)
  }
- 
- /**
-- *	intel_scu_ipc_ioread8		-	read a word via the SCU
-- *	@addr: register on SCU
-- *	@data: return pointer for read byte
-+ * intel_scu_ipc_ioread8		-	read a word via the SCU
-+ * @addr: Register on SCU
-+ * @data: Return pointer for read byte
-  *
-- *	Read a single register. Returns 0 on success or an error code. All
-- *	locking between SCU accesses is handled for the caller.
-+ * Read a single register. Returns %0 on success or an error code. All
-+ * locking between SCU accesses is handled for the caller.
-  *
-- *	This function may sleep.
-+ * This function may sleep.
-  */
- int intel_scu_ipc_ioread8(u16 addr, u8 *data)
- {
-@@ -238,14 +238,14 @@ int intel_scu_ipc_ioread8(u16 addr, u8 *data)
  EXPORT_SYMBOL(intel_scu_ipc_ioread8);
  
- /**
-- *	intel_scu_ipc_iowrite8		-	write a byte via the SCU
+-/**
+- *	intel_scu_ipc_ioread16		-	read a word via the SCU
 - *	@addr: register on SCU
-- *	@data: byte to write
-+ * intel_scu_ipc_iowrite8		-	write a byte via the SCU
-+ * @addr: Register on SCU
-+ * @data: Byte to write
-  *
-- *	Write a single register. Returns 0 on success or an error code. All
+- *	@data: return pointer for read word
+- *
+- *	Read a register pair. Returns 0 on success or an error code. All
 - *	locking between SCU accesses is handled for the caller.
-+ * Write a single register. Returns %0 on success or an error code. All
-+ * locking between SCU accesses is handled for the caller.
-  *
-- *	This function may sleep.
-+ * This function may sleep.
-  */
- int intel_scu_ipc_iowrite8(u16 addr, u8 data)
- {
-@@ -254,17 +254,17 @@ int intel_scu_ipc_iowrite8(u16 addr, u8 data)
- EXPORT_SYMBOL(intel_scu_ipc_iowrite8);
- 
- /**
-- *	intel_scu_ipc_readvv		-	read a set of registers
-- *	@addr: register list
-- *	@data: bytes to return
-- *	@len: length of array
-+ * intel_scu_ipc_readvv		-	read a set of registers
-+ * @addr: Register list
-+ * @data: Bytes to return
-+ * @len: Length of array
-  *
-- *	Read registers. Returns 0 on success or an error code. All
-- *	locking between SCU accesses is handled for the caller.
-+ * Read registers. Returns %0 on success or an error code. All locking
-+ * between SCU accesses is handled for the caller.
-  *
-- *	The largest array length permitted by the hardware is 5 items.
-+ * The largest array length permitted by the hardware is 5 items.
-  *
-- *	This function may sleep.
-+ * This function may sleep.
-  */
- int intel_scu_ipc_readv(u16 *addr, u8 *data, int len)
- {
-@@ -273,18 +273,17 @@ int intel_scu_ipc_readv(u16 *addr, u8 *data, int len)
- EXPORT_SYMBOL(intel_scu_ipc_readv);
- 
- /**
-- *	intel_scu_ipc_writev		-	write a set of registers
-- *	@addr: register list
-- *	@data: bytes to write
-- *	@len: length of array
-+ * intel_scu_ipc_writev		-	write a set of registers
-+ * @addr: Register list
-+ * @data: Bytes to write
-+ * @len: Length of array
-  *
-- *	Write registers. Returns 0 on success or an error code. All
-- *	locking between SCU accesses is handled for the caller.
-+ * Write registers. Returns %0 on success or an error code. All locking
-+ * between SCU accesses is handled for the caller.
-  *
-- *	The largest array length permitted by the hardware is 5 items.
 - *
 - *	This function may sleep.
-+ * The largest array length permitted by the hardware is 5 items.
-  *
-+ * This function may sleep.
-  */
- int intel_scu_ipc_writev(u16 *addr, u8 *data, int len)
- {
-@@ -293,19 +292,18 @@ int intel_scu_ipc_writev(u16 *addr, u8 *data, int len)
- EXPORT_SYMBOL(intel_scu_ipc_writev);
- 
+- */
+-int intel_scu_ipc_ioread16(u16 addr, u16 *data)
+-{
+-	u16 x[2] = {addr, addr + 1};
+-	return pwr_reg_rdwr(x, (u8 *)data, 2, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_R);
+-}
+-EXPORT_SYMBOL(intel_scu_ipc_ioread16);
+-
+-/**
+- *	intel_scu_ipc_ioread32		-	read a dword via the SCU
+- *	@addr: register on SCU
+- *	@data: return pointer for read dword
+- *
+- *	Read four registers. Returns 0 on success or an error code. All
+- *	locking between SCU accesses is handled for the caller.
+- *
+- *	This function may sleep.
+- */
+-int intel_scu_ipc_ioread32(u16 addr, u32 *data)
+-{
+-	u16 x[4] = {addr, addr + 1, addr + 2, addr + 3};
+-	return pwr_reg_rdwr(x, (u8 *)data, 4, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_R);
+-}
+-EXPORT_SYMBOL(intel_scu_ipc_ioread32);
+-
  /**
-- *	intel_scu_ipc_update_register	-	r/m/w a register
-- *	@addr: register address
-- *	@bits: bits to update
-- *	@mask: mask of bits to update
-+ * intel_scu_ipc_update_register	-	r/m/w a register
-+ * @addr: Register address
-+ * @bits: Bits to update
-+ * @mask: Mask of bits to update
-  *
-- *	Read-modify-write power control unit register. The first data argument
-- *	must be register value and second is mask value
-- *	mask is a bitmap that indicates which bits to update.
-- *	0 = masked. Don't modify this bit, 1 = modify this bit.
-- *	returns 0 on success or an error code.
-+ * Read-modify-write power control unit register. The first data argument
-+ * must be register value and second is mask value mask is a bitmap that
-+ * indicates which bits to update. %0 = masked. Don't modify this bit, %1 =
-+ * modify this bit. returns %0 on success or an error code.
-  *
-- *	This function may sleep. Locking between SCU accesses is handled
-- *	for the caller.
-+ * This function may sleep. Locking between SCU accesses is handled
-+ * for the caller.
-  */
- int intel_scu_ipc_update_register(u16 addr, u8 bits, u8 mask)
- {
-@@ -315,16 +313,16 @@ int intel_scu_ipc_update_register(u16 addr, u8 bits, u8 mask)
- EXPORT_SYMBOL(intel_scu_ipc_update_register);
+  *	intel_scu_ipc_iowrite8		-	write a byte via the SCU
+  *	@addr: register on SCU
+@@ -287,40 +253,6 @@ int intel_scu_ipc_iowrite8(u16 addr, u8 data)
+ }
+ EXPORT_SYMBOL(intel_scu_ipc_iowrite8);
  
+-/**
+- *	intel_scu_ipc_iowrite16		-	write a word via the SCU
+- *	@addr: register on SCU
+- *	@data: word to write
+- *
+- *	Write two registers. Returns 0 on success or an error code. All
+- *	locking between SCU accesses is handled for the caller.
+- *
+- *	This function may sleep.
+- */
+-int intel_scu_ipc_iowrite16(u16 addr, u16 data)
+-{
+-	u16 x[2] = {addr, addr + 1};
+-	return pwr_reg_rdwr(x, (u8 *)&data, 2, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_W);
+-}
+-EXPORT_SYMBOL(intel_scu_ipc_iowrite16);
+-
+-/**
+- *	intel_scu_ipc_iowrite32		-	write a dword via the SCU
+- *	@addr: register on SCU
+- *	@data: dword to write
+- *
+- *	Write four registers. Returns 0 on success or an error code. All
+- *	locking between SCU accesses is handled for the caller.
+- *
+- *	This function may sleep.
+- */
+-int intel_scu_ipc_iowrite32(u16 addr, u32 data)
+-{
+-	u16 x[4] = {addr, addr + 1, addr + 2, addr + 3};
+-	return pwr_reg_rdwr(x, (u8 *)&data, 4, IPCMSG_PCNTRL, IPC_CMD_PCNTRL_W);
+-}
+-EXPORT_SYMBOL(intel_scu_ipc_iowrite32);
+-
  /**
-- *	intel_scu_ipc_simple_command	-	send a simple command
-- *	@cmd: command
-- *	@sub: sub type
-+ * intel_scu_ipc_simple_command	-	send a simple command
-+ * @cmd: Command
-+ * @sub: Sub type
-  *
-- *	Issue a simple command to the SCU. Do not use this interface if
-- *	you must then access data as any data values may be overwritten
-- *	by another SCU access by the time this function returns.
-+ * Issue a simple command to the SCU. Do not use this interface if you must
-+ * then access data as any data values may be overwritten by another SCU
-+ * access by the time this function returns.
-  *
-- *	This function may sleep. Locking for SCU accesses is handled for
-- *	the caller.
-+ * This function may sleep. Locking for SCU accesses is handled for the
-+ * caller.
-  */
- int intel_scu_ipc_simple_command(int cmd, int sub)
- {
-@@ -344,16 +342,16 @@ int intel_scu_ipc_simple_command(int cmd, int sub)
- EXPORT_SYMBOL(intel_scu_ipc_simple_command);
- 
- /**
-- *	intel_scu_ipc_command	-	command with data
-- *	@cmd: command
-- *	@sub: sub type
-- *	@in: input data
-- *	@inlen: input length in dwords
-- *	@out: output data
-- *	@outlein: output length in dwords
-+ * intel_scu_ipc_command	-	command with data
-+ * @cmd: Command
-+ * @sub: Sub type
-+ * @in: Input data
-+ * @inlen: Input length in dwords
-+ * @out: Output data
-+ * @outlen: Output length in dwords
-  *
-- *	Issue a command to the SCU which involves data transfers. Do the
-- *	data copies under the lock but leave it for the caller to interpret
-+ * Issue a command to the SCU which involves data transfers. Do the
-+ * data copies under the lock but leave it for the caller to interpret.
-  */
- int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- 			  u32 *out, int outlen)
+  *	intel_scu_ipc_readvv		-	read a set of registers
+  *	@addr: register list
 -- 
 2.24.1
