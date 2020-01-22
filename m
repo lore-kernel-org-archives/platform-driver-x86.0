@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 2/9] platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_simple_command() static
-Date: Wed, 22 Jan 2020 19:46:12 +0300
-Message-ID: <20200122164619.73563-3-mika.westerberg@linux.intel.com>
+Subject: [PATCH 8/9] platform/x86: intel_pmc_ipc: Propagate error from kstrtoul()
+Date: Wed, 22 Jan 2020 19:46:18 +0300
+Message-ID: <20200122164619.73563-9-mika.westerberg@linux.intel.com>
 References: <20200122164619.73563-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,60 +12,30 @@ To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This function is not called outside of intel_pmc_ipc.c so we can make it
-static instead.
+kstrtoul() already returns negative error if the input was not valid so
+return it directly.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_pmc_ipc.h | 6 ------
- drivers/platform/x86/intel_pmc_ipc.c | 3 +--
- 2 files changed, 1 insertion(+), 8 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index 3b2e8b461520..b4f804877651 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -31,7 +31,6 @@
- 
- #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
- 
--int intel_pmc_ipc_simple_command(int cmd, int sub);
- int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
- 		u32 *out, u32 outlen, u32 dptr, u32 sptr);
- int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
-@@ -43,11 +42,6 @@ int intel_pmc_gcr_write(u32 offset, u32 data);
- 
- #else
- 
--static inline int intel_pmc_ipc_simple_command(int cmd, int sub)
--{
--	return -EINVAL;
--}
--
- static inline int intel_pmc_ipc_raw_cmd(u32 cmd, u32 sub, u8 *in, u32 inlen,
- 		u32 *out, u32 outlen, u32 dptr, u32 sptr)
- {
 diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 9229c7a16536..53551f5474a7 100644
+index b87036089a54..7b180ead064a 100644
 --- a/drivers/platform/x86/intel_pmc_ipc.c
 +++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -404,7 +404,7 @@ static int intel_pmc_ipc_check_status(void)
-  *
-  * Return:	an IPC error code or 0 on success.
-  */
--int intel_pmc_ipc_simple_command(int cmd, int sub)
-+static int intel_pmc_ipc_simple_command(int cmd, int sub)
- {
+@@ -512,8 +512,9 @@ static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
+ 	int subcmd;
  	int ret;
  
-@@ -419,7 +419,6 @@ int intel_pmc_ipc_simple_command(int cmd, int sub)
+-	if (kstrtoul(buf, 0, &val))
+-		return -EINVAL;
++	ret = kstrtoul(buf, 0, &val);
++	if (ret)
++		return ret;
  
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(intel_pmc_ipc_simple_command);
- 
- /**
-  * intel_pmc_ipc_raw_cmd() - IPC command with data and pointers
+ 	if (val)
+ 		subcmd = 1;
 -- 
 2.24.1
