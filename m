@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 4/9] platform/x86: intel_pmc_ipc: Drop intel_pmc_gcr_read() and intel_pmc_gcr_write()
-Date: Wed, 22 Jan 2020 19:46:14 +0300
-Message-ID: <20200122164619.73563-5-mika.westerberg@linux.intel.com>
+Subject: [PATCH 6/9] platform/x86: intel_pmc_ipc: Get rid of unnecessary includes
+Date: Wed, 22 Jan 2020 19:46:16 +0300
+Message-ID: <20200122164619.73563-7-mika.westerberg@linux.intel.com>
 References: <20200122164619.73563-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,127 +12,42 @@ To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-These functions are not used anywhere so drop them completely.
+There is no point including headers that are not needed in the driver so
+drop them.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_pmc_ipc.h | 12 ------
- drivers/platform/x86/intel_pmc_ipc.c | 59 ----------------------------
- 2 files changed, 71 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index 966ff2171ff9..e6da1ce26256 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -34,9 +34,7 @@
- int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
- 		u32 *out, u32 outlen);
- int intel_pmc_s0ix_counter_read(u64 *data);
--int intel_pmc_gcr_read(u32 offset, u32 *data);
- int intel_pmc_gcr_read64(u32 offset, u64 *data);
--int intel_pmc_gcr_write(u32 offset, u32 data);
- 
- #else
- 
-@@ -51,21 +49,11 @@ static inline int intel_pmc_s0ix_counter_read(u64 *data)
- 	return -EINVAL;
- }
- 
--static inline int intel_pmc_gcr_read(u32 offset, u32 *data)
--{
--	return -EINVAL;
--}
--
- static inline int intel_pmc_gcr_read64(u32 offset, u64 *data)
- {
- 	return -EINVAL;
- }
- 
--static inline int intel_pmc_gcr_write(u32 offset, u32 data)
--{
--	return -EINVAL;
--}
--
- #endif /*CONFIG_INTEL_PMC_IPC*/
- 
- #endif
 diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 83f47df1c4a5..677ed470e14e 100644
+index 83b106f66fa6..8527327d88c7 100644
 --- a/drivers/platform/x86/intel_pmc_ipc.c
 +++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -210,35 +210,6 @@ static inline int is_gcr_valid(u32 offset)
- 	return 0;
- }
+@@ -12,23 +12,13 @@
+  */
  
--/**
-- * intel_pmc_gcr_read() - Read a 32-bit PMC GCR register
-- * @offset:	offset of GCR register from GCR address base
-- * @data:	data pointer for storing the register output
-- *
-- * Reads the 32-bit PMC GCR register at given offset.
-- *
-- * Return:	negative value on error or 0 on success.
-- */
--int intel_pmc_gcr_read(u32 offset, u32 *data)
--{
--	int ret;
--
--	spin_lock(&ipcdev.gcr_lock);
--
--	ret = is_gcr_valid(offset);
--	if (ret < 0) {
--		spin_unlock(&ipcdev.gcr_lock);
--		return ret;
--	}
--
--	*data = readl(ipcdev.gcr_mem_base + offset);
--
--	spin_unlock(&ipcdev.gcr_lock);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(intel_pmc_gcr_read);
--
- /**
-  * intel_pmc_gcr_read64() - Read a 64-bit PMC GCR register
-  * @offset:	offset of GCR register from GCR address base
-@@ -268,36 +239,6 @@ int intel_pmc_gcr_read64(u32 offset, u64 *data)
- }
- EXPORT_SYMBOL_GPL(intel_pmc_gcr_read64);
+ #include <linux/acpi.h>
+-#include <linux/atomic.h>
+-#include <linux/bitops.h>
+ #include <linux/delay.h>
+-#include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/interrupt.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+-#include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/notifier.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
+-#include <linux/pm.h>
+-#include <linux/pm_qos.h>
+-#include <linux/sched.h>
+-#include <linux/spinlock.h>
+-#include <linux/suspend.h>
  
--/**
-- * intel_pmc_gcr_write() - Write PMC GCR register
-- * @offset:	offset of GCR register from GCR address base
-- * @data:	register update value
-- *
-- * Writes the PMC GCR register of given offset with given
-- * value.
-- *
-- * Return:	negative value on error or 0 on success.
-- */
--int intel_pmc_gcr_write(u32 offset, u32 data)
--{
--	int ret;
--
--	spin_lock(&ipcdev.gcr_lock);
--
--	ret = is_gcr_valid(offset);
--	if (ret < 0) {
--		spin_unlock(&ipcdev.gcr_lock);
--		return ret;
--	}
--
--	writel(data, ipcdev.gcr_mem_base + offset);
--
--	spin_unlock(&ipcdev.gcr_lock);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
--
- /**
-  * intel_pmc_gcr_update() - Update PMC GCR register bits
-  * @offset:	offset of GCR register from GCR address base
+ #include <asm/intel_pmc_ipc.h>
+ 
 -- 
 2.24.1
