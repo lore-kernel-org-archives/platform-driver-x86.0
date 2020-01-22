@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 9/9] platform/x86: intel_pmc_ipc: Switch to use driver->dev_groups
-Date: Wed, 22 Jan 2020 19:46:19 +0300
-Message-ID: <20200122164619.73563-10-mika.westerberg@linux.intel.com>
+Subject: [PATCH 1/9] platform/x86: intel_pmc_ipc: Make intel_pmc_gcr_update() static
+Date: Wed, 22 Jan 2020 19:46:11 +0300
+Message-ID: <20200122164619.73563-2-mika.westerberg@linux.intel.com>
 References: <20200122164619.73563-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,68 +12,60 @@ To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The driver core provides support for adding additional attributes for
-devices via new ->dev_groups member of struct device_driver. Convert the
-driver to use that instead of adding the attributes manually.
+This function is not called outside of intel_pmc_ipc.c so we can make it
+static instead.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_pmc_ipc.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/intel_pmc_ipc.h | 6 ------
+ drivers/platform/x86/intel_pmc_ipc.c | 3 +--
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
+diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+index 9e7adcdbe031..3b2e8b461520 100644
+--- a/arch/x86/include/asm/intel_pmc_ipc.h
++++ b/arch/x86/include/asm/intel_pmc_ipc.h
+@@ -40,7 +40,6 @@ int intel_pmc_s0ix_counter_read(u64 *data);
+ int intel_pmc_gcr_read(u32 offset, u32 *data);
+ int intel_pmc_gcr_read64(u32 offset, u64 *data);
+ int intel_pmc_gcr_write(u32 offset, u32 data);
+-int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val);
+ 
+ #else
+ 
+@@ -81,11 +80,6 @@ static inline int intel_pmc_gcr_write(u32 offset, u32 data)
+ 	return -EINVAL;
+ }
+ 
+-static inline int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+-{
+-	return -EINVAL;
+-}
+-
+ #endif /*CONFIG_INTEL_PMC_IPC*/
+ 
+ #endif
 diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 7b180ead064a..2433bf73f1ed 100644
+index 5c1da2bb1435..9229c7a16536 100644
 --- a/drivers/platform/x86/intel_pmc_ipc.c
 +++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -539,6 +539,11 @@ static const struct attribute_group intel_ipc_group = {
- 	.attrs = intel_ipc_attrs,
- };
- 
-+static const struct attribute_group *intel_ipc_groups[] = {
-+	&intel_ipc_group,
-+	NULL
-+};
-+
- static struct resource punit_res_array[] = {
- 	/* Punit BIOS */
- 	{
-@@ -879,18 +884,10 @@ static int ipc_plat_probe(struct platform_device *pdev)
- 		goto err_irq;
- 	}
- 
--	ret = sysfs_create_group(&pdev->dev.kobj, &intel_ipc_group);
--	if (ret) {
--		dev_err(&pdev->dev, "Failed to create sysfs group %d\n",
--			ret);
--		goto err_sys;
--	}
--
- 	ipcdev.has_gcr_regs = true;
- 
- 	return 0;
--err_sys:
--	devm_free_irq(&pdev->dev, ipcdev.irq, &ipcdev);
-+
- err_irq:
- 	platform_device_unregister(ipcdev.tco_dev);
- 	platform_device_unregister(ipcdev.punit_dev);
-@@ -901,7 +898,6 @@ static int ipc_plat_probe(struct platform_device *pdev)
- 
- static int ipc_plat_remove(struct platform_device *pdev)
+@@ -309,7 +309,7 @@ EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
+  *
+  * Return:	negative value on error or 0 on success.
+  */
+-int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
++static int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
  {
--	sysfs_remove_group(&pdev->dev.kobj, &intel_ipc_group);
- 	devm_free_irq(&pdev->dev, ipcdev.irq, &ipcdev);
- 	platform_device_unregister(ipcdev.tco_dev);
- 	platform_device_unregister(ipcdev.punit_dev);
-@@ -916,6 +912,7 @@ static struct platform_driver ipc_plat_driver = {
- 	.driver = {
- 		.name = "pmc-ipc-plat",
- 		.acpi_match_table = ACPI_PTR(ipc_acpi_ids),
-+		.dev_groups = intel_ipc_groups,
- 	},
- };
+ 	u32 new_val;
+ 	int ret = 0;
+@@ -339,7 +339,6 @@ int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+ 	spin_unlock(&ipcdev.gcr_lock);
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(intel_pmc_gcr_update);
  
+ static int update_no_reboot_bit(void *priv, bool set)
+ {
 -- 
 2.24.1
