@@ -1,39 +1,49 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 0/9] platform/x86: intel_pmc_ipc: Cleanups
-Date: Wed, 22 Jan 2020 19:46:10 +0300
-Message-ID: <20200122164619.73563-1-mika.westerberg@linux.intel.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 37/38] platform/x86: intel_pmc_ipc: Convert to MFD
+Date: Thu, 23 Jan 2020 08:01:42 +0000
+Message-ID: <20200123080142.GP15507@dell>
+References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
+ <20200121160114.60007-38-mika.westerberg@linux.intel.com>
+ <20200122123454.GL15507@dell>
+ <20200122125300.GO2665@lahna.fi.intel.com>
+ <20200122132757.GM15507@dell>
+ <20200122144523.GX2665@lahna.fi.intel.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200122144523.GX2665@lahna.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Brown <broonie@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Wed, 22 Jan 2020, Mika Westerberg wrote:
 
-This is another independent cleanup series that I split out from my SCU/PMC
-IPC rework patch set [1] as suggested by Greg. This removes code that is
-not used anywhere and makes certain functions static as they are not called
-outside of the driver. We also make the driver to use driver->dev_groups to
-expose sysfs attributes.
+> On Wed, Jan 22, 2020 at 01:27:57PM +0000, Lee Jones wrote:
+> > > Which type of device you suggest here? And which bus it should be
+> > > registered to? I think we can make this create a platform_device but
+> > > then we would need to do that from the PCI driver as well which seems
+> > > unnecessary since we already have the struct pci_dev.
+> > 
+> > What kind of device is it?
+> 
+> It is either part of an ACPI device (platform_device) or a PCI device
+> depending on the platform.
+> 
+> > Refrain from using platform device, unless it is one please.
+> 
+> OK.
+> 
+> Greg suggested making the SCU IPC functionality a class and I think it
+> fits here nicely so I'm going to try that next if nobody objects. I'll
+> send the first cleanup patches separately.
 
-[1] https://lkml.org/lkml/2020/1/21/678
-
-Mika Westerberg (9):
-  platform/x86: intel_pmc_ipc: Make intel_pmc_gcr_update() static
-  platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_simple_command() static
-  platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_raw_cmd() static
-  platform/x86: intel_pmc_ipc: Drop intel_pmc_gcr_read() and intel_pmc_gcr_write()
-  platform/x86: intel_pmc_ipc: Drop ipc_data_readb()
-  platform/x86: intel_pmc_ipc: Get rid of unnecessary includes
-  platform/x86: intel_pmc_ipc: Use octal permissions in sysfs attributes
-  platform/x86: intel_pmc_ipc: Propagate error from kstrtoul()
-  platform/x86: intel_pmc_ipc: Switch to use driver->dev_groups
-
- arch/x86/include/asm/intel_pmc_ipc.h |  32 --------
- drivers/platform/x86/intel_pmc_ipc.c | 114 ++++-----------------------
- 2 files changed, 16 insertions(+), 130 deletions(-)
+Sounds good.
 
 -- 
-2.24.1
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
