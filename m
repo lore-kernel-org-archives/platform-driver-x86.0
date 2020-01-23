@@ -1,50 +1,41 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 00/10] platform/x86: intel_scu_ipc: A fix and cleanups
-Date: Thu, 23 Jan 2020 14:31:45 +0200
-Message-ID: <CAHp75VfEA3gpAceLjhjDKZQSE6O7tQ0g9nnyyDiReSevjhZruw@mail.gmail.com>
-References: <20200122162813.26070-1-mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 0/5] Intel Speed Select Core Power Support
+Date: Thu, 23 Jan 2020 14:32:34 +0200
+Message-ID: <CAHp75VcJXC6jtgXcxV2ikEEw_q=UPHyHYCST9QvyhWK+oRGvnQ@mail.gmail.com>
+References: <20200114192217.580364-1-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200122162813.26070-1-mika.westerberg@linux.intel.com>
+In-Reply-To: <20200114192217.580364-1-srinivas.pandruvada@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Andriy Shevchenko <andriy.shevchenko@intel.com>, Prarit Bhargava <prarit@redhat.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jan 22, 2020 at 6:28 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
+On Tue, Jan 14, 2020 at 9:22 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
 >
-> Hi,
->
-> As suggested by Greg in the discussion around my SCU/PMC IPC rework series [1],
-> I split the cleanups touching intel_scu_ipc driver in a separate series
-> that can be applied independly.
->
-> The first patch fixes interrupt support to work in Intel Merrifield. The
-> rest of the patches are cleanups mostly removing code that is not used
-> anywhere.
+> This series add core-power or SST-CP support. Also fixes some display
+> issue with SST-TF.
 >
 
 Pushed to my review and testing queue, thanks!
 
-> [1] https://lkml.org/lkml/2020/1/21/678
+> Srinivas Pandruvada (5):
+>   platform/x86: ISST: Allow additional core-power mailbox commands
+>   tools/power/x86/intel-speed-select: Add support for core-power
+>     discovery
+>   tools/power/x86/intel-speed-select: Fix result display for turbo-freq
+>     auto mode
+>   tools/power/x86/intel-speed-select: Change the order for clos disable
+>   tools/power/x86/intel-speed-select: Update version
 >
-> Mika Westerberg (10):
->   platform/x86: intel_scu_ipc: Fix interrupt support
->   platform/x86: intel_scu_ipc: Add constants for register offsets
->   platform/x86: intel_scu_ipc: Remove Lincroft support
->   platform/x86: intel_scu_ipc: Drop intel_scu_ipc_i2c_cntrl()
->   platform/x86: intel_scu_ipc: Sleeping is fine when polling
->   platform/x86: intel_scu_ipc: Drop unused prototype intel_scu_ipc_fw_update()
->   platform/x86: intel_scu_ipc: Drop unused macros
->   platform/x86: intel_scu_ipc: Drop intel_scu_ipc_io[read|write][8|16]()
->   platform/x86: intel_scu_ipc: Drop intel_scu_ipc_raw_command()
->   platform/x86: intel_scu_ipc: Reformat kernel-doc comments of exported functions
->
->  arch/x86/include/asm/intel_scu_ipc.h |  20 --
->  drivers/platform/x86/intel_scu_ipc.c | 414 ++++++---------------------
->  2 files changed, 91 insertions(+), 343 deletions(-)
+>  .../intel_speed_select_if/isst_if_common.c    |  3 +
+>  .../x86/intel-speed-select/isst-config.c      | 34 ++++++------
+>  .../power/x86/intel-speed-select/isst-core.c  | 55 +++++++++++++++++++
+>  .../x86/intel-speed-select/isst-display.c     | 27 ++++++---
+>  tools/power/x86/intel-speed-select/isst.h     |  6 ++
+>  5 files changed, 100 insertions(+), 25 deletions(-)
 >
 > --
 > 2.24.1
