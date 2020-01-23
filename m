@@ -1,51 +1,53 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v4 37/38] platform/x86: intel_pmc_ipc: Convert to MFD
-Date: Thu, 23 Jan 2020 10:56:16 +0200
-Message-ID: <20200123085616.GF2665@lahna.fi.intel.com>
-References: <20200121160114.60007-1-mika.westerberg@linux.intel.com>
- <20200121160114.60007-38-mika.westerberg@linux.intel.com>
- <20200122123454.GL15507@dell>
- <20200122125300.GO2665@lahna.fi.intel.com>
- <20200122132757.GM15507@dell>
- <20200122144523.GX2665@lahna.fi.intel.com>
- <20200123080142.GP15507@dell>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 0/9] platform/x86: intel_pmc_ipc: Cleanups
+Date: Thu, 23 Jan 2020 14:31:31 +0200
+Message-ID: <CAHp75VcTeT0Brhe+in-XKfwwaaXSwfRK0ceNVgUPd_TOpk1TqQ@mail.gmail.com>
+References: <20200122164619.73563-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200123080142.GP15507@dell>
+In-Reply-To: <20200122164619.73563-1-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Brown <broonie@kernel.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Zha Qipeng <qipeng.zha@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jan 23, 2020 at 08:01:42AM +0000, Lee Jones wrote:
-> On Wed, 22 Jan 2020, Mika Westerberg wrote:
-> 
-> > On Wed, Jan 22, 2020 at 01:27:57PM +0000, Lee Jones wrote:
-> > > > Which type of device you suggest here? And which bus it should be
-> > > > registered to? I think we can make this create a platform_device but
-> > > > then we would need to do that from the PCI driver as well which seems
-> > > > unnecessary since we already have the struct pci_dev.
-> > > 
-> > > What kind of device is it?
-> > 
-> > It is either part of an ACPI device (platform_device) or a PCI device
-> > depending on the platform.
-> > 
-> > > Refrain from using platform device, unless it is one please.
-> > 
-> > OK.
-> > 
-> > Greg suggested making the SCU IPC functionality a class and I think it
-> > fits here nicely so I'm going to try that next if nobody objects. I'll
-> > send the first cleanup patches separately.
-> 
-> Sounds good.
+On Wed, Jan 22, 2020 at 6:46 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> Hi,
+>
+> This is another independent cleanup series that I split out from my SCU/PMC
+> IPC rework patch set [1] as suggested by Greg. This removes code that is
+> not used anywhere and makes certain functions static as they are not called
+> outside of the driver. We also make the driver to use driver->dev_groups to
+> expose sysfs attributes.
+>
+> [1] https://lkml.org/lkml/2020/1/21/678
+>
 
-FYI, I the cleanup patch series can be found here:
+Pushed to my review and testing queue, thanks!
 
-https://www.spinics.net/lists/platform-driver-x86/msg20728.html
-https://www.spinics.net/lists/platform-driver-x86/msg20729.html
-https://www.spinics.net/lists/platform-driver-x86/msg20734.html
-https://www.spinics.net/lists/platform-driver-x86/msg20750.html
+> Mika Westerberg (9):
+>   platform/x86: intel_pmc_ipc: Make intel_pmc_gcr_update() static
+>   platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_simple_command() static
+>   platform/x86: intel_pmc_ipc: Make intel_pmc_ipc_raw_cmd() static
+>   platform/x86: intel_pmc_ipc: Drop intel_pmc_gcr_read() and intel_pmc_gcr_write()
+>   platform/x86: intel_pmc_ipc: Drop ipc_data_readb()
+>   platform/x86: intel_pmc_ipc: Get rid of unnecessary includes
+>   platform/x86: intel_pmc_ipc: Use octal permissions in sysfs attributes
+>   platform/x86: intel_pmc_ipc: Propagate error from kstrtoul()
+>   platform/x86: intel_pmc_ipc: Switch to use driver->dev_groups
+>
+>  arch/x86/include/asm/intel_pmc_ipc.h |  32 --------
+>  drivers/platform/x86/intel_pmc_ipc.c | 114 ++++-----------------------
+>  2 files changed, 16 insertions(+), 130 deletions(-)
+>
+> --
+> 2.24.1
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
