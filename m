@@ -1,48 +1,97 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-nb-wmi: Support left round button on N56VB
-Date: Thu, 23 Jan 2020 14:32:47 +0200
-Message-ID: <CAHp75VdYL-CXaQYmpdJad5nd3uzBd8A9k3pyHgjdcASMHCAtqg@mail.gmail.com>
-References: <20200113223927.102509-1-paul@crapouillou.net>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 06/33] platform/x86: dell-laptop: disable kbd backlight on Inspiron 10xx
+Date: Thu, 23 Jan 2020 20:16:41 -0500
+Message-ID: <20200124011708.18232-6-sashal@kernel.org>
+References: <20200124011708.18232-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200113223927.102509-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Corentin Chary <corentin.chary@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>, Mario Limonciello <mario.limonciello@dell.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jan 14, 2020 at 12:39 AM Paul Cercueil <paul@crapouillou.net> wrote:
->
-> The N56VB laptop has a round button located on the left side above the
-> keyboard. Map it to F13 since it does not have any predeterminated
-> purpose.
->
+From: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
 
-Pushed to my review and testing queue, thanks!
+[ Upstream commit 10b65e2915b2fcc606d173e98a972850101fb4c4 ]
 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/platform/x86/asus-nb-wmi.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index b361c73636a4..6f12747a359a 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -471,6 +471,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
->         { KE_KEY, 0x67, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + CRT + TV */
->         { KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } },
->         { KE_IGNORE, 0x6E, },  /* Low Battery notification */
-> +       { KE_KEY, 0x71, { KEY_F13 } }, /* General-purpose button */
->         { KE_KEY, 0x7a, { KEY_ALS_TOGGLE } }, /* Ambient Light Sensor Toggle */
->         { KE_KEY, 0x7c, { KEY_MICMUTE } },
->         { KE_KEY, 0x7D, { KEY_BLUETOOTH } }, /* Bluetooth Enable */
-> --
-> 2.24.1
->
+This patch adds a quirk disabling keyboard backlight support for the
+Dell Inspiron 1012 and 1018.
 
+Those models wrongly report supporting keyboard backlight control
+features (through SMBIOS tokens) even though they're not equipped with
+a backlit keyboard. This led to broken controls being exposed
+through sysfs by this driver which froze the system when used.
 
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=107651
+Signed-off-by: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/dell-laptop.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index d27be2836bc21..74e988f839e85 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -33,6 +33,7 @@
+ 
+ struct quirk_entry {
+ 	bool touchpad_led;
++	bool kbd_led_not_present;
+ 	bool kbd_led_levels_off_1;
+ 	bool kbd_missing_ac_tag;
+ 
+@@ -73,6 +74,10 @@ static struct quirk_entry quirk_dell_latitude_e6410 = {
+ 	.kbd_led_levels_off_1 = true,
+ };
+ 
++static struct quirk_entry quirk_dell_inspiron_1012 = {
++	.kbd_led_not_present = true,
++};
++
+ static struct platform_driver platform_driver = {
+ 	.driver = {
+ 		.name = "dell-laptop",
+@@ -310,6 +315,24 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
+ 		},
+ 		.driver_data = &quirk_dell_latitude_e6410,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "Dell Inspiron 1012",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1012"),
++		},
++		.driver_data = &quirk_dell_inspiron_1012,
++	},
++	{
++		.callback = dmi_matched,
++		.ident = "Dell Inspiron 1018",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1018"),
++		},
++		.driver_data = &quirk_dell_inspiron_1012,
++	},
+ 	{ }
+ };
+ 
+@@ -1493,6 +1516,9 @@ static void kbd_init(void)
+ {
+ 	int ret;
+ 
++	if (quirks && quirks->kbd_led_not_present)
++		return;
++
+ 	ret = kbd_init_info();
+ 	kbd_init_tokens();
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
