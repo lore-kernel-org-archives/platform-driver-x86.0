@@ -1,14 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 06/33] platform/x86: dell-laptop: disable kbd backlight on Inspiron 10xx
-Date: Thu, 23 Jan 2020 20:16:41 -0500
-Message-ID: <20200124011708.18232-6-sashal@kernel.org>
-References: <20200124011708.18232-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 01/11] platform/x86: dell-laptop: disable kbd backlight on Inspiron 10xx
+Date: Thu, 23 Jan 2020 20:17:37 -0500
+Message-ID: <20200124011747.18575-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200124011708.18232-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Pacien TRAN-GIRARD <pacien.trangirard@pacien.net>, Mario Limonciello <mario.limonciello@dell.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
@@ -36,10 +34,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 26 insertions(+)
 
 diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index d27be2836bc21..74e988f839e85 100644
+index 3433986d52200..949dbc8aab413 100644
 --- a/drivers/platform/x86/dell-laptop.c
 +++ b/drivers/platform/x86/dell-laptop.c
-@@ -33,6 +33,7 @@
+@@ -37,6 +37,7 @@
  
  struct quirk_entry {
  	bool touchpad_led;
@@ -47,7 +45,7 @@ index d27be2836bc21..74e988f839e85 100644
  	bool kbd_led_levels_off_1;
  	bool kbd_missing_ac_tag;
  
-@@ -73,6 +74,10 @@ static struct quirk_entry quirk_dell_latitude_e6410 = {
+@@ -77,6 +78,10 @@ static struct quirk_entry quirk_dell_latitude_e6410 = {
  	.kbd_led_levels_off_1 = true,
  };
  
@@ -58,7 +56,7 @@ index d27be2836bc21..74e988f839e85 100644
  static struct platform_driver platform_driver = {
  	.driver = {
  		.name = "dell-laptop",
-@@ -310,6 +315,24 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
+@@ -314,6 +319,24 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
  		},
  		.driver_data = &quirk_dell_latitude_e6410,
  	},
@@ -83,7 +81,7 @@ index d27be2836bc21..74e988f839e85 100644
  	{ }
  };
  
-@@ -1493,6 +1516,9 @@ static void kbd_init(void)
+@@ -1497,6 +1520,9 @@ static void kbd_init(void)
  {
  	int ret;
  
