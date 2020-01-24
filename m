@@ -1,56 +1,47 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v12 03/10] firmware: Rename FW_OPT_NOFALLBACK to
- FW_OPT_NOFALLBACK_SYSFS
-Date: Fri, 24 Jan 2020 10:16:48 +0100
-Message-ID: <d25d5d6e-0348-b19f-539e-048cfa70d6a6@redhat.com>
-References: <20200115163554.101315-1-hdegoede@redhat.com>
- <20200115163554.101315-4-hdegoede@redhat.com>
- <20200124085751.GA2957916@kroah.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 24/56] platform/x86: GPD pocket fan: Allow somewhat lower/higher temperature limits
+Date: Fri, 24 Jan 2020 09:19:40 -0500
+Message-ID: <20200124142012.29752-24-sashal@kernel.org>
+References: <20200124142012.29752-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200124085751.GA2957916@kroah.com>
-Content-Language: en-US
+In-Reply-To: <20200124142012.29752-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Lutomirski <luto@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, Jason Anderson <jasona.594@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+From: Hans de Goede <hdegoede@redhat.com>
 
-On 1/24/20 9:57 AM, Greg Kroah-Hartman wrote:
-> On Wed, Jan 15, 2020 at 05:35:47PM +0100, Hans de Goede wrote:
->> This is a preparation patch for adding a new platform fallback mechanism,
->> which will have its own enable/disable FW_OPT_xxx option.
->>
->> Note this also fixes a typo in one of the re-wordwrapped comments:
->> enfoce -> enforce.
->>
->> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> I've taken this in my tree for now in a quest to try to get others to
-> pay attention to this series...
+[ Upstream commit 1f27dbd8265dbb379926c8f6a4453fe7fe26d7a3 ]
 
-Thank you.
+Allow the user to configure the fan to turn on / speed-up at lower
+thresholds then before (20 degrees Celcius as minimum instead of 40) and
+likewise also allow the user to delay the fan speeding-up till the
+temperature hits 90 degrees Celcius (was 70).
 
-As mentioned before I believe that this series is ready for merging now.
+Cc: Jason Anderson <jasona.594@gmail.com>
+Reported-by: Jason Anderson <jasona.594@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/gpd-pocket-fan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Andy Lutomirski had one last change request for v12 of the second
-patch in the series, specifically to replace the loop searching for
-the prefix with a memem, but the kernel does not have memmem.
-
-Andy, are you ok with v12 as is, given that we don't have memmem ?
-
-Assuming Andy is ok with v12 as is, then to merge this we need
-to probably wait for 5.6-rc1 and then have the x86/efi folks do
-an immutable branch with the first 2 patches of the series.
-
-After that you (Greg) can merge patches 3-10 (after merging the
-branch) and the platform/drivers/x86 folks can take 11 and 12
-(also after merging the branch).
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
+index 73eb1572b9662..b471b86c28fe8 100644
+--- a/drivers/platform/x86/gpd-pocket-fan.c
++++ b/drivers/platform/x86/gpd-pocket-fan.c
+@@ -127,7 +127,7 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
+-		if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
++		if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
+ 			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
+ 				temp_limits[i]);
+ 			temp_limits[0] = TEMP_LIMIT0_DEFAULT;
+-- 
+2.20.1
