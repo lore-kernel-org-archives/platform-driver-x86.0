@@ -1,47 +1,73 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 051/107] platform/x86: GPD pocket fan: Allow somewhat lower/higher temperature limits
-Date: Fri, 24 Jan 2020 09:17:21 -0500
-Message-ID: <20200124141817.28793-51-sashal@kernel.org>
-References: <20200124141817.28793-1-sashal@kernel.org>
+From: Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v2] admin guide/pm: Admin guide for Intel Uncore
+ Frequency limits
+Date: Fri, 24 Jan 2020 10:00:39 -0700
+Message-ID: <20200124100039.70116459@lwn.net>
+References: <20200113040143.1419770-1-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>, Jason Anderson <jasona.594@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20200113040143.1419770-1-srinivas.pandruvada@linux.intel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: andy@infradead.org, dvhart@infradead.org, lenb@kernel.org, andy@kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+On Sun, 12 Jan 2020 20:01:43 -0800
+Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> wrote:
 
-[ Upstream commit 1f27dbd8265dbb379926c8f6a4453fe7fe26d7a3 ]
+> Added documentation for the attributes to control uncore frequency
+> selection.
+> 
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+> v2:
+>  - Split the documentation patch to another patch to merge via different
+>     tree
 
-Allow the user to configure the fan to turn on / speed-up at lower
-thresholds then before (20 degrees Celcius as minimum instead of 40) and
-likewise also allow the user to delay the fan speeding-up till the
-temperature hits 90 degrees Celcius (was 70).
+Which tree did you have in mind?  PM stuff tends to go through Rafael's
+tree, normally, which is fine.
 
-Cc: Jason Anderson <jasona.594@gmail.com>
-Reported-by: Jason Anderson <jasona.594@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/gpd-pocket-fan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/admin-guide/pm/intel_uncore.rst | 23 +++++++++++++++++++
+>  .../admin-guide/pm/working-state.rst          |  1 +
+>  2 files changed, 24 insertions(+)
+>  create mode 100644 Documentation/admin-guide/pm/intel_uncore.rst
+> 
+> diff --git a/Documentation/admin-guide/pm/intel_uncore.rst b/Documentation/admin-guide/pm/intel_uncore.rst
+> new file mode 100644
+> index 000000000000..d75be65fb16a
+> --- /dev/null
+> +++ b/Documentation/admin-guide/pm/intel_uncore.rst
+> @@ -0,0 +1,23 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=========================================================
+> +Intel® Uncore Frequency Selection
 
-diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
-index 73eb1572b9662..b471b86c28fe8 100644
---- a/drivers/platform/x86/gpd-pocket-fan.c
-+++ b/drivers/platform/x86/gpd-pocket-fan.c
-@@ -127,7 +127,7 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
--		if (temp_limits[i] < 40000 || temp_limits[i] > 70000) {
-+		if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
- 			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and 70000)\n",
- 				temp_limits[i]);
- 			temp_limits[0] = TEMP_LIMIT0_DEFAULT;
--- 
-2.20.1
+I would really like to avoid adding ® symbols throughout the docs.  I get
+grief for non-ASCII symbols that actually have a need to be there; this
+isn't one of those.  
+
+> +=========================================================
+> +
+> +The uncore frequency in the Intel(R) hardware is selected based on internal heuristics, which uses the current selected performance state and various system power constraints. In majority of the cases this selection is the most optimal, so there is no need for placing external constraints from the Operating System.
+
+I would say that this violates the 80-character limit by a character or
+two...  The entire patch has this problem.
+
+> +
+> +But there are some customers who wants less jitters from dynamic uncore frequency selection. For them, power saving is much lower priority than consistent performance. Currently these customers uses MSR 0x620, to place hard limits on the maximum and the minimum uncore frequency. They can now use Linux sysfs to place these limits and also have additional capability to place hard limits under power constraint scenario.
+
+less jitter (singular)
+
+> +
+> +The Uncore frequency section attributes are present under "/sys/devices/system/cpu/intel_uncore_frequency".
+> +The scope of these attributes is per die in multi-die systems or package wide in non multi-die systems. There is a unique folder for each die or package. For example:
+> +"package_00_die_00" for package 0 and die 0.
+
+This may not render as you would like; use an RST literal block here.
+
+Thanks,
+
+jon
