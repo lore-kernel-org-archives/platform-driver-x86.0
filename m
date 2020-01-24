@@ -1,73 +1,49 @@
-From: Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v2] admin guide/pm: Admin guide for Intel Uncore
- Frequency limits
-Date: Fri, 24 Jan 2020 10:00:39 -0700
-Message-ID: <20200124100039.70116459@lwn.net>
-References: <20200113040143.1419770-1-srinivas.pandruvada@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20200113040143.1419770-1-srinivas.pandruvada@linux.intel.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: andy@infradead.org, dvhart@infradead.org, lenb@kernel.org, andy@kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org
+From: Gayatri Kammela <gayatri.kammela@intel.com>
+Subject: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs entries
+Date: Fri, 24 Jan 2020 10:50:21 -0800
+Message-ID: <cover.1579890793.git.gayatri.kammela@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, dvhart@infradead.org, mika.westerberg@intel.com, peterz@infradead.org, charles.d.prestopine@intel.com, Gayatri Kammela <gayatri.kammela@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Box <david.e.box@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, 12 Jan 2020 20:01:43 -0800
-Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> wrote:
+Hi,
 
-> Added documentation for the attributes to control uncore frequency
-> selection.
-> 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
-> v2:
->  - Split the documentation patch to another patch to merge via different
->     tree
+Tiger Lake platform supports 8 sub-states/low power modes of S0ix. Add
+debugfs entries to pmc_core driver to access low power mode registers
+and residencies.
 
-Which tree did you have in mind?  PM stuff tends to go through Rafael's
-tree, normally, which is fine.
+Patch 1: Add debugfs entry to access sub-state residencies
+Patch 2: Add debugfs entry for low power mode status registers
+Patch 3: Refactor the driver by removing redundant code
+Patch 4: Remove slp_s0 attributes from tgl_reg_map
+Patch 5: Add an additional parameter to pmc_core_lpm_display_map()
+Patch 6: Dump low power status registers on an S0ix.y failure
+Patch 7: Add debugfs support to access live status registers
 
->  Documentation/admin-guide/pm/intel_uncore.rst | 23 +++++++++++++++++++
->  .../admin-guide/pm/working-state.rst          |  1 +
->  2 files changed, 24 insertions(+)
->  create mode 100644 Documentation/admin-guide/pm/intel_uncore.rst
-> 
-> diff --git a/Documentation/admin-guide/pm/intel_uncore.rst b/Documentation/admin-guide/pm/intel_uncore.rst
-> new file mode 100644
-> index 000000000000..d75be65fb16a
-> --- /dev/null
-> +++ b/Documentation/admin-guide/pm/intel_uncore.rst
-> @@ -0,0 +1,23 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=========================================================
-> +Intel® Uncore Frequency Selection
+Gayatri Kammela (7):
+  platform/x86: intel_pmc_core: Add debugfs entry to access sub-state
+    residencies
+  platform/x86: intel_pmc_core: Add debugfs entry for low power mode
+    status registers
+  platform/x86: intel_pmc_core: Refactor the driver by removing
+    redundant code
+  platform/x86: intel_pmc_core: Remove slp_s0 attributes from
+    tgl_reg_map
+  platform/x86: intel_pmc_core: Add an additional parameter to
+    pmc_core_lpm_display()
+  platform/x86: intel_pmc_core: Dump low power status registers on an
+    S0ix.y failure
+  platform/x86: intel_pmc_core: Add debugfs support to access live
+    status registers
 
-I would really like to avoid adding ® symbols throughout the docs.  I get
-grief for non-ASCII symbols that actually have a need to be there; this
-isn't one of those.  
+ drivers/platform/x86/intel_pmc_core.c | 301 +++++++++++++++++++++++---
+ drivers/platform/x86/intel_pmc_core.h |  28 +++
+ 2 files changed, 302 insertions(+), 27 deletions(-)
 
-> +=========================================================
-> +
-> +The uncore frequency in the Intel(R) hardware is selected based on internal heuristics, which uses the current selected performance state and various system power constraints. In majority of the cases this selection is the most optimal, so there is no need for placing external constraints from the Operating System.
-
-I would say that this violates the 80-character limit by a character or
-two...  The entire patch has this problem.
-
-> +
-> +But there are some customers who wants less jitters from dynamic uncore frequency selection. For them, power saving is much lower priority than consistent performance. Currently these customers uses MSR 0x620, to place hard limits on the maximum and the minimum uncore frequency. They can now use Linux sysfs to place these limits and also have additional capability to place hard limits under power constraint scenario.
-
-less jitter (singular)
-
-> +
-> +The Uncore frequency section attributes are present under "/sys/devices/system/cpu/intel_uncore_frequency".
-> +The scope of these attributes is per die in multi-die systems or package wide in non multi-die systems. There is a unique folder for each die or package. For example:
-> +"package_00_die_00" for package 0 and die 0.
-
-This may not render as you would like; use an RST literal block here.
-
-Thanks,
-
-jon
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Box <david.e.box@intel.com>
+-- 
+2.17.1
