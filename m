@@ -1,65 +1,67 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs entries
-Date: Mon, 27 Jan 2020 12:49:16 +0200
-Message-ID: <CAHp75Vfb38BEh2OZkO2EoQgCyBxaLoiwh8S_qKiPQRX1g+ZA2Q@mail.gmail.com>
+From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Subject: RE: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs entries
+Date: Mon, 27 Jan 2020 18:02:32 +0000
+Message-ID: <BL0PR11MB31071AD85775C09B8EC26608F20B0@BL0PR11MB3107.namprd11.prod.outlook.com>
 References: <cover.1579890793.git.gayatri.kammela@intel.com>
+ <CAHp75Vfb38BEh2OZkO2EoQgCyBxaLoiwh8S_qKiPQRX1g+ZA2Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1579890793.git.gayatri.kammela@intel.com>
+In-Reply-To: <CAHp75Vfb38BEh2OZkO2EoQgCyBxaLoiwh8S_qKiPQRX1g+ZA2Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gayatri Kammela <gayatri.kammela@intel.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Mika Westerberg <mika.westerberg@intel.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Box <david.e.box@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Box, David E" <david.e.box@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jan 24, 2020 at 10:59 PM Gayatri Kammela
-<gayatri.kammela@intel.com> wrote:
->
-> Hi,
->
-> Tiger Lake platform supports 8 sub-states/low power modes of S0ix. Add
-> debugfs entries to pmc_core driver to access low power mode registers
-> and residencies.
->
-> Patch 1: Add debugfs entry to access sub-state residencies
-> Patch 2: Add debugfs entry for low power mode status registers
-> Patch 3: Refactor the driver by removing redundant code
-> Patch 4: Remove slp_s0 attributes from tgl_reg_map
-> Patch 5: Add an additional parameter to pmc_core_lpm_display_map()
-> Patch 6: Dump low power status registers on an S0ix.y failure
-> Patch 7: Add debugfs support to access live status registers
-
-It doesn't apply to our for-next branch.
-
->
-> Gayatri Kammela (7):
->   platform/x86: intel_pmc_core: Add debugfs entry to access sub-state
->     residencies
->   platform/x86: intel_pmc_core: Add debugfs entry for low power mode
->     status registers
->   platform/x86: intel_pmc_core: Refactor the driver by removing
->     redundant code
->   platform/x86: intel_pmc_core: Remove slp_s0 attributes from
->     tgl_reg_map
->   platform/x86: intel_pmc_core: Add an additional parameter to
->     pmc_core_lpm_display()
->   platform/x86: intel_pmc_core: Dump low power status registers on an
->     S0ix.y failure
->   platform/x86: intel_pmc_core: Add debugfs support to access live
->     status registers
->
->  drivers/platform/x86/intel_pmc_core.c | 301 +++++++++++++++++++++++---
->  drivers/platform/x86/intel_pmc_core.h |  28 +++
->  2 files changed, 302 insertions(+), 27 deletions(-)
->
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: David Box <david.e.box@intel.com>
-> --
-> 2.17.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBTaGV2Y2hlbmtv
+IDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBTZW50OiBNb25kYXksIEphbnVhcnkgMjcs
+IDIwMjAgMjo0OSBBTQ0KPiBUbzogS2FtbWVsYSwgR2F5YXRyaSA8Z2F5YXRyaS5rYW1tZWxhQGlu
+dGVsLmNvbT4NCj4gQ2M6IFBsYXRmb3JtIERyaXZlciA8cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2Vy
+Lmtlcm5lbC5vcmc+OyBMaW51eCBLZXJuZWwNCj4gTWFpbGluZyBMaXN0IDxsaW51eC1rZXJuZWxA
+dmdlci5rZXJuZWwub3JnPjsgU29tYXlhamksIFZpc2h3YW5hdGgNCj4gPHZpc2h3YW5hdGguc29t
+YXlhamlAaW50ZWwuY29tPjsgRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsNCj4g
+V2VzdGVyYmVyZywgTWlrYSA8bWlrYS53ZXN0ZXJiZXJnQGludGVsLmNvbT47IFBldGVyIFppamxz
+dHJhIChJbnRlbCkNCj4gPHBldGVyekBpbmZyYWRlYWQub3JnPjsgUHJlc3RvcGluZSwgQ2hhcmxl
+cyBEDQo+IDxjaGFybGVzLmQucHJlc3RvcGluZUBpbnRlbC5jb20+OyBQYW5kcnV2YWRhLCBTcmlu
+aXZhcw0KPiA8c3Jpbml2YXMucGFuZHJ1dmFkYUBpbnRlbC5jb20+OyBBbmR5IFNoZXZjaGVua28N
+Cj4gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbT47IEJveCwgRGF2aWQgRQ0KPiA8
+ZGF2aWQuZS5ib3hAaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxIDAvN10gcGxh
+dGZvcm0veDg2OiBpbnRlbF9wbWNfY29yZTogQWRkIGRlYnVnZnMNCj4gZW50cmllcw0KPiANCj4g
+T24gRnJpLCBKYW4gMjQsIDIwMjAgYXQgMTA6NTkgUE0gR2F5YXRyaSBLYW1tZWxhDQo+IDxnYXlh
+dHJpLmthbW1lbGFAaW50ZWwuY29tPiB3cm90ZToNCj4gPg0KPiA+IEhpLA0KPiA+DQo+ID4gVGln
+ZXIgTGFrZSBwbGF0Zm9ybSBzdXBwb3J0cyA4IHN1Yi1zdGF0ZXMvbG93IHBvd2VyIG1vZGVzIG9m
+IFMwaXguIEFkZA0KPiA+IGRlYnVnZnMgZW50cmllcyB0byBwbWNfY29yZSBkcml2ZXIgdG8gYWNj
+ZXNzIGxvdyBwb3dlciBtb2RlIHJlZ2lzdGVycw0KPiA+IGFuZCByZXNpZGVuY2llcy4NCj4gPg0K
+PiA+IFBhdGNoIDE6IEFkZCBkZWJ1Z2ZzIGVudHJ5IHRvIGFjY2VzcyBzdWItc3RhdGUgcmVzaWRl
+bmNpZXMgUGF0Y2ggMjoNCj4gPiBBZGQgZGVidWdmcyBlbnRyeSBmb3IgbG93IHBvd2VyIG1vZGUg
+c3RhdHVzIHJlZ2lzdGVycyBQYXRjaCAzOg0KPiA+IFJlZmFjdG9yIHRoZSBkcml2ZXIgYnkgcmVt
+b3ZpbmcgcmVkdW5kYW50IGNvZGUgUGF0Y2ggNDogUmVtb3ZlIHNscF9zMA0KPiA+IGF0dHJpYnV0
+ZXMgZnJvbSB0Z2xfcmVnX21hcCBQYXRjaCA1OiBBZGQgYW4gYWRkaXRpb25hbCBwYXJhbWV0ZXIg
+dG8NCj4gPiBwbWNfY29yZV9scG1fZGlzcGxheV9tYXAoKSBQYXRjaCA2OiBEdW1wIGxvdyBwb3dl
+ciBzdGF0dXMgcmVnaXN0ZXJzIG9uDQo+ID4gYW4gUzBpeC55IGZhaWx1cmUgUGF0Y2ggNzogQWRk
+IGRlYnVnZnMgc3VwcG9ydCB0byBhY2Nlc3MgbGl2ZSBzdGF0dXMNCj4gPiByZWdpc3RlcnMNCj4g
+DQo+IEl0IGRvZXNuJ3QgYXBwbHkgdG8gb3VyIGZvci1uZXh0IGJyYW5jaC4NClNvcnJ5IHRvIGhl
+YXIgdGhhdC4gSSd2ZSByZWJhc2VkIHRoZSBzZXJpZXMgb24gbWFpbmxpbmUgNS41LXJjNy4gU2hv
+dWxkIEkgcmViYXNlIGl0IG9uIGZvci1uZXh0IGJyYW5jaD8NCj4gDQo+ID4NCj4gPiBHYXlhdHJp
+IEthbW1lbGEgKDcpOg0KPiA+ICAgcGxhdGZvcm0veDg2OiBpbnRlbF9wbWNfY29yZTogQWRkIGRl
+YnVnZnMgZW50cnkgdG8gYWNjZXNzIHN1Yi1zdGF0ZQ0KPiA+ICAgICByZXNpZGVuY2llcw0KPiA+
+ICAgcGxhdGZvcm0veDg2OiBpbnRlbF9wbWNfY29yZTogQWRkIGRlYnVnZnMgZW50cnkgZm9yIGxv
+dyBwb3dlciBtb2RlDQo+ID4gICAgIHN0YXR1cyByZWdpc3RlcnMNCj4gPiAgIHBsYXRmb3JtL3g4
+NjogaW50ZWxfcG1jX2NvcmU6IFJlZmFjdG9yIHRoZSBkcml2ZXIgYnkgcmVtb3ZpbmcNCj4gPiAg
+ICAgcmVkdW5kYW50IGNvZGUNCj4gPiAgIHBsYXRmb3JtL3g4NjogaW50ZWxfcG1jX2NvcmU6IFJl
+bW92ZSBzbHBfczAgYXR0cmlidXRlcyBmcm9tDQo+ID4gICAgIHRnbF9yZWdfbWFwDQo+ID4gICBw
+bGF0Zm9ybS94ODY6IGludGVsX3BtY19jb3JlOiBBZGQgYW4gYWRkaXRpb25hbCBwYXJhbWV0ZXIg
+dG8NCj4gPiAgICAgcG1jX2NvcmVfbHBtX2Rpc3BsYXkoKQ0KPiA+ICAgcGxhdGZvcm0veDg2OiBp
+bnRlbF9wbWNfY29yZTogRHVtcCBsb3cgcG93ZXIgc3RhdHVzIHJlZ2lzdGVycyBvbiBhbg0KPiA+
+ICAgICBTMGl4LnkgZmFpbHVyZQ0KPiA+ICAgcGxhdGZvcm0veDg2OiBpbnRlbF9wbWNfY29yZTog
+QWRkIGRlYnVnZnMgc3VwcG9ydCB0byBhY2Nlc3MgbGl2ZQ0KPiA+ICAgICBzdGF0dXMgcmVnaXN0
+ZXJzDQo+ID4NCj4gPiAgZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1jX2NvcmUuYyB8IDMw
+MQ0KPiA+ICsrKysrKysrKysrKysrKysrKysrKysrLS0tICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9p
+bnRlbF9wbWNfY29yZS5oIHwNCj4gPiAyOCArKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAzMDIg
+aW5zZXJ0aW9ucygrKSwgMjcgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBDYzogU3Jpbml2YXMgUGFu
+ZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBpbnRlbC5jb20+DQo+ID4gQ2M6IEFuZHkgU2hl
+dmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPg0KPiA+IENjOiBEYXZp
+ZCBCb3ggPGRhdmlkLmUuYm94QGludGVsLmNvbT4NCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo+
+IA0KPiANCj4gLS0NCj4gV2l0aCBCZXN0IFJlZ2FyZHMsDQo+IEFuZHkgU2hldmNoZW5rbw0K
