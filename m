@@ -1,56 +1,39 @@
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 Subject: Re: [PATCH v2 1/3] platform/x86: thinkpad_acpi: remove unused defines
-Date: Mon, 3 Feb 2020 12:00:43 +0200
-Message-ID: <20200203100043.GZ32742@smile.fi.intel.com>
+Date: Mon, 3 Feb 2020 12:02:11 +0200
+Message-ID: <20200203100211.GA32742@smile.fi.intel.com>
 References: <20200131143650.4149-1-linux@weissschuh.net>
  <20200131143650.4149-2-linux@weissschuh.net>
+ <20200203100043.GZ32742@smile.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200131143650.4149-2-linux@weissschuh.net>
+In-Reply-To: <20200203100043.GZ32742@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
 Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jan 31, 2020 at 03:36:48PM +0100, Thomas Weiﬂschuh wrote:
-> They were never used.
-
-Thanks for the series.
-
-Unfortunately I may not proceed it since it misses our patchwork [1]
-for some reason.
-
-Besides that, this patch is okay, but the rest two must be:
- - unified together to avoid regression in the middle
- - done other way around, simple add aliases to *old* ones
-
-Don't forget to update any documentation if needed.
-
-[1]: https://patchwork.kernel.org/project/platform-driver-x86/list/
-
+On Mon, Feb 03, 2020 at 12:00:43PM +0200, Andy Shevchenko wrote:
+> On Fri, Jan 31, 2020 at 03:36:48PM +0100, Thomas Weiﬂschuh wrote:
+> > They were never used.
 > 
-> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 3 ---
->  1 file changed, 3 deletions(-)
+> Thanks for the series.
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index da794dcfdd92..2d3a99e3efb7 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -9323,9 +9323,6 @@ static struct ibm_struct mute_led_driver_data = {
->  #define GET_STOP	"BCSG"
->  #define SET_STOP	"BCSS"
->  
-> -#define START_ATTR "charge_start_threshold"
-> -#define STOP_ATTR  "charge_stop_threshold"
-> -
->  enum {
->  	BAT_ANY = 0,
->  	BAT_PRIMARY = 1,
+> Unfortunately I may not proceed it since it misses our patchwork [1]
+> for some reason.
+
+Oh, sorry! It misses our *mailing list* while patchwork is good.
+
+> Besides that, this patch is okay, but the rest two must be:
+>  - unified together to avoid regression in the middle
+>  - done other way around, simple add aliases to *old* ones
+> 
+> Don't forget to update any documentation if needed.
+> 
+> [1]: https://patchwork.kernel.org/project/platform-driver-x86/list/
 
 -- 
 With Best Regards,
