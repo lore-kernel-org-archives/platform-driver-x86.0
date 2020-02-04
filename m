@@ -1,65 +1,55 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 2I385SW to
- critclk_systems DMI table
-Date: Mon, 3 Feb 2020 22:17:53 +0100
-Message-ID: <466fff4c-eb61-7fd5-1442-54499c3db645@redhat.com>
-References: <20200203201105.11659-1-georgmueller@gmx.net>
+From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Subject: RE: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs entries
+Date: Tue, 4 Feb 2020 04:00:43 +0000
+Message-ID: <BL0PR11MB3107F8D50FCADD168EAA9E7BF2030@BL0PR11MB3107.namprd11.prod.outlook.com>
+References: <cover.1579890793.git.gayatri.kammela@intel.com>
+ <CAHp75Vfb38BEh2OZkO2EoQgCyBxaLoiwh8S_qKiPQRX1g+ZA2Q@mail.gmail.com>
+ <BL0PR11MB31071AD85775C09B8EC26608F20B0@BL0PR11MB3107.namprd11.prod.outlook.com>
+ <CAHp75VeRAWsqxfjOxw97SBPRLvcyF=SGrN84hT=UUNC6yQ6-_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200203201105.11659-1-georgmueller@gmx.net>
+In-Reply-To: <CAHp75VeRAWsqxfjOxw97SBPRLvcyF=SGrN84hT=UUNC6yQ6-_A@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Box, David E" <david.e.box@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-On 03-02-2020 21:11, Georg Müller wrote:
-> The Lex 2I385SW board has two Intel I211 ethernet controllers. Without
-> this patch, only the first port is usable. The second port fails to
-> start with the following message:
-> 
->      igb: probe of 0000:02:00.0 failed with error -2
-> 
-> Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-> Tested-by: Georg Müller <georgmueller@gmx.net>
-> Signed-off-by: Georg Müller <georgmueller@gmx.net>
-
-Patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-> ---
->   drivers/platform/x86/pmc_atom.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-> index 3e3c66dfec2e..ca684ed760d1 100644
-> --- a/drivers/platform/x86/pmc_atom.c
-> +++ b/drivers/platform/x86/pmc_atom.c
-> @@ -383,6 +383,14 @@ static const struct dmi_system_id critclk_systems[] = {
->   			DMI_MATCH(DMI_PRODUCT_NAME, "3I380D"),
->   		},
->   	},
-> +	{
-> +		/* pmc_plt_clk* - are used for ethernet controllers */
-> +		.ident = "Lex 2I385SW",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Lex BayTrail"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "2I385SW"),
-> +		},
-> +	},
->   	{
->   		/* pmc_plt_clk* - are used for ethernet controllers */
->   		.ident = "Beckhoff CB3163",
-> --
-> 2.24.1
-> 
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gPGFu
+ZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+DQo+IFNlbnQ6IE1vbmRheSwgSmFudWFyeSAyNywgMjAy
+MCAxMTowMCBBTQ0KPiBUbzogS2FtbWVsYSwgR2F5YXRyaSA8Z2F5YXRyaS5rYW1tZWxhQGludGVs
+LmNvbT4NCj4gQ2M6IFBsYXRmb3JtIERyaXZlciA8cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtl
+cm5lbC5vcmc+OyBMaW51eCBLZXJuZWwNCj4gTWFpbGluZyBMaXN0IDxsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnPjsgU29tYXlhamksIFZpc2h3YW5hdGgNCj4gPHZpc2h3YW5hdGguc29tYXlh
+amlAaW50ZWwuY29tPjsgRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsNCj4gV2Vz
+dGVyYmVyZywgTWlrYSA8bWlrYS53ZXN0ZXJiZXJnQGludGVsLmNvbT47IFBldGVyIFppamxzdHJh
+IChJbnRlbCkNCj4gPHBldGVyekBpbmZyYWRlYWQub3JnPjsgUHJlc3RvcGluZSwgQ2hhcmxlcyBE
+DQo+IDxjaGFybGVzLmQucHJlc3RvcGluZUBpbnRlbC5jb20+OyBQYW5kcnV2YWRhLCBTcmluaXZh
+cw0KPiA8c3Jpbml2YXMucGFuZHJ1dmFkYUBpbnRlbC5jb20+OyBBbmR5IFNoZXZjaGVua28NCj4g
+PGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbT47IEJveCwgRGF2aWQgRQ0KPiA8ZGF2
+aWQuZS5ib3hAaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxIDAvN10gcGxhdGZv
+cm0veDg2OiBpbnRlbF9wbWNfY29yZTogQWRkIGRlYnVnZnMNCj4gZW50cmllcw0KPiANCj4gT24g
+TW9uLCBKYW4gMjcsIDIwMjAgYXQgODowMyBQTSBLYW1tZWxhLCBHYXlhdHJpDQo+IDxnYXlhdHJp
+LmthbW1lbGFAaW50ZWwuY29tPiB3cm90ZToNCj4gDQo+ID4gPiBJdCBkb2Vzbid0IGFwcGx5IHRv
+IG91ciBmb3ItbmV4dCBicmFuY2guDQo+ID4gU29ycnkgdG8gaGVhciB0aGF0LiBJJ3ZlIHJlYmFz
+ZWQgdGhlIHNlcmllcyBvbiBtYWlubGluZSA1LjUtcmM3LiBTaG91bGQgSQ0KPiByZWJhc2UgaXQg
+b24gZm9yLW5leHQgYnJhbmNoPw0KPiANCj4gWW91IHNob3VsZCBhbHdheXMgYmFzZSB5b3VyIGJy
+YW5jaCBvbiB0aGUgZm9yLW5leHQgKHdoYXRldmVyIGl0J3MgYmVpbmcNCj4gY2FsbGVkKSBvZiB0
+aGUgc3Vic3lzdGVtIHlvdXIgc2VyaWVzIGFnYWluc3Qgb2YuDQoNCkhpIEFuZHksDQoNClRoZSBj
+dXJyZW50IHNlcmllcyBoYXMgYSBkZXBlbmRlbmN5IG9uIFRpZ2VyIExha2UgYW5kIEVsa2hhcnQg
+TGFrZSBwYXRjaGUgd2hpY2ggaXMgbWVyZ2VkIGluIHRvIG1haW5saW5lLiANCg0KKDU1NGYyNjlm
+MGYzOCBwbGF0Zm9ybS94ODY6IGludGVsX3BtY19jb3JlOiBBZGQgSW50ZWwgRWxraGFydCBMYWtl
+IHN1cHBvcnQNCjQ5YTQzNzk0MWMzZiBwbGF0Zm9ybS94ODY6IGludGVsX3BtY19jb3JlOiBBZGQg
+SW50ZWwgVGlnZXIgTGFrZSBzdXBwb3J0DQo2MjY4YzBiMjc4YjUgcGxhdGZvcm0veDg2OiBpbnRl
+bF9wbWNfY29yZTogTWFrZSBkZWJ1Z2ZzIGVudHJ5IGZvciBwY2hfaXBfcG93ZXJfZ2F0aW5nX3N0
+YXR1cyBjb25kaXRpb25hbA0KZTM5ODU0NzgxODMwIHBsYXRmb3JtL3g4NjogaW50ZWxfcG1jX2Nv
+cmU6IENyZWF0ZSBwbGF0Zm9ybSBkZXBlbmRlbnQgYml0bWFwIHN0cnVjdHMNCmIxY2IzM2RhZTQx
+NCBwbGF0Zm9ybS94ODY6IGludGVsX3BtY19jb3JlOiBDbGVhbiB1cDogUmVtb3ZlIGNvbW1hIGFm
+dGVyIHRoZSB0ZXJtaW5hdGlvbiBsaW5lKQ0KDQpCdXQgdGhleSBhcmUgbm90IGF2YWlsYWJsZSBp
+biBmb3ItbmV4dCBicmFuY2guIEkgYW0gY29uZnVzZWQsIGhvdyB0aGF0IGNvdWxkIGJlIHRoZSBj
+YXNlLiBGb3IgbWUgdG8gYmFzZSB0aGUgY3VycmVudCBzZXJpZXMgb24gZm9yLW5leHQgYnJhbmNo
+LCB0aGUgZGVwZW5kZW5jeSBwYXRjaCBzZXJpZXMgc2hvdWxkIGJlIGF2YWlsYWJsZSBpbiBmb3It
+bmV4dCBicmFuY2guDQoNCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNo
+ZXZjaGVua28NCg==
