@@ -1,125 +1,65 @@
-From: Gayatri Kammela <gayatri.kammela@intel.com>
-Subject: [PATCH v2 3/7] platform/x86: intel_pmc_core: Refactor the driver by removing redundant code
-Date: Tue,  4 Feb 2020 15:01:56 -0800
-Message-ID: <b73e135f66da250b98d2fd8b6e9ff5212372f247.1580848931.git.gayatri.kammela@intel.com>
-References: <cover.1580848931.git.gayatri.kammela@intel.com>
+From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Subject: RE: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs entries
+Date: Tue, 4 Feb 2020 23:10:49 +0000
+Message-ID: <BYAPR11MB362427151E22D623A1B48E37F2030@BYAPR11MB3624.namprd11.prod.outlook.com>
+References: <cover.1579890793.git.gayatri.kammela@intel.com>
+ <CAHp75Vfb38BEh2OZkO2EoQgCyBxaLoiwh8S_qKiPQRX1g+ZA2Q@mail.gmail.com>
+ <BL0PR11MB31071AD85775C09B8EC26608F20B0@BL0PR11MB3107.namprd11.prod.outlook.com>
+ <CAHp75VeRAWsqxfjOxw97SBPRLvcyF=SGrN84hT=UUNC6yQ6-_A@mail.gmail.com>
+ <BL0PR11MB3107F8D50FCADD168EAA9E7BF2030@BL0PR11MB3107.namprd11.prod.outlook.com>
+ <20200204113414.GB10400@smile.fi.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1580848931.git.gayatri.kammela@intel.com>
-In-Reply-To: <cover.1580848931.git.gayatri.kammela@intel.com>
-References: <cover.1580848931.git.gayatri.kammela@intel.com>
+In-Reply-To: <20200204113414.GB10400@smile.fi.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, dvhart@infradead.org, mika.westerberg@intel.com, peterz@infradead.org, charles.d.prestopine@intel.com, Gayatri Kammela <gayatri.kammela@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Box <david.e.box@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, "Box, David E" <david.e.box@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-pmc_core_slps0_dbg_show() is responsible for displaying debug registers
-through slp_s0_debug_status entry. The driver uses the same but
-redundant code to dump these debug registers for an S0ix failure.
+> > > > > It doesn't apply to our for-next branch.
+> > > > Sorry to hear that. I've rebased the series on mainline 5.5-rc7.
+> > > > Should I
+> > > rebase it on for-next branch?
+> > >
+> > > You should always base your branch on the for-next (whatever it's
+> > > being
+> > > called) of the subsystem your series against of.
+> >
+> > Hi Andy,
+> >
+> > The current series has a dependency on Tiger Lake and Elkhart Lake patc=
+he
+> which is merged in to mainline.
+> >
+> > (554f269f0f38 platform/x86: intel_pmc_core: Add Intel Elkhart Lake
+> > support 49a437941c3f platform/x86: intel_pmc_core: Add Intel Tiger
+> > Lake support
+> > 6268c0b278b5 platform/x86: intel_pmc_core: Make debugfs entry for
+> > pch_ip_power_gating_status conditional
+> > e39854781830 platform/x86: intel_pmc_core: Create platform dependent
+> > bitmap structs
+> > b1cb33dae414 platform/x86: intel_pmc_core: Clean up: Remove comma
+> > after the termination line)
+> >
+> > But they are not available in for-next branch. I am confused, how that =
+could
+> be the case. For me to base the current series on for-next branch, the
+> dependency patch series should be available in for-next branch.
+>=20
+> I'm wondering how did you check it?
+> The branch location is in this [1] tree.
 
-Hence, refactor the driver by removing redundant code and reuse the
-same function that both dumps registers through slp_s0_debug_status
-entry and in resume for an S0ix failure.
+Thank you for your patience Andy. I apologize for the mishap as I was check=
+ing in the wrong tree. I have rebased the series on for-next branch on righ=
+t tree this time and sent v2.
 
-The changes in this patch are preparatory, so platforms that support low
-power sub-states can dump the debug registers when the attempt to enter
-low power states are unsuccessful.
-
-Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David Box <david.e.box@intel.com>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
----
- drivers/platform/x86/intel_pmc_core.c | 48 +++++++++++++--------------
- 1 file changed, 23 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index fc4da7c33dbf..9c66f253cf2b 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -845,30 +845,41 @@ static void pmc_core_slps0_dbg_latch(struct pmc_dev *pmcdev, bool reset)
- 	mutex_unlock(&pmcdev->lock);
- }
- 
--static int pmc_core_slps0_dbg_show(struct seq_file *s, void *unused)
-+static void pmc_core_slps0_display(struct pmc_dev *pmcdev, struct device *dev,
-+				   struct seq_file *s)
- {
--	struct pmc_dev *pmcdev = s->private;
- 	const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
- 	const struct pmc_bit_map *map;
--	int offset;
-+	int offset = pmcdev->map->slps0_dbg_offset;
- 	u32 data;
- 
--	pmc_core_slps0_dbg_latch(pmcdev, false);
--	offset = pmcdev->map->slps0_dbg_offset;
- 	while (*maps) {
- 		map = *maps;
- 		data = pmc_core_reg_read(pmcdev, offset);
- 		offset += 4;
- 		while (map->name) {
--			seq_printf(s, "SLP_S0_DBG: %-32s\tState: %s\n",
--				   map->name,
--				   data & map->bit_mask ?
--				   "Yes" : "No");
-+			if (dev)
-+				dev_dbg(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
-+					map->name,
-+					data & map->bit_mask ? "Yes" : "No");
-+			if (s)
-+				seq_printf(s, "SLP_S0_DBG: %-32s\tState: %s\n",
-+					   map->name,
-+					   data & map->bit_mask ? "Yes" : "No");
- 			++map;
- 		}
- 		++maps;
- 	}
-+}
-+
-+static int pmc_core_slps0_dbg_show(struct seq_file *s, void *unused)
-+{
-+	struct pmc_dev *pmcdev = s->private;
-+
-+	pmc_core_slps0_dbg_latch(pmcdev, false);
-+	pmc_core_slps0_display(pmcdev, NULL, s);
- 	pmc_core_slps0_dbg_latch(pmcdev, true);
-+
- 	return 0;
- }
- DEFINE_SHOW_ATTRIBUTE(pmc_core_slps0_dbg);
-@@ -1263,10 +1274,6 @@ static inline bool pmc_core_is_s0ix_failed(struct pmc_dev *pmcdev)
- static int pmc_core_resume(struct device *dev)
- {
- 	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
--	const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
--	int offset = pmcdev->map->slps0_dbg_offset;
--	const struct pmc_bit_map *map;
--	u32 data;
- 
- 	if (!pmcdev->check_counters)
- 		return 0;
-@@ -1284,18 +1291,9 @@ static int pmc_core_resume(struct device *dev)
- 	/* The real interesting case - S0ix failed - lets ask PMC why. */
- 	dev_warn(dev, "CPU did not enter SLP_S0!!! (S0ix cnt=%llu)\n",
- 		 pmcdev->s0ix_counter);
--	while (*maps) {
--		map = *maps;
--		data = pmc_core_reg_read(pmcdev, offset);
--		offset += 4;
--		while (map->name) {
--			dev_dbg(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
--				map->name,
--				data & map->bit_mask ? "Yes" : "No");
--			map++;
--		}
--		maps++;
--	}
-+	if (pmcdev->map->slps0_dbg_maps)
-+		pmc_core_slps0_display(pmcdev, dev, NULL);
-+
- 	return 0;
- }
- 
--- 
-2.17.1
+>=20
+> [1]: http://git.infradead.org/linux-platform-drivers-x86.git
+>=20
+> --
+> With Best Regards,
+> Andy Shevchenko
+>=20
