@@ -1,55 +1,66 @@
-From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Subject: RE: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs entries
-Date: Tue, 4 Feb 2020 04:00:43 +0000
-Message-ID: <BL0PR11MB3107F8D50FCADD168EAA9E7BF2030@BL0PR11MB3107.namprd11.prod.outlook.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs entries
+Date: Tue, 4 Feb 2020 13:34:14 +0200
+Message-ID: <20200204113414.GB10400@smile.fi.intel.com>
 References: <cover.1579890793.git.gayatri.kammela@intel.com>
  <CAHp75Vfb38BEh2OZkO2EoQgCyBxaLoiwh8S_qKiPQRX1g+ZA2Q@mail.gmail.com>
  <BL0PR11MB31071AD85775C09B8EC26608F20B0@BL0PR11MB3107.namprd11.prod.outlook.com>
  <CAHp75VeRAWsqxfjOxw97SBPRLvcyF=SGrN84hT=UUNC6yQ6-_A@mail.gmail.com>
+ <BL0PR11MB3107F8D50FCADD168EAA9E7BF2030@BL0PR11MB3107.namprd11.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeRAWsqxfjOxw97SBPRLvcyF=SGrN84hT=UUNC6yQ6-_A@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <BL0PR11MB3107F8D50FCADD168EAA9E7BF2030@BL0PR11MB3107.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Box, David E" <david.e.box@intel.com>
+To: "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, "Box, David E" <david.e.box@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gPGFu
-ZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+DQo+IFNlbnQ6IE1vbmRheSwgSmFudWFyeSAyNywgMjAy
-MCAxMTowMCBBTQ0KPiBUbzogS2FtbWVsYSwgR2F5YXRyaSA8Z2F5YXRyaS5rYW1tZWxhQGludGVs
-LmNvbT4NCj4gQ2M6IFBsYXRmb3JtIERyaXZlciA8cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtl
-cm5lbC5vcmc+OyBMaW51eCBLZXJuZWwNCj4gTWFpbGluZyBMaXN0IDxsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnPjsgU29tYXlhamksIFZpc2h3YW5hdGgNCj4gPHZpc2h3YW5hdGguc29tYXlh
-amlAaW50ZWwuY29tPjsgRGFycmVuIEhhcnQgPGR2aGFydEBpbmZyYWRlYWQub3JnPjsNCj4gV2Vz
-dGVyYmVyZywgTWlrYSA8bWlrYS53ZXN0ZXJiZXJnQGludGVsLmNvbT47IFBldGVyIFppamxzdHJh
-IChJbnRlbCkNCj4gPHBldGVyekBpbmZyYWRlYWQub3JnPjsgUHJlc3RvcGluZSwgQ2hhcmxlcyBE
-DQo+IDxjaGFybGVzLmQucHJlc3RvcGluZUBpbnRlbC5jb20+OyBQYW5kcnV2YWRhLCBTcmluaXZh
-cw0KPiA8c3Jpbml2YXMucGFuZHJ1dmFkYUBpbnRlbC5jb20+OyBBbmR5IFNoZXZjaGVua28NCj4g
-PGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbT47IEJveCwgRGF2aWQgRQ0KPiA8ZGF2
-aWQuZS5ib3hAaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxIDAvN10gcGxhdGZv
-cm0veDg2OiBpbnRlbF9wbWNfY29yZTogQWRkIGRlYnVnZnMNCj4gZW50cmllcw0KPiANCj4gT24g
-TW9uLCBKYW4gMjcsIDIwMjAgYXQgODowMyBQTSBLYW1tZWxhLCBHYXlhdHJpDQo+IDxnYXlhdHJp
-LmthbW1lbGFAaW50ZWwuY29tPiB3cm90ZToNCj4gDQo+ID4gPiBJdCBkb2Vzbid0IGFwcGx5IHRv
-IG91ciBmb3ItbmV4dCBicmFuY2guDQo+ID4gU29ycnkgdG8gaGVhciB0aGF0LiBJJ3ZlIHJlYmFz
-ZWQgdGhlIHNlcmllcyBvbiBtYWlubGluZSA1LjUtcmM3LiBTaG91bGQgSQ0KPiByZWJhc2UgaXQg
-b24gZm9yLW5leHQgYnJhbmNoPw0KPiANCj4gWW91IHNob3VsZCBhbHdheXMgYmFzZSB5b3VyIGJy
-YW5jaCBvbiB0aGUgZm9yLW5leHQgKHdoYXRldmVyIGl0J3MgYmVpbmcNCj4gY2FsbGVkKSBvZiB0
-aGUgc3Vic3lzdGVtIHlvdXIgc2VyaWVzIGFnYWluc3Qgb2YuDQoNCkhpIEFuZHksDQoNClRoZSBj
-dXJyZW50IHNlcmllcyBoYXMgYSBkZXBlbmRlbmN5IG9uIFRpZ2VyIExha2UgYW5kIEVsa2hhcnQg
-TGFrZSBwYXRjaGUgd2hpY2ggaXMgbWVyZ2VkIGluIHRvIG1haW5saW5lLiANCg0KKDU1NGYyNjlm
-MGYzOCBwbGF0Zm9ybS94ODY6IGludGVsX3BtY19jb3JlOiBBZGQgSW50ZWwgRWxraGFydCBMYWtl
-IHN1cHBvcnQNCjQ5YTQzNzk0MWMzZiBwbGF0Zm9ybS94ODY6IGludGVsX3BtY19jb3JlOiBBZGQg
-SW50ZWwgVGlnZXIgTGFrZSBzdXBwb3J0DQo2MjY4YzBiMjc4YjUgcGxhdGZvcm0veDg2OiBpbnRl
-bF9wbWNfY29yZTogTWFrZSBkZWJ1Z2ZzIGVudHJ5IGZvciBwY2hfaXBfcG93ZXJfZ2F0aW5nX3N0
-YXR1cyBjb25kaXRpb25hbA0KZTM5ODU0NzgxODMwIHBsYXRmb3JtL3g4NjogaW50ZWxfcG1jX2Nv
-cmU6IENyZWF0ZSBwbGF0Zm9ybSBkZXBlbmRlbnQgYml0bWFwIHN0cnVjdHMNCmIxY2IzM2RhZTQx
-NCBwbGF0Zm9ybS94ODY6IGludGVsX3BtY19jb3JlOiBDbGVhbiB1cDogUmVtb3ZlIGNvbW1hIGFm
-dGVyIHRoZSB0ZXJtaW5hdGlvbiBsaW5lKQ0KDQpCdXQgdGhleSBhcmUgbm90IGF2YWlsYWJsZSBp
-biBmb3ItbmV4dCBicmFuY2guIEkgYW0gY29uZnVzZWQsIGhvdyB0aGF0IGNvdWxkIGJlIHRoZSBj
-YXNlLiBGb3IgbWUgdG8gYmFzZSB0aGUgY3VycmVudCBzZXJpZXMgb24gZm9yLW5leHQgYnJhbmNo
-LCB0aGUgZGVwZW5kZW5jeSBwYXRjaCBzZXJpZXMgc2hvdWxkIGJlIGF2YWlsYWJsZSBpbiBmb3It
-bmV4dCBicmFuY2guDQoNCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNo
-ZXZjaGVua28NCg==
+On Tue, Feb 04, 2020 at 04:00:43AM +0000, Kammela, Gayatri wrote:
+> > -----Original Message-----
+> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Sent: Monday, January 27, 2020 11:00 AM
+> > To: Kammela, Gayatri <gayatri.kammela@intel.com>
+> > Cc: Platform Driver <platform-driver-x86@vger.kernel.org>; Linux Kernel
+> > Mailing List <linux-kernel@vger.kernel.org>; Somayaji, Vishwanath
+> > <vishwanath.somayaji@intel.com>; Darren Hart <dvhart@infradead.org>;
+> > Westerberg, Mika <mika.westerberg@intel.com>; Peter Zijlstra (Intel)
+> > <peterz@infradead.org>; Prestopine, Charles D
+> > <charles.d.prestopine@intel.com>; Pandruvada, Srinivas
+> > <srinivas.pandruvada@intel.com>; Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com>; Box, David E
+> > <david.e.box@intel.com>
+> > Subject: Re: [PATCH v1 0/7] platform/x86: intel_pmc_core: Add debugfs
+> > entries
+> > 
+> > On Mon, Jan 27, 2020 at 8:03 PM Kammela, Gayatri
+> > <gayatri.kammela@intel.com> wrote:
+> > 
+> > > > It doesn't apply to our for-next branch.
+> > > Sorry to hear that. I've rebased the series on mainline 5.5-rc7. Should I
+> > rebase it on for-next branch?
+> > 
+> > You should always base your branch on the for-next (whatever it's being
+> > called) of the subsystem your series against of.
+> 
+> Hi Andy,
+> 
+> The current series has a dependency on Tiger Lake and Elkhart Lake patche which is merged in to mainline. 
+> 
+> (554f269f0f38 platform/x86: intel_pmc_core: Add Intel Elkhart Lake support
+> 49a437941c3f platform/x86: intel_pmc_core: Add Intel Tiger Lake support
+> 6268c0b278b5 platform/x86: intel_pmc_core: Make debugfs entry for pch_ip_power_gating_status conditional
+> e39854781830 platform/x86: intel_pmc_core: Create platform dependent bitmap structs
+> b1cb33dae414 platform/x86: intel_pmc_core: Clean up: Remove comma after the termination line)
+> 
+> But they are not available in for-next branch. I am confused, how that could be the case. For me to base the current series on for-next branch, the dependency patch series should be available in for-next branch.
+
+I'm wondering how did you check it?
+The branch location is in this [1] tree.
+
+[1]: http://git.infradead.org/linux-platform-drivers-x86.git
+
+-- 
+With Best Regards,
+Andy Shevchenko
