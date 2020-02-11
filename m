@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v5 07/18] platform/x86: intel_scu_ipc: Add managed function to register SCU IPC
-Date: Tue, 11 Feb 2020 16:25:52 +0300
-Message-ID: <20200211132603.73509-8-mika.westerberg@linux.intel.com>
+Subject: [PATCH v5 14/18] x86/platform/intel-mid: Add empty stubs for intel_scu_devices_[create|destroy]()
+Date: Tue, 11 Feb 2020 16:25:59 +0300
+Message-ID: <20200211132603.73509-15-mika.westerberg@linux.intel.com>
 References: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,115 +12,46 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Drivers such as intel_pmc_ipc.c can be unloaded as well so in order to
-support those in this driver add a new function that can be called to
-unregister the SCU IPC when it is not needed anymore.
-
-We also add a managed version of the intel_scu_ipc_register() that takes
-care of calling intel_scu_ipc_unregister() automatically when the driver
-is unbound.
+This allows to call the functions even when CONFIG_X86_INTEL_MID is not
+enabled.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_scu_ipc.h | 10 +++++
- drivers/platform/x86/intel_scu_ipc.c | 63 ++++++++++++++++++++++++++++
- 2 files changed, 73 insertions(+)
+ arch/x86/include/asm/intel-mid.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index 27041fe999e9..2463ff5cad5b 100644
---- a/arch/x86/include/asm/intel_scu_ipc.h
-+++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -25,6 +25,16 @@ __intel_scu_ipc_register(struct device *parent,
- #define intel_scu_ipc_register(parent, pdata)  \
- 	__intel_scu_ipc_register(parent, pdata, THIS_MODULE)
- 
-+void intel_scu_ipc_unregister(struct intel_scu_ipc_dev *scu);
-+
-+struct intel_scu_ipc_dev *
-+__devm_intel_scu_ipc_register(struct device *parent,
-+			      const struct intel_scu_ipc_pdata *pdata,
-+			      struct module *owner);
-+
-+#define devm_intel_scu_ipc_register(parent, pdata)  \
-+	__devm_intel_scu_ipc_register(parent, pdata, THIS_MODULE)
-+
- struct intel_scu_ipc_dev *intel_scu_ipc_dev_get(void);
- void intel_scu_ipc_dev_put(struct intel_scu_ipc_dev *scu);
- struct intel_scu_ipc_dev *devm_intel_scu_ipc_dev_get(struct device *dev);
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index b9e77facf280..58b3d4a48ae2 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -639,6 +639,69 @@ __intel_scu_ipc_register(struct device *parent,
+diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
+index 8e5af119dc2d..de58391bdee0 100644
+--- a/arch/x86/include/asm/intel-mid.h
++++ b/arch/x86/include/asm/intel-mid.h
+@@ -88,11 +88,17 @@ static inline bool intel_mid_has_msic(void)
+ 	return (intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_PENWELL);
  }
- EXPORT_SYMBOL_GPL(__intel_scu_ipc_register);
  
-+/**
-+ * intel_scu_ipc_unregister() - Unregister SCU IPC
-+ * @scu: SCU IPC handle
-+ *
-+ * This unregisters the SCU IPC device and releases the acquired
-+ * resources once the refcount goes to zero.
-+ */
-+void intel_scu_ipc_unregister(struct intel_scu_ipc_dev *scu)
-+{
-+	mutex_lock(&ipclock);
-+	if (!WARN_ON(!ipcdev)) {
-+		ipcdev = NULL;
-+		device_unregister(&scu->dev);
-+	}
-+	mutex_unlock(&ipclock);
-+}
-+EXPORT_SYMBOL_GPL(intel_scu_ipc_unregister);
++extern void intel_scu_devices_create(void);
++extern void intel_scu_devices_destroy(void);
 +
-+static void devm_intel_scu_ipc_unregister(struct device *dev, void *res)
-+{
-+	struct intel_scu_ipc_devres *devres = res;
-+	struct intel_scu_ipc_dev *scu = devres->scu;
+ #else /* !CONFIG_X86_INTEL_MID */
+ 
+ #define intel_mid_identify_cpu()	0
+ #define intel_mid_has_msic()		0
+ 
++static inline void intel_scu_devices_create(void) { }
++static inline void intel_scu_devices_destroy(void) { }
 +
-+	intel_scu_ipc_unregister(scu);
-+}
-+
-+/**
-+ * __devm_intel_scu_ipc_register() - Register managed SCU IPC device
-+ * @parent: Parent device
-+ * @pdata: Platform specific data
-+ * @owner: Module registering the SCU IPC device
-+ *
-+ * Call this function to register managed SCU IPC mechanism under
-+ * @parent. Returns pointer to the new SCU IPC device or ERR_PTR() in
-+ * case of failure. The caller may use the returned instance if it needs
-+ * to do SCU IPC calls itself.
-+ */
-+struct intel_scu_ipc_dev *
-+__devm_intel_scu_ipc_register(struct device *parent,
-+			      const struct intel_scu_ipc_pdata *pdata,
-+			      struct module *owner)
-+{
-+	struct intel_scu_ipc_devres *devres;
-+	struct intel_scu_ipc_dev *scu;
-+
-+	devres = devres_alloc(devm_intel_scu_ipc_unregister, sizeof(*devres),
-+			      GFP_KERNEL);
-+	if (!devres)
-+		return NULL;
-+
-+	scu = __intel_scu_ipc_register(parent, pdata, owner);
-+	if (IS_ERR(scu)) {
-+		devres_free(devres);
-+		return scu;
-+	}
-+
-+	devres->scu = scu;
-+	devres_add(parent, devres);
-+
-+	return scu;
-+}
-+EXPORT_SYMBOL_GPL(__devm_intel_scu_ipc_register);
-+
- static int __init intel_scu_ipc_init(void)
- {
- 	return class_register(&intel_scu_ipc_class);
+ #endif /* !CONFIG_X86_INTEL_MID */
+ 
+ enum intel_mid_timer_options {
+@@ -115,9 +121,6 @@ extern enum intel_mid_timer_options intel_mid_timer_options;
+ #define SFI_MTMR_MAX_NUM		8
+ #define SFI_MRTC_MAX			8
+ 
+-extern void intel_scu_devices_create(void);
+-extern void intel_scu_devices_destroy(void);
+-
+ /* VRTC timer */
+ #define MRST_VRTC_MAP_SZ		1024
+ /* #define MRST_VRTC_PGOFFSET		0xc00 */
 -- 
 2.25.0
