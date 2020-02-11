@@ -1,45 +1,77 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: linux-next: Tree for Feb 11
- (drivers/platform/x86/intel_pmc_core.c)
-Date: Mon, 10 Feb 2020 23:06:05 -0800
-Message-ID: <f0d576b6-7204-0caf-1ca8-aae6c82d3b8d@infradead.org>
-References: <20200211130054.001bfce9@canb.auug.org.au>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH v5 04/18] platform/x86: intel_mid_powerbtn: Convert to use new SCU IPC API
+Date: Tue, 11 Feb 2020 16:25:49 +0300
+Message-ID: <20200211132603.73509-5-mika.westerberg@linux.intel.com>
+References: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200211130054.001bfce9@canb.auug.org.au>
-Content-Language: en-US
+In-Reply-To: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 2/10/20 6:00 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20200210:
-> 
+This converts the power button driver to use the new SCU IPC API where
+the SCU IPC instance is passed to the functions.
 
-on i386:
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/intel_mid_powerbtn.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-Function args are reversed (offset and status);
-
-../drivers/platform/x86/intel_pmc_core.c: In function 'pmc_core_resume':
-../drivers/platform/x86/intel_pmc_core.c:1329:43: warning: passing argument 4 of 'pmc_core_lpm_display' makes integer from pointer without a cast [-Wint-conversion]
-   pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
-                                           ^~~~~~~~
-../drivers/platform/x86/intel_pmc_core.c:977:13: note: expected 'u32 {aka unsigned int}' but argument is of type 'char *'
- static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
-             ^~~~~~~~~~~~~~~~~~~~
-../drivers/platform/x86/intel_pmc_core.c:1329:53: warning: passing argument 5 of 'pmc_core_lpm_display' makes pointer from integer without a cast [-Wint-conversion]
-   pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
-                                                     ^~~~~~
-../drivers/platform/x86/intel_pmc_core.c:977:13: note: expected 'const char *' but argument is of type 'int'
- static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
-             ^~~~~~~~~~~~~~~~~~~~
-
-
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 6f436836fe50..1fdcdef1d89f 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -46,6 +46,7 @@ struct mid_pb_ddata {
+ 	unsigned short mirqlvl1_addr;
+ 	unsigned short pbstat_addr;
+ 	u8 pbstat_mask;
++	struct intel_scu_ipc_dev *scu;
+ 	int (*setup)(struct mid_pb_ddata *ddata);
+ };
+ 
+@@ -55,7 +56,8 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
+ 	int ret;
+ 	u8 pbstat;
+ 
+-	ret = intel_scu_ipc_ioread8(ddata->pbstat_addr, &pbstat);
++	ret = intel_scu_ipc_dev_ioread8(ddata->scu, ddata->pbstat_addr,
++					&pbstat);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -67,14 +69,15 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
+ 
+ static int mid_irq_ack(struct mid_pb_ddata *ddata)
+ {
+-	return intel_scu_ipc_update_register(ddata->mirqlvl1_addr, 0, MSIC_PWRBTNM);
++	return intel_scu_ipc_dev_update(ddata->scu, ddata->mirqlvl1_addr, 0,
++					MSIC_PWRBTNM);
+ }
+ 
+ static int mrfld_setup(struct mid_pb_ddata *ddata)
+ {
+ 	/* Unmask the PBIRQ and MPBIRQ on Tangier */
+-	intel_scu_ipc_update_register(BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
+-	intel_scu_ipc_update_register(BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
+ 
+ 	return 0;
+ }
+@@ -161,6 +164,10 @@ static int mid_pb_probe(struct platform_device *pdev)
+ 			return error;
+ 	}
+ 
++	ddata->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
++	if (!ddata->scu)
++		return -EPROBE_DEFER;
++
+ 	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mid_pb_isr,
+ 					  IRQF_ONESHOT, DRIVER_NAME, ddata);
+ 	if (error) {
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.25.0
