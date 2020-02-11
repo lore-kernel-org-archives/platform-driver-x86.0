@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v5 04/18] platform/x86: intel_mid_powerbtn: Convert to use new SCU IPC API
-Date: Tue, 11 Feb 2020 16:25:49 +0300
-Message-ID: <20200211132603.73509-5-mika.westerberg@linux.intel.com>
+Subject: [PATCH v5 02/18] platform/x86: intel_scu_ipc: Log more information if SCU IPC command fails
+Date: Tue, 11 Feb 2020 16:25:47 +0300
+Message-ID: <20200211132603.73509-3-mika.westerberg@linux.intel.com>
 References: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,66 +12,87 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This converts the power button driver to use the new SCU IPC API where
-the SCU IPC instance is passed to the functions.
+Currently we only log an error if the command times out which makes it
+hard to figure out the failing command. This changes the driver to log
+command and subcommand with the error code which should make debugging
+easier. This also allows us to simplify the callers as they don't need
+to log these errors themselves.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_mid_powerbtn.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index 6f436836fe50..1fdcdef1d89f 100644
---- a/drivers/platform/x86/intel_mid_powerbtn.c
-+++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -46,6 +46,7 @@ struct mid_pb_ddata {
- 	unsigned short mirqlvl1_addr;
- 	unsigned short pbstat_addr;
- 	u8 pbstat_mask;
-+	struct intel_scu_ipc_dev *scu;
- 	int (*setup)(struct mid_pb_ddata *ddata);
- };
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 19c2cc41fb05..1fc52b63d984 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -147,7 +147,6 @@ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
+ 		usleep_range(50, 100);
+ 	} while (time_before(jiffies, end));
  
-@@ -55,7 +56,8 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
- 	int ret;
- 	u8 pbstat;
- 
--	ret = intel_scu_ipc_ioread8(ddata->pbstat_addr, &pbstat);
-+	ret = intel_scu_ipc_dev_ioread8(ddata->scu, ddata->pbstat_addr,
-+					&pbstat);
- 	if (ret)
- 		return ret;
- 
-@@ -67,14 +69,15 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
- 
- static int mid_irq_ack(struct mid_pb_ddata *ddata)
- {
--	return intel_scu_ipc_update_register(ddata->mirqlvl1_addr, 0, MSIC_PWRBTNM);
-+	return intel_scu_ipc_dev_update(ddata->scu, ddata->mirqlvl1_addr, 0,
-+					MSIC_PWRBTNM);
+-	dev_err(&scu->dev, "IPC timed out");
+ 	return -ETIMEDOUT;
  }
  
- static int mrfld_setup(struct mid_pb_ddata *ddata)
+@@ -156,10 +155,8 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
  {
- 	/* Unmask the PBIRQ and MPBIRQ on Tangier */
--	intel_scu_ipc_update_register(BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
--	intel_scu_ipc_update_register(BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
-+	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
-+	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
+ 	int status;
  
- 	return 0;
- }
-@@ -161,6 +164,10 @@ static int mid_pb_probe(struct platform_device *pdev)
- 			return error;
+-	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT)) {
+-		dev_err(&scu->dev, "IPC timed out\n");
++	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT))
+ 		return -ETIMEDOUT;
+-	}
+ 
+ 	status = ipc_read_status(scu);
+ 	if (status & IPC_STATUS_ERR)
+@@ -331,6 +328,7 @@ EXPORT_SYMBOL(intel_scu_ipc_update_register);
+ int intel_scu_ipc_simple_command(int cmd, int sub)
+ {
+ 	struct intel_scu_ipc_dev *scu;
++	u32 cmdval;
+ 	int err;
+ 
+ 	mutex_lock(&ipclock);
+@@ -339,8 +337,12 @@ int intel_scu_ipc_simple_command(int cmd, int sub)
+ 		return -ENODEV;
  	}
+ 	scu = ipcdev;
+-	ipc_command(scu, sub << 12 | cmd);
++	cmdval = sub << 12 | cmd;
++	ipc_command(scu, cmdval);
+ 	err = intel_scu_ipc_check_status(scu);
++	if (err)
++		dev_err(&scu->dev, "IPC command %#x failed with %d\n", cmdval,
++			err);
+ 	mutex_unlock(&ipclock);
+ 	return err;
+ }
+@@ -362,6 +364,7 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+ 			  u32 *out, int outlen)
+ {
+ 	struct intel_scu_ipc_dev *scu;
++	u32 cmdval;
+ 	int i, err;
  
-+	ddata->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
-+	if (!ddata->scu)
-+		return -EPROBE_DEFER;
-+
- 	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mid_pb_isr,
- 					  IRQF_ONESHOT, DRIVER_NAME, ddata);
- 	if (error) {
+ 	mutex_lock(&ipclock);
+@@ -374,10 +377,13 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+ 	for (i = 0; i < inlen; i++)
+ 		ipc_data_writel(scu, *in++, 4 * i);
+ 
+-	ipc_command(scu, (inlen << 16) | (sub << 12) | cmd);
++	cmdval = (inlen << 16) | (sub << 12) | cmd;
++	ipc_command(scu, cmdval);
+ 	err = intel_scu_ipc_check_status(scu);
+-
+-	if (!err) {
++	if (err) {
++		dev_err(&scu->dev, "IPC command %#x failed with %d\n", cmdval,
++			err);
++	} else {
+ 		for (i = 0; i < outlen; i++)
+ 			*out++ = ipc_data_readl(scu, 4 * i);
+ 	}
 -- 
 2.25.0
