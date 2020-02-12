@@ -1,28 +1,45 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v5 03/18] platform/x86: intel_scu_ipc: Introduce new SCU
- IPC API
-Date: Wed, 12 Feb 2020 14:45:08 +0200
-Message-ID: <20200212124508.GE2667@lahna.fi.intel.com>
-References: <20200211132603.73509-1-mika.westerberg@linux.intel.com>
- <20200211132603.73509-4-mika.westerberg@linux.intel.com>
- <20200211154841.GF10400@smile.fi.intel.com>
- <20200212114341.GW2667@lahna.fi.intel.com>
- <20200212115541.GT10400@smile.fi.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: linux-next: Tree for Feb 11 (drivers/platform/x86/intel_pmc_core.c)
+Date: Wed, 12 Feb 2020 16:23:25 +0200
+Message-ID: <CAHp75Ve3oenxkSCr9FC14MErQeN6pwrafemgKUNMwxUDr+aYKA@mail.gmail.com>
+References: <20200211130054.001bfce9@canb.auug.org.au> <f0d576b6-7204-0caf-1ca8-aae6c82d3b8d@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200212115541.GT10400@smile.fi.intel.com>
+In-Reply-To: <f0d576b6-7204-0caf-1ca8-aae6c82d3b8d@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Linux Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Feb 12, 2020 at 01:55:41PM +0200, Andy Shevchenko wrote:
-> > No problem doing that but I'm not sure what's the benefit over what is
-> > done now?
-> 
-> That's what I'm trying to figure out. Would it be? Maybe you can play with it
-> locally and decide which one is better?
+On Tue, Feb 11, 2020 at 9:32 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 2/10/20 6:00 PM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > Changes since 20200210:
+> >
+>
+> on i386:
+>
+> Function args are reversed (offset and status);
+>
+> ../drivers/platform/x86/intel_pmc_core.c: In function 'pmc_core_resume':
+> ../drivers/platform/x86/intel_pmc_core.c:1329:43: warning: passing argument 4 of 'pmc_core_lpm_display' makes integer from pointer without a cast [-Wint-conversion]
+>    pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
+>                                            ^~~~~~~~
+> ../drivers/platform/x86/intel_pmc_core.c:977:13: note: expected 'u32 {aka unsigned int}' but argument is of type 'char *'
+>  static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
+>              ^~~~~~~~~~~~~~~~~~~~
+> ../drivers/platform/x86/intel_pmc_core.c:1329:53: warning: passing argument 5 of 'pmc_core_lpm_display' makes pointer from integer without a cast [-Wint-conversion]
+>    pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
+>                                                      ^~~~~~
+> ../drivers/platform/x86/intel_pmc_core.c:977:13: note: expected 'const char *' but argument is of type 'int'
+>  static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
+>              ^~~~~~~~~~~~~~~~~~~~
 
-OK, I'll try that.
+Thank you, it should be fixed in today's Linux Next.
+
+-- 
+With Best Regards,
+Andy Shevchenko
