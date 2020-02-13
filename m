@@ -1,45 +1,62 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: linux-next: Tree for Feb 11 (drivers/platform/x86/intel_pmc_core.c)
-Date: Wed, 12 Feb 2020 16:23:25 +0200
-Message-ID: <CAHp75Ve3oenxkSCr9FC14MErQeN6pwrafemgKUNMwxUDr+aYKA@mail.gmail.com>
-References: <20200211130054.001bfce9@canb.auug.org.au> <f0d576b6-7204-0caf-1ca8-aae6c82d3b8d@infradead.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] platform/x86: i2c-multi-instantiate: Replace zero-length
+ array with flexible-array member
+Date: Wed, 12 Feb 2020 18:55:25 -0600
+Message-ID: <20200213005525.GA11420@embeddedor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f0d576b6-7204-0caf-1ca8-aae6c82d3b8d@infradead.org>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Linux Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Feb 11, 2020 at 9:32 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 2/10/20 6:00 PM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > Changes since 20200210:
-> >
->
-> on i386:
->
-> Function args are reversed (offset and status);
->
-> ../drivers/platform/x86/intel_pmc_core.c: In function 'pmc_core_resume':
-> ../drivers/platform/x86/intel_pmc_core.c:1329:43: warning: passing argument 4 of 'pmc_core_lpm_display' makes integer from pointer without a cast [-Wint-conversion]
->    pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
->                                            ^~~~~~~~
-> ../drivers/platform/x86/intel_pmc_core.c:977:13: note: expected 'u32 {aka unsigned int}' but argument is of type 'char *'
->  static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
->              ^~~~~~~~~~~~~~~~~~~~
-> ../drivers/platform/x86/intel_pmc_core.c:1329:53: warning: passing argument 5 of 'pmc_core_lpm_display' makes pointer from integer without a cast [-Wint-conversion]
->    pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
->                                                      ^~~~~~
-> ../drivers/platform/x86/intel_pmc_core.c:977:13: note: expected 'const char *' but argument is of type 'int'
->  static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
->              ^~~~~~~~~~~~~~~~~~~~
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Thank you, it should be fixed in today's Linux Next.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/platform/x86/i2c-multi-instantiate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+index ffb8d5d1eb5f..6acc8457866e 100644
+--- a/drivers/platform/x86/i2c-multi-instantiate.c
++++ b/drivers/platform/x86/i2c-multi-instantiate.c
+@@ -28,7 +28,7 @@ struct i2c_inst_data {
+ 
+ struct i2c_multi_inst_data {
+ 	int num_clients;
+-	struct i2c_client *clients[0];
++	struct i2c_client *clients[];
+ };
+ 
+ static int i2c_multi_inst_count(struct acpi_resource *ares, void *data)
 -- 
-With Best Regards,
-Andy Shevchenko
+2.23.0
