@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 375/459] platform/x86: intel_mid_powerbtn: Take a copy of ddata
-Date: Fri, 14 Feb 2020 11:00:25 -0500
-Message-ID: <20200214160149.11681-375-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 279/459] efi/x86: Don't panic or BUG() on non-critical error conditions
+Date: Fri, 14 Feb 2020 10:58:49 -0500
+Message-ID: <20200214160149.11681-279-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,44 +9,131 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Arvind Sankar <nivedita@alum.mit.edu>, Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org, x86@kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit 5e0c94d3aeeecc68c573033f08d9678fecf253bd ]
+[ Upstream commit e2d68a955e49d61fd0384f23e92058dc9b79be5e ]
 
-The driver gets driver_data from memory that is marked as const (which
-is probably put to read-only memory) and it then modifies it. This
-likely causes some sort of fault to happen.
+The logic in __efi_enter_virtual_mode() does a number of steps in
+sequence, all of which may fail in one way or the other. In most
+cases, we simply print an error and disable EFI runtime services
+support, but in some cases, we BUG() or panic() and bring down the
+system when encountering conditions that we could easily handle in
+the same way.
 
-Fix this by taking a copy of the structure.
+While at it, replace a pointless page-to-virt-phys conversion with
+one that goes straight from struct page to physical.
 
-Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200103113953.9571-14-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_mid_powerbtn.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/platform/efi/efi.c    | 28 ++++++++++++++--------------
+ arch/x86/platform/efi/efi_64.c |  9 +++++----
+ 2 files changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index 292bace83f1e3..6f436836fe501 100644
---- a/drivers/platform/x86/intel_mid_powerbtn.c
-+++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -146,9 +146,10 @@ static int mid_pb_probe(struct platform_device *pdev)
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 8a4f389330396..01d7ca492741d 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -954,16 +954,14 @@ static void __init __efi_enter_virtual_mode(void)
  
- 	input_set_capability(input, EV_KEY, KEY_POWER);
+ 	if (efi_alloc_page_tables()) {
+ 		pr_err("Failed to allocate EFI page tables\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
+ 	}
  
--	ddata = (struct mid_pb_ddata *)id->driver_data;
-+	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
-+			     sizeof(*ddata), GFP_KERNEL);
- 	if (!ddata)
--		return -ENODATA;
-+		return -ENOMEM;
+ 	efi_merge_regions();
+ 	new_memmap = efi_map_regions(&count, &pg_shift);
+ 	if (!new_memmap) {
+ 		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
+ 	}
  
- 	ddata->dev = &pdev->dev;
- 	ddata->irq = irq;
+ 	pa = __pa(new_memmap);
+@@ -977,8 +975,7 @@ static void __init __efi_enter_virtual_mode(void)
+ 
+ 	if (efi_memmap_init_late(pa, efi.memmap.desc_size * count)) {
+ 		pr_err("Failed to remap late EFI memory map\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
+ 	}
+ 
+ 	if (efi_enabled(EFI_DBG)) {
+@@ -986,12 +983,11 @@ static void __init __efi_enter_virtual_mode(void)
+ 		efi_print_memmap();
+ 	}
+ 
+-	BUG_ON(!efi.systab);
++	if (WARN_ON(!efi.systab))
++		goto err;
+ 
+-	if (efi_setup_page_tables(pa, 1 << pg_shift)) {
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
+-	}
++	if (efi_setup_page_tables(pa, 1 << pg_shift))
++		goto err;
+ 
+ 	efi_sync_low_kernel_mappings();
+ 
+@@ -1011,9 +1007,9 @@ static void __init __efi_enter_virtual_mode(void)
+ 	}
+ 
+ 	if (status != EFI_SUCCESS) {
+-		pr_alert("Unable to switch EFI into virtual mode (status=%lx)!\n",
+-			 status);
+-		panic("EFI call to SetVirtualAddressMap() failed!");
++		pr_err("Unable to switch EFI into virtual mode (status=%lx)!\n",
++		       status);
++		goto err;
+ 	}
+ 
+ 	efi_free_boot_services();
+@@ -1042,6 +1038,10 @@ static void __init __efi_enter_virtual_mode(void)
+ 
+ 	/* clean DUMMY object */
+ 	efi_delete_dummy_variable();
++	return;
++
++err:
++	clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+ }
+ 
+ void __init efi_enter_virtual_mode(void)
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index 08ce8177c3af1..52a1e5192fa80 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -392,11 +392,12 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 		return 0;
+ 
+ 	page = alloc_page(GFP_KERNEL|__GFP_DMA32);
+-	if (!page)
+-		panic("Unable to allocate EFI runtime stack < 4GB\n");
++	if (!page) {
++		pr_err("Unable to allocate EFI runtime stack < 4GB\n");
++		return 1;
++	}
+ 
+-	efi_scratch.phys_stack = virt_to_phys(page_address(page));
+-	efi_scratch.phys_stack += PAGE_SIZE; /* stack grows down */
++	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
+ 
+ 	npages = (_etext - _text) >> PAGE_SHIFT;
+ 	text = __pa(_text);
 -- 
 2.20.1
