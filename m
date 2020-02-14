@@ -1,255 +1,139 @@
-From: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] thinkpad_acpi: Add sysfs entry for
- lcdshadow feature
-Date: Thu, 13 Feb 2020 15:42:32 +0900
-Message-ID: <20200213064232.13267-1-njoshi1@lenovo.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 320/542] efi/x86: Don't panic or BUG() on non-critical error conditions
+Date: Fri, 14 Feb 2020 10:45:12 -0500
+Message-ID: <20200214154854.6746-320-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Benjamin Berg <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, mpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Arvind Sankar <nivedita@alum.mit.edu>, Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org, x86@kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-  This feature is supported on some Thinkpad products like T490s, Thinkpad
-  X1 yoga 4th Gen etc . The lcdshadow feature can be enabled and disabled
-  when user press "Fn" + "D" key. Currently, no user feedback is given for
-  this action. Adding as sysfs entry allows userspace to show an On Screen
-  Display whenever the setting changes.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-  Summary of changes is mentioned below :
+[ Upstream commit e2d68a955e49d61fd0384f23e92058dc9b79be5e ]
 
- - Added TP_HKEY_EV_LCDSHADOW_CHANGED for consistency inside the driver
- - Added unmapped LCDSHADOW to keymap
- - Added lcdshadow_get function to read value using ACPI
- - Added lcdshadow_refresh function to re-read value and send notification
- - Added sysfs group creation to tpaci_lcdshadow_init
- - Added lcdshadow_exit to remove sysfs group again
- - Implemented lcdshadow_enable_show/lcdshadow_enable_store
- - Added handler to tpacpi_driver_event to update refresh lcdshadow
- - Explicitly call tpacpi_driver_event for extended keyset
+The logic in __efi_enter_virtual_mode() does a number of steps in
+sequence, all of which may fail in one way or the other. In most
+cases, we simply print an error and disable EFI runtime services
+support, but in some cases, we BUG() or panic() and bring down the
+system when encountering conditions that we could easily handle in
+the same way.
 
- Patch is tested on kernel 5.5 on Thinkpad X1 Yoga 4th Gen.
+While at it, replace a pointless page-to-virt-phys conversion with
+one that goes straight from struct page to physical.
 
-Co-developed-by: Benjamin Berg <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Benjamin Berg <bberg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Mark Pearson <mpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200103113953.9571-14-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 117 +++++++++++++++++++++++----
- 1 file changed, 102 insertions(+), 15 deletions(-)
+ arch/x86/platform/efi/efi.c    | 28 ++++++++++++++--------------
+ arch/x86/platform/efi/efi_64.c |  9 +++++----
+ 2 files changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index da794dcfdd92..bd137cc7baee 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -155,6 +155,7 @@ enum tpacpi_hkey_event_t {
- 	TP_HKEY_EV_VOL_UP		= 0x1015, /* Volume up or unmute */
- 	TP_HKEY_EV_VOL_DOWN		= 0x1016, /* Volume down or unmute */
- 	TP_HKEY_EV_VOL_MUTE		= 0x1017, /* Mixer output mute */
-+	TP_HKEY_EV_LCDSHADOW_CHANGED	= 0x130f, /* Eprivacy status changed */
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index 06f69bcd233fe..ad4dd3a977533 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -1000,16 +1000,14 @@ static void __init __efi_enter_virtual_mode(void)
  
- 	/* Reasons for waking up from S3/S4 */
- 	TP_HKEY_EV_WKUP_S3_UNDOCK	= 0x2304, /* undock requested, S3 */
-@@ -1925,6 +1926,7 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
- 
- 	/* Lenovo extended keymap, starting at 0x1300 */
- 	TP_ACPI_HOTKEYSCAN_EXTENDED_START,
-+	TP_ACPI_HOTKEYSCAN_LCDSHADOW = 67,
- 	/* first new observed key (star, favorites) is 0x1311 */
- 	TP_ACPI_HOTKEYSCAN_STAR = 69,
- 	TP_ACPI_HOTKEYSCAN_CLIPPING_TOOL2,
-@@ -3342,7 +3344,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
--		KEY_UNKNOWN, KEY_UNKNOWN
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 
- 		},
- 
-@@ -3444,7 +3446,8 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
--		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_RESERVED,         /* LCD Shadow/ePrivacy */
- 		KEY_UNKNOWN,
- 
- 		KEY_BOOKMARKS,       /* Favorite app, 0x311 */
-@@ -3921,6 +3924,7 @@ static bool hotkey_notify_hotkey(const u32 hkey,
- 		scancode -= (0x300 - TP_ACPI_HOTKEYSCAN_EXTENDED_START);
- 		if (scancode >= TP_ACPI_HOTKEYSCAN_EXTENDED_START &&
- 		    scancode < TPACPI_HOTKEY_MAP_LEN) {
-+			tpacpi_driver_event(hkey);
- 			tpacpi_input_send_key(scancode);
- 			return true;
- 		}
-@@ -9717,6 +9721,12 @@ static struct ibm_struct battery_driver_data = {
- 
- static int lcdshadow_state;
- 
-+static void lcdshadow_notify_change(void)
-+{
-+	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
-+		     "lcdshadow_enable");
-+}
-+
- static int lcdshadow_on_off(bool state)
- {
- 	acpi_handle set_shadow_handle;
-@@ -9731,6 +9741,7 @@ static int lcdshadow_on_off(bool state)
- 		return -EIO;
- 
- 	lcdshadow_state = state;
-+	lcdshadow_notify_change();
- 	return 0;
- }
- 
-@@ -9743,27 +9754,90 @@ static int lcdshadow_set(bool on)
- 	return lcdshadow_on_off(on);
- }
- 
--static int tpacpi_lcdshadow_init(struct ibm_init_struct *iibm)
-+static int lcdshadow_get(void)
- {
- 	acpi_handle get_shadow_handle;
- 	int output;
- 
--	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "GSSS", &get_shadow_handle))) {
--		lcdshadow_state = -ENODEV;
--		return 0;
--	}
-+	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "GSSS",
-+					&get_shadow_handle)))
-+		return -ENODEV;
- 
--	if (!acpi_evalf(get_shadow_handle, &output, NULL, "dd", 0)) {
--		lcdshadow_state = -EIO;
-+	if (!acpi_evalf(get_shadow_handle, &output, NULL, "dd", 0))
- 		return -EIO;
-+
-+	if (!(output & 0x10000))
-+		return -ENODEV;
-+
-+	return output & 0x1;
-+}
-+
-+static void lcdshadow_refresh(void)
-+{
-+	int new_state;
-+
-+	new_state = lcdshadow_get();
-+
-+	if (lcdshadow_state != new_state) {
-+		lcdshadow_state = new_state;
-+		lcdshadow_notify_change();
+ 	if (efi_alloc_page_tables()) {
+ 		pr_err("Failed to allocate EFI page tables\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
  	}
--	if (!(output & 0x10000)) {
--		lcdshadow_state = -ENODEV;
--		return 0;
--	}
--	lcdshadow_state = output & 0x1;
-+}
  
--	return 0;
-+
-+/* sysfs lcdshadow entry */
-+static ssize_t lcdshadow_enable_show(struct device *dev,
-+				      struct device_attribute *attr,
-+				      char *buf)
-+{
-+	if (lcdshadow_state < 0)
-+		return lcdshadow_state;
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", lcdshadow_state);
-+}
-+
-+static ssize_t lcdshadow_enable_store(struct device *dev,
-+				       struct device_attribute *attr,
-+				       const char *buf, size_t count)
-+{
-+	unsigned long t;
-+	int res;
-+
-+	if (parse_strtoul(buf, 1, &t))
-+		return -EINVAL;
-+
-+	tpacpi_disclose_usertask(attr->attr.name, "set to %ld\n", t);
-+
-+	res = lcdshadow_set(!!t);
-+
-+	return (res < 0) ? res : count;
-+}
-+
-+static DEVICE_ATTR_RW(lcdshadow_enable);
-+
-+static struct attribute *lcdshadow_attributes[] = {
-+	&dev_attr_lcdshadow_enable.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group lcdshadow_attr_group = {
-+	.attrs = lcdshadow_attributes,
-+};
-+
-+
-+static int tpacpi_lcdshadow_init(struct ibm_init_struct *iibm)
-+{
-+	int res;
-+
-+	lcdshadow_state = lcdshadow_get();
-+
-+	if (lcdshadow_state < 0 && lcdshadow_state != -ENODEV)
-+		return lcdshadow_state;
-+
-+	res = sysfs_create_group(&tpacpi_pdev->dev.kobj,
-+				  &lcdshadow_attr_group);
-+
-+	return res;
- }
- 
- static void lcdshadow_resume(void)
-@@ -9805,11 +9879,18 @@ static int lcdshadow_write(char *buf)
- 	return lcdshadow_set(state);
- }
- 
-+static void lcdshadow_exit(void)
-+{
-+	sysfs_remove_group(&tpacpi_pdev->dev.kobj,
-+			   &lcdshadow_attr_group);
-+}
-+
- static struct ibm_struct lcdshadow_driver_data = {
- 	.name = "lcdshadow",
- 	.resume = lcdshadow_resume,
- 	.read = lcdshadow_read,
- 	.write = lcdshadow_write,
-+	.exit = lcdshadow_exit,
- };
- 
- /****************************************************************************
-@@ -9859,6 +9940,12 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
- 
- 		mutex_unlock(&kbdlight_mutex);
+ 	efi_merge_regions();
+ 	new_memmap = efi_map_regions(&count, &pg_shift);
+ 	if (!new_memmap) {
+ 		pr_err("Error reallocating memory, EFI runtime non-functional!\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
  	}
-+	if (lcdshadow_state >= 0) {
-+		switch (hkey_event) {
-+		case TP_HKEY_EV_LCDSHADOW_CHANGED:
-+			lcdshadow_refresh();
-+		}
+ 
+ 	pa = __pa(new_memmap);
+@@ -1023,8 +1021,7 @@ static void __init __efi_enter_virtual_mode(void)
+ 
+ 	if (efi_memmap_init_late(pa, efi.memmap.desc_size * count)) {
+ 		pr_err("Failed to remap late EFI memory map\n");
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
++		goto err;
+ 	}
+ 
+ 	if (efi_enabled(EFI_DBG)) {
+@@ -1032,12 +1029,11 @@ static void __init __efi_enter_virtual_mode(void)
+ 		efi_print_memmap();
+ 	}
+ 
+-	BUG_ON(!efi.systab);
++	if (WARN_ON(!efi.systab))
++		goto err;
+ 
+-	if (efi_setup_page_tables(pa, 1 << pg_shift)) {
+-		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+-		return;
+-	}
++	if (efi_setup_page_tables(pa, 1 << pg_shift))
++		goto err;
+ 
+ 	efi_sync_low_kernel_mappings();
+ 
+@@ -1057,9 +1053,9 @@ static void __init __efi_enter_virtual_mode(void)
+ 	}
+ 
+ 	if (status != EFI_SUCCESS) {
+-		pr_alert("Unable to switch EFI into virtual mode (status=%lx)!\n",
+-			 status);
+-		panic("EFI call to SetVirtualAddressMap() failed!");
++		pr_err("Unable to switch EFI into virtual mode (status=%lx)!\n",
++		       status);
++		goto err;
+ 	}
+ 
+ 	efi_free_boot_services();
+@@ -1088,6 +1084,10 @@ static void __init __efi_enter_virtual_mode(void)
+ 
+ 	/* clean DUMMY object */
+ 	efi_delete_dummy_variable();
++	return;
++
++err:
++	clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+ }
+ 
+ void __init efi_enter_virtual_mode(void)
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index 08ce8177c3af1..52a1e5192fa80 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -392,11 +392,12 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 		return 0;
+ 
+ 	page = alloc_page(GFP_KERNEL|__GFP_DMA32);
+-	if (!page)
+-		panic("Unable to allocate EFI runtime stack < 4GB\n");
++	if (!page) {
++		pr_err("Unable to allocate EFI runtime stack < 4GB\n");
++		return 1;
 +	}
- }
  
- static void hotkey_driver_event(const unsigned int scancode)
+-	efi_scratch.phys_stack = virt_to_phys(page_address(page));
+-	efi_scratch.phys_stack += PAGE_SIZE; /* stack grows down */
++	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
+ 
+ 	npages = (_etext - _text) >> PAGE_SHIFT;
+ 	text = __pa(_text);
 -- 
-2.17.1
+2.20.1
