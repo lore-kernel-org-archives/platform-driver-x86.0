@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 024/252] efi/x86: Map the entire EFI vendor string before copying it
-Date: Fri, 14 Feb 2020 11:07:59 -0500
-Message-ID: <20200214161147.15842-24-sashal@kernel.org>
-References: <20200214161147.15842-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 016/141] efi/x86: Map the entire EFI vendor string before copying it
+Date: Fri, 14 Feb 2020 11:19:16 -0500
+Message-ID: <20200214162122.19794-16-sashal@kernel.org>
+References: <20200214162122.19794-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
 Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Ard Biesheuvel <ardb@kernel.org>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Arvind Sankar <nivedita@alum.mit.edu>, Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org, x86@kernel.org
@@ -40,10 +40,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 335a62e74a2e9..5b0275310070e 100644
+index b6669d326545a..f08abdf8bb676 100644
 --- a/arch/x86/platform/efi/efi.c
 +++ b/arch/x86/platform/efi/efi.c
-@@ -480,7 +480,6 @@ void __init efi_init(void)
+@@ -478,7 +478,6 @@ void __init efi_init(void)
  	efi_char16_t *c16;
  	char vendor[100] = "unknown";
  	int i = 0;
@@ -51,7 +51,7 @@ index 335a62e74a2e9..5b0275310070e 100644
  
  #ifdef CONFIG_X86_32
  	if (boot_params.efi_info.efi_systab_hi ||
-@@ -505,14 +504,16 @@ void __init efi_init(void)
+@@ -503,14 +502,16 @@ void __init efi_init(void)
  	/*
  	 * Show what we know for posterity
  	 */
