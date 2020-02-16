@@ -1,77 +1,34 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 063/542] efi/x86: Map the entire EFI vendor string before copying it
-Date: Fri, 14 Feb 2020 10:40:55 -0500
-Message-ID: <20200214154854.6746-63-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] platform/x86: Kconfig: Fix a typo
+Date: Sun, 16 Feb 2020 11:34:37 +0100
+Message-ID: <20200216103437.19500-1-christophe.jaillet@wanadoo.fr>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Arvind Sankar <nivedita@alum.mit.edu>, Matthew Garrett <mjg59@google.com>, linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org, x86@kernel.org
+To: dvhart@infradead.org, andy@infradead.org, mchehab+samsung@kernel.org, dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org, ayman.bagabas@gmail.com, srinivas.pandruvada@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+'paramaters' should be 'parameters'
 
-[ Upstream commit ffc2760bcf2dba0dbef74013ed73eea8310cc52c ]
-
-Fix a couple of issues with the way we map and copy the vendor string:
-- we map only 2 bytes, which usually works since you get at least a
-  page, but if the vendor string happens to cross a page boundary,
-  a crash will result
-- only call early_memunmap() if early_memremap() succeeded, or we will
-  call it with a NULL address which it doesn't like,
-- while at it, switch to early_memremap_ro(), and array indexing rather
-  than pointer dereferencing to read the CHAR16 characters.
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: Matthew Garrett <mjg59@google.com>
-Cc: linux-efi@vger.kernel.org
-Fixes: 5b83683f32b1 ("x86: EFI runtime service support")
-Link: https://lkml.kernel.org/r/20200103113953.9571-5-ardb@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- arch/x86/platform/efi/efi.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ drivers/platform/x86/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 38d44f36d5ede..06f69bcd233fe 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -541,7 +541,6 @@ void __init efi_init(void)
- 	efi_char16_t *c16;
- 	char vendor[100] = "unknown";
- 	int i = 0;
--	void *tmp;
- 
- #ifdef CONFIG_X86_32
- 	if (boot_params.efi_info.efi_systab_hi ||
-@@ -566,14 +565,16 @@ void __init efi_init(void)
- 	/*
- 	 * Show what we know for posterity
- 	 */
--	c16 = tmp = early_memremap(efi.systab->fw_vendor, 2);
-+	c16 = early_memremap_ro(efi.systab->fw_vendor,
-+				sizeof(vendor) * sizeof(efi_char16_t));
- 	if (c16) {
--		for (i = 0; i < sizeof(vendor) - 1 && *c16; ++i)
--			vendor[i] = *c16++;
-+		for (i = 0; i < sizeof(vendor) - 1 && c16[i]; ++i)
-+			vendor[i] = c16[i];
- 		vendor[i] = '\0';
--	} else
-+		early_memunmap(c16, sizeof(vendor) * sizeof(efi_char16_t));
-+	} else {
- 		pr_err("Could not map the firmware vendor!\n");
--	early_memunmap(tmp, 2);
-+	}
- 
- 	pr_info("EFI v%u.%.02u by %s\n",
- 		efi.systab->hdr.revision >> 16,
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 664ead09c7fb..ae75b19e8649 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1213,7 +1213,7 @@ config INTEL_RST
+         tristate "Intel Rapid Start Technology Driver"
+ 	depends on ACPI
+ 	---help---
+-	  This driver provides support for modifying paramaters on systems
++	  This driver provides support for modifying parameters on systems
+ 	  equipped with Intel's Rapid Start Technology. When put in an ACPI
+ 	  sleep state, these devices will wake after either a configured
+ 	  timeout or when the system battery reaches a critical state,
 -- 
 2.20.1
