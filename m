@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v6 07/19] platform/x86: intel_scu_ipcutil: Convert to use new SCU IPC API
-Date: Mon, 17 Feb 2020 16:14:34 +0300
-Message-ID: <20200217131446.32818-8-mika.westerberg@linux.intel.com>
+Subject: [PATCH v6 10/19] mfd: intel_soc_pmic: Add SCU IPC member to struct intel_soc_pmic
+Date: Mon, 17 Feb 2020 16:14:37 +0300
+Message-ID: <20200217131446.32818-11-mika.westerberg@linux.intel.com>
 References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,86 +12,49 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Convert the IPC util to use the new SCU IPC API where the SCU IPC
-instance is passed to the functions.
+Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
+be using this field going forward to access the SCU IPC instance.
+
+While there add kernel-doc for the intel_soc_pmic structure.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipcutil.c | 43 +++++++++++++++++++++---
- 1 file changed, 39 insertions(+), 4 deletions(-)
+ include/linux/mfd/intel_soc_pmic.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/platform/x86/intel_scu_ipcutil.c b/drivers/platform/x86/intel_scu_ipcutil.c
-index 8afe6fa06d7b..b7c10c15a3d6 100644
---- a/drivers/platform/x86/intel_scu_ipcutil.c
-+++ b/drivers/platform/x86/intel_scu_ipcutil.c
-@@ -22,6 +22,9 @@
+diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+index bfecd6bd4990..6a88e34cb955 100644
+--- a/include/linux/mfd/intel_soc_pmic.h
++++ b/include/linux/mfd/intel_soc_pmic.h
+@@ -13,6 +13,20 @@
  
- static int major;
+ #include <linux/regmap.h>
  
-+struct intel_scu_ipc_dev *scu;
-+static DEFINE_MUTEX(scu_lock);
-+
- /* IOCTL commands */
- #define	INTE_SCU_IPC_REGISTER_READ	0
- #define INTE_SCU_IPC_REGISTER_WRITE	1
-@@ -52,12 +55,12 @@ static int scu_reg_access(u32 cmd, struct scu_ipc_data  *data)
- 
- 	switch (cmd) {
- 	case INTE_SCU_IPC_REGISTER_READ:
--		return intel_scu_ipc_readv(data->addr, data->data, count);
-+		return intel_scu_ipc_dev_readv(scu, data->addr, data->data, count);
- 	case INTE_SCU_IPC_REGISTER_WRITE:
--		return intel_scu_ipc_writev(data->addr, data->data, count);
-+		return intel_scu_ipc_dev_writev(scu, data->addr, data->data, count);
- 	case INTE_SCU_IPC_REGISTER_UPDATE:
--		return intel_scu_ipc_update_register(data->addr[0],
--						    data->data[0], data->mask);
-+		return intel_scu_ipc_dev_update(scu, data->addr[0], data->data[0],
-+						data->mask);
- 	default:
- 		return -ENOTTY;
- 	}
-@@ -91,8 +94,40 @@ static long scu_ipc_ioctl(struct file *fp, unsigned int cmd,
- 	return 0;
- }
- 
-+static int scu_ipc_open(struct inode *inode, struct file *file)
-+{
-+	int ret = 0;
-+
-+	/* Only single open at the time */
-+	mutex_lock(&scu_lock);
-+	if (scu) {
-+		ret = -EBUSY;
-+		goto unlock;
-+	}
-+
-+	scu = intel_scu_ipc_dev_get();
-+	if (!scu)
-+		ret = -ENODEV;
-+
-+unlock:
-+	mutex_unlock(&scu_lock);
-+	return ret;
-+}
-+
-+static int scu_ipc_release(struct inode *inode, struct file *file)
-+{
-+	mutex_lock(&scu_lock);
-+	intel_scu_ipc_dev_put(scu);
-+	scu = NULL;
-+	mutex_unlock(&scu_lock);
-+
-+	return 0;
-+}
-+
- static const struct file_operations scu_ipc_fops = {
- 	.unlocked_ioctl = scu_ipc_ioctl,
-+	.open = scu_ipc_open,
-+	.release = scu_ipc_release,
++/**
++ * struct intel_soc_pmic - Intel SoC PMIC data
++ * @irq: Master interrupt number of the parent PMIC device
++ * @regmap: Pointer to the parent PMIC device regmap structure
++ * @irq_chip_data: IRQ chip data for the PMIC itself
++ * @irq_chip_data_pwrbtn: Chained IRQ chip data for the Power Button
++ * @irq_chip_data_tmu: Chained IRQ chip data for the Time Management Unit
++ * @irq_chip_data_bcu: Chained IRQ chip data for the Burst Control Unit
++ * @irq_chip_data_adc: Chained IRQ chip data for the General Purpose ADC
++ * @irq_chip_data_chgr: Chained IRQ chip data for the External Charger
++ * @irq_chip_data_crit: Chained IRQ chip data for the Critical Event Handler
++ * @dev: Pointer to the parent PMIC device
++ * @scu: Pointer to the SCU IPC device data structure
++ */
+ struct intel_soc_pmic {
+ 	int irq;
+ 	struct regmap *regmap;
+@@ -24,6 +38,7 @@ struct intel_soc_pmic {
+ 	struct regmap_irq_chip_data *irq_chip_data_chgr;
+ 	struct regmap_irq_chip_data *irq_chip_data_crit;
+ 	struct device *dev;
++	struct intel_scu_ipc_dev *scu;
  };
  
- static int __init ipc_module_init(void)
+ int intel_soc_pmic_exec_mipi_pmic_seq_element(u16 i2c_address, u32 reg_address,
 -- 
 2.25.0
