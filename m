@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v6 10/19] mfd: intel_soc_pmic: Add SCU IPC member to struct intel_soc_pmic
-Date: Mon, 17 Feb 2020 16:14:37 +0300
-Message-ID: <20200217131446.32818-11-mika.westerberg@linux.intel.com>
+Subject: [PATCH v6 12/19] mfd: intel_soc_pmic_mrfld: Convert to use new SCU IPC API
+Date: Mon, 17 Feb 2020 16:14:39 +0300
+Message-ID: <20200217131446.32818-13-mika.westerberg@linux.intel.com>
 References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,49 +12,55 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
-be using this field going forward to access the SCU IPC instance.
-
-While there add kernel-doc for the intel_soc_pmic structure.
+This converts the Intel Merrifield PMIC driver over the new SCU IPC API
+where the SCU IPC instance is passed to the functions.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/mfd/intel_soc_pmic.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/mfd/intel_soc_pmic_mrfld.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
-index bfecd6bd4990..6a88e34cb955 100644
---- a/include/linux/mfd/intel_soc_pmic.h
-+++ b/include/linux/mfd/intel_soc_pmic.h
-@@ -13,6 +13,20 @@
+diff --git a/drivers/mfd/intel_soc_pmic_mrfld.c b/drivers/mfd/intel_soc_pmic_mrfld.c
+index 26a1551c5faf..bd94c989d232 100644
+--- a/drivers/mfd/intel_soc_pmic_mrfld.c
++++ b/drivers/mfd/intel_soc_pmic_mrfld.c
+@@ -74,10 +74,11 @@ static const struct mfd_cell bcove_dev[] = {
+ static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
+ 				    unsigned int *val)
+ {
++	struct intel_soc_pmic *pmic = context;
+ 	u8 ipc_out;
+ 	int ret;
  
- #include <linux/regmap.h>
+-	ret = intel_scu_ipc_ioread8(reg, &ipc_out);
++	ret = intel_scu_ipc_dev_ioread8(pmic->scu, reg, &ipc_out);
+ 	if (ret)
+ 		return ret;
  
-+/**
-+ * struct intel_soc_pmic - Intel SoC PMIC data
-+ * @irq: Master interrupt number of the parent PMIC device
-+ * @regmap: Pointer to the parent PMIC device regmap structure
-+ * @irq_chip_data: IRQ chip data for the PMIC itself
-+ * @irq_chip_data_pwrbtn: Chained IRQ chip data for the Power Button
-+ * @irq_chip_data_tmu: Chained IRQ chip data for the Time Management Unit
-+ * @irq_chip_data_bcu: Chained IRQ chip data for the Burst Control Unit
-+ * @irq_chip_data_adc: Chained IRQ chip data for the General Purpose ADC
-+ * @irq_chip_data_chgr: Chained IRQ chip data for the External Charger
-+ * @irq_chip_data_crit: Chained IRQ chip data for the Critical Event Handler
-+ * @dev: Pointer to the parent PMIC device
-+ * @scu: Pointer to the SCU IPC device data structure
-+ */
- struct intel_soc_pmic {
- 	int irq;
- 	struct regmap *regmap;
-@@ -24,6 +38,7 @@ struct intel_soc_pmic {
- 	struct regmap_irq_chip_data *irq_chip_data_chgr;
- 	struct regmap_irq_chip_data *irq_chip_data_crit;
- 	struct device *dev;
-+	struct intel_scu_ipc_dev *scu;
- };
+@@ -88,10 +89,11 @@ static int bcove_ipc_byte_reg_read(void *context, unsigned int reg,
+ static int bcove_ipc_byte_reg_write(void *context, unsigned int reg,
+ 				     unsigned int val)
+ {
++	struct intel_soc_pmic *pmic = context;
+ 	u8 ipc_in = val;
+ 	int ret;
  
- int intel_soc_pmic_exec_mipi_pmic_seq_element(u16 i2c_address, u32 reg_address,
+-	ret = intel_scu_ipc_iowrite8(reg, ipc_in);
++	ret = intel_scu_ipc_dev_iowrite8(pmic->scu, reg, ipc_in);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -117,6 +119,10 @@ static int bcove_probe(struct platform_device *pdev)
+ 	if (!pmic)
+ 		return -ENOMEM;
+ 
++	pmic->scu = devm_intel_scu_ipc_dev_get(dev);
++	if (!pmic->scu)
++		return -ENOMEM;
++
+ 	platform_set_drvdata(pdev, pmic);
+ 	pmic->dev = &pdev->dev;
+ 
 -- 
 2.25.0
