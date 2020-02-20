@@ -1,98 +1,59 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [REPOST][PATCH 1/2] platform/x86/intel-uncore-freq: Fix static checker issue and potential race condition
-Date: Mon, 17 Feb 2020 18:28:43 -0800
-Message-ID: <20200218022844.179988-2-srinivas.pandruvada@linux.intel.com>
-References: <20200218022844.179988-1-srinivas.pandruvada@linux.intel.com>
+From: Chen Zhou <chenzhou10@huawei.com>
+Subject: [PATCH -next] platform/x86: intel_pmc_core: fix build error without CONFIG_DEBUG_FS
+Date: Thu, 20 Feb 2020 11:33:35 +0800
+Message-ID: <20200220033335.106963-1-chenzhou10@huawei.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200218022844.179988-1-srinivas.pandruvada@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Dan Carpenter <dan.carpenter@oracle.com>
+To: rajneesh.bhardwaj@intel.com, vishwanath.somayaji@intel.com
+Cc: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, chenzhou10@huawei.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-There is a possible race condition when:
-All CPUs in a package is offlined and just before the last CPU offline,
-user tries to read sysfs entry and read happens while offline callback
-is about to delete the sysfs entry.
+If CONFIG_DEBUG_FS is n, build fails:
 
-Although not reproduced but this is possible scenerio and can be
-reproduced by adding a msleep() in the show_min_max_freq_khz() before
-mutex_lock() and read min_freq attribute from user space. Before
-msleep() finishes, force every CPUs in a package offline.
+drivers/platform/x86/intel_pmc_core.c: In function pmc_core_resume:
+drivers/platform/x86/intel_pmc_core.c:1327:3: error: implicit declaration of function pmc_core_slps0_display; did you mean pmc_core_is_pc10_failed? [-Werror=implicit-function-declaration]
+   pmc_core_slps0_display(pmcdev, dev, NULL);
+      ^~~~~~~~~~~~~~~~~~~~~~
 
-This will cause deadlock, with offline and sysfs read/write operation
-because of mutex_lock. The uncore_remove_die_entry() will not release
-mutex till read/write callback returns because of kobject_put() and
-read/write callback waiting on mutex.
+Function pmc_core_slps0_display() is responsible for displaying debug
+registers, which is under CONFIG_DEBUG_FS.
 
-We don't have to remove the sysfs folder when the package is offline.
-While there is no CPU present, we can fail the read/write calls by
-returning ENXIO error. So remove the kobject_put() call in offline path.
+Providing the static inline stub whenever CONFIG_DEBUG_FS is disabled
+to fix this. Function pmc_core_lpm_display() is the same.
 
-This also address the warning from static checker, as there is no
-access to "data" variable after kobject_put:
-"The patch 49a474c7ba51: "platform/x86: Add support for Uncore
-frequency control" from Jan 13, 2020, leads to the following static
-checker warning:
-
-        drivers/platform/x86/intel-uncore-frequency.c:285 uncore_remove_die_entry()
-        error: dereferencing freed memory 'data'
-"
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- drivers/platform/x86/intel-uncore-frequency.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/platform/x86/intel-uncore-frequency.c b/drivers/platform/x86/intel-uncore-frequency.c
-index 2b1a0734c3f8..c83ec95e8f3e 100644
---- a/drivers/platform/x86/intel-uncore-frequency.c
-+++ b/drivers/platform/x86/intel-uncore-frequency.c
-@@ -97,6 +97,9 @@ static int uncore_read_ratio(struct uncore_data *data, unsigned int *min,
- 	u64 cap;
- 	int ret;
- 
-+	if (data->control_cpu < 0)
-+		return -ENXIO;
-+
- 	ret = rdmsrl_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT, &cap);
- 	if (ret)
- 		return ret;
-@@ -116,6 +119,11 @@ static int uncore_write_ratio(struct uncore_data *data, unsigned int input,
- 
- 	mutex_lock(&uncore_lock);
- 
-+	if (data->control_cpu < 0) {
-+		ret = -ENXIO;
-+		goto finish_write;
-+	}
-+
- 	input /= UNCORE_FREQ_KHZ_MULTIPLIER;
- 	if (!input || input > 0x7F) {
- 		ret = -EINVAL;
-@@ -273,18 +281,15 @@ static void uncore_add_die_entry(int cpu)
- 	mutex_unlock(&uncore_lock);
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index f4a36fb..939f8e0 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -1117,6 +1117,20 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 	}
  }
- 
--/* Last CPU in this die is offline, so remove sysfs entries */
-+/* Last CPU in this die is offline, make control cpu invalid */
- static void uncore_remove_die_entry(int cpu)
+ #else
++static inline void pmc_core_slps0_display(struct pmc_dev *pmcdev,
++					   struct device *dev,
++					   struct seq_file *s)
++{
++}
++
++static inline void pmc_core_lpm_display(struct pmc_dev *pmcdev,
++					 struct device *dev,
++					 struct seq_file *s, u32 offset,
++					 const char *str,
++					 const struct pmc_bit_map **maps)
++{
++}
++
+ static inline void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
  {
- 	struct uncore_data *data;
- 
- 	mutex_lock(&uncore_lock);
- 	data = uncore_get_instance(cpu);
--	if (data) {
--		kobject_put(&data->kobj);
-+	if (data)
- 		data->control_cpu = -1;
--		data->valid = false;
--	}
- 	mutex_unlock(&uncore_lock);
  }
- 
 -- 
-2.20.1
+2.7.4
