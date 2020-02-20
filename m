@@ -1,244 +1,53 @@
-From: Nitin Joshi <nitjoshi@gmail.com>
-Subject: [PATCH] thinkpad_acpi: Add sysfs entry for lcdshadow feature
-Date: Thu, 20 Feb 2020 16:46:37 +0900
-Message-ID: <20200220074637.7578-1-njoshi1@lenovo.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH 0/2] arm64: Support to find mirrored memory ranges
+Date: Thu, 20 Feb 2020 10:21:29 +0100
+Message-ID: <CAKv+Gu930691BaDLuoVOU_gz0V8MtfWbfSTKcYuHxDvLz5hAiA@mail.gmail.com>
+References: <1582289580-24045-1-git-send-email-jingxiangfeng@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1582289580-24045-1-git-send-email-jingxiangfeng@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, mpearson@lenovo.com, linux-kernel@vger.kernel.org, Nitin Joshi <njoshi1@lenovo.com>, Benjamin Berg <bberg@redhat.com>
+To: Jing Xiangfeng <jingxiangfeng@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, the arch/x86 maintainers <x86@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-efi <linux-efi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Linux-MM <linux-mm@kvack.org>, Kefeng Wang <wangkefeng.wang@huawei.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-  This feature is supported on some Thinkpad products like T490s, Thinkpad
-  X1 yoga 4th Gen etc . The lcdshadow feature can be enabled and disabled
-  when user press "Fn" + "D" key. Currently, no user feedback is given for
-  this action. Adding as sysfs entry allows userspace to show an On Screen
-  Display whenever the setting changes.
+On Thu, 20 Feb 2020 at 04:43, Jing Xiangfeng <jingxiangfeng@huawei.com> wrote:
+>
+> This series enable finding mirrored memory ranges
+> functionality on arm64 platform. This feature has been
+> implemented on the x86 platform, so we move some
+> functions from x86.
+>
 
-  Summary of changes is mentioned below :
+Hello Jing Xiangfeng,
 
- - Added TP_HKEY_EV_LCDSHADOW_CHANGED for consistency inside the driver
- - Added unmapped LCDSHADOW to keymap
- - Added lcdshadow_get function to read value using ACPI
- - Added lcdshadow_refresh function to re-read value and send notification
- - Added sysfs group creation to tpaci_lcdshadow_init
- - Added lcdshadow_exit to remove sysfs group again
- - Implemented lcdshadow_enable_show/lcdshadow_enable_store
- - Added handler to tpacpi_driver_event to update refresh lcdshadow
- - Explicitly call tpacpi_driver_event for extended keyset
+Could you explain your use case a bit better? Usually, the firmware is
+a better place to make modifications to the EFI memory map.
 
- Patch is tested on kernel 5.5 on Thinkpad X1 Yoga 4th Gen.
+The reason I am asking is that currently, on ARM and arm64, we never
+make *any* changes to the firmware provided tables (EFI system table,
+EFI memory map, DT/ACPI/SMBIOS tables etc), in order to ensure that
+kexec is idempotent, i.e., it will always see the exact same state as
+far as the firmware is concerned. This is a bit different from x86,
+where the memory map is already modified for various other reasons, so
+using it for fake memory regions is not such a big deal.
 
-Co-developed-by: Benjamin Berg <bberg@redhat.com>
-Signed-off-by: Benjamin Berg <bberg@redhat.com>
-Reviewed-by: Mark Pearson <mpearson@lenovo.com>
-Signed-off-by: Nitin Joshi <njoshi1@lenovo.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 117 +++++++++++++++++++++++----
- 1 file changed, 102 insertions(+), 15 deletions(-)
+Do you see a use case for this in production?
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index da794dcfdd92..bd137cc7baee 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -155,6 +155,7 @@ enum tpacpi_hkey_event_t {
- 	TP_HKEY_EV_VOL_UP		= 0x1015, /* Volume up or unmute */
- 	TP_HKEY_EV_VOL_DOWN		= 0x1016, /* Volume down or unmute */
- 	TP_HKEY_EV_VOL_MUTE		= 0x1017, /* Mixer output mute */
-+	TP_HKEY_EV_LCDSHADOW_CHANGED	= 0x130f, /* Eprivacy status changed */
- 
- 	/* Reasons for waking up from S3/S4 */
- 	TP_HKEY_EV_WKUP_S3_UNDOCK	= 0x2304, /* undock requested, S3 */
-@@ -1925,6 +1926,7 @@ enum {	/* hot key scan codes (derived from ACPI DSDT) */
- 
- 	/* Lenovo extended keymap, starting at 0x1300 */
- 	TP_ACPI_HOTKEYSCAN_EXTENDED_START,
-+	TP_ACPI_HOTKEYSCAN_LCDSHADOW = 67,
- 	/* first new observed key (star, favorites) is 0x1311 */
- 	TP_ACPI_HOTKEYSCAN_STAR = 69,
- 	TP_ACPI_HOTKEYSCAN_CLIPPING_TOOL2,
-@@ -3342,7 +3344,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
--		KEY_UNKNOWN, KEY_UNKNOWN
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 
- 		},
- 
-@@ -3444,7 +3446,8 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
- 		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
--		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,
-+		KEY_RESERVED,         /* LCD Shadow/ePrivacy */
- 		KEY_UNKNOWN,
- 
- 		KEY_BOOKMARKS,       /* Favorite app, 0x311 */
-@@ -3921,6 +3924,7 @@ static bool hotkey_notify_hotkey(const u32 hkey,
- 		scancode -= (0x300 - TP_ACPI_HOTKEYSCAN_EXTENDED_START);
- 		if (scancode >= TP_ACPI_HOTKEYSCAN_EXTENDED_START &&
- 		    scancode < TPACPI_HOTKEY_MAP_LEN) {
-+			tpacpi_driver_event(hkey);
- 			tpacpi_input_send_key(scancode);
- 			return true;
- 		}
-@@ -9717,6 +9721,12 @@ static struct ibm_struct battery_driver_data = {
- 
- static int lcdshadow_state;
- 
-+static void lcdshadow_notify_change(void)
-+{
-+	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
-+		     "lcdshadow_enable");
-+}
-+
- static int lcdshadow_on_off(bool state)
- {
- 	acpi_handle set_shadow_handle;
-@@ -9731,6 +9741,7 @@ static int lcdshadow_on_off(bool state)
- 		return -EIO;
- 
- 	lcdshadow_state = state;
-+	lcdshadow_notify_change();
- 	return 0;
- }
- 
-@@ -9743,27 +9754,90 @@ static int lcdshadow_set(bool on)
- 	return lcdshadow_on_off(on);
- }
- 
--static int tpacpi_lcdshadow_init(struct ibm_init_struct *iibm)
-+static int lcdshadow_get(void)
- {
- 	acpi_handle get_shadow_handle;
- 	int output;
- 
--	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "GSSS", &get_shadow_handle))) {
--		lcdshadow_state = -ENODEV;
--		return 0;
--	}
-+	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "GSSS",
-+					&get_shadow_handle)))
-+		return -ENODEV;
- 
--	if (!acpi_evalf(get_shadow_handle, &output, NULL, "dd", 0)) {
--		lcdshadow_state = -EIO;
-+	if (!acpi_evalf(get_shadow_handle, &output, NULL, "dd", 0))
- 		return -EIO;
-+
-+	if (!(output & 0x10000))
-+		return -ENODEV;
-+
-+	return output & 0x1;
-+}
-+
-+static void lcdshadow_refresh(void)
-+{
-+	int new_state;
-+
-+	new_state = lcdshadow_get();
-+
-+	if (lcdshadow_state != new_state) {
-+		lcdshadow_state = new_state;
-+		lcdshadow_notify_change();
- 	}
--	if (!(output & 0x10000)) {
--		lcdshadow_state = -ENODEV;
--		return 0;
--	}
--	lcdshadow_state = output & 0x1;
-+}
- 
--	return 0;
-+
-+/* sysfs lcdshadow entry */
-+static ssize_t lcdshadow_enable_show(struct device *dev,
-+				      struct device_attribute *attr,
-+				      char *buf)
-+{
-+	if (lcdshadow_state < 0)
-+		return lcdshadow_state;
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", lcdshadow_state);
-+}
-+
-+static ssize_t lcdshadow_enable_store(struct device *dev,
-+				       struct device_attribute *attr,
-+				       const char *buf, size_t count)
-+{
-+	unsigned long t;
-+	int res;
-+
-+	if (parse_strtoul(buf, 1, &t))
-+		return -EINVAL;
-+
-+	tpacpi_disclose_usertask(attr->attr.name, "set to %ld\n", t);
-+
-+	res = lcdshadow_set(!!t);
-+
-+	return (res < 0) ? res : count;
-+}
-+
-+static DEVICE_ATTR_RW(lcdshadow_enable);
-+
-+static struct attribute *lcdshadow_attributes[] = {
-+	&dev_attr_lcdshadow_enable.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group lcdshadow_attr_group = {
-+	.attrs = lcdshadow_attributes,
-+};
-+
-+
-+static int tpacpi_lcdshadow_init(struct ibm_init_struct *iibm)
-+{
-+	int res;
-+
-+	lcdshadow_state = lcdshadow_get();
-+
-+	if (lcdshadow_state < 0 && lcdshadow_state != -ENODEV)
-+		return lcdshadow_state;
-+
-+	res = sysfs_create_group(&tpacpi_pdev->dev.kobj,
-+				  &lcdshadow_attr_group);
-+
-+	return res;
- }
- 
- static void lcdshadow_resume(void)
-@@ -9805,11 +9879,18 @@ static int lcdshadow_write(char *buf)
- 	return lcdshadow_set(state);
- }
- 
-+static void lcdshadow_exit(void)
-+{
-+	sysfs_remove_group(&tpacpi_pdev->dev.kobj,
-+			   &lcdshadow_attr_group);
-+}
-+
- static struct ibm_struct lcdshadow_driver_data = {
- 	.name = "lcdshadow",
- 	.resume = lcdshadow_resume,
- 	.read = lcdshadow_read,
- 	.write = lcdshadow_write,
-+	.exit = lcdshadow_exit,
- };
- 
- /****************************************************************************
-@@ -9859,6 +9940,12 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
- 
- 		mutex_unlock(&kbdlight_mutex);
- 	}
-+	if (lcdshadow_state >= 0) {
-+		switch (hkey_event) {
-+		case TP_HKEY_EV_LCDSHADOW_CHANGED:
-+			lcdshadow_refresh();
-+		}
-+	}
- }
- 
- static void hotkey_driver_event(const unsigned int scancode)
--- 
-2.17.1
+> Jing Xiangfeng (2):
+>   efi: allow EFI_FAKE_MEMMAP on arm64 platform
+>   arm64/efi: support to find mirrored memory ranges
+>
+>  arch/x86/include/asm/efi.h      |  5 -----
+>  arch/x86/platform/efi/efi.c     | 39 ---------------------------------------
+>  drivers/firmware/efi/Kconfig    |  2 +-
+>  drivers/firmware/efi/arm-init.c |  2 ++
+>  drivers/firmware/efi/efi.c      | 23 +++++++++++++++++++++++
+>  drivers/firmware/efi/memmap.c   | 16 ++++++++++++++++
+>  include/linux/efi.h             |  5 +++++
+>  7 files changed, 47 insertions(+), 45 deletions(-)
+>
+> --
+> 1.8.3.1
+>
