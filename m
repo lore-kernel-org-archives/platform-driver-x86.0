@@ -1,59 +1,33 @@
-From: Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH -next] platform/x86: intel_pmc_core: fix build error without CONFIG_DEBUG_FS
-Date: Thu, 20 Feb 2020 11:33:35 +0800
-Message-ID: <20200220033335.106963-1-chenzhou10@huawei.com>
+From: Jing Xiangfeng <jingxiangfeng@huawei.com>
+Subject: [PATCH 0/2] arm64: Support to find mirrored memory ranges
+Date: Thu, 20 Feb 2020 03:43:31 -0000 (UTC)
+Message-ID: <1582289580-24045-1-git-send-email-jingxiangfeng@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Date: Fri, 21 Feb 2020 07:52:58 -0500
 Sender: linux-kernel-owner@vger.kernel.org
-To: rajneesh.bhardwaj@intel.com, vishwanath.somayaji@intel.com
-Cc: dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, chenzhou10@huawei.com
+To: ardb@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org, dvhart@infradead.org, andy@infradead.org
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, wangkefeng.wang@huawei.com, jingxiangfeng@huawei.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-If CONFIG_DEBUG_FS is n, build fails:
+This series enable finding mirrored memory ranges
+functionality on arm64 platform. This feature has been
+implemented on the x86 platform, so we move some
+functions from x86.
 
-drivers/platform/x86/intel_pmc_core.c: In function pmc_core_resume:
-drivers/platform/x86/intel_pmc_core.c:1327:3: error: implicit declaration of function pmc_core_slps0_display; did you mean pmc_core_is_pc10_failed? [-Werror=implicit-function-declaration]
-   pmc_core_slps0_display(pmcdev, dev, NULL);
-      ^~~~~~~~~~~~~~~~~~~~~~
+Jing Xiangfeng (2):
+  efi: allow EFI_FAKE_MEMMAP on arm64 platform
+  arm64/efi: support to find mirrored memory ranges
 
-Function pmc_core_slps0_display() is responsible for displaying debug
-registers, which is under CONFIG_DEBUG_FS.
+ arch/x86/include/asm/efi.h      |  5 -----
+ arch/x86/platform/efi/efi.c     | 39 ---------------------------------------
+ drivers/firmware/efi/Kconfig    |  2 +-
+ drivers/firmware/efi/arm-init.c |  2 ++
+ drivers/firmware/efi/efi.c      | 23 +++++++++++++++++++++++
+ drivers/firmware/efi/memmap.c   | 16 ++++++++++++++++
+ include/linux/efi.h             |  5 +++++
+ 7 files changed, 47 insertions(+), 45 deletions(-)
 
-Providing the static inline stub whenever CONFIG_DEBUG_FS is disabled
-to fix this. Function pmc_core_lpm_display() is the same.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- drivers/platform/x86/intel_pmc_core.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index f4a36fb..939f8e0 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -1117,6 +1117,20 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
- 	}
- }
- #else
-+static inline void pmc_core_slps0_display(struct pmc_dev *pmcdev,
-+					   struct device *dev,
-+					   struct seq_file *s)
-+{
-+}
-+
-+static inline void pmc_core_lpm_display(struct pmc_dev *pmcdev,
-+					 struct device *dev,
-+					 struct seq_file *s, u32 offset,
-+					 const char *str,
-+					 const struct pmc_bit_map **maps)
-+{
-+}
-+
- static inline void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
- {
- }
 -- 
-2.7.4
+1.8.3.1
