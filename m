@@ -1,119 +1,69 @@
-From: Rajat Jain <rajatja@google.com>
-Subject: Re: [External] Re: [PATCH] thinkpad_acpi: Add sysfs entry for
+From: Mark Pearson <mpearson@lenovo.com>
+Subject: RE: [External] Re: [PATCH] thinkpad_acpi: Add sysfs entry for
  lcdshadow feature
-Date: Thu, 20 Feb 2020 10:39:02 -0800
-Message-ID: <CACK8Z6GwuOnJUUscriGwKWGBp5PFKyuqUkFYC8tEXa0UEuEZww@mail.gmail.com>
-References: <20200220074637.7578-1-njoshi1@lenovo.com> <CAHp75VcJmEOu1-b7F2UAsv=Gujb=pPLzjz2ye9t4=Q68+ors-w@mail.gmail.com>
+Date: Thu, 20 Feb 2020 19:03:00 +0000
+Message-ID: <PS1PR0302MB260492DDE243BE0A64A39AA7BD130@PS1PR0302MB2604.apcprd03.prod.outlook.com>
+References: <20200220074637.7578-1-njoshi1@lenovo.com>
+ <CAHp75VcJmEOu1-b7F2UAsv=Gujb=pPLzjz2ye9t4=Q68+ors-w@mail.gmail.com>
  <HK2PR0302MB25937E2946BF38583B3A905DBD130@HK2PR0302MB2593.apcprd03.prod.outlook.com>
+ <CACK8Z6GwuOnJUUscriGwKWGBp5PFKyuqUkFYC8tEXa0UEuEZww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <HK2PR0302MB25937E2946BF38583B3A905DBD130@HK2PR0302MB2593.apcprd03.prod.outlook.com>
+In-Reply-To: <CACK8Z6GwuOnJUUscriGwKWGBp5PFKyuqUkFYC8tEXa0UEuEZww@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Pearson <mpearson@lenovo.com>
+To: Rajat Jain <rajatja@google.com>
 Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Nitin Joshi <nitjoshi@gmail.com>, Mat King <mathewk@google.com>, Jani Nikula <jani.nikula@linux.intel.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Nitin Joshi1 <njoshi1@lenovo.com>, Benjamin Berg <bberg@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Mark,
-
-On Thu, Feb 20, 2020 at 7:14 AM Mark Pearson <mpearson@lenovo.com> wrote:
->
-> Hi Andy
->
-> > -----Original Message-----
-> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Sent: Thursday, February 20, 2020 5:43 AM
-> >
-> > On Thu, Feb 20, 2020 at 9:48 AM Nitin Joshi <nitjoshi@gmail.com> wrote:
-> > >
-> > >   This feature is supported on some Thinkpad products like T490s, Thi=
-nkpad
-> > >   X1 yoga 4th Gen etc . The lcdshadow feature can be enabled and disa=
-bled
-> > >   when user press "Fn" + "D" key. Currently, no user feedback is give=
-n for
-> > >   this action. Adding as sysfs entry allows userspace to show an On S=
-creen
-> > >   Display whenever the setting changes.
-> > >
-> > >   Summary of changes is mentioned below :
-> > >
-> > >  - Added TP_HKEY_EV_LCDSHADOW_CHANGED for consistency inside the
-> > driver
-> > >  - Added unmapped LCDSHADOW to keymap
-> > >  - Added lcdshadow_get function to read value using ACPI
-> > >  - Added lcdshadow_refresh function to re-read value and send notific=
-ation
-> > >  - Added sysfs group creation to tpaci_lcdshadow_init
-> > >  - Added lcdshadow_exit to remove sysfs group again
-> > >  - Implemented lcdshadow_enable_show/lcdshadow_enable_store
-> > >  - Added handler to tpacpi_driver_event to update refresh lcdshadow
-> > >  - Explicitly call tpacpi_driver_event for extended keyset
-> >
-> > Adding custom PrivacyGuard support to this driver was my mistake,
-> > There is a discussion [1] how to do this in generic way to cover other
-> > possible users.
-> > I Cc this to people from that discussion.
-> >
-> > [1]: https://lore.kernel.org/dri-
-> > devel/CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail
-> > .gmail.com/
-> >
-> Thanks for the pointer to that thread - really useful and interesting, we=
- weren't aware there was an ongoing exercise to do this.
->
-> I work with Nitin as part of the Linux team at Lenovo. We're trying to ge=
-t more directly and actively involved in the open source community to impro=
-ve the Linux experience on Lenovo devices and of course want to make sure w=
-e contribute the right way. We're all still pretty new so pointers and help=
- are very much appreciated (we've been getting some great support from the =
-distros to get us started).
->
-> For this particular issue what is the best way to contribute and get invo=
-lved? We'd like to make it so ePrivacy can be used more easily from Linux. =
-I agree a more generic way of controlling it would be good.
-> I looked at the proposed patch from Rajat (https://lkml.org/lkml/2019/10/=
-22/967) - it seems like a good solution to me. We can help with testing tha=
-t on our platforms if that would be useful.
-
-Thanks you, just so that you know, the latest patchset is at:
-https://lkml.org/lkml/2019/12/20/794
-
-It would be great to get some additional testing if possible. I can
-send a sample ACPI (for our platform) in case it helps.
-
->
-> I need to understand how we connect that implementation with the ACPI con=
-trols we have (as I believe what we have are thinkpad specific and not to a=
- drm spec; we need to confirm that). We also have the ACPI events that noti=
-fy if ePrivacy was changed by the hotkeys and that seems like something tha=
-t should be done in thinkpad_acpi.c and not the drm code.
-
-Not sure if the two need to be connected somehow (or if handling the
-event is actually not important and polling is acceptable)?
-
-So there was some brief discussion about this on my patches - but
-atleast on  the platforms I have seen, there was no way to change the
-privacy screen out of software / kernel control. Essentially, if there
-are hotkeys, they would send an input event to the kernel, who'd send
-them to userspace, who'd use the DRM method to toggle the privacy
-screen. Thus the current version of the patch only supports
-controlling the privacy screen via set() method. The get() method just
-returns the cached value.I hope that works for you.
-
-Jani, I'm waiting on your inputs here
-https://lkml.org/lkml/2020/1/24/1932 in order to send the next
-iteration of my patch. Can you please let me know if you have any
-comments.
-
-Thanks & Best Regards,
-
-Rajat
-
->
-> As a note Nitin has been working with the Red Hat folk and is looking at =
-the user space aspect of this (in particularl gnome settings) as well.
->
-> Thanks
-> Mark Pearson
+SGkgUmFqYXQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFqYXQg
+SmFpbiA8cmFqYXRqYUBnb29nbGUuY29tPg0KPiBTZW50OiBUaHVyc2RheSwgRmVicnVhcnkgMjAs
+IDIwMjAgMTozOSBQTQ0KPiA+DQo+ID4gRm9yIHRoaXMgcGFydGljdWxhciBpc3N1ZSB3aGF0IGlz
+IHRoZSBiZXN0IHdheSB0byBjb250cmlidXRlIGFuZCBnZXQNCj4gPiBpbnZvbHZlZD8gV2UnZCBs
+aWtlIHRvIG1ha2UgaXQgc28gZVByaXZhY3kgY2FuIGJlIHVzZWQgbW9yZSBlYXNpbHkgZnJvbQ0K
+PiA+IExpbnV4LiBJIGFncmVlIGEgbW9yZSBnZW5lcmljIHdheSBvZiBjb250cm9sbGluZyBpdCB3
+b3VsZCBiZSBnb29kLg0KPiA+IEkgbG9va2VkIGF0IHRoZSBwcm9wb3NlZCBwYXRjaCBmcm9tIFJh
+amF0DQo+ID4gKGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzEwLzIyLzk2NykgLSBpdCBzZWVt
+cyBsaWtlIGEgZ29vZCBzb2x1dGlvbiB0byBtZS4NCj4gPiBXZSBjYW4gaGVscCB3aXRoIHRlc3Rp
+bmcgdGhhdCBvbiBvdXIgcGxhdGZvcm1zIGlmIHRoYXQgd291bGQgYmUgdXNlZnVsLg0KPiANCj4g
+VGhhbmtzIHlvdSwganVzdCBzbyB0aGF0IHlvdSBrbm93LCB0aGUgbGF0ZXN0IHBhdGNoc2V0IGlz
+IGF0Og0KPiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS8xMi8yMC83OTQNCj4gDQo+IEl0IHdv
+dWxkIGJlIGdyZWF0IHRvIGdldCBzb21lIGFkZGl0aW9uYWwgdGVzdGluZyBpZiBwb3NzaWJsZS4g
+SSBjYW4NCj4gc2VuZCBhIHNhbXBsZSBBQ1BJIChmb3Igb3VyIHBsYXRmb3JtKSBpbiBjYXNlIGl0
+IGhlbHBzLg0KPiANClNvdW5kcyBnb29kIC0gd2UnbGwgZGVmaW5pdGVseSB0cnkgdGhpcyBvdXQg
+YW5kIHNlZSBob3cgaXQgZ29lcy4gSSBzdXNwZWN0IHdlJ2xsIGhhdmUgc29tZSBxdWVzdGlvbnMg
+b25jZSB3ZSB0cnkgaXQgb3V0IGFuZCBnZXQgbW9yZSBmYW1pbGlhci4NCg0KPiA+DQo+ID4gSSBu
+ZWVkIHRvIHVuZGVyc3RhbmQgaG93IHdlIGNvbm5lY3QgdGhhdCBpbXBsZW1lbnRhdGlvbiB3aXRo
+IHRoZSBBQ1BJDQo+ID4gY29udHJvbHMgd2UgaGF2ZSAoYXMgSSBiZWxpZXZlIHdoYXQgd2UgaGF2
+ZSBhcmUgdGhpbmtwYWQgc3BlY2lmaWMgYW5kIG5vdCB0bw0KPiA+IGEgZHJtIHNwZWM7IHdlIG5l
+ZWQgdG8gY29uZmlybSB0aGF0KS4gV2UgYWxzbyBoYXZlIHRoZSBBQ1BJIGV2ZW50cyB0aGF0DQo+
+ID4gbm90aWZ5IGlmIGVQcml2YWN5IHdhcyBjaGFuZ2VkIGJ5IHRoZSBob3RrZXlzIGFuZCB0aGF0
+IHNlZW1zIGxpa2Ugc29tZXRoaW5nDQo+ID4gdGhhdCBzaG91bGQgYmUgZG9uZSBpbiB0aGlua3Bh
+ZF9hY3BpLmMgYW5kIG5vdCB0aGUgZHJtIGNvZGUuDQo+ID4gDQo+ID4gTm90IHN1cmUgaWYgdGhl
+IHR3byBuZWVkIHRvIGJlIGNvbm5lY3RlZCBzb21laG93IChvciBpZiBoYW5kbGluZyB0aGUNCj4g
+PiBldmVudCBpcyBhY3R1YWxseSBub3QgaW1wb3J0YW50IGFuZCBwb2xsaW5nIGlzIGFjY2VwdGFi
+bGUpPw0KPiANCj4gU28gdGhlcmUgd2FzIHNvbWUgYnJpZWYgZGlzY3Vzc2lvbiBhYm91dCB0aGlz
+IG9uIG15IHBhdGNoZXMgLSBidXQNCj4gYXRsZWFzdCBvbiAgdGhlIHBsYXRmb3JtcyBJIGhhdmUg
+c2VlbiwgdGhlcmUgd2FzIG5vIHdheSB0byBjaGFuZ2UgdGhlDQo+IHByaXZhY3kgc2NyZWVuIG91
+dCBvZiBzb2Z0d2FyZSAvIGtlcm5lbCBjb250cm9sLiBFc3NlbnRpYWxseSwgaWYgdGhlcmUNCj4g
+YXJlIGhvdGtleXMsIHRoZXkgd291bGQgc2VuZCBhbiBpbnB1dCBldmVudCB0byB0aGUga2VybmVs
+LCB3aG8nZCBzZW5kDQo+IHRoZW0gdG8gdXNlcnNwYWNlLCB3aG8nZCB1c2UgdGhlIERSTSBtZXRo
+b2QgdG8gdG9nZ2xlIHRoZSBwcml2YWN5DQo+IHNjcmVlbi4gVGh1cyB0aGUgY3VycmVudCB2ZXJz
+aW9uIG9mIHRoZSBwYXRjaCBvbmx5IHN1cHBvcnRzDQo+IGNvbnRyb2xsaW5nIHRoZSBwcml2YWN5
+IHNjcmVlbiB2aWEgc2V0KCkgbWV0aG9kLiBUaGUgZ2V0KCkgbWV0aG9kIGp1c3QNCj4gcmV0dXJu
+cyB0aGUgY2FjaGVkIHZhbHVlLkkgaG9wZSB0aGF0IHdvcmtzIGZvciB5b3UuDQo+IA0KT0sgLSBv
+biB0aGUgdGhpbmtwYWRzIHdlIGhhdmUgZnVuY3Rpb24rRCBhcyBhICdob3RrZXknIHRvIGNvbnRy
+b2wgdGhlIGZlYXR1cmUuLi5hbmQgbXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IGJ5cGFzc2VzIGV2
+ZXJ5dGhpbmcgYW5kIGdvZXMgc3RyYWlnaHQgdG8gdGhlIGZpcm13YXJlLg0KDQpUaGUgY2hhbmdl
+cyBOaXRpbiBoYWQgYmVlbiB3b3JraW5nIG9uIGluIHRoaW5rcGFkX2FjcGkuYyB3YXMgdG8gbWFr
+ZSB0aGlzIG1vcmUgTGludXggYW5kIGZyaWVuZGx5IC0gcHJvdmlkZSBhIHN5c2ZzIGhvb2sgZm9y
+IHVzZXIgc3BhY2UgdG8gY29ubmVjdCB0byB3aXRoIHRoZSBhaW0gb2YgYWxsb3dpbmcgaXQgdG8g
+YmUgY29uZmlndXJlZCBmcm9tIHVzZXIgc3BhY2UgYW5kIGhhdmUgb24gc2NyZWVuIGRpc3BsYXkg
+d2hlbiBpdCB3YXMgdHJpZ2dlcmVkIGV0Yy4NCg0KSSdtIHBlcnNvbmFsbHkgbm90IHN1cmUgeWV0
+IGhvdyB0aGlzIHRpZXMgdXAgd2l0aCB0aGUgRFJNIG1ldGhvZCAtIG1vcmUgZGlnZ2luZyByZXF1
+aXJlZC4gSSdtIGludHJpZ3VlZCB0byBzZWUgaWYgaXQgd29ya3Mgb24gb3VyIHN5c3RlbXMgKHNh
+ZGx5IEkgZG9uJ3QgaGF2ZSBhbnl0aGluZyB3aXRoIHRoYXQgZmVhdHVyZSBhdmFpbGFibGUgb24g
+bXkgZGVzayByaWdodCBub3cuLi5JIG5lZWQgdG8gZ2V0IG15IGhhbmRzIG9uIG9uZSkNCg0KVGhh
+bmtzDQpNYXJrDQo=
