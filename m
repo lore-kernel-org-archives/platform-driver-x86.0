@@ -1,45 +1,74 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] thinkpad_acpi: Add sysfs entry for lcdshadow feature
-Date: Thu, 20 Feb 2020 12:42:53 +0200
-Message-ID: <CAHp75VcJmEOu1-b7F2UAsv=Gujb=pPLzjz2ye9t4=Q68+ors-w@mail.gmail.com>
+From: Mark Pearson <mpearson@lenovo.com>
+Subject: RE: [External]  Re: [PATCH] thinkpad_acpi: Add sysfs entry for
+ lcdshadow feature
+Date: Thu, 20 Feb 2020 15:14:25 +0000
+Message-ID: <HK2PR0302MB25937E2946BF38583B3A905DBD130@HK2PR0302MB2593.apcprd03.prod.outlook.com>
 References: <20200220074637.7578-1-njoshi1@lenovo.com>
+ <CAHp75VcJmEOu1-b7F2UAsv=Gujb=pPLzjz2ye9t4=Q68+ors-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200220074637.7578-1-njoshi1@lenovo.com>
+In-Reply-To: <CAHp75VcJmEOu1-b7F2UAsv=Gujb=pPLzjz2ye9t4=Q68+ors-w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nitin Joshi <nitjoshi@gmail.com>, Mat King <mathewk@google.com>, Jani Nikula <jani.nikula@linux.intel.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Rajat Jain <rajatja@google.com>
-Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, mpearson@lenovo.com, Nitin Joshi <njoshi1@lenovo.com>, Benjamin Berg <bberg@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Nitin Joshi <nitjoshi@gmail.com>, Mat King <mathewk@google.com>, Jani Nikula <jani.nikula@linux.intel.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Rajat Jain <rajatja@google.com>
+Cc: Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Nitin Joshi1 <njoshi1@lenovo.com>, Benjamin Berg <bberg@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Feb 20, 2020 at 9:48 AM Nitin Joshi <nitjoshi@gmail.com> wrote:
->
->   This feature is supported on some Thinkpad products like T490s, Thinkpad
->   X1 yoga 4th Gen etc . The lcdshadow feature can be enabled and disabled
->   when user press "Fn" + "D" key. Currently, no user feedback is given for
->   this action. Adding as sysfs entry allows userspace to show an On Screen
->   Display whenever the setting changes.
->
->   Summary of changes is mentioned below :
->
->  - Added TP_HKEY_EV_LCDSHADOW_CHANGED for consistency inside the driver
->  - Added unmapped LCDSHADOW to keymap
->  - Added lcdshadow_get function to read value using ACPI
->  - Added lcdshadow_refresh function to re-read value and send notification
->  - Added sysfs group creation to tpaci_lcdshadow_init
->  - Added lcdshadow_exit to remove sysfs group again
->  - Implemented lcdshadow_enable_show/lcdshadow_enable_store
->  - Added handler to tpacpi_driver_event to update refresh lcdshadow
->  - Explicitly call tpacpi_driver_event for extended keyset
-
-Adding custom PrivacyGuard support to this driver was my mistake,
-There is a discussion [1] how to do this in generic way to cover other
-possible users.
-I Cc this to people from that discussion.
-
-[1]: https://lore.kernel.org/dri-devel/CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com/
-
-
---
-With Best Regards,
-Andy Shevchenko
+SGkgQW5keQ0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFuZHkgU2hl
+dmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4NCj4gU2VudDogVGh1cnNkYXksIEZl
+YnJ1YXJ5IDIwLCAyMDIwIDU6NDMgQU0NCj4gDQo+IE9uIFRodSwgRmViIDIwLCAyMDIwIGF0IDk6
+NDggQU0gTml0aW4gSm9zaGkgPG5pdGpvc2hpQGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiAg
+IFRoaXMgZmVhdHVyZSBpcyBzdXBwb3J0ZWQgb24gc29tZSBUaGlua3BhZCBwcm9kdWN0cyBsaWtl
+IFQ0OTBzLCBUaGlua3BhZA0KPiA+ICAgWDEgeW9nYSA0dGggR2VuIGV0YyAuIFRoZSBsY2RzaGFk
+b3cgZmVhdHVyZSBjYW4gYmUgZW5hYmxlZCBhbmQgZGlzYWJsZWQNCj4gPiAgIHdoZW4gdXNlciBw
+cmVzcyAiRm4iICsgIkQiIGtleS4gQ3VycmVudGx5LCBubyB1c2VyIGZlZWRiYWNrIGlzIGdpdmVu
+IGZvcg0KPiA+ICAgdGhpcyBhY3Rpb24uIEFkZGluZyBhcyBzeXNmcyBlbnRyeSBhbGxvd3MgdXNl
+cnNwYWNlIHRvIHNob3cgYW4gT24gU2NyZWVuDQo+ID4gICBEaXNwbGF5IHdoZW5ldmVyIHRoZSBz
+ZXR0aW5nIGNoYW5nZXMuDQo+ID4NCj4gPiAgIFN1bW1hcnkgb2YgY2hhbmdlcyBpcyBtZW50aW9u
+ZWQgYmVsb3cgOg0KPiA+DQo+ID4gIC0gQWRkZWQgVFBfSEtFWV9FVl9MQ0RTSEFET1dfQ0hBTkdF
+RCBmb3IgY29uc2lzdGVuY3kgaW5zaWRlIHRoZQ0KPiBkcml2ZXINCj4gPiAgLSBBZGRlZCB1bm1h
+cHBlZCBMQ0RTSEFET1cgdG8ga2V5bWFwDQo+ID4gIC0gQWRkZWQgbGNkc2hhZG93X2dldCBmdW5j
+dGlvbiB0byByZWFkIHZhbHVlIHVzaW5nIEFDUEkNCj4gPiAgLSBBZGRlZCBsY2RzaGFkb3dfcmVm
+cmVzaCBmdW5jdGlvbiB0byByZS1yZWFkIHZhbHVlIGFuZCBzZW5kIG5vdGlmaWNhdGlvbg0KPiA+
+ICAtIEFkZGVkIHN5c2ZzIGdyb3VwIGNyZWF0aW9uIHRvIHRwYWNpX2xjZHNoYWRvd19pbml0DQo+
+ID4gIC0gQWRkZWQgbGNkc2hhZG93X2V4aXQgdG8gcmVtb3ZlIHN5c2ZzIGdyb3VwIGFnYWluDQo+
+ID4gIC0gSW1wbGVtZW50ZWQgbGNkc2hhZG93X2VuYWJsZV9zaG93L2xjZHNoYWRvd19lbmFibGVf
+c3RvcmUNCj4gPiAgLSBBZGRlZCBoYW5kbGVyIHRvIHRwYWNwaV9kcml2ZXJfZXZlbnQgdG8gdXBk
+YXRlIHJlZnJlc2ggbGNkc2hhZG93DQo+ID4gIC0gRXhwbGljaXRseSBjYWxsIHRwYWNwaV9kcml2
+ZXJfZXZlbnQgZm9yIGV4dGVuZGVkIGtleXNldA0KPiANCj4gQWRkaW5nIGN1c3RvbSBQcml2YWN5
+R3VhcmQgc3VwcG9ydCB0byB0aGlzIGRyaXZlciB3YXMgbXkgbWlzdGFrZSwNCj4gVGhlcmUgaXMg
+YSBkaXNjdXNzaW9uIFsxXSBob3cgdG8gZG8gdGhpcyBpbiBnZW5lcmljIHdheSB0byBjb3ZlciBv
+dGhlcg0KPiBwb3NzaWJsZSB1c2Vycy4NCj4gSSBDYyB0aGlzIHRvIHBlb3BsZSBmcm9tIHRoYXQg
+ZGlzY3Vzc2lvbi4NCj4gDQo+IFsxXTogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvZHJpLQ0KPiBk
+ZXZlbC9DQUxfcXV2UmtuU1NWdlhOM3FfU2UwaHJ6aXcyb1ROUzNFTk5vZUhZaHZjaUNScTlZd3dA
+bWFpbA0KPiAuZ21haWwuY29tLw0KPiANClRoYW5rcyBmb3IgdGhlIHBvaW50ZXIgdG8gdGhhdCB0
+aHJlYWQgLSByZWFsbHkgdXNlZnVsIGFuZCBpbnRlcmVzdGluZywgd2Ugd2VyZW4ndCBhd2FyZSB0
+aGVyZSB3YXMgYW4gb25nb2luZyBleGVyY2lzZSB0byBkbyB0aGlzLg0KDQpJIHdvcmsgd2l0aCBO
+aXRpbiBhcyBwYXJ0IG9mIHRoZSBMaW51eCB0ZWFtIGF0IExlbm92by4gV2UncmUgdHJ5aW5nIHRv
+IGdldCBtb3JlIGRpcmVjdGx5IGFuZCBhY3RpdmVseSBpbnZvbHZlZCBpbiB0aGUgb3BlbiBzb3Vy
+Y2UgY29tbXVuaXR5IHRvIGltcHJvdmUgdGhlIExpbnV4IGV4cGVyaWVuY2Ugb24gTGVub3ZvIGRl
+dmljZXMgYW5kIG9mIGNvdXJzZSB3YW50IHRvIG1ha2Ugc3VyZSB3ZSBjb250cmlidXRlIHRoZSBy
+aWdodCB3YXkuIFdlJ3JlIGFsbCBzdGlsbCBwcmV0dHkgbmV3IHNvIHBvaW50ZXJzIGFuZCBoZWxw
+IGFyZSB2ZXJ5IG11Y2ggYXBwcmVjaWF0ZWQgKHdlJ3ZlIGJlZW4gZ2V0dGluZyBzb21lIGdyZWF0
+IHN1cHBvcnQgZnJvbSB0aGUgZGlzdHJvcyB0byBnZXQgdXMgc3RhcnRlZCkuDQoNCkZvciB0aGlz
+IHBhcnRpY3VsYXIgaXNzdWUgd2hhdCBpcyB0aGUgYmVzdCB3YXkgdG8gY29udHJpYnV0ZSBhbmQg
+Z2V0IGludm9sdmVkPyBXZSdkIGxpa2UgdG8gbWFrZSBpdCBzbyBlUHJpdmFjeSBjYW4gYmUgdXNl
+ZCBtb3JlIGVhc2lseSBmcm9tIExpbnV4LiBJIGFncmVlIGEgbW9yZSBnZW5lcmljIHdheSBvZiBj
+b250cm9sbGluZyBpdCB3b3VsZCBiZSBnb29kLg0KSSBsb29rZWQgYXQgdGhlIHByb3Bvc2VkIHBh
+dGNoIGZyb20gUmFqYXQgKGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzEwLzIyLzk2NykgLSBp
+dCBzZWVtcyBsaWtlIGEgZ29vZCBzb2x1dGlvbiB0byBtZS4gV2UgY2FuIGhlbHAgd2l0aCB0ZXN0
+aW5nIHRoYXQgb24gb3VyIHBsYXRmb3JtcyBpZiB0aGF0IHdvdWxkIGJlIHVzZWZ1bC4NCg0KSSBu
+ZWVkIHRvIHVuZGVyc3RhbmQgaG93IHdlIGNvbm5lY3QgdGhhdCBpbXBsZW1lbnRhdGlvbiB3aXRo
+IHRoZSBBQ1BJIGNvbnRyb2xzIHdlIGhhdmUgKGFzIEkgYmVsaWV2ZSB3aGF0IHdlIGhhdmUgYXJl
+IHRoaW5rcGFkIHNwZWNpZmljIGFuZCBub3QgdG8gYSBkcm0gc3BlYzsgd2UgbmVlZCB0byBjb25m
+aXJtIHRoYXQpLiBXZSBhbHNvIGhhdmUgdGhlIEFDUEkgZXZlbnRzIHRoYXQgbm90aWZ5IGlmIGVQ
+cml2YWN5IHdhcyBjaGFuZ2VkIGJ5IHRoZSBob3RrZXlzIGFuZCB0aGF0IHNlZW1zIGxpa2Ugc29t
+ZXRoaW5nIHRoYXQgc2hvdWxkIGJlIGRvbmUgaW4gdGhpbmtwYWRfYWNwaS5jIGFuZCBub3QgdGhl
+IGRybSBjb2RlLiBOb3Qgc3VyZSBpZiB0aGUgdHdvIG5lZWQgdG8gYmUgY29ubmVjdGVkIHNvbWVo
+b3cgKG9yIGlmIGhhbmRsaW5nIHRoZSBldmVudCBpcyBhY3R1YWxseSBub3QgaW1wb3J0YW50IGFu
+ZCBwb2xsaW5nIGlzIGFjY2VwdGFibGUpPw0KDQpBcyBhIG5vdGUgTml0aW4gaGFzIGJlZW4gd29y
+a2luZyB3aXRoIHRoZSBSZWQgSGF0IGZvbGsgYW5kIGlzIGxvb2tpbmcgYXQgdGhlIHVzZXIgc3Bh
+Y2UgYXNwZWN0IG9mIHRoaXMgKGluIHBhcnRpY3VsYXJsIGdub21lIHNldHRpbmdzKSBhcyB3ZWxs
+Lg0KDQpUaGFua3MNCk1hcmsgUGVhcnNvbg0K
