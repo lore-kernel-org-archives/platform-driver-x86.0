@@ -1,63 +1,52 @@
 From: Logan Gunthorpe <logang@deltatee.com>
-Subject: [PATCH v3 4/7] x86/mm: Introduce _set_memory_prot()
-Date: Fri, 21 Feb 2020 11:25:00 -0700
-Message-ID: <20200221182503.28317-5-logang@deltatee.com>
+Subject: [PATCH v3 7/7] mm/memremap: Set caching mode for PCI P2PDMA memory to WC
+Date: Fri, 21 Feb 2020 11:25:03 -0700
+Message-ID: <20200221182503.28317-8-logang@deltatee.com>
 References: <20200221182503.28317-1-logang@deltatee.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200221182503.28317-1-logang@deltatee.com>
-Sender: linux-sh-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Eric Badger <ebadger@gigaio.com>, Logan Gunthorpe <logang@deltatee.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc: Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Eric Badger <ebadger@gigaio.com>, Logan Gunthorpe <logang@deltatee.com>, Jason Gunthorpe <jgg@ziepe.ca>
 List-Id: platform-driver-x86.vger.kernel.org
 
-For use in the 32bit arch_add_memory() to set the pgprot type of the
-memory to add.
+PCI BAR IO memory should never be mapped as WB, however prior to this
+the PAT bits were set WB and it was typically overridden by MTRR
+registers set by the firmware.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Set PCI P2PDMA memory to be WC (writecombining) as the only current
+user (the NVMe CMB) was originally mapped WC before the P2PDMA code
+replaced the mapping with devm_memremap_pages().
+
+Future use-cases may need to generalize this by adding flags to
+select the caching type, as some P2PDMA cases will not want WC.
+However, those use-cases are not upstream yet and this can be changed
+when they arrive.
+
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- arch/x86/include/asm/set_memory.h | 1 +
- arch/x86/mm/pat/set_memory.c      | 7 +++++++
- 2 files changed, 8 insertions(+)
+ mm/memremap.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-index 64c3dce374e5..0aca959cf9a4 100644
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -34,6 +34,7 @@
-  * The caller is required to take care of these.
-  */
- 
-+int _set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
- int _set_memory_uc(unsigned long addr, int numpages);
- int _set_memory_wc(unsigned long addr, int numpages);
- int _set_memory_wt(unsigned long addr, int numpages);
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index c4aedd00c1ba..2ba83d53d835 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -1792,6 +1792,13 @@ static inline int cpa_clear_pages_array(struct page **pages, int numpages,
- 		CPA_PAGES_ARRAY, pages);
- }
- 
-+int _set_memory_prot(unsigned long addr, int numpages, pgprot_t prot)
-+{
-+	return change_page_attr_set_clr(&addr, numpages, prot,
-+					__pgprot(~pgprot_val(prot)), 0, 0,
-+					NULL);
-+}
-+
- int _set_memory_uc(unsigned long addr, int numpages)
- {
- 	/*
+diff --git a/mm/memremap.c b/mm/memremap.c
+index 06742372a203..8d141c3e3364 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -190,7 +190,10 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
+ 		}
+ 		break;
+ 	case MEMORY_DEVICE_DEVDAX:
++		need_devmap_managed = false;
++		break;
+ 	case MEMORY_DEVICE_PCI_P2PDMA:
++		params.pgprot = pgprot_writecombine(params.pgprot);
+ 		need_devmap_managed = false;
+ 		break;
+ 	default:
 -- 
 2.20.1
