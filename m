@@ -1,7 +1,7 @@
 From: Kristian Klausen <kristian@klausen.dk>
-Subject: [PATCH] platform/x86: asus-wmi: Support laptops where the first battery is named BATT
-Date: Sun, 23 Feb 2020 18:54:24 +0100
-Message-ID: <20200223175424.15613-1-kristian@klausen.dk>
+Subject: [PATCH v2] platform/x86: asus-wmi: Support laptops where the first battery is named BATT
+Date: Sun, 23 Feb 2020 19:18:32 +0100
+Message-ID: <20200223181832.17131-1-kristian@klausen.dk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <stable-owner@vger.kernel.org>
@@ -38,11 +38,15 @@ to either confirm or deny credit[3].
 [2] https://www.kernel.org/doc/html/v5.5/process/stable-kernel-rules.html
 [3] https://gist.github.com/klausenbusk/643f15320ae8997427155c38be13e445#gistcomment-3186429
 
+v2:
+Add base commit
+Remove uneeded parenthesis and adjust styling
+
  drivers/platform/x86/asus-wmi.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 612ef5526226..4c690cebdd55 100644
+index 612ef5526226..01becbe2a9a8 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
 @@ -426,8 +426,11 @@ static int asus_wmi_battery_add(struct power_supply *battery)
@@ -53,10 +57,12 @@ index 612ef5526226..4c690cebdd55 100644
 +	 * battery is named BATT.
  	 */
 -	if (strcmp(battery->desc->name, "BAT0") != 0)
-+	if (strcmp(battery->desc->name, "BAT0") != 0
-+	&& (strcmp(battery->desc->name, "BATT") != 0))
++	if (strcmp(battery->desc->name, "BAT0") != 0 &&
++	    strcmp(battery->desc->name, "BATT") != 0)
  		return -ENODEV;
  
  	if (device_create_file(&battery->dev,
+
+base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
 -- 
 2.25.1
