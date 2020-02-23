@@ -1,204 +1,62 @@
-From: Logan Gunthorpe <logang@deltatee.com>
-Subject: [PATCH v3 5/7] powerpc/mm: Thread pgprot_t through create_section_mapping()
-Date: Fri, 21 Feb 2020 11:25:01 -0700
-Message-ID: <20200221182503.28317-6-logang@deltatee.com>
-References: <20200221182503.28317-1-logang@deltatee.com>
+From: Kristian Klausen <kristian@klausen.dk>
+Subject: [PATCH] platform/x86: asus-wmi: Support laptops where the first battery is named BATT
+Date: Sun, 23 Feb 2020 18:54:24 +0100
+Message-ID: <20200223175424.15613-1-kristian@klausen.dk>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200221182503.28317-1-logang@deltatee.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Eric Badger <ebadger@gigaio.com>, Logan Gunthorpe <logang@deltatee.com>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: Kristian Klausen <kristian@klausen.dk>, stable@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-In prepartion to support a pgprot_t argument for arch_add_memory().
+The WMI method to set the charge threshold does not provide a
+way to specific a battery, so we assume it is the first/primary
+battery (by checking if the name is BAT0).
+On some newer ASUS laptops (Zenbook UM431DA) though, the
+primary/first battery isn't named BAT0 but BATT, so we need
+to support that case.
 
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Kristian Klausen <kristian@klausen.dk>
+Cc: stable@vger.kernel.org
 ---
- arch/powerpc/include/asm/book3s/64/hash.h  |  3 ++-
- arch/powerpc/include/asm/book3s/64/radix.h |  3 ++-
- arch/powerpc/include/asm/sparsemem.h       |  3 ++-
- arch/powerpc/mm/book3s64/hash_utils.c      |  5 +++--
- arch/powerpc/mm/book3s64/pgtable.c         |  7 ++++---
- arch/powerpc/mm/book3s64/radix_pgtable.c   | 18 +++++++++++-------
- arch/powerpc/mm/mem.c                      |  5 +++--
- 7 files changed, 27 insertions(+), 17 deletions(-)
+I'm not sure if this is candidate for -stable, it fix a real bug
+(charge threshold doesn't work on newer ASUS laptops) which has been
+reported by a user[1], but is that enough?
+I had a quick look at[2], can this be considered a "something
+critical"? It "bothers people"[1]. My point: I'm not sure..
 
-diff --git a/arch/powerpc/include/asm/book3s/64/hash.h b/arch/powerpc/include/asm/book3s/64/hash.h
-index 2781ebf6add4..6fc4520092c7 100644
---- a/arch/powerpc/include/asm/book3s/64/hash.h
-+++ b/arch/powerpc/include/asm/book3s/64/hash.h
-@@ -251,7 +251,8 @@ extern int __meminit hash__vmemmap_create_mapping(unsigned long start,
- extern void hash__vmemmap_remove_mapping(unsigned long start,
- 				     unsigned long page_size);
- 
--int hash__create_section_mapping(unsigned long start, unsigned long end, int nid);
-+int hash__create_section_mapping(unsigned long start, unsigned long end,
-+				 int nid, pgprot_t prot);
- int hash__remove_section_mapping(unsigned long start, unsigned long end);
- 
- #endif /* !__ASSEMBLY__ */
-diff --git a/arch/powerpc/include/asm/book3s/64/radix.h b/arch/powerpc/include/asm/book3s/64/radix.h
-index d97db3ad9aae..46799f3c3d1d 100644
---- a/arch/powerpc/include/asm/book3s/64/radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/radix.h
-@@ -289,7 +289,8 @@ static inline unsigned long radix__get_tree_size(void)
- }
- 
- #ifdef CONFIG_MEMORY_HOTPLUG
--int radix__create_section_mapping(unsigned long start, unsigned long end, int nid);
-+int radix__create_section_mapping(unsigned long start, unsigned long end,
-+				  int nid, pgprot_t prot);
- int radix__remove_section_mapping(unsigned long start, unsigned long end);
- #endif /* CONFIG_MEMORY_HOTPLUG */
- #endif /* __ASSEMBLY__ */
-diff --git a/arch/powerpc/include/asm/sparsemem.h b/arch/powerpc/include/asm/sparsemem.h
-index 3192d454a733..c89b32443cff 100644
---- a/arch/powerpc/include/asm/sparsemem.h
-+++ b/arch/powerpc/include/asm/sparsemem.h
-@@ -13,7 +13,8 @@
- #endif /* CONFIG_SPARSEMEM */
- 
- #ifdef CONFIG_MEMORY_HOTPLUG
--extern int create_section_mapping(unsigned long start, unsigned long end, int nid);
-+extern int create_section_mapping(unsigned long start, unsigned long end,
-+				  int nid, pgprot_t prot);
- extern int remove_section_mapping(unsigned long start, unsigned long end);
- 
- #ifdef CONFIG_PPC_BOOK3S_64
-diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-index 523d4d39d11e..201738e07a1d 100644
---- a/arch/powerpc/mm/book3s64/hash_utils.c
-+++ b/arch/powerpc/mm/book3s64/hash_utils.c
-@@ -809,7 +809,8 @@ int resize_hpt_for_hotplug(unsigned long new_mem_size)
- 	return 0;
- }
- 
--int hash__create_section_mapping(unsigned long start, unsigned long end, int nid)
-+int hash__create_section_mapping(unsigned long start, unsigned long end,
-+				 int nid, pgprot_t prot)
+I'm unsure if there is a bettery way to fix this. Maybe a counter
+would be better (+1 for every new battery)? It would probably need
+to be atomic to prevent race condition (I'm not sure how this code
+is run), but this "fix" is way simpler.
+
+Please do not accept this patch just yet, I'm waiting for the tester
+to either confirm or deny credit[3].
+
+[1] https://gist.github.com/klausenbusk/643f15320ae8997427155c38be13e445#gistcomment-3186025
+[2] https://www.kernel.org/doc/html/v5.5/process/stable-kernel-rules.html
+[3] https://gist.github.com/klausenbusk/643f15320ae8997427155c38be13e445#gistcomment-3186429
+
+ drivers/platform/x86/asus-wmi.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 612ef5526226..4c690cebdd55 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -426,8 +426,11 @@ static int asus_wmi_battery_add(struct power_supply *battery)
  {
- 	int rc;
+ 	/* The WMI method does not provide a way to specific a battery, so we
+ 	 * just assume it is the first battery.
++	 * Note: On some newer ASUS laptops (Zenbook UM431DA), the primary/first
++	 * battery is named BATT.
+ 	 */
+-	if (strcmp(battery->desc->name, "BAT0") != 0)
++	if (strcmp(battery->desc->name, "BAT0") != 0
++	&& (strcmp(battery->desc->name, "BATT") != 0))
+ 		return -ENODEV;
  
-@@ -819,7 +820,7 @@ int hash__create_section_mapping(unsigned long start, unsigned long end, int nid
- 	}
- 
- 	rc = htab_bolt_mapping(start, end, __pa(start),
--			       pgprot_val(PAGE_KERNEL), mmu_linear_psize,
-+			       pgprot_val(prot), mmu_linear_psize,
- 			       mmu_kernel_ssize);
- 
- 	if (rc < 0) {
-diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
-index 2bf7e1b4fd82..e0bb69c616e4 100644
---- a/arch/powerpc/mm/book3s64/pgtable.c
-+++ b/arch/powerpc/mm/book3s64/pgtable.c
-@@ -171,12 +171,13 @@ void mmu_cleanup_all(void)
- }
- 
- #ifdef CONFIG_MEMORY_HOTPLUG
--int __meminit create_section_mapping(unsigned long start, unsigned long end, int nid)
-+int __meminit create_section_mapping(unsigned long start, unsigned long end,
-+				     int nid, pgprot_t prot)
- {
- 	if (radix_enabled())
--		return radix__create_section_mapping(start, end, nid);
-+		return radix__create_section_mapping(start, end, nid, prot);
- 
--	return hash__create_section_mapping(start, end, nid);
-+	return hash__create_section_mapping(start, end, nid, prot);
- }
- 
- int __meminit remove_section_mapping(unsigned long start, unsigned long end)
-diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-index dd1bea45325c..0ef10b5c26ba 100644
---- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-@@ -253,7 +253,7 @@ static unsigned long next_boundary(unsigned long addr, unsigned long end)
- 
- static int __meminit create_physical_mapping(unsigned long start,
- 					     unsigned long end,
--					     int nid)
-+					     int nid, pgprot_t _prot)
- {
- 	unsigned long vaddr, addr, mapping_size = 0;
- 	bool prev_exec, exec = false;
-@@ -289,7 +289,7 @@ static int __meminit create_physical_mapping(unsigned long start,
- 			prot = PAGE_KERNEL_X;
- 			exec = true;
- 		} else {
--			prot = PAGE_KERNEL;
-+			prot = _prot;
- 			exec = false;
- 		}
- 
-@@ -333,7 +333,7 @@ static void __init radix_init_pgtable(void)
- 
- 		WARN_ON(create_physical_mapping(reg->base,
- 						reg->base + reg->size,
--						-1));
-+						-1, PAGE_KERNEL));
- 	}
- 
- 	/* Find out how many PID bits are supported */
-@@ -712,8 +712,10 @@ static int __meminit stop_machine_change_mapping(void *data)
- 
- 	spin_unlock(&init_mm.page_table_lock);
- 	pte_clear(&init_mm, params->aligned_start, params->pte);
--	create_physical_mapping(__pa(params->aligned_start), __pa(params->start), -1);
--	create_physical_mapping(__pa(params->end), __pa(params->aligned_end), -1);
-+	create_physical_mapping(__pa(params->aligned_start),
-+				__pa(params->start), -1, PAGE_KERNEL);
-+	create_physical_mapping(__pa(params->end), __pa(params->aligned_end),
-+				-1, PAGE_KERNEL);
- 	spin_lock(&init_mm.page_table_lock);
- 	return 0;
- }
-@@ -870,14 +872,16 @@ static void __meminit remove_pagetable(unsigned long start, unsigned long end)
- 	radix__flush_tlb_kernel_range(start, end);
- }
- 
--int __meminit radix__create_section_mapping(unsigned long start, unsigned long end, int nid)
-+int __meminit radix__create_section_mapping(unsigned long start,
-+					    unsigned long end, int nid,
-+					    pgprot_t prot)
- {
- 	if (end >= RADIX_VMALLOC_START) {
- 		pr_warn("Outside the supported range\n");
- 		return -1;
- 	}
- 
--	return create_physical_mapping(__pa(start), __pa(end), nid);
-+	return create_physical_mapping(__pa(start), __pa(end), nid, prot);
- }
- 
- int __meminit radix__remove_section_mapping(unsigned long start, unsigned long end)
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index b4bece53bec0..19b1da5d7eca 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -96,7 +96,8 @@ int memory_add_physaddr_to_nid(u64 start)
- }
- #endif
- 
--int __weak create_section_mapping(unsigned long start, unsigned long end, int nid)
-+int __weak create_section_mapping(unsigned long start, unsigned long end,
-+				  int nid, pgprot_t prot)
- {
- 	return -ENODEV;
- }
-@@ -137,7 +138,7 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
- 	resize_hpt_for_hotplug(memblock_phys_mem_size());
- 
- 	start = (unsigned long)__va(start);
--	rc = create_section_mapping(start, start + size, nid);
-+	rc = create_section_mapping(start, start + size, nid, PAGE_KERNEL);
- 	if (rc) {
- 		pr_warn("Unable to create mapping for hot added memory 0x%llx..0x%llx: %d\n",
- 			start, start + size, rc);
+ 	if (device_create_file(&battery->dev,
 -- 
-2.20.1
+2.25.1
