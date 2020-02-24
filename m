@@ -1,10 +1,10 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Support laptops where the first battery is named BATT
-Date: Mon, 24 Feb 2020 01:10:15 +0000
-Message-ID: <20200224011016.9FC2B208C3@mail.kernel.org>
-References: <20200223175424.15613-1-kristian@klausen.dk>
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: Support laptops where the first battery is named BATT
+Date: Mon, 24 Feb 2020 01:10:17 +0000
+Message-ID: <20200224011017.C5207208C4@mail.kernel.org>
+References: <20200223181832.17131-1-kristian@klausen.dk>
 Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200223175424.15613-1-kristian@klausen.dk>
+In-Reply-To: <20200223181832.17131-1-kristian@klausen.dk>
 Sender: stable-owner@vger.kernel.org
 To: Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 Cc: Kristian Klausen <kristian@klausen.dk>, stable@vger.kernel.orgstable@vger.kernel.orgstable@vger.kernel.org
