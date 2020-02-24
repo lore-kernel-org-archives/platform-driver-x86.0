@@ -1,91 +1,32 @@
-From: Kristian Klausen <kristian@klausen.dk>
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: Support laptops where the
- first battery is named BATT
-Date: Mon, 24 Feb 2020 02:14:54 +0100
-Message-ID: <e700ebdc-3dce-c151-3ea5-f7ab1e4cb07f@klausen.dk>
-References: <20200223181832.17131-1-kristian@klausen.dk>
- <20200224011017.C5207208C4@mail.kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v3 2/7] mm/memory_hotplug: Rename mhp_restrictions to
+ mhp_params
+Date: Mon, 24 Feb 2020 10:11:52 +0100
+Message-ID: <e428521d-3509-5403-f8d8-c584a7d4d320@redhat.com>
+References: <20200221182503.28317-1-logang@deltatee.com>
+ <20200221182503.28317-3-logang@deltatee.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200224011017.C5207208C4@mail.kernel.org>
-Content-Language: da
-Sender: stable-owner@vger.kernel.org
-To: Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
-Cc: stable@vger.kernel.org
+Return-path: <linux-ia64-owner@vger.kernel.org>
+In-Reply-To: <20200221182503.28317-3-logang@deltatee.com>
+Content-Language: en-US
+Sender: linux-ia64-owner@vger.kernel.org
+To: Logan Gunthorpe <logang@deltatee.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Michal Hocko <mhocko@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Eric Badger <ebadger@gigaio.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 24.02.2020 02.10, Sasha Levin wrote:
-> Hi,
->
-> [This is an automated email]
->
-> This commit has been processed because it contains a -stable tag.
-> The stable tag indicates that it's relevant for the following trees: all
->
-> The bot has tested the following trees: v5.5.5, v5.4.21, v4.19.105, v4.14.171, v4.9.214, v4.4.214.
->
-> v5.5.5: Build OK!
-> v5.4.21: Build OK!
-> v4.19.105: Failed to apply! Possible dependencies:
->      11e87702be65 ("PCI: pciehp: Differentiate between surprise and safe removal")
->      125450f81441 ("PCI: hotplug: Embed hotplug_slot")
->      5790a9c78e78 ("PCI: pciehp: Unify controller and slot structs")
->      7973353e92ee ("platform/x86: asus-wmi: Refactor charge threshold to use the battery hooking API")
->      80696f991424 ("PCI: pciehp: Tolerate Presence Detect hardwired to zero")
->      81c4b5bf30de ("PCI: hotplug: Constify hotplug_slot_ops")
->      a7da21613c4e ("PCI: hotplug: Drop hotplug_slot_info")
->      b096f626a682 ("platform/x86: asus-wmi: Switch fan boost mode")
->      eee6e273843d ("PCI: pciehp: Drop hotplug_slot_ops wrappers")
->
-> v4.14.171: Failed to apply! Possible dependencies:
->      125450f81441 ("PCI: hotplug: Embed hotplug_slot")
->      4aed1cd6fb95 ("PCI: pciehp: Document struct slot and struct controller")
->      51bbf9bee34f ("PCI: hotplug: Demidlayer registration with the core")
->      5790a9c78e78 ("PCI: pciehp: Unify controller and slot structs")
->      7973353e92ee ("platform/x86: asus-wmi: Refactor charge threshold to use the battery hooking API")
->      81c4b5bf30de ("PCI: hotplug: Constify hotplug_slot_ops")
->      97c6f25d5828 ("PCI/hotplug: ppc: correct a php_slot usage after free")
->      a7da21613c4e ("PCI: hotplug: Drop hotplug_slot_info")
->      b096f626a682 ("platform/x86: asus-wmi: Switch fan boost mode")
->      c7abb2352c29 ("PCI: Remove unnecessary messages for memory allocation failures")
->      dbb3d78f61ba ("platform/x86: asus-wmi: Call led hw_changed API on kbd brightness change")
->      ed99d29b2b15 ("platform/x86: asus-wmi: Add keyboard backlight toggle support")
->
-> v4.9.214: Failed to apply! Possible dependencies:
->      125450f81441 ("PCI: hotplug: Embed hotplug_slot")
->      4aed1cd6fb95 ("PCI: pciehp: Document struct slot and struct controller")
->      51bbf9bee34f ("PCI: hotplug: Demidlayer registration with the core")
->      5790a9c78e78 ("PCI: pciehp: Unify controller and slot structs")
->      7973353e92ee ("platform/x86: asus-wmi: Refactor charge threshold to use the battery hooking API")
->      81c4b5bf30de ("PCI: hotplug: Constify hotplug_slot_ops")
->      97c6f25d5828 ("PCI/hotplug: ppc: correct a php_slot usage after free")
->      a7da21613c4e ("PCI: hotplug: Drop hotplug_slot_info")
->      b096f626a682 ("platform/x86: asus-wmi: Switch fan boost mode")
->      c7abb2352c29 ("PCI: Remove unnecessary messages for memory allocation failures")
->      dbb3d78f61ba ("platform/x86: asus-wmi: Call led hw_changed API on kbd brightness change")
->      ed99d29b2b15 ("platform/x86: asus-wmi: Add keyboard backlight toggle support")
->
-> v4.4.214: Failed to apply! Possible dependencies:
->      125450f81441 ("PCI: hotplug: Embed hotplug_slot")
->      2ac83cccabbc ("PCI: hotplug: Use list_for_each_entry() to simplify code")
->      51bbf9bee34f ("PCI: hotplug: Demidlayer registration with the core")
->      66725152fb9f ("PCI/hotplug: PowerPC PowerNV PCI hotplug driver")
->      7973353e92ee ("platform/x86: asus-wmi: Refactor charge threshold to use the battery hooking API")
->      89379f165a1b ("PCI/hotplug: pnv_php: export symbols and move struct types needed by cxl")
->      97c6f25d5828 ("PCI/hotplug: ppc: correct a php_slot usage after free")
->      a7da21613c4e ("PCI: hotplug: Drop hotplug_slot_info")
->      b096f626a682 ("platform/x86: asus-wmi: Switch fan boost mode")
->      dbb3d78f61ba ("platform/x86: asus-wmi: Call led hw_changed API on kbd brightness change")
->      ed99d29b2b15 ("platform/x86: asus-wmi: Add keyboard backlight toggle support")
->      ef69b03dfd32 ("MAINTAINERS: Add powerpc drivers to the powerpc section")
->      ff3ce480e8b5 ("PCI: Fix all whitespace issues")
->
->
-> NOTE: The patch will not be queued to stable trees until it is upstream.
->
-> How should we proceed with this patch?
+On 21.02.20 19:24, Logan Gunthorpe wrote:
+> The mhp_restrictions struct really doesn't specify anything resembling
+> a restriction anymore so rename it to be mhp_params as it is a list
+> of extended parameters.
+> 
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 
-The patch should only be applied to the v5.4 and v5.5 trees.
-- Kristian
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
+
+-- 
+Thanks,
+
+David / dhildenb
