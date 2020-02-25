@@ -1,40 +1,80 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: Support laptops where the
- first battery is named BATT
-Date: Tue, 25 Feb 2020 11:55:27 +0200
-Message-ID: <CAHp75VfGkn_oGCNyP=RWo9fHvh8YzEy6e7cDCczJefsq2HMRFw@mail.gmail.com>
-References: <20200223181832.17131-1-kristian@klausen.dk> <20200224011017.C5207208C4@mail.kernel.org>
- <e700ebdc-3dce-c151-3ea5-f7ab1e4cb07f@klausen.dk> <CAHp75VcAZZ-d1BQON0ciLoCGt5=1qh4s1jLGhDdApicT+7BEGg@mail.gmail.com>
- <af54a82e-0b9f-1e88-8741-bd4a3658d8e7@klausen.dk>
+Subject: Re: [PATCH -next] platform/x86: intel_pmc_core: fix build error
+ without CONFIG_DEBUG_FS
+Date: Tue, 25 Feb 2020 12:13:16 +0200
+Message-ID: <CAHp75Vf3Bsjj+0ebkxMatZfUGDJ=upOHBFHfOs_PDOnFTnRJYQ@mail.gmail.com>
+References: <20200220033335.106963-1-chenzhou10@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <af54a82e-0b9f-1e88-8741-bd4a3658d8e7@klausen.dk>
-Sender: stable-owner@vger.kernel.org
-To: Kristian Klausen <kristian@klausen.dk>
-Cc: Sasha Levin <sashal@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Stable <stable@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200220033335.106963-1-chenzhou10@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen Zhou <chenzhou10@huawei.com>, Gayatri Kammela <gayatri.kammela@intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Feb 25, 2020 at 11:51 AM Kristian Klausen <kristian@klausen.dk> wrote:
-> On 25.02.2020 10.30, Andy Shevchenko wrote:
-> > On Mon, Feb 24, 2020 at 3:15 AM Kristian Klausen <kristian@klausen.dk> wrote:
-> >> On 24.02.2020 02.10, Sasha Levin wrote:
-> >>> NOTE: The patch will not be queued to stable trees until it is upstream.
-> >>>
-> >>> How should we proceed with this patch?
-> >> The patch should only be applied to the v5.4 and v5.5 trees.
-> > I'm not sure I got this right. Do we have already this change in upstream?
-> > I don't see it there. So, why there is no mention of the v5.6 and
-> > current upstream in above list?
+On Thu, Feb 20, 2020 at 5:40 AM Chen Zhou <chenzhou10@huawei.com> wrote:
 >
-> Sorry about that, my response does not make any sense.
-> The change isn't upstream yet, and should be applied upstream first and
-> the 5.4 and 5.6 tree tree if possible.
+> If CONFIG_DEBUG_FS is n, build fails:
+>
+> drivers/platform/x86/intel_pmc_core.c: In function pmc_core_resume:
+> drivers/platform/x86/intel_pmc_core.c:1327:3: error: implicit declaration of function pmc_core_slps0_display; did you mean pmc_core_is_pc10_failed? [-Werror=implicit-function-declaration]
+>    pmc_core_slps0_display(pmcdev, dev, NULL);
+>       ^~~~~~~~~~~~~~~~~~~~~~
+>
+> Function pmc_core_slps0_display() is responsible for displaying debug
+> registers, which is under CONFIG_DEBUG_FS.
+>
+> Providing the static inline stub whenever CONFIG_DEBUG_FS is disabled
+> to fix this. Function pmc_core_lpm_display() is the same.
 
-The usual pattern is to add Fixes tag and Cc: stable@.
+Thank you for the patch, but I think it's not the right approach.
+Basically we need to move those functions outside of #if
+IS_ENABLED(CONFIG_DEBUG_FS).
+(Move them upper).
 
-> Was I wrong CC'ing stable@vger.kernel.org? (suggested by git send-email
-> due to "Cc: stable@vger.kernel.org")
+Also I have noticed another issue in pmc_core_lpm_display(). It uses
+tgl_lpm_maps directly. It shouldn't.
+
+Cc: Gayatri.
+
+Gayatri, care to fix?
+
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  drivers/platform/x86/intel_pmc_core.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index f4a36fb..939f8e0 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -1117,6 +1117,20 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+>         }
+>  }
+>  #else
+> +static inline void pmc_core_slps0_display(struct pmc_dev *pmcdev,
+> +                                          struct device *dev,
+> +                                          struct seq_file *s)
+> +{
+> +}
+> +
+> +static inline void pmc_core_lpm_display(struct pmc_dev *pmcdev,
+> +                                        struct device *dev,
+> +                                        struct seq_file *s, u32 offset,
+> +                                        const char *str,
+> +                                        const struct pmc_bit_map **maps)
+> +{
+> +}
+> +
+>  static inline void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+>  {
+>  }
+> --
+> 2.7.4
+>
+
 
 -- 
 With Best Regards,
