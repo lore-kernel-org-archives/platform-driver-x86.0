@@ -1,85 +1,43 @@
-From: Kristian Klausen <kristian@klausen.dk>
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: Support laptops where the
- first battery is named BATT
-Date: Tue, 25 Feb 2020 10:15:01 +0100
-Message-ID: <4e447fb1-a8a5-92e1-85be-6c23de20683c@klausen.dk>
-References: <20200223181832.17131-1-kristian@klausen.dk>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 11/19] mfd: intel_soc_pmic_bxtwc: Convert to use new
+ SCU IPC API
+Date: Tue, 25 Feb 2020 09:24:57 +0000
+Message-ID: <20200225092457.GY3494@dell>
+References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
+ <20200217131446.32818-12-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200223181832.17131-1-kristian@klausen.dk>
-Content-Language: en-US
-Sender: stable-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: stable@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200217131446.32818-12-mika.westerberg@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 23.02.2020 19.18, Kristian Klausen wrote:
-> The WMI method to set the charge threshold does not provide a
-> way to specific a battery, so we assume it is the first/primary
-> battery (by checking if the name is BAT0).
-> On some newer ASUS laptops (Zenbook UM431DA) though, the
-> primary/first battery isn't named BAT0 but BATT, so we need
-> to support that case.
->
-> Signed-off-by: Kristian Klausen <kristian@klausen.dk>
-> Cc: stable@vger.kernel.org
+On Mon, 17 Feb 2020, Mika Westerberg wrote:
+
+> Convert the Intel Broxton Whiskey Cover PMIC driver to use the new SCU
+> IPC API. This allows us to get rid of the PMC IPC implementation which
+> is now covered in SCU IPC driver. We drop the error log if the IPC
+> command fails because intel_scu_ipc_dev_command() does that already.
+> 
+> Also move PMIC specific IPC message constants to the PMIC driver from
+> the intel_pmc_ipc.h header.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
-> I'm not sure if this is candidate for -stable, it fix a real bug
-> (charge threshold doesn't work on newer ASUS laptops) which has been
-> reported by a user[1], but is that enough?
-> I had a quick look at[2], can this be considered a "something
-> critical"? It "bothers people"[1]. My point: I'm not sure..
->
-> I'm unsure if there is a bettery way to fix this. Maybe a counter
-> would be better (+1 for every new battery)? It would probably need
-> to be atomic to prevent race condition (I'm not sure how this code
-> is run), but this "fix" is way simpler.
->
-> Please do not accept this patch just yet, I'm waiting for the tester
-> to either confirm or deny credit[3].
+>  arch/x86/include/asm/intel_pmc_ipc.h |  3 ---
+>  drivers/mfd/intel_soc_pmic_bxtwc.c   | 34 ++++++++++++++--------------
+>  2 files changed, 17 insertions(+), 20 deletions(-)
 
-Please add:
-Reported-by: Alberto Gomez Marin
-Tested-by: Alberto Gomez Marin
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-Is a email required? The tester prefer not to disclose his email 
-address[1]. The tester didn't test this exact patch, but the only change 
-is a line break and no parenthesis, so it should be the same[2].
-[1] 
-https://gist.github.com/klausenbusk/643f15320ae8997427155c38be13e445#gistcomment-3187929
-[2] 
-https://gist.github.com/klausenbusk/643f15320ae8997427155c38be13e445#gistcomment-3185442
-
->
-> [1] https://gist.github.com/klausenbusk/643f15320ae8997427155c38be13e445#gistcomment-3186025
-> [2] https://www.kernel.org/doc/html/v5.5/process/stable-kernel-rules.html
-> [3] https://gist.github.com/klausenbusk/643f15320ae8997427155c38be13e445#gistcomment-3186429
->
-> v2:
-> Add base commit
-> Remove uneeded parenthesis and adjust styling
->
->   drivers/platform/x86/asus-wmi.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 612ef5526226..01becbe2a9a8 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -426,8 +426,11 @@ static int asus_wmi_battery_add(struct power_supply *battery)
->   {
->   	/* The WMI method does not provide a way to specific a battery, so we
->   	 * just assume it is the first battery.
-> +	 * Note: On some newer ASUS laptops (Zenbook UM431DA), the primary/first
-> +	 * battery is named BATT.
->   	 */
-> -	if (strcmp(battery->desc->name, "BAT0") != 0)
-> +	if (strcmp(battery->desc->name, "BAT0") != 0 &&
-> +	    strcmp(battery->desc->name, "BATT") != 0)
->   		return -ENODEV;
->   
->   	if (device_create_file(&battery->dev,
->
-> base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
