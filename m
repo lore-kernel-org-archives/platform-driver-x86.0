@@ -1,74 +1,68 @@
-From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Subject: RE: [PATCH -next] platform/x86: intel_pmc_core: fix build error
- without CONFIG_DEBUG_FS
-Date: Tue, 25 Feb 2020 17:10:46 +0000
-Message-ID: <BN8PR11MB362069564569B69E42C00086F2ED0@BN8PR11MB3620.namprd11.prod.outlook.com>
-References: <20200220033335.106963-1-chenzhou10@huawei.com>
- <CAHp75Vf3Bsjj+0ebkxMatZfUGDJ=upOHBFHfOs_PDOnFTnRJYQ@mail.gmail.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH] x86/efi: Add additional efi tables for unencrypted
+ mapping checks
+Date: Tue, 25 Feb 2020 11:40:40 -0600
+Message-ID: <5705e8ab-c8f1-77c3-0bda-4687a53a73ea@amd.com>
+References: <9b52495a2d8adfc8f2d731a0236c945196143ef4.1582644865.git.thomas.lendacky@amd.com>
+ <CAKv+Gu_3=u1S1dgmjMH+0-7GhD+v3YvgQvqEUx7QSDjPMW1HVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vf3Bsjj+0ebkxMatZfUGDJ=upOHBFHfOs_PDOnFTnRJYQ@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_3=u1S1dgmjMH+0-7GhD+v3YvgQvqEUx7QSDjPMW1HVw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Chen Zhou <chenzhou10@huawei.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, the arch/x86 maintainers <x86@kernel.org>, platform-driver-x86@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gPGFu
-ZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+DQo+IFNlbnQ6IFR1ZXNkYXksIEZlYnJ1YXJ5IDI1LCAy
-MDIwIDI6MTMgQU0NCj4gVG86IENoZW4gWmhvdSA8Y2hlbnpob3UxMEBodWF3ZWkuY29tPjsgS2Ft
-bWVsYSwgR2F5YXRyaQ0KPiA8Z2F5YXRyaS5rYW1tZWxhQGludGVsLmNvbT4NCj4gQ2M6IFJham5l
-ZXNoIEJoYXJkd2FqIDxyYWpuZWVzaC5iaGFyZHdhakBpbnRlbC5jb20+OyBTb21heWFqaSwNCj4g
-VmlzaHdhbmF0aCA8dmlzaHdhbmF0aC5zb21heWFqaUBpbnRlbC5jb20+OyBEYXJyZW4gSGFydA0K
-PiA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBBbmR5IFNoZXZjaGVua28gPGFuZHlAaW5mcmFkZWFk
-Lm9yZz47DQo+IFBsYXRmb3JtIERyaXZlciA8cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5l
-bC5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZw0KPiBMaXN0IDxsaW51eC1rZXJuZWxAdmdlci5r
-ZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIC1uZXh0XSBwbGF0Zm9ybS94ODY6IGlu
-dGVsX3BtY19jb3JlOiBmaXggYnVpbGQgZXJyb3INCj4gd2l0aG91dCBDT05GSUdfREVCVUdfRlMN
-Cj4gDQo+IE9uIFRodSwgRmViIDIwLCAyMDIwIGF0IDU6NDAgQU0gQ2hlbiBaaG91IDxjaGVuemhv
-dTEwQGh1YXdlaS5jb20+DQo+IHdyb3RlOg0KPiA+DQo+ID4gSWYgQ09ORklHX0RFQlVHX0ZTIGlz
-IG4sIGJ1aWxkIGZhaWxzOg0KPiA+DQo+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1j
-X2NvcmUuYzogSW4gZnVuY3Rpb24gcG1jX2NvcmVfcmVzdW1lOg0KPiA+IGRyaXZlcnMvcGxhdGZv
-cm0veDg2L2ludGVsX3BtY19jb3JlLmM6MTMyNzozOiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRp
-b24NCj4gb2YgZnVuY3Rpb24gcG1jX2NvcmVfc2xwczBfZGlzcGxheTsgZGlkIHlvdSBtZWFuDQo+
-IHBtY19jb3JlX2lzX3BjMTBfZmFpbGVkPyBbLVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi1kZWNs
-YXJhdGlvbl0NCj4gPiAgICBwbWNfY29yZV9zbHBzMF9kaXNwbGF5KHBtY2RldiwgZGV2LCBOVUxM
-KTsNCj4gPiAgICAgICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+DQo+ID4NCj4gPiBGdW5jdGlvbiBw
-bWNfY29yZV9zbHBzMF9kaXNwbGF5KCkgaXMgcmVzcG9uc2libGUgZm9yIGRpc3BsYXlpbmcgZGVi
-dWcNCj4gPiByZWdpc3RlcnMsIHdoaWNoIGlzIHVuZGVyIENPTkZJR19ERUJVR19GUy4NCj4gPg0K
-PiA+IFByb3ZpZGluZyB0aGUgc3RhdGljIGlubGluZSBzdHViIHdoZW5ldmVyIENPTkZJR19ERUJV
-R19GUyBpcyBkaXNhYmxlZA0KPiA+IHRvIGZpeCB0aGlzLiBGdW5jdGlvbiBwbWNfY29yZV9scG1f
-ZGlzcGxheSgpIGlzIHRoZSBzYW1lLg0KPiANCj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2gsIGJ1
-dCBJIHRoaW5rIGl0J3Mgbm90IHRoZSByaWdodCBhcHByb2FjaC4NCj4gQmFzaWNhbGx5IHdlIG5l
-ZWQgdG8gbW92ZSB0aG9zZSBmdW5jdGlvbnMgb3V0c2lkZSBvZiAjaWYNCj4gSVNfRU5BQkxFRChD
-T05GSUdfREVCVUdfRlMpLg0KPiAoTW92ZSB0aGVtIHVwcGVyKS4NCkFncmVlZA0KPiANCj4gQWxz
-byBJIGhhdmUgbm90aWNlZCBhbm90aGVyIGlzc3VlIGluIHBtY19jb3JlX2xwbV9kaXNwbGF5KCku
-IEl0IHVzZXMNCj4gdGdsX2xwbV9tYXBzIGRpcmVjdGx5LiBJdCBzaG91bGRuJ3QuDQo+IA0KPiBD
-YzogR2F5YXRyaS4NCj4gDQo+IEdheWF0cmksIGNhcmUgdG8gZml4Pw0KSGkgQW5keSwgY2F1Z2h0
-IHRoaXMgYnVnIGluIG91ciBpbnRlcm5hbCByZWdyZXNzaW9uIHRvby4gSSB3aWxsIHNlbmQgdGhl
-IHBhdGNoIHNob3J0bHkuIFRoYW5rcyENCj4gDQo+ID4gUmVwb3J0ZWQtYnk6IEh1bGsgUm9ib3Qg
-PGh1bGtjaUBodWF3ZWkuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IENoZW4gWmhvdSA8Y2hlbnpo
-b3UxMEBodWF3ZWkuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRl
-bF9wbWNfY29yZS5jIHwgMTQgKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE0
-IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4
-Ni9pbnRlbF9wbWNfY29yZS5jDQo+ID4gYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNf
-Y29yZS5jDQo+ID4gaW5kZXggZjRhMzZmYi4uOTM5ZjhlMCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2
-ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfY29yZS5jDQo+ID4gKysrIGIvZHJpdmVycy9wbGF0
-Zm9ybS94ODYvaW50ZWxfcG1jX2NvcmUuYw0KPiA+IEBAIC0xMTE3LDYgKzExMTcsMjAgQEAgc3Rh
-dGljIHZvaWQgcG1jX2NvcmVfZGJnZnNfcmVnaXN0ZXIoc3RydWN0DQo+IHBtY19kZXYgKnBtY2Rl
-dikNCj4gPiAgICAgICAgIH0NCj4gPiAgfQ0KPiA+ICAjZWxzZQ0KPiA+ICtzdGF0aWMgaW5saW5l
-IHZvaWQgcG1jX2NvcmVfc2xwczBfZGlzcGxheShzdHJ1Y3QgcG1jX2RldiAqcG1jZGV2LA0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZGV2aWNl
-ICpkZXYsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0
-cnVjdCBzZXFfZmlsZSAqcykgeyB9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW5saW5lIHZvaWQgcG1j
-X2NvcmVfbHBtX2Rpc3BsYXkoc3RydWN0IHBtY19kZXYgKnBtY2RldiwNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBzZXFfZmlsZSAq
-cywgdTMyIG9mZnNldCwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIGNvbnN0IGNoYXIgKnN0ciwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIGNvbnN0IHN0cnVjdCBwbWNfYml0X21hcA0KPiA+ICsqKm1hcHMpIHsgfQ0KPiA+
-ICsNCj4gPiAgc3RhdGljIGlubGluZSB2b2lkIHBtY19jb3JlX2RiZ2ZzX3JlZ2lzdGVyKHN0cnVj
-dCBwbWNfZGV2ICpwbWNkZXYpICB7DQo+ID4gfQ0KPiA+IC0tDQo+ID4gMi43LjQNCj4gPg0KPiAN
-Cj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg==
+On 2/25/20 10:09 AM, Ard Biesheuvel wrote:
+> On Tue, 25 Feb 2020 at 16:34, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>>
+>> When booting with SME active, EFI tables must be mapped unencrypted since
+>> they were built by UEFI in unencrypted memory. Update the list of tables
+>> to be checked during early_memremap() processing to account for new EFI
+>> tables.
+>>
+>> This fixes a bug where an EFI TPM log table has been created by UEFI, but
+>> it lives in memory that has been marked as usable rather than reserved.
+>>
+>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> 
+> Thanks Tom
+> 
+> Mind respinning this on top of efi/next?
+
+Sure, no problem, v2 on the way. I wasn't sure if this would go through
+the x86 tree or the efi tree (though this should apply cleanly to efi/next
+with just a few lines of offset).
+
+Thanks,
+Tom
+
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/>
+> Thanks,
+> 
+> 
+>> ---
+>>  arch/x86/platform/efi/efi.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+>> index ae923ee8e2b4..eba5038c7a44 100644
+>> --- a/arch/x86/platform/efi/efi.c
+>> +++ b/arch/x86/platform/efi/efi.c
+>> @@ -85,6 +85,9 @@ static const unsigned long * const efi_tables[] = {
+>>  #ifdef CONFIG_EFI_RCI2_TABLE
+>>         &rci2_table_phys,
+>>  #endif
+>> +       &efi.rng_seed,
+>> +       &efi.tpm_log,
+>> +       &efi.tpm_final_log,
+>>  };
+>>
+>>  u64 efi_setup;         /* efi setup_data physical address */
+>> --
+>> 2.17.1
+>>
