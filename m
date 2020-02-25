@@ -1,43 +1,32 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 11/19] mfd: intel_soc_pmic_bxtwc: Convert to use new
- SCU IPC API
-Date: Tue, 25 Feb 2020 09:24:57 +0000
-Message-ID: <20200225092457.GY3494@dell>
-References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
- <20200217131446.32818-12-mika.westerberg@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: Support laptops where the
+ first battery is named BATT
+Date: Tue, 25 Feb 2020 11:30:38 +0200
+Message-ID: <CAHp75VcAZZ-d1BQON0ciLoCGt5=1qh4s1jLGhDdApicT+7BEGg@mail.gmail.com>
+References: <20200223181832.17131-1-kristian@klausen.dk> <20200224011017.C5207208C4@mail.kernel.org>
+ <e700ebdc-3dce-c151-3ea5-f7ab1e4cb07f@klausen.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200217131446.32818-12-mika.westerberg@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <e700ebdc-3dce-c151-3ea5-f7ab1e4cb07f@klausen.dk>
+Sender: stable-owner@vger.kernel.org
+To: Kristian Klausen <kristian@klausen.dk>
+Cc: Sasha Levin <sashal@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Stable <stable@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 17 Feb 2020, Mika Westerberg wrote:
+On Mon, Feb 24, 2020 at 3:15 AM Kristian Klausen <kristian@klausen.dk> wrote:
+> On 24.02.2020 02.10, Sasha Levin wrote:
 
-> Convert the Intel Broxton Whiskey Cover PMIC driver to use the new SCU
-> IPC API. This allows us to get rid of the PMC IPC implementation which
-> is now covered in SCU IPC driver. We drop the error log if the IPC
-> command fails because intel_scu_ipc_dev_command() does that already.
-> 
-> Also move PMIC specific IPC message constants to the PMIC driver from
-> the intel_pmc_ipc.h header.
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  arch/x86/include/asm/intel_pmc_ipc.h |  3 ---
->  drivers/mfd/intel_soc_pmic_bxtwc.c   | 34 ++++++++++++++--------------
->  2 files changed, 17 insertions(+), 20 deletions(-)
+> > NOTE: The patch will not be queued to stable trees until it is upstream.
+> >
+> > How should we proceed with this patch?
+>
+> The patch should only be applied to the v5.4 and v5.5 trees.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+I'm not sure I got this right. Do we have already this change in upstream?
+I don't see it there. So, why there is no mention of the v5.6 and
+current upstream in above list?
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
