@@ -1,94 +1,37 @@
-From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Subject: RE: [PATCH -next] platform/x86: intel_pmc_core: fix build error
- without CONFIG_DEBUG_FS
-Date: Wed, 26 Feb 2020 01:56:11 +0000
-Message-ID: <BYAPR11MB3624FB3A1FC8F5C43D8F6DC4F2EA0@BYAPR11MB3624.namprd11.prod.outlook.com>
-References: <20200220033335.106963-1-chenzhou10@huawei.com>
- <CAHp75Vf3Bsjj+0ebkxMatZfUGDJ=upOHBFHfOs_PDOnFTnRJYQ@mail.gmail.com>
- <BN8PR11MB362069564569B69E42C00086F2ED0@BN8PR11MB3620.namprd11.prod.outlook.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 12/19] mfd: intel_soc_pmic_mrfld: Convert to use new
+ SCU IPC API
+Date: Wed, 26 Feb 2020 06:45:10 +0000
+Message-ID: <20200226064510.GZ3494@dell>
+References: <20200217131446.32818-1-mika.westerberg@linux.intel.com>
+ <20200217131446.32818-13-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BN8PR11MB362069564569B69E42C00086F2ED0@BN8PR11MB3620.namprd11.prod.outlook.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20200217131446.32818-13-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Chen Zhou <chenzhou10@huawei.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBLYW1tZWxhLCBHYXlhdHJpDQo+
-IFNlbnQ6IFR1ZXNkYXksIEZlYnJ1YXJ5IDI1LCAyMDIwIDk6MTEgQU0NCj4gVG86IEFuZHkgU2hl
-dmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT47IENoZW4gWmhvdQ0KPiA8Y2hlbnpo
-b3UxMEBodWF3ZWkuY29tPg0KPiBDYzogUmFqbmVlc2ggQmhhcmR3YWogPHJham5lZXNoLmJoYXJk
-d2FqQGludGVsLmNvbT47IFNvbWF5YWppLA0KPiBWaXNod2FuYXRoIDx2aXNod2FuYXRoLnNvbWF5
-YWppQGludGVsLmNvbT47IERhcnJlbiBIYXJ0DQo+IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz47IEFu
-ZHkgU2hldmNoZW5rbyA8YW5keUBpbmZyYWRlYWQub3JnPjsNCj4gUGxhdGZvcm0gRHJpdmVyIDxw
-bGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5lbCBNYWlsaW5n
-DQo+IExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJFOiBb
-UEFUQ0ggLW5leHRdIHBsYXRmb3JtL3g4NjogaW50ZWxfcG1jX2NvcmU6IGZpeCBidWlsZCBlcnJv
-cg0KPiB3aXRob3V0IENPTkZJR19ERUJVR19GUw0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KPiA+IEZyb206IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWls
-LmNvbT4NCj4gPiBTZW50OiBUdWVzZGF5LCBGZWJydWFyeSAyNSwgMjAyMCAyOjEzIEFNDQo+ID4g
-VG86IENoZW4gWmhvdSA8Y2hlbnpob3UxMEBodWF3ZWkuY29tPjsgS2FtbWVsYSwgR2F5YXRyaQ0K
-PiA+IDxnYXlhdHJpLmthbW1lbGFAaW50ZWwuY29tPg0KPiA+IENjOiBSYWpuZWVzaCBCaGFyZHdh
-aiA8cmFqbmVlc2guYmhhcmR3YWpAaW50ZWwuY29tPjsgU29tYXlhamksDQo+ID4gVmlzaHdhbmF0
-aCA8dmlzaHdhbmF0aC5zb21heWFqaUBpbnRlbC5jb20+OyBEYXJyZW4gSGFydA0KPiA+IDxkdmhh
-cnRAaW5mcmFkZWFkLm9yZz47IEFuZHkgU2hldmNoZW5rbyA8YW5keUBpbmZyYWRlYWQub3JnPjsN
-Cj4gUGxhdGZvcm0NCj4gPiBEcml2ZXIgPHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwu
-b3JnPjsgTGludXggS2VybmVsIE1haWxpbmcNCj4gPiBMaXN0IDxsaW51eC1rZXJuZWxAdmdlci5r
-ZXJuZWwub3JnPg0KPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggLW5leHRdIHBsYXRmb3JtL3g4Njog
-aW50ZWxfcG1jX2NvcmU6IGZpeCBidWlsZA0KPiA+IGVycm9yIHdpdGhvdXQgQ09ORklHX0RFQlVH
-X0ZTDQo+ID4NCj4gPiBPbiBUaHUsIEZlYiAyMCwgMjAyMCBhdCA1OjQwIEFNIENoZW4gWmhvdSA8
-Y2hlbnpob3UxMEBodWF3ZWkuY29tPg0KPiA+IHdyb3RlOg0KPiA+ID4NCj4gPiA+IElmIENPTkZJ
-R19ERUJVR19GUyBpcyBuLCBidWlsZCBmYWlsczoNCj4gPiA+DQo+ID4gPiBkcml2ZXJzL3BsYXRm
-b3JtL3g4Ni9pbnRlbF9wbWNfY29yZS5jOiBJbiBmdW5jdGlvbiBwbWNfY29yZV9yZXN1bWU6DQo+
-ID4gPiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfY29yZS5jOjEzMjc6MzogZXJyb3I6
-IGltcGxpY2l0DQo+ID4gPiBkZWNsYXJhdGlvbg0KPiA+IG9mIGZ1bmN0aW9uIHBtY19jb3JlX3Ns
-cHMwX2Rpc3BsYXk7IGRpZCB5b3UgbWVhbg0KPiA+IHBtY19jb3JlX2lzX3BjMTBfZmFpbGVkPyBb
-LVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi1kZWNsYXJhdGlvbl0NCj4gPiA+ICAgIHBtY19jb3Jl
-X3NscHMwX2Rpc3BsYXkocG1jZGV2LCBkZXYsIE5VTEwpOw0KPiA+ID4gICAgICAgXn5+fn5+fn5+
-fn5+fn5+fn5+fn5+fg0KPiA+ID4NCj4gPiA+IEZ1bmN0aW9uIHBtY19jb3JlX3NscHMwX2Rpc3Bs
-YXkoKSBpcyByZXNwb25zaWJsZSBmb3IgZGlzcGxheWluZw0KPiA+ID4gZGVidWcgcmVnaXN0ZXJz
-LCB3aGljaCBpcyB1bmRlciBDT05GSUdfREVCVUdfRlMuDQo+ID4gPg0KPiA+ID4gUHJvdmlkaW5n
-IHRoZSBzdGF0aWMgaW5saW5lIHN0dWIgd2hlbmV2ZXIgQ09ORklHX0RFQlVHX0ZTIGlzDQo+ID4g
-PiBkaXNhYmxlZCB0byBmaXggdGhpcy4gRnVuY3Rpb24gcG1jX2NvcmVfbHBtX2Rpc3BsYXkoKSBp
-cyB0aGUgc2FtZS4NCj4gPg0KPiA+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLCBidXQgSSB0aGlu
-ayBpdCdzIG5vdCB0aGUgcmlnaHQgYXBwcm9hY2guDQo+ID4gQmFzaWNhbGx5IHdlIG5lZWQgdG8g
-bW92ZSB0aG9zZSBmdW5jdGlvbnMgb3V0c2lkZSBvZiAjaWYNCj4gPiBJU19FTkFCTEVEKENPTkZJ
-R19ERUJVR19GUykuDQo+ID4gKE1vdmUgdGhlbSB1cHBlcikuDQo+IEFncmVlZA0KPiA+DQo+ID4g
-QWxzbyBJIGhhdmUgbm90aWNlZCBhbm90aGVyIGlzc3VlIGluIHBtY19jb3JlX2xwbV9kaXNwbGF5
-KCkuIEl0IHVzZXMNCj4gPiB0Z2xfbHBtX21hcHMgZGlyZWN0bHkuIEl0IHNob3VsZG4ndC4NCj4g
-Pg0KPiA+IENjOiBHYXlhdHJpLg0KPiA+DQo+ID4gR2F5YXRyaSwgY2FyZSB0byBmaXg/DQo+IEhp
-IEFuZHksIGNhdWdodCB0aGlzIGJ1ZyBpbiBvdXIgaW50ZXJuYWwgcmVncmVzc2lvbiB0b28uIEkg
-d2lsbCBzZW5kIHRoZSBwYXRjaA0KPiBzaG9ydGx5LiBUaGFua3MhDQoNClVwZGF0ZTogQW5keSwg
-SSBoYXZlIDQgc21hbGwgZml4ZXMgZm9yIHRoZSBwYXRjaCBzZXJpZXMgbWVyZ2VkIGluIGZvci1u
-ZXh0IGJyYW5jaC4gSSBhbSB3b25kZXJpbmcgaWYgSSBzaG91bGQgc2VuZCB0aGUgZml4dXAgcGF0
-Y2hlcyBvciBpZiB5b3UgZHJvcCB0aGUgcGF0Y2ggc2VyaWVzIGZyb20gZm9yLW5leHQgYnJhbmNo
-LCBJIGNhbiBzZW5kIG91dCB0aGUgbmV3IHZlcnNpb24gdGhhdCBpbmNsdWRlcyBhbGwgdGhlc2Ug
-Zml4ZXMuIFBsZWFzZSBzdWdnZXN0LiBUaGFua3MhDQoNCj4gPg0KPiA+ID4gUmVwb3J0ZWQtYnk6
-IEh1bGsgUm9ib3QgPGh1bGtjaUBodWF3ZWkuY29tPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogQ2hl
-biBaaG91IDxjaGVuemhvdTEwQGh1YXdlaS5jb20+DQo+ID4gPiAtLS0NCj4gPiA+ICBkcml2ZXJz
-L3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfY29yZS5jIHwgMTQgKysrKysrKysrKysrKysNCj4gPiA+
-ICAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfY29yZS5jDQo+ID4gPiBiL2RyaXZl
-cnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmMNCj4gPiA+IGluZGV4IGY0YTM2ZmIuLjkz
-OWY4ZTAgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNf
-Y29yZS5jDQo+ID4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfY29yZS5j
-DQo+ID4gPiBAQCAtMTExNyw2ICsxMTE3LDIwIEBAIHN0YXRpYyB2b2lkIHBtY19jb3JlX2RiZ2Zz
-X3JlZ2lzdGVyKHN0cnVjdA0KPiA+IHBtY19kZXYgKnBtY2RldikNCj4gPiA+ICAgICAgICAgfQ0K
-PiA+ID4gIH0NCj4gPiA+ICAjZWxzZQ0KPiA+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZCBwbWNfY29y
-ZV9zbHBzMF9kaXNwbGF5KHN0cnVjdCBwbWNfZGV2ICpwbWNkZXYsDQo+ID4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRldmljZSAqZGV2LA0KPiA+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBzZXFf
-ZmlsZSAqcykgeyB9DQo+ID4gPiArDQo+ID4gPiArc3RhdGljIGlubGluZSB2b2lkIHBtY19jb3Jl
-X2xwbV9kaXNwbGF5KHN0cnVjdCBwbWNfZGV2ICpwbWNkZXYsDQo+ID4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IHNlcV9maWxlICpz
-LCB1MzIgb2Zmc2V0LA0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBjb25zdCBjaGFyICpzdHIsDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGNvbnN0IHN0cnVjdCBwbWNfYml0X21hcA0KPiA+ID4gKyoqbWFwcykgeyB9
-DQo+ID4gPiArDQo+ID4gPiAgc3RhdGljIGlubGluZSB2b2lkIHBtY19jb3JlX2RiZ2ZzX3JlZ2lz
-dGVyKHN0cnVjdCBwbWNfZGV2ICpwbWNkZXYpDQo+ID4gPiB7IH0NCj4gPiA+IC0tDQo+ID4gPiAy
-LjcuNA0KPiA+ID4NCj4gPg0KPiA+DQo+ID4gLS0NCj4gPiBXaXRoIEJlc3QgUmVnYXJkcywNCj4g
-PiBBbmR5IFNoZXZjaGVua28NCg==
+On Mon, 17 Feb 2020, Mika Westerberg wrote:
+
+> This converts the Intel Merrifield PMIC driver over the new SCU IPC API
+> where the SCU IPC instance is passed to the functions.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/mfd/intel_soc_pmic_mrfld.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
