@@ -1,86 +1,74 @@
-From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Subject: RE: [PATCH v1 0/4] platform/x86: intel_pmc_core: Add bug fixes or
- code
-Date: Thu, 27 Feb 2020 15:52:59 +0000
-Message-ID: <BYAPR11MB362461968CAAC427A185AC5CF2EB0@BYAPR11MB3624.namprd11.prod.outlook.com>
-References: <cover.1582770011.git.gayatri.kammela@intel.com>
- <20200227095643.GB1224808@smile.fi.intel.com>
+From: Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH v3 0/7] Allow setting caching mode in arch_add_memory()
+ for P2PDMA
+Date: Thu, 27 Feb 2020 13:17:04 -0400
+Message-ID: <20200227171704.GK31668@ziepe.ca>
+References: <20200221182503.28317-1-logang@deltatee.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200227095643.GB1224808@smile.fi.intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "peterz@infradead.org" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Chen Zhou <chenzhou10@huawei.com>, "Box, David E" <david.e.box@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ia64-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200221182503.28317-1-logang@deltatee.com>
+Sender: linux-ia64-owner@vger.kernel.org
+To: Logan Gunthorpe <logang@deltatee.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Sent: Thursday, February 27, 2020 1:57 AM
-> To: Kammela, Gayatri <gayatri.kammela@intel.com>
-> Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
-> Somayaji, Vishwanath <vishwanath.somayaji@intel.com>;
-> dvhart@infradead.org; Westerberg, Mika <mika.westerberg@intel.com>;
-> peterz@infradead.org; Prestopine, Charles D
-> <charles.d.prestopine@intel.com>; Chen Zhou <chenzhou10@huawei.com>;
-> Box, David E <david.e.box@intel.com>
-> Subject: Re: [PATCH v1 0/4] platform/x86: intel_pmc_core: Add bug fixes o=
-r
-> code
->=20
-> On Wed, Feb 26, 2020 at 06:43:26PM -0800, Gayatri Kammela wrote:
-> > Hi,
-> >
-> > This patch series consists of bug fixes and code optimization for the
-> > series https://patchwork.kernel.org/patch/11365325/
-> >
-> > Patch 1: Make pmc_core_lpm_display() generic Patch 2: Relocate both
-> > pmc_core_slps0_display() and pmc_core_lpm_display() Patch 3: Remove
-> > the duplicate if() condition to create debugfs entry Patch 4: Add back
-> > slp_s0_offset attribute back to tgl_reg_map
->=20
-> Let's do other way around, i.e. patch 2 as a first in the series, so I ma=
-y fix the
-> current (visible) issue.
-
-Hi Andy,  sure I will change the order and send the version 2
-
->=20
-> Then fix the kbuild bot complains and send the rest.
-
-Sure, I will do that. Thanks!
-
->=20
-> >
-> > Gayatri Kammela (4):
-> >   platform/x86: intel_pmc_core: fix: Make pmc_core_lpm_display() generi=
-c
-> >     for platforms that support sub-states
-> >   platform/x86: intel_pmc_core: fix: Relocate pmc_core_slps0_display()
-> >     and pmc_core_lpm_display() to outside of CONFIG_DEBUG_FS
-> >   platform/x86: intel_pmc_core: fix: Remove the duplicate if() to creat=
-e
-> >     debugfs entry for substate_live_status_registers
-> >   platform/x86: intel_pmc_core: fix: Add slp_s0_offset attribute back t=
-o
-> >     tgl_reg_map
-> >
-> >  drivers/platform/x86/intel_pmc_core.c | 131
-> > +++++++++++++-------------
-> >  1 file changed, 66 insertions(+), 65 deletions(-)
-> >
-> > Cc: Chen Zhou <chenzhou10@huawei.com>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: David Box <david.e.box@intel.com>
-> > --
-> > 2.17.1
-> >
->=20
+On Fri, Feb 21, 2020 at 11:24:56AM -0700, Logan Gunthorpe wrote:
+> Hi,
+> 
+> This is v3 of the patchset which cleans up a number of minor issues
+> from the feedback of v2 and rebases onto v5.6-rc2. Additional feedback
+> is welcome.
+> 
+> Thanks,
+> 
+> Logan
+> 
 > --
-> With Best Regards,
-> Andy Shevchenko
->=20
+> 
+> Changes in v3:
+>  * Rebased onto v5.6-rc2
+>  * Rename mhp_modifiers to mhp_params per David with an updated kernel
+>    doc per Dan
+>  * Drop support for s390 per David seeing it does not support
+>    ZONE_DEVICE yet and there was a potential problem with huge pages.
+>  * Added WARN_ON_ONCE in cases where arches recieve non PAGE_KERNEL
+>    parameters
+>  * Collected David and Micheal's Reviewed-By and Acked-by Tags
+> 
+> Changes in v2:
+>  * Rebased onto v5.5-rc5
+>  * Renamed mhp_restrictions to mhp_modifiers and added the pgprot field
+>    to that structure instead of using an argument for
+>    arch_add_memory().
+>  * Add patch to drop the unused flags field in mhp_restrictions
+> 
+> A git branch is available here:
+> 
+> https://github.com/sbates130272/linux-p2pmem remap_pages_cache_v3
+> 
+> --
+> 
+> Currently, the page tables created using memremap_pages() are always
+> created with the PAGE_KERNEL cacheing mode. However, the P2PDMA code
+> is creating pages for PCI BAR memory which should never be accessed
+> through the cache and instead use either WC or UC. This still works in
+> most cases, on x86, because the MTRR registers typically override the
+> caching settings in the page tables for all of the IO memory to be
+> UC-. However, this tends not to work so well on other arches or
+> some rare x86 machines that have firmware which does not setup the
+> MTRR registers in this way.
+> 
+> Instead of this, this series proposes a change to arch_add_memory()
+> to take the pgprot required by the mapping which allows us to
+> explicitly set pagetable entries for P2PDMA memory to WC.
+
+Is there a particular reason why WC was selected here? I thought for
+the p2pdma cases there was no kernel user that touched the memory?
+
+I definitely forsee devices where we want UC instead.
+
+Even so, the whole idea looks like the right direction to me.
+
+Jason
