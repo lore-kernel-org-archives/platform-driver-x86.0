@@ -1,93 +1,45 @@
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] platform/x86: i2c-multi-instantiate: Replace zero-length
- array with flexible-array member
-Date: Thu, 27 Feb 2020 13:40:17 -0600
-Message-ID: <50d9bf1b-e8a4-4ca8-ed40-fbbcd297218d@embeddedor.com>
-References: <20200213005525.GA11420@embeddedor.com>
- <f8281f16-b47e-41d6-f67b-1300bc5affff@embeddedor.com>
- <582c09ec-a6aa-72fe-7566-7fb70c156c4d@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Gayatri Kammela <gayatri.kammela@intel.com>
+Subject: [PATCH v2 0/4] platform/x86: intel_pmc_core: Add bug fixes or code
+Date: Thu, 27 Feb 2020 15:29:12 -0800
+Message-ID: <cover.1582845395.git.gayatri.kammela@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <582c09ec-a6aa-72fe-7566-7fb70c156c4d@redhat.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, dvhart@infradead.org, mika.westerberg@intel.com, peterz@infradead.org, charles.d.prestopine@intel.com, Gayatri Kammela <gayatri.kammela@intel.com>, Chen Zhou <chenzhou10@huawei.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, David Box <david.e.box@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
+Hi,
 
+This patch series consists of bug fixes and code optimization for the
+series https://patchwork.kernel.org/patch/11365325/
 
-On 2/27/20 13:01, Hans de Goede wrote:
-> Hi,
-> 
-> 
-> On 2/27/20 8:03 PM, Gustavo A. R. Silva wrote:
->> Hi all,
->>
->> Friendly ping: who can take this?
-> 
-> FWIW, the patch looks good to me:
-> 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> 
+Patch 1: Relocate both pmc_core_slps0_display() and pmc_core_lpm_display()
+Patch 2: Make pmc_core_lpm_display() generic
+Patch 3: Remove the duplicate if() condition to create debugfs entry
+Patch 4: Add back slp_s0_offset attribute back to tgl_reg_map
 
-Thanks, Hans.
---
-Gustavo
+Changes since v1:
+1) Changed the order of the patches i.e., patch 2 in v1 is made first in
+   the order for v2.
+2) Fixed the warnings reported by kbuild test robot.
 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
->> On 2/12/20 18:55, Gustavo A. R. Silva wrote:
->>> The current codebase makes use of the zero-length array language
->>> extension to the C90 standard, but the preferred mechanism to declare
->>> variable-length types such as these ones is a flexible array member[1][2],
->>> introduced in C99:
->>>
->>> struct foo {
->>>          int stuff;
->>>          struct boo array[];
->>> };
->>>
->>> By making use of the mechanism above, we will get a compiler warning
->>> in case the flexible array does not occur last in the structure, which
->>> will help us prevent some kind of undefined behavior bugs from being
->>> inadvertently introduced[3] to the codebase from now on.
->>>
->>> Also, notice that, dynamic memory allocations won't be affected by
->>> this change:
->>>
->>> "Flexible array members have incomplete type, and so the sizeof operator
->>> may not be applied. As a quirk of the original implementation of
->>> zero-length arrays, sizeof evaluates to zero."[1]
->>>
->>> This issue was found with the help of Coccinelle.
->>>
->>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->>> [2] https://github.com/KSPP/linux/issues/21
->>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->>>
->>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>> ---
->>>   drivers/platform/x86/i2c-multi-instantiate.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
->>> index ffb8d5d1eb5f..6acc8457866e 100644
->>> --- a/drivers/platform/x86/i2c-multi-instantiate.c
->>> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
->>> @@ -28,7 +28,7 @@ struct i2c_inst_data {
->>>     struct i2c_multi_inst_data {
->>>       int num_clients;
->>> -    struct i2c_client *clients[0];
->>> +    struct i2c_client *clients[];
->>>   };
->>>     static int i2c_multi_inst_count(struct acpi_resource *ares, void *data)
->>>
->>
-> 
+Gayatri Kammela (4):
+  platform/x86: intel_pmc_core: fix: Relocate pmc_core_slps0_display()
+    and pmc_core_lpm_display() to outside of CONFIG_DEBUG_FS
+  platform/x86: intel_pmc_core: fix: Make pmc_core_lpm_display() generic
+    for platforms that support sub-states
+  platform/x86: intel_pmc_core: fix: Remove the duplicate if() to create
+    debugfs entry for substate_live_status_registers
+  platform/x86: intel_pmc_core: fix: Add slp_s0_offset attribute back to
+    tgl_reg_map
+
+ drivers/platform/x86/intel_pmc_core.c | 140 ++++++++++++++------------
+ 1 file changed, 75 insertions(+), 65 deletions(-)
+
+base-commit: 7adb1e8aeeb5d4d88012568b2049599c1a247cf2
+
+Cc: Chen Zhou <chenzhou10@huawei.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Box <david.e.box@intel.com>
+-- 
+2.17.1
