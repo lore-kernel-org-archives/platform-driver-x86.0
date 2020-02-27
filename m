@@ -1,85 +1,73 @@
-From: Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v3 0/7] Allow setting caching mode in arch_add_memory()
- for P2PDMA
-Date: Thu, 27 Feb 2020 10:08:09 -0800
-Message-ID: <CAPcyv4g6OYvD57LdWcqGuWVanckQv4a1uzJrE1OZyMH+z=5KZw@mail.gmail.com>
-References: <20200221182503.28317-1-logang@deltatee.com> <20200227171704.GK31668@ziepe.ca>
- <e8781f85-3fc7-b9ce-c751-606803cbdc77@deltatee.com> <20200227174311.GL31668@ziepe.ca>
- <CAPcyv4iek=EmNk9JgXq=-HcZjd9Kz4m2+qXMhnDWMshFKFZPXQ@mail.gmail.com> <20200227180346.GM31668@ziepe.ca>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH] platform/x86: i2c-multi-instantiate: Replace zero-length
+ array with flexible-array member
+Date: Thu, 27 Feb 2020 13:03:10 -0600
+Message-ID: <f8281f16-b47e-41d6-f67b-1300bc5affff@embeddedor.com>
+References: <20200213005525.GA11420@embeddedor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-ia64-owner@vger.kernel.org>
-In-Reply-To: <20200227180346.GM31668@ziepe.ca>
-Sender: linux-ia64-owner@vger.kernel.org
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Logan Gunthorpe <logang@deltatee.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-ia64@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-s390 <linux-s390@vger.kernel.org>, Linux-sh <linux-sh@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.h>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200213005525.GA11420@embeddedor.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Feb 27, 2020 at 10:03 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Thu, Feb 27, 2020 at 09:55:04AM -0800, Dan Williams wrote:
-> > On Thu, Feb 27, 2020 at 9:43 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > On Thu, Feb 27, 2020 at 10:21:50AM -0700, Logan Gunthorpe wrote:
-> > > >
-> > > >
-> > > > On 2020-02-27 10:17 a.m., Jason Gunthorpe wrote:
-> > > > >> Instead of this, this series proposes a change to arch_add_memory()
-> > > > >> to take the pgprot required by the mapping which allows us to
-> > > > >> explicitly set pagetable entries for P2PDMA memory to WC.
-> > > > >
-> > > > > Is there a particular reason why WC was selected here? I thought for
-> > > > > the p2pdma cases there was no kernel user that touched the memory?
-> > > >
-> > > > Yes, that's correct. I choose WC here because the existing users are
-> > > > registering memory blocks without side effects which fit the WC
-> > > > semantics well.
-> > >
-> > > Hm, AFAIK WC memory is not compatible with the spinlocks/mutexs/etc in
-> > > Linux, so while it is true the memory has no side effects, there would
-> > > be surprising concurrency risks if anything in the kernel tried to
-> > > write to it.
-> > >
-> > > Not compatible means the locks don't contain stores to WC memory the
-> > > way you would expect. AFAIK on many CPUs extra barriers are required
-> > > to keep WC stores ordered, the same way ARM already has extra barriers
-> > > to keep UC stores ordered with locking..
-> > >
-> > > The spinlocks are defined to contain UC stores though.
-> >
-> > How are spinlocks and mutexes getting into p2pdma ranges in the first
-> > instance? Even with UC, the system has bigger problems if it's trying
-> > to send bus locks targeting PCI, see the flurry of activity of trying
-> > to trigger faults on split locks [1].
->
-> This is not what I was trying to explain.
->
-> Consider
->
->  static spinlock lock; // CPU DRAM
->  static idx = 0;
->  u64 *wc_memory = [..];
->
->  spin_lock(&lock);
->  wc_memory[0] = idx++;
->  spin_unlock(&lock);
->
-> You'd expect that the PCI device will observe stores where idx is
-> strictly increasing, but this is not guarenteed. idx may decrease, idx
-> may skip. It just won't duplicate.
->
-> Or perhaps
->
->  wc_memory[0] = foo;
->  writel(doorbell)
->
-> foo is not guarenteed observable by the device before doorbell reaches
-> the device.
->
-> All of these are things that do not happen with UC or NC memory, and
-> are surprising violations of our programming model.
->
-> Generic kernel code should never touch WC memory unless the code is
-> specifically designed to handle it.
+Hi all,
 
-Ah, yes, agree.
+Friendly ping: who can take this?
+
+Thanks
+--
+Gustavo
+
+On 2/12/20 18:55, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  drivers/platform/x86/i2c-multi-instantiate.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+> index ffb8d5d1eb5f..6acc8457866e 100644
+> --- a/drivers/platform/x86/i2c-multi-instantiate.c
+> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
+> @@ -28,7 +28,7 @@ struct i2c_inst_data {
+>  
+>  struct i2c_multi_inst_data {
+>  	int num_clients;
+> -	struct i2c_client *clients[0];
+> +	struct i2c_client *clients[];
+>  };
+>  
+>  static int i2c_multi_inst_count(struct acpi_resource *ares, void *data)
+> 
