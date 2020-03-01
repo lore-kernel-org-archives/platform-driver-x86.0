@@ -1,61 +1,178 @@
-From: Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v3 7/7] mm/memremap: Set caching mode for PCI P2PDMA
- memory to WC
-Date: Sat, 29 Feb 2020 14:47:47 -0800
-Message-ID: <CAPcyv4gNi3sesGnujShStoF8bi8kYg+MQkqhQRCT_1+wex5wbw@mail.gmail.com>
-References: <20200221182503.28317-1-logang@deltatee.com> <20200221182503.28317-8-logang@deltatee.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-ia64-owner@vger.kernel.org>
-In-Reply-To: <20200221182503.28317-8-logang@deltatee.com>
-Sender: linux-ia64-owner@vger.kernel.org
-To: Logan Gunthorpe <logang@deltatee.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-ia64@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-s390 <linux-s390@vger.kernel.org>, Linux-sh <linux-sh@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy
+From: Gayatri Kammela <gayatri.kammela@intel.com>
+Subject: [PATCH v3 1/5] platform/x86: intel_pmc_core: fix: Relocate pmc_core_slps0_display() and pmc_core_lpm_display() to outside of CONFIG_DEBUG_FS
+Date: Sun,  1 Mar 2020 12:44:22 -0800
+Message-ID: <d751fa4225d6be77ae91103ef19d2c23f59b9bbd.1583093898.git.gayatri.kammela@intel.com>
+References: <cover.1583093898.git.gayatri.kammela@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1583093898.git.gayatri.kammela@intel.com>
+In-Reply-To: <cover.1583093898.git.gayatri.kammela@intel.com>
+References: <cover.1583093898.git.gayatri.kammela@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, dvhart@infradead.org, mika.westerberg@intel.com, peterz@infradead.org, charles.d.prestopine@intel.com, Gayatri Kammela <gayatri.kammela@intel.com>, Chen Zhou <chenzhou10@huawei.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "David E . Box" <david.e.box@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Feb 21, 2020 at 10:25 AM Logan Gunthorpe <logang@deltatee.com> wrote:
->
-> PCI BAR IO memory should never be mapped as WB, however prior to this
-> the PAT bits were set WB and it was typically overridden by MTRR
-> registers set by the firmware.
->
-> Set PCI P2PDMA memory to be WC (writecombining) as the only current
-> user (the NVMe CMB) was originally mapped WC before the P2PDMA code
-> replaced the mapping with devm_memremap_pages().
+Since pmc_core_slps0_display() and pmc_core_lpm_display() is responsible
+for dumping as well as displaying debug registers, there is no need for
+these two functions to be defined under CONFIG_DEBUG_FS.
 
-Will the change to UC regress this existing use case?
+Hence, relocate these functions from under CONFIG_DEBUG_FS to above the
+block.
 
->
-> Future use-cases may need to generalize this by adding flags to
-> select the caching type, as some P2PDMA cases will not want WC.
-> However, those use-cases are not upstream yet and this can be changed
-> when they arrive.
->
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->  mm/memremap.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/mm/memremap.c b/mm/memremap.c
-> index 06742372a203..8d141c3e3364 100644
-> --- a/mm/memremap.c
-> +++ b/mm/memremap.c
-> @@ -190,7 +190,10 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
->                 }
->                 break;
->         case MEMORY_DEVICE_DEVDAX:
-> +               need_devmap_managed = false;
-> +               break;
->         case MEMORY_DEVICE_PCI_P2PDMA:
-> +               params.pgprot = pgprot_writecombine(params.pgprot);
+Cc: Chen Zhou <chenzhou10@huawei.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David E. Box <david.e.box@intel.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+---
+ drivers/platform/x86/intel_pmc_core.c | 122 +++++++++++++-------------
+ 1 file changed, 61 insertions(+), 61 deletions(-)
 
-Approach looks good to me, modulo Jason's comment that this should be
-UC. Upcoming DAX changes will want to pass this via pgmap, but as you
-say this can wait for this changes to arrive.
-
-After change to UC:
-
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index f4a36fbabf4c..20b2f49726cf 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -612,6 +612,67 @@ static int pmc_core_check_read_lock_bit(void)
+ 	return value & BIT(pmcdev->map->pm_read_disable_bit);
+ }
+ 
++static void pmc_core_slps0_display(struct pmc_dev *pmcdev, struct device *dev,
++				   struct seq_file *s)
++{
++	const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
++	const struct pmc_bit_map *map;
++	int offset = pmcdev->map->slps0_dbg_offset;
++	u32 data;
++
++	while (*maps) {
++		map = *maps;
++		data = pmc_core_reg_read(pmcdev, offset);
++		offset += 4;
++		while (map->name) {
++			if (dev)
++				dev_dbg(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
++					map->name,
++					data & map->bit_mask ? "Yes" : "No");
++			if (s)
++				seq_printf(s, "SLP_S0_DBG: %-32s\tState: %s\n",
++					   map->name,
++					   data & map->bit_mask ? "Yes" : "No");
++			++map;
++		}
++		++maps;
++	}
++}
++
++static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
++				 struct seq_file *s, u32 offset,
++				 const char *str,
++				 const struct pmc_bit_map **maps)
++{
++	u32 lpm_regs[ARRAY_SIZE(tgl_lpm_maps)-1];
++	int index, idx, len = 32, bit_mask;
++
++	for (index = 0; tgl_lpm_maps[index]; index++) {
++		lpm_regs[index] = pmc_core_reg_read(pmcdev, offset);
++		offset += 4;
++	}
++
++	for (idx = 0; maps[idx]; idx++) {
++		if (dev)
++			dev_dbg(dev, "\nLPM_%s_%d:\t0x%x\n", str, idx,
++				lpm_regs[idx]);
++		if (s)
++			seq_printf(s, "\nLPM_%s_%d:\t0x%x\n", str, idx,
++				   lpm_regs[idx]);
++		for (index = 0; maps[idx][index].name && index < len; index++) {
++			bit_mask = maps[idx][index].bit_mask;
++			if (dev)
++				dev_dbg(dev, "%-30s %-30d\n",
++					maps[idx][index].name,
++					lpm_regs[idx] & bit_mask ? 1 : 0);
++			if (s)
++				seq_printf(s, "%-30s %-30d\n",
++					   maps[idx][index].name,
++					   lpm_regs[idx] & bit_mask ? 1 : 0);
++		}
++	}
++}
++
+ #if IS_ENABLED(CONFIG_DEBUG_FS)
+ static bool slps0_dbg_latch;
+ 
+@@ -844,33 +905,6 @@ static void pmc_core_slps0_dbg_latch(struct pmc_dev *pmcdev, bool reset)
+ 	mutex_unlock(&pmcdev->lock);
+ }
+ 
+-static void pmc_core_slps0_display(struct pmc_dev *pmcdev, struct device *dev,
+-				   struct seq_file *s)
+-{
+-	const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
+-	const struct pmc_bit_map *map;
+-	int offset = pmcdev->map->slps0_dbg_offset;
+-	u32 data;
+-
+-	while (*maps) {
+-		map = *maps;
+-		data = pmc_core_reg_read(pmcdev, offset);
+-		offset += 4;
+-		while (map->name) {
+-			if (dev)
+-				dev_dbg(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
+-					map->name,
+-					data & map->bit_mask ? "Yes" : "No");
+-			if (s)
+-				seq_printf(s, "SLP_S0_DBG: %-32s\tState: %s\n",
+-					   map->name,
+-					   data & map->bit_mask ? "Yes" : "No");
+-			++map;
+-		}
+-		++maps;
+-	}
+-}
+-
+ static int pmc_core_slps0_dbg_show(struct seq_file *s, void *unused)
+ {
+ 	struct pmc_dev *pmcdev = s->private;
+@@ -974,40 +1008,6 @@ static int pmc_core_substate_res_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_res);
+ 
+-static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
+-				 struct seq_file *s, u32 offset,
+-				 const char *str,
+-				 const struct pmc_bit_map **maps)
+-{
+-	u32 lpm_regs[ARRAY_SIZE(tgl_lpm_maps)-1];
+-	int index, idx, len = 32, bit_mask;
+-
+-	for (index = 0; tgl_lpm_maps[index]; index++) {
+-		lpm_regs[index] = pmc_core_reg_read(pmcdev, offset);
+-		offset += 4;
+-	}
+-
+-	for (idx = 0; maps[idx]; idx++) {
+-		if (dev)
+-			dev_dbg(dev, "\nLPM_%s_%d:\t0x%x\n", str, idx,
+-				lpm_regs[idx]);
+-		if (s)
+-			seq_printf(s, "\nLPM_%s_%d:\t0x%x\n", str, idx,
+-				   lpm_regs[idx]);
+-		for (index = 0; maps[idx][index].name && index < len; index++) {
+-			bit_mask = maps[idx][index].bit_mask;
+-			if (dev)
+-				dev_dbg(dev, "%-30s %-30d\n",
+-					maps[idx][index].name,
+-					lpm_regs[idx] & bit_mask ? 1 : 0);
+-			if (s)
+-				seq_printf(s, "%-30s %-30d\n",
+-					   maps[idx][index].name,
+-					   lpm_regs[idx] & bit_mask ? 1 : 0);
+-		}
+-	}
+-}
+-
+ static int pmc_core_substate_sts_regs_show(struct seq_file *s, void *unused)
+ {
+ 	struct pmc_dev *pmcdev = s->private;
+-- 
+2.17.1
