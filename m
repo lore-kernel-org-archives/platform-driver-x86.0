@@ -1,49 +1,94 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v7 00/19] platform/x86: Rework intel_scu_ipc and
- intel_pmc_ipc drivers
-Date: Mon, 2 Mar 2020 18:37:10 +0200
-Message-ID: <20200302163710.GI1224808@smile.fi.intel.com>
-References: <20200302133327.55929-1-mika.westerberg@linux.intel.com>
- <20200302142621.GB3494@dell>
- <20200302143803.GI2667@lahna.fi.intel.com>
- <20200302151924.GC3494@dell>
- <20200302154205.GF1224808@smile.fi.intel.com>
- <20200302155716.GD3494@dell>
- <20200302160746.GF2540@lahna.fi.intel.com>
+From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Subject: RE: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes or
+ code
+Date: Mon, 2 Mar 2020 18:29:29 +0000
+Message-ID: <BYAPR11MB362421570806431752364CD3F2E70@BYAPR11MB3624.namprd11.prod.outlook.com>
+References: <cover.1583093898.git.gayatri.kammela@intel.com>
+ <20200302125427.GV1224808@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200302160746.GF2540@lahna.fi.intel.com>
+In-Reply-To: <20200302125427.GV1224808@smile.fi.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Darren Hart <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "peterz@infradead.org" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Chen Zhou <chenzhou10@huawei.com>, "Box, David E" <david.e.box@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Mar 02, 2020 at 06:07:46PM +0200, Mika Westerberg wrote:
-> On Mon, Mar 02, 2020 at 03:57:16PM +0000, Lee Jones wrote:
-> > > This series has dependencies to PDx86 (as mentioned in cover letter).
-> > > 
-> > > What do you prefer then, me to:
-> > > a) prepare ib from what I have, then you take it followed by me taking your ib, or
-> > > b) take everything and prepare ib for you?
-> > 
-> > Either would be fine by me.
-> 
-> I would prefer these to go through pdx86 because of the dependency.
-> 
-> > What kind of dependencies are they?  Are they protected by Kconfig
-> > options?  Another way of asking that would be to say, would this set
-> > throw build errors if I tried to apply and build it or would it just
-> > refuse to compile?
-> 
-> They do not apply cleanly because linux-platform-drivers-x86.git/for-next
-> re-organizes Kconfig and Makefile entries. I think they should still
-> build fine, though.
+> -----Original Message-----
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Sent: Monday, March 2, 2020 4:54 AM
+> To: Kammela, Gayatri <gayatri.kammela@intel.com>
+> Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
+> Somayaji, Vishwanath <vishwanath.somayaji@intel.com>;
+> dvhart@infradead.org; Westerberg, Mika <mika.westerberg@intel.com>;
+> peterz@infradead.org; Prestopine, Charles D
+> <charles.d.prestopine@intel.com>; Chen Zhou <chenzhou10@huawei.com>;
+> Box, David E <david.e.box@intel.com>
+> Subject: Re: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes o=
+r
+> code
+>=20
+> On Sun, Mar 01, 2020 at 12:44:21PM -0800, Gayatri Kammela wrote:
+> > Hi,
+> >
+> > This patch series consists of bug fixes and code optimization for the
+> > series https://patchwork.kernel.org/patch/11365325/
+> >
+>=20
+> I had applied first four, the fifth requires additional work.
+> When send a new version, do it only for last one.
 
-So, then it's third possible way, to build this on top of MFD next followed by
-importing an ib to PDx86 with conflict resolution.
+Thanks Andy! I will send the 5th patch alone in new version.
 
--- 
-With Best Regards,
-Andy Shevchenko
+>=20
+> > Patch 1: Relocate both pmc_core_slps0_display() and
+> > pmc_core_lpm_display() Patch 2: Remove the duplicate if() condition to
+> > create debugfs entry Patch 3: Add back slp_s0_offset attribute back to
+> > tgl_reg_map Patch 4: Make pmc_core_substate_res_show() generic Patch
+> > 5: Make pmc_core_lpm_display() generic
+> >
+> > Changes since v1:
+> > 1) Changed the order of the patches i.e., patch 2 in v1 is made first i=
+n
+> >    the order for v2.
+> > 2) Fixed the warnings reported by kbuild test robot.
+> >
+> > Changes since v2:
+> > 1) Add "Make pmc_core_substate_res_show() generic" patch to v3.
+> > 2) Fixed the memory leak issue in pmc_core_lpm_display().
+> > 3) Moved patch 2 in v2 to the last in the series in v3.
+> >
+> > Gayatri Kammela (5):
+> >   platform/x86: intel_pmc_core: fix: Relocate pmc_core_slps0_display()
+> >     and pmc_core_lpm_display() to outside of CONFIG_DEBUG_FS
+> >   platform/x86: intel_pmc_core: fix: Remove the duplicate if() to creat=
+e
+> >     debugfs entry for substate_live_status_registers
+> >   platform/x86: intel_pmc_core: fix: Add slp_s0_offset attribute back t=
+o
+> >     tgl_reg_map
+> >   platform/x86: intel_pmc_core: Make pmc_core_substate_res_show()
+> >     generic
+> >   platform/x86: intel_pmc_core: fix: Make pmc_core_lpm_display() generi=
+c
+> >     for platforms that support sub-states
+> >
+> >  drivers/platform/x86/intel_pmc_core.c | 148 +++++++++++++++-----------
+> >  drivers/platform/x86/intel_pmc_core.h |   3 +-
+> >  2 files changed, 85 insertions(+), 66 deletions(-)
+> >
+> > base-commit: 7adb1e8aeeb5d4d88012568b2049599c1a247cf2
+> >
+> > Cc: Chen Zhou <chenzhou10@huawei.com>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: David Box <david.e.box@intel.com>
+> > --
+> > 2.17.1
+> >
+>=20
+> --
+> With Best Regards,
+> Andy Shevchenko
+>=20
