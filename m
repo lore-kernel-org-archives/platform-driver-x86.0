@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v7 15/19] x86/platform/intel-mid: Add empty stubs for intel_scu_devices_[create|destroy]()
-Date: Mon,  2 Mar 2020 16:33:23 +0300
-Message-ID: <20200302133327.55929-16-mika.westerberg@linux.intel.com>
+Subject: [PATCH v7 05/19] platform/x86: intel_mid_powerbtn: Convert to use new SCU IPC API
+Date: Mon,  2 Mar 2020 16:33:13 +0300
+Message-ID: <20200302133327.55929-6-mika.westerberg@linux.intel.com>
 References: <20200302133327.55929-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,46 +12,66 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This allows to call the functions even when CONFIG_X86_INTEL_MID is not
-enabled.
+This converts the power button driver to use the new SCU IPC API where
+the SCU IPC instance is passed to the functions.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel-mid.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel_mid_powerbtn.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
-index 8e5af119dc2d..de58391bdee0 100644
---- a/arch/x86/include/asm/intel-mid.h
-+++ b/arch/x86/include/asm/intel-mid.h
-@@ -88,11 +88,17 @@ static inline bool intel_mid_has_msic(void)
- 	return (intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_PENWELL);
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 6f436836fe50..1fdcdef1d89f 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -46,6 +46,7 @@ struct mid_pb_ddata {
+ 	unsigned short mirqlvl1_addr;
+ 	unsigned short pbstat_addr;
+ 	u8 pbstat_mask;
++	struct intel_scu_ipc_dev *scu;
+ 	int (*setup)(struct mid_pb_ddata *ddata);
+ };
+ 
+@@ -55,7 +56,8 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
+ 	int ret;
+ 	u8 pbstat;
+ 
+-	ret = intel_scu_ipc_ioread8(ddata->pbstat_addr, &pbstat);
++	ret = intel_scu_ipc_dev_ioread8(ddata->scu, ddata->pbstat_addr,
++					&pbstat);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -67,14 +69,15 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
+ 
+ static int mid_irq_ack(struct mid_pb_ddata *ddata)
+ {
+-	return intel_scu_ipc_update_register(ddata->mirqlvl1_addr, 0, MSIC_PWRBTNM);
++	return intel_scu_ipc_dev_update(ddata->scu, ddata->mirqlvl1_addr, 0,
++					MSIC_PWRBTNM);
  }
  
-+extern void intel_scu_devices_create(void);
-+extern void intel_scu_devices_destroy(void);
+ static int mrfld_setup(struct mid_pb_ddata *ddata)
+ {
+ 	/* Unmask the PBIRQ and MPBIRQ on Tangier */
+-	intel_scu_ipc_update_register(BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
+-	intel_scu_ipc_update_register(BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
+ 
+ 	return 0;
+ }
+@@ -161,6 +164,10 @@ static int mid_pb_probe(struct platform_device *pdev)
+ 			return error;
+ 	}
+ 
++	ddata->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
++	if (!ddata->scu)
++		return -EPROBE_DEFER;
 +
- #else /* !CONFIG_X86_INTEL_MID */
- 
- #define intel_mid_identify_cpu()	0
- #define intel_mid_has_msic()		0
- 
-+static inline void intel_scu_devices_create(void) { }
-+static inline void intel_scu_devices_destroy(void) { }
-+
- #endif /* !CONFIG_X86_INTEL_MID */
- 
- enum intel_mid_timer_options {
-@@ -115,9 +121,6 @@ extern enum intel_mid_timer_options intel_mid_timer_options;
- #define SFI_MTMR_MAX_NUM		8
- #define SFI_MRTC_MAX			8
- 
--extern void intel_scu_devices_create(void);
--extern void intel_scu_devices_destroy(void);
--
- /* VRTC timer */
- #define MRST_VRTC_MAP_SZ		1024
- /* #define MRST_VRTC_PGOFFSET		0xc00 */
+ 	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mid_pb_isr,
+ 					  IRQF_ONESHOT, DRIVER_NAME, ddata);
+ 	if (error) {
 -- 
 2.25.0
