@@ -1,163 +1,118 @@
-From: Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v3 6/7] mm/memory_hotplug: Add pgprot_t to mhp_params
-Date: Mon, 2 Mar 2020 11:55:18 -0700
-Message-ID: <8b13f6aa-77b7-a47d-1a49-b8e2f800ac9d@deltatee.com>
-References: <20200221182503.28317-1-logang@deltatee.com>
- <20200221182503.28317-7-logang@deltatee.com>
- <CAPcyv4gR1+NaWzteqNKip=cYk89oEVW18HNao7Xv=JipzzDagw@mail.gmail.com>
+From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Subject: RE: [PATCH v3 5/5] platform/x86: intel_pmc_core: fix: Make
+ pmc_core_lpm_display() generic for platforms that support sub-states
+Date: Mon, 2 Mar 2020 18:57:04 +0000
+Message-ID: <BYAPR11MB3624E93E7E8D8FF291051508F2E70@BYAPR11MB3624.namprd11.prod.outlook.com>
+References: <cover.1583093898.git.gayatri.kammela@intel.com>
+ <5e28f488a6cc8b7c1e08b536868844b586a1eaf1.1583093898.git.gayatri.kammela@intel.com>
+ <20200302125343.GU1224808@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAPcyv4gR1+NaWzteqNKip=cYk89oEVW18HNao7Xv=JipzzDagw@mail.gmail.com>
-Content-Language: en-CA
-Sender: linux-sh-owner@vger.kernel.org
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-ia64@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-s390 <linux-s390@vger.kernel.org>, Linux-sh <linux-sh@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200302125343.GU1224808@smile.fi.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "peterz@infradead.org" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Chen Zhou <chenzhou10@huawei.com>, "Box, David E" <david.e.box@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
+> -----Original Message-----
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Sent: Monday, March 2, 2020 4:54 AM
+> To: Kammela, Gayatri <gayatri.kammela@intel.com>
+> Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
+> Somayaji, Vishwanath <vishwanath.somayaji@intel.com>;
+> dvhart@infradead.org; Westerberg, Mika <mika.westerberg@intel.com>;
+> peterz@infradead.org; Prestopine, Charles D
+> <charles.d.prestopine@intel.com>; Chen Zhou <chenzhou10@huawei.com>;
+> Box, David E <david.e.box@intel.com>
+> Subject: Re: [PATCH v3 5/5] platform/x86: intel_pmc_core: fix: Make
+> pmc_core_lpm_display() generic for platforms that support sub-states
+>=20
+> On Sun, Mar 01, 2020 at 12:44:26PM -0800, Gayatri Kammela wrote:
+> > Currently pmc_core_lpm_display() uses array of struct pointers i.e.,
+> > tgl_lpm_maps for Tiger Lake directly to iterate through and to get the
+> > number of status/live status registers which is hardcoded and cannot
+> > be re-used for future platforms that support sub-states. To maintain
+> > readability, make pmc_core_lpm_display() generic, so that it can
+> > re-used for future platforms.
+>=20
+> My comments below.
 
+Thanks Andy! for the comments.
 
-On 2020-02-29 3:44 p.m., Dan Williams wrote:
-> On Fri, Feb 21, 2020 at 10:25 AM Logan Gunthorpe <logang@deltatee.com> wrote:
->>
->> devm_memremap_pages() is currently used by the PCI P2PDMA code to create
->> struct page mappings for IO memory. At present, these mappings are created
->> with PAGE_KERNEL which implies setting the PAT bits to be WB. However, on
->> x86, an mtrr register will typically override this and force the cache
->> type to be UC-. In the case firmware doesn't set this register it is
->> effectively WB and will typically result in a machine check exception
->> when it's accessed.
->>
->> Other arches are not currently likely to function correctly seeing they
->> don't have any MTRR registers to fall back on.
->>
->> To solve this, provide a way to specify the pgprot value explicitly to
->> arch_add_memory().
->>
->> Of the arches that support MEMORY_HOTPLUG: x86_64, and arm64 need a simple
->> change to pass the pgprot_t down to their respective functions which set
->> up the page tables. For x86_32, set the page tables explicitly using
->> _set_memory_prot() (seeing they are already mapped). For ia64, s390 and
->> sh, reject anything but PAGE_KERNEL settings -- this should be fine,
->> for now, seeing these architectures don't support ZONE_DEVICE.
->>
->> A check in __add_pages() is also added to ensure the pgprot parameter was
->> set for all arches.
->>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->> Acked-by: David Hildenbrand <david@redhat.com>
->> Acked-by: Michal Hocko <mhocko@suse.com>
->> ---
->>  arch/arm64/mm/mmu.c            | 3 ++-
->>  arch/ia64/mm/init.c            | 3 +++
->>  arch/powerpc/mm/mem.c          | 3 ++-
->>  arch/s390/mm/init.c            | 3 +++
->>  arch/sh/mm/init.c              | 3 +++
->>  arch/x86/mm/init_32.c          | 5 +++++
->>  arch/x86/mm/init_64.c          | 2 +-
->>  include/linux/memory_hotplug.h | 2 ++
->>  mm/memory_hotplug.c            | 5 ++++-
->>  mm/memremap.c                  | 6 +++---
->>  10 files changed, 28 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->> index ee37bca8aba8..ea3fa844a8a2 100644
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -1058,7 +1058,8 @@ int arch_add_memory(int nid, u64 start, u64 size,
->>                 flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
->>
->>         __create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
->> -                            size, PAGE_KERNEL, __pgd_pgtable_alloc, flags);
->> +                            size, params->pgprot, __pgd_pgtable_alloc,
->> +                            flags);
->>
->>         memblock_clear_nomap(start, size);
->>
->> diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
->> index 97bbc23ea1e3..d637b4ea3147 100644
->> --- a/arch/ia64/mm/init.c
->> +++ b/arch/ia64/mm/init.c
->> @@ -676,6 +676,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
->>         unsigned long nr_pages = size >> PAGE_SHIFT;
->>         int ret;
->>
->> +       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
->> +               return -EINVAL;
->> +
->>         ret = __add_pages(nid, start_pfn, nr_pages, params);
->>         if (ret)
->>                 printk("%s: Problem encountered in __add_pages() as ret=%d\n",
->> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
->> index 19b1da5d7eca..832412bc7fad 100644
->> --- a/arch/powerpc/mm/mem.c
->> +++ b/arch/powerpc/mm/mem.c
->> @@ -138,7 +138,8 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
->>         resize_hpt_for_hotplug(memblock_phys_mem_size());
->>
->>         start = (unsigned long)__va(start);
->> -       rc = create_section_mapping(start, start + size, nid, PAGE_KERNEL);
->> +       rc = create_section_mapping(start, start + size, nid,
->> +                                   params->pgprot);
->>         if (rc) {
->>                 pr_warn("Unable to create mapping for hot added memory 0x%llx..0x%llx: %d\n",
->>                         start, start + size, rc);
->> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
->> index e9e4a7abd0cc..87b2d024e75a 100644
->> --- a/arch/s390/mm/init.c
->> +++ b/arch/s390/mm/init.c
->> @@ -277,6 +277,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
->>         if (WARN_ON_ONCE(params->altmap))
->>                 return -EINVAL;
->>
->> +       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
->> +               return -EINVAL;
->> +
->>         rc = vmem_add_mapping(start, size);
->>         if (rc)
->>                 return rc;
->> diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
->> index e5114c053364..b9de2d4fa57e 100644
->> --- a/arch/sh/mm/init.c
->> +++ b/arch/sh/mm/init.c
->> @@ -412,6 +412,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
->>         unsigned long nr_pages = size >> PAGE_SHIFT;
->>         int ret;
->>
->> +       if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot)
->> +               return -EINVAL;
->> +
->>         /* We only have ZONE_NORMAL, so this is easy.. */
->>         ret = __add_pages(nid, start_pfn, nr_pages, params);
->>         if (unlikely(ret))
->> diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
->> index e25a4218e6ff..96d8e4fb1cc8 100644
->> --- a/arch/x86/mm/init_32.c
->> +++ b/arch/x86/mm/init_32.c
->> @@ -858,6 +858,11 @@ int arch_add_memory(int nid, u64 start, u64 size,
->>  {
->>         unsigned long start_pfn = start >> PAGE_SHIFT;
->>         unsigned long nr_pages = size >> PAGE_SHIFT;
->> +       int ret;
->> +
->> +       ret = _set_memory_prot(start, nr_pages, params->pgprot);
-> 
-> Perhaps a comment since it's not immediately obvious where the
-> PAGE_KERNEL prot was established, and perhaps add a conditional to
-> skip this call in the param->pgprot == PAGE_KERNEL case?
+>=20
+> ...
+>=20
+> > +static int pmc_core_lpm_get_arr_size(const struct pmc_bit_map **maps)
+> > +{
+> > +	int idx, arr_size =3D 0;
+>=20
+> And why do you need arr_size variable at all?
 
-Yes I can add the skip in the PAGE_KERNEL case. Though I'm not sure what
-you are asking for with regards to the comment. Just that pgprot is set
-by the caller usually to PAGE_KERNEL?
+I could just return idx value at the end of the for loop. I will remove the=
+ arr_size variable.
 
-> Other than that looks good to me, but only an ack since I'm only
-> testing the x86 changes.
-> 
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
+>=20
+> > +
+> > +	for (idx =3D 0; maps[idx]; idx++)
+> > +		arr_size++;
+> > +
+> > +	return arr_size;
+> > +}
+>=20
+> ...
+>=20
+> > -	int index, idx, len =3D 32, bit_mask;
+> > +	int index, idx, bit_mask, len =3D 32;
+>=20
+> What's the point of shuffling this?
 
+Just wanted to have all uninitialized variables declared before initialized=
+ ones. I will just leave this out in v4.
 
-Thanks,
+>=20
+> > +	int arr_size =3D pmc_core_lpm_get_arr_size(maps);
+>=20
+> This would be better in a split manner, i.e.
+>=20
+> 	int arr_size;
+>=20
+> 	...
+>=20
+> 	arr_size =3D ...;
 
-Logan
+Sure, I will make this change in v4
+
+>=20
+> ...
+>=20
+> > +	lpm_regs =3D kmalloc_array(arr_size, sizeof(*lpm_regs), GFP_KERNEL);
+> > +	if(!lpm_regs)
+>=20
+> > +		goto err;
+>=20
+> There is no point to have the label. Simple return will work.
+
+Thought adding a label will help not to have multiple kfree() in the same f=
+unction (one here at the check and one at the end of the for loop) I will a=
+dd a return.
+
+>=20
+> > -	for (index =3D 0; tgl_lpm_maps[index]; index++) {
+> > +	for (index =3D 0; maps[index]; index++) {
+>=20
+> Why not to reuse arr_size here?
+
+Good point! I missed it. I will use the arr_size here to iterate.
+
+>=20
+> >  		lpm_regs[index] =3D pmc_core_reg_read(pmcdev, offset);
+> >  		offset +=3D 4;
+> >  	}
+>=20
+> --
+> With Best Regards,
+> Andy Shevchenko
+>=20
