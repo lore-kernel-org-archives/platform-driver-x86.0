@@ -1,94 +1,74 @@
-From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Subject: RE: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes or
- code
-Date: Mon, 2 Mar 2020 18:29:29 +0000
-Message-ID: <BYAPR11MB362421570806431752364CD3F2E70@BYAPR11MB3624.namprd11.prod.outlook.com>
-References: <cover.1583093898.git.gayatri.kammela@intel.com>
- <20200302125427.GV1224808@smile.fi.intel.com>
+From: Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v3 4/7] x86/mm: Introduce _set_memory_prot()
+Date: Mon, 2 Mar 2020 11:46:13 -0700
+Message-ID: <1be997b0-e17a-5d48-efad-a01d84d5e496@deltatee.com>
+References: <20200221182503.28317-1-logang@deltatee.com>
+ <20200221182503.28317-5-logang@deltatee.com>
+ <CAPcyv4j=bZ5KBPp6PbViERdDe+HZpV_W6qbSJupTNAzyfiK6xg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200302125427.GV1224808@smile.fi.intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "peterz@infradead.org" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Chen Zhou <chenzhou10@huawei.com>, "Box, David E" <david.e.box@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ia64-owner@vger.kernel.org>
+In-Reply-To: <CAPcyv4j=bZ5KBPp6PbViERdDe+HZpV_W6qbSJupTNAzyfiK6xg@mail.gmail.com>
+Content-Language: en-CA
+Sender: linux-ia64-owner@vger.kernel.org
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-ia64@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-s390 <linux-s390@vger.kernel.org>, Linux-sh <linux-sh@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy
 List-Id: platform-driver-x86.vger.kernel.org
 
-> -----Original Message-----
-> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Sent: Monday, March 2, 2020 4:54 AM
-> To: Kammela, Gayatri <gayatri.kammela@intel.com>
-> Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
-> Somayaji, Vishwanath <vishwanath.somayaji@intel.com>;
-> dvhart@infradead.org; Westerberg, Mika <mika.westerberg@intel.com>;
-> peterz@infradead.org; Prestopine, Charles D
-> <charles.d.prestopine@intel.com>; Chen Zhou <chenzhou10@huawei.com>;
-> Box, David E <david.e.box@intel.com>
-> Subject: Re: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes o=
-r
-> code
->=20
-> On Sun, Mar 01, 2020 at 12:44:21PM -0800, Gayatri Kammela wrote:
-> > Hi,
-> >
-> > This patch series consists of bug fixes and code optimization for the
-> > series https://patchwork.kernel.org/patch/11365325/
-> >
->=20
-> I had applied first four, the fifth requires additional work.
-> When send a new version, do it only for last one.
 
-Thanks Andy! I will send the 5th patch alone in new version.
 
->=20
-> > Patch 1: Relocate both pmc_core_slps0_display() and
-> > pmc_core_lpm_display() Patch 2: Remove the duplicate if() condition to
-> > create debugfs entry Patch 3: Add back slp_s0_offset attribute back to
-> > tgl_reg_map Patch 4: Make pmc_core_substate_res_show() generic Patch
-> > 5: Make pmc_core_lpm_display() generic
-> >
-> > Changes since v1:
-> > 1) Changed the order of the patches i.e., patch 2 in v1 is made first i=
-n
-> >    the order for v2.
-> > 2) Fixed the warnings reported by kbuild test robot.
-> >
-> > Changes since v2:
-> > 1) Add "Make pmc_core_substate_res_show() generic" patch to v3.
-> > 2) Fixed the memory leak issue in pmc_core_lpm_display().
-> > 3) Moved patch 2 in v2 to the last in the series in v3.
-> >
-> > Gayatri Kammela (5):
-> >   platform/x86: intel_pmc_core: fix: Relocate pmc_core_slps0_display()
-> >     and pmc_core_lpm_display() to outside of CONFIG_DEBUG_FS
-> >   platform/x86: intel_pmc_core: fix: Remove the duplicate if() to creat=
-e
-> >     debugfs entry for substate_live_status_registers
-> >   platform/x86: intel_pmc_core: fix: Add slp_s0_offset attribute back t=
-o
-> >     tgl_reg_map
-> >   platform/x86: intel_pmc_core: Make pmc_core_substate_res_show()
-> >     generic
-> >   platform/x86: intel_pmc_core: fix: Make pmc_core_lpm_display() generi=
-c
-> >     for platforms that support sub-states
-> >
-> >  drivers/platform/x86/intel_pmc_core.c | 148 +++++++++++++++-----------
-> >  drivers/platform/x86/intel_pmc_core.h |   3 +-
-> >  2 files changed, 85 insertions(+), 66 deletions(-)
-> >
-> > base-commit: 7adb1e8aeeb5d4d88012568b2049599c1a247cf2
-> >
-> > Cc: Chen Zhou <chenzhou10@huawei.com>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: David Box <david.e.box@intel.com>
-> > --
-> > 2.17.1
-> >
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
->=20
+On 2020-02-29 3:33 p.m., Dan Williams wrote:
+> On Fri, Feb 21, 2020 at 10:25 AM Logan Gunthorpe <logang@deltatee.com> wrote:
+>>
+>> For use in the 32bit arch_add_memory() to set the pgprot type of the
+>> memory to add.
+>>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> Cc: x86@kernel.org
+>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+>> Cc: Andy Lutomirski <luto@kernel.org>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>> ---
+>>  arch/x86/include/asm/set_memory.h | 1 +
+>>  arch/x86/mm/pat/set_memory.c      | 7 +++++++
+>>  2 files changed, 8 insertions(+)
+>>
+>> diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
+>> index 64c3dce374e5..0aca959cf9a4 100644
+>> --- a/arch/x86/include/asm/set_memory.h
+>> +++ b/arch/x86/include/asm/set_memory.h
+>> @@ -34,6 +34,7 @@
+>>   * The caller is required to take care of these.
+>>   */
+>>
+>> +int _set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
+> 
+> I wonder if this should be separated from the naming convention of the
+> other routines because this is only an internal helper for code paths
+> where the prot was established by an upper layer. For example, I
+> expect that the kernel does not want new usages to make the mistake of
+> calling:
+> 
+>    _set_memory_prot(..., pgprot_writecombine(pgprot))
+> 
+> ...instead of
+> 
+>     _set_memory_wc()
+> 
+> I'm thinking just a double underscore rename (__set_memory_prot) and a
+> kerneldoc comment for that  pointing people to use the direct
+> _set_memory_<cachemode> helpers.
+
+Thanks! Will do. Note, though, that even _set_memory_wc() is an internal
+x86-specific function. But the extra comment and underscore still make
+sense.
+
+> With that you can add:
+> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> 
