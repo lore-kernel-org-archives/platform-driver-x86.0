@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v8 06/19] watchdog: intel-mid_wdt: Convert to use new SCU IPC API
-Date: Tue,  3 Mar 2020 16:36:36 +0300
-Message-ID: <20200303133649.39819-7-mika.westerberg@linux.intel.com>
+Subject: [PATCH v8 08/19] platform/x86: intel_scu_ipc: Add managed function to register SCU IPC
+Date: Tue,  3 Mar 2020 16:36:38 +0300
+Message-ID: <20200303133649.39819-9-mika.westerberg@linux.intel.com>
 References: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,143 +12,114 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This converts the Intel MID watchdog driver over the new SCU IPC API
-where the SCU IPC instance is passed to the functions.
+Drivers such as intel_pmc_ipc.c can be unloaded as well so in order to
+support those in this driver add a new function that can be called to
+unregister the SCU IPC when it is not needed anymore.
+
+We also add a managed version of the intel_scu_ipc_register() that takes
+care of calling intel_scu_ipc_unregister() automatically when the driver
+is unbound.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/watchdog/intel-mid_wdt.c | 53 ++++++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 16 deletions(-)
+ arch/x86/include/asm/intel_scu_ipc.h | 10 +++++
+ drivers/platform/x86/intel_scu_ipc.c | 62 ++++++++++++++++++++++++++++
+ 2 files changed, 72 insertions(+)
 
-diff --git a/drivers/watchdog/intel-mid_wdt.c b/drivers/watchdog/intel-mid_wdt.c
-index 470213abfd3d..1ae03b64ef8b 100644
---- a/drivers/watchdog/intel-mid_wdt.c
-+++ b/drivers/watchdog/intel-mid_wdt.c
-@@ -33,14 +33,24 @@ enum {
- 	SCU_WATCHDOG_KEEPALIVE,
- };
+diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
+index d5f6ae514172..11d457af68c5 100644
+--- a/arch/x86/include/asm/intel_scu_ipc.h
++++ b/arch/x86/include/asm/intel_scu_ipc.h
+@@ -25,6 +25,16 @@ __intel_scu_ipc_register(struct device *parent,
+ #define intel_scu_ipc_register(parent, scu_data)  \
+ 	__intel_scu_ipc_register(parent, scu_data, THIS_MODULE)
  
--static inline int wdt_command(int sub, u32 *in, int inlen)
-+struct mid_wdt {
-+	struct watchdog_device wd;
-+	struct device *dev;
++void intel_scu_ipc_unregister(struct intel_scu_ipc_dev *scu);
++
++struct intel_scu_ipc_dev *
++__devm_intel_scu_ipc_register(struct device *parent,
++			      const struct intel_scu_ipc_data *scu_data,
++			      struct module *owner);
++
++#define devm_intel_scu_ipc_register(parent, scu_data)  \
++	__devm_intel_scu_ipc_register(parent, scu_data, THIS_MODULE)
++
+ struct intel_scu_ipc_dev *intel_scu_ipc_dev_get(void);
+ void intel_scu_ipc_dev_put(struct intel_scu_ipc_dev *scu);
+ struct intel_scu_ipc_dev *devm_intel_scu_ipc_dev_get(struct device *dev);
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 608034ea7af5..d9cf7f7602b0 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -637,6 +637,68 @@ __intel_scu_ipc_register(struct device *parent,
+ }
+ EXPORT_SYMBOL_GPL(__intel_scu_ipc_register);
+ 
++/**
++ * intel_scu_ipc_unregister() - Unregister SCU IPC
++ * @scu: SCU IPC handle
++ *
++ * This unregisters the SCU IPC device and releases the acquired
++ * resources once the refcount goes to zero.
++ */
++void intel_scu_ipc_unregister(struct intel_scu_ipc_dev *scu)
++{
++	mutex_lock(&ipclock);
++	if (!WARN_ON(!ipcdev)) {
++		ipcdev = NULL;
++		device_unregister(&scu->dev);
++	}
++	mutex_unlock(&ipclock);
++}
++EXPORT_SYMBOL_GPL(intel_scu_ipc_unregister);
++
++static void devm_intel_scu_ipc_unregister(struct device *dev, void *res)
++{
++	struct intel_scu_ipc_devres *dr = res;
++	struct intel_scu_ipc_dev *scu = dr->scu;
++
++	intel_scu_ipc_unregister(scu);
++}
++
++/**
++ * __devm_intel_scu_ipc_register() - Register managed SCU IPC device
++ * @parent: Parent device
++ * @scu_data: Data used to configure SCU IPC
++ * @owner: Module registering the SCU IPC device
++ *
++ * Call this function to register managed SCU IPC mechanism under
++ * @parent. Returns pointer to the new SCU IPC device or ERR_PTR() in
++ * case of failure. The caller may use the returned instance if it needs
++ * to do SCU IPC calls itself.
++ */
++struct intel_scu_ipc_dev *
++__devm_intel_scu_ipc_register(struct device *parent,
++			      const struct intel_scu_ipc_data *scu_data,
++			      struct module *owner)
++{
++	struct intel_scu_ipc_devres *dr;
 +	struct intel_scu_ipc_dev *scu;
-+};
 +
-+static inline int
-+wdt_command(struct mid_wdt *mid, int sub, const void *in, size_t inlen, size_t size)
- {
--	return intel_scu_ipc_command(IPC_WATCHDOG, sub, in, inlen, NULL, 0);
-+	struct intel_scu_ipc_dev *scu = mid->scu;
++	dr = devres_alloc(devm_intel_scu_ipc_unregister, sizeof(*dr), GFP_KERNEL);
++	if (!dr)
++		return NULL;
 +
-+	return intel_scu_ipc_dev_command_with_size(scu, IPC_WATCHDOG, sub, in,
-+						   inlen, size, NULL, 0);
- }
- 
- static int wdt_start(struct watchdog_device *wd)
- {
--	struct device *dev = watchdog_get_drvdata(wd);
-+	struct mid_wdt *mid = watchdog_get_drvdata(wd);
- 	int ret, in_size;
- 	int timeout = wd->timeout;
- 	struct ipc_wd_start {
-@@ -49,38 +59,41 @@ static int wdt_start(struct watchdog_device *wd)
- 	} ipc_wd_start = { timeout - MID_WDT_PRETIMEOUT, timeout };
- 
- 	/*
--	 * SCU expects the input size for watchdog IPC to
--	 * be based on 4 bytes
-+	 * SCU expects the input size for watchdog IPC to be 2 which is the
-+	 * size of the structure in dwords. SCU IPC normally takes bytes
-+	 * but this is a special case where we specify size to be different
-+	 * than inlen.
- 	 */
- 	in_size = DIV_ROUND_UP(sizeof(ipc_wd_start), 4);
- 
--	ret = wdt_command(SCU_WATCHDOG_START, (u32 *)&ipc_wd_start, in_size);
-+	ret = wdt_command(mid, SCU_WATCHDOG_START, &ipc_wd_start,
-+			  sizeof(ipc_wd_start), in_size);
- 	if (ret)
--		dev_crit(dev, "error starting watchdog: %d\n", ret);
-+		dev_crit(mid->dev, "error starting watchdog: %d\n", ret);
- 
- 	return ret;
- }
- 
- static int wdt_ping(struct watchdog_device *wd)
- {
--	struct device *dev = watchdog_get_drvdata(wd);
-+	struct mid_wdt *mid = watchdog_get_drvdata(wd);
- 	int ret;
- 
--	ret = wdt_command(SCU_WATCHDOG_KEEPALIVE, NULL, 0);
-+	ret = wdt_command(mid, SCU_WATCHDOG_KEEPALIVE, NULL, 0, 0);
- 	if (ret)
--		dev_crit(dev, "Error executing keepalive: %d\n", ret);
-+		dev_crit(mid->dev, "Error executing keepalive: %d\n", ret);
- 
- 	return ret;
- }
- 
- static int wdt_stop(struct watchdog_device *wd)
- {
--	struct device *dev = watchdog_get_drvdata(wd);
-+	struct mid_wdt *mid = watchdog_get_drvdata(wd);
- 	int ret;
- 
--	ret = wdt_command(SCU_WATCHDOG_STOP, NULL, 0);
-+	ret = wdt_command(mid, SCU_WATCHDOG_STOP, NULL, 0, 0);
- 	if (ret)
--		dev_crit(dev, "Error stopping watchdog: %d\n", ret);
-+		dev_crit(mid->dev, "Error stopping watchdog: %d\n", ret);
- 
- 	return ret;
- }
-@@ -110,6 +123,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct watchdog_device *wdt_dev;
- 	struct intel_mid_wdt_pdata *pdata = dev->platform_data;
-+	struct mid_wdt *mid;
- 	int ret;
- 
- 	if (!pdata) {
-@@ -123,10 +137,13 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 			return ret;
- 	}
- 
--	wdt_dev = devm_kzalloc(dev, sizeof(*wdt_dev), GFP_KERNEL);
--	if (!wdt_dev)
-+	mid = devm_kzalloc(dev, sizeof(*mid), GFP_KERNEL);
-+	if (!mid)
- 		return -ENOMEM;
- 
-+	mid->dev = dev;
-+	wdt_dev = &mid->wd;
++	scu = __intel_scu_ipc_register(parent, scu_data, owner);
++	if (IS_ERR(scu)) {
++		devres_free(dr);
++		return scu;
++	}
 +
- 	wdt_dev->info = &mid_wdt_info;
- 	wdt_dev->ops = &mid_wdt_ops;
- 	wdt_dev->min_timeout = MID_WDT_TIMEOUT_MIN;
-@@ -135,7 +152,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 	wdt_dev->parent = dev;
- 
- 	watchdog_set_nowayout(wdt_dev, WATCHDOG_NOWAYOUT);
--	watchdog_set_drvdata(wdt_dev, dev);
-+	watchdog_set_drvdata(wdt_dev, mid);
- 
- 	ret = devm_request_irq(dev, pdata->irq, mid_wdt_irq,
- 			       IRQF_SHARED | IRQF_NO_SUSPEND, "watchdog",
-@@ -145,6 +162,10 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	mid->scu = devm_intel_scu_ipc_dev_get(dev);
-+	if (!mid->scu)
-+		return -EPROBE_DEFER;
++	dr->scu = scu;
++	devres_add(parent, dr);
 +
- 	/*
- 	 * The firmware followed by U-Boot leaves the watchdog running
- 	 * with the default threshold which may vary. When we get here
++	return scu;
++}
++EXPORT_SYMBOL_GPL(__devm_intel_scu_ipc_register);
++
+ static int __init intel_scu_ipc_init(void)
+ {
+ 	return class_register(&intel_scu_ipc_class);
 -- 
 2.25.1
