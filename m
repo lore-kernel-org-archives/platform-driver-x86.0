@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v8 19/19] MAINTAINERS: Update entry for Intel Broxton PMC driver
-Date: Tue,  3 Mar 2020 16:36:49 +0300
-Message-ID: <20200303133649.39819-20-mika.westerberg@linux.intel.com>
+Subject: [PATCH v8 17/19] platform/x86: intel_telemetry: Add telemetry_get_pltdata()
+Date: Tue,  3 Mar 2020 16:36:47 +0300
+Message-ID: <20200303133649.39819-18-mika.westerberg@linux.intel.com>
 References: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,63 +12,79 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The driver lives now under MFD so split the current entry into two parts
-and add me as co-maintainer of the Intel Broxton PMC driver. While there
-correct formatting of Zha Qipeng's email address.
+Add new function that allows telemetry modules to get pointer to the
+platform specific configuration. This is needed to allow the telemetry
+debugfs module to fetch PMC IPC instance in the subsequent patch.
+
+This also allows us to replace telemetry_pltconfig_valid() with
+telemetry_get_pltdata() as well.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/intel_telemetry.h         |  2 +-
+ drivers/platform/x86/intel_telemetry_core.c    | 17 ++++++-----------
+ drivers/platform/x86/intel_telemetry_debugfs.c |  3 +--
+ 3 files changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4d4e3241bf99..20e4353260f7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8371,6 +8371,13 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/intel_atomisp2_pm.c
+diff --git a/arch/x86/include/asm/intel_telemetry.h b/arch/x86/include/asm/intel_telemetry.h
+index 274aaf0dae48..2c0e7d7a10e9 100644
+--- a/arch/x86/include/asm/intel_telemetry.h
++++ b/arch/x86/include/asm/intel_telemetry.h
+@@ -95,7 +95,7 @@ int telemetry_set_pltdata(const struct telemetry_core_ops *ops,
  
-+INTEL BROXTON PMC DRIVER
-+M:	Mika Westerberg <mika.westerberg@linux.intel.com>
-+M:	Zha Qipeng <qipeng.zha@intel.com>
-+S:	Maintained
-+F:	drivers/mfd/intel_pmc_bxt.c
-+F:	include/linux/mfd/intel_pmc_bxt.h
-+
- INTEL C600 SERIES SAS CONTROLLER DRIVER
- M:	Intel SCU Linux support <intel-linux-scu@intel.com>
- M:	Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-@@ -8579,6 +8586,13 @@ F:	drivers/dma/mic_x100_dma.c
- F:	drivers/dma/mic_x100_dma.h
- F:	Documentation/mic/
+ int telemetry_clear_pltdata(void);
  
-+INTEL P-Unit IPC DRIVER
-+M:	Zha Qipeng <qipeng.zha@intel.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	arch/x86/include/asm/intel_punit_ipc.h
-+F:	drivers/platform/x86/intel_punit_ipc.c
-+
- INTEL PMC CORE DRIVER
- M:	Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
- M:	Vishwanath Somayaji <vishwanath.somayaji@intel.com>
-@@ -8586,15 +8600,6 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/intel_pmc_core*
+-int telemetry_pltconfig_valid(void);
++struct telemetry_plt_config *telemetry_get_pltdata(void);
  
--INTEL PMC/P-Unit IPC DRIVER
--M:	Zha Qipeng<qipeng.zha@intel.com>
--L:	platform-driver-x86@vger.kernel.org
--S:	Maintained
--F:	arch/x86/include/asm/intel_pmc_ipc.h
--F:	arch/x86/include/asm/intel_punit_ipc.h
--F:	drivers/platform/x86/intel_pmc_ipc.c
--F:	drivers/platform/x86/intel_punit_ipc.c
+ int telemetry_get_evtname(enum telemetry_unit telem_unit,
+ 			  const char **name, int len);
+diff --git a/drivers/platform/x86/intel_telemetry_core.c b/drivers/platform/x86/intel_telemetry_core.c
+index d4040bb222b4..fdf55b5d6948 100644
+--- a/drivers/platform/x86/intel_telemetry_core.c
++++ b/drivers/platform/x86/intel_telemetry_core.c
+@@ -353,21 +353,16 @@ int telemetry_clear_pltdata(void)
+ EXPORT_SYMBOL_GPL(telemetry_clear_pltdata);
+ 
+ /**
+- * telemetry_pltconfig_valid() - Checkif platform config is valid
++ * telemetry_get_pltdata() - Return telemetry platform config
+  *
+- * Usage by other than telemetry module is invalid
+- *
+- * Return: 0 success, < 0 for failure
++ * May be used by other telemetry modules to get platform specific
++ * configuration.
+  */
+-int telemetry_pltconfig_valid(void)
++struct telemetry_plt_config *telemetry_get_pltdata(void)
+ {
+-	if (telm_core_conf.plt_config)
+-		return 0;
 -
- INTEL PMIC GPIO DRIVERS
- M:	Andy Shevchenko <andy@kernel.org>
- S:	Maintained
+-	else
+-		return -EINVAL;
++	return telm_core_conf.plt_config;
+ }
+-EXPORT_SYMBOL_GPL(telemetry_pltconfig_valid);
++EXPORT_SYMBOL_GPL(telemetry_get_pltdata);
+ 
+ static inline int telemetry_get_pssevtname(enum telemetry_unit telem_unit,
+ 					   const char **name, int len)
+diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
+index 8e3fb55ac1ae..85a456aa0ab9 100644
+--- a/drivers/platform/x86/intel_telemetry_debugfs.c
++++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+@@ -911,8 +911,7 @@ static int __init telemetry_debugfs_init(void)
+ 
+ 	debugfs_conf = (struct telemetry_debugfs_conf *)id->driver_data;
+ 
+-	err = telemetry_pltconfig_valid();
+-	if (err < 0) {
++	if (!telemetry_get_pltdata()) {
+ 		pr_info("Invalid pltconfig, ensure IPC1 device is enabled in BIOS\n");
+ 		return -ENODEV;
+ 	}
 -- 
 2.25.1
