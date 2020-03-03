@@ -1,106 +1,25 @@
-From: Gayatri Kammela <gayatri.kammela@intel.com>
-Subject: [PATCH v4] platform/x86: intel_pmc_core: fix: Make pmc_core_lpm_display() generic for platforms that support sub-states
-Date: Tue,  3 Mar 2020 13:28:08 -0800
-Message-ID: <d770d0ed104ae009a98d72e85eae1ce4d63866b4.1583265275.git.gayatri.kammela@intel.com>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 0/2] tools/power/x86/intel-speed-select: Bug fixes for
+Date: Tue,  3 Mar 2020 14:50:42 -0800
+Message-ID: <20200303225044.362525-1-srinivas.pandruvada@linux.intel.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com, dvhart@infradead.org, mika.westerberg@intel.com, peterz@infradead.org, charles.d.prestopine@intel.com, Gayatri Kammela <gayatri.kammela@intel.com>, Chen Zhou <chenzhou10@huawei.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "David E . Box" <david.e.box@intel.com>
+To: andriy.shevchenko@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, prarit@redhat.com, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Currently pmc_core_lpm_display() uses array of struct pointers i.e.,
-tgl_lpm_maps for Tiger Lake directly to iterate through and to get the
-number of status/live status registers which is hardcoded and cannot
-be re-used for future platforms that support sub-states. To maintain
-readability, make pmc_core_lpm_display() generic, so that it can re-used
-for future platforms.
+The latest code at 5.6-* cycle has two bugs related to CPU count and
+sending of CLOS_PM_QOS_CONFIG.
 
-Cc: Chen Zhou <chenzhou10@huawei.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David E. Box <david.e.box@intel.com>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
----
+Srinivas Pandruvada (2):
+  tools/power/x86/intel-speed-select: Fix mailbox usage for
+    CLOS_PM_QOS_CONFIG
+  tools/power/x86/intel-speed-select: Fix last cpu number
 
-Changes since v1:
-1) Changed the order of the patches i.e., patch 2 in v1 is made first in
-   the order for v2.
-2) Fixed the warnings reported by kbuild test robot.
+ tools/power/x86/intel-speed-select/isst-config.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Changes since v2:
-1) Add "Make pmc_core_substate_res_show() generic" patch to v3.
-2) Fixed the memory leak issue in pmc_core_lpm_display().
-3) Moved patch 2 in v2 to the last in the series in v3.
-
-Changes since v3:
-1) Addressed the comments received in v3.
-2) Sending this patch alone in v4
-
- drivers/platform/x86/intel_pmc_core.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 986fe677d6fe..6ddb74d05ea6 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -20,6 +20,7 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
-+#include <linux/slab.h>
- #include <linux/suspend.h>
- #include <linux/uaccess.h>
- 
-@@ -639,20 +640,35 @@ static void pmc_core_slps0_display(struct pmc_dev *pmcdev, struct device *dev,
- 	}
- }
- 
-+static int pmc_core_lpm_get_arr_size(const struct pmc_bit_map **maps)
-+{
-+	int idx;
-+
-+	for (idx = 0; maps[idx]; idx++)
-+		;/* Nothing */
-+
-+	return idx;
-+}
-+
- static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
- 				 struct seq_file *s, u32 offset,
- 				 const char *str,
- 				 const struct pmc_bit_map **maps)
- {
--	u32 lpm_regs[ARRAY_SIZE(tgl_lpm_maps)-1];
--	int index, idx, len = 32, bit_mask;
-+	int index, idx, len = 32, bit_mask, arr_size;
-+	u32 *lpm_regs;
-+
-+	arr_size = pmc_core_lpm_get_arr_size(maps);
-+	lpm_regs = kmalloc_array(arr_size, sizeof(*lpm_regs), GFP_KERNEL);
-+	if (!lpm_regs)
-+		return;
- 
--	for (index = 0; tgl_lpm_maps[index]; index++) {
-+	for (index = 0; index < arr_size; index++) {
- 		lpm_regs[index] = pmc_core_reg_read(pmcdev, offset);
- 		offset += 4;
- 	}
- 
--	for (idx = 0; maps[idx]; idx++) {
-+	for (idx = 0; idx < arr_size; idx++) {
- 		if (dev)
- 			dev_dbg(dev, "\nLPM_%s_%d:\t0x%x\n", str, idx,
- 				lpm_regs[idx]);
-@@ -671,6 +687,8 @@ static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
- 					   lpm_regs[idx] & bit_mask ? 1 : 0);
- 		}
- 	}
-+
-+	kfree(lpm_regs);
- }
- 
- #if IS_ENABLED(CONFIG_DEBUG_FS)
-
-base-commit: 8d92e160dd8fa62a4e52e334ff6dccc885cb6696
 -- 
-2.17.1
+2.24.1
