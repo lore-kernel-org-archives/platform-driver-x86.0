@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v8 16/19] platform/x86: intel_pmc_ipc: Move PCI IDs to intel_scu_pcidrv.c
-Date: Tue,  3 Mar 2020 16:36:46 +0300
-Message-ID: <20200303133649.39819-17-mika.westerberg@linux.intel.com>
+Subject: [PATCH v8 14/19] platform/x86: intel_pmc_ipc: Drop intel_pmc_ipc_command()
+Date: Tue,  3 Mar 2020 16:36:44 +0300
+Message-ID: <20200303133649.39819-15-mika.westerberg@linux.intel.com>
 References: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,191 +12,70 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The PCI probe driver in intel_pmc_ipc.c is a duplicate of what we
-already have in intel_scu_pcidrv.c with the exception that the later also
-creates SCU specific devices. Move the PCI IDs from the intel_pmc_ipc.c
-to intel_scu.c and use driver_data to detect whether SCU devices need to
-be created or not.
-
-Also update Kconfig entry to mention all platforms supported by the
-Intel SCU PCI driver and change dependency from X86_INTEL_MID to PCI
-which is more generic.
+Now that all callers have been converted over to the SCU IPC API we can
+drop intel_pmc_ipc_command().
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/Kconfig            | 13 ++++--
- drivers/platform/x86/intel_pmc_ipc.c    | 61 +------------------------
- drivers/platform/x86/intel_scu_pcidrv.c | 21 +++++++--
- 3 files changed, 27 insertions(+), 68 deletions(-)
+ arch/x86/include/asm/intel_pmc_ipc.h |  8 --------
+ drivers/platform/x86/intel_pmc_ipc.c | 20 --------------------
+ 2 files changed, 28 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 07bfad7d8106..13681f4ec2c5 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1321,7 +1321,7 @@ config INTEL_PMC_CORE
+diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+index ddc964b9c78c..22848df5faaf 100644
+--- a/arch/x86/include/asm/intel_pmc_ipc.h
++++ b/arch/x86/include/asm/intel_pmc_ipc.h
+@@ -27,19 +27,11 @@
  
- config INTEL_PMC_IPC
- 	tristate "Intel PMC IPC Driver"
--	depends on ACPI && PCI
-+	depends on ACPI
- 	select INTEL_SCU_IPC
- 	---help---
- 	This driver provides support for PMC control on some Intel platforms.
-@@ -1343,13 +1343,18 @@ config INTEL_SCU
+ #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
  
- config INTEL_SCU_PCI
- 	bool "Intel SCU PCI driver"
--	depends on X86_INTEL_MID
-+	depends on PCI
- 	select INTEL_SCU
- 	help
- 	  This driver is used to bridge the communications between kernel
- 	  and SCU on some embedded Intel x86 platforms. It also creates
--	  devices that are connected to the SoC through the SCU. This is
--	  not needed for PC-type machines.
-+	  devices that are connected to the SoC through the SCU.
-+	  Platforms supported:
-+	    Medfield
-+	    Clovertrail
-+	    Merrifield
-+	    Broxton
-+	    Apollo Lake
+-int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+-		u32 *out, u32 outlen);
+ int intel_pmc_s0ix_counter_read(u64 *data);
+ int intel_pmc_gcr_read64(u32 offset, u64 *data);
  
- config INTEL_SCU_IPC_UTIL
- 	tristate "Intel SCU IPC utility driver"
+ #else
+ 
+-static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+-		u32 *out, u32 outlen)
+-{
+-	return -EINVAL;
+-}
+-
+ static inline int intel_pmc_s0ix_counter_read(u64 *data)
+ {
+ 	return -EINVAL;
 diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 3ec7a0d1e9b0..c006609ef74b 100644
+index ea85b854c4c6..3ec7a0d1e9b0 100644
 --- a/drivers/platform/x86/intel_pmc_ipc.c
 +++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -17,7 +17,6 @@
- #include <linux/interrupt.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <linux/module.h>
--#include <linux/pci.h>
- #include <linux/platform_device.h>
- 
- #include <asm/intel_pmc_ipc.h>
-@@ -194,50 +193,6 @@ static int update_no_reboot_bit(void *priv, bool set)
+@@ -194,26 +194,6 @@ static int update_no_reboot_bit(void *priv, bool set)
  				    PMC_CFG_NO_REBOOT_MASK, value);
  }
  
--static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+-/**
+- * intel_pmc_ipc_command() -  IPC command with input/output data
+- * @cmd:	IPC command code.
+- * @sub:	IPC command sub type.
+- * @in:		input data of this IPC command.
+- * @inlen:	input data length in bytes.
+- * @out:	output data of this IPC command.
+- * @outlen:	output data length in dwords.
+- *
+- * Send an IPC command to PMC with input/output data.
+- *
+- * Return:	an IPC error code or 0 on success.
+- */
+-int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
+-			  u32 *out, u32 outlen)
 -{
--	struct intel_pmc_ipc_dev *pmc = &ipcdev;
--	struct intel_scu_ipc_pdata pdata = {};
--	struct intel_scu_ipc_dev *scu;
--	int ret;
--
--	/* Only one PMC is supported */
--	if (pmc->dev)
--		return -EBUSY;
--
--	spin_lock_init(&ipcdev.gcr_lock);
--
--	ret = pcim_enable_device(pdev);
--	if (ret)
--		return ret;
--
--	pdata.mem = pdev->resource[0];
--
--	scu = devm_intel_scu_ipc_register(&pdev->dev, &pdata);
--	if (IS_ERR(scu))
--		return PTR_ERR(scu);
--
--	pmc->dev = &pdev->dev;
--
--	pci_set_drvdata(pdev, pmc);
--
--	return 0;
+-	return intel_scu_ipc_dev_command(NULL, cmd, sub, in, inlen, out, outlen);
 -}
+-EXPORT_SYMBOL_GPL(intel_pmc_ipc_command);
 -
--static const struct pci_device_id ipc_pci_ids[] = {
--	{PCI_VDEVICE(INTEL, 0x0a94), 0},
--	{PCI_VDEVICE(INTEL, 0x1a94), 0},
--	{PCI_VDEVICE(INTEL, 0x5a94), 0},
--	{ 0,}
--};
--MODULE_DEVICE_TABLE(pci, ipc_pci_ids);
--
--static struct pci_driver ipc_pci_driver = {
--	.name = "intel_pmc_ipc",
--	.id_table = ipc_pci_ids,
--	.probe = ipc_pci_probe,
--};
--
- static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
- 					      struct device_attribute *attr,
- 					      const char *buf, size_t count)
-@@ -673,25 +628,11 @@ static struct platform_driver ipc_plat_driver = {
- 
- static int __init intel_pmc_ipc_init(void)
+ static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
  {
--	int ret;
--
--	ret = platform_driver_register(&ipc_plat_driver);
--	if (ret) {
--		pr_err("Failed to register PMC ipc platform driver\n");
--		return ret;
--	}
--	ret = pci_register_driver(&ipc_pci_driver);
--	if (ret) {
--		pr_err("Failed to register PMC ipc pci driver\n");
--		platform_driver_unregister(&ipc_plat_driver);
--		return ret;
--	}
--	return ret;
-+	return platform_driver_register(&ipc_plat_driver);
- }
- 
- static void __exit intel_pmc_ipc_exit(void)
- {
--	pci_unregister_driver(&ipc_pci_driver);
- 	platform_driver_unregister(&ipc_plat_driver);
- }
- 
-diff --git a/drivers/platform/x86/intel_scu_pcidrv.c b/drivers/platform/x86/intel_scu_pcidrv.c
-index b869ec2eda0e..8c5fd8240da9 100644
---- a/drivers/platform/x86/intel_scu_pcidrv.c
-+++ b/drivers/platform/x86/intel_scu_pcidrv.c
-@@ -17,6 +17,7 @@
- static int intel_scu_pci_probe(struct pci_dev *pdev,
- 			       const struct pci_device_id *id)
- {
-+	void (*setup_fn)(void) = (void (*)(void))id->driver_data;
- 	struct intel_scu_ipc_data scu_data = {};
- 	struct intel_scu_ipc_dev *scu;
- 	int ret;
-@@ -32,14 +33,26 @@ static int intel_scu_pci_probe(struct pci_dev *pdev,
- 	if (IS_ERR(scu))
- 		return PTR_ERR(scu);
- 
--	intel_scu_devices_create();
-+	if (setup_fn)
-+		setup_fn();
- 	return 0;
- }
- 
-+static void intel_mid_scu_setup(void)
-+{
-+	intel_scu_devices_create();
-+}
-+
- static const struct pci_device_id pci_ids[] = {
--	{ PCI_VDEVICE(INTEL, 0x080e) },
--	{ PCI_VDEVICE(INTEL, 0x08ea) },
--	{ PCI_VDEVICE(INTEL, 0x11a0) },
-+	{ PCI_VDEVICE(INTEL, 0x080e),
-+	  .driver_data = (kernel_ulong_t)intel_mid_scu_setup },
-+	{ PCI_VDEVICE(INTEL, 0x08ea),
-+	  .driver_data = (kernel_ulong_t)intel_mid_scu_setup },
-+	{ PCI_VDEVICE(INTEL, 0x0a94) },
-+	{ PCI_VDEVICE(INTEL, 0x11a0),
-+	  .driver_data = (kernel_ulong_t)intel_mid_scu_setup },
-+	{ PCI_VDEVICE(INTEL, 0x1a94) },
-+	{ PCI_VDEVICE(INTEL, 0x5a94) },
- 	{}
- };
- 
+ 	struct intel_pmc_ipc_dev *pmc = &ipcdev;
 -- 
 2.25.1
