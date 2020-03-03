@@ -1,101 +1,38 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v8 02/19] platform/x86: intel_scu_ipc: Log more information if SCU IPC command fails
-Date: Tue,  3 Mar 2020 16:36:32 +0300
-Message-ID: <20200303133649.39819-3-mika.westerberg@linux.intel.com>
-References: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: Support laptops where the
+ first battery is named BATT
+Date: Tue, 3 Mar 2020 16:46:49 +0200
+Message-ID: <CAHp75VeG0CgORmpsH8q72MAXhgQs29QAXs1w4B4FxReQ01S7dA@mail.gmail.com>
+References: <20200223181832.17131-1-kristian@klausen.dk> <20200224011017.C5207208C4@mail.kernel.org>
+ <e700ebdc-3dce-c151-3ea5-f7ab1e4cb07f@klausen.dk> <CAHp75VcAZZ-d1BQON0ciLoCGt5=1qh4s1jLGhDdApicT+7BEGg@mail.gmail.com>
+ <af54a82e-0b9f-1e88-8741-bd4a3658d8e7@klausen.dk> <CAHp75VfGkn_oGCNyP=RWo9fHvh8YzEy6e7cDCczJefsq2HMRFw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VfGkn_oGCNyP=RWo9fHvh8YzEy6e7cDCczJefsq2HMRFw@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Kristian Klausen <kristian@klausen.dk>
+Cc: Sasha Levin <sashal@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Stable <stable@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Currently we only log an error if the command times out which makes it
-hard to figure out the failing command. This changes the driver to log
-command and subcommand with the error code which should make debugging
-easier. This also allows us to simplify the callers as they don't need
-to log these errors themselves.
+On Tue, Feb 25, 2020 at 11:55 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Tue, Feb 25, 2020 at 11:51 AM Kristian Klausen <kristian@klausen.dk> wrote:
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel_scu_ipc.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+...
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 584e33c37708..e8ea250aeda3 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -147,7 +147,6 @@ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
- 		usleep_range(50, 100);
- 	} while (time_before(jiffies, end));
- 
--	dev_err(&scu->dev, "IPC timed out");
- 	return -ETIMEDOUT;
- }
- 
-@@ -156,10 +155,8 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
- {
- 	int status;
- 
--	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT)) {
--		dev_err(&scu->dev, "IPC timed out\n");
-+	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT))
- 		return -ETIMEDOUT;
--	}
- 
- 	status = ipc_read_status(scu);
- 	if (status & IPC_STATUS_ERR)
-@@ -331,6 +328,7 @@ EXPORT_SYMBOL(intel_scu_ipc_update_register);
- int intel_scu_ipc_simple_command(int cmd, int sub)
- {
- 	struct intel_scu_ipc_dev *scu;
-+	u32 cmdval;
- 	int err;
- 
- 	mutex_lock(&ipclock);
-@@ -339,9 +337,12 @@ int intel_scu_ipc_simple_command(int cmd, int sub)
- 		return -ENODEV;
- 	}
- 	scu = ipcdev;
--	ipc_command(scu, sub << 12 | cmd);
-+	cmdval = sub << 12 | cmd;
-+	ipc_command(scu, cmdval);
- 	err = intel_scu_ipc_check_status(scu);
- 	mutex_unlock(&ipclock);
-+	if (err)
-+		dev_err(&scu->dev, "IPC command %#x failed with %d\n", cmdval, err);
- 	return err;
- }
- EXPORT_SYMBOL(intel_scu_ipc_simple_command);
-@@ -362,6 +363,7 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- 			  u32 *out, int outlen)
- {
- 	struct intel_scu_ipc_dev *scu;
-+	u32 cmdval;
- 	int i, err;
- 
- 	mutex_lock(&ipclock);
-@@ -374,7 +376,8 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- 	for (i = 0; i < inlen; i++)
- 		ipc_data_writel(scu, *in++, 4 * i);
- 
--	ipc_command(scu, (inlen << 16) | (sub << 12) | cmd);
-+	cmdval = (inlen << 16) | (sub << 12) | cmd;
-+	ipc_command(scu, cmdval);
- 	err = intel_scu_ipc_check_status(scu);
- 
- 	if (!err) {
-@@ -383,6 +386,8 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- 	}
- 
- 	mutex_unlock(&ipclock);
-+	if (err)
-+		dev_err(&scu->dev, "IPC command %#x failed with %d\n", cmdval, err);
- 	return err;
- }
- EXPORT_SYMBOL(intel_scu_ipc_command);
+> > Sorry about that, my response does not make any sense.
+> > The change isn't upstream yet, and should be applied upstream first and
+> > the 5.4 and 5.6 tree tree if possible.
+>
+> The usual pattern is to add Fixes tag and Cc: stable@.
+>
+> > Was I wrong CC'ing stable@vger.kernel.org? (suggested by git send-email
+> > due to "Cc: stable@vger.kernel.org")
+
+Kristian, to be clear, I'm waiting for v3 with appropriate tag and Cc
+list applied.
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
