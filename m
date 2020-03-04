@@ -1,36 +1,41 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86: ISST: Fix wrong unregister type
-Date: Tue,  3 Mar 2020 14:53:54 -0800
-Message-ID: <20200303225354.363038-1-srinivas.pandruvada@linux.intel.com>
+From: Leonid Maksymchuk <leonmaxx@gmail.com>
+Subject: [PATCH] platform/x86: asus_wmi: Fix return value of fan_boost_mode_store
+Date: Wed,  4 Mar 2020 13:38:11 +0200
+Message-ID: <20200304113811.31988-1-leonmaxx@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andriy.shevchenko@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, prarit@redhat.com, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: corentin.chary@gmail.com, dvhart@infradead.org, andy@infradead.org, yurii.pavlovskyi@gmail.com, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Leonid Maksymchuk <leonmaxx@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The MMIO driver is not unregistering with the correct type with the ISST
-common core during module removal. This should be unregistered with
-ISST_IF_DEV_MMIO instead of ISST_IF_DEV_MBOX.
+Function fan_boost_mode_store returns 0 if store is successful,
+this leads to infinite loop after any write to it's sysfs entry:
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+# echo 0 >/sys/devices/platform/asus-nb-wmi/fan_boost_mode
+
+This command never ends, one CPU core is at 100% utilization.
+This patch fixes this by returning size of written data.
+
+Fixes: b096f626a682 ("platform/x86: asus-wmi: Switch fan boost mode")
+Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
 ---
- drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c | 2 +-
+ drivers/platform/x86/asus-wmi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-index ad8c7c0df4d9..3584859fcc42 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-@@ -126,7 +126,7 @@ static void isst_if_remove(struct pci_dev *pdev)
- 	struct isst_if_device *punit_dev;
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 612ef5526226..e5d35987c048 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1719,7 +1719,7 @@ static ssize_t fan_boost_mode_store(struct device *dev,
+ 	asus->fan_boost_mode = new_mode;
+ 	fan_boost_mode_write(asus);
  
- 	punit_dev = pci_get_drvdata(pdev);
--	isst_if_cdev_unregister(ISST_IF_DEV_MBOX);
-+	isst_if_cdev_unregister(ISST_IF_DEV_MMIO);
- 	mutex_destroy(&punit_dev->mutex);
+-	return result;
++	return count;
  }
  
+ // Fan boost mode: 0 - normal, 1 - overboost, 2 - silent
 -- 
-2.24.1
+2.25.1
