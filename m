@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 22/27] tools/power/x86/intel-speed-select: Improve CLX commands
-Date: Thu,  5 Mar 2020 14:45:33 -0800
-Message-ID: <20200305224538.490864-23-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 21/27] tools/power/x86/intel-speed-select: Show error for invalid CPUs in the options
+Date: Thu,  5 Mar 2020 14:45:32 -0800
+Message-ID: <20200305224538.490864-22-srinivas.pandruvada@linux.intel.com>
 References: <20200305224538.490864-1-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,60 +12,42 @@ To: andriy.shevchenko@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, prarit@redhat.com, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-CLX doesn't have capability to change the feature in the hardware, but
-this acts as "--auto | -a" option. So even if user didn't specify the
-option, use this as --auto | -a to set cpufreq scaling frequency limits.
-
-Also remove perror with debug_printf as they don't bring any value.
+When --cpu or -c is used to specify target CPUs and non of them are valid,
+display error.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- tools/power/x86/intel-speed-select/isst-config.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 386791aaeca1..a44ec2f76f52 100644
+index 7a8a315ac8d1..386791aaeca1 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1162,7 +1162,7 @@ static void dump_clx_n_config_for_cpu(int cpu, void *arg1, void *arg2,
+@@ -425,7 +425,7 @@ static void for_each_online_target_cpu_in_set(
+ 	void (*callback)(int, void *, void *, void *, void *), void *arg1,
+ 	void *arg2, void *arg3, void *arg4)
+ {
+-	int i;
++	int i, found = 0;
  
- 	ret = clx_n_config(cpu);
- 	if (ret) {
--		perror("isst_get_process_ctdp");
-+		debug_printf("clx_n_config failed");
- 	} else {
- 		struct isst_pkg_ctdp_level_info *ctdp_level;
- 		struct isst_pbf_info *pbf_info;
-@@ -1419,7 +1419,7 @@ static int set_clx_pbf_cpufreq_scaling_min_max(int cpu)
+ 	for (i = 0; i < topo_max_cpus; ++i) {
+ 		int online;
+@@ -439,9 +439,14 @@ static void for_each_online_target_cpu_in_set(
+ 			online =
+ 				1; /* online entry for CPU 0 needs some special configs */
  
- 	ret = clx_n_config(cpu);
- 	if (ret) {
--		perror("set_clx_pbf_cpufreq_scaling_min_max");
-+		debug_printf("cpufreq_scaling_min_max failed for CLX");
- 		return ret;
+-		if (online && callback)
++		if (online && callback) {
+ 			callback(i, arg1, arg2, arg3, arg4);
++			found = 1;
++		}
  	}
++
++	if (!found)
++		fprintf(stderr, "No valid CPU in the list\n");
+ }
  
-@@ -1635,17 +1635,13 @@ static void set_pbf_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 	int status = *(int *)arg4;
- 
- 	if (is_clx_n_platform()) {
-+		ret = 0;
- 		if (status) {
--			ret = 0;
--			if (auto_mode)
--				set_clx_pbf_cpufreq_scaling_min_max(cpu);
-+			set_clx_pbf_cpufreq_scaling_min_max(cpu);
- 
- 		} else {
--			ret = -1;
--			if (auto_mode) {
--				set_scaling_max_to_cpuinfo_max(cpu);
--				set_scaling_min_to_cpuinfo_min(cpu);
--			}
-+			set_scaling_max_to_cpuinfo_max(cpu);
-+			set_scaling_min_to_cpuinfo_min(cpu);
- 		}
- 		goto disp_result;
- 	}
+ #define BITMASK_SIZE 32
 -- 
 2.24.1
