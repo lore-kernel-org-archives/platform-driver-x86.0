@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 06/27] tools/power/x86/intel-speed-select: Max CPU count calculation when CPU0 is offline
-Date: Thu,  5 Mar 2020 14:45:17 -0800
-Message-ID: <20200305224538.490864-7-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 03/27] tools/power/x86/intel-speed-select: Enhance core-power info command
+Date: Thu,  5 Mar 2020 14:45:14 -0800
+Message-ID: <20200305224538.490864-4-srinivas.pandruvada@linux.intel.com>
 References: <20200305224538.490864-1-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,48 +12,105 @@ To: andriy.shevchenko@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, prarit@redhat.com, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Currently /sys/devices/system/cpu/cpu0/topology/thread_siblings is used to
-get the max CPU count. But when CPU0 is offline, then this file will be
-absent.
+In addition to CLOS enable status, also show the core-power feature
+status. This will help why clos enable status didn't give desired
+results as the core-power feature may be disabled or unsupported.
 
-So add processing so that we can get count from any first CPU in the
-system. which is online.
+The new display looks as follows:
+
+$intel-speed-select core-power info
+Intel(R) Speed Select Technology
+..
+ package-0
+  die-0
+    cpu-0
+      core-power
+        support-status:supported
+        enable-status:enabled
+        clos-enable-status:1
+        priority-type:0
+
+In the above display "support-status" and "enable-status", shows the
+status of the core-power feature and "clos-enable-status", shows the
+status of the clos.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../power/x86/intel-speed-select/isst-config.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ .../power/x86/intel-speed-select/isst-config.c  |  9 +++++++--
+ .../power/x86/intel-speed-select/isst-display.c | 17 ++++++++++++++++-
+ tools/power/x86/intel-speed-select/isst.h       |  4 +++-
+ 3 files changed, 26 insertions(+), 4 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index b8f4846d7c78..c773c6cc02a5 100644
+index c0de18e10cda..405b03cba248 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -316,10 +316,24 @@ static void set_max_cpu_num(void)
- {
- 	FILE *filep;
- 	unsigned long dummy;
-+	int i;
+@@ -1754,8 +1754,13 @@ static void get_clos_info_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
+ 	ret = isst_clos_get_clos_information(cpu, &enable, &prio_type);
+ 	if (ret)
+ 		perror("isst_clos_get_info");
+-	else
+-		isst_clos_display_clos_information(cpu, outf, enable, prio_type);
++	else {
++		int cp_state, cp_cap;
++
++		isst_read_pm_config(cpu, &cp_state, &cp_cap);
++		isst_clos_display_clos_information(cpu, outf, enable, prio_type,
++						   cp_state, cp_cap);
++	}
+ }
  
- 	topo_max_cpus = 0;
--	filep = fopen_or_exit(
--		"/sys/devices/system/cpu/cpu0/topology/thread_siblings", "r");
-+	for (i = 0; i < 256; ++i) {
-+		char path[256];
+ static void dump_clos_info(int arg)
+diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
+index 3d70be2a9f61..30377acb909d 100644
+--- a/tools/power/x86/intel-speed-select/isst-display.c
++++ b/tools/power/x86/intel-speed-select/isst-display.c
+@@ -589,7 +589,8 @@ void isst_clos_display_information(int cpu, FILE *outf, int clos,
+ }
+ 
+ void isst_clos_display_clos_information(int cpu, FILE *outf,
+-					int clos_enable, int type)
++					int clos_enable, int type,
++					int state, int cap)
+ {
+ 	char header[256];
+ 	char value[256];
+@@ -605,7 +606,21 @@ void isst_clos_display_clos_information(int cpu, FILE *outf,
+ 	snprintf(header, sizeof(header), "core-power");
+ 	format_and_print(outf, 4, header, NULL);
+ 
++	snprintf(header, sizeof(header), "support-status");
++	if (cap)
++		snprintf(value, sizeof(value), "supported");
++	else
++		snprintf(value, sizeof(value), "unsupported");
++	format_and_print(outf, 5, header, value);
 +
-+		snprintf(path, sizeof(path),
-+			 "/sys/devices/system/cpu/cpu%d/topology/thread_siblings", i);
-+		filep = fopen(path, "r");
-+		if (filep)
-+			break;
-+	}
+ 	snprintf(header, sizeof(header), "enable-status");
++	if (state)
++		snprintf(value, sizeof(value), "enabled");
++	else
++		snprintf(value, sizeof(value), "disabled");
++	format_and_print(outf, 5, header, value);
 +
-+	if (!filep) {
-+		fprintf(stderr, "Can't get max cpu number\n");
-+		exit(0);
-+	}
-+
- 	while (fscanf(filep, "%lx,", &dummy) == 1)
- 		topo_max_cpus += BITMASK_SIZE;
- 	fclose(filep);
++	snprintf(header, sizeof(header), "clos-enable-status");
+ 	snprintf(value, sizeof(value), "%d", clos_enable);
+ 	format_and_print(outf, 5, header, value);
+ 
+diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
+index ad5aa6341d0f..53e147a9a295 100644
+--- a/tools/power/x86/intel-speed-select/isst.h
++++ b/tools/power/x86/intel-speed-select/isst.h
+@@ -245,7 +245,9 @@ extern void isst_display_result(int cpu, FILE *outf, char *feature, char *cmd,
+ 
+ extern int isst_clos_get_clos_information(int cpu, int *enable, int *type);
+ extern void isst_clos_display_clos_information(int cpu, FILE *outf,
+-					       int clos_enable, int type);
++					       int clos_enable, int type,
++					       int state, int cap);
+ extern int is_clx_n_platform(void);
+ extern int get_cpufreq_base_freq(int cpu);
++extern int isst_read_pm_config(int cpu, int *cp_state, int *cp_cap);
+ #endif
 -- 
 2.24.1
