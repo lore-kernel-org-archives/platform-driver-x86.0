@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 03/27] tools/power/x86/intel-speed-select: Enhance core-power info command
-Date: Thu,  5 Mar 2020 14:45:14 -0800
-Message-ID: <20200305224538.490864-4-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 01/27] tools/power/x86/intel-speed-select: Warn for invalid package id
+Date: Thu,  5 Mar 2020 14:45:12 -0800
+Message-ID: <20200305224538.490864-2-srinivas.pandruvada@linux.intel.com>
 References: <20200305224538.490864-1-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,105 +12,39 @@ To: andriy.shevchenko@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, prarit@redhat.com, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-In addition to CLOS enable status, also show the core-power feature
-status. This will help why clos enable status didn't give desired
-results as the core-power feature may be disabled or unsupported.
-
-The new display looks as follows:
-
-$intel-speed-select core-power info
-Intel(R) Speed Select Technology
-..
- package-0
-  die-0
-    cpu-0
-      core-power
-        support-status:supported
-        enable-status:enabled
-        clos-enable-status:1
-        priority-type:0
-
-In the above display "support-status" and "enable-status", shows the
-status of the core-power feature and "clos-enable-status", shows the
-status of the clos.
+When CPU is offline, we can't get package id. So print error for this
+and don't use output.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../power/x86/intel-speed-select/isst-config.c  |  9 +++++++--
- .../power/x86/intel-speed-select/isst-display.c | 17 ++++++++++++++++-
- tools/power/x86/intel-speed-select/isst.h       |  4 +++-
- 3 files changed, 26 insertions(+), 4 deletions(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index c0de18e10cda..405b03cba248 100644
+index c922cfd7ba50..3f019f4f90df 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1754,8 +1754,13 @@ static void get_clos_info_for_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 	ret = isst_clos_get_clos_information(cpu, &enable, &prio_type);
- 	if (ret)
- 		perror("isst_clos_get_info");
--	else
--		isst_clos_display_clos_information(cpu, outf, enable, prio_type);
-+	else {
-+		int cp_state, cp_cap;
-+
-+		isst_read_pm_config(cpu, &cp_state, &cp_cap);
-+		isst_clos_display_clos_information(cpu, outf, enable, prio_type,
-+						   cp_state, cp_cap);
-+	}
- }
+@@ -261,6 +261,10 @@ static void for_each_online_package_in_set(void (*callback)(int, void *, void *,
+ 		if (die_id < 0)
+ 			die_id = 0;
+ 		pkg_id = get_physical_package_id(i);
++		if (pkg_id < 0) {
++			fprintf(stderr, "Failed to get package id, CPU %d may be offline\n", i);
++			continue;
++		}
+ 		/* Create an unique id for package, die combination to store */
+ 		pkg_id = (MAX_PACKAGE_COUNT * pkg_id + die_id);
  
- static void dump_clos_info(int arg)
-diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 3d70be2a9f61..30377acb909d 100644
---- a/tools/power/x86/intel-speed-select/isst-display.c
-+++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -589,7 +589,8 @@ void isst_clos_display_information(int cpu, FILE *outf, int clos,
- }
+@@ -362,6 +366,10 @@ static void set_cpu_present_cpu_mask(void)
+ 				die_id = 0;
  
- void isst_clos_display_clos_information(int cpu, FILE *outf,
--					int clos_enable, int type)
-+					int clos_enable, int type,
-+					int state, int cap)
- {
- 	char header[256];
- 	char value[256];
-@@ -605,7 +606,21 @@ void isst_clos_display_clos_information(int cpu, FILE *outf,
- 	snprintf(header, sizeof(header), "core-power");
- 	format_and_print(outf, 4, header, NULL);
- 
-+	snprintf(header, sizeof(header), "support-status");
-+	if (cap)
-+		snprintf(value, sizeof(value), "supported");
-+	else
-+		snprintf(value, sizeof(value), "unsupported");
-+	format_and_print(outf, 5, header, value);
-+
- 	snprintf(header, sizeof(header), "enable-status");
-+	if (state)
-+		snprintf(value, sizeof(value), "enabled");
-+	else
-+		snprintf(value, sizeof(value), "disabled");
-+	format_and_print(outf, 5, header, value);
-+
-+	snprintf(header, sizeof(header), "clos-enable-status");
- 	snprintf(value, sizeof(value), "%d", clos_enable);
- 	format_and_print(outf, 5, header, value);
- 
-diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
-index ad5aa6341d0f..53e147a9a295 100644
---- a/tools/power/x86/intel-speed-select/isst.h
-+++ b/tools/power/x86/intel-speed-select/isst.h
-@@ -245,7 +245,9 @@ extern void isst_display_result(int cpu, FILE *outf, char *feature, char *cmd,
- 
- extern int isst_clos_get_clos_information(int cpu, int *enable, int *type);
- extern void isst_clos_display_clos_information(int cpu, FILE *outf,
--					       int clos_enable, int type);
-+					       int clos_enable, int type,
-+					       int state, int cap);
- extern int is_clx_n_platform(void);
- extern int get_cpufreq_base_freq(int cpu);
-+extern int isst_read_pm_config(int cpu, int *cp_state, int *cp_cap);
- #endif
+ 			pkg_id = get_physical_package_id(i);
++			if (pkg_id < 0) {
++				fprintf(stderr, "Failed to get package id, CPU %d may be offline\n", i);
++				continue;
++			}
+ 			if (pkg_id < MAX_PACKAGE_COUNT &&
+ 			    die_id < MAX_DIE_PER_PACKAGE) {
+ 				int core_id = get_physical_core_id(i);
 -- 
 2.24.1
