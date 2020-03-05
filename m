@@ -1,7 +1,7 @@
 From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 05/27] tools/power/x86/intel-speed-select: Special handling for CPU 0 online/offline
-Date: Thu,  5 Mar 2020 14:45:16 -0800
-Message-ID: <20200305224538.490864-6-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 08/27] tools/power/x86/intel-speed-select: Helpful warning for missing kernel interface
+Date: Thu,  5 Mar 2020 14:45:19 -0800
+Message-ID: <20200305224538.490864-9-srinivas.pandruvada@linux.intel.com>
 References: <20200305224538.490864-1-srinivas.pandruvada@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,40 +12,79 @@ To: andriy.shevchenko@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, prarit@redhat.com, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-When "-o" option for force online/offline is used with command:
-perf-profile set-config-level
+When the device file "/dev/isst_interface" is not present, instead of
+failing on access, check at the start and print a helpful warning.
 
-If the config level calls for CPU 0 online/offline, then call fails
-as there is special kernel setup required for CPU 0 online/offline
-and the currently not setup for that.
-
-But when call is for online CPU 0, then don't fail. Just warn that
-this system is not setup for CPU 0 online/offline.
+Here CLX platform is an exception, which doesn't depend on the device
+file. So continue for CLX platform.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- tools/power/x86/intel-speed-select/isst-config.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ .../x86/intel-speed-select/isst-config.c      | 34 +++++++++++++------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 405b03cba248..b8f4846d7c78 100644
+index 4773970cda9b..9bf461e57a34 100644
 --- a/tools/power/x86/intel-speed-select/isst-config.c
 +++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -220,8 +220,14 @@ static void set_cpu_online_offline(int cpu, int state)
- 		 "/sys/devices/system/cpu/cpu%d/online", cpu);
+@@ -2408,6 +2408,8 @@ static void print_version(void)
  
- 	fd = open(buffer, O_WRONLY);
--	if (fd < 0)
-+	if (fd < 0) {
-+		if (!cpu && state) {
-+			fprintf(stderr, "This system is not configured for CPU 0 online/offline\n");
-+			fprintf(stderr, "Ignoring online request for CPU 0 as this is already online\n");
-+			return;
-+		}
- 		err(-1, "%s open failed", buffer);
+ static void cmdline(int argc, char **argv)
+ {
++	const char *pathname = "/dev/isst_interface";
++	FILE *fp;
+ 	int opt;
+ 	int option_index = 0;
+ 	int ret;
+@@ -2423,6 +2425,28 @@ static void cmdline(int argc, char **argv)
+ 		{ 0, 0, 0, 0 }
+ 	};
+ 
++	if (geteuid() != 0) {
++		fprintf(stderr, "Must run as root\n");
++		exit(0);
 +	}
++
++	ret = update_cpu_model();
++	if (ret)
++		err(-1, "Invalid CPU model (%d)\n", cpu_model);
++	printf("Intel(R) Speed Select Technology\n");
++	printf("Executing on CPU model:%d[0x%x]\n", cpu_model, cpu_model);
++
++	if (!is_clx_n_platform()) {
++		fp = fopen(pathname, "rb");
++		if (!fp) {
++			fprintf(stderr, "Intel speed select drivers are not loaded on this system.\n");
++			fprintf(stderr, "Verify that kernel config includes CONFIG_INTEL_SPEED_SELECT_INTERFACE.\n");
++			fprintf(stderr, "If the config is included then this is not a supported platform.\n");
++			exit(0);
++		}
++		fclose(fp);
++	}
++
+ 	progname = argv[0];
+ 	while ((opt = getopt_long_only(argc, argv, "+c:df:hio:v", long_options,
+ 				       &option_index)) != -1) {
+@@ -2457,20 +2481,10 @@ static void cmdline(int argc, char **argv)
+ 		}
+ 	}
  
- 	if (state)
- 		ret = write(fd, "1\n", 2);
+-	if (geteuid() != 0) {
+-		fprintf(stderr, "Must run as root\n");
+-		exit(0);
+-	}
+-
+ 	if (optind > (argc - 2)) {
+ 		fprintf(stderr, "Feature name and|or command not specified\n");
+ 		exit(0);
+ 	}
+-	ret = update_cpu_model();
+-	if (ret)
+-		err(-1, "Invalid CPU model (%d)\n", cpu_model);
+-	printf("Intel(R) Speed Select Technology\n");
+-	printf("Executing on CPU model:%d[0x%x]\n", cpu_model, cpu_model);
+ 	set_max_cpu_num();
+ 	store_cpu_topology();
+ 	set_cpu_present_cpu_mask();
 -- 
 2.24.1
