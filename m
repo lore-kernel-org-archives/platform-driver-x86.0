@@ -1,228 +1,126 @@
 From: Logan Gunthorpe <logang@deltatee.com>
-Subject: [PATCH v4 6/7] mm/memory_hotplug: Add pgprot_t to mhp_params
-Date: Fri,  6 Mar 2020 10:08:45 -0700
-Message-ID: <20200306170846.9333-7-logang@deltatee.com>
-References: <20200306170846.9333-1-logang@deltatee.com>
+Subject: [PATCH v4 0/7] Allow setting caching mode in arch_add_memory() for P2PDMA
+Date: Fri,  6 Mar 2020 10:08:39 -0700
+Message-ID: <20200306170846.9333-1-logang@deltatee.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-ia64-owner@vger.kernel.org>
-In-Reply-To: <20200306170846.9333-1-logang@deltatee.com>
-Sender: linux-ia64-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Eric Badger <ebadger@gigaio.com>, Logan Gunthorpe <logang@deltatee.com>, Michal Hocko <mhocko@suse.com>
+Cc: Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Eric Badger <ebadger@gigaio.com>, Logan Gunthorpe <logang@deltatee.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-devm_memremap_pages() is currently used by the PCI P2PDMA code to create
-struct page mappings for IO memory. At present, these mappings are created
-with PAGE_KERNEL which implies setting the PAT bits to be WB. However, on
-x86, an mtrr register will typically override this and force the cache
-type to be UC-. In the case firmware doesn't set this register it is
-effectively WB and will typically result in a machine check exception
-when it's accessed.
+Hi,
 
-Other arches are not currently likely to function correctly seeing they
-don't have any MTRR registers to fall back on.
+This is v4 of the patchset which cleans up a number of minor issues
+from the feedback of v3 and rebases onto v5.6-rc4. Additional feedback
+is welcome.
 
-To solve this, provide a way to specify the pgprot value explicitly to
-arch_add_memory().
+Also worth noting, is that the kernel test robot reports[1] that Patch 3
+in this series improves will-it-scale.per_process_ops by 36%. Though,
+for the life of me, I can't understand why that would be. But it's
+reported the same thing twice now for different versions of the series.
 
-Of the arches that support MEMORY_HOTPLUG: x86_64, and arm64 need a simple
-change to pass the pgprot_t down to their respective functions which set
-up the page tables. For x86_32, set the page tables explicitly using
-_set_memory_prot() (seeing they are already mapped). For ia64, s390 and
-sh, reject anything but PAGE_KERNEL settings -- this should be fine,
-for now, seeing these architectures don't support ZONE_DEVICE.
+Thanks,
 
-A check in __add_pages() is also added to ensure the pgprot parameter was
-set for all arches.
+Logan
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
----
- arch/arm64/mm/mmu.c            |  3 ++-
- arch/ia64/mm/init.c            |  3 +++
- arch/powerpc/mm/mem.c          |  3 ++-
- arch/s390/mm/init.c            |  3 +++
- arch/sh/mm/init.c              |  3 +++
- arch/x86/mm/init_32.c          | 12 ++++++++++++
- arch/x86/mm/init_64.c          |  2 +-
- include/linux/memory_hotplug.h |  3 +++
- mm/memory_hotplug.c            |  5 ++++-
- mm/memremap.c                  |  6 +++---
- 10 files changed, 36 insertions(+), 7 deletions(-)
+[1] https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/5APDKNBEJGVJTJRTI2IIA3P4OC2OEYPS/
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index ee37bca8aba8..ea3fa844a8a2 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -1058,7 +1058,8 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
- 
- 	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
--			     size, PAGE_KERNEL, __pgd_pgtable_alloc, flags);
-+			     size, params->pgprot, __pgd_pgtable_alloc,
-+			     flags);
- 
- 	memblock_clear_nomap(start, size);
- 
-diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
-index 97bbc23ea1e3..d637b4ea3147 100644
---- a/arch/ia64/mm/init.c
-+++ b/arch/ia64/mm/init.c
-@@ -676,6 +676,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 	int ret;
- 
-+	if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
-+		return -EINVAL;
-+
- 	ret = __add_pages(nid, start_pfn, nr_pages, params);
- 	if (ret)
- 		printk("%s: Problem encountered in __add_pages() as ret=%d\n",
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 19b1da5d7eca..832412bc7fad 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -138,7 +138,8 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
- 	resize_hpt_for_hotplug(memblock_phys_mem_size());
- 
- 	start = (unsigned long)__va(start);
--	rc = create_section_mapping(start, start + size, nid, PAGE_KERNEL);
-+	rc = create_section_mapping(start, start + size, nid,
-+				    params->pgprot);
- 	if (rc) {
- 		pr_warn("Unable to create mapping for hot added memory 0x%llx..0x%llx: %d\n",
- 			start, start + size, rc);
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index e9e4a7abd0cc..87b2d024e75a 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -277,6 +277,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 	if (WARN_ON_ONCE(params->altmap))
- 		return -EINVAL;
- 
-+	if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
-+		return -EINVAL;
-+
- 	rc = vmem_add_mapping(start, size);
- 	if (rc)
- 		return rc;
-diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-index e5114c053364..b9de2d4fa57e 100644
---- a/arch/sh/mm/init.c
-+++ b/arch/sh/mm/init.c
-@@ -412,6 +412,9 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 	int ret;
- 
-+	if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot)
-+		return -EINVAL;
-+
- 	/* We only have ZONE_NORMAL, so this is easy.. */
- 	ret = __add_pages(nid, start_pfn, nr_pages, params);
- 	if (unlikely(ret))
-diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-index e25a4218e6ff..69128f1a22ac 100644
---- a/arch/x86/mm/init_32.c
-+++ b/arch/x86/mm/init_32.c
-@@ -858,6 +858,18 @@ int arch_add_memory(int nid, u64 start, u64 size,
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
-+	int ret;
-+
-+	/*
-+	 * The page tables were already mapped at boot so if the caller
-+	 * requests a different mapping type then we must change all the
-+	 * pages with __set_memory_prot().
-+	 */
-+	if (params->pgprot.pgprot != PAGE_KERNEL.pgprot) {
-+		ret = __set_memory_prot(start, nr_pages, params->pgprot);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	return __add_pages(nid, start_pfn, nr_pages, params);
- }
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 9e7692080dda..230240af38b4 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -868,7 +868,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 
--	init_memory_mapping(start, start + size, PAGE_KERNEL);
-+	init_memory_mapping(start, start + size, params->pgprot);
- 
- 	return add_pages(nid, start_pfn, nr_pages, params);
- }
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index c5df1b3dada0..3195d11876ea 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -56,9 +56,12 @@ enum {
- /*
-  * Extended parameters for memory hotplug:
-  * altmap: alternative allocator for memmap array (optional)
-+ * pgprot: page protection flags to apply to newly created page tables
-+ *	(required)
-  */
- struct mhp_params {
- 	struct vmem_altmap *altmap;
-+	pgprot_t pgprot;
- };
- 
- /*
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index c69469e1b40e..d7d4806ad81b 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -305,6 +305,9 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
- 	unsigned long nr, start_sec, end_sec;
- 	struct vmem_altmap *altmap = params->altmap;
- 
-+	if (WARN_ON_ONCE(!params->pgprot.pgprot))
-+		return -EINVAL;
-+
- 	err = check_hotplug_memory_addressable(pfn, nr_pages);
- 	if (err)
- 		return err;
-@@ -993,7 +996,7 @@ static int online_memory_block(struct memory_block *mem, void *arg)
-  */
- int __ref add_memory_resource(int nid, struct resource *res)
- {
--	struct mhp_params params = {};
-+	struct mhp_params params = { .pgprot = PAGE_KERNEL };
- 	u64 start, size;
- 	bool new_node = false;
- 	int ret;
-diff --git a/mm/memremap.c b/mm/memremap.c
-index 6891a503a078..06742372a203 100644
---- a/mm/memremap.c
-+++ b/mm/memremap.c
-@@ -166,8 +166,8 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
- 		 * We do not want any optional features only our own memmap
- 		 */
- 		.altmap = pgmap_altmap(pgmap),
-+		.pgprot = PAGE_KERNEL,
- 	};
--	pgprot_t pgprot = PAGE_KERNEL;
- 	int error, is_ram;
- 	bool need_devmap_managed = true;
- 
-@@ -255,8 +255,8 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
- 	if (nid < 0)
- 		nid = numa_mem_id();
- 
--	error = track_pfn_remap(NULL, &pgprot, PHYS_PFN(res->start), 0,
--			resource_size(res));
-+	error = track_pfn_remap(NULL, &params.pgprot, PHYS_PFN(res->start),
-+				0, resource_size(res));
- 	if (error)
- 		goto err_pfn_remap;
- 
--- 
+--
+
+Changes in v4:
+ * Rebased onto v5.6-rc4
+ * Collected tags form David, Dan and Michal
+ * Minor changes to the new _set_memory_prot() function and added some
+   comments as requested by Dan.
+ * Changed the default caching type for P2PDMA memory to UC instead of
+   WC per Jason's concerns that WC might be more generally unsafe.
+
+Changes in v3:
+ * Rebased onto v5.6-rc2
+ * Rename mhp_modifiers to mhp_params per David with an updated kernel
+   doc per Dan
+ * Drop support for s390 per David seeing it does not support
+   ZONE_DEVICE yet and there was a potential problem with huge pages.
+ * Added WARN_ON_ONCE in cases where arches recieve non PAGE_KERNEL
+   parameters
+ * Collected David and Micheal's Reviewed-By and Acked-by Tags
+
+Changes in v2:
+ * Rebased onto v5.5-rc5
+ * Renamed mhp_restrictions to mhp_modifiers and added the pgprot field
+   to that structure instead of using an argument for
+   arch_add_memory().
+ * Add patch to drop the unused flags field in mhp_restrictions
+
+A git branch is available here:
+
+https://github.com/sbates130272/linux-p2pmem remap_pages_cache_v4
+
+--
+
+Currently, the page tables created using memremap_pages() are always
+created with the PAGE_KERNEL cacheing mode. However, the P2PDMA code
+is creating pages for PCI BAR memory which should never be accessed
+through the cache and instead use either WC or UC. This still works in
+most cases, on x86, because the MTRR registers typically override the
+caching settings in the page tables for all of the IO memory to be
+UC-. However, this tends not to work so well on other arches or
+some rare x86 machines that have firmware which does not setup the
+MTRR registers in this way.
+
+Instead of this, this series proposes a change to arch_add_memory()
+to take the pgprot required by the mapping which allows us to
+explicitly set pagetable entries for P2PDMA memory to UC.
+
+This changes is pretty routine for most of the arches: x86_64, arm64
+and powerpc simply need to thread the pgprot through to where the page
+tables are setup. x86_32 unfortunately sets up the page tables at boot so
+must use _set_memory_prot() to change their caching mode. ia64, s390 and sh
+don't appear to have an easy way to change the page tables so, for now
+at least, we just return -EINVAL on such mappings and thus they will
+not support P2PDMA memory until the work for this is done. This should
+be fine as they don't yet support ZONE_DEVICE.
+
+--
+
+Logan Gunthorpe (7):
+  mm/memory_hotplug: Drop the flags field from struct mhp_restrictions
+  mm/memory_hotplug: Rename mhp_restrictions to mhp_params
+  x86/mm: Thread pgprot_t through init_memory_mapping()
+  x86/mm: Introduce __set_memory_prot()
+  powerpc/mm: Thread pgprot_t through create_section_mapping()
+  mm/memory_hotplug: Add pgprot_t to mhp_params
+  mm/memremap: Set caching mode for PCI P2PDMA memory to WC
+
+ arch/arm64/mm/mmu.c                        |  7 ++--
+ arch/ia64/mm/init.c                        |  7 ++--
+ arch/powerpc/include/asm/book3s/64/hash.h  |  3 +-
+ arch/powerpc/include/asm/book3s/64/radix.h |  3 +-
+ arch/powerpc/include/asm/sparsemem.h       |  3 +-
+ arch/powerpc/mm/book3s64/hash_utils.c      |  5 +--
+ arch/powerpc/mm/book3s64/pgtable.c         |  7 ++--
+ arch/powerpc/mm/book3s64/radix_pgtable.c   | 18 ++++++----
+ arch/powerpc/mm/mem.c                      | 10 +++---
+ arch/s390/mm/init.c                        |  9 +++--
+ arch/sh/mm/init.c                          |  7 ++--
+ arch/x86/include/asm/page_types.h          |  3 --
+ arch/x86/include/asm/pgtable.h             |  3 ++
+ arch/x86/include/asm/set_memory.h          |  1 +
+ arch/x86/kernel/amd_gart_64.c              |  3 +-
+ arch/x86/mm/init.c                         |  9 ++---
+ arch/x86/mm/init_32.c                      | 19 ++++++++--
+ arch/x86/mm/init_64.c                      | 40 ++++++++++++----------
+ arch/x86/mm/mm_internal.h                  |  3 +-
+ arch/x86/mm/pat/set_memory.c               | 13 +++++++
+ arch/x86/platform/uv/bios_uv.c             |  3 +-
+ include/linux/memory_hotplug.h             | 21 ++++++------
+ mm/memory_hotplug.c                        | 11 +++---
+ mm/memremap.c                              | 17 +++++----
+ 24 files changed, 144 insertions(+), 81 deletions(-)
+
+
+base-commit: 98d54f81e36ba3bf92172791eba5ca5bd813989b
+--
 2.20.1
