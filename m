@@ -1,126 +1,204 @@
 From: Logan Gunthorpe <logang@deltatee.com>
-Subject: [PATCH v4 0/7] Allow setting caching mode in arch_add_memory() for P2PDMA
-Date: Fri,  6 Mar 2020 10:08:39 -0700
-Message-ID: <20200306170846.9333-1-logang@deltatee.com>
+Subject: [PATCH v4 5/7] powerpc/mm: Thread pgprot_t through create_section_mapping()
+Date: Fri,  6 Mar 2020 10:08:44 -0700
+Message-ID: <20200306170846.9333-6-logang@deltatee.com>
+References: <20200306170846.9333-1-logang@deltatee.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200306170846.9333-1-logang@deltatee.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Eric Badger <ebadger@gigaio.com>, Logan Gunthorpe <logang@deltatee.com>
+Cc: Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Eric Badger <ebadger@gigaio.com>, Logan Gunthorpe <logang@deltatee.com>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+In prepartion to support a pgprot_t argument for arch_add_memory().
 
-This is v4 of the patchset which cleans up a number of minor issues
-from the feedback of v3 and rebases onto v5.6-rc4. Additional feedback
-is welcome.
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ arch/powerpc/include/asm/book3s/64/hash.h  |  3 ++-
+ arch/powerpc/include/asm/book3s/64/radix.h |  3 ++-
+ arch/powerpc/include/asm/sparsemem.h       |  3 ++-
+ arch/powerpc/mm/book3s64/hash_utils.c      |  5 +++--
+ arch/powerpc/mm/book3s64/pgtable.c         |  7 ++++---
+ arch/powerpc/mm/book3s64/radix_pgtable.c   | 18 +++++++++++-------
+ arch/powerpc/mm/mem.c                      |  5 +++--
+ 7 files changed, 27 insertions(+), 17 deletions(-)
 
-Also worth noting, is that the kernel test robot reports[1] that Patch 3
-in this series improves will-it-scale.per_process_ops by 36%. Though,
-for the life of me, I can't understand why that would be. But it's
-reported the same thing twice now for different versions of the series.
-
-Thanks,
-
-Logan
-
-[1] https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/5APDKNBEJGVJTJRTI2IIA3P4OC2OEYPS/
-
---
-
-Changes in v4:
- * Rebased onto v5.6-rc4
- * Collected tags form David, Dan and Michal
- * Minor changes to the new _set_memory_prot() function and added some
-   comments as requested by Dan.
- * Changed the default caching type for P2PDMA memory to UC instead of
-   WC per Jason's concerns that WC might be more generally unsafe.
-
-Changes in v3:
- * Rebased onto v5.6-rc2
- * Rename mhp_modifiers to mhp_params per David with an updated kernel
-   doc per Dan
- * Drop support for s390 per David seeing it does not support
-   ZONE_DEVICE yet and there was a potential problem with huge pages.
- * Added WARN_ON_ONCE in cases where arches recieve non PAGE_KERNEL
-   parameters
- * Collected David and Micheal's Reviewed-By and Acked-by Tags
-
-Changes in v2:
- * Rebased onto v5.5-rc5
- * Renamed mhp_restrictions to mhp_modifiers and added the pgprot field
-   to that structure instead of using an argument for
-   arch_add_memory().
- * Add patch to drop the unused flags field in mhp_restrictions
-
-A git branch is available here:
-
-https://github.com/sbates130272/linux-p2pmem remap_pages_cache_v4
-
---
-
-Currently, the page tables created using memremap_pages() are always
-created with the PAGE_KERNEL cacheing mode. However, the P2PDMA code
-is creating pages for PCI BAR memory which should never be accessed
-through the cache and instead use either WC or UC. This still works in
-most cases, on x86, because the MTRR registers typically override the
-caching settings in the page tables for all of the IO memory to be
-UC-. However, this tends not to work so well on other arches or
-some rare x86 machines that have firmware which does not setup the
-MTRR registers in this way.
-
-Instead of this, this series proposes a change to arch_add_memory()
-to take the pgprot required by the mapping which allows us to
-explicitly set pagetable entries for P2PDMA memory to UC.
-
-This changes is pretty routine for most of the arches: x86_64, arm64
-and powerpc simply need to thread the pgprot through to where the page
-tables are setup. x86_32 unfortunately sets up the page tables at boot so
-must use _set_memory_prot() to change their caching mode. ia64, s390 and sh
-don't appear to have an easy way to change the page tables so, for now
-at least, we just return -EINVAL on such mappings and thus they will
-not support P2PDMA memory until the work for this is done. This should
-be fine as they don't yet support ZONE_DEVICE.
-
---
-
-Logan Gunthorpe (7):
-  mm/memory_hotplug: Drop the flags field from struct mhp_restrictions
-  mm/memory_hotplug: Rename mhp_restrictions to mhp_params
-  x86/mm: Thread pgprot_t through init_memory_mapping()
-  x86/mm: Introduce __set_memory_prot()
-  powerpc/mm: Thread pgprot_t through create_section_mapping()
-  mm/memory_hotplug: Add pgprot_t to mhp_params
-  mm/memremap: Set caching mode for PCI P2PDMA memory to WC
-
- arch/arm64/mm/mmu.c                        |  7 ++--
- arch/ia64/mm/init.c                        |  7 ++--
- arch/powerpc/include/asm/book3s/64/hash.h  |  3 +-
- arch/powerpc/include/asm/book3s/64/radix.h |  3 +-
- arch/powerpc/include/asm/sparsemem.h       |  3 +-
- arch/powerpc/mm/book3s64/hash_utils.c      |  5 +--
- arch/powerpc/mm/book3s64/pgtable.c         |  7 ++--
- arch/powerpc/mm/book3s64/radix_pgtable.c   | 18 ++++++----
- arch/powerpc/mm/mem.c                      | 10 +++---
- arch/s390/mm/init.c                        |  9 +++--
- arch/sh/mm/init.c                          |  7 ++--
- arch/x86/include/asm/page_types.h          |  3 --
- arch/x86/include/asm/pgtable.h             |  3 ++
- arch/x86/include/asm/set_memory.h          |  1 +
- arch/x86/kernel/amd_gart_64.c              |  3 +-
- arch/x86/mm/init.c                         |  9 ++---
- arch/x86/mm/init_32.c                      | 19 ++++++++--
- arch/x86/mm/init_64.c                      | 40 ++++++++++++----------
- arch/x86/mm/mm_internal.h                  |  3 +-
- arch/x86/mm/pat/set_memory.c               | 13 +++++++
- arch/x86/platform/uv/bios_uv.c             |  3 +-
- include/linux/memory_hotplug.h             | 21 ++++++------
- mm/memory_hotplug.c                        | 11 +++---
- mm/memremap.c                              | 17 +++++----
- 24 files changed, 144 insertions(+), 81 deletions(-)
-
-
-base-commit: 98d54f81e36ba3bf92172791eba5ca5bd813989b
---
+diff --git a/arch/powerpc/include/asm/book3s/64/hash.h b/arch/powerpc/include/asm/book3s/64/hash.h
+index 2781ebf6add4..6fc4520092c7 100644
+--- a/arch/powerpc/include/asm/book3s/64/hash.h
++++ b/arch/powerpc/include/asm/book3s/64/hash.h
+@@ -251,7 +251,8 @@ extern int __meminit hash__vmemmap_create_mapping(unsigned long start,
+ extern void hash__vmemmap_remove_mapping(unsigned long start,
+ 				     unsigned long page_size);
+ 
+-int hash__create_section_mapping(unsigned long start, unsigned long end, int nid);
++int hash__create_section_mapping(unsigned long start, unsigned long end,
++				 int nid, pgprot_t prot);
+ int hash__remove_section_mapping(unsigned long start, unsigned long end);
+ 
+ #endif /* !__ASSEMBLY__ */
+diff --git a/arch/powerpc/include/asm/book3s/64/radix.h b/arch/powerpc/include/asm/book3s/64/radix.h
+index d97db3ad9aae..46799f3c3d1d 100644
+--- a/arch/powerpc/include/asm/book3s/64/radix.h
++++ b/arch/powerpc/include/asm/book3s/64/radix.h
+@@ -289,7 +289,8 @@ static inline unsigned long radix__get_tree_size(void)
+ }
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
+-int radix__create_section_mapping(unsigned long start, unsigned long end, int nid);
++int radix__create_section_mapping(unsigned long start, unsigned long end,
++				  int nid, pgprot_t prot);
+ int radix__remove_section_mapping(unsigned long start, unsigned long end);
+ #endif /* CONFIG_MEMORY_HOTPLUG */
+ #endif /* __ASSEMBLY__ */
+diff --git a/arch/powerpc/include/asm/sparsemem.h b/arch/powerpc/include/asm/sparsemem.h
+index 3192d454a733..c89b32443cff 100644
+--- a/arch/powerpc/include/asm/sparsemem.h
++++ b/arch/powerpc/include/asm/sparsemem.h
+@@ -13,7 +13,8 @@
+ #endif /* CONFIG_SPARSEMEM */
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
+-extern int create_section_mapping(unsigned long start, unsigned long end, int nid);
++extern int create_section_mapping(unsigned long start, unsigned long end,
++				  int nid, pgprot_t prot);
+ extern int remove_section_mapping(unsigned long start, unsigned long end);
+ 
+ #ifdef CONFIG_PPC_BOOK3S_64
+diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+index 523d4d39d11e..201738e07a1d 100644
+--- a/arch/powerpc/mm/book3s64/hash_utils.c
++++ b/arch/powerpc/mm/book3s64/hash_utils.c
+@@ -809,7 +809,8 @@ int resize_hpt_for_hotplug(unsigned long new_mem_size)
+ 	return 0;
+ }
+ 
+-int hash__create_section_mapping(unsigned long start, unsigned long end, int nid)
++int hash__create_section_mapping(unsigned long start, unsigned long end,
++				 int nid, pgprot_t prot)
+ {
+ 	int rc;
+ 
+@@ -819,7 +820,7 @@ int hash__create_section_mapping(unsigned long start, unsigned long end, int nid
+ 	}
+ 
+ 	rc = htab_bolt_mapping(start, end, __pa(start),
+-			       pgprot_val(PAGE_KERNEL), mmu_linear_psize,
++			       pgprot_val(prot), mmu_linear_psize,
+ 			       mmu_kernel_ssize);
+ 
+ 	if (rc < 0) {
+diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
+index 2bf7e1b4fd82..e0bb69c616e4 100644
+--- a/arch/powerpc/mm/book3s64/pgtable.c
++++ b/arch/powerpc/mm/book3s64/pgtable.c
+@@ -171,12 +171,13 @@ void mmu_cleanup_all(void)
+ }
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
+-int __meminit create_section_mapping(unsigned long start, unsigned long end, int nid)
++int __meminit create_section_mapping(unsigned long start, unsigned long end,
++				     int nid, pgprot_t prot)
+ {
+ 	if (radix_enabled())
+-		return radix__create_section_mapping(start, end, nid);
++		return radix__create_section_mapping(start, end, nid, prot);
+ 
+-	return hash__create_section_mapping(start, end, nid);
++	return hash__create_section_mapping(start, end, nid, prot);
+ }
+ 
+ int __meminit remove_section_mapping(unsigned long start, unsigned long end)
+diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
+index dd1bea45325c..0ef10b5c26ba 100644
+--- a/arch/powerpc/mm/book3s64/radix_pgtable.c
++++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
+@@ -253,7 +253,7 @@ static unsigned long next_boundary(unsigned long addr, unsigned long end)
+ 
+ static int __meminit create_physical_mapping(unsigned long start,
+ 					     unsigned long end,
+-					     int nid)
++					     int nid, pgprot_t _prot)
+ {
+ 	unsigned long vaddr, addr, mapping_size = 0;
+ 	bool prev_exec, exec = false;
+@@ -289,7 +289,7 @@ static int __meminit create_physical_mapping(unsigned long start,
+ 			prot = PAGE_KERNEL_X;
+ 			exec = true;
+ 		} else {
+-			prot = PAGE_KERNEL;
++			prot = _prot;
+ 			exec = false;
+ 		}
+ 
+@@ -333,7 +333,7 @@ static void __init radix_init_pgtable(void)
+ 
+ 		WARN_ON(create_physical_mapping(reg->base,
+ 						reg->base + reg->size,
+-						-1));
++						-1, PAGE_KERNEL));
+ 	}
+ 
+ 	/* Find out how many PID bits are supported */
+@@ -712,8 +712,10 @@ static int __meminit stop_machine_change_mapping(void *data)
+ 
+ 	spin_unlock(&init_mm.page_table_lock);
+ 	pte_clear(&init_mm, params->aligned_start, params->pte);
+-	create_physical_mapping(__pa(params->aligned_start), __pa(params->start), -1);
+-	create_physical_mapping(__pa(params->end), __pa(params->aligned_end), -1);
++	create_physical_mapping(__pa(params->aligned_start),
++				__pa(params->start), -1, PAGE_KERNEL);
++	create_physical_mapping(__pa(params->end), __pa(params->aligned_end),
++				-1, PAGE_KERNEL);
+ 	spin_lock(&init_mm.page_table_lock);
+ 	return 0;
+ }
+@@ -870,14 +872,16 @@ static void __meminit remove_pagetable(unsigned long start, unsigned long end)
+ 	radix__flush_tlb_kernel_range(start, end);
+ }
+ 
+-int __meminit radix__create_section_mapping(unsigned long start, unsigned long end, int nid)
++int __meminit radix__create_section_mapping(unsigned long start,
++					    unsigned long end, int nid,
++					    pgprot_t prot)
+ {
+ 	if (end >= RADIX_VMALLOC_START) {
+ 		pr_warn("Outside the supported range\n");
+ 		return -1;
+ 	}
+ 
+-	return create_physical_mapping(__pa(start), __pa(end), nid);
++	return create_physical_mapping(__pa(start), __pa(end), nid, prot);
+ }
+ 
+ int __meminit radix__remove_section_mapping(unsigned long start, unsigned long end)
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index b4bece53bec0..19b1da5d7eca 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -96,7 +96,8 @@ int memory_add_physaddr_to_nid(u64 start)
+ }
+ #endif
+ 
+-int __weak create_section_mapping(unsigned long start, unsigned long end, int nid)
++int __weak create_section_mapping(unsigned long start, unsigned long end,
++				  int nid, pgprot_t prot)
+ {
+ 	return -ENODEV;
+ }
+@@ -137,7 +138,7 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
+ 	resize_hpt_for_hotplug(memblock_phys_mem_size());
+ 
+ 	start = (unsigned long)__va(start);
+-	rc = create_section_mapping(start, start + size, nid);
++	rc = create_section_mapping(start, start + size, nid, PAGE_KERNEL);
+ 	if (rc) {
+ 		pr_warn("Unable to create mapping for hot added memory 0x%llx..0x%llx: %d\n",
+ 			start, start + size, rc);
+-- 
 2.20.1
