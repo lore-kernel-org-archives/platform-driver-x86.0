@@ -1,75 +1,45 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 00/27] tools/power/x86/intel-speed-select: Enhancements
-Date: Thu,  5 Mar 2020 14:45:11 -0800
-Message-ID: <20200305224538.490864-1-srinivas.pandruvada@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: GPD pocket fan: Fix error message when temp-limits are out of range
+Date: Fri,  6 Mar 2020 10:17:24 +0100
+Message-ID: <20200306091724.55347-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andriy.shevchenko@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, prarit@redhat.com, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Pavel Machek <pavel@denx.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-These are not urgent fixes, but improves usability based on user
-feedback. This series addresses:
-- Check validaity of user options for a command
-- Print helpful errors
-- Improves help
-- Enhance existing options like --info
-- Fixes issues with json keys
-- Take care of handling offline CPUs
+Commit 1f27dbd8265d ("platform/x86: GPD pocket fan: Allow somewhat
+lower/higher temperature limits") changed the module-param sanity check
+to accept temperature limits between 20 and 90 degrees celcius.
 
+But the error message printed when the module params are outside this
+range was not updated. This commit updates the error message to match
+the new min and max value for the temp-limits.
 
-Srinivas Pandruvada (27):
-  tools/power/x86/intel-speed-select: Warn for invalid package id
-  tools/power/x86/intel-speed-select: Make target CPU optional for
-    core-power info
-  tools/power/x86/intel-speed-select: Enhance core-power info command
-  tools/power/x86/intel-speed-select: Use more verbiage for clos
-    information
-  tools/power/x86/intel-speed-select: Special handling for CPU 0
-    online/offline
-  tools/power/x86/intel-speed-select: Max CPU count calculation when
-    CPU0 is offline
-  tools/power/x86/intel-speed-select: Store topology information
-  tools/power/x86/intel-speed-select: Helpful warning for missing kernel
-    interface
-  tools/power/x86/intel-speed-select: Enhance help
-  tools/power/x86/intel-speed-select: Enhance --info option
-  tools/power/x86/intel-speed-select: Add an API for error/information
-    print
-  tools/power/x86/intel-speed-select: Improve error display for
-    perf-profile feature
-  tools/power/x86/intel-speed-select: Check feature status first
-  tools/power/x86/intel-speed-select: Display error for invalid priority
-    type
-  tools/power/x86/intel-speed-select: Enhance help for core-power assoc
-  tools/power/x86/intel-speed-select: Improve output of perf-profile
-    commands
-  tools/power/x86/intel-speed-select: Improve error display for
-    base-freq feature
-  tools/power/x86/intel-speed-select: Improve error display for
-    turbo-freq feature
-  tools/power/x86/intel-speed-select: Kernel interface error handling
-  tools/power/x86/intel-speed-select: Improve core-power result and
-    error display
-  tools/power/x86/intel-speed-select: Show error for invalid CPUs in the
-    options
-  tools/power/x86/intel-speed-select: Improve CLX commands
-  tools/power/x86/intel-speed-select: Fix avx options for turbo-freq
-    feature
-  tools/power/x86/intel-speed-select: Print friendly warning for bad
-    command line
-  tools/power/x86/intel-speed-select: Add display for enabled cpus count
-  tools/power/x86/intel-speed-select: Avoid duplicate Package strings
-    for json
-  tools/power/x86/intel-speed-select: Update version
+Reported-by: Pavel Machek <pavel@denx.de>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/gpd-pocket-fan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../x86/intel-speed-select/isst-config.c      | 574 ++++++++++++++----
- .../power/x86/intel-speed-select/isst-core.c  | 117 +++-
- .../x86/intel-speed-select/isst-display.c     | 274 ++++++---
- tools/power/x86/intel-speed-select/isst.h     |  12 +-
- 4 files changed, 752 insertions(+), 225 deletions(-)
-
--- 
-2.24.1
+diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86=
+/gpd-pocket-fan.c
+index b471b86c28fe..5b516e4c2bfb 100644
+--- a/drivers/platform/x86/gpd-pocket-fan.c
++++ b/drivers/platform/x86/gpd-pocket-fan.c
+@@ -128,7 +128,7 @@ static int gpd_pocket_fan_probe(struct platform_devic=
+e *pdev)
+=20
+ 	for (i =3D 0; i < ARRAY_SIZE(temp_limits); i++) {
+ 		if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
+-			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 40000 and=
+ 70000)\n",
++			dev_err(&pdev->dev, "Invalid temp-limit %d (must be between 20000 and=
+ 90000)\n",
+ 				temp_limits[i]);
+ 			temp_limits[0] =3D TEMP_LIMIT0_DEFAULT;
+ 			temp_limits[1] =3D TEMP_LIMIT1_DEFAULT;
+--=20
+2.25.1
