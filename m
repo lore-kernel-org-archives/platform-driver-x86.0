@@ -1,43 +1,55 @@
-From: Logan Gunthorpe <logang@deltatee.com>
-Subject: [PATCH v4 1/7] mm/memory_hotplug: Drop the flags field from struct mhp_restrictions
-Date: Fri,  6 Mar 2020 10:08:40 -0700
-Message-ID: <20200306170846.9333-2-logang@deltatee.com>
-References: <20200306170846.9333-1-logang@deltatee.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH] platform/x86: GPD pocket fan: Fix error message when
+ temp-limits are out of range
+Date: Sat, 7 Mar 2020 22:56:25 +0100
+Message-ID: <20200307215625.GA487@duo.ucw.cz>
+References: <20200306091724.55347-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20200306170846.9333-1-logang@deltatee.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Michal Hocko <mhocko@kernel.org>, David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Christoph Hellwig <hch@lst.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Eric Badger <ebadger@gigaio.com>, Logan Gunthorpe <logang@deltatee.com>, Michal Hocko <mhocko@suse.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200306091724.55347-1-hdegoede@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Pavel Machek <pavel@denx.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This variable is not used anywhere and should therefore be removed
-from the structure.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
----
- include/linux/memory_hotplug.h | 2 --
- 1 file changed, 2 deletions(-)
+--Nq2Wo0NMKNjxTN9z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index f4d59155f3d4..69ff3037528d 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -55,11 +55,9 @@ enum {
- 
- /*
-  * Restrictions for the memory hotplug:
-- * flags:  MHP_ flags
-  * altmap: alternative allocator for memmap array
-  */
- struct mhp_restrictions {
--	unsigned long flags;
- 	struct vmem_altmap *altmap;
- };
- 
--- 
-2.20.1
+On Fri 2020-03-06 10:17:24, Hans de Goede wrote:
+> Commit 1f27dbd8265d ("platform/x86: GPD pocket fan: Allow somewhat
+> lower/higher temperature limits") changed the module-param sanity check
+> to accept temperature limits between 20 and 90 degrees celcius.
+>=20
+> But the error message printed when the module params are outside this
+> range was not updated. This commit updates the error message to match
+> the new min and max value for the temp-limits.
+>=20
+> Reported-by: Pavel Machek <pavel@denx.de>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+
+Acked-by: Pavel Machek <pavel@denx.de>
+
+Thanks!
+							Pavel
+						=09
+--=20
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--Nq2Wo0NMKNjxTN9z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXmQYiQAKCRAw5/Bqldv6
+8tb+AJ4yBCrpbQGEn2I8MQXX4qFv032j5wCfUVKB/C9JdupHUXxdBbUMQtxtnCI=
+=k0AH
+-----END PGP SIGNATURE-----
+
+--Nq2Wo0NMKNjxTN9z--
