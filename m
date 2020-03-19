@@ -1,73 +1,117 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v12 03/10] firmware: Rename FW_OPT_NOFALLBACK to
- FW_OPT_NOFALLBACK_SYSFS
-Date: Wed, 18 Mar 2020 14:56:23 +0100
-Message-ID: <8fa336bd-339f-40e0-08fe-e6b968736679@redhat.com>
-References: <20200115163554.101315-1-hdegoede@redhat.com>
- <20200115163554.101315-4-hdegoede@redhat.com>
- <20200124085751.GA2957916@kroah.com>
- <d25d5d6e-0348-b19f-539e-048cfa70d6a6@redhat.com>
- <20200318132741.GA2794545@kroah.com>
+From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Subject: RE: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes or
+ code
+Date: Thu, 19 Mar 2020 17:57:06 +0000
+Message-ID: <BYAPR11MB3624F3CB24817BB8C5AE6C10F2F40@BYAPR11MB3624.namprd11.prod.outlook.com>
+References: <cover.1583093898.git.gayatri.kammela@intel.com>
+ <20200302125427.GV1224808@smile.fi.intel.com>
+ <BYAPR11MB362421570806431752364CD3F2E70@BYAPR11MB3624.namprd11.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20200318132741.GA2794545@kroah.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <BYAPR11MB362421570806431752364CD3F2E70@BYAPR11MB3624.namprd11.prod.outlook.com>
 Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Jones <pjones@redhat.com>, Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "peterz@infradead.org" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Chen Zhou <chenzhou10@huawei.com>, "Box, David E" <david.e.box@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Greg,
+> -----Original Message-----
+> From: Kammela, Gayatri
+> Sent: Monday, March 2, 2020 10:29 AM
+> To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
+> Somayaji, Vishwanath <vishwanath.somayaji@intel.com>;
+> dvhart@infradead.org; Westerberg, Mika <mika.westerberg@intel.com>;
+> peterz@infradead.org; Prestopine, Charles D
+> <charles.d.prestopine@intel.com>; Chen Zhou <chenzhou10@huawei.com>;
+> Box, David E <david.e.box@intel.com>
+> Subject: RE: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes o=
+r
+> code
+>=20
+> > -----Original Message-----
+> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Sent: Monday, March 2, 2020 4:54 AM
+> > To: Kammela, Gayatri <gayatri.kammela@intel.com>
+> > Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > Somayaji, Vishwanath <vishwanath.somayaji@intel.com>;
+> > dvhart@infradead.org; Westerberg, Mika <mika.westerberg@intel.com>;
+> > peterz@infradead.org; Prestopine, Charles D
+> > <charles.d.prestopine@intel.com>; Chen Zhou
+> <chenzhou10@huawei.com>;
+> > Box, David E <david.e.box@intel.com>
+> > Subject: Re: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug
+> > fixes or code
+> >
+> > On Sun, Mar 01, 2020 at 12:44:21PM -0800, Gayatri Kammela wrote:
+> > > Hi,
+> > >
+> > > This patch series consists of bug fixes and code optimization for
+> > > the series https://patchwork.kernel.org/patch/11365325/
+> > >
+> >
+> > I had applied first four, the fifth requires additional work.
+> > When send a new version, do it only for last one.
+>=20
+> Thanks Andy! I will send the 5th patch alone in new version.
+>=20
 
-On 3/18/20 2:27 PM, Greg Kroah-Hartman wrote:
-> On Fri, Jan 24, 2020 at 10:16:48AM +0100, Hans de Goede wrote:
->> Hi,
->>
->> On 1/24/20 9:57 AM, Greg Kroah-Hartman wrote:
->>> On Wed, Jan 15, 2020 at 05:35:47PM +0100, Hans de Goede wrote:
->>>> This is a preparation patch for adding a new platform fallback mechanism,
->>>> which will have its own enable/disable FW_OPT_xxx option.
->>>>
->>>> Note this also fixes a typo in one of the re-wordwrapped comments:
->>>> enfoce -> enforce.
->>>>
->>>> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>
->>> I've taken this in my tree for now in a quest to try to get others to
->>> pay attention to this series...
->>
->> Thank you.
->>
->> As mentioned before I believe that this series is ready for merging now.
->>
->> Andy Lutomirski had one last change request for v12 of the second
->> patch in the series, specifically to replace the loop searching for
->> the prefix with a memem, but the kernel does not have memmem.
->>
->> Andy, are you ok with v12 as is, given that we don't have memmem ?
->>
->> Assuming Andy is ok with v12 as is, then to merge this we need
->> to probably wait for 5.6-rc1 and then have the x86/efi folks do
->> an immutable branch with the first 2 patches of the series.
-> 
-> Did this every happen?  Or do I need to dump this all into my tree?
+Hi Andy! I see first 3 patches are merged in for-next branch on 2/28 but no=
+t 4th patch. Can you please check? http://git.infradead.org/linux-platform-=
+drivers-x86.git/shortlog/refs/heads/for-next
 
-Ard has done a immutable branch with just the 2 patches:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tag/?h=stable-shared-branch-for-driver-tree
-
-I did not see any mails about this being pulled / merged, but I just
-checked and this has landed in the tip tree 10 days ago:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/include/linux/efi.h?h=efi/core
-
-So if you merge the stable-shared-branch-for-driver-tree tag and then
-merge patches 3-8 of this series (or rather 4-8 since you already
-merged 3 IIRC) that would be great.
-
-Regards,
-
-Hans
+> >
+> > > Patch 1: Relocate both pmc_core_slps0_display() and
+> > > pmc_core_lpm_display() Patch 2: Remove the duplicate if() condition
+> > > to create debugfs entry Patch 3: Add back slp_s0_offset attribute
+> > > back to tgl_reg_map Patch 4: Make pmc_core_substate_res_show()
+> > > generic Patch
+> > > 5: Make pmc_core_lpm_display() generic
+> > >
+> > > Changes since v1:
+> > > 1) Changed the order of the patches i.e., patch 2 in v1 is made first=
+ in
+> > >    the order for v2.
+> > > 2) Fixed the warnings reported by kbuild test robot.
+> > >
+> > > Changes since v2:
+> > > 1) Add "Make pmc_core_substate_res_show() generic" patch to v3.
+> > > 2) Fixed the memory leak issue in pmc_core_lpm_display().
+> > > 3) Moved patch 2 in v2 to the last in the series in v3.
+> > >
+> > > Gayatri Kammela (5):
+> > >   platform/x86: intel_pmc_core: fix: Relocate pmc_core_slps0_display(=
+)
+> > >     and pmc_core_lpm_display() to outside of CONFIG_DEBUG_FS
+> > >   platform/x86: intel_pmc_core: fix: Remove the duplicate if() to cre=
+ate
+> > >     debugfs entry for substate_live_status_registers
+> > >   platform/x86: intel_pmc_core: fix: Add slp_s0_offset attribute back=
+ to
+> > >     tgl_reg_map
+> > >   platform/x86: intel_pmc_core: Make pmc_core_substate_res_show()
+> > >     generic
+> > >   platform/x86: intel_pmc_core: fix: Make pmc_core_lpm_display()
+> generic
+> > >     for platforms that support sub-states
+> > >
+> > >  drivers/platform/x86/intel_pmc_core.c | 148 +++++++++++++++---------=
+--
+> > >  drivers/platform/x86/intel_pmc_core.h |   3 +-
+> > >  2 files changed, 85 insertions(+), 66 deletions(-)
+> > >
+> > > base-commit: 7adb1e8aeeb5d4d88012568b2049599c1a247cf2
+> > >
+> > > Cc: Chen Zhou <chenzhou10@huawei.com>
+> > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Cc: David Box <david.e.box@intel.com>
+> > > --
+> > > 2.17.1
+> > >
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
+> >
