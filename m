@@ -1,85 +1,114 @@
 From: Thomas Gleixner <tglx@linutronix.de>
-Subject: [patch 13/22] thermal: Convert to new X86 CPU match macros
-Date: Fri, 20 Mar 2020 14:13:58 +0100
-Message-ID: <20200320131509.967017771@linutronix.de>
+Subject: [patch 08/22] ACPI: Convert to new X86 CPU match macros
+Date: Fri, 20 Mar 2020 14:13:53 +0100
+Message-ID: <20200320131509.467730627@linutronix.de>
 References: <20200320131345.635023594@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: LKML <linux-kernel@vger.kernel.org>
-Cc: x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Gross <mgross@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, linux-pm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, Chanwoo
+Cc: x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Gross <mgross@linux.intel.com>, Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Chanw
 List-Id: platform-driver-x86.vger.kernel.org
 
 The new macro set has a consistent namespace and uses C99 initializers
 instead of the grufty C89 ones.
 
-Get rid the of the local QUARK defines and use the proper ones.
+Rename the local macro wrapper to X86_MATCH for consistency. It stays for
+readability sake.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Amit Kucheria <amit.kucheria@verdurent.com>
-Cc: linux-pm@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
+Cc: linux-acpi@vger.kernel.org
 ---
- drivers/thermal/intel/intel_powerclamp.c        |    2 +-
- drivers/thermal/intel/intel_quark_dts_thermal.c |    5 +----
- drivers/thermal/intel/intel_soc_dts_thermal.c   |    3 +--
- drivers/thermal/intel/x86_pkg_temp_thermal.c    |    2 +-
- 4 files changed, 4 insertions(+), 8 deletions(-)
+ drivers/acpi/acpi_lpss.c |    6 ++----
+ drivers/acpi/x86/utils.c |   20 ++++++++++----------
+ 2 files changed, 12 insertions(+), 14 deletions(-)
 
---- a/drivers/thermal/intel/intel_powerclamp.c
-+++ b/drivers/thermal/intel/intel_powerclamp.c
-@@ -651,7 +651,7 @@ static struct thermal_cooling_device_ops
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -306,11 +306,9 @@ static const struct lpss_device_desc bsw
+ 	.setup = lpss_deassert_reset,
  };
  
- static const struct x86_cpu_id __initconst intel_powerclamp_ids[] = {
--	{ X86_VENDOR_INTEL, X86_FAMILY_ANY, X86_MODEL_ANY, X86_FEATURE_MWAIT },
-+	X86_MATCH_VENDOR_FEATURE(INTEL, X86_FEATURE_MWAIT, NULL),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, intel_powerclamp_ids);
---- a/drivers/thermal/intel/intel_quark_dts_thermal.c
-+++ b/drivers/thermal/intel/intel_quark_dts_thermal.c
-@@ -64,9 +64,6 @@
- #include <asm/cpu_device_id.h>
- #include <asm/iosf_mbi.h>
- 
--#define X86_FAMILY_QUARK	0x5
--#define X86_MODEL_QUARK_X1000	0x9
+-#define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
 -
- /* DTS reset is programmed via QRK_MBI_UNIT_SOC */
- #define QRK_DTS_REG_OFFSET_RESET	0x34
- #define QRK_DTS_RESET_BIT		BIT(0)
-@@ -433,7 +430,7 @@ static struct soc_sensor_entry *alloc_so
- }
- 
- static const struct x86_cpu_id qrk_thermal_ids[] __initconst  = {
--	{ X86_VENDOR_INTEL, X86_FAMILY_QUARK, X86_MODEL_QUARK_X1000 },
-+	X86_MATCH_VENDOR_FAM_MODEL(INTEL, 5, INTEL_FAM5_QUARK_X1000, NULL),
+ static const struct x86_cpu_id lpss_cpu_ids[] = {
+-	ICPU(INTEL_FAM6_ATOM_SILVERMONT),	/* Valleyview, Bay Trail */
+-	ICPU(INTEL_FAM6_ATOM_AIRMONT),	/* Braswell, Cherry Trail */
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	NULL),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	NULL),
  	{}
  };
- MODULE_DEVICE_TABLE(x86cpu, qrk_thermal_ids);
---- a/drivers/thermal/intel/intel_soc_dts_thermal.c
-+++ b/drivers/thermal/intel/intel_soc_dts_thermal.c
-@@ -36,8 +36,7 @@ static irqreturn_t soc_irq_thread_fn(int
- }
  
- static const struct x86_cpu_id soc_thermal_ids[] = {
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_ATOM_SILVERMONT, 0,
--		BYT_SOC_DTS_APIC_IRQ},
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT, BYT_SOC_DTS_APIC_IRQ),
- 	{}
+--- a/drivers/acpi/x86/utils.c
++++ b/drivers/acpi/x86/utils.c
+@@ -37,7 +37,7 @@ struct always_present_id {
+ 	const char *uid;
  };
- MODULE_DEVICE_TABLE(x86cpu, soc_thermal_ids);
---- a/drivers/thermal/intel/x86_pkg_temp_thermal.c
-+++ b/drivers/thermal/intel/x86_pkg_temp_thermal.c
-@@ -478,7 +478,7 @@ static int pkg_thermal_cpu_online(unsign
- }
  
- static const struct x86_cpu_id __initconst pkg_temp_thermal_ids[] = {
--	{ X86_VENDOR_INTEL, X86_FAMILY_ANY, X86_MODEL_ANY, X86_FEATURE_PTS },
-+	X86_MATCH_VENDOR_FEATURE(INTEL, X86_FEATURE_PTS, NULL),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, pkg_temp_thermal_ids);
+-#define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
++#define X86_MATCH(model)	X86_MATCH_INTEL_FAM6_MODEL(model, NULL)
+ 
+ #define ENTRY(hid, uid, cpu_models, dmi...) {				\
+ 	{ { hid, }, {} },						\
+@@ -51,29 +51,29 @@ static const struct always_present_id al
+ 	 * Bay / Cherry Trail PWM directly poked by GPU driver in win10,
+ 	 * but Linux uses a separate PWM driver, harmless if not used.
+ 	 */
+-	ENTRY("80860F09", "1", ICPU(INTEL_FAM6_ATOM_SILVERMONT), {}),
+-	ENTRY("80862288", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {}),
++	ENTRY("80860F09", "1", X86_MATCH(ATOM_SILVERMONT), {}),
++	ENTRY("80862288", "1", X86_MATCH(ATOM_AIRMONT), {}),
+ 
+ 	/* Lenovo Yoga Book uses PWM2 for keyboard backlight control */
+-	ENTRY("80862289", "2", ICPU(INTEL_FAM6_ATOM_AIRMONT), {
++	ENTRY("80862289", "2", X86_MATCH(ATOM_AIRMONT), {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Lenovo YB1-X9"),
+ 		}),
+ 	/*
+ 	 * The INT0002 device is necessary to clear wakeup interrupt sources
+ 	 * on Cherry Trail devices, without it we get nobody cared IRQ msgs.
+ 	 */
+-	ENTRY("INT0002", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {}),
++	ENTRY("INT0002", "1", X86_MATCH(ATOM_AIRMONT), {}),
+ 	/*
+ 	 * On the Dell Venue 11 Pro 7130 and 7139, the DSDT hides
+ 	 * the touchscreen ACPI device until a certain time
+ 	 * after _SB.PCI0.GFX0.LCD.LCD1._ON gets called has passed
+ 	 * *and* _STA has been called at least 3 times since.
+ 	 */
+-	ENTRY("SYNA7500", "1", ICPU(INTEL_FAM6_HASWELL_L), {
++	ENTRY("SYNA7500", "1", X86_MATCH(HASWELL_L), {
+ 		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7130"),
+ 	      }),
+-	ENTRY("SYNA7500", "1", ICPU(INTEL_FAM6_HASWELL_L), {
++	ENTRY("SYNA7500", "1", X86_MATCH(HASWELL_L), {
+ 		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7139"),
+ 	      }),
+@@ -89,19 +89,19 @@ static const struct always_present_id al
+ 	 * was copy-pasted from the GPD win, so it has a disabled KIOX000A
+ 	 * node which we should not enable, thus we also check the BIOS date.
+ 	 */
+-	ENTRY("KIOX000A", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {
++	ENTRY("KIOX000A", "1", X86_MATCH(ATOM_AIRMONT), {
+ 		DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+ 		DMI_MATCH(DMI_BOARD_NAME, "Default string"),
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
+ 		DMI_MATCH(DMI_BIOS_DATE, "02/21/2017")
+ 	      }),
+-	ENTRY("KIOX000A", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {
++	ENTRY("KIOX000A", "1", X86_MATCH(ATOM_AIRMONT), {
+ 		DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+ 		DMI_MATCH(DMI_BOARD_NAME, "Default string"),
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
+ 		DMI_MATCH(DMI_BIOS_DATE, "03/20/2017")
+ 	      }),
+-	ENTRY("KIOX000A", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {
++	ENTRY("KIOX000A", "1", X86_MATCH(ATOM_AIRMONT), {
+ 		DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+ 		DMI_MATCH(DMI_BOARD_NAME, "Default string"),
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
