@@ -1,44 +1,41 @@
 From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [patch 02/22] x86/cpu: Add conistent CPU match macros
-Date: Fri, 20 Mar 2020 21:27:58 +0100
-Message-ID: <87h7yipy9d.fsf@nanos.tec.linutronix.de>
-References: <20200320131345.635023594@linutronix.de> <20200320131508.826011988@linutronix.de> <CAHp75VdKavBD=yTR6Mz4iaGKQVP__xCsf-fWdy1MMJJywhDd-Q@mail.gmail.com>
+Subject: Re: [patch 09/22] cpufreq: Convert to new X86 CPU match macros
+Date: Fri, 20 Mar 2020 21:30:29 +0100
+Message-ID: <87eetmpy56.fsf@nanos.tec.linutronix.de>
+References: <20200320131345.635023594@linutronix.de> <20200320131509.564059710@linutronix.de> <CAHp75VdkvyqOaAsLmz8K2j4bdd0sboPoUpRr6U-zvtkSaQfPRQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdKavBD=yTR6Mz4iaGKQVP__xCsf-fWdy1MMJJywhDd-Q@mail.gmail.com>
+In-Reply-To: <CAHp75VdkvyqOaAsLmz8K2j4bdd0sboPoUpRr6U-zvtkSaQfPRQ@mail.gmail.com>
 Sender: linux-acpi-owner@vger.kernel.org
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Gross <mgross@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Linux PM <linux-pm@vger.kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-edac@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>li
+Cc: LKML <linux-kernel@vger.kernel.org>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Gross <mgross@linux.intel.com>, Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Linux PM <linux-pm@vger.kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linux-edac@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>li
 List-Id: platform-driver-x86.vger.kernel.org
 
 Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+> On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
->> Also a add a few model constants for Centaur CPUs and QUARK.
+>> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6,  9, X86_FEATURE_EST, NULL),
+>> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6, 13, X86_FEATURE_EST, NULL),
+>> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  3, X86_FEATURE_EST, NULL),
+>> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  4, X86_FEATURE_EST, NULL),
 >
-> I would perhaps made this as a separate change(s).
+>> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
+>> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
+>> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
+>
+>> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
+>> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
+>> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
+>
+> Perhaps use names instead of 6 and 15?
 
-Can do.
+Thought about that and did not come up with anyting useful. FAM6 vs. 6
+is not really any better
 
->> +#define X86_MATCH_VENDOR_FAM_MODEL_FEATURE(_vendor, _family, _model,   \
->> +                                          _feature, _data) {           \
->
-> I would leave it on one line despite the length, but it's up to you.
->
->> +       .vendor         = X86_VENDOR_##_vendor,                         \
->> +       .family         = _family,                                      \
->> +       .model          = _model,                                       \
->> +       .feature        = _feature,                                     \
->
->> +       .driver_data    = (unsigned long) _data                         \
->
-> For sake of consistency shouldn't be this kernel_ulong_t ?
+> Also, NULL vs. 0?
 
-I can change that though in kernel space this does not matter.
-
-> Or we are going to get rid of that type?
-
-No.
+Both works, but yes I used mostly NULL.
 
 Thanks,
 
