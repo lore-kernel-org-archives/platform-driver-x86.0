@@ -1,61 +1,57 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: [patch 00/22] x86/treewide: Consolidate CPU match macro maze and get
- rid of C89 (sic!) initializers
-Date: Fri, 20 Mar 2020 14:13:45 +0100
-Message-ID: <20200320131345.635023594@linutronix.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 01/19] platform/x86: intel_scu_ipc: Split out SCU IPC
+ functionality from the SCU driver
+Date: Fri, 20 Mar 2020 13:36:02 +0000
+Message-ID: <20200320133602.GE5477@dell>
+References: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
+ <20200303133649.39819-2-mika.westerberg@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200303133649.39819-2-mika.westerberg@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Gross <mgross@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Chanw
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The x86 CPU matching based on struct x86_cpu_id:
+On Tue, 03 Mar 2020, Mika Westerberg wrote:
 
-  - is using an inconsistent macro mess with pointlessly duplicated and
-    slightly different local macros. Finding the places is an art as there
-    is no consistent name space at all.
+> The SCU IPC functionality is usable outside of Intel MID devices. For
+> example modern Intel CPUs include the same thing but now it is called
+> PMC (Power Management Controller) instead of SCU. To make the IPC
+> available for those split the driver into core part (intel_scu_ipc.c)
+> and the SCU PCI driver part (intel_scu_pcidrv.c) which then calls the
+> former before it goes and creates rest of the SCU devices. The SCU IPC
+> will also register a new class that gets assigned to the device that is
+> created under the parent PCI device.
+> 
+> We also split the Kconfig symbols so that INTEL_SCU_IPC enables the SCU
+> IPC library and INTEL_SCU_PCI the SCU driver and convert the users
+> accordingly. While there remove default y from the INTEL_SCU_PCI symbol
+> as it is already selected by X86_INTEL_MID.
+> 
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  arch/x86/Kconfig                        |   2 +-
+>  arch/x86/include/asm/intel_scu_ipc.h    |  18 +++
 
-  - is still mostly based on C89 struct initializers which rely on the
-    ordering of the struct members. That's proliferated forever as every
-    new driver just copies the mess from some exising one.
+>  drivers/mfd/Kconfig                     |   4 +-
 
-A recent offlist conversation about adding more match criteria to the CPU
-matching logic instead of creating yet another set of horrors, reminded me
-of a pile of scripts and patches which I hacked on a few years ago when I
-tried to add something to struct x86_cpu_id.
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-That stuff was finally not needed and ended up in my ever growing todo list
-and collected dust and cobwebs, but (un)surprisingly enough most of it
-still worked out of the box. The copy & paste machinery still works as it
-did years ago.
+>  drivers/platform/x86/Kconfig            |  24 ++--
+>  drivers/platform/x86/Makefile           |   1 +
+>  drivers/platform/x86/intel_scu_ipc.c    | 172 ++++++++++++++++--------
+>  drivers/platform/x86/intel_scu_pcidrv.c |  55 ++++++++
+>  7 files changed, 208 insertions(+), 68 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel_scu_pcidrv.c
 
-There are a few places which needed extra care due to new creative macros,
-new check combinations etc. and surprisingly ONE open coded proper C99
-initializer.
-
-It was reasonably simple to make it at least compile and pass a quick
-binary equivalence check.
-
-The result is a X86_MATCH prefix based set of macros which are reflecting
-the needs of the usage sites and shorten the base macro which takes all
-possible parameters (vendor, family, model, feature, data) and uses proper
-C99 initializers.
-
-So extensions of the match logic are trivial after that.
-
-The patch set is against Linus tree and has trivial conflicts against
-linux-next.
-
-The diffstat is:
- 71 files changed, 525 insertions(+), 472 deletions(-)
-
-but the extra lines are pretty much kernel-doc documentation which I added
-to each of the new macros. The usage sites diffstat is:
-
- 70 files changed, 393 insertions(+), 471 deletions(-)
-
-Thoughts?
-
-Thanks,
-
-	tglx
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
