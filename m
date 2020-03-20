@@ -1,93 +1,105 @@
-From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Subject: RE: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes or
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: [patch 01/22] x86/devicetable: Move x86 specific macro out of generic
  code
-Date: Thu, 19 Mar 2020 18:15:53 +0000
-Message-ID: <BYAPR11MB3624FFB1B25DD743F473AFFEF2F40@BYAPR11MB3624.namprd11.prod.outlook.com>
-References: <cover.1583093898.git.gayatri.kammela@intel.com>
- <20200302125427.GV1224808@smile.fi.intel.com>
- <BYAPR11MB362421570806431752364CD3F2E70@BYAPR11MB3624.namprd11.prod.outlook.com>
- <BYAPR11MB3624F3CB24817BB8C5AE6C10F2F40@BYAPR11MB3624.namprd11.prod.outlook.com>
- <20200319180618.GN1922688@smile.fi.intel.com>
+Date: Fri, 20 Mar 2020 14:13:46 +0100
+Message-ID: <20200320131508.736205164@linutronix.de>
+References: <20200320131345.635023594@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200319180618.GN1922688@smile.fi.intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>, "dvhart@infradead.org" <dvhart@infradead.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "peterz@infradead.org" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Chen Zhou <chenzhou10@huawei.com>, "Box, David E" <david.e.box@intel.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Gross <mgross@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Chanw
 List-Id: platform-driver-x86.vger.kernel.org
 
-> -----Original Message-----
-> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Sent: Thursday, March 19, 2020 11:06 AM
-> To: Kammela, Gayatri <gayatri.kammela@intel.com>
-> Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
-> Somayaji, Vishwanath <vishwanath.somayaji@intel.com>;
-> dvhart@infradead.org; Westerberg, Mika <mika.westerberg@intel.com>;
-> peterz@infradead.org; Prestopine, Charles D
-> <charles.d.prestopine@intel.com>; Chen Zhou <chenzhou10@huawei.com>;
-> Box, David E <david.e.box@intel.com>
-> Subject: Re: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes o=
-r
-> code
->=20
-> On Thu, Mar 19, 2020 at 05:57:06PM +0000, Kammela, Gayatri wrote:
-> > > -----Original Message-----
-> > > From: Kammela, Gayatri
-> > > Sent: Monday, March 2, 2020 10:29 AM
-> > > To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Cc: platform-driver-x86@vger.kernel.org;
-> > > linux-kernel@vger.kernel.org; Somayaji, Vishwanath
-> > > <vishwanath.somayaji@intel.com>; dvhart@infradead.org; Westerberg,
-> > > Mika <mika.westerberg@intel.com>; peterz@infradead.org; Prestopine,
-> > > Charles D <charles.d.prestopine@intel.com>; Chen Zhou
-> > > <chenzhou10@huawei.com>; Box, David E <david.e.box@intel.com>
-> > > Subject: RE: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug
-> > > fixes or code
-> > >
-> > > > -----Original Message-----
-> > > > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > Sent: Monday, March 2, 2020 4:54 AM
-> > > > To: Kammela, Gayatri <gayatri.kammela@intel.com>
-> > > > Cc: platform-driver-x86@vger.kernel.org;
-> > > > linux-kernel@vger.kernel.org; Somayaji, Vishwanath
-> > > > <vishwanath.somayaji@intel.com>; dvhart@infradead.org;
-> Westerberg,
-> > > > Mika <mika.westerberg@intel.com>; peterz@infradead.org;
-> > > > Prestopine, Charles D <charles.d.prestopine@intel.com>; Chen Zhou
-> > > <chenzhou10@huawei.com>;
-> > > > Box, David E <david.e.box@intel.com>
-> > > > Subject: Re: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug
-> > > > fixes or code
-> > > >
-> > > > On Sun, Mar 01, 2020 at 12:44:21PM -0800, Gayatri Kammela wrote:
-> > > > > Hi,
-> > > > >
-> > > > > This patch series consists of bug fixes and code optimization
-> > > > > for the series https://patchwork.kernel.org/patch/11365325/
-> > > > >
-> > > >
-> > > > I had applied first four, the fifth requires additional work.
-> > > > When send a new version, do it only for last one.
-> > >
-> > > Thanks Andy! I will send the 5th patch alone in new version.
-> > >
-> >
-> > Hi Andy! I see first 3 patches are merged in for-next branch on 2/28
-> > but not 4th patch. Can you please check?
-> > http://git.infradead.org/linux-platform-drivers-x86.git/shortlog/refs/
-> > heads/for-next
->=20
->=20
-> Is it in my review and testing queue?
+There is no reason that this gunk is in a generic header file. The wildcard
+defines need to stay as they are required by file2alias.
 
-I think it is archived and superseded https://patchwork.kernel.org/patch/11=
-414379/
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/include/asm/cpu_device_id.h   |   13 ++++++++++++-
+ arch/x86/kvm/svm.c                     |    1 +
+ arch/x86/kvm/vmx/vmx.c                 |    1 +
+ drivers/cpufreq/acpi-cpufreq.c         |    1 +
+ drivers/cpufreq/amd_freq_sensitivity.c |    1 +
+ include/linux/mod_devicetable.h        |    4 +---
+ 6 files changed, 17 insertions(+), 4 deletions(-)
 
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
->=20
+--- a/arch/x86/include/asm/cpu_device_id.h
++++ b/arch/x86/include/asm/cpu_device_id.h
+@@ -6,10 +6,21 @@
+  * Declare drivers belonging to specific x86 CPUs
+  * Similar in spirit to pci_device_id and related PCI functions
+  */
+-
+ #include <linux/mod_devicetable.h>
+ 
+ /*
++ * The wildcard initializers are in mod_devicetable.h because
++ * file2alias needs them. Sigh.
++ */
++
++#define X86_FEATURE_MATCH(x) {			\
++	.vendor		= X86_VENDOR_ANY,	\
++	.family		= X86_FAMILY_ANY,	\
++	.model		= X86_MODEL_ANY,	\
++	.feature	= x,			\
++}
++
++/*
+  * Match specific microcode revisions.
+  *
+  * vendor/family/model/stepping must be all set.
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -48,6 +48,7 @@
+ #include <asm/kvm_para.h>
+ #include <asm/irq_remapping.h>
+ #include <asm/spec-ctrl.h>
++#include <asm/cpu_device_id.h>
+ 
+ #include <asm/virtext.h>
+ #include "trace.h"
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -31,6 +31,7 @@
+ #include <asm/apic.h>
+ #include <asm/asm.h>
+ #include <asm/cpu.h>
++#include <asm/cpu_device_id.h>
+ #include <asm/debugreg.h>
+ #include <asm/desc.h>
+ #include <asm/fpu/internal.h>
+--- a/drivers/cpufreq/acpi-cpufreq.c
++++ b/drivers/cpufreq/acpi-cpufreq.c
+@@ -30,6 +30,7 @@
+ #include <asm/msr.h>
+ #include <asm/processor.h>
+ #include <asm/cpufeature.h>
++#include <asm/cpu_device_id.h>
+ 
+ MODULE_AUTHOR("Paul Diefenbaugh, Dominik Brodowski");
+ MODULE_DESCRIPTION("ACPI Processor P-States Driver");
+--- a/drivers/cpufreq/amd_freq_sensitivity.c
++++ b/drivers/cpufreq/amd_freq_sensitivity.c
+@@ -18,6 +18,7 @@
+ 
+ #include <asm/msr.h>
+ #include <asm/cpufeature.h>
++#include <asm/cpu_device_id.h>
+ 
+ #include "cpufreq_ondemand.h"
+ 
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -667,9 +667,7 @@ struct x86_cpu_id {
+ 	kernel_ulong_t driver_data;
+ };
+ 
+-#define X86_FEATURE_MATCH(x) \
+-	{ X86_VENDOR_ANY, X86_FAMILY_ANY, X86_MODEL_ANY, x }
+-
++/* Wild cards for x86_cpu_id::vendor, family, model and feature */
+ #define X86_VENDOR_ANY 0xffff
+ #define X86_FAMILY_ANY 0
+ #define X86_MODEL_ANY  0
