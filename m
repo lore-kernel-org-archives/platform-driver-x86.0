@@ -1,113 +1,138 @@
 From: Thomas Gleixner <tglx@linutronix.de>
-Subject: [patch 10/22] EDAC: Convert to new X86 CPU match macros
-Date: Fri, 20 Mar 2020 14:13:55 +0100
-Message-ID: <20200320131509.673579000@linutronix.de>
+Subject: [patch 06/22] x86/kernel: Convert to new CPU match macros
+Date: Fri, 20 Mar 2020 14:13:51 +0100
+Message-ID: <20200320131509.250559388@linutronix.de>
 References: <20200320131345.635023594@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: LKML <linux-kernel@vger.kernel.org>
-Cc: x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Gross <mgross@linux.intel.com>, Tony Luck <tony.luck@intel.com>, linux-edac@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Chanw
+Cc: x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Gross <mgross@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Chanw
 List-Id: platform-driver-x86.vger.kernel.org
 
 The new macro set has a consistent namespace and uses C99 initializers
 instead of the grufty C89 ones.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-edac@vger.kernel.org
----
- drivers/edac/amd64_edac.c |   14 +++++++-------
- drivers/edac/i10nm_base.c |    8 ++++----
- drivers/edac/pnd2_edac.c  |    4 ++--
- drivers/edac/sb_edac.c    |   14 +++++++-------
- drivers/edac/skx_base.c   |    2 +-
- 5 files changed, 21 insertions(+), 21 deletions(-)
+Get rid the of the local macro wrappers for consistency.
 
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -3626,13 +3626,13 @@ static void setup_pci_device(void)
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/kernel/apic/apic.c |   34 ++++++++++++++--------------------
+ arch/x86/kernel/smpboot.c   |    2 +-
+ arch/x86/kernel/tsc_msr.c   |   14 +++++++-------
+ arch/x86/power/cpu.c        |   16 ++--------------
+ 4 files changed, 24 insertions(+), 42 deletions(-)
+
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -546,12 +546,6 @@ static struct clock_event_device lapic_c
+ };
+ static DEFINE_PER_CPU(struct clock_event_device, lapic_events);
+ 
+-#define DEADLINE_MODEL_MATCH_FUNC(model, func)	\
+-	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)&func }
+-
+-#define DEADLINE_MODEL_MATCH_REV(model, rev)	\
+-	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)rev }
+-
+ static u32 hsx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+@@ -588,23 +582,23 @@ static u32 skx_deadline_rev(void)
  }
  
- static const struct x86_cpu_id amd64_cpuids[] = {
--	{ X86_VENDOR_AMD, 0xF,	X86_MODEL_ANY,	X86_FEATURE_ANY, 0 },
--	{ X86_VENDOR_AMD, 0x10, X86_MODEL_ANY,	X86_FEATURE_ANY, 0 },
--	{ X86_VENDOR_AMD, 0x15, X86_MODEL_ANY,	X86_FEATURE_ANY, 0 },
--	{ X86_VENDOR_AMD, 0x16, X86_MODEL_ANY,	X86_FEATURE_ANY, 0 },
--	{ X86_VENDOR_AMD, 0x17, X86_MODEL_ANY,	X86_FEATURE_ANY, 0 },
--	{ X86_VENDOR_HYGON, 0x18, X86_MODEL_ANY, X86_FEATURE_ANY, 0 },
--	{ X86_VENDOR_AMD, 0x19, X86_MODEL_ANY,	X86_FEATURE_ANY, 0 },
-+	X86_MATCH_VENDOR_FAM(AMD,	0x0F, NULL),
-+	X86_MATCH_VENDOR_FAM(AMD,	0x10, NULL),
-+	X86_MATCH_VENDOR_FAM(AMD,	0x15, NULL),
-+	X86_MATCH_VENDOR_FAM(AMD,	0x16, NULL),
-+	X86_MATCH_VENDOR_FAM(AMD,	0x17, NULL),
-+	X86_MATCH_VENDOR_FAM(HYGON,	0x18, NULL),
-+	X86_MATCH_VENDOR_FAM(AMD,	0x19, NULL),
- 	{ }
+ static const struct x86_cpu_id deadline_match[] = {
+-	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_HASWELL_X,	hsx_deadline_rev),
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_X,	0x0b000020),
+-	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_BROADWELL_D,	bdx_deadline_rev),
+-	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_SKYLAKE_X,	skx_deadline_rev),
+-
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL,		0x22),
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_L,	0x20),
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_G,	0x17),
++	X86_MATCH_INTEL_FAM6_MODEL( HASWELL_X,		&hsx_deadline_rev),
++	X86_MATCH_INTEL_FAM6_MODEL( BROADWELL_X,	0x0b000020),
++	X86_MATCH_INTEL_FAM6_MODEL( BROADWELL_D,	&bdx_deadline_rev),
++	X86_MATCH_INTEL_FAM6_MODEL( SKYLAKE_X,		&skx_deadline_rev),
++
++	X86_MATCH_INTEL_FAM6_MODEL( HASWELL,		0x22),
++	X86_MATCH_INTEL_FAM6_MODEL( HASWELL_L,		0x20),
++	X86_MATCH_INTEL_FAM6_MODEL( HASWELL_G,		0x17),
+ 
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL,	0x25),
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_G,	0x17),
++	X86_MATCH_INTEL_FAM6_MODEL( BROADWELL,		0x25),
++	X86_MATCH_INTEL_FAM6_MODEL( BROADWELL_G,	0x17),
+ 
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_SKYLAKE_L,	0xb2),
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_SKYLAKE,		0xb2),
++	X86_MATCH_INTEL_FAM6_MODEL( SKYLAKE_L,		0xb2),
++	X86_MATCH_INTEL_FAM6_MODEL( SKYLAKE,		0xb2),
+ 
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_KABYLAKE_L,	0x52),
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_KABYLAKE,		0x52),
++	X86_MATCH_INTEL_FAM6_MODEL( KABYLAKE_L,		0x52),
++	X86_MATCH_INTEL_FAM6_MODEL( KABYLAKE,		0x52),
+ 
+ 	{},
  };
- MODULE_DEVICE_TABLE(x86cpu, amd64_cpuids);
---- a/drivers/edac/i10nm_base.c
-+++ b/drivers/edac/i10nm_base.c
-@@ -123,10 +123,10 @@ static int i10nm_get_all_munits(void)
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -466,7 +466,7 @@ static bool match_smt(struct cpuinfo_x86
+  */
+ 
+ static const struct x86_cpu_id snc_cpu[] = {
+-	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_SKYLAKE_X },
++	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X, NULL),
+ 	{}
+ };
+ 
+--- a/arch/x86/kernel/tsc_msr.c
++++ b/arch/x86/kernel/tsc_msr.c
+@@ -63,13 +63,13 @@ static const struct freq_desc freq_desc_
+ };
+ 
+ static const struct x86_cpu_id tsc_msr_cpu_ids[] = {
+-	INTEL_CPU_FAM6(ATOM_SALTWELL_MID,	freq_desc_pnw),
+-	INTEL_CPU_FAM6(ATOM_SALTWELL_TABLET,	freq_desc_clv),
+-	INTEL_CPU_FAM6(ATOM_SILVERMONT,		freq_desc_byt),
+-	INTEL_CPU_FAM6(ATOM_SILVERMONT_MID,	freq_desc_tng),
+-	INTEL_CPU_FAM6(ATOM_AIRMONT,		freq_desc_cht),
+-	INTEL_CPU_FAM6(ATOM_AIRMONT_MID,	freq_desc_ann),
+-	INTEL_CPU_FAM6(ATOM_AIRMONT_NP,		freq_desc_lgm),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SALTWELL_MID,	&freq_desc_pnw),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SALTWELL_TABLET,&freq_desc_clv),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	&freq_desc_byt),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID,	&freq_desc_tng),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&freq_desc_cht),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT_MID,	&freq_desc_ann),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT_NP,	&freq_desc_lgm),
+ 	{}
+ };
+ 
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -475,20 +475,8 @@ static int msr_save_cpuid_features(const
  }
  
- static const struct x86_cpu_id i10nm_cpuids[] = {
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_ATOM_TREMONT_D, 0, 0 },
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_ICELAKE_X, 0, 0 },
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_ICELAKE_D, 0, 0 },
--	{ }
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	NULL),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		NULL),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		NULL),
-+	{}
+ static const struct x86_cpu_id msr_save_cpu_table[] = {
+-	{
+-		.vendor = X86_VENDOR_AMD,
+-		.family = 0x15,
+-		.model = X86_MODEL_ANY,
+-		.feature = X86_FEATURE_ANY,
+-		.driver_data = (kernel_ulong_t)msr_save_cpuid_features,
+-	},
+-	{
+-		.vendor = X86_VENDOR_AMD,
+-		.family = 0x16,
+-		.model = X86_MODEL_ANY,
+-		.feature = X86_FEATURE_ANY,
+-		.driver_data = (kernel_ulong_t)msr_save_cpuid_features,
+-	},
++	X86_MATCH_VENDOR_FAM(AMD, 0x15, &msr_save_cpuid_features),
++	X86_MATCH_VENDOR_FAM(AMD, 0x16, &msr_save_cpuid_features),
+ 	{}
  };
- MODULE_DEVICE_TABLE(x86cpu, i10nm_cpuids);
  
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -1537,8 +1537,8 @@ static struct dunit_ops dnv_ops = {
- };
- 
- static const struct x86_cpu_id pnd2_cpuids[] = {
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_ATOM_GOLDMONT, 0, (kernel_ulong_t)&apl_ops },
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_ATOM_GOLDMONT_D, 0, (kernel_ulong_t)&dnv_ops },
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&apl_ops),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_D,	&dnv_ops),
- 	{ }
- };
- MODULE_DEVICE_TABLE(x86cpu, pnd2_cpuids);
---- a/drivers/edac/sb_edac.c
-+++ b/drivers/edac/sb_edac.c
-@@ -3420,13 +3420,13 @@ static int sbridge_register_mci(struct s
- }
- 
- static const struct x86_cpu_id sbridge_cpuids[] = {
--	INTEL_CPU_FAM6(SANDYBRIDGE_X,	  pci_dev_descr_sbridge_table),
--	INTEL_CPU_FAM6(IVYBRIDGE_X,	  pci_dev_descr_ibridge_table),
--	INTEL_CPU_FAM6(HASWELL_X,	  pci_dev_descr_haswell_table),
--	INTEL_CPU_FAM6(BROADWELL_X,	  pci_dev_descr_broadwell_table),
--	INTEL_CPU_FAM6(BROADWELL_D,	  pci_dev_descr_broadwell_table),
--	INTEL_CPU_FAM6(XEON_PHI_KNL,	  pci_dev_descr_knl_table),
--	INTEL_CPU_FAM6(XEON_PHI_KNM,	  pci_dev_descr_knl_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE_X, &pci_dev_descr_sbridge_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE_X,	  &pci_dev_descr_ibridge_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_X,	  &pci_dev_descr_haswell_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_X,	  &pci_dev_descr_broadwell_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_D,	  &pci_dev_descr_broadwell_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,  &pci_dev_descr_knl_table),
-+	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,  &pci_dev_descr_knl_table),
- 	{ }
- };
- MODULE_DEVICE_TABLE(x86cpu, sbridge_cpuids);
---- a/drivers/edac/skx_base.c
-+++ b/drivers/edac/skx_base.c
-@@ -158,7 +158,7 @@ static int get_all_munits(const struct m
- }
- 
- static const struct x86_cpu_id skx_cpuids[] = {
--	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_SKYLAKE_X, 0, 0 },
-+	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,	NULL),
- 	{ }
- };
- MODULE_DEVICE_TABLE(x86cpu, skx_cpuids);
