@@ -1,114 +1,45 @@
 From: Thomas Gleixner <tglx@linutronix.de>
-Subject: [patch 08/22] ACPI: Convert to new X86 CPU match macros
-Date: Fri, 20 Mar 2020 14:13:53 +0100
-Message-ID: <20200320131509.467730627@linutronix.de>
+Subject: [patch 05/22] x86/kvm: Convert to new CPU match macros
+Date: Fri, 20 Mar 2020 14:13:50 +0100
+Message-ID: <20200320131509.136884777@linutronix.de>
 References: <20200320131345.635023594@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: LKML <linux-kernel@vger.kernel.org>
-Cc: x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Gross <mgross@linux.intel.com>, Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Chanw
+Cc: x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Gross <mgross@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-edac@vger.kernel.org, platform-driver-x86@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Chanw
 List-Id: platform-driver-x86.vger.kernel.org
 
 The new macro set has a consistent namespace and uses C99 initializers
 instead of the grufty C89 ones.
 
-Rename the local macro wrapper to X86_MATCH for consistency. It stays for
-readability sake.
-
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org>
-Cc: linux-acpi@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>
 ---
- drivers/acpi/acpi_lpss.c |    6 ++----
- drivers/acpi/x86/utils.c |   20 ++++++++++----------
- 2 files changed, 12 insertions(+), 14 deletions(-)
+ arch/x86/kvm/svm.c     |    2 +-
+ arch/x86/kvm/vmx/vmx.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -306,11 +306,9 @@ static const struct lpss_device_desc bsw
- 	.setup = lpss_deassert_reset,
- };
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -60,7 +60,7 @@ MODULE_LICENSE("GPL");
  
--#define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
--
- static const struct x86_cpu_id lpss_cpu_ids[] = {
--	ICPU(INTEL_FAM6_ATOM_SILVERMONT),	/* Valleyview, Bay Trail */
--	ICPU(INTEL_FAM6_ATOM_AIRMONT),	/* Braswell, Cherry Trail */
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	NULL),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	NULL),
+ #ifdef MODULE
+ static const struct x86_cpu_id svm_cpu_id[] = {
+-	X86_FEATURE_MATCH(X86_FEATURE_SVM),
++	X86_MATCH_FEATURE(X86_FEATURE_SVM, NULL),
  	{}
  };
+ MODULE_DEVICE_TABLE(x86cpu, svm_cpu_id);
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -67,7 +67,7 @@ MODULE_LICENSE("GPL");
  
---- a/drivers/acpi/x86/utils.c
-+++ b/drivers/acpi/x86/utils.c
-@@ -37,7 +37,7 @@ struct always_present_id {
- 	const char *uid;
+ #ifdef MODULE
+ static const struct x86_cpu_id vmx_cpu_id[] = {
+-	X86_FEATURE_MATCH(X86_FEATURE_VMX),
++	X86_MATCH_FEATURE(X86_FEATURE_VMX, NULL),
+ 	{}
  };
- 
--#define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
-+#define X86_MATCH(model)	X86_MATCH_INTEL_FAM6_MODEL(model, NULL)
- 
- #define ENTRY(hid, uid, cpu_models, dmi...) {				\
- 	{ { hid, }, {} },						\
-@@ -51,29 +51,29 @@ static const struct always_present_id al
- 	 * Bay / Cherry Trail PWM directly poked by GPU driver in win10,
- 	 * but Linux uses a separate PWM driver, harmless if not used.
- 	 */
--	ENTRY("80860F09", "1", ICPU(INTEL_FAM6_ATOM_SILVERMONT), {}),
--	ENTRY("80862288", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {}),
-+	ENTRY("80860F09", "1", X86_MATCH(ATOM_SILVERMONT), {}),
-+	ENTRY("80862288", "1", X86_MATCH(ATOM_AIRMONT), {}),
- 
- 	/* Lenovo Yoga Book uses PWM2 for keyboard backlight control */
--	ENTRY("80862289", "2", ICPU(INTEL_FAM6_ATOM_AIRMONT), {
-+	ENTRY("80862289", "2", X86_MATCH(ATOM_AIRMONT), {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Lenovo YB1-X9"),
- 		}),
- 	/*
- 	 * The INT0002 device is necessary to clear wakeup interrupt sources
- 	 * on Cherry Trail devices, without it we get nobody cared IRQ msgs.
- 	 */
--	ENTRY("INT0002", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {}),
-+	ENTRY("INT0002", "1", X86_MATCH(ATOM_AIRMONT), {}),
- 	/*
- 	 * On the Dell Venue 11 Pro 7130 and 7139, the DSDT hides
- 	 * the touchscreen ACPI device until a certain time
- 	 * after _SB.PCI0.GFX0.LCD.LCD1._ON gets called has passed
- 	 * *and* _STA has been called at least 3 times since.
- 	 */
--	ENTRY("SYNA7500", "1", ICPU(INTEL_FAM6_HASWELL_L), {
-+	ENTRY("SYNA7500", "1", X86_MATCH(HASWELL_L), {
- 		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7130"),
- 	      }),
--	ENTRY("SYNA7500", "1", ICPU(INTEL_FAM6_HASWELL_L), {
-+	ENTRY("SYNA7500", "1", X86_MATCH(HASWELL_L), {
- 		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7139"),
- 	      }),
-@@ -89,19 +89,19 @@ static const struct always_present_id al
- 	 * was copy-pasted from the GPD win, so it has a disabled KIOX000A
- 	 * node which we should not enable, thus we also check the BIOS date.
- 	 */
--	ENTRY("KIOX000A", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {
-+	ENTRY("KIOX000A", "1", X86_MATCH(ATOM_AIRMONT), {
- 		DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
- 		DMI_MATCH(DMI_BOARD_NAME, "Default string"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
- 		DMI_MATCH(DMI_BIOS_DATE, "02/21/2017")
- 	      }),
--	ENTRY("KIOX000A", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {
-+	ENTRY("KIOX000A", "1", X86_MATCH(ATOM_AIRMONT), {
- 		DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
- 		DMI_MATCH(DMI_BOARD_NAME, "Default string"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
- 		DMI_MATCH(DMI_BIOS_DATE, "03/20/2017")
- 	      }),
--	ENTRY("KIOX000A", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {
-+	ENTRY("KIOX000A", "1", X86_MATCH(ATOM_AIRMONT), {
- 		DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
- 		DMI_MATCH(DMI_BOARD_NAME, "Default string"),
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
+ MODULE_DEVICE_TABLE(x86cpu, vmx_cpu_id);
