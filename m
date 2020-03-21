@@ -1,43 +1,87 @@
 From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [patch 09/22] cpufreq: Convert to new X86 CPU match macros
-Date: Fri, 20 Mar 2020 23:18:38 +0100
-Message-ID: <877dzept4x.fsf@nanos.tec.linutronix.de>
-References: <20200320131345.635023594@linutronix.de> <20200320131509.564059710@linutronix.de> <CAHp75VdkvyqOaAsLmz8K2j4bdd0sboPoUpRr6U-zvtkSaQfPRQ@mail.gmail.com> <87eetmpy56.fsf@nanos.tec.linutronix.de> <CAHp75VfuU98gEriS+GDJqZX4BV-cZT9hPbrDX-roeo63O8UvYQ@mail.gmail.com>
+Subject: [patch V3 20/20] lockdep: Add posixtimer context tracing bits
+Date: Sat, 21 Mar 2020 12:26:04 +0100
+Message-ID: <20200321113242.751182723@linutronix.de>
+References: <20200321112544.878032781@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfuU98gEriS+GDJqZX4BV-cZT9hPbrDX-roeo63O8UvYQ@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Gross <mgross@linux.intel.com>, Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Linux PM <linux-pm@vger.kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linux-edac@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>li
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8-bit
+Return-path: <linux-hexagon-owner@vger.kernel.org>
+Sender: linux-hexagon-owner@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Sebastian Siewior <bigeasy@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Joel Fernandes <joel@joelfernandes.org>, Oleg Nesterov <oleg@redhat.com>, Davidlohr Bueso <dave@stgolabs.net>, Logan Gunthorpe <logang@deltatee.com>, Bjorn Helgaas <bhelgaas@google.com>, Kurt Schwemmer <kurt.schwemmer@microsemi.com>, linux-pci@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>, "David S. Miller" <davem@davemloft.net>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-drive
 List-Id: platform-driver-x86.vger.kernel.org
 
-Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-> On Fri, Mar 20, 2020 at 10:30 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
->> > On Fri, Mar 20, 2020 at 3:18 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> >
->> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6,  9, X86_FEATURE_EST, NULL),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL,  6, 13, X86_FEATURE_EST, NULL),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  3, X86_FEATURE_EST, NULL),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 15,  4, X86_FEATURE_EST, NULL),
->> >
->> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
->> >
->> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0x8, 0),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL,  6, 0xb, 0),
->> >> +       X86_MATCH_VENDOR_FAM_MODEL(INTEL, 15, 0x2, 0),
->> >
->> > Perhaps use names instead of 6 and 15?
->>
->> Thought about that and did not come up with anyting useful. FAM6 vs. 6
->> is not really any better
->
-> Hmm... Do we have family 15 for Intel? Perhaps I missed something...
-> Or is it for any family?
+Splitting run_posix_cpu_timers() into two parts is work in progress which
+is stuck on other entry code related problems. The heavy lifting which
+involves locking of sighand lock will be moved into task context so the
+necessary execution time is burdened on the task and not on interrupt
+context.
 
-Pentium 4
+Until this work completes lockdep with the spinlock nesting rules enabled
+would emit warnings for this known context.
+
+Prevent it by setting "->irq_config = 1" for the invocation of
+run_posix_cpu_timers() so lockdep does not complain when sighand lock is
+acquried. This will be removed once the split is completed.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/irqflags.h       |   12 ++++++++++++
+ kernel/time/posix-cpu-timers.c |    6 +++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -69,6 +69,16 @@ do {						\
+ 			current->irq_config = 0;	\
+ 	  } while (0)
+ 
++# define lockdep_posixtimer_enter()				\
++	  do {							\
++		  current->irq_config = 1;			\
++	  } while (0)
++
++# define lockdep_posixtimer_exit()				\
++	  do {							\
++		  current->irq_config = 0;			\
++	  } while (0)
++
+ # define lockdep_irq_work_enter(__work)					\
+ 	  do {								\
+ 		  if (!(atomic_read(&__work->flags) & IRQ_WORK_HARD_IRQ))\
+@@ -94,6 +104,8 @@ do {						\
+ # define lockdep_softirq_exit()		do { } while (0)
+ # define lockdep_hrtimer_enter(__hrtimer)		do { } while (0)
+ # define lockdep_hrtimer_exit(__hrtimer)		do { } while (0)
++# define lockdep_posixtimer_enter()		do { } while (0)
++# define lockdep_posixtimer_exit()		do { } while (0)
+ # define lockdep_irq_work_enter(__work)		do { } while (0)
+ # define lockdep_irq_work_exit(__work)		do { } while (0)
+ #endif
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -1126,8 +1126,11 @@ void run_posix_cpu_timers(void)
+ 	if (!fastpath_timer_check(tsk))
+ 		return;
+ 
+-	if (!lock_task_sighand(tsk, &flags))
++	lockdep_posixtimer_enter();
++	if (!lock_task_sighand(tsk, &flags)) {
++		lockdep_posixtimer_exit();
+ 		return;
++	}
+ 	/*
+ 	 * Here we take off tsk->signal->cpu_timers[N] and
+ 	 * tsk->cpu_timers[N] all the timers that are firing, and
+@@ -1169,6 +1172,7 @@ void run_posix_cpu_timers(void)
+ 			cpu_timer_fire(timer);
+ 		spin_unlock(&timer->it_lock);
+ 	}
++	lockdep_posixtimer_exit();
+ }
+ 
+ /*
