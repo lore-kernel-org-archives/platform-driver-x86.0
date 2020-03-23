@@ -1,73 +1,47 @@
-From: Sebastian Siewior <bigeasy@linutronix.de>
-Subject: [PATCH] completion: Use lockdep_assert_RT_in_threaded_ctx() in
- complete_all()
-Date: Mon, 23 Mar 2020 16:20:19 +0100
-Message-ID: <20200323152019.4qjwluldohuh3by5@linutronix.de>
-References: <20200321112544.878032781@linutronix.de>
- <20200321113242.317954042@linutronix.de>
+From: mark gross <mgross@linux.intel.com>
+Subject: Re: [patch 08/22] ACPI: Convert to new X86 CPU match macros
+Date: Mon, 23 Mar 2020 09:38:44 -0700
+Message-ID: <20200323163844.GB123290@mtg-dev.jf.intel.com>
+References: <20200320131345.635023594@linutronix.de>
+ <20200320131509.467730627@linutronix.de>
+ <CAHp75VcK3tL0YayjF=CSkSkHiOpg2zOV3rdkXQWJmLZ9fmevpg@mail.gmail.com>
+ <87bloqpy1x.fsf@nanos.tec.linutronix.de>
+Reply-To: mgross@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200321113242.317954042@linutronix.de>
-Sender: linux-acpi-owner@vger.kernel.org
+In-Reply-To: <87bloqpy1x.fsf@nanos.tec.linutronix.de>
+Sender: linux-crypto-owner@vger.kernel.org
 To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Joel Fernandes <joel@joelfernandes.org>, Oleg Nesterov <oleg@redhat.com>, Davidlohr Bueso <dave@stgolabs.net>, Davidlohr Bueso <dbueso@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Logan Gunthorpe <logang@deltatee.com>, Bjorn Helgaas <bhelgaas@google.com>, Kurt Schwemmer <kurt.schwemmer@microsemi.com>, linux-pci@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>, "David S. Miller" <davem@davemloft.net>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, LKML <linux-kernel@vger.kernel.org>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Viresh Kumar <viresh.kumar@linaro.org>, Linux PM <linux-pm@vger.kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-edac@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The warning was intended to spot complete_all() users from hardirq
-context on PREEMPT_RT. The warning as-is will also trigger in interrupt
-handlers, which are threaded on PREEMPT_RT, which was not intended.
+On Fri, Mar 20, 2020 at 09:32:26PM +0100, Thomas Gleixner wrote:
+> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+> 
+> > On Fri, Mar 20, 2020 at 3:19 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >>
+> >> The new macro set has a consistent namespace and uses C99 initializers
+> >> instead of the grufty C89 ones.
+> >>
+> >> Rename the local macro wrapper to X86_MATCH for consistency. It stays for
+> >> readability sake.
+> >
+> >> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,     NULL),
+> >> +       X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,        NULL),
+> >
+> >> -#define ICPU(model)    { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
+> >> +#define X86_MATCH(model)       X86_MATCH_INTEL_FAM6_MODEL(model, NULL)
+> >
+> > Maybe we can do a generic macro to avoid all these ', NULL' repetitions?
+> 
+> I opted for having the data argument everywhere to keep the macro maze
+> small. And we have enough places where data is actually used.
++1
 
-Use lockdep_assert_RT_in_threaded_ctx() which triggers in non-preemptive
-context on PREEMPT_RT.
+--mark
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- include/linux/lockdep.h   | 15 +++++++++++++++
- kernel/sched/completion.c |  2 +-
- 2 files changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 425b4ceb7cd07..206774ac69460 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -711,6 +711,21 @@ do {									\
- # define lockdep_assert_in_irq() do { } while (0)
- #endif
- 
-+#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
-+
-+# define lockdep_assert_RT_in_threaded_ctx() do {			\
-+		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
-+			  current->hardirq_context &&			\
-+			  !(current->hardirq_threaded || current->irq_config),	\
-+			  "Not in threaded context on PREEMPT_RT as expected\n");	\
-+} while (0)
-+
-+#else
-+
-+# define lockdep_assert_RT_in_threaded_ctx() do { } while (0)
-+
-+#endif
-+
- #ifdef CONFIG_LOCKDEP
- void lockdep_rcu_suspicious(const char *file, const int line, const char *s);
- #else
-diff --git a/kernel/sched/completion.c b/kernel/sched/completion.c
-index f15e96164ff1e..a778554f9dad7 100644
---- a/kernel/sched/completion.c
-+++ b/kernel/sched/completion.c
-@@ -58,7 +58,7 @@ void complete_all(struct completion *x)
- {
- 	unsigned long flags;
- 
--	WARN_ON(irqs_disabled());
-+	lockdep_assert_RT_in_threaded_ctx();
- 
- 	raw_spin_lock_irqsave(&x->wait.lock, flags);
- 	x->done = UINT_MAX;
--- 
-2.26.0.rc2
+> Thanks,
+> 
+>         tglx
