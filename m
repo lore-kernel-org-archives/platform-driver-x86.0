@@ -1,690 +1,235 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH v2] platform: x86: Add ACPI driver for ChromeOS
-Date: Sun, 22 Mar 2020 08:21:11 -0700
-Message-ID: <f29b78b579ae04cfedbe7a7aebaa7a1f4dcc3a68.camel@linux.intel.com>
-References: <20200322094334.1872663-1-enric.balletbo@collabora.com>
+From: "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [patch V3 13/20] Documentation: Add lock ordering and nesting
+ documentation
+Date: Sun, 22 Mar 2020 19:55:01 -0700
+Message-ID: <20200323025501.GE3199@paulmck-ThinkPad-P72>
+References: <20200321112544.878032781@linutronix.de>
+ <20200321113242.026561244@linutronix.de>
+Reply-To: paulmck@kernel.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200322094334.1872663-1-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-kernel@vger.kernel.org
-Cc: vbendeb@chromium.org, groeck@chromium.org, bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org, andy@infradead.org, Collabora Kernel ML <kernel@collabora.com>, Ayman Bagabas <ayman.bagabas@gmail.com>, Darren Hart <dvhart@infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jeremy Soller <jeremy@system76.com>, Mattias Jacobsson <2pi@mok.nu>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Rajat Jain <rajatja@google.com>, Yauhen Kharuzhy <jekhor@gmail.com>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200321113242.026561244@linutronix.de>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Sebastian Siewior <bigeasy@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Joel Fernandes <joel@joelfernandes.org>, Oleg Nesterov <oleg@redhat.com>, Davidlohr Bueso <dave@stgolabs.net>, Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, Logan Gunthorpe <logang@deltatee.com>, Bjorn Helgaas <bhelgaas@google.com>, Kurt Schwemmer <kurt.schwemmer@microsemi.com>, linux-pci@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>, "David S. Miller" <davem@davemloft.net>, linux-wireless@vger.kernel.orgnet
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, 2020-03-22 at 10:43 +0100, Enric Balletbo i Serra wrote:
-> This driver attaches to the ChromeOS ACPI device and then exports the
-> values
-> reported by the ACPI in a sysfs directory. The ACPI values are
-> presented in
-> the string form (numbers as decimal values) or binary blobs, and can
-> be
-> accessed as the contents of the appropriate read only files in the
-> sysfs
-> directory tree originating in /sys/devices/platform/chromeos_acpi.
+On Sat, Mar 21, 2020 at 12:25:57PM +0100, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
 > 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> The kernel provides a variety of locking primitives. The nesting of these
+> lock types and the implications of them on RT enabled kernels is nowhere
+> documented.
+> 
+> Add initial documentation.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: "Paul E . McKenney" <paulmck@kernel.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
 > ---
+> V3: Addressed review comments from Paul, Jonathan, Davidlohr
+> V2: Addressed review comments from Randy
+> ---
+>  Documentation/locking/index.rst     |    1 
+>  Documentation/locking/locktypes.rst |  299 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 300 insertions(+)
+>  create mode 100644 Documentation/locking/locktypes.rst
 > 
-
-[...]
-
->  /sys/devices/platform/chromeos_acpi/BINF.2 : 1
-Just wondering why don't you create additional attributes under ACPI
-device itself, like in your case:
-/sys/bus/acpi/devices/GGL0001/*
-
-Additional attributes are added for ACPI device objects at such
-location in other cases also for some PNP* and INT3* objects.
-
-This will make your driver simple with one attr group.
-
-Thanks,
-Srinivas 
-
-
->  /sys/devices/platform/chromeos_acpi/FMAP : -2031616
->  /sys/devices/platform/chromeos_acpi/HWID : SAMUS E25-G7R-W35
->  /sys/devices/platform/chromeos_acpi/BINF.0 : 0
->  /sys/devices/platform/chromeos_acpi/GPIO.0/GPIO.2 : -1
->  /sys/devices/platform/chromeos_acpi/GPIO.0/GPIO.0 : 1
->  /sys/devices/platform/chromeos_acpi/GPIO.0/GPIO.3 : INT3437:00
->  /sys/devices/platform/chromeos_acpi/GPIO.0/GPIO.1 : 0
->  /sys/devices/platform/chromeos_acpi/FRID : Google_Samus.6300.102.0
->  /sys/devices/platform/chromeos_acpi/VBNV.0 : 38
->  /sys/devices/platform/chromeos_acpi/BINF.3 : 2
->  /sys/devices/platform/chromeos_acpi/BINF.1 : 1
->  /sys/devices/platform/chromeos_acpi/GPIO.1/GPIO.2 : 16
->  /sys/devices/platform/chromeos_acpi/GPIO.1/GPIO.0 : 3
->  /sys/devices/platform/chromeos_acpi/GPIO.1/GPIO.3 : INT3437:00
->  /sys/devices/platform/chromeos_acpi/GPIO.1/GPIO.1 : 1
->  /sys/devices/platform/chromeos_acpi/CHSW : 0
->  /sys/devices/platform/chromeos_acpi/FWID : Google_Samus.6300.330.0
->  /sys/devices/platform/chromeos_acpi/VBNV.1 : 16
->  /sys/devices/platform/chromeos_acpi/BINF.4 : 0
-> 
-> And for binary packages:
-> 
-> cat /sys/devices/platform/chromeos_acpi/MECK | hexdump
->  0000000 02fb 8e72 a025 0a73 0f13 095e 9e07 41e6
->  0000010 f9e6 bb4e 76cc bef9 cca7 70e2 8f6d 863d
->  0000020
-> 
-> cat /sys/devices/platform/chromeos_acpi/VDAT | hexdump
->  0000000 6256 4453 0002 0000 0448 0000 0000 0000
->  0000010 0c00 0000 0000 0000 0850 0000 0000 0000
->  0000020 7c54 0003 0000 0000 0420 0000 0000 0000
->  0000030 0408 0000 0000 0000 0007 0000 0000 0000
->  0000040 0003 0000 0000 0000 0448 0000 0000 0000
->  0000050 0408 0000 0000 0000 9335 1f80 0000 0000
->  0000060 69a8 21f3 0000 0000 1d02 21f9 0000 0000
->  0000070 ba55 371b 0000 0000 0000 0000 0000 0000
->  0000080 bcae 001d 0000 0000 0003 0001 0001 0003
->  0000090 000c 0000 0003 0001 0003 0001 0001 0000
->  00000a0 0001 0000 0000 0000 cc00 01da 0000 0000
->  00000b0 0200 0000 0204 0000 0001 0000 0000 0000
->  00000c0 0800 0000 0000 0000 0000 0001 0000 0000
->  00000d0 0001 0001 1301 0000 0000 0000 0000 0000
->  00000e0 0000 0000 0000 0000 0000 0000 0000 0000
->  *
-> 
-> Thanks,
->  Enric
-> 
-> [1] https://lkml.org/lkml/2017/7/31/378
-> 
-> Changes in v2:
-> - Note that this version is a total rework, with those major changes:
->   - Use lists to track dinamically allocated attributes and groups.
->   - Use sysfs binary attributes to store the ACPI contents.
->   - Remove all the functionalities except the one that creates the
-> sysfs files.
-> 
->  drivers/platform/x86/Kconfig         |  12 +
->  drivers/platform/x86/Makefile        |   1 +
->  drivers/platform/x86/chromeos_acpi.c | 489
-> +++++++++++++++++++++++++++
->  3 files changed, 502 insertions(+)
->  create mode 100644 drivers/platform/x86/chromeos_acpi.c
-> 
-> diff --git a/drivers/platform/x86/Kconfig
-> b/drivers/platform/x86/Kconfig
-> index 587403c44598..917a1c1a0758 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -72,6 +72,18 @@ config ACERHDF
->  	  If you have an Acer Aspire One netbook, say Y or M
->  	  here.
+> --- a/Documentation/locking/index.rst
+> +++ b/Documentation/locking/index.rst
+> @@ -7,6 +7,7 @@ locking
+>  .. toctree::
+>      :maxdepth: 1
 >  
-> +config ACPI_CHROMEOS
-> +	tristate "ChromeOS specific ACPI extensions"
-> +	depends on ACPI
-> +	depends on CHROME_PLATFORMS
-> +	help
-> +	  This driver provides the firmware interface for the services
-> +	  exported through the ChromeOS interfaces when using ChromeOS
-> +	  ACPI firmware.
-> +
-> +	  If you have an ACPI-compatible Chromebook, say Y or M
-> +	  here.
-> +
->  config ALIENWARE_WMI
->  	tristate "Alienware Special feature control"
->  	depends on ACPI
-> diff --git a/drivers/platform/x86/Makefile
-> b/drivers/platform/x86/Makefile
-> index 3747b1f07cf1..222e2e88ccb8 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -83,6 +83,7 @@ obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
->  obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
->  obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
->  obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
-> +obj-$(CONFIG_ACPI_CHROMEOS)	+= chromeos_acpi.o
->  
->  obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
->  obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
-> diff --git a/drivers/platform/x86/chromeos_acpi.c
-> b/drivers/platform/x86/chromeos_acpi.c
-> new file mode 100644
-> index 000000000000..4d9addee2473
+> +    locktypes
+>      lockdep-design
+>      lockstat
+>      locktorture
 > --- /dev/null
-> +++ b/drivers/platform/x86/chromeos_acpi.c
-> @@ -0,0 +1,489 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * ChromeOS specific ACPI extensions
-> + *
-> + * Copyright 2011 Google, Inc.
-> + * Copyright 2020 Google LLC
-> + *
-> + * This file is a rework and part of the code is ported from
-> + * drivers/platform/x86/chromeos_acpi.c of the chromeos-3.18 kernel
-> and
-> + * was originally written by Vadim Bendebury <vbendeb@chromium.org>.
-> + *
-> + * This driver attaches to the ChromeOS ACPI device and then exports
-> the
-> + * values reported by the ACPI in a sysfs directory. All values are
-> + * presented in the string form (numbers as decimal values) and can
-> be
-> + * accessed as the contents of the appropriate read only files in
-> the
-> + * sysfs directory tree originating in
-> /sys/devices/platform/chromeos_acpi.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/kernel.h>
-> +#include <linux/list.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +/*
-> + * ACPI method name for MLST; the response for this method is a
-> package of
-> + * strings listing the methods which should be reflected in sysfs.
-> + */
-> +#define MLST "MLST"
-> +
-> +/*
-> + * The default list of methods the ChromeOS ACPI device is supposed
-> to export,
-> + * if the MLST method is not present or is poorly formed.  The MLST
-> method
-> + * itself is included, to aid in debugging.
-> + */
-> +static char *chromeos_acpi_default_methods[] = {
-> +	"CHSW", "HWID", "BINF", "GPIO", "CHNV", "FWID", "FRID", MLST
-> +};
-> +
-> +/*
-> + * Representation of a single sysfs attribute. In addition to the
-> standard
-> + * bin_attribute structure has a list of these structures (to keep
-> track for
-> + * de-allocation when removing the driver) and a pointer to the
-> actual
-> + * attribute name and value, reported when accessing the appropriate
-> sysfs
-> + * file.
-> + */
-> +struct chromeos_acpi_attribute {
-> +	struct bin_attribute bin_attr;
-> +	struct list_head list;
-> +	char *name;
-> +	char *data;
-> +};
-> +
-> +/*
-> + * Representation of a sysfs attribute group (a sub directory in the
-> device's
-> + * sysfs directory). In addition to the standard structure has lists
-> to allow
-> + * to keep track of the allocated structures.
-> + */
-> +struct chromeos_acpi_attribute_group {
-> +	struct list_head attribs;
-> +	struct list_head list;
-> +	struct kobject *kobj;	/* chromeos_acpi/name directory */
-> +	char *name;
-> +};
-> +
-> +/*
-> + * This is the main structure, we use it to store data and adds
-> links pointing
-> + * at lists of allocated attributes and attribute groups.
-> + */
-> +struct chromeos_acpi_dev {
-> +	struct platform_device *pdev;
-> +
-> +	struct chromeos_acpi_attribute_group root;
-> +	struct list_head groups;
-> +};
-> +
-> +static struct chromeos_acpi_dev chromeos_acpi;
-> +
-> +static ssize_t chromeos_acpi_read_bin_attribute(struct file *filp,
-> +						struct kobject *kobj,
-> +						struct bin_attribute
-> *bin_attr,
-> +						char *buffer, loff_t
-> pos,
-> +						size_t count)
-> +{
-> +	struct chromeos_acpi_attribute *info = bin_attr->private;
-> +
-> +	return memory_read_from_buffer(buffer, count, &pos, info->data,
-> +				       info->bin_attr.size);
-> +}
-> +
-> +static char *chromeos_acpi_alloc_name(char *name, int count, int
-> index)
-> +{
-> +	char *str;
-> +
-> +	if (count == 1)
-> +		str = kstrdup(name, GFP_KERNEL);
-> +	else
-> +		str = kasprintf(GFP_KERNEL, "%s.%d", name, index);
-> +
-> +	return str;
-> +}
-> +
-> +static int
-> +chromeos_acpi_add_attr(struct chromeos_acpi_attribute_group *aag,
-> +		       union acpi_object *element, char *name,
-> +		       int count, int index)
-> +{
-> +	struct chromeos_acpi_attribute *info;
-> +	char buffer[24]; /* enough to store a u64 and "\n\0" */
-> +	int length;
-> +	int ret;
-> +
-> +	info = kzalloc(sizeof(*info), GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	info->name = chromeos_acpi_alloc_name(name, count, index);
-> +	if (!info->name) {
-> +		ret = -ENOMEM;
-> +		goto free_attribute;
-> +	}
-> +
-> +	sysfs_bin_attr_init(&info->bin_attr);
-> +	info->bin_attr.attr.name = info->name;
-> +	info->bin_attr.attr.mode = 0444;
-> +
-> +	switch (element->type) {
-> +	case ACPI_TYPE_BUFFER:
-> +		length = element->buffer.length;
-> +		info->data = kmemdup(element->buffer.pointer,
-> +				     length, GFP_KERNEL);
-> +		break;
-> +	case ACPI_TYPE_INTEGER:
-> +		length = snprintf(buffer, sizeof(buffer), "%d",
-> +				  (int)element->integer.value);
-> +		info->data = kmemdup(buffer, length, GFP_KERNEL);
-> +		break;
-> +	case ACPI_TYPE_STRING:
-> +		length = element->string.length + 1;
-> +		info->data = kstrdup(element->string.pointer,
-> GFP_KERNEL);
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		goto free_attr_name;
-> +	}
-> +
-> +	if (!info->data) {
-> +		ret = -ENOMEM;
-> +		goto free_attr_name;
-> +	}
-> +
-> +	info->bin_attr.size = length;
-> +	info->bin_attr.read = chromeos_acpi_read_bin_attribute;
-> +	info->bin_attr.private = info;
-> +
-> +	INIT_LIST_HEAD(&info->list);
-> +
-> +	ret = sysfs_create_bin_file(aag->kobj, &info->bin_attr);
-> +	if (ret)
-> +		goto free_attr_data;
-> +
-> +	list_add(&info->list, &aag->attribs);
-> +
-> +	return 0;
-> +
-> +free_attr_data:
-> +	kfree(info->data);
-> +free_attr_name:
-> +	kfree(info->name);
-> +free_attribute:
-> +	kfree(info);
-> +	return ret;
-> +}
-> +
-> +static void
-> +chromeos_acpi_remove_attribs(struct chromeos_acpi_attribute_group
-> *aag)
-> +{
-> +	struct chromeos_acpi_attribute *attr, *tmp_attr;
-> +
-> +	list_for_each_entry_safe(attr, tmp_attr, &aag->attribs, list) {
-> +		sysfs_remove_bin_file(aag->kobj, &attr->bin_attr);
-> +		kfree(attr->name);
-> +		kfree(attr->data);
-> +		kfree(attr);
-> +	}
-> +}
-> +
-> +/**
-> + * chromeos_acpi_add_group() - Create a sysfs group including
-> attributes
-> + *			       representing a nested ACPI package.
-> + *
-> + * @obj: Package contents as returned by ACPI.
-> + * @name: Name of the group.
-> + * @num_attrs: Number of attributes of this package.
-> + * @index: Index number of this particular group.
-> + *
-> + * The created group is called @name in case there is a single
-> instance, or
-> + * @name.@index otherwise.
-> + *
-> + * All group and attribute storage allocations are included in the
-> lists for
-> + * tracking of allocated memory.
-> + *
-> + * Return: 0 on success, negative errno on failure.
-> + */
-> +static int chromeos_acpi_add_group(union acpi_object *obj, char
-> *name,
-> +				   int num_attrs, int index)
-> +{
-> +	struct device *dev = &chromeos_acpi.pdev->dev;
-> +	struct chromeos_acpi_attribute_group *aag;
-> +	union acpi_object *element;
-> +	int i, count, ret;
-> +
-> +	aag = kzalloc(sizeof(*aag), GFP_KERNEL);
-> +	if (!aag)
-> +		return -ENOMEM;
-> +
-> +	aag->name = chromeos_acpi_alloc_name(name, num_attrs, index);
-> +	if (!aag->name) {
-> +		ret = -ENOMEM;
-> +		goto free_group;
-> +	}
-> +
-> +	aag->kobj = kobject_create_and_add(aag->name, &dev->kobj);
-> +	if (!aag->kobj) {
-> +		ret = -EINVAL;
-> +		goto free_group_name;
-> +	}
-> +
-> +	INIT_LIST_HEAD(&aag->attribs);
-> +	INIT_LIST_HEAD(&aag->list);
-> +
-> +	count = obj->package.count;
-> +	element = obj->package.elements;
-> +	for (i = 0; i < count; i++, element++) {
-> +		ret = chromeos_acpi_add_attr(aag, element, name, count,
-> i);
-> +		if (ret)
-> +			goto free_group_attr;
-> +	}
-> +
-> +	list_add(&aag->list, &chromeos_acpi.groups);
-> +
-> +	return 0;
-> +
-> +free_group_attr:
-> +	chromeos_acpi_remove_attribs(aag);
-> +	kobject_put(aag->kobj);
-> +free_group_name:
-> +	kfree(aag->name);
-> +free_group:
-> +	kfree(aag);
-> +	return ret;
-> +}
-> +
-> +static void chromeos_acpi_remove_groups(void)
-> +{
-> +	struct chromeos_acpi_attribute_group *aag, *tmp_aag;
-> +
-> +	list_for_each_entry_safe(aag, tmp_aag, &chromeos_acpi.groups,
-> list) {
-> +		chromeos_acpi_remove_attribs(aag);
-> +		kfree(aag->name);
-> +		kobject_put(aag->kobj);
-> +		kfree(aag);
-> +	}
-> +}
-> +
-> +/**
-> + * chromeos_acpi_handle_package() - Create sysfs group including
-> attributes
-> + *				    representing an ACPI package.
-> + *
-> + * @obj: Package contents as returned by ACPI.
-> + * @name: Name of the group.
-> + *
-> + * Scalar objects included in the package get sysfs attributes
-> created for
-> + * them. Nested packages are passed to a function creating a sysfs
-> group per
-> + * package.
-> + *
-> + * Return: 0 on success, negative errno on failure.
-> + */
-> +static int chromeos_acpi_handle_package(union acpi_object *obj, char
-> *name)
-> +{
-> +	struct device *dev = &chromeos_acpi.pdev->dev;
-> +	int count = obj->package.count;
-> +	union acpi_object *element;
-> +	int i, ret = 0;
-> +
-> +	element = obj->package.elements;
-> +	for (i = 0; i < count; i++, element++) {
-> +		if (element->type == ACPI_TYPE_BUFFER ||
-> +		    element->type == ACPI_TYPE_STRING ||
-> +		    element->type == ACPI_TYPE_INTEGER)
-> +			/* Create a single attribute in the root
-> directory */
-> +			ret =
-> chromeos_acpi_add_attr(&chromeos_acpi.root,
-> +						     element, name,
-> +						     count, i);
-> +		else if (element->type == ACPI_TYPE_PACKAGE)
-> +			/* Create a group of attributes */
-> +			ret = chromeos_acpi_add_group(element, name,
-> +						      count, i);
-> +		else
-> +			ret = -EINVAL;
-> +		if (ret)
-> +			dev_err(dev,
-> +				"failed to create group attributes
-> (%d)\n",
-> +				ret);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * chromeos_acpi_add_method() - Evaluate an ACPI method and create
-> sysfs
-> + *				attributes.
-> + *
-> + * @adev: ACPI device
-> + * @name: Name of the method to evaluate
-> + *
-> + * Return: 0 on success, non-zero on failure
-> + */
-> +static int chromeos_acpi_add_method(struct acpi_device *adev, char
-> *name)
-> +{
-> +	struct device *dev = &chromeos_acpi.pdev->dev;
-> +	struct acpi_buffer output;
-> +	union acpi_object *obj;
-> +	acpi_status status;
-> +	int ret = 0;
-> +
-> +	output.length = ACPI_ALLOCATE_BUFFER;
-> +
-> +	status = acpi_evaluate_object(adev->handle, name, NULL,
-> &output);
-> +	if (ACPI_FAILURE(status)) {
-> +		dev_err(dev, "failed to retrieve %s (%d)\n", name,
-> status);
-> +		return status;
-> +	}
-> +
-> +	obj = output.pointer;
-> +	if (obj->type == ACPI_TYPE_PACKAGE)
-> +		ret = chromeos_acpi_handle_package(obj, name);
-> +
-> +	kfree(output.pointer);
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * chromeos_acpi_process_mlst() - Evaluate the MLST method and add
-> methods
-> + *				  listed in the response.
-> + *
-> + * @adev: ACPI device
-> + *
-> + * Returns: 0 if successful, non-zero if error.
-> + */
-> +static int chromeos_acpi_process_mlst(struct acpi_device *adev)
-> +{
-> +	char name[ACPI_NAMESEG_SIZE + 1];
-> +	union acpi_object *element, *obj;
-> +	struct acpi_buffer output;
-> +	acpi_status status;
-> +	int ret = 0;
-> +	int size;
-> +	int i;
-> +
-> +	output.length = ACPI_ALLOCATE_BUFFER;
-> +	status = acpi_evaluate_object(adev->handle, MLST, NULL,
-> +				      &output);
-> +	if (ACPI_FAILURE(status))
-> +		return status;
-> +
-> +	obj = output.pointer;
-> +	if (obj->type != ACPI_TYPE_PACKAGE) {
-> +		ret = -EINVAL;
-> +		goto free_acpi_buffer;
-> +	}
-> +
-> +	element = obj->package.elements;
-> +	for (i = 0; i < obj->package.count; i++, element++) {
-> +		if (element->type == ACPI_TYPE_STRING) {
-> +			size = min(element->string.length + 1,
-> +				   (u32)ACPI_NAMESEG_SIZE + 1);
-> +			strlcpy(name, element->string.pointer, size);
-> +			ret = chromeos_acpi_add_method(adev, name);
-> +			if (ret) {
-> +				chromeos_acpi_remove_groups();
-> +				break;
-> +			}
-> +		}
-> +	}
-> +
-> +free_acpi_buffer:
-> +	kfree(output.pointer);
-> +
-> +	return ret;
-> +}
-> +
-> +static int chromeos_acpi_device_add(struct acpi_device *adev)
-> +{
-> +	struct chromeos_acpi_attribute_group *aag =
-> &chromeos_acpi.root;
-> +	struct device *dev = &chromeos_acpi.pdev->dev;
-> +	int i, ret;
-> +
-> +	INIT_LIST_HEAD(&aag->attribs);
-> +	INIT_LIST_HEAD(&aag->list);
-> +
-> +	aag->kobj = &dev->kobj;
-> +
-> +	/*
-> +	 * Attempt to add methods by querying the device's MLST method
-> +	 * for the list of methods.
-> +	 */
-> +	if (!chromeos_acpi_process_mlst(adev))
-> +		return 0;
-> +
-> +	dev_info(dev, "falling back to default list of methods\n");
-> +
-> +	for (i = 0; i < ARRAY_SIZE(chromeos_acpi_default_methods); i++)
-> {
-> +		ret = chromeos_acpi_add_method(adev,
-> +					     chromeos_acpi_default_meth
-> ods[i]);
-> +		if (ret) {
-> +			dev_err(dev, "failed to add default methods
-> (%d)\n",
-> +				ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int chromeos_acpi_device_remove(struct acpi_device *adev)
-> +{
-> +	/* Remove dinamically allocated sysfs groups and attributes */
-> +	chromeos_acpi_remove_groups();
-> +	/* Remove attributes from the root group */
-> +	chromeos_acpi_remove_attribs(&chromeos_acpi.root);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct acpi_device_id chromeos_device_ids[] = {
-> +	{ "GGL0001", 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, chromeos_device_ids);
-> +
-> +static struct acpi_driver chromeos_acpi_driver = {
-> +	.name = "ChromeOS ACPI driver",
-> +	.class = "chromeos-acpi",
-> +	.ids = chromeos_device_ids,
-> +	.ops = {
-> +		.add = chromeos_acpi_device_add,
-> +		.remove = chromeos_acpi_device_remove,
-> +	},
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static int __init chromeos_acpi_init(void)
-> +{
-> +	int ret;
-> +
-> +	chromeos_acpi.pdev =
-> platform_device_register_simple("chromeos_acpi",
-> +						PLATFORM_DEVID_NONE,
-> NULL, 0);
-> +	if (IS_ERR(chromeos_acpi.pdev)) {
-> +		pr_err("unable to register chromeos_acpi platform
-> device\n");
-> +		return PTR_ERR(chromeos_acpi.pdev);
-> +	}
-> +
-> +	INIT_LIST_HEAD(&chromeos_acpi.groups);
-> +
-> +	ret = acpi_bus_register_driver(&chromeos_acpi_driver);
-> +	if (ret < 0) {
-> +		pr_err("failed to register chromeos_acpi driver
-> (%d)\n", ret);
-> +		platform_device_unregister(chromeos_acpi.pdev);
-> +		chromeos_acpi.pdev = NULL;
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit chromeos_acpi_exit(void)
-> +{
-> +	acpi_bus_unregister_driver(&chromeos_acpi_driver);
-> +	platform_device_unregister(chromeos_acpi.pdev);
-> +}
-> +
-> +module_init(chromeos_acpi_init);
-> +module_exit(chromeos_acpi_exit);
-> +
-> +MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ");
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("ChromeOS specific ACPI extensions");
+> +++ b/Documentation/locking/locktypes.rst
+> @@ -0,0 +1,299 @@
+
+[ . . . Adding your example execution sequences . . . ]
+
+> +PREEMPT_RT kernels preserve all other spinlock_t semantics:
+> +
+> + - Tasks holding a spinlock_t do not migrate.  Non-PREEMPT_RT kernels
+> +   avoid migration by disabling preemption.  PREEMPT_RT kernels instead
+> +   disable migration, which ensures that pointers to per-CPU variables
+> +   remain valid even if the task is preempted.
+> +
+> + - Task state is preserved across spinlock acquisition, ensuring that the
+> +   task-state rules apply to all kernel configurations.  Non-PREEMPT_RT
+> +   kernels leave task state untouched.  However, PREEMPT_RT must change
+> +   task state if the task blocks during acquisition.  Therefore, it saves
+> +   the current task state before blocking and the corresponding lock wakeup
+> +   restores it.
+> +
+> +   Other types of wakeups would normally unconditionally set the task state
+> +   to RUNNING, but that does not work here because the task must remain
+> +   blocked until the lock becomes available.  Therefore, when a non-lock
+> +   wakeup attempts to awaken a task blocked waiting for a spinlock, it
+> +   instead sets the saved state to RUNNING.  Then, when the lock
+> +   acquisition completes, the lock wakeup sets the task state to the saved
+> +   state, in this case setting it to RUNNING.
+
+In the normal case where the task sleeps through the entire lock
+acquisition, the sequence of events is as follows:
+
+     state = UNINTERRUPTIBLE
+     lock()
+       block()
+         real_state = state
+         state = SLEEPONLOCK
+
+                               lock wakeup
+                                 state = real_state == UNINTERRUPTIBLE
+
+This sequence of events can occur when the task acquires spinlocks
+on its way to sleeping, for example, in a call to wait_event().
+
+The non-lock wakeup can occur when a wakeup races with this wait_event(),
+which can result in the following sequence of events:
+
+     state = UNINTERRUPTIBLE
+     lock()
+       block()
+         real_state = state
+         state = SLEEPONLOCK
+
+                             non lock wakeup
+                                 real_state = RUNNING
+
+                               lock wakeup
+                                 state = real_state == RUNNING
+
+Without this real_state subterfuge, the wakeup might be lost.
+
+[ . . . and continuing where I left off earlier . . . ]
+
+> +bit spinlocks
+> +-------------
+> +
+> +Bit spinlocks are problematic for PREEMPT_RT as they cannot be easily
+> +substituted by an RT-mutex based implementation for obvious reasons.
+> +
+> +The semantics of bit spinlocks are preserved on PREEMPT_RT kernels and the
+> +caveats vs. raw_spinlock_t apply.
+> +
+> +Some bit spinlocks are substituted by regular spinlock_t for PREEMPT_RT but
+> +this requires conditional (#ifdef'ed) code changes at the usage site while
+> +the spinlock_t substitution is simply done by the compiler and the
+> +conditionals are restricted to header files and core implementation of the
+> +locking primitives and the usage sites do not require any changes.
+
+PREEMPT_RT cannot substitute bit spinlocks because a single bit is
+too small to accommodate an RT-mutex.  Therefore, the semantics of bit
+spinlocks are preserved on PREEMPT_RT kernels, so that the raw_spinlock_t
+caveats also apply to bit spinlocks.
+
+Some bit spinlocks are replaced with regular spinlock_t for PREEMPT_RT
+using conditional (#ifdef'ed) code changes at the usage site.
+In contrast, usage-site changes are not needed for the spinlock_t
+substitution.  Instead, conditionals in header files and the core locking
+implemementation enable the compiler to do the substitution transparently.
+
+
+> +Lock type nesting rules
+> +=======================
+> +
+> +The most basic rules are:
+> +
+> +  - Lock types of the same lock category (sleeping, spinning) can nest
+> +    arbitrarily as long as they respect the general lock ordering rules to
+> +    prevent deadlocks.
+
+  - Lock types in the same category (sleeping, spinning) can nest
+     arbitrarily as long as they respect the general deadlock-avoidance
+     ordering rules.
+
+[ Give or take lockdep eventually complaining about too-deep nesting,
+  but that is probably not worth mentioning here.  Leave that caveat
+  to the lockdep documentation. ]
+
+> +  - Sleeping lock types cannot nest inside spinning lock types.
+> +
+> +  - Spinning lock types can nest inside sleeping lock types.
+> +
+> +These rules apply in general independent of CONFIG_PREEMPT_RT.
+
+These constraints apply both in CONFIG_PREEMPT_RT and otherwise.
+
+> +As PREEMPT_RT changes the lock category of spinlock_t and rwlock_t from
+> +spinning to sleeping this has obviously restrictions how they can nest with
+> +raw_spinlock_t.
+> +
+> +This results in the following nest ordering:
+
+The fact that PREEMPT_RT changes the lock category of spinlock_t and
+rwlock_t from spinning to sleeping means that they cannot be acquired
+while holding a raw spinlock.  This results in the following nesting
+ordering:
+
+> +  1) Sleeping locks
+> +  2) spinlock_t and rwlock_t
+> +  3) raw_spinlock_t and bit spinlocks
+> +
+> +Lockdep is aware of these constraints to ensure that they are respected.
+
+Lockdep will complain if these constraints are violated, both in
+CONFIG_PREEMPT_RT and otherwise.
+
+
+> +Owner semantics
+> +===============
+> +
+> +Most lock types in the Linux kernel have strict owner semantics, i.e. the
+> +context (task) which acquires a lock has to release it.
+
+The aforementioned lock types have strict owner semantics: The context
+(task) that acquired the lock must release it.
+
+> +There are two exceptions:
+> +
+> +  - semaphores
+> +  - rwsems
+> +
+> +semaphores have no owner semantics for historical reason, and as such
+> +trylock and release operations can be called from any context. They are
+> +often used for both serialization and waiting purposes. That's generally
+> +discouraged and should be replaced by separate serialization and wait
+> +mechanisms, such as mutexes and completions.
+
+semaphores lack owner semantics for historical reasons, so their trylock
+and release operations may be called from any context. They are often
+used for both serialization and waiting, but new use cases should
+instead use separate serialization and wait mechanisms, such as mutexes
+and completions.
+
+> +rwsems have grown interfaces which allow non owner release for special
+> +purposes. This usage is problematic on PREEMPT_RT because PREEMPT_RT
+> +substitutes all locking primitives except semaphores with RT-mutex based
+> +implementations to provide priority inheritance for all lock types except
+> +the truly spinning ones. Priority inheritance on ownerless locks is
+> +obviously impossible.
+> +
+> +For now the rwsem non-owner release excludes code which utilizes it from
+> +being used on PREEMPT_RT enabled kernels. In same cases this can be
+> +mitigated by disabling portions of the code, in other cases the complete
+> +functionality has to be disabled until a workable solution has been found.
+
+rwsems have grown special-purpose interfaces that allow non-owner release.
+This non-owner release prevents PREEMPT_RT from substituting RT-mutex
+implementations, for example, by defeating priority inheritance.
+After all, if the lock has no owner, whose priority should be boosted?
+As a result, PREEMPT_RT does not currently support rwsem, which in turn
+means that code using it must therefore be disabled until a workable
+solution presents itself.
+
+[ Note: Not as confident as I would like to be in the above. ]
+
+							Thanx, Paul
