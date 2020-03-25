@@ -1,73 +1,55 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [patch V3 03/20] usb: gadget: Use completion interface instead of open coding it
-Date: Wed, 25 Mar 2020 10:37:57 +0200
-Message-ID: <87blokde3e.fsf@kernel.org>
-References: <20200321112544.878032781@linutronix.de> <20200321113241.043380271@linutronix.de>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [cpufreq] 06c4d00466: will-it-scale.per_process_ops -53.4% regression
+Date: Wed, 25 Mar 2020 11:32:06 +0100
+Message-ID: <87zhc4ybbt.fsf@nanos.tec.linutronix.de>
+References: <20200320131509.564059710@linutronix.de> <20200324060124.GC11705@shao2-debian> <CAHp75VeeKZLeZ8E3Py7LECN54SPFHaRgkxrMzBYQWXM8x+4JhA@mail.gmail.com> <43a4189a-7153-18e8-4657-4a4400002c05@intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200321113241.043380271@linutronix.de>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Sebastian Siewior <bigeasy@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Joel Fernandes <joel@joelfernandes.org>, Oleg Nesterov <oleg@redhat.com>, Davidlohr Bueso <dave@stgolabs.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>, Bjorn Helgaas <bhelgaas@google.com>, Kurt Schwemmer <kurt.schwemmer@microsemi.com>, linux-pci@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>, "David S. Miller" <davem@davemloft.net>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, Zhang Rui <rui.zha>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <43a4189a-7153-18e8-4657-4a4400002c05@intel.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Rong Chen <rong.a.chen@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Gross <mgross@linux.intel.com>, Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Linux PM <linux-pm@vger.kernel.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Len Brown <lenb@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linux-edac@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>li
 List-Id: platform-driver-x86.vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Thomas Gleixner <tglx@linutronix.de> writes:
-
-> From: Thomas Gleixner <tglx@linutronix.de>
+Rong Chen <rong.a.chen@intel.com> writes:
+> On 3/24/20 6:24 PM, Andy Shevchenko wrote:
+>> On Tue, Mar 24, 2020 at 8:02 AM kernel test robot <rong.a.chen@intel.com> wrote:
+>>> Greeting,
+>>>
+>>> FYI, we noticed a -53.4% regression of will-it-scale.per_process_ops due to commit:
+>>> commit: 06c4d00466eb374841bc84c39af19b3161ff6917 ("[patch 09/22] cpufreq: Convert to new X86 CPU match macros")
+>>> url: https://github.com/0day-ci/linux/commits/Thomas-Gleixner/x86-devicetable-Move-x86-specific-macro-out-of-generic-code/20200321-031729
+>>> base: https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git linux-next
+>>>
+>>> in testcase: will-it-scale
+>>> on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 8G memory
+>>> with following parameters:
+>>
+>> drivers/cpufreq/speedstep-centrino.c change missed the terminator,
+>> perhaps it's a culprit, because I don't believe removing dups and
+>> reordering lines may affect this.
+>> Can you restore terminator there and re-test?
+>>
 >
-> ep_io() uses a completion on stack and open codes the waiting with:
->
->   wait_event_interruptible (done.wait, done.done);
-> and
->   wait_event (done.wait, done.done);
->
-> This waits in non-exclusive mode for complete(), but there is no reason to
-> do so because the completion can only be waited for by the task itself and
-> complete() wakes exactly one exlusive waiter.
->
-> Replace the open coded implementation with the corresponding
-> wait_for_completion*() functions.
->
-> No functional change.
->
-> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: linux-usb@vger.kernel.org
+> I have retested with the change, but it has no effect on the performance.
 
-Do you want to carry it via your tree? If so:
+Bah. The binary equivalence testing detected this, but I obvioulsy
+missed it. Delta fix below.
 
-Acked-by: Felipe Balbi <balbi@kernel.org>
+Thanks,
 
-Otherwise, let me know and I'll pick this patch.
+        tglx
 
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl57GGUACgkQzL64meEa
-mQY/phAAyKS/jK6b1hVevAPsOBS5Zyk+RBQmkmps/3C2lTyyturSmqT3TAMZyTZo
-/HPtsvyUYn8RBI5Pa62mvcnGi+/Lmk76YzmUqn/VJRe+J8kjuFI6IoyT4uDxdUsB
-qGTiuQ5qbV7Ft3fvLoEEbuyPZeDc/pbfFyK78ajdAYec4MGS8r12tWzhRZTRyRAG
-4fb/PjPcfk8/9eTkdgnjgINZTiwT9YN7HWpEfajl3MhlYK9pZh/J7swRaYwZULBo
-+eVd6a6ZYt0YLC8wVQ/kJ9Q3EttmWBwPJB4FIXMzYDkXx2Z898ZUKeIJ8IXlwKSh
-CynbYGL7rNJQ+UDpVA8/y5Mqqnu3pAht/csgfrBxm/ukjkMphIDjpzuUaODgH5W3
-Eb4EXNgvgspzEMgz6pv9INgPPh2tWRmBQex8qOLrs1xups+ZmhFSHGKCUs8hxlDj
-Zk0U6Mce6mopXiCf2iVgrv9ItHlp4myA/HwWEub+LwOJi8tCt+vCjzXloWMx4Ha+
-TNyxLHrqLaeTQoYgl1wJQMjIhmcrb9UMBaJ5FhKdaXAGfAeicPSzVqVHG/yl6nds
-Z2cTMhW5kIxJDMAOuemeYZLY8PMzXrG5xHT7Da3yOzurIOmp2rhvhjpt9TpjKDLE
-3qsBCaxpICoolHqV8bAov175RPtyVvv5zdyXWulMD/1c2kVYiiY=
-=IAgh
------END PGP SIGNATURE-----
---=-=-=--
+8<--------------
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -2727,7 +2727,7 @@ static inline void intel_pstate_request_
+ 
+ #define X86_MATCH_HWP(model, hwp_mode)					\
+ 	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_##model, \
+-					   X86_FEATURE_APERFMPERF, hwp_mode)
++					   X86_FEATURE_HWP, hwp_mode)
+ 
+ static const struct x86_cpu_id hwp_support_ids[] __initconst = {
+ 	X86_MATCH_HWP(BROADWELL_X,	INTEL_PSTATE_HWP_BROADWELL),
