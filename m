@@ -1,93 +1,168 @@
-From: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: [PATCH v2] Documentation/locking/locktypes: minor copy editor fixes
-Date: Wed, 25 Mar 2020 09:58:14 -0700
-Message-ID: <ac615f36-0b44-408d-aeab-d76e4241add4@infradead.org>
-References: <20200323025501.GE3199@paulmck-ThinkPad-P72>
- <87r1xhz6qp.fsf@nanos.tec.linutronix.de>
- <20200325002811.GO19865@paulmck-ThinkPad-P72>
- <87wo78y5yy.fsf@nanos.tec.linutronix.de>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH v2] platform: x86: Add ACPI driver for ChromeOS
+Date: Wed, 25 Mar 2020 21:34:49 +0100
+Message-ID: <fbd5e95a-59ab-bb51-892e-ddd220b85215@collabora.com>
+References: <20200322094334.1872663-1-enric.balletbo@collabora.com>
+ <20200322111022.GA72939@kroah.com>
+ <c480f318-c326-d51c-e757-c65c2526ab4d@collabora.com>
+ <20200324164956.GE2518746@kroah.com>
+ <3444110c-d6c0-16df-9b5d-12578ed442c5@collabora.com>
+ <3166e472e0ef5c0db8da3ab7d846b47795e69057.camel@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87wo78y5yy.fsf-ecDvlHI5BZPZikZi3RtOZ1XZhhPuCNm+@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3166e472e0ef5c0db8da3ab7d846b47795e69057.camel@linux.intel.com>
 Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, paulmck-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joel Fernandes <joel-QYYGw3jwrUn5owFQY34kdNi2O/JbrIOy@public.gmane.org>, Oleg Nesterov <oleg-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Davidlohr Bueso <dave-h16yJtLeMjHk1uMJSBkQmQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Logan Gunthorpe <logang-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kurt Schwemmer <kurt.schwemmer-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Darren Hart <dvha>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, vbendeb@chromium.org, groeck@chromium.org, bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org, andy@infradead.org, Collabora Kernel ML <kernel@collabora.com>, Ayman Bagabas <ayman.bagabas@gmail.com>, Darren Hart <dvhart@infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jeremy Soller <jeremy@system76.com>, Mattias Jacobsson <2pi@mok.nu>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Rajat Jain <rajatja@google.com>, Yauhen Kharuzhy <jekhor@gmail.com>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Hi Srinivas,
 
-Minor editorial fixes:
-- add some hyphens in multi-word adjectives
-- add some periods for consistency
-- add "'" for possessive CPU's
-- capitalize IRQ when it's an acronym and not part of a function name
+On 24/3/20 18:20, Srinivas Pandruvada wrote:
+> On Tue, 2020-03-24 at 18:08 +0100, Enric Balletbo i Serra wrote:
+>> Hi Greg,
+>>
+>> On 24/3/20 17:49, Greg Kroah-Hartman wrote:
+>>> On Tue, Mar 24, 2020 at 05:31:10PM +0100, Enric Balletbo i Serra
+>>> wrote:
+>>>> Hi Greg,
+>>>>
+>>>> Many thanks for your quick answer, some comments below.
+>>>>
+> [...]
+> 
+>>> Are you sure they aren't already there under
+>>> /sys/firmware/acpi/?  I
+>>> thought all tables and methods were exported there with no need to
+>>> do
+>>> anything special.
+>>>
+>>
+>> That's the first I did when I started to forward port this patch from
+>> chromeos
+>> kernel to mainline.
+>>
+>> On my system I get:
+>>
+>> /sys/firmware/acpi/tables#
+>> APIC  DSDT  FACP  FACS  HPET  MCFG  SSDT  data  dynamic
+>>
+>> (data and dynamic are empty directories)
+>>
+>> I quickly concluded (maybe wrong) that as there is no a MLST entry it
+>> was not
+>> exported, but maybe one of those already contains the info? Or,
+>> should I expect
+>> a MLST entry here?
+>>
+> If the data you are reading doesn't depend on any runtime variable in
+> ACPI tables then you can read from firmware tables as is.
+> 
+> You can download acpica tools and run your method on acpi dump using
+> acpiexec tool. Once you can take dump, you can run on any Linux system.
+> 
+> If you can get what you need from running on the dump, then you can do
+> by directly reading from /sys/firmware/acpi/tables/ from user space
+> without kernel change. Sometimes it is enough as lots of config data
+> tend to be static.
+> 
 
-Signed-off-by: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Paul McKenney <paulmck-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Sebastian Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Joel Fernandes <joel-QYYGw3jwrUn5owFQY34kdNi2O/JbrIOy@public.gmane.org>
-Cc: Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
----
- Documentation/locking/locktypes.rst |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+As I said I'm not an ACPI expert, so thanks in advance for your help.
 
---- linux-next-20200325.orig/Documentation/locking/locktypes.rst
-+++ linux-next-20200325/Documentation/locking/locktypes.rst
-@@ -84,7 +84,7 @@ rtmutex
- 
- RT-mutexes are mutexes with support for priority inheritance (PI).
- 
--PI has limitations on non PREEMPT_RT enabled kernels due to preemption and
-+PI has limitations on non-PREEMPT_RT-enabled kernels due to preemption and
- interrupt disabled sections.
- 
- PI clearly cannot preempt preemption-disabled or interrupt-disabled
-@@ -150,7 +150,7 @@ kernel configuration including PREEMPT_R
- 
- raw_spinlock_t is a strict spinning lock implementation in all kernels,
- including PREEMPT_RT kernels.  Use raw_spinlock_t only in real critical
--core code, low level interrupt handling and places where disabling
-+core code, low-level interrupt handling and places where disabling
- preemption or interrupts is required, for example, to safely access
- hardware state.  raw_spinlock_t can sometimes also be used when the
- critical section is tiny, thus avoiding RT-mutex overhead.
-@@ -160,20 +160,20 @@ spinlock_t
- 
- The semantics of spinlock_t change with the state of PREEMPT_RT.
- 
--On a non PREEMPT_RT enabled kernel spinlock_t is mapped to raw_spinlock_t
-+On a non-PREEMPT_RT-enabled kernel spinlock_t is mapped to raw_spinlock_t
- and has exactly the same semantics.
- 
- spinlock_t and PREEMPT_RT
- -------------------------
- 
--On a PREEMPT_RT enabled kernel spinlock_t is mapped to a separate
-+On a PREEMPT_RT-enabled kernel spinlock_t is mapped to a separate
- implementation based on rt_mutex which changes the semantics:
- 
-- - Preemption is not disabled
-+ - Preemption is not disabled.
- 
-  - The hard interrupt related suffixes for spin_lock / spin_unlock
--   operations (_irq, _irqsave / _irqrestore) do not affect the CPUs
--   interrupt disabled state
-+   operations (_irq, _irqsave / _irqrestore) do not affect the CPU's
-+   interrupt disabled state.
- 
-  - The soft interrupt related suffix (_bh()) still disables softirq
-    handlers.
-@@ -279,7 +279,7 @@ fully preemptible context.  Instead, use
- spin_lock_irqsave() and their unlock counterparts.  In cases where the
- interrupt disabling and locking must remain separate, PREEMPT_RT offers a
- local_lock mechanism.  Acquiring the local_lock pins the task to a CPU,
--allowing things like per-CPU irq-disabled locks to be acquired.  However,
-+allowing things like per-CPU IRQ-disabled locks to be acquired.  However,
- this approach should be used only where absolutely necessary.
- 
- 
+I am trying to look if I can get from userspace the value of the HWID entry
+exported from the driver.
+
+$ cat /sys/devices/platform/chromeos_acpi/HWID
+SAMUS E25-G7R-W35
+
+Using acpiexec I get the element list of the MLST method, but I don't know how
+to get the HWID value.
+
+- evaluate crhw.mlst
+Evaluating \CRHW.MLST
+Evaluation of \CRHW.MLST returned object 0x55f17a7aed60, external buffer length 158
+  [Package] Contains 10 Elements:
+    [String] Length 04 = "CHSW"
+    [String] Length 04 = "FWID"
+    [String] Length 04 = "HWID"
+    [String] Length 04 = "FRID"
+    [String] Length 04 = "BINF"
+    [String] Length 04 = "GPIO"
+    [String] Length 04 = "VBNV"
+    [String] Length 04 = "VDAT"
+    [String] Length 04 = "FMAP"
+    [String] Length 04 = "MECK"
+
+Any clue?
+
+Thanks in advance,
+Enric
+
+
+> Thanks,
+> Srinivas
+> 
+> 
+> 
+> 
+> 
+> 
+>>> What makes these attributes "special" from any other ACPI method?
+>>>
+>>
+>> I can't answer this question right now. I need to investigate more I
+>> guess ;-)
+>>
+>> Thanks again for your answer,
+>> Enric
+>>
+>>>>>> +static int __init chromeos_acpi_init(void)
+>>>>>> +{
+>>>>>> +	int ret;
+>>>>>> +
+>>>>>> +	chromeos_acpi.pdev =
+>>>>>> platform_device_register_simple("chromeos_acpi",
+>>>>>> +						PLATFORM_DEVID_
+>>>>>> NONE, NULL, 0);
+>>>>>> +	if (IS_ERR(chromeos_acpi.pdev)) {
+>>>>>> +		pr_err("unable to register chromeos_acpi
+>>>>>> platform device\n");
+>>>>>> +		return PTR_ERR(chromeos_acpi.pdev);
+>>>>>> +	}
+>>>>>
+>>>>> Only use platform devices and drivers for things that are
+>>>>> actually
+>>>>> platform devices and drivers.  That's not what this is, it is
+>>>>> an ACPI
+>>>>> device and driver.  Don't abuse the platform interface please.
+>>>>>
+>>>>
+>>>> Ok. The purpose was to not break ChromeOS userspace since is
+>>>> looking for the
+>>>> attributes inside /sys/devices/platform/chromeos_acpi. Not a good
+>>>> reason, I
+>>>> know, and I assume we will need to change userspace instead, and
+>>>> convert this to
+>>>> a ACPI device and driver only, right?
+>>>
+>>> How can any userspace be looking for anything that hasn't been
+>>> submitted
+>>> before?  That's nothing to worry about, we don't have to support
+>>> things
+>>> like that :)
+>>>
+>>>> I'll investigate the different places in userspace where this is
+>>>> used and see
+>>>> how difficult it is to do the changes.
+>>>
+>>> Look at /sys/firmware/acpi/ first please.
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>>
+> 
+> 
