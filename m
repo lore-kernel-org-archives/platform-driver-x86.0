@@ -1,35 +1,41 @@
-From: Geoff Levand <geoff@infradead.org>
-Subject: Re: [patch V3 12/20] powerpc/ps3: Convert half completion to rcuwait
-Date: Fri, 27 Mar 2020 12:14:43 -0700
-Message-ID: <f3210d53-dfb1-6bbc-cc82-832105fcfaa2@infradead.org>
-References: <20200321112544.878032781@linutronix.de>
- <20200321113241.930037873@linutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200321113241.930037873@linutronix.de>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Sebastian Siewior <bigeasy@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Joel Fernandes <joel@joelfernandes.org>, Oleg Nesterov <oleg@redhat.com>, Davidlohr Bueso <dave@stgolabs.net>, Michael Ellerman <mpe@ellerman.id.au>, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org, Logan Gunthorpe <logang@deltatee.com>, Bjorn Helgaas <bhelgaas@google.com>, Kurt Schwemmer <kurt.schwemmer@microsemi.com>, linux-pci@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>, "David S. Miller" <davem@davemloft.net>, linux-wireless@vger.kernel.org, netdev@vger.kernel.
+From: Gayatri Kammela <gayatri.kammela@intel.com>
+Subject: [PATCH v1 0/3] Fixes: update Tiger Lake ACPI device IDs
+Date: Fri, 27 Mar 2020 13:24:51 -0700
+Message-ID: <cover.1585335927.git.gayatri.kammela@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, lenb@kernel.org, dvhart@infradead.org, alex.hung@canonical.com, rui.zhang@intel.com, daniel.lezcano@linaro.org, amit.kucheria@verdurent.com, mika.westerberg@intel.com, peterz@infradead.org, charles.d.prestopine@intel.com, Gayatri Kammela <gayatri.kammela@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
 Hi,
 
-On 3/21/20 4:25 AM, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> The PS3 notification interrupt and kthread use a hacked up completion to
-> communicate. Since we're wanting to change the completion implementation and
-> this is abuse anyway, replace it with a simple rcuwait since there is only ever
-> the one waiter.
-> 
-> AFAICT the kthread uses TASK_INTERRUPTIBLE to not increase loadavg, kthreads
-> cannot receive signals by default and this one doesn't look different. Use
-> TASK_IDLE instead.
+The hardware IDs for devices supported by Tiger Lake for various drivers
+such as DPTF, fan, Intel thermal and intel-hid are added with missing 'C'
+which makes them invalid. Hence fix these IDs by updating.
 
-I tested the patch set applied against v5.6-rc7 on the PS3 and it worked
-as expected.
+For instance, the updated ID now looks like
+INT1047 --> INTC1047
 
-Tested by: Geoff Levand <geoff@infradead.org>
+Patch 1: Update Tiger Lake ACPI device IDs for DPTF and fan drivers
+Patch 2: Update Tiger Lake ACPI device ID for intel-hid driver
+Patch 3: Update Tiger Lake ACPI device IDs for thermal driver
+
+Gayatri Kammela (3):
+  ACPI: fix: Update Tiger Lake ACPI device IDs
+  platform/x86: intel-hid: fix: Update Tiger Lake ACPI device ID
+  thermal: int340x_thermal: fix: Update Tiger Lake ACPI device IDs
+
+ drivers/acpi/device_pm.c                                | 2 +-
+ drivers/acpi/dptf/dptf_power.c                          | 2 +-
+ drivers/acpi/dptf/int340x_thermal.c                     | 8 ++++----
+ drivers/platform/x86/intel-hid.c                        | 2 +-
+ drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 2 +-
+ drivers/thermal/intel/int340x_thermal/int3403_thermal.c | 2 +-
+ 6 files changed, 9 insertions(+), 9 deletions(-)
+
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+-- 
+2.17.1
