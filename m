@@ -1,82 +1,44 @@
-From: "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Subject: RE: [PATCH v1 1/3] ACPI: fix: Update Tiger Lake ACPI device IDs
-Date: Fri, 27 Mar 2020 20:45:13 +0000
-Message-ID: <BYAPR11MB36249D9AC4FDE3A9EFF79D66F2CC0@BYAPR11MB3624.namprd11.prod.outlook.com>
-References: <cover.1585335927.git.gayatri.kammela@intel.com>
-         <f2b887a74103500ab59c42e6082f9c52f2063e4a.1585335927.git.gayatri.kammela@intel.com>
- <7e9c5faa9c4c873b6f5b5a8a526134cd92ef6a2a.camel@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Gayatri Kammela <gayatri.kammela@intel.com>
+Subject: [PATCH v2 0/3] Fixes: update Tiger Lake ACPI device IDs
+Date: Fri, 27 Mar 2020 14:28:18 -0700
+Message-ID: <cover.1585343507.git.gayatri.kammela@intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7e9c5faa9c4c873b6f5b5a8a526134cd92ef6a2a.camel@intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: "dvhart@infradead.org" <dvhart@infradead.org>, "alex.hung@canonical.com" <alex.hung@canonical.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>, "lenb@kernel.org" <lenb@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, "Zhang, Rui" <rui.zhang@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
+To: linux-pm@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, lenb@kernel.org, dvhart@infradead.org, alex.hung@canonical.com, rui.zhang@intel.com, daniel.lezcano@linaro.org, amit.kucheria@verdurent.com, mika.westerberg@intel.com, peterz@infradead.org, charles.d.prestopine@intel.com, Gayatri Kammela <gayatri.kammela@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYW5kcnV2YWRhLCBTcmluaXZh
-cyA8c3Jpbml2YXMucGFuZHJ1dmFkYUBpbnRlbC5jb20+DQo+IFNlbnQ6IEZyaWRheSwgTWFyY2gg
-MjcsIDIwMjAgMTozNyBQTQ0KPiBUbzogbGludXgtcG1Admdlci5rZXJuZWwub3JnOyBLYW1tZWxh
-LCBHYXlhdHJpDQo+IDxnYXlhdHJpLmthbW1lbGFAaW50ZWwuY29tPg0KPiBDYzogZHZoYXJ0QGlu
-ZnJhZGVhZC5vcmc7IGFsZXguaHVuZ0BjYW5vbmljYWwuY29tOw0KPiBkYW5pZWwubGV6Y2Fub0Bs
-aW5hcm8ub3JnOyBhbWl0Lmt1Y2hlcmlhQHZlcmR1cmVudC5jb207IGxlbmJAa2VybmVsLm9yZzsN
-Cj4gcGV0ZXJ6QGluZnJhZGVhZC5vcmc7IFpoYW5nLCBSdWkgPHJ1aS56aGFuZ0BpbnRlbC5jb20+
-OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgYW5kcml5LnNoZXZjaGVua29AbGlu
-dXguaW50ZWwuY29tOyBXZXN0ZXJiZXJnLA0KPiBNaWthIDxtaWthLndlc3RlcmJlcmdAaW50ZWwu
-Y29tPjsgUHJlc3RvcGluZSwgQ2hhcmxlcyBEDQo+IDxjaGFybGVzLmQucHJlc3RvcGluZUBpbnRl
-bC5jb20+OyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsNCj4gV3lzb2NraSwg
-UmFmYWVsIEogPHJhZmFlbC5qLnd5c29ja2lAaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BB
-VENIIHYxIDEvM10gQUNQSTogZml4OiBVcGRhdGUgVGlnZXIgTGFrZSBBQ1BJIGRldmljZSBJRHMN
-Cj4gDQo+IE9uIEZyaSwgMjAyMC0wMy0yNyBhdCAxMzoyNCAtMDcwMCwgR2F5YXRyaSBLYW1tZWxh
-IHdyb3RlOg0KPiA+IFRpZ2VyIExha2UncyBuZXcgdW5pcXVlIEFDUEkgZGV2aWNlIElEcyBmb3Ig
-RFBURiBhbmQgZmFuIGRyaXZlcnMgYXJlDQo+ID4gbm90IHZhbGlkIGFzIHRoZSBJRHMgYXJlIG1p
-c3NpbmcgJ0MnLiBGaXggdGhlIElEcyBieSB1cGRhdGluZyB0aGVtLg0KPiA+DQo+ID4gQWZ0ZXIg
-dGhlIHVwZGF0ZSwgdGhlIG5ldyBJRHMgc2hvdWxkIG5vdyBsb29rIGxpa2UNCj4gPiBJTlQxMDQ3
-IC0tPiBJTlRDMTA0Nw0KPiA+IElOVDEwNDAgLS0+IElOVEMxMDQwDQo+ID4gSU5UMTA0MyAtLT4g
-SU5UQzEwNDMNCj4gPiBJTlQxMDQ0IC0tPiBJTlRDMTA0NA0KPiA+DQo+IFdlIG5lZWQgRml4ZXMg
-dGFnLg0KPiANCj4gRm9yIGV4YW1wbGUNCj4gDQo+IEZpeGVzOiA1NWNmZTZhNWM1ODIgKCJBQ1BJ
-OiBEUFRGOiBBZGQgVGlnZXIgTGFrZSBBQ1BJIGRldmljZSBJRHMiKQ0KPiBDYzogNS42KyA8c3Rh
-YmxlQHZnZXIua2VybmVsLm9yZz4gIyA1LjYrDQoNClRoYW5rcyBTcmluaXZhcyEgSSB3aWxsIGFk
-ZCB0aGUgZml4ZXMgdGFnIGFuZCBzZW5kIHYyDQoNCj4gDQo+IEJ5IHRoZSB0aW1lIHRoaXMgcGF0
-Y2ggaXMgbWVyZ2VkIEkgZ3Vlc3MgdGhlIDUuNiB3aWxsIGJlIG91dC4NCj4gDQo+ID4gQ2M6IEFu
-ZHkgU2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPg0KPiA+IENj
-OiBTcmluaXZhcyBQYW5kcnV2YWRhIDxzcmluaXZhcy5wYW5kcnV2YWRhQGludGVsLmNvbT4NCj4g
-PiBDYzogUmFmYWVsIEouIFd5c29ja2kgPHJhZmFlbC5qLnd5c29ja2lAaW50ZWwuY29tPg0KPiA+
-IFN1Z2dlc3RlZC1ieTogU3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBp
-bnRlbC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogR2F5YXRyaSBLYW1tZWxhIDxnYXlhdHJpLmth
-bW1lbGFAaW50ZWwuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2FjcGkvZGV2aWNlX3BtLmMg
-ICAgICAgICAgICB8IDIgKy0NCj4gPiAgZHJpdmVycy9hY3BpL2RwdGYvZHB0Zl9wb3dlci5jICAg
-ICAgfCAyICstDQo+ID4gIGRyaXZlcnMvYWNwaS9kcHRmL2ludDM0MHhfdGhlcm1hbC5jIHwgOCAr
-KysrLS0tLQ0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlv
-bnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2FjcGkvZGV2aWNlX3BtLmMgYi9k
-cml2ZXJzL2FjcGkvZGV2aWNlX3BtLmMgaW5kZXgNCj4gPiBiNjRjNjJiZmNlYTUuLjgwZGFlM2Iz
-YzM2YSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2FjcGkvZGV2aWNlX3BtLmMNCj4gPiArKysg
-Yi9kcml2ZXJzL2FjcGkvZGV2aWNlX3BtLmMNCj4gPiBAQCAtMTMyMSw3ICsxMzIxLDcgQEAgaW50
-IGFjcGlfZGV2X3BtX2F0dGFjaChzdHJ1Y3QgZGV2aWNlICpkZXYsIGJvb2wNCj4gPiBwb3dlcl9v
-bikNCj4gPiAgCSAqLw0KPiA+ICAJc3RhdGljIGNvbnN0IHN0cnVjdCBhY3BpX2RldmljZV9pZCBz
-cGVjaWFsX3BtX2lkc1tdID0gew0KPiA+ICAJCXsiUE5QMEMwQiIsIH0sIC8qIEdlbmVyaWMgQUNQ
-SSBmYW4gKi8NCj4gPiAtCQl7IklOVDEwNDQiLCB9LCAvKiBGYW4gZm9yIFRpZ2VyIExha2UgZ2Vu
-ZXJhdGlvbiAqLw0KPiA+ICsJCXsiSU5UQzEwNDQiLCB9LCAvKiBGYW4gZm9yIFRpZ2VyIExha2Ug
-Z2VuZXJhdGlvbiAqLw0KPiA+ICAJCXsiSU5UMzQwNCIsIH0sIC8qIEZhbiAqLw0KPiA+ICAJCXt9
-DQo+ID4gIAl9Ow0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2FjcGkvZHB0Zi9kcHRmX3Bvd2Vy
-LmMNCj4gPiBiL2RyaXZlcnMvYWNwaS9kcHRmL2RwdGZfcG93ZXIuYyBpbmRleCAzODdmMjdlZjMz
-NjguLmU1ZmIzNGJmYTUyYw0KPiA+IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvYWNwaS9kcHRm
-L2RwdGZfcG93ZXIuYw0KPiA+ICsrKyBiL2RyaXZlcnMvYWNwaS9kcHRmL2RwdGZfcG93ZXIuYw0K
-PiA+IEBAIC05Nyw3ICs5Nyw3IEBAIHN0YXRpYyBpbnQgZHB0Zl9wb3dlcl9yZW1vdmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZQ0KPiA+ICpwZGV2KQ0KPiA+ICB9DQo+ID4NCj4gPiAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBhY3BpX2RldmljZV9pZCBpbnQzNDA3X2RldmljZV9pZHNbXSA9IHsNCj4gPiAt
-CXsiSU5UMTA0NyIsIDB9LA0KPiA+ICsJeyJJTlRDMTA0NyIsIDB9LA0KPiA+ICAJeyJJTlQzNDA3
-IiwgMH0sDQo+ID4gIAl7IiIsIDB9LA0KPiA+ICB9Ow0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2FjcGkvZHB0Zi9pbnQzNDB4X3RoZXJtYWwuYw0KPiA+IGIvZHJpdmVycy9hY3BpL2RwdGYvaW50
-MzQweF90aGVybWFsLmMNCj4gPiBpbmRleCAxZWM3YjY5MDA2NjIuLjI5YjVjNzcyNTZkZCAxMDA2
-NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2FjcGkvZHB0Zi9pbnQzNDB4X3RoZXJtYWwuYw0KPiA+ICsr
-KyBiL2RyaXZlcnMvYWNwaS9kcHRmL2ludDM0MHhfdGhlcm1hbC5jDQo+ID4gQEAgLTEzLDEwICsx
-MywxMCBAQA0KPiA+DQo+ID4gICNkZWZpbmUgSU5UMzQwMV9ERVZJQ0UgMFgwMQ0KPiA+ICBzdGF0
-aWMgY29uc3Qgc3RydWN0IGFjcGlfZGV2aWNlX2lkIGludDM0MHhfdGhlcm1hbF9kZXZpY2VfaWRz
-W10gPSB7DQo+ID4gLQl7IklOVDEwNDAifSwNCj4gPiAtCXsiSU5UMTA0MyJ9LA0KPiA+IC0JeyJJ
-TlQxMDQ0In0sDQo+ID4gLQl7IklOVDEwNDcifSwNCj4gPiArCXsiSU5UQzEwNDAifSwNCj4gPiAr
-CXsiSU5UQzEwNDMifSwNCj4gPiArCXsiSU5UQzEwNDQifSwNCj4gPiArCXsiSU5UQzEwNDcifSwN
-Cj4gPiAgCXsiSU5UMzQwMCJ9LA0KPiA+ICAJeyJJTlQzNDAxIiwgSU5UMzQwMV9ERVZJQ0V9LA0K
-PiA+ICAJeyJJTlQzNDAyIn0sDQoNCg==
+Hi,
+
+The hardware IDs for devices supported by Tiger Lake for various drivers
+such as DPTF, fan, Intel thermal and intel-hid are added with missing 'C'
+which makes them invalid. Hence fix these IDs by updating.
+
+For instance, the updated ID now looks like
+INT1047 --> INTC1047
+
+Patch 1: Update Tiger Lake ACPI device IDs for DPTF and fan drivers
+Patch 2: Update Tiger Lake ACPI device ID for intel-hid driver
+Patch 3: Update Tiger Lake ACPI device IDs for thermal driver
+
+Changes since v1:
+1) Added fixes tag to each patch
+
+Gayatri Kammela (3):
+  ACPI: fix: Update Tiger Lake ACPI device IDs
+  platform/x86: intel-hid: fix: Update Tiger Lake ACPI device ID
+  thermal: int340x_thermal: fix: Update Tiger Lake ACPI device IDs
+
+ drivers/acpi/device_pm.c                                | 2 +-
+ drivers/acpi/dptf/dptf_power.c                          | 2 +-
+ drivers/acpi/dptf/int340x_thermal.c                     | 8 ++++----
+ drivers/platform/x86/intel-hid.c                        | 2 +-
+ drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 2 +-
+ drivers/thermal/intel/int340x_thermal/int3403_thermal.c | 2 +-
+ 6 files changed, 9 insertions(+), 9 deletions(-)
+
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+-- 
+2.17.1
