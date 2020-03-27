@@ -1,27 +1,51 @@
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH 0/2] platform: convert to use new I2C API
-Date: Thu, 26 Mar 2020 22:09:50 +0100
-Message-ID: <20200326210952.12857-1-wsa+renesas@sang-engineering.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/1] x86/platform/intel-mid: convert to use i2c_new_client_device()
+Date: Fri, 27 Mar 2020 09:37:21 +0200
+Message-ID: <CAHp75VdQAReLyr3GxMH8v5hD4EhpdGSunKbdKbaLoXRmnpyYgw@mail.gmail.com>
+References: <20200326211015.13654-1-wsa+renesas@sang-engineering.com> <20200326211015.13654-2-wsa+renesas@sang-engineering.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200326211015.13654-2-wsa+renesas@sang-engineering.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-i2c@vger.kernel.org
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-We are deprecating calls which return NULL in favor of new variants which
-return an ERR_PTR. Only build tested.
+On Thu, Mar 26, 2020 at 11:10 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+> Move away from the deprecated API and return the shiny new ERRPTR where
+> useful.
+>
 
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Wolfram Sang (2):
-  platform/chrome: chromeos_laptop: make I2C API conversion complete
-  platform/mellanox: mlxreg-hotplug: convert to use
-    i2c_new_client_device()
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  arch/x86/platform/intel-mid/sfi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/platform/intel-mid/sfi.c b/arch/x86/platform/intel-mid/sfi.c
+> index b8f7f193f383..30bd5714a3d4 100644
+> --- a/arch/x86/platform/intel-mid/sfi.c
+> +++ b/arch/x86/platform/intel-mid/sfi.c
+> @@ -287,8 +287,8 @@ void intel_scu_devices_create(void)
+>
+>                 adapter = i2c_get_adapter(i2c_bus[i]);
+>                 if (adapter) {
+> -                       client = i2c_new_device(adapter, i2c_devs[i]);
+> -                       if (!client)
+> +                       client = i2c_new_client_device(adapter, i2c_devs[i]);
+> +                       if (IS_ERR(client))
+>                                 pr_err("can't create i2c device %s\n",
+>                                         i2c_devs[i]->type);
+>                 } else
+> --
+> 2.20.1
+>
 
- drivers/platform/chrome/chromeos_laptop.c  |  2 +-
- drivers/platform/mellanox/mlxreg-hotplug.c | 11 +++++++----
- 2 files changed, 8 insertions(+), 5 deletions(-)
 
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
