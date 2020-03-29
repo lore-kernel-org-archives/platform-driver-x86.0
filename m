@@ -1,61 +1,76 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 0/3] Fixes: update Tiger Lake ACPI device IDs
-Date: Sat, 28 Mar 2020 22:43:44 +0200
-Message-ID: <CAHp75VcEO0udSzpWX14vaZcjLni2RA3NGXNqr50HMK=S7GWjxg@mail.gmail.com>
-References: <cover.1585343507.git.gayatri.kammela@intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 5.6 regression fix 0/2] ACPI: PM: s2idle: Fix some systems no longer waking up from suspend
+Date: Mon, 30 Mar 2020 00:34:17 +0200
+Message-ID: <20200329223419.122796-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1585343507.git.gayatri.kammela@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gayatri Kammela <gayatri.kammela@intel.com>
-Cc: Linux PM <linux-pm@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Alex Hung <alex.hung@canonical.com>, "Zhang, Rui" <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Mika Westerberg <mika.westerberg@intel.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Mar 27, 2020 at 11:34 PM Gayatri Kammela
-<gayatri.kammela@intel.com> wrote:
->
-> Hi,
->
-> The hardware IDs for devices supported by Tiger Lake for various drivers
-> such as DPTF, fan, Intel thermal and intel-hid are added with missing 'C'
-> which makes them invalid. Hence fix these IDs by updating.
->
-> For instance, the updated ID now looks like
-> INT1047 --> INTC1047
->
-> Patch 1: Update Tiger Lake ACPI device IDs for DPTF and fan drivers
-> Patch 2: Update Tiger Lake ACPI device ID for intel-hid driver
-> Patch 3: Update Tiger Lake ACPI device IDs for thermal driver
->
+Hi Rafael, Andy and Darren,
 
-Please, keep the IDs sorted (INTC should go after INT, etc).
-Also I will need an Ack for patch 1 (at least).
+I've been debugging an issue I noticed on various Cherry Trail devices
+this weekend. The issue is that when trying to wakeup the laptop / 2-in-1
+with the USB keyboard, then it not only not wakes up, after this wakeup
+attempt it will also no longer wakeup through other means such as the
+power-button, IOW the system hangs which is not so nice.
 
-> Changes since v1:
-> 1) Added fixes tag to each patch
->
-> Gayatri Kammela (3):
->   ACPI: fix: Update Tiger Lake ACPI device IDs
->   platform/x86: intel-hid: fix: Update Tiger Lake ACPI device ID
->   thermal: int340x_thermal: fix: Update Tiger Lake ACPI device IDs
->
->  drivers/acpi/device_pm.c                                | 2 +-
->  drivers/acpi/dptf/dptf_power.c                          | 2 +-
->  drivers/acpi/dptf/int340x_thermal.c                     | 8 ++++----
->  drivers/platform/x86/intel-hid.c                        | 2 +-
->  drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 2 +-
->  drivers/thermal/intel/int340x_thermal/int3403_thermal.c | 2 +-
->  6 files changed, 9 insertions(+), 9 deletions(-)
->
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> --
-> 2.17.1
->
+This is also happening in 5.5 since 5.5.5 .
 
+Here is the explanation of the problem from the commit message of the
+first patch:
 
--- 
-With Best Regards,
-Andy Shevchenko
+###
+
+Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
+waking up the system") the SCI triggering without there being a wakeup
+cause recognized by the ACPI sleep code will no longer wakeup the system.
+
+This works as intended, but this is a problem for devices where the SCI
+is shared with another device which is also a wakeup source.
+
+In the past these from the pov of the ACPI sleep code spurious SCIs would
+still cause a wakeup so the wakeup from the device sharing the interrupt
+would actually wakeup the system. This now no longer works.
+
+This is a problem on e.g. Bay Trail-T and Cherry Trail devices where
+some peripherals (typically the XHCI controller) can signal a
+Power Management Event (PME) to the Power Management Controller (PMC)
+to wakeup the system, this uses the same interrupt as the SCI.
+These wakeups are handled through a special INT0002 ACPI device which
+checks for events in the GPE0a_STS for this and takes care of acking
+the PME so that the shared interrupt stops triggering.
+
+The change to the ACPI sleep code to ignore the spurious SCI, causes
+the system to no longer wakeup on these PME events. To make things
+worse this means that the INT0002 device driver interrupt handler will
+no longer run, causing the PME to not get cleared and resulting in the
+system hanging. Trying to wakeup the system after such a PME through e.g.
+the power button no longer works.
+
+###
+
+The first patch in this series adds an acpi_s2idle_register_wake_callback=
+()
+function the ACPI sleep code which registers a callback to be called from
+acpi_s2idle_wake() and when the callback returns true, return true from
+acpi_s2idle_wake().
+
+The second patch in this series makes the INT0002 driver use this mechani=
+sm
+to check the GPE0a_STS register from acpi_s2idle_wake() and to tell the
+system to wakeup if a PME is signaled in the register.
+
+This is the cleanest solution I could come up with. I hope it is to your
+liking.
+
+Since the INT0002 driver change depends on the changes from the first
+patch I suggest that we merge both patches to Rafael's tree.
+Andy or Darren, may we have your Acked-by for that?
+
+Regards,
+
+Hans
