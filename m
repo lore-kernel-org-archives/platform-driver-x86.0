@@ -1,73 +1,200 @@
 From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v2 1/3] ACPI: fix: Update Tiger Lake ACPI device IDs
-Date: Wed, 1 Apr 2020 13:29:33 +0200
-Message-ID: <CAJZ5v0gYaZW8ycWQkcymz9W8svtNVnLGxsPZXEf4tP8Tpsmyew@mail.gmail.com>
-References: <cover.1585343507.git.gayatri.kammela@intel.com>
- <9359b8e261d69983b1eed2b8e53ef9eabfdfdd51.1585343507.git.gayatri.kammela@intel.com>
- <CAJZ5v0j8OaqM6k52Ar9sYn0Ea_u9+MBB0rcMWv6vGBt5jXCQBQ@mail.gmail.com>
- <20200330172439.GB1922688@smile.fi.intel.com> <BYAPR11MB362459660B914BEF1526AD8DF2CB0@BYAPR11MB3624.namprd11.prod.outlook.com>
- <CAJZ5v0inmWu6_ZYLCKart6F873SqK5AyvVXOCS83Yr=KQAQV_Q@mail.gmail.com>
+Subject: Re: [PATCH 5.6 regression fix 1/2] ACPI: PM: Add acpi_s2idle_register_wake_callback()
+Date: Wed, 1 Apr 2020 18:32:41 +0200
+Message-ID: <CAJZ5v0iapuqnfsQHhTQTWXdEtzX_MMTBUqdAzCej19AF9rtrNA@mail.gmail.com>
+References: <20200329223419.122796-1-hdegoede@redhat.com> <20200329223419.122796-2-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0inmWu6_ZYLCKart6F873SqK5AyvVXOCS83Yr=KQAQV_Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Zhang, Rui" <rui.zhang@intel.com>, Linux PM <linux-pm@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Alex Hung <alex.hung@canonical.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, Peter Zijlstra <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, "5 . 6+" <stable@vger.kernel.org>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20200329223419.122796-2-hdegoede@redhat.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "5 . 4+" <stable@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Mar 31, 2020 at 8:19 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Mon, Mar 30, 2020 at 12:34 AM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> On Tue, Mar 31, 2020 at 1:22 AM Kammela, Gayatri
-> <gayatri.kammela@intel.com> wrote:
-> >
-> > > -----Original Message-----
-> > > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Sent: Monday, March 30, 2020 10:25 AM
-> > > To: Rafael J. Wysocki <rafael@kernel.org>
-> > > Cc: Kammela, Gayatri <gayatri.kammela@intel.com>; Zhang, Rui
-> > > <rui.zhang@intel.com>; Linux PM <linux-pm@vger.kernel.org>; Platform
-> > > Driver <platform-driver-x86@vger.kernel.org>; Linux Kernel Mailing List
-> > > <linux-kernel@vger.kernel.org>; Len Brown <lenb@kernel.org>; Darren Hart
-> > > <dvhart@infradead.org>; Alex Hung <alex.hung@canonical.com>; Daniel
-> > > Lezcano <daniel.lezcano@linaro.org>; Amit Kucheria
-> > > <amit.kucheria@verdurent.com>; Westerberg, Mika
-> > > <mika.westerberg@intel.com>; Peter Zijlstra <peterz@infradead.org>;
-> > > Prestopine, Charles D <charles.d.prestopine@intel.com>; 5 . 6+
-> > > <stable@vger.kernel.org>; Pandruvada, Srinivas
-> > > <srinivas.pandruvada@intel.com>; Wysocki, Rafael J
-> > > <rafael.j.wysocki@intel.com>
-> > > Subject: Re: [PATCH v2 1/3] ACPI: fix: Update Tiger Lake ACPI device IDs
-> > >
-> > > On Mon, Mar 30, 2020 at 06:43:35PM +0200, Rafael J. Wysocki wrote:
-> > > > On Fri, Mar 27, 2020 at 10:34 PM Gayatri Kammela
-> > > > <gayatri.kammela@intel.com> wrote:
-> > >
-> > > > > -       {"INT1044"},
-> > > > > -       {"INT1047"},
-> > > > > +       {"INTC1040"},
-> > > > > +       {"INTC1043"},
-> > > > > +       {"INTC1044"},
-> > > > > +       {"INTC1047"},
-> > > > >         {"INT3400"},
-> > > > >         {"INT3401", INT3401_DEVICE},
-> > > > >         {"INT3402"},
-> > > > > --
-> > > >
-> > > > I can take this along with the other two patches in the series if that
-> > > > is fine by Andy and Rui.
-> > >
-> > > One nit is to fix the ordering to be alphanumeric or close enough (I admit in
-> > > some cases it might require unneeded churn) to that.
-> > Thanks Andy and Rafael! Should I send v3 for this series with right ordering this time?
+> Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
+> waking up the system") the SCI triggering without there being a wakeup
+> cause recognized by the ACPI sleep code will no longer wakeup the system.
 >
-> No need, I can fix up the ordering just fine.
+> This works as intended, but this is a problem for devices where the SCI
+> is shared with another device which is also a wakeup source.
 >
-> > > Otherwise,
-> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> In the past these, from the pov of the ACPI sleep code, spurious SCIs
+> would still cause a wakeup so the wakeup from the device sharing the
+> interrupt would actually wakeup the system. This now no longer works.
 >
-> Thanks!
+> This is a problem on e.g. Bay Trail-T and Cherry Trail devices where
+> some peripherals (typically the XHCI controller) can signal a
+> Power Management Event (PME) to the Power Management Controller (PMC)
+> to wakeup the system, this uses the same interrupt as the SCI.
+> These wakeups are handled through a special INT0002 ACPI device which
+> checks for events in the GPE0a_STS for this and takes care of acking
+> the PME so that the shared interrupt stops triggering.
+>
+> The change to the ACPI sleep code to ignore the spurious SCI, causes
+> the system to no longer wakeup on these PME events. To make things
+> worse this means that the INT0002 device driver interrupt handler will
+> no longer run, causing the PME to not get cleared and resulting in the
+> system hanging. Trying to wakeup the system after such a PME through e.g.
+> the power button no longer works.
+>
+> Add an acpi_s2idle_register_wake_callback() function which registers
+> a callback to be called from acpi_s2idle_wake() and when the callback
+> returns true, return true from acpi_s2idle_wake().
+>
+> The INT0002 driver will use this mechanism to check the GPE0a_STS
+> register from acpi_s2idle_wake() and to tell the system to wakeup
+> if a PME is signaled in the register.
+>
+> Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+> Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Now applied as 5.7 material with the changes mentioned above.
+I generally agree with the approach, but I would make some, mostly
+cosmetic, changes.
 
-Please check the bleeding-edge branch in my tree.
+First off, I'd put the new code into drivers/acpi/wakeup.c.
+
+I'd export one function from there to be called from
+acpi_s2idle_wake() and the install/uninstall routines for the users.
+
+> ---
+>  drivers/acpi/sleep.c | 70 ++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/acpi.h |  7 +++++
+>  2 files changed, 77 insertions(+)
+>
+> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+> index e5f95922bc21..e360e51afa8e 100644
+> --- a/drivers/acpi/sleep.c
+> +++ b/drivers/acpi/sleep.c
+> @@ -943,6 +943,65 @@ static struct acpi_scan_handler lps0_handler = {
+>         .attach = lps0_device_attach,
+>  };
+>
+> +struct s2idle_wake_callback {
+
+I'd call this acpi_wakeup_handler.
+
+> +       struct list_head list;
+
+list_node?
+
+> +       bool (*function)(void *data);
+
+bool (*wakeup)(void *context)?
+
+> +       void *user_data;
+
+context?
+
+> +};
+> +
+> +static LIST_HEAD(s2idle_wake_callback_head);
+> +static DEFINE_MUTEX(s2idle_wake_callback_mutex);
+> +
+> +/*
+> + * Drivers which may share an IRQ with the SCI can use this to register
+> + * a callback which returns true when the device they are managing wants
+> + * to trigger a wakeup.
+> + */
+> +int acpi_s2idle_register_wake_callback(
+> +       int wake_irq, bool (*function)(void *data), void *user_data)
+> +{
+> +       struct s2idle_wake_callback *callback;
+> +
+> +       /*
+> +        * If the device is not sharing its IRQ with the SCI, there is no
+> +        * need to register the callback.
+> +        */
+> +       if (!acpi_sci_irq_valid() || wake_irq != acpi_sci_irq)
+> +               return 0;
+> +
+> +       callback = kmalloc(sizeof(*callback), GFP_KERNEL);
+> +       if (!callback)
+> +               return -ENOMEM;
+> +
+> +       callback->function = function;
+> +       callback->user_data = user_data;
+> +
+> +       mutex_lock(&s2idle_wake_callback_mutex);
+> +       list_add(&callback->list, &s2idle_wake_callback_head);
+> +       mutex_unlock(&s2idle_wake_callback_mutex);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_s2idle_register_wake_callback);
+> +
+> +void acpi_s2idle_unregister_wake_callback(
+> +       bool (*function)(void *data), void *user_data)
+> +{
+> +       struct s2idle_wake_callback *cb;
+> +
+> +       mutex_lock(&s2idle_wake_callback_mutex);
+> +       list_for_each_entry(cb, &s2idle_wake_callback_head, list) {
+> +               if (cb->function == function &&
+> +                   cb->user_data == user_data) {
+> +                       list_del(&cb->list);
+> +                       kfree(cb);
+> +                       break;
+> +               }
+> +       }
+> +       mutex_unlock(&s2idle_wake_callback_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_s2idle_unregister_wake_callback);
+> +
+>  static int acpi_s2idle_begin(void)
+>  {
+>         acpi_scan_lock_acquire();
+> @@ -992,6 +1051,8 @@ static void acpi_s2idle_sync(void)
+>
+>  static bool acpi_s2idle_wake(void)
+>  {
+> +       struct s2idle_wake_callback *cb;
+> +
+>         if (!acpi_sci_irq_valid())
+>                 return pm_wakeup_pending();
+>
+> @@ -1025,6 +1086,15 @@ static bool acpi_s2idle_wake(void)
+>                 if (acpi_any_gpe_status_set() && !acpi_ec_dispatch_gpe())
+>                         return true;
+>
+> +               /*
+> +                * Check callbacks registered by drivers sharing the SCI.
+> +                * Note no need to lock, nothing else is running.
+> +                */
+> +               list_for_each_entry(cb, &s2idle_wake_callback_head, list) {
+> +                       if (cb->function(cb->user_data))
+> +                               return true;
+> +               }
+
+AFAICS this needs to be done in acpi_s2idle_restore() too to clear the
+status bits in case one of these wakeup sources triggers along with a
+GPE or a fixed event and the other one wins the race.
+
+> +
+>                 /*
+>                  * Cancel the wakeup and process all pending events in case
+>                  * there are any wakeup ones in there.
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 0f24d701fbdc..9f06e1dc79c1 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -488,6 +488,13 @@ void __init acpi_nvs_nosave_s3(void);
+>  void __init acpi_sleep_no_blacklist(void);
+>  #endif /* CONFIG_PM_SLEEP */
+>
+> +#ifdef CONFIG_ACPI_SYSTEM_POWER_STATES_SUPPORT
+> +int acpi_s2idle_register_wake_callback(
+> +       int wake_irq, bool (*function)(void *data), void *user_data);
+> +void acpi_s2idle_unregister_wake_callback(
+> +       bool (*function)(void *data), void *user_data);
+> +#endif
+> +
+>  struct acpi_osc_context {
+>         char *uuid_str;                 /* UUID string */
+>         int rev;
+> --
+
+Thanks!
