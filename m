@@ -1,66 +1,67 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v2 1/3] ACPI: fix: Update Tiger Lake ACPI device IDs
-Date: Tue, 31 Mar 2020 08:19:29 +0200
-Message-ID: <CAJZ5v0inmWu6_ZYLCKart6F873SqK5AyvVXOCS83Yr=KQAQV_Q@mail.gmail.com>
-References: <cover.1585343507.git.gayatri.kammela@intel.com>
- <9359b8e261d69983b1eed2b8e53ef9eabfdfdd51.1585343507.git.gayatri.kammela@intel.com>
- <CAJZ5v0j8OaqM6k52Ar9sYn0Ea_u9+MBB0rcMWv6vGBt5jXCQBQ@mail.gmail.com>
- <20200330172439.GB1922688@smile.fi.intel.com> <BYAPR11MB362459660B914BEF1526AD8DF2CB0@BYAPR11MB3624.namprd11.prod.outlook.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the MP-man MPWIN895CL tablet
+Date: Wed,  1 Apr 2020 10:03:48 +0200
+Message-ID: <20200401080348.5128-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <BYAPR11MB362459660B914BEF1526AD8DF2CB0@BYAPR11MB3624.namprd11.prod.outlook.com>
-Sender: stable-owner@vger.kernel.org
-To: "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Zhang, Rui" <rui.zhang@intel.com>, Linux PM <linux-pm@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Alex Hung <alex.hung@canonical.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, Peter Zijlstra <peterz@infradead.org>, "Prestopine, Charles D" <charles.d.prestopine@intel.com>, "5 . 6+" <stable@vger.kernel.org>, "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Mar 31, 2020 at 1:22 AM Kammela, Gayatri
-<gayatri.kammela@intel.com> wrote:
->
-> > -----Original Message-----
-> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Sent: Monday, March 30, 2020 10:25 AM
-> > To: Rafael J. Wysocki <rafael@kernel.org>
-> > Cc: Kammela, Gayatri <gayatri.kammela@intel.com>; Zhang, Rui
-> > <rui.zhang@intel.com>; Linux PM <linux-pm@vger.kernel.org>; Platform
-> > Driver <platform-driver-x86@vger.kernel.org>; Linux Kernel Mailing List
-> > <linux-kernel@vger.kernel.org>; Len Brown <lenb@kernel.org>; Darren Hart
-> > <dvhart@infradead.org>; Alex Hung <alex.hung@canonical.com>; Daniel
-> > Lezcano <daniel.lezcano@linaro.org>; Amit Kucheria
-> > <amit.kucheria@verdurent.com>; Westerberg, Mika
-> > <mika.westerberg@intel.com>; Peter Zijlstra <peterz@infradead.org>;
-> > Prestopine, Charles D <charles.d.prestopine@intel.com>; 5 . 6+
-> > <stable@vger.kernel.org>; Pandruvada, Srinivas
-> > <srinivas.pandruvada@intel.com>; Wysocki, Rafael J
-> > <rafael.j.wysocki@intel.com>
-> > Subject: Re: [PATCH v2 1/3] ACPI: fix: Update Tiger Lake ACPI device IDs
-> >
-> > On Mon, Mar 30, 2020 at 06:43:35PM +0200, Rafael J. Wysocki wrote:
-> > > On Fri, Mar 27, 2020 at 10:34 PM Gayatri Kammela
-> > > <gayatri.kammela@intel.com> wrote:
-> >
-> > > > -       {"INT1044"},
-> > > > -       {"INT1047"},
-> > > > +       {"INTC1040"},
-> > > > +       {"INTC1043"},
-> > > > +       {"INTC1044"},
-> > > > +       {"INTC1047"},
-> > > >         {"INT3400"},
-> > > >         {"INT3401", INT3401_DEVICE},
-> > > >         {"INT3402"},
-> > > > --
-> > >
-> > > I can take this along with the other two patches in the series if that
-> > > is fine by Andy and Rui.
-> >
-> > One nit is to fix the ordering to be alphanumeric or close enough (I admit in
-> > some cases it might require unneeded churn) to that.
-> Thanks Andy and Rafael! Should I send v3 for this series with right ordering this time?
+Add touchscreen info for the MP-man MPWIN895CL tablet.
 
-No need, I can fix up the ordering just fine.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-> > Otherwise,
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Thanks!
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x8=
+6/touchscreen_dmi.c
+index 6ec8923dec1a..931814e62454 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -373,6 +373,23 @@ static const struct ts_dmi_data jumper_ezpad_mini3_d=
+ata =3D {
+ 	.properties	=3D jumper_ezpad_mini3_props,
+ };
+=20
++static const struct property_entry mpman_mpwin895cl_props[] =3D {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 3),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 9),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-mpman-mpwin895cl.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
++	{ }
++};
++
++static const struct ts_dmi_data mpman_mpwin895cl_data =3D {
++	.acpi_name	=3D "MSSL1680:00",
++	.properties	=3D mpman_mpwin895cl_props,
++};
++
+ static const struct property_entry myria_my8307_props[] =3D {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1720),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+@@ -908,6 +925,14 @@ const struct dmi_system_id touchscreen_dmi_table[] =3D=
+ {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
+ 		},
+ 	},
++	{
++		/* MP Man MPWIN895CL */
++		.driver_data =3D (void *)&mpman_mpwin895cl_data,
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR, "MPMAN"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MPWIN8900CL"),
++		},
++	},
+ 	{
+ 		/* Myria MY8307 */
+ 		.driver_data =3D (void *)&myria_my8307_data,
+--=20
+2.26.0
