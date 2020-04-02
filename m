@@ -1,47 +1,43 @@
-From: YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] platform/x86: wmi: Make two functions static
-Date: Thu, 2 Apr 2020 15:15:49 +0800
-Message-ID: <20200402071549.3304-1-yuehaibing@huawei.com>
+From: Prarit Bhargava <prarit@redhat.com>
+Subject: [PATCH] tools/power/x86/intel-speed-select: Fix CLX-N package information output
+Date: Thu,  2 Apr 2020 14:07:32 -0400
+Message-ID: <20200402180732.24684-1-prarit@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy@infradead.org, 2pi@mok.nu, yuehaibing@huawei.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Prarit Bhargava <prarit@redhat.com>, andriy.shevchenko@linux.intel.com, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Fix sparse warnings:
+On CLX-N the perf-profile output is missing the package, die, and cpu
+output.  On CLX-N the pkg_dev struct will never be evaluated by the core
+code so pkg_dev.processed is always 0 and the package, die, and cpu
+information is never output.
 
-drivers/platform/x86/xiaomi-wmi.c:26:5: warning: symbol 'xiaomi_wmi_probe' was not declared. Should it be static?
-drivers/platform/x86/xiaomi-wmi.c:51:6: warning: symbol 'xiaomi_wmi_notify' was not declared. Should it be static?
+Set the pkg_dev.processed flag to 1 for CLX-N processors.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Cc: andriy.shevchenko@linux.intel.com
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
 ---
- drivers/platform/x86/xiaomi-wmi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/xiaomi-wmi.c b/drivers/platform/x86/xiaomi-wmi.c
-index 601cbb282f54..54a2546bb93b 100644
---- a/drivers/platform/x86/xiaomi-wmi.c
-+++ b/drivers/platform/x86/xiaomi-wmi.c
-@@ -23,7 +23,7 @@ struct xiaomi_wmi {
- 	unsigned int key_code;
- };
- 
--int xiaomi_wmi_probe(struct wmi_device *wdev, const void *context)
-+static int xiaomi_wmi_probe(struct wmi_device *wdev, const void *context)
- {
- 	struct xiaomi_wmi *data;
- 
-@@ -48,7 +48,7 @@ int xiaomi_wmi_probe(struct wmi_device *wdev, const void *context)
- 	return input_register_device(data->input_dev);
- }
- 
--void xiaomi_wmi_notify(struct wmi_device *wdev, union acpi_object *dummy)
-+static void xiaomi_wmi_notify(struct wmi_device *wdev, union acpi_object *dummy)
- {
- 	struct xiaomi_wmi *data;
- 
--- 
-2.17.1
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/pow=
+er/x86/intel-speed-select/isst-config.c
+index d1ac57be0cbd..2e64b9b6eb2e 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -1169,6 +1169,7 @@ static void dump_clx_n_config_for_cpu(int cpu, void=
+ *arg1, void *arg2,
+=20
+ 		ctdp_level =3D &clx_n_pkg_dev.ctdp_level[0];
+ 		pbf_info =3D &ctdp_level->pbf_info;
++		clx_n_pkg_dev.processed =3D 1;
+ 		isst_ctdp_display_information(cpu, outf, tdp_level, &clx_n_pkg_dev);
+ 		free_cpu_set(ctdp_level->core_cpumask);
+ 		free_cpu_set(pbf_info->core_cpumask);
+--=20
+2.18.2
