@@ -1,13 +1,13 @@
 From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH v4 12/12] mellanox: switch to virtio_legacy_init/size
-Date: Mon, 6 Apr 2020 17:02:17 -0400
-Message-ID: <20200406210108.148131-13-mst@redhat.com>
-References: <20200406210108.148131-1-mst@redhat.com>
+Subject: [PATCH v5 12/12] mellanox: switch to virtio_legacy_init/size
+Date: Mon, 6 Apr 2020 17:35:17 -0400
+Message-ID: <20200406213314.248038-13-mst@redhat.com>
+References: <20200406213314.248038-1-mst@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200406210108.148131-1-mst@redhat.com>
+In-Reply-To: <20200406213314.248038-1-mst@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, platform-driver-x86@vger.kernel.org
@@ -18,6 +18,10 @@ explicit.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
+
+maintainers, pls ack merging this through virtio tree due to dependency
+on previous patches in the patchset.
+
  drivers/platform/mellanox/mlxbf-tmfifo.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
