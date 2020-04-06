@@ -1,73 +1,61 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 12/12] mellanox: switch to virtio_legacy_init/size
-Date: Tue, 7 Apr 2020 00:57:43 +0300
-Message-ID: <CAHp75Ve46P=TYk0pzHFsYXjkKX92K2=NO5Krqy2uo_7HG=DWCA@mail.gmail.com>
-References: <20200406213314.248038-1-mst@redhat.com> <20200406213314.248038-13-mst@redhat.com>
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH v6 12/12] mellanox: switch to virtio_legacy_init/size
+Date: Mon, 6 Apr 2020 18:26:53 -0400
+Message-ID: <20200406222507.281867-13-mst@redhat.com>
+References: <20200406222507.281867-1-mst@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200406213314.248038-13-mst@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20200406222507.281867-1-mst@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 7, 2020 at 12:35 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> These are used for legacy ring format, switch to APIs that make this
-> explicit.
->
+These are used for legacy ring format, switch to APIs that make this
+explicit.
 
 Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
 
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->
-> maintainers, pls ack merging this through virtio tree due to dependency
-> on previous patches in the patchset.
+maintainers, pls ack merging this through virtio tree due to dependency
+on previous patches in the patchset.
 
-Here you are!
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
->
->  drivers/platform/mellanox/mlxbf-tmfifo.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> index 5739a9669b29..f42b1fb713f1 100644
-> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> @@ -214,7 +214,7 @@ static void mlxbf_tmfifo_free_vrings(struct mlxbf_tmfifo *fifo,
->         for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
->                 vring = &tm_vdev->vrings[i];
->                 if (vring->va) {
-> -                       size = vring_size(vring->num, vring->align);
-> +                       size = vring_legacy_size(vring->num, vring->align);
->                         dma_free_coherent(tm_vdev->vdev.dev.parent, size,
->                                           vring->va, vring->dma);
->                         vring->va = NULL;
-> @@ -245,7 +245,7 @@ static int mlxbf_tmfifo_alloc_vrings(struct mlxbf_tmfifo *fifo,
->                 vring->vdev_id = tm_vdev->vdev.id.device;
->                 dev = &tm_vdev->vdev.dev;
->
-> -               size = vring_size(vring->num, vring->align);
-> +               size = vring_legacy_size(vring->num, vring->align);
->                 va = dma_alloc_coherent(dev->parent, size, &dma, GFP_KERNEL);
->                 if (!va) {
->                         mlxbf_tmfifo_free_vrings(fifo, tm_vdev);
-> @@ -935,7 +935,7 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
->                 vring = &tm_vdev->vrings[i];
->
->                 /* zero vring */
-> -               size = vring_size(vring->num, vring->align);
-> +               size = vring_legacy_size(vring->num, vring->align);
->                 memset(vring->va, 0, size);
->                 vq = vring_new_virtqueue(i, vring->num, vring->align, vdev,
->                                          false, false, vring->va,
-> --
-> MST
->
-
-
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index 5739a9669b29..f42b1fb713f1 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -214,7 +214,7 @@ static void mlxbf_tmfifo_free_vrings(struct mlxbf_tmfifo *fifo,
+ 	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
+ 		vring = &tm_vdev->vrings[i];
+ 		if (vring->va) {
+-			size = vring_size(vring->num, vring->align);
++			size = vring_legacy_size(vring->num, vring->align);
+ 			dma_free_coherent(tm_vdev->vdev.dev.parent, size,
+ 					  vring->va, vring->dma);
+ 			vring->va = NULL;
+@@ -245,7 +245,7 @@ static int mlxbf_tmfifo_alloc_vrings(struct mlxbf_tmfifo *fifo,
+ 		vring->vdev_id = tm_vdev->vdev.id.device;
+ 		dev = &tm_vdev->vdev.dev;
+ 
+-		size = vring_size(vring->num, vring->align);
++		size = vring_legacy_size(vring->num, vring->align);
+ 		va = dma_alloc_coherent(dev->parent, size, &dma, GFP_KERNEL);
+ 		if (!va) {
+ 			mlxbf_tmfifo_free_vrings(fifo, tm_vdev);
+@@ -935,7 +935,7 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
+ 		vring = &tm_vdev->vrings[i];
+ 
+ 		/* zero vring */
+-		size = vring_size(vring->num, vring->align);
++		size = vring_legacy_size(vring->num, vring->align);
+ 		memset(vring->va, 0, size);
+ 		vq = vring_new_virtqueue(i, vring->num, vring->align, vdev,
+ 					 false, false, vring->va,
 -- 
-With Best Regards,
-Andy Shevchenko
+MST
