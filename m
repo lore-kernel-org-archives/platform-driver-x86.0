@@ -1,13 +1,13 @@
 From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH v7 16/19] mellanox: switch to virtio_legacy_init/size
-Date: Mon, 6 Apr 2020 21:08:03 -0400
-Message-ID: <20200407010700.446571-17-mst@redhat.com>
-References: <20200407010700.446571-1-mst@redhat.com>
+Subject: [PATCH v8 16/19] mellanox: switch to virtio_legacy_init/size
+Date: Mon, 6 Apr 2020 21:17:00 -0400
+Message-ID: <20200407011612.478226-17-mst@redhat.com>
+References: <20200407011612.478226-1-mst@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200407010700.446571-1-mst@redhat.com>
+In-Reply-To: <20200407011612.478226-1-mst@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, platform-driver-x86@vger.kernel.org
