@@ -1,57 +1,40 @@
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH v8 16/19] mellanox: switch to virtio_legacy_init/size
-Date: Mon, 6 Apr 2020 21:17:00 -0400
-Message-ID: <20200407011612.478226-17-mst@redhat.com>
-References: <20200407011612.478226-1-mst@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH] platform/x86: surface3_power: Fix a NULL vs IS_ERR() check
+ in probe
+Date: Tue, 7 Apr 2020 12:30:52 +0300
+Message-ID: <20200407093052.GL68494@mwanda>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <kernel-janitors-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200407011612.478226-1-mst@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, platform-driver-x86@vger.kernel.org
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>
+Cc: Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Stephen Just <stephenjust@gmail.com>, platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-These are used for legacy ring format, switch to APIs that make this
-explicit.
+The i2c_acpi_new_device() function never returns NULL, it returns error
+pointers.
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Fixes: b1f81b496b0d ("platform/x86: surface3_power: MSHW0011 rev-eng implementation")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/platform/mellanox/mlxbf-tmfifo.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/surface3_power.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index 5739a9669b29..f42b1fb713f1 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -214,7 +214,7 @@ static void mlxbf_tmfifo_free_vrings(struct mlxbf_tmfifo *fifo,
- 	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
- 		vring = &tm_vdev->vrings[i];
- 		if (vring->va) {
--			size = vring_size(vring->num, vring->align);
-+			size = vring_legacy_size(vring->num, vring->align);
- 			dma_free_coherent(tm_vdev->vdev.dev.parent, size,
- 					  vring->va, vring->dma);
- 			vring->va = NULL;
-@@ -245,7 +245,7 @@ static int mlxbf_tmfifo_alloc_vrings(struct mlxbf_tmfifo *fifo,
- 		vring->vdev_id = tm_vdev->vdev.id.device;
- 		dev = &tm_vdev->vdev.dev;
+diff --git a/drivers/platform/x86/surface3_power.c b/drivers/platform/x86/surface3_power.c
+index 946ac2dc08ae..cc4f9cba6856 100644
+--- a/drivers/platform/x86/surface3_power.c
++++ b/drivers/platform/x86/surface3_power.c
+@@ -522,8 +522,8 @@ static int mshw0011_probe(struct i2c_client *client)
+ 	strlcpy(board_info.type, "MSHW0011-bat0", I2C_NAME_SIZE);
  
--		size = vring_size(vring->num, vring->align);
-+		size = vring_legacy_size(vring->num, vring->align);
- 		va = dma_alloc_coherent(dev->parent, size, &dma, GFP_KERNEL);
- 		if (!va) {
- 			mlxbf_tmfifo_free_vrings(fifo, tm_vdev);
-@@ -935,7 +935,7 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
- 		vring = &tm_vdev->vrings[i];
+ 	bat0 = i2c_acpi_new_device(dev, 1, &board_info);
+-	if (!bat0)
+-		return -ENOMEM;
++	if (IS_ERR(bat0))
++		return PTR_ERR(bat0);
  
- 		/* zero vring */
--		size = vring_size(vring->num, vring->align);
-+		size = vring_legacy_size(vring->num, vring->align);
- 		memset(vring->va, 0, size);
- 		vq = vring_new_virtqueue(i, vring->num, vring->align, vdev,
- 					 false, false, vring->va,
+ 	data->bat0 = bat0;
+ 	i2c_set_clientdata(bat0, data);
 -- 
-MST
+2.25.1
