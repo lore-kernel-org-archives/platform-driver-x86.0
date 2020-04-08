@@ -1,7 +1,7 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 5/6] platform/x86: intel_cht_int33fe: Switch to use acpi_dev_hid_uid_match()
-Date: Wed,  8 Apr 2020 19:09:05 +0300
-Message-ID: <20200408160905.12101-6-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/6] software node: Allow register and unregister software node groups
+Date: Wed,  8 Apr 2020 19:09:02 +0300
+Message-ID: <20200408160905.12101-3-andriy.shevchenko@linux.intel.com>
 References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,34 +12,87 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.or
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Since we have a generic helper, drop custom implementation in the driver.
+Sometimes it's more convenient to register a set of individual software nodes
+grouped together. Add couple of functions for that.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_cht_int33fe_typec.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/base/swnode.c    | 48 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/property.h |  3 +++
+ 2 files changed, 51 insertions(+)
 
-diff --git a/drivers/platform/x86/intel_cht_int33fe_typec.c b/drivers/platform/x86/intel_cht_int33fe_typec.c
-index 904e75d39953..e89defb33067 100644
---- a/drivers/platform/x86/intel_cht_int33fe_typec.c
-+++ b/drivers/platform/x86/intel_cht_int33fe_typec.c
-@@ -40,16 +40,13 @@ static int cht_int33fe_check_for_max17047(struct device *dev, void *data)
- {
- 	struct i2c_client **max17047 = data;
- 	struct acpi_device *adev;
--	const char *hid;
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index de8d3543e8fe..2079937ddb51 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -726,6 +726,54 @@ void software_node_unregister_nodes(const struct software_node *nodes)
+ }
+ EXPORT_SYMBOL_GPL(software_node_unregister_nodes);
  
- 	adev = ACPI_COMPANION(dev);
- 	if (!adev)
- 		return 0;
++/**
++ * software_node_register_node_group - Register a group of software nodes
++ * @node_group: NULL terminated array of software node pointers to be registered
++ *
++ * Register multiple software nodes at once.
++ */
++int software_node_register_node_group(const struct software_node **node_group)
++{
++	unsigned int i;
++	int ret;
++
++	if (!node_group)
++		return 0;
++
++	for (i = 0; node_group[i]; i++) {
++		ret = software_node_register(node_group[i]);
++		if (ret) {
++			software_node_unregister_node_group(node_group);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(software_node_register_node_group);
++
++/**
++ * software_node_unregister_node_group - Unregister a group of software nodes
++ * @node_group: NULL terminated array of software node pointers to be unregistered
++ *
++ * Unregister multiple software nodes at once.
++ */
++void software_node_unregister_node_group(const struct software_node **node_group)
++{
++	struct swnode *swnode;
++	unsigned int i;
++
++	if (!node_group)
++		return;
++
++	for (i = 0; node_group[i]; i++) {
++		swnode = software_node_to_swnode(node_group[i]);
++		if (swnode)
++			fwnode_remove_software_node(&swnode->fwnode);
++	}
++}
++EXPORT_SYMBOL_GPL(software_node_unregister_node_group);
++
+ /**
+  * software_node_register - Register static software node
+  * @node: The software node to be registered
+diff --git a/include/linux/property.h b/include/linux/property.h
+index d86de017c689..c7b5f3db36aa 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -440,6 +440,9 @@ software_node_find_by_name(const struct software_node *parent,
+ int software_node_register_nodes(const struct software_node *nodes);
+ void software_node_unregister_nodes(const struct software_node *nodes);
  
--	hid = acpi_device_hid(adev);
--
- 	/* The MAX17047 ACPI node doesn't have an UID, so we don't check that */
--	if (strcmp(hid, "MAX17047"))
-+	if (!acpi_dev_hid_uid_match(adev, "MAX17047", NULL))
- 		return 0;
++int software_node_register_node_group(const struct software_node **node_group);
++void software_node_unregister_node_group(const struct software_node **node_group);
++
+ int software_node_register(const struct software_node *node);
  
- 	*max17047 = to_i2c_client(dev);
+ int software_node_notify(struct device *dev, unsigned long action);
 -- 
 2.25.1
