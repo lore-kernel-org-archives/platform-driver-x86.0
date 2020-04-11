@@ -1,78 +1,50 @@
-From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Subject: Re: [RFC 0/8] Stop monitoring disabled devices
-Date: Thu, 9 Apr 2020 13:10:01 +0200
-Message-ID: <aeec2ce8-8fb9-9353-f3dd-36a476ceeb3b@collabora.com>
-References: <20200407174926.23971-1-andrzej.p@collabora.com>
- <2bc5a902-acde-526a-11a5-2357d899916c@linaro.org>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 013/149] tools/power/x86/intel-speed-select: Fix mailbox usage for CLOS_PM_QOS_CONFIG
+Date: Sat, 11 Apr 2020 19:01:30 -0400
+Message-ID: <20200411230347.22371-13-sashal@kernel.org>
+References: <20200411230347.22371-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <2bc5a902-acde-526a-11a5-2357d899916c@linaro.org>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, "David S . Miller" <davem@davemloft.net>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Allison Randal <allison@lohutok.net>, Enrico Weigelt <info@metux.net>, Gayatri Kammela <gayatri.kammela@intel.com>, Thomas Gleixner <tglx@lin>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Daniel,
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-W dniu 09.04.2020 o 12:29, Daniel Lezcano pisze:
-> On 07/04/2020 19:49, Andrzej Pietrasiewicz wrote:
->> The current kernel behavior is to keep polling the thermal zone devices
->> regardless of their current mode. This is not desired, as all such "disabled"
->> devices are meant to be handled by userspace,> so polling them makes no sense.
-> 
-> Thanks for proposing these changes.
-> 
-> I've been (quickly) through the series and the description below. I have
-> the feeling the series makes more complex while the current code which
-> would deserve a cleanup.
-> 
-> Why not first:
-> 
->   - Add a 'mode' field in the thermal zone device
->   - Kill all set/get_mode callbacks in the drivers which are duplicated code.
->   - Add a function:
-> 
->   enum thermal_device_mode thermal_zone_get_mode( *tz)
->   {
-> 	...
-> 	if (tz->ops->get_mode)
-> 		return tz->ops->get_mode();
-> 
-> 	return tz->mode;
->   }
-> 
-> 
->   int thermal_zone_set_mode(..*tz, enum thermal_device_mode mode)
->   {
-> 	...
-> 	if (tz->ops->set_mode)
-> 		return tz->ops->set_mode(tz, mode);
-> 
-> 	tz->mode = mode;
-> 
-> 	return 0;
->   }
-> 
->   static inline thermal_zone_enable(... *tz)
->   {
-> 	thermal_zone_set_mode(tz, THERMAL_DEVICE_ENABLED);
->   }
-> 
->   static inline thermal_zone_disable(... *tz) {
-> 	thermal_zone_set_mode(tz, THERMAL_DEVICE_DISABLED);
->   }
-> 
-> And then when the code is consolidated, use the mode to enable/disable
-> the polling and continue killing the duplicated code in of-thermal.c and
-> anywhere else.
-> 
-> 
+[ Upstream commit 8ddbda76245f5d10e00020db34455404019efc91 ]
 
-Thanks for feedback.
+Even for the products using MMIO, this message needs to be sent via
+mail box. The previous fix done for this didn't properly address this.
+That fix simply removed sending command via MMIO, but still didn't
+trigger sending via mailbox.
 
-Anyone else?
+Add additional condition to check for CLOS_PM_QOS_CONFIG, when MMIO
+is supported on a platform.
 
-Andrzej
+Fixes: cd0e63706549 (tools/power/x86/intel-speed-select: Use mailbox for CLOS_PM_QOS_CONFIG)
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/power/x86/intel-speed-select/isst-config.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index 2b2b8167c65be..6a973e7832228 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -571,7 +571,8 @@ int isst_send_mbox_command(unsigned int cpu, unsigned char command,
+ 		"mbox_send: cpu:%d command:%x sub_command:%x parameter:%x req_data:%x\n",
+ 		cpu, command, sub_command, parameter, req_data);
+ 
+-	if (isst_platform_info.mmio_supported && command == CONFIG_CLOS) {
++	if (isst_platform_info.mmio_supported && command == CONFIG_CLOS &&
++	    sub_command != CLOS_PM_QOS_CONFIG) {
+ 		unsigned int value;
+ 		int write = 0;
+ 		int clos_id, core_id, ret = 0;
+-- 
+2.20.1
