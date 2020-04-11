@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 011/108] platform/x86: asus_wmi: Fix return value of fan_boost_mode_store
-Date: Sat, 11 Apr 2020 19:08:06 -0400
-Message-ID: <20200411230943.24951-11-sashal@kernel.org>
-References: <20200411230943.24951-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 012/121] platform/x86: asus_wmi: Fix return value of fan_boost_mode_store
+Date: Sat, 11 Apr 2020 19:05:17 -0400
+Message-ID: <20200411230706.23855-12-sashal@kernel.org>
+References: <20200411230706.23855-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Leonid Maksymchuk <leonmaxx@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
