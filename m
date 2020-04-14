@@ -1,150 +1,153 @@
 From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [RFC v2 3/9] thermal: Properly handle mode values in .set_mode()
-Date: Wed, 15 Apr 2020 00:14:50 +0200
-Message-ID: <e7ed4bcf-8605-c6ad-4412-acb33251a0b3@linaro.org>
+Subject: Re: [RFC v2 4/9] thermal: core: Let thermal zone device's mode be
+ stored in its struct
+Date: Wed, 15 Apr 2020 00:30:31 +0200
+Message-ID: <c053480c-8279-2a51-7a55-252ff723b432@linaro.org>
 References: <2bc5a902-acde-526a-11a5-2357d899916c@linaro.org>
  <20200414180105.20042-1-andrzej.p@collabora.com>
- <20200414180105.20042-4-andrzej.p@collabora.com>
+ <20200414180105.20042-5-andrzej.p@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200414180105.20042-4-andrzej.p@collabora.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
+In-Reply-To: <20200414180105.20042-5-andrzej.p@collabora.com>
 Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
 To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, "David S . Miller" <davem@davemloft.net>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Allison Randal <allison@lohutok.net>, Enrico Weigelt <info@metux.net>, Gayatri Kammela <gayatri.kammela@intel.com>, Thomas Gleixner <tglx@lin>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, platform-driver-x86@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, kernel@collabora.com, Fabio Estevam <festevam@gmail.com>, Amit Kucheria <amit.kucheria@verdurent.com>, linux-acpi@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>, Darren Hart <dvhart@infradead.org>, Zhang Rui <rui.zhang@intel.com>, Gayatri Kammela <gayatri.kammela@intel.com>, Len Brown <lenb@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>, Thomas Gleixner <tglx@linutronix.de>, Allison Randal <allison@lohutok.net>, linux-arm-kernel@lists.infradead.org, Support Opensource <support.opensource@diasemi.com>, netdev@vger.kernel.org, Peter Kaestle <peter@piie.net>, Pengutronix Kernel Team <kernel@pengutronix.de>, Enrico Weigelt <info@metux.net>, "David S . Miller" <davem@davemloft.net>, Andy
 List-Id: platform-driver-x86.vger.kernel.org
 
-
-Hi Andrzej,
-
-you can drop this patch. It is not useful as the caller checks the
-correctness of the values in the patch 4/9.
-
-Moreover the patch is bogus because it returns before releasing the lock.
-
-On 14/04/2020 20:00, Andrzej Pietrasiewicz wrote:
-> Allow only THERMAL_DEVICE_ENABLED and THERMAL_DEVICE_DISABLED as valid
-> states to transition to.
-
-
-
-
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> ---
->  drivers/net/ethernet/mellanox/mlxsw/core_thermal.c | 8 ++++++--
->  drivers/platform/x86/acerhdf.c                     | 4 ++++
->  drivers/thermal/imx_thermal.c                      | 4 +++-
->  drivers/thermal/intel/intel_quark_dts_thermal.c    | 5 ++++-
->  drivers/thermal/of-thermal.c                       | 4 +++-
->  5 files changed, 20 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
-> index ce0a6837daa3..cd435ca7adbe 100644
-> --- a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
-> +++ b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
-> @@ -296,8 +296,10 @@ static int mlxsw_thermal_set_mode(struct thermal_zone_device *tzdev,
->  
->  	if (mode == THERMAL_DEVICE_ENABLED)
->  		tzdev->polling_delay = thermal->polling_delay;
-> -	else
-> +	else if (mode == THERMAL_DEVICE_DISABLED)
->  		tzdev->polling_delay = 0;
-> +	else
-> +		return -EINVAL;
->  
->  	mutex_unlock(&tzdev->lock);
->  
-> @@ -486,8 +488,10 @@ static int mlxsw_thermal_module_mode_set(struct thermal_zone_device *tzdev,
->  
->  	if (mode == THERMAL_DEVICE_ENABLED)
->  		tzdev->polling_delay = thermal->polling_delay;
-> -	else
-> +	else if (mode == THERMAL_DEVICE_DISABLED)
->  		tzdev->polling_delay = 0;
-> +	else
-> +		return -EINVAL;
->  
->  	mutex_unlock(&tzdev->lock);
->  
-> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-> index 8cc86f4e3ac1..d5188c1d688b 100644
-> --- a/drivers/platform/x86/acerhdf.c
-> +++ b/drivers/platform/x86/acerhdf.c
-> @@ -431,6 +431,10 @@ static int acerhdf_get_mode(struct thermal_zone_device *thermal,
->  static int acerhdf_set_mode(struct thermal_zone_device *thermal,
->  			    enum thermal_device_mode mode)
->  {
-> +	if (mode != THERMAL_DEVICE_DISABLED &&
-> +	    mode != THERMAL_DEVICE_ENABLED)
-> +		return -EINVAL;
-> +
->  	if (mode == THERMAL_DEVICE_DISABLED && kernelmode)
->  		acerhdf_revert_to_bios_mode();
->  	else if (mode == THERMAL_DEVICE_ENABLED && !kernelmode)
-> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-> index e761c9b42217..36b1924f1938 100644
-> --- a/drivers/thermal/imx_thermal.c
-> +++ b/drivers/thermal/imx_thermal.c
-> @@ -361,7 +361,7 @@ static int imx_set_mode(struct thermal_zone_device *tz,
->  			data->irq_enabled = true;
->  			enable_irq(data->irq);
->  		}
-> -	} else {
-> +	} else if (mode == THERMAL_DEVICE_DISABLED) {
->  		regmap_write(map, soc_data->sensor_ctrl + REG_CLR,
->  			     soc_data->measure_temp_mask);
->  		regmap_write(map, soc_data->sensor_ctrl + REG_SET,
-> @@ -374,6 +374,8 @@ static int imx_set_mode(struct thermal_zone_device *tz,
->  			disable_irq(data->irq);
->  			data->irq_enabled = false;
->  		}
-> +	} else {
-> +		return -EINVAL;
->  	}
->  
->  	data->mode = mode;
-> diff --git a/drivers/thermal/intel/intel_quark_dts_thermal.c b/drivers/thermal/intel/intel_quark_dts_thermal.c
-> index d704fc104cfd..11d7db895125 100644
-> --- a/drivers/thermal/intel/intel_quark_dts_thermal.c
-> +++ b/drivers/thermal/intel/intel_quark_dts_thermal.c
-> @@ -325,8 +325,11 @@ static int sys_set_mode(struct thermal_zone_device *tzd,
->  	mutex_lock(&dts_update_mutex);
->  	if (mode == THERMAL_DEVICE_ENABLED)
->  		ret = soc_dts_enable(tzd);
-> -	else
-> +	else if (mode == THERMAL_DEVICE_DISABLED)
->  		ret = soc_dts_disable(tzd);
-> +	else
-> +		return -EINVAL;
-> +
->  	mutex_unlock(&dts_update_mutex);
->  
->  	return ret;
-> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-> index 874a47d6923f..36bebf623980 100644
-> --- a/drivers/thermal/of-thermal.c
-> +++ b/drivers/thermal/of-thermal.c
-> @@ -289,9 +289,11 @@ static int of_thermal_set_mode(struct thermal_zone_device *tz,
->  	if (mode == THERMAL_DEVICE_ENABLED) {
->  		tz->polling_delay = data->polling_delay;
->  		tz->passive_delay = data->passive_delay;
-> -	} else {
-> +	} else if (mode == THERMAL_DEVICE_DISABLED) {
->  		tz->polling_delay = 0;
->  		tz->passive_delay = 0;
-> +	} else {
-> +		return -EINVAL;
->  	}
->  
->  	mutex_unlock(&tz->lock);
-> 
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+T24gMTQvMDQvMjAyMCAyMDowMSwgQW5kcnplaiBQaWV0cmFzaWV3aWN6IHdyb3RlOgo+IEFsbCB0
+aGUgZHJpdmVycyB3aGljaCBwcm92aWRlIC0+Z2V0X21vZGUoKS8tPnNldF9tb2RlKCkgbWV0aG9k
+cyBzdG9yZSB0aGVpcgo+IG1vZGUgaW4gYSB0aGVybWFsX2RldmljZV9tb2RlIGVudW0sIHNvIGtl
+ZXAgdGhpcyBpbmZvcm1hdGlvbiBpbiBzdHJ1Y3QKPiB0aGVybWFsX3pvbmVfZGV2aWNlIHJhdGhl
+ciB0aGFuIHNjYXR0ZXJlZCBhbGwgb3ZlciB0aGUgcGxhY2UuCj4gCj4gU2lnbmVkLW9mZi1ieTog
+QW5kcnplaiBQaWV0cmFzaWV3aWN6IDxhbmRyemVqLnBAY29sbGFib3JhLmNvbT4KPiAtLS0KPiAg
+ZHJpdmVycy90aGVybWFsL3RoZXJtYWxfY29yZS5jICB8IDI4ICsrKysrKysrKysrKysrKysrKysK
+PiAgZHJpdmVycy90aGVybWFsL3RoZXJtYWxfc3lzZnMuYyB8ICA5ICsrKy0tLS0KPiAgaW5jbHVk
+ZS9saW51eC90aGVybWFsLmggICAgICAgICB8IDQ4ICsrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKwo+ICAzIGZpbGVzIGNoYW5nZWQsIDc5IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25z
+KC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdGhlcm1hbC90aGVybWFsX2NvcmUuYyBiL2Ry
+aXZlcnMvdGhlcm1hbC90aGVybWFsX2NvcmUuYwo+IGluZGV4IDlhMzIxZGM1NDhjOC4uY2IwZmY0
+N2YwZGJlIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvdGhlcm1hbC90aGVybWFsX2NvcmUuYwo+ICsr
+KyBiL2RyaXZlcnMvdGhlcm1hbC90aGVybWFsX2NvcmUuYwo+IEBAIC00NjksNiArNDY5LDM0IEBA
+IHN0YXRpYyB2b2lkIHRoZXJtYWxfem9uZV9kZXZpY2VfcmVzZXQoc3RydWN0IHRoZXJtYWxfem9u
+ZV9kZXZpY2UgKnR6KQo+ICAJdGhlcm1hbF96b25lX2RldmljZV9pbml0KHR6KTsKPiAgfQo+ICAK
+PiAraW50IHRoZXJtYWxfem9uZV9kZXZpY2VfZ2V0X21vZGUoc3RydWN0IHRoZXJtYWxfem9uZV9k
+ZXZpY2UgKnR6LAo+ICsJCQkJIGVudW0gdGhlcm1hbF9kZXZpY2VfbW9kZSAqbW9kZSkKPiArewo+
+ICsJaWYgKHR6LT5vcHMtPmdldF9tb2RlKQo+ICsJCXJldHVybiB0ei0+b3BzLT5nZXRfbW9kZSh0
+eiwgbW9kZSk7CgpJIHRoaW5rIHdlIGNhbiBnZXQgcmlkIG9mIHRoZSBnZXRfbW9kZSBoZXJlLgoK
+bG9ja3MgbWlzc2luZy4KCmFuZCBtb2RlID0gdHotPm1vZGUgbXVzdCBiZSBhbHdheXMgc2V0LgoK
+PiArCSptb2RlID0gdHotPm1vZGU7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArRVhQT1JUX1NZ
+TUJPTF9HUEwodGhlcm1hbF96b25lX2RldmljZV9nZXRfbW9kZSk7Cj4gKwo+ICtpbnQgdGhlcm1h
+bF96b25lX2RldmljZV9zZXRfbW9kZShzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqdHosCj4g
+KwkJCQkgZW51bSB0aGVybWFsX2RldmljZV9tb2RlIG1vZGUpCj4gK3sKPiArCWlmIChtb2RlICE9
+IFRIRVJNQUxfREVWSUNFX0RJU0FCTEVEICYmCj4gKwkgICAgbW9kZSAhPSBUSEVSTUFMX0RFVklD
+RV9FTkFCTEVEKQo+ICsJCXJldHVybiAtRUlOVkFMOwoKSSdtIG5vdCBzdXJlIHRoaXMgaXMgdXNl
+ZnVsIGFzICdtb2RlJyBpcyBhbiBlbnVtIGFuZCB0aGlzIGNvbmRpdGlvbiB3aWxsCmJlIGFsd2F5
+cyBjb3JyZWN0LgoKbG9ja3MgbWlzc2luZy4KCj4gKwlpZiAodHotPm9wcy0+c2V0X21vZGUpCj4g
+KwkJcmV0dXJuIHR6LT5vcHMtPnNldF9tb2RlKHR6LCBtb2RlKTsKCj4gKwl0ei0+bW9kZSA9IG1v
+ZGU7CgpJdCBzaG91bGQgYmUgbGlrZToKCglpbnQgcmV0ID0gMDsKCgltdXRleF9sb2NrKCZ0ei0+
+bG9jayk7CgoJaWYgKHR6LT5vcHMtPnNldF9tb2RlKQoJCXJldCA9IHR6LT5vcHMtPnNldF9tb2Rl
+KHR6LCBtb2RlKTsKCgkqbW9kZSA9IHR6LT5tb2RlOwoKCW11dGV4X3VubG9jaygmdHotPmxvY2sp
+OwoKCXJldHVybiByZXQ7Cgo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gK0VYUE9SVF9TWU1CT0xf
+R1BMKHRoZXJtYWxfem9uZV9kZXZpY2Vfc2V0X21vZGUpOwo+ICsKPiAgdm9pZCB0aGVybWFsX3pv
+bmVfZGV2aWNlX3VwZGF0ZShzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqdHosCj4gIAkJCQll
+bnVtIHRoZXJtYWxfbm90aWZ5X2V2ZW50IGV2ZW50KQo+ICB7Cj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvdGhlcm1hbC90aGVybWFsX3N5c2ZzLmMgYi9kcml2ZXJzL3RoZXJtYWwvdGhlcm1hbF9zeXNm
+cy5jCj4gaW5kZXggYWE5OWVkYjRkZmY3Li42NmQ5NjkxYjhiZDYgMTAwNjQ0Cj4gLS0tIGEvZHJp
+dmVycy90aGVybWFsL3RoZXJtYWxfc3lzZnMuYwo+ICsrKyBiL2RyaXZlcnMvdGhlcm1hbC90aGVy
+bWFsX3N5c2ZzLmMKPiBAQCAtNTIsMTAgKzUyLDcgQEAgbW9kZV9zaG93KHN0cnVjdCBkZXZpY2Ug
+KmRldiwgc3RydWN0IGRldmljZV9hdHRyaWJ1dGUgKmF0dHIsIGNoYXIgKmJ1ZikKPiAgCWVudW0g
+dGhlcm1hbF9kZXZpY2VfbW9kZSBtb2RlOwo+ICAJaW50IHJlc3VsdDsKPiAgCj4gLQlpZiAoIXR6
+LT5vcHMtPmdldF9tb2RlKQo+IC0JCXJldHVybiAtRVBFUk07Cj4gLQo+IC0JcmVzdWx0ID0gdHot
+Pm9wcy0+Z2V0X21vZGUodHosICZtb2RlKTsKPiArCXJlc3VsdCA9IHRoZXJtYWxfem9uZV9kZXZp
+Y2VfZ2V0X21vZGUodHosICZtb2RlKTsKPiAgCWlmIChyZXN1bHQpCj4gIAkJcmV0dXJuIHJlc3Vs
+dDsKPiAgCj4gQEAgLTc0LDkgKzcxLDkgQEAgbW9kZV9zdG9yZShzdHJ1Y3QgZGV2aWNlICpkZXYs
+IHN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRyLAo+ICAJCXJldHVybiAtRVBFUk07Cj4gIAo+
+ICAJaWYgKCFzdHJuY21wKGJ1ZiwgImVuYWJsZWQiLCBzaXplb2YoImVuYWJsZWQiKSAtIDEpKQo+
+IC0JCXJlc3VsdCA9IHR6LT5vcHMtPnNldF9tb2RlKHR6LCBUSEVSTUFMX0RFVklDRV9FTkFCTEVE
+KTsKPiArCQlyZXN1bHQgPSB0aGVybWFsX3pvbmVfZGV2aWNlX2VuYWJsZSh0eik7Cj4gIAllbHNl
+IGlmICghc3RybmNtcChidWYsICJkaXNhYmxlZCIsIHNpemVvZigiZGlzYWJsZWQiKSAtIDEpKQo+
+IC0JCXJlc3VsdCA9IHR6LT5vcHMtPnNldF9tb2RlKHR6LCBUSEVSTUFMX0RFVklDRV9ESVNBQkxF
+RCk7Cj4gKwkJcmVzdWx0ID0gdGhlcm1hbF96b25lX2RldmljZV9kaXNhYmxlKHR6KTsKPiAgCWVs
+c2UKPiAgCQlyZXN1bHQgPSAtRUlOVkFMOwo+ICAKPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51
+eC90aGVybWFsLmggYi9pbmNsdWRlL2xpbnV4L3RoZXJtYWwuaAo+IGluZGV4IGM5MWIxZTM0NGQ1
+Ni4uOWZmODU0MmI3ZTdkIDEwMDY0NAo+IC0tLSBhL2luY2x1ZGUvbGludXgvdGhlcm1hbC5oCj4g
+KysrIGIvaW5jbHVkZS9saW51eC90aGVybWFsLmgKPiBAQCAtMTQzLDYgKzE0Myw3IEBAIHN0cnVj
+dCB0aGVybWFsX2F0dHIgewo+ICAgKiBAdHJpcF90ZW1wX2F0dHJzOglhdHRyaWJ1dGVzIGZvciB0
+cmlwIHBvaW50cyBmb3Igc3lzZnM6IHRyaXAgdGVtcGVyYXR1cmUKPiAgICogQHRyaXBfdHlwZV9h
+dHRyczoJYXR0cmlidXRlcyBmb3IgdHJpcCBwb2ludHMgZm9yIHN5c2ZzOiB0cmlwIHR5cGUKPiAg
+ICogQHRyaXBfaHlzdF9hdHRyczoJYXR0cmlidXRlcyBmb3IgdHJpcCBwb2ludHMgZm9yIHN5c2Zz
+OiB0cmlwIGh5c3RlcmVzaXMKPiArICogQG1vZGU6CQljdXJyZW50IG1vZGUgb2YgdGhpcyB0aGVy
+bWFsIHpvbmUKPiAgICogQGRldmRhdGE6CXByaXZhdGUgcG9pbnRlciBmb3IgZGV2aWNlIHByaXZh
+dGUgZGF0YQo+ICAgKiBAdHJpcHM6CW51bWJlciBvZiB0cmlwIHBvaW50cyB0aGUgdGhlcm1hbCB6
+b25lIHN1cHBvcnRzCj4gICAqIEB0cmlwc19kaXNhYmxlZDsJYml0bWFwIGZvciBkaXNhYmxlZCB0
+cmlwcwo+IEBAIC0xODUsNiArMTg2LDcgQEAgc3RydWN0IHRoZXJtYWxfem9uZV9kZXZpY2Ugewo+
+ICAJc3RydWN0IHRoZXJtYWxfYXR0ciAqdHJpcF90ZW1wX2F0dHJzOwo+ICAJc3RydWN0IHRoZXJt
+YWxfYXR0ciAqdHJpcF90eXBlX2F0dHJzOwo+ICAJc3RydWN0IHRoZXJtYWxfYXR0ciAqdHJpcF9o
+eXN0X2F0dHJzOwo+ICsJZW51bSB0aGVybWFsX2RldmljZV9tb2RlIG1vZGU7Cj4gIAl2b2lkICpk
+ZXZkYXRhOwo+ICAJaW50IHRyaXBzOwo+ICAJdW5zaWduZWQgbG9uZyB0cmlwc19kaXNhYmxlZDsJ
+LyogYml0bWFwIGZvciBkaXNhYmxlZCB0cmlwcyAqLwo+IEBAIC00MzcsNiArNDM5LDE5IEBAIGlu
+dCB0aGVybWFsX3pvbmVfYmluZF9jb29saW5nX2RldmljZShzdHJ1Y3QgdGhlcm1hbF96b25lX2Rl
+dmljZSAqLCBpbnQsCj4gIAkJCQkgICAgIHVuc2lnbmVkIGludCk7Cj4gIGludCB0aGVybWFsX3pv
+bmVfdW5iaW5kX2Nvb2xpbmdfZGV2aWNlKHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2aWNlICosIGlu
+dCwKPiAgCQkJCSAgICAgICBzdHJ1Y3QgdGhlcm1hbF9jb29saW5nX2RldmljZSAqKTsKPiArCj4g
+K2ludCB0aGVybWFsX3pvbmVfZGV2aWNlX2dldF9tb2RlKHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2
+aWNlICp0eiwKPiArCQkJCSBlbnVtIHRoZXJtYWxfZGV2aWNlX21vZGUgKm1vZGUpOwo+ICtpbnQg
+dGhlcm1hbF96b25lX2RldmljZV9zZXRfbW9kZShzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAq
+dHosCj4gKwkJCQkgZW51bSB0aGVybWFsX2RldmljZV9tb2RlIG1vZGUpOwo+ICsKPiArc3RhdGlj
+IGlubGluZSB2b2lkCj4gK3RoZXJtYWxfem9uZV9kZXZpY2Vfc3RvcmVfbW9kZShzdHJ1Y3QgdGhl
+cm1hbF96b25lX2RldmljZSAqdHosCj4gKwkJCSAgICAgICBlbnVtIHRoZXJtYWxfZGV2aWNlX21v
+ZGUgbW9kZSkKPiArewo+ICsJdHotPm1vZGUgPSBtb2RlOwo+ICt9Cj4gKwoKUGxlYXNlIHJlbW92
+ZSB0aGlzIHN0b3JlX21vZGUgZnVuY3Rpb24sIGl0IGlzIG5vdCBuZWVkZWQuCgpKdXN0OgoKdGhl
+cm1hbF96b25lX2RldmljZV9nZXRfbW9kZSgpCnRoZXJtYWxfem9uZV9kZXZpY2Vfc2V0X21vZGUo
+KQp0aGVybWFsX3pvbmVfZGV2aWNlX2Rpc2FibGUoKQp0aGVybWFsX3pvbmVfZGV2aWNlX2VuYWJs
+ZSgpCgpBbmQgYWxsIG9mIHRoZW0gaW4gZHJpdmVycy90aGVybWFsL3RoZXJtYWxfY29yZS5oCgo+
+ICB2b2lkIHRoZXJtYWxfem9uZV9kZXZpY2VfdXBkYXRlKHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2
+aWNlICosCj4gIAkJCQllbnVtIHRoZXJtYWxfbm90aWZ5X2V2ZW50KTsKPiAgdm9pZCB0aGVybWFs
+X3pvbmVfc2V0X3RyaXBzKHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2aWNlICopOwo+IEBAIC00OTQs
+NiArNTA5LDE3IEBAIHN0YXRpYyBpbmxpbmUgaW50IHRoZXJtYWxfem9uZV91bmJpbmRfY29vbGlu
+Z19kZXZpY2UoCj4gIAlzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqdHosIGludCB0cmlwLAo+
+ICAJc3RydWN0IHRoZXJtYWxfY29vbGluZ19kZXZpY2UgKmNkZXYpCj4gIHsgcmV0dXJuIC1FTk9E
+RVY7IH0KPiArc3RhdGljIGlubGluZSBpbnQgdGhlcm1hbF96b25lX2RldmljZV9nZXRfbW9kZShz
+dHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqdHosCj4gKwkJCQkJICAgICAgIGVudW0gdGhlcm1h
+bF9kZXZpY2VfbW9kZSAqbW9kZSkKPiAreyByZXR1cm4gLUVOT0RFVjsgfQo+ICtzdGF0aWMgaW5s
+aW5lIGludCB0aGVybWFsX3pvbmVfZGV2aWNlX3NldF9tb2RlKHN0cnVjdCB0aGVybWFsX3pvbmVf
+ZGV2aWNlICp0eiwKPiArCQkJCQkgICAgICAgZW51bSB0aGVybWFsX2RldmljZV9tb2RlIG1vZGUp
+Cj4gK3sgcmV0dXJuIC1FTk9ERVY7IH0KPiArc3RhdGljIGlubGluZSB2b2lkCj4gK3RoZXJtYWxf
+em9uZV9kZXZpY2Vfc3RvcmVfbW9kZShzdHJ1Y3QgdGhlcm1hbF96b25lX2RldmljZSAqdHosCj4g
+KwkJCSAgICAgICBlbnVtIHRoZXJtYWxfZGV2aWNlX21vZGUgbW9kZSkKPiAreyB9Cj4gKwo+ICBz
+dGF0aWMgaW5saW5lIHZvaWQgdGhlcm1hbF96b25lX2RldmljZV91cGRhdGUoc3RydWN0IHRoZXJt
+YWxfem9uZV9kZXZpY2UgKnR6LAo+ICAJCQkJCSAgICAgIGVudW0gdGhlcm1hbF9ub3RpZnlfZXZl
+bnQgZXZlbnQpCj4gIHsgfQo+IEBAIC01NDMsNCArNTY5LDI2IEBAIHN0YXRpYyBpbmxpbmUgdm9p
+ZCB0aGVybWFsX25vdGlmeV9mcmFtZXdvcmsoc3RydWN0IHRoZXJtYWxfem9uZV9kZXZpY2UgKnR6
+LAo+ICB7IH0KPiAgI2VuZGlmIC8qIENPTkZJR19USEVSTUFMICovCj4gIAo+ICtzdGF0aWMgaW5s
+aW5lIGludCB0aGVybWFsX3pvbmVfZGV2aWNlX2VuYWJsZShzdHJ1Y3QgdGhlcm1hbF96b25lX2Rl
+dmljZSAqdHopCj4gK3sKPiArCXJldHVybiB0aGVybWFsX3pvbmVfZGV2aWNlX3NldF9tb2RlKHR6
+LCBUSEVSTUFMX0RFVklDRV9FTkFCTEVEKTsKPiArfQo+ICsKPiArc3RhdGljIGlubGluZSBpbnQg
+dGhlcm1hbF96b25lX2RldmljZV9kaXNhYmxlKHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2aWNlICp0
+eikKPiArewo+ICsJcmV0dXJuIHRoZXJtYWxfem9uZV9kZXZpY2Vfc2V0X21vZGUodHosIFRIRVJN
+QUxfREVWSUNFX0RJU0FCTEVEKTsKPiArfQo+ICsKPiArc3RhdGljIGlubGluZSB2b2lkCj4gK3Ro
+ZXJtYWxfem9uZV9kZXZpY2Vfc3RvcmVfZW5hYmxlZChzdHJ1Y3QgdGhlcm1hbF96b25lX2Rldmlj
+ZSAqdHopCj4gK3sKPiArCXRoZXJtYWxfem9uZV9kZXZpY2Vfc3RvcmVfbW9kZSh0eiwgVEhFUk1B
+TF9ERVZJQ0VfRU5BQkxFRCk7Cj4gK30KPiArCj4gK3N0YXRpYyBpbmxpbmUgdm9pZAo+ICt0aGVy
+bWFsX3pvbmVfZGV2aWNlX3N0b3JlX2Rpc2FibGVkKHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2aWNl
+ICp0eikKPiArewo+ICsJdGhlcm1hbF96b25lX2RldmljZV9zdG9yZV9tb2RlKHR6LCBUSEVSTUFM
+X0RFVklDRV9ESVNBQkxFRCk7Cj4gK30KPiArCj4gICNlbmRpZiAvKiBfX1RIRVJNQUxfSF9fICov
+Cj4gCgoKLS0gCjxodHRwOi8vd3d3LmxpbmFyby5vcmcvPiBMaW5hcm8ub3JnIOKUgiBPcGVuIHNv
+dXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKCkZvbGxvdyBMaW5hcm86ICA8aHR0cDovL3d3dy5m
+YWNlYm9vay5jb20vcGFnZXMvTGluYXJvPiBGYWNlYm9vayB8CjxodHRwOi8vdHdpdHRlci5jb20v
+IyEvbGluYXJvb3JnPiBUd2l0dGVyIHwKPGh0dHA6Ly93d3cubGluYXJvLm9yZy9saW5hcm8tYmxv
+Zy8+IEJsb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwK
