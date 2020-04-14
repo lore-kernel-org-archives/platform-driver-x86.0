@@ -1,46 +1,148 @@
 From: Hans de Goede <hdegoede@redhat.com>
 Subject: Re: [PATCH] platform/x86: intel_int0002_vgpio: Only bind to the
  INT0002 dev when using s2idle
-Date: Tue, 14 Apr 2020 15:15:53 +0200
-Message-ID: <32d57d33-5278-aead-1545-fac1ab936fbd@redhat.com>
+Date: Tue, 14 Apr 2020 15:24:47 +0200
+Message-ID: <b876973e-71f4-1dbc-1b41-138f81511685@redhat.com>
 References: <20200407213058.62870-1-hdegoede@redhat.com>
- <cfd3171a-94fb-7382-28e1-a236cb6759cc@redhat.com>
- <CAHp75VdqQnHbMSSeoDESMgywH-1VxBTT=Uo_GLV1aycmg=MXtA@mail.gmail.com>
+ <CAKErNvqM9ax8RB+Hm0e70a_uk_Ok3KfSQDmy0q9jKFaAQM3Fsg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdqQnHbMSSeoDESMgywH-1VxBTT=Uo_GLV1aycmg=MXtA@mail.gmail.com>
+In-Reply-To: <CAKErNvqM9ax8RB+Hm0e70a_uk_Ok3KfSQDmy0q9jKFaAQM3Fsg@mail.gmail.com>
 Content-Language: en-US
 Sender: stable-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Maxim Mikityanskiy <maxtram95@gmail.com>, "5 . 3+" <stable@vger.kernel.org>
+To: Maxim Mikityanskiy <maxtram95@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "5 . 3+" <stable@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
 Hi,
 
-On 4/8/20 12:26 AM, Andy Shevchenko wrote:
-> On Wed, Apr 8, 2020 at 1:24 AM Hans de Goede <hdegoede@redhat.com> wrote:
+On 4/8/20 2:11 PM, Maxim Mikityanskiy wrote:
+> On Wed, Apr 8, 2020 at 12:31 AM Hans de Goede <hdegoede@redhat.com> wrote:
 >>
->> Hi all,
+>> Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement
+>> irq_set_wake on Bay Trail") stopped passing irq_set_wake requests on to
+>> the parents IRQ because this was breaking suspend (causing immediate
+>> wakeups) on an Asus E202SA.
 >>
->> I just realized that I should have added a cover letter to this
->> patch to discuss how to merge it.
+>> This workaround for this issue is mostly fine, on most Cherry Trail
+>> devices where we need the INT0002 device for wakeups by e.g. USB kbds,
+>> the parent IRQ is shared with the ACPI SCI and that is marked as wakeup
+>> anyways.
 >>
->> Rafael has already queued up the
->> "[PATCH v3 2/2] platform/x86: intel_int0002_vgpio: Use acpi_register_wakeup_handler()"
->> in his tree. Looking at both patches the parts of the file the
->> touch are different enough that that should not be a problem though.
+>> But not on all devices, specifically on a Medion Akoya E1239T there is
+>> no SCI at all, and because the irq_set_wake request is not passed on to
+>> the parent IRQ, wake up by the builtin USB kbd does not work here.
 >>
->> So I guess this can go through platform/x86 as usual, or
->> (assuming everyone is ok with the change itself) alternatively
->> Rafael can take it to make sure there will be no conflicts?
+>> So the workaround for the Asus E202SA immediate wake problem is causing
+>> problems elsewhere; and in hindsight it is not the correct fix,
+>> the Asus E202SA uses Airmont CPU cores, but this does not mean it is a
+>> Cherry Trail based device, Brasswell uses Airmont CPU cores too and this
+>> actually is a Braswell device.
+>>
+>> Most (all?) Braswell devices use classic S3 mode suspend rather then
+>> s2idle suspend and in this case directly dealing with PME events as
+>> the INT0002 driver does likely is not the best idea, so that this is
+>> causing issues is not surprising.
+>>
+>> Replace the workaround of not passing irq_set_wake requests on to the
+>> parents IRQ, by not binding to the INT0002 device when s2idle is not used.
+>> This fixes USB kbd wakeups not working on some Cherry Trail devices,
+>> while still avoiding mucking with the wakeup flags on the Asus E202SA
+>> (and other Brasswell devices).
 > 
-> You will need different patches for v5.7 and the rest.
-> In v5.7 new CPU macros are in use.
+> I tested this patch over kernel 5.6.2 on Asus E202SA and didn't notice
+> any regressions. Wakeup by opening lid, by pressing a button on
+> keyboard, by USB keyboard — all seem to work fine. So, if appropriate:
+> 
+> Tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
 
-I see, I will send out a v2 rebased on top of 5.7-rc1.
+Thank you for testing this.
+
+> I have a question though. After your patch this driver will basically
+> be a no-op on my laptop. Does it mean I don't even need it in the
+> first place? What about the IRQ storm this driver is meant to deal
+> with — does it never happen on Braswell? What are the reproduction
+> steps to verify my hardware is not affected? I have that INT0002
+> device, so I'm worried it may cause issues if not bound to the driver.
+
+I do not expect Braswell platforms to suffer from the IRQ storm
+issue. That was something which I hit on a Cherry Trail based device.
+
+To test this, try waking up the device from suspend by an USB attached
+keyboard (this may not work, in that case wake it some other way).
+
+After this do:
+
+cat /proc/interrupts | grep " 9-fasteoi"
+
+This should output something like this:
+
+[root@localhost ~]# cat /proc/interrupts | grep " 9-fasteoi"
+    9:          0          0          0          0   IO-APIC    9-fasteoi   acpi
+
+Repeat this a couple of times, of the numbers after the 9:
+increase (very) rapidly you have an interrupt storm. Likely
+they will either be fully unchanged or change very slowly.
+
+Note if nothing is output then IRQ 9 is not used on your
+model, then the INT0002 device cannot cause an interrupt storm.
 
 Regards,
 
 Hans
+
+
+
+> 
+>> Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
+>> Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
+>> Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement irq_set_wake on Bay Trail")
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/platform/x86/intel_int0002_vgpio.c | 18 +++++-------------
+>>   1 file changed, 5 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+>> index 55f088f535e2..e8bec72d3823 100644
+>> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+>> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+>> @@ -143,21 +143,9 @@ static struct irq_chip int0002_byt_irqchip = {
+>>          .irq_set_wake           = int0002_irq_set_wake,
+>>   };
+>>
+>> -static struct irq_chip int0002_cht_irqchip = {
+>> -       .name                   = DRV_NAME,
+>> -       .irq_ack                = int0002_irq_ack,
+>> -       .irq_mask               = int0002_irq_mask,
+>> -       .irq_unmask             = int0002_irq_unmask,
+>> -       /*
+>> -        * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
+>> -        * and we don't want to mess with the ACPI SCI irq settings.
+>> -        */
+>> -       .flags                  = IRQCHIP_SKIP_SET_WAKE,
+>> -};
+>> -
+>>   static const struct x86_cpu_id int0002_cpu_ids[] = {
+>>          INTEL_CPU_FAM6(ATOM_SILVERMONT, int0002_byt_irqchip),   /* Valleyview, Bay Trail  */
+>> -       INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_cht_irqchip),      /* Braswell, Cherry Trail */
+>> +       INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_byt_irqchip),      /* Braswell, Cherry Trail */
+>>          {}
+>>   };
+>>
+>> @@ -181,6 +169,10 @@ static int int0002_probe(struct platform_device *pdev)
+>>          if (!cpu_id)
+>>                  return -ENODEV;
+>>
+>> +       /* We only need to directly deal with PMEs when using s2idle */
+>> +       if (!pm_suspend_default_s2idle())
+>> +               return -ENODEV;
+>> +
+>>          irq = platform_get_irq(pdev, 0);
+>>          if (irq < 0)
+>>                  return irq;
+>> --
+>> 2.26.0
+>>
+> 
