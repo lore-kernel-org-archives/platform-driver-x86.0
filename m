@@ -1,34 +1,59 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
-Date: Mon, 13 Apr 2020 22:41:51 +0200
-Message-ID: <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
-References: <20200413134611.478441-1-enric.balletbo@collabora.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v1 0/6] platform/x86: intel_cht_int33fe: clean up series
+Date: Tue, 14 Apr 2020 14:08:42 +0200
+Message-ID: <9aa81292-70c2-c12a-ded1-1164faac0024@redhat.com>
+References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200413134611.478441-1-enric.balletbo@collabora.com>
+In-Reply-To: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
 Sender: linux-acpi-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Collabora Kernel ML <kernel@collabora.com>, Guenter Roeck <groeck@chromium.org>, Benson Leung <bleung@chromium.org>, Dmitry Torokhov <dtor@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org, Andy Shevchenko <andy@infradead.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, =?UTF-8?Q?Bla=C5=BE_Hrastnik?= <blaz@mxxn.io>, Darren Hart <dvhart@infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Jeremy Soller <je>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, linux-acpi@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Apr 13, 2020 at 3:46 PM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> This driver attaches to the ChromeOS ACPI device and then exports the values
-> reported by the ACPI in a sysfs directory. These values are not exported
-> via the standard ACPI tables, hence a specific driver is needed to do
-> it.
+Hi,
 
-So how exactly are they exported?
+On 4/8/20 6:09 PM, Andy Shevchenko wrote:
+> When I started looking into the intel_cht_int33fe driver for an example of use
+> software node API, I have noticed that it's hard to get and code a bit messy.
+> Here is a clean up, main part of which is to introduce node groups and API to
+> register and unregister them. This and some pre-existing APIs can be used in
+> the driver.
+> 
+> So, because of cross-subsystem nature of this series, I may recommend to create
+> myself the immutable branch which can be pulled to Rafael's and Greg's trees
+> respectively. I'm also open for other proposals how to proceed.
 
-> The ACPI values are presented in the string form (numbers as decimal
-> values) or binary blobs, and can be accessed as the contents of the
-> appropriate read only files in the standard ACPI devices sysfs directory tree.
+The series looks good to me and I've also tested it on one of
+the devices using the intel_cht_int33fe driver and everything seems
+to work fine, so for the whole series:
 
-My understanding based on a cursory look at the patch is that there is
-an ACPI device with _HID equal to "GGL0001"  and one or more special
-methods under it that return values which you want to export over
-sysfs as binary attributes.  They appear to be read-only.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
 
-I guess that these data are to be consubed by user space?
+Regards,
+
+Hans
+
+
+
+
+
+> 
+> Andy Shevchenko (6):
+>    device property: export set_secondary_fwnode() to modules
+>    software node: Allow register and unregister software node groups
+>    platform/x86: intel_cht_int33fe: Convert software node array to group
+>    platform/x86: intel_cht_int33fe: Convert to use set_secondary_fwnode()
+>    platform/x86: intel_cht_int33fe: Switch to use
+>      acpi_dev_hid_uid_match()
+>    platform/x86: intel_cht_int33fe: Fix spelling issues
+> 
+>   drivers/base/core.c                           |   1 +
+>   drivers/base/swnode.c                         |  48 ++++++++
+>   .../platform/x86/intel_cht_int33fe_typec.c    | 106 +++++++++---------
+>   include/linux/property.h                      |   3 +
+>   4 files changed, 108 insertions(+), 50 deletions(-)
+> 
