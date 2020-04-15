@@ -1,50 +1,53 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 065/129] platform/x86: intel-hid: fix: Update Tiger Lake ACPI device ID
-Date: Wed, 15 Apr 2020 07:33:40 -0400
-Message-ID: <20200415113445.11881-65-sashal@kernel.org>
-References: <20200415113445.11881-1-sashal@kernel.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH] tools/power/x86/intel-speed-select: Fix CLX-N package
+ information output
+Date: Wed, 15 Apr 2020 19:10:43 +0300
+Message-ID: <20200415161043.GU185537@smile.fi.intel.com>
+References: <20200402180732.24684-1-prarit@redhat.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200415113445.11881-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Gayatri Kammela <gayatri.kammela@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200402180732.24684-1-prarit@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Prarit Bhargava <prarit@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Gayatri Kammela <gayatri.kammela@intel.com>
+On Thu, Apr 02, 2020 at 02:07:32PM -0400, Prarit Bhargava wrote:
+> On CLX-N the perf-profile output is missing the package, die, and cpu
+> output.  On CLX-N the pkg_dev struct will never be evaluated by the core
+> code so pkg_dev.processed is always 0 and the package, die, and cpu
+> information is never output.
+> 
+> Set the pkg_dev.processed flag to 1 for CLX-N processors.
 
-[ Upstream commit d5764dc597467664a1a70ab66a2314a011aeccd4 ]
+I will accept this with PR from Srinivas whenever he sends one to public mailing list.
 
-Tiger Lake's new unique ACPI device IDs for intel-hid driver is not
-valid because of missing 'C' in the ID. Fix the ID by updating it.
+> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+> Cc: andriy.shevchenko@linux.intel.com
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: platform-driver-x86@vger.kernel.org
+> ---
+>  tools/power/x86/intel-speed-select/isst-config.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+> index d1ac57be0cbd..2e64b9b6eb2e 100644
+> --- a/tools/power/x86/intel-speed-select/isst-config.c
+> +++ b/tools/power/x86/intel-speed-select/isst-config.c
+> @@ -1169,6 +1169,7 @@ static void dump_clx_n_config_for_cpu(int cpu, void *arg1, void *arg2,
+>  
+>  		ctdp_level = &clx_n_pkg_dev.ctdp_level[0];
+>  		pbf_info = &ctdp_level->pbf_info;
+> +		clx_n_pkg_dev.processed = 1;
+>  		isst_ctdp_display_information(cpu, outf, tdp_level, &clx_n_pkg_dev);
+>  		free_cpu_set(ctdp_level->core_cpumask);
+>  		free_cpu_set(pbf_info->core_cpumask);
+> -- 
+> 2.18.2
+> 
 
-After the update, the new ID should now look like
-INT1051 --> INTC1051
-
-Fixes: bdd11b654035 ("platform/x86: intel-hid: Add Tiger Lake ACPI device ID")
-Suggested-by: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/intel-hid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 43d590250228c..9c0e6e0fabdff 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -19,8 +19,8 @@ MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Alex Hung");
- 
- static const struct acpi_device_id intel_hid_ids[] = {
--	{"INT1051", 0},
- 	{"INT33D5", 0},
-+	{"INTC1051", 0},
- 	{"", 0},
- };
- 
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
