@@ -1,112 +1,141 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2] platform/x86: intel_int0002_vgpio: Only bind to the
- INT0002 dev when using s2idle
-Date: Wed, 15 Apr 2020 11:48:20 +0200
-Message-ID: <a9c4b315-2784-fe59-1236-3e3bf391fd4c@redhat.com>
-References: <20200414131953.131533-1-hdegoede@redhat.com>
- <4380034.KJPSqyn9gG@kreacher>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [RFC 2/8] thermal: Properly handle mode values in .set_mode()
+Date: Wed, 15 Apr 2020 12:05:42 +0200
+Message-ID: <be73e437-8913-25f5-4abe-cad2caedcf74@samsung.com>
+References: <20200407174926.23971-1-andrzej.p@collabora.com>
+        <20200407174926.23971-3-andrzej.p@collabora.com>
+        <CGME20200415100543eucas1p24e24293da39844ca8791db86af5365a7@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <4380034.KJPSqyn9gG@kreacher>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20200407174926.23971-3-andrzej.p@collabora.com>
 Content-Language: en-US
-Sender: stable-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Maxim Mikityanskiy <maxtram95@gmail.com>, "5 . 3+" <stable@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, "David S . Miller" <davem@davemloft.net>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Allison Randal <allison@lohutok.net>, Enrico Weigelt <info@metux.net>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
 
-On 4/15/20 11:45 AM, Rafael J. Wysocki wrote:
-> On Tuesday, April 14, 2020 3:19:53 PM CEST Hans de Goede wrote:
->> Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement
->> irq_set_wake on Bay Trail") stopped passing irq_set_wake requests on to
->> the parents IRQ because this was breaking suspend (causing immediate
->> wakeups) on an Asus E202SA.
->>
->> This workaround for this issue is mostly fine, on most Cherry Trail
->> devices where we need the INT0002 device for wakeups by e.g. USB kbds,
->> the parent IRQ is shared with the ACPI SCI and that is marked as wakeup
->> anyways.
->>
->> But not on all devices, specifically on a Medion Akoya E1239T there is
->> no SCI at all, and because the irq_set_wake request is not passed on to
->> the parent IRQ, wake up by the builtin USB kbd does not work here.
->>
->> So the workaround for the Asus E202SA immediate wake problem is causing
->> problems elsewhere; and in hindsight it is not the correct fix,
->> the Asus E202SA uses Airmont CPU cores, but this does not mean it is a
->> Cherry Trail based device, Brasswell uses Airmont CPU cores too and this
->> actually is a Braswell device.
->>
->> Most (all?) Braswell devices use classic S3 mode suspend rather then
->> s2idle suspend and in this case directly dealing with PME events as
->> the INT0002 driver does likely is not the best idea, so that this is
->> causing issues is not surprising.
->>
->> Replace the workaround of not passing irq_set_wake requests on to the
->> parents IRQ, by not binding to the INT0002 device when s2idle is not used.
->> This fixes USB kbd wakeups not working on some Cherry Trail devices,
->> while still avoiding mucking with the wakeup flags on the Asus E202SA
->> (and other Brasswell devices).
->>
->> Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
->> Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
->> Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement irq_set_wake on Bay Trail")
->> Tested-by: Maxim Mikityanskiy <maxtram95@gmail.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v2:
->> - Rebase on top of 5.7-rc1
->> ---
->>   drivers/platform/x86/intel_int0002_vgpio.c | 18 +++++-------------
->>   1 file changed, 5 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
->> index 289c6655d425..30806046b664 100644
->> --- a/drivers/platform/x86/intel_int0002_vgpio.c
->> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
->> @@ -143,21 +143,9 @@ static struct irq_chip int0002_byt_irqchip = {
->>   	.irq_set_wake		= int0002_irq_set_wake,
->>   };
->>   
->> -static struct irq_chip int0002_cht_irqchip = {
->> -	.name			= DRV_NAME,
->> -	.irq_ack		= int0002_irq_ack,
->> -	.irq_mask		= int0002_irq_mask,
->> -	.irq_unmask		= int0002_irq_unmask,
->> -	/*
->> -	 * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
->> -	 * and we don't want to mess with the ACPI SCI irq settings.
->> -	 */
->> -	.flags			= IRQCHIP_SKIP_SET_WAKE,
->> -};
->> -
->>   static const struct x86_cpu_id int0002_cpu_ids[] = {
->>   	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	&int0002_byt_irqchip),
->> -	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&int0002_cht_irqchip),
->> +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&int0002_byt_irqchip),
->>   	{}
->>   };
->>   
->> @@ -181,6 +169,10 @@ static int int0002_probe(struct platform_device *pdev)
->>   	if (!cpu_id)
->>   		return -ENODEV;
->>   
->> +	/* We only need to directly deal with PMEs when using s2idle */
->> +	if (!pm_suspend_default_s2idle())
->> +		return -ENODEV;
->> +
+On 4/7/20 7:49 PM, Andrzej Pietrasiewicz wrote:
+> Allow only THERMAL_DEVICE_ENABLED and THERMAL_DEVICE_DISABLED as valid
+> states to transition to.
 > 
-> What if the system supports s2idle which is not the default suspend option
-> and then it is selected by user space (overriding the default)?
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlxsw/core_thermal.c | 8 ++++++--
+>  drivers/platform/x86/acerhdf.c                     | 4 ++++
+>  drivers/thermal/imx_thermal.c                      | 4 +++-
+>  drivers/thermal/intel/intel_quark_dts_thermal.c    | 5 ++++-
+>  drivers/thermal/of-thermal.c                       | 4 +++-
+>  5 files changed, 20 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
+> index ce0a6837daa3..cd435ca7adbe 100644
+> --- a/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
+> +++ b/drivers/net/ethernet/mellanox/mlxsw/core_thermal.c
+> @@ -296,8 +296,10 @@ static int mlxsw_thermal_set_mode(struct thermal_zone_device *tzdev,
+>  
+>  	if (mode == THERMAL_DEVICE_ENABLED)
+>  		tzdev->polling_delay = thermal->polling_delay;
+> -	else
+> +	else if (mode == THERMAL_DEVICE_DISABLED)
+>  		tzdev->polling_delay = 0;
+> +	else
+> +		return -EINVAL;
 
-This driver only binds (the cpuid check still visible above) on Bay Trail
-and Cherry Trail/Brasswell systems. AFAIK those never support both modes,
-the laptop variants of these SoCs always use S3 and the tablet versions
-always use s2idle.
+Making sure that the valid parameters are passed to driver specific
+->set_mode method should be handled in the higher layer (callers).
 
-Regards,
-
-Hans
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+ 
+>  	mutex_unlock(&tzdev->lock);
+>  
+> @@ -486,8 +488,10 @@ static int mlxsw_thermal_module_mode_set(struct thermal_zone_device *tzdev,
+>  
+>  	if (mode == THERMAL_DEVICE_ENABLED)
+>  		tzdev->polling_delay = thermal->polling_delay;
+> -	else
+> +	else if (mode == THERMAL_DEVICE_DISABLED)
+>  		tzdev->polling_delay = 0;
+> +	else
+> +		return -EINVAL;
+>  
+>  	mutex_unlock(&tzdev->lock);
+>  
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index 8cc86f4e3ac1..d5188c1d688b 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -431,6 +431,10 @@ static int acerhdf_get_mode(struct thermal_zone_device *thermal,
+>  static int acerhdf_set_mode(struct thermal_zone_device *thermal,
+>  			    enum thermal_device_mode mode)
+>  {
+> +	if (mode != THERMAL_DEVICE_DISABLED &&
+> +	    mode != THERMAL_DEVICE_ENABLED)
+> +		return -EINVAL;
+> +
+>  	if (mode == THERMAL_DEVICE_DISABLED && kernelmode)
+>  		acerhdf_revert_to_bios_mode();
+>  	else if (mode == THERMAL_DEVICE_ENABLED && !kernelmode)
+> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+> index bb6754a5342c..014512581918 100644
+> --- a/drivers/thermal/imx_thermal.c
+> +++ b/drivers/thermal/imx_thermal.c
+> @@ -368,7 +368,7 @@ static int imx_set_mode(struct thermal_zone_device *tz,
+>  			data->irq_enabled = true;
+>  			enable_irq(data->irq);
+>  		}
+> -	} else {
+> +	} else if (mode == THERMAL_DEVICE_DISABLED) {
+>  		regmap_write(map, soc_data->sensor_ctrl + REG_CLR,
+>  			     soc_data->measure_temp_mask);
+>  		regmap_write(map, soc_data->sensor_ctrl + REG_SET,
+> @@ -381,6 +381,8 @@ static int imx_set_mode(struct thermal_zone_device *tz,
+>  			disable_irq(data->irq);
+>  			data->irq_enabled = false;
+>  		}
+> +	} else {
+> +		return -EINVAL;
+>  	}
+>  
+>  	data->mode = mode;
+> diff --git a/drivers/thermal/intel/intel_quark_dts_thermal.c b/drivers/thermal/intel/intel_quark_dts_thermal.c
+> index 5d33b350da1c..5f4bcc0e4fd3 100644
+> --- a/drivers/thermal/intel/intel_quark_dts_thermal.c
+> +++ b/drivers/thermal/intel/intel_quark_dts_thermal.c
+> @@ -328,8 +328,11 @@ static int sys_set_mode(struct thermal_zone_device *tzd,
+>  	mutex_lock(&dts_update_mutex);
+>  	if (mode == THERMAL_DEVICE_ENABLED)
+>  		ret = soc_dts_enable(tzd);
+> -	else
+> +	else if (mode == THERMAL_DEVICE_DISABLED)
+>  		ret = soc_dts_disable(tzd);
+> +	else
+> +		return -EINVAL;
+> +
+>  	mutex_unlock(&dts_update_mutex);
+>  
+>  	return ret;
+> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+> index ef0baa954ff0..b7621dfab17c 100644
+> --- a/drivers/thermal/of-thermal.c
+> +++ b/drivers/thermal/of-thermal.c
+> @@ -289,9 +289,11 @@ static int of_thermal_set_mode(struct thermal_zone_device *tz,
+>  	if (mode == THERMAL_DEVICE_ENABLED) {
+>  		tz->polling_delay = data->polling_delay;
+>  		tz->passive_delay = data->passive_delay;
+> -	} else {
+> +	} else if (mode == THERMAL_DEVICE_DISABLED) {
+>  		tz->polling_delay = 0;
+>  		tz->passive_delay = 0;
+> +	} else {
+> +		return -EINVAL;
+>  	}
+>  
+>  	mutex_unlock(&tz->lock);
+> 
