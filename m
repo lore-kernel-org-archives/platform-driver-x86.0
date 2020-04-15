@@ -1,15 +1,15 @@
 From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [RFC 3/8] thermal: Store thermal mode in a dedicated enum
-Date: Wed, 15 Apr 2020 12:09:43 +0200
-Message-ID: <4085ca11-5060-c786-93af-f77d6f5d6e60@samsung.com>
+Subject: Re: [RFC 7/8] thermal: of: Monitor thermal zone after enabling it
+Date: Wed, 15 Apr 2020 12:18:28 +0200
+Message-ID: <40316054-5e39-f1fa-81f2-bfda787d2167@samsung.com>
 References: <20200407174926.23971-1-andrzej.p@collabora.com>
- <20200407174926.23971-4-andrzej.p@collabora.com>
- <CGME20200415100944eucas1p1dcfeb784e790ca2fc3417fd2797e3f5d@eucas1p1.samsung.com>
+ <20200407174926.23971-8-andrzej.p@collabora.com>
+ <CGME20200415101829eucas1p18e21324d3c39926fffc6c8b5dc52f206@eucas1p1.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
-In-Reply-To: <20200407174926.23971-4-andrzej.p@collabora.com>
+In-Reply-To: <20200407174926.23971-8-andrzej.p@collabora.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -27,200 +27,61 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 
 On 4/7/20 7:49 PM, Andrzej Pietrasiewicz wrote:
-> Prepare for adding THERMAL_DEVICE_INITIAL mode.
+> thermal/of calls its own ->set_mode() method, so monitor thermal zone
+> afterwards. This is needed for the DISABLED->ENABLED transition.
 > 
 > Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 > ---
->  drivers/acpi/thermal.c                        | 27 +++++++++----------
->  drivers/platform/x86/acerhdf.c                | 12 ++++++---
->  .../intel/int340x_thermal/int3400_thermal.c   | 18 +++++--------
->  3 files changed, 27 insertions(+), 30 deletions(-)
+>  drivers/thermal/of-thermal.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
-> index 19067a5e5293..a93b0412dd6b 100644
-> --- a/drivers/acpi/thermal.c
-> +++ b/drivers/acpi/thermal.c
-> @@ -172,7 +172,7 @@ struct acpi_thermal {
->  	struct acpi_thermal_trips trips;
->  	struct acpi_handle_list devices;
->  	struct thermal_zone_device *thermal_zone;
-> -	int tz_enabled;
-> +	enum thermal_device_mode mode;
->  	int kelvin_offset;	/* in millidegrees */
->  	struct work_struct thermal_check_work;
->  };
-> @@ -500,7 +500,7 @@ static void acpi_thermal_check(void *data)
->  {
->  	struct acpi_thermal *tz = data;
+> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+> index b7621dfab17c..cf2c43ebcb78 100644
+> --- a/drivers/thermal/of-thermal.c
+> +++ b/drivers/thermal/of-thermal.c
+> @@ -523,8 +523,11 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+>  		if (sensor_specs.np == sensor_np && id == sensor_id) {
+>  			tzd = thermal_zone_of_add_sensor(child, sensor_np,
+>  							 data, ops);
+> -			if (!IS_ERR(tzd))
+> +			if (!IS_ERR(tzd)) {
+>  				tzd->ops->set_mode(tzd, THERMAL_DEVICE_ENABLED);
+> +				thermal_zone_device_update(tzd,
+> +						THERMAL_EVENT_UNSPECIFIED);
+> +			}
 >  
-> -	if (!tz->tz_enabled)
-> +	if (tz->mode != THERMAL_DEVICE_ENABLED)
->  		return;
->  
->  	thermal_zone_device_update(tz->thermal_zone,
-> @@ -534,8 +534,7 @@ static int thermal_get_mode(struct thermal_zone_device *thermal,
->  	if (!tz)
->  		return -EINVAL;
->  
-> -	*mode = tz->tz_enabled ? THERMAL_DEVICE_ENABLED :
-> -		THERMAL_DEVICE_DISABLED;
-> +	*mode = tz->mode;
->  
->  	return 0;
->  }
-> @@ -544,27 +543,25 @@ static int thermal_set_mode(struct thermal_zone_device *thermal,
->  				enum thermal_device_mode mode)
->  {
->  	struct acpi_thermal *tz = thermal->devdata;
-> -	int enable;
->  
->  	if (!tz)
->  		return -EINVAL;
->  
-> +	if (mode != THERMAL_DEVICE_DISABLED &&
-> +	    mode != THERMAL_DEVICE_ENABLED)
-> +		return -EINVAL;
->  	/*
->  	 * enable/disable thermal management from ACPI thermal driver
->  	 */
-> -	if (mode == THERMAL_DEVICE_ENABLED)
-> -		enable = 1;
-> -	else if (mode == THERMAL_DEVICE_DISABLED) {
-> -		enable = 0;
-> +	if (mode == THERMAL_DEVICE_DISABLED)
->  		pr_warn("thermal zone will be disabled\n");
-> -	} else
-> -		return -EINVAL;
->  
-> -	if (enable != tz->tz_enabled) {
-> -		tz->tz_enabled = enable;
-> +	if (mode != tz->mode) {
-> +		tz->mode = mode;
->  		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
->  			"%s kernel ACPI thermal control\n",
-> -			tz->tz_enabled ? "Enable" : "Disable"));
-> +			tz->mode == THERMAL_DEVICE_ENABLED ?
-> +			"Enable" : "Disable"));
->  		acpi_thermal_check(tz);
->  	}
->  	return 0;
-> @@ -913,7 +910,7 @@ static int acpi_thermal_register_thermal_zone(struct acpi_thermal *tz)
->  	if (ACPI_FAILURE(status))
->  		return -ENODEV;
->  
-> -	tz->tz_enabled = 1;
-> +	tz->mode = THERMAL_DEVICE_ENABLED;
->  
->  	dev_info(&tz->device->dev, "registered as thermal_zone%d\n",
->  		 tz->thermal_zone->id);
-> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-> index d5188c1d688b..87e357017d4a 100644
-> --- a/drivers/platform/x86/acerhdf.c
-> +++ b/drivers/platform/x86/acerhdf.c
-> @@ -65,8 +65,10 @@
->  
->  #ifdef START_IN_KERNEL_MODE
->  static int kernelmode = 1;
-> +static enum thermal_device_mode thermal_mode = THERMAL_DEVICE_ENABLED;
->  #else
->  static int kernelmode;
-> +static enum thermal_device_mode thermal_mode = THERMAL_DEVICE_DISABLED;
->  #endif
->  
->  static unsigned int interval = 10;
-> @@ -416,8 +418,7 @@ static int acerhdf_get_mode(struct thermal_zone_device *thermal,
->  	if (verbose)
->  		pr_notice("kernel mode fan control %d\n", kernelmode);
->  
-> -	*mode = (kernelmode) ? THERMAL_DEVICE_ENABLED
-> -			     : THERMAL_DEVICE_DISABLED;
-> +	*mode = thermal_mode;
->  
->  	return 0;
->  }
-> @@ -435,10 +436,13 @@ static int acerhdf_set_mode(struct thermal_zone_device *thermal,
->  	    mode != THERMAL_DEVICE_ENABLED)
->  		return -EINVAL;
->  
-> -	if (mode == THERMAL_DEVICE_DISABLED && kernelmode)
-> +	if (mode == THERMAL_DEVICE_DISABLED && kernelmode) {
->  		acerhdf_revert_to_bios_mode();
-> -	else if (mode == THERMAL_DEVICE_ENABLED && !kernelmode)
-> +		thermal_mode = THERMAL_DEVICE_DISABLED;
-> +	} else if (mode == THERMAL_DEVICE_ENABLED && !kernelmode) {
->  		acerhdf_enable_kernelmode();
-> +		thermal_mode = THERMAL_DEVICE_ENABLED;
-> +	}
->  
->  	return 0;
->  }
+>  			of_node_put(sensor_specs.np);
+>  			of_node_put(child);
+> 
 
-The conversion missed:
+This patch is bogus/redundant, please look at ->set_mode implementation for
+thermal/of drivers:
 
-* handling of "force_bios" and force_product" kernel parameters:
+static int of_thermal_set_mode(struct thermal_zone_device *tz,
+			       enum thermal_device_mode mode)
+{
+	struct __thermal_zone *data = tz->devdata;
 
-	if (force_bios[0]) {
-		version = force_bios;
-		pr_info("forcing BIOS version: %s\n", version);
-		kernelmode = 0;
+	mutex_lock(&tz->lock);
+
+	if (mode == THERMAL_DEVICE_ENABLED) {
+		tz->polling_delay = data->polling_delay;
+		tz->passive_delay = data->passive_delay;
+	} else {
+		tz->polling_delay = 0;
+		tz->passive_delay = 0;
 	}
 
-	if (force_product[0]) {
-		product = force_product;
-		pr_info("forcing BIOS product: %s\n", product);
-		kernelmode = 0;
-	}
+	mutex_unlock(&tz->lock);
 
-* acerhdf_revert_to_bios_mode() call on error in acerhdf_set_cur_state()
+	data->mode = mode;
+	thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
+
+	return 0;
+}
 
 Best regards,
 --
 Bartlomiej Zolnierkiewicz
 Samsung R&D Institute Poland
 Samsung Electronics
-
-> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> index 634b943e9e3d..fcbd1b14fa74 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> @@ -44,7 +44,7 @@ static char *int3400_thermal_uuids[INT3400_THERMAL_MAXIMUM_UUID] = {
->  struct int3400_thermal_priv {
->  	struct acpi_device *adev;
->  	struct thermal_zone_device *thermal;
-> -	int mode;
-> +	enum thermal_device_mode mode;
->  	int art_count;
->  	struct art *arts;
->  	int trt_count;
-> @@ -247,24 +247,20 @@ static int int3400_thermal_set_mode(struct thermal_zone_device *thermal,
->  				enum thermal_device_mode mode)
->  {
->  	struct int3400_thermal_priv *priv = thermal->devdata;
-> -	bool enable;
->  	int result = 0;
->  
->  	if (!priv)
->  		return -EINVAL;
->  
-> -	if (mode == THERMAL_DEVICE_ENABLED)
-> -		enable = true;
-> -	else if (mode == THERMAL_DEVICE_DISABLED)
-> -		enable = false;
-> -	else
-> +	if (mode != THERMAL_DEVICE_ENABLED &&
-> +	    mode != THERMAL_DEVICE_DISABLED)
->  		return -EINVAL;
->  
-> -	if (enable != priv->mode) {
-> -		priv->mode = enable;
-> +	if (mode != priv->mode) {
-> +		priv->mode = mode;
->  		result = int3400_thermal_run_osc(priv->adev->handle,
-> -						 priv->current_uuid_index,
-> -						 enable);
-> +						priv->current_uuid_index,
-> +						mode == THERMAL_DEVICE_ENABLED);
->  	}
->  	return result;
->  }
-> 
