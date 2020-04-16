@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v9 15/20] platform/x86: intel_pmc_ipc: Drop intel_pmc_ipc_command()
-Date: Thu, 16 Apr 2020 11:15:47 +0300
-Message-ID: <20200416081552.68083-16-mika.westerberg@linux.intel.com>
+Subject: [PATCH v9 10/20] mfd: intel_soc_pmic: Add SCU IPC member to struct intel_soc_pmic
+Date: Thu, 16 Apr 2020 11:15:42 +0300
+Message-ID: <20200416081552.68083-11-mika.westerberg@linux.intel.com>
 References: <20200416081552.68083-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,70 +12,50 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Now that all callers have been converted over to the SCU IPC API we can
-drop intel_pmc_ipc_command().
+Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
+be using this field going forward to access the SCU IPC instance.
+
+While there add kernel-doc for the intel_soc_pmic structure.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/x86/include/asm/intel_pmc_ipc.h |  8 --------
- drivers/platform/x86/intel_pmc_ipc.c | 20 --------------------
- 2 files changed, 28 deletions(-)
+ include/linux/mfd/intel_soc_pmic.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index ddc964b9c78c..22848df5faaf 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -27,19 +27,11 @@
+diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+index bfecd6bd4990..6a88e34cb955 100644
+--- a/include/linux/mfd/intel_soc_pmic.h
++++ b/include/linux/mfd/intel_soc_pmic.h
+@@ -13,6 +13,20 @@
  
- #if IS_ENABLED(CONFIG_INTEL_PMC_IPC)
+ #include <linux/regmap.h>
  
--int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
--		u32 *out, u32 outlen);
- int intel_pmc_s0ix_counter_read(u64 *data);
- int intel_pmc_gcr_read64(u32 offset, u64 *data);
++/**
++ * struct intel_soc_pmic - Intel SoC PMIC data
++ * @irq: Master interrupt number of the parent PMIC device
++ * @regmap: Pointer to the parent PMIC device regmap structure
++ * @irq_chip_data: IRQ chip data for the PMIC itself
++ * @irq_chip_data_pwrbtn: Chained IRQ chip data for the Power Button
++ * @irq_chip_data_tmu: Chained IRQ chip data for the Time Management Unit
++ * @irq_chip_data_bcu: Chained IRQ chip data for the Burst Control Unit
++ * @irq_chip_data_adc: Chained IRQ chip data for the General Purpose ADC
++ * @irq_chip_data_chgr: Chained IRQ chip data for the External Charger
++ * @irq_chip_data_crit: Chained IRQ chip data for the Critical Event Handler
++ * @dev: Pointer to the parent PMIC device
++ * @scu: Pointer to the SCU IPC device data structure
++ */
+ struct intel_soc_pmic {
+ 	int irq;
+ 	struct regmap *regmap;
+@@ -24,6 +38,7 @@ struct intel_soc_pmic {
+ 	struct regmap_irq_chip_data *irq_chip_data_chgr;
+ 	struct regmap_irq_chip_data *irq_chip_data_crit;
+ 	struct device *dev;
++	struct intel_scu_ipc_dev *scu;
+ };
  
- #else
- 
--static inline int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
--		u32 *out, u32 outlen)
--{
--	return -EINVAL;
--}
--
- static inline int intel_pmc_s0ix_counter_read(u64 *data)
- {
- 	return -EINVAL;
-diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index 0558eadc2a14..e4110df24490 100644
---- a/drivers/platform/x86/intel_pmc_ipc.c
-+++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -194,26 +194,6 @@ static int update_no_reboot_bit(void *priv, bool set)
- 				    PMC_CFG_NO_REBOOT_MASK, value);
- }
- 
--/**
-- * intel_pmc_ipc_command() -  IPC command with input/output data
-- * @cmd:	IPC command code.
-- * @sub:	IPC command sub type.
-- * @in:		input data of this IPC command.
-- * @inlen:	input data length in bytes.
-- * @out:	output data of this IPC command.
-- * @outlen:	output data length in dwords.
-- *
-- * Send an IPC command to PMC with input/output data.
-- *
-- * Return:	an IPC error code or 0 on success.
-- */
--int intel_pmc_ipc_command(u32 cmd, u32 sub, u8 *in, u32 inlen,
--			  u32 *out, u32 outlen)
--{
--	return intel_scu_ipc_dev_command(NULL, cmd, sub, in, inlen, out, outlen);
--}
--EXPORT_SYMBOL_GPL(intel_pmc_ipc_command);
--
- static int ipc_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct intel_pmc_ipc_dev *pmc = &ipcdev;
+ int intel_soc_pmic_exec_mipi_pmic_seq_element(u16 i2c_address, u32 reg_address,
 -- 
 2.25.1
