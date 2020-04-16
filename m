@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v9 03/20] platform/x86: intel_scu_ipc: Move legacy SCU IPC API to a separate header
-Date: Thu, 16 Apr 2020 11:15:35 +0300
-Message-ID: <20200416081552.68083-4-mika.westerberg@linux.intel.com>
+Subject: [PATCH v9 08/20] platform/x86: intel_scu_ipc: Add managed function to register SCU IPC
+Date: Thu, 16 Apr 2020 11:15:40 +0300
+Message-ID: <20200416081552.68083-9-mika.westerberg@linux.intel.com>
 References: <20200416081552.68083-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,158 +12,114 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-In preparation for introducing a new API for SCU IPC, move the legacy
-API and constants to a separate header that is is subject to be removed
-eventually.
+Drivers such as intel_pmc_ipc.c can be unloaded as well so in order to
+support those in this driver add a new function that can be called to
+unregister the SCU IPC when it is not needed anymore.
+
+We also add a managed version of the intel_scu_ipc_register() that takes
+care of calling intel_scu_ipc_unregister() automatically when the driver
+is unbound.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_scu_ipc.h        | 56 +------------------
- arch/x86/include/asm/intel_scu_ipc_legacy.h | 62 +++++++++++++++++++++
- 2 files changed, 63 insertions(+), 55 deletions(-)
- create mode 100644 arch/x86/include/asm/intel_scu_ipc_legacy.h
+ arch/x86/include/asm/intel_scu_ipc.h | 10 +++++
+ drivers/platform/x86/intel_scu_ipc.c | 62 ++++++++++++++++++++++++++++
+ 2 files changed, 72 insertions(+)
 
 diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index c53d18f9440b..2d0e485842fd 100644
+index d5f6ae514172..11d457af68c5 100644
 --- a/arch/x86/include/asm/intel_scu_ipc.h
 +++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -3,22 +3,6 @@
- #define  _ASM_X86_INTEL_SCU_IPC_H_
+@@ -25,6 +25,16 @@ __intel_scu_ipc_register(struct device *parent,
+ #define intel_scu_ipc_register(parent, scu_data)  \
+ 	__intel_scu_ipc_register(parent, scu_data, THIS_MODULE)
  
- #include <linux/ioport.h>
--#include <linux/notifier.h>
--
--#define IPCMSG_INDIRECT_READ	0x02
--#define IPCMSG_INDIRECT_WRITE	0x05
--
--#define IPCMSG_COLD_OFF		0x80	/* Only for Tangier */
--
--#define IPCMSG_WARM_RESET	0xF0
--#define IPCMSG_COLD_RESET	0xF1
--#define IPCMSG_SOFT_RESET	0xF2
--#define IPCMSG_COLD_BOOT	0xF3
--
--#define IPCMSG_VRTC		0xFA	 /* Set vRTC device */
--	/* Command id associated with message IPCMSG_VRTC */
--	#define IPC_CMD_VRTC_SETTIME      1 /* Set time */
--	#define IPC_CMD_VRTC_SETALARM     2 /* Set alarm */
++void intel_scu_ipc_unregister(struct intel_scu_ipc_dev *scu);
++
++struct intel_scu_ipc_dev *
++__devm_intel_scu_ipc_register(struct device *parent,
++			      const struct intel_scu_ipc_data *scu_data,
++			      struct module *owner);
++
++#define devm_intel_scu_ipc_register(parent, scu_data)  \
++	__devm_intel_scu_ipc_register(parent, scu_data, THIS_MODULE)
++
+ struct intel_scu_ipc_dev *intel_scu_ipc_dev_get(void);
+ void intel_scu_ipc_dev_put(struct intel_scu_ipc_dev *scu);
+ struct intel_scu_ipc_dev *devm_intel_scu_ipc_dev_get(struct device *dev);
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 608034ea7af5..d9cf7f7602b0 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -637,6 +637,68 @@ __intel_scu_ipc_register(struct device *parent,
+ }
+ EXPORT_SYMBOL_GPL(__intel_scu_ipc_register);
  
- struct device;
- struct intel_scu_ipc_dev;
-@@ -37,44 +21,6 @@ struct intel_scu_ipc_dev *
- intel_scu_ipc_register(struct device *parent,
- 		       const struct intel_scu_ipc_data *scu_data);
- 
--/* Read single register */
--int intel_scu_ipc_ioread8(u16 addr, u8 *data);
--
--/* Read a vector */
--int intel_scu_ipc_readv(u16 *addr, u8 *data, int len);
--
--/* Write single register */
--int intel_scu_ipc_iowrite8(u16 addr, u8 data);
--
--/* Write a vector */
--int intel_scu_ipc_writev(u16 *addr, u8 *data, int len);
--
--/* Update single register based on the mask */
--int intel_scu_ipc_update_register(u16 addr, u8 data, u8 mask);
--
--/* Issue commands to the SCU with or without data */
--int intel_scu_ipc_simple_command(int cmd, int sub);
--int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
--			  u32 *out, int outlen);
--
--extern struct blocking_notifier_head intel_scu_notifier;
--
--static inline void intel_scu_notifier_add(struct notifier_block *nb)
--{
--	blocking_notifier_chain_register(&intel_scu_notifier, nb);
--}
--
--static inline void intel_scu_notifier_remove(struct notifier_block *nb)
--{
--	blocking_notifier_chain_unregister(&intel_scu_notifier, nb);
--}
--
--static inline int intel_scu_notifier_post(unsigned long v, void *p)
--{
--	return blocking_notifier_call_chain(&intel_scu_notifier, v, p);
--}
--
--#define		SCU_AVAILABLE		1
--#define		SCU_DOWN		2
-+#include <asm/intel_scu_ipc_legacy.h>
- 
- #endif
-diff --git a/arch/x86/include/asm/intel_scu_ipc_legacy.h b/arch/x86/include/asm/intel_scu_ipc_legacy.h
-new file mode 100644
-index 000000000000..d3a02bc07edd
---- /dev/null
-+++ b/arch/x86/include/asm/intel_scu_ipc_legacy.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_INTEL_SCU_IPC_LEGACY_H_
-+#define _ASM_X86_INTEL_SCU_IPC_LEGACY_H_
-+
-+#include <linux/notifier.h>
-+
-+#define IPCMSG_INDIRECT_READ	0x02
-+#define IPCMSG_INDIRECT_WRITE	0x05
-+
-+#define IPCMSG_COLD_OFF		0x80	/* Only for Tangier */
-+
-+#define IPCMSG_WARM_RESET	0xF0
-+#define IPCMSG_COLD_RESET	0xF1
-+#define IPCMSG_SOFT_RESET	0xF2
-+#define IPCMSG_COLD_BOOT	0xF3
-+
-+#define IPCMSG_VRTC		0xFA	/* Set vRTC device */
-+/* Command id associated with message IPCMSG_VRTC */
-+#define IPC_CMD_VRTC_SETTIME      1	/* Set time */
-+#define IPC_CMD_VRTC_SETALARM     2	/* Set alarm */
-+
-+/* Read single register */
-+int intel_scu_ipc_ioread8(u16 addr, u8 *data);
-+
-+/* Read a vector */
-+int intel_scu_ipc_readv(u16 *addr, u8 *data, int len);
-+
-+/* Write single register */
-+int intel_scu_ipc_iowrite8(u16 addr, u8 data);
-+
-+/* Write a vector */
-+int intel_scu_ipc_writev(u16 *addr, u8 *data, int len);
-+
-+/* Update single register based on the mask */
-+int intel_scu_ipc_update_register(u16 addr, u8 data, u8 mask);
-+
-+/* Issue commands to the SCU with or without data */
-+int intel_scu_ipc_simple_command(int cmd, int sub);
-+int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
-+			  u32 *out, int outlen);
-+
-+extern struct blocking_notifier_head intel_scu_notifier;
-+
-+static inline void intel_scu_notifier_add(struct notifier_block *nb)
++/**
++ * intel_scu_ipc_unregister() - Unregister SCU IPC
++ * @scu: SCU IPC handle
++ *
++ * This unregisters the SCU IPC device and releases the acquired
++ * resources once the refcount goes to zero.
++ */
++void intel_scu_ipc_unregister(struct intel_scu_ipc_dev *scu)
 +{
-+	blocking_notifier_chain_register(&intel_scu_notifier, nb);
++	mutex_lock(&ipclock);
++	if (!WARN_ON(!ipcdev)) {
++		ipcdev = NULL;
++		device_unregister(&scu->dev);
++	}
++	mutex_unlock(&ipclock);
++}
++EXPORT_SYMBOL_GPL(intel_scu_ipc_unregister);
++
++static void devm_intel_scu_ipc_unregister(struct device *dev, void *res)
++{
++	struct intel_scu_ipc_devres *dr = res;
++	struct intel_scu_ipc_dev *scu = dr->scu;
++
++	intel_scu_ipc_unregister(scu);
 +}
 +
-+static inline void intel_scu_notifier_remove(struct notifier_block *nb)
++/**
++ * __devm_intel_scu_ipc_register() - Register managed SCU IPC device
++ * @parent: Parent device
++ * @scu_data: Data used to configure SCU IPC
++ * @owner: Module registering the SCU IPC device
++ *
++ * Call this function to register managed SCU IPC mechanism under
++ * @parent. Returns pointer to the new SCU IPC device or ERR_PTR() in
++ * case of failure. The caller may use the returned instance if it needs
++ * to do SCU IPC calls itself.
++ */
++struct intel_scu_ipc_dev *
++__devm_intel_scu_ipc_register(struct device *parent,
++			      const struct intel_scu_ipc_data *scu_data,
++			      struct module *owner)
 +{
-+	blocking_notifier_chain_unregister(&intel_scu_notifier, nb);
++	struct intel_scu_ipc_devres *dr;
++	struct intel_scu_ipc_dev *scu;
++
++	dr = devres_alloc(devm_intel_scu_ipc_unregister, sizeof(*dr), GFP_KERNEL);
++	if (!dr)
++		return NULL;
++
++	scu = __intel_scu_ipc_register(parent, scu_data, owner);
++	if (IS_ERR(scu)) {
++		devres_free(dr);
++		return scu;
++	}
++
++	dr->scu = scu;
++	devres_add(parent, dr);
++
++	return scu;
 +}
++EXPORT_SYMBOL_GPL(__devm_intel_scu_ipc_register);
 +
-+static inline int intel_scu_notifier_post(unsigned long v, void *p)
-+{
-+	return blocking_notifier_call_chain(&intel_scu_notifier, v, p);
-+}
-+
-+#define		SCU_AVAILABLE		1
-+#define		SCU_DOWN		2
-+
-+#endif
+ static int __init intel_scu_ipc_init(void)
+ {
+ 	return class_register(&intel_scu_ipc_class);
 -- 
 2.25.1
