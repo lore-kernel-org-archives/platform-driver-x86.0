@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v9 14/20] usb: typec: mux: Convert the Intel PMC Mux driver to use new SCU IPC API
-Date: Thu, 16 Apr 2020 11:15:46 +0300
-Message-ID: <20200416081552.68083-15-mika.westerberg@linux.intel.com>
+Subject: [PATCH v9 18/20] platform/x86: intel_telemetry: Add telemetry_get_pltdata()
+Date: Thu, 16 Apr 2020 11:15:50 +0300
+Message-ID: <20200416081552.68083-19-mika.westerberg@linux.intel.com>
 References: <20200416081552.68083-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,75 +12,79 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Add new function that allows telemetry modules to get pointer to the
+platform specific configuration. This is needed to allow the telemetry
+debugfs module to fetch PMC IPC instance in the subsequent patch.
 
-Convert the driver to use the new SCU IPC API. This allows us to get rid
-of the duplicate PMC IPC implementation which is now covered in SCU IPC
-driver.
+This also allows us to replace telemetry_pltconfig_valid() with
+telemetry_get_pltdata() as well.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/usb/typec/mux/Kconfig         |  2 +-
- drivers/usb/typec/mux/intel_pmc_mux.c | 12 ++++++++----
- 2 files changed, 9 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/intel_telemetry.h         |  2 +-
+ drivers/platform/x86/intel_telemetry_core.c    | 17 ++++++-----------
+ drivers/platform/x86/intel_telemetry_debugfs.c |  3 +--
+ 3 files changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/usb/typec/mux/Kconfig b/drivers/usb/typec/mux/Kconfig
-index 77eb97b2aa86..a4dbd11f8ee2 100644
---- a/drivers/usb/typec/mux/Kconfig
-+++ b/drivers/usb/typec/mux/Kconfig
-@@ -11,7 +11,7 @@ config TYPEC_MUX_PI3USB30532
+diff --git a/arch/x86/include/asm/intel_telemetry.h b/arch/x86/include/asm/intel_telemetry.h
+index 274aaf0dae48..2c0e7d7a10e9 100644
+--- a/arch/x86/include/asm/intel_telemetry.h
++++ b/arch/x86/include/asm/intel_telemetry.h
+@@ -95,7 +95,7 @@ int telemetry_set_pltdata(const struct telemetry_core_ops *ops,
  
- config TYPEC_MUX_INTEL_PMC
- 	tristate "Intel PMC mux control"
--	depends on INTEL_PMC_IPC
-+	depends on INTEL_SCU_IPC
- 	select USB_ROLE_SWITCH
- 	help
- 	  Driver for USB muxes controlled by Intel PMC FW. Intel PMC FW can
-diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
-index f5c5e0aef66f..fce255e28a00 100644
---- a/drivers/usb/typec/mux/intel_pmc_mux.c
-+++ b/drivers/usb/typec/mux/intel_pmc_mux.c
-@@ -15,7 +15,7 @@
- #include <linux/usb/typec_dp.h>
- #include <linux/usb/typec_tbt.h>
+ int telemetry_clear_pltdata(void);
  
--#include <asm/intel_pmc_ipc.h>
-+#include <asm/intel_scu_ipc.h>
+-int telemetry_pltconfig_valid(void);
++struct telemetry_plt_config *telemetry_get_pltdata(void);
  
- #define PMC_USBC_CMD		0xa7
+ int telemetry_get_evtname(enum telemetry_unit telem_unit,
+ 			  const char **name, int len);
+diff --git a/drivers/platform/x86/intel_telemetry_core.c b/drivers/platform/x86/intel_telemetry_core.c
+index d4040bb222b4..fdf55b5d6948 100644
+--- a/drivers/platform/x86/intel_telemetry_core.c
++++ b/drivers/platform/x86/intel_telemetry_core.c
+@@ -353,21 +353,16 @@ int telemetry_clear_pltdata(void)
+ EXPORT_SYMBOL_GPL(telemetry_clear_pltdata);
  
-@@ -96,6 +96,7 @@ struct pmc_usb_port {
- struct pmc_usb {
- 	u8 num_ports;
- 	struct device *dev;
-+	struct intel_scu_ipc_dev *ipc;
- 	struct pmc_usb_port *port;
- };
- 
-@@ -107,9 +108,8 @@ static int pmc_usb_command(struct pmc_usb_port *port, u8 *msg, u32 len)
- 	 * Error bit will always be 0 with the USBC command.
- 	 * Status can be checked from the response message.
- 	 */
--	intel_pmc_ipc_command(PMC_USBC_CMD, 0, msg, len,
--			      (void *)response, 1);
+ /**
+- * telemetry_pltconfig_valid() - Checkif platform config is valid
++ * telemetry_get_pltdata() - Return telemetry platform config
+  *
+- * Usage by other than telemetry module is invalid
+- *
+- * Return: 0 success, < 0 for failure
++ * May be used by other telemetry modules to get platform specific
++ * configuration.
+  */
+-int telemetry_pltconfig_valid(void)
++struct telemetry_plt_config *telemetry_get_pltdata(void)
+ {
+-	if (telm_core_conf.plt_config)
+-		return 0;
 -
-+	intel_scu_ipc_dev_command(port->pmc->ipc, PMC_USBC_CMD, 0, msg, len,
-+				  response, sizeof(response));
- 	if (response[2]) {
- 		if (response[2] & BIT(1))
- 			return -EIO;
-@@ -370,6 +370,10 @@ static int pmc_usb_probe(struct platform_device *pdev)
- 	if (!pmc->port)
- 		return -ENOMEM;
+-	else
+-		return -EINVAL;
++	return telm_core_conf.plt_config;
+ }
+-EXPORT_SYMBOL_GPL(telemetry_pltconfig_valid);
++EXPORT_SYMBOL_GPL(telemetry_get_pltdata);
  
-+	pmc->ipc = devm_intel_scu_ipc_dev_get(&pdev->dev);
-+	if (!pmc->ipc)
-+		return -ENODEV;
-+
- 	pmc->dev = &pdev->dev;
+ static inline int telemetry_get_pssevtname(enum telemetry_unit telem_unit,
+ 					   const char **name, int len)
+diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel_telemetry_debugfs.c
+index 8a53d3b485b3..6cac3e05b817 100644
+--- a/drivers/platform/x86/intel_telemetry_debugfs.c
++++ b/drivers/platform/x86/intel_telemetry_debugfs.c
+@@ -910,8 +910,7 @@ static int __init telemetry_debugfs_init(void)
  
- 	/*
+ 	debugfs_conf = (struct telemetry_debugfs_conf *)id->driver_data;
+ 
+-	err = telemetry_pltconfig_valid();
+-	if (err < 0) {
++	if (!telemetry_get_pltdata()) {
+ 		pr_info("Invalid pltconfig, ensure IPC1 device is enabled in BIOS\n");
+ 		return -ENODEV;
+ 	}
 -- 
 2.25.1
