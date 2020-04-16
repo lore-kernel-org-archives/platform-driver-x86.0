@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v9 06/20] watchdog: intel-mid_wdt: Convert to use new SCU IPC API
-Date: Thu, 16 Apr 2020 11:15:38 +0300
-Message-ID: <20200416081552.68083-7-mika.westerberg@linux.intel.com>
+Subject: [PATCH v9 03/20] platform/x86: intel_scu_ipc: Move legacy SCU IPC API to a separate header
+Date: Thu, 16 Apr 2020 11:15:35 +0300
+Message-ID: <20200416081552.68083-4-mika.westerberg@linux.intel.com>
 References: <20200416081552.68083-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,143 +12,158 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-This converts the Intel MID watchdog driver over the new SCU IPC API
-where the SCU IPC instance is passed to the functions.
+In preparation for introducing a new API for SCU IPC, move the legacy
+API and constants to a separate header that is is subject to be removed
+eventually.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/watchdog/intel-mid_wdt.c | 53 ++++++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 16 deletions(-)
+ arch/x86/include/asm/intel_scu_ipc.h        | 56 +------------------
+ arch/x86/include/asm/intel_scu_ipc_legacy.h | 62 +++++++++++++++++++++
+ 2 files changed, 63 insertions(+), 55 deletions(-)
+ create mode 100644 arch/x86/include/asm/intel_scu_ipc_legacy.h
 
-diff --git a/drivers/watchdog/intel-mid_wdt.c b/drivers/watchdog/intel-mid_wdt.c
-index 470213abfd3d..1ae03b64ef8b 100644
---- a/drivers/watchdog/intel-mid_wdt.c
-+++ b/drivers/watchdog/intel-mid_wdt.c
-@@ -33,14 +33,24 @@ enum {
- 	SCU_WATCHDOG_KEEPALIVE,
- };
+diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
+index c53d18f9440b..2d0e485842fd 100644
+--- a/arch/x86/include/asm/intel_scu_ipc.h
++++ b/arch/x86/include/asm/intel_scu_ipc.h
+@@ -3,22 +3,6 @@
+ #define  _ASM_X86_INTEL_SCU_IPC_H_
  
--static inline int wdt_command(int sub, u32 *in, int inlen)
-+struct mid_wdt {
-+	struct watchdog_device wd;
-+	struct device *dev;
-+	struct intel_scu_ipc_dev *scu;
-+};
+ #include <linux/ioport.h>
+-#include <linux/notifier.h>
+-
+-#define IPCMSG_INDIRECT_READ	0x02
+-#define IPCMSG_INDIRECT_WRITE	0x05
+-
+-#define IPCMSG_COLD_OFF		0x80	/* Only for Tangier */
+-
+-#define IPCMSG_WARM_RESET	0xF0
+-#define IPCMSG_COLD_RESET	0xF1
+-#define IPCMSG_SOFT_RESET	0xF2
+-#define IPCMSG_COLD_BOOT	0xF3
+-
+-#define IPCMSG_VRTC		0xFA	 /* Set vRTC device */
+-	/* Command id associated with message IPCMSG_VRTC */
+-	#define IPC_CMD_VRTC_SETTIME      1 /* Set time */
+-	#define IPC_CMD_VRTC_SETALARM     2 /* Set alarm */
+ 
+ struct device;
+ struct intel_scu_ipc_dev;
+@@ -37,44 +21,6 @@ struct intel_scu_ipc_dev *
+ intel_scu_ipc_register(struct device *parent,
+ 		       const struct intel_scu_ipc_data *scu_data);
+ 
+-/* Read single register */
+-int intel_scu_ipc_ioread8(u16 addr, u8 *data);
+-
+-/* Read a vector */
+-int intel_scu_ipc_readv(u16 *addr, u8 *data, int len);
+-
+-/* Write single register */
+-int intel_scu_ipc_iowrite8(u16 addr, u8 data);
+-
+-/* Write a vector */
+-int intel_scu_ipc_writev(u16 *addr, u8 *data, int len);
+-
+-/* Update single register based on the mask */
+-int intel_scu_ipc_update_register(u16 addr, u8 data, u8 mask);
+-
+-/* Issue commands to the SCU with or without data */
+-int intel_scu_ipc_simple_command(int cmd, int sub);
+-int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+-			  u32 *out, int outlen);
+-
+-extern struct blocking_notifier_head intel_scu_notifier;
+-
+-static inline void intel_scu_notifier_add(struct notifier_block *nb)
+-{
+-	blocking_notifier_chain_register(&intel_scu_notifier, nb);
+-}
+-
+-static inline void intel_scu_notifier_remove(struct notifier_block *nb)
+-{
+-	blocking_notifier_chain_unregister(&intel_scu_notifier, nb);
+-}
+-
+-static inline int intel_scu_notifier_post(unsigned long v, void *p)
+-{
+-	return blocking_notifier_call_chain(&intel_scu_notifier, v, p);
+-}
+-
+-#define		SCU_AVAILABLE		1
+-#define		SCU_DOWN		2
++#include <asm/intel_scu_ipc_legacy.h>
+ 
+ #endif
+diff --git a/arch/x86/include/asm/intel_scu_ipc_legacy.h b/arch/x86/include/asm/intel_scu_ipc_legacy.h
+new file mode 100644
+index 000000000000..d3a02bc07edd
+--- /dev/null
++++ b/arch/x86/include/asm/intel_scu_ipc_legacy.h
+@@ -0,0 +1,62 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_INTEL_SCU_IPC_LEGACY_H_
++#define _ASM_X86_INTEL_SCU_IPC_LEGACY_H_
 +
-+static inline int
-+wdt_command(struct mid_wdt *mid, int sub, const void *in, size_t inlen, size_t size)
- {
--	return intel_scu_ipc_command(IPC_WATCHDOG, sub, in, inlen, NULL, 0);
-+	struct intel_scu_ipc_dev *scu = mid->scu;
++#include <linux/notifier.h>
 +
-+	return intel_scu_ipc_dev_command_with_size(scu, IPC_WATCHDOG, sub, in,
-+						   inlen, size, NULL, 0);
- }
- 
- static int wdt_start(struct watchdog_device *wd)
- {
--	struct device *dev = watchdog_get_drvdata(wd);
-+	struct mid_wdt *mid = watchdog_get_drvdata(wd);
- 	int ret, in_size;
- 	int timeout = wd->timeout;
- 	struct ipc_wd_start {
-@@ -49,38 +59,41 @@ static int wdt_start(struct watchdog_device *wd)
- 	} ipc_wd_start = { timeout - MID_WDT_PRETIMEOUT, timeout };
- 
- 	/*
--	 * SCU expects the input size for watchdog IPC to
--	 * be based on 4 bytes
-+	 * SCU expects the input size for watchdog IPC to be 2 which is the
-+	 * size of the structure in dwords. SCU IPC normally takes bytes
-+	 * but this is a special case where we specify size to be different
-+	 * than inlen.
- 	 */
- 	in_size = DIV_ROUND_UP(sizeof(ipc_wd_start), 4);
- 
--	ret = wdt_command(SCU_WATCHDOG_START, (u32 *)&ipc_wd_start, in_size);
-+	ret = wdt_command(mid, SCU_WATCHDOG_START, &ipc_wd_start,
-+			  sizeof(ipc_wd_start), in_size);
- 	if (ret)
--		dev_crit(dev, "error starting watchdog: %d\n", ret);
-+		dev_crit(mid->dev, "error starting watchdog: %d\n", ret);
- 
- 	return ret;
- }
- 
- static int wdt_ping(struct watchdog_device *wd)
- {
--	struct device *dev = watchdog_get_drvdata(wd);
-+	struct mid_wdt *mid = watchdog_get_drvdata(wd);
- 	int ret;
- 
--	ret = wdt_command(SCU_WATCHDOG_KEEPALIVE, NULL, 0);
-+	ret = wdt_command(mid, SCU_WATCHDOG_KEEPALIVE, NULL, 0, 0);
- 	if (ret)
--		dev_crit(dev, "Error executing keepalive: %d\n", ret);
-+		dev_crit(mid->dev, "Error executing keepalive: %d\n", ret);
- 
- 	return ret;
- }
- 
- static int wdt_stop(struct watchdog_device *wd)
- {
--	struct device *dev = watchdog_get_drvdata(wd);
-+	struct mid_wdt *mid = watchdog_get_drvdata(wd);
- 	int ret;
- 
--	ret = wdt_command(SCU_WATCHDOG_STOP, NULL, 0);
-+	ret = wdt_command(mid, SCU_WATCHDOG_STOP, NULL, 0, 0);
- 	if (ret)
--		dev_crit(dev, "Error stopping watchdog: %d\n", ret);
-+		dev_crit(mid->dev, "Error stopping watchdog: %d\n", ret);
- 
- 	return ret;
- }
-@@ -110,6 +123,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct watchdog_device *wdt_dev;
- 	struct intel_mid_wdt_pdata *pdata = dev->platform_data;
-+	struct mid_wdt *mid;
- 	int ret;
- 
- 	if (!pdata) {
-@@ -123,10 +137,13 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 			return ret;
- 	}
- 
--	wdt_dev = devm_kzalloc(dev, sizeof(*wdt_dev), GFP_KERNEL);
--	if (!wdt_dev)
-+	mid = devm_kzalloc(dev, sizeof(*mid), GFP_KERNEL);
-+	if (!mid)
- 		return -ENOMEM;
- 
-+	mid->dev = dev;
-+	wdt_dev = &mid->wd;
++#define IPCMSG_INDIRECT_READ	0x02
++#define IPCMSG_INDIRECT_WRITE	0x05
 +
- 	wdt_dev->info = &mid_wdt_info;
- 	wdt_dev->ops = &mid_wdt_ops;
- 	wdt_dev->min_timeout = MID_WDT_TIMEOUT_MIN;
-@@ -135,7 +152,7 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 	wdt_dev->parent = dev;
- 
- 	watchdog_set_nowayout(wdt_dev, WATCHDOG_NOWAYOUT);
--	watchdog_set_drvdata(wdt_dev, dev);
-+	watchdog_set_drvdata(wdt_dev, mid);
- 
- 	ret = devm_request_irq(dev, pdata->irq, mid_wdt_irq,
- 			       IRQF_SHARED | IRQF_NO_SUSPEND, "watchdog",
-@@ -145,6 +162,10 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	mid->scu = devm_intel_scu_ipc_dev_get(dev);
-+	if (!mid->scu)
-+		return -EPROBE_DEFER;
++#define IPCMSG_COLD_OFF		0x80	/* Only for Tangier */
 +
- 	/*
- 	 * The firmware followed by U-Boot leaves the watchdog running
- 	 * with the default threshold which may vary. When we get here
++#define IPCMSG_WARM_RESET	0xF0
++#define IPCMSG_COLD_RESET	0xF1
++#define IPCMSG_SOFT_RESET	0xF2
++#define IPCMSG_COLD_BOOT	0xF3
++
++#define IPCMSG_VRTC		0xFA	/* Set vRTC device */
++/* Command id associated with message IPCMSG_VRTC */
++#define IPC_CMD_VRTC_SETTIME      1	/* Set time */
++#define IPC_CMD_VRTC_SETALARM     2	/* Set alarm */
++
++/* Read single register */
++int intel_scu_ipc_ioread8(u16 addr, u8 *data);
++
++/* Read a vector */
++int intel_scu_ipc_readv(u16 *addr, u8 *data, int len);
++
++/* Write single register */
++int intel_scu_ipc_iowrite8(u16 addr, u8 data);
++
++/* Write a vector */
++int intel_scu_ipc_writev(u16 *addr, u8 *data, int len);
++
++/* Update single register based on the mask */
++int intel_scu_ipc_update_register(u16 addr, u8 data, u8 mask);
++
++/* Issue commands to the SCU with or without data */
++int intel_scu_ipc_simple_command(int cmd, int sub);
++int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
++			  u32 *out, int outlen);
++
++extern struct blocking_notifier_head intel_scu_notifier;
++
++static inline void intel_scu_notifier_add(struct notifier_block *nb)
++{
++	blocking_notifier_chain_register(&intel_scu_notifier, nb);
++}
++
++static inline void intel_scu_notifier_remove(struct notifier_block *nb)
++{
++	blocking_notifier_chain_unregister(&intel_scu_notifier, nb);
++}
++
++static inline int intel_scu_notifier_post(unsigned long v, void *p)
++{
++	return blocking_notifier_call_chain(&intel_scu_notifier, v, p);
++}
++
++#define		SCU_AVAILABLE		1
++#define		SCU_DOWN		2
++
++#endif
 -- 
 2.25.1
