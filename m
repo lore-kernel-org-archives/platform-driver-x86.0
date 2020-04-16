@@ -1,7 +1,7 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v9 07/20] platform/x86: intel_scu_ipcutil: Convert to use new SCU IPC API
-Date: Thu, 16 Apr 2020 11:15:39 +0300
-Message-ID: <20200416081552.68083-8-mika.westerberg@linux.intel.com>
+Subject: [PATCH v9 02/20] platform/x86: intel_scu_ipc: Log more information if SCU IPC command fails
+Date: Thu, 16 Apr 2020 11:15:34 +0300
+Message-ID: <20200416081552.68083-3-mika.westerberg@linux.intel.com>
 References: <20200416081552.68083-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,86 +12,90 @@ To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@inf
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Convert the IPC util to use the new SCU IPC API where the SCU IPC
-instance is passed to the functions.
+Currently we only log an error if the command times out which makes it
+hard to figure out the failing command. This changes the driver to log
+command and subcommand with the error code which should make debugging
+easier. This also allows us to simplify the callers as they don't need
+to log these errors themselves.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_scu_ipcutil.c | 43 +++++++++++++++++++++---
- 1 file changed, 39 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/x86/intel_scu_ipcutil.c b/drivers/platform/x86/intel_scu_ipcutil.c
-index 8afe6fa06d7b..b7c10c15a3d6 100644
---- a/drivers/platform/x86/intel_scu_ipcutil.c
-+++ b/drivers/platform/x86/intel_scu_ipcutil.c
-@@ -22,6 +22,9 @@
+diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
+index 584e33c37708..e8ea250aeda3 100644
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -147,7 +147,6 @@ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
+ 		usleep_range(50, 100);
+ 	} while (time_before(jiffies, end));
  
- static int major;
- 
-+struct intel_scu_ipc_dev *scu;
-+static DEFINE_MUTEX(scu_lock);
-+
- /* IOCTL commands */
- #define	INTE_SCU_IPC_REGISTER_READ	0
- #define INTE_SCU_IPC_REGISTER_WRITE	1
-@@ -52,12 +55,12 @@ static int scu_reg_access(u32 cmd, struct scu_ipc_data  *data)
- 
- 	switch (cmd) {
- 	case INTE_SCU_IPC_REGISTER_READ:
--		return intel_scu_ipc_readv(data->addr, data->data, count);
-+		return intel_scu_ipc_dev_readv(scu, data->addr, data->data, count);
- 	case INTE_SCU_IPC_REGISTER_WRITE:
--		return intel_scu_ipc_writev(data->addr, data->data, count);
-+		return intel_scu_ipc_dev_writev(scu, data->addr, data->data, count);
- 	case INTE_SCU_IPC_REGISTER_UPDATE:
--		return intel_scu_ipc_update_register(data->addr[0],
--						    data->data[0], data->mask);
-+		return intel_scu_ipc_dev_update(scu, data->addr[0], data->data[0],
-+						data->mask);
- 	default:
- 		return -ENOTTY;
- 	}
-@@ -91,8 +94,40 @@ static long scu_ipc_ioctl(struct file *fp, unsigned int cmd,
- 	return 0;
+-	dev_err(&scu->dev, "IPC timed out");
+ 	return -ETIMEDOUT;
  }
  
-+static int scu_ipc_open(struct inode *inode, struct file *file)
-+{
-+	int ret = 0;
-+
-+	/* Only single open at the time */
-+	mutex_lock(&scu_lock);
-+	if (scu) {
-+		ret = -EBUSY;
-+		goto unlock;
-+	}
-+
-+	scu = intel_scu_ipc_dev_get();
-+	if (!scu)
-+		ret = -ENODEV;
-+
-+unlock:
-+	mutex_unlock(&scu_lock);
-+	return ret;
-+}
-+
-+static int scu_ipc_release(struct inode *inode, struct file *file)
-+{
-+	mutex_lock(&scu_lock);
-+	intel_scu_ipc_dev_put(scu);
-+	scu = NULL;
-+	mutex_unlock(&scu_lock);
-+
-+	return 0;
-+}
-+
- static const struct file_operations scu_ipc_fops = {
- 	.unlocked_ioctl = scu_ipc_ioctl,
-+	.open = scu_ipc_open,
-+	.release = scu_ipc_release,
- };
+@@ -156,10 +155,8 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
+ {
+ 	int status;
  
- static int __init ipc_module_init(void)
+-	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT)) {
+-		dev_err(&scu->dev, "IPC timed out\n");
++	if (!wait_for_completion_timeout(&scu->cmd_complete, IPC_TIMEOUT))
+ 		return -ETIMEDOUT;
+-	}
+ 
+ 	status = ipc_read_status(scu);
+ 	if (status & IPC_STATUS_ERR)
+@@ -331,6 +328,7 @@ EXPORT_SYMBOL(intel_scu_ipc_update_register);
+ int intel_scu_ipc_simple_command(int cmd, int sub)
+ {
+ 	struct intel_scu_ipc_dev *scu;
++	u32 cmdval;
+ 	int err;
+ 
+ 	mutex_lock(&ipclock);
+@@ -339,9 +337,12 @@ int intel_scu_ipc_simple_command(int cmd, int sub)
+ 		return -ENODEV;
+ 	}
+ 	scu = ipcdev;
+-	ipc_command(scu, sub << 12 | cmd);
++	cmdval = sub << 12 | cmd;
++	ipc_command(scu, cmdval);
+ 	err = intel_scu_ipc_check_status(scu);
+ 	mutex_unlock(&ipclock);
++	if (err)
++		dev_err(&scu->dev, "IPC command %#x failed with %d\n", cmdval, err);
+ 	return err;
+ }
+ EXPORT_SYMBOL(intel_scu_ipc_simple_command);
+@@ -362,6 +363,7 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+ 			  u32 *out, int outlen)
+ {
+ 	struct intel_scu_ipc_dev *scu;
++	u32 cmdval;
+ 	int i, err;
+ 
+ 	mutex_lock(&ipclock);
+@@ -374,7 +376,8 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+ 	for (i = 0; i < inlen; i++)
+ 		ipc_data_writel(scu, *in++, 4 * i);
+ 
+-	ipc_command(scu, (inlen << 16) | (sub << 12) | cmd);
++	cmdval = (inlen << 16) | (sub << 12) | cmd;
++	ipc_command(scu, cmdval);
+ 	err = intel_scu_ipc_check_status(scu);
+ 
+ 	if (!err) {
+@@ -383,6 +386,8 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+ 	}
+ 
+ 	mutex_unlock(&ipclock);
++	if (err)
++		dev_err(&scu->dev, "IPC command %#x failed with %d\n", cmdval, err);
+ 	return err;
+ }
+ EXPORT_SYMBOL(intel_scu_ipc_command);
 -- 
 2.25.1
