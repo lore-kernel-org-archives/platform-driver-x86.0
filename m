@@ -1,52 +1,37 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
 Subject: Re: [PATCH v1 0/6] platform/x86: intel_cht_int33fe: clean up series
-Date: Thu, 16 Apr 2020 17:17:30 +0300
-Message-ID: <20200416141730.GE185537@smile.fi.intel.com>
-References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
+Date: Thu, 16 Apr 2020 17:03:06 +0200
+Message-ID: <CAJZ5v0ihzD4knW=pKFmcsW0Q9c5rfyJMFh2ChiePe5SWO6G_TQ@mail.gmail.com>
+References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com> <20200416141730.GE185537@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, linux-acpi@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20200416141730.GE185537@smile.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Apr 08, 2020 at 07:09:00PM +0300, Andy Shevchenko wrote:
-> When I started looking into the intel_cht_int33fe driver for an example of use
-> software node API, I have noticed that it's hard to get and code a bit messy.
-> Here is a clean up, main part of which is to introduce node groups and API to
-> register and unregister them. This and some pre-existing APIs can be used in
-> the driver.
-> 
-> So, because of cross-subsystem nature of this series, I may recommend to create
-> myself the immutable branch which can be pulled to Rafael's and Greg's trees
-> respectively. I'm also open for other proposals how to proceed.
+On Thu, Apr 16, 2020 at 4:17 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Wed, Apr 08, 2020 at 07:09:00PM +0300, Andy Shevchenko wrote:
+> > When I started looking into the intel_cht_int33fe driver for an example of use
+> > software node API, I have noticed that it's hard to get and code a bit messy.
+> > Here is a clean up, main part of which is to introduce node groups and API to
+> > register and unregister them. This and some pre-existing APIs can be used in
+> > the driver.
+> >
+> > So, because of cross-subsystem nature of this series, I may recommend to create
+> > myself the immutable branch which can be pulled to Rafael's and Greg's trees
+> > respectively. I'm also open for other proposals how to proceed.
+>
+> Greg, Rafael,
+> any suggestion how to proceed with this series?
+>
+> (It has been reviewed and tested).
 
-Greg, Rafael,
-any suggestion how to proceed with this series?
+You can merge them through platform/x86 as far as I'm concerned, or
+please let me know if you want me to pick them up.
 
-(It has been reviewed and tested).
-
-> Andy Shevchenko (6):
->   device property: export set_secondary_fwnode() to modules
->   software node: Allow register and unregister software node groups
->   platform/x86: intel_cht_int33fe: Convert software node array to group
->   platform/x86: intel_cht_int33fe: Convert to use set_secondary_fwnode()
->   platform/x86: intel_cht_int33fe: Switch to use
->     acpi_dev_hid_uid_match()
->   platform/x86: intel_cht_int33fe: Fix spelling issues
-> 
->  drivers/base/core.c                           |   1 +
->  drivers/base/swnode.c                         |  48 ++++++++
->  .../platform/x86/intel_cht_int33fe_typec.c    | 106 +++++++++---------
->  include/linux/property.h                      |   3 +
->  4 files changed, 108 insertions(+), 50 deletions(-)
-> 
-> -- 
-> 2.25.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Cheers!
