@@ -1,73 +1,77 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v9 19/20] platform/x86: intel_pmc_ipc: Convert to MFD
-Date: Fri, 17 Apr 2020 13:59:14 +0300
-Message-ID: <CAHp75VcMH47yvqaTNN851+G4ghT-og0M15DaN0b_+J_0yCW84g@mail.gmail.com>
-References: <20200416081552.68083-1-mika.westerberg@linux.intel.com>
- <20200416081552.68083-20-mika.westerberg@linux.intel.com> <20200417105704.GE3737@dell>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the MP-man
+ MPWIN895CL tablet
+Date: Fri, 17 Apr 2020 16:30:00 +0300
+Message-ID: <CAHp75VcO=cePNRmJGmvGPcD=CBD9kkXJyKqK7yMKNYrpKWSwuw@mail.gmail.com>
+References: <20200401080348.5128-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200417105704.GE3737@dell>
+In-Reply-To: <20200401080348.5128-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Apr 17, 2020 at 1:56 PM Lee Jones <lee.jones@linaro.org> wrote:
+On Wed, Apr 1, 2020 at 11:03 AM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> On Thu, 16 Apr 2020, Mika Westerberg wrote:
+> Add touchscreen info for the MP-man MPWIN895CL tablet.
 >
-> > This driver only creates a bunch of platform devices sharing resources
-> > belonging to the PMC device. This is pretty much what MFD subsystem is
-> > for so move the driver there, renaming it to intel_pmc_bxt.c which
-> > should be more clear what it is.
-> >
-> > MFD subsystem provides nice helper APIs for subdevice creation so
-> > convert the driver to use those. Unfortunately the ACPI device includes
-> > separate resources for most of the subdevices so we cannot simply call
-> > mfd_add_devices() to create all of them but instead we need to call it
-> > separately for each device.
-> >
-> > The new MFD driver continues to expose two sysfs attributes that allow
-> > userspace to send IPC commands to the PMC/SCU to avoid breaking any
-> > existing applications that may use these. Generally this is bad idea so
-> > document this in the ABI documentation.
-> >
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  .../ABI/obsolete/sysfs-driver-intel_pmc_bxt   |  22 +
-> >  arch/x86/include/asm/intel_pmc_ipc.h          |  47 --
-> >  arch/x86/include/asm/intel_telemetry.h        |   1 +
-> >  drivers/mfd/Kconfig                           |  16 +-
-> >  drivers/mfd/Makefile                          |   1 +
-> >  drivers/mfd/intel_pmc_bxt.c                   | 468 +++++++++++++
-> >  drivers/platform/x86/Kconfig                  |  16 +-
-> >  drivers/platform/x86/Makefile                 |   1 -
-> >  drivers/platform/x86/intel_pmc_ipc.c          | 645 ------------------
-> >  .../platform/x86/intel_telemetry_debugfs.c    |  12 +-
-> >  drivers/platform/x86/intel_telemetry_pltdrv.c |   2 +
-> >  drivers/usb/typec/tcpm/Kconfig                |   2 +-
-> >  drivers/watchdog/iTCO_wdt.c                   |  25 +-
-> >  include/linux/mfd/intel_pmc_bxt.h             |  53 ++
-> >  include/linux/platform_data/itco_wdt.h        |  11 +-
-> >  15 files changed, 602 insertions(+), 720 deletions(-)
-> >  create mode 100644 Documentation/ABI/obsolete/sysfs-driver-intel_pmc_bxt
-> >  delete mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
-> >  create mode 100644 drivers/mfd/intel_pmc_bxt.c
-> >  delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
-> >  create mode 100644 include/linux/mfd/intel_pmc_bxt.h
->
-> Looks good to me know.
->
-> Thanks for taking the time to realise my review comments.
->
-> For my own reference (apply this as-is to your sign-off block):
->
->   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-Can you prepare ib for ii that I can pull from?
-Or do you want me to do the same for you?
+Pushed to my review and testing queue, thanks!
+
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index 6ec8923dec1a..931814e62454 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -373,6 +373,23 @@ static const struct ts_dmi_data jumper_ezpad_mini3_data = {
+>         .properties     = jumper_ezpad_mini3_props,
+>  };
+>
+> +static const struct property_entry mpman_mpwin895cl_props[] = {
+> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 3),
+> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 9),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
+> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
+> +       PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +       PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-mpman-mpwin895cl.fw"),
+> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +       PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +       { }
+> +};
+> +
+> +static const struct ts_dmi_data mpman_mpwin895cl_data = {
+> +       .acpi_name      = "MSSL1680:00",
+> +       .properties     = mpman_mpwin895cl_props,
+> +};
+> +
+>  static const struct property_entry myria_my8307_props[] = {
+>         PROPERTY_ENTRY_U32("touchscreen-size-x", 1720),
+>         PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+> @@ -908,6 +925,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+>                         DMI_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
+>                 },
+>         },
+> +       {
+> +               /* MP Man MPWIN895CL */
+> +               .driver_data = (void *)&mpman_mpwin895cl_data,
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "MPMAN"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "MPWIN8900CL"),
+> +               },
+> +       },
+>         {
+>                 /* Myria MY8307 */
+>                 .driver_data = (void *)&myria_my8307_data,
+> --
+> 2.26.0
+>
+
 
 -- 
 With Best Regards,
