@@ -1,50 +1,48 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 0/4] support watchdog with longer timeout period
-Date: Fri, 17 Apr 2020 16:41:52 +0300
-Message-ID: <CAHp75VfZLR0an_bkD0vK6sTQSTcf_xHbAB0i7Qbod02gpV4tzg@mail.gmail.com>
-References: <20200416163514.7334-1-michaelsh@mellanox.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20200416163514.7334-1-michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Subject: [RFC v3 0/2] Stop monitoring disabled devices
+Date: Fri, 17 Apr 2020 18:20:18 +0200
+Message-ID: <20200417162020.19980-1-andrzej.p@collabora.com>
+References: <9ac3b37a-8746-b8ee-70e1-9c876830ac83@linaro.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <9ac3b37a-8746-b8ee-70e1-9c876830ac83@linaro.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: Zhang Rui <rui.zhang@intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, "David S . Miller" <davem@davemloft.net>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Allison Randal <allison@lohutok.net>, Enrico Weigelt <info@metux.net>, Gayatri Kammela <gayatri.k>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Apr 16, 2020 at 7:35 PM <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org> wrote:
->
-> From: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
->
-> This patchset adds support of extended new watchdog type 3 of Mellanox
-> Ethernet and Infiniband switch systems.
-> This type of watchdog can have a timeout period longer than 255 or 32 sec.
-> as it was before.
->
+This is the third iteration of this RFC. It has been substantially
+rewritten compared to v2.
 
-Pushed to my review and testing queue, thanks!
+The first patch makes all the drivers store their mode in struct
+thermal_zone_device. Such a move has consequences: driver-specific
+variables for storing mode are not necessary. Consequently get_mode()
+methods become obsolete. Then sysfs "mode" attribute stops depending
+on get_mode() being provided, because it is always provided from now on.
 
+The first patch also introduces the initial mode to be optionally passed
+to thermal_zone_device_register().
 
-> Michael Shych (4):
->   platform_data/mlxreg: support new watchdog type with longer timeout
->     period
->   platform/x86: mlx-platform: support new watchdog type with longer
->     timeout
->   watchdog: mlx-wdt: support new watchdog type with longer timeout
->     period
->   Documentation/watchdog: Add description of new watchdog type 3
->
->  Documentation/watchdog/mlx-wdt.rst   |   9 +++
->  drivers/platform/x86/mlx-platform.c  | 106 +++++++++++++++++++++++++++++++
->  drivers/watchdog/mlx_wdt.c           |  75 +++++++++++++++++++++----
->  include/linux/platform_data/mlxreg.h |   5 +-
->  4 files changed, 183 insertions(+), 12 deletions(-)
->
-> --
-> 2.11.0
->
+Given all the groundwork done in patch 1/2 patch 2/2 becomes very simple.
 
+This series addresses comments from Daniel and Bartlomiej - thank you guys!
+
+Andrzej Pietrasiewicz (2):
+  thermal: core: Let thermal zone device's mode be stored in its struct
+  thermal: core: Stop polling DISABLED thermal devices
+
+ drivers/acpi/thermal.c                        | 46 +++++---------
+ .../ethernet/mellanox/mlxsw/core_thermal.c    | 57 ++++--------------
+ drivers/platform/x86/acerhdf.c                | 17 +-----
+ drivers/thermal/da9062-thermal.c              | 16 ++---
+ drivers/thermal/imx_thermal.c                 | 29 +++------
+ .../intel/int340x_thermal/int3400_thermal.c   | 30 ++--------
+ .../thermal/intel/intel_quark_dts_thermal.c   | 22 ++-----
+ drivers/thermal/of-thermal.c                  | 30 +++-------
+ drivers/thermal/thermal_core.c                | 60 +++++++++++++++++--
+ drivers/thermal/thermal_core.h                | 16 +++++
+ drivers/thermal/thermal_sysfs.c               | 29 +--------
+ include/linux/thermal.h                       |  7 ++-
+ 12 files changed, 139 insertions(+), 220 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
