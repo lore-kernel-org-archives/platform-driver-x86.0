@@ -1,50 +1,47 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: surface3_power: Fix a NULL vs IS_ERR()
- check in probe
-Date: Fri, 17 Apr 2020 16:40:49 +0300
-Message-ID: <CAHp75VdACZz2apwYT2LXxTsHwbzKo0eOLu0-Qts-4Um7jXynnw@mail.gmail.com>
-References: <20200407093052.GL68494@mwanda>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 0/4] support watchdog with longer timeout period
+Date: Fri, 17 Apr 2020 16:41:52 +0300
+Message-ID: <CAHp75VfZLR0an_bkD0vK6sTQSTcf_xHbAB0i7Qbod02gpV4tzg@mail.gmail.com>
+References: <20200416163514.7334-1-michaelsh@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <kernel-janitors-owner@vger.kernel.org>
-In-Reply-To: <20200407093052.GL68494@mwanda>
-Sender: kernel-janitors-owner@vger.kernel.org
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Darren Hart <dvhart@infradead.org>, =?UTF-8?Q?Bla=C5=BE_Hrastnik?= <blaz@mxxn.io>, Andy Shevchenko <andy@infradead.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Stephen Just <stephenjust@gmail.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, kernel-janitors@vger.kernel.org
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20200416163514.7334-1-michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 7, 2020 at 12:33 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+On Thu, Apr 16, 2020 at 7:35 PM <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org> wrote:
 >
-> The i2c_acpi_new_device() function never returns NULL, it returns error
-> pointers.
+> From: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+>
+> This patchset adds support of extended new watchdog type 3 of Mellanox
+> Ethernet and Infiniband switch systems.
+> This type of watchdog can have a timeout period longer than 255 or 32 sec.
+> as it was before.
 >
 
 Pushed to my review and testing queue, thanks!
 
 
-> Fixes: b1f81b496b0d ("platform/x86: surface3_power: MSHW0011 rev-eng implementation")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/platform/x86/surface3_power.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Michael Shych (4):
+>   platform_data/mlxreg: support new watchdog type with longer timeout
+>     period
+>   platform/x86: mlx-platform: support new watchdog type with longer
+>     timeout
+>   watchdog: mlx-wdt: support new watchdog type with longer timeout
+>     period
+>   Documentation/watchdog: Add description of new watchdog type 3
 >
-> diff --git a/drivers/platform/x86/surface3_power.c b/drivers/platform/x86/surface3_power.c
-> index 946ac2dc08ae..cc4f9cba6856 100644
-> --- a/drivers/platform/x86/surface3_power.c
-> +++ b/drivers/platform/x86/surface3_power.c
-> @@ -522,8 +522,8 @@ static int mshw0011_probe(struct i2c_client *client)
->         strlcpy(board_info.type, "MSHW0011-bat0", I2C_NAME_SIZE);
+>  Documentation/watchdog/mlx-wdt.rst   |   9 +++
+>  drivers/platform/x86/mlx-platform.c  | 106 +++++++++++++++++++++++++++++++
+>  drivers/watchdog/mlx_wdt.c           |  75 +++++++++++++++++++++----
+>  include/linux/platform_data/mlxreg.h |   5 +-
+>  4 files changed, 183 insertions(+), 12 deletions(-)
 >
->         bat0 = i2c_acpi_new_device(dev, 1, &board_info);
-> -       if (!bat0)
-> -               return -ENOMEM;
-> +       if (IS_ERR(bat0))
-> +               return PTR_ERR(bat0);
->
->         data->bat0 = bat0;
->         i2c_set_clientdata(bat0, data);
 > --
-> 2.25.1
+> 2.11.0
 >
 
 
