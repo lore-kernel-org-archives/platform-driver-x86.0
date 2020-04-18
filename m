@@ -1,63 +1,45 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v1 4/4] Documentation/watchdog: Add description of new
- watchdog type 3
-Date: Sat, 18 Apr 2020 04:46:47 -0700
-Message-ID: <20200418114646.GB103392@roeck-us.net>
-References: <20200416163514.7334-1-michaelsh@mellanox.com>
- <20200416163514.7334-5-michaelsh@mellanox.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v1 0/6] platform/x86: intel_cht_int33fe: clean up series
+Date: Sat, 18 Apr 2020 21:43:34 +0200
+Message-ID: <1920083.GZryhg05AW@kreacher>
+References: <20200408160905.12101-1-andriy.shevchenko@linux.intel.com> <CAJZ5v0ihzD4knW=pKFmcsW0Q9c5rfyJMFh2ChiePe5SWO6G_TQ@mail.gmail.com> <CAHp75Vf6MT1AFacUkRUP3760nv=3V5kzF2AHWJG64tr5yZ2=dg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20200416163514.7334-5-michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org
-Cc: wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAHp75Vf6MT1AFacUkRUP3760nv=3V5kzF2AHWJG64tr5yZ2=dg@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Darren Hart <dvhart@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Apr 16, 2020 at 07:35:14PM +0300, michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org wrote:
-> From: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+On Thursday, April 16, 2020 5:21:15 PM CEST Andy Shevchenko wrote:
+> On Thu, Apr 16, 2020 at 6:05 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Thu, Apr 16, 2020 at 4:17 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > On Wed, Apr 08, 2020 at 07:09:00PM +0300, Andy Shevchenko wrote:
+> > > > When I started looking into the intel_cht_int33fe driver for an example of use
+> > > > software node API, I have noticed that it's hard to get and code a bit messy.
+> > > > Here is a clean up, main part of which is to introduce node groups and API to
+> > > > register and unregister them. This and some pre-existing APIs can be used in
+> > > > the driver.
+> > > >
+> > > > So, because of cross-subsystem nature of this series, I may recommend to create
+> > > > myself the immutable branch which can be pulled to Rafael's and Greg's trees
+> > > > respectively. I'm also open for other proposals how to proceed.
+> > >
+> > > Greg, Rafael,
+> > > any suggestion how to proceed with this series?
+> > >
+> > > (It has been reviewed and tested).
+> >
+> > You can merge them through platform/x86 as far as I'm concerned, or
+> > please let me know if you want me to pick them up.
 > 
-> Add documentation with details of new type of Mellanox watchdog driver.
-> 
-> Signed-off-by: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> 
+> Works for me, but I would like to ask for formal Ack tag.
 
-Stray empty line.
+I'm guessing that you talk about the first two patches, right?
 
-Also, the subject should reflect the driver name.
-
-Guenter
-
-> Reviewed-by: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/watchdog/mlx-wdt.rst | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/watchdog/mlx-wdt.rst b/Documentation/watchdog/mlx-wdt.rst
-> index bf5bafac47f0..fa0a94e5c82e 100644
-> --- a/Documentation/watchdog/mlx-wdt.rst
-> +++ b/Documentation/watchdog/mlx-wdt.rst
-> @@ -24,10 +24,19 @@ Type 2:
->    Maximum timeout is 255 sec.
->    Get time-left is supported.
->  
-> +Type 3:
-> +  Same as Type 2 with extended maximum timeout period.
-> +  Maximum timeout is 65535 sec.
-> +
->  Type 1 HW watchdog implementation exist in old systems and
->  all new systems have type 2 HW watchdog.
->  Two types of HW implementation have also different register map.
->  
-> +Type 3 HW watchdog implementation can exist on all Mellanox systems
-> +with new programmer logic device.
-> +It's differentiated by WD capability bit.
-> +Old systems still have only one main watchdog.
-> +
->  Mellanox system can have 2 watchdogs: main and auxiliary.
->  Main and auxiliary watchdog devices can be enabled together
->  on the same system.
-> -- 
-> 2.11.0
-> 
+Please feel free to add my ACK to both, thanks!
