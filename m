@@ -1,65 +1,63 @@
-From: Prarit Bhargava <prarit@redhat.com>
-Subject: Re: [PATCH] intel-speed-select: Fix speed-select-base-freq-properties
- output on CLX-N
-Date: Mon, 20 Apr 2020 11:46:18 -0400
-Message-ID: <d0bfcbfe-4834-624f-b590-1aa93970e5a4@redhat.com>
-References: <20200420141054.26173-1-prarit@redhat.com>
- <CAHp75VfKCuX1CNMaVLeghdoP9-KHh3+1yuFVgU8qhRbKi69JNQ@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v1 0/4] support watchdog with longer timeout period
+Date: Mon, 20 Apr 2020 18:52:55 +0300
+Message-ID: <CAHp75VeXC=sMW54yGnSY6S-_kECXY+KURRt2LWGfBm5W14ue-w@mail.gmail.com>
+References: <20200416163514.7334-1-michaelsh@mellanox.com> <CAHp75VfZLR0an_bkD0vK6sTQSTcf_xHbAB0i7Qbod02gpV4tzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfKCuX1CNMaVLeghdoP9-KHh3+1yuFVgU8qhRbKi69JNQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75VfZLR0an_bkD0vK6sTQSTcf_xHbAB0i7Qbod02gpV4tzg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Fri, Apr 17, 2020 at 4:41 PM Andy Shevchenko
+<andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+> On Thu, Apr 16, 2020 at 7:35 PM <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org> wrote:
+> >
+> > From: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> >
+> > This patchset adds support of extended new watchdog type 3 of Mellanox
+> > Ethernet and Infiniband switch systems.
+> > This type of watchdog can have a timeout period longer than 255 or 32 sec.
+> > as it was before.
+> >
+>
+> Pushed to my review and testing queue, thanks!
+
+Withdrawn due to changes requested.
+Please, address and resend.
+
+>
+>
+> > Michael Shych (4):
+> >   platform_data/mlxreg: support new watchdog type with longer timeout
+> >     period
+> >   platform/x86: mlx-platform: support new watchdog type with longer
+> >     timeout
+> >   watchdog: mlx-wdt: support new watchdog type with longer timeout
+> >     period
+> >   Documentation/watchdog: Add description of new watchdog type 3
+> >
+> >  Documentation/watchdog/mlx-wdt.rst   |   9 +++
+> >  drivers/platform/x86/mlx-platform.c  | 106 +++++++++++++++++++++++++++++++
+> >  drivers/watchdog/mlx_wdt.c           |  75 +++++++++++++++++++++----
+> >  include/linux/platform_data/mlxreg.h |   5 +-
+> >  4 files changed, 183 insertions(+), 12 deletions(-)
+> >
+> > --
+> > 2.11.0
+> >
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
 
-On 4/20/20 11:43 AM, Andy Shevchenko wrote:
-> On Mon, Apr 20, 2020 at 6:11 PM Prarit Bhargava <prarit@redhat.com> wrote:
->>
->> On CLX-N, the perf-profile-level's output is terminated before the
->> speed-select-base-freq-properties are output which results in a corrupt
->> json file.
->>
->> Adjust the output of speed-select-base-freq-properties by one on CLX-N.
->>
-> 
-> Thanks for the patch, it will be pulled from Srinivas' tree whenever
-> he sends a PR to PDx86 mailing list.
 
-Srinivas, OOC do you want these patches to be sent somewhere else?  FWIW, I'm
-running get_maintainers.pl to get the mailing list and cc.
-
-P.
-
-> 
-> 
->> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
->> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
->> Cc: platform-driver-x86@vger.kernel.org
->> ---
->>  tools/power/x86/intel-speed-select/isst-display.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
->> index 51dbaa5f02ec..f6e2ce181123 100644
->> --- a/tools/power/x86/intel-speed-select/isst-display.c
->> +++ b/tools/power/x86/intel-speed-select/isst-display.c
->> @@ -470,7 +470,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
->>                                 _isst_pbf_display_information(cpu, outf,
->>                                                               tdp_level,
->>                                                           &ctdp_level->pbf_info,
->> -                                                             level + 1);
->> +                                                             level + 2);
->>                         continue;
->>                 }
->>
->> --
->> 2.18.2
->>
-> 
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
