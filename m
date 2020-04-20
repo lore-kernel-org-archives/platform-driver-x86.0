@@ -1,52 +1,86 @@
-From: "=?utf-8?B?UGV0ZXIgS8Okc3RsZQ==?=" <peter@piie.net>
-Subject: Re: [RFC v3 1/2] thermal: core: Let thermal zone device's mode be
- stored in its struct
-Date: Sun, 19 Apr 2020 13:50:35 +0000
-Message-ID: <a3f6a008696d87acb67db06c21eb600d@piie.net>
-References: <20200417162020.19980-2-andrzej.p@collabora.com>
- <9ac3b37a-8746-b8ee-70e1-9c876830ac83@linaro.org>
- <20200417162020.19980-1-andrzej.p@collabora.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v9 19/20] platform/x86: intel_pmc_ipc: Convert to MFD
+Date: Mon, 20 Apr 2020 08:29:11 +0100
+Message-ID: <20200420072911.GJ3737@dell>
+References: <20200416081552.68083-1-mika.westerberg@linux.intel.com>
+ <20200416081552.68083-20-mika.westerberg@linux.intel.com>
+ <20200417105704.GE3737@dell>
+ <CAHp75VcMH47yvqaTNN851+G4ghT-og0M15DaN0b_+J_0yCW84g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200417162020.19980-2-andrzej.p@collabora.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, "David S . Miller" <davem@davemloft.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Allison Randal <allison@lohutok.net>, Enrico Weigelt <info@metux.net>, Gayatri Kammela <gayatri.kammela>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcMH47yvqaTNN851+G4ghT-og0M15DaN0b_+J_0yCW84g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-17. April 2020 18:20, "Andrzej Pietrasiewicz" <andrzej.p@collabora.com> schrieb:
+On Fri, 17 Apr 2020, Andy Shevchenko wrote:
 
-> Thermal zone devices' mode is stored in individual drivers. This patch
-> changes it so that mode is stored in struct thermal_zone_device instead.
+> On Fri, Apr 17, 2020 at 1:56 PM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Thu, 16 Apr 2020, Mika Westerberg wrote:
+> >
+> > > This driver only creates a bunch of platform devices sharing resources
+> > > belonging to the PMC device. This is pretty much what MFD subsystem is
+> > > for so move the driver there, renaming it to intel_pmc_bxt.c which
+> > > should be more clear what it is.
+> > >
+> > > MFD subsystem provides nice helper APIs for subdevice creation so
+> > > convert the driver to use those. Unfortunately the ACPI device includes
+> > > separate resources for most of the subdevices so we cannot simply call
+> > > mfd_add_devices() to create all of them but instead we need to call it
+> > > separately for each device.
+> > >
+> > > The new MFD driver continues to expose two sysfs attributes that allow
+> > > userspace to send IPC commands to the PMC/SCU to avoid breaking any
+> > > existing applications that may use these. Generally this is bad idea so
+> > > document this in the ABI documentation.
+> > >
+> > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > ---
+> > >  .../ABI/obsolete/sysfs-driver-intel_pmc_bxt   |  22 +
+> > >  arch/x86/include/asm/intel_pmc_ipc.h          |  47 --
+> > >  arch/x86/include/asm/intel_telemetry.h        |   1 +
+> > >  drivers/mfd/Kconfig                           |  16 +-
+> > >  drivers/mfd/Makefile                          |   1 +
+> > >  drivers/mfd/intel_pmc_bxt.c                   | 468 +++++++++++++
+> > >  drivers/platform/x86/Kconfig                  |  16 +-
+> > >  drivers/platform/x86/Makefile                 |   1 -
+> > >  drivers/platform/x86/intel_pmc_ipc.c          | 645 ------------------
+> > >  .../platform/x86/intel_telemetry_debugfs.c    |  12 +-
+> > >  drivers/platform/x86/intel_telemetry_pltdrv.c |   2 +
+> > >  drivers/usb/typec/tcpm/Kconfig                |   2 +-
+> > >  drivers/watchdog/iTCO_wdt.c                   |  25 +-
+> > >  include/linux/mfd/intel_pmc_bxt.h             |  53 ++
+> > >  include/linux/platform_data/itco_wdt.h        |  11 +-
+> > >  15 files changed, 602 insertions(+), 720 deletions(-)
+> > >  create mode 100644 Documentation/ABI/obsolete/sysfs-driver-intel_pmc_bxt
+> > >  delete mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
+> > >  create mode 100644 drivers/mfd/intel_pmc_bxt.c
+> > >  delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
+> > >  create mode 100644 include/linux/mfd/intel_pmc_bxt.h
+> >
+> > Looks good to me know.
+> >
+> > Thanks for taking the time to realise my review comments.
+> >
+> > For my own reference (apply this as-is to your sign-off block):
+> >
+> >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 > 
-> As a result all driver-specific variables storing the mode are not needed
-> and are removed. Consequently, the get_mode() implementations have nothing
-> to operate on and need to be removed, too.
-> 
-> Some thermal framework specific functions are introduced:
-> 
-> thermal_zone_device_get_mode()
-> thermal_zone_device_set_mode()
-> thermal_zone_device_enable()
-> thermal_zone_device_disable()
-> 
-> thermal_zone_device_get_mode() and its "set" counterpart take tzd's lock
-> and the "set" calls driver's set_mode() if provided, so the latter must
-> not take this lock again. At the end of the "set"
-> thermal_zone_device_update() is called so drivers don't need to repeat this
-> invocation in their specific set_mode() implementations.
-> 
-> The scope of the above 4 functions is purposedly limited to the thermal
-> framework and drivers are not supposed to call them. This encapsulation
-> does not fully work at the moment for some drivers, though:
-> 
-> - platform/x86/acerhdf.c
+> Can you prepare ib for ii that I can pull from?
+> Or do you want me to do the same for you?
 
-Acked-by: Peter Kaestle <peter@piie.net>
-
-[...]
+It would probably be easier for me to do it, as I already have the
+infra. to deal with it.  I have some more reviews to conduct, then
+I'll get around to it.
 
 -- 
---peter;
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
