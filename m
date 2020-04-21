@@ -1,16 +1,14 @@
 From: Hans de Goede <hdegoede@redhat.com>
 Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the ONDA V891
  v5 tablet
-Date: Tue, 21 Apr 2020 16:39:09 +0200
-Message-ID: <3641ea31-6c16-10af-3201-6d6b80cbd460@redhat.com>
+Date: Tue, 21 Apr 2020 16:39:45 +0200
+Message-ID: <b93970df-86e3-4636-13e8-60675aec7137@redhat.com>
 References: <20200421132548.5627-1-karasevm98@gmail.com>
- <1fd3919b-6094-9c33-64d0-e8775c4428bc@redhat.com>
- <CAFTSnMhSF39MeiRccRm1QB0nk1F19iZ0w5K_ChxVvJqGh9FMAg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAFTSnMhSF39MeiRccRm1QB0nk1F19iZ0w5K_ChxVvJqGh9FMAg@mail.gmail.com>
+In-Reply-To: <20200421132548.5627-1-karasevm98@gmail.com>
 Content-Language: en-US
 Sender: linux-input-owner@vger.kernel.org
 To: Maksim Karasev <karasevm98@gmail.com>
@@ -19,16 +17,68 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 Hi,
 
-On 4/21/20 4:24 PM, Maksim Karasev wrote:
-> Hello,
-> Sorry, but I think you are mistaken,
-> the v891 and v891w are 2 different tablets (different screen, battery,
-> camera, and internal storage).
-> My patch is for the v891.
+On 4/21/20 3:25 PM, Maksim Karasev wrote:
+> Add touchscreen info for the ONDA V891 v5 tablet.
+> 
+> Signed-off-by: Maksim Karasev <karasevm98@gmail.com>
 
-Ah I see, so the v891w has a 1920x1200 screen and the
-v891 has a 1280x800 screen, ok.
+Patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
 Hans
+
+
+
+> ---
+>   drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
+>   1 file changed, 27 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index 6ec8923dec1a..cc2a2e0a0585 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -448,6 +448,24 @@ static const struct ts_dmi_data onda_v820w_32g_data = {
+>   	.properties	= onda_v820w_32g_props,
+>   };
+>   
+> +static const struct property_entry onda_v891_v5_props[] = {
+> +	PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
+> +	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
+> +	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+> +	PROPERTY_ENTRY_STRING("firmware-name",
+> +			      "gsl3676-onda-v891-v5.fw"),
+> +	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
+> +	PROPERTY_ENTRY_BOOL("silead,home-button"),
+> +	{ }
+> +};
+> +
+> +static const struct ts_dmi_data onda_v891_v5_data = {
+> +	.acpi_name	= "MSSL1680:00",
+> +	.properties	= onda_v891_v5_props,
+> +};
+> +
+>   static const struct property_entry onda_v891w_v1_props[] = {
+>   	PROPERTY_ENTRY_U32("touchscreen-min-x", 46),
+>   	PROPERTY_ENTRY_U32("touchscreen-min-y",  8),
+> @@ -940,6 +958,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+>   			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "V820w DualOS")
+>   		},
+>   	},
+> +	{
+> +		/* ONDA V891 v5 */
+> +		.driver_data = (void *)&onda_v891_v5_data,
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ONDA"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "ONDA Tablet"),
+> +			DMI_MATCH(DMI_BIOS_VERSION, "ONDA.D869CJABNRBA06"),
+> +		},
+> +	},
+>   	{
+>   		/* ONDA V891w revision P891WBEBV1B00 aka v1 */
+>   		.driver_data = (void *)&onda_v891w_v1_data,
+> 
