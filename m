@@ -1,63 +1,82 @@
-From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Subject: [PATCH v3 2/2] thermal: core: Stop polling DISABLED thermal devices
-Date: Thu, 23 Apr 2020 18:57:05 +0200
-Message-ID: <20200423165705.13585-3-andrzej.p@collabora.com>
-References: <a3998ad2-19bc-0893-a10d-2bb5adf7d99f@samsung.com>
- <20200423165705.13585-1-andrzej.p@collabora.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200423165705.13585-1-andrzej.p@collabora.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, "David S . Miller" <davem@davemloft.net>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Heiko Stuebner <heiko@sntech.de>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang7@gma>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] thinkpad_acpi: Add support for dual
+ fan control on select models
+Date: Fri, 24 Apr 2020 00:10:16 +0300
+Message-ID: <CAHp75VdsR=uADmb7h0Bj_n0ALRVX39_gLjEpUfPbfQ=ZygtSxQ@mail.gmail.com>
+References: <20200417194344.22597-1-larsh@apache.org>
+ <20200423165238.54109-1-larsh@apache.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20200423165238.54109-1-larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Lars <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>
+Cc: Alexander Kappner <agk-mA9ux5SlULTR7s880joybQ@public.gmane.org>, kjslag-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, =?UTF-8?Q?Sebastian_D=C3=B6rner?= <bastidoerner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nanodario-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thinkpad-acpi devel ML <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, arc-e1Wt+8K1Ta8ZEwqihLH0+Q@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Polling DISABLED devices is not desired, as all such "disabled" devices
-are meant to be handled by userspace. This patch introduces and uses
-should_stop_polling() to decide whether the device should be polled or not.
+On Thu, Apr 23, 2020 at 7:56 PM Lars <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org> wrote:
+>
+> This patch allows controlling multiple fans as if they were a single fan.
+>
+> This adds P52, P72, X1E, and X1E gen2 to dual fan quirks.
+> Both fans are controlled together.
+>
+> Tested on an X1 Extreme Gen2.
+>
+> The patch is defensive, it adds only specific supported machines, and falls
+> back to the old behavior if both fans cannot be controlled.
+>
+> Background:
+> I tested the BIOS default behavior on my X1E gen2 and both fans are always
+> changed together. So rather than adding controls for each fan, this controls
+> both fans together as the BIOS would do.
+>
+> This was inspired by a discussion on dual fan support for the thinkfan tool
+> [1]. Thanks to Github users voidworker and civic9.
 
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
----
- drivers/thermal/thermal_core.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+GitHub
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index a2a5034f76e7..03c4d8d23284 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -305,13 +305,22 @@ static void thermal_zone_device_set_polling(struct thermal_zone_device *tz,
- 		cancel_delayed_work(&tz->poll_queue);
- }
- 
-+static inline bool should_stop_polling(struct thermal_zone_device *tz)
-+{
-+	return thermal_zone_device_get_mode(tz) == THERMAL_DEVICE_DISABLED;
-+}
-+
- static void monitor_thermal_zone(struct thermal_zone_device *tz)
- {
-+	bool stop;
-+
-+	stop = should_stop_polling(tz);
-+
- 	mutex_lock(&tz->lock);
- 
--	if (tz->passive)
-+	if (!stop && tz->passive)
- 		thermal_zone_device_set_polling(tz, tz->passive_delay);
--	else if (tz->polling_delay)
-+	else if (!stop && tz->polling_delay)
- 		thermal_zone_device_set_polling(tz, tz->polling_delay);
- 	else
- 		thermal_zone_device_set_polling(tz, 0);
-@@ -503,6 +512,9 @@ void thermal_zone_device_update(struct thermal_zone_device *tz,
- {
- 	int count;
- 
-+	if (should_stop_polling(tz))
-+		return;
-+
- 	if (atomic_read(&in_suspend))
- 		return;
- 
+>
+> The BIOS ids are taken from there. The X1E gen2 id is verified on my machine.
+>
+
+I got two mails, which one is correct?
+So, please send a new version only one time, thanks.
+
+Some comments below.
+
+> [1]: vmatare/thinkfan#58
+
+Please, use full URL her.
+
+...
+
+> +               if (((level < 0) || (level > 7)))
+>                         return -EINVAL;
+
+Maybe you didn't check what I did for previous version...
+Here is too many parentheses.
+
+> +       TPACPI_Q_LNV3('N', '1', 'D', TPACPI_FAN_2CTL),  /* P70 */
+> +       TPACPI_Q_LNV3('N', '1', 'E', TPACPI_FAN_2CTL),  /* P50 */
+> +       TPACPI_Q_LNV3('N', '1', 'T', TPACPI_FAN_2CTL),  /* P71 */
+> +       TPACPI_Q_LNV3('N', '1', 'U', TPACPI_FAN_2CTL),  /* P51 */
+> +       TPACPI_Q_LNV3('N', '2', 'C', TPACPI_FAN_2CTL),  /* P52 / P72 */
+> +       TPACPI_Q_LNV3('N', '2', 'E', TPACPI_FAN_2CTL),  /* X1 Extreme (1st gen) */
+> +       TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),  /* X1 Extreme (2nd gen) */
+
+This has been expanded, but commit message still old, please, update
+commit message as well (and perhaps give a credit to people who
+suggested / tested other models).
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
