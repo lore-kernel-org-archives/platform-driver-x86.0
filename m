@@ -1,60 +1,112 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] thinkpad_acpi: Add support for dual
- fan control on select models
-Date: Fri, 24 Apr 2020 14:11:51 +0300
-Message-ID: <CAHp75VeX2SjX5J-w933FKh_yii=cJ9_tWj3RRNx7Q6vijtt6AQ@mail.gmail.com>
-References: <20200423165457.54388-1-larsh@apache.org>
- <20200423215709.72993-1-larsh@apache.org>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 18/38] efi/x86: Don't remap text<->rodata gap read-only for mixed mode
+Date: Fri, 24 Apr 2020 08:22:16 -0400
+Message-ID: <20200424122237.9831-18-sashal@kernel.org>
+References: <20200424122237.9831-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20200423215709.72993-1-larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Lars <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>
-Cc: Alexander Kappner <agk-mA9ux5SlULTR7s880joybQ@public.gmane.org>, Kevin Slagle <kjslag-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Sebastian_D=C3=B6rner?= <bastidoerner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dario Messina <nanodario-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Marc Burkhardt <marc-e1Wt+8K1Ta8ZEwqihLH0+Q@public.gmane.org>, Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thinkpad-acpi devel ML <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200424122237.9831-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>, Jiri Slaby <jslaby@suse.cz>, Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, x86@kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Apr 24, 2020 at 12:57 AM Lars <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org> wrote:
->
-> This adds dual fan control for the following models:
-> P50, P51, P52, P70, P71, P72, P1 gen1, X1E gen1, P2 gen2, and X1E gen2.
->
-> Both fans are controlled together as if they were a single fan.
->
-> Tested on an X1 Extreme Gen1, an X1 Extreme Gen2, and a P50.
->
-> The patch is defensive, it adds only specific supported machines, and falls
-> back to the old behavior if both fans cannot be controlled.
->
-> Background:
-> I tested the BIOS default behavior on my X1E gen2 and both fans are always
-> changed together. So rather than adding controls for each fan, this controls
-> both fans together as the BIOS would do.
->
-> This was inspired by a discussion on dual fan support for the thinkfan tool
-> [1].
-> All BIOS ids are taken from there. The X1E gen2 id is verified on my machine.
->
-> Thanks to GitHub users voidworker and civic9 for the earlier patches and BIOS
-> ids, and to users peter-stoll and sassman for testing the patch on their
-> machines.
->
-> [1]: https://github.com/vmatare/thinkfan/issues/58
->
-> Signed-off-by: Lars <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-One question though, is Lars your real name here? [1]
+[ Upstream commit f6103162008dfd37567f240b50e5e1ea7cf2e00c ]
 
-[1]: https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+Commit
 
+  d9e3d2c4f10320 ("efi/x86: Don't map the entire kernel text RW for mixed mode")
+
+updated the code that creates the 1:1 memory mapping to use read-only
+attributes for the 1:1 alias of the kernel's text and rodata sections, to
+protect it from inadvertent modification. However, it failed to take into
+account that the unused gap between text and rodata is given to the page
+allocator for general use.
+
+If the vmap'ed stack happens to be allocated from this region, any by-ref
+output arguments passed to EFI runtime services that are allocated on the
+stack (such as the 'datasize' argument taken by GetVariable() when invoked
+from efivar_entry_size()) will be referenced via a read-only mapping,
+resulting in a page fault if the EFI code tries to write to it:
+
+  BUG: unable to handle page fault for address: 00000000386aae88
+  #PF: supervisor write access in kernel mode
+  #PF: error_code(0x0003) - permissions violation
+  PGD fd61063 P4D fd61063 PUD fd62063 PMD 386000e1
+  Oops: 0003 [#1] SMP PTI
+  CPU: 2 PID: 255 Comm: systemd-sysv-ge Not tainted 5.6.0-rc4-default+ #22
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+  RIP: 0008:0x3eaeed95
+  Code: ...  <89> 03 be 05 00 00 80 a1 74 63 b1 3e 83 c0 48 e8 44 d2 ff ff eb 05
+  RSP: 0018:000000000fd73fa0 EFLAGS: 00010002
+  RAX: 0000000000000001 RBX: 00000000386aae88 RCX: 000000003e9f1120
+  RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000001
+  RBP: 000000000fd73fd8 R08: 00000000386aae88 R09: 0000000000000000
+  R10: 0000000000000002 R11: 0000000000000000 R12: 0000000000000000
+  R13: ffffc0f040220000 R14: 0000000000000000 R15: 0000000000000000
+  FS:  00007f21160ac940(0000) GS:ffff9cf23d500000(0000) knlGS:0000000000000000
+  CS:  0008 DS: 0018 ES: 0018 CR0: 0000000080050033
+  CR2: 00000000386aae88 CR3: 000000000fd6c004 CR4: 00000000003606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+  Modules linked in:
+  CR2: 00000000386aae88
+  ---[ end trace a8bfbd202e712834 ]---
+
+Let's fix this by remapping text and rodata individually, and leave the
+gaps mapped read-write.
+
+Fixes: d9e3d2c4f10320 ("efi/x86: Don't map the entire kernel text RW for mixed mode")
+Reported-by: Jiri Slaby <jslaby@suse.cz>
+Tested-by: Jiri Slaby <jslaby@suse.cz>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200409130434.6736-10-ardb@kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/platform/efi/efi_64.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index a472940638820..a20914b38e6ae 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -202,7 +202,7 @@ virt_to_phys_or_null_size(void *va, unsigned long size)
+ 
+ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ {
+-	unsigned long pfn, text, pf;
++	unsigned long pfn, text, pf, rodata;
+ 	struct page *page;
+ 	unsigned npages;
+ 	pgd_t *pgd = efi_mm.pgd;
+@@ -256,7 +256,7 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 
+ 	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
+ 
+-	npages = (__end_rodata_aligned - _text) >> PAGE_SHIFT;
++	npages = (_etext - _text) >> PAGE_SHIFT;
+ 	text = __pa(_text);
+ 	pfn = text >> PAGE_SHIFT;
+ 
+@@ -266,6 +266,14 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 		return 1;
+ 	}
+ 
++	npages = (__end_rodata - __start_rodata) >> PAGE_SHIFT;
++	rodata = __pa(__start_rodata);
++	pfn = rodata >> PAGE_SHIFT;
++	if (kernel_map_pages_in_pgd(pgd, pfn, rodata, npages, pf)) {
++		pr_err("Failed to map kernel rodata 1:1\n");
++		return 1;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
