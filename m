@@ -1,270 +1,111 @@
-From: Jithu Joseph <jithu.joseph@intel.com>
-Subject: [PATCH v2 1/1] platform/x86: Add Slim Bootloader firmware update signaling driver
-Date: Thu, 23 Apr 2020 15:42:22 -0700
-Message-ID: <20200423224222.29730-2-jithu.joseph@intel.com>
-References: <20200423224222.29730-1-jithu.joseph@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200423224222.29730-1-jithu.joseph@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy@infradead.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, maurice.ma@intel.com, ravi.p.rangarajan@intel.com, sean.v.kelley@intel.com, kuo-lang.tseng@intel.com, Jithu Joseph <jithu.joseph@intel.com>
+From: "Zhang, Rui" <rui.zhang@intel.com>
+Subject: RE: [PATCH v3 2/2] thermal: core: Stop polling DISABLED thermal
+ devices
+Date: Fri, 24 Apr 2020 09:03:29 +0000
+Message-ID: <744357E9AAD1214791ACBA4B0B90926377CF60E3@SHSMSX108.ccr.corp.intel.com>
+References: <a3998ad2-19bc-0893-a10d-2bb5adf7d99f@samsung.com>
+ <20200423165705.13585-1-andrzej.p@collabora.com>
+ <20200423165705.13585-3-andrzej.p@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20200423165705.13585-3-andrzej.p@collabora.com>
+Content-Language: en-US
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, "David S . Miller" <davem@davemloft.net>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Heiko Stuebner <heiko@sntech.de>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang7@gmail.com>, Chunyan Zhang <zhang.l>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Slim Bootloader(SBL) is a small open-source boot firmware,
-designed for running on certain Intel platforms. SBL can be
-thought-of as fulfilling the role of a minimal BIOS
-implementation, i.e initializing the hardware and booting
-Operating System.
+Hi, Andrzej,
 
-Since SBL is not UEFI compliant, firmware update cannot be triggered
-using standard UEFI runtime services. Further considering performance
-impact, SBL doesn't look for a firmware update image on every reset
-and does so only when firmware update signal is asserted.
+Thanks for the patches. My Linux laptop was broken and won't get fixed till next
+week, so I may lost some of the discussions previously.
 
-SBL exposes an ACPI-WMI device which comes up in sysfs as
-/sys/bus/wmi/44FADEB1xxx and this driver adds a
-"firmware_update_request" device attribute. This attribute normally
-has a value of 0 and userspace can signal SBL to update firmware,
-on next reboot, by writing a value of 1 like:
+> -----Original Message-----
+> From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> Sent: Friday, April 24, 2020 12:57 AM
+> To: linux-pm@vger.kernel.org
+> Cc: Zhang, Rui <rui.zhang@intel.com>; Rafael J . Wysocki
+> <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Jiri Pirko
+> <jiri@mellanox.com>; Ido Schimmel <idosch@mellanox.com>; David S .
+> Miller <davem@davemloft.net>; Peter Kaestle <peter@piie.net>; Darren
+> Hart <dvhart@infradead.org>; Andy Shevchenko <andy@infradead.org>;
+> Support Opensource <support.opensource@diasemi.com>; Daniel Lezcano
+> <daniel.lezcano@linaro.org>; Amit Kucheria
+> <amit.kucheria@verdurent.com>; Shawn Guo <shawnguo@kernel.org>;
+> Sascha Hauer <s.hauer@pengutronix.de>; Pengutronix Kernel Team
+> <kernel@pengutronix.de>; Fabio Estevam <festevam@gmail.com>; NXP
+> Linux Team <linux-imx@nxp.com>; Heiko Stuebner <heiko@sntech.de>;
+> Orson Zhai <orsonzhai@gmail.com>; Baolin Wang
+> <baolin.wang7@gmail.com>; Chunyan Zhang <zhang.lyra@gmail.com>; linux-
+> acpi@vger.kernel.org; netdev@vger.kernel.org; platform-driver-
+> x86@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> kernel@collabora.com; Andrzej Pietrasiewicz <andrzej.p@collabora.com>;
+> Barlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Subject: [PATCH v3 2/2] thermal: core: Stop polling DISABLED thermal devices
+> Importance: High
+> 
+> Polling DISABLED devices is not desired, as all such "disabled" devices are
+> meant to be handled by userspace. This patch introduces and uses
+> should_stop_polling() to decide whether the device should be polled or not.
+> 
+Thanks for the fix, and IMO, this reveal some more problems.
+Say, we need to define "DISABLED" thermal zone.
+Can we read the temperature? Can we trust the trip point value?
 
-echo 1 > /sys/bus/wmi/devices/44FADEB1xxx/firmware_update_request
+IMO, a disabled thermal zone does not mean it is handled by userspace, because
+that is what the userspace governor designed for.
+Instead, if a thermal zone is disabled, in thermal_zone_device_update(), we should
+basically skip all the other operations as well.
 
-This driver only implements a signaling mechanism, the actual firmware
-update process and various details like firmware update image format,
-firmware image location etc are defined by SBL and are not in the
-scope of this driver.
+I'll try your patches and probably make an incremental patch.
 
-DocLink: https://slimbootloader.github.io/security/firmware-update.html
+Thanks,
+rui
 
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
----
- .../ABI/testing/sysfs-platform-sbl-fwu-wmi    |  12 ++
- MAINTAINERS                                   |   7 +
- drivers/platform/x86/Kconfig                  |  10 ++
- drivers/platform/x86/Makefile                 |   1 +
- drivers/platform/x86/sbl_fwu_wmi.c            | 144 ++++++++++++++++++
- 5 files changed, 174 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-sbl-fwu-wmi
- create mode 100644 drivers/platform/x86/sbl_fwu_wmi.c
-
-diff --git a/Documentation/ABI/testing/sysfs-platform-sbl-fwu-wmi b/Documentation/ABI/testing/sysfs-platform-sbl-fwu-wmi
-new file mode 100644
-index 000000000000..5aa618987cad
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-sbl-fwu-wmi
-@@ -0,0 +1,12 @@
-+What:		/sys/bus/wmi/devices/44FADEB1-B204-40F2-8581-394BBDC1B651/firmware_update_request
-+Date:		April 2020
-+KernelVersion:	5.7
-+Contact:	"Jithu Joseph" <jithu.joseph@intel.com>
-+Description:
-+		Allow user space entities to trigger update of Slim
-+		Bootloader (SBL). This attribute normally has a value
-+		of 0 and userspace can signal SBL to update firmware,
-+		on next reboot, by writing a value of 1.
-+		There are two available states:
-+		    * 0 -> Skip firmware update while rebooting
-+		    * 1 -> Attempt firmware update on next reboot
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b816a453b10e..fb613308dc4e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15454,6 +15454,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
- F:	include/linux/srcu*.h
- F:	kernel/rcu/srcu*.c
- 
-+SLIM BOOTLOADER (SBL) FIRMWARE UPDATE WMI DRIVER
-+M:	Jithu Joseph <jithu.joseph@intel.com>
-+R:	Maurice Ma <maurice.ma@intel.com>
-+S:	Maintained
-+W:	https://slimbootloader.github.io/security/firmware-update.html
-+F:	drivers/platform/x86/sbl_fwu_wmi.c
-+
- SMACK SECURITY MODULE
- M:	Casey Schaufler <casey@schaufler-ca.com>
- L:	linux-security-module@vger.kernel.org
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 0ad7ad8cf8e1..69cfc2904265 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -104,6 +104,16 @@ config PEAQ_WMI
- 	help
- 	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
- 
-+config SBL_FWU_WMI
-+	tristate "WMI driver for Slim Bootloader firmware update signaling"
-+	depends on ACPI_WMI
-+	help
-+	  Say Y here if you want to be able to use the WMI interface to signal
-+	  Slim Bootloader to trigger update on next reboot.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called sbl-fwu-wmi.
-+
- config XIAOMI_WMI
- 	tristate "Xiaomi WMI key driver"
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 53408d965874..65455c2214c9 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
- obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
- obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
- obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
-+obj-$(CONFIG_SBL_FWU_WMI)		+= sbl_fwu_wmi.o
- obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
- 
- # Acer
-diff --git a/drivers/platform/x86/sbl_fwu_wmi.c b/drivers/platform/x86/sbl_fwu_wmi.c
-new file mode 100644
-index 000000000000..4563245d32bd
---- /dev/null
-+++ b/drivers/platform/x86/sbl_fwu_wmi.c
-@@ -0,0 +1,144 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Slim Bootloader(SBL) firmware update signaling driver
-+ *
-+ * Slim Bootloader is a small, open-source, non UEFI compliant, boot firmware
-+ * optimized for running on certain Intel platforms.
-+ *
-+ * SBL exposes an ACPI-WMI device via /sys/bus/wmi/<SBL_FWU_WMI_GUID>.
-+ * This driver further adds "firmware_update_request" device attribute.
-+ * This attribute normally has a value of 0 and userspace can signal SBL
-+ * to update firmware, on next reboot, by writing a value of 1.
-+ *
-+ * More details of SBL firmware update process is available at:
-+ * https://slimbootloader.github.io/security/firmware-update.html
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/sysfs.h>
-+#include <linux/wmi.h>
-+
-+#define SBL_FWU_WMI_GUID  "44FADEB1-B204-40F2-8581-394BBDC1B651"
-+
-+static int get_fwu_request(struct device *dev, u32 *out)
-+{
-+	struct acpi_buffer result = {ACPI_ALLOCATE_BUFFER, NULL};
-+	union acpi_object *obj;
-+	acpi_status status;
-+
-+	status = wmi_query_block(SBL_FWU_WMI_GUID, 0, &result);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(dev, "wmi_query_block failed\n");
-+		return -ENODEV;
-+	}
-+
-+	obj = (union acpi_object *)result.pointer;
-+	if (!obj || obj->type != ACPI_TYPE_INTEGER) {
-+		dev_warn(dev, "wmi_query_block returned invalid value\n");
-+		kfree(obj);
-+		return -EINVAL;
-+	}
-+
-+	*out = obj->integer.value;
-+	kfree(obj);
-+
-+	return 0;
-+}
-+
-+static int set_fwu_request(struct device *dev, u32 in)
-+{
-+	struct acpi_buffer input;
-+	acpi_status status;
-+	u32 value;
-+
-+	value = in;
-+	input.length = sizeof(u32);
-+	input.pointer = &value;
-+
-+	status = wmi_set_block(SBL_FWU_WMI_GUID, 0, &input);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(dev, "wmi_set_block failed\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static ssize_t firmware_update_request_show(struct device *dev,
-+					    struct device_attribute *attr,
-+					    char *buf)
-+{
-+	u32 val;
-+	int ret;
-+
-+	ret = get_fwu_request(dev, &val);
-+	if (ret)
-+		return ret;
-+
-+	return sprintf(buf, "%d\n", val);
-+}
-+
-+static ssize_t firmware_update_request_store(struct device *dev,
-+					     struct device_attribute *attr,
-+					     const char *buf, size_t count)
-+{
-+	unsigned int val;
-+	int ret;
-+
-+	ret = kstrtouint(buf, 0, &val);
-+	if (ret)
-+		return ret;
-+
-+	/* May later be extended to support values other than 0 and 1 */
-+	if (val > 1)
-+		return -ERANGE;
-+
-+	ret = set_fwu_request(dev, val);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(firmware_update_request);
-+
-+static struct attribute *firmware_update_attrs[] = {
-+	&dev_attr_firmware_update_request.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(firmware_update);
-+
-+static int sbl_fwu_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	dev_info(&wdev->dev, "Slim Bootloader signaling driver attached\n");
-+	return 0;
-+}
-+
-+static int sbl_fwu_wmi_remove(struct wmi_device *wdev)
-+{
-+	dev_info(&wdev->dev, "Slim Bootloader signaling driver removed\n");
-+	return 0;
-+}
-+
-+static const struct wmi_device_id sbl_fwu_wmi_id_table[] = {
-+	{ .guid_string = SBL_FWU_WMI_GUID },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(wmi, sbl_fwu_wmi_id_table);
-+
-+static struct wmi_driver sbl_fwu_wmi_driver = {
-+	.driver = {
-+		.name = "sbl-fwu-wmi",
-+		.dev_groups = firmware_update_groups,
-+	},
-+	.probe = sbl_fwu_wmi_probe,
-+	.remove = sbl_fwu_wmi_remove,
-+	.id_table = sbl_fwu_wmi_id_table,
-+};
-+module_wmi_driver(sbl_fwu_wmi_driver);
-+
-+MODULE_AUTHOR("Jithu Joseph <jithu.joseph@intel.com>");
-+MODULE_DESCRIPTION("Slim Bootloader firmware update signaling driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> ---
+>  drivers/thermal/thermal_core.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/thermal_core.c
+> b/drivers/thermal/thermal_core.c index a2a5034f76e7..03c4d8d23284 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -305,13 +305,22 @@ static void thermal_zone_device_set_polling(struct
+> thermal_zone_device *tz,
+>  		cancel_delayed_work(&tz->poll_queue);
+>  }
+> 
+> +static inline bool should_stop_polling(struct thermal_zone_device *tz)
+> +{
+> +	return thermal_zone_device_get_mode(tz) ==
+> THERMAL_DEVICE_DISABLED; }
+> +
+>  static void monitor_thermal_zone(struct thermal_zone_device *tz)  {
+> +	bool stop;
+> +
+> +	stop = should_stop_polling(tz);
+> +
+>  	mutex_lock(&tz->lock);
+> 
+> -	if (tz->passive)
+> +	if (!stop && tz->passive)
+>  		thermal_zone_device_set_polling(tz, tz->passive_delay);
+> -	else if (tz->polling_delay)
+> +	else if (!stop && tz->polling_delay)
+>  		thermal_zone_device_set_polling(tz, tz->polling_delay);
+>  	else
+>  		thermal_zone_device_set_polling(tz, 0); @@ -503,6 +512,9
+> @@ void thermal_zone_device_update(struct thermal_zone_device *tz,  {
+>  	int count;
+> 
+> +	if (should_stop_polling(tz))
+> +		return;
+> +
+>  	if (atomic_read(&in_suspend))
+>  		return;
+> 
+> --
+> 2.17.1
