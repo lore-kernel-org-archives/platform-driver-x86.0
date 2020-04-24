@@ -1,164 +1,104 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] thinkpad_acpi: Add support for dual
- fan control on select models
-Date: Fri, 24 Apr 2020 12:59:29 +0300
-Message-ID: <CAHp75VdZtrGr597WK6gCrpGDKct12xSScJKNMV8LNmmgBYNe_w@mail.gmail.com>
-References: <20200423165457.54388-1-larsh@apache.org>
- <20200423215709.72993-1-larsh@apache.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] Immutable branch between MFD, X86, USB and Watchdog due
+ for the v5.7 merge window
+Date: Fri, 24 Apr 2020 11:24:52 +0100
+Message-ID: <20200424102452.GB8414@dell>
+References: <20200416081552.68083-1-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20200423215709.72993-1-larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Lars <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>
-Cc: Alexander Kappner <agk-mA9ux5SlULTR7s880joybQ@public.gmane.org>, Kevin Slagle <kjslag-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Sebastian_D=C3=B6rner?= <bastidoerner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dario Messina <nanodario-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thinkpad-acpi devel ML <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, arc-e1Wt+8K1Ta8ZEwqihLH0+Q@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200416081552.68083-1-mika.westerberg@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Zha Qipeng <qipeng.zha@intel.com>, "David E . Box" <david.e.box@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Apr 24, 2020 at 12:57 AM Lars <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org> wrote:
->
-> This adds dual fan control for the following models:
-> P50, P51, P52, P70, P71, P72, P1 gen1, X1E gen1, P2 gen2, and X1E gen2.
->
-> Both fans are controlled together as if they were a single fan.
->
-> Tested on an X1 Extreme Gen1, an X1 Extreme Gen2, and a P50.
->
-> The patch is defensive, it adds only specific supported machines, and falls
-> back to the old behavior if both fans cannot be controlled.
->
-> Background:
-> I tested the BIOS default behavior on my X1E gen2 and both fans are always
-> changed together. So rather than adding controls for each fan, this controls
-> both fans together as the BIOS would do.
->
-> This was inspired by a discussion on dual fan support for the thinkfan tool
-> [1].
-> All BIOS ids are taken from there. The X1E gen2 id is verified on my machine.
->
-> Thanks to GitHub users voidworker and civic9 for the earlier patches and BIOS
-> ids, and to users peter-stoll and sassman for testing the patch on their
-> machines.
->
+Enjoy!
 
-Pushed to my review and testing queue, thank you!
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-> [1]: https://github.com/vmatare/thinkfan/issues/58
->
-> Signed-off-by: Lars <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 43 ++++++++++++++++++++++++----
->  1 file changed, 37 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index da794dcfdd92..9e0f65e567be 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -318,6 +318,7 @@ static struct {
->         u32 uwb:1;
->         u32 fan_ctrl_status_undef:1;
->         u32 second_fan:1;
-> +       u32 second_fan_ctl:1;
->         u32 beep_needs_two_args:1;
->         u32 mixer_no_level_control:1;
->         u32 battery_force_primary:1;
-> @@ -8325,11 +8326,19 @@ static int fan_set_level(int level)
->
->         switch (fan_control_access_mode) {
->         case TPACPI_FAN_WR_ACPI_SFAN:
-> -               if (level >= 0 && level <= 7) {
-> -                       if (!acpi_evalf(sfan_handle, NULL, NULL, "vd", level))
-> -                               return -EIO;
-> -               } else
-> +               if ((level < 0) || (level > 7))
->                         return -EINVAL;
-> +
-> +               if (tp_features.second_fan_ctl) {
-> +                       if (!fan_select_fan2() ||
-> +                           !acpi_evalf(sfan_handle, NULL, NULL, "vd", level)) {
-> +                               pr_warn("Couldn't set 2nd fan level, disabling support\n");
-> +                               tp_features.second_fan_ctl = 0;
-> +                       }
-> +                       fan_select_fan1();
-> +               }
-> +               if (!acpi_evalf(sfan_handle, NULL, NULL, "vd", level))
-> +                       return -EIO;
->                 break;
->
->         case TPACPI_FAN_WR_ACPI_FANS:
-> @@ -8346,6 +8355,15 @@ static int fan_set_level(int level)
->                 else if (level & TP_EC_FAN_AUTO)
->                         level |= 4;     /* safety min speed 4 */
->
-> +               if (tp_features.second_fan_ctl) {
-> +                       if (!fan_select_fan2() ||
-> +                           !acpi_ec_write(fan_status_offset, level)) {
-> +                               pr_warn("Couldn't set 2nd fan level, disabling support\n");
-> +                               tp_features.second_fan_ctl = 0;
-> +                       }
-> +                       fan_select_fan1();
-> +
-> +               }
->                 if (!acpi_ec_write(fan_status_offset, level))
->                         return -EIO;
->                 else
-> @@ -8764,6 +8782,7 @@ static const struct attribute_group fan_attr_group = {
->
->  #define TPACPI_FAN_Q1  0x0001          /* Unitialized HFSP */
->  #define TPACPI_FAN_2FAN        0x0002          /* EC 0x31 bit 0 selects fan2 */
-> +#define TPACPI_FAN_2CTL        0x0004          /* selects fan2 control */
->
->  static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
->         TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
-> @@ -8772,6 +8791,13 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
->         TPACPI_QEC_IBM('7', '0', TPACPI_FAN_Q1),
->         TPACPI_QEC_LNV('7', 'M', TPACPI_FAN_2FAN),
->         TPACPI_Q_LNV('N', '1', TPACPI_FAN_2FAN),
-> +       TPACPI_Q_LNV3('N', '1', 'D', TPACPI_FAN_2CTL),  /* P70 */
-> +       TPACPI_Q_LNV3('N', '1', 'E', TPACPI_FAN_2CTL),  /* P50 */
-> +       TPACPI_Q_LNV3('N', '1', 'T', TPACPI_FAN_2CTL),  /* P71 */
-> +       TPACPI_Q_LNV3('N', '1', 'U', TPACPI_FAN_2CTL),  /* P51 */
-> +       TPACPI_Q_LNV3('N', '2', 'C', TPACPI_FAN_2CTL),  /* P52 / P72 */
-> +       TPACPI_Q_LNV3('N', '2', 'E', TPACPI_FAN_2CTL),  /* P1 / X1 Extreme (1st gen) */
-> +       TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),  /* P1 / X1 Extreme (2nd gen) */
->  };
->
->  static int __init fan_init(struct ibm_init_struct *iibm)
-> @@ -8789,6 +8815,7 @@ static int __init fan_init(struct ibm_init_struct *iibm)
->         fan_watchdog_maxinterval = 0;
->         tp_features.fan_ctrl_status_undef = 0;
->         tp_features.second_fan = 0;
-> +       tp_features.second_fan_ctl = 0;
->         fan_control_desired_level = 7;
->
->         if (tpacpi_is_ibm()) {
-> @@ -8813,8 +8840,12 @@ static int __init fan_init(struct ibm_init_struct *iibm)
->                                 fan_quirk1_setup();
->                         if (quirks & TPACPI_FAN_2FAN) {
->                                 tp_features.second_fan = 1;
-> -                               dbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_FAN,
-> -                                       "secondary fan support enabled\n");
-> +                               pr_info("secondary fan support enabled\n");
-> +                       }
-> +                       if (quirks & TPACPI_FAN_2CTL) {
-> +                               tp_features.second_fan = 1;
-> +                               tp_features.second_fan_ctl = 1;
-> +                               pr_info("secondary fan control enabled\n");
->                         }
->                 } else {
->                         pr_err("ThinkPad ACPI EC access misbehaving, fan status and control unavailable\n");
-> --
-> 2.25.3
->
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-x86-usb-watchdog-v5.7
+
+for you to fetch changes up to 2f72d35ea75ee8bf8c9e63fb43d43d5bfb4ac8fd:
+
+  MAINTAINERS: Update entry for Intel Broxton PMC driver (2020-04-24 11:18:51 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD, X86, USB and Watchdog due for the v5.7 merge window
+
+----------------------------------------------------------------
+Heikki Krogerus (1):
+      usb: typec: mux: Convert the Intel PMC Mux driver to use new SCU IPC API
+
+Mika Westerberg (19):
+      platform/x86: intel_scu_ipc: Split out SCU IPC functionality from the SCU driver
+      platform/x86: intel_scu_ipc: Log more information if SCU IPC command fails
+      platform/x86: intel_scu_ipc: Move legacy SCU IPC API to a separate header
+      platform/x86: intel_scu_ipc: Introduce new SCU IPC API
+      platform/x86: intel_mid_powerbtn: Convert to use new SCU IPC API
+      watchdog: intel-mid_wdt: Convert to use new SCU IPC API
+      platform/x86: intel_scu_ipcutil: Convert to use new SCU IPC API
+      platform/x86: intel_scu_ipc: Add managed function to register SCU IPC
+      platform/x86: intel_pmc_ipc: Start using SCU IPC
+      mfd: intel_soc_pmic: Add SCU IPC member to struct intel_soc_pmic
+      mfd: intel_soc_pmic_bxtwc: Convert to use new SCU IPC API
+      mfd: intel_soc_pmic_mrfld: Convert to use new SCU IPC API
+      platform/x86: intel_telemetry: Convert to use new SCU IPC API
+      platform/x86: intel_pmc_ipc: Drop intel_pmc_ipc_command()
+      x86/platform/intel-mid: Add empty stubs for intel_scu_devices_[create|destroy]()
+      platform/x86: intel_pmc_ipc: Move PCI IDs to intel_scu_pcidrv.c
+      platform/x86: intel_telemetry: Add telemetry_get_pltdata()
+      platform/x86: intel_pmc_ipc: Convert to MFD
+      MAINTAINERS: Update entry for Intel Broxton PMC driver
+
+ .../ABI/obsolete/sysfs-driver-intel_pmc_bxt        |  22 +
+ MAINTAINERS                                        |  23 +-
+ arch/x86/Kconfig                                   |   2 +-
+ arch/x86/include/asm/intel-mid.h                   |   9 +-
+ arch/x86/include/asm/intel_pmc_ipc.h               |  59 --
+ arch/x86/include/asm/intel_scu_ipc.h               | 114 +--
+ arch/x86/include/asm/intel_scu_ipc_legacy.h        |  91 ++
+ arch/x86/include/asm/intel_telemetry.h             |   6 +-
+ drivers/mfd/Kconfig                                |  20 +-
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/intel_pmc_bxt.c                        | 468 ++++++++++
+ drivers/mfd/intel_soc_pmic_bxtwc.c                 |  34 +-
+ drivers/mfd/intel_soc_pmic_mrfld.c                 |  10 +-
+ drivers/platform/x86/Kconfig                       |  46 +-
+ drivers/platform/x86/Makefile                      |   2 +-
+ drivers/platform/x86/intel_mid_powerbtn.c          |  15 +-
+ drivers/platform/x86/intel_pmc_ipc.c               | 949 ---------------------
+ drivers/platform/x86/intel_scu_ipc.c               | 447 +++++++---
+ drivers/platform/x86/intel_scu_ipcutil.c           |  43 +-
+ drivers/platform/x86/intel_scu_pcidrv.c            |  68 ++
+ drivers/platform/x86/intel_telemetry_core.c        |  17 +-
+ drivers/platform/x86/intel_telemetry_debugfs.c     |  15 +-
+ drivers/platform/x86/intel_telemetry_pltdrv.c      |  97 ++-
+ drivers/usb/typec/mux/Kconfig                      |   2 +-
+ drivers/usb/typec/mux/intel_pmc_mux.c              |  12 +-
+ drivers/usb/typec/tcpm/Kconfig                     |   2 +-
+ drivers/watchdog/iTCO_wdt.c                        |  25 +-
+ drivers/watchdog/intel-mid_wdt.c                   |  53 +-
+ include/linux/mfd/intel_pmc_bxt.h                  |  53 ++
+ include/linux/mfd/intel_soc_pmic.h                 |  15 +
+ include/linux/platform_data/itco_wdt.h             |  11 +-
+ 31 files changed, 1411 insertions(+), 1320 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/sysfs-driver-intel_pmc_bxt
+ delete mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
+ create mode 100644 arch/x86/include/asm/intel_scu_ipc_legacy.h
+ create mode 100644 drivers/mfd/intel_pmc_bxt.c
+ delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
+ create mode 100644 drivers/platform/x86/intel_scu_pcidrv.c
+ create mode 100644 include/linux/mfd/intel_pmc_bxt.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
