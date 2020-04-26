@@ -1,106 +1,80 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 2/2] ACPI / scan: Create platform device for CPLM3218 ACPI nodes
-Date: Sun, 26 Apr 2020 12:47:13 +0200
-Message-ID: <20200426104713.216896-3-hdegoede@redhat.com>
+Subject: [PATCH 1/2] platform/x86: i2c-multi-instantiate: Add flag for passing fwnode
+Date: Sun, 26 Apr 2020 12:47:12 +0200
+Message-ID: <20200426104713.216896-2-hdegoede@redhat.com>
 References: <20200426104713.216896-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 In-Reply-To: <20200426104713.216896-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-acpi-owner@vger.kernel.org
 To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 Cc: Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some CPLM3218 ACPI nodes also put the SMBus Alert Response Address (0x0c)
-in their ACPI resource table; and they put it there as the first entry,
-here is an example from the CPLM3218 device in the DSDT of an Asus T100TA=
+In some cases the driver for the i2c_client-s which i2c-multi-instantiate
+instantiates may need access some fields / methods from to the ACPI fwnod=
+e
+for which i2c_clients are being instantiated.
+
+An example of this are CPLM3218 ACPI device-s. These contain CPM0 and
+CPM1 packages with various information (e.g. register init values) which
+the driver needs.
+
+Passing the fwnode through the i2c_board_info struct also gives the
+i2c-core access to it, and if we do not pass an IRQ then the i2c-core
+will use the fwnode to get an IRQ, see i2c_acpi_get_irq().
+
+This is a problem when there is only an IRQ for 1 of the clients describe=
+d
+in the ACPI device we are instantiating clients for. If we unconditionall=
+y
+pass the fwnode, then i2c_acpi_get_irq() will assign the same IRQ to all
+clients instantiated, leading to kernel-oopses like this (BSG1160 device)=
 :
 
- Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
- {
-     Name (SBUF, ResourceTemplate ()
-     {
-         I2cSerialBusV2 (0x000C, ControllerInitiated, 0x00061A80,
-             AddressingMode7Bit, "\\_SB.I2C3",
-             0x00, ResourceConsumer, , Exclusive,
-             )
-         I2cSerialBusV2 (0x0048, ControllerInitiated, 0x00061A80,
-             AddressingMode7Bit, "\\_SB.I2C3",
-             0x00, ResourceConsumer, , Exclusive,
-             )
-         Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
-         {
-             0x00000033,
-         }
-     })
-     Return (SBUF) /* \_SB_.I2C3.ALSD._CRS.SBUF */
- }
+[   27.340557] genirq: Flags mismatch irq 76. 00002001 (bmc150_magn_event=
+) vs. 00000001 (bmc150_accel_event)
+[   27.340567] Call Trace:
+...
 
-The actual I2C address of the sensor in this case is the 0x48 address
-from the second resource-table entry. On some other devices
-(e.g. HP X2 Bay Trail models, Acer SW5-012) the CPLM3218 node contains
-only 1 I2C resource.
-
-Add the CPLM3218 to the I2C multi instantiate list, so that the
-i2c-multi-instantiate.c driver can handle it.
-
-Note in the case where there are 2 I2C resources we simply instatiate
-i2c-clients for both and let the cm32181 driver figure out that the
-first one is not the one it wants.
-
-Doing things this way is actually desirable because on devices where
-there are 2 I2C resources it seems that we first need to do a SMBus
-read of the 0x0c address before the sensor will respond to I2C transfers
-on its actual address.
+So we cannot simply always pass the fwnode. This commit adds a PASS_FWNOD=
+E
+flag, which can be used to pass the fwnode in cases where we do not have
+the IRQ problem and the driver for the instantiated client(s) needs acces=
+s
+to the fwnode.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/acpi/scan.c                          | 1 +
- drivers/platform/x86/i2c-multi-instantiate.c | 7 +++++++
- 2 files changed, 8 insertions(+)
+ drivers/platform/x86/i2c-multi-instantiate.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 6d3448895382..937d72fc212c 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -1544,6 +1544,7 @@ static bool acpi_device_enumeration_by_parent(struc=
-t acpi_device *device)
- 	static const struct acpi_device_id i2c_multi_instantiate_ids[] =3D {
- 		{"BSG1160", },
- 		{"BSG2150", },
-+		{"CPLM3218", },
- 		{"INT33FE", },
- 		{"INT3515", },
- 		{}
 diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platf=
 orm/x86/i2c-multi-instantiate.c
-index dcafb1a29d17..e1cdc44e6f57 100644
+index 6acc8457866e..dcafb1a29d17 100644
 --- a/drivers/platform/x86/i2c-multi-instantiate.c
 +++ b/drivers/platform/x86/i2c-multi-instantiate.c
-@@ -180,6 +180,12 @@ static const struct i2c_inst_data int3515_data[]  =3D=
- {
- 	{}
- };
+@@ -20,6 +20,8 @@
+ #define IRQ_RESOURCE_GPIO	1
+ #define IRQ_RESOURCE_APIC	2
 =20
-+static const struct i2c_inst_data cplm3218_data[]  =3D {
-+	{ "cm32181", PASS_FWNODE },
-+	{ "cm32181", PASS_FWNODE },
-+	{}
-+};
++#define PASS_FWNODE		BIT(2)
 +
- /*
-  * Note new device-ids must also be added to i2c_multi_instantiate_ids i=
-n
-  * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
-@@ -187,6 +193,7 @@ static const struct i2c_inst_data int3515_data[]  =3D=
- {
- static const struct acpi_device_id i2c_multi_inst_acpi_ids[] =3D {
- 	{ "BSG1160", (unsigned long)bsg1160_data },
- 	{ "BSG2150", (unsigned long)bsg2150_data },
-+	{ "CPLM3218", (unsigned long)cplm3218_data },
- 	{ "INT3515", (unsigned long)int3515_data },
- 	{ }
- };
+ struct i2c_inst_data {
+ 	const char *type;
+ 	unsigned int flags;
+@@ -93,6 +95,10 @@ static int i2c_multi_inst_probe(struct platform_device=
+ *pdev)
+ 		snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev),
+ 			 inst_data[i].type, i);
+ 		board_info.dev_name =3D name;
++
++		if (inst_data[i].flags & PASS_FWNODE)
++			board_info.fwnode =3D dev->fwnode;
++
+ 		switch (inst_data[i].flags & IRQ_RESOURCE_TYPE) {
+ 		case IRQ_RESOURCE_GPIO:
+ 			ret =3D acpi_dev_gpio_irq_get(adev, inst_data[i].irq_idx);
 --=20
 2.26.0
