@@ -1,88 +1,90 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] platform/x86: i2c-multi-instantiate: Add flag for
- passing fwnode
-Date: Sun, 26 Apr 2020 20:59:14 +0300
-Message-ID: <CAHp75VdOd6C36oR7HAnqrKiinVBr4YcqqJ=dv3NpR3=Xp0QQ-Q@mail.gmail.com>
-References: <20200426104713.216896-1-hdegoede@redhat.com> <20200426104713.216896-2-hdegoede@redhat.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] thinkpad_acpi: Add support for dual
+ fan control on select models
+Date: Mon, 27 Apr 2020 12:40:44 +0300
+Message-ID: <CAHp75VeTp4ACpOxDtr64QX49-YZ8Uk_BM8XcMCDgg0BdqxNTpg@mail.gmail.com>
+References: <20200423165457.54388-1-larsh@apache.org>
+ <20200423215709.72993-1-larsh@apache.org>
+ <CAHp75VeX2SjX5J-w933FKh_yii=cJ9_tWj3RRNx7Q6vijtt6AQ@mail.gmail.com>
+ <1630425700.517847.1587973463950@mail.yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200426104713.216896-2-hdegoede@redhat.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1630425700.517847.1587973463950-sAHhhX/85wgbqTNvkayDYw@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: "larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org" <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>
+Cc: Alexander Kappner <agk-mA9ux5SlULTR7s880joybQ@public.gmane.org>, Kevin Slagle <kjslag-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Sebastian_D=C3=B6rner?= <bastidoerner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dario Messina <nanodario-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Marc Burkhardt <marc-e1Wt+8K1Ta8ZEwqihLH0+Q@public.gmane.org>, Stefan Assmann <sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thinkpad-acpi devel ML <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, Apr 26, 2020 at 1:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Mon, Apr 27, 2020 at 10:44 AM larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org> wrote:
 >
-> In some cases the driver for the i2c_client-s which i2c-multi-instantiate
-> instantiates may need access some fields / methods from to the ACPI fwnode
-> for which i2c_clients are being instantiated.
 >
-> An example of this are CPLM3218 ACPI device-s. These contain CPM0 and
-> CPM1 packages with various information (e.g. register init values) which
-> the driver needs.
+> Hi Andy,
 >
-> Passing the fwnode through the i2c_board_info struct also gives the
-> i2c-core access to it, and if we do not pass an IRQ then the i2c-core
-> will use the fwnode to get an IRQ, see i2c_acpi_get_irq().
+> my full name is Lars Hofhansl.
+> Should I send a new post?
+>
+> Just in case, I hereby:
+>
+> Signed-off-by: Lars Hofhansl <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>
 
-I'm wondering, can we rather do it in the same way like we do for
-GPIO/APIC case here.
-Introduce IRQ_RESOURCE_SHARED (or so) and
-
-case _SHARED:
- irq = i2c_acpi_get_irq();
-...
-
-?
+No need for this one, I will update locally, thanks!
 
 >
-> This is a problem when there is only an IRQ for 1 of the clients described
-> in the ACPI device we are instantiating clients for. If we unconditionally
-> pass the fwnode, then i2c_acpi_get_irq() will assign the same IRQ to all
-> clients instantiated, leading to kernel-oopses like this (BSG1160 device):
+> -- Lars
 >
-> [   27.340557] genirq: Flags mismatch irq 76. 00002001 (bmc150_magn_event) vs. 00000001 (bmc150_accel_event)
-> [   27.340567] Call Trace:
-> ...
+> On Friday, April 24, 2020, 4:12:05 AM PDT, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >
-> So we cannot simply always pass the fwnode. This commit adds a PASS_FWNODE
-> flag, which can be used to pass the fwnode in cases where we do not have
-> the IRQ problem and the driver for the instantiated client(s) needs access
-> to the fwnode.
 >
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/i2c-multi-instantiate.c | 6 ++++++
->  1 file changed, 6 insertions(+)
 >
-> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
-> index 6acc8457866e..dcafb1a29d17 100644
-> --- a/drivers/platform/x86/i2c-multi-instantiate.c
-> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
-> @@ -20,6 +20,8 @@
->  #define IRQ_RESOURCE_GPIO      1
->  #define IRQ_RESOURCE_APIC      2
 >
-> +#define PASS_FWNODE            BIT(2)
-> +
->  struct i2c_inst_data {
->         const char *type;
->         unsigned int flags;
-> @@ -93,6 +95,10 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
->                 snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev),
->                          inst_data[i].type, i);
->                 board_info.dev_name = name;
-> +
-> +               if (inst_data[i].flags & PASS_FWNODE)
-> +                       board_info.fwnode = dev->fwnode;
-> +
->                 switch (inst_data[i].flags & IRQ_RESOURCE_TYPE) {
->                 case IRQ_RESOURCE_GPIO:
->                         ret = acpi_dev_gpio_irq_get(adev, inst_data[i].irq_idx);
+>
+> On Fri, Apr 24, 2020 at 12:57 AM Lars <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org> wrote:
+> >
+> > This adds dual fan control for the following models:
+> > P50, P51, P52, P70, P71, P72, P1 gen1, X1E gen1, P2 gen2, and X1E gen2.
+> >
+> > Both fans are controlled together as if they were a single fan.
+> >
+> > Tested on an X1 Extreme Gen1, an X1 Extreme Gen2, and a P50.
+> >
+> > The patch is defensive, it adds only specific supported machines, and falls
+> > back to the old behavior if both fans cannot be controlled.
+> >
+> > Background:
+> > I tested the BIOS default behavior on my X1E gen2 and both fans are always
+> > changed together. So rather than adding controls for each fan, this controls
+> > both fans together as the BIOS would do.
+> >
+> > This was inspired by a discussion on dual fan support for the thinkfan tool
+> > [1].
+> > All BIOS ids are taken from there. The X1E gen2 id is verified on my machine.
+> >
+> > Thanks to GitHub users voidworker and civic9 for the earlier patches and BIOS
+> > ids, and to users peter-stoll and sassman for testing the patch on their
+> > machines.
+> >
+> > [1]: https://github.com/vmatare/thinkfan/issues/58
+> >
+> > Signed-off-by: Lars <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>
+>
+> One question though, is Lars your real name here? [1]
+>
+>
+> [1]:
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+>
 > --
-> 2.26.0
+> With Best Regards,
+> Andy Shevchenko
 >
 
 
