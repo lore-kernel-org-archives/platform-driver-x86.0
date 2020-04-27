@@ -1,27 +1,60 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 1/8] iio: light: cm32181: Add some extra register
- defines
-Date: Mon, 27 Apr 2020 20:29:17 +0200
-Message-ID: <10122c2e-ea04-2be7-ac19-c070390d5335@redhat.com>
+Subject: Re: [PATCH v2 3/8] iio: light: cm32181: Handle ACPI instantiating a
+ cm32181 client on the SMBus ARA
+Date: Mon, 27 Apr 2020 20:31:15 +0200
+Message-ID: <2dae8c05-c84c-3caf-f84a-34615183ab01@redhat.com>
 References: <20200427155037.218390-1-hdegoede@redhat.com>
+ <20200427155037.218390-3-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200427155037.218390-1-hdegoede@redhat.com>
+In-Reply-To: <20200427155037.218390-3-hdegoede@redhat.com>
 Content-Language: en-US
 Sender: linux-acpi-owner@vger.kernel.org
 To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jonathan Cameron <jic23@kernel.org>
 Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi ,
+Hi All,
 
-Self-nack for this series, specifically for the
+On 4/27/20 5:50 PM, Hans de Goede wrote:
+> Some ACPI systems list 2 I2C resources for the CM3218 sensor. On these
+> systems the first I2cSerialBus ACPI-resource points to the SMBus Alert
+> Response Address (ARA, 0x0c) and the second I2cSerialBus ACPI-resource
+> points to the actual CM3218 sensor address.
+> 
+>  From the ACPI/x86 side devices with more then 1 I2cSerialBus ACPI-resource
+> are handled by the drivers/platform/x86/i2c-multi-instantiate.c code.
+> This code will instantiate "cm32181" i2c_client-s for both resources.
+> 
+> Add a check to cm32181_probe() for the client's address being the ARA
+> address, and in that case fail the probe with -ENODEV.
+> 
+> On these ACPI systems the sensor may have a SMBus Alert asserted at boot,
+> if this is the case the sensor will not respond to any i2c_transfers on
+> its actual address until we read from the ARA register to clear the Alert.
+> 
+> Therefor we must (try to) read a byte from the client with the ARA
+> register, before returning -ENODEV, so that we clear the Alert and when
+> we get called again for the client instantiated for the second
+> I2cSerialBus ACPI-resource the sensor will respond to our i2c-transfers.
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-[PATCH v2 3/8] iio: light: cm32181: Handle ACPI instantiating a cm32181 client on the SMBus ARA
+So this assumes that i2c-multi-inst will be used for ACPI
+CPLM3218 device nodes and we get 2 separate i2c_clients for
+the ARA, resp. the real address. This has been discussed on the
+linux-acpi list and the conclusion is that that instanting 2
+full i2c_clients is not the right solution.
 
-Patch, I will reply to that patch with more details and I will prepare a v3
+Instead the cm32181 driver should create a "dummy" client
+for the second address (which is part of the same chip)
+itself, using an acpi version of i2c_new_dummy_device() or
+i2c_new_ancillary_device()
+
+I will prepare a v3
 of this series with a better solution.
 
 Regards,
@@ -29,68 +62,46 @@ Regards,
 Hans
 
 
-On 4/27/20 5:50 PM, Hans de Goede wrote:
-> These come from a newer version of cm32181.c, which is floating around
-> the net, with a copyright of:
-> 
->   * Copyright (C) 2014 Capella Microsystems Inc.
->   * Author: Kevin Tsai <ktsai@capellamicro.com>
->   *
->   * This program is free software; you can redistribute it and/or modify it
->   * under the terms of the GNU General Public License version 2, as published
->   * by the Free Software Foundation.
-> 
-> Note that this removes the bogus CM32181_CMD_ALS_ENABLE define, there
-> is no enable bit, only a disable bit and enabled is the absence of
-> being disabled.
-> 
-> This is a preparation patch for adding support for the older
-> CM3218 model of the light sensor.
-> 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+
 > ---
->   drivers/iio/light/cm32181.c | 15 +++++++++++----
->   1 file changed, 11 insertions(+), 4 deletions(-)
+> Changes in v2
+> - s/i2c_client-s/I2C clients/ in added comment
+> ---
+>   drivers/iio/light/cm32181.c | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
 > 
 > diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
-> index 5f4fb5674fa0..ee386afe811e 100644
+> index fd371b36c7b3..4c26a4a8a070 100644
 > --- a/drivers/iio/light/cm32181.c
 > +++ b/drivers/iio/light/cm32181.c
-> @@ -18,6 +18,9 @@
+> @@ -51,6 +51,8 @@
+>   #define CM32181_CALIBSCALE_RESOLUTION	1000
+>   #define MLUX_PER_LUX			1000
 >   
->   /* Registers Address */
->   #define CM32181_REG_ADDR_CMD		0x00
-> +#define CM32181_REG_ADDR_WH		0x01
-> +#define CM32181_REG_ADDR_WL		0x02
-> +#define CM32181_REG_ADDR_TEST		0x03
->   #define CM32181_REG_ADDR_ALS		0x04
->   #define CM32181_REG_ADDR_STATUS		0x06
->   #define CM32181_REG_ADDR_ID		0x07
-> @@ -26,9 +29,13 @@
->   #define CM32181_CONF_REG_NUM		0x01
->   
->   /* CMD register */
-> -#define CM32181_CMD_ALS_ENABLE		0x00
-> -#define CM32181_CMD_ALS_DISABLE		0x01
-> -#define CM32181_CMD_ALS_INT_EN		0x02
-> +#define CM32181_CMD_ALS_DISABLE		BIT(0)
-> +#define CM32181_CMD_ALS_INT_EN		BIT(1)
-> +#define CM32181_CMD_ALS_THRES_WINDOW	BIT(2)
+> +#define SMBUS_ALERT_RESPONSE_ADDRESS	0x0c
 > +
-> +#define CM32181_CMD_ALS_PERS_SHIFT	4
-> +#define CM32181_CMD_ALS_PERS_MASK	(0x03 << CM32181_CMD_ALS_PERS_SHIFT)
-> +#define CM32181_CMD_ALS_PERS_DEFAULT	(0x01 << CM32181_CMD_ALS_PERS_SHIFT)
+>   static const u8 cm32181_reg[CM32181_CONF_REG_NUM] = {
+>   	CM32181_REG_ADDR_CMD,
+>   };
+> @@ -333,6 +335,20 @@ static int cm32181_probe(struct i2c_client *client,
+>   	struct iio_dev *indio_dev;
+>   	int ret;
 >   
->   #define CM32181_CMD_ALS_IT_SHIFT	6
->   #define CM32181_CMD_ALS_IT_MASK		(0x0F << CM32181_CMD_ALS_IT_SHIFT)
-> @@ -82,7 +89,7 @@ static int cm32181_reg_init(struct cm32181_chip *cm32181)
->   		return -ENODEV;
->   
->   	/* Default Values */
-> -	cm32181->conf_regs[CM32181_REG_ADDR_CMD] = CM32181_CMD_ALS_ENABLE |
-> +	cm32181->conf_regs[CM32181_REG_ADDR_CMD] =
->   			CM32181_CMD_ALS_IT_DEFAULT | CM32181_CMD_ALS_SM_DEFAULT;
->   	cm32181->calibscale = CM32181_CALIBSCALE_DEFAULT;
->   
+> +	/*
+> +	 * Some ACPI systems list 2 I2C resources for the CM3218 sensor, the
+> +	 * SMBus Alert Response Address (ARA, 0x0c) and the actual I2C address.
+> +	 * drivers/platform/x86/i2c-multi-instantiate.c instantiates "cm32181"
+> +	 * I2C clients for both resources, ignore the ARA client.
+> +	 * On these systems the sensor may have a SMBus Alert asserted at boot,
+> +	 * in that case the ARA must be read to clear the Alert otherwise the
+> +	 * sensor will not respond on its actual I2C address.
+> +	 */
+> +	if (client->addr == SMBUS_ALERT_RESPONSE_ADDRESS) {
+> +		i2c_smbus_read_byte(client);
+> +		return -ENODEV;
+> +	}
+> +
+>   	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*cm32181));
+>   	if (!indio_dev) {
+>   		dev_err(&client->dev, "devm_iio_device_alloc failed\n");
 > 
