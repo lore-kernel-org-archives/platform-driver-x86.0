@@ -1,39 +1,49 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 11/11] iio: light: cm32181: Fix integartion time typo
-Date: Tue, 28 Apr 2020 19:29:23 +0200
-Message-ID: <20200428172923.567806-11-hdegoede@redhat.com>
-References: <20200428172923.567806-1-hdegoede@redhat.com>
+From: civic9 <civic9-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] thinkpad_acpi: Add support for dual
+ fan control on select models
+Date: Tue, 28 Apr 2020 23:18:24 +0200
+Message-ID: <CAM_y6qhV6r9BVE6Uibn=xpDZRYuhZDBBgfHT8fMECNS1DyaQwQ@mail.gmail.com>
+References: <20200423165457.54388-1-larsh@apache.org>
+ <20200423215709.72993-1-larsh@apache.org>
+ <11041815.WYjWQN8m1R@lenovodario>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200428172923.567806-1-hdegoede@redhat.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jonathan Cameron <jic23@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <11041815.WYjWQN8m1R@lenovodario>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Dario Messina <nanodario-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: agk-mA9ux5SlULTR7s880joybQ@public.gmane.org, kjslag-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bastidoerner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Lars <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>, arc-e1Wt+8K1Ta8ZEwqihLH0+Q@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Fix integartion time typo and while at it improve the comment with
-the typo a bit in general.
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/iio/light/cm32181.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
-index d8b128286527..8e294069c7da 100644
---- a/drivers/iio/light/cm32181.c
-+++ b/drivers/iio/light/cm32181.c
-@@ -235,7 +235,7 @@ static int cm32181_reg_init(struct cm32181_chip *cm32=
-181)
-  *  @cm32181:	pointer of struct cm32181
-  *  @val2:	pointer of int to load the als_it value.
-  *
-- *  Report the current integartion time by millisecond.
-+ *  Report the current integration time in milliseconds.
-  *
-  *  Return: IIO_VAL_INT_PLUS_MICRO for success, otherwise -EINVAL.
-  */
---=20
-2.26.0
+cG9uLiwgMjcga3dpIDIwMjAgbyAyMDo0MSBEYXJpbyBNZXNzaW5hIDxuYW5vZGFyaW9AZ21haWwu
+Y29tPiBuYXBpc2HFgihhKToKPgo+IE9uIFRodSwgQXByIDIzLCAyMDIwIGF0IDIzOjU3OjU5IENF
+U1QsIExhcnMgPGxhcnNoQGFwYWNoZS5vcmc+IHdyb3RlOgo+ID4gVGhpcyBhZGRzIGR1YWwgZmFu
+IGNvbnRyb2wgZm9yIHRoZSBmb2xsb3dpbmcgbW9kZWxzOgo+ID4gUDUwLCBQNTEsIFA1MiwgUDcw
+LCBQNzEsIFA3MiwgUDEgZ2VuMSwgWDFFIGdlbjEsIFAyIGdlbjIsIGFuZCBYMUUgZ2VuMi4KPiA+
+Cj4gPiBCb3RoIGZhbnMgYXJlIGNvbnRyb2xsZWQgdG9nZXRoZXIgYXMgaWYgdGhleSB3ZXJlIGEg
+c2luZ2xlIGZhbi4KPiA+IFsuLi5dCj4gPiBCYWNrZ3JvdW5kOgo+ID4gSSB0ZXN0ZWQgdGhlIEJJ
+T1MgZGVmYXVsdCBiZWhhdmlvciBvbiBteSBYMUUgZ2VuMiBhbmQgYm90aCBmYW5zIGFyZSBhbHdh
+eXMKPiA+IGNoYW5nZWQgdG9nZXRoZXIuIFNvIHJhdGhlciB0aGFuIGFkZGluZyBjb250cm9scyBm
+b3IgZWFjaCBmYW4sIHRoaXMgY29udHJvbHMKPiA+IGJvdGggZmFucyB0b2dldGhlciBhcyB0aGUg
+QklPUyB3b3VsZCBkby4KPiBIaSBMYXJzLCB3aHkgaGF2ZSB5b3UgY2hvc2VuIHRvIGNvbnRyb2wg
+bXVsdGlwbGUgZmFucyBpbiB0aGlzIHdheT8KPiBJIGtub3cgdGhhdCBCSU9TIGNvbnRyb2xzIGJv
+dGggZmFucyB0b2dldGhlciwgYnV0IHRoZSBFQyBoYXMgdGhlIGNhcGFiaWxpdGllcwo+IHRvIGNv
+bnRyb2wgYm90aCBmYW5zIGluZGVwZW5kZW50bHksIHNvIG1heWJlIGl0IGNhbiBiZSBjb252ZW5p
+ZW50IHRvIGV4cG9zZQo+IHRoaXMgZmVhdHVyZS4KCisxClByZXZpb3VzIHZlcnNpb24gb2YgdGhl
+IHBhdGNoIFsxXSBhbGxvd3MgdG8gY29udHJvbCBib3RoIGZhbnMgaW5kZXBlbmRlbnRseS4KSG93
+ZXZlciBzb21lIHNvZnR3YXJlIGxpa2UgdGhpbmtmYW4gaXMgbm90IHJlYWR5IHRvIGNvbnRyb2wg
+dHdvIGZhbnMuCkJ1dCBJIGFsc28gdGhpbmsgdGhpcyBmZWF0dXJlIHNob3VsZCBiZSBhdCBsZWFz
+dCBvcHRpb25hbGx5IGV4cG9zZWQuCgpbMV0gaHR0cHM6Ly9naXRodWIuY29tL2NpdmljOS90aGlu
+a3BhZF9hY3BpLjJuZGZhbi5wYXRjaC9ibG9iL21hc3Rlci90aGlua3BhZF9hY3BpLjJuZGZhbi5w
+YXRjaC90aGlua3BhZF9hY3BpLjJuZGZhbi5wYXRjaAoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmlibS1hY3BpLWRldmVsIG1haWxpbmcgbGlzdAppYm0t
+YWNwaS1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6Ly9saXN0cy5zb3VyY2Vmb3Jn
+ZS5uZXQvbGlzdHMvbGlzdGluZm8vaWJtLWFjcGktZGV2ZWwK
