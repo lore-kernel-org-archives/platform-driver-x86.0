@@ -1,51 +1,75 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] support watchdog with longer timeout period
-Date: Tue, 28 Apr 2020 18:36:00 +0300
-Message-ID: <CAHp75VdxGO55sGvMizzZrLfs-sdmEBmDj5nRXYn_wQ=GugexYw@mail.gmail.com>
-References: <20200428130816.582-1-michaelsh@mellanox.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v3 01/11] iio: light: cm32181: Switch to new style i2c-driver probe function
+Date: Tue, 28 Apr 2020 19:29:13 +0200
+Message-ID: <20200428172923.567806-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20200428130816.582-1-michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jonathan Cameron <jic23@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Apr 28, 2020 at 4:09 PM <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org> wrote:
->
-> From: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
->
-> This patchset adds support of extended new watchdog type 3 of Mellanox
-> Ethernet and Infiniband switch systems.
-> This type of watchdog can have a timeout period longer than 255 or 32 sec.
-> as it was before.
->
+Switch to the new style i2c-driver probe_new probe function and drop the
+unnecessary i2c_device_id table (we do not have any old style board files
+using this).
 
-Acked-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This is a preparation patch for adding ACPI binding support.
 
-for PDx86 bits.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v3:
+- This is a new patch in v3 of this patch-set
+---
+ drivers/iio/light/cm32181.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
-> Michael Shych (4):
->   platform_data/mlxreg: support new watchdog type with longer timeout
->     period
->   platform/x86: mlx-platform: support new watchdog type with longer
->     timeout
->   watchdog: mlx-wdt: support new watchdog type with longer timeout
->     period
->   docs: watchdog: mlx-wdt: Add description of new watchdog type 3
->
->  Documentation/watchdog/mlx-wdt.rst   |  12 ++++
->  drivers/platform/x86/mlx-platform.c  | 106 ++++++++++++++++++++++++++++++
->  drivers/watchdog/mlx_wdt.c           |  75 +++++++++++++++++++++----
->  include/linux/platform_data/mlxreg.h |   5 +-
->  4 files changed, 186 insertions(+), 12 deletions(-)
->
-> --
-> 2.11.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
+index 5f4fb5674fa0..cc57190a24cb 100644
+--- a/drivers/iio/light/cm32181.c
++++ b/drivers/iio/light/cm32181.c
+@@ -294,8 +294,7 @@ static const struct iio_info cm32181_info =3D {
+ 	.attrs			=3D &cm32181_attribute_group,
+ };
+=20
+-static int cm32181_probe(struct i2c_client *client,
+-			const struct i2c_device_id *id)
++static int cm32181_probe(struct i2c_client *client)
+ {
+ 	struct cm32181_chip *cm32181;
+ 	struct iio_dev *indio_dev;
+@@ -316,7 +315,7 @@ static int cm32181_probe(struct i2c_client *client,
+ 	indio_dev->channels =3D cm32181_channels;
+ 	indio_dev->num_channels =3D ARRAY_SIZE(cm32181_channels);
+ 	indio_dev->info =3D &cm32181_info;
+-	indio_dev->name =3D id->name;
++	indio_dev->name =3D dev_name(&client->dev);
+ 	indio_dev->modes =3D INDIO_DIRECT_MODE;
+=20
+ 	ret =3D cm32181_reg_init(cm32181);
+@@ -338,13 +337,6 @@ static int cm32181_probe(struct i2c_client *client,
+ 	return 0;
+ }
+=20
+-static const struct i2c_device_id cm32181_id[] =3D {
+-	{ "cm32181", 0 },
+-	{ }
+-};
+-
+-MODULE_DEVICE_TABLE(i2c, cm32181_id);
+-
+ static const struct of_device_id cm32181_of_match[] =3D {
+ 	{ .compatible =3D "capella,cm32181" },
+ 	{ }
+@@ -356,8 +348,7 @@ static struct i2c_driver cm32181_driver =3D {
+ 		.name	=3D "cm32181",
+ 		.of_match_table =3D of_match_ptr(cm32181_of_match),
+ 	},
+-	.id_table       =3D cm32181_id,
+-	.probe		=3D cm32181_probe,
++	.probe_new	=3D cm32181_probe,
+ };
+=20
+ module_i2c_driver(cm32181_driver);
+--=20
+2.26.0
