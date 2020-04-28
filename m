@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 05/11] iio: light: cm32181: Clean up the probe function a bit
-Date: Tue, 28 Apr 2020 19:29:17 +0200
-Message-ID: <20200428172923.567806-5-hdegoede@redhat.com>
+Subject: [PATCH v3 06/11] iio: light: cm32181: Handle CM3218 ACPI devices with 2 I2C resources
+Date: Tue, 28 Apr 2020 19:29:18 +0200
+Message-ID: <20200428172923.567806-6-hdegoede@redhat.com>
 References: <20200428172923.567806-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,80 +12,93 @@ To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darre
 Cc: Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-3 small cleanups to cm32181_probe():
+Some ACPI systems list 2 I2C resources for the CM3218 sensor. On these
+systems the first I2cSerialBus ACPI-resource points to the SMBus Alert
+Response Address (ARA, 0x0c) and the second I2cSerialBus ACPI-resource
+points to the actual CM3218 sensor address:
 
-1. Do not log an error when we fail to allocate memory (as a general
-rule drivers do not log errors for this as the kernel will already
-have complained loudly that it could not alloc the mem).
+ Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+ {
+     Name (SBUF, ResourceTemplate ()
+     {
+         I2cSerialBusV2 (0x000C, ControllerInitiated, 0x00061A80,
+             AddressingMode7Bit, "\\_SB.I2C3",
+             0x00, ResourceConsumer, , Exclusive,
+             )
+         I2cSerialBusV2 (0x0048, ControllerInitiated, 0x00061A80,
+             AddressingMode7Bit, "\\_SB.I2C3",
+             0x00, ResourceConsumer, , Exclusive,
+             )
+         Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
+         {
+             0x00000033,
+         }
+     })
+     Return (SBUF) /* \_SB_.I2C3.ALSD._CRS.SBUF */
+ }
 
-2. Remove the i2c_set_clientdata() call, we never use i2c_get_clientdata(=
-)
-or dev_get_drvdata() anywhere.
+Detect this and take the following step to deal with it:
 
-3. Add a dev helper variable and use it in various places instead of
-&client->dev.
+1. When a SMBus Alert capable sensor has an Alert asserted, it will
+   not respond on its actual I2C address. Read a byte from the ARA
+   to clear any pending Alerts.
+
+2. Create a "dummy" client for the actual I2C address and
+   use that client to communicate with the sensor.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
 Changes in v3:
-- This is a new patch in v3 of this patch-set
+- Create and use a dummy client instead of relying on i2c-multi-instantia=
+te
+  to create 2 separate clients for the 2 I2C resources
+
+Changes in v2
+- s/i2c_client-s/I2C clients/ in added comment
 ---
- drivers/iio/light/cm32181.c | 22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
+ drivers/iio/light/cm32181.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
 diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
-index 065bc7a11f84..8fe49610fc26 100644
+index 8fe49610fc26..c23a5c3a86a3 100644
 --- a/drivers/iio/light/cm32181.c
 +++ b/drivers/iio/light/cm32181.c
-@@ -326,41 +326,35 @@ static const struct iio_info cm32181_info =3D {
+@@ -51,6 +51,8 @@
+ #define CM32181_CALIBSCALE_RESOLUTION	1000
+ #define MLUX_PER_LUX			1000
 =20
- static int cm32181_probe(struct i2c_client *client)
- {
-+	struct device *dev =3D &client->dev;
- 	struct cm32181_chip *cm32181;
- 	struct iio_dev *indio_dev;
- 	int ret;
-=20
--	indio_dev =3D devm_iio_device_alloc(&client->dev, sizeof(*cm32181));
--	if (!indio_dev) {
--		dev_err(&client->dev, "devm_iio_device_alloc failed\n");
-+	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*cm32181));
-+	if (!indio_dev)
++#define SMBUS_ALERT_RESPONSE_ADDRESS	0x0c
++
+ static const u8 cm32181_reg[CM32181_CONF_REG_NUM] =3D {
+ 	CM32181_REG_ADDR_CMD,
+ };
+@@ -335,6 +337,26 @@ static int cm32181_probe(struct i2c_client *client)
+ 	if (!indio_dev)
  		return -ENOMEM;
--	}
 =20
++	/*
++	 * Some ACPI systems list 2 I2C resources for the CM3218 sensor, the
++	 * SMBus Alert Response Address (ARA, 0x0c) and the actual I2C address.
++	 * Detect this and take the following step to deal with it:
++	 * 1. When a SMBus Alert capable sensor has an Alert asserted, it will
++	 *    not respond on its actual I2C address. Read a byte from the ARA
++	 *    to clear any pending Alerts.
++	 * 2. Create a "dummy" client for the actual I2C address and
++	 *    use that client to communicate with the sensor.
++	 */
++	if (ACPI_HANDLE(dev) && client->addr =3D=3D SMBUS_ALERT_RESPONSE_ADDRES=
+S) {
++		struct i2c_board_info board_info =3D { .type =3D "dummy" };
++
++		i2c_smbus_read_byte(client);
++
++		client =3D i2c_acpi_new_device(dev, 1, &board_info);
++		if (IS_ERR(client))
++			return PTR_ERR(client);
++	}
++
  	cm32181 =3D iio_priv(indio_dev);
--	i2c_set_clientdata(client, indio_dev);
  	cm32181->client =3D client;
-=20
- 	mutex_init(&cm32181->lock);
--	indio_dev->dev.parent =3D &client->dev;
-+	indio_dev->dev.parent =3D dev;
- 	indio_dev->channels =3D cm32181_channels;
- 	indio_dev->num_channels =3D ARRAY_SIZE(cm32181_channels);
- 	indio_dev->info =3D &cm32181_info;
--	indio_dev->name =3D dev_name(&client->dev);
-+	indio_dev->name =3D dev_name(dev);
- 	indio_dev->modes =3D INDIO_DIRECT_MODE;
-=20
- 	ret =3D cm32181_reg_init(cm32181);
- 	if (ret) {
--		dev_err(&client->dev,
--			"%s: register init failed\n",
--			__func__);
-+		dev_err(dev, "%s: register init failed\n", __func__);
- 		return ret;
- 	}
-=20
--	ret =3D devm_iio_device_register(&client->dev, indio_dev);
-+	ret =3D devm_iio_device_register(dev, indio_dev);
- 	if (ret) {
--		dev_err(&client->dev,
--			"%s: regist device failed\n",
--			__func__);
-+		dev_err(dev, "%s: regist device failed\n", __func__);
- 		return ret;
- 	}
 =20
 --=20
 2.26.0
