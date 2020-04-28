@@ -1,49 +1,115 @@
-From: civic9 <civic9-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] thinkpad_acpi: Add support for dual
- fan control on select models
-Date: Tue, 28 Apr 2020 23:18:24 +0200
-Message-ID: <CAM_y6qhV6r9BVE6Uibn=xpDZRYuhZDBBgfHT8fMECNS1DyaQwQ@mail.gmail.com>
-References: <20200423165457.54388-1-larsh@apache.org>
- <20200423215709.72993-1-larsh@apache.org>
- <11041815.WYjWQN8m1R@lenovodario>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] platform/x86: intel_pmc_core: avoid unused-function warnings
+Date: Tue, 28 Apr 2020 23:36:38 +0200
+Message-ID: <20200428213648.3629501-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <11041815.WYjWQN8m1R@lenovodario>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Dario Messina <nanodario-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: agk-mA9ux5SlULTR7s880joybQ@public.gmane.org, kjslag-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bastidoerner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, sassmann-llIHtaV5axyzQB+pC5nmwQ@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Lars <larsh-1oDqGaOF3Lkdnm+yROfE0A@public.gmane.org>, arc-e1Wt+8K1Ta8ZEwqihLH0+Q@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>, Vishwanath Somayaji <vishwanath.somayaji@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Gayatri Kammela <gayatri.kammela@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Chen Zhou <chenzhou10@huawei.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "David E. Box" <david.e.box@intel.com>, Tony Luck <tony.luck@intel.com>, Rajat Jain <rajatja@google.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nishad Kamdar <nishadkamdar@gmail.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-cG9uLiwgMjcga3dpIDIwMjAgbyAyMDo0MSBEYXJpbyBNZXNzaW5hIDxuYW5vZGFyaW9AZ21haWwu
-Y29tPiBuYXBpc2HFgihhKToKPgo+IE9uIFRodSwgQXByIDIzLCAyMDIwIGF0IDIzOjU3OjU5IENF
-U1QsIExhcnMgPGxhcnNoQGFwYWNoZS5vcmc+IHdyb3RlOgo+ID4gVGhpcyBhZGRzIGR1YWwgZmFu
-IGNvbnRyb2wgZm9yIHRoZSBmb2xsb3dpbmcgbW9kZWxzOgo+ID4gUDUwLCBQNTEsIFA1MiwgUDcw
-LCBQNzEsIFA3MiwgUDEgZ2VuMSwgWDFFIGdlbjEsIFAyIGdlbjIsIGFuZCBYMUUgZ2VuMi4KPiA+
-Cj4gPiBCb3RoIGZhbnMgYXJlIGNvbnRyb2xsZWQgdG9nZXRoZXIgYXMgaWYgdGhleSB3ZXJlIGEg
-c2luZ2xlIGZhbi4KPiA+IFsuLi5dCj4gPiBCYWNrZ3JvdW5kOgo+ID4gSSB0ZXN0ZWQgdGhlIEJJ
-T1MgZGVmYXVsdCBiZWhhdmlvciBvbiBteSBYMUUgZ2VuMiBhbmQgYm90aCBmYW5zIGFyZSBhbHdh
-eXMKPiA+IGNoYW5nZWQgdG9nZXRoZXIuIFNvIHJhdGhlciB0aGFuIGFkZGluZyBjb250cm9scyBm
-b3IgZWFjaCBmYW4sIHRoaXMgY29udHJvbHMKPiA+IGJvdGggZmFucyB0b2dldGhlciBhcyB0aGUg
-QklPUyB3b3VsZCBkby4KPiBIaSBMYXJzLCB3aHkgaGF2ZSB5b3UgY2hvc2VuIHRvIGNvbnRyb2wg
-bXVsdGlwbGUgZmFucyBpbiB0aGlzIHdheT8KPiBJIGtub3cgdGhhdCBCSU9TIGNvbnRyb2xzIGJv
-dGggZmFucyB0b2dldGhlciwgYnV0IHRoZSBFQyBoYXMgdGhlIGNhcGFiaWxpdGllcwo+IHRvIGNv
-bnRyb2wgYm90aCBmYW5zIGluZGVwZW5kZW50bHksIHNvIG1heWJlIGl0IGNhbiBiZSBjb252ZW5p
-ZW50IHRvIGV4cG9zZQo+IHRoaXMgZmVhdHVyZS4KCisxClByZXZpb3VzIHZlcnNpb24gb2YgdGhl
-IHBhdGNoIFsxXSBhbGxvd3MgdG8gY29udHJvbCBib3RoIGZhbnMgaW5kZXBlbmRlbnRseS4KSG93
-ZXZlciBzb21lIHNvZnR3YXJlIGxpa2UgdGhpbmtmYW4gaXMgbm90IHJlYWR5IHRvIGNvbnRyb2wg
-dHdvIGZhbnMuCkJ1dCBJIGFsc28gdGhpbmsgdGhpcyBmZWF0dXJlIHNob3VsZCBiZSBhdCBsZWFz
-dCBvcHRpb25hbGx5IGV4cG9zZWQuCgpbMV0gaHR0cHM6Ly9naXRodWIuY29tL2NpdmljOS90aGlu
-a3BhZF9hY3BpLjJuZGZhbi5wYXRjaC9ibG9iL21hc3Rlci90aGlua3BhZF9hY3BpLjJuZGZhbi5w
-YXRjaC90aGlua3BhZF9hY3BpLjJuZGZhbi5wYXRjaAoKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmlibS1hY3BpLWRldmVsIG1haWxpbmcgbGlzdAppYm0t
-YWNwaS1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQKaHR0cHM6Ly9saXN0cy5zb3VyY2Vmb3Jn
-ZS5uZXQvbGlzdHMvbGlzdGluZm8vaWJtLWFjcGktZGV2ZWwK
+When both CONFIG_DEBUG_FS and CONFIG_PM_SLEEP are disabled, the
+functions that got moved out of the #ifdef section now cause
+a warning:
+
+drivers/platform/x86/intel_pmc_core.c:654:13: error: 'pmc_core_lpm_display' defined but not used [-Werror=unused-function]
+  654 | static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
+      |             ^~~~~~~~~~~~~~~~~~~~
+drivers/platform/x86/intel_pmc_core.c:617:13: error: 'pmc_core_slps0_display' defined but not used [-Werror=unused-function]
+  617 | static void pmc_core_slps0_display(struct pmc_dev *pmcdev, struct device *dev,
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+
+Rather than add even more #ifdefs here, remove them entirely and
+let the compiler work it out, it can actually get rid of all the
+debugfs calls without problems as long as the struct member is
+there.
+
+The two PM functions just need a __maybe_unused annotations to avoid
+another warning instead of the #ifdef.
+
+Fixes: aae43c2bcdc1 ("platform/x86: intel_pmc_core: Relocate pmc_core_*_display() to outside of CONFIG_DEBUG_FS")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/platform/x86/intel_pmc_core.c | 18 ++----------------
+ drivers/platform/x86/intel_pmc_core.h |  2 --
+ 2 files changed, 2 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index a130859ec49e..7c8bdab078cf 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -692,7 +692,6 @@ static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
+ 	kfree(lpm_regs);
+ }
+ 
+-#if IS_ENABLED(CONFIG_DEBUG_FS)
+ static bool slps0_dbg_latch;
+ 
+ static inline u8 pmc_core_reg_read_byte(struct pmc_dev *pmcdev, int offset)
+@@ -1133,15 +1132,6 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+ 				    &pmc_core_substate_l_sts_regs_fops);
+ 	}
+ }
+-#else
+-static inline void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+-{
+-}
+-
+-static inline void pmc_core_dbgfs_unregister(struct pmc_dev *pmcdev)
+-{
+-}
+-#endif /* CONFIG_DEBUG_FS */
+ 
+ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		&spt_reg_map),
+@@ -1260,13 +1250,11 @@ static int pmc_core_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM_SLEEP
+-
+ static bool warn_on_s0ix_failures;
+ module_param(warn_on_s0ix_failures, bool, 0644);
+ MODULE_PARM_DESC(warn_on_s0ix_failures, "Check and warn for S0ix failures");
+ 
+-static int pmc_core_suspend(struct device *dev)
++static __maybe_unused int pmc_core_suspend(struct device *dev)
+ {
+ 	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+ 
+@@ -1318,7 +1306,7 @@ static inline bool pmc_core_is_s0ix_failed(struct pmc_dev *pmcdev)
+ 	return false;
+ }
+ 
+-static int pmc_core_resume(struct device *dev)
++static __maybe_unused int pmc_core_resume(struct device *dev)
+ {
+ 	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+ 	const struct pmc_bit_map **maps = pmcdev->map->lpm_sts;
+@@ -1348,8 +1336,6 @@ static int pmc_core_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-#endif
+-
+ static const struct dev_pm_ops pmc_core_pm_ops = {
+ 	SET_LATE_SYSTEM_SLEEP_PM_OPS(pmc_core_suspend, pmc_core_resume)
+ };
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index 0d50b2402abe..5eae55d80226 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -282,9 +282,7 @@ struct pmc_dev {
+ 	u32 base_addr;
+ 	void __iomem *regbase;
+ 	const struct pmc_reg_map *map;
+-#if IS_ENABLED(CONFIG_DEBUG_FS)
+ 	struct dentry *dbgfs_dir;
+-#endif /* CONFIG_DEBUG_FS */
+ 	int pmc_xram_read_bit;
+ 	struct mutex lock; /* generic mutex lock for PMC Core */
+ 
+-- 
+2.26.0
