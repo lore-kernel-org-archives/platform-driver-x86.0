@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v3 06/11] iio: light: cm32181: Handle CM3218 ACPI devices with 2 I2C resources
-Date: Tue, 28 Apr 2020 19:29:18 +0200
-Message-ID: <20200428172923.567806-6-hdegoede@redhat.com>
+Subject: [PATCH v3 07/11] iio: light: cm32181: Change reg_init to use a bitmap of which registers to init
+Date: Tue, 28 Apr 2020 19:29:19 +0200
+Message-ID: <20200428172923.567806-7-hdegoede@redhat.com>
 References: <20200428172923.567806-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -9,96 +9,72 @@ Return-path: <linux-acpi-owner@vger.kernel.org>
 In-Reply-To: <20200428172923.567806-1-hdegoede@redhat.com>
 Sender: linux-acpi-owner@vger.kernel.org
 To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jonathan Cameron <jic23@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some ACPI systems list 2 I2C resources for the CM3218 sensor. On these
-systems the first I2cSerialBus ACPI-resource points to the SMBus Alert
-Response Address (ARA, 0x0c) and the second I2cSerialBus ACPI-resource
-points to the actual CM3218 sensor address:
+This is a preparation patch for reading some ACPI tables which give
+init values for multiple registers.
 
- Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
- {
-     Name (SBUF, ResourceTemplate ()
-     {
-         I2cSerialBusV2 (0x000C, ControllerInitiated, 0x00061A80,
-             AddressingMode7Bit, "\\_SB.I2C3",
-             0x00, ResourceConsumer, , Exclusive,
-             )
-         I2cSerialBusV2 (0x0048, ControllerInitiated, 0x00061A80,
-             AddressingMode7Bit, "\\_SB.I2C3",
-             0x00, ResourceConsumer, , Exclusive,
-             )
-         Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
-         {
-             0x00000033,
-         }
-     })
-     Return (SBUF) /* \_SB_.I2C3.ALSD._CRS.SBUF */
- }
-
-Detect this and take the following step to deal with it:
-
-1. When a SMBus Alert capable sensor has an Alert asserted, it will
-   not respond on its actual I2C address. Read a byte from the ARA
-   to clear any pending Alerts.
-
-2. Create a "dummy" client for the actual I2C address and
-   use that client to communicate with the sensor.
-
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v3:
-- Create and use a dummy client instead of relying on i2c-multi-instantia=
-te
-  to create 2 separate clients for the 2 I2C resources
-
-Changes in v2
-- s/i2c_client-s/I2C clients/ in added comment
+Changes in v2:
+- Use unsigned long for init_regs_bitmap
+- Use for_each_set_bit()
 ---
- drivers/iio/light/cm32181.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/iio/light/cm32181.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
-index 8fe49610fc26..c23a5c3a86a3 100644
+index c23a5c3a86a3..bcea669d20cb 100644
 --- a/drivers/iio/light/cm32181.c
 +++ b/drivers/iio/light/cm32181.c
-@@ -51,6 +51,8 @@
- #define CM32181_CALIBSCALE_RESOLUTION	1000
- #define MLUX_PER_LUX			1000
+@@ -26,7 +26,7 @@
+ #define CM32181_REG_ADDR_ID		0x07
 =20
-+#define SMBUS_ALERT_RESPONSE_ADDRESS	0x0c
-+
- static const u8 cm32181_reg[CM32181_CONF_REG_NUM] =3D {
- 	CM32181_REG_ADDR_CMD,
- };
-@@ -335,6 +337,26 @@ static int cm32181_probe(struct i2c_client *client)
- 	if (!indio_dev)
- 		return -ENOMEM;
+ /* Number of Configurable Registers */
+-#define CM32181_CONF_REG_NUM		0x01
++#define CM32181_CONF_REG_NUM		4
 =20
-+	/*
-+	 * Some ACPI systems list 2 I2C resources for the CM3218 sensor, the
-+	 * SMBus Alert Response Address (ARA, 0x0c) and the actual I2C address.
-+	 * Detect this and take the following step to deal with it:
-+	 * 1. When a SMBus Alert capable sensor has an Alert asserted, it will
-+	 *    not respond on its actual I2C address. Read a byte from the ARA
-+	 *    to clear any pending Alerts.
-+	 * 2. Create a "dummy" client for the actual I2C address and
-+	 *    use that client to communicate with the sensor.
-+	 */
-+	if (ACPI_HANDLE(dev) && client->addr =3D=3D SMBUS_ALERT_RESPONSE_ADDRES=
-S) {
-+		struct i2c_board_info board_info =3D { .type =3D "dummy" };
-+
-+		i2c_smbus_read_byte(client);
-+
-+		client =3D i2c_acpi_new_device(dev, 1, &board_info);
-+		if (IS_ERR(client))
-+			return PTR_ERR(client);
-+	}
-+
- 	cm32181 =3D iio_priv(indio_dev);
- 	cm32181->client =3D client;
+ /* CMD register */
+ #define CM32181_CMD_ALS_DISABLE		BIT(0)
+@@ -53,10 +53,6 @@
 =20
+ #define SMBUS_ALERT_RESPONSE_ADDRESS	0x0c
+=20
+-static const u8 cm32181_reg[CM32181_CONF_REG_NUM] =3D {
+-	CM32181_REG_ADDR_CMD,
+-};
+-
+ /* CM3218 Family */
+ static const int cm3218_als_it_bits[] =3D { 0, 1, 2, 3 };
+ static const int cm3218_als_it_values[] =3D { 100000, 200000, 400000, 80=
+0000 };
+@@ -71,6 +67,7 @@ struct cm32181_chip {
+ 	struct i2c_client *client;
+ 	struct mutex lock;
+ 	u16 conf_regs[CM32181_CONF_REG_NUM];
++	unsigned long init_regs_bitmap;
+ 	int calibscale;
+ 	int num_als_it;
+ 	const int *als_it_bits;
+@@ -115,12 +112,13 @@ static int cm32181_reg_init(struct cm32181_chip *cm=
+32181)
+ 	/* Default Values */
+ 	cm32181->conf_regs[CM32181_REG_ADDR_CMD] =3D
+ 			CM32181_CMD_ALS_IT_DEFAULT | CM32181_CMD_ALS_SM_DEFAULT;
++	cm32181->init_regs_bitmap =3D BIT(CM32181_REG_ADDR_CMD);
+ 	cm32181->calibscale =3D CM32181_CALIBSCALE_DEFAULT;
+=20
+ 	/* Initialize registers*/
+-	for (i =3D 0; i < CM32181_CONF_REG_NUM; i++) {
+-		ret =3D i2c_smbus_write_word_data(client, cm32181_reg[i],
+-			cm32181->conf_regs[i]);
++	for_each_set_bit(i, &cm32181->init_regs_bitmap, CM32181_CONF_REG_NUM) {
++		ret =3D i2c_smbus_write_word_data(client, i,
++						cm32181->conf_regs[i]);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
 --=20
 2.26.0
