@@ -1,50 +1,64 @@
-From: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: RE: [PATCH v3 0/4] support watchdog with longer timeout period
-Date: Sun, 3 May 2020 16:13:54 +0000
-Message-ID: <AM6PR05MB6168FA74FF9554A3E33601D1D9A90@AM6PR05MB6168.eurprd05.prod.outlook.com>
-References: <20200503053424.31943-1-michaelsh@mellanox.com>
- <CAHp75Vff-xe06L1xOc9jMii+kEPJZzmiPBFPVMkeD46v0QW+hw@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 10/11] iio: light: cm32181: Add support for parsing
+ CPM0 and CPM1 ACPI tables
+Date: Sun, 3 May 2020 19:25:20 +0300
+Message-ID: <CAHp75Vdt+shL3yXHfct17DUHdRBBrCzC4vBjQL8YHbimFefV7A@mail.gmail.com>
+References: <20200428172923.567806-1-hdegoede@redhat.com> <20200428172923.567806-10-hdegoede@redhat.com>
+ <20200503122237.4af34181@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75Vff-xe06L1xOc9jMii+kEPJZzmiPBFPVMkeD46v0QW+hw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20200503122237.4af34181@archlinux>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio <linux-iio@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBTaGV2Y2hlbmtv
-IDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBTZW50OiBTdW5kYXksIE1heSAzLCAyMDIw
-IDc6MTEgUE0NCj4gVG86IE1pY2hhZWwgU2h5Y2ggPG1pY2hhZWxzaEBtZWxsYW5veC5jb20+DQo+
-IENjOiBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+OyBXaW0gVmFuIFNlYnJvZWNr
-IDx3aW1AbGludXgtDQo+IHdhdGNoZG9nLm9yZz47IEFuZHkgU2hldmNoZW5rbyA8YW5keUBpbmZy
-YWRlYWQub3JnPjsgRGFycmVuIEhhcnQNCj4gPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgbGludXgt
-d2F0Y2hkb2dAdmdlci5rZXJuZWwub3JnOyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3JtLWRy
-aXZlci14ODZAdmdlci5rZXJuZWwub3JnPjsgVmFkaW0gUGFzdGVybmFrDQo+IDx2YWRpbXBAbWVs
-bGFub3guY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDAvNF0gc3VwcG9ydCB3YXRjaGRv
-ZyB3aXRoIGxvbmdlciB0aW1lb3V0IHBlcmlvZA0KPiANCj4gT24gU3VuLCBNYXkgMywgMjAyMCBh
-dCA4OjM0IEFNIDxtaWNoYWVsc2hAbWVsbGFub3guY29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206
-IE1pY2hhZWwgU2h5Y2ggPG1pY2hhZWxzaEBtZWxsYW5veC5jb20+DQo+ID4NCj4gPiBUaGlzIHBh
-dGNoc2V0IGFkZHMgc3VwcG9ydCBvZiBleHRlbmRlZCBuZXcgd2F0Y2hkb2cgdHlwZSAzIG9mIE1l
-bGxhbm94DQo+ID4gRXRoZXJuZXQgYW5kIEluZmluaWJhbmQgc3dpdGNoIHN5c3RlbXMuDQo+ID4g
-VGhpcyB0eXBlIG9mIHdhdGNoZG9nIGNhbiBoYXZlIGEgdGltZW91dCBwZXJpb2QgbG9uZ2VyIHRo
-YW4gMjU1IG9yIDMyIHNlYy4NCj4gPiBhcyBpdCB3YXMgYmVmb3JlLg0KPiA+DQo+IA0KPiBJZiB5
-b3UgaWdub3JlIG15IHRhZ3MsIHdoeSBhcmUgeW91IGJvdGhlcmluZyBhYm91dCBjaGFuZ2VzIGF0
-IGFsbD8NCg0KU29ycnkgdGhhdCBJIG1pc3NlZCBpdC4NClNob3VsZCBJIHJlc2VuZCB0aGlzIHBh
-dGNoc2V0Pw0KSWYgeWVzLCBhcyBzdGlsbCB2MyBvciBuZXcgb25lIHY0Pw0KDQo+IA0KPiA+IE1p
-Y2hhZWwgU2h5Y2ggKDQpOg0KPiA+ICAgcGxhdGZvcm1fZGF0YS9tbHhyZWc6IHN1cHBvcnQgbmV3
-IHdhdGNoZG9nIHR5cGUgd2l0aCBsb25nZXIgdGltZW91dA0KPiA+ICAgICBwZXJpb2QNCj4gPiAg
-IHBsYXRmb3JtL3g4NjogbWx4LXBsYXRmb3JtOiBzdXBwb3J0IG5ldyB3YXRjaGRvZyB0eXBlIHdp
-dGggbG9uZ2VyDQo+ID4gICAgIHRpbWVvdXQNCj4gPiAgIHdhdGNoZG9nOiBtbHgtd2R0OiBzdXBw
-b3J0IG5ldyB3YXRjaGRvZyB0eXBlIHdpdGggbG9uZ2VyIHRpbWVvdXQNCj4gPiAgICAgcGVyaW9k
-DQo+ID4gICBkb2NzOiB3YXRjaGRvZzogbWx4LXdkdDogQWRkIGRlc2NyaXB0aW9uIG9mIG5ldyB3
-YXRjaGRvZyB0eXBlIDMNCj4gPg0KPiA+ICBEb2N1bWVudGF0aW9uL3dhdGNoZG9nL21seC13ZHQu
-cnN0ICAgfCAgMTAgKysrKw0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9tbHgtcGxhdGZvcm0u
-YyAgfCAxMDYNCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIGRyaXZlcnMv
-d2F0Y2hkb2cvbWx4X3dkdC5jICAgICAgICAgICB8ICA3MyArKysrKysrKysrKysrKysrKysrKy0t
-LS0NCj4gPiAgaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL21seHJlZy5oIHwgICA1ICstDQo+
-ID4gIDQgZmlsZXMgY2hhbmdlZCwgMTgyIGluc2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQ0K
-PiA+DQo+ID4gLS0NCj4gPiAyLjExLjANCj4gPg0KPiANCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBS
-ZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg==
+On Sun, May 3, 2020 at 2:22 PM Jonathan Cameron <jic23@kernel.org> wrote:
+> On Tue, 28 Apr 2020 19:29:22 +0200
+> Hans de Goede <hdegoede@redhat.com> wrote:
+
+...
+
+> > This was tested on the following models: Acer Switch 10 SW5-012 (CM32181)
+> > Asus T100TA (CM3218), Asus T100CHI (CM3218) and HP X2 10-n000nd (CM32181).
+>
+> I assume it's far too much to hope this CPM0 / CPM1 stuff is actually defined
+> in a spec anywhere?
+>
+> There are standard way of adding vendor specific data blobs to ACPI and this
+> isn't one of them (unless I'm missing something).  People need to beat
+> up vendors earlier about this stuff.
+>
+> Grumble over...
+>
+> Code looks fine to me, but I'd like an ACPI review ideally.
+
+ACPI didn't cover embedded world and has the following issues
+a) where it should be strict (like how many I2CSerialBus() resources
+can be given and for what type of devices, etc), it doesn't
+b) they need to provides better validation tools, but they didn't
+c) it's still windows oriented :-(
+
+Above is custom extension on how to add device properties (and note,
+we have now _DSD() and still we have some M$ way of thinking how to
+use them).
+
+Since the above approach is in the wild, I'm afraid we have not many
+possibilities here (each of them with own problems):
+1/ shout at vendors to use ACPI properly and simple don't by broken
+hardware (rather firmware)
+2/ try to support custom changes (may lead to several approaches for
+the same thing)
+3/ create a lot of board files (something in between 1/ and 2/)
+
+As a result:
+1/ is obviously a best one, but I think it's an utopia.
+2/ in practice we don't have many deviations (luckily OEMs are quite
+lazy to modify reference BIOSes and often reuse existing approaches)
+3/ may not work, because on cheap laptops the means of distinguishing
+them (like DMI strings) may also been broken.
+
+-- 
+With Best Regards,
+Andy Shevchenko
