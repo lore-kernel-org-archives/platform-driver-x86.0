@@ -1,49 +1,50 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] support watchdog with longer timeout period
-Date: Sun, 3 May 2020 19:10:40 +0300
-Message-ID: <CAHp75Vff-xe06L1xOc9jMii+kEPJZzmiPBFPVMkeD46v0QW+hw@mail.gmail.com>
+From: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH v3 0/4] support watchdog with longer timeout period
+Date: Sun, 3 May 2020 16:13:54 +0000
+Message-ID: <AM6PR05MB6168FA74FF9554A3E33601D1D9A90@AM6PR05MB6168.eurprd05.prod.outlook.com>
 References: <20200503053424.31943-1-michaelsh@mellanox.com>
+ <CAHp75Vff-xe06L1xOc9jMii+kEPJZzmiPBFPVMkeD46v0QW+hw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20200503053424.31943-1-michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CAHp75Vff-xe06L1xOc9jMii+kEPJZzmiPBFPVMkeD46v0QW+hw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, May 3, 2020 at 8:34 AM <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org> wrote:
->
-> From: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
->
-> This patchset adds support of extended new watchdog type 3 of Mellanox
-> Ethernet and Infiniband switch systems.
-> This type of watchdog can have a timeout period longer than 255 or 32 sec.
-> as it was before.
->
-
-If you ignore my tags, why are you bothering about changes at all?
-
-> Michael Shych (4):
->   platform_data/mlxreg: support new watchdog type with longer timeout
->     period
->   platform/x86: mlx-platform: support new watchdog type with longer
->     timeout
->   watchdog: mlx-wdt: support new watchdog type with longer timeout
->     period
->   docs: watchdog: mlx-wdt: Add description of new watchdog type 3
->
->  Documentation/watchdog/mlx-wdt.rst   |  10 ++++
->  drivers/platform/x86/mlx-platform.c  | 106 ++++++++++++++++++++++++++++++
->  drivers/watchdog/mlx_wdt.c           |  73 ++++++++++++++++++++----
->  include/linux/platform_data/mlxreg.h |   5 +-
->  4 files changed, 182 insertions(+), 12 deletions(-)
->
-> --
-> 2.11.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBTaGV2Y2hlbmtv
+IDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBTZW50OiBTdW5kYXksIE1heSAzLCAyMDIw
+IDc6MTEgUE0NCj4gVG86IE1pY2hhZWwgU2h5Y2ggPG1pY2hhZWxzaEBtZWxsYW5veC5jb20+DQo+
+IENjOiBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+OyBXaW0gVmFuIFNlYnJvZWNr
+IDx3aW1AbGludXgtDQo+IHdhdGNoZG9nLm9yZz47IEFuZHkgU2hldmNoZW5rbyA8YW5keUBpbmZy
+YWRlYWQub3JnPjsgRGFycmVuIEhhcnQNCj4gPGR2aGFydEBpbmZyYWRlYWQub3JnPjsgbGludXgt
+d2F0Y2hkb2dAdmdlci5rZXJuZWwub3JnOyBQbGF0Zm9ybSBEcml2ZXINCj4gPHBsYXRmb3JtLWRy
+aXZlci14ODZAdmdlci5rZXJuZWwub3JnPjsgVmFkaW0gUGFzdGVybmFrDQo+IDx2YWRpbXBAbWVs
+bGFub3guY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDAvNF0gc3VwcG9ydCB3YXRjaGRv
+ZyB3aXRoIGxvbmdlciB0aW1lb3V0IHBlcmlvZA0KPiANCj4gT24gU3VuLCBNYXkgMywgMjAyMCBh
+dCA4OjM0IEFNIDxtaWNoYWVsc2hAbWVsbGFub3guY29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206
+IE1pY2hhZWwgU2h5Y2ggPG1pY2hhZWxzaEBtZWxsYW5veC5jb20+DQo+ID4NCj4gPiBUaGlzIHBh
+dGNoc2V0IGFkZHMgc3VwcG9ydCBvZiBleHRlbmRlZCBuZXcgd2F0Y2hkb2cgdHlwZSAzIG9mIE1l
+bGxhbm94DQo+ID4gRXRoZXJuZXQgYW5kIEluZmluaWJhbmQgc3dpdGNoIHN5c3RlbXMuDQo+ID4g
+VGhpcyB0eXBlIG9mIHdhdGNoZG9nIGNhbiBoYXZlIGEgdGltZW91dCBwZXJpb2QgbG9uZ2VyIHRo
+YW4gMjU1IG9yIDMyIHNlYy4NCj4gPiBhcyBpdCB3YXMgYmVmb3JlLg0KPiA+DQo+IA0KPiBJZiB5
+b3UgaWdub3JlIG15IHRhZ3MsIHdoeSBhcmUgeW91IGJvdGhlcmluZyBhYm91dCBjaGFuZ2VzIGF0
+IGFsbD8NCg0KU29ycnkgdGhhdCBJIG1pc3NlZCBpdC4NClNob3VsZCBJIHJlc2VuZCB0aGlzIHBh
+dGNoc2V0Pw0KSWYgeWVzLCBhcyBzdGlsbCB2MyBvciBuZXcgb25lIHY0Pw0KDQo+IA0KPiA+IE1p
+Y2hhZWwgU2h5Y2ggKDQpOg0KPiA+ICAgcGxhdGZvcm1fZGF0YS9tbHhyZWc6IHN1cHBvcnQgbmV3
+IHdhdGNoZG9nIHR5cGUgd2l0aCBsb25nZXIgdGltZW91dA0KPiA+ICAgICBwZXJpb2QNCj4gPiAg
+IHBsYXRmb3JtL3g4NjogbWx4LXBsYXRmb3JtOiBzdXBwb3J0IG5ldyB3YXRjaGRvZyB0eXBlIHdp
+dGggbG9uZ2VyDQo+ID4gICAgIHRpbWVvdXQNCj4gPiAgIHdhdGNoZG9nOiBtbHgtd2R0OiBzdXBw
+b3J0IG5ldyB3YXRjaGRvZyB0eXBlIHdpdGggbG9uZ2VyIHRpbWVvdXQNCj4gPiAgICAgcGVyaW9k
+DQo+ID4gICBkb2NzOiB3YXRjaGRvZzogbWx4LXdkdDogQWRkIGRlc2NyaXB0aW9uIG9mIG5ldyB3
+YXRjaGRvZyB0eXBlIDMNCj4gPg0KPiA+ICBEb2N1bWVudGF0aW9uL3dhdGNoZG9nL21seC13ZHQu
+cnN0ICAgfCAgMTAgKysrKw0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9tbHgtcGxhdGZvcm0u
+YyAgfCAxMDYNCj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIGRyaXZlcnMv
+d2F0Y2hkb2cvbWx4X3dkdC5jICAgICAgICAgICB8ICA3MyArKysrKysrKysrKysrKysrKysrKy0t
+LS0NCj4gPiAgaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL21seHJlZy5oIHwgICA1ICstDQo+
+ID4gIDQgZmlsZXMgY2hhbmdlZCwgMTgyIGluc2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQ0K
+PiA+DQo+ID4gLS0NCj4gPiAyLjExLjANCj4gPg0KPiANCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBS
+ZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg==
