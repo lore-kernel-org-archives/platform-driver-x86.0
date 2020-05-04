@@ -1,59 +1,54 @@
-From: michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org
-Subject: [PATCH v4 4/4] docs: watchdog: mlx-wdt: Add description of new watchdog type 3
-Date: Mon,  4 May 2020 17:14:27 +0300
-Message-ID: <20200504141427.17685-5-michaelsh@mellanox.com>
-References: <20200504141427.17685-1-michaelsh@mellanox.com>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20200504141427.17685-1-michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 0/5] platform/x86: intel-vbtn: Fixes + rework to make it
+ work on more devices
+Date: Mon, 4 May 2020 15:38:58 +0000
+Message-ID: <e729ee1142a94fd394e0dbfb84e52a4b@AUSX13MPC101.AMER.DELL.COM>
+References: <20200502182951.114231-1-hdegoede@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200502182951.114231-1-hdegoede@redhat.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: hdegoede@redhat.com, dvhart@infradead.org, andy@infradead.org
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> -----Original Message-----
+> From: Hans de Goede <hdegoede@redhat.com>
+> Sent: Saturday, May 2, 2020 1:30 PM
+> To: Darren Hart; Andy Shevchenko; Limonciello, Mario
+> Cc: Hans de Goede; linux-acpi@vger.kernel.org; platform-driver-
+> x86@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH 0/5] platform/x86: intel-vbtn: Fixes + rework to make it =
+work
+> on more devices
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> Hi All,
+>=20
+> Here is a series of fixes, mostly aimed at fixing commit: de9647efeaa9
+> ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's"=
+)
+> causing the driver to not bind on some devices where it could and
+> should report SW_TABLET_MODE.
+>=20
+> The last commit makes the driver also work on some devices where it
+> previously would not work because they lack a VBDL method.
+>=20
+> Mario, can you test this on a Dell XPS 9360 (for which you wrote the
+> de9647efeaa9 commit) to ensure that this series does not cause a
+> regression there?
 
-Add documentation with details of new type of Mellanox watchdog driver.
+Unfortunately I can't double check that with WFH, I don't have access to th=
+is hardware.
 
-Signed-off-by: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
----
-v1-v2:
-Add explanation about device registers order
----
-v2-v3:
-Remove note about cpu_to_le16 and vice versa conversion
----
- Documentation/watchdog/mlx-wdt.rst | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> Also I have a question for you about using the DMI
+> chassis-type for this / a proposal for dealing with this differently
+> below the '---' of the commit msg of the 4th patch.
 
-diff --git a/Documentation/watchdog/mlx-wdt.rst b/Documentation/watchdog/mlx-wdt.rst
-index bf5bafac47f0..35e690dea9db 100644
---- a/Documentation/watchdog/mlx-wdt.rst
-+++ b/Documentation/watchdog/mlx-wdt.rst
-@@ -24,10 +24,19 @@ Type 2:
-   Maximum timeout is 255 sec.
-   Get time-left is supported.
- 
-+Type 3:
-+  Same as Type 2 with extended maximum timeout period.
-+  Maximum timeout is 65535 sec.
-+
- Type 1 HW watchdog implementation exist in old systems and
- all new systems have type 2 HW watchdog.
- Two types of HW implementation have also different register map.
- 
-+Type 3 HW watchdog implementation can exist on all Mellanox systems
-+with new programmer logic device.
-+It's differentiated by WD capability bit.
-+Old systems still have only one main watchdog.
-+
- Mellanox system can have 2 watchdogs: main and auxiliary.
- Main and auxiliary watchdog devices can be enabled together
- on the same system.
-@@ -54,3 +63,4 @@ The driver checks during initialization if the previous system reset
- was done by the watchdog. If yes, it makes a notification about this event.
- 
- Access to HW registers is performed through a generic regmap interface.
-+Programmable logic device registers have little-endian order.
--- 
-2.11.0
+
+OK will look.
