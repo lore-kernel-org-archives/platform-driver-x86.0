@@ -1,104 +1,88 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v4 06/11] iio: light: cm32181: Handle CM3218 ACPI devices with 2 I2C resources
-Date: Mon,  4 May 2020 14:55:46 +0200
-Message-ID: <20200504125551.434647-6-hdegoede@redhat.com>
+Subject: [PATCH v4 08/11] iio: light: cm32181: Use units of 1/100000th for calibscale and lux_per_bit
+Date: Mon,  4 May 2020 14:55:48 +0200
+Message-ID: <20200504125551.434647-8-hdegoede@redhat.com>
 References: <20200504125551.434647-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 In-Reply-To: <20200504125551.434647-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-acpi-owner@vger.kernel.org
 To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Jonathan Cameron <jic23@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Some ACPI systems list 2 I2C resources for the CM3218 sensor. On these
-systems the first I2cSerialBus ACPI-resource points to the SMBus Alert
-Response Address (ARA, 0x0c) and the second I2cSerialBus ACPI-resource
-points to the actual CM3218 sensor address:
+Use units of 1/100000th for calibscale and lux_per_bit. The similar
+cm3232 driver already uses 1/100000th as unit for calibscale.
 
- Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
- {
-     Name (SBUF, ResourceTemplate ()
-     {
-         I2cSerialBusV2 (0x000C, ControllerInitiated, 0x00061A80,
-             AddressingMode7Bit, "\\_SB.I2C3",
-             0x00, ResourceConsumer, , Exclusive,
-             )
-         I2cSerialBusV2 (0x0048, ControllerInitiated, 0x00061A80,
-             AddressingMode7Bit, "\\_SB.I2C3",
-             0x00, ResourceConsumer, , Exclusive,
-             )
-         Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive, ,, )
-         {
-             0x00000033,
-         }
-     })
-     Return (SBUF) /* \_SB_.I2C3.ALSD._CRS.SBUF */
- }
+This allows for higher-accuracy and makes it easier to add support
+for getting device-specific calibscale and lux_per_bit values from
+a device's ACPI tables, as the values in the ACPI tables also use
+1/100000th units.
 
-Detect this and take the following step to deal with it:
+This units change means that our intermediate values in cm32181_get_lux()
+may get quite big, change the type of the lux variable to a u64 to
+deal with this.
 
-1. When a SMBus Alert capable sensor has an Alert asserted, it will
-   not respond on its actual I2C address. Read a byte from the ARA
-   to clear any pending Alerts.
-
-2. Create a "dummy" client for the actual I2C address and
-   use that client to communicate with the sensor.
-
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v3:
-- Create and use a dummy client instead of relying on i2c-multi-instantia=
-te
-  to create 2 separate clients for the 2 I2C resources
-
-Changes in v2
-- s/i2c_client-s/I2C clients/ in added comment
----
- drivers/iio/light/cm32181.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/iio/light/cm32181.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
-index f6261798baa3..fd760e209dfa 100644
+index f5af986e1ed4..59c95e22ad00 100644
 --- a/drivers/iio/light/cm32181.c
 +++ b/drivers/iio/light/cm32181.c
-@@ -51,6 +51,8 @@
- #define CM32181_CALIBSCALE_RESOLUTION	1000
- #define MLUX_PER_LUX			1000
+@@ -45,11 +45,11 @@
+ #define CM32181_CMD_ALS_SM_MASK		(0x03 << CM32181_CMD_ALS_SM_SHIFT)
+ #define CM32181_CMD_ALS_SM_DEFAULT	(0x01 << CM32181_CMD_ALS_SM_SHIFT)
 =20
-+#define SMBUS_ALERT_RESPONSE_ADDRESS	0x0c
-+
- static const u8 cm32181_reg[CM32181_CONF_REG_NUM] =3D {
- 	CM32181_REG_ADDR_CMD,
- };
-@@ -351,6 +353,26 @@ static int cm32181_probe(struct i2c_client *client)
- 	if (!indio_dev)
- 		return -ENOMEM;
+-#define CM32181_MLUX_PER_BIT		5	/* ALS_SM=3D01 IT=3D800ms */
+-#define CM32181_MLUX_PER_BIT_BASE_IT	800000	/* Based on IT=3D800ms */
+-#define	CM32181_CALIBSCALE_DEFAULT	1000
+-#define CM32181_CALIBSCALE_RESOLUTION	1000
+-#define MLUX_PER_LUX			1000
++#define CM32181_LUX_PER_BIT		500	/* ALS_SM=3D01 IT=3D800ms */
++#define CM32181_LUX_PER_BIT_RESOLUTION	100000
++#define CM32181_LUX_PER_BIT_BASE_IT	800000	/* Based on IT=3D800ms */
++#define CM32181_CALIBSCALE_DEFAULT	100000
++#define CM32181_CALIBSCALE_RESOLUTION	100000
 =20
-+	/*
-+	 * Some ACPI systems list 2 I2C resources for the CM3218 sensor, the
-+	 * SMBus Alert Response Address (ARA, 0x0c) and the actual I2C address.
-+	 * Detect this and take the following step to deal with it:
-+	 * 1. When a SMBus Alert capable sensor has an Alert asserted, it will
-+	 *    not respond on its actual I2C address. Read a byte from the ARA
-+	 *    to clear any pending Alerts.
-+	 * 2. Create a "dummy" client for the actual I2C address and
-+	 *    use that client to communicate with the sensor.
-+	 */
-+	if (ACPI_HANDLE(dev) && client->addr =3D=3D SMBUS_ALERT_RESPONSE_ADDRES=
-S) {
-+		struct i2c_board_info board_info =3D { .type =3D "dummy" };
-+
-+		i2c_smbus_read_byte(client);
-+
-+		client =3D i2c_acpi_new_device(dev, 1, &board_info);
-+		if (IS_ERR(client))
-+			return PTR_ERR(client);
-+	}
-+
- 	cm32181 =3D iio_priv(indio_dev);
- 	cm32181->client =3D client;
+ #define SMBUS_ALERT_RESPONSE_ADDRESS	0x0c
 =20
+@@ -219,15 +219,15 @@ static int cm32181_get_lux(struct cm32181_chip *cm3=
+2181)
+ 	struct i2c_client *client =3D cm32181->client;
+ 	int ret;
+ 	int als_it;
+-	unsigned long lux;
++	u64 lux;
+=20
+ 	ret =3D cm32181_read_als_it(cm32181, &als_it);
+ 	if (ret < 0)
+ 		return -EINVAL;
+=20
+-	lux =3D CM32181_MLUX_PER_BIT;
+-	lux *=3D CM32181_MLUX_PER_BIT_BASE_IT;
+-	lux /=3D als_it;
++	lux =3D CM32181_LUX_PER_BIT;
++	lux *=3D CM32181_LUX_PER_BIT_BASE_IT;
++	lux =3D div_u64(lux, als_it);
+=20
+ 	ret =3D i2c_smbus_read_word_data(client, CM32181_REG_ADDR_ALS);
+ 	if (ret < 0)
+@@ -235,8 +235,8 @@ static int cm32181_get_lux(struct cm32181_chip *cm321=
+81)
+=20
+ 	lux *=3D ret;
+ 	lux *=3D cm32181->calibscale;
+-	lux /=3D CM32181_CALIBSCALE_RESOLUTION;
+-	lux /=3D MLUX_PER_LUX;
++	lux =3D div_u64(lux, CM32181_CALIBSCALE_RESOLUTION);
++	lux =3D div_u64(lux, CM32181_LUX_PER_BIT_RESOLUTION);
+=20
+ 	if (lux > 0xFFFF)
+ 		lux =3D 0xFFFF;
 --=20
 2.26.0
