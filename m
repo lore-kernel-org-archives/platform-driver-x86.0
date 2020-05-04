@@ -1,231 +1,200 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v3 10/11] iio: light: cm32181: Add support for parsing
- CPM0 and CPM1 ACPI tables
-Date: Mon, 4 May 2020 11:57:30 +0200
-Message-ID: <d72cda48-79cd-8f73-066e-e5ef7a2e9ee1@redhat.com>
+From: Jonathan Cameron <Jonathan.Cameron-aYUidmrrA3LQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 04/11] iio: light: cm32181: Add support for the
+ CM3218
+Date: Mon, 4 May 2020 11:23:42 +0100
+Message-ID: <20200504112342.00001cac@Huawei.com>
 References: <20200428172923.567806-1-hdegoede@redhat.com>
- <20200428172923.567806-10-hdegoede@redhat.com>
- <20200503122237.4af34181@archlinux>
+        <20200428172923.567806-4-hdegoede@redhat.com>
+        <20200503115906.6fb86b49@archlinux>
+        <3eae2042-209e-5944-b90e-f747da820ac9@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200503122237.4af34181@archlinux>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3eae2042-209e-5944-b90e-f747da820ac9-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+On Mon, 4 May 2020 11:49:59 +0200
+Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
 
-On 5/3/20 1:22 PM, Jonathan Cameron wrote:
-> On Tue, 28 Apr 2020 19:29:22 +0200
-> Hans de Goede <hdegoede@redhat.com> wrote:
+> Hi,
 > 
->> On ACPI based systems the CPLM3218 ACPI device node describing the
->> CM3218[1] sensor typically will have some extra tables with register
->> init values for initializing the sensor and calibration info.
->>
->> This is based on a newer version of cm32181.c, with a copyright of:
->>
->>   * Copyright (C) 2014 Capella Microsystems Inc.
->>   * Author: Kevin Tsai <ktsai@capellamicro.com>
->>   *
->>   * This program is free software; you can redistribute it and/or modify it
->>   * under the terms of the GNU General Public License version 2, as published
->>   * by the Free Software Foundation.
->>
->> Which is floating around on the net in various places, but the changes
->> from this newer version never made it upstream.
->>
->> This was tested on the following models: Acer Switch 10 SW5-012 (CM32181)
->> Asus T100TA (CM3218), Asus T100CHI (CM3218) and HP X2 10-n000nd (CM32181).
+> On 5/3/20 12:59 PM, Jonathan Cameron wrote:
+> > On Tue, 28 Apr 2020 19:29:16 +0200
+> > Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> >   
+> >> Add support for the CM3218 which is an older version of the
+> >> CM32181.
+> >>
+> >> This is based on a newer version of cm32181.c, with a copyright of:
+> >>
+> >>   * Copyright (C) 2014 Capella Microsystems Inc.
+> >>   * Author: Kevin Tsai <ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org>
+> >>   *
+> >>   * This program is free software; you can redistribute it and/or modify it
+> >>   * under the terms of the GNU General Public License version 2, as published
+> >>   * by the Free Software Foundation.
+> >>
+> >> Which is floating around on the net in various places, but the changes
+> >> from this newer version never made it upstream.
+> >>
+> >> This was tested on an Asus T100TA and an Asus T100CHI, which both come
+> >> with the CM3218 variant of the light sensor.
+> >>
+> >> Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>  
+> > 
+> > The need to also store the name for the different sensors makes
+> > the case for picking between 'chip_info' structures in here stronger.
+> > So I'd do that instead of setting multiple elements in your
+> > switch statement... (See inline)
+> >   
+> >> ---
+> >>   drivers/iio/light/cm32181.c | 48 +++++++++++++++++++++++++++----------
+> >>   1 file changed, 36 insertions(+), 12 deletions(-)
+> >>
+> >> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
+> >> index 6fc0a753c499..065bc7a11f84 100644
+> >> --- a/drivers/iio/light/cm32181.c
+> >> +++ b/drivers/iio/light/cm32181.c
+> >> @@ -55,15 +55,24 @@ static const u8 cm32181_reg[CM32181_CONF_REG_NUM] = {
+> >>   	CM32181_REG_ADDR_CMD,
+> >>   };
+> >>   
+> >> -static const int als_it_bits[] = {12, 8, 0, 1, 2, 3};
+> >> -static const int als_it_value[] = {25000, 50000, 100000, 200000, 400000,
+> >> -	800000};
+> >> +/* CM3218 Family */
+> >> +static const int cm3218_als_it_bits[] = { 0, 1, 2, 3 };
+> >> +static const int cm3218_als_it_values[] = { 100000, 200000, 400000, 800000 };
+> >> +
+> >> +/* CM32181 Family */
+> >> +static const int cm32181_als_it_bits[] = { 12, 8, 0, 1, 2, 3 };
+> >> +static const int cm32181_als_it_values[] = {
+> >> +	25000, 50000, 100000, 200000, 400000, 800000
+> >> +};
+> >>   
+> >>   struct cm32181_chip {
+> >>   	struct i2c_client *client;
+> >>   	struct mutex lock;
+> >>   	u16 conf_regs[CM32181_CONF_REG_NUM];
+> >>   	int calibscale;
+> >> +	int num_als_it;
+> >> +	const int *als_it_bits;
+> >> +	const int *als_it_values;  
+> > These are constant for each type of chip and come as a set.
+> > Better to just have a cm32181_chip_info structure with all 3 in it
+> > (and the name as mentioned earlier).  That way your switch below
+> > just becomes a matter of setting a single pointer for each case.  
 > 
-> I assume it's far too much to hope this CPM0 / CPM1 stuff is actually defined
-> in a spec anywhere?
+> Ok I will add a chip_info structure for v4 off the patch-set.
 > 
-> There are standard way of adding vendor specific data blobs to ACPI and this
-> isn't one of them (unless I'm missing something).  People need to beat
-> up vendors earlier about this stuff.
+> 
+> >   
+> >>   };
+> >>   
+> >>   /**
+> >> @@ -85,8 +94,21 @@ static int cm32181_reg_init(struct cm32181_chip *cm32181)
+> >>   		return ret;
+> >>   
+> >>   	/* check device ID */
+> >> -	if ((ret & 0xFF) != 0x81)
+> >> +	switch (ret & 0xFF) {
+> >> +	case 0x18: /* CM3218 */  
+> > 
+> > I'd ideally like to see a sanity check that we have the part expected.
+> > So the compatible matches what we actually get.  
+> 
+> Erm, so far I've only seen the CM3218 on X86 + ACPI devices which
+> use an ACPI id of CPLM3218 for both sensor models, so at least
+> on ACPI there is nothing to check.
 
-To be fair, most devices with these sensors are quite old, the T100TA
-was released in 2013. I have adding support for these on my todo list
-for quite some time now (years really), but I never got around to it until
-now.
+Groan.  Never mind then.
 
-Surprisingly enough, the recent released Chuwi Hi 13 device is also using
-a CM32181 sensor though, so even though these are old they are still
-being used.
+J 
 
-Anyways what I'm trying to say is that the CPM0 / CPM1 objects predate
-specs for doing this in a more standardized ways by many years.
-
-Also the specs to do this in a standardized way are mostly being driven
-from the ARM side of things and x86 hardware/firmware developers are
-used to just doing there own things for decades now, so I would not
-expect them to pick this up anytime soon, sorry.
-
-Regards,
-
-Hans
-
-
-
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v2:
->> - Factor out the parsing into a separate helper function
->> ---
->>   drivers/iio/light/cm32181.c | 101 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 101 insertions(+)
->>
->> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
->> index cae2264e4336..d8b128286527 100644
->> --- a/drivers/iio/light/cm32181.c
->> +++ b/drivers/iio/light/cm32181.c
->> @@ -4,6 +4,7 @@
->>    * Author: Kevin Tsai <ktsai@capellamicro.com>
->>    */
->>   
->> +#include <linux/acpi.h>
->>   #include <linux/delay.h>
->>   #include <linux/err.h>
->>   #include <linux/i2c.h>
->> @@ -53,6 +54,15 @@
->>   
->>   #define SMBUS_ALERT_RESPONSE_ADDRESS	0x0c
->>   
->> +/* CPM0 Index 0: device-id (3218 or 32181), 1: Unknown, 2: init_regs_bitmap */
->> +#define CPM0_REGS_BITMAP		2
->> +#define CPM0_HEADER_SIZE		3
->> +
->> +/* CPM1 Index 0: lux_per_bit, 1: calibscale, 2: resolution (100000) */
->> +#define CPM1_LUX_PER_BIT		0
->> +#define CPM1_CALIBSCALE			1
->> +#define CPM1_SIZE			3
->> +
->>   /* CM3218 Family */
->>   static const int cm3218_als_it_bits[] = { 0, 1, 2, 3 };
->>   static const int cm3218_als_it_values[] = { 100000, 200000, 400000, 800000 };
->> @@ -65,6 +75,7 @@ static const int cm32181_als_it_values[] = {
->>   
->>   struct cm32181_chip {
->>   	struct i2c_client *client;
->> +	struct device *dev;
->>   	struct mutex lock;
->>   	u16 conf_regs[CM32181_CONF_REG_NUM];
->>   	unsigned long init_regs_bitmap;
->> @@ -76,6 +87,92 @@ struct cm32181_chip {
->>   	const int *als_it_values;
->>   };
->>   
->> +static int cm32181_read_als_it(struct cm32181_chip *cm32181, int *val2);
->> +
->> +#ifdef CONFIG_ACPI
->> +/**
->> + * cm32181_acpi_get_cpm() - Get CPM object from ACPI
->> + * @client	pointer of struct i2c_client.
->> + * @obj_name	pointer of ACPI object name.
->> + * @count	maximum size of return array.
->> + * @vals	pointer of array for return elements.
->> + *
->> + * Convert ACPI CPM table to array.
->> + *
->> + * Return: -ENODEV for fail.  Otherwise is number of elements.
->> + */
->> +static int cm32181_acpi_get_cpm(struct device *dev, char *obj_name,
->> +				u64 *values, int count)
->> +{
->> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
->> +	union acpi_object *cpm, *elem;
->> +	acpi_handle handle;
->> +	acpi_status status;
->> +	int i;
->> +
->> +	handle = ACPI_HANDLE(dev);
->> +	if (!handle)
->> +		return -ENODEV;
->> +
->> +	status = acpi_evaluate_object(handle, obj_name, NULL, &buffer);
->> +	if (ACPI_FAILURE(status)) {
->> +		dev_err(dev, "object %s not found\n", obj_name);
->> +		return -ENODEV;
->> +	}
->> +
->> +	cpm = buffer.pointer;
->> +	if (cpm->package.count > count)
->> +		dev_warn(dev, "%s table contains %d values, only using first %d values\n",
->> +			 obj_name, cpm->package.count, count);
->> +
->> +	count = min_t(int, cpm->package.count, count);
->> +	for (i = 0; i < count; i++) {
->> +		elem = &(cpm->package.elements[i]);
->> +		values[i] = elem->integer.value;
->> +	}
->> +
->> +	kfree(buffer.pointer);
->> +
->> +	return count;
->> +}
->> +
->> +static void cm32181_acpi_parse_cpm_tables(struct cm32181_chip *cm32181)
->> +{
->> +	u64 vals[CPM0_HEADER_SIZE + CM32181_CONF_REG_NUM];
->> +	struct device *dev = cm32181->dev;
->> +	int i, count;
->> +
->> +	count = cm32181_acpi_get_cpm(dev, "CPM0", vals, ARRAY_SIZE(vals));
->> +	if (count <= CPM0_HEADER_SIZE)
->> +		return;
->> +
->> +	count -= CPM0_HEADER_SIZE;
->> +
->> +	cm32181->init_regs_bitmap = vals[CPM0_REGS_BITMAP];
->> +	cm32181->init_regs_bitmap &= GENMASK(count - 1, 0);
->> +	for_each_set_bit(i, &cm32181->init_regs_bitmap, count)
->> +		cm32181->conf_regs[i] =	vals[CPM0_HEADER_SIZE + i];
->> +
->> +	count = cm32181_acpi_get_cpm(dev, "CPM1", vals, ARRAY_SIZE(vals));
->> +	if (count != CPM1_SIZE)
->> +		return;
->> +
->> +	cm32181->lux_per_bit = vals[CPM1_LUX_PER_BIT];
->> +
->> +	/* Check for uncalibrated devices */
->> +	if (vals[CPM1_CALIBSCALE] == CM32181_CALIBSCALE_DEFAULT)
->> +		return;
->> +
->> +	cm32181->calibscale = vals[CPM1_CALIBSCALE];
->> +	/* CPM1 lux_per_bit is for the current it value */
->> +	cm32181_read_als_it(cm32181, &cm32181->lux_per_bit_base_it);
->> +}
->> +#else
->> +static void cm32181_acpi_parse_cpm_tables(struct cm32181_chip *cm32181)
->> +{
->> +}
->> +#endif /* CONFIG_ACPI */
->> +
->>   /**
->>    * cm32181_reg_init() - Initialize CM32181 registers
->>    * @cm32181:	pointer of struct cm32181.
->> @@ -119,6 +216,9 @@ static int cm32181_reg_init(struct cm32181_chip *cm32181)
->>   	cm32181->lux_per_bit = CM32181_LUX_PER_BIT;
->>   	cm32181->lux_per_bit_base_it = CM32181_LUX_PER_BIT_BASE_IT;
->>   
->> +	if (ACPI_HANDLE(cm32181->dev))
->> +		cm32181_acpi_parse_cpm_tables(cm32181);
->> +
->>   	/* Initialize registers*/
->>   	for_each_set_bit(i, &cm32181->init_regs_bitmap, CM32181_CONF_REG_NUM) {
->>   		ret = i2c_smbus_write_word_data(client, i,
->> @@ -361,6 +461,7 @@ static int cm32181_probe(struct i2c_client *client)
->>   
->>   	cm32181 = iio_priv(indio_dev);
->>   	cm32181->client = client;
->> +	cm32181->dev = dev;
->>   
->>   	mutex_init(&cm32181->lock);
->>   	indio_dev->dev.parent = dev;
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> > 
+> > If it doesn't but the part is still one we support print a warning.
+> >   
+> >> +		cm32181->num_als_it = ARRAY_SIZE(cm3218_als_it_bits);
+> >> +		cm32181->als_it_bits = cm3218_als_it_bits;
+> >> +		cm32181->als_it_values = cm3218_als_it_values;
+> >> +		break;
+> >> +	case 0x81: /* CM32181 */
+> >> +	case 0x82: /* CM32182, fully compat. with CM32181 */
+> >> +		cm32181->num_als_it = ARRAY_SIZE(cm32181_als_it_bits);
+> >> +		cm32181->als_it_bits = cm32181_als_it_bits;
+> >> +		cm32181->als_it_values = cm32181_als_it_values;
+> >> +		break;
+> >> +	default:
+> >>   		return -ENODEV;
+> >> +	}
+> >>   
+> >>   	/* Default Values */
+> >>   	cm32181->conf_regs[CM32181_REG_ADDR_CMD] =
+> >> @@ -121,9 +143,9 @@ static int cm32181_read_als_it(struct cm32181_chip *cm32181, int *val2)
+> >>   	als_it = cm32181->conf_regs[CM32181_REG_ADDR_CMD];
+> >>   	als_it &= CM32181_CMD_ALS_IT_MASK;
+> >>   	als_it >>= CM32181_CMD_ALS_IT_SHIFT;
+> >> -	for (i = 0; i < ARRAY_SIZE(als_it_bits); i++) {
+> >> -		if (als_it == als_it_bits[i]) {
+> >> -			*val2 = als_it_value[i];
+> >> +	for (i = 0; i < cm32181->num_als_it; i++) {
+> >> +		if (als_it == cm32181->als_it_bits[i]) {
+> >> +			*val2 = cm32181->als_it_values[i];
+> >>   			return IIO_VAL_INT_PLUS_MICRO;
+> >>   		}
+> >>   	}
+> >> @@ -146,14 +168,14 @@ static int cm32181_write_als_it(struct cm32181_chip *cm32181, int val)
+> >>   	u16 als_it;
+> >>   	int ret, i, n;
+> >>   
+> >> -	n = ARRAY_SIZE(als_it_value);
+> >> +	n = cm32181->num_als_it;
+> >>   	for (i = 0; i < n; i++)
+> >> -		if (val <= als_it_value[i])
+> >> +		if (val <= cm32181->als_it_values[i])
+> >>   			break;
+> >>   	if (i >= n)
+> >>   		i = n - 1;
+> >>   
+> >> -	als_it = als_it_bits[i];
+> >> +	als_it = cm32181->als_it_bits[i];
+> >>   	als_it <<= CM32181_CMD_ALS_IT_SHIFT;
+> >>   
+> >>   	mutex_lock(&cm32181->lock);
+> >> @@ -265,11 +287,12 @@ static int cm32181_write_raw(struct iio_dev *indio_dev,
+> >>   static ssize_t cm32181_get_it_available(struct device *dev,
+> >>   			struct device_attribute *attr, char *buf)
+> >>   {
+> >> +	struct cm32181_chip *cm32181 = iio_priv(dev_to_iio_dev(dev));
+> >>   	int i, n, len;
+> >>   
+> >> -	n = ARRAY_SIZE(als_it_value);
+> >> +	n = cm32181->num_als_it;
+> >>   	for (i = 0, len = 0; i < n; i++)
+> >> -		len += sprintf(buf + len, "0.%06u ", als_it_value[i]);
+> >> +		len += sprintf(buf + len, "0.%06u ", cm32181->als_it_values[i]);
+> >>   	return len + sprintf(buf + len, "\n");
+> >>   }
+> >>   
+> >> @@ -345,6 +368,7 @@ static int cm32181_probe(struct i2c_client *client)
+> >>   }
+> >>   
+> >>   static const struct of_device_id cm32181_of_match[] = {
+> >> +	{ .compatible = "capella,cm3218" },
+> >>   	{ .compatible = "capella,cm32181" },
+> >>   	{ }
+> >>   };  
+> >   
 > 
