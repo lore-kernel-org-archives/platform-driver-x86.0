@@ -1,79 +1,80 @@
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Subject: Re: [PATCH v3 10/11] iio: light: cm32181: Add support for parsing
- CPM0 and CPM1 ACPI tables
-Date: Mon, 4 May 2020 10:40:48 +0100
-Message-ID: <20200504104048.00003f35@Huawei.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v3 01/11] iio: light: cm32181: Switch to new style
+ i2c-driver probe function
+Date: Mon, 4 May 2020 11:46:30 +0200
+Message-ID: <4f6df1df-8c82-c14f-8862-c020d67d3df3@redhat.com>
 References: <20200428172923.567806-1-hdegoede@redhat.com>
-        <20200428172923.567806-10-hdegoede@redhat.com>
-        <20200503122237.4af34181@archlinux>
-        <CAHp75Vdt+shL3yXHfct17DUHdRBBrCzC4vBjQL8YHbimFefV7A@mail.gmail.com>
+ <20200503115456.11a16411@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vdt+shL3yXHfct17DUHdRBBrCzC4vBjQL8YHbimFefV7A@mail.gmail.com>
+In-Reply-To: <20200503115456.11a16411@archlinux>
+Content-Language: en-US
 Sender: linux-acpi-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hans de Goede <hdegoede@redhat.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio <linux-iio@vger.kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sun, 3 May 2020 19:25:20 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Hi,
 
-> On Sun, May 3, 2020 at 2:22 PM Jonathan Cameron <jic23@kernel.org> wrote:
-> > On Tue, 28 Apr 2020 19:29:22 +0200
-> > Hans de Goede <hdegoede@redhat.com> wrote:  
+On 5/3/20 12:54 PM, Jonathan Cameron wrote:
+> On Tue, 28 Apr 2020 19:29:13 +0200
+> Hans de Goede <hdegoede@redhat.com> wrote:
 > 
-> ...
+>> Switch to the new style i2c-driver probe_new probe function and drop the
+>> unnecessary i2c_device_id table (we do not have any old style board files
+>> using this).
+>>
+>> This is a preparation patch for adding ACPI binding support.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v3:
+>> - This is a new patch in v3 of this patch-set
+>> ---
+>>   drivers/iio/light/cm32181.c | 15 +++------------
+>>   1 file changed, 3 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
+>> index 5f4fb5674fa0..cc57190a24cb 100644
+>> --- a/drivers/iio/light/cm32181.c
+>> +++ b/drivers/iio/light/cm32181.c
+>> @@ -294,8 +294,7 @@ static const struct iio_info cm32181_info = {
+>>   	.attrs			= &cm32181_attribute_group,
+>>   };
+>>   
+>> -static int cm32181_probe(struct i2c_client *client,
+>> -			const struct i2c_device_id *id)
+>> +static int cm32181_probe(struct i2c_client *client)
+>>   {
+>>   	struct cm32181_chip *cm32181;
+>>   	struct iio_dev *indio_dev;
+>> @@ -316,7 +315,7 @@ static int cm32181_probe(struct i2c_client *client,
+>>   	indio_dev->channels = cm32181_channels;
+>>   	indio_dev->num_channels = ARRAY_SIZE(cm32181_channels);
+>>   	indio_dev->info = &cm32181_info;
+>> -	indio_dev->name = id->name;
+>> +	indio_dev->name = dev_name(&client->dev);
 > 
-> > > This was tested on the following models: Acer Switch 10 SW5-012 (CM32181)
-> > > Asus T100TA (CM3218), Asus T100CHI (CM3218) and HP X2 10-n000nd (CM32181).  
-> >
-> > I assume it's far too much to hope this CPM0 / CPM1 stuff is actually defined
-> > in a spec anywhere?
-> >
-> > There are standard way of adding vendor specific data blobs to ACPI and this
-> > isn't one of them (unless I'm missing something).  People need to beat
-> > up vendors earlier about this stuff.
-> >
-> > Grumble over...
-> >
-> > Code looks fine to me, but I'd like an ACPI review ideally.  
+> ABI breakage.  The name needs to be unaffected by this patch and I'm
+> fairly sure it just gained the vendor prefix.
 > 
-> ACPI didn't cover embedded world and has the following issues
-> a) where it should be strict (like how many I2CSerialBus() resources
-> can be given and for what type of devices, etc), it doesn't
-> b) they need to provides better validation tools, but they didn't
-> c) it's still windows oriented :-(
-> 
-> Above is custom extension on how to add device properties (and note,
-> we have now _DSD() and still we have some M$ way of thinking how to
-> use them).
-> 
-> Since the above approach is in the wild, I'm afraid we have not many
-> possibilities here (each of them with own problems):
-> 1/ shout at vendors to use ACPI properly and simple don't by broken
-> hardware (rather firmware)
-> 2/ try to support custom changes (may lead to several approaches for
-> the same thing)
-> 3/ create a lot of board files (something in between 1/ and 2/)
-> 
-> As a result:
-> 1/ is obviously a best one, but I think it's an utopia.
+> So to drop that table, you need to provide the 'clean' part number
+> somewhere else.  Seeing as driver currently only supports one number,
+> you could just provide it directly here. However, as you are
+> going to add support for another part number later, you'll need
+> to do something more clever when you introduce that.
 
-Let's keep the "shout" bit where possible :)  Makes us feel better anyway.
+Ok, I will fix this for the next version.
 
-> 2/ in practice we don't have many deviations (luckily OEMs are quite
-> lazy to modify reference BIOSes and often reuse existing approaches)
-> 3/ may not work, because on cheap laptops the means of distinguishing
-> them (like DMI strings) may also been broken.
-> 
+> I'll make this suggestion in that patch, but I think you should add
+> a chip_info structure for each of the supported chips rather than using
+> a switch to put a number of different elements in place.  The name
+> would then go in there.
 
-The UEFI forum are finally making steps in the right direction on
-how they develop their specs (sort of) so I guess interested companies
-should rock up and see if they can get some of this stuff fixed.
-(those that can attend meetings anyway - but that's a different issue).
+Ok, I will add a chip_info structure for the next version (version 4).
 
-Spec meetings are fun and everyone loves the EDK2 source code :)
+Regards,
 
-J
+Hans
