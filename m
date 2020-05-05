@@ -1,113 +1,117 @@
-From: Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: 5.6 regression caused by "ACPICA: Dispatcher: always generate
- buffer objects for ASL create_field() operator"
-Date: Tue, 5 May 2020 15:50:15 +0200
-Message-ID: <11795a75-70de-5fcc-878f-14a0381947ea@gmail.com>
-References: <49f20a91-9362-6249-d413-1461258d56a9@redhat.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
+ switch on "Detachable" and "Portable" chassis-types
+Date: Tue, 5 May 2020 14:22:05 +0000
+Message-ID: <afe7c366c97f4ab18d5a98a9695ceff6@AUSX13MPC101.AMER.DELL.COM>
+References: <20200502182951.114231-1-hdegoede@redhat.com>
+ <20200502182951.114231-5-hdegoede@redhat.com>
+ <7c3e5f844a224ff780cd8e3b3f5f7641@AUSX13MPC101.AMER.DELL.COM>
+ <13a8ec94-1eae-4d95-7238-85c612ebc896@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <49f20a91-9362-6249-d413-1461258d56a9@redhat.com>
+In-Reply-To: <13a8ec94-1eae-4d95-7238-85c612ebc896@redhat.com>
 Content-Language: en-US
 Sender: linux-acpi-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Bob Moore <robert.moore@intel.com>, Erik Kaneda <erik.kaneda@intel.com>, Mattia Dongili <malattia@linux.it>, William Bader <williambader@hotmail.com>, Dominik Mierzejewski <dominik@greysector.net>
-Cc: linux-acpi <linux-acpi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org
+To: hdegoede@redhat.com, dvhart@infradead.org, andy@infradead.org
+Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 5/5/20 2:55 PM, Hans de Goede wrote:
-> Hi All,
-> 
-> Commit 6d232b29cfce ("ACPICA: Dispatcher: always generate buffer
-> objects for ASL create_field() operator") has dropped the
-> automatic conversion of small buffers into integers.
-> 
-> But some drivers relied on this automatic conversion, these
-> drivers have checks like this:
-> 
->          if (object->type != ACPI_TYPE_INTEGER) {
->                  pr_warn("Invalid acpi_object: expected 0x%x got 0x%x\n",
->                                  ACPI_TYPE_INTEGER, object->type);
->                  kfree(object);
->                  return -EINVAL;
->          }
-> 
-> This specific bit comes from the sony-laptop (platform/x86) code,
-> the ACPICA change has broken this code, causing systems using this
-> driver to hang on resume from suspend.
-> 
-> We have multiple bug-reports open for this already:
-> 
-> https://bugzilla.kernel.org/show_bug.cgi?id=207491
-> https://bugzilla.redhat.com/show_bug.cgi?id=1829096
-> https://bugzilla.redhat.com/show_bug.cgi?id=1830150
-> 
-> Mattia Dongili, the sony-laptop driver has already submitted
-> a fix for this upstream, adjusting the sony-laptop driver
-> to deal with the returned object type now being a BUFFER.
-> 
-> The goal of this email is to:
-> 
-> 1. Make everyone involved aware of this breakage as we
-> may see similar breakage elsewhere.
-> 
-> 2. Discuss if we should maybe revert the ACPICA change.
-> 
-> If you are reading this then 1. has been accomplished :)
-> 
-> Which leaves us with 2. I'm tending towards keeping the
-> change, since it seems the right thing to do and dealing
-> with the fallout. But since there is fallout we should
-> also at least consider reverting the ACPICA change.
-> 
-> So ACPI maintainers what is you take on this ?
-> 
-> Regards,
-> 
-> Hans
-
-Hi,
-
-I'd like to advise against reverting the commit. Quite honestly, I don't
-think reverting the commit is a good idea. This will break things for
-devices that assume Microsoft-like AML interpreter behavior _inside_ the
-DSDT. Such as the MS Surface devices for example, which, as stated in the
-commit message, depend on the type being Buffer via a check on
-ObjectType(...). There is no fix for those devices other than a)
-accepting MS behavior in ACPICA, b) introducing a quirk in ACPICA which
-switches between behaviors on a device basis, or c) patching the DSDT of
-those devices specifically for Linux.
-
-I'd also argue that since this is MS behavior, this is the behavior that
-almost all consumer electronics devices with ACPI will expect. Case in
-point, the DSDT of one of the affected Sony laptops, which contains the
-following code:
-
-         CreateField (SNBF, Zero, 0x20, SNBD)
-         CreateWordField (SNBF, 0x02, CPW0)
-         CreateWordField (SNBF, 0x04, CPW1)
-         CreateWordField (SNBF, Zero, RCW0)
-         CreateWordField (SNBF, 0x02, RCW1)
-
-They explicitly create a Buffer field of 32 bits via CreateField and not
-a 32 bit Integer field via CreateDWordField. I'd argue that if they
-wanted this field to be an Integer, CreateDWordField would be the
-straight-forward approach.
-
-Unfortunately, I also don't see a way to identify all affected calls to
-ACPI functions automatically or easily, as this requires to look at the
-DSDTs and the code behind those calls. If you have DSDTs, here's a way
-to identify if that particular DSDT/driver combo is affected:
-
-If a call to an ACPI function expects an Integer and the ACPI function
-returns a field created with CreateField(...) and the field is smaller
-than 64 bits (on 64bit machines), then this call is affected.
-
-The only semi-reasonable way, as far as I can see, to identify this on a
-broad scale is to get this information out to the respective maintainers
-of drivers with apci_evaluate_{integer,object,dsm,..?} calls and ask them
-to check those calls against DSDTs. Also maybe help them by introducing a
-function which does Buffer-to-Integer conversion.
-
-Regards,
-Maximilian
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
+LW93bmVyQHZnZXIua2VybmVsLm9yZyA8cGxhdGZvcm0tZHJpdmVyLXg4Ni0NCj4gb3duZXJAdmdl
+ci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgSGFucyBkZSBHb2VkZQ0KPiBTZW50OiBUdWVzZGF5
+LCBNYXkgNSwgMjAyMCA0OjA2IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW87IGR2aGFydEBp
+bmZyYWRlYWQub3JnOyBhbmR5QGluZnJhZGVhZC5vcmcNCj4gQ2M6IGxpbnV4LWFjcGlAdmdlci5r
+ZXJuZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+
+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCA0LzVdIHBsYXRm
+b3JtL3g4NjogaW50ZWwtdmJ0bjogQWxzbyBoYW5kbGUgdGFibGV0LW1vZGUNCj4gc3dpdGNoIG9u
+ICJEZXRhY2hhYmxlIiBhbmQgIlBvcnRhYmxlIiBjaGFzc2lzLXR5cGVzDQo+IA0KPiANCj4gW0VY
+VEVSTkFMIEVNQUlMXQ0KPiANCj4gSGksDQo+IA0KPiBPbiA1LzQvMjAgNTozNyBQTSwgTWFyaW8u
+TGltb25jaWVsbG9AZGVsbC5jb20gd3JvdGU6DQo+ID4NCj4gPg0KPiA+PiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQu
+Y29tPg0KPiA+PiBTZW50OiBTYXR1cmRheSwgTWF5IDIsIDIwMjAgMTozMCBQTQ0KPiA+PiBUbzog
+RGFycmVuIEhhcnQ7IEFuZHkgU2hldmNoZW5rbzsgTGltb25jaWVsbG8sIE1hcmlvDQo+ID4+IENj
+OiBIYW5zIGRlIEdvZWRlOyBsaW51eC1hY3BpQHZnZXIua2VybmVsLm9yZzsgcGxhdGZvcm0tZHJp
+dmVyLQ0KPiA+PiB4ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnDQo+ID4+IFN1YmplY3Q6IFtQQVRDSCA0LzVdIHBsYXRmb3JtL3g4NjogaW50ZWwtdmJ0bjog
+QWxzbyBoYW5kbGUgdGFibGV0LW1vZGUNCj4gc3dpdGNoDQo+ID4+IG9uICJEZXRhY2hhYmxlIiBh
+bmQgIlBvcnRhYmxlIiBjaGFzc2lzLXR5cGVzDQo+ID4+DQo+ID4+DQo+ID4+IFtFWFRFUk5BTCBF
+TUFJTF0NCj4gPj4NCj4gPj4gQ29tbWl0IGRlOTY0N2VmZWFhOSAoInBsYXRmb3JtL3g4NjogaW50
+ZWwtdmJ0bjogT25seSBhY3RpdmF0ZSB0YWJsZXQgbW9kZQ0KPiA+PiBzd2l0Y2ggb24gMi1pbi0x
+J3MiKSBhZGRlZCBhIERNSSBjaGFzc2lzLXR5cGUgY2hlY2sgdG8gYXZvaWQgYWNjaWRlbnRhbGx5
+DQo+ID4+IHJlcG9ydGluZyBTV19UQUJMRVRfTU9ERSA9IDEgdG8gdXNlcnNwYWNlIG9uIGxhcHRv
+cHMuDQo+ID4+DQo+ID4+IFNvbWUgZGV2aWNlcyB3aXRoIGEgZGV0YWNoYWJsZSBrZXlib2FyZCBh
+bmQgdXNpbmcgdGhlIGludGVsLXZibnQgKElOVDMzRDYpDQo+ID4+IGludGVyZmFjZSB0byByZXBv
+cnQgaWYgdGhleSBhcmUgaW4gdGFibGV0IG1vZGUgKGtleWJvYXJkIGRldGFjaGVkKSBvciBub3Qs
+DQo+ID4+IHJlcG9ydCAzMiAvICJEZXRhY2hhYmxlIiBhcyBjaGFzc2lzLXR5cGUsIGUuZy4gdGhl
+IEhQIFBhdmlsaW9uIFgyIHNlcmllcy4NCj4gPj4NCj4gPj4gT3RoZXIgZGV2aWNlcyB3aXRoIGEg
+ZGV0YWNoYWJsZSBrZXlib2FyZCBhbmQgdXNpbmcgdGhlIGludGVsLXZibnQgKElOVDMzRDYpDQo+
+ID4+IGludGVyZmFjZSB0byByZXBvcnQgU1dfVEFCTEVUX01PREUsIHJlcG9ydCA4IC8gIlBvcnRh
+YmxlIiBhcyBjaGFzc2lzLXR5cGUuDQo+ID4+IFRoZSBEZWxsIFZlbnVlIDExIFBybyA3MTMwIGlz
+IGFuIGV4YW1wbGUgb2YgdGhpcy4NCj4gPj4NCj4gPj4gRXh0ZW5kIHRoZSBETUkgY2hhc3Npcy10
+eXBlIGNoZWNrIHRvIGFsc28gYWNjZXB0IFBvcnRhYmxlcyBhbmQgRGV0YWNoYWJsZXMNCj4gPj4g
+c28gdGhhdCB0aGUgaW50ZWwtdmJ0biBkcml2ZXIgd2lsbCByZXBvcnQgU1dfVEFCTEVUX01PREUg
+b24gdGhlc2UgZGV2aWNlcy4NCj4gPj4NCj4gPj4gTm90ZSB0aGUgY2hhc3Npcy10eXBlIGNoZWNr
+IHdhcyBvcmlnaW5hbGx5IGFkZGVkIHRvIGF2b2lkIGEgZmFsc2UtcG9zaXRpdmUNCj4gPj4gdGFi
+bGV0LW1vZGUgcmVwb3J0IG9uIHRoZSBEZWxsIFhQUyA5MzYwIGxhcHRvcC4gVG8gdGhlIGJlc3Qg
+b2YgbXkga25vd2xlZGdlDQo+ID4+IHRoYXQgbGFwdG9wIGlzIHVzaW5nIGEgY2hhc3Npcy10eXBl
+IG9mIDkgLyAiTGFwdG9wIiwgc28gYWZ0ZXIgdGhpcyBjb21taXQNCj4gPj4gd2Ugc3RpbGwgaWdu
+b3JlIHRoZSB0YWJsZXQtc3dpdGNoIGZvciB0aGF0IGNoYXNzaXMtdHlwZS4NCj4gPg0KPiA+IFll
+cyB0aGF0J3MgY29ycmVjdC4NCj4gPg0KPiA+Pg0KPiA+PiBGaXhlczogZGU5NjQ3ZWZlYWE5ICgi
+cGxhdGZvcm0veDg2OiBpbnRlbC12YnRuOiBPbmx5IGFjdGl2YXRlIHRhYmxldCBtb2RlDQo+ID4+
+IHN3aXRjaCBvbiAyLWluLTEncyIpDQo+ID4+IFNpZ25lZC1vZmYtYnk6IEhhbnMgZGUgR29lZGUg
+PGhkZWdvZWRlQHJlZGhhdC5jb20+DQo+ID4+IC0tLQ0KPiA+PiBMb29raW5nIGF0IHRoZSBNaWNy
+b3NvZnQgV2luZG93cyBkb2N1bWVudGF0aW9uIGZvciB0YWJsZXQtbW9kZSByZXBvcnRpbmc6DQo+
+ID4+IGh0dHBzOi8vZG9jcy5taWNyb3NvZnQuY29tL2VuLXVzL3dpbmRvd3MtaGFyZHdhcmUvZHJp
+dmVycy9ncGlvYnRuL2J1dHRvbi0NCj4gPj4gaW1wbGVtZW50YXRpb24NCj4gPj4NCj4gPj4gVGhl
+biB0aGUgcHJlc2VuY2Ugb2YgYSB0YWJsZXQtbW9kZSBzd2l0Y2ggaXMgaW5kaWNhdGVkIGJ5IHRo
+ZSBwcmVzZW5jZQ0KPiA+PiBvZiBhIFBOUDBDNjAgY29tcGF0aWJsZSBBQ1BJIGRldmljZXMuIFRo
+ZXJlIGFyZSAyIHdheXMgaW4gd2hpY2ggdGhpcyBkZXZpY2UNCj4gPj4gY2FuIHJlcG9ydCB0aGUg
+dGFibGV0LW1vZGUuIDEuIERpcmVjdGx5IHByb3ZpZGluZyBhIEdwaW9JbnQgcmVzb3VyY2UgaW5z
+aWRlDQo+ID4+IHRoZSBQTlAwQzYwIGRldmljZSwgMi4gVGhyb3VnaCBpbmplY3RpbmcgZXZlbnRz
+IGZyb20gYSBXaW5kb3dzIGRyaXZlci4NCj4gPj4NCj4gPj4gSXQgc2VlbXMgdGhhdCB0aGUgaW50
+ZWwtdmJ0biAvIHRoZSBJTlQzM0Q2IEFDUEkgZGV2aWNlIGlzIHRoZSBBQ1BJIHNpZGUNCj4gPj4g
+b2YgSW50ZWwncyBnZW5lcmljIHNvbHV0aW9uIGZvciB0aGUgY2FzZSB3aGVyZSB0aGUgdGFibGV0
+LW1vZGUgY29tZXMgZnJvbQ0KPiA+PiB0aGUgZW1iZWRkZWQtY29udHJvbGxlciBhbmQgbmVlZHMg
+dG8gYmUgImluamVjdGVkIi4NCj4gPj4NCj4gPj4gVGhpcyBhbGwgc3VnZ2VzdHMgdGhhdCBpdCBt
+aWdodCBiZSBiZXR0ZXIgdG8gcmVwbGFjZSB0aGUgY2hhc3Npcy10eXBlDQo+ID4+IGNoZWNrIHdp
+dGggYSBhY3BpX2Rldl9wcmVzZW50KCJQTlAwQzYwIiwgTlVMTCwgLTEpIGNoZWNrLg0KPiA+Pg0K
+PiA+PiBNYXJpbywgY2FuIHlvdSBwcm92aWRlIGFuIGFjcGlkdW1wIGFuZCBhbHNhLWluZm8uc2gg
+b3V0cHV0IGZvciB0aGUNCj4gPj4gRGVsbCBYUFMgOTM2MCwgc28gdGhhdCBJIGNhbiBjaGVjayBp
+ZiB0aGF0IG1pZ2h0IGhlbHAgd2l0aCB0aGUgaXNzdWUNCj4gPj4gdGhlcmUsIGFuZCB0aHVzIGlz
+IGEgcG90ZW50aWFsIGNhbmRpZGF0ZSB0byByZXBsYWNlIHRoZSBjaGFzc2lzLXR5cGUNCj4gPj4g
+Y2hlY2s/DQo+ID4NCj4gPiBVbmZvcnR1bmF0ZWx5IHdpdGggV0ZIIHJpZ2h0IG5vdywgSSBkb24n
+dCBoYXZlIGFjY2VzcyB0byBhIFhQUyA5NjMwIHRvDQo+ID4gZG91YmxlIGNoZWNrIHRoZSBwYXRj
+aCBzZXJpZXMuDQo+ID4NCj4gPiBIb3dldmVyIEkgZG8gYWdyZWUgdGhpcyBzaG91bGQgYmUgYSBn
+b29kIGFwcHJvYWNoLg0KPiANCj4gT2ssIHNvIGxldHMgc3RpY2sgd2l0aCB0aGUgY2hhc3Npcy10
+eXBlIGNoZWNrIChhcyBhbWVuZGVkIGJ5IHRoaXMgcGF0Y2gpDQo+IGZvciBub3cgdGhlbi4gVGhl
+biBvbmNlIHlvdSBhcmUgYWJsZSB0byBnbyB0byB5b3VyIG9mZmljZSBhZ2Fpbiwgd2UNCj4gY2Fu
+IGV4YW1pbmUgdGhlIGFjcGlfZGV2X3ByZXNlbnQoIlBOUDBDNjAiLCBOVUxMLCAtMSkgYWx0ZXJu
+YXRpdmUuDQoNCkkga25vdyBYUFMgMTMncyBhcmUgcHJldHR5IHBvcHVsYXIsIHBlcmhhcHMgc29t
+ZW9uZSBvbiB0aGUgbWFpbGluZyBsaXN0IHdobyBoYXMNCm9uZSBjYW4gc2hhcmUgQUNQSSBkdW1w
+IGluIHRoZSBpbnRlcmltLg0KDQo+IA0KPiA+IFJldmlld2VkLWJ5OiBNYXJpbyBMaW1vbmNpZWxs
+byA8TWFyaW8ubGltb25jaWVsbG9AZGVsbC5jb20+DQo+IA0KPiBUaGFuayB5b3UuDQo+IA0KPiBS
+ZWdhcmRzLA0KPiANCj4gSGFucw0KPiANCj4gDQo+IA0KPiANCj4gPj4gLS0tDQo+ID4+ICAgZHJp
+dmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtdmJ0bi5jIHwgMTIgKysrKysrKysrKystDQo+ID4+ICAg
+MSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPj4NCj4g
+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLXZidG4uYyBiL2RyaXZl
+cnMvcGxhdGZvcm0veDg2L2ludGVsLQ0KPiA+PiB2YnRuLmMNCj4gPj4gaW5kZXggNTAwZmFlODJl
+MTJjLi40OTIxZmMxNWRjNmMgMTAwNjQ0DQo+ID4+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2
+L2ludGVsLXZidG4uYw0KPiA+PiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC12YnRu
+LmMNCj4gPj4gQEAgLTE1OCwxMiArMTU4LDIyIEBAIHN0YXRpYyB2b2lkIGRldGVjdF90YWJsZXRf
+bW9kZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ID4+ICpkZXZpY2UpDQo+ID4+ICAgc3RhdGlj
+IGJvb2wgaW50ZWxfdmJ0bl9oYXNfc3dpdGNoZXMoYWNwaV9oYW5kbGUgaGFuZGxlKQ0KPiA+PiAg
+IHsNCj4gPj4gICAJY29uc3QgY2hhciAqY2hhc3Npc190eXBlID0gZG1pX2dldF9zeXN0ZW1faW5m
+byhETUlfQ0hBU1NJU19UWVBFKTsNCj4gPj4gKwl1bnNpZ25lZCBsb25nIGNoYXNzaXNfdHlwZV9p
+bnQ7DQo+ID4+ICAgCXVuc2lnbmVkIGxvbmcgbG9uZyB2Z2JzOw0KPiA+PiAgIAlhY3BpX3N0YXR1
+cyBzdGF0dXM7DQo+ID4+DQo+ID4+IC0JaWYgKCEoY2hhc3Npc190eXBlICYmIHN0cmNtcChjaGFz
+c2lzX3R5cGUsICIzMSIpID09IDApKQ0KPiA+PiArCWlmIChrc3RydG91bChjaGFzc2lzX3R5cGUs
+IDEwLCAmY2hhc3Npc190eXBlX2ludCkpDQo+ID4+ICAgCQlyZXR1cm4gZmFsc2U7DQo+ID4+DQo+
+ID4+ICsJc3dpdGNoIChjaGFzc2lzX3R5cGVfaW50KSB7DQo+ID4+ICsJY2FzZSAgODogLyogUG9y
+dGFibGUgKi8NCj4gPj4gKwljYXNlIDMxOiAvKiBDb252ZXJ0aWJsZSAqLw0KPiA+PiArCWNhc2Ug
+MzI6IC8qIERldGFjaGFibGUgKi8NCj4gPj4gKwkJYnJlYWs7DQo+ID4+ICsJZGVmYXVsdDoNCj4g
+Pj4gKwkJcmV0dXJuIGZhbHNlOw0KPiA+PiArCX0NCj4gPj4gKw0KPiA+PiAgIAlzdGF0dXMgPSBh
+Y3BpX2V2YWx1YXRlX2ludGVnZXIoaGFuZGxlLCAiVkdCUyIsIE5VTEwsICZ2Z2JzKTsNCj4gPj4g
+ICAJcmV0dXJuIEFDUElfU1VDQ0VTUyhzdGF0dXMpOw0KPiA+PiAgIH0NCj4gPj4gLS0NCj4gPj4g
+Mi4yNi4wDQo+ID4NCg0K
