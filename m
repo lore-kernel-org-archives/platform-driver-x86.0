@@ -1,39 +1,28 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] Add support for Vinga Twizzle J116 Silead touchscreen
-Date: Tue, 5 May 2020 13:55:40 +0300
-Message-ID: <CAHp75VfUUwGyM97Fzh+u1hAFmjdyYinrYE=a+eAwuCNjchq4Qw@mail.gmail.com>
-References: <20200504164514.18641-1-a@dun.ai> <72bd44ab-98a8-0cdc-b7e6-104a69ca3643@infradead.org>
- <f4aeeb2c-32c4-e2a8-193e-2b4d892da4db@redhat.com>
+Subject: Re: [PATCH 1/2] [sony-laptop] SNC calls should handle BUFFER types
+Date: Tue, 5 May 2020 15:27:15 +0300
+Message-ID: <CAHp75Ve--kecWYufUiXUxUZM=tL3NgKtDNf6Ny4ds8GJVz_0pA@mail.gmail.com>
+References: <20200505111810.65586-1-malattia@linux.it> <20200505111810.65586-2-malattia@linux.it>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f4aeeb2c-32c4-e2a8-193e-2b4d892da4db@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Andrew Dunai <a@dun.ai>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20200505111810.65586-2-malattia@linux.it>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mattia Dongili <malattia@linux.it>, "Schmauss, Erik" <erik.schmauss@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.co>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Dominik Mierzejewski <dominik@greysector.net>, William Bader <williambader@hotmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 5, 2020 at 12:02 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 5/4/20 8:20 PM, Randy Dunlap wrote:
++Cc ACPI(CA) people
 
-> > Usually you need to send patches to a maintainer who could then
-> > merge/apply them.
->
->  From a code point-of-view this looks good to me.
->
-> Andrew, if you can resend this to the proper folks (including me)
-> with a proper Signed-off-by (*), then this should be ready for merging.
->
-> Regards,
->
-> Hans
->
->
-> *) that might have already been there, but it wasn't present in
-> the part quoted by Randy
+On Tue, May 5, 2020 at 1:16 PM <malattia@linux.it> wrote:
+> After commit 6d232b29cfce ("ACPICA: Dispatcher: always generate buffer
+> objects for ASL create_field() operator") ACPICA creates buffers even
+> when new fields are small enough to fit into an integer.
 
-Luckily I see the original message. There is neither Sob nor commit
-message. They must to be present.
+> Many SNC calls counted on the old behaviour.
+
+Rafael, Erik, is it correct behaviour from ACPICA p.o.v. nowadays or
+should be fixed rather there?
 
 -- 
 With Best Regards,
