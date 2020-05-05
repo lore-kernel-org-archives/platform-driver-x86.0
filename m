@@ -1,43 +1,50 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] support watchdog with longer timeout period
-Date: Tue, 5 May 2020 19:14:15 +0300
-Message-ID: <CAHp75VdN6PfCCmRB_FssTRCoXms7JTt_af59pMqZNgV4ygz_8w@mail.gmail.com>
-References: <20200504141427.17685-1-michaelsh@mellanox.com> <ac2c580c-7cc0-8091-f3bc-fce175478e50@roeck-us.net>
+From: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH v4 0/4] support watchdog with longer timeout period
+Date: Tue, 5 May 2020 18:39:03 +0000
+Message-ID: <AM6PR05MB50649F646F8A7870160D1973A2A70@AM6PR05MB5064.eurprd05.prod.outlook.com>
+References: <20200504141427.17685-1-michaelsh@mellanox.com>
+ <ac2c580c-7cc0-8091-f3bc-fce175478e50@roeck-us.net>
+ <CAHp75VdN6PfCCmRB_FssTRCoXms7JTt_af59pMqZNgV4ygz_8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ac2c580c-7cc0-8091-f3bc-fce175478e50-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <CAHp75VdN6PfCCmRB_FssTRCoXms7JTt_af59pMqZNgV4ygz_8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, Wim Van Sebroeck <wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Wim Van Sebroeck <wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 5, 2020 at 7:09 PM Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> On 5/4/20 7:14 AM, michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org wrote:
-> > From: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-
-> > Michael Shych (4):
-> >   platform_data/mlxreg: support new watchdog type with longer timeout
-> >     period
-> >   platform/x86: mlx-platform: support new watchdog type with longer
-> >     timeout
-> >   watchdog: mlx-wdt: support new watchdog type with longer timeout
-> >     period
-> >   docs: watchdog: mlx-wdt: Add description of new watchdog type 3
-> >
-> >  Documentation/watchdog/mlx-wdt.rst   |  10 ++++
-> >  drivers/platform/x86/mlx-platform.c  | 106 ++++++++++++++++++++++++++++++
-> >  drivers/watchdog/mlx_wdt.c           |  73 ++++++++++++++++++++----
-> >  include/linux/platform_data/mlxreg.h |   5 +-
-
-> Guess the big question is now which branch to use to take this series.
-> Thoughts, anyone ?
-
-count(watchdog) = 8
-count(platform) = 6
-
-Thoughts?
-
--- 
-With Best Regards,
-Andy Shevchenko
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBTaGV2Y2hlbmtv
+IDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBTZW50OiBUdWVzZGF5LCBNYXkgMDUsIDIw
+MjAgNzoxNCBQTQ0KPiBUbzogR3VlbnRlciBSb2VjayA8bGludXhAcm9lY2stdXMubmV0Pg0KPiBD
+YzogTWljaGFlbCBTaHljaCA8bWljaGFlbHNoQG1lbGxhbm94LmNvbT47IFdpbSBWYW4gU2Vicm9l
+Y2sNCj4gPHdpbUBsaW51eC13YXRjaGRvZy5vcmc+OyBBbmR5IFNoZXZjaGVua28gPGFuZHlAaW5m
+cmFkZWFkLm9yZz47IERhcnJlbg0KPiBIYXJ0IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz47IGxpbnV4
+LXdhdGNoZG9nQHZnZXIua2VybmVsLm9yZzsgUGxhdGZvcm0gRHJpdmVyDQo+IDxwbGF0Zm9ybS1k
+cml2ZXIteDg2QHZnZXIua2VybmVsLm9yZz47IFZhZGltIFBhc3Rlcm5haw0KPiA8dmFkaW1wQG1l
+bGxhbm94LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NCAwLzRdIHN1cHBvcnQgd2F0Y2hk
+b2cgd2l0aCBsb25nZXIgdGltZW91dCBwZXJpb2QNCj4gDQo+IE9uIFR1ZSwgTWF5IDUsIDIwMjAg
+YXQgNzowOSBQTSBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+IHdyb3RlOg0KPiA+
+IE9uIDUvNC8yMCA3OjE0IEFNLCBtaWNoYWVsc2hAbWVsbGFub3guY29tIHdyb3RlOg0KPiA+ID4g
+RnJvbTogTWljaGFlbCBTaHljaCA8bWljaGFlbHNoQG1lbGxhbm94LmNvbT4NCj4gDQo+ID4gPiBN
+aWNoYWVsIFNoeWNoICg0KToNCj4gPiA+ICAgcGxhdGZvcm1fZGF0YS9tbHhyZWc6IHN1cHBvcnQg
+bmV3IHdhdGNoZG9nIHR5cGUgd2l0aCBsb25nZXIgdGltZW91dA0KPiA+ID4gICAgIHBlcmlvZA0K
+PiA+ID4gICBwbGF0Zm9ybS94ODY6IG1seC1wbGF0Zm9ybTogc3VwcG9ydCBuZXcgd2F0Y2hkb2cg
+dHlwZSB3aXRoIGxvbmdlcg0KPiA+ID4gICAgIHRpbWVvdXQNCj4gPiA+ICAgd2F0Y2hkb2c6IG1s
+eC13ZHQ6IHN1cHBvcnQgbmV3IHdhdGNoZG9nIHR5cGUgd2l0aCBsb25nZXIgdGltZW91dA0KPiA+
+ID4gICAgIHBlcmlvZA0KPiA+ID4gICBkb2NzOiB3YXRjaGRvZzogbWx4LXdkdDogQWRkIGRlc2Ny
+aXB0aW9uIG9mIG5ldyB3YXRjaGRvZyB0eXBlIDMNCj4gPiA+DQo+ID4gPiAgRG9jdW1lbnRhdGlv
+bi93YXRjaGRvZy9tbHgtd2R0LnJzdCAgIHwgIDEwICsrKysNCj4gPiA+ICBkcml2ZXJzL3BsYXRm
+b3JtL3g4Ni9tbHgtcGxhdGZvcm0uYyAgfCAxMDYNCj4gKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrDQo+ID4gPiAgZHJpdmVycy93YXRjaGRvZy9tbHhfd2R0LmMgICAgICAgICAgIHwgIDcz
+ICsrKysrKysrKysrKysrKysrKysrLS0tLQ0KPiA+ID4gIGluY2x1ZGUvbGludXgvcGxhdGZvcm1f
+ZGF0YS9tbHhyZWcuaCB8ICAgNSArLQ0KPiANCj4gPiBHdWVzcyB0aGUgYmlnIHF1ZXN0aW9uIGlz
+IG5vdyB3aGljaCBicmFuY2ggdG8gdXNlIHRvIHRha2UgdGhpcyBzZXJpZXMuDQo+ID4gVGhvdWdo
+dHMsIGFueW9uZSA/DQo+IA0KPiBjb3VudCh3YXRjaGRvZykgPSA4DQo+IGNvdW50KHBsYXRmb3Jt
+KSA9IDYNCj4gDQo+IFRob3VnaHRzPw0KDQpIaSBBbmR5LA0KDQpXZSBoYXZlIHNvbWUgbW9yZSBw
+YXRjaGVzIHdlIGFyZSBnb2luZyB0byBzZW5kIGZvciBwbGF0Zm9ybQ0KZHJpdmVycy4NCk1heWJl
+IGl0J3MgYmV0dGVyIHRvIHRha2UgaXQgdG8gcGxhdGZvcm0gYnJhbmNoIHRvIG1ha2UgZnVydGhl
+cg0KbWVyZ2luZyBlYXNpZXI/DQoNClRoYW5rcywNClZhZGltLg0KPiANCj4gLS0NCj4gV2l0aCBC
+ZXN0IFJlZ2FyZHMsDQo+IEFuZHkgU2hldmNoZW5rbw0K
