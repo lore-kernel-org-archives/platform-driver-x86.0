@@ -1,117 +1,116 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
  switch on "Detachable" and "Portable" chassis-types
-Date: Tue, 5 May 2020 14:22:05 +0000
-Message-ID: <afe7c366c97f4ab18d5a98a9695ceff6@AUSX13MPC101.AMER.DELL.COM>
-References: <20200502182951.114231-1-hdegoede@redhat.com>
- <20200502182951.114231-5-hdegoede@redhat.com>
+Date: Tue, 5 May 2020 17:27:41 +0300
+Message-ID: <CAHp75VcNJFfgshhL_pYsHodF1pMNySw08Z_4jr-vVkE-Xpj_ng@mail.gmail.com>
+References: <20200502182951.114231-1-hdegoede@redhat.com> <20200502182951.114231-5-hdegoede@redhat.com>
  <7c3e5f844a224ff780cd8e3b3f5f7641@AUSX13MPC101.AMER.DELL.COM>
- <13a8ec94-1eae-4d95-7238-85c612ebc896@redhat.com>
+ <13a8ec94-1eae-4d95-7238-85c612ebc896@redhat.com> <afe7c366c97f4ab18d5a98a9695ceff6@AUSX13MPC101.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <13a8ec94-1eae-4d95-7238-85c612ebc896@redhat.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: hdegoede@redhat.com, dvhart@infradead.org, andy@infradead.org
-Cc: linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <afe7c366c97f4ab18d5a98a9695ceff6@AUSX13MPC101.AMER.DELL.COM>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
-LW93bmVyQHZnZXIua2VybmVsLm9yZyA8cGxhdGZvcm0tZHJpdmVyLXg4Ni0NCj4gb3duZXJAdmdl
-ci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgSGFucyBkZSBHb2VkZQ0KPiBTZW50OiBUdWVzZGF5
-LCBNYXkgNSwgMjAyMCA0OjA2IEFNDQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW87IGR2aGFydEBp
-bmZyYWRlYWQub3JnOyBhbmR5QGluZnJhZGVhZC5vcmcNCj4gQ2M6IGxpbnV4LWFjcGlAdmdlci5r
-ZXJuZWwub3JnOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+
-IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCA0LzVdIHBsYXRm
-b3JtL3g4NjogaW50ZWwtdmJ0bjogQWxzbyBoYW5kbGUgdGFibGV0LW1vZGUNCj4gc3dpdGNoIG9u
-ICJEZXRhY2hhYmxlIiBhbmQgIlBvcnRhYmxlIiBjaGFzc2lzLXR5cGVzDQo+IA0KPiANCj4gW0VY
-VEVSTkFMIEVNQUlMXQ0KPiANCj4gSGksDQo+IA0KPiBPbiA1LzQvMjAgNTozNyBQTSwgTWFyaW8u
-TGltb25jaWVsbG9AZGVsbC5jb20gd3JvdGU6DQo+ID4NCj4gPg0KPiA+PiAtLS0tLU9yaWdpbmFs
-IE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQu
-Y29tPg0KPiA+PiBTZW50OiBTYXR1cmRheSwgTWF5IDIsIDIwMjAgMTozMCBQTQ0KPiA+PiBUbzog
-RGFycmVuIEhhcnQ7IEFuZHkgU2hldmNoZW5rbzsgTGltb25jaWVsbG8sIE1hcmlvDQo+ID4+IENj
-OiBIYW5zIGRlIEdvZWRlOyBsaW51eC1hY3BpQHZnZXIua2VybmVsLm9yZzsgcGxhdGZvcm0tZHJp
-dmVyLQ0KPiA+PiB4ODZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnDQo+ID4+IFN1YmplY3Q6IFtQQVRDSCA0LzVdIHBsYXRmb3JtL3g4NjogaW50ZWwtdmJ0bjog
-QWxzbyBoYW5kbGUgdGFibGV0LW1vZGUNCj4gc3dpdGNoDQo+ID4+IG9uICJEZXRhY2hhYmxlIiBh
-bmQgIlBvcnRhYmxlIiBjaGFzc2lzLXR5cGVzDQo+ID4+DQo+ID4+DQo+ID4+IFtFWFRFUk5BTCBF
-TUFJTF0NCj4gPj4NCj4gPj4gQ29tbWl0IGRlOTY0N2VmZWFhOSAoInBsYXRmb3JtL3g4NjogaW50
-ZWwtdmJ0bjogT25seSBhY3RpdmF0ZSB0YWJsZXQgbW9kZQ0KPiA+PiBzd2l0Y2ggb24gMi1pbi0x
-J3MiKSBhZGRlZCBhIERNSSBjaGFzc2lzLXR5cGUgY2hlY2sgdG8gYXZvaWQgYWNjaWRlbnRhbGx5
-DQo+ID4+IHJlcG9ydGluZyBTV19UQUJMRVRfTU9ERSA9IDEgdG8gdXNlcnNwYWNlIG9uIGxhcHRv
-cHMuDQo+ID4+DQo+ID4+IFNvbWUgZGV2aWNlcyB3aXRoIGEgZGV0YWNoYWJsZSBrZXlib2FyZCBh
-bmQgdXNpbmcgdGhlIGludGVsLXZibnQgKElOVDMzRDYpDQo+ID4+IGludGVyZmFjZSB0byByZXBv
-cnQgaWYgdGhleSBhcmUgaW4gdGFibGV0IG1vZGUgKGtleWJvYXJkIGRldGFjaGVkKSBvciBub3Qs
-DQo+ID4+IHJlcG9ydCAzMiAvICJEZXRhY2hhYmxlIiBhcyBjaGFzc2lzLXR5cGUsIGUuZy4gdGhl
-IEhQIFBhdmlsaW9uIFgyIHNlcmllcy4NCj4gPj4NCj4gPj4gT3RoZXIgZGV2aWNlcyB3aXRoIGEg
-ZGV0YWNoYWJsZSBrZXlib2FyZCBhbmQgdXNpbmcgdGhlIGludGVsLXZibnQgKElOVDMzRDYpDQo+
-ID4+IGludGVyZmFjZSB0byByZXBvcnQgU1dfVEFCTEVUX01PREUsIHJlcG9ydCA4IC8gIlBvcnRh
-YmxlIiBhcyBjaGFzc2lzLXR5cGUuDQo+ID4+IFRoZSBEZWxsIFZlbnVlIDExIFBybyA3MTMwIGlz
-IGFuIGV4YW1wbGUgb2YgdGhpcy4NCj4gPj4NCj4gPj4gRXh0ZW5kIHRoZSBETUkgY2hhc3Npcy10
-eXBlIGNoZWNrIHRvIGFsc28gYWNjZXB0IFBvcnRhYmxlcyBhbmQgRGV0YWNoYWJsZXMNCj4gPj4g
-c28gdGhhdCB0aGUgaW50ZWwtdmJ0biBkcml2ZXIgd2lsbCByZXBvcnQgU1dfVEFCTEVUX01PREUg
-b24gdGhlc2UgZGV2aWNlcy4NCj4gPj4NCj4gPj4gTm90ZSB0aGUgY2hhc3Npcy10eXBlIGNoZWNr
-IHdhcyBvcmlnaW5hbGx5IGFkZGVkIHRvIGF2b2lkIGEgZmFsc2UtcG9zaXRpdmUNCj4gPj4gdGFi
-bGV0LW1vZGUgcmVwb3J0IG9uIHRoZSBEZWxsIFhQUyA5MzYwIGxhcHRvcC4gVG8gdGhlIGJlc3Qg
-b2YgbXkga25vd2xlZGdlDQo+ID4+IHRoYXQgbGFwdG9wIGlzIHVzaW5nIGEgY2hhc3Npcy10eXBl
-IG9mIDkgLyAiTGFwdG9wIiwgc28gYWZ0ZXIgdGhpcyBjb21taXQNCj4gPj4gd2Ugc3RpbGwgaWdu
-b3JlIHRoZSB0YWJsZXQtc3dpdGNoIGZvciB0aGF0IGNoYXNzaXMtdHlwZS4NCj4gPg0KPiA+IFll
-cyB0aGF0J3MgY29ycmVjdC4NCj4gPg0KPiA+Pg0KPiA+PiBGaXhlczogZGU5NjQ3ZWZlYWE5ICgi
-cGxhdGZvcm0veDg2OiBpbnRlbC12YnRuOiBPbmx5IGFjdGl2YXRlIHRhYmxldCBtb2RlDQo+ID4+
-IHN3aXRjaCBvbiAyLWluLTEncyIpDQo+ID4+IFNpZ25lZC1vZmYtYnk6IEhhbnMgZGUgR29lZGUg
-PGhkZWdvZWRlQHJlZGhhdC5jb20+DQo+ID4+IC0tLQ0KPiA+PiBMb29raW5nIGF0IHRoZSBNaWNy
-b3NvZnQgV2luZG93cyBkb2N1bWVudGF0aW9uIGZvciB0YWJsZXQtbW9kZSByZXBvcnRpbmc6DQo+
-ID4+IGh0dHBzOi8vZG9jcy5taWNyb3NvZnQuY29tL2VuLXVzL3dpbmRvd3MtaGFyZHdhcmUvZHJp
-dmVycy9ncGlvYnRuL2J1dHRvbi0NCj4gPj4gaW1wbGVtZW50YXRpb24NCj4gPj4NCj4gPj4gVGhl
-biB0aGUgcHJlc2VuY2Ugb2YgYSB0YWJsZXQtbW9kZSBzd2l0Y2ggaXMgaW5kaWNhdGVkIGJ5IHRo
-ZSBwcmVzZW5jZQ0KPiA+PiBvZiBhIFBOUDBDNjAgY29tcGF0aWJsZSBBQ1BJIGRldmljZXMuIFRo
-ZXJlIGFyZSAyIHdheXMgaW4gd2hpY2ggdGhpcyBkZXZpY2UNCj4gPj4gY2FuIHJlcG9ydCB0aGUg
-dGFibGV0LW1vZGUuIDEuIERpcmVjdGx5IHByb3ZpZGluZyBhIEdwaW9JbnQgcmVzb3VyY2UgaW5z
-aWRlDQo+ID4+IHRoZSBQTlAwQzYwIGRldmljZSwgMi4gVGhyb3VnaCBpbmplY3RpbmcgZXZlbnRz
-IGZyb20gYSBXaW5kb3dzIGRyaXZlci4NCj4gPj4NCj4gPj4gSXQgc2VlbXMgdGhhdCB0aGUgaW50
-ZWwtdmJ0biAvIHRoZSBJTlQzM0Q2IEFDUEkgZGV2aWNlIGlzIHRoZSBBQ1BJIHNpZGUNCj4gPj4g
-b2YgSW50ZWwncyBnZW5lcmljIHNvbHV0aW9uIGZvciB0aGUgY2FzZSB3aGVyZSB0aGUgdGFibGV0
-LW1vZGUgY29tZXMgZnJvbQ0KPiA+PiB0aGUgZW1iZWRkZWQtY29udHJvbGxlciBhbmQgbmVlZHMg
-dG8gYmUgImluamVjdGVkIi4NCj4gPj4NCj4gPj4gVGhpcyBhbGwgc3VnZ2VzdHMgdGhhdCBpdCBt
-aWdodCBiZSBiZXR0ZXIgdG8gcmVwbGFjZSB0aGUgY2hhc3Npcy10eXBlDQo+ID4+IGNoZWNrIHdp
-dGggYSBhY3BpX2Rldl9wcmVzZW50KCJQTlAwQzYwIiwgTlVMTCwgLTEpIGNoZWNrLg0KPiA+Pg0K
-PiA+PiBNYXJpbywgY2FuIHlvdSBwcm92aWRlIGFuIGFjcGlkdW1wIGFuZCBhbHNhLWluZm8uc2gg
-b3V0cHV0IGZvciB0aGUNCj4gPj4gRGVsbCBYUFMgOTM2MCwgc28gdGhhdCBJIGNhbiBjaGVjayBp
-ZiB0aGF0IG1pZ2h0IGhlbHAgd2l0aCB0aGUgaXNzdWUNCj4gPj4gdGhlcmUsIGFuZCB0aHVzIGlz
-IGEgcG90ZW50aWFsIGNhbmRpZGF0ZSB0byByZXBsYWNlIHRoZSBjaGFzc2lzLXR5cGUNCj4gPj4g
-Y2hlY2s/DQo+ID4NCj4gPiBVbmZvcnR1bmF0ZWx5IHdpdGggV0ZIIHJpZ2h0IG5vdywgSSBkb24n
-dCBoYXZlIGFjY2VzcyB0byBhIFhQUyA5NjMwIHRvDQo+ID4gZG91YmxlIGNoZWNrIHRoZSBwYXRj
-aCBzZXJpZXMuDQo+ID4NCj4gPiBIb3dldmVyIEkgZG8gYWdyZWUgdGhpcyBzaG91bGQgYmUgYSBn
-b29kIGFwcHJvYWNoLg0KPiANCj4gT2ssIHNvIGxldHMgc3RpY2sgd2l0aCB0aGUgY2hhc3Npcy10
-eXBlIGNoZWNrIChhcyBhbWVuZGVkIGJ5IHRoaXMgcGF0Y2gpDQo+IGZvciBub3cgdGhlbi4gVGhl
-biBvbmNlIHlvdSBhcmUgYWJsZSB0byBnbyB0byB5b3VyIG9mZmljZSBhZ2Fpbiwgd2UNCj4gY2Fu
-IGV4YW1pbmUgdGhlIGFjcGlfZGV2X3ByZXNlbnQoIlBOUDBDNjAiLCBOVUxMLCAtMSkgYWx0ZXJu
-YXRpdmUuDQoNCkkga25vdyBYUFMgMTMncyBhcmUgcHJldHR5IHBvcHVsYXIsIHBlcmhhcHMgc29t
-ZW9uZSBvbiB0aGUgbWFpbGluZyBsaXN0IHdobyBoYXMNCm9uZSBjYW4gc2hhcmUgQUNQSSBkdW1w
-IGluIHRoZSBpbnRlcmltLg0KDQo+IA0KPiA+IFJldmlld2VkLWJ5OiBNYXJpbyBMaW1vbmNpZWxs
-byA8TWFyaW8ubGltb25jaWVsbG9AZGVsbC5jb20+DQo+IA0KPiBUaGFuayB5b3UuDQo+IA0KPiBS
-ZWdhcmRzLA0KPiANCj4gSGFucw0KPiANCj4gDQo+IA0KPiANCj4gPj4gLS0tDQo+ID4+ICAgZHJp
-dmVycy9wbGF0Zm9ybS94ODYvaW50ZWwtdmJ0bi5jIHwgMTIgKysrKysrKysrKystDQo+ID4+ICAg
-MSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPj4NCj4g
-Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsLXZidG4uYyBiL2RyaXZl
-cnMvcGxhdGZvcm0veDg2L2ludGVsLQ0KPiA+PiB2YnRuLmMNCj4gPj4gaW5kZXggNTAwZmFlODJl
-MTJjLi40OTIxZmMxNWRjNmMgMTAwNjQ0DQo+ID4+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2
-L2ludGVsLXZidG4uYw0KPiA+PiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC12YnRu
-LmMNCj4gPj4gQEAgLTE1OCwxMiArMTU4LDIyIEBAIHN0YXRpYyB2b2lkIGRldGVjdF90YWJsZXRf
-bW9kZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ID4+ICpkZXZpY2UpDQo+ID4+ICAgc3RhdGlj
-IGJvb2wgaW50ZWxfdmJ0bl9oYXNfc3dpdGNoZXMoYWNwaV9oYW5kbGUgaGFuZGxlKQ0KPiA+PiAg
-IHsNCj4gPj4gICAJY29uc3QgY2hhciAqY2hhc3Npc190eXBlID0gZG1pX2dldF9zeXN0ZW1faW5m
-byhETUlfQ0hBU1NJU19UWVBFKTsNCj4gPj4gKwl1bnNpZ25lZCBsb25nIGNoYXNzaXNfdHlwZV9p
-bnQ7DQo+ID4+ICAgCXVuc2lnbmVkIGxvbmcgbG9uZyB2Z2JzOw0KPiA+PiAgIAlhY3BpX3N0YXR1
-cyBzdGF0dXM7DQo+ID4+DQo+ID4+IC0JaWYgKCEoY2hhc3Npc190eXBlICYmIHN0cmNtcChjaGFz
-c2lzX3R5cGUsICIzMSIpID09IDApKQ0KPiA+PiArCWlmIChrc3RydG91bChjaGFzc2lzX3R5cGUs
-IDEwLCAmY2hhc3Npc190eXBlX2ludCkpDQo+ID4+ICAgCQlyZXR1cm4gZmFsc2U7DQo+ID4+DQo+
-ID4+ICsJc3dpdGNoIChjaGFzc2lzX3R5cGVfaW50KSB7DQo+ID4+ICsJY2FzZSAgODogLyogUG9y
-dGFibGUgKi8NCj4gPj4gKwljYXNlIDMxOiAvKiBDb252ZXJ0aWJsZSAqLw0KPiA+PiArCWNhc2Ug
-MzI6IC8qIERldGFjaGFibGUgKi8NCj4gPj4gKwkJYnJlYWs7DQo+ID4+ICsJZGVmYXVsdDoNCj4g
-Pj4gKwkJcmV0dXJuIGZhbHNlOw0KPiA+PiArCX0NCj4gPj4gKw0KPiA+PiAgIAlzdGF0dXMgPSBh
-Y3BpX2V2YWx1YXRlX2ludGVnZXIoaGFuZGxlLCAiVkdCUyIsIE5VTEwsICZ2Z2JzKTsNCj4gPj4g
-ICAJcmV0dXJuIEFDUElfU1VDQ0VTUyhzdGF0dXMpOw0KPiA+PiAgIH0NCj4gPj4gLS0NCj4gPj4g
-Mi4yNi4wDQo+ID4NCg0K
+On Tue, May 5, 2020 at 5:22 PM <Mario.Limonciello@dell.com> wrote:
+>
+> > -----Original Message-----
+> > From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
+> > owner@vger.kernel.org> On Behalf Of Hans de Goede
+> > Sent: Tuesday, May 5, 2020 4:06 AM
+> > To: Limonciello, Mario; dvhart@infradead.org; andy@infradead.org
+> > Cc: linux-acpi@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-
+> > kernel@vger.kernel.org
+> > Subject: Re: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
+> > switch on "Detachable" and "Portable" chassis-types
+> >
+> >
+> > [EXTERNAL EMAIL]
+> >
+> > Hi,
+> >
+> > On 5/4/20 5:37 PM, Mario.Limonciello@dell.com wrote:
+> > >
+> > >
+> > >> -----Original Message-----
+> > >> From: Hans de Goede <hdegoede@redhat.com>
+> > >> Sent: Saturday, May 2, 2020 1:30 PM
+> > >> To: Darren Hart; Andy Shevchenko; Limonciello, Mario
+> > >> Cc: Hans de Goede; linux-acpi@vger.kernel.org; platform-driver-
+> > >> x86@vger.kernel.org; linux-kernel@vger.kernel.org
+> > >> Subject: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
+> > switch
+> > >> on "Detachable" and "Portable" chassis-types
+> > >>
+> > >>
+> > >> [EXTERNAL EMAIL]
+> > >>
+> > >> Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+> > >> switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
+> > >> reporting SW_TABLET_MODE = 1 to userspace on laptops.
+> > >>
+> > >> Some devices with a detachable keyboard and using the intel-vbnt (INT33D6)
+> > >> interface to report if they are in tablet mode (keyboard detached) or not,
+> > >> report 32 / "Detachable" as chassis-type, e.g. the HP Pavilion X2 series.
+> > >>
+> > >> Other devices with a detachable keyboard and using the intel-vbnt (INT33D6)
+> > >> interface to report SW_TABLET_MODE, report 8 / "Portable" as chassis-type.
+> > >> The Dell Venue 11 Pro 7130 is an example of this.
+> > >>
+> > >> Extend the DMI chassis-type check to also accept Portables and Detachables
+> > >> so that the intel-vbtn driver will report SW_TABLET_MODE on these devices.
+> > >>
+> > >> Note the chassis-type check was originally added to avoid a false-positive
+> > >> tablet-mode report on the Dell XPS 9360 laptop. To the best of my knowledge
+> > >> that laptop is using a chassis-type of 9 / "Laptop", so after this commit
+> > >> we still ignore the tablet-switch for that chassis-type.
+> > >
+> > > Yes that's correct.
+> > >
+> > >>
+> > >> Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+> > >> switch on 2-in-1's")
+> > >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > >> ---
+> > >> Looking at the Microsoft Windows documentation for tablet-mode reporting:
+> > >> https://docs.microsoft.com/en-us/windows-hardware/drivers/gpiobtn/button-
+> > >> implementation
+> > >>
+> > >> Then the presence of a tablet-mode switch is indicated by the presence
+> > >> of a PNP0C60 compatible ACPI devices. There are 2 ways in which this device
+> > >> can report the tablet-mode. 1. Directly providing a GpioInt resource inside
+> > >> the PNP0C60 device, 2. Through injecting events from a Windows driver.
+> > >>
+> > >> It seems that the intel-vbtn / the INT33D6 ACPI device is the ACPI side
+> > >> of Intel's generic solution for the case where the tablet-mode comes from
+> > >> the embedded-controller and needs to be "injected".
+> > >>
+> > >> This all suggests that it might be better to replace the chassis-type
+> > >> check with a acpi_dev_present("PNP0C60", NULL, -1) check.
+> > >>
+> > >> Mario, can you provide an acpidump and alsa-info.sh output for the
+> > >> Dell XPS 9360, so that I can check if that might help with the issue
+> > >> there, and thus is a potential candidate to replace the chassis-type
+> > >> check?
+> > >
+> > > Unfortunately with WFH right now, I don't have access to a XPS 9630 to
+> > > double check the patch series.
+> > >
+> > > However I do agree this should be a good approach.
+> >
+> > Ok, so lets stick with the chassis-type check (as amended by this patch)
+> > for now then. Then once you are able to go to your office again, we
+> > can examine the acpi_dev_present("PNP0C60", NULL, -1) alternative.
+>
+> I know XPS 13's are pretty popular, perhaps someone on the mailing list who has
+> one can share ACPI dump in the interim.
+
+https://github.com/intel/dptfxtract/issues/13
+?
+
+-- 
+With Best Regards,
+Andy Shevchenko
