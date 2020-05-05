@@ -1,116 +1,181 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
- switch on "Detachable" and "Portable" chassis-types
-Date: Tue, 5 May 2020 17:27:41 +0300
-Message-ID: <CAHp75VcNJFfgshhL_pYsHodF1pMNySw08Z_4jr-vVkE-Xpj_ng@mail.gmail.com>
-References: <20200502182951.114231-1-hdegoede@redhat.com> <20200502182951.114231-5-hdegoede@redhat.com>
- <7c3e5f844a224ff780cd8e3b3f5f7641@AUSX13MPC101.AMER.DELL.COM>
- <13a8ec94-1eae-4d95-7238-85c612ebc896@redhat.com> <afe7c366c97f4ab18d5a98a9695ceff6@AUSX13MPC101.AMER.DELL.COM>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] watchdog: mlx-wdt: support new watchdog type with
+ longer timeout period
+Date: Tue, 5 May 2020 09:07:24 -0700
+Message-ID: <366b5f85-9468-44ac-ece9-da21ae4b55e5@roeck-us.net>
+References: <20200504141427.17685-1-michaelsh@mellanox.com>
+ <20200504141427.17685-4-michaelsh@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <afe7c366c97f4ab18d5a98a9695ceff6@AUSX13MPC101.AMER.DELL.COM>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20200504141427.17685-4-michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org, andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 5, 2020 at 5:22 PM <Mario.Limonciello@dell.com> wrote:
->
-> > -----Original Message-----
-> > From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
-> > owner@vger.kernel.org> On Behalf Of Hans de Goede
-> > Sent: Tuesday, May 5, 2020 4:06 AM
-> > To: Limonciello, Mario; dvhart@infradead.org; andy@infradead.org
-> > Cc: linux-acpi@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
-> > switch on "Detachable" and "Portable" chassis-types
-> >
-> >
-> > [EXTERNAL EMAIL]
-> >
-> > Hi,
-> >
-> > On 5/4/20 5:37 PM, Mario.Limonciello@dell.com wrote:
-> > >
-> > >
-> > >> -----Original Message-----
-> > >> From: Hans de Goede <hdegoede@redhat.com>
-> > >> Sent: Saturday, May 2, 2020 1:30 PM
-> > >> To: Darren Hart; Andy Shevchenko; Limonciello, Mario
-> > >> Cc: Hans de Goede; linux-acpi@vger.kernel.org; platform-driver-
-> > >> x86@vger.kernel.org; linux-kernel@vger.kernel.org
-> > >> Subject: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
-> > switch
-> > >> on "Detachable" and "Portable" chassis-types
-> > >>
-> > >>
-> > >> [EXTERNAL EMAIL]
-> > >>
-> > >> Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-> > >> switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
-> > >> reporting SW_TABLET_MODE = 1 to userspace on laptops.
-> > >>
-> > >> Some devices with a detachable keyboard and using the intel-vbnt (INT33D6)
-> > >> interface to report if they are in tablet mode (keyboard detached) or not,
-> > >> report 32 / "Detachable" as chassis-type, e.g. the HP Pavilion X2 series.
-> > >>
-> > >> Other devices with a detachable keyboard and using the intel-vbnt (INT33D6)
-> > >> interface to report SW_TABLET_MODE, report 8 / "Portable" as chassis-type.
-> > >> The Dell Venue 11 Pro 7130 is an example of this.
-> > >>
-> > >> Extend the DMI chassis-type check to also accept Portables and Detachables
-> > >> so that the intel-vbtn driver will report SW_TABLET_MODE on these devices.
-> > >>
-> > >> Note the chassis-type check was originally added to avoid a false-positive
-> > >> tablet-mode report on the Dell XPS 9360 laptop. To the best of my knowledge
-> > >> that laptop is using a chassis-type of 9 / "Laptop", so after this commit
-> > >> we still ignore the tablet-switch for that chassis-type.
-> > >
-> > > Yes that's correct.
-> > >
-> > >>
-> > >> Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-> > >> switch on 2-in-1's")
-> > >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > >> ---
-> > >> Looking at the Microsoft Windows documentation for tablet-mode reporting:
-> > >> https://docs.microsoft.com/en-us/windows-hardware/drivers/gpiobtn/button-
-> > >> implementation
-> > >>
-> > >> Then the presence of a tablet-mode switch is indicated by the presence
-> > >> of a PNP0C60 compatible ACPI devices. There are 2 ways in which this device
-> > >> can report the tablet-mode. 1. Directly providing a GpioInt resource inside
-> > >> the PNP0C60 device, 2. Through injecting events from a Windows driver.
-> > >>
-> > >> It seems that the intel-vbtn / the INT33D6 ACPI device is the ACPI side
-> > >> of Intel's generic solution for the case where the tablet-mode comes from
-> > >> the embedded-controller and needs to be "injected".
-> > >>
-> > >> This all suggests that it might be better to replace the chassis-type
-> > >> check with a acpi_dev_present("PNP0C60", NULL, -1) check.
-> > >>
-> > >> Mario, can you provide an acpidump and alsa-info.sh output for the
-> > >> Dell XPS 9360, so that I can check if that might help with the issue
-> > >> there, and thus is a potential candidate to replace the chassis-type
-> > >> check?
-> > >
-> > > Unfortunately with WFH right now, I don't have access to a XPS 9630 to
-> > > double check the patch series.
-> > >
-> > > However I do agree this should be a good approach.
-> >
-> > Ok, so lets stick with the chassis-type check (as amended by this patch)
-> > for now then. Then once you are able to go to your office again, we
-> > can examine the acpi_dev_present("PNP0C60", NULL, -1) alternative.
->
-> I know XPS 13's are pretty popular, perhaps someone on the mailing list who has
-> one can share ACPI dump in the interim.
+On 5/4/20 7:14 AM, michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org wrote:
+> From: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> 
+> New programmable logic device can have watchdog type 3 implementation.
+> It's same as Type 2 with extended maximum timeout period.
+> Maximum timeout is up-to 65535 sec.
+> Type 3 HW watchdog implementation can exist on all Mellanox systems.
+> It is differentiated by WD capability bit.
+> 
+> Signed-off-by: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 
-https://github.com/intel/dptfxtract/issues/13
-?
+Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
--- 
-With Best Regards,
-Andy Shevchenko
+> ---
+> v1-v2:
+> Make changes pointed out by Guenter:
+> -Simplify bit operations
+> -Consistency in registers access
+> -Don't check irrelevant return code
+> ---
+> v2-v3
+> Remove unnecessary cpu_to_le16 and vice versa conversions
+> ---
+>  drivers/watchdog/mlx_wdt.c | 73 +++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 62 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/watchdog/mlx_wdt.c b/drivers/watchdog/mlx_wdt.c
+> index 03b9ac4b99af..54193369e85c 100644
+> --- a/drivers/watchdog/mlx_wdt.c
+> +++ b/drivers/watchdog/mlx_wdt.c
+> @@ -21,6 +21,7 @@
+>  #define MLXREG_WDT_CLOCK_SCALE		1000
+>  #define MLXREG_WDT_MAX_TIMEOUT_TYPE1	32
+>  #define MLXREG_WDT_MAX_TIMEOUT_TYPE2	255
+> +#define MLXREG_WDT_MAX_TIMEOUT_TYPE3	65535
+>  #define MLXREG_WDT_MIN_TIMEOUT		1
+>  #define MLXREG_WDT_OPTIONS_BASE (WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE | \
+>  				 WDIOF_SETTIMEOUT)
+> @@ -49,6 +50,7 @@ struct mlxreg_wdt {
+>  	int tleft_idx;
+>  	int ping_idx;
+>  	int reset_idx;
+> +	int regmap_val_sz;
+>  	enum mlxreg_wdt_type wdt_type;
+>  };
+>  
+> @@ -111,7 +113,8 @@ static int mlxreg_wdt_set_timeout(struct watchdog_device *wdd,
+>  	u32 regval, set_time, hw_timeout;
+>  	int rc;
+>  
+> -	if (wdt->wdt_type == MLX_WDT_TYPE1) {
+> +	switch (wdt->wdt_type) {
+> +	case MLX_WDT_TYPE1:
+>  		rc = regmap_read(wdt->regmap, reg_data->reg, &regval);
+>  		if (rc)
+>  			return rc;
+> @@ -120,14 +123,32 @@ static int mlxreg_wdt_set_timeout(struct watchdog_device *wdd,
+>  		regval = (regval & reg_data->mask) | hw_timeout;
+>  		/* Rowndown to actual closest number of sec. */
+>  		set_time = BIT(hw_timeout) / MLXREG_WDT_CLOCK_SCALE;
+> -	} else {
+> +		rc = regmap_write(wdt->regmap, reg_data->reg, regval);
+> +		break;
+> +	case MLX_WDT_TYPE2:
+> +		set_time = timeout;
+> +		rc = regmap_write(wdt->regmap, reg_data->reg, timeout);
+> +		break;
+> +	case MLX_WDT_TYPE3:
+> +		/* WD_TYPE3 has 2B set time register */
+>  		set_time = timeout;
+> -		regval = timeout;
+> +		if (wdt->regmap_val_sz == 1) {
+> +			regval = timeout & 0xff;
+> +			rc = regmap_write(wdt->regmap, reg_data->reg, regval);
+> +			if (!rc) {
+> +				regval = (timeout & 0xff00) >> 8;
+> +				rc = regmap_write(wdt->regmap,
+> +						reg_data->reg + 1, regval);
+> +			}
+> +		} else {
+> +			rc = regmap_write(wdt->regmap, reg_data->reg, timeout);
+> +		}
+> +		break;
+> +	default:
+> +		return -EINVAL;
+>  	}
+>  
+>  	wdd->timeout = set_time;
+> -	rc = regmap_write(wdt->regmap, reg_data->reg, regval);
+> -
+>  	if (!rc) {
+>  		/*
+>  		 * Restart watchdog with new timeout period
+> @@ -147,10 +168,25 @@ static unsigned int mlxreg_wdt_get_timeleft(struct watchdog_device *wdd)
+>  {
+>  	struct mlxreg_wdt *wdt = watchdog_get_drvdata(wdd);
+>  	struct mlxreg_core_data *reg_data = &wdt->pdata->data[wdt->tleft_idx];
+> -	u32 regval;
+> +	u32 regval, msb, lsb;
+>  	int rc;
+>  
+> -	rc = regmap_read(wdt->regmap, reg_data->reg, &regval);
+> +	if (wdt->wdt_type == MLX_WDT_TYPE2) {
+> +		rc = regmap_read(wdt->regmap, reg_data->reg, &regval);
+> +	} else {
+> +		/* WD_TYPE3 has 2 byte timeleft register */
+> +		if (wdt->regmap_val_sz == 1) {
+> +			rc = regmap_read(wdt->regmap, reg_data->reg, &lsb);
+> +			if (!rc) {
+> +				rc = regmap_read(wdt->regmap,
+> +						reg_data->reg + 1, &msb);
+> +				regval = (msb & 0xff) << 8 | (lsb & 0xff);
+> +			}
+> +		} else {
+> +			rc = regmap_read(wdt->regmap, reg_data->reg, &regval);
+> +		}
+> +	}
+> +
+>  	/* Return 0 timeleft in case of failure register read. */
+>  	return rc == 0 ? regval : 0;
+>  }
+> @@ -212,13 +248,23 @@ static void mlxreg_wdt_config(struct mlxreg_wdt *wdt,
+>  		wdt->wdd.info = &mlxreg_wdt_aux_info;
+>  
+>  	wdt->wdt_type = pdata->version;
+> -	if (wdt->wdt_type == MLX_WDT_TYPE2) {
+> -		wdt->wdd.ops = &mlxreg_wdt_ops_type2;
+> -		wdt->wdd.max_timeout = MLXREG_WDT_MAX_TIMEOUT_TYPE2;
+> -	} else {
+> +	switch (wdt->wdt_type) {
+> +	case MLX_WDT_TYPE1:
+>  		wdt->wdd.ops = &mlxreg_wdt_ops_type1;
+>  		wdt->wdd.max_timeout = MLXREG_WDT_MAX_TIMEOUT_TYPE1;
+> +		break;
+> +	case MLX_WDT_TYPE2:
+> +		wdt->wdd.ops = &mlxreg_wdt_ops_type2;
+> +		wdt->wdd.max_timeout = MLXREG_WDT_MAX_TIMEOUT_TYPE2;
+> +		break;
+> +	case MLX_WDT_TYPE3:
+> +		wdt->wdd.ops = &mlxreg_wdt_ops_type2;
+> +		wdt->wdd.max_timeout = MLXREG_WDT_MAX_TIMEOUT_TYPE3;
+> +		break;
+> +	default:
+> +		break;
+>  	}
+> +
+>  	wdt->wdd.min_timeout = MLXREG_WDT_MIN_TIMEOUT;
+>  }
+>  
+> @@ -249,6 +295,11 @@ static int mlxreg_wdt_probe(struct platform_device *pdev)
+>  
+>  	wdt->wdd.parent = dev;
+>  	wdt->regmap = pdata->regmap;
+> +	rc = regmap_get_val_bytes(wdt->regmap);
+> +	if (rc < 0)
+> +		return -EINVAL;
+> +
+> +	wdt->regmap_val_sz = rc;
+>  	mlxreg_wdt_config(wdt, pdata);
+>  
+>  	if ((pdata->features & MLXREG_CORE_WD_FEATURE_NOWAYOUT))
+> 
