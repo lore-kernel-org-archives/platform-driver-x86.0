@@ -1,122 +1,295 @@
-From: "Kaneda, Erik" <erik.kaneda@intel.com>
-Subject: RE: 5.6 regression caused by "ACPICA: Dispatcher: always generate
- buffer objects for ASL create_field() operator"
-Date: Tue, 5 May 2020 22:11:19 +0000
-Message-ID: <BYAPR11MB3096868FE8523B2F94A50F9DF0A70@BYAPR11MB3096.namprd11.prod.outlook.com>
-References: <49f20a91-9362-6249-d413-1461258d56a9@redhat.com>
- <11795a75-70de-5fcc-878f-14a0381947ea@gmail.com>
+From: Richard Hughes <hughsient@gmail.com>
+Subject: [PATCH] platform/x86: Export LPC attributes for the system SPI chip
+Date: Wed, 06 May 2020 16:52:46 +0100
+Message-ID: <18e48255d68a1408b3e3152780f0e789df540059.camel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <11795a75-70de-5fcc-878f-14a0381947ea@gmail.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hdegoede@redhat.com>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, "Moore, Robert" <robert.moore@intel.com>, Mattia Dongili <malattia@linux.it>, William Bader <williambader@hotmail.com>, Dominik Mierzejewski <dominik@greysector.net>
-Cc: linux-acpi <linux-acpi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-security-module-owner@vger.kernel.org>
+Sender: owner-linux-security-module@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtYWNwaS1vd25l
-ckB2Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LWFjcGktDQo+IG93bmVyQHZnZXIua2VybmVsLm9yZz4g
-T24gQmVoYWxmIE9mIE1heGltaWxpYW4gTHV6DQo+IFNlbnQ6IFR1ZXNkYXksIE1heSA1LCAyMDIw
-IDY6NTAgQU0NCj4gVG86IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhhdC5jb20+OyBXeXNv
-Y2tpLCBSYWZhZWwgSg0KPiA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+OyBNb29yZSwgUm9i
-ZXJ0IDxyb2JlcnQubW9vcmVAaW50ZWwuY29tPjsNCj4gS2FuZWRhLCBFcmlrIDxlcmlrLmthbmVk
-YUBpbnRlbC5jb20+OyBNYXR0aWEgRG9uZ2lsaSA8bWFsYXR0aWFAbGludXguaXQ+Ow0KPiBXaWxs
-aWFtIEJhZGVyIDx3aWxsaWFtYmFkZXJAaG90bWFpbC5jb20+OyBEb21pbmlrIE1pZXJ6ZWpld3Nr
-aQ0KPiA8ZG9taW5pa0BncmV5c2VjdG9yLm5ldD4NCj4gQ2M6IGxpbnV4LWFjcGkgPGxpbnV4LWFj
-cGlAdmdlci5rZXJuZWwub3JnPjsgRGFycmVuIEhhcnQNCj4gPGR2aGFydEBpbmZyYWRlYWQub3Jn
-PjsgQW5keSBTaGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVhZC5vcmc+Ow0KPiBwbGF0Zm9ybS1kcml2
-ZXIteDg2QHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogNS42IHJlZ3Jlc3Npb24gY2F1
-c2VkIGJ5ICJBQ1BJQ0E6IERpc3BhdGNoZXI6IGFsd2F5cyBnZW5lcmF0ZQ0KPiBidWZmZXIgb2Jq
-ZWN0cyBmb3IgQVNMIGNyZWF0ZV9maWVsZCgpIG9wZXJhdG9yIg0KPiANCj4gT24gNS81LzIwIDI6
-NTUgUE0sIEhhbnMgZGUgR29lZGUgd3JvdGU6DQo+ID4gSGkgQWxsLA0KPiA+DQo+ID4gQ29tbWl0
-IDZkMjMyYjI5Y2ZjZSAoIkFDUElDQTogRGlzcGF0Y2hlcjogYWx3YXlzIGdlbmVyYXRlIGJ1ZmZl
-cg0KPiA+IG9iamVjdHMgZm9yIEFTTCBjcmVhdGVfZmllbGQoKSBvcGVyYXRvciIpIGhhcyBkcm9w
-cGVkIHRoZSBhdXRvbWF0aWMNCj4gPiBjb252ZXJzaW9uIG9mIHNtYWxsIGJ1ZmZlcnMgaW50byBp
-bnRlZ2Vycy4NCj4gPg0KPiA+IEJ1dCBzb21lIGRyaXZlcnMgcmVsaWVkIG9uIHRoaXMgYXV0b21h
-dGljIGNvbnZlcnNpb24sIHRoZXNlIGRyaXZlcnMNCj4gPiBoYXZlIGNoZWNrcyBsaWtlIHRoaXM6
-DQo+ID4NCj4gPiAgICAgICAgICBpZiAob2JqZWN0LT50eXBlICE9IEFDUElfVFlQRV9JTlRFR0VS
-KSB7DQo+ID4gICAgICAgICAgICAgICAgICBwcl93YXJuKCJJbnZhbGlkIGFjcGlfb2JqZWN0OiBl
-eHBlY3RlZCAweCV4IGdvdCAweCV4XG4iLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIEFDUElfVFlQRV9JTlRFR0VSLCBvYmplY3QtPnR5cGUpOw0KPiA+ICAgICAgICAgICAg
-ICAgICAga2ZyZWUob2JqZWN0KTsNCj4gPiAgICAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFM
-Ow0KPiA+ICAgICAgICAgIH0NCj4gPg0KPiA+IFRoaXMgc3BlY2lmaWMgYml0IGNvbWVzIGZyb20g
-dGhlIHNvbnktbGFwdG9wIChwbGF0Zm9ybS94ODYpIGNvZGUsIHRoZQ0KPiA+IEFDUElDQSBjaGFu
-Z2UgaGFzIGJyb2tlbiB0aGlzIGNvZGUsIGNhdXNpbmcgc3lzdGVtcyB1c2luZyB0aGlzIGRyaXZl
-cg0KPiA+IHRvIGhhbmcgb24gcmVzdW1lIGZyb20gc3VzcGVuZC4NCj4gPg0KPiA+IFdlIGhhdmUg
-bXVsdGlwbGUgYnVnLXJlcG9ydHMgb3BlbiBmb3IgdGhpcyBhbHJlYWR5Og0KPiA+DQo+ID4gaHR0
-cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNnaT9pZD0yMDc0OTENCj4gPiBodHRw
-czovL2J1Z3ppbGxhLnJlZGhhdC5jb20vc2hvd19idWcuY2dpP2lkPTE4MjkwOTYNCj4gPiBodHRw
-czovL2J1Z3ppbGxhLnJlZGhhdC5jb20vc2hvd19idWcuY2dpP2lkPTE4MzAxNTANCj4gPg0KPiA+
-IE1hdHRpYSBEb25naWxpLCB0aGUgc29ueS1sYXB0b3AgZHJpdmVyIGhhcyBhbHJlYWR5IHN1Ym1p
-dHRlZCBhIGZpeCBmb3INCj4gPiB0aGlzIHVwc3RyZWFtLCBhZGp1c3RpbmcgdGhlIHNvbnktbGFw
-dG9wIGRyaXZlciB0byBkZWFsIHdpdGggdGhlDQo+ID4gcmV0dXJuZWQgb2JqZWN0IHR5cGUgbm93
-IGJlaW5nIGEgQlVGRkVSLg0KPiA+DQo+ID4gVGhlIGdvYWwgb2YgdGhpcyBlbWFpbCBpcyB0bzoN
-Cj4gPg0KPiA+IDEuIE1ha2UgZXZlcnlvbmUgaW52b2x2ZWQgYXdhcmUgb2YgdGhpcyBicmVha2Fn
-ZSBhcyB3ZSBtYXkgc2VlIHNpbWlsYXINCj4gPiBicmVha2FnZSBlbHNld2hlcmUuDQo+ID4NCj4g
-PiAyLiBEaXNjdXNzIGlmIHdlIHNob3VsZCBtYXliZSByZXZlcnQgdGhlIEFDUElDQSBjaGFuZ2Uu
-DQo+ID4NCj4gPiBJZiB5b3UgYXJlIHJlYWRpbmcgdGhpcyB0aGVuIDEuIGhhcyBiZWVuIGFjY29t
-cGxpc2hlZCA6KQ0KPiA+DQo+ID4gV2hpY2ggbGVhdmVzIHVzIHdpdGggMi4gSSdtIHRlbmRpbmcg
-dG93YXJkcyBrZWVwaW5nIHRoZSBjaGFuZ2UsIHNpbmNlDQo+ID4gaXQgc2VlbXMgdGhlIHJpZ2h0
-IHRoaW5nIHRvIGRvIGFuZCBkZWFsaW5nIHdpdGggdGhlIGZhbGxvdXQuIEJ1dCBzaW5jZQ0KPiA+
-IHRoZXJlIGlzIGZhbGxvdXQgd2Ugc2hvdWxkIGFsc28gYXQgbGVhc3QgY29uc2lkZXIgcmV2ZXJ0
-aW5nIHRoZSBBQ1BJQ0ENCj4gPiBjaGFuZ2UuDQo+ID4NCj4gPiBTbyBBQ1BJIG1haW50YWluZXJz
-IHdoYXQgaXMgeW91IHRha2Ugb24gdGhpcyA/DQoNCldoYXQgYSBtZXNzLiBTZXZlcmFsIHRob3Vn
-aHRzLi4uDQoNCkkgdGhpbmsgd2Ugc2hvdWxkIGtlZXAgdGhlIGludGVybmFsIEFNTCBpbnRlcnBy
-ZXRlciBiZWhhdmlvciBhcyBpcyBiZWNhdXNlIGl0IHNvbHZlcyBhIHByb2JsZW0uDQoNClRoZSBB
-Q1BJIHNwZWMgc2F5cyB0aGF0IGJ1ZmZlcnMgdGhhdCBhcmUgc21hbGwgZW5vdWdoIHRvIGZpdCBp
-bnNpZGUgb2YgaW50ZWdlcnMgc2hvdWxkIGJlIHRyZWF0ZWQgYXMNCmludGVnZXJzLiBIb3dldmVy
-LCB3ZSBmb3VuZCB0aGF0IHRoaXMgaXMgbm90IHRoZSBjYXNlIGZvciBDcmVhdGVGaWVsZCBvcGVy
-YXRvcnMuIFRoZSBpbnRlcm5hbA0KcmVwcmVzZW50YXRpb24gb2YgdGhpcyBuZWVkcyB0byBiZSBh
-IGJ1ZmZlciB0byBtYXRjaCBNUyBBTUwgaW50ZXJwcmV0ZXIuDQoNClNOQyBpcyBub3QgYSBwcmUt
-ZGVmaW5lZCBtZXRob2Qgc28gd2UgYWN0dWFsbHkgZG9uJ3Qga25vdyB3aGF0IHRoZSByZXR1cm4g
-dHlwZSBpcyBzdXBwb3NlZA0KdG8gYmUuIEF0IHNvbWUgcG9pbnQgZHVyaW5nIHRoZSBkZXZlbG9w
-bWVudCBvZiB0aGlzIGRyaXZlciwgaXQncyBsaWtlbHkgdGhhdCBzb21lb25lIG1hZGUgYW4gb2Jz
-ZXJ2YXRpb24NCmFib3V0IHdoYXQgIlNOQyIgcmV0dXJuZWQgYXQgc29tZSBwb2ludCBpbiB0aW1l
-IGFuZCBjb250aW51ZWQgdG8gYXNzdW1lIHRoYXQgaXQgd2lsbCB1c2UgdGhlIHNhbWUNCnR5cGUu
-DQoNCkZvciBtZXRob2RzIHRoYXQgYXJlIG5vdCBhIHBhcnQgb2YgdGhlIEFDUEkgc3BlY2lmaWNh
-dGlvbiwgYnVmZmVycyBsZXNzIHRoYW4gb3IgZXF1YWwgdG8gOCBieXRlcyBhbmQNCmludGVnZXJz
-IGNvdWxkIGJlIHVzZWQgaW50ZXJjaGFuZ2VhYmx5LiBJIGRvbid0IHNlZSBhIHJlYXNvbiB3aHkg
-dGhlIGRhdGEgaW5zaWRlIHRoZSBidWZmZXIgc2hvdWxkIGJlDQppbnZhbGlkLg0KDQpFcmlrDQo+
-ID4NCj4gPiBSZWdhcmRzLA0KPiA+DQo+ID4gSGFucw0KPiANCj4gSGksDQo+IA0KPiBJJ2QgbGlr
-ZSB0byBhZHZpc2UgYWdhaW5zdCByZXZlcnRpbmcgdGhlIGNvbW1pdC4gUXVpdGUgaG9uZXN0bHks
-IEkgZG9uJ3QgdGhpbmsNCj4gcmV2ZXJ0aW5nIHRoZSBjb21taXQgaXMgYSBnb29kIGlkZWEuIFRo
-aXMgd2lsbCBicmVhayB0aGluZ3MgZm9yIGRldmljZXMgdGhhdA0KPiBhc3N1bWUgTWljcm9zb2Z0
-LWxpa2UgQU1MIGludGVycHJldGVyIGJlaGF2aW9yIF9pbnNpZGVfIHRoZSBEU0RULiBTdWNoIGFz
-DQo+IHRoZSBNUyBTdXJmYWNlIGRldmljZXMgZm9yIGV4YW1wbGUsIHdoaWNoLCBhcyBzdGF0ZWQg
-aW4gdGhlIGNvbW1pdCBtZXNzYWdlLA0KPiBkZXBlbmQgb24gdGhlIHR5cGUgYmVpbmcgQnVmZmVy
-IHZpYSBhIGNoZWNrIG9uIE9iamVjdFR5cGUoLi4uKS4gVGhlcmUgaXMgbm8NCj4gZml4IGZvciB0
-aG9zZSBkZXZpY2VzIG90aGVyIHRoYW4gYSkgYWNjZXB0aW5nIE1TIGJlaGF2aW9yIGluIEFDUElD
-QSwgYikNCj4gaW50cm9kdWNpbmcgYSBxdWlyayBpbiBBQ1BJQ0Egd2hpY2ggc3dpdGNoZXMgYmV0
-d2VlbiBiZWhhdmlvcnMgb24gYSBkZXZpY2UNCj4gYmFzaXMsIG9yIGMpIHBhdGNoaW5nIHRoZSBE
-U0RUIG9mIHRob3NlIGRldmljZXMgc3BlY2lmaWNhbGx5IGZvciBMaW51eC4NCj4gDQo+IEknZCBh
-bHNvIGFyZ3VlIHRoYXQgc2luY2UgdGhpcyBpcyBNUyBiZWhhdmlvciwgdGhpcyBpcyB0aGUgYmVo
-YXZpb3IgdGhhdCBhbG1vc3QgYWxsDQo+IGNvbnN1bWVyIGVsZWN0cm9uaWNzIGRldmljZXMgd2l0
-aCBBQ1BJIHdpbGwgZXhwZWN0LiBDYXNlIGluIHBvaW50LCB0aGUgRFNEVA0KPiBvZiBvbmUgb2Yg
-dGhlIGFmZmVjdGVkIFNvbnkgbGFwdG9wcywgd2hpY2ggY29udGFpbnMgdGhlIGZvbGxvd2luZyBj
-b2RlOg0KPiANCj4gICAgICAgICAgQ3JlYXRlRmllbGQgKFNOQkYsIFplcm8sIDB4MjAsIFNOQkQp
-DQo+ICAgICAgICAgIENyZWF0ZVdvcmRGaWVsZCAoU05CRiwgMHgwMiwgQ1BXMCkNCj4gICAgICAg
-ICAgQ3JlYXRlV29yZEZpZWxkIChTTkJGLCAweDA0LCBDUFcxKQ0KPiAgICAgICAgICBDcmVhdGVX
-b3JkRmllbGQgKFNOQkYsIFplcm8sIFJDVzApDQo+ICAgICAgICAgIENyZWF0ZVdvcmRGaWVsZCAo
-U05CRiwgMHgwMiwgUkNXMSkNCj4gDQo+IFRoZXkgZXhwbGljaXRseSBjcmVhdGUgYSBCdWZmZXIg
-ZmllbGQgb2YgMzIgYml0cyB2aWEgQ3JlYXRlRmllbGQgYW5kIG5vdCBhIDMyIGJpdA0KPiBJbnRl
-Z2VyIGZpZWxkIHZpYSBDcmVhdGVEV29yZEZpZWxkLiBJJ2QgYXJndWUgdGhhdCBpZiB0aGV5IHdh
-bnRlZCB0aGlzIGZpZWxkIHRvDQo+IGJlIGFuIEludGVnZXIsIENyZWF0ZURXb3JkRmllbGQgd291
-bGQgYmUgdGhlIHN0cmFpZ2h0LWZvcndhcmQgYXBwcm9hY2guDQo+IA0KPiBVbmZvcnR1bmF0ZWx5
-LCBJIGFsc28gZG9uJ3Qgc2VlIGEgd2F5IHRvIGlkZW50aWZ5IGFsbCBhZmZlY3RlZCBjYWxscyB0
-byBBQ1BJDQo+IGZ1bmN0aW9ucyBhdXRvbWF0aWNhbGx5IG9yIGVhc2lseSwgYXMgdGhpcyByZXF1
-aXJlcyB0byBsb29rIGF0IHRoZSBEU0RUcyBhbmQgdGhlDQo+IGNvZGUgYmVoaW5kIHRob3NlIGNh
-bGxzLiBJZiB5b3UgaGF2ZSBEU0RUcywgaGVyZSdzIGEgd2F5IHRvIGlkZW50aWZ5IGlmIHRoYXQN
-Cj4gcGFydGljdWxhciBEU0RUL2RyaXZlciBjb21ibyBpcyBhZmZlY3RlZDoNCj4gDQo+IElmIGEg
-Y2FsbCB0byBhbiBBQ1BJIGZ1bmN0aW9uIGV4cGVjdHMgYW4gSW50ZWdlciBhbmQgdGhlIEFDUEkg
-ZnVuY3Rpb24gcmV0dXJucw0KPiBhIGZpZWxkIGNyZWF0ZWQgd2l0aCBDcmVhdGVGaWVsZCguLi4p
-IGFuZCB0aGUgZmllbGQgaXMgc21hbGxlciB0aGFuIDY0IGJpdHMgKG9uDQo+IDY0Yml0IG1hY2hp
-bmVzKSwgdGhlbiB0aGlzIGNhbGwgaXMgYWZmZWN0ZWQuDQo+IA0KPiBUaGUgb25seSBzZW1pLXJl
-YXNvbmFibGUgd2F5LCBhcyBmYXIgYXMgSSBjYW4gc2VlLCB0byBpZGVudGlmeSB0aGlzIG9uIGEg
-YnJvYWQNCj4gc2NhbGUgaXMgdG8gZ2V0IHRoaXMgaW5mb3JtYXRpb24gb3V0IHRvIHRoZSByZXNw
-ZWN0aXZlIG1haW50YWluZXJzIG9mIGRyaXZlcnMNCj4gd2l0aCBhcGNpX2V2YWx1YXRlX3tpbnRl
-Z2VyLG9iamVjdCxkc20sLi4/fSBjYWxscyBhbmQgYXNrIHRoZW0gdG8gY2hlY2sNCj4gdGhvc2Ug
-Y2FsbHMgYWdhaW5zdCBEU0RUcy4gQWxzbyBtYXliZSBoZWxwIHRoZW0gYnkgaW50cm9kdWNpbmcg
-YSBmdW5jdGlvbg0KPiB3aGljaCBkb2VzIEJ1ZmZlci10by1JbnRlZ2VyIGNvbnZlcnNpb24uDQo+
-IA0KPiBSZWdhcmRzLA0KPiBNYXhpbWlsaWFuDQo+IA0KDQo=
+Export standard LPC configuration values from various LPC/eSPI
+controllers. This allows userspace components such as fwupd to
+verify the most basic SPI protections are set correctly.
+For instance, checking BIOSWE is disabled and BLE is enabled.
+
+More cutting-edge checks (e.g. PRx and BootGuard) can be added
+once the basics are in place. Exporting these values from the
+kernel allows us to report the security level of the platform
+without rebooting and running an unsigned EFI binary like
+chipsec.
+
+Signed-off-by: Richard Hughes <richard@hughsie.com>
+---
+ MAINTAINERS                          |   6 +
+ drivers/platform/x86/Kconfig         |  10 ++
+ drivers/platform/x86/Makefile        |   1 +
+ drivers/platform/x86/intel_spi_lpc.c | 183 +++++++++++++++++++++++++++
+ 4 files changed, 200 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_spi_lpc.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2926327e4976..2779a8d48f1c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -401,6 +401,12 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/i2c-multi-instantiate.c
+ 
++SPI LPC configuration
++M:	Richard Hughes <richard@hughsie.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/intel_spi_lpc.c
++
+ ACPI PMIC DRIVERS
+ M:	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+ M:	Len Brown <lenb@kernel.org>
+diff --git a/drivers/platform/x86/Kconfig
+b/drivers/platform/x86/Kconfig
+index 0ad7ad8cf8e1..5f7441cde5e7 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -837,6 +837,16 @@ config INTEL_VBTN
+ 	  To compile this driver as a module, choose M here: the module
+will
+ 	  be called intel_vbtn.
+ 
++config INTEL_SPI_LPC
++	tristate "Intel SPI LPC configuration"
++	depends on SECURITY
++	help
++	  Export LPC configuration attributes for the system SPI chip.
++
++	  To compile this driver as a module, choose M here: the module
+will
++	  be called intel_spi_lpc.
++	  If unsure, say N.
++
+ config SURFACE3_WMI
+ 	tristate "Surface 3 WMI Driver"
+ 	depends on ACPI_WMI
+diff --git a/drivers/platform/x86/Makefile
+b/drivers/platform/x86/Makefile
+index 53408d965874..e8f6901bb165 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -78,6 +78,7 @@ obj-$(CONFIG_INTEL_INT0002_VGPIO)	+=
+intel_int0002_vgpio.o
+ obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
+ obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+ obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
++obj-$(CONFIG_INTEL_SPI_LPC)		+= intel_spi_lpc.o
+ 
+ # Microsoft
+ obj-$(CONFIG_SURFACE3_WMI)		+= surface3-wmi.o
+diff --git a/drivers/platform/x86/intel_spi_lpc.c
+b/drivers/platform/x86/intel_spi_lpc.c
+new file mode 100644
+index 000000000000..dd573593a0f5
+--- /dev/null
++++ b/drivers/platform/x86/intel_spi_lpc.c
+@@ -0,0 +1,183 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * SPI LPC flash platform security driver
++ *
++ * Copyright 2020 (c) Richard Hughes (richard@hughsie.com)
++ *
++ * This file is licensed under  the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/module.h>
++#include <linux/security.h>
++#include <linux/pci.h>
++
++/* LPC bridge PCI config space registers */
++#define BIOS_CNTL_REG				0xDC
++#define BIOS_CNTL_WRITE_ENABLE_MASK		0x01
++#define BIOS_CNTL_LOCK_ENABLE_MASK		0x02
++#define BIOS_CNTL_WP_DISABLE_MASK		0x20
++
++/*
++ * This data only exists for exporting the supported PCI ids via
++ * MODULE_DEVICE_TABLE.  We do not actually register a pci_driver.
++ */
++static const struct pci_device_id pci_tbl[] = {
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x02a4)}, /* Comet Lake SPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x34a4)}, /* Ice Lake-LP SPI
+*/
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x9c66)}, /* 8 Series SPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x9ce6)}, /* Wildcat Point-LP
+GSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x9d2a)}, /* Sunrise Point-
+LP/SPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x9d4e)}, /* Sunrise Point
+LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x9da4)}, /* Cannon Point-LP
+SPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa140)}, /* Sunrise Point-H
+LPC */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa141)}, /* Sunrise Point-H
+LPC */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa142)}, /* Sunrise Point-H
+LPC */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa143)}, /* H110 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa144)}, /* H170 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa145)}, /* Z170 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa146)}, /* Q170 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa147)}, /* Q150 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa148)}, /* B150 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa149)}, /* C236 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa14a)}, /* C232 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa14b)}, /* Sunrise Point-H
+LPC */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa14c)}, /* Sunrise Point-H
+LPC */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa14d)}, /* QM170 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa14e)}, /* HM170 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa14f)}, /* Sunrise Point-H
+LPC */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa150)}, /* CM236 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa151)}, /* Sunrise Point-H
+LPC */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa152)}, /* HM175 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa153)}, /* QM175 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa154)}, /* CM238 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa155)}, /* Sunrise Point-H
+LPC */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa1c1)}, /* C621 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa1c2)}, /* C622 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa1c3)}, /* C624 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa1c4)}, /* C625 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa1c5)}, /* C626 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa1c6)}, /* C627 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa1c7)}, /* C628 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa304)}, /* H370 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa305)}, /* Z390 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa306)}, /* Q370 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa30c)}, /* QM370 LPC/eSPI */
++	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa324)}, /* Cannon Lake PCH
+SPI */
++	{0, }
++};
++MODULE_DEVICE_TABLE(pci, pci_tbl);
++
++struct dentry *spi_dir;
++struct dentry *spi_bioswe;
++struct dentry *spi_ble;
++struct dentry *spi_smm_bwp;
++struct pci_dev *dev;
++const u8 bios_cntl_off = BIOS_CNTL_REG;
++
++static ssize_t bioswe_read(struct file *filp, char __user *buf,
++			   size_t count, loff_t *ppos)
++{
++	char tmp[2];
++	u8 bios_cntl_val;
++
++	pci_read_config_byte(dev, bios_cntl_off, &bios_cntl_val);
++	sprintf(tmp, "%d\n",
++		bios_cntl_val & BIOS_CNTL_WRITE_ENABLE_MASK ? 1 : 0);
++	return simple_read_from_buffer(buf, count, ppos, tmp,
+sizeof(tmp));
++}
++
++static const struct file_operations spi_bioswe_ops = {
++	.read  = bioswe_read,
++};
++
++static ssize_t ble_read(struct file *filp, char __user *buf,
++			size_t count, loff_t *ppos)
++{
++	char tmp[2];
++	u8 bios_cntl_val;
++
++	pci_read_config_byte(dev, bios_cntl_off, &bios_cntl_val);
++	sprintf(tmp, "%d\n",
++		bios_cntl_val & BIOS_CNTL_LOCK_ENABLE_MASK ? 1 : 0);
++	return simple_read_from_buffer(buf, count, ppos, tmp,
+sizeof(tmp));
++}
++
++static const struct file_operations spi_ble_ops = {
++	.read  = ble_read,
++};
++
++static ssize_t smm_bwp_read(struct file *filp, char __user *buf,
++			    size_t count, loff_t *ppos)
++{
++	char tmp[2];
++	u8 bios_cntl_val;
++
++	pci_read_config_byte(dev, bios_cntl_off, &bios_cntl_val);
++	sprintf(tmp, "%d\n",
++		bios_cntl_val & BIOS_CNTL_WP_DISABLE_MASK ? 1 : 0);
++	return simple_read_from_buffer(buf, count, ppos, tmp,
+sizeof(tmp));
++}
++
++static const struct file_operations spi_smm_bwp_ops = {
++	.read  = smm_bwp_read,
++};
++
++static int __init mod_init(void)
++{
++	int i;
++
++	/* Find SPI Controller */
++	for (i = 0; !dev && pci_tbl[i].vendor; ++i)
++		dev = pci_get_device(pci_tbl[i].vendor,
++				     pci_tbl[i].device, NULL);
++	if (!dev)
++		return -ENODEV;
++
++	spi_dir = securityfs_create_dir("spi", NULL);
++	if (IS_ERR(spi_dir))
++		return -1;
++
++	spi_bioswe =
++	    securityfs_create_file("bioswe",
++				   0600, spi_dir, NULL,
++				   &spi_bioswe_ops);
++	if (IS_ERR(spi_bioswe))
++		goto out;
++	spi_ble =
++	    securityfs_create_file("ble",
++				   0600, spi_dir, NULL,
++				   &spi_ble_ops);
++	if (IS_ERR(spi_ble))
++		goto out;
++	spi_smm_bwp =
++	    securityfs_create_file("smm_bwp",
++				   0600, spi_dir, NULL,
++				   &spi_smm_bwp_ops);
++	if (IS_ERR(spi_smm_bwp))
++		goto out;
++
++	return 0;
++out:
++	securityfs_remove(spi_bioswe);
++	securityfs_remove(spi_ble);
++	securityfs_remove(spi_smm_bwp);
++	securityfs_remove(spi_dir);
++	return -1;
++}
++
++static void __exit mod_exit(void)
++{
++	securityfs_remove(spi_bioswe);
++	securityfs_remove(spi_ble);
++	securityfs_remove(spi_smm_bwp);
++	securityfs_remove(spi_dir);
++}
++
++module_init(mod_init);
++module_exit(mod_exit);
++
++MODULE_DESCRIPTION("SPI LPC flash platform security driver");
++MODULE_AUTHOR("Richard Hughes <richard@hughsie.com>");
++MODULE_LICENSE("GPL");
