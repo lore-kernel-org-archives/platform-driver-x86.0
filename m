@@ -1,70 +1,150 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Subject: Re: [PATCH] platform/x86: dell-laptop: don't register
- platform::micmute if the related tokens don't exist.
-Date: Thu, 7 May 2020 13:13:31 +0200
-Message-ID: <20200507111331.dzge7htw5toejh72@pali>
-References: <20200507094242.7523-1-koba.ko@canonical.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
+ switch on "Detachable" and "Portable" chassis-types
+Date: Thu, 7 May 2020 13:25:38 +0200
+Message-ID: <ca5e5db1-eac5-358b-7d85-95d62e87b6f0@redhat.com>
+References: <20200502182951.114231-1-hdegoede@redhat.com>
+ <20200502182951.114231-5-hdegoede@redhat.com>
+ <7c3e5f844a224ff780cd8e3b3f5f7641@AUSX13MPC101.AMER.DELL.COM>
+ <13a8ec94-1eae-4d95-7238-85c612ebc896@redhat.com>
+ <afe7c366c97f4ab18d5a98a9695ceff6@AUSX13MPC101.AMER.DELL.COM>
+ <CAHp75VcNJFfgshhL_pYsHodF1pMNySw08Z_4jr-vVkE-Xpj_ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200507094242.7523-1-koba.ko@canonical.com>
+In-Reply-To: <CAHp75VcNJFfgshhL_pYsHodF1pMNySw08Z_4jr-vVkE-Xpj_ng@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: koba.ko@canonical.com
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thursday 07 May 2020 17:42:42 koba.ko@canonical.com wrote:
-> From: Koba Ko <koba.ko@canonical.com>
-> 
-> Error messge is issued,
-> "platform::micmute: Setting an LED's brightness failed (-19)",
-> Even the device isn't presented.
-> 
-> Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
-> If one of two tokens doesn't exist, don't register platform::micmute.
-> 
-> Signed-off-by: Koba Ko <koba.ko@canonical.com>
-> ---
->  drivers/platform/x86/dell-laptop.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-> index 1e46022fb2c5..afc1ded83e56 100644
-> --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
-> @@ -2208,10 +2208,13 @@ static int __init dell_init(void)
->  
->  	dell_laptop_register_notifier(&dell_laptop_notifier);
->  
-> -	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
-> -	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
-> -	if (ret < 0)
-> -		goto fail_led;
-> +	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
-> +	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
-> +		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
-> +		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
-> +		if (ret < 0)
-> +			goto fail_led;
-> +	}
+Hi,
 
-Hello! I think that this is correct approach. Changing micmute LED is
-done via those GLOBAL_MIC_MUTE_DISABLE and GLOBAL_MIC_MUTE_ENABLE
-tokens. And if these tokens are not supported by hardware then linux
-kernel should not register micmute LED device. There are lot of Dell
-machines without led diode for microphone and these machines obviously
-would not support those tokens.
-
-But this change is incomplete as registration of led class dev would be
-optional. So deregistration also needs to be optional.
-
-And I think there is missing better description / explanation of this
-change to make it clear what really happens.
-
->  
->  	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
->  		return 0;
-> -- 
-> 2.17.1
+On 5/5/20 4:27 PM, Andy Shevchenko wrote:
+> On Tue, May 5, 2020 at 5:22 PM <Mario.Limonciello@dell.com> wrote:
+>>
+>>> -----Original Message-----
+>>> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
+>>> owner@vger.kernel.org> On Behalf Of Hans de Goede
+>>> Sent: Tuesday, May 5, 2020 4:06 AM
+>>> To: Limonciello, Mario; dvhart@infradead.org; andy@infradead.org
+>>> Cc: linux-acpi@vger.kernel.org; platform-driver-x86@vger.kernel.org; linux-
+>>> kernel@vger.kernel.org
+>>> Subject: Re: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
+>>> switch on "Detachable" and "Portable" chassis-types
+>>>
+>>>
+>>> [EXTERNAL EMAIL]
+>>>
+>>> Hi,
+>>>
+>>> On 5/4/20 5:37 PM, Mario.Limonciello@dell.com wrote:
+>>>>
+>>>>
+>>>>> -----Original Message-----
+>>>>> From: Hans de Goede <hdegoede@redhat.com>
+>>>>> Sent: Saturday, May 2, 2020 1:30 PM
+>>>>> To: Darren Hart; Andy Shevchenko; Limonciello, Mario
+>>>>> Cc: Hans de Goede; linux-acpi@vger.kernel.org; platform-driver-
+>>>>> x86@vger.kernel.org; linux-kernel@vger.kernel.org
+>>>>> Subject: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
+>>> switch
+>>>>> on "Detachable" and "Portable" chassis-types
+>>>>>
+>>>>>
+>>>>> [EXTERNAL EMAIL]
+>>>>>
+>>>>> Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+>>>>> switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
+>>>>> reporting SW_TABLET_MODE = 1 to userspace on laptops.
+>>>>>
+>>>>> Some devices with a detachable keyboard and using the intel-vbnt (INT33D6)
+>>>>> interface to report if they are in tablet mode (keyboard detached) or not,
+>>>>> report 32 / "Detachable" as chassis-type, e.g. the HP Pavilion X2 series.
+>>>>>
+>>>>> Other devices with a detachable keyboard and using the intel-vbnt (INT33D6)
+>>>>> interface to report SW_TABLET_MODE, report 8 / "Portable" as chassis-type.
+>>>>> The Dell Venue 11 Pro 7130 is an example of this.
+>>>>>
+>>>>> Extend the DMI chassis-type check to also accept Portables and Detachables
+>>>>> so that the intel-vbtn driver will report SW_TABLET_MODE on these devices.
+>>>>>
+>>>>> Note the chassis-type check was originally added to avoid a false-positive
+>>>>> tablet-mode report on the Dell XPS 9360 laptop. To the best of my knowledge
+>>>>> that laptop is using a chassis-type of 9 / "Laptop", so after this commit
+>>>>> we still ignore the tablet-switch for that chassis-type.
+>>>>
+>>>> Yes that's correct.
+>>>>
+>>>>>
+>>>>> Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+>>>>> switch on 2-in-1's")
+>>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>>>> ---
+>>>>> Looking at the Microsoft Windows documentation for tablet-mode reporting:
+>>>>> https://docs.microsoft.com/en-us/windows-hardware/drivers/gpiobtn/button-
+>>>>> implementation
+>>>>>
+>>>>> Then the presence of a tablet-mode switch is indicated by the presence
+>>>>> of a PNP0C60 compatible ACPI devices. There are 2 ways in which this device
+>>>>> can report the tablet-mode. 1. Directly providing a GpioInt resource inside
+>>>>> the PNP0C60 device, 2. Through injecting events from a Windows driver.
+>>>>>
+>>>>> It seems that the intel-vbtn / the INT33D6 ACPI device is the ACPI side
+>>>>> of Intel's generic solution for the case where the tablet-mode comes from
+>>>>> the embedded-controller and needs to be "injected".
+>>>>>
+>>>>> This all suggests that it might be better to replace the chassis-type
+>>>>> check with a acpi_dev_present("PNP0C60", NULL, -1) check.
+>>>>>
+>>>>> Mario, can you provide an acpidump and alsa-info.sh output for the
+>>>>> Dell XPS 9360, so that I can check if that might help with the issue
+>>>>> there, and thus is a potential candidate to replace the chassis-type
+>>>>> check?
+>>>>
+>>>> Unfortunately with WFH right now, I don't have access to a XPS 9630 to
+>>>> double check the patch series.
+>>>>
+>>>> However I do agree this should be a good approach.
+>>>
+>>> Ok, so lets stick with the chassis-type check (as amended by this patch)
+>>> for now then. Then once you are able to go to your office again, we
+>>> can examine the acpi_dev_present("PNP0C60", NULL, -1) alternative.
+>>
+>> I know XPS 13's are pretty popular, perhaps someone on the mailing list who has
+>> one can share ACPI dump in the interim.
 > 
+> https://github.com/intel/dptfxtract/issues/13
+
+Good one.
+
+So this has:
+
+         Device (CIND)
+         {
+             Name (_HID, "INT33D3" /* Intel GPIO Buttons */)  // _HID: Hardware I
+             Name (_CID, "PNP0C60" /* Display Sensor Device */)  // _CID: Compati
+             Method (_STA, 0, Serialized)  // _STA: Status
+             {
+                 If ((OSYS >= 0x07DC))
+                 {
+                     Return (0x0F)
+                 }
+
+                 Return (Zero)
+             }
+         }
+
+And OSYS >= 0x07DC checks for "Windows 2012" which Linux does advertise,
+so despite not having a tablet-mode(switch) the XPS 9360 still has a
+PNP0C60 ACPI device and will report 0xf (present) as status for it,
+so a acpi_dev_present("PNP0C60", NULL, -1) check will succeed on it.
+
+Conclusion: such a check is not a valid alternative for checking DMI
+chassis-types (and from that pov this series thus is ready for merging).
+
+Regards,
+
+Hans
