@@ -1,30 +1,40 @@
-From: Richard Hughes <hughsient@gmail.com>
-Subject: Re: [PATCH] platform/x86: Export LPC attributes for the system SPI chip
-Date: Thu, 7 May 2020 20:49:05 +0100
-Message-ID: <CAD2FfiGweUHNJGdj7OUQFxEhQBYvMCbuWM-+ez=SpN=HbcaS4Q@mail.gmail.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86: Export LPC attributes for the system SPI
+ chip
+Date: Thu, 7 May 2020 20:03:21 +0000
+Message-ID: <70757953c25645baac2dddd7c6924d05@AUSX13MPC101.AMER.DELL.COM>
 References: <18e48255d68a1408b3e3152780f0e789df540059.camel@gmail.com>
  <aa217de398584fa7846cf4ac0c872036@AUSX13MPC101.AMER.DELL.COM>
- <CAD2FfiEk8Fq3=i_3NHvtuwip=-v_cGfnYSowdPi86U_BcgP2gQ@mail.gmail.com> <61c7782cd2e64bb9ab2aaf6a016bbb6c@AUSX13MPC101.AMER.DELL.COM>
+ <CAD2FfiEk8Fq3=i_3NHvtuwip=-v_cGfnYSowdPi86U_BcgP2gQ@mail.gmail.com>
+ <61c7782cd2e64bb9ab2aaf6a016bbb6c@AUSX13MPC101.AMER.DELL.COM>
+ <CAD2FfiGweUHNJGdj7OUQFxEhQBYvMCbuWM-+ez=SpN=HbcaS4Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-security-module-owner@vger.kernel.org>
-In-Reply-To: <61c7782cd2e64bb9ab2aaf6a016bbb6c@AUSX13MPC101.AMER.DELL.COM>
+In-Reply-To: <CAD2FfiGweUHNJGdj7OUQFxEhQBYvMCbuWM-+ez=SpN=HbcaS4Q@mail.gmail.com>
+Content-Language: en-US
 Sender: owner-linux-security-module@vger.kernel.org
-To: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>, mika.westerberg@linux.intel.com
+To: hughsient@gmail.com
+Cc: platform-driver-x86@vger.kernel.org, linux-security-module@vger.kernel.org, mika.westerberg@linux.intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 7 May 2020 at 20:22, <Mario.Limonciello@dell.com> wrote:
-> By default the driver exposes SPI serial flash contents as read-only but =
-it can
-> be changed from kernel command line, passing =E2=80=9Cintel-spi.writeable=
-=3D1=E2=80=9D.
-
-Ahh, that was the bit I didn't know; having the SPI as readonly by
-default is certainly a good idea, and probably sane enough to enable
-for Fedora/RHEL as you still need to "do" something manual to enable
-SPI writing. I guess I can add my securityfs additions to
-intel-spi-pci.c with Mikas approval.
-
-Richard
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIEh1Z2hlcyA8aHVn
+aHNpZW50QGdtYWlsLmNvbT4NCj4gU2VudDogVGh1cnNkYXksIE1heSA3LCAyMDIwIDI6NDkgUE0N
+Cj4gVG86IExpbW9uY2llbGxvLCBNYXJpbw0KPiBDYzogUGxhdGZvcm0gRHJpdmVyOyBsaW51eC1z
+ZWN1cml0eS1tb2R1bGU7IG1pa2Eud2VzdGVyYmVyZ0BsaW51eC5pbnRlbC5jb20NCj4gU3ViamVj
+dDogUmU6IFtQQVRDSF0gcGxhdGZvcm0veDg2OiBFeHBvcnQgTFBDIGF0dHJpYnV0ZXMgZm9yIHRo
+ZSBzeXN0ZW0gU1BJDQo+IGNoaXANCj4gDQo+IA0KPiBbRVhURVJOQUwgRU1BSUxdDQo+IA0KPiBP
+biBUaHUsIDcgTWF5IDIwMjAgYXQgMjA6MjIsIDxNYXJpby5MaW1vbmNpZWxsb0BkZWxsLmNvbT4g
+d3JvdGU6DQo+ID4gQnkgZGVmYXVsdCB0aGUgZHJpdmVyIGV4cG9zZXMgU1BJIHNlcmlhbCBmbGFz
+aCBjb250ZW50cyBhcyByZWFkLW9ubHkgYnV0IGl0DQo+IGNhbg0KPiA+IGJlIGNoYW5nZWQgZnJv
+bSBrZXJuZWwgY29tbWFuZCBsaW5lLCBwYXNzaW5nIOKAnGludGVsLXNwaS53cml0ZWFibGU9MeKA
+nS4NCj4gDQo+IEFoaCwgdGhhdCB3YXMgdGhlIGJpdCBJIGRpZG4ndCBrbm93OyBoYXZpbmcgdGhl
+IFNQSSBhcyByZWFkb25seSBieQ0KPiBkZWZhdWx0IGlzIGNlcnRhaW5seSBhIGdvb2QgaWRlYSwg
+YW5kIHByb2JhYmx5IHNhbmUgZW5vdWdoIHRvIGVuYWJsZQ0KPiBmb3IgRmVkb3JhL1JIRUwgYXMg
+eW91IHN0aWxsIG5lZWQgdG8gImRvIiBzb21ldGhpbmcgbWFudWFsIHRvIGVuYWJsZQ0KPiBTUEkg
+d3JpdGluZy4gSSBndWVzcyBJIGNhbiBhZGQgbXkgc2VjdXJpdHlmcyBhZGRpdGlvbnMgdG8NCj4g
+aW50ZWwtc3BpLXBjaS5jIHdpdGggTWlrYXMgYXBwcm92YWwuDQo+IA0KPiBSaWNoYXJkDQoNCk1p
+a2EsDQoNClNpbmNlIHlvdSdyZSBiZWluZyBqb2luZWQgaW50byB0aGUgdGhyZWFkIGxhdGUsIGhl
+cmUgaXMgdGhlIGNvbnRleHQ6DQpodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9wbGF0Zm9y
+bS1kcml2ZXIteDg2L21zZzIxNjQ2Lmh0bWwNCg0KVGhhbmtzLA0K
