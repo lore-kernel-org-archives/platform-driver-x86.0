@@ -1,70 +1,34 @@
-From: koba.ko@canonical.com
-Subject: [PATCH] platform/x86: dell-laptop: don't register platform::micmute if the related tokens don't exist.
-Date: Thu,  7 May 2020 20:27:03 +0800
-Message-ID: <20200507122703.14617-1-koba.ko@canonical.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-laptop: don't register
+ platform::micmute if the related tokens don't exist.
+Date: Thu, 7 May 2020 15:54:06 +0300
+Message-ID: <CAHp75Vcz+HgR1Vxjio+HvLOi_gpZiZLe4P-iPtsLRY8nVWE2+w@mail.gmail.com>
+References: <20200507094242.7523-1-koba.ko@canonical.com> <20200507111331.dzge7htw5toejh72@pali>
+ <CAJB-X+WKqrWuKK0=BWtj7f8AovsMzbCO-QaLi2ZaP0_Q6321WQ@mail.gmail.com> <20200507114517.tslux7m7aysuwaok@pali>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200507114517.tslux7m7aysuwaok@pali>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello <mario.limonciello@dell.com>
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: Koba Ko <koba.ko@canonical.com>, Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Koba Ko <koba.ko@canonical.com>
+On Thu, May 7, 2020 at 2:45 PM Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> On Thursday 07 May 2020 19:27:47 Koba Ko wrote:
 
-During boot up, Error messge is issued,
-"platform::micmute: Setting an LED's brightness failed (-19)",
-but the device isn't presented.
+> > don't understand "registration and deregistration would be optional',
+> > could you explain more!?
+>
+> After your patch led_classdev_register() function is not always called.
+> And led_classdev_unregister() should not be called when there is no
+> device registered.
 
-Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
-If one of two tokens doesn't exist,
-don't call led_classdev_register() for platform::micmute.
-After that, you wouldn't see the platform::micmute in /sys/class/leds/,
-and the error message wouldn't see in dmesg.
+I think it's not a strong requirement after the commit
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit?i=
+d=3D1dbb9fb4082ce2a2f1cf9596881ddece062d15d0
 
-Signed-off-by: Koba Ko <koba.ko@canonical.com>
----
- drivers/platform/x86/dell-laptop.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index 74e988f839e8..e315185dbdd6 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -2164,7 +2164,7 @@ static struct led_classdev micmute_led_cdev = {
- static int __init dell_init(void)
- {
- 	struct calling_interface_token *token;
--	int max_intensity = 0;
-+	int max_intensity = 0, is_micmute_exist = 0;
- 	int ret;
- 
- 	if (!dmi_check_system(dell_device_table))
-@@ -2204,10 +2204,14 @@ static int __init dell_init(void)
- 
- 	dell_laptop_register_notifier(&dell_laptop_notifier);
- 
--	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
--	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
--	if (ret < 0)
--		goto fail_led;
-+	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
-+	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
-+		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
-+		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
-+		if (ret < 0)
-+			goto fail_led;
-+		is_micmute_exist = 1;
-+	}
- 
- 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
- 		return 0;
-@@ -2254,7 +2258,8 @@ static int __init dell_init(void)
- fail_get_brightness:
- 	backlight_device_unregister(dell_backlight_device);
- fail_backlight:
--	led_classdev_unregister(&micmute_led_cdev);
-+	if (is_micmute_exist)
-+		led_classdev_unregister(&micmute_led_cdev);
- fail_led:
- 	dell_cleanup_rfkill();
- fail_rfkill:
--- 
-2.25.1
+--=20
+With Best Regards,
+Andy Shevchenko
