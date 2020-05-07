@@ -1,50 +1,30 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: Export LPC attributes for the system SPI
- chip
-Date: Thu, 7 May 2020 19:22:02 +0000
-Message-ID: <61c7782cd2e64bb9ab2aaf6a016bbb6c@AUSX13MPC101.AMER.DELL.COM>
+From: Richard Hughes <hughsient@gmail.com>
+Subject: Re: [PATCH] platform/x86: Export LPC attributes for the system SPI chip
+Date: Thu, 7 May 2020 20:49:05 +0100
+Message-ID: <CAD2FfiGweUHNJGdj7OUQFxEhQBYvMCbuWM-+ez=SpN=HbcaS4Q@mail.gmail.com>
 References: <18e48255d68a1408b3e3152780f0e789df540059.camel@gmail.com>
  <aa217de398584fa7846cf4ac0c872036@AUSX13MPC101.AMER.DELL.COM>
- <CAD2FfiEk8Fq3=i_3NHvtuwip=-v_cGfnYSowdPi86U_BcgP2gQ@mail.gmail.com>
+ <CAD2FfiEk8Fq3=i_3NHvtuwip=-v_cGfnYSowdPi86U_BcgP2gQ@mail.gmail.com> <61c7782cd2e64bb9ab2aaf6a016bbb6c@AUSX13MPC101.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-security-module-owner@vger.kernel.org>
-In-Reply-To: <CAD2FfiEk8Fq3=i_3NHvtuwip=-v_cGfnYSowdPi86U_BcgP2gQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <61c7782cd2e64bb9ab2aaf6a016bbb6c@AUSX13MPC101.AMER.DELL.COM>
 Sender: owner-linux-security-module@vger.kernel.org
-To: hughsient@gmail.com
-Cc: platform-driver-x86@vger.kernel.org, linux-security-module@vger.kernel.org
+To: Mario Limonciello <Mario.Limonciello@dell.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>, mika.westerberg@linux.intel.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
-LW93bmVyQHZnZXIua2VybmVsLm9yZyA8cGxhdGZvcm0tZHJpdmVyLXg4Ni0NCj4gb3duZXJAdmdl
-ci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgUmljaGFyZCBIdWdoZXMNCj4gU2VudDogVGh1cnNk
-YXksIE1heSA3LCAyMDIwIDE6NDcgUE0NCj4gVG86IExpbW9uY2llbGxvLCBNYXJpbw0KPiBDYzog
-UGxhdGZvcm0gRHJpdmVyOyBsaW51eC1zZWN1cml0eS1tb2R1bGUNCj4gU3ViamVjdDogUmU6IFtQ
-QVRDSF0gcGxhdGZvcm0veDg2OiBFeHBvcnQgTFBDIGF0dHJpYnV0ZXMgZm9yIHRoZSBzeXN0ZW0g
-U1BJDQo+IGNoaXANCj4gDQo+IA0KPiBbRVhURVJOQUwgRU1BSUxdDQo+IA0KPiBPbiBUaHUsIDcg
-TWF5IDIwMjAgYXQgMTg6NDUsIDxNYXJpby5MaW1vbmNpZWxsb0BkZWxsLmNvbT4gd3JvdGU6DQo+
-ID4gVG8gZWNobyBBbmR5J3MgcXVlc3Rpb24sIEkgd291bGQgd29uZGVyIGlmIGl0IG1ha2VzIHNl
-bnNlIHRvIGp1c3QgZXhwb3J0DQo+ID4gdGhlc2UgYXR0cmlidXRlcyBpbiBzZWN1cml0eWZzIGRp
-cmVjdGx5IGZyb20gdGhlIGludGVsLXNwaS1wY2kgZHJpdmVyIHJhdGhlcg0KPiA+IHRoYW4gdG8g
-aGF2ZSBhbm90aGVyIGRyaXZlciBpbiBwbGF0Zm9ybS14ODYgdG8gZ2V0IHRoZSBpbmZvcm1hdGlv
-bi4NCj4gDQo+IFRoZSAiREFOR0VST1VTIiBpbiB0aGUgU1BJX0lOVEVMX1NQSV9QQ0kgYW5kIFNQ
-SV9JTlRFTF9TUElfUExBVEZPUk0NCj4gd29ycmllZCBtZSBzb21ld2hhdC4gSSdtIGd1ZXNzaW5n
-IHRoaXMgaXMgd2h5IG1vc3QgZGlzdHJvcyBkb24ndA0KPiBjb21waWxlIGl0IGFzIGEgbW9kdWxl
-IGJ5IGRlZmF1bHQuIElmIHRoZSBtb2R1bGUgaXNuJ3QgYWN0dWFsbHkgc3RpbGwNCj4gY29uc2lk
-ZXJlZCBkYW5nZXJvdXMsIGFuZCB3ZSBjYW4gcmVtb3ZlIHRoZSB3YXJuaW5nIEkgY2FuIG9mIGNv
-dXJzZQ0KPiByZXNwaW4gbXkgcGF0Y2ggb24gdG9wIG9mIHRoYXQgaW5zdGVhZC4NCj4gDQo+IFJp
-Y2hhcmQuDQoNCldlbGwgcmVhZGluZyB0aGUgZG9jdW1lbnRhdGlvbiBmb3IgaXQgY2FuIGV4cGxh
-aW4gd2h5IGl0J3MgcG90ZW50aWFsbHkgZGFuZ2Vyb3VzLg0KSWYgYSBtYW51ZmFjdHVyZXIgaGFz
-bid0IHByb3Blcmx5IGNvbmZpZ3VyZWQgbG9jayBkb3duIGJpdHMgbGlrZSB0aG9zZSB5b3UncmUg
-dHJ5aW5nDQp0byBleHBvc2UsIHRoYXQgd291bGQgYWxsb3cgZG9pbmcgZGFuZ2Vyb3VzIHRoaW5n
-cy4NCg0KaHR0cHM6Ly93d3cua2VybmVsLm9yZy9kb2MvaHRtbC9sYXRlc3QvZHJpdmVyLWFwaS9t
-dGQvaW50ZWwtc3BpLmh0bWwNCiINCiBUaGUgaW50ZWwtc3BpIGRyaXZlciBtYWtlcyBpdCBwb3Nz
-aWJsZSB0byByZWFkIGFuZCB3cml0ZSB0aGUgU1BJIHNlcmlhbCBmbGFzaCwgaWYgDQpjZXJ0YWlu
-IHByb3RlY3Rpb24gYml0cyBhcmUgbm90IHNldCBhbmQgbG9ja2VkLiBJZiBpdCBmaW5kcyBhbnkg
-b2YgdGhlbSBzZXQsIHRoZSANCndob2xlIE1URCBkZXZpY2UgaXMgbWFkZSByZWFkLW9ubHkgdG8g
-cHJldmVudCBwYXJ0aWFsIG92ZXJ3cml0ZXMuDQpCeSBkZWZhdWx0IHRoZSBkcml2ZXIgZXhwb3Nl
-cyBTUEkgc2VyaWFsIGZsYXNoIGNvbnRlbnRzIGFzIHJlYWQtb25seSBidXQgaXQgY2FuDQpiZSBj
-aGFuZ2VkIGZyb20ga2VybmVsIGNvbW1hbmQgbGluZSwgcGFzc2luZyDigJxpbnRlbC1zcGkud3Jp
-dGVhYmxlPTHigJ0uDQoiDQo=
+On Thu, 7 May 2020 at 20:22, <Mario.Limonciello@dell.com> wrote:
+> By default the driver exposes SPI serial flash contents as read-only but =
+it can
+> be changed from kernel command line, passing =E2=80=9Cintel-spi.writeable=
+=3D1=E2=80=9D.
+
+Ahh, that was the bit I didn't know; having the SPI as readonly by
+default is certainly a good idea, and probably sane enough to enable
+for Fedora/RHEL as you still need to "do" something manual to enable
+SPI writing. I guess I can add my securityfs additions to
+intel-spi-pci.c with Mikas approval.
+
+Richard
