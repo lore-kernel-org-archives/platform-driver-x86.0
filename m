@@ -1,153 +1,37 @@
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: 5.6 regression caused by "ACPICA: Dispatcher: always generate
- buffer objects for ASL create_field() operator"
-Date: Wed, 6 May 2020 19:21:50 +0200
-Message-ID: <7fb8757c-41e7-3be0-5552-80696559bdfe@intel.com>
-References: <49f20a91-9362-6249-d413-1461258d56a9@redhat.com>
- <11795a75-70de-5fcc-878f-14a0381947ea@gmail.com>
- <BYAPR11MB3096868FE8523B2F94A50F9DF0A70@BYAPR11MB3096.namprd11.prod.outlook.com>
+From: Chih-Wei Huang <cwhuang@linux.org.tw>
+Subject: [PATCH] platform/x86: acerhdf: replace space by * in modalias
+Date: Thu,  7 May 2020 11:12:01 +0800
+Message-ID: <20200507031201.20460-1-cwhuang@linux.org.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <BYAPR11MB3096868FE8523B2F94A50F9DF0A70@BYAPR11MB3096.namprd11.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Kaneda, Erik" <erik.kaneda@intel.com>
-Cc: Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hdegoede@redhat.com>, "Moore, Robert" <robert.moore@intel.com>, Mattia Dongili <malattia@linux.it>, William Bader <williambader@hotmail.com>, Dominik Mierzejewski <dominik@greysector.net>, linux-acpi <linux-acpi@vger.kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Borislav Petkov <bp@suse.de>, Chih-Wei Huang <cwhuang@linux.org.tw>, =?UTF-8?q?Peter=20K=C3=A4stle?= <peter@piie.net>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 5/6/2020 12:11 AM, Kaneda, Erik wrote:
->
->> -----Original Message-----
->> From: linux-acpi-owner@vger.kernel.org <linux-acpi-
->> owner@vger.kernel.org> On Behalf Of Maximilian Luz
->> Sent: Tuesday, May 5, 2020 6:50 AM
->> To: Hans de Goede <hdegoede@redhat.com>; Wysocki, Rafael J
->> <rafael.j.wysocki@intel.com>; Moore, Robert <robert.moore@intel.com>;
->> Kaneda, Erik <erik.kaneda@intel.com>; Mattia Dongili <malattia@linux.it>;
->> William Bader <williambader@hotmail.com>; Dominik Mierzejewski
->> <dominik@greysector.net>
->> Cc: linux-acpi <linux-acpi@vger.kernel.org>; Darren Hart
->> <dvhart@infradead.org>; Andy Shevchenko <andy@infradead.org>;
->> platform-driver-x86@vger.kernel.org
->> Subject: Re: 5.6 regression caused by "ACPICA: Dispatcher: always generate
->> buffer objects for ASL create_field() operator"
->>
->> On 5/5/20 2:55 PM, Hans de Goede wrote:
->>> Hi All,
->>>
->>> Commit 6d232b29cfce ("ACPICA: Dispatcher: always generate buffer
->>> objects for ASL create_field() operator") has dropped the automatic
->>> conversion of small buffers into integers.
->>>
->>> But some drivers relied on this automatic conversion, these drivers
->>> have checks like this:
->>>
->>>           if (object->type != ACPI_TYPE_INTEGER) {
->>>                   pr_warn("Invalid acpi_object: expected 0x%x got 0x%x\n",
->>>                                   ACPI_TYPE_INTEGER, object->type);
->>>                   kfree(object);
->>>                   return -EINVAL;
->>>           }
->>>
->>> This specific bit comes from the sony-laptop (platform/x86) code, the
->>> ACPICA change has broken this code, causing systems using this driver
->>> to hang on resume from suspend.
->>>
->>> We have multiple bug-reports open for this already:
->>>
->>> https://bugzilla.kernel.org/show_bug.cgi?id=207491
->>> https://bugzilla.redhat.com/show_bug.cgi?id=1829096
->>> https://bugzilla.redhat.com/show_bug.cgi?id=1830150
->>>
->>> Mattia Dongili, the sony-laptop driver has already submitted a fix for
->>> this upstream, adjusting the sony-laptop driver to deal with the
->>> returned object type now being a BUFFER.
->>>
->>> The goal of this email is to:
->>>
->>> 1. Make everyone involved aware of this breakage as we may see similar
->>> breakage elsewhere.
->>>
->>> 2. Discuss if we should maybe revert the ACPICA change.
->>>
->>> If you are reading this then 1. has been accomplished :)
->>>
->>> Which leaves us with 2. I'm tending towards keeping the change, since
->>> it seems the right thing to do and dealing with the fallout. But since
->>> there is fallout we should also at least consider reverting the ACPICA
->>> change.
->>>
->>> So ACPI maintainers what is you take on this ?
-> What a mess. Several thoughts...
->
-> I think we should keep the internal AML interpreter behavior as is because it solves a problem.
+Using space in module alias makes it harder to parse modules.alias.
+Replace it by a star(*).
 
-I also would prefer to deal with the fallout rather than to revert the fix.
+Reviewed-by: Peter Kästle <peter@piie.net>
+Signed-off-by: Chih-Wei Huang <cwhuang@linux.org.tw>
+---
+ drivers/platform/x86/acerhdf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I think that the potential damage is limited and the affected driver 
-code should be fixed anyway which may not happen if the change in 
-question is reverted.
-
-
-> The ACPI spec says that buffers that are small enough to fit inside of integers should be treated as
-> integers. However, we found that this is not the case for CreateField operators. The internal
-> representation of this needs to be a buffer to match MS AML interpreter.
->
-> SNC is not a pre-defined method so we actually don't know what the return type is supposed
-> to be. At some point during the development of this driver, it's likely that someone made an observation
-> about what "SNC" returned at some point in time and continued to assume that it will use the same
-> type.
->
-> For methods that are not a part of the ACPI specification, buffers less than or equal to 8 bytes and
-> integers could be used interchangeably. I don't see a reason why the data inside the buffer should be
-> invalid.
->
-> Erik
->>> Regards,
->>>
->>> Hans
->> Hi,
->>
->> I'd like to advise against reverting the commit. Quite honestly, I don't think
->> reverting the commit is a good idea. This will break things for devices that
->> assume Microsoft-like AML interpreter behavior _inside_ the DSDT. Such as
->> the MS Surface devices for example, which, as stated in the commit message,
->> depend on the type being Buffer via a check on ObjectType(...). There is no
->> fix for those devices other than a) accepting MS behavior in ACPICA, b)
->> introducing a quirk in ACPICA which switches between behaviors on a device
->> basis, or c) patching the DSDT of those devices specifically for Linux.
->>
->> I'd also argue that since this is MS behavior, this is the behavior that almost all
->> consumer electronics devices with ACPI will expect. Case in point, the DSDT
->> of one of the affected Sony laptops, which contains the following code:
->>
->>           CreateField (SNBF, Zero, 0x20, SNBD)
->>           CreateWordField (SNBF, 0x02, CPW0)
->>           CreateWordField (SNBF, 0x04, CPW1)
->>           CreateWordField (SNBF, Zero, RCW0)
->>           CreateWordField (SNBF, 0x02, RCW1)
->>
->> They explicitly create a Buffer field of 32 bits via CreateField and not a 32 bit
->> Integer field via CreateDWordField. I'd argue that if they wanted this field to
->> be an Integer, CreateDWordField would be the straight-forward approach.
->>
->> Unfortunately, I also don't see a way to identify all affected calls to ACPI
->> functions automatically or easily, as this requires to look at the DSDTs and the
->> code behind those calls. If you have DSDTs, here's a way to identify if that
->> particular DSDT/driver combo is affected:
->>
->> If a call to an ACPI function expects an Integer and the ACPI function returns
->> a field created with CreateField(...) and the field is smaller than 64 bits (on
->> 64bit machines), then this call is affected.
->>
->> The only semi-reasonable way, as far as I can see, to identify this on a broad
->> scale is to get this information out to the respective maintainers of drivers
->> with apci_evaluate_{integer,object,dsm,..?} calls and ask them to check
->> those calls against DSDTs. Also maybe help them by introducing a function
->> which does Buffer-to-Integer conversion.
->>
->> Regards,
->> Maximilian
->>
+diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+index 505224225378..306ea92d5b10 100644
+--- a/drivers/platform/x86/acerhdf.c
++++ b/drivers/platform/x86/acerhdf.c
+@@ -837,7 +837,7 @@ MODULE_ALIAS("dmi:*:*Packard*Bell*:pnDOTMU*:");
+ MODULE_ALIAS("dmi:*:*Packard*Bell*:pnENBFT*:");
+ MODULE_ALIAS("dmi:*:*Packard*Bell*:pnDOTMA*:");
+ MODULE_ALIAS("dmi:*:*Packard*Bell*:pnDOTVR46*:");
+-MODULE_ALIAS("dmi:*:*Acer*:pnExtensa 5420*:");
++MODULE_ALIAS("dmi:*:*Acer*:pnExtensa*5420*:");
+ 
+ module_init(acerhdf_init);
+ module_exit(acerhdf_exit);
+-- 
+2.21.1
