@@ -1,33 +1,103 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: dell-laptop: don't register
- platform::micmute if the related tokens don't exist.
-Date: Thu, 7 May 2020 15:58:26 +0300
-Message-ID: <CAHp75VcC4sXC7_jbhFM2bE01NGks0zzQBNquAc_Xz6jcmwvkpw@mail.gmail.com>
-References: <20200507122703.14617-1-koba.ko@canonical.com> <CAJB-X+XwshJp1ud32kXxRGkE+8WdM+=e1MSewmOUvgERk2yGMw@mail.gmail.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH] platform/x86: Export LPC attributes for the system SPI chip
+Date: Thu, 7 May 2020 19:05:31 +0200
+Message-ID: <CABxcv=kTL_grDUL00c_e2jyPD4hTtFS8Jze6pQBEz_arR6TPVA@mail.gmail.com>
+References: <18e48255d68a1408b3e3152780f0e789df540059.camel@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJB-X+XwshJp1ud32kXxRGkE+8WdM+=e1MSewmOUvgERk2yGMw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Koba Ko <koba.ko@canonical.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mario Limonciello <mario.limonciello@dell.com>
+Return-path: <linux-security-module-owner@vger.kernel.org>
+In-Reply-To: <18e48255d68a1408b3e3152780f0e789df540059.camel@gmail.com>
+Sender: owner-linux-security-module@vger.kernel.org
+To: Richard Hughes <hughsient@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-security-module@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, May 7, 2020 at 3:36 PM Koba Ko <koba.ko@canonical.com> wrote:
+Hello Richard,
+
+On Wed, May 6, 2020 at 5:52 PM Richard Hughes <hughsient@gmail.com> wrote:
 >
-> Hi All,
-> I enhanced the patch and refine the commet.
-> please check it again.
+> Export standard LPC configuration values from various LPC/eSPI
+> controllers. This allows userspace components such as fwupd to
+> verify the most basic SPI protections are set correctly.
+> For instance, checking BIOSWE is disabled and BLE is enabled.
+>
+> More cutting-edge checks (e.g. PRx and BootGuard) can be added
+> once the basics are in place. Exporting these values from the
+> kernel allows us to report the security level of the platform
+> without rebooting and running an unsigned EFI binary like
+> chipsec.
+>
+> Signed-off-by: Richard Hughes <richard@hughsie.com>
+> ---
 
-Thank you.
-What you should or shouldn't have done:
-- you need to use version in the patch (-v<n>, where <n> is a version)
-- you need to write a changelog after cutter line '---' instead of
-separate messages or so
-- you need to avoid top postings like this very email you send
-- you need to wait for a while (usually one day or so) to give a
-change for people to look at it
+The patch looks good to me, I just have some small comments.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +config INTEL_SPI_LPC
+> +       tristate "Intel SPI LPC configuration"
+> +       depends on SECURITY
+
+Maybe "depends on SECURITYFS" instead? I would also add ||
+COMPILE_TEST to have more build coverage.
+
+Another option is to not even add a dependency here since the
+securityfs_*() functions are still defined if SECURITYFS isn't
+enabled. They just return -ENODEV.
+
+[snip]
+
+> +       spi_dir = securityfs_create_dir("spi", NULL);
+> +       if (IS_ERR(spi_dir))
+> +               return -1;
+> +
+> +       spi_bioswe =
+> +           securityfs_create_file("bioswe",
+> +                                  0600, spi_dir, NULL,
+> +                                  &spi_bioswe_ops);
+> +       if (IS_ERR(spi_bioswe))
+> +               goto out;
+> +       spi_ble =
+> +           securityfs_create_file("ble",
+> +                                  0600, spi_dir, NULL,
+> +                                  &spi_ble_ops);
+> +       if (IS_ERR(spi_ble))
+> +               goto out;
+> +       spi_smm_bwp =
+> +           securityfs_create_file("smm_bwp",
+> +                                  0600, spi_dir, NULL,
+> +                                  &spi_smm_bwp_ops);
+> +       if (IS_ERR(spi_smm_bwp))
+> +               goto out;
+> +
+> +       return 0;
+> +out:
+> +       securityfs_remove(spi_bioswe);
+> +       securityfs_remove(spi_ble);
+> +       securityfs_remove(spi_smm_bwp);
+
+I don't think this is needed since if smm_bwp was successfully created
+then it will never reach the error handling.
+
+> +       securityfs_remove(spi_dir);
+
+The convention is to remove these in the reverse order that were created, i.e:
+
+securityfs_remove(spi_ble);
+securityfs_remove(spi_bioswe);
+securityfs_remove(spi_dir);
+
+> +static void __exit mod_exit(void)
+> +{
+> +       securityfs_remove(spi_bioswe);
+> +       securityfs_remove(spi_ble);
+> +       securityfs_remove(spi_smm_bwp);
+> +       securityfs_remove(spi_dir);
+> +}
+> +
+
+Same here. It makes it easier if in the future other entries are added.
+
+I wonder if these new entries should be documented in
+Documentation/ABI/. Or maybe that's not a requirement for securityfs?
+
+Best regards,
+Javier
