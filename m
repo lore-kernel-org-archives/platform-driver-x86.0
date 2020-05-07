@@ -1,40 +1,113 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: Export LPC attributes for the system SPI
- chip
-Date: Thu, 7 May 2020 20:03:21 +0000
-Message-ID: <70757953c25645baac2dddd7c6924d05@AUSX13MPC101.AMER.DELL.COM>
-References: <18e48255d68a1408b3e3152780f0e789df540059.camel@gmail.com>
- <aa217de398584fa7846cf4ac0c872036@AUSX13MPC101.AMER.DELL.COM>
- <CAD2FfiEk8Fq3=i_3NHvtuwip=-v_cGfnYSowdPi86U_BcgP2gQ@mail.gmail.com>
- <61c7782cd2e64bb9ab2aaf6a016bbb6c@AUSX13MPC101.AMER.DELL.COM>
- <CAD2FfiGweUHNJGdj7OUQFxEhQBYvMCbuWM-+ez=SpN=HbcaS4Q@mail.gmail.com>
+Subject: RE: [PATCH] platform/x86: dell-laptop: don't register
+ platform::micmute if the related tokens don't exist.
+Date: Thu, 7 May 2020 20:11:08 +0000
+Message-ID: <31e54254d233424f937ea767c5a26f57@AUSX13MPC101.AMER.DELL.COM>
+References: <20200507122703.14617-1-koba.ko@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-security-module-owner@vger.kernel.org>
-In-Reply-To: <CAD2FfiGweUHNJGdj7OUQFxEhQBYvMCbuWM-+ez=SpN=HbcaS4Q@mail.gmail.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200507122703.14617-1-koba.ko@canonical.com>
 Content-Language: en-US
-Sender: owner-linux-security-module@vger.kernel.org
-To: hughsient@gmail.com
-Cc: platform-driver-x86@vger.kernel.org, linux-security-module@vger.kernel.org, mika.westerberg@linux.intel.com
+Sender: linux-kernel-owner@vger.kernel.org
+To: koba.ko@canonical.com, mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIEh1Z2hlcyA8aHVn
-aHNpZW50QGdtYWlsLmNvbT4NCj4gU2VudDogVGh1cnNkYXksIE1heSA3LCAyMDIwIDI6NDkgUE0N
-Cj4gVG86IExpbW9uY2llbGxvLCBNYXJpbw0KPiBDYzogUGxhdGZvcm0gRHJpdmVyOyBsaW51eC1z
-ZWN1cml0eS1tb2R1bGU7IG1pa2Eud2VzdGVyYmVyZ0BsaW51eC5pbnRlbC5jb20NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSF0gcGxhdGZvcm0veDg2OiBFeHBvcnQgTFBDIGF0dHJpYnV0ZXMgZm9yIHRo
-ZSBzeXN0ZW0gU1BJDQo+IGNoaXANCj4gDQo+IA0KPiBbRVhURVJOQUwgRU1BSUxdDQo+IA0KPiBP
-biBUaHUsIDcgTWF5IDIwMjAgYXQgMjA6MjIsIDxNYXJpby5MaW1vbmNpZWxsb0BkZWxsLmNvbT4g
-d3JvdGU6DQo+ID4gQnkgZGVmYXVsdCB0aGUgZHJpdmVyIGV4cG9zZXMgU1BJIHNlcmlhbCBmbGFz
-aCBjb250ZW50cyBhcyByZWFkLW9ubHkgYnV0IGl0DQo+IGNhbg0KPiA+IGJlIGNoYW5nZWQgZnJv
-bSBrZXJuZWwgY29tbWFuZCBsaW5lLCBwYXNzaW5nIOKAnGludGVsLXNwaS53cml0ZWFibGU9MeKA
-nS4NCj4gDQo+IEFoaCwgdGhhdCB3YXMgdGhlIGJpdCBJIGRpZG4ndCBrbm93OyBoYXZpbmcgdGhl
-IFNQSSBhcyByZWFkb25seSBieQ0KPiBkZWZhdWx0IGlzIGNlcnRhaW5seSBhIGdvb2QgaWRlYSwg
-YW5kIHByb2JhYmx5IHNhbmUgZW5vdWdoIHRvIGVuYWJsZQ0KPiBmb3IgRmVkb3JhL1JIRUwgYXMg
-eW91IHN0aWxsIG5lZWQgdG8gImRvIiBzb21ldGhpbmcgbWFudWFsIHRvIGVuYWJsZQ0KPiBTUEkg
-d3JpdGluZy4gSSBndWVzcyBJIGNhbiBhZGQgbXkgc2VjdXJpdHlmcyBhZGRpdGlvbnMgdG8NCj4g
-aW50ZWwtc3BpLXBjaS5jIHdpdGggTWlrYXMgYXBwcm92YWwuDQo+IA0KPiBSaWNoYXJkDQoNCk1p
-a2EsDQoNClNpbmNlIHlvdSdyZSBiZWluZyBqb2luZWQgaW50byB0aGUgdGhyZWFkIGxhdGUsIGhl
-cmUgaXMgdGhlIGNvbnRleHQ6DQpodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9wbGF0Zm9y
-bS1kcml2ZXIteDg2L21zZzIxNjQ2Lmh0bWwNCg0KVGhhbmtzLA0K
+> -----Original Message-----
+> From: koba.ko@canonical.com <koba.ko@canonical.com>
+> Sent: Thursday, May 7, 2020 7:27 AM
+> To: Matthew Garrett; Pali Roh=E1r; Darren Hart; Andy Shevchenko; platform=
+-driver-
+> x86@vger.kernel.org; linux-kernel@vger.kernel.org; Limonciello, Mario
+> Subject: [PATCH] platform/x86: dell-laptop: don't register platform::micm=
+ute if
+> the related tokens don't exist.
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> From: Koba Ko <koba.ko@canonical.com>
+>=20
+> During boot up, Error messge is issued,
+> "platform::micmute: Setting an LED's brightness failed (-19)",
+> but the device isn't presented.
+>=20
+> Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
+> If one of two tokens doesn't exist,
+> don't call led_classdev_register() for platform::micmute.
+> After that, you wouldn't see the platform::micmute in /sys/class/leds/,
+> and the error message wouldn't see in dmesg.
+>=20
+
+Unless it's a pre-release platform, I think it's worth mentioning in commit
+message what the hardware is.
+
+If it's pre-release, then perhaps mention "pre-release vostro platform" her=
+e.
+This is useful information in case in the future something in this driver m=
+ust
+change for a full class/line of systems.
+
+> Signed-off-by: Koba Ko <koba.ko@canonical.com>
+> ---
+>  drivers/platform/x86/dell-laptop.c | 17 +++++++++++------
+>  1 file changed, 11 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/de=
+ll-
+> laptop.c
+> index 74e988f839e8..e315185dbdd6 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -2164,7 +2164,7 @@ static struct led_classdev micmute_led_cdev =3D {
+>  static int __init dell_init(void)
+>  {
+>  	struct calling_interface_token *token;
+> -	int max_intensity =3D 0;
+> +	int max_intensity =3D 0, is_micmute_exist =3D 0;
+
+As a nit, please declare variables on their own line and I don't like is_mi=
+cmute_exist
+as this is bad grammar.
+
+Perhaps "micmute_exists" instead.
+
+Also this variable can be a boolean type instead with it's usage.
+
+>  	int ret;
+>=20
+>  	if (!dmi_check_system(dell_device_table))
+> @@ -2204,10 +2204,14 @@ static int __init dell_init(void)
+>=20
+>  	dell_laptop_register_notifier(&dell_laptop_notifier);
+>=20
+> -	micmute_led_cdev.brightness =3D ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> -	ret =3D led_classdev_register(&platform_device->dev, &micmute_led_cdev)=
+;
+> -	if (ret < 0)
+> -		goto fail_led;
+> +	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
+> +	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
+> +		micmute_led_cdev.brightness =3D ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> +		ret =3D led_classdev_register(&platform_device->dev,
+> &micmute_led_cdev);
+> +		if (ret < 0)
+> +			goto fail_led;
+> +		is_micmute_exist =3D 1;
+> +	}
+>=20
+>  	if (acpi_video_get_backlight_type() !=3D acpi_backlight_vendor)
+>  		return 0;
+> @@ -2254,7 +2258,8 @@ static int __init dell_init(void)
+>  fail_get_brightness:
+>  	backlight_device_unregister(dell_backlight_device);
+>  fail_backlight:
+> -	led_classdev_unregister(&micmute_led_cdev);
+> +	if (is_micmute_exist)
+> +		led_classdev_unregister(&micmute_led_cdev);
+>  fail_led:
+>  	dell_cleanup_rfkill();
+>  fail_rfkill:
+> --
+> 2.25.1
