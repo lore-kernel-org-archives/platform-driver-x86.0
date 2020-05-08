@@ -1,31 +1,29 @@
-From: Richard Hughes <hughsient@gmail.com>
-Subject: Re: [PATCH] platform/x86: Export LPC attributes for the system SPI chip
-Date: Fri, 8 May 2020 17:15:07 +0100
-Message-ID: <CAD2FfiG2c4iXmTjUpQAUqRVBVyH0Hm4VfO5PBTXf03VXHR22ng@mail.gmail.com>
-References: <18e48255d68a1408b3e3152780f0e789df540059.camel@gmail.com>
- <aa217de398584fa7846cf4ac0c872036@AUSX13MPC101.AMER.DELL.COM>
- <CAD2FfiEk8Fq3=i_3NHvtuwip=-v_cGfnYSowdPi86U_BcgP2gQ@mail.gmail.com>
- <61c7782cd2e64bb9ab2aaf6a016bbb6c@AUSX13MPC101.AMER.DELL.COM>
- <CAD2FfiGweUHNJGdj7OUQFxEhQBYvMCbuWM-+ez=SpN=HbcaS4Q@mail.gmail.com>
- <70757953c25645baac2dddd7c6924d05@AUSX13MPC101.AMER.DELL.COM> <20200508082028.GP487496@lahna.fi.intel.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] platform/x86: dell-laptop: don't register
+ platform::micmute if the related tokens don't exist.
+Date: Fri, 8 May 2020 17:25:24 +0000
+Message-ID: <99e0ccfba0fe4fba8030a056a2dd7492@AUSX13MPC105.AMER.DELL.COM>
+References: <20200507094242.7523-1-koba.ko@canonical.com>
+ <CAHp75VeDFpjwZoNWj6SwvnHE70o4x+U9GnK-tbrFpK6fkBN7MA@mail.gmail.com>
+ <CAJB-X+U9vOzKNt3Z-BzZrEJhyU0Gd_5rVM=yqfy3TZTWNn2_YA@mail.gmail.com>
+ <e0eb1c5f17574bfcb6dd58d12b37ce7b@AUSX13MPC101.AMER.DELL.COM>
+ <CAJB-X+UTzknY63mL2iY5mXNDYm9ohm2ZeQBdPDUBZ+MSkcUAFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-security-module-owner@vger.kernel.org>
-In-Reply-To: <20200508082028.GP487496@lahna.fi.intel.com>
-Sender: owner-linux-security-module@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJB-X+UTzknY63mL2iY5mXNDYm9ohm2ZeQBdPDUBZ+MSkcUAFQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: koba.ko@canonical.com
+Cc: andy.shevchenko@gmail.com, mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 8 May 2020 at 09:20, Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> Thanks for the information. I actually prefer that this would be in a
-> separate driver because I do not want distros to enable intel-spi just
-> for this. It is really only meant for special setups where firmware
-> upgrade/access flow has been thoroughly tested.
-
-Do you think the driver should be part of mtd (e.g. something like
-drivers/mtd/spi-nor/controllers/intel-spi-pci-lpc.c) or be something
-like I proposed in drivers/platform/x86? Ideas very welcome, thanks.
-
-Richard
+PiBoaSBBbGwswqANCj4gQXMgcGVyIGFkdmVydGlzZW1lbnQsIFVwZGF0ZSB0aGUgcGF0Y2guDQo+
+IFBsZWFzZSBoZWxwIHRvIHJldmlldy4NCg0KS29iYSwNCg0KMSkgUGxlYXNlIHJlc2VuZCBwYXRj
+aCBhcyBpbmxpbmUgdGV4dCB0byBtYWlsaW5nIGxpc3QsIG5vdCBhdHRhY2htZW50Lg0KMikgQWxz
+byB5b3UgaGF2ZSBhIHR5cG9ncmFwaGljYWwgZXJyb3IgaW4geW91ciBjb21taXQgbWVzc2FnZSwg
+eW91IHNob3VsZCBmaXggKG1lc3NnZSBtaXNzcGVsbGVkKQ0KMykgWW91IGhhdmUgYSBncmFtbWF0
+aWNhbCBlcnJvciBpbiB5b3VyIGNvbW1pdCBtZXNzYWdlKCJpc24ndCBwcmVzZW50ZWQiKQ0KNCkg
+QXMgeW91IHJldiB0aGUgcGF0Y2gsIHlvdSBjYW4gdXBkYXRlIGluIHRoZSB0aXRsZSBmcm9tIFtQ
+QVRDSF0gdG8gW1BBVENIIHYyXSBhbmQgc28gb24uDQoNClRoYW5rcywNCg0K
