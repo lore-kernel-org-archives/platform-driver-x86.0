@@ -1,64 +1,102 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: Export LPC attributes for the system SPI
- chip
-Date: Fri, 8 May 2020 17:27:12 +0000
-Message-ID: <34e4985da20747a780971b8ce7cd83ab@AUSX13MPC105.AMER.DELL.COM>
-References: <18e48255d68a1408b3e3152780f0e789df540059.camel@gmail.com>
- <aa217de398584fa7846cf4ac0c872036@AUSX13MPC101.AMER.DELL.COM>
- <CAD2FfiEk8Fq3=i_3NHvtuwip=-v_cGfnYSowdPi86U_BcgP2gQ@mail.gmail.com>
- <61c7782cd2e64bb9ab2aaf6a016bbb6c@AUSX13MPC101.AMER.DELL.COM>
- <CAD2FfiGweUHNJGdj7OUQFxEhQBYvMCbuWM-+ez=SpN=HbcaS4Q@mail.gmail.com>
- <70757953c25645baac2dddd7c6924d05@AUSX13MPC101.AMER.DELL.COM>
- <20200508082028.GP487496@lahna.fi.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and
+ T200TA
+Date: Fri, 8 May 2020 21:54:29 +0200
+Message-ID: <bcb4d40a-8971-22d6-959b-14b2d329cfd4@redhat.com>
+References: <20200422220559.99726-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-security-module-owner@vger.kernel.org>
-In-Reply-To: <20200508082028.GP487496@lahna.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200422220559.99726-1-hdegoede@redhat.com>
 Content-Language: en-US
-Sender: owner-linux-security-module@vger.kernel.org
-To: mika.westerberg@linux.intel.com
-Cc: hughsient@gmail.com, platform-driver-x86@vger.kernel.org, linux-security-module@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
+Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
-LW93bmVyQHZnZXIua2VybmVsLm9yZyA8cGxhdGZvcm0tZHJpdmVyLXg4Ni0NCj4gb3duZXJAdmdl
-ci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgTWlrYSBXZXN0ZXJiZXJnDQo+IFNlbnQ6IEZyaWRh
-eSwgTWF5IDgsIDIwMjAgMzoyMCBBTQ0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvDQo+IENjOiBo
-dWdoc2llbnRAZ21haWwuY29tOyBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsg
-bGludXgtDQo+IHNlY3VyaXR5LW1vZHVsZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6
-IFtQQVRDSF0gcGxhdGZvcm0veDg2OiBFeHBvcnQgTFBDIGF0dHJpYnV0ZXMgZm9yIHRoZSBzeXN0
-ZW0NCj4gU1BJIGNoaXANCj4gDQo+IA0KPiBbRVhURVJOQUwgRU1BSUxdDQo+IA0KPiBPbiBUaHUs
-IE1heSAwNywgMjAyMCBhdCAwODowMzoyMVBNICswMDAwLCBNYXJpby5MaW1vbmNpZWxsb0BkZWxs
-LmNvbQ0KPiB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBG
-cm9tOiBSaWNoYXJkIEh1Z2hlcyA8aHVnaHNpZW50QGdtYWlsLmNvbT4NCj4gPiA+IFNlbnQ6IFRo
-dXJzZGF5LCBNYXkgNywgMjAyMCAyOjQ5IFBNDQo+ID4gPiBUbzogTGltb25jaWVsbG8sIE1hcmlv
-DQo+ID4gPiBDYzogUGxhdGZvcm0gRHJpdmVyOyBsaW51eC1zZWN1cml0eS1tb2R1bGU7DQo+IG1p
-a2Eud2VzdGVyYmVyZ0BsaW51eC5pbnRlbC5jb20NCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hd
-IHBsYXRmb3JtL3g4NjogRXhwb3J0IExQQyBhdHRyaWJ1dGVzIGZvciB0aGUNCj4gc3lzdGVtIFNQ
-SQ0KPiA+ID4gY2hpcA0KPiA+ID4NCj4gPiA+DQo+ID4gPiBbRVhURVJOQUwgRU1BSUxdDQo+ID4g
-Pg0KPiA+ID4gT24gVGh1LCA3IE1heSAyMDIwIGF0IDIwOjIyLCA8TWFyaW8uTGltb25jaWVsbG9A
-ZGVsbC5jb20+IHdyb3RlOg0KPiA+ID4gPiBCeSBkZWZhdWx0IHRoZSBkcml2ZXIgZXhwb3NlcyBT
-UEkgc2VyaWFsIGZsYXNoIGNvbnRlbnRzIGFzIHJlYWQtDQo+IG9ubHkgYnV0IGl0DQo+ID4gPiBj
-YW4NCj4gPiA+ID4gYmUgY2hhbmdlZCBmcm9tIGtlcm5lbCBjb21tYW5kIGxpbmUsIHBhc3Npbmcg
-4oCcaW50ZWwtDQo+IHNwaS53cml0ZWFibGU9MeKAnS4NCj4gPiA+DQo+ID4gPiBBaGgsIHRoYXQg
-d2FzIHRoZSBiaXQgSSBkaWRuJ3Qga25vdzsgaGF2aW5nIHRoZSBTUEkgYXMgcmVhZG9ubHkgYnkN
-Cj4gPiA+IGRlZmF1bHQgaXMgY2VydGFpbmx5IGEgZ29vZCBpZGVhLCBhbmQgcHJvYmFibHkgc2Fu
-ZSBlbm91Z2ggdG8gZW5hYmxlDQo+ID4gPiBmb3IgRmVkb3JhL1JIRUwgYXMgeW91IHN0aWxsIG5l
-ZWQgdG8gImRvIiBzb21ldGhpbmcgbWFudWFsIHRvIGVuYWJsZQ0KPiA+ID4gU1BJIHdyaXRpbmcu
-IEkgZ3Vlc3MgSSBjYW4gYWRkIG15IHNlY3VyaXR5ZnMgYWRkaXRpb25zIHRvDQo+ID4gPiBpbnRl
-bC1zcGktcGNpLmMgd2l0aCBNaWthcyBhcHByb3ZhbC4NCj4gPiA+DQo+ID4gPiBSaWNoYXJkDQo+
-ID4NCj4gPiBNaWthLA0KPiA+DQo+ID4gU2luY2UgeW91J3JlIGJlaW5nIGpvaW5lZCBpbnRvIHRo
-ZSB0aHJlYWQgbGF0ZSwgaGVyZSBpcyB0aGUgY29udGV4dDoNCj4gPiBodHRwczovL3d3dy5zcGlu
-aWNzLm5ldC9saXN0cy9wbGF0Zm9ybS1kcml2ZXIteDg2L21zZzIxNjQ2Lmh0bWwNCj4gDQo+IFRo
-YW5rcyBmb3IgdGhlIGluZm9ybWF0aW9uLiBJIGFjdHVhbGx5IHByZWZlciB0aGF0IHRoaXMgd291
-bGQgYmUgaW4gYQ0KPiBzZXBhcmF0ZSBkcml2ZXIgYmVjYXVzZSBJIGRvIG5vdCB3YW50IGRpc3Ry
-b3MgdG8gZW5hYmxlIGludGVsLXNwaSBqdXN0DQo+IGZvciB0aGlzLiBJdCBpcyByZWFsbHkgb25s
-eSBtZWFudCBmb3Igc3BlY2lhbCBzZXR1cHMgd2hlcmUgZmlybXdhcmUNCj4gdXBncmFkZS9hY2Nl
-c3MgZmxvdyBoYXMgYmVlbiB0aG9yb3VnaGx5IHRlc3RlZC4NCg0KTWlrYSwNCg0KVGhhbmtzIGZv
-ciB0aG9zZSBjb21tZW50cyBhbmQgY29udGV4dCBvbiB0aGF0IGRyaXZlci4gIENvbnNpZGVyaW5n
-IHRoaXMsDQp3aGF0IGRvIHlvdSB0aGluayBhYm91dCBhcyBwYXJ0IG9mIHRoaXMgbmV3IGRyaXZl
-ciwgbW92aW5nIHRoZSBsaXN0IG9mDQpzdXBwb3J0ZWQgSURzIGluIHRoZXJlIHRvIHNvbWV0aGlu
-ZyB0aGF0IGNhbiBiZSBzb3VyY2VkIGJ5IGJvdGggZHJpdmVycz8NCkkgdGhpbmsgaXQgc2hvdWxk
-IGhlbHAgYXZvaWQgaGF2aW5nIHRvIGtlZXAgdGhlIHR3byBsaXN0cyBmdWxseSBpbiBzeW5jDQph
-cyBuZXcgc2lsaWNvbiBjb21lcyBvdXQuDQoNClRoYW5rcywNCg==
+Hi,
+
+On 4/23/20 12:05 AM, Hans de Goede wrote:
+> asus-nb-wmi does not add any extra functionality on these Asus
+> Transformer books. They have detachable keyboards, so the hotkeys are
+> send through a HID device (and handled by the hid-asus driver) and also
+> the rfkill functionality is not used on these devices.
+> 
+> Besides not adding any extra functionality, initializing the WMI interface
+> on these devices actually has a negative side-effect. For some reason
+> the \_SB.ATKD.INIT() function which asus_wmi_platform_init() calls drives
+> GPO2 (INT33FC:02) pin 8, which is connected to the front facing webcam LED,
+> high and there is no (WMI or other) interface to drive this low again
+> causing the LED to be permanently on, even during suspend.
+> 
+> This commit adds a blacklist of DMI system_ids on which not to load the
+> asus-nb-wmi and adds these Transformer books to this list. This fixes
+> the webcam LED being permanently on under Linux.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+
+Because of the BYT/CHT work which I do as a side project I have a bunch
+of BYT/CHT based 2-in-1s as test devices, including the T100TA and T200TA.
+
+So recently I've been looking into properly reporting SW_TABLET_MODE
+state to userspace to let userspace know if the keyboard of these
+detachables is attached or not; and guess what, the Asus models
+report this through WMI. So blacklisting is not the right thing to do
+here after all :|  I do have a plan for another fix for this
+(which will also involve DMI matching)...
+
+Andy, Darren, I see that you have already added this to the for-next
+branch of linux-platform-drivers-x86. I'm not sure what your vision
+on forced pushed there is. If forced pushes are ok, please drop this
+patch. If not let me know and I will send out a revert.
+
+Regards,
+
+Hans
+
+
+
+> ---
+>   drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index 6f12747a359a..c4404d9c1de4 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -515,9 +515,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
+>   	.detect_quirks = asus_nb_wmi_quirks,
+>   };
+>   
+> +static const struct dmi_system_id asus_nb_wmi_blacklist[] __initconst = {
+> +	{
+> +		/*
+> +		 * asus-nb-wm adds no functionality. The T100TA has a detachable
+> +		 * USB kbd, so no hotkeys and it has no WMI rfkill; and loading
+> +		 * asus-nb-wm causes the camera LED to turn and _stay_ on.
+> +		 */
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
+> +		},
+> +	},
+> +	{
+> +		/* The Asus T200TA has the same issue as the T100TA */
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
+> +		},
+> +	},
+> +	{} /* Terminating entry */
+> +};
+>   
+>   static int __init asus_nb_wmi_init(void)
+>   {
+> +	if (dmi_check_system(asus_nb_wmi_blacklist))
+> +		return -ENODEV;
+> +
+>   	return asus_wmi_register_driver(&asus_nb_wmi_driver);
+>   }
+>   
+> 
