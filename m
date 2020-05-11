@@ -1,52 +1,50 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 3/3] platform/x86: asus-wmi: Ignore WMI events with code 0x79
-Date: Sun, 10 May 2020 14:24:32 +0200
-Message-ID: <20200510122432.123751-3-hdegoede@redhat.com>
-References: <20200510122432.123751-1-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: koba.ko@canonical.com
+Subject: [PATCH] platform/x86: dell-laptop: don't register platform::micmute if the related tokens don't exist.
+Date: Mon, 11 May 2020 09:16:03 +0800
+Message-ID: <20200511011603.4278-1-koba.ko@canonical.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200510122432.123751-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Mario.Limonciello@dell.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On some Asus devices, e.g. the T100TA, when the charger is connected
-we not only get a WMI event with code 0x58, but immediately after that
-event we also get an even with code 0x79.
+From: Koba Ko <koba.ko@canonical.com>
 
-This is likely related to these devices having an Asus WMI device with a
-device-id of 0x00120066, which seems to provide some sort of charger-type
-info. The T100TA charger over a micro-USB connector, the embedded-
-controller register read when calling asus_wmi_get_devstate(0x00120066)
-returns different values when connected to a USB port (max 500mA charging)
-vs when connected to a 2A capable wall-charger. But the AML code reading
-this mangles the return value so that we can no longer tell the difference.
-So for now the meaning of the value return when getting the status of
-device-id 0x00120066 is unclear.
+On dell G3-3590, error message is issued during boot up,
+"platform::micmute: Setting an LED's brightness failed (-19)",
+but there's no micmute led on the machine.
 
-This commit adds a key-mapping of code 0x79 to KE_IGNORE, silencing the
-kernel logging the following message every time the charger is plugged-in:
+Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
+If one of two tokens doesn't exist,
+don't call led_classdev_register() for platform::micmute.
+After that, you wouldn't see the platform::micmute in /sys/class/leds/,
+and the error message wouldn't see in dmesg.
 
-[   79.639548] asus_wmi: Unknown key 79 pressed
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Koba Ko <koba.ko@canonical.com>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/dell-laptop.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 6f12747a359a..b2887556fd4d 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -472,6 +472,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
- 	{ KE_KEY, 0x6B, { KEY_TOUCHPAD_TOGGLE } },
- 	{ KE_IGNORE, 0x6E, },  /* Low Battery notification */
- 	{ KE_KEY, 0x71, { KEY_F13 } }, /* General-purpose button */
-+	{ KE_IGNORE, 0x79, },  /* Charger type dectection notification */
- 	{ KE_KEY, 0x7a, { KEY_ALS_TOGGLE } }, /* Ambient Light Sensor Toggle */
- 	{ KE_KEY, 0x7c, { KEY_MICMUTE } },
- 	{ KE_KEY, 0x7D, { KEY_BLUETOOTH } }, /* Bluetooth Enable */
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index 1e46022fb2c5..afc1ded83e56 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -2208,10 +2208,13 @@ static int __init dell_init(void)
+ 
+ 	dell_laptop_register_notifier(&dell_laptop_notifier);
+ 
+-	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+-	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
+-	if (ret < 0)
+-		goto fail_led;
++	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
++	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
++		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
++		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
++		if (ret < 0)
++			goto fail_led;
++	}
+ 
+ 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
+ 		return 0;
 -- 
-2.26.0
+2.17.1
