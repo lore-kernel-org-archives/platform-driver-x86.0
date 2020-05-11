@@ -1,7 +1,7 @@
 From: koba.ko@canonical.com
-Subject: [PATCH] platform/x86: dell-laptop: don't register platform::micmute if the related tokens don't exist.
-Date: Mon, 11 May 2020 09:16:03 +0800
-Message-ID: <20200511011603.4278-1-koba.ko@canonical.com>
+Subject: [PATCH] V2: platform/x86: dell-laptop: don't register platform::micmute if the related tokens don't exist.
+Date: Mon, 11 May 2020 09:44:56 +0800
+Message-ID: <20200511014456.5149-1-koba.ko@canonical.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Mario.Limonciello@dell.com
@@ -20,6 +20,9 @@ After that, you wouldn't see the platform::micmute in /sys/class/leds/,
 and the error message wouldn't see in dmesg.
 
 Signed-off-by: Koba Ko <koba.ko@canonical.com>
+---
+Changelog:
+1. Refine the typo of comment.
 ---
  drivers/platform/x86/dell-laptop.c | 11 +++++++----
  1 file changed, 7 insertions(+), 4 deletions(-)
