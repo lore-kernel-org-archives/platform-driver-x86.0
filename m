@@ -1,8 +1,8 @@
 From: Mika Westerberg <mika.westerberg@linux.intel.com>
 Subject: Re: [PATCH] platform/x86: Export LPC attributes for the system SPI
  chip
-Date: Mon, 11 May 2020 13:41:13 +0300
-Message-ID: <20200511104113.GJ487496@lahna.fi.intel.com>
+Date: Mon, 11 May 2020 13:45:04 +0300
+Message-ID: <20200511104504.GK487496@lahna.fi.intel.com>
 References: <18e48255d68a1408b3e3152780f0e789df540059.camel@gmail.com>
  <aa217de398584fa7846cf4ac0c872036@AUSX13MPC101.AMER.DELL.COM>
  <CAD2FfiEk8Fq3=i_3NHvtuwip=-v_cGfnYSowdPi86U_BcgP2gQ@mail.gmail.com>
@@ -10,83 +10,29 @@ References: <18e48255d68a1408b3e3152780f0e789df540059.camel@gmail.com>
  <CAD2FfiGweUHNJGdj7OUQFxEhQBYvMCbuWM-+ez=SpN=HbcaS4Q@mail.gmail.com>
  <70757953c25645baac2dddd7c6924d05@AUSX13MPC101.AMER.DELL.COM>
  <20200508082028.GP487496@lahna.fi.intel.com>
- <34e4985da20747a780971b8ce7cd83ab@AUSX13MPC105.AMER.DELL.COM>
+ <CAD2FfiG2c4iXmTjUpQAUqRVBVyH0Hm4VfO5PBTXf03VXHR22ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-security-module-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <34e4985da20747a780971b8ce7cd83ab@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <CAD2FfiG2c4iXmTjUpQAUqRVBVyH0Hm4VfO5PBTXf03VXHR22ng@mail.gmail.com>
 Sender: owner-linux-security-module@vger.kernel.org
-To: Mario.Limonciello@dell.com
-Cc: hughsient@gmail.com, platform-driver-x86@vger.kernel.org, linux-security-module@vger.kernel.org
+To: Richard Hughes <hughsient@gmail.com>
+Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, May 08, 2020 at 05:27:12PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
-> > owner@vger.kernel.org> On Behalf Of Mika Westerberg
-> > Sent: Friday, May 8, 2020 3:20 AM
-> > To: Limonciello, Mario
-> > Cc: hughsient@gmail.com; platform-driver-x86@vger.kernel.org; linux-
-> > security-module@vger.kernel.org
-> > Subject: Re: [PATCH] platform/x86: Export LPC attributes for the system
-> > SPI chip
-> > 
-> > 
-> > [EXTERNAL EMAIL]
-> > 
-> > On Thu, May 07, 2020 at 08:03:21PM +0000, Mario.Limonciello@dell.com
-> > wrote:
-> > > > -----Original Message-----
-> > > > From: Richard Hughes <hughsient@gmail.com>
-> > > > Sent: Thursday, May 7, 2020 2:49 PM
-> > > > To: Limonciello, Mario
-> > > > Cc: Platform Driver; linux-security-module;
-> > mika.westerberg@linux.intel.com
-> > > > Subject: Re: [PATCH] platform/x86: Export LPC attributes for the
-> > system SPI
-> > > > chip
-> > > >
-> > > >
-> > > > [EXTERNAL EMAIL]
-> > > >
-> > > > On Thu, 7 May 2020 at 20:22, <Mario.Limonciello@dell.com> wrote:
-> > > > > By default the driver exposes SPI serial flash contents as read-
-> > only but it
-> > > > can
-> > > > > be changed from kernel command line, passing “intel-
-> > spi.writeable=1”.
-> > > >
-> > > > Ahh, that was the bit I didn't know; having the SPI as readonly by
-> > > > default is certainly a good idea, and probably sane enough to enable
-> > > > for Fedora/RHEL as you still need to "do" something manual to enable
-> > > > SPI writing. I guess I can add my securityfs additions to
-> > > > intel-spi-pci.c with Mikas approval.
-> > > >
-> > > > Richard
-> > >
-> > > Mika,
-> > >
-> > > Since you're being joined into the thread late, here is the context:
-> > > https://www.spinics.net/lists/platform-driver-x86/msg21646.html
-> > 
+On Fri, May 08, 2020 at 05:15:07PM +0100, Richard Hughes wrote:
+> On Fri, 8 May 2020 at 09:20, Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
 > > Thanks for the information. I actually prefer that this would be in a
 > > separate driver because I do not want distros to enable intel-spi just
 > > for this. It is really only meant for special setups where firmware
 > > upgrade/access flow has been thoroughly tested.
 > 
-> Mika,
-> 
-> Thanks for those comments and context on that driver.  Considering this,
-> what do you think about as part of this new driver, moving the list of
-> supported IDs in there to something that can be sourced by both drivers?
-> I think it should help avoid having to keep the two lists fully in sync
-> as new silicon comes out.
+> Do you think the driver should be part of mtd (e.g. something like
+> drivers/mtd/spi-nor/controllers/intel-spi-pci-lpc.c) or be something
+> like I proposed in drivers/platform/x86? Ideas very welcome, thanks.
 
-Hi,
-
-Since this is binding to the LPC/eSPI device I think you may be adding
-this functionality to drivers/mfd/lpc_ich.c. It is also filling the data
-for intel-spi so it is natural place to re-use the code. I actually
-think it already has some of these PCI IDs.
+I think you may want to look at drivers/mfd/lpc_ich.c and see if some of
+this can be placed there. It is the "LPC" driver that binds to the
+LPC/eSPI PCI device so it already has at least some of these PCI IDs.
