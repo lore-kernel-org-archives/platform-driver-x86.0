@@ -1,78 +1,39 @@
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH 1/1] x86/platform/intel-mid: convert to use
- i2c_new_client_device()
-Date: Tue, 12 May 2020 18:32:22 +0200
-Message-ID: <20200512163222.GL13516@ninjato>
-References: <20200326211015.13654-1-wsa+renesas@sang-engineering.com>
- <20200326211015.13654-2-wsa+renesas@sang-engineering.com>
+From: Richard Hughes <hughsient@gmail.com>
+Subject: Re: [PATCH] platform/x86: Export LPC attributes for the system SPI chip
+Date: Tue, 12 May 2020 21:37:13 +0100
+Message-ID: <CAD2FfiEOqTUO-XOgar1RtR9PtXWf4tKtsdZX6oS-Q-_y=k6tig@mail.gmail.com>
+References: <CAD2FfiEk8Fq3=i_3NHvtuwip=-v_cGfnYSowdPi86U_BcgP2gQ@mail.gmail.com>
+ <61c7782cd2e64bb9ab2aaf6a016bbb6c@AUSX13MPC101.AMER.DELL.COM>
+ <CAD2FfiGweUHNJGdj7OUQFxEhQBYvMCbuWM-+ez=SpN=HbcaS4Q@mail.gmail.com>
+ <70757953c25645baac2dddd7c6924d05@AUSX13MPC101.AMER.DELL.COM>
+ <20200508082028.GP487496@lahna.fi.intel.com> <CAD2FfiG2c4iXmTjUpQAUqRVBVyH0Hm4VfO5PBTXf03VXHR22ng@mail.gmail.com>
+ <20200511104504.GK487496@lahna.fi.intel.com> <CAD2FfiHn0PNaC3aFXE-hn9Mmtt5JW_D8BK0hOScYXR9EJLNbcw@mail.gmail.com>
+ <20200511162811.GA487496@lahna.fi.intel.com> <CAD2FfiHo1EzRupjgKhtLX0Zguq-bVeW5+u_PNQGAzV0x+AtfVw@mail.gmail.com>
+ <20200512064401.GF487496@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="c8JyeaiReRNoiMDS"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200326211015.13654-2-wsa+renesas@sang-engineering.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-i2c@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-security-module-owner@vger.kernel.org>
+In-Reply-To: <20200512064401.GF487496@lahna.fi.intel.com>
+Sender: owner-linux-security-module@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Tue, 12 May 2020 at 07:44, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> I mean for the SPI-NOR controller PCI device registers (not the LPC PCI
+> device, sorry about not being clear), like config space.
 
---c8JyeaiReRNoiMDS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I don't think I need to care about those, but I'll admit I'm a bit of
+a newbie with all the terminology. I'll respin the patch now and cc
+you on the new version too.
 
-On Thu, Mar 26, 2020 at 10:10:15PM +0100, Wolfram Sang wrote:
-> Move away from the deprecated API and return the shiny new ERRPTR where
-> useful.
->=20
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
+> If that's the case then I guess this should go to intel-spi-pci/platform
+> drivers after all. I think one option is that we add Kconfig option that
+> makes the driver load but only provide the security bits without
+> actually calling intel_spi_probe().
 
-Can we have this now so I can remove the old API in the next merge
-window? Andy already reviewed it. Thanks!
+I think getting distros to enable any of the SPI_INTEL_SPI* options
+might be an uphill battle.
 
->  arch/x86/platform/intel-mid/sfi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/x86/platform/intel-mid/sfi.c b/arch/x86/platform/intel-=
-mid/sfi.c
-> index b8f7f193f383..30bd5714a3d4 100644
-> --- a/arch/x86/platform/intel-mid/sfi.c
-> +++ b/arch/x86/platform/intel-mid/sfi.c
-> @@ -287,8 +287,8 @@ void intel_scu_devices_create(void)
-> =20
->  		adapter =3D i2c_get_adapter(i2c_bus[i]);
->  		if (adapter) {
-> -			client =3D i2c_new_device(adapter, i2c_devs[i]);
-> -			if (!client)
-> +			client =3D i2c_new_client_device(adapter, i2c_devs[i]);
-> +			if (IS_ERR(client))
->  				pr_err("can't create i2c device %s\n",
->  					i2c_devs[i]->type);
->  		} else
-> --=20
-> 2.20.1
->=20
-
---c8JyeaiReRNoiMDS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl66z5YACgkQFA3kzBSg
-Kbbj/g/9FuU+f6nINdnCcLn6Gl6KSTzeEqAp+Bwn2S7ZfUZXJbij8C3FyJg/ATaz
-SUU1LyRzZ8nG2TgT8g4//6PnAH/9UXLuepbrr2PDnSne2WiGVrR7SZRLunN4hiHF
-UzI5mh1kUV9/Zd0uLGtZmoIyx3HOjAq5MULX/mV7HCdFBhXQwcPGW6c8NEdwPW9c
-axT+ndOvFHzUv0wWN8KmFc6wwisz5XJ15QqZQkUK44zt+byG0vLQMgOA4NtXGlyx
-+MufwoKqb9BH+LgFZpYuANX866D7By86Ozpc5geGRKeKyUVjgm2hm7urNzT97Gze
-opbMM6R49WIqg+O6NVzYkvwdk/JlBjjxFPFDxD3VSH34EoCvVs07/S/YTBDIS+0G
-Q5ogbNiGUETYYx+B0lBcJTzEF6iNXz4b872eCtK5NYM28icqfUt5Q61+X3y1eYOF
-MJv5quOOfa21F7tk0l5UDPFke7eqbG5WgIKuHA31PANhqBRszLUgSmjJUxp6QdAJ
-P2oMG0z9h5lHW6dMDdNIPXhB9uamu1H7zUx6benKwRG6Hu7RJNNOPfQOB4Yitk29
-g9I1BYsKXehrrIeM9QDfE5WMJP6fUbDvN3Nkn/08U4Bpipydwoxg1W7hHiCuKGOj
-Kgj7d6JsIuvbb8qpv1ndJ7n4rTEJi2ZupAx0Oypv3qnWRqIceK8=
-=auP+
------END PGP SIGNATURE-----
-
---c8JyeaiReRNoiMDS--
+Richard.
