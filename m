@@ -1,88 +1,80 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] platform/x86: dell-wmi: Ignore keyboard attached /
- detached events
-Date: Wed, 13 May 2020 17:29:11 +0000
-Message-ID: <5242ea25f5c94a06beda838dba8c06ef@AUSX13MPC105.AMER.DELL.COM>
-References: <20200513130544.90243-1-hdegoede@redhat.com>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups easily
+Date: Wed, 13 May 2020 23:18:15 +0100
+Message-ID: <CACvgo52+Uqx4GJFwadJoFzzt5EMc69HcW-+K9uxv9t25TtSDBg@mail.gmail.com>
+References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
+ <20190731131045.GB147138@dtor-ws> <20190802104633.GA14823@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200513130544.90243-1-hdegoede@redhat.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: hdegoede@redhat.com, dvhart@infradead.org, andy@infradead.org, pali@kernel.org, mjg59@srcf.ucam.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20190802104633.GA14823@kroah.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, x86@kernel.org, linux-input@vger.kernel.org, linux-fbdev <linux-fbdev@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sudeep Holla <sudeep.holla@arm.com>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Richard Gong <richard.gong@linux.intel.com>, Ingo Molnar <mingo@redhat.>
 List-Id: platform-driver-x86.vger.kernel.org
 
-> -----Original Message-----
-> From: Hans de Goede <hdegoede@redhat.com>
-> Sent: Wednesday, May 13, 2020 8:06 AM
-> To: Darren Hart; Andy Shevchenko; Pali Roh=E1r; Matthew Garrett
-> Cc: Hans de Goede; Limonciello, Mario; platform-driver-x86@vger.kernel.or=
-g;
-> linux-kernel@vger.kernel.org
-> Subject: [PATCH] platform/x86: dell-wmi: Ignore keyboard attached / detac=
-hed
-> events
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> Ignore events with a type of 0x0011 and a code of 0xfff2 / 0xfff3,
-> this silences the following messages being logged when the keyboard is
-> detached / attached on a Dell Venue 11 Pro 7130:
->=20
-> [   63.621953] dell_wmi: Unknown key with type 0x0011 and code 0xfff2 pre=
-ssed
-> [   70.240558] dell_wmi: Unknown key with type 0x0011 and code 0xfff3 pre=
-ssed
->=20
-> Note SW_TABLET_MODE is already reported through the intel_vbtn driver on
-> this and other Dell devices, so dell_wmi should not report this too,
-> to avoid duplicate events.
+Hi Greg,
 
-If they didn't also come through on intel-vbtn I would have proposed that w=
-e
-should have a separate tablet mode switch coming from dell-wmi too.
+On Fri, 2 Aug 2019 at 11:46, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 
-As a general note the reason for these is that the WMI architecture on Wind=
-ows
-differs in that applications typically directly receive the events and do t=
-hings
-with them.
+>
+> I have now done this with patch 1/10.  Here's the pull info if any
+> subsystem maintainer wants to suck this into their tree to provide the
+> ability for drivers to add/remove attribute groups easily.
+>
+> This is part of my driver-core tree now, and will go to Linus for
+> 5.4-rc1, along with a few platform drivers that have been acked by their
+> various subsystem maintainers that convert them to use this new
+> functionality.
+>
+> If anyone has any questions about this, please let me know.
+>
+> thanks,
+>
+> greg k-h
+>
+> -------------------
+>
+> The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+>
+>   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/dev_groups_all_drivers
+>
+> for you to fetch changes up to 23b6904442d08b7dbed7622ed33b236d41a3aa8b:
+>
+>   driver core: add dev_groups to all drivers (2019-08-02 12:37:53 +0200)
+>
+> ----------------------------------------------------------------
+> dev_groups added to struct driver
+>
+> Persistent tag for others to pull this branch from
+>
+> This is the first patch in a longer series that adds the ability for the
+> driver core to create and remove a list of attribute groups
+> automatically when the device is bound/unbound from a specific driver.
+>
+> See:
+>         https://lore.kernel.org/r/20190731124349.4474-2-gregkh@linuxfoundation.org
+> for details on this patch, and examples of how to use it in other
+> drivers.
+>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+> ----------------------------------------------------------------
+> Dmitry Torokhov (1):
+>       driver core: add dev_groups to all drivers
+>
+>  drivers/base/dd.c      | 14 ++++++++++++++
+>  include/linux/device.h |  3 +++
+>  2 files changed, 17 insertions(+)
+> _______________________________________________
 
->=20
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/dell-wmi.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-=
-wmi.c
-> index 86e8dd6a8b33..c25a4286d766 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -310,6 +310,16 @@ static const struct key_entry dell_wmi_keymap_type_0=
-011[]
-> =3D {
->  	/* Battery inserted */
->  	{ KE_IGNORE, 0xfff1, { KEY_RESERVED } },
->=20
-> +	/*
-> +	 * Detachable keyboard detached / undocked
-> +	 * Note SW_TABLET_MODE is already reported through the intel_vbtn
-> +	 * driver for this, so we ignore it.
-> +	 */
-> +	{ KE_IGNORE, 0xfff2, { KEY_RESERVED } },
-> +
-> +	/* Detachable keyboard attached / docked */
-> +	{ KE_IGNORE, 0xfff3, { KEY_RESERVED } },
-> +
->  	/* Keyboard backlight level changed */
->  	{ KE_IGNORE, KBD_LED_OFF_TOKEN,      { KEY_RESERVED } },
->  	{ KE_IGNORE, KBD_LED_ON_TOKEN,       { KEY_RESERVED } },
-> --
-> 2.26.0
+Was planning to re-spin DRM a series which uses .dev_groups, although
+I cannot see the core patch.
+Did the it get reverted or simply fell though the cracks?
 
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
+-Emil
