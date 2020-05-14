@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 25/27] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
-Date: Thu, 14 May 2020 14:55:48 -0400
-Message-ID: <20200514185550.21462-25-sashal@kernel.org>
-References: <20200514185550.21462-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 27/31] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
+Date: Thu, 14 May 2020 14:54:09 -0400
+Message-ID: <20200514185413.20755-27-sashal@kernel.org>
+References: <20200514185413.20755-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200514185550.21462-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200514185413.20755-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
@@ -40,10 +40,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 24 insertions(+)
 
 diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 0fd7e40b86a0d..8137aa3437068 100644
+index 59f3a37a44d7a..8db2dc05b8cf2 100644
 --- a/drivers/platform/x86/asus-nb-wmi.c
 +++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -561,9 +561,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
+@@ -517,9 +517,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
  	.detect_quirks = asus_nb_wmi_quirks,
  };
  
