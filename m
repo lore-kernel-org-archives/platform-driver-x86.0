@@ -1,78 +1,94 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH] V2: platform/x86: dell-laptop: don't register
- platform::micmute if the related tokens don't exist.
-Date: Thu, 14 May 2020 01:26:11 +0000
-Message-ID: <135a804acc8247648ff8e811843f68ce@AUSX13MPC105.AMER.DELL.COM>
-References: <20200511014456.5149-1-koba.ko@canonical.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups
+ easily
+Date: Thu, 14 May 2020 09:16:31 +0200
+Message-ID: <20200514071631.GA1566388@kroah.com>
+References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
+ <20190731131045.GB147138@dtor-ws>
+ <20190802104633.GA14823@kroah.com>
+ <CACvgo52+Uqx4GJFwadJoFzzt5EMc69HcW-+K9uxv9t25TtSDBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200511014456.5149-1-koba.ko@canonical.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CACvgo52+Uqx4GJFwadJoFzzt5EMc69HcW-+K9uxv9t25TtSDBg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: koba.ko@canonical.com, mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, x86@kernel.org, linux-input@vger.kernel.org, linux-fbdev <linux-fbdev@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sudeep Holla <sudeep.holla@arm.com>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Richard Gong <richard.gong@linux.intel.com>, Ingo Molnar <mingo@redhat.>
 List-Id: platform-driver-x86.vger.kernel.org
 
-> -----Original Message-----
-> From: koba.ko@canonical.com <koba.ko@canonical.com>
-> Sent: Sunday, May 10, 2020 8:45 PM
-> To: Matthew Garrett; Pali Roh=E1r; Darren Hart; Andy Shevchenko; platform=
--driver-
-> x86@vger.kernel.org; linux-kernel@vger.kernel.org; Limonciello, Mario
-> Subject: [PATCH] V2: platform/x86: dell-laptop: don't register
-> platform::micmute if the related tokens don't exist.
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> From: Koba Ko <koba.ko@canonical.com>
->=20
-> On dell G3-3590, error message is issued during boot up,
-> "platform::micmute: Setting an LED's brightness failed (-19)",
-> but there's no micmute led on the machine.
->=20
-> Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
-> If one of two tokens doesn't exist,
-> don't call led_classdev_register() for platform::micmute.
-> After that, you wouldn't see the platform::micmute in /sys/class/leds/,
-> and the error message wouldn't see in dmesg.
->=20
-> Signed-off-by: Koba Ko <koba.ko@canonical.com>
-> ---
-> Changelog:
-> 1. Refine the typo of comment.
-> ---
->  drivers/platform/x86/dell-laptop.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/de=
-ll-
-> laptop.c
-> index 1e46022fb2c5..afc1ded83e56 100644
-> --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
-> @@ -2208,10 +2208,13 @@ static int __init dell_init(void)
->=20
->  	dell_laptop_register_notifier(&dell_laptop_notifier);
->=20
-> -	micmute_led_cdev.brightness =3D ledtrig_audio_get(LED_AUDIO_MICMUTE);
-> -	ret =3D led_classdev_register(&platform_device->dev, &micmute_led_cdev)=
-;
-> -	if (ret < 0)
-> -		goto fail_led;
-> +	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
-> +	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
-> +		micmute_led_cdev.brightness =3D ledtrig_audio_get(LED_AUDIO_MICMUTE);
-> +		ret =3D led_classdev_register(&platform_device->dev,
-> &micmute_led_cdev);
-> +		if (ret < 0)
-> +			goto fail_led;
-> +	}
->=20
->  	if (acpi_video_get_backlight_type() !=3D acpi_backlight_vendor)
->  		return 0;
-> --
-> 2.17.1
+On Wed, May 13, 2020 at 11:18:15PM +0100, Emil Velikov wrote:
+> Hi Greg,
+> 
+> On Fri, 2 Aug 2019 at 11:46, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> 
+> >
+> > I have now done this with patch 1/10.  Here's the pull info if any
+> > subsystem maintainer wants to suck this into their tree to provide the
+> > ability for drivers to add/remove attribute groups easily.
+> >
+> > This is part of my driver-core tree now, and will go to Linus for
+> > 5.4-rc1, along with a few platform drivers that have been acked by their
+> > various subsystem maintainers that convert them to use this new
+> > functionality.
+> >
+> > If anyone has any questions about this, please let me know.
+> >
+> > thanks,
+> >
+> > greg k-h
+> >
+> > -------------------
+> >
+> > The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+> >
+> >   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/dev_groups_all_drivers
+> >
+> > for you to fetch changes up to 23b6904442d08b7dbed7622ed33b236d41a3aa8b:
+> >
+> >   driver core: add dev_groups to all drivers (2019-08-02 12:37:53 +0200)
+> >
+> > ----------------------------------------------------------------
+> > dev_groups added to struct driver
+> >
+> > Persistent tag for others to pull this branch from
+> >
+> > This is the first patch in a longer series that adds the ability for the
+> > driver core to create and remove a list of attribute groups
+> > automatically when the device is bound/unbound from a specific driver.
+> >
+> > See:
+> >         https://lore.kernel.org/r/20190731124349.4474-2-gregkh@linuxfoundation.org
+> > for details on this patch, and examples of how to use it in other
+> > drivers.
+> >
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> > ----------------------------------------------------------------
+> > Dmitry Torokhov (1):
+> >       driver core: add dev_groups to all drivers
+> >
+> >  drivers/base/dd.c      | 14 ++++++++++++++
+> >  include/linux/device.h |  3 +++
+> >  2 files changed, 17 insertions(+)
+> > _______________________________________________
+> 
+> Was planning to re-spin DRM a series which uses .dev_groups, although
+> I cannot see the core patch.
+> Did the it get reverted or simply fell though the cracks?
 
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
+Nope, it's in there:
+	23b6904442d0 ("driver core: add dev_groups to all drivers")
+which showed up in the 5.4 kernel release.
+
+Lots of other subsystems have already been converted to use this, do you
+not see it in your tree?
+
+thanks,
+
+greg k-h
