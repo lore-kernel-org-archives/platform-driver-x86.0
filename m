@@ -1,97 +1,81 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups easily
-Date: Thu, 14 May 2020 12:48:32 +0100
-Message-ID: <CACvgo52Mqag6wzWqJPMqbtbSsqDgPyyG33huAd+cQgFKQhfQUw@mail.gmail.com>
-References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
- <20190731131045.GB147138@dtor-ws> <20190802104633.GA14823@kroah.com>
- <CACvgo52+Uqx4GJFwadJoFzzt5EMc69HcW-+K9uxv9t25TtSDBg@mail.gmail.com> <20200514071631.GA1566388@kroah.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 36/39] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
+Date: Thu, 14 May 2020 14:54:53 -0400
+Message-ID: <20200514185456.21060-36-sashal@kernel.org>
+References: <20200514185456.21060-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200514071631.GA1566388@kroah.com>
+In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, x86@kernel.org, linux-input@vger.kernel.org, linux-fbdev <linux-fbdev@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sudeep Holla <sudeep.holla@arm.com>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Richard Gong <richard.gong@linux.intel.com>, Ingo Molnar <mingo@redhat.>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, 14 May 2020 at 08:16, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, May 13, 2020 at 11:18:15PM +0100, Emil Velikov wrote:
-> > Hi Greg,
-> >
-> > On Fri, 2 Aug 2019 at 11:46, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> >
-> > >
-> > > I have now done this with patch 1/10.  Here's the pull info if any
-> > > subsystem maintainer wants to suck this into their tree to provide the
-> > > ability for drivers to add/remove attribute groups easily.
-> > >
-> > > This is part of my driver-core tree now, and will go to Linus for
-> > > 5.4-rc1, along with a few platform drivers that have been acked by their
-> > > various subsystem maintainers that convert them to use this new
-> > > functionality.
-> > >
-> > > If anyone has any questions about this, please let me know.
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> > >
-> > > -------------------
-> > >
-> > > The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
-> > >
-> > >   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
-> > >
-> > > are available in the Git repository at:
-> > >
-> > >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/dev_groups_all_drivers
-> > >
-> > > for you to fetch changes up to 23b6904442d08b7dbed7622ed33b236d41a3aa8b:
-> > >
-> > >   driver core: add dev_groups to all drivers (2019-08-02 12:37:53 +0200)
-> > >
-> > > ----------------------------------------------------------------
-> > > dev_groups added to struct driver
-> > >
-> > > Persistent tag for others to pull this branch from
-> > >
-> > > This is the first patch in a longer series that adds the ability for the
-> > > driver core to create and remove a list of attribute groups
-> > > automatically when the device is bound/unbound from a specific driver.
-> > >
-> > > See:
-> > >         https://lore.kernel.org/r/20190731124349.4474-2-gregkh@linuxfoundation.org
-> > > for details on this patch, and examples of how to use it in other
-> > > drivers.
-> > >
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > >
-> > > ----------------------------------------------------------------
-> > > Dmitry Torokhov (1):
-> > >       driver core: add dev_groups to all drivers
-> > >
-> > >  drivers/base/dd.c      | 14 ++++++++++++++
-> > >  include/linux/device.h |  3 +++
-> > >  2 files changed, 17 insertions(+)
-> > > _______________________________________________
-> >
-> > Was planning to re-spin DRM a series which uses .dev_groups, although
-> > I cannot see the core patch.
-> > Did the it get reverted or simply fell though the cracks?
->
-> Nope, it's in there:
->         23b6904442d0 ("driver core: add dev_groups to all drivers")
-> which showed up in the 5.4 kernel release.
->
-> Lots of other subsystems have already been converted to use this, do you
-> not see it in your tree?
->
-A case of PEBKAC it seems - I was looking at a 5.3 checkout somehow.
+From: Hans de Goede <hdegoede@redhat.com>
 
-Thanks for the core work. Will check/merge the fbdev patches over the
-next few days and polish drm land.
+[ Upstream commit 3bd12da7f50b8bc191fcb3bab1f55c582234df59 ]
 
--Emil
+asus-nb-wmi does not add any extra functionality on these Asus
+Transformer books. They have detachable keyboards, so the hotkeys are
+send through a HID device (and handled by the hid-asus driver) and also
+the rfkill functionality is not used on these devices.
+
+Besides not adding any extra functionality, initializing the WMI interface
+on these devices actually has a negative side-effect. For some reason
+the \_SB.ATKD.INIT() function which asus_wmi_platform_init() calls drives
+GPO2 (INT33FC:02) pin 8, which is connected to the front facing webcam LED,
+high and there is no (WMI or other) interface to drive this low again
+causing the LED to be permanently on, even during suspend.
+
+This commit adds a blacklist of DMI system_ids on which not to load the
+asus-nb-wmi and adds these Transformer books to this list. This fixes
+the webcam LED being permanently on under Linux.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 59f3a37a44d7a..8db2dc05b8cf2 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -517,9 +517,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
+ 	.detect_quirks = asus_nb_wmi_quirks,
+ };
+ 
++static const struct dmi_system_id asus_nb_wmi_blacklist[] __initconst = {
++	{
++		/*
++		 * asus-nb-wm adds no functionality. The T100TA has a detachable
++		 * USB kbd, so no hotkeys and it has no WMI rfkill; and loading
++		 * asus-nb-wm causes the camera LED to turn and _stay_ on.
++		 */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
++		},
++	},
++	{
++		/* The Asus T200TA has the same issue as the T100TA */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
++		},
++	},
++	{} /* Terminating entry */
++};
+ 
+ static int __init asus_nb_wmi_init(void)
+ {
++	if (dmi_check_system(asus_nb_wmi_blacklist))
++		return -ENODEV;
++
+ 	return asus_wmi_register_driver(&asus_nb_wmi_driver);
+ }
+ 
+-- 
+2.20.1
