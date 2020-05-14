@@ -1,45 +1,78 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] platform/x86: ISST: Increase timeout
-Date: Wed, 13 May 2020 15:24:34 -0700
-Message-ID: <20200513222434.152088-1-srinivas.pandruvada@linux.intel.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] V2: platform/x86: dell-laptop: don't register
+ platform::micmute if the related tokens don't exist.
+Date: Thu, 14 May 2020 01:26:11 +0000
+Message-ID: <135a804acc8247648ff8e811843f68ce@AUSX13MPC105.AMER.DELL.COM>
+References: <20200511014456.5149-1-koba.ko@canonical.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200511014456.5149-1-koba.ko@canonical.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy@infradead.org, dvhart@infradead.org, prarit@redhat.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: koba.ko@canonical.com, mjg59@srcf.ucam.org, pali.rohar@gmail.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Fix timeout issue on some Ice Lake servers, where mail box command is
-timing out before the response,
+> -----Original Message-----
+> From: koba.ko@canonical.com <koba.ko@canonical.com>
+> Sent: Sunday, May 10, 2020 8:45 PM
+> To: Matthew Garrett; Pali Roh=E1r; Darren Hart; Andy Shevchenko; platform=
+-driver-
+> x86@vger.kernel.org; linux-kernel@vger.kernel.org; Limonciello, Mario
+> Subject: [PATCH] V2: platform/x86: dell-laptop: don't register
+> platform::micmute if the related tokens don't exist.
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> From: Koba Ko <koba.ko@canonical.com>
+>=20
+> On dell G3-3590, error message is issued during boot up,
+> "platform::micmute: Setting an LED's brightness failed (-19)",
+> but there's no micmute led on the machine.
+>=20
+> Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
+> If one of two tokens doesn't exist,
+> don't call led_classdev_register() for platform::micmute.
+> After that, you wouldn't see the platform::micmute in /sys/class/leds/,
+> and the error message wouldn't see in dmesg.
+>=20
+> Signed-off-by: Koba Ko <koba.ko@canonical.com>
+> ---
+> Changelog:
+> 1. Refine the typo of comment.
+> ---
+>  drivers/platform/x86/dell-laptop.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/de=
+ll-
+> laptop.c
+> index 1e46022fb2c5..afc1ded83e56 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -2208,10 +2208,13 @@ static int __init dell_init(void)
+>=20
+>  	dell_laptop_register_notifier(&dell_laptop_notifier);
+>=20
+> -	micmute_led_cdev.brightness =3D ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> -	ret =3D led_classdev_register(&platform_device->dev, &micmute_led_cdev)=
+;
+> -	if (ret < 0)
+> -		goto fail_led;
+> +	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
+> +	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
+> +		micmute_led_cdev.brightness =3D ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> +		ret =3D led_classdev_register(&platform_device->dev,
+> &micmute_led_cdev);
+> +		if (ret < 0)
+> +			goto fail_led;
+> +	}
+>=20
+>  	if (acpi_video_get_backlight_type() !=3D acpi_backlight_vendor)
+>  		return 0;
+> --
+> 2.17.1
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../x86/intel_speed_select_if/isst_if_mbox_pci.c      | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-index de4169d0796b..d84e2174cbde 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-@@ -21,13 +21,12 @@
- #define PUNIT_MAILBOX_BUSY_BIT		31
- 
- /*
-- * Commands has variable amount of processing time. Most of the commands will
-- * be done in 0-3 tries, but some takes up to 50.
-- * The real processing time was observed as 25us for the most of the commands
-- * at 2GHz. It is possible to optimize this count taking samples on customer
-- * systems.
-+ * The average time to complete some commands is about 40us. The current
-+ * count is enough to satisfy 40us. But when the firmware is very busy, this
-+ * causes timeout occasionally.  So increase to deal with some worst case
-+ * scenarios. Most of the command still complete in few us.
-  */
--#define OS_MAILBOX_RETRY_COUNT		50
-+#define OS_MAILBOX_RETRY_COUNT		100
- 
- struct isst_if_device {
- 	struct mutex mutex;
--- 
-2.25.4
+Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
