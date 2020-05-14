@@ -1,94 +1,97 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups
- easily
-Date: Thu, 14 May 2020 09:16:31 +0200
-Message-ID: <20200514071631.GA1566388@kroah.com>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups easily
+Date: Thu, 14 May 2020 12:48:32 +0100
+Message-ID: <CACvgo52Mqag6wzWqJPMqbtbSsqDgPyyG33huAd+cQgFKQhfQUw@mail.gmail.com>
 References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
- <20190731131045.GB147138@dtor-ws>
- <20190802104633.GA14823@kroah.com>
- <CACvgo52+Uqx4GJFwadJoFzzt5EMc69HcW-+K9uxv9t25TtSDBg@mail.gmail.com>
+ <20190731131045.GB147138@dtor-ws> <20190802104633.GA14823@kroah.com>
+ <CACvgo52+Uqx4GJFwadJoFzzt5EMc69HcW-+K9uxv9t25TtSDBg@mail.gmail.com> <20200514071631.GA1566388@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACvgo52+Uqx4GJFwadJoFzzt5EMc69HcW-+K9uxv9t25TtSDBg@mail.gmail.com>
+In-Reply-To: <20200514071631.GA1566388@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Emil Velikov <emil.l.velikov@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, x86@kernel.org, linux-input@vger.kernel.org, linux-fbdev <linux-fbdev@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sudeep Holla <sudeep.holla@arm.com>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Darren Hart <dvhart@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Richard Gong <richard.gong@linux.intel.com>, Ingo Molnar <mingo@redhat.>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, May 13, 2020 at 11:18:15PM +0100, Emil Velikov wrote:
-> Hi Greg,
-> 
-> On Fri, 2 Aug 2019 at 11:46, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> 
+On Thu, 14 May 2020 at 08:16, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, May 13, 2020 at 11:18:15PM +0100, Emil Velikov wrote:
+> > Hi Greg,
 > >
-> > I have now done this with patch 1/10.  Here's the pull info if any
-> > subsystem maintainer wants to suck this into their tree to provide the
-> > ability for drivers to add/remove attribute groups easily.
+> > On Fri, 2 Aug 2019 at 11:46, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
 > >
-> > This is part of my driver-core tree now, and will go to Linus for
-> > 5.4-rc1, along with a few platform drivers that have been acked by their
-> > various subsystem maintainers that convert them to use this new
-> > functionality.
+> > >
+> > > I have now done this with patch 1/10.  Here's the pull info if any
+> > > subsystem maintainer wants to suck this into their tree to provide the
+> > > ability for drivers to add/remove attribute groups easily.
+> > >
+> > > This is part of my driver-core tree now, and will go to Linus for
+> > > 5.4-rc1, along with a few platform drivers that have been acked by their
+> > > various subsystem maintainers that convert them to use this new
+> > > functionality.
+> > >
+> > > If anyone has any questions about this, please let me know.
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> > >
+> > > -------------------
+> > >
+> > > The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+> > >
+> > >   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+> > >
+> > > are available in the Git repository at:
+> > >
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/dev_groups_all_drivers
+> > >
+> > > for you to fetch changes up to 23b6904442d08b7dbed7622ed33b236d41a3aa8b:
+> > >
+> > >   driver core: add dev_groups to all drivers (2019-08-02 12:37:53 +0200)
+> > >
+> > > ----------------------------------------------------------------
+> > > dev_groups added to struct driver
+> > >
+> > > Persistent tag for others to pull this branch from
+> > >
+> > > This is the first patch in a longer series that adds the ability for the
+> > > driver core to create and remove a list of attribute groups
+> > > automatically when the device is bound/unbound from a specific driver.
+> > >
+> > > See:
+> > >         https://lore.kernel.org/r/20190731124349.4474-2-gregkh@linuxfoundation.org
+> > > for details on this patch, and examples of how to use it in other
+> > > drivers.
+> > >
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > >
+> > > ----------------------------------------------------------------
+> > > Dmitry Torokhov (1):
+> > >       driver core: add dev_groups to all drivers
+> > >
+> > >  drivers/base/dd.c      | 14 ++++++++++++++
+> > >  include/linux/device.h |  3 +++
+> > >  2 files changed, 17 insertions(+)
+> > > _______________________________________________
 > >
-> > If anyone has any questions about this, please let me know.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
-> > -------------------
-> >
-> > The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
-> >
-> >   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/dev_groups_all_drivers
-> >
-> > for you to fetch changes up to 23b6904442d08b7dbed7622ed33b236d41a3aa8b:
-> >
-> >   driver core: add dev_groups to all drivers (2019-08-02 12:37:53 +0200)
-> >
-> > ----------------------------------------------------------------
-> > dev_groups added to struct driver
-> >
-> > Persistent tag for others to pull this branch from
-> >
-> > This is the first patch in a longer series that adds the ability for the
-> > driver core to create and remove a list of attribute groups
-> > automatically when the device is bound/unbound from a specific driver.
-> >
-> > See:
-> >         https://lore.kernel.org/r/20190731124349.4474-2-gregkh@linuxfoundation.org
-> > for details on this patch, and examples of how to use it in other
-> > drivers.
-> >
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > ----------------------------------------------------------------
-> > Dmitry Torokhov (1):
-> >       driver core: add dev_groups to all drivers
-> >
-> >  drivers/base/dd.c      | 14 ++++++++++++++
-> >  include/linux/device.h |  3 +++
-> >  2 files changed, 17 insertions(+)
-> > _______________________________________________
-> 
-> Was planning to re-spin DRM a series which uses .dev_groups, although
-> I cannot see the core patch.
-> Did the it get reverted or simply fell though the cracks?
+> > Was planning to re-spin DRM a series which uses .dev_groups, although
+> > I cannot see the core patch.
+> > Did the it get reverted or simply fell though the cracks?
+>
+> Nope, it's in there:
+>         23b6904442d0 ("driver core: add dev_groups to all drivers")
+> which showed up in the 5.4 kernel release.
+>
+> Lots of other subsystems have already been converted to use this, do you
+> not see it in your tree?
+>
+A case of PEBKAC it seems - I was looking at a 5.3 checkout somehow.
 
-Nope, it's in there:
-	23b6904442d0 ("driver core: add dev_groups to all drivers")
-which showed up in the 5.4 kernel release.
+Thanks for the core work. Will check/merge the fbdev patches over the
+next few days and polish drm land.
 
-Lots of other subsystems have already been converted to use this, do you
-not see it in your tree?
-
-thanks,
-
-greg k-h
+-Emil
