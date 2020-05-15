@@ -1,73 +1,57 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Subject: Re: [PATCH] V2: platform/x86: dell-laptop: don't register
- platform::micmute if the related tokens don't exist.
-Date: Fri, 15 May 2020 00:35:30 +0200
-Message-ID: <20200514223530.24r7c42bvwxvyyv5@pali>
-References: <20200511014456.5149-1-koba.ko@canonical.com>
+From: =?UTF-8?Q?Bernhard_=c3=9cbelacker?= <bernhardu@mailbox.org>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Trekstor
+ Yourbook C11B
+Date: Fri, 15 May 2020 16:07:52 +0200
+Message-ID: <4787d347-b761-6283-7f9d-34c1a11b909f@mailbox.org>
+References: <20200512204009.4751-1-bernhardu@mailbox.org>
+ <2656984b-3eec-c6d0-f992-8f1f8973fe3e@redhat.com>
+ <CAHp75VejzaZL26ztQMFGjAAMC3B8mkSnXSvGhyFeiHUbUUpp=w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200511014456.5149-1-koba.ko@canonical.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: koba.ko@canonical.com
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Mario.Limonciello@dell.com
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VejzaZL26ztQMFGjAAMC3B8mkSnXSvGhyFeiHUbUUpp=w@mail.gmail.com>
+Content-Language: en-GB
+Sender: linux-input-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Otmar Meier <otmarjun.meier@nexgo.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Monday 11 May 2020 09:44:56 koba.ko@canonical.com wrote:
-> From: Koba Ko <koba.ko@canonical.com>
-> 
-> On dell G3-3590, error message is issued during boot up,
-> "platform::micmute: Setting an LED's brightness failed (-19)",
-> but there's no micmute led on the machine.
-> 
-> Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
-> If one of two tokens doesn't exist,
-> don't call led_classdev_register() for platform::micmute.
-> After that, you wouldn't see the platform::micmute in /sys/class/leds/,
-> and the error message wouldn't see in dmesg.
-> 
-> Signed-off-by: Koba Ko <koba.ko@canonical.com>
 
-Fine for me, you can add:
-
-Reviewed-by: Pali Rohár <pali@kernel.org>
-
-Darren / Andy, when applying this patch, please add Fixes line so this
-change would be propagated to stable kernels:
-
-Fixes: d00fa46e0a2c6 ("platform/x86: dell-laptop: Add micmute LED trigger support")
-
-> ---
-> Changelog:
-> 1. Refine the typo of comment.
-> ---
->  drivers/platform/x86/dell-laptop.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+Am 13.05.20 um 19:17 schrieb Andy Shevchenko:
+> On Tue, May 12, 2020 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>> Hi,
+>> On 5/12/20 10:40 PM, Bernhard Übelacker wrote:
+>>> Add touchscreen info for the Trekstor Yourbook C11B. It seems to
+>>> use the same touchscreen as the Primebook C11, so we only add a new DMI
+>>> match.
+>>>
+>>> Cc: Otmar Meier <otmarjun.meier@nexgo.de>
+>>> Reported-and-tested-by: Otmar Meier <otmarjun.meier@nexgo.de>
+>>> Signed-off-by: Bernhard Übelacker <bernhardu@mailbox.org>
+>>
+>> Thank you, patch looks good to me:
+>>
+>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 > 
-> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-> index 1e46022fb2c5..afc1ded83e56 100644
-> --- a/drivers/platform/x86/dell-laptop.c
-> +++ b/drivers/platform/x86/dell-laptop.c
-> @@ -2208,10 +2208,13 @@ static int __init dell_init(void)
->  
->  	dell_laptop_register_notifier(&dell_laptop_notifier);
->  
-> -	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
-> -	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
-> -	if (ret < 0)
-> -		goto fail_led;
-> +	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
-> +	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
-> +		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
-> +		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
-> +		if (ret < 0)
-> +			goto fail_led;
-> +	}
->  
->  	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
->  		return 0;
-> -- 
-> 2.17.1
-> 
+> This doesn't apply to our for-next.
+> Please, rebase, add Hans' tag and resend, thanks!
+
+
+Hello Andy,
+I am not sure against which git tree I should rebase?
+
+I tried to rebase against the branch for-next in the git tree below.
+And tried to apply the patch saved from my
+thunderbird and got no error.
+
+Is this the right git tree?
+
+Kind regards,
+Bernhard
+
+
+$ git clone -b for-next --single-branch --depth=10000  git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git
+$ cd linux-gpio-intel
+$ LANG=C git am ../'[PATCH] platform_x86: touchscreen_dmi: Add info for the Trekstor Yourbook C11B.eml'
+Applying: platform/x86: touchscreen_dmi: Add info for the Trekstor Yourbook C11B
