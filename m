@@ -1,49 +1,48 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Trekstor
- Yourbook C11B
-Date: Fri, 15 May 2020 17:18:15 +0300
-Message-ID: <CAHp75VfAeyMnwoJi8P0d4Gs5dziUQYhPGzS2fmev00UiRZ6vaQ@mail.gmail.com>
-References: <20200512204009.4751-1-bernhardu@mailbox.org> <2656984b-3eec-c6d0-f992-8f1f8973fe3e@redhat.com>
- <CAHp75VejzaZL26ztQMFGjAAMC3B8mkSnXSvGhyFeiHUbUUpp=w@mail.gmail.com> <4787d347-b761-6283-7f9d-34c1a11b909f@mailbox.org>
+From: =?UTF-8?q?Bernhard=20=C3=9Cbelacker?= <bernhardu@mailbox.org>
+Subject: [PATCH v2] platform/x86: touchscreen_dmi: Add info for the Trekstor Yourbook C11B
+Date: Fri, 15 May 2020 17:59:12 +0200
+Message-ID: <20200515155912.48032-1-bernhardu@mailbox.org>
+References: <CAHp75VfAeyMnwoJi8P0d4Gs5dziUQYhPGzS2fmev00UiRZ6vaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <4787d347-b761-6283-7f9d-34c1a11b909f@mailbox.org>
+In-Reply-To: <CAHp75VfAeyMnwoJi8P0d4Gs5dziUQYhPGzS2fmev00UiRZ6vaQ@mail.gmail.com>
 Sender: linux-input-owner@vger.kernel.org
-To: =?UTF-8?Q?Bernhard_=C3=9Cbelacker?= <bernhardu@mailbox.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Otmar Meier <otmarjun.meier@nexgo.de>
+To: Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Bernhard=20=C3=9Cbelacker?= <bernhardu@mailbox.org>, Otmar Meier <otmarjun.meier@nexgo.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, May 15, 2020 at 5:08 PM Bernhard =C3=9Cbelacker
-<bernhardu@mailbox.org> wrote:
-> Am 13.05.20 um 19:17 schrieb Andy Shevchenko:
-> > On Tue, May 12, 2020 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wr=
-ote:
-> >> Hi,
-> >> On 5/12/20 10:40 PM, Bernhard =C3=9Cbelacker wrote:
-> >>> Add touchscreen info for the Trekstor Yourbook C11B. It seems to
-> >>> use the same touchscreen as the Primebook C11, so we only add a new D=
-MI
-> >>> match.
-> >>>
-> >>> Cc: Otmar Meier <otmarjun.meier@nexgo.de>
-> >>> Reported-and-tested-by: Otmar Meier <otmarjun.meier@nexgo.de>
-> >>> Signed-off-by: Bernhard =C3=9Cbelacker <bernhardu@mailbox.org>
-> >>
-> >> Thank you, patch looks good to me:
-> >>
-> >> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> >
-> > This doesn't apply to our for-next.
-> > Please, rebase, add Hans' tag and resend, thanks!
+Add touchscreen info for the Trekstor Yourbook C11B. It seems to
+use the same touchscreen as the Primebook C11, so we only add a new DMI
+match.
 
-> I am not sure against which git tree I should rebase?
+Cc: Otmar Meier <otmarjun.meier@nexgo.de>
+Reported-and-tested-by: Otmar Meier <otmarjun.meier@nexgo.de>
+Signed-off-by: Bernhard Übelacker <bernhardu@mailbox.org>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Ah, sorry, this one [1] you should use for PDx86.
-
-[1]: http://git.infradead.org/linux-platform-drivers-x86.git
-
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 87591cea127a..f9d9045cdf40 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -1197,6 +1197,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "TREK.G.WI71C.JGBMRBA05"),
+ 		},
+ 	},
++	{
++		/* Trekstor Yourbook C11B (same touchscreen as the Primebook C11) */
++		.driver_data = (void *)&trekstor_primebook_c11_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "YOURBOOK C11B"),
++		},
++	},
+ 	{
+ 		/* Vinga Twizzle J116 */
+ 		.driver_data = (void *)&vinga_twizzle_j116_data,
+-- 
+2.26.2
