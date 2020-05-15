@@ -1,60 +1,65 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCHv2 5/7] platform/x86: thinkpad_acpi: Use
- input_device_enabled()
-Date: Fri, 15 May 2020 14:02:02 -0300
-Message-ID: <20200515170202.GA6364@khazad-dum.debian.net>
-References: <20200515164943.28480-1-andrzej.p@collabora.com>
- <20200515165227.28859-1-andrzej.p@collabora.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv2 0/7] Support inhibiting input devices
+Date: Fri, 15 May 2020 20:19:10 +0200
+Message-ID: <842b95bb-8391-5806-fe65-be64b02de122@redhat.com>
+References: <20200506002746.GB89269@dtor-ws>
+ <20200515164943.28480-1-andrzej.p@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200515165227.28859-1-andrzej.p@collabora.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: linux-input@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, kernel@collabora.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20200515164943.28480-1-andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix Kernel Team <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Barry
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 15 May 2020, Andrzej Pietrasiewicz wrote:
-> Use the new helper. Inspecting input device's 'users' member needs to be
-> done under device's mutex, so add appropriate invocations.
+Hi Andrezj,
+
+On 5/15/20 6:49 PM, Andrzej Pietrasiewicz wrote:
+> Userspace might want to implement a policy to temporarily disregard input
+> from certain devices, including not treating them as wakeup sources.
 > 
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> An example use case is a laptop, whose keyboard can be folded under the
+> screen to create tablet-like experience. The user then must hold the laptop
+> in such a way that it is difficult to avoid pressing the keyboard keys. It
+> is therefore desirable to temporarily disregard input from the keyboard,
+> until it is folded back. This obviously is a policy which should be kept
+> out of the kernel, but the kernel must provide suitable means to implement
+> such a policy.
 
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Actually libinput already binds together (inside libinput) SW_TABLET_MODE
+generating evdev nodes and e.g. internal keyboards on devices with 360°
+hinges for this reason. libinput simply closes the /dev/input/event#
+node when folded and re-opens it when the keyboard should become active
+again. Thus not only suppresses events but allows e.g. touchpads to
+enter runtime suspend mode which saves power. Typically closing the
+/dev/input/event# node will also disable the device as wakeup source.
 
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 0f704484ae1d..8ae11b8c3ebb 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -2671,9 +2671,10 @@ static void hotkey_poll_setup(const bool may_warn)
->  	const u32 poll_driver_mask = hotkey_driver_mask & hotkey_source_mask;
->  	const u32 poll_user_mask = hotkey_user_mask & hotkey_source_mask;
->  
-> +	mutex_lock(&tpacpi_inputdev->mutex);
->  	if (hotkey_poll_freq > 0 &&
->  	    (poll_driver_mask ||
-> -	     (poll_user_mask && tpacpi_inputdev->users > 0))) {
-> +	     (poll_user_mask && input_device_enabled(tpacpi_inputdev)))) {
->  		if (!tpacpi_hotkey_task) {
->  			tpacpi_hotkey_task = kthread_run(hotkey_kthread,
->  					NULL, TPACPI_NVRAM_KTHREAD_NAME);
-> @@ -2690,6 +2691,7 @@ static void hotkey_poll_setup(const bool may_warn)
->  				  poll_user_mask, poll_driver_mask);
->  		}
->  	}
-> +	mutex_unlock(&tpacpi_inputdev->mutex);
->  }
->  
->  static void hotkey_poll_setup_safe(const bool may_warn)
+So I wonder what this series actually adds for functionality for
+userspace which can not already be achieved this way?
 
--- 
-  Henrique Holschuh
+I also noticed that you keep the device open (do not call the
+input_device's close callback) when inhibited and just throw away
+any events generated. This seems inefficient and may lead to
+the internal state getting out of sync. What if a key is pressed
+while inhibited and then the device is uninhibited while the key
+is still pressed?  Now the press event is lost and userspace
+querying the current state will see the pressed key as being
+released.
 
-  "One disk to rule them all, One disk to find them. One disk to bring
-  them all and in the darkness grind them. In the Land of Redmond
-  where the shadows lie." -- The Silicon Valley Tarot
+On top of this you add special inhibit and uninhibit callbacks
+and implement those for just a few devices. How do these differ
+from just closing the device and later opening it again ?
+
+Also using a sysfs property for this is very weird given that the
+rest of the evdev interface is using ioctls for everything...
+
+So all in all I see a lot of question marks here and I think we
+need to have a detailed discussion about what use-cases this
+series tries to enable before moving forward with this.
+
+Regards,
+
+Hans
