@@ -1,301 +1,60 @@
-From: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCHv2 6/7] Input: Add "inhibited" property
-Date: Fri, 15 May 2020 18:52:37 +0200
-Message-ID: <20200515165237.28906-1-andrzej.p@collabora.com>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCHv2 5/7] platform/x86: thinkpad_acpi: Use
+ input_device_enabled()
+Date: Fri, 15 May 2020 14:02:02 -0300
+Message-ID: <20200515170202.GA6364@khazad-dum.debian.net>
 References: <20200515164943.28480-1-andrzej.p@collabora.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20200515164943.28480-1-andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix Kernel Team <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Barry
+ <20200515165227.28859-1-andrzej.p@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200515165227.28859-1-andrzej.p@collabora.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: linux-input@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, kernel@collabora.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Patrik Fimml <patrikf-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On Fri, 15 May 2020, Andrzej Pietrasiewicz wrote:
+> Use the new helper. Inspecting input device's 'users' member needs to be
+> done under device's mutex, so add appropriate invocations.
+> 
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 
-Userspace might want to implement a policy to temporarily disregard input
-from certain devices, including not treating them as wakeup sources.
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
-An example use case is a laptop, whose keyboard can be folded under the
-screen to create tablet-like experience. The user then must hold the laptop
-in such a way that it is difficult to avoid pressing the keyboard keys. It
-is therefore desirable to temporarily disregard input from the keyboard,
-until it is folded back. This obviously is a policy which should be kept
-out of the kernel, but the kernel must provide suitable means to implement
-such a policy.
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 0f704484ae1d..8ae11b8c3ebb 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -2671,9 +2671,10 @@ static void hotkey_poll_setup(const bool may_warn)
+>  	const u32 poll_driver_mask = hotkey_driver_mask & hotkey_source_mask;
+>  	const u32 poll_user_mask = hotkey_user_mask & hotkey_source_mask;
+>  
+> +	mutex_lock(&tpacpi_inputdev->mutex);
+>  	if (hotkey_poll_freq > 0 &&
+>  	    (poll_driver_mask ||
+> -	     (poll_user_mask && tpacpi_inputdev->users > 0))) {
+> +	     (poll_user_mask && input_device_enabled(tpacpi_inputdev)))) {
+>  		if (!tpacpi_hotkey_task) {
+>  			tpacpi_hotkey_task = kthread_run(hotkey_kthread,
+>  					NULL, TPACPI_NVRAM_KTHREAD_NAME);
+> @@ -2690,6 +2691,7 @@ static void hotkey_poll_setup(const bool may_warn)
+>  				  poll_user_mask, poll_driver_mask);
+>  		}
+>  	}
+> +	mutex_unlock(&tpacpi_inputdev->mutex);
+>  }
+>  
+>  static void hotkey_poll_setup_safe(const bool may_warn)
 
-This patch adds a sysfs interface for exactly this purpose.
-
-To implement the said interface it adds an "inhibited" property to struct
-input_dev and two optional methods - inhibit() and uninhibit(), and
-effectively creates four states a device can be in: closed uninhibited,
-closed inhibited, open uninhibited, open inhibited. It also defers calling
-driver's ->open() and ->close() to until they are actually needed, e.g. it
-makes no sense to prepare the underlying device for generating events
-(->open()) if the device is inhibited.
-
-              uninhibit
-closed      <------------ closed
-uninhibited ------------> inhibited
-      | ^     inhibit        | ^
- 1st  | |               1st  | |
- open | |               open | |
-      | |                    | |
-      | | last               | | last
-      | | close              | | close
-      v |     uninhibit      v |
-open        <------------ open
-uninhibited ------------> inhibited
-
-The top inhibit/uninhibit transition happens when users == 0.
-The bottom inhibit/uninhibit transition happens when users > 0.
-The left open/close transition happens when !inhibited.
-The right open/close transition happens when inhibited.
-Due to all transitions being serialized with dev->mutex, it is impossible
-to have "diagonal" transitions between closed uninhibited and open
-inhibited or between open uninhibited and closed inhibited.
-
-open() and close() - if provided - are called in both inhibit and uninhibit
-paths. Please note that close() does not return a value, so if your driver
-might need failing inhibiting, you need to provide inhibit() so that it
-returns a value to check.
-
-It is drivers' responsibility to implement their inhibiting capability in
-terms of whatever is suitable in their context, be it open/close,
-inhibit/uninhibit or a combination of both. The drivers should also ensure
-that they properly interact with suspend/resume and PM runtime, because
-most likely a side effect of inhibiting a device should be its going into
-low power mode. Properly inhibiting a device means to prevent it from being
-a wakeup source, so drivers should also take care of that.
-
-Signed-off-by: Patrik Fimml <patrikf-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Co-developed-by: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
----
- drivers/input/input.c | 136 ++++++++++++++++++++++++++++++++++++++----
- include/linux/input.h |   8 +++
- 2 files changed, 134 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/input/input.c b/drivers/input/input.c
-index 41377bfa142d..5b859a178c11 100644
---- a/drivers/input/input.c
-+++ b/drivers/input/input.c
-@@ -367,8 +367,13 @@ static int input_get_disposition(struct input_dev *dev,
- static void input_handle_event(struct input_dev *dev,
- 			       unsigned int type, unsigned int code, int value)
- {
--	int disposition = input_get_disposition(dev, type, code, &value);
-+	int disposition;
- 
-+	/* filter-out events from inhibited devices */
-+	if (dev->inhibited)
-+		return;
-+
-+	disposition = input_get_disposition(dev, type, code, &value);
- 	if (disposition != INPUT_IGNORE_EVENT && type != EV_SYN)
- 		add_input_randomness(type, code, value);
- 
-@@ -612,7 +617,7 @@ int input_open_device(struct input_handle *handle)
- 
- 	handle->open++;
- 
--	if (dev->users++) {
-+	if (dev->users++ || dev->inhibited) {
- 		/*
- 		 * Device is already opened, so we can exit immediately and
- 		 * report success.
-@@ -660,6 +665,14 @@ int input_flush_device(struct input_handle *handle, struct file *file)
- }
- EXPORT_SYMBOL(input_flush_device);
- 
-+static inline void input_stop(struct input_dev *dev)
-+{
-+	if (dev->poller)
-+		input_dev_poller_stop(dev->poller);
-+	if (dev->close)
-+		dev->close(dev);
-+}
-+
- /**
-  * input_close_device - close input device
-  * @handle: handle through which device is being accessed
-@@ -675,13 +688,8 @@ void input_close_device(struct input_handle *handle)
- 
- 	__input_release_device(handle);
- 
--	if (!--dev->users) {
--		if (dev->poller)
--			input_dev_poller_stop(dev->poller);
--
--		if (dev->close)
--			dev->close(dev);
--	}
-+	if (!dev->inhibited && !--dev->users)
-+		input_stop(dev);
- 
- 	if (!--handle->open) {
- 		/*
-@@ -1416,12 +1424,49 @@ static ssize_t input_dev_show_properties(struct device *dev,
- }
- static DEVICE_ATTR(properties, S_IRUGO, input_dev_show_properties, NULL);
- 
-+static int input_inhibit(struct input_dev *dev);
-+static int input_uninhibit(struct input_dev *dev);
-+
-+static ssize_t inhibited_show(struct device *dev,
-+			      struct device_attribute *attr,
-+			      char *buf)
-+{
-+	struct input_dev *input_dev = to_input_dev(dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", input_dev->inhibited);
-+}
-+
-+static ssize_t inhibited_store(struct device *dev,
-+			       struct device_attribute *attr, const char *buf,
-+			       size_t len)
-+{
-+	struct input_dev *input_dev = to_input_dev(dev);
-+	ssize_t rv;
-+	bool inhibited;
-+
-+	if (strtobool(buf, &inhibited))
-+		return -EINVAL;
-+
-+	if (inhibited)
-+		rv = input_inhibit(input_dev);
-+	else
-+		rv = input_uninhibit(input_dev);
-+
-+	if (rv != 0)
-+		return rv;
-+
-+	return len;
-+}
-+
-+static DEVICE_ATTR_RW(inhibited);
-+
- static struct attribute *input_dev_attrs[] = {
- 	&dev_attr_name.attr,
- 	&dev_attr_phys.attr,
- 	&dev_attr_uniq.attr,
- 	&dev_attr_modalias.attr,
- 	&dev_attr_properties.attr,
-+	&dev_attr_inhibited.attr,
- 	NULL
- };
- 
-@@ -1703,6 +1748,77 @@ void input_reset_device(struct input_dev *dev)
- }
- EXPORT_SYMBOL(input_reset_device);
- 
-+static int input_inhibit(struct input_dev *dev)
-+{
-+	int ret = 0;
-+
-+	mutex_lock(&dev->mutex);
-+
-+	if (dev->inhibited)
-+		goto out;
-+
-+	if (dev->users) {
-+		if (dev->inhibit) {
-+			ret = dev->inhibit(dev);
-+			if (ret)
-+				goto out;
-+		}
-+		input_stop(dev);
-+	}
-+
-+	spin_lock_irq(&dev->event_lock);
-+	input_dev_release_keys(dev);
-+	input_dev_toggle(dev, false);
-+	spin_unlock_irq(&dev->event_lock);
-+
-+	dev->inhibited = true;
-+
-+out:
-+	mutex_unlock(&dev->mutex);
-+	return ret;
-+}
-+
-+static int input_uninhibit(struct input_dev *dev)
-+{
-+	int ret = 0;
-+
-+	mutex_lock(&dev->mutex);
-+
-+	if (!dev->inhibited)
-+		goto out;
-+
-+	if (dev->users) {
-+		if (dev->open) {
-+			ret = dev->open(dev);
-+			if (ret)
-+				goto toggle;
-+		}
-+		if (dev->uninhibit) {
-+			ret = dev->uninhibit(dev);
-+			if (ret) {
-+				if (dev->close)
-+					dev->close(dev);
-+				goto toggle;
-+			}
-+		}
-+		if (dev->poller)
-+			input_dev_poller_start(dev->poller);
-+	}
-+
-+	dev->inhibited = false;
-+
-+toggle:
-+	if (!dev->inhibited) {
-+		spin_lock_irq(&dev->event_lock);
-+		input_dev_toggle(dev, true);
-+		spin_unlock_irq(&dev->event_lock);
-+	}
-+
-+out:
-+	mutex_unlock(&dev->mutex);
-+	return ret;
-+}
-+
- #ifdef CONFIG_PM_SLEEP
- static int input_dev_suspend(struct device *dev)
- {
-@@ -2131,7 +2247,7 @@ bool input_device_enabled(struct input_dev *dev)
- {
- 	lockdep_assert_held(&dev->mutex);
- 
--	return dev->users > 0;
-+	return !dev->inhibited && dev->users > 0;
- }
- EXPORT_SYMBOL_GPL(input_device_enabled);
- 
-diff --git a/include/linux/input.h b/include/linux/input.h
-index eda4587dba67..8d0dcfaeaf6f 100644
---- a/include/linux/input.h
-+++ b/include/linux/input.h
-@@ -127,6 +127,9 @@ enum input_clock_type {
-  *	and needs not be explicitly unregistered or freed.
-  * @timestamp: storage for a timestamp set by input_set_timestamp called
-  *  by a driver
-+ * @inhibit: makes the device ignore all input
-+ * @uninhibit: undoes the effect of inhibit
-+ * @inhibited: indicates that the input device is inhibited
-  */
- struct input_dev {
- 	const char *name;
-@@ -201,6 +204,11 @@ struct input_dev {
- 	bool devres_managed;
- 
- 	ktime_t timestamp[INPUT_CLK_MAX];
-+
-+	int (*inhibit)(struct input_dev *dev);
-+	int (*uninhibit)(struct input_dev *dev);
-+
-+	bool inhibited;
- };
- #define to_input_dev(d) container_of(d, struct input_dev, dev)
- 
 -- 
-2.17.1
+  Henrique Holschuh
+
+  "One disk to rule them all, One disk to find them. One disk to bring
+  them all and in the darkness grind them. In the Land of Redmond
+  where the shadows lie." -- The Silicon Valley Tarot
