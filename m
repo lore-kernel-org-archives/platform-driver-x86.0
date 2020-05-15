@@ -1,65 +1,86 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv2 0/7] Support inhibiting input devices
-Date: Fri, 15 May 2020 20:19:10 +0200
-Message-ID: <842b95bb-8391-5806-fe65-be64b02de122@redhat.com>
-References: <20200506002746.GB89269@dtor-ws>
- <20200515164943.28480-1-andrzej.p@collabora.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: intel-vbtn: Only blacklist SW_TABLET_MODE on the 9 / "Laptop" chasis-type
+Date: Fri, 15 May 2020 20:39:16 +0200
+Message-ID: <20200515183916.82919-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20200515164943.28480-1-andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix Kernel Team <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Barry
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mario Limonciello <mario.limonciello@dell.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Andrezj,
+The HP Stream x360 11-p000nd no longer report SW_TABLET_MODE state / events
+with recent kernels. This model reports a chassis-type of 10 / "Notebook"
+which is not on the recently introduced chassis-type whitelist
 
-On 5/15/20 6:49 PM, Andrzej Pietrasiewicz wrote:
-> Userspace might want to implement a policy to temporarily disregard input
-> from certain devices, including not treating them as wakeup sources.
-> 
-> An example use case is a laptop, whose keyboard can be folded under the
-> screen to create tablet-like experience. The user then must hold the laptop
-> in such a way that it is difficult to avoid pressing the keyboard keys. It
-> is therefore desirable to temporarily disregard input from the keyboard,
-> until it is folded back. This obviously is a policy which should be kept
-> out of the kernel, but the kernel must provide suitable means to implement
-> such a policy.
+Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+switch on 2-in-1's") added a chassis-type whitelist and only listed 31 /
+"Convertible" as being capable of generating valid SW_TABLET_MOD events.
 
-Actually libinput already binds together (inside libinput) SW_TABLET_MODE
-generating evdev nodes and e.g. internal keyboards on devices with 360°
-hinges for this reason. libinput simply closes the /dev/input/event#
-node when folded and re-opens it when the keyboard should become active
-again. Thus not only suppresses events but allows e.g. touchpads to
-enter runtime suspend mode which saves power. Typically closing the
-/dev/input/event# node will also disable the device as wakeup source.
+Commit 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode
+switch on "Detachable" and "Portable" chassis-types") extended the
+whitelist with chassis-types 8 / "Portable" and 32 / "Detachable".
 
-So I wonder what this series actually adds for functionality for
-userspace which can not already be achieved this way?
+And now we need to exten the whitelist again with 10 / "Notebook"...
 
-I also noticed that you keep the device open (do not call the
-input_device's close callback) when inhibited and just throw away
-any events generated. This seems inefficient and may lead to
-the internal state getting out of sync. What if a key is pressed
-while inhibited and then the device is uninhibited while the key
-is still pressed?  Now the press event is lost and userspace
-querying the current state will see the pressed key as being
-released.
+The issue original fixed by the whitelist is really a ACPI DSDT bug on
+the Dell XPS 9360 where it has a VGBS which reports it is in tablet mode
+even though it is not a 2-in-1 at all, but a regular laptop.
 
-On top of this you add special inhibit and uninhibit callbacks
-and implement those for just a few devices. How do these differ
-from just closing the device and later opening it again ?
+So since this is a workaround for a DSDT issue on that specific model,
+instead of extending the whitelist over and over again, lets switch to
+a blacklist and only blacklist the chassis-type of the model for which
+the chassis-type check was added.
 
-Also using a sysfs property for this is very weird given that the
-rest of the evdev interface is using ioctls for everything...
+Note this also fixes the current version of the code no longer checking
+if dmi_get_system_info(DMI_CHASSIS_TYPE) returns NULL.
 
-So all in all I see a lot of question marks here and I think we
-need to have a detailed discussion about what use-cases this
-series tries to enable before moving forward with this.
+Fixes: 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types")
+Cc: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Note I can even see there being 2-in-1s using intel-vbtn to report
+SW_TABLET_MODE with a chassis-type of 9. So maybe we should make the
+quirk / blacklist stricter by combining it with a
+dmi_name_in_vendors("Dell") check ?
+---
+ drivers/platform/x86/intel-vbtn.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index ef92c1c3adbd..0487b606a274 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -170,21 +170,18 @@ static bool intel_vbtn_has_buttons(acpi_handle handle)
+ static bool intel_vbtn_has_switches(acpi_handle handle)
+ {
+ 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+-	unsigned long chassis_type_int;
+ 	unsigned long long vgbs;
+ 	acpi_status status;
+ 
+-	if (kstrtoul(chassis_type, 10, &chassis_type_int))
+-		return false;
+-
+-	switch (chassis_type_int) {
+-	case  8: /* Portable */
+-	case 31: /* Convertible */
+-	case 32: /* Detachable */
+-		break;
+-	default:
++	/*
++	 * Some normal laptops have a VGBS method despite being non-convertible
++	 * and their VGBS method always returns 0, causing detect_tablet_mode()
++	 * to report SW_TABLET_MODE=1 to userspace, which causes issues.
++	 * These laptops have a DMI chassis_type of 9 ("Laptop"), do not report
++	 * switches on any devices with a DMI chassis_type of 9.
++	 */
++	if (chassis_type && strcmp(chassis_type, "9") == 0)
+ 		return false;
+-	}
+ 
+ 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+ 	return ACPI_SUCCESS(status);
+-- 
+2.26.0
