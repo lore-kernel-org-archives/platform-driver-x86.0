@@ -1,163 +1,134 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCHv2 0/7] Support inhibiting input devices
-Date: Mon, 18 May 2020 16:23:21 +0200
-Message-ID: <f674ba4f-bd83-0877-c730-5dc6ea09ae4b@redhat.com>
-References: <20200506002746.GB89269@dtor-ws>
- <20200515164943.28480-1-andrzej.p@collabora.com>
- <842b95bb-8391-5806-fe65-be64b02de122@redhat.com>
- <e6030957-97dc-5b04-7855-bc14a78164c8@collabora.com>
- <6d9921fc-5c2f-beda-4dcd-66d6970a22fe@redhat.com>
- <09679de4-75d3-1f29-ec5f-8d42c84273dd@collabora.com>
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH] x86/uv/time: Replace one-element array and save heap space
+Date: Mon, 18 May 2020 14:01:14 -0500
+Message-ID: <20200518190114.GA7757@embeddedor>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <09679de4-75d3-1f29-ec5f-8d42c84273dd@collabora.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-input@vger.kernel.org, linux-acpi@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Barry
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "x86@kernel.org H. Peter Anvin" <hpa@zytor.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Kees Cook <keescook@chromium.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+The current codebase makes use of one-element arrays in the following
+form:
 
-On 5/18/20 3:49 PM, Andrzej Pietrasiewicz wrote:
-> Hi Hans,
-> 
-> W dniu 18.05.2020 o 14:24, Hans de Goede pisze:
->> Hi,
->>
->> On 5/18/20 12:48 PM, Andrzej Pietrasiewicz wrote:
->>> Hi Hans,
->>>
->>> W dniu 15.05.2020 o 20:19, Hans de Goede pisze:
->>>> Hi Andrezj,
->>>>
->>>> On 5/15/20 6:49 PM, Andrzej Pietrasiewicz wrote:
->>>>> Userspace might want to implement a policy to temporarily disregard input
->>>>> from certain devices, including not treating them as wakeup sources.
->>>>>
->>>>> An example use case is a laptop, whose keyboard can be folded under the
->>>>> screen to create tablet-like experience. The user then must hold the laptop
->>>>> in such a way that it is difficult to avoid pressing the keyboard keys. It
->>>>> is therefore desirable to temporarily disregard input from the keyboard,
->>>>> until it is folded back. This obviously is a policy which should be kept
->>>>> out of the kernel, but the kernel must provide suitable means to implement
->>>>> such a policy.
->>>>
->>>> Actually libinput already binds together (inside libinput) SW_TABLET_MODE
->>>> generating evdev nodes and e.g. internal keyboards on devices with 360°
->>>> hinges for this reason. libinput simply closes the /dev/input/event#
->>>> node when folded and re-opens it when the keyboard should become active
->>>> again. Thus not only suppresses events but allows e.g. touchpads to
->>>> enter runtime suspend mode which saves power. Typically closing the
->>>> /dev/input/event# node will also disable the device as wakeup source.
->>>>
->>>> So I wonder what this series actually adds for functionality for
->>>> userspace which can not already be achieved this way?
->>>>
->>>> I also noticed that you keep the device open (do not call the
->>>> input_device's close callback) when inhibited and just throw away
->>>
->>> I'm not sure if I understand you correctly, it is called:
->>>
->>> +static inline void input_stop(struct input_dev *dev)
->>> +{
->>> +    if (dev->poller)
->>> +        input_dev_poller_stop(dev->poller);
->>> +    if (dev->close)
->>> +        dev->close(dev);
->>>                  ^^^^^^^^^^^^^^^^
->>> +static int input_inhibit(struct input_dev *dev)
->>> +{
->>> +    int ret = 0;
->>> +
->>> +    mutex_lock(&dev->mutex);
->>> +
->>> +    if (dev->inhibited)
->>> +        goto out;
->>> +
->>> +    if (dev->users) {
->>> +        if (dev->inhibit) {
->>> +            ret = dev->inhibit(dev);
->>> +            if (ret)
->>> +                goto out;
->>> +        }
->>> +        input_stop(dev);
->>>                  ^^^^^^^^^^^^^^^^
->>>
->>> It will not be called when dev->users is zero, but if it is zero,
->>> then nobody has opened the device yet so there is nothing to close.
->>
->> Ah, I missed that.
->>
->> So if the device implements the inhibit call back then on
->> inhibit it will get both the inhibit and close callback called?
->>
-> 
-> That's right. And conversely, upon uninhibit open() and uninhibit()
-> callbacks will be invoked. Please note that just as with open()/close(),
-> providing inhibit()/uninhibit() is optional.
+struct something {
+    int length;
+    u8 data[1];
+};
 
-Ack.
+struct something *instance;
 
->> And what happens if the last user goes away and the device
->> is not inhibited?
-> 
-> close() is called as usually.
+instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+instance->length = size;
+memcpy(instance->data, source, size);
 
-But not inhibit, hmm, see below.
+but the preferred mechanism to declare variable-length types such as
+these ones is a flexible array member[1][2], introduced in C99:
 
->> I'm trying to understand here what the difference between the 2
->> is / what the goal of having a separate inhibit callback ?
->>
-> 
-> Drivers have very different ideas about what it means to suspend/resume
-> and open/close. The optional inhibit/uninhibit callbacks are meant for
-> the drivers to know that it is this particular action going on.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-So the inhibit() callback triggers the "suspend" behavior ?
-But shouldn't drivers which are capable of suspending the device
-always do so on close() ?
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on. So, replace
+the one-element array with a flexible-array member.
 
-Since your current proposal also calls close() on inhibit() I
-really see little difference between an inhibit() and the last
-user of the device closing it and IMHO unless there is a good
-reason to actually differentiate the 2 it would be better
-to only stick with the existing close() and in cases where
-that does not put the device in a low-power mode yet, fix
-the existing close() callback to do the low-power mode
-setting instead of adding a new callback.
+Also, make use of the new struct_size() helper to properly calculate the
+total size needed to allocate dynamic memory for struct uv_rtc_timer_head.
+Notice that, due to the use of a one-element array, space for an extra
+struct cpu:
 
-> For inhibit() there's one more argument: close() does not return a value,
-> so its meaning is "do some last cleanup" and as such it is not allowed
-> to fail - whatever its effect is, we must deem it successful. inhibit()
-> does return a value and so it is allowed to fail.
+struct {
+	int     lcpu;           /* systemwide logical cpu number */
+	u64     expires;        /* next timer expiration for this cpu */
+} cpu[1]
 
-Well, we could make close() return an error and at least in the inhibit()
-case propagate that to userspace. I wonder if userspace is going to
-do anything useful with that error though...
+was being allocated at the moment of applying the sizeof operator to
+struct uv_rtc_timer_head in the call to kmalloc_node() at line 159:
 
-In my experience errors during cleanup/shutdown are best logged
-(using dev_err) and otherwise ignored, so that we try to clean up
-as much possible. Unless the very first step of the shutdown process
-fails the device is going to be in some twilight zone state anyways
-at this point we might as well try to cleanup as much as possible.
+159		head = kmalloc_node(sizeof(struct uv_rtc_timer_head) +
+160			(uv_blade_nr_possible_cpus(bid) *
+161				2 * sizeof(u64)),
+162			GFP_KERNEL, nid);
 
-> All in all, it is up to the drivers to decide which callback they
-> provide. Based on my work so far I would say that there are tens
-> of simple cases where open() and close() are sufficient, out of total
-> ~400 users of input_allocate_device():
-> 
-> $ git grep "input_allocate_device(" | grep -v ^Documentation | \
-> cut -f1 -d: | sort | uniq | wc
->      390     390   13496
+but that extra cpu[] was never actually being accessed due to the
+following piece of code at line 168:
 
-So can you explain a bit more about the cases where only having
-open/close is not sufficient?  So far I have the feeling that
-those are all we need and that we really do not need separate
-[un]inhibit callbacks.
+168		head->ncpus = uv_blade_nr_possible_cpus(bid);
 
-Regards,
+and the piece of code at line 187:
 
-Hans
+187		for (c = 0; c < head->ncpus; c++) {
+188			u64 exp = head->cpu[c].expires;
+189			if (exp < lowest) {
+190				bcpu = c;
+191				lowest = exp;
+192			}
+193		}
+
+so heap space was being wasted.
+
+Another thing important to notice is that through the use of the
+struct_size() helper, code at line 161:
+
+161		2 * sizeof(u64)),
+
+is changed to now be the actual size of struct cpu; see
+sizeof(*(p)->member) at include/linux/overflow.h:314:
+
+314 #define struct_size(p, member, n)                                       \
+315         __ab_c_size(n,                                                  \
+316                     sizeof(*(p)->member) + __must_be_array((p)->member),\
+317                     sizeof(*(p)))
+
+As a side note, the original developer could have implemented code at line
+161: 2 * sizeof(64) as follows:
+
+sizeof(*head->cpu)
+
+This issue has been out there since 2009.
+
+This issue was found with the help of Coccinelle and fixed _manually_.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ arch/x86/platform/uv/uv_time.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
+index 7af31b245636..993a8ae6fdfb 100644
+--- a/arch/x86/platform/uv/uv_time.c
++++ b/arch/x86/platform/uv/uv_time.c
+@@ -52,7 +52,7 @@ struct uv_rtc_timer_head {
+ 	struct {
+ 		int	lcpu;		/* systemwide logical cpu number */
+ 		u64	expires;	/* next timer expiration for this cpu */
+-	} cpu[1];
++	} cpu[];
+ };
+ 
+ /*
+@@ -156,9 +156,8 @@ static __init int uv_rtc_allocate_timers(void)
+ 		struct uv_rtc_timer_head *head = blade_info[bid];
+ 
+ 		if (!head) {
+-			head = kmalloc_node(sizeof(struct uv_rtc_timer_head) +
+-				(uv_blade_nr_possible_cpus(bid) *
+-					2 * sizeof(u64)),
++			head = kmalloc_node(struct_size(head, cpu,
++				uv_blade_nr_possible_cpus(bid)),
+ 				GFP_KERNEL, nid);
+ 			if (!head) {
+ 				uv_rtc_deallocate_timers();
+-- 
+2.26.2
