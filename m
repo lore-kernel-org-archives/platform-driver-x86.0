@@ -1,101 +1,59 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv2 0/7] Support inhibiting input devices
-Date: Mon, 18 May 2020 14:24:05 +0200
-Message-ID: <6d9921fc-5c2f-beda-4dcd-66d6970a22fe@redhat.com>
-References: <20200506002746.GB89269@dtor-ws>
- <20200515164943.28480-1-andrzej.p@collabora.com>
- <842b95bb-8391-5806-fe65-be64b02de122@redhat.com>
- <e6030957-97dc-5b04-7855-bc14a78164c8@collabora.com>
+From: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: your mail
+Date: Mon, 18 May 2020 16:35:30 +0300
+Message-ID: <20200518133530.GB1298122@kuha.fi.intel.com>
+References: <526351589195104@mail.yandex.com>
+ <20200511113506.GB2062175@kuha.fi.intel.com>
+ <CAHp75VcwUcbtZFQExEoJg9sFFVa_ueUT71SiMCVWetgaQg6kDQ@mail.gmail.com>
+ <5ee2b9ef-25e3-c049-3f82-d3d51d392824@redhat.com>
+ <CAHp75VdUeBt++mJCvWkHm82XQ+ze1U6OpQ9fv8Hb2d1Nfsz3pw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e6030957-97dc-5b04-7855-bc14a78164c8-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix Kernel Team <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Barry
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdUeBt++mJCvWkHm82XQ+ze1U6OpQ9fv8Hb2d1Nfsz3pw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jakub-FiUXBBwNs2Q@public.gmane.org
+Cc: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, USB <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+Hi Jakub,
 
-On 5/18/20 12:48 PM, Andrzej Pietrasiewicz wrote:
-> Hi Hans,
+On Mon, May 11, 2020 at 04:40:05PM +0300, Andy Shevchenko wrote:
+> On Mon, May 11, 2020 at 3:29 PM Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> > On 5/11/20 1:44 PM, Andy Shevchenko wrote:
 > 
-> W dniu 15.05.2020 o 20:19, Hans de Goede pisze:
->> Hi Andrezj,
->>
->> On 5/15/20 6:49 PM, Andrzej Pietrasiewicz wrote:
->>> Userspace might want to implement a policy to temporarily disregard input
->>> from certain devices, including not treating them as wakeup sources.
->>>
->>> An example use case is a laptop, whose keyboard can be folded under the
->>> screen to create tablet-like experience. The user then must hold the laptop
->>> in such a way that it is difficult to avoid pressing the keyboard keys. It
->>> is therefore desirable to temporarily disregard input from the keyboard,
->>> until it is folded back. This obviously is a policy which should be kept
->>> out of the kernel, but the kernel must provide suitable means to implement
->>> such a policy.
->>
->> Actually libinput already binds together (inside libinput) SW_TABLET_MODE
->> generating evdev nodes and e.g. internal keyboards on devices with 360°
->> hinges for this reason. libinput simply closes the /dev/input/event#
->> node when folded and re-opens it when the keyboard should become active
->> again. Thus not only suppresses events but allows e.g. touchpads to
->> enter runtime suspend mode which saves power. Typically closing the
->> /dev/input/event# node will also disable the device as wakeup source.
->>
->> So I wonder what this series actually adds for functionality for
->> userspace which can not already be achieved this way?
->>
->> I also noticed that you keep the device open (do not call the
->> input_device's close callback) when inhibited and just throw away
+> ...
 > 
-> I'm not sure if I understand you correctly, it is called:
+> > > I would rather disable them and issue a firmware bug.
+> > > Vendors, including us, should do something sane about this.
+> >
+> > I have to partially disagree here. I agree that for future hardware
+> > versions the firmware team of those devices should offer a saner
+> > interface. But for the current hardware gen I guess we are stuck
+> > with this and having a DMI table for popular models (well any model
+> > a Linux user is willing to submit a quirk for) is better then simply
+> > not having things working under Linux.
+> >
+> > I do wonder what Windows does here though. Perhaps the INT3513 device
+> > has some ACPI methods to query for more info, like how many Type-C
+> > controllers there actually are?
 > 
-> +static inline void input_stop(struct input_dev *dev)
-> +{
-> +    if (dev->poller)
-> +        input_dev_poller_stop(dev->poller);
-> +    if (dev->close)
-> +        dev->close(dev);
->                  ^^^^^^^^^^^^^^^^
-> +static int input_inhibit(struct input_dev *dev)
-> +{
-> +    int ret = 0;
-> +
-> +    mutex_lock(&dev->mutex);
-> +
-> +    if (dev->inhibited)
-> +        goto out;
-> +
-> +    if (dev->users) {
-> +        if (dev->inhibit) {
-> +            ret = dev->inhibit(dev);
-> +            if (ret)
-> +                goto out;
-> +        }
-> +        input_stop(dev);
->                  ^^^^^^^^^^^^^^^^
-> 
-> It will not be called when dev->users is zero, but if it is zero,
-> then nobody has opened the device yet so there is nothing to close.
+> I think they do silly things there in usual obscure MS way, i.e.
+> hardcoding everything in the driver per platform.
+> That's why I'm really disappointed how things are going on.
 
-Ah, I missed that.
+I've been trying to figure out which exact NUC10i3 your NUC is? I
+can't find a NUC10i3 that uses Comet Lake -S?
 
-So if the device implements the inhibit call back then on
-inhibit it will get both the inhibit and close callback called?
+If your NUC isn't actually "-S" variant, then the ACPI device entry
+with HID INT3515 should return 0 from its _STA method.
 
-And what happens if the last user goes away and the device
-is not inhibited?
+But can you please share the full name of your board (like NUC10i3FNH
+or something like that - should read on the bottom of the device).
+Also, dmesg output would be useful.
 
-I'm trying to understand here what the difference between the 2
-is / what the goal of having a separate inhibit callback ?
+thanks,
 
-IOW is there something which we want to do on close when
-the close is being done to inhibit the device, which we do
-not want to do on a normal close ?
-
-Regards,
-
-Hans
+-- 
+heikki
