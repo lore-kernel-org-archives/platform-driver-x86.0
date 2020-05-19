@@ -1,67 +1,175 @@
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH] x86/uv/time: Replace one-element array and save heap
- space
-Date: Mon, 18 May 2020 17:32:02 -0500
-Message-ID: <20200518223202.GD9868@embeddedor>
-References: <20200518190114.GA7757@embeddedor>
- <b03d196cdbbbc6e9e8456910c6c6673ab67f76cb.camel@perches.com>
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Subject: Re: [PATCHv2 0/7] Support inhibiting input devices
+Date: Tue, 19 May 2020 11:02:58 +0200
+Message-ID: <2d224833-3a7e-bc7c-af15-1f803f466697@collabora.com>
+References: <20200506002746.GB89269@dtor-ws>
+ <20200515164943.28480-1-andrzej.p@collabora.com>
+ <842b95bb-8391-5806-fe65-be64b02de122@redhat.com>
+ <e6030957-97dc-5b04-7855-bc14a78164c8@collabora.com>
+ <6d9921fc-5c2f-beda-4dcd-66d6970a22fe@redhat.com>
+ <09679de4-75d3-1f29-ec5f-8d42c84273dd@collabora.com>
+ <f674ba4f-bd83-0877-c730-5dc6ea09ae4b@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b03d196cdbbbc6e9e8456910c6c6673ab67f76cb.camel@perches.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "x86@kernel.org H. Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <f674ba4f-bd83-0877-c730-5dc6ea09ae4b@redhat.com>
+Content-Language: en-US
+Sender: linux-acpi-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org, linux-acpi@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Barry
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, May 18, 2020 at 12:09:16PM -0700, Joe Perches wrote:
-> On Mon, 2020-05-18 at 14:01 -0500, Gustavo A. R. Silva wrote:
-> > The current codebase makes use of one-element arrays in the following
-> > form:
-> > 
-> > struct something {
-> >     int length;
-> >     u8 data[1];
-> > };
-> []
-> > This issue has been out there since 2009.
-> > This issue was found with the help of Coccinelle and fixed _manually_.
-> []
-> > diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
-> > index 7af31b245636..993a8ae6fdfb 100644
-> > --- a/arch/x86/platform/uv/uv_time.c
-> > +++ b/arch/x86/platform/uv/uv_time.c
-> > @@ -52,7 +52,7 @@ struct uv_rtc_timer_head {
-> >  	struct {
-> >  		int	lcpu;		/* systemwide logical cpu number */
-> >  		u64	expires;	/* next timer expiration for this cpu */
-> > -	} cpu[1];
-> > +	} cpu[];
-> >  };
-> >  
-> >  /*
-> > @@ -156,9 +156,8 @@ static __init int uv_rtc_allocate_timers(void)
-> >  		struct uv_rtc_timer_head *head = blade_info[bid];
-> >  
-> >  		if (!head) {
-> > -			head = kmalloc_node(sizeof(struct uv_rtc_timer_head) +
-> > -				(uv_blade_nr_possible_cpus(bid) *
-> > -					2 * sizeof(u64)),
-> > +			head = kmalloc_node(struct_size(head, cpu,
-> > +				uv_blade_nr_possible_cpus(bid)),
-> 
-> It's probably safer to use kzalloc_node here as well.
-> 
+Hi Hans, Hi Dmitry,
 
-Thanks for your feedback, Joe. I'll wait for comments from the
-maintainers on this and the rest of the patch.
+W dniu 18.05.2020 o 16:23, Hans de Goede pisze:
+> Hi,
 
-Thanks
---
-Gustavo
+<snip>
 
-> >  				GFP_KERNEL, nid);
-> >  			if (!head) {
-> >  				uv_rtc_deallocate_timers();
+>>>>>
+>>>>> So I wonder what this series actually adds for functionality for
+>>>>> userspace which can not already be achieved this way?
+>>>>>
+>>>>> I also noticed that you keep the device open (do not call the
+>>>>> input_device's close callback) when inhibited and just throw away
+>>>>
+>>>> I'm not sure if I understand you correctly, it is called:
+>>>>
+>>>> +static inline void input_stop(struct input_dev *dev)
+>>>> +{
+>>>> +    if (dev->poller)
+>>>> +        input_dev_poller_stop(dev->poller);
+>>>> +    if (dev->close)
+>>>> +        dev->close(dev);
+>>>>                  ^^^^^^^^^^^^^^^^
+>>>> +static int input_inhibit(struct input_dev *dev)
+>>>> +{
+>>>> +    int ret = 0;
+>>>> +
+>>>> +    mutex_lock(&dev->mutex);
+>>>> +
+>>>> +    if (dev->inhibited)
+>>>> +        goto out;
+>>>> +
+>>>> +    if (dev->users) {
+>>>> +        if (dev->inhibit) {
+>>>> +            ret = dev->inhibit(dev);
+>>>> +            if (ret)
+>>>> +                goto out;
+>>>> +        }
+>>>> +        input_stop(dev);
+>>>>                  ^^^^^^^^^^^^^^^^
+>>>>
+>>>> It will not be called when dev->users is zero, but if it is zero,
+>>>> then nobody has opened the device yet so there is nothing to close.
+>>>
+>>> Ah, I missed that.
+>>>
+>>> So if the device implements the inhibit call back then on
+>>> inhibit it will get both the inhibit and close callback called?
+>>>
+>>
+>> That's right. And conversely, upon uninhibit open() and uninhibit()
+>> callbacks will be invoked. Please note that just as with open()/close(),
+>> providing inhibit()/uninhibit() is optional.
 > 
+> Ack.
+> 
+>>> And what happens if the last user goes away and the device
+>>> is not inhibited?
+>>
+>> close() is called as usually.
+> 
+> But not inhibit, hmm, see below.
+> 
+>>> I'm trying to understand here what the difference between the 2
+>>> is / what the goal of having a separate inhibit callback ?
+>>>
+>>
+>> Drivers have very different ideas about what it means to suspend/resume
+>> and open/close. The optional inhibit/uninhibit callbacks are meant for
+>> the drivers to know that it is this particular action going on.
+> 
+> So the inhibit() callback triggers the "suspend" behavior ?
+> But shouldn't drivers which are capable of suspending the device
+> always do so on close() ?
+> 
+> Since your current proposal also calls close() on inhibit() I
+> really see little difference between an inhibit() and the last
+> user of the device closing it and IMHO unless there is a good
+> reason to actually differentiate the 2 it would be better
+> to only stick with the existing close() and in cases where
+> that does not put the device in a low-power mode yet, fix
+> the existing close() callback to do the low-power mode
+> setting instead of adding a new callback.
+> 
+>> For inhibit() there's one more argument: close() does not return a value,
+>> so its meaning is "do some last cleanup" and as such it is not allowed
+>> to fail - whatever its effect is, we must deem it successful. inhibit()
+>> does return a value and so it is allowed to fail.
+> 
+> Well, we could make close() return an error and at least in the inhibit()
+> case propagate that to userspace. I wonder if userspace is going to
+> do anything useful with that error though...
+> 
+> In my experience errors during cleanup/shutdown are best logged
+> (using dev_err) and otherwise ignored, so that we try to clean up
+> as much possible. Unless the very first step of the shutdown process
+> fails the device is going to be in some twilight zone state anyways
+> at this point we might as well try to cleanup as much as possible.
+
+What you say makes sense to me.
+@Dmitry?
+
+> 
+>> All in all, it is up to the drivers to decide which callback they
+>> provide. Based on my work so far I would say that there are tens
+>> of simple cases where open() and close() are sufficient, out of total
+>> ~400 users of input_allocate_device():
+>>
+>> $ git grep "input_allocate_device(" | grep -v ^Documentation | \
+>> cut -f1 -d: | sort | uniq | wc
+>>      390     390   13496
+> 
+> So can you explain a bit more about the cases where only having
+> open/close is not sufficient?  So far I have the feeling that
+> those are all we need and that we really do not need separate
+> [un]inhibit callbacks.
+
+My primary concern was not being able to propagate inhibit() error
+to userspace, and then if we have inhibit(), uninhibit() should be
+there for completeness. If propagating the error to userspace can
+be neglected then yes, it seems open/close should be sufficient,
+even more because the real meaning of "open" is "prepare the device
+for generating input events".
+
+To validate the idea of not introducing inhibit()/uninhibit() callbacks
+to implement device inhibiting/uninhibiting let's look at
+drivers/input/mouse/elan_i2c_core.c (PATCH 7/7):
+
+static int elan_inhibit(struct input_dev *input)
+{
+[...]
+
+	ret = mutex_lock_interruptible(&data->sysfs_mutex);
+	if (ret)
+		return ret;
+
+	disable_irq(client->irq);
+
+	ret = elan_disable_power(data);
+	if (ret)
+		enable_irq(client->irq);
+[...]
+}
+
+First, close() does not exist in this driver. Of course this can be
+fixed. Then it doesn't return a value. Then, if either taking the
+mutex or disabling the power fails, the close() is still deemed
+successful. Is it ok?
+@Dmitry?
+
+Regards,
+
+Andrzej
