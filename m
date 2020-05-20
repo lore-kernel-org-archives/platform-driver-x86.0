@@ -1,63 +1,72 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Subject: Re: [PATCH] platform/x86: dell-wmi: Ignore keyboard attached /
- detached events
-Date: Tue, 19 May 2020 19:51:38 +0200
-Message-ID: <20200519175138.xu7pquxyku6mwjwt@pali>
-References: <20200513130544.90243-1-hdegoede@redhat.com>
+From: Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] x86/uv/time: Replace one-element array and save heap
+ space
+Date: Wed, 20 May 2020 10:19:07 -0700
+Message-ID: <202005201017.72D1B3A@keescook>
+References: <20200518190114.GA7757@embeddedor>
+ <b03d196cdbbbc6e9e8456910c6c6673ab67f76cb.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200513130544.90243-1-hdegoede@redhat.com>
+In-Reply-To: <b03d196cdbbbc6e9e8456910c6c6673ab67f76cb.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, Mario Limonciello <mario.limonciello@dell.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "x86@kernel.org H. Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wednesday 13 May 2020 15:05:44 Hans de Goede wrote:
-> Ignore events with a type of 0x0011 and a code of 0xfff2 / 0xfff3,
-> this silences the following messages being logged when the keyboard is
-> detached / attached on a Dell Venue 11 Pro 7130:
+On Mon, May 18, 2020 at 12:09:16PM -0700, Joe Perches wrote:
+> On Mon, 2020-05-18 at 14:01 -0500, Gustavo A. R. Silva wrote:
+> > The current codebase makes use of one-element arrays in the following
+> > form:
+> > 
+> > struct something {
+> >     int length;
+> >     u8 data[1];
+> > };
+> []
+> > This issue has been out there since 2009.
+> > This issue was found with the help of Coccinelle and fixed _manually_.
+> []
+> > diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
+> > index 7af31b245636..993a8ae6fdfb 100644
+> > --- a/arch/x86/platform/uv/uv_time.c
+> > +++ b/arch/x86/platform/uv/uv_time.c
+> > @@ -52,7 +52,7 @@ struct uv_rtc_timer_head {
+> >  	struct {
+> >  		int	lcpu;		/* systemwide logical cpu number */
+> >  		u64	expires;	/* next timer expiration for this cpu */
+> > -	} cpu[1];
+> > +	} cpu[];
+> >  };
+> >  
+> >  /*
+> > @@ -156,9 +156,8 @@ static __init int uv_rtc_allocate_timers(void)
+> >  		struct uv_rtc_timer_head *head = blade_info[bid];
+> >  
+> >  		if (!head) {
+> > -			head = kmalloc_node(sizeof(struct uv_rtc_timer_head) +
+> > -				(uv_blade_nr_possible_cpus(bid) *
+> > -					2 * sizeof(u64)),
+> > +			head = kmalloc_node(struct_size(head, cpu,
+> > +				uv_blade_nr_possible_cpus(bid)),
 > 
-> [   63.621953] dell_wmi: Unknown key with type 0x0011 and code 0xfff2 pressed
-> [   70.240558] dell_wmi: Unknown key with type 0x0011 and code 0xfff3 pressed
-> 
-> Note SW_TABLET_MODE is already reported through the intel_vbtn driver on
-> this and other Dell devices, so dell_wmi should not report this too,
-> to avoid duplicate events.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> It's probably safer to use kzalloc_node here as well.
 
-Looks good, you can add my:
+Hm, I think it's not actually needed here. All three members are
+immediately initialized and it doesn't look to ever be copied to
+userspace.
 
-Acked-by: Pali Rohár <pali@kernel.org>
+> 
+> >  				GFP_KERNEL, nid);
+> >  			if (!head) {
+> >  				uv_rtc_deallocate_timers();
+> 
 
-> ---
->  drivers/platform/x86/dell-wmi.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index 86e8dd6a8b33..c25a4286d766 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -310,6 +310,16 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
->  	/* Battery inserted */
->  	{ KE_IGNORE, 0xfff1, { KEY_RESERVED } },
->  
-> +	/*
-> +	 * Detachable keyboard detached / undocked
-> +	 * Note SW_TABLET_MODE is already reported through the intel_vbtn
-> +	 * driver for this, so we ignore it.
-> +	 */
-> +	{ KE_IGNORE, 0xfff2, { KEY_RESERVED } },
-> +
-> +	/* Detachable keyboard attached / docked */
-> +	{ KE_IGNORE, 0xfff3, { KEY_RESERVED } },
-> +
->  	/* Keyboard backlight level changed */
->  	{ KE_IGNORE, KBD_LED_OFF_TOKEN,      { KEY_RESERVED } },
->  	{ KE_IGNORE, KBD_LED_ON_TOKEN,       { KEY_RESERVED } },
-> -- 
-> 2.26.0
-> 
+FWIW, I think this change is good as-is. Always nice to get back a
+little memory. ;)
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
