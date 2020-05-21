@@ -1,73 +1,68 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] x86/uv/time: Replace one-element array and save heap
- space
-Date: Wed, 20 May 2020 12:01:24 -0700
-Message-ID: <5725ba0a9efe2db07ff8c38ff673be172958d7ce.camel@perches.com>
-References: <20200518190114.GA7757@embeddedor>
-         <b03d196cdbbbc6e9e8456910c6c6673ab67f76cb.camel@perches.com>
-         <202005201017.72D1B3A@keescook>
+From: Chris Chiu <chiu@endlessm.com>
+Subject: asus-wmi fails to load on new ASUS laptop UX325JA
+Date: Thu, 21 May 2020 18:33:34 +0800
+Message-ID: <CAB4CAweJ6Zi2DqQ5qgQq-apAMzSSk3uzoohEJ443F5T=LohAAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <202005201017.72D1B3A@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kees Cook <keescook@chromium.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "x86@kernel.org H. Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, gregkh@linuxfoundation.org, gayatri.kammela@intel.com, Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 2020-05-20 at 10:19 -0700, Kees Cook wrote:
-> On Mon, May 18, 2020 at 12:09:16PM -0700, Joe Perches wrote:
-> > On Mon, 2020-05-18 at 14:01 -0500, Gustavo A. R. Silva wrote:
-> > > The current codebase makes use of one-element arrays in the following
-> > > form:
-> > > 
-> > > struct something {
-> > >     int length;
-> > >     u8 data[1];
-> > > };
-> > []
-> > > This issue has been out there since 2009.
-> > > This issue was found with the help of Coccinelle and fixed _manually_.
-> > []
-> > > diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
-[]
-> > > @@ -156,9 +156,8 @@ static __init int uv_rtc_allocate_timers(void)
-> > >  		struct uv_rtc_timer_head *head = blade_info[bid];
-> > >  
-> > >  		if (!head) {
-> > > -			head = kmalloc_node(sizeof(struct uv_rtc_timer_head) +
-> > > -				(uv_blade_nr_possible_cpus(bid) *
-> > > -					2 * sizeof(u64)),
-> > > +			head = kmalloc_node(struct_size(head, cpu,
-> > > +				uv_blade_nr_possible_cpus(bid)),
-> > 
-> > It's probably safer to use kzalloc_node here as well.
-> 
-> Hm, I think it's not actually needed here.
+Hi,
+    I have the ASUS new laptop UX325JA and most of the media keys are
+not working even with the latest kernel (5.7.0-rc5+). Looking into the
+dmesg log, the ASUS WMI driver fails to load because of
+[    7.827241] asus-nb-wmi: probe of asus-nb-wmi failed with error -5.
 
-Right. Turns out it's not needed.
+    Before this message, the following message repeat 5 times, please
+check the full dmesg log here
+https://gist.github.com/mschiu77/9a53cd8ff17029e949210dfb3ec1213f
+[    7.825975] ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field
+[IIA3] at bit offset/length 96/32 exceeds size of target Buffer (96
+bits) (20200326/dsopcode-203)
+[    7.825985] No Local Variables are initialized for Method [WMNB]
+[    7.826005] ACPI Error: Aborting method \_SB.ATKD.WMNB due to
+previous error (AE_AML_BUFFER_LIMIT) (20200326/psparse-531)
 
-> All three members are
-> immediately initialized and it doesn't look to ever be copied to
-> userspace.
+    It fails the \_SB.ATKD.WMNB because the local variable IIA3
+exceeds the buffer limit. The WMNB is the function to deal with all
+ASUS WMI functions, such as ASUS_WMI_METHODID_INIT...etc. The related
+code in DSDT is as follows. The full DSDT is here
+https://gist.github.com/mschiu77/849c6cb89a8d8cadd015fa75465882dd
 
-It's more that the reader doesn't have to lookup the
-struct to know all the members are initialized.
+Method (WMNB, 3, Serialized)
+{
+    P8XH (Zero, 0x11)
+    CreateDWordField (Arg2, Zero, IIA0)
+    CreateDWordField (Arg2, 0x04, IIA1)
+    CreateDWordField (Arg2, 0x08, IIA2)
+    CreateDWordField (Arg2, 0x0C, IIA3)
+    CreateDWordField (Arg2, 0x10, IIA4)
+    Local0 = (Arg1 & 0xFFFFFFFF)
+    If ((Local0 == 0x54494E49))
 
-It's also not a fast path so any extra time to zero
-is not significant.
+    Just as the error messages indicated,  the IIA3 is out of boundary
+for the target Buffer. The limit 96bits (12 bytes) is determined by
+the input acpi_buffer size, which refers to internally defined struct
+bios_args, in asus_wmi_evaluate_method3. Because all ASUS WMI
+evaluations will invoke  asus_wmi_evaluate_method3 at last, so all
+ASUS WMI functions fail to work. I can simply fix this by extending
+the bios_args from 3 args to 5 u32 args as follows, but I don't think
+it's generic enough and may have to change if there're more local
+variables declared in ACPI method on the future ASUS machines. Any
+suggestions for this?
 
-> > >  				GFP_KERNEL, nid);
-> > >  			if (!head) {
-> > >  				uv_rtc_deallocate_timers();
-> 
-> FWIW, I think this change is good as-is. Always nice to get back a
-> little memory. ;)
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -116,6 +116,8 @@ struct bios_args {
+        u32 arg0;
+        u32 arg1;
+        u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
++       u32 arg3;
++       u32 arg4;
+ } __packed;
 
-Saving space, 0 to 4 bytes at a time,
-depending on the heap sizes...
 
-Using the struct_size is clearer though, so that's good too.
-
-cheers, Joe
+Chris
