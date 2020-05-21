@@ -1,68 +1,49 @@
-From: Chris Chiu <chiu@endlessm.com>
-Subject: asus-wmi fails to load on new ASUS laptop UX325JA
-Date: Thu, 21 May 2020 18:33:34 +0800
-Message-ID: <CAB4CAweJ6Zi2DqQ5qgQq-apAMzSSk3uzoohEJ443F5T=LohAAA@mail.gmail.com>
+From: Michael Shych <michaelsh-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH v4 0/4] support watchdog with longer timeout period
+Date: Thu, 21 May 2020 14:25:19 +0000
+Message-ID: <AM6PR05MB6168698F8A3D49F0EF61EFF0D9B70@AM6PR05MB6168.eurprd05.prod.outlook.com>
+References: <20200504141427.17685-1-michaelsh@mellanox.com>
+ <ac2c580c-7cc0-8091-f3bc-fce175478e50@roeck-us.net>
+ <CAHp75VdN6PfCCmRB_FssTRCoXms7JTt_af59pMqZNgV4ygz_8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, gregkh@linuxfoundation.org, gayatri.kammela@intel.com, Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75VdN6PfCCmRB_FssTRCoXms7JTt_af59pMqZNgV4ygz_8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-Q8PRGTgFL9WUCWQAtAn6Ix2eb7JE58TQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-    I have the ASUS new laptop UX325JA and most of the media keys are
-not working even with the latest kernel (5.7.0-rc5+). Looking into the
-dmesg log, the ASUS WMI driver fails to load because of
-[    7.827241] asus-nb-wmi: probe of asus-nb-wmi failed with error -5.
-
-    Before this message, the following message repeat 5 times, please
-check the full dmesg log here
-https://gist.github.com/mschiu77/9a53cd8ff17029e949210dfb3ec1213f
-[    7.825975] ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field
-[IIA3] at bit offset/length 96/32 exceeds size of target Buffer (96
-bits) (20200326/dsopcode-203)
-[    7.825985] No Local Variables are initialized for Method [WMNB]
-[    7.826005] ACPI Error: Aborting method \_SB.ATKD.WMNB due to
-previous error (AE_AML_BUFFER_LIMIT) (20200326/psparse-531)
-
-    It fails the \_SB.ATKD.WMNB because the local variable IIA3
-exceeds the buffer limit. The WMNB is the function to deal with all
-ASUS WMI functions, such as ASUS_WMI_METHODID_INIT...etc. The related
-code in DSDT is as follows. The full DSDT is here
-https://gist.github.com/mschiu77/849c6cb89a8d8cadd015fa75465882dd
-
-Method (WMNB, 3, Serialized)
-{
-    P8XH (Zero, 0x11)
-    CreateDWordField (Arg2, Zero, IIA0)
-    CreateDWordField (Arg2, 0x04, IIA1)
-    CreateDWordField (Arg2, 0x08, IIA2)
-    CreateDWordField (Arg2, 0x0C, IIA3)
-    CreateDWordField (Arg2, 0x10, IIA4)
-    Local0 = (Arg1 & 0xFFFFFFFF)
-    If ((Local0 == 0x54494E49))
-
-    Just as the error messages indicated,  the IIA3 is out of boundary
-for the target Buffer. The limit 96bits (12 bytes) is determined by
-the input acpi_buffer size, which refers to internally defined struct
-bios_args, in asus_wmi_evaluate_method3. Because all ASUS WMI
-evaluations will invoke  asus_wmi_evaluate_method3 at last, so all
-ASUS WMI functions fail to work. I can simply fix this by extending
-the bios_args from 3 args to 5 u32 args as follows, but I don't think
-it's generic enough and may have to change if there're more local
-variables declared in ACPI method on the future ASUS machines. Any
-suggestions for this?
-
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -116,6 +116,8 @@ struct bios_args {
-        u32 arg0;
-        u32 arg1;
-        u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
-+       u32 arg3;
-+       u32 arg4;
- } __packed;
-
-
-Chris
+SGkgQW5keSwgR3VlbnRlciwNCg0KRGlkIHlvdSB1bmRlcnN0YW5kIHRvIHdoaWNoIGJyYW5jaCBp
+dCB3aWxsIGJlIGJldHRlciB0byB0YWtlIHRoaXMgcGF0Y2hzZXQ/DQoNClRoYW5rcywNCiAgIE1p
+Y2hhZWwuDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBTaGV2
+Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBTZW50OiBUdWVzZGF5LCBNYXkg
+NSwgMjAyMCA3OjE0IFBNDQo+IFRvOiBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+
+DQo+IENjOiBNaWNoYWVsIFNoeWNoIDxtaWNoYWVsc2hAbWVsbGFub3guY29tPjsgV2ltIFZhbiBT
+ZWJyb2VjayA8d2ltQGxpbnV4LQ0KPiB3YXRjaGRvZy5vcmc+OyBBbmR5IFNoZXZjaGVua28gPGFu
+ZHlAaW5mcmFkZWFkLm9yZz47IERhcnJlbiBIYXJ0DQo+IDxkdmhhcnRAaW5mcmFkZWFkLm9yZz47
+IGxpbnV4LXdhdGNoZG9nQHZnZXIua2VybmVsLm9yZzsgUGxhdGZvcm0gRHJpdmVyDQo+IDxwbGF0
+Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZz47IFZhZGltIFBhc3Rlcm5haw0KPiA8dmFk
+aW1wQG1lbGxhbm94LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NCAwLzRdIHN1cHBvcnQg
+d2F0Y2hkb2cgd2l0aCBsb25nZXIgdGltZW91dCBwZXJpb2QNCj4gDQo+IE9uIFR1ZSwgTWF5IDUs
+IDIwMjAgYXQgNzowOSBQTSBHdWVudGVyIFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+IHdyb3Rl
+Og0KPiA+IE9uIDUvNC8yMCA3OjE0IEFNLCBtaWNoYWVsc2hAbWVsbGFub3guY29tIHdyb3RlOg0K
+PiA+ID4gRnJvbTogTWljaGFlbCBTaHljaCA8bWljaGFlbHNoQG1lbGxhbm94LmNvbT4NCj4gDQo+
+ID4gPiBNaWNoYWVsIFNoeWNoICg0KToNCj4gPiA+ICAgcGxhdGZvcm1fZGF0YS9tbHhyZWc6IHN1
+cHBvcnQgbmV3IHdhdGNoZG9nIHR5cGUgd2l0aCBsb25nZXIgdGltZW91dA0KPiA+ID4gICAgIHBl
+cmlvZA0KPiA+ID4gICBwbGF0Zm9ybS94ODY6IG1seC1wbGF0Zm9ybTogc3VwcG9ydCBuZXcgd2F0
+Y2hkb2cgdHlwZSB3aXRoIGxvbmdlcg0KPiA+ID4gICAgIHRpbWVvdXQNCj4gPiA+ICAgd2F0Y2hk
+b2c6IG1seC13ZHQ6IHN1cHBvcnQgbmV3IHdhdGNoZG9nIHR5cGUgd2l0aCBsb25nZXIgdGltZW91
+dA0KPiA+ID4gICAgIHBlcmlvZA0KPiA+ID4gICBkb2NzOiB3YXRjaGRvZzogbWx4LXdkdDogQWRk
+IGRlc2NyaXB0aW9uIG9mIG5ldyB3YXRjaGRvZyB0eXBlIDMNCj4gPiA+DQo+ID4gPiAgRG9jdW1l
+bnRhdGlvbi93YXRjaGRvZy9tbHgtd2R0LnJzdCAgIHwgIDEwICsrKysNCj4gPiA+ICBkcml2ZXJz
+L3BsYXRmb3JtL3g4Ni9tbHgtcGxhdGZvcm0uYyAgfCAxMDYNCj4gKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrDQo+ID4gPiAgZHJpdmVycy93YXRjaGRvZy9tbHhfd2R0LmMgICAgICAgICAg
+IHwgIDczICsrKysrKysrKysrKysrKysrKysrLS0tLQ0KPiA+ID4gIGluY2x1ZGUvbGludXgvcGxh
+dGZvcm1fZGF0YS9tbHhyZWcuaCB8ICAgNSArLQ0KPiANCj4gPiBHdWVzcyB0aGUgYmlnIHF1ZXN0
+aW9uIGlzIG5vdyB3aGljaCBicmFuY2ggdG8gdXNlIHRvIHRha2UgdGhpcyBzZXJpZXMuDQo+ID4g
+VGhvdWdodHMsIGFueW9uZSA/DQo+IA0KPiBjb3VudCh3YXRjaGRvZykgPSA4DQo+IGNvdW50KHBs
+YXRmb3JtKSA9IDYNCj4gDQo+IFRob3VnaHRzPw0KPiANCj4gLS0NCj4gV2l0aCBCZXN0IFJlZ2Fy
+ZHMsDQo+IEFuZHkgU2hldmNoZW5rbw0K
