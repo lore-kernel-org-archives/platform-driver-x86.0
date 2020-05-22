@@ -1,143 +1,192 @@
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH] x86/uv/time: Replace one-element array and save heap
- space
-Date: Thu, 21 May 2020 18:24:15 -0500
-Message-ID: <20200521232415.GD29907@embeddedor>
-References: <20200518190114.GA7757@embeddedor>
+From: "larsh@apache.org" <larsh@apache.org>
+Subject: Re: Low Latency Tolerance preventing Intel Package from entering
+ deep sleep states
+Date: Fri, 22 May 2020 06:14:59 +0000 (UTC)
+Message-ID: <193598853.2172716.1590128099214@mail.yahoo.com>
+References: <1505028180.591737.1589564161284.ref@mail.yahoo.com> <1505028180.591737.1589564161284@mail.yahoo.com> <CAHp75VfC0NdyyR1zXbk47G_9y5ResrpV+w3cOntDqP_naocuvQ@mail.gmail.com> <2952287.p5mUHPKNZq@kreacher> <d0022af356cf9bd5b544187d9a396734d85a76b3.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200518190114.GA7757@embeddedor>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "x86@kernel.org H. Peter Anvin" <hpa@zytor.com>, John Stultz <john.stultz@linaro.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <d0022af356cf9bd5b544187d9a396734d85a76b3.camel@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Andy Shevchenko <andy.shevchenko@gmail.com>, "David E. Box" <david.e.box@linux.intel.com>
+Cc: "ibm-acpi-devel@lists.sourceforge.net" <ibm-acpi-devel@lists.sourceforge.net>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-[+CC John Stultz <john.stultz@linaro.org> and +Kees' Reviewed-by tag]
+Thanks David!
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+With this I tracked down the SD Card Reader (Genesys Logic, Inc Device 9755=
+) as the culprit.
+These are standard in many ThinkPads.
+The curious part is that resume from suspend (S3 or S0iX) also fixes the pr=
+oblem.
+Looks like the driver is not initializing correctly at boot time.
 
-On Mon, May 18, 2020 at 02:01:14PM -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of one-element arrays in the following
-> form:
-> 
-> struct something {
->     int length;
->     u8 data[1];
-> };
-> 
-> struct something *instance;
-> 
-> instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-> instance->length = size;
-> memcpy(instance->data, source, size);
-> 
-> but the preferred mechanism to declare variable-length types such as
-> these ones is a flexible array member[1][2], introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on. So, replace
-> the one-element array with a flexible-array member.
-> 
-> Also, make use of the new struct_size() helper to properly calculate the
-> total size needed to allocate dynamic memory for struct uv_rtc_timer_head.
-> Notice that, due to the use of a one-element array, space for an extra
-> struct cpu:
-> 
-> struct {
-> 	int     lcpu;           /* systemwide logical cpu number */
-> 	u64     expires;        /* next timer expiration for this cpu */
-> } cpu[1]
-> 
-> was being allocated at the moment of applying the sizeof operator to
-> struct uv_rtc_timer_head in the call to kmalloc_node() at line 159:
-> 
-> 159		head = kmalloc_node(sizeof(struct uv_rtc_timer_head) +
-> 160			(uv_blade_nr_possible_cpus(bid) *
-> 161				2 * sizeof(u64)),
-> 162			GFP_KERNEL, nid);
-> 
-> but that extra cpu[] was never actually being accessed due to the
-> following piece of code at line 168:
-> 
-> 168		head->ncpus = uv_blade_nr_possible_cpus(bid);
-> 
-> and the piece of code at line 187:
-> 
-> 187		for (c = 0; c < head->ncpus; c++) {
-> 188			u64 exp = head->cpu[c].expires;
-> 189			if (exp < lowest) {
-> 190				bcpu = c;
-> 191				lowest = exp;
-> 192			}
-> 193		}
-> 
-> so heap space was being wasted.
-> 
-> Another thing important to notice is that through the use of the
-> struct_size() helper, code at line 161:
-> 
-> 161		2 * sizeof(u64)),
-> 
-> is changed to now be the actual size of struct cpu; see
-> sizeof(*(p)->member) at include/linux/overflow.h:314:
-> 
-> 314 #define struct_size(p, member, n)                                       \
-> 315         __ab_c_size(n,                                                  \
-> 316                     sizeof(*(p)->member) + __must_be_array((p)->member),\
-> 317                     sizeof(*(p)))
-> 
-> As a side note, the original developer could have implemented code at line
-> 161: 2 * sizeof(64) as follows:
-> 
-> sizeof(*head->cpu)
-> 
-> This issue has been out there since 2009.
-> 
-> This issue was found with the help of Coccinelle and fixed _manually_.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  arch/x86/platform/uv/uv_time.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
-> index 7af31b245636..993a8ae6fdfb 100644
-> --- a/arch/x86/platform/uv/uv_time.c
-> +++ b/arch/x86/platform/uv/uv_time.c
-> @@ -52,7 +52,7 @@ struct uv_rtc_timer_head {
->  	struct {
->  		int	lcpu;		/* systemwide logical cpu number */
->  		u64	expires;	/* next timer expiration for this cpu */
-> -	} cpu[1];
-> +	} cpu[];
->  };
->  
->  /*
-> @@ -156,9 +156,8 @@ static __init int uv_rtc_allocate_timers(void)
->  		struct uv_rtc_timer_head *head = blade_info[bid];
->  
->  		if (!head) {
-> -			head = kmalloc_node(sizeof(struct uv_rtc_timer_head) +
-> -				(uv_blade_nr_possible_cpus(bid) *
-> -					2 * sizeof(u64)),
-> +			head = kmalloc_node(struct_size(head, cpu,
-> +				uv_blade_nr_possible_cpus(bid)),
->  				GFP_KERNEL, nid);
->  			if (!head) {
->  				uv_rtc_deallocate_timers();
-> -- 
-> 2.26.2
-> 
+Transcript:
+
+$ cat /sys/kernel/debug/pmc_core/ltr_show | grep SOUTHPORT
+SOUTHPORT_A=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LTR: RAW: 0x88018c01=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Non-Snoop(ns): 1024=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Snoop(ns): 327=
+68=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0
+SOUTHPORT_B=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LTR: RAW: 0x0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 Non-Snoop(ns): 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Snoop(ns): 0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0
+SOUTHPORT_C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LTR: RAW: 0x9f409f4=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Non-Snoop(ns): 0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 Snoop(ns): 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0
+SOUTHPORT_D=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LTR: RAW: 0x88aa88aa=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Non-Snoop(ns): 174080=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Snoop(ns): 174080=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0
+SOUTHPORT_E=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LTR: RAW: 0x0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 Non-Snoop(ns): 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Snoop(ns): 0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0
+
+$ lspci -t
+-[0000:00]-+-00.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-01.0-[01]--+=
+-00.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \-00.1
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-02.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-04.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-08.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-12.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-14.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-14.2
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-15.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-16.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-1c.0-[53]---=
+-00.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-1d.0-[02]---=
+-00.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-1d.6-[52]---=
+-00.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-1e.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-1f.0
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-1f.3
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-1f.4
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-1f.5
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \-1f.6
+
+$ lspci | grep 53
+53:00.0 SD Host controller: Genesys Logic, Inc Device 9755
+
+$ cat /sys/bus/pci/devices/0000\:53\:00.0/power/control
+auto
+
+$ echo 1 > /sys/bus/pci/devices/0000\:53\:00.0/remove
+1
+
+$ cat /sys/kernel/debug/pmc_core/ltr_show | grep SOUTHPORT
+SOUTHPORT_A=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LTR: RAW: 0x8010c01=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Non-Snoop(ns): 0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 Snoop(ns): 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0
+SOUTHPORT_B=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LTR: RAW: 0x0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 Non-Snoop(ns): 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Snoop(ns): 0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0
+SOUTHPORT_C=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LTR: RAW: 0x9f409f4=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Non-Snoop(ns): 0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 Snoop(ns): 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0
+SOUTHPORT_D=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LTR: RAW: 0x8c548c54=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Non-Snoop(ns): 2752512=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Snoop(ns): 2752512=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0
+SOUTHPORT_E=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LTR: RAW: 0x0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 Non-Snoop(ns): 0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Snoop(ns): 0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0
+
+Cheers.
+
+-- Lars
+
+
+
+
+
+
+
+
+On Tuesday, May 19, 2020, 9:03:53 AM PDT, David E. Box <david.e.box@linux.i=
+ntel.com> wrote:=20
+
+
+
+
+
+> > > Does anybody know what's going on or how to debug this further?
+> > > As stated above, I was able to work around this problem by
+> > > ignoring SOUTHPORT_A via /sys/kernel/debug/pmc_core/ltr_ignore.
+> > > There has to be a better way, and I'm sure I'm not the only one
+> > > running into this.
+
+ltr_show shows the PMC's (Power Management Controller) view of SoC
+devices and busses. The SOUTHPORTs are the PCIe root ports on your
+system. When you run lspci they are the PCI bridges. Generally, the
+bridges are enumerated in the same order as the SOUTHPORTs, so
+SOUTHPORT_A is your first bridge and the device attached to it (shown
+in lspci -t) is the device that was blocking deeper PC states according
+to your debug.
+
+Determine what this device is on your system. If the ltr was low it's
+because that is what the device requested. You should first check that
+runtime pm is enabled for the device. To do this, check the control
+file in /sys/bus/pci/devices/<SSSS:BB:DD.F>/power, where SSSS:BB:DD.F
+is the enumeration of your device as shown in lspci. If it is 'on' then
+runtime pm is disabled. To enable it echo 'auto' into the file with
+root privileges. Enabling runtime pm should allow the driver to reduce
+functionality of the device when idle. This should lead to a larger
+latency request on the PCI bus which should be reflected in ltr_show.
+You can see if the device is actually runtime suspended and how much
+time it's been suspended (or active) by reading the associated files in
+the power folder.
+
+If this doesn't work, then it's possible that your device doesn't
+support runtime pm. This may be purposely for reliability reasons or
+the driver may just lack support. Check forums discussing issues with
+the device and look for possible options in the driver to force pm
+support (generally this will be centered around enabling ASPM).
+
+You can also download powertop to see the package c-state residencies
+more clearly as percentages of time. powertop also has a tunables tab
+that will show the status of runtime pm on all devices on the system
+and allow you to enable them individually.
+
+
+David
