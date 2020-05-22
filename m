@@ -1,59 +1,194 @@
-From: Chris Chiu <chiu@endlessm.com>
-Subject: [PATCH] platform/x86: asus_wmi: Reserve more space for struct bias_args
-Date: Fri, 22 May 2020 15:44:24 +0800
-Message-ID: <20200522074424.54264-1-chiu@endlessm.com>
+From: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/5] iio: core: pass parent device as parameter during allocation
+Date: Fri, 22 May 2020 11:22:04 +0300
+Message-ID: <20200522082208.383631-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy@infradead.org, hdegoede@redhat.com, gregkh@linuxfoundation.org, gayatri.kammela@intel.com, mika.westerberg@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com, Chris Chiu <chiu@endlessm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
+Cc: vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, syednwaris-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dan-d1oNz5vA2fxXqviUI+FSNg@public.gmane.org, jikos-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, ak-n176/SwNRljddJNmlsFzeA@public.gmane.org, paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org, milo.kim-l0cyMroinI0@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, orsonzhai-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, baolin.wang7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tduszyns@gmail.
 List-Id: platform-driver-x86.vger.kernel.org
 
-On the ASUS laptop UX325JA/UX425JA, most of the media keys are not
-working due to the ASUS WMI driver fails to be loaded. The ACPI error
-as follows leads to the failure of asus_wmi_evaluate_method.
-  ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [IIA3] at bit offset/length 96/32 exceeds size of target Buffer (96 bits) (20200326/dsopcode-203)
-  No Local Variables are initialized for Method [WMNB]
-  ACPI Error: Aborting method \_SB.ATKD.WMNB due to previous error (AE_AML_BUFFER_LIMIT) (20200326/psparse-531)
+The change passes the parent device to the iio_device_alloc() call. This
+also updates the devm_iio_device_alloc() call to consider the device object
+as the parent device by default.
 
-The DSDT for the WMNB part shows that 5 DWORD required for local
-variables and the 3rd variable IIA3 hit the buffer limit.
+Having it passed like this, should ensure that any IIO device object
+already has a device object as parent, allowing for neater control, like
+passing the 'indio_dev' object for other stuff [like buffers/triggers/etc],
+and potentially creating iiom_xxx(indio_dev) functions.
 
-Method (WMNB, 3, Serialized)
-{ ..
-    CreateDWordField (Arg2, Zero, IIA0)
-    CreateDWordField (Arg2, 0x04, IIA1)
-    CreateDWordField (Arg2, 0x08, IIA2)
-    CreateDWordField (Arg2, 0x0C, IIA3)
-    CreateDWordField (Arg2, 0x10, IIA4)
-    Local0 = (Arg1 & 0xFFFFFFFF)
-    If ((Local0 == 0x54494E49))
-  ..
-}
+With this patch, only the 'drivers/platform/x86/toshiba_acpi.c' needs an
+update to pass the parent object as a parameter.
 
-The limitation is determined by the input acpi_buffer size passed
-to the wmi_evaluate_method. Since the struct bios_args is the data
-structure used as input buffer by default for all ASUS WMI calls,
-the size needs to be expanded to fix the problem.
+In the next patch all devm_iio_device_alloc() calls will be handled.
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/platform/x86/asus-wmi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iio/dummy/iio_simple_dummy.c         | 14 ++++++++------
+ drivers/iio/industrialio-core.c              | 11 ++++++-----
+ drivers/platform/x86/toshiba_acpi.c          |  3 +--
+ drivers/staging/iio/Documentation/device.txt |  4 +---
+ include/linux/iio/iio.h                      |  4 ++--
+ 5 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index bb7c529d7d16..cd212ee210e2 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -116,6 +116,8 @@ struct bios_args {
- 	u32 arg0;
- 	u32 arg1;
- 	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
-+	u32 arg4;
-+	u32 arg5;
- } __packed;
+diff --git a/drivers/iio/dummy/iio_simple_dummy.c b/drivers/iio/dummy/iio_simple_dummy.c
+index 6cb02299a215..b35ae7c039f7 100644
+--- a/drivers/iio/dummy/iio_simple_dummy.c
++++ b/drivers/iio/dummy/iio_simple_dummy.c
+@@ -566,6 +566,13 @@ static struct iio_sw_device *iio_dummy_probe(const char *name)
+ 	struct iio_dev *indio_dev;
+ 	struct iio_dummy_state *st;
+ 	struct iio_sw_device *swd;
++	struct device *parent = NULL;
++
++	/*
++	 * With hardware: Set the parent device.
++	 * parent = &spi->dev;
++	 * parent = &client->dev;
++	 */
  
- /*
+ 	swd = kzalloc(sizeof(*swd), GFP_KERNEL);
+ 	if (!swd) {
+@@ -580,7 +587,7 @@ static struct iio_sw_device *iio_dummy_probe(const char *name)
+ 	 * It also has a region (accessed by iio_priv()
+ 	 * for chip specific state information.
+ 	 */
+-	indio_dev = iio_device_alloc(sizeof(*st));
++	indio_dev = iio_device_alloc(parent, sizeof(*st));
+ 	if (!indio_dev) {
+ 		ret = -ENOMEM;
+ 		goto error_ret;
+@@ -590,11 +597,6 @@ static struct iio_sw_device *iio_dummy_probe(const char *name)
+ 	mutex_init(&st->lock);
+ 
+ 	iio_dummy_init_device(indio_dev);
+-	/*
+-	 * With hardware: Set the parent device.
+-	 * indio_dev->dev.parent = &spi->dev;
+-	 * indio_dev->dev.parent = &client->dev;
+-	 */
+ 
+ 	 /*
+ 	 * Make the iio_dev struct available to remove function.
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 1527f01a44f1..75661661aaba 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1493,7 +1493,7 @@ struct device_type iio_device_type = {
+  * iio_device_alloc() - allocate an iio_dev from a driver
+  * @sizeof_priv:	Space to allocate for private structure.
+  **/
+-struct iio_dev *iio_device_alloc(int sizeof_priv)
++struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
+ {
+ 	struct iio_dev *dev;
+ 	size_t alloc_size;
+@@ -1510,6 +1510,7 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
+ 	if (!dev)
+ 		return NULL;
+ 
++	dev->dev.parent = parent;
+ 	dev->dev.groups = dev->groups;
+ 	dev->dev.type = &iio_device_type;
+ 	dev->dev.bus = &iio_bus_type;
+@@ -1551,7 +1552,7 @@ static void devm_iio_device_release(struct device *dev, void *res)
+ 
+ /**
+  * devm_iio_device_alloc - Resource-managed iio_device_alloc()
+- * @dev:		Device to allocate iio_dev for
++ * @parent:		Device to allocate iio_dev for, and parent for this IIO device
+  * @sizeof_priv:	Space to allocate for private structure.
+  *
+  * Managed iio_device_alloc. iio_dev allocated with this function is
+@@ -1560,7 +1561,7 @@ static void devm_iio_device_release(struct device *dev, void *res)
+  * RETURNS:
+  * Pointer to allocated iio_dev on success, NULL on failure.
+  */
+-struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv)
++struct iio_dev *devm_iio_device_alloc(struct device *parent, int sizeof_priv)
+ {
+ 	struct iio_dev **ptr, *iio_dev;
+ 
+@@ -1569,10 +1570,10 @@ struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv)
+ 	if (!ptr)
+ 		return NULL;
+ 
+-	iio_dev = iio_device_alloc(sizeof_priv);
++	iio_dev = iio_device_alloc(parent, sizeof_priv);
+ 	if (iio_dev) {
+ 		*ptr = iio_dev;
+-		devres_add(dev, ptr);
++		devres_add(parent, ptr);
+ 	} else {
+ 		devres_free(ptr);
+ 	}
+diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+index 808944546739..4a4d09c352dd 100644
+--- a/drivers/platform/x86/toshiba_acpi.c
++++ b/drivers/platform/x86/toshiba_acpi.c
+@@ -3128,7 +3128,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 
+ 	toshiba_accelerometer_available(dev);
+ 	if (dev->accelerometer_supported) {
+-		dev->indio_dev = iio_device_alloc(sizeof(*dev));
++		dev->indio_dev = iio_device_alloc(&acpi_dev->dev, sizeof(*dev));
+ 		if (!dev->indio_dev) {
+ 			pr_err("Unable to allocate iio device\n");
+ 			goto iio_error;
+@@ -3138,7 +3138,6 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 
+ 		dev->indio_dev->info = &toshiba_iio_accel_info;
+ 		dev->indio_dev->name = "Toshiba accelerometer";
+-		dev->indio_dev->dev.parent = &acpi_dev->dev;
+ 		dev->indio_dev->modes = INDIO_DIRECT_MODE;
+ 		dev->indio_dev->channels = toshiba_iio_accel_channels;
+ 		dev->indio_dev->num_channels =
+diff --git a/drivers/staging/iio/Documentation/device.txt b/drivers/staging/iio/Documentation/device.txt
+index ec42544a46aa..0d1275b1eb3f 100644
+--- a/drivers/staging/iio/Documentation/device.txt
++++ b/drivers/staging/iio/Documentation/device.txt
+@@ -8,7 +8,7 @@ The crucial structure for device drivers in iio is iio_dev.
+ 
+ First allocate one using:
+ 
+-struct iio_dev *indio_dev = iio_device_alloc(sizeof(struct chip_state));
++struct iio_dev *indio_dev = iio_device_alloc(parent, sizeof(struct chip_state));
+ where chip_state is a structure of local state data for this instance of
+ the chip.
+ 
+@@ -16,8 +16,6 @@ That data can be accessed using iio_priv(struct iio_dev *).
+ 
+ Then fill in the following:
+ 
+-- indio_dev->dev.parent
+-	Struct device associated with the underlying hardware.
+ - indio_dev->name
+ 	Name of the device being driven - made available as the name
+ 	attribute in sysfs.
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index a1be82e74c93..91a69f4751aa 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -676,7 +676,7 @@ static inline void *iio_device_get_drvdata(struct iio_dev *indio_dev)
+ 
+ /* Can we make this smaller? */
+ #define IIO_ALIGN L1_CACHE_BYTES
+-struct iio_dev *iio_device_alloc(int sizeof_priv);
++struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv);
+ 
+ static inline void *iio_priv(const struct iio_dev *indio_dev)
+ {
+@@ -690,7 +690,7 @@ static inline struct iio_dev *iio_priv_to_dev(void *priv)
+ }
+ 
+ void iio_device_free(struct iio_dev *indio_dev);
+-struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv);
++struct iio_dev *devm_iio_device_alloc(struct device *parent, int sizeof_priv);
+ struct iio_trigger *devm_iio_trigger_alloc(struct device *dev,
+ 						const char *fmt, ...);
+ /**
 -- 
-2.25.2
+2.25.1
