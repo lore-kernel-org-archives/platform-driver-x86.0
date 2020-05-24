@@ -1,135 +1,231 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [RFC v3 1/2] thermal: core: Let thermal zone device's mode be
- stored in its struct
-Date: Sat, 23 May 2020 23:24:51 +0200
-Message-ID: <f39c5ca6-5efa-889c-21f5-632dfd24715e@linaro.org>
-References: <9ac3b37a-8746-b8ee-70e1-9c876830ac83@linaro.org>
- <20200417162020.19980-1-andrzej.p@collabora.com>
- <20200417162020.19980-2-andrzej.p@collabora.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] iio: core: pass parent device as parameter during
+ allocation
+Date: Sun, 24 May 2020 15:12:03 +0100
+Message-ID: <20200524151203.4b13712d@archlinux>
+References: <20200522082208.383631-1-alexandru.ardelean@analog.com>
+ <CAHp75VfqxJxa1Uk3h4vfzQOdZDRr8Lqvt3Z5vzpp5NAw=u_ZPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200417162020.19980-2-andrzej.p@collabora.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, "David S . Miller" <davem@davemloft.net>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Allison Randal <allison@lohutok.net>, Enrico Weigelt <info@metux.net>, Gayatri Kammela <gayatri.kammela@intel.com>, Thomas Gleixner <tglx@lin>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane-mx.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAHp75VfqxJxa1Uk3h4vfzQOdZDRr8Lqvt3Z5vzpp5NAw=u_ZPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane-mx.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: milo.kim-l0cyMroinI0@public.gmane.org, tomislav.denis-jb26L5wWkzc@public.gmane.org, Dan Robertson <dan-d1oNz5vA2fxXqviUI+FSNg@public.gmane.org>, Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eddie James <eajames-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Song Qiang <songqiang1304521-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org, "open list:STAGING
+ SUBSYSTEM" <devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-ke>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Andrzej,
+On Fri, 22 May 2020 11:56:40 +0300
+Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-On 17/04/2020 18:20, Andrzej Pietrasiewicz wrote:
-> Thermal zone devices' mode is stored in individual drivers. This patch
-> changes it so that mode is stored in struct thermal_zone_device instead.
+> On Fri, May 22, 2020 at 11:36 AM Alexandru Ardelean
+> <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org> wrote:
+> >
+> > The change passes the parent device to the iio_device_alloc() call. This
+> > also updates the devm_iio_device_alloc() call to consider the device object
+> > as the parent device by default.
+> >
+> > Having it passed like this, should ensure that any IIO device object
+> > already has a device object as parent, allowing for neater control, like
+> > passing the 'indio_dev' object for other stuff [like buffers/triggers/etc],
+> > and potentially creating iiom_xxx(indio_dev) functions.
+> >
+> > With this patch, only the 'drivers/platform/x86/toshiba_acpi.c' needs an
+> > update to pass the parent object as a parameter.  
 > 
-> As a result all driver-specific variables storing the mode are not needed
-> and are removed. Consequently, the get_mode() implementations have nothing
-> to operate on and need to be removed, too.
+> Acked-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Whole series looks good to me.   I dare say a few drivers will cross with
+this but I'll keep my eyes open and it's not too much a a problem if
+we have a few cases left to clean up later.
+
+Nice work.  I'll let this sit for a weekish though as it obviously touches
+a lot of drivers so people 'might' want to comment.
+
+Thanks,
+
+Jonathan
+
 > 
-> Some thermal framework specific functions are introduced:
+> >
+> > In the next patch all devm_iio_device_alloc() calls will be handled.
+> >
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  drivers/iio/dummy/iio_simple_dummy.c         | 14 ++++++++------
+> >  drivers/iio/industrialio-core.c              | 11 ++++++-----
+> >  drivers/platform/x86/toshiba_acpi.c          |  3 +--
+> >  drivers/staging/iio/Documentation/device.txt |  4 +---
+> >  include/linux/iio/iio.h                      |  4 ++--
+> >  5 files changed, 18 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/drivers/iio/dummy/iio_simple_dummy.c b/drivers/iio/dummy/iio_simple_dummy.c
+> > index 6cb02299a215..b35ae7c039f7 100644
+> > --- a/drivers/iio/dummy/iio_simple_dummy.c
+> > +++ b/drivers/iio/dummy/iio_simple_dummy.c
+> > @@ -566,6 +566,13 @@ static struct iio_sw_device *iio_dummy_probe(const char *name)
+> >         struct iio_dev *indio_dev;
+> >         struct iio_dummy_state *st;
+> >         struct iio_sw_device *swd;
+> > +       struct device *parent = NULL;
+> > +
+> > +       /*
+> > +        * With hardware: Set the parent device.
+> > +        * parent = &spi->dev;
+> > +        * parent = &client->dev;
+> > +        */
+> >
+> >         swd = kzalloc(sizeof(*swd), GFP_KERNEL);
+> >         if (!swd) {
+> > @@ -580,7 +587,7 @@ static struct iio_sw_device *iio_dummy_probe(const char *name)
+> >          * It also has a region (accessed by iio_priv()
+> >          * for chip specific state information.
+> >          */
+> > -       indio_dev = iio_device_alloc(sizeof(*st));
+> > +       indio_dev = iio_device_alloc(parent, sizeof(*st));
+> >         if (!indio_dev) {
+> >                 ret = -ENOMEM;
+> >                 goto error_ret;
+> > @@ -590,11 +597,6 @@ static struct iio_sw_device *iio_dummy_probe(const char *name)
+> >         mutex_init(&st->lock);
+> >
+> >         iio_dummy_init_device(indio_dev);
+> > -       /*
+> > -        * With hardware: Set the parent device.
+> > -        * indio_dev->dev.parent = &spi->dev;
+> > -        * indio_dev->dev.parent = &client->dev;
+> > -        */
+> >
+> >          /*
+> >          * Make the iio_dev struct available to remove function.
+> > diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> > index 1527f01a44f1..75661661aaba 100644
+> > --- a/drivers/iio/industrialio-core.c
+> > +++ b/drivers/iio/industrialio-core.c
+> > @@ -1493,7 +1493,7 @@ struct device_type iio_device_type = {
+> >   * iio_device_alloc() - allocate an iio_dev from a driver
+> >   * @sizeof_priv:       Space to allocate for private structure.
+> >   **/
+> > -struct iio_dev *iio_device_alloc(int sizeof_priv)
+> > +struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
+> >  {
+> >         struct iio_dev *dev;
+> >         size_t alloc_size;
+> > @@ -1510,6 +1510,7 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
+> >         if (!dev)
+> >                 return NULL;
+> >
+> > +       dev->dev.parent = parent;
+> >         dev->dev.groups = dev->groups;
+> >         dev->dev.type = &iio_device_type;
+> >         dev->dev.bus = &iio_bus_type;
+> > @@ -1551,7 +1552,7 @@ static void devm_iio_device_release(struct device *dev, void *res)
+> >
+> >  /**
+> >   * devm_iio_device_alloc - Resource-managed iio_device_alloc()
+> > - * @dev:               Device to allocate iio_dev for
+> > + * @parent:            Device to allocate iio_dev for, and parent for this IIO device
+> >   * @sizeof_priv:       Space to allocate for private structure.
+> >   *
+> >   * Managed iio_device_alloc. iio_dev allocated with this function is
+> > @@ -1560,7 +1561,7 @@ static void devm_iio_device_release(struct device *dev, void *res)
+> >   * RETURNS:
+> >   * Pointer to allocated iio_dev on success, NULL on failure.
+> >   */
+> > -struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv)
+> > +struct iio_dev *devm_iio_device_alloc(struct device *parent, int sizeof_priv)
+> >  {
+> >         struct iio_dev **ptr, *iio_dev;
+> >
+> > @@ -1569,10 +1570,10 @@ struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv)
+> >         if (!ptr)
+> >                 return NULL;
+> >
+> > -       iio_dev = iio_device_alloc(sizeof_priv);
+> > +       iio_dev = iio_device_alloc(parent, sizeof_priv);
+> >         if (iio_dev) {
+> >                 *ptr = iio_dev;
+> > -               devres_add(dev, ptr);
+> > +               devres_add(parent, ptr);
+> >         } else {
+> >                 devres_free(ptr);
+> >         }
+> > diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> > index 808944546739..4a4d09c352dd 100644
+> > --- a/drivers/platform/x86/toshiba_acpi.c
+> > +++ b/drivers/platform/x86/toshiba_acpi.c
+> > @@ -3128,7 +3128,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+> >
+> >         toshiba_accelerometer_available(dev);
+> >         if (dev->accelerometer_supported) {
+> > -               dev->indio_dev = iio_device_alloc(sizeof(*dev));
+> > +               dev->indio_dev = iio_device_alloc(&acpi_dev->dev, sizeof(*dev));
+> >                 if (!dev->indio_dev) {
+> >                         pr_err("Unable to allocate iio device\n");
+> >                         goto iio_error;
+> > @@ -3138,7 +3138,6 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+> >
+> >                 dev->indio_dev->info = &toshiba_iio_accel_info;
+> >                 dev->indio_dev->name = "Toshiba accelerometer";
+> > -               dev->indio_dev->dev.parent = &acpi_dev->dev;
+> >                 dev->indio_dev->modes = INDIO_DIRECT_MODE;
+> >                 dev->indio_dev->channels = toshiba_iio_accel_channels;
+> >                 dev->indio_dev->num_channels =
+> > diff --git a/drivers/staging/iio/Documentation/device.txt b/drivers/staging/iio/Documentation/device.txt
+> > index ec42544a46aa..0d1275b1eb3f 100644
+> > --- a/drivers/staging/iio/Documentation/device.txt
+> > +++ b/drivers/staging/iio/Documentation/device.txt
+> > @@ -8,7 +8,7 @@ The crucial structure for device drivers in iio is iio_dev.
+> >
+> >  First allocate one using:
+> >
+> > -struct iio_dev *indio_dev = iio_device_alloc(sizeof(struct chip_state));
+> > +struct iio_dev *indio_dev = iio_device_alloc(parent, sizeof(struct chip_state));
+> >  where chip_state is a structure of local state data for this instance of
+> >  the chip.
+> >
+> > @@ -16,8 +16,6 @@ That data can be accessed using iio_priv(struct iio_dev *).
+> >
+> >  Then fill in the following:
+> >
+> > -- indio_dev->dev.parent
+> > -       Struct device associated with the underlying hardware.
+> >  - indio_dev->name
+> >         Name of the device being driven - made available as the name
+> >         attribute in sysfs.
+> > diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> > index a1be82e74c93..91a69f4751aa 100644
+> > --- a/include/linux/iio/iio.h
+> > +++ b/include/linux/iio/iio.h
+> > @@ -676,7 +676,7 @@ static inline void *iio_device_get_drvdata(struct iio_dev *indio_dev)
+> >
+> >  /* Can we make this smaller? */
+> >  #define IIO_ALIGN L1_CACHE_BYTES
+> > -struct iio_dev *iio_device_alloc(int sizeof_priv);
+> > +struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv);
+> >
+> >  static inline void *iio_priv(const struct iio_dev *indio_dev)
+> >  {
+> > @@ -690,7 +690,7 @@ static inline struct iio_dev *iio_priv_to_dev(void *priv)
+> >  }
+> >
+> >  void iio_device_free(struct iio_dev *indio_dev);
+> > -struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv);
+> > +struct iio_dev *devm_iio_device_alloc(struct device *parent, int sizeof_priv);
+> >  struct iio_trigger *devm_iio_trigger_alloc(struct device *dev,
+> >                                                 const char *fmt, ...);
+> >  /**
+> > --
+> > 2.25.1
+> >  
 > 
-> thermal_zone_device_get_mode()
-> thermal_zone_device_set_mode()
-> thermal_zone_device_enable()
-> thermal_zone_device_disable()
 > 
-> thermal_zone_device_get_mode() and its "set" counterpart take tzd's lock
-> and the "set" calls driver's set_mode() if provided, so the latter must
-> not take this lock again. At the end of the "set"
-> thermal_zone_device_update() is called so drivers don't need to repeat this
-> invocation in their specific set_mode() implementations.
-> 
-> The scope of the above 4 functions is purposedly limited to the thermal
-> framework and drivers are not supposed to call them. This encapsulation
-> does not fully work at the moment for some drivers, though:
-> 
-> - platform/x86/acerhdf.c
-> - drivers/thermal/imx_thermal.c
-> - drivers/thermal/intel/intel_quark_dts_thermal.c
-> - drivers/thermal/of-thermal.c
-> 
-> and they manipulate struct thermal_zone_device's members directly.
-> 
-> struct thermal_zone_params gains a new member called initial_mode, which
-> is used to set tzd's mode at registration time.
-> 
-> The sysfs "mode" attribute is always exposed from now on, because all
-> thermal zone devices now have their get_mode() implemented at the generic
-> level and it is always available. Exposing "mode" doesn't hurt the drivers
-> which don't provide their own set_mode(), because writing to "mode" will
-> result in -EPERM, as expected.
-
-The result is great, that is a nice cleanup of the thermal framework.
-
-After review it appears there are still problems IMO, especially with
-the suspend / resume path. The patch is big, it is a bit complex to
-comment. I suggest to re-org the changes as following:
-
- - patch 1 : Add the four functions:
-
- * thermal_zone_device_set_mode()
- * thermal_zone_device_enable()
- * thermal_zone_device_disable()
- * thermal_zone_device_is_enabled()
-
-*but* do not export thermal_zone_device_set_mode(), it must stay private
-to the thermal framework ATM.
-
- - patch 2 : Add the mode THERMAL_DEVICE_SUSPENDED
-
-In the thermal_pm_notify() in the:
-
- - PM_SUSPEND_PREPARE case, set the mode to THERMAL_DEVICE_SUSPENDED if
-the mode is THERMAL_DEVICE_ENABLED
-
- - PM_POST_SUSPEND case, set the mode to THERMAL_DEVICE_ENABLED, if the
-mode is THERMAL_DEVICE_SUSPENDED
-
- - patch 3 : Change the monitor function
-
-Change monitor_thermal_zone() function to set the polling to zero if the
-mode is THERMAL_DEVICE_DISABLED
-
- - patch 4 : Do the changes to remove get_mode() ops
-
-Make sure there is no access to tz->mode from the drivers anymore but
-use of the functions of patch 1. IMO, this is the tricky part because a
-part of the drivers are not calling the update after setting the mode
-while the function thermal_zone_device_enable()/disable() call update
-via the thermal_zone_device_set_mode(), so we must be sure to not break
-anything.
-
- - patch 5 : Do the changes to remove set_mode() ops users
-
-As the patch 3 sets the polling to zero, the routine in the driver
-setting the polling to zero is no longer needed (eg. in the mellanox
-driver). I expect int300 to be the last user of this ops, hopefully we
-can find a way to get rid of the specific call done inside and then
-remove the ops.
-
-The initial_mode approach looks hackish, I suggest to make the default
-the thermal zone disabled after creating and then explicitly enable it.
-Note that is what do a lot of drivers already.
-
-Hopefully, these changes are git-bisect safe.
-
-Does it make sense ?
-
-
-
-
-
-
-
-
-
-
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
