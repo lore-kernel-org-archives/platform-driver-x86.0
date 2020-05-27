@@ -1,224 +1,154 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv2 0/7] Support inhibiting input devices
-Date: Tue, 26 May 2020 23:34:30 -0700
-Message-ID: <20200527063430.GJ89269@dtor-ws>
-References: <20200506002746.GB89269@dtor-ws>
- <20200515164943.28480-1-andrzej.p@collabora.com>
- <842b95bb-8391-5806-fe65-be64b02de122@redhat.com>
- <e6030957-97dc-5b04-7855-bc14a78164c8@collabora.com>
- <6d9921fc-5c2f-beda-4dcd-66d6970a22fe@redhat.com>
- <09679de4-75d3-1f29-ec5f-8d42c84273dd@collabora.com>
- <f674ba4f-bd83-0877-c730-5dc6ea09ae4b@redhat.com>
- <2d224833-3a7e-bc7c-af15-1f803f466697@collabora.com>
- <aa2ce2ab-e5bc-9cb4-8b53-c1ef9348b646@redhat.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [RFC v3 1/2] thermal: core: Let thermal zone device's mode be
+ stored in its struct
+Date: Wed, 27 May 2020 15:30:30 +0200
+Message-ID: <4493c0e4-51aa-3907-810c-74949ff27ca4@samsung.com>
+References: <9ac3b37a-8746-b8ee-70e1-9c876830ac83@linaro.org>
+        <20200417162020.19980-1-andrzej.p@collabora.com>
+        <20200417162020.19980-2-andrzej.p@collabora.com>
+        <CGME20200523212502eucas1p27c01e46512cd6b38c2bb605fad01026f@eucas1p2.samsung.com>
+        <f39c5ca6-5efa-889c-21f5-632dfd24715e@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <aa2ce2ab-e5bc-9cb4-8b53-c1ef9348b646-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix Kernel Team <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <f39c5ca6-5efa-889c-21f5-632dfd24715e@linaro.org>
+Content-Language: en-US
+Sender: linux-acpi-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, "David S . Miller" <davem@davemloft.net>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Allison Randal <allison@lohutok.net>, Enrico Weigelt <info@metux.net>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, May 19, 2020 at 11:36:34AM +0200, Hans de Goede wrote:
-> Hi,
+
+Hi Daniel,
+
+On 5/23/20 11:24 PM, Daniel Lezcano wrote:
+> Hi Andrzej,
 > 
-> On 5/19/20 11:02 AM, Andrzej Pietrasiewicz wrote:
-> > Hi Hans, Hi Dmitry,
-> > 
-> > W dniu 18.05.2020 o 16:23, Hans de Goede pisze:
-> > > Hi,
-> > 
-> > <snip>
-> > 
-> > > > > > > 
-> > > > > > > So I wonder what this series actually adds for functionality for
-> > > > > > > userspace which can not already be achieved this way?
-> > > > > > > 
-> > > > > > > I also noticed that you keep the device open (do not call the
-> > > > > > > input_device's close callback) when inhibited and just throw away
-> > > > > > 
-> > > > > > I'm not sure if I understand you correctly, it is called:
-> > > > > > 
-> > > > > > +static inline void input_stop(struct input_dev *dev)
-> > > > > > +{
-> > > > > > +    if (dev->poller)
-> > > > > > +        input_dev_poller_stop(dev->poller);
-> > > > > > +    if (dev->close)
-> > > > > > +        dev->close(dev);
-> > > > > >                  ^^^^^^^^^^^^^^^^
-> > > > > > +static int input_inhibit(struct input_dev *dev)
-> > > > > > +{
-> > > > > > +    int ret = 0;
-> > > > > > +
-> > > > > > +    mutex_lock(&dev->mutex);
-> > > > > > +
-> > > > > > +    if (dev->inhibited)
-> > > > > > +        goto out;
-> > > > > > +
-> > > > > > +    if (dev->users) {
-> > > > > > +        if (dev->inhibit) {
-> > > > > > +            ret = dev->inhibit(dev);
-> > > > > > +            if (ret)
-> > > > > > +                goto out;
-> > > > > > +        }
-> > > > > > +        input_stop(dev);
-> > > > > >                  ^^^^^^^^^^^^^^^^
-> > > > > > 
-> > > > > > It will not be called when dev->users is zero, but if it is zero,
-> > > > > > then nobody has opened the device yet so there is nothing to close.
-> > > > > 
-> > > > > Ah, I missed that.
-> > > > > 
-> > > > > So if the device implements the inhibit call back then on
-> > > > > inhibit it will get both the inhibit and close callback called?
-> > > > > 
-> > > > 
-> > > > That's right. And conversely, upon uninhibit open() and uninhibit()
-> > > > callbacks will be invoked. Please note that just as with open()/close(),
-> > > > providing inhibit()/uninhibit() is optional.
-> > > 
-> > > Ack.
-> > > 
-> > > > > And what happens if the last user goes away and the device
-> > > > > is not inhibited?
-> > > > 
-> > > > close() is called as usually.
-> > > 
-> > > But not inhibit, hmm, see below.
-> > > 
-> > > > > I'm trying to understand here what the difference between the 2
-> > > > > is / what the goal of having a separate inhibit callback ?
-> > > > > 
-> > > > 
-> > > > Drivers have very different ideas about what it means to suspend/resume
-> > > > and open/close. The optional inhibit/uninhibit callbacks are meant for
-> > > > the drivers to know that it is this particular action going on.
-> > > 
-> > > So the inhibit() callback triggers the "suspend" behavior ?
-> > > But shouldn't drivers which are capable of suspending the device
-> > > always do so on close() ?
-> > > 
-> > > Since your current proposal also calls close() on inhibit() I
-> > > really see little difference between an inhibit() and the last
-> > > user of the device closing it and IMHO unless there is a good
-> > > reason to actually differentiate the 2 it would be better
-> > > to only stick with the existing close() and in cases where
-> > > that does not put the device in a low-power mode yet, fix
-> > > the existing close() callback to do the low-power mode
-> > > setting instead of adding a new callback.
-> > > 
-> > > > For inhibit() there's one more argument: close() does not return a value,
-> > > > so its meaning is "do some last cleanup" and as such it is not allowed
-> > > > to fail - whatever its effect is, we must deem it successful. inhibit()
-> > > > does return a value and so it is allowed to fail.
-> > > 
-> > > Well, we could make close() return an error and at least in the inhibit()
-> > > case propagate that to userspace. I wonder if userspace is going to
-> > > do anything useful with that error though...
-
-It really can't do anything. Have you ever seen userspace handling
-errors from close()? And what can be done? A program is terminating, but
-the kernel says "no, you closing input device failed, you have to
-continue running indefinitely..."
-
-> > > 
-> > > In my experience errors during cleanup/shutdown are best logged
-> > > (using dev_err) and otherwise ignored, so that we try to clean up
-> > > as much possible. Unless the very first step of the shutdown process
-> > > fails the device is going to be in some twilight zone state anyways
-> > > at this point we might as well try to cleanup as much as possible.
-> > 
-> > What you say makes sense to me.
-> > @Dmitry?
-
-I will note here, that inhibit is closer to suspend() than to close(),
-and we do report errors for suspend(). Therefore we could conceivably
-try to handle errors if driver really wants to be fancy. But I think
-majority of cases will be quite happy with using close() and simply
-logging errors, as Hans said.
-
-That said, I think the way we should handle inhibit/uninhibit, is that
-if we have the callback defined, then we call it, and only call open and
-close if uninhibit or inhibit are _not_ defined.
-
-> > 
-> > > 
-> > > > All in all, it is up to the drivers to decide which callback they
-> > > > provide. Based on my work so far I would say that there are tens
-> > > > of simple cases where open() and close() are sufficient, out of total
-> > > > ~400 users of input_allocate_device():
-> > > > 
-> > > > $ git grep "input_allocate_device(" | grep -v ^Documentation | \
-> > > > cut -f1 -d: | sort | uniq | wc
-> > > >      390     390   13496
-> > > 
-> > > So can you explain a bit more about the cases where only having
-> > > open/close is not sufficient?  So far I have the feeling that
-> > > those are all we need and that we really do not need separate
-> > > [un]inhibit callbacks.
-> > 
-> > My primary concern was not being able to propagate inhibit() error
-> > to userspace, and then if we have inhibit(), uninhibit() should be
-> > there for completeness. If propagating the error to userspace can
-> > be neglected then yes, it seems open/close should be sufficient,
-> > even more because the real meaning of "open" is "prepare the device
-> > for generating input events".
-> > 
-> > To validate the idea of not introducing inhibit()/uninhibit() callbacks
-> > to implement device inhibiting/uninhibiting let's look at
-> > drivers/input/mouse/elan_i2c_core.c (PATCH 7/7):
-> > 
-> > static int elan_inhibit(struct input_dev *input)
-> > {
-> > [...]
-> > 
-> >      ret = mutex_lock_interruptible(&data->sysfs_mutex);
-> >      if (ret)
-> >          return ret;
-> > 
-> >      disable_irq(client->irq);
-> > 
-> >      ret = elan_disable_power(data);
-> >      if (ret)
-> >          enable_irq(client->irq);
-> > [...]
-> > }
-> > 
-> > First, close() does not exist in this driver. Of course this can be
-> > fixed. Then it doesn't return a value. Then, if either taking the
-> > mutex or disabling the power fails, the close() is still deemed
-> > successful. Is it ok?
+> On 17/04/2020 18:20, Andrzej Pietrasiewicz wrote:
+>> Thermal zone devices' mode is stored in individual drivers. This patch
+>> changes it so that mode is stored in struct thermal_zone_device instead.
+>>
+>> As a result all driver-specific variables storing the mode are not needed
+>> and are removed. Consequently, the get_mode() implementations have nothing
+>> to operate on and need to be removed, too.
+>>
+>> Some thermal framework specific functions are introduced:
+>>
+>> thermal_zone_device_get_mode()
+>> thermal_zone_device_set_mode()
+>> thermal_zone_device_enable()
+>> thermal_zone_device_disable()
+>>
+>> thermal_zone_device_get_mode() and its "set" counterpart take tzd's lock
+>> and the "set" calls driver's set_mode() if provided, so the latter must
+>> not take this lock again. At the end of the "set"
+>> thermal_zone_device_update() is called so drivers don't need to repeat this
+>> invocation in their specific set_mode() implementations.
+>>
+>> The scope of the above 4 functions is purposedly limited to the thermal
+>> framework and drivers are not supposed to call them. This encapsulation
+>> does not fully work at the moment for some drivers, though:
+>>
+>> - platform/x86/acerhdf.c
+>> - drivers/thermal/imx_thermal.c
+>> - drivers/thermal/intel/intel_quark_dts_thermal.c
+>> - drivers/thermal/of-thermal.c
+>>
+>> and they manipulate struct thermal_zone_device's members directly.
+>>
+>> struct thermal_zone_params gains a new member called initial_mode, which
+>> is used to set tzd's mode at registration time.
+>>
+>> The sysfs "mode" attribute is always exposed from now on, because all
+>> thermal zone devices now have their get_mode() implemented at the generic
+>> level and it is always available. Exposing "mode" doesn't hurt the drivers
+>> which don't provide their own set_mode(), because writing to "mode" will
+>> result in -EPERM, as expected.
 > 
-> Note I also mentioned another solution for the error propagation,
-> which would require a big "flag day" commit adding "return 0"
-> to all existing close callbacks, but otherwise should work for your
-> purposes:
-
-No, please, no flag days and no changing close() to return error, it
-makes no sense for close().
-
+> The result is great, that is a nice cleanup of the thermal framework.
 > 
-> > Well, we could make close() return an error and at least in the inhibit()
-> > case propagate that to userspace. I wonder if userspace is going to
-> > do anything useful with that error though...
+> After review it appears there are still problems IMO, especially with
+> the suspend / resume path. The patch is big, it is a bit complex to
+> comment. I suggest to re-org the changes as following:
+
+There are still issues with the related existing thermal code but this
+patch seems to be a step in the right direction.
+
+For the latest version posted ("v3" one, your mail was replied to the
+older "RFC v3" one):
+
+https://lore.kernel.org/linux-pm/20200423165705.13585-2-andrzej.p@collabora.com/
+
+I couldn't find the problems with the patch itself (no new issues
+being introduced, all changes seem to be improvements over the current
+situation).
+
+Also the patch is not small but it also not that big and it mostly
+removes the code:
+
+17 files changed, 105 insertions(+), 244 deletions(-)
+
+I worry that since the original code is intertwined in the interesting
+ways the cost of work on splitting the patch on smaller changes may be
+higher than its benefits.
+
+>  - patch 1 : Add the four functions:
 > 
-> And I guess we could log an error that close failed in the old close() path
-> where we cannot propagate the error.
+>  * thermal_zone_device_set_mode()
+>  * thermal_zone_device_enable()
+>  * thermal_zone_device_disable()
+>  * thermal_zone_device_is_enabled()
 > 
-> Also why the mutex_lock_interruptible() ?  If you change that to
-> a normal mutex_lock() you loose one of the possible 2 error cases and
-> I doubt anyone is going to do a CTRL-C of the process doing the
-> inhibiting (or that that process starts a timer using a signal
-> to ensure the inhibit does not take to long or some such).
+> *but* do not export thermal_zone_device_set_mode(), it must stay private
+> to the thermal framework ATM.
+> 
+>  - patch 2 : Add the mode THERMAL_DEVICE_SUSPENDED
+> 
+> In the thermal_pm_notify() in the:
+> 
+>  - PM_SUSPEND_PREPARE case, set the mode to THERMAL_DEVICE_SUSPENDED if
+> the mode is THERMAL_DEVICE_ENABLED
+> 
+>  - PM_POST_SUSPEND case, set the mode to THERMAL_DEVICE_ENABLED, if the
+> mode is THERMAL_DEVICE_SUSPENDED
+> 
+>  - patch 3 : Change the monitor function
+> 
+> Change monitor_thermal_zone() function to set the polling to zero if the
+> mode is THERMAL_DEVICE_DISABLED
+> 
+>  - patch 4 : Do the changes to remove get_mode() ops
+> 
+> Make sure there is no access to tz->mode from the drivers anymore but
+> use of the functions of patch 1. IMO, this is the tricky part because a
+> part of the drivers are not calling the update after setting the mode
+> while the function thermal_zone_device_enable()/disable() call update
+> via the thermal_zone_device_set_mode(), so we must be sure to not break
+> anything.
+> 
+>  - patch 5 : Do the changes to remove set_mode() ops users
+> 
+> As the patch 3 sets the polling to zero, the routine in the driver
+> setting the polling to zero is no longer needed (eg. in the mellanox
+> driver). I expect int300 to be the last user of this ops, hopefully we
+> can find a way to get rid of the specific call done inside and then
+> remove the ops.
+> 
+> The initial_mode approach looks hackish, I suggest to make the default
+> the thermal zone disabled after creating and then explicitly enable it.
+> Note that is what do a lot of drivers already.
+> 
+> Hopefully, these changes are git-bisect safe.
+> 
+> Does it make sense ?
 
-Well, we have the dedicated callbacks in Chrome OS, so when I did the
-patch I could even handle Ctrl-C, so why not? But it indeed can easily
-be dropped in favor of straight mutex_lock().
+Besides the requirement to split the patch it seems that the above
+list contains a lot of problematic areas with the existing thermal
+code yet to be addressed..
 
-Thanks.
-
--- 
-Dmitry
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
