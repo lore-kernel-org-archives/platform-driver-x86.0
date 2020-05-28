@@ -1,154 +1,120 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [RFC v3 1/2] thermal: core: Let thermal zone device's mode be
- stored in its struct
-Date: Wed, 27 May 2020 15:30:30 +0200
-Message-ID: <4493c0e4-51aa-3907-810c-74949ff27ca4@samsung.com>
-References: <9ac3b37a-8746-b8ee-70e1-9c876830ac83@linaro.org>
-        <20200417162020.19980-1-andrzej.p@collabora.com>
-        <20200417162020.19980-2-andrzej.p@collabora.com>
-        <CGME20200523212502eucas1p27c01e46512cd6b38c2bb605fad01026f@eucas1p2.samsung.com>
-        <f39c5ca6-5efa-889c-21f5-632dfd24715e@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Subject: [PATCH v4 00/11] Stop monitoring disabled devices
+Date: Thu, 28 May 2020 21:20:40 +0200
+Message-ID: <20200528192051.28034-1-andrzej.p@collabora.com>
+References: <Message-ID: <4493c0e4-51aa-3907-810c-74949ff27ca4@samsung.com>
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <f39c5ca6-5efa-889c-21f5-632dfd24715e@linaro.org>
-Content-Language: en-US
+In-Reply-To: <Message-ID: <4493c0e4-51aa-3907-810c-74949ff27ca4@samsung.com>
 Sender: linux-acpi-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, "David S . Miller" <davem@davemloft.net>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Support Opensource <support.opensource@diasemi.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Allison Randal <allison@lohutok.net>, Enrico Weigelt <info@metux.net>
+To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Luca Coelho <luciano.coelho@intel.com>, Intel Linux Wireless <linuxwifi@intel.com>, Kalle Valo <kvalo@codeaurora.org>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Sebastian Reichel <sre@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-
-Hi Daniel,
-
-On 5/23/20 11:24 PM, Daniel Lezcano wrote:
-> Hi Andrzej,
-> 
-> On 17/04/2020 18:20, Andrzej Pietrasiewicz wrote:
->> Thermal zone devices' mode is stored in individual drivers. This patch
->> changes it so that mode is stored in struct thermal_zone_device instead.
->>
->> As a result all driver-specific variables storing the mode are not needed
->> and are removed. Consequently, the get_mode() implementations have nothing
->> to operate on and need to be removed, too.
->>
->> Some thermal framework specific functions are introduced:
->>
->> thermal_zone_device_get_mode()
->> thermal_zone_device_set_mode()
->> thermal_zone_device_enable()
->> thermal_zone_device_disable()
->>
->> thermal_zone_device_get_mode() and its "set" counterpart take tzd's lock
->> and the "set" calls driver's set_mode() if provided, so the latter must
->> not take this lock again. At the end of the "set"
->> thermal_zone_device_update() is called so drivers don't need to repeat this
->> invocation in their specific set_mode() implementations.
->>
->> The scope of the above 4 functions is purposedly limited to the thermal
->> framework and drivers are not supposed to call them. This encapsulation
->> does not fully work at the moment for some drivers, though:
->>
->> - platform/x86/acerhdf.c
->> - drivers/thermal/imx_thermal.c
->> - drivers/thermal/intel/intel_quark_dts_thermal.c
->> - drivers/thermal/of-thermal.c
->>
->> and they manipulate struct thermal_zone_device's members directly.
->>
->> struct thermal_zone_params gains a new member called initial_mode, which
->> is used to set tzd's mode at registration time.
->>
->> The sysfs "mode" attribute is always exposed from now on, because all
->> thermal zone devices now have their get_mode() implemented at the generic
->> level and it is always available. Exposing "mode" doesn't hurt the drivers
->> which don't provide their own set_mode(), because writing to "mode" will
->> result in -EPERM, as expected.
-> 
-> The result is great, that is a nice cleanup of the thermal framework.
-> 
-> After review it appears there are still problems IMO, especially with
-> the suspend / resume path. The patch is big, it is a bit complex to
-> comment. I suggest to re-org the changes as following:
-
-There are still issues with the related existing thermal code but this
-patch seems to be a step in the right direction.
-
-For the latest version posted ("v3" one, your mail was replied to the
-older "RFC v3" one):
+There is already a reviewed v3 (not to be confused with RFC v3), which can
+be considered for merging:
 
 https://lore.kernel.org/linux-pm/20200423165705.13585-2-andrzej.p@collabora.com/
 
-I couldn't find the problems with the patch itself (no new issues
+Let me cite Bartlomiej Zolnierkiewicz:
+
+"I couldn't find the problems with the patch itself (no new issues
 being introduced, all changes seem to be improvements over the current
 situation).
 
 Also the patch is not small but it also not that big and it mostly
 removes the code:
 
-17 files changed, 105 insertions(+), 244 deletions(-)
+17 files changed, 105 insertions(+), 244 deletions(-)"
 
-I worry that since the original code is intertwined in the interesting
-ways the cost of work on splitting the patch on smaller changes may be
-higher than its benefits.
+There have been raised some concerns about bisectability and about
+introducing "initial_mode" member in struct thermal_zone_params.
 
->  - patch 1 : Add the four functions:
-> 
->  * thermal_zone_device_set_mode()
->  * thermal_zone_device_enable()
->  * thermal_zone_device_disable()
->  * thermal_zone_device_is_enabled()
-> 
-> *but* do not export thermal_zone_device_set_mode(), it must stay private
-> to the thermal framework ATM.
-> 
->  - patch 2 : Add the mode THERMAL_DEVICE_SUSPENDED
-> 
-> In the thermal_pm_notify() in the:
-> 
->  - PM_SUSPEND_PREPARE case, set the mode to THERMAL_DEVICE_SUSPENDED if
-> the mode is THERMAL_DEVICE_ENABLED
-> 
->  - PM_POST_SUSPEND case, set the mode to THERMAL_DEVICE_ENABLED, if the
-> mode is THERMAL_DEVICE_SUSPENDED
-> 
->  - patch 3 : Change the monitor function
-> 
-> Change monitor_thermal_zone() function to set the polling to zero if the
-> mode is THERMAL_DEVICE_DISABLED
-> 
->  - patch 4 : Do the changes to remove get_mode() ops
-> 
-> Make sure there is no access to tz->mode from the drivers anymore but
-> use of the functions of patch 1. IMO, this is the tricky part because a
-> part of the drivers are not calling the update after setting the mode
-> while the function thermal_zone_device_enable()/disable() call update
-> via the thermal_zone_device_set_mode(), so we must be sure to not break
-> anything.
-> 
->  - patch 5 : Do the changes to remove set_mode() ops users
-> 
-> As the patch 3 sets the polling to zero, the routine in the driver
-> setting the polling to zero is no longer needed (eg. in the mellanox
-> driver). I expect int300 to be the last user of this ops, hopefully we
-> can find a way to get rid of the specific call done inside and then
-> remove the ops.
-> 
-> The initial_mode approach looks hackish, I suggest to make the default
-> the thermal zone disabled after creating and then explicitly enable it.
-> Note that is what do a lot of drivers already.
-> 
-> Hopefully, these changes are git-bisect safe.
-> 
-> Does it make sense ?
+This v4 series addresses those concerns: it takes a more gradual
+approach and uses explicit tzd state initialization, hence there are more
+insertions than in v3, and the net effect is -63 lines versus -139 lines
+in v3.
 
-Besides the requirement to split the patch it seems that the above
-list contains a lot of problematic areas with the existing thermal
-code yet to be addressed..
+Patch 2/11 converts the 3 drivers which don't store their mode in
+enum thermal_device_mode to do so. Once that is cleared,
+struct thermal_zone_device gains its "mode" member (patch 3/11) and then
+all interested drivers change the location where they store their
+state: instead of storing it in some variable in a driver, they store it
+in struct thermal_zone_device (patch 4/11). Patch 4/11 does not introduce
+other changes. Then get_mode() driver method becomes redundant, and so
+it is removed (patch 5/11). This is the first part of the groundwork.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+The second part of the groundwork is to add (patch 6/11) and use (patch
+7/11) helpers for accessing tzd's state from drivers. From this moment
+on the drivers don't access tzd->mode directly. Please note that after
+patch 4/11 all thermal zone devices have their mode implicitly initialized
+to DISABLED, as a result of kzalloc and THERMAL_DEVICE_DISABLED == 0.
+This is not a problem from the point of view of polling them, because
+their state is not considered when deciding to poll or to cease polling.
+In preparation for considering tzd's state when deciding to poll or to
+cease polling it ensured (patch 8/11 and some in patch 7/11) that all the
+drivers are explicitly initialized with regard to their state.
+
+With all that groundwork in place now it makes sense to modify thermal_core
+so that it stops polling DISABLED devices (patch 9/11), which is the
+ultimate purpose of this work.
+
+While at it, some set_mode() implementations only change the polling
+variables to make the core stop polling their drivers, but that is now
+unnecessary and those set_mode() implementations are removed. In other
+implementations polling variables modifications are removed. Some other
+set_mode() implementations are simplified or removed (patch 10/11).
+
+set_mode() is now only called when tzd's mode is about to change. Actual
+setting is performed in thermal_core, in thermal_zone_device_set_mode().
+The meaning of set_mode() callback is actually to notify the driver about
+the mode being changed and giving the driver a chance to oppose such
+a change. To better reflect the purpose of the method it is renamed to
+change_mode() (patch 11/11).
+
+Andrzej Pietrasiewicz (11):
+  acpi: thermal: Fix error handling in the register function
+  thermal: Store thermal mode in a dedicated enum
+  thermal: Add current mode to thermal zone device
+  thermal: Store device mode in struct thermal_zone_device
+  thermal: remove get_mode() operation of drivers
+  thermal: Add mode helpers
+  thermal: Use mode helpers in drivers
+  thermal: Explicitly enable non-changing thermal zone devices
+  thermal: core: Stop polling DISABLED thermal devices
+  thermal: Simplify or eliminate unnecessary set_mode() methods
+  thermal: Rename set_mode() to change_mode()
+
+ drivers/acpi/thermal.c                        | 75 +++++----------
+ .../ethernet/chelsio/cxgb4/cxgb4_thermal.c    |  8 ++
+ .../ethernet/mellanox/mlxsw/core_thermal.c    | 91 ++++---------------
+ drivers/net/wireless/intel/iwlwifi/mvm/tt.c   |  9 +-
+ drivers/platform/x86/acerhdf.c                | 33 +++----
+ drivers/platform/x86/intel_mid_thermal.c      |  6 ++
+ drivers/power/supply/power_supply_core.c      |  9 +-
+ drivers/thermal/armada_thermal.c              |  6 ++
+ drivers/thermal/da9062-thermal.c              | 16 +---
+ drivers/thermal/dove_thermal.c                |  6 ++
+ drivers/thermal/hisi_thermal.c                |  6 +-
+ drivers/thermal/imx_thermal.c                 | 57 ++++--------
+ .../intel/int340x_thermal/int3400_thermal.c   | 43 +++------
+ .../int340x_thermal/int340x_thermal_zone.c    |  5 +
+ drivers/thermal/intel/intel_pch_thermal.c     |  5 +
+ .../thermal/intel/intel_quark_dts_thermal.c   | 34 ++-----
+ drivers/thermal/intel/intel_soc_dts_iosf.c    |  3 +
+ drivers/thermal/intel/x86_pkg_temp_thermal.c  |  6 ++
+ drivers/thermal/kirkwood_thermal.c            |  7 ++
+ drivers/thermal/rcar_thermal.c                |  9 +-
+ drivers/thermal/rockchip_thermal.c            |  6 +-
+ drivers/thermal/spear_thermal.c               |  7 ++
+ drivers/thermal/sprd_thermal.c                |  6 +-
+ drivers/thermal/st/st_thermal.c               |  5 +
+ drivers/thermal/thermal_core.c                | 76 ++++++++++++++--
+ drivers/thermal/thermal_of.c                  | 51 ++---------
+ drivers/thermal/thermal_sysfs.c               | 37 +-------
+ include/linux/thermal.h                       | 19 +++-
+ 28 files changed, 289 insertions(+), 352 deletions(-)
+
+
+base-commit: 351f4911a477ae01239c42f771f621d85b06ea10
+-- 
+2.17.1
