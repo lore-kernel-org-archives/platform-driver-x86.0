@@ -1,87 +1,203 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 4/5] iio: light: lm3533-als: remove explicit parent
- assignment
-Date: Fri, 29 May 2020 11:08:38 +0000
-Message-ID: <05500c815f4881a6aa86c809c5ac53e8af3f3e91.camel@analog.com>
-References: <20200522082208.383631-1-alexandru.ardelean@analog.com>
- <20200522082208.383631-4-alexandru.ardelean@analog.com>
- <20200529101608.GC19480@localhost>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 02/11] thermal: Store thermal mode in a dedicated enum
+Date: Fri, 29 May 2020 07:48:21 -0700
+Message-ID: <20200529144821.GA93994@roeck-us.net>
+References: <4493c0e4-51aa-3907-810c-74949ff27ca4@samsung.com>
+ <20200528192051.28034-1-andrzej.p@collabora.com>
+ <20200528192051.28034-3-andrzej.p@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane-mx.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20200529101608.GC19480@localhost>
-Content-Language: en-US
-Content-ID: <C6D081712A43FD4B9CD4A682AA944F89-nA3rOoH6FIycE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane-mx.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: "johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "milo.kim-l0cyMroinI0@public.gmane.org" <milo.kim-l0cyMroinI0@public.gmane.org>, "tomislav.denis-jb26L5wWkzc@public.gmane.org" <tomislav.denis-jb26L5wWkzc@public.gmane.org>, "dan-d1oNz5vA2fxXqviUI+FSNg@public.gmane.org" <dan-d1oNz5vA2fxXqviUI+FSNg@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "eajames-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org" <eajames-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org" <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, "lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "fabrice.gasnier-qxv4g6HH51o@public.gmane.org" <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, "srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org" <linux-stm32-XDFAJ8BFU24N7RejjzZ/Li2xQDfSxrLKVpNB7YpNyf8@public.gmane.org>, "devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org" <devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org>, linux-samsung-soc@vger
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200528192051.28034-3-andrzej.p@collabora.com>
+Sender: netdev-owner@vger.kernel.org
+To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Heiko Stuebner <heiko@sntech.de>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Vishal Kulkarni <vishal@chelsio.com>, Luca Coelho <luciano.coelho@intel.com>, Miquel Raynal <miquel.raynal@bootlin.com>, kernel@collabora.com, Fabio Estevam <festevam@gmail.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Allison Randal <allison@lohutok.net>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 2020-05-29 at 12:16 +0200, Johan Hovold wrote:
-> [External]
+On Thu, May 28, 2020 at 09:20:42PM +0200, Andrzej Pietrasiewicz wrote:
+> Prepare for storing mode in struct thermal_zone_device.
 > 
-> On Fri, May 22, 2020 at 11:22:07AM +0300, Alexandru Ardelean wrote:
-> > This assignment is the more peculiar of the bunch as it assigns the parent
-> > of the platform-device's device (i.e. pdev->dev.parent) as the IIO device's
-> > parent.
-> > 
-> > It's unclear whether this is intentional or not.
-> > Hence it is in it's own patch.
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> ---
+>  drivers/acpi/thermal.c                        | 27 +++++++++----------
+>  drivers/platform/x86/acerhdf.c                |  8 ++++--
+>  .../intel/int340x_thermal/int3400_thermal.c   | 18 +++++--------
+>  3 files changed, 25 insertions(+), 28 deletions(-)
 > 
-> Yeah, we have a few mfd drivers whose child drivers registers their
-> class devices directly under the parent mfd device rather than the
-> corresponding child platform device.
-> 
-> Since it's done consistently I think you need to update them all if you
-> really want to change this. 
-> 
-> And it may not be worth it since at least in theory someone could now be
-> relying on this topology.
+> diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
+> index 6de8066ca1e7..fb46070c66d8 100644
+> --- a/drivers/acpi/thermal.c
+> +++ b/drivers/acpi/thermal.c
+> @@ -172,7 +172,7 @@ struct acpi_thermal {
+>  	struct acpi_thermal_trips trips;
+>  	struct acpi_handle_list devices;
+>  	struct thermal_zone_device *thermal_zone;
+> -	int tz_enabled;
+> +	enum thermal_device_mode mode;
+>  	int kelvin_offset;	/* in millidegrees */
+>  	struct work_struct thermal_check_work;
+>  };
+> @@ -500,7 +500,7 @@ static void acpi_thermal_check(void *data)
+>  {
+>  	struct acpi_thermal *tz = data;
+>  
+> -	if (!tz->tz_enabled)
+> +	if (tz->mode != THERMAL_DEVICE_ENABLED)
+>  		return;
+>  
+>  	thermal_zone_device_update(tz->thermal_zone,
+> @@ -534,8 +534,7 @@ static int thermal_get_mode(struct thermal_zone_device *thermal,
+>  	if (!tz)
+>  		return -EINVAL;
+>  
+> -	*mode = tz->tz_enabled ? THERMAL_DEVICE_ENABLED :
+> -		THERMAL_DEVICE_DISABLED;
+> +	*mode = tz->mode;
+>  
+>  	return 0;
+>  }
+> @@ -544,27 +543,25 @@ static int thermal_set_mode(struct thermal_zone_device *thermal,
+>  				enum thermal_device_mode mode)
+>  {
+>  	struct acpi_thermal *tz = thermal->devdata;
+> -	int enable;
+>  
+>  	if (!tz)
+>  		return -EINVAL;
+>  
+> +	if (mode != THERMAL_DEVICE_DISABLED &&
+> +	    mode != THERMAL_DEVICE_ENABLED)
+> +		return -EINVAL;
 
-Thanks for the feedback.
-I guess, it could make sense to do here:
-      devm_iio_device_alloc(pdev->dev.parent, ...)
+Personally I find this check unnecessary: The enum has no other values,
+and it is verifyable that the callers provide the enum and not some other
+value.
 
-Currently it's:
-      devm_iio_device_alloc(&pdev->dev, ...)
+>  	/*
+>  	 * enable/disable thermal management from ACPI thermal driver
+>  	 */
+> -	if (mode == THERMAL_DEVICE_ENABLED)
+> -		enable = 1;
+> -	else if (mode == THERMAL_DEVICE_DISABLED) {
+> -		enable = 0;
+> +	if (mode == THERMAL_DEVICE_DISABLED)
+>  		pr_warn("thermal zone will be disabled\n");
+> -	} else
+> -		return -EINVAL;
+>  
+> -	if (enable != tz->tz_enabled) {
+> -		tz->tz_enabled = enable;
+> +	if (mode != tz->mode) {
+> +		tz->mode = mode;
+>  		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+>  			"%s kernel ACPI thermal control\n",
+> -			tz->tz_enabled ? "Enable" : "Disable"));
+> +			tz->mode == THERMAL_DEVICE_ENABLED ?
+> +			"Enable" : "Disable"));
+>  		acpi_thermal_check(tz);
+>  	}
+>  	return 0;
+> @@ -915,7 +912,7 @@ static int acpi_thermal_register_thermal_zone(struct acpi_thermal *tz)
+>  		goto remove_dev_link;
+>  	}
+>  
+> -	tz->tz_enabled = 1;
+> +	tz->mode = THERMAL_DEVICE_ENABLED;
+>  
+>  	dev_info(&tz->device->dev, "registered as thermal_zone%d\n",
+>  		 tz->thermal_zone->id);
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index 8cc86f4e3ac1..830a8b060e74 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -68,6 +68,7 @@ static int kernelmode = 1;
+>  #else
+>  static int kernelmode;
+>  #endif
+> +static enum thermal_device_mode thermal_mode;
+>  
+>  static unsigned int interval = 10;
+>  static unsigned int fanon = 60000;
+> @@ -397,6 +398,7 @@ static inline void acerhdf_revert_to_bios_mode(void)
+>  {
+>  	acerhdf_change_fanstate(ACERHDF_FAN_AUTO);
+>  	kernelmode = 0;
+> +	thermal_mode = THERMAL_DEVICE_DISABLED;
+>  	if (thz_dev)
+>  		thz_dev->polling_delay = 0;
+>  	pr_notice("kernel mode fan control OFF\n");
+> @@ -404,6 +406,7 @@ static inline void acerhdf_revert_to_bios_mode(void)
+>  static inline void acerhdf_enable_kernelmode(void)
+>  {
+>  	kernelmode = 1;
+> +	thermal_mode = THERMAL_DEVICE_ENABLED;
+>  
+>  	thz_dev->polling_delay = interval*1000;
+>  	thermal_zone_device_update(thz_dev, THERMAL_EVENT_UNSPECIFIED);
+> @@ -416,8 +419,7 @@ static int acerhdf_get_mode(struct thermal_zone_device *thermal,
+>  	if (verbose)
+>  		pr_notice("kernel mode fan control %d\n", kernelmode);
+>  
+> -	*mode = (kernelmode) ? THERMAL_DEVICE_ENABLED
+> -			     : THERMAL_DEVICE_DISABLED;
+> +	*mode = thermal_mode;
+>  
+>  	return 0;
+>  }
+> @@ -739,6 +741,8 @@ static int __init acerhdf_register_thermal(void)
+>  	if (IS_ERR(cl_dev))
+>  		return -EINVAL;
+>  
+> +	thermal_mode = kernelmode ?
+> +		THERMAL_DEVICE_ENABLED : THERMAL_DEVICE_DISABLED;
+>  	thz_dev = thermal_zone_device_register("acerhdf", 2, 0, NULL,
+>  					      &acerhdf_dev_ops,
+>  					      &acerhdf_zone_params, 0,
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> index 0b3a62655843..e84faaadff87 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> @@ -48,7 +48,7 @@ struct int3400_thermal_priv {
+>  	struct acpi_device *adev;
+>  	struct platform_device *pdev;
+>  	struct thermal_zone_device *thermal;
+> -	int mode;
+> +	enum thermal_device_mode mode;
+>  	int art_count;
+>  	struct art *arts;
+>  	int trt_count;
+> @@ -395,24 +395,20 @@ static int int3400_thermal_set_mode(struct thermal_zone_device *thermal,
+>  				enum thermal_device_mode mode)
+>  {
+>  	struct int3400_thermal_priv *priv = thermal->devdata;
+> -	bool enable;
+>  	int result = 0;
+>  
+>  	if (!priv)
+>  		return -EINVAL;
+>  
+> -	if (mode == THERMAL_DEVICE_ENABLED)
+> -		enable = true;
+> -	else if (mode == THERMAL_DEVICE_DISABLED)
+> -		enable = false;
+> -	else
+> +	if (mode != THERMAL_DEVICE_ENABLED &&
+> +	    mode != THERMAL_DEVICE_DISABLED)
+>  		return -EINVAL;
 
-That would make it slightly more consistent.
-i.e. the life-time of the object would be attached to the parent of the platform
-device, versus the platform-device.
+Same as above.
 
-Currently, as it is, the allocation [of the IIO device] is tied the platform-
-device, and the IIO registration to the parent (of the platform-device).
-I'm not super-familiar with the internals here, but does this sound a bit wrong?
-Is there a chance where the IIO device could be de-allocated, while registered?
-
-
-> 
-> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  drivers/iio/light/lm3533-als.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/drivers/iio/light/lm3533-als.c b/drivers/iio/light/lm3533-als.c
-> > index bc196c212881..0f380ec8d30c 100644
-> > --- a/drivers/iio/light/lm3533-als.c
-> > +++ b/drivers/iio/light/lm3533-als.c
-> > @@ -852,7 +852,6 @@ static int lm3533_als_probe(struct platform_device
-> > *pdev)
-> >  	indio_dev->channels = lm3533_als_channels;
-> >  	indio_dev->num_channels = ARRAY_SIZE(lm3533_als_channels);
-> >  	indio_dev->name = dev_name(&pdev->dev);
-> > -	indio_dev->dev.parent = pdev->dev.parent;
-> >  	indio_dev->modes = INDIO_DIRECT_MODE;
-> >  
-> >  	als = iio_priv(indio_dev);
-> 
-> Johan
+>  
+> -	if (enable != priv->mode) {
+> -		priv->mode = enable;
+> +	if (mode != priv->mode) {
+> +		priv->mode = mode;
+>  		result = int3400_thermal_run_osc(priv->adev->handle,
+> -						 priv->current_uuid_index,
+> -						 enable);
+> +						priv->current_uuid_index,
+> +						mode == THERMAL_DEVICE_ENABLED);
+>  	}
+>  
+>  	evaluate_odvp(priv);
