@@ -1,38 +1,70 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+From: Guenter Roeck <linux@roeck-us.net>
 Subject: Re: [PATCH v4 02/11] thermal: Store thermal mode in a dedicated enum
-Date: Fri, 29 May 2020 08:30:09 -0700
-Message-ID: <ae02a0b8-4187-d571-0d93-4697b587f351@roeck-us.net>
-References: <20200529150549.GA154196@roeck-us.net>
- <b9aa246f-4534-db23-aea1-07aae2edbdd5@collabora.com>
+Date: Fri, 29 May 2020 08:34:08 -0700
+Message-ID: <6829f088-d816-fa7c-da97-cb5fd082d69d@roeck-us.net>
+References: <4493c0e4-51aa-3907-810c-74949ff27ca4@samsung.com>
+ <20200528192051.28034-1-andrzej.p@collabora.com>
+ <20200528192051.28034-3-andrzej.p@collabora.com>
+ <20200529144821.GA93994@roeck-us.net>
+ <e48e5948-51f0-7ce7-265b-d432ea058b7e@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b9aa246f-4534-db23-aea1-07aae2edbdd5-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <e48e5948-51f0-7ce7-265b-d432ea058b7e@collabora.com>
 Content-Language: en-US
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Emmanuel Grumbach <emmanuel.grumbach-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Vishal Kulkarni <vishal-ut6Up61K2wZBDgjK7y7TUQ@public.gmane.org>, Luca Coelho <luciano.coelho-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Miquel Raynal <miquel.raynal-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Amit Kucheria <amit.kucheria-LY4KaoCqKrnby3iVrkZq2A@public.gmane.org>, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Allison Randal <allison-wcfNWazeolPR7s880joybQ@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Heiko Stuebner <heiko@sntech.de>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Vishal Kulkarni <vishal@chelsio.com>, Luca Coelho <luciano.coelho@intel.com>, Miquel Raynal <miquel.raynal@bootlin.com>, kernel@collabora.com, Fabio Estevam <festevam@gmail.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Allison Randal <allison@lohutok.net>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 5/29/20 8:08 AM, Andrzej Pietrasiewicz wrote:
-> W dniu 29.05.2020 o 17:05, Guenter Roeck pisze:
+On 5/29/20 8:13 AM, Andrzej Pietrasiewicz wrote:
+> Hi Guenter,
+> 
+> W dniu 29.05.2020 o 16:48, Guenter Roeck pisze:
 >> On Thu, May 28, 2020 at 09:20:42PM +0200, Andrzej Pietrasiewicz wrote:
 >>> Prepare for storing mode in struct thermal_zone_device.
 >>>
->>> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>
->> What is the baseline for this series ? I can't get this patch to apply
->> on top of current mainline, nor on v5.6, nor on top of linux-next.
->>
->> Thanks,
->> Guenter
->>
+>>> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+>>> ---
+>>>   drivers/acpi/thermal.c                        | 27 +++++++++----------
+>>>   drivers/platform/x86/acerhdf.c                |  8 ++++--
+>>>   .../intel/int340x_thermal/int3400_thermal.c   | 18 +++++--------
+>>>   3 files changed, 25 insertions(+), 28 deletions(-)
 > 
-> git://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git, branch "testing".
+> <snip>
 > 
-> base-commit: 351f4911a477ae01239c42f771f621d85b06ea10
+>>> @@ -544,27 +543,25 @@ static int thermal_set_mode(struct thermal_zone_device *thermal,
+>>>                   enum thermal_device_mode mode)
+>>>   {
+>>>       struct acpi_thermal *tz = thermal->devdata;
+>>> -    int enable;
+>>>         if (!tz)
+>>>           return -EINVAL;
+>>>   +    if (mode != THERMAL_DEVICE_DISABLED &&
+>>> +        mode != THERMAL_DEVICE_ENABLED)
+>>> +        return -EINVAL;
+>>
+>> Personally I find this check unnecessary: The enum has no other values,
+>> and it is verifyable that the callers provide the enum and not some other
+>> value.
 > 
-Thanks!
+> It is getting removed in PATCH 10/11.
+> 
+> 
+>>> +    if (mode != THERMAL_DEVICE_ENABLED &&
+>>> +        mode != THERMAL_DEVICE_DISABLED)
+>>>           return -EINVAL;
+>>
+>> Same as above.
+> 
+> ditto.
+
+Hmm, I think that would be better done with this patch. But I guess
+that is a bit of PoV, so
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+since I don't have any other objections/observations.
 
 Guenter
