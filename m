@@ -1,63 +1,47 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] platform/x86: Add new intel_atomisp2_led driver
-Date: Sat, 30 May 2020 18:50:09 +0300
-Message-ID: <CAHp75Veq65-xV1k3OODjQamLYJsztHT1fyCSDgm9JMGu7Qha9A@mail.gmail.com>
-References: <20200509130707.219463-1-hdegoede@redhat.com>
+From: Nickolai Kozachenko <daemongloom@gmail.com>
+Subject: [PATCH v2] intel-hid: Expand DMI quirk to support HP Spectre X2 (2015)
+Date: Sat, 30 May 2020 22:07:20 +0500
+Message-ID: <20200530170719.16923-1-daemongloom@gmail.com>
+References: <20200530170648.16845-1-daemongloom@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200509130707.219463-1-hdegoede@redhat.com>
+In-Reply-To: <CAHp75VdV4mAfAz5OZSW3FSzDwkvQiM7djBTH9rrAZYHJUp5jRA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, acpi4asus-user <acpi4asus-user@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Alex Hung <alex.hung@canonical.com>
+Cc: Nickolai Kozachenko <daemongloom@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, May 9, 2020 at 4:07 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Many Bay Trail and Cherry Trail devices come with a camera attached to
-> Intel's Image Signal Processor. Linux currently does not have a driver for
-> these, so they do not work as a camera.
->
-> Some of these camera's have a status LED which is controlled through a GPIO
-> in some cases, e.g. on the Asus T100TA and Asus T200TA, there is a firmware
-> issue where the LED gets turned on at boot.
->
-> This commit adds a Linux LED driver for the camera LED on these devices.
-> This driver will turn the LED off at boot and also allows controlling the
-> LED (so the user can repurpose it) through the sysfs LED interface.
->
-> Which GPIO is attached to the LED is usually not described in the ACPI
-> tables, so this driver contains per-system info about the GPIO inside the
-> driver. This means that this driver only works on systems the driver knows
-> about.
 
-> +static int __init atomisp2_led_init(void)
-> +{
-> +       const struct dmi_system_id *system;
-> +
-> +       system = dmi_first_match(atomisp2_led_systems);
-> +       if (!system)
-> +               return -ENODEV;
-> +
-> +       gpio_lookup = system->driver_data;
-> +       gpiod_add_lookup_table(gpio_lookup);
-> +
-> +       pdev = platform_device_register_resndata(NULL,
-> +                                                DEV_NAME, PLATFORM_DEVID_NONE,
-> +                                                NULL, 0, &atomisp2_leds_pdata,
-> +                                                sizeof(atomisp2_leds_pdata));
-> +       if (IS_ERR(pdev)) {
-> +               gpiod_remove_lookup_table(gpio_lookup);
+HEBC method reports capabilities of 5 button array but HP Spectre X2 (2015)
+does not have this control method (the same was for Wacom MobileStudio
+Pro). Expand previous DMI quirk by Alex Hung to also enable 5 button array
+for this system.
 
-> +               return PTR_ERR(pdev);
-> +       }
-> +
-> +       return 0;
+Signed-off-by: Nickolai Kozachenko <daemongloom@gmail.com>
+---
+Formatted patch with git
 
-return PTR_ERR_OR_ZERO(...);
+ drivers/platform/x86/intel-hid.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> +}
-
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index cc7dd4d87cce..9ee79b74311c 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -79,6 +79,13 @@ static const struct dmi_system_id button_array_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Wacom MobileStudio Pro 16"),
+ 		},
+ 	},
++	{
++		.ident = "HP Spectre x2 (2015)",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP Spectre x2 Detachable"),
++		},
++	},
+ 	{ }
+ };
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
