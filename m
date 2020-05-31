@@ -1,47 +1,42 @@
-From: Nickolai Kozachenko <daemongloom@gmail.com>
-Subject: [PATCH v2] intel-hid: Expand DMI quirk to support HP Spectre X2 (2015)
-Date: Sat, 30 May 2020 22:07:20 +0500
-Message-ID: <20200530170719.16923-1-daemongloom@gmail.com>
-References: <20200530170648.16845-1-daemongloom@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] platform/x86: touchscreen_dmi: Update Trekstor Twin 10.1 entry
+Date: Sun, 31 May 2020 17:05:24 +0200
+Message-ID: <20200531150524.89576-1-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdV4mAfAz5OZSW3FSzDwkvQiM7djBTH9rrAZYHJUp5jRA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Hung <alex.hung@canonical.com>
-Cc: Nickolai Kozachenko <daemongloom@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
+Add minimum values for the x and y axis, correct the max value for the
+x-axis and add support for the capacitive home-button these tablets have.
 
-HEBC method reports capabilities of 5 button array but HP Spectre X2 (2015)
-does not have this control method (the same was for Wacom MobileStudio
-Pro). Expand previous DMI quirk by Alex Hung to also enable 5 button array
-for this system.
-
-Signed-off-by: Nickolai Kozachenko <daemongloom@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Formatted patch with git
+ drivers/platform/x86/touchscreen_dmi.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
- drivers/platform/x86/intel-hid.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index cc7dd4d87cce..9ee79b74311c 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -79,6 +79,13 @@ static const struct dmi_system_id button_array_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Wacom MobileStudio Pro 16"),
- 		},
- 	},
-+	{
-+		.ident = "HP Spectre x2 (2015)",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HP Spectre x2 Detachable"),
-+		},
-+	},
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 931814e62454..48ffe90ec3ce 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -679,11 +679,14 @@ static const struct ts_dmi_data trekstor_primetab_t13b_data = {
+ };
+ 
+ static const struct property_entry trekstor_surftab_twin_10_1_props[] = {
+-	PROPERTY_ENTRY_U32("touchscreen-size-x", 1900),
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 20),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 0),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1890),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1280),
+ 	PROPERTY_ENTRY_U32("touchscreen-inverted-y", 1),
+ 	PROPERTY_ENTRY_STRING("firmware-name", "gsl3670-surftab-twin-10-1-st10432-8.fw"),
+ 	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
  	{ }
  };
  
 -- 
-2.25.1
+2.26.2
