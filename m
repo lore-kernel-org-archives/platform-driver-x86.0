@@ -1,73 +1,42 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v1 2/8] platform/mellanox: mlxreg-hotplug: Add environmental data to uevent
-Date: Mon,  1 Jun 2020 12:18:45 +0300
-Message-ID: <20200601091851.5491-3-vadimp@mellanox.com>
-References: <20200601091851.5491-1-vadimp@mellanox.com>
+Subject: [PATCH platform-next v1 0/8] platform/x86: Add new features for Mellanox systems
+Date: Mon,  1 Jun 2020 12:18:43 +0300
+Message-ID: <20200601091851.5491-1-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200601091851.5491-1-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: andy@infradead.org, dvhart@infradead.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Send "udev" event with environmental data in order to allow handling
-"ENV{}" variables in "udev" rules.
+The patchset adds new features for the existing Mellanox systems.
 
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
----
- drivers/platform/mellanox/mlxreg-hotplug.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+Patch #1 allows to configure number of hotplug 'sysfs' attributes for
+		 the particular system class according to the hardware data for
+		 the specific system from this class, instead of configuring it
+		 up-to maximum number in the class.
+Patch #2 adds environmental data to hotplug uevent.
+Patches #3-#4 adds more definitions for system attributes.
+Patch #5 extends 'mlxreg-io' driver with complex attributes support.
+Patches #6 extends documentation with new attributes.
+Patches #7-#8 extends FAN platform data with register presence field.
 
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index 832fcf282d45..5420d5bb0e6c 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -97,13 +97,36 @@ struct mlxreg_hotplug_priv_data {
- 	u8 not_asserted;
- };
- 
-+/* Environment variables array for udev. */
-+static char *mlxreg_hotplug_udev_envp[] = { NULL, NULL };
-+
-+static int
-+mlxreg_hotplug_udev_event_send(struct kobject *kobj,
-+			       struct mlxreg_core_data *data, bool action)
-+{
-+	char event_str[MLXREG_CORE_LABEL_MAX_SIZE + 2];
-+	char label[MLXREG_CORE_LABEL_MAX_SIZE] = { 0 };
-+	int i;
-+
-+	mlxreg_hotplug_udev_envp[0] = event_str;
-+	for (i = 0; data->label[i]; i++)
-+		label[i] = toupper(data->label[i]);
-+
-+	if (action)
-+		snprintf(event_str, MLXREG_CORE_LABEL_MAX_SIZE, "%s=1", label);
-+	else
-+		snprintf(event_str, MLXREG_CORE_LABEL_MAX_SIZE, "%s=0", label);
-+
-+	return kobject_uevent_env(kobj, KOBJ_CHANGE, mlxreg_hotplug_udev_envp);
-+}
-+
- static int mlxreg_hotplug_device_create(struct mlxreg_hotplug_priv_data *priv,
- 					struct mlxreg_core_data *data)
- {
- 	struct mlxreg_core_hotplug_platform_data *pdata;
- 
- 	/* Notify user by sending hwmon uevent. */
--	kobject_uevent(&priv->hwmon->kobj, KOBJ_CHANGE);
-+	mlxreg_hotplug_udev_event_send(&priv->hwmon->kobj, data, true);
- 
- 	/*
- 	 * Return if adapter number is negative. It could be in case hotplug
-@@ -141,7 +164,7 @@ mlxreg_hotplug_device_destroy(struct mlxreg_hotplug_priv_data *priv,
- 			      struct mlxreg_core_data *data)
- {
- 	/* Notify user by sending hwmon uevent. */
--	kobject_uevent(&priv->hwmon->kobj, KOBJ_CHANGE);
-+	mlxreg_hotplug_udev_event_send(&priv->hwmon->kobj, data, false);
- 
- 	if (data->hpdev.client) {
- 		i2c_unregister_device(data->hpdev.client);
+Vadim Pasternak (8):
+  platform/mellanox: mlxreg-hotplug: Use capability register for
+    attribute creation
+  platform/mellanox: mlxreg-hotplug: Add environmental data to uevent
+  platform_data/mlxreg: Add support for complex attributes
+  platform/x86: mlx-platform: Add more definitions for system attributes
+  platform/mellanox: mlxreg-io: Add support for complex attributes
+  Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
+  platform_data/mlxreg: Add presence register field for FAN devices
+  platform/x86: mlx-platform: Extend FAN platform data description
+
+ Documentation/ABI/stable/sysfs-driver-mlxreg-io |  17 +++
+ drivers/platform/mellanox/mlxreg-hotplug.c      |  81 ++++++++++----
+ drivers/platform/mellanox/mlxreg-io.c           |  47 ++++++--
+ drivers/platform/x86/mlx-platform.c             | 141 ++++++++++++++++++++++++
+ include/linux/platform_data/mlxreg.h            |   4 +
+ 5 files changed, 258 insertions(+), 32 deletions(-)
+
 -- 
 2.11.0
