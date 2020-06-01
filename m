@@ -1,7 +1,7 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v1 7/8] platform_data/mlxreg: Add presence register field for FAN devices
-Date: Mon,  1 Jun 2020 12:18:50 +0300
-Message-ID: <20200601091851.5491-8-vadimp@mellanox.com>
+Subject: [PATCH platform-next v1 8/8] platform/x86: mlx-platform: Extend FAN platform data description
+Date: Mon,  1 Jun 2020 12:18:51 +0300
+Message-ID: <20200601091851.5491-9-vadimp@mellanox.com>
 References: <20200601091851.5491-1-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200601091851.5491-1-vadimp@mellanox.com>
@@ -10,35 +10,115 @@ To: andy@infradead.org, dvhart@infradead.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add new field 'reg_prsnt' to the structure 'mlxreg_core_data' to
-provide the number FAN drawers equpped within the system. The purpose
-is to allow mapping between FAN drawers and FAN rotors (tachometer),
-since FAN drawer can be eqipped with a few rotors.
+Extend FAN platform data with register presence field.
+Add register present entry per rotor (tachometer) description tuple.
+The purpose is to allow indication of FAN presence.
 
 Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 ---
- include/linux/platform_data/mlxreg.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/mlx-platform.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
-index a2adc3ad45f2..9cffa9a64ab3 100644
---- a/include/linux/platform_data/mlxreg.h
-+++ b/include/linux/platform_data/mlxreg.h
-@@ -75,6 +75,7 @@ struct mlxreg_hotplug_device {
-  * @mask: attribute access mask;
-  * @bit: attribute effective bit;
-  * @capability: attribute capability register;
-+ * @reg_prsnt: attribute presence register;
-  * @mode: access mode;
-  * @np - pointer to node platform associated with attribute;
-  * @hpdev - hotplug device data;
-@@ -88,6 +89,7 @@ struct mlxreg_core_data {
- 	u32 mask;
- 	u32 bit;
- 	u32 capability;
-+	u32 reg_prsnt;
- 	umode_t	mode;
- 	struct device_node *np;
- 	struct mlxreg_hotplug_device hpdev;
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 034736cec9a6..90bc7969b199 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -1840,6 +1840,8 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_data[] = {
+ 		.mask = GENMASK(7, 0),
+ 		.capability = MLXPLAT_CPLD_LPC_REG_FAN_CAP1_OFFSET,
+ 		.bit = BIT(0),
++		.reg_prsnt = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
++
+ 	},
+ 	{
+ 		.label = "tacho2",
+@@ -1847,6 +1849,7 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_data[] = {
+ 		.mask = GENMASK(7, 0),
+ 		.capability = MLXPLAT_CPLD_LPC_REG_FAN_CAP1_OFFSET,
+ 		.bit = BIT(1),
++		.reg_prsnt = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
+ 	},
+ 	{
+ 		.label = "tacho3",
+@@ -1854,6 +1857,7 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_data[] = {
+ 		.mask = GENMASK(7, 0),
+ 		.capability = MLXPLAT_CPLD_LPC_REG_FAN_CAP1_OFFSET,
+ 		.bit = BIT(2),
++		.reg_prsnt = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
+ 	},
+ 	{
+ 		.label = "tacho4",
+@@ -1861,6 +1865,7 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_data[] = {
+ 		.mask = GENMASK(7, 0),
+ 		.capability = MLXPLAT_CPLD_LPC_REG_FAN_CAP1_OFFSET,
+ 		.bit = BIT(3),
++		.reg_prsnt = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
+ 	},
+ 	{
+ 		.label = "tacho5",
+@@ -1868,6 +1873,7 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_data[] = {
+ 		.mask = GENMASK(7, 0),
+ 		.capability = MLXPLAT_CPLD_LPC_REG_FAN_CAP1_OFFSET,
+ 		.bit = BIT(4),
++		.reg_prsnt = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
+ 	},
+ 	{
+ 		.label = "tacho6",
+@@ -1875,6 +1881,7 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_data[] = {
+ 		.mask = GENMASK(7, 0),
+ 		.capability = MLXPLAT_CPLD_LPC_REG_FAN_CAP1_OFFSET,
+ 		.bit = BIT(5),
++		.reg_prsnt = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
+ 	},
+ 	{
+ 		.label = "tacho7",
+@@ -1882,6 +1889,7 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_data[] = {
+ 		.mask = GENMASK(7, 0),
+ 		.capability = MLXPLAT_CPLD_LPC_REG_FAN_CAP1_OFFSET,
+ 		.bit = BIT(6),
++		.reg_prsnt = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
+ 	},
+ 	{
+ 		.label = "tacho8",
+@@ -1889,6 +1897,7 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_data[] = {
+ 		.mask = GENMASK(7, 0),
+ 		.capability = MLXPLAT_CPLD_LPC_REG_FAN_CAP1_OFFSET,
+ 		.bit = BIT(7),
++		.reg_prsnt = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
+ 	},
+ 	{
+ 		.label = "tacho9",
+@@ -1896,6 +1905,7 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_data[] = {
+ 		.mask = GENMASK(7, 0),
+ 		.capability = MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET,
+ 		.bit = BIT(0),
++		.reg_prsnt = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
+ 	},
+ 	{
+ 		.label = "tacho10",
+@@ -1903,6 +1913,7 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_data[] = {
+ 		.mask = GENMASK(7, 0),
+ 		.capability = MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET,
+ 		.bit = BIT(1),
++		.reg_prsnt = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
+ 	},
+ 	{
+ 		.label = "tacho11",
+@@ -1910,6 +1921,7 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_data[] = {
+ 		.mask = GENMASK(7, 0),
+ 		.capability = MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET,
+ 		.bit = BIT(2),
++		.reg_prsnt = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
+ 	},
+ 	{
+ 		.label = "tacho12",
+@@ -1917,6 +1929,7 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_fan_data[] = {
+ 		.mask = GENMASK(7, 0),
+ 		.capability = MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET,
+ 		.bit = BIT(3),
++		.reg_prsnt = MLXPLAT_CPLD_LPC_REG_FAN_OFFSET,
+ 	},
+ 	{
+ 		.label = "conf",
 -- 
 2.11.0
