@@ -1,32 +1,52 @@
-From: "=?utf-8?B?UGV0ZXIgS8Okc3RsZQ==?=" <peter@piie.net>
-Subject: Re: [PATCH v4 11/11] thermal: Rename set_mode() to change_mode()
-Date: Mon, 01 Jun 2020 11:38:44 +0000
-Message-ID: <49000a709ad0fd5c86005d43f776a8f4@piie.net>
-References: <20200528192051.28034-12-andrzej.p@collabora.com> <Message-ID:
- <4493c0e4-51aa-3907-810c-74949ff27ca4@samsung.com>
- <20200528192051.28034-1-andrzej.p@collabora.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 06/11] thermal: Add mode helpers
+Date: Mon, 1 Jun 2020 06:40:11 -0700
+Message-ID: <c5780899-c471-4ce3-7581-5ab39a3cf219@roeck-us.net>
+References: <20200529155206.GA158553@roeck-us.net>
+ <526286da-70d2-7c55-3c41-15fd2c969a39@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20200528192051.28034-12-andrzej.p@collabora.com>
+In-Reply-To: <526286da-70d2-7c55-3c41-15fd2c969a39@collabora.com>
+Content-Language: en-US
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Luca Coelho <luciano.coelho@intel.com>, Intel Linux Wireless <linuxwifi@intel.com>, Kalle Valo <kvalo@codeaurora.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Sebastian Reichel <sre@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Support Opensource <support.opensource@diasemi.com>
+To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Heiko Stuebner <heiko@sntech.de>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Vishal Kulkarni <vishal@chelsio.com>, Luca Coelho <luciano.coelho@intel.com>, Miquel Raynal <miquel.raynal@bootlin.com>, kernel@collabora.com, Fabio Estevam <festevam@gmail.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Allison Randal <allison@lohutok.net>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-28. Mai 2020 21:22, "Andrzej Pietrasiewicz" <andrzej.p@collabora.com> schrieb:
-
-> set_mode() is only called when tzd's mode is about to change. Actual
-> setting is performed in thermal_core, in thermal_zone_device_set_mode().
-> The meaning of set_mode() callback is actually to notify the driver about
-> the mode being changed and giving the driver a chance to oppose such
-> change.
+On 6/1/20 4:16 AM, Andrzej Pietrasiewicz wrote:
+> Hi Guenter,
 > 
-> To better reflect the purpose of the method rename it to change_mode()
+> W dniu 29.05.2020 o 17:52, Guenter Roeck pisze:
+>> On Thu, May 28, 2020 at 09:20:46PM +0200, Andrzej Pietrasiewicz wrote:
+>>> Prepare for making the drivers not access tzd's private members.
+>>>
+>>> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 > 
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> ---
-> drivers/platform/x86/acerhdf.c | 6 +++---
+> <snip>
+> 
+>>> +
+>> Nit: unnecessary empty line.
+>>
+>>> +        return ret;
+> 
+> <snip>
+> 
+>>> +    return thermal_zone_device_set_mode(tz, THERMAL_DEVICE_ENABLED);
+>>> +}
+>>> +EXPORT_SYMBOL(thermal_zone_device_enable);
+>>
+>> Other exports in thermal/ use EXPORT_SYMBOL_GPL.
+> 
+> Other than that does it look good to you?
 
-Acked-by: Peter Kaestle <peter@piie.net>
+Yes, it does.
+
+> I can send a v5 where the two above will be corrected, but did you have
+> a chance to review patches 7-11?
+> 
+Not yet. I got distracted, sorry. Hopefully I'll get to it
+today or tomorrow.
+
+Guenter
