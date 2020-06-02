@@ -1,52 +1,70 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 06/11] thermal: Add mode helpers
-Date: Mon, 1 Jun 2020 06:40:11 -0700
-Message-ID: <c5780899-c471-4ce3-7581-5ab39a3cf219@roeck-us.net>
-References: <20200529155206.GA158553@roeck-us.net>
- <526286da-70d2-7c55-3c41-15fd2c969a39@collabora.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: RFC: Writing a small superio kernel driver to allow superio probing
+ on locked down systems?
+Date: Tue, 2 Jun 2020 13:13:27 +0200
+Message-ID: <0d7e97e0-fe78-163a-cdaf-825b9d0b50ee@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <526286da-70d2-7c55-3c41-15fd2c969a39@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Heiko Stuebner <heiko@sntech.de>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Vishal Kulkarni <vishal@chelsio.com>, Luca Coelho <luciano.coelho@intel.com>, Miquel Raynal <miquel.raynal@bootlin.com>, kernel@collabora.com, Fabio Estevam <festevam@gmail.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Allison Randal <allison@lohutok.net>, NXP Linux Team <linux-imx@nxp.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 6/1/20 4:16 AM, Andrzej Pietrasiewicz wrote:
-> Hi Guenter,
-> 
-> W dniu 29.05.2020 o 17:52, Guenter Roeck pisze:
->> On Thu, May 28, 2020 at 09:20:46PM +0200, Andrzej Pietrasiewicz wrote:
->>> Prepare for making the drivers not access tzd's private members.
->>>
->>> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> 
-> <snip>
-> 
->>> +
->> Nit: unnecessary empty line.
->>
->>> +        return ret;
-> 
-> <snip>
-> 
->>> +    return thermal_zone_device_set_mode(tz, THERMAL_DEVICE_ENABLED);
->>> +}
->>> +EXPORT_SYMBOL(thermal_zone_device_enable);
->>
->> Other exports in thermal/ use EXPORT_SYMBOL_GPL.
-> 
-> Other than that does it look good to you?
+Hi All,
 
-Yes, it does.
+Yesterday Fedora received this bug report:
 
-> I can send a v5 where the two above will be corrected, but did you have
-> a chance to review patches 7-11?
-> 
-Not yet. I got distracted, sorry. Hopefully I'll get to it
-today or tomorrow.
+https://bugzilla.redhat.com/show_bug.cgi?id=1842611
 
-Guenter
+The problem reported here is that sensors-detect is denied
+/dev/ports access when run on systems booted with secure-boot
+enabled (and thus kernel-lockdown mode activated).
+
+I've been thinking a bit about this issue and I was thinking
+that maybe we could do a very small kernel driver to help
+sensors-detect here (and which might also be useful for
+other diagnostic purposes) ?
+
+The idea would be to take the superio probe code from
+sensors-detect and put it in a kernel module under
+drivers/platform/x86.
+
+This module will never autoload (sensors-detect will
+need to modprobe it); and this module will offer a couple
+of sysfs attributes, all of which will only be readable
+by root (to avoid a regular user being able to trigger
+the probe if the module does somehow end up being loaded
+through some other mechanism).
+
+When the first sysfs attr is read then the module will
+do the probe and export the results through sysfs
+attr. With the results being the super-io base address
+(0x2e or 0x4e IIRC) and the device-id of the super-io
+chip; and maybe some other info.
+
+The above proposal is a bit fuzy wrt what info will be
+exported through sysfs attributes because I've not looked
+at super-io probing for ages, details to be filled in later.
+
+The main purpose of this email is to test the waters
+for the concept of such a module, so some questions:
+
+1. Do you (hwmon and platform/x86 maintainers) think
+that the proposed security comprise is ok?
+
+IOW is it ok to allow root to trigger a super-io probe,
+which involves poking some io-ports. Note this will
+only allow root to cause the kernel to do the probe,
+the probe itself and thus the exact io-port reads / writes
+are fully under the kernel's control.
+
+2. Do you think that the concept of having a little
+helper module for this, with a simple sysfs interface
+is ok?
+
+Regards,
+
+Hans
