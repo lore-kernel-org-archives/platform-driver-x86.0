@@ -1,167 +1,190 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCHv2 0/7] Support inhibiting input devices
-Date: Tue, 2 Jun 2020 22:19:29 +0200
-Message-ID: <8f97d2e1-497a-495d-bc82-f46dbeba440c@redhat.com>
-References: <20200515164943.28480-1-andrzej.p@collabora.com>
- <842b95bb-8391-5806-fe65-be64b02de122@redhat.com>
- <e6030957-97dc-5b04-7855-bc14a78164c8@collabora.com>
- <6d9921fc-5c2f-beda-4dcd-66d6970a22fe@redhat.com>
- <09679de4-75d3-1f29-ec5f-8d42c84273dd@collabora.com>
- <f674ba4f-bd83-0877-c730-5dc6ea09ae4b@redhat.com>
- <2d224833-3a7e-bc7c-af15-1f803f466697@collabora.com>
- <aa2ce2ab-e5bc-9cb4-8b53-c1ef9348b646@redhat.com>
- <20200527063430.GJ89269@dtor-ws>
- <88f939cd-1518-d516-59f2-8f627a6a70d2@collabora.com>
- <20200602175241.GO89269@dtor-ws>
- <82e9f2ab-a16e-51ee-1413-bedf0122026a@collabora.com>
+From: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2] platform/x86: thinkpad_acpi: lap or
+ desk mode interface
+Date: Tue, 2 Jun 2020 18:56:15 -0400
+Message-ID: <20200602225615.8336-1-markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <82e9f2ab-a16e-51ee-1413-bedf0122026a@collabora.com>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-acpi@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org
+Cc: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+  Newer Lenovo Thinkpad platforms have support to identify whether the
+  system is on-lap or not using an ACPI DYTC event from the firmware.
 
-On 6/2/20 8:50 PM, Andrzej Pietrasiewicz wrote:
-> Hi Dmitry,
-> 
-> W dniu 02.06.2020 o 19:52, Dmitry Torokhov pisze:
->> Hi Andrzej,
->>
->> On Tue, Jun 02, 2020 at 06:56:40PM +0200, Andrzej Pietrasiewicz wrote:
->>> Hi Dmitry,
->>>
->>> W dniu 27.05.2020 o 08:34, Dmitry Torokhov pisze:
->>>> That said, I think the way we should handle inhibit/uninhibit, is that
->>>> if we have the callback defined, then we call it, and only call open and
->>>> close if uninhibit or inhibit are _not_ defined.
->>>>
->>>
->>> If I understand you correctly you suggest to call either inhibit,
->>> if provided or close, if inhibit is not provided, but not both,
->>> that is, if both are provided then on the inhibit path only
->>> inhibit is called. And, consequently, you suggest to call either
->>> uninhibit or open, but not both. The rest of my mail makes this
->>> assumption, so kindly confirm if I understand you correctly.
->>
->> Yes, that is correct. If a driver wants really fine-grained control, it
->> will provide inhibit (or both inhibit and close), otherwise it will rely
->> on close in place of inhibit.
->>
->>>
->>> In my opinion this idea will not work.
->>>
->>> The first question is should we be able to inhibit a device
->>> which is not opened? In my opinion we should, in order to be
->>> able to inhibit a device in anticipation without needing to
->>> open it first.
->>
->> I agree.
->>
->>>
->>> Then what does opening (with input_open_device()) an inhibited
->>> device mean? Should it succeed or should it fail?
->>
->> It should succeed.
->>
->>> If it is not
->>> the first opening then effectively it boils down to increasing
->>> device's and handle's counters, so we can allow it to succeed.
->>> If, however, the device is being opened for the first time,
->>> the ->open() method wants to be called, but that somehow
->>> contradicts the device's inhibited state. So a logical thing
->>> to do is to either fail input_open_device() or postpone ->open()
->>> invocation to the moment of uninhibiting - and the latter is
->>> what the patches in this series currently do.
->>>
->>> Failing input_open_device() because of the inhibited state is
->>> not the right thing to do. Let me explain. Suppose that a device
->>> is already inhibited and then a new matching handler appears
->>> in the system. Most handlers (apm-power.c, evbug.c, input-leds.c,
->>> mac_hid.c, sysrq.c, vt/keyboard.c and rfkill/input.c) don't create
->>> any character devices (only evdev.c, joydev.c and mousedev.c do),
->>> so for them it makes no sense to delay calling input_open_device()
->>> and it is called in handler's ->connect(). If input_open_device()
->>> now fails, we have lost the only chance for this ->connect() to
->>> succeed.
->>>
->>> Summarizing, IMO the uninhibit path should be calling both
->>> ->open() and ->uninhibit() (if provided), and conversely, the inhibit
->>> path should be calling both ->inhibit() and ->close() (if provided).
->>
->> So what you are trying to say is that you see inhibit as something that
->> is done in addition to what happens in close. But what exactly do you
->> want to do in inhibit, in addition to what close is doing?
-> 
-> See below (*).
-> 
->>
->> In my view, if we want to have a dedicated inhibit callback, then it
->> will do everything that close does, they both are aware of each other
->> and can sort out the state transitions between them. For drivers that do
->> not have dedicated inhibit/uninhibit, we can use open and close
->> handlers, and have input core sort out when each should be called. That
->> means that we should not call dev->open() in input_open_device() when
->> device is inhibited (and same for dev->close() in input_close_device).
->> And when uninhibiting, we should not call dev->open() when there are no
->> users for the device, and no dev->close() when inhibiting with no users.
->>
->> Do you see any problems with this approach?
-> 
-> My concern is that if e.g. both ->open() and ->uninhibit() are provided,
-> then in certain circumstances ->open() won't be called:
-> 
-> 1. users == 0
-> 2. inhibit happens
-> 3. input_open_device() happens, ->open() not called
-> 4. uninhibit happens
-> 5. as part of uninhibit ->uninhibit() is only called, but ->open() is not.
-> 
-> They way I understand your answer is that we implicitly impose requirements
-> on drivers which choose to implement e.g. both ->open() and ->uninhibit():
-> in such a case ->uninhibit() should be doing exactly the same things as
-> ->open() does. Which leads to a conclusion that in practice no drivers
-> should choose to implement both, otherwise they must be aware that
-> ->uninhibit() can be sometimes called instead of ->open(). Then ->open()
-> becomes synonymous with ->uninhibit(), and ->close() with ->inhibit().
-> Or, maybe, then ->inhibit() can be a superset of ->close() and
-> ->uninhibit() a superset of ->open().
-> 
-> If such an approach is ok with you, it is ok with me, too.
-> 
-> (*)
-> Calling both ->inhibit() and ->close() (if they are provided) allows
-> drivers to go fancy and fail inhibiting (which is impossible using
-> only ->close() as it does not return a value, but ->inhibit() by design
-> does). Then ->uninhibit() is mostly for symmetry.
+  This patch provides the ability to retrieve the current mode via sysfs
+  entrypoints and will be used by userspace for thermal mode and WWAN
+  functionality
 
-All the complications discussed above are exactly why I still
-believe that there should be only open and close.
+Co-developed-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+- cleaned up initialisation sequence to be cleaner and avoid spamming
+  platforms that don't have DYTC with warning message. Tested on P52
+- Adding platform-driver-x86 mailing list for review as requested
 
-If error propagation on inhibit is considered as something
-really important to have then we can make the input driver close
-callback return an error (*), note I'm talking about the
-driver close callback here, not the system call.
+ drivers/platform/x86/thinkpad_acpi.c | 113 +++++++++++++++++++++++++++
+ 1 file changed, 113 insertions(+)
 
-If the close callback is called for actually closing the fd
-referring to the input node, then the new error return code
-can be ignored, as we already do for errors on close atm
-since the driver close callback returns void.
-
-I still have not seen a very convincing argument for having
-separate inhibit and close callbacks and as the messy discussion
-above shows, having 2 such very similar yet subtly different
-calls seems like a bad idea...
-
-Regards,
-
-Hans
-
-
-*) This will require a flag day where "return 0" is added
-to all current close handlers
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 0f704484ae1d..8f51bbba21cd 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -4049,6 +4049,7 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+ 		pr_debug("EC reports: Thermal Control Command set completed (DYTC)\n");
+ 		/* recommended action: do nothing, we don't have
+ 		 * Lenovo ATM information */
++		tpacpi_driver_event(hkey);
+ 		return true;
+ 	case TP_HKEY_EV_THM_TRANSFM_CHANGED:
+ 		pr_debug("EC reports: Thermal Transformation changed (GMTS)\n");
+@@ -9811,6 +9812,110 @@ static struct ibm_struct lcdshadow_driver_data = {
+ 	.write = lcdshadow_write,
+ };
+ 
++/*************************************************************************
++ * DYTC subdriver, for the Lenovo performace mode feature
++ */
++
++#define DYTC_CMD_GET      2 /*To get current IC function and mode*/
++
++#define DYTC_GET_ENABLE_MASK  0x1 /*0 = disabled, 1 = enabled*/
++#define DYTC_GET_LAPMODE_SHIFT 17
++
++static int  dytc_lapmode;
++static void dytc_lapmode_notify_change(void)
++{
++	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
++			"dytc_lapmode");
++}
++
++static int dytc_command(int command)
++{
++	acpi_handle dytc_handle;
++	int output;
++
++	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DYTC", &dytc_handle))) {
++		/*Platform doesn't support DYTC*/
++		return -ENODEV;
++	}
++	if (!acpi_evalf(dytc_handle, &output, NULL, "dd", command))
++		return -EIO;
++	return output;
++}
++
++static int dytc_lapmode_get(void)
++{
++	int output;
++
++	output = dytc_command(DYTC_CMD_GET);
++	if ((output == -ENODEV) || (output == -EIO))
++		return output;
++
++	return ((output >> DYTC_GET_LAPMODE_SHIFT) &
++				DYTC_GET_ENABLE_MASK);
++}
++
++static void dytc_lapmode_refresh(void)
++{
++	int new_state;
++
++	new_state = dytc_lapmode_get();
++	if ((new_state == -ENODEV) || (new_state == -EIO))
++		return;
++
++	if (dytc_lapmode != new_state) {
++		dytc_lapmode = new_state;
++		dytc_lapmode_notify_change();
++	}
++}
++
++/* sysfs lapmode entry */
++static ssize_t dytc_lapmode_show(struct device *dev,
++					struct device_attribute *attr,
++					char *buf)
++{
++	if (dytc_lapmode < 0)
++		return dytc_lapmode;
++
++	return snprintf(buf, PAGE_SIZE, "%d\n", dytc_lapmode);
++}
++
++static DEVICE_ATTR_RO(dytc_lapmode);
++
++static struct attribute *dytc_attributes[] = {
++	&dev_attr_dytc_lapmode.attr,
++	NULL
++};
++
++static const struct attribute_group dytc_attr_group = {
++	.attrs = dytc_attributes,
++};
++
++static int tpacpi_dytc_init(struct ibm_init_struct *iibm)
++{
++	int res;
++
++	dytc_lapmode = dytc_lapmode_get();
++
++	if (dytc_lapmode < 0 && dytc_lapmode != -ENODEV)
++		return dytc_lapmode;
++
++	res = sysfs_create_group(&tpacpi_pdev->dev.kobj,
++				&dytc_attr_group);
++
++	return res;
++}
++
++static void dytc_exit(void)
++{
++	sysfs_remove_group(&tpacpi_pdev->dev.kobj,
++			&dytc_attr_group);
++}
++
++static struct ibm_struct dytc_driver_data = {
++	.name = "dytc",
++	.exit = dytc_exit
++};
++
+ /****************************************************************************
+  ****************************************************************************
+  *
+@@ -9858,6 +9963,10 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
+ 
+ 		mutex_unlock(&kbdlight_mutex);
+ 	}
++
++	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED)
++		dytc_lapmode_refresh();
++
+ }
+ 
+ static void hotkey_driver_event(const unsigned int scancode)
+@@ -10296,6 +10405,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+ 		.init = tpacpi_lcdshadow_init,
+ 		.data = &lcdshadow_driver_data,
+ 	},
++	{
++		.init = tpacpi_dytc_init,
++		.data = &dytc_driver_data,
++	},
+ };
+ 
+ static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
+-- 
+2.26.2
