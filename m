@@ -1,70 +1,49 @@
-From: =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
-Subject: Re: [PATCH v3 5/7] iio: adc: exynos: Use input_device_enabled()
-Date: Fri, 5 Jun 2020 21:49:48 +0200
-Message-ID: <20200605194948.GC9553@qmqm.qmqm.pl>
-References: <20200604072853.GP89269@dtor-ws>
- <20200605173335.13753-1-andrzej.p@collabora.com>
- <20200605173335.13753-6-andrzej.p@collabora.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+Date: Sat, 6 Jun 2020 11:04:35 -0700
+Message-ID: <20200606180435.GQ89269@dtor-ws>
+References: <20200413134611.478441-1-enric.balletbo@collabora.com>
+ <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
+ <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com>
+ <10490419.gsntqH5CaE@kreacher>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200605173335.13753-6-andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <10490419.gsntqH5CaE@kreacher>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Len Brown <lenb@kernel.org>, Collabora Kernel ML <kernel@collabora.com>, Guenter Roeck <groeck@chromium.org>, Benson Leung <bleung@chromium.org>, Dmitry Torokhov <dtor@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org, Andy Shevchenko <andy@infradead.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>, Darren Hart <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Jeremy
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 05, 2020 at 07:33:33PM +0200, Andrzej Pietrasiewicz wrote:
-> A new helper is available, so use it. Inspecting 'users' member of
-> input_dev requires taking device's mutex.
+Hi Rafael,
+
+On Fri, Jun 05, 2020 at 01:17:15PM +0200, Rafael J. Wysocki wrote:
 > 
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  drivers/iio/adc/exynos_adc.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
+> First off, GGL0001 is not a valid ACPI device ID, because the GGL prefix is not
+> present in the list at https://uefi.org/acpi_id_list
 > 
-> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-> index 22131a677445..294715bafe25 100644
-> --- a/drivers/iio/adc/exynos_adc.c
-> +++ b/drivers/iio/adc/exynos_adc.c
-> @@ -630,10 +630,13 @@ static irqreturn_t exynos_ts_isr(int irq, void *dev_id)
->  	struct exynos_adc *info = dev_id;
->  	struct iio_dev *dev = dev_get_drvdata(info->dev);
->  	u32 x, y;
-> -	bool pressed;
-> +	bool pressed, cont;
->  	int ret;
->  
-> -	while (info->input->users) {
-> +	mutex_lock(&info->input->mutex);
-> +	cont = input_device_enabled(info->input);
-> +	mutex_unlock(&info->input->mutex);
-> +	while (cont) {
->  		ret = exynos_read_s3c64xx_ts(dev, &x, &y);
->  		if (ret == -ETIMEDOUT)
->  			break;
-> @@ -651,6 +654,10 @@ static irqreturn_t exynos_ts_isr(int irq, void *dev_id)
->  		input_sync(info->input);
->  
->  		usleep_range(1000, 1100);
-> +
-> +		mutex_lock(&info->input->mutex);
-> +		cont = input_device_enabled(info->input);
-> +		mutex_unlock(&info->input->mutex);
->  	}
+> There are two ways to address that.  One would be to take the GOOG prefix
+> (present in the list above), append a proper unique number (if I were to
+> guess, I would say that 0001 had been reserved already) to it and then
+> put the resulting device ID into the firmware, to be returned _HID for the
+> device in question (you can add a _CID returning "GGL0001" so it can be
+> found by the old invalid ID at least from the kernel).
 
-The mutex doesn't really protect anything here, but I would nevertheless
-suggest this sequence instead:
+This is not going to happen, as there are devices in the wild with such
+firmware (i.e. Samus - Google Pixel 2 - was shipped in 2015). Even if
+Google were to release updated firmware (which is quite unlikely), it
+does not mean that users who are not using Chrome OS would apply updated
+firmware.
 
-lock()
-while (test) {
-	unlock()
-	...
-	lock()
-}
-unlock()
+> The other one would
+> be to properly register the GGL prefix for Google and establish a process for
+> allocating IDs with that prefix internally.
 
-Best Regards,
-Micha³ Miros³aw
+I think it depends on whether there are more instances of "GGL" prefix.
+I thought we mostly used GOOG for everything.
+
+Thanks.
+
+-- 
+Dmitry
