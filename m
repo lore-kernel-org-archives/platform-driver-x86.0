@@ -1,75 +1,49 @@
-From: Y Paritcher <y.linux@paritcher.com>
-Subject: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to bios_to_linux_keycode
-Date: Mon,  8 Jun 2020 19:05:30 -0400
-Message-ID: <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
-References: <cover.1591584631.git.y.linux@paritcher.com> <cover.1591656154.git.y.linux@paritcher.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 042/274] tools/power/x86/intel-speed-select: Fix CLX-N package information output
+Date: Mon,  8 Jun 2020 19:02:15 -0400
+Message-ID: <20200608230607.3361041-42-sashal@kernel.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1591656154.git.y.linux@paritcher.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>, Mario.Limonciello@dell.com
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, andriy.shevchenko@linux.intel.com, platform-driver-x86@vger.kernel.org, Sasha Levin <sashal@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
-keycode) to allow for a new keycode 0xffff, this silences the following
-messages being logged at startup on a Dell Inspiron 5593:
+From: Prarit Bhargava <prarit@redhat.com>
 
-    dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
-    dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
+[ Upstream commit 28c59ae6965ca0626e3150e2f2863e0f0c810ed7 ]
 
-as per this code comment:
+On CLX-N the perf-profile output is missing the package, die, and cpu
+output.  On CLX-N the pkg_dev struct will never be evaluated by the core
+code so pkg_dev.processed is always 0 and the package, die, and cpu
+information is never output.
 
-   Log if we find an entry in the DMI table that we don't
-   understand.  If this happens, we should figure out what
-   the entry means and add it to bios_to_linux_keycode.
+Set the pkg_dev.processed flag to 1 for CLX-N processors.
 
-These are keycodes included in the 0xB2 DMI table, for which the
-corosponding keys are not known.
-
-Now when a user will encounter this key, a proper message wil be printed:
-
-    dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
-
-This will then allow the key to be identified properly.
-
-Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: andriy.shevchenko@linux.intel.com
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/dell-wmi.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 6b510f8431a3..dae1db96b5a0 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -196,7 +196,7 @@ struct dell_dmi_results {
- };
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index b73763489410..3688f1101ec4 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -1169,6 +1169,7 @@ static void dump_clx_n_config_for_cpu(int cpu, void *arg1, void *arg2,
  
- /* Uninitialized entries here are KEY_RESERVED == 0. */
--static const u16 bios_to_linux_keycode[256] = {
-+static const u16 bios_to_linux_keycode[65536] = {
- 	[0]	= KEY_MEDIA,
- 	[1]	= KEY_NEXTSONG,
- 	[2]	= KEY_PLAYPAUSE,
-@@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
- 	[37]	= KEY_UNKNOWN,
- 	[38]	= KEY_MICMUTE,
- 	[255]	= KEY_PROG3,
-+	[65535]	= KEY_UNKNOWN,
- };
- 
- /*
-@@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
- 					&table->keymap[i];
- 
- 		/* Uninitialized entries are 0 aka KEY_RESERVED. */
--		u16 keycode = (bios_entry->keycode <
--			       ARRAY_SIZE(bios_to_linux_keycode)) ?
--			bios_to_linux_keycode[bios_entry->keycode] :
--			KEY_RESERVED;
-+		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
- 
- 		/*
- 		 * Log if we find an entry in the DMI table that we don't
+ 		ctdp_level = &clx_n_pkg_dev.ctdp_level[0];
+ 		pbf_info = &ctdp_level->pbf_info;
++		clx_n_pkg_dev.processed = 1;
+ 		isst_ctdp_display_information(cpu, outf, tdp_level, &clx_n_pkg_dev);
+ 		free_cpu_set(ctdp_level->core_cpumask);
+ 		free_cpu_set(pbf_info->core_cpumask);
 -- 
-2.27.0
+2.25.1
