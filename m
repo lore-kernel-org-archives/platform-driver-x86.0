@@ -1,109 +1,52 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
- bios_to_linux_keycode
-Date: Mon, 8 Jun 2020 16:27:10 -0700
-Message-ID: <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <cover.1591656154.git.y.linux@paritcher.com>
- <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 70/72] platform/x86: hp-wmi: Convert simple_strtoul() to kstrtou32()
+Date: Mon,  8 Jun 2020 19:24:58 -0400
+Message-ID: <20200608232500.3369581-70-sashal@kernel.org>
+References: <20200608232500.3369581-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Y Paritcher <y.linux@paritcher.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>, Mario.Limonciello@dell.com
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi--
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 6/8/20 4:05 PM, Y Paritcher wrote:
-> Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
-> keycode) to allow for a new keycode 0xffff, this silences the following
-> messages being logged at startup on a Dell Inspiron 5593:
-> 
->     dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
->     dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
-> 
-> as per this code comment:
-> 
->    Log if we find an entry in the DMI table that we don't
->    understand.  If this happens, we should figure out what
->    the entry means and add it to bios_to_linux_keycode.
-> 
-> These are keycodes included in the 0xB2 DMI table, for which the
-> corosponding keys are not known.
+[ Upstream commit 5cdc45ed3948042f0d73c6fec5ee9b59e637d0d2 ]
 
-  corresponding
+First of all, unsigned long can overflow u32 value on 64-bit machine.
+Second, simple_strtoul() doesn't check for overflow in the input.
 
-> 
-> Now when a user will encounter this key, a proper message wil be printed:
-> 
->     dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
-> 
-> This will then allow the key to be identified properly.
-> 
-> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
-> ---
->  drivers/platform/x86/dell-wmi.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index 6b510f8431a3..dae1db96b5a0 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -196,7 +196,7 @@ struct dell_dmi_results {
->  };
->  
->  /* Uninitialized entries here are KEY_RESERVED == 0. */
-> -static const u16 bios_to_linux_keycode[256] = {
-> +static const u16 bios_to_linux_keycode[65536] = {
+Convert simple_strtoul() to kstrtou32() to eliminate above issues.
 
-It surely seems odd to me to expand an array from 512 bytes to 128 Kbytes
-just to handle one special case.  Can't it be handled in code as a
-special case?
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/hp-wmi.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
->  	[0]	= KEY_MEDIA,
->  	[1]	= KEY_NEXTSONG,
->  	[2]	= KEY_PLAYPAUSE,
-> @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
->  	[37]	= KEY_UNKNOWN,
->  	[38]	= KEY_MICMUTE,
->  	[255]	= KEY_PROG3,
-> +	[65535]	= KEY_UNKNOWN,
->  };
->  
->  /*
-> @@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
->  					&table->keymap[i];
->  
->  		/* Uninitialized entries are 0 aka KEY_RESERVED. */
-> -		u16 keycode = (bios_entry->keycode <
-> -			       ARRAY_SIZE(bios_to_linux_keycode)) ?
-> -			bios_to_linux_keycode[bios_entry->keycode] :
-> -			KEY_RESERVED;
-> +		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
->  
->  		/*
->  		 * Log if we find an entry in the DMI table that we don't
-> 
-
-Something like:
-
-		u16 keycode;
-
-		keycode = bios_entry->keycode == 0xffff ? KEY_UNKNOWN :
-			(bios_entry->keycode <
-			       ARRAY_SIZE(bios_to_linux_keycode)) ?
-			bios_to_linux_keycode[bios_entry->keycode] :
-			KEY_RESERVED;
-
-
-
-Also please fix this:
-(no To-header on input) <>
-
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 06a3c1ef8eee..952544ca0d84 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -474,8 +474,14 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
+ static ssize_t als_store(struct device *dev, struct device_attribute *attr,
+ 			 const char *buf, size_t count)
+ {
+-	u32 tmp = simple_strtoul(buf, NULL, 10);
+-	int ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
++	u32 tmp;
++	int ret;
++
++	ret = kstrtou32(buf, 10, &tmp);
++	if (ret)
++		return ret;
++
++	ret = hp_wmi_perform_query(HPWMI_ALS_QUERY, HPWMI_WRITE, &tmp,
+ 				       sizeof(tmp), sizeof(tmp));
+ 	if (ret)
+ 		return ret < 0 ? ret : -EINVAL;
 -- 
-~Randy
+2.25.1
