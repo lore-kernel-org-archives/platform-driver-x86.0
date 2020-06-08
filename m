@@ -1,14 +1,15 @@
 From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Date: Mon, 8 Jun 2020 10:50:12 +0200
-Message-ID: <20200608085012.ve2zefw26hisagso@pali>
+Subject: Re: [PATCH 3/3] platform/x86: dell-wmi: add keys to
+ bios_to_linux_keycode
+Date: Mon, 8 Jun 2020 11:00:17 +0200
+Message-ID: <20200608090017.4qgtbosz7oullex2@pali>
 References: <cover.1591584631.git.y.linux@paritcher.com>
- <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
+ <13951508596a3f654c6d47f5380ddb4f38e2f6b5.1591584631.git.y.linux@paritcher.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
+In-Reply-To: <13951508596a3f654c6d47f5380ddb4f38e2f6b5.1591584631.git.y.linux@paritcher.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Y Paritcher <y.linux@paritcher.com>
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>
@@ -16,88 +17,63 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 Hello!
 
-On Monday 08 June 2020 00:22:25 Y Paritcher wrote:
-> Ignore events with a type of 0x0012 and a code of 0xe035,
-> this silences the following messages being logged when
-> pressing the Fn-lock key on a Dell Inspiron 5593:
-
-Could you please explain why to ignore these events instead of sending
-them to userspace via input layer? I think that userspace can be
-interested in knowing when Fn lock key was pressed and I can imagine
-that some it can use it for some purposes.
-
-> dell_wmi: Unknown WMI event type 0x12
-> dell_wmi: Unknown key with type 0x0012 and code 0xe035 pressed
-
-These messages are printed to inform about fact that some events were
-not processed. And they should not be silenced without reason. If for
-some reasons it is needed to completely ignore some kind of events then
-this reason should be documented (e.g. in commit message) so other
-developers would know why that code is there. Not all Linux developers
-have all those Dell machines for testing so they do not know all
-hardware details.
-
+On Monday 08 June 2020 00:22:26 Y Paritcher wrote:
+> Increase length of bios_to_linux_keycode to 2 bytes to allow for a new
+> keycode 0xffff, this silences the following messages being logged at
+> startup on a Dell Inspiron 5593
+> 
+> dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
+> dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
+> 
 > Signed-off-by: Y Paritcher <y.linux@paritcher.com>
 > ---
->  drivers/platform/x86/dell-wmi.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+>  drivers/platform/x86/dell-wmi.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index 0b4f72f923cd..f37e7e9093c2 100644
+> index f37e7e9093c2..5ef716e3034f 100644
 > --- a/drivers/platform/x86/dell-wmi.c
 > +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -334,6 +334,14 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
->  	{ KE_IGNORE, KBD_LED_AUTO_100_TOKEN, { KEY_RESERVED } },
+> @@ -196,7 +196,7 @@ struct dell_dmi_results {
 >  };
 >  
-> +/*
-> + * Keymap for WMI events of type 0x0012
-> + */
-> +static const struct key_entry dell_wmi_keymap_type_0012[] = {
-> +	/* Fn-lock button pressed */
-> +	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
-> +};
-> +
->  static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
->  {
->  	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-> @@ -425,6 +433,7 @@ static void dell_wmi_notify(struct wmi_device *wdev,
->  			break;
->  		case 0x0010: /* Sequence of keys pressed */
->  		case 0x0011: /* Sequence of events occurred */
-> +		case 0x0012: /* Sequence of events occurred */
+>  /* Uninitialized entries here are KEY_RESERVED == 0. */
+> -static const u16 bios_to_linux_keycode[256] = {
+> +static const u16 bios_to_linux_keycode[65536] = {
 
-It is really sequence of events? Because you wrote that Fn-lock key was
-pressed (and not generic event). Also it is really sequence? And not
-just one event/key-press (with possibility of some additional details in
-buffer)? It would be nice to put documentation for this type of events
-to check and review that implementation is correct.
+This change dramatically increase memory usage. I guess other that
+maintainers would not like such change.
 
->  			for (i = 2; i < len; ++i)
->  				dell_wmi_process_key(wdev, buffer_entry[1],
->  						     buffer_entry[i]);
-> @@ -556,6 +565,7 @@ static int dell_wmi_input_setup(struct wmi_device *wdev)
->  			 ARRAY_SIZE(dell_wmi_keymap_type_0000) +
->  			 ARRAY_SIZE(dell_wmi_keymap_type_0010) +
->  			 ARRAY_SIZE(dell_wmi_keymap_type_0011) +
-> +			 ARRAY_SIZE(dell_wmi_keymap_type_0012) +
->  			 1,
->  			 sizeof(struct key_entry), GFP_KERNEL);
->  	if (!keymap) {
-> @@ -600,6 +610,13 @@ static int dell_wmi_input_setup(struct wmi_device *wdev)
->  		pos++;
->  	}
+>  	[0]	= KEY_MEDIA,
+>  	[1]	= KEY_NEXTSONG,
+>  	[2]	= KEY_PLAYPAUSE,
+> @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
+>  	[37]	= KEY_UNKNOWN,
+>  	[38]	= KEY_MICMUTE,
+>  	[255]	= KEY_PROG3,
+> +	[65535]	= KEY_UNKNOWN,
+
+Also it seems that this change is not complete. It looks like that you
+map two different scancodes (0x48 and 0x50) to same keycodes, moreover
+both are unknown.
+
+Could you please describe which key presses (or events) generate
+delivering these WMI scancode events?
+
+Note that purpose of printing unknown/unrecognized keys messages is to
+inform that current pressed key was not processed or that it was
+ignored.
+
+For me it looks like this just just hide information that key was not
+processed correctly as this change does not implement correct processing
+of this key.
+
+Also, could you share documentation about these 0x48/0x50 events? Or it
+is under NDA?
+
+>  };
 >  
-> +	/* Append table with events of type 0x0012 */
-> +	for (i = 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
-> +		keymap[pos] = dell_wmi_keymap_type_0012[i];
-> +		keymap[pos].code |= (0x0012 << 16);
-> +		pos++;
-> +	}
-> +
->  	/*
->  	 * Now append also table with "legacy" events of type 0x0000. Some of
->  	 * them are reported also on laptops which have scancodes in DMI.
+>  /*
 > -- 
 > 2.27.0
 > 
