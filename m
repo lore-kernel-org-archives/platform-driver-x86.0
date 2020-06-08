@@ -1,90 +1,54 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 165/175] platform/x86: intel-vbtn: Only blacklist SW_TABLET_MODE on the 9 / "Laptop" chasis-type
-Date: Mon,  8 Jun 2020 19:18:38 -0400
-Message-ID: <20200608231848.3366970-165-sashal@kernel.org>
-References: <20200608231848.3366970-1-sashal@kernel.org>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Subject: Re: [PATCH v2 1/3] platform/x86: dell-wmi: add new backlight events
+Date: Tue, 9 Jun 2020 01:24:40 +0200
+Message-ID: <20200608232440.a5tpxvf4mami563m@pali>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <cover.1591656154.git.y.linux@paritcher.com>
+ <1ddd0496403199130532923e4ccb30481ff167b6.1591656154.git.y.linux@paritcher.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200608231848.3366970-1-sashal@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1ddd0496403199130532923e4ccb30481ff167b6.1591656154.git.y.linux@paritcher.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>, Mario Limonciello <mario.limonciello@dell.com>, Mario Limonciello <Mario.limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+To: Y Paritcher <y.linux@paritcher.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Mario.Limonciello@dell.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+On Monday 08 June 2020 19:05:28 Y Paritcher wrote:
+> Add events with a type of 0x0010 and a code of 0x57 / 0x58,
+> this silences the following messages being logged on a
+> Dell Inspiron 5593:
+> 
+> dell_wmi: Unknown key with type 0x0010 and code 0x0057 pressed
+> dell_wmi: Unknown key with type 0x0010 and code 0x0058 pressed
+> 
+> These are brightness events and will be handled by acpi-video
+> 
+> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
 
-[ Upstream commit cfae58ed681c5fe0185db843013ecc71cd265ebf ]
+Reviewed-by: Pali Rohár <pali@kernel.org>
 
-The HP Stream x360 11-p000nd no longer report SW_TABLET_MODE state / events
-with recent kernels. This model reports a chassis-type of 10 / "Notebook"
-which is not on the recently introduced chassis-type whitelist
-
-Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-switch on 2-in-1's") added a chassis-type whitelist and only listed 31 /
-"Convertible" as being capable of generating valid SW_TABLET_MOD events.
-
-Commit 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode
-switch on "Detachable" and "Portable" chassis-types") extended the
-whitelist with chassis-types 8 / "Portable" and 32 / "Detachable".
-
-And now we need to exten the whitelist again with 10 / "Notebook"...
-
-The issue original fixed by the whitelist is really a ACPI DSDT bug on
-the Dell XPS 9360 where it has a VGBS which reports it is in tablet mode
-even though it is not a 2-in-1 at all, but a regular laptop.
-
-So since this is a workaround for a DSDT issue on that specific model,
-instead of extending the whitelist over and over again, lets switch to
-a blacklist and only blacklist the chassis-type of the model for which
-the chassis-type check was added.
-
-Note this also fixes the current version of the code no longer checking
-if dmi_get_system_info(DMI_CHASSIS_TYPE) returns NULL.
-
-Fixes: 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types")
-Cc: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/intel-vbtn.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 5acfa08b5dac..cb2a80fdd8f4 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -157,21 +157,18 @@ static void detect_tablet_mode(struct platform_device *device)
- static bool intel_vbtn_has_switches(acpi_handle handle)
- {
- 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
--	unsigned long chassis_type_int;
- 	unsigned long long vgbs;
- 	acpi_status status;
- 
--	if (kstrtoul(chassis_type, 10, &chassis_type_int))
--		return false;
--
--	switch (chassis_type_int) {
--	case  8: /* Portable */
--	case 31: /* Convertible */
--	case 32: /* Detachable */
--		break;
--	default:
-+	/*
-+	 * Some normal laptops have a VGBS method despite being non-convertible
-+	 * and their VGBS method always returns 0, causing detect_tablet_mode()
-+	 * to report SW_TABLET_MODE=1 to userspace, which causes issues.
-+	 * These laptops have a DMI chassis_type of 9 ("Laptop"), do not report
-+	 * switches on any devices with a DMI chassis_type of 9.
-+	 */
-+	if (chassis_type && strcmp(chassis_type, "9") == 0)
- 		return false;
--	}
- 
- 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	return ACPI_SUCCESS(status);
--- 
-2.25.1
+> ---
+>  drivers/platform/x86/dell-wmi.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> index c25a4286d766..0b2edfe2767d 100644
+> --- a/drivers/platform/x86/dell-wmi.c
+> +++ b/drivers/platform/x86/dell-wmi.c
+> @@ -255,6 +255,10 @@ static const struct key_entry dell_wmi_keymap_type_0010[] = {
+>  	/* Keyboard backlight change notification */
+>  	{ KE_IGNORE, 0x3f, { KEY_RESERVED } },
+>  
+> +	/* Backlight brightness level */
+> +	{ KE_KEY,    0x57, { KEY_BRIGHTNESSDOWN } },
+> +	{ KE_KEY,    0x58, { KEY_BRIGHTNESSUP } },
+> +
+>  	/* Mic mute */
+>  	{ KE_KEY, 0x150, { KEY_MICMUTE } },
+>  
+> -- 
+> 2.27.0
+> 
