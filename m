@@ -1,74 +1,72 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH 1/3] platform/x86: dell-wmi: add new backlight events
-Date: Mon, 8 Jun 2020 20:14:15 +0000
-Message-ID: <14b9e7d3a3e842e991e4e5e271b447e7@AUSX13MPC105.AMER.DELL.COM>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Date: Mon, 8 Jun 2020 22:30:47 +0200
+Message-ID: <20200608203047.u4ewb3tyfmatyrsz@pali>
 References: <cover.1591584631.git.y.linux@paritcher.com>
- <7dbe4e9e5ed64e4704b1c4ae13ac84df644ccc13.1591584631.git.y.linux@paritcher.com>
- <20200608083503.l5g5iq52ezxkobvv@pali>
- <3e0d394545954ed79b8f883e1ac93338@AUSX13MPC105.AMER.DELL.COM>
- <e91bb21e-98fa-f469-cc24-abc9ae200e4d@paritcher.com>
+ <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
+ <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
+ <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e91bb21e-98fa-f469-cc24-abc9ae200e4d@paritcher.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: y.linux@paritcher.com, pali@kernel.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
+To: Y Paritcher <y.linux@paritcher.com>
+Cc: Mario.Limonciello@dell.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBZIFBhcml0Y2hlciA8eS5saW51
-eEBwYXJpdGNoZXIuY29tPg0KPiBTZW50OiBNb25kYXksIEp1bmUgOCwgMjAyMCAzOjEyIFBNDQo+
-IFRvOiBMaW1vbmNpZWxsbywgTWFyaW87IHBhbGlAa2VybmVsLm9yZw0KPiBDYzogbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7
-DQo+IG1qZzU5QHNyY2YudWNhbS5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIHBsYXRm
-b3JtL3g4NjogZGVsbC13bWk6IGFkZCBuZXcgYmFja2xpZ2h0IGV2ZW50cw0KPiANCj4gDQo+IFtF
-WFRFUk5BTCBFTUFJTF0NCj4gDQo+IE9uIDYvOC8yMCAxMTozMCBBTSwgTWFyaW8uTGltb25jaWVs
-bG9AZGVsbC5jb20gd3JvdGU6DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+
-IEZyb206IHBsYXRmb3JtLWRyaXZlci14ODYtb3duZXJAdmdlci5rZXJuZWwub3JnIDxwbGF0Zm9y
-bS1kcml2ZXIteDg2LQ0KPiA+PiBvd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFsZiBPZiBQ
-YWxpIFJvaMOhcg0KPiA+PiBTZW50OiBNb25kYXksIEp1bmUgOCwgMjAyMCAzOjM1IEFNDQo+ID4+
-IFRvOiBZIFBhcml0Y2hlcg0KPiA+PiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
-cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4+IE1hdHRoZXcgR2FycmV0
-dA0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIIDEvM10gcGxhdGZvcm0veDg2OiBkZWxsLXdtaTog
-YWRkIG5ldyBiYWNrbGlnaHQNCj4gZXZlbnRzDQo+ID4+DQo+ID4+DQo+ID4+IFtFWFRFUk5BTCBF
-TUFJTF0NCj4gPj4NCj4gPj4gT24gTW9uZGF5IDA4IEp1bmUgMjAyMCAwMDoyMjoyNCBZIFBhcml0
-Y2hlciB3cm90ZToNCj4gPj4+IElnbm9yZSBldmVudHMgd2l0aCBhIHR5cGUgb2YgMHgwMDEwIGFu
-ZCBhIGNvZGUgb2YgMHg1NyAvIDB4NTgsDQo+ID4+PiB0aGlzIHNpbGVuY2VzIHRoZSBmb2xsb3dp
-bmcgbWVzc2FnZXMgYmVpbmcgbG9nZ2VkIG9uIGENCj4gPj4+IERlbGwgSW5zcGlyb24gNTU5MzoN
-Cj4gPj4+DQo+ID4+PiBkZWxsX3dtaTogVW5rbm93biBrZXkgd2l0aCB0eXBlIDB4MDAxMCBhbmQg
-Y29kZSAweDAwNTcgcHJlc3NlZA0KPiA+Pj4gZGVsbF93bWk6IFVua25vd24ga2V5IHdpdGggdHlw
-ZSAweDAwMTAgYW5kIGNvZGUgMHgwMDU4IHByZXNzZWQNCj4gPj4+DQo+ID4+PiBTaWduZWQtb2Zm
-LWJ5OiBZIFBhcml0Y2hlciA8eS5saW51eEBwYXJpdGNoZXIuY29tPg0KPiA+Pj4gLS0tDQo+ID4+
-PiAgZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYyB8IDQgKysrKw0KPiA+Pj4gIDEgZmls
-ZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYw0KPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2Rl
-bGwtDQo+ID4+IHdtaS5jDQo+ID4+PiBpbmRleCBjMjVhNDI4NmQ3NjYuLjBiNGY3MmY5MjNjZCAx
-MDA2NDQNCj4gPj4+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gPj4+
-ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gPj4+IEBAIC0yNTIsNiAr
-MjUyLDEwIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qga2V5X2VudHJ5DQo+ID4+IGRlbGxfd21pX2tl
-eW1hcF90eXBlXzAwMTBbXSA9IHsNCj4gPj4+ICAJLyogRm4tbG9jayBzd2l0Y2hlZCB0byBtdWx0
-aW1lZGlhIGtleXMgKi8NCj4gPj4+ICAJeyBLRV9JR05PUkUsIDB4MSwgeyBLRVlfUkVTRVJWRUQg
-fSB9LA0KPiA+Pj4NCj4gPj4+ICsJLyogQmFja2xpZ2h0IGJyaWdodG5lc3MgbGV2ZWwgKi8NCj4g
-Pj4+ICsJeyBLRV9LRVksICAgIDB4NTcsIHsgS0VZX0JSSUdIVE5FU1NET1dOIH0gfSwNCj4gPj4+
-ICsJeyBLRV9LRVksICAgIDB4NTgsIHsgS0VZX0JSSUdIVE5FU1NVUCB9IH0sDQo+ID4+PiArDQo+
-ID4NCj4gPiBGb3IgdGhlc2UgcGFydGljdWxhciBldmVudHMgYXJlIHRoZXkgZW1pdHRlZCBieSBh
-bm90aGVyIGludGVyZmFjZSBhcyB3ZWxsDQo+IGluIHRoaXMNCj4gPiBwbGF0Zm9ybT8NCj4gPg0K
-PiA+IElmIHNvIHRoZXkgc2hvdWxkIGJlIEtFX0lHTk9SRSBzbyB5b3UgZG9uJ3QgZW5kIHVwIHdp
-dGggZG91YmxlDQo+IG5vdGlmaWNhdGlvbnMgdG8NCj4gPiB1c2Vyc3BhY2UuDQo+IFRoYW5rIHlv
-dSBib3RoIGZvciB0aGUgcmV2aWV3LA0KPiBUaGlzIGlzIG15IGZpcnN0IHBhdGNoIHNvIGlmIGkg
-YW0gZG9pbmcgc29tZXRoaW5nIHdyb25nIHBsZWFzZSBsZXQgbWUga25vdy4NCj4gDQo+IEJvdGgg
-YmVmb3JlIGFuZCBhZnRlciB0aGlzIGNoYW5nZSB0aGV5IGFyZSBvbmx5IGVtaXR0ZWQgb25jZSAo
-dmVyaWZpZWQgdmlhDQo+IHNob3drZXlzKQ0KPiB0aGlzIGlzIGJlY2F1c2UgYGRlbGxfd21pX3By
-b2Nlc3Nfa2V5KClgIGNhbGxzDQo+IGBhY3BpX3ZpZGVvX2hhbmRsZXNfYnJpZ2h0bmVzc19rZXlf
-cHJlc3NlcygpYA0KPiBmb3IgYnJpZ2h0bmVzcyBldmVudHMsIGFuZCBgYWNwaV92aWRlb19oYW5k
-bGVzX2JyaWdodG5lc3Nfa2V5X3ByZXNzZXMoKWANCj4gbWFrZXMgc3VyZSBubyBkdXBsaWNhdGUg
-YWNwaS12aWRlbyBldmVudHMgYXJlIHNlbnQuDQoNClRoYXQncyBnb29kIHRvIGhlYXIgdGhhdCBp
-dCBhbHNvIGZpbHRlcnMgaXQsIGJ1dCBteSBvcGluaW9uIGlzIHRoYXQgZGVsbC13bWkuYw0Kc2hv
-dWxkIGFsc28gZmlsdGVyIGl0LiAgU28ganVzdCBjaGFuZ2UgS0VfS0VZIHRvIEtFX0lHTk9SRSBs
-aWtlIHRoZSBvdGhlciBldmVudHMuDQoNCj4gPg0KPiA+Pj4gIAkvKiBLZXlib2FyZCBiYWNrbGln
-aHQgY2hhbmdlIG5vdGlmaWNhdGlvbiAqLw0KPiA+Pj4gIAl7IEtFX0lHTk9SRSwgMHgzZiwgeyBL
-RVlfUkVTRVJWRUQgfSB9LA0KPiA+Pg0KPiA+PiBQbGVhc2UsIGtlZXAgY29kZXMgc29ydGVkLg0K
-PiANCj4gV2lsbCBmaXgNCj4gPj4NCj4gPj4+DQo+ID4+PiAtLQ0KPiA+Pj4gMi4yNy4wDQo+ID4+
-Pg0K
+Hello!
+
+On Monday 08 June 2020 16:12:52 Y Paritcher wrote:
+> You are right.
+> I had assumed (incorrectly) the were the same.
+> I turned on dyndbg and got the events with the extended data.
+> 
+> Fn lock key switched to multimedia keys
+> dell_wmi: Received WMI event (02 00 12 00 35 e0 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00)
+> the extended data is e0 01
+> 
+> Fn-lock switched to function keys
+> dell_wmi: Received WMI event (02 00 12 00 35 e0 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00)
+> the extended data is e0 00
+
+That is why I asked if buffer is really sequence of events. From your
+log can be seen that it is not a sequence, but rather just one event.
+
+> Therefore i agree this should have it's own case in `dell_wmi_process_key` but i am
+> not sure yet how to deal with it. any suggestion are helpful.
+
+I guess you could handle it like for event type 0x0000 which also
+process one event where can be additional information in buffer.
+See relevant code for 0x0000:
+
+		case 0x0000: /* One key pressed or event occurred */
+			if (len > 2)
+				dell_wmi_process_key(wdev, 0x0000,
+						     buffer_entry[2]);
+			/* Other entries could contain additional information */
+			break;
+
+Just processing of additional information from buffer is not implemented
+yet, probably nobody needed it yet.
+
+> About sending it to userspace, I just followed what was already done, if that is not
+> desired we should change it for all the models.
+
+Main question if we need to send this event to userspace. Or if we
+should drop this event as it is duplicate which was already processed by
+other layer. This is something which we do not know and it needs to be
+investigated and documented/explained. So in future when will do some
+changes in that code, we would know how to handle it without breaking
+existing systems.
+
+I would suggest to not describe changes in commit message, but rather
+describe explanation of those changes in commit message. E.g. what was
+decision and why you are doing it in that way.
+
+It would help in future to know why such code is needed.
+
+E.g. "event XYZ needs to be ignored as kernel receive its duplicate also
+via keyboard controller". Or e.g. "event needs to be processed by wmi
+driver because notebook's embedded controller sends it only via wmi".
