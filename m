@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 175/274] platform/x86: intel-vbtn: Use acpi_evaluate_integer()
-Date: Mon,  8 Jun 2020 19:04:28 -0400
-Message-ID: <20200608230607.3361041-175-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 176/274] platform/x86: intel-vbtn: Split keymap into buttons and switches parts
+Date: Mon,  8 Jun 2020 19:04:29 -0400
+Message-ID: <20200608230607.3361041-176-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,59 +14,79 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 18937875a231d831c309716d6d8fc358f8381881 ]
+[ Upstream commit f6ba524970c4b73b234bf41ecd6628f5803b1559 ]
 
-Use acpi_evaluate_integer() instead of open-coding it.
+Split the sparse keymap into 2 separate keymaps, a buttons and a switches
+keymap and combine the 2 to a single map again in intel_vbtn_input_setup().
 
-This is a preparation patch for adding a intel_vbtn_has_switches()
-helper function.
+This is a preparation patch for not telling userspace that we have switches
+when we do not have them (and for doing the same for the buttons).
 
 Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ drivers/platform/x86/intel-vbtn.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index b5880936d785..191894d648bb 100644
+index 191894d648bb..634096cef21a 100644
 --- a/drivers/platform/x86/intel-vbtn.c
 +++ b/drivers/platform/x86/intel-vbtn.c
-@@ -119,28 +119,21 @@ static void detect_tablet_mode(struct platform_device *device)
- 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+@@ -40,14 +40,20 @@ static const struct key_entry intel_vbtn_keymap[] = {
+ 	{ KE_IGNORE, 0xC7, { KEY_VOLUMEDOWN } },	/* volume-down key release */
+ 	{ KE_KEY,    0xC8, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key press */
+ 	{ KE_KEY,    0xC9, { KEY_ROTATE_LOCK_TOGGLE } },	/* rotate-lock key release */
++};
++
++static const struct key_entry intel_vbtn_switchmap[] = {
+ 	{ KE_SW,     0xCA, { .sw = { SW_DOCK, 1 } } },		/* Docked */
+ 	{ KE_SW,     0xCB, { .sw = { SW_DOCK, 0 } } },		/* Undocked */
+ 	{ KE_SW,     0xCC, { .sw = { SW_TABLET_MODE, 1 } } },	/* Tablet */
+ 	{ KE_SW,     0xCD, { .sw = { SW_TABLET_MODE, 0 } } },	/* Laptop */
+-	{ KE_END },
+ };
+ 
++#define KEYMAP_LEN \
++	(ARRAY_SIZE(intel_vbtn_keymap) + ARRAY_SIZE(intel_vbtn_switchmap) + 1)
++
+ struct intel_vbtn_priv {
++	struct key_entry keymap[KEYMAP_LEN];
+ 	struct input_dev *input_dev;
+ 	bool wakeup_mode;
+ };
+@@ -55,13 +61,29 @@ struct intel_vbtn_priv {
+ static int intel_vbtn_input_setup(struct platform_device *device)
+ {
  	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
--	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *obj;
-+	unsigned long long vgbs;
- 	acpi_status status;
- 	int m;
+-	int ret;
++	int ret, keymap_len = 0;
++
++	if (true) {
++		memcpy(&priv->keymap[keymap_len], intel_vbtn_keymap,
++		       ARRAY_SIZE(intel_vbtn_keymap) *
++		       sizeof(struct key_entry));
++		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
++	}
++
++	if (true) {
++		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
++		       ARRAY_SIZE(intel_vbtn_switchmap) *
++		       sizeof(struct key_entry));
++		keymap_len += ARRAY_SIZE(intel_vbtn_switchmap);
++	}
++
++	priv->keymap[keymap_len].type = KE_END;
  
- 	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
--		goto out;
-+		return;
+ 	priv->input_dev = devm_input_allocate_device(&device->dev);
+ 	if (!priv->input_dev)
+ 		return -ENOMEM;
  
--	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
-+	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	if (ACPI_FAILURE(status))
--		goto out;
--
--	obj = vgbs_output.pointer;
--	if (!(obj && obj->type == ACPI_TYPE_INTEGER))
--		goto out;
-+		return;
+-	ret = sparse_keymap_setup(priv->input_dev, intel_vbtn_keymap, NULL);
++	ret = sparse_keymap_setup(priv->input_dev, priv->keymap, NULL);
+ 	if (ret)
+ 		return ret;
  
--	m = !(obj->integer.value & TABLET_MODE_FLAG);
-+	m = !(vgbs & TABLET_MODE_FLAG);
- 	input_report_switch(priv->input_dev, SW_TABLET_MODE, m);
--	m = (obj->integer.value & DOCK_MODE_FLAG) ? 1 : 0;
-+	m = (vgbs & DOCK_MODE_FLAG) ? 1 : 0;
- 	input_report_switch(priv->input_dev, SW_DOCK, m);
--out:
--	kfree(vgbs_output.pointer);
- }
- 
- static int intel_vbtn_probe(struct platform_device *device)
 -- 
 2.25.1
