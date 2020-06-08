@@ -1,63 +1,51 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 049/274] platform/x86: dell-laptop: don't register micmute LED if there is no token
-Date: Mon,  8 Jun 2020 19:02:22 -0400
-Message-ID: <20200608230607.3361041-49-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 043/274] platform/x86: sony-laptop: Make resuming thermal profile safer
+Date: Mon,  8 Jun 2020 19:02:16 -0400
+Message-ID: <20200608230607.3361041-43-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Koba Ko <koba.ko@canonical.com>, Mario Limonciello <Mario.limonciello@dell.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Mattia Dongili <malattia@linux.it>, Dominik Mierzejewski <dominik@greysector.net>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Koba Ko <koba.ko@canonical.com>
+From: Mattia Dongili <malattia@linux.it>
 
-[ Upstream commit 257e03a334ccb96e657bf5f6ab3b5693a22c2aa4 ]
+[ Upstream commit 476d60b1b4c8a2b14a53ef9b772058f35e604661 ]
 
-On Dell G3-3590, error message is issued during boot up,
-"platform::micmute: Setting an LED's brightness failed (-19)",
-but there's no micmute led on the machine.
+The thermal handle object may fail initialization when the module is
+loaded in the first place. Avoid attempting to use it on resume then.
 
-Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
-If one of two tokens doesn't exist,
-don't call led_classdev_register() for platform::micmute.
-After that, you wouldn't see the platform::micmute in /sys/class/leds/,
-and the error message wouldn't see in dmesg.
-
-Fixes: d00fa46e0a2c6 ("platform/x86: dell-laptop: Add micmute LED trigger support")
-Signed-off-by: Koba Ko <koba.ko@canonical.com>
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
-Reviewed-by: Pali Rohár <pali@kernel.org>
+Fixes: 6d232b29cfce ("ACPICA: Dispatcher: always generate buffer objects for ASL create_field() operator")
+Reported-by: Dominik Mierzejewski <dominik@greysector.net>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207491
+Signed-off-by: Mattia Dongili <malattia@linux.it>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/dell-laptop.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/platform/x86/sony-laptop.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
-index f8d3e3bd1bb5..5e9c2296931c 100644
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -2204,10 +2204,13 @@ static int __init dell_init(void)
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index 51309f7ceede..e4ef3dc3bc2f 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -2295,7 +2295,12 @@ static void sony_nc_thermal_cleanup(struct platform_device *pd)
+ #ifdef CONFIG_PM_SLEEP
+ static void sony_nc_thermal_resume(void)
+ {
+-	unsigned int status = sony_nc_thermal_mode_get();
++	int status;
++
++	if (!th_handle)
++		return;
++
++	status = sony_nc_thermal_mode_get();
  
- 	dell_laptop_register_notifier(&dell_laptop_notifier);
- 
--	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
--	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
--	if (ret < 0)
--		goto fail_led;
-+	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
-+	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
-+		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
-+		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
-+		if (ret < 0)
-+			goto fail_led;
-+	}
- 
- 	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
- 		return 0;
+ 	if (status != th_handle->mode)
+ 		sony_nc_thermal_mode_set(th_handle->mode);
 -- 
 2.25.1
