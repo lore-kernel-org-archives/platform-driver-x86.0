@@ -1,76 +1,52 @@
-From: Y Paritcher <y.linux@paritcher.com>
-Subject: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Date: Mon,  8 Jun 2020 00:22:25 -0400
-Message-ID: <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
-References: <cover.1591584631.git.y.linux@paritcher.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3 0/7] Support inhibiting input devices
+Date: Sun, 7 Jun 2020 22:37:37 -0700
+Message-ID: <20200608053737.GS89269@dtor-ws>
+References: <20200604072853.GP89269@dtor-ws>
+ <20200605173335.13753-1-andrzej.p@collabora.com>
+ <20200607202414.GB13138@amd>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1591584631.git.y.linux@paritcher.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200607202414.GB13138@amd>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Ignore events with a type of 0x0012 and a code of 0xe035,
-this silences the following messages being logged when
-pressing the Fn-lock key on a Dell Inspiron 5593:
+On Sun, Jun 07, 2020 at 10:24:14PM +0200, Pavel Machek wrote:
+> On Fri 2020-06-05 19:33:28, Andrzej Pietrasiewicz wrote:
+> > Userspace might want to implement a policy to temporarily disregard input
+> > from certain devices.
+> 
+> Wow, you certainly cc a lot of lists.
+> 
+> > An example use case is a convertible laptop, whose keyboard can be folded
+> > under the screen to create tablet-like experience. The user then must hold
+> > the laptop in such a way that it is difficult to avoid pressing the keyboard
+> > keys. It is therefore desirable to temporarily disregard input from the
+> > keyboard, until it is folded back. This obviously is a policy which should
+> > be kept out of the kernel, but the kernel must provide suitable means to
+> > implement such a policy.
+> > 
+> > Due to interactions with suspend/resume, a helper has been added for drivers
+> > to decide if the device is being used or not (PATCH 1/7) and it has been
+> > applied to relevant drivers (PATCH 2,4,5,6/7).
+> 
+> But is that a right way to implement it?
+> 
+> We want this for cellphones, too -- touchscreen should be disabled
+> while the device is locked in the pocket -- but we really want the
+> touchscreen hardware to be powered down in that case (because it keeps
+> SoC busy and eats a _lot_ of electricity).
+> 
+> But simplistic "receive an event and then drop it if device is
+> inhibited" does not allow that...
 
-dell_wmi: Unknown WMI event type 0x12
-dell_wmi: Unknown key with type 0x0012 and code 0xe035 pressed
+I do not think you read the entirety of this patch series...
 
-Signed-off-by: Y Paritcher <y.linux@paritcher.com>
----
- drivers/platform/x86/dell-wmi.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Thanks.
 
-diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 0b4f72f923cd..f37e7e9093c2 100644
---- a/drivers/platform/x86/dell-wmi.c
-+++ b/drivers/platform/x86/dell-wmi.c
-@@ -334,6 +334,14 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
- 	{ KE_IGNORE, KBD_LED_AUTO_100_TOKEN, { KEY_RESERVED } },
- };
- 
-+/*
-+ * Keymap for WMI events of type 0x0012
-+ */
-+static const struct key_entry dell_wmi_keymap_type_0012[] = {
-+	/* Fn-lock button pressed */
-+	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
-+};
-+
- static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
- {
- 	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
-@@ -425,6 +433,7 @@ static void dell_wmi_notify(struct wmi_device *wdev,
- 			break;
- 		case 0x0010: /* Sequence of keys pressed */
- 		case 0x0011: /* Sequence of events occurred */
-+		case 0x0012: /* Sequence of events occurred */
- 			for (i = 2; i < len; ++i)
- 				dell_wmi_process_key(wdev, buffer_entry[1],
- 						     buffer_entry[i]);
-@@ -556,6 +565,7 @@ static int dell_wmi_input_setup(struct wmi_device *wdev)
- 			 ARRAY_SIZE(dell_wmi_keymap_type_0000) +
- 			 ARRAY_SIZE(dell_wmi_keymap_type_0010) +
- 			 ARRAY_SIZE(dell_wmi_keymap_type_0011) +
-+			 ARRAY_SIZE(dell_wmi_keymap_type_0012) +
- 			 1,
- 			 sizeof(struct key_entry), GFP_KERNEL);
- 	if (!keymap) {
-@@ -600,6 +610,13 @@ static int dell_wmi_input_setup(struct wmi_device *wdev)
- 		pos++;
- 	}
- 
-+	/* Append table with events of type 0x0012 */
-+	for (i = 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
-+		keymap[pos] = dell_wmi_keymap_type_0012[i];
-+		keymap[pos].code |= (0x0012 << 16);
-+		pos++;
-+	}
-+
- 	/*
- 	 * Now append also table with "legacy" events of type 0x0000. Some of
- 	 * them are reported also on laptops which have scancodes in DMI.
 -- 
-2.27.0
+Dmitry
