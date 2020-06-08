@@ -1,51 +1,40 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 043/274] platform/x86: sony-laptop: Make resuming thermal profile safer
-Date: Mon,  8 Jun 2020 19:02:16 -0400
-Message-ID: <20200608230607.3361041-43-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+From: Y Paritcher <y.linux@paritcher.com>
+Subject: [PATCH v2 0/3] platform/x86: dell-wmi: new keys
+Date: Mon,  8 Jun 2020 19:05:27 -0400
+Message-ID: <cover.1591656154.git.y.linux@paritcher.com>
+References: <cover.1591584631.git.y.linux@paritcher.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+In-Reply-To: <cover.1591584631.git.y.linux@paritcher.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Mattia Dongili <malattia@linux.it>, Dominik Mierzejewski <dominik@greysector.net>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>, Mario.Limonciello@dell.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Mattia Dongili <malattia@linux.it>
+As per discussion backlight events are passed on as they are
+filtered by acpi-video.
 
-[ Upstream commit 476d60b1b4c8a2b14a53ef9b772058f35e604661 ]
+Events of type 0x0012 have extended data in the rest of the
+buffer, this data is currently ignored.
 
-The thermal handle object may fail initialization when the module is
-loaded in the first place. Avoid attempting to use it on resume then.
+The Fn lock key currently is ignored. If userspace has a way
+to deal with this a function to pass on the extended data
+can be added.
 
-Fixes: 6d232b29cfce ("ACPICA: Dispatcher: always generate buffer objects for ASL create_field() operator")
-Reported-by: Dominik Mierzejewski <dominik@greysector.net>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207491
-Signed-off-by: Mattia Dongili <malattia@linux.it>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/sony-laptop.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 51309f7ceede..e4ef3dc3bc2f 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -2295,7 +2295,12 @@ static void sony_nc_thermal_cleanup(struct platform_device *pd)
- #ifdef CONFIG_PM_SLEEP
- static void sony_nc_thermal_resume(void)
- {
--	unsigned int status = sony_nc_thermal_mode_get();
-+	int status;
-+
-+	if (!th_handle)
-+		return;
-+
-+	status = sony_nc_thermal_mode_get();
+messages of type:
  
- 	if (status != th_handle->mode)
- 		sony_nc_thermal_mode_set(th_handle->mode);
+    firmware scancode 0xXX maps to unrecognized keycode 0xXXXX
+
+are from unknown keycodes in the DMI table and should be added
+to bios_to_linux_keycode to allow them to be processed.
+
+Y Paritcher (3):
+  platform/x86: dell-wmi: add new backlight events
+  platform/x86: dell-wmi: add new keymap type 0x0012
+  platform/x86: dell-wmi: add new dmi keys to bios_to_linux_keycode
+
+ drivers/platform/x86/dell-wmi.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
+
 -- 
-2.25.1
+2.27.0
