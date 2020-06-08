@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 189/274] platform/x86: sony-laptop: SNC calls should handle BUFFER types
-Date: Mon,  8 Jun 2020 19:04:42 -0400
-Message-ID: <20200608230607.3361041-189-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 262/274] platform/x86: intel-vbtn: Only blacklist SW_TABLET_MODE on the 9 / "Laptop" chasis-type
+Date: Mon,  8 Jun 2020 19:05:55 -0400
+Message-ID: <20200608230607.3361041-262-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,118 +9,82 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Mattia Dongili <malattia@linux.it>, Dominik Mierzejewski <dominik@greysector.net>, William Bader <williambader@hotmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, Mario Limonciello <mario.limonciello@dell.com>, Mario Limonciello <Mario.limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Mattia Dongili <malattia@linux.it>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 47828d22539f76c8c9dcf2a55f18ea3a8039d8ef ]
+[ Upstream commit cfae58ed681c5fe0185db843013ecc71cd265ebf ]
 
-After commit 6d232b29cfce ("ACPICA: Dispatcher: always generate buffer
-objects for ASL create_field() operator") ACPICA creates buffers even
-when new fields are small enough to fit into an integer.
-Many SNC calls counted on the old behaviour.
-Since sony-laptop already handles the INTEGER/BUFFER case in
-sony_nc_buffer_call, switch sony_nc_int_call to use its more generic
-function instead.
+The HP Stream x360 11-p000nd no longer report SW_TABLET_MODE state / events
+with recent kernels. This model reports a chassis-type of 10 / "Notebook"
+which is not on the recently introduced chassis-type whitelist
 
-Fixes: 6d232b29cfce ("ACPICA: Dispatcher: always generate buffer objects for ASL create_field() operator")
-Reported-by: Dominik Mierzejewski <dominik@greysector.net>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207491
-Reported-by: William Bader <williambader@hotmail.com>
-Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1830150
-Signed-off-by: Mattia Dongili <malattia@linux.it>
+Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+switch on 2-in-1's") added a chassis-type whitelist and only listed 31 /
+"Convertible" as being capable of generating valid SW_TABLET_MOD events.
+
+Commit 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode
+switch on "Detachable" and "Portable" chassis-types") extended the
+whitelist with chassis-types 8 / "Portable" and 32 / "Detachable".
+
+And now we need to exten the whitelist again with 10 / "Notebook"...
+
+The issue original fixed by the whitelist is really a ACPI DSDT bug on
+the Dell XPS 9360 where it has a VGBS which reports it is in tablet mode
+even though it is not a 2-in-1 at all, but a regular laptop.
+
+So since this is a workaround for a DSDT issue on that specific model,
+instead of extending the whitelist over and over again, lets switch to
+a blacklist and only blacklist the chassis-type of the model for which
+the chassis-type check was added.
+
+Note this also fixes the current version of the code no longer checking
+if dmi_get_system_info(DMI_CHASSIS_TYPE) returns NULL.
+
+Fixes: 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types")
+Cc: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/sony-laptop.c | 53 +++++++++++++-----------------
- 1 file changed, 23 insertions(+), 30 deletions(-)
+ drivers/platform/x86/intel-vbtn.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index e4ef3dc3bc2f..e5a1b5533408 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -757,33 +757,6 @@ static union acpi_object *__call_snc_method(acpi_handle handle, char *method,
- 	return result;
- }
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 4921fc15dc6c..a05b80955dcd 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -158,21 +158,18 @@ static void detect_tablet_mode(struct platform_device *device)
+ static bool intel_vbtn_has_switches(acpi_handle handle)
+ {
+ 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+-	unsigned long chassis_type_int;
+ 	unsigned long long vgbs;
+ 	acpi_status status;
  
--static int sony_nc_int_call(acpi_handle handle, char *name, int *value,
--		int *result)
--{
--	union acpi_object *object = NULL;
--	if (value) {
--		u64 v = *value;
--		object = __call_snc_method(handle, name, &v);
--	} else
--		object = __call_snc_method(handle, name, NULL);
+-	if (kstrtoul(chassis_type, 10, &chassis_type_int))
+-		return false;
 -
--	if (!object)
--		return -EINVAL;
--
--	if (object->type != ACPI_TYPE_INTEGER) {
--		pr_warn("Invalid acpi_object: expected 0x%x got 0x%x\n",
--				ACPI_TYPE_INTEGER, object->type);
--		kfree(object);
--		return -EINVAL;
+-	switch (chassis_type_int) {
+-	case  8: /* Portable */
+-	case 31: /* Convertible */
+-	case 32: /* Detachable */
+-		break;
+-	default:
++	/*
++	 * Some normal laptops have a VGBS method despite being non-convertible
++	 * and their VGBS method always returns 0, causing detect_tablet_mode()
++	 * to report SW_TABLET_MODE=1 to userspace, which causes issues.
++	 * These laptops have a DMI chassis_type of 9 ("Laptop"), do not report
++	 * switches on any devices with a DMI chassis_type of 9.
++	 */
++	if (chassis_type && strcmp(chassis_type, "9") == 0)
+ 		return false;
 -	}
--
--	if (result)
--		*result = object->integer.value;
--
--	kfree(object);
--	return 0;
--}
--
- #define MIN(a, b)	(a > b ? b : a)
- static int sony_nc_buffer_call(acpi_handle handle, char *name, u64 *value,
- 		void *buffer, size_t buflen)
-@@ -795,17 +768,20 @@ static int sony_nc_buffer_call(acpi_handle handle, char *name, u64 *value,
- 	if (!object)
- 		return -EINVAL;
  
--	if (object->type == ACPI_TYPE_BUFFER) {
-+	if (!buffer) {
-+		/* do nothing */
-+	} else if (object->type == ACPI_TYPE_BUFFER) {
- 		len = MIN(buflen, object->buffer.length);
-+		memset(buffer, 0, buflen);
- 		memcpy(buffer, object->buffer.pointer, len);
- 
- 	} else if (object->type == ACPI_TYPE_INTEGER) {
- 		len = MIN(buflen, sizeof(object->integer.value));
-+		memset(buffer, 0, buflen);
- 		memcpy(buffer, &object->integer.value, len);
- 
- 	} else {
--		pr_warn("Invalid acpi_object: expected 0x%x got 0x%x\n",
--				ACPI_TYPE_BUFFER, object->type);
-+		pr_warn("Unexpected acpi_object: 0x%x\n", object->type);
- 		ret = -EINVAL;
- 	}
- 
-@@ -813,6 +789,23 @@ static int sony_nc_buffer_call(acpi_handle handle, char *name, u64 *value,
- 	return ret;
- }
- 
-+static int sony_nc_int_call(acpi_handle handle, char *name, int *value, int
-+		*result)
-+{
-+	int ret;
-+
-+	if (value) {
-+		u64 v = *value;
-+
-+		ret = sony_nc_buffer_call(handle, name, &v, result,
-+				sizeof(*result));
-+	} else {
-+		ret =  sony_nc_buffer_call(handle, name, NULL, result,
-+				sizeof(*result));
-+	}
-+	return ret;
-+}
-+
- struct sony_nc_handles {
- 	u16 cap[0x10];
- 	struct device_attribute devattr;
+ 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+ 	return ACPI_SUCCESS(status);
 -- 
 2.25.1
