@@ -1,115 +1,109 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 065/106] platform/x86: intel-vbtn: Do not advertise switches to userspace if they are not there
-Date: Mon,  8 Jun 2020 19:21:57 -0400
-Message-ID: <20200608232238.3368589-65-sashal@kernel.org>
-References: <20200608232238.3368589-1-sashal@kernel.org>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
+ bios_to_linux_keycode
+Date: Mon, 8 Jun 2020 16:27:10 -0700
+Message-ID: <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <cover.1591656154.git.y.linux@paritcher.com>
+ <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+In-Reply-To: <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+To: Y Paritcher <y.linux@paritcher.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>, Mario.Limonciello@dell.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+Hi--
 
-[ Upstream commit 990fbb48067bf8cfa34b7d1e6e1674eaaef2f450 ]
+On 6/8/20 4:05 PM, Y Paritcher wrote:
+> Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
+> keycode) to allow for a new keycode 0xffff, this silences the following
+> messages being logged at startup on a Dell Inspiron 5593:
+> 
+>     dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
+>     dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
+> 
+> as per this code comment:
+> 
+>    Log if we find an entry in the DMI table that we don't
+>    understand.  If this happens, we should figure out what
+>    the entry means and add it to bios_to_linux_keycode.
+> 
+> These are keycodes included in the 0xB2 DMI table, for which the
+> corosponding keys are not known.
 
-Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
-reporting SW_TABLET_MODE = 1 to userspace on laptops (specifically on the
-Dell XPS 9360), to avoid e.g. userspace ignoring touchpad events because
-userspace thought the device was in tablet-mode.
+  corresponding
 
-But if we are not getting the initial status of the switch because the
-device does not have a tablet mode, then we really should not advertise
-the presence of a tablet-mode switch to userspace at all, as userspace may
-use the mere presence of this switch for certain heuristics.
+> 
+> Now when a user will encounter this key, a proper message wil be printed:
+> 
+>     dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
+> 
+> This will then allow the key to be identified properly.
+> 
+> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+> ---
+>  drivers/platform/x86/dell-wmi.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+> index 6b510f8431a3..dae1db96b5a0 100644
+> --- a/drivers/platform/x86/dell-wmi.c
+> +++ b/drivers/platform/x86/dell-wmi.c
+> @@ -196,7 +196,7 @@ struct dell_dmi_results {
+>  };
+>  
+>  /* Uninitialized entries here are KEY_RESERVED == 0. */
+> -static const u16 bios_to_linux_keycode[256] = {
+> +static const u16 bios_to_linux_keycode[65536] = {
 
-Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/intel-vbtn.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+It surely seems odd to me to expand an array from 512 bytes to 128 Kbytes
+just to handle one special case.  Can't it be handled in code as a
+special case?
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index e42203776727..23cda7aa96cd 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -54,6 +54,7 @@ static const struct key_entry intel_vbtn_switchmap[] = {
- struct intel_vbtn_priv {
- 	struct key_entry keymap[KEYMAP_LEN];
- 	struct input_dev *input_dev;
-+	bool has_switches;
- 	bool wakeup_mode;
- };
- 
-@@ -69,7 +70,7 @@ static int intel_vbtn_input_setup(struct platform_device *device)
- 		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
- 	}
- 
--	if (true) {
-+	if (priv->has_switches) {
- 		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
- 		       ARRAY_SIZE(intel_vbtn_switchmap) *
- 		       sizeof(struct key_entry));
-@@ -137,16 +138,12 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 
- static void detect_tablet_mode(struct platform_device *device)
- {
--	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
- 	unsigned long long vgbs;
- 	acpi_status status;
- 	int m;
- 
--	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
--		return;
--
- 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	if (ACPI_FAILURE(status))
- 		return;
-@@ -157,6 +154,19 @@ static void detect_tablet_mode(struct platform_device *device)
- 	input_report_switch(priv->input_dev, SW_DOCK, m);
- }
- 
-+static bool intel_vbtn_has_switches(acpi_handle handle)
-+{
-+	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
-+	unsigned long long vgbs;
-+	acpi_status status;
-+
-+	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
-+		return false;
-+
-+	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
-+	return ACPI_SUCCESS(status);
-+}
-+
- static int intel_vbtn_probe(struct platform_device *device)
- {
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
-@@ -175,13 +185,16 @@ static int intel_vbtn_probe(struct platform_device *device)
- 		return -ENOMEM;
- 	dev_set_drvdata(&device->dev, priv);
- 
-+	priv->has_switches = intel_vbtn_has_switches(handle);
-+
- 	err = intel_vbtn_input_setup(device);
- 	if (err) {
- 		pr_err("Failed to setup Intel Virtual Button\n");
- 		return err;
- 	}
- 
--	detect_tablet_mode(device);
-+	if (priv->has_switches)
-+		detect_tablet_mode(device);
- 
- 	status = acpi_install_notify_handler(handle,
- 					     ACPI_DEVICE_NOTIFY,
+>  	[0]	= KEY_MEDIA,
+>  	[1]	= KEY_NEXTSONG,
+>  	[2]	= KEY_PLAYPAUSE,
+> @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
+>  	[37]	= KEY_UNKNOWN,
+>  	[38]	= KEY_MICMUTE,
+>  	[255]	= KEY_PROG3,
+> +	[65535]	= KEY_UNKNOWN,
+>  };
+>  
+>  /*
+> @@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
+>  					&table->keymap[i];
+>  
+>  		/* Uninitialized entries are 0 aka KEY_RESERVED. */
+> -		u16 keycode = (bios_entry->keycode <
+> -			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+> -			bios_to_linux_keycode[bios_entry->keycode] :
+> -			KEY_RESERVED;
+> +		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
+>  
+>  		/*
+>  		 * Log if we find an entry in the DMI table that we don't
+> 
+
+Something like:
+
+		u16 keycode;
+
+		keycode = bios_entry->keycode == 0xffff ? KEY_UNKNOWN :
+			(bios_entry->keycode <
+			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+			bios_to_linux_keycode[bios_entry->keycode] :
+			KEY_RESERVED;
+
+
+
+Also please fix this:
+(no To-header on input) <>
+
 -- 
-2.25.1
+~Randy
