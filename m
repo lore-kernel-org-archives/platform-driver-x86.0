@@ -1,12 +1,12 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 70/72] platform/x86: hp-wmi: Convert simple_strtoul() to kstrtou32()
-Date: Mon,  8 Jun 2020 19:24:58 -0400
-Message-ID: <20200608232500.3369581-70-sashal@kernel.org>
-References: <20200608232500.3369581-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 101/106] platform/x86: hp-wmi: Convert simple_strtoul() to kstrtou32()
+Date: Mon,  8 Jun 2020 19:22:33 -0400
+Message-ID: <20200608232238.3368589-101-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200608232500.3369581-1-sashal@kernel.org>
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
