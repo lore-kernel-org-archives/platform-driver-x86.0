@@ -1,44 +1,76 @@
-From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Subject: [PATCH v4 4/7] ACPI: button: Use input_device_enabled() helper
-Date: Mon,  8 Jun 2020 13:22:08 +0200
-Message-ID: <20200608112211.12125-5-andrzej.p@collabora.com>
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 1/3] platform/x86: dell-wmi: add new backlight events
+Date: Mon, 8 Jun 2020 15:30:52 +0000
+Message-ID: <3e0d394545954ed79b8f883e1ac93338@AUSX13MPC105.AMER.DELL.COM>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <7dbe4e9e5ed64e4704b1c4ae13ac84df644ccc13.1591584631.git.y.linux@paritcher.com>
+ <20200608083503.l5g5iq52ezxkobvv@pali>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200608112211.12125-1-andrzej.p@collabora.com>
+In-Reply-To: <20200608083503.l5g5iq52ezxkobvv@pali>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Barry
+To: pali@kernel.org, y.linux@paritcher.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-A new helper is available, so use it.
+> -----Original Message-----
+> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
+> owner@vger.kernel.org> On Behalf Of Pali Roh=E1r
+> Sent: Monday, June 8, 2020 3:35 AM
+> To: Y Paritcher
+> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+> Matthew Garrett
+> Subject: Re: [PATCH 1/3] platform/x86: dell-wmi: add new backlight events
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> On Monday 08 June 2020 00:22:24 Y Paritcher wrote:
+> > Ignore events with a type of 0x0010 and a code of 0x57 / 0x58,
+> > this silences the following messages being logged on a
+> > Dell Inspiron 5593:
+> >
+> > dell_wmi: Unknown key with type 0x0010 and code 0x0057 pressed
+> > dell_wmi: Unknown key with type 0x0010 and code 0x0058 pressed
+> >
+> > Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+> > ---
+> >  drivers/platform/x86/dell-wmi.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/del=
+l-
+> wmi.c
+> > index c25a4286d766..0b4f72f923cd 100644
+> > --- a/drivers/platform/x86/dell-wmi.c
+> > +++ b/drivers/platform/x86/dell-wmi.c
+> > @@ -252,6 +252,10 @@ static const struct key_entry
+> dell_wmi_keymap_type_0010[] =3D {
+> >  	/* Fn-lock switched to multimedia keys */
+> >  	{ KE_IGNORE, 0x1, { KEY_RESERVED } },
+> >
+> > +	/* Backlight brightness level */
+> > +	{ KE_KEY,    0x57, { KEY_BRIGHTNESSDOWN } },
+> > +	{ KE_KEY,    0x58, { KEY_BRIGHTNESSUP } },
+> > +
 
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
----
- drivers/acpi/button.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+For these particular events are they emitted by another interface as well i=
+n this
+platform?
 
-diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-index ff7ab291f678..4deb2b48d03c 100644
---- a/drivers/acpi/button.c
-+++ b/drivers/acpi/button.c
-@@ -411,7 +411,7 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
- 		input = button->input;
- 		if (button->type == ACPI_BUTTON_TYPE_LID) {
- 			mutex_lock(&button->input->mutex);
--			users = button->input->users;
-+			users = input_device_enabled(button->input);
- 			mutex_unlock(&button->input->mutex);
- 			if (users)
- 				acpi_lid_update_state(device, true);
-@@ -460,7 +460,7 @@ static int acpi_button_resume(struct device *dev)
- 
- 	button->suspended = false;
- 	mutex_lock(&input->mutex);
--	if (button->type == ACPI_BUTTON_TYPE_LID && input->users) {
-+	if (button->type == ACPI_BUTTON_TYPE_LID && input_device_enabled(input)) {
- 		button->last_state = !!acpi_lid_evaluate_state(device);
- 		button->last_time = ktime_get();
- 		acpi_lid_initialize_state(device);
--- 
-2.17.1
+If so they should be KE_IGNORE so you don't end up with double notification=
+s to
+userspace.
+
+> >  	/* Keyboard backlight change notification */
+> >  	{ KE_IGNORE, 0x3f, { KEY_RESERVED } },
+>=20
+> Please, keep codes sorted.
+>=20
+> >
+> > --
+> > 2.27.0
+> >
