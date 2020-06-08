@@ -1,51 +1,75 @@
 From: Y Paritcher <y.linux@paritcher.com>
-Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Date: Mon, 8 Jun 2020 18:53:35 -0400
-Message-ID: <53ad1d28-91d1-5dd0-3430-e2ee752df06f@paritcher.com>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
- <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
- <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
- <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
- <01169d6e-1bb1-6fc5-0690-0e8f44941cce@paritcher.com>
- <6cfba0ce42a74b39b5b80e9c621e2601@AUSX13MPC105.AMER.DELL.COM>
+Subject: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to bios_to_linux_keycode
+Date: Mon,  8 Jun 2020 19:05:30 -0400
+Message-ID: <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
+References: <cover.1591584631.git.y.linux@paritcher.com> <cover.1591656154.git.y.linux@paritcher.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6cfba0ce42a74b39b5b80e9c621e2601@AUSX13MPC105.AMER.DELL.COM>
-Content-Language: en-US
+In-Reply-To: <cover.1591656154.git.y.linux@paritcher.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com, hdegoede@redhat.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, pali@kernel.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>, Mario.Limonciello@dell.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 6/8/20 6:00 PM, Mario.Limonciello@dell.com wrote:
->>
->> this is the WMI event from pressing the Fn lock key.
->> this indicates which mode it is switching to.
->>
->> this changes if the default for pressing the F[1-12] should be Function or
->> media.
->> the scancodes of the Fn keys are properly transmitted, this just inverts
->> which
->> ones are sent by default and which are sent when pressing the Fn+F[1-12]
->>
->> In other words, there are 24 scancode the only difference is which 12 are
->> default
->> and which 12 are when pressing with the Fn key
->>>>
->>>> Therefore i agree this should have it's own case in
-> 
-> To me this sounds like it makes most sense to either be an evdev switch which indicates
-> which mode the fn key is set to when an event comes in.  You can populate the starting
-> mode by looking up from a token.
-> https://github.com/dell/libsmbios/blob/master/doc/token_list.csv#L987
-> 
-> Any other thoughts from others?
-> 
+Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
+keycode) to allow for a new keycode 0xffff, this silences the following
+messages being logged at startup on a Dell Inspiron 5593:
 
-beware that sometimes the key will do the unexpected.
+    dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
+    dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
 
-If the Fn lock is turned off in the bios pressing the Fn lock key
-will send an event with the current mode again, as switching is disallowed.
+as per this code comment:
+
+   Log if we find an entry in the DMI table that we don't
+   understand.  If this happens, we should figure out what
+   the entry means and add it to bios_to_linux_keycode.
+
+These are keycodes included in the 0xB2 DMI table, for which the
+corosponding keys are not known.
+
+Now when a user will encounter this key, a proper message wil be printed:
+
+    dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
+
+This will then allow the key to be identified properly.
+
+Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+---
+ drivers/platform/x86/dell-wmi.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 6b510f8431a3..dae1db96b5a0 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -196,7 +196,7 @@ struct dell_dmi_results {
+ };
+ 
+ /* Uninitialized entries here are KEY_RESERVED == 0. */
+-static const u16 bios_to_linux_keycode[256] = {
++static const u16 bios_to_linux_keycode[65536] = {
+ 	[0]	= KEY_MEDIA,
+ 	[1]	= KEY_NEXTSONG,
+ 	[2]	= KEY_PLAYPAUSE,
+@@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
+ 	[37]	= KEY_UNKNOWN,
+ 	[38]	= KEY_MICMUTE,
+ 	[255]	= KEY_PROG3,
++	[65535]	= KEY_UNKNOWN,
+ };
+ 
+ /*
+@@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
+ 					&table->keymap[i];
+ 
+ 		/* Uninitialized entries are 0 aka KEY_RESERVED. */
+-		u16 keycode = (bios_entry->keycode <
+-			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+-			bios_to_linux_keycode[bios_entry->keycode] :
+-			KEY_RESERVED;
++		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
+ 
+ 		/*
+ 		 * Log if we find an entry in the DMI table that we don't
+-- 
+2.27.0
