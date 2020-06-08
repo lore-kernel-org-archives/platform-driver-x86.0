@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 262/274] platform/x86: intel-vbtn: Only blacklist SW_TABLET_MODE on the 9 / "Laptop" chasis-type
-Date: Mon,  8 Jun 2020 19:05:55 -0400
-Message-ID: <20200608230607.3361041-262-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 263/274] platform/x86: asus_wmi: Reserve more space for struct bias_args
+Date: Mon,  8 Jun 2020 19:05:56 -0400
+Message-ID: <20200608230607.3361041-263-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,82 +9,60 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>, Mario Limonciello <mario.limonciello@dell.com>, Mario Limonciello <Mario.limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Chris Chiu <chiu@endlessm.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Chris Chiu <chiu@endlessm.com>
 
-[ Upstream commit cfae58ed681c5fe0185db843013ecc71cd265ebf ]
+[ Upstream commit 7b91f1565fbfbe5a162d91f8a1f6c5580c2fc1d0 ]
 
-The HP Stream x360 11-p000nd no longer report SW_TABLET_MODE state / events
-with recent kernels. This model reports a chassis-type of 10 / "Notebook"
-which is not on the recently introduced chassis-type whitelist
+On the ASUS laptop UX325JA/UX425JA, most of the media keys are not
+working due to the ASUS WMI driver fails to be loaded. The ACPI error
+as follows leads to the failure of asus_wmi_evaluate_method.
+  ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [IIA3] at bit offset/length 96/32 exceeds size of target Buffer (96 bits) (20200326/dsopcode-203)
+  No Local Variables are initialized for Method [WMNB]
+  ACPI Error: Aborting method \_SB.ATKD.WMNB due to previous error (AE_AML_BUFFER_LIMIT) (20200326/psparse-531)
 
-Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-switch on 2-in-1's") added a chassis-type whitelist and only listed 31 /
-"Convertible" as being capable of generating valid SW_TABLET_MOD events.
+The DSDT for the WMNB part shows that 5 DWORD required for local
+variables and the 3rd variable IIA3 hit the buffer limit.
 
-Commit 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode
-switch on "Detachable" and "Portable" chassis-types") extended the
-whitelist with chassis-types 8 / "Portable" and 32 / "Detachable".
+Method (WMNB, 3, Serialized)
+{ ..
+    CreateDWordField (Arg2, Zero, IIA0)
+    CreateDWordField (Arg2, 0x04, IIA1)
+    CreateDWordField (Arg2, 0x08, IIA2)
+    CreateDWordField (Arg2, 0x0C, IIA3)
+    CreateDWordField (Arg2, 0x10, IIA4)
+    Local0 = (Arg1 & 0xFFFFFFFF)
+    If ((Local0 == 0x54494E49))
+  ..
+}
 
-And now we need to exten the whitelist again with 10 / "Notebook"...
+The limitation is determined by the input acpi_buffer size passed
+to the wmi_evaluate_method. Since the struct bios_args is the data
+structure used as input buffer by default for all ASUS WMI calls,
+the size needs to be expanded to fix the problem.
 
-The issue original fixed by the whitelist is really a ACPI DSDT bug on
-the Dell XPS 9360 where it has a VGBS which reports it is in tablet mode
-even though it is not a 2-in-1 at all, but a regular laptop.
-
-So since this is a workaround for a DSDT issue on that specific model,
-instead of extending the whitelist over and over again, lets switch to
-a blacklist and only blacklist the chassis-type of the model for which
-the chassis-type check was added.
-
-Note this also fixes the current version of the code no longer checking
-if dmi_get_system_info(DMI_CHASSIS_TYPE) returns NULL.
-
-Fixes: 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types")
-Cc: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 4921fc15dc6c..a05b80955dcd 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -158,21 +158,18 @@ static void detect_tablet_mode(struct platform_device *device)
- static bool intel_vbtn_has_switches(acpi_handle handle)
- {
- 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
--	unsigned long chassis_type_int;
- 	unsigned long long vgbs;
- 	acpi_status status;
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index bb7c529d7d16..cd212ee210e2 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -116,6 +116,8 @@ struct bios_args {
+ 	u32 arg0;
+ 	u32 arg1;
+ 	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
++	u32 arg4;
++	u32 arg5;
+ } __packed;
  
--	if (kstrtoul(chassis_type, 10, &chassis_type_int))
--		return false;
--
--	switch (chassis_type_int) {
--	case  8: /* Portable */
--	case 31: /* Convertible */
--	case 32: /* Detachable */
--		break;
--	default:
-+	/*
-+	 * Some normal laptops have a VGBS method despite being non-convertible
-+	 * and their VGBS method always returns 0, causing detect_tablet_mode()
-+	 * to report SW_TABLET_MODE=1 to userspace, which causes issues.
-+	 * These laptops have a DMI chassis_type of 9 ("Laptop"), do not report
-+	 * switches on any devices with a DMI chassis_type of 9.
-+	 */
-+	if (chassis_type && strcmp(chassis_type, "9") == 0)
- 		return false;
--	}
- 
- 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	return ACPI_SUCCESS(status);
+ /*
 -- 
 2.25.1
