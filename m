@@ -1,50 +1,77 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 261/274] platform/x86: intel-hid: Add a quirk to support HP Spectre X2 (2015)
-Date: Mon,  8 Jun 2020 19:05:54 -0400
-Message-ID: <20200608230607.3361041-261-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 178/274] platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types
+Date: Mon,  8 Jun 2020 19:04:31 -0400
+Message-ID: <20200608230607.3361041-178-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Nickolai Kozachenko <daemongloom@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, Mario Limonciello <Mario.limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Nickolai Kozachenko <daemongloom@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 8fe63eb757ac6e661a384cc760792080bdc738dc ]
+[ Upstream commit 1fac39fd0316b19c3e57a182524332332d1643ce ]
 
-HEBC method reports capabilities of 5 button array but HP Spectre X2 (2015)
-does not have this control method (the same was for Wacom MobileStudio Pro).
-Expand previous DMI quirk by Alex Hung to also enable 5 button array
-for this system.
+Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
+switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
+reporting SW_TABLET_MODE = 1 to userspace on laptops.
 
-Signed-off-by: Nickolai Kozachenko <daemongloom@gmail.com>
+Some devices with a detachable keyboard and using the intel-vbnt (INT33D6)
+interface to report if they are in tablet mode (keyboard detached) or not,
+report 32 / "Detachable" as chassis-type, e.g. the HP Pavilion X2 series.
+
+Other devices with a detachable keyboard and using the intel-vbnt (INT33D6)
+interface to report SW_TABLET_MODE, report 8 / "Portable" as chassis-type.
+The Dell Venue 11 Pro 7130 is an example of this.
+
+Extend the DMI chassis-type check to also accept Portables and Detachables
+so that the intel-vbtn driver will report SW_TABLET_MODE on these devices.
+
+Note the chassis-type check was originally added to avoid a false-positive
+tablet-mode report on the Dell XPS 9360 laptop. To the best of my knowledge
+that laptop is using a chassis-type of 9 / "Laptop", so after this commit
+we still ignore the tablet-switch for that chassis-type.
+
+Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-hid.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/platform/x86/intel-vbtn.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index cc7dd4d87cce..9ee79b74311c 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -79,6 +79,13 @@ static const struct dmi_system_id button_array_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Wacom MobileStudio Pro 16"),
- 		},
- 	},
-+	{
-+		.ident = "HP Spectre x2 (2015)",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HP Spectre x2 Detachable"),
-+		},
-+	},
- 	{ }
- };
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 500fae82e12c..4921fc15dc6c 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -158,12 +158,22 @@ static void detect_tablet_mode(struct platform_device *device)
+ static bool intel_vbtn_has_switches(acpi_handle handle)
+ {
+ 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
++	unsigned long chassis_type_int;
+ 	unsigned long long vgbs;
+ 	acpi_status status;
  
+-	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
++	if (kstrtoul(chassis_type, 10, &chassis_type_int))
+ 		return false;
+ 
++	switch (chassis_type_int) {
++	case  8: /* Portable */
++	case 31: /* Convertible */
++	case 32: /* Detachable */
++		break;
++	default:
++		return false;
++	}
++
+ 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+ 	return ACPI_SUCCESS(status);
+ }
 -- 
 2.25.1
