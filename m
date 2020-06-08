@@ -1,118 +1,120 @@
 From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Date: Mon, 8 Jun 2020 15:40:53 +0000
-Message-ID: <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
+Subject: RE: [PATCH 3/3] platform/x86: dell-wmi: add keys to
+ bios_to_linux_keycode
+Date: Mon, 8 Jun 2020 15:46:44 +0000
+Message-ID: <8baab72e3d2e407792c3ffa1d9fffba8@AUSX13MPC105.AMER.DELL.COM>
 References: <cover.1591584631.git.y.linux@paritcher.com>
- <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
+ <13951508596a3f654c6d47f5380ddb4f38e2f6b5.1591584631.git.y.linux@paritcher.com>
+ <20200608090017.4qgtbosz7oullex2@pali>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
+In-Reply-To: <20200608090017.4qgtbosz7oullex2@pali>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: y.linux@paritcher.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, pali@kernel.org
+To: pali@kernel.org, y.linux@paritcher.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 > -----Original Message-----
 > From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
-> owner@vger.kernel.org> On Behalf Of Y Paritcher
-> Sent: Sunday, June 7, 2020 11:22 PM
+> owner@vger.kernel.org> On Behalf Of Pali Roh=E1r
+> Sent: Monday, June 8, 2020 4:00 AM
+> To: Y Paritcher
 > Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
-> Matthew Garrett; Pali Roh=E1r
-> Subject: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+> Matthew Garrett
+> Subject: Re: [PATCH 3/3] platform/x86: dell-wmi: add keys to
+> bios_to_linux_keycode
 >=20
 >=20
 > [EXTERNAL EMAIL]
 >=20
-> Ignore events with a type of 0x0012 and a code of 0xe035,
-> this silences the following messages being logged when
-> pressing the Fn-lock key on a Dell Inspiron 5593:
+> Hello!
 >=20
-> dell_wmi: Unknown WMI event type 0x12
-> dell_wmi: Unknown key with type 0x0012 and code 0xe035 pressed
+> On Monday 08 June 2020 00:22:26 Y Paritcher wrote:
+> > Increase length of bios_to_linux_keycode to 2 bytes to allow for a new
+> > keycode 0xffff, this silences the following messages being logged at
+> > startup on a Dell Inspiron 5593
 
-Event type 0x12 is for "System Events".  This is the type of events that
-you typically would see come in for things "like" the wrong power adapter
-being plugged in on Windows or stuff about plugging a Thunderbolt dock into
-a port that doesn't support Thunderbolt.
+Which event type?  Can you show the whole WMI buffer that came through?
 
-A message might look something like (paraphrased)
-"Your system requires a 180W power adapter to charge effectively, but you
-plugged in a 60W adapter."
-
-There often is extended data with these events.  As such I don't believe al=
-l
-information in event type 0x0012 should be treated like scan codes like tho=
-se in
-0x10 or 0x11.
-
-I would guess that Fn-lock on this machine probably has extended data in th=
-e next
-showing whether it was turned on and off.  If it does, perhaps it makes sen=
-se to
-send this information to userspace as an evdev switch instead.
-
->=20
-> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
-> ---
->  drivers/platform/x86/dell-wmi.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-
+> >
+> > dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
+> > dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
+> >
+> > Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+> > ---
+> >  drivers/platform/x86/dell-wmi.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/del=
+l-
 > wmi.c
-> index 0b4f72f923cd..f37e7e9093c2 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -334,6 +334,14 @@ static const struct key_entry
-> dell_wmi_keymap_type_0011[] =3D {
->  	{ KE_IGNORE, KBD_LED_AUTO_100_TOKEN, { KEY_RESERVED } },
->  };
+> > index f37e7e9093c2..5ef716e3034f 100644
+> > --- a/drivers/platform/x86/dell-wmi.c
+> > +++ b/drivers/platform/x86/dell-wmi.c
+> > @@ -196,7 +196,7 @@ struct dell_dmi_results {
+> >  };
+> >
+> >  /* Uninitialized entries here are KEY_RESERVED =3D=3D 0. */
+> > -static const u16 bios_to_linux_keycode[256] =3D {
+> > +static const u16 bios_to_linux_keycode[65536] =3D {
 >=20
-> +/*
-> + * Keymap for WMI events of type 0x0012
-> + */
-> +static const struct key_entry dell_wmi_keymap_type_0012[] =3D {
-> +	/* Fn-lock button pressed */
-> +	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
-> +};
-> +
->  static void dell_wmi_process_key(struct wmi_device *wdev, int type, int
-> code)
->  {
->  	struct dell_wmi_priv *priv =3D dev_get_drvdata(&wdev->dev);
-> @@ -425,6 +433,7 @@ static void dell_wmi_notify(struct wmi_device *wdev,
->  			break;
->  		case 0x0010: /* Sequence of keys pressed */
->  		case 0x0011: /* Sequence of events occurred */
-> +		case 0x0012: /* Sequence of events occurred */
->  			for (i =3D 2; i < len; ++i)
->  				dell_wmi_process_key(wdev, buffer_entry[1],
->  						     buffer_entry[i]);
-> @@ -556,6 +565,7 @@ static int dell_wmi_input_setup(struct wmi_device
-> *wdev)
->  			 ARRAY_SIZE(dell_wmi_keymap_type_0000) +
->  			 ARRAY_SIZE(dell_wmi_keymap_type_0010) +
->  			 ARRAY_SIZE(dell_wmi_keymap_type_0011) +
-> +			 ARRAY_SIZE(dell_wmi_keymap_type_0012) +
->  			 1,
->  			 sizeof(struct key_entry), GFP_KERNEL);
->  	if (!keymap) {
-> @@ -600,6 +610,13 @@ static int dell_wmi_input_setup(struct wmi_device
-> *wdev)
->  		pos++;
->  	}
+> This change dramatically increase memory usage. I guess other that
+> maintainers would not like such change.
 >=20
-> +	/* Append table with events of type 0x0012 */
-> +	for (i =3D 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
-> +		keymap[pos] =3D dell_wmi_keymap_type_0012[i];
-> +		keymap[pos].code |=3D (0x0012 << 16);
-> +		pos++;
-> +	}
-> +
->  	/*
->  	 * Now append also table with "legacy" events of type 0x0000. Some of
->  	 * them are reported also on laptops which have scancodes in DMI.
-> --
-> 2.27.0
+> >  	[0]	=3D KEY_MEDIA,
+> >  	[1]	=3D KEY_NEXTSONG,
+> >  	[2]	=3D KEY_PLAYPAUSE,
+> > @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] =3D {
+> >  	[37]	=3D KEY_UNKNOWN,
+> >  	[38]	=3D KEY_MICMUTE,
+> >  	[255]	=3D KEY_PROG3,
+> > +	[65535]	=3D KEY_UNKNOWN,
+>=20
+> Also it seems that this change is not complete. It looks like that you
+> map two different scancodes (0x48 and 0x50) to same keycodes, moreover
+> both are unknown.
+>=20
+> Could you please describe which key presses (or events) generate
+> delivering these WMI scancode events?
+>=20
+> Note that purpose of printing unknown/unrecognized keys messages is to
+> inform that current pressed key was not processed or that it was
+> ignored.
+>=20
+> For me it looks like this just just hide information that key was not
+> processed correctly as this change does not implement correct processing
+> of this key.
+>=20
+> Also, could you share documentation about these 0x48/0x50 events? Or it
+> is under NDA?
+>=20
+> >  };
+> >
+> >  /*
+> > --
+> > 2.27.0
+> >
+
+I would actually question if there is value to lines in dell-wmi.c like thi=
+s:
+
+pr_info("Unknown WMI event type 0x%x\n", (int)buffer_entry[1]);
+
+and
+
+pr_info("Unknown key with type 0x%04x and code 0x%04x pressed\n", type, cod=
+e);
+
+In both of those cases the information doesn't actually help the user, by d=
+efault it's
+ignored by the driver anyway.  It just notifies the user it's something the=
+ driver doesn't
+comprehend.  I would think these are better suited to downgrade to debug.  =
+And if
+a key combination isn't doing something expected the user can use dyndbg to=
+ turn it
+back on and can be debugged what should be populated or "explicitly" ignore=
+d.
