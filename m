@@ -1,151 +1,74 @@
-From: Y Paritcher <y.linux@paritcher.com>
-Subject: Re: [PATCH 3/3] platform/x86: dell-wmi: add keys to
- bios_to_linux_keycode
-Date: Mon, 8 Jun 2020 16:12:54 -0400
-Message-ID: <e447a347-a2a2-4196-b3f8-01389323d268@paritcher.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 1/3] platform/x86: dell-wmi: add new backlight events
+Date: Mon, 8 Jun 2020 20:14:15 +0000
+Message-ID: <14b9e7d3a3e842e991e4e5e271b447e7@AUSX13MPC105.AMER.DELL.COM>
 References: <cover.1591584631.git.y.linux@paritcher.com>
- <13951508596a3f654c6d47f5380ddb4f38e2f6b5.1591584631.git.y.linux@paritcher.com>
- <20200608090017.4qgtbosz7oullex2@pali>
- <8baab72e3d2e407792c3ffa1d9fffba8@AUSX13MPC105.AMER.DELL.COM>
+ <7dbe4e9e5ed64e4704b1c4ae13ac84df644ccc13.1591584631.git.y.linux@paritcher.com>
+ <20200608083503.l5g5iq52ezxkobvv@pali>
+ <3e0d394545954ed79b8f883e1ac93338@AUSX13MPC105.AMER.DELL.COM>
+ <e91bb21e-98fa-f469-cc24-abc9ae200e4d@paritcher.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8baab72e3d2e407792c3ffa1d9fffba8@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <e91bb21e-98fa-f469-cc24-abc9ae200e4d@paritcher.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com, pali@kernel.org
+To: y.linux@paritcher.com, pali@kernel.org
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 6/8/20 11:46 AM, Mario.Limonciello@dell.com wrote:
->> -----Original Message-----
->> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
->> owner@vger.kernel.org> On Behalf Of Pali Rohár
->> Sent: Monday, June 8, 2020 4:00 AM
->> To: Y Paritcher
->> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
->> Matthew Garrett
->> Subject: Re: [PATCH 3/3] platform/x86: dell-wmi: add keys to
->> bios_to_linux_keycode
->>
->>
->> [EXTERNAL EMAIL]
->>
->> Hello!
->>
->> On Monday 08 June 2020 00:22:26 Y Paritcher wrote:
->>> Increase length of bios_to_linux_keycode to 2 bytes to allow for a new
->>> keycode 0xffff, this silences the following messages being logged at
->>> startup on a Dell Inspiron 5593
-> 
-> Which event type?  Can you show the whole WMI buffer that came through?
-> 
->>>
->>> dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
->>> dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
->>>
->>> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
->>> ---
->>>  drivers/platform/x86/dell-wmi.c | 3 ++-
->>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-
->> wmi.c
->>> index f37e7e9093c2..5ef716e3034f 100644
->>> --- a/drivers/platform/x86/dell-wmi.c
->>> +++ b/drivers/platform/x86/dell-wmi.c
->>> @@ -196,7 +196,7 @@ struct dell_dmi_results {
->>>  };
->>>
->>>  /* Uninitialized entries here are KEY_RESERVED == 0. */
->>> -static const u16 bios_to_linux_keycode[256] = {
->>> +static const u16 bios_to_linux_keycode[65536] = {
->>
->> This change dramatically increase memory usage. I guess other that
->> maintainers would not like such change.
->>
->>>  	[0]	= KEY_MEDIA,
->>>  	[1]	= KEY_NEXTSONG,
->>>  	[2]	= KEY_PLAYPAUSE,
->>> @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
->>>  	[37]	= KEY_UNKNOWN,
->>>  	[38]	= KEY_MICMUTE,
->>>  	[255]	= KEY_PROG3,
->>> +	[65535]	= KEY_UNKNOWN,
->>
->> Also it seems that this change is not complete. It looks like that you
->> map two different scancodes (0x48 and 0x50) to same keycodes, moreover
->> both are unknown.
->>
->> Could you please describe which key presses (or events) generate
->> delivering these WMI scancode events?
->>
->> Note that purpose of printing unknown/unrecognized keys messages is to
->> inform that current pressed key was not processed or that it was
->> ignored.
->>
->> For me it looks like this just just hide information that key was not
->> processed correctly as this change does not implement correct processing
->> of this key.
-
-
-The dell_wmi: firmware scancode XXXX maps to unrecognized keycode XXXX
-events are emitted at startup when processing DMI table entries that dell-wmi
-does not recognize.
-
-my DMI table contains among others:
-48 00 FF FF 
-50 00 FF FF
-
-the scan/keycodes are 2 bytes the array was only 1 byte until now as there were
-never any reported keycodes with the higher byte set.
-
-
-unlike my other patches this one is not for key press events. None of the keys on my laptop correspond to these scancode/keycode.
-
-the reason for this type of log event is in a comment:
-
-/*
- * Log if we find an entry in the DMI table that we don't
- * understand.  If this happens, we should figure out what
- * the entry means and add it to bios_to_linux_keycode.
- */
-
-therefore I tried adding this to the list of known keycodes.
-As of now almost half of the keycodes in the list are KEY_UNKNOWN.
-
-If anyone has a way of figuring out how to map this to a specific key,
-i will try to identify it further.
-
-
->>
->> Also, could you share documentation about these 0x48/0x50 events? Or it
->> is under NDA?
->>
-
-I am just a regular user. I have no clue what they are nor any inside info.
->>>  };
->>>
->>>  /*
->>> --
->>> 2.27.0
->>>
-> 
-> I would actually question if there is value to lines in dell-wmi.c like this:
-> 
-> pr_info("Unknown WMI event type 0x%x\n", (int)buffer_entry[1]);
-> 
-> and
-> 
-> pr_info("Unknown key with type 0x%04x and code 0x%04x pressed\n", type, code);
-> 
-> In both of those cases the information doesn't actually help the user, by default it's
-> ignored by the driver anyway.  It just notifies the user it's something the driver doesn't
-> comprehend.  I would think these are better suited to downgrade to debug.  And if
-> a key combination isn't doing something expected the user can use dyndbg to turn it
-> back on and can be debugged what should be populated or "explicitly" ignored.
-> 
-
-I agree with this. The only reason i am adding these definitions is to get rid of 
-annoying log messages. They should really be debug. 
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBZIFBhcml0Y2hlciA8eS5saW51
+eEBwYXJpdGNoZXIuY29tPg0KPiBTZW50OiBNb25kYXksIEp1bmUgOCwgMjAyMCAzOjEyIFBNDQo+
+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW87IHBhbGlAa2VybmVsLm9yZw0KPiBDYzogbGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZzsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7
+DQo+IG1qZzU5QHNyY2YudWNhbS5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIHBsYXRm
+b3JtL3g4NjogZGVsbC13bWk6IGFkZCBuZXcgYmFja2xpZ2h0IGV2ZW50cw0KPiANCj4gDQo+IFtF
+WFRFUk5BTCBFTUFJTF0NCj4gDQo+IE9uIDYvOC8yMCAxMTozMCBBTSwgTWFyaW8uTGltb25jaWVs
+bG9AZGVsbC5jb20gd3JvdGU6DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+
+IEZyb206IHBsYXRmb3JtLWRyaXZlci14ODYtb3duZXJAdmdlci5rZXJuZWwub3JnIDxwbGF0Zm9y
+bS1kcml2ZXIteDg2LQ0KPiA+PiBvd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFsZiBPZiBQ
+YWxpIFJvaMOhcg0KPiA+PiBTZW50OiBNb25kYXksIEp1bmUgOCwgMjAyMCAzOjM1IEFNDQo+ID4+
+IFRvOiBZIFBhcml0Y2hlcg0KPiA+PiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
+cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4+IE1hdHRoZXcgR2FycmV0
+dA0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIIDEvM10gcGxhdGZvcm0veDg2OiBkZWxsLXdtaTog
+YWRkIG5ldyBiYWNrbGlnaHQNCj4gZXZlbnRzDQo+ID4+DQo+ID4+DQo+ID4+IFtFWFRFUk5BTCBF
+TUFJTF0NCj4gPj4NCj4gPj4gT24gTW9uZGF5IDA4IEp1bmUgMjAyMCAwMDoyMjoyNCBZIFBhcml0
+Y2hlciB3cm90ZToNCj4gPj4+IElnbm9yZSBldmVudHMgd2l0aCBhIHR5cGUgb2YgMHgwMDEwIGFu
+ZCBhIGNvZGUgb2YgMHg1NyAvIDB4NTgsDQo+ID4+PiB0aGlzIHNpbGVuY2VzIHRoZSBmb2xsb3dp
+bmcgbWVzc2FnZXMgYmVpbmcgbG9nZ2VkIG9uIGENCj4gPj4+IERlbGwgSW5zcGlyb24gNTU5MzoN
+Cj4gPj4+DQo+ID4+PiBkZWxsX3dtaTogVW5rbm93biBrZXkgd2l0aCB0eXBlIDB4MDAxMCBhbmQg
+Y29kZSAweDAwNTcgcHJlc3NlZA0KPiA+Pj4gZGVsbF93bWk6IFVua25vd24ga2V5IHdpdGggdHlw
+ZSAweDAwMTAgYW5kIGNvZGUgMHgwMDU4IHByZXNzZWQNCj4gPj4+DQo+ID4+PiBTaWduZWQtb2Zm
+LWJ5OiBZIFBhcml0Y2hlciA8eS5saW51eEBwYXJpdGNoZXIuY29tPg0KPiA+Pj4gLS0tDQo+ID4+
+PiAgZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYyB8IDQgKysrKw0KPiA+Pj4gIDEgZmls
+ZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYw0KPiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2Rl
+bGwtDQo+ID4+IHdtaS5jDQo+ID4+PiBpbmRleCBjMjVhNDI4NmQ3NjYuLjBiNGY3MmY5MjNjZCAx
+MDA2NDQNCj4gPj4+IC0tLSBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gPj4+
+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gPj4+IEBAIC0yNTIsNiAr
+MjUyLDEwIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qga2V5X2VudHJ5DQo+ID4+IGRlbGxfd21pX2tl
+eW1hcF90eXBlXzAwMTBbXSA9IHsNCj4gPj4+ICAJLyogRm4tbG9jayBzd2l0Y2hlZCB0byBtdWx0
+aW1lZGlhIGtleXMgKi8NCj4gPj4+ICAJeyBLRV9JR05PUkUsIDB4MSwgeyBLRVlfUkVTRVJWRUQg
+fSB9LA0KPiA+Pj4NCj4gPj4+ICsJLyogQmFja2xpZ2h0IGJyaWdodG5lc3MgbGV2ZWwgKi8NCj4g
+Pj4+ICsJeyBLRV9LRVksICAgIDB4NTcsIHsgS0VZX0JSSUdIVE5FU1NET1dOIH0gfSwNCj4gPj4+
+ICsJeyBLRV9LRVksICAgIDB4NTgsIHsgS0VZX0JSSUdIVE5FU1NVUCB9IH0sDQo+ID4+PiArDQo+
+ID4NCj4gPiBGb3IgdGhlc2UgcGFydGljdWxhciBldmVudHMgYXJlIHRoZXkgZW1pdHRlZCBieSBh
+bm90aGVyIGludGVyZmFjZSBhcyB3ZWxsDQo+IGluIHRoaXMNCj4gPiBwbGF0Zm9ybT8NCj4gPg0K
+PiA+IElmIHNvIHRoZXkgc2hvdWxkIGJlIEtFX0lHTk9SRSBzbyB5b3UgZG9uJ3QgZW5kIHVwIHdp
+dGggZG91YmxlDQo+IG5vdGlmaWNhdGlvbnMgdG8NCj4gPiB1c2Vyc3BhY2UuDQo+IFRoYW5rIHlv
+dSBib3RoIGZvciB0aGUgcmV2aWV3LA0KPiBUaGlzIGlzIG15IGZpcnN0IHBhdGNoIHNvIGlmIGkg
+YW0gZG9pbmcgc29tZXRoaW5nIHdyb25nIHBsZWFzZSBsZXQgbWUga25vdy4NCj4gDQo+IEJvdGgg
+YmVmb3JlIGFuZCBhZnRlciB0aGlzIGNoYW5nZSB0aGV5IGFyZSBvbmx5IGVtaXR0ZWQgb25jZSAo
+dmVyaWZpZWQgdmlhDQo+IHNob3drZXlzKQ0KPiB0aGlzIGlzIGJlY2F1c2UgYGRlbGxfd21pX3By
+b2Nlc3Nfa2V5KClgIGNhbGxzDQo+IGBhY3BpX3ZpZGVvX2hhbmRsZXNfYnJpZ2h0bmVzc19rZXlf
+cHJlc3NlcygpYA0KPiBmb3IgYnJpZ2h0bmVzcyBldmVudHMsIGFuZCBgYWNwaV92aWRlb19oYW5k
+bGVzX2JyaWdodG5lc3Nfa2V5X3ByZXNzZXMoKWANCj4gbWFrZXMgc3VyZSBubyBkdXBsaWNhdGUg
+YWNwaS12aWRlbyBldmVudHMgYXJlIHNlbnQuDQoNClRoYXQncyBnb29kIHRvIGhlYXIgdGhhdCBp
+dCBhbHNvIGZpbHRlcnMgaXQsIGJ1dCBteSBvcGluaW9uIGlzIHRoYXQgZGVsbC13bWkuYw0Kc2hv
+dWxkIGFsc28gZmlsdGVyIGl0LiAgU28ganVzdCBjaGFuZ2UgS0VfS0VZIHRvIEtFX0lHTk9SRSBs
+aWtlIHRoZSBvdGhlciBldmVudHMuDQoNCj4gPg0KPiA+Pj4gIAkvKiBLZXlib2FyZCBiYWNrbGln
+aHQgY2hhbmdlIG5vdGlmaWNhdGlvbiAqLw0KPiA+Pj4gIAl7IEtFX0lHTk9SRSwgMHgzZiwgeyBL
+RVlfUkVTRVJWRUQgfSB9LA0KPiA+Pg0KPiA+PiBQbGVhc2UsIGtlZXAgY29kZXMgc29ydGVkLg0K
+PiANCj4gV2lsbCBmaXgNCj4gPj4NCj4gPj4+DQo+ID4+PiAtLQ0KPiA+Pj4gMi4yNy4wDQo+ID4+
+Pg0K
