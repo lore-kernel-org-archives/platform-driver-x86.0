@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 066/106] platform/x86: intel-vbtn: Also handle tablet-mode switch on "Detachable" and "Portable" chassis-types
-Date: Mon,  8 Jun 2020 19:21:58 -0400
-Message-ID: <20200608232238.3368589-66-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 065/106] platform/x86: intel-vbtn: Do not advertise switches to userspace if they are not there
+Date: Mon,  8 Jun 2020 19:21:57 -0400
+Message-ID: <20200608232238.3368589-65-sashal@kernel.org>
 References: <20200608232238.3368589-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,69 +9,107 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>, Mario Limonciello <Mario.limonciello@dell.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 1fac39fd0316b19c3e57a182524332332d1643ce ]
+[ Upstream commit 990fbb48067bf8cfa34b7d1e6e1674eaaef2f450 ]
 
 Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
 switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
-reporting SW_TABLET_MODE = 1 to userspace on laptops.
+reporting SW_TABLET_MODE = 1 to userspace on laptops (specifically on the
+Dell XPS 9360), to avoid e.g. userspace ignoring touchpad events because
+userspace thought the device was in tablet-mode.
 
-Some devices with a detachable keyboard and using the intel-vbnt (INT33D6)
-interface to report if they are in tablet mode (keyboard detached) or not,
-report 32 / "Detachable" as chassis-type, e.g. the HP Pavilion X2 series.
-
-Other devices with a detachable keyboard and using the intel-vbnt (INT33D6)
-interface to report SW_TABLET_MODE, report 8 / "Portable" as chassis-type.
-The Dell Venue 11 Pro 7130 is an example of this.
-
-Extend the DMI chassis-type check to also accept Portables and Detachables
-so that the intel-vbtn driver will report SW_TABLET_MODE on these devices.
-
-Note the chassis-type check was originally added to avoid a false-positive
-tablet-mode report on the Dell XPS 9360 laptop. To the best of my knowledge
-that laptop is using a chassis-type of 9 / "Laptop", so after this commit
-we still ignore the tablet-switch for that chassis-type.
+But if we are not getting the initial status of the switch because the
+device does not have a tablet mode, then we really should not advertise
+the presence of a tablet-mode switch to userspace at all, as userspace may
+use the mere presence of this switch for certain heuristics.
 
 Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel-vbtn.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 23cda7aa96cd..5f8120d12859 100644
+index e42203776727..23cda7aa96cd 100644
 --- a/drivers/platform/x86/intel-vbtn.c
 +++ b/drivers/platform/x86/intel-vbtn.c
-@@ -157,12 +157,22 @@ static void detect_tablet_mode(struct platform_device *device)
- static bool intel_vbtn_has_switches(acpi_handle handle)
+@@ -54,6 +54,7 @@ static const struct key_entry intel_vbtn_switchmap[] = {
+ struct intel_vbtn_priv {
+ 	struct key_entry keymap[KEYMAP_LEN];
+ 	struct input_dev *input_dev;
++	bool has_switches;
+ 	bool wakeup_mode;
+ };
+ 
+@@ -69,7 +70,7 @@ static int intel_vbtn_input_setup(struct platform_device *device)
+ 		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
+ 	}
+ 
+-	if (true) {
++	if (priv->has_switches) {
+ 		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
+ 		       ARRAY_SIZE(intel_vbtn_switchmap) *
+ 		       sizeof(struct key_entry));
+@@ -137,16 +138,12 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 
+ static void detect_tablet_mode(struct platform_device *device)
  {
- 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
-+	unsigned long chassis_type_int;
+-	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
  	unsigned long long vgbs;
  	acpi_status status;
+ 	int m;
  
 -	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
-+	if (kstrtoul(chassis_type, 10, &chassis_type_int))
- 		return false;
- 
-+	switch (chassis_type_int) {
-+	case  8: /* Portable */
-+	case 31: /* Convertible */
-+	case 32: /* Detachable */
-+		break;
-+	default:
-+		return false;
-+	}
-+
+-		return;
+-
  	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	return ACPI_SUCCESS(status);
+ 	if (ACPI_FAILURE(status))
+ 		return;
+@@ -157,6 +154,19 @@ static void detect_tablet_mode(struct platform_device *device)
+ 	input_report_switch(priv->input_dev, SW_DOCK, m);
  }
+ 
++static bool intel_vbtn_has_switches(acpi_handle handle)
++{
++	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
++	unsigned long long vgbs;
++	acpi_status status;
++
++	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
++		return false;
++
++	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
++	return ACPI_SUCCESS(status);
++}
++
+ static int intel_vbtn_probe(struct platform_device *device)
+ {
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+@@ -175,13 +185,16 @@ static int intel_vbtn_probe(struct platform_device *device)
+ 		return -ENOMEM;
+ 	dev_set_drvdata(&device->dev, priv);
+ 
++	priv->has_switches = intel_vbtn_has_switches(handle);
++
+ 	err = intel_vbtn_input_setup(device);
+ 	if (err) {
+ 		pr_err("Failed to setup Intel Virtual Button\n");
+ 		return err;
+ 	}
+ 
+-	detect_tablet_mode(device);
++	if (priv->has_switches)
++		detect_tablet_mode(device);
+ 
+ 	status = acpi_install_notify_handler(handle,
+ 					     ACPI_DEVICE_NOTIFY,
 -- 
 2.25.1
