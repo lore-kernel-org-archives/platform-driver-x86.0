@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 042/274] tools/power/x86/intel-speed-select: Fix CLX-N package information output
-Date: Mon,  8 Jun 2020 19:02:15 -0400
-Message-ID: <20200608230607.3361041-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 175/274] platform/x86: intel-vbtn: Use acpi_evaluate_integer()
+Date: Mon,  8 Jun 2020 19:04:28 -0400
+Message-ID: <20200608230607.3361041-175-sashal@kernel.org>
 References: <20200608230607.3361041-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,41 +9,64 @@ Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
 Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Prarit Bhargava <prarit@redhat.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, andriy.shevchenko@linux.intel.com, platform-driver-x86@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Prarit Bhargava <prarit@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 28c59ae6965ca0626e3150e2f2863e0f0c810ed7 ]
+[ Upstream commit 18937875a231d831c309716d6d8fc358f8381881 ]
 
-On CLX-N the perf-profile output is missing the package, die, and cpu
-output.  On CLX-N the pkg_dev struct will never be evaluated by the core
-code so pkg_dev.processed is always 0 and the package, die, and cpu
-information is never output.
+Use acpi_evaluate_integer() instead of open-coding it.
 
-Set the pkg_dev.processed flag to 1 for CLX-N processors.
+This is a preparation patch for adding a intel_vbtn_has_switches()
+helper function.
 
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: andriy.shevchenko@linux.intel.com
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
+Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/intel-speed-select/isst-config.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/intel-vbtn.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index b73763489410..3688f1101ec4 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -1169,6 +1169,7 @@ static void dump_clx_n_config_for_cpu(int cpu, void *arg1, void *arg2,
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index b5880936d785..191894d648bb 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -119,28 +119,21 @@ static void detect_tablet_mode(struct platform_device *device)
+ 	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+-	struct acpi_buffer vgbs_output = { ACPI_ALLOCATE_BUFFER, NULL };
+-	union acpi_object *obj;
++	unsigned long long vgbs;
+ 	acpi_status status;
+ 	int m;
  
- 		ctdp_level = &clx_n_pkg_dev.ctdp_level[0];
- 		pbf_info = &ctdp_level->pbf_info;
-+		clx_n_pkg_dev.processed = 1;
- 		isst_ctdp_display_information(cpu, outf, tdp_level, &clx_n_pkg_dev);
- 		free_cpu_set(ctdp_level->core_cpumask);
- 		free_cpu_set(pbf_info->core_cpumask);
+ 	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
+-		goto out;
++		return;
+ 
+-	status = acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
++	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+ 	if (ACPI_FAILURE(status))
+-		goto out;
+-
+-	obj = vgbs_output.pointer;
+-	if (!(obj && obj->type == ACPI_TYPE_INTEGER))
+-		goto out;
++		return;
+ 
+-	m = !(obj->integer.value & TABLET_MODE_FLAG);
++	m = !(vgbs & TABLET_MODE_FLAG);
+ 	input_report_switch(priv->input_dev, SW_TABLET_MODE, m);
+-	m = (obj->integer.value & DOCK_MODE_FLAG) ? 1 : 0;
++	m = (vgbs & DOCK_MODE_FLAG) ? 1 : 0;
+ 	input_report_switch(priv->input_dev, SW_DOCK, m);
+-out:
+-	kfree(vgbs_output.pointer);
+ }
+ 
+ static int intel_vbtn_probe(struct platform_device *device)
 -- 
 2.25.1
