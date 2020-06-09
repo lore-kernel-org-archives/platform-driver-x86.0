@@ -1,41 +1,67 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Date: Tue, 9 Jun 2020 17:49:38 +0200
-Message-ID: <20200609154938.udo7mn7ka7z7pr6c@pali>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v3 1/3] platform/x86: dell-wmi: add new backlight events
+Date: Tue, 9 Jun 2020 16:02:28 +0000
+Message-ID: <29f57822df4e45f192b72c6151f4697c@AUSX13MPC105.AMER.DELL.COM>
 References: <cover.1591584631.git.y.linux@paritcher.com>
- <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
- <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
- <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
- <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
+ <cover.1591673143.git.y.linux@paritcher.com>
+ <50885a0c51c6fb31d20ddeb7434572448f1453be.1591673143.git.y.linux@paritcher.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <50885a0c51c6fb31d20ddeb7434572448f1453be.1591673143.git.y.linux@paritcher.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com, Sebastian Reichel <sre@kernel.org>
-Cc: y.linux@paritcher.com, hdegoede@redhat.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, mjg59@srcf.ucam.org
+To: y.linux@paritcher.com, pali@kernel.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Monday 08 June 2020 20:36:58 Mario.Limonciello@dell.com wrote:
-> Can you please comment here how you would like to see events like this should come
-> through to userspace?
-> 
-> * Wrong power adapter (you have X and should have Y)
-> * You have plugged a dock into the wrong port
-> * Fn-lock mode
 
-In my opinion, Fn-lock mode is related to input subsystem and should be
-probably reported via input device. For a user, fn-lock is similar like
-caps-lock, scroll-lock or num-lock. Also fn-lock is provided by other
-laptops and therefore I would expect that kernel provide fn-lock state
-for all laptops (thinkpad / latitude / ...) via same interface. And not
-via dell-specific interface or general-vendor-message interface.
 
-Wrong power adapter sounds like something related to power subsystem.
-Adding Sebastian to the loop, maybe he can provide some useful ideas
-about it.
+> -----Original Message-----
+> From: Y Paritcher <y.linux@paritcher.com>
+> Sent: Monday, June 8, 2020 10:53 PM
+> To: Pali Roh=E1r
+> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+> Matthew Garrett; Limonciello, Mario
+> Subject: [PATCH v3 1/3] platform/x86: dell-wmi: add new backlight events
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> Add events with a type of 0x0010 and a code of 0x57 / 0x58,
+> this silences the following messages being logged on a
+> Dell Inspiron 5593:
+>=20
+> dell_wmi: Unknown key with type 0x0010 and code 0x0057 pressed
+> dell_wmi: Unknown key with type 0x0010 and code 0x0058 pressed
+>=20
+> These are brightness events and will be handled by acpi-video
+>=20
+> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
 
-And plugged dock into wrong port. This is probably dell-specific event
-and some interface for "vendor" messages from kernel to userspace would
-be needed to deliver such things.
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+
+> ---
+>  drivers/platform/x86/dell-wmi.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-
+> wmi.c
+> index c25a4286d766..0b2edfe2767d 100644
+> --- a/drivers/platform/x86/dell-wmi.c
+> +++ b/drivers/platform/x86/dell-wmi.c
+> @@ -255,6 +255,10 @@ static const struct key_entry
+> dell_wmi_keymap_type_0010[] =3D {
+>  	/* Keyboard backlight change notification */
+>  	{ KE_IGNORE, 0x3f, { KEY_RESERVED } },
+>=20
+> +	/* Backlight brightness level */
+> +	{ KE_KEY,    0x57, { KEY_BRIGHTNESSDOWN } },
+> +	{ KE_KEY,    0x58, { KEY_BRIGHTNESSUP } },
+> +
+>  	/* Mic mute */
+>  	{ KE_KEY, 0x150, { KEY_MICMUTE } },
+>=20
+> --
+> 2.27.0
