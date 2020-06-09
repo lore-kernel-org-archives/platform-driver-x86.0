@@ -1,114 +1,174 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v2 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Date: Tue, 9 Jun 2020 00:26:45 +0000
-Message-ID: <295ad85ecc464a57bffd5b783d4170a1@AUSX13MPC105.AMER.DELL.COM>
+From: Y Paritcher <y.linux@paritcher.com>
+Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
+ bios_to_linux_keycode
+Date: Mon, 8 Jun 2020 20:43:45 -0400
+Message-ID: <d48b54ab-09ad-381b-c130-c5f3cdb4da10@paritcher.com>
 References: <cover.1591584631.git.y.linux@paritcher.com>
  <cover.1591656154.git.y.linux@paritcher.com>
- <74fdb288757cf5970a558f920f531b3bd1c51b47.1591656154.git.y.linux@paritcher.com>
- <20200608233303.57ubv4rxo4tnaaxa@pali>
+ <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
+ <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
+ <20200608235508.wthtgilgmifwfgz2@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200608233303.57ubv4rxo4tnaaxa@pali>
+In-Reply-To: <20200608235508.wthtgilgmifwfgz2@pali>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: pali@kernel.org, y.linux@paritcher.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
+To: =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>, Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Mario.Limonciello@dell.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciA8cGFsaUBr
-ZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIEp1bmUgOCwgMjAyMCA2OjMzIFBNDQo+IFRvOiBZ
-IFBhcml0Y2hlcg0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgcGxhdGZvcm0t
-ZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7DQo+IE1hdHRoZXcgR2FycmV0dDsgTGltb25jaWVs
-bG8sIE1hcmlvDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMi8zXSBwbGF0Zm9ybS94ODY6IGRl
-bGwtd21pOiBhZGQgbmV3IGtleW1hcCB0eXBlDQo+IDB4MDAxMg0KPiANCj4gDQo+IFtFWFRFUk5B
-TCBFTUFJTF0NCj4gDQo+IE9uIE1vbmRheSAwOCBKdW5lIDIwMjAgMTk6MDU6MjkgWSBQYXJpdGNo
-ZXIgd3JvdGU6DQo+ID4gVGhlc2UgYXJlIGV2ZW50cyB3aXRoIGV4dGVuZGVkIGRhdGEuIFRoZSBl
-eHRlbmRlZCBkYXRhIGlzDQo+ID4gY3VycmVudGx5IGlnbm9yZWQgYXMgdXNlcnNwYWNlIGRvZXMg
-bm90IGhhdmUgYSB3YXkgdG8gZGVhbA0KPiA+IGl0Lg0KPiA+DQo+ID4gSWdub3JlIGV2ZW50IHdp
-dGggYSB0eXBlIG9mIDB4MDAxMiBhbmQgYSBjb2RlIG9mIDB4ZTAzNSwgYXMNCj4gPiB0aGUga2V5
-Ym9hcmQgY29udHJvbGxlciB0YWtlcyBjYXJlIG9mIEZuIGxvY2sgZXZlbnRzIGJ5IGl0c2VsZi4N
-Cj4gDQo+IE5pY2UhIFRoaXMgaXMgaW5mb3JtYXRpb24gd2hpY2ggaXMgcmVhbGx5IGltcG9ydGFu
-dCBhbmQgbmVlZCB0byBoYXZlIGl0DQo+IGRvY3VtZW50ZWQuDQo+IA0KPiA+IFRoaXMgc2lsZW5j
-ZXMgdGhlIGZvbGxvd2luZyBtZXNzYWdlcyBiZWluZyBsb2dnZWQgd2hlbg0KPiA+IHByZXNzaW5n
-IHRoZSBGbi1sb2NrIGtleSBvbiBhIERlbGwgSW5zcGlyb24gNTU5MzoNCj4gPg0KPiA+IGRlbGxf
-d21pOiBVbmtub3duIFdNSSBldmVudCB0eXBlIDB4MTINCj4gPiBkZWxsX3dtaTogVW5rbm93biBr
-ZXkgd2l0aCB0eXBlIDB4MDAxMiBhbmQgY29kZSAweGUwMzUgcHJlc3NlZA0KPiA+DQo+ID4gVGhp
-cyBpcyBjb25zaXN0ZW50IHdpdGggdGhlIGJlaGF2aW9yIGZvciB0aGUgRm4tbG9jayBrZXkNCj4g
-PiBlbHNld2hlcmUgaW4gdGhpcyBmaWxlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogWSBQYXJp
-dGNoZXIgPHkubGludXhAcGFyaXRjaGVyLmNvbT4NCj4gDQo+IEknbSBmaW5lIHdpdGggdGhpcyBw
-YXRjaCBub3cuDQo+IA0KPiBSZXZpZXdlZC1ieTogUGFsaSBSb2jDoXIgPHBhbGlAa2VybmVsLm9y
-Zz4NCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMgfCAy
-MCArKysrKysrKysrKysrKysrKysrLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTkgaW5zZXJ0aW9u
-cygrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZv
-cm0veDg2L2RlbGwtd21pLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLQ0KPiB3bWkuYw0K
-PiA+IGluZGV4IDBiMmVkZmUyNzY3ZC4uNmI1MTBmODQzMWEzIDEwMDY0NA0KPiA+IC0tLSBhL2Ry
-aXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3Jt
-L3g4Ni9kZWxsLXdtaS5jDQo+ID4gQEAgLTMzNCw2ICszMzQsMTUgQEAgc3RhdGljIGNvbnN0IHN0
-cnVjdCBrZXlfZW50cnkNCj4gZGVsbF93bWlfa2V5bWFwX3R5cGVfMDAxMVtdID0gew0KPiA+ICAJ
-eyBLRV9JR05PUkUsIEtCRF9MRURfQVVUT18xMDBfVE9LRU4sIHsgS0VZX1JFU0VSVkVEIH0gfSwN
-Cj4gPiAgfTsNCj4gPg0KPiA+ICsvKg0KPiA+ICsgKiBLZXltYXAgZm9yIFdNSSBldmVudHMgb2Yg
-dHlwZSAweDAwMTINCj4gPiArICogVGhleSBhcmUgZXZlbnRzIHdpdGggZXh0ZW5kZWQgZGF0YQ0K
-PiA+ICsgKi8NCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBrZXlfZW50cnkgZGVsbF93bWlfa2V5
-bWFwX3R5cGVfMDAxMltdID0gew0KPiA+ICsJLyogRm4tbG9jayBidXR0b24gcHJlc3NlZCAqLw0K
-PiA+ICsJeyBLRV9JR05PUkUsIDB4ZTAzNSwgeyBLRVlfUkVTRVJWRUQgfSB9LA0KPiA+ICt9Ow0K
-PiA+ICsNCj4gPiAgc3RhdGljIHZvaWQgZGVsbF93bWlfcHJvY2Vzc19rZXkoc3RydWN0IHdtaV9k
-ZXZpY2UgKndkZXYsIGludCB0eXBlLCBpbnQNCj4gY29kZSkNCj4gPiAgew0KPiA+ICAJc3RydWN0
-IGRlbGxfd21pX3ByaXYgKnByaXYgPSBkZXZfZ2V0X2RydmRhdGEoJndkZXYtPmRldik7DQo+ID4g
-QEAgLTQxOCwxMCArNDI3LDExIEBAIHN0YXRpYyB2b2lkIGRlbGxfd21pX25vdGlmeShzdHJ1Y3Qg
-d21pX2RldmljZQ0KPiAqd2RldiwNCj4gPg0KPiA+ICAJCXN3aXRjaCAoYnVmZmVyX2VudHJ5WzFd
-KSB7DQo+ID4gIAkJY2FzZSAweDAwMDA6IC8qIE9uZSBrZXkgcHJlc3NlZCBvciBldmVudCBvY2N1
-cnJlZCAqLw0KPiA+ICsJCWNhc2UgMHgwMDEyOiAvKiBFdmVudCB3aXRoIGV4dGVuZGVkIGRhdGEg
-b2NjdXJyZWQgKi8NCg0KSSBkb24ndCByZWFsbHkgbGlrZSB0aGlzIGJlaW5nIGhhbmRsZWQgYXMg
-YSBrZXkgYXMgaXQncyBqdXN0IGRpc2NhcmRpbmcgYWxsDQp0aGF0IGV4dGVuZGVkIGRhdGEuDQoN
-Cj4gDQo+IE1hcmlvLCBhcmUgeW91IGFibGUgdG8gZ2V0IHNvbWUgb2ZmaWNpYWwgZG9jdW1lbnRh
-dGlvbiBmb3IgdGhlc2UgMHgwMDEyDQo+IGV2ZW50IHR5cGVzPyBJIHRoaW5rIGl0IGNvdWxkIGJl
-IHJlYWxseSB1c2VmdWwgZm9yIGNvbW11bml0eSBzbyB0aGV5IGNhbg0KPiB1bmRlcnN0YW5kIGFu
-ZCBhZGQgZWFzaWx5IG5ldyB0eXBlIG9mIGNvZGUgYW5kIGV2ZW50cy4gQmVjYXVzZSBjdXJyZW50
-bHkNCj4gd2UgYXJlIGp1c3QgZ3Vlc3Npbmcgd2hhdCBpdCBjb3VsZCBiZS4gKEl0IGlzIHNlcXVl
-bmNlPyBPciBzaW5nbGUgZXZlbnQ/DQo+IE9yIHNpbmdsZSBldmVudCB3aXRoIGV4dGVuZGVkIGRh
-dGE/IEl0IGlzIGdlbmVyaWMgZXZlbnQ/IE9yIGl0IGlzIHJlYWwNCj4ga2V5cHJlc3M/IGV0Yy4u
-LikNCg0KSXQncyBhIHNpbmdsZSBldmVudCB3aXRoIG1vcmUgZGF0YSBpbiB0aGUgc3Vic2VxdWVu
-dCB3b3Jkcy4gIEl0IGlzIGRlZmluaXRlbHkNCm5vdCBhIHJlYWwga2V5cHJlc3MuICBJdCdzIHN1
-cHBvc2VkIHRvIGJlIGRhdGEgdGhhdCBhIHVzZXIgYXBwbGljYXRpb24gd291bGQgc2hvdy4NCg0K
-UmVtZW1iZXIgdGhlIHdheSBXTUkgd29ya3Mgb24gTGludXggYW5kIFdpbmRvd3MgaXMgZGlmZmVy
-ZW50LiAgT24gV2luZG93cw0KdXNlcmxhbmQgYXBwbGljYXRpb25zIGdldCB0aGUgZXZlbnRzIGRp
-cmVjdGx5LiAgT24gTGludXgga2VybmVsIGRyaXZlcnMgZ2V0IHRoZQ0KZXZlbnRzIGFuZCBlaXRo
-ZXIgdXNlIGl0IGludGVybmFsbHksIHBhc3MgdG8gYW5vdGhlciBrZXJuZWwgZHJpdmVyIG9yIHBh
-c3MgdG8NCnVzZXJsYW5kIGluIHRoZSBmb3JtIG9mIGEgdHJhbnNsYXRlZCBldmVudC4NCg0KU28g
-b24gV2luZG93cyB0aGUgd2hvbGUgYnVmZmVyIGdldHMgbG9va2VkIGF0IGRpcmVjdGx5IGJ5IHRo
-ZSBhcHBsaWNhdGlvbiBhbmQgdGhlDQphcHBsaWNhdGlvbiB3aWxsIGRlY29kZSBpdCB0byBzaG93
-IGEgdHJhbnNsYXRlZCBzdHJpbmcuDQoNCkkgY2FuIGNlcnRhaW5seSBkaXNjdXNzIGludGVybmFs
-bHkgYWJvdXQgb3VyIHRlYW0gcmVsZWFzaW5nIGEgcGF0Y2ggdG8gZXhwb3J0DQphbGwgdGhlc2Ug
-b3RoZXIgZXZlbnRzLiAgSSB3b3VsZCBsaWtlIHRvIGtub3cgd2hhdCBpbnRlcmZhY2UgdG8gcmVj
-b21tZW5kIGl0IHBhc3MNCnRvIHVzZXJzcGFjZSB0aG91Z2gsIGJlY2F1c2UgYXMgSSBzYWlkIHRo
-aXMgaXMgbW9yZSB0aGFuIGp1c3QgYSBrZXljb2RlIHRoYXQNCmNvbWVzIHRocm91Z2ggaW4gdGhl
-IGV2ZW50LiAgSXQncyBub3QgdXNlZnVsIHRvIGp1c3QgZG8gZGV2X2luZm8sIGl0IHJlYWxseSBz
-aG91bGQNCmJlIHNvbWV0aGluZyB0aGF0IHVzZXJzcGFjZSBjYW4gYWN0IG9uIGFuZCBzaG93IGEg
-dHJhbnNsYXRlZCBtZXNzYWdlLg0KSSBkb24ndCB0aGluayB3ZSB3YW50IHRvIGFkZCBhbm90aGVy
-IDE1IERlbGwgc3BlY2lmaWMga2V5Y29kZXMgdG8gdGhlIGtlcm5lbCBmb3IgdGhlDQp2YXJpb3Vz
-IGV2ZW50cyBhbmQgYWRkIGFub3RoZXIgNCBtb3JlIHdoZW4gYSBsYXB0b3AgaW50cm9kdWNlcyBh
-bm90aGVyIHNldCBvZiBrZXlzLg0KDQo+IA0KPiA+ICAJCQlpZiAobGVuID4gMikNCj4gPiAgCQkJ
-CWRlbGxfd21pX3Byb2Nlc3Nfa2V5KHdkZXYsIDB4MDAwMCwNCj4gPiAgCQkJCQkJICAgICBidWZm
-ZXJfZW50cnlbMl0pOw0KPiA+IC0JCQkvKiBPdGhlciBlbnRyaWVzIGNvdWxkIGNvbnRhaW4gYWRk
-aXRpb25hbCBpbmZvcm1hdGlvbiAqLw0KPiA+ICsJCQkvKiBFeHRlbmRlZCBkYXRhIGlzIGN1cnJl
-bnRseSBpZ25vcmVkICovDQo+ID4gIAkJCWJyZWFrOw0KPiA+ICAJCWNhc2UgMHgwMDEwOiAvKiBT
-ZXF1ZW5jZSBvZiBrZXlzIHByZXNzZWQgKi8NCj4gPiAgCQljYXNlIDB4MDAxMTogLyogU2VxdWVu
-Y2Ugb2YgZXZlbnRzIG9jY3VycmVkICovDQo+ID4gQEAgLTU1Niw2ICs1NjYsNyBAQCBzdGF0aWMg
-aW50IGRlbGxfd21pX2lucHV0X3NldHVwKHN0cnVjdCB3bWlfZGV2aWNlDQo+ICp3ZGV2KQ0KPiA+
-ICAJCQkgQVJSQVlfU0laRShkZWxsX3dtaV9rZXltYXBfdHlwZV8wMDAwKSArDQo+ID4gIAkJCSBB
-UlJBWV9TSVpFKGRlbGxfd21pX2tleW1hcF90eXBlXzAwMTApICsNCj4gPiAgCQkJIEFSUkFZX1NJ
-WkUoZGVsbF93bWlfa2V5bWFwX3R5cGVfMDAxMSkgKw0KPiA+ICsJCQkgQVJSQVlfU0laRShkZWxs
-X3dtaV9rZXltYXBfdHlwZV8wMDEyKSArDQo+ID4gIAkJCSAxLA0KPiA+ICAJCQkgc2l6ZW9mKHN0
-cnVjdCBrZXlfZW50cnkpLCBHRlBfS0VSTkVMKTsNCj4gPiAgCWlmICgha2V5bWFwKSB7DQo+ID4g
-QEAgLTYwMCw2ICs2MTEsMTMgQEAgc3RhdGljIGludCBkZWxsX3dtaV9pbnB1dF9zZXR1cChzdHJ1
-Y3Qgd21pX2RldmljZQ0KPiAqd2RldikNCj4gPiAgCQlwb3MrKzsNCj4gPiAgCX0NCj4gPg0KPiA+
-ICsJLyogQXBwZW5kIHRhYmxlIHdpdGggZXZlbnRzIG9mIHR5cGUgMHgwMDEyICovDQo+ID4gKwlm
-b3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShkZWxsX3dtaV9rZXltYXBfdHlwZV8wMDEyKTsgaSsr
-KSB7DQo+ID4gKwkJa2V5bWFwW3Bvc10gPSBkZWxsX3dtaV9rZXltYXBfdHlwZV8wMDEyW2ldOw0K
-PiA+ICsJCWtleW1hcFtwb3NdLmNvZGUgfD0gKDB4MDAxMiA8PCAxNik7DQo+ID4gKwkJcG9zKys7
-DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICAJLyoNCj4gPiAgCSAqIE5vdyBhcHBlbmQgYWxzbyB0YWJs
-ZSB3aXRoICJsZWdhY3kiIGV2ZW50cyBvZiB0eXBlIDB4MDAwMC4gU29tZSBvZg0KPiA+ICAJICog
-dGhlbSBhcmUgcmVwb3J0ZWQgYWxzbyBvbiBsYXB0b3BzIHdoaWNoIGhhdmUgc2NhbmNvZGVzIGlu
-IERNSS4NCj4gPiAtLQ0KPiA+IDIuMjcuMA0KPiA+DQo=
+On 6/8/20 7:55 PM, Pali Rohár wrote:
+> Hello!
+> 
+> On Monday 08 June 2020 16:27:10 Randy Dunlap wrote:
+>> Hi--
+>>
+>> On 6/8/20 4:05 PM, Y Paritcher wrote:
+>>> Increase length of bios_to_linux_keycode to 2 bytes (the true size of a
+>>> keycode) to allow for a new keycode 0xffff, this silences the following
+>>> messages being logged at startup on a Dell Inspiron 5593:
+>>>
+>>>     dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
+>>>     dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
+> 
+> Which keys generate these two scancodes? Or how have you been able to
+> trigger these scancodes (in case they are not generated by key press)?
+> 
+> It is important to know for which key or event or feature we need to
+> include this patch and therefore what feature is currently
+> non-functional on that laptop.
+> 
+
+As I said before:
+The DMI contains a table of firmware scancode to linux keycode mappings.
+this is parsed at boot and used together with the bios_to_linux_keycode
+entries & dell_wmi_keymap_type_ tables to create a keymap.
+
+If a DMI entry does not have a corresponding entry in bios_to_linux_keycode
+we log a message to allow adding the correct linux keycode if known.
+This is regardless of if the key actually exists on the device.
+
+To date, I have not been able to generate this keycode on my computer.
+
+>>> as per this code comment:
+>>>
+>>>    Log if we find an entry in the DMI table that we don't
+>>>    understand.  If this happens, we should figure out what
+>>>    the entry means and add it to bios_to_linux_keycode.
+>>>
+>>> These are keycodes included in the 0xB2 DMI table, for which the
+>>> corosponding keys are not known.
+>>
+>>   corresponding
+>>
+>>>
+>>> Now when a user will encounter this key, a proper message wil be printed:
+>>>
+>>>     dell_wmi: Unknown key with type 0xXXXX and code 0xXXXX pressed
+>>>
+>>> This will then allow the key to be identified properly.
+>>>
+>>> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+>>> ---
+>>>  drivers/platform/x86/dell-wmi.c | 8 +++-----
+>>>  1 file changed, 3 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+>>> index 6b510f8431a3..dae1db96b5a0 100644
+>>> --- a/drivers/platform/x86/dell-wmi.c
+>>> +++ b/drivers/platform/x86/dell-wmi.c
+>>> @@ -196,7 +196,7 @@ struct dell_dmi_results {
+>>>  };
+>>>  
+>>>  /* Uninitialized entries here are KEY_RESERVED == 0. */
+>>> -static const u16 bios_to_linux_keycode[256] = {
+>>> +static const u16 bios_to_linux_keycode[65536] = {
+>>
+>> It surely seems odd to me to expand an array from 512 bytes to 128 Kbytes
+>> just to handle one special case.  Can't it be handled in code as a
+>> special case?
+> 
+> I already wrote that more developers would not be happy about this
+> change. I would rather to see e.g. that Randy's suggestion with 0xffff
+> check as increasing memory usage.
+> 
+
+Will change
+
+>>>  	[0]	= KEY_MEDIA,
+>>>  	[1]	= KEY_NEXTSONG,
+>>>  	[2]	= KEY_PLAYPAUSE,
+>>> @@ -237,6 +237,7 @@ static const u16 bios_to_linux_keycode[256] = {
+>>>  	[37]	= KEY_UNKNOWN,
+>>>  	[38]	= KEY_MICMUTE,
+>>>  	[255]	= KEY_PROG3,
+>>> +	[65535]	= KEY_UNKNOWN,
+> 
+> Looking at the last two lines... and for me it looks like that 0x00FF
+> and 0xFFFF are just "placeholders" or special values for unknown /
+> custom / unsupported / reserved / special / ... codes.
+> 
+
+Probably so, but i have no way of knowing.
+
+I just don't think there is a point spamming a users log with info that
+they can't do anything with. If this is turned into a debug print then
+i don't care to leave this as is, i had thought this might be helpful
+just to know that this keycode mapping appears in the wild.
+
+> It is really suspicious why first 38 values are defined, then there is
+> gap, then one value 255 and then huge gap to 65535.
+> 
+> Mario, this looks like some mapping table between internal Dell BIOS key
+> code and standard Linux key code. Are you able to get access to some
+> documentation which contains explanation of those Dell key numbers?
+> It could really help us to understand these gaps and what is correct
+> interpretation of these numbers.
+> 
+> E.g. I remember that pressing Fn+Q or Fn+W on some Dell Latitude
+> generates code 255, which could prove my thesis about "special codes"
+> (which are probably not found in e.g. Windows or Linux mapping tables).
+> 
+>>>  };
+>>>  
+>>>  /*
+>>> @@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
+>>>  					&table->keymap[i];
+>>>  
+>>>  		/* Uninitialized entries are 0 aka KEY_RESERVED. */
+>>> -		u16 keycode = (bios_entry->keycode <
+>>> -			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+>>> -			bios_to_linux_keycode[bios_entry->keycode] :
+>>> -			KEY_RESERVED;
+>>> +		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
+>>>  
+>>>  		/*
+>>>  		 * Log if we find an entry in the DMI table that we don't
+>>>
+>>
+>> Something like:
+>>
+>> 		u16 keycode;
+>>
+>> 		keycode = bios_entry->keycode == 0xffff ? KEY_UNKNOWN :
+>> 			(bios_entry->keycode <
+>> 			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+>> 			bios_to_linux_keycode[bios_entry->keycode] :
+>> 			KEY_RESERVED;
+>>
+>>
+>>
+>> Also please fix this:
+>> (no To-header on input) <>
+> 
+> Hint: specifying git send-email with '--to' argument instead of '--cc'
+> should help.
+> 
+
+Sorry about that.
+>>
+>> -- 
+>> ~Randy
+>>
