@@ -1,14 +1,15 @@
 From: Y Paritcher <y.linux@paritcher.com>
-Subject: [PATCH v2 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Date: Mon,  8 Jun 2020 19:05:29 -0400
-Message-ID: <74fdb288757cf5970a558f920f531b3bd1c51b47.1591656154.git.y.linux@paritcher.com>
-References: <cover.1591584631.git.y.linux@paritcher.com> <cover.1591656154.git.y.linux@paritcher.com>
+Subject: [PATCH v3 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Date: Mon,  8 Jun 2020 23:52:53 -0400
+Message-ID: <b2efc80238424ffe5f97422f3e59e9689a327a28.1591673143.git.y.linux@paritcher.com>
+References: <cover.1591584631.git.y.linux@paritcher.com> <cover.1591673143.git.y.linux@paritcher.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1591656154.git.y.linux@paritcher.com>
+In-Reply-To: <cover.1591673143.git.y.linux@paritcher.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>, Mario.Limonciello@dell.com
+To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Mario.Limonciello@dell.com
 List-Id: platform-driver-x86.vger.kernel.org
 
 These are events with extended data. The extended data is
@@ -28,11 +29,11 @@ elsewhere in this file.
 
 Signed-off-by: Y Paritcher <y.linux@paritcher.com>
 ---
- drivers/platform/x86/dell-wmi.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ drivers/platform/x86/dell-wmi.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index 0b2edfe2767d..6b510f8431a3 100644
+index 0b2edfe2767d..e3bc2601e631 100644
 --- a/drivers/platform/x86/dell-wmi.c
 +++ b/drivers/platform/x86/dell-wmi.c
 @@ -334,6 +334,15 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
@@ -57,7 +58,8 @@ index 0b2edfe2767d..6b510f8431a3 100644
  		case 0x0000: /* One key pressed or event occurred */
 +		case 0x0012: /* Event with extended data occurred */
  			if (len > 2)
- 				dell_wmi_process_key(wdev, 0x0000,
+-				dell_wmi_process_key(wdev, 0x0000,
++				dell_wmi_process_key(wdev, buffer_entry[1],
  						     buffer_entry[2]);
 -			/* Other entries could contain additional information */
 +			/* Extended data is currently ignored */
