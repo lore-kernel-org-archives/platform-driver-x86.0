@@ -1,115 +1,181 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 177/274] platform/x86: intel-vbtn: Do not advertise switches to userspace if they are not there
-Date: Mon,  8 Jun 2020 19:04:30 -0400
-Message-ID: <20200608230607.3361041-177-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+From: Y Paritcher <y.linux@paritcher.com>
+Subject: Re: [PATCH v2 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Date: Mon, 8 Jun 2020 20:57:38 -0400
+Message-ID: <2d4b308d-ce03-b13b-0140-4bbe669878c4@paritcher.com>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <cover.1591656154.git.y.linux@paritcher.com>
+ <74fdb288757cf5970a558f920f531b3bd1c51b47.1591656154.git.y.linux@paritcher.com>
+ <20200608233303.57ubv4rxo4tnaaxa@pali>
+ <295ad85ecc464a57bffd5b783d4170a1@AUSX13MPC105.AMER.DELL.COM>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <295ad85ecc464a57bffd5b783d4170a1@AUSX13MPC105.AMER.DELL.COM>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario.Limonciello@dell.com, pali@kernel.org
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+On 6/8/20 8:26 PM, Mario.Limonciello@dell.com wrote:
+>> -----Original Message-----
+>> From: Pali Rohár <pali@kernel.org>
+>> Sent: Monday, June 8, 2020 6:33 PM
+>> To: Y Paritcher
+>> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+>> Matthew Garrett; Limonciello, Mario
+>> Subject: Re: [PATCH v2 2/3] platform/x86: dell-wmi: add new keymap type
+>> 0x0012
+>>
+>>
+>> [EXTERNAL EMAIL]
+>>
+>> On Monday 08 June 2020 19:05:29 Y Paritcher wrote:
+>>> These are events with extended data. The extended data is
+>>> currently ignored as userspace does not have a way to deal
+>>> it.
+>>>
+>>> Ignore event with a type of 0x0012 and a code of 0xe035, as
+>>> the keyboard controller takes care of Fn lock events by itself.
+>>
+>> Nice! This is information which is really important and need to have it
+>> documented.
+>>
+>>> This silences the following messages being logged when
+>>> pressing the Fn-lock key on a Dell Inspiron 5593:
+>>>
+>>> dell_wmi: Unknown WMI event type 0x12
+>>> dell_wmi: Unknown key with type 0x0012 and code 0xe035 pressed
+>>>
+>>> This is consistent with the behavior for the Fn-lock key
+>>> elsewhere in this file.
+>>>
+>>> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+>>
+>> I'm fine with this patch now.
+>>
+>> Reviewed-by: Pali Rohár <pali@kernel.org>
+>>
+>>> ---
+>>>  drivers/platform/x86/dell-wmi.c | 20 +++++++++++++++++++-
+>>>  1 file changed, 19 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-
+>> wmi.c
+>>> index 0b2edfe2767d..6b510f8431a3 100644
+>>> --- a/drivers/platform/x86/dell-wmi.c
+>>> +++ b/drivers/platform/x86/dell-wmi.c
+>>> @@ -334,6 +334,15 @@ static const struct key_entry
+>> dell_wmi_keymap_type_0011[] = {
+>>>  	{ KE_IGNORE, KBD_LED_AUTO_100_TOKEN, { KEY_RESERVED } },
+>>>  };
+>>>
+>>> +/*
+>>> + * Keymap for WMI events of type 0x0012
+>>> + * They are events with extended data
+>>> + */
+>>> +static const struct key_entry dell_wmi_keymap_type_0012[] = {
+>>> +	/* Fn-lock button pressed */
+>>> +	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
+>>> +};
+>>> +
+>>>  static void dell_wmi_process_key(struct wmi_device *wdev, int type, int
+>> code)
+>>>  {
+>>>  	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+>>> @@ -418,10 +427,11 @@ static void dell_wmi_notify(struct wmi_device
+>> *wdev,
+>>>
+>>>  		switch (buffer_entry[1]) {
+>>>  		case 0x0000: /* One key pressed or event occurred */
+>>> +		case 0x0012: /* Event with extended data occurred */
+> 
+> I don't really like this being handled as a key as it's just discarding all
+> that extended data.
+> 
+>>
+>> Mario, are you able to get some official documentation for these 0x0012
+>> event types? I think it could be really useful for community so they can
+>> understand and add easily new type of code and events. Because currently
+>> we are just guessing what it could be. (It is sequence? Or single event?
+>> Or single event with extended data? It is generic event? Or it is real
+>> keypress? etc...)
+> 
+> It's a single event with more data in the subsequent words.  It is definitely
+> not a real keypress.  It's supposed to be data that a user application would show.
+> 
+> Remember the way WMI works on Linux and Windows is different.  On Windows
+> userland applications get the events directly.  On Linux kernel drivers get the
+> events and either use it internally, pass to another kernel driver or pass to
+> userland in the form of a translated event.
+> 
+> So on Windows the whole buffer gets looked at directly by the application and the
+> application will decode it to show a translated string.
+> 
+> I can certainly discuss internally about our team releasing a patch to export
+> all these other events.  I would like to know what interface to recommend it pass
+> to userspace though, because as I said this is more than just a keycode that
+> comes through in the event.  It's not useful to just do dev_info, it really should
+> be something that userspace can act on and show a translated message.
+> I don't think we want to add another 15 Dell specific keycodes to the kernel for the
+> various events and add another 4 more when a laptop introduces another set of keys.
+> 
 
-[ Upstream commit 990fbb48067bf8cfa34b7d1e6e1674eaaef2f450 ]
+We can treat this as a key for now. This gets rid of the unnecessary log messages.
 
-Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
-reporting SW_TABLET_MODE = 1 to userspace on laptops (specifically on the
-Dell XPS 9360), to avoid e.g. userspace ignoring touchpad events because
-userspace thought the device was in tablet-mode.
+When adecision is made about how to handle extended events it will be very easy
+just to make this its own case statement and handle with it separately.
 
-But if we are not getting the initial status of the switch because the
-device does not have a tablet mode, then we really should not advertise
-the presence of a tablet-mode switch to userspace at all, as userspace may
-use the mere presence of this switch for certain heuristics.
+However if you want to pass Fn lock event to userspace there are keys from older
+models of type 0010:
+    /* Fn-lock switched to function keys */
+    { KE_IGNORE, 0x0, { KEY_RESERVED } },
 
-Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/intel-vbtn.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+    /* Fn-lock switched to multimedia keys */
+    { KE_IGNORE, 0x1, { KEY_RESERVED } },
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 634096cef21a..500fae82e12c 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -55,6 +55,7 @@ static const struct key_entry intel_vbtn_switchmap[] = {
- struct intel_vbtn_priv {
- 	struct key_entry keymap[KEYMAP_LEN];
- 	struct input_dev *input_dev;
-+	bool has_switches;
- 	bool wakeup_mode;
- };
- 
-@@ -70,7 +71,7 @@ static int intel_vbtn_input_setup(struct platform_device *device)
- 		keymap_len += ARRAY_SIZE(intel_vbtn_keymap);
- 	}
- 
--	if (true) {
-+	if (priv->has_switches) {
- 		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
- 		       ARRAY_SIZE(intel_vbtn_switchmap) *
- 		       sizeof(struct key_entry));
-@@ -138,16 +139,12 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 
- static void detect_tablet_mode(struct platform_device *device)
- {
--	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
- 	unsigned long long vgbs;
- 	acpi_status status;
- 	int m;
- 
--	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
--		return;
--
- 	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	if (ACPI_FAILURE(status))
- 		return;
-@@ -158,6 +155,19 @@ static void detect_tablet_mode(struct platform_device *device)
- 	input_report_switch(priv->input_dev, SW_DOCK, m);
- }
- 
-+static bool intel_vbtn_has_switches(acpi_handle handle)
-+{
-+	const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
-+	unsigned long long vgbs;
-+	acpi_status status;
-+
-+	if (!(chassis_type && strcmp(chassis_type, "31") == 0))
-+		return false;
-+
-+	status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
-+	return ACPI_SUCCESS(status);
-+}
-+
- static int intel_vbtn_probe(struct platform_device *device)
- {
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
-@@ -176,13 +186,16 @@ static int intel_vbtn_probe(struct platform_device *device)
- 		return -ENOMEM;
- 	dev_set_drvdata(&device->dev, priv);
- 
-+	priv->has_switches = intel_vbtn_has_switches(handle);
-+
- 	err = intel_vbtn_input_setup(device);
- 	if (err) {
- 		pr_err("Failed to setup Intel Virtual Button\n");
- 		return err;
- 	}
- 
--	detect_tablet_mode(device);
-+	if (priv->has_switches)
-+		detect_tablet_mode(device);
- 
- 	status = acpi_install_notify_handler(handle,
- 					     ACPI_DEVICE_NOTIFY,
--- 
-2.25.1
+They should also be changed to be passed to userspace and they don't signify status
+with extended data rather by which event is called.
+
+This means that passing these types of events to userspace is a separate task, that
+might require rethinking the entire design of how all event types are treated.
+
+The current patch will be necessary regardless of what is decided in regards to
+passing the events on, and continues the status quo.
+>>
+>>>  			if (len > 2)
+>>>  				dell_wmi_process_key(wdev, 0x0000,
+>>>  						     buffer_entry[2]);
+>>> -			/* Other entries could contain additional information */
+>>> +			/* Extended data is currently ignored */
+>>>  			break;
+>>>  		case 0x0010: /* Sequence of keys pressed */
+>>>  		case 0x0011: /* Sequence of events occurred */
+>>> @@ -556,6 +566,7 @@ static int dell_wmi_input_setup(struct wmi_device
+>> *wdev)
+>>>  			 ARRAY_SIZE(dell_wmi_keymap_type_0000) +
+>>>  			 ARRAY_SIZE(dell_wmi_keymap_type_0010) +
+>>>  			 ARRAY_SIZE(dell_wmi_keymap_type_0011) +
+>>> +			 ARRAY_SIZE(dell_wmi_keymap_type_0012) +
+>>>  			 1,
+>>>  			 sizeof(struct key_entry), GFP_KERNEL);
+>>>  	if (!keymap) {
+>>> @@ -600,6 +611,13 @@ static int dell_wmi_input_setup(struct wmi_device
+>> *wdev)
+>>>  		pos++;
+>>>  	}
+>>>
+>>> +	/* Append table with events of type 0x0012 */
+>>> +	for (i = 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
+>>> +		keymap[pos] = dell_wmi_keymap_type_0012[i];
+>>> +		keymap[pos].code |= (0x0012 << 16);
+>>> +		pos++;
+>>> +	}
+>>> +
+>>>  	/*
+>>>  	 * Now append also table with "legacy" events of type 0x0000. Some of
+>>>  	 * them are reported also on laptops which have scancodes in DMI.
+>>> --
+>>> 2.27.0
+>>>
