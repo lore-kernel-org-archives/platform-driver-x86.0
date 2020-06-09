@@ -1,81 +1,114 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.6 126/606] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
-Date: Mon,  8 Jun 2020 19:04:11 -0400
-Message-ID: <20200608231211.3363633-126-sashal@kernel.org>
-References: <20200608231211.3363633-1-sashal@kernel.org>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v2 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Date: Tue, 9 Jun 2020 00:26:45 +0000
+Message-ID: <295ad85ecc464a57bffd5b783d4170a1@AUSX13MPC105.AMER.DELL.COM>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <cover.1591656154.git.y.linux@paritcher.com>
+ <74fdb288757cf5970a558f920f531b3bd1c51b47.1591656154.git.y.linux@paritcher.com>
+ <20200608233303.57ubv4rxo4tnaaxa@pali>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+In-Reply-To: <20200608233303.57ubv4rxo4tnaaxa@pali>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+To: pali@kernel.org, y.linux@paritcher.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
-
-[ Upstream commit 3bd12da7f50b8bc191fcb3bab1f55c582234df59 ]
-
-asus-nb-wmi does not add any extra functionality on these Asus
-Transformer books. They have detachable keyboards, so the hotkeys are
-send through a HID device (and handled by the hid-asus driver) and also
-the rfkill functionality is not used on these devices.
-
-Besides not adding any extra functionality, initializing the WMI interface
-on these devices actually has a negative side-effect. For some reason
-the \_SB.ATKD.INIT() function which asus_wmi_platform_init() calls drives
-GPO2 (INT33FC:02) pin 8, which is connected to the front facing webcam LED,
-high and there is no (WMI or other) interface to drive this low again
-causing the LED to be permanently on, even during suspend.
-
-This commit adds a blacklist of DMI system_ids on which not to load the
-asus-nb-wmi and adds these Transformer books to this list. This fixes
-the webcam LED being permanently on under Linux.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 6f12747a359a..c4404d9c1de4 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -515,9 +515,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
- 	.detect_quirks = asus_nb_wmi_quirks,
- };
- 
-+static const struct dmi_system_id asus_nb_wmi_blacklist[] __initconst = {
-+	{
-+		/*
-+		 * asus-nb-wm adds no functionality. The T100TA has a detachable
-+		 * USB kbd, so no hotkeys and it has no WMI rfkill; and loading
-+		 * asus-nb-wm causes the camera LED to turn and _stay_ on.
-+		 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
-+		},
-+	},
-+	{
-+		/* The Asus T200TA has the same issue as the T100TA */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
-+		},
-+	},
-+	{} /* Terminating entry */
-+};
- 
- static int __init asus_nb_wmi_init(void)
- {
-+	if (dmi_check_system(asus_nb_wmi_blacklist))
-+		return -ENODEV;
-+
- 	return asus_wmi_register_driver(&asus_nb_wmi_driver);
- }
- 
--- 
-2.25.1
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYWxpIFJvaMOhciA8cGFsaUBr
+ZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIEp1bmUgOCwgMjAyMCA2OjMzIFBNDQo+IFRvOiBZ
+IFBhcml0Y2hlcg0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgcGxhdGZvcm0t
+ZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7DQo+IE1hdHRoZXcgR2FycmV0dDsgTGltb25jaWVs
+bG8sIE1hcmlvDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMi8zXSBwbGF0Zm9ybS94ODY6IGRl
+bGwtd21pOiBhZGQgbmV3IGtleW1hcCB0eXBlDQo+IDB4MDAxMg0KPiANCj4gDQo+IFtFWFRFUk5B
+TCBFTUFJTF0NCj4gDQo+IE9uIE1vbmRheSAwOCBKdW5lIDIwMjAgMTk6MDU6MjkgWSBQYXJpdGNo
+ZXIgd3JvdGU6DQo+ID4gVGhlc2UgYXJlIGV2ZW50cyB3aXRoIGV4dGVuZGVkIGRhdGEuIFRoZSBl
+eHRlbmRlZCBkYXRhIGlzDQo+ID4gY3VycmVudGx5IGlnbm9yZWQgYXMgdXNlcnNwYWNlIGRvZXMg
+bm90IGhhdmUgYSB3YXkgdG8gZGVhbA0KPiA+IGl0Lg0KPiA+DQo+ID4gSWdub3JlIGV2ZW50IHdp
+dGggYSB0eXBlIG9mIDB4MDAxMiBhbmQgYSBjb2RlIG9mIDB4ZTAzNSwgYXMNCj4gPiB0aGUga2V5
+Ym9hcmQgY29udHJvbGxlciB0YWtlcyBjYXJlIG9mIEZuIGxvY2sgZXZlbnRzIGJ5IGl0c2VsZi4N
+Cj4gDQo+IE5pY2UhIFRoaXMgaXMgaW5mb3JtYXRpb24gd2hpY2ggaXMgcmVhbGx5IGltcG9ydGFu
+dCBhbmQgbmVlZCB0byBoYXZlIGl0DQo+IGRvY3VtZW50ZWQuDQo+IA0KPiA+IFRoaXMgc2lsZW5j
+ZXMgdGhlIGZvbGxvd2luZyBtZXNzYWdlcyBiZWluZyBsb2dnZWQgd2hlbg0KPiA+IHByZXNzaW5n
+IHRoZSBGbi1sb2NrIGtleSBvbiBhIERlbGwgSW5zcGlyb24gNTU5MzoNCj4gPg0KPiA+IGRlbGxf
+d21pOiBVbmtub3duIFdNSSBldmVudCB0eXBlIDB4MTINCj4gPiBkZWxsX3dtaTogVW5rbm93biBr
+ZXkgd2l0aCB0eXBlIDB4MDAxMiBhbmQgY29kZSAweGUwMzUgcHJlc3NlZA0KPiA+DQo+ID4gVGhp
+cyBpcyBjb25zaXN0ZW50IHdpdGggdGhlIGJlaGF2aW9yIGZvciB0aGUgRm4tbG9jayBrZXkNCj4g
+PiBlbHNld2hlcmUgaW4gdGhpcyBmaWxlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogWSBQYXJp
+dGNoZXIgPHkubGludXhAcGFyaXRjaGVyLmNvbT4NCj4gDQo+IEknbSBmaW5lIHdpdGggdGhpcyBw
+YXRjaCBub3cuDQo+IA0KPiBSZXZpZXdlZC1ieTogUGFsaSBSb2jDoXIgPHBhbGlAa2VybmVsLm9y
+Zz4NCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMgfCAy
+MCArKysrKysrKysrKysrKysrKysrLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTkgaW5zZXJ0aW9u
+cygrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZv
+cm0veDg2L2RlbGwtd21pLmMgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLQ0KPiB3bWkuYw0K
+PiA+IGluZGV4IDBiMmVkZmUyNzY3ZC4uNmI1MTBmODQzMWEzIDEwMDY0NA0KPiA+IC0tLSBhL2Ry
+aXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLmMNCj4gPiArKysgYi9kcml2ZXJzL3BsYXRmb3Jt
+L3g4Ni9kZWxsLXdtaS5jDQo+ID4gQEAgLTMzNCw2ICszMzQsMTUgQEAgc3RhdGljIGNvbnN0IHN0
+cnVjdCBrZXlfZW50cnkNCj4gZGVsbF93bWlfa2V5bWFwX3R5cGVfMDAxMVtdID0gew0KPiA+ICAJ
+eyBLRV9JR05PUkUsIEtCRF9MRURfQVVUT18xMDBfVE9LRU4sIHsgS0VZX1JFU0VSVkVEIH0gfSwN
+Cj4gPiAgfTsNCj4gPg0KPiA+ICsvKg0KPiA+ICsgKiBLZXltYXAgZm9yIFdNSSBldmVudHMgb2Yg
+dHlwZSAweDAwMTINCj4gPiArICogVGhleSBhcmUgZXZlbnRzIHdpdGggZXh0ZW5kZWQgZGF0YQ0K
+PiA+ICsgKi8NCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBrZXlfZW50cnkgZGVsbF93bWlfa2V5
+bWFwX3R5cGVfMDAxMltdID0gew0KPiA+ICsJLyogRm4tbG9jayBidXR0b24gcHJlc3NlZCAqLw0K
+PiA+ICsJeyBLRV9JR05PUkUsIDB4ZTAzNSwgeyBLRVlfUkVTRVJWRUQgfSB9LA0KPiA+ICt9Ow0K
+PiA+ICsNCj4gPiAgc3RhdGljIHZvaWQgZGVsbF93bWlfcHJvY2Vzc19rZXkoc3RydWN0IHdtaV9k
+ZXZpY2UgKndkZXYsIGludCB0eXBlLCBpbnQNCj4gY29kZSkNCj4gPiAgew0KPiA+ICAJc3RydWN0
+IGRlbGxfd21pX3ByaXYgKnByaXYgPSBkZXZfZ2V0X2RydmRhdGEoJndkZXYtPmRldik7DQo+ID4g
+QEAgLTQxOCwxMCArNDI3LDExIEBAIHN0YXRpYyB2b2lkIGRlbGxfd21pX25vdGlmeShzdHJ1Y3Qg
+d21pX2RldmljZQ0KPiAqd2RldiwNCj4gPg0KPiA+ICAJCXN3aXRjaCAoYnVmZmVyX2VudHJ5WzFd
+KSB7DQo+ID4gIAkJY2FzZSAweDAwMDA6IC8qIE9uZSBrZXkgcHJlc3NlZCBvciBldmVudCBvY2N1
+cnJlZCAqLw0KPiA+ICsJCWNhc2UgMHgwMDEyOiAvKiBFdmVudCB3aXRoIGV4dGVuZGVkIGRhdGEg
+b2NjdXJyZWQgKi8NCg0KSSBkb24ndCByZWFsbHkgbGlrZSB0aGlzIGJlaW5nIGhhbmRsZWQgYXMg
+YSBrZXkgYXMgaXQncyBqdXN0IGRpc2NhcmRpbmcgYWxsDQp0aGF0IGV4dGVuZGVkIGRhdGEuDQoN
+Cj4gDQo+IE1hcmlvLCBhcmUgeW91IGFibGUgdG8gZ2V0IHNvbWUgb2ZmaWNpYWwgZG9jdW1lbnRh
+dGlvbiBmb3IgdGhlc2UgMHgwMDEyDQo+IGV2ZW50IHR5cGVzPyBJIHRoaW5rIGl0IGNvdWxkIGJl
+IHJlYWxseSB1c2VmdWwgZm9yIGNvbW11bml0eSBzbyB0aGV5IGNhbg0KPiB1bmRlcnN0YW5kIGFu
+ZCBhZGQgZWFzaWx5IG5ldyB0eXBlIG9mIGNvZGUgYW5kIGV2ZW50cy4gQmVjYXVzZSBjdXJyZW50
+bHkNCj4gd2UgYXJlIGp1c3QgZ3Vlc3Npbmcgd2hhdCBpdCBjb3VsZCBiZS4gKEl0IGlzIHNlcXVl
+bmNlPyBPciBzaW5nbGUgZXZlbnQ/DQo+IE9yIHNpbmdsZSBldmVudCB3aXRoIGV4dGVuZGVkIGRh
+dGE/IEl0IGlzIGdlbmVyaWMgZXZlbnQ/IE9yIGl0IGlzIHJlYWwNCj4ga2V5cHJlc3M/IGV0Yy4u
+LikNCg0KSXQncyBhIHNpbmdsZSBldmVudCB3aXRoIG1vcmUgZGF0YSBpbiB0aGUgc3Vic2VxdWVu
+dCB3b3Jkcy4gIEl0IGlzIGRlZmluaXRlbHkNCm5vdCBhIHJlYWwga2V5cHJlc3MuICBJdCdzIHN1
+cHBvc2VkIHRvIGJlIGRhdGEgdGhhdCBhIHVzZXIgYXBwbGljYXRpb24gd291bGQgc2hvdy4NCg0K
+UmVtZW1iZXIgdGhlIHdheSBXTUkgd29ya3Mgb24gTGludXggYW5kIFdpbmRvd3MgaXMgZGlmZmVy
+ZW50LiAgT24gV2luZG93cw0KdXNlcmxhbmQgYXBwbGljYXRpb25zIGdldCB0aGUgZXZlbnRzIGRp
+cmVjdGx5LiAgT24gTGludXgga2VybmVsIGRyaXZlcnMgZ2V0IHRoZQ0KZXZlbnRzIGFuZCBlaXRo
+ZXIgdXNlIGl0IGludGVybmFsbHksIHBhc3MgdG8gYW5vdGhlciBrZXJuZWwgZHJpdmVyIG9yIHBh
+c3MgdG8NCnVzZXJsYW5kIGluIHRoZSBmb3JtIG9mIGEgdHJhbnNsYXRlZCBldmVudC4NCg0KU28g
+b24gV2luZG93cyB0aGUgd2hvbGUgYnVmZmVyIGdldHMgbG9va2VkIGF0IGRpcmVjdGx5IGJ5IHRo
+ZSBhcHBsaWNhdGlvbiBhbmQgdGhlDQphcHBsaWNhdGlvbiB3aWxsIGRlY29kZSBpdCB0byBzaG93
+IGEgdHJhbnNsYXRlZCBzdHJpbmcuDQoNCkkgY2FuIGNlcnRhaW5seSBkaXNjdXNzIGludGVybmFs
+bHkgYWJvdXQgb3VyIHRlYW0gcmVsZWFzaW5nIGEgcGF0Y2ggdG8gZXhwb3J0DQphbGwgdGhlc2Ug
+b3RoZXIgZXZlbnRzLiAgSSB3b3VsZCBsaWtlIHRvIGtub3cgd2hhdCBpbnRlcmZhY2UgdG8gcmVj
+b21tZW5kIGl0IHBhc3MNCnRvIHVzZXJzcGFjZSB0aG91Z2gsIGJlY2F1c2UgYXMgSSBzYWlkIHRo
+aXMgaXMgbW9yZSB0aGFuIGp1c3QgYSBrZXljb2RlIHRoYXQNCmNvbWVzIHRocm91Z2ggaW4gdGhl
+IGV2ZW50LiAgSXQncyBub3QgdXNlZnVsIHRvIGp1c3QgZG8gZGV2X2luZm8sIGl0IHJlYWxseSBz
+aG91bGQNCmJlIHNvbWV0aGluZyB0aGF0IHVzZXJzcGFjZSBjYW4gYWN0IG9uIGFuZCBzaG93IGEg
+dHJhbnNsYXRlZCBtZXNzYWdlLg0KSSBkb24ndCB0aGluayB3ZSB3YW50IHRvIGFkZCBhbm90aGVy
+IDE1IERlbGwgc3BlY2lmaWMga2V5Y29kZXMgdG8gdGhlIGtlcm5lbCBmb3IgdGhlDQp2YXJpb3Vz
+IGV2ZW50cyBhbmQgYWRkIGFub3RoZXIgNCBtb3JlIHdoZW4gYSBsYXB0b3AgaW50cm9kdWNlcyBh
+bm90aGVyIHNldCBvZiBrZXlzLg0KDQo+IA0KPiA+ICAJCQlpZiAobGVuID4gMikNCj4gPiAgCQkJ
+CWRlbGxfd21pX3Byb2Nlc3Nfa2V5KHdkZXYsIDB4MDAwMCwNCj4gPiAgCQkJCQkJICAgICBidWZm
+ZXJfZW50cnlbMl0pOw0KPiA+IC0JCQkvKiBPdGhlciBlbnRyaWVzIGNvdWxkIGNvbnRhaW4gYWRk
+aXRpb25hbCBpbmZvcm1hdGlvbiAqLw0KPiA+ICsJCQkvKiBFeHRlbmRlZCBkYXRhIGlzIGN1cnJl
+bnRseSBpZ25vcmVkICovDQo+ID4gIAkJCWJyZWFrOw0KPiA+ICAJCWNhc2UgMHgwMDEwOiAvKiBT
+ZXF1ZW5jZSBvZiBrZXlzIHByZXNzZWQgKi8NCj4gPiAgCQljYXNlIDB4MDAxMTogLyogU2VxdWVu
+Y2Ugb2YgZXZlbnRzIG9jY3VycmVkICovDQo+ID4gQEAgLTU1Niw2ICs1NjYsNyBAQCBzdGF0aWMg
+aW50IGRlbGxfd21pX2lucHV0X3NldHVwKHN0cnVjdCB3bWlfZGV2aWNlDQo+ICp3ZGV2KQ0KPiA+
+ICAJCQkgQVJSQVlfU0laRShkZWxsX3dtaV9rZXltYXBfdHlwZV8wMDAwKSArDQo+ID4gIAkJCSBB
+UlJBWV9TSVpFKGRlbGxfd21pX2tleW1hcF90eXBlXzAwMTApICsNCj4gPiAgCQkJIEFSUkFZX1NJ
+WkUoZGVsbF93bWlfa2V5bWFwX3R5cGVfMDAxMSkgKw0KPiA+ICsJCQkgQVJSQVlfU0laRShkZWxs
+X3dtaV9rZXltYXBfdHlwZV8wMDEyKSArDQo+ID4gIAkJCSAxLA0KPiA+ICAJCQkgc2l6ZW9mKHN0
+cnVjdCBrZXlfZW50cnkpLCBHRlBfS0VSTkVMKTsNCj4gPiAgCWlmICgha2V5bWFwKSB7DQo+ID4g
+QEAgLTYwMCw2ICs2MTEsMTMgQEAgc3RhdGljIGludCBkZWxsX3dtaV9pbnB1dF9zZXR1cChzdHJ1
+Y3Qgd21pX2RldmljZQ0KPiAqd2RldikNCj4gPiAgCQlwb3MrKzsNCj4gPiAgCX0NCj4gPg0KPiA+
+ICsJLyogQXBwZW5kIHRhYmxlIHdpdGggZXZlbnRzIG9mIHR5cGUgMHgwMDEyICovDQo+ID4gKwlm
+b3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShkZWxsX3dtaV9rZXltYXBfdHlwZV8wMDEyKTsgaSsr
+KSB7DQo+ID4gKwkJa2V5bWFwW3Bvc10gPSBkZWxsX3dtaV9rZXltYXBfdHlwZV8wMDEyW2ldOw0K
+PiA+ICsJCWtleW1hcFtwb3NdLmNvZGUgfD0gKDB4MDAxMiA8PCAxNik7DQo+ID4gKwkJcG9zKys7
+DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICAJLyoNCj4gPiAgCSAqIE5vdyBhcHBlbmQgYWxzbyB0YWJs
+ZSB3aXRoICJsZWdhY3kiIGV2ZW50cyBvZiB0eXBlIDB4MDAwMC4gU29tZSBvZg0KPiA+ICAJICog
+dGhlbSBhcmUgcmVwb3J0ZWQgYWxzbyBvbiBsYXB0b3BzIHdoaWNoIGhhdmUgc2NhbmNvZGVzIGlu
+IERNSS4NCj4gPiAtLQ0KPiA+IDIuMjcuMA0KPiA+DQo=
