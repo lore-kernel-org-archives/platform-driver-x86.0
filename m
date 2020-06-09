@@ -1,126 +1,252 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Subject: Re: [PATCH v3 3/3] platform/x86: dell-wmi: add new dmi mapping for
- keycode 0xffff
-Date: Tue, 9 Jun 2020 11:19:52 +0200
-Message-ID: <20200609091952.myqtorlp42aiqpup@pali>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Date: Tue, 9 Jun 2020 12:44:34 +0200
+Message-ID: <137d8e69-a83f-6129-19e0-316ef0a51076@redhat.com>
 References: <cover.1591584631.git.y.linux@paritcher.com>
- <cover.1591673143.git.y.linux@paritcher.com>
- <e2f6b5ee27a3a6142a2f8806be8dfbce442548da.1591673143.git.y.linux@paritcher.com>
+ <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
+ <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
+ <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
+ <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e2f6b5ee27a3a6142a2f8806be8dfbce442548da.1591673143.git.y.linux@paritcher.com>
+In-Reply-To: <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Y Paritcher <y.linux@paritcher.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Mario.Limonciello@dell.com
+To: Mario.Limonciello@dell.com, y.linux@paritcher.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, pali@kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Adding Darren and Andy, please look at this issue as this is something
-which should be decided how to handle in all platform/wmi drivers.
+Hi,
 
-On Monday 08 June 2020 23:52:54 Y Paritcher wrote:
-> This looks to be a special value for some sort of custom scancode.
-> This code could not be triggered for any keypress and is included
-> from the 0xB2 DMI table.
+On 6/8/20 10:36 PM, Mario.Limonciello@dell.com wrote:
+>> -----Original Message-----
+>> From: Y Paritcher <y.linux@paritcher.com>
+>> Sent: Monday, June 8, 2020 3:13 PM
+>> To: Limonciello, Mario
+>> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+>> mjg59@srcf.ucam.org; pali@kernel.org
+>> Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+>>
+>>
+>> [EXTERNAL EMAIL]
+>>
+>> On 6/8/20 11:40 AM, Mario.Limonciello@dell.com wrote:
+>>>> -----Original Message-----
+>>>> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
+>>>> owner@vger.kernel.org> On Behalf Of Y Paritcher
+>>>> Sent: Sunday, June 7, 2020 11:22 PM
+>>>> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+>>>> Matthew Garrett; Pali Rohár
+>>>> Subject: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+>>>>
+>>>>
+>>>> [EXTERNAL EMAIL]
+>>>>
+>>>> Ignore events with a type of 0x0012 and a code of 0xe035,
+>>>> this silences the following messages being logged when
+>>>> pressing the Fn-lock key on a Dell Inspiron 5593:
+>>>>
+>>>> dell_wmi: Unknown WMI event type 0x12
+>>>> dell_wmi: Unknown key with type 0x0012 and code 0xe035 pressed
+>>>
+>>> Event type 0x12 is for "System Events".  This is the type of events that
+>>> you typically would see come in for things "like" the wrong power adapter
+>>> being plugged in on Windows or stuff about plugging a Thunderbolt dock
+>> into
+>>> a port that doesn't support Thunderbolt.
+>>>
+>>> A message might look something like (paraphrased)
+>>> "Your system requires a 180W power adapter to charge effectively, but you
+>>> plugged in a 60W adapter."
+>>>
+>>> There often is extended data with these events.  As such I don't believe
+>> all
+>>> information in event type 0x0012 should be treated like scan codes like
+>> those in
+>>> 0x10 or 0x11.
+>>>
+>>> I would guess that Fn-lock on this machine probably has extended data in
+>> the next
+>>> showing whether it was turned on and off.  If it does, perhaps it makes
+>> sense to
+>>> send this information to userspace as an evdev switch instead.
+>>>
+>>
+>> You are right.
+>> I had assumed (incorrectly) the were the same.
+>> I turned on dyndbg and got the events with the extended data.
+>>
+>> Fn lock key switched to multimedia keys
+>> dell_wmi: Received WMI event (02 00 12 00 35 e0 01 00 00 00 00 00 00 00 00
+>> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00)
+>> the extended data is e0 01
+>>
+>> Fn-lock switched to function keys
+>> dell_wmi: Received WMI event (02 00 12 00 35 e0 00 00 00 00 00 00 00 00 00
+>> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00)
+>> the extended data is e0 00
 > 
-> This prevents the following messages from being logged at startup on a
-> Dell Inspiron 5593:
+> To be clear - do the function keys not send different scan codes on this laptop
+> in the two different modes?  I expected that they should be sending separate scan
+> codes.  If they are not sending different scan codes, then this actually needs
+> to be captured in the kernel and a translation map is needed which is platform
+> specific.
 > 
->     dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
->     dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
+>>
+>> Therefore i agree this should have it's own case in `dell_wmi_process_key`
+>> but i am
+>> not sure yet how to deal with it. any suggestion are helpful.
+>>
+>> About sending it to userspace, I just followed what was already done, if
+>> that is not
+>> desired we should change it for all the models.
 > 
-> as per this code comment:
+> Right, I don't think this was a bad first attempt.  I just think it's different
+> than the 0x10/0x11 events.
 > 
->    Log if we find an entry in the DMI table that we don't
->    understand.  If this happens, we should figure out what
->    the entry means and add it to bios_to_linux_keycode.
+> I'm not saying it shouldn't apply to more models, but just that events from
+> this 0x12 table should be treated differently.
 > 
-> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
-> ---
->  drivers/platform/x86/dell-wmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I feel we need a different way to send these types of events to userspace
+> than a keycode.
 > 
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-> index e3bc2601e631..bbdb3e860892 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -506,7 +506,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
->  		u16 keycode = (bios_entry->keycode <
->  			       ARRAY_SIZE(bios_to_linux_keycode)) ?
->  			bios_to_linux_keycode[bios_entry->keycode] :
-> -			KEY_RESERVED;
-> +			(bios_entry->keycode == 0xffff ? KEY_UNKNOWN : KEY_RESERVED);
-
-I really do not like this patch in this form as it is inconsistent with
-how are these key codes processed. And also because it does not solve
-any problem. It just hides existence of the problem. And this is
-something which should be avoided as it makes debugging harder and
-basically does not bring any value.
-
-To explain it a bit more. We have mapping table bios_to_linux_keycode[]
-from Dell BIOS key codes to Linux key codes. This mapping table is used
-for processing Dell WMI buffer of type 0x0010.
-
-You are not able to trigger these events and therefore you and nobody
-else in this discussion does not know yet what real key triggers this
-Dell BIOS key code.
-
-So it means that you are proposing to add "bogus" value into
-bios_to_linux_keycode[] table (just implicitly via check to reduce
-memory usage, but it does not matter) just because to hide existence of
-the problem.
-
-This bogus value "KEY_UNKNOWN" is there just as a placeholder because
-nobody know correct value and nobody was able to trigger it.
-
-Also how it differs situation with unknown keycode "39" which is also
-missing in the table from yours with keycode "65535" which is also
-missing in the table?
-
-I think there is no difference, for both values we do not know what is
-correct mapping to Linux keycodes and therefore value is not present in
-bios_to_linux_keycode[] table.
-
-If I accept to take this bogus value for keycode "65535", tomorrow can
-somebody send me a patch which adds bogus value "1000" for the same
-reason as you as it makes precedense. But it also does not solve any
-problem.
-
-We would just end up with mess and garbage in bios_to_linux_keycode[]
-mapping table together with some correct values in table.
-
-So we should ask here two main questions:
-
-1) Is dell-wmi able to process key presses (or events) with scancode
-0x48 and keycode 0xffff?
-
-2) If we are not able to process them, what should we do?
-
-Answer for first question is definitely "no".
-
-And answer for second question, I'm not sure, but I thought that
-throwing warning or info message is the correct solution. Driver cannot
-handle something, so it inform about it, instead of silently dropping
-event. Same behavior I'm seeing in other kernel drivers.
-
-But looks like that you and Mario have opposite opinion, that kernel
-should not log unknown events and rather should drop them.
-
-I would like to have behavior of dell-wmi same as in other drivers for
-consistency, so the best would be to ask WMI/platform maintainers. They
-could have opinion how to handle these problem globally.
-
-...
-
-Darren & Andy, could you please say something to this, what do you think
-about silently dropping events/actions which are currently unknown for
-dell-wmi driver? It is better to log them or not? Currently we are
-logging them.
-
->  
->  		/*
->  		 * Log if we find an entry in the DMI table that we don't
-> -- 
-> 2.27.0
+> I for example think that the power adapter and dock events are also potentially
+> useful but realistically userspace needs to be able to show translated messages to
+> a user.
 > 
+> Hans,
+> 
+> Can you please comment here how you would like to see events like this should come
+> through to userspace?
+> 
+> * Wrong power adapter (you have X and should have Y)
+> * You have plugged a dock into the wrong port
+> * Fn-lock mode
+
+Note just thinking out loud here.
+
+I'm thinking we just need a mechanism to show a "user notification". This would
+be just a plain text string passed from the kernel to userspace. I guess we
+may also want some mechanism to build (on the kernel side) a small file
+with all possible messages for translation from US English to other languages.
+
+So the idea would be that e.g. gnome-shell can listen for these in some way
+and then show a notification in its notification mechanism with the message,
+like how it does for when software updates are available for example.
+
+I think we can make this as simple as using the normal printk buffer for this
+and prefixing the messages with "USER NOTIFY", we already have some messages
+in the kernel which would qualify for this, e.g. in the USB core we have:
+
+                 dev_info(&udev->dev, "not running at top speed; "
+                         "connect to a high speed hub\n");
+
+This one is about USB1 vs USB2 ports, but we have a similar one somewhere
+for USB2 vs USB3 ports (I think) which would also be an interesting message
+to actually show to the user inside the desktop environment.
+
+So sticking with the above example, we could change that to
+
+#define USER_NOTIFY "USER NOTIFY: "
+
+dev_info(&udev->dev, USER_NOTIFY "not running at top speed; connect to a high speed hub\n");
+
+And then userspace would trigger on the "USER NOTIFY: " part, keep the
+bit before it (which describes the device) as is, try to translate
+the text after it and then combine the text before it + the possibly
+translated text after it and show that as a notification.
+
+The reason for (ab)using the printk ring-buffer for this is that
+we will still want to have these messages in dmesg too anyways,
+so why add a new mechanism and send the same message twice if
+we can just tag the messages inside the printk ring-buffer ?
+
+Note the dev_info above would likely be replaced with some new
+helper which also does some magic to help with gathering a
+list of strings to translate.
+
+Again just thinking out loud here. If anyone has any initial
+reaction to this please let me know...
+
+Regards,
+
+Hans
+
+
+
+
+
+
+
+
+
+
+> 
+>>>>
+>>>> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+>>>> ---
+>>>>   drivers/platform/x86/dell-wmi.c | 17 +++++++++++++++++
+>>>>   1 file changed, 17 insertions(+)
+>>>>
+>>>> diff --git a/drivers/platform/x86/dell-wmi.c
+>> b/drivers/platform/x86/dell-
+>>>> wmi.c
+>>>> index 0b4f72f923cd..f37e7e9093c2 100644
+>>>> --- a/drivers/platform/x86/dell-wmi.c
+>>>> +++ b/drivers/platform/x86/dell-wmi.c
+>>>> @@ -334,6 +334,14 @@ static const struct key_entry
+>>>> dell_wmi_keymap_type_0011[] = {
+>>>>   	{ KE_IGNORE, KBD_LED_AUTO_100_TOKEN, { KEY_RESERVED } },
+>>>>   };
+>>>>
+>>>> +/*
+>>>> + * Keymap for WMI events of type 0x0012
+>>>> + */
+>>>> +static const struct key_entry dell_wmi_keymap_type_0012[] = {
+>>>> +	/* Fn-lock button pressed */
+>>>> +	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
+>>>> +};
+>>>> +
+>>>>   static void dell_wmi_process_key(struct wmi_device *wdev, int type, int
+>>>> code)
+>>>>   {
+>>>>   	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+>>>> @@ -425,6 +433,7 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+>>>>   			break;
+>>>>   		case 0x0010: /* Sequence of keys pressed */
+>>>>   		case 0x0011: /* Sequence of events occurred */
+>>>> +		case 0x0012: /* Sequence of events occurred */
+>>>>   			for (i = 2; i < len; ++i)
+>>>>   				dell_wmi_process_key(wdev, buffer_entry[1],
+>>>>   						     buffer_entry[i]);
+>>>> @@ -556,6 +565,7 @@ static int dell_wmi_input_setup(struct wmi_device
+>>>> *wdev)
+>>>>   			 ARRAY_SIZE(dell_wmi_keymap_type_0000) +
+>>>>   			 ARRAY_SIZE(dell_wmi_keymap_type_0010) +
+>>>>   			 ARRAY_SIZE(dell_wmi_keymap_type_0011) +
+>>>> +			 ARRAY_SIZE(dell_wmi_keymap_type_0012) +
+>>>>   			 1,
+>>>>   			 sizeof(struct key_entry), GFP_KERNEL);
+>>>>   	if (!keymap) {
+>>>> @@ -600,6 +610,13 @@ static int dell_wmi_input_setup(struct wmi_device
+>>>> *wdev)
+>>>>   		pos++;
+>>>>   	}
+>>>>
+>>>> +	/* Append table with events of type 0x0012 */
+>>>> +	for (i = 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
+>>>> +		keymap[pos] = dell_wmi_keymap_type_0012[i];
+>>>> +		keymap[pos].code |= (0x0012 << 16);
+>>>> +		pos++;
+>>>> +	}
+>>>> +
+>>>>   	/*
+>>>>   	 * Now append also table with "legacy" events of type 0x0000. Some of
+>>>>   	 * them are reported also on laptops which have scancodes in DMI.
+>>>> --
+>>>> 2.27.0
+>>>
