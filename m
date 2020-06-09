@@ -1,39 +1,44 @@
-From: Y Paritcher <y.linux@paritcher.com>
-Subject: [PATCH v3 0/3] platform/x86: dell-wmi: new keys
-Date: Mon,  8 Jun 2020 23:52:51 -0400
-Message-ID: <cover.1591673143.git.y.linux@paritcher.com>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Date: Tue, 9 Jun 2020 10:04:28 +0200
+Message-ID: <20200609080428.bjlimc2mfhn6hjbs@pali>
 References: <cover.1591584631.git.y.linux@paritcher.com>
+ <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
+ <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1591584631.git.y.linux@paritcher.com>
+Content-Disposition: inline
+In-Reply-To: <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Mario.Limonciello@dell.com
+To: Mario.Limonciello@dell.com
+Cc: y.linux@paritcher.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Extended data and events like Fn lock are currently ignored.
-This is consistent with what was done until now.
-Changing this is out of scope of this patch and would require
-rethinking how events are processed, as on some devices the status
-is sent as it own event, and on some devices via extended data.
-That is also dependent on better docs from the team at Dell.
+On Monday 08 June 2020 15:40:53 Mario.Limonciello@dell.com wrote:
+> > dell_wmi: Unknown WMI event type 0x12
+> > dell_wmi: Unknown key with type 0x0012 and code 0xe035 pressed
+> 
+> Event type 0x12 is for "System Events".  This is the type of events that
+> you typically would see come in for things "like" the wrong power adapter
+> being plugged in on Windows or stuff about plugging a Thunderbolt dock into
+> a port that doesn't support Thunderbolt.
+> 
+> A message might look something like (paraphrased)
+> "Your system requires a 180W power adapter to charge effectively, but you
+> plugged in a 60W adapter."
+> 
+> There often is extended data with these events.  As such I don't believe all
+> information in event type 0x0012 should be treated like scan codes like those in
+> 0x10 or 0x11.
+> 
+> I would guess that Fn-lock on this machine probably has extended data in the next
+> showing whether it was turned on and off.  If it does, perhaps it makes sense to
+> send this information to userspace as an evdev switch instead.
 
-The keycode 0xffff look to be a special case and was added as an
-exception code (Thanks Randy for the implementation).
-It was not found for any key on my device, it is only located in
-the DMI table parsed at boot into the keymap.
+Thank you for information!
 
-Overall I am trying to get useless data (to me) out of my syslog
-by documenting the correct scancode/keycode mappings
-
-Y Paritcher (3):
-  platform/x86: dell-wmi: add new backlight events
-  platform/x86: dell-wmi: add new keymap type 0x0012
-  platform/x86: dell-wmi: add new dmi mapping for keycode 0xffff
-
- drivers/platform/x86/dell-wmi.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
-
--- 
-2.27.0
+Interesting is that I got this email only now, after all other emails in
+this thread. But seems that you have wrote it prior I asked question
+about documentation for these events. So probably some email delivery
+problem / delay.
