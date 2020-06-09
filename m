@@ -1,252 +1,124 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Date: Tue, 9 Jun 2020 12:44:34 +0200
-Message-ID: <137d8e69-a83f-6129-19e0-316ef0a51076@redhat.com>
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Date: Tue, 9 Jun 2020 15:36:54 +0000
+Message-ID: <ae45da27126d470888ef0d839665b9ed@AUSX13MPC105.AMER.DELL.COM>
 References: <cover.1591584631.git.y.linux@paritcher.com>
  <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
  <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
  <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
  <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
+ <137d8e69-a83f-6129-19e0-316ef0a51076@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <137d8e69-a83f-6129-19e0-316ef0a51076@redhat.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com, y.linux@paritcher.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, pali@kernel.org
+Sender: linux-input-owner@vger.kernel.org
+To: hdegoede@redhat.com, y.linux@paritcher.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, pali@kernel.org, linux-input@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-On 6/8/20 10:36 PM, Mario.Limonciello@dell.com wrote:
->> -----Original Message-----
->> From: Y Paritcher <y.linux@paritcher.com>
->> Sent: Monday, June 8, 2020 3:13 PM
->> To: Limonciello, Mario
->> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
->> mjg59@srcf.ucam.org; pali@kernel.org
->> Subject: Re: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
->>
->>
->> [EXTERNAL EMAIL]
->>
->> On 6/8/20 11:40 AM, Mario.Limonciello@dell.com wrote:
->>>> -----Original Message-----
->>>> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
->>>> owner@vger.kernel.org> On Behalf Of Y Paritcher
->>>> Sent: Sunday, June 7, 2020 11:22 PM
->>>> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
->>>> Matthew Garrett; Pali Rohár
->>>> Subject: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
->>>>
->>>>
->>>> [EXTERNAL EMAIL]
->>>>
->>>> Ignore events with a type of 0x0012 and a code of 0xe035,
->>>> this silences the following messages being logged when
->>>> pressing the Fn-lock key on a Dell Inspiron 5593:
->>>>
->>>> dell_wmi: Unknown WMI event type 0x12
->>>> dell_wmi: Unknown key with type 0x0012 and code 0xe035 pressed
->>>
->>> Event type 0x12 is for "System Events".  This is the type of events that
->>> you typically would see come in for things "like" the wrong power adapter
->>> being plugged in on Windows or stuff about plugging a Thunderbolt dock
->> into
->>> a port that doesn't support Thunderbolt.
->>>
->>> A message might look something like (paraphrased)
->>> "Your system requires a 180W power adapter to charge effectively, but you
->>> plugged in a 60W adapter."
->>>
->>> There often is extended data with these events.  As such I don't believe
->> all
->>> information in event type 0x0012 should be treated like scan codes like
->> those in
->>> 0x10 or 0x11.
->>>
->>> I would guess that Fn-lock on this machine probably has extended data in
->> the next
->>> showing whether it was turned on and off.  If it does, perhaps it makes
->> sense to
->>> send this information to userspace as an evdev switch instead.
->>>
->>
->> You are right.
->> I had assumed (incorrectly) the were the same.
->> I turned on dyndbg and got the events with the extended data.
->>
->> Fn lock key switched to multimedia keys
->> dell_wmi: Received WMI event (02 00 12 00 35 e0 01 00 00 00 00 00 00 00 00
->> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00)
->> the extended data is e0 01
->>
->> Fn-lock switched to function keys
->> dell_wmi: Received WMI event (02 00 12 00 35 e0 00 00 00 00 00 00 00 00 00
->> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00)
->> the extended data is e0 00
-> 
-> To be clear - do the function keys not send different scan codes on this laptop
-> in the two different modes?  I expected that they should be sending separate scan
-> codes.  If they are not sending different scan codes, then this actually needs
-> to be captured in the kernel and a translation map is needed which is platform
-> specific.
-> 
->>
->> Therefore i agree this should have it's own case in `dell_wmi_process_key`
->> but i am
->> not sure yet how to deal with it. any suggestion are helpful.
->>
->> About sending it to userspace, I just followed what was already done, if
->> that is not
->> desired we should change it for all the models.
-> 
-> Right, I don't think this was a bad first attempt.  I just think it's different
-> than the 0x10/0x11 events.
-> 
-> I'm not saying it shouldn't apply to more models, but just that events from
-> this 0x12 table should be treated differently.
-> 
-> I feel we need a different way to send these types of events to userspace
-> than a keycode.
-> 
-> I for example think that the power adapter and dock events are also potentially
-> useful but realistically userspace needs to be able to show translated messages to
-> a user.
-> 
-> Hans,
-> 
-> Can you please comment here how you would like to see events like this should come
-> through to userspace?
-> 
-> * Wrong power adapter (you have X and should have Y)
-> * You have plugged a dock into the wrong port
-> * Fn-lock mode
-
-Note just thinking out loud here.
-
-I'm thinking we just need a mechanism to show a "user notification". This would
-be just a plain text string passed from the kernel to userspace. I guess we
-may also want some mechanism to build (on the kernel side) a small file
-with all possible messages for translation from US English to other languages.
-
-So the idea would be that e.g. gnome-shell can listen for these in some way
-and then show a notification in its notification mechanism with the message,
-like how it does for when software updates are available for example.
-
-I think we can make this as simple as using the normal printk buffer for this
-and prefixing the messages with "USER NOTIFY", we already have some messages
-in the kernel which would qualify for this, e.g. in the USB core we have:
-
-                 dev_info(&udev->dev, "not running at top speed; "
-                         "connect to a high speed hub\n");
-
-This one is about USB1 vs USB2 ports, but we have a similar one somewhere
-for USB2 vs USB3 ports (I think) which would also be an interesting message
-to actually show to the user inside the desktop environment.
-
-So sticking with the above example, we could change that to
-
-#define USER_NOTIFY "USER NOTIFY: "
-
-dev_info(&udev->dev, USER_NOTIFY "not running at top speed; connect to a high speed hub\n");
-
-And then userspace would trigger on the "USER NOTIFY: " part, keep the
-bit before it (which describes the device) as is, try to translate
-the text after it and then combine the text before it + the possibly
-translated text after it and show that as a notification.
-
-The reason for (ab)using the printk ring-buffer for this is that
-we will still want to have these messages in dmesg too anyways,
-so why add a new mechanism and send the same message twice if
-we can just tag the messages inside the printk ring-buffer ?
-
-Note the dev_info above would likely be replaced with some new
-helper which also does some magic to help with gathering a
-list of strings to translate.
-
-Again just thinking out loud here. If anyone has any initial
-reaction to this please let me know...
-
-Regards,
-
-Hans
-
-
-
-
-
-
-
-
-
-
-> 
->>>>
->>>> Signed-off-by: Y Paritcher <y.linux@paritcher.com>
->>>> ---
->>>>   drivers/platform/x86/dell-wmi.c | 17 +++++++++++++++++
->>>>   1 file changed, 17 insertions(+)
->>>>
->>>> diff --git a/drivers/platform/x86/dell-wmi.c
->> b/drivers/platform/x86/dell-
->>>> wmi.c
->>>> index 0b4f72f923cd..f37e7e9093c2 100644
->>>> --- a/drivers/platform/x86/dell-wmi.c
->>>> +++ b/drivers/platform/x86/dell-wmi.c
->>>> @@ -334,6 +334,14 @@ static const struct key_entry
->>>> dell_wmi_keymap_type_0011[] = {
->>>>   	{ KE_IGNORE, KBD_LED_AUTO_100_TOKEN, { KEY_RESERVED } },
->>>>   };
->>>>
->>>> +/*
->>>> + * Keymap for WMI events of type 0x0012
->>>> + */
->>>> +static const struct key_entry dell_wmi_keymap_type_0012[] = {
->>>> +	/* Fn-lock button pressed */
->>>> +	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
->>>> +};
->>>> +
->>>>   static void dell_wmi_process_key(struct wmi_device *wdev, int type, int
->>>> code)
->>>>   {
->>>>   	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
->>>> @@ -425,6 +433,7 @@ static void dell_wmi_notify(struct wmi_device *wdev,
->>>>   			break;
->>>>   		case 0x0010: /* Sequence of keys pressed */
->>>>   		case 0x0011: /* Sequence of events occurred */
->>>> +		case 0x0012: /* Sequence of events occurred */
->>>>   			for (i = 2; i < len; ++i)
->>>>   				dell_wmi_process_key(wdev, buffer_entry[1],
->>>>   						     buffer_entry[i]);
->>>> @@ -556,6 +565,7 @@ static int dell_wmi_input_setup(struct wmi_device
->>>> *wdev)
->>>>   			 ARRAY_SIZE(dell_wmi_keymap_type_0000) +
->>>>   			 ARRAY_SIZE(dell_wmi_keymap_type_0010) +
->>>>   			 ARRAY_SIZE(dell_wmi_keymap_type_0011) +
->>>> +			 ARRAY_SIZE(dell_wmi_keymap_type_0012) +
->>>>   			 1,
->>>>   			 sizeof(struct key_entry), GFP_KERNEL);
->>>>   	if (!keymap) {
->>>> @@ -600,6 +610,13 @@ static int dell_wmi_input_setup(struct wmi_device
->>>> *wdev)
->>>>   		pos++;
->>>>   	}
->>>>
->>>> +	/* Append table with events of type 0x0012 */
->>>> +	for (i = 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
->>>> +		keymap[pos] = dell_wmi_keymap_type_0012[i];
->>>> +		keymap[pos].code |= (0x0012 << 16);
->>>> +		pos++;
->>>> +	}
->>>> +
->>>>   	/*
->>>>   	 * Now append also table with "legacy" events of type 0x0000. Some of
->>>>   	 * them are reported also on laptops which have scancodes in DMI.
->>>> --
->>>> 2.27.0
->>>
+TG9vcCBsaW51eC1pbnB1dCBtYWlsaW5nIGxpc3QgYW5kIHRyaW0gdG8gdGhlIHJlbGV2YW50IGNv
+bnZlcnNhdGlvbi4NCg0KPiA+IENhbiB5b3UgcGxlYXNlIGNvbW1lbnQgaGVyZSBob3cgeW91IHdv
+dWxkIGxpa2UgdG8gc2VlIGV2ZW50cyBsaWtlIHRoaXMNCj4gc2hvdWxkIGNvbWUNCj4gPiB0aHJv
+dWdoIHRvIHVzZXJzcGFjZT8NCj4gPg0KPiA+ICogV3JvbmcgcG93ZXIgYWRhcHRlciAoeW91IGhh
+dmUgWCBhbmQgc2hvdWxkIGhhdmUgWSkNCj4gPiAqIFlvdSBoYXZlIHBsdWdnZWQgYSBkb2NrIGlu
+dG8gdGhlIHdyb25nIHBvcnQNCj4gPiAqIEZuLWxvY2sgbW9kZQ0KPiANCj4gTm90ZSBqdXN0IHRo
+aW5raW5nIG91dCBsb3VkIGhlcmUuDQo+IA0KPiBJJ20gdGhpbmtpbmcgd2UganVzdCBuZWVkIGEg
+bWVjaGFuaXNtIHRvIHNob3cgYSAidXNlciBub3RpZmljYXRpb24iLiBUaGlzDQo+IHdvdWxkDQo+
+IGJlIGp1c3QgYSBwbGFpbiB0ZXh0IHN0cmluZyBwYXNzZWQgZnJvbSB0aGUga2VybmVsIHRvIHVz
+ZXJzcGFjZS4gSSBndWVzcyB3ZQ0KPiBtYXkgYWxzbyB3YW50IHNvbWUgbWVjaGFuaXNtIHRvIGJ1
+aWxkIChvbiB0aGUga2VybmVsIHNpZGUpIGEgc21hbGwgZmlsZQ0KPiB3aXRoIGFsbCBwb3NzaWJs
+ZSBtZXNzYWdlcyBmb3IgdHJhbnNsYXRpb24gZnJvbSBVUyBFbmdsaXNoIHRvIG90aGVyDQo+IGxh
+bmd1YWdlcy4NCg0KVGhlIHBhcnQgdGhhdCBmYWxscyBhcGFydCBoZXJlIGlzIHRoYXQgc29tZSBz
+dHJpbmdzIGhhdmUgZHluYW1pYyBkYXRhIGFkZGVkIHRvDQp0aGVtLiAgRm9yIGV4YW1wbGUgaW4g
+dGhlIGNhc2UgSSBzYWlkIHdyb25nIHBvd2VyIGFkYXB0ZXIgdGhlcmUgd2lsbCBiZSBzb21lIG51
+bWJlcnMNCnB1dCBpbnRvIHRoZSBzdHJpbmcgYmFzZWQgb24gd2hhdCBjb21lcyBpbnRvIHRoZSBi
+dWZmZXIuICBTbyBob3cgd2lsbCB5b3UgdHJhbnNsYXRlDQp0aGVzZT8NCg0KSSBndWVzcyB5b3Ug
+Y2FuIGRyYXcgYSBsaW5lIGluIHRoZSBzYW5kIGFuZCBzYXkgYWxsIHN0cmluZ3MgdGhhdCBjYW4g
+YmUgZW1pdHRlZCBtdXN0DQpiZSAic3RhdGljIGFuZCBnZW5lcmljIi4NCg0KPiANCj4gU28gdGhl
+IGlkZWEgd291bGQgYmUgdGhhdCBlLmcuIGdub21lLXNoZWxsIGNhbiBsaXN0ZW4gZm9yIHRoZXNl
+IGluIHNvbWUgd2F5DQo+IGFuZCB0aGVuIHNob3cgYSBub3RpZmljYXRpb24gaW4gaXRzIG5vdGlm
+aWNhdGlvbiBtZWNoYW5pc20gd2l0aCB0aGUNCj4gbWVzc2FnZSwNCj4gbGlrZSBob3cgaXQgZG9l
+cyBmb3Igd2hlbiBzb2Z0d2FyZSB1cGRhdGVzIGFyZSBhdmFpbGFibGUgZm9yIGV4YW1wbGUuDQo+
+IA0KPiBJIHRoaW5rIHdlIGNhbiBtYWtlIHRoaXMgYXMgc2ltcGxlIGFzIHVzaW5nIHRoZSBub3Jt
+YWwgcHJpbnRrIGJ1ZmZlciBmb3INCj4gdGhpcw0KPiBhbmQgcHJlZml4aW5nIHRoZSBtZXNzYWdl
+cyB3aXRoICJVU0VSIE5PVElGWSIsIHdlIGFscmVhZHkgaGF2ZSBzb21lDQo+IG1lc3NhZ2VzDQo+
+IGluIHRoZSBrZXJuZWwgd2hpY2ggd291bGQgcXVhbGlmeSBmb3IgdGhpcywgZS5nLiBpbiB0aGUg
+VVNCIGNvcmUgd2UgaGF2ZToNCj4gDQo+ICAgICAgICAgICAgICAgICAgZGV2X2luZm8oJnVkZXYt
+PmRldiwgIm5vdCBydW5uaW5nIGF0IHRvcCBzcGVlZDsgIg0KPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgImNvbm5lY3QgdG8gYSBoaWdoIHNwZWVkIGh1YlxuIik7DQo+IA0KPiBUaGlzIG9uZSBp
+cyBhYm91dCBVU0IxIHZzIFVTQjIgcG9ydHMsIGJ1dCB3ZSBoYXZlIGEgc2ltaWxhciBvbmUgc29t
+ZXdoZXJlDQo+IGZvciBVU0IyIHZzIFVTQjMgcG9ydHMgKEkgdGhpbmspIHdoaWNoIHdvdWxkIGFs
+c28gYmUgYW4gaW50ZXJlc3RpbmcgbWVzc2FnZQ0KPiB0byBhY3R1YWxseSBzaG93IHRvIHRoZSB1
+c2VyIGluc2lkZSB0aGUgZGVza3RvcCBlbnZpcm9ubWVudC4NCj4gDQo+IFNvIHN0aWNraW5nIHdp
+dGggdGhlIGFib3ZlIGV4YW1wbGUsIHdlIGNvdWxkIGNoYW5nZSB0aGF0IHRvDQo+IA0KPiAjZGVm
+aW5lIFVTRVJfTk9USUZZICJVU0VSIE5PVElGWTogIg0KPiANCj4gZGV2X2luZm8oJnVkZXYtPmRl
+diwgVVNFUl9OT1RJRlkgIm5vdCBydW5uaW5nIGF0IHRvcCBzcGVlZDsgY29ubmVjdCB0byBhDQo+
+IGhpZ2ggc3BlZWQgaHViXG4iKTsNCj4gDQo+IEFuZCB0aGVuIHVzZXJzcGFjZSB3b3VsZCB0cmln
+Z2VyIG9uIHRoZSAiVVNFUiBOT1RJRlk6ICIgcGFydCwga2VlcCB0aGUNCj4gYml0IGJlZm9yZSBp
+dCAod2hpY2ggZGVzY3JpYmVzIHRoZSBkZXZpY2UpIGFzIGlzLCB0cnkgdG8gdHJhbnNsYXRlDQo+
+IHRoZSB0ZXh0IGFmdGVyIGl0IGFuZCB0aGVuIGNvbWJpbmUgdGhlIHRleHQgYmVmb3JlIGl0ICsg
+dGhlIHBvc3NpYmx5DQo+IHRyYW5zbGF0ZWQgdGV4dCBhZnRlciBpdCBhbmQgc2hvdyB0aGF0IGFz
+IGEgbm90aWZpY2F0aW9uLg0KPiANCj4gVGhlIHJlYXNvbiBmb3IgKGFiKXVzaW5nIHRoZSBwcmlu
+dGsgcmluZy1idWZmZXIgZm9yIHRoaXMgaXMgdGhhdA0KPiB3ZSB3aWxsIHN0aWxsIHdhbnQgdG8g
+aGF2ZSB0aGVzZSBtZXNzYWdlcyBpbiBkbWVzZyB0b28gYW55d2F5cywNCj4gc28gd2h5IGFkZCBh
+IG5ldyBtZWNoYW5pc20gYW5kIHNlbmQgdGhlIHNhbWUgbWVzc2FnZSB0d2ljZSBpZg0KPiB3ZSBj
+YW4ganVzdCB0YWcgdGhlIG1lc3NhZ2VzIGluc2lkZSB0aGUgcHJpbnRrIHJpbmctYnVmZmVyID8N
+Cj4gDQo+IE5vdGUgdGhlIGRldl9pbmZvIGFib3ZlIHdvdWxkIGxpa2VseSBiZSByZXBsYWNlZCB3
+aXRoIHNvbWUgbmV3DQo+IGhlbHBlciB3aGljaCBhbHNvIGRvZXMgc29tZSBtYWdpYyB0byBoZWxw
+IHdpdGggZ2F0aGVyaW5nIGENCj4gbGlzdCBvZiBzdHJpbmdzIHRvIHRyYW5zbGF0ZS4NCj4gDQo+
+IEFnYWluIGp1c3QgdGhpbmtpbmcgb3V0IGxvdWQgaGVyZS4gSWYgYW55b25lIGhhcyBhbnkgaW5p
+dGlhbA0KPiByZWFjdGlvbiB0byB0aGlzIHBsZWFzZSBsZXQgbWUga25vdy4uLg0KPiANCg0KQXMg
+YSBnZW5lcmFsIGNvbW1lbnQsIEkgdGhpbmsgaXQgY2FwdHVyZXMgdmVyeSB3ZWxsIHRoZSBwb3Nz
+aWJpbGl0eQ0KdGhhdCB0aGUga2VybmVsIGhhcyBtb3JlIGluZm9ybWF0aW9uIHRoYW4gdXNlcnNw
+YWNlIGFib3V0IHRoZSBjaXJjdW1zdGFuY2VzDQpvZiBzb21ldGhpbmcgdGhhdCBhIHVzZXIgc2hv
+dWxkIGJlIG5vdGlmaWVkLiAgRGVmaW5pdGVseSB0aGF0J3MgdGhlDQpjYXNlIGZvciB0aGVzZSBX
+TUkvQUNQSSBldmVudHMsIGFuZCBJIHdvdWxkIHRoaW5rIHNpbWlsYXIgY2lyY3Vtc3RhbmNlcw0K
+Y2FuIGFwcGx5IHRvIG90aGVyIHN1YnN5c3RlbSB0b28uDQoNCj4gUmVnYXJkcywNCj4gDQo+IEhh
+bnMNCj4gDQo+IA0KPiANCj4gDQo+IA0KPiANCj4gDQo+IA0KPiANCj4gDQo+ID4NCj4gPj4+Pg0K
+PiA+Pj4+IFNpZ25lZC1vZmYtYnk6IFkgUGFyaXRjaGVyIDx5LmxpbnV4QHBhcml0Y2hlci5jb20+
+DQo+ID4+Pj4gLS0tDQo+ID4+Pj4gICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS5jIHwg
+MTcgKysrKysrKysrKysrKysrKysNCj4gPj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRp
+b25zKCspDQo+ID4+Pj4NCj4gPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYv
+ZGVsbC13bWkuYw0KPiA+PiBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtDQo+ID4+Pj4gd21p
+LmMNCj4gPj4+PiBpbmRleCAwYjRmNzJmOTIzY2QuLmYzN2U3ZTkwOTNjMiAxMDA2NDQNCj4gPj4+
+PiAtLS0gYS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS5jDQo+ID4+Pj4gKysrIGIvZHJp
+dmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWkuYw0KPiA+Pj4+IEBAIC0zMzQsNiArMzM0LDE0IEBA
+IHN0YXRpYyBjb25zdCBzdHJ1Y3Qga2V5X2VudHJ5DQo+ID4+Pj4gZGVsbF93bWlfa2V5bWFwX3R5
+cGVfMDAxMVtdID0gew0KPiA+Pj4+ICAgCXsgS0VfSUdOT1JFLCBLQkRfTEVEX0FVVE9fMTAwX1RP
+S0VOLCB7IEtFWV9SRVNFUlZFRCB9IH0sDQo+ID4+Pj4gICB9Ow0KPiA+Pj4+DQo+ID4+Pj4gKy8q
+DQo+ID4+Pj4gKyAqIEtleW1hcCBmb3IgV01JIGV2ZW50cyBvZiB0eXBlIDB4MDAxMg0KPiA+Pj4+
+ICsgKi8NCj4gPj4+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBrZXlfZW50cnkgZGVsbF93bWlfa2V5
+bWFwX3R5cGVfMDAxMltdID0gew0KPiA+Pj4+ICsJLyogRm4tbG9jayBidXR0b24gcHJlc3NlZCAq
+Lw0KPiA+Pj4+ICsJeyBLRV9JR05PUkUsIDB4ZTAzNSwgeyBLRVlfUkVTRVJWRUQgfSB9LA0KPiA+
+Pj4+ICt9Ow0KPiA+Pj4+ICsNCj4gPj4+PiAgIHN0YXRpYyB2b2lkIGRlbGxfd21pX3Byb2Nlc3Nf
+a2V5KHN0cnVjdCB3bWlfZGV2aWNlICp3ZGV2LCBpbnQgdHlwZSwNCj4gaW50DQo+ID4+Pj4gY29k
+ZSkNCj4gPj4+PiAgIHsNCj4gPj4+PiAgIAlzdHJ1Y3QgZGVsbF93bWlfcHJpdiAqcHJpdiA9IGRl
+dl9nZXRfZHJ2ZGF0YSgmd2Rldi0+ZGV2KTsNCj4gPj4+PiBAQCAtNDI1LDYgKzQzMyw3IEBAIHN0
+YXRpYyB2b2lkIGRlbGxfd21pX25vdGlmeShzdHJ1Y3Qgd21pX2RldmljZQ0KPiAqd2RldiwNCj4g
+Pj4+PiAgIAkJCWJyZWFrOw0KPiA+Pj4+ICAgCQljYXNlIDB4MDAxMDogLyogU2VxdWVuY2Ugb2Yg
+a2V5cyBwcmVzc2VkICovDQo+ID4+Pj4gICAJCWNhc2UgMHgwMDExOiAvKiBTZXF1ZW5jZSBvZiBl
+dmVudHMgb2NjdXJyZWQgKi8NCj4gPj4+PiArCQljYXNlIDB4MDAxMjogLyogU2VxdWVuY2Ugb2Yg
+ZXZlbnRzIG9jY3VycmVkICovDQo+ID4+Pj4gICAJCQlmb3IgKGkgPSAyOyBpIDwgbGVuOyArK2kp
+DQo+ID4+Pj4gICAJCQkJZGVsbF93bWlfcHJvY2Vzc19rZXkod2RldiwgYnVmZmVyX2VudHJ5WzFd
+LA0KPiA+Pj4+ICAgCQkJCQkJICAgICBidWZmZXJfZW50cnlbaV0pOw0KPiA+Pj4+IEBAIC01NTYs
+NiArNTY1LDcgQEAgc3RhdGljIGludCBkZWxsX3dtaV9pbnB1dF9zZXR1cChzdHJ1Y3Qgd21pX2Rl
+dmljZQ0KPiA+Pj4+ICp3ZGV2KQ0KPiA+Pj4+ICAgCQkJIEFSUkFZX1NJWkUoZGVsbF93bWlfa2V5
+bWFwX3R5cGVfMDAwMCkgKw0KPiA+Pj4+ICAgCQkJIEFSUkFZX1NJWkUoZGVsbF93bWlfa2V5bWFw
+X3R5cGVfMDAxMCkgKw0KPiA+Pj4+ICAgCQkJIEFSUkFZX1NJWkUoZGVsbF93bWlfa2V5bWFwX3R5
+cGVfMDAxMSkgKw0KPiA+Pj4+ICsJCQkgQVJSQVlfU0laRShkZWxsX3dtaV9rZXltYXBfdHlwZV8w
+MDEyKSArDQo+ID4+Pj4gICAJCQkgMSwNCj4gPj4+PiAgIAkJCSBzaXplb2Yoc3RydWN0IGtleV9l
+bnRyeSksIEdGUF9LRVJORUwpOw0KPiA+Pj4+ICAgCWlmICgha2V5bWFwKSB7DQo+ID4+Pj4gQEAg
+LTYwMCw2ICs2MTAsMTMgQEAgc3RhdGljIGludCBkZWxsX3dtaV9pbnB1dF9zZXR1cChzdHJ1Y3Qg
+d21pX2RldmljZQ0KPiA+Pj4+ICp3ZGV2KQ0KPiA+Pj4+ICAgCQlwb3MrKzsNCj4gPj4+PiAgIAl9
+DQo+ID4+Pj4NCj4gPj4+PiArCS8qIEFwcGVuZCB0YWJsZSB3aXRoIGV2ZW50cyBvZiB0eXBlIDB4
+MDAxMiAqLw0KPiA+Pj4+ICsJZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUoZGVsbF93bWlfa2V5
+bWFwX3R5cGVfMDAxMik7IGkrKykgew0KPiA+Pj4+ICsJCWtleW1hcFtwb3NdID0gZGVsbF93bWlf
+a2V5bWFwX3R5cGVfMDAxMltpXTsNCj4gPj4+PiArCQlrZXltYXBbcG9zXS5jb2RlIHw9ICgweDAw
+MTIgPDwgMTYpOw0KPiA+Pj4+ICsJCXBvcysrOw0KPiA+Pj4+ICsJfQ0KPiA+Pj4+ICsNCj4gPj4+
+PiAgIAkvKg0KPiA+Pj4+ICAgCSAqIE5vdyBhcHBlbmQgYWxzbyB0YWJsZSB3aXRoICJsZWdhY3ki
+IGV2ZW50cyBvZiB0eXBlIDB4MDAwMC4NCj4gU29tZSBvZg0KPiA+Pj4+ICAgCSAqIHRoZW0gYXJl
+IHJlcG9ydGVkIGFsc28gb24gbGFwdG9wcyB3aGljaCBoYXZlIHNjYW5jb2RlcyBpbiBETUkuDQo+
+ID4+Pj4gLS0NCj4gPj4+PiAyLjI3LjANCj4gPj4+DQoNCg==
