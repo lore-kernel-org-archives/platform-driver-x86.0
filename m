@@ -1,91 +1,140 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v4 0/3] platform/x86: dell-wmi: new keys
-Date: Wed, 10 Jun 2020 19:22:56 +0000
-Message-ID: <7fb650f568b44eb78e37aa8a534a69d7@AUSX13MPC105.AMER.DELL.COM>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <cover.1591811549.git.y.linux@paritcher.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
+Date: Wed, 10 Jun 2020 23:21:46 +0200
+Message-ID: <4e7f8bf3-b72b-d418-ec95-e1f8c3d61261@collabora.com>
+References: <20200413134611.478441-1-enric.balletbo@collabora.com>
+ <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
+ <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com>
+ <10490419.gsntqH5CaE@kreacher>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1591811549.git.y.linux@paritcher.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <10490419.gsntqH5CaE@kreacher>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy@infradead.org, dvhart@infradead.org
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org, y.linux@paritcher.com, pali@kernel.org
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Len Brown <lenb@kernel.org>, Collabora Kernel ML <kernel@collabora.com>, Guenter Roeck <groeck@chromium.org>, Benson Leung <bleung@chromium.org>, Dmitry Torokhov <dtor@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org, Andy Shevchenko <andy@infradead.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>, Darren Hart <dvhart@infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Jeremy Soller <jer>
 List-Id: platform-driver-x86.vger.kernel.org
 
-> -----Original Message-----
-> From: Y Paritcher <y.linux@paritcher.com>
-> Sent: Wednesday, June 10, 2020 12:57 PM
-> To: Pali Roh=E1r
-> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
-> Matthew Garrett; Limonciello, Mario
-> Subject: [PATCH v4 0/3] platform/x86: dell-wmi: new keys
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> change since v3:
->     No code changes.
->     Update commit message to reflect info given by Mario at dell.
->=20
-> Is there anything more i have to do for the patches that were reviewed
-> or will they be picked up by the maintainers?
-> Thanks
->=20
-> Y Paritcher (3):
->   platform/x86: dell-wmi: add new backlight events
->   platform/x86: dell-wmi: add new keymap type 0x0012
->   platform/x86: dell-wmi: add new dmi mapping for keycode 0xffff
->=20
->  drivers/platform/x86/dell-wmi.c | 28 +++++++++++++++++++++++++---
->  1 file changed, 25 insertions(+), 3 deletions(-)
->=20
-> --
-> 2.27.0
+Hi Rafael,
 
-Andy,
+Many thanks for your feedback. See my answers inline.
 
-The whole series looks good to me now.  You can put this on the patches
-when they're swooped up.
+On 5/6/20 13:17, Rafael J. Wysocki wrote:
+> On Tuesday, April 14, 2020 4:35:38 PM CEST Enric Balletbo i Serra wrote:
+>> Hi Rafael,
+>>
+>> On 13/4/20 22:41, Rafael J. Wysocki wrote:
+>>> On Mon, Apr 13, 2020 at 3:46 PM Enric Balletbo i Serra
+>>> <enric.balletbo@collabora.com> wrote:
+>>>>
+>>>> This driver attaches to the ChromeOS ACPI device and then exports the values
+>>>> reported by the ACPI in a sysfs directory. These values are not exported
+>>>> via the standard ACPI tables, hence a specific driver is needed to do
+>>>> it.
+>>>
+>>> So how exactly are they exported?
+>>>
+>>
+>> They are exported through sysfs.
+>>
+>>>> The ACPI values are presented in the string form (numbers as decimal
+>>>> values) or binary blobs, and can be accessed as the contents of the
+>>>> appropriate read only files in the standard ACPI devices sysfs directory tree.
+>>>
+>>> My understanding based on a cursory look at the patch is that there is
+>>> an ACPI device with _HID equal to "GGL0001"  and one or more special
+>>> methods under it that return values which you want to export over
+>>> sysfs as binary attributes.  They appear to be read-only.
+>>>
+>>
+>> Exactly, there is an ACPI device equal to "GGL0001" and one special method
+>> called MLST that returns a list of the other control methods supported by the
+>> Chrome OS hardware device. The driver calls the special MLST method and goes
+>> through the list.
+>>
+>>> I guess that these data are to be consubed by user space?
+>>>
+>>
+>> Yes, this is used by user space, to be more specific ChromeOS userspace uses it.
+> 
+> Well, let me start over.
+> 
+> The subject and changelog of this patch are not precise enough IMO and there is
+> not enough information in the latter.
+> 
 
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+Ok, I can improve that.
 
-However I would like to note there was a comment that you had a direct ques=
-tion
-asked by Pali that probably got lost in the thread.  This was on patch 3/3 =
-on v3.
-I think it's worth answering as it could dictate a follow up patch to chang=
-e behavior.
+> It is not clear what "ACPI driver for ChromeOS" means.  There may be many ACPI
+> drivers in a Linux-based system as a rule.
+> 
+> It is unclear what the ChromeOS ACPI device is and why it is there.  Is there
+> any documentation of it you can point me to?
+> 
 
-The summary of my argument which led to his is nested somewhere in the thre=
-ad was that
-to most users this isn't useful since they can't act on it.  IE they can't =
-use something
-like setkeycodes and go on their merry way.  The user who could act on it b=
-y coming
-to upstream and submitting questions and patches is more technical and havi=
-ng them
-use dyndbg to turn on the messages about unknown shouldn't be a big deal.
+I'm afraid, I don't think there is any documentation, I'll ask around.
 
-> I'm not sure, but I thought that
-> throwing warning or info message is the correct solution. Driver cannot
-> handle something, so it inform about it, instead of silently dropping
-> event. Same behavior I'm seeing in other kernel drivers.
+> It is unclear what you mean by "These values are not exported via the standard
+> ACPI tables".
+> 
+> It looks like (but it is not actually documented in any way) the idea is to
+> get to the ACPI device object with _HID returning "GGL0001", evaluate the
+> MLST method under it and then evaluate the methods listed by it and export the
+> data returned by them via sysfs, under the "GGL0001" device on the "acpi" bus.
+> Is this correct?
+> 
 
-> But looks like that you and Mario have opposite opinion, that kernel
-> should not log unknown events and rather should drop them.
+Yes, this is correct.
 
-> I would like to have behavior of dell-wmi same as in other drivers for
-> consistency, so the best would be to ask WMI/platform maintainers. They
-> could have opinion how to handle these problem globally.
+> If so, there is a couple of issues here.
+> 
+> First off, GGL0001 is not a valid ACPI device ID, because the GGL prefix is not
+> present in the list at https://uefi.org/acpi_id_list
+> 
+> There are two ways to address that.  One would be to take the GOOG prefix
+> (present in the list above), append a proper unique number (if I were to
+> guess, I would say that 0001 had been reserved already) to it and then
+> put the resulting device ID into the firmware, to be returned _HID for the
+> device in question (you can add a _CID returning "GGL0001" so it can be
+> found by the old invalid ID at least from the kernel).
 
-> ...
+As Dmitry said, this is not going to happen.
 
-> Darren & Andy, could you please say something to this, what do you think
-> about silently dropping events/actions which are currently unknown for
-> dell-wmi driver? It is better to log them or not? Currently we are
-> logging them.
 
-Can you please advise which way you would rather have the subsystem go?
+> The other one would
+> be to properly register the GGL prefix for Google and establish a process for
+> allocating IDs with that prefix internally.
+>
+
+IIUC I think this is the option we should go, although I am not really sure how
+to do it (I will investigate or ask).
+
+To give you some references, if I'm not wrong, this prefix is used in all or
+almost all Intel Chromebook devices (auron, cyan, eve, fizz, hatch, octopus,
+poppy, strago ...) The ACPI source for this device can be found here [1], and,
+if not all, almost all Intel based Chromebooks are shipped with the firmware
+that supports this.
+
+> Next, device attributes in sysfs are part of the kernel ABI and once defined,
+> they cannot change (exceptions happen, but rarely), so you must guarantee
+> that whatever appears in there, will always be present for devices with the
+> given device ID in the future in the same format.
+> 
+> Can you actually guarantee that?  If so, what is that guarantee based on?
+> 
+
+Although is not really documented, can we say that this is a standard "de facto"
+assuming that there are lots of devices in the field and for a long time with
+that? Can this be a guarantee?
+
+> Thanks!
+> 
+> 
+> 
+
+Thanks!
+
+[1]
+https://chromium.googlesource.com/chromiumos/third_party/coreboot/+/refs/heads/chromeos-2016.05/src/vendorcode/google/chromeos/acpi/chromeos.asl
