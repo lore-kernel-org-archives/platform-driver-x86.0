@@ -1,134 +1,92 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: Re: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP
- platforms
-Date: Wed, 10 Jun 2020 11:41:06 -0600
-Message-ID: <0affa00e-8a52-9e29-56d4-39dff952d736@canonical.com>
-References: <20200610153747.27040-1-kai.heng.feng@canonical.com>
- <4d0714fe5e2548b6b638ea447ad19490@AUSX13MPC105.AMER.DELL.COM>
+From: Y Paritcher <y.linux@paritcher.com>
+Subject: [PATCH v4 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
+Date: Wed, 10 Jun 2020 13:56:57 -0400
+Message-ID: <b2efc80238424ffe5f97422f3e59e9689a327a28.1591811549.git.y.linux@paritcher.com>
+References: <cover.1591584631.git.y.linux@paritcher.com> <cover.1591811549.git.y.linux@paritcher.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4d0714fe5e2548b6b638ea447ad19490@AUSX13MPC105.AMER.DELL.COM>
-Content-Language: en-US
+In-Reply-To: <cover.1591811549.git.y.linux@paritcher.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kai.heng.feng@canonical.com
-Cc: Mario.Limonciello@dell.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Mario.Limonciello@dell.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 2020-06-10 9:49 a.m., Mario.Limonciello@dell.com wrote:
->> -----Original Message-----
->> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
->> owner@vger.kernel.org> On Behalf Of Kai-Heng Feng
->> Sent: Wednesday, June 10, 2020 10:38 AM
->> To: alex.hung@canonical.com
->> Cc: Kai-Heng Feng; Darren Hart; Andy Shevchenko; open list:INTEL HID EVENT
->> DRIVER; open list
->> Subject: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP
->> platforms
->>
->>
->> [EXTERNAL EMAIL]
->>
->> Wireless hotkey on HP platforms can trigger two events, if both
->> hp-wireless and intel-hid are supported. Two events at the same time
->> renders wireless hotkey useless.
->>
->> HP confirmed that hp-wireless (HPQ6001) should always be the canonical
->> source of wireless hotkey event, so skip registering rfkill hotkey if
->> HPQ6001 is present.
->>
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->>  drivers/platform/x86/intel-hid.c | 31 ++++++++++++++++++++++++++++++-
->>  1 file changed, 30 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-
->> hid.c
->> index 9ee79b74311c..31091c8faf70 100644
->> --- a/drivers/platform/x86/intel-hid.c
->> +++ b/drivers/platform/x86/intel-hid.c
->> @@ -25,6 +25,8 @@ static const struct acpi_device_id intel_hid_ids[] = {
->>  };
->>  MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
->>
->> +static bool hp_wireless_present;
->> +
->>  /* In theory, these are HID usages. */
->>  static const struct key_entry intel_hid_keymap[] = {
->>  	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
->> @@ -49,6 +51,29 @@ static const struct key_entry intel_hid_keymap[] = {
->>  	{ KE_END },
->>  };
->>
->> +static const struct key_entry intel_hid_no_rfkill_keymap[] = {
->> +	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
->> +	/* 2: Toggle SW_ROTATE_LOCK -- easy to implement if seen in wild */
->> +	{ KE_KEY, 3, { KEY_NUMLOCK } },
->> +	{ KE_KEY, 4, { KEY_HOME } },
->> +	{ KE_KEY, 5, { KEY_END } },
->> +	{ KE_KEY, 6, { KEY_PAGEUP } },
->> +	{ KE_KEY, 7, { KEY_PAGEDOWN } },
->> +	/* 8: rfkill -- use hp-wireless instead */
->> +	{ KE_KEY, 9, { KEY_POWER } },
->> +	{ KE_KEY, 11, { KEY_SLEEP } },
->> +	/* 13 has two different meanings in the spec -- ignore it. */
->> +	{ KE_KEY, 14, { KEY_STOPCD } },
->> +	{ KE_KEY, 15, { KEY_PLAYPAUSE } },
->> +	{ KE_KEY, 16, { KEY_MUTE } },
->> +	{ KE_KEY, 17, { KEY_VOLUMEUP } },
->> +	{ KE_KEY, 18, { KEY_VOLUMEDOWN } },
->> +	{ KE_KEY, 19, { KEY_BRIGHTNESSUP } },
->> +	{ KE_KEY, 20, { KEY_BRIGHTNESSDOWN } },
->> +	/* 27: wake -- needs special handling */
->> +	{ KE_END },
->> +};
->> +
->>  /* 5 button array notification value. */
->>  static const struct key_entry intel_array_keymap[] = {
->>  	{ KE_KEY,    0xC2, { KEY_LEFTMETA } },                /* Press */
->> @@ -317,7 +342,8 @@ static int intel_hid_input_setup(struct platform_device
->> *device)
->>  	if (!priv->input_dev)
->>  		return -ENOMEM;
->>
->> -	ret = sparse_keymap_setup(priv->input_dev, intel_hid_keymap, NULL);
->> +	ret = sparse_keymap_setup(priv->input_dev, hp_wireless_present ?
->> +			intel_hid_no_rfkill_keymap : intel_hid_keymap, NULL);
->>  	if (ret)
->>  		return ret;
->>
->> @@ -575,6 +601,9 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void
->> *context, void **rv)
->>  			dev_info(&dev->dev,
->>  				 "intel-hid: created platform device\n");
->>
->> +	if (!strcmp(acpi_device_hid(dev), "HPQ6001"))
->> +		hp_wireless_present = true;
+These are events with extended data. The extended data is
+currently ignored as userspace does not have a way to deal
+it.
 
-(Resend with format removed)
+Ignore event with a type of 0x0012 and a code of 0xe035, as
+the keyboard controller takes care of Fn lock events by itself.
+This silences the following messages being logged when
+pressing the Fn-lock key on a Dell Inspiron 5593:
 
-This can impact all HP systems that do not have this problem. How about
-a DMI quirk that is limited to this particular system?
+dell_wmi: Unknown WMI event type 0x12
+dell_wmi: Unknown key with type 0x0012 and code 0xe035 pressed
 
+This is consistent with the behavior for the Fn-lock key
+elsewhere in this file.
 
-> 
-> Just having the ACPI device present doesn't actually mean that the user
-> has a kernel compiled with hp-wireless or that it has finished initializing.
-> 
-> I would think this needs a better handshake in case hp-wireless was unloaded
-> or not present so the event could still come through intel-hid in this
-> circumstance.
-> 
->> +
->>  	return AE_OK;
->>  }
->>
->> --
->> 2.17.1
-> 
+Signed-off-by: Y Paritcher <y.linux@paritcher.com>
+---
+ drivers/platform/x86/dell-wmi.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
+index 0b2edfe2767d..e3bc2601e631 100644
+--- a/drivers/platform/x86/dell-wmi.c
++++ b/drivers/platform/x86/dell-wmi.c
+@@ -334,6 +334,15 @@ static const struct key_entry dell_wmi_keymap_type_0011[] = {
+ 	{ KE_IGNORE, KBD_LED_AUTO_100_TOKEN, { KEY_RESERVED } },
+ };
+ 
++/*
++ * Keymap for WMI events of type 0x0012
++ * They are events with extended data
++ */
++static const struct key_entry dell_wmi_keymap_type_0012[] = {
++	/* Fn-lock button pressed */
++	{ KE_IGNORE, 0xe035, { KEY_RESERVED } },
++};
++
+ static void dell_wmi_process_key(struct wmi_device *wdev, int type, int code)
+ {
+ 	struct dell_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+@@ -418,10 +427,11 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+ 
+ 		switch (buffer_entry[1]) {
+ 		case 0x0000: /* One key pressed or event occurred */
++		case 0x0012: /* Event with extended data occurred */
+ 			if (len > 2)
+-				dell_wmi_process_key(wdev, 0x0000,
++				dell_wmi_process_key(wdev, buffer_entry[1],
+ 						     buffer_entry[2]);
+-			/* Other entries could contain additional information */
++			/* Extended data is currently ignored */
+ 			break;
+ 		case 0x0010: /* Sequence of keys pressed */
+ 		case 0x0011: /* Sequence of events occurred */
+@@ -556,6 +566,7 @@ static int dell_wmi_input_setup(struct wmi_device *wdev)
+ 			 ARRAY_SIZE(dell_wmi_keymap_type_0000) +
+ 			 ARRAY_SIZE(dell_wmi_keymap_type_0010) +
+ 			 ARRAY_SIZE(dell_wmi_keymap_type_0011) +
++			 ARRAY_SIZE(dell_wmi_keymap_type_0012) +
+ 			 1,
+ 			 sizeof(struct key_entry), GFP_KERNEL);
+ 	if (!keymap) {
+@@ -600,6 +611,13 @@ static int dell_wmi_input_setup(struct wmi_device *wdev)
+ 		pos++;
+ 	}
+ 
++	/* Append table with events of type 0x0012 */
++	for (i = 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
++		keymap[pos] = dell_wmi_keymap_type_0012[i];
++		keymap[pos].code |= (0x0012 << 16);
++		pos++;
++	}
++
+ 	/*
+ 	 * Now append also table with "legacy" events of type 0x0000. Some of
+ 	 * them are reported also on laptops which have scancodes in DMI.
 -- 
-Cheers,
-Alex Hung
+2.27.0
