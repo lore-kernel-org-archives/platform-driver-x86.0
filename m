@@ -1,53 +1,88 @@
-From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
-Date: Wed, 10 Jun 2020 16:01:45 +0200
-Message-ID: <CAJZ5v0gVBzLpQqNrV-kzV84mLB86Gd6Ws63RwBKT=r1WgbeDSQ@mail.gmail.com>
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com> <964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com>
- <CAJZ5v0hB2ra2K=dd9ZjVyy1V2b1PmFHm79uDO2HtHU1D_4YUbw@mail.gmail.com>
- <6136f26c-e090-e025-af55-4c5f3a6aec92@collabora.com> <3e61c9c1-b211-da9f-c55b-b44eb6522f2a@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3e61c9c1-b211-da9f-c55b-b44eb6522f2a-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Samsung SoC <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>Peter
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP platforms
+Date: Wed, 10 Jun 2020 23:37:47 +0800
+Message-ID: <20200610153747.27040-1-kai.heng.feng@canonical.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: alex.hung@canonical.com
+Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:INTEL HID EVENT DRIVER" <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 10, 2020 at 3:21 PM Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->
-> Hi,
->
-> On 6/10/20 3:12 PM, Andrzej Pietrasiewicz wrote:
-> > Hi All,
-> >
+Wireless hotkey on HP platforms can trigger two events, if both
+hp-wireless and intel-hid are supported. Two events at the same time
+renders wireless hotkey useless.
 
-[cut]
+HP confirmed that hp-wireless (HPQ6001) should always be the canonical
+source of wireless hotkey event, so skip registering rfkill hotkey if
+HPQ6001 is present.
 
-> > What would it mean to become a wakeup source if there are no users,
-> > or nobody has ever opened the device? There are no interested
-> > input handlers (users) so what's the point of becoming a wakeup
-> > source? Why would the system need to wake up?
->
-> Well this is what we have been doing so far, so arguably we
-> need to keep doing it to avoid regressions / breaking our ABI.
->
-> Lets for example take a laptop, where when suspended the
-> power-button is the only valid wakeup-source and this is
-> running good old slackware with fvwm2 or windowmaker as
-> "desktop environment", then likely no process will have
-> the power-button input evdev node open.  Still we should
-> wakeup the laptop on the power-button press, otherwise
-> it will never wakeup.
->
-> Note I agree with you that the way this works is not
-> ideal, I just do not think that we can change it.
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/platform/x86/intel-hid.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-Please note that "no users" merely means that user space is not
-interested in receiving and processing the events from that device.
-
-If it is configured for system wakeup, it doesn't matter whether or
-not user space will consume the related events.
-
-Thanks!
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index 9ee79b74311c..31091c8faf70 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -25,6 +25,8 @@ static const struct acpi_device_id intel_hid_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
+ 
++static bool hp_wireless_present;
++
+ /* In theory, these are HID usages. */
+ static const struct key_entry intel_hid_keymap[] = {
+ 	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
+@@ -49,6 +51,29 @@ static const struct key_entry intel_hid_keymap[] = {
+ 	{ KE_END },
+ };
+ 
++static const struct key_entry intel_hid_no_rfkill_keymap[] = {
++	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
++	/* 2: Toggle SW_ROTATE_LOCK -- easy to implement if seen in wild */
++	{ KE_KEY, 3, { KEY_NUMLOCK } },
++	{ KE_KEY, 4, { KEY_HOME } },
++	{ KE_KEY, 5, { KEY_END } },
++	{ KE_KEY, 6, { KEY_PAGEUP } },
++	{ KE_KEY, 7, { KEY_PAGEDOWN } },
++	/* 8: rfkill -- use hp-wireless instead */
++	{ KE_KEY, 9, { KEY_POWER } },
++	{ KE_KEY, 11, { KEY_SLEEP } },
++	/* 13 has two different meanings in the spec -- ignore it. */
++	{ KE_KEY, 14, { KEY_STOPCD } },
++	{ KE_KEY, 15, { KEY_PLAYPAUSE } },
++	{ KE_KEY, 16, { KEY_MUTE } },
++	{ KE_KEY, 17, { KEY_VOLUMEUP } },
++	{ KE_KEY, 18, { KEY_VOLUMEDOWN } },
++	{ KE_KEY, 19, { KEY_BRIGHTNESSUP } },
++	{ KE_KEY, 20, { KEY_BRIGHTNESSDOWN } },
++	/* 27: wake -- needs special handling */
++	{ KE_END },
++};
++
+ /* 5 button array notification value. */
+ static const struct key_entry intel_array_keymap[] = {
+ 	{ KE_KEY,    0xC2, { KEY_LEFTMETA } },                /* Press */
+@@ -317,7 +342,8 @@ static int intel_hid_input_setup(struct platform_device *device)
+ 	if (!priv->input_dev)
+ 		return -ENOMEM;
+ 
+-	ret = sparse_keymap_setup(priv->input_dev, intel_hid_keymap, NULL);
++	ret = sparse_keymap_setup(priv->input_dev, hp_wireless_present ?
++			intel_hid_no_rfkill_keymap : intel_hid_keymap, NULL);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -575,6 +601,9 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 			dev_info(&dev->dev,
+ 				 "intel-hid: created platform device\n");
+ 
++	if (!strcmp(acpi_device_hid(dev), "HPQ6001"))
++		hp_wireless_present = true;
++
+ 	return AE_OK;
+ }
+ 
+-- 
+2.17.1
