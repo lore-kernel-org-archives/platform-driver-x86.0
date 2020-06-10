@@ -1,7 +1,7 @@
 From: Y Paritcher <y.linux@paritcher.com>
-Subject: [PATCH v4 1/3] platform/x86: dell-wmi: add new backlight events
-Date: Wed, 10 Jun 2020 13:56:56 -0400
-Message-ID: <50885a0c51c6fb31d20ddeb7434572448f1453be.1591811549.git.y.linux@paritcher.com>
+Subject: [PATCH v4 3/3] platform/x86: dell-wmi: add new dmi mapping for keycode 0xffff
+Date: Wed, 10 Jun 2020 13:56:58 -0400
+Message-ID: <b388001d4804871f03067dbbe134f7368c8b5b25.1591811549.git.y.linux@paritcher.com>
 References: <cover.1591584631.git.y.linux@paritcher.com> <cover.1591811549.git.y.linux@paritcher.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,34 +12,41 @@ To: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Matthew Garrett <mjg59@srcf.ucam.org>, Mario.Limonciello@dell.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add events with a type of 0x0010 and a code of 0x57 / 0x58,
-this silences the following messages being logged on a
+This keycode is used by Dell as a no-op for keys that should have
+no function.
+
+This keycode is never triggered by a keypress in practice, rather
+it is included from the 0xB2 DMI table at startup.
+
+This prevents the following messages from being logged at startup on a
 Dell Inspiron 5593:
 
-dell_wmi: Unknown key with type 0x0010 and code 0x0057 pressed
-dell_wmi: Unknown key with type 0x0010 and code 0x0058 pressed
+    dell_wmi: firmware scancode 0x48 maps to unrecognized keycode 0xffff
+    dell_wmi: firmware scancode 0x50 maps to unrecognized keycode 0xffff
 
-These are brightness events and will be handled by acpi-video
+as per this code comment:
+
+   Log if we find an entry in the DMI table that we don't
+   understand.  If this happens, we should figure out what
+   the entry means and add it to bios_to_linux_keycode.
 
 Signed-off-by: Y Paritcher <y.linux@paritcher.com>
 ---
- drivers/platform/x86/dell-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/platform/x86/dell-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-wmi.c
-index c25a4286d766..0b2edfe2767d 100644
+index e3bc2601e631..bbdb3e860892 100644
 --- a/drivers/platform/x86/dell-wmi.c
 +++ b/drivers/platform/x86/dell-wmi.c
-@@ -255,6 +255,10 @@ static const struct key_entry dell_wmi_keymap_type_0010[] = {
- 	/* Keyboard backlight change notification */
- 	{ KE_IGNORE, 0x3f, { KEY_RESERVED } },
+@@ -506,7 +506,7 @@ static void handle_dmi_entry(const struct dmi_header *dm, void *opaque)
+ 		u16 keycode = (bios_entry->keycode <
+ 			       ARRAY_SIZE(bios_to_linux_keycode)) ?
+ 			bios_to_linux_keycode[bios_entry->keycode] :
+-			KEY_RESERVED;
++			(bios_entry->keycode == 0xffff ? KEY_UNKNOWN : KEY_RESERVED);
  
-+	/* Backlight brightness level */
-+	{ KE_KEY,    0x57, { KEY_BRIGHTNESSDOWN } },
-+	{ KE_KEY,    0x58, { KEY_BRIGHTNESSUP } },
-+
- 	/* Mic mute */
- 	{ KE_KEY, 0x150, { KEY_MICMUTE } },
- 
+ 		/*
+ 		 * Log if we find an entry in the DMI table that we don't
 -- 
 2.27.0
