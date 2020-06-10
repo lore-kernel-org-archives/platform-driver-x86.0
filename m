@@ -1,127 +1,157 @@
-From: Hans de Goede <hdegoede@redhat.com>
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
-Date: Wed, 10 Jun 2020 15:21:34 +0200
-Message-ID: <3e61c9c1-b211-da9f-c55b-b44eb6522f2a@redhat.com>
+Date: Wed, 10 Jun 2020 15:41:13 +0200
+Message-ID: <2d5fd063-66bc-c707-4041-84a17c0a7d04@collabora.com>
 References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
  <20200608112211.12125-1-andrzej.p@collabora.com>
  <964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com>
  <CAJZ5v0hB2ra2K=dd9ZjVyy1V2b1PmFHm79uDO2HtHU1D_4YUbw@mail.gmail.com>
  <6136f26c-e090-e025-af55-4c5f3a6aec92@collabora.com>
+ <3e61c9c1-b211-da9f-c55b-b44eb6522f2a@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
-In-Reply-To: <6136f26c-e090-e025-af55-4c5f3a6aec92@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <3e61c9c1-b211-da9f-c55b-b44eb6522f2a@redhat.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Collabora Kernel ML <kernel@collabora.com>, Nick Dyer <nick@shmanahar.org>, linux-iio@vger.kernel.org, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Laxman Dewangan <ldewangan@nvidia.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Peter Hutterer <peter.hutterer@redhat.com>, Fabio Estevam <festevam@gmail.com>, Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, linux-input@vger.kernel.org, Len Brown <lenb@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>, Linux PM <linux-pm@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Henrique de Moraes Holschuh <ibm-acpi@hmh>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>, linux-input@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Kukjin Kim <kgene@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-SGksCgpPbiA2LzEwLzIwIDM6MTIgUE0sIEFuZHJ6ZWogUGlldHJhc2lld2ljeiB3cm90ZToKPiBI
-aSBBbGwsCj4gCj4gVyBkbml1IDEwLjA2LjIwMjAgb8KgMTI6MzgsIFJhZmFlbCBKLiBXeXNvY2tp
-IHBpc3plOgo+PiBPbiBXZWQsIEp1biAxMCwgMjAyMCBhdCAxMTo1MCBBTSBIYW5zIGRlIEdvZWRl
-IDxoZGVnb2VkZUByZWRoYXQuY29tPiB3cm90ZToKPj4+Cj4+PiBIaSBBbGwsCj4+Pgo+Pj4gT24g
-Ni84LzIwIDE6MjIgUE0sIEFuZHJ6ZWogUGlldHJhc2lld2ljeiB3cm90ZToKPj4+PiBUaGlzIGlz
-IGEgcXVpY2sgcmVzcGluIG9mIHYzLCB3aXRoIGp1c3QgdHdvIHNtYWxsIGNoYW5nZXMsIHBsZWFz
-ZSBzZWUKPj4+PiB0aGUgY2hhbmdlbG9nIGJlbG93Lgo+Pj4+Cj4+Pj4gVXNlcnNwYWNlIG1pZ2h0
-IHdhbnQgdG8gaW1wbGVtZW50IGEgcG9saWN5IHRvIHRlbXBvcmFyaWx5IGRpc3JlZ2FyZCBpbnB1
-dAo+Pj4+IGZyb20gY2VydGFpbiBkZXZpY2VzLgo+Pj4+Cj4+Pj4gQW4gZXhhbXBsZSB1c2UgY2Fz
-ZSBpcyBhIGNvbnZlcnRpYmxlIGxhcHRvcCwgd2hvc2Uga2V5Ym9hcmQgY2FuIGJlIGZvbGRlZAo+
-Pj4+IHVuZGVyIHRoZSBzY3JlZW4gdG8gY3JlYXRlIHRhYmxldC1saWtlIGV4cGVyaWVuY2UuIFRo
-ZSB1c2VyIHRoZW4gbXVzdCBob2xkCj4+Pj4gdGhlIGxhcHRvcCBpbiBzdWNoIGEgd2F5IHRoYXQg
-aXQgaXMgZGlmZmljdWx0IHRvIGF2b2lkIHByZXNzaW5nIHRoZSBrZXlib2FyZAo+Pj4+IGtleXMu
-IEl0IGlzIHRoZXJlZm9yZSBkZXNpcmFibGUgdG8gdGVtcG9yYXJpbHkgZGlzcmVnYXJkIGlucHV0
-IGZyb20gdGhlCj4+Pj4ga2V5Ym9hcmQsIHVudGlsIGl0IGlzIGZvbGRlZCBiYWNrLiBUaGlzIG9i
-dmlvdXNseSBpcyBhIHBvbGljeSB3aGljaCBzaG91bGQKPj4+PiBiZSBrZXB0IG91dCBvZiB0aGUg
-a2VybmVsLCBidXQgdGhlIGtlcm5lbCBtdXN0IHByb3ZpZGUgc3VpdGFibGUgbWVhbnMgdG8KPj4+
-PiBpbXBsZW1lbnQgc3VjaCBhIHBvbGljeS4KPj4+Cj4+PiBGaXJzdCBvZiBhbGwgc29ycnkgdG8g
-c3RhcnQgYSBzb21ld2hhdCBuZXcgZGlzY3Vzc2lvbiBhYm91dCB0aGlzCj4+PiB3aGlsZSB0aGlz
-IHBhdGNoIHNldCBpcyBhbHNvIHNvbWV3aGF0IGZhciBhbG9uZyBpbiB0aGUgcmV2aWV3IHByb2Nl
-c3MsCj4+PiBidXQgSSBiZWxpZXZlIHdoYXQgSSBkaXNjdXNzIGJlbG93IG5lZWRzIHRvIGJlIHRh
-a2VuIGludG8gYWNjb3VudC4KPj4+Cj4+PiBZZXN0ZXJkYXkgSSBoYXZlIGJlZW4gbG9va2luZyBp
-bnRvIHdoeSBhbiBBc3VzIFQxMDFIQSB3b3VsZCBub3Qgc3RheQo+Pj4gc3VzcGVuZGVkIHdoZW4g
-dGhlIExJRCBpcyBjbG9zZWQuIFRoZSBjYXVzZSBpcyB0aGF0IHRoZSBVU0IgSElEIG11bHRpLXRv
-dWNoCj4+PiB0b3VjaHBhZCBpbiB0aGUgYmFzZSBvZiB0aGUgZGV2aWNlIHN0YXJ0cyBzZW5kaW5n
-IGV2ZW50cyB3aGVuIHRoZSBzY3JlZW4KPj4+IGdldHMgY2xvc2UgdG8gdGhlIHRvdWNocGFkIChz
-byB3aGVuIHRoZSBMSUQgaXMgZnVsbHkgY2xvc2VkKSBhbmQgdGhlc2UKPj4+IGV2ZW50cyBhcmUg
-Y2F1c2luZyBhIHdha2V1cCBmcm9tIHN1c3BlbmQuIEhJRCBtdWx0aS10b3VjaCBkZXZpY2VzCj4+
-PiBkbyBoYXZlIGEgd2F5IHRvIHRlbGwgdGhlbSB0byBmdWxseSBzdG9wIHNlbmRpbmcgZXZlbnRz
-LCBhbHNvIGRpc2FibGluZwo+Pj4gdGhlIFVTQiByZW1vdGUgd2FrZXVwIHRoZSBkZXZpY2UgaXMg
-ZG9pbmcuIFRoZSBxdWVzdGlvbiBpcyB3aGVuIHRvIHRlbGwKPj4+IGl0IHRvIG5vdCBzZW5kIGV2
-ZW50cyB0aG91Z2ggLi4uCj4+Pgo+Pj4gU28gbm93IEkndmUgYmVlbiB0aGlua2luZyBhYm91dCBo
-b3cgdG8gZml4IHRoaXMgYW5kIEkgYmVsaWV2ZSB0aGF0IHRoZXJlCj4+PiBpcyBzb21lIGludGVy
-YWN0aW9uIGJldHdlZW4gdGhpcyBwcm9ibGVtIGFuZCB0aGlzIHBhdGNoLXNldC4KPj4+Cj4+PiBU
-aGUgcHJvYmxlbSBJJ20gc2VlaW5nIG9uIHRoZSBUMTAxSEEgaXMgYWJvdXQgd2FrZXVwcywgc28g
-dGhlIHF1ZXN0aW9uCj4+PiB3aGljaCBJIHdhbnQgdG8gZGlzY3VzcyBpczoKPj4+Cj4+PiAxLiBI
-b3cgZG9lcyBpbmhpYml0aW5nIGludGVyYWN0IHdpdGggZW5hYmxpbmcgLwo+Pj4gZGlzYWJsaW5n
-IHRoZSBkZXZpY2UgYXMgYSB3YWtldXAgc291cmNlID8KPj4+Cj4+PiAyLiBTaW5jZSB3ZSBoYXZl
-IG5vdyBtYWRlIGluaGliaXRpbmcgZXF1YWwgb3Blbi9jbG9zZSBob3cgZG9lcyBvcGVuL2Nsb3Nl
-Cj4+PiBpbnRlcmFjdCB3aXRoIGEgZGV2aWNlIGJlaW5nIGEgd2FrZXVwIHNvdXJjZSA/Cj4+Pgo+
-Pj4gQW5kIG15IG93biBpbml0aWFsICh0byBiZSBkaXNjdXNzZWQpIGFuc3dlcnMgdG8gdGhlc2Ug
-cXVlc3Rpb25zOgo+Pj4KPj4+IDEuIEl0IHNlZW1zIHRvIG1lIHRoYXQgd2hlbiBhIGRldmljZSBp
-cyBpbmhpYml0ZWQgaXQgc2hvdWxkIG5vdCBiZSBhCj4+PiB3YWtldXAgc291cmNlLCBzbyB3aGVy
-ZSBwb3NzaWJsZSBhIGlucHV0LWRldmljZS1kcml2ZXIgc2hvdWxkIGRpc2FibGUKPj4+IGEgZGV2
-aWNlJ3Mgd2FrZXVwIGNhcGFiaWxpdGllcyBvbiBzdXNwZW5kIGlmIGluaGliaXRlZAo+Pgo+PiBJ
-ZiAiaW5oaWJpdCIgbWVhbnMgImRvIG5vdCBnZW5lcmF0ZSBhbnkgZXZlbnRzIGdvaW5nIGZvcndh
-cmQiLCB0aGVuCj4+IHRoaXMgbXVzdCBhbHNvIGNvdmVyIHdha2V1cCBldmVudHMsIHNvIEkgYWdy
-ZWUuCj4gCj4gSSBhZ3JlZSwgdG9vLgo+IAo+Pgo+Pj4gMi4gVGhpcyBvbmUgaXMgdHJpY2tpZXIg
-SSBkb24ndCB0aGluayB3ZSBoYXZlIHJlYWxseSBjbGVhcmx5IHNwZWNpZmllZAo+Pj4gYW55IGJl
-aGF2aW9yIGhlcmUuIFRoZSBkZWZhdWx0IGJlaGF2aW9yIG9mIG1vc3QgZHJpdmVycyBzZWVtcyB0
-byBiZQo+Pj4gdXNpbmcgc29tZXRoaW5nIGxpa2UgdGhpcyBpbiB0aGVpciBzdXNwZW5kIGNhbGxi
-YWNrOgo+Pj4KPj4+IMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoZGV2aWNlX21heV93YWtldXAoZGV2
-KSkKPj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZW5hYmxlX2lycV93YWtl
-KGRhdGEtPmlycSk7Cj4+PiDCoMKgwqDCoMKgwqDCoMKgwqAgZWxzZSBpZiAoaW5wdXQtPnVzZXJz
-KQo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmb29fc3RvcF9yZWNlaXZp
-bmdfZXZlbnRzKGRhdGEpOwo+Pj4KPj4+IFNpbmNlIHRoaXMgaXMgd2hhdCBtb3N0IGRyaXZlcnMg
-c2VlbSB0byBkbyBJIGJlbGlldmUgd2Ugc2hvdWxkIGtlZXAKPj4+IHRoaXMgYXMgaXMgYW5kIHRo
-YXQgd2Ugc2hvdWxkIGp1c3QgY2xlYXJseSBkb2N1bWVudCB0aGF0IGlmIHRoZQo+Pj4gaW5wdXRf
-ZGV2aWNlIGhhcyB1c2VycyAoaGFzIGJlZW4gb3BlbmVkKSBvciBub3QgZG9lcyBub3QgbWF0dGVy
-Cj4+PiBmb3IgaXRzIHdha2V1cCBiZWhhdmlvci4KPj4+Cj4+PiBDb21iaW5pbmcgdGhlc2UgMiBh
-bnN3ZXJzIGxlYWRzIHRvIHRoaXMgbmV3IHBzZXVkbyBjb2RlIHRlbXBsYXRlCj4+PiBmb3IgYW4g
-aW5wdXQtZGV2aWNlJ3Mgc3VzcGVuZCBtZXRob2Q6Cj4+Pgo+Pj4gwqDCoMKgwqDCoMKgwqDCoCAv
-Kgo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgICogSWYgaW5oaWJpdGVkIHdlIGhhdmUgYWxyZWFkeSBk
-aXNhYmxlZCBldmVudHMgYW5kCj4+PiDCoMKgwqDCoMKgwqDCoMKgwqAgKiB3ZSBkbyBOT1Qgd2Fu
-dCB0byBzZXR1cCB0aGUgZGV2aWNlIGFzIHdha2Ugc291cmNlLgo+Pj4gwqDCoMKgwqDCoMKgwqDC
-oMKgICovCj4+PiDCoMKgwqDCoMKgwqDCoMKgIGlmIChpbnB1dC0+aW5oaWJpdGVkKQo+Pj4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIDA7Cj4gCj4gUmlnaHQsIGlmIGEg
-ZGV2aWNlIGlzIGluaGliaXRlZCBpdCBzaG91bGRuJ3QgYmVjb21lIGEgd2FrZXVwIHNvdXJjZSwK
-PiBiZWNhdXNlIHRoYXQgd291bGQgY29udHJhZGljdCB0aGUgcHVycG9zZSBvZiBiZWluZyBpbmhp
-Yml0ZWQuCgpBY2suIE5vdGUgSSBkbyB0aGluayB0aGF0IHdlIG5lZWQgdG8gZG9jdW1lbnQgdGhp
-cyAoYW5kIG1vcmUKaW4gZ2VuZXJhbCB0aGUgYW5zd2VyIHRvIGJvdGggcXVlc3Rpb25zIGZyb20g
-YWJvdmUpIGNsZWFybHkgc28KdGhhdCBnb2luZyBmb3J3YXJkIGlmIHRoZXJlIGFyZSBhbnkgcXVl
-c3Rpb25zIGFib3V0IGhvdyB0aGlzIGlzCnN1cHBvc2VkIHRvIHdvcmsgd2UgY2FuIGp1c3QgcG9p
-bnQgdG8gdGhlIGRvY3MuCgpDYW4geW91IGRvIGEgZm9sbG93LXVwIHBhdGNoLCBvciBpbmNsdWRl
-IGEgcGF0Y2ggaW4geW91ciBuZXh0CnZlcnNpb24gd2hpY2ggZG9jdW1lbnRzIHRoaXMgKG9uY2Ug
-d2UgYWdyZWUgb24gd2hhdCAidGhpcyIKZXhhY3RseSBpcykgPwoKPj4+Cj4+PiDCoMKgwqDCoMKg
-wqDCoMKgwqAgaWYgKGRldmljZV9tYXlfd2FrZXVwKGRldikpCj4+PiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIGVuYWJsZV9pcnFfd2FrZShkYXRhLT5pcnEpOwo+IAo+IFdoYXQg
-d291bGQgaXQgbWVhbiB0byBiZWNvbWUgYSB3YWtldXAgc291cmNlIGlmIHRoZXJlIGFyZSBubyB1
-c2VycywKPiBvciBub2JvZHkgaGFzIGV2ZXIgb3BlbmVkIHRoZSBkZXZpY2U/IFRoZXJlIGFyZSBu
-byBpbnRlcmVzdGVkCj4gaW5wdXQgaGFuZGxlcnMgKHVzZXJzKSBzbyB3aGF0J3MgdGhlIHBvaW50
-IG9mIGJlY29taW5nIGEgd2FrZXVwCj4gc291cmNlPyBXaHkgd291bGQgdGhlIHN5c3RlbSBuZWVk
-IHRvIHdha2UgdXA/CgpXZWxsIHRoaXMgaXMgd2hhdCB3ZSBoYXZlIGJlZW4gZG9pbmcgc28gZmFy
-LCBzbyBhcmd1YWJseSB3ZQpuZWVkIHRvIGtlZXAgZG9pbmcgaXQgdG8gYXZvaWQgcmVncmVzc2lv
-bnMgLyBicmVha2luZyBvdXIgQUJJLgoKTGV0cyBmb3IgZXhhbXBsZSB0YWtlIGEgbGFwdG9wLCB3
-aGVyZSB3aGVuIHN1c3BlbmRlZCB0aGUKcG93ZXItYnV0dG9uIGlzIHRoZSBvbmx5IHZhbGlkIHdh
-a2V1cC1zb3VyY2UgYW5kIHRoaXMgaXMKcnVubmluZyBnb29kIG9sZCBzbGFja3dhcmUgd2l0aCBm
-dndtMiBvciB3aW5kb3dtYWtlciBhcwoiZGVza3RvcCBlbnZpcm9ubWVudCIsIHRoZW4gbGlrZWx5
-IG5vIHByb2Nlc3Mgd2lsbCBoYXZlCnRoZSBwb3dlci1idXR0b24gaW5wdXQgZXZkZXYgbm9kZSBv
-cGVuLiAgU3RpbGwgd2Ugc2hvdWxkCndha2V1cCB0aGUgbGFwdG9wIG9uIHRoZSBwb3dlci1idXR0
-b24gcHJlc3MsIG90aGVyd2lzZQppdCB3aWxsIG5ldmVyIHdha2V1cC4KCk5vdGUgSSBhZ3JlZSB3
-aXRoIHlvdSB0aGF0IHRoZSB3YXkgdGhpcyB3b3JrcyBpcyBub3QKaWRlYWwsIEkganVzdCBkbyBu
-b3QgdGhpbmsgdGhhdCB3ZSBjYW4gY2hhbmdlIGl0LgoKPj4+IMKgwqDCoMKgwqDCoMKgwqDCoCBl
-bHNlIGlmIChpbnB1dC0+dXNlcnMpCj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGZvb19zdG9wX3JlY2VpdmluZ19ldmVudHMoZGF0YSk7Cj4+Pgo+Pj4gIyMjCgo8c25pcD4K
-ClJlZ2FyZHMsCgpIYW5zCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Hans,
+
+W dniu 10.06.2020 o 15:21, Hans de Goede pisze:
+> Hi,
+> 
+> On 6/10/20 3:12 PM, Andrzej Pietrasiewicz wrote:
+>> Hi All,
+>>
+>> W dniu 10.06.2020 o 12:38, Rafael J. Wysocki pisze:
+>>> On Wed, Jun 10, 2020 at 11:50 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>
+>>>> Hi All,
+>>>>
+>>>> On 6/8/20 1:22 PM, Andrzej Pietrasiewicz wrote:
+>>>>> This is a quick respin of v3, with just two small changes, please see
+>>>>> the changelog below.
+>>>>>
+>>>>> Userspace might want to implement a policy to temporarily disregard input
+>>>>> from certain devices.
+>>>>>
+>>>>> An example use case is a convertible laptop, whose keyboard can be folded
+>>>>> under the screen to create tablet-like experience. The user then must hold
+>>>>> the laptop in such a way that it is difficult to avoid pressing the keyboard
+>>>>> keys. It is therefore desirable to temporarily disregard input from the
+>>>>> keyboard, until it is folded back. This obviously is a policy which should
+>>>>> be kept out of the kernel, but the kernel must provide suitable means to
+>>>>> implement such a policy.
+>>>>
+>>>> First of all sorry to start a somewhat new discussion about this
+>>>> while this patch set is also somewhat far along in the review process,
+>>>> but I believe what I discuss below needs to be taken into account.
+>>>>
+>>>> Yesterday I have been looking into why an Asus T101HA would not stay
+>>>> suspended when the LID is closed. The cause is that the USB HID multi-touch
+>>>> touchpad in the base of the device starts sending events when the screen
+>>>> gets close to the touchpad (so when the LID is fully closed) and these
+>>>> events are causing a wakeup from suspend. HID multi-touch devices
+>>>> do have a way to tell them to fully stop sending events, also disabling
+>>>> the USB remote wakeup the device is doing. The question is when to tell
+>>>> it to not send events though ...
+>>>>
+>>>> So now I've been thinking about how to fix this and I believe that there
+>>>> is some interaction between this problem and this patch-set.
+>>>>
+>>>> The problem I'm seeing on the T101HA is about wakeups, so the question
+>>>> which I want to discuss is:
+>>>>
+>>>> 1. How does inhibiting interact with enabling /
+>>>> disabling the device as a wakeup source ?
+>>>>
+>>>> 2. Since we have now made inhibiting equal open/close how does open/close
+>>>> interact with a device being a wakeup source ?
+>>>>
+>>>> And my own initial (to be discussed) answers to these questions:
+>>>>
+>>>> 1. It seems to me that when a device is inhibited it should not be a
+>>>> wakeup source, so where possible a input-device-driver should disable
+>>>> a device's wakeup capabilities on suspend if inhibited
+>>>
+>>> If "inhibit" means "do not generate any events going forward", then
+>>> this must also cover wakeup events, so I agree.
+>>
+>> I agree, too.
+>>
+>>>
+>>>> 2. This one is trickier I don't think we have really clearly specified
+>>>> any behavior here. The default behavior of most drivers seems to be
+>>>> using something like this in their suspend callback:
+>>>>
+>>>>           if (device_may_wakeup(dev))
+>>>>                   enable_irq_wake(data->irq);
+>>>>           else if (input->users)
+>>>>                   foo_stop_receiving_events(data);
+>>>>
+>>>> Since this is what most drivers seem to do I believe we should keep
+>>>> this as is and that we should just clearly document that if the
+>>>> input_device has users (has been opened) or not does not matter
+>>>> for its wakeup behavior.
+>>>>
+>>>> Combining these 2 answers leads to this new pseudo code template
+>>>> for an input-device's suspend method:
+>>>>
+>>>>          /*
+>>>>           * If inhibited we have already disabled events and
+>>>>           * we do NOT want to setup the device as wake source.
+>>>>           */
+>>>>          if (input->inhibited)
+>>>>                  return 0;
+>>
+>> Right, if a device is inhibited it shouldn't become a wakeup source,
+>> because that would contradict the purpose of being inhibited.
+> 
+> Ack. Note I do think that we need to document this (and more
+> in general the answer to both questions from above) clearly so
+> that going forward if there are any questions about how this is
+> supposed to work we can just point to the docs.
+> 
+> Can you do a follow-up patch, or include a patch in your next
+> version which documents this (once we agree on what "this"
+> exactly is) ?
+
+Sure I can. Just need to know when "this" becomes stable enough ;)
+If this series otherwise looks mature enough I would opt for a
+follow-up patch.
+
+> 
+>>>>
+>>>>           if (device_may_wakeup(dev))
+>>>>                   enable_irq_wake(data->irq);
+>>
+>> What would it mean to become a wakeup source if there are no users,
+>> or nobody has ever opened the device? There are no interested
+>> input handlers (users) so what's the point of becoming a wakeup
+>> source? Why would the system need to wake up?
+> 
+> Well this is what we have been doing so far, so arguably we
+> need to keep doing it to avoid regressions / breaking our ABI.
+> 
+> Lets for example take a laptop, where when suspended the
+> power-button is the only valid wakeup-source and this is
+> running good old slackware with fvwm2 or windowmaker as
+> "desktop environment", then likely no process will have
+> the power-button input evdev node open.  Still we should
+> wakeup the laptop on the power-button press, otherwise
+> it will never wakeup.
+> 
+
+True, thanks for explaining.
+
+> Note I agree with you that the way this works is not
+> ideal, I just do not think that we can change it.
+> 
+
+Regards,
+
+Andrzej
