@@ -1,89 +1,131 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
-Date: Wed, 10 Jun 2020 15:43:05 -0700
-Message-ID: <20200610224305.GC248110@dtor-ws>
-References: <20200413134611.478441-1-enric.balletbo@collabora.com>
- <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
- <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com>
- <10490419.gsntqH5CaE@kreacher>
- <4e7f8bf3-b72b-d418-ec95-e1f8c3d61261@collabora.com>
- <59771d3689da41a5bbc67541aa6f4777@AUSX13MPC105.AMER.DELL.COM>
- <20200610214033.GB248110@dtor-ws>
- <adf9daaf08f1464684e48ec203194fe9@AUSX13MPC105.AMER.DELL.COM>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <adf9daaf08f1464684e48ec203194fe9@AUSX13MPC105.AMER.DELL.COM>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com
-Cc: enric.balletbo@collabora.com, rjw@rjwysocki.net, rafael@kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, lenb@kernel.org, kernel@collabora.com, groeck@chromium.org, bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org, vbendeb@chromium.org, andy@infradead.org, ayman.bagabas@gmail.com, benjamin.tissoires@redhat.com, blaz@mxxn.io, dvhart@infradead.org, gregkh@linuxfoundation.org, hdegoede@redhat.com, jeremy@system76.com, 2pi@mok.nu, mchehab+samsung@kernel.org, rajatja@google.com, srinivas.pandruvada@linux.intel.com, platform-driver-x86@vger.kernel.org
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP
+ platforms
+Date: Thu, 11 Jun 2020 15:16:18 +0800
+Message-ID: <82013BD4-B247-4E4E-94AB-1BEF8403E6E6@canonical.com>
+References: <20200610153747.27040-1-kai.heng.feng@canonical.com>
+ <4d0714fe5e2548b6b638ea447ad19490@AUSX13MPC105.AMER.DELL.COM>
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4d0714fe5e2548b6b638ea447ad19490@AUSX13MPC105.AMER.DELL.COM>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Alex Hung <alex.hung@canonical.com>, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Jun 10, 2020 at 09:52:12PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > Sent: Wednesday, June 10, 2020 4:41 PM
-> > To: Limonciello, Mario
-> > Cc: enric.balletbo@collabora.com; rjw@rjwysocki.net; rafael@kernel.org;
-> > linux-kernel@vger.kernel.org; linux-acpi@vger.kernel.org; lenb@kernel.org;
-> > kernel@collabora.com; groeck@chromium.org; bleung@chromium.org;
-> > dtor@chromium.org; gwendal@chromium.org; vbendeb@chromium.org;
-> > andy@infradead.org; ayman.bagabas@gmail.com; benjamin.tissoires@redhat.com;
-> > blaz@mxxn.io; dvhart@infradead.org; gregkh@linuxfoundation.org;
-> > hdegoede@redhat.com; jeremy@system76.com; 2pi@mok.nu;
-> > mchehab+samsung@kernel.org; rajatja@google.com;
-> > srinivas.pandruvada@linux.intel.com; platform-driver-x86@vger.kernel.org
-> > Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
-> > 
-> > 
-> > [EXTERNAL EMAIL]
-> > 
-> > On Wed, Jun 10, 2020 at 09:28:36PM +0000, Mario.Limonciello@dell.com wrote:
-> > > >
-> > > > To give you some references, if I'm not wrong, this prefix is used in
-> > all
-> > > > or
-> > > > almost all Intel Chromebook devices (auron, cyan, eve, fizz, hatch,
-> > > > octopus,
-> > > > poppy, strago ...) The ACPI source for this device can be found here
-> > [1],
-> > > > and,
-> > > > if not all, almost all Intel based Chromebooks are shipped with the
-> > > > firmware
-> > > > that supports this.
-> > >
-> > > You can potentially carry a small patch in your downstream kernel for the
-> > > legacy stuff until it reaches EOL.  At least for the new stuff you could
-> > > enact a process that properly reserves unique numbers and changes the
-> > driver
-> > > when the interface provided by the ACPI device has changed.
-> > 
-> > If we use this prefix for hatch EOL is ~7 years from now.
-> > 
+
+
+> On Jun 10, 2020, at 23:49, mario.limonciello@dell.com wrote:
 > 
-> Isn't the whole point of the ACPI registry and choosing an ID?  You know internally
-> if you need to change the interface that a new ID is needed and a new driver will
-> be needed that comprehends that ID change.  So if you can't guarantee that 0001 is
-> the same driver interface in every firmware implementation google used then that is
-> where this falls apart.
+>> -----Original Message-----
+>> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
+>> owner@vger.kernel.org> On Behalf Of Kai-Heng Feng
+>> Sent: Wednesday, June 10, 2020 10:38 AM
+>> To: alex.hung@canonical.com
+>> Cc: Kai-Heng Feng; Darren Hart; Andy Shevchenko; open list:INTEL HID EVENT
+>> DRIVER; open list
+>> Subject: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP
+>> platforms
+>> 
+>> 
+>> [EXTERNAL EMAIL]
+>> 
+>> Wireless hotkey on HP platforms can trigger two events, if both
+>> hp-wireless and intel-hid are supported. Two events at the same time
+>> renders wireless hotkey useless.
+>> 
+>> HP confirmed that hp-wireless (HPQ6001) should always be the canonical
+>> source of wireless hotkey event, so skip registering rfkill hotkey if
+>> HPQ6001 is present.
+>> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> ---
+>> drivers/platform/x86/intel-hid.c | 31 ++++++++++++++++++++++++++++++-
+>> 1 file changed, 30 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-
+>> hid.c
+>> index 9ee79b74311c..31091c8faf70 100644
+>> --- a/drivers/platform/x86/intel-hid.c
+>> +++ b/drivers/platform/x86/intel-hid.c
+>> @@ -25,6 +25,8 @@ static const struct acpi_device_id intel_hid_ids[] = {
+>> };
+>> MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
+>> 
+>> +static bool hp_wireless_present;
+>> +
+>> /* In theory, these are HID usages. */
+>> static const struct key_entry intel_hid_keymap[] = {
+>> 	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
+>> @@ -49,6 +51,29 @@ static const struct key_entry intel_hid_keymap[] = {
+>> 	{ KE_END },
+>> };
+>> 
+>> +static const struct key_entry intel_hid_no_rfkill_keymap[] = {
+>> +	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
+>> +	/* 2: Toggle SW_ROTATE_LOCK -- easy to implement if seen in wild */
+>> +	{ KE_KEY, 3, { KEY_NUMLOCK } },
+>> +	{ KE_KEY, 4, { KEY_HOME } },
+>> +	{ KE_KEY, 5, { KEY_END } },
+>> +	{ KE_KEY, 6, { KEY_PAGEUP } },
+>> +	{ KE_KEY, 7, { KEY_PAGEDOWN } },
+>> +	/* 8: rfkill -- use hp-wireless instead */
+>> +	{ KE_KEY, 9, { KEY_POWER } },
+>> +	{ KE_KEY, 11, { KEY_SLEEP } },
+>> +	/* 13 has two different meanings in the spec -- ignore it. */
+>> +	{ KE_KEY, 14, { KEY_STOPCD } },
+>> +	{ KE_KEY, 15, { KEY_PLAYPAUSE } },
+>> +	{ KE_KEY, 16, { KEY_MUTE } },
+>> +	{ KE_KEY, 17, { KEY_VOLUMEUP } },
+>> +	{ KE_KEY, 18, { KEY_VOLUMEDOWN } },
+>> +	{ KE_KEY, 19, { KEY_BRIGHTNESSUP } },
+>> +	{ KE_KEY, 20, { KEY_BRIGHTNESSDOWN } },
+>> +	/* 27: wake -- needs special handling */
+>> +	{ KE_END },
+>> +};
+>> +
+>> /* 5 button array notification value. */
+>> static const struct key_entry intel_array_keymap[] = {
+>> 	{ KE_KEY,    0xC2, { KEY_LEFTMETA } },                /* Press */
+>> @@ -317,7 +342,8 @@ static int intel_hid_input_setup(struct platform_device
+>> *device)
+>> 	if (!priv->input_dev)
+>> 		return -ENOMEM;
+>> 
+>> -	ret = sparse_keymap_setup(priv->input_dev, intel_hid_keymap, NULL);
+>> +	ret = sparse_keymap_setup(priv->input_dev, hp_wireless_present ?
+>> +			intel_hid_no_rfkill_keymap : intel_hid_keymap, NULL);
+>> 	if (ret)
+>> 		return ret;
+>> 
+>> @@ -575,6 +601,9 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void
+>> *context, void **rv)
+>> 			dev_info(&dev->dev,
+>> 				 "intel-hid: created platform device\n");
+>> 
+>> +	if (!strcmp(acpi_device_hid(dev), "HPQ6001"))
+>> +		hp_wireless_present = true;
 > 
-> I know there is a long support lifecycle but you're talking about rebasing
-> to new LTS kernels a handful of times between now and then.  If the interface really
-> is stable the patch should be small and it shouldn't be a large amount of technical
-> debt to carry downstream until EOL.
+> Just having the ACPI device present doesn't actually mean that the user
+> has a kernel compiled with hp-wireless or that it has finished initializing.
 
-I think we are talking about different things actually. Let's forget
-about Chrome OS and downstream kernels. We have devices that have
-already been shipped and in hands of users. Some of them are old, some
-of them are new. We can't not enforce that firmware for these devices
-will be either released or updated. Therefore, if we want expose this
-device in mainline kernel, we need to have it handle "GGL0001" HID in
-addition to whatever proper HID we may select for it.
+We can use IS_REACHEABLE() to see if it's compiled.
 
-We internally can fix it (HID) for next generation of devices.
+> 
+> I would think this needs a better handshake in case hp-wireless was unloaded
+> or not present so the event could still come through intel-hid in this
+> circumstance.
 
-Thanks.
+However, it's hard to determine if the other driver has finished initialization or any form of cross module handshake.
+Can you please point me to any good example if there's one?
 
--- 
-Dmitry
+> 
+>> +
+>> 	return AE_OK;
+>> }
+>> 
+>> --
+>> 2.17.1
