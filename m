@@ -1,178 +1,183 @@
-From: Alex Hung <alex.hung@canonical.com>
-Subject: Re: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP
- platforms
-Date: Thu, 11 Jun 2020 09:53:15 -0600
-Message-ID: <0c381c46-a4ab-b973-8ed6-4bc8aa06022a@canonical.com>
-References: <20200610153747.27040-1-kai.heng.feng@canonical.com>
- <4d0714fe5e2548b6b638ea447ad19490@AUSX13MPC105.AMER.DELL.COM>
- <0affa00e-8a52-9e29-56d4-39dff952d736@canonical.com>
- <A98FC3F7-2295-4B49-95DD-1D861BC56B9A@canonical.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
+Date: Fri, 12 Jun 2020 10:14:17 +0200
+Message-ID: <2e4bd050-117c-cc5f-8cf0-055b5304717f@redhat.com>
+References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+ <20200608112211.12125-1-andrzej.p@collabora.com>
+ <964ca07a-3da5-101f-7edf-64bdeec98a4b@redhat.com>
+ <CAJZ5v0hB2ra2K=dd9ZjVyy1V2b1PmFHm79uDO2HtHU1D_4YUbw@mail.gmail.com>
+ <20200610182836.GA248110@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <A98FC3F7-2295-4B49-95DD-1D861BC56B9A@canonical.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20200610182836.GA248110@dtor-ws>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Mario.Limonciello@dell.com, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, Linux PM <linux-pm@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>, linux-input@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Kuk
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 2020-06-11 1:24 a.m., Kai-Heng Feng wrote:
-> 
-> 
->> On Jun 11, 2020, at 01:41, Alex Hung <alex.hung@canonical.com> wrote:
->>
->> On 2020-06-10 9:49 a.m., Mario.Limonciello@dell.com wrote:
->>>> -----Original Message-----
->>>> From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
->>>> owner@vger.kernel.org> On Behalf Of Kai-Heng Feng
->>>> Sent: Wednesday, June 10, 2020 10:38 AM
->>>> To: alex.hung@canonical.com
->>>> Cc: Kai-Heng Feng; Darren Hart; Andy Shevchenko; open list:INTEL HID EVENT
->>>> DRIVER; open list
->>>> Subject: [PATCH] platform/x86: intel-hid: Use hp-wireless for rfkill on HP
->>>> platforms
->>>>
->>>>
->>>> [EXTERNAL EMAIL]
->>>>
->>>> Wireless hotkey on HP platforms can trigger two events, if both
->>>> hp-wireless and intel-hid are supported. Two events at the same time
->>>> renders wireless hotkey useless.
->>>>
->>>> HP confirmed that hp-wireless (HPQ6001) should always be the canonical
->>>> source of wireless hotkey event, so skip registering rfkill hotkey if
->>>> HPQ6001 is present.
->>>>
->>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>>> ---
->>>> drivers/platform/x86/intel-hid.c | 31 ++++++++++++++++++++++++++++++-
->>>> 1 file changed, 30 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-
->>>> hid.c
->>>> index 9ee79b74311c..31091c8faf70 100644
->>>> --- a/drivers/platform/x86/intel-hid.c
->>>> +++ b/drivers/platform/x86/intel-hid.c
->>>> @@ -25,6 +25,8 @@ static const struct acpi_device_id intel_hid_ids[] = {
->>>> };
->>>> MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
->>>>
->>>> +static bool hp_wireless_present;
->>>> +
->>>> /* In theory, these are HID usages. */
->>>> static const struct key_entry intel_hid_keymap[] = {
->>>> 	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
->>>> @@ -49,6 +51,29 @@ static const struct key_entry intel_hid_keymap[] = {
->>>> 	{ KE_END },
->>>> };
->>>>
->>>> +static const struct key_entry intel_hid_no_rfkill_keymap[] = {
->>>> +	/* 1: LSuper (Page 0x07, usage 0xE3) -- unclear what to do */
->>>> +	/* 2: Toggle SW_ROTATE_LOCK -- easy to implement if seen in wild */
->>>> +	{ KE_KEY, 3, { KEY_NUMLOCK } },
->>>> +	{ KE_KEY, 4, { KEY_HOME } },
->>>> +	{ KE_KEY, 5, { KEY_END } },
->>>> +	{ KE_KEY, 6, { KEY_PAGEUP } },
->>>> +	{ KE_KEY, 7, { KEY_PAGEDOWN } },
->>>> +	/* 8: rfkill -- use hp-wireless instead */
->>>> +	{ KE_KEY, 9, { KEY_POWER } },
->>>> +	{ KE_KEY, 11, { KEY_SLEEP } },
->>>> +	/* 13 has two different meanings in the spec -- ignore it. */
->>>> +	{ KE_KEY, 14, { KEY_STOPCD } },
->>>> +	{ KE_KEY, 15, { KEY_PLAYPAUSE } },
->>>> +	{ KE_KEY, 16, { KEY_MUTE } },
->>>> +	{ KE_KEY, 17, { KEY_VOLUMEUP } },
->>>> +	{ KE_KEY, 18, { KEY_VOLUMEDOWN } },
->>>> +	{ KE_KEY, 19, { KEY_BRIGHTNESSUP } },
->>>> +	{ KE_KEY, 20, { KEY_BRIGHTNESSDOWN } },
->>>> +	/* 27: wake -- needs special handling */
->>>> +	{ KE_END },
->>>> +};
->>>> +
->>>> /* 5 button array notification value. */
->>>> static const struct key_entry intel_array_keymap[] = {
->>>> 	{ KE_KEY,    0xC2, { KEY_LEFTMETA } },                /* Press */
->>>> @@ -317,7 +342,8 @@ static int intel_hid_input_setup(struct platform_device
->>>> *device)
->>>> 	if (!priv->input_dev)
->>>> 		return -ENOMEM;
->>>>
->>>> -	ret = sparse_keymap_setup(priv->input_dev, intel_hid_keymap, NULL);
->>>> +	ret = sparse_keymap_setup(priv->input_dev, hp_wireless_present ?
->>>> +			intel_hid_no_rfkill_keymap : intel_hid_keymap, NULL);
->>>> 	if (ret)
->>>> 		return ret;
->>>>
->>>> @@ -575,6 +601,9 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void
->>>> *context, void **rv)
->>>> 			dev_info(&dev->dev,
->>>> 				 "intel-hid: created platform device\n");
->>>>
->>>> +	if (!strcmp(acpi_device_hid(dev), "HPQ6001"))
->>>> +		hp_wireless_present = true;
->>
->> (Resend with format removed)
->>
->> This can impact all HP systems that do not have this problem.
-> 
-> HP is certain that HPQ6001 should always be used over INT33D5.
+Hi,
 
-and OEMs can change all the time.
-
-> 
-> If this patch breaks other platform, then we should fix HPQ6001 instead.
-
-Looks like a firmware bug, and this is a workaround.
-
-In this case, both HP6001 and INT33D5 receive wireless toggle events -
-which is an incorrect firmware behaviour.
-
-In scenario that both HP6001 and INT33D5 are present and wireless toggle
-events are only sent to INT33D5 (a correct firmware behaviour), this
-patch will break and this is concerning.
-
-> 
->> How about
->> a DMI quirk that is limited to this particular system?
-> 
-> We should avoid using DMI quirk for this one, as this is to follow the HP's spec.
-
-INT33D5 is defined by Intel, and HP spec says an event from HP6001, and
-nothing about interactions with INT33D5.
-
-Workarounds are unavoidable. It doesn't have to be DMI quirks but it has
-to be done without affecting good systems.
-
-> 
-> Kai-Heng
-> 
->>
->>
+On 6/10/20 8:28 PM, Dmitry Torokhov wrote:
+> On Wed, Jun 10, 2020 at 12:38:30PM +0200, Rafael J. Wysocki wrote:
+>> On Wed, Jun 10, 2020 at 11:50 AM Hans de Goede <hdegoede@redhat.com> wrote:
 >>>
->>> Just having the ACPI device present doesn't actually mean that the user
->>> has a kernel compiled with hp-wireless or that it has finished initializing.
+>>> Hi All,
 >>>
->>> I would think this needs a better handshake in case hp-wireless was unloaded
->>> or not present so the event could still come through intel-hid in this
->>> circumstance.
->>>
->>>> +
->>>> 	return AE_OK;
->>>> }
+>>> On 6/8/20 1:22 PM, Andrzej Pietrasiewicz wrote:
+>>>> This is a quick respin of v3, with just two small changes, please see
+>>>> the changelog below.
 >>>>
->>>> --
->>>> 2.17.1
+>>>> Userspace might want to implement a policy to temporarily disregard input
+>>>> from certain devices.
+>>>>
+>>>> An example use case is a convertible laptop, whose keyboard can be folded
+>>>> under the screen to create tablet-like experience. The user then must hold
+>>>> the laptop in such a way that it is difficult to avoid pressing the keyboard
+>>>> keys. It is therefore desirable to temporarily disregard input from the
+>>>> keyboard, until it is folded back. This obviously is a policy which should
+>>>> be kept out of the kernel, but the kernel must provide suitable means to
+>>>> implement such a policy.
 >>>
->>
->>
->> -- 
->> Cheers,
->> Alex Hung
+>>> First of all sorry to start a somewhat new discussion about this
+>>> while this patch set is also somewhat far along in the review process,
+>>> but I believe what I discuss below needs to be taken into account.
+>>>
+>>> Yesterday I have been looking into why an Asus T101HA would not stay
+>>> suspended when the LID is closed. The cause is that the USB HID multi-touch
+>>> touchpad in the base of the device starts sending events when the screen
+>>> gets close to the touchpad (so when the LID is fully closed) and these
+>>> events are causing a wakeup from suspend. HID multi-touch devices
+>>> do have a way to tell them to fully stop sending events, also disabling
+>>> the USB remote wakeup the device is doing. The question is when to tell
+>>> it to not send events though ...
+>>>
+>>> So now I've been thinking about how to fix this and I believe that there
+>>> is some interaction between this problem and this patch-set.
+>>>
+>>> The problem I'm seeing on the T101HA is about wakeups, so the question
+>>> which I want to discuss is:
+>>>
+>>> 1. How does inhibiting interact with enabling /
+>>> disabling the device as a wakeup source ?
 > 
+> One should not affect the other.
+> 
+>>>
+>>> 2. Since we have now made inhibiting equal open/close how does open/close
+>>> interact with a device being a wakeup source ?
+> 
+> One did not affect another, and it should not.
+> 
+>>>
+>>> And my own initial (to be discussed) answers to these questions:
+>>>
+>>> 1. It seems to me that when a device is inhibited it should not be a
+>>> wakeup source, so where possible a input-device-driver should disable
+>>> a device's wakeup capabilities on suspend if inhibited
+>>
+>> If "inhibit" means "do not generate any events going forward", then
+>> this must also cover wakeup events, so I agree.
+> 
+> Why? These are separate concepts. Do we disable wake on lan when
+> bringing network interface down? Do we update power/wakeup when device
+> is inhibited? Do we restore it afterwards? Do we un-inhibit if we
+> reenable wakeup after device is inhibited? Do we return error? How?
+> 
+> Inhibit works on logical level, i.e. if I have several input interfaces
+> on the same hardware device, I cam inhibit one leaving others intact.
+> This does not mean that the device should stop generating wakeup events.
+> We can't even guarantee this for composite devices.
 
+After thinking more about this I believe you are right and we should
+keep these as 2 separate, completely independent settings.
 
--- 
-Cheers,
-Alex Hung
+Especially since the wakeup setting typically is a setting of the
+parent device, where as the inhibit is done on the actual input-dev.
+
+###
+
+Some quick background info on my original thoughts here, as mentioned
+I started thinking about this because of spurious wakeups from suspend
+when the lid of an asus t101ha is "touching" its touchpad. The HID
+multi-touch protocol has a setting where we can ask the device to
+stop sending events. So even though the kbd + touchpad are a
+single composite USB device, we can disable wakeup (in a way)
+for just the touchpad at the hid-multitouch level.
+
+So I was thinking maybe adding a separate wakeup setting to the
+input device itself for this. But thinking more about it, when
+the lid is closed we can just disable wakeup on the entire USB
+device, since the keyboard is covered by the lid too.
+
+And then on suspend the hid-multitouch driver can detect that its
+parent (or parents parent in the case of USB) has wakeup disabled
+and also tell the device to stop scanning for fingers to save some
+power.
+
+We probably also need a close and open callbacks add the HID-driver
+level, so that if there are no touchpad users we can also use
+the same option to put the HID multi-touch device in a low power mode
+where it does not scan for fingers.
+
+<snip>
+
+>>> A different, but related issue is how to make devices actually use the
+>>> new inhibit support on the builtin keyboard + touchpad when say the lid
+>>> is closed.   Arguably this is an userspace problem, but it is a tricky
+>>> one. Currently on most modern Linux distributions suspend-on-lid-close
+>>> is handled by systemd-logind and most modern desktop-environments are
+>>> happy to have logind handle this for them.
+>>>
+>>> But most knowledge about input devices and e.g. heurisitics to decide
+>>> if a touchpad is internal or external are part of libinput. Now we could
+>>> have libinput use the new inhibit support (1), but then when the lid
+>>> closes we get race between whatever process is using libinput trying
+>>> to inhibit the touchpad (which must be done before to suspend to disable
+>>> it as wakeup source) and logind trying to suspend the system.
+>>>
+>>> One solution here would be to move the setting of the inhibit sysfs
+>>> attr into logind, but that requires adding a whole bunch of extra
+>>> knowledge to logind which does not really belong there IMHO.
+> 
+> You do not need to push the knowledge into logind, you just need to
+> communicate to logind what devices can be wakeup sources and which ones
+> should not. Chrome OS uses udev tags/properties for that.
+
+True, I did not think of doing the tag thingie + letting logind do
+the inhibit on LID close based on that. logind could also disable
+wakeup (to save power while suspended) on devices which are tagged
+for it to do that (should probably be a separate tag from the
+inhibit tag).
+
+>>> I've been thinking a bit about this and to me it seems that the kernel
+>>> is in the ideal position to automatically inhibit some devices when
+>>> some EV_SW transitions from 0->1 (and uninhibit again on 1->0). The
+>>> issue here is to chose on which devices to enable this. I believe
+>>> that the auto inhibit on some switches mechanism is best done inside
+>>> the kernel (disabled by default) and then we can have a sysfs
+>>> attr called auto_inhibit_ev_sw_mask which can be set to e.g.
+>>> (1 << SW_LID) to make the kernel auto-inhibit the input-device whenever
+>>> the lid is closed, or to ((1 << SW_LID) | (1 << SW_TABLET_MODE)) to
+>>> inhibit both when the lid is closed or when switched to tablet mode.
+> 
+> This is a policy and should be kept out of the kernel. Yes, we had it
+> implemented with rfkill input handler, but it caused quite a few issues.
+> As far as I know it is not being used anymore and we should not try with
+> SW_LID->inhibit either.
+> 
+> I know it is faster to patch the kernel than to roll out proper
+> userspace because everyone updates kernel regularly, but it does not
+> mean it is the right solution.
+
+Agreed, I just could not come up with a clean userspace solution, but
+using udev+hwdb to set a tag for logind instead of having the write
+to a new auto_inhibit_ev_sw_mask will work nicely.
+
+So I think this is all resolved now (or at least we have a plan for it).
+
+Regards,
+
+Hans
