@@ -1,8 +1,8 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
+From: <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
  bios_to_linux_keycode
-Date: Fri, 12 Jun 2020 16:14:10 +0200
-Message-ID: <20200612141410.7sp7brcmgcel3bfc@pali>
+Date: Fri, 12 Jun 2020 14:59:39 +0000
+Message-ID: <a8b5465e4c834f1c98c8499acb0cacb7@AUSX13MPC105.AMER.DELL.COM>
 References: <cover.1591584631.git.y.linux@paritcher.com>
  <cover.1591656154.git.y.linux@paritcher.com>
  <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
@@ -11,127 +11,63 @@ References: <cover.1591584631.git.y.linux@paritcher.com>
  <ced5832cfe984c68b27a577cac0f02f1@AUSX13MPC105.AMER.DELL.COM>
  <20200610094449.xltvs2y6kp7driyh@pali>
  <a7b5dd31dd32461aad51e08d38777edf@AUSX13MPC105.AMER.DELL.COM>
+ <20200612141410.7sp7brcmgcel3bfc@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a7b5dd31dd32461aad51e08d38777edf@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <20200612141410.7sp7brcmgcel3bfc@pali>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mario.Limonciello@dell.com
+To: pali@kernel.org
 Cc: rdunlap@infradead.org, y.linux@paritcher.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wednesday 10 June 2020 12:35:09 Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: platform-driver-x86-owner@vger.kernel.org <platform-driver-x86-
-> > owner@vger.kernel.org> On Behalf Of Pali Rohár
-> > Sent: Wednesday, June 10, 2020 4:45 AM
-> > To: Limonciello, Mario
-> > Cc: rdunlap@infradead.org; y.linux@paritcher.com; linux-
-> > kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
-> > mjg59@srcf.ucam.org
-> > Subject: Re: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
-> > bios_to_linux_keycode
-> > 
-> > 
-> > [EXTERNAL EMAIL]
-> > 
-> > On Tuesday 09 June 2020 19:49:18 Mario.Limonciello@dell.com wrote:
-> > > >
-> > > > Looking at the last two lines... and for me it looks like that 0x00FF
-> > > > and 0xFFFF are just "placeholders" or special values for unknown /
-> > > > custom / unsupported / reserved / special / ... codes.
-> > > >
-> > > > It is really suspicious why first 38 values are defined, then there is
-> > > > gap, then one value 255 and then huge gap to 65535.
-> > > >
-> > > > Mario, this looks like some mapping table between internal Dell BIOS
-> > key
-> > > > code and standard Linux key code. Are you able to get access to some
-> > > > documentation which contains explanation of those Dell key numbers?
-> > > > It could really help us to understand these gaps and what is correct
-> > > > interpretation of these numbers.
-> > > >
-> > >
-> > > The codes are actually 4 bytes in the table, but in practice nothing
-> > above the
-> > > first two bytes is used.
-> > >
-> > > Those two called out are special though, here are their meanings:
-> > >
-> > > 0x00FF is user programmable function
-> > > 0xFFFF is no function
-> > >
-> > > For the purpose of memory consumption I think it's reasonable to ignore
-> > the
-> > > upper 2 bytes and special case these two.
-> > 
-> > Thank you for information!
-> > 
-> > So 0x00FF is "user programmable" button. Do I understand it correctly
-> > that Dell/BIOS does not explicitly provide meaning for these buttons,
-> > they do not have fixed functionality and therefore user should configure
-> > them as he want?
-> 
-> Correct
-> 
-> > 
-> > And what does mean "no function"? I do not know what should I imagine if
-> > I receive key press marked as "no function".
-> 
-> It means no action is expected to occur, should behave like a no-op.  I think
-> discarding it makes fine sense.
-
-Thank you! This was missing bit of information.
-
-Just I'm curious, why firmware sends "no-op" event which we could ignore? :D
-
-I can imagine that those events / scan codes may contain some
-information which we can use...
-
-> > 
-> > > > E.g. I remember that pressing Fn+Q or Fn+W on some Dell Latitude
-> > > > generates code 255, which could prove my thesis about "special codes"
-> > > > (which are probably not found in e.g. Windows or Linux mapping tables).
-> > > >
-> > > > > >  };
-> > > > > >
-> > > > > >  /*
-> > > > > > @@ -503,10 +504,7 @@ static void handle_dmi_entry(const struct
-> > > > dmi_header *dm, void *opaque)
-> > > > > >  					&table->keymap[i];
-> > > > > >
-> > > > > >  		/* Uninitialized entries are 0 aka KEY_RESERVED. */
-> > > > > > -		u16 keycode = (bios_entry->keycode <
-> > > > > > -			       ARRAY_SIZE(bios_to_linux_keycode)) ?
-> > > > > > -			bios_to_linux_keycode[bios_entry->keycode] :
-> > > > > > -			KEY_RESERVED;
-> > > > > > +		u16 keycode = bios_to_linux_keycode[bios_entry->keycode];
-> > > > > >
-> > > > > >  		/*
-> > > > > >  		 * Log if we find an entry in the DMI table that we don't
-> > > > > >
-> > > > >
-> > > > > Something like:
-> > > > >
-> > > > > 		u16 keycode;
-> > > > >
-> > > > > 		keycode = bios_entry->keycode == 0xffff ? KEY_UNKNOWN :
-> > > > > 			(bios_entry->keycode <
-> > > > > 			       ARRAY_SIZE(bios_to_linux_keycode)) ?
-> > > > > 			bios_to_linux_keycode[bios_entry->keycode] :
-> > > > > 			KEY_RESERVED;
-> > > > >
-> > > > >
-> > > > >
-> > > > > Also please fix this:
-> > > > > (no To-header on input) <>
-> > > >
-> > > > Hint: specifying git send-email with '--to' argument instead of '--cc'
-> > > > should help.
-> > > >
-> > > > >
-> > > > > --
-> > > > > ~Randy
-> > > > >
+PiA+DQo+ID4gPg0KPiA+ID4gQW5kIHdoYXQgZG9lcyBtZWFuICJubyBmdW5jdGlvbiI/IEkgZG8g
+bm90IGtub3cgd2hhdCBzaG91bGQgSSBpbWFnaW5lDQo+IGlmDQo+ID4gPiBJIHJlY2VpdmUga2V5
+IHByZXNzIG1hcmtlZCBhcyAibm8gZnVuY3Rpb24iLg0KPiA+DQo+ID4gSXQgbWVhbnMgbm8gYWN0
+aW9uIGlzIGV4cGVjdGVkIHRvIG9jY3VyLCBzaG91bGQgYmVoYXZlIGxpa2UgYSBuby1vcC4gIEkN
+Cj4gdGhpbmsNCj4gPiBkaXNjYXJkaW5nIGl0IG1ha2VzIGZpbmUgc2Vuc2UuDQo+IA0KPiBUaGFu
+ayB5b3UhIFRoaXMgd2FzIG1pc3NpbmcgYml0IG9mIGluZm9ybWF0aW9uLg0KPiANCj4gSnVzdCBJ
+J20gY3VyaW91cywgd2h5IGZpcm13YXJlIHNlbmRzICJuby1vcCIgZXZlbnQgd2hpY2ggd2UgY291
+bGQgaWdub3JlPw0KPiA6RA0KPiANCg0KSSBkb24ndCBoYXZlIGRldGFpbHMgb24gdGhpcywgYnV0
+IEkgY2FuIGF0IGxlYXN0IGh5cG90aGVzaXplIGEgc2l0dWF0aW9uIHRoYXQNCnRoZXJlIHdhcyBh
+IG1hbnVmYWN0dXJpbmcgZXJyb3Igd2l0aCB0aGUgd3Jvbmcga2V5Ym9hcmQgYXBwbGllZC4gIExp
+a2UgdGhpbmsgaWYNCnRoZSBzeXN0ZW0gaGFzIGtleWJvYXJkIHdpdGhvdXQgYSBiYWNrbGlnaHQg
+YW5kIHRoZXJlIHdhcyBhIGtleWJvYXJkIHdpdGgNCmEgc2lsa3NjcmVlbmVkIGtleSBmb3IgbW9k
+aWZ5aW5nIGJhY2tsaWdodC4gIEluIHRoaXMgY2FzZSBmaXJtd2FyZSBldmVudHMNCnJlbGF0ZWQg
+dG8ga2V5Ym9hcmQgYmFja2xpZ2h0IHNob3VsZG4ndCBmbG93IHRocm91Z2ggc28gZmlybXdhcmUg
+Y291bGQgaW5zdGVhZA0Kc2VuZCB0aGlzIHR5cGUgb2YgZXZlbnQuDQoNCj4gSSBjYW4gaW1hZ2lu
+ZSB0aGF0IHRob3NlIGV2ZW50cyAvIHNjYW4gY29kZXMgbWF5IGNvbnRhaW4gc29tZQ0KPiBpbmZv
+cm1hdGlvbiB3aGljaCB3ZSBjYW4gdXNlLi4uDQoNCkkgbWVhbiBJIHN1cHBvc2UgeW91IGNhbiBj
+aG9vc2UgdG8gaWdub3JlIG15IGNvbW1lbnRzLCBidXQgSSdtIHRlbGxpbmcgeW91IHRoaXMNCmV2
+ZW50IGRvZXNuJ3QgY29udGFpbiBhbnl0aGluZyB1c2VmdWwuDQoNCj4gDQo+ID4gPg0KPiA+ID4g
+PiA+IEUuZy4gSSByZW1lbWJlciB0aGF0IHByZXNzaW5nIEZuK1Egb3IgRm4rVyBvbiBzb21lIERl
+bGwgTGF0aXR1ZGUNCj4gPiA+ID4gPiBnZW5lcmF0ZXMgY29kZSAyNTUsIHdoaWNoIGNvdWxkIHBy
+b3ZlIG15IHRoZXNpcyBhYm91dCAic3BlY2lhbA0KPiBjb2RlcyINCj4gPiA+ID4gPiAod2hpY2gg
+YXJlIHByb2JhYmx5IG5vdCBmb3VuZCBpbiBlLmcuIFdpbmRvd3Mgb3IgTGludXggbWFwcGluZw0K
+PiB0YWJsZXMpLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICB9Ow0KPiA+ID4gPiA+ID4gPg0K
+PiA+ID4gPiA+ID4gPiAgLyoNCj4gPiA+ID4gPiA+ID4gQEAgLTUwMywxMCArNTA0LDcgQEAgc3Rh
+dGljIHZvaWQgaGFuZGxlX2RtaV9lbnRyeShjb25zdCBzdHJ1Y3QNCj4gPiA+ID4gPiBkbWlfaGVh
+ZGVyICpkbSwgdm9pZCAqb3BhcXVlKQ0KPiA+ID4gPiA+ID4gPiAgCQkJCQkmdGFibGUtPmtleW1h
+cFtpXTsNCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gIAkJLyogVW5pbml0aWFsaXplZCBl
+bnRyaWVzIGFyZSAwIGFrYSBLRVlfUkVTRVJWRUQuICovDQo+ID4gPiA+ID4gPiA+IC0JCXUxNiBr
+ZXljb2RlID0gKGJpb3NfZW50cnktPmtleWNvZGUgPA0KPiA+ID4gPiA+ID4gPiAtCQkJICAgICAg
+IEFSUkFZX1NJWkUoYmlvc190b19saW51eF9rZXljb2RlKSkgPw0KPiA+ID4gPiA+ID4gPiAtCQkJ
+Ymlvc190b19saW51eF9rZXljb2RlW2Jpb3NfZW50cnktPmtleWNvZGVdIDoNCj4gPiA+ID4gPiA+
+ID4gLQkJCUtFWV9SRVNFUlZFRDsNCj4gPiA+ID4gPiA+ID4gKwkJdTE2IGtleWNvZGUgPSBiaW9z
+X3RvX2xpbnV4X2tleWNvZGVbYmlvc19lbnRyeS0NCj4gPmtleWNvZGVdOw0KPiA+ID4gPiA+ID4g
+Pg0KPiA+ID4gPiA+ID4gPiAgCQkvKg0KPiA+ID4gPiA+ID4gPiAgCQkgKiBMb2cgaWYgd2UgZmlu
+ZCBhbiBlbnRyeSBpbiB0aGUgRE1JIHRhYmxlIHRoYXQgd2UNCj4gZG9uJ3QNCj4gPiA+ID4gPiA+
+ID4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBTb21ldGhpbmcgbGlrZToNCj4gPiA+ID4gPiA+
+DQo+ID4gPiA+ID4gPiAJCXUxNiBrZXljb2RlOw0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IAkJ
+a2V5Y29kZSA9IGJpb3NfZW50cnktPmtleWNvZGUgPT0gMHhmZmZmID8gS0VZX1VOS05PV04gOg0K
+PiA+ID4gPiA+ID4gCQkJKGJpb3NfZW50cnktPmtleWNvZGUgPA0KPiA+ID4gPiA+ID4gCQkJICAg
+ICAgIEFSUkFZX1NJWkUoYmlvc190b19saW51eF9rZXljb2RlKSkgPw0KPiA+ID4gPiA+ID4gCQkJ
+Ymlvc190b19saW51eF9rZXljb2RlW2Jpb3NfZW50cnktPmtleWNvZGVdIDoNCj4gPiA+ID4gPiA+
+IAkJCUtFWV9SRVNFUlZFRDsNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4N
+Cj4gPiA+ID4gPiA+IEFsc28gcGxlYXNlIGZpeCB0aGlzOg0KPiA+ID4gPiA+ID4gKG5vIFRvLWhl
+YWRlciBvbiBpbnB1dCkgPD4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEhpbnQ6IHNwZWNpZnlpbmcg
+Z2l0IHNlbmQtZW1haWwgd2l0aCAnLS10bycgYXJndW1lbnQgaW5zdGVhZCBvZiAnLS0NCj4gY2Mn
+DQo+ID4gPiA+ID4gc2hvdWxkIGhlbHAuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+
+ID4gPiAtLQ0KPiA+ID4gPiA+ID4gflJhbmR5DQo+ID4gPiA+ID4gPg0K
