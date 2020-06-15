@@ -1,73 +1,50 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH v2 3/3] platform/x86: dell-wmi: add new dmi keys to
- bios_to_linux_keycode
-Date: Fri, 12 Jun 2020 14:59:39 +0000
-Message-ID: <a8b5465e4c834f1c98c8499acb0cacb7@AUSX13MPC105.AMER.DELL.COM>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <cover.1591656154.git.y.linux@paritcher.com>
- <d585d2a0f01a6b9480352530b571dec2d1afd79f.1591656154.git.y.linux@paritcher.com>
- <8053252a-83ad-bcaa-2830-ccfbca1b4152@infradead.org>
- <20200608235508.wthtgilgmifwfgz2@pali>
- <ced5832cfe984c68b27a577cac0f02f1@AUSX13MPC105.AMER.DELL.COM>
- <20200610094449.xltvs2y6kp7driyh@pali>
- <a7b5dd31dd32461aad51e08d38777edf@AUSX13MPC105.AMER.DELL.COM>
- <20200612141410.7sp7brcmgcel3bfc@pali>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [PATCH 0/6] remove deprecated i2c_new_device API
+Date: Mon, 15 Jun 2020 09:58:09 +0200
+Message-ID: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200612141410.7sp7brcmgcel3bfc@pali>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: pali@kernel.org
-Cc: rdunlap@infradead.org, y.linux@paritcher.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, mjg59@srcf.ucam.org
+To: linux-i2c@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org, x86@kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-PiA+DQo+ID4gPg0KPiA+ID4gQW5kIHdoYXQgZG9lcyBtZWFuICJubyBmdW5jdGlvbiI/IEkgZG8g
-bm90IGtub3cgd2hhdCBzaG91bGQgSSBpbWFnaW5lDQo+IGlmDQo+ID4gPiBJIHJlY2VpdmUga2V5
-IHByZXNzIG1hcmtlZCBhcyAibm8gZnVuY3Rpb24iLg0KPiA+DQo+ID4gSXQgbWVhbnMgbm8gYWN0
-aW9uIGlzIGV4cGVjdGVkIHRvIG9jY3VyLCBzaG91bGQgYmVoYXZlIGxpa2UgYSBuby1vcC4gIEkN
-Cj4gdGhpbmsNCj4gPiBkaXNjYXJkaW5nIGl0IG1ha2VzIGZpbmUgc2Vuc2UuDQo+IA0KPiBUaGFu
-ayB5b3UhIFRoaXMgd2FzIG1pc3NpbmcgYml0IG9mIGluZm9ybWF0aW9uLg0KPiANCj4gSnVzdCBJ
-J20gY3VyaW91cywgd2h5IGZpcm13YXJlIHNlbmRzICJuby1vcCIgZXZlbnQgd2hpY2ggd2UgY291
-bGQgaWdub3JlPw0KPiA6RA0KPiANCg0KSSBkb24ndCBoYXZlIGRldGFpbHMgb24gdGhpcywgYnV0
-IEkgY2FuIGF0IGxlYXN0IGh5cG90aGVzaXplIGEgc2l0dWF0aW9uIHRoYXQNCnRoZXJlIHdhcyBh
-IG1hbnVmYWN0dXJpbmcgZXJyb3Igd2l0aCB0aGUgd3Jvbmcga2V5Ym9hcmQgYXBwbGllZC4gIExp
-a2UgdGhpbmsgaWYNCnRoZSBzeXN0ZW0gaGFzIGtleWJvYXJkIHdpdGhvdXQgYSBiYWNrbGlnaHQg
-YW5kIHRoZXJlIHdhcyBhIGtleWJvYXJkIHdpdGgNCmEgc2lsa3NjcmVlbmVkIGtleSBmb3IgbW9k
-aWZ5aW5nIGJhY2tsaWdodC4gIEluIHRoaXMgY2FzZSBmaXJtd2FyZSBldmVudHMNCnJlbGF0ZWQg
-dG8ga2V5Ym9hcmQgYmFja2xpZ2h0IHNob3VsZG4ndCBmbG93IHRocm91Z2ggc28gZmlybXdhcmUg
-Y291bGQgaW5zdGVhZA0Kc2VuZCB0aGlzIHR5cGUgb2YgZXZlbnQuDQoNCj4gSSBjYW4gaW1hZ2lu
-ZSB0aGF0IHRob3NlIGV2ZW50cyAvIHNjYW4gY29kZXMgbWF5IGNvbnRhaW4gc29tZQ0KPiBpbmZv
-cm1hdGlvbiB3aGljaCB3ZSBjYW4gdXNlLi4uDQoNCkkgbWVhbiBJIHN1cHBvc2UgeW91IGNhbiBj
-aG9vc2UgdG8gaWdub3JlIG15IGNvbW1lbnRzLCBidXQgSSdtIHRlbGxpbmcgeW91IHRoaXMNCmV2
-ZW50IGRvZXNuJ3QgY29udGFpbiBhbnl0aGluZyB1c2VmdWwuDQoNCj4gDQo+ID4gPg0KPiA+ID4g
-PiA+IEUuZy4gSSByZW1lbWJlciB0aGF0IHByZXNzaW5nIEZuK1Egb3IgRm4rVyBvbiBzb21lIERl
-bGwgTGF0aXR1ZGUNCj4gPiA+ID4gPiBnZW5lcmF0ZXMgY29kZSAyNTUsIHdoaWNoIGNvdWxkIHBy
-b3ZlIG15IHRoZXNpcyBhYm91dCAic3BlY2lhbA0KPiBjb2RlcyINCj4gPiA+ID4gPiAod2hpY2gg
-YXJlIHByb2JhYmx5IG5vdCBmb3VuZCBpbiBlLmcuIFdpbmRvd3Mgb3IgTGludXggbWFwcGluZw0K
-PiB0YWJsZXMpLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICB9Ow0KPiA+ID4gPiA+ID4gPg0K
-PiA+ID4gPiA+ID4gPiAgLyoNCj4gPiA+ID4gPiA+ID4gQEAgLTUwMywxMCArNTA0LDcgQEAgc3Rh
-dGljIHZvaWQgaGFuZGxlX2RtaV9lbnRyeShjb25zdCBzdHJ1Y3QNCj4gPiA+ID4gPiBkbWlfaGVh
-ZGVyICpkbSwgdm9pZCAqb3BhcXVlKQ0KPiA+ID4gPiA+ID4gPiAgCQkJCQkmdGFibGUtPmtleW1h
-cFtpXTsNCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gIAkJLyogVW5pbml0aWFsaXplZCBl
-bnRyaWVzIGFyZSAwIGFrYSBLRVlfUkVTRVJWRUQuICovDQo+ID4gPiA+ID4gPiA+IC0JCXUxNiBr
-ZXljb2RlID0gKGJpb3NfZW50cnktPmtleWNvZGUgPA0KPiA+ID4gPiA+ID4gPiAtCQkJICAgICAg
-IEFSUkFZX1NJWkUoYmlvc190b19saW51eF9rZXljb2RlKSkgPw0KPiA+ID4gPiA+ID4gPiAtCQkJ
-Ymlvc190b19saW51eF9rZXljb2RlW2Jpb3NfZW50cnktPmtleWNvZGVdIDoNCj4gPiA+ID4gPiA+
-ID4gLQkJCUtFWV9SRVNFUlZFRDsNCj4gPiA+ID4gPiA+ID4gKwkJdTE2IGtleWNvZGUgPSBiaW9z
-X3RvX2xpbnV4X2tleWNvZGVbYmlvc19lbnRyeS0NCj4gPmtleWNvZGVdOw0KPiA+ID4gPiA+ID4g
-Pg0KPiA+ID4gPiA+ID4gPiAgCQkvKg0KPiA+ID4gPiA+ID4gPiAgCQkgKiBMb2cgaWYgd2UgZmlu
-ZCBhbiBlbnRyeSBpbiB0aGUgRE1JIHRhYmxlIHRoYXQgd2UNCj4gZG9uJ3QNCj4gPiA+ID4gPiA+
-ID4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBTb21ldGhpbmcgbGlrZToNCj4gPiA+ID4gPiA+
-DQo+ID4gPiA+ID4gPiAJCXUxNiBrZXljb2RlOw0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IAkJ
-a2V5Y29kZSA9IGJpb3NfZW50cnktPmtleWNvZGUgPT0gMHhmZmZmID8gS0VZX1VOS05PV04gOg0K
-PiA+ID4gPiA+ID4gCQkJKGJpb3NfZW50cnktPmtleWNvZGUgPA0KPiA+ID4gPiA+ID4gCQkJICAg
-ICAgIEFSUkFZX1NJWkUoYmlvc190b19saW51eF9rZXljb2RlKSkgPw0KPiA+ID4gPiA+ID4gCQkJ
-Ymlvc190b19saW51eF9rZXljb2RlW2Jpb3NfZW50cnktPmtleWNvZGVdIDoNCj4gPiA+ID4gPiA+
-IAkJCUtFWV9SRVNFUlZFRDsNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiA+IEFsc28gcGxlYXNlIGZpeCB0aGlzOg0KPiA+ID4gPiA+ID4gKG5vIFRvLWhl
-YWRlciBvbiBpbnB1dCkgPD4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEhpbnQ6IHNwZWNpZnlpbmcg
-Z2l0IHNlbmQtZW1haWwgd2l0aCAnLS10bycgYXJndW1lbnQgaW5zdGVhZCBvZiAnLS0NCj4gY2Mn
-DQo+ID4gPiA+ID4gc2hvdWxkIGhlbHAuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gPiAtLQ0KPiA+ID4gPiA+ID4gflJhbmR5DQo+ID4gPiA+ID4gPg0K
+I want to remove the above API this cycle, and just a few patches have
+not made it into 5.8-rc1. They have been reviewed and most had been
+promised to get into linux-next, but well, things happen. So, I hope it
+is okay for everyone to collect them like this and push them via I2C for
+5.8-rc2.
+
+One minor exception is the media documentation patch which I simply have
+missed so far, but it is trivial.
+
+And then, finally, there is the removal of the old API as the final
+patch. Phew, that's been a long ride.
+
+I am open for comments, of course.
+
+Happy hacking,
+
+   Wolfram
+
+
+Wolfram Sang (6):
+  drm: encoder_slave: fix refcouting error for modules
+  drm: encoder_slave: use new I2C API
+  x86/platform/intel-mid: convert to use i2c_new_client_device()
+  video: backlight: tosa_lcd: convert to use i2c_new_client_device()
+  Documentation: media: convert to use i2c_new_client_device()
+  i2c: remove deprecated i2c_new_device API
+
+ .../driver-api/media/v4l2-subdev.rst          |  2 +-
+ .../userspace-api/media/conf_nitpick.py       |  2 +-
+ arch/x86/platform/intel-mid/sfi.c             |  4 +--
+ drivers/gpu/drm/drm_encoder_slave.c           | 15 ++++-------
+ drivers/i2c/i2c-core-base.c                   | 25 -------------------
+ drivers/video/backlight/tosa_lcd.c            |  4 +--
+ include/linux/i2c.h                           |  8 +++---
+ 7 files changed, 14 insertions(+), 46 deletions(-)
+
+-- 
+2.27.0
