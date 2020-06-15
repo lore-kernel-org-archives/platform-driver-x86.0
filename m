@@ -1,50 +1,43 @@
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH 0/6] remove deprecated i2c_new_device API
-Date: Mon, 15 Jun 2020 09:58:09 +0200
-Message-ID: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 3/6] x86/platform/intel-mid: convert to use i2c_new_client_device()
+Date: Mon, 15 Jun 2020 09:58:12 +0200
+Message-ID: <20200615075816.2848-4-wsa+renesas@sang-engineering.com>
+References: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200615075816.2848-1-wsa+renesas@sang-engineering.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-i2c@vger.kernel.org
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org, x86@kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-I want to remove the above API this cycle, and just a few patches have
-not made it into 5.8-rc1. They have been reviewed and most had been
-promised to get into linux-next, but well, things happen. So, I hope it
-is okay for everyone to collect them like this and push them via I2C for
-5.8-rc2.
+Move away from the deprecated API and return the shiny new ERRPTR where
+useful.
 
-One minor exception is the media documentation patch which I simply have
-missed so far, but it is trivial.
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
 
-And then, finally, there is the removal of the old API as the final
-patch. Phew, that's been a long ride.
+I'd like to push it via I2C for 5.8-rc2.
 
-I am open for comments, of course.
+ arch/x86/platform/intel-mid/sfi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Happy hacking,
-
-   Wolfram
-
-
-Wolfram Sang (6):
-  drm: encoder_slave: fix refcouting error for modules
-  drm: encoder_slave: use new I2C API
-  x86/platform/intel-mid: convert to use i2c_new_client_device()
-  video: backlight: tosa_lcd: convert to use i2c_new_client_device()
-  Documentation: media: convert to use i2c_new_client_device()
-  i2c: remove deprecated i2c_new_device API
-
- .../driver-api/media/v4l2-subdev.rst          |  2 +-
- .../userspace-api/media/conf_nitpick.py       |  2 +-
- arch/x86/platform/intel-mid/sfi.c             |  4 +--
- drivers/gpu/drm/drm_encoder_slave.c           | 15 ++++-------
- drivers/i2c/i2c-core-base.c                   | 25 -------------------
- drivers/video/backlight/tosa_lcd.c            |  4 +--
- include/linux/i2c.h                           |  8 +++---
- 7 files changed, 14 insertions(+), 46 deletions(-)
-
+diff --git a/arch/x86/platform/intel-mid/sfi.c b/arch/x86/platform/intel-mid/sfi.c
+index b8f7f193f383..30bd5714a3d4 100644
+--- a/arch/x86/platform/intel-mid/sfi.c
++++ b/arch/x86/platform/intel-mid/sfi.c
+@@ -287,8 +287,8 @@ void intel_scu_devices_create(void)
+ 
+ 		adapter = i2c_get_adapter(i2c_bus[i]);
+ 		if (adapter) {
+-			client = i2c_new_device(adapter, i2c_devs[i]);
+-			if (!client)
++			client = i2c_new_client_device(adapter, i2c_devs[i]);
++			if (IS_ERR(client))
+ 				pr_err("can't create i2c device %s\n",
+ 					i2c_devs[i]->type);
+ 		} else
 -- 
 2.27.0
