@@ -1,50 +1,77 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH 0/6] remove deprecated i2c_new_device API
-Date: Tue, 16 Jun 2020 15:05:58 +0100
-Message-ID: <CACvgo52PaW97cxMeGhbpD4FUVy5BRAunaCxX3106OOAZm6x67A@mail.gmail.com>
-References: <20200615075816.2848-1-wsa+renesas@sang-engineering.com> <20200616121244.GN20149@phenom.ffwll.local>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20200616121244.GN20149@phenom.ffwll.local>
-Sender: linux-media-owner@vger.kernel.org
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org, linux-fbdev <linux-fbdev@vger.kernel.org>, x86@kernel.org, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Subject: [PATCH] Input: document inhibiting
+Date: Tue, 16 Jun 2020 19:29:09 +0200
+Message-ID: <20200616172909.21625-1-andrzej.p@collabora.com>
+References: <40988408-8f36-3a52-6439-34084de6b129@redhat.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <40988408-8f36-3a52-6439-34084de6b129@redhat.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Barry
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi all,
+Document inhibiting input devices and its relation to being
+a wakeup source.
 
-On Tue, 16 Jun 2020 at 13:12, Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Mon, Jun 15, 2020 at 09:58:09AM +0200, Wolfram Sang wrote:
-> > I want to remove the above API this cycle, and just a few patches have
-> > not made it into 5.8-rc1. They have been reviewed and most had been
-> > promised to get into linux-next, but well, things happen. So, I hope it
-> > is okay for everyone to collect them like this and push them via I2C for
-> > 5.8-rc2.
->
-> for the drm side of things:
->
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> >
-> > One minor exception is the media documentation patch which I simply have
-> > missed so far, but it is trivial.
-> >
-> > And then, finally, there is the removal of the old API as the final
-> > patch. Phew, that's been a long ride.
-> >
-> > I am open for comments, of course.
-> >
-> > Happy hacking,
-> >
-> >    Wolfram
-> >
-> >
-> > Wolfram Sang (6):
-> >   drm: encoder_slave: fix refcouting error for modules
-> >   drm: encoder_slave: use new I2C API
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+---
 
-The first two are in drm-misc-next and are to be expected with the 5.9
-merge window. As long as that doesn't cause major nuisance proceed as
-you prefer.
+@Hans, @Dmitry,
 
--Emil
+My fist attempt at documenting inhibiting. Kindly look at it to see if I haven't got anything
+wrong.
+
+Andrzej
+
+ Documentation/input/input-programming.rst | 36 +++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/Documentation/input/input-programming.rst b/Documentation/input/input-programming.rst
+index 45a4c6e05e39..0cd1ad4504fb 100644
+--- a/Documentation/input/input-programming.rst
++++ b/Documentation/input/input-programming.rst
+@@ -164,6 +164,42 @@ disconnects. Calls to both callbacks are serialized.
+ The open() callback should return a 0 in case of success or any nonzero value
+ in case of failure. The close() callback (which is void) must always succeed.
+ 
++Inhibiting input devices
++~~~~~~~~~~~~~~~~~~~~~~~~
++
++Inhibiting a device means ignoring input events from it. As such it is about maintaining
++relationships with input handlers - either an already existing relationships, or
++relationships to be established while the device is in inhibited state.
++
++If a device is inhibited, no input handler will receive events from it.
++
++The fact that nobody wants events from the device is exploited further, by calling device's
++close() (if there are users) and open() (if there are users) on inhibit and uninhibit
++operations, respectively. Indeed, the meaning of close() is to stop providing events
++to the input core and that of open() is to start providing events to the input core.
++
++Inhibiting and uninhibiting is orthogonal to opening and closing the device by input
++handlers. Userspace might want to inhibit a device in anticipation before any handler is
++positively matched against it.
++
++Inhibiting and uninhibiting is orthogonal to device's being a wakeup source, too. Being a
++wakeup source plays a role when the system is sleeping, not when the system is operating.
++How drivers should program their interaction between inhibiting, sleeping and being a wakeup
++source is driver-specific.
++
++Taking the analogy with the network devices - bringing a network interface down doesn't mean
++that it should be impossible to be wake the system up on LAN through this interface. So, there
++may be input drivers which should be considered wakeup sources even when inhibited. Actually,
++in many i2c input devices their interrupt is declared a wakeup interrupt and its handling
++happens in driver's core, which is not aware of input-specific inhibit (nor should it be).
++Composite devices containing several interfaces can be inhibited on a per-interface basis and
++e.g. inhibiting one interface shouldn't affect the device's capability of being a wakeup source.
++
++If a device is to be considered a wakeup source while inhibited, special care must be taken when
++programming its suspend(), as it might need to call device's open(). Depending on what close()
++means for the device in question not opening() it before going to sleep might make it impossible
++to provide any wakeup events. The device is going to sleep anyway.
++
+ Basic event types
+ ~~~~~~~~~~~~~~~~~
+ 
+-- 
+2.17.1
