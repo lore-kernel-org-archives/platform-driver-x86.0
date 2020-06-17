@@ -1,39 +1,29 @@
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Subject: Re: [PATCH] Input: document inhibiting
-Date: Tue, 16 Jun 2020 10:38:25 -0700
-Message-ID: <d51a16b9-9ebd-1150-7d47-6296dcd2989b@infradead.org>
+Date: Wed, 17 Jun 2020 09:44:34 +0200
+Message-ID: <f9007f37-c526-5fa4-3188-a554d2434177@redhat.com>
 References: <40988408-8f36-3a52-6439-34084de6b129@redhat.com>
  <20200616172909.21625-1-andrzej.p@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
-In-Reply-To: <20200616172909.21625-1-andrzej.p@collabora.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20200616172909.21625-1-andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Cc: kernel@collabora.com, Nick Dyer <nick@shmanahar.org>, Laxman Dewangan <ldewangan@nvidia.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Peter Hutterer <peter.hutterer@redhat.com>, Fabio Estevam <festevam@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Krzysztof Kozlowski <krzk@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Kukjin Kim <kgene@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Len Brown <lenb@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>, Sascha Hauer <s.hauer@pengutronix.de>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Vladimir Zapolskiy <vz@mleia.com>, Hans de Goede <hdegoede@redhat.com>, =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>, Barry Song <baohua@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Thierry
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix Kernel Team <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Barry
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 6/16/20 10:29 AM, Andrzej Pietrasiewicz wrote:
+Hi,
+
+On 6/16/20 7:29 PM, Andrzej Pietrasiewicz wrote:
 > Document inhibiting input devices and its relation to being
 > a wakeup source.
 > 
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 > ---
-
-Hi,
-I have some editorial comments. Please see below.
-
-
+> 
 > @Hans, @Dmitry,
 > 
 > My fist attempt at documenting inhibiting. Kindly look at it to see if I haven't got anything
@@ -41,17 +31,17 @@ I have some editorial comments. Please see below.
 > 
 > Andrzej
 > 
->  Documentation/input/input-programming.rst | 36 +++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
+>   Documentation/input/input-programming.rst | 36 +++++++++++++++++++++++
+>   1 file changed, 36 insertions(+)
 > 
 > diff --git a/Documentation/input/input-programming.rst b/Documentation/input/input-programming.rst
 > index 45a4c6e05e39..0cd1ad4504fb 100644
 > --- a/Documentation/input/input-programming.rst
 > +++ b/Documentation/input/input-programming.rst
 > @@ -164,6 +164,42 @@ disconnects. Calls to both callbacks are serialized.
->  The open() callback should return a 0 in case of success or any nonzero value
->  in case of failure. The close() callback (which is void) must always succeed.
->  
+>   The open() callback should return a 0 in case of success or any nonzero value
+>   in case of failure. The close() callback (which is void) must always succeed.
+>   
 > +Inhibiting input devices
 > +~~~~~~~~~~~~~~~~~~~~~~~~
 > +
@@ -65,18 +55,25 @@ I have some editorial comments. Please see below.
 > +close() (if there are users) and open() (if there are users) on inhibit and uninhibit
 > +operations, respectively. Indeed, the meaning of close() is to stop providing events
 > +to the input core and that of open() is to start providing events to the input core.
+
+Maybe add the following here? :
+
+Calling the device's close() method on inhibit (if there are users) allows the driver
+to save power. Either by directly powering down the device or by releasing the
+runtime-pm reference it got in open() when the driver is using runtime-pm.
+
+Otherwise this looks good to me. Thank you for doing this, we (including myself)
+really need to get better at doucmenting all sorts of kernel things. Often we have
+these long discussions about something on the mailinglist and then everyone is
+expected to just know what was decided from the on, which really doesn't work all
+that well.
+
 > +
 > +Inhibiting and uninhibiting is orthogonal to opening and closing the device by input
-
-                               are
-
 > +handlers. Userspace might want to inhibit a device in anticipation before any handler is
 > +positively matched against it.
 > +
 > +Inhibiting and uninhibiting is orthogonal to device's being a wakeup source, too. Being a
-
-                               are
-
 > +wakeup source plays a role when the system is sleeping, not when the system is operating.
 > +How drivers should program their interaction between inhibiting, sleeping and being a wakeup
 > +source is driver-specific.
@@ -85,9 +82,6 @@ I have some editorial comments. Please see below.
 > +that it should be impossible to be wake the system up on LAN through this interface. So, there
 > +may be input drivers which should be considered wakeup sources even when inhibited. Actually,
 > +in many i2c input devices their interrupt is declared a wakeup interrupt and its handling
-
-           I2C
-
 > +happens in driver's core, which is not aware of input-specific inhibit (nor should it be).
 > +Composite devices containing several interfaces can be inhibited on a per-interface basis and
 > +e.g. inhibiting one interface shouldn't affect the device's capability of being a wakeup source.
@@ -95,17 +89,14 @@ I have some editorial comments. Please see below.
 > +If a device is to be considered a wakeup source while inhibited, special care must be taken when
 > +programming its suspend(), as it might need to call device's open(). Depending on what close()
 > +means for the device in question not opening() it before going to sleep might make it impossible
-
-                        in question, not
-
 > +to provide any wakeup events. The device is going to sleep anyway.
 > +
->  Basic event types
->  ~~~~~~~~~~~~~~~~~
->  
+>   Basic event types
+>   ~~~~~~~~~~~~~~~~~
+>   
 > 
 
-thanks for documentation.
 
--- 
-~Randy
+Regards,
+
+Hans
