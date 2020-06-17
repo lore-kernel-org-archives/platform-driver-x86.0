@@ -1,98 +1,191 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2] Input: document inhibiting
-Date: Wed, 17 Jun 2020 09:52:30 -0700
-Message-ID: <8ebf502e-855d-6a6b-9c7b-d96d5e519d82@infradead.org>
-References: <f9007f37-c526-5fa4-3188-a554d2434177@redhat.com>
- <20200617101822.8558-1-andrzej.p@collabora.com>
+From: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Subject: [RESEND PATCH v2] platform/x86: thinkpad_acpi: lap
+ or desk mode interface
+Date: Wed, 17 Jun 2020 14:09:37 -0400
+Message-ID: <20200617180937.14949-1-markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
-In-Reply-To: <20200617101822.8558-1-andrzej.p@collabora.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Cc: kernel@collabora.com, Nick Dyer <nick@shmanahar.org>, Laxman Dewangan <ldewangan@nvidia.com>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Peter Hutterer <peter.hutterer@redhat.com>, Fabio Estevam <festevam@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Krzysztof Kozlowski <krzk@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Kukjin Kim <kgene@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Len Brown <lenb@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>, Sascha Hauer <s.hauer@pengutronix.de>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Vladimir Zapolskiy <vz@mleia.com>, Hans de Goede <hdegoede@redhat.com>, =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>, Barry Song <baohua@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Thierry
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Cc: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 6/17/20 3:18 AM, Andrzej Pietrasiewicz wrote:
-> Document inhibiting input devices and its relation to being
-> a wakeup source.
-> 
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> ---
-> v1..v2:
-> 
-> - Addressed editorial comments from Randy
-> - Added a paragraph by Hans
-> 
->  Documentation/input/input-programming.rst | 40 +++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
-> 
-> diff --git a/Documentation/input/input-programming.rst b/Documentation/input/input-programming.rst
-> index 45a4c6e05e39..7432315cc829 100644
-> --- a/Documentation/input/input-programming.rst
-> +++ b/Documentation/input/input-programming.rst
-> @@ -164,6 +164,46 @@ disconnects. Calls to both callbacks are serialized.
->  The open() callback should return a 0 in case of success or any nonzero value
->  in case of failure. The close() callback (which is void) must always succeed.
->  
-> +Inhibiting input devices
-> +~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +Inhibiting a device means ignoring input events from it. As such it is about maintaining
-> +relationships with input handlers - either already existing relationships, or relationships
-> +to be established while the device is in inhibited state.
-> +
-> +If a device is inhibited, no input handler will receive events from it.
-> +
-> +The fact that nobody wants events from the device is exploited further, by calling device's
-> +close() (if there are users) and open() (if there are users) on inhibit and uninhibit
-> +operations, respectively. Indeed, the meaning of close() is to stop providing events
-> +to the input core and that of open() is to start providing events to the input core.
-> +
-> +Calling the device's close() method on inhibit (if there are users) allows the driver
-> +to save power. Either by directly powering down the device or by releasing the
-> +runtime-pm reference it got in open() when the driver is using runtime-pm.
-> +
-> +Inhibiting and uninhibiting are orthogonal to opening and closing the device by input
-> +handlers. Userspace might want to inhibit a device in anticipation before any handler is
-> +positively matched against it.
-> +
-> +Inhibiting and uninhibiting are orthogonal to device's being a wakeup source, too. Being a
-> +wakeup source plays a role when the system is sleeping, not when the system is operating.
-> +How drivers should program their interaction between inhibiting, sleeping and being a wakeup
-> +source is driver-specific.
-> +
-> +Taking the analogy with the network devices - bringing a network interface down doesn't mean
-> +that it should be impossible be wake the system up on LAN through this interface. So, there
-> +may be input drivers which should be considered wakeup sources even when inhibited. Actually,
-> +in many I2C input devices their interrupt is declared a wakeup interrupt and its handling
-> +happens in driver's core, which is not aware of input-specific inhibit (nor should it be).
-> +Composite devices containing several interfaces can be inhibited on a per-interface basis and
-> +e.g. inhibiting one interface shouldn't affect the device's capability of being a wakeup source.
-> +
-> +If a device is to be considered a wakeup source while inhibited, special care must be taken when
-> +programming its suspend(), as it might need to call device's open(). Depending on what close()
-> +means for the device in question, not opening() it before going to sleep might make it
-> +impossible to provide any wakeup events. The device is going to sleep anyway.
-> +
->  Basic event types
->  ~~~~~~~~~~~~~~~~~
->  
-> 
+  Newer Lenovo Thinkpad platforms have support to identify whether the
+  system is on-lap or not using an ACPI DYTC event from the firmware.
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+  This patch provides the ability to retrieve the current mode via sysfs
+  entrypoints and will be used by userspace for thermal mode and WWAN
+  functionality
 
-Thanks.
+Co-developed-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+---
+Resend:
+- Adding Bastien Nocera to cc list as requested
+Changes in v2:
+- cleaned up initialisation sequence to be cleaner and avoid spamming
+  platforms that don't have DYTC with warning message. Tested on P52
+- Adding platform-driver-x86 mailing list for review as requested
 
+ drivers/platform/x86/thinkpad_acpi.c | 113 +++++++++++++++++++++++++++
+ 1 file changed, 113 insertions(+)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 0f704484ae1d..8f51bbba21cd 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -4049,6 +4049,7 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+ 		pr_debug("EC reports: Thermal Control Command set completed (DYTC)\n");
+ 		/* recommended action: do nothing, we don't have
+ 		 * Lenovo ATM information */
++		tpacpi_driver_event(hkey);
+ 		return true;
+ 	case TP_HKEY_EV_THM_TRANSFM_CHANGED:
+ 		pr_debug("EC reports: Thermal Transformation changed (GMTS)\n");
+@@ -9811,6 +9812,110 @@ static struct ibm_struct lcdshadow_driver_data = {
+ 	.write = lcdshadow_write,
+ };
+ 
++/*************************************************************************
++ * DYTC subdriver, for the Lenovo performace mode feature
++ */
++
++#define DYTC_CMD_GET      2 /*To get current IC function and mode*/
++
++#define DYTC_GET_ENABLE_MASK  0x1 /*0 = disabled, 1 = enabled*/
++#define DYTC_GET_LAPMODE_SHIFT 17
++
++static int  dytc_lapmode;
++static void dytc_lapmode_notify_change(void)
++{
++	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
++			"dytc_lapmode");
++}
++
++static int dytc_command(int command)
++{
++	acpi_handle dytc_handle;
++	int output;
++
++	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DYTC", &dytc_handle))) {
++		/*Platform doesn't support DYTC*/
++		return -ENODEV;
++	}
++	if (!acpi_evalf(dytc_handle, &output, NULL, "dd", command))
++		return -EIO;
++	return output;
++}
++
++static int dytc_lapmode_get(void)
++{
++	int output;
++
++	output = dytc_command(DYTC_CMD_GET);
++	if ((output == -ENODEV) || (output == -EIO))
++		return output;
++
++	return ((output >> DYTC_GET_LAPMODE_SHIFT) &
++				DYTC_GET_ENABLE_MASK);
++}
++
++static void dytc_lapmode_refresh(void)
++{
++	int new_state;
++
++	new_state = dytc_lapmode_get();
++	if ((new_state == -ENODEV) || (new_state == -EIO))
++		return;
++
++	if (dytc_lapmode != new_state) {
++		dytc_lapmode = new_state;
++		dytc_lapmode_notify_change();
++	}
++}
++
++/* sysfs lapmode entry */
++static ssize_t dytc_lapmode_show(struct device *dev,
++					struct device_attribute *attr,
++					char *buf)
++{
++	if (dytc_lapmode < 0)
++		return dytc_lapmode;
++
++	return snprintf(buf, PAGE_SIZE, "%d\n", dytc_lapmode);
++}
++
++static DEVICE_ATTR_RO(dytc_lapmode);
++
++static struct attribute *dytc_attributes[] = {
++	&dev_attr_dytc_lapmode.attr,
++	NULL
++};
++
++static const struct attribute_group dytc_attr_group = {
++	.attrs = dytc_attributes,
++};
++
++static int tpacpi_dytc_init(struct ibm_init_struct *iibm)
++{
++	int res;
++
++	dytc_lapmode = dytc_lapmode_get();
++
++	if (dytc_lapmode < 0 && dytc_lapmode != -ENODEV)
++		return dytc_lapmode;
++
++	res = sysfs_create_group(&tpacpi_pdev->dev.kobj,
++				&dytc_attr_group);
++
++	return res;
++}
++
++static void dytc_exit(void)
++{
++	sysfs_remove_group(&tpacpi_pdev->dev.kobj,
++			&dytc_attr_group);
++}
++
++static struct ibm_struct dytc_driver_data = {
++	.name = "dytc",
++	.exit = dytc_exit
++};
++
+ /****************************************************************************
+  ****************************************************************************
+  *
+@@ -9858,6 +9963,10 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
+ 
+ 		mutex_unlock(&kbdlight_mutex);
+ 	}
++
++	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED)
++		dytc_lapmode_refresh();
++
+ }
+ 
+ static void hotkey_driver_event(const unsigned int scancode)
+@@ -10296,6 +10405,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+ 		.init = tpacpi_lcdshadow_init,
+ 		.data = &lcdshadow_driver_data,
+ 	},
++	{
++		.init = tpacpi_dytc_init,
++		.data = &dytc_driver_data,
++	},
+ };
+ 
+ static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
 -- 
-~Randy
+2.26.2
