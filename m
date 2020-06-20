@@ -1,89 +1,227 @@
-From: <Mario.Limonciello@dell.com>
-Subject: RE: [PATCH 2/3] platform/x86: dell-wmi: add new keymap type 0x0012
-Date: Fri, 19 Jun 2020 17:26:06 +0000
-Message-ID: <1bf60afb825a4a4abd5b4e6c278ac710@AUSX13MPC105.AMER.DELL.COM>
-References: <cover.1591584631.git.y.linux@paritcher.com>
- <0dc191a3d16f0e114f6a8976433e248018e10c43.1591584631.git.y.linux@paritcher.com>
- <83fe431cacbc4708962767668ac8f06f@AUSX13MPC105.AMER.DELL.COM>
- <79bd59ee-dd37-bdc5-f6b4-00f2c33fdcff@paritcher.com>
- <7f9f0410696141cfabb0237d33b7b529@AUSX13MPC105.AMER.DELL.COM>
- <20200609154938.udo7mn7ka7z7pr6c@pali>
- <20200609164533.qtup47io2aoc5hgl@earth.universe>
- <136a06e3-0f00-d252-ebdd-a76c8a575db8@redhat.com>
- <20200619153103.k4ewdaljqubcrvvc@earth.universe>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v2] platform/x86: Add new intel_atomisp2_led driver
+Date: Sat, 20 Jun 2020 14:37:05 +0200
+Message-ID: <20200620123705.72625-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200619153103.k4ewdaljqubcrvvc@earth.universe>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.reichel@collabora.com, hdegoede@redhat.com
-Cc: pali@kernel.org, y.linux@paritcher.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, mjg59@srcf.ucam.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-> >
-> > This is not so much about non-genuine as about the adapter having
-> > the wrong wattage. E.g. plugging a 65W adapter in a laptop which
-> > has a 45W CPU + a 35W discrete GPU will not allow the laptop to
-> > really charge while it is in use.
->=20
-> Ok. So how much information is available over WMI? Exposing the
-> max. input power via the power-supply API makes sense in any case.
+Many Bay Trail and Cherry Trail devices come with a camera attached to
+Intel's Image Signal Processor. Linux currently does not have a driver for
+these, so they do not work as a camera.
 
-WMI is event driven.  You plug in the adapter and the platform will
-evaluate its power needs and advertise it to the OS in the event.
+Some of these camera's have a status LED which is controlled through a GPIO
+in some cases, e.g. on the Asus T100TA and Asus T200TA, there is a firmware
+issue where the LED gets turned on at boot.
 
-It's important to note this is not a fixed value.
-For example if you have a dock connected the power needs might be higher.
+This commit adds a Linux LED driver for the camera LED on these devices.
+This driver will turn the LED off at boot and also allows controlling the
+LED (so the user can repurpose it) through the sysfs LED interface.
 
->=20
-> > One issue I see with doing this in the power_supply class is that
-> > the charger is represented by the standard ACPI AC adapter stuff,
-> > which does not have this info. This sort of extra info comes from
-> > WMI. Now we could have the WMI driver register a second power_supply
-> > device, but that means having 2 power_supply devices representing
-> > the 1 AC adapter which does not feel right.
->=20
-> I agree. WMI and ACPI information need to be merged and exposed
-> as one device to userspace. It's not the first time we have this
-> kind of requirement, but so far it was about merging battery info
-> from two places. Unfortunately no code has been written so far to
-> support this.
->=20
-> > I was myself actually thinking more along the lines of adding a
-> > new mechanism to the kernel where the kernel can send messages
-> > to userspace (either with some special tag inside dmesg, or through
-> > a new mechanism) indication that the message should be shown
-> > as a notification (dialog/bubble/whatever) inside the UI.
-> >
-> > This could be useful for this adapter case, but e.g. also for
-> > pluging a thunderbolt device into a non thunderbolt capable
-> > Type-C port, a superspeed USB device into a USB-2 only USB
-> > port and probably other cases.
-> >
-> > Rather then inventing separate userspace APIs for all these
-> > cases having a general notification mechanism might be
-> > quite useful for this (as long as the kernel does not
-> > over use it).
->=20
-> I don't think this is a good idea. It brings all kind of
-> localization problems. Also the information is not machine
-> parsable. It looks more like a hack to get things working
-> quickly by avoiding using/designing proper APIs.
+Which GPIO is attached to the LED is usually not described in the ACPI
+tables, so this driver contains per-system info about the GPIO inside the
+driver. This means that this driver only works on systems the driver knows
+about.
 
-When you have the data to populate in sysfs at init time I
-would agree, but at least in this case it's not always
-static data that can be queried on demand.  You would have
-to wait until the first event comes around and populate
-some kernel structures for the sysfs attributes to read from
-at that time.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+- Rebase on top of v5.8-rc1
+- Use PTR_ERR_OR_ZERO
+---
+ MAINTAINERS                               |   6 ++
+ drivers/platform/x86/Kconfig              |  21 ++++
+ drivers/platform/x86/Makefile             |   1 +
+ drivers/platform/x86/intel_atomisp2_led.c | 116 ++++++++++++++++++++++
+ 4 files changed, 144 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_atomisp2_led.c
 
-As a similar suggestion to Hans', what about letting the kernel
-advertise a table of fixed printf style strings for translation?
-When the dynamic data comes in the event can just be an index to one
-of those strings and the data in the following bytes.  Userland
-could then map the strings accordingly.
-
-Running with this concept, it could even be an overhaul to your typical
-content in dmesg to allow errors and info messages to be translatable too.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 301330e02bca..5535761f2b54 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8600,6 +8600,12 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/intel_atomisp2_pm.c
+ 
++INTEL ATOMISP2 LED DRIVER
++M:	Hans de Goede <hdegoede@redhat.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/intel_atomisp2_led.c
++
+ INTEL BROXTON PMC DRIVER
+ M:	Mika Westerberg <mika.westerberg@linux.intel.com>
+ M:	Zha Qipeng <qipeng.zha@intel.com>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0581a54cf562..318e083f38b3 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -761,6 +761,27 @@ config INTEL_ATOMISP2_PM
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel_atomisp2_pm.
+ 
++config INTEL_ATOMISP2_LED
++	tristate "Intel AtomISP2 camera LED driver"
++	depends on GPIOLIB && LEDS_GPIO
++	help
++	  Many Bay Trail and Cherry Trail devices come with a camera attached
++	  to Intel's Image Signal Processor. Linux currently does not have a
++	  driver for these, so they do not work as a camera. Some of these
++	  camera's have a LED which is controlled through a GPIO.
++
++	  Some of these devices have a firmware issue where the LED gets turned
++	  on at boot. This driver will turn the LED off at boot and also allows
++	  controlling the LED (repurposing it) through the sysfs LED interface.
++
++	  Which GPIO is attached to the LED is usually not described in the
++	  ACPI tables, so this driver contains per-system info about the GPIO
++	  inside the driver, this means that this driver only works on systems
++	  the driver knows about.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel_atomisp2_led.
++
+ config INTEL_CHT_INT33FE
+ 	tristate "Intel Cherry Trail ACPI INT33FE Driver"
+ 	depends on X86 && ACPI && I2C && REGULATOR
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 2b85852a1a87..7a78cc0bb249 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -70,6 +70,7 @@ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+ 
+ # Intel
+ obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= intel_atomisp2_pm.o
++obj-$(CONFIG_INTEL_ATOMISP2_LED)	+= intel_atomisp2_led.o
+ obj-$(CONFIG_INTEL_CHT_INT33FE)		+= intel_cht_int33fe.o
+ intel_cht_int33fe-objs			:= intel_cht_int33fe_common.o \
+ 					   intel_cht_int33fe_typec.o \
+diff --git a/drivers/platform/x86/intel_atomisp2_led.c b/drivers/platform/x86/intel_atomisp2_led.c
+new file mode 100644
+index 000000000000..5935dfca166f
+--- /dev/null
++++ b/drivers/platform/x86/intel_atomisp2_led.c
+@@ -0,0 +1,116 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Driver for controlling LEDs for cameras connected to the Intel atomisp2
++ * The main purpose of this driver is to turn off LEDs which are on at boot.
++ *
++ * Copyright (C) 2020 Hans de Goede <hdegoede@redhat.com>
++ */
++
++#include <linux/dmi.h>
++#include <linux/gpio/consumer.h>
++#include <linux/gpio/machine.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
++#include <linux/platform_device.h>
++#include <linux/workqueue.h>
++
++/* This must be leds-gpio as the leds-gpio driver binds to the name */
++#define DEV_NAME		"leds-gpio"
++
++static const struct gpio_led atomisp2_leds[] = {
++	{
++		.name = "atomisp2::camera",
++		.default_state  = LEDS_GPIO_DEFSTATE_OFF,
++	},
++};
++
++static const struct gpio_led_platform_data atomisp2_leds_pdata = {
++	.num_leds	= ARRAY_SIZE(atomisp2_leds),
++	.leds		= atomisp2_leds,
++};
++
++static struct gpiod_lookup_table asus_t100ta_lookup = {
++	.dev_id = DEV_NAME,
++	.table = {
++		GPIO_LOOKUP_IDX("INT33FC:02", 8, NULL, 0, GPIO_ACTIVE_HIGH),
++		{ }
++	}
++};
++
++static struct gpiod_lookup_table asus_t100chi_lookup = {
++	.dev_id = DEV_NAME,
++	.table = {
++		GPIO_LOOKUP_IDX("INT33FC:01", 24, NULL, 0, GPIO_ACTIVE_HIGH),
++		{ }
++	}
++};
++
++static const struct dmi_system_id atomisp2_led_systems[] __initconst = {
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
++		},
++		.driver_data = &asus_t100ta_lookup,
++	},
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
++		},
++		.driver_data = &asus_t100ta_lookup,
++	},
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100CHI"),
++		},
++		.driver_data = &asus_t100chi_lookup,
++	},
++	{} /* Terminating entry */
++};
++MODULE_DEVICE_TABLE(dmi, atomisp2_led_systems);
++
++static struct gpiod_lookup_table *gpio_lookup;
++static struct platform_device *pdev;
++
++static int __init atomisp2_led_init(void)
++{
++	const struct dmi_system_id *system;
++
++	system = dmi_first_match(atomisp2_led_systems);
++	if (!system)
++		return -ENODEV;
++
++	gpio_lookup = system->driver_data;
++	gpiod_add_lookup_table(gpio_lookup);
++
++	pdev = platform_device_register_resndata(NULL,
++						 DEV_NAME, PLATFORM_DEVID_NONE,
++						 NULL, 0, &atomisp2_leds_pdata,
++						 sizeof(atomisp2_leds_pdata));
++	if (IS_ERR(pdev))
++		gpiod_remove_lookup_table(gpio_lookup);
++
++	return PTR_ERR_OR_ZERO(pdev);
++}
++
++static void __exit atomisp2_led_cleanup(void)
++{
++	platform_device_unregister(pdev);
++	gpiod_remove_lookup_table(gpio_lookup);
++}
++
++module_init(atomisp2_led_init);
++module_exit(atomisp2_led_cleanup);
++
++/*
++ * The ACPI INIT method from Asus WMI's code on the T100TA and T200TA turns the
++ * LED on (without the WMI interface allowing further control over the LED).
++ * Ensure we are loaded after asus-nb-wmi so that we turn the LED off again.
++ */
++MODULE_SOFTDEP("pre: asus_nb_wmi");
++MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com");
++MODULE_DESCRIPTION("Intel atomisp2 camera LED driver");
++MODULE_LICENSE("GPL");
+-- 
+2.26.2
