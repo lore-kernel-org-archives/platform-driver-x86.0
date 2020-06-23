@@ -1,71 +1,73 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH v4] platform: x86: Add ACPI driver for ChromeOS
-Date: Tue, 23 Jun 2020 16:46:58 +0200
-Message-ID: <cb138300-6063-f345-f358-512193a9574c@collabora.com>
-References: <20200413134611.478441-1-enric.balletbo@collabora.com>
- <CAJZ5v0gWZ27_DwWQadsJOUxLo4a0rAMe45d4AWXS2gHJZfgfKg@mail.gmail.com>
- <a2953d50-da22-279a-f1e4-faa796d815b1@collabora.com>
- <10490419.gsntqH5CaE@kreacher> <20200606180435.GQ89269@dtor-ws>
+From: Kristian Klausen <kristian@klausen.dk>
+Subject: Re: [PATCH v13 1/4] battery: Add the battery hooking API
+Date: Wed, 24 Jun 2020 01:42:26 +0200
+Message-ID: <2270b8c7-beec-5ab6-f8b7-5ec41751c699@klausen.dk>
+References: <20180207145813.icmv6rwemyejhxbk@thinkpad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200606180435.GQ89269@dtor-ws>
+In-Reply-To: <20180207145813.icmv6rwemyejhxbk@thinkpad>
 Content-Language: en-US
 Sender: linux-acpi-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Len Brown <lenb@kernel.org>, Collabora Kernel ML <kernel@collabora.com>, Guenter Roeck <groeck@chromium.org>, Benson Leung <bleung@chromium.org>, Dmitry Torokhov <dtor@chromium.org>, Gwendal Grignou <gwendal@chromium.org>, vbendeb@chromium.org, Andy Shevchenko <andy@infradead.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>, Darren Hart <dvhart@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, Jeremy Soller <jeremy@system76.com>, Mattias Jacobsson <2pi@mok>
+To: Ognjen Galic <smclt30p@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, =?UTF-8?Q?Christoph_B=c3=b6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Rafael,
+On 07.02.2018 15.58, Ognjen Galic wrote:
+> This is a patch that implements a generic hooking API for the
+> generic ACPI battery driver.
+>
+> With this new generic API, drivers can expose platform specific
+> behaviour via sysfs attributes in /sys/class/power_supply/BATn/
+> in a generic way.
+>
+> A perfect example of the need for this API are Lenovo ThinkPads.
+>
+> Lenovo ThinkPads have a ACPI extension that allows the setting of
+> start and stop charge thresholds in the EC and battery firmware
+> via ACPI. The thinkpad_acpi module can use this API to expose
+> sysfs attributes that it controls inside the ACPI battery driver
+> sysfs tree, under /sys/class/power_supply/BATN/.
+>
+> The file drivers/acpi/battery.h has been moved to
+> include/acpi/battery.h and the includes inside ac.c, sbs.c, and
+> battery.c have been adjusted to reflect that.
+>
+> When drivers hooks into the API, the API calls add_battery() for
+> each battery in the system that passes it a acpi_battery
+> struct. Then, the drivers can use device_create_file() to create
+> new sysfs attributes with that struct and identify the batteries
+> for per-battery attributes.
 
-On 6/6/20 20:04, Dmitry Torokhov wrote:
-> Hi Rafael,
-> 
-> On Fri, Jun 05, 2020 at 01:17:15PM +0200, Rafael J. Wysocki wrote:
->>
->> First off, GGL0001 is not a valid ACPI device ID, because the GGL prefix is not
->> present in the list at https://uefi.org/acpi_id_list
->>
+Hi
 
-True, this device ID is not in the ACPI id list, but it is in the legacy PNP id
-list at https://uefi.org/pnp_id_list
+I did that, when I implemented charge threshold support for ASUS 
+laptops[1][2].
 
-Even is a legacy one, this device has been here a long time, just that Google
-had an out-of-tree patch to support that we would like to upstream.
+It works very well but I can't control the threshold with udev (also 
+reported by another user here[3]). So I did a bit of digging and the 
+doc[4] states: "If attributes are added after the device is registered, 
+then userspace won’t get notified and userspace will not know about the 
+new attributes.", which seems to be the way the current code works:
+power_supply_register_no_ws is called[5] and if it success all the hooks 
+are run.
 
-So, I'm wondering if PNP id's are still valid?
+Looking at the code I'm not sure there is a easy way to fix it, do you 
+have any good ideas?
 
->> There are two ways to address that.  One would be to take the GOOG prefix
->> (present in the list above), append a proper unique number (if I were to
->> guess, I would say that 0001 had been reserved already) to it and then
->> put the resulting device ID into the firmware, to be returned _HID for the
->> device in question (you can add a _CID returning "GGL0001" so it can be
->> found by the old invalid ID at least from the kernel).
-> 
-> This is not going to happen, as there are devices in the wild with such
-> firmware (i.e. Samus - Google Pixel 2 - was shipped in 2015). Even if
-> Google were to release updated firmware (which is quite unlikely), it
-> does not mean that users who are not using Chrome OS would apply updated
-> firmware.
-> 
->> The other one would
->> be to properly register the GGL prefix for Google and establish a process for
->> allocating IDs with that prefix internally.
-> 
-> I think it depends on whether there are more instances of "GGL" prefix.
-> I thought we mostly used GOOG for everything.
-> 
+Best
+Kristian Klausen
 
-I only see one instance using GGL, GGL0001 which I think is present on all
-ACPI-based Chromebooks, and I'd think that the PNP id GGL is a proper valid
-prefix for Google. However is true that then Google mostly used GOOG.
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d507a54f5865d8dcbdd16c66a1a2da15640878ca
+[2] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7973353e92ee1e7ca3b2eb361a4b7cb66c92abee
+[3] 
+https://www.reddit.com/r/linuxhardware/comments/g8kpee/psa_kernel_54_added_the_ability_to_set_a_battery/fp8bwgu/
+[4] 
+https://www.kernel.org/doc/html/v5.8-rc2/driver-api/driver-model/device.html
+[5] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/acpi/battery.c?id=8c3f6993c221cc1a2588046e3ff32d64580396b7#n854
 
-[1]
-https://chromium.googlesource.com/chromiumos/third_party/coreboot/+/refs/heads/chromeos-2016.05/src/vendorcode/google/chromeos/acpi/chromeos.asl
-
-Thanks,
- Enric
-
-> Thanks.
-> 
+>
+> Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
