@@ -1,73 +1,193 @@
-From: Kristian Klausen <kristian@klausen.dk>
-Subject: Re: [PATCH v13 1/4] battery: Add the battery hooking API
-Date: Wed, 24 Jun 2020 01:42:26 +0200
-Message-ID: <2270b8c7-beec-5ab6-f8b7-5ec41751c699@klausen.dk>
-References: <20180207145813.icmv6rwemyejhxbk@thinkpad>
+From: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3] platform/x86: thinkpad_acpi: lap or
+ desk mode interface
+Date: Tue, 23 Jun 2020 22:08:06 -0400
+Message-ID: <20200624020806.25388-1-markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20180207145813.icmv6rwemyejhxbk@thinkpad>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Ognjen Galic <smclt30p@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Sebastian Reichel <sre@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, =?UTF-8?Q?Christoph_B=c3=b6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org
+Cc: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 07.02.2018 15.58, Ognjen Galic wrote:
-> This is a patch that implements a generic hooking API for the
-> generic ACPI battery driver.
->
-> With this new generic API, drivers can expose platform specific
-> behaviour via sysfs attributes in /sys/class/power_supply/BATn/
-> in a generic way.
->
-> A perfect example of the need for this API are Lenovo ThinkPads.
->
-> Lenovo ThinkPads have a ACPI extension that allows the setting of
-> start and stop charge thresholds in the EC and battery firmware
-> via ACPI. The thinkpad_acpi module can use this API to expose
-> sysfs attributes that it controls inside the ACPI battery driver
-> sysfs tree, under /sys/class/power_supply/BATN/.
->
-> The file drivers/acpi/battery.h has been moved to
-> include/acpi/battery.h and the includes inside ac.c, sbs.c, and
-> battery.c have been adjusted to reflect that.
->
-> When drivers hooks into the API, the API calls add_battery() for
-> each battery in the system that passes it a acpi_battery
-> struct. Then, the drivers can use device_create_file() to create
-> new sysfs attributes with that struct and identify the batteries
-> for per-battery attributes.
+  Newer Lenovo Thinkpad platforms have support to identify whether the
+  system is on-lap or not using an ACPI DYTC event from the firmware.
 
-Hi
+  This patch provides the ability to retrieve the current mode via sysfs
+  entrypoints and will be used by userspace for thermal mode and WWAN
+  functionality
 
-I did that, when I implemented charge threshold support for ASUS 
-laptops[1][2].
+Co-developed-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+---
+Changes in v3:
+- Fixed inaccurate comments
+- Used BIT macro to check lapmode bit setting as recommended and update
+  define name
+- Check for new_state == dytc_lapmode in dytc_lapmode_refresh
 
-It works very well but I can't control the threshold with udev (also 
-reported by another user here[3]). So I did a bit of digging and the 
-doc[4] states: "If attributes are added after the device is registered, 
-then userspace won’t get notified and userspace will not know about the 
-new attributes.", which seems to be the way the current code works:
-power_supply_register_no_ws is called[5] and if it success all the hooks 
-are run.
+Changes in v2:
+- cleaned up initialisation sequence to be cleaner and avoid spamming
+  platforms that don't have DYTC with warning message. Tested on P52
+- Adding platform-driver-x86 mailing list for review as requested
 
-Looking at the code I'm not sure there is a easy way to fix it, do you 
-have any good ideas?
+ drivers/platform/x86/thinkpad_acpi.c | 110 +++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
 
-Best
-Kristian Klausen
-
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d507a54f5865d8dcbdd16c66a1a2da15640878ca
-[2] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7973353e92ee1e7ca3b2eb361a4b7cb66c92abee
-[3] 
-https://www.reddit.com/r/linuxhardware/comments/g8kpee/psa_kernel_54_added_the_ability_to_set_a_battery/fp8bwgu/
-[4] 
-https://www.kernel.org/doc/html/v5.8-rc2/driver-api/driver-model/device.html
-[5] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/acpi/battery.c?id=8c3f6993c221cc1a2588046e3ff32d64580396b7#n854
-
->
-> Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 0f704484ae1d..ce3bfb546109 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -4049,6 +4049,7 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+ 		pr_debug("EC reports: Thermal Control Command set completed (DYTC)\n");
+ 		/* recommended action: do nothing, we don't have
+ 		 * Lenovo ATM information */
++		tpacpi_driver_event(hkey);
+ 		return true;
+ 	case TP_HKEY_EV_THM_TRANSFM_CHANGED:
+ 		pr_debug("EC reports: Thermal Transformation changed (GMTS)\n");
+@@ -9811,6 +9812,107 @@ static struct ibm_struct lcdshadow_driver_data = {
+ 	.write = lcdshadow_write,
+ };
+ 
++/*************************************************************************
++ * DYTC subdriver, for the Lenovo lapmode feature
++ */
++
++#define DYTC_CMD_GET          2 /* To get current IC function and mode */
++#define DYTC_GET_LAPMODE_BIT 17 /* Set when in lapmode */
++
++static int  dytc_lapmode;
++static void dytc_lapmode_notify_change(void)
++{
++	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
++			"dytc_lapmode");
++}
++
++static int dytc_command(int command)
++{
++	acpi_handle dytc_handle;
++	int output;
++
++	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DYTC", &dytc_handle))) {
++		/* Platform doesn't support DYTC */
++		return -ENODEV;
++	}
++	if (!acpi_evalf(dytc_handle, &output, NULL, "dd", command))
++		return -EIO;
++	return output;
++}
++
++static int dytc_lapmode_get(void)
++{
++	int output;
++
++	output = dytc_command(DYTC_CMD_GET);
++	if ((output == -ENODEV) || (output == -EIO))
++		return output;
++
++	return (output & BIT(DYTC_GET_LAPMODE_BIT) ? 1 : 0);
++}
++
++static void dytc_lapmode_refresh(void)
++{
++	int new_state;
++
++	new_state = dytc_lapmode_get();
++	if ((new_state == -ENODEV) || (new_state == -EIO) || (new_state == dytc_lapmode))
++		return;
++
++	if (dytc_lapmode != new_state) {
++		dytc_lapmode = new_state;
++		dytc_lapmode_notify_change();
++	}
++}
++
++/* sysfs lapmode entry */
++static ssize_t dytc_lapmode_show(struct device *dev,
++					struct device_attribute *attr,
++					char *buf)
++{
++	if (dytc_lapmode < 0)
++		return dytc_lapmode;
++
++	return snprintf(buf, PAGE_SIZE, "%d\n", dytc_lapmode);
++}
++
++static DEVICE_ATTR_RO(dytc_lapmode);
++
++static struct attribute *dytc_attributes[] = {
++	&dev_attr_dytc_lapmode.attr,
++	NULL
++};
++
++static const struct attribute_group dytc_attr_group = {
++	.attrs = dytc_attributes,
++};
++
++static int tpacpi_dytc_init(struct ibm_init_struct *iibm)
++{
++	int res;
++
++	dytc_lapmode = dytc_lapmode_get();
++
++	if (dytc_lapmode < 0 && dytc_lapmode != -ENODEV)
++		return dytc_lapmode;
++
++	res = sysfs_create_group(&tpacpi_pdev->dev.kobj,
++				&dytc_attr_group);
++
++	return res;
++}
++
++static void dytc_exit(void)
++{
++	sysfs_remove_group(&tpacpi_pdev->dev.kobj,
++			&dytc_attr_group);
++}
++
++static struct ibm_struct dytc_driver_data = {
++	.name = "dytc",
++	.exit = dytc_exit
++};
++
+ /****************************************************************************
+  ****************************************************************************
+  *
+@@ -9858,6 +9960,10 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
+ 
+ 		mutex_unlock(&kbdlight_mutex);
+ 	}
++
++	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED)
++		dytc_lapmode_refresh();
++
+ }
+ 
+ static void hotkey_driver_event(const unsigned int scancode)
+@@ -10296,6 +10402,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+ 		.init = tpacpi_lcdshadow_init,
+ 		.data = &lcdshadow_driver_data,
+ 	},
++	{
++		.init = tpacpi_dytc_init,
++		.data = &dytc_driver_data,
++	},
+ };
+ 
+ static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
+-- 
+2.26.2
