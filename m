@@ -1,126 +1,115 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v4 07/11] thermal: Use mode helpers in drivers
-Date: Wed, 24 Jun 2020 11:51:40 +0200
-Message-ID: <313ca24a-0cc4-a976-19bb-0f30aa845226@samsung.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 08/11] thermal: Explicitly enable non-changing
+ thermal zone devices
+Date: Wed, 24 Jun 2020 12:00:59 +0200
+Message-ID: <0dc0796a-1559-d5e9-5297-c95281792a06@samsung.com>
 References: <Message-ID: <4493c0e4-51aa-3907-810c-74949ff27ca4@samsung.com>
         <20200528192051.28034-1-andrzej.p@collabora.com>
-        <CGME20200528192211eucas1p1dc9b49e1288321503954ed16d9e3001b@eucas1p1.samsung.com>
-        <20200528192051.28034-8-andrzej.p@collabora.com>
+        <CGME20200528192214eucas1p183eafb73cad6465e71e779fb68679f03@eucas1p1.samsung.com>
+        <20200528192051.28034-9-andrzej.p@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200528192051.28034-8-andrzej.p@collabora.com>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20200528192051.28034-9-andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Luca Coelho <luciano.coelho@intel.com>, Intel Linux Wireless <linuxwifi@intel.com>, Kalle Valo <kvalo@codeaurora.org>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vishal Kulkarni <vishal-ut6Up61K2wZBDgjK7y7TUQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ido Schimmel <idosch-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Johannes Berg <johannes.berg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Emmanuel Grumbach <emmanuel.grumbach-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Luca Coelho <luciano.coelho-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Intel Linux Wireless <linuxwifi-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Kaestle <peter-p08lbbvQ7EI@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
 
 On 5/28/20 9:20 PM, Andrzej Pietrasiewicz wrote:
-> Use thermal_zone_device_{en|dis}able() and thermal_zone_device_is_enabled().
+> Some thermal zone devices never change their state, so they should be
+> always enabled.
 > 
-> Consequently, all set_mode() implementations in drivers:
-> 
-> - can stop modifying tzd's "mode" member,
-> - shall stop taking tzd's lock, as it is taken in the helpers
-> - shall stop calling thermal_zone_device_update() as it is called in the
-> helpers
-> - can assume they are called when the mode truly changes, so checks to
-> verify that can be dropped
-> 
-> Not providing set_mode() by a driver no longer prevents the core from
-> being able to set tzd's mode, so the relevant check in mode_store() is
-> removed.
-> 
-> Other comments:
-> 
-> - acpi/thermal.c: tz->thermal_zone->mode will be updated only after we
-> return from set_mode(), so use function parameter in thermal_set_mode()
-> instead, no need to call acpi_thermal_check() in set_mode()
-> - thermal/imx_thermal.c: regmap writes and mode assignment are done in
-> thermal_zone_device_{en|dis}able() and set_mode() callback
-> - thermal/intel/intel_quark_dts_thermal.c: soc_dts_{en|dis}able() are a
-> part of set_mode() callback, so they don't need to modify tzd->mode, and
-> don't need to fall back to the opposite mode if unsuccessful, as the return
-> value will be propagated to thermal_zone_device_{en|dis}able() and
-> ultimately tzd's member will not be changed in thermal_zone_device_set_mode().
-> - thermal/of-thermal.c: no need to set zone->mode to DISABLED in
-> of_parse_thermal_zones() as a tzd is kzalloc'ed so mode is DISABLED anyway
-> 
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 > ---
->  drivers/acpi/thermal.c                        | 21 ++++++-----
->  .../ethernet/mellanox/mlxsw/core_thermal.c    | 37 +++++++++----------
->  drivers/platform/x86/acerhdf.c                | 17 +++++----
->  drivers/thermal/da9062-thermal.c              |  6 ++-
->  drivers/thermal/hisi_thermal.c                |  6 ++-
->  drivers/thermal/imx_thermal.c                 | 33 +++++++----------
->  .../intel/int340x_thermal/int3400_thermal.c   |  5 +--
->  .../thermal/intel/intel_quark_dts_thermal.c   | 18 ++-------
->  drivers/thermal/rockchip_thermal.c            |  6 ++-
->  drivers/thermal/sprd_thermal.c                |  6 ++-
->  drivers/thermal/thermal_core.c                |  2 +-
->  drivers/thermal/thermal_of.c                  | 10 +----
->  drivers/thermal/thermal_sysfs.c               | 11 ++----
->  13 files changed, 80 insertions(+), 98 deletions(-)
+>  drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c     |  8 ++++++++
+>  drivers/net/wireless/intel/iwlwifi/mvm/tt.c            |  9 ++++++++-
+>  drivers/platform/x86/intel_mid_thermal.c               |  6 ++++++
+>  drivers/power/supply/power_supply_core.c               |  9 +++++++--
+>  drivers/thermal/armada_thermal.c                       |  6 ++++++
+>  drivers/thermal/dove_thermal.c                         |  6 ++++++
+>  .../thermal/intel/int340x_thermal/int3400_thermal.c    |  5 +++++
+>  .../intel/int340x_thermal/int340x_thermal_zone.c       |  5 +++++
+>  drivers/thermal/intel/intel_pch_thermal.c              |  5 +++++
+>  drivers/thermal/intel/intel_soc_dts_iosf.c             |  3 +++
+>  drivers/thermal/intel/x86_pkg_temp_thermal.c           |  6 ++++++
+>  drivers/thermal/kirkwood_thermal.c                     |  7 +++++++
+>  drivers/thermal/rcar_thermal.c                         |  9 ++++++++-
+>  drivers/thermal/spear_thermal.c                        |  7 +++++++
+>  drivers/thermal/st/st_thermal.c                        |  5 +++++
+>  drivers/thermal/thermal_of.c                           | 10 +++++++++-
+>  16 files changed, 101 insertions(+), 5 deletions(-)
 
 [...]
 
-> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-> index 32c5fe16b7f7..3efe749dc5a0 100644
-> --- a/drivers/platform/x86/acerhdf.c
-> +++ b/drivers/platform/x86/acerhdf.c
-> @@ -397,19 +397,16 @@ static inline void acerhdf_revert_to_bios_mode(void)
->  {
->  	acerhdf_change_fanstate(ACERHDF_FAN_AUTO);
->  	kernelmode = 0;
-> -	if (thz_dev) {
-> -		thz_dev->mode = THERMAL_DEVICE_DISABLED;
-> +	if (thz_dev)
->  		thz_dev->polling_delay = 0;
-> -	}
-> +
->  	pr_notice("kernel mode fan control OFF\n");
->  }
->  static inline void acerhdf_enable_kernelmode(void)
->  {
->  	kernelmode = 1;
-> -	thz_dev->mode = THERMAL_DEVICE_ENABLED;
+> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> index 3c0397a29b8c..8e8c9af7e5f4 100644
+> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
+> @@ -485,6 +485,10 @@ static int int3400_thermal_probe(struct platform_device *pdev)
+>  		goto free_art_trt;
+>  	}
 >  
->  	thz_dev->polling_delay = interval*1000;
-> -	thermal_zone_device_update(thz_dev, THERMAL_EVENT_UNSPECIFIED);
->  	pr_notice("kernel mode fan control ON\n");
->  }
->  
-> @@ -723,6 +720,8 @@ static void acerhdf_unregister_platform(void)
->  
->  static int __init acerhdf_register_thermal(void)
->  {
-> +	int ret;
-> +
->  	cl_dev = thermal_cooling_device_register("acerhdf-fan", NULL,
->  						 &acerhdf_cooling_ops);
->  
-> @@ -736,8 +735,12 @@ static int __init acerhdf_register_thermal(void)
->  	if (IS_ERR(thz_dev))
->  		return -EINVAL;
->  
-> -	thz_dev->mode = kernelmode ?
-> -		THERMAL_DEVICE_ENABLED : THERMAL_DEVICE_DISABLED;
-> +	if (kernelmode)
-> +		ret = thermal_zone_device_enable(thz_dev);
-> +	else
-> +		ret = thermal_zone_device_disable(thz_dev);
-> +	if (ret)
+> +	result = thermal_zone_device_enable(priv->thermal);
 
-Cleanup on error seems to be missing here.
+I'm not sure about correctness of this addition.
 
-> +		return ret;
+This driver contains ->set_mode but doesn't call it on initialization
+(in v3 it was using THERMAL_DEVICE_DISABLED as .initial_mode parameter).
+
+> +	if (result)
+> +		goto free_tzd;
+> +
+>  	priv->rel_misc_dev_res = acpi_thermal_rel_misc_device_add(
+>  							priv->adev->handle);
 >  
->  	if (strcmp(thz_dev->governor->name,
->  				acerhdf_zone_params.governor_name)) {
+> @@ -518,6 +522,7 @@ static int int3400_thermal_probe(struct platform_device *pdev)
+>  free_rel_misc:
+>  	if (!priv->rel_misc_dev_res)
+>  		acpi_thermal_rel_misc_device_remove(priv->adev->handle);
+> +free_tzd:
+>  	thermal_zone_device_unregister(priv->thermal);
+>  free_art_trt:
+>  	kfree(priv->trts);
+
+[...]
+
+> diff --git a/drivers/thermal/thermal_of.c b/drivers/thermal/thermal_of.c
+> index 43a516a35d64..011fd7f0a01e 100644
+> --- a/drivers/thermal/thermal_of.c
+> +++ b/drivers/thermal/thermal_of.c
+> @@ -1066,7 +1066,7 @@ int __init of_parse_thermal_zones(void)
+>  	for_each_available_child_of_node(np, child) {
+>  		struct thermal_zone_device *zone;
+>  		struct thermal_zone_params *tzp;
+> -		int i, mask = 0;
+> +		int i, ret, mask = 0;
+>  		u32 prop;
+>  
+>  		tz = thermal_of_build_thermal_zone(child);
+> @@ -1113,6 +1113,14 @@ int __init of_parse_thermal_zones(void)
+>  			of_thermal_free_zone(tz);
+>  			/* attempting to build remaining zones still */
+>  		}
+> +		ret = thermal_zone_device_enable(zone);
+
+This doesn't seem correct as it is done too early and
+there is already proper thermal_zone_device_enable() call
+in thermal_zone_of_sensor_register().
+
+> +		if (ret) {
+> +			thermal_zone_device_unregister(zone);
+> +			pr_err("Failed to enable thermal zone\n");
+> +			kfree(tzp);
+> +			kfree(ops);
+> +			of_thermal_free_zone(tz);
+> +		}
+>  	}
+>  	of_node_put(np);
+>  
 
 Best regards,
 --
