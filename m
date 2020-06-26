@@ -1,67 +1,69 @@
 From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Subject: [PATCH v5 00/11] Stop monitoring disabled devices
-Date: Fri, 26 Jun 2020 19:37:44 +0200
-Message-ID: <20200626173755.26379-1-andrzej.p@collabora.com>
+Subject: [PATCH v5 01/11] acpi: thermal: Fix error handling in the register function
+Date: Fri, 26 Jun 2020 19:37:45 +0200
+Message-ID: <20200626173755.26379-2-andrzej.p@collabora.com>
 References: <9cbffad6-69e4-0b33-4640-fde7c4f6a6e7@linaro.org>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <9cbffad6-69e4-0b33-4640-fde7c4f6a6e7@linaro.org>
-Sender: linux-acpi-owner@vger.kernel.org
+ <20200626173755.26379-1-andrzej.p@collabora.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20200626173755.26379-1-andrzej.p@collabora.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
 Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Luca Coelho <luciano.coelho@intel.com>, Intel Linux Wireless <linuxwifi@intel.com>, Kalle Valo <kvalo@codeaurora.org>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Sebastian Reichel <sre@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-A respin of v4 with these changes:
+The acpi_thermal_register_thermal_zone() is missing any error handling.
+This needs to be fixed.
 
-v4..v5:
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+---
+ drivers/acpi/thermal.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-- EXPORT_SYMBOL -> EXPORT_SYMBOL_GPL (Daniel)
-- dropped unnecessary thermal_zone_device_enable() in int3400_thermal.c
-and in thermal_of.c (Bartlomiej)
-
-Andrzej Pietrasiewicz (11):
-  acpi: thermal: Fix error handling in the register function
-  thermal: Store thermal mode in a dedicated enum
-  thermal: Add current mode to thermal zone device
-  thermal: Store device mode in struct thermal_zone_device
-  thermal: remove get_mode() operation of drivers
-  thermal: Add mode helpers
-  thermal: Use mode helpers in drivers
-  thermal: Explicitly enable non-changing thermal zone devices
-  thermal: core: Stop polling DISABLED thermal devices
-  thermal: Simplify or eliminate unnecessary set_mode() methods
-  thermal: Rename set_mode() to change_mode()
-
- drivers/acpi/thermal.c                        | 75 +++++----------
- .../ethernet/chelsio/cxgb4/cxgb4_thermal.c    |  8 ++
- .../ethernet/mellanox/mlxsw/core_thermal.c    | 91 ++++---------------
- drivers/net/wireless/intel/iwlwifi/mvm/tt.c   |  9 +-
- drivers/platform/x86/acerhdf.c                | 33 +++----
- drivers/platform/x86/intel_mid_thermal.c      |  6 ++
- drivers/power/supply/power_supply_core.c      |  9 +-
- drivers/thermal/armada_thermal.c              |  6 ++
- drivers/thermal/da9062-thermal.c              | 16 +---
- drivers/thermal/dove_thermal.c                |  6 ++
- drivers/thermal/hisi_thermal.c                |  6 +-
- drivers/thermal/imx_thermal.c                 | 57 ++++--------
- .../intel/int340x_thermal/int3400_thermal.c   | 38 ++------
- .../int340x_thermal/int340x_thermal_zone.c    |  5 +
- drivers/thermal/intel/intel_pch_thermal.c     |  5 +
- .../thermal/intel/intel_quark_dts_thermal.c   | 34 ++-----
- drivers/thermal/intel/intel_soc_dts_iosf.c    |  3 +
- drivers/thermal/intel/x86_pkg_temp_thermal.c  |  6 ++
- drivers/thermal/kirkwood_thermal.c            |  7 ++
- drivers/thermal/rcar_thermal.c                |  9 +-
- drivers/thermal/rockchip_thermal.c            |  6 +-
- drivers/thermal/spear_thermal.c               |  7 ++
- drivers/thermal/sprd_thermal.c                |  6 +-
- drivers/thermal/st/st_thermal.c               |  5 +
- drivers/thermal/thermal_core.c                | 76 ++++++++++++++--
- drivers/thermal/thermal_of.c                  | 41 +--------
- drivers/thermal/thermal_sysfs.c               | 37 +-------
- include/linux/thermal.h                       | 19 +++-
- 28 files changed, 275 insertions(+), 351 deletions(-)
-
-
-base-commit: 48778464bb7d346b47157d21ffde2af6b2d39110
+diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
+index 19067a5e5293..6de8066ca1e7 100644
+--- a/drivers/acpi/thermal.c
++++ b/drivers/acpi/thermal.c
+@@ -901,23 +901,35 @@ static int acpi_thermal_register_thermal_zone(struct acpi_thermal *tz)
+ 	result = sysfs_create_link(&tz->device->dev.kobj,
+ 				   &tz->thermal_zone->device.kobj, "thermal_zone");
+ 	if (result)
+-		return result;
++		goto unregister_tzd;
+ 
+ 	result = sysfs_create_link(&tz->thermal_zone->device.kobj,
+ 				   &tz->device->dev.kobj, "device");
+ 	if (result)
+-		return result;
++		goto remove_tz_link;
+ 
+ 	status =  acpi_bus_attach_private_data(tz->device->handle,
+ 					       tz->thermal_zone);
+-	if (ACPI_FAILURE(status))
+-		return -ENODEV;
++	if (ACPI_FAILURE(status)) {
++		result = -ENODEV;
++		goto remove_dev_link;
++	}
+ 
+ 	tz->tz_enabled = 1;
+ 
+ 	dev_info(&tz->device->dev, "registered as thermal_zone%d\n",
+ 		 tz->thermal_zone->id);
++
+ 	return 0;
++
++remove_dev_link:
++	sysfs_remove_link(&tz->thermal_zone->device.kobj, "device");
++remove_tz_link:
++	sysfs_remove_link(&tz->device->dev.kobj, "thermal_zone");
++unregister_tzd:
++	thermal_zone_device_unregister(tz->thermal_zone);
++
++	return result;
+ }
+ 
+ static void acpi_thermal_unregister_thermal_zone(struct acpi_thermal *tz)
 -- 
 2.17.1
