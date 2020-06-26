@@ -1,52 +1,132 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v4 3/7] ACPI: button: Access input device's users under
- appropriate mutex
-Date: Thu, 25 Jun 2020 12:55:29 +0200
-Message-ID: <CAJZ5v0hgQt-amMn8xiF_0kyVZ-9pQxgm5H-VcFpinVQGKnYhwQ@mail.gmail.com>
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com> <20200608112211.12125-4-andrzej.p@collabora.com>
- <CAJZ5v0j7e9TzDtEiDXmj3fLAQ7CvFHoe7Q3aYKKas3PEXrsUuw@mail.gmail.com> <20200625052318.GE248110@dtor-ws>
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Subject: Re: [PATCH v4 07/11] thermal: Use mode helpers in drivers
+Date: Fri, 26 Jun 2020 18:08:54 +0200
+Message-ID: <fd77c8e7-25a2-49ca-676a-b8669d848adb@collabora.com>
+References: <Message-ID: <4493c0e4-51aa-3907-810c-74949ff27ca4@samsung.com>
+ <20200528192051.28034-1-andrzej.p@collabora.com>
+ <CGME20200528192211eucas1p1dc9b49e1288321503954ed16d9e3001b@eucas1p1.samsung.com>
+ <20200528192051.28034-8-andrzej.p@collabora.com>
+ <313ca24a-0cc4-a976-19bb-0f30aa845226@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200625052318.GE248110@dtor-ws>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Andrzej Pietrasiewicz <andrzej.p@collabora.com>, Linux PM <linux-pm@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Samsung SoC <linux-samsung-soc@vger.kernel.org>, linux-input@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, Platform Driver <platform-driver-x86@vger.kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>Peter
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <313ca24a-0cc4-a976-19bb-0f30aa845226@samsung.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Luca Coelho <luciano.coelho@intel.com>, Intel Linux Wireless <linuxwifi@intel.com>, Kalle Valo <kvalo@codeaurora.org>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jun 25, 2020 at 7:23 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Wed, Jun 24, 2020 at 05:00:09PM +0200, Rafael J. Wysocki wrote:
-> > On Mon, Jun 8, 2020 at 1:22 PM Andrzej Pietrasiewicz
-> > <andrzej.p@collabora.com> wrote:
-> > >
-> > > Inspecting input device's 'users' member should be done under device's
-> > > mutex, so add appropriate invocations.
-> > >
-> > > Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> >
-> > This looks like a fix that might be applied independently of the other
-> > patches in the series.
-> >
-> > Do you want me to pick it up?
->
-> If you pick it we'll have to have a dance with this series. Can I apply
-> instead?
+Hi Bartlomiej,
 
-Yes, please.
+W dniu 24.06.2020 o 11:51, Bartlomiej Zolnierkiewicz pisze:
+> 
+> On 5/28/20 9:20 PM, Andrzej Pietrasiewicz wrote:
+>> Use thermal_zone_device_{en|dis}able() and thermal_zone_device_is_enabled().
+>>
+>> Consequently, all set_mode() implementations in drivers:
+>>
+>> - can stop modifying tzd's "mode" member,
+>> - shall stop taking tzd's lock, as it is taken in the helpers
+>> - shall stop calling thermal_zone_device_update() as it is called in the
+>> helpers
+>> - can assume they are called when the mode truly changes, so checks to
+>> verify that can be dropped
+>>
+>> Not providing set_mode() by a driver no longer prevents the core from
+>> being able to set tzd's mode, so the relevant check in mode_store() is
+>> removed.
+>>
+>> Other comments:
+>>
+>> - acpi/thermal.c: tz->thermal_zone->mode will be updated only after we
+>> return from set_mode(), so use function parameter in thermal_set_mode()
+>> instead, no need to call acpi_thermal_check() in set_mode()
+>> - thermal/imx_thermal.c: regmap writes and mode assignment are done in
+>> thermal_zone_device_{en|dis}able() and set_mode() callback
+>> - thermal/intel/intel_quark_dts_thermal.c: soc_dts_{en|dis}able() are a
+>> part of set_mode() callback, so they don't need to modify tzd->mode, and
+>> don't need to fall back to the opposite mode if unsuccessful, as the return
+>> value will be propagated to thermal_zone_device_{en|dis}able() and
+>> ultimately tzd's member will not be changed in thermal_zone_device_set_mode().
+>> - thermal/of-thermal.c: no need to set zone->mode to DISABLED in
+>> of_parse_thermal_zones() as a tzd is kzalloc'ed so mode is DISABLED anyway
+>>
+>> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+>> ---
+>>   drivers/acpi/thermal.c                        | 21 ++++++-----
+>>   .../ethernet/mellanox/mlxsw/core_thermal.c    | 37 +++++++++----------
+>>   drivers/platform/x86/acerhdf.c                | 17 +++++----
+>>   drivers/thermal/da9062-thermal.c              |  6 ++-
+>>   drivers/thermal/hisi_thermal.c                |  6 ++-
+>>   drivers/thermal/imx_thermal.c                 | 33 +++++++----------
+>>   .../intel/int340x_thermal/int3400_thermal.c   |  5 +--
+>>   .../thermal/intel/intel_quark_dts_thermal.c   | 18 ++-------
+>>   drivers/thermal/rockchip_thermal.c            |  6 ++-
+>>   drivers/thermal/sprd_thermal.c                |  6 ++-
+>>   drivers/thermal/thermal_core.c                |  2 +-
+>>   drivers/thermal/thermal_of.c                  | 10 +----
+>>   drivers/thermal/thermal_sysfs.c               | 11 ++----
+>>   13 files changed, 80 insertions(+), 98 deletions(-)
+> 
+> [...]
+> 
+>> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+>> index 32c5fe16b7f7..3efe749dc5a0 100644
+>> --- a/drivers/platform/x86/acerhdf.c
+>> +++ b/drivers/platform/x86/acerhdf.c
+>> @@ -397,19 +397,16 @@ static inline void acerhdf_revert_to_bios_mode(void)
+>>   {
+>>   	acerhdf_change_fanstate(ACERHDF_FAN_AUTO);
+>>   	kernelmode = 0;
+>> -	if (thz_dev) {
+>> -		thz_dev->mode = THERMAL_DEVICE_DISABLED;
+>> +	if (thz_dev)
+>>   		thz_dev->polling_delay = 0;
+>> -	}
+>> +
+>>   	pr_notice("kernel mode fan control OFF\n");
+>>   }
+>>   static inline void acerhdf_enable_kernelmode(void)
+>>   {
+>>   	kernelmode = 1;
+>> -	thz_dev->mode = THERMAL_DEVICE_ENABLED;
+>>   
+>>   	thz_dev->polling_delay = interval*1000;
+>> -	thermal_zone_device_update(thz_dev, THERMAL_EVENT_UNSPECIFIED);
+>>   	pr_notice("kernel mode fan control ON\n");
+>>   }
+>>   
+>> @@ -723,6 +720,8 @@ static void acerhdf_unregister_platform(void)
+>>   
+>>   static int __init acerhdf_register_thermal(void)
+>>   {
+>> +	int ret;
+>> +
+>>   	cl_dev = thermal_cooling_device_register("acerhdf-fan", NULL,
+>>   						 &acerhdf_cooling_ops);
+>>   
+>> @@ -736,8 +735,12 @@ static int __init acerhdf_register_thermal(void)
+>>   	if (IS_ERR(thz_dev))
+>>   		return -EINVAL;
+>>   
+>> -	thz_dev->mode = kernelmode ?
+>> -		THERMAL_DEVICE_ENABLED : THERMAL_DEVICE_DISABLED;
+>> +	if (kernelmode)
+>> +		ret = thermal_zone_device_enable(thz_dev);
+>> +	else
+>> +		ret = thermal_zone_device_disable(thz_dev);
+>> +	if (ret)
+> 
+> Cleanup on error seems to be missing here.
 
-Also feel free to add
+It does seem so, but it is not the case.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+acerhdf_register_thermal() is called from acerhdf_init().
+The latter checks the return value of the former and on error
+jumps to the err_unreg label, where thermal zone(s) is/are unregistered.
 
-to it.
+Regards,
 
-> I do not think this change has any practical effect as nobody
-> attaches/detached input handlers or opening/closing input devices when
-> system goes through device resume phase.
-
-Indeed.
-
-Thanks!
+Andrzej
