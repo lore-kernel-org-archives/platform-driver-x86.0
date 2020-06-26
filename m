@@ -1,47 +1,36 @@
-From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Subject: [PATCH v5 03/11] thermal: Add current mode to thermal zone device
-Date: Fri, 26 Jun 2020 19:37:47 +0200
-Message-ID: <20200626173755.26379-4-andrzej.p@collabora.com>
-References: <9cbffad6-69e4-0b33-4640-fde7c4f6a6e7@linaro.org>
- <20200626173755.26379-1-andrzej.p@collabora.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20200626173755.26379-1-andrzej.p@collabora.com>
-Sender: netdev-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Luca Coelho <luciano.coelho@intel.com>, Intel Linux Wireless <linuxwifi@intel.com>, Kalle Valo <kvalo@codeaurora.org>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Sebastian Reichel <sre@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Support Opensource <support.opensource@diasemi.com>
+From: kernel test robot <lkp@intel.com>
+Subject: [RFC PATCH] thermal: thermal_zone_device_set_mode() can be static
+Date: Sat, 27 Jun 2020 04:50:28 +0800
+Message-ID: <20200626205028.GA2296@014f859222aa>
+References: <20200626173755.26379-7-andrzej.p@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200626173755.26379-7-andrzej.p@collabora.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
+Cc: kbuild-all@lists.01.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Prepare for changing the place where the mode is stored: now it is in
-drivers, which might or might not implement get_mode()/set_mode() methods.
-A lot of cleanup can be done thanks to storing it in struct tzd. The
-get_mode() methods will become redundant.
 
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
 ---
- include/linux/thermal.h | 2 ++
- 1 file changed, 2 insertions(+)
+ thermal_core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index 216185bb3014..5f91d7f04512 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -128,6 +128,7 @@ struct thermal_cooling_device {
-  * @trip_temp_attrs:	attributes for trip points for sysfs: trip temperature
-  * @trip_type_attrs:	attributes for trip points for sysfs: trip type
-  * @trip_hyst_attrs:	attributes for trip points for sysfs: trip hysteresis
-+ * @mode:		current mode of this thermal zone
-  * @devdata:	private pointer for device private data
-  * @trips:	number of trip points the thermal zone supports
-  * @trips_disabled;	bitmap for disabled trips
-@@ -170,6 +171,7 @@ struct thermal_zone_device {
- 	struct thermal_attr *trip_temp_attrs;
- 	struct thermal_attr *trip_type_attrs;
- 	struct thermal_attr *trip_hyst_attrs;
-+	enum thermal_device_mode mode;
- 	void *devdata;
- 	int trips;
- 	unsigned long trips_disabled;	/* bitmap for disabled trips */
--- 
-2.17.1
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 3181295075b9a..f02c57c986f0e 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -459,8 +459,8 @@ static void thermal_zone_device_reset(struct thermal_zone_device *tz)
+ 	thermal_zone_device_init(tz);
+ }
+ 
+-int thermal_zone_device_set_mode(struct thermal_zone_device *tz,
+-				 enum thermal_device_mode mode)
++static int thermal_zone_device_set_mode(struct thermal_zone_device *tz,
++					enum thermal_device_mode mode)
+ {
+ 	int ret = 0;
+ 
