@@ -1,197 +1,197 @@
-From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Subject: [PATCH v6 02/11] thermal: Store thermal mode in a dedicated enum
-Date: Mon, 29 Jun 2020 13:16:06 +0200
-Message-ID: <20200629111615.18131-3-andrzej.p@collabora.com>
-References: <CAHLCerO2XOOX9akEwaTu_cjSqRycFpNmoVxkSe36L8B4ALWidA@mail.gmail.com>
- <20200629111615.18131-1-andrzej.p@collabora.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20200629111615.18131-1-andrzej.p@collabora.com>
-Sender: netdev-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Luca Coelho <luciano.coelho@intel.com>, Intel Linux Wireless <linuxwifi@intel.com>, Kalle Valo <kvalo@codeaurora.org>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Sebastian Reichel <sre@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@verdurent.com>, Support Opensource <support.opensource@diasemi.com>
+From: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4] platform/x86: thinkpad_acpi: lap or
+ desk mode interface
+Date: Mon, 29 Jun 2020 15:17:48 -0400
+Message-ID: <20200629191748.3859-1-markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org
+Cc: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Prepare for storing mode in struct thermal_zone_device.
+  Newer Lenovo Thinkpad platforms have support to identify whether the
+  system is on-lap or not using an ACPI DYTC event from the firmware.
 
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-[for acerhdf]
-Acked-by: Peter Kaestle <peter@piie.net>
-Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+  This patch provides the ability to retrieve the current mode via sysfs
+  entrypoints and will be used by userspace for thermal mode and WWAN
+  functionality
+
+Co-developed-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/acpi/thermal.c                        | 27 +++++++++----------
- drivers/platform/x86/acerhdf.c                |  8 ++++--
- .../intel/int340x_thermal/int3400_thermal.c   | 18 +++++--------
- 3 files changed, 25 insertions(+), 28 deletions(-)
+Changes in v4:
+ - Correct hotkey event comment as we're handling event
+ - Remove unnecessary check in dytc_lapmode_refresh
+Changes in v3:
+- Fixed inaccurate comments
+- Used BIT macro to check lapmode bit setting as recommended and update
+  define name
+- Check for new_state == dytc_lapmode in dytc_lapmode_refresh
 
-diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
-index 6de8066ca1e7..fb46070c66d8 100644
---- a/drivers/acpi/thermal.c
-+++ b/drivers/acpi/thermal.c
-@@ -172,7 +172,7 @@ struct acpi_thermal {
- 	struct acpi_thermal_trips trips;
- 	struct acpi_handle_list devices;
- 	struct thermal_zone_device *thermal_zone;
--	int tz_enabled;
-+	enum thermal_device_mode mode;
- 	int kelvin_offset;	/* in millidegrees */
- 	struct work_struct thermal_check_work;
+Changes in v2:
+- cleaned up initialisation sequence to be cleaner and avoid spamming
+  platforms that don't have DYTC with warning message. Tested on P52
+- Adding platform-driver-x86 mailing list for review as requested
+
+ drivers/platform/x86/thinkpad_acpi.c | 111 ++++++++++++++++++++++++++-
+ 1 file changed, 109 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 0f704484ae1d..859b40c7113e 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -4047,8 +4047,8 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+ 		return true;
+ 	case TP_HKEY_EV_THM_CSM_COMPLETED:
+ 		pr_debug("EC reports: Thermal Control Command set completed (DYTC)\n");
+-		/* recommended action: do nothing, we don't have
+-		 * Lenovo ATM information */
++		/* Thermal event - pass on to event handler */
++		tpacpi_driver_event(hkey);
+ 		return true;
+ 	case TP_HKEY_EV_THM_TRANSFM_CHANGED:
+ 		pr_debug("EC reports: Thermal Transformation changed (GMTS)\n");
+@@ -9811,6 +9811,105 @@ static struct ibm_struct lcdshadow_driver_data = {
+ 	.write = lcdshadow_write,
  };
-@@ -500,7 +500,7 @@ static void acpi_thermal_check(void *data)
- {
- 	struct acpi_thermal *tz = data;
  
--	if (!tz->tz_enabled)
-+	if (tz->mode != THERMAL_DEVICE_ENABLED)
- 		return;
++/*************************************************************************
++ * DYTC subdriver, for the Lenovo lapmode feature
++ */
++
++#define DYTC_CMD_GET          2 /* To get current IC function and mode */
++#define DYTC_GET_LAPMODE_BIT 17 /* Set when in lapmode */
++
++static int  dytc_lapmode;
++static void dytc_lapmode_notify_change(void)
++{
++	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
++			"dytc_lapmode");
++}
++
++static int dytc_command(int command)
++{
++	acpi_handle dytc_handle;
++	int output;
++
++	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DYTC", &dytc_handle))) {
++		/* Platform doesn't support DYTC */
++		return -ENODEV;
++	}
++	if (!acpi_evalf(dytc_handle, &output, NULL, "dd", command))
++		return -EIO;
++	return output;
++}
++
++static int dytc_lapmode_get(void)
++{
++	int output;
++
++	output = dytc_command(DYTC_CMD_GET);
++	if ((output == -ENODEV) || (output == -EIO))
++		return output;
++
++	return (output & BIT(DYTC_GET_LAPMODE_BIT) ? 1 : 0);
++}
++
++static void dytc_lapmode_refresh(void)
++{
++	int new_state;
++
++	new_state = dytc_lapmode_get();
++	if ((new_state == -ENODEV) || (new_state == -EIO) || (new_state == dytc_lapmode))
++		return;
++
++	dytc_lapmode = new_state;
++	dytc_lapmode_notify_change();
++}
++
++/* sysfs lapmode entry */
++static ssize_t dytc_lapmode_show(struct device *dev,
++					struct device_attribute *attr,
++					char *buf)
++{
++	if (dytc_lapmode < 0)
++		return dytc_lapmode;
++
++	return snprintf(buf, PAGE_SIZE, "%d\n", dytc_lapmode);
++}
++
++static DEVICE_ATTR_RO(dytc_lapmode);
++
++static struct attribute *dytc_attributes[] = {
++	&dev_attr_dytc_lapmode.attr,
++	NULL
++};
++
++static const struct attribute_group dytc_attr_group = {
++	.attrs = dytc_attributes,
++};
++
++static int tpacpi_dytc_init(struct ibm_init_struct *iibm)
++{
++	int res;
++
++	dytc_lapmode = dytc_lapmode_get();
++
++	if (dytc_lapmode < 0 && dytc_lapmode != -ENODEV)
++		return dytc_lapmode;
++
++	res = sysfs_create_group(&tpacpi_pdev->dev.kobj,
++				&dytc_attr_group);
++
++	return res;
++}
++
++static void dytc_exit(void)
++{
++	sysfs_remove_group(&tpacpi_pdev->dev.kobj,
++			&dytc_attr_group);
++}
++
++static struct ibm_struct dytc_driver_data = {
++	.name = "dytc",
++	.exit = dytc_exit
++};
++
+ /****************************************************************************
+  ****************************************************************************
+  *
+@@ -9858,6 +9957,10 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
  
- 	thermal_zone_device_update(tz->thermal_zone,
-@@ -534,8 +534,7 @@ static int thermal_get_mode(struct thermal_zone_device *thermal,
- 	if (!tz)
- 		return -EINVAL;
- 
--	*mode = tz->tz_enabled ? THERMAL_DEVICE_ENABLED :
--		THERMAL_DEVICE_DISABLED;
-+	*mode = tz->mode;
- 
- 	return 0;
+ 		mutex_unlock(&kbdlight_mutex);
+ 	}
++
++	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED)
++		dytc_lapmode_refresh();
++
  }
-@@ -544,27 +543,25 @@ static int thermal_set_mode(struct thermal_zone_device *thermal,
- 				enum thermal_device_mode mode)
- {
- 	struct acpi_thermal *tz = thermal->devdata;
--	int enable;
  
- 	if (!tz)
- 		return -EINVAL;
+ static void hotkey_driver_event(const unsigned int scancode)
+@@ -10296,6 +10399,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+ 		.init = tpacpi_lcdshadow_init,
+ 		.data = &lcdshadow_driver_data,
+ 	},
++	{
++		.init = tpacpi_dytc_init,
++		.data = &dytc_driver_data,
++	},
+ };
  
-+	if (mode != THERMAL_DEVICE_DISABLED &&
-+	    mode != THERMAL_DEVICE_ENABLED)
-+		return -EINVAL;
- 	/*
- 	 * enable/disable thermal management from ACPI thermal driver
- 	 */
--	if (mode == THERMAL_DEVICE_ENABLED)
--		enable = 1;
--	else if (mode == THERMAL_DEVICE_DISABLED) {
--		enable = 0;
-+	if (mode == THERMAL_DEVICE_DISABLED)
- 		pr_warn("thermal zone will be disabled\n");
--	} else
--		return -EINVAL;
- 
--	if (enable != tz->tz_enabled) {
--		tz->tz_enabled = enable;
-+	if (mode != tz->mode) {
-+		tz->mode = mode;
- 		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
- 			"%s kernel ACPI thermal control\n",
--			tz->tz_enabled ? "Enable" : "Disable"));
-+			tz->mode == THERMAL_DEVICE_ENABLED ?
-+			"Enable" : "Disable"));
- 		acpi_thermal_check(tz);
- 	}
- 	return 0;
-@@ -915,7 +912,7 @@ static int acpi_thermal_register_thermal_zone(struct acpi_thermal *tz)
- 		goto remove_dev_link;
- 	}
- 
--	tz->tz_enabled = 1;
-+	tz->mode = THERMAL_DEVICE_ENABLED;
- 
- 	dev_info(&tz->device->dev, "registered as thermal_zone%d\n",
- 		 tz->thermal_zone->id);
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 4df7609b4aa9..9d1030b1a4f4 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -68,6 +68,7 @@ static int kernelmode = 1;
- #else
- static int kernelmode;
- #endif
-+static enum thermal_device_mode thermal_mode;
- 
- static unsigned int interval = 10;
- static unsigned int fanon = 60000;
-@@ -397,6 +398,7 @@ static inline void acerhdf_revert_to_bios_mode(void)
- {
- 	acerhdf_change_fanstate(ACERHDF_FAN_AUTO);
- 	kernelmode = 0;
-+	thermal_mode = THERMAL_DEVICE_DISABLED;
- 	if (thz_dev)
- 		thz_dev->polling_delay = 0;
- 	pr_notice("kernel mode fan control OFF\n");
-@@ -404,6 +406,7 @@ static inline void acerhdf_revert_to_bios_mode(void)
- static inline void acerhdf_enable_kernelmode(void)
- {
- 	kernelmode = 1;
-+	thermal_mode = THERMAL_DEVICE_ENABLED;
- 
- 	thz_dev->polling_delay = interval*1000;
- 	thermal_zone_device_update(thz_dev, THERMAL_EVENT_UNSPECIFIED);
-@@ -416,8 +419,7 @@ static int acerhdf_get_mode(struct thermal_zone_device *thermal,
- 	if (verbose)
- 		pr_notice("kernel mode fan control %d\n", kernelmode);
- 
--	*mode = (kernelmode) ? THERMAL_DEVICE_ENABLED
--			     : THERMAL_DEVICE_DISABLED;
-+	*mode = thermal_mode;
- 
- 	return 0;
- }
-@@ -739,6 +741,8 @@ static int __init acerhdf_register_thermal(void)
- 	if (IS_ERR(cl_dev))
- 		return -EINVAL;
- 
-+	thermal_mode = kernelmode ?
-+		THERMAL_DEVICE_ENABLED : THERMAL_DEVICE_DISABLED;
- 	thz_dev = thermal_zone_device_register("acerhdf", 2, 0, NULL,
- 					      &acerhdf_dev_ops,
- 					      &acerhdf_zone_params, 0,
-diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-index 0b3a62655843..e84faaadff87 100644
---- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-@@ -48,7 +48,7 @@ struct int3400_thermal_priv {
- 	struct acpi_device *adev;
- 	struct platform_device *pdev;
- 	struct thermal_zone_device *thermal;
--	int mode;
-+	enum thermal_device_mode mode;
- 	int art_count;
- 	struct art *arts;
- 	int trt_count;
-@@ -395,24 +395,20 @@ static int int3400_thermal_set_mode(struct thermal_zone_device *thermal,
- 				enum thermal_device_mode mode)
- {
- 	struct int3400_thermal_priv *priv = thermal->devdata;
--	bool enable;
- 	int result = 0;
- 
- 	if (!priv)
- 		return -EINVAL;
- 
--	if (mode == THERMAL_DEVICE_ENABLED)
--		enable = true;
--	else if (mode == THERMAL_DEVICE_DISABLED)
--		enable = false;
--	else
-+	if (mode != THERMAL_DEVICE_ENABLED &&
-+	    mode != THERMAL_DEVICE_DISABLED)
- 		return -EINVAL;
- 
--	if (enable != priv->mode) {
--		priv->mode = enable;
-+	if (mode != priv->mode) {
-+		priv->mode = mode;
- 		result = int3400_thermal_run_osc(priv->adev->handle,
--						 priv->current_uuid_index,
--						 enable);
-+						priv->current_uuid_index,
-+						mode == THERMAL_DEVICE_ENABLED);
- 	}
- 
- 	evaluate_odvp(priv);
+ static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
 -- 
-2.17.1
+2.26.2
