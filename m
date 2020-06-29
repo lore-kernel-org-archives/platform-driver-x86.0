@@ -1,57 +1,43 @@
-From: Amit Kucheria <amit.kucheria@verdurent.com>
-Subject: Re: [PATCH v5 03/11] thermal: Add current mode to thermal zone device
-Date: Mon, 29 Jun 2020 12:49:51 +0530
-Message-ID: <CAHLCerNXcst72EDWf-xRTdUJ78jMDhhxpf31MO2WPgtJxzv6bA@mail.gmail.com>
-References: <9cbffad6-69e4-0b33-4640-fde7c4f6a6e7@linaro.org>
- <20200626173755.26379-1-andrzej.p@collabora.com> <20200626173755.26379-4-andrzej.p@collabora.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v6 06/11] thermal: Add mode helpers
+Date: Mon, 29 Jun 2020 14:08:38 +0200
+Message-ID: <23060170-b78b-5717-1215-826488c04981@linaro.org>
+References: <CAHLCerO2XOOX9akEwaTu_cjSqRycFpNmoVxkSe36L8B4ALWidA@mail.gmail.com>
+ <20200629111615.18131-1-andrzej.p@collabora.com>
+ <20200629111615.18131-7-andrzej.p@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200626173755.26379-4-andrzej.p@collabora.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: Linux PM list <linux-pm@vger.kernel.org>, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, lakml <linux-arm-kernel@lists.infradead.org>, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Luca Coelho <luciano.coelho@intel.com>, Intel Linux Wireless <linuxwifi@intel.com>, Kalle Valo <kvalo@codeaurora.org>, Peter Kaestle <peter@piie.net>, Darr
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20200629111615.18131-7-andrzej.p@collabora.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Luca Coelho <luciano.coelho@intel.com>, Intel Linux Wireless <linuxwifi@intel.com>, Kalle Valo <kvalo@codeaurora.org>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Sebastian Reichel <sre@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Support Opensource <support.opensource@diasemi.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:08 PM Andrzej Pietrasiewicz
-<andrzej.p@collabora.com> wrote:
->
-> Prepare for changing the place where the mode is stored: now it is in
-> drivers, which might or might not implement get_mode()/set_mode() methods.
-> A lot of cleanup can be done thanks to storing it in struct tzd. The
-> get_mode() methods will become redundant.
->
+On 29/06/2020 13:16, Andrzej Pietrasiewicz wrote:
+> Prepare for making the drivers not access tzd's private members.
+> 
 > Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 > Reviewed-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> [EXPORT_SYMBOL -> EXPORT_SYMBOL_GPL]
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> [staticize thermal_zone_device_set_mode()]
+> Signed-off-by: kernel test robot <lkp@intel.com>
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Duplicate signed-off line.
+
+Please resend a V7 without a reply-to, so the series will be correctly
+handled by patchwork and that will make my life easier.
+
+Thanks
 
 
-> ---
->  include/linux/thermal.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> index 216185bb3014..5f91d7f04512 100644
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -128,6 +128,7 @@ struct thermal_cooling_device {
->   * @trip_temp_attrs:   attributes for trip points for sysfs: trip temperature
->   * @trip_type_attrs:   attributes for trip points for sysfs: trip type
->   * @trip_hyst_attrs:   attributes for trip points for sysfs: trip hysteresis
-> + * @mode:              current mode of this thermal zone
->   * @devdata:   private pointer for device private data
->   * @trips:     number of trip points the thermal zone supports
->   * @trips_disabled;    bitmap for disabled trips
-> @@ -170,6 +171,7 @@ struct thermal_zone_device {
->         struct thermal_attr *trip_temp_attrs;
->         struct thermal_attr *trip_type_attrs;
->         struct thermal_attr *trip_hyst_attrs;
-> +       enum thermal_device_mode mode;
->         void *devdata;
->         int trips;
->         unsigned long trips_disabled;   /* bitmap for disabled trips */
-> --
-> 2.17.1
->
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
