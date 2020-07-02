@@ -1,7 +1,7 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
 Subject: Re: [PATCH v7 00/11] Stop monitoring disabled devices
-Date: Thu, 2 Jul 2020 16:58:26 +0200
-Message-ID: <134e1e38-02d0-32ed-bd59-cf283a161b35@linaro.org>
+Date: Thu, 2 Jul 2020 19:01:12 +0200
+Message-ID: <8aeb4f51-1813-63c1-165b-06640af5968f@linaro.org>
 References: <20200629122925.21729-1-andrzej.p@collabora.com>
  <aab40d90-3f72-657c-5e14-e53a34c4b420@linaro.org>
  <3d03d1a2-ac06-b69b-93cb-e0203be62c10@collabora.com>
@@ -16,12 +16,12 @@ References: <20200629122925.21729-1-andrzej.p@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5a28deb7-f307-8b03-faad-ab05cb8095d1-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <5a28deb7-f307-8b03-faad-ab05cb8095d1@collabora.com>
 Content-Language: en-US
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vishal Kulkarni <vishal-ut6Up61K2wZBDgjK7y7TUQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ido Schimmel <idosch-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Johannes Berg <johannes.berg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Emmanuel Grumbach <emmanuel.grumbach-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Luca Coelho <luciano.coelho-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Intel Linux Wireless <linuxwifi-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Kaestle <peter-p08lbbvQ7EI@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Miquel Raynal <miquel.raynal-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Amit Kucheria <amit.kucheria-LY4KaoCqKrnby3iVrkZq2A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Luca Coelho <luciano.coelho@intel.com>, Intel Linux Wireless <linuxwifi@intel.com>, Kalle Valo <kvalo@codeaurora.org>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Sebastian Reichel <sre@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Support Opensource <support.opensource@diasemi.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
 On 02/07/2020 15:53, Andrzej Pietrasiewicz wrote:
@@ -44,13 +44,102 @@ On 02/07/2020 15:53, Andrzej Pietrasiewicz wrote:
 > 
 > That would be very kind of you, thank you!
 
-Author: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Date:   Mon Jun 29 14:29:21 2020 +0200
+With the lock correctness option enabled:
 
-    thermal: Use mode helpers in drivers
-
-    Use thermal_zone_device_{en|dis}able() and
-thermal_zone_device_is_enabled().
+[    4.179223] imx_thermal tempmon: Extended Commercial CPU temperature
+grade - max:105C critical:100C passive:95C
+[    4.189557]
+[    4.191060] ============================================
+[    4.196378] WARNING: possible recursive locking detected
+[    4.201699] 5.8.0-rc3-00011-gf5e50bf4d3ef #42 Not tainted
+[    4.207102] --------------------------------------------
+[    4.212421] kworker/0:3/54 is trying to acquire lock:
+[    4.217480] ca09a3e4 (&tz->lock){+.+.}-{3:3}, at:
+thermal_zone_device_is_enabled+0x18/0x34
+[    4.225777]
+[    4.225777] but task is already holding lock:
+[    4.231615] ca09a3e4 (&tz->lock){+.+.}-{3:3}, at:
+thermal_zone_get_temp+0x38/0x6c
+[    4.239121]
+[    4.239121] other info that might help us debug this:
+[    4.245655]  Possible unsafe locking scenario:
+[    4.245655]
+[    4.251579]        CPU0
+[    4.254031]        ----
+[    4.256481]   lock(&tz->lock);
+[    4.259544]   lock(&tz->lock);
+[    4.262608]
+[    4.262608]  *** DEADLOCK ***
+[    4.262608]
+[    4.268533]  May be due to missing lock nesting notation
+[    4.268533]
+[    4.275329] 4 locks held by kworker/0:3/54:
+[    4.279517]  #0: cb0066a8 ((wq_completion)events){+.+.}-{0:0}, at:
+process_one_work+0x224/0x808
+[    4.288241]  #1: ca075f10 (deferred_probe_work){+.+.}-{0:0}, at:
+process_one_work+0x224/0x808
+[    4.296787]  #2: cb1a48d8 (&dev->mutex){....}-{3:3}, at:
+__device_attach+0x30/0x140
+[    4.304468]  #3: ca09a3e4 (&tz->lock){+.+.}-{3:3}, at:
+thermal_zone_get_temp+0x38/0x6c
+[    4.312408]
+[    4.312408] stack backtrace:
+[    4.316778] CPU: 0 PID: 54 Comm: kworker/0:3 Not tainted
+5.8.0-rc3-00011-gf5e50bf4d3ef #42
+[    4.325048] Hardware name: Freescale i.MX7 Dual (Device Tree)
+[    4.330809] Workqueue: events deferred_probe_work_func
+[    4.335973] [<c0312384>] (unwind_backtrace) from [<c030c580>]
+(show_stack+0x10/0x14)
+[    4.343734] [<c030c580>] (show_stack) from [<c079d7d8>]
+(dump_stack+0xe8/0x114)
+[    4.351062] [<c079d7d8>] (dump_stack) from [<c03abf78>]
+(__lock_acquire+0xbfc/0x2cb4)
+[    4.358909] [<c03abf78>] (__lock_acquire) from [<c03ae9c4>]
+(lock_acquire+0xf4/0x4e4)
+[    4.366758] [<c03ae9c4>] (lock_acquire) from [<c10630fc>]
+(__mutex_lock+0xb0/0xaa8)
+[    4.374431] [<c10630fc>] (__mutex_lock) from [<c1063b10>]
+(mutex_lock_nested+0x1c/0x24)
+[    4.382452] [<c1063b10>] (mutex_lock_nested) from [<c0d932c0>]
+(thermal_zone_device_is_enabled+0x18/0x34)
+[    4.392036] [<c0d932c0>] (thermal_zone_device_is_enabled) from
+[<c0d9da90>] (imx_get_temp+0x30/0x208)
+[    4.401271] [<c0d9da90>] (imx_get_temp) from [<c0d97484>]
+(thermal_zone_get_temp+0x4c/0x6c)
+[    4.409640] [<c0d97484>] (thermal_zone_get_temp) from [<c0d93df0>]
+(thermal_zone_device_update+0x8c/0x258)
+[    4.419310] [<c0d93df0>] (thermal_zone_device_update) from
+[<c0d9401c>] (thermal_zone_device_set_mode+0x60/0x88)
+[    4.429500] [<c0d9401c>] (thermal_zone_device_set_mode) from
+[<c0d9e1d4>] (imx_thermal_probe+0x3e4/0x578)
+[    4.439082] [<c0d9e1d4>] (imx_thermal_probe) from [<c0a78388>]
+(platform_drv_probe+0x48/0x98)
+[    4.447622] [<c0a78388>] (platform_drv_probe) from [<c0a7603c>]
+(really_probe+0x218/0x348)
+[    4.455903] [<c0a7603c>] (really_probe) from [<c0a76278>]
+(driver_probe_device+0x5c/0xb4)
+[    4.464098] [<c0a76278>] (driver_probe_device) from [<c0a743bc>]
+(bus_for_each_drv+0x58/0xb8)
+[    4.472638] [<c0a743bc>] (bus_for_each_drv) from [<c0a75db0>]
+(__device_attach+0xd4/0x140)
+[    4.480919] [<c0a75db0>] (__device_attach) from [<c0a750b0>]
+(bus_probe_device+0x88/0x90)
+[    4.489112] [<c0a750b0>] (bus_probe_device) from [<c0a75564>]
+(deferred_probe_work_func+0x68/0x98)
+[    4.498088] [<c0a75564>] (deferred_probe_work_func) from [<c0369988>]
+(process_one_work+0x2e0/0x808)
+[    4.507237] [<c0369988>] (process_one_work) from [<c036a150>]
+(worker_thread+0x2a0/0x59c)
+[    4.515432] [<c036a150>] (worker_thread) from [<c0372208>]
+(kthread+0x16c/0x178)
+[    4.522843] [<c0372208>] (kthread) from [<c0300174>]
+(ret_from_fork+0x14/0x20)
+[    4.530074] Exception stack(0xca075fb0 to 0xca075ff8)
+[    4.535138] 5fa0:                                     00000000
+00000000 00000000 00000000
+[    4.543328] 5fc0: 00000000 00000000 00000000 00000000 00000000
+00000000 00000000 00000000
+[    4.551516] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
 
 
 
