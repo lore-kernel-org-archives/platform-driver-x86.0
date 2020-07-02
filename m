@@ -1,43 +1,119 @@
-From: Aaron Ma <aaron.ma@canonical.com>
-Subject: [PATCH] platform/x86: thinkpad_acpi: not loading brightness_init when _BCL invalid
-Date: Thu,  2 Jul 2020 16:55:20 +0800
-Message-ID: <20200702085520.16901-1-aaron.ma@canonical.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] platform/x86: thinkpad_acpi: lap or
+ desk mode interface
+Date: Thu, 2 Jul 2020 12:29:32 +0300
+Message-ID: <CAHp75VeO5SzYs=kRh+BV_vydO7PTPLkmu8aiYXvSJFTewSTYwA@mail.gmail.com>
+References: <markpearson@lenovo.com>
+ <20200629191748.3859-1-markpearson@lenovo.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: aaron.ma@canonical.com, mapengyu@gmail.com, ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20200629191748.3859-1-markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Cc: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thinkpad-acpi devel ML <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-When _BCL invalid, disable thinkpad_acpi backlight brightness control.
+On Mon, Jun 29, 2020 at 10:23 PM Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org> wrote:
 
-brightness_enable is already checked at the beginning,
-Always print notice when enabled brightness control.
+Thanks for the patch, my comments below.
 
-Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+>   Newer Lenovo Thinkpad platforms have support to identify whether the
+>   system is on-lap or not using an ACPI DYTC event from the firmware.
+>
+>   This patch provides the ability to retrieve the current mode via sysfs
+>   entrypoints and will be used by userspace for thermal mode and WWAN
+>   functionality
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index ff7f0a4f2475..a52d6d457d6c 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -6955,10 +6955,13 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
- 			pr_warn("Cannot enable backlight brightness support, ACPI is already handling it.  Refer to the acpi_backlight kernel parameter.\n");
- 			return 1;
- 		}
--	} else if (tp_features.bright_acpimode && brightness_enable > 1) {
--		pr_notice("Standard ACPI backlight interface not available, thinkpad_acpi native brightness control enabled\n");
-+	} else if (!tp_features.bright_acpimode) {
-+		pr_notice("thinkpad_acpi backlight interface not available\n");
-+		return 1;
- 	}
- 
-+	pr_notice("thinkpad_acpi native brightness control enabled\n");
-+
- 	/*
- 	 * Check for module parameter bogosity, note that we
- 	 * init brightness_mode to TPACPI_BRGHT_MODE_MAX in order to be
+Please use proper indentation (no need to have spaces) and punctuation
+(like period at the end of sentences).
+
+...
+
+>  drivers/platform/x86/thinkpad_acpi.c | 111 ++++++++++++++++++++++++++-
+>  1 file changed, 109 insertions(+), 2 deletions(-)
+
+You specifically added a new ABI, where is documentation? It's a show stopper.
+
+...
+
+> +       sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
+> +                       "dytc_lapmode");
+
+One line?
+
+...
+
+> +       int output;
+> +
+> +       output = dytc_command(DYTC_CMD_GET);
+
+> +       if ((output == -ENODEV) || (output == -EIO))
+> +               return output;
+
+Why not simple
+
+ if (output < 0)
+   return output;
+
+Btw, how will this survive the 31st bit (if some method would like to use it)?
+
+I think your prototype should be
+
+int foo(cmd, *output);
+
+...
+
+> +       new_state = dytc_lapmode_get();
+> +       if ((new_state == -ENODEV) || (new_state == -EIO) || (new_state == dytc_lapmode))
+> +               return;
+
+What about other errors?
+What about MSB being set?
+
+...
+
+> +       dytc_lapmode = dytc_lapmode_get();
+> +
+> +       if (dytc_lapmode < 0 && dytc_lapmode != -ENODEV)
+> +               return dytc_lapmode;
+
+> +       res = sysfs_create_group(&tpacpi_pdev->dev.kobj,
+> +                               &dytc_attr_group);
+> +
+> +       return res;
+
+return ...(...);
+
+So, we create a group for all possible error cases but ENODEV. Why?
+
+> +}
+
+...
+
+> +       sysfs_remove_group(&tpacpi_pdev->dev.kobj,
+> +                       &dytc_attr_group);
+
+One line?
+
+...
+
+> +static struct ibm_struct dytc_driver_data = {
+> +       .name = "dytc",
+> +       .exit = dytc_exit
+
+Comma is missed.
+
+> +};
+
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
