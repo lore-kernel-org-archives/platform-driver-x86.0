@@ -1,237 +1,215 @@
-From: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5] platform/x86: thinkpad_acpi: lap or
- desk mode interface
-Date: Thu, 2 Jul 2020 21:23:53 -0400
-Message-ID: <20200703012353.26413-1-markpearson@lenovo.com>
-References: <markpearson@lenovo.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH v7 00/11] Stop monitoring disabled devices
+Date: Fri, 03 Jul 2020 09:49:15 +0800
+Message-ID: <44c622dd7de8c7bf143c4435c0edd1b98d09a3d6.camel@intel.com>
+References: <20200629122925.21729-1-andrzej.p@collabora.com>
+         <aab40d90-3f72-657c-5e14-e53a34c4b420@linaro.org>
+         <3d03d1a2-ac06-b69b-93cb-e0203be62c10@collabora.com>
+         <47111821-d691-e71d-d740-e4325e290fa4@linaro.org>
+         <be9b7ee3-cad0-e462-126d-08de9b226285@collabora.com>
+         <4353a939-3f5e-8369-5bc0-ad8162b5ffc7@linaro.org>
+         <a531d80f-afd1-2dec-6c77-ed984e97595c@collabora.com>
+         <db1ff4e1-cbf8-89b3-5d64-b91a1fd88a41@linaro.org>
+         <73942aea-ae79-753c-fe90-d4a99423d548@collabora.com>
+         <374dddd9-b600-3a30-d6c3-8cfcefc944d9@linaro.org>
+         <5a28deb7-f307-8b03-faad-ab05cb8095d1@collabora.com>
+         <8aeb4f51-1813-63c1-165b-06640af5968f@linaro.org>
+         <685ef627-e377-bbf1-da11-7f7556ca2dd7@collabora.com>
+         <d41bf28f-ee91-6946-2334-f11ec81f96fe@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org
-Cc: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <d41bf28f-ee91-6946-2334-f11ec81f96fe@linaro.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Luca Coelho <luciano.coelho@intel.com>, Intel Linux Wireless <linuxwifi@intel.com>, Kalle Valo <kvalo@codeaurora.org>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Sebastian Reichel <sre@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Support Opensource <support.opensource@diasemi.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Newer Lenovo Thinkpad platforms have support to identify whether the
-system is on-lap or not using an ACPI DYTC event from the firmware.
+On Thu, 2020-07-02 at 19:49 +0200, Daniel Lezcano wrote:
+> On 02/07/2020 19:19, Andrzej Pietrasiewicz wrote:
+> > Hi,
+> > 
+> > W dniu 02.07.2020 o 19:01, Daniel Lezcano pisze:
+> > > On 02/07/2020 15:53, Andrzej Pietrasiewicz wrote:
+> > > > Hi Daniel,
+> > > > 
+> > > > <snip>
+> > > > 
+> > > > > > > > > 
+> > > > > > > > > I did reproduce:
+> > > > > > > > > 
+> > > > > > > > > v5.8-rc3 + series => imx6 hang at boot time
+> > > > > > > > > v5.8-rc3 => imx6 boots correctly
+> > > > > 
+> > > > > So finally I succeeded to reproduce it on my imx7 locally.
+> > > > > The sensor
+> > > > > was failing to initialize for another reason related to the
+> > > > > legacy
+> > > > > cooling device, this is why it is not appearing on the imx7.
+> > > > > 
+> > > > > I can now git-bisect :)
+> > > > > 
+> > > > 
+> > > > That would be very kind of you, thank you!
+> > > 
+> > > With the lock correctness option enabled:
+> > > 
+> > > [    4.179223] imx_thermal tempmon: Extended Commercial CPU
+> > > temperature
+> > > grade - max:105C critical:100C passive:95C
+> > > [    4.189557]
+> > > [    4.191060] ============================================
+> > > [    4.196378] WARNING: possible recursive locking detected
+> > > [    4.201699] 5.8.0-rc3-00011-gf5e50bf4d3ef #42 Not tainted
+> > > [    4.207102] --------------------------------------------
+> > > [    4.212421] kworker/0:3/54 is trying to acquire lock:
+> > > [    4.217480] ca09a3e4 (&tz->lock){+.+.}-{3:3}, at:
+> > > thermal_zone_device_is_enabled+0x18/0x34
+> > > [    4.225777]
+> > > [    4.225777] but task is already holding lock:
+> > > [    4.231615] ca09a3e4 (&tz->lock){+.+.}-{3:3}, at:
+> > > thermal_zone_get_temp+0x38/0x6c
+> > > [    4.239121]
+> > > [    4.239121] other info that might help us debug this:
+> > > [    4.245655]  Possible unsafe locking scenario:
+> > > [    4.245655]
+> > > [    4.251579]        CPU0
+> > > [    4.254031]        ----
+> > > [    4.256481]   lock(&tz->lock);
+> > > [    4.259544]   lock(&tz->lock);
+> > > [    4.262608]
+> > > [    4.262608]  *** DEADLOCK ***
+> > > [    4.262608]
+> > > [    4.268533]  May be due to missing lock nesting notation
+> > > [    4.268533]
+> > > [    4.275329] 4 locks held by kworker/0:3/54:
+> > > [    4.279517]  #0: cb0066a8 ((wq_completion)events){+.+.}-{0:0}, 
+> > > at:
+> > > process_one_work+0x224/0x808
+> > > [    4.288241]  #1: ca075f10 (deferred_probe_work){+.+.}-{0:0},
+> > > at:
+> > > process_one_work+0x224/0x808
+> > > [    4.296787]  #2: cb1a48d8 (&dev->mutex){....}-{3:3}, at:
+> > > __device_attach+0x30/0x140
+> > > [    4.304468]  #3: ca09a3e4 (&tz->lock){+.+.}-{3:3}, at:
+> > > thermal_zone_get_temp+0x38/0x6c
+> > > [    4.312408]
+> > > [    4.312408] stack backtrace:
+> > > [    4.316778] CPU: 0 PID: 54 Comm: kworker/0:3 Not tainted
+> > > 5.8.0-rc3-00011-gf5e50bf4d3ef #42
+> > > [    4.325048] Hardware name: Freescale i.MX7 Dual (Device Tree)
+> > > [    4.330809] Workqueue: events deferred_probe_work_func
+> > > [    4.335973] [<c0312384>] (unwind_backtrace) from [<c030c580>]
+> > > (show_stack+0x10/0x14)
+> > > [    4.343734] [<c030c580>] (show_stack) from [<c079d7d8>]
+> > > (dump_stack+0xe8/0x114)
+> > > [    4.351062] [<c079d7d8>] (dump_stack) from [<c03abf78>]
+> > > (__lock_acquire+0xbfc/0x2cb4)
+> > > [    4.358909] [<c03abf78>] (__lock_acquire) from [<c03ae9c4>]
+> > > (lock_acquire+0xf4/0x4e4)
+> > > [    4.366758] [<c03ae9c4>] (lock_acquire) from [<c10630fc>]
+> > > (__mutex_lock+0xb0/0xaa8)
+> > > [    4.374431] [<c10630fc>] (__mutex_lock) from [<c1063b10>]
+> > > (mutex_lock_nested+0x1c/0x24)
+> > > [    4.382452] [<c1063b10>] (mutex_lock_nested) from [<c0d932c0>]
+> > > (thermal_zone_device_is_enabled+0x18/0x34)
+> > > [    4.392036] [<c0d932c0>] (thermal_zone_device_is_enabled) from
+> > > [<c0d9da90>] (imx_get_temp+0x30/0x208)
+> > > [    4.401271] [<c0d9da90>] (imx_get_temp) from [<c0d97484>]
+> > > (thermal_zone_get_temp+0x4c/0x6c)
+> > > [    4.409640] [<c0d97484>] (thermal_zone_get_temp) from
+> > > [<c0d93df0>]
+> > > (thermal_zone_device_update+0x8c/0x258)
+> > > [    4.419310] [<c0d93df0>] (thermal_zone_device_update) from
+> > > [<c0d9401c>] (thermal_zone_device_set_mode+0x60/0x88)
+> > > [    4.429500] [<c0d9401c>] (thermal_zone_device_set_mode) from
+> > > [<c0d9e1d4>] (imx_thermal_probe+0x3e4/0x578)
+> > > [    4.439082] [<c0d9e1d4>] (imx_thermal_probe) from [<c0a78388>]
+> > > (platform_drv_probe+0x48/0x98)
+> > > [    4.447622] [<c0a78388>] (platform_drv_probe) from
+> > > [<c0a7603c>]
+> > > (really_probe+0x218/0x348)
+> > > [    4.455903] [<c0a7603c>] (really_probe) from [<c0a76278>]
+> > > (driver_probe_device+0x5c/0xb4)
+> > > [    4.464098] [<c0a76278>] (driver_probe_device) from
+> > > [<c0a743bc>]
+> > > (bus_for_each_drv+0x58/0xb8)
+> > > [    4.472638] [<c0a743bc>] (bus_for_each_drv) from [<c0a75db0>]
+> > > (__device_attach+0xd4/0x140)
+> > > [    4.480919] [<c0a75db0>] (__device_attach) from [<c0a750b0>]
+> > > (bus_probe_device+0x88/0x90)
+> > > [    4.489112] [<c0a750b0>] (bus_probe_device) from [<c0a75564>]
+> > > (deferred_probe_work_func+0x68/0x98)
+> > > [    4.498088] [<c0a75564>] (deferred_probe_work_func) from
+> > > [<c0369988>]
+> > > (process_one_work+0x2e0/0x808)
+> > > [    4.507237] [<c0369988>] (process_one_work) from [<c036a150>]
+> > > (worker_thread+0x2a0/0x59c)
+> > > [    4.515432] [<c036a150>] (worker_thread) from [<c0372208>]
+> > > (kthread+0x16c/0x178)
+> > > [    4.522843] [<c0372208>] (kthread) from [<c0300174>]
+> > > (ret_from_fork+0x14/0x20)
+> > > [    4.530074] Exception stack(0xca075fb0 to 0xca075ff8)
+> > > [    4.535138] 5fa0:                                     00000000
+> > > 00000000 00000000 00000000
+> > > [    4.543328] 5fc0: 00000000 00000000 00000000 00000000 00000000
+> > > 00000000 00000000 00000000
+> > > [    4.551516] 5fe0: 00000000 00000000 00000000 00000000 00000013
+> > > 00000000
+> > > 
+> > > 
+> > > 
+> > 
+> > Thanks!
+> > 
+> > That confirms your suspicions.
+> > 
+> > So the reason is that ->get_temp() is called while the mutex is
+> > held and
+> > thermal_zone_device_is_enabled() wants to take the same mutex.
+> 
+> Yes, that's correct.
+> 
+> > Is adding a comment to thermal_zone_device_is_enabled() to never
+> > call
+> > it while the mutex is held and adding another version of it which
+> > does
+> > not take the mutex ok?
+> 
+> The thermal_zone_device_is_enabled() is only used in two places, acpi
+> and this imx driver, and given:
+> 
+> 1. as soon as the mutex is released, there is no guarantee the
+> thermal
+> zone won't be changed right after, the lock is pointless, thus the
+> information also.
+> 
+> 2. from a design point of view, I don't see why a driver should know
+> if
+> a thermal zone is disabled or not
+> 
+> It would make sense to end with this function and do not give the
+> different drivers an opportunity to access this information.
 
-This patch provides the ability to retrieve the current mode via sysfs
-entrypoints and will be used by userspace for thermal mode and WWAN
-functionality
+I agree.
+> 
+> Why not add change_mode for the acpi in order to enable or disable
+> the
+> events
 
-Co-developed-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
----
-Changes in v5:
- - Updated with review changes from Andy Shevchenko
- - Added ABI information to thinkpad-acpi.rst
- - improved error handling and parameter passing as recommended
- - code cleanup as recommended
- - added review tag from bnocera
-Changes in v4:
- - Correct hotkey event comment as we're handling event
- - Remove unnecessary check in dytc_lapmode_refresh
-Changes in v3:
-- Fixed inaccurate comments
-- Used BIT macro to check lapmode bit setting as recommended and update
-  define name
-- Check for new_state == dytc_lapmode in dytc_lapmode_refresh
-Changes in v2:
-- cleaned up initialisation sequence to be cleaner and avoid spamming
-  platforms that don't have DYTC with warning message. Tested on P52
-- Adding platform-driver-x86 mailing list for review as requested
+thermal_zone_device_is_enabled() is invoked in acpi thermal driver
+because we only want to do thermal_zone_device_update() when the acpi
+thermal zone is enabled.
 
- .../admin-guide/laptops/thinkpad-acpi.rst     |  15 +++
- drivers/platform/x86/thinkpad_acpi.c          | 111 +++++++++++++++++-
- 2 files changed, 124 insertions(+), 2 deletions(-)
+As thermal_zone_device_update() can handle a disabled thermal zone now,
+we can just remove the check.
 
-diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-index 822907dcc845..99066aa8d97b 100644
---- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-+++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-@@ -50,6 +50,7 @@ detailed description):
- 	- WAN enable and disable
- 	- UWB enable and disable
- 	- LCD Shadow (PrivacyGuard) enable and disable
-+	- Lap mode sensor
- 
- A compatibility table by model and feature is maintained on the web
- site, http://ibm-acpi.sf.net/. I appreciate any success or failure
-@@ -1432,6 +1433,20 @@ The first command ensures the best viewing angle and the latter one turns
- on the feature, restricting the viewing angles.
- 
- 
-+DYTC Lapmode sensor
-+------------------
-+
-+sysfs: dytc_lapmode
-+
-+Newer thinkpads and mobile workstations have the ability to determine if
-+the device is in deskmode or lapmode. This feature is used by user space
-+to decide if WWAN transmission can be increased to maximum power and is
-+also useful for understanding the different thermal modes available as
-+they differ between desk and lap mode.
-+
-+The property is read-only. If the platform doesn't have support the sysfs
-+class is not created.
-+
- EXPERIMENTAL: UWB
- -----------------
- 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index ff7f0a4f2475..037eb77414f9 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -4022,8 +4022,8 @@ static bool hotkey_notify_6xxx(const u32 hkey,
- 		return true;
- 	case TP_HKEY_EV_THM_CSM_COMPLETED:
- 		pr_debug("EC reports: Thermal Control Command set completed (DYTC)\n");
--		/* recommended action: do nothing, we don't have
--		 * Lenovo ATM information */
-+		/* Thermal event - pass on to event handler */
-+		tpacpi_driver_event(hkey);
- 		return true;
- 	case TP_HKEY_EV_THM_TRANSFM_CHANGED:
- 		pr_debug("EC reports: Thermal Transformation changed (GMTS)\n");
-@@ -9795,6 +9795,105 @@ static struct ibm_struct lcdshadow_driver_data = {
- 	.write = lcdshadow_write,
- };
- 
-+/*************************************************************************
-+ * DYTC subdriver, for the Lenovo lapmode feature
-+ */
-+
-+#define DYTC_CMD_GET          2 /* To get current IC function and mode */
-+#define DYTC_GET_LAPMODE_BIT 17 /* Set when in lapmode */
-+
-+static bool dytc_lapmode;
-+
-+static void dytc_lapmode_notify_change(void)
-+{
-+	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL, "dytc_lapmode");
-+}
-+
-+static int dytc_command(int command, int *output)
-+{
-+	acpi_handle dytc_handle;
-+
-+	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DYTC", &dytc_handle))) {
-+		/* Platform doesn't support DYTC */
-+		return -ENODEV;
-+	}
-+	if (!acpi_evalf(dytc_handle, output, NULL, "dd", command))
-+		return -EIO;
-+	return 0;
-+}
-+
-+static int dytc_lapmode_get(bool *state)
-+{
-+	int output, err;
-+
-+	err = dytc_command(DYTC_CMD_GET, &output);
-+	if (err)
-+		return err;
-+	*state = output & BIT(DYTC_GET_LAPMODE_BIT) ? true : false;
-+	return 0;
-+}
-+
-+static void dytc_lapmode_refresh(void)
-+{
-+	bool new_state;
-+	int err;
-+
-+	err = dytc_lapmode_get(&new_state);
-+	if (err || (new_state == dytc_lapmode))
-+		return;
-+
-+	dytc_lapmode = new_state;
-+	dytc_lapmode_notify_change();
-+}
-+
-+/* sysfs lapmode entry */
-+static ssize_t dytc_lapmode_show(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	return snprintf(buf, PAGE_SIZE, "%d\n", dytc_lapmode);
-+}
-+
-+static DEVICE_ATTR_RO(dytc_lapmode);
-+
-+static struct attribute *dytc_attributes[] = {
-+	&dev_attr_dytc_lapmode.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group dytc_attr_group = {
-+	.attrs = dytc_attributes,
-+};
-+
-+static int tpacpi_dytc_init(struct ibm_init_struct *iibm)
-+{
-+	int err;
-+
-+	err = dytc_lapmode_get(&dytc_lapmode);
-+	/* If support isn't available (ENODEV) then don't return an error
-+	 * but just don't create the sysfs group
-+	 */
-+	if (err == -ENODEV)
-+		return 0;
-+	/* For all other errors we can flag the failure */
-+	if (err)
-+		return err;
-+
-+	/* Platform supports this feature - create the group */
-+	err = sysfs_create_group(&tpacpi_pdev->dev.kobj, &dytc_attr_group);
-+	return err;
-+}
-+
-+static void dytc_exit(void)
-+{
-+	sysfs_remove_group(&tpacpi_pdev->dev.kobj, &dytc_attr_group);
-+}
-+
-+static struct ibm_struct dytc_driver_data = {
-+	.name = "dytc",
-+	.exit = dytc_exit,
-+};
-+
- /****************************************************************************
-  ****************************************************************************
-  *
-@@ -9842,6 +9941,10 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
- 
- 		mutex_unlock(&kbdlight_mutex);
- 	}
-+
-+	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED)
-+		dytc_lapmode_refresh();
-+
- }
- 
- static void hotkey_driver_event(const unsigned int scancode)
-@@ -10280,6 +10383,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
- 		.init = tpacpi_lcdshadow_init,
- 		.data = &lcdshadow_driver_data,
- 	},
-+	{
-+		.init = tpacpi_dytc_init,
-+		.data = &dytc_driver_data,
-+	},
- };
- 
- static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
--- 
-2.26.2
+thanks,
+rui
+
+>  and for imx_thermal use irq_enabled flag instead of the thermal
+> zone mode? Moreover it is very unclear why this function is needed in
+> imx_get_temp(), and I suspect we should be able to get rid of it.
+> 
+> 
