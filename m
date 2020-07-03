@@ -1,85 +1,39 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v7 00/11] Stop monitoring disabled devices
-Date: Fri, 3 Jul 2020 08:38:48 +0200
-Message-ID: <58265668-fc6d-729a-c126-0c73c2ea853b@linaro.org>
-References: <20200629122925.21729-1-andrzej.p@collabora.com>
- <aab40d90-3f72-657c-5e14-e53a34c4b420@linaro.org>
- <3d03d1a2-ac06-b69b-93cb-e0203be62c10@collabora.com>
- <47111821-d691-e71d-d740-e4325e290fa4@linaro.org>
- <be9b7ee3-cad0-e462-126d-08de9b226285@collabora.com>
- <4353a939-3f5e-8369-5bc0-ad8162b5ffc7@linaro.org>
- <a531d80f-afd1-2dec-6c77-ed984e97595c@collabora.com>
- <db1ff4e1-cbf8-89b3-5d64-b91a1fd88a41@linaro.org>
- <73942aea-ae79-753c-fe90-d4a99423d548@collabora.com>
- <374dddd9-b600-3a30-d6c3-8cfcefc944d9@linaro.org>
- <5a28deb7-f307-8b03-faad-ab05cb8095d1@collabora.com>
- <8aeb4f51-1813-63c1-165b-06640af5968f@linaro.org>
- <685ef627-e377-bbf1-da11-7f7556ca2dd7@collabora.com>
- <d41bf28f-ee91-6946-2334-f11ec81f96fe@linaro.org>
- <44c622dd7de8c7bf143c4435c0edd1b98d09a3d6.camel@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <44c622dd7de8c7bf143c4435c0edd1b98d09a3d6.camel@intel.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Andrzej Pietrasiewicz <andrzej.p@collabora.com>, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>, "David S . Miller" <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>, Johannes Berg <johannes.berg@intel.com>, Emmanuel Grumbach <emmanuel.grumbach@intel.com>, Luca Coelho <luciano.coelho@intel.com>, Intel Linux Wireless <linuxwifi@intel.com>, Kalle Valo <kvalo@codeaurora.org>, Peter Kaestle <peter@piie.net>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Sebastian Reichel <sre@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Amit Kucheria <amit.kucheria@verdurent.com>, Support Opensource <support.opensource@diasemi.com>, Shawn Guo <shawnguo@kernel.org>
+From: Andrzej Pietrasiewicz <andrzej.p-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH 0/3] Fixes for stop monitoring disabled devices series
+Date: Fri,  3 Jul 2020 12:43:51 +0200
+Message-ID: <20200703104354.19657-1-andrzej.p@collabora.com>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vishal Kulkarni <vishal-ut6Up61K2wZBDgjK7y7TUQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ido Schimmel <idosch-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Johannes Berg <johannes.berg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Emmanuel Grumbach <emmanuel.grumbach-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Luca Coelho <luciano.coelho-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Intel Linux Wireless <linuxwifi-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Kaestle <peter-p08lbbvQ7EI@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Miquel Raynal <miquel.raynal-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-LY4KaoCqKrnby3iVrkZq2A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 03/07/2020 03:49, Zhang Rui wrote:
-> On Thu, 2020-07-02 at 19:49 +0200, Daniel Lezcano wrote:
+This short series contains fixes for "Stop monitoring disabled devices"
+series https://www.spinics.net/lists/arm-kernel/msg817861.html
 
-[ ... ]
+Invocation of thermal_zone_device_is_enabled() in acpi/thermal is now
+redundant, because thermal_zone_device_update() now is capable of
+handling disabled devices.
 
->>> So the reason is that ->get_temp() is called while the mutex is
->>> held and
->>> thermal_zone_device_is_enabled() wants to take the same mutex.
->>
->> Yes, that's correct.
->>
->>> Is adding a comment to thermal_zone_device_is_enabled() to never
->>> call
->>> it while the mutex is held and adding another version of it which
->>> does
->>> not take the mutex ok?
->>
->> The thermal_zone_device_is_enabled() is only used in two places, acpi
->> and this imx driver, and given:
->>
->> 1. as soon as the mutex is released, there is no guarantee the
->> thermal
->> zone won't be changed right after, the lock is pointless, thus the
->> information also.
->>
->> 2. from a design point of view, I don't see why a driver should know
->> if
->> a thermal zone is disabled or not
->>
->> It would make sense to end with this function and do not give the
->> different drivers an opportunity to access this information.
-> 
-> I agree.
->>
->> Why not add change_mode for the acpi in order to enable or disable
->> the
->> events
-> 
-> thermal_zone_device_is_enabled() is invoked in acpi thermal driver
-> because we only want to do thermal_zone_device_update() when the acpi
-> thermal zone is enabled.
-> 
-> As thermal_zone_device_update() can handle a disabled thermal zone now,
-> we can just remove the check.
+In imx's ->get_temp() the lock must not be taken, otherwise a deadlock
+happens. The decision whether explicitly running a measurement cycle
+is needed is taken based on driver's local irq_enabled variable.
 
-Ah yes, good point!
+Finally, thermal_zone_device_is_enabled() is made available to the
+core only, as there are no driver users of it.
 
+Andrzej Pietrasiewicz (3):
+  acpi: thermal: Don't call thermal_zone_device_is_enabled()
+  thermal: imx: Use driver's local data to decide whether to run a
+    measurement
+  thermal: Make thermal_zone_device_is_enabled() available to core only
 
+ drivers/acpi/thermal.c         | 3 ---
+ drivers/thermal/imx_thermal.c  | 7 ++++---
+ drivers/thermal/thermal_core.c | 1 -
+ drivers/thermal/thermal_core.h | 2 ++
+ include/linux/thermal.h        | 5 -----
+ 5 files changed, 6 insertions(+), 12 deletions(-)
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.17.1
