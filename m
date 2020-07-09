@@ -1,13 +1,13 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH platform-next v1 1/8] platform/mellanox: mlxreg-hotplug:
- Use capability register for attribute creation
-Date: Thu, 9 Jul 2020 19:06:13 +0300
-Message-ID: <CAHp75VfFdf=ZxuURpVR6LRaDm+x4VQsPgR6FLrcZPhLMn8MOpw@mail.gmail.com>
-References: <20200601091851.5491-1-vadimp@mellanox.com> <20200601091851.5491-2-vadimp@mellanox.com>
+Subject: Re: [PATCH platform-next v1 2/8] platform/mellanox: mlxreg-hotplug:
+ Add environmental data to uevent
+Date: Thu, 9 Jul 2020 19:32:17 +0300
+Message-ID: <CAHp75VfXPxoQjeOTMRmO=Yf3YSsGJh2xRRSm9U7wTpRx9N8Bgw@mail.gmail.com>
+References: <20200601091851.5491-1-vadimp@mellanox.com> <20200601091851.5491-3-vadimp@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200601091851.5491-2-vadimp@mellanox.com>
+In-Reply-To: <20200601091851.5491-3-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vadim Pasternak <vadimp@mellanox.com>
 Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
@@ -15,39 +15,56 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 On Mon, Jun 1, 2020 at 12:19 PM Vadim Pasternak <vadimp@mellanox.com> wrote:
 >
-> Create the 'sysfs' attributes according to configuration provided
-> through the capability register, which purpose is to indicate the
-> actual number of the components within the particular group.
-> Such components could be, for example the FAN or power supply units.
-> The motivation is to avoid adding a new code in the future in order to
-> distinct between the systems types supported different number of the
-
-supported -> supporting a
-
-> components like power supplies, FANs, ASICs, line cards.
+> Send "udev" event with environmental data in order to allow handling
+> "ENV{}" variables in "udev" rules.
 
 ...
 
->                 /* Go over all units within the item. */
-> -               for (j = 0; j < item->count; j++, data++, id++) {
-> +               for (j = 0, k = 0; j < item->count; j++, data++) {
-> +                       /* Skip if bit in mask is not set. */
-> +                       if (!(item->mask & BIT(j)))
-> +                               continue;
+> +static int
+> +mlxreg_hotplug_udev_event_send(struct kobject *kobj,
+> +                              struct mlxreg_core_data *data, bool action)
+> +{
+> +       char event_str[MLXREG_CORE_LABEL_MAX_SIZE + 2];
+> +       char label[MLXREG_CORE_LABEL_MAX_SIZE] = { 0 };
+> +       int i;
+> +
+> +       mlxreg_hotplug_udev_envp[0] = event_str;
 
-Instead of splitted comments and this code, perhaps
+> +       for (i = 0; data->label[i]; i++)
+> +               label[i] = toupper(data->label[i]);
 
-/* Go over all unmasked units within item */
-for_each_set_bit(j, &item->mask, item->count) {
+Sounds like a candidate to be in string_helpers.h
+
+#include <ctype.h>
 ...
+static inline void string_upper(char *dst, const char *src)
+{
+  do {
+    *dst++ = toupper(*src);
+  } while (*src++);
 }
 
-It might require a mask defined as unsigned long, though. Or temporary
-variables.
+// similar for tolower
+...
 
->                 }
-> +               num_attrs += k;
->         }
+There are plenty existing users that can benefit and I can imagine how
+many more will come.
+So, If you add the first patch in the series to bring this in, I will take it.
+
+> +       if (action)
+> +               snprintf(event_str, MLXREG_CORE_LABEL_MAX_SIZE, "%s=1", label);
+> +       else
+> +               snprintf(event_str, MLXREG_CORE_LABEL_MAX_SIZE, "%s=0", label);
+
+Wouldn't be easier to have
+
+..."%s=%d" ... !!action...
+
+?
+
+> +
+> +       return kobject_uevent_env(kobj, KOBJ_CHANGE, mlxreg_hotplug_udev_envp);
+> +}
 
 -- 
 With Best Regards,
