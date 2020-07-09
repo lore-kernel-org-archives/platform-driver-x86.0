@@ -1,13 +1,13 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH platform-next v1 2/8] platform/mellanox: mlxreg-hotplug:
- Add environmental data to uevent
-Date: Thu, 9 Jul 2020 19:32:17 +0300
-Message-ID: <CAHp75VfXPxoQjeOTMRmO=Yf3YSsGJh2xRRSm9U7wTpRx9N8Bgw@mail.gmail.com>
-References: <20200601091851.5491-1-vadimp@mellanox.com> <20200601091851.5491-3-vadimp@mellanox.com>
+Subject: Re: [PATCH platform-next v1 5/8] platform/mellanox: mlxreg-io: Add
+ support for complex attributes
+Date: Thu, 9 Jul 2020 19:37:44 +0300
+Message-ID: <CAHp75Vc+bK2RagNKr6abT=J9GrLwJ5bcj9Q5MhbGFo3Ho_VBDA@mail.gmail.com>
+References: <20200601091851.5491-1-vadimp@mellanox.com> <20200601091851.5491-6-vadimp@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200601091851.5491-3-vadimp@mellanox.com>
+In-Reply-To: <20200601091851.5491-6-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vadim Pasternak <vadimp@mellanox.com>
 Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
@@ -15,56 +15,68 @@ List-Id: platform-driver-x86.vger.kernel.org
 
 On Mon, Jun 1, 2020 at 12:19 PM Vadim Pasternak <vadimp@mellanox.com> wrote:
 >
-> Send "udev" event with environmental data in order to allow handling
-> "ENV{}" variables in "udev" rules.
+> Add support for attributes composed from few registers.
+> Such attributes could occupy from 2 to 4 sequential registers.
+> For word size register space complex attribute can occupy up to two
+
+attributes
+
+> register, for byte size - up to four. These attributes can carry, for
+
+registers
+
+> example, CPLD or FPGA versioning, power consuming info, etcetera.
+> Such registers contain read only data.
+
+read-only.
 
 ...
 
-> +static int
-> +mlxreg_hotplug_udev_event_send(struct kobject *kobj,
-> +                              struct mlxreg_core_data *data, bool action)
-> +{
-> +       char event_str[MLXREG_CORE_LABEL_MAX_SIZE + 2];
-> +       char label[MLXREG_CORE_LABEL_MAX_SIZE] = { 0 };
-> +       int i;
+> +        * There are four kinds of attributes: single bit, full register's
+> +        * bits, bit sequence, bits in few registers For the first kind field
+> +        * mask indicates which bits are not related and field bit is set zero.
+> +        * For the second kind field mask is set to zero and field bit is set
+> +        * with all bits one. No special handling for such kind of attributes -
+> +        * pass value as is. For the third kind, field mask indicates which
+
+the field
+
+> +        * bits are related and field bit is set to the first bit number (from
+
+the field
+
+> +        * 1 to 32) is the bit sequence. For the fourth kind - the number of
+> +        * registers which should be read for getting an attribute are specified
+> +        * through 'data->regnum' field.
+>          */
+
+...
+
+> +               /*
+> +                * Some attributes could occupied few registers in case regmap
+> +                * bit size is 8 or 16. Compose such attribute from 'regnum'
+
+attributes
+
+> +                * registers. Such attributes contain read only data.
+
+read-only
+
+> +                */
+> +               if (data->regnum > 1 && !rw_flag)
+
+This I didn't get. They contain read-only data and here you explicitly
+turn down rw_flag == false.
+Can you clarify this?
+
+> +                       return -EINVAL;
+> +               for (i = 1; i < data->regnum; i++) {
+> +                       ret = regmap_read(regmap, data->reg + i, &val);
+> +                       if (ret)
+> +                               goto access_error;
 > +
-> +       mlxreg_hotplug_udev_envp[0] = event_str;
-
-> +       for (i = 0; data->label[i]; i++)
-> +               label[i] = toupper(data->label[i]);
-
-Sounds like a candidate to be in string_helpers.h
-
-#include <ctype.h>
-...
-static inline void string_upper(char *dst, const char *src)
-{
-  do {
-    *dst++ = toupper(*src);
-  } while (*src++);
-}
-
-// similar for tolower
-...
-
-There are plenty existing users that can benefit and I can imagine how
-many more will come.
-So, If you add the first patch in the series to bring this in, I will take it.
-
-> +       if (action)
-> +               snprintf(event_str, MLXREG_CORE_LABEL_MAX_SIZE, "%s=1", label);
-> +       else
-> +               snprintf(event_str, MLXREG_CORE_LABEL_MAX_SIZE, "%s=0", label);
-
-Wouldn't be easier to have
-
-..."%s=%d" ... !!action...
-
-?
-
-> +
-> +       return kobject_uevent_env(kobj, KOBJ_CHANGE, mlxreg_hotplug_udev_envp);
-> +}
+> +                       *regval |= rol32(val, regsize * i);
+> +               }
 
 -- 
 With Best Regards,
