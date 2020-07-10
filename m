@@ -1,78 +1,240 @@
-From: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [External] Re: [PATCH v5] platform/x86:
- thinkpad_acpi: lap or desk mode interface
-Date: Fri, 10 Jul 2020 08:28:15 -0400
-Message-ID: <fbbaa036-2bd5-b1cc-862e-f006e9fbefde@lenovo.com>
-References: <markpearson@lenovo.com>
- <20200703012353.26413-1-markpearson@lenovo.com>
- <CAHp75Vcs15wGCzwW8Pq7AXyqQnvnopNdFP1nDE0nf+ZTz=9zFw@mail.gmail.com>
- <7c1698a6-ebd6-553d-a686-d9bd4e5a5e99@redhat.com>
- <CAHp75Ve-qOs8VosoxEaHH1EnK-r16Sx0ki3uj14yZJWyuwC88w@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] platform/x86: Add new intel_atomisp2_led driver
+Date: Fri, 10 Jul 2020 23:35:19 +0300
+Message-ID: <CAHp75Vf5dm0iErjK4sCA54kKJhLeNe4oAG3PrCJiJHFyrJZ_iQ@mail.gmail.com>
+References: <20200620123705.72625-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <CAHp75Ve-qOs8VosoxEaHH1EnK-r16Sx0ki3uj14yZJWyuwC88w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thinkpad-acpi devel ML <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200620123705.72625-1-hdegoede@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+On Sat, Jun 20, 2020 at 3:37 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Many Bay Trail and Cherry Trail devices come with a camera attached to
+> Intel's Image Signal Processor. Linux currently does not have a driver for
+> these, so they do not work as a camera.
+>
+> Some of these camera's have a status LED which is controlled through a GPIO
+> in some cases, e.g. on the Asus T100TA and Asus T200TA, there is a firmware
+> issue where the LED gets turned on at boot.
+>
+> This commit adds a Linux LED driver for the camera LED on these devices.
+> This driver will turn the LED off at boot and also allows controlling the
+> LED (so the user can repurpose it) through the sysfs LED interface.
+>
+> Which GPIO is attached to the LED is usually not described in the ACPI
+> tables, so this driver contains per-system info about the GPIO inside the
+> driver. This means that this driver only works on systems the driver knows
+> about.
+>
+
+Pushed to my review and testing queue, thanks!
+
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v2:
+> - Rebase on top of v5.8-rc1
+> - Use PTR_ERR_OR_ZERO
+> ---
+>  MAINTAINERS                               |   6 ++
+>  drivers/platform/x86/Kconfig              |  21 ++++
+>  drivers/platform/x86/Makefile             |   1 +
+>  drivers/platform/x86/intel_atomisp2_led.c | 116 ++++++++++++++++++++++
+>  4 files changed, 144 insertions(+)
+>  create mode 100644 drivers/platform/x86/intel_atomisp2_led.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 301330e02bca..5535761f2b54 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8600,6 +8600,12 @@ L:       platform-driver-x86@vger.kernel.org
+>  S:     Maintained
+>  F:     drivers/platform/x86/intel_atomisp2_pm.c
+>
+> +INTEL ATOMISP2 LED DRIVER
+> +M:     Hans de Goede <hdegoede@redhat.com>
+> +L:     platform-driver-x86@vger.kernel.org
+> +S:     Maintained
+> +F:     drivers/platform/x86/intel_atomisp2_led.c
+> +
+>  INTEL BROXTON PMC DRIVER
+>  M:     Mika Westerberg <mika.westerberg@linux.intel.com>
+>  M:     Zha Qipeng <qipeng.zha@intel.com>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 0581a54cf562..318e083f38b3 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -761,6 +761,27 @@ config INTEL_ATOMISP2_PM
+>           To compile this driver as a module, choose M here: the module
+>           will be called intel_atomisp2_pm.
+>
+> +config INTEL_ATOMISP2_LED
+> +       tristate "Intel AtomISP2 camera LED driver"
+> +       depends on GPIOLIB && LEDS_GPIO
+> +       help
+> +         Many Bay Trail and Cherry Trail devices come with a camera attached
+> +         to Intel's Image Signal Processor. Linux currently does not have a
+> +         driver for these, so they do not work as a camera. Some of these
+> +         camera's have a LED which is controlled through a GPIO.
+> +
+> +         Some of these devices have a firmware issue where the LED gets turned
+> +         on at boot. This driver will turn the LED off at boot and also allows
+> +         controlling the LED (repurposing it) through the sysfs LED interface.
+> +
+> +         Which GPIO is attached to the LED is usually not described in the
+> +         ACPI tables, so this driver contains per-system info about the GPIO
+> +         inside the driver, this means that this driver only works on systems
+> +         the driver knows about.
+> +
+> +         To compile this driver as a module, choose M here: the module
+> +         will be called intel_atomisp2_led.
+> +
+>  config INTEL_CHT_INT33FE
+>         tristate "Intel Cherry Trail ACPI INT33FE Driver"
+>         depends on X86 && ACPI && I2C && REGULATOR
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 2b85852a1a87..7a78cc0bb249 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -70,6 +70,7 @@ obj-$(CONFIG_THINKPAD_ACPI)   += thinkpad_acpi.o
+>
+>  # Intel
+>  obj-$(CONFIG_INTEL_ATOMISP2_PM)                += intel_atomisp2_pm.o
+> +obj-$(CONFIG_INTEL_ATOMISP2_LED)       += intel_atomisp2_led.o
+>  obj-$(CONFIG_INTEL_CHT_INT33FE)                += intel_cht_int33fe.o
+>  intel_cht_int33fe-objs                 := intel_cht_int33fe_common.o \
+>                                            intel_cht_int33fe_typec.o \
+> diff --git a/drivers/platform/x86/intel_atomisp2_led.c b/drivers/platform/x86/intel_atomisp2_led.c
+> new file mode 100644
+> index 000000000000..5935dfca166f
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_atomisp2_led.c
+> @@ -0,0 +1,116 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Driver for controlling LEDs for cameras connected to the Intel atomisp2
+> + * The main purpose of this driver is to turn off LEDs which are on at boot.
+> + *
+> + * Copyright (C) 2020 Hans de Goede <hdegoede@redhat.com>
+> + */
+> +
+> +#include <linux/dmi.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/machine.h>
+> +#include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/workqueue.h>
+> +
+> +/* This must be leds-gpio as the leds-gpio driver binds to the name */
+> +#define DEV_NAME               "leds-gpio"
+> +
+> +static const struct gpio_led atomisp2_leds[] = {
+> +       {
+> +               .name = "atomisp2::camera",
+> +               .default_state  = LEDS_GPIO_DEFSTATE_OFF,
+> +       },
+> +};
+> +
+> +static const struct gpio_led_platform_data atomisp2_leds_pdata = {
+> +       .num_leds       = ARRAY_SIZE(atomisp2_leds),
+> +       .leds           = atomisp2_leds,
+> +};
+> +
+> +static struct gpiod_lookup_table asus_t100ta_lookup = {
+> +       .dev_id = DEV_NAME,
+> +       .table = {
+> +               GPIO_LOOKUP_IDX("INT33FC:02", 8, NULL, 0, GPIO_ACTIVE_HIGH),
+> +               { }
+> +       }
+> +};
+> +
+> +static struct gpiod_lookup_table asus_t100chi_lookup = {
+> +       .dev_id = DEV_NAME,
+> +       .table = {
+> +               GPIO_LOOKUP_IDX("INT33FC:01", 24, NULL, 0, GPIO_ACTIVE_HIGH),
+> +               { }
+> +       }
+> +};
+> +
+> +static const struct dmi_system_id atomisp2_led_systems[] __initconst = {
+> +       {
+> +               .matches = {
+> +                       DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +                       DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
+> +               },
+> +               .driver_data = &asus_t100ta_lookup,
+> +       },
+> +       {
+> +               .matches = {
+> +                       DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +                       DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
+> +               },
+> +               .driver_data = &asus_t100ta_lookup,
+> +       },
+> +       {
+> +               .matches = {
+> +                       DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +                       DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100CHI"),
+> +               },
+> +               .driver_data = &asus_t100chi_lookup,
+> +       },
+> +       {} /* Terminating entry */
+> +};
+> +MODULE_DEVICE_TABLE(dmi, atomisp2_led_systems);
+> +
+> +static struct gpiod_lookup_table *gpio_lookup;
+> +static struct platform_device *pdev;
+> +
+> +static int __init atomisp2_led_init(void)
+> +{
+> +       const struct dmi_system_id *system;
+> +
+> +       system = dmi_first_match(atomisp2_led_systems);
+> +       if (!system)
+> +               return -ENODEV;
+> +
+> +       gpio_lookup = system->driver_data;
+> +       gpiod_add_lookup_table(gpio_lookup);
+> +
+> +       pdev = platform_device_register_resndata(NULL,
+> +                                                DEV_NAME, PLATFORM_DEVID_NONE,
+> +                                                NULL, 0, &atomisp2_leds_pdata,
+> +                                                sizeof(atomisp2_leds_pdata));
+> +       if (IS_ERR(pdev))
+> +               gpiod_remove_lookup_table(gpio_lookup);
+> +
+> +       return PTR_ERR_OR_ZERO(pdev);
+> +}
+> +
+> +static void __exit atomisp2_led_cleanup(void)
+> +{
+> +       platform_device_unregister(pdev);
+> +       gpiod_remove_lookup_table(gpio_lookup);
+> +}
+> +
+> +module_init(atomisp2_led_init);
+> +module_exit(atomisp2_led_cleanup);
+> +
+> +/*
+> + * The ACPI INIT method from Asus WMI's code on the T100TA and T200TA turns the
+> + * LED on (without the WMI interface allowing further control over the LED).
+> + * Ensure we are loaded after asus-nb-wmi so that we turn the LED off again.
+> + */
+> +MODULE_SOFTDEP("pre: asus_nb_wmi");
+> +MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com");
+> +MODULE_DESCRIPTION("Intel atomisp2 camera LED driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.26.2
+>
 
 
-On 7/10/2020 8:20 AM, Andy Shevchenko wrote:
-> On Fri, Jul 10, 2020 at 11:00 AM Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>
->> Hi,
->>
->> On 7/9/20 8:02 PM, Andy Shevchenko wrote:
->>> On Fri, Jul 3, 2020 at 4:24 AM Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org> wrote:
->>>>
->>>> Newer Lenovo Thinkpad platforms have support to identify whether the
->>>> system is on-lap or not using an ACPI DYTC event from the firmware.
->>>>
->>>> This patch provides the ability to retrieve the current mode via sysfs
->>>> entrypoints and will be used by userspace for thermal mode and WWAN
->>>> functionality
->>>
->>> Hans, do you think it's good to have custom ABI for this? I think you
->>> may be know better what types of ABI we already have for such thing.
->>
->> Actually, Mark asked me the same question before submitting his
->> patch upstream. I'm never a fan of custom ABI for this. But for now
->> the solution Lenovo has chosen to deal with thermal management
->> issues on modern hw is unique to Lenovo and we do not have anything
->> like this anywhere else.
->>
->> So for now I believe that a custom ABI is best.
->>
->> If we see this becoming a common feature on more platforms then we can
->> design a generic API for it once we have a better idea how this would
->> look like when implemented by others and then thinkpad_acpi can easily
->> add support for the new generic interface, while keeping its own
->> custom interface for backward compatibility.
-> 
-> Thank you very much for the elaborative comment, appreciated!
-> 
-Yes, thanks Hans from me too.
-
-Just to note, I'm very happy to work on or contribute to a generic 
-framework if that makes sense in the future. I'd likely need some help & 
-guidance on the best way to do it but if you see a need let me know.
-
-Andy - let me know if you need anything else for this patch. I have a 
-follow on patch for a similar sensor that I'll send up once this one is 
-approved - I figured we should learn from our mistakes on this one 
-before duplicating the errors.
-
-Thanks all for the support, reviews and guidance
-
-Mark
+-- 
+With Best Regards,
+Andy Shevchenko
