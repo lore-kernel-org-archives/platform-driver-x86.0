@@ -1,35 +1,46 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] ACPI / platform: Fix return value check in check_acpi_dev()
-Date: Thu, 9 Jul 2020 22:54:55 +0300
-Message-ID: <CAHp75Vci3KCT0J_E9S2odgTr0aDXcjRe=s=-rZGGzrbUV3N+5A@mail.gmail.com>
-References: <1591357094-39850-1-git-send-email-luwei32@huawei.com>
+From: Aaron Ma <aaron.ma@canonical.com>
+Subject: [v3][PATCH] platform/x86: thinkpad_acpi: not loading brightness_init when _BCL invalid
+Date: Fri, 10 Jul 2020 09:56:14 +0800
+Message-ID: <20200710015614.3854-1-aaron.ma@canonical.com>
+References: <20200702085520.16901-1-aaron.ma@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1591357094-39850-1-git-send-email-luwei32@huawei.com>
+In-Reply-To: <20200702085520.16901-1-aaron.ma@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lu Wei <luwei32@huawei.com>
-Cc: Alex Hung <alex.hung@canonical.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, AceLan Kao <acelan.kao@canonical.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: aaron.ma@canonical.com, mapengyu@gmail.com, ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jun 5, 2020 at 2:42 PM Lu Wei <luwei32@huawei.com> wrote:
->
-> In the function check_acpi_dev(), if it fails to create
-> platform device, the return value is ERR_PTR() or NULL. Thus it must
-> use IS_ERR_OR_NULL to check return value.
->
+When _BCL invalid, disable thinkpad_acpi backlight brightness control.
 
-Thanks!
+brightness_enable is already checked at the beginning.
+Most new thinkpads are using GPU driver to control brightness now,
+print notice when enabled brightness control even when brightness_enable = 1.
 
-> Fixes: ecc83e52b28c (intel-hid: new hid event driver for hotkeys)
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-This is not the correct format. Please, fix it in the next version, thanks!
-
->  drivers/platform/x86/intel-hid.c  | 2 +-
->  drivers/platform/x86/intel-vbtn.c | 2 +-
-
-Please, split per driver.
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index ff7f0a4f2475..2b36d5416a3b 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -6955,10 +6955,13 @@ static int __init brightness_init(struct ibm_init_struct *iibm)
+ 			pr_warn("Cannot enable backlight brightness support, ACPI is already handling it.  Refer to the acpi_backlight kernel parameter.\n");
+ 			return 1;
+ 		}
+-	} else if (tp_features.bright_acpimode && brightness_enable > 1) {
+-		pr_notice("Standard ACPI backlight interface not available, thinkpad_acpi native brightness control enabled\n");
++	} else if (!tp_features.bright_acpimode) {
++		pr_notice("ACPI backlight interface not available\n");
++		return 1;
+ 	}
+ 
++	pr_notice("ACPI native brightness control enabled\n");
++
+ 	/*
+ 	 * Check for module parameter bogosity, note that we
+ 	 * init brightness_mode to TPACPI_BRGHT_MODE_MAX in order to be
 -- 
-With Best Regards,
-Andy Shevchenko
+2.26.2
