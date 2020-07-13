@@ -1,12 +1,12 @@
 From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] platform/x86: Replace HTTP links with HTTPS ones
-Date: Mon, 13 Jul 2020 20:46:06 +0200
-Message-ID: <20200713184606.37033-1-grandmaster@al2klimov.de>
+Subject: [PATCH] platform/x86: acerhdf: Replace HTTP links with HTTPS ones
+Date: Mon, 13 Jul 2020 20:56:16 +0200
+Message-ID: <20200713185616.37104-1-grandmaster@al2klimov.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dvhart@infradead.org, andy@infradead.org, mika.westerberg@linux.intel.com, lee.jones@linaro.org, dmitry.torokhov@gmail.com, mchehab+huawei@kernel.org, ayman.bagabas@gmail.com, masahiroy@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: peter@piie.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: "Alexander A. Klimov" <grandmaster@al2klimov.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
@@ -48,58 +48,21 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- drivers/platform/x86/Kconfig      |  2 +-
- drivers/platform/x86/apple-gmux.c | 16 ++++++++--------
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ drivers/platform/x86/acerhdf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 0581a54cf562..1d96e07b2a02 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -140,7 +140,7 @@ config ACERHDF
- 	  in the same node directory will tell you if it is "acerhdf".
- 
- 	  For more information about this driver see
--	  <http://piie.net/files/acerhdf_README.txt>
-+	  <https://piie.net/files/acerhdf_README.txt>
- 
- 	  If you have an Acer Aspire One netbook, say Y or M
- 	  here.
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 7e3083deb1c5..9aae45a45200 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -277,8 +277,8 @@ static bool gmux_is_indexed(struct apple_gmux_data *gmux_data)
-  * MBP5 2008/09 uses a `TI LP8543`_ backlight driver. All newer models
-  * use a `TI LP8545`_.
+diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+index 4df7609b4aa9..a7a0b2e0ceb9 100644
+--- a/drivers/platform/x86/acerhdf.c
++++ b/drivers/platform/x86/acerhdf.c
+@@ -5,7 +5,7 @@
+  *           as soon as the upper/lower threshold is reached.
   *
-- * .. _TI LP8543: http://www.ti.com/lit/ds/symlink/lp8543.pdf
-- * .. _TI LP8545: http://www.ti.com/lit/ds/symlink/lp8545.pdf
-+ * .. _TI LP8543: https://www.ti.com/lit/ds/symlink/lp8543.pdf
-+ * .. _TI LP8545: https://www.ti.com/lit/ds/symlink/lp8545.pdf
-  */
- 
- static int gmux_get_brightness(struct backlight_device *bd)
-@@ -373,14 +373,14 @@ static const struct backlight_ops gmux_bl_ops = {
-  * switch the panel and the external DP connector and allocates a framebuffer
-  * for the selected GPU.
+  * (C) 2009 - Peter Kaestle     peter (a) piie.net
+- *                              http://piie.net
++ *                              https://piie.net
+  *     2009 Borislav Petkov	bp (a) alien8.de
   *
-- * .. _US 8,687,007 B2: http://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
-- * .. _NXP CBTL06141:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
-- * .. _NXP CBTL06142:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
-- * .. _TI HD3SS212:     http://www.ti.com/lit/ds/symlink/hd3ss212.pdf
-+ * .. _US 8,687,007 B2: https://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
-+ * .. _NXP CBTL06141:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
-+ * .. _NXP CBTL06142:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
-+ * .. _TI HD3SS212:     https://www.ti.com/lit/ds/symlink/hd3ss212.pdf
-  * .. _Pericom PI3VDP12412: https://www.pericom.com/assets/Datasheets/PI3VDP12412.pdf
-- * .. _TI SN74LV4066A:  http://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
-+ * .. _TI SN74LV4066A:  https://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
-  * .. _NXP CBTL03062:   http://pdf.datasheetarchive.com/indexerfiles/Datasheets-SW16/DSASW00308511.pdf
-- * .. _TI TS3DS10224:   http://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
-+ * .. _TI TS3DS10224:   https://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
-  */
- 
- static void gmux_read_switch_state(struct apple_gmux_data *gmux_data)
+  * Inspired by and many thanks to:
 -- 
 2.27.0
