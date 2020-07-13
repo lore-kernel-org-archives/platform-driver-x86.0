@@ -1,12 +1,12 @@
 From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] platform/x86: acerhdf: Replace HTTP links with HTTPS ones
-Date: Mon, 13 Jul 2020 20:56:16 +0200
-Message-ID: <20200713185616.37104-1-grandmaster@al2klimov.de>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Replace HTTP links with HTTPS ones
+Date: Mon, 13 Jul 2020 21:06:28 +0200
+Message-ID: <20200713190629.37242-1-grandmaster@al2klimov.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: peter@piie.net, dvhart@infradead.org, andy@infradead.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+To: ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: "Alexander A. Klimov" <grandmaster@al2klimov.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
@@ -48,21 +48,50 @@ Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
  Impossible is nothing! :)
 
 
- drivers/platform/x86/acerhdf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/thinkpad_acpi.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-index 4df7609b4aa9..a7a0b2e0ceb9 100644
---- a/drivers/platform/x86/acerhdf.c
-+++ b/drivers/platform/x86/acerhdf.c
-@@ -5,7 +5,7 @@
-  *           as soon as the upper/lower threshold is reached.
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index ff7f0a4f2475..24fc16eca550 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -7957,7 +7957,7 @@ static struct ibm_struct volume_driver_data = {
+  *	does so, its initial value is meaningless (0x07).
   *
-  * (C) 2009 - Peter Kaestle     peter (a) piie.net
-- *                              http://piie.net
-+ *                              https://piie.net
-  *     2009 Borislav Petkov	bp (a) alien8.de
+  *	For firmware bugs, refer to:
+- *	http://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
++ *	https://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
   *
-  * Inspired by and many thanks to:
+  * 	----
+  *
+@@ -7982,7 +7982,7 @@ static struct ibm_struct volume_driver_data = {
+  *	mode.
+  *
+  *	For firmware bugs, refer to:
+- *	http://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
++ *	https://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
+  *
+  *	----
+  *
+@@ -10094,7 +10094,7 @@ static int __must_check __init get_thinkpad_model_data(
+ 	 * X32 or newer, all Z series;  Some models must have an
+ 	 * up-to-date BIOS or they will not be detected.
+ 	 *
+-	 * See http://thinkwiki.org/wiki/List_of_DMI_IDs
++	 * See https://thinkwiki.org/wiki/List_of_DMI_IDs
+ 	 */
+ 	while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL, dev))) {
+ 		if (sscanf(dev->name,
+@@ -10613,8 +10613,8 @@ MODULE_DEVICE_TABLE(acpi, ibm_htk_device_ids);
+ /*
+  * DMI matching for module autoloading
+  *
+- * See http://thinkwiki.org/wiki/List_of_DMI_IDs
+- * See http://thinkwiki.org/wiki/BIOS_Upgrade_Downloads
++ * See https://thinkwiki.org/wiki/List_of_DMI_IDs
++ * See https://thinkwiki.org/wiki/BIOS_Upgrade_Downloads
+  *
+  * Only models listed in thinkwiki will be supported, so add yours
+  * if it is not there yet.
 -- 
 2.27.0
