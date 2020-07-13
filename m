@@ -1,94 +1,95 @@
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH] mlxbf-tmfifo: endian-ness wrappers for config access
-Date: Sun, 12 Jul 2020 10:55:03 -0400
-Message-ID: <20200712102743-mutt-send-email-mst@kernel.org>
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Subject: Re: [PATCH v4 0/3] platform/x86: dell-wmi: new keys
+Date: Mon, 13 Jul 2020 09:29:12 +0200
+Message-ID: <20200713072912.ibpojadruifdgnu2@pali>
+References: <cover.1591584631.git.y.linux@paritcher.com>
+ <cover.1591811549.git.y.linux@paritcher.com>
+ <7fb650f568b44eb78e37aa8a534a69d7@AUSX13MPC105.AMER.DELL.COM>
+ <CAHp75VdEtHfGavFBaC9Y2=bzX5pAeLqnssBE1owudRv9pKDAXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
+In-Reply-To: <CAHp75VdEtHfGavFBaC9Y2=bzX5pAeLqnssBE1owudRv9pKDAXw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, dwoods@mellanox.com, lsun@mellanox.com
-Cc: Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mario Limonciello <Mario.Limonciello@dell.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>, y.linux@paritcher.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hello!
-While working out some endian-ness issues with virtio,
-I noticed that the following driver:
+On Thursday 09 July 2020 22:29:42 Andy Shevchenko wrote:
+> On Wed, Jun 10, 2020 at 10:23 PM <Mario.Limonciello@dell.com> wrote:
+> >
+> > > -----Original Message-----
+> > > From: Y Paritcher <y.linux@paritcher.com>
+> > > Sent: Wednesday, June 10, 2020 12:57 PM
+> > > To: Pali Rohár
+> > > Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org;
+> > > Matthew Garrett; Limonciello, Mario
+> > > Subject: [PATCH v4 0/3] platform/x86: dell-wmi: new keys
+> > >
+> > >
+> > > [EXTERNAL EMAIL]
+> > >
+> > > change since v3:
+> > >     No code changes.
+> > >     Update commit message to reflect info given by Mario at dell.
+> > >
+> > > Is there anything more i have to do for the patches that were reviewed
+> > > or will they be picked up by the maintainers?
+> > > Thanks
+> > >
+> > > Y Paritcher (3):
+> > >   platform/x86: dell-wmi: add new backlight events
+> > >   platform/x86: dell-wmi: add new keymap type 0x0012
+> > >   platform/x86: dell-wmi: add new dmi mapping for keycode 0xffff
+> > >
+> > >  drivers/platform/x86/dell-wmi.c | 28 +++++++++++++++++++++++++---
+> > >  1 file changed, 25 insertions(+), 3 deletions(-)
+> > >
+> > > --
+> > > 2.27.0
+> >
+> > Andy,
+> >
+> > The whole series looks good to me now.  You can put this on the patches
+> > when they're swooped up.
+> >
+> > Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+> >
+> > However I would like to note there was a comment that you had a direct question
+> > asked by Pali that probably got lost in the thread.  This was on patch 3/3 on v3.
+> > I think it's worth answering as it could dictate a follow up patch to change behavior.
+> >
+> > The summary of my argument which led to his is nested somewhere in the thread was that
+> > to most users this isn't useful since they can't act on it.  IE they can't use something
+> > like setkeycodes and go on their merry way.  The user who could act on it by coming
+> > to upstream and submitting questions and patches is more technical and having them
+> > use dyndbg to turn on the messages about unknown shouldn't be a big deal.
+> >
+> > > I'm not sure, but I thought that
+> > > throwing warning or info message is the correct solution. Driver cannot
+> > > handle something, so it inform about it, instead of silently dropping
+> > > event. Same behavior I'm seeing in other kernel drivers.
+> >
+> > > But looks like that you and Mario have opposite opinion, that kernel
+> > > should not log unknown events and rather should drop them.
+> >
+> > > I would like to have behavior of dell-wmi same as in other drivers for
+> > > consistency, so the best would be to ask WMI/platform maintainers. They
+> > > could have opinion how to handle these problem globally.
+> >
+> > > ...
+> >
+> > > Darren & Andy, could you please say something to this, what do you think
+> > > about silently dropping events/actions which are currently unknown for
+> > > dell-wmi driver? It is better to log them or not? Currently we are
+> > > logging them.
+> >
+> > Can you please advise which way you would rather have the subsystem go?
+> 
+> Seems Pali is okay with this version, so everything is settled I suppose.
+> I will add it to my queue, thanks!
 
-drivers/platform/mellanox/mlxbf-tmfifo.c
-
-seems to access virtio net config directly.
-E.g.:
-
-                        if (ntohs(hdr.len) > config->mtu +
-                            MLXBF_TMFIFO_NET_L2_OVERHEAD)
-                                return;
-
-This is not incorrect in that the specific device is at the
-moment always legacy (no virtio 1).
-
-However this throws up sparse warnings as the structure
-is shared with modern devices which need the tagging for
-correct virtio 1 endian-ness.
-
-Using correct conversions will also allow virtio 1 support
-in this driver down the road.
-
-I'd like to merge the following patch. It's on top of
-a branch config-endian in my tree which includes
-the endian-ness tagging.
-
-Would appreciate acks from relevant maintainers.
-I also note that the console config field seems to be unused.
-Would appreciate a confirmation.
-Thanks!
-
---
-
-mlxbf-tmfifo: endian-ness wrappers for config access
-
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-
--->
-
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index 5739a9669b29..b1484206429f 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -608,6 +608,7 @@ static void mlxbf_tmfifo_rxtx_header(struct mlxbf_tmfifo_vring *vring,
- {
- 	struct mlxbf_tmfifo *fifo = vring->fifo;
- 	struct virtio_net_config *config;
-+	struct virtio_device *vdev;
- 	struct mlxbf_tmfifo_msg_hdr hdr;
- 	int vdev_id, hdr_len;
- 
-@@ -625,7 +626,8 @@ static void mlxbf_tmfifo_rxtx_header(struct mlxbf_tmfifo_vring *vring,
- 			vdev_id = VIRTIO_ID_NET;
- 			hdr_len = sizeof(struct virtio_net_hdr);
- 			config = &fifo->vdev[vdev_id]->config.net;
--			if (ntohs(hdr.len) > config->mtu +
-+			vdev = &fifo->vdev[vdev_id]->vdev;
-+			if (ntohs(hdr.len) > virtio16_to_cpu(vdev, config->mtu) +
- 			    MLXBF_TMFIFO_NET_L2_OVERHEAD)
- 				return;
- 		} else {
-@@ -1231,8 +1233,14 @@ static int mlxbf_tmfifo_probe(struct platform_device *pdev)
- 
- 	/* Create the network vdev. */
- 	memset(&net_config, 0, sizeof(net_config));
--	net_config.mtu = ETH_DATA_LEN;
--	net_config.status = VIRTIO_NET_S_LINK_UP;
-+
-+#defined MLXBF_TMFIFO_LITTLE_ENDIAN (virtio_legacy_is_little_endian() ||
-+			(MLXBF_TMFIFO_NET_FEATURES & (1ULL << VIRTIO_F_VERSION_1)))
-+
-+	net_config.mtu = __cpu_to_virtio16(MLXBF_TMFIFO_LITTLE_ENDIAN,
-+					   ETH_DATA_LEN);
-+	net_config.status = __cpu_to_virtio16(MLXBF_TMFIFO_LITTLE_ENDIAN,
-+					      VIRTIO_NET_S_LINK_UP);
- 	mlxbf_tmfifo_get_cfg_mac(net_config.mac);
- 	rc = mlxbf_tmfifo_create_vdev(dev, fifo, VIRTIO_ID_NET,
- 				      MLXBF_TMFIFO_NET_FEATURES, &net_config,
--- 
-MST
+Hello Andy! Yes, I'm fine with this patch series, but question how to
+handle these "unknown" events still remains.
