@@ -1,97 +1,118 @@
-From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Replace HTTP links with HTTPS ones
-Date: Mon, 13 Jul 2020 21:06:28 +0200
-Message-ID: <20200713190629.37242-1-grandmaster@al2klimov.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] platform/x86: Replace HTTP links with HTTPS ones
+Date: Mon, 13 Jul 2020 22:17:10 +0300
+Message-ID: <CAHp75Ve2pPGN3BtMw6x1xR5Cyv8VP=KMJMMJ9qao29ArrxPo9w@mail.gmail.com>
+References: <20200713184606.37033-1-grandmaster@al2klimov.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200713184606.37033-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Mon, Jul 13, 2020 at 9:46 PM Alexander A. Klimov
+<grandmaster@al2klimov.de> wrote:
+>
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
+Please split per driver basis.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+>
+>  If there are any URLs to be removed completely or at least not just HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+>
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+>
+>  If you apply the patch, please let me know.
+>
+>  Sorry again to all maintainers who complained about subject lines.
+>  Now I realized that you want an actually perfect prefixes,
+>  not just subsystem ones.
+>  I tried my best...
+>  And yes, *I could* (at least half-)automate it.
+>  Impossible is nothing! :)
+>
+>
+>  drivers/platform/x86/Kconfig      |  2 +-
+>  drivers/platform/x86/apple-gmux.c | 16 ++++++++--------
+>  2 files changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 0581a54cf562..1d96e07b2a02 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -140,7 +140,7 @@ config ACERHDF
+>           in the same node directory will tell you if it is "acerhdf".
+>
+>           For more information about this driver see
+> -         <http://piie.net/files/acerhdf_README.txt>
+> +         <https://piie.net/files/acerhdf_README.txt>
+>
+>           If you have an Acer Aspire One netbook, say Y or M
+>           here.
+> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+> index 7e3083deb1c5..9aae45a45200 100644
+> --- a/drivers/platform/x86/apple-gmux.c
+> +++ b/drivers/platform/x86/apple-gmux.c
+> @@ -277,8 +277,8 @@ static bool gmux_is_indexed(struct apple_gmux_data *gmux_data)
+>   * MBP5 2008/09 uses a `TI LP8543`_ backlight driver. All newer models
+>   * use a `TI LP8545`_.
+>   *
+> - * .. _TI LP8543: http://www.ti.com/lit/ds/symlink/lp8543.pdf
+> - * .. _TI LP8545: http://www.ti.com/lit/ds/symlink/lp8545.pdf
+> + * .. _TI LP8543: https://www.ti.com/lit/ds/symlink/lp8543.pdf
+> + * .. _TI LP8545: https://www.ti.com/lit/ds/symlink/lp8545.pdf
+>   */
+>
+>  static int gmux_get_brightness(struct backlight_device *bd)
+> @@ -373,14 +373,14 @@ static const struct backlight_ops gmux_bl_ops = {
+>   * switch the panel and the external DP connector and allocates a framebuffer
+>   * for the selected GPU.
+>   *
+> - * .. _US 8,687,007 B2: http://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
+> - * .. _NXP CBTL06141:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+> - * .. _NXP CBTL06142:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+> - * .. _TI HD3SS212:     http://www.ti.com/lit/ds/symlink/hd3ss212.pdf
+> + * .. _US 8,687,007 B2: https://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
+> + * .. _NXP CBTL06141:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+> + * .. _NXP CBTL06142:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+> + * .. _TI HD3SS212:     https://www.ti.com/lit/ds/symlink/hd3ss212.pdf
+>   * .. _Pericom PI3VDP12412: https://www.pericom.com/assets/Datasheets/PI3VDP12412.pdf
+> - * .. _TI SN74LV4066A:  http://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
+> + * .. _TI SN74LV4066A:  https://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
+>   * .. _NXP CBTL03062:   http://pdf.datasheetarchive.com/indexerfiles/Datasheets-SW16/DSASW00308511.pdf
+> - * .. _TI TS3DS10224:   http://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
+> + * .. _TI TS3DS10224:   https://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
+>   */
+>
+>  static void gmux_read_switch_state(struct apple_gmux_data *gmux_data)
+> --
+> 2.27.0
+>
 
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/platform/x86/thinkpad_acpi.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index ff7f0a4f2475..24fc16eca550 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -7957,7 +7957,7 @@ static struct ibm_struct volume_driver_data = {
-  *	does so, its initial value is meaningless (0x07).
-  *
-  *	For firmware bugs, refer to:
-- *	http://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
-+ *	https://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
-  *
-  * 	----
-  *
-@@ -7982,7 +7982,7 @@ static struct ibm_struct volume_driver_data = {
-  *	mode.
-  *
-  *	For firmware bugs, refer to:
-- *	http://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
-+ *	https://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
-  *
-  *	----
-  *
-@@ -10094,7 +10094,7 @@ static int __must_check __init get_thinkpad_model_data(
- 	 * X32 or newer, all Z series;  Some models must have an
- 	 * up-to-date BIOS or they will not be detected.
- 	 *
--	 * See http://thinkwiki.org/wiki/List_of_DMI_IDs
-+	 * See https://thinkwiki.org/wiki/List_of_DMI_IDs
- 	 */
- 	while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL, dev))) {
- 		if (sscanf(dev->name,
-@@ -10613,8 +10613,8 @@ MODULE_DEVICE_TABLE(acpi, ibm_htk_device_ids);
- /*
-  * DMI matching for module autoloading
-  *
-- * See http://thinkwiki.org/wiki/List_of_DMI_IDs
-- * See http://thinkwiki.org/wiki/BIOS_Upgrade_Downloads
-+ * See https://thinkwiki.org/wiki/List_of_DMI_IDs
-+ * See https://thinkwiki.org/wiki/BIOS_Upgrade_Downloads
-  *
-  * Only models listed in thinkwiki will be supported, so add yours
-  * if it is not there yet.
 -- 
-2.27.0
+With Best Regards,
+Andy Shevchenko
