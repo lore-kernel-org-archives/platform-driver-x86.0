@@ -1,55 +1,105 @@
-From: Florian Eckert <fe@dev.tdt.de>
-Subject: [PATCH 1/1] platform/x86: revert pcengines-apuv2 wire up simswitch gpio as led
-Date: Mon, 13 Jul 2020 10:50:10 +0200
-Message-ID: <20200713085010.26394-1-fe@dev.tdt.de>
+From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Subject: [PATCH] platform/x86: Replace HTTP links with HTTPS ones
+Date: Mon, 13 Jul 2020 20:46:06 +0200
+Message-ID: <20200713184606.37033-1-grandmaster@al2klimov.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: info@metux.net, vhart@infradead.org, andy@infradead.org, Eckert.Florian@googlemail.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Eckert <fe@dev.tdt.de>
+To: dvhart@infradead.org, andy@infradead.org, mika.westerberg@linux.intel.com, lee.jones@linaro.org, dmitry.torokhov@gmail.com, mchehab+huawei@kernel.org, ayman.bagabas@gmail.com, masahiroy@kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: "Alexander A. Klimov" <grandmaster@al2klimov.de>
 List-Id: platform-driver-x86.vger.kernel.org
 
-This reverts commit 5037d4ddda31c2dbbb018109655f61054b1756dc.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-Explanation why this does not work:
-This change connects the simswap to the LED subsystem of the kernel.
-From my point of view, it's nonsense. If we do it this way, then this
-can be switched relatively easily via the LED subsystem (trigger:
-none/default-on) and that is dangerous! If this is used, it would be
-unfavorable, since there is also another trigger (trigger:
-heartbeat/netdev).
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
 
-Therefore, this simswap GPIO should remain in the GPIO
-subsystem and be switched via it and not be connected to the LED
-subsystem. To avoid the problems mentioned above. The LED subsystem is
-not made for this and it is not a good compromise, but rather dangerous.
-
-Signed-off-by: Florian Eckert <fe@dev.tdt.de>
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 ---
- drivers/platform/x86/pcengines-apuv2.c | 3 ---
- 1 file changed, 3 deletions(-)
+ Continuing my work started at 93431e0607e5.
+ See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+ (Actually letting a shell for loop submit all this stuff for me.)
 
-diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-index 9b11ef1a401f..6aff6cf41414 100644
---- a/drivers/platform/x86/pcengines-apuv2.c
-+++ b/drivers/platform/x86/pcengines-apuv2.c
-@@ -78,7 +78,6 @@ static const struct gpio_led apu2_leds[] = {
- 	{ .name = "apu:green:1" },
- 	{ .name = "apu:green:2" },
- 	{ .name = "apu:green:3" },
--	{ .name = "apu:simswap" },
- };
+ If there are any URLs to be removed completely or at least not just HTTPSified:
+ Just clearly say so and I'll *undo my change*.
+ See also: https://lkml.org/lkml/2020/6/27/64
+
+ If there are any valid, but yet not changed URLs:
+ See: https://lkml.org/lkml/2020/6/26/837
+
+ If you apply the patch, please let me know.
+
+ Sorry again to all maintainers who complained about subject lines.
+ Now I realized that you want an actually perfect prefixes,
+ not just subsystem ones.
+ I tried my best...
+ And yes, *I could* (at least half-)automate it.
+ Impossible is nothing! :)
+
+
+ drivers/platform/x86/Kconfig      |  2 +-
+ drivers/platform/x86/apple-gmux.c | 16 ++++++++--------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0581a54cf562..1d96e07b2a02 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -140,7 +140,7 @@ config ACERHDF
+ 	  in the same node directory will tell you if it is "acerhdf".
  
- static const struct gpio_led_platform_data apu2_leds_pdata = {
-@@ -95,8 +94,6 @@ static struct gpiod_lookup_table gpios_led_table = {
- 				NULL, 1, GPIO_ACTIVE_LOW),
- 		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_LED3,
- 				NULL, 2, GPIO_ACTIVE_LOW),
--		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_SIMSWAP,
--				NULL, 3, GPIO_ACTIVE_LOW),
- 	}
- };
+ 	  For more information about this driver see
+-	  <http://piie.net/files/acerhdf_README.txt>
++	  <https://piie.net/files/acerhdf_README.txt>
  
+ 	  If you have an Acer Aspire One netbook, say Y or M
+ 	  here.
+diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+index 7e3083deb1c5..9aae45a45200 100644
+--- a/drivers/platform/x86/apple-gmux.c
++++ b/drivers/platform/x86/apple-gmux.c
+@@ -277,8 +277,8 @@ static bool gmux_is_indexed(struct apple_gmux_data *gmux_data)
+  * MBP5 2008/09 uses a `TI LP8543`_ backlight driver. All newer models
+  * use a `TI LP8545`_.
+  *
+- * .. _TI LP8543: http://www.ti.com/lit/ds/symlink/lp8543.pdf
+- * .. _TI LP8545: http://www.ti.com/lit/ds/symlink/lp8545.pdf
++ * .. _TI LP8543: https://www.ti.com/lit/ds/symlink/lp8543.pdf
++ * .. _TI LP8545: https://www.ti.com/lit/ds/symlink/lp8545.pdf
+  */
+ 
+ static int gmux_get_brightness(struct backlight_device *bd)
+@@ -373,14 +373,14 @@ static const struct backlight_ops gmux_bl_ops = {
+  * switch the panel and the external DP connector and allocates a framebuffer
+  * for the selected GPU.
+  *
+- * .. _US 8,687,007 B2: http://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
+- * .. _NXP CBTL06141:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+- * .. _NXP CBTL06142:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+- * .. _TI HD3SS212:     http://www.ti.com/lit/ds/symlink/hd3ss212.pdf
++ * .. _US 8,687,007 B2: https://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
++ * .. _NXP CBTL06141:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
++ * .. _NXP CBTL06142:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
++ * .. _TI HD3SS212:     https://www.ti.com/lit/ds/symlink/hd3ss212.pdf
+  * .. _Pericom PI3VDP12412: https://www.pericom.com/assets/Datasheets/PI3VDP12412.pdf
+- * .. _TI SN74LV4066A:  http://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
++ * .. _TI SN74LV4066A:  https://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
+  * .. _NXP CBTL03062:   http://pdf.datasheetarchive.com/indexerfiles/Datasheets-SW16/DSASW00308511.pdf
+- * .. _TI TS3DS10224:   http://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
++ * .. _TI TS3DS10224:   https://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
+  */
+ 
+ static void gmux_read_switch_state(struct apple_gmux_data *gmux_data)
 -- 
-2.20.1
+2.27.0
