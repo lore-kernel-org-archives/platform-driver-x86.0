@@ -1,51 +1,113 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v2 00/11] platform/x86: Add new features for Mellanox systems
-Date: Tue, 14 Jul 2020 15:01:52 +0300
-Message-ID: <20200714120203.10352-1-vadimp@mellanox.com>
+Subject: [PATCH platform-next v2 02/11] lib/test-string_helpers.c: Add string_upper() and string_lower() tests
+Date: Tue, 14 Jul 2020 15:01:54 +0300
+Message-ID: <20200714120203.10352-3-vadimp@mellanox.com>
+References: <20200714120203.10352-1-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200714120203.10352-1-vadimp@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: andy@infradead.org, dvhart@infradead.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-The patchset adds new features for the existing Mellanox systems.
+Add few of simple tests for string_upper() and string_lower() helpers.
 
-Patch #1 add string helpers for upper/lower conversion.
-Patch #2 add tests for these helpers.
-Patch #3 updates license for module 'mlxreg-hotplug'.
-Patch #4 allows to configure number of hotplug 'sysfs' attributes for
-		 the particular system class according to the hardware data for
-		 the specific system from this class, instead of configuring it
-		 up-to maximum number in the class.
-Patch #5 adds environmental data to hotplug 'uevent'.
-Patches #6-#7 add more definitions for system attributes.
-Patch #8 extends 'mlxreg-io' driver with complex attributes support.
-Patch #9 extends documentation with new attributes.
-Patches #10-#11 extend FAN platform data with register presence field.
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+---
+ lib/test-string_helpers.c | 67 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-Vadim Pasternak (11):
-  lib/string_helpers: Introduce string_upper() and string_lower()
-    helpers
-  lib/test-string_helpers.c: Add string_upper() and string_lower() tests
-  platform/mellanox: mlxreg-hotplug: Modify module license
-  platform/mellanox: mlxreg-hotplug: Use capability register for
-    attribute creation
-  platform/mellanox: mlxreg-hotplug: Add environmental data to uevent
-  platform_data/mlxreg: Add support for complex attributes
-  platform/x86: mlx-platform: Add more definitions for system attributes
-  platform/mellanox: mlxreg-io: Add support for complex attributes
-  Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
-  platform_data/mlxreg: Add presence register field for FAN devices
-  platform/x86: mlx-platform: Extend FAN platform data description
-
- Documentation/ABI/stable/sysfs-driver-mlxreg-io |  17 +++
- drivers/platform/mellanox/mlxreg-hotplug.c      | 114 ++++++++++---------
- drivers/platform/mellanox/mlxreg-io.c           |  45 ++++++--
- drivers/platform/x86/mlx-platform.c             | 141 ++++++++++++++++++++++++
- include/linux/platform_data/mlxreg.h            |   4 +
- include/linux/string_helpers.h                  |  15 +++
- lib/test-string_helpers.c                       |  67 +++++++++++
- 7 files changed, 341 insertions(+), 62 deletions(-)
-
+diff --git a/lib/test-string_helpers.c b/lib/test-string_helpers.c
+index 25b5cbfb7615..10360d4ea273 100644
+--- a/lib/test-string_helpers.c
++++ b/lib/test-string_helpers.c
+@@ -238,6 +238,28 @@ static const struct test_string_2 escape1[] __initconst = {{
+ 	/* terminator */
+ }};
+ 
++static const struct test_string strings_upper[] __initconst = {
++	{
++		.in = "abcdefgh1234567890test",
++		.out = "ABCDEFGH1234567890TEST",
++	},
++	{
++		.in = "abCdeFgH1234567890TesT",
++		.out = "ABCDEFGH1234567890TEST",
++	},
++};
++
++static const struct test_string strings_lower[] __initconst = {
++	{
++		.in = "ABCDEFGH1234567890TEST",
++		.out = "abcdefgh1234567890test",
++	},
++	{
++		.in = "abCdeFgH1234567890TesT",
++		.out = "abcdefgh1234567890test",
++	},
++};
++
+ static __init const char *test_string_find_match(const struct test_string_2 *s2,
+ 						 unsigned int flags)
+ {
+@@ -390,6 +412,48 @@ static __init void test_string_get_size(void)
+ 	test_string_get_size_one(4096, U64_MAX, "75.6 ZB", "64.0 ZiB");
+ }
+ 
++static void __init test_string_upper_lower(void)
++{
++	char *dst;
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(strings_upper); i++) {
++		const char *s = strings_upper[i].in;
++		int len = strlen(strings_upper[i].in) + 1;
++
++		dst = kmalloc(len, GFP_KERNEL);
++		if (!dst)
++			return;
++
++		string_upper(dst, s);
++		if (memcmp(dst, strings_upper[i].out, len)) {
++			pr_warn("Test 'string_upper' failed : expected %s, got %s!\n",
++				strings_upper[i].out, dst);
++			kfree(dst);
++			return;
++		}
++		kfree(dst);
++	}
++
++	for (i = 0; i < ARRAY_SIZE(strings_lower); i++) {
++		const char *s = strings_lower[i].in;
++		int len = strlen(strings_lower[i].in) + 1;
++
++		dst = kmalloc(len, GFP_KERNEL);
++		if (!dst)
++			return;
++
++		string_lower(dst, s);
++		if (memcmp(dst, strings_lower[i].out, len)) {
++			pr_warn("Test 'string_lower failed : : expected %s, got %s!\n",
++				strings_lower[i].out, dst);
++			kfree(dst);
++			return;
++		}
++		kfree(dst);
++	}
++}
++
+ static int __init test_string_helpers_init(void)
+ {
+ 	unsigned int i;
+@@ -411,6 +475,9 @@ static int __init test_string_helpers_init(void)
+ 	/* Test string_get_size() */
+ 	test_string_get_size();
+ 
++	/* Test string upper(), string_lower() */
++	test_string_upper_lower();
++
+ 	return -EINVAL;
+ }
+ module_init(test_string_helpers_init);
 -- 
 2.11.0
