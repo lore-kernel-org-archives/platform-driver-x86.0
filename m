@@ -1,90 +1,51 @@
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: [PATCH v2] mlxbf-tmfifo: use wrappers for config access
-Date: Tue, 14 Jul 2020 05:15:32 -0400
-Message-ID: <20200714091133.788853-1-mst@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 5.8 regression fix] platform/x86: thinkpad_acpi: Revert:
+ Use strndup_user() in dispatch_proc_write()
+Date: Tue, 14 Jul 2020 11:33:52 +0200
+Message-ID: <af1a7c41-071f-4c26-9a9a-7c6ffb5dde88@redhat.com>
+References: <20200714081510.6070-1-hdegoede@redhat.com>
+ <CAHp75Vd6uGNw5m3-Tc1tkABLT_Wi7CtW2yo8+B5TpYV4U8XE9A@mail.gmail.com>
+ <CAHp75Ve9HF4WVkiUA77s9LsN6d8oaFPRgjLi86FnDSHgmVvTNA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <CAHp75Ve9HF4WVkiUA77s9LsN6d8oaFPRgjLi86FnDSHgmVvTNA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, platform-driver-x86@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-mlxbf-tmfifo.c
+Hi,
 
-seems to access virtio net config directly.
-E.g.:
+On 7/14/20 10:27 AM, Andy Shevchenko wrote:
+> On Tue, Jul 14, 2020 at 11:21 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+>> On Tue, Jul 14, 2020 at 11:15 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>
+>>> Commit 35d13c7a0512 ("platform/x86: thinkpad_acpi: Use strndup_user()
+>>> in dispatch_proc_write()") cleaned up dispatch_proc_write() by replacing
+>>> the code to copy the passed in data from userspae with strndup_user().
+>>
+>> user space
 
-                        if (ntohs(hdr.len) > config->mtu +
-                            MLXBF_TMFIFO_NET_L2_OVERHEAD)
-                                return;
+Ack, do you want me to send a v2, or can you fix this up after applying.
 
-This is not incorrect in that the specific device is at the
-moment always legacy (no virtio 1).
+>>> But strndup_user() expects a 0 terminated input buffer and the buffer
+>>> passed to dispatch_proc_write() is NOT 0 terminated.
+> 
+> Second though, perhaps it's a simple wrong count parameter?
+> strndup_user(..., min(count, PAGE_SIZE)) or so would work?
 
-However this throws up sparse warnings as the structure
-is shared with modern devices which need the tagging for
-correct virtio 1 endian-ness.
+I honestly have not looked at a better fix and given that you've just come
+up with 2 suggestions which may or may not work, combined with
+where we are in the 5.8 cycle I believe it would be best to just
+play it safe and go with the revert for 5.8.
 
-Using correct conversions will also allow virtio 1 support
-in this driver down the road.
+If you then take a second attempt at cleaning this up for 5.9 and
+send it to me, I can test it for you.
 
-I'd like to merge the following patch. It's on top of
-a branch config-endian in my tree which includes
-the endian-ness tagging.
+Regards,
 
-Would appreciate acks on merging it through my tree from relevant maintainers.
-I also note that the console config field seems to be unused.
-Would appreciate a confirmation.
-Thanks!
-
----
-
-Changes from v1:
-	bugfixes
-
- drivers/platform/mellanox/mlxbf-tmfifo.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index 5739a9669b29..3a93081eee97 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -608,6 +608,7 @@ static void mlxbf_tmfifo_rxtx_header(struct mlxbf_tmfifo_vring *vring,
- {
- 	struct mlxbf_tmfifo *fifo = vring->fifo;
- 	struct virtio_net_config *config;
-+	struct virtio_device *vdev;
- 	struct mlxbf_tmfifo_msg_hdr hdr;
- 	int vdev_id, hdr_len;
- 
-@@ -625,7 +626,8 @@ static void mlxbf_tmfifo_rxtx_header(struct mlxbf_tmfifo_vring *vring,
- 			vdev_id = VIRTIO_ID_NET;
- 			hdr_len = sizeof(struct virtio_net_hdr);
- 			config = &fifo->vdev[vdev_id]->config.net;
--			if (ntohs(hdr.len) > config->mtu +
-+			vdev = &fifo->vdev[vdev_id]->vdev;
-+			if (ntohs(hdr.len) > virtio16_to_cpu(vdev, config->mtu) +
- 			    MLXBF_TMFIFO_NET_L2_OVERHEAD)
- 				return;
- 		} else {
-@@ -1231,8 +1233,14 @@ static int mlxbf_tmfifo_probe(struct platform_device *pdev)
- 
- 	/* Create the network vdev. */
- 	memset(&net_config, 0, sizeof(net_config));
--	net_config.mtu = ETH_DATA_LEN;
--	net_config.status = VIRTIO_NET_S_LINK_UP;
-+
-+#define MLXBF_TMFIFO_LITTLE_ENDIAN (virtio_legacy_is_little_endian() || \
-+			(MLXBF_TMFIFO_NET_FEATURES & (1ULL << VIRTIO_F_VERSION_1)))
-+
-+	net_config.mtu = __cpu_to_virtio16(MLXBF_TMFIFO_LITTLE_ENDIAN,
-+					   ETH_DATA_LEN);
-+	net_config.status = __cpu_to_virtio16(MLXBF_TMFIFO_LITTLE_ENDIAN,
-+					      VIRTIO_NET_S_LINK_UP);
- 	mlxbf_tmfifo_get_cfg_mac(net_config.mac);
- 	rc = mlxbf_tmfifo_create_vdev(dev, fifo, VIRTIO_ID_NET,
- 				      MLXBF_TMFIFO_NET_FEATURES, &net_config,
--- 
-MST
+Hans
