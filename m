@@ -1,7 +1,7 @@
 From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v2 01/11] lib/string_helpers: Introduce string_upper() and string_lower() helpers
-Date: Tue, 14 Jul 2020 15:01:53 +0300
-Message-ID: <20200714120203.10352-2-vadimp@mellanox.com>
+Subject: [PATCH platform-next v2 06/11] platform_data/mlxreg: Add support for complex attributes
+Date: Tue, 14 Jul 2020 15:01:58 +0300
+Message-ID: <20200714120203.10352-7-vadimp@mellanox.com>
 References: <20200714120203.10352-1-vadimp@mellanox.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200714120203.10352-1-vadimp@mellanox.com>
@@ -10,45 +10,33 @@ To: andy@infradead.org, dvhart@infradead.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Provide the helpers for string conversions to upper alnd lower cases.
+Add new field 'regnum' to the structure 'mlxreg_core_data' to specify
+the number of registers occupied by multi-register attribute.
 
 Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 ---
- include/linux/string_helpers.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ include/linux/platform_data/mlxreg.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/string_helpers.h b/include/linux/string_helpers.h
-index c28955132234..86f150c2a6b6 100644
---- a/include/linux/string_helpers.h
-+++ b/include/linux/string_helpers.h
-@@ -2,6 +2,7 @@
- #ifndef _LINUX_STRING_HELPERS_H_
- #define _LINUX_STRING_HELPERS_H_
+diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
+index b8da8aef2446..a2adc3ad45f2 100644
+--- a/include/linux/platform_data/mlxreg.h
++++ b/include/linux/platform_data/mlxreg.h
+@@ -80,6 +80,7 @@ struct mlxreg_hotplug_device {
+  * @hpdev - hotplug device data;
+  * @health_cntr: dynamic device health indication counter;
+  * @attached: true if device has been attached after good health indication;
++ * @regnum: number of registers occupied by multi-register attribute;
+  */
+ struct mlxreg_core_data {
+ 	char label[MLXREG_CORE_LABEL_MAX_SIZE];
+@@ -92,6 +93,7 @@ struct mlxreg_core_data {
+ 	struct mlxreg_hotplug_device hpdev;
+ 	u8 health_cntr;
+ 	bool attached;
++	u8 regnum;
+ };
  
-+#include <linux/ctype.h>
- #include <linux/types.h>
- 
- struct file;
-@@ -75,6 +76,20 @@ static inline int string_escape_str_any_np(const char *src, char *dst,
- 	return string_escape_str(src, dst, sz, ESCAPE_ANY_NP, only);
- }
- 
-+static inline void string_upper(char *dst, const char *src)
-+{
-+	do {
-+		*dst++ = toupper(*src);
-+	} while (*src++);
-+}
-+
-+static inline void string_lower(char *dst, const char *src)
-+{
-+	do {
-+		*dst++ = tolower(*src);
-+	} while (*src++);
-+}
-+
- char *kstrdup_quotable(const char *src, gfp_t gfp);
- char *kstrdup_quotable_cmdline(struct task_struct *task, gfp_t gfp);
- char *kstrdup_quotable_file(struct file *file, gfp_t gfp);
+ /**
 -- 
 2.11.0
