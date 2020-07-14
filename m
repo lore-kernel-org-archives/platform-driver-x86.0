@@ -1,123 +1,90 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH V3 3/3] platform/x86: Intel PMT Telemetry capability driver
-Date: Tue, 14 Jul 2020 11:51:20 +0300
-Message-ID: <CAHp75VeueLvou3SEtR=EcTi0x+0qpLz7_cvE2KBXHXa_crS8cA@mail.gmail.com>
-References: <20200508021844.6911-1-david.e.box@linux.intel.com> <20200714062323.19990-4-david.e.box@linux.intel.com>
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH v2] mlxbf-tmfifo: use wrappers for config access
+Date: Tue, 14 Jul 2020 05:15:32 -0400
+Message-ID: <20200714091133.788853-1-mst@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200714062323.19990-4-david.e.box@linux.intel.com>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Alexander Duyck <alexander.h.duyck@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jul 14, 2020 at 9:22 AM David E. Box
-<david.e.box@linux.intel.com> wrote:
->
-> PMT Telemetry is a capability of the Intel Platform Monitoring Technology.
-> The Telemetry capability provides access to device telemetry metrics that
-> provide hardware performance data to users from continuous, memory mapped,
-> read-only register spaces.
->
-> Register mappings are not provided by the driver. Instead, a GUID is read
-> from a header for each endpoint. The GUID identifies the device and is to
-> be used with an XML, provided by the vendor, to discover the available set
-> of metrics and their register mapping.  This allows firmware updates to
-> modify the register space without needing to update the driver every time
-> with new mappings. Firmware writes a new GUID in this case to specify the
-> new mapping.  Software tools with access to the associated XML file can
-> then interpret the changes.
->
-> This module manages access to all PMT Telemetry endpoints on a system,
-> independent of the device exporting them. It creates a pmt_telemetry class
-> to manage the devices. For each telemetry endpoint, sysfs files provide
-> GUID and size information as well as a pointer to the parent device the
-> telemetry came from. Software may discover the association between
-> endpoints and devices by iterating through the list in sysfs, or by looking
-> for the existence of the class folder under the device of interest.  A
-> device node of the same name allows software to then map the telemetry
-> space for direct access.
->
-> This patch also creates an pci device id list for early telemetry hardware
-> that requires workarounds for known issues.
+mlxbf-tmfifo.c
 
-Some more style issues, after addressing feel free to add
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+seems to access virtio net config directly.
+E.g.:
 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+                        if (ntohs(hdr.len) > config->mtu +
+                            MLXBF_TMFIFO_NET_L2_OVERHEAD)
+                                return;
 
-Since you are submitting this the order of the above SoB chain is a
-bit strange. I think something like
+This is not incorrect in that the specific device is at the
+moment always legacy (no virtio 1).
 
-SoB: Alexander
-Co-developed-by: Alexander
-SoB: David
+However this throws up sparse warnings as the structure
+is shared with modern devices which need the tagging for
+correct virtio 1 endian-ness.
 
-is expected (same for patch 2).
+Using correct conversions will also allow virtio 1 support
+in this driver down the road.
 
-...
+I'd like to merge the following patch. It's on top of
+a branch config-endian in my tree which includes
+the endian-ness tagging.
 
-> +Contact:       David Box <david.e.box@linux.intel.com>
-> +Description:
-> +               The telem<x> directory contains files describing an instance of
-> +               a PMT telemetry device that exposes hardware telemetry. Each
-> +               telem<x> directory has an associated /dev/telem<x> node. This
-> +               node may be opened and mapped to access the telemetry space of
-> +               the device. The register layout of the telemetry space is
-> +               determined from an XML file that matches the pci device id and
+Would appreciate acks on merging it through my tree from relevant maintainers.
+I also note that the console config field seems to be unused.
+Would appreciate a confirmation.
+Thanks!
 
-PCI
+---
 
-> +               guid for the device.
+Changes from v1:
+	bugfixes
 
-GUID
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-Same for all code where it appears.
-
-...
-
-> +       psize = (PFN_UP(entry->base_addr + entry->header.size) - pfn) *
-> +               PAGE_SIZE;
-
-I wouldn't mind having this on one line.
-
-...
-
-> +static ssize_t guid_show(struct device *dev, struct device_attribute *attr,
-> +                        char *buf)
-
-Ditto.
-
-...
-
-> +static ssize_t offset_show(struct device *dev, struct device_attribute *attr,
-> +                          char *buf)
-
-Ditto.
-
-...
-
-> +static bool pmt_telem_is_early_client_hw(struct device *dev)
-> +{
-
-> +       struct pci_dev *parent;
-> +
-> +       parent = to_pci_dev(dev->parent);
-
-Can be one line.
-
-> +       return !!pci_match_id(pmt_telem_early_client_pci_ids, parent);
-> +}
-
-...
-
-> +               entry->header_res = platform_get_resource(pdev, IORESOURCE_MEM,
-> +                                                         i);
-
-One line, please.
-
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index 5739a9669b29..3a93081eee97 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -608,6 +608,7 @@ static void mlxbf_tmfifo_rxtx_header(struct mlxbf_tmfifo_vring *vring,
+ {
+ 	struct mlxbf_tmfifo *fifo = vring->fifo;
+ 	struct virtio_net_config *config;
++	struct virtio_device *vdev;
+ 	struct mlxbf_tmfifo_msg_hdr hdr;
+ 	int vdev_id, hdr_len;
+ 
+@@ -625,7 +626,8 @@ static void mlxbf_tmfifo_rxtx_header(struct mlxbf_tmfifo_vring *vring,
+ 			vdev_id = VIRTIO_ID_NET;
+ 			hdr_len = sizeof(struct virtio_net_hdr);
+ 			config = &fifo->vdev[vdev_id]->config.net;
+-			if (ntohs(hdr.len) > config->mtu +
++			vdev = &fifo->vdev[vdev_id]->vdev;
++			if (ntohs(hdr.len) > virtio16_to_cpu(vdev, config->mtu) +
+ 			    MLXBF_TMFIFO_NET_L2_OVERHEAD)
+ 				return;
+ 		} else {
+@@ -1231,8 +1233,14 @@ static int mlxbf_tmfifo_probe(struct platform_device *pdev)
+ 
+ 	/* Create the network vdev. */
+ 	memset(&net_config, 0, sizeof(net_config));
+-	net_config.mtu = ETH_DATA_LEN;
+-	net_config.status = VIRTIO_NET_S_LINK_UP;
++
++#define MLXBF_TMFIFO_LITTLE_ENDIAN (virtio_legacy_is_little_endian() || \
++			(MLXBF_TMFIFO_NET_FEATURES & (1ULL << VIRTIO_F_VERSION_1)))
++
++	net_config.mtu = __cpu_to_virtio16(MLXBF_TMFIFO_LITTLE_ENDIAN,
++					   ETH_DATA_LEN);
++	net_config.status = __cpu_to_virtio16(MLXBF_TMFIFO_LITTLE_ENDIAN,
++					      VIRTIO_NET_S_LINK_UP);
+ 	mlxbf_tmfifo_get_cfg_mac(net_config.mac);
+ 	rc = mlxbf_tmfifo_create_vdev(dev, fifo, VIRTIO_ID_NET,
+ 				      MLXBF_TMFIFO_NET_FEATURES, &net_config,
 -- 
-With Best Regards,
-Andy Shevchenko
+MST
