@@ -1,48 +1,55 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v1] platform/x86: thinkpad_acpi: Limit size
- when call strndup_user()
-Date: Tue, 14 Jul 2020 13:42:50 +0300
-Message-ID: <20200714104250.87970-1-andriy.shevchenko@linux.intel.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 5.8 regression fix] platform/x86: thinkpad_acpi: Revert:
+ Use strndup_user() in dispatch_proc_write()
+Date: Tue, 14 Jul 2020 13:43:01 +0300
+Message-ID: <CAHp75Vc=ZAH4YeDF+o-89hJZCz2r2csRDcYjBVA30nzbyikFMg@mail.gmail.com>
+References: <20200714081510.6070-1-hdegoede@redhat.com> <CAHp75Vd6uGNw5m3-Tc1tkABLT_Wi7CtW2yo8+B5TpYV4U8XE9A@mail.gmail.com>
+ <CAHp75Ve9HF4WVkiUA77s9LsN6d8oaFPRgjLi86FnDSHgmVvTNA@mail.gmail.com> <af1a7c41-071f-4c26-9a9a-7c6ffb5dde88@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <af1a7c41-071f-4c26-9a9a-7c6ffb5dde88@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-During conversion to use strndup_user() the commit 35d13c7a0512
-("platform/x86: thinkpad_acpi: Use strndup_user() in dispatch_proc_write()")
-missed the fact that buffer coming thru procfs is not immediately NULL
-terminated. We have to limit size when calling strndup_user().
+On Tue, Jul 14, 2020 at 12:33 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 7/14/20 10:27 AM, Andy Shevchenko wrote:
+> > On Tue, Jul 14, 2020 at 11:21 AM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> >> On Tue, Jul 14, 2020 at 11:15 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> >>>
+> >>> Commit 35d13c7a0512 ("platform/x86: thinkpad_acpi: Use strndup_user()
+> >>> in dispatch_proc_write()") cleaned up dispatch_proc_write() by replacing
+> >>> the code to copy the passed in data from userspae with strndup_user().
+> >>
+> >> user space
+>
+> Ack, do you want me to send a v2, or can you fix this up after applying.
+>
+> >>> But strndup_user() expects a 0 terminated input buffer and the buffer
+> >>> passed to dispatch_proc_write() is NOT 0 terminated.
+> >
+> > Second though, perhaps it's a simple wrong count parameter?
+> > strndup_user(..., min(count, PAGE_SIZE)) or so would work?
+>
+> I honestly have not looked at a better fix and given that you've just come
+> up with 2 suggestions which may or may not work, combined with
+> where we are in the 5.8 cycle I believe it would be best to just
+> play it safe and go with the revert for 5.8.
+>
+> If you then take a second attempt at cleaning this up for 5.9 and
+> send it to me, I can test it for you.
 
-Fixes: 35d13c7a0512 ("platform/x86: thinkpad_acpi: Use strndup_user() in dispatch_proc_write()")
-Reported-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- drivers/platform/x86/thinkpad_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I guess there is no need to revert. I have looked at the documentation
+and see that all of the procfs parameters are normal strings, but you
+are right they are not NULL terminated per se. So, the problematic
+place is the size of data we retrieve from user space.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index f571d6254e7c..f411ad814cab 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -886,7 +886,7 @@ static ssize_t dispatch_proc_write(struct file *file,
- 	if (!ibm || !ibm->write)
- 		return -EINVAL;
- 
--	kernbuf = strndup_user(userbuf, PAGE_SIZE);
-+	kernbuf = strndup_user(userbuf, min_t(long, count, PAGE_SIZE));
- 	if (IS_ERR(kernbuf))
- 		return PTR_ERR(kernbuf);
- 
+I have sent a patch.
+
+
 -- 
-2.27.0
+With Best Regards,
+Andy Shevchenko
