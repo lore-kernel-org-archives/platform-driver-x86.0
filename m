@@ -1,64 +1,82 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH platform-next v2 00/11] platform/x86: Add new features for
- Mellanox systems
-Date: Wed, 15 Jul 2020 13:01:57 +0300
-Message-ID: <CAHp75VdthROggsKZ2e1-9P+_quL8GjMYqQMujf88anXteqxKQQ@mail.gmail.com>
-References: <20200714120203.10352-1-vadimp@mellanox.com>
+Subject: Re: [PATCH] platform/x86: apple-gmux: Replace HTTP links with HTTPS ones
+Date: Wed, 15 Jul 2020 13:02:29 +0300
+Message-ID: <CAHp75Vc+JuwwitN6KVVE9FcV_Go-qWYJ3fuo272sBh9-R=D_mQ@mail.gmail.com>
+References: <CAHp75Ve2pPGN3BtMw6x1xR5Cyv8VP=KMJMMJ9qao29ArrxPo9w@mail.gmail.com>
+ <20200714190721.47603-1-grandmaster@al2klimov.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200714120203.10352-1-vadimp@mellanox.com>
+In-Reply-To: <20200714190721.47603-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Tue, Jul 14, 2020 at 3:02 PM Vadim Pasternak <vadimp@mellanox.com> wrote:
+On Tue, Jul 14, 2020 at 10:07 PM Alexander A. Klimov
+<grandmaster@al2klimov.de> wrote:
 >
-> The patchset adds new features for the existing Mellanox systems.
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 >
-> Patch #1 add string helpers for upper/lower conversion.
-> Patch #2 add tests for these helpers.
-> Patch #3 updates license for module 'mlxreg-hotplug'.
-> Patch #4 allows to configure number of hotplug 'sysfs' attributes for
->                  the particular system class according to the hardware data for
->                  the specific system from this class, instead of configuring it
->                  up-to maximum number in the class.
-> Patch #5 adds environmental data to hotplug 'uevent'.
-> Patches #6-#7 add more definitions for system attributes.
-> Patch #8 extends 'mlxreg-io' driver with complex attributes support.
-> Patch #9 extends documentation with new attributes.
-> Patches #10-#11 extend FAN platform data with register presence field.
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
 >
 
 Pushed to my review and testing queue, thanks!
 
-> Vadim Pasternak (11):
->   lib/string_helpers: Introduce string_upper() and string_lower()
->     helpers
->   lib/test-string_helpers.c: Add string_upper() and string_lower() tests
->   platform/mellanox: mlxreg-hotplug: Modify module license
->   platform/mellanox: mlxreg-hotplug: Use capability register for
->     attribute creation
->   platform/mellanox: mlxreg-hotplug: Add environmental data to uevent
->   platform_data/mlxreg: Add support for complex attributes
->   platform/x86: mlx-platform: Add more definitions for system attributes
->   platform/mellanox: mlxreg-io: Add support for complex attributes
->   Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
->   platform_data/mlxreg: Add presence register field for FAN devices
->   platform/x86: mlx-platform: Extend FAN platform data description
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  drivers/platform/x86/apple-gmux.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 >
->  Documentation/ABI/stable/sysfs-driver-mlxreg-io |  17 +++
->  drivers/platform/mellanox/mlxreg-hotplug.c      | 114 ++++++++++---------
->  drivers/platform/mellanox/mlxreg-io.c           |  45 ++++++--
->  drivers/platform/x86/mlx-platform.c             | 141 ++++++++++++++++++++++++
->  include/linux/platform_data/mlxreg.h            |   4 +
->  include/linux/string_helpers.h                  |  15 +++
->  lib/test-string_helpers.c                       |  67 +++++++++++
->  7 files changed, 341 insertions(+), 62 deletions(-)
+> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
+> index 7e3083deb1c5..9aae45a45200 100644
+> --- a/drivers/platform/x86/apple-gmux.c
+> +++ b/drivers/platform/x86/apple-gmux.c
+> @@ -277,8 +277,8 @@ static bool gmux_is_indexed(struct apple_gmux_data *gmux_data)
+>   * MBP5 2008/09 uses a `TI LP8543`_ backlight driver. All newer models
+>   * use a `TI LP8545`_.
+>   *
+> - * .. _TI LP8543: http://www.ti.com/lit/ds/symlink/lp8543.pdf
+> - * .. _TI LP8545: http://www.ti.com/lit/ds/symlink/lp8545.pdf
+> + * .. _TI LP8543: https://www.ti.com/lit/ds/symlink/lp8543.pdf
+> + * .. _TI LP8545: https://www.ti.com/lit/ds/symlink/lp8545.pdf
+>   */
 >
+>  static int gmux_get_brightness(struct backlight_device *bd)
+> @@ -373,14 +373,14 @@ static const struct backlight_ops gmux_bl_ops = {
+>   * switch the panel and the external DP connector and allocates a framebuffer
+>   * for the selected GPU.
+>   *
+> - * .. _US 8,687,007 B2: http://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
+> - * .. _NXP CBTL06141:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+> - * .. _NXP CBTL06142:   http://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+> - * .. _TI HD3SS212:     http://www.ti.com/lit/ds/symlink/hd3ss212.pdf
+> + * .. _US 8,687,007 B2: https://pimg-fpiw.uspto.gov/fdd/07/870/086/0.pdf
+> + * .. _NXP CBTL06141:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+> + * .. _NXP CBTL06142:   https://www.nxp.com/documents/data_sheet/CBTL06141.pdf
+> + * .. _TI HD3SS212:     https://www.ti.com/lit/ds/symlink/hd3ss212.pdf
+>   * .. _Pericom PI3VDP12412: https://www.pericom.com/assets/Datasheets/PI3VDP12412.pdf
+> - * .. _TI SN74LV4066A:  http://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
+> + * .. _TI SN74LV4066A:  https://www.ti.com/lit/ds/symlink/sn74lv4066a.pdf
+>   * .. _NXP CBTL03062:   http://pdf.datasheetarchive.com/indexerfiles/Datasheets-SW16/DSASW00308511.pdf
+> - * .. _TI TS3DS10224:   http://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
+> + * .. _TI TS3DS10224:   https://www.ti.com/lit/ds/symlink/ts3ds10224.pdf
+>   */
+>
+>  static void gmux_read_switch_state(struct apple_gmux_data *gmux_data)
 > --
-> 2.11.0
+> 2.27.0
 >
 
 
