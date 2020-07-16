@@ -1,49 +1,44 @@
-From: "David E. Box" <david.e.box@linux.intel.com>
-Subject: Re: [PATCH V3 3/3] platform/x86: Intel PMT Telemetry capability
- driver
-Date: Wed, 15 Jul 2020 16:59:02 -0700
-Message-ID: <245ecc65a839bd69413045ae5ee307ba03ca0869.camel@linux.intel.com>
-References: <20200508021844.6911-1-david.e.box@linux.intel.com>
-         <20200714062323.19990-4-david.e.box@linux.intel.com>
-         <727a75a0-3fb5-769a-cf1f-70a2a0bab0c8@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
+From: Rajmohan Mani <rajmohan.mani@intel.com>
+Subject: [PATCH 0/2] Add Intel Input Output Manager driver
+Date: Wed, 15 Jul 2020 17:33:08 -0700
+Message-ID: <20200716003310.26125-1-rajmohan.mani@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <727a75a0-3fb5-769a-cf1f-70a2a0bab0c8@linux.intel.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexey Budankov <alexey.budankov@linux.intel.com>, lee.jones@linaro.org, dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com, alexander.h.duyck@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Jithu Joseph <jithu.joseph@intel.com>, =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
+Cc: pmalani@chromium.org, bleung@chromium.org, Rajmohan Mani <rajmohan.mani@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 2020-07-15 at 10:39 +0300, Alexey Budankov wrote:
-> Hi David,
-> 
-> On 14.07.2020 9:23, David E. Box wrote:
+Hi,
 
-...
+This patch series add support for Intel Input Output Manager (IOM)
+driver, which is leveraged by the Intel PMC USB mux control driver.
 
-> > 
-> > +static int pmt_telem_open(struct inode *inode, struct file *filp)
-> > +{
-> > +	struct pmt_telem_priv *priv;
-> > +	struct pmt_telem_entry *entry;
-> > +	struct pci_driver *pci_drv;
-> > +	struct pci_dev *pci_dev;
-> > +
-> > +	if (!capable(CAP_SYS_ADMIN))
-> 
-> Thanks for supplying these patches.
-> Are there any reasons not to expose this feature to CAP_PERFMON
-> privileged
-> processes too that currently have access to performance monitoring
-> features
-> of the kernel without root/CAP_SYS_ADMIN credentials? This could be
-> done by
-> pefmon_capable() function call starting from v5.8+.
+This patch series has a dependency on the following 4 patches, that
+are in Greg's usb-next branch.
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/tree/?h=usb-next
 
-The new capability is well suited for this feature. I'll make the
-change. Thanks.
+ffe82945d8eb usb: typec: intel_pmc_mux: Add support for USB4
+cab9219d2af4 usb: typec: intel_pmc_mux: Definitions for response status bits
+1a1be50b5ebd usb: typec: Add data structure for Enter_USB message
+6701911bb1c1 usb: typec: Combine the definitions for Accessory and USB modes
 
-David
+Heikki Krogerus (1):
+  usb: typec: intel_pmc_mux: Check the port status before connect
+
+Rajmohan Mani (1):
+  platform/x86: Add Intel Input Output Manager (IOM) driver
+
+ drivers/platform/x86/Kconfig                |  16 +++
+ drivers/platform/x86/Makefile               |   1 +
+ drivers/platform/x86/intel_iom.c            | 133 ++++++++++++++++++++
+ drivers/usb/typec/mux/Kconfig               |   1 +
+ drivers/usb/typec/mux/intel_pmc_mux.c       |  73 +++++++++--
+ include/linux/platform_data/x86/intel_iom.h |  62 +++++++++
+ 6 files changed, 276 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/platform/x86/intel_iom.c
+ create mode 100644 include/linux/platform_data/x86/intel_iom.h
+
+-- 
+2.20.1
