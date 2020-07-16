@@ -1,44 +1,286 @@
 From: Rajmohan Mani <rajmohan.mani@intel.com>
-Subject: [PATCH 0/2] Add Intel Input Output Manager driver
-Date: Wed, 15 Jul 2020 17:33:08 -0700
-Message-ID: <20200716003310.26125-1-rajmohan.mani@intel.com>
+Subject: [PATCH 1/2] platform/x86: Add Intel Input Output Manager (IOM) driver
+Date: Wed, 15 Jul 2020 17:33:09 -0700
+Message-ID: <20200716003310.26125-2-rajmohan.mani@intel.com>
+References: <20200716003310.26125-1-rajmohan.mani@intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200716003310.26125-1-rajmohan.mani@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Jithu Joseph <jithu.joseph@intel.com>, =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org
 Cc: pmalani@chromium.org, bleung@chromium.org, Rajmohan Mani <rajmohan.mani@intel.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
+Input Output Manager (IOM) is part of the Tiger Lake SoC that
+configures the Type-C Sub System (TCSS). IOM is a micro controller
+that handles Type-C topology, configuration and PM functions of
+various Type-C devices connected on the platform.
 
-This patch series add support for Intel Input Output Manager (IOM)
-driver, which is leveraged by the Intel PMC USB mux control driver.
+This driver helps read relevant information such as Type-C port
+status (whether a device is connected to a Type-C port or not) and
+the activity type on the Type-C ports (such as USB, Display Port,
+Thunderbolt), for consumption by other drivers.
 
-This patch series has a dependency on the following 4 patches, that
-are in Greg's usb-next branch.
-https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/tree/?h=usb-next
+Currently intel_iom_port_status() API is exported by this driver,
+that has information about the Type-C port status and port activity
+type.
 
-ffe82945d8eb usb: typec: intel_pmc_mux: Add support for USB4
-cab9219d2af4 usb: typec: intel_pmc_mux: Definitions for response status bits
-1a1be50b5ebd usb: typec: Add data structure for Enter_USB message
-6701911bb1c1 usb: typec: Combine the definitions for Accessory and USB modes
-
-Heikki Krogerus (1):
-  usb: typec: intel_pmc_mux: Check the port status before connect
-
-Rajmohan Mani (1):
-  platform/x86: Add Intel Input Output Manager (IOM) driver
-
+Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+---
  drivers/platform/x86/Kconfig                |  16 +++
  drivers/platform/x86/Makefile               |   1 +
  drivers/platform/x86/intel_iom.c            | 133 ++++++++++++++++++++
- drivers/usb/typec/mux/Kconfig               |   1 +
- drivers/usb/typec/mux/intel_pmc_mux.c       |  73 +++++++++--
  include/linux/platform_data/x86/intel_iom.h |  62 +++++++++
- 6 files changed, 276 insertions(+), 10 deletions(-)
+ 4 files changed, 212 insertions(+)
  create mode 100644 drivers/platform/x86/intel_iom.c
  create mode 100644 include/linux/platform_data/x86/intel_iom.h
 
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0581a54cf562..271feddb20ef 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -816,6 +816,22 @@ config INTEL_INT0002_VGPIO
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called intel_int0002_vgpio.
+ 
++config INTEL_IOM
++	tristate "Intel Input Output Manager (IOM) driver"
++	depends on ACPI && PCI
++	help
++	  This driver helps read relevant information such as Type-C port
++	  status (whether a device is connected to a Type-C port or not)
++	  and the activity type on the Type-C ports (such as USB, Display
++	  Port, Thunderbolt), for consumption by other drivers.
++
++	  Currently intel_iom_port_status() API is exported by this driver,
++	  that has information about the Type-C port status and port activity
++	  type.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called intel_iom.
++
+ config INTEL_MENLOW
+ 	tristate "Thermal Management driver for Intel menlow platform"
+ 	depends on ACPI_THERMAL
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 2b85852a1a87..d71e4620a7c6 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -76,6 +76,7 @@ intel_cht_int33fe-objs			:= intel_cht_int33fe_common.o \
+ 					   intel_cht_int33fe_microb.o
+ obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
+ obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
++obj-$(CONFIG_INTEL_IOM)			+= intel_iom.o
+ obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
+ obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+ obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
+diff --git a/drivers/platform/x86/intel_iom.c b/drivers/platform/x86/intel_iom.c
+new file mode 100644
+index 000000000000..ece0fe720b2d
+--- /dev/null
++++ b/drivers/platform/x86/intel_iom.c
+@@ -0,0 +1,133 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Intel Core SoC Input Output Manager (IOM) driver.
++ *
++ * This driver provides access to the Input Output Manager (IOM) (that
++ * is part of Tiger Lake SoC) registers that can be used to know about
++ * Type-C Sub System related information (such as Type-C port status,
++ * activity type on Type-C ports).
++ *
++ * Copyright (C) 2020, Intel Corporation
++ * Author: Rajmohan Mani <rajmohan.mani@intel.com>
++ */
++
++#include <linux/io.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/platform_data/x86/intel_iom.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++
++#define IOM_PORT_STATUS_OFFSET				0x560
++
++struct intel_iom {
++	struct device *dev;
++	void __iomem *regbar;
++};
++
++static struct intel_iom iom_dev;
++
++/**
++ * intel_iom_get() - Get IOM device instance
++ *
++ * This function returns the IOM device instance. This also ensures that
++ * this driver cannot be unloaded while the caller has the instance.
++ *
++ * Call intel_iom_put() to release the instance.
++ *
++ * Returns IOM device instance on success or error pointer otherwise.
++ */
++struct intel_iom *intel_iom_get(void)
++{
++	struct device *dev = get_device(iom_dev.dev);
++
++	/* Prevent this driver from being unloaded while in use */
++	if (!try_module_get(dev->driver->owner)) {
++		put_device(iom_dev.dev);
++		return ERR_PTR(-EBUSY);
++	}
++
++	return &iom_dev;
++}
++EXPORT_SYMBOL_GPL(intel_iom_get);
++
++/**
++ * intel_iom_put() - Put IOM device instance
++ * @iom: IOM device instance
++ *
++ * This function releases the IOM device instance created using
++ * intel_iom_get() and allows the driver to be unloaded.
++ *
++ * Call intel_iom_put() to release the instance.
++ */
++void intel_iom_put(struct intel_iom *iom)
++{
++	if (!iom)
++		return;
++
++	module_put(iom->dev->driver->owner);
++	put_device(iom->dev);
++}
++EXPORT_SYMBOL_GPL(intel_iom_put);
++
++/**
++ * intel_iom_port_status() - Get status bits for the Type-C port
++ * @iom: IOM device instance
++ * @port: Type-C port number
++ * @status: pointer to receive the status bits
++ *
++ * Returns 0 on success, error otherwise.
++ */
++int intel_iom_port_status(struct intel_iom *iom, u8 port, u32 *status)
++{
++	void __iomem *reg;
++
++	if (!iom)
++		return -ENODEV;
++
++	if (!status || (port > IOM_MAX_PORTS - 1))
++		return -EINVAL;
++
++	reg = iom->regbar + IOM_PORT_STATUS_OFFSET + IOM_REG_LEN * port;
++
++	*status = ioread32(reg);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(intel_iom_port_status);
++
++static int intel_iom_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	void __iomem *addr;
++
++	addr = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(addr))
++		return PTR_ERR(addr);
++
++	iom_dev.regbar = addr;
++
++	iom_dev.dev = dev;
++	dev_set_drvdata(dev, &iom_dev);
++	return 0;
++}
++
++static const struct acpi_device_id intel_iom_acpi_ids[] = {
++	{ "INTC1072" },
++	{}
++};
++MODULE_DEVICE_TABLE(acpi, intel_iom_acpi_ids);
++
++static struct platform_driver intel_iom_driver = {
++	.probe = intel_iom_probe,
++	.driver = {
++		.name = "intel_iom",
++		.acpi_match_table = intel_iom_acpi_ids,
++	},
++};
++
++module_platform_driver_probe(intel_iom_driver, intel_iom_probe);
++
++MODULE_AUTHOR("Rajmohan Mani <rajmohan.mani@intel.com>");
++MODULE_DESCRIPTION("Intel IOM driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/platform_data/x86/intel_iom.h b/include/linux/platform_data/x86/intel_iom.h
+new file mode 100644
+index 000000000000..d86c60b25a44
+--- /dev/null
++++ b/include/linux/platform_data/x86/intel_iom.h
+@@ -0,0 +1,62 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _PLATFORM_DATA_X86_INTEL_IOM_H_
++#define _PLATFORM_DATA_X86_INTEL_IOM_H_
++
++#include <linux/bits.h>
++#include <linux/types.h>
++
++/* Input Output Manager (IOM) PORT STATUS */
++#define IOM_PORT_STATUS_ACTIVITY_TYPE_MASK		GENMASK(9, 6)
++#define IOM_PORT_STATUS_ACTIVITY_TYPE_SHIFT		0x06
++#define IOM_PORT_STATUS_ACTIVITY_TYPE_USB		0x03
++/* activity type: Safe Mode */
++#define IOM_PORT_STATUS_ACTIVITY_TYPE_SAFE_MODE		0x04
++/* activity type: Display Port */
++#define IOM_PORT_STATUS_ACTIVITY_TYPE_DP		0x05
++/* activity type: Display Port Multi Function Device */
++#define IOM_PORT_STATUS_ACTIVITY_TYPE_DP_MFD		0x06
++/* activity type: Thunderbolt */
++#define IOM_PORT_STATUS_ACTIVITY_TYPE_TBT		0x07
++#define IOM_PORT_STATUS_ACTIVITY_TYPE_ALT_MODE_USB	0x0c
++#define IOM_PORT_STATUS_ACTIVITY_TYPE_ALT_MODE_TBT_USB	0x0d
++/* Upstream Facing Port Information */
++#define IOM_PORT_STATUS_UFP				BIT(10)
++/* Display Port Hot Plug Detect status */
++#define IOM_PORT_STATUS_DHPD_HPD_STATUS_MASK		GENMASK(13, 12)
++#define IOM_PORT_STATUS_DHPD_HPD_STATUS_SHIFT		0x0c
++#define IOM_PORT_STATUS_DHPD_HPD_STATUS_ASSERT		0x01
++#define IOM_PORT_STATUS_DHPD_HPD_SOURCE_TBT		BIT(14)
++#define IOM_PORT_STATUS_CONNECTED			BIT(31)
++
++#define IOM_MAX_PORTS					4
++/* Register length in bytes */
++#define IOM_REG_LEN					4
++
++struct intel_iom;
++
++#ifdef CONFIG_ACPI
++
++struct intel_iom *intel_iom_get(void);
++void intel_iom_put(struct intel_iom *iom);
++int intel_iom_port_status(struct intel_iom *iom, u8 port, u32 *status);
++
++#else
++
++struct intel_iom *intel_iom_get(void)
++{
++	return NULL;
++}
++
++void intel_iom_put(struct intel_iom *iom)
++{
++}
++
++int intel_iom_port_status(struct intel_iom *iom, u8 port, u32 *status)
++{
++	return 0;
++}
++
++#endif
++
++#endif /* _PLATFORM_DATA_X86_INTEL_IOM_H_ */
 -- 
 2.20.1
