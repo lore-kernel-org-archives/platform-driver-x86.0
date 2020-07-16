@@ -1,54 +1,44 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH V3 3/3] platform/x86: Intel PMT Telemetry capability
- driver
-Date: Thu, 16 Jul 2020 08:57:24 +0300
-Message-ID: <8a580318-9bd4-1146-f2e9-6cb851828762@linux.intel.com>
-References: <20200508021844.6911-1-david.e.box@linux.intel.com>
- <20200714062323.19990-4-david.e.box@linux.intel.com>
- <727a75a0-3fb5-769a-cf1f-70a2a0bab0c8@linux.intel.com>
- <245ecc65a839bd69413045ae5ee307ba03ca0869.camel@linux.intel.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/2] usb: typec: intel_pmc_mux: Check the port status
+ before connect
+Date: Thu, 16 Jul 2020 09:05:08 +0200
+Message-ID: <20200716070508.GB962748@kroah.com>
+References: <20200716003310.26125-1-rajmohan.mani@intel.com>
+ <20200716003310.26125-3-rajmohan.mani@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <245ecc65a839bd69413045ae5ee307ba03ca0869.camel@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20200716003310.26125-3-rajmohan.mani@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: david.e.box@linux.intel.com, lee.jones@linaro.org, dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com, alexander.h.duyck@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>
+To: Rajmohan Mani <rajmohan.mani@intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Jithu Joseph <jithu.joseph@intel.com>, =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-usb@vger.kernel.org, pmalani@chromium.org, bleung@chromium.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-
-On 16.07.2020 2:59, David E. Box wrote:
-> On Wed, 2020-07-15 at 10:39 +0300, Alexey Budankov wrote:
->> Hi David,
->>
->> On 14.07.2020 9:23, David E. Box wrote:
+On Wed, Jul 15, 2020 at 05:33:10PM -0700, Rajmohan Mani wrote:
+> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 > 
-> ...
+> The PMC microcontroller that we use for configuration, does
+> not supply any status information back. For port status we
+> need to talk to another controller on the board called IOM
+> (I/O manager).
 > 
->>>
->>> +static int pmt_telem_open(struct inode *inode, struct file *filp)
->>> +{
->>> +	struct pmt_telem_priv *priv;
->>> +	struct pmt_telem_entry *entry;
->>> +	struct pci_driver *pci_drv;
->>> +	struct pci_dev *pci_dev;
->>> +
->>> +	if (!capable(CAP_SYS_ADMIN))
->>
->> Thanks for supplying these patches.
->> Are there any reasons not to expose this feature to CAP_PERFMON
->> privileged
->> processes too that currently have access to performance monitoring
->> features
->> of the kernel without root/CAP_SYS_ADMIN credentials? This could be
->> done by
->> pefmon_capable() function call starting from v5.8+.
+> By checking the port status before configuring the muxes, we
+> can make sure that we do not reconfigure the port after
+> bootup when the system firmware (for example BIOS) has
+> already configured it.
 > 
-> The new capability is well suited for this feature. I'll make the
-> change. Thanks.
+> Using the status information also to check if DisplayPort
+> HPD is still asserted when the cable plug is disconnected,
+> and clearing it if it is.
+> 
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-I appreciate your cooperation. Thanks!
+You can't just forward on patches from others without also adding your
+signed-off-by to them, right?
 
-Alexei
+Please fix up this series and try again.
+
+thanks,
+
+greg k-h
