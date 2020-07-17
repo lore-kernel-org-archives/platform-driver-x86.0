@@ -1,76 +1,32 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 2/2] usb: typec: intel_pmc_mux: Check the port status
- before connect
-Date: Fri, 17 Jul 2020 08:19:09 +0200
-Message-ID: <20200717061909.GB3237166@kroah.com>
-References: <20200716003310.26125-1-rajmohan.mani@intel.com>
- <20200716003310.26125-3-rajmohan.mani@intel.com>
- <20200716070508.GB962748@kroah.com>
- <DM6PR11MB39632A8236161E4A27FAB1BBF67C0@DM6PR11MB3963.namprd11.prod.outlook.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 0/3] Add 3 new keycodes and use them for 3 new hotkeys on new Lenovo Thinkpads
+Date: Fri, 17 Jul 2020 13:41:52 +0200
+Message-ID: <20200717114155.56222-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DM6PR11MB39632A8236161E4A27FAB1BBF67C0@DM6PR11MB3963.namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, "Joseph, Jithu" <jithu.joseph@intel.com>, =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "pmalani@chromium.org" <pmalani@chromium.org>, "bleung@chromium.org" <bleung@chromium.o>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc: Hans de Goede <hdegoede@redhat.com>, linux-input@vger.kernel.org, Marco Trevisan <marco.trevisan@canonical.com>, Mark Pearson <mpearson@lenovo.com>, Christian Kellner <ckellner@redhat.com>, Benjamin Berg <bberg@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Jul 17, 2020 at 06:04:51AM +0000, Mani, Rajmohan wrote:
-> Hi Greg,
-> 
-> > -----Original Message-----
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Sent: Thursday, July 16, 2020 12:05 AM
-> > To: Mani, Rajmohan <rajmohan.mani@intel.com>
-> > Cc: Darren Hart <dvhart@infradead.org>; Andy Shevchenko
-> > <andy@infradead.org>; Mika Westerberg
-> > <mika.westerberg@linux.intel.com>; Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com>; Lee Jones <lee.jones@linaro.org>; Ayman
-> > Bagabas <ayman.bagabas@gmail.com>; Masahiro Yamada
-> > <masahiroy@kernel.org>; Joseph, Jithu <jithu.joseph@intel.com>; Blaž
-> > Hrastnik <blaz@mxxn.io>; Srinivas Pandruvada
-> > <srinivas.pandruvada@linux.intel.com>; linux-kernel@vger.kernel.org;
-> > platform-driver-x86@vger.kernel.org; Heikki Krogerus
-> > <heikki.krogerus@linux.intel.com>; linux-usb@vger.kernel.org;
-> > pmalani@chromium.org; bleung@chromium.org
-> > Subject: Re: [PATCH 2/2] usb: typec: intel_pmc_mux: Check the port status
-> > before connect
-> > 
-> > On Wed, Jul 15, 2020 at 05:33:10PM -0700, Rajmohan Mani wrote:
-> > > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > >
-> > > The PMC microcontroller that we use for configuration, does not supply
-> > > any status information back. For port status we need to talk to
-> > > another controller on the board called IOM (I/O manager).
-> > >
-> > > By checking the port status before configuring the muxes, we can make
-> > > sure that we do not reconfigure the port after bootup when the system
-> > > firmware (for example BIOS) has already configured it.
-> > >
-> > > Using the status information also to check if DisplayPort HPD is still
-> > > asserted when the cable plug is disconnected, and clearing it if it
-> > > is.
-> > >
-> > > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > 
-> > You can't just forward on patches from others without also adding your
-> > signed-off-by to them, right?
-> > 
-> 
-> Sorry I missed this.
-> 
-> > Please fix up this series and try again.
-> > 
-> 
-> Ack. Will fix this with v2.
+Hi All,
 
-Stop and go talk to the proper people in Intel for how to submit patches
-to the kernel as you are not following the rules they have documented
-for you.
+This is a simple patch-series adding support for 3 new hotkeys found
+on various new Lenovo Thinkpad models.
 
-thanks,
+There is one small complication, these 3 new hotkeys also require
+the addition of new key-codes to include/uapi/linux/input-event-codes.h.
 
-greg k-h
+And those changes have to land first. It is probably easiest to just
+merge everything through the platform/x86 tree, or alternatively we
+would need an immutable branch from the input-subsys with the first
+patch on there which the platform/x86 maintainers can then merge.
+
+Dmitry, can you please let us know how you want to proceed with these
+changes; And if you are ok with merging the input-event-codes.h changes
+through the platform/x86 tree, may we have your Acked-by for that ?
+
+Regards,
+
+Hans
