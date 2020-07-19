@@ -1,36 +1,27 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] isst: isst_if.h: drop a duplicated word
-Date: Sat, 18 Jul 2020 17:29:03 -0700
-Message-ID: <20200719002903.20469-1-rdunlap@infradead.org>
+From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: Re: [PATCH 0/3] Add 3 new keycodes and use them for 3 new hotkeys on
+ new Lenovo Thinkpads
+Date: Sun, 19 Jul 2020 19:56:49 -0300
+Message-ID: <20200719225649.GA4341@khazad-dum.debian.net>
+References: <20200717114155.56222-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200717114155.56222-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, linux-input@vger.kernel.org, Marco Trevisan <marco.trevisan@canonical.com>, Mark Pearson <mpearson@lenovo.com>, Christian Kellner <ckellner@redhat.com>, Benjamin Berg <bberg@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Drop the repeated word "for" in a comment.
+On Fri, 17 Jul 2020, Hans de Goede wrote:
+> This is a simple patch-series adding support for 3 new hotkeys found
+> on various new Lenovo Thinkpad models.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
----
-This description could still use some better wording.
+For all three patches, pending an ack for the new keycodes by the input
+maintainers:
 
- include/uapi/linux/isst_if.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 
---- linux-next-20200717.orig/include/uapi/linux/isst_if.h
-+++ linux-next-20200717/include/uapi/linux/isst_if.h
-@@ -69,7 +69,7 @@ struct isst_if_cpu_maps {
-  * @logical_cpu:	Logical CPU number to get target PCI device.
-  * @reg:		PUNIT register offset
-  * @value:		For write operation value to write and for
-- *			for read placeholder read value
-+ *			read placeholder read value
-  *
-  * Structure to specify read/write data to PUNIT registers.
-  */
+-- 
+  Henrique Holschuh
