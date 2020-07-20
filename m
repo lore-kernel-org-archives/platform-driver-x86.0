@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 24/34] platform/x86: ISST: Add new PCI device ids
-Date: Mon, 20 Jul 2020 17:37:57 -0400
-Message-ID: <20200720213807.407380-24-sashal@kernel.org>
-References: <20200720213807.407380-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 29/40] platform/x86: ISST: Add new PCI device ids
+Date: Mon, 20 Jul 2020 17:37:04 -0400
+Message-ID: <20200720213715.406997-29-sashal@kernel.org>
+References: <20200720213715.406997-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
@@ -55,7 +55,7 @@ index de4169d0796bd..9a055fd54053f 100644
  };
  MODULE_DEVICE_TABLE(pci, isst_if_mbox_ids);
 diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-index ad8c7c0df4d9a..e3778204b7a60 100644
+index 3584859fcc421..aa17fd7817f8f 100644
 --- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
 +++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
 @@ -72,6 +72,7 @@ static long isst_if_mmio_rd_wr(u8 *cmd_ptr, int *write_only, int resume)
