@@ -1,27 +1,42 @@
-From: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: Re: [PATCH 0/3] Add 3 new keycodes and use them for 3 new hotkeys on
- new Lenovo Thinkpads
-Date: Sun, 19 Jul 2020 19:56:49 -0300
-Message-ID: <20200719225649.GA4341@khazad-dum.debian.net>
-References: <20200717114155.56222-1-hdegoede@redhat.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 30/40] platform/x86: asus-wmi: allow BAT1 battery name
+Date: Mon, 20 Jul 2020 17:37:05 -0400
+Message-ID: <20200720213715.406997-30-sashal@kernel.org>
+References: <20200720213715.406997-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200717114155.56222-1-hdegoede@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, linux-input@vger.kernel.org, Marco Trevisan <marco.trevisan@canonical.com>, Mark Pearson <mpearson@lenovo.com>, Christian Kellner <ckellner@redhat.com>, Benjamin Berg <bberg@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20200720213715.406997-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Vasiliy Kupriakov <rublag-ns@yandex.ru>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 17 Jul 2020, Hans de Goede wrote:
-> This is a simple patch-series adding support for 3 new hotkeys found
-> on various new Lenovo Thinkpad models.
+From: Vasiliy Kupriakov <rublag-ns@yandex.ru>
 
-For all three patches, pending an ack for the new keycodes by the input
-maintainers:
+[ Upstream commit 9a33e375d98ece5ea40c576eabd3257acb90c509 ]
 
-Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+The battery on my laptop ASUS TUF Gaming FX706II is named BAT1.
+This patch allows battery extension to load.
 
+Signed-off-by: Vasiliy Kupriakov <rublag-ns@yandex.ru>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/asus-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index cd212ee210e2d..537b824a1ae25 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -432,6 +432,7 @@ static int asus_wmi_battery_add(struct power_supply *battery)
+ 	 * battery is named BATT.
+ 	 */
+ 	if (strcmp(battery->desc->name, "BAT0") != 0 &&
++	    strcmp(battery->desc->name, "BAT1") != 0 &&
+ 	    strcmp(battery->desc->name, "BATT") != 0)
+ 		return -ENODEV;
+ 
 -- 
-  Henrique Holschuh
+2.25.1
