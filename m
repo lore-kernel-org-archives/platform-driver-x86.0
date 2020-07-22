@@ -1,44 +1,33 @@
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: Re: [PATCH] isst: isst_if.h: drop a duplicated word
-Date: Tue, 21 Jul 2020 08:10:37 -0700
-Message-ID: <c76c51bfa78316caaf8201a63ac200fa373ae3ae.camel@linux.intel.com>
-References: <20200719002903.20469-1-rdunlap@infradead.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 0/3] Add 3 new keycodes and use them for 3 new hotkeys on
+ new Lenovo Thinkpads
+Date: Tue, 21 Jul 2020 22:41:44 -0700
+Message-ID: <20200722054144.GQ1665100@dtor-ws>
+References: <20200717114155.56222-1-hdegoede@redhat.com>
+ <20200719225649.GA4341@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200719002903.20469-1-rdunlap@infradead.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200719225649.GA4341@khazad-dum.debian.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Hans de Goede <hdegoede@redhat.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, linux-input@vger.kernel.org, Marco Trevisan <marco.trevisan@canonical.com>, Mark Pearson <mpearson@lenovo.com>, Christian Kellner <ckellner@redhat.com>, Benjamin Berg <bberg@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, 2020-07-18 at 17:29 -0700, Randy Dunlap wrote:
-> Drop the repeated word "for" in a comment.
+On Sun, Jul 19, 2020 at 07:56:49PM -0300, Henrique de Moraes Holschuh wrote:
+> On Fri, 17 Jul 2020, Hans de Goede wrote:
+> > This is a simple patch-series adding support for 3 new hotkeys found
+> > on various new Lenovo Thinkpad models.
 > 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-
-> ---
-> This description could still use some better wording.
-
-I will fix the wording in a follow up patch.
-
->  include/uapi/linux/isst_if.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> For all three patches, pending an ack for the new keycodes by the input
+> maintainers:
 > 
-> --- linux-next-20200717.orig/include/uapi/linux/isst_if.h
-> +++ linux-next-20200717/include/uapi/linux/isst_if.h
-> @@ -69,7 +69,7 @@ struct isst_if_cpu_maps {
->   * @logical_cpu:	Logical CPU number to get target PCI device.
->   * @reg:		PUNIT register offset
->   * @value:		For write operation value to write and for
-> - *			for read placeholder read value
-> + *			read placeholder read value
->   *
->   * Structure to specify read/write data to PUNIT registers.
->   */
+> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+
+Do you want me to merge all 3 through input tree?
+
+Thanks.
+
+-- 
+Dmitry
