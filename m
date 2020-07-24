@@ -1,45 +1,99 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: kernel BUG at net/core/dev.c:LINE! (3)
-Date: Fri, 24 Jul 2020 01:20:21 +0300
-Message-ID: <20200723222021.GY3703480@smile.fi.intel.com>
-References: <000000000000ba65ba05a2fd48d9@google.com>
- <000000000000467ece05ab223d81@google.com>
+From: "Mani, Rajmohan" <rajmohan.mani@intel.com>
+Subject: RE: [PATCH 1/2] platform/x86: Add Intel Input Output Manager (IOM)
+ driver
+Date: Fri, 24 Jul 2020 05:15:21 +0000
+Message-ID: <DM6PR11MB39635AB6EE1C6454BFC8874BF6770@DM6PR11MB3963.namprd11.prod.outlook.com>
+References: <20200716003310.26125-1-rajmohan.mani@intel.com>
+ <20200716003310.26125-2-rajmohan.mani@intel.com>
+ <20200716070950.GC962748@kroah.com>
+ <DM6PR11MB39632BD9A5A0DF4A9EAB351CF67C0@DM6PR11MB3963.namprd11.prod.outlook.com>
+ <20200717061821.GA3237166@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <000000000000467ece05ab223d81@google.com>
+In-Reply-To: <20200717061821.GA3237166@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: syzbot <syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com>
-Cc: andy@greyhouse.net, andy@infradead.org, arnd@arndb.de, davem@davemloft.net, dvhart@infradead.org, gregkh@linuxfoundation.org, j.vosburgh@gmail.com, kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, peterz@infradead.org, platform-driver-x86@vger.kernel.org, skunberg.kelsey@gmail.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, vfalico@gmail.com
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, "Joseph, Jithu" <jithu.joseph@intel.com>, =?utf-8?B?Qmxhxb4gSHJhc3RuaWs=?= <blaz@mxxn.io>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "pmalani@chromium.org" <pmalani@chromium.org>, "bleung@chromium.org" <bleung@chromiu>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Thu, Jul 23, 2020 at 02:07:08PM -0700, syzbot wrote:
-> syzbot has bisected this issue to:
-> 
-> commit 5a707af10da95a53a55011a612e69063491020d4
-> Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Date:   Fri Apr 21 13:36:06 2017 +0000
-> 
->     platform/x86: wmi: Describe function parameters
-
-Seems like random commit for known problem.
-
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14a9ad40900000
-> start commit:   994e99a9 Merge tag 'platform-drivers-x86-v5.8-2' of git://..
-> git tree:       upstream
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=16a9ad40900000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12a9ad40900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=e944500a36bc4d55
-> dashboard link: https://syzkaller.appspot.com/bug?extid=af23e7f3e0a7e10c8b67
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ea63cf100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14afdb9f100000
-> 
-> Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
-> Fixes: 5a707af10da9 ("platform/x86: wmi: Describe function parameters")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
--- 
-With Best Regards,
-Andy Shevchenko
+SGkgR3JlZywNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0gcGxhdGZvcm0veDg2OiBBZGQg
+SW50ZWwgSW5wdXQgT3V0cHV0IE1hbmFnZXIgKElPTSkNCj4gZHJpdmVyDQoNCi4uLg0KDQo+ID4g
+PiA+ICtzdHJ1Y3QgaW50ZWxfaW9tIHsNCj4gPiA+ID4gKwlzdHJ1Y3QgZGV2aWNlICpkZXY7DQo+
+ID4gPiA+ICsJdm9pZCBfX2lvbWVtICpyZWdiYXI7DQo+ID4gPiA+ICt9Ow0KPiA+ID4gPiArDQo+
+ID4gPiA+ICtzdGF0aWMgc3RydWN0IGludGVsX2lvbSBpb21fZGV2Ow0KPiA+ID4NCj4gPiA+IFdo
+eSBqdXN0IG9uZT8gIFdoeSBpcyB0aGlzIHN0YXRpYz8NCj4gPiA+DQo+ID4NCj4gPiBUaGVyZSBp
+cyBqdXN0IG9uZSBJT00gZGV2aWNlIGluIHRoZSBzeXN0ZW0uDQo+IA0KPiBGb3IgdG9kYXksIHll
+cywgbm8gbmVlZCB0byBmb3JjZSB5b3Vyc2VsZiB0byBoYXZlIHRvIGNoYW5nZSB0aGlzIGluIHRo
+ZSBmdXR1cmUuDQo+IEp1c3QgdXNlIGEgbm9ybWFsIHBlci1pbnN0YW5jZSB2YXJpYWJsZSBpbnN0
+ZWFkIHBsZWFzZSwgaWYgeW91IHJlYWxseSBuZWVkIGl0Lg0KPiANCg0KQWNrDQoNCj4gPiA+ID4g
+Kw0KPiA+ID4gPiArCS8qIFByZXZlbnQgdGhpcyBkcml2ZXIgZnJvbSBiZWluZyB1bmxvYWRlZCB3
+aGlsZSBpbiB1c2UgKi8NCj4gPiA+ID4gKwlpZiAoIXRyeV9tb2R1bGVfZ2V0KGRldi0+ZHJpdmVy
+LT5vd25lcikpIHsNCj4gPiA+DQo+ID4gPiBXaHkgYXJlIHlvdSBwb2tpbmcgYXJvdW5kIGluIGEg
+cmFuZG9tIGRldmljZSdzIGRyaXZlcidzIG93bmVyPw0KPiA+ID4NCj4gPiA+IFRoYXQncyBub3Qg
+b2suICBBbmQgcHJvYmFibHkgdG90YWxseSByYWN5Lg0KPiA+ID4NCj4gPiA+IEhhbmRsZSBtb2R1
+bGUgcmVmZXJlbmNlIGNvdW50cyBwcm9wZXJseSwgbm90IGxpa2UgdGhpcy4NCj4gPiA+DQo+ID4N
+Cj4gPiBBY2suIFdpbGwgdXNlIFRISVNfTU9EVUxFIGhlcmUuDQo+IA0KPiBObywgdGhhdCBpcyBu
+b3QgdGhlIGFuc3dlciwgYW5kIGlzIGFsd2F5cyB3cm9uZyB0byB1c2UgOigNCj4gDQoNClRoaXMg
+c2hvdWxkIG5vdCBtYXR0ZXIgYW55bW9yZSwgYXMgSSBmaW5kIHJlZmVyZW5jZSBjb3VudGluZyBt
+YXkgbm90IGJlIG5lZWRlZC4NCg0KPiA+ID4gQW5kIHdoeSBkb2VzIGl0IGV2ZW4gbWF0dGVyIHRo
+YXQgeW91IGluY3JlbWVudGVkIHRoZSBtb2R1bGUNCj4gPiA+IHJlZmVyZW5jZSBjb3VudD8gIFdo
+YXQgaXMgdGhhdCAicHJvdGVjdGluZyIgeW91IGZyb20/DQo+ID4gPg0KPiA+DQo+ID4gVG8gcHJl
+dmVudCB0aGlzIGRyaXZlciBmcm9tIGJlaW5nIHVubG9hZGVkLCB3aGlsZSBpdCBpcyBiZWluZyB1
+c2VkLg0KPiANCj4gV2h5IGRvZXMgdGhhdCBtYXR0ZXI/ICBTaG91bGRuJ3Qgbm9ybWFsIHJlZmVy
+ZW5jZSBjb3VudGluZyBhbmQNCj4gZGVwZW5kYW5jaWVzIGJlIGFsbCB0aGF0IHlvdSBuZWVkPw0K
+PiANCg0KSSBmaW5kIGp1c3QgZGVwZW5kZW5jaWVzIGFyZSBlbm91Z2ggdG8gcHJldmVudCB0aGUg
+ZHJpdmVyIGZyb20gYmVpbmcgdW5sb2FkZWQuDQoNCldpdGggSW50ZWwgUE1DIFVTQiBtdXggY29u
+dHJvbCBkcml2ZXIsIG5vdCB1c2luZyBpbnRlbF9pb21fZ2V0KCkvaW50ZWxfaW9tX3B1dCgpLA0K
+anVzdCBpbnZva2luZyBpbnRlbF9pb21fcG9ydF9zdGF0dXMoKSBpcyBlbm91Z2ggZm9yIHJtbW9k
+IHRvIHJlcG9ydCBmYWlsdXJlDQooY2l0aW5nIHRoZSB1c2UgYnkgaW50ZWxfcG1jX211eCkgaW4g
+dW5sb2FkaW5nIHRoZSBJT00gZHJpdmVyLg0KDQo+ID4gPiA+ICsJCXB1dF9kZXZpY2UoaW9tX2Rl
+di5kZXYpOw0KPiA+ID4gPiArCQlyZXR1cm4gRVJSX1BUUigtRUJVU1kpOw0KPiA+ID4gPiArCX0N
+Cj4gPiA+ID4gKw0KPiA+ID4gPiArCXJldHVybiAmaW9tX2RldjsNCj4gPiA+ID4gK30NCj4gPiA+
+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKGludGVsX2lvbV9nZXQpOw0KPiA+ID4NCj4gPiA+IFdobyBj
+YWxscyB0aGlzIGZ1bmN0aW9uPw0KPiA+ID4NCj4gPg0KPiA+IEludGVsIFBNQyBVU0IgbXV4IGNv
+bnRyb2wgZHJpdmVyLCBpbiB0aGlzIGNhc2UuDQo+ID4gVGhlIGNhbGxlcnMgYXJlIGV4cGVjdGVk
+IHRvIGNhbGwgaW50ZWxfaW9tX2dldCgpIGJlZm9yZSB1c2luZyB0aGUNCj4gPiBpbnRlbF9pb21f
+cG9ydF9zdGF0dXMoKSwgYWZ0ZXIgd2hpY2ggaW50ZWxfaW9tX3B1dCgpIGNhbiBiZSBjYWxsZWQg
+dG8NCj4gPiByZWxlYXNlIHRoZSBJT00gZGV2aWNlIGluc3RhbmNlLg0KPiANCj4gV2h5IG5vdCBq
+dXN0IGhhdmUgYSBzaW5nbGUgY2FsbCBpZiBhbGwgdGhpcyBkcml2ZXIgZG9lcyBpcyBzdXBwb3J0
+IG9uZSB0aGluZy4gIFRoZQ0KPiByZWZlcmVuY2UgY291bnRpbmcgc2hvdWxkbid0IGJlIG5lZWRl
+ZCBhdCBhbGwsIHJpZ2h0Pw0KPiANCg0KQWNrLiBUaGF0IGxvb2tzIHRvIGJlIHRoZSBjYXNlLCBi
+YXNlZCBvbiBteSBmaW5kaW5ncy4NCg0KPiA+ID4gPiArLyoqDQo+ID4gPiA+ICsgKiBpbnRlbF9p
+b21fcHV0KCkgLSBQdXQgSU9NIGRldmljZSBpbnN0YW5jZQ0KPiA+ID4gPiArICogQGlvbTogSU9N
+IGRldmljZSBpbnN0YW5jZQ0KPiA+ID4gPiArICoNCj4gPiA+ID4gKyAqIFRoaXMgZnVuY3Rpb24g
+cmVsZWFzZXMgdGhlIElPTSBkZXZpY2UgaW5zdGFuY2UgY3JlYXRlZCB1c2luZw0KPiA+ID4gPiAr
+ICogaW50ZWxfaW9tX2dldCgpIGFuZCBhbGxvd3MgdGhlIGRyaXZlciB0byBiZSB1bmxvYWRlZC4N
+Cj4gPiA+ID4gKyAqDQo+ID4gPiA+ICsgKiBDYWxsIGludGVsX2lvbV9wdXQoKSB0byByZWxlYXNl
+IHRoZSBpbnN0YW5jZS4NCj4gPiA+ID4gKyAqLw0KPiA+ID4gPiArdm9pZCBpbnRlbF9pb21fcHV0
+KHN0cnVjdCBpbnRlbF9pb20gKmlvbSkgew0KPiA+ID4gPiArCWlmICghaW9tKQ0KPiA+ID4gPiAr
+CQlyZXR1cm47DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwltb2R1bGVfcHV0KGlvbS0+ZGV2LT5kcml2
+ZXItPm93bmVyKTsNCj4gPiA+DQo+ID4gPiBBbmQgaWYgdGhlIGRldmljZSBkb2Vzbid0IGhhdmUg
+YSBkcml2ZXI/ICBib29tIDooDQo+ID4gPg0KPiA+ID4gRG9uJ3QgZG8gdGhpcy4NCj4gPiA+DQo+
+ID4NCj4gPiBBY2suIFdpbGwgdXNlIFRISVNfTU9EVUxFIGhlcmUuDQo+IA0KPiBBZ2Fpbiwgbm8s
+IHRoYXQgd2lsbCBiZSBldmVuIG1vcmUgaW5jb3JyZWN0Lg0KPiANCg0KVGhpcyBzaG91bGRuJ3Qg
+YmUgcmVsZXZhbnQgYW55bW9yZS4NCg0KPiA+ID4gPiArCXB1dF9kZXZpY2UoaW9tLT5kZXYpOw0K
+PiA+ID4gPiArfQ0KPiA+ID4gPiArRVhQT1JUX1NZTUJPTF9HUEwoaW50ZWxfaW9tX3B1dCk7DQo+
+ID4gPiA+ICsNCj4gPiA+ID4gKy8qKg0KPiA+ID4gPiArICogaW50ZWxfaW9tX3BvcnRfc3RhdHVz
+KCkgLSBHZXQgc3RhdHVzIGJpdHMgZm9yIHRoZSBUeXBlLUMgcG9ydA0KPiA+ID4gPiArICogQGlv
+bTogSU9NIGRldmljZSBpbnN0YW5jZQ0KPiA+ID4gPiArICogQHBvcnQ6IFR5cGUtQyBwb3J0IG51
+bWJlcg0KPiA+ID4gPiArICogQHN0YXR1czogcG9pbnRlciB0byByZWNlaXZlIHRoZSBzdGF0dXMg
+Yml0cw0KPiA+ID4gPiArICoNCj4gPiA+ID4gKyAqIFJldHVybnMgMCBvbiBzdWNjZXNzLCBlcnJv
+ciBvdGhlcndpc2UuDQo+ID4gPiA+ICsgKi8NCj4gPiA+ID4gK2ludCBpbnRlbF9pb21fcG9ydF9z
+dGF0dXMoc3RydWN0IGludGVsX2lvbSAqaW9tLCB1OCBwb3J0LCB1MzINCj4gPiA+ID4gKypzdGF0
+dXMpIHsNCj4gPiA+ID4gKwl2b2lkIF9faW9tZW0gKnJlZzsNCj4gPiA+ID4gKw0KPiA+ID4gPiAr
+CWlmICghaW9tKQ0KPiA+ID4gPiArCQlyZXR1cm4gLUVOT0RFVjsNCj4gPiA+ID4gKw0KPiA+ID4g
+PiArCWlmICghc3RhdHVzIHx8IChwb3J0ID4gSU9NX01BWF9QT1JUUyAtIDEpKQ0KPiA+ID4gPiAr
+CQlyZXR1cm4gLUVJTlZBTDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCXJlZyA9IGlvbS0+cmVnYmFy
+ICsgSU9NX1BPUlRfU1RBVFVTX09GRlNFVCArIElPTV9SRUdfTEVOICoNCj4gPiA+IHBvcnQ7DQo+
+ID4gPiA+ICsNCj4gPiA+ID4gKwkqc3RhdHVzID0gaW9yZWFkMzIocmVnKTsNCj4gPiA+ID4gKw0K
+PiA+ID4gPiArCXJldHVybiAwOw0KPiA+ID4gPiArfQ0KPiA+ID4gPiArRVhQT1JUX1NZTUJPTF9H
+UEwoaW50ZWxfaW9tX3BvcnRfc3RhdHVzKTsNCj4gPiA+DQo+ID4gPiBTbyB0aGUgd2hvbGUgZHJp
+dmVyIGlzIGhlcmUganVzdCB0byByZWFkLCBkaXJlY3RseSBmcm9tIG1lbW9yeSwgYQ0KPiA+ID4g
+c2luZ2xlDQo+ID4gPiAzMiBiaXQgdmFsdWU/DQo+ID4NCj4gPiBZZXMuDQo+IA0KPiBPaywgdGhl
+biB0aGlzIHdob2xlIGRyaXZlciBjb3VsZCBiZSBhYm91dCA5MCUgc21hbGxlciBhbmQgbW9yZSBv
+YnZpb3VzLg0KPiBEb24ndCBhZGQgdGhlIHJlZmVyZW5jZSBjb3VudGluZywgdGhlIHN0YXRpYyB2
+YXJpYWJsZXMgYW5kIGFsbCB0aGUgb3RoZXIgc3R1ZmYNCj4ganVzdCB0byBnZXQgYSAzMmJpdCBu
+dW1iZXIuDQo+IA0KDQpBY2sNCg==
