@@ -1,99 +1,104 @@
-From: "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Subject: RE: [PATCH 1/2] platform/x86: Add Intel Input Output Manager (IOM)
- driver
-Date: Fri, 24 Jul 2020 05:15:21 +0000
-Message-ID: <DM6PR11MB39635AB6EE1C6454BFC8874BF6770@DM6PR11MB3963.namprd11.prod.outlook.com>
-References: <20200716003310.26125-1-rajmohan.mani@intel.com>
- <20200716003310.26125-2-rajmohan.mani@intel.com>
- <20200716070950.GC962748@kroah.com>
- <DM6PR11MB39632BD9A5A0DF4A9EAB351CF67C0@DM6PR11MB3963.namprd11.prod.outlook.com>
- <20200717061821.GA3237166@kroah.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v13 1/4] battery: Add the battery hooking API
+Date: Sat, 25 Jul 2020 21:00:50 +0200
+Message-ID: <20200725190050.3ssslnkrauq6zdrd@earth.universe>
+References: <20180207145813.icmv6rwemyejhxbk@thinkpad>
+ <2270b8c7-beec-5ab6-f8b7-5ec41751c699@klausen.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200717061821.GA3237166@kroah.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, "Joseph, Jithu" <jithu.joseph@intel.com>, =?utf-8?B?Qmxhxb4gSHJhc3RuaWs=?= <blaz@mxxn.io>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "pmalani@chromium.org" <pmalani@chromium.org>, "bleung@chromium.org" <bleung@chromiu>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hfre6zazdmed5p3p"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2270b8c7-beec-5ab6-f8b7-5ec41751c699@klausen.dk>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Kristian Klausen <kristian@klausen.dk>
+Cc: Ognjen Galic <smclt30p@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>, Lv Zheng <lv.zheng@intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, devel@acpica.org, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, Platform Driver <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, Linux PM <linux-pm@vger.kernel.org>, Christoph =?utf-8?Q?B=C3=B6hmwalder?= <christoph@boehmwalder.at>, Kevin Locke <kevin@kevinlocke.name>
 List-Id: platform-driver-x86.vger.kernel.org
 
-SGkgR3JlZywNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDEvMl0gcGxhdGZvcm0veDg2OiBBZGQg
-SW50ZWwgSW5wdXQgT3V0cHV0IE1hbmFnZXIgKElPTSkNCj4gZHJpdmVyDQoNCi4uLg0KDQo+ID4g
-PiA+ICtzdHJ1Y3QgaW50ZWxfaW9tIHsNCj4gPiA+ID4gKwlzdHJ1Y3QgZGV2aWNlICpkZXY7DQo+
-ID4gPiA+ICsJdm9pZCBfX2lvbWVtICpyZWdiYXI7DQo+ID4gPiA+ICt9Ow0KPiA+ID4gPiArDQo+
-ID4gPiA+ICtzdGF0aWMgc3RydWN0IGludGVsX2lvbSBpb21fZGV2Ow0KPiA+ID4NCj4gPiA+IFdo
-eSBqdXN0IG9uZT8gIFdoeSBpcyB0aGlzIHN0YXRpYz8NCj4gPiA+DQo+ID4NCj4gPiBUaGVyZSBp
-cyBqdXN0IG9uZSBJT00gZGV2aWNlIGluIHRoZSBzeXN0ZW0uDQo+IA0KPiBGb3IgdG9kYXksIHll
-cywgbm8gbmVlZCB0byBmb3JjZSB5b3Vyc2VsZiB0byBoYXZlIHRvIGNoYW5nZSB0aGlzIGluIHRo
-ZSBmdXR1cmUuDQo+IEp1c3QgdXNlIGEgbm9ybWFsIHBlci1pbnN0YW5jZSB2YXJpYWJsZSBpbnN0
-ZWFkIHBsZWFzZSwgaWYgeW91IHJlYWxseSBuZWVkIGl0Lg0KPiANCg0KQWNrDQoNCj4gPiA+ID4g
-Kw0KPiA+ID4gPiArCS8qIFByZXZlbnQgdGhpcyBkcml2ZXIgZnJvbSBiZWluZyB1bmxvYWRlZCB3
-aGlsZSBpbiB1c2UgKi8NCj4gPiA+ID4gKwlpZiAoIXRyeV9tb2R1bGVfZ2V0KGRldi0+ZHJpdmVy
-LT5vd25lcikpIHsNCj4gPiA+DQo+ID4gPiBXaHkgYXJlIHlvdSBwb2tpbmcgYXJvdW5kIGluIGEg
-cmFuZG9tIGRldmljZSdzIGRyaXZlcidzIG93bmVyPw0KPiA+ID4NCj4gPiA+IFRoYXQncyBub3Qg
-b2suICBBbmQgcHJvYmFibHkgdG90YWxseSByYWN5Lg0KPiA+ID4NCj4gPiA+IEhhbmRsZSBtb2R1
-bGUgcmVmZXJlbmNlIGNvdW50cyBwcm9wZXJseSwgbm90IGxpa2UgdGhpcy4NCj4gPiA+DQo+ID4N
-Cj4gPiBBY2suIFdpbGwgdXNlIFRISVNfTU9EVUxFIGhlcmUuDQo+IA0KPiBObywgdGhhdCBpcyBu
-b3QgdGhlIGFuc3dlciwgYW5kIGlzIGFsd2F5cyB3cm9uZyB0byB1c2UgOigNCj4gDQoNClRoaXMg
-c2hvdWxkIG5vdCBtYXR0ZXIgYW55bW9yZSwgYXMgSSBmaW5kIHJlZmVyZW5jZSBjb3VudGluZyBt
-YXkgbm90IGJlIG5lZWRlZC4NCg0KPiA+ID4gQW5kIHdoeSBkb2VzIGl0IGV2ZW4gbWF0dGVyIHRo
-YXQgeW91IGluY3JlbWVudGVkIHRoZSBtb2R1bGUNCj4gPiA+IHJlZmVyZW5jZSBjb3VudD8gIFdo
-YXQgaXMgdGhhdCAicHJvdGVjdGluZyIgeW91IGZyb20/DQo+ID4gPg0KPiA+DQo+ID4gVG8gcHJl
-dmVudCB0aGlzIGRyaXZlciBmcm9tIGJlaW5nIHVubG9hZGVkLCB3aGlsZSBpdCBpcyBiZWluZyB1
-c2VkLg0KPiANCj4gV2h5IGRvZXMgdGhhdCBtYXR0ZXI/ICBTaG91bGRuJ3Qgbm9ybWFsIHJlZmVy
-ZW5jZSBjb3VudGluZyBhbmQNCj4gZGVwZW5kYW5jaWVzIGJlIGFsbCB0aGF0IHlvdSBuZWVkPw0K
-PiANCg0KSSBmaW5kIGp1c3QgZGVwZW5kZW5jaWVzIGFyZSBlbm91Z2ggdG8gcHJldmVudCB0aGUg
-ZHJpdmVyIGZyb20gYmVpbmcgdW5sb2FkZWQuDQoNCldpdGggSW50ZWwgUE1DIFVTQiBtdXggY29u
-dHJvbCBkcml2ZXIsIG5vdCB1c2luZyBpbnRlbF9pb21fZ2V0KCkvaW50ZWxfaW9tX3B1dCgpLA0K
-anVzdCBpbnZva2luZyBpbnRlbF9pb21fcG9ydF9zdGF0dXMoKSBpcyBlbm91Z2ggZm9yIHJtbW9k
-IHRvIHJlcG9ydCBmYWlsdXJlDQooY2l0aW5nIHRoZSB1c2UgYnkgaW50ZWxfcG1jX211eCkgaW4g
-dW5sb2FkaW5nIHRoZSBJT00gZHJpdmVyLg0KDQo+ID4gPiA+ICsJCXB1dF9kZXZpY2UoaW9tX2Rl
-di5kZXYpOw0KPiA+ID4gPiArCQlyZXR1cm4gRVJSX1BUUigtRUJVU1kpOw0KPiA+ID4gPiArCX0N
-Cj4gPiA+ID4gKw0KPiA+ID4gPiArCXJldHVybiAmaW9tX2RldjsNCj4gPiA+ID4gK30NCj4gPiA+
-ID4gK0VYUE9SVF9TWU1CT0xfR1BMKGludGVsX2lvbV9nZXQpOw0KPiA+ID4NCj4gPiA+IFdobyBj
-YWxscyB0aGlzIGZ1bmN0aW9uPw0KPiA+ID4NCj4gPg0KPiA+IEludGVsIFBNQyBVU0IgbXV4IGNv
-bnRyb2wgZHJpdmVyLCBpbiB0aGlzIGNhc2UuDQo+ID4gVGhlIGNhbGxlcnMgYXJlIGV4cGVjdGVk
-IHRvIGNhbGwgaW50ZWxfaW9tX2dldCgpIGJlZm9yZSB1c2luZyB0aGUNCj4gPiBpbnRlbF9pb21f
-cG9ydF9zdGF0dXMoKSwgYWZ0ZXIgd2hpY2ggaW50ZWxfaW9tX3B1dCgpIGNhbiBiZSBjYWxsZWQg
-dG8NCj4gPiByZWxlYXNlIHRoZSBJT00gZGV2aWNlIGluc3RhbmNlLg0KPiANCj4gV2h5IG5vdCBq
-dXN0IGhhdmUgYSBzaW5nbGUgY2FsbCBpZiBhbGwgdGhpcyBkcml2ZXIgZG9lcyBpcyBzdXBwb3J0
-IG9uZSB0aGluZy4gIFRoZQ0KPiByZWZlcmVuY2UgY291bnRpbmcgc2hvdWxkbid0IGJlIG5lZWRl
-ZCBhdCBhbGwsIHJpZ2h0Pw0KPiANCg0KQWNrLiBUaGF0IGxvb2tzIHRvIGJlIHRoZSBjYXNlLCBi
-YXNlZCBvbiBteSBmaW5kaW5ncy4NCg0KPiA+ID4gPiArLyoqDQo+ID4gPiA+ICsgKiBpbnRlbF9p
-b21fcHV0KCkgLSBQdXQgSU9NIGRldmljZSBpbnN0YW5jZQ0KPiA+ID4gPiArICogQGlvbTogSU9N
-IGRldmljZSBpbnN0YW5jZQ0KPiA+ID4gPiArICoNCj4gPiA+ID4gKyAqIFRoaXMgZnVuY3Rpb24g
-cmVsZWFzZXMgdGhlIElPTSBkZXZpY2UgaW5zdGFuY2UgY3JlYXRlZCB1c2luZw0KPiA+ID4gPiAr
-ICogaW50ZWxfaW9tX2dldCgpIGFuZCBhbGxvd3MgdGhlIGRyaXZlciB0byBiZSB1bmxvYWRlZC4N
-Cj4gPiA+ID4gKyAqDQo+ID4gPiA+ICsgKiBDYWxsIGludGVsX2lvbV9wdXQoKSB0byByZWxlYXNl
-IHRoZSBpbnN0YW5jZS4NCj4gPiA+ID4gKyAqLw0KPiA+ID4gPiArdm9pZCBpbnRlbF9pb21fcHV0
-KHN0cnVjdCBpbnRlbF9pb20gKmlvbSkgew0KPiA+ID4gPiArCWlmICghaW9tKQ0KPiA+ID4gPiAr
-CQlyZXR1cm47DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwltb2R1bGVfcHV0KGlvbS0+ZGV2LT5kcml2
-ZXItPm93bmVyKTsNCj4gPiA+DQo+ID4gPiBBbmQgaWYgdGhlIGRldmljZSBkb2Vzbid0IGhhdmUg
-YSBkcml2ZXI/ICBib29tIDooDQo+ID4gPg0KPiA+ID4gRG9uJ3QgZG8gdGhpcy4NCj4gPiA+DQo+
-ID4NCj4gPiBBY2suIFdpbGwgdXNlIFRISVNfTU9EVUxFIGhlcmUuDQo+IA0KPiBBZ2Fpbiwgbm8s
-IHRoYXQgd2lsbCBiZSBldmVuIG1vcmUgaW5jb3JyZWN0Lg0KPiANCg0KVGhpcyBzaG91bGRuJ3Qg
-YmUgcmVsZXZhbnQgYW55bW9yZS4NCg0KPiA+ID4gPiArCXB1dF9kZXZpY2UoaW9tLT5kZXYpOw0K
-PiA+ID4gPiArfQ0KPiA+ID4gPiArRVhQT1JUX1NZTUJPTF9HUEwoaW50ZWxfaW9tX3B1dCk7DQo+
-ID4gPiA+ICsNCj4gPiA+ID4gKy8qKg0KPiA+ID4gPiArICogaW50ZWxfaW9tX3BvcnRfc3RhdHVz
-KCkgLSBHZXQgc3RhdHVzIGJpdHMgZm9yIHRoZSBUeXBlLUMgcG9ydA0KPiA+ID4gPiArICogQGlv
-bTogSU9NIGRldmljZSBpbnN0YW5jZQ0KPiA+ID4gPiArICogQHBvcnQ6IFR5cGUtQyBwb3J0IG51
-bWJlcg0KPiA+ID4gPiArICogQHN0YXR1czogcG9pbnRlciB0byByZWNlaXZlIHRoZSBzdGF0dXMg
-Yml0cw0KPiA+ID4gPiArICoNCj4gPiA+ID4gKyAqIFJldHVybnMgMCBvbiBzdWNjZXNzLCBlcnJv
-ciBvdGhlcndpc2UuDQo+ID4gPiA+ICsgKi8NCj4gPiA+ID4gK2ludCBpbnRlbF9pb21fcG9ydF9z
-dGF0dXMoc3RydWN0IGludGVsX2lvbSAqaW9tLCB1OCBwb3J0LCB1MzINCj4gPiA+ID4gKypzdGF0
-dXMpIHsNCj4gPiA+ID4gKwl2b2lkIF9faW9tZW0gKnJlZzsNCj4gPiA+ID4gKw0KPiA+ID4gPiAr
-CWlmICghaW9tKQ0KPiA+ID4gPiArCQlyZXR1cm4gLUVOT0RFVjsNCj4gPiA+ID4gKw0KPiA+ID4g
-PiArCWlmICghc3RhdHVzIHx8IChwb3J0ID4gSU9NX01BWF9QT1JUUyAtIDEpKQ0KPiA+ID4gPiAr
-CQlyZXR1cm4gLUVJTlZBTDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCXJlZyA9IGlvbS0+cmVnYmFy
-ICsgSU9NX1BPUlRfU1RBVFVTX09GRlNFVCArIElPTV9SRUdfTEVOICoNCj4gPiA+IHBvcnQ7DQo+
-ID4gPiA+ICsNCj4gPiA+ID4gKwkqc3RhdHVzID0gaW9yZWFkMzIocmVnKTsNCj4gPiA+ID4gKw0K
-PiA+ID4gPiArCXJldHVybiAwOw0KPiA+ID4gPiArfQ0KPiA+ID4gPiArRVhQT1JUX1NZTUJPTF9H
-UEwoaW50ZWxfaW9tX3BvcnRfc3RhdHVzKTsNCj4gPiA+DQo+ID4gPiBTbyB0aGUgd2hvbGUgZHJp
-dmVyIGlzIGhlcmUganVzdCB0byByZWFkLCBkaXJlY3RseSBmcm9tIG1lbW9yeSwgYQ0KPiA+ID4g
-c2luZ2xlDQo+ID4gPiAzMiBiaXQgdmFsdWU/DQo+ID4NCj4gPiBZZXMuDQo+IA0KPiBPaywgdGhl
-biB0aGlzIHdob2xlIGRyaXZlciBjb3VsZCBiZSBhYm91dCA5MCUgc21hbGxlciBhbmQgbW9yZSBv
-YnZpb3VzLg0KPiBEb24ndCBhZGQgdGhlIHJlZmVyZW5jZSBjb3VudGluZywgdGhlIHN0YXRpYyB2
-YXJpYWJsZXMgYW5kIGFsbCB0aGUgb3RoZXIgc3R1ZmYNCj4ganVzdCB0byBnZXQgYSAzMmJpdCBu
-dW1iZXIuDQo+IA0KDQpBY2sNCg==
+
+--hfre6zazdmed5p3p
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Wed, Jun 24, 2020 at 01:42:26AM +0200, Kristian Klausen wrote:
+> On 07.02.2018 15.58, Ognjen Galic wrote:
+> > This is a patch that implements a generic hooking API for the
+> > generic ACPI battery driver.
+> >=20
+> > With this new generic API, drivers can expose platform specific
+> > behaviour via sysfs attributes in /sys/class/power_supply/BATn/
+> > in a generic way.
+> >=20
+> > A perfect example of the need for this API are Lenovo ThinkPads.
+> >=20
+> > Lenovo ThinkPads have a ACPI extension that allows the setting of
+> > start and stop charge thresholds in the EC and battery firmware
+> > via ACPI. The thinkpad_acpi module can use this API to expose
+> > sysfs attributes that it controls inside the ACPI battery driver
+> > sysfs tree, under /sys/class/power_supply/BATN/.
+> >=20
+> > The file drivers/acpi/battery.h has been moved to
+> > include/acpi/battery.h and the includes inside ac.c, sbs.c, and
+> > battery.c have been adjusted to reflect that.
+> >=20
+> > When drivers hooks into the API, the API calls add_battery() for
+> > each battery in the system that passes it a acpi_battery
+> > struct. Then, the drivers can use device_create_file() to create
+> > new sysfs attributes with that struct and identify the batteries
+> > for per-battery attributes.
+>=20
+> Hi
+>=20
+> I did that, when I implemented charge threshold support for ASUS
+> laptops[1][2].
+>=20
+> It works very well but I can't control the threshold with udev (also
+> reported by another user here[3]). So I did a bit of digging and the doc[=
+4]
+> states: "If attributes are added after the device is registered, then
+> userspace won=E2=80=99t get notified and userspace will not know about th=
+e new
+> attributes.", which seems to be the way the current code works:
+> power_supply_register_no_ws is called[5] and if it success all the hooks =
+are
+> run.
+>
+> Looking at the code I'm not sure there is a easy way to fix it, do you ha=
+ve
+> any good ideas?
+
+That problem is described by Greg in his blog post from 2013:
+
+http://kroah.com/log/blog/2013/06/26/how-to-create-a-sysfs-file-correctly/
+
+The power-supply subsystem offers registering extra attributes
+at registration time by filling in the .attr_grp field in the
+struct power_supply_config supplied as last parameter to
+power_supply_register_*() since 4.21.
+
+-- Sebastian
+
+--hfre6zazdmed5p3p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8cgV4ACgkQ2O7X88g7
++pqvtQ//ZrWf/Jt4UggT7gakaPf45snDjeeIbYOG4t+yuEAOkSI+6VHGMERKap2o
+mkpuzVdEYnpIP4PtSjCxM9adJvSktn/z22QvkypyyYDDmsuGGu8d3fUD1o1TYDGE
+Dm5Kce8aqHIFBVL1TG+9Yg6O8L5gkKE6NC8dwlwFRTgnh7jAR910F8sva6Poc0PC
+Uvp3DqeuqRWgdPqKko5l5BTtfsghu+nTl+cMqYxrN7yTLeimaTUZZdLtYrwNJ3Z1
+o4jDSYCGlxdb269FGsPj3Ukoh4KvGJ4Iz+FZw60QToteki3lMuQfmrZBrsd1dWFo
+SEdrG0m+zetHNRJWEiuxSFRKHsHQXOiyrmso63HxfdwhB8s+mlBsC0pn+kunKhTh
+xx0v9n9xygPfs3QWVd8mQJkE2yLVeExacsoZPLabL9NLYUTEMRUrB43pcq0D85Jv
++d7MDMKJ+Q+xOVGk6GukdMCgmR+cY7jImZqIIRKUrE1utKQ0fux2bZzbsJ7jXyvC
+H27QMpJ1uA+knpRKx5PpWM5ohfVRUogaItv5C7uBzrpksMToB+wU2LumrOSKg67D
+vvv3XkWm6KFKl+wOOGWcj/1pzTOatqQk0VQC1BKVeoWzqFPq/x2XNCMHIpYK7ZpP
+ABX2jdj0v3Jd7bwiKRNLc9P0W6E7YQcM1V3+N2KI36O4FoLWL9M=
+=9vtN
+-----END PGP SIGNATURE-----
+
+--hfre6zazdmed5p3p--
