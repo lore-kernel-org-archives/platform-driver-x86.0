@@ -1,93 +1,44 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] x86/platform/geode: Convert LED to GPIO machine descriptor
-Date: Mon, 27 Jul 2020 13:45:53 +0300
-Message-ID: <CAHp75VfZk-6WrbppbBeBzCj+g=56hF0ip+HdVtOxLVaFF3J+Gg@mail.gmail.com>
-References: <20200727080019.286172-1-linus.walleij@linaro.org>
+Subject: Re: [PATCH v1] platform/mellanox: mlxbf-pmc: Add Mellanox BlueField
+ PMC driver
+Date: Mon, 27 Jul 2020 13:53:50 +0300
+Message-ID: <CAHp75Vdsw61-uNi2TiR7F4j0s=F6XCnQC_j81hXfyJ9tfeq8QA@mail.gmail.com>
+References: <0bad52e6e10ff2e8d8a19f95bab7642ec5e71838.1595838334.git.sramani@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20200727080019.286172-1-linus.walleij@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Andres Salomon <dilinger@queued.net>, linux-geode@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0bad52e6e10ff2e8d8a19f95bab7642ec5e71838.1595838334.git.sramani@mellanox.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shravan Kumar Ramani <sramani@mellanox.com>
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, Jiri Pirko <jiri@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:02 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Mon, Jul 27, 2020 at 12:02 PM Shravan Kumar Ramani
+<sramani@mellanox.com> wrote:
 >
-> This makes the machine look up the LED from a GPIO machine
-> descriptor table. The Geode LEDs should be on the CS5535
-> companion chip.
+> The performance modules in BlueField are present in several hardware
+> blocks and each block provides access to these stats either through
+> counters that can be programmed to monitor supported events or
+> through memory-mapped registers that hold the relevant information.
+> The hardware blocks that include a performance module are:
+>  * Tile (block containing 2 cores and a shared L2 cache)
+>  * TRIO (PCIe root complex)
+>  * MSS (Memory Sub-system containing the Memory Controller and L3 cache)
+>  * GIC (Interrupt controller)
+>  * SMMU (System Memory Management Unit)
+> The mlx_pmc driver provides access to all of these performance modules
+> through a hwmon sysfs interface.
 
-Comments (rather nit-picks) below for all three.
+Just brief comments:
+- consider to revisit header block to see what is really necessary and
+what can be dropped
+- add comma to the arrays where last line is not a termination
+- look at match_string() / sysfs_match_string() API, I think they can
+be utilised here
+- UUID manipulations (esp. with that GUID_INIT() against non-constant)
+seems too much, consider refactoring and cleaning up these pieces
+- use kstroto*() API instead of sscanf. It has a range check
 
-In any case this version is okay
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-I'm not sure the prefix shouldn't be .../geode: for all of them
-followed by mentioning the name in the subject line.
-
-> Cc: linux-gpio@vger.kernel.org
-> Cc: Andres Salomon <dilinger@queued.net>
-> Cc: linux-geode@lists.infradead.org
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: platform-driver-x86@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  arch/x86/platform/geode/net5501.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/platform/geode/net5501.c b/arch/x86/platform/geode/net5501.c
-> index 163e1b545517..d4e6c57b9c87 100644
-> --- a/arch/x86/platform/geode/net5501.c
-> +++ b/arch/x86/platform/geode/net5501.c
-> @@ -20,6 +20,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/input.h>
->  #include <linux/gpio_keys.h>
-> +#include <linux/gpio/machine.h>
->
->  #include <asm/geode.h>
->
-> @@ -55,9 +56,7 @@ static struct platform_device net5501_buttons_dev = {
->  static struct gpio_led net5501_leds[] = {
->         {
->                 .name = "net5501:1",
-> -               .gpio = 6,
->                 .default_trigger = "default-on",
-> -               .active_low = 0,
->         },
->  };
->
-> @@ -66,6 +65,15 @@ static struct gpio_led_platform_data net5501_leds_data = {
->         .leds = net5501_leds,
->  };
->
-> +static struct gpiod_lookup_table net5501_leds_gpio_table = {
-> +       .dev_id = "leds-gpio",
-> +       .table = {
-> +               /* The Geode GPIOs should be on the CS5535 companion chip */
-> +               GPIO_LOOKUP_IDX("cs5535-gpio", 6, NULL, 0, GPIO_ACTIVE_HIGH),
-
-> +               { },
-
-It will be good if we don't put commas in the terminator line (to
-avoid copy'n'paste practice of this).
-
-> +       },
-> +};
-
-...
-
->  static void __init register_net5501(void)
->  {
->         /* Setup LED control through leds-gpio driver */
-> +       gpiod_add_lookup_table(&net5501_leds_gpio_table);
->         platform_add_devices(net5501_devs, ARRAY_SIZE(net5501_devs));
->  }
-
-The cleanest way is also to provide an __exitcall function, but I
-guess it may be too much.
 
 -- 
 With Best Regards,
