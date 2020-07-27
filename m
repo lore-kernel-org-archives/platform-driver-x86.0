@@ -1,52 +1,44 @@
-From: Nitin Joshi1 <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [External] Re: [PATCH v4] platform/x86:
- thinkpad_acpi: lap or desk mode interface
-Date: Mon, 27 Jul 2020 02:51:09 +0000
-Message-ID: <SG2PR03MB2718DFC08C4ECF7816D1B4E48C720@SG2PR03MB2718.apcprd03.prod.outlook.com>
-References: <markpearson@lenovo.com>
- <20200629191748.3859-1-markpearson@lenovo.com>
- <732277929.1313334.1593596757447.JavaMail.zimbra@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 0/3] Add 3 new keycodes and use them for 3 new hotkeys on
+ new Lenovo Thinkpads
+Date: Mon, 27 Jul 2020 09:45:29 +0200
+Message-ID: <f67ede61-c9d4-6abc-9b59-a5b2b615d1b6@redhat.com>
+References: <20200717114155.56222-1-hdegoede@redhat.com>
+ <20200719225649.GA4341@khazad-dum.debian.net>
+ <20200722054144.GQ1665100@dtor-ws>
+ <20200727005049.GA10254@khazad-dum.debian.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <732277929.1313334.1593596757447.JavaMail.zimbra-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20200727005049.GA10254@khazad-dum.debian.net>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark RH Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-Cc: Sugumaran Lacshiminarayanan <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org" <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, "ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Darren Hart <dvhart@infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andy Shevchenko <andy@infradead.org>, linux-input@vger.kernel.org, Marco Trevisan <marco.trevisan@canonical.com>, Mark Pearson <mpearson@lenovo.com>, Christian Kellner <ckellner@redhat.com>, Benjamin Berg <bberg@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hello Bastien
+Hi,
 
->-----Original Message-----
->From: Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
->----- Original Message -----
->> Newer Lenovo Thinkpad platforms have support to identify whether the
->>   system is on-lap or not using an ACPI DYTC event from the firmware.
+On 7/27/20 2:50 AM, Henrique de Moraes Holschuh wrote:
+> On Tue, 21 Jul 2020, Dmitry Torokhov wrote:
+>> On Sun, Jul 19, 2020 at 07:56:49PM -0300, Henrique de Moraes Holschuh wrote:
+>>> On Fri, 17 Jul 2020, Hans de Goede wrote:
+>>>> This is a simple patch-series adding support for 3 new hotkeys found
+>>>> on various new Lenovo Thinkpad models.
+>>>
+>>> For all three patches, pending an ack for the new keycodes by the input
+>>> maintainers:
+>>>
+>>> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
 >>
->>   This patch provides the ability to retrieve the current mode via sysfs
->>   entrypoints and will be used by userspace for thermal mode and WWAN
->>   functionality
->>
->> Co-developed-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
->> Reviewed-by: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
->
->
->You can add my:
->Reviewed-by: Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> Do you want me to merge all 3 through input tree?
+> 
+> Hans, Daren, Andy, what do you prefer?
 
-It's already added in latest patch and currently in "for-next"
-http://git.infradead.org/linux-platform-drivers-x86.git/commit/acf7f4a59114471c3964f118564fe8e7a6f34bb8
+Taking all this upstream through Dmitry's input tree is fine with
+me, but this really is up to Andy and/or Daren.
 
-Thanks 
+Regards,
+
+Hans
