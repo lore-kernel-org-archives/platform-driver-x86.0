@@ -1,50 +1,116 @@
-From: Nitin Joshi1 <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [External] Re: [PATCH v4] platform/x86:
- thinkpad_acpi: lap or desk mode interface
-Date: Mon, 27 Jul 2020 12:49:21 +0000
-Message-ID: <SG2PR03MB2718BD5C540321CAE069A7A38C720@SG2PR03MB2718.apcprd03.prod.outlook.com>
-References: <markpearson@lenovo.com>
- <20200629191748.3859-1-markpearson@lenovo.com>
- <732277929.1313334.1593596757447.JavaMail.zimbra@redhat.com>
- <SG2PR03MB2718DFC08C4ECF7816D1B4E48C720@SG2PR03MB2718.apcprd03.prod.outlook.com>
- <321690127.4797880.1595847834329.JavaMail.zimbra@redhat.com>
+From: "David E. Box" <david.e.box@linux.intel.com>
+Subject: Re: [PATCH V4 0/3] Intel Platform Monitoring Technology
+Date: Mon, 27 Jul 2020 09:29:00 -0700
+Message-ID: <718d3322c97561f69e156ed479e52d01d0899d78.camel@linux.intel.com>
+References: <20200714062323.19990-1-david.e.box@linux.intel.com>
+         <20200717190620.29821-1-david.e.box@linux.intel.com>
+         <CAHp75VftSf8pzSAYMjcKg-MSiy0T4xG=wiKpgY20_ZKOO0Tq0w@mail.gmail.com>
+Reply-To: david.e.box@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <321690127.4797880.1595847834329.JavaMail.zimbra-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: "ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org" <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Mark RH Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Sugumaran Lacshiminarayanan <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VftSf8pzSAYMjcKg-MSiy0T4xG=wiKpgY20_ZKOO0Tq0w@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Alexander Duyck <alexander.h.duyck@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQmFzdGllbiBOb2NlcmEgPGJub2Nl
-cmFAcmVkaGF0LmNvbT4NCj5TZW50OiBNb25kYXksIEp1bHkgMjcsIDIwMjAgODowNCBQTQ0KPlRv
-OiBOaXRpbiBKb3NoaTEgPG5qb3NoaTFAbGVub3ZvLmNvbT4NCj4+ID4+DQo+PiA+PiBDby1kZXZl
-bG9wZWQtYnk6IE5pdGluIEpvc2hpIDxuam9zaGkxQGxlbm92by5jb20+DQo+PiA+PiBTaWduZWQt
-b2ZmLWJ5OiBOaXRpbiBKb3NoaSA8bmpvc2hpMUBsZW5vdm8uY29tPg0KPj4gPj4gUmV2aWV3ZWQt
-Ynk6IFN1Z3VtYXJhbiA8c2xhY3NoaW1pbmFyQGxlbm92by5jb20+DQo+PiA+PiBTaWduZWQtb2Zm
-LWJ5OiBNYXJrIFBlYXJzb24gPG1hcmtwZWFyc29uQGxlbm92by5jb20+DQo+PiA+DQo+PiA+DQo+
-PiA+WW91IGNhbiBhZGQgbXk6DQo+PiA+UmV2aWV3ZWQtYnk6IEJhc3RpZW4gTm9jZXJhIDxibm9j
-ZXJhQHJlZGhhdC5jb20+DQo+Pg0KPj4gSXQncyBhbHJlYWR5IGFkZGVkIGluIGxhdGVzdCBwYXRj
-aCBhbmQgY3VycmVudGx5IGluICJmb3ItbmV4dCINCj4+IGh0dHA6Ly9naXQuaW5mcmFkZWFkLm9y
-Zy9saW51eC1wbGF0Zm9ybS1kcml2ZXJzLXg4Ni5naXQvY29tbWl0L2FjZjdmNGENCj4+IDU5MTE0
-NDcxYzM5NjRmMTE4NTY0ZmU4ZTdhNmYzNGJiOA0KPg0KPkkgc2VudCBteSBtZXNzYWdlIG5lYXJs
-eSBhIG1vbnRoIGFnbywgMiBkYXlzIGJlZm9yZSB0aGUgYXV0aG9yaW5nIGRhdGUgb2YNCj50aGUg
-cGF0Y2ggdGhhdCB3YXMgbWVyZ2VkLCBzbyBJJ20gbm90IHN1cmUgd2hhdCB5b3UncmUgdHJ5aW5n
-IHRvIHRlbGwgbWUNCj5oZXJlIDopDQoNClNvcnJ5ICwgcGxlYXNlIGlnbm9yZSB0aGlzIGUtbWFp
-bCAuIERvbuKAmXQga25vdyB3aHkgaXQgY2FtZSB1cCBvbiBteSBtYWlsYm94IHRvZGF5IC4gQnV0
-IGl0cyBteSBtaXN0YWtlICwgSSB3b3VsZCBoYXZlIHNlZW4gZGF0ZSB3aGVuIHRoaXMgZS1tYWls
-IHdhcyBzZW50IDopIA0KQXBvbG9naXplIGZvciBpbmNvbnZlbmllbmNlIGNhdXNlZC4NCg0KVGhh
-bmtzICYgUmVnYXJkcywNCk5pdGluIEpvc2hpDQoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KaWJtLWFjcGktZGV2ZWwgbWFpbGluZyBsaXN0CmlibS1hY3Bp
-LWRldmVsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApodHRwczovL2xpc3RzLnNvdXJjZWZvcmdlLm5l
-dC9saXN0cy9saXN0aW5mby9pYm0tYWNwaS1kZXZlbAo=
+On Mon, 2020-07-27 at 13:23 +0300, Andy Shevchenko wrote:
+> On Fri, Jul 17, 2020 at 10:05 PM David E. Box
+> <david.e.box@linux.intel.com> wrote:
+> > Intel Platform Monitoring Technology (PMT) is an architecture for
+> > enumerating and accessing hardware monitoring capabilities on a
+> > device.
+> > With customers increasingly asking for hardware telemetry,
+> > engineers not
+> > only have to figure out how to measure and collect data, but also
+> > how to
+> > deliver it and make it discoverable. The latter may be through some
+> > device
+> > specific method requiring device specific tools to collect the
+> > data. This
+> > in turn requires customers to manage a suite of different tools in
+> > order to
+> > collect the differing assortment of monitoring data on their
+> > systems.  Even
+> > when such information can be provided in kernel drivers, they may
+> > require
+> > constant maintenance to update register mappings as they change
+> > with
+> > firmware updates and new versions of hardware. PMT provides a
+> > solution for
+> > discovering and reading telemetry from a device through a hardware
+> > agnostic
+> > framework that allows for updates to systems without requiring
+> > patches to
+> > the kernel or software tools.
+> > 
+> > PMT defines several capabilities to support collecting monitoring
+> > data from
+> > hardware. All are discoverable as separate instances of the PCIE
+> > Designated
+> > Vendor extended capability (DVSEC) with the Intel vendor code. The
+> > DVSEC ID
+> > field uniquely identifies the capability. Each DVSEC also provides
+> > a BAR
+> > offset to a header that defines capability-specific attributes,
+> > including
+> > GUID, feature type, offset and length, as well as configuration
+> > settings
+> > where applicable. The GUID uniquely identifies the register space
+> > of any
+> > monitor data exposed by the capability. The GUID is associated with
+> > an XML
+> > file from the vendor that describes the mapping of the register
+> > space along
+> > with properties of the monitor data. This allows vendors to perform
+> > firmware updates that can change the mapping (e.g. add new metrics)
+> > without
+> > requiring any changes to drivers or software tools. The new mapping
+> > is
+> > confirmed by an updated GUID, read from the hardware, which
+> > software uses
+> > with a new XML.
+> > 
+> > The current capabilities defined by PMT are Telemetry, Watcher, and
+> > Crashlog.  The Telemetry capability provides access to a continuous
+> > block
+> > of read only data. The Watcher capability provides access to
+> > hardware
+> > sampling and tracing features. Crashlog provides access to device
+> > crash
+> > dumps.  While there is some relationship between capabilities
+> > (Watcher can
+> > be configured to sample from the Telemetry data set) each exists as
+> > stand
+> > alone features with no dependency on any other. The design
+> > therefore splits
+> > them into individual, capability specific drivers. MFD is used to
+> > create
+> > platform devices for each capability so that they may be managed by
+> > their
+> > own driver. The PMT architecture is (for the most part) agnostic to
+> > the
+> > type of device it can collect from. Devices nodes are consequently
+> > generic
+> > in naming, e.g. /dev/telem<n> and /dev/smplr<n>. Each capability
+> > driver
+> > creates a class to manage the list of devices supporting
+> > it.  Software can
+> > determine which devices support a PMT feature by searching through
+> > each
+> > device node entry in the sysfs class folder. It can additionally
+> > determine
+> > if a particular device supports a PMT feature by checking for a PMT
+> > class
+> > folder in the device folder.
+> > 
+> > This patch set provides support for the PMT framework, along with
+> > support
+> > for Telemetry on Tiger Lake.
+> > 
+> 
+> I assume this goes thru MFD tree.
+
+Yes, looking for pull by MFD. Thanks Andy.
