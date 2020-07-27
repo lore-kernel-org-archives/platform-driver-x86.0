@@ -1,45 +1,57 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1] platform/mellanox: mlxbf-pmc: Add Mellanox BlueField
- PMC driver
-Date: Mon, 27 Jul 2020 13:53:50 +0300
-Message-ID: <CAHp75Vdsw61-uNi2TiR7F4j0s=F6XCnQC_j81hXfyJ9tfeq8QA@mail.gmail.com>
-References: <0bad52e6e10ff2e8d8a19f95bab7642ec5e71838.1595838334.git.sramani@mellanox.com>
+From: Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [External] Re: [PATCH v4] platform/x86:
+ thinkpad_acpi: lap or desk mode interface
+Date: Mon, 27 Jul 2020 07:03:54 -0400 (EDT)
+Message-ID: <321690127.4797880.1595847834329.JavaMail.zimbra@redhat.com>
+References: <markpearson@lenovo.com>
+ <20200629191748.3859-1-markpearson@lenovo.com>
+ <732277929.1313334.1593596757447.JavaMail.zimbra@redhat.com>
+ <SG2PR03MB2718DFC08C4ECF7816D1B4E48C720@SG2PR03MB2718.apcprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0bad52e6e10ff2e8d8a19f95bab7642ec5e71838.1595838334.git.sramani@mellanox.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shravan Kumar Ramani <sramani@mellanox.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, Jiri Pirko <jiri@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <SG2PR03MB2718DFC08C4ECF7816D1B4E48C720-ePYYJTVkT3RfCKvAoM4nXq82SN/2zMuYvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Nitin Joshi1 <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Cc: ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, Mark RH Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Sugumaran Lacshiminarayanan <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:02 PM Shravan Kumar Ramani
-<sramani@mellanox.com> wrote:
->
-> The performance modules in BlueField are present in several hardware
-> blocks and each block provides access to these stats either through
-> counters that can be programmed to monitor supported events or
-> through memory-mapped registers that hold the relevant information.
-> The hardware blocks that include a performance module are:
->  * Tile (block containing 2 cores and a shared L2 cache)
->  * TRIO (PCIe root complex)
->  * MSS (Memory Sub-system containing the Memory Controller and L3 cache)
->  * GIC (Interrupt controller)
->  * SMMU (System Memory Management Unit)
-> The mlx_pmc driver provides access to all of these performance modules
-> through a hwmon sysfs interface.
-
-Just brief comments:
-- consider to revisit header block to see what is really necessary and
-what can be dropped
-- add comma to the arrays where last line is not a termination
-- look at match_string() / sysfs_match_string() API, I think they can
-be utilised here
-- UUID manipulations (esp. with that GUID_INIT() against non-constant)
-seems too much, consider refactoring and cleaning up these pieces
-- use kstroto*() API instead of sscanf. It has a range check
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+----- Original Message -----
+> Hello Bastien
+> 
+> >-----Original Message-----
+> >From: Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> 
+> >----- Original Message -----
+> >> Newer Lenovo Thinkpad platforms have support to identify whether the
+> >>   system is on-lap or not using an ACPI DYTC event from the firmware.
+> >>
+> >>   This patch provides the ability to retrieve the current mode via sysfs
+> >>   entrypoints and will be used by userspace for thermal mode and WWAN
+> >>   functionality
+> >>
+> >> Co-developed-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+> >> Signed-off-by: Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+> >> Reviewed-by: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+> >> Signed-off-by: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+> >
+> >
+> >You can add my:
+> >Reviewed-by: Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> 
+> It's already added in latest patch and currently in "for-next"
+> http://git.infradead.org/linux-platform-drivers-x86.git/commit/acf7f4a59114471c3964f118564fe8e7a6f34bb8
+
+I sent my message nearly a month ago, 2 days before the authoring date
+of the patch that was merged, so I'm not sure what you're trying to
+tell me here :)
