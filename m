@@ -1,58 +1,381 @@
-From: Shravan Ramani <sramani@mellanox.com>
-Subject: RE: [PATCH v1] platform/mellanox: mlxbf-pmc: Add Mellanox BlueField
- PMC driver
-Date: Tue, 28 Jul 2020 05:04:29 +0000
-Message-ID: <HE1PR0501MB28125EED224EE4F487862974CE730@HE1PR0501MB2812.eurprd05.prod.outlook.com>
-References: <0bad52e6e10ff2e8d8a19f95bab7642ec5e71838.1595838334.git.sramani@mellanox.com>
- <CAHp75Vdsw61-uNi2TiR7F4j0s=F6XCnQC_j81hXfyJ9tfeq8QA@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V4 2/3] mfd: Intel Platform Monitoring Technology support
+Date: Tue, 28 Jul 2020 08:58:59 +0100
+Message-ID: <20200728075859.GH1850026@dell>
+References: <20200714062323.19990-1-david.e.box@linux.intel.com>
+ <20200717190620.29821-3-david.e.box@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vdsw61-uNi2TiR7F4j0s=F6XCnQC_j81hXfyJ9tfeq8QA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>, Jiri Pirko <jiri@mellanox.com>, Platform Driver <platform-driver-x86@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200717190620.29821-3-david.e.box@linux.intel.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: "David E. Box" <david.e.box@linux.intel.com>
+Cc: dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com, alexander.h.duyck@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5keSBTaGV2Y2hlbmtv
-IDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPg0KPiBTZW50OiBNb25kYXksIEp1bHkgMjcsIDIw
-MjAgNDoyNCBQTQ0KPiBUbzogU2hyYXZhbiBSYW1hbmkgPHNyYW1hbmlAbWVsbGFub3guY29tPg0K
-PiBDYzogQW5keSBTaGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVhZC5vcmc+OyBEYXJyZW4gSGFydA0K
-PiA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBWYWRpbSBQYXN0ZXJuYWsgPHZhZGltcEBtZWxsYW5v
-eC5jb20+OyBKaXJpIFBpcmtvDQo+IDxqaXJpQG1lbGxhbm94LmNvbT47IFBsYXRmb3JtIERyaXZl
-ciA8cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiBMaW51eCBLZXJuZWwg
-TWFpbGluZyBMaXN0IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPg0KPiBTdWJqZWN0OiBS
-ZTogW1BBVENIIHYxXSBwbGF0Zm9ybS9tZWxsYW5veDogbWx4YmYtcG1jOiBBZGQgTWVsbGFub3gg
-Qmx1ZUZpZWxkDQo+IFBNQyBkcml2ZXINCj4gDQo+IE9uIE1vbiwgSnVsIDI3LCAyMDIwIGF0IDEy
-OjAyIFBNIFNocmF2YW4gS3VtYXIgUmFtYW5pDQo+IDxzcmFtYW5pQG1lbGxhbm94LmNvbT4gd3Jv
-dGU6DQo+ID4NCj4gPiBUaGUgcGVyZm9ybWFuY2UgbW9kdWxlcyBpbiBCbHVlRmllbGQgYXJlIHBy
-ZXNlbnQgaW4gc2V2ZXJhbCBoYXJkd2FyZQ0KPiA+IGJsb2NrcyBhbmQgZWFjaCBibG9jayBwcm92
-aWRlcyBhY2Nlc3MgdG8gdGhlc2Ugc3RhdHMgZWl0aGVyIHRocm91Z2gNCj4gPiBjb3VudGVycyB0
-aGF0IGNhbiBiZSBwcm9ncmFtbWVkIHRvIG1vbml0b3Igc3VwcG9ydGVkIGV2ZW50cyBvciB0aHJv
-dWdoDQo+ID4gbWVtb3J5LW1hcHBlZCByZWdpc3RlcnMgdGhhdCBob2xkIHRoZSByZWxldmFudCBp
-bmZvcm1hdGlvbi4NCj4gPiBUaGUgaGFyZHdhcmUgYmxvY2tzIHRoYXQgaW5jbHVkZSBhIHBlcmZv
-cm1hbmNlIG1vZHVsZSBhcmU6DQo+ID4gICogVGlsZSAoYmxvY2sgY29udGFpbmluZyAyIGNvcmVz
-IGFuZCBhIHNoYXJlZCBMMiBjYWNoZSkNCj4gPiAgKiBUUklPIChQQ0llIHJvb3QgY29tcGxleCkN
-Cj4gPiAgKiBNU1MgKE1lbW9yeSBTdWItc3lzdGVtIGNvbnRhaW5pbmcgdGhlIE1lbW9yeSBDb250
-cm9sbGVyIGFuZCBMMw0KPiA+IGNhY2hlKQ0KPiA+ICAqIEdJQyAoSW50ZXJydXB0IGNvbnRyb2xs
-ZXIpDQo+ID4gICogU01NVSAoU3lzdGVtIE1lbW9yeSBNYW5hZ2VtZW50IFVuaXQpIFRoZSBtbHhf
-cG1jIGRyaXZlciBwcm92aWRlcw0KPiA+IGFjY2VzcyB0byBhbGwgb2YgdGhlc2UgcGVyZm9ybWFu
-Y2UgbW9kdWxlcyB0aHJvdWdoIGEgaHdtb24gc3lzZnMNCj4gPiBpbnRlcmZhY2UuDQo+IA0KPiBK
-dXN0IGJyaWVmIGNvbW1lbnRzOg0KPiAtIGNvbnNpZGVyIHRvIHJldmlzaXQgaGVhZGVyIGJsb2Nr
-IHRvIHNlZSB3aGF0IGlzIHJlYWxseSBuZWNlc3NhcnkgYW5kIHdoYXQgY2FuDQo+IGJlIGRyb3Bw
-ZWQNCj4gLSBhZGQgY29tbWEgdG8gdGhlIGFycmF5cyB3aGVyZSBsYXN0IGxpbmUgaXMgbm90IGEg
-dGVybWluYXRpb24NCj4gLSBsb29rIGF0IG1hdGNoX3N0cmluZygpIC8gc3lzZnNfbWF0Y2hfc3Ry
-aW5nKCkgQVBJLCBJIHRoaW5rIHRoZXkgY2FuIGJlIHV0aWxpc2VkDQo+IGhlcmUNCj4gLSBVVUlE
-IG1hbmlwdWxhdGlvbnMgKGVzcC4gd2l0aCB0aGF0IEdVSURfSU5JVCgpIGFnYWluc3Qgbm9uLWNv
-bnN0YW50KSBzZWVtcw0KPiB0b28gbXVjaCwgY29uc2lkZXIgcmVmYWN0b3JpbmcgYW5kIGNsZWFu
-aW5nIHVwIHRoZXNlIHBpZWNlcw0KDQpDb3VsZCB5b3UgcGxlYXNlIGVsYWJvcmF0ZSBvbiB3aGF0
-IGFwcHJvYWNoIHlvdSdkIGxpa2UgbWUgdG8gdGFrZSB3aXRoIHRoZSBVVUlEIG1hbmlwdWxhdGlv
-bj8NCkkgdXNlZCB0aGUgc2FtZSBhcHByb2FjaCBhcyBpbiBkcml2ZXJzL3BsYXRmb3JtL21lbGxh
-bm94L21seGJmLWJvb3RjdGwuYyB3aGljaCBzZWVtZWQgbGlrZSBhbiBhcHByb3ByaWF0ZSBleGFt
-cGxlLg0KQW55IG90aGVyIHBvaW50ZXJzIHdvdWxkIGJlIGhlbHBmdWwuDQoNClRoYW5rcyBmb3Ig
-dGhlIGZlZWRiYWNrLiBXaWxsIGFkZHJlc3MgYWxsIHRoZSBvdGhlciBjb21tZW50cyBpbiB2Mi4N
-Cg0KUmVnYXJkcywNClNocmF2YW4NCg0KPiAtIHVzZSBrc3Ryb3RvKigpIEFQSSBpbnN0ZWFkIG9m
-IHNzY2FuZi4gSXQgaGFzIGEgcmFuZ2UgY2hlY2sNCj4gDQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3Qg
-UmVnYXJkcywNCj4gQW5keSBTaGV2Y2hlbmtvDQo=
+On Fri, 17 Jul 2020, David E. Box wrote:
+
+> Intel Platform Monitoring Technology (PMT) is an architecture for
+> enumerating and accessing hardware monitoring facilities. PMT supports
+> multiple types of monitoring capabilities. This driver creates platform
+> devices for each type so that they may be managed by capability specific
+> drivers (to be introduced). Capabilities are discovered using PCIe DVSEC
+> ids. Support is included for the 3 current capability types, Telemetry,
+> Watcher, and Crashlog. The features are available on new Intel platforms
+> starting from Tiger Lake for which support is added.
+> 
+> Also add a quirk mechanism for several early hardware differences and bugs.
+> For Tiger Lake, do not support Watcher and Crashlog capabilities since they
+> will not be compatible with future product. Also, fix use a quirk to fix
+> the discovery table offset.
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+
+This should be in chronological order.
+
+> ---
+>  MAINTAINERS             |   5 +
+>  drivers/mfd/Kconfig     |  10 ++
+>  drivers/mfd/Makefile    |   1 +
+>  drivers/mfd/intel_pmt.c | 215 ++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 231 insertions(+)
+>  create mode 100644 drivers/mfd/intel_pmt.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b4a43a9e7fbc..2e42bf0c41ab 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8845,6 +8845,11 @@ F:	drivers/mfd/intel_soc_pmic*
+>  F:	include/linux/mfd/intel_msic.h
+>  F:	include/linux/mfd/intel_soc_pmic*
+>  
+> +INTEL PMT DRIVER
+> +M:	"David E. Box" <david.e.box@linux.intel.com>
+> +S:	Maintained
+> +F:	drivers/mfd/intel_pmt.c
+> +
+>  INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION SUPPORT
+>  M:	Stanislav Yakovlev <stas.yakovlev@gmail.com>
+>  L:	linux-wireless@vger.kernel.org
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index a37d7d171382..1a62ce2c68d9 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -670,6 +670,16 @@ config MFD_INTEL_PMC_BXT
+>  	  Register and P-unit access. In addition this creates devices
+>  	  for iTCO watchdog and telemetry that are part of the PMC.
+>  
+> +config MFD_INTEL_PMT
+> +	tristate "Intel Platform Monitoring Technology support"
+
+Nit: "Intel Platform Monitoring Technology (PMT) support"
+
+> +	depends on PCI
+> +	select MFD_CORE
+> +	help
+> +	  The Intel Platform Monitoring Technology (PMT) is an interface that
+> +	  provides access to hardware monitor registers. This driver supports
+> +	  Telemetry, Watcher, and Crashlog PMT capabilities/devices for
+> +	  platforms starting from Tiger Lake.
+> +
+>  config MFD_IPAQ_MICRO
+>  	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
+>  	depends on SA1100_H3100 || SA1100_H3600
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 9367a92f795a..1961b4737985 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -216,6 +216,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
+>  obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
+>  obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
+>  obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+= intel_pmc_bxt.o
+> +obj-$(CONFIG_MFD_INTEL_PMT)	+= intel_pmt.o
+>  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
+>  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+>  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
+> diff --git a/drivers/mfd/intel_pmt.c b/drivers/mfd/intel_pmt.c
+> new file mode 100644
+> index 000000000000..6857eaf4ff86
+> --- /dev/null
+> +++ b/drivers/mfd/intel_pmt.c
+> @@ -0,0 +1,215 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Intel Platform Monitoring Technology MFD driver
+
+s/MFD/(PMT)/
+
+> + * Copyright (c) 2020, Intel Corporation.
+> + * All Rights Reserved.
+> + *
+> + * Authors: David E. Box <david.e.box@linux.intel.com>
+
+Looks odd to use a plural for a single author.
+
+> + */
+> +
+> +#include <linux/bits.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/types.h>
+
+Alphabetical please.
+
+> +/* Intel DVSEC capability vendor space offsets */
+> +#define INTEL_DVSEC_ENTRIES		0xA
+> +#define INTEL_DVSEC_SIZE		0xB
+> +#define INTEL_DVSEC_TABLE		0xC
+> +#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
+> +#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
+> +#define INTEL_DVSEC_ENTRY_SIZE		4
+> +
+> +/* PMT capabilities */
+> +#define DVSEC_INTEL_ID_TELEMETRY	2
+> +#define DVSEC_INTEL_ID_WATCHER		3
+> +#define DVSEC_INTEL_ID_CRASHLOG		4
+> +
+> +#define TELEMETRY_DEV_NAME		"pmt_telemetry"
+> +#define WATCHER_DEV_NAME		"pmt_watcher"
+> +#define CRASHLOG_DEV_NAME		"pmt_crashlog"
+
+Please don't define names of things.  It makes grepping a pain, at the
+very least.  Just use the 'raw' string in-place.
+
+> +struct intel_dvsec_header {
+> +	u16	length;
+> +	u16	id;
+> +	u8	num_entries;
+> +	u8	entry_size;
+> +	u8	tbir;
+> +	u32	offset;
+> +};
+> +
+> +enum pmt_quirks {
+> +	/* Watcher capability not supported */
+> +	PMT_QUIRK_NO_WATCHER	= BIT(0),
+> +
+> +	/* Crashlog capability not supported */
+> +	PMT_QUIRK_NO_CRASHLOG	= BIT(1),
+> +
+> +	/* Use shift instead of mask to read discovery table offset */
+> +	PMT_QUIRK_TABLE_SHIFT	= BIT(2),
+> +};
+> +
+> +struct pmt_platform_info {
+> +	unsigned long quirks;
+> +};
+> +
+> +static const struct pmt_platform_info tgl_info = {
+> +	.quirks = PMT_QUIRK_NO_WATCHER | PMT_QUIRK_NO_CRASHLOG |
+> +		  PMT_QUIRK_TABLE_SHIFT,
+> +};
+> +
+> +static int
+> +pmt_add_dev(struct pci_dev *pdev, struct intel_dvsec_header *header,
+> +	    struct pmt_platform_info *info)
+
+My personal preference is to a) only break when you have to and b) to
+align with the '('.  Perhaps point b) is satisfied and it's just the
+patch format that's shifting the tab though?
+
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res, *tmp;
+> +	struct mfd_cell *cell;
+> +	const char *name;
+> +	int count = header->num_entries;
+> +	int size = header->entry_size;
+> +	int i;
+> +
+> +	switch (header->id) {
+> +	case DVSEC_INTEL_ID_TELEMETRY:
+> +		name = TELEMETRY_DEV_NAME;
+> +		break;
+> +	case DVSEC_INTEL_ID_WATCHER:
+> +		if (info->quirks & PMT_QUIRK_NO_WATCHER) {
+> +			dev_info(dev, "Watcher not supported\n");
+> +			return 0;
+> +		}
+> +		name = WATCHER_DEV_NAME;
+> +		break;
+> +	case DVSEC_INTEL_ID_CRASHLOG:
+> +		if (info->quirks & PMT_QUIRK_NO_CRASHLOG) {
+> +			dev_info(dev, "Crashlog not supported\n");
+> +			return 0;
+> +		}
+> +		name = CRASHLOG_DEV_NAME;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+
+Doesn't deserve an error message?
+
+> +	}
+> +
+> +	if (!header->num_entries || !header->entry_size) {
+> +		dev_warn(dev, "Invalid count or size for %s header\n", name);
+> +		return -EINVAL;
+
+If you're returning an error, this should be dev_err().
+
+Even if you only handle it as a warning at the call site.
+
+> +	}
+> +
+> +	cell = devm_kzalloc(dev, sizeof(*cell), GFP_KERNEL);
+> +	if (!cell)
+> +		return -ENOMEM;
+> +
+> +	res = devm_kcalloc(dev, count, sizeof(*res), GFP_KERNEL);
+> +	if (!res)
+> +		return -ENOMEM;
+> +
+> +	if (info->quirks & PMT_QUIRK_TABLE_SHIFT)
+> +		header->offset >>= 3;
+> +
+> +	for (i = 0, tmp = res; i < count; i++, tmp++) {
+> +		tmp->start = pdev->resource[header->tbir].start +
+> +			     header->offset + i * (size << 2);
+
+Deserves a comment I think.
+
+> +		tmp->end = tmp->start + (size << 2) - 1;
+> +		tmp->flags = IORESOURCE_MEM;
+> +	}
+> +
+> +	cell->resources = res;
+> +	cell->num_resources = count;
+> +	cell->name = name;
+> +
+> +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cell, 1, NULL, 0,
+> +				    NULL);
+> +}
+> +
+> +static int
+> +pmt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> +{
+> +	struct intel_dvsec_header header;
+> +	struct pmt_platform_info *info;
+> +	bool found_devices = false;
+> +	int ret, pos = 0;
+> +	u32 table;
+> +	u16 vid;
+> +
+> +	ret = pcim_enable_device(pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	info = devm_kmemdup(&pdev->dev, (void *)id->driver_data, sizeof(*info),
+> +			    GFP_KERNEL);
+> +	if (!info)
+> +		return -ENOMEM;
+> +
+> +	pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
+> +	while (pos) {
+
+If you do:
+
+	do {
+		int pos;
+
+		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
+		if (!pos)
+			break;
+
+Then you can invoke pci_find_next_ext_capability() once, no?
+
+> +		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vid);
+> +		if (vid != PCI_VENDOR_ID_INTEL)
+> +			continue;
+> +
+> +		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2,
+> +				     &header.id);
+> +		pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES,
+> +				     &header.num_entries);
+> +		pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE,
+> +				     &header.entry_size);
+> +		pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE,
+> +				      &table);
+> +
+> +		header.tbir = INTEL_DVSEC_TABLE_BAR(table);
+> +		header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
+> +
+> +		ret = pmt_add_dev(pdev, &header, info);
+> +		if (ret)
+> +			dev_warn(&pdev->dev,
+> +				 "Failed to add devices for DVSEC id %d\n",
+
+"device", so not all devices, right?
+
+> +				 header.id);
+
+Don't you want to continue here?
+
+Else you're going to set found_devices for a failed device.
+
+> +		found_devices = true;
+> +
+> +		pos = pci_find_next_ext_capability(pdev, pos,
+> +						   PCI_EXT_CAP_ID_DVSEC);
+> +	}
+> +
+> +	if (!found_devices) {
+> +		dev_err(&pdev->dev, "No supported PMT capabilities found.\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	pm_runtime_put(&pdev->dev);
+> +	pm_runtime_allow(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static void pmt_pci_remove(struct pci_dev *pdev)
+> +{
+> +	pm_runtime_forbid(&pdev->dev);
+> +	pm_runtime_get_sync(&pdev->dev);
+> +}
+> +
+> +#define PCI_DEVICE_ID_INTEL_PMT_TGL	0x9a0d
+
+What's this for?
+
+If this is PCI_DEVICE_DATA magic, it would be worth tying it to the
+struct i.e. remove the empty line between it and the table below.
+
+> +static const struct pci_device_id pmt_pci_ids[] = {
+> +	{ PCI_DEVICE_DATA(INTEL, PMT_TGL, &tgl_info) },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(pci, pmt_pci_ids);
+> +
+> +static struct pci_driver pmt_pci_driver = {
+> +	.name = "intel-pmt",
+> +	.id_table = pmt_pci_ids,
+> +	.probe = pmt_pci_probe,
+> +	.remove = pmt_pci_remove,
+> +};
+> +module_pci_driver(pmt_pci_driver);
+> +
+> +MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
+> +MODULE_DESCRIPTION("Intel Platform Monitoring Technology MFD driver");
+
+s/MFD/(PMT)/
+
+> +MODULE_LICENSE("GPL v2");
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
