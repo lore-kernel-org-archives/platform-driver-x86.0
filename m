@@ -1,116 +1,138 @@
-From: "David E. Box" <david.e.box@linux.intel.com>
-Subject: Re: [PATCH V4 0/3] Intel Platform Monitoring Technology
-Date: Mon, 27 Jul 2020 09:29:00 -0700
-Message-ID: <718d3322c97561f69e156ed479e52d01d0899d78.camel@linux.intel.com>
-References: <20200714062323.19990-1-david.e.box@linux.intel.com>
-         <20200717190620.29821-1-david.e.box@linux.intel.com>
-         <CAHp75VftSf8pzSAYMjcKg-MSiy0T4xG=wiKpgY20_ZKOO0Tq0w@mail.gmail.com>
-Reply-To: david.e.box@linux.intel.com
+From: Nitin Joshi1 <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [External] Re: [PATCH] platform/x86:
+ thinkpad_acpi: psensor interface
+Date: Tue, 28 Jul 2020 03:51:08 +0000
+Message-ID: <PU1PR03MB2716FE7EF1BF12E5B9EC25188C730@PU1PR03MB2716.apcprd03.prod.outlook.com>
+References: <markpearson@lenovo.com>
+ <20200715235242.4934-1-markpearson@lenovo.com>
+ <CAHp75Vcwg9aEpybYwEFvhYH4gpy7952i+zMs-2TKGPzkzuhO=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VftSf8pzSAYMjcKg-MSiy0T4xG=wiKpgY20_ZKOO0Tq0w@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Alexander Duyck <alexander.h.duyck@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <CAHp75Vcwg9aEpybYwEFvhYH4gpy7952i+zMs-2TKGPzkzuhO=g@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark RH Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Cc: Tomoki Maruichi <maruichit-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Thinkpad-acpi devel ML <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Sugumaran Lacshiminarayanan <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Platform Driver <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, 2020-07-27 at 13:23 +0300, Andy Shevchenko wrote:
-> On Fri, Jul 17, 2020 at 10:05 PM David E. Box
-> <david.e.box@linux.intel.com> wrote:
-> > Intel Platform Monitoring Technology (PMT) is an architecture for
-> > enumerating and accessing hardware monitoring capabilities on a
-> > device.
-> > With customers increasingly asking for hardware telemetry,
-> > engineers not
-> > only have to figure out how to measure and collect data, but also
-> > how to
-> > deliver it and make it discoverable. The latter may be through some
-> > device
-> > specific method requiring device specific tools to collect the
-> > data. This
-> > in turn requires customers to manage a suite of different tools in
-> > order to
-> > collect the differing assortment of monitoring data on their
-> > systems.  Even
-> > when such information can be provided in kernel drivers, they may
-> > require
-> > constant maintenance to update register mappings as they change
-> > with
-> > firmware updates and new versions of hardware. PMT provides a
-> > solution for
-> > discovering and reading telemetry from a device through a hardware
-> > agnostic
-> > framework that allows for updates to systems without requiring
-> > patches to
-> > the kernel or software tools.
-> > 
-> > PMT defines several capabilities to support collecting monitoring
-> > data from
-> > hardware. All are discoverable as separate instances of the PCIE
-> > Designated
-> > Vendor extended capability (DVSEC) with the Intel vendor code. The
-> > DVSEC ID
-> > field uniquely identifies the capability. Each DVSEC also provides
-> > a BAR
-> > offset to a header that defines capability-specific attributes,
-> > including
-> > GUID, feature type, offset and length, as well as configuration
-> > settings
-> > where applicable. The GUID uniquely identifies the register space
-> > of any
-> > monitor data exposed by the capability. The GUID is associated with
-> > an XML
-> > file from the vendor that describes the mapping of the register
-> > space along
-> > with properties of the monitor data. This allows vendors to perform
-> > firmware updates that can change the mapping (e.g. add new metrics)
-> > without
-> > requiring any changes to drivers or software tools. The new mapping
-> > is
-> > confirmed by an updated GUID, read from the hardware, which
-> > software uses
-> > with a new XML.
-> > 
-> > The current capabilities defined by PMT are Telemetry, Watcher, and
-> > Crashlog.  The Telemetry capability provides access to a continuous
-> > block
-> > of read only data. The Watcher capability provides access to
-> > hardware
-> > sampling and tracing features. Crashlog provides access to device
-> > crash
-> > dumps.  While there is some relationship between capabilities
-> > (Watcher can
-> > be configured to sample from the Telemetry data set) each exists as
-> > stand
-> > alone features with no dependency on any other. The design
-> > therefore splits
-> > them into individual, capability specific drivers. MFD is used to
-> > create
-> > platform devices for each capability so that they may be managed by
-> > their
-> > own driver. The PMT architecture is (for the most part) agnostic to
-> > the
-> > type of device it can collect from. Devices nodes are consequently
-> > generic
-> > in naming, e.g. /dev/telem<n> and /dev/smplr<n>. Each capability
-> > driver
-> > creates a class to manage the list of devices supporting
-> > it.  Software can
-> > determine which devices support a PMT feature by searching through
-> > each
-> > device node entry in the sysfs class folder. It can additionally
-> > determine
-> > if a particular device supports a PMT feature by checking for a PMT
-> > class
-> > folder in the device folder.
-> > 
-> > This patch set provides support for the PMT framework, along with
-> > support
-> > for Telemetry on Tiger Lake.
-> > 
-> 
-> I assume this goes thru MFD tree.
+Hi Andy ,
 
-Yes, looking for pull by MFD. Thanks Andy.
+>-----Original Message-----
+>From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>Sent: Monday, July 27, 2020 7:35 PM
+>On Thu, Jul 16, 2020 at 2:53 AM Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+>wrote:
+>>
+>>         case TP_HKEY_EV_PALM_DETECTED:
+>>         case TP_HKEY_EV_PALM_UNDETECTED:
+>> -               /* palm detected hovering the keyboard, forward to user-space
+>> -                * via netlink for consumption */
+>> +               /* palm detected - pass on to event handler */
+>> +               tpacpi_driver_event(hkey);
+>>                 return true;
+>
+>Comment here tells something about the netlink interface to user space.
+>Can you elaborate why we need sysfs now and how it's all supposed to
+>work?
+Using  netlink , we were getting proximity events like '0x60b0' and '0x60b1' but for our WWAN requirement, we need default and current 
+p-sensor state too .  
+Some tools like "acpi-listen" uses netlink to display events but we need default and current p-sensor state also as per our requirement. 
+hence , we have added new sysfs to get current p-sensor state using 'GPSS' method from BIOS .
+This will be used for implementing "Dynamic power reduction" app which is used to control Body SAR value as per FCC requirement .
+When Body or any object is near or away from p-sensor location on thinkpad system , then sysfs will be set .
+
+>
+>...
+>
+>> +static int psensor_get(bool *state)
+>> +{
+>> +       acpi_handle psensor_handle;
+>> +       int output;
+>> +
+>> +       if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "GPSS",
+>&psensor_handle)))
+>> +               return -ENODEV;
+>> +
+>> +       if (!acpi_evalf(psensor_handle, &output, NULL, "d"))
+>> +               return -EIO;
+>> +
+>> +       /* Check if sensor has a Psensor */
+>> +       if (!(output & BIT(PSENSOR_PRESENT_BIT)))
+>> +               return -ENODEV;
+>> +
+>> +       /* Return if psensor is set or not */
+>> +       *state = output & BIT(PSENSOR_ON_BIT) ? true : false;
+>> +       return 0;
+>> +}
+>
+>It reminds me of a function you created in one of the previous changes. Can
+>you rather create a parameterized helper which will serve for both?
+
+Ack , we will check it .
+
+>
+>...
+>
+>> +/* sysfs psensor entry */
+>> +static ssize_t psensor_state_show(struct device *dev,
+>> +                                       struct device_attribute *attr,
+>> +                                       char *buf) {
+>
+>> +       return snprintf(buf, PAGE_SIZE, "%d\n", psensor_state);
+>
+>We know that %d takes much less than PAGE_SIZE, use sprintf().
+>
+>> +}
+>
+>> +
+>
+>No blank line here.
+>
+Ack
+
+>> +static DEVICE_ATTR_RO(psensor_state);
+>
+>...
+>
+>> +static struct attribute *psensor_attributes[] = {
+>> +       &dev_attr_psensor_state.attr,
+>
+>> +       NULL,
+>
+>No comma for terminator line(s).
+>
+
+Ack 
+
+>> +};
+>
+>...
+>
+>> +       /* If support isn't available (ENODEV) then don't return an error
+>> +        * but just don't create the sysfs group
+>> +        */
+>
+>/*
+> * Consider to use a proper multi-line comment style.
+> * Like here. (It's applicable to the entire patch)  */
+>
+>...
+>
+>> +       err = sysfs_create_group(&tpacpi_pdev->dev.kobj,
+>&psensor_attr_group);
+>> +       return err;
+>
+>return sysfs...
+Ack 
+
+Thanks & Regards,
+Nitin Joshi
