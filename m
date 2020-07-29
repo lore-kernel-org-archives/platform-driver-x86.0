@@ -1,412 +1,490 @@
-From: "David E. Box" <david.e.box@linux.intel.com>
-Subject: Re: [PATCH V4 2/3] mfd: Intel Platform Monitoring Technology support
-Date: Tue, 28 Jul 2020 13:35:33 -0700
-Message-ID: <5757b1989f2acff2f3e9b9a9e595e5cc54da1958.camel@linux.intel.com>
-References: <20200714062323.19990-1-david.e.box@linux.intel.com>
-         <20200717190620.29821-3-david.e.box@linux.intel.com>
-         <20200728075859.GH1850026@dell>
-Reply-To: david.e.box@linux.intel.com
+From: Perry Yuan <Perry.Yuan@dell.com>
+Subject: [PATCH] platform/x86:dell-laptop:Add battery charging thresholds and charging mode switch.
+Date: Tue, 28 Jul 2020 23:54:24 -0700
+Message-ID: <20200729065424.12851-1-Perry_Yuan@Dell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200728075859.GH1850026@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com, alexander.h.duyck@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: sre@kernel.org, mjg59@srcf.ucam.org, pali@kernel.org, dvhart@infradead.org, andy@infradead.org, mario.limonciello@dell.com
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, perry_yuan <Perry.Yuan@dell.com>, Limonciello Mario <Mario.Limonciello@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Lee,
+From: perry_yuan <perry_yuan@dell.com>
 
-Thanks for this thorough review. Ack on all the comments with
-particular thanks for spoting the missing continue.
+The patch control battery charging thresholds when system is under custom
+charging mode through smbios API and driver`s sys attributes.It also set the
+percentage bounds for custom charge.
+Start value must lie in the range [50, 95],End value must lie in the range
+[55, 100],END must be at least (START + 5).
 
-David
+The patch also add the battery charging modes switch support.User can switch
+the battery charging mode through the new sysfs entry.
 
-On Tue, 2020-07-28 at 08:58 +0100, Lee Jones wrote:
-> On Fri, 17 Jul 2020, David E. Box wrote:
-> 
-> > Intel Platform Monitoring Technology (PMT) is an architecture for
-> > enumerating and accessing hardware monitoring facilities. PMT
-> > supports
-> > multiple types of monitoring capabilities. This driver creates
-> > platform
-> > devices for each type so that they may be managed by capability
-> > specific
-> > drivers (to be introduced). Capabilities are discovered using PCIe
-> > DVSEC
-> > ids. Support is included for the 3 current capability types,
-> > Telemetry,
-> > Watcher, and Crashlog. The features are available on new Intel
-> > platforms
-> > starting from Tiger Lake for which support is added.
-> > 
-> > Also add a quirk mechanism for several early hardware differences
-> > and bugs.
-> > For Tiger Lake, do not support Watcher and Crashlog capabilities
-> > since they
-> > will not be compatible with future product. Also, fix use a quirk
-> > to fix
-> > the discovery table offset.
-> > 
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com
-> > >
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> 
-> This should be in chronological order.
-> 
-> > ---
-> >  MAINTAINERS             |   5 +
-> >  drivers/mfd/Kconfig     |  10 ++
-> >  drivers/mfd/Makefile    |   1 +
-> >  drivers/mfd/intel_pmt.c | 215
-> > ++++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 231 insertions(+)
-> >  create mode 100644 drivers/mfd/intel_pmt.c
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index b4a43a9e7fbc..2e42bf0c41ab 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -8845,6 +8845,11 @@ F:	drivers/mfd/intel_soc_pmic*
-> >  F:	include/linux/mfd/intel_msic.h
-> >  F:	include/linux/mfd/intel_soc_pmic*
-> >  
-> > +INTEL PMT DRIVER
-> > +M:	"David E. Box" <david.e.box@linux.intel.com>
-> > +S:	Maintained
-> > +F:	drivers/mfd/intel_pmt.c
-> > +
-> >  INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION
-> > SUPPORT
-> >  M:	Stanislav Yakovlev <stas.yakovlev@gmail.com>
-> >  L:	linux-wireless@vger.kernel.org
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index a37d7d171382..1a62ce2c68d9 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -670,6 +670,16 @@ config MFD_INTEL_PMC_BXT
-> >  	  Register and P-unit access. In addition this creates devices
-> >  	  for iTCO watchdog and telemetry that are part of the PMC.
-> >  
-> > +config MFD_INTEL_PMT
-> > +	tristate "Intel Platform Monitoring Technology support"
-> 
-> Nit: "Intel Platform Monitoring Technology (PMT) support"
-> 
-> > +	depends on PCI
-> > +	select MFD_CORE
-> > +	help
-> > +	  The Intel Platform Monitoring Technology (PMT) is an
-> > interface that
-> > +	  provides access to hardware monitor registers. This driver
-> > supports
-> > +	  Telemetry, Watcher, and Crashlog PMT capabilities/devices for
-> > +	  platforms starting from Tiger Lake.
-> > +
-> >  config MFD_IPAQ_MICRO
-> >  	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
-> >  	depends on SA1100_H3100 || SA1100_H3600
-> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > index 9367a92f795a..1961b4737985 100644
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> > @@ -216,6 +216,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+=
-> > intel-lpss-pci.o
-> >  obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
-> >  obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
-> >  obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+= intel_pmc_bxt.o
-> > +obj-$(CONFIG_MFD_INTEL_PMT)	+= intel_pmt.o
-> >  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
-> >  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
-> >  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
-> > diff --git a/drivers/mfd/intel_pmt.c b/drivers/mfd/intel_pmt.c
-> > new file mode 100644
-> > index 000000000000..6857eaf4ff86
-> > --- /dev/null
-> > +++ b/drivers/mfd/intel_pmt.c
-> > @@ -0,0 +1,215 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Intel Platform Monitoring Technology MFD driver
-> 
-> s/MFD/(PMT)/
-> 
-> > + * Copyright (c) 2020, Intel Corporation.
-> > + * All Rights Reserved.
-> > + *
-> > + * Authors: David E. Box <david.e.box@linux.intel.com>
-> 
-> Looks odd to use a plural for a single author.
-> 
-> > + */
-> > +
-> > +#include <linux/bits.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/mfd/core.h>
-> > +#include <linux/types.h>
-> 
-> Alphabetical please.
-> 
-> > +/* Intel DVSEC capability vendor space offsets */
-> > +#define INTEL_DVSEC_ENTRIES		0xA
-> > +#define INTEL_DVSEC_SIZE		0xB
-> > +#define INTEL_DVSEC_TABLE		0xC
-> > +#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
-> > +#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
-> > +#define INTEL_DVSEC_ENTRY_SIZE		4
-> > +
-> > +/* PMT capabilities */
-> > +#define DVSEC_INTEL_ID_TELEMETRY	2
-> > +#define DVSEC_INTEL_ID_WATCHER		3
-> > +#define DVSEC_INTEL_ID_CRASHLOG		4
-> > +
-> > +#define TELEMETRY_DEV_NAME		"pmt_telemetry"
-> > +#define WATCHER_DEV_NAME		"pmt_watcher"
-> > +#define CRASHLOG_DEV_NAME		"pmt_crashlog"
-> 
-> Please don't define names of things.  It makes grepping a pain, at
-> the
-> very least.  Just use the 'raw' string in-place.
-> 
-> > +struct intel_dvsec_header {
-> > +	u16	length;
-> > +	u16	id;
-> > +	u8	num_entries;
-> > +	u8	entry_size;
-> > +	u8	tbir;
-> > +	u32	offset;
-> > +};
-> > +
-> > +enum pmt_quirks {
-> > +	/* Watcher capability not supported */
-> > +	PMT_QUIRK_NO_WATCHER	= BIT(0),
-> > +
-> > +	/* Crashlog capability not supported */
-> > +	PMT_QUIRK_NO_CRASHLOG	= BIT(1),
-> > +
-> > +	/* Use shift instead of mask to read discovery table offset */
-> > +	PMT_QUIRK_TABLE_SHIFT	= BIT(2),
-> > +};
-> > +
-> > +struct pmt_platform_info {
-> > +	unsigned long quirks;
-> > +};
-> > +
-> > +static const struct pmt_platform_info tgl_info = {
-> > +	.quirks = PMT_QUIRK_NO_WATCHER | PMT_QUIRK_NO_CRASHLOG |
-> > +		  PMT_QUIRK_TABLE_SHIFT,
-> > +};
-> > +
-> > +static int
-> > +pmt_add_dev(struct pci_dev *pdev, struct intel_dvsec_header
-> > *header,
-> > +	    struct pmt_platform_info *info)
-> 
-> My personal preference is to a) only break when you have to and b) to
-> align with the '('.  Perhaps point b) is satisfied and it's just the
-> patch format that's shifting the tab though?
-> 
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct resource *res, *tmp;
-> > +	struct mfd_cell *cell;
-> > +	const char *name;
-> > +	int count = header->num_entries;
-> > +	int size = header->entry_size;
-> > +	int i;
-> > +
-> > +	switch (header->id) {
-> > +	case DVSEC_INTEL_ID_TELEMETRY:
-> > +		name = TELEMETRY_DEV_NAME;
-> > +		break;
-> > +	case DVSEC_INTEL_ID_WATCHER:
-> > +		if (info->quirks & PMT_QUIRK_NO_WATCHER) {
-> > +			dev_info(dev, "Watcher not supported\n");
-> > +			return 0;
-> > +		}
-> > +		name = WATCHER_DEV_NAME;
-> > +		break;
-> > +	case DVSEC_INTEL_ID_CRASHLOG:
-> > +		if (info->quirks & PMT_QUIRK_NO_CRASHLOG) {
-> > +			dev_info(dev, "Crashlog not supported\n");
-> > +			return 0;
-> > +		}
-> > +		name = CRASHLOG_DEV_NAME;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> 
-> Doesn't deserve an error message?
-> 
-> > +	}
-> > +
-> > +	if (!header->num_entries || !header->entry_size) {
-> > +		dev_warn(dev, "Invalid count or size for %s header\n",
-> > name);
-> > +		return -EINVAL;
-> 
-> If you're returning an error, this should be dev_err().
-> 
-> Even if you only handle it as a warning at the call site.
-> 
-> > +	}
-> > +
-> > +	cell = devm_kzalloc(dev, sizeof(*cell), GFP_KERNEL);
-> > +	if (!cell)
-> > +		return -ENOMEM;
-> > +
-> > +	res = devm_kcalloc(dev, count, sizeof(*res), GFP_KERNEL);
-> > +	if (!res)
-> > +		return -ENOMEM;
-> > +
-> > +	if (info->quirks & PMT_QUIRK_TABLE_SHIFT)
-> > +		header->offset >>= 3;
-> > +
-> > +	for (i = 0, tmp = res; i < count; i++, tmp++) {
-> > +		tmp->start = pdev->resource[header->tbir].start +
-> > +			     header->offset + i * (size << 2);
-> 
-> Deserves a comment I think.
-> 
-> > +		tmp->end = tmp->start + (size << 2) - 1;
-> > +		tmp->flags = IORESOURCE_MEM;
-> > +	}
-> > +
-> > +	cell->resources = res;
-> > +	cell->num_resources = count;
-> > +	cell->name = name;
-> > +
-> > +	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cell, 1,
-> > NULL, 0,
-> > +				    NULL);
-> > +}
-> > +
-> > +static int
-> > +pmt_pci_probe(struct pci_dev *pdev, const struct pci_device_id
-> > *id)
-> > +{
-> > +	struct intel_dvsec_header header;
-> > +	struct pmt_platform_info *info;
-> > +	bool found_devices = false;
-> > +	int ret, pos = 0;
-> > +	u32 table;
-> > +	u16 vid;
-> > +
-> > +	ret = pcim_enable_device(pdev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	info = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
-> > sizeof(*info),
-> > +			    GFP_KERNEL);
-> > +	if (!info)
-> > +		return -ENOMEM;
-> > +
-> > +	pos = pci_find_next_ext_capability(pdev, pos,
-> > PCI_EXT_CAP_ID_DVSEC);
-> > +	while (pos) {
-> 
-> If you do:
-> 
-> 	do {
-> 		int pos;
-> 
-> 		pos = pci_find_next_ext_capability(pdev, pos,
-> PCI_EXT_CAP_ID_DVSEC);
-> 		if (!pos)
-> 			break;
-> 
-> Then you can invoke pci_find_next_ext_capability() once, no?
-> 
-> > +		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1,
-> > &vid);
-> > +		if (vid != PCI_VENDOR_ID_INTEL)
-> > +			continue;
-> > +
-> > +		pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2,
-> > +				     &header.id);
-> > +		pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES,
-> > +				     &header.num_entries);
-> > +		pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE,
-> > +				     &header.entry_size);
-> > +		pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE,
-> > +				      &table);
-> > +
-> > +		header.tbir = INTEL_DVSEC_TABLE_BAR(table);
-> > +		header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-> > +
-> > +		ret = pmt_add_dev(pdev, &header, info);
-> > +		if (ret)
-> > +			dev_warn(&pdev->dev,
-> > +				 "Failed to add devices for DVSEC id
-> > %d\n",
-> 
-> "device", so not all devices, right?
-> 
-> > +				 header.id);
-> 
-> Don't you want to continue here?
-> 
-> Else you're going to set found_devices for a failed device.
-> 
-> > +		found_devices = true;
-> > +
-> > +		pos = pci_find_next_ext_capability(pdev, pos,
-> > +						   PCI_EXT_CAP_ID_DVSEC
-> > );
-> > +	}
-> > +
-> > +	if (!found_devices) {
-> > +		dev_err(&pdev->dev, "No supported PMT capabilities
-> > found.\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	pm_runtime_put(&pdev->dev);
-> > +	pm_runtime_allow(&pdev->dev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void pmt_pci_remove(struct pci_dev *pdev)
-> > +{
-> > +	pm_runtime_forbid(&pdev->dev);
-> > +	pm_runtime_get_sync(&pdev->dev);
-> > +}
-> > +
-> > +#define PCI_DEVICE_ID_INTEL_PMT_TGL	0x9a0d
-> 
-> What's this for?
-> 
-> If this is PCI_DEVICE_DATA magic, it would be worth tying it to the
-> struct i.e. remove the empty line between it and the table below.
-> 
-> > +static const struct pci_device_id pmt_pci_ids[] = {
-> > +	{ PCI_DEVICE_DATA(INTEL, PMT_TGL, &tgl_info) },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(pci, pmt_pci_ids);
-> > +
-> > +static struct pci_driver pmt_pci_driver = {
-> > +	.name = "intel-pmt",
-> > +	.id_table = pmt_pci_ids,
-> > +	.probe = pmt_pci_probe,
-> > +	.remove = pmt_pci_remove,
-> > +};
-> > +module_pci_driver(pmt_pci_driver);
-> > +
-> > +MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
-> > +MODULE_DESCRIPTION("Intel Platform Monitoring Technology MFD
-> > driver");
-> 
-> s/MFD/(PMT)/
-> 
-> > +MODULE_LICENSE("GPL v2");
+Primary battery charging modes valid choices are:
+['primarily_ac', 'adaptive', 'custom', 'standard', 'express']
+
+Signed-off-by: Perry Yuan <perry_yuan@dell.com>
+Signed-off-by: Limonciello Mario <Mario_Limonciello@Dell.com>
+---
+ Documentation/ABI/testing/sysfs-class-power |  23 ++
+ drivers/platform/x86/dell-laptop.c          | 344 ++++++++++++++++++++
+ drivers/platform/x86/dell-smbios.h          |  26 ++
+ 3 files changed, 393 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+index bf3b48f022dc..a8adc3b0ca4b 100644
+--- a/Documentation/ABI/testing/sysfs-class-power
++++ b/Documentation/ABI/testing/sysfs-class-power
+@@ -334,6 +334,29 @@ Description:
+ 		Access: Read
+ 		Valid values: Represented in microvolts
+ 
++What:		/sys/class/power_supply/<supply_name>/charge_control_charging_mode
++Date:		March 2020
++Contact:	linux-pm@vger.kernel.org
++Description:
++		Represents the type of charging modes currently being applied to the
++		battery."Express", "Primarily_ac", "Adaptive", "Custom" and
++		"Standard" all mean different charging speeds.
++
++		1: "Adaptive" means that the charger uses some
++		algorithm to adjust the charge rate dynamically, without
++		any user configuration required.
++		2: "Custom" means that the charger uses the charge_control_*
++		properties to start and stop charging
++		based on user input.
++		3: "Express" means the charger use fast charging technology
++		4: "Primarily_ac" means that users who primarily operate the system
++		while plugged into an external power source.
++		5: "Standard" fully charges the battery at a moderate rate.
++
++		Access: Read, Write
++		Valid values: "Express", "Primarily_ac", "Standard",
++			      "Adaptive", "Custom"
++
+ ===== USB Properties =====
+ 
+ What: 		/sys/class/power_supply/<supply_name>/current_avg
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+index 74e988f839e8..8e45ce92a2d9 100644
+--- a/drivers/platform/x86/dell-laptop.c
++++ b/drivers/platform/x86/dell-laptop.c
+@@ -28,6 +28,8 @@
+ #include <linux/debugfs.h>
+ #include <linux/seq_file.h>
+ #include <acpi/video.h>
++#include <acpi/battery.h>
++#include <linux/string.h>
+ #include "dell-rbtn.h"
+ #include "dell-smbios.h"
+ 
+@@ -90,6 +92,14 @@ static struct rfkill *wifi_rfkill;
+ static struct rfkill *bluetooth_rfkill;
+ static struct rfkill *wwan_rfkill;
+ static bool force_rfkill;
++static enum battery_charging_mode bat_chg_current = BAT_NONE_MODE;
++static const char * const battery_state[BAT_MAX_MODE] = {
++	[BAT_PRIMARILY_AC_MODE] = "primarily_ac",
++	[BAT_ADAPTIVE_MODE] = "adaptive",
++	[BAT_CUSTOM_MODE] = "custom",
++	[BAT_STANDARD_MODE] = "standard",
++	[BAT_EXPRESS_MODE] = "express",
++};
+ 
+ module_param(force_rfkill, bool, 0444);
+ MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models");
+@@ -2161,6 +2171,338 @@ static struct led_classdev micmute_led_cdev = {
+ 	.default_trigger = "audio-micmute",
+ };
+ 
++static int dell_battery_get(int *start, int *end)
++{
++	struct calling_interface_buffer buffer;
++	struct calling_interface_token *token;
++	int ret;
++
++	if (start) {
++		token = dell_smbios_find_token(BATTERY_CUSTOM_CHARGE_START);
++		if (!token)
++			return -ENODEV;
++		dell_fill_request(&buffer, token->location, 0, 0, 0);
++		ret = dell_send_request(&buffer,
++					CLASS_TOKEN_READ, SELECT_TOKEN_STD);
++		*start = buffer.output[1];
++	}
++
++	if (end) {
++		token = dell_smbios_find_token(BATTERY_CUSTOM_CHARGE_END);
++		if (!token)
++			return -ENODEV;
++		dell_fill_request(&buffer, token->location, 0, 0, 0);
++		ret = dell_send_request(&buffer,
++					CLASS_TOKEN_READ, SELECT_TOKEN_STD);
++		if (ret)
++			return -EIO;
++		*end = buffer.output[1];
++	}
++
++	return 0;
++}
++
++static int dell_battery_set(int start, int end)
++{
++	struct calling_interface_buffer buffer;
++	struct calling_interface_token *token;
++	int ret;
++
++	if (start < CHARGE_START_MIN || end < CHARGE_START_MAX ||
++		start > CHARGE_END_MIN || end > CHARGE_END_MAX)
++		return -EINVAL;
++
++	token = dell_smbios_find_token(BATTERY_CUSTOM_CHARGE_START);
++	if (!token)
++		return -ENODEV;
++
++	dell_fill_request(&buffer, token->location, start, 0, 0);
++	ret = dell_send_request(&buffer,
++				CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
++	if (ret)
++		return -EIO;
++
++	token = dell_smbios_find_token(BATTERY_CUSTOM_CHARGE_END);
++	if (!token)
++		return -ENODEV;
++
++	dell_fill_request(&buffer, token->location, end, 0, 0);
++	ret = dell_send_request(&buffer,
++				CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
++	if (ret)
++		return -EIO;
++
++	return ret;
++}
++
++static int battery_charging_mode_set(enum battery_charging_mode mode)
++{
++	struct calling_interface_buffer buffer;
++	struct calling_interface_token *token;
++	int ret;
++
++	if (mode <= BAT_NONE_MODE || mode >= BAT_MAX_MODE)
++		return -EINVAL;
++
++	switch (mode) {
++	case BAT_STANDARD_MODE:
++		token = dell_smbios_find_token(BAT_STANDARD_MODE_TOKEN);
++		if (!token)
++			return -ENODEV;
++		break;
++	case BAT_EXPRESS_MODE:
++		token = dell_smbios_find_token(BAT_EXPRESS_MODE_TOKEN);
++		if (!token)
++			return -ENODEV;
++		break;
++	case BAT_PRIMARILY_AC_MODE:
++		token = dell_smbios_find_token(BAT_PRIMARILY_AC_MODE_TOKEN);
++		if (!token)
++			return -ENODEV;
++		break;
++	case BAT_CUSTOM_MODE:
++		token = dell_smbios_find_token(BAT_CUSTOM_MODE_TOKEN);
++		if (!token)
++			return -ENODEV;
++		break;
++	case BAT_ADAPTIVE_MODE:
++		token = dell_smbios_find_token(BAT_ADAPTIVE_MODE_TOKEN);
++		if (!token)
++			return -ENODEV;
++		break;
++	default:
++		pr_warn("unspported charging mode!\n");
++		return -EINVAL;
++	}
++
++	dell_fill_request(&buffer, token->location, mode, 0, 0);
++	ret = dell_send_request(&buffer, CLASS_TOKEN_WRITE, SELECT_TOKEN_STD);
++	if (ret)
++		return -EIO;
++
++	return ret;
++}
++
++static int battery_charging_mode_get(enum battery_charging_mode *mode)
++{
++	struct calling_interface_buffer buffer;
++	struct calling_interface_token *token;
++	int ret;
++
++	token = dell_smbios_find_token(BAT_CUSTOM_MODE_TOKEN);
++	if (!token)
++		return -ENODEV;
++	dell_fill_request(&buffer, token->location, 0, 0, 0);
++	ret = dell_send_request(&buffer, CLASS_TOKEN_READ, SELECT_TOKEN_STD);
++	if (ret)
++		return -EIO;
++	if (ret == 0)
++		*mode = buffer.output[1];
++
++	return ret;
++}
++
++static ssize_t charge_control_charging_mode_show(struct device *dev,
++		struct device_attribute *attr,
++		char *buf)
++{
++	enum battery_charging_mode mode;
++	char *s = buf;
++
++	for (mode = BAT_STANDARD_MODE; mode < BAT_MAX_MODE; mode++) {
++		if (battery_state[mode]) {
++			if (mode == bat_chg_current)
++				s += sprintf(s, "[%s] ", battery_state[mode]);
++			else
++				s += sprintf(s, "%s ", battery_state[mode]);
++		}
++	}
++	if (s != buf)
++		/* convert the last space to a newline */
++		*(s-1) = '\n';
++	return (s - buf);
++}
++
++static ssize_t charge_control_charging_mode_store(struct device *dev,
++		struct device_attribute *attr,
++		const char *buf, size_t size)
++{
++	int err;
++	enum battery_charging_mode mode;
++	char *p;
++	int len;
++	const char *label;
++
++	p = memchr(buf, '\n', size);
++	len = p ? p - buf : size;
++
++	for (mode = BAT_STANDARD_MODE; mode < BAT_MAX_MODE; mode++) {
++		label = battery_state[mode];
++		if (label && len == strlen(label) &&
++			!strncmp(buf, label, len)) {
++			bat_chg_current = mode;
++			break;
++		}
++	}
++	if (mode > BAT_NONE_MODE && mode < BAT_MAX_MODE)
++		err = battery_charging_mode_set(mode);
++	else
++		err = -EINVAL;
++
++	return err ? err : size;
++}
++
++static ssize_t charge_control_start_threshold_show(struct device *dev,
++		struct device_attribute *attr,
++		char *buf)
++{
++	int err, start;
++
++	err = dell_battery_get(&start, NULL);
++	if (err)
++		return err;
++
++	return sprintf(buf, "%d\n", start);
++}
++
++static ssize_t charge_control_start_threshold_store(struct device *dev,
++		struct device_attribute *attr,
++		const char *buf, size_t size)
++{
++	int err, start, end;
++
++	err = dell_battery_get(NULL, &end);
++	if (err)
++		return err;
++	err = kstrtoint(buf, 10, &start);
++	if (err)
++		return err;
++	err = dell_battery_set(start, end);
++	if (err)
++		return err;
++
++	return size;
++}
++
++static ssize_t charge_control_end_threshold_show(struct device *dev,
++		struct device_attribute *attr,
++		char *buf)
++{
++	int err, end;
++
++	err = dell_battery_get(NULL, &end);
++	if (err)
++		return err;
++
++	return sprintf(buf, "%d\n", end);
++}
++
++static ssize_t charge_control_end_threshold_store(struct device *dev,
++		struct device_attribute *attr,
++		const char *buf, size_t size)
++{
++	int err, start, end;
++
++	err = dell_battery_get(&start, NULL);
++	if (err)
++		return err;
++	err = kstrtouint(buf, 10, &end);
++	if (err)
++		return err;
++	err = dell_battery_set(start, end);
++	if (err)
++		return err;
++
++	return size;
++}
++
++static ssize_t charge_control_thresholds_show(struct device *dev,
++		struct device_attribute *attr,
++		char *buf)
++{
++	int err, start, end;
++
++	err = dell_battery_get(&start, &end);
++	if (err)
++		return err;
++
++	return sprintf(buf, "%d %d\n", start, end);
++}
++
++static ssize_t charge_control_thresholds_store(struct device *dev,
++		struct device_attribute *attr,
++		const char *buf, size_t size)
++{
++	int err, start, end;
++
++	if (sscanf(buf, "%d %d", &start, &end) != 2)
++		return -EINVAL;
++
++	err = dell_battery_set(start, end);
++	if (err)
++		return err;
++
++	return size;
++}
++
++static DEVICE_ATTR_RW(charge_control_start_threshold);
++static DEVICE_ATTR_RW(charge_control_end_threshold);
++static DEVICE_ATTR_RW(charge_control_thresholds);
++static DEVICE_ATTR_RW(charge_control_charging_mode);
++
++static int dell_battery_add(struct power_supply *battery)
++{
++	device_create_file(&battery->dev,
++		&dev_attr_charge_control_start_threshold);
++	device_create_file(&battery->dev,
++		&dev_attr_charge_control_end_threshold);
++	device_create_file(&battery->dev,
++		&dev_attr_charge_control_charging_mode);
++
++	return 0;
++}
++
++static int dell_battery_remove(struct power_supply *battery)
++{
++	device_remove_file(&battery->dev,
++		&dev_attr_charge_control_start_threshold);
++	device_remove_file(&battery->dev,
++		&dev_attr_charge_control_end_threshold);
++	device_remove_file(&battery->dev,
++		&dev_attr_charge_control_charging_mode);
++
++	return 0;
++}
++
++static struct acpi_battery_hook dell_battery_hook = {
++	.add_battery = dell_battery_add,
++	.remove_battery = dell_battery_remove,
++	.name = "Dell Battery Extension"
++};
++
++static void dell_battery_setup(struct device *dev)
++{
++	enum battery_charging_mode current_mode = BAT_NONE_MODE;
++
++	battery_charging_mode_get(&current_mode);
++	if (current_mode) {
++		bat_chg_current = current_mode;
++		pr_debug("battery is present\n");
++	} else {
++		pr_debug("battery is not present\n");
++	}
++	battery_hook_register(&dell_battery_hook);
++	device_create_file(dev, &dev_attr_charge_control_thresholds);
++}
++
++static void dell_battery_exit(struct device *dev)
++{
++	if (bat_chg_current != BAT_NONE_MODE) {
++		battery_hook_unregister(&dell_battery_hook);
++		device_remove_file(dev, &dev_attr_charge_control_thresholds);
++	}
++}
++
+ static int __init dell_init(void)
+ {
+ 	struct calling_interface_token *token;
+@@ -2197,6 +2539,7 @@ static int __init dell_init(void)
+ 		touchpad_led_init(&platform_device->dev);
+ 
+ 	kbd_led_init(&platform_device->dev);
++	dell_battery_setup(&platform_device->dev);
+ 
+ 	dell_laptop_dir = debugfs_create_dir("dell_laptop", NULL);
+ 	debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
+@@ -2281,6 +2624,7 @@ static void __exit dell_exit(void)
+ 		platform_device_unregister(platform_device);
+ 		platform_driver_unregister(&platform_driver);
+ 	}
++	dell_battery_exit(&platform_device->dev);
+ }
+ 
+ /* dell-rbtn.c driver export functions which will not work correctly (and could
+diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell-smbios.h
+index a7ff9803f41a..36e6b06a0f47 100644
+--- a/drivers/platform/x86/dell-smbios.h
++++ b/drivers/platform/x86/dell-smbios.h
+@@ -35,6 +35,32 @@
+ #define GLOBAL_MIC_MUTE_ENABLE	0x0364
+ #define GLOBAL_MIC_MUTE_DISABLE	0x0365
+ 
++/*Battery Charging Modes Tokens*/
++#define BAT_CUSTOM_MODE_TOKEN		0x343
++#define BAT_PRIMARILY_AC_MODE_TOKEN	0x0341
++#define BAT_ADAPTIVE_MODE_TOKEN		0x0342
++#define BAT_STANDARD_MODE_TOKEN		0x0346
++#define BAT_EXPRESS_MODE_TOKEN		0x0347
++#define BATTERY_CUSTOM_CHARGE_START	0x0349
++#define BATTERY_CUSTOM_CHARGE_END	0x034A
++
++/* percentage bounds for custom charge */
++#define CHARGE_START_MIN	50
++#define CHARGE_START_MAX	95
++#define CHARGE_END_MIN		55
++#define CHARGE_END_MAX		100
++
++/*Battery Charging Modes */
++enum battery_charging_mode {
++	BAT_NONE_MODE = 0,
++	BAT_STANDARD_MODE,
++	BAT_EXPRESS_MODE,
++	BAT_PRIMARILY_AC_MODE,
++	BAT_ADAPTIVE_MODE,
++	BAT_CUSTOM_MODE,
++	BAT_MAX_MODE,
++};
++
+ struct notifier_block;
+ 
+ struct calling_interface_token {
+-- 
+2.27.0
