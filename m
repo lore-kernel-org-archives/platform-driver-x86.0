@@ -1,47 +1,62 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V4 2/3] mfd: Intel Platform Monitoring Technology support
-Date: Fri, 31 Jul 2020 07:19:19 +0100
-Message-ID: <20200731061919.GJ2419169@dell>
-References: <20200714062323.19990-1-david.e.box@linux.intel.com>
- <20200717190620.29821-3-david.e.box@linux.intel.com>
- <20200728075859.GH1850026@dell>
- <3DCA0A88-0890-49EE-8644-E6311E891C55@gmail.com>
+From: "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Subject: Re: [PATCH 1/1] platform/x86: revert pcengines-apuv2 wire up
+ simswitch gpio as led
+Date: Fri, 31 Jul 2020 15:45:56 +0200
+Message-ID: <6def788e-f2f8-da80-b189-56ae4630440f@metux.net>
+References: <20200713085010.26394-1-fe@dev.tdt.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3DCA0A88-0890-49EE-8644-E6311E891C55@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Mark D Rustad <mrustad@gmail.com>
-Cc: "David E. Box" <david.e.box@linux.intel.com>, dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com, alexander.h.duyck@linux.intel.com, linux-kernel <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200713085010.26394-1-fe@dev.tdt.de>
+Content-Language: tl
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Eckert <fe@dev.tdt.de>, info@metux.net, vhart@infradead.org, andy@infradead.org, Eckert.Florian@googlemail.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, 29 Jul 2020, Mark D Rustad wrote:
+On 13.07.20 10:50, Florian Eckert wrote:
 
-> at 12:58 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> 
-> > If you do:
-> > 
-> > 	do {
-> > 		int pos;
-> > 
-> > 		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
-> > 		if (!pos)
-> > 			break;
-> > 
-> > Then you can invoke pci_find_next_ext_capability() once, no?
-> 
-> Part of your suggestion here won't work, because pos needs to be initialized
-> to 0 the first time. As such it needs to be declared and initialized outside
-> the loop. Other than that it may be ok.
+Hello Florian,
 
-Right.  It was just an example I quickly hacked out.
+> This reverts commit 5037d4ddda31c2dbbb018109655f61054b1756dc.
 
-Feel free to move the variable, or make it static, etc.
+no, please dont.
+
+> This change connects the simswap to the LED subsystem of the kernel.
+> From my point of view, it's nonsense. If we do it this way, then this
+> can be switched relatively easily via the LED subsystem (trigger:
+> none/default-on) and that is dangerous! If this is used, it would be
+> unfavorable, since there is also another trigger (trigger:
+> heartbeat/netdev).
+
+I don't think that potential silly abuse is a good argument. It if
+would, we should also disallow things like "echo FOO > /dev/sda" :p
+
+The reason for it wire'ing up was having an simple and easy to use
+interface. Raw gpios do NOT meet this criteria: complicated to use and
+not stable addressing (from userland PoV) - would require an extra
+userland program just for that single specific task.
+
+Yes, LED is not the optimal approach, same for other gpio-connected
+switches, eg. relais or various multiplexers. But as long as we don't
+have a really fitting subsystem, it's IMHO the best compromise we have
+so far.
+
+Actually, I've already been hacking on a better subsystem, which models
+switchable inter-device connections. It's called portmux. But it's not
+usable yet. Lets talk about this instead of just wildly dropping
+existing functionality, that's used in the field.
+
+
+--mtx
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
