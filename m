@@ -1,62 +1,81 @@
-From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
-Date: Mon, 3 Aug 2020 16:40:58 +0200
-Message-ID: <8fc3a97d-94b7-e073-3981-2f146f5f209e@collabora.com>
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com>
- <1821a5b7-cbf3-a739-2203-a93b06f0c6f2@redhat.com>
+From: Elvis Stansvik <elvstone-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [External] Re: [PATCH v5] platform/x86:
+ thinkpad_acpi: lap or desk mode interface
+Date: Mon, 3 Aug 2020 16:46:28 +0200
+Message-ID: <CAHms=eZ4YVAvmUsjcZTsPOf15sxK_vELbK6fvCs=Bbm3gxFGeQ@mail.gmail.com>
+References: <CAHms=eZm3LY-Z4p+TkfZ+vyxGd_7XKPBsSEM_Mvnx2s-GO2c9w@mail.gmail.com>
+ <CAHms=eYpcy__Km_9O4MUtLxpasH1sAgQEmcapOhV79j01twhow@mail.gmail.com>
+ <0e462361-a3bc-a7b8-bacd-85f32b575bac@lenovo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1821a5b7-cbf3-a739-2203-a93b06f0c6f2@redhat.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
-Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Barry
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <0e462361-a3bc-a7b8-bacd-85f32b575bac-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Cc: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Dmitry,
-
-W dniu 12.06.2020 o 10:17, Hans de Goede pisze:
-> Hi,
-> 
-> On 6/8/20 1:22 PM, Andrzej Pietrasiewicz wrote:
->> This is a quick respin of v3, with just two small changes, please see
->> the changelog below.
->>
->> Userspace might want to implement a policy to temporarily disregard input
->> from certain devices.
->>
-
-<snip>
-
->> v3..v4:
->> - updated the comment in input_open_device() (Hans)
->> - used more straightforward locking pattern in adc/exynos (Michał)
->>
->> v2..v3:
->> - ignored autorepeat events in input_get_disposition() if a key is not
->> pressed (Hans)
->> - dropped inhibit()/uninhibit() driver callbacks (Hans)
->> - split ACPI button patch into taking the lock and using the helper (Rafael)
->> - dropped the elan_i2c conversion
->> - fixed typos in exynos adc
->>
->> v1..v2:
->> - added input_device_enabled() helper and used it in drivers (Dmitry)
->> - the fact of open() and close() being called in inhibit/uninhibit paths has
->> been emphasized in the commit message of PATCH 6/7 (Dmitry)
-
-<snip>
-
-> 
-> The entire series looks good to me:
-> 
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-What are the prospects of this series being merged?
-
-Regards,
-
-Andrzej
+RGVuIG3DpW4gMyBhdWcuIDIwMjAga2wgMTY6Mjcgc2tyZXYgTWFyayBQZWFyc29uIDxtYXJrcGVh
+cnNvbkBsZW5vdm8uY29tPjoKPgo+IEhpIEVsdmlzLAo+Cj4gT24gOC8zLzIwMjAgOToyMCBBTSwg
+RWx2aXMgU3RhbnN2aWsgd3JvdGU6Cj4gPgo+ID4gRGVuIHPDtm4gMiBhdWcuIDIwMjAga2wgMjM6
+MTAgc2tyZXYgRWx2aXMgU3RhbnN2aWsKPiA+IDxlbHZzdG9uZUBnbWFpbC5jb20+Ogo+ID4+Cj4g
+Pj4gKEFwb2xvZ2llcyBpbiBhZHZhbmNlIGZvciBtaXNzaW5nIEluLVJlcGx5LVRvIGhlYWRlciBp
+biB0aGlzCj4gPj4gcmVwbHkuIEkgc3Vic2NyaWJlZCB0byB0aGUgbGlzdCBqdXN0IG5vdy4pCj4g
+Pj4KPiA+PiBEZW4gZnJlIDMganVsaSAyMDIwIGtsIDAxOjI0IHNrcmV2IE1hcmsgUGVhcnNvbgo+
+ID4+IDxtYXJrcGVhcnNvbkBsZW5vdm8uY29tPjoKPiA+Pj4gTmV3ZXIgTGVub3ZvIFRoaW5rcGFk
+IHBsYXRmb3JtcyBoYXZlIHN1cHBvcnQgdG8gaWRlbnRpZnkgd2hldGhlcgo+ID4+PiB0aGUgc3lz
+dGVtIGlzIG9uLWxhcCBvciBub3QgdXNpbmcgYW4gQUNQSSBEWVRDIGV2ZW50IGZyb20gdGhlCj4g
+Pj4+IGZpcm13YXJlLgo+ID4+Pgo+ID4+PiBUaGlzIHBhdGNoIHByb3ZpZGVzIHRoZSBhYmlsaXR5
+IHRvIHJldHJpZXZlIHRoZSBjdXJyZW50IG1vZGUgdmlhCj4gPj4+IHN5c2ZzIGVudHJ5cG9pbnRz
+IGFuZCB3aWxsIGJlIHVzZWQgYnkgdXNlcnNwYWNlIGZvciB0aGVybWFsIG1vZGUKPiA+Pj4gYW5k
+IFdXQU4gZnVuY3Rpb25hbGl0eQo+ID4+Cj4gPj4gSSB0cmllZCB0aGUgcGF0Y2ggb3V0IG9uIG15
+IFgxQzYgKDIwS0gwMDdCTVgpLCBydW5uaW5nIExlbm92bwo+ID4+IGZpcm13YXJlIHZlcnNpb24g
+MC4xLjQ5Lgo+ID4+Cj4gPj4gVGhlIHN5c2ZzIHBhdGggL3N5cy9kZXZpY2VzL3BsYXRmb3JtL3Ro
+aW5rcGFkX2FjcGkvZHl0Y19sYXBtb2RlIGlzCj4gPj4gc2hvd2luZyB1cCwgYnV0IGl0J3MgcmVw
+b3J0aW5nIDAgcmVnYXJkbGVzcyBpZiB0aGUgbGFwdG9wIGlzIGluIG15Cj4gPj4gbGFwIG9yIG9u
+IGEgZGVzay4KPiA+Pgo+ID4+IEkgdGVzdGVkIHRoaXMgYnkgaGF2aW5nIHRoZSBsYXB0b3AgaW4g
+bXkgbGFwIGZvciBmaXZlIG1pbnV0ZXMsIGFuZAo+ID4+IHRoZW4gb24gYSBkZXNrIGZvciBmaXZl
+IG1pbnV0ZXMuIFRoZSB2YWx1ZSByZXBvcnRlZCB0aHJvdWdoCj4gPj4gL3N5cy9kZXZpY2VzL3Bs
+YXRmb3JtL3RoaW5rcGFkX2FjcGkvZHl0Y19sYXBtb2RlIHdhcyBhbHdheXMgMC4KPiA+Pgo+IFRo
+YW5rcyBmb3IgdGhlIHVwZGF0ZS4KPiBUaGUgWDFDNiBkb2Vzbid0IGhhdmUgc3VwcG9ydCBmb3Ig
+dGhlIG5ldyB0aGVybWFsIG1vZGUgaW1wbGVtZW50YXRpb24gc28KPiBJJ20gd29uZGVyaW5nIGlm
+IHRoZSBsYXBtb2RlIGJlaW5nIGF2YWlsYWJsZSBjb3VsZCBiZSByZWxhdGVkIHRvIHRoZQo+IHZl
+cnNpb24gb2YgRFlUQyBpcyBhdmFpbGFibGUuIEknbGwgY2hlY2sgd2l0aCB0aGUgZmlybXdhcmUg
+dGVhbSBhbmQgZ2V0Cj4gYmFjayB0byB5b3Ugb24gdGhhdCAtIHRoZXkgaGFkbid0IGxpc3RlZCBp
+dCB0byBtZSBhcyBhIGxpbWl0YXRpb24KPiBwcmV2aW91c2x5IGFuZCB1bmZvcnR1bmF0ZWx5IEkg
+ZG9uJ3QgaGF2ZSBhbiBYMUM2IHNvIGRpZG4ndCB0ZXN0IG9uIHRoYXQKPiBwbGF0Zm9ybS4KPgo+
+IEFzIGEgbm90ZSAtIHRoZSBsYXBtb2RlIGlzIHByaW1hcmlseSBmb3IgdGhlIHRoZXJtYWwgbW9k
+ZXMgKGl0IGlzIGFsc28KPiBiZWluZyB1c2VkIGZvciBXV0FOIHBvd2VyIGNvbnRyb2wgYnV0IHRo
+YXQgaXMgbm90IHN1cHBvcnRlZCBmb3IgTGludXggb24KPiB0aGUgWDFDNiBlaXRoZXIgZm9yIG90
+aGVyIHJlYXNvbnMpLiBJJ20gYWZyYWlkIHRoZSBpbnRlcmZhY2UgaXMgb2YKPiBsaW1pdGVkIHVz
+ZSB0byB5b3UgYW55d2F5Li4uLgoKVGhhbmtzIE1hcmsuIEkga25vdyB0aGUgWDFDNiBmaXJtd2Fy
+ZSBkaWQgbm90IGdldCB0aGUgbmV3IHRoZXJtYWwgbW9kZQppbXBsZW1lbnRhdGlvbiwgYnV0IHRo
+b3VnaHQgdGhhdCBJIHdvdWxkIHN0aWxsIGJlIGFibGUgdG8gcXVlcnkgaXRzCmxhcCBtb2RlLgoK
+VGhlIHJlYXNvbiBJIHdhbnRlZCBxdWVyeSB0aGUgbGFwIG1vZGUgaXMgYWN0dWFsbHkgYmVjYXVz
+ZSBJJ20gdHJ5aW5nCnRvIGhlbHAgTWF0dGhldyBHYXJyZXR0IG91dCBpbiBhZGRpbmcgc3VwcG9y
+dCBmb3IgdGhlIGFkYXB0aXZlIERQVEYKcGVyZm9ybWFuY2UgcG9saWN5IG9uIHRoZSB0aGVybWFs
+ZCBzaWRlLCBpbnN0ZWFkIG9mIG9uIHRoZSBmaXJtd2FyZQpzaWRlIGxpa2UgTGVub3ZvIGRlY2lk
+ZWQgdG8gZG8gZm9yIG1vcmUgcmVjZW50IG1vZGVscy4gU2VlIHRoYXQgZWZmb3J0CmhlcmUgaHR0
+cHM6Ly9naXRodWIuY29tL21qZzU5L3RoZXJtYWxfZGFlbW9uL2lzc3Vlcy83KS4gV2Ugd2VyZQpz
+dXJwcmlzZWQgdG8gZmluZCB0aGF0IGFsbCBvZiB0aGUgT0VNIGNvbmRpdGlvbnMgaW4gdGhlIEFQ
+Q1QgdGFibGUKcmVtYWluZWQgdW5jaGFuZ2VkIHdoZW4gdGhlIGxhcHRvcCB3YXMgdGFrZW4gYmV0
+d2VlbiBsYXAgYW5kIGRlc2suIFNvCkkgc3RhcnRlZCBzdXNwZWN0aW5nIHRoYXQgcGVyaGFwcyB0
+aGUgWDFDNiBhbmQgaXRzIGZpcm13YXJlIHNpbXBseQpkb2VzIG5vdCBoYXZlIHRoZSBhYmlsaXR5
+IHRvIGRldGVjdCBsYXAgdnMgZGVzay4gVGhhdCdzIHdoeSBJIHdhbnRlZAp0byB1c2UgdGhpcyBw
+YXRjaCB0byBxdWVyeSB0aGUgbGFwIG1vZGUsIGFzIGEgZGVidWdnaW5nIGFpZC4KCklmIFgxQzYg
+ZG9lcyBub3QgaGF2ZSB0aGUgYWJpbGl0eSB0byBkZXRlY3QgbGFwIG1vZGUsIHRoZW4gdGhhdCB3
+b3VsZApvYnZpb3VzbHkgZXhwbGFpbiB3aHkgdGhlIGZpcm13YXJlIGRvZXMgbm90IGNoYW5nZSBh
+bnkgQVBDVCBjb25kaXRpb24Kd2hlbiBwdXQgb24vb2ZmIGxhcCwgYW5kIGFueSBlZmZvcnQgdG8g
+Z2V0IGFkYXB0aXZlIHBlcmZvcm1hbmNlIHBvbGljeQp3b3JraW5nIG9uIHRoZSB0aGVybWFsZCBz
+aWRlIGlzIHByb2JhYmx5IGRvb21lZCA6KAoKRWx2aXMKCj4KPiBNYXJrCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaWJtLWFjcGktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmlibS1hY3BpLWRldmVsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApodHRwczovL2xpc3Rz
+LnNvdXJjZWZvcmdlLm5ldC9saXN0cy9saXN0aW5mby9pYm0tYWNwaS1kZXZlbAo=
