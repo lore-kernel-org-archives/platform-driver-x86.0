@@ -1,16 +1,18 @@
-From: Elvis Stansvik <elvstone-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
 Subject: Re: [External] Re: [PATCH v5] platform/x86:
  thinkpad_acpi: lap or desk mode interface
-Date: Mon, 3 Aug 2020 16:46:28 +0200
-Message-ID: <CAHms=eZ4YVAvmUsjcZTsPOf15sxK_vELbK6fvCs=Bbm3gxFGeQ@mail.gmail.com>
+Date: Mon, 3 Aug 2020 12:15:52 -0400
+Message-ID: <4481e959-7e13-fb11-0628-9509380d38ee@lenovo.com>
 References: <CAHms=eZm3LY-Z4p+TkfZ+vyxGd_7XKPBsSEM_Mvnx2s-GO2c9w@mail.gmail.com>
  <CAHms=eYpcy__Km_9O4MUtLxpasH1sAgQEmcapOhV79j01twhow@mail.gmail.com>
  <0e462361-a3bc-a7b8-bacd-85f32b575bac@lenovo.com>
+ <CAHms=eZ4YVAvmUsjcZTsPOf15sxK_vELbK6fvCs=Bbm3gxFGeQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <0e462361-a3bc-a7b8-bacd-85f32b575bac-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CAHms=eZ4YVAvmUsjcZTsPOf15sxK_vELbK6fvCs=Bbm3gxFGeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
  <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
@@ -19,63 +21,44 @@ List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@publi
 List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
  <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
 Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+To: Elvis Stansvik <elvstone-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-RGVuIG3DpW4gMyBhdWcuIDIwMjAga2wgMTY6Mjcgc2tyZXYgTWFyayBQZWFyc29uIDxtYXJrcGVh
-cnNvbkBsZW5vdm8uY29tPjoKPgo+IEhpIEVsdmlzLAo+Cj4gT24gOC8zLzIwMjAgOToyMCBBTSwg
-RWx2aXMgU3RhbnN2aWsgd3JvdGU6Cj4gPgo+ID4gRGVuIHPDtm4gMiBhdWcuIDIwMjAga2wgMjM6
-MTAgc2tyZXYgRWx2aXMgU3RhbnN2aWsKPiA+IDxlbHZzdG9uZUBnbWFpbC5jb20+Ogo+ID4+Cj4g
-Pj4gKEFwb2xvZ2llcyBpbiBhZHZhbmNlIGZvciBtaXNzaW5nIEluLVJlcGx5LVRvIGhlYWRlciBp
-biB0aGlzCj4gPj4gcmVwbHkuIEkgc3Vic2NyaWJlZCB0byB0aGUgbGlzdCBqdXN0IG5vdy4pCj4g
-Pj4KPiA+PiBEZW4gZnJlIDMganVsaSAyMDIwIGtsIDAxOjI0IHNrcmV2IE1hcmsgUGVhcnNvbgo+
-ID4+IDxtYXJrcGVhcnNvbkBsZW5vdm8uY29tPjoKPiA+Pj4gTmV3ZXIgTGVub3ZvIFRoaW5rcGFk
-IHBsYXRmb3JtcyBoYXZlIHN1cHBvcnQgdG8gaWRlbnRpZnkgd2hldGhlcgo+ID4+PiB0aGUgc3lz
-dGVtIGlzIG9uLWxhcCBvciBub3QgdXNpbmcgYW4gQUNQSSBEWVRDIGV2ZW50IGZyb20gdGhlCj4g
-Pj4+IGZpcm13YXJlLgo+ID4+Pgo+ID4+PiBUaGlzIHBhdGNoIHByb3ZpZGVzIHRoZSBhYmlsaXR5
-IHRvIHJldHJpZXZlIHRoZSBjdXJyZW50IG1vZGUgdmlhCj4gPj4+IHN5c2ZzIGVudHJ5cG9pbnRz
-IGFuZCB3aWxsIGJlIHVzZWQgYnkgdXNlcnNwYWNlIGZvciB0aGVybWFsIG1vZGUKPiA+Pj4gYW5k
-IFdXQU4gZnVuY3Rpb25hbGl0eQo+ID4+Cj4gPj4gSSB0cmllZCB0aGUgcGF0Y2ggb3V0IG9uIG15
-IFgxQzYgKDIwS0gwMDdCTVgpLCBydW5uaW5nIExlbm92bwo+ID4+IGZpcm13YXJlIHZlcnNpb24g
-MC4xLjQ5Lgo+ID4+Cj4gPj4gVGhlIHN5c2ZzIHBhdGggL3N5cy9kZXZpY2VzL3BsYXRmb3JtL3Ro
-aW5rcGFkX2FjcGkvZHl0Y19sYXBtb2RlIGlzCj4gPj4gc2hvd2luZyB1cCwgYnV0IGl0J3MgcmVw
-b3J0aW5nIDAgcmVnYXJkbGVzcyBpZiB0aGUgbGFwdG9wIGlzIGluIG15Cj4gPj4gbGFwIG9yIG9u
-IGEgZGVzay4KPiA+Pgo+ID4+IEkgdGVzdGVkIHRoaXMgYnkgaGF2aW5nIHRoZSBsYXB0b3AgaW4g
-bXkgbGFwIGZvciBmaXZlIG1pbnV0ZXMsIGFuZAo+ID4+IHRoZW4gb24gYSBkZXNrIGZvciBmaXZl
-IG1pbnV0ZXMuIFRoZSB2YWx1ZSByZXBvcnRlZCB0aHJvdWdoCj4gPj4gL3N5cy9kZXZpY2VzL3Bs
-YXRmb3JtL3RoaW5rcGFkX2FjcGkvZHl0Y19sYXBtb2RlIHdhcyBhbHdheXMgMC4KPiA+Pgo+IFRo
-YW5rcyBmb3IgdGhlIHVwZGF0ZS4KPiBUaGUgWDFDNiBkb2Vzbid0IGhhdmUgc3VwcG9ydCBmb3Ig
-dGhlIG5ldyB0aGVybWFsIG1vZGUgaW1wbGVtZW50YXRpb24gc28KPiBJJ20gd29uZGVyaW5nIGlm
-IHRoZSBsYXBtb2RlIGJlaW5nIGF2YWlsYWJsZSBjb3VsZCBiZSByZWxhdGVkIHRvIHRoZQo+IHZl
-cnNpb24gb2YgRFlUQyBpcyBhdmFpbGFibGUuIEknbGwgY2hlY2sgd2l0aCB0aGUgZmlybXdhcmUg
-dGVhbSBhbmQgZ2V0Cj4gYmFjayB0byB5b3Ugb24gdGhhdCAtIHRoZXkgaGFkbid0IGxpc3RlZCBp
-dCB0byBtZSBhcyBhIGxpbWl0YXRpb24KPiBwcmV2aW91c2x5IGFuZCB1bmZvcnR1bmF0ZWx5IEkg
-ZG9uJ3QgaGF2ZSBhbiBYMUM2IHNvIGRpZG4ndCB0ZXN0IG9uIHRoYXQKPiBwbGF0Zm9ybS4KPgo+
-IEFzIGEgbm90ZSAtIHRoZSBsYXBtb2RlIGlzIHByaW1hcmlseSBmb3IgdGhlIHRoZXJtYWwgbW9k
-ZXMgKGl0IGlzIGFsc28KPiBiZWluZyB1c2VkIGZvciBXV0FOIHBvd2VyIGNvbnRyb2wgYnV0IHRo
-YXQgaXMgbm90IHN1cHBvcnRlZCBmb3IgTGludXggb24KPiB0aGUgWDFDNiBlaXRoZXIgZm9yIG90
-aGVyIHJlYXNvbnMpLiBJJ20gYWZyYWlkIHRoZSBpbnRlcmZhY2UgaXMgb2YKPiBsaW1pdGVkIHVz
-ZSB0byB5b3UgYW55d2F5Li4uLgoKVGhhbmtzIE1hcmsuIEkga25vdyB0aGUgWDFDNiBmaXJtd2Fy
-ZSBkaWQgbm90IGdldCB0aGUgbmV3IHRoZXJtYWwgbW9kZQppbXBsZW1lbnRhdGlvbiwgYnV0IHRo
-b3VnaHQgdGhhdCBJIHdvdWxkIHN0aWxsIGJlIGFibGUgdG8gcXVlcnkgaXRzCmxhcCBtb2RlLgoK
-VGhlIHJlYXNvbiBJIHdhbnRlZCBxdWVyeSB0aGUgbGFwIG1vZGUgaXMgYWN0dWFsbHkgYmVjYXVz
-ZSBJJ20gdHJ5aW5nCnRvIGhlbHAgTWF0dGhldyBHYXJyZXR0IG91dCBpbiBhZGRpbmcgc3VwcG9y
-dCBmb3IgdGhlIGFkYXB0aXZlIERQVEYKcGVyZm9ybWFuY2UgcG9saWN5IG9uIHRoZSB0aGVybWFs
-ZCBzaWRlLCBpbnN0ZWFkIG9mIG9uIHRoZSBmaXJtd2FyZQpzaWRlIGxpa2UgTGVub3ZvIGRlY2lk
-ZWQgdG8gZG8gZm9yIG1vcmUgcmVjZW50IG1vZGVscy4gU2VlIHRoYXQgZWZmb3J0CmhlcmUgaHR0
-cHM6Ly9naXRodWIuY29tL21qZzU5L3RoZXJtYWxfZGFlbW9uL2lzc3Vlcy83KS4gV2Ugd2VyZQpz
-dXJwcmlzZWQgdG8gZmluZCB0aGF0IGFsbCBvZiB0aGUgT0VNIGNvbmRpdGlvbnMgaW4gdGhlIEFQ
-Q1QgdGFibGUKcmVtYWluZWQgdW5jaGFuZ2VkIHdoZW4gdGhlIGxhcHRvcCB3YXMgdGFrZW4gYmV0
-d2VlbiBsYXAgYW5kIGRlc2suIFNvCkkgc3RhcnRlZCBzdXNwZWN0aW5nIHRoYXQgcGVyaGFwcyB0
-aGUgWDFDNiBhbmQgaXRzIGZpcm13YXJlIHNpbXBseQpkb2VzIG5vdCBoYXZlIHRoZSBhYmlsaXR5
-IHRvIGRldGVjdCBsYXAgdnMgZGVzay4gVGhhdCdzIHdoeSBJIHdhbnRlZAp0byB1c2UgdGhpcyBw
-YXRjaCB0byBxdWVyeSB0aGUgbGFwIG1vZGUsIGFzIGEgZGVidWdnaW5nIGFpZC4KCklmIFgxQzYg
-ZG9lcyBub3QgaGF2ZSB0aGUgYWJpbGl0eSB0byBkZXRlY3QgbGFwIG1vZGUsIHRoZW4gdGhhdCB3
-b3VsZApvYnZpb3VzbHkgZXhwbGFpbiB3aHkgdGhlIGZpcm13YXJlIGRvZXMgbm90IGNoYW5nZSBh
-bnkgQVBDVCBjb25kaXRpb24Kd2hlbiBwdXQgb24vb2ZmIGxhcCwgYW5kIGFueSBlZmZvcnQgdG8g
-Z2V0IGFkYXB0aXZlIHBlcmZvcm1hbmNlIHBvbGljeQp3b3JraW5nIG9uIHRoZSB0aGVybWFsZCBz
-aWRlIGlzIHByb2JhYmx5IGRvb21lZCA6KAoKRWx2aXMKCj4KPiBNYXJrCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaWJtLWFjcGktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmlibS1hY3BpLWRldmVsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApodHRwczovL2xpc3Rz
-LnNvdXJjZWZvcmdlLm5ldC9saXN0cy9saXN0aW5mby9pYm0tYWNwaS1kZXZlbAo=
+
+
+On 8/3/2020 10:46 AM, Elvis Stansvik wrote:
+
+> 
+> Thanks Mark. I know the X1C6 firmware did not get the new thermal
+> mode implementation, but thought that I would still be able to query
+> its lap mode.
+> 
+> The reason I wanted query the lap mode is actually because I'm
+> trying to help Matthew Garrett out in adding support for the adaptive
+> DPTF performance policy on the thermald side, instead of on the
+> firmware side like Lenovo decided to do for more recent models. See
+> that effort here https://github.com/mjg59/thermal_daemon/issues/7).
+> We were surprised to find that all of the OEM conditions in the APCT
+> table remained unchanged when the laptop was taken between lap and
+> desk. So I started suspecting that perhaps the X1C6 and its firmware
+> simply does not have the ability to detect lap vs desk. That's why I
+> wanted to use this patch to query the lap mode, as a debugging aid.
+> 
+> If X1C6 does not have the ability to detect lap mode, then that
+> would obviously explain why the firmware does not change any APCT
+> condition when put on/off lap, and any effort to get adaptive
+> performance policy working on the thermald side is probably doomed
+> :(
+> 
+Just as a follow-up for this mailing list - I responded to the X1C6 
+issues on the thermal_daemon thread mentioned above - I will track those 
+there.
+
+Anything related to the thinkpad_acpi driver and improvements needed to 
+my previous patch will come here. I have a question in to the firmware 
+team to understand the limitations of when the lapmode variable should 
+be made available or not. Looks like I have some work to do there....
+
+Thanks!
+Mark
