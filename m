@@ -1,64 +1,74 @@
-From: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [External] Re: [PATCH v5] platform/x86:
- thinkpad_acpi: lap or desk mode interface
-Date: Mon, 3 Aug 2020 12:15:52 -0400
-Message-ID: <4481e959-7e13-fb11-0628-9509380d38ee@lenovo.com>
-References: <CAHms=eZm3LY-Z4p+TkfZ+vyxGd_7XKPBsSEM_Mvnx2s-GO2c9w@mail.gmail.com>
- <CAHms=eYpcy__Km_9O4MUtLxpasH1sAgQEmcapOhV79j01twhow@mail.gmail.com>
- <0e462361-a3bc-a7b8-bacd-85f32b575bac@lenovo.com>
- <CAHms=eZ4YVAvmUsjcZTsPOf15sxK_vELbK6fvCs=Bbm3gxFGeQ@mail.gmail.com>
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH v2 18/24] mlxbf-tmfifo: sparse tags for config access
+Date: Mon, 3 Aug 2020 17:00:01 -0400
+Message-ID: <20200803205814.540410-19-mst@redhat.com>
+References: <20200803205814.540410-1-mst@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <CAHms=eZ4YVAvmUsjcZTsPOf15sxK_vELbK6fvCs=Bbm3gxFGeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Elvis Stansvik <elvstone-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <virtualization-bounces@lists.linux-foundation.org>
+In-Reply-To: <20200803205814.540410-1-mst@redhat.com>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
+ <mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
+List-Post: <mailto:virtualization@lists.linux-foundation.org>
+List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
+ <mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
+Errors-To: virtualization-bounces@lists.linux-foundation.org
+Sender: "Virtualization" <virtualization-bounces@lists.linux-foundation.org>
+To: linux-kernel@vger.kernel.org
+Cc: Vadim Pasternak <vadimp@mellanox.com>, platform-driver-x86@vger.kernel.org, Darren Hart <dvhart@infradead.org>, virtualization@lists.linux-foundation.org, Andy Shevchenko <andy@infradead.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
+mlxbf-tmfifo accesses config space using native types -
+which works for it since the legacy virtio native types.
 
+This will break if it ever needs to support modern virtio,
+so with new tags previously introduced for virtio net config,
+sparse now warns for this in drivers.
 
-On 8/3/2020 10:46 AM, Elvis Stansvik wrote:
+Since this is a legacy only device, fix it up using
+virtio_legacy_is_little_endian for now.
 
-> 
-> Thanks Mark. I know the X1C6 firmware did not get the new thermal
-> mode implementation, but thought that I would still be able to query
-> its lap mode.
-> 
-> The reason I wanted query the lap mode is actually because I'm
-> trying to help Matthew Garrett out in adding support for the adaptive
-> DPTF performance policy on the thermald side, instead of on the
-> firmware side like Lenovo decided to do for more recent models. See
-> that effort here https://github.com/mjg59/thermal_daemon/issues/7).
-> We were surprised to find that all of the OEM conditions in the APCT
-> table remained unchanged when the laptop was taken between lap and
-> desk. So I started suspecting that perhaps the X1C6 and its firmware
-> simply does not have the ability to detect lap vs desk. That's why I
-> wanted to use this patch to query the lap mode, as a debugging aid.
-> 
-> If X1C6 does not have the ability to detect lap mode, then that
-> would obviously explain why the firmware does not change any APCT
-> condition when put on/off lap, and any effort to get adaptive
-> performance policy working on the thermald side is probably doomed
-> :(
-> 
-Just as a follow-up for this mailing list - I responded to the X1C6 
-issues on the thermal_daemon thread mentioned above - I will track those 
-there.
+No functional changes.
 
-Anything related to the thinkpad_acpi driver and improvements needed to 
-my previous patch will come here. I have a question in to the firmware 
-team to understand the limitations of when the lapmode variable should 
-be made available or not. Looks like I have some work to do there....
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-Thanks!
-Mark
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index 5739a9669b29..bbc4e71a16ff 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -625,7 +625,10 @@ static void mlxbf_tmfifo_rxtx_header(struct mlxbf_tmfifo_vring *vring,
+ 			vdev_id = VIRTIO_ID_NET;
+ 			hdr_len = sizeof(struct virtio_net_hdr);
+ 			config = &fifo->vdev[vdev_id]->config.net;
+-			if (ntohs(hdr.len) > config->mtu +
++			/* A legacy-only interface for now. */
++			if (ntohs(hdr.len) >
++			    __virtio16_to_cpu(virtio_legacy_is_little_endian(),
++					      config->mtu) +
+ 			    MLXBF_TMFIFO_NET_L2_OVERHEAD)
+ 				return;
+ 		} else {
+@@ -1231,8 +1234,12 @@ static int mlxbf_tmfifo_probe(struct platform_device *pdev)
+ 
+ 	/* Create the network vdev. */
+ 	memset(&net_config, 0, sizeof(net_config));
+-	net_config.mtu = ETH_DATA_LEN;
+-	net_config.status = VIRTIO_NET_S_LINK_UP;
++
++	/* A legacy-only interface for now. */
++	net_config.mtu = __cpu_to_virtio16(virtio_legacy_is_little_endian(),
++					   ETH_DATA_LEN);
++	net_config.status = __cpu_to_virtio16(virtio_legacy_is_little_endian(),
++					      VIRTIO_NET_S_LINK_UP);
+ 	mlxbf_tmfifo_get_cfg_mac(net_config.mac);
+ 	rc = mlxbf_tmfifo_create_vdev(dev, fifo, VIRTIO_ID_NET,
+ 				      MLXBF_TMFIFO_NET_FEATURES, &net_config,
+-- 
+MST
