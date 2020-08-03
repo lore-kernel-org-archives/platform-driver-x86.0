@@ -1,60 +1,62 @@
-From: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [External] Re: [PATCH v5] platform/x86:
- thinkpad_acpi: lap or desk mode interface
-Date: Mon, 3 Aug 2020 10:26:45 -0400
-Message-ID: <0e462361-a3bc-a7b8-bacd-85f32b575bac@lenovo.com>
-References: <CAHms=eZm3LY-Z4p+TkfZ+vyxGd_7XKPBsSEM_Mvnx2s-GO2c9w@mail.gmail.com>
- <CAHms=eYpcy__Km_9O4MUtLxpasH1sAgQEmcapOhV79j01twhow@mail.gmail.com>
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Subject: Re: [PATCH v4 0/7] Support inhibiting input devices
+Date: Mon, 3 Aug 2020 16:40:58 +0200
+Message-ID: <8fc3a97d-94b7-e073-3981-2f146f5f209e@collabora.com>
+References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+ <20200608112211.12125-1-andrzej.p@collabora.com>
+ <1821a5b7-cbf3-a739-2203-a93b06f0c6f2@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <CAHms=eYpcy__Km_9O4MUtLxpasH1sAgQEmcapOhV79j01twhow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1821a5b7-cbf3-a739-2203-a93b06f0c6f2@redhat.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Elvis Stansvik <elvstone-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sugumaran <slacshiminar-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, Bastien Nocera <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org, patches@opensource.cirrus.com, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Barry
 List-Id: platform-driver-x86.vger.kernel.org
 
-SGkgRWx2aXMsCgpPbiA4LzMvMjAyMCA5OjIwIEFNLCBFbHZpcyBTdGFuc3ZpayB3cm90ZToKPiAK
-PiBEZW4gc8O2biAyIGF1Zy4gMjAyMCBrbCAyMzoxMCBza3JldiBFbHZpcyBTdGFuc3ZpayAKPiA8
-ZWx2c3RvbmVAZ21haWwuY29tPjoKPj4gCj4+IChBcG9sb2dpZXMgaW4gYWR2YW5jZSBmb3IgbWlz
-c2luZyBJbi1SZXBseS1UbyBoZWFkZXIgaW4gdGhpcwo+PiByZXBseS4gSSBzdWJzY3JpYmVkIHRv
-IHRoZSBsaXN0IGp1c3Qgbm93LikKPj4gCj4+IERlbiBmcmUgMyBqdWxpIDIwMjAga2wgMDE6MjQg
-c2tyZXYgTWFyayBQZWFyc29uIAo+PiA8bWFya3BlYXJzb25AbGVub3ZvLmNvbT46Cj4+PiBOZXdl
-ciBMZW5vdm8gVGhpbmtwYWQgcGxhdGZvcm1zIGhhdmUgc3VwcG9ydCB0byBpZGVudGlmeSB3aGV0
-aGVyIAo+Pj4gdGhlIHN5c3RlbSBpcyBvbi1sYXAgb3Igbm90IHVzaW5nIGFuIEFDUEkgRFlUQyBl
-dmVudCBmcm9tIHRoZSAKPj4+IGZpcm13YXJlLgo+Pj4gCj4+PiBUaGlzIHBhdGNoIHByb3ZpZGVz
-IHRoZSBhYmlsaXR5IHRvIHJldHJpZXZlIHRoZSBjdXJyZW50IG1vZGUgdmlhIAo+Pj4gc3lzZnMg
-ZW50cnlwb2ludHMgYW5kIHdpbGwgYmUgdXNlZCBieSB1c2Vyc3BhY2UgZm9yIHRoZXJtYWwgbW9k
-ZSAKPj4+IGFuZCBXV0FOIGZ1bmN0aW9uYWxpdHkKPj4gCj4+IEkgdHJpZWQgdGhlIHBhdGNoIG91
-dCBvbiBteSBYMUM2ICgyMEtIMDA3Qk1YKSwgcnVubmluZyBMZW5vdm8gCj4+IGZpcm13YXJlIHZl
-cnNpb24gMC4xLjQ5Lgo+PiAKPj4gVGhlIHN5c2ZzIHBhdGggL3N5cy9kZXZpY2VzL3BsYXRmb3Jt
-L3RoaW5rcGFkX2FjcGkvZHl0Y19sYXBtb2RlIGlzIAo+PiBzaG93aW5nIHVwLCBidXQgaXQncyBy
-ZXBvcnRpbmcgMCByZWdhcmRsZXNzIGlmIHRoZSBsYXB0b3AgaXMgaW4gbXkgCj4+IGxhcCBvciBv
-biBhIGRlc2suCj4+IAo+PiBJIHRlc3RlZCB0aGlzIGJ5IGhhdmluZyB0aGUgbGFwdG9wIGluIG15
-IGxhcCBmb3IgZml2ZSBtaW51dGVzLCBhbmQgCj4+IHRoZW4gb24gYSBkZXNrIGZvciBmaXZlIG1p
-bnV0ZXMuIFRoZSB2YWx1ZSByZXBvcnRlZCB0aHJvdWdoIAo+PiAvc3lzL2RldmljZXMvcGxhdGZv
-cm0vdGhpbmtwYWRfYWNwaS9keXRjX2xhcG1vZGUgd2FzIGFsd2F5cyAwLgo+PiAKVGhhbmtzIGZv
-ciB0aGUgdXBkYXRlLgpUaGUgWDFDNiBkb2Vzbid0IGhhdmUgc3VwcG9ydCBmb3IgdGhlIG5ldyB0
-aGVybWFsIG1vZGUgaW1wbGVtZW50YXRpb24gc28gCkknbSB3b25kZXJpbmcgaWYgdGhlIGxhcG1v
-ZGUgYmVpbmcgYXZhaWxhYmxlIGNvdWxkIGJlIHJlbGF0ZWQgdG8gdGhlIAp2ZXJzaW9uIG9mIERZ
-VEMgaXMgYXZhaWxhYmxlLiBJJ2xsIGNoZWNrIHdpdGggdGhlIGZpcm13YXJlIHRlYW0gYW5kIGdl
-dCAKYmFjayB0byB5b3Ugb24gdGhhdCAtIHRoZXkgaGFkbid0IGxpc3RlZCBpdCB0byBtZSBhcyBh
-IGxpbWl0YXRpb24gCnByZXZpb3VzbHkgYW5kIHVuZm9ydHVuYXRlbHkgSSBkb24ndCBoYXZlIGFu
-IFgxQzYgc28gZGlkbid0IHRlc3Qgb24gdGhhdCAKcGxhdGZvcm0uCgpBcyBhIG5vdGUgLSB0aGUg
-bGFwbW9kZSBpcyBwcmltYXJpbHkgZm9yIHRoZSB0aGVybWFsIG1vZGVzIChpdCBpcyBhbHNvIApi
-ZWluZyB1c2VkIGZvciBXV0FOIHBvd2VyIGNvbnRyb2wgYnV0IHRoYXQgaXMgbm90IHN1cHBvcnRl
-ZCBmb3IgTGludXggb24gCnRoZSBYMUM2IGVpdGhlciBmb3Igb3RoZXIgcmVhc29ucykuIEknbSBh
-ZnJhaWQgdGhlIGludGVyZmFjZSBpcyBvZiAKbGltaXRlZCB1c2UgdG8geW91IGFueXdheS4uLi4K
-Ck1hcmsKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpp
-Ym0tYWNwaS1kZXZlbCBtYWlsaW5nIGxpc3QKaWJtLWFjcGktZGV2ZWxAbGlzdHMuc291cmNlZm9y
-Z2UubmV0Cmh0dHBzOi8vbGlzdHMuc291cmNlZm9yZ2UubmV0L2xpc3RzL2xpc3RpbmZvL2libS1h
-Y3BpLWRldmVsCg==
+Hi Dmitry,
+
+W dniu 12.06.2020 o 10:17, Hans de Goede pisze:
+> Hi,
+> 
+> On 6/8/20 1:22 PM, Andrzej Pietrasiewicz wrote:
+>> This is a quick respin of v3, with just two small changes, please see
+>> the changelog below.
+>>
+>> Userspace might want to implement a policy to temporarily disregard input
+>> from certain devices.
+>>
+
+<snip>
+
+>> v3..v4:
+>> - updated the comment in input_open_device() (Hans)
+>> - used more straightforward locking pattern in adc/exynos (Michał)
+>>
+>> v2..v3:
+>> - ignored autorepeat events in input_get_disposition() if a key is not
+>> pressed (Hans)
+>> - dropped inhibit()/uninhibit() driver callbacks (Hans)
+>> - split ACPI button patch into taking the lock and using the helper (Rafael)
+>> - dropped the elan_i2c conversion
+>> - fixed typos in exynos adc
+>>
+>> v1..v2:
+>> - added input_device_enabled() helper and used it in drivers (Dmitry)
+>> - the fact of open() and close() being called in inhibit/uninhibit paths has
+>> been emphasized in the commit message of PATCH 6/7 (Dmitry)
+
+<snip>
+
+> 
+> The entire series looks good to me:
+> 
+> Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+What are the prospects of this series being merged?
+
+Regards,
+
+Andrzej
