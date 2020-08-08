@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 10/14] platform/x86: intel-hid: Fix return value check in check_acpi_dev()
-Date: Sat,  8 Aug 2020 19:40:09 -0400
-Message-ID: <20200808234013.3619541-10-sashal@kernel.org>
-References: <20200808234013.3619541-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 15/21] platform/x86: intel-hid: Fix return value check in check_acpi_dev()
+Date: Sat,  8 Aug 2020 19:39:35 -0400
+Message-ID: <20200808233941.3619277-15-sashal@kernel.org>
+References: <20200808233941.3619277-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200808234013.3619541-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20200808233941.3619277-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Lu Wei <luwei32@huawei.com>, Hulk Robot <hulkci@huawei.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
@@ -30,10 +30,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index e34fd70b67afe..3add7b3f9658b 100644
+index c514cb73bb500..d7d69eadb9bba 100644
 --- a/drivers/platform/x86/intel-hid.c
 +++ b/drivers/platform/x86/intel-hid.c
-@@ -366,7 +366,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+@@ -564,7 +564,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
  		return AE_OK;
  
  	if (acpi_match_device_ids(dev, ids) == 0)
