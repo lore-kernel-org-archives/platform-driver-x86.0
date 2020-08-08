@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 11/14] platform/x86: intel-vbtn: Fix return value check in check_acpi_dev()
-Date: Sat,  8 Aug 2020 19:40:10 -0400
-Message-ID: <20200808234013.3619541-11-sashal@kernel.org>
-References: <20200808234013.3619541-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 7/9] platform/x86: intel-vbtn: Fix return value check in check_acpi_dev()
+Date: Sat,  8 Aug 2020 19:40:34 -0400
+Message-ID: <20200808234037.3619732-7-sashal@kernel.org>
+References: <20200808234037.3619732-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200808234013.3619541-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20200808234037.3619732-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Lu Wei <luwei32@huawei.com>, Hulk Robot <hulkci@huawei.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
@@ -30,10 +30,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 58c5ff36523ab..d7fa2b88d27ab 100644
+index a74340dff530e..1cf2a38add5f9 100644
 --- a/drivers/platform/x86/intel-vbtn.c
 +++ b/drivers/platform/x86/intel-vbtn.c
-@@ -178,7 +178,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+@@ -168,7 +168,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
  		return AE_OK;
  
  	if (acpi_match_device_ids(dev, ids) == 0)
