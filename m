@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 41/60] platform/x86: asus-nb-wmi: add support for ASUS ROG Zephyrus G14 and G15
-Date: Mon, 10 Aug 2020 15:10:09 -0400
-Message-ID: <20200810191028.3793884-41-sashal@kernel.org>
-References: <20200810191028.3793884-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 45/64] platform/x86: asus-nb-wmi: add support for ASUS ROG Zephyrus G14 and G15
+Date: Mon, 10 Aug 2020 15:08:40 -0400
+Message-ID: <20200810190859.3793319-45-sashal@kernel.org>
+References: <20200810190859.3793319-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200810191028.3793884-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Armas Spann <zappel@retarded.farm>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
@@ -31,7 +31,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 82 insertions(+)
 
 diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index c4404d9c1de4f..1bb082308c209 100644
+index 8c4d00482ef06..6c42f73c1dfd3 100644
 --- a/drivers/platform/x86/asus-nb-wmi.c
 +++ b/drivers/platform/x86/asus-nb-wmi.c
 @@ -110,6 +110,16 @@ static struct quirk_entry quirk_asus_forceals = {
