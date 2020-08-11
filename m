@@ -1,134 +1,40 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.8 45/64] platform/x86: asus-nb-wmi: add support for ASUS ROG Zephyrus G14 and G15
-Date: Mon, 10 Aug 2020 15:08:40 -0400
-Message-ID: <20200810190859.3793319-45-sashal@kernel.org>
-References: <20200810190859.3793319-1-sashal@kernel.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V5 0/3] Intel Platform Monitoring Technology
+Date: Tue, 11 Aug 2020 09:04:33 +0100
+Message-ID: <20200811080433.GI4411@dell>
+References: <20200717190620.29821-1-david.e.box@linux.intel.com>
+ <20200729213719.17795-1-david.e.box@linux.intel.com>
+ <74c03fe9fea12f4b056bf694a0d03d5200244231.camel@linux.intel.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200810190859.3793319-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Armas Spann <zappel@retarded.farm>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sasha Levin <sashal@kernel.org>, acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <74c03fe9fea12f4b056bf694a0d03d5200244231.camel@linux.intel.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: "David E. Box" <david.e.box@linux.intel.com>
+Cc: dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com, alexander.h.duyck@linux.intel.com, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-From: Armas Spann <zappel@retarded.farm>
+On Mon, 10 Aug 2020, David E. Box wrote:
 
-[ Upstream commit 13bceda68fb9ef388ad40d355ab8d03ee64d14c2 ]
+> Friendly ping.
 
-Add device support for the new ASUS ROG Zephyrus G14 (GA401I) and
-G15 (GA502I) series.
+Don't do that.  Sending contentless pings is seldom helpful.
 
-This is accomplished by two new quirk entries (one per each series),
-as well as all current available G401I/G502I DMI_PRODUCT_NAMEs to match
-the corresponding devices.
+If you think your set has been dropped please just send a [RESEND].
 
-Signed-off-by: Armas Spann <zappel@retarded.farm>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/asus-nb-wmi.c | 82 ++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+This is probably worth doing anyway, since you've sent v2, v3, v4 and
+now v5 has reply-tos of one another.  The thread has become quite
+messy as a result.
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 8c4d00482ef06..6c42f73c1dfd3 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -110,6 +110,16 @@ static struct quirk_entry quirk_asus_forceals = {
- 	.wmi_force_als_set = true,
- };
- 
-+static struct quirk_entry quirk_asus_ga401i = {
-+	.wmi_backlight_power = true,
-+	.wmi_backlight_set_devstate = true,
-+};
-+
-+static struct quirk_entry quirk_asus_ga502i = {
-+	.wmi_backlight_power = true,
-+	.wmi_backlight_set_devstate = true,
-+};
-+
- static int dmi_matched(const struct dmi_system_id *dmi)
- {
- 	pr_info("Identified laptop model '%s'\n", dmi->ident);
-@@ -411,6 +421,78 @@ static const struct dmi_system_id asus_quirks[] = {
- 		},
- 		.driver_data = &quirk_asus_forceals,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA401IH",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IH"),
-+		},
-+		.driver_data = &quirk_asus_ga401i,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA401II",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA401II"),
-+		},
-+		.driver_data = &quirk_asus_ga401i,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA401IU",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IU"),
-+		},
-+		.driver_data = &quirk_asus_ga401i,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA401IV",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IV"),
-+		},
-+		.driver_data = &quirk_asus_ga401i,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA401IVC",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IVC"),
-+		},
-+		.driver_data = &quirk_asus_ga401i,
-+	},
-+		{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA502II",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA502II"),
-+		},
-+		.driver_data = &quirk_asus_ga502i,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA502IU",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IU"),
-+		},
-+		.driver_data = &quirk_asus_ga502i,
-+	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUSTeK COMPUTER INC. GA502IV",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IV"),
-+		},
-+		.driver_data = &quirk_asus_ga502i,
-+	},
- 	{},
- };
- 
+Also please take the time to identify where we are with respect to the
+current release cycle.  The merge-window is open presently.  Meaning
+that most maintainers are busy, either sending out pull-requests or
+ramping up for the next cycle (or just taking a quick breather).
+
 -- 
-2.25.1
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
