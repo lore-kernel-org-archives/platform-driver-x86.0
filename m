@@ -1,16 +1,17 @@
-From: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+From: "Limonciello, Mario" <Mario.Limonciello-8PEkshWhKlo@public.gmane.org>
 Subject: Re: [External] RE: [PATCH v2] platform/x86:
  thinkpad_acpi: performance mode interface
-Date: Fri, 21 Aug 2020 15:35:38 -0400
-Message-ID: <1806c4ec-6788-bcc7-7e09-8e5274d2b9d5@lenovo.com>
+Date: Fri, 21 Aug 2020 20:00:38 +0000
+Message-ID: <DM6PR19MB26369308415B8235B3C9997EFA5B0@DM6PR19MB2636.namprd19.prod.outlook.com>
 References: <markpearson@lenovo.com>
  <20200821175310.335873-1-markpearson@lenovo.com>
  <DM6PR19MB2636F1CFCE1E386D6E793E25FA5B0@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <1806c4ec-6788-bcc7-7e09-8e5274d2b9d5@lenovo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <DM6PR19MB2636F1CFCE1E386D6E793E25FA5B0-JELcaX3dgTY1BKDJOnGuQNvXXbHMiUzJvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+In-Reply-To: <1806c4ec-6788-bcc7-7e09-8e5274d2b9d5-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
 Content-Language: en-US
 List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
  <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
@@ -20,60 +21,67 @@ List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@publi
 List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
  <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
 Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: "Limonciello, Mario" <Mario.Limonciello-8PEkshWhKlo@public.gmane.org>
+To: Mark Pearson <markpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
 Cc: "ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <bnocera-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org" <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, Nitin Joshi <njoshi1-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Mario
-
-On 8/21/2020 3:15 PM, Limonciello, Mario wrote:
->>
-<snip>
-> 
-> Thanks for adapting a lot of my feedback, this looks much better to me.
-> 
-No problems and genuinely thank you for the feedback. Sorry it took so 
-long to get this update out - PTO and other things got in the way :)
-
->>
-<snip>
->> +
->> +The sysfs entry provides the ability to return the current status and to set
->> the
->> +desired mode. For example::
->> +
->> +        echo H > /sys/devices/platform/thinkpad_acpi/dytc_perfmode
->> +        echo M > /sys/devices/platform/thinkpad_acpi/dytc_perfmode
->> +        echo L > /sys/devices/platform/thinkpad_acpi/dytc_perfmode
->> +
-> 
-> I was thinking about this some more, do you actually want another mode that "disables"
-> this feature?   IE "O" turns it off an calls DYTC_DISABLE_CQL.
-> 
-> For example if a user wanted to test the recently landed code in thermald 2.3
-> and compare performance between the two it seems like this and that "might" fight.
-> As an outsider looking in - I of course may be wrong too here.
-> 
-> If at some point in the future thermald does a better job than this implementation you
-> might also want an "out" to let thermald or another piece of userland turn this off
-> if it's in the picture.
-> 
-I'm still digging into this one. Right now I haven't found a good clean 
-way of just disabling the firmware. Currently when thermald goes in and 
-tweaks the CPU power registers it has the effect of overriding the FW 
-anyway - but I appreciate that's not quite the same as actually doing it 
-explicitly.
-
-I'm still discussing with the BIOS team how to implement this - these 
-conversations take time.... I suspect I'll need a new BIOS API which 
-will take a while to implement and get rolled out. I didn't want to hold 
-up this patch as there are benefits for users in the meantime and Lenovo 
-do plan on supporting the thermal software going forwards. I'm not not 
-dropping the plan to have a disable function as I can see the benefits.
-
-Thanks for the input. Let me know if you want a reviewed-by tag added. I 
-think it's kinda awesome having input from a Dell engineer on a Lenovo 
-related driver and I hope in the future I can provide the same help ;) 
-Open source is awesome.
-
-Mark
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBwbGF0Zm9ybS1kcml2ZXIteDg2
+LW93bmVyQHZnZXIua2VybmVsLm9yZyA8cGxhdGZvcm0tZHJpdmVyLXg4Ni0NCj4gb3duZXJAdmdl
+ci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgTWFyayBQZWFyc29uDQo+IFNlbnQ6IEZyaWRheSwg
+QXVndXN0IDIxLCAyMDIwIDE0OjM2DQo+IFRvOiBMaW1vbmNpZWxsbywgTWFyaW8NCj4gQ2M6IGli
+bS1hY3BpLWRldmVsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldDsgcGxhdGZvcm0tZHJpdmVyLXg4NkB2
+Z2VyLmtlcm5lbC5vcmc7DQo+IGlibS1hY3BpQGhtaC5lbmcuYnI7IGJub2NlcmFAcmVkaGF0LmNv
+bTsgTml0aW4gSm9zaGkNCj4gU3ViamVjdDogUmU6IFtFeHRlcm5hbF0gUkU6IFtQQVRDSCB2Ml0g
+cGxhdGZvcm0veDg2OiB0aGlua3BhZF9hY3BpOg0KPiBwZXJmb3JtYW5jZSBtb2RlIGludGVyZmFj
+ZQ0KPiANCj4gDQo+IFtFWFRFUk5BTCBFTUFJTF0NCj4gDQo+IEhpIE1hcmlvDQo+IA0KPiBPbiA4
+LzIxLzIwMjAgMzoxNSBQTSwgTGltb25jaWVsbG8sIE1hcmlvIHdyb3RlOg0KPiA+Pg0KPiA8c25p
+cD4NCj4gPg0KPiA+IFRoYW5rcyBmb3IgYWRhcHRpbmcgYSBsb3Qgb2YgbXkgZmVlZGJhY2ssIHRo
+aXMgbG9va3MgbXVjaCBiZXR0ZXIgdG8gbWUuDQo+ID4NCj4gTm8gcHJvYmxlbXMgYW5kIGdlbnVp
+bmVseSB0aGFuayB5b3UgZm9yIHRoZSBmZWVkYmFjay4gU29ycnkgaXQgdG9vayBzbw0KPiBsb25n
+IHRvIGdldCB0aGlzIHVwZGF0ZSBvdXQgLSBQVE8gYW5kIG90aGVyIHRoaW5ncyBnb3QgaW4gdGhl
+IHdheSA6KQ0KPiANCj4gPj4NCj4gPHNuaXA+DQo+ID4+ICsNCj4gPj4gK1RoZSBzeXNmcyBlbnRy
+eSBwcm92aWRlcyB0aGUgYWJpbGl0eSB0byByZXR1cm4gdGhlIGN1cnJlbnQgc3RhdHVzIGFuZCB0
+bw0KPiBzZXQNCj4gPj4gdGhlDQo+ID4+ICtkZXNpcmVkIG1vZGUuIEZvciBleGFtcGxlOjoNCj4g
+Pj4gKw0KPiA+PiArICAgICAgICBlY2hvIEggPiAvc3lzL2RldmljZXMvcGxhdGZvcm0vdGhpbmtw
+YWRfYWNwaS9keXRjX3BlcmZtb2RlDQo+ID4+ICsgICAgICAgIGVjaG8gTSA+IC9zeXMvZGV2aWNl
+cy9wbGF0Zm9ybS90aGlua3BhZF9hY3BpL2R5dGNfcGVyZm1vZGUNCj4gPj4gKyAgICAgICAgZWNo
+byBMID4gL3N5cy9kZXZpY2VzL3BsYXRmb3JtL3RoaW5rcGFkX2FjcGkvZHl0Y19wZXJmbW9kZQ0K
+PiA+PiArDQo+ID4NCj4gPiBJIHdhcyB0aGlua2luZyBhYm91dCB0aGlzIHNvbWUgbW9yZSwgZG8g
+eW91IGFjdHVhbGx5IHdhbnQgYW5vdGhlciBtb2RlIHRoYXQNCj4gImRpc2FibGVzIg0KPiA+IHRo
+aXMgZmVhdHVyZT8gICBJRSAiTyIgdHVybnMgaXQgb2ZmIGFuIGNhbGxzIERZVENfRElTQUJMRV9D
+UUwuDQo+ID4NCj4gPiBGb3IgZXhhbXBsZSBpZiBhIHVzZXIgd2FudGVkIHRvIHRlc3QgdGhlIHJl
+Y2VudGx5IGxhbmRlZCBjb2RlIGluIHRoZXJtYWxkDQo+IDIuMw0KPiA+IGFuZCBjb21wYXJlIHBl
+cmZvcm1hbmNlIGJldHdlZW4gdGhlIHR3byBpdCBzZWVtcyBsaWtlIHRoaXMgYW5kIHRoYXQgIm1p
+Z2h0Ig0KPiBmaWdodC4NCj4gPiBBcyBhbiBvdXRzaWRlciBsb29raW5nIGluIC0gSSBvZiBjb3Vy
+c2UgbWF5IGJlIHdyb25nIHRvbyBoZXJlLg0KPiA+DQo+ID4gSWYgYXQgc29tZSBwb2ludCBpbiB0
+aGUgZnV0dXJlIHRoZXJtYWxkIGRvZXMgYSBiZXR0ZXIgam9iIHRoYW4gdGhpcw0KPiBpbXBsZW1l
+bnRhdGlvbiB5b3UNCj4gPiBtaWdodCBhbHNvIHdhbnQgYW4gIm91dCIgdG8gbGV0IHRoZXJtYWxk
+IG9yIGFub3RoZXIgcGllY2Ugb2YgdXNlcmxhbmQgdHVybg0KPiB0aGlzIG9mZg0KPiA+IGlmIGl0
+J3MgaW4gdGhlIHBpY3R1cmUuDQo+ID4NCj4gSSdtIHN0aWxsIGRpZ2dpbmcgaW50byB0aGlzIG9u
+ZS4gUmlnaHQgbm93IEkgaGF2ZW4ndCBmb3VuZCBhIGdvb2QgY2xlYW4NCj4gd2F5IG9mIGp1c3Qg
+ZGlzYWJsaW5nIHRoZSBmaXJtd2FyZS4gQ3VycmVudGx5IHdoZW4gdGhlcm1hbGQgZ29lcyBpbiBh
+bmQNCj4gdHdlYWtzIHRoZSBDUFUgcG93ZXIgcmVnaXN0ZXJzIGl0IGhhcyB0aGUgZWZmZWN0IG9m
+IG92ZXJyaWRpbmcgdGhlIEZXDQo+IGFueXdheSAtIGJ1dCBJIGFwcHJlY2lhdGUgdGhhdCdzIG5v
+dCBxdWl0ZSB0aGUgc2FtZSBhcyBhY3R1YWxseSBkb2luZyBpdA0KPiBleHBsaWNpdGx5Lg0KPiAN
+Cg0KV2hhdCBhYm91dCBhIG1vZHByb2JlIHBhcmFtZXRlciB0byBkaXNhYmxlIGF0IGxlYXN0PyAg
+VGhhdCB3b3VsZCBhdCBsZWFzdA0KbWFrZSBpdCBwcmV0dHkgZWFzeSB0byBtYWtlIGEgY2hhbmdl
+LCByZWJvb3QgYW5kIGNvbXBhcmUgd2l0aCB0aGVybWFsZCAob3INCm90aGVyIHNvZnR3YXJlKSB3
+aXRob3V0IGRpc2FibGluZyB0aGUgcmVzdCBvZiB0aGUgZnVuY3Rpb25hbGl0eSBvZiB0aGUNCnRo
+aW5rcGFkX2FjcGkgZHJpdmVyLg0KDQo+IEknbSBzdGlsbCBkaXNjdXNzaW5nIHdpdGggdGhlIEJJ
+T1MgdGVhbSBob3cgdG8gaW1wbGVtZW50IHRoaXMgLSB0aGVzZQ0KPiBjb252ZXJzYXRpb25zIHRh
+a2UgdGltZS4uLi4gSSBzdXNwZWN0IEknbGwgbmVlZCBhIG5ldyBCSU9TIEFQSSB3aGljaA0KPiB3
+aWxsIHRha2UgYSB3aGlsZSB0byBpbXBsZW1lbnQgYW5kIGdldCByb2xsZWQgb3V0LiBJIGRpZG4n
+dCB3YW50IHRvIGhvbGQNCj4gdXAgdGhpcyBwYXRjaCBhcyB0aGVyZSBhcmUgYmVuZWZpdHMgZm9y
+IHVzZXJzIGluIHRoZSBtZWFudGltZSBhbmQgTGVub3ZvDQo+IGRvIHBsYW4gb24gc3VwcG9ydGlu
+ZyB0aGUgdGhlcm1hbCBzb2Z0d2FyZSBnb2luZyBmb3J3YXJkcy4gSSdtIG5vdCBub3QNCj4gZHJv
+cHBpbmcgdGhlIHBsYW4gdG8gaGF2ZSBhIGRpc2FibGUgZnVuY3Rpb24gYXMgSSBjYW4gc2VlIHRo
+ZSBiZW5lZml0cy4NCj4gDQoNCg0KWXVwLCB3ZWxsIGF3YXJlIGhvdyB0aGVzZSB0eXBlcyBvZiB0
+aGluZ3MgZ28uDQoNCj4gVGhhbmtzIGZvciB0aGUgaW5wdXQuIExldCBtZSBrbm93IGlmIHlvdSB3
+YW50IGEgcmV2aWV3ZWQtYnkgdGFnIGFkZGVkLiBJDQo+IHRoaW5rIGl0J3Mga2luZGEgYXdlc29t
+ZSBoYXZpbmcgaW5wdXQgZnJvbSBhIERlbGwgZW5naW5lZXIgb24gYSBMZW5vdm8NCj4gcmVsYXRl
+ZCBkcml2ZXIgYW5kIEkgaG9wZSBpbiB0aGUgZnV0dXJlIEkgY2FuIHByb3ZpZGUgdGhlIHNhbWUg
+aGVscCA7KQ0KPiBPcGVuIHNvdXJjZSBpcyBhd2Vzb21lLg0KPiANCj4gTWFyaw0KDQrwn5iKDQoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KaWJtLWFjcGkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmlibS1hY3BpLWRldmVsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldApo
+dHRwczovL2xpc3RzLnNvdXJjZWZvcmdlLm5ldC9saXN0cy9saXN0aW5mby9pYm0tYWNwaS1kZXZl
+bAo=
