@@ -1,7 +1,7 @@
 From: Kenneth Chan <kenneth.t.chan@gmail.com>
-Subject: [PATCH 6/9] add write support to mute
-Date: Sat, 22 Aug 2020 02:14:30 +0800
-Message-ID: <20200821181433.17653-7-kenneth.t.chan@gmail.com>
+Subject: [PATCH 7/9] resolve hotkey double trigger bug
+Date: Sat, 22 Aug 2020 02:14:31 +0800
+Message-ID: <20200821181433.17653-8-kenneth.t.chan@gmail.com>
 References: <20200821181433.17653-1-kenneth.t.chan@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,84 +12,41 @@ To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: laforge@gnumonks.org, Kenneth Chan <kenneth.t.chan@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add write support to the mute platform device
+Sometimes double ACPI events are triggered for brightness, vol and mute hotkeys. This
+patch fixes it.
 
 
 Signed-off-by: Kenneth Chan <kenneth.t.chan@gmail.com>
 ---
- drivers/platform/x86/panasonic-laptop.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+ drivers/platform/x86/panasonic-laptop.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index c77292588a8a..3b0294ee9d3e 100644
+index 3b0294ee9d3e..6779099a3ec9 100644
 --- a/drivers/platform/x86/panasonic-laptop.c
 +++ b/drivers/platform/x86/panasonic-laptop.c
 @@ -13,6 +13,7 @@
   *
   * ChangeLog:
   *	Aug.18, 2020	Kenneth Chan <kenneth.t.chan@gmail.com>
-+ *			add write support to mute
++ *			resolve hotkey double trigger
+  *			add write support to mute
   *			fix sticky_key init bug
   *			fix naming of platform files for consistency with other
-  *			modules
-@@ -220,6 +221,7 @@ struct pcc_acpi {
- 	acpi_handle		handle;
- 	unsigned long		num_sifr;
- 	int			sticky_key;
-+	int			mute;
- 	u32			*sinf;
- 	struct acpi_device	*device;
- 	struct input_dev	*input_dev;
-@@ -483,6 +485,24 @@ static ssize_t mute_show(struct device *dev, struct device_attribute *attr,
- 	return snprintf(buf, PAGE_SIZE, "%u\n", pcc->sinf[SINF_MUTE]);
+@@ -597,9 +598,11 @@ static void acpi_pcc_generate_keyinput(struct pcc_acpi *pcc)
+ 					result & 0xf, 0x80, false);
+ 	}
+ 
+-	if (!sparse_keymap_report_event(hotk_input_dev,
+-					result & 0xf, result & 0x80, false))
+-		pr_err("Unknown hotkey event: 0x%04llx\n", result);
++	if ((result & 0xf) == 0x7 || (result & 0xf) == 0x9 || (result & 0xf) == 0xa) {
++		if (!sparse_keymap_report_event(hotk_input_dev,
++						result & 0xf, result & 0x80, false))
++			pr_err("Unknown hotkey event: 0x%04llx\n", result);
++	}
  }
  
-+static ssize_t mute_store(struct device *dev, struct device_attribute *attr,
-+			  const char *buf, size_t count)
-+{
-+	struct acpi_device *acpi = to_acpi_device(dev);
-+	struct pcc_acpi *pcc = acpi_driver_data(acpi);
-+	int err, val;
-+
-+	err = kstrtoint(buf, 0, &val);
-+	if (err)
-+		return err;
-+	if (val == 0 || val == 1) {
-+		acpi_pcc_write_sset(pcc, SINF_MUTE, val);
-+		pcc->mute = val;
-+	}
-+
-+	return count;
-+}
-+
- static ssize_t sticky_key_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
- {
-@@ -533,7 +553,7 @@ static ssize_t cdpower_store(struct device *dev, struct device_attribute *attr,
- 
- static DEVICE_ATTR_RO(numbatt);
- static DEVICE_ATTR_RO(lcdtype);
--static DEVICE_ATTR_RO(mute);
-+static DEVICE_ATTR_RW(mute);
- static DEVICE_ATTR_RW(sticky_key);
- static DEVICE_ATTR_RW(cdpower);
- 
-@@ -690,6 +710,7 @@ static int acpi_pcc_hotkey_resume(struct device *dev)
- 	if (!pcc)
- 		return -EINVAL;
- 
-+	acpi_pcc_write_sset(pcc, SINF_MUTE, pcc->mute);
- 	acpi_pcc_write_sset(pcc, SINF_STICKY_KEY, pcc->sticky_key);
- 
- 	return 0;
-@@ -760,6 +781,8 @@ static int acpi_pcc_hotkey_add(struct acpi_device *device)
- 	acpi_pcc_write_sset(pcc, SINF_STICKY_KEY, 0);
- 	pcc->sticky_key = 0;
- 
-+	pcc->mute = pcc->sinf[SINF_MUTE];
-+
- 	/* add sysfs attributes */
- 	result = sysfs_create_group(&device->dev.kobj, &pcc_attr_group);
- 	if (result)
+ static void acpi_pcc_hotkey_notify(struct acpi_device *device, u32 event)
 -- 
 2.17.5
