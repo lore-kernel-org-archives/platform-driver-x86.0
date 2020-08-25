@@ -1,69 +1,35 @@
-From: "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Subject: RE: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager (IOM)
- driver
-Date: Tue, 25 Aug 2020 01:03:25 +0000
-Message-ID: <DM6PR11MB3963032D3549E865BE1F4CADF6570@DM6PR11MB3963.namprd11.prod.outlook.com>
-References: <20200822040508.23510-1-rajmohan.mani@intel.com>
- <20200822040508.23510-2-rajmohan.mani@intel.com>
- <20200822095631.GB2553024@google.com>
- <DM6PR11MB3963121C820F570F845BBAEEF6560@DM6PR11MB3963.namprd11.prod.outlook.com>
- <20200824224726.GA48297@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+From: Kenneth Chan <kenneth.t.chan@gmail.com>
+Subject: [PATCH] panasonic-laptop: take over maintainership
+Date: Tue, 25 Aug 2020 18:13:41 +0800
+Message-ID: <20200825101341.5699-1-kenneth.t.chan@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200824224726.GA48297@google.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Prashant Malani <pmalani@chromium.org>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, "Joseph, Jithu" <jithu.joseph@intel.com>, =?iso-8859-2?Q?Bla=BE_Hrastnik?= <blaz@mxxn.io>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "bleung@chromium.org" <bleung@chrom>
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: laforge@gnumonks.org, Kenneth Chan <kenneth.t.chan@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Prashant,
+Take over maintaniership of panasonic-laptop from Harald Welte.
 
-...
 
-> > > > +
-> > > > +	reg =3D iom->regbar + IOM_PORT_STATUS_OFFSET + IOM_REG_LEN *
-> > > port;
-> > > > +
-> > > > +	*status =3D ioread32(reg);
-> > >
-> > > Perhaps just inline reg within the parentheses?
-> >
-> > Kept this way to increase readability. Let me know if you feel
-> > strongly towards inline reg.
->=20
-> I'd rather this be inlined, you save a couple lines from the variable dec=
-laration,
-> and IMO we're not gaining much in terms of readability by declaring this
-> separately.
->=20
+Signed-off-by: Kenneth Chan <kenneth.t.chan@gmail.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ack
-(at least to me, it was more readable)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3b186ade3597..3815ba053136 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13039,7 +13039,7 @@ F:	include/net/page_pool.h
+ F:	net/core/page_pool.c
+ 
+ PANASONIC LAPTOP ACPI EXTRAS DRIVER
+-M:	Harald Welte <laforge@gnumonks.org>
++M:	Kenneth Chan <kenneth.t.chan@gmail.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/panasonic-laptop.c
 
-...
-
-> >
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(intel_iom_port_status);
-> > > > +
-> > > > +static int intel_iom_probe(struct platform_device *pdev) {
-> > > > +	void __iomem *addr;
-> > > > +
-> > > > +	/* only one IOM device is supported */
-> > >
-> > > Minor nit: s/only/Only
-> >
-> > And then I may need to end the comment with a period.
-> > Let me know if you feel strongly.
-> Yes, let's capitalize and add the period. Let's try to use the right punc=
-tuation
-> where possible.
->=20
-
-Ack
-Will take care of this as part of v3.
+base-commit: 6a9dc5fd6170d0a41c8a14eb19e63d94bea5705a
+-- 
+2.17.5
