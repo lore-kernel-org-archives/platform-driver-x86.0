@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 23/24] Input: surface3_spi - Simplify with dev_err_probe()
-Date: Wed, 26 Aug 2020 20:17:05 +0200
-Message-ID: <20200826181706.11098-23-krzk@kernel.org>
+Subject: [PATCH 22/24] Input: sis_i2c - Simplify with dev_err_probe()
+Date: Wed, 26 Aug 2020 20:17:04 +0200
+Message-ID: <20200826181706.11098-22-krzk@kernel.org>
 References: <20200826181706.11098-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
@@ -15,39 +15,42 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/input/touchscreen/surface3_spi.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ drivers/input/touchscreen/sis_i2c.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/input/touchscreen/surface3_spi.c b/drivers/input/touchscreen/surface3_spi.c
-index ce4828b1415a..25bb77ddf2ef 100644
---- a/drivers/input/touchscreen/surface3_spi.c
-+++ b/drivers/input/touchscreen/surface3_spi.c
-@@ -223,7 +223,6 @@ static void surface3_spi_power(struct surface3_ts_data *data, bool on)
-  */
- static int surface3_spi_get_gpio_config(struct surface3_ts_data *data)
- {
--	int error;
- 	struct device *dev;
- 	struct gpio_desc *gpiod;
- 	int i;
-@@ -233,15 +232,9 @@ static int surface3_spi_get_gpio_config(struct surface3_ts_data *data)
- 	/* Get the reset lines GPIO pin number */
- 	for (i = 0; i < 2; i++) {
- 		gpiod = devm_gpiod_get_index(dev, NULL, i, GPIOD_OUT_LOW);
--		if (IS_ERR(gpiod)) {
--			error = PTR_ERR(gpiod);
--			if (error != -EPROBE_DEFER)
--				dev_err(dev,
--					"Failed to get power GPIO %d: %d\n",
--					i,
--					error);
--			return error;
--		}
-+		if (IS_ERR(gpiod))
-+			return dev_err_probe(dev, PTR_ERR(gpiod),
-+					     "Failed to get power GPIO %d\n", i);
+diff --git a/drivers/input/touchscreen/sis_i2c.c b/drivers/input/touchscreen/sis_i2c.c
+index 6274555f1673..348a2ba9b7c9 100644
+--- a/drivers/input/touchscreen/sis_i2c.c
++++ b/drivers/input/touchscreen/sis_i2c.c
+@@ -311,23 +311,15 @@ static int sis_ts_probe(struct i2c_client *client,
  
- 		data->gpiod_rst[i] = gpiod;
- 	}
+ 	ts->attn_gpio = devm_gpiod_get_optional(&client->dev,
+ 						"attn", GPIOD_IN);
+-	if (IS_ERR(ts->attn_gpio)) {
+-		error = PTR_ERR(ts->attn_gpio);
+-		if (error != -EPROBE_DEFER)
+-			dev_err(&client->dev,
+-				"Failed to get attention GPIO: %d\n", error);
+-		return error;
+-	}
++	if (IS_ERR(ts->attn_gpio))
++		return dev_err_probe(&client->dev, PTR_ERR(ts->attn_gpio),
++				     "Failed to get attention GPIO\n");
+ 
+ 	ts->reset_gpio = devm_gpiod_get_optional(&client->dev,
+ 						 "reset", GPIOD_OUT_LOW);
+-	if (IS_ERR(ts->reset_gpio)) {
+-		error = PTR_ERR(ts->reset_gpio);
+-		if (error != -EPROBE_DEFER)
+-			dev_err(&client->dev,
+-				"Failed to get reset GPIO: %d\n", error);
+-		return error;
+-	}
++	if (IS_ERR(ts->reset_gpio))
++		return dev_err_probe(&client->dev, PTR_ERR(ts->reset_gpio),
++				     "Failed to get reset GPIO\n");
+ 
+ 	sis_ts_reset(ts);
+ 
 -- 
 2.17.1
