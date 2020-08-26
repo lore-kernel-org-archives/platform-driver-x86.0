@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 17/24] Input: melfas_mip4 - Simplify with dev_err_probe()
-Date: Wed, 26 Aug 2020 20:16:59 +0200
-Message-ID: <20200826181706.11098-17-krzk@kernel.org>
+Subject: [PATCH 20/24] Input: resistive-adc-touch - Simplify with dev_err_probe()
+Date: Wed, 26 Aug 2020 20:17:02 +0200
+Message-ID: <20200826181706.11098-20-krzk@kernel.org>
 References: <20200826181706.11098-1-krzk@kernel.org>
 Return-path: <linux-input-owner@vger.kernel.org>
 In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
@@ -15,28 +15,27 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/input/touchscreen/melfas_mip4.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/input/touchscreen/resistive-adc-touch.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/input/touchscreen/melfas_mip4.c b/drivers/input/touchscreen/melfas_mip4.c
-index f67efdd040b2..d43a8643adcd 100644
---- a/drivers/input/touchscreen/melfas_mip4.c
-+++ b/drivers/input/touchscreen/melfas_mip4.c
-@@ -1451,13 +1451,8 @@ static int mip4_probe(struct i2c_client *client, const struct i2c_device_id *id)
+diff --git a/drivers/input/touchscreen/resistive-adc-touch.c b/drivers/input/touchscreen/resistive-adc-touch.c
+index cfc8bb4553f7..46b5a6caef84 100644
+--- a/drivers/input/touchscreen/resistive-adc-touch.c
++++ b/drivers/input/touchscreen/resistive-adc-touch.c
+@@ -108,12 +108,8 @@ static int grts_probe(struct platform_device *pdev)
  
- 	ts->gpio_ce = devm_gpiod_get_optional(&client->dev,
- 					      "ce", GPIOD_OUT_LOW);
--	if (IS_ERR(ts->gpio_ce)) {
--		error = PTR_ERR(ts->gpio_ce);
--		if (error != EPROBE_DEFER)
--			dev_err(&client->dev,
--				"Failed to get gpio: %d\n", error);
+ 	/* get the channels from IIO device */
+ 	st->iio_chans = devm_iio_channel_get_all(dev);
+-	if (IS_ERR(st->iio_chans)) {
+-		error = PTR_ERR(st->iio_chans);
+-		if (error != -EPROBE_DEFER)
+-			dev_err(dev, "can't get iio channels.\n");
 -		return error;
 -	}
-+	if (IS_ERR(ts->gpio_ce))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->gpio_ce), "Failed to get gpio\n");
++	if (IS_ERR(st->iio_chans))
++		return dev_err_probe(dev, PTR_ERR(st->iio_chans), "can't get iio channels\n");
  
- 	error = mip4_power_on(ts);
- 	if (error)
+ 	chan = &st->iio_chans[0];
+ 	st->pressure = false;
 -- 
 2.17.1
