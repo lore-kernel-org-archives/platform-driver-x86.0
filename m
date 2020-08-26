@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 20/24] Input: resistive-adc-touch - Simplify with dev_err_probe()
-Date: Wed, 26 Aug 2020 20:17:02 +0200
-Message-ID: <20200826181706.11098-20-krzk@kernel.org>
+Subject: [PATCH 24/24] Input: sx8643 - Simplify with dev_err_probe()
+Date: Wed, 26 Aug 2020 20:17:06 +0200
+Message-ID: <20200826181706.11098-24-krzk@kernel.org>
 References: <20200826181706.11098-1-krzk@kernel.org>
 Return-path: <linux-input-owner@vger.kernel.org>
 In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
@@ -15,27 +15,29 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/input/touchscreen/resistive-adc-touch.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/input/touchscreen/sx8654.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/input/touchscreen/resistive-adc-touch.c b/drivers/input/touchscreen/resistive-adc-touch.c
-index cfc8bb4553f7..46b5a6caef84 100644
---- a/drivers/input/touchscreen/resistive-adc-touch.c
-+++ b/drivers/input/touchscreen/resistive-adc-touch.c
-@@ -108,12 +108,8 @@ static int grts_probe(struct platform_device *pdev)
+diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
+index de85e57b2486..d2ed9be64c3a 100644
+--- a/drivers/input/touchscreen/sx8654.c
++++ b/drivers/input/touchscreen/sx8654.c
+@@ -323,13 +323,9 @@ static int sx8654_probe(struct i2c_client *client,
  
- 	/* get the channels from IIO device */
- 	st->iio_chans = devm_iio_channel_get_all(dev);
--	if (IS_ERR(st->iio_chans)) {
--		error = PTR_ERR(st->iio_chans);
+ 	sx8654->gpio_reset = devm_gpiod_get_optional(&client->dev, "reset",
+ 						     GPIOD_OUT_HIGH);
+-	if (IS_ERR(sx8654->gpio_reset)) {
+-		error = PTR_ERR(sx8654->gpio_reset);
 -		if (error != -EPROBE_DEFER)
--			dev_err(dev, "can't get iio channels.\n");
+-			dev_err(&client->dev, "unable to get reset-gpio: %d\n",
+-				error);
 -		return error;
 -	}
-+	if (IS_ERR(st->iio_chans))
-+		return dev_err_probe(dev, PTR_ERR(st->iio_chans), "can't get iio channels\n");
++	if (IS_ERR(sx8654->gpio_reset))
++		return dev_err_probe(&client->dev, PTR_ERR(sx8654->gpio_reset),
++				     "unable to get reset-gpio\n");
+ 	dev_dbg(&client->dev, "got GPIO reset pin\n");
  
- 	chan = &st->iio_chans[0];
- 	st->pressure = false;
+ 	sx8654->data = device_get_match_data(&client->dev);
 -- 
 2.17.1
