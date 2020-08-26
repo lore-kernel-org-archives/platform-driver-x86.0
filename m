@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 04/24] Input: gpio-vibra - Simplify with dev_err_probe()
-Date: Wed, 26 Aug 2020 20:16:46 +0200
-Message-ID: <20200826181706.11098-4-krzk@kernel.org>
+Subject: [PATCH 05/24] Input: pwm-beeper - Simplify with dev_err_probe()
+Date: Wed, 26 Aug 2020 20:16:47 +0200
+Message-ID: <20200826181706.11098-5-krzk@kernel.org>
 References: <20200826181706.11098-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
@@ -15,38 +15,45 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/input/misc/gpio-vibra.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+ drivers/input/misc/pwm-beeper.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
-index f79f75595dd7..53042e0ba9ee 100644
---- a/drivers/input/misc/gpio-vibra.c
-+++ b/drivers/input/misc/gpio-vibra.c
-@@ -114,21 +114,13 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
+index d6b12477748a..8c0085e8c552 100644
+--- a/drivers/input/misc/pwm-beeper.c
++++ b/drivers/input/misc/pwm-beeper.c
+@@ -132,13 +132,8 @@ static int pwm_beeper_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
- 	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
- 	err = PTR_ERR_OR_ZERO(vibrator->vcc);
--	if (err) {
--		if (err != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "Failed to request regulator: %d\n",
--				err);
--		return err;
+ 	beeper->pwm = devm_pwm_get(dev, NULL);
+-	if (IS_ERR(beeper->pwm)) {
+-		error = PTR_ERR(beeper->pwm);
+-		if (error != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to request PWM device: %d\n",
+-				error);
+-		return error;
 -	}
-+	if (err)
-+		return dev_err_probe(&pdev->dev, err, "Failed to request regulator\n");
++	if (IS_ERR(beeper->pwm))
++		return dev_err_probe(dev, PTR_ERR(beeper->pwm), "Failed to request PWM device\n");
  
- 	vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
- 	err = PTR_ERR_OR_ZERO(vibrator->gpio);
--	if (err) {
--		if (err != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "Failed to request main gpio: %d\n",
--				err);
--		return err;
+ 	/* Sync up PWM state and ensure it is off. */
+ 	pwm_init_state(beeper->pwm, &state);
+@@ -151,13 +146,9 @@ static int pwm_beeper_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	beeper->amplifier = devm_regulator_get(dev, "amp");
+-	if (IS_ERR(beeper->amplifier)) {
+-		error = PTR_ERR(beeper->amplifier);
+-		if (error != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to get 'amp' regulator: %d\n",
+-				error);
+-		return error;
 -	}
-+	if (err)
-+		return dev_err_probe(&pdev->dev, err, "Failed to request main gpio\n");
++	if (IS_ERR(beeper->amplifier))
++		return dev_err_probe(dev, PTR_ERR(beeper->amplifier),
++				     "Failed to get 'amp' regulator\n");
  
- 	INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
+ 	INIT_WORK(&beeper->work, pwm_beeper_work);
  
 -- 
 2.17.1
