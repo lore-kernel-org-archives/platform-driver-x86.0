@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 15/24] Input: elants_i2c - Simplify with dev_err_probe()
-Date: Wed, 26 Aug 2020 20:16:57 +0200
-Message-ID: <20200826181706.11098-15-krzk@kernel.org>
+Subject: [PATCH 17/24] Input: melfas_mip4 - Simplify with dev_err_probe()
+Date: Wed, 26 Aug 2020 20:16:59 +0200
+Message-ID: <20200826181706.11098-17-krzk@kernel.org>
 References: <20200826181706.11098-1-krzk@kernel.org>
 Return-path: <linux-input-owner@vger.kernel.org>
 In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
@@ -15,43 +15,28 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/input/touchscreen/elants_i2c.c | 22 ++++++----------------
- 1 file changed, 6 insertions(+), 16 deletions(-)
+ drivers/input/touchscreen/melfas_mip4.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-index b0bd5bb079be..ad299eb333f1 100644
---- a/drivers/input/touchscreen/elants_i2c.c
-+++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -1245,24 +1245,14 @@ static int elants_i2c_probe(struct i2c_client *client,
- 	i2c_set_clientdata(client, ts);
+diff --git a/drivers/input/touchscreen/melfas_mip4.c b/drivers/input/touchscreen/melfas_mip4.c
+index f67efdd040b2..d43a8643adcd 100644
+--- a/drivers/input/touchscreen/melfas_mip4.c
++++ b/drivers/input/touchscreen/melfas_mip4.c
+@@ -1451,13 +1451,8 @@ static int mip4_probe(struct i2c_client *client, const struct i2c_device_id *id)
  
- 	ts->vcc33 = devm_regulator_get(&client->dev, "vcc33");
--	if (IS_ERR(ts->vcc33)) {
--		error = PTR_ERR(ts->vcc33);
--		if (error != -EPROBE_DEFER)
+ 	ts->gpio_ce = devm_gpiod_get_optional(&client->dev,
+ 					      "ce", GPIOD_OUT_LOW);
+-	if (IS_ERR(ts->gpio_ce)) {
+-		error = PTR_ERR(ts->gpio_ce);
+-		if (error != EPROBE_DEFER)
 -			dev_err(&client->dev,
--				"Failed to get 'vcc33' regulator: %d\n",
--				error);
+-				"Failed to get gpio: %d\n", error);
 -		return error;
 -	}
-+	if (IS_ERR(ts->vcc33))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->vcc33),
-+				     "Failed to get 'vcc33' regulator\n");
++	if (IS_ERR(ts->gpio_ce))
++		return dev_err_probe(&client->dev, PTR_ERR(ts->gpio_ce), "Failed to get gpio\n");
  
- 	ts->vccio = devm_regulator_get(&client->dev, "vccio");
--	if (IS_ERR(ts->vccio)) {
--		error = PTR_ERR(ts->vccio);
--		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev,
--				"Failed to get 'vccio' regulator: %d\n",
--				error);
--		return error;
--	}
-+	if (IS_ERR(ts->vccio))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->vccio),
-+				     "Failed to get 'vccio' regulator\n");
- 
- 	ts->reset_gpio = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_LOW);
- 	if (IS_ERR(ts->reset_gpio)) {
+ 	error = mip4_power_on(ts);
+ 	if (error)
 -- 
 2.17.1
