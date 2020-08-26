@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 22/24] Input: sis_i2c - Simplify with dev_err_probe()
-Date: Wed, 26 Aug 2020 20:17:04 +0200
-Message-ID: <20200826181706.11098-22-krzk@kernel.org>
+Subject: [PATCH 21/24] Input: silead - Simplify with dev_err_probe()
+Date: Wed, 26 Aug 2020 20:17:03 +0200
+Message-ID: <20200826181706.11098-21-krzk@kernel.org>
 References: <20200826181706.11098-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
@@ -15,42 +15,27 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/input/touchscreen/sis_i2c.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+ drivers/input/touchscreen/silead.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/input/touchscreen/sis_i2c.c b/drivers/input/touchscreen/sis_i2c.c
-index 6274555f1673..348a2ba9b7c9 100644
---- a/drivers/input/touchscreen/sis_i2c.c
-+++ b/drivers/input/touchscreen/sis_i2c.c
-@@ -311,23 +311,15 @@ static int sis_ts_probe(struct i2c_client *client,
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index 8fa2f3b7cfd8..754debb4b2c4 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -512,11 +512,9 @@ static int silead_ts_probe(struct i2c_client *client,
  
- 	ts->attn_gpio = devm_gpiod_get_optional(&client->dev,
- 						"attn", GPIOD_IN);
--	if (IS_ERR(ts->attn_gpio)) {
--		error = PTR_ERR(ts->attn_gpio);
--		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev,
--				"Failed to get attention GPIO: %d\n", error);
--		return error;
+ 	/* Power GPIO pin */
+ 	data->gpio_power = devm_gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
+-	if (IS_ERR(data->gpio_power)) {
+-		if (PTR_ERR(data->gpio_power) != -EPROBE_DEFER)
+-			dev_err(dev, "Shutdown GPIO request failed\n");
+-		return PTR_ERR(data->gpio_power);
 -	}
-+	if (IS_ERR(ts->attn_gpio))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->attn_gpio),
-+				     "Failed to get attention GPIO\n");
++	if (IS_ERR(data->gpio_power))
++		return dev_err_probe(dev, PTR_ERR(data->gpio_power),
++				     "Shutdown GPIO request failed\n");
  
- 	ts->reset_gpio = devm_gpiod_get_optional(&client->dev,
- 						 "reset", GPIOD_OUT_LOW);
--	if (IS_ERR(ts->reset_gpio)) {
--		error = PTR_ERR(ts->reset_gpio);
--		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev,
--				"Failed to get reset GPIO: %d\n", error);
--		return error;
--	}
-+	if (IS_ERR(ts->reset_gpio))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->reset_gpio),
-+				     "Failed to get reset GPIO\n");
- 
- 	sis_ts_reset(ts);
- 
+ 	error = silead_ts_setup(client);
+ 	if (error)
 -- 
 2.17.1
