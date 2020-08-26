@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 12/24] Input: cy8ctma140 - Simplify with dev_err_probe()
-Date: Wed, 26 Aug 2020 20:16:54 +0200
-Message-ID: <20200826181706.11098-12-krzk@kernel.org>
+Subject: [PATCH 14/24] Input: ektf2127 - Simplify with dev_err_probe()
+Date: Wed, 26 Aug 2020 20:16:56 +0200
+Message-ID: <20200826181706.11098-14-krzk@kernel.org>
 References: <20200826181706.11098-1-krzk@kernel.org>
 Return-path: <linux-input-owner@vger.kernel.org>
 In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
@@ -15,27 +15,27 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/input/touchscreen/cy8ctma140.c | 8 ++------
+ drivers/input/touchscreen/ektf2127.c | 8 ++------
  1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/input/touchscreen/cy8ctma140.c b/drivers/input/touchscreen/cy8ctma140.c
-index a9be29139cbf..23da5bb00ead 100644
---- a/drivers/input/touchscreen/cy8ctma140.c
-+++ b/drivers/input/touchscreen/cy8ctma140.c
-@@ -259,12 +259,8 @@ static int cy8ctma140_probe(struct i2c_client *client,
- 	ts->regulators[1].supply = "vdd";
- 	error = devm_regulator_bulk_get(dev, ARRAY_SIZE(ts->regulators),
- 				      ts->regulators);
--	if (error) {
+diff --git a/drivers/input/touchscreen/ektf2127.c b/drivers/input/touchscreen/ektf2127.c
+index eadd389cf81f..cd41483cfae5 100644
+--- a/drivers/input/touchscreen/ektf2127.c
++++ b/drivers/input/touchscreen/ektf2127.c
+@@ -237,12 +237,8 @@ static int ektf2127_probe(struct i2c_client *client,
+ 
+ 	/* This requests the gpio *and* turns on the touchscreen controller */
+ 	ts->power_gpios = devm_gpiod_get(dev, "power", GPIOD_OUT_HIGH);
+-	if (IS_ERR(ts->power_gpios)) {
+-		error = PTR_ERR(ts->power_gpios);
 -		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get regulators %d\n",
--				error);
+-			dev_err(dev, "Error getting power gpio: %d\n", error);
 -		return error;
 -	}
-+	if (error)
-+		return dev_err_probe(dev, error, "Failed to get regulators\n");
++	if (IS_ERR(ts->power_gpios))
++		return dev_err_probe(dev, PTR_ERR(ts->power_gpios), "Error getting power gpio\n");
  
- 	error = cy8ctma140_power_up(ts);
- 	if (error)
+ 	input = devm_input_allocate_device(dev);
+ 	if (!input)
 -- 
 2.17.1
