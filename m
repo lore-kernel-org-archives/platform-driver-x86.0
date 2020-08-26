@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 09/24] Input: bu21013_ts - Simplify with dev_err_probe()
-Date: Wed, 26 Aug 2020 20:16:51 +0200
-Message-ID: <20200826181706.11098-9-krzk@kernel.org>
+Subject: [PATCH 10/24] Input: bu21029_ts - Simplify with dev_err_probe()
+Date: Wed, 26 Aug 2020 20:16:52 +0200
+Message-ID: <20200826181706.11098-10-krzk@kernel.org>
 References: <20200826181706.11098-1-krzk@kernel.org>
 Return-path: <linux-input-owner@vger.kernel.org>
 In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
@@ -15,41 +15,42 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/input/touchscreen/bu21013_ts.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ drivers/input/touchscreen/bu21029_ts.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/input/touchscreen/bu21013_ts.c b/drivers/input/touchscreen/bu21013_ts.c
-index 2f1f0d7607f8..bb99405b5dac 100644
---- a/drivers/input/touchscreen/bu21013_ts.c
-+++ b/drivers/input/touchscreen/bu21013_ts.c
-@@ -497,11 +497,9 @@ static int bu21013_probe(struct i2c_client *client,
- 	/* Named "CS" on the chip, DT binding is "reset" */
- 	ts->cs_gpiod = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_HIGH);
- 	error = PTR_ERR_OR_ZERO(ts->cs_gpiod);
--	if (error) {
+diff --git a/drivers/input/touchscreen/bu21029_ts.c b/drivers/input/touchscreen/bu21029_ts.c
+index 49a8d4bbca3a..96c178b606dc 100644
+--- a/drivers/input/touchscreen/bu21029_ts.c
++++ b/drivers/input/touchscreen/bu21029_ts.c
+@@ -360,23 +360,15 @@ static int bu21029_probe(struct i2c_client *client,
+ 	}
+ 
+ 	bu21029->vdd = devm_regulator_get(&client->dev, "vdd");
+-	if (IS_ERR(bu21029->vdd)) {
+-		error = PTR_ERR(bu21029->vdd);
 -		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev, "failed to get CS GPIO\n");
+-			dev_err(&client->dev,
+-				"failed to acquire 'vdd' supply: %d\n", error);
 -		return error;
 -	}
-+	if (error)
-+		return dev_err_probe(&client->dev, error, "failed to get CS GPIO\n");
-+
- 	gpiod_set_consumer_name(ts->cs_gpiod, "BU21013 CS");
++	if (IS_ERR(bu21029->vdd))
++		return dev_err_probe(&client->dev, PTR_ERR(bu21029->vdd),
++				     "failed to acquire 'vdd' supply\n");
  
- 	error = devm_add_action_or_reset(&client->dev,
-@@ -516,11 +514,8 @@ static int bu21013_probe(struct i2c_client *client,
- 	ts->int_gpiod = devm_gpiod_get_optional(&client->dev,
- 						"touch", GPIOD_IN);
- 	error = PTR_ERR_OR_ZERO(ts->int_gpiod);
--	if (error) {
+ 	bu21029->reset_gpios = devm_gpiod_get_optional(&client->dev,
+ 						       "reset", GPIOD_OUT_HIGH);
+-	if (IS_ERR(bu21029->reset_gpios)) {
+-		error = PTR_ERR(bu21029->reset_gpios);
 -		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev, "failed to get INT GPIO\n");
+-			dev_err(&client->dev,
+-				"failed to acquire 'reset' gpio: %d\n", error);
 -		return error;
 -	}
-+	if (error)
-+		return dev_err_probe(&client->dev, error, "failed to get INT GPIO\n");
++	if (IS_ERR(bu21029->reset_gpios))
++		return dev_err_probe(&client->dev, PTR_ERR(bu21029->reset_gpios),
++				     "failed to acquire 'reset' gpio\n");
  
- 	if (ts->int_gpiod)
- 		gpiod_set_consumer_name(ts->int_gpiod, "BU21013 INT");
+ 	in_dev = devm_input_allocate_device(&client->dev);
+ 	if (!in_dev) {
 -- 
 2.17.1
