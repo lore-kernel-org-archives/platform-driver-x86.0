@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 18/24] Input: pixcir_i2c_ts - Simplify with dev_err_probe()
-Date: Wed, 26 Aug 2020 20:17:00 +0200
-Message-ID: <20200826181706.11098-18-krzk@kernel.org>
+Subject: [PATCH 13/24] Input: edf-ft5x06 - Simplify with dev_err_probe()
+Date: Wed, 26 Aug 2020 20:16:55 +0200
+Message-ID: <20200826181706.11098-13-krzk@kernel.org>
 References: <20200826181706.11098-1-krzk@kernel.org>
 Return-path: <linux-input-owner@vger.kernel.org>
 In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
@@ -15,66 +15,29 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/input/touchscreen/pixcir_i2c_ts.c | 38 +++++++----------------
- 1 file changed, 12 insertions(+), 26 deletions(-)
+ drivers/input/touchscreen/edt-ft5x06.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-index 9aa098577350..fb37567e2d7e 100644
---- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-+++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-@@ -515,41 +515,27 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 	input_set_drvdata(input, tsdata);
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index 6ff81d48da86..d4827ac963b0 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -1098,13 +1098,9 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ 	tsdata->max_support_points = chip_data->max_support_points;
  
- 	tsdata->gpio_attb = devm_gpiod_get(dev, "attb", GPIOD_IN);
--	if (IS_ERR(tsdata->gpio_attb)) {
--		error = PTR_ERR(tsdata->gpio_attb);
+ 	tsdata->vcc = devm_regulator_get(&client->dev, "vcc");
+-	if (IS_ERR(tsdata->vcc)) {
+-		error = PTR_ERR(tsdata->vcc);
 -		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to request ATTB gpio: %d\n",
--				error);
+-			dev_err(&client->dev,
+-				"failed to request regulator: %d\n", error);
 -		return error;
 -	}
-+	if (IS_ERR(tsdata->gpio_attb))
-+		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_attb),
-+				     "Failed to request ATTB gpio\n");
++	if (IS_ERR(tsdata->vcc))
++		return dev_err_probe(&client->dev, PTR_ERR(tsdata->vcc),
++				     "failed to request regulator\n");
  
- 	tsdata->gpio_reset = devm_gpiod_get_optional(dev, "reset",
- 						     GPIOD_OUT_LOW);
--	if (IS_ERR(tsdata->gpio_reset)) {
--		error = PTR_ERR(tsdata->gpio_reset);
--		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to request RESET gpio: %d\n",
--				error);
--		return error;
--	}
-+	if (IS_ERR(tsdata->gpio_reset))
-+		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_reset),
-+				     "Failed to request RESET gpio\n");
- 
- 	tsdata->gpio_wake = devm_gpiod_get_optional(dev, "wake",
- 						    GPIOD_OUT_HIGH);
--	if (IS_ERR(tsdata->gpio_wake)) {
--		error = PTR_ERR(tsdata->gpio_wake);
--		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get wake gpio: %d\n", error);
--		return error;
--	}
-+	if (IS_ERR(tsdata->gpio_wake))
-+		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_wake),
-+				     "Failed to get wake gpio\n");
- 
- 	tsdata->gpio_enable = devm_gpiod_get_optional(dev, "enable",
- 						      GPIOD_OUT_HIGH);
--	if (IS_ERR(tsdata->gpio_enable)) {
--		error = PTR_ERR(tsdata->gpio_enable);
--		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get enable gpio: %d\n", error);
--		return error;
--	}
-+	if (IS_ERR(tsdata->gpio_enable))
-+		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_enable),
-+				     "Failed to get enable gpio\n");
- 
- 	if (tsdata->gpio_enable)
- 		msleep(100);
+ 	error = regulator_enable(tsdata->vcc);
+ 	if (error < 0) {
 -- 
 2.17.1
