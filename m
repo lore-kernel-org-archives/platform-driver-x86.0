@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 19/24] Input: raydium_i2c_ts - Simplify with dev_err_probe()
-Date: Wed, 26 Aug 2020 20:17:01 +0200
-Message-ID: <20200826181706.11098-19-krzk@kernel.org>
+Subject: [PATCH 23/24] Input: surface3_spi - Simplify with dev_err_probe()
+Date: Wed, 26 Aug 2020 20:17:05 +0200
+Message-ID: <20200826181706.11098-23-krzk@kernel.org>
 References: <20200826181706.11098-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
@@ -15,54 +15,39 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/input/touchscreen/raydium_i2c_ts.c | 30 +++++++---------------
- 1 file changed, 9 insertions(+), 21 deletions(-)
+ drivers/input/touchscreen/surface3_spi.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/input/touchscreen/raydium_i2c_ts.c b/drivers/input/touchscreen/raydium_i2c_ts.c
-index fe245439adee..4017775f6466 100644
---- a/drivers/input/touchscreen/raydium_i2c_ts.c
-+++ b/drivers/input/touchscreen/raydium_i2c_ts.c
-@@ -1015,32 +1015,20 @@ static int raydium_i2c_probe(struct i2c_client *client,
- 	i2c_set_clientdata(client, ts);
+diff --git a/drivers/input/touchscreen/surface3_spi.c b/drivers/input/touchscreen/surface3_spi.c
+index ce4828b1415a..25bb77ddf2ef 100644
+--- a/drivers/input/touchscreen/surface3_spi.c
++++ b/drivers/input/touchscreen/surface3_spi.c
+@@ -223,7 +223,6 @@ static void surface3_spi_power(struct surface3_ts_data *data, bool on)
+  */
+ static int surface3_spi_get_gpio_config(struct surface3_ts_data *data)
+ {
+-	int error;
+ 	struct device *dev;
+ 	struct gpio_desc *gpiod;
+ 	int i;
+@@ -233,15 +232,9 @@ static int surface3_spi_get_gpio_config(struct surface3_ts_data *data)
+ 	/* Get the reset lines GPIO pin number */
+ 	for (i = 0; i < 2; i++) {
+ 		gpiod = devm_gpiod_get_index(dev, NULL, i, GPIOD_OUT_LOW);
+-		if (IS_ERR(gpiod)) {
+-			error = PTR_ERR(gpiod);
+-			if (error != -EPROBE_DEFER)
+-				dev_err(dev,
+-					"Failed to get power GPIO %d: %d\n",
+-					i,
+-					error);
+-			return error;
+-		}
++		if (IS_ERR(gpiod))
++			return dev_err_probe(dev, PTR_ERR(gpiod),
++					     "Failed to get power GPIO %d\n", i);
  
- 	ts->avdd = devm_regulator_get(&client->dev, "avdd");
--	if (IS_ERR(ts->avdd)) {
--		error = PTR_ERR(ts->avdd);
--		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev,
--				"Failed to get 'avdd' regulator: %d\n", error);
--		return error;
--	}
-+	if (IS_ERR(ts->avdd))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->avdd),
-+				     "Failed to get 'avdd' regulator\n");
- 
- 	ts->vccio = devm_regulator_get(&client->dev, "vccio");
--	if (IS_ERR(ts->vccio)) {
--		error = PTR_ERR(ts->vccio);
--		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev,
--				"Failed to get 'vccio' regulator: %d\n", error);
--		return error;
--	}
-+	if (IS_ERR(ts->vccio))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->vccio),
-+				     "Failed to get 'vccio' regulator\n");
- 
- 	ts->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
- 						 GPIOD_OUT_LOW);
--	if (IS_ERR(ts->reset_gpio)) {
--		error = PTR_ERR(ts->reset_gpio);
--		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev,
--				"failed to get reset gpio: %d\n", error);
--		return error;
--	}
-+	if (IS_ERR(ts->reset_gpio))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->reset_gpio),
-+				     "Failed to get reset gpio\n");
- 
- 	error = raydium_i2c_power_on(ts);
- 	if (error)
+ 		data->gpiod_rst[i] = gpiod;
+ 	}
 -- 
 2.17.1
