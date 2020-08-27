@@ -1,191 +1,78 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 26/27] Input: bu21013_ts - Use local 'client->dev' variable in probe()
-Date: Thu, 27 Aug 2020 20:58:28 +0200
-Message-ID: <20200827185829.30096-27-krzk@kernel.org>
+Subject: [PATCH v3 25/27] Input: gpio_keys - Simplify with dev_err_probe()
+Date: Thu, 27 Aug 2020 20:58:27 +0200
+Message-ID: <20200827185829.30096-26-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
-Sender: linux-input-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Bastien Nocera <hadess@hadess.net>, Sangwon Jee <jeesw@melfas.com>, Eugen Hristev <eugen.hristev@microchip.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, clang-built-linux@googlegroups.com
 Cc: Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-'dev' is shorter and simpler than '&client->dev' and in few cases it
-allows to skip line wrapping. Probe function uses '&client->dev' a lot,
-so this improves readability slightly.
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe() and devm_fwnode_gpiod_get_optional().   Less code and
+the error value gets printed.
 
-Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 ---
 
 Changes since v2:
-1. New patch
----
- drivers/input/touchscreen/bu21013_ts.c | 61 ++++++++++++--------------
- 1 file changed, 28 insertions(+), 33 deletions(-)
+1. Preserve comment,
+2. Include <device.h> to fix warning on clang (reported by kbuild),
+3. Fix use of uninitialized "error" variable.
 
-diff --git a/drivers/input/touchscreen/bu21013_ts.c b/drivers/input/touchscreen/bu21013_ts.c
-index 86bd38243d6c..f09204091ba5 100644
---- a/drivers/input/touchscreen/bu21013_ts.c
-+++ b/drivers/input/touchscreen/bu21013_ts.c
-@@ -411,31 +411,32 @@ static int bu21013_probe(struct i2c_client *client,
- 	struct input_dev *in_dev;
- 	struct input_absinfo *info;
- 	u32 max_x = 0, max_y = 0;
-+	struct device *dev = &client->dev;
- 	int error;
+Changes since v1:
+1. Use devm_fwnode_gpiod_get_optional
+---
+ drivers/input/keyboard/gpio_keys.c | 25 ++++++++-----------------
+ 1 file changed, 8 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+index f2d4e4daa818..160d94b1c2c0 100644
+--- a/drivers/input/keyboard/gpio_keys.c
++++ b/drivers/input/keyboard/gpio_keys.c
+@@ -18,6 +18,7 @@
+ #include <linux/sysctl.h>
+ #include <linux/proc_fs.h>
+ #include <linux/delay.h>
++#include <linux/device.h>
+ #include <linux/platform_device.h>
+ #include <linux/input.h>
+ #include <linux/gpio_keys.h>
+@@ -494,23 +495,13 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+ 	spin_lock_init(&bdata->lock);
  
- 	if (!i2c_check_functionality(client->adapter,
- 				     I2C_FUNC_SMBUS_BYTE_DATA)) {
--		dev_err(&client->dev, "i2c smbus byte data not supported\n");
-+		dev_err(dev, "i2c smbus byte data not supported\n");
- 		return -EIO;
- 	}
- 
- 	if (!client->irq) {
--		dev_err(&client->dev, "No IRQ set up\n");
-+		dev_err(dev, "No IRQ set up\n");
- 		return -EINVAL;
- 	}
- 
--	ts = devm_kzalloc(&client->dev, sizeof(*ts), GFP_KERNEL);
-+	ts = devm_kzalloc(dev, sizeof(*ts), GFP_KERNEL);
- 	if (!ts)
- 		return -ENOMEM;
- 
- 	ts->client = client;
- 
--	ts->x_flip = device_property_read_bool(&client->dev, "rohm,flip-x");
--	ts->y_flip = device_property_read_bool(&client->dev, "rohm,flip-y");
-+	ts->x_flip = device_property_read_bool(dev, "rohm,flip-x");
-+	ts->y_flip = device_property_read_bool(dev, "rohm,flip-y");
- 
--	in_dev = devm_input_allocate_device(&client->dev);
-+	in_dev = devm_input_allocate_device(dev);
- 	if (!in_dev) {
--		dev_err(&client->dev, "device memory alloc failed\n");
-+		dev_err(dev, "device memory alloc failed\n");
- 		return -ENOMEM;
- 	}
- 	ts->in_dev = in_dev;
-@@ -445,8 +446,8 @@ static int bu21013_probe(struct i2c_client *client,
- 	in_dev->name = DRIVER_TP;
- 	in_dev->id.bustype = BUS_I2C;
- 
--	device_property_read_u32(&client->dev, "rohm,touch-max-x", &max_x);
--	device_property_read_u32(&client->dev, "rohm,touch-max-y", &max_y);
-+	device_property_read_u32(dev, "rohm,touch-max-x", &max_x);
-+	device_property_read_u32(dev, "rohm,touch-max-y", &max_y);
- 
- 	input_set_abs_params(in_dev, ABS_MT_POSITION_X, 0, max_x, 0, 0);
- 	input_set_abs_params(in_dev, ABS_MT_POSITION_Y, 0, max_y, 0, 0);
-@@ -455,14 +456,14 @@ static int bu21013_probe(struct i2c_client *client,
- 
- 	/* Adjust for the legacy "flip" properties, if present */
- 	if (!ts->props.invert_x &&
--	    device_property_read_bool(&client->dev, "rohm,flip-x")) {
-+	    device_property_read_bool(dev, "rohm,flip-x")) {
- 		info = &in_dev->absinfo[ABS_MT_POSITION_X];
- 		info->maximum -= info->minimum;
- 		info->minimum = 0;
- 	}
- 
- 	if (!ts->props.invert_y &&
--	    device_property_read_bool(&client->dev, "rohm,flip-y")) {
-+	    device_property_read_bool(dev, "rohm,flip-y")) {
- 		info = &in_dev->absinfo[ABS_MT_POSITION_Y];
- 		info->maximum -= info->minimum;
- 		info->minimum = 0;
-@@ -472,50 +473,46 @@ static int bu21013_probe(struct i2c_client *client,
- 				    INPUT_MT_DIRECT | INPUT_MT_TRACK |
- 					INPUT_MT_DROP_UNUSED);
- 	if (error) {
--		dev_err(&client->dev, "failed to initialize MT slots");
-+		dev_err(dev, "failed to initialize MT slots");
- 		return error;
- 	}
- 
--	ts->regulator = devm_regulator_get(&client->dev, "avdd");
-+	ts->regulator = devm_regulator_get(dev, "avdd");
- 	if (IS_ERR(ts->regulator)) {
--		dev_err(&client->dev, "regulator_get failed\n");
-+		dev_err(dev, "regulator_get failed\n");
- 		return PTR_ERR(ts->regulator);
- 	}
- 
- 	error = regulator_enable(ts->regulator);
- 	if (error) {
--		dev_err(&client->dev, "regulator enable failed\n");
-+		dev_err(dev, "regulator enable failed\n");
- 		return error;
- 	}
- 
--	error = devm_add_action_or_reset(&client->dev, bu21013_power_off, ts);
-+	error = devm_add_action_or_reset(dev, bu21013_power_off, ts);
- 	if (error) {
--		dev_err(&client->dev, "failed to install power off handler\n");
-+		dev_err(dev, "failed to install power off handler\n");
- 		return error;
- 	}
- 
- 	/* Named "CS" on the chip, DT binding is "reset" */
--	ts->cs_gpiod = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_HIGH);
-+	ts->cs_gpiod = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
- 	if (IS_ERR(ts->cs_gpiod))
--		return dev_err_probe(&client->dev, PTR_ERR(ts->cs_gpiod),
--				     "failed to get CS GPIO\n");
-+		return dev_err_probe(dev, PTR_ERR(ts->cs_gpiod), "failed to get CS GPIO\n");
- 
- 	gpiod_set_consumer_name(ts->cs_gpiod, "BU21013 CS");
- 
--	error = devm_add_action_or_reset(&client->dev,
--					 bu21013_disable_chip, ts);
-+	error = devm_add_action_or_reset(dev, bu21013_disable_chip, ts);
- 	if (error) {
--		dev_err(&client->dev,
--			"failed to install chip disable handler\n");
-+		dev_err(dev, "failed to install chip disable handler\n");
- 		return error;
- 	}
- 
- 	/* Named "INT" on the chip, DT binding is "touch" */
--	ts->int_gpiod = devm_gpiod_get_optional(&client->dev,
--						"touch", GPIOD_IN);
-+	ts->int_gpiod = devm_gpiod_get_optional(dev, "touch", GPIOD_IN);
- 	error = PTR_ERR_OR_ZERO(ts->int_gpiod);
- 	if (error)
--		return dev_err_probe(&client->dev, error, "failed to get INT GPIO\n");
-+		return dev_err_probe(dev, error, "failed to get INT GPIO\n");
- 
- 	if (ts->int_gpiod)
- 		gpiod_set_consumer_name(ts->int_gpiod, "BU21013 INT");
-@@ -523,22 +520,20 @@ static int bu21013_probe(struct i2c_client *client,
- 	/* configure the touch panel controller */
- 	error = bu21013_init_chip(ts);
- 	if (error) {
--		dev_err(&client->dev, "error in bu21013 config\n");
-+		dev_err(dev, "error in bu21013 config\n");
- 		return error;
- 	}
- 
--	error = devm_request_threaded_irq(&client->dev, client->irq,
--					  NULL, bu21013_gpio_irq,
-+	error = devm_request_threaded_irq(dev, client->irq, NULL, bu21013_gpio_irq,
- 					  IRQF_ONESHOT, DRIVER_TP, ts);
- 	if (error) {
--		dev_err(&client->dev, "request irq %d failed\n",
--			client->irq);
-+		dev_err(dev, "request irq %d failed\n", client->irq);
- 		return error;
- 	}
- 
- 	error = input_register_device(in_dev);
- 	if (error) {
--		dev_err(&client->dev, "failed to register input device\n");
-+		dev_err(dev, "failed to register input device\n");
- 		return error;
- 	}
- 
+ 	if (child) {
+-		bdata->gpiod = devm_fwnode_gpiod_get(dev, child,
+-						     NULL, GPIOD_IN, desc);
+-		if (IS_ERR(bdata->gpiod)) {
+-			error = PTR_ERR(bdata->gpiod);
+-			if (error == -ENOENT) {
+-				/*
+-				 * GPIO is optional, we may be dealing with
+-				 * purely interrupt-driven setup.
+-				 */
+-				bdata->gpiod = NULL;
+-			} else {
+-				if (error != -EPROBE_DEFER)
+-					dev_err(dev, "failed to get gpio: %d\n",
+-						error);
+-				return error;
+-			}
+-		}
++		/*
++		 * GPIO is optional, we may be dealing with purely
++		 * interrupt-driven setup.
++		 */
++		bdata->gpiod = devm_fwnode_gpiod_get_optional(dev, child, NULL, GPIOD_IN, desc);
++		if (IS_ERR(bdata->gpiod))
++			return dev_err_probe(dev, PTR_ERR(bdata->gpiod), "failed to get gpio\n");
+ 	} else if (gpio_is_valid(button->gpio)) {
+ 		/*
+ 		 * Legacy GPIO number, so request the GPIO here and
 -- 
 2.17.1
