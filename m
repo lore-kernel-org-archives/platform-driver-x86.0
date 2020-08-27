@@ -1,18 +1,18 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 07/24] Input: rotary_encoder - Simplify with dev_err_probe()
-Date: Thu, 27 Aug 2020 12:08:15 +0300
-Message-ID: <CAHp75VdqgEvcs_LAHBV=O57vVMVrjUnfVr3anzJmtFMKYyeMkw@mail.gmail.com>
-References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-7-krzk@kernel.org>
+Subject: Re: [PATCH 08/24] Input: elan_i2c - Simplify with dev_err_probe()
+Date: Thu, 27 Aug 2020 12:09:10 +0300
+Message-ID: <CAHp75Vedvy73_uSoKpm=w2sgSWX8kzejhYF4Azc6Vh4T7hXEmg@mail.gmail.com>
+References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-8-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20200826181706.11098-7-krzk@kernel.org>
-Sender: linux-input-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200826181706.11098-8-krzk@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Bastien Nocera <hadess@hadess.net>, Sangwon Jee <jeesw@melfas.com>, Eugen Hristev <eugen.hristev@microchip.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-input <linux-input@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Aug 26, 2020 at 9:23 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Wed, Aug 26, 2020 at 9:20 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
 > Common pattern of handling deferred probe can be simplified with
 > dev_err_probe().  Less code and also it prints the error value.
@@ -21,28 +21,29 @@ Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  drivers/input/misc/rotary_encoder.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
+>  drivers/input/mouse/elan_i2c_core.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
 >
-> diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/rotary_encoder.c
-> index 6d613f2a017c..ea56c9f4975a 100644
-> --- a/drivers/input/misc/rotary_encoder.c
-> +++ b/drivers/input/misc/rotary_encoder.c
-> @@ -236,12 +236,8 @@ static int rotary_encoder_probe(struct platform_device *pdev)
->                 device_property_read_bool(dev, "rotary-encoder,relative-axis");
+> diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+> index c599e21a8478..d703b0d5a3bd 100644
+> --- a/drivers/input/mouse/elan_i2c_core.c
+> +++ b/drivers/input/mouse/elan_i2c_core.c
+> @@ -1229,13 +1229,8 @@ static int elan_probe(struct i2c_client *client,
+>         mutex_init(&data->sysfs_mutex);
 >
->         encoder->gpios = devm_gpiod_get_array(dev, NULL, GPIOD_IN);
-> -       if (IS_ERR(encoder->gpios)) {
-> -               err = PTR_ERR(encoder->gpios);
-> -               if (err != -EPROBE_DEFER)
-> -                       dev_err(dev, "unable to get gpios: %d\n", err);
-> -               return err;
+>         data->vcc = devm_regulator_get(dev, "vcc");
+> -       if (IS_ERR(data->vcc)) {
+> -               error = PTR_ERR(data->vcc);
+> -               if (error != -EPROBE_DEFER)
+> -                       dev_err(dev, "Failed to get 'vcc' regulator: %d\n",
+> -                               error);
+> -               return error;
 > -       }
-> +       if (IS_ERR(encoder->gpios))
-> +               return dev_err_probe(dev, PTR_ERR(encoder->gpios), "unable to get gpios\n");
->         if (encoder->gpios->ndescs < 2) {
->                 dev_err(dev, "not enough gpios found\n");
->                 return -EINVAL;
+> +       if (IS_ERR(data->vcc))
+> +               return dev_err_probe(dev, PTR_ERR(data->vcc), "Failed to get 'vcc' regulator\n");
+>
+>         error = regulator_enable(data->vcc);
+>         if (error) {
 > --
 > 2.17.1
 >
