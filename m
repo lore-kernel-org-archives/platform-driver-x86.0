@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 13/27] Input: elants_i2c - Simplify with dev_err_probe()
-Date: Thu, 27 Aug 2020 20:58:15 +0200
-Message-ID: <20200827185829.30096-14-krzk@kernel.org>
+Subject: [PATCH v3 14/27] Input: goodix - Simplify with dev_err_probe()
+Date: Thu, 27 Aug 2020 20:58:16 +0200
+Message-ID: <20200827185829.30096-15-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
 Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
@@ -17,43 +17,79 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/input/touchscreen/elants_i2c.c | 22 ++++++----------------
- 1 file changed, 6 insertions(+), 16 deletions(-)
+ drivers/input/touchscreen/goodix.c | 40 ++++++++----------------------
+ 1 file changed, 11 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-index b0bd5bb079be..ad299eb333f1 100644
---- a/drivers/input/touchscreen/elants_i2c.c
-+++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -1245,24 +1245,14 @@ static int elants_i2c_probe(struct i2c_client *client,
- 	i2c_set_clientdata(client, ts);
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index 02c75ea385e0..48c4c3d297fe 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -864,7 +864,6 @@ static int goodix_add_acpi_gpio_mappings(struct goodix_ts_data *ts)
+  */
+ static int goodix_get_gpio_config(struct goodix_ts_data *ts)
+ {
+-	int error;
+ 	struct device *dev;
+ 	struct gpio_desc *gpiod;
+ 	bool added_acpi_mappings = false;
+@@ -874,33 +873,20 @@ static int goodix_get_gpio_config(struct goodix_ts_data *ts)
+ 	dev = &ts->client->dev;
  
- 	ts->vcc33 = devm_regulator_get(&client->dev, "vcc33");
--	if (IS_ERR(ts->vcc33)) {
--		error = PTR_ERR(ts->vcc33);
+ 	ts->avdd28 = devm_regulator_get(dev, "AVDD28");
+-	if (IS_ERR(ts->avdd28)) {
+-		error = PTR_ERR(ts->avdd28);
 -		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev,
--				"Failed to get 'vcc33' regulator: %d\n",
--				error);
+-			dev_err(dev,
+-				"Failed to get AVDD28 regulator: %d\n", error);
 -		return error;
 -	}
-+	if (IS_ERR(ts->vcc33))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->vcc33),
-+				     "Failed to get 'vcc33' regulator\n");
++	if (IS_ERR(ts->avdd28))
++		return dev_err_probe(dev, PTR_ERR(ts->avdd28), "Failed to get AVDD28 regulator\n");
  
- 	ts->vccio = devm_regulator_get(&client->dev, "vccio");
--	if (IS_ERR(ts->vccio)) {
--		error = PTR_ERR(ts->vccio);
+ 	ts->vddio = devm_regulator_get(dev, "VDDIO");
+-	if (IS_ERR(ts->vddio)) {
+-		error = PTR_ERR(ts->vddio);
 -		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev,
--				"Failed to get 'vccio' regulator: %d\n",
--				error);
+-			dev_err(dev,
+-				"Failed to get VDDIO regulator: %d\n", error);
 -		return error;
 -	}
-+	if (IS_ERR(ts->vccio))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->vccio),
-+				     "Failed to get 'vccio' regulator\n");
++	if (IS_ERR(ts->vddio))
++		return dev_err_probe(dev, PTR_ERR(ts->vddio), "Failed to get VDDIO regulator\n");
  
- 	ts->reset_gpio = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_LOW);
- 	if (IS_ERR(ts->reset_gpio)) {
+ retry_get_irq_gpio:
+ 	/* Get the interrupt GPIO pin number */
+ 	gpiod = devm_gpiod_get_optional(dev, GOODIX_GPIO_INT_NAME, GPIOD_IN);
+-	if (IS_ERR(gpiod)) {
+-		error = PTR_ERR(gpiod);
+-		if (error != -EPROBE_DEFER)
+-			dev_dbg(dev, "Failed to get %s GPIO: %d\n",
+-				GOODIX_GPIO_INT_NAME, error);
+-		return error;
+-	}
++	if (IS_ERR(gpiod))
++		return dev_err_probe(dev, PTR_ERR(gpiod), "Failed to get %s GPIO\n",
++				     GOODIX_GPIO_INT_NAME);
++
+ 	if (!gpiod && has_acpi_companion(dev) && !added_acpi_mappings) {
+ 		added_acpi_mappings = true;
+ 		if (goodix_add_acpi_gpio_mappings(ts) == 0)
+@@ -911,13 +897,9 @@ static int goodix_get_gpio_config(struct goodix_ts_data *ts)
+ 
+ 	/* Get the reset line GPIO pin number */
+ 	gpiod = devm_gpiod_get_optional(dev, GOODIX_GPIO_RST_NAME, GPIOD_IN);
+-	if (IS_ERR(gpiod)) {
+-		error = PTR_ERR(gpiod);
+-		if (error != -EPROBE_DEFER)
+-			dev_dbg(dev, "Failed to get %s GPIO: %d\n",
+-				GOODIX_GPIO_RST_NAME, error);
+-		return error;
+-	}
++	if (IS_ERR(gpiod))
++		return dev_err_probe(dev, PTR_ERR(gpiod), "Failed to get %s GPIO\n",
++				     GOODIX_GPIO_RST_NAME);
+ 
+ 	ts->gpiod_rst = gpiod;
+ 
 -- 
 2.17.1
