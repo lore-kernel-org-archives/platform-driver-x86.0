@@ -1,11 +1,11 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 17/27] Input: raydium_i2c_ts - Simplify with dev_err_probe()
-Date: Thu, 27 Aug 2020 20:58:19 +0200
-Message-ID: <20200827185829.30096-18-krzk@kernel.org>
+Subject: [PATCH v3 16/27] Input: pixcir_i2c_ts - Simplify with dev_err_probe()
+Date: Thu, 27 Aug 2020 20:58:18 +0200
+Message-ID: <20200827185829.30096-17-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
-Sender: linux-input-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Bastien Nocera <hadess@hadess.net>, Sangwon Jee <jeesw@melfas.com>, Eugen Hristev <eugen.hristev@microchip.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, clang-built-linux@googlegroups.com
 Cc: Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
@@ -17,54 +17,66 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/input/touchscreen/raydium_i2c_ts.c | 30 +++++++---------------
- 1 file changed, 9 insertions(+), 21 deletions(-)
+ drivers/input/touchscreen/pixcir_i2c_ts.c | 38 +++++++----------------
+ 1 file changed, 12 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/input/touchscreen/raydium_i2c_ts.c b/drivers/input/touchscreen/raydium_i2c_ts.c
-index fe245439adee..4017775f6466 100644
---- a/drivers/input/touchscreen/raydium_i2c_ts.c
-+++ b/drivers/input/touchscreen/raydium_i2c_ts.c
-@@ -1015,32 +1015,20 @@ static int raydium_i2c_probe(struct i2c_client *client,
- 	i2c_set_clientdata(client, ts);
+diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index 9aa098577350..fb37567e2d7e 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -515,41 +515,27 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 	input_set_drvdata(input, tsdata);
  
- 	ts->avdd = devm_regulator_get(&client->dev, "avdd");
--	if (IS_ERR(ts->avdd)) {
--		error = PTR_ERR(ts->avdd);
+ 	tsdata->gpio_attb = devm_gpiod_get(dev, "attb", GPIOD_IN);
+-	if (IS_ERR(tsdata->gpio_attb)) {
+-		error = PTR_ERR(tsdata->gpio_attb);
 -		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev,
--				"Failed to get 'avdd' regulator: %d\n", error);
+-			dev_err(dev, "Failed to request ATTB gpio: %d\n",
+-				error);
 -		return error;
 -	}
-+	if (IS_ERR(ts->avdd))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->avdd),
-+				     "Failed to get 'avdd' regulator\n");
++	if (IS_ERR(tsdata->gpio_attb))
++		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_attb),
++				     "Failed to request ATTB gpio\n");
  
- 	ts->vccio = devm_regulator_get(&client->dev, "vccio");
--	if (IS_ERR(ts->vccio)) {
--		error = PTR_ERR(ts->vccio);
+ 	tsdata->gpio_reset = devm_gpiod_get_optional(dev, "reset",
+ 						     GPIOD_OUT_LOW);
+-	if (IS_ERR(tsdata->gpio_reset)) {
+-		error = PTR_ERR(tsdata->gpio_reset);
 -		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev,
--				"Failed to get 'vccio' regulator: %d\n", error);
+-			dev_err(dev, "Failed to request RESET gpio: %d\n",
+-				error);
 -		return error;
 -	}
-+	if (IS_ERR(ts->vccio))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->vccio),
-+				     "Failed to get 'vccio' regulator\n");
++	if (IS_ERR(tsdata->gpio_reset))
++		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_reset),
++				     "Failed to request RESET gpio\n");
  
- 	ts->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
- 						 GPIOD_OUT_LOW);
--	if (IS_ERR(ts->reset_gpio)) {
--		error = PTR_ERR(ts->reset_gpio);
+ 	tsdata->gpio_wake = devm_gpiod_get_optional(dev, "wake",
+ 						    GPIOD_OUT_HIGH);
+-	if (IS_ERR(tsdata->gpio_wake)) {
+-		error = PTR_ERR(tsdata->gpio_wake);
 -		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev,
--				"failed to get reset gpio: %d\n", error);
+-			dev_err(dev, "Failed to get wake gpio: %d\n", error);
 -		return error;
 -	}
-+	if (IS_ERR(ts->reset_gpio))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->reset_gpio),
-+				     "Failed to get reset gpio\n");
++	if (IS_ERR(tsdata->gpio_wake))
++		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_wake),
++				     "Failed to get wake gpio\n");
  
- 	error = raydium_i2c_power_on(ts);
- 	if (error)
+ 	tsdata->gpio_enable = devm_gpiod_get_optional(dev, "enable",
+ 						      GPIOD_OUT_HIGH);
+-	if (IS_ERR(tsdata->gpio_enable)) {
+-		error = PTR_ERR(tsdata->gpio_enable);
+-		if (error != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to get enable gpio: %d\n", error);
+-		return error;
+-	}
++	if (IS_ERR(tsdata->gpio_enable))
++		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_enable),
++				     "Failed to get enable gpio\n");
+ 
+ 	if (tsdata->gpio_enable)
+ 		msleep(100);
 -- 
 2.17.1
