@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 05/27] Input: rotary_encoder - Simplify with dev_err_probe()
-Date: Thu, 27 Aug 2020 20:58:07 +0200
-Message-ID: <20200827185829.30096-6-krzk@kernel.org>
+Subject: [PATCH v3 06/27] Input: elan_i2c - Simplify with dev_err_probe()
+Date: Thu, 27 Aug 2020 20:58:08 +0200
+Message-ID: <20200827185829.30096-7-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
@@ -17,27 +17,28 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/input/misc/rotary_encoder.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/input/mouse/elan_i2c_core.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/rotary_encoder.c
-index 6d613f2a017c..ea56c9f4975a 100644
---- a/drivers/input/misc/rotary_encoder.c
-+++ b/drivers/input/misc/rotary_encoder.c
-@@ -236,12 +236,8 @@ static int rotary_encoder_probe(struct platform_device *pdev)
- 		device_property_read_bool(dev, "rotary-encoder,relative-axis");
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index c599e21a8478..d703b0d5a3bd 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -1229,13 +1229,8 @@ static int elan_probe(struct i2c_client *client,
+ 	mutex_init(&data->sysfs_mutex);
  
- 	encoder->gpios = devm_gpiod_get_array(dev, NULL, GPIOD_IN);
--	if (IS_ERR(encoder->gpios)) {
--		err = PTR_ERR(encoder->gpios);
--		if (err != -EPROBE_DEFER)
--			dev_err(dev, "unable to get gpios: %d\n", err);
--		return err;
+ 	data->vcc = devm_regulator_get(dev, "vcc");
+-	if (IS_ERR(data->vcc)) {
+-		error = PTR_ERR(data->vcc);
+-		if (error != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to get 'vcc' regulator: %d\n",
+-				error);
+-		return error;
 -	}
-+	if (IS_ERR(encoder->gpios))
-+		return dev_err_probe(dev, PTR_ERR(encoder->gpios), "unable to get gpios\n");
- 	if (encoder->gpios->ndescs < 2) {
- 		dev_err(dev, "not enough gpios found\n");
- 		return -EINVAL;
++	if (IS_ERR(data->vcc))
++		return dev_err_probe(dev, PTR_ERR(data->vcc), "Failed to get 'vcc' regulator\n");
+ 
+ 	error = regulator_enable(data->vcc);
+ 	if (error) {
 -- 
 2.17.1
