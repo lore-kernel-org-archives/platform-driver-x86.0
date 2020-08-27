@@ -1,43 +1,74 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 09/27] Input: chipone_icn8318 - Simplify with dev_err_probe()
-Date: Thu, 27 Aug 2020 20:58:11 +0200
-Message-ID: <20200827185829.30096-10-krzk@kernel.org>
-References: <20200827185829.30096-1-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Bastien Nocera <hadess@hadess.net>, Sangwon Jee <jeesw@melfas.com>, Eugen Hristev <eugen.hristev@microchip.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, clang-built-linux@googlegroups.com
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 02/27] Input: gpio-vibra - Simplify with dev_err_probe()
+Date: Thu, 27 Aug 2020 22:36:31 +0300
+Message-ID: <CAHp75VfFMv9kMi0skDmNVm2kdqh+PvvXJOeZzePuPfvLpGNiHQ@mail.gmail.com>
+References: <20200827185829.30096-1-krzk@kernel.org> <20200827185829.30096-3-krzk@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20200827185829.30096-3-krzk@kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Bastien Nocera <hadess@hadess.net>, Sangwon Jee <jeesw@melfas.com>, Eugen Hristev <eugen.hristev@microchip.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-input <linux-input@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, clang-built-linux <clang-built-linux@googlegroups.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and also it prints the error value.
+On Thu, Aug 27, 2020 at 9:58 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/input/touchscreen/chipone_icn8318.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/input/touchscreen/chipone_icn8318.c b/drivers/input/touchscreen/chipone_icn8318.c
-index d91d2fd78649..5bee007184c4 100644
---- a/drivers/input/touchscreen/chipone_icn8318.c
-+++ b/drivers/input/touchscreen/chipone_icn8318.c
-@@ -194,12 +194,8 @@ static int icn8318_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 
- 	data->wake_gpio = devm_gpiod_get(dev, "wake", GPIOD_OUT_LOW);
--	if (IS_ERR(data->wake_gpio)) {
--		error = PTR_ERR(data->wake_gpio);
--		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Error getting wake gpio: %d\n", error);
--		return error;
--	}
-+	if (IS_ERR(data->wake_gpio))
-+		return dev_err_probe(dev, PTR_ERR(data->wake_gpio), "Error getting wake gpio\n");
- 
- 	input = devm_input_allocate_device(dev);
- 	if (!input)
+>
+> ---
+>
+> Changes since v1:
+> 1. Remove unneeded PTR_ERR_OR_ZERO, as pointed by Andy.
+> ---
+>  drivers/input/misc/gpio-vibra.c | 20 ++++++--------------
+>  1 file changed, 6 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/input/misc/gpio-vibra.c b/drivers/input/misc/gpio-vibra.c
+> index f79f75595dd7..13c69f173620 100644
+> --- a/drivers/input/misc/gpio-vibra.c
+> +++ b/drivers/input/misc/gpio-vibra.c
+> @@ -113,22 +113,14 @@ static int gpio_vibrator_probe(struct platform_device *pdev)
+>                 return -ENOMEM;
+>
+>         vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
+> -       err = PTR_ERR_OR_ZERO(vibrator->vcc);
+> -       if (err) {
+> -               if (err != -EPROBE_DEFER)
+> -                       dev_err(&pdev->dev, "Failed to request regulator: %d\n",
+> -                               err);
+> -               return err;
+> -       }
+> +       if (IS_ERR(vibrator->vcc))
+> +               return dev_err_probe(&pdev->dev, PTR_ERR(vibrator->vcc),
+> +                                    "Failed to request regulator\n");
+>
+>         vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
+> -       err = PTR_ERR_OR_ZERO(vibrator->gpio);
+> -       if (err) {
+> -               if (err != -EPROBE_DEFER)
+> -                       dev_err(&pdev->dev, "Failed to request main gpio: %d\n",
+> -                               err);
+> -               return err;
+> -       }
+> +       if (IS_ERR(vibrator->gpio))
+> +               return dev_err_probe(&pdev->dev, PTR_ERR(vibrator->gpio),
+> +                                    "Failed to request main gpio\n");
+>
+>         INIT_WORK(&vibrator->play_work, gpio_vibrator_play_work);
+>
+> --
+> 2.17.1
+>
+
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
