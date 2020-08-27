@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 25/27] Input: gpio_keys - Simplify with dev_err_probe()
-Date: Thu, 27 Aug 2020 20:58:27 +0200
-Message-ID: <20200827185829.30096-26-krzk@kernel.org>
+Subject: [PATCH v3 27/27] Input: bu21029_ts - Use local 'client->dev' variable in probe()
+Date: Thu, 27 Aug 2020 20:58:29 +0200
+Message-ID: <20200827185829.30096-28-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
@@ -10,69 +10,105 @@ To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@
 Cc: Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe() and devm_fwnode_gpiod_get_optional().   Less code and
-the error value gets printed.
+'dev' is shorter and simpler than '&client->dev' and in few cases it
+allows to skip line wrapping. Probe function uses '&client->dev' a lot,
+so this improves readability slightly.
 
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 ---
 
 Changes since v2:
-1. Preserve comment,
-2. Include <device.h> to fix warning on clang (reported by kbuild),
-3. Fix use of uninitialized "error" variable.
-
-Changes since v1:
-1. Use devm_fwnode_gpiod_get_optional
+1. New patch
 ---
- drivers/input/keyboard/gpio_keys.c | 25 ++++++++-----------------
- 1 file changed, 8 insertions(+), 17 deletions(-)
+ drivers/input/touchscreen/bu21029_ts.c | 37 +++++++++++---------------
+ 1 file changed, 16 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index f2d4e4daa818..160d94b1c2c0 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -18,6 +18,7 @@
- #include <linux/sysctl.h>
- #include <linux/proc_fs.h>
- #include <linux/delay.h>
-+#include <linux/device.h>
- #include <linux/platform_device.h>
- #include <linux/input.h>
- #include <linux/gpio_keys.h>
-@@ -494,23 +495,13 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 	spin_lock_init(&bdata->lock);
+diff --git a/drivers/input/touchscreen/bu21029_ts.c b/drivers/input/touchscreen/bu21029_ts.c
+index 96c178b606dc..78e256254764 100644
+--- a/drivers/input/touchscreen/bu21029_ts.c
++++ b/drivers/input/touchscreen/bu21029_ts.c
+@@ -334,6 +334,7 @@ static void bu21029_stop_chip(struct input_dev *dev)
+ static int bu21029_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
++	struct device *dev = &client->dev;
+ 	struct bu21029_ts_data *bu21029;
+ 	struct input_dev *in_dev;
+ 	int error;
+@@ -342,37 +343,33 @@ static int bu21029_probe(struct i2c_client *client,
+ 				     I2C_FUNC_SMBUS_WRITE_BYTE |
+ 				     I2C_FUNC_SMBUS_WRITE_BYTE_DATA |
+ 				     I2C_FUNC_SMBUS_READ_I2C_BLOCK)) {
+-		dev_err(&client->dev,
+-			"i2c functionality support is not sufficient\n");
++		dev_err(dev, "i2c functionality support is not sufficient\n");
+ 		return -EIO;
+ 	}
  
- 	if (child) {
--		bdata->gpiod = devm_fwnode_gpiod_get(dev, child,
--						     NULL, GPIOD_IN, desc);
--		if (IS_ERR(bdata->gpiod)) {
--			error = PTR_ERR(bdata->gpiod);
--			if (error == -ENOENT) {
--				/*
--				 * GPIO is optional, we may be dealing with
--				 * purely interrupt-driven setup.
--				 */
--				bdata->gpiod = NULL;
--			} else {
--				if (error != -EPROBE_DEFER)
--					dev_err(dev, "failed to get gpio: %d\n",
--						error);
--				return error;
--			}
--		}
-+		/*
-+		 * GPIO is optional, we may be dealing with purely
-+		 * interrupt-driven setup.
-+		 */
-+		bdata->gpiod = devm_fwnode_gpiod_get_optional(dev, child, NULL, GPIOD_IN, desc);
-+		if (IS_ERR(bdata->gpiod))
-+			return dev_err_probe(dev, PTR_ERR(bdata->gpiod), "failed to get gpio\n");
- 	} else if (gpio_is_valid(button->gpio)) {
- 		/*
- 		 * Legacy GPIO number, so request the GPIO here and
+-	bu21029 = devm_kzalloc(&client->dev, sizeof(*bu21029), GFP_KERNEL);
++	bu21029 = devm_kzalloc(dev, sizeof(*bu21029), GFP_KERNEL);
+ 	if (!bu21029)
+ 		return -ENOMEM;
+ 
+-	error = device_property_read_u32(&client->dev, "rohm,x-plate-ohms",
+-					 &bu21029->x_plate_ohms);
++	error = device_property_read_u32(dev, "rohm,x-plate-ohms", &bu21029->x_plate_ohms);
+ 	if (error) {
+-		dev_err(&client->dev,
+-			"invalid 'x-plate-ohms' supplied: %d\n", error);
++		dev_err(dev, "invalid 'x-plate-ohms' supplied: %d\n", error);
+ 		return error;
+ 	}
+ 
+-	bu21029->vdd = devm_regulator_get(&client->dev, "vdd");
++	bu21029->vdd = devm_regulator_get(dev, "vdd");
+ 	if (IS_ERR(bu21029->vdd))
+-		return dev_err_probe(&client->dev, PTR_ERR(bu21029->vdd),
++		return dev_err_probe(dev, PTR_ERR(bu21029->vdd),
+ 				     "failed to acquire 'vdd' supply\n");
+ 
+-	bu21029->reset_gpios = devm_gpiod_get_optional(&client->dev,
+-						       "reset", GPIOD_OUT_HIGH);
++	bu21029->reset_gpios = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(bu21029->reset_gpios))
+-		return dev_err_probe(&client->dev, PTR_ERR(bu21029->reset_gpios),
++		return dev_err_probe(dev, PTR_ERR(bu21029->reset_gpios),
+ 				     "failed to acquire 'reset' gpio\n");
+ 
+-	in_dev = devm_input_allocate_device(&client->dev);
++	in_dev = devm_input_allocate_device(dev);
+ 	if (!in_dev) {
+-		dev_err(&client->dev, "unable to allocate input device\n");
++		dev_err(dev, "unable to allocate input device\n");
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -394,19 +391,17 @@ static int bu21029_probe(struct i2c_client *client,
+ 	input_set_drvdata(in_dev, bu21029);
+ 
+ 	irq_set_status_flags(client->irq, IRQ_NOAUTOEN);
+-	error = devm_request_threaded_irq(&client->dev, client->irq,
+-					  NULL, bu21029_touch_soft_irq,
+-					  IRQF_ONESHOT, DRIVER_NAME, bu21029);
++	error = devm_request_threaded_irq(dev, client->irq, NULL,
++					  bu21029_touch_soft_irq, IRQF_ONESHOT,
++					  DRIVER_NAME, bu21029);
+ 	if (error) {
+-		dev_err(&client->dev,
+-			"unable to request touch irq: %d\n", error);
++		dev_err(dev, "unable to request touch irq: %d\n", error);
+ 		return error;
+ 	}
+ 
+ 	error = input_register_device(in_dev);
+ 	if (error) {
+-		dev_err(&client->dev,
+-			"unable to register input device: %d\n", error);
++		dev_err(dev, "unable to register input device: %d\n", error);
+ 		return error;
+ 	}
+ 
 -- 
 2.17.1
