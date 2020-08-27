@@ -1,52 +1,31 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 08/24] Input: elan_i2c - Simplify with dev_err_probe()
-Date: Thu, 27 Aug 2020 12:09:10 +0300
-Message-ID: <CAHp75Vedvy73_uSoKpm=w2sgSWX8kzejhYF4Azc6Vh4T7hXEmg@mail.gmail.com>
-References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-8-krzk@kernel.org>
+Subject: Re: [PATCH 09/24] Input: bu21013_ts - Simplify with dev_err_probe()
+Date: Thu, 27 Aug 2020 12:10:38 +0300
+Message-ID: <CAHp75VevroOYYYBnCAHUqhkkeYcAHLrSwnT3wnxj1Mc4k8sfng@mail.gmail.com>
+References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-9-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200826181706.11098-8-krzk@kernel.org>
+In-Reply-To: <20200826181706.11098-9-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Linus Walleij <linus.walleij@linaro.org>, Bastien Nocera <hadess@hadess.net>, Sangwon Jee <jeesw@melfas.com>, Eugen Hristev <eugen.hristev@microchip.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-input <linux-input@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Aug 26, 2020 at 9:20 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Wed, Aug 26, 2020 at 9:19 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
 > Common pattern of handling deferred probe can be simplified with
 > dev_err_probe().  Less code and also it prints the error value.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>         ts->cs_gpiod = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_HIGH);
+>         error = PTR_ERR_OR_ZERO(ts->cs_gpiod);
 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/input/mouse/elan_i2c_core.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-> index c599e21a8478..d703b0d5a3bd 100644
-> --- a/drivers/input/mouse/elan_i2c_core.c
-> +++ b/drivers/input/mouse/elan_i2c_core.c
-> @@ -1229,13 +1229,8 @@ static int elan_probe(struct i2c_client *client,
->         mutex_init(&data->sysfs_mutex);
->
->         data->vcc = devm_regulator_get(dev, "vcc");
-> -       if (IS_ERR(data->vcc)) {
-> -               error = PTR_ERR(data->vcc);
-> -               if (error != -EPROBE_DEFER)
-> -                       dev_err(dev, "Failed to get 'vcc' regulator: %d\n",
-> -                               error);
-> -               return error;
-> -       }
-> +       if (IS_ERR(data->vcc))
-> +               return dev_err_probe(dev, PTR_ERR(data->vcc), "Failed to get 'vcc' regulator\n");
->
->         error = regulator_enable(data->vcc);
->         if (error) {
-> --
-> 2.17.1
->
+> +       if (error)
+> +               return dev_err_probe(&client->dev, error, "failed to get CS GPIO\n");
+> +
+
+if (IS_ERR())
+ return ... PTR_ERR()...
 
 
 -- 
