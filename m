@@ -1,60 +1,33 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [RESEND PATCH V5 0/3] Intel Platform Monitoring Technology
-Date: Fri, 28 Aug 2020 14:29:54 +0300
-Message-ID: <CAHp75VcKrkxuAJvXnLGnHJTkVfac6N0RTH-3OEA5ksV2psWBew@mail.gmail.com>
-References: <20200819180255.11770-1-david.e.box@linux.intel.com> <20200828105655.GU1826686@dell>
+From: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
+ (IOM) driver
+Date: Fri, 28 Aug 2020 14:55:35 +0300
+Message-ID: <20200828115535.GD174928@kuha.fi.intel.com>
+References: <20200822040508.23510-1-rajmohan.mani@intel.com>
+ <20200822040508.23510-2-rajmohan.mani@intel.com>
+ <20200828074359.GC942935@kroah.com>
+ <20200828090832.GB174928@kuha.fi.intel.com>
+ <20200828100335.GB1229122@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20200828105655.GU1826686@dell>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "David E. Box" <david.e.box@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Alexander Duyck <alexander.h.duyck@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20200828100335.GB1229122-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Rajmohan Mani <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ayman Bagabas <ayman.bagabas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Masahiro Yamada <masahiroy-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jithu Joseph <jithu.joseph-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz-piQ53kQ5nys@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmalani-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Aug 28, 2020 at 1:57 PM Lee Jones <lee.jones@linaro.org> wrote:
-> On Wed, 19 Aug 2020, David E. Box wrote:
->
-> [...]
->
-> > David E. Box (3):
-> >   PCI: Add defines for Designated Vendor-Specific Extended Capability
-> >   mfd: Intel Platform Monitoring Technology support
-> >   platform/x86: Intel PMT Telemetry capability driver
-> >
-> >  .../ABI/testing/sysfs-class-pmt_telemetry     |  46 ++
-> >  MAINTAINERS                                   |   6 +
-> >  drivers/mfd/Kconfig                           |  10 +
-> >  drivers/mfd/Makefile                          |   1 +
-> >  drivers/mfd/intel_pmt.c                       | 220 +++++++++
-> >  drivers/platform/x86/Kconfig                  |  10 +
-> >  drivers/platform/x86/Makefile                 |   1 +
-> >  drivers/platform/x86/intel_pmt_telemetry.c    | 448 ++++++++++++++++++
-> >  include/uapi/linux/pci_regs.h                 |   5 +
-> >  9 files changed, 747 insertions(+)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-class-pmt_telemetry
-> >  create mode 100644 drivers/mfd/intel_pmt.c
-> >  create mode 100644 drivers/platform/x86/intel_pmt_telemetry.c
->
-> What's the plan for this set?
->
-> I'm happy to pick it up and take it through MFD if required.
+On Fri, Aug 28, 2020 at 12:03:35PM +0200, Greg Kroah-Hartman wrote:
+> Handle the situation today, if, in the future, someone else needs/wants
+> this, _then_ work on splitting it out into separate pieces.  Don't
+> create additional complexity today, for no benefit today.  It's already
+> caused numerous review comments/complaints the way this is designed...
 
-I guess that was already agreed like this and you were in Cc list of
-that discussion.
-
->
-> If that's the route of choice, I'll pick it up in just over a week.
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Senior Technical Lead - Developer Services
-> Linaro.org =E2=94=82 Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+OK. We'll handle this in the mux driver for now.
 
 
+thanks,
 
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+heikki
