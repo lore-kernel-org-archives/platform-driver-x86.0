@@ -1,218 +1,192 @@
-From: Raul E Rangel <rrangel@chromium.org>
-Subject: [PATCH v2 1/2] Input: i8042 - Prevent intermixing i8042 commands
-Date: Thu, 27 Aug 2020 14:41:53 -0600
-Message-ID: <20200827144112.v2.1.I6981f9a9f0c12e60f8038f3b574184f8ffc1b9b5@changeid>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
+ (IOM) driver
+Date: Fri, 28 Aug 2020 09:43:59 +0200
+Message-ID: <20200828074359.GC942935@kroah.com>
+References: <20200822040508.23510-1-rajmohan.mani@intel.com>
+ <20200822040508.23510-2-rajmohan.mani@intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200822040508.23510-2-rajmohan.mani@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com, Shirish.S@amd.com, Raul E Rangel <rrangel@chromium.org>, Andy Shevchenko <andy@infradead.org>, Dan Murphy <dmurphy@ti.com>, Darren Hart <dvhart@infradead.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, "Lee, Chun-Yi" <jlee@suse.com>, Pavel Machek <pavel@ucw.cz>, Rajat Jain <rajatja@google.com>, Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Rajmohan Mani <rajmohan.mani@intel.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Jithu Joseph <jithu.joseph@intel.com>, =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-usb@vger.kernel.org, pmalani@chromium.org, bleung@chromium.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The i8042_mutex must be held by writers of the AUX and KBD ports, as
-well as users of i8042_command. There were a lot of users of
-i8042_command that were not calling i8042_lock_chip/i8042_unlock_chip.
-This resulted in i8042_commands being issues in between PS/2
-transactions.
+On Fri, Aug 21, 2020 at 09:05:06PM -0700, Rajmohan Mani wrote:
+> Input Output Manager (IOM) is part of the Tiger Lake SoC that
+> configures the Type-C Sub System (TCSS). IOM is a micro controller
+> that handles Type-C topology, configuration and PM functions of
+> various Type-C devices connected on the platform.
+> 
+> This driver helps read relevant information such as Type-C port
+> status (whether a device is connected to a Type-C port or not) and
+> the activity type on the Type-C ports (such as USB, Display Port,
+> Thunderbolt), for consumption by other drivers.
+> 
+> Currently intel_iom_port_status() API is exported by this driver,
+> that has information about the Type-C port status and port activity
+> type.
+> 
+> Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+> ---
+>  drivers/platform/x86/Kconfig                | 16 ++++
+>  drivers/platform/x86/Makefile               |  1 +
+>  drivers/platform/x86/intel_iom.c            | 95 +++++++++++++++++++++
+>  include/linux/platform_data/x86/intel_iom.h | 49 +++++++++++
+>  4 files changed, 161 insertions(+)
+>  create mode 100644 drivers/platform/x86/intel_iom.c
+>  create mode 100644 include/linux/platform_data/x86/intel_iom.h
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 40219bba6801..f09b4b525ea5 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -837,6 +837,22 @@ config INTEL_INT0002_VGPIO
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called intel_int0002_vgpio.
+>  
+> +config INTEL_IOM
+> +	tristate "Intel Input Output Manager (IOM) driver"
+> +	depends on ACPI && PCI
+> +	help
+> +	  This driver helps read relevant information such as Type-C port
+> +	  status (whether a device is connected to a Type-C port or not)
+> +	  and the activity type on the Type-C ports (such as USB, Display
+> +	  Port, Thunderbolt), for consumption by other drivers.
+> +
+> +	  Currently intel_iom_port_status() API is exported by this driver,
+> +	  that has information about the Type-C port status and port activity
+> +	  type.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called intel_iom.
+> +
+>  config INTEL_MENLOW
+>  	tristate "Thermal Management driver for Intel menlow platform"
+>  	depends on ACPI_THERMAL
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 5f823f7eff45..b44f706074c3 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -77,6 +77,7 @@ intel_cht_int33fe-objs			:= intel_cht_int33fe_common.o \
+>  					   intel_cht_int33fe_microb.o
+>  obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
+>  obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
+> +obj-$(CONFIG_INTEL_IOM)			+= intel_iom.o
+>  obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
+>  obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+>  obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
+> diff --git a/drivers/platform/x86/intel_iom.c b/drivers/platform/x86/intel_iom.c
+> new file mode 100644
+> index 000000000000..cda7716410c6
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_iom.c
+> @@ -0,0 +1,95 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Intel Core SoC Input Output Manager (IOM) driver.
+> + *
+> + * This driver provides access to the Input Output Manager (IOM) (that
+> + * is part of Tiger Lake SoC) registers that can be used to know about
+> + * Type-C Sub System related information (such as Type-C port status,
+> + * activity type on Type-C ports).
+> + *
+> + * Copyright (C) 2020, Intel Corporation
+> + * Author: Rajmohan Mani <rajmohan.mani@intel.com>
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_data/x86/intel_iom.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#define IOM_PORT_STATUS_OFFSET				0x560
+> +
+> +struct intel_iom {
+> +	struct device *dev;
+> +	void __iomem *regbar;
+> +};
+> +
+> +static struct intel_iom *iom;
+> +
+> +/**
+> + * intel_iom_port_status() - Get status bits for the Type-C port
+> + * @port: Type-C port number
+> + * @status: pointer to receive the status bits
+> + *
+> + * Returns 0 on success, error otherwise.
+> + */
+> +int intel_iom_port_status(u8 port, u32 *status)
+> +{
+> +	void __iomem *reg;
+> +
+> +	if (!iom || !iom->dev || !iom->regbar)
+> +		return -ENODEV;
+> +
+> +	if (!status || (port > IOM_MAX_PORTS - 1))
+> +		return -EINVAL;
+> +
+> +	reg = iom->regbar + IOM_PORT_STATUS_OFFSET + IOM_REG_LEN * port;
+> +
+> +	*status = ioread32(reg);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(intel_iom_port_status);
+> +
+> +static int intel_iom_probe(struct platform_device *pdev)
+> +{
+> +	void __iomem *addr;
+> +
+> +	/* only one IOM device is supported */
+> +	if (iom)
+> +		return -EBUSY;
+> +
+> +	iom = devm_kzalloc(&pdev->dev, sizeof(*iom), GFP_KERNEL);
+> +	if (!iom)
+> +		return -ENOMEM;
+> +
+> +	addr = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(addr))
+> +		return PTR_ERR(addr);
+> +
+> +	iom->regbar = addr;
+> +	iom->dev = &pdev->dev;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct acpi_device_id intel_iom_acpi_ids[] = {
+> +	{ "INTC1072" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, intel_iom_acpi_ids);
+> +
+> +static struct platform_driver intel_iom_driver = {
+> +	.probe = intel_iom_probe,
+> +	.driver = {
+> +		.name = "intel_iom",
+> +		.acpi_match_table = intel_iom_acpi_ids,
+> +	},
+> +};
+> +
+> +module_platform_driver_probe(intel_iom_driver, intel_iom_probe);
+> +
+> +MODULE_AUTHOR("Rajmohan Mani <rajmohan.mani@intel.com>");
+> +MODULE_DESCRIPTION("Intel IOM driver");
+> +MODULE_LICENSE("GPL v2");
 
-This change moves the mutex lock into i8042_command and removes the
-burden of locking the mutex from the callers.
+I still find this crazy that a whole separate driver is created just to
+read a single 32bit value.
 
-It is expected that the i8042_mutex is locked before calling
-i8042_aux_write or i8042_kbd_write. This is currently done by the PS/2
-layer via ps2_begin_command and ps2_end_command. Other modules
-(serio_raw) do not currently lock the mutex, so there is still a
-possibility for intermixed commands.
+Why not put this logic in the driver that wants to read that value?
+That would be much simpler, smaller, and more obvious.
 
-Link: https://lore.kernel.org/linux-input/CAHQZ30ANTeM-pgdYZ4AbgxsnevBJnJgKZ1Kg+Uy8oSXZUvz=og@mail.gmail.com
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
-Tested this on a device with only a PS/2 keyboard. I was able to do
-1200+ suspend/resume cycles.
+thanks,
 
-Also tested this on a device with a PS/2 keyboard and a PS/2 mouse.
-I was able to do 250+ iterations with out problems.
-
-Changes in v2:
-- Fixed bad indent
-- Added Link: tag
-- Removed left over rc variable
-
- drivers/input/serio/i8042.c         | 29 ++++++++++++++---------------
- drivers/leds/leds-clevo-mail.c      |  9 ---------
- drivers/platform/x86/acer-wmi.c     |  2 --
- drivers/platform/x86/amilo-rfkill.c |  6 +-----
- include/linux/i8042.h               | 10 ----------
- 5 files changed, 15 insertions(+), 41 deletions(-)
-
-diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
-index 0dddf273afd94..65ca6b47f41e8 100644
---- a/drivers/input/serio/i8042.c
-+++ b/drivers/input/serio/i8042.c
-@@ -137,8 +137,7 @@ static DEFINE_SPINLOCK(i8042_lock);
- 
- /*
-  * Writers to AUX and KBD ports as well as users issuing i8042_command
-- * directly should acquire i8042_mutex (by means of calling
-- * i8042_lock_chip() and i8042_unlock_ship() helpers) to ensure that
-+ * directly should acquire i8042_mutex to ensure that
-  * they do not disturb each other (unfortunately in many i8042
-  * implementations write to one of the ports will immediately abort
-  * command that is being processed by another port).
-@@ -173,18 +172,6 @@ static irqreturn_t i8042_interrupt(int irq, void *dev_id);
- static bool (*i8042_platform_filter)(unsigned char data, unsigned char str,
- 				     struct serio *serio);
- 
--void i8042_lock_chip(void)
--{
--	mutex_lock(&i8042_mutex);
--}
--EXPORT_SYMBOL(i8042_lock_chip);
--
--void i8042_unlock_chip(void)
--{
--	mutex_unlock(&i8042_mutex);
--}
--EXPORT_SYMBOL(i8042_unlock_chip);
--
- int i8042_install_filter(bool (*filter)(unsigned char data, unsigned char str,
- 					struct serio *serio))
- {
-@@ -343,10 +330,14 @@ int i8042_command(unsigned char *param, int command)
- 	unsigned long flags;
- 	int retval;
- 
-+	mutex_lock(&i8042_mutex);
-+
- 	spin_lock_irqsave(&i8042_lock, flags);
- 	retval = __i8042_command(param, command);
- 	spin_unlock_irqrestore(&i8042_lock, flags);
- 
-+	mutex_unlock(&i8042_mutex);
-+
- 	return retval;
- }
- EXPORT_SYMBOL(i8042_command);
-@@ -379,10 +370,18 @@ static int i8042_kbd_write(struct serio *port, unsigned char c)
- static int i8042_aux_write(struct serio *serio, unsigned char c)
- {
- 	struct i8042_port *port = serio->port_data;
-+	unsigned long flags;
-+	int retval = 0;
-+
-+	spin_lock_irqsave(&i8042_lock, flags);
- 
--	return i8042_command(&c, port->mux == -1 ?
-+	retval = __i8042_command(&c, port->mux == -1 ?
- 					I8042_CMD_AUX_SEND :
- 					I8042_CMD_MUX_SEND + port->mux);
-+
-+	spin_unlock_irqrestore(&i8042_lock, flags);
-+
-+	return retval;
- }
- 
- 
-diff --git a/drivers/leds/leds-clevo-mail.c b/drivers/leds/leds-clevo-mail.c
-index f512e99b976b1..6c3d7e54f95cf 100644
---- a/drivers/leds/leds-clevo-mail.c
-+++ b/drivers/leds/leds-clevo-mail.c
-@@ -95,17 +95,12 @@ MODULE_DEVICE_TABLE(dmi, clevo_mail_led_dmi_table);
- static void clevo_mail_led_set(struct led_classdev *led_cdev,
- 				enum led_brightness value)
- {
--	i8042_lock_chip();
--
- 	if (value == LED_OFF)
- 		i8042_command(NULL, CLEVO_MAIL_LED_OFF);
- 	else if (value <= LED_HALF)
- 		i8042_command(NULL, CLEVO_MAIL_LED_BLINK_0_5HZ);
- 	else
- 		i8042_command(NULL, CLEVO_MAIL_LED_BLINK_1HZ);
--
--	i8042_unlock_chip();
--
- }
- 
- static int clevo_mail_led_blink(struct led_classdev *led_cdev,
-@@ -114,8 +109,6 @@ static int clevo_mail_led_blink(struct led_classdev *led_cdev,
- {
- 	int status = -EINVAL;
- 
--	i8042_lock_chip();
--
- 	if (*delay_on == 0 /* ms */ && *delay_off == 0 /* ms */) {
- 		/* Special case: the leds subsystem requested us to
- 		 * chose one user friendly blinking of the LED, and
-@@ -142,8 +135,6 @@ static int clevo_mail_led_blink(struct led_classdev *led_cdev,
- 		       *delay_on, *delay_off);
- 	}
- 
--	i8042_unlock_chip();
--
- 	return status;
- }
- 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 60c18f21588dd..6cb6f800503b2 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -1044,9 +1044,7 @@ static acpi_status WMID_set_u32(u32 value, u32 cap)
- 			return AE_BAD_PARAMETER;
- 		if (quirks->mailled == 1) {
- 			param = value ? 0x92 : 0x93;
--			i8042_lock_chip();
- 			i8042_command(&param, 0x1059);
--			i8042_unlock_chip();
- 			return 0;
- 		}
- 		break;
-diff --git a/drivers/platform/x86/amilo-rfkill.c b/drivers/platform/x86/amilo-rfkill.c
-index 493e169c8f615..c981c6e07ff94 100644
---- a/drivers/platform/x86/amilo-rfkill.c
-+++ b/drivers/platform/x86/amilo-rfkill.c
-@@ -28,12 +28,8 @@
- static int amilo_a1655_rfkill_set_block(void *data, bool blocked)
- {
- 	u8 param = blocked ? A1655_WIFI_OFF : A1655_WIFI_ON;
--	int rc;
- 
--	i8042_lock_chip();
--	rc = i8042_command(&param, A1655_WIFI_COMMAND);
--	i8042_unlock_chip();
--	return rc;
-+	return i8042_command(&param, A1655_WIFI_COMMAND);
- }
- 
- static const struct rfkill_ops amilo_a1655_rfkill_ops = {
-diff --git a/include/linux/i8042.h b/include/linux/i8042.h
-index 0261e2fb36364..1c081081c161d 100644
---- a/include/linux/i8042.h
-+++ b/include/linux/i8042.h
-@@ -55,8 +55,6 @@ struct serio;
- 
- #if defined(CONFIG_SERIO_I8042) || defined(CONFIG_SERIO_I8042_MODULE)
- 
--void i8042_lock_chip(void);
--void i8042_unlock_chip(void);
- int i8042_command(unsigned char *param, int command);
- int i8042_install_filter(bool (*filter)(unsigned char data, unsigned char str,
- 					struct serio *serio));
-@@ -65,14 +63,6 @@ int i8042_remove_filter(bool (*filter)(unsigned char data, unsigned char str,
- 
- #else
- 
--static inline void i8042_lock_chip(void)
--{
--}
--
--static inline void i8042_unlock_chip(void)
--{
--}
--
- static inline int i8042_command(unsigned char *param, int command)
- {
- 	return -ENODEV;
--- 
-2.28.0.297.g1956fa8f8d-goog
+greg k-h
