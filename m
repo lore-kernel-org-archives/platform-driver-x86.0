@@ -1,40 +1,42 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 24/27] gpio: Add devm_fwnode_gpiod_get_optional() helpers
-Date: Fri, 28 Aug 2020 17:56:43 +0300
-Message-ID: <CAHp75VfOSqxs5mw7jK0Xp2H2xFFLbb3i=ARxiuViOEniafCp7g@mail.gmail.com>
-References: <20200827185829.30096-1-krzk@kernel.org> <20200827185829.30096-25-krzk@kernel.org>
- <CACRpkdZNS6TTpUDEiezORKXu-h0Sdz_dPcCxmR+UbT_Rc+oMpw@mail.gmail.com> <CAJKOXPej87cqgPtt4it66fp2CgjcyAQULG2260UH60hsnOZu7Q@mail.gmail.com>
+From: "Mani, Rajmohan" <rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager (IOM)
+ driver
+Date: Fri, 28 Aug 2020 15:21:27 +0000
+Message-ID: <DM6PR11MB3963833C6BEDA666C3C442F5F6520@DM6PR11MB3963.namprd11.prod.outlook.com>
+References: <20200822040508.23510-1-rajmohan.mani@intel.com>
+ <20200822040508.23510-2-rajmohan.mani@intel.com>
+ <20200828074359.GC942935@kroah.com>
+ <20200828090832.GB174928@kuha.fi.intel.com>
+ <20200828100335.GB1229122@kroah.com>
+ <20200828115535.GD174928@kuha.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPej87cqgPtt4it66fp2CgjcyAQULG2260UH60hsnOZu7Q@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Bastien Nocera <hadess@hadess.net>, Sangwon Jee <jeesw@melfas.com>, Eugen Hristev <eugen.hristev@microchip.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, platform-driver-x86 <platform-driver-x86@vger.kernel.org>, clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20200828115535.GD174928-FZxXFokcWpatqXYlAKuG4QC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ayman Bagabas <ayman.bagabas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Masahiro Yamada <masahiroy-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Joseph, Jithu" <jithu.joseph-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, =?iso-8859-2?Q?Bla=BE_Hrastnik?= <blaz-piQ53kQ5nys@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pmalani-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <pmalani-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Aug 28, 2020 at 5:45 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Fri, 28 Aug 2020 at 16:31, Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Thu, Aug 27, 2020 at 9:00 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > > Add devm_fwnode_gpiod_get_optional() and
-> > > devm_fwnode_gpiod_get_index_optional() helpers, similar to regular
-> > > devm_gpiod optional versions.  Drivers getting GPIOs from a firmware
-> > > node might use it to remove some boilerplate code.
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> >
-> > OK then, I suppose this gets merged with the rest?
-> >
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> That's the easiest unless you expect some conflicts. Only one next
-> patch depends on this so worst case it could wait one cycle.
+> Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
+> (IOM) driver
+>=20
+> On Fri, Aug 28, 2020 at 12:03:35PM +0200, Greg Kroah-Hartman wrote:
+> > Handle the situation today, if, in the future, someone else
+> > needs/wants this, _then_ work on splitting it out into separate
+> > pieces.  Don't create additional complexity today, for no benefit
+> > today.  It's already caused numerous review comments/complaints the way
+> this is designed...
+>=20
+> OK. We'll handle this in the mux driver for now.
+>=20
 
-I believe Dmitry and Linus are familiar with the concept of immutable
-branches, so it won't be a problem to create one and share.
+Ack. Will work with Heikki on this.
 
--- 
-With Best Regards,
-Andy Shevchenko
+>=20
+> thanks,
+>=20
+> --
+> heikki
