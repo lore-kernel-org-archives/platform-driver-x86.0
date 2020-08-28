@@ -1,63 +1,48 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
- (IOM) driver
-Date: Fri, 28 Aug 2020 12:03:35 +0200
-Message-ID: <20200828100335.GB1229122@kroah.com>
-References: <20200822040508.23510-1-rajmohan.mani@intel.com>
- <20200822040508.23510-2-rajmohan.mani@intel.com>
- <20200828074359.GC942935@kroah.com>
- <20200828090832.GB174928@kuha.fi.intel.com>
+From: joeyli <jlee@suse.com>
+Subject: Re: [PATCH] platform/x86: acer-wmi: add automatic keyboard
+ background light toggle key as KEY_LIGHTS_TOGGLE
+Date: Fri, 28 Aug 2020 18:08:39 +0800
+Message-ID: <20200828100839.GK7501@linux-l9pv.suse>
+References: <20200804001423.36778-1-timo.witte@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200828090832.GB174928@kuha.fi.intel.com>
+In-Reply-To: <20200804001423.36778-1-timo.witte@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Rajmohan Mani <rajmohan.mani@intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Jithu Joseph <jithu.joseph@intel.com>, =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org, pmalani@chromium.org, bleung@chromium.org
+To: Timo Witte <timo.witte@gmail.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, "open list:ACER WMI LAPTOP EXTRAS" <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Aug 28, 2020 at 12:08:32PM +0300, Heikki Krogerus wrote:
-> Hi Greg,
+Hi Timo,
+
+On Tue, Aug 04, 2020 at 02:14:23AM +0200, Timo Witte wrote:
+> Got a dmesg message on my AMD Renoir based Acer laptop:
+> "acer_wmi: Unknown key number - 0x84" when toggling keyboard
+> background light
 > 
-> On Fri, Aug 28, 2020 at 09:43:59AM +0200, Greg Kroah-Hartman wrote:
-> > I still find this crazy that a whole separate driver is created just to
-> > read a single 32bit value.
-> > 
-> > Why not put this logic in the driver that wants to read that value?
-> > That would be much simpler, smaller, and more obvious.
+> Signed-off-by: Timo Witte <timo.witte@gmail.com>
+
+Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com>
+
+Thanks for your help!
+Joey Lee
+
+> ---
+>  drivers/platform/x86/acer-wmi.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> That would mean that we start maintaining something like DMI quirk
-> table in those drivers. Unfortunately the IOM device is not available
-> on every platform. Also, even on platforms that do have it, there is
-> no guarantee that the device is always going to be mapped to the same
-> address.
-
-Ok, but putting it in another driver has the same problem as you are now
-depending on that driver with the driver that calls this, right?
-
-The quirk table would go in here, but not somewhere else?
-
-And if this really is only for typec stuff, put it in the typec
-directory, not burried off in the platform driver subdir please.
-
-> Nevertheless, I was originally hoping that we could hide the handling
-> of IOM somehow in ACPI without the need for an actual device object,
-> but it now turns out that the other features of the IOM chip have
-> created interest. At least our i915 guys probable have some use for it
-> (I don't know exactly what they are planning to use it for).
-> 
-> So the fact that we may later need the device for something else, on
-> top of the clumsiness and most importantly risks involved with using
-> ACPI to take care of extra tasks (ASL tends to have bugs - bugs that
-> may never ever get fixed), I think the IOM device object, and the
-> driver that binds to it, do have a valid reason for existing.
-
-Handle the situation today, if, in the future, someone else needs/wants
-this, _then_ work on splitting it out into separate pieces.  Don't
-create additional complexity today, for no benefit today.  It's already
-caused numerous review comments/complaints the way this is designed...
-
-thanks,
-
-greg k-h
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index 60c18f21588d..87797f785d6a 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -111,6 +111,7 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
+>  	{KE_KEY, 0x64, {KEY_SWITCHVIDEOMODE} },	/* Display Switch */
+>  	{KE_IGNORE, 0x81, {KEY_SLEEP} },
+>  	{KE_KEY, 0x82, {KEY_TOUCHPAD_TOGGLE} },	/* Touch Pad Toggle */
+> +	{KE_IGNORE, 0x84, {KEY_LIGHTS_TOGGLE} }, /* Automatic Keyboard background light toggle */
+>  	{KE_KEY, KEY_TOUCHPAD_ON, {KEY_TOUCHPAD_ON} },
+>  	{KE_KEY, KEY_TOUCHPAD_OFF, {KEY_TOUCHPAD_OFF} },
+>  	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
+> -- 
+> 2.27.0
