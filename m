@@ -1,69 +1,74 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
- (IOM) driver
-Date: Sat, 29 Aug 2020 08:27:19 +0200
-Message-ID: <20200829062719.GA80106@kroah.com>
-References: <20200822040508.23510-1-rajmohan.mani@intel.com>
- <20200822040508.23510-2-rajmohan.mani@intel.com>
- <20200828074359.GC942935@kroah.com>
- <20200828090832.GB174928@kuha.fi.intel.com>
- <DM6PR11MB3963228D43B50604AE4D0F3AF6520@DM6PR11MB3963.namprd11.prod.outlook.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/2] Input: i8042 - Prevent intermixing i8042 commands
+Date: Sat, 29 Aug 2020 09:47:58 +0200
+Message-ID: <20200829074758.GA16838@amd>
+References: <20200827135205.1.I6981f9a9f0c12e60f8038f3b574184f8ffc1b9b5@changeid>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <DM6PR11MB3963228D43B50604AE4D0F3AF6520@DM6PR11MB3963.namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, "Joseph, Jithu" <jithu.joseph@intel.com>, =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "pmalani@chromium.org" <pmalani@chromium.org>, "bleung@chromium.org" <bleung@chromium.o>
+In-Reply-To: <20200827135205.1.I6981f9a9f0c12e60f8038f3b574184f8ffc1b9b5@changeid>
+Sender: linux-leds-owner@vger.kernel.org
+To: Raul E Rangel <rrangel@chromium.org>
+Cc: linux-input@vger.kernel.org, dmitry.torokhov@gmail.com, Shirish.S@amd.com, Andy Shevchenko <andy@infradead.org>, Dan Murphy <dmurphy@ti.com>, Darren Hart <dvhart@infradead.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, "Lee, Chun-Yi" <jlee@suse.com>, Rajat Jain <rajatja@google.com>, Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, Aug 28, 2020 at 03:20:22PM +0000, Mani, Rajmohan wrote:
-> Hi Greg,
-> 
-> > Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
-> > (IOM) driver
-> > 
-> > Hi Greg,
-> > 
-> > On Fri, Aug 28, 2020 at 09:43:59AM +0200, Greg Kroah-Hartman wrote:
-> > > I still find this crazy that a whole separate driver is created just
-> > > to read a single 32bit value.
-> > >
-> > > Why not put this logic in the driver that wants to read that value?
-> > > That would be much simpler, smaller, and more obvious.
-> > 
-> > That would mean that we start maintaining something like DMI quirk table in
-> > those drivers. Unfortunately the IOM device is not available on every platform.
-> > Also, even on platforms that do have it, there is no guarantee that the device is
-> > always going to be mapped to the same address.
-> > 
-> > Nevertheless, I was originally hoping that we could hide the handling of IOM
-> > somehow in ACPI without the need for an actual device object, but it now
-> > turns out that the other features of the IOM chip have created interest. At
-> > least our i915 guys probable have some use for it (I don't know exactly what
-> > they are planning to use it for).
-> > 
-> > So the fact that we may later need the device for something else, on top of the
-> > clumsiness and most importantly risks involved with using ACPI to take care of
-> > extra tasks (ASL tends to have bugs - bugs that may never ever get fixed), I
-> > think the IOM device object, and the driver that binds to it, do have a valid
-> > reason for existing.
-> > 
-> 
-> Intel PMC USB mux device is part of the PCH, while IOM is part of the SoC.
 
-I have no idea what a "PCH" is, what "IOM" is, and how any of this
-relates to a "SoC" :)
+--BXVAT5kNtrzKuDFl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Don't impose arbritrary hardware "splits" to kernel code when the kernel
-has no such "partitioning" please.
+On Thu 2020-08-27 13:52:22, Raul E Rangel wrote:
+> The i8042_mutex must be held by writers of the AUX and KBD ports, as
+> well as users of i8042_command. There were a lot of users of
+> i8042_command that were not calling i8042_lock_chip/i8042_unlock_chip.
+> This resulted in i8042_commands being issues in between PS/2
+> transactions.
+>=20
+> This change moves the mutex lock into i8042_command and removes the
+> burden of locking the mutex from the callers.
+>=20
+> It is expected that the i8042_mutex is locked before calling
+> i8042_aux_write or i8042_kbd_write. This is currently done by the PS/2
+> layer via ps2_begin_command and ps2_end_command. Other modules
+> (serio_raw) do not currently lock the mutex, so there is still a
+> possibility for intermixed commands.
 
-> This was another reason we had to have a separate ACPI device.
 
-That sounds like a firmware issue you can solve in UEFI.
+> @@ -343,10 +330,14 @@ int i8042_command(unsigned char *param, int command)
+>  	unsigned long flags;
+>  	int retval;
+> =20
+> +	mutex_lock(&i8042_mutex);
+> +
+>  	spin_lock_irqsave(&i8042_lock, flags);
+>  	retval =3D __i8042_command(param, command);
+>  	spin_unlock_irqrestore(&i8042_lock, flags);
+> =20
+> +	 mutex_unlock(&i8042_mutex);
+> +
+>  	return retval;
 
-I think this is the most TLA-laden email I have ever written, and I used
-to work at IBM :)
+There's something wrong with whitespace here. Checkpatch?
+									Pavel
+								=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-greg k-h
+--BXVAT5kNtrzKuDFl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl9KCC4ACgkQMOfwapXb+vLRLQCZAVRSNB7AWmLMpShfbIqQb9g7
+e2kAn0k5vjeRzWluElrV5q2QcU+nhqJy
+=TVRR
+-----END PGP SIGNATURE-----
+
+--BXVAT5kNtrzKuDFl--
