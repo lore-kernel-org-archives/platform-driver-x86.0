@@ -1,31 +1,53 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: sysfs output without newlines
-Date: Sun, 30 Aug 2020 11:11:42 +0200
-Message-ID: <20200830091142.GC112265@kroah.com>
-References: <0f837bfb394ac632241eaac3e349b2ba806bce09.camel@perches.com>
+From: Raul Rangel <rrangel@chromium.org>
+Subject: Re: [PATCH 1/2] Input: i8042 - Prevent intermixing i8042 commands
+Date: Mon, 31 Aug 2020 07:39:44 -0600
+Message-ID: <CAHQZ30CuWSzaMNYSfh6Zr12Q1=GA_Yqpg0jaePDkFQjgsDDBPg@mail.gmail.com>
+References: <20200827135205.1.I6981f9a9f0c12e60f8038f3b574184f8ffc1b9b5@changeid>
+ <20200829074758.GA16838@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0f837bfb394ac632241eaac3e349b2ba806bce09.camel@perches.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Denis Efremov <efremov@linux.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Kees Cook <keescook@chromium.org>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, Julia Lawall <julia.lawall@inria.fr>, Alex Dewar <alex.dewar90@gmail.com>, York Sun <york.sun@nxp.com>, Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>, Robert Richter <rric@kernel.org>, Michal Simek <michal.simek@xilinx.com>, Boris Brezillon <bbrezillon@kernel.org>, Maxim Levitsky <maximlevitsky@gmail.com>, Alex Dubov <oakad@yahoo.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tomas Winkler <tomas.winkler@intel.com>, Arnd Bergmann <arnd@arndb.de>Ma
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20200829074758.GA16838@amd>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: linux-input <linux-input@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "S, Shirish" <Shirish.S@amd.com>, Andy Shevchenko <andy@infradead.org>, Dan Murphy <dmurphy@ti.com>, Darren Hart <dvhart@infradead.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, "Lee, Chun-Yi" <jlee@suse.com>, Rajat Jain <rajatja@google.com>, Stephen Boyd <swboyd@chromium.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Sat, Aug 29, 2020 at 11:23:43AM -0700, Joe Perches wrote:
-> While doing an investigation for a possible treewide conversion of
-> sysfs output using sprintf/snprintf/scnprintf, I discovered
-> several instances of sysfs output without terminating newlines.
-> 
-> It seems likely all of these should have newline terminations
-> or have the \n\r termination changed to a single newline.
-> 
-> Anyone have any objection to patches adding newlines to these
-> in their original forms using sprintf/snprintf/scnprintf?
+On Sat, Aug 29, 2020 at 1:48 AM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> On Thu 2020-08-27 13:52:22, Raul E Rangel wrote:
+> > The i8042_mutex must be held by writers of the AUX and KBD ports, as
+> > well as users of i8042_command. There were a lot of users of
+> > i8042_command that were not calling i8042_lock_chip/i8042_unlock_chip.
+> > This resulted in i8042_commands being issues in between PS/2
+> > transactions.
+> >
+> > This change moves the mutex lock into i8042_command and removes the
+> > burden of locking the mutex from the callers.
+> >
+> > It is expected that the i8042_mutex is locked before calling
+> > i8042_aux_write or i8042_kbd_write. This is currently done by the PS/2
+> > layer via ps2_begin_command and ps2_end_command. Other modules
+> > (serio_raw) do not currently lock the mutex, so there is still a
+> > possibility for intermixed commands.
+>
+>
+> > @@ -343,10 +330,14 @@ int i8042_command(unsigned char *param, int command)
+> >       unsigned long flags;
+> >       int retval;
+> >
+> > +     mutex_lock(&i8042_mutex);
+> > +
+> >       spin_lock_irqsave(&i8042_lock, flags);
+> >       retval = __i8042_command(param, command);
+> >       spin_unlock_irqrestore(&i8042_lock, flags);
+> >
+> > +      mutex_unlock(&i8042_mutex);
+> > +
+> >       return retval;
+>
+> There's something wrong with whitespace here. Checkpatch?
+>                                                                         Pavel
+It's fixed in the v2 patch: https://patchwork.kernel.org/patch/11741855/
 
-No objection for me, patches for my subsystems will be gladly taken.
-
-thanks,
-
-greg k-h
+Thanks
