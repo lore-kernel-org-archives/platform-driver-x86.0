@@ -1,111 +1,48 @@
-From: "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Subject: RE: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager (IOM)
- driver
-Date: Mon, 31 Aug 2020 21:40:52 +0000
-Message-ID: <DM6PR11MB396318BBCF00D2327711AC0AF6510@DM6PR11MB3963.namprd11.prod.outlook.com>
-References: <20200822040508.23510-1-rajmohan.mani@intel.com>
- <20200822040508.23510-2-rajmohan.mani@intel.com>
- <20200828074359.GC942935@kroah.com>
- <20200828090832.GB174928@kuha.fi.intel.com>
- <DM6PR11MB3963228D43B50604AE4D0F3AF6520@DM6PR11MB3963.namprd11.prod.outlook.com>
- <20200829062719.GA80106@kroah.com>
+From: David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org>
+Subject: RE: sysfs output without newlines
+Date: Tue, 1 Sep 2020 09:07:42 +0000
+Message-ID: <5f0b48e0291b4b54bc1caeb8b5715c65@AcuMS.aculab.com>
+References: <0f837bfb394ac632241eaac3e349b2ba806bce09.camel@perches.com>
+         <4cd6275c-6e95-3aeb-9924-141f62e00449@linux.com>
+ <b64a4cb0ee68fee01973616e5ef0f299ac191f6d.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200829062719.GA80106@kroah.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b64a4cb0ee68fee01973616e5ef0f299ac191f6d.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Ayman Bagabas <ayman.bagabas@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, "Joseph, Jithu" <jithu.joseph@intel.com>, =?iso-8859-2?Q?Bla=BE_Hrastnik?= <blaz@mxxn.io>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "pmalani@chromium.org" <pmalani@chromium.org>, "bleung@chromium.org" <bleung@chromiu>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Joe Perches' <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Denis Efremov <efremov-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "Gustavo A . R . Silva" <gustavoars-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Julia Lawall <julia.lawall-MZpvjPyXg2s@public.gmane.org>, Alex Dewar <alex.dewar90-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: York Sun <york.sun-3arQi8VN3Tc@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Boris Brezillon <bbrezillon-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxim Levitsky <maximlevitsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alex Dubov <oakad-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomas Winkler <tomas.winkler-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Jakub Kicinski <kuba-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Douglas Miller <dougmill-tEXmvtCZX7AybS5Ee8rs3A@public.gmane.org>, Stanislav Yakovlev <stas.yakovlev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi Greg,
-
-> Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
-> (IOM) driver
->=20
-> On Fri, Aug 28, 2020 at 03:20:22PM +0000, Mani, Rajmohan wrote:
-> > Hi Greg,
+From: Joe Perches
+> Sent: 29 August 2020 21:34
+...
+> > On 8/29/20 9:23 PM, Joe Perches wrote:
+> > > While doing an investigation for a possible treewide conversion of
+> > > sysfs output using sprintf/snprintf/scnprintf, I discovered
+> > > several instances of sysfs output without terminating newlines.
+> > >
+> > > It seems likely all of these should have newline terminations
+> > > or have the \n\r termination changed to a single newline.
 > >
-> > > Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output
-> > > Manager
-> > > (IOM) driver
-> > >
-> > > Hi Greg,
-> > >
-> > > On Fri, Aug 28, 2020 at 09:43:59AM +0200, Greg Kroah-Hartman wrote:
-> > > > I still find this crazy that a whole separate driver is created
-> > > > just to read a single 32bit value.
-> > > >
-> > > > Why not put this logic in the driver that wants to read that value?
-> > > > That would be much simpler, smaller, and more obvious.
-> > >
-> > > That would mean that we start maintaining something like DMI quirk
-> > > table in those drivers. Unfortunately the IOM device is not available=
- on
-> every platform.
-> > > Also, even on platforms that do have it, there is no guarantee that
-> > > the device is always going to be mapped to the same address.
-> > >
-> > > Nevertheless, I was originally hoping that we could hide the
-> > > handling of IOM somehow in ACPI without the need for an actual
-> > > device object, but it now turns out that the other features of the
-> > > IOM chip have created interest. At least our i915 guys probable have
-> > > some use for it (I don't know exactly what they are planning to use i=
-t for).
-> > >
-> > > So the fact that we may later need the device for something else, on
-> > > top of the clumsiness and most importantly risks involved with using
-> > > ACPI to take care of extra tasks (ASL tends to have bugs - bugs that
-> > > may never ever get fixed), I think the IOM device object, and the
-> > > driver that binds to it, do have a valid reason for existing.
-> > >
-> >
-> > Intel PMC USB mux device is part of the PCH, while IOM is part of the S=
-oC.
->=20
-> I have no idea what a "PCH" is, what "IOM" is, and how any of this relate=
-s to a
-> "SoC" :)
->=20
+> > I think that it could break badly written scripts in rare cases.
+> 
+> Maybe.
+> 
+> Is sysfs output a nominally unchangeable api like seq_?
+> Dunno.  seq_ output is extended all the time.
+> 
+> I think whitespace isn't generally considered part of
+> sscanf type input content awareness.
 
-I was just meaning to say IOM (Intel Output Manager) is a separate device, =
-that
-is not part of PCH (Platform Controller Hub) like PMC (Power Management Con=
-troller).
+The shell will remove trailing '\n' (but not '\r') from:
+	foo=$(cat bar)
+So shell scripts are unlikely to be affected.
 
-For the sake of completeness
+	David
 
-PCH - Platform Controller Hub (usually that handles I/Os in Intel core plat=
-forms)
-IOM - Input Output Manager (IOM) is part of the Tiger Lake SoC that handles=
- Type-C
-topology, configuration and PM functions of various Type-C devices connecte=
-d
-on the platform
-
-> Don't impose arbritrary hardware "splits" to kernel code when the kernel =
-has
-> no such "partitioning" please.
->=20
-
-Ack.
-
-> > This was another reason we had to have a separate ACPI device.
->=20
-> That sounds like a firmware issue you can solve in UEFI.
->=20
-
-Ack
-
-> I think this is the most TLA-laden email I have ever written, and I used =
-to work
-> at IBM :)
-
-I thought it was only Intel where TLAs are abundantly used.
-
-Thanks for the reviews and the direction on this topic.
-
->=20
-> greg k-h
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
