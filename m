@@ -1,72 +1,42 @@
-From: Samuel =?utf-8?B?xIxhdm9q?= <samuel@cavoj.net>
-Subject: platform/x86: asus-wmi: SW_TABLET_MODE is always 1 on some devices
-Date: Tue, 1 Sep 2020 23:55:36 +0200
-Message-ID: <20200901215536.qcouepovmfxje4n5@fastboi.localdomain>
+From: Pete Zaitcev <zaitcev@redhat.com>
+Subject: Re: sysfs output without newlines
+Date: Tue, 1 Sep 2020 17:22:30 -0500
+Message-ID: <20200901172230.531decf6@suzdal.zaitcev.lan>
+References: <0f837bfb394ac632241eaac3e349b2ba806bce09.camel@perches.com>
+ <4cd6275c-6e95-3aeb-9924-141f62e00449@linux.com>
+ <b64a4cb0ee68fee01973616e5ef0f299ac191f6d.camel@perches.com>
+ <5f0b48e0291b4b54bc1caeb8b5715c65@AcuMS.aculab.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Corentin Chary <corentin.chary@gmail.com>
-Cc: acpi4asus-user@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
+In-Reply-To: <5f0b48e0291b4b54bc1caeb8b5715c65@AcuMS.aculab.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
+To: David Laight <David.Laight@ACULAB.COM>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Kai =?UTF-8?B?TcOka2lzYXJh?= <Kai.Makisara@kolumbus.fi>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, Madalin Bucur <madalin.bucur@nxp.com>, Michal Simek <michal.simek@xilinx.com>, Alex Dewar <alex.dewar90@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jakub Kicinski <kuba@kernel.org>, Tomas Winkler <tomas.winkler@intel.com>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Stanislav Yakovlev <stas.yakovl>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hello!
+On Tue, 1 Sep 2020 09:07:42 +0000
+David Laight <David.Laight@ACULAB.COM> wrote:
 
-A bug was introduced with the following commit[1]:
+> The shell will remove trailing '\n' (but not '\r') from:
+> 	foo=$(cat bar)
+> So shell scripts are unlikely to be affected.
 
-    b0dbd97de: platform/x86: asus-wmi: Add support for SW_TABLET_MODE
+Surprisingly enough, Python is okay with this:
 
-The SW_TABLET_MODE switch seems to be always 1 on some devices,
-including my UX360CA and a UX390UAK[2].
+    with open("/proc/sys/net/ipv4/ip_forward",'r') as fp:
+        print(int(fp.read()))
 
-This can be seen in the output of evtest:
+Nonetheless, I would rather no add those newlines. I saw enough
+weird software that is sensitive where it's should not bee.
 
-    # evtest /dev/input/by-path/platform-asus-nb-wmi-event
-    Input driver version is 1.0.1
-    Input device ID: bus 0x19 vendor 0x0 product 0x0 version 0x0
-    Input device name: "Asus WMI hotkeys"
-    Supported events:
-      (...)
-      Event type 5 (EV_SW)
-        Event code 1 (SW_TABLET_MODE) state 1
-
-And directly results in libinput disabling the trackpad and keyboard via
-its tablet-mode mechanism, rendering X.org and Wayland unusable (not even
-switching to VT works without sysrq+r):
-
-    # libinput debug-events
-    (...)
-    -event8   DEVICE_ADDED     Asus WMI hotkeys     seat0 default group10 cap:kS
-     event8   SWITCH_TOGGLE    +0.000s	switch tablet-mode state 1
-    (...)
-
-I have been using the following workaround to get my input working
-again:
-
-    # cat /usr/share/libinput/50-system-asus.quirks
-    (...)
-    [Asus WMI hotkeys]
-    MatchName=*Asus WMI hotkeys*
-    ModelTabletModeSwitchUnreliable=1
-
-Another option would be to rmmod asus_nb_wmi and blacklist it for now.
-
-I am not sure what the solution would be as I am not acquainted with the
-WMI module. However, I can provide some information about my hardware:
-
-The UX360CA fully disables the keyboard in hardware(firmware?) when the
-lid is flipped beyond 180 degrees (tablet mode). The trackpad is not
-disabled. A KEY_PROG2 event is generated by the same "Asus WMI hotkeys"
-input device at this moment, it however does not carry the actual state
--- a 1 is sent and a 0 follows immediately[3]. The same KEY_PROG2
-sequence is generated when the lid is returned back to laptop position.
-The SW_TABLET_MODE switch does not change state at all during this.
-Thank you.
-
-Have a nice day,
-Samuel
-
-[1]: https://patchwork.kernel.org/patch/11539215/
-[2]: https://bugzilla.kernel.org/show_bug.cgi?id=209011
-[3]: https://lore.kernel.org/patchwork/patch/973647/
+-- Pete
