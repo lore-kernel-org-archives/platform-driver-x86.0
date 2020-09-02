@@ -1,89 +1,50 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/3] integrity: Move import of MokListRT certs to a
- separate routine
-Date: Wed, 2 Sep 2020 10:55:21 +0300
-Message-ID: <CAHp75Vec0a3LC7dGY6wacQu0brc+Zjfowt6kGdcZ9sfMzoDR9g@mail.gmail.com>
-References: <20200826034455.28707-1-lszubowi@redhat.com> <20200826034455.28707-3-lszubowi@redhat.com>
+Subject: Re: sysfs output without newlines
+Date: Wed, 2 Sep 2020 10:57:36 +0300
+Message-ID: <CAHp75VekCuRCxg_J1V4Rsfq6LEfkH+EC8WEhFzteGpuR51WpCQ@mail.gmail.com>
+References: <0f837bfb394ac632241eaac3e349b2ba806bce09.camel@perches.com>
+ <4cd6275c-6e95-3aeb-9924-141f62e00449@linux.com>
+ <b64a4cb0ee68fee01973616e5ef0f299ac191f6d.camel@perches.com>
+ <5f0b48e0291b4b54bc1caeb8b5715c65@AcuMS.aculab.com>
+ <20200901172230.531decf6@suzdal.zaitcev.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200826034455.28707-3-lszubowi@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lenny Szubowicz <lszubowi@redhat.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-efi <linux-efi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Kees Cook <keescook@chromium.org>, Mimi Zohar <zohar@linux.ibm.com>, Borislav Petkov <bp@alien8.de>, Peter Jones <pjones@redhat.com>, David Howells <dhowells@redhat.com>, Prarit Bhargava <prarit@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
+In-Reply-To: <20200901172230.531decf6@suzdal.zaitcev.lan>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
+To: Pete Zaitcev <zaitcev@redhat.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, =?UTF-8?Q?Kai_M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, Maxim Levitsky <maximlevitsky@gmail.com>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, Madalin Bucur <madalin.bucur@nxp.com>, Michal Simek <michal.simek@xilinx.com>, Alex Dewar <alex.dewar90@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jakub Kicinski <kuba@kernel.org>, Tomas Winkler <tomas.winkler@intel.com>, Arnd Bergmann <arnd@arndb.de>, "platform-driver-x86@vger.kernel.org" <platform>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Wed, Aug 26, 2020 at 6:45 AM Lenny Szubowicz <lszubowi@redhat.com> wrote:
+On Wed, Sep 2, 2020 at 1:24 AM Pete Zaitcev <zaitcev@redhat.com> wrote:
 >
-> Move the loading of certs from the UEFI MokListRT into a separate
-> routine to facilitate additional MokList functionality.
+> On Tue, 1 Sep 2020 09:07:42 +0000
+> David Laight <David.Laight@ACULAB.COM> wrote:
 >
-> There is no visible functional change as a result of this patch.
-> Although the UEFI dbx certs are now loaded before the MokList certs,
-> they are loaded onto different key rings. So the order of the keys
-> on their respective key rings is the same.
+> > The shell will remove trailing '\n' (but not '\r') from:
+> >       foo=$(cat bar)
+> > So shell scripts are unlikely to be affected.
+>
+> Surprisingly enough, Python is okay with this:
+>
+>     with open("/proc/sys/net/ipv4/ip_forward",'r') as fp:
+>         print(int(fp.read()))
+>
+> Nonetheless, I would rather no add those newlines. I saw enough
+> weird software that is sensitive where it's should not bee.
 
-...
-
->  /*
-> + * load_moklist_certs() - Load MokList certs
-> + *
-> + * Returns:    Summary error status
-> + *
-> + * Load the certs contained in the UEFI MokListRT database into the
-> + * platform trusted keyring.
-> + */
-
-Hmm... Is it intentionally kept out of kernel doc format?
-
-> +static int __init load_moklist_certs(void)
-> +{
-> +       efi_guid_t mok_var = EFI_SHIM_LOCK_GUID;
-> +       void *mok = NULL;
-> +       unsigned long moksize = 0;
-> +       efi_status_t status;
-> +       int rc = 0;
-
-Redundant assignment (see below).
-
-> +       /* Get MokListRT. It might not exist, so it isn't an error
-> +        * if we can't get it.
-> +        */
-> +       mok = get_cert_list(L"MokListRT", &mok_var, &moksize, &status);
-
-> +       if (!mok) {
-
-Why not positive conditional? Sometimes ! is hard to notice.
-
-> +               if (status == EFI_NOT_FOUND)
-> +                       pr_debug("MokListRT variable wasn't found\n");
-> +               else
-> +                       pr_info("Couldn't get UEFI MokListRT\n");
-> +       } else {
-> +               rc = parse_efi_signature_list("UEFI:MokListRT",
-> +                                             mok, moksize, get_handler_for_db);
-> +               if (rc)
-> +                       pr_err("Couldn't parse MokListRT signatures: %d\n", rc);
-> +               kfree(mok);
-
- kfree(...)
- if (rc)
-  ...
- return rc;
-
-And with positive conditional there will be no need to have redundant
-'else' followed by additional level of indentation.
-
-> +       }
-
-> +       return rc;
-
-return 0;
-
-> +}
-
-P.S. Yes, I see that the above was in the original code, so, consider
-my comments as suggestions to improve the code.
+There are still a lot of scripts in PHP and Perl. Besides that I think
+the many users of such files are in clouds, means Go should be checked
+even before these.
 
 -- 
 With Best Regards,
