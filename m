@@ -1,103 +1,81 @@
 From: Lenny Szubowicz <lszubowi@redhat.com>
-Subject: Re: [PATCH 2/3] integrity: Move import of MokListRT certs to a
- separate routine
-Date: Fri, 4 Sep 2020 20:57:57 -0400
-Message-ID: <ada8f771-5717-58f1-8352-feffea8703b4@redhat.com>
+Subject: Re: [PATCH 0/3] integrity: Load certs from EFI MOK config table
+Date: Fri, 4 Sep 2020 21:30:38 -0400
+Message-ID: <1e4d1f97-e1c1-d76d-1f91-135290da625c@redhat.com>
 References: <20200826034455.28707-1-lszubowi@redhat.com>
- <20200826034455.28707-3-lszubowi@redhat.com>
- <CAHp75Vec0a3LC7dGY6wacQu0brc+Zjfowt6kGdcZ9sfMzoDR9g@mail.gmail.com>
+ <6f63a0cf1349281ef2c407d95abedfba1f90345a.camel@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vec0a3LC7dGY6wacQu0brc+Zjfowt6kGdcZ9sfMzoDR9g@mail.gmail.com>
+Return-path: <linux-security-module-owner@vger.kernel.org>
+In-Reply-To: <6f63a0cf1349281ef2c407d95abedfba1f90345a.camel@linux.ibm.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-efi <linux-efi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-security-module <linux-security-module@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Kees Cook <keescook@chromium.org>, Mimi Zohar <zohar@linux.ibm.com>, Borislav Petkov <bp@alien8.de>, Peter Jones <pjones@redhat.com>, David Howells <dhowells@redhat.com>, Prarit Bhargava <prarit@redhat.com>
+Sender: owner-linux-security-module@vger.kernel.org
+To: Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-security-module@vger.kernel.org, ardb@kernel.org, jmorris@namei.org, serge@hallyn.com, keescook@chromium.org, bp@alien8.de, pjones@redhat.com, dhowells@redhat.com, prarit@redhat.com
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 9/2/20 3:55 AM, Andy Shevchenko wrote:
-> On Wed, Aug 26, 2020 at 6:45 AM Lenny Szubowicz <lszubowi@redhat.com> wrote:
+On 8/26/20 7:55 AM, Mimi Zohar wrote:
+> Hi Lenny,
+> 
+> On Tue, 2020-08-25 at 23:44 -0400, Lenny Szubowicz wrote:
+>> Because of system-specific EFI firmware limitations,
+>> EFI volatile variables may not be capable of holding the
+>> required contents of the Machine Owner Key (MOK) certificate
+>> store. Therefore, an EFI boot loader may pass the MOK certs
+>> via a EFI configuration table created specifically for this
+>> purpose to avoid this firmware limitation.
 >>
->> Move the loading of certs from the UEFI MokListRT into a separate
->> routine to facilitate additional MokList functionality.
+>> An EFI configuration table is a simpler and more robust mechanism
+>> compared to EFI variables and is well suited for one-way passage
+>> of static information from a pre-OS environment to the kernel.
 >>
->> There is no visible functional change as a result of this patch.
->> Although the UEFI dbx certs are now loaded before the MokList certs,
->> they are loaded onto different key rings. So the order of the keys
->> on their respective key rings is the same.
+>> This patch set does not remove the support for loading certs
+>> from the EFI MOK variables into the platform key ring.
+>> However, if both the EFI MOK config table and corresponding
+>> EFI MOK variables are present, the MOK table is used as the
+>> source of MOK certs.
+>>
+>> The contents of the individual named MOK config table entries are
+>> made available to user space via read-only sysfs binary files under:
+>>
+>> 	/sys/firmware/efi/mok-variables/
 > 
-> ...
+> Please include a security section in this cover letter with a
+> comparison of the MoK variables and the EFI configuration table
+> security (eg. same mechanism?).  Has mokutil been updated?  If so,
+> please provide a link.
 > 
->>   /*
->> + * load_moklist_certs() - Load MokList certs
->> + *
->> + * Returns:    Summary error status
->> + *
->> + * Load the certs contained in the UEFI MokListRT database into the
->> + * platform trusted keyring.
->> + */
-> 
-> Hmm... Is it intentionally kept out of kernel doc format?
-
-Yes. Since this is a static local routine, I thought that it
-shouldn't be included by kerneldoc. But I wanted to generally adhere
-to the kernel doc conventions for a routine header. To that end,
-in V2 I move the "Return:" section to come after the short description.
-
-> 
->> +static int __init load_moklist_certs(void)
->> +{
->> +       efi_guid_t mok_var = EFI_SHIM_LOCK_GUID;
->> +       void *mok = NULL;
->> +       unsigned long moksize = 0;
->> +       efi_status_t status;
->> +       int rc = 0;
-> 
-> Redundant assignment (see below).
-> 
->> +       /* Get MokListRT. It might not exist, so it isn't an error
->> +        * if we can't get it.
->> +        */
->> +       mok = get_cert_list(L"MokListRT", &mok_var, &moksize, &status);
-> 
->> +       if (!mok) {
-> 
-> Why not positive conditional? Sometimes ! is hard to notice.
-> 
->> +               if (status == EFI_NOT_FOUND)
->> +                       pr_debug("MokListRT variable wasn't found\n");
->> +               else
->> +                       pr_info("Couldn't get UEFI MokListRT\n");
->> +       } else {
->> +               rc = parse_efi_signature_list("UEFI:MokListRT",
->> +                                             mok, moksize, get_handler_for_db);
->> +               if (rc)
->> +                       pr_err("Couldn't parse MokListRT signatures: %d\n", rc);
->> +               kfree(mok);
-> 
->   kfree(...)
->   if (rc)
->    ...
->   return rc;
-> 
-> And with positive conditional there will be no need to have redundant
-> 'else' followed by additional level of indentation.
-> 
->> +       }
-> 
->> +       return rc;
-> 
-> return 0;
-> 
->> +}
-> 
-> P.S. Yes, I see that the above was in the original code, so, consider
-> my comments as suggestions to improve the code.
+> Mimi
 > 
 
-I agree that your suggestions improve the code. I've incorporated this
-into V2.
+I've included some more information about the MOK config table
+entries in the V2 cover letter.
 
-                        -Lenny.
+[root@localhost ~]# ls -l /sys/firmware/efi/mok-variables
+total 0
+-r--------. 1 root root     0 Sep  4 21:10 MokIgnoreDB
+-r--------. 1 root root 18184 Sep  4 21:10 MokListRT
+-r--------. 1 root root    76 Sep  4 21:10 MokListXRT
+-r--------. 1 root root     0 Sep  4 21:10 MokSBStateRT
+
+The roughly 18KB of data in /sys/firmware/efi/mok-variables/MokListRT
+is exactly the same data that is returned by a EFI GetVariable()
+call for MokListRT. Of course, that's on a system where the EFI
+firmware can handle a volatile variable with that much data.
+
+Therefore, load_moklist_certs() can pass the mokvar_entry data directly
+to parse_efi_signature_list() in the same way it does for the
+efi.get_variable() data that it obtains via get_cert_list().
+
+Unfortunately, there is no updated mokutil available yet that
+uses the new sysfs entries.
+
+Also relevant is availability of an updated shim, which builds
+the EFI MOK variable configuration table.
+
+Of course, both of these should show up as upstream pull requests
+and also in Fedora rawhide at some point.
+
+Thank you for your review.
+
+                       -Lenny.
