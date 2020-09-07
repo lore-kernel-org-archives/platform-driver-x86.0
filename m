@@ -1,7 +1,7 @@
 From: Mike Travis <mike.travis@hpe.com>
-Subject: [PATCH 08/12] x86/platform/uv: Adjust GAM MMR references affected by UV5 updates
-Date: Mon, 07 Sep 2020 13:54:38 -0500
-Message-ID: <20200907185431.162991006@hpe.com>
+Subject: [PATCH 11/12] x86/platform/uv: Update UV5 TSC Checking
+Date: Mon, 07 Sep 2020 13:54:41 -0500
+Message-ID: <20200907185431.445769235@hpe.com>
 References: <20200907185430.363197758@hpe.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -11,52 +11,73 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>, "H. Peter Anvin" <hpa@zytor.com>, Russ Anderson <russ.anderson@hpe.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Alexandre Chartre <alexandre.chartre@oracle.com>, Jian Cai <caij2003@gmail.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Make modifications to the GAM MMR mappings to accommodate changes for UV5.
+Update check of BIOS TSC sync status to include both possible "invalid"
+states provided by newer UV5 BIOS.
 
 Signed-off-by: Mike Travis <mike.travis@hpe.com>
-Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
 Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- arch/x86/kernel/apic/x2apic_uv_x.c |   30 +++++++++++++++++++++++++-----
- 1 file changed, 25 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/uv/uv_hub.h   |    2 +-
+ arch/x86/kernel/apic/x2apic_uv_x.c |   24 ++++++++++--------------
+ 2 files changed, 11 insertions(+), 15 deletions(-)
 
+--- linux.orig/arch/x86/include/asm/uv/uv_hub.h
++++ linux/arch/x86/include/asm/uv/uv_hub.h
+@@ -727,7 +727,7 @@ extern void uv_nmi_setup_hubless(void);
+ #define UVH_TSC_SYNC_SHIFT_UV2K	16	/* UV2/3k have different bits */
+ #define UVH_TSC_SYNC_MASK	3	/* 0011 */
+ #define UVH_TSC_SYNC_VALID	3	/* 0011 */
+-#define UVH_TSC_SYNC_INVALID	2	/* 0010 */
++#define UVH_TSC_SYNC_UNKNOWN	0	/* 0000 */
+ 
+ /* BMC sets a bit this MMR non-zero before sending an NMI */
+ #define UVH_NMI_MMR		UVH_BIOS_KERNEL_MMR
 --- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
 +++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -932,12 +932,32 @@ static __init void map_gru_high(int max_
+@@ -200,36 +200,32 @@ static void __init uv_tsc_check_sync(voi
+ 	int sync_state;
+ 	int mmr_shift;
+ 	char *state;
+-	bool valid;
  
- static __init void map_mmr_high(int max_pnode)
- {
--	union uvh_rh_gam_mmr_overlay_config_u mmr;
--	int shift = UVH_RH_GAM_MMR_OVERLAY_CONFIG_BASE_SHFT;
-+	unsigned long base;
-+	int shift;
-+	bool enable;
+-	/* Accommodate different UV arch BIOSes */
++	/* Different returns from different UV BIOS versions */
+ 	mmr = uv_early_read_mmr(UVH_TSC_SYNC_MMR);
+ 	mmr_shift =
+ 		is_uv2_hub() ? UVH_TSC_SYNC_SHIFT_UV2K : UVH_TSC_SYNC_SHIFT;
+ 	sync_state = (mmr >> mmr_shift) & UVH_TSC_SYNC_MASK;
  
--	mmr.v = uv_read_local_mmr(UVH_RH_GAM_MMR_OVERLAY_CONFIG);
--	if (mmr.s.enable)
--		map_high("MMR", mmr.s.base, shift, shift, max_pnode, map_uc);
-+	if (UVH_RH10_GAM_MMR_OVERLAY_CONFIG) {
-+		union uvh_rh10_gam_mmr_overlay_config_u mmr;
++	/* Check if TSC is valid for all sockets */
+ 	switch (sync_state) {
+ 	case UVH_TSC_SYNC_VALID:
+ 		state = "in sync";
+-		valid = true;
++		mark_tsc_async_resets("UV BIOS");
+ 		break;
+ 
+-	case UVH_TSC_SYNC_INVALID:
+-		state = "unstable";
+-		valid = false;
++	/* If BIOS state unknown, don't do anything */
++	case UVH_TSC_SYNC_UNKNOWN:
++		state = "unknown";
+ 		break;
 +
-+		mmr.v = uv_read_local_mmr(UVH_RH10_GAM_MMR_OVERLAY_CONFIG);
-+		enable = mmr.s.enable;
-+		base = mmr.s.base;
-+		shift = UVH_RH10_GAM_MMR_OVERLAY_CONFIG_BASE_SHFT;
-+	} else if (UVH_RH_GAM_MMR_OVERLAY_CONFIG) {
-+		union uvh_rh_gam_mmr_overlay_config_u mmr;
-+
-+		mmr.v = uv_read_local_mmr(UVH_RH_GAM_MMR_OVERLAY_CONFIG);
-+		enable = mmr.s.enable;
-+		base = mmr.s.base;
-+		shift = UVH_RH_GAM_MMR_OVERLAY_CONFIG_BASE_SHFT;
-+	} else {
-+		pr_err("UV:%s:RH_GAM_MMR_OVERLAY_CONFIG MMR undefined?\n",
-+			__func__);
-+		return;
-+	}
-+
-+	if (enable)
-+		map_high("MMR", base, shift, shift, max_pnode, map_uc);
- 	else
- 		pr_info("UV: MMR disabled\n");
++	/* Otherwise, BIOS indicates problem with TSC */
+ 	default:
+-		state = "unknown: assuming valid";
+-		valid = true;
++		state = "unstable";
++		mark_tsc_unstable("UV BIOS");
+ 		break;
+ 	}
+ 	pr_info("UV: TSC sync state from BIOS:0%d(%s)\n", sync_state, state);
+-
+-	/* Mark flag that says TSC != 0 is valid for socket 0 */
+-	if (valid)
+-		mark_tsc_async_resets("UV BIOS");
+-	else
+-		mark_tsc_unstable("UV BIOS");
  }
+ 
+ /* Selector for (4|4A|5) structs */
