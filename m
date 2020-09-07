@@ -1,7 +1,7 @@
 From: Mike Travis <mike.travis@hpe.com>
-Subject: [PATCH 06/12] x86/platform/uv: Add and Decode Arch Type in UVsystab
-Date: Mon, 07 Sep 2020 13:54:36 -0500
-Message-ID: <20200907185430.977855369@hpe.com>
+Subject: [PATCH 09/12] x86/platform/uv: Update UV5 MMR references in UV GRU
+Date: Mon, 07 Sep 2020 13:54:39 -0500
+Message-ID: <20200907185431.257694099@hpe.com>
 References: <20200907185430.363197758@hpe.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -11,350 +11,67 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>, "H. Peter Anvin" <hpa@zytor.com>, Russ Anderson <russ.anderson@hpe.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Alexandre Chartre <alexandre.chartre@oracle.com>, Jian Cai <caij2003@gmail.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-A patch to add and process the UV Arch Type field in the UVsystab passed
-from UV BIOS to the kernel.  This allows the system to be recognized
-without relying on the OEM_ID which OEMs want to change.
+Make modifications to the GRU mappings to accommodate changes for UV5.
 
 Signed-off-by: Mike Travis <mike.travis@hpe.com>
 Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
 Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- arch/x86/include/asm/uv/bios.h     |   17 +++-
- arch/x86/kernel/apic/x2apic_uv_x.c |  135 +++++++++++++++++++++++++++++++------
- arch/x86/platform/uv/bios_uv.c     |   28 +++++--
- 3 files changed, 150 insertions(+), 30 deletions(-)
+ arch/x86/kernel/apic/x2apic_uv_x.c |   30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
---- linux.orig/arch/x86/include/asm/uv/bios.h
-+++ linux/arch/x86/include/asm/uv/bios.h
-@@ -5,8 +5,9 @@
- /*
-  * UV BIOS layer definitions.
-  *
-- *  Copyright (c) 2008-2009 Silicon Graphics, Inc.  All Rights Reserved.
-- *  Copyright (c) Russ Anderson <rja@sgi.com>
-+ * Copyright (C) 2018-2020 Hewlett Packard Enterprise Development LP
-+ * Copyright (C) 2007-2017 Silicon Graphics, Inc. All rights reserved.
-+ * Copyright (c) Russ Anderson <rja@sgi.com>
-  */
- 
- #include <linux/rtc.h>
-@@ -71,6 +72,11 @@ struct uv_gam_range_entry {
- 	u32	limit;		/* PA bits 56:26 (UV_GAM_RANGE_SHFT) */
- };
- 
-+#define	UV_AT_SIZE	8	/* 7 character arch type + NULL char */
-+struct uv_arch_type_entry {
-+	char	archtype[UV_AT_SIZE];
-+};
-+
- #define	UV_SYSTAB_SIG			"UVST"
- #define	UV_SYSTAB_VERSION_1		1	/* UV2/3 BIOS version */
- #define	UV_SYSTAB_VERSION_UV4		0x400	/* UV4 BIOS base version */
-@@ -79,10 +85,14 @@ struct uv_gam_range_entry {
- #define	UV_SYSTAB_VERSION_UV4_3		0x403	/* - GAM Range PXM Value */
- #define	UV_SYSTAB_VERSION_UV4_LATEST	UV_SYSTAB_VERSION_UV4_3
- 
-+#define	UV_SYSTAB_VERSION_UV5		0x500	/* UV5 GAM base version */
-+#define	UV_SYSTAB_VERSION_UV5_LATEST	UV_SYSTAB_VERSION_UV5
-+
- #define	UV_SYSTAB_TYPE_UNUSED		0	/* End of table (offset == 0) */
- #define	UV_SYSTAB_TYPE_GAM_PARAMS	1	/* GAM PARAM conversions */
- #define	UV_SYSTAB_TYPE_GAM_RNG_TBL	2	/* GAM entry table */
--#define	UV_SYSTAB_TYPE_MAX		3
-+#define	UV_SYSTAB_TYPE_ARCH_TYPE	3	/* UV arch type */
-+#define	UV_SYSTAB_TYPE_MAX		4
- 
- /*
-  * The UV system table describes specific firmware
-@@ -133,6 +143,7 @@ extern s64 uv_bios_reserved_page_pa(u64,
- extern int uv_bios_set_legacy_vga_target(bool decode, int domain, int bus);
- 
- extern int uv_bios_init(void);
-+extern unsigned long get_uv_systab_phys(bool msg);
- 
- extern unsigned long sn_rtc_cycles_per_second;
- extern int uv_type;
 --- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
 +++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -32,7 +32,8 @@ static u64			gru_start_paddr, gru_end_pa
- static union uvh_apicid		uvh_apicid;
- static int			uv_node_id;
+@@ -83,6 +83,9 @@ static unsigned long __init uv_early_rea
  
--/* Unpack OEM/TABLE ID's to be NULL terminated strings */
-+/* Unpack AT/OEM/TABLE ID's to be NULL terminated strings */
-+static u8 uv_archtype[UV_AT_SIZE];
- static u8 oem_id[ACPI_OEM_ID_SIZE + 1];
- static u8 oem_table_id[ACPI_OEM_TABLE_ID_SIZE + 1];
- 
-@@ -287,20 +288,104 @@ static void __init uv_stringify(int len,
- 	strncpy(to, from, len-1);
- }
- 
-+/* Find UV arch type entry in UVsystab */
-+static unsigned long __init early_find_archtype(struct uv_systab *st)
-+{
-+	int i;
-+
-+	for (i = 0; st->entry[i].type != UV_SYSTAB_TYPE_UNUSED; i++) {
-+		unsigned long ptr = st->entry[i].offset;
-+
-+		if (!ptr)
-+			continue;
-+		ptr += (unsigned long)st;
-+		if (st->entry[i].type == UV_SYSTAB_TYPE_ARCH_TYPE)
-+			return ptr;
-+	}
-+	return 0;
-+}
-+
-+/* Validate UV arch type field in UVsystab */
-+static int __init decode_arch_type(unsigned long ptr)
-+{
-+	struct uv_arch_type_entry *uv_ate = (struct uv_arch_type_entry *)ptr;
-+	int n = strlen(uv_ate->archtype);
-+
-+	if (n > 0 && n < sizeof(uv_ate->archtype)) {
-+		pr_info("UV: UVarchtype received from BIOS\n");
-+		uv_stringify(UV_AT_SIZE, uv_archtype, uv_ate->archtype);
-+		return 1;
-+	}
-+	return 0;
-+}
-+
-+/* Determine if UV arch type entry might exist in UVsystab */
-+static int __init early_get_arch_type(void)
-+{
-+	unsigned long uvst_physaddr, uvst_size, ptr;
-+	struct uv_systab *st;
-+	u32 rev;
-+	int ret;
-+
-+	uvst_physaddr = get_uv_systab_phys(0);
-+	if (!uvst_physaddr)
-+		return 0;
-+
-+	st = early_memremap_ro(uvst_physaddr, sizeof(struct uv_systab));
-+	if (!st) {
-+		pr_err("UV: Cannot access UVsystab, remap failed\n");
-+		return 0;
-+	}
-+
-+	rev = st->revision;
-+	if (rev < UV_SYSTAB_VERSION_UV5) {
-+		early_memunmap(st, sizeof(struct uv_systab));
-+		return 0;
-+	}
-+
-+	uvst_size = st->size;
-+	early_memunmap(st, sizeof(struct uv_systab));
-+	st = early_memremap_ro(uvst_physaddr, uvst_size);
-+	if (!st) {
-+		pr_err("UV: Cannot access UVarchtype, remap failed\n");
-+		return 0;
-+	}
-+
-+	ptr = early_find_archtype(st);
-+	if (!ptr) {
-+		early_memunmap(st, uvst_size);
-+		return 0;
-+	}
-+
-+	ret = decode_arch_type(ptr);
-+	early_memunmap(st, uvst_size);
-+	return ret;
-+}
-+
- static int __init uv_set_system_type(char *_oem_id)
+ static inline bool is_GRU_range(u64 start, u64 end)
  {
- 	int pnodeid;
- 
--	/* Save OEM ID */
-+	/* Save OEM_ID passed from ACPI MADT */
- 	uv_stringify(sizeof(oem_id), oem_id, _oem_id);
- 
--	/* Set hubless type if true */
--	if (strncmp(oem_id, "SGI", 3) != 0) {
--		if (strncmp(oem_id, "NSGI", 4) != 0)
-+	/* Check if BIOS sent us a UVarchtype */
-+	if (!early_get_arch_type())
++	if (!gru_start_paddr)
++		return false;
 +
-+		/* If not use OEM ID for UVarchtype */
-+		uv_stringify(UV_AT_SIZE, uv_archtype, _oem_id);
-+
-+	/* Check if not hubbed */
-+	if (strncmp(uv_archtype, "SGI", 3) != 0) {
-+
-+		/* (Not hubbed), check if not hubless */
-+		if (strncmp(uv_archtype, "NSGI", 4) != 0)
-+
-+			/* (Not hubless), not a UV */
- 			return 0;
- 
- 		/* UV4 Hubless: CH */
--		if (strncmp(oem_id, "NSGI4", 5) == 0)
-+		if (strncmp(uv_archtype, "NSGI4", 5) == 0)
- 			uv_hubless_system = 0x11;
- 
- 		/* UV3 Hubless: UV300/MC990X w/o hub */
-@@ -319,10 +404,10 @@ static int __init uv_set_system_type(cha
- 
- 	/* Set hubbed type if true */
- 	uv_hub_info->hub_revision =
--		!strncmp(oem_id, "SGI5", 4) ? UV5_HUB_REVISION_BASE :
--		!strncmp(oem_id, "SGI4", 4) ? UV4_HUB_REVISION_BASE :
--		!strncmp(oem_id, "SGI3", 4) ? UV3_HUB_REVISION_BASE :
--		!strcmp(oem_id, "SGI2") ? UV2_HUB_REVISION_BASE : 0;
-+		!strncmp(uv_archtype, "SGI5", 4) ? UV5_HUB_REVISION_BASE :
-+		!strncmp(uv_archtype, "SGI4", 4) ? UV4_HUB_REVISION_BASE :
-+		!strncmp(uv_archtype, "SGI3", 4) ? UV3_HUB_REVISION_BASE :
-+		!strcmp(uv_archtype, "SGI2") ? UV2_HUB_REVISION_BASE : 0;
- 
- 	switch (uv_hub_info->hub_revision) {
- 	case UV5_HUB_REVISION_BASE:
-@@ -393,8 +478,7 @@ static int __init uv_acpi_madt_oem_check
- 	return 0;
- 
- badbios:
--	pr_err("UV: OEM_ID:%s OEM_TABLE_ID:%s\n", oem_id, oem_table_id);
--	pr_err("UV: Current UV Type or BIOS not supported\n");
-+	pr_err("UV: UVarchtype:%s not supported\n", uv_archtype);
- 	BUG();
+ 	return start >= gru_start_paddr && end <= gru_end_paddr;
  }
  
-@@ -1187,6 +1271,7 @@ static void __init decode_gam_rng_tbl(un
- 	pr_info("UV: GRT: %d entries, sockets(min:%x,max:%x) pnodes(min:%x,max:%x)\n", index, _min_socket, _max_socket, _min_pnode, _max_pnode);
- }
- 
-+/* Walk through UVsystab decoding the fields */
- static int __init decode_uv_systab(void)
+@@ -914,13 +917,24 @@ static __init void map_high(char *id, un
+ static __init void map_gru_high(int max_pnode)
  {
- 	struct uv_systab *st;
-@@ -1216,7 +1301,8 @@ static int __init decode_uv_systab(void)
- 		if (!ptr)
- 			continue;
- 
--		ptr = ptr + (unsigned long)st;
-+		/* point to payload */
-+		ptr += (unsigned long)st;
- 
- 		switch (st->entry[i].type) {
- 		case UV_SYSTAB_TYPE_GAM_PARAMS:
-@@ -1226,6 +1312,15 @@ static int __init decode_uv_systab(void)
- 		case UV_SYSTAB_TYPE_GAM_RNG_TBL:
- 			decode_gam_rng_tbl(ptr);
- 			break;
+ 	union uvh_rh_gam_gru_overlay_config_u gru;
+-	int shift = UVH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT;
+-	unsigned long mask = UVH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_MASK;
+-	unsigned long base;
++	unsigned long mask, base;
++	int shift;
 +
-+		case UV_SYSTAB_TYPE_ARCH_TYPE:
-+			/* already processed in early startup */
-+			break;
-+
-+		default:
-+			pr_err("UV:%s:Unrecognized UV_SYSTAB_TYPE:%d, skipped\n",
-+				__func__, st->entry[i].type);
-+			break;
- 		}
- 	}
- 	return 0;
-@@ -1266,7 +1361,7 @@ static void __init build_socket_tables(v
- 			pr_info("UV: No UVsystab socket table, ignoring\n");
- 			return;
- 		}
--		pr_crit("UV: Error: UVsystab address translations not available!\n");
-+		pr_err("UV: Error: UVsystab address translations not available!\n");
- 		BUG();
- 	}
++	if (UVH_RH_GAM_GRU_OVERLAY_CONFIG) {
++		gru.v = uv_read_local_mmr(UVH_RH_GAM_GRU_OVERLAY_CONFIG);
++		shift = UVH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT;
++		mask = UVH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_MASK;
++	} else if (UVH_RH10_GAM_GRU_OVERLAY_CONFIG) {
++		gru.v = uv_read_local_mmr(UVH_RH10_GAM_GRU_OVERLAY_CONFIG);
++		shift = UVH_RH10_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT;
++		mask = UVH_RH10_GAM_GRU_OVERLAY_CONFIG_BASE_MASK;
++	} else {
++		pr_err("UV: GRU unavailable (no MMR)\n");
++		return;
++	}
  
-@@ -1392,9 +1487,9 @@ static int __maybe_unused proc_hubless_s
- 	return 0;
- }
- 
--static int __maybe_unused proc_oemid_show(struct seq_file *file, void *data)
-+static int __maybe_unused proc_archtype_show(struct seq_file *file, void *data)
- {
--	seq_printf(file, "%s/%s\n", oem_id, oem_table_id);
-+	seq_printf(file, "%s/%s\n", uv_archtype, oem_table_id);
- 	return 0;
- }
- 
-@@ -1403,7 +1498,7 @@ static __init void uv_setup_proc_files(i
- 	struct proc_dir_entry *pde;
- 
- 	pde = proc_mkdir(UV_PROC_NODE, NULL);
--	proc_create_single("oemid", 0, pde, proc_oemid_show);
-+	proc_create_single("archtype", 0, pde, proc_archtype_show);
- 	if (hubless)
- 		proc_create_single("hubless", 0, pde, proc_hubless_show);
- 	else
-@@ -1455,12 +1550,14 @@ static void __init uv_system_init_hub(vo
- 
- 	map_low_mmrs();
- 
--	/* Get uv_systab for decoding: */
-+	/* Get uv_systab for decoding, setup UV BIOS calls */
- 	uv_bios_init();
- 
- 	/* If there's an UVsystab problem then abort UV init: */
--	if (decode_uv_systab() < 0)
-+	if (decode_uv_systab() < 0) {
-+		pr_err("UV: Mangled UVsystab format\n");
+-	gru.v = uv_read_local_mmr(UVH_RH_GAM_GRU_OVERLAY_CONFIG);
+ 	if (!gru.s.enable) {
+-		pr_info("UV: GRU disabled\n");
++		pr_info("UV: GRU disabled (by BIOS)\n");
  		return;
-+	}
+ 	}
  
- 	build_socket_tables();
- 	build_uv_gr_table();
---- linux.orig/arch/x86/platform/uv/bios_uv.c
-+++ linux/arch/x86/platform/uv/bios_uv.c
-@@ -2,8 +2,9 @@
- /*
-  * BIOS run time interface routines.
-  *
-- *  Copyright (c) 2008-2009 Silicon Graphics, Inc.  All Rights Reserved.
-- *  Copyright (c) Russ Anderson <rja@sgi.com>
-+ * Copyright (C) 2018-2020 Hewlett Packard Enterprise Development LP
-+ * Copyright (C) 2007-2017 Silicon Graphics, Inc. All rights reserved.
-+ * Copyright (c) Russ Anderson <rja@sgi.com>
-  */
- 
- #include <linux/efi.h>
-@@ -169,16 +170,27 @@ int uv_bios_set_legacy_vga_target(bool d
- 				(u64)decode, (u64)domain, (u64)bus, 0, 0);
+@@ -1289,7 +1303,11 @@ static void __init uv_init_hub_info(stru
+ 	/* Show system specific info: */
+ 	pr_info("UV: N:%d M:%d m_shift:%d n_lshift:%d\n", hi->n_val, hi->m_val, hi->m_shift, hi->n_lshift);
+ 	pr_info("UV: gpa_mask/shift:0x%lx/%d pnode_mask:0x%x apic_pns:%d\n", hi->gpa_mask, hi->gpa_shift, hi->pnode_mask, hi->apic_pnode_shift);
+-	pr_info("UV: mmr_base/shift:0x%lx/%ld gru_base/shift:0x%lx/%ld\n", hi->global_mmr_base, hi->global_mmr_shift, hi->global_gru_base, hi->global_gru_shift);
++	pr_info("UV: mmr_base/shift:0x%lx/%ld\n", hi->global_mmr_base, hi->global_mmr_shift);
++	if (hi->global_gru_base)
++		pr_info("UV: gru_base/shift:0x%lx/%ld\n",
++			hi->global_gru_base, hi->global_gru_shift);
++
+ 	pr_info("UV: gnode_upper:0x%lx gnode_extra:0x%x\n", hi->gnode_upper, hi->gnode_extra);
  }
  
--int uv_bios_init(void)
-+unsigned long get_uv_systab_phys(bool msg)
- {
--	uv_systab = NULL;
- 	if ((uv_systab_phys == EFI_INVALID_TABLE_ADDR) ||
- 	    !uv_systab_phys || efi_runtime_disabled()) {
--		pr_crit("UV: UVsystab: missing\n");
--		return -EEXIST;
-+		if (msg)
-+			pr_crit("UV: UVsystab: missing\n");
-+		return 0;
- 	}
-+	return uv_systab_phys;
-+}
-+
-+int uv_bios_init(void)
-+{
-+	unsigned long uv_systab_phys_addr;
-+
-+	uv_systab = NULL;
-+	uv_systab_phys_addr = get_uv_systab_phys(1);
-+	if (!uv_systab_phys_addr)
-+		return -EEXIST;
- 
--	uv_systab = ioremap(uv_systab_phys, sizeof(struct uv_systab));
-+	uv_systab = ioremap(uv_systab_phys_addr, sizeof(struct uv_systab));
- 	if (!uv_systab || strncmp(uv_systab->signature, UV_SYSTAB_SIG, 4)) {
- 		pr_err("UV: UVsystab: bad signature!\n");
- 		iounmap(uv_systab);
-@@ -190,7 +202,7 @@ int uv_bios_init(void)
- 		int size = uv_systab->size;
- 
- 		iounmap(uv_systab);
--		uv_systab = ioremap(uv_systab_phys, size);
-+		uv_systab = ioremap(uv_systab_phys_addr, size);
- 		if (!uv_systab) {
- 			pr_err("UV: UVsystab: ioremap(%d) failed!\n", size);
- 			return -EFAULT;
