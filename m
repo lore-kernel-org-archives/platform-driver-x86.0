@@ -1,7 +1,7 @@
 From: Mike Travis <mike.travis@hpe.com>
-Subject: [PATCH 10/12] x86/platform/uv: Update Node Present Counting
-Date: Mon, 07 Sep 2020 13:54:40 -0500
-Message-ID: <20200907185431.351814173@hpe.com>
+Subject: [PATCH 12/12] x86/platform/uv: Update for UV5 NMI MMR changes
+Date: Mon, 07 Sep 2020 13:54:42 -0500
+Message-ID: <20200907185431.537894945@hpe.com>
 References: <20200907185430.363197758@hpe.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -11,56 +11,130 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>, "H. Peter Anvin" <hpa@zytor.com>, Russ Anderson <russ.anderson@hpe.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Alexandre Chartre <alexandre.chartre@oracle.com>, Jian Cai <caij2003@gmail.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-The changes in the UV5 arch shrunk the NODE PRESENT table to just 2x64
-entries (128 total) so are in to 64 bit MMRs instead of a depth of 64
-bits in an array.  Adjust references when counting up the nodes present.
+The UV NMI MMR addresses and fields moved between UV4 and UV5
+necessitating a rewrite of the UV NMI handler.  Adjust references
+to accommodate those changes.
 
 Signed-off-by: Mike Travis <mike.travis@hpe.com>
 Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
 Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- arch/x86/kernel/apic/x2apic_uv_x.c |   26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/uv/uv_hub.h |   13 -------
+ arch/x86/platform/uv/uv_nmi.c    |   65 +++++++++++++++++++++++++++++++++------
+ 2 files changed, 55 insertions(+), 23 deletions(-)
 
---- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -1437,20 +1437,32 @@ static int __init decode_uv_systab(void)
- /* Set up physical blade translations from UVH_NODE_PRESENT_TABLE */
- static __init void boot_init_possible_blades(struct uv_hub_info_s *hub_info)
- {
-+	unsigned long np;
- 	int i, uv_pb = 0;
+--- linux.orig/arch/x86/include/asm/uv/uv_hub.h
++++ linux/arch/x86/include/asm/uv/uv_hub.h
+@@ -735,19 +735,6 @@ extern void uv_nmi_setup_hubless(void);
+ #define UVH_NMI_MMR_SHIFT	63
+ #define UVH_NMI_MMR_TYPE	"SCRATCH5"
  
--	pr_info("UV: NODE_PRESENT_DEPTH = %d\n", UVH_NODE_PRESENT_TABLE_DEPTH);
--	for (i = 0; i < UVH_NODE_PRESENT_TABLE_DEPTH; i++) {
--		unsigned long np;
+-/* Newer SMM NMI handler, not present in all systems */
+-#define UVH_NMI_MMRX		UVH_EVENT_OCCURRED0
+-#define UVH_NMI_MMRX_CLEAR	UVH_EVENT_OCCURRED0_ALIAS
+-#define UVH_NMI_MMRX_SHIFT	UVH_EVENT_OCCURRED0_EXTIO_INT0_SHFT
+-#define UVH_NMI_MMRX_TYPE	"EXTIO_INT0"
 -
--		np = uv_read_local_mmr(UVH_NODE_PRESENT_TABLE + i * 8);
--		if (np)
-+	if (UVH_NODE_PRESENT_TABLE) {
-+		pr_info("UV: NODE_PRESENT_DEPTH = %d\n",
-+			UVH_NODE_PRESENT_TABLE_DEPTH);
-+		for (i = 0; i < UVH_NODE_PRESENT_TABLE_DEPTH; i++) {
-+			np = uv_read_local_mmr(UVH_NODE_PRESENT_TABLE + i * 8);
- 			pr_info("UV: NODE_PRESENT(%d) = 0x%016lx\n", i, np);
+-/* Non-zero indicates newer SMM NMI handler present */
+-#define UVH_NMI_MMRX_SUPPORTED	UVH_EXTIO_INT0_BROADCAST
 -
-+			uv_pb += hweight64(np);
-+		}
-+	}
-+	if (UVH_NODE_PRESENT_0) {
-+		np = uv_read_local_mmr(UVH_NODE_PRESENT_0);
-+		pr_info("UV: NODE_PRESENT_0 = 0x%016lx\n", np);
-+		uv_pb += hweight64(np);
-+	}
-+	if (UVH_NODE_PRESENT_1) {
-+		np = uv_read_local_mmr(UVH_NODE_PRESENT_1);
-+		pr_info("UV: NODE_PRESENT_1 = 0x%016lx\n", np);
- 		uv_pb += hweight64(np);
- 	}
- 	if (uv_possible_blades != uv_pb)
- 		uv_possible_blades = uv_pb;
+-/* Indicates to BIOS that we want to use the newer SMM NMI handler */
+-#define UVH_NMI_MMRX_REQ	UVH_BIOS_KERNEL_MMR_ALIAS_2
+-#define UVH_NMI_MMRX_REQ_SHIFT	62
+-
+ struct uv_hub_nmi_s {
+ 	raw_spinlock_t	nmi_lock;
+ 	atomic_t	in_nmi;		/* flag this node in UV NMI IRQ */
+--- linux.orig/arch/x86/platform/uv/uv_nmi.c
++++ linux/arch/x86/platform/uv/uv_nmi.c
+@@ -2,8 +2,9 @@
+ /*
+  * SGI NMI support routines
+  *
+- *  Copyright (c) 2009-2013 Silicon Graphics, Inc.  All Rights Reserved.
+- *  Copyright (c) Mike Travis
++ * Copyright (C) 2018-2020 Hewlett Packard Enterprise Development LP
++ * Copyright (C) 2007-2017 Silicon Graphics, Inc. All rights reserved.
++ * Copyright (c) Mike Travis
+  */
+ 
+ #include <linux/cpu.h>
+@@ -54,6 +55,20 @@ static struct uv_hub_nmi_s **uv_hub_nmi_
+ 
+ DEFINE_PER_CPU(struct uv_cpu_nmi_s, uv_cpu_nmi);
+ 
++/* Newer SMM NMI handler, not present in all systems */
++static unsigned long uvh_nmi_mmrx;		/* UVH_EVENT_OCCURRED0/1 */
++static unsigned long uvh_nmi_mmrx_clear;	/* UVH_EVENT_OCCURRED0/1_ALIAS */
++static int uvh_nmi_mmrx_shift;			/* UVH_EVENT_OCCURRED0/1_EXTIO_INT0_SHFT */
++static int uvh_nmi_mmrx_mask;			/* UVH_EVENT_OCCURRED0/1_EXTIO_INT0_MASK */
++static char *uvh_nmi_mmrx_type;			/* "EXTIO_INT0" */
 +
-+	pr_info("UV: number nodes/possible blades %d\n", uv_pb);
++/* Non-zero indicates newer SMM NMI handler present */
++static unsigned long uvh_nmi_mmrx_supported;	/* UVH_EXTIO_INT0_BROADCAST */
++
++/* Indicates to BIOS that we want to use the newer SMM NMI handler */
++static unsigned long uvh_nmi_mmrx_req;		/* UVH_BIOS_KERNEL_MMR_ALIAS_2 */
++static int uvh_nmi_mmrx_req_shift;		/* 62 */
++
+ /* UV hubless values */
+ #define NMI_CONTROL_PORT	0x70
+ #define NMI_DUMMY_PORT		0x71
+@@ -227,13 +242,43 @@ static inline bool uv_nmi_action_is(cons
+ /* Setup which NMI support is present in system */
+ static void uv_nmi_setup_mmrs(void)
+ {
+-	if (uv_read_local_mmr(UVH_NMI_MMRX_SUPPORTED)) {
+-		uv_write_local_mmr(UVH_NMI_MMRX_REQ,
+-					1UL << UVH_NMI_MMRX_REQ_SHIFT);
+-		nmi_mmr = UVH_NMI_MMRX;
+-		nmi_mmr_clear = UVH_NMI_MMRX_CLEAR;
+-		nmi_mmr_pending = 1UL << UVH_NMI_MMRX_SHIFT;
+-		pr_info("UV: SMI NMI support: %s\n", UVH_NMI_MMRX_TYPE);
++	/* First determine arch specific MMRs to handshake with BIOS */
++	if (UVH_EVENT_OCCURRED0_EXTIO_INT0_MASK) {
++		uvh_nmi_mmrx = UVH_EVENT_OCCURRED0;
++		uvh_nmi_mmrx_clear = UVH_EVENT_OCCURRED0_ALIAS;
++		uvh_nmi_mmrx_shift = UVH_EVENT_OCCURRED0_EXTIO_INT0_SHFT;
++		uvh_nmi_mmrx_mask = UVH_EVENT_OCCURRED0_EXTIO_INT0_MASK;
++		uvh_nmi_mmrx_type = "OCRD0-EXTIO_INT0";
++
++		uvh_nmi_mmrx_supported = UVH_EXTIO_INT0_BROADCAST;
++		uvh_nmi_mmrx_req = UVH_BIOS_KERNEL_MMR_ALIAS_2;
++		uvh_nmi_mmrx_req_shift = 62;
++
++	} else if (UVH_EVENT_OCCURRED1_EXTIO_INT0_MASK) {
++		uvh_nmi_mmrx = UVH_EVENT_OCCURRED1;
++		uvh_nmi_mmrx_clear = UVH_EVENT_OCCURRED1_ALIAS;
++		uvh_nmi_mmrx_shift = UVH_EVENT_OCCURRED1_EXTIO_INT0_SHFT;
++		uvh_nmi_mmrx_mask = UVH_EVENT_OCCURRED1_EXTIO_INT0_MASK;
++		uvh_nmi_mmrx_type = "OCRD1-EXTIO_INT0";
++
++		uvh_nmi_mmrx_supported = UVH_EXTIO_INT0_BROADCAST;
++		uvh_nmi_mmrx_req = UVH_BIOS_KERNEL_MMR_ALIAS_2;
++		uvh_nmi_mmrx_req_shift = 62;
++
++	} else {
++		pr_err("UV:%s:cannot find EVENT_OCCURRED*_EXTIO_INT0\n",
++			__func__);
++		return;
++	}
++
++	/* Then find out if new NMI is supported */
++	if (likely(uv_read_local_mmr(uvh_nmi_mmrx_supported))) {
++		uv_write_local_mmr(uvh_nmi_mmrx_req,
++					1UL << uvh_nmi_mmrx_req_shift);
++		nmi_mmr = uvh_nmi_mmrx;
++		nmi_mmr_clear = uvh_nmi_mmrx_clear;
++		nmi_mmr_pending = 1UL << uvh_nmi_mmrx_shift;
++		pr_info("UV: SMI NMI support: %s\n", uvh_nmi_mmrx_type);
+ 	} else {
+ 		nmi_mmr = UVH_NMI_MMR;
+ 		nmi_mmr_clear = UVH_NMI_MMR_CLEAR;
+@@ -1049,5 +1094,5 @@ void __init uv_nmi_setup_hubless(void)
+ 	/* Ensure NMI enabled in Processor Interface Reg: */
+ 	uv_reassert_nmi();
+ 	uv_register_nmi_notifier();
+-	pr_info("UV: Hubless NMI enabled\n");
++	pr_info("UV: PCH NMI enabled\n");
  }
- 
- static void __init build_socket_tables(void)
