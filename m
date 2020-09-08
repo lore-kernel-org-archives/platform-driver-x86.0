@@ -1,50 +1,49 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 03/12] x86/platform/uv: Adjust references in UV kernel
- modules
-Date: Tue, 8 Sep 2020 17:22:07 +0200
-Message-ID: <20200908152207.GC4114051@kroah.com>
+From: Mike Travis <mike.travis@hpe.com>
+Subject: Re: [PATCH 04/12] x86/platform/uv: Update UV MMRs for UV5
+Date: Tue, 8 Sep 2020 08:35:37 -0700
+Message-ID: <3e93b858-f74d-8e93-e444-fd85fc5856e4@hpe.com>
 References: <20200907185430.363197758@hpe.com>
- <20200907185430.685975987@hpe.com>
+ <20200907185430.782245884@hpe.com> <20200908152314.GD4114051@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200907185430.685975987@hpe.com>
+In-Reply-To: <20200908152314.GD4114051@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Travis <mike.travis@hpe.com>
+To: Greg KH <gregkh@linuxfoundation.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@suse.de>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, "H. Peter Anvin" <hpa@zytor.com>, Russ Anderson <russ.anderson@hpe.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Alexandre Chartre <alexandre.chartre@oracle.com>, Jian Cai <caij2003@gmail.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Mon, Sep 07, 2020 at 01:54:33PM -0500, Mike Travis wrote:
-> There is a symbol clash from the auto-generated uv_mmrs.h file that
-> clashes with code in the UV kernel modules (is_uv() is the symbol).
-> Change those prior to the symbol clash so as to not cause a compile error.
+
+
+On 9/8/2020 8:23 AM, Greg KH wrote:
+> On Mon, Sep 07, 2020 at 01:54:34PM -0500, Mike Travis wrote:
+>> --- linux.orig/drivers/misc/sgi-gru/grufile.c
+>> +++ linux/drivers/misc/sgi-gru/grufile.c
+>> @@ -7,7 +7,8 @@
+>>    * This file supports the user system call for file open, close, mmap, etc.
+>>    * This also incudes the driver initialization code.
+>>    *
+>> - *  Copyright (c) 2008-2014 Silicon Graphics, Inc.  All Rights Reserved.
+>> + * Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
+>> + * Copyright (c) 2008-2017 Silicon Graphics, Inc.  All Rights Reserved.
 > 
-> Signed-off-by: Mike Travis <mike.travis@hpe.com>
-> Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-> Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
-> ---
->  drivers/misc/sgi-xp/xp.h            |   11 ++++++-----
->  drivers/misc/sgi-xp/xp_main.c       |    7 ++++---
->  drivers/misc/sgi-xp/xp_uv.c         |    9 ++++++---
->  drivers/misc/sgi-xp/xpc_main.c      |    9 +++++----
->  drivers/misc/sgi-xp/xpc_partition.c |    5 +++--
->  drivers/misc/sgi-xp/xpnet.c         |    5 +++--
->  6 files changed, 27 insertions(+), 19 deletions(-)
+> Please drop all copyright changes from this series, as these do not look
+> correct at all, sorry.
 > 
-> --- linux.orig/drivers/misc/sgi-xp/xp.h
-> +++ linux/drivers/misc/sgi-xp/xp.h
-> @@ -3,7 +3,8 @@
->   * License.  See the file "COPYING" in the main directory of this archive
->   * for more details.
->   *
-> - * Copyright (C) 2004-2008 Silicon Graphics, Inc. All rights reserved.
-> + * Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
-> + * Copyright (c) 2008-2017 Silicon Graphics, Inc.  All Rights Reserved.
+> You can send an add-on patch for all of that if it's really necessary,
+> and you get legal approval for it :)
 
-This change does not make sense.  If you want to make it, please make it
-in a separate patch that justifies the dates being added here please.
+I can move them all to a single patch.  The HPE one is straight from 
+their guidance on Copyrights.  The older SGI one is also from SGI's 
+guidance though I'm not sure if I can find it anymore.  I also wasn't 
+sure if it should be retained since the HPE one didn't take effect until 
+SGI was legally part of HPE (circa 2018).  2017/18 was also the last 
+time we did this big a change (for the UV4A).
 
-thanks,
-
-greg k-h
+> 
+> thanks,
+> 
+> greg k-h
+> 
