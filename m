@@ -1,62 +1,69 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 4/4] platform/x86: thinkpad_acpi: Map
- Clipping tool hotkey to KEY_SELECTIVE_SCREENSHOT
-Date: Tue,  8 Sep 2020 15:51:47 +0200
-Message-ID: <20200908135147.4044-5-hdegoede@redhat.com>
-References: <20200908135147.4044-1-hdegoede@redhat.com>
+From: Mike Travis <mike.travis@hpe.com>
+Subject: Re: [PATCH 04/12] x86/platform/uv: Update UV MMRs for UV5
+Date: Tue, 8 Sep 2020 09:20:14 -0700
+Message-ID: <35d4ce27-7a93-c3d5-3c0d-99fff06229c2@hpe.com>
+References: <20200907185430.363197758@hpe.com>
+ <20200907185430.782245884@hpe.com> <20200908152314.GD4114051@kroah.com>
+ <3e93b858-f74d-8e93-e444-fd85fc5856e4@hpe.com>
+ <20200908154430.GA4171853@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20200908135147.4044-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
-List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
- <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Cc: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Pearson <mpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200908154430.GA4171853@kroah.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, "H. Peter Anvin" <hpa@zytor.com>, Russ Anderson <russ.anderson@hpe.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Alexandre Chartre <alexandre.chartre@oracle.com>, Jian Cai <caij2003@gmail.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Commit 696c6523ec8f ("platform/x86: thinkpad_acpi: add mapping for new
-hotkeys") added support for a bunch of new hotkeys, but the
-clipping/snipping tool hotkey got ignored because there was no good
-key-code to map it to.
 
-Recently a new KEY_SELECTIVE_SCREENSHOT keycode was added by commit
-3b059da9835c ("Input: allocate keycode for "Selective Screenshot" key")
-quoting from the commit message:
 
-"New Chrome OS keyboards have a "snip" key that is basically a selective
-screenshot (allows a user to select an area of screen to be copied).
-Allocate a keycode for it."
+On 9/8/2020 8:44 AM, Greg KH wrote:
+> On Tue, Sep 08, 2020 at 08:35:37AM -0700, Mike Travis wrote:
+>>
+>>
+>> On 9/8/2020 8:23 AM, Greg KH wrote:
+>>> On Mon, Sep 07, 2020 at 01:54:34PM -0500, Mike Travis wrote:
+>>>> --- linux.orig/drivers/misc/sgi-gru/grufile.c
+>>>> +++ linux/drivers/misc/sgi-gru/grufile.c
+>>>> @@ -7,7 +7,8 @@
+>>>>     * This file supports the user system call for file open, close, mmap, etc.
+>>>>     * This also incudes the driver initialization code.
+>>>>     *
+>>>> - *  Copyright (c) 2008-2014 Silicon Graphics, Inc.  All Rights Reserved.
+>>>> + * Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
+>>>> + * Copyright (c) 2008-2017 Silicon Graphics, Inc.  All Rights Reserved.
+>>>
+>>> Please drop all copyright changes from this series, as these do not look
+>>> correct at all, sorry.
+>>>
+>>> You can send an add-on patch for all of that if it's really necessary,
+>>> and you get legal approval for it :)
+>>
+>> I can move them all to a single patch.  The HPE one is straight from their
+>> guidance on Copyrights.  The older SGI one is also from SGI's guidance
+>> though I'm not sure if I can find it anymore.  I also wasn't sure if it
+>> should be retained since the HPE one didn't take effect until SGI was
+>> legally part of HPE (circa 2018).  2017/18 was also the last time we did
+>> this big a change (for the UV4A).
+> 
+> If you haven't touched a file in a year, you don't get to claim
+> copyright on that year.  If you wish to disagree on this, great, I'll
+> gladly take a patch that modifies the lines that has a signed-off-by
+> from one of your lawyers for it :)
 
-Support for this "snip" key seems like it is also a good match for the
-clipping/snipping tool hotkey, so map this hotkey to the new
-KEY_SELECTIVE_SCREENSHOT key-code.
+I skipped over that part.  But I'm moving all changes to a single patch 
+and I will look more closely at HPE's documents.  Heaven knows they have 
+plenty of lawyers, so many it's hard to ask a simple question... like 
+when does a copyright take effect.  When you change it internally, or 
+when it gets published?  Sounds like you lean towards the second?
 
-Reviewed-by: Bastien Nocera <hadess-0MeiytkfxGOsTnJN9+BGXg@public.gmane.org>
-Acked-by: Henrique de Moraes Holschuh <hmh-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- drivers/platform/x86/thinkpad_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Mike
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 4b701e9a0392..47925c319d7b 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3434,7 +3434,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
- 		KEY_UNKNOWN,
- 
- 		KEY_BOOKMARKS,			/* Favorite app, 0x311 */
--		KEY_RESERVED,			/* Clipping tool */
-+		KEY_SELECTIVE_SCREENSHOT,	/* Clipping tool */
- 		KEY_CALC,			/* Calculator (above numpad, P52) */
- 		KEY_BLUETOOTH,			/* Bluetooth */
- 		KEY_KEYBOARD,			/* Keyboard, 0x315 */
--- 
-2.28.0
+> 
+> thanks,
+> 
+> greg k-h
+> 
