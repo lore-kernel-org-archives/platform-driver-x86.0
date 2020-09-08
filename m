@@ -1,95 +1,42 @@
-From: Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH] platform/x86: Add Driver to set up lid GPEs on MS Surface
- device
-Date: Tue, 8 Sep 2020 22:19:27 +0200
-Message-ID: <d1d3b1bb-1d7b-ae8d-fbe4-23f995df47fb@gmail.com>
-References: <20200908171934.1661509-1-luzmaximilian@gmail.com>
- <CAHp75VevrwKaba_FsZj-nPqJGR9fkmFPzvdCew0wCqF_L6QLbA@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 0/4] Add 4 new keycodes and use them for 4 new hotkeys
+ on new Lenovo Thinkpads
+Date: Tue, 8 Sep 2020 16:39:50 -0700
+Message-ID: <20200908233950.GC1665100@dtor-ws>
+References: <20200908135147.4044-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VevrwKaba_FsZj-nPqJGR9fkmFPzvdCew0wCqF_L6QLbA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Gayatri Kammela <gayatri.kammela@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200908135147.4044-1-hdegoede@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>, linux-input@vger.kernel.org, Mark Pearson <mpearson@lenovo.com>, ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 9/8/20 8:40 PM, Andy Shevchenko wrote:
-> On Tue, Sep 8, 2020 at 8:20 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+Hi Hans,
 
-...
-
->> +       .gpe_number = 0x17,
->> +       .gpe_number = 0x4D,
->> +       .gpe_number = 0x4F,
->> +       .gpe_number = 0x57,
+On Tue, Sep 08, 2020 at 03:51:43PM +0200, Hans de Goede wrote:
+> Hi All,
 > 
->  From where these numbers come from? Can we get them from firmware (ACPI)?
-
-Yes, they are obtained from ACPI/the DSDT. Specifically from the name of
-the GPE handler notifying the lid device. See [1] for a repo full of
-Surface ACPI dumps (source for this). I'll add a comment pointing this out
-in v2.
-
-[1]: https://github.com/linux-surface/acpidumps
-
-...
-
->> +static int surface_gpe_probe(struct platform_device *pdev)
->> +{
->> +       const struct surface_lid_device *lid;
->> +       int status;
->> +
+> Here is a v2 of my series to get a couple of new hotkeys, and matching
+> thinkpad_acpi hkey event codes seen on the last 2 generations of
+> Thinkpads supported.
 > 
->> +       lid = dev_get_platdata(&pdev->dev);
->> +       if (!lid)
->> +               return -ENODEV;
+> New in this version that Lenovo got back to me and explained that the 0x1316
+> hkey event belongs to Fn + right Shift, so that is mapped now too.
 > 
-> Can we use software nodes?
-
-As far as I can tell this would work via fwnode_create_software_node /
-fwnode_remove_software_node and device properties? I don't seem to find
-much documentation on this (there doesn't seem to be an entry for
-software nodes in the official docs?), but I think I should be able to
-make this work.
-
->> +       status = acpi_mark_gpe_for_wake(NULL, lid->gpe_number);
->> +       if (status) {
->> +               dev_err(&pdev->dev, "failed to mark GPE for wake: %d\n", status);
->> +               return -EINVAL;
->> +       }
->> +
+> Since these make both include/uapi/linux/input-event-codes.h and
+> drivers/platform/x86 changes one open question with this series is how to
+> merge it.
 > 
->> +       status = acpi_enable_gpe(NULL, lid->gpe_number);
+> Dmitry, for v1 of this series you suggested you could merge them all
+> through the input tree ? Andy, one of the drivers/platform/x86 maintainers
+> gave his Acked-by for this:
 > 
-> Did I miss anything or all calls of enable / disable GPE are using
-> NULL as a first parameter? What the point in such case?
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-As far as I can tell, some of the more generic uses have a non-NULL
-gpe_device parameter (acpi/device_pm.c, acpi/wakeup.c) and NULL just
-means index-0/main device? Not an expert on that though, so probably
-just ignore me here and let the ACPI guys answer this.
+I queued up the series, thank you.
 
-...
-
->> +MODULE_ALIAS("dmi:*:svnMicrosoftCorporation:pnSurfacePro:*");
->> +MODULE_ALIAS("dmi:*:svnMicrosoftCorporation:pnSurfacePro4:*");
-> 
-> Can simply
-> 
-> MODULE_ALIAS("dmi:*:svnMicrosoftCorporation:pnSurface*:*");
-> 
-> work?
-
-Depends on your preference, really. That would also auto-load the module
-on Surface Pro 3 and earlier devices (just won't do anything on those).
-So it's a trade-off between unnecessary loading of the module and
-maintainability/readability. Let me know what you prefer and I'll switch
-to that.
-
-Style and other issues are noted, I'll fix them for v2.
-
-Regards,
-Max
+-- 
+Dmitry
