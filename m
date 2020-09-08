@@ -1,60 +1,53 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND PATCH V5 0/3] Intel Platform Monitoring Technology
-Date: Tue, 8 Sep 2020 10:26:20 +0100
-Message-ID: <20200908092620.GL4400@dell>
-References: <20200819180255.11770-1-david.e.box@linux.intel.com>
- <20200828105655.GU1826686@dell>
- <CAHp75VcKrkxuAJvXnLGnHJTkVfac6N0RTH-3OEA5ksV2psWBew@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 2/4] Input: allocate keycode for Fn +
+ right shift
+Date: Tue,  8 Sep 2020 15:51:45 +0200
+Message-ID: <20200908135147.4044-3-hdegoede@redhat.com>
+References: <20200908135147.4044-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcKrkxuAJvXnLGnHJTkVfac6N0RTH-3OEA5ksV2psWBew@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "David E. Box" <david.e.box@linux.intel.com>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Alexander Duyck <alexander.h.duyck@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20200908135147.4044-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=ibm-acpi-devel>
+List-Post: <mailto:ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/ibm-acpi-devel>,
+ <mailto:ibm-acpi-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: ibm-acpi-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andy Shevchenko <andy-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Henrique de Moraes Holschuh <ibm-acpi-N3TV7GIv+o9fyO9Q7EP/yw@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, platform-driver-x86-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ibm-acpi-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Mark Pearson <mpearson-6jq1YtArVR3QT0dZR+AlfA@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-On Fri, 28 Aug 2020, Andy Shevchenko wrote:
+The last 2 generations of Lenovo Thinkpads send an acpi_thinkpad event when
+Fn + right shift is pressed.  This is intended for use with "Lenovo Quick
+Clean" software, which disables the touchpad + kbd for 2 minutes on this
+key-combo so that healthcare workes can disinfect it.
 
-> On Fri, Aug 28, 2020 at 1:57 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > On Wed, 19 Aug 2020, David E. Box wrote:
-> >
-> > [...]
-> >
-> > > David E. Box (3):
-> > >   PCI: Add defines for Designated Vendor-Specific Extended Capability
-> > >   mfd: Intel Platform Monitoring Technology support
-> > >   platform/x86: Intel PMT Telemetry capability driver
-> > >
-> > >  .../ABI/testing/sysfs-class-pmt_telemetry     |  46 ++
-> > >  MAINTAINERS                                   |   6 +
-> > >  drivers/mfd/Kconfig                           |  10 +
-> > >  drivers/mfd/Makefile                          |   1 +
-> > >  drivers/mfd/intel_pmt.c                       | 220 +++++++++
-> > >  drivers/platform/x86/Kconfig                  |  10 +
-> > >  drivers/platform/x86/Makefile                 |   1 +
-> > >  drivers/platform/x86/intel_pmt_telemetry.c    | 448 ++++++++++++++++++
-> > >  include/uapi/linux/pci_regs.h                 |   5 +
-> > >  9 files changed, 747 insertions(+)
-> > >  create mode 100644 Documentation/ABI/testing/sysfs-class-pmt_telemetry
-> > >  create mode 100644 drivers/mfd/intel_pmt.c
-> > >  create mode 100644 drivers/platform/x86/intel_pmt_telemetry.c
-> >
-> > What's the plan for this set?
-> >
-> > I'm happy to pick it up and take it through MFD if required.
-> 
-> I guess that was already agreed like this and you were in Cc list of
-> that discussion.
+But there is no silkscreen print on the right-keyboard to indicate this,
+so add a KEY_FN_RIGHT_SHIFT keycode define to use for this key-combo.
 
-I have many submissions on the go at the moment.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+- New patch in v2 of this patch-set
+---
+ include/uapi/linux/input-event-codes.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Keeping full status for each of them in my head would be impossible.
-
+diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+index b74821d09145..ee93428ced9a 100644
+--- a/include/uapi/linux/input-event-codes.h
++++ b/include/uapi/linux/input-event-codes.h
+@@ -545,6 +545,7 @@
+ #define KEY_FN_F		0x1e2
+ #define KEY_FN_S		0x1e3
+ #define KEY_FN_B		0x1e4
++#define KEY_FN_RIGHT_SHIFT	0x1e5
+ 
+ #define KEY_BRL_DOT1		0x1f1
+ #define KEY_BRL_DOT2		0x1f2
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.28.0
