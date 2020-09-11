@@ -1,48 +1,39 @@
 From: "David E. Box" <david.e.box@linux.intel.com>
-Subject: [PATCH 1/3] mfd: intel_pmt: Add OOBMSM device ID
-Date: Fri, 11 Sep 2020 12:45:47 -0700
-Message-ID: <20200911194549.12780-2-david.e.box@linux.intel.com>
-References: <20200911194549.12780-1-david.e.box@linux.intel.com>
+Subject: [PATCH 0/3] intel_pmt: Add Alder Lake and OOB-MSM support
+Date: Fri, 11 Sep 2020 12:45:46 -0700
+Message-ID: <20200911194549.12780-1-david.e.box@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200911194549.12780-1-david.e.box@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: david.e.box@linux.intel.com, lee.jones@linaro.org, dvhart@infradead.org, andy@infradead.org, alexander.h.duyck@linux.intel.com
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
-Add Out of Band Management Services Module device ID to Intel PMT driver.
+Adds Intel Platform Monitoring Technology (PMT) PCI ids for Alder Lake and
+the Out Of Band Management Services Module used by Sapphire Rapdis and
+other platforms.
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/mfd/intel_pmt.c | 4 ++++
- 1 file changed, 4 insertions(+)
+This patchset applies on top of the patchset linked below which was
+accepted and awaiting merge in mfd next.
 
-diff --git a/drivers/mfd/intel_pmt.c b/drivers/mfd/intel_pmt.c
-index 0e572b105101..8f9970ab3026 100644
---- a/drivers/mfd/intel_pmt.c
-+++ b/drivers/mfd/intel_pmt.c
-@@ -55,6 +55,8 @@ struct pmt_platform_info {
- 	unsigned long quirks;
- };
- 
-+static const struct pmt_platform_info pmt_info;
-+
- static const struct pmt_platform_info tgl_info = {
- 	.quirks = PMT_QUIRK_NO_WATCHER | PMT_QUIRK_NO_CRASHLOG |
- 		  PMT_QUIRK_TABLE_SHIFT,
-@@ -200,8 +202,10 @@ static void pmt_pci_remove(struct pci_dev *pdev)
- 	pm_runtime_get_sync(&pdev->dev);
- }
- 
-+#define PCI_DEVICE_ID_INTEL_PMT_OOBMSM	0x09a7
- #define PCI_DEVICE_ID_INTEL_PMT_TGL	0x9a0d
- static const struct pci_device_id pmt_pci_ids[] = {
-+	{ PCI_DEVICE_DATA(INTEL, PMT_OOBMSM, &pmt_info) },
- 	{ PCI_DEVICE_DATA(INTEL, PMT_TGL, &tgl_info) },
- 	{ }
- };
+Link: https://lore.kernel.org/lkml/20200819180255.11770-1-david.e.box@linux.intel.com/
+
+Alexander Duyck (1):
+  platform/x86: Intel PMT Crashlog capability driver
+
+David E. Box (2):
+  mfd: intel_pmt: Add OOBMSM device ID
+  mfd: intel_pmt: Add Alder Lake (ADL) support
+
+ .../ABI/testing/sysfs-class-pmt_crashlog      |  66 ++
+ drivers/mfd/intel_pmt.c                       |   6 +
+ drivers/platform/x86/Kconfig                  |  10 +
+ drivers/platform/x86/Makefile                 |   1 +
+ drivers/platform/x86/intel_pmt_crashlog.c     | 588 ++++++++++++++++++
+ 5 files changed, 671 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-pmt_crashlog
+ create mode 100644 drivers/platform/x86/intel_pmt_crashlog.c
+
 -- 
 2.20.1
