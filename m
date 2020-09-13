@@ -1,50 +1,43 @@
-From: Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH] platform/x86: Add Driver to set up lid GPEs on MS Surface
- device
-Date: Sat, 12 Sep 2020 00:46:30 +0200
-Message-ID: <e6125bee-d42e-f485-295a-8b9ad6777d4a@gmail.com>
-References: <20200908171934.1661509-1-luzmaximilian@gmail.com>
- <20200911221053.GF103884@mtg-dev.jf.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20200911221053.GF103884@mtg-dev.jf.intel.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: mgross@linux.intel.com
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Gayatri Kammela <gayatri.kammela@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+From: trix@redhat.com
+Subject: [PATCH] platform/x86: thinkpad_acpi: initialize tp_nvram_state variable
+Date: Sun, 13 Sep 2020 12:02:03 -0700
+Message-ID: <20200913190203.22238-1-trix@redhat.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org, natechancellor@gmail.com, ndesaulniers@google.com, len.brown@intel.com
+Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com, Tom Rix <trix@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 9/12/20 12:10 AM, mark gross wrote:
-> Surface devices are tablets with detachable keyboards.  they don't really
-> have a "lid" as the tablet is the "lid".
+From: Tom Rix <trix@redhat.com>
 
-The Surface Laptop series doesn't have a detachable keyboard, yet still
-requires this. Arguably, the Surface Books are also more laptop than
-tablet (at least that's the way I use mine...). Finally, on the actual
-tablets (Surface Pro series) the lid switch detects when the keyboard
-cover is opened (or at least that's what I have been told, I don't
-own/have access to a Pro series device).
+clang static analysis flags this represenative problem
+thinkpad_acpi.c:2523:7: warning: Branch condition evaluates
+  to a garbage value
+                if (!oldn->mute ||
+                    ^~~~~~~~~~~
 
-Regardless of that, this patch is intended to provide the same behavior
-as found on Windows, for all devices included in this patch, which is:
-When you open the lid, or in case of the Pro series fold away the
-keyboard cover, the device wakes from suspend/s2idle. Without this
-patch, that doesn't work.
+In hotkey_kthread() mute is conditionally set by hotkey_read_nvram()
+but unconditionally checked by hotkey_compare_and_issue_event().
+So the tp_nvram_state variable s[2] needs to be initialized.
 
-> I'm just questioning if the creator of the device designed it the way they did
-> maybe we should think twice about doing this.
+Fixes: 01e88f25985d ("ACPI: thinkpad-acpi: add CMOS NVRAM polling for hot keys (v9)")
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-As far as I can tell, the intended behavior is to wake the device when
-the lid is opened, which on the Laptops and Books is a more conventional
-lid and on the Pros constitutes opening the cover.
-
-I'm open for any alternative though.
-
-Also please note that I've already sent a v2 of this patch with Andy's
-comments addressed: https://lore.kernel.org/patchwork/patch/1303997/
-
---
-Regards,
-Max
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 47925c319d7b..24da8b6872f2 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -2573,7 +2573,7 @@ static void hotkey_compare_and_issue_event(struct tp_nvram_state *oldn,
+  */
+ static int hotkey_kthread(void *data)
+ {
+-	struct tp_nvram_state s[2];
++	struct tp_nvram_state s[2] = { 0 };
+ 	u32 poll_mask, event_mask;
+ 	unsigned int si, so;
+ 	unsigned long t;
+-- 
+2.18.1
