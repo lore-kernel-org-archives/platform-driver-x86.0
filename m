@@ -1,290 +1,64 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2] Introduce support for Systems Management Driver over
- WMI for Dell Systems
-Date: Mon, 14 Sep 2020 12:11:23 +0200
-Message-ID: <26ddd2ea-a520-751b-d9f2-6667feb7edfa@redhat.com>
-References: <20200904142846.5356-1-divya_bharathi@dell.com>
+Subject: Re: [PATCH 1/3] mfd: intel_pmt: Add OOBMSM device ID
+Date: Mon, 14 Sep 2020 15:01:05 +0200
+Message-ID: <3e68c73f-4984-26d1-f15e-695c4c41dcf3@redhat.com>
+References: <20200911194549.12780-1-david.e.box@linux.intel.com>
+ <20200911194549.12780-2-david.e.box@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200904142846.5356-1-divya_bharathi@dell.com>
+In-Reply-To: <20200911194549.12780-2-david.e.box@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Divya Bharathi <divya27392@gmail.com>, dvhart@infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, Divya Bharathi <divya_bharathi@dell.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mario Limonciello <mario.limonciello@dell.com>, Prasanth KSR <prasanth.ksr@dell.com>
+To: "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org, dvhart@infradead.org, andy@infradead.org, alexander.h.duyck@linux.intel.com
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: platform-driver-x86.vger.kernel.org
 
 Hi,
 
-Like last-time I will split this review in 2,
-this first email will focus on the sysfs API/ABI part only.
-
-On 9/4/20 4:28 PM, Divya Bharathi wrote:
-> The Dell WMI Systems Management Driver provides a sysfs
-> interface for systems management to enable BIOS configuration
-> capability on certain Dell Systems.
+On 9/11/20 9:45 PM, David E. Box wrote:
+> Add Out of Band Management Services Module device ID to Intel PMT driver.
 > 
-> This driver allows user to configure Dell systems with a
-> uniform common interface. To facilitate this, the patch
-> introduces a generic way for driver to be able to create
-> configurable BIOS Attributes available in Setup (F2) screen.
-> 
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> Co-developed-by: Mario Limonciello <mario.limonciello@dell.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> Co-developed-by: Prasanth KSR <prasanth.ksr@dell.com>
-> Signed-off-by: Prasanth KSR <prasanth.ksr@dell.com>
-> Signed-off-by: Divya Bharathi <divya_bharathi@dell.com>
-> ---
-> 
-> ChangeLog from v1 to v2:
->   - use pr_fmt instead of pr_err(DRIVER_NAME
->   - re-order variables reverse xmas tree order
->   - correct returns of -1 to error codes
->   - correct usage of {} on some split line statements
->   - Refine all documentation deficiencies suggested by Hans
->   - Merge all attributes to a single directory
->   - Overhaul WMI interface interaction as suggested by Hans
->     * Move WMI driver registration to start of module
->     * Remove usage of lists that only use first entry for WMI interfaces
->     * Create a global structure shared across interface source files
->     * Make get_current_password function static
->     * Remove get_pending changes function, shared across global structure now.
-> - Overhaul use of mutexes
->     * Make kset list mutex shared across source files
->     * Remove unneeded dell-wmi-sysman call_mutex
->     * Keep remaining call_mutexes in WMI functions
-> - Move security area calculation into a function
-> - Use NLS helper for utf8->utf16 conversion
-> 
->   .../testing/sysfs-platform-dell-wmi-sysman    | 126 ++++
->   MAINTAINERS                                   |   9 +
->   drivers/platform/x86/Kconfig                  |  12 +
->   drivers/platform/x86/Makefile                 |   8 +
->   .../x86/dell-wmi-biosattr-interface.c         | 198 ++++++
->   .../platform/x86/dell-wmi-enum-attributes.c   | 214 +++++++
->   .../platform/x86/dell-wmi-int-attributes.c    | 195 ++++++
->   .../x86/dell-wmi-passobj-attributes.c         | 168 +++++
->   .../x86/dell-wmi-passwordattr-interface.c     | 200 ++++++
->   .../platform/x86/dell-wmi-string-attributes.c | 177 ++++++
->   .../platform/x86/dell-wmi-sysman-attributes.c | 572 ++++++++++++++++++
->   .../platform/x86/dell-wmi-sysman-attributes.h | 132 ++++
->   12 files changed, 2011 insertions(+)
->   create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-wmi-sysman
->   create mode 100644 drivers/platform/x86/dell-wmi-biosattr-interface.c
->   create mode 100644 drivers/platform/x86/dell-wmi-enum-attributes.c
->   create mode 100644 drivers/platform/x86/dell-wmi-int-attributes.c
->   create mode 100644 drivers/platform/x86/dell-wmi-passobj-attributes.c
->   create mode 100644 drivers/platform/x86/dell-wmi-passwordattr-interface.c
->   create mode 100644 drivers/platform/x86/dell-wmi-string-attributes.c
->   create mode 100644 drivers/platform/x86/dell-wmi-sysman-attributes.c
->   create mode 100644 drivers/platform/x86/dell-wmi-sysman-attributes.h
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dell-wmi-sysman b/Documentation/ABI/testing/sysfs-platform-dell-wmi-sysman
-> new file mode 100644
-> index 000000000000..e4b608275ea4
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-dell-wmi-sysman
-> @@ -0,0 +1,126 @@
-> +What:		/sys/devices/platform/dell-wmi-sysman/attributes/
-> +Date:		December 2020
-> +KernelVersion:	5.10
-> +Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
-> +		Mario Limonciello <mario.limonciello@dell.com>,
-> +		Prasanth KSR <prasanth.ksr@dell.com>
-> +Description:
-> +		The Dell WMI Systems Management Driver provides a sysfs interface
-> +		for systems management software to enable BIOS configuration
-> +		capability on certain Dell systems. This directory exposes
-> +		interfaces for interacting with BIOS attributes.
-> +
-> +		Attributes can accept a set of pre-defined valid values or a range of
-> +		numerical values or a string. An atribute can accept float as well,
-> +		if so '.' is used as decimal separator.
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 
-Please replace: "An atribute" with "A numerical attribute", note this also fixes
-a typo in attribute. Also this still deels a bit handwavy, if currently all used
-numerical values are integers, lets just forget about floats for now and add
-floats later as a separate type, to me that seems more sensible then having
-a magical numerical type which can represent both.
+Looks good to me:
 
-> +
-> +		Also, BIOS Admin password and System Password can be set, reset or
-> +		cleared using these attributes. An "Admin" password is used for
-> +		preventing modification to the BIOS settings. A "System" password is
-> +		required to boot a machine.
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 
-Please add a paragraph for the type sysfs-attribute here, e.g.:
-
-		type: Give the type of <attr>, this may be one of "integer", "string",
-		"enum" and "password"
-
-
-> +
-> +		current_value:	A file that can be read to obtain the current
-> +		value of the <attr>
-> +
-> +		This file can also be written to in order to update
-> +		the value of a <attr>
-> +
-> +		default_value:	A file that can be read to obtain the default
-> +		value of the <attr>
-> +
-> +		display_name:	A file that can be read to obtain a user friendly
-> +		description of the at <attr>
-> +
-> +		display_name_language_code:	A file that can be read to obtain
-> +		the IETF language tag corresponding to the "display_name" of the <attr>
-> +
-> +		modifier:	A file that can be read to obtain attribute-level
-> +		dependency rule. It says an attribute X will become read-only or
-> +		suppressed,	if attribute Y is not configured.
-> +		For example, AutoOnHr becomes read-only if AutoOn is disabled
-
-This still does not specify the syntax, if I do:
-
-cat /sys/devices/platform/dell-wmi-sysman/attributes/AutoOnHr/modifier
-
-What will the output be? and how should other software interpret that output?
-
-> +
-> +		possible_value:	A file that can be read to obtain the possible
-> +		values of the <attr>. Values are separated using semi-colon.
-
-This one is valid for enums only, right ? The above sysfs-attributes are all
-generic, which is fine. But please add some separate headings for attributes which
-are only value for a specific type, e.g.:
-
-"enum"-type specific attributes:
-
-	possible_value:...
-
-Also shouldn't this be named possible_values? note the extra 's' at the end.
-
-> +
-> +		value_modifier:	A file that can be read to obtain value-level
-> +		dependency. This file is similar to modifier but here, an attribute's
-> +		current value will be forcefully changed based dependent attributes
-> +		value.
-> +		For example, current value of LegacyOrom will become Disabled if
-> +		SecureBoot is Enabled.
-> +
-
-Please group this together with modifier (in the section with sysfs-attributes
-which are common to all types) and also this needs a lot better explanation / documentation.
-
-> +		lower_bound:	A file that can be read to obtain the lower
-> +		bound value of the <attr>
-> +
-> +		upper_bound:	A file that can be read to obtain the upper
-> +		bound value of the <attr>
-> +
-> +		scalar_increment:	A file that can be read to obtain the
-> +		resolution of the incremental value this attribute accepts.
-
-Please put all 3 under:
-
-"integer"-type specific attributes:
-
-So that you get:
-
-"integer"-type specific attributes:
-
-	lower_bound:	...
-
-	upper_bound:	...
-
-	scalar_increment:	...
-
-Also please rename lower_bound to min_value and upper_bound to max_value,
-this makes its clearer that they apply to current_value and in general
-makes it easier to understand what they do.
-
-
-> +
-> +		max_length:	A file that can be read to obtain the maximum
-> +		length value of the <attr>
-> +
-> +		min_length:	A file that can be read to obtain the minimum
-> +		length value of the <attr>
-
-Please put these 2 under:
-
-"string"-type specific attributes:
-
-
-> +
-> +		is_password_set:	A file that can be read
-> +		to obtain flag to see if a password is set on <attr>
-> +
-> +		max_password_length:	A file that can be read to obtain the
-> +		maximum length of the Password
-> +
-> +		min_password_length:	A file that can be read to obtain the
-> +		minimum length of the Password
-> +
-> +		current_password: A write only value used for privileged access
-> +		such as setting attributes when a system or admin password is set
-> +		or resetting to a new password
-> +
-> +		new_password: A write only value that when used in tandem with
-> +		current_password will reset a system or admin password.
-
-Please put all 5 of these under:
-
-"password"-type specific attributes:
-
-
-> +
-> +What:		/sys/devices/platform/dell-wmi-sysman/attributes/reset_bios
-> +Date:		December 2020
-> +KernelVersion:	5.10
-> +Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
-> +		Mario Limonciello <mario.limonciello@dell.com>,
-> +		Prasanth KSR <prasanth.ksr@dell.com>
-> +Description:
-> +		This attribute can be used to reset the BIOS Configuration.
-> +		Specifically, it tells which type of reset BIOS configuration is being
-> +		requested on the host.
-> +
-> +		Reading from it returns a list of supported options encoded as:
-> +
-> +			'builtinsafe' (Built in safe configuration profile)
-> +			'lastknowngood' (Last known good saved configuration profile)
-> +			'factory' (Default factory settings configuration profile)
-> +			'custom' (Custom saved configuration profile)
-> +
-> +		The currently selected option is printed in square brackets as
-> +		shown below:
-> +
-> +		# echo "factory" > sys/devices/platform/dell-wmi-sysman/attributes/reset_bios
-> +
-> +		# cat sys/devices/platform/dell-wmi-sysman/attributes/reset_bios
-> +		# builtinsafe lastknowngood [factory] custom
-> +
-> +		Note that any changes to this attribute requires a reboot
-> +		for changes to take effect.
-> +
-> +What:		/sys/devices/platform/dell-wmi-sysman/attributes/pending_reboot
-> +Date:		December 2020
-> +KernelVersion:	5.10
-> +Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
-> +		Mario Limonciello <mario.limonciello@dell.com>,
-> +		Prasanth KSR <prasanth.ksr@dell.com>
-> +Description:
-> +		A read-only attribute reads 1 if a reboot is necessary to apply
-> +		pending BIOS attribute changes.
-> +
-> +			0:	All BIOS attributes setting are current
-> +			1:	A reboot is necessary to get pending BIOS attribute changes
-> +				applied
-> +
-> +
-
+Lee, I expect you will pick this-one up (and the next also) ?
 
 Regards,
 
 Hans
+
+> ---
+>   drivers/mfd/intel_pmt.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/mfd/intel_pmt.c b/drivers/mfd/intel_pmt.c
+> index 0e572b105101..8f9970ab3026 100644
+> --- a/drivers/mfd/intel_pmt.c
+> +++ b/drivers/mfd/intel_pmt.c
+> @@ -55,6 +55,8 @@ struct pmt_platform_info {
+>   	unsigned long quirks;
+>   };
+>   
+> +static const struct pmt_platform_info pmt_info;
+> +
+>   static const struct pmt_platform_info tgl_info = {
+>   	.quirks = PMT_QUIRK_NO_WATCHER | PMT_QUIRK_NO_CRASHLOG |
+>   		  PMT_QUIRK_TABLE_SHIFT,
+> @@ -200,8 +202,10 @@ static void pmt_pci_remove(struct pci_dev *pdev)
+>   	pm_runtime_get_sync(&pdev->dev);
+>   }
+>   
+> +#define PCI_DEVICE_ID_INTEL_PMT_OOBMSM	0x09a7
+>   #define PCI_DEVICE_ID_INTEL_PMT_TGL	0x9a0d
+>   static const struct pci_device_id pmt_pci_ids[] = {
+> +	{ PCI_DEVICE_DATA(INTEL, PMT_OOBMSM, &pmt_info) },
+>   	{ PCI_DEVICE_DATA(INTEL, PMT_TGL, &tgl_info) },
+>   	{ }
+>   };
+> 
