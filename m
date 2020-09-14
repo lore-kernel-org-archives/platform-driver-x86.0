@@ -1,77 +1,139 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: initialize tp_nvram_state
- variable
-Date: Mon, 14 Sep 2020 10:39:39 +0200
-Message-ID: <a20bfbb6-65d4-2aef-1b78-15af329d77b4@redhat.com>
-References: <20200913190203.22238-1-trix@redhat.com>
+Subject: Re: [PATCH] Introduce support for Systems Management Driver over WMI
+ for Dell Systems
+Date: Mon, 14 Sep 2020 10:45:02 +0200
+Message-ID: <c5a6e340-66ec-e03b-a9a8-9c61b9f388d5@redhat.com>
+References: <20200730143122.10237-1-divya_bharathi@dell.com>
+ <aa23d8b8-6c6b-b6f2-e916-1defff8a9b26@redhat.com>
+ <DM6PR19MB26362B2A2CDFE73BE167FD34FA2E0@DM6PR19MB2636.namprd19.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200913190203.22238-1-trix@redhat.com>
+In-Reply-To: <DM6PR19MB26362B2A2CDFE73BE167FD34FA2E0@DM6PR19MB2636.namprd19.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: trix@redhat.com, ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org, natechancellor@gmail.com, ndesaulniers@google.com, len.brown@intel.com
-Cc: ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+To: "Limonciello, Mario" <Mario.Limonciello@dell.com>, Divya Bharathi <divya27392@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Bharathi, Divya" <Divya.Bharathi@Dell.com>, "Ksr, Prasanth" <Prasanth.Ksr@dell.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
 Hi,
 
-On 9/13/20 9:02 PM, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
+Sorry for being slow with getting back to you on this.
+
+On 9/1/20 4:22 PM, Limonciello, Mario wrote:
+>>
+>> "A read-only attribute enumerating if a reboot is pending on any BIOS attribute
+>> change."
+>> does not really seem to make much sense. I guess what this is trying to say is:
+>>
+>> "This read-only attribute reads 1 if a reboot is necessary to apply pending BIOS
+>> attribute changes"?
+>>
+>>                0:      All BIOS attributes setting are current
+>>                1:      A reboot is necessary to get pending pending BIOS attribute
+>> changes applied
+>>
+>> Or some such. I'm not really happy with my own text either, but I think it
+>> better explains
+>> what this attribute is about then the original text, right ?
 > 
-> clang static analysis flags this represenative problem
-> thinkpad_acpi.c:2523:7: warning: Branch condition evaluates
->    to a garbage value
->                  if (!oldn->mute ||
->                      ^~~~~~~~~~~
+> I think that text does read better, Divya and team will reword it.
 > 
-> In hotkey_kthread() mute is conditionally set by hotkey_read_nvram()
-> but unconditionally checked by hotkey_compare_and_issue_event().
-> So the tp_nvram_state variable s[2] needs to be initialized.
+> <snip>
 > 
-> Fixes: 01e88f25985d ("ACPI: thinkpad-acpi: add CMOS NVRAM polling for hot keys (v9)")
-
-Looking at the code I do not think this can actually happen,
-this can only happen if the poll_mask == 0 the first time
-through the loop so s[1] does never gets initialized and then
-the second time to the loop poll_mask != 0, but if poll_mask
-changes then we hit:
-
-                 mutex_lock(&hotkey_thread_data_mutex);
-                 if (was_frozen || hotkey_config_change != change_detector) {
-                         /* forget old state on thaw or config change */
-                         si = so;
-                         t = 0;
-                         change_detector = hotkey_config_change;
-                 }
-
-Where we set si = so so then this can also not happen.
-
-I can understand the static-analyzer warning about this, and fixing
-that warning is good. But I doubt that this warrants a fixes tag.
-
-So with the Fixes tag dropped this is:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
->   drivers/platform/x86/thinkpad_acpi.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>>> +           display_name_language_code:     A file that can be read to obtain
+>>> +           the language code corresponding to the "display_name" of the <attr>
+>>
+>> This needs to be specified better, e.g. this needs to say that this is an
+>> ISO 639‑1 language code (or some other language-code specification)
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 47925c319d7b..24da8b6872f2 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -2573,7 +2573,7 @@ static void hotkey_compare_and_issue_event(struct tp_nvram_state *oldn,
->    */
->   static int hotkey_kthread(void *data)
->   {
-> -	struct tp_nvram_state s[2];
-> +	struct tp_nvram_state s[2] = { 0 };
->   	u32 poll_mask, event_mask;
->   	unsigned int si, so;
->   	unsigned long t;
+> Ack.
 > 
+>>
+>>
+>>> +
+>>> +           modifier:       A file that can be read to obtain attribute-level
+>>> +           dependency rule which has to be met to configure <attr>
+>>
+>> What is the difference between modifier and value_modifier ? Also this need to
+>> be specified in more detail.
+> 
+> Ack.
+> 
+>>
+>>> +
+>>> +           possible_value: A file that can be read to obtain the possible
+>>> +           value of the <attr>
+>>
+>> This is an enum, so possible value_s_ ?  I assume that for a enum this will list
+>> all possible values, this also needs to specify how the possible values will be
+>> separated (e.g. using semi-colons or newlines or ...).
+> 
+> Yes correct.
+> 
+>>
+>>
+>>> +
+>>> +           value_modifier: A file that can be read to obtain value-level
+>>> +           dependency on a possible value which has to be met to configure
+>> <attr>
+>>> +
+>>> +What:              /sys/devices/platform/dell-wmi-
+>> sysman/attributes/integer/<attr>/
+>>> +Date:              October 2020
+>>> +KernelVersion:     5.9
+>>> +Contact:   Divya Bharathi <Divya.Bharathi@Dell.com>,
+>>> +           Mario Limonciello <mario.limonciello@dell.com>,
+>>> +           Prasanth KSR <prasanth.ksr@dell.com>
+>>> +Description:
+>>> +           This directory exposes interfaces for interaction with
+>>> +           BIOS integer attributes.
+>>> +
+>>> +           Integer attributes are settings that accept a range of
+>>> +           numerical values for inputs. Each BIOS integer has a
+>>> +           lower bound and an upper bound on the values that it can take.
+>>> +
+>>> +           current_value:  A file that can be read to obtain the current
+>>> +           value of the <attr>
+>>> +
+>>> +           This file can also be written to in order to update
+>>> +           the value of an <attr>.
+>>> +
+>>> +           default_value:  A file that can be read to obtain the default
+>>> +           value of the <attr>
+>>> +
+>>> +           display_name:   A file that can be read to obtain a user friendly
+>>> +           description of the at <attr>
+>>> +
+>>> +           display_name_language_code:     A file that can be read to obtain
+>>> +           the language code corresponding to the "display_name" of the <attr>
+>>> +
+>>> +           lower_bound:    A file that can be read to obtain the lower
+>>> +           bound value of the <attr>
+>>> +
+>>> +           modifier:       A file that can be read to obtain attribute-level
+>>> +           dependency rule which has to be met to configure <attr>
+>>> +
+>>> +           scalar_increment:       A file that can be read to obtain the
+>>> +           resolution of the incremental value this attribute accepts.
+>>> +
+>>> +           upper_bound:    A file that can be read to obtain the upper
+>>> +           bound value of the <attr>
+>>
+>> Are these integers or also possibly floats? I guess possibly also floats, right?
+>> Then at a minimum this should specify which decimal-separator is used (I assume
+>> we will go with the usual '.' as decimal separator).
+> 
+> In practice they're integers, but I don't see why they couldn't be floats.
+
+Hmm, that is a bit hand-wavy, for an userspace ABI we really need to define
+this clearly. Either it is integers (which is fine), or it is floats and we need
+to define a decimal-separator as part of the ABI.
+
+Note the reason why I started wondering about this in the first place is the
+scalar_increment attribute. I think that can use some clarification too.
+
+Regards,
+
+Hans
