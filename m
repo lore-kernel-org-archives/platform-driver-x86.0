@@ -1,8 +1,8 @@
 From: Hans de Goede <hdegoede@redhat.com>
 Subject: Re: [PATCH] Introduce support for Systems Management Driver over WMI
  for Dell Systems
-Date: Mon, 14 Sep 2020 11:13:42 +0200
-Message-ID: <97b3e266-1e20-6cf5-8960-c60b1b04f6bc@redhat.com>
+Date: Mon, 14 Sep 2020 11:13:52 +0200
+Message-ID: <67ca316a-227f-80f6-ad22-7d08112b2584@redhat.com>
 References: <20200730143122.10237-1-divya_bharathi@dell.com>
  <d3de1d27-25ac-be43-54d8-dcbfffa31e1d@redhat.com>
  <DM6PR19MB26364970D0981212E811E1B0FA2E0@DM6PR19MB2636.namprd19.prod.outlook.com>
