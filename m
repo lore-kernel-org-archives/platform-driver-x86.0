@@ -1,790 +1,129 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 3/3] platform/x86: Intel PMT Crashlog capability driver
-Date: Mon, 14 Sep 2020 15:28:06 +0200
-Message-ID: <6e3738db-bfff-7fd2-65e6-bd0d126f9eaa@redhat.com>
-References: <20200911194549.12780-1-david.e.box@linux.intel.com>
- <20200911194549.12780-4-david.e.box@linux.intel.com>
+From: "Limonciello, Mario" <Mario.Limonciello@dell.com>
+Subject: RE: [PATCH] Introduce support for Systems Management Driver over WMI
+ for Dell Systems
+Date: Mon, 14 Sep 2020 16:06:15 +0000
+Message-ID: <DM6PR19MB26368BB2B8C4D7CE58DF7C31FA230@DM6PR19MB2636.namprd19.prod.outlook.com>
+References: <20200730143122.10237-1-divya_bharathi@dell.com>
+ <d3de1d27-25ac-be43-54d8-dcbfffa31e1d@redhat.com>
+ <DM6PR19MB26364970D0981212E811E1B0FA2E0@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <67ca316a-227f-80f6-ad22-7d08112b2584@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200911194549.12780-4-david.e.box@linux.intel.com>
+In-Reply-To: <67ca316a-227f-80f6-ad22-7d08112b2584@redhat.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org, dvhart@infradead.org, andy@infradead.org, alexander.h.duyck@linux.intel.com
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Divya Bharathi <divya27392@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "Bharathi, Divya" <Divya.Bharathi@Dell.com>, "Ksr, Prasanth" <Prasanth.Ksr@dell.com>, Richard Hughes <rhughes@redhat.com>, Jared Dominguez <jaredz@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-Hi,
-
-On 9/11/20 9:45 PM, David E. Box wrote:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> Add support for the Intel Platform Monitoring Technology crashlog
-> interface.  This interface provides a few sysfs values to allow for
-> controlling the crashlog telemetry interface as well as a character driver
-> to allow for mapping the crashlog memory region so that it can be accessed
-> after a crashlog has been recorded.
-> 
-> This driver is meant to only support the server version of the crashlog
-> which is identified as crash_type 1 with a version of zero. Currently no
-> other types are supported.
-> 
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->   .../ABI/testing/sysfs-class-pmt_crashlog      |  66 ++
->   drivers/platform/x86/Kconfig                  |  10 +
->   drivers/platform/x86/Makefile                 |   1 +
->   drivers/platform/x86/intel_pmt_crashlog.c     | 588 ++++++++++++++++++
->   4 files changed, 665 insertions(+)
->   create mode 100644 Documentation/ABI/testing/sysfs-class-pmt_crashlog
->   create mode 100644 drivers/platform/x86/intel_pmt_crashlog.c
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-pmt_crashlog b/Documentation/ABI/testing/sysfs-class-pmt_crashlog
-> new file mode 100644
-> index 000000000000..40fb4ff437a6
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-pmt_crashlog
-> @@ -0,0 +1,66 @@
-> +What:		/sys/class/pmt_crashlog/
-> +Date:		September 2020
-> +KernelVersion:	5.10
-> +Contact:	Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> +Description:
-> +		The pmt_crashlog/ class directory contains information
-> +		for devices that expose crashlog capabilities using the Intel
-> +		Platform Monitoring Technology (PTM).
-> +
-> +What:		/sys/class/pmt_crashlog/crashlogX
-> +Date:		September 2020
-> +KernelVersion:	5.10
-> +Contact:	Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> +Description:
-> +		The crashlogX directory contains files for configuring an
-> +		instance of a PMT crashlog device that can perform crash data
-> +		recoring. Each crashlogX device has an associated
-> +		/dev/crashlogX device node. This node can be opened and mapped
-> +		to access the resulting crashlog data. The register layout for
-> +		the log can be determined from an XML file of specified guid
-> +		for the parent device.
-> +
-> +What:		/sys/class/pmt_crashlog/crashlogX/guid
-> +Date:		September 2020
-> +KernelVersion:	5.10
-> +Contact:	Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> +Description:
-> +		(RO) The guid for this crashlog device. The guid identifies the
-> +		version of the XML file for the parent device that should be
-> +		used to determine the register layout.
-> +
-> +What:		/sys/class/pmt_crashlog/crashlogX/size
-> +Date:		September 2020
-> +KernelVersion:	5.10
-> +Contact:	Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> +Description:
-> +		(RO) The length of the result buffer in bytes that corresponds
-> +		to the mapping size for the /dev/crashlogX device node.
-> +
-> +What:		/sys/class/pmt_crashlog/crashlogX/offset
-> +Date:		September 2020
-> +KernelVersion:	5.10
-> +Contact:	Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> +Description:
-> +		(RO) The offset of the buffer in bytes that corresponds
-> +		to the mapping for the /dev/crashlogX device node.
-> +
-> +What:		/sys/class/pmt_crashlog/crashlogX/enable
-> +Date:		September 2020
-> +KernelVersion:	5.10
-> +Contact:	Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> +Description:
-> +		(RW) Boolean value controlling if the crashlog functionality
-> +		is enabled for the /dev/crashlogX device node.
-> +
-> +What:		/sys/class/pmt_crashlog/crashlogX/trigger
-> +Date:		September 2020
-> +KernelVersion:	5.10
-> +Contact:	Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> +Description:
-> +		(RW) Boolean value controlling  the triggering of the
-> +		/dev/crashlogX device node. When read it provides data on if
-> +		the crashlog has been triggered. When written to it can be
-> +		used to either clear the current trigger by writing false, or
-> +		to trigger a new event if the trigger is not currently set.
-> +
-
-Both the pmt_crashlog and the attributes suggest that this is highly
-Intel PMT specific. /sys/class/foo interfaces are generally speaking
-meant to be generic interfaces.
-
-If this was defining a generic, vendor and implementation agnostic interface for
-configuring / accessing crashlogs, then using a class would be fine, but that
-is not the case, so I believe that this should not implement / register a class.
-
-Since the devices are instantiated through MFD there already is a
-static sysfs-path which can be used to find the device in sysfs:
-/sys/bus/platform/device/pmt_crashlog
-
-So you can register the sysfs attributes directly under the platform_device
-and then userspace can easily find them, so there really is no need to
-use a class here.
-
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 48335b02014f..50c3234e4f72 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1360,6 +1360,16 @@ config INTEL_PMC_CORE
->   		- LTR Ignore
->   		- MPHY/PLL gating status (Sunrisepoint PCH only)
->   
-> +config INTEL_PMT_CRASHLOG
-> +	tristate "Intel Platform Monitoring Technology (PMT) Crashlog driver"
-> +	help
-> +	 The Intel Platform Monitoring Technology (PMT) crashlog driver provides
-> +	 access to hardware crashlog capabilities on devices that support the
-> +	 feature.
-> +
-> +	 For more information, see
-> +	 <file:Documentation/ABI/testing/sysfs-class-intel_pmt_crashlog>
-> +
->   config INTEL_PMT_TELEMETRY
->   	tristate "Intel Platform Monitoring Technology (PMT) Telemetry driver"
->   	help
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index ca942e70de8d..1b8b2502d460 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -140,6 +140,7 @@ obj-$(CONFIG_INTEL_MFLD_THERMAL)	+= intel_mid_thermal.o
->   obj-$(CONFIG_INTEL_MID_POWER_BUTTON)	+= intel_mid_powerbtn.o
->   obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
->   obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o intel_pmc_core_pltdrv.o
-> +obj-$(CONFIG_INTEL_PMT_CRASHLOG)	+= intel_pmt_crashlog.o
->   obj-$(CONFIG_INTEL_PMT_TELEMETRY)	+= intel_pmt_telemetry.o
->   obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
->   obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
-> diff --git a/drivers/platform/x86/intel_pmt_crashlog.c b/drivers/platform/x86/intel_pmt_crashlog.c
-> new file mode 100644
-> index 000000000000..31d43708055c
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel_pmt_crashlog.c
-> @@ -0,0 +1,588 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Intel Platform Monitoring Technology Crashlog driver
-> + *
-> + * Copyright (c) 2020, Intel Corporation.
-> + * All Rights Reserved.
-> + *
-> + * Authors: "Alexander Duyck" <alexander.h.duyck@linux.intel.com>
-> + */
-> +
-> +#include <linux/cdev.h>
-> +#include <linux/idr.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/uaccess.h>
-> +
-> +#define DRV_NAME		"pmt_crashlog"
-> +
-> +/* Crashlog access types */
-> +#define ACCESS_FUTURE		1
-> +#define ACCESS_BARID		2
-> +#define ACCESS_LOCAL		3
-> +
-> +/* Crashlog discovery header types */
-> +#define CRASH_TYPE_OOBMSM	1
-> +
-> +/* Control Flags */
-> +#define CRASHLOG_FLAG_DISABLE	BIT(27)
-> +#define CRASHLOG_FLAG_CLEAR	BIT(28)
-> +#define CRASHLOG_FLAG_EXECUTE	BIT(29)
-> +#define CRASHLOG_FLAG_COMPLETE	BIT(31)
-> +#define CRASHLOG_FLAG_MASK	GENMASK(31, 28)
-> +
-> +/* Common Header */
-> +#define CONTROL_OFFSET		0x0
-> +#define GUID_OFFSET		0x4
-> +#define BASE_OFFSET		0x8
-> +#define SIZE_OFFSET		0xC
-> +#define GET_ACCESS(v)		((v) & GENMASK(3, 0))
-> +#define GET_TYPE(v)		(((v) & GENMASK(7, 4)) >> 4)
-> +#define GET_VERSION(v)		(((v) & GENMASK(19, 16)) >> 16)
-> +
-> +#define GET_ADDRESS(v)		((v) & GENMASK(31, 3))
-> +#define GET_BIR(v)		((v) & GENMASK(2, 0))
-> +
-> +static DEFINE_IDA(crashlog_devid_ida);
-> +
-> +struct crashlog_header {
-> +	u32	base_offset;
-> +	u32	size;
-> +	u32	guid;
-> +	u8	bir;
-> +	u8	access_type;
-> +	u8	crash_type;
-> +	u8	version;
-> +};
-> +
-> +struct pmt_crashlog_priv;
-> +
-> +struct crashlog_entry {
-> +	struct pmt_crashlog_priv	*priv;
-> +	struct crashlog_header		header;
-> +	struct resource			*header_res;
-> +	void __iomem			*disc_table;
-> +	unsigned long			crashlog_data;
-> +	size_t				crashlog_data_size;
-> +	struct cdev			cdev;
-> +	dev_t				devt;
-> +	int				devid;
-> +	struct ida			*ida;
-> +};
-> +
-> +struct pmt_crashlog_priv {
-> +	struct device		*dev;
-> +	struct pci_dev		*parent;
-> +	struct crashlog_entry	*entry;
-> +	int			num_entries;
-> +};
-> +
-> +/*
-> + * I/O
-> + */
-> +static bool pmt_crashlog_complete(struct crashlog_entry *entry)
-> +{
-> +	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
-> +
-> +	/* return current value of the crashlog complete flag */
-> +	return !!(control & CRASHLOG_FLAG_COMPLETE);
-> +}
-> +
-> +static bool pmt_crashlog_disabled(struct crashlog_entry *entry)
-> +{
-> +	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
-> +
-> +	/* return current value of the crashlog disabled flag */
-> +	return !!(control & CRASHLOG_FLAG_DISABLE);
-> +}
-> +
-> +static void pmt_crashlog_set_disable(struct crashlog_entry *entry, bool disable)
-> +{
-> +	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
-> +
-> +	/* clear control bits */
-> +	control &= ~(CRASHLOG_FLAG_MASK | CRASHLOG_FLAG_DISABLE);
-> +	if (disable)
-> +		control |= CRASHLOG_FLAG_DISABLE;
-> +
-> +	writel(control, entry->disc_table + CONTROL_OFFSET);
-> +}
-> +
-> +static void pmt_crashlog_set_clear(struct crashlog_entry *entry)
-> +{
-> +	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
-> +
-> +	/* clear control bits */
-> +	control &= ~CRASHLOG_FLAG_MASK;
-> +	control |= CRASHLOG_FLAG_CLEAR;
-> +
-> +	writel(control, entry->disc_table + CONTROL_OFFSET);
-> +}
-> +
-> +static void pmt_crashlog_set_execute(struct crashlog_entry *entry)
-> +{
-> +	u32 control = readl(entry->disc_table + CONTROL_OFFSET);
-> +
-> +	/* clear control bits */
-> +	control &= ~CRASHLOG_FLAG_MASK;
-> +	control |= CRASHLOG_FLAG_EXECUTE;
-> +
-> +	writel(control, entry->disc_table + CONTROL_OFFSET);
-> +}
-
-These 3 pmt_crashlog_set_* functions are all triggered through
-sysfs writes and they all do read-modify-write of the control-register,
-so this is racy. You need to add a mutex to protect the r-m-w sequences.
-
-
-> +
-> +/*
-> + * devfs
-> + */
-> +static int pmt_crashlog_open(struct inode *inode, struct file *filp)
-> +{
-> +	struct crashlog_entry *entry;
-> +	struct pci_driver *pci_drv;
-> +	struct pmt_crashlog_priv *priv;
-> +
-> +	if (!capable(CAP_SYS_ADMIN))
-> +		return -EPERM;
-> +
-> +	entry = container_of(inode->i_cdev, struct crashlog_entry, cdev);
-> +	priv = entry->priv;
-> +	pci_drv = pci_dev_driver(priv->parent);
-> +
-> +	if (!pci_drv)
-> +		return -ENODEV;
-> +
-> +	filp->private_data = entry;
-> +	get_device(&priv->parent->dev);
-> +
-> +	if (!try_module_get(pci_drv->driver.owner)) {
-> +		put_device(&priv->parent->dev);
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int pmt_crashlog_release(struct inode *inode, struct file *filp)
-> +{
-> +	struct crashlog_entry *entry = filp->private_data;
-> +	struct pmt_crashlog_priv *priv;
-> +	struct pci_driver *pci_drv;
-> +
-> +	priv = entry->priv;
-> +	pci_drv = pci_dev_driver(priv->parent);
-> +
-> +	put_device(&priv->parent->dev);
-> +	module_put(pci_drv->driver.owner);
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +pmt_crashlog_mmap(struct file *filp, struct vm_area_struct *vma)
-> +{
-> +	struct crashlog_entry *entry = filp->private_data;
-> +	struct pmt_crashlog_priv *priv;
-> +	unsigned long phys = entry->crashlog_data;
-> +	unsigned long pfn = PFN_DOWN(phys);
-> +	unsigned long vsize = vma->vm_end - vma->vm_start;
-> +	unsigned long psize;
-> +
-> +	if ((vma->vm_flags & VM_WRITE) ||
-> +	    (vma->vm_flags & VM_MAYWRITE))
-> +		return -EPERM;
-> +
-> +	priv = entry->priv;
-> +
-> +	if (!entry->crashlog_data_size) {
-> +		dev_err(priv->dev, "Crashlog data not accessible\n");
-> +		return -EAGAIN;
-> +	}
-> +
-> +	psize = (PFN_UP(entry->crashlog_data + entry->crashlog_data_size) - pfn) *
-> +		PAGE_SIZE;
-> +	if (vsize > psize) {
-> +		dev_err(priv->dev, "Requested mmap size is too large\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-> +	if (io_remap_pfn_range(vma, vma->vm_start, pfn,
-> +		vsize, vma->vm_page_prot))
-> +		return -EAGAIN;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations pmt_crashlog_fops = {
-> +	.owner =	THIS_MODULE,
-> +	.open =		pmt_crashlog_open,
-> +	.mmap =		pmt_crashlog_mmap,
-
-mmap but no read, I guess read may be emulated through mmap,
-is that the case ?
-
-I can see sysadmins wanting to be able to do a simple cat
-on this file to get the logs (including headers), so if
-the kernel-core does not emulate read in this case, you
-should really add read support I guess.
-
-Also how big are these files ?  sysfs also supports binary
-files, so unless these files are huge / this is really
-performance critical it may make more sense to just add
-a binary sysfs attr for this and get rid of the whole chardev
-all together.
-
-
-> +	.release =	pmt_crashlog_release,
-> +};
-> +
-> +/*
-> + * sysfs
-> + */
-> +static ssize_t
-> +guid_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct crashlog_entry *entry;
-> +
-> +	entry = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "0x%x\n", entry->header.guid);
-> +}
-> +static DEVICE_ATTR_RO(guid);
-> +
-> +static ssize_t size_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct crashlog_entry *entry;
-> +
-> +	entry = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%lu\n", entry->crashlog_data_size);
-> +}
-> +static DEVICE_ATTR_RO(size);
-> +
-> +static ssize_t
-> +offset_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct crashlog_entry *entry;
-> +
-> +	entry = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%lu\n", offset_in_page(entry->crashlog_data));
-> +}
-> +static DEVICE_ATTR_RO(offset);
-> +
-> +static ssize_t
-> +enable_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct crashlog_entry *entry;
-> +	int enabled;
-> +
-> +	entry = dev_get_drvdata(dev);
-> +	enabled = !pmt_crashlog_disabled(entry);
-> +
-> +	return sprintf(buf, "%d\n", enabled);
-> +}
-> +
-> +static ssize_t
-> +enable_store(struct device *dev, struct device_attribute *attr,
-> +	    const char *buf, size_t count)
-> +{
-> +	struct crashlog_entry *entry;
-> +	bool enabled;
-> +	int result;
-> +
-> +	entry = dev_get_drvdata(dev);
-> +
-> +	result = kstrtobool(buf, &enabled);
-> +	if (result)
-> +		return result;
-> +
-> +	pmt_crashlog_set_disable(entry, !enabled);
-> +
-> +	return strnlen(buf, count);
-> +}
-> +static DEVICE_ATTR_RW(enable);
-> +
-> +static ssize_t
-> +trigger_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct crashlog_entry *entry;
-> +	int trigger;
-> +
-> +	entry = dev_get_drvdata(dev);
-> +	trigger = pmt_crashlog_complete(entry);
-> +
-> +	return sprintf(buf, "%d\n", trigger);
-> +}
-> +
-> +static ssize_t
-> +trigger_store(struct device *dev, struct device_attribute *attr,
-> +	    const char *buf, size_t count)
-> +{
-> +	struct crashlog_entry *entry;
-> +	bool trigger;
-> +	int result;
-> +
-> +	entry = dev_get_drvdata(dev);
-> +
-> +	result = kstrtobool(buf, &trigger);
-> +	if (result)
-> +		return result;
-> +
-> +	if (trigger) {
-> +		/* we cannot trigger a new crash if one is still pending */
-> +		if (pmt_crashlog_complete(entry))
-> +			return -EEXIST;
-> +
-> +		/* if device is currently disabled, return busy */
-> +		if (pmt_crashlog_disabled(entry))
-> +			return -EBUSY;
-> +
-> +		pmt_crashlog_set_execute(entry);
-> +	} else {
-> +		pmt_crashlog_set_clear(entry);
-> +	}
-> +
-> +	return strnlen(buf, count);
-> +}
-> +static DEVICE_ATTR_RW(trigger);
-> +
-> +static struct attribute *pmt_crashlog_attrs[] = {
-> +	&dev_attr_guid.attr,
-> +	&dev_attr_size.attr,
-> +	&dev_attr_offset.attr,
-> +	&dev_attr_enable.attr,
-> +	&dev_attr_trigger.attr,
-> +	NULL
-> +};
-> +ATTRIBUTE_GROUPS(pmt_crashlog);
-> +
-> +static struct class pmt_crashlog_class = {
-> +	.name = "pmt_crashlog",
-> +	.owner = THIS_MODULE,
-> +	.dev_groups = pmt_crashlog_groups,
-> +};
-> +
-> +/*
-> + * initialization
-> + */
-> +static int pmt_crashlog_make_dev(struct pmt_crashlog_priv *priv,
-> +				 struct crashlog_entry *entry)
-> +{
-> +	struct device *dev;
-> +	int ret;
-> +
-> +	ret = alloc_chrdev_region(&entry->devt, 0, 1, DRV_NAME);
-> +	if (ret < 0) {
-> +		dev_err(priv->dev, "alloc_chrdev_region err: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Create a character device for Samplers */
-> +	cdev_init(&entry->cdev, &pmt_crashlog_fops);
-> +
-> +	ret = cdev_add(&entry->cdev, entry->devt, 1);
-> +	if (ret) {
-> +		dev_err(priv->dev, "Could not add char dev\n");
-> +		return ret;
-> +	}
-> +
-> +	dev = device_create(&pmt_crashlog_class, &priv->parent->dev, entry->devt,
-> +			    entry, "%s%d", "crashlog", entry->devid);
-> +
-> +	if (IS_ERR(dev)) {
-> +		dev_err(priv->dev, "Could not create device node\n");
-> +		cdev_del(&entry->cdev);
-> +	}
-> +
-> +	return PTR_ERR_OR_ZERO(dev);
-> +}
-> +
-> +static void
-> +pmt_crashlog_populate_header(void __iomem *disc_offset,
-> +			     struct crashlog_header *header)
-> +{
-> +	u32 discovery_header = readl(disc_offset);
-> +
-> +	header->access_type = GET_ACCESS(discovery_header);
-> +	header->crash_type = GET_TYPE(discovery_header);
-> +	header->version = GET_VERSION(discovery_header);
-> +	header->guid = readl(disc_offset + GUID_OFFSET);
-> +	header->base_offset = readl(disc_offset + BASE_OFFSET);
-> +
-> +	/*
-> +	 * For non-local access types the lower 3 bits of base offset
-> +	 * contains the index of the base address register where the
-> +	 * crashlogetry can be found.
-> +	 */
-> +	header->bir = GET_BIR(header->base_offset);
-> +	header->base_offset ^= header->bir;
-> +
-> +	/* Size is measured in DWORDs */
-> +	header->size = readl(disc_offset + SIZE_OFFSET);
-> +}
-> +
-> +static int pmt_crashlog_add_entry(struct pmt_crashlog_priv *priv,
-> +				  struct crashlog_entry *entry)
-> +{
-> +	struct resource *res = entry->header_res;
-> +	int ret;
-> +
-> +	pmt_crashlog_populate_header(entry->disc_table, &entry->header);
-> +
-> +	/* Local access and BARID only for now */
-> +	switch (entry->header.access_type) {
-> +	case ACCESS_LOCAL:
-> +		dev_info(priv->dev, "access_type: LOCAL\n");
-> +		if (entry->header.bir) {
-> +			dev_err(priv->dev,
-> +				"Unsupported BAR index %d for access type %d\n",
-> +				entry->header.bir, entry->header.access_type);
-> +			return -EINVAL;
-> +		}
-> +
-> +		entry->crashlog_data = res->start + resource_size(res) +
-> +				       entry->header.base_offset;
-> +		break;
-> +
-> +	case ACCESS_BARID:
-> +		dev_info(priv->dev, "access_type: BARID\n");
-> +		entry->crashlog_data =
-> +			priv->parent->resource[entry->header.bir].start +
-> +			entry->header.base_offset;
-> +		break;
-> +
-> +	default:
-> +		dev_err(priv->dev, "Unsupported access type %d\n",
-> +			entry->header.access_type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_info(priv->dev, "crashlod_data address: 0x%lx\n", entry->crashlog_data);
-> +
-> +	entry->crashlog_data_size = entry->header.size * 4;
-> +
-> +	if (entry->header.crash_type != CRASH_TYPE_OOBMSM) {
-> +		dev_err(priv->dev, "Unsupported crashlog header type %d\n",
-> +			entry->header.crash_type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (entry->header.version != 0) {
-> +		dev_err(priv->dev, "Unsupported version value %d\n",
-> +			entry->header.version);
-> +		return -EINVAL;
-> +	}
-> +
-> +	entry->ida = &crashlog_devid_ida;
-> +
-> +	entry->devid = ida_simple_get(entry->ida, 0, 0, GFP_KERNEL);
-> +	if (entry->devid < 0)
-> +		return entry->devid;
-> +
-> +	ret = pmt_crashlog_make_dev(priv, entry);
-> +	if (ret) {
-> +		ida_simple_remove(entry->ida, entry->devid);
-> +		return ret;
-> +	}
-
-Hmm wait, you are making one chardev per log entry ? Then just using
-binary sysfs attributes seems to make even more sense to me.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void pmt_crashlog_remove_entries(struct pmt_crashlog_priv *priv)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < priv->num_entries; i++) {
-> +		device_destroy(&pmt_crashlog_class, priv->entry[i].devt);
-> +		cdev_del(&priv->entry[i].cdev);
-> +
-> +		unregister_chrdev_region(priv->entry[i].devt, 1);
-> +		ida_simple_remove(priv->entry[i].ida, priv->entry[i].devid);
-> +	}
-> +}
-> +static int pmt_crashlog_probe(struct platform_device *pdev)
-> +{
-> +	struct pmt_crashlog_priv *priv;
-> +	struct crashlog_entry *entry;
-> +	int i;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +	priv->dev = &pdev->dev;
-> +	priv->parent  = to_pci_dev(priv->dev->parent);
-> +
-> +	priv->entry = devm_kcalloc(&pdev->dev, pdev->num_resources,
-> +				   sizeof(*(priv->entry)), GFP_KERNEL);
-> +
-> +	for (i = 0, entry = priv->entry; i < pdev->num_resources;
-> +	     i++, entry++) {
-> +		int ret;
-> +
-> +		entry->header_res = platform_get_resource(pdev, IORESOURCE_MEM,
-> +							  i);
-> +		if (!entry->header_res) {
-> +			pmt_crashlog_remove_entries(priv);
-> +			return -ENODEV;
-> +		}
-> +
-> +		dev_info(&pdev->dev, "%d res start: 0x%llx, end 0x%llx\n", i,
-> +			 entry->header_res->start, entry->header_res->end);
-> +
-> +		entry->disc_table = devm_platform_ioremap_resource(pdev, i);
-> +		if (IS_ERR(entry->disc_table)) {
-> +			pmt_crashlog_remove_entries(priv);
-> +			return PTR_ERR(entry->disc_table);
-> +		}
-> +
-> +		ret = pmt_crashlog_add_entry(priv, entry);
-> +		if (ret) {
-> +			pmt_crashlog_remove_entries(priv);
-> +			return ret;
-> +		}
-> +
-> +		entry->priv = priv;
-> +		priv->num_entries++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int pmt_crashlog_remove(struct platform_device *pdev)
-> +{
-> +	struct pmt_crashlog_priv *priv;
-> +
-> +	priv = (struct pmt_crashlog_priv *)platform_get_drvdata(pdev);
-> +
-> +	pmt_crashlog_remove_entries(priv);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver pmt_crashlog_driver = {
-> +	.driver = {
-> +		.name   = DRV_NAME,
-> +	},
-> +	.probe  = pmt_crashlog_probe,
-> +	.remove = pmt_crashlog_remove,
-> +};
-> +
-> +static int __init pmt_crashlog_init(void)
-> +{
-> +	int ret = class_register(&pmt_crashlog_class);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = platform_driver_register(&pmt_crashlog_driver);
-> +	if (ret) {
-> +		class_unregister(&pmt_crashlog_class);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit pmt_crashlog_exit(void)
-> +{
-> +	platform_driver_unregister(&pmt_crashlog_driver);
-> +	class_unregister(&pmt_crashlog_class);
-> +	ida_destroy(&crashlog_devid_ida);
-> +}
-> +
-> +module_init(pmt_crashlog_init);
-> +module_exit(pmt_crashlog_exit);
-> +
-> +MODULE_AUTHOR("Alexander Duyck <alexander.h.duyck@linux.intel.com>");
-> +MODULE_DESCRIPTION("Intel PMT Crashlog driver");
-> +MODULE_ALIAS("platform:" DRV_NAME);
-> +MODULE_LICENSE("GPL v2");
-> 
-
-Regards,
-
-Hans
+PiBTbyBteSB0aGlua2luZyBoZXJlIGlzIGFzIGZvbGxvd3M6DQo+IA0KPiAxLiBBRkFJSyBvdGhl
+ciB2ZW5kb3JzIG1heSB3YW50IHRvIGRvIHNvbWV0aGluZyBzaW1pbGFyIGluIHRoZSBuZWFyIGZ1
+dHVyZQ0KPiAyLiBUaGUgaW50ZXJmYWNlIHlvdSAoRGVsbCkgaGF2ZSBjb21lIHVwIHdpdGggbG9v
+a3MgcHJldHR5IGdlbmVyaWMgLyBjb21wbGV0ZQ0KPiB0byBtZQ0KPiANCj4gPiBXb3VsZCB0aG9z
+ZSBwb3NzaWJsZSBvcHRpb25zDQo+ID4gYmUgaGFyZGNvZGVkIGluIHRoZWlyIGtlcm5lbCBkcml2
+ZXI/DQo+IA0KPiBNYXliZSwgc28gdGhlIGZpcm13YXJlIGltcGxlbWVudGF0aW9uIG9mIGFuIGVu
+dW0gdHlwZSwgY2FuIHRha2UgMiBmb3JtczoNCj4gYSkgQW4gaW50ZWdlciBpbiB0aGUgcmFuZ2Ug
+b2YgMC0jIHdoZXJlIDAtIyBpcyBsaWtlIHRoZSBpbnRlZ2VyIHZhbHVlIGJhY2tpbmcNCj4gYW4g
+ZW51bSBpbiBDDQo+IGIpIFJlYWRpbmcgdGhlIGN1cnJlbnQgdmFsdWUgYXMgYSBzdHJpbmcgYW5k
+IHdoZW4gd3JpdGluZyBvbmx5IGEgdmFsdWUgZnJvbSBhDQo+IGZpeGVkIGxpc3Qgb2Ygc3RyaW5n
+cyBpcyB2YWxpZA0KPiANCj4gTm93IGluIGJvdGggY2FzZXMsIGVpdGhlciBub3Qga25vd2luZyB3
+aGF0IHRoZSBudW1iZXJzIGFjdHVhbGx5IG1lYW4sIG9yIG5vdA0KPiBrbm93aW5nDQo+IHdoaWNo
+IHZhbHVlcyBhcmUgdmFsaWQgZm9yIHdyaXRpbmcgd291bGQgbWFrZSB0aGUgaW50ZXJmYWNlIHBy
+ZXR0eSBoYXJkIHRvDQo+IHVzZSwNCj4gY2xvc2UgdG8gdXNlbGVzcy4gU28geWVzIGluIHRoYXQg
+Y2FzZSB0aGUgZHJpdmVyIG1heSBuZWVkIHRvIGhhcmRjb2RlIHRvDQo+IHZhbHVlcw0KPiAoYXNz
+dW1pbmcgdGhhdCBzY2FsZXMgZm9yIHRoYXQgdmVuZG9yIGFuZCB0aGV5IGRvbid0IGhhdmUgYSBn
+YXppbGxpb24NCj4gZGlmZmVyZW50DQo+IGVudW1zKS4NCj4gDQo+IEFsc28gbm90ZSB0aGF0IHN5
+c2ZzIGF0dHJpYnV0ZXMgY2FuIGJlIG1hcmtlZCBhcyBvcHRpb25hbCwgc28gd2UgY291bGQgbWFy
+aw0KPiB0aGluZ3MgbGlrZSBwb3NzaWJsZSBlbnVtLXZhbHVlcywgbWluL21heC9zY2FsYXJfaW5j
+IGFzIG9wdGFsIHJpZ2h0IGZyb20gdGhlDQo+IHN0YXJ0Lg0KPiBXZSBjb3VsZCBmb3Igbm93IG1h
+cmsgZXZlcnl0aGluZyBvcHRpb25hbCBleGNlcHQgZm9yIHR5cGUsIGN1cnJlbnRfdmFsdWUgYW5k
+DQo+IGRpc3BsYXktbmFtZS4gVGhhdCBzaG91bGQgbWFrZSBpdCBlYXN5IGZvciBvdGhlciB2ZW5k
+b3JzIGltcGxlbWVudGF0aW9ucyB0bw0KPiBhZGhlcmUgdG8gLyBpbXBsZW1lbnQgdGhlIEFQSS4N
+Cj4gDQo+ID4gRGVsbCBzZXRzIHByZWNlZGVudCBoZXJlIGJ5IGhhdmluZyB0aGUgZmlyc3QgZHJp
+dmVyLg0KPiANCj4gUmlnaHQgYW5kIG5vcm1hbGx5IEkgbWF5IGhhdmUgd2FudGVkIHRvIHdhaXQg
+dW50aWwgYSBzZWNvbmQgdmVuZG9yIGltcGxlbWVudHMNCj4gYSBzaW1pbGFyIG1lY2hhbmlzbSB1
+bmRlciBMaW51eCBzbyB0aGF0IHdlIGNhbiBmaW5kIGNvbW1vbiBncm91bmQgYmV0d2VlbiB0aGUN
+Cj4gMiBpbXBsZW1lbnRhdGlvbnMgZm9yIHRoZSBnZW5lcmljIHVzZXJzcGFjZSBBUEkgZm9yIHRo
+aXMuDQo+IA0KDQpJIHRoaW5rIGluIHRlcm1zIG9mIHRoZSBiYXNpYyBzeXNmcyBmaWxlcyBhbmQg
+dGhlaXIgY29udGVudHMsIGEgZ2VuZXJpYyBBUEkgbWFrZXMNCmZpbmUgc2Vuc2UsIGJ1dCBJJ20g
+aHVuZyBzcGVjaWZpY2FsbHkgdXAgb24gdGhlIGZsb3cgd2hlbiB0aGUgZmlybXdhcmUgaW50ZXJm
+YWNlIGlzDQpsb2NrZWQgZG93bi4NCg0KPiBUaGUgcHJvYmxlbSB3aXRoIHRoYXQgYXBwcm9hY2gg
+aXMgdGhhdCBiZWNhdXNlIHdlIGRvIG5vdCBicmVhayB1c2Vyc3BhY2UsDQo+IHdlIHRoZW4gZ2V0
+IHRvIGNhcnJ5IHRoZSAidGVtcG9yYXJ5IiB2ZW5kb3Itc3BlY2lmaWMgaW1wbGVtZW50YXRpb24g
+b2YgdGhlDQo+IHVzZXJzcGFjZSBBUEkgYXJvdW5kIGZvciBldmVyLCBzaW5jZSBpdCBtYXkgdmVy
+eSB3ZWxsIGhhdmUgZXhpc3RpbmcgdXNlcnMNCj4gYmVmb3JlIHdlIHJlcGxhY2UgaXQgd2l0aCB0
+aGUgZ2VuZXJpYyBBUEkuDQo+IA0KPiBUaGlzIHNjZW5hcmlvIHdvdWxkIG1lYW4gdGhhdCBhZnRl
+ciBzb21lIHBvaW50IGluIHRpbWUgKHdoZW4gdGhlIGdlbmVyaWMgQVBJDQo+IGdldHMNCj4gYWRk
+ZWQgdG8gdGhlIGtlcm5lbCkgRGVsbCBuZWVkcyB0byBzdXBwb3J0IDIgdXNlcnNwYWNlIEFQSXMg
+dGhlIG9uZSB3aGljaCBpcw0KPiBiZWluZyBpbnRyb2R1Y2VkIGJ5IHRoaXMgcGF0Y2ggKyB0aGUg
+Z2VuZXJpYyBvbmUgZ29pbmcgZm9yd2FyZC4NCj4gDQo+IFNpbmNlIHRvIG1lIHRoZSBjdXJyZW50
+IEFQSS9BQkkgRGVsbCBpcyBwcm9wb3NpbmcgaXMgcHJldHR5IGdlbmVyaWMgSSdtDQo+IHRyeWlu
+ZyB0byBhdm9pZCB0aGlzIGhhdmluZyAyIG1haW50YWluIDIgZGlmZmVyZW50IHVzZXJzcGFjZSBB
+UElzIHByb2JsZW0NCj4gYnkgbWFraW5nIHRoaXMgdGhlIGdlbmVyaWMgQVBJIGZyb20gdGhlIGdl
+dCBnby4NCg0KSSdtIHdvcnJpZWQgdGhhdCB3ZSBhY3R1YWxseSBlbmQgdXAgaW4gYSBzaXR1YXRp
+b24gdGhhdCB0aGUgImdlbmVyaWMiIG9uZSBzdXBwb3J0cw0KdGhlc2UgYmFzaWMgZmVhdHVyZXMu
+ICBUaGlzIGlzIHZlcnkgc2ltaWxhciB0byB0aGUgRGVsbCBvbmUsIGJ1dCBtaXNzZXMgY2VydGFp
+bg0KZW5oYW5jZW1lbnRzIHRoYXQgYXJlIG5vdCBpbiB0aGUgZ2VuZXJpYyBvbmUgc28geW91IGhh
+dmUgdG8gdXNlIHRoZSBEZWxsIG9uZSB0byBnZXQNCnRob3NlIGZlYXR1cmVzLiAgQW5kIHRoZW4g
+aG93IGRvIHlvdSBrbm93IHdoaWNoIG9uZSB0byBzZWxlY3QgZnJvbSB0aGUga2VybmVsIGNvbmZp
+Zz8NCg0KSXQgZ2V0cyBtZXNzeSBxdWlja2x5Lg0KIA0KPiANCj4gPiAyKSBEZWxsIGhhcyBzb21l
+IGV4dGVuc2lvbnMgcGxhbm5lZCBmb3Igb3RoZXIgYXV0aGVudGljYXRpb24gbWVjaGFuaXNtcyB0
+aGFuDQo+IHBhc3N3b3JkLg0KPiA+IFRoYXQgaXMgKmRlZmluaXRlbHkqIGdvaW5nIHRvIGJlIERl
+bGwgc3BlY2lmaWMsIHNvIHNob3VsZCBpdCBiZSBkb25lIGluIHRoaXMNCj4gdmVuZG9yDQo+ID4g
+YWdub3N0aWMgZGlyZWN0b3J5Pw0KPiANCj4gV2VsbCBlYWNoIHByb3BlcnR5Og0KPiANCj4gL3N5
+cy9jbGFzcy9maXJtd2FyZS1wcm9wZXJ0aWVzL2RlbGwtYmlvcy88cHJvcGVydHktbmFtZT4NCj4g
+DQo+IFdpbGwgaGF2ZSBhIHR5cGUgYXR0cmlidXRlOg0KPiANCj4gL3N5cy9jbGFzcy9maXJtd2Fy
+ZS1wcm9wZXJ0aWVzL2RlbGwtYmlvcy88cHJvcGVydHktbmFtZT4vdHlwZQ0KPiANCj4gWW91IGNh
+biB1c2UgZGVsbC1zcGVjaWFsLWF1dGgtbWVjaGFuaXNtIGFzIHR5cGUgZm9yIHRoaXMgYW5kDQo+
+IHRoZW4gaXQgaXMgY2xlYXIgaXQgaXMgZGVsbCBzcGVjaWZpYy4gQXMgbWVudGlvbmVkIGFib3Zl
+IEkNCj4gZnVsbHkgZXhwZWN0IG5ldyB0eXBlcyB0byBnZXQgYWRkZWQgb3ZlciB0aGlzIGFuZCB1
+c2Vyc3BhY2UgdG9vbHMNCj4gd2lsbCBiZSBleHBlY3RlZCB0byBqdXN0IHNraXAgcHJvcGVydGll
+cyB3aXRoIHVua25vd24gdHlwZXMNCj4gKHBvc3NpYmx5IHdpdGggYSB3YXJuaW5nKS4NCg0KU28g
+SSB0aGluayB0aGUgbnVhbmNlIHRoYXQgaXMgbWlzc2VkIGhlcmUgaXMgdGhlIGFjdHVhbCBmbG93
+IGZvciBpbnRlcmFjdGluZyB3aXRoDQphbiBhdHRyaWJ1dGUgd2hlbiBwYXNzd29yZCBzZWN1cml0
+eSBpcyBlbmFibGVkIGluIHRvZGF5J3MgcGF0Y2ggc2V0IChib3RoIHYxIGFuZCB2MikuDQoNClVz
+ZXJzcGFjZSB3b3VsZCBwZXJmb3JtIGxpa2UgdGhpczoNCjEpIENoZWNrICJpc19wYXNzd29yZF9z
+ZXQiIGF0dHJpYnV0ZSB0byBkZXRlcm1pbmUgaWYgYWRtaW4gcGFzc3dvcmQgcmVxdWlyZWQNCjIp
+IElmIHllcyB3cml0ZSBwYXNzd29yZCBpbnRvIHRoZSBjdXJyZW50X3Bhc3N3b3JkIGF0dHJpYnV0
+ZSAobG9jYXRpb24gY2hhbmdlZCBpbiAyIHBhdGNoZXMpDQozKSB3cml0ZSBuZXcgYXR0cmlidXRl
+IHZhbHVlKHMpDQo0KSBJZiBuZWNlc3NhcnkgY2xlYXIgY3VycmVudF9wYXNzd29yZCBhdHRyaWJ1
+dGUNCg0KVGhpcyB3b3JrcyBsaWtlIGEgInNlc3Npb24iIHRvZGF5IHdpdGggYWRtaW4gcGFzc3dv
+cmQuICBTbyBpZiB5b3UgaGF2ZSBhIGdlbmVyaWMgaW50ZXJmYWNlDQpyZXByZXNlbnRpbmcgdGhp
+bmdzIGFzIGF0dHJpYnV0ZXMgeW91IG5lZWQgdG8gYWxzbyBoYXZlIGEgZ2VuZXJpYyBhdHRyaWJ1
+dGUgaW5kaWNhdGluZw0KYXV0aGVudGljYXRpb24gcmVxdWlyZWQuICBUaGF0IHdvdWxkIG1lYW4g
+QUxMIGF0dHJpYnV0ZXMgbmVlZCB0byBoYXZlIGEgImF1dGhlbnRpY2F0aW9uX3JlcXVpcmVkIg0K
+dHlwZSBvZiBhdHRyaWJ1dGUuDQoNCkFuZCB0aGVuIHRoYXQgY29tZXMgYmFjayB0byB0aGUgcG9p
+bnQgdGhhdCBhdXRoZW50aWNhdGlvbiBmbG93IGlzIGRlZmluaXRlbHkgbm90IGdlbmVyaWMuDQpE
+ZWxsIHJlcXVpcmVzIHlvdSB0byB3cml0ZSB0aGUgcGFzc3dvcmQgaW4gZXZlcnkgV01JIGNhbGwg
+dG9kYXksIGJ1dCB0aGUgc3lzZnMgaW50ZXJmYWNlIGFjdHVhbGx5DQpiZWhhdmVzIGxpa2UgYSBz
+ZXNzaW9uIGFuZCBjYWNoZXMgdGhlIHBhc3N3b3JkIGluIG1lbW9yeSBmb3IgdGhlIG5leHQgY2Fs
+bC4NCg0KQXMgYSBjb21wbGV0ZWx5IGh5cG90aGV0aWNhbCBpZGVhIHdoYXQgaWYgYW5vdGhlciB2
+ZW5kb3IgYWxzbyBzdXBwb3J0cyBhbiBhZG1pbiBwYXNzd29yZCBidXQgZGVjaWRlcyBmb3INCnRo
+ZWlyIHRocmVhdCBtb2RlbCBpdCdzIGFjdHVhbGx5IGEgcGFzc3dvcmQgaGFzaGVkIGFwcGVuZGVk
+IHdpdGggYSBub25jZSBhbmQgaGFzaGVkIGFuZCBoZW5jZQ0KbmVlZHMgdG8gYmUgc2V0IGV2ZXJ5
+IHRpbWUgZnJvbSBzeXNmcz8NCg0KVGhlaXIgZmxvdyBtaWdodCBsb29rIHNvbWV0aGluZyBsaWtl
+IHRoaXM6DQoxKSBDaGVjayBhdXRoX3JlcXVpcmVkIGF0dHJpYnV0ZQ0KMikgV3JpdGUgaGFzaChw
+YXNzd29yZHxub25jZSkgdG8gY3VycmVudF9wYXNzd29yZA0KMykgV3JpdGUgYXR0cmlidXRlDQo0
+KSBXcml0ZSBoYXNoKHBhc3N3b3JkfG5vbmNlKSB0byBjdXJyZW50X3Bhc3N3b3JkDQo1KSBOb3Qg
+bmVjZXNzYXJ5IHRvIGNsZWFyIGN1cnJlbnRfcGFzc3dvcmQNCg0KVGhvc2UgYXJlIHZlcnkgZGlm
+ZmVyZW50IGZsb3dzIHRvIGdldCB0byBhbmQgY2hhbmdlIHRoZSBzYW1lICJ0eXBlcyIgb2YgZGF0
+YS4gIEJ5IERlbGwncyBpbnRlcmZhY2UNCmJlaW5nIERlbGwgc3BlY2lmaWMgd2UgY2FuIGd1YXJh
+bnRlZSB0aGF0IHRoZSBkb2N1bWVudGVkIGZsb3cgd29ya3MgaG93IGl0IHNob3VsZC4NCg0KPiAN
+Cj4gV2UgY291bGQgZXZlbiBkbyBzb21ldGhpbmcgbGlrZSB3ZSBoYXZlIGZvciAuZGVza3RvcCBm
+aWxlcw0KPiBmaWVsZHMsIHdoZXJlIHdlIGFkZCBzb21ldGhpbmcgdG8gdGhlIHN5c2ZzIEFCSSBk
+b2N1bWVudGF0aW9uDQo+IHRoYXQgdmVuZG9ycyBtYXkgYWRkIHZlbmRvciBzcGVjaWZpYyB0eXBl
+cyBwcmVmaXhlZCB3aXRoIFgtPHZlbmRvcm5hbWU+Lg0KPiANCj4gU28gYWxsIGluIGFsbCBJIGJl
+bGlldmUgdGhhdCB3ZSBjYW4gbWFrZSB1c2luZyB0aGUgcHJvcG9zZWQgc3lzZnMgQUJJDQo+IGEg
+Z2VuZXJpYyBvbmUgd29yaywgYW5kIHRoYXQgdGhpcyB3aWxsIGJlIHdvcnRoIGl0IHRvIGF2b2lk
+IGhhdmluZyB0aGUNCj4gaXNzdWUgb2YgZXZlbnR1YWxseSBoYXZpbmcgYm90aCBhIGNvdXBsZSBv
+ZiB2ZW5kb3Igc3BlY2lmaWMgQVBJcyArDQo+IG9uZSBncmFudCB1bmlmaWVkIGdlbmVyaWMgQVBJ
+IHJlcGxhY2luZyB0aG9zZSB2ZW5kb3ItQVBJcw0KPiAod2hlcmUgd2UgY2FuIG5ldmVyIGRyb3Ag
+dGhlIHZlbmRvciBzcGVjaWZpYyBBUElzIGJlY2F1c2Ugb2YNCj4gYmFja3dhcmQgY29tcGF0LiBn
+dWFyYW50ZWVzKS4NCg0KSSdtIHBlcnNvbmFsbHkgbGVhbmluZyBvbiB0aGUgcmlnaHQgcGxhY2Ug
+dG8gaGF2ZSBhIHZlbmRvciBhZ25vc3RpYyB2aWV3IGlzICJvdXRzaWRlIg0Kb2YgdGhlIGtlcm5l
+bCBpbiBhbiB1c2VybGFuZCBsaWJyYXJ5LiAgQWxsIHRoZSB2ZW5kb3IgZHJpdmVycyB0aGF0IGNo
+YW5nZSBzZXR0aW5ncyBjYW4NCmJlaGF2ZSB2ZXJ5IHNpbWlsYXJseSBmb3IgdGhlIG1vc3QgcGFy
+dCwgYnV0IGRpZmZlcmVuY2VzIGJldHdlZW4gdmVuZG9yIGltcGxlbWVudGF0aW9ucw0KY2FuIGJl
+IGJldHRlciBleHByZXNzZWQgdGhlcmUuDQoNCg==
