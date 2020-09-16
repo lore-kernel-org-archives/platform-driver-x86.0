@@ -1,158 +1,147 @@
-From: Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: Add Driver to set up lid GPEs on MS
- Surface device
-Date: Wed, 16 Sep 2020 19:54:13 +0200
-Message-ID: <5fe41f91-068e-9da8-8308-d71061d378bd@gmail.com>
-References: <20200910211520.1490626-1-luzmaximilian@gmail.com>
- <EMZQgUl1xLN4o0hV9ZkCD563O85SuOYB5kNFZ5_hlxLQXbJCXpQfrM2afyFIr28h31tXMxD1mxE4DkA5Wy60A0Z2mDnstwF17tEdnX4IRas=@protonmail.com>
- <355dae14-2508-706b-53f8-48b78f84e7cc@gmail.com>
- <ID5eml6LsB6tCDrZwhbfin228LE3cor6ZEYbAHj6C3SZ9y0AcL40SWweP-iAjmEpCeEV5NZHJLKBpUo5qw1VR0Q7xOXAVSH7epRjTRkj64Y=@protonmail.com>
+From: =?UTF-8?q?Samuel=20=C4=8Cavoj?= <samuel@cavoj.net>
+Subject: [PATCH] platform/x86: asus-wmi: Add support for SW_TABLET_MODE on UX360
+Date: Wed, 16 Sep 2020 21:12:33 +0200
+Message-ID: <20200916191232.1020318-1-samuel@cavoj.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ID5eml6LsB6tCDrZwhbfin228LE3cor6ZEYbAHj6C3SZ9y0AcL40SWweP-iAjmEpCeEV5NZHJLKBpUo5qw1VR0Q7xOXAVSH7epRjTRkj64Y=@protonmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Cc: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Gayatri Kammela <gayatri.kammela@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, Corentin Chary <corentin.chary@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Samuel=20=C4=8Cavoj?= <samuel@cavoj.net>, Hans de Goede <hdegoede@redhat.com>
 List-Id: platform-driver-x86.vger.kernel.org
 
-On 9/16/20 7:13 PM, Barnabás Pőcze wrote:
-...
->>>> +	}s
->>>> +
->>>> +	return 0;
->>>> +}
->>>> [...]
->>>> +static int surface_gpe_probe(struct platform_device *pdev)
->>>> +{
->>>> +	struct surface_lid_device *lid;
->>>> +	u32 gpe_number;
->>>> +	int status;
->>>> +
->>>> +	status = device_property_read_u32(&pdev->dev, "gpe", &gpe_number);
->>>> +	if (status)
->>>> +		return -ENODEV;
->>>
->>> 'device_property_read_u32()' returns an error code, you could simply return that
->>> instead of hiding it.
->>
->> My thought there was that if the "gpe" property isn't present or of a
->> different type, this is not a device that we want to/can handle. Thus
->> the -ENODEV. Although I think a debug print statement may be useful
->> here.
->>
-> 
-> I see, I just wanted to bring to your attention that 'device_property_read_u32()'
-> returns various standard error codes and you could simply return those.
+The UX360CA has a WMI device id 0x00060062, which reports whether the
+lid is flipped in tablet mode (1) or in normal laptop mode (0).
 
-I think one could also argue that module-loading should have taken care
-of filtering out devices that we don't load on, so -ENODEV would be
-redundant here. At least if one neglects that a user could try to
-manually bind the driver to a device. Following that thought, I guess it
-makes more sense to return the actual value here.
+This commit adds a quirk (quirk_asus_use_lid_flip_devid) for devices on
+which this WMI device should be used to figure out the SW_TABLET_MODE
+state, as opposed to the quirk_asus_use_kbd_dock_devid.
 
->> [...]
->>>> +
->>>> +	lid->gpe_number = gpe_number;
->>>> +	platform_set_drvdata(pdev, lid);
->>>> +
->>>> +	status = surface_lid_enable_wakeup(&pdev->dev, false);
->>>> +	if (status) {
->>>> +		acpi_disable_gpe(NULL, gpe_number);
->>>> +		platform_set_drvdata(pdev, NULL);
->>>
->>> Why is 'platform_set_drvdata(pdev, NULL)' needed?
->>
->> Is this not required for clean-up once the driver data has been set? Or
->> does the driver-base take care of that for us when the driver is
->> removed/fails to probe? My reasoning was that I don't want to leave
->> stuff around for any other driver to trip on (and rather have that
->> driver oops on a NULL-pointer). If the driver-core already takes care of
->> NULL-ing that, that line is not needed. Unfortunately that behavior
->> doesn't seem to be explained in the documentation.
->>
-> 
-> I'm not aware that it would be required. As a matter of fact, only two x86
-> platform drivers (intel_pmc_core, ideapad-laptop) do any cleanup of driver data.
-> There are much more hits (536) for "set_drvdata(.* NULL" when scanning all drivers.
-> There are 4864 hits for "set_drvdata(.*" that have no 'NULL' in them.
-> 
-> There is drivers/base/dd.c:really_probe(), which seems to be the place where driver
-> probes are actually called. And it calls 'dev_set_drvdata(dev, NULL)' if the probe
-> fails. And it also sets the driver data to NULL in '__device_release_driver()',
-> so I'm pretty sure the driver core takes care of it.
+It is assumed other UX360* models have the same WMI device. As such, the
+quirk is applied to devices with DMI_MATCH(DMI_PRODUCT_NAME, "UX360").
+More devices with this feature need to be tested and added accordingly.
 
-I see, thanks! Would make sense that the core takes care of that.
+The reason for using a whitelist via the quirk mechanism is that the new
+WMI device (0x00060062) is also present on some models which do not have
+a 360 degree hinge (at least FX503VD and GL503VD from Hans' DSTS
+collection) and therefore its presence cannot be relied on.
 
->>>> +		return status;
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->> [...]
->>>> +static int __init surface_gpe_init(void)
->>>> +{
->>>> +	const struct dmi_system_id *match;
->>>> +	const struct property_entry *props;
->>>> +	struct platform_device *pdev;
->>>> +	struct fwnode_handle *fwnode;
->>>> +	int status;
->>>> +
->>>> +	match = dmi_first_match(dmi_lid_device_table);
->>>> +	if (!match) {
->>>> +		pr_info(KBUILD_MODNAME": no device detected, exiting\n");
->>>
->>> If you put
->>>    #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>> before including any headers, you can simply write 'pr_info("no device...")' and it'll
->>> be prefixed by the module name. This is the "usual" way of achieving what you want.
->>
->> Right, thanks!
->>
->>>> +		return 0;
->>>
->>> Shouldn't it return -ENODEV?
->>
->> How does module auto-loading behave with a -ENODEV return value in init?
->> I know that in the driver's probe callback it signals that the driver
->> isn't intended for the device. Is this the same for modules or would a
->> user get an error message in the kernel log? As I couldn't find any
->> documentation on this, I assumed it didn't behave the same and would
->> emit an error message.
->>
->> The reason I don't want to emit an error message here is that the module
->> can be loaded for devices that it's not intended (and that's not
->> something we can fix with a better MODULE_ALIAS as Microsoft cleverly
->> named their 5th generation Surface Pro "Surface Pro", without any
->> version number). Mainly, I don't want users to get a random error
->> message that doesn't indicate an actual error.
->>
-> 
-> I wasn't sure, so I tested it. It prints the "no device" message, but that's it,
-> no more indication of the -ENODEV error in the kernel log during automatic
-> module loading at boot.
-> 
-> You could print "no compatible Microsoft Surface device found, exitig" (or something
-> similar). I think this provides enough information for any user to decide if
-> they should be concerned or not.
+This patch is a followup to "platform/x86: asus-wmi: Fix SW_TABLET_MODE
+always reporting 1 on many different models" by Hans de Goede.
 
-I ran the same test (with same results) earlier today and also did some
-digging: From what I can tell, udev is responsible for auto-loading and
-the code doing that can be found at [1]. This code seems to, by default,
-log any errors as debug output. Only in verbose mode it logs them as
-error, with the exception of -ENODEV, which then is specifically logged
-only as notice.
+Signed-off-by: Samuel Čavoj <samuel@cavoj.net>
+Cc: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c         | 14 +++++++++++++
+ drivers/platform/x86/asus-wmi.c            | 23 ++++++++++++++++++++++
+ drivers/platform/x86/asus-wmi.h            |  1 +
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 4 files changed, 39 insertions(+)
 
-It also seems to be used by a couple of other modules this way. So I
-guess that's the expected use-case for -ENODEV in module-init and pretty
-much guarantees the behavior I've wanted.
-
-[1]: https://github.com/systemd/systemd/blob/6d95e7d9b263c94e94704e3125cb790840b76ca2/src/shared/module-util.c#L58-L64
-
-Thanks again. If there are no other comments, I'll likely submit a v3
-addressing the issues tomorrow.
-
-Regards,
-Max
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 345bd224494b..ae5501e07712 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -119,6 +119,10 @@ static struct quirk_entry quirk_asus_use_kbd_dock_devid = {
+ 	.use_kbd_dock_devid = true,
+ };
+ 
++static struct quirk_entry quirk_asus_use_lid_flip_devid = {
++	.use_lid_flip_devid = true,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	pr_info("Identified laptop model '%s'\n", dmi->ident);
+@@ -520,6 +524,16 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_use_kbd_dock_devid,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS ZenBook Flip UX360",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			/* Match UX360* */
++			DMI_MATCH(DMI_PRODUCT_NAME, "UX360"),
++		},
++		.driver_data = &quirk_asus_use_lid_flip_devid,
++	},
+ 	{},
+ };
+ 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index ae6289d37faf..a628a7d9e066 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -63,6 +63,7 @@ MODULE_LICENSE("GPL");
+ #define NOTIFY_KBD_BRTTOGGLE		0xc7
+ #define NOTIFY_KBD_FBM			0x99
+ #define NOTIFY_KBD_TTP			0xae
++#define NOTIFY_LID_FLIP			0xfa
+ 
+ #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
+ 
+@@ -375,6 +376,18 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
+ 		}
+ 	}
+ 
++	if (asus->driver->quirks->use_lid_flip_devid) {
++		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
++		if (result >= 0) {
++			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
++			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
++		} else if (result == -ENODEV) {
++			pr_err("This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
++		} else {
++			pr_err("Error checking for lid-flip: %d\n", result);
++		}
++	}
++
+ 	err = input_register_device(asus->inputdev);
+ 	if (err)
+ 		goto err_free_dev;
+@@ -2127,6 +2140,16 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+ 		return;
+ 	}
+ 
++	if (asus->driver->quirks->use_lid_flip_devid && code == NOTIFY_LID_FLIP) {
++		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
++
++		if (result >= 0) {
++			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
++			input_sync(asus->inputdev);
++		}
++		return;
++	}
++
+ 	if (asus->fan_boost_mode_available && code == NOTIFY_KBD_FBM) {
+ 		fan_boost_mode_switch_next(asus);
+ 		return;
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 1a95c172f94b..b302415bf1d9 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -34,6 +34,7 @@ struct quirk_entry {
+ 	bool wmi_backlight_set_devstate;
+ 	bool wmi_force_als_set;
+ 	bool use_kbd_dock_devid;
++	bool use_lid_flip_devid;
+ 	int wapf;
+ 	/*
+ 	 * For machines with AMD graphic chips, it will send out WMI event
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index 897b8332a39f..2f274cf52805 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -62,6 +62,7 @@
+ 
+ /* Misc */
+ #define ASUS_WMI_DEVID_CAMERA		0x00060013
++#define ASUS_WMI_DEVID_LID_FLIP		0x00060062
+ 
+ /* Storage */
+ #define ASUS_WMI_DEVID_CARDREADER	0x00080013
+-- 
+2.28.0
