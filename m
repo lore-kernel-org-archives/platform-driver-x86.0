@@ -6,79 +6,78 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9092EC43461
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 18:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0A8C433E2
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 18:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57815221EE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 18:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA985206D4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 18:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgIQSlW (ORCPT
+        id S1726424AbgIQSpu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Sep 2020 14:41:22 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.112]:19583 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728471AbgIQQ6k (ORCPT
+        Thu, 17 Sep 2020 14:45:50 -0400
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.114]:17251 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728684AbgIQQv7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Sep 2020 12:58:40 -0400
-Received: from [100.112.5.40] by server-1.bemta.az-c.us-east-1.aws.symcld.net id F5/7C-47518-3B5936F5; Thu, 17 Sep 2020 16:58:27 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjleJIrShJLcpLzFFi42JJl3vFrrtpanK
-  8wbejFha9TdOZLPZfl7BYeP8Uq8XXb7fZLd4cBwqdWZhksXrPC2YHdo+ds+6ye/zatobFY97J
-  QI/3+66yeXzeJBfAGsWamZeUX5HAmnF6yWvWgmmSFYtevWJrYNwk0sXIxSEk8J9RYv7eL+wQz
-  kNGiTunl7OCOMICrYwSGzvvsoE4IgI7GSUOL70EVsYMkpky5wMbRM8tJokph1YAOZwcbALaEl
-  u2/AKzeQVsJeac2MUOYrMIqEqcenWFpYuRg0NUIFbi20w/iBJBiZMzn7CA2JwCHhIz/x8DK2c
-  WsJCYOf88I4QtLnHryXwmCFteYvvbOcwgtoSAgsTK7wvZIOwEiWUv7zBPYBSchWTsLCSjZiEZ
-  NQvJqAWMLKsYTZOKMtMzSnITM3N0DQ0MdA0NjXTNdU0s9RKrdJP1Sot1UxOLS3QN9RLLi/WKK
-  3OTc1L08lJLNjECoymlgN1wB+PiNx/0DjFKcjApifJ+n5AcL8SXlJ9SmZFYnBFfVJqTWnyIUY
-  aDQ0mCV30yUE6wKDU9tSItMwcY2TBpCQ4eJRHekClAad7igsTc4sx0iNQpRkUpcd5ykD4BkER
-  GaR5cGyyZXGKUlRLmZWRgYBDiKUgtys0sQZV/xSjOwagkzPsLZApPZl4J3PRXQIuZgBazcSaC
-  LC5JREhJNTDlBvI5xO1tuHQwWMo3WEaN5VmymFac+1Sn49onDC8vaRUrnlzoful6tml4juSe9
-  sTHO9IEFGe+s1lpmv7835IXypHnlh/NPlddybLxMIf727nKgVdLaqd614fWRR8QYK0pmLDBef
-  bnrcEzst0afU7H1RXZ561f1bH4aoqZvWx8m+18HiHeHZsbnfZfeTfp4YZ4kc3xj/Ytv8W1z2u
-  lm9KvP0+ebX3EuagmL1CA4/mSyuuGE4rD+/qTyidMUQmdJPGes2Fq+uLPMQ82r/i3ffKRYiel
-  u/YzfUM6G8y6ftgtuZhVYbpXhN+Yu2x56dfj988xSpTEX16kefw8t/spxaNHNjfWf2AO2Jx5Q
-  k/x4zElluKMREMt5qLiRAC9vRQ2oQMAAA==
+        Thu, 17 Sep 2020 12:51:59 -0400
+Received: from [100.112.135.189] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-b.us-west-2.aws.symcld.net id 85/0E-22172-914936F5; Thu, 17 Sep 2020 16:51:37 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjleJIrShJLcpLzFFi42JJl3vFpis5JTn
+  eYPsPOYvepulMFvuvS1gsvH+K1eLrt9vsFm+OA4XOLEyyWL3nBbMDu8fOWXfZPX5tW8PiMe9k
+  oMf7fVfZPD5vkgtgjWLNzEvKr0hgzdj77R9rwX6hikXPLBsYr/J1MXJyCAn8Z5SYvDOoi5ELy
+  H7IKLFo0yJWEEdYoJVRYmPnXTYQR0RgCqPE4jvTmEAcZoHljBKnujYxQvQ8YJQ4+GYaG8gwNg
+  FtiS1bfoHZvAK2Ei39x9hBbBYBVYmm/p1AcQ4OUYFYiW8z/SBKBCVOznzCAmJzCthJ9G6ZBdb
+  KLGAhMXP+eUYIW1zi1pP5TBC2vMT2t3OYQWwJAQWJld8XskHYCRLLXt5hnsAoOAvJ2FlIRs1C
+  MmoWklELGFlWMZonFWWmZ5TkJmbm6BoaGOgaGhrpGhob65pZ6CVW6SbplRbrlqcWl+ga6SWWF
+  +sVV+Ym56To5aWWbGIERlNKQavLDsb/rz/oHWKU5GBSEuX9PiE5XogvKT+lMiOxOCO+qDQntf
+  gQowwHh5IEr/pkoJxgUWp6akVaZg4wsmHSEhw8SiK8/ycBpXmLCxJzizPTIVKnGBWlxHlVQRI
+  CIImM0jy4NlgyucQoKyXMy8jAwCDEU5BalJtZgir/ilGcg1FJmHctyBSezLwSuOmvgBYzAS1m
+  40wEWVySiJCSamCK/aBYcfPvfp3m6gcm9su7ztW8air1uyot2a60i8Mj9JbiGbHbN/d0WhSJn
+  prGlt0Y8CipTNLy7a5Pv97Mdtk9ifdo3IpDu9Y4TtBcMIFxu6fay9dfPqbJF7UUH745r/jpmo
+  73OX/KPLj0bh0KFpC/VMG5i2HSvwzl30eXCXZczWG/atAnF1uspqv/9ZzNmea6Z/oFnkpPpB0
+  SrfSDYldyN31vmqG6I+Pw65dHfdYpsRQ3TVx+T7dhQ0VbruTd6FmaRkli5Uam9e5eDr5XfwmZ
+  fHa6l+n69uQvVhXOzB+XbOReTOthXpumvKv9cCebNuf6fPeM+onZKYuSaqw05nAJqr63T3pYl
+  lEuUBavCDQ6I9FQi7moOBEA3BQAUqEDAAA=
 X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-47.tower-406.messagelabs.com!1600361904!9731!1
-X-Originating-IP: [103.30.234.7]
+X-Msg-Ref: server-28.tower-346.messagelabs.com!1600361495!43421!1
+X-Originating-IP: [103.30.234.6]
 X-SYMC-ESS-Client-Auth: outbound-route-from=pass
 X-StarScan-Received: 
 X-StarScan-Version: 9.60.3; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 32516 invoked from network); 17 Sep 2020 16:58:26 -0000
-Received: from unknown (HELO lenovo.com) (103.30.234.7)
-  by server-47.tower-406.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 17 Sep 2020 16:58:26 -0000
+Received: (qmail 23852 invoked from network); 17 Sep 2020 16:51:37 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.6)
+  by server-28.tower-346.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 17 Sep 2020 16:51:37 -0000
 Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
         (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by Forcepoint Email with ESMTPS id AAF2F862D328E0329396;
-        Fri, 18 Sep 2020 00:58:22 +0800 (CST)
+        by Forcepoint Email with ESMTPS id 87D53D092206406B0E50;
+        Fri, 18 Sep 2020 00:51:33 +0800 (CST)
 Received: from [10.46.52.228] (10.46.52.228) by reswpmail04.lenovo.com
  (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Thu, 17 Sep
- 2020 09:58:19 -0700
+ 2020 09:51:30 -0700
 Subject: Re: [External] Re: RFC: offering a standardized (/sys/class)
  userspace API for selecting system/laptop performance-profiles
-To:     Benjamin Berg <bberg@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+To:     Hans de Goede <hdegoede@redhat.com>,
         Bastien Nocera <hadess@hadess.net>,
         Elia Devito <eliadevito@gmail.com>,
-        "Mark Pearson" <mpearson@lenovo.com>
-CC:     Jared Dominguez <jaredz@redhat.com>,
+        Mark Pearson <mpearson@lenovo.com>
+CC:     Benjamin Berg <bberg@redhat.com>,
+        Jared Dominguez <jaredz@redhat.com>,
         <platform-driver-x86@vger.kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 References: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
  <21b6dffbbc6dbb14ebef3f078cc2497f9a872f57.camel@hadess.net>
- <b6332a4a-7606-2bd0-632b-f67b68d3dd1b@redhat.com>
- <9f01ce60a6b3319855f6a26b94af3e5fc6d2595e.camel@redhat.com>
- <6e0409e7-5bc2-4ca6-a0aa-725a9a91aa8d@redhat.com>
- <83694d5164a32d1ce6cdafb9cb73d731ca4b4a78.camel@redhat.com>
+ <f8e4fc83-9665-2a58-d2e0-e858a16417e8@lenovo.com>
+ <6e49abf2-6e93-bb41-7df3-0ac66b689df6@redhat.com>
 From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <0577bc9b-aa9f-c4b6-bac6-64325d81eeff@lenovo.com>
-Date:   Thu, 17 Sep 2020 12:58:17 -0400
+Message-ID: <a2861f6e-7e7e-3bf8-8f31-c4c2c92096ce@lenovo.com>
+Date:   Thu, 17 Sep 2020 12:51:28 -0400
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <83694d5164a32d1ce6cdafb9cb73d731ca4b4a78.camel@redhat.com>
+In-Reply-To: <6e49abf2-6e93-bb41-7df3-0ac66b689df6@redhat.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -89,75 +88,69 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 9/17/2020 10:10 AM, Benjamin Berg wrote:
+
+On 9/17/2020 10:04 AM, Hans de Goede wrote:
 > Hi,
 > 
-> On Thu, 2020-09-17 at 15:54 +0200, Hans de Goede wrote:
->> Hi,
+> On 9/17/20 3:36 PM, Mark Pearson wrote:
+>> Hi all,
 >>
->> On 9/17/20 3:50 PM, Benjamin Berg wrote:
->>> On Thu, 2020-09-17 at 14:51 +0200, Hans de Goede wrote:
->>>>> Compared to the WIP lenovo-dytc "perfmode" driver, we're missing
->>>>> something to advertise the unavailability of a profile, and the reason
->>>>> for that unavailability.
->>>>
->>>> UGh, do we really need to export this though. We have the lap_mode thing
->>>> already; and that is something which we will need for other reasons in
->>>> the future too. Any UI for selecting performance modes can display a
->>>> warning when lap_mode is true saying that: "The laptop has detected that it
->>>> is sitting on someone's lap and that performance may be limited
->>>> because of this." (feel free to improve the text).
->>>
->>> Well, for dytc_perfmode there are actually always the three states
->>> L/M/H. It just happens that the kernel will write "H*" (was "M*" until
->>> yesterday) when the performance mode is degraded due to lap detection.
->>>
->>> Think of dytc_perfmode as a profile that sets a number of things:
->>>    * Thermal Limits
->>>    * Fan Behaviour
->>>    * possibly more
->>>
->>> While dytc_lapmode will only enforce a change to the thermal limit.
->>> So "performance" (H) is technically a valid mode even when the lap is
->>> detected.
->>>
->>>> I guess we could split the "value" attribute from my reply to Benjamin's
->>>> email into "configured_value" (rw) and "actual_value" (rw) attributes.
->>>> If we have the info we might as well export it I guess,.
->>>
->>> I consider the "*" purely a curtsey to users that read the attribute
->>> directly using e.g. cat to help with the interpretation. It probably is
->>> not interesting to userspace applications/daemons.
+<snip>
 >>
->> So if there is a difference between M and H and H* then I think we should
->> just do the KISS thing and only have a single value attribute and in the
->> new interface handle the H* like H (p-p-d can still check the lap_mode
->> attribute to differentiate the 2 if it wants to).
+>> One question - the main reason for a common interface is for user 
+>> space to not deal with a mess of APIs.
 > 
-> I guess you are saying to drop "H*" and only have "L"/"M"/"H"? If so,
-> fine with me, but we probably need that input in reply to
->    https://patchwork.kernel.org/patch/11730133/#23618881
-> then :)
+> Correct.
 > 
-> In principle it could be useful for userspace to know that performance
-> is or would be dramatically impacted. i.e. when dytc_lapmode is 1, then
-> you might want to say something like:
+>> Is it worth me doing a simplified version of my patch (maybe using 
+>> debugfs?) so I can expose the modes to users whilst we work on the 
+>> common solution? I'm assuming there is no mileage in getting my patch 
+>> (with the fix I owe Benjamin) in and then changing it in the future 
+>> once the generic solution is available as that potentially messes up 
+>> userspace too much?
 > 
->    performance states >= 75 are impacted due to "lapmode"
+> Using debugfs as an intermediate solution is a good idea. debugfs 
+> interfaces have no ABI guarantees, so we can simply drop it when the 
+> generic stuff lands.
 > 
-> But, not sure if a kernel interface for that is useful or whether we
-> should just put that kind of knowledge into userspace.
-> 
-> Benjamin
-> 
-I don't have a strong opinion on this but the kernel driver is already 
-knowledgeable about the quirks of what does and doesn't work on the 
-system so it seems like a good place to have that logic.
+Great. I'll look at that as an alternative for the short term.
 
-What if we have an API for "configured" and "actual" - and if they 
-differ userspace knows it should figure out why (likely lapmode, but if 
-the HW vendor adds a new setting related to "position of sun in the sky" 
-or "how much money is in your account and can you afford the electricity 
-bill?" that could be added too....)
+>> Something as a stopgap measure that won't annoy the kernel community 
+>> but is good for Linux users as I'm guessing the generic solution is 
+>> likely to be months away
+> 
+> The generic solution will definitely not make the 5.10 kernel, but 5.11 
+> is not entirely out of the question, although to be honest 5.12 seems 
+> more realistic.
+> 
+OK.
+> <snip>
+> 
+>>>> I guess we should also add an optional lap_mode sysfs attribute
+>>>> to the class-device, to have all the info for the Thinkpads in
+>>>> one place.
+>>>>
+>> I'm good with this too - but the lapmode patch is accepted and there 
+>> is the palm sensor patch too which I'm hoping is accepted soon. Whilst 
+>> I'm happy to make them part of this implementation (if they fit) I'd 
+>> appreciate if they didn't get removed or held up as they're needed for 
+>> our WWAN implementation which is already overdue.
+>> The main consumer there will be our WWAN enablement utility and we can 
+>> change that to support different API if needs be :)
+> 
+> As the rest of the dicussion has shown the lap_mode thingie indeed is 
+> best left in place as a
+> thinkpad_acpi only interface for now.
+> 
+> I guess the same applies to the palm_sensor stuff. We may want to 
+> advertise that through
+> some standardize API later, but for now we can just use a thinkpad_acpi 
+> specific API and
+> then also export the info through the standardized API later, as we will 
+> do for the
+> lcdshadow stuff.
+> 
+Sounds good.
+Happy to work on that too in the future
 
 Mark
