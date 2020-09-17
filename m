@@ -7,55 +7,53 @@ X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C2AC43464
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 21:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00414C43464
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 21:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB9F52083B
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 21:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC1F52083B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 21:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbgIQVqb (ORCPT
+        id S1725886AbgIQVvE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Sep 2020 17:46:31 -0400
-Received: from mga14.intel.com ([192.55.52.115]:65310 "EHLO mga14.intel.com"
+        Thu, 17 Sep 2020 17:51:04 -0400
+Received: from mga01.intel.com ([192.55.52.88]:11948 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbgIQVqb (ORCPT
+        id S1725858AbgIQVvE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Sep 2020 17:46:31 -0400
-IronPort-SDR: axf+HoJ90SfdUDYT1oOxFUDQ685O/BR61kqcGfrW5LFwCvuUucEGilAmwHGxEG+iWV5OghJ1Wp
- OcgEnYKi05mQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9747"; a="159105813"
+        Thu, 17 Sep 2020 17:51:04 -0400
+IronPort-SDR: eZmnMcRLJHPUwH6NpXKPlyROlhGCNOhSYaNRqHZQ67zNfMzPMnA/4f6eVDqP8a8nC9wywu6uYt
+ DmulWIr8356g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9747"; a="177899478"
 X-IronPort-AV: E=Sophos;i="5.77,272,1596524400"; 
-   d="scan'208";a="159105813"
+   d="scan'208";a="177899478"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:46:29 -0700
-IronPort-SDR: 4v506Jv4WNG8inJA6c0dcYElPBXLhmBjERs77eC/TvL6SfRnAMW2nK5nbrBfR3DgUSYstFPc5M
- DckGfjp+fSsA==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:51:04 -0700
+IronPort-SDR: uaVjyTv9QUwcyQXGGpSzY0pE64rTcroIgzRsGoBjzcxUvc0AcTwQM8esrtClai/wY+MrCpz4FM
+ /EpabDmEKVbg==
 X-IronPort-AV: E=Sophos;i="5.77,272,1596524400"; 
-   d="scan'208";a="344508817"
+   d="scan'208";a="303099401"
 Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:46:28 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:51:03 -0700
 Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
-        by smtp.ostc.intel.com (Postfix) with ESMTP id 3FC1A6369;
-        Thu, 17 Sep 2020 14:46:28 -0700 (PDT)
-Date:   Thu, 17 Sep 2020 14:46:28 -0700
+        by smtp.ostc.intel.com (Postfix) with ESMTP id B74806369;
+        Thu, 17 Sep 2020 14:51:03 -0700 (PDT)
+Date:   Thu, 17 Sep 2020 14:51:03 -0700
 From:   mark gross <mgross@linux.intel.com>
-To:     trix@redhat.com
-Cc:     ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org,
-        natechancellor@gmail.com, ndesaulniers@google.com,
-        len.brown@intel.com, ibm-acpi-devel@lists.sourceforge.net,
+To:     Necip Fazil Yildiran <fazilyildiran@gmail.com>
+Cc:     andy@infradead.org, matan@svgalib.org,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: initialize tp_nvram_state
- variable
-Message-ID: <20200917214628.GC29136@mtg-dev.jf.intel.com>
+        paul@pgazz.com, jeho@cs.utexas.edu
+Subject: Re: [PATCH] platform/x86: fix kconfig dependency warning for
+ LG_LAPTOP
+Message-ID: <20200917215103.GE29136@mtg-dev.jf.intel.com>
 Reply-To: mgross@linux.intel.com
-References: <20200913190203.22238-1-trix@redhat.com>
+References: <20200915090922.16423-1-fazilyildiran@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200913190203.22238-1-trix@redhat.com>
+In-Reply-To: <20200915090922.16423-1-fazilyildiran@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
@@ -65,39 +63,38 @@ Acked-by: mark gross <mgross@linux.intel.com>
 
 --mark
 
-
-On Sun, Sep 13, 2020 at 12:02:03PM -0700, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
+On Tue, Sep 15, 2020 at 12:09:23PM +0300, Necip Fazil Yildiran wrote:
+> When LG_LAPTOP is enabled and NEW_LEDS is disabled, it results in the
+> following Kbuild warning:
 > 
-> clang static analysis flags this represenative problem
-> thinkpad_acpi.c:2523:7: warning: Branch condition evaluates
->   to a garbage value
->                 if (!oldn->mute ||
->                     ^~~~~~~~~~~
+> WARNING: unmet direct dependencies detected for LEDS_CLASS
+>   Depends on [n]: NEW_LEDS [=n]
+>   Selected by [y]:
+>   - LG_LAPTOP [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && ACPI [=y] && ACPI_WMI [=y] && INPUT [=y]
 > 
-> In hotkey_kthread() mute is conditionally set by hotkey_read_nvram()
-> but unconditionally checked by hotkey_compare_and_issue_event().
-> So the tp_nvram_state variable s[2] needs to be initialized.
+> The reason is that LG_LAPTOP selects LEDS_CLASS without depending on or
+> selecting NEW_LEDS while LEDS_CLASS is subordinate to NEW_LEDS.
 > 
-> Fixes: 01e88f25985d ("ACPI: thinkpad-acpi: add CMOS NVRAM polling for hot keys (v9)")
-> Signed-off-by: Tom Rix <trix@redhat.com>
+> Honor the kconfig menu hierarchy to remove kconfig dependency warnings.
+> 
+> Fixes: dbf0c5a6b1f8 ("platform/x86: Add LG Gram laptop special features driver")
+> Signed-off-by: Necip Fazil Yildiran <fazilyildiran@gmail.com>
 > ---
->  drivers/platform/x86/thinkpad_acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/platform/x86/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 47925c319d7b..24da8b6872f2 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -2573,7 +2573,7 @@ static void hotkey_compare_and_issue_event(struct tp_nvram_state *oldn,
->   */
->  static int hotkey_kthread(void *data)
->  {
-> -	struct tp_nvram_state s[2];
-> +	struct tp_nvram_state s[2] = { 0 };
->  	u32 poll_mask, event_mask;
->  	unsigned int si, so;
->  	unsigned long t;
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 40219bba6801..81f6079d08e6 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1112,6 +1112,7 @@ config LG_LAPTOP
+>  	depends on ACPI_WMI
+>  	depends on INPUT
+>  	select INPUT_SPARSEKMAP
+> +	select NEW_LEDS
+>  	select LEDS_CLASS
+>  	help
+>  	 This driver adds support for hotkeys as well as control of keyboard
 > -- 
-> 2.18.1
+> 2.25.1
 > 
