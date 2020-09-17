@@ -2,205 +2,251 @@ Return-Path: <SRS0=nDDs=C2=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377B7C2BBD1
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 12:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7ABAC43461
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 12:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA16421D92
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 12:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67DD5208DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 12:27:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BaC0G9kL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b2C+iLhp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgIQMYz (ORCPT
+        id S1726348AbgIQM0Z (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Sep 2020 08:24:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:56947 "EHLO
+        Thu, 17 Sep 2020 08:26:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39467 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726610AbgIQMYw (ORCPT
+        by vger.kernel.org with ESMTP id S1726572AbgIQM0T (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Sep 2020 08:24:52 -0400
+        Thu, 17 Sep 2020 08:26:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600345474;
+        s=mimecast20190719; t=1600345519;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=DwmvRcjbR2xj5LF7cOtCfTJ7KS/mVcMqXvGXS85FNzQ=;
-        b=BaC0G9kLvwlsQV6gMK2zw976nDJct4phE8WNL7FMqvcjp+jUrbuIxiMJNpfu7e/ZUrAX9v
-        CqYfr6FAsF0idKPa9QBaXqyHGXm9VdfRlRa/SljoStlwk1ibzN5HKCUEScyGvZIlsi5LIy
-        fZUy0jyDiPfduPkno78Twft3Mmojwss=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-332-qjWjyb_zM9iHsOz6RXBjzw-1; Thu, 17 Sep 2020 08:22:27 -0400
-X-MC-Unique: qjWjyb_zM9iHsOz6RXBjzw-1
-Received: by mail-wr1-f70.google.com with SMTP id g6so823269wrv.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 05:22:27 -0700 (PDT)
+        bh=EpwSRZwF6kCzeEsY4bUVgEiUx1sx1UhSc53TJLpGhZc=;
+        b=b2C+iLhpCbrgatbk6xrCN+FY0y50MNYZXMD+CrQF27ldTkywOOSTG/W+eou7ycFR3ANZdF
+        39zZiD3IvhFPjy9iIuQ7pXWxgOYBGVYUHAOFWA7m+lJ+RIS0/64Jbd9/XyMqlygKWyZYFU
+        lyWll4YLMPX0rozopnBUMJFcfnCMCvs=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-490-Aex95AzENBe3dSGmqLwEAg-1; Thu, 17 Sep 2020 08:23:15 -0400
+X-MC-Unique: Aex95AzENBe3dSGmqLwEAg-1
+Received: by mail-ed1-f70.google.com with SMTP id c3so827913edm.7
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 05:23:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=DwmvRcjbR2xj5LF7cOtCfTJ7KS/mVcMqXvGXS85FNzQ=;
-        b=WfPuHwyyAl4nMzXerQ3H6yp02M/agDoVMKfEfT+yQDhJZIk9BaICgio//fO1G2Tbsx
-         HSZY8Rwdp4SjbojKgAxTEQ6wetKFb4ejudvcInPrG5ZTPWvcukHk3cXDtyhOODbVbJgE
-         61f0YkYpSmrWqp0s0MKexe0okxl/bhTJB/4gAbujw5/U+y8uPR9Z3C04SOs73x15j3aF
-         NFUkEzzkzbHAHuJYFhYcn29+Cgvd2VRwnQ3QQ8ehg/k8UfImDL5td02F7zs3y3YZvIZf
-         LNZapnQbiXZvDA0BmmIpBqeenMiR/piBmy71CSZ638mKAyKWTXRaMcV5qEOQHSoI3ZI5
-         ZR/w==
-X-Gm-Message-State: AOAM531yGK4DL1usFglkMbnnBjV2AsKzthBcep6YTWIFD0sIK4dKrsLY
-        Odd8c+OSab8S+lHCcOICrHOWcZgwZGdAu/qurjNa3JApqdq+hHR6S159rSuFcktgFZS/Ox7vO0O
-        +aqMXtGdZ1A8LHpiYefuXBIoQGcnOqD2oTg==
-X-Received: by 2002:a1c:a444:: with SMTP id n65mr9637536wme.122.1600345346257;
-        Thu, 17 Sep 2020 05:22:26 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw5PcVN3ILWKHZLV7m5yqDy7cANwsSY7aLZChsmJHDVsLnQOgkpDCtFMG6YkNpwBcwGGoMzEA==
-X-Received: by 2002:a1c:a444:: with SMTP id n65mr9637517wme.122.1600345346038;
-        Thu, 17 Sep 2020 05:22:26 -0700 (PDT)
-Received: from dhcp-64-164.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 63sm10894555wrh.71.2020.09.17.05.22.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2020 05:22:25 -0700 (PDT)
-Message-ID: <b62caf7d0d7c78bfb7487cda969f55de30253a5c.camel@redhat.com>
-Subject: Re: RFC: offering a standardized (/sys/class) userspace API for
- selecting system/laptop performance-profiles
-From:   Benjamin Berg <bberg@redhat.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Elia Devito <eliadevito@gmail.com>,
-        Mark Pearson <mpearson@lenovo.com>
-Cc:     Bastien Nocera <hadess@hadess.net>,
-        Jared Dominguez <jaredz@redhat.com>,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Date:   Thu, 17 Sep 2020 14:22:22 +0200
-In-Reply-To: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
-References: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-2nyhjPbW5sQROs3eZzMU"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EpwSRZwF6kCzeEsY4bUVgEiUx1sx1UhSc53TJLpGhZc=;
+        b=B/SmGdujLijpp9N80PIeMeVfHljVqqTieXxXIxuNh/xaWZrggnY09RCUhZbHpuv3T0
+         FSPyead4T2D6TpGMUevrLparoD6DwcWadRmzqXM/rrHrq4ugyixq6VzXt96b9dvluRgG
+         xqYQavgRhisQdLKNwzF06+IANxO4nNqTARIpQterI1S+T43YCktpW6em55eYhonDY5Wp
+         MCFoTj8xo1Ti1Sy6Kf8XVVrcoCKNsTmucXerQRHOFeT9g2hHSSUBzfQcej2HWjG9FGey
+         Rt546pIq3BL2012ExseIdDtE5H4wttA+Jb1o50rS1bpY24d1Fqz0bInFfcCYKbADSZBN
+         Lzlw==
+X-Gm-Message-State: AOAM531iJdqyosUWUyiLX/X5gLrk3++Bwj22oKX7C05qG4TSfsKykT0p
+        94tLCBWN6akWDUrZpjjvQpnVTHGoZzYQJcgsVGm7CD1ayfvL7NOonz4BQOurz/S0Zz0oF7PLGtx
+        8BmW19EBT0kXAvKR0CE5M1zmt566nMrUFnw==
+X-Received: by 2002:a17:906:7d5:: with SMTP id m21mr13155777ejc.538.1600345394017;
+        Thu, 17 Sep 2020 05:23:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxEPoMFT7XB6P070flyc8A8/xwSwiaeGfTUgNTZRGcyvkspku8nczgnWd/GoC6eG+3j8Wo7Yg==
+X-Received: by 2002:a17:906:7d5:: with SMTP id m21mr13155751ejc.538.1600345393714;
+        Thu, 17 Sep 2020 05:23:13 -0700 (PDT)
+Received: from x1.localdomain ([2a0e:5700:4:11:334c:7e36:8d57:40cb])
+        by smtp.gmail.com with ESMTPSA id nh1sm14681428ejb.21.2020.09.17.05.23.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Sep 2020 05:23:13 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: asus-wmi: Add support for SW_TABLET_MODE on
+ UX360
+To:     =?UTF-8?Q?Samuel_=c4=8cavoj?= <samuel@cavoj.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Corentin Chary <corentin.chary@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200916191232.1020318-1-samuel@cavoj.net>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <206d51c4-401d-e73b-b81a-fc57346a47ee@redhat.com>
+Date:   Thu, 17 Sep 2020 14:23:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200916191232.1020318-1-samuel@cavoj.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-
---=-2nyhjPbW5sQROs3eZzMU
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
 Hi,
 
-On Thu, 2020-09-17 at 13:22 +0200, Hans de Goede wrote:
-> The big question is what do we do if there are more then 3 profiles?
+On 9/16/20 9:12 PM, Samuel Čavoj wrote:
+> The UX360CA has a WMI device id 0x00060062, which reports whether the
+> lid is flipped in tablet mode (1) or in normal laptop mode (0).
+> 
+> This commit adds a quirk (quirk_asus_use_lid_flip_devid) for devices on
+> which this WMI device should be used to figure out the SW_TABLET_MODE
+> state, as opposed to the quirk_asus_use_kbd_dock_devid.
+> 
+> It is assumed other UX360* models have the same WMI device. As such, the
+> quirk is applied to devices with DMI_MATCH(DMI_PRODUCT_NAME, "UX360").
+> More devices with this feature need to be tested and added accordingly.
+> 
+> The reason for using a whitelist via the quirk mechanism is that the new
+> WMI device (0x00060062) is also present on some models which do not have
+> a 360 degree hinge (at least FX503VD and GL503VD from Hans' DSTS
+> collection) and therefore its presence cannot be relied on.
+> 
+> This patch is a followup to "platform/x86: asus-wmi: Fix SW_TABLET_MODE
+> always reporting 1 on many different models" by Hans de Goede.
+> 
+> Signed-off-by: Samuel Čavoj <samuel@cavoj.net>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> ---
+>   drivers/platform/x86/asus-nb-wmi.c         | 14 +++++++++++++
+>   drivers/platform/x86/asus-wmi.c            | 23 ++++++++++++++++++++++
+>   drivers/platform/x86/asus-wmi.h            |  1 +
+>   include/linux/platform_data/x86/asus-wmi.h |  1 +
+>   4 files changed, 39 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index 345bd224494b..ae5501e07712 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -119,6 +119,10 @@ static struct quirk_entry quirk_asus_use_kbd_dock_devid = {
+>   	.use_kbd_dock_devid = true,
+>   };
+>   
+> +static struct quirk_entry quirk_asus_use_lid_flip_devid = {
+> +	.use_lid_flip_devid = true,
 
-The Intel p-state driver has the 4 modes:
- * performance
- * balance_performance
- * balance_power
- * power
 
-This seems to also match what windows does with their power slider,
-there the modes are mapped to integer values:
- * power: 25
- * balance_power: 50
- * balance_performance: 75
- * performance: 100
+Note the default (quirk_asus_unknown) quirks set:
 
-Which appears to be the same as what newer DPTF versions use. For older
-DPTF versions this is done through OEM variables, which also appear to
-have 4 separate states usually. The MS power slider seems to define the
-four possible modes:
- * Battery Saver
- * Better Battery
- * Better Performance
- * Best Performance
+         .wmi_backlight_set_devstate = true,
 
-https://docs.microsoft.com/en-us/windows-hardware/customize/desktop/customi=
-ze-power-slider#set-default-power-slider-mode
+So you're changing that to false for all devices using that
+quirk now.  I did not set this quirk for the transformer devices,
+since the quirk has to do with the handling of Fn + F7 (display off hotkey)
+by the embedded-controller. Since on transformer devices the keyboard is
+an USB device and not handled by the embedded-controller they do not need
+the wmi_backlight_set_devstate quirk, so I left it out. Chances are that
+your UX360 does need it. The purpose of the quirk is to make the embbedded
+controller send a KEY_DISPLAY_OFF event on FN + F7 and have it not do anything
+else (like turning off the backlight by itself).
 
-> One option would be something like the following:
->=20
-> cat /sys/class/system_performance_profile/thinkpad_acpi/performance_profi=
-le
->=20
-> low-power [balanced] performance
+TL;DR: you should probably add:         .wmi_backlight_set_devstate = true,
+to your new quirk_asus_use_lid_flip_devid quirk.
 
-I guess userspace is responsible for setting all drivers to the correct
-state when the user changes a global system setting?
 
-> cat /sys/class/system_performance_profile/thinkpad_acpi/extra_performance=
-_profiles
->=20
-> extra-low-power balanced-performance-mix
->=20
-> So we add an optional extra_performance_profiles sysfs attribute and we a=
-sk all
-> drivers implemeting this class to implement at least the 3 standard profi=
-les
-> (by mapping 3 of their options to these) and optional they can offer extr=
-a
-> profiles (with free form names) in the extra_performance_profiles
-> sysfs attribute under the class-device.
 
-I think it would be good if userspace can figure out where such these
-extra profiles would be sorted in on the "power save -- performance"
-scale. Assigning an integer in the range of 0-100 might be a solution
-for that.
+> +};
+> +
+>   static int dmi_matched(const struct dmi_system_id *dmi)
+>   {
+>   	pr_info("Identified laptop model '%s'\n", dmi->ident);
+> @@ -520,6 +524,16 @@ static const struct dmi_system_id asus_quirks[] = {
+>   		},
+>   		.driver_data = &quirk_asus_use_kbd_dock_devid,
+>   	},
+> +	{
+> +		.callback = dmi_matched,
+> +		.ident = "ASUS ZenBook Flip UX360",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> +			/* Match UX360* */
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "UX360"),
+> +		},
+> +		.driver_data = &quirk_asus_use_lid_flip_devid,
+> +	},
+>   	{},
+>   };
+>   
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index ae6289d37faf..a628a7d9e066 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -63,6 +63,7 @@ MODULE_LICENSE("GPL");
+>   #define NOTIFY_KBD_BRTTOGGLE		0xc7
+>   #define NOTIFY_KBD_FBM			0x99
+>   #define NOTIFY_KBD_TTP			0xae
+> +#define NOTIFY_LID_FLIP			0xfa
+>   
+>   #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
+>   
+> @@ -375,6 +376,18 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
+>   		}
+>   	}
+>   
+> +	if (asus->driver->quirks->use_lid_flip_devid) {
+> +		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
+> +		if (result >= 0) {
+> +			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
+> +			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+> +		} else if (result == -ENODEV) {
+> +			pr_err("This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
+> +		} else {
+> +			pr_err("Error checking for lid-flip: %d\n", result);
+> +		}
+> +	}
+> +
+>   	err = input_register_device(asus->inputdev);
+>   	if (err)
+>   		goto err_free_dev;
+> @@ -2127,6 +2140,16 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+>   		return;
+>   	}
+>   
+> +	if (asus->driver->quirks->use_lid_flip_devid && code == NOTIFY_LID_FLIP) {
+> +		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
+> +
+> +		if (result >= 0) {
+> +			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+> +			input_sync(asus->inputdev);
+> +		}
+> +		return;
+> +	}
+> +
+>   	if (asus->fan_boost_mode_available && code == NOTIFY_KBD_FBM) {
+>   		fan_boost_mode_switch_next(asus);
+>   		return;
+> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+> index 1a95c172f94b..b302415bf1d9 100644
+> --- a/drivers/platform/x86/asus-wmi.h
+> +++ b/drivers/platform/x86/asus-wmi.h
+> @@ -34,6 +34,7 @@ struct quirk_entry {
+>   	bool wmi_backlight_set_devstate;
+>   	bool wmi_force_als_set;
+>   	bool use_kbd_dock_devid;
+> +	bool use_lid_flip_devid;
+>   	int wapf;
+>   	/*
+>   	 * For machines with AMD graphic chips, it will send out WMI event
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 897b8332a39f..2f274cf52805 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -62,6 +62,7 @@
+>   
+>   /* Misc */
+>   #define ASUS_WMI_DEVID_CAMERA		0x00060013
+> +#define ASUS_WMI_DEVID_LID_FLIP		0x00060062
+>   
+>   /* Storage */
+>   #define ASUS_WMI_DEVID_CARDREADER	0x00080013
+> 
 
-Benjamin
+Otherwise the patch looks good to me, thank you for the patch.
 
-> The idea behind putting the extra profiles in a separate sysfs-attribute
-> is that reading the main performance_profile attribute will always show
-> one selected, even if one of the extra profiles is actually in use,
-> then the driver should also show the closest standardized profile as
-> being active.
->=20
-> This will allow userspace code to always rely on the standard interface
-> both for getting a representation of the currently active profile as well
-> as for setting the active profile.
->=20
-> Elia, Mark, I assume that both of you want to get your patches for this
-> upstream sooner, rather then later. But I think we should put them on
-> hold until we have an agreement on a shared userspace API for this.
->=20
-> I would like to think that the above proposal is a good start,
-> if we can quickly (*) decide on an userspace API here
->=20
-> Regards,
->=20
-> Hans
->=20
-> p.s.
->=20
-> I guess we should also add an optional lap_mode sysfs attribute
-> to the class-device, to have all the info for the Thinkpads in
-> one place.
->=20
->=20
-> *) but not too quickly, it is important we get this right
->=20
+Regards,
 
---=-2nyhjPbW5sQROs3eZzMU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEED2NO4vMS33W8E4AFq6ZWhpmFY3AFAl9jVP4ACgkQq6ZWhpmF
-Y3DIyQ//fdzK7w5OHGfADI2RAyCiEedRMmqzfS6u1WyW+l3N1jyE8z8eoISVl2cP
-+TIc95QSj7UM/hUuhtn1PiWWEIQEqId/wv38DHkEFZa7V1p5b0TQETuKwG6Gvi+i
-5woE70sHEjY55cxbWqtGqiztriyuEAS31oRF2XG3WQ7Gk2SqwH8yU+CdrcMA425n
-Sk3E3lJN9s2R06lsmC/f4kLrsO1qB+kC79oBos/By6cPdAQe+OSvbh2sMxFcuymm
-WGHqHlc1gg+4AtGGfT+fr0tlnUl4Gr/nt4Z2EHWZsMWnp6+LseV2OiKKA47r/amp
-eHtc3YzqU/C0mVJQnE6aIJKjKbmzs5rJiQSPuEpZyUhMCPUsG5Boof7zG7TV+y9/
-2brGlJaVSWxrTAM+YNbBRZhEVo1y0Hno1J+G0g1yjekeMuAzRsXWAk3px4k3qpTQ
-gdSDH4qVj54tazy/Hc0Zm9trLT4z2x1wahYjQ9iWiwk9Sfk20z7+74PJrAHzm9lp
-LBlm9Ev+LjiDbVC/WIWDihFhBhfKIfJOHfXSTL1Nlz93LnwMkLy+J+Psbe2MakPm
-uvYeaN7D4ynEllV3p9qgif8pIfBTPHxQheQfeD+PF+AcO0CUT+9P4zVF57g9Ikks
-KescQvoRI06toUh5dc3iD5dzwcFslBf+MdfG1TI103txdw5TFYg=
-=3RkO
------END PGP SIGNATURE-----
-
---=-2nyhjPbW5sQROs3eZzMU--
+Hans
 
