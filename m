@@ -1,215 +1,247 @@
-From: "Bharathi, Divya" <Divya.Bharathi@Dell.com>
-Subject: RE: [PATCH v2] Introduce support for Systems Management Driver over
- WMI for Dell Systems
-Date: Thu, 17 Sep 2020 05:22:59 +0000
-Message-ID: <CY4PR19MB1254A26A233052B71ACC5ACA853E0@CY4PR19MB1254.namprd19.prod.outlook.com>
-References: <20200904142846.5356-1-divya_bharathi@dell.com>
- <aaf3b072-a109-4f69-67dd-bea3dc5fb023@redhat.com>
- <DM6PR19MB2636829402BC67EC1048E15FFA230@DM6PR19MB2636.namprd19.prod.outlook.com>
- <CY4PR19MB12544CE6AFD16E89E688ACCD85200@CY4PR19MB1254.namprd19.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CY4PR19MB12544CE6AFD16E89E688ACCD85200@CY4PR19MB1254.namprd19.prod.outlook.com>
+Return-Path: <SRS0=nDDs=C2=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDB6C43461
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 10:13:12 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.kernel.org (Postfix) with ESMTP id F13772083B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 10:13:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LjORgp9q"
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1726554AbgIQKNK (ORCPT
+        <rfc822;platform-driver-x86@archiver.kernel.org>);
+        Thu, 17 Sep 2020 06:13:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58487 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726539AbgIQKNJ (ORCPT
+        <rfc822;platform-driver-x86@vger.kernel.org>);
+        Thu, 17 Sep 2020 06:13:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600337587;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=m+hwi7YJI4TPq52R5OLk88Dp9POsN+S8ypLkGLER598=;
+        b=LjORgp9qPy/t3RJ4S08+kX/GlZd+L9l6jBfYZICvgM3Jik6m/DKBjBEJI3pglNZEycY9hd
+        zGxuDmwaolv4GILIVHWFFT0+MlMGSzq7XeQmtv9ekCd+Xy0PFL+eIHinKG0FMSyLRRbohC
+        Fts1a7yGAoIWQI1rdlGTqg6eNiEAq6w=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-574-J3AYNfmbNvee2k-oNPxhJQ-1; Thu, 17 Sep 2020 06:12:00 -0400
+X-MC-Unique: J3AYNfmbNvee2k-oNPxhJQ-1
+Received: by mail-ej1-f69.google.com with SMTP id d8so687229ejt.14
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 03:12:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=m+hwi7YJI4TPq52R5OLk88Dp9POsN+S8ypLkGLER598=;
+        b=DzDTtFCmzFa+yt2FRjBmYfl4SLQOMYiNBLNTrku67/EyLGiqTMXGfj4lcwNis6lNyX
+         YLWy4BsIWV3zmVZ2AMIpnzaccj8pSuVmIHHSpobtG8mGaeE5tDAbLNJC3XjX4bFO+JB5
+         Yu1NJB7jhbdCew7GnNq9l6SYjJ7zEpEDBj91L+SXeXruEJDTmHlx8f/VnMeZ79BBQunW
+         0V/Tw2cwEfPlCbH8lSp+KvtmHLq2OUm90nF3LkD73AuAsk+SEln4+v7OQ4H2llj8OfKt
+         z2KcXmPOJgpfC/LV6Blk1AbHYoSriRLBRnWY8/frLps6IWM/fvG8r21d9VhqHd5Br46D
+         5YqA==
+X-Gm-Message-State: AOAM532cqyTYRWjO6rjjeA4mbZD1k03EnFB317QKfh88KnzDA4Rfu61F
+        Y6PtxvQIJo4lQ0T49Hd+2BbcIz1OavoqldOEB8euNKmDAjVX2ZcuQdha0EbxSg6MVBK5Q2nzyH2
+        OpOcF+ALUJ7WV3EZiyiD0LtVkxBwnjkD15A==
+X-Received: by 2002:a17:906:2681:: with SMTP id t1mr12738627ejc.474.1600337519026;
+        Thu, 17 Sep 2020 03:11:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJybIGHkD8kwpiGJiP6DgXfRE0e5iPW7jHUNnU1jQVMT35HfYCcHXwr0TLVt5lpCv+19PBFmpg==
+X-Received: by 2002:a17:906:2681:: with SMTP id t1mr12738606ejc.474.1600337518717;
+        Thu, 17 Sep 2020 03:11:58 -0700 (PDT)
+Received: from x1.localdomain ([2a0e:5700:4:11:334c:7e36:8d57:40cb])
+        by smtp.gmail.com with ESMTPSA id e15sm11355614ejm.68.2020.09.17.03.11.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Sep 2020 03:11:58 -0700 (PDT)
+Subject: Re: [PATCH] Introduce support for Systems Management Driver over WMI
+ for Dell Systems
+To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        Divya Bharathi <divya27392@gmail.com>,
+        "dvhart@infradead.org" <dvhart@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
+        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>,
+        Richard Hughes <rhughes@redhat.com>,
+        Jared Dominguez <jaredz@redhat.com>
+References: <20200730143122.10237-1-divya_bharathi@dell.com>
+ <d3de1d27-25ac-be43-54d8-dcbfffa31e1d@redhat.com>
+ <DM6PR19MB26364970D0981212E811E1B0FA2E0@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <67ca316a-227f-80f6-ad22-7d08112b2584@redhat.com>
+ <DM6PR19MB26368BB2B8C4D7CE58DF7C31FA230@DM6PR19MB2636.namprd19.prod.outlook.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <5847917c-2c34-5d74-b5db-f33bb8fc9e13@redhat.com>
+Date:   Thu, 17 Sep 2020 12:11:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <DM6PR19MB26368BB2B8C4D7CE58DF7C31FA230@DM6PR19MB2636.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-To: "Limonciello, Mario" <Mario.Limonciello@dell.com>, Hans de Goede <hdegoede@redhat.com>, Divya Bharathi <divya27392@gmail.com>, "dvhart@infradead.org" <dvhart@infradead.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Ksr, Prasanth" <Prasanth.Ksr@dell.com>
-List-Id: platform-driver-x86.vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Precedence: bulk
+List-ID: <platform-driver-x86.vger.kernel.org>
+X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-DQo8c25pcD4NCg0KPiA+DQo+ID4gPg0KPiA+ID4gPiArDQo+ID4gPiA+ICsvKiBrZXB0IHZhcmlh
-YmxlIG5hbWVzIHNhbWUgYXMgaW4gc3lzZnMgZmlsZSBuYW1lIGZvciBzeXNmc19zaG93DQo+ID4g
-PiA+ICttYWNybw0KPiA+ID4gZGVmaW5pdGlvbiAqLw0KPiA+ID4gPiArc3RydWN0IGVudW1lcmF0
-aW9uX2RhdGEgew0KPiA+ID4gPiArCWNoYXIgZGlzcGxheV9uYW1lX2xhbmd1YWdlX2NvZGVbTUFY
-X0JVRkZdOw0KPiA+ID4gPiArCWNoYXIgYXR0cmlidXRlX25hbWVbTUFYX0JVRkZdOw0KPiA+ID4g
-PiArCWNoYXIgZGlzcGxheV9uYW1lW01BWF9CVUZGXTsNCj4gPiA+ID4gKwljaGFyIGRlZmF1bHRf
-dmFsdWVbTUFYX0JVRkZdOw0KPiA+ID4gPiArCWNoYXIgY3VycmVudF92YWx1ZVtNQVhfQlVGRl07
-DQo+ID4gPiA+ICsJY2hhciBtb2RpZmllcltNQVhfQlVGRl07DQo+ID4gPiA+ICsJaW50IHZhbHVl
-X21vZGlmaWVyX2NvdW50Ow0KPiA+ID4gPiArCWNoYXIgdmFsdWVfbW9kaWZpZXJbTUFYX0JVRkZd
-Ow0KPiA+ID4gPiArCWludCBwb3NzaWJsZV92YWx1ZV9jb3VudDsNCj4gPiA+ID4gKwljaGFyIHBv
-c3NpYmxlX3ZhbHVlW01BWF9CVUZGXTsNCj4gPiA+ID4gKwljaGFyIHR5cGVbTUFYX0JVRkZdOw0K
-PiA+ID4gPiArfTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArc3RhdGljIHN0cnVjdCBlbnVtZXJhdGlv
-bl9kYXRhICplbnVtZXJhdGlvbl9kYXRhOyBzdGF0aWMgaW50DQo+ID4gPiA+ICtlbnVtZXJhdGlv
-bl9pbnN0YW5jZXNfY291bnQ7DQo+ID4gPg0KPiA+ID4gUGxlYXNlIHN0b3JlIHRoZXNlIDIgaW4g
-dGhlIGdsb2JhbCB3bWlfcHJpdiBkYXRhLg0KPiA+ID4NCj4gPiA+IEFsc28gdGhlcmUgaXMgYSBs
-b3Qgb2Ygb3ZlcmxhcCBiZXR3ZWVuIHN0cnVjdHMgbGlrZSBzdHJ1Y3QNCj4gPiA+IGVudW1lcmF0
-aW9uX2RhdGEsIHN0cnVjdCBpbnRlZ2VyX2RhdGEsIGV0Yy4NCj4gPiA+DQo+ID4gPiBJIHRoaW5r
-IGl0IHdvdWxkIGJlIGdvb2QgdG8gbWFrZSBhIHNpbmdsZSBzdHJ1Y3QgYXR0cl9kYXRhLCB3aGlj
-aA0KPiA+ID4gY29udGFpbnMgZmllbGRzIGZvciBhbGwgdGhlIHN1cHBvcnRlZCB0eXBlcy4NCj4g
-PiA+DQo+ID4gPiBJIGFsc28gc2VlIGEgbG90IG9mIG92ZXJsYXBwaW5nIGNvZGUgYmV0d2VlbjoN
-Cj4gPiA+DQo+ID4gPiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsLXdtaS1lbnVtLWF0dHJpYnV0
-ZXMuYw0KPiA+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWktaW50LWF0dHJpYnV0ZXMu
-Yw0KPiA+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC13bWktc3RyaW5nLWF0dHJpYnV0ZXMu
-Yw0KPiA+ID4NCj4gPiA+IEkgdGhpbmsgdGhhdCBmb2xkaW5nIHRoZSBkYXRhIHN0cnVjdHVyZXMg
-dG9nZXRoZXIgd2lsbCBoZWxwIHdpdGggYWxzbw0KPiA+ID4gdW5pZnlpbmcgdGhhdCBjb2RlIGlu
-dG8gYSBzaW5nbGUgZGVsbC13bWktc3RkLWF0dHJpYnV0ZXMuYyBmaWxlLg0KPiA+ID4NCj4gDQo+
-IFllcywgaXQgZG9lcyBzZWVtIGxpa2UgbG90IG9mIGNvZGUgaXMgb3ZlcmxhcHBpbmcgYnV0IHRo
-ZXkgZGlmZmVyIGJ5DQo+IHByb3BlcnRpZXMgdGhhdCBhcmUgbGl0dGxlIHVubm90aWNlYWJsZS4N
-Cj4gDQo+IElmIHdlIG1ha2Ugc2luZ2xlIGZpbGUgYWRkaW5nIHN3aXRjaCBjYXNlcyB3ZSBtYXkg
-ZW5kIHVwIGluIG1hbnkNCj4gc3dpdGNoIGNhc2VzIGFuZCBpZiBjb25kaXRpb25zLiBCZWNhdXNl
-LCBoZXJlIG9ubHkgYXR0cmlidXRlX25hbWUsDQo+IGRpc3BsYXlfbGFuZ19jb2RlLCBkaXNwbGF5
-X2xhbmcgYW5kIG1vZGlmaWVyIGFyZSBzYW1lLiBBcGFydCBmcm9tDQo+IHRoZXNlIG90aGVyIHBy
-b3BlcnRpZXMgYXJlIGRpZmZlcmVudCBlaXRoZXIgYnkgbmFtZSBvciBkYXRhIHR5cGUuDQo+IA0K
-PiBBbHNvLCBvbmUgYWR2YW50YWdlIGhlcmUgaXMgaWYgYW55IG5ldyB0eXBlIGlzIGFkZGVkIGlu
-IGZ1dHVyZSBpdCB3aWxsDQo+IGJlIGVhc2llciB0byBjcmVhdGUgbmV3IHN5c2ZzX2F0dHJfZ3Jv
-dXAgYWNjb3JkaW5nIHRvIG5ldyB0eXBlJ3MNCj4gcHJvcGVydGllcw0KPiANCj4gV2Ugd2lsbCBj
-ZXJ0YWlubHkgdHJ5IGFuZCBtaW5pbWl6ZSBzb21lIGlkZW50aWNhbCBsb29raW5nIGNvZGUNCj4g
-d2hlcmV2ZXIgcG9zc2libGUgYW5kIGFkZCBpbmxpbmUgY29tbWVudHMvZG9jdW1lbnQgdGhlDQo+
-IGRpZmZlcmVuY2VzIG1vcmUgY2xlYXJseSBpbiB2MyB3aGljaCBpcyBpbmNvbWluZyBzaG9ydGx5
-Lg0KPiANCj4gPiA+ID4gK2dldF9pbnN0YW5jZV9pZChlbnVtZXJhdGlvbik7DQo+ID4gPiA+ICsN
-Cj4gPiA+ID4gK3N0YXRpYyBzc2l6ZV90IGN1cnJlbnRfdmFsdWVfc2hvdyhzdHJ1Y3Qga29iamVj
-dCAqa29iaiwgc3RydWN0DQo+ID4gPiBrb2JqX2F0dHJpYnV0ZSAqYXR0ciwgY2hhciAqYnVmKQ0K
-PiA+ID4gPiArew0KPiA+ID4gPiArCWludCBpbnN0YW5jZV9pZDsNCj4gPiA+ID4gKw0KPiA+ID4g
-PiArCWlmICghY2FwYWJsZShDQVBfU1lTX0FETUlOKSkNCj4gPiA+ID4gKwkJcmV0dXJuIC1FUEVS
-TTsNCj4gPiA+ID4gKwlpbnN0YW5jZV9pZCA9IGdldF9lbnVtZXJhdGlvbl9pbnN0YW5jZV9pZChr
-b2JqKTsNCj4gPiA+DQo+ID4gPiBJZiB5b3UgdW5pZnkgdGhlIGludGVnZXIsIHN0cmluZyBhbmQg
-ZW51bSBjb2RlIHRoZW4gdGhpcyBqdXN0IGJlY29tZXM6DQo+ID4gPiBnZXRfc3RkX2luc3RhbmNl
-X2lkKGtvYmopDQo+ID4gPg0KPiANCj4gRm9yIGVhY2ggdHlwZSBvZiBhdHRyaWJ1dGUgR1VJRHMg
-YXJlIGRpZmZlcmVudCBhbmQgZm9yIGVhY2ggdHlwZQ0KPiBpbnN0YW5jZSBJRHMgc3RhcnQgZnJv
-bSB6ZXJvLiBTbyBpZiB3ZSBwb3B1bGF0ZSB0aGVtIGluIHNpbmdsZSBkYXRhDQo+IHN0cnVjdHVy
-ZSB0aGVuIGluc3RhbmNlIElEcyBtYXkgb3ZlcmxhcC4NCj4gDQo+ID4gPiA+ICsJaWYgKGluc3Rh
-bmNlX2lkID49IDApIHsNCj4gPiA+ID4gKwkJdW5pb24gYWNwaV9vYmplY3QgKm9iajsNCj4gPiA+
-ID4gKw0KPiA+ID4gPiArCQlvYmogPSBnZXRfd21pb2JqX3BvaW50ZXIoaW5zdGFuY2VfaWQsDQo+
-ID4gPiBERUxMX1dNSV9CSU9TX0VOVU1FUkFUSU9OX0FUVFJJQlVURV9HVUlEKTsNCj4gPiA+ID4g
-KwkJaWYgKCFvYmopDQo+ID4gPiA+ICsJCQlyZXR1cm4gLUFFX0VSUk9SOw0KPiA+ID4NCj4gPiA+
-ID4gKwkJc3RybmNweV9hdHRyKGVudW1lcmF0aW9uX2RhdGFbaW5zdGFuY2VfaWRdLmN1cnJlbnRf
-dmFsdWUsDQo+ID4gPiA+ICsJCSAgICAgICBvYmotPnBhY2thZ2UuZWxlbWVudHNbQ1VSUkVOVF9W
-QUxdLnN0cmluZy5wb2ludGVyKTsNCj4gPiA+IFNvIHRoZXNlIDIgbGluZXMgc2VlbSB0byBiZSB0
-aGUgb25seSB0aGluZyB3aGljaCBpcyBkaWZmZXJlbnQgZm9yDQo+ID4gPiBjdXJyZW50X3ZhbHVl
-X3Nob3csIGJldHdlZW4gZW51bXMsIGludHMgYW5kIHN0cmluZ3MsIHNvIHlvdSBjYW4gcHV0IGEN
-Cj4gPiA+IHNpbXBsZSBzd2l0Y2gtY2FzZSBvbiB0aGUgdHlwZSBoZXJlLg0KPiA+ID4NCj4gPg0K
-PiA+IFRoaXMgaXMgYSBnb29kIHBvaW50LCBpdCB3aWxsIGNhdXNlIGEgbG90IG9mIGNoYW5nZXMg
-YXMgYSByZXN1bHQgYW5kIGEgbG90IGxlc3MNCj4gPiBjb2RlLg0KPiA+DQo+ID4gPiA+ICsJCWtm
-cmVlKG9iaik7DQo+ID4gPiA+ICsJCXJldHVybiBzcHJpbnRmKGJ1ZiwgIiVzXG4iLA0KPiA+ID4g
-ZW51bWVyYXRpb25fZGF0YVtpbnN0YW5jZV9pZF0uY3VycmVudF92YWx1ZSk7DQo+ID4gPiA+ICsJ
-fQ0KPiA+ID4gPiArCXJldHVybiAtRUlPOw0KPiA+ID4gPiArfSA+ICsNCj4gPiA+ID4gKy8qKg0K
-PiA+ID4gPiArICogdmFsaWRhdGVfZW51bWVyYXRpb25faW5wdXQoKSAtIFZhbGlkYXRlIGlucHV0
-IG9mIGN1cnJlbnRfdmFsdWUNCj4gPiA+ID4gK2FnYWluc3QNCj4gPiA+IHBvc3NpYmxlIHZhbHVl
-cw0KPiA+ID4gPiArICogQGluc3RhbmNlX2lkOiBUaGUgaW5zdGFuY2Ugb24gd2hpY2ggaW5wdXQg
-aXMgdmFsaWRhdGVkDQo+ID4gPiA+ICsgKiBAYnVmOiBJbnB1dCB2YWx1ZQ0KPiA+ID4gPiArICoq
-Lw0KPiA+ID4gPiAraW50IHZhbGlkYXRlX2VudW1lcmF0aW9uX2lucHV0KGludCBpbnN0YW5jZV9p
-ZCwgY29uc3QgY2hhciAqYnVmKSB7DQo+ID4gPiA+ICsJY2hhciAqb3B0aW9ucywgKnRtcCwgKnA7
-DQo+ID4gPiA+ICsJaW50IHJldCA9IC1FSU5WQUw7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlvcHRp
-b25zID0gdG1wID0NCj4gPiA+ID4gK2tzdHJkdXAoKGVudW1lcmF0aW9uX2RhdGFbaW5zdGFuY2Vf
-aWRdLnBvc3NpYmxlX3ZhbHVlKSwNCj4gPiA+IEdGUF9LRVJORUwpOw0KPiA+ID4gPiArCWlmICgh
-b3B0aW9ucykNCj4gPiA+ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gPiA+ICsNCj4gPiA+ID4g
-Kwl3aGlsZSAoKHAgPSBzdHJzZXAoJm9wdGlvbnMsICI7IikpICE9IE5VTEwpIHsNCj4gPiA+ID4g
-KwkJaWYgKCEqcCkNCj4gPiA+ID4gKwkJCWNvbnRpbnVlOw0KPiA+ID4gPiArCQlpZiAoIXN0cm5j
-YXNlY21wKHAsIGJ1Ziwgc3RybGVuKHApKSkgew0KPiA+ID4gPiArCQkJcmV0ID0gMDsNCj4gPiA+
-ID4gKwkJCWJyZWFrOw0KPiA+ID4gPiArCQl9DQo+ID4gPiA+ICsJfQ0KPiA+ID4gPiArDQo+ID4g
-PiA+ICsJa2ZyZWUodG1wKTsNCj4gPiA+ID4gKwlyZXR1cm4gcmV0Ow0KPiA+ID4gPiArfQ0KPiA+
-ID4NCj4gPiA+IEZvciB0aGUgdmFsaWRhdGUgZnVuY3Rpb25zIHlvdSBjYW4ga2VlcCBhbGwgMyBp
-biB0aGUgbmV3DQo+ID4gPiBkZWxsLXdtaS1zdGQtYXR0cmlidXRlcy5jIGZpbGUgYW5kIHRoZW4g
-Y2FsbCB0aGUgcmlnaHQgb25lIHRocm91Z2ggYQ0KPiA+ID4gc3dpdGNoLWNhc2UgYmFzZWQgb24g
-dGhlIHR5cGUuDQo+ID4gPg0KPiA+ID4gPiArDQo+ID4gPiA+ICthdHRyaWJ1dGVfc19wcm9wZXJ0
-eV9zaG93KGRpc3BsYXlfbmFtZV9sYW5ndWFnZV9jb2RlLA0KPiA+IGVudW1lcmF0aW9uKTsNCj4g
-PiA+ID4gK3N0YXRpYyBzdHJ1Y3Qga29ial9hdHRyaWJ1dGUgZGlzcGxfbGFuZ2NvZGUgPQ0KPiA+
-ID4gPiArCQlfX0FUVFJfUk8oZGlzcGxheV9uYW1lX2xhbmd1YWdlX2NvZGUpOw0KPiA+ID4gPiAr
-DQo+ID4gPiA+ICthdHRyaWJ1dGVfc19wcm9wZXJ0eV9zaG93KGRpc3BsYXlfbmFtZSwgZW51bWVy
-YXRpb24pOyBzdHJ1Y3QNCj4gPiA+ID4gK2tvYmpfYXR0cmlidXRlIGRpc3BsX25hbWUgPQ0KPiA+
-ID4gPiArCQlfX0FUVFJfUk8oZGlzcGxheV9uYW1lKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArYXR0
-cmlidXRlX3NfcHJvcGVydHlfc2hvdyhkZWZhdWx0X3ZhbHVlLCBlbnVtZXJhdGlvbik7IHN0cnVj
-dA0KPiA+ID4gPiAra29ial9hdHRyaWJ1dGUgZGVmYXVsdF92YWwgPQ0KPiA+ID4gPiArCQlfX0FU
-VFJfUk8oZGVmYXVsdF92YWx1ZSk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gK2F0dHJpYnV0ZV9wcm9w
-ZXJ0eV9zdG9yZShjdXJyZW50X3ZhbHVlLCBlbnVtZXJhdGlvbik7IHN0cnVjdA0KPiA+ID4gPiAr
-a29ial9hdHRyaWJ1dGUgY3VycmVudF92YWwgPQ0KPiA+ID4gPiArCQlfX0FUVFJfUlcoY3VycmVu
-dF92YWx1ZSk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gK2F0dHJpYnV0ZV9zX3Byb3BlcnR5X3Nob3co
-bW9kaWZpZXIsIGVudW1lcmF0aW9uKTsgc3RydWN0DQo+ID4gPiA+ICtrb2JqX2F0dHJpYnV0ZSBt
-b2RpZmllciA9DQo+ID4gPiA+ICsJCV9fQVRUUl9STyhtb2RpZmllcik7DQo+ID4gPiA+ICsNCj4g
-PiA+ID4gK2F0dHJpYnV0ZV9zX3Byb3BlcnR5X3Nob3codmFsdWVfbW9kaWZpZXIsIGVudW1lcmF0
-aW9uKTsgc3RydWN0DQo+ID4gPiA+ICtrb2JqX2F0dHJpYnV0ZSB2YWx1ZV9tb2RmciA9DQo+ID4g
-PiA+ICsJCV9fQVRUUl9STyh2YWx1ZV9tb2RpZmllcik7DQo+ID4gPiA+ICsNCj4gPiA+ID4gK2F0
-dHJpYnV0ZV9zX3Byb3BlcnR5X3Nob3cocG9zc2libGVfdmFsdWUsIGVudW1lcmF0aW9uKTsgc3Ry
-dWN0DQo+ID4gPiA+ICtrb2JqX2F0dHJpYnV0ZSBwb3NzX3ZhbCA9DQo+ID4gPiA+ICsJCV9fQVRU
-Ul9STyhwb3NzaWJsZV92YWx1ZSk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gK2F0dHJpYnV0ZV9zX3By
-b3BlcnR5X3Nob3codHlwZSwgZW51bWVyYXRpb24pOyBzdHJ1Y3Qga29ial9hdHRyaWJ1dGUNCj4g
-PiA+ID4gK3R5cGUgPQ0KPiA+ID4gPiArCQlfX0FUVFJfUk8odHlwZSk7DQo+ID4gPiA+ICsNCj4g
-PiA+ID4gK3N0YXRpYyBzdHJ1Y3QgYXR0cmlidXRlICplbnVtZXJhdGlvbl9hdHRyc1tdID0gew0K
-PiA+ID4gPiArCSZkaXNwbF9sYW5nY29kZS5hdHRyLA0KPiA+ID4gPiArCSZkaXNwbF9uYW1lLmF0
-dHIsDQo+ID4gPiA+ICsJJmRlZmF1bHRfdmFsLmF0dHIsDQo+ID4gPiA+ICsJJmN1cnJlbnRfdmFs
-LmF0dHIsDQo+ID4gPiA+ICsJJm1vZGlmaWVyLmF0dHIsDQo+ID4gPiA+ICsJJnZhbHVlX21vZGZy
-LmF0dHIsDQo+ID4gPiA+ICsJJnBvc3NfdmFsLmF0dHIsDQo+ID4gPiA+ICsJJnR5cGUuYXR0ciwN
-Cj4gPiA+ID4gKwlOVUxMLA0KPiA+ID4gPiArfTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArc3RhdGlj
-IGNvbnN0IHN0cnVjdCBhdHRyaWJ1dGVfZ3JvdXAgZW51bWVyYXRpb25fYXR0cl9ncm91cCA9IHsN
-Cj4gPiA+ID4gKwkuYXR0cnMgPSBlbnVtZXJhdGlvbl9hdHRycywNCj4gPiA+ID4gK307DQo+ID4g
-PiA+ICsNCj4gPiA+ID4gK2ludCBhbGxvY19lbnVtX2RhdGEodm9pZCkNCj4gPiA+ID4gK3sNCj4g
-PiA+ID4gKwlpbnQgcmV0ID0gMDsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCWVudW1lcmF0aW9uX2lu
-c3RhbmNlc19jb3VudCA9DQo+ID4gPiBnZXRfaW5zdGFuY2VfY291bnQoREVMTF9XTUlfQklPU19F
-TlVNRVJBVElPTl9BVFRSSUJVVEVfR1VJRCk7DQo+ID4gPiA+ICsJZW51bWVyYXRpb25fZGF0YSA9
-IGt6YWxsb2MoKHNpemVvZihzdHJ1Y3QgZW51bWVyYXRpb25fZGF0YSkgKg0KPiA+ID4gZW51bWVy
-YXRpb25faW5zdGFuY2VzX2NvdW50KSwNCj4gPiA+ID4gKwkJCQkJR0ZQX0tFUk5FTCk7DQo+ID4g
-PiA+ICsJaWYgKCFlbnVtZXJhdGlvbl9kYXRhKQ0KPiA+ID4gPiArCQlyZXQgPSAtRU5PTUVNOw0K
-PiA+ID4gPiArCXJldHVybiByZXQ7DQo+ID4gPiA+ICt9DQo+ID4gPiA+ICsNCj4gPiA+DQo+ID4g
-PiBUaGUgcmVzdCBvZiB0aGUgZmlsZSBpcyBtb3N0bHkgaWRlbnRpY2FsIGJldHdlZW4gc3RyaW5n
-cywgaW50cyBhbmQgZW51bXMuDQo+ID4gPg0KPiA+ID4gPiArLyoqDQo+ID4gPiA+ICsgKiBwb3B1
-bGF0ZV9lbnVtX2RhdGEoKSAtIFBvcHVsYXRlIGFsbCBwcm9wZXJ0aWVzIG9mIGFuIGluc3RhbmNl
-DQo+ID4gPiA+ICt1bmRlcg0KPiA+ID4gZW51bWVyYXRpb24gYXR0cmlidXRlDQo+ID4gPiA+ICsg
-KiBAZW51bWVyYXRpb25fb2JqOiBBQ1BJIG9iamVjdCB3aXRoIGVudW1lcmF0aW9uIGRhdGENCj4g
-PiA+ID4gKyAqIEBpbnN0YW5jZV9pZDogVGhlIGluc3RhbmNlIHRvIGVudW1lcmF0ZQ0KPiA+ID4g
-PiArICogQGF0dHJfbmFtZV9rb2JqOiBUaGUgcGFyZW50IGtlcm5lbCBvYmplY3QgICoqLyBpbnQN
-Cj4gPiA+ID4gK3BvcHVsYXRlX2VudW1fZGF0YSh1bmlvbiBhY3BpX29iamVjdCAqZW51bWVyYXRp
-b25fb2JqLCBpbnQNCj4gPiBpbnN0YW5jZV9pZCwNCj4gPiA+ID4gKwkJCXN0cnVjdCBrb2JqZWN0
-ICphdHRyX25hbWVfa29iaikNCj4gPiA+ID4gK3sNCj4gPiA+ID4gKwlpbnQgcmV0dmFsID0gc3lz
-ZnNfY3JlYXRlX2dyb3VwKGF0dHJfbmFtZV9rb2JqLA0KPiA+ID4gJmVudW1lcmF0aW9uX2F0dHJf
-Z3JvdXApOw0KPiA+ID4gPiArCWludCBpLCBuZXh0X29iajsNCj4gPiA+ID4gKw0KPiA+ID4gPiAr
-CWlmIChyZXR2YWwpDQo+ID4gPiA+ICsJCWdvdG8gb3V0Ow0KPiA+ID4gPiArDQo+ID4gPiA+ICsJ
-bXV0ZXhfbG9jaygmZW51bV9tdXRleCk7DQo+ID4gPiA+ICsJc3RybmNweV9hdHRyKGVudW1lcmF0
-aW9uX2RhdGFbaW5zdGFuY2VfaWRdLmF0dHJpYnV0ZV9uYW1lLA0KPiA+ID4gPiArCQllbnVtZXJh
-dGlvbl9vYmpbQVRUUl9OQU1FXS5zdHJpbmcucG9pbnRlcik7DQo+ID4gPiA+ICsNCj4gPiAJc3Ry
-bmNweV9hdHRyKGVudW1lcmF0aW9uX2RhdGFbaW5zdGFuY2VfaWRdLmRpc3BsYXlfbmFtZV9sYW5n
-dWFnZQ0KPiA+IF9jb2RlLA0KPiA+ID4gPiArCQllbnVtZXJhdGlvbl9vYmpbRElTUExfTkFNRV9M
-QU5HX0NPREVdLnN0cmluZy5wb2ludGVyKTsNCj4gPiA+ID4gKwlzdHJuY3B5X2F0dHIoZW51bWVy
-YXRpb25fZGF0YVtpbnN0YW5jZV9pZF0uZGlzcGxheV9uYW1lLA0KPiA+ID4gPiArCQllbnVtZXJh
-dGlvbl9vYmpbRElTUExBWV9OQU1FXS5zdHJpbmcucG9pbnRlcik7DQo+ID4gPiA+ICsJc3RybmNw
-eV9hdHRyKGVudW1lcmF0aW9uX2RhdGFbaW5zdGFuY2VfaWRdLmRlZmF1bHRfdmFsdWUsDQo+ID4g
-PiA+ICsJCWVudW1lcmF0aW9uX29ialtERUZBVUxUX1ZBTF0uc3RyaW5nLnBvaW50ZXIpOw0KPiA+
-ID4gPiArCXN0cm5jcHlfYXR0cihlbnVtZXJhdGlvbl9kYXRhW2luc3RhbmNlX2lkXS5jdXJyZW50
-X3ZhbHVlLA0KPiA+ID4gPiArCQllbnVtZXJhdGlvbl9vYmpbQ1VSUkVOVF9WQUxdLnN0cmluZy5w
-b2ludGVyKTsNCj4gPiA+ID4gKwlzdHJuY3B5X2F0dHIoZW51bWVyYXRpb25fZGF0YVtpbnN0YW5j
-ZV9pZF0ubW9kaWZpZXIsDQo+ID4gPiA+ICsJCWVudW1lcmF0aW9uX29ialtNT0RJRklFUl0uc3Ry
-aW5nLnBvaW50ZXIpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsJbmV4dF9vYmogPSBNT0RJRklFUiAr
-IDE7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwllbnVtZXJhdGlvbl9kYXRhW2luc3RhbmNlX2lkXS52
-YWx1ZV9tb2RpZmllcl9jb3VudCA9DQo+ID4gPiA+ICsJCSh1aW50cHRyX3QpZW51bWVyYXRpb25f
-b2JqW25leHRfb2JqXS5zdHJpbmcucG9pbnRlcjsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCWZvciAo
-aSA9IDA7IGkgPA0KPiA+ID4gPiArZW51bWVyYXRpb25fZGF0YVtpbnN0YW5jZV9pZF0udmFsdWVf
-bW9kaWZpZXJfY291bnQ7IGkrKykNCj4gPiA+IHsNCj4gPiA+ID4gKwkJc3RyY2F0KGVudW1lcmF0
-aW9uX2RhdGFbaW5zdGFuY2VfaWRdLnZhbHVlX21vZGlmaWVyLA0KPiA+ID4gPiArCQkJZW51bWVy
-YXRpb25fb2JqWysrbmV4dF9vYmpdLnN0cmluZy5wb2ludGVyKTsNCj4gPiA+ID4gKwkJc3RyY2F0
-KGVudW1lcmF0aW9uX2RhdGFbaW5zdGFuY2VfaWRdLnZhbHVlX21vZGlmaWVyLCAiOyIpOw0KPiA+
-ID4gPiArCX0NCj4gPiA+ID4gKw0KPiA+ID4gPiArCWVudW1lcmF0aW9uX2RhdGFbaW5zdGFuY2Vf
-aWRdLnBvc3NpYmxlX3ZhbHVlX2NvdW50ID0NCj4gPiA+ID4gKwkJKHVpbnRwdHJfdCkgZW51bWVy
-YXRpb25fb2JqWysrbmV4dF9vYmpdLnN0cmluZy5wb2ludGVyOw0KPiA+ID4gPiArDQo+ID4gPiA+
-ICsJZm9yIChpID0gMDsgaSA8DQo+ID4gPiA+ICtlbnVtZXJhdGlvbl9kYXRhW2luc3RhbmNlX2lk
-XS5wb3NzaWJsZV92YWx1ZV9jb3VudDsgaSsrKQ0KPiA+ID4gew0KPiA+ID4gPiArCQlzdHJjYXQo
-ZW51bWVyYXRpb25fZGF0YVtpbnN0YW5jZV9pZF0ucG9zc2libGVfdmFsdWUsDQo+ID4gPiA+ICsJ
-CQllbnVtZXJhdGlvbl9vYmpbKytuZXh0X29ial0uc3RyaW5nLnBvaW50ZXIpOw0KPiA+ID4gPiAr
-CQlzdHJjYXQoZW51bWVyYXRpb25fZGF0YVtpbnN0YW5jZV9pZF0ucG9zc2libGVfdmFsdWUsICI7
-Iik7DQo+ID4gPiA+ICsJfQ0KPiA+ID4gPiArCXN0cm5jcHlfYXR0cihlbnVtZXJhdGlvbl9kYXRh
-W2luc3RhbmNlX2lkXS50eXBlLCAiZW51bWVyYXRpb24iKTsNCj4gPiA+ID4gKwltdXRleF91bmxv
-Y2soJmVudW1fbXV0ZXgpOw0KPiA+ID4gPiArDQo+ID4gPiA+ICtvdXQ6DQo+ID4gPiA+ICsJcmV0
-dXJuIHJldHZhbDsNCj4gPiA+ID4gK30NCj4gPiA+DQo+ID4gPg0KPiA+ID4gSSBndWVzcyB5b3Ug
-bWF5IGFsc28gbmVlZCBhIHN3aXRjaC1jYXNlIGJhc2VkIG9uIHRoZSB0eXBlIGluIHRoZQ0KPiA+
-ID4gcG9wdWxhcmUgZnVuY3Rpb24uDQo+ID4gPg0KPiA+ID4gPiArDQo+ID4gPiA+ICsvKioNCj4g
-PiA+ID4gKyAqIGV4aXRfZW51bV9hdHRyaWJ1dGVzKCkgLSBDbGVhciBhbGwgYXR0cmlidXRlIGRh
-dGENCj4gPiA+ID4gKyAqIEBrc2V0OiBUaGUga3NldCB0byBmcmVlDQo+ID4gPiA+ICsgKg0KPiA+
-ID4gPiArICogQ2xlYXJzIGFsbCBkYXRhIGFsbG9jYXRlZCBmb3IgdGhpcyBncm91cCBvZiBhdHRy
-aWJ1dGVzICAqKi8gdm9pZA0KPiA+ID4gPiArZXhpdF9lbnVtX2F0dHJpYnV0ZXMoc3RydWN0IGtz
-ZXQgKmtzZXQpIHsNCj4gPiA+ID4gKwlzdHJ1Y3Qga29iamVjdCAqcG9zLCAqbmV4dDsNCj4gPiA+
-ID4gKw0KPiA+ID4gPiArCW11dGV4X2xvY2soJmtzZXRfbXV0ZXgpOw0KPiA+ID4gPiArCWxpc3Rf
-Zm9yX2VhY2hfZW50cnlfc2FmZShwb3MsIG5leHQsICZrc2V0LT5saXN0LCBlbnRyeSkgew0KPiA+
-ID4gPiArCQlzeXNmc19yZW1vdmVfZ3JvdXAocG9zLCAmZW51bWVyYXRpb25fYXR0cl9ncm91cCk7
-DQo+ID4gPiA+ICsJfQ0KPiA+ID4gPiArCW11dGV4X3VubG9jaygma3NldF9tdXRleCk7DQo+ID4g
-PiA+ICsJbXV0ZXhfbG9jaygmZW51bV9tdXRleCk7DQo+ID4gPiA+ICsJa2ZyZWUoZW51bWVyYXRp
-b25fZGF0YSk7DQo+ID4gPiA+ICsJbXV0ZXhfdW5sb2NrKCZlbnVtX211dGV4KTsNCj4gPiA+ID4g
-K30NCj4gPiA+DQo+ID4gPiBTaW5jZSB0aGVyZSBpcyBub3cgb25seSAxIGtzZXQgZm9yIHRoZSBt
-YWluIGRpciwgeW91IGFyZSBub3cgY2FsbGluZw0KPiA+ID4gc3lzZnNfcmVtb3ZlX2dyb3VwIDQg
-dGltZXMgKGZvciBhbGwgdGhlIGRpZmZlcmVudCB0aW1lcykgb24gZWFjaCBlbnRyeQ0KPiA+ID4g
-aW4gdGhlIGF0dHJpYnV0ZXMgZGlyLiBJIGd1ZXNzIHRoaXMgbWF5IGZhaWwgc2lsZW50bHksIGJ1
-dCBpdCBzdGlsbCBpcw0KPiA+ID4gbm90IGdvb2QuIFNvIHRoaXMgbmVlZHMgdG8gYmUgZml4ZWQu
-DQo+ID4gPg0KPiA+ID4gVGhlIHJlbWFya3MgdG8gdGhpcyBmaWxlIGFsc28gYXBwbHkgdG8gdGhl
-Og0KPiA+ID4NCj4gPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLWludC1hdHRyaWJ1
-dGVzLmMNCj4gPiA+IGRyaXZlcnMvcGxhdGZvcm0veDg2L2RlbGwtd21pLXN0cmluZy1hdHRyaWJ1
-dGVzLmMNCj4gPiA+DQo+ID4gPiBmaWxlcy4NCj4gPiA+DQoNClNpbmNlIHdlIG1haW50YWluZWQg
-NCBkaWZmZXJlbnQgYXR0cmlidXRlIGdyb3VwcyB1bmRlciAxIGtzZXQsIGVhY2ggdGltZQ0KcmVz
-cGVjdGl2ZSBhdHRyaWJ1dGUgZ3JvdXAgd2lsbCBiZSByZW1vdmVkLiBBbmQgb25jZSBhbGwgZ3Jv
-dXBzIGFyZQ0KcmVtb3ZlZCwga3NldCBpcyBkZWxldGVkLg0KDQpSZWdhcmRzLA0KRGl2eWENCg==
+Hi,
+
+On 9/14/20 6:06 PM, Limonciello, Mario wrote:
+>> So my thinking here is as follows:
+>>
+>> 1. AFAIK other vendors may want to do something similar in the near future
+>> 2. The interface you (Dell) have come up with looks pretty generic / complete
+>> to me
+
+<snip>
+
+>>> Dell sets precedent here by having the first driver.
+>>
+>> Right and normally I may have wanted to wait until a second vendor implements
+>> a similar mechanism under Linux so that we can find common ground between the
+>> 2 implementations for the generic userspace API for this.
+>>
+> 
+> I think in terms of the basic sysfs files and their contents, a generic API makes
+> fine sense, but I'm hung specifically up on the flow when the firmware interface is
+> locked down.
+
+Ok.
+
+>> The problem with that approach is that because we do not break userspace,
+>> we then get to carry the "temporary" vendor-specific implementation of the
+>> userspace API around for ever, since it may very well have existing users
+>> before we replace it with the generic API.
+>>
+>> This scenario would mean that after some point in time (when the generic API
+>> gets
+>> added to the kernel) Dell needs to support 2 userspace APIs the one which is
+>> being introduced by this patch + the generic one going forward.
+>>
+>> Since to me the current API/ABI Dell is proposing is pretty generic I'm
+>> trying to avoid this having 2 maintain 2 different userspace APIs problem
+>> by making this the generic API from the get go.
+> 
+> I'm worried that we actually end up in a situation that the "generic" one supports
+> these basic features.  This is very similar to the Dell one, but misses certain
+> enhancements that are not in the generic one so you have to use the Dell one to get
+> those features.  And then how do you know which one to select from the kernel config?
+> 
+> It gets messy quickly.
+
+If there are 2 interfaces then yes it can get messy, but having 2 interfaces is
+exactly what I'm trying to avoid here.
+
+>>> 2) Dell has some extensions planned for other authentication mechanisms than
+>> password.
+>>> That is *definitely* going to be Dell specific, so should it be done in this
+>> vendor
+>>> agnostic directory?
+>>
+>> Well each property:
+>>
+>> /sys/class/firmware-properties/dell-bios/<property-name>
+>>
+>> Will have a type attribute:
+>>
+>> /sys/class/firmware-properties/dell-bios/<property-name>/type
+>>
+>> You can use dell-special-auth-mechanism as type for this and
+>> then it is clear it is dell specific. As mentioned above I
+>> fully expect new types to get added over this and userspace tools
+>> will be expected to just skip properties with unknown types
+>> (possibly with a warning).
+> 
+> So I think the nuance that is missed here is the actual flow for interacting with
+> an attribute when password security is enabled in today's patch set (both v1 and v2).
+> 
+> Userspace would perform like this:
+> 1) Check "is_password_set" attribute to determine if admin password required
+> 2) If yes write password into the current_password attribute (location changed in 2 patches)
+> 3) write new attribute value(s)
+> 4) If necessary clear current_password attribute
+> 
+> This works like a "session" today with admin password.  So if you have a generic interface
+> representing things as attributes you need to also have a generic attribute indicating
+> authentication required.  That would mean ALL attributes need to have a "authentication_required"
+> type of attribute.
+> 
+> And then that comes back to the point that authentication flow is definitely not generic.
+> Dell requires you to write the password in every WMI call today, but the sysfs interface actually
+> behaves like a session and caches the password in memory for the next call.
+> 
+> As a completely hypothetical idea what if another vendor also supports an admin password but decides for
+> their threat model it's actually a password hashed appended with a nonce and hashed and hence
+> needs to be set every time from sysfs?
+> 
+> Their flow might look something like this:
+> 1) Check auth_required attribute
+> 2) Write hash(password|nonce) to current_password
+> 3) Write attribute
+> 4) Write hash(password|nonce) to current_password
+> 5) Not necessary to clear current_password
+> 
+> Those are very different flows to get to and change the same "types" of data.  By Dell's interface
+> being Dell specific we can guarantee that the documented flow works how it should.
+
+Documenting the flow could be part of the documentation for the
+different passwd types. For how things currently work the User and
+Admin password attributed would have a type of "password", the hash
+example you gave will have a different type for its password attribute,
+e.g. "hotp" and not only the type could be different but also
+the sysfs-attributes, e.g. the "Admin" password-dir which has a "type"
+sysfs-atrribute which returns "htop" may not have a current_password
+attribute at all, instead it may would have a hash attribute, making
+it (more) clear that this one works differently.
+
+This would mean that existing userspace software can not work with
+systems using the new "hotp" password atrributes, but that is
+unavoidable.
+
+I think that the current generic password flow will work well
+for other vendors too, they may need to not cache it in the
+kernel (instead sending it directly to the firmware once), but the basic
+concept of having to write the plain-text bios Admin password before
+being able to change protected settings seems like it is something which
+matches how most current BIOS-es work.  And needing a way to re-lock the
+settings also sounds like something which will be pretty common for most
+implementations.
+
+>> We could even do something like we have for .desktop files
+>> fields, where we add something to the sysfs ABI documentation
+>> that vendors may add vendor specific types prefixed with X-<vendorname>.
+>>
+>> So all in all I believe that we can make using the proposed sysfs ABI
+>> a generic one work, and that this will be worth it to avoid having the
+>> issue of eventually having both a couple of vendor specific APIs +
+>> one grant unified generic API replacing those vendor-APIs
+>> (where we can never drop the vendor specific APIs because of
+>> backward compat. guarantees).
+> 
+> I'm personally leaning on the right place to have a vendor agnostic view is "outside"
+> of the kernel in an userland library.  All the vendor drivers that change settings can
+> behave very similarly for the most part, but differences between vendor implementations
+> can be better expressed there.
+
+We have tried that before in several cases (that I'm aware of) and this never
+works out. Esp. not when the basic kernel interface is reasonable sane,
+then a lot of people / projects avoid the lib and just poke the kernel API
+directly. We have seen this e.g. with hwmon-class devices and with v4l devices
+and with backlight-class devices. Since I've seen this happen 3 times already
+I'm not a big believer in adding a userspace library to hide the vendor
+differences.
+
+Regards,
+
+Hans
+
