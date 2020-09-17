@@ -2,205 +2,183 @@ Return-Path: <SRS0=nDDs=C2=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E9BC43461
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 14:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10F8C2BBD1
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 14:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3B8208E4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 14:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F62520838
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 14:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cavoj.net header.i=@cavoj.net header.b="sR5GSYeA";
-	dkim=pass (1024-bit key) header.d=cavoj.net header.i=@cavoj.net header.b="sR5GSYeA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Axpa7k9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgIQOMx (ORCPT
+        id S1727381AbgIQOLi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Sep 2020 10:12:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727239AbgIQN6l (ORCPT
+        Thu, 17 Sep 2020 10:11:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51227 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727352AbgIQOLW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Sep 2020 09:58:41 -0400
-Received: from mail.sammserver.com (sammserver.com [IPv6:2001:470:5a5b:1::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96B70C061756;
-        Thu, 17 Sep 2020 06:35:53 -0700 (PDT)
-Received: by mail.sammserver.com (Postfix, from userid 5011)
-        id DF253105EE08; Thu, 17 Sep 2020 15:35:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cavoj.net; s=email;
-        t=1600349751; bh=4tH4rZyjDgnv1dbbHfTOgqSTEzpb/RRtA/u8wp8LmAc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=sR5GSYeARD9RaIElWXn4CkiihXXAfVdNjolUx1AYigCZeHkihEO3/71u5fEYC/0aE
-         RCxcTNC1RRpQgKv07TUARXZ2KtAM2hv/M5oukt13nq2YJ3cA5JzCFbeqpg0BJ/nC8h
-         X2J79SiaErnUzpj3u9xqE+9b1crPt+FxlaQm0GBw=
-Received: from fastboi.localdomain (fastboi.wg [10.32.40.5])
-        by mail.sammserver.com (Postfix) with ESMTP id 92DF5105EE05;
-        Thu, 17 Sep 2020 15:35:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cavoj.net; s=email;
-        t=1600349751; bh=4tH4rZyjDgnv1dbbHfTOgqSTEzpb/RRtA/u8wp8LmAc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=sR5GSYeARD9RaIElWXn4CkiihXXAfVdNjolUx1AYigCZeHkihEO3/71u5fEYC/0aE
-         RCxcTNC1RRpQgKv07TUARXZ2KtAM2hv/M5oukt13nq2YJ3cA5JzCFbeqpg0BJ/nC8h
-         X2J79SiaErnUzpj3u9xqE+9b1crPt+FxlaQm0GBw=
-Received: by fastboi.localdomain (Postfix, from userid 1000)
-        id 6428914209C4; Thu, 17 Sep 2020 15:35:51 +0200 (CEST)
-From:   =?UTF-8?q?Samuel=20=C4=8Cavoj?= <samuel@cavoj.net>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Corentin Chary <corentin.chary@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Samuel=20=C4=8Cavoj?= <samuel@cavoj.net>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2] platform/x86: asus-wmi: Add support for SW_TABLET_MODE on UX360
-Date:   Thu, 17 Sep 2020 15:34:26 +0200
-Message-Id: <20200917133425.168310-1-samuel@cavoj.net>
-X-Mailer: git-send-email 2.28.0
+        Thu, 17 Sep 2020 10:11:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600351857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dF75HMvcCCwBIMjZhM0MqmBdo7iicvPzKUPWjV2yvk8=;
+        b=Axpa7k9vGLU/fo9RNET0RqClsyGYOmTc+12qEBxid+5Rz4aDrhCXmVnbFF/9DxQx6zY+aS
+        BS5fHZKPat5DzjszAr3uJuOUCzEK90dzANYXtzZuOqPW0TUttptKZyMrWmWm/X2KNCLObg
+        t+A2+e3jbCvEaYLYojtlZ3AntA6rNcY=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-BW5PZiDTOq2rzhsYXMpRIg-1; Thu, 17 Sep 2020 10:10:55 -0400
+X-MC-Unique: BW5PZiDTOq2rzhsYXMpRIg-1
+Received: by mail-wm1-f71.google.com with SMTP id c200so796832wmd.5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 07:10:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=dF75HMvcCCwBIMjZhM0MqmBdo7iicvPzKUPWjV2yvk8=;
+        b=o2AUapf2oNmB0fErBUYpEPKTeXG1Da0z2InCOjs4N+EKIbX5fJON4oM0owJm9M1Eky
+         F7Kim0eqWT+arNYBGIFuhn8pCFQxnOLFTV1IUM6UYx2CyvHitNB82pTBFmb5zVYO3jvL
+         /It0YVQOsNVXz2xM74/16MIieeaCDChw1Q2TSKCWWJBTfD0JOdeMlcp2CI7j40EPbOtf
+         QmFRzbTMEdK35Vh3su+yjAJ/gCWIlK3P/7NjbwxcDz3jycV773zJPEqKrrIRwW8v2Qph
+         nqevNNgWON+ixh0Xo0FY66KGXB2Cat2q6uQREw8CloC9cCZP20jFTrnTuvmvicsOEyOk
+         P2MA==
+X-Gm-Message-State: AOAM532D0v9CqH/Ih+HWsMWFBKUz6dQHIRTZRv+hHRea7N83HWAEyRQG
+        8CgDJ7vSVbC7MtzTE+PLnjbOd/MH8XNjjf3esi804x29KaMfg0tHUjM3bRqLvvsKnAJlpPwVzNQ
+        lmsucnqZ6NvaFtZiUqPjZfjCipLwVKoRl8Q==
+X-Received: by 2002:a7b:c753:: with SMTP id w19mr10083795wmk.157.1600351853829;
+        Thu, 17 Sep 2020 07:10:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwvvlMXpIDNZWr8+8/AoOYvWQ29qEs4dUNL9VTdTu+pvK8zGdpnbjGkn+2K09UlOwvrBjcwyQ==
+X-Received: by 2002:a7b:c753:: with SMTP id w19mr10083771wmk.157.1600351853629;
+        Thu, 17 Sep 2020 07:10:53 -0700 (PDT)
+Received: from dhcp-64-164.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id q12sm36964270wrs.48.2020.09.17.07.10.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Sep 2020 07:10:52 -0700 (PDT)
+Message-ID: <83694d5164a32d1ce6cdafb9cb73d731ca4b4a78.camel@redhat.com>
+Subject: Re: RFC: offering a standardized (/sys/class) userspace API for
+ selecting system/laptop performance-profiles
+From:   Benjamin Berg <bberg@redhat.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Elia Devito <eliadevito@gmail.com>,
+        Mark Pearson <mpearson@lenovo.com>
+Cc:     Jared Dominguez <jaredz@redhat.com>,
+        platform-driver-x86@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Thu, 17 Sep 2020 16:10:50 +0200
+In-Reply-To: <6e0409e7-5bc2-4ca6-a0aa-725a9a91aa8d@redhat.com>
+References: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
+         <21b6dffbbc6dbb14ebef3f078cc2497f9a872f57.camel@hadess.net>
+         <b6332a4a-7606-2bd0-632b-f67b68d3dd1b@redhat.com>
+         <9f01ce60a6b3319855f6a26b94af3e5fc6d2595e.camel@redhat.com>
+         <6e0409e7-5bc2-4ca6-a0aa-725a9a91aa8d@redhat.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-tKXbWGcYreah4JwpZFcX"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The UX360CA has a WMI device id 0x00060062, which reports whether the
-lid is flipped in tablet mode (1) or in normal laptop mode (0).
 
-This commit adds a quirk (quirk_asus_use_lid_flip_devid) for devices on
-which this WMI device should be used to figure out the SW_TABLET_MODE
-state, as opposed to the quirk_asus_use_kbd_dock_devid.
+--=-tKXbWGcYreah4JwpZFcX
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It is assumed other UX360* models have the same WMI device. As such, the
-quirk is applied to devices with DMI_MATCH(DMI_PRODUCT_NAME, "UX360").
-More devices with this feature need to be tested and added accordingly.
+Hi,
 
-The reason for using a whitelist via the quirk mechanism is that the new
-WMI device (0x00060062) is also present on some models which do not have
-a 360 degree hinge (at least FX503VD and GL503VD from Hans' DSTS
-collection) and therefore its presence cannot be relied on.
+On Thu, 2020-09-17 at 15:54 +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 9/17/20 3:50 PM, Benjamin Berg wrote:
+> > On Thu, 2020-09-17 at 14:51 +0200, Hans de Goede wrote:
+> > > > Compared to the WIP lenovo-dytc "perfmode" driver, we're missing
+> > > > something to advertise the unavailability of a profile, and the rea=
+son
+> > > > for that unavailability.
+> > >=20
+> > > UGh, do we really need to export this though. We have the lap_mode th=
+ing
+> > > already; and that is something which we will need for other reasons i=
+n
+> > > the future too. Any UI for selecting performance modes can display a
+> > > warning when lap_mode is true saying that: "The laptop has detected t=
+hat it
+> > > is sitting on someone's lap and that performance may be limited
+> > > because of this." (feel free to improve the text).
+> >=20
+> > Well, for dytc_perfmode there are actually always the three states
+> > L/M/H. It just happens that the kernel will write "H*" (was "M*" until
+> > yesterday) when the performance mode is degraded due to lap detection.
+> >=20
+> > Think of dytc_perfmode as a profile that sets a number of things:
+> >   * Thermal Limits
+> >   * Fan Behaviour
+> >   * possibly more
+> >=20
+> > While dytc_lapmode will only enforce a change to the thermal limit.
+> > So "performance" (H) is technically a valid mode even when the lap is
+> > detected.
+> >=20
+> > > I guess we could split the "value" attribute from my reply to Benjami=
+n's
+> > > email into "configured_value" (rw) and "actual_value" (rw) attributes=
+.
+> > > If we have the info we might as well export it I guess,.
+> >=20
+> > I consider the "*" purely a curtsey to users that read the attribute
+> > directly using e.g. cat to help with the interpretation. It probably is
+> > not interesting to userspace applications/daemons.
+>=20
+> So if there is a difference between M and H and H* then I think we should
+> just do the KISS thing and only have a single value attribute and in the
+> new interface handle the H* like H (p-p-d can still check the lap_mode
+> attribute to differentiate the 2 if it wants to).
 
-This patch is a followup to "platform/x86: asus-wmi: Fix SW_TABLET_MODE
-always reporting 1 on many different models" by Hans de Goede.
+I guess you are saying to drop "H*" and only have "L"/"M"/"H"? If so,
+fine with me, but we probably need that input in reply to
+  https://patchwork.kernel.org/patch/11730133/#23618881
+then :)
 
-Signed-off-by: Samuel Čavoj <samuel@cavoj.net>
-Cc: Hans de Goede <hdegoede@redhat.com>
----
+In principle it could be useful for userspace to know that performance
+is or would be dramatically impacted. i.e. when dytc_lapmode is 1, then
+you might want to say something like:
 
-v1 -> v2:
-  - inherit wmi_backlight_set_devstate from default quirk
+  performance states >=3D 75 are impacted due to "lapmode"
 
----
- drivers/platform/x86/asus-nb-wmi.c         | 15 +++++++++++++++
- drivers/platform/x86/asus-wmi.c            | 22 ++++++++++++++++++++++
- drivers/platform/x86/asus-wmi.h            |  1 +
- include/linux/platform_data/x86/asus-wmi.h |  1 +
- 4 files changed, 39 insertions(+)
+But, not sure if a kernel interface for that is useful or whether we
+should just put that kind of knowledge into userspace.
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 345bd224494b..5019b03b2c95 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -119,6 +119,11 @@ static struct quirk_entry quirk_asus_use_kbd_dock_devid = {
- 	.use_kbd_dock_devid = true,
- };
- 
-+static struct quirk_entry quirk_asus_use_lid_flip_devid = {
-+	.wmi_backlight_set_devstate = true,
-+	.use_lid_flip_devid = true,
-+};
-+
- static int dmi_matched(const struct dmi_system_id *dmi)
- {
- 	pr_info("Identified laptop model '%s'\n", dmi->ident);
-@@ -520,6 +525,16 @@ static const struct dmi_system_id asus_quirks[] = {
- 		},
- 		.driver_data = &quirk_asus_use_kbd_dock_devid,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUS ZenBook Flip UX360",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			/* Match UX360* */
-+			DMI_MATCH(DMI_PRODUCT_NAME, "UX360"),
-+		},
-+		.driver_data = &quirk_asus_use_lid_flip_devid,
-+	},
- 	{},
- };
- 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index ae6289d37faf..e5066248e83a 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -63,6 +63,7 @@ MODULE_LICENSE("GPL");
- #define NOTIFY_KBD_BRTTOGGLE		0xc7
- #define NOTIFY_KBD_FBM			0x99
- #define NOTIFY_KBD_TTP			0xae
-+#define NOTIFY_LID_FLIP			0xfa
- 
- #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
- 
-@@ -375,6 +376,18 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
- 		}
- 	}
- 
-+	if (asus->driver->quirks->use_lid_flip_devid) {
-+		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
-+		if (result >= 0) {
-+			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
-+			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
-+		} else if (result == -ENODEV) {
-+			pr_err("This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
-+		} else {
-+			pr_err("Error checking for lid-flip: %d\n", result);
-+		}
-+	}
-+
- 	err = input_register_device(asus->inputdev);
- 	if (err)
- 		goto err_free_dev;
-@@ -2127,6 +2140,15 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- 		return;
- 	}
- 
-+	if (asus->driver->quirks->use_lid_flip_devid && code == NOTIFY_LID_FLIP) {
-+		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
-+		if (result >= 0) {
-+			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
-+			input_sync(asus->inputdev);
-+		}
-+		return;
-+	}
-+
- 	if (asus->fan_boost_mode_available && code == NOTIFY_KBD_FBM) {
- 		fan_boost_mode_switch_next(asus);
- 		return;
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 1a95c172f94b..b302415bf1d9 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -34,6 +34,7 @@ struct quirk_entry {
- 	bool wmi_backlight_set_devstate;
- 	bool wmi_force_als_set;
- 	bool use_kbd_dock_devid;
-+	bool use_lid_flip_devid;
- 	int wapf;
- 	/*
- 	 * For machines with AMD graphic chips, it will send out WMI event
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 897b8332a39f..2f274cf52805 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -62,6 +62,7 @@
- 
- /* Misc */
- #define ASUS_WMI_DEVID_CAMERA		0x00060013
-+#define ASUS_WMI_DEVID_LID_FLIP		0x00060062
- 
- /* Storage */
- #define ASUS_WMI_DEVID_CARDREADER	0x00080013
--- 
-2.28.0
+Benjamin
+
+--=-tKXbWGcYreah4JwpZFcX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEED2NO4vMS33W8E4AFq6ZWhpmFY3AFAl9jbmoACgkQq6ZWhpmF
+Y3AjERAAsbrXluLuMBkYE3rYcskSyNnlv2UoX24cTLP5rUZG1u5H7ed7e6zDlH/d
+a04EUIWTo9yzkW8NWXjQVY8pH7IMmiwKgOrTNw8k1nD+DZdqRG0LVu0Rb4HIX8ch
+BwcjEwMiRR/N8gWuNQFYvebZG+7qixTDsiQVhgsdeG3FWIjDNYP9pFIjYhXCcfFO
+HnS6J5+NAR8YaTixOKpp091lRPikyLseb4EzNcJQ048/k7HUB7tIct++Y0dLA/1t
+2b+Mwd6g4wFfGDX+EVaVeZuWREKm1iILuVh9p9RyRBGMgm56539DSMoiKpQrHk1f
+PCEOjC2M6UQXxABX+wGIQQ4jZGSFSkyKYFZ7gUBPwJ1ms1J3r6DH/HH7CVRZ77I7
+957A4Ues9bz7Qd2f03iDOP2+4fMpQpgkUve86k6oKVfvSCUhbLjz9BPU9Y3hDuJV
+W1r8mAu4XaBxuuZj+kSFtXu4WkCLHY3VBrsTBXGokDCtavCtkGPNcVGnVPjn5afn
+g62oxJ9fbKPKqBTYlYte6Osd2yLmFVxqQe3awQLcu6YRbvr6ly3NDqO6bLdm39Ol
+4QT+TANUt2fmC6HaD/0wbglmVNnTBGm8Ja9HtJ/NPA0KmPhsLMy3pwnNpZcPZP+6
+mm02SaTrxdZGMffEfv2JC9iEW1qWG93A0+yX3ewwQh/mAWl5ESI=
+=dGll
+-----END PGP SIGNATURE-----
+
+--=-tKXbWGcYreah4JwpZFcX--
 
