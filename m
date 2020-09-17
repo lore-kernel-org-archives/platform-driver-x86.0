@@ -2,496 +2,197 @@ Return-Path: <SRS0=nDDs=C2=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C87C433E2
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 16:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4DCC43461
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 17:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB38206E6
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 16:10:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbtP6Oh4"
+	by mail.kernel.org (Postfix) with ESMTP id 4BB72221E7
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 17:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgIQQJz (ORCPT
+        id S1726381AbgIQRRd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Sep 2020 12:09:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728200AbgIQP7p (ORCPT
+        Thu, 17 Sep 2020 13:17:33 -0400
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.112]:54095 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726580AbgIQRQp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Sep 2020 11:59:45 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63156C061356;
-        Thu, 17 Sep 2020 08:58:31 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id lo4so3984961ejb.8;
-        Thu, 17 Sep 2020 08:58:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i2jqX17dPrs1jPVKkRQ5LwVOkLkQAiLqBxm34cBLTpI=;
-        b=sbtP6Oh4F6VeLBfgwW0NjLOYNV1C5ipeI3dGQUCYnzwajAnnoiSFRsbpmT9pXZf92h
-         /WJhLIliid0Tlz1Vev3NXi5e6OmBdstPv6vdMCYE5g0667K4QH+7PXtPrFpLzFzlLhyj
-         IX5HVnsEC+eaqCOtR2dqVwJqgITbQw6iw7/dznAeOyT6cTjyp/oA/eS+o+wQ9oxZxqpC
-         o76/siuUn1wVo+lpDekRu5K/7eXurW20wEbpHb9UZS/pcZHETtAVNoBEp66mTAmJFNLq
-         OWoX/6fisnbdGG6WA7CwYBx56cYAfSmD0/sbhWRyKye6g2OqvfwOhDxUqnT2GEZ9jGm3
-         nP/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i2jqX17dPrs1jPVKkRQ5LwVOkLkQAiLqBxm34cBLTpI=;
-        b=ErwrnMguQO4HJpvo08xNayYeDgm2QagRLsw9yqT2YVuvV+BnFmQto1GJYQA6Hb7iFr
-         lxOv5/Ju/yEw0lW8GKgL+zHjNBC8Uirp7RU0tSH43y5hv8mWatjgFPwiTnAqKQYnC3Ke
-         kMhzDcIVq0iBbRgSTQ1mqqbXumrBhNMqSf45w1Eta0QJO4YMfLe4ANf2EI6WmWAzFkOn
-         RwWwjCGm61VibJj+l3Y13VEYe1KmvHeqlEoSW/1LYVuzA1q0kVINmAjPB7wdq0jy2I7M
-         KnjFRWO6HuwcJOBZi0G0lrl13WDgph2XucS5S7FZCyyDK0FWOtNRUX0d/Ne5a3wItLVL
-         xycQ==
-X-Gm-Message-State: AOAM531/h7qVDUiUxK8+mcbn6idXI5nT0W6Pwp+z9Ag0kMfDoZbDDFCq
-        CnN/P2x4b+XPWAC+FPVDhKE=
-X-Google-Smtp-Source: ABdhPJweU/FW35CotruHoztp48fkkThY/D3buxiulPB2jymtq55w0ihqLf2hE8OK9V7RO7Hzr9vT8Q==
-X-Received: by 2002:a17:906:4c89:: with SMTP id q9mr32771149eju.290.1600358309635;
-        Thu, 17 Sep 2020 08:58:29 -0700 (PDT)
-Received: from xws.fritz.box (pd9e5a4c4.dip0.t-ipconnect.de. [217.229.164.196])
-        by smtp.gmail.com with ESMTPSA id jo2sm192572ejb.101.2020.09.17.08.58.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2020 08:58:28 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH v3] platform/x86: Add Driver to set up lid GPEs on MS Surface devices
-Date:   Thu, 17 Sep 2020 17:55:59 +0200
-Message-Id: <20200917155559.1686146-1-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Thu, 17 Sep 2020 13:16:45 -0400
+Received: from [100.112.133.211] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-b.us-west-2.aws.symcld.net id F9/50-44464-BF9936F5; Thu, 17 Sep 2020 17:16:43 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIKsWRWlGSWpSXmKPExsWSLveKXffXzOR
+  4g2ubDSx6m6YzWey/LmGx8P4pVouv326zW7w5DhQ6szDJYvWeF8wO7B47Z91l9/i1bQ2Lx7yT
+  gR7v911l8/i8SS6ANYo1My8pvyKBNeP19ofMBS1KFTc7GpkbGJ9KdzFycQgJ/GeUuLKqlQnCe
+  cgosfnNAXYQR1iglVFiY+ddNhBHRGAno8TRDb3MIA4zSGbKnA9sED0HmCV+XXsKNICTg01AW2
+  LLll9sIDavgK1E697p7CA2i4CqxObDl4FqODhEBWIlvs30gygRlDg58wkLiM0pYCexdPdlVhC
+  bWcBCYub884wQtrjErSfzmSBseYnmrbOZQWwJAQWJld8XskHYCRLLXt5hnsAoOAvJ2FlIRs1C
+  MmoWklELGFlWMVokFWWmZ5TkJmbm6BoaGOgaGhrpGhob6RoZWOglVukm6ZUW65anFpfoGukll
+  hfrFVfmJuek6OWllmxiBMZUSkHLhR2M69580DvEKMnBpCTK+31CcrwQX1J+SmVGYnFGfFFpTm
+  rxIUYZDg4lCd7WGUA5waLU9NSKtMwcYHzDpCU4eJREeE1A0rzFBYm5xZnpEKlTjIpS4rwrQRI
+  CIImM0jy4NlhKucQoKyXMy8jAwCDEU5BalJtZgir/ilGcg1FJmJcBmKCEeDLzSuCmvwJazAS0
+  mI0zEWRxSSJCSqqBifP82a0fTqyXYTd4U/hH95R3rn6b57/1PfFiYv7cOsnFj68Zbr0xjd1Cz
+  2tp+blbv8w0BX8ULRR0PKCb++c/S0L63DPBe3j7+X193WwVTiV99maN/30xyXyZSMvXtvqEwu
+  k+v3a+aHZ+LB++MoNNhs1+/Ub5kOvn+iaG/pklpM6h+qhd+N8Tn3OZX6sePN5sscLhgXBJxfu
+  Z+1SjGn2PObza+3CphercxdE+hSrdTNqTHG1TH0XMKjn0JPgrh/iviBNOa87uWXosuGx76Q2J
+  p+ycx9paz3vNvJvmrLZy40+ef/oRheUvtHXnZDWahF42XCjDZphZnL9jYcei7dPurTPZtv9MF
+  uMtgYj/Z8VnKbEUZyQaajEXFScCABw7BHikAwAA
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-25.tower-346.messagelabs.com!1600363000!45854!1
+X-Originating-IP: [103.30.234.7]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 22718 invoked from network); 17 Sep 2020 17:16:42 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.7)
+  by server-25.tower-346.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 17 Sep 2020 17:16:42 -0000
+Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id E650D38CE4D84E9E9269;
+        Fri, 18 Sep 2020 01:16:38 +0800 (CST)
+Received: from [10.46.52.228] (10.46.52.228) by reswpmail04.lenovo.com
+ (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Thu, 17 Sep
+ 2020 10:16:35 -0700
+Subject: Re: [External] Re: RFC: offering a standardized (/sys/class)
+ userspace API for selecting system/laptop performance-profiles
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Elia Devito <eliadevito@gmail.com>,
+        "Mark Pearson" <mpearson@lenovo.com>
+CC:     Jared Dominguez <jaredz@redhat.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
+ <21b6dffbbc6dbb14ebef3f078cc2497f9a872f57.camel@hadess.net>
+ <b6332a4a-7606-2bd0-632b-f67b68d3dd1b@redhat.com>
+ <9f01ce60a6b3319855f6a26b94af3e5fc6d2595e.camel@redhat.com>
+ <6e0409e7-5bc2-4ca6-a0aa-725a9a91aa8d@redhat.com>
+ <83694d5164a32d1ce6cdafb9cb73d731ca4b4a78.camel@redhat.com>
+ <0577bc9b-aa9f-c4b6-bac6-64325d81eeff@lenovo.com>
+ <c06f214d-ca9d-9ca3-236a-82a0bacfb582@redhat.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+Message-ID: <3ed9ac0a-2e24-7d3a-f264-c3bb03b846d9@lenovo.com>
+Date:   Thu, 17 Sep 2020 13:16:33 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
+In-Reply-To: <c06f214d-ca9d-9ca3-236a-82a0bacfb582@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-Originating-IP: [10.46.52.228]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Conventionally, wake-up events for a specific device, in our case the
-lid device, are managed via the ACPI _PRW field. While this does not
-seem strictly necessary based on ACPI spec, the kernel disables GPE
-wakeups to avoid non-wakeup interrupts preventing suspend by default and
-only enables GPEs associated via the _PRW field with a wake-up capable
-device. This behavior has been introduced in commit f941d3e41da7 ("ACPI:
-EC / PM: Disable non-wakeup GPEs for suspend-to-idle") and is described
-in more detail in its commit message.
 
-Unfortunately, on MS Surface devices, there is no _PRW field present on
-the lid device, thus no GPE is associated with it, and therefore the GPE
-responsible for sending the status-change notification to the lid gets
-disabled during suspend, making it impossible to wake the device via the
-lid.
+On 9/17/2020 1:03 PM, Hans de Goede wrote:
+> Hi Mark,
+> 
+> On 9/17/20 6:58 PM, Mark Pearson wrote:
+>> On 9/17/2020 10:10 AM, Benjamin Berg wrote:
+>>> Hi,
+>>>
+>>> On Thu, 2020-09-17 at 15:54 +0200, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> On 9/17/20 3:50 PM, Benjamin Berg wrote:
+>>>>> On Thu, 2020-09-17 at 14:51 +0200, Hans de Goede wrote:
+>>>>>>> Compared to the WIP lenovo-dytc "perfmode" driver, we're missing
+>>>>>>> something to advertise the unavailability of a profile, and the 
+>>>>>>> reason
+>>>>>>> for that unavailability.
+>>>>>>
+>>>>>> UGh, do we really need to export this though. We have the lap_mode 
+>>>>>> thing
+>>>>>> already; and that is something which we will need for other 
+>>>>>> reasons in
+>>>>>> the future too. Any UI for selecting performance modes can display a
+>>>>>> warning when lap_mode is true saying that: "The laptop has 
+>>>>>> detected that it
+>>>>>> is sitting on someone's lap and that performance may be limited
+>>>>>> because of this." (feel free to improve the text).
+>>>>>
+>>>>> Well, for dytc_perfmode there are actually always the three states
+>>>>> L/M/H. It just happens that the kernel will write "H*" (was "M*" until
+>>>>> yesterday) when the performance mode is degraded due to lap detection.
+>>>>>
+>>>>> Think of dytc_perfmode as a profile that sets a number of things:
+>>>>>    * Thermal Limits
+>>>>>    * Fan Behaviour
+>>>>>    * possibly more
+>>>>>
+>>>>> While dytc_lapmode will only enforce a change to the thermal limit.
+>>>>> So "performance" (H) is technically a valid mode even when the lap is
+>>>>> detected.
+>>>>>
+>>>>>> I guess we could split the "value" attribute from my reply to 
+>>>>>> Benjamin's
+>>>>>> email into "configured_value" (rw) and "actual_value" (rw) 
+>>>>>> attributes.
+>>>>>> If we have the info we might as well export it I guess,.
+>>>>>
+>>>>> I consider the "*" purely a curtsey to users that read the attribute
+>>>>> directly using e.g. cat to help with the interpretation. It 
+>>>>> probably is
+>>>>> not interesting to userspace applications/daemons.
+>>>>
+>>>> So if there is a difference between M and H and H* then I think we 
+>>>> should
+>>>> just do the KISS thing and only have a single value attribute and in 
+>>>> the
+>>>> new interface handle the H* like H (p-p-d can still check the lap_mode
+>>>> attribute to differentiate the 2 if it wants to).
+>>>
+>>> I guess you are saying to drop "H*" and only have "L"/"M"/"H"? If so,
+>>> fine with me, but we probably need that input in reply to
+>>>    https://patchwork.kernel.org/patch/11730133/#23618881
+>>> then :)
+>>>
+>>> In principle it could be useful for userspace to know that performance
+>>> is or would be dramatically impacted. i.e. when dytc_lapmode is 1, then
+>>> you might want to say something like:
+>>>
+>>>    performance states >= 75 are impacted due to "lapmode"
+>>>
+>>> But, not sure if a kernel interface for that is useful or whether we
+>>> should just put that kind of knowledge into userspace.
+>>>
+>>> Benjamin
+>>>
+>> I don't have a strong opinion on this but the kernel driver is already 
+>> knowledgeable about the quirks of what does and doesn't work on the 
+>> system so it seems like a good place to have that logic.
+>>
+>> What if we have an API for "configured" and "actual" - and if they 
+>> differ userspace knows it should figure out why (likely lapmode, but 
+>> if the HW vendor adds a new setting related to "position of sun in the 
+>> sky" or "how much money is in your account and can you afford the 
+>> electricity bill?" that could be added too....)
+> 
+> As I understand the problem with the configured and actual 
+> value/performance_level ideas is that if I understand things correctly 
+> that H* is not the same as M,
+> it behaves close-ish to M because of the lower thermal-limits from 
+> lapmode, but if I understood Benjamin correctly is is not exactly the 
+> same, so if we were
+> to advertise "M" in the actual_performance_level sysfs-attribute then 
+> that would not really be correct ?
+> 
 
-This patch introduces a pseudo-device and respective driver which, based
-on some DMI matching, marks the corresponding GPE of the lid device for
-wake and enables it during suspend. The behavior of this driver models
-the behavior of the ACPI/PM core for normal wakeup GPEs, properly
-declared via the _PRW field.
+Just a small clarification - in our case High performance is only for 
+deskmode. It drops to Medium in lapmode.
+Medium mode is slightly different in power rating between lap and desk 
+mode (e.g on X1Carbon 14.5W on lap, 15W on desk). I haven't really 
+worried about this in my patch implementation - it's still "medium"
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
+Does that make it better or more confusing?
 
-Changes in v2:
- - Use software nodes and device properties instead of platform data.
- - Simplify module alias.
- - Add comment regarding origin of GPE numbers.
- - Fix style issues.
-
-Changes in v3:
- - Rebase onto v5.9-rc5
- - Fix and restructure error handling and module cleanup.
- - Remove unnecessary platform_set_drvdata(..., NULL) calls.
- - Add pr_fmt definition
- - Return -ENODEV if no compatible device is found in module init.
-
----
- MAINTAINERS                        |   6 +
- drivers/platform/x86/Kconfig       |  10 +
- drivers/platform/x86/Makefile      |   1 +
- drivers/platform/x86/surface_gpe.c | 307 +++++++++++++++++++++++++++++
- 4 files changed, 324 insertions(+)
- create mode 100644 drivers/platform/x86/surface_gpe.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0d0862b19ce5..b082cc24268e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11557,6 +11557,12 @@ F:	drivers/scsi/smartpqi/smartpqi*.[ch]
- F:	include/linux/cciss*.h
- F:	include/uapi/linux/cciss*.h
- 
-+MICROSOFT SURFACE GPE LID SUPPORT DRIVER
-+M:	Maximilian Luz <luzmaximilian@gmail.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/surface_gpe.c
-+
- MICROSOFT SURFACE PRO 3 BUTTON DRIVER
- M:	Chen Yu <yu.c.chen@intel.com>
- L:	platform-driver-x86@vger.kernel.org
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 40219bba6801..cd29ab65f8b1 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -894,6 +894,16 @@ config SURFACE_3_POWER_OPREGION
- 	  This driver provides support for ACPI operation
- 	  region of the Surface 3 battery platform driver.
- 
-+config SURFACE_GPE
-+	tristate "Surface GPE/Lid Support Driver"
-+	depends on ACPI
-+	depends on DMI
-+	help
-+	  This driver marks the GPEs related to the ACPI lid device found on
-+	  Microsoft Surface devices as wakeup sources and prepares them
-+	  accordingly. It is required on those devices to allow wake-ups from
-+	  suspend by opening the lid.
-+
- config SURFACE_PRO3_BUTTON
- 	tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3/4 tablet"
- 	depends on ACPI && INPUT
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 5f823f7eff45..58c2a6f52e39 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -85,6 +85,7 @@ obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
- obj-$(CONFIG_SURFACE3_WMI)		+= surface3-wmi.o
- obj-$(CONFIG_SURFACE_3_BUTTON)		+= surface3_button.o
- obj-$(CONFIG_SURFACE_3_POWER_OPREGION)	+= surface3_power.o
-+obj-$(CONFIG_SURFACE_GPE)		+= surface_gpe.o
- obj-$(CONFIG_SURFACE_PRO3_BUTTON)	+= surfacepro3_button.o
- 
- # MSI
-diff --git a/drivers/platform/x86/surface_gpe.c b/drivers/platform/x86/surface_gpe.c
-new file mode 100644
-index 000000000000..2857e3862ca4
---- /dev/null
-+++ b/drivers/platform/x86/surface_gpe.c
-@@ -0,0 +1,307 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Surface GPE/Lid driver to enable wakeup from suspend via the lid by
-+ * properly configuring the respective GPEs. Required for wakeup via lid on
-+ * newer Intel-based Microsoft Surface devices.
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/dmi.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+/*
-+ * Note: The GPE numbers for the lid devices found below have been obtained
-+ *       from ACPI/the DSDT table, specifically from the GPE handler for the
-+ *       lid.
-+ */
-+
-+static const struct property_entry lid_device_props_l17[] = {
-+	PROPERTY_ENTRY_U32("gpe", 0x17),
-+	{},
-+};
-+
-+static const struct property_entry lid_device_props_l4D[] = {
-+	PROPERTY_ENTRY_U32("gpe", 0x4D),
-+	{},
-+};
-+
-+static const struct property_entry lid_device_props_l4F[] = {
-+	PROPERTY_ENTRY_U32("gpe", 0x4F),
-+	{},
-+};
-+
-+static const struct property_entry lid_device_props_l57[] = {
-+	PROPERTY_ENTRY_U32("gpe", 0x57),
-+	{},
-+};
-+
-+/*
-+ * Note: When changing this, don't forget to check that the MODULE_ALIAS below
-+ *       still fits.
-+ */
-+static const struct dmi_system_id dmi_lid_device_table[] = {
-+	{
-+		.ident = "Surface Pro 4",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 4"),
-+		},
-+		.driver_data = (void *)lid_device_props_l17,
-+	},
-+	{
-+		.ident = "Surface Pro 5",
-+		.matches = {
-+			/*
-+			 * We match for SKU here due to generic product name
-+			 * "Surface Pro".
-+			 */
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Pro_1796"),
-+		},
-+		.driver_data = (void *)lid_device_props_l4F,
-+	},
-+	{
-+		.ident = "Surface Pro 5 (LTE)",
-+		.matches = {
-+			/*
-+			 * We match for SKU here due to generic product name
-+			 * "Surface Pro"
-+			 */
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Pro_1807"),
-+		},
-+		.driver_data = (void *)lid_device_props_l4F,
-+	},
-+	{
-+		.ident = "Surface Pro 6",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 6"),
-+		},
-+		.driver_data = (void *)lid_device_props_l4F,
-+	},
-+	{
-+		.ident = "Surface Pro 7",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Pro 7"),
-+		},
-+		.driver_data = (void *)lid_device_props_l4D,
-+	},
-+	{
-+		.ident = "Surface Book 1",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Book"),
-+		},
-+		.driver_data = (void *)lid_device_props_l17,
-+	},
-+	{
-+		.ident = "Surface Book 2",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Book 2"),
-+		},
-+		.driver_data = (void *)lid_device_props_l17,
-+	},
-+	{
-+		.ident = "Surface Book 3",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Book 3"),
-+		},
-+		.driver_data = (void *)lid_device_props_l4D,
-+	},
-+	{
-+		.ident = "Surface Laptop 1",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Laptop"),
-+		},
-+		.driver_data = (void *)lid_device_props_l57,
-+	},
-+	{
-+		.ident = "Surface Laptop 2",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Surface Laptop 2"),
-+		},
-+		.driver_data = (void *)lid_device_props_l57,
-+	},
-+	{
-+		.ident = "Surface Laptop 3 (Intel 13\")",
-+		.matches = {
-+			/*
-+			 * We match for SKU here due to different vairants: The
-+			 * AMD (15") version does not rely on GPEs.
-+			 */
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Laptop_3_1867:1868"),
-+		},
-+		.driver_data = (void *)lid_device_props_l4D,
-+	},
-+	{ }
-+};
-+
-+struct surface_lid_device {
-+	u32 gpe_number;
-+};
-+
-+static int surface_lid_enable_wakeup(struct device *dev, bool enable)
-+{
-+	const struct surface_lid_device *lid = dev_get_drvdata(dev);
-+	int action = enable ? ACPI_GPE_ENABLE : ACPI_GPE_DISABLE;
-+	acpi_status status;
-+
-+	status = acpi_set_gpe_wake_mask(NULL, lid->gpe_number, action);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(dev, "failed to set GPE wake mask: %s\n",
-+			acpi_format_exception(status));
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int surface_gpe_suspend(struct device *dev)
-+{
-+	return surface_lid_enable_wakeup(dev, true);
-+}
-+
-+static int surface_gpe_resume(struct device *dev)
-+{
-+	return surface_lid_enable_wakeup(dev, false);
-+}
-+
-+static SIMPLE_DEV_PM_OPS(surface_gpe_pm, surface_gpe_suspend, surface_gpe_resume);
-+
-+static int surface_gpe_probe(struct platform_device *pdev)
-+{
-+	struct surface_lid_device *lid;
-+	u32 gpe_number;
-+	acpi_status status;
-+	int ret;
-+
-+	ret = device_property_read_u32(&pdev->dev, "gpe", &gpe_number);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to read 'gpe' property: %d\n", ret);
-+		return ret;
-+	}
-+
-+	lid = devm_kzalloc(&pdev->dev, sizeof(*lid), GFP_KERNEL);
-+	if (!lid)
-+		return -ENOMEM;
-+
-+	lid->gpe_number = gpe_number;
-+	platform_set_drvdata(pdev, lid);
-+
-+	status = acpi_mark_gpe_for_wake(NULL, gpe_number);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(&pdev->dev, "failed to mark GPE for wake: %s\n",
-+			acpi_format_exception(status));
-+		return -EINVAL;
-+	}
-+
-+	status = acpi_enable_gpe(NULL, gpe_number);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(&pdev->dev, "failed to enable GPE: %s\n",
-+			acpi_format_exception(status));
-+		return -EINVAL;
-+	}
-+
-+	ret = surface_lid_enable_wakeup(&pdev->dev, false);
-+	if (ret)
-+		acpi_disable_gpe(NULL, gpe_number);
-+
-+	return ret;
-+}
-+
-+static int surface_gpe_remove(struct platform_device *pdev)
-+{
-+	struct surface_lid_device *lid = dev_get_drvdata(&pdev->dev);
-+
-+	/* restore default behavior without this module */
-+	surface_lid_enable_wakeup(&pdev->dev, false);
-+	acpi_disable_gpe(NULL, lid->gpe_number);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver surface_gpe_driver = {
-+	.probe = surface_gpe_probe,
-+	.remove = surface_gpe_remove,
-+	.driver = {
-+		.name = "surface_gpe",
-+		.pm = &surface_gpe_pm,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+};
-+
-+static struct platform_device *surface_gpe_device;
-+
-+static int __init surface_gpe_init(void)
-+{
-+	const struct dmi_system_id *match;
-+	struct platform_device *pdev;
-+	struct fwnode_handle *fwnode;
-+	int status;
-+
-+	match = dmi_first_match(dmi_lid_device_table);
-+	if (!match) {
-+		pr_info("no compatible Microsoft Surface device found, exiting\n");
-+		return -ENODEV;
-+	}
-+
-+	status = platform_driver_register(&surface_gpe_driver);
-+	if (status)
-+		return status;
-+
-+	fwnode = fwnode_create_software_node(match->driver_data, NULL);
-+	if (IS_ERR(fwnode)) {
-+		status = PTR_ERR(fwnode);
-+		goto err_node;
-+	}
-+
-+	pdev = platform_device_alloc("surface_gpe", PLATFORM_DEVID_NONE);
-+	if (!pdev) {
-+		status = -ENOMEM;
-+		goto err_alloc;
-+	}
-+
-+	pdev->dev.fwnode = fwnode;
-+
-+	status = platform_device_add(pdev);
-+	if (status)
-+		goto err_add;
-+
-+	surface_gpe_device = pdev;
-+	return 0;
-+
-+err_add:
-+	platform_device_put(pdev);
-+err_alloc:
-+	fwnode_remove_software_node(fwnode);
-+err_node:
-+	platform_driver_unregister(&surface_gpe_driver);
-+	return status;
-+}
-+module_init(surface_gpe_init);
-+
-+static void __exit surface_gpe_exit(void)
-+{
-+	struct fwnode_handle *fwnode = surface_gpe_device->dev.fwnode;
-+
-+	platform_device_unregister(surface_gpe_device);
-+	platform_driver_unregister(&surface_gpe_driver);
-+	fwnode_remove_software_node(fwnode);
-+}
-+module_exit(surface_gpe_exit);
-+
-+MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
-+MODULE_DESCRIPTION("Surface GPE/Lid Driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("dmi:*:svnMicrosoftCorporation:pnSurface*:*");
--- 
-2.28.0
-
+Mark
