@@ -2,91 +2,81 @@ Return-Path: <SRS0=nDDs=C2=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDB6C43461
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 10:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5CAC43461
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 11:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F13772083B
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 10:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C0E2075E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 11:06:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LjORgp9q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aNIJakFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgIQKNK (ORCPT
+        id S1726645AbgIQLF4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Sep 2020 06:13:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58487 "EHLO
+        Thu, 17 Sep 2020 07:05:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:47756 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726539AbgIQKNJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726605AbgIQLFw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Sep 2020 06:13:09 -0400
+        Thu, 17 Sep 2020 07:05:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600337587;
+        s=mimecast20190719; t=1600340734;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=m+hwi7YJI4TPq52R5OLk88Dp9POsN+S8ypLkGLER598=;
-        b=LjORgp9qPy/t3RJ4S08+kX/GlZd+L9l6jBfYZICvgM3Jik6m/DKBjBEJI3pglNZEycY9hd
-        zGxuDmwaolv4GILIVHWFFT0+MlMGSzq7XeQmtv9ekCd+Xy0PFL+eIHinKG0FMSyLRRbohC
-        Fts1a7yGAoIWQI1rdlGTqg6eNiEAq6w=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-574-J3AYNfmbNvee2k-oNPxhJQ-1; Thu, 17 Sep 2020 06:12:00 -0400
-X-MC-Unique: J3AYNfmbNvee2k-oNPxhJQ-1
-Received: by mail-ej1-f69.google.com with SMTP id d8so687229ejt.14
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 03:12:00 -0700 (PDT)
+        bh=aYEGJhzeoqDcgOjK7MIlvVJV5vz2e5dMbqaD+VDMfm0=;
+        b=aNIJakFi3EzhlfHKhQzTpJkSTnPrw2z2LtUdvbhQZG6BqWkh9xL88guN94wCj/UhuFCg+A
+        QLYYfmyrpswXCFopSnyeypYyv9e4Evl/xIMul16G+3cd2MDLQ+KE9YyR/kzpSodqp5yDUc
+        qDbem4DljOKnzoobcellJ4Pd8fPFmDI=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-490-ztcqlqSMMfefp20wAUsi7w-1; Thu, 17 Sep 2020 07:03:25 -0400
+X-MC-Unique: ztcqlqSMMfefp20wAUsi7w-1
+Received: by mail-ed1-f71.google.com with SMTP id y15so764450edq.4
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 04:03:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=m+hwi7YJI4TPq52R5OLk88Dp9POsN+S8ypLkGLER598=;
-        b=DzDTtFCmzFa+yt2FRjBmYfl4SLQOMYiNBLNTrku67/EyLGiqTMXGfj4lcwNis6lNyX
-         YLWy4BsIWV3zmVZ2AMIpnzaccj8pSuVmIHHSpobtG8mGaeE5tDAbLNJC3XjX4bFO+JB5
-         Yu1NJB7jhbdCew7GnNq9l6SYjJ7zEpEDBj91L+SXeXruEJDTmHlx8f/VnMeZ79BBQunW
-         0V/Tw2cwEfPlCbH8lSp+KvtmHLq2OUm90nF3LkD73AuAsk+SEln4+v7OQ4H2llj8OfKt
-         z2KcXmPOJgpfC/LV6Blk1AbHYoSriRLBRnWY8/frLps6IWM/fvG8r21d9VhqHd5Br46D
-         5YqA==
-X-Gm-Message-State: AOAM532cqyTYRWjO6rjjeA4mbZD1k03EnFB317QKfh88KnzDA4Rfu61F
-        Y6PtxvQIJo4lQ0T49Hd+2BbcIz1OavoqldOEB8euNKmDAjVX2ZcuQdha0EbxSg6MVBK5Q2nzyH2
-        OpOcF+ALUJ7WV3EZiyiD0LtVkxBwnjkD15A==
-X-Received: by 2002:a17:906:2681:: with SMTP id t1mr12738627ejc.474.1600337519026;
-        Thu, 17 Sep 2020 03:11:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJybIGHkD8kwpiGJiP6DgXfRE0e5iPW7jHUNnU1jQVMT35HfYCcHXwr0TLVt5lpCv+19PBFmpg==
-X-Received: by 2002:a17:906:2681:: with SMTP id t1mr12738606ejc.474.1600337518717;
-        Thu, 17 Sep 2020 03:11:58 -0700 (PDT)
+        bh=aYEGJhzeoqDcgOjK7MIlvVJV5vz2e5dMbqaD+VDMfm0=;
+        b=BmswSEQa/SywgCIiWVI6uIr9cjy+NrZJp532gYI2VbEii8k2nko+PD+594JMj/u40i
+         o6RmMoIK4higfLlHbqcZsgyUwVzxpZCpA/1F1CtgQCpwEE4jbuPlpLtVNoVa28oZ4I0x
+         0rMS0c4s0NURaSeYO5IVDWJyWBjeoUBKLzIWgEJ5JxQhZefiCG1xqtY6noCaFXK5B5wX
+         DurZk0LRvTx7xl9PvOdwj2uPcdwy2U1/hp4M46UzGaQB7OV15BirPEAxBrHqHWMfeEbv
+         iG4tyYHcz23GjlI71G59bNCBeTTUoqRY/MoqVnlOrCd/FzSfB6+e7sRY//IP+Fm+kyCr
+         Olqw==
+X-Gm-Message-State: AOAM530hXui14IrfdqOGztNvgR2M9wZ7R4Kur/yooQQ/wBx5szN7wenp
+        s9AzciJHqz0DoOtGhUkNaldL5DSK9tgFiGb9Zy1lQSrBH0qBSqOpd/1B/ZGYF3+nplMyvbwtJaM
+        md4vF/IS6bIRX9poIN+ozcF+Yk/pkpQFFjg==
+X-Received: by 2002:a17:906:f150:: with SMTP id gw16mr28576290ejb.528.1600340603876;
+        Thu, 17 Sep 2020 04:03:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwJlAz9qSJ0pbsd/pSrMQTAcclkfIvPi7Tvj4g1N6WP8g5FRAt/PwKTXQGSBILyExKL+qLlOw==
+X-Received: by 2002:a17:906:f150:: with SMTP id gw16mr28576261ejb.528.1600340603528;
+        Thu, 17 Sep 2020 04:03:23 -0700 (PDT)
 Received: from x1.localdomain ([2a0e:5700:4:11:334c:7e36:8d57:40cb])
-        by smtp.gmail.com with ESMTPSA id e15sm11355614ejm.68.2020.09.17.03.11.57
+        by smtp.gmail.com with ESMTPSA id b6sm16369626eds.46.2020.09.17.04.03.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Sep 2020 03:11:58 -0700 (PDT)
-Subject: Re: [PATCH] Introduce support for Systems Management Driver over WMI
- for Dell Systems
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
-        Divya Bharathi <divya27392@gmail.com>,
-        "dvhart@infradead.org" <dvhart@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
-        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>,
-        Richard Hughes <rhughes@redhat.com>,
-        Jared Dominguez <jaredz@redhat.com>
-References: <20200730143122.10237-1-divya_bharathi@dell.com>
- <d3de1d27-25ac-be43-54d8-dcbfffa31e1d@redhat.com>
- <DM6PR19MB26364970D0981212E811E1B0FA2E0@DM6PR19MB2636.namprd19.prod.outlook.com>
- <67ca316a-227f-80f6-ad22-7d08112b2584@redhat.com>
- <DM6PR19MB26368BB2B8C4D7CE58DF7C31FA230@DM6PR19MB2636.namprd19.prod.outlook.com>
+        Thu, 17 Sep 2020 04:03:22 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: hp-wmi: add support for thermal policy
+To:     Elia Devito <eliadevito@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200914170252.41125-1-eliadevito@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <5847917c-2c34-5d74-b5db-f33bb8fc9e13@redhat.com>
-Date:   Thu, 17 Sep 2020 12:11:57 +0200
+Message-ID: <af8ccfbf-8a6f-8667-aee6-d196e8e7c845@redhat.com>
+Date:   Thu, 17 Sep 2020 13:03:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <DM6PR19MB26368BB2B8C4D7CE58DF7C31FA230@DM6PR19MB2636.namprd19.prod.outlook.com>
+In-Reply-To: <20200914170252.41125-1-eliadevito@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -96,152 +86,208 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/14/20 6:06 PM, Limonciello, Mario wrote:
->> So my thinking here is as follows:
->>
->> 1. AFAIK other vendors may want to do something similar in the near future
->> 2. The interface you (Dell) have come up with looks pretty generic / complete
->> to me
-
-<snip>
-
->>> Dell sets precedent here by having the first driver.
->>
->> Right and normally I may have wanted to wait until a second vendor implements
->> a similar mechanism under Linux so that we can find common ground between the
->> 2 implementations for the generic userspace API for this.
->>
+On 9/14/20 7:02 PM, Elia Devito wrote:
+> HP Spectre notebooks (and probabily other model as well)
+> support at least 3 thermal policy:
+>   - Default
+>   - Performance
+>   - Cool
 > 
-> I think in terms of the basic sysfs files and their contents, a generic API makes
-> fine sense, but I'm hung specifically up on the flow when the firmware interface is
-> locked down.
+> the correct thermal policy configuration make the firmware to correctly
+> set OEM variables for Intel DPTF and optimize fan management to reach
+> the best performance.
 
-Ok.
+You mention DPTF, have you tested this patch together with Matthew Garret's
+modified thermald which supports dynamic DPTF profiles ? :
 
->> The problem with that approach is that because we do not break userspace,
->> we then get to carry the "temporary" vendor-specific implementation of the
->> userspace API around for ever, since it may very well have existing users
->> before we replace it with the generic API.
->>
->> This scenario would mean that after some point in time (when the generic API
->> gets
->> added to the kernel) Dell needs to support 2 userspace APIs the one which is
->> being introduced by this patch + the generic one going forward.
->>
->> Since to me the current API/ABI Dell is proposing is pretty generic I'm
->> trying to avoid this having 2 maintain 2 different userspace APIs problem
->> by making this the generic API from the get go.
-> 
-> I'm worried that we actually end up in a situation that the "generic" one supports
-> these basic features.  This is very similar to the Dell one, but misses certain
-> enhancements that are not in the generic one so you have to use the Dell one to get
-> those features.  And then how do you know which one to select from the kernel config?
-> 
-> It gets messy quickly.
+https://mjg59.dreamwidth.org/54923.html
 
-If there are 2 interfaces then yes it can get messy, but having 2 interfaces is
-exactly what I'm trying to avoid here.
+And if you have, have you alsoe tested it without this ?
 
->>> 2) Dell has some extensions planned for other authentication mechanisms than
->> password.
->>> That is *definitely* going to be Dell specific, so should it be done in this
->> vendor
->>> agnostic directory?
->>
->> Well each property:
->>
->> /sys/class/firmware-properties/dell-bios/<property-name>
->>
->> Will have a type attribute:
->>
->> /sys/class/firmware-properties/dell-bios/<property-name>/type
->>
->> You can use dell-special-auth-mechanism as type for this and
->> then it is clear it is dell specific. As mentioned above I
->> fully expect new types to get added over this and userspace tools
->> will be expected to just skip properties with unknown types
->> (possibly with a warning).
-> 
-> So I think the nuance that is missed here is the actual flow for interacting with
-> an attribute when password security is enabled in today's patch set (both v1 and v2).
-> 
-> Userspace would perform like this:
-> 1) Check "is_password_set" attribute to determine if admin password required
-> 2) If yes write password into the current_password attribute (location changed in 2 patches)
-> 3) write new attribute value(s)
-> 4) If necessary clear current_password attribute
-> 
-> This works like a "session" today with admin password.  So if you have a generic interface
-> representing things as attributes you need to also have a generic attribute indicating
-> authentication required.  That would mean ALL attributes need to have a "authentication_required"
-> type of attribute.
-> 
-> And then that comes back to the point that authentication flow is definitely not generic.
-> Dell requires you to write the password in every WMI call today, but the sysfs interface actually
-> behaves like a session and caches the password in memory for the next call.
-> 
-> As a completely hypothetical idea what if another vendor also supports an admin password but decides for
-> their threat model it's actually a password hashed appended with a nonce and hashed and hence
-> needs to be set every time from sysfs?
-> 
-> Their flow might look something like this:
-> 1) Check auth_required attribute
-> 2) Write hash(password|nonce) to current_password
-> 3) Write attribute
-> 4) Write hash(password|nonce) to current_password
-> 5) Not necessary to clear current_password
-> 
-> Those are very different flows to get to and change the same "types" of data.  By Dell's interface
-> being Dell specific we can guarantee that the documented flow works how it should.
 
-Documenting the flow could be part of the documentation for the
-different passwd types. For how things currently work the User and
-Admin password attributed would have a type of "password", the hash
-example you gave will have a different type for its password attribute,
-e.g. "hotp" and not only the type could be different but also
-the sysfs-attributes, e.g. the "Admin" password-dir which has a "type"
-sysfs-atrribute which returns "htop" may not have a current_password
-attribute at all, instead it may would have a hash attribute, making
-it (more) clear that this one works differently.
-
-This would mean that existing userspace software can not work with
-systems using the new "hotp" password atrributes, but that is
-unavoidable.
-
-I think that the current generic password flow will work well
-for other vendors too, they may need to not cache it in the
-kernel (instead sending it directly to the firmware once), but the basic
-concept of having to write the plain-text bios Admin password before
-being able to change protected settings seems like it is something which
-matches how most current BIOS-es work.  And needing a way to re-lock the
-settings also sounds like something which will be pretty common for most
-implementations.
-
->> We could even do something like we have for .desktop files
->> fields, where we add something to the sysfs ABI documentation
->> that vendors may add vendor specific types prefixed with X-<vendorname>.
->>
->> So all in all I believe that we can make using the proposed sysfs ABI
->> a generic one work, and that this will be worth it to avoid having the
->> issue of eventually having both a couple of vendor specific APIs +
->> one grant unified generic API replacing those vendor-APIs
->> (where we can never drop the vendor specific APIs because of
->> backward compat. guarantees).
 > 
-> I'm personally leaning on the right place to have a vendor agnostic view is "outside"
-> of the kernel in an userland library.  All the vendor drivers that change settings can
-> behave very similarly for the most part, but differences between vendor implementations
-> can be better expressed there.
+> Signed-off-by: Elia Devito <eliadevito@gmail.com>
+> ---
+>   drivers/platform/x86/hp-wmi.c | 80 +++++++++++++++++++++++++++++++++++
+>   1 file changed, 80 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index 1762f335bac9..14ee176f5588 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -81,6 +81,7 @@ enum hp_wmi_commandtype {
+>   	HPWMI_FEATURE2_QUERY		= 0x0d,
+>   	HPWMI_WIRELESS2_QUERY		= 0x1b,
+>   	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
+> +	HPWMI_THERMAL_POLICY_QUERY	= 0x4c
+>   };
+>   
+>   enum hp_wmi_command {
+> @@ -114,6 +115,12 @@ enum hp_wireless2_bits {
+>   	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
+>   };
+>   
+> +enum hp_thermal_policy {
+> +	HP_THERMAL_POLICY_PERFORMANCE	= 0x00,
+> +	HP_THERMAL_POLICY_DEFAULT		= 0x01,
+> +	HP_THERMAL_POLICY_COOL			= 0x02
+> +};
+> +
+>   #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
+>   #define IS_SWBLOCKED(x) !(x & HPWMI_POWER_SOFT)
+>   
+> @@ -458,6 +465,28 @@ static ssize_t postcode_show(struct device *dev, struct device_attribute *attr,
+>   	return sprintf(buf, "0x%x\n", value);
+>   }
+>   
+> +static ssize_t thermal_policy_show(struct device *dev, struct device_attribute *attr,
+> +			     char *buf)
+> +{
+> +	int value;
+> +
+> +	/* Get the current thermal policy */
+> +	value = hp_wmi_read_int(HPWMI_THERMAL_POLICY_QUERY);
+> +	if (value < 0)
+> +		return value;
+> +
+> +	switch (value) {
+> +	case HP_THERMAL_POLICY_PERFORMANCE:
+> +		return sprintf(buf, "Performance (%x)\n", value);
+> +	case HP_THERMAL_POLICY_DEFAULT:
+> +		return sprintf(buf, "Default (%x)\n", value);
+> +	case HP_THERMAL_POLICY_COOL:
+> +		return sprintf(buf, "Cool (%x)\n", value);
+> +	default:
+> +		return sprintf(buf, "Unknown (%x)\n", value);
+> +	}
+> +}
+> +
 
-We have tried that before in several cases (that I'm aware of) and this never
-works out. Esp. not when the basic kernel interface is reasonable sane,
-then a lot of people / projects avoid the lib and just poke the kernel API
-directly. We have seen this e.g. with hwmon-class devices and with v4l devices
-and with backlight-class devices. Since I've seen this happen 3 times already
-I'm not a big believer in adding a userspace library to hide the vendor
-differences.
+So your showing it as a string here.
 
-Regards,
+
+>   static ssize_t als_store(struct device *dev, struct device_attribute *attr,
+>   			 const char *buf, size_t count)
+>   {
+> @@ -499,12 +528,35 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
+>   	return count;
+>   }
+>   
+> +static ssize_t thermal_policy_store(struct device *dev, struct device_attribute *attr,
+> +			      const char *buf, size_t count)
+> +{
+> +	u32 tmp;
+> +	int ret;
+> +
+> +	ret = kstrtou32(buf, 10, &tmp);
+> +	if (ret)
+> +		return ret;
+
+
+But then taking an integer value here. That is not really a good userspace interface IMHO.
+
+What you can do is put the strings in an array of strings and then loop
+over the array in show, adding [] around the selected option, so that
+showing it will e.g. output:
+
+Performance [Default] Cool
+
+or:
+
+[Performance] Default Cool
+
+(and in the unknown case none of the 3 would have [] around it)
+
+And then in the store callback also loop over the array,
+comparing the user provided string with the 3 strings and
+then selecting the value based on that; or return -EINVAL
+if non of the strings match. Note I'm open to other
+suggestions, but this is more or less how we usually deal with
+exporting enums in sysfs now a days.
+
+Note please use sysfs_match_string for the store function,
+this will do things like ignoring the '\n' which echo
+adds for you without needing to code all this out.
+
+
+
+> +
+> +	if (tmp < HP_THERMAL_POLICY_PERFORMANCE || tmp > HP_THERMAL_POLICY_COOL)
+> +		return -EINVAL;
+> +
+> +	/* Set thermal policy */
+> +	ret = hp_wmi_perform_query(HPWMI_THERMAL_POLICY_QUERY, HPWMI_WRITE, &tmp,
+> +				       sizeof(tmp), sizeof(tmp));
+> +	if (ret)
+> +		return ret < 0 ? ret : -EINVAL;
+> +
+> +	return count;
+> +}
+> +
+>   static DEVICE_ATTR_RO(display);
+>   static DEVICE_ATTR_RO(hddtemp);
+>   static DEVICE_ATTR_RW(als);
+>   static DEVICE_ATTR_RO(dock);
+>   static DEVICE_ATTR_RO(tablet);
+>   static DEVICE_ATTR_RW(postcode);
+> +static DEVICE_ATTR_RW(thermal_policy);
+>   
+>   static struct attribute *hp_wmi_attrs[] = {
+>   	&dev_attr_display.attr,
+> @@ -861,6 +913,30 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+>   	return err;
+>   }
+>   
+> +static int thermal_policy_setup(struct platform_device *device)
+> +{
+> +	int err, tp;
+> +
+> +	tp = hp_wmi_read_int(HPWMI_THERMAL_POLICY_QUERY);
+> +	if (tp < 0)
+> +		return tp;
+> +
+> +	/*
+> +	 * set thermal policy to ensure that the firmware correctly
+> +	 * sets the OEM variables for the DPTF
+> +	 */
+> +	err = hp_wmi_perform_query(HPWMI_THERMAL_POLICY_QUERY, HPWMI_WRITE, &tp,
+> +							   sizeof(tp), 0);
+> +	if (err)
+> +		return err;
+> +
+> +	err = device_create_file(&device->dev, &dev_attr_thermal_policy);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+>   static int __init hp_wmi_bios_setup(struct platform_device *device)
+>   {
+>   	/* clear detected rfkill devices */
+> @@ -872,6 +948,8 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+>   	if (hp_wmi_rfkill_setup(device))
+>   		hp_wmi_rfkill2_setup(device);
+>   
+> +	thermal_policy_setup(device);
+> +
+>   	return 0;
+>   }
+>   
+> @@ -879,6 +957,8 @@ static int __exit hp_wmi_bios_remove(struct platform_device *device)
+>   {
+>   	int i;
+>   
+> +	device_remove_file(&device->dev, &dev_attr_thermal_policy);
+> +
+>   	for (i = 0; i < rfkill2_count; i++) {
+>   		rfkill_unregister(rfkill2[i].rfkill);
+>   		rfkill_destroy(rfkill2[i].rfkill);
+> 
+
+Otherwise this looks good to me.
+
+Regsrds,
 
 Hans
 
