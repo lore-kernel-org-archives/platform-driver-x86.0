@@ -4,126 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1490EC43464
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 21:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C2AC43464
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 21:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD93E208E4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 21:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9F52083B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 21:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbgIQVkf (ORCPT
+        id S1726065AbgIQVqb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Sep 2020 17:40:35 -0400
-Received: from mga05.intel.com ([192.55.52.43]:48083 "EHLO mga05.intel.com"
+        Thu, 17 Sep 2020 17:46:31 -0400
+Received: from mga14.intel.com ([192.55.52.115]:65310 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbgIQVkf (ORCPT
+        id S1726040AbgIQVqb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Sep 2020 17:40:35 -0400
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Sep 2020 17:40:35 EDT
-IronPort-SDR: KQkD8RzcC7Xf4IpV9XYUMMcgsuQucvILr8UWOxiqkKp2PF0mz0rutOfz8aC3nFskZFQhIsQrPj
- jjdy2c0uhBvg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9747"; a="244629379"
+        Thu, 17 Sep 2020 17:46:31 -0400
+IronPort-SDR: axf+HoJ90SfdUDYT1oOxFUDQ685O/BR61kqcGfrW5LFwCvuUucEGilAmwHGxEG+iWV5OghJ1Wp
+ OcgEnYKi05mQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9747"; a="159105813"
 X-IronPort-AV: E=Sophos;i="5.77,272,1596524400"; 
-   d="scan'208";a="244629379"
+   d="scan'208";a="159105813"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:33:25 -0700
-IronPort-SDR: CQoFn8VfQMiEND8uAu6laA3WpJ29+CyLgq4qStsNdQ8mAmNLPwTrKxP5wW3boUqlNKywdh+3/V
- IzF22DgbjqMw==
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:46:29 -0700
+IronPort-SDR: 4v506Jv4WNG8inJA6c0dcYElPBXLhmBjERs77eC/TvL6SfRnAMW2nK5nbrBfR3DgUSYstFPc5M
+ DckGfjp+fSsA==
 X-IronPort-AV: E=Sophos;i="5.77,272,1596524400"; 
-   d="scan'208";a="289121070"
+   d="scan'208";a="344508817"
 Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:33:24 -0700
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:46:28 -0700
 Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
-        by smtp.ostc.intel.com (Postfix) with ESMTP id CE12B6369;
-        Thu, 17 Sep 2020 14:33:24 -0700 (PDT)
-Date:   Thu, 17 Sep 2020 14:33:24 -0700
+        by smtp.ostc.intel.com (Postfix) with ESMTP id 3FC1A6369;
+        Thu, 17 Sep 2020 14:46:28 -0700 (PDT)
+Date:   Thu, 17 Sep 2020 14:46:28 -0700
 From:   mark gross <mgross@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: intel-vbtn: Fix SW_TABLET_MODE always
- reporting 1 on the HP Pavilion 11 x360
-Message-ID: <20200917213324.GB29136@mtg-dev.jf.intel.com>
+To:     trix@redhat.com
+Cc:     ibm-acpi@hmh.eng.br, dvhart@infradead.org, andy@infradead.org,
+        natechancellor@gmail.com, ndesaulniers@google.com,
+        len.brown@intel.com, ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: initialize tp_nvram_state
+ variable
+Message-ID: <20200917214628.GC29136@mtg-dev.jf.intel.com>
 Reply-To: mgross@linux.intel.com
-References: <20200912093532.18522-1-hdegoede@redhat.com>
+References: <20200913190203.22238-1-trix@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200912093532.18522-1-hdegoede@redhat.com>
+In-Reply-To: <20200913190203.22238-1-trix@redhat.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Acked-by: Mark Gross <mgross@linux.intel.com>
+Acked-by: mark gross <mgross@linux.intel.com>
 
 --mark
 
-On Sat, Sep 12, 2020 at 11:35:32AM +0200, Hans de Goede wrote:
-> Commit cfae58ed681c ("platform/x86: intel-vbtn: Only blacklist
-> SW_TABLET_MODE on the 9 / "Laptop" chasis-type") restored SW_TABLET_MODE
-> reporting on the HP stream x360 11 series on which it was previously broken
-> by commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet
-> mode switch on 2-in-1's").
+
+On Sun, Sep 13, 2020 at 12:02:03PM -0700, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
 > 
-> It turns out that enabling SW_TABLET_MODE reporting on devices with a
-> chassis-type of 10 ("Notebook") causes SW_TABLET_MODE to always report 1
-> at boot on the HP Pavilion 11 x360, which causes libinput to disable the
-> kbd and touchpad.
+> clang static analysis flags this represenative problem
+> thinkpad_acpi.c:2523:7: warning: Branch condition evaluates
+>   to a garbage value
+>                 if (!oldn->mute ||
+>                     ^~~~~~~~~~~
 > 
-> The HP Pavilion 11 x360's ACPI VGBS method sets bit 4 instead of bit 6 when
-> NOT in tablet mode at boot. Inspecting all the DSDTs in my DSDT collection
-> shows only one other model, the Medion E1239T ever setting bit 4 and it
-> always sets this together with bit 6.
+> In hotkey_kthread() mute is conditionally set by hotkey_read_nvram()
+> but unconditionally checked by hotkey_compare_and_issue_event().
+> So the tp_nvram_state variable s[2] needs to be initialized.
 > 
-> So lets treat bit 4 as a second bit which when set indicates the device not
-> being in tablet-mode, as we already do for bit 6.
-> 
-> While at it also prefix all VGBS constant defines with "VGBS_".
-> 
-> Fixes: cfae58ed681c ("platform/x86: intel-vbtn: Only blacklist SW_TABLET_MODE on the 9 / "Laptop" chasis-type")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Fixes: 01e88f25985d ("ACPI: thinkpad-acpi: add CMOS NVRAM polling for hot keys (v9)")
+> Signed-off-by: Tom Rix <trix@redhat.com>
 > ---
->  drivers/platform/x86/intel-vbtn.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+>  drivers/platform/x86/thinkpad_acpi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-> index e85d8e58320c..f443619e1e7e 100644
-> --- a/drivers/platform/x86/intel-vbtn.c
-> +++ b/drivers/platform/x86/intel-vbtn.c
-> @@ -15,9 +15,13 @@
->  #include <linux/platform_device.h>
->  #include <linux/suspend.h>
->  
-> +/* Returned when NOT in tablet mode on some HP Stream x360 11 models */
-> +#define VGBS_TABLET_MODE_FLAG_ALT	0x10
->  /* When NOT in tablet mode, VGBS returns with the flag 0x40 */
-> -#define TABLET_MODE_FLAG 0x40
-> -#define DOCK_MODE_FLAG   0x80
-> +#define VGBS_TABLET_MODE_FLAG		0x40
-> +#define VGBS_DOCK_MODE_FLAG		0x80
-> +
-> +#define VGBS_TABLET_MODE_FLAGS (VGBS_TABLET_MODE_FLAG | VGBS_TABLET_MODE_FLAG_ALT)
->  
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("AceLan Kao");
-> @@ -72,9 +76,9 @@ static void detect_tablet_mode(struct platform_device *device)
->  	if (ACPI_FAILURE(status))
->  		return;
->  
-> -	m = !(vgbs & TABLET_MODE_FLAG);
-> +	m = !(vgbs & VGBS_TABLET_MODE_FLAGS);
->  	input_report_switch(priv->input_dev, SW_TABLET_MODE, m);
-> -	m = (vgbs & DOCK_MODE_FLAG) ? 1 : 0;
-> +	m = (vgbs & VGBS_DOCK_MODE_FLAG) ? 1 : 0;
->  	input_report_switch(priv->input_dev, SW_DOCK, m);
->  }
->  
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 47925c319d7b..24da8b6872f2 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -2573,7 +2573,7 @@ static void hotkey_compare_and_issue_event(struct tp_nvram_state *oldn,
+>   */
+>  static int hotkey_kthread(void *data)
+>  {
+> -	struct tp_nvram_state s[2];
+> +	struct tp_nvram_state s[2] = { 0 };
+>  	u32 poll_mask, event_mask;
+>  	unsigned int si, so;
+>  	unsigned long t;
 > -- 
-> 2.28.0
+> 2.18.1
 > 
