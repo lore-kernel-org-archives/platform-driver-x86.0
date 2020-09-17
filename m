@@ -2,84 +2,236 @@ Return-Path: <SRS0=nDDs=C2=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F83C43461
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 13:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4696AC433E2
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 13:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9E92072E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 13:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043872072E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 13:13:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="VNobLq2X"
+	dkim=pass (1024-bit key) header.d=cavoj.net header.i=@cavoj.net header.b="bBFcHwwJ";
+	dkim=pass (1024-bit key) header.d=cavoj.net header.i=@cavoj.net header.b="bBFcHwwJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgIQNLp (ORCPT
+        id S1726783AbgIQNMv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Sep 2020 09:11:45 -0400
-Received: from mail-41103.protonmail.ch ([185.70.41.103]:28462 "EHLO
-        mail-41103.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726919AbgIQNLi (ORCPT
+        Thu, 17 Sep 2020 09:12:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgIQNMs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Sep 2020 09:11:38 -0400
-X-Greylist: delayed 502 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Sep 2020 09:11:38 EDT
-Received: from mail-03.mail-europe.com (mail-03.mail-europe.com [91.134.188.129])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        by mail-41103.protonmail.ch (Postfix) with ESMTPS id 1F2C12002423
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 13:02:54 +0000 (UTC)
-Authentication-Results: mail-41103.protonmail.ch;
-        dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="VNobLq2X"
-Date:   Thu, 17 Sep 2020 13:02:32 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1600347764;
-        bh=KCLamIxOJ0a1uj7ObJfMxWA6QXZ/fyTrm4xLLJCPrXQ=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=VNobLq2XRU7VyuXdf3pxIANVFCbfWRdyFxE1FZZ5hcyODkUTARs44MYp7cSzJUjS8
-         nzR5v1NyCbXs2I4Q6hzBNelaK6zFyLMNxXxwwcygyjBTrjOpkJkAfx1RhRrT4TZEUq
-         mNjoARzCHIGp9d+WhKLRfJbVpPD9lsLl8EOT43zY=
+        Thu, 17 Sep 2020 09:12:48 -0400
+Received: from mail.sammserver.com (sammserver.com [IPv6:2001:470:5a5b:1::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D3AC06174A;
+        Thu, 17 Sep 2020 06:12:34 -0700 (PDT)
+Received: by mail.sammserver.com (Postfix, from userid 5011)
+        id C3F17105EC41; Thu, 17 Sep 2020 15:12:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cavoj.net; s=email;
+        t=1600348352; bh=NlmODojt90dHWRNZCnYGYjuP0kznZDkGkL+0HEVZ4Oo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bBFcHwwJHn+RtNNm26FB5p7qvrCEQCsOT3pRpC4vqdB9cFjEa6INCfCQPOf1JZNxa
+         4p15L3ICQ+5E1V13IC2XzoW11Rt1bxI4Ngnh13/8j9v/I/67bI/VEJzI6Li1Oh+M8o
+         alQxp/n1YVny1FHH2m0ErtotPkhfhAeVxe0hi+MY=
+Received: from fastboi.localdomain (fastboi.wg [10.32.40.5])
+        by mail.sammserver.com (Postfix) with ESMTP id 6D5EE105EC3E;
+        Thu, 17 Sep 2020 15:12:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cavoj.net; s=email;
+        t=1600348352; bh=NlmODojt90dHWRNZCnYGYjuP0kznZDkGkL+0HEVZ4Oo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bBFcHwwJHn+RtNNm26FB5p7qvrCEQCsOT3pRpC4vqdB9cFjEa6INCfCQPOf1JZNxa
+         4p15L3ICQ+5E1V13IC2XzoW11Rt1bxI4Ngnh13/8j9v/I/67bI/VEJzI6Li1Oh+M8o
+         alQxp/n1YVny1FHH2m0ErtotPkhfhAeVxe0hi+MY=
+Received: by fastboi.localdomain (Postfix, from userid 1000)
+        id 5623B14209C4; Thu, 17 Sep 2020 15:12:32 +0200 (CEST)
+Date:   Thu, 17 Sep 2020 15:12:32 +0200
+From:   Samuel =?utf-8?B?xIxhdm9q?= <samuel@cavoj.net>
 To:     Hans de Goede <hdegoede@redhat.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Elia Devito <eliadevito@gmail.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Benjamin Berg <bberg@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Jared Dominguez <jaredz@redhat.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: RFC: offering a standardized (/sys/class) userspace API for selecting system/laptop performance-profiles
-Message-ID: <jQoirRukXGYClb58QQWmL6rQ6usxi_hKzPRYe2tlEyjXG-hEVxwzECgEXFxzyMRG2sEnxwdKNvmWzEV4oZcaJ4MM5RrgFtBdin8yxH4cAYs=@protonmail.com>
-In-Reply-To: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
-References: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: asus-wmi: Add support for SW_TABLET_MODE
+ on UX360
+Message-ID: <20200917131232.2t4aos75lrwtdvky@fastboi.localdomain>
+References: <20200916191232.1020318-1-samuel@cavoj.net>
+ <206d51c4-401d-e73b-b81a-fc57346a47ee@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <206d51c4-401d-e73b-b81a-fc57346a47ee@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+Hi.
 
+On 17.09.2020 14:23, Hans de Goede wrote:
+> Hi,
+> 
+> On 9/16/20 9:12 PM, Samuel Čavoj wrote:
+> > The UX360CA has a WMI device id 0x00060062, which reports whether the
+> > lid is flipped in tablet mode (1) or in normal laptop mode (0).
+> > 
+> > This commit adds a quirk (quirk_asus_use_lid_flip_devid) for devices on
+> > which this WMI device should be used to figure out the SW_TABLET_MODE
+> > state, as opposed to the quirk_asus_use_kbd_dock_devid.
+> > 
+> > It is assumed other UX360* models have the same WMI device. As such, the
+> > quirk is applied to devices with DMI_MATCH(DMI_PRODUCT_NAME, "UX360").
+> > More devices with this feature need to be tested and added accordingly.
+> > 
+> > The reason for using a whitelist via the quirk mechanism is that the new
+> > WMI device (0x00060062) is also present on some models which do not have
+> > a 360 degree hinge (at least FX503VD and GL503VD from Hans' DSTS
+> > collection) and therefore its presence cannot be relied on.
+> > 
+> > This patch is a followup to "platform/x86: asus-wmi: Fix SW_TABLET_MODE
+> > always reporting 1 on many different models" by Hans de Goede.
+> > 
+> > Signed-off-by: Samuel Čavoj <samuel@cavoj.net>
+> > Cc: Hans de Goede <hdegoede@redhat.com>
+> > ---
+> >   drivers/platform/x86/asus-nb-wmi.c         | 14 +++++++++++++
+> >   drivers/platform/x86/asus-wmi.c            | 23 ++++++++++++++++++++++
+> >   drivers/platform/x86/asus-wmi.h            |  1 +
+> >   include/linux/platform_data/x86/asus-wmi.h |  1 +
+> >   4 files changed, 39 insertions(+)
+> > 
+> > diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> > index 345bd224494b..ae5501e07712 100644
+> > --- a/drivers/platform/x86/asus-nb-wmi.c
+> > +++ b/drivers/platform/x86/asus-nb-wmi.c
+> > @@ -119,6 +119,10 @@ static struct quirk_entry quirk_asus_use_kbd_dock_devid = {
+> >   	.use_kbd_dock_devid = true,
+> >   };
+> > +static struct quirk_entry quirk_asus_use_lid_flip_devid = {
+> > +	.use_lid_flip_devid = true,
+> 
+> 
+> Note the default (quirk_asus_unknown) quirks set:
+> 
+>         .wmi_backlight_set_devstate = true,
+> 
+> So you're changing that to false for all devices using that
+> quirk now.  I did not set this quirk for the transformer devices,
+> since the quirk has to do with the handling of Fn + F7 (display off hotkey)
+> by the embedded-controller. Since on transformer devices the keyboard is
+> an USB device and not handled by the embedded-controller they do not need
+> the wmi_backlight_set_devstate quirk, so I left it out. Chances are that
+> your UX360 does need it. The purpose of the quirk is to make the embbedded
+> controller send a KEY_DISPLAY_OFF event on FN + F7 and have it not do anything
+> else (like turning off the backlight by itself).
+> 
+> TL;DR: you should probably add:         .wmi_backlight_set_devstate = true,
+> to your new quirk_asus_use_lid_flip_devid quirk.
+> 
 
-2020. szeptember 17., cs=C3=BCt=C3=B6rt=C3=B6k 13:22 keltez=C3=A9ssel, Hans=
- de Goede =C3=ADrta:
+Of course. I didn't notice that. Thank you.
 
-> [...]
-> I guess we should also add an optional lap_mode sysfs attribute
-> to the class-device, to have all the info for the Thinkpads in
-> one place.
-> [...]
+Should I send a v2 right away, or do I wait for other potential
+comments?
 
+Regards,
+Sam
 
-Excuse my ignorance, but why does "lap_mode" need to be here?
-I understand the implications of it regarding performance, but
-I think it would be more sense to export it via the hwmon (or
-something similar) subsystem? What am I missing?
-
-
-Thanks,
-Barnab=C3=A1s P=C5=91cze
+> 
+> 
+> > +};
+> > +
+> >   static int dmi_matched(const struct dmi_system_id *dmi)
+> >   {
+> >   	pr_info("Identified laptop model '%s'\n", dmi->ident);
+> > @@ -520,6 +524,16 @@ static const struct dmi_system_id asus_quirks[] = {
+> >   		},
+> >   		.driver_data = &quirk_asus_use_kbd_dock_devid,
+> >   	},
+> > +	{
+> > +		.callback = dmi_matched,
+> > +		.ident = "ASUS ZenBook Flip UX360",
+> > +		.matches = {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+> > +			/* Match UX360* */
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "UX360"),
+> > +		},
+> > +		.driver_data = &quirk_asus_use_lid_flip_devid,
+> > +	},
+> >   	{},
+> >   };
+> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> > index ae6289d37faf..a628a7d9e066 100644
+> > --- a/drivers/platform/x86/asus-wmi.c
+> > +++ b/drivers/platform/x86/asus-wmi.c
+> > @@ -63,6 +63,7 @@ MODULE_LICENSE("GPL");
+> >   #define NOTIFY_KBD_BRTTOGGLE		0xc7
+> >   #define NOTIFY_KBD_FBM			0x99
+> >   #define NOTIFY_KBD_TTP			0xae
+> > +#define NOTIFY_LID_FLIP			0xfa
+> >   #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
+> > @@ -375,6 +376,18 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
+> >   		}
+> >   	}
+> > +	if (asus->driver->quirks->use_lid_flip_devid) {
+> > +		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
+> > +		if (result >= 0) {
+> > +			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
+> > +			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+> > +		} else if (result == -ENODEV) {
+> > +			pr_err("This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
+> > +		} else {
+> > +			pr_err("Error checking for lid-flip: %d\n", result);
+> > +		}
+> > +	}
+> > +
+> >   	err = input_register_device(asus->inputdev);
+> >   	if (err)
+> >   		goto err_free_dev;
+> > @@ -2127,6 +2140,16 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+> >   		return;
+> >   	}
+> > +	if (asus->driver->quirks->use_lid_flip_devid && code == NOTIFY_LID_FLIP) {
+> > +		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
+> > +
+> > +		if (result >= 0) {
+> > +			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
+> > +			input_sync(asus->inputdev);
+> > +		}
+> > +		return;
+> > +	}
+> > +
+> >   	if (asus->fan_boost_mode_available && code == NOTIFY_KBD_FBM) {
+> >   		fan_boost_mode_switch_next(asus);
+> >   		return;
+> > diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+> > index 1a95c172f94b..b302415bf1d9 100644
+> > --- a/drivers/platform/x86/asus-wmi.h
+> > +++ b/drivers/platform/x86/asus-wmi.h
+> > @@ -34,6 +34,7 @@ struct quirk_entry {
+> >   	bool wmi_backlight_set_devstate;
+> >   	bool wmi_force_als_set;
+> >   	bool use_kbd_dock_devid;
+> > +	bool use_lid_flip_devid;
+> >   	int wapf;
+> >   	/*
+> >   	 * For machines with AMD graphic chips, it will send out WMI event
+> > diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> > index 897b8332a39f..2f274cf52805 100644
+> > --- a/include/linux/platform_data/x86/asus-wmi.h
+> > +++ b/include/linux/platform_data/x86/asus-wmi.h
+> > @@ -62,6 +62,7 @@
+> >   /* Misc */
+> >   #define ASUS_WMI_DEVID_CAMERA		0x00060013
+> > +#define ASUS_WMI_DEVID_LID_FLIP		0x00060062
+> >   /* Storage */
+> >   #define ASUS_WMI_DEVID_CARDREADER	0x00080013
+> > 
+> 
+> Otherwise the patch looks good to me, thank you for the patch.
+> 
+> Regards,
+> 
+> Hans
+> 
