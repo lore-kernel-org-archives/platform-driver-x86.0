@@ -2,155 +2,112 @@ Return-Path: <SRS0=nDDs=C2=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0A8C433E2
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 18:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86924C43461
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 19:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA985206D4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 18:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2983D206C9
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 19:16:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwvCOxib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgIQSpu (ORCPT
+        id S1726303AbgIQTQK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Sep 2020 14:45:50 -0400
-Received: from mail1.bemta24.messagelabs.com ([67.219.250.114]:17251 "EHLO
-        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728684AbgIQQv7 (ORCPT
+        Thu, 17 Sep 2020 15:16:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728388AbgIQQSp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Sep 2020 12:51:59 -0400
-Received: from [100.112.135.189] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-b.us-west-2.aws.symcld.net id 85/0E-22172-914936F5; Thu, 17 Sep 2020 16:51:37 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjleJIrShJLcpLzFFi42JJl3vFpis5JTn
-  eYPsPOYvepulMFvuvS1gsvH+K1eLrt9vsFm+OA4XOLEyyWL3nBbMDu8fOWXfZPX5tW8PiMe9k
-  oMf7fVfZPD5vkgtgjWLNzEvKr0hgzdj77R9rwX6hikXPLBsYr/J1MXJyCAn8Z5SYvDOoi5ELy
-  H7IKLFo0yJWEEdYoJVRYmPnXTYQR0RgCqPE4jvTmEAcZoHljBKnujYxQvQ8YJQ4+GYaG8gwNg
-  FtiS1bfoHZvAK2Ei39x9hBbBYBVYmm/p1AcQ4OUYFYiW8z/SBKBCVOznzCAmJzCthJ9G6ZBdb
-  KLGAhMXP+eUYIW1zi1pP5TBC2vMT2t3OYQWwJAQWJld8XskHYCRLLXt5hnsAoOAvJ2FlIRs1C
-  MmoWklELGFlWMZonFWWmZ5TkJmbm6BoaGOgaGhrpGhob65pZ6CVW6SbplRbrlqcWl+ga6SWWF
-  +sVV+Ym56To5aWWbGIERlNKQavLDsb/rz/oHWKU5GBSEuX9PiE5XogvKT+lMiOxOCO+qDQntf
-  gQowwHh5IEr/pkoJxgUWp6akVaZg4wsmHSEhw8SiK8/ycBpXmLCxJzizPTIVKnGBWlxHlVQRI
-  CIImM0jy4NlgyucQoKyXMy8jAwCDEU5BalJtZgir/ilGcg1FJmHctyBSezLwSuOmvgBYzAS1m
-  40wEWVySiJCSamCK/aBYcfPvfp3m6gcm9su7ztW8air1uyot2a60i8Mj9JbiGbHbN/d0WhSJn
-  prGlt0Y8CipTNLy7a5Pv97Mdtk9ifdo3IpDu9Y4TtBcMIFxu6fay9dfPqbJF7UUH745r/jpmo
-  73OX/KPLj0bh0KFpC/VMG5i2HSvwzl30eXCXZczWG/atAnF1uspqv/9ZzNmea6Z/oFnkpPpB0
-  SrfSDYldyN31vmqG6I+Pw65dHfdYpsRQ3TVx+T7dhQ0VbruTd6FmaRkli5Uam9e5eDr5XfwmZ
-  fHa6l+n69uQvVhXOzB+XbOReTOthXpumvKv9cCebNuf6fPeM+onZKYuSaqw05nAJqr63T3pYl
-  lEuUBavCDQ6I9FQi7moOBEA3BQAUqEDAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-28.tower-346.messagelabs.com!1600361495!43421!1
-X-Originating-IP: [103.30.234.6]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.60.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 23852 invoked from network); 17 Sep 2020 16:51:37 -0000
-Received: from unknown (HELO lenovo.com) (103.30.234.6)
-  by server-28.tower-346.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 17 Sep 2020 16:51:37 -0000
-Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 87D53D092206406B0E50;
-        Fri, 18 Sep 2020 00:51:33 +0800 (CST)
-Received: from [10.46.52.228] (10.46.52.228) by reswpmail04.lenovo.com
- (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Thu, 17 Sep
- 2020 09:51:30 -0700
-Subject: Re: [External] Re: RFC: offering a standardized (/sys/class)
- userspace API for selecting system/laptop performance-profiles
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Elia Devito <eliadevito@gmail.com>,
-        Mark Pearson <mpearson@lenovo.com>
-CC:     Benjamin Berg <bberg@redhat.com>,
-        Jared Dominguez <jaredz@redhat.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
- <21b6dffbbc6dbb14ebef3f078cc2497f9a872f57.camel@hadess.net>
- <f8e4fc83-9665-2a58-d2e0-e858a16417e8@lenovo.com>
- <6e49abf2-6e93-bb41-7df3-0ac66b689df6@redhat.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <a2861f6e-7e7e-3bf8-8f31-c4c2c92096ce@lenovo.com>
-Date:   Thu, 17 Sep 2020 12:51:28 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 17 Sep 2020 12:18:45 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D292C061226;
+        Thu, 17 Sep 2020 09:18:09 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id z22so4082724ejl.7;
+        Thu, 17 Sep 2020 09:18:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CwsCZGPPc4UztwJYa8ujzMQrMgcPcRryCeMG+FPPd0o=;
+        b=jwvCOxibAW//ZJ3LBKpKwQb+MWCze3cCT9PoT+1UeRVR8pvOmQEH6Lz0gpWi8teTXI
+         iCIZEz41kSt6ulScHaN2iX7F3eNDYCEwt2IPgduOnEaflG6/FmhxGHgmLypim4xYkrI1
+         1XFCG4E6Wuq1bMdQwFjPUQ5/Ac4z9UOoR5809yK+fJZ5plLVpPbWWjxg4k/iwJkkCubH
+         Jd5IAv1HWVV51zc9WFS8Xni8sHBo2LIYkEkd3raAG8yhqOcL7X4pzeW4pxVolnrp36g5
+         zvCA+3Y/YOUTS5WhTgjrK3YN43bVEBWoXRdsJvvziZBWeo5BsEJCpvJSmuPwmxo9v5GY
+         owzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CwsCZGPPc4UztwJYa8ujzMQrMgcPcRryCeMG+FPPd0o=;
+        b=oaydIV1IbxgbqMU0ArJGhn295ehm/UwDNq0oUiGeupoP+WiG4DoVdfeR59+Q7F8DGq
+         W0SMChRPLugFmD6eRPSjQXXXnwTKbE7Gq2KUsjqJMSR0L6NGmuhBQwu/oRR4kjcvSSph
+         1lsdZCXD6YeQIKYxY052ykyH+iCWzv/3lGnuhlJtKVH6zVKKYxba0Fxc3+Hw4/ww7fek
+         haNOA1GPGu6NZo2j1OfgbOg8nMlGjEUr7wuOld7c6KHQUd+IcyYT3IaJYlLW7k12Ja+T
+         lo83AOCQlHx11LnPoTw9PVOH0oyGGvRA3DkOg5zHBZNVS5DSQu+PonBbaV0FufjcXQvK
+         3bHg==
+X-Gm-Message-State: AOAM533gwEshLgd5q/v529bamH3DJok50cAYiCoRNBZYnFmhSk60q2hb
+        8LOUFfH2lJClVdp4zlOKk+o=
+X-Google-Smtp-Source: ABdhPJxlYSJ4C4Rgl+RcS36v/pR8pI8wwmEvOL3Sv1i1PmWpwbGa2nxfM12nDkk7oVdu28K2HrK3yA==
+X-Received: by 2002:a17:906:3913:: with SMTP id f19mr33272392eje.83.1600359487673;
+        Thu, 17 Sep 2020 09:18:07 -0700 (PDT)
+Received: from localhost.localdomain ([85.153.229.188])
+        by smtp.gmail.com with ESMTPSA id bo8sm109242edb.39.2020.09.17.09.18.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Sep 2020 09:18:06 -0700 (PDT)
+From:   Necip Fazil Yildiran <fazilyildiran@gmail.com>
+To:     andy@infradead.org
+Cc:     hdegoede@redhat.com, matan@svgalib.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        paul@pgazz.com, jeho@cs.utexas.edu,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>
+Subject: [PATCH] platform/x86: fix kconfig dependency warning for FUJITSU_LAPTOP
+Date:   Thu, 17 Sep 2020 19:16:53 +0300
+Message-Id: <20200917161652.147616-1-fazilyildiran@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <6e49abf2-6e93-bb41-7df3-0ac66b689df6@redhat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.46.52.228]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail04.lenovo.com (10.62.32.23)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+When FUJITSU_LAPTOP is enabled and NEW_LEDS is disabled, it results in the
+following Kbuild warning:
 
-On 9/17/2020 10:04 AM, Hans de Goede wrote:
-> Hi,
-> 
-> On 9/17/20 3:36 PM, Mark Pearson wrote:
->> Hi all,
->>
-<snip>
->>
->> One question - the main reason for a common interface is for user 
->> space to not deal with a mess of APIs.
-> 
-> Correct.
-> 
->> Is it worth me doing a simplified version of my patch (maybe using 
->> debugfs?) so I can expose the modes to users whilst we work on the 
->> common solution? I'm assuming there is no mileage in getting my patch 
->> (with the fix I owe Benjamin) in and then changing it in the future 
->> once the generic solution is available as that potentially messes up 
->> userspace too much?
-> 
-> Using debugfs as an intermediate solution is a good idea. debugfs 
-> interfaces have no ABI guarantees, so we can simply drop it when the 
-> generic stuff lands.
-> 
-Great. I'll look at that as an alternative for the short term.
+WARNING: unmet direct dependencies detected for LEDS_CLASS
+  Depends on [n]: NEW_LEDS [=n]
+  Selected by [y]:
+  - FUJITSU_LAPTOP [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && ACPI [=y] && INPUT [=y] && BACKLIGHT_CLASS_DEVICE [=y] && (ACPI_VIDEO [=n] || ACPI_VIDEO [=n]=n)
 
->> Something as a stopgap measure that won't annoy the kernel community 
->> but is good for Linux users as I'm guessing the generic solution is 
->> likely to be months away
-> 
-> The generic solution will definitely not make the 5.10 kernel, but 5.11 
-> is not entirely out of the question, although to be honest 5.12 seems 
-> more realistic.
-> 
-OK.
-> <snip>
-> 
->>>> I guess we should also add an optional lap_mode sysfs attribute
->>>> to the class-device, to have all the info for the Thinkpads in
->>>> one place.
->>>>
->> I'm good with this too - but the lapmode patch is accepted and there 
->> is the palm sensor patch too which I'm hoping is accepted soon. Whilst 
->> I'm happy to make them part of this implementation (if they fit) I'd 
->> appreciate if they didn't get removed or held up as they're needed for 
->> our WWAN implementation which is already overdue.
->> The main consumer there will be our WWAN enablement utility and we can 
->> change that to support different API if needs be :)
-> 
-> As the rest of the dicussion has shown the lap_mode thingie indeed is 
-> best left in place as a
-> thinkpad_acpi only interface for now.
-> 
-> I guess the same applies to the palm_sensor stuff. We may want to 
-> advertise that through
-> some standardize API later, but for now we can just use a thinkpad_acpi 
-> specific API and
-> then also export the info through the standardized API later, as we will 
-> do for the
-> lcdshadow stuff.
-> 
-Sounds good.
-Happy to work on that too in the future
+The reason is that FUJITSU_LAPTOP selects LEDS_CLASS without depending on
+or selecting NEW_LEDS while LEDS_CLASS is subordinate to NEW_LEDS.
 
-Mark
+Honor the kconfig menu hierarchy to remove kconfig dependency warnings.
+
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Fixes: d89bcc83e709 ("platform/x86: fujitsu-laptop: select LEDS_CLASS")
+Signed-off-by: Necip Fazil Yildiran <fazilyildiran@gmail.com>
+---
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 40219bba6801..3cd2b99628ba 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -469,6 +469,7 @@ config FUJITSU_LAPTOP
+ 	depends on BACKLIGHT_CLASS_DEVICE
+ 	depends on ACPI_VIDEO || ACPI_VIDEO = n
+ 	select INPUT_SPARSEKMAP
++	select NEW_LEDS
+ 	select LEDS_CLASS
+ 	help
+ 	  This is a driver for laptops built by Fujitsu:
+-- 
+2.25.1
+
