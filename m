@@ -2,153 +2,132 @@ Return-Path: <SRS0=nDDs=C2=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84927C43461
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 18:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5488C43461
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 18:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42849221F1
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 18:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B46206D4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 18:37:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HvDek7Fc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h4fHomDn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgIQSQ2 (ORCPT
+        id S1726236AbgIQShp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Sep 2020 14:16:28 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39629 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726634AbgIQSQ1 (ORCPT
+        Thu, 17 Sep 2020 14:37:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51711 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728109AbgIQRFb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Sep 2020 14:16:27 -0400
+        Thu, 17 Sep 2020 13:05:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600366584;
+        s=mimecast20190719; t=1600362329;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XB5+Bmzk2zRJ6QJXBjVut5QgAuFDyrBjoFWGrk/SghM=;
-        b=HvDek7Fc26tj9fuI8CrysrPf3JhekMesb0lfOyR0pYIwMs9k4O5B116P2rvx0+gVIseDij
-        U2vHENacTYypIjmZsDNbgj5yIhLQefQNOT6FjHSYXc/WS3EPEz2lWMcZPniMnNlNbcSG25
-        odI6uwJoIp9yodCfw8vk9crzU2ilP+k=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-349-NZYj4lPCN4mGhUKBgzpGKA-1; Thu, 17 Sep 2020 14:16:20 -0400
-X-MC-Unique: NZYj4lPCN4mGhUKBgzpGKA-1
-Received: by mail-wr1-f69.google.com with SMTP id 33so1202275wre.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 11:16:20 -0700 (PDT)
+        bh=ViRKiaHGNL6zjgr6AuF0d906JEay5J9deMU/dB7bn6A=;
+        b=h4fHomDnOxa0czXo2skufg96fTBNf2i/0w/aoo7hUqSJMJHLFk69KGGYr+aI/A72eBz9Bx
+        P5eqViD1lRjskLJGMVpjiYL80InYRhzreoM9Asj2zVniN1iLD/7ttqBmWLdcwIil9RqE0l
+        R8wQbTnGBS/XE6eKjutPfbPKwd9/mfw=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-Ru9B_aW2MGi8dtvgAF8Aag-1; Thu, 17 Sep 2020 13:05:27 -0400
+X-MC-Unique: Ru9B_aW2MGi8dtvgAF8Aag-1
+Received: by mail-ej1-f71.google.com with SMTP id i14so1153348ejc.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 10:05:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=XB5+Bmzk2zRJ6QJXBjVut5QgAuFDyrBjoFWGrk/SghM=;
-        b=tCGpGX5fqbFkfpw9X8XeyjorEDFmD+r6dyhptPtmoSbGSHpgzR5DThL+8CSdCnibsw
-         hAwgn5x+ZKNPQkqaoHGQfpPWB142JgYS+3dZThVb9kvNmtOdMmiR+8BnEH+4lSVXGIu9
-         4Wfm7h7VBHxO2SESIsdbd47FTzJohJNM8tpjkCZzunIgWdTbZy2Wa9QQAdlzogkdapcw
-         NvPTkhWzLdGRyWKemK2hQbIy3DZ0DC1AWwQnLl3J3qZQgDnwOZptbDCrkWO7Fu5GwuKD
-         Vz15XBHcPfsh01b8/IyrOE9NSR5beuGiWzcwbBMPrkysWwru5mkEGSaYcXg31N3jwCtr
-         tvTw==
-X-Gm-Message-State: AOAM530LjRbGbcIj/szJWbyLMW2h7X4+yR2I9xFWN3wHbzor9M9x86y3
-        sSvqHu1juvrpeWqlozpS2Q8B9xAAtzRASm/qK+BGaTQtJm+9imisUblFw/fJxpG2z5uxoqdLum/
-        Fqqy3UUM86/tMGZrsMWd8vLQ+9QptQu0zBw==
-X-Received: by 2002:adf:ce05:: with SMTP id p5mr4807330wrn.110.1600366579418;
-        Thu, 17 Sep 2020 11:16:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxXjWAgRuWkNKf59qMNDFElrppxDJ0XYeo6KcsrjckJMmzevMZdYokLSTCIFQeBZ7V1MJy/Wg==
-X-Received: by 2002:adf:ce05:: with SMTP id p5mr4807311wrn.110.1600366579228;
-        Thu, 17 Sep 2020 11:16:19 -0700 (PDT)
-Received: from dhcp-64-164.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id v204sm423922wmg.20.2020.09.17.11.16.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Sep 2020 11:16:18 -0700 (PDT)
-Message-ID: <261328975238951d0412727220a1b7d915cebb99.camel@redhat.com>
-Subject: Re: [External] Re: RFC: offering a standardized (/sys/class)
- userspace API for selecting system/laptop performance-profiles
-From:   Benjamin Berg <bberg@redhat.com>
-To:     Mark Pearson <markpearson@lenovo.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Elia Devito <eliadevito@gmail.com>,
-        Mark Pearson <mpearson@lenovo.com>
-Cc:     Jared Dominguez <jaredz@redhat.com>,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Date:   Thu, 17 Sep 2020 20:16:16 +0200
-In-Reply-To: <3ed9ac0a-2e24-7d3a-f264-c3bb03b846d9@lenovo.com>
-References: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
-         <21b6dffbbc6dbb14ebef3f078cc2497f9a872f57.camel@hadess.net>
-         <b6332a4a-7606-2bd0-632b-f67b68d3dd1b@redhat.com>
-         <9f01ce60a6b3319855f6a26b94af3e5fc6d2595e.camel@redhat.com>
-         <6e0409e7-5bc2-4ca6-a0aa-725a9a91aa8d@redhat.com>
-         <83694d5164a32d1ce6cdafb9cb73d731ca4b4a78.camel@redhat.com>
-         <0577bc9b-aa9f-c4b6-bac6-64325d81eeff@lenovo.com>
-         <c06f214d-ca9d-9ca3-236a-82a0bacfb582@redhat.com>
-         <3ed9ac0a-2e24-7d3a-f264-c3bb03b846d9@lenovo.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-qGvs1NhDzAqHr6lNa3G1"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ViRKiaHGNL6zjgr6AuF0d906JEay5J9deMU/dB7bn6A=;
+        b=OsYDveJgufkaGQANW8Dz01/VF0C8nzcBzLaw/Wr0CmCkFo98Ugg/BHP6B5xlkS/zKX
+         eUHGl+M2XZ3cM3nzxJ2Mri2IDXQvSpr35sAQsI7Gca15i8/1xBesPQlsaoamMzSrO12x
+         0xb1g3tLLKxWp2p7PhwPZGfSkaoVHx3QYhZN6XsuyEvp59zjTBp7/y48voeVCTklGxOa
+         6J9Y4JXCdzqvam+dTfiqTnIxABya5tHR4tSQ6VLO/lbiNMKf2yUiHExE7/EKQzL+z9ZC
+         6atVTBFyXh6JhmCJbJ4vI/L4xAgbiksugKdY2z1icTmJ0nZiykczpyfa+vwv6EzwYJsI
+         37UQ==
+X-Gm-Message-State: AOAM531tm7ut2EJEv4/cRlOwmC+KBCBgGXTLUtPANlh9shFSi37+o54D
+        tEmvNxEQ9AsqreppSPxfCW4rsJHrXLLQbvyE3IeTzl8SKKtOSRsHiZ5LJ1bl1vtgSyBn/Y6RUCb
+        Hh/AEfrYE51XyV+aYihPqfXQGYaXu1xuBrw==
+X-Received: by 2002:a17:906:fb8c:: with SMTP id lr12mr33279661ejb.9.1600362325856;
+        Thu, 17 Sep 2020 10:05:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwUSg9ICNcbEeI+QynKZEArbMo/daqfzgQaqaCc2Y2LV3RyD5NkSKmKIzdOHFWq1X387N2LTg==
+X-Received: by 2002:a17:906:fb8c:: with SMTP id lr12mr33279637ejb.9.1600362325653;
+        Thu, 17 Sep 2020 10:05:25 -0700 (PDT)
+Received: from x1.localdomain ([109.37.143.101])
+        by smtp.gmail.com with ESMTPSA id w1sm206505eds.18.2020.09.17.10.05.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Sep 2020 10:05:25 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: fix kconfig dependency warning for
+ FUJITSU_LAPTOP
+To:     Necip Fazil Yildiran <fazilyildiran@gmail.com>, andy@infradead.org
+Cc:     matan@svgalib.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, paul@pgazz.com, jeho@cs.utexas.edu
+References: <20200917161652.147616-1-fazilyildiran@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <772f32e2-342f-bdbf-7753-2ee54efebaaf@redhat.com>
+Date:   Thu, 17 Sep 2020 19:05:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200917161652.147616-1-fazilyildiran@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
---=-qGvs1NhDzAqHr6lNa3G1
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 9/17/20 6:16 PM, Necip Fazil Yildiran wrote:
+> When FUJITSU_LAPTOP is enabled and NEW_LEDS is disabled, it results in the
+> following Kbuild warning:
+> 
+> WARNING: unmet direct dependencies detected for LEDS_CLASS
+>    Depends on [n]: NEW_LEDS [=n]
+>    Selected by [y]:
+>    - FUJITSU_LAPTOP [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && ACPI [=y] && INPUT [=y] && BACKLIGHT_CLASS_DEVICE [=y] && (ACPI_VIDEO [=n] || ACPI_VIDEO [=n]=n)
+> 
+> The reason is that FUJITSU_LAPTOP selects LEDS_CLASS without depending on
+> or selecting NEW_LEDS while LEDS_CLASS is subordinate to NEW_LEDS.
+> 
+> Honor the kconfig menu hierarchy to remove kconfig dependency warnings.
+> 
+> Reported-by: Hans de Goede <hdegoede@redhat.com>
+> Fixes: d89bcc83e709 ("platform/x86: fujitsu-laptop: select LEDS_CLASS")
+> Signed-off-by: Necip Fazil Yildiran <fazilyildiran@gmail.com>
 
-On Thu, 2020-09-17 at 13:16 -0400, Mark Pearson wrote:
-> > As I understand the problem with the configured and actual=20
-> > value/performance_level ideas is that if I understand things correctly=
-=20
-> > that H* is not the same as M,
-> > it behaves close-ish to M because of the lower thermal-limits from=20
-> > lapmode, but if I understood Benjamin correctly is is not exactly the=
-=20
-> > same, so if we were
-> > to advertise "M" in the actual_performance_level sysfs-attribute then=
-=20
-> > that would not really be correct ?
->=20
-> Just a small clarification - in our case High performance is only for=20
-> deskmode. It drops to Medium in lapmode.
-> Medium mode is slightly different in power rating between lap and desk=
-=20
-> mode (e.g on X1Carbon 14.5W on lap, 15W on desk). I haven't really=20
-> worried about this in my patch implementation - it's still "medium"
+Thank you, patch looks good to me:
 
-Hmm, what I saw on the X1 Carbon 7th Gen was that putting it into
-performance mode (H) increases the fan speed. And I believe that this
-was also the case while it was in lap mode.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Specifically, I believe I observed that changing dytc_perfmode from M
-to H caused the fan to turn on (and vice versa). So while CPU power
-limits are very similar, there still seems to be differences in the
-active cooling behaviour.
+Regards,
 
-Benjamin
+Hans
 
---=-qGvs1NhDzAqHr6lNa3G1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEED2NO4vMS33W8E4AFq6ZWhpmFY3AFAl9jp/AACgkQq6ZWhpmF
-Y3DU8w/+J7hNKAWziO8BC/8uedNtCC8xYdGFWxjQtHY2I2retI0Ob9rcubiV1bPs
-cYbS4nzE2bpQA2jFncXYmygUp99Ekg7HdFyj6HvUoDIvgXvlXkMIFQZFdeSOFZLR
-9jGx8J4eU+h9609EtAaaQkbqQ7Y67sKMH0D6bdQw2wBRyYcSdjAWv7ukc9jF3Fm1
-VYOgjPRiZhwLJMAmlnVbWpOPd8sFycn9Y1gJk3h+Z4gaB2z3gvg8vOAkcfILP7ud
-FEFLqQ3Itg2Q2/MVdF3Sn3jzKgbj8lAq1c3SdMDPorXcssmV0rkuJKOBvmWt6aUW
-Ro4kZd+zFId3PHw2gpe/ICbsG0YOIFfsPXzlEdpMwLe6l9WtspPA/ZFb3m7HbtQI
-DtBvjK1VDqEsRbCsCM/iIQQyzajgBGDHdry2iD52+NWwpe0tDnz7rG2ggeeMiLx3
-zI5VlwZGmasY5SxKzrrpKlw7Cl0A15UXrCh0UwtL14eUX8qT2EmgDUFZGvOE470I
-e67w5AP1oD4beoUsTeoq0nBj1rwRN0OIHTbsrmgDZPyJC6WauO1YDt3SS3c+xrK+
-skxyYXaiBEeZlCoDFV1uEPSg1oMNIY7fw4d2oNera0bmTMrCyOd1UOGG6JBuUvwL
-rn9U6Eplx6s5X7sA17cWwtNjkMezU/expG7ekgsEkOPPEFkypU4=
-=I6lW
------END PGP SIGNATURE-----
-
---=-qGvs1NhDzAqHr6lNa3G1--
+> ---
+>   drivers/platform/x86/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 40219bba6801..3cd2b99628ba 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -469,6 +469,7 @@ config FUJITSU_LAPTOP
+>   	depends on BACKLIGHT_CLASS_DEVICE
+>   	depends on ACPI_VIDEO || ACPI_VIDEO = n
+>   	select INPUT_SPARSEKMAP
+> +	select NEW_LEDS
+>   	select LEDS_CLASS
+>   	help
+>   	  This is a driver for laptops built by Fujitsu:
+> 
 
