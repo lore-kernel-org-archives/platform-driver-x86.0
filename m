@@ -2,144 +2,152 @@ Return-Path: <SRS0=nDDs=C2=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5896C43461
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 13:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22917C43461
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 13:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88B9C21582
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 13:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD68721734
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 13:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d+ogQty/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="acV8olg/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgIQNwy (ORCPT
+        id S1727108AbgIQNxj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Sep 2020 09:52:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39343 "EHLO
+        Thu, 17 Sep 2020 09:53:39 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:53185 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727041AbgIQNvu (ORCPT
+        by vger.kernel.org with ESMTP id S1726843AbgIQNus (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Sep 2020 09:51:50 -0400
+        Thu, 17 Sep 2020 09:50:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600350689;
+        s=mimecast20190719; t=1600350618;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3qB5BXc10sehLv/jZwK+gvBmYi8ElTtxaWoNGNhhrbQ=;
-        b=d+ogQty/w0I/xBtxzjRarPVq5QNN1EgSTvTaxnWxNMSraUNToL23Cmu2lO7J9zJFeGpemk
-        7eKthoe9TColJ4QFj3VMOeuTtom//yOOxC+a/hoax0U1iJqO9CCUeK2iWXNJG9Gdk4ixJh
-        2xiTezOwEGUzJJJzhP/5ZlNIiRtKFmE=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-297-qBBA4evfO0u9-jVeYrf-Zg-1; Thu, 17 Sep 2020 09:51:26 -0400
-X-MC-Unique: qBBA4evfO0u9-jVeYrf-Zg-1
-Received: by mail-ej1-f71.google.com with SMTP id lx11so903887ejb.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 06:51:26 -0700 (PDT)
+        bh=Och7vbzH8fgh9G7ABSzr3yG4aKCg/RiGZcndYd97UZM=;
+        b=acV8olg/P6CDGj7zMy/1KR2+iLZos46xfGbDtSlNyOME5WBy7YaQl3B+iSbK8FH8tnL3X0
+        9caEa1J6EQcPqCHZ8sBoi4RasgaNWwljNpuL7p72fvh/s8tDz4eV19Kl3BPCmHn55K3Qt7
+        MmV9KZ3SALndkv41shXltbJKcU/TeOs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-592-yrHoydwTPA2CQmILNCmWEg-1; Thu, 17 Sep 2020 09:50:15 -0400
+X-MC-Unique: yrHoydwTPA2CQmILNCmWEg-1
+Received: by mail-wm1-f70.google.com with SMTP id x81so770491wmg.8
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 06:50:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3qB5BXc10sehLv/jZwK+gvBmYi8ElTtxaWoNGNhhrbQ=;
-        b=uDUHsSUVuxt3OPpECUmcWcL6nER2ZU0T2o/AjLk7ImdibyMkPP07tr2F6nDwVsnJlt
-         IEaswOKdOGLaID3PtgJWYpwTUZFErTyKJJI3l9E85SifeQt9ZTU/GPuzv9OBlIlYfVbS
-         5TXQzAqf9fU0cixHiCStwj9d78mkYvLBoCPvJxr1pKiysGFTL1u2VRvILqnEARzDmREE
-         ud3wibhzw1FP7kCvzyo1TNoSppFUtKK+sf2DTVsJKA/6xdX9yHQHx9ShuLghcUKxYnpF
-         jQQdD9mI1CYZY5k9xDLAWFWWPg+9eS+G4+RPiReAg+NaIxpTplADd4z0UGOdbLKcUkyc
-         vF1g==
-X-Gm-Message-State: AOAM530xtJ5yiPsLfkalhduw42owNZrS6a3HwRFInWaFT8mFuU0oecrP
-        zav7znxB5QK0JOoEOqC7pj6p9SPhv5hBnfUj/ABv6aNV4jJhbp41ChzGZszSpvO/87q+rxKZHuz
-        ZZXEX+iH8+gVL4tJThDhRfcg4/e76a4aM4Q==
-X-Received: by 2002:a17:906:c113:: with SMTP id do19mr30068348ejc.219.1600350685434;
-        Thu, 17 Sep 2020 06:51:25 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxl33lb3PVjQB45fxl2qpgJAdsd3tScNyC6eVHXHVX4H+sBsqpfaSdQUqMXSE52RNIGuyShHA==
-X-Received: by 2002:a17:906:c113:: with SMTP id do19mr30068326ejc.219.1600350685200;
-        Thu, 17 Sep 2020 06:51:25 -0700 (PDT)
-Received: from x1.localdomain ([2a0e:5700:4:11:334c:7e36:8d57:40cb])
-        by smtp.gmail.com with ESMTPSA id f17sm16700988eds.45.2020.09.17.06.51.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Sep 2020 06:51:24 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version;
+        bh=Och7vbzH8fgh9G7ABSzr3yG4aKCg/RiGZcndYd97UZM=;
+        b=ma1bb5IhJ1pWoAu2z6hiKR4Bc8EzWw1VphGQphkoWzsE/YzpzrQgqqCPXnFghN4Kk+
+         /GsT9JtZOW3sT1WBOnBKd8pENk7cyIaLOPWiPDgZH1fivz+ygP+GY0kw2+jAOqh8jc3p
+         pwaKfvhyVvlmZvGCaFozuGniTQpbwI4VB8rv60tydygTVjY0QHBHy8w3YomqMxKIh/4B
+         iQXc07Hc7OiO9xU3NT6ScV9GrVGfK+8yWcYBJ1mNMIxoqcgOIZEVrQ0vMuF5PNtgOOaW
+         C8xWNfDchQdj8VeaulW0a6hXWMpLuujaLlQfx9fjiC9AezauPSKVtENdQafL0/z+MaY4
+         zXig==
+X-Gm-Message-State: AOAM532aUSxSVGihMFVCQa2JwfaqPcxW0rYc4rVFGuajmZ+J4mov/Eug
+        KK8meTePiSPmiI6EXJTWb+DbmGp6lPZAOT4nlFejK7jn+X/IWD/F0eUaiyEQIL1pEEnALmcFqj4
+        lklGNd82ncqT3nuogGt6kdQfpsjKoyDvZVg==
+X-Received: by 2002:adf:e9c1:: with SMTP id l1mr32516897wrn.68.1600350614435;
+        Thu, 17 Sep 2020 06:50:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzvcVvRxuCSD0OzPqoSFymwai56HtOMPkDIVM9nNGHMmTaAx4vEmX/pYsfIq2AeKjdQbhusfA==
+X-Received: by 2002:adf:e9c1:: with SMTP id l1mr32516872wrn.68.1600350614244;
+        Thu, 17 Sep 2020 06:50:14 -0700 (PDT)
+Received: from dhcp-64-164.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id c14sm31670187wrm.64.2020.09.17.06.50.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Sep 2020 06:50:13 -0700 (PDT)
+Message-ID: <9f01ce60a6b3319855f6a26b94af3e5fc6d2595e.camel@redhat.com>
 Subject: Re: RFC: offering a standardized (/sys/class) userspace API for
  selecting system/laptop performance-profiles
-To:     Bastien Nocera <hadess@hadess.net>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Cc:     Elia Devito <eliadevito@gmail.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Benjamin Berg <bberg@redhat.com>,
-        Jared Dominguez <jaredz@redhat.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
+From:   Benjamin Berg <bberg@redhat.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Elia Devito <eliadevito@gmail.com>,
+        Mark Pearson <mpearson@lenovo.com>
+Cc:     Jared Dominguez <jaredz@redhat.com>,
+        platform-driver-x86@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Thu, 17 Sep 2020 15:50:11 +0200
+In-Reply-To: <b6332a4a-7606-2bd0-632b-f67b68d3dd1b@redhat.com>
 References: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
- <jQoirRukXGYClb58QQWmL6rQ6usxi_hKzPRYe2tlEyjXG-hEVxwzECgEXFxzyMRG2sEnxwdKNvmWzEV4oZcaJ4MM5RrgFtBdin8yxH4cAYs=@protonmail.com>
- <3748b6be-cd8b-19e6-eb36-c5f94850d764@redhat.com>
- <085164663786cefb3159549cf4909658872e2795.camel@hadess.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <4622581d-2c89-f7b6-55af-aee253638cb6@redhat.com>
-Date:   Thu, 17 Sep 2020 15:51:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+         <21b6dffbbc6dbb14ebef3f078cc2497f9a872f57.camel@hadess.net>
+         <b6332a4a-7606-2bd0-632b-f67b68d3dd1b@redhat.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-Xz6VRGR8RFnamGnLmQHz"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-In-Reply-To: <085164663786cefb3159549cf4909658872e2795.camel@hadess.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
 
-On 9/17/20 3:28 PM, Bastien Nocera wrote:
-> On Thu, 2020-09-17 at 15:24 +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 9/17/20 3:02 PM, Barnabás Pőcze wrote:
->>> Hi
->>>
->>>
->>> 2020. szeptember 17., csütörtök 13:22 keltezéssel, Hans de Goede
->>> írta:
->>>
->>>> [...]
->>>> I guess we should also add an optional lap_mode sysfs attribute
->>>> to the class-device, to have all the info for the Thinkpads in
->>>> one place.
->>>> [...]
->>>
->>>
->>> Excuse my ignorance, but why does "lap_mode" need to be here?
->>> I understand the implications of it regarding performance, but
->>> I think it would be more sense to export it via the hwmon (or
->>> something similar) subsystem? What am I missing?
->>
->> Well hwmon has very clearly defined sensor types, like voltage,
->> fan-speed and temperature. lap_mode does not match any of them.
->>
->> Also registering another-type class device just for the lap_mode
->> boolean seems overkill, esp. since lap_mode is inherently coupled
->> to the performance-profile stuff.
-> 
-> There's proximity sensors in the IIO subsystem which this could use
+--=-Xz6VRGR8RFnamGnLmQHz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-But this is not a proximity sensor, it is a state determined by
-the firmware based on several data sources, which may or may not
-include a proximity sensor and which may or may not include an
-accelerometer + who knows what else.
+On Thu, 2020-09-17 at 14:51 +0200, Hans de Goede wrote:
+> > Compared to the WIP lenovo-dytc "perfmode" driver, we're missing
+> > something to advertise the unavailability of a profile, and the reason
+> > for that unavailability.
+>=20
+> UGh, do we really need to export this though. We have the lap_mode thing
+> already; and that is something which we will need for other reasons in
+> the future too. Any UI for selecting performance modes can display a
+> warning when lap_mode is true saying that: "The laptop has detected that =
+it
+> is sitting on someone's lap and that performance may be limited
+> because of this." (feel free to improve the text).
 
-But with the earlier discussed splitting of the value
-sysfs-attr into a configure_value (rw) and actual_value(ro)
-attributes I don't think we need lap_mode inside the
-system_performance_profile class at all. We already have
-a thinkpad_acpi specific sysfs attribute exporting this, and
-since this is AFAIK a thinkpad specific thing, just leaving
-it there is probably the best solution.
+Well, for dytc_perfmode there are actually always the three states
+L/M/H. It just happens that the kernel will write "H*" (was "M*" until
+yesterday) when the performance mode is degraded due to lap detection.
 
-Regards,
+Think of dytc_perfmode as a profile that sets a number of things:
+ * Thermal Limits
+ * Fan Behaviour
+ * possibly more
 
-Hans
+While dytc_lapmode will only enforce a change to the thermal limit.
+
+So "performance" (H) is technically a valid mode even when the lap is
+detected.
+
+> I guess we could split the "value" attribute from my reply to Benjamin's
+> email into "configured_value" (rw) and "actual_value" (rw) attributes.
+> If we have the info we might as well export it I guess,.
+
+I consider the "*" purely a curtsey to users that read the attribute
+directly using e.g. cat to help with the interpretation. It probably is
+not interesting to userspace applications/daemons.
+
+Benjamin
+
+--=-Xz6VRGR8RFnamGnLmQHz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEED2NO4vMS33W8E4AFq6ZWhpmFY3AFAl9jaZMACgkQq6ZWhpmF
+Y3D97xAAzoHJvcglMkT4XgfWOQxpi9MkPVLxSzIAHjtMrTnIY85Gko5gU4EZLtHA
+3/ydAECnFoKhV0FUlKjgAtTsg64aTqjWJrl7h8S9BLZSUgsaCfLPqit0IUAP4y5l
+kP4cOGhL3oMWW8KU4eBYXEdlb2+KL4A5QA4VG/Bagp2L0q1Kf2OWN5hY7k7lW5Uz
+UzHJhz/HLZxlpBR65nthhWWC+T5J6ZTy5Le264/UpdvJzprudvT5TYyQqD0Wj40S
+syzytyJEqtnACocwxQbOmOmxBB1wp8EbKfvRPgIdF4kRWpTuj3pVO0ASelQnJxT1
+cchqBwP0a+rBX8CqTwJJHEr+627CiEV5hc9tFrDqmaNdgWxLpyPVTa/7nqH17umw
+lPm+BSYgHzphE8aL4XkSXebQxMBO2TVdMEM5oGPbXlWaHM3HjBDMqfOQhwiEm9dP
+cpBrSiEqEFW/x9msoAA1+SEUgPTEfxlDUr4IrxtHGz3SMuRr6zQhVaeuFJRYuIXj
+yhZ15NZrMuGAm1sK5/5QsWl2TgMIrhzV4jARcNZaWPDPRz0oZNm1izvFt+k3SBUm
+bDba+CfNSkHSSyx6e3+nzj12KvB+YGglPzcUKQnd6Hf8oQYvBXIvuo/42i6+o9nu
+Lob0m+pyCix5lJWDWS/GvZAjeRdTR9nnTBSNg5fY1S9pBE6Q55o=
+=/xU6
+-----END PGP SIGNATURE-----
+
+--=-Xz6VRGR8RFnamGnLmQHz--
 
