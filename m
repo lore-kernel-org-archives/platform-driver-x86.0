@@ -5,82 +5,83 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F681C433E2
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 11:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDF0C43461
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 11:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDBBA21D7F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 11:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC208206D4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Sep 2020 11:50:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hfpeqj0a"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WePaOMcn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgIQLjl (ORCPT
+        id S1726793AbgIQLuq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Sep 2020 07:39:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:29936 "EHLO
+        Thu, 17 Sep 2020 07:50:46 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33001 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726899AbgIQLj0 (ORCPT
+        by vger.kernel.org with ESMTP id S1726845AbgIQLuN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Sep 2020 07:39:26 -0400
+        Thu, 17 Sep 2020 07:50:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600342760;
+        s=mimecast20190719; t=1600343410;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=swUloeU1Hk/iMWefaHKkfsnrPNSH9XZbVlVEZlISsFM=;
-        b=Hfpeqj0a/RQsduFrsOSO85GyMcTydheb3/iFAOZ0xxkt1//4Io8ohYn22JB3k2Kgh1YGH5
-        EORw2ifIkXYtr6N0vfgA+yUG9P02xPf+aXxnylz7F9PA68gu9sF4rmelIwfeCqYmesz30m
-        VKt2Bv1UgGFQLq7RZDc5pCJbhHGBQU8=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-152-8uCJcLdmNtqmdkU6Avx5Lg-1; Thu, 17 Sep 2020 07:39:16 -0400
-X-MC-Unique: 8uCJcLdmNtqmdkU6Avx5Lg-1
-Received: by mail-ed1-f71.google.com with SMTP id b12so782185edw.15
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 04:39:16 -0700 (PDT)
+        bh=fIOTnLJn3GvxUVqb33sUqtVuUK+v3BB7+6gGdZ/dnGU=;
+        b=WePaOMcnlIMk/9uBDa/UsUvFiS3Pa6fFCq5qJ13kdIgaN+qnsdiFbcVVzwF9VzjAEFxi/g
+        uYLw8t0tKxhMLc3ZCIAegpa5+NpAxaaOGumXEhu0yw/1uZUgB4AOYaNl8P9+Y6OAq+cJAl
+        acxdvG9a5jiga4D2VkGsRkRWVCKGm1E=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-410-fLnlTPzRPayY4QDOkIlcfQ-1; Thu, 17 Sep 2020 07:48:57 -0400
+X-MC-Unique: fLnlTPzRPayY4QDOkIlcfQ-1
+Received: by mail-ej1-f72.google.com with SMTP id ml20so758277ejb.23
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2020 04:48:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=swUloeU1Hk/iMWefaHKkfsnrPNSH9XZbVlVEZlISsFM=;
-        b=UaIONGVP86Q0r3bFzrET+vYEX7iVaK0dTrSA/nmQBD3b5OjTKG/qgXcp0HXoW6/fX+
-         qjmJSfmTOz7gdNToWgHFT4OX+B9x4QigAJEwEaoZUQnI7eA2c1X3ehYPxgmp1fXDeHis
-         dLCPY7sFp4aExs+ndT8JFvLAbqCFva2AcLBZaL8t8GEteVPCzzZceGGyv5UeOsd/EfYv
-         mDTL/IkaxEfkldCextMT9CNIQJOktAAZVW1GqNl9scWUn7quXLeCzQWETUKI76A/DILW
-         t9MBiY/fIpEBpPBC2SRuJZT3W/QKeSOG1Mx3B2SapTRcRlvXc7EgvG25GL/XRK2Z+TMo
-         Vubg==
-X-Gm-Message-State: AOAM530yqCyWGnLwP58gOQYeMQrvcMtFT4JljA99OdDmerFiET866taP
-        GkDfOZzTu+aepQd7PqgHtoHG1VP7lxcHe64b6zP+6PJpNeGRknhsA3tmkTJE1v/CPtE/hIW1GEC
-        FfulBLnaKy/hmgcnKZ0wQwlDs9t6ZS4CALw==
-X-Received: by 2002:a17:906:9491:: with SMTP id t17mr29509694ejx.227.1600342754986;
-        Thu, 17 Sep 2020 04:39:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxpC+UQ7xJx7XkSR/xjfQP525TULZtyEoIAHeY3WENUuP7iiTK5EgzAHkahceQQAxYA7x5EEQ==
-X-Received: by 2002:a17:906:9491:: with SMTP id t17mr29509667ejx.227.1600342754588;
-        Thu, 17 Sep 2020 04:39:14 -0700 (PDT)
+        bh=fIOTnLJn3GvxUVqb33sUqtVuUK+v3BB7+6gGdZ/dnGU=;
+        b=o7bMnIFKhi436DoTZM0enrxEM/RBFA5+oeaIpk1Or8pY3VCbNfZyHK9GtHzVowhTIO
+         3wQkIXRjN5a5v7rwWO1Y2GvGJEkKKvi1rKYhIlQ1ZViaGSBDgHhrnl47QoZFBje0kt7D
+         WDz/4eX5IBtIiHQCIC0llh6ByNOHUKpLypD69AzIFNrjGbRcrQTg53ad00a7CVLHBrbT
+         tiSSPtbEW1OBXOfEqWQCdCqBmKWP4wKmFjEa4z3iEfeYgTTzpQmx5kIrNCuJa1ql8Mn3
+         jWrYJHc/1OzVrOg1YYDEe7RM36ifFGOOjhGUDrpfBIYx7d0HxWGVZqUNs73sGEBWY2yQ
+         TuoQ==
+X-Gm-Message-State: AOAM531Ad5SWiu9pr6LJL3sRKlotGVTop1zT8uGj6NiQY7iWkqmvJBCX
+        DaYqY4WHBL71l3lRLG0oAbjOzJ+l7xXGO8yaScapRkcDhHmSZHnuqkgFQk6ROTjCLLKFlLyqp9N
+        Z3oe8P/kHVecu9PHCyCofUaWWjTbE2VXf9A==
+X-Received: by 2002:a17:906:3bd8:: with SMTP id v24mr31228868ejf.509.1600343335558;
+        Thu, 17 Sep 2020 04:48:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxEoexmREwK9xyUcNyD26RuFAnhzMvgVtCvuk88tEd+9KWugKt6ecaIVr7zJg6VSqQxLcT6JA==
+X-Received: by 2002:a17:906:3bd8:: with SMTP id v24mr31228838ejf.509.1600343335213;
+        Thu, 17 Sep 2020 04:48:55 -0700 (PDT)
 Received: from x1.localdomain ([2a0e:5700:4:11:334c:7e36:8d57:40cb])
-        by smtp.gmail.com with ESMTPSA id os15sm14881605ejb.61.2020.09.17.04.39.13
+        by smtp.gmail.com with ESMTPSA id k19sm14765946ejo.40.2020.09.17.04.48.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Sep 2020 04:39:13 -0700 (PDT)
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: performance mode
- interface
-To:     Mark Pearson <markpearson@lenovo.com>
-Cc:     ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, ibm-acpi@hmh.eng.br,
-        bnocera@redhat.com, mario.limonciello@dell.com,
-        Nitin Joshi <njoshi1@lenovo.com>,
-        Jared Dominguez <jaredz@redhat.com>
-References: <markpearson@lenovo.com>
- <20200821175310.335873-1-markpearson@lenovo.com>
+        Thu, 17 Sep 2020 04:48:54 -0700 (PDT)
+Subject: Re: [PATCH 3/3] platform/x86: Intel PMT Crashlog capability driver
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
+        dvhart@infradead.org, andy@infradead.org,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
+References: <20200911194549.12780-1-david.e.box@linux.intel.com>
+ <20200911194549.12780-4-david.e.box@linux.intel.com>
+ <6e3738db-bfff-7fd2-65e6-bd0d126f9eaa@redhat.com>
+ <CAKgT0UcxSwRseMBdMd0_HDUS=JGZDAZnAy-tkLkB-hMXLYtucw@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <56b9e961-5dd8-8ac1-fa5a-3fb0b222b2e8@redhat.com>
-Date:   Thu, 17 Sep 2020 13:39:12 +0200
+Message-ID: <f4b1fbb3-5d73-1214-8cd2-79432d4b23e4@redhat.com>
+Date:   Thu, 17 Sep 2020 13:48:53 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200821175310.335873-1-markpearson@lenovo.com>
+In-Reply-To: <CAKgT0UcxSwRseMBdMd0_HDUS=JGZDAZnAy-tkLkB-hMXLYtucw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -90,511 +91,207 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 8/21/20 7:53 PM, Mark Pearson wrote:
-> Lenovo Thinkpad platforms with DYTC version 5 and newer have enhanced
-> firmware to provide different performance/thermal modes.
+On 9/14/20 8:07 PM, Alexander Duyck wrote:
+> On Mon, Sep 14, 2020 at 6:42 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi,
+>>
+>> On 9/11/20 9:45 PM, David E. Box wrote:
+>>> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>>
+>>> Add support for the Intel Platform Monitoring Technology crashlog
+>>> interface.  This interface provides a few sysfs values to allow for
+>>> controlling the crashlog telemetry interface as well as a character driver
+>>> to allow for mapping the crashlog memory region so that it can be accessed
+>>> after a crashlog has been recorded.
+>>>
+>>> This driver is meant to only support the server version of the crashlog
+>>> which is identified as crash_type 1 with a version of zero. Currently no
+>>> other types are supported.
+>>>
+>>> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+>>> ---
+>>>    .../ABI/testing/sysfs-class-pmt_crashlog      |  66 ++
+>>>    drivers/platform/x86/Kconfig                  |  10 +
+>>>    drivers/platform/x86/Makefile                 |   1 +
+>>>    drivers/platform/x86/intel_pmt_crashlog.c     | 588 ++++++++++++++++++
+>>>    4 files changed, 665 insertions(+)
+>>>    create mode 100644 Documentation/ABI/testing/sysfs-class-pmt_crashlog
+>>>    create mode 100644 drivers/platform/x86/intel_pmt_crashlog.c
+>>>
+>>> diff --git a/Documentation/ABI/testing/sysfs-class-pmt_crashlog b/Documentation/ABI/testing/sysfs-class-pmt_crashlog
+>>> new file mode 100644
+>>> index 000000000000..40fb4ff437a6
+>>> --- /dev/null
+>>> +++ b/Documentation/ABI/testing/sysfs-class-pmt_crashlog
+>>> @@ -0,0 +1,66 @@
+>>> +What:                /sys/class/pmt_crashlog/
+>>> +Date:                September 2020
+>>> +KernelVersion:       5.10
+>>> +Contact:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>> +Description:
+>>> +             The pmt_crashlog/ class directory contains information
+>>> +             for devices that expose crashlog capabilities using the Intel
+>>> +             Platform Monitoring Technology (PTM).
+>>> +
+>>> +What:                /sys/class/pmt_crashlog/crashlogX
+>>> +Date:                September 2020
+>>> +KernelVersion:       5.10
+>>> +Contact:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>> +Description:
+>>> +             The crashlogX directory contains files for configuring an
+>>> +             instance of a PMT crashlog device that can perform crash data
+>>> +             recoring. Each crashlogX device has an associated
+>>> +             /dev/crashlogX device node. This node can be opened and mapped
+>>> +             to access the resulting crashlog data. The register layout for
+>>> +             the log can be determined from an XML file of specified guid
+>>> +             for the parent device.
+>>> +
+>>> +What:                /sys/class/pmt_crashlog/crashlogX/guid
+>>> +Date:                September 2020
+>>> +KernelVersion:       5.10
+>>> +Contact:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>> +Description:
+>>> +             (RO) The guid for this crashlog device. The guid identifies the
+>>> +             version of the XML file for the parent device that should be
+>>> +             used to determine the register layout.
+>>> +
+>>> +What:                /sys/class/pmt_crashlog/crashlogX/size
+>>> +Date:                September 2020
+>>> +KernelVersion:       5.10
+>>> +Contact:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>> +Description:
+>>> +             (RO) The length of the result buffer in bytes that corresponds
+>>> +             to the mapping size for the /dev/crashlogX device node.
+>>> +
+>>> +What:                /sys/class/pmt_crashlog/crashlogX/offset
+>>> +Date:                September 2020
+>>> +KernelVersion:       5.10
+>>> +Contact:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>> +Description:
+>>> +             (RO) The offset of the buffer in bytes that corresponds
+>>> +             to the mapping for the /dev/crashlogX device node.
+>>> +
+>>> +What:                /sys/class/pmt_crashlog/crashlogX/enable
+>>> +Date:                September 2020
+>>> +KernelVersion:       5.10
+>>> +Contact:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>> +Description:
+>>> +             (RW) Boolean value controlling if the crashlog functionality
+>>> +             is enabled for the /dev/crashlogX device node.
+>>> +
+>>> +What:                /sys/class/pmt_crashlog/crashlogX/trigger
+>>> +Date:                September 2020
+>>> +KernelVersion:       5.10
+>>> +Contact:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>>> +Description:
+>>> +             (RW) Boolean value controlling  the triggering of the
+>>> +             /dev/crashlogX device node. When read it provides data on if
+>>> +             the crashlog has been triggered. When written to it can be
+>>> +             used to either clear the current trigger by writing false, or
+>>> +             to trigger a new event if the trigger is not currently set.
+>>> +
+>>
+>> Both the pmt_crashlog and the attributes suggest that this is highly
+>> Intel PMT specific. /sys/class/foo interfaces are generally speaking
+>> meant to be generic interfaces.
+>>
+>> If this was defining a generic, vendor and implementation agnostic interface for
+>> configuring / accessing crashlogs, then using a class would be fine, but that
+>> is not the case, so I believe that this should not implement / register a class.
+>>
+>> Since the devices are instantiated through MFD there already is a
+>> static sysfs-path which can be used to find the device in sysfs:
+>> /sys/bus/platform/device/pmt_crashlog
+>>
+>> So you can register the sysfs attributes directly under the platform_device
+>> and then userspace can easily find them, so there really is no need to
+>> use a class here.
 > 
-> The modes can be controlled by hotkeys (FN+H, FN+M, FN+L) to switch
-> the operating mode between three different modes.
+> I see. So we change the root directory from "/sys/class/pmt_crashlog/"
+> to "/sys/bus/platform/device/pmt_crashlog" while retaining the same
+> functionality. That should be workable.
+
+Ack.
+
+<snip>
+
+>>> +static const struct file_operations pmt_crashlog_fops = {
+>>> +     .owner =        THIS_MODULE,
+>>> +     .open =         pmt_crashlog_open,
+>>> +     .mmap =         pmt_crashlog_mmap,
+>>
+>> mmap but no read, I guess read may be emulated through mmap,
+>> is that the case ?
+>>
+>> I can see sysadmins wanting to be able to do a simple cat
+>> on this file to get the logs (including headers), so if
+>> the kernel-core does not emulate read in this case, you
+>> should really add read support I guess.
 > 
-> H - High performance. Maximum power is available and the temperature is
-> allowed to increase to the maximum for the platform.
-> M - Medium performance (aka balance). In this mode power will be limited
-> and the laptop will have a lower maximum temperature.
-> L - Low performance (aka quiet). In this mode power consumption is reduced
-> and the device will be cooler.
+> So first the contents of the crashlog are not really human readable,
+> so it is not likely that they would "cat" the contents.
+
+Sorry, I was not really clear there, what I meant is a sysadmin doing
+something like this:
+
+cat /sys/.../crashlog-file > /mnt/external-usb-disk/server-foo-bar-crashlog20200917
+
+So that they can easily save the crashlog for later reference without
+needing to install special tools.
+
+> Also I don't
+> believe it is a very common thing to provide read access if we don't
+> know the memory layout of the region. If you take a look at the
+> handling for resourceN in
+> pci_create_attr(https://elixir.bootlin.com/linux/v5.9-rc4/source/drivers/pci/pci-sysfs.c#L1127)
+> it looks like it does something similar where it only provides mmap
+> for MMIO access.
+
+That was meant as a way to allow doing hardware-drivers in userspace
+(think old userspace modesetting Xorg/xfree86) without needing to
+call iopl and on non-x86 platforms which don't have iopl.
+
+
 > 
-> High performance mode is only available when the device is in 'desk mode'.
-> If the device detects that it is on a lap then it will automatically drop
-> into medium mode to maintain a safer operating temperature.
+>> Also how big are these files ?  sysfs also supports binary
+>> files, so unless these files are huge / this is really
+>> performance critical it may make more sense to just add
+>> a binary sysfs attr for this and get rid of the whole chardev
+>> all together.
 > 
-> This patch provides an interface to determine the current mode and to also
-> allow the setting of the mode through the dytc_perfmode sysfs entry. This
-> can be used by userspace for improved control.
+> So for the file we are looking at the minimum of a page up to multiple
+> pages of data. It largely depends on how much information is collected
+> by the crashlog agent. I can take a look and see if we can do it. Odds
+> are it shouldn't be too different from how resourceN is done for the
+> PCI devices.
+
+Ok, a few pages of data should not be an issue for a binary sysfs
+file at all.
+
+<snip>
+
+>>> +     entry->devid = ida_simple_get(entry->ida, 0, 0, GFP_KERNEL);
+>>> +     if (entry->devid < 0)
+>>> +             return entry->devid;
+>>> +
+>>> +     ret = pmt_crashlog_make_dev(priv, entry);
+>>> +     if (ret) {
+>>> +             ida_simple_remove(entry->ida, entry->devid);
+>>> +             return ret;
+>>> +     }
+>>
+>> Hmm wait, you are making one chardev per log entry ? Then just using
+>> binary sysfs attributes seems to make even more sense to me.
 > 
-> Reviewed-by: Nitin Joshi <njoshi1@lenovo.com>
-> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-> ---
-> Changes in v2:
->   - Add userspace notification to hkey event handler. Note this got
->     somewhat more complicated than expected as retrieving the performance
->     mode when in lapmode generates an event itself; added a flag to
->     ignore these known events.
->   - Updated the values returned to be simpler (H/M*/M/L) as suggested.
->   - Added ABI documentation as requested. Lap and palm sensor details
->     added whilst I was doing this.
->   - Cleaned up code based on recommendations as well as feedback received
->     from other patch reviews.
->   - Based on discussion with firmware team the lapmode sensor should only
->     be made available for DYTC v5 and later. Added this to init logic.
-> 
->   .../sysfs-devices-platform-thinkpad_acpi      |  34 +++
->   .../admin-guide/laptops/thinkpad-acpi.rst     |  35 +++
->   drivers/platform/x86/thinkpad_acpi.c          | 267 ++++++++++++++++--
->   3 files changed, 310 insertions(+), 26 deletions(-)
->   create mode 100644 Documentation/ABI/testing/sysfs-devices-platform-thinkpad_acpi
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-devices-platform-thinkpad_acpi b/Documentation/ABI/testing/sysfs-devices-platform-thinkpad_acpi
-> new file mode 100644
-> index 000000000000..28f07753a889
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-devices-platform-thinkpad_acpi
-> @@ -0,0 +1,34 @@
-> +What:		/sys/devices/platform/thinkpad_acpi/dytc_perfmode
-> +Date:		August 2020
-> +Contact:	Mark Pearson <markpearson@lenovo.com>
-> +Description:
-> +		Reads return the current performance mode setting configured in firmware using
-> +		the below nomenclature.
-> +
-> +		Writes configure the performance mode setting by using the below nomenclature.
-> +
-> +		H  - High performance mode. Maximum power and temperature available.
-> +		M* - High performance mode but performance is limited to medium as system is
-> +		     in lapmode. Power and temperature maximums reduced to a safe threshold.
-> +		M  - Medium performance mode (aka 'balance'). Lower maximum power and temperatures
-> +		     but better battery life.
-> +		L  - Low performance mode (aka 'quiet'). Reduced power setting gives lower
-> +		     temperatures and extended battery life. Fans run quieter.
-> +
-> +What:		/sys/devices/platform/thinkpad_acpi/dytc_lapmode
-> +Date:		August 2020
-> +Contact:	Mark Pearson <markpearson@lenovo.com>
-> +Description:
-> +		Reads returns the current value of the lapmode sensor.
-> +
-> +		0 - desk mode is detected
-> +		1 - lap mode is detected
-> +
-> +What:		/sys/devices/platform/thinkpad_acpi/psensor_state
-> +Date:		August 2020
-> +Contact:	Nitin Joshi <njoshi1@lenovo.com>
-> +Description:
-> +		Reads returns the current value of the palm sensor.
-> +
-> +		0 - palm not detected
-> +		1 - palm detected
-> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> index 6b57c52d8f13..b98f0de9e063 100644
-> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> @@ -52,6 +52,7 @@ detailed description):
->   	- LCD Shadow (PrivacyGuard) enable and disable
->   	- Lap mode sensor
->           - Palm sensor (aka psensor)
-> +	- Thermal mode status and control
->   
->   A compatibility table by model and feature is maintained on the web
->   site, http://ibm-acpi.sf.net/. I appreciate any success or failure
-> @@ -1465,6 +1466,40 @@ Note - some platforms have a limitation whereby the EC firmware cannot
->   determine if the sensor is installed or not. On these platforms the psensor
->   state will always be reported as true to avoid high power being used incorrectly.
->   
-> +DYTC Thermal mode status and control
-> +------------------------------------
-> +
-> +sysfs: dytc_perfmode
-> +
-> +Lenovo Thinkpad platforms with DYTC version 5 and newer have enhanced firmware to
-> +provide improved performance control.
-> +
-> +The firmware can be controlled by hotkeys (FN+H, FN+M, FN+L) to switch the
-> +operating mode between three different modes. This sysfs node provides a better
-> +interface for user space to use.
-> +
-> +The modes available are:
-> +
-> +H - High performance. Maximum power is available and the temperature is
-> +allowed to increase to the maximum for the platform.
-> +
-> +M - Medium performance (aka balance). In this mode power will be limited and
-> +the laptop will remain cooler.
-> +
-> +L - Low performance (aka quiet). In this mode power consumption is reduced and
-> +the device will be cooler and quieter.
-> +
-> +Note: High performance mode is only available when the device is in 'deskmode'. If
-> +the device detects that it is on a lap then it will automatically drop into medium
-> +mode to maintain a safer operating temperature.
-> +
-> +The sysfs entry provides the ability to return the current status and to set the
-> +desired mode. For example::
-> +
-> +        echo H > /sys/devices/platform/thinkpad_acpi/dytc_perfmode
-> +        echo M > /sys/devices/platform/thinkpad_acpi/dytc_perfmode
-> +        echo L > /sys/devices/platform/thinkpad_acpi/dytc_perfmode
-> +
+> Yes we are required to create one per log entry as each one can be
+> accessed independently.
 
-
-So we recently had another driver show up with almost the same interface / thing:
-
-https://patchwork.kernel.org/patch/11774509/
-
-So I believe that we really should come up with a standardize sysfs interface
-for this under /sys/class/<some-name>
-
-Please see the "RFC: offering a standardized (/sys/class) userspace API for selecting
-system/laptop performance-profiles" mail thread which I just started.
-
-Note I've not looked at the rest of this patch at all yet. But this patch should
-not be merged until the userspace API question is settled so nack to this patch
-for now (sorry).
-
-Mark, once we have an agreement on what the userspace API for this should
-look like I can implement a small helper-library / class-core for registering
-the class device for this, modify this patch to use that and test it on a X1C8.
-
-Or if you prefer you can do this yourself. Please let me know how you want to
-proceed with this.
+That is fine, but then at least to me, using sysfs binary files, seems to make
+a lot more sense then creating multiple char devices for this.
 
 Regards,
 
 Hans
-
-
-
->   EXPERIMENTAL: UWB
->   -----------------
->   
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 41b75dd4755c..8fcb660aa5a2 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -9817,18 +9817,43 @@ static struct ibm_struct lcdshadow_driver_data = {
->   };
->   
->   /*************************************************************************
-> - * DYTC subdriver, for the Lenovo lapmode feature
-> + * DYTC subdriver, for the Lenovo lap and performance mode feature
->    */
->   
-> +#define DYTC_CMD_QUERY        0 /* To get DYTC status - enable/revision */
-> +#define DYTC_CMD_SET          1 /* To enable/disable IC function mode */
->   #define DYTC_CMD_GET          2 /* To get current IC function and mode */
-> -#define DYTC_GET_LAPMODE_BIT 17 /* Set when in lapmode */
-> +#define DYTC_CMD_RESET    0x1ff /* To reset back to default */
->   
-> -static bool dytc_lapmode;
-> +#define DYTC_QUERY_ENABLE_BIT 8  /* Bit 8 - 0 = disabled, 1 = enabled */
-> +#define DYTC_QUERY_SUBREV_BIT 16 /* Bits 16 - 27 - sub revisision */
-> +#define DYTC_QUERY_REV_BIT    28 /* Bits 28 - 31 - revision */
->   
-> -static void dytc_lapmode_notify_change(void)
-> -{
-> -	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL, "dytc_lapmode");
-> -}
-> +#define DYTC_GET_FUNCTION_BIT 8  /* Bits 8-11 - function setting */
-> +#define DYTC_GET_MODE_BIT     12 /* Bits 12-15 - mode setting */
-> +#define DYTC_GET_LAPMODE_BIT  17 /* Bit 17 - lapmode. Set when on lap */
-> +
-> +#define DYTC_SET_FUNCTION_BIT 12 /* Bits 12-15 - funct setting */
-> +#define DYTC_SET_MODE_BIT     16 /* Bits 16-19 - mode setting */
-> +#define DYTC_SET_VALID_BIT    20 /* Bit 20 - 1 = on, 0 = off */
-> +
-> +#define DYTC_FUNCTION_STD     0  /* Function = 0, standard mode */
-> +#define DYTC_FUNCTION_CQL     1  /* Function = 1, lap mode */
-> +#define DYTC_FUNCTION_MMC     11 /* Function = 11, desk mode */
-> +
-> +#define DYTC_MODE_PERFORM     2  /* High power mode aka performance */
-> +#define DYTC_MODE_QUIET       3  /* low power mode aka quiet */
-> +#define DYTC_MODE_BALANCE   0xF  /* default mode aka balance */
-> +
-> +#define DYTC_DISABLE_CQL ((DYTC_MODE_BALANCE << DYTC_SET_MODE_BIT) | \
-> +		(DYTC_FUNCTION_CQL << DYTC_SET_FUNCTION_BIT) | \
-> +		DYTC_CMD_SET)
-> +#define DYTC_ENABLE_CQL (DYTC_DISABLE_CQL | (1 << DYTC_SET_VALID_BIT))
-> +
-> +static bool dytc_lapmode;
-> +static int  dytc_perfmode;
-> +static bool dytc_available;
-> +static bool dytc_ignore_next_event;
->   
->   static int dytc_command(int command, int *output)
->   {
-> @@ -9843,6 +9868,87 @@ static int dytc_command(int command, int *output)
->   	return 0;
->   }
->   
-> +static int dytc_perfmode_get(int *perfmode, int *funcmode)
-> +{
-> +	int output, err;
-> +
-> +	if (!dytc_available)
-> +		return -ENODEV;
-> +
-> +	err = dytc_command(DYTC_CMD_GET, &output);
-> +	if (err)
-> +		return err;
-> +	*funcmode = (output >> DYTC_GET_FUNCTION_BIT) & 0xF;
-> +
-> +	if (*funcmode == DYTC_FUNCTION_CQL) {
-> +		int dummy;
-> +		/*
-> +		 * We can't get the mode when in CQL mode - so we disable CQL
-> +		 * mode retrieve the mode and then enable it again.
-> +		 * As disabling/enabling CQL triggers an event we set a flag to
-> +		 * ignore these events. This will be cleared by the event handler
-> +		 */
-> +		dytc_ignore_next_event = true;
-> +		err = dytc_command(DYTC_DISABLE_CQL, &dummy);
-> +		if (err)
-> +			return err;
-> +		err = dytc_command(DYTC_CMD_GET, &output);
-> +		if (err)
-> +			return err;
-> +		/* Again ignore this event */
-> +		dytc_ignore_next_event = true;
-> +		err = dytc_command(DYTC_ENABLE_CQL, &dummy);
-> +		if (err)
-> +			return err;
-> +	}
-> +	*perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
-> +	return 0;
-> +}
-> +
-> +static int dytc_perfmode_set(int perfmode)
-> +{
-> +	int err, dytc_set;
-> +	int output;
-> +	int cur_perfmode, cur_funcmode;
-> +
-> +	if (!dytc_available)
-> +		return -ENODEV;
-> +
-> +	if (perfmode == DYTC_MODE_BALANCE) {
-> +		/* To get back to balance mode we just issue a reset command */
-> +		err = dytc_command(DYTC_CMD_RESET, &output);
-> +		if (err)
-> +			return err;
-> +	} else {
-> +		/* Determine if we are in CQL mode. This alters the commands we do */
-> +		err = dytc_perfmode_get(&cur_perfmode, &cur_funcmode);
-> +		if (err)
-> +			return err;
-> +
-> +		if (cur_funcmode == DYTC_FUNCTION_CQL) {
-> +			/* To set the mode we need to disable CQL first*/
-> +			dytc_ignore_next_event = true; /*ignore event*/
-> +			err = dytc_command(DYTC_DISABLE_CQL, &output);
-> +			if (err)
-> +				return err;
-> +		}
-> +		dytc_set = (1 << DYTC_SET_VALID_BIT) |
-> +			(DYTC_FUNCTION_MMC << DYTC_SET_FUNCTION_BIT) |
-> +			(perfmode << DYTC_SET_MODE_BIT) |
-> +			DYTC_CMD_SET;
-> +		err = dytc_command(dytc_set, &output);
-> +		if (err)
-> +			return err;
-> +		if (cur_funcmode == DYTC_FUNCTION_CQL) {
-> +			dytc_ignore_next_event = true; /*ignore event*/
-> +			err = dytc_command(DYTC_ENABLE_CQL, &output);
-> +			if (err)
-> +				return err;
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +
->   static int dytc_lapmode_get(bool *state)
->   {
->   	int output, err;
-> @@ -9854,45 +9960,130 @@ static int dytc_lapmode_get(bool *state)
->   	return 0;
->   }
->   
-> -static void dytc_lapmode_refresh(void)
-> +static void dytc_refresh(void)
->   {
-> -	bool new_state;
-> +	bool lapmode;
-> +	int perfmode, funcmode;
->   	int err;
->   
-> -	err = dytc_lapmode_get(&new_state);
-> -	if (err || (new_state == dytc_lapmode))
-> +	err = dytc_lapmode_get(&lapmode);
-> +	if (err)
-> +		return;
-> +	if (dytc_ignore_next_event) {
-> +		dytc_ignore_next_event = false; /*clear setting*/
->   		return;
-> +	}
-> +	if (lapmode != dytc_lapmode) {
-> +		dytc_lapmode = lapmode;
-> +		sysfs_notify(&tpacpi_pdev->dev.kobj, NULL, "dytc_lapmode");
-> +	}
-> +	err = dytc_perfmode_get(&perfmode, &funcmode);
-> +	if (err)
-> +		return;
-> +	if (perfmode != dytc_perfmode) {
-> +		dytc_perfmode = perfmode;
-> +		sysfs_notify(&tpacpi_pdev->dev.kobj, NULL, "dytc_perfmode");
-> +	}
-> +}
-> +
-> +/* sysfs perfmode entry */
-> +static ssize_t dytc_perfmode_show(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  char *buf)
-> +{
-> +	int err;
-> +	int perfmode, funcmode;
-> +
-> +	err = dytc_perfmode_get(&perfmode, &funcmode);
-> +	if (err)
-> +		return err;
->   
-> -	dytc_lapmode = new_state;
-> -	dytc_lapmode_notify_change();
-> +	switch (perfmode) {
-> +	case DYTC_MODE_PERFORM:
-> +		/* High performance is only available in deskmode */
-> +		if (funcmode == DYTC_FUNCTION_CQL)
-> +			return sprintf(buf, "M*\n");
-> +		else
-> +			return sprintf(buf, "H\n");
-> +	case DYTC_MODE_QUIET:
-> +		return sprintf(buf, "L\n");
-> +	case DYTC_MODE_BALANCE:
-> +		return sprintf(buf, "M\n");
-> +	default:
-> +		return sprintf(buf, "Unknown (%d)\n", perfmode);
-> +	}
->   }
->   
-> +static ssize_t dytc_perfmode_store(struct device *dev,
-> +				   struct device_attribute *attr,
-> +				   const char *buf, size_t count)
-> +{
-> +	int err;
-> +
-> +	switch (buf[0]) {
-> +	case 'l':
-> +	case 'L':
-> +		err = dytc_perfmode_set(DYTC_MODE_QUIET);
-> +		break;
-> +	case 'm':
-> +	case 'M':
-> +		err = dytc_perfmode_set(DYTC_MODE_BALANCE);
-> +		break;
-> +	case 'h':
-> +	case 'H':
-> +		err = dytc_perfmode_set(DYTC_MODE_PERFORM);
-> +		break;
-> +	default:
-> +		err = -EINVAL;
-> +		pr_err("Unknown operating mode. Ignoring\n");
-> +		break;
-> +	}
-> +	if (err)
-> +		return err;
-> +
-> +	tpacpi_disclose_usertask(attr->attr.name,
-> +				"Performance mode set to %c\n", buf[0]);
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(dytc_perfmode);
-> +
-> +static struct attribute *dytc_perfmode_attributes[] = {
-> +	&dev_attr_dytc_perfmode.attr,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group dytc_perf_attr_group = {
-> +	.attrs = dytc_perfmode_attributes
-> +};
-> +
->   /* sysfs lapmode entry */
->   static ssize_t dytc_lapmode_show(struct device *dev,
->   					struct device_attribute *attr,
->   					char *buf)
->   {
-> -	return snprintf(buf, PAGE_SIZE, "%d\n", dytc_lapmode);
-> +	return sprintf(buf, "%d\n", dytc_lapmode);
->   }
->   
->   static DEVICE_ATTR_RO(dytc_lapmode);
->   
-> -static struct attribute *dytc_attributes[] = {
-> +static struct attribute *dytc_lap_attributes[] = {
->   	&dev_attr_dytc_lapmode.attr,
-> -	NULL,
-> +	NULL
->   };
->   
-> -static const struct attribute_group dytc_attr_group = {
-> -	.attrs = dytc_attributes,
-> +static const struct attribute_group dytc_lap_attr_group = {
-> +	.attrs = dytc_lap_attributes
->   };
->   
->   static int tpacpi_dytc_init(struct ibm_init_struct *iibm)
->   {
-> -	int err;
-> +	int err, output;
->   
-> -	err = dytc_lapmode_get(&dytc_lapmode);
-> -	/* If support isn't available (ENODEV) then don't return an error
-> -	 * but just don't create the sysfs group
-> +	err = dytc_command(DYTC_CMD_QUERY, &output);
-> +	/*
-> +	 * If support isn't available (ENODEV) then don't return an error
-> +	 * just don't create the sysfs group
->   	 */
->   	if (err == -ENODEV)
->   		return 0;
-> @@ -9900,14 +10091,38 @@ static int tpacpi_dytc_init(struct ibm_init_struct *iibm)
->   	if (err)
->   		return err;
->   
-> -	/* Platform supports this feature - create the group */
-> -	err = sysfs_create_group(&tpacpi_pdev->dev.kobj, &dytc_attr_group);
-> +	/* Check DYTC is enabled and supports mode setting */
-> +	dytc_available = false;
-> +	dytc_ignore_next_event = false;
-> +	if (output & BIT(DYTC_QUERY_ENABLE_BIT)) {
-> +		/* Only DYTC v5.0 and later has this feature. */
-> +		int dytc_version;
-> +
-> +		dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
-> +		if (dytc_version >= 5) {
-> +			dbg_printk(TPACPI_DBG_INIT,
-> +				   "DYTC version %d: thermal mode available\n", dytc_version);
-> +			dytc_available = true;
-> +			/* Platform supports this feature - create the group */
-> +			err = sysfs_create_group(&tpacpi_pdev->dev.kobj, &dytc_perf_attr_group);
-> +			if (err)
-> +				return err;
-> +
-> +			err = dytc_lapmode_get(&dytc_lapmode);
-> +			if (err)
-> +				return err;
-> +			err = sysfs_create_group(&tpacpi_pdev->dev.kobj, &dytc_lap_attr_group);
-> +		}
-> +	}
->   	return err;
->   }
->   
->   static void dytc_exit(void)
->   {
-> -	sysfs_remove_group(&tpacpi_pdev->dev.kobj, &dytc_attr_group);
-> +	if (dytc_available) {
-> +		sysfs_remove_group(&tpacpi_pdev->dev.kobj, &dytc_lap_attr_group);
-> +		sysfs_remove_group(&tpacpi_pdev->dev.kobj, &dytc_perf_attr_group);
-> +	}
->   }
->   
->   static struct ibm_struct dytc_driver_data = {
-> @@ -10057,7 +10272,7 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
->   	}
->   
->   	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED)
-> -		dytc_lapmode_refresh();
-> +		dytc_refresh();
->   
->   	if ((hkey_event == TP_HKEY_EV_PALM_DETECTED) ||
->   		(hkey_event == TP_HKEY_EV_PALM_UNDETECTED))
-> 
 
