@@ -2,108 +2,91 @@ Return-Path: <SRS0=ABgw=C5=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8621C43463
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Sep 2020 18:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CDFC43465
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Sep 2020 20:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A16542078D
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Sep 2020 18:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D318E20829
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Sep 2020 20:41:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qfquR5NM"
+	dkim=pass (1024-bit key) header.d=wildgooses.com header.i=@wildgooses.com header.b="B9nmzHHH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgITSEZ (ORCPT
+        id S1726427AbgITUl2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 20 Sep 2020 14:04:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50946 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgITSEZ (ORCPT
+        Sun, 20 Sep 2020 16:41:28 -0400
+Received: from mail1.nippynetworks.com ([91.220.24.129]:57620 "EHLO
+        mail1.nippynetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgITUl2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 20 Sep 2020 14:04:25 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C439C061755
-        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Sep 2020 11:04:25 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id q12so5700967plr.12
-        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Sep 2020 11:04:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b0vEODKx+8M7lOgVoSNWUvUIlrStSnAO0G4P1whubkc=;
-        b=qfquR5NMxBnMluk9IAP/DNtmiLodMTLR1Kj1iZHxUHDLxiHgdLe+03JRQFfcsJN62O
-         hKxYL1WPVbaLoYrnph3Yxt5SQPef1suCmHywDWQqTq41UuKrkCKyDgG71C0PjL4/qC2w
-         QdX85CgNNJ0CZG2axW5emIABXQhtjFRIh+9gTZ0hdoSn7ynoBslUOyON1gAQmd65tFDR
-         R7UK7m0qs7zbVdSPJksu+tRHufIwFG3Ww39V0MuTPe09KIsBIYaHp72rH9xQ8yCyneW7
-         LRy88fy9QMVddyqRiaO246vNx+9RjNR9U3S3nwmCVkfUrtKVjfel0DSOtnhxEuSV25Au
-         lbAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b0vEODKx+8M7lOgVoSNWUvUIlrStSnAO0G4P1whubkc=;
-        b=AbaO8L720EuVoawaiL5Nq1FuDD9dy8CR8WAXNLgJAg1xy4zExg4WaJGOyEYpXT/ePz
-         e3XhW4o8yrUDfGCaCTXDiaJOx2au+f0NVDliy3aipDAPDy/nULcZfLSfpEpiIuec/Xzm
-         qTMG/WEBancVn45JXRCPMCFmANwrM5qu9IVvkeYKxfB5aosRQasO3bBmD5zB8zz6Sk49
-         EAl/h2paoZDsNyz+nHaA4FarPcb1X21meP3IrI/WcpAODp4pbxdCViy2yaa4zBdGpDnP
-         AFJAcaakj/Y7mYamOnMnKMPp2E1uSZ1xpdjkuYuzSrqw/zNlhaBExs6IZmca8TWxfx1b
-         WxHA==
-X-Gm-Message-State: AOAM533vBHjMRzIRWavnoqnZmpCTnpFfSNA4T3pqxMa4fA7MEyOPyEGZ
-        ikJGK6bzXfnGkfE4sFfaAw1eYDqxAD14gBhal/Q=
-X-Google-Smtp-Source: ABdhPJwBj1W8zN68v4kygKZjDwQAeX/LS01M/yWWBdORG9/aK0Wcq/qN49haT5C6sHzphoFRtwCR+Og3vVQUNgZn6a4=
-X-Received: by 2002:a17:902:9e08:b029:d0:8a6a:d5e8 with SMTP id
- d8-20020a1709029e08b02900d08a6ad5e8mr41517659plq.0.1600625064606; Sun, 20 Sep
- 2020 11:04:24 -0700 (PDT)
+        Sun, 20 Sep 2020 16:41:28 -0400
+Received: from twocubed.nippynetworks.com (office.nippynetworks.com [46.17.61.232])
+        by mail1.nippynetworks.com (Postfix) with SMTP id 4BvfRD21N7zTgZM;
+        Sun, 20 Sep 2020 21:33:28 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wildgooses.com;
+        s=dkim; t=1600634012;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=dTuEJgYM6LNmm/jFqMkJjsE9372TSsB7bhiTsLa2tvw=;
+        b=B9nmzHHHkUDdpuavrr5ANVP4mNFUVzIvi/pkKL9CTkMPYwaZL6jQiT0ZRdHjSqzmg7vggT
+        RBNHnsmsgzX0dCDU++R9hBzagDuUyyCZAna7GoKT1sxFwOH5uJZKBpNxg5wtQ5Dtr9nheY
+        lgqxQOerctxFtHDGh3I7Qwq9s1AimmY=
+Received: by twocubed.nippynetworks.com (sSMTP sendmail emulation); Sun, 20 Sep 2020 21:33:23 +0100
+From:   Ed Wildgoose <lists@wildgooses.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     fe@dev.tdt.de, Ed Wildgoose <lists@wildgooses.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH] gpio: gpio-amd-fch: Fix typo on define of AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
+Date:   Sun, 20 Sep 2020 21:32:06 +0100
+Message-Id: <20200920203207.25696-1-lists@wildgooses.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <CAJubAmEg_uXsWRqHXA2_L8i2AVU_ZLH19txYqgVpP5s+AwNzfA@mail.gmail.com>
-In-Reply-To: <CAJubAmEg_uXsWRqHXA2_L8i2AVU_ZLH19txYqgVpP5s+AwNzfA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 20 Sep 2020 21:04:08 +0300
-Message-ID: <CAHp75VdKkZ0Ra3FMvbfq2hJH7_KZ5S_XLCxmrgFOAMiGDe6AKQ@mail.gmail.com>
-Subject: Re: LG laptop driver not working on recent models
-To:     Alessandro Zarrilli <alessandro@zarrilli.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     Matan Ziv-Av <matan@svgalib.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-+Cc: PDx86 mailing list and co-maintainers
+Schematics show that the GPIO number is 55 (not 59). Trivial typo.
 
-On Sat, Sep 19, 2020 at 2:44 PM Alessandro Zarrilli
-<alessandro@zarrilli.net> wrote:
->
-> Note: I'm adding Andy in CC because I see he was the committer of the driver I'm going to talk about.
->
-> Hi Matan,
->
-> I see you are the maintainer of the Linux kernel LG Gram laptop driver (linux/drivers/platform/x86/lg-laptop.c).
->
-> I've just bought the LG Gram 2020 version (product code 17Z990). I'm running Kernel 5.4.0, but unfortunately it seems your driver is not working correctly on this laptop model.
->
-> Take for example "battery care limit", the feature I'm interested the most:
->
-> # cat /sys/devices/platform/lg-laptop/battery_care_limit
-> 0
-> # echo 80 > /sys/devices/platform/lg-laptop/battery_care_limit
-> # cat /sys/devices/platform/lg-laptop/battery_care_limit
-> 0
-> # echo 100 > /sys/devices/platform/lg-laptop/battery_care_limit
-> # cat /sys/devices/platform/lg-laptop/battery_care_limit
-> 0
->
-> Is there any chance you could fix this? Can I help in any way? I'm not skilled in C programming (just used it a long time ago), but I'm an old time developer and Linux system administrator: if you give me some hints, maybe I could sort it out myself.
->
-> Thanks and regards
-> Alessandro
+Signed-off-by: Ed Wildgoose <lists@wildgooses.com>
+---
+ drivers/platform/x86/pcengines-apuv2.c          | 2 +-
+ include/linux/platform_data/gpio/gpio-amd-fch.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-
-
+diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+index 6aff6cf41..c37349f97 100644
+--- a/drivers/platform/x86/pcengines-apuv2.c
++++ b/drivers/platform/x86/pcengines-apuv2.c
+@@ -32,7 +32,7 @@
+ #define APU2_GPIO_REG_LED3		AMD_FCH_GPIO_REG_GPIO59_DEVSLP1
+ #define APU2_GPIO_REG_MODESW		AMD_FCH_GPIO_REG_GPIO32_GE1
+ #define APU2_GPIO_REG_SIMSWAP		AMD_FCH_GPIO_REG_GPIO33_GE2
+-#define APU2_GPIO_REG_MPCIE2		AMD_FCH_GPIO_REG_GPIO59_DEVSLP0
++#define APU2_GPIO_REG_MPCIE2		AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
+ #define APU2_GPIO_REG_MPCIE3		AMD_FCH_GPIO_REG_GPIO51
+ 
+ /* Order in which the GPIO lines are defined in the register list */
+diff --git a/include/linux/platform_data/gpio/gpio-amd-fch.h b/include/linux/platform_data/gpio/gpio-amd-fch.h
+index 9e46678ed..255d51c9d 100644
+--- a/include/linux/platform_data/gpio/gpio-amd-fch.h
++++ b/include/linux/platform_data/gpio/gpio-amd-fch.h
+@@ -19,7 +19,7 @@
+ #define AMD_FCH_GPIO_REG_GPIO49		0x40
+ #define AMD_FCH_GPIO_REG_GPIO50		0x41
+ #define AMD_FCH_GPIO_REG_GPIO51		0x42
+-#define AMD_FCH_GPIO_REG_GPIO59_DEVSLP0	0x43
++#define AMD_FCH_GPIO_REG_GPIO55_DEVSLP0	0x43
+ #define AMD_FCH_GPIO_REG_GPIO57		0x44
+ #define AMD_FCH_GPIO_REG_GPIO58		0x45
+ #define AMD_FCH_GPIO_REG_GPIO59_DEVSLP1	0x46
 -- 
-With Best Regards,
-Andy Shevchenko
+2.26.2
+
