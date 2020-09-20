@@ -1,121 +1,109 @@
-Return-Path: <SRS0=keqn=C4=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=ABgw=C5=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F08FC43463
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 19 Sep 2020 07:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8621C43463
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Sep 2020 18:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4B6F21D43
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 19 Sep 2020 07:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16542078D
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Sep 2020 18:04:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qfquR5NM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgISH6o (ORCPT
+        id S1726148AbgITSEZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 19 Sep 2020 03:58:44 -0400
-Received: from mga05.intel.com ([192.55.52.43]:9419 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbgISH6o (ORCPT
+        Sun, 20 Sep 2020 14:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgITSEZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 19 Sep 2020 03:58:44 -0400
-IronPort-SDR: 6RLAm5l++MtqiuuDWzoUa1aD/g2BIXs7K1YuchpPvSbHhG6QEXNZNmxgYVMTta71aOAyvQCL8w
- x6Qx2flD9eLQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9748"; a="244939802"
-X-IronPort-AV: E=Sophos;i="5.77,278,1596524400"; 
-   d="scan'208";a="244939802"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2020 00:58:41 -0700
-IronPort-SDR: B/SXFwDUMfw+9Xirb9HcNd4+el4a/ZS01my2XwQkyhBPKH3DYvQLY41glukoAf9n+k6tfwdEyJ
- 8EXxUPxzrgBA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,278,1596524400"; 
-   d="scan'208";a="340112893"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 19 Sep 2020 00:58:41 -0700
-Received: from [10.249.228.91] (abudanko-mobl.ccr.corp.intel.com [10.249.228.91])
-        by linux.intel.com (Postfix) with ESMTP id 8585F580279;
-        Sat, 19 Sep 2020 00:58:39 -0700 (PDT)
-Subject: Re: [PATCH 3/3] platform/x86: Intel PMT Crashlog capability driver
-To:     "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
-        dvhart@infradead.org, andy@infradead.org,
-        alexander.h.duyck@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-References: <20200911194549.12780-1-david.e.box@linux.intel.com>
- <20200911194549.12780-4-david.e.box@linux.intel.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <0ec64bdc-66fd-4be1-03cf-561a7c42de68@linux.intel.com>
-Date:   Sat, 19 Sep 2020 10:58:38 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Sun, 20 Sep 2020 14:04:25 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C439C061755
+        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Sep 2020 11:04:25 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id q12so5700967plr.12
+        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Sep 2020 11:04:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b0vEODKx+8M7lOgVoSNWUvUIlrStSnAO0G4P1whubkc=;
+        b=qfquR5NMxBnMluk9IAP/DNtmiLodMTLR1Kj1iZHxUHDLxiHgdLe+03JRQFfcsJN62O
+         hKxYL1WPVbaLoYrnph3Yxt5SQPef1suCmHywDWQqTq41UuKrkCKyDgG71C0PjL4/qC2w
+         QdX85CgNNJ0CZG2axW5emIABXQhtjFRIh+9gTZ0hdoSn7ynoBslUOyON1gAQmd65tFDR
+         R7UK7m0qs7zbVdSPJksu+tRHufIwFG3Ww39V0MuTPe09KIsBIYaHp72rH9xQ8yCyneW7
+         LRy88fy9QMVddyqRiaO246vNx+9RjNR9U3S3nwmCVkfUrtKVjfel0DSOtnhxEuSV25Au
+         lbAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b0vEODKx+8M7lOgVoSNWUvUIlrStSnAO0G4P1whubkc=;
+        b=AbaO8L720EuVoawaiL5Nq1FuDD9dy8CR8WAXNLgJAg1xy4zExg4WaJGOyEYpXT/ePz
+         e3XhW4o8yrUDfGCaCTXDiaJOx2au+f0NVDliy3aipDAPDy/nULcZfLSfpEpiIuec/Xzm
+         qTMG/WEBancVn45JXRCPMCFmANwrM5qu9IVvkeYKxfB5aosRQasO3bBmD5zB8zz6Sk49
+         EAl/h2paoZDsNyz+nHaA4FarPcb1X21meP3IrI/WcpAODp4pbxdCViy2yaa4zBdGpDnP
+         AFJAcaakj/Y7mYamOnMnKMPp2E1uSZ1xpdjkuYuzSrqw/zNlhaBExs6IZmca8TWxfx1b
+         WxHA==
+X-Gm-Message-State: AOAM533vBHjMRzIRWavnoqnZmpCTnpFfSNA4T3pqxMa4fA7MEyOPyEGZ
+        ikJGK6bzXfnGkfE4sFfaAw1eYDqxAD14gBhal/Q=
+X-Google-Smtp-Source: ABdhPJwBj1W8zN68v4kygKZjDwQAeX/LS01M/yWWBdORG9/aK0Wcq/qN49haT5C6sHzphoFRtwCR+Og3vVQUNgZn6a4=
+X-Received: by 2002:a17:902:9e08:b029:d0:8a6a:d5e8 with SMTP id
+ d8-20020a1709029e08b02900d08a6ad5e8mr41517659plq.0.1600625064606; Sun, 20 Sep
+ 2020 11:04:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200911194549.12780-4-david.e.box@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAJubAmEg_uXsWRqHXA2_L8i2AVU_ZLH19txYqgVpP5s+AwNzfA@mail.gmail.com>
+In-Reply-To: <CAJubAmEg_uXsWRqHXA2_L8i2AVU_ZLH19txYqgVpP5s+AwNzfA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 20 Sep 2020 21:04:08 +0300
+Message-ID: <CAHp75VdKkZ0Ra3FMvbfq2hJH7_KZ5S_XLCxmrgFOAMiGDe6AKQ@mail.gmail.com>
+Subject: Re: LG laptop driver not working on recent models
+To:     Alessandro Zarrilli <alessandro@zarrilli.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     Matan Ziv-Av <matan@svgalib.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
++Cc: PDx86 mailing list and co-maintainers
 
-Thanks for the patches.
+On Sat, Sep 19, 2020 at 2:44 PM Alessandro Zarrilli
+<alessandro@zarrilli.net> wrote:
+>
+> Note: I'm adding Andy in CC because I see he was the committer of the driver I'm going to talk about.
+>
+> Hi Matan,
+>
+> I see you are the maintainer of the Linux kernel LG Gram laptop driver (linux/drivers/platform/x86/lg-laptop.c).
+>
+> I've just bought the LG Gram 2020 version (product code 17Z990). I'm running Kernel 5.4.0, but unfortunately it seems your driver is not working correctly on this laptop model.
+>
+> Take for example "battery care limit", the feature I'm interested the most:
+>
+> # cat /sys/devices/platform/lg-laptop/battery_care_limit
+> 0
+> # echo 80 > /sys/devices/platform/lg-laptop/battery_care_limit
+> # cat /sys/devices/platform/lg-laptop/battery_care_limit
+> 0
+> # echo 100 > /sys/devices/platform/lg-laptop/battery_care_limit
+> # cat /sys/devices/platform/lg-laptop/battery_care_limit
+> 0
+>
+> Is there any chance you could fix this? Can I help in any way? I'm not skilled in C programming (just used it a long time ago), but I'm an old time developer and Linux system administrator: if you give me some hints, maybe I could sort it out myself.
+>
+> Thanks and regards
+> Alessandro
 
-On 11.09.2020 22:45, David E. Box wrote:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> Add support for the Intel Platform Monitoring Technology crashlog
-> interface.  This interface provides a few sysfs values to allow for
-> controlling the crashlog telemetry interface as well as a character driver
-> to allow for mapping the crashlog memory region so that it can be accessed
-> after a crashlog has been recorded.
-> 
-> This driver is meant to only support the server version of the crashlog
-> which is identified as crash_type 1 with a version of zero. Currently no
-> other types are supported.
-> 
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  .../ABI/testing/sysfs-class-pmt_crashlog      |  66 ++
->  drivers/platform/x86/Kconfig                  |  10 +
->  drivers/platform/x86/Makefile                 |   1 +
->  drivers/platform/x86/intel_pmt_crashlog.c     | 588 ++++++++++++++++++
->  4 files changed, 665 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-pmt_crashlog
->  create mode 100644 drivers/platform/x86/intel_pmt_crashlog.c
 
-<SNIP>
 
-> +
-> +/*
-> + * devfs
-> + */
-> +static int pmt_crashlog_open(struct inode *inode, struct file *filp)
-> +{
-> +	struct crashlog_entry *entry;
-> +	struct pci_driver *pci_drv;
-> +	struct pmt_crashlog_priv *priv;
-> +
-> +	if (!capable(CAP_SYS_ADMIN))
-> +		return -EPERM;
-
-Will not this above still block access to /dev/crashlogX for admin_group users
-in case root configured access e.g. similar to this:
-
-ls -alh /dev/
-crw-rw----.  1 root admin_group      1,   9 Sep 15 18:28 crashlogX
-
-If yes then that capable() check is probably superfluous and
-should be avoided in order not to block access to PMT data.
-
-Could you please clarify or comment?
-
-Thanks,
-Alexei  
+-- 
+With Best Regards,
+Andy Shevchenko
