@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162F1C43463
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 09:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4482EC43463
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 09:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B93B2214F1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 09:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1282158C
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 09:38:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EGtblSUY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HNoywDUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgIUJTF (ORCPT
+        id S1726343AbgIUJiW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Sep 2020 05:19:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55470 "EHLO
+        Mon, 21 Sep 2020 05:38:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:33069 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726333AbgIUJTF (ORCPT
+        by vger.kernel.org with ESMTP id S1726475AbgIUJiV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Sep 2020 05:19:05 -0400
+        Mon, 21 Sep 2020 05:38:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600679943;
+        s=mimecast20190719; t=1600681099;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3qp4k5f2KI+AeGRhJ9jLHzhWwAc1X/UvENG6IrkroPY=;
-        b=EGtblSUYCgqiK3rE/cveA0RKMKC0ttWCnGhWRMlUuwLy9NkBbD6dioHIlCiL51REVU6CqC
-        fHNBCqGkRqEDPqAx4Y2mIjwIlItxqedeMOifPfhesDRL1zuwSEfbdPDcJ5qYwvx/MLAyyO
-        frgQ49Q6ZJyw2OWymn43ji0E6fV2OIU=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-480-pDdsCRmZMqK4kq7fTRLaag-1; Mon, 21 Sep 2020 05:19:01 -0400
-X-MC-Unique: pDdsCRmZMqK4kq7fTRLaag-1
-Received: by mail-ed1-f69.google.com with SMTP id n25so4393788edr.13
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2020 02:19:01 -0700 (PDT)
+        bh=YMueE7TUp93oQ7tBGEmbtQUpxk5L9SeW1/QycLtgmXo=;
+        b=HNoywDUIGn15Z7LCuXfvpkc9Kx/m3POdRp67EOqgvuLDbo8uvXvKvEie9llr48xLv3CB58
+        JaMHiyWjDug6WdDNznQS8gb0WXPwx+O7iOQ/+YUlfQb8FR06VsQFJEDPTKPLx6Bez9v6uT
+        vICunHI5nGt6Zvb5ojqxRttiUUCu5FI=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-38-E28Bak2GPounbSHuUfG5rQ-1; Mon, 21 Sep 2020 05:38:14 -0400
+X-MC-Unique: E28Bak2GPounbSHuUfG5rQ-1
+Received: by mail-ej1-f71.google.com with SMTP id f17so4647711ejq.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2020 02:38:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=3qp4k5f2KI+AeGRhJ9jLHzhWwAc1X/UvENG6IrkroPY=;
-        b=B5KeMpRAkoga8lvBJv8Pz5JVODodGpQTGXj4bs8r84jwTwkuLOYkbmKiCv9uwa049q
-         D43gKSlUJtoM358FMXeGDmJdJJnNSxNrUOvHsWZGdb2cCI4gJISSTSCpdu5qEGpy1Rxi
-         I5jUzjw1x0Kh1Xz41339VhtKJ3fC2aHy6KbEXF514YG5+N074nMR28sXOZu6T5Cyrgn8
-         sde08J0HXt1Vvn2UqK1P3fmGoQjce4/V7+oCvtKl00BsjwOEL2WUI302S46RjialkHdL
-         Fkwoc4EzDMw4PdqpN9LkmS8LVyES7I1tljtCbGF4TRfnzcnztOm5JWmxhK9SOU+a+zOu
-         JIKg==
-X-Gm-Message-State: AOAM5306qyGuG3OsBX1wC7ZuMU36N/9uGNVKmCFIJP5jnShJzdSNks/g
-        8KQxJ4nbZ/0yxWbF/rftHF1pBdOOjeYkI4geW8t5a/3WJqEQlh5y/bSrC7spwwcpF14CeWgWaQA
-        Ty5O017wnyrsIXOIZ6FwnO/OrvWGg5DFhQw==
-X-Received: by 2002:a50:a418:: with SMTP id u24mr51947446edb.103.1600679940029;
-        Mon, 21 Sep 2020 02:19:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzDKoKGiKQIQpBJlsb/iqwSh7JcFxvu99TdsAlFbT44ZItCwR+Vi3SamuNRx7W9du4vOje0Cg==
-X-Received: by 2002:a50:a418:: with SMTP id u24mr51947429edb.103.1600679939783;
-        Mon, 21 Sep 2020 02:18:59 -0700 (PDT)
+        bh=YMueE7TUp93oQ7tBGEmbtQUpxk5L9SeW1/QycLtgmXo=;
+        b=LVsQ1YzOICWAAhl5s0YMqkO1ZxjrJG2TiMF/Xh543BA6/2HBUq7JRxor8Pjn6pGjBc
+         fUNFmiN41q9N3QGabm5zVxlylimoc9UmtD8JtesWI6nAYX7tw9ujwI3LW0YlmOEGlavE
+         BoXoRjNrHmd6bxxJk93Rtp/iieZaoJeTDecQCtbFCBHyIGbU/ABlOSpMo0M4trLehBYW
+         DIh9zX6mlPb60Ly20YV7Mgge4ebHOxh728tTqe6uBrecheykVFw3pfvaFsyd9cXdsmbR
+         po0L+RNkBSxzFpmx59TW/5b4BSiVp014smrgprk16ty/l0MpX9FKVS97+r+P4H/+i8EM
+         f3Jw==
+X-Gm-Message-State: AOAM533fO0kQWxQ1pidrPiscXbBsbtfRPDIKqms6P1b/fIa/vKercE5e
+        ihH2I382RPj+FoQC6Fwu39V5CUctfvtw0GXfRWEkWTzJlp9Zm3CaqsZ9bToeJo7MJmwXthneQNR
+        wPEwZ9NpCxroPkNF5arKT4diD2MXOfzKiTg==
+X-Received: by 2002:a17:906:4e54:: with SMTP id g20mr50585144ejw.252.1600681092949;
+        Mon, 21 Sep 2020 02:38:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwJSZTXdBVWGqB2un9eeUK9ZWv92rLjbjiVwFl5amHpnBMSabLAay1iXxSoBq76KE4eSf8Hvw==
+X-Received: by 2002:a17:906:4e54:: with SMTP id g20mr50585133ejw.252.1600681092754;
+        Mon, 21 Sep 2020 02:38:12 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id j15sm8478438ejs.5.2020.09.21.02.18.59
+        by smtp.gmail.com with ESMTPSA id j15sm8509972ejs.5.2020.09.21.02.38.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Sep 2020 02:18:59 -0700 (PDT)
+        Mon, 21 Sep 2020 02:38:12 -0700 (PDT)
 Subject: Re: [PATCH v2] Introduce support for Systems Management Driver over
  WMI for Dell Systems
 To:     "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
@@ -78,13 +78,14 @@ References: <20200904142846.5356-1-divya_bharathi@dell.com>
  <aaf3b072-a109-4f69-67dd-bea3dc5fb023@redhat.com>
  <DM6PR19MB2636829402BC67EC1048E15FFA230@DM6PR19MB2636.namprd19.prod.outlook.com>
  <CY4PR19MB12544CE6AFD16E89E688ACCD85200@CY4PR19MB1254.namprd19.prod.outlook.com>
+ <CY4PR19MB1254A26A233052B71ACC5ACA853E0@CY4PR19MB1254.namprd19.prod.outlook.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <0c575811-a578-1b11-7741-f795f0c7265e@redhat.com>
-Date:   Mon, 21 Sep 2020 11:18:58 +0200
+Message-ID: <a6dbd512-760a-bd01-28ab-7e82d18d03d8@redhat.com>
+Date:   Mon, 21 Sep 2020 11:38:11 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CY4PR19MB12544CE6AFD16E89E688ACCD85200@CY4PR19MB1254.namprd19.prod.outlook.com>
+In-Reply-To: <CY4PR19MB1254A26A233052B71ACC5ACA853E0@CY4PR19MB1254.namprd19.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -94,96 +95,89 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/15/20 6:28 PM, Bharathi, Divya wrote:
+On 9/17/20 7:22 AM, Bharathi, Divya wrote:
 
 <snip>
 
->>>> +/* kept variable names same as in sysfs file name for sysfs_show
->>>> +macro
->>> definition */
->>>> +struct enumeration_data {
->>>> +	char display_name_language_code[MAX_BUFF];
->>>> +	char attribute_name[MAX_BUFF];
->>>> +	char display_name[MAX_BUFF];
->>>> +	char default_value[MAX_BUFF];
->>>> +	char current_value[MAX_BUFF];
->>>> +	char modifier[MAX_BUFF];
->>>> +	int value_modifier_count;
->>>> +	char value_modifier[MAX_BUFF];
->>>> +	int possible_value_count;
->>>> +	char possible_value[MAX_BUFF];
->>>> +	char type[MAX_BUFF];
->>>> +};
->>>> +
->>>> +static struct enumeration_data *enumeration_data; static int
->>>> +enumeration_instances_count;
->>>
->>> Please store these 2 in the global wmi_priv data.
->>>
->>> Also there is a lot of overlap between structs like struct
->>> enumeration_data, struct integer_data, etc.
->>>
->>> I think it would be good to make a single struct attr_data, which
->>> contains fields for all the supported types.
->>>
->>> I also see a lot of overlapping code between:
->>>
->>> drivers/platform/x86/dell-wmi-enum-attributes.c
->>> drivers/platform/x86/dell-wmi-int-attributes.c
->>> drivers/platform/x86/dell-wmi-string-attributes.c
->>>
->>> I think that folding the data structures together will help with also
->>> unifying that code into a single dell-wmi-std-attributes.c file.
->>>
+>>>>> +
+>>>>> +/**
+>>>>> + * exit_enum_attributes() - Clear all attribute data
+>>>>> + * @kset: The kset to free
+>>>>> + *
+>>>>> + * Clears all data allocated for this group of attributes  **/ void
+>>>>> +exit_enum_attributes(struct kset *kset) {
+>>>>> +	struct kobject *pos, *next;
+>>>>> +
+>>>>> +	mutex_lock(&kset_mutex);
+>>>>> +	list_for_each_entry_safe(pos, next, &kset->list, entry) {
+>>>>> +		sysfs_remove_group(pos, &enumeration_attr_group);
+>>>>> +	}
+>>>>> +	mutex_unlock(&kset_mutex);
+>>>>> +	mutex_lock(&enum_mutex);
+>>>>> +	kfree(enumeration_data);
+>>>>> +	mutex_unlock(&enum_mutex);
+>>>>> +}
+>>>>
+>>>> Since there is now only 1 kset for the main dir, you are now calling
+>>>> sysfs_remove_group 4 times (for all the different times) on each entry
+>>>> in the attributes dir. I guess this may fail silently, but it still is
+>>>> not good. So this needs to be fixed.
+>>>>
+>>>> The remarks to this file also apply to the:
+>>>>
+>>>> drivers/platform/x86/dell-wmi-int-attributes.c
+>>>> drivers/platform/x86/dell-wmi-string-attributes.c
+>>>>
+>>>> files.
+>>>>
 > 
-> Yes, it does seem like lot of code is overlapping but they differ by
-> properties that are little unnoticeable.
-> 
-> If we make single file adding switch cases we may end up in many
-> switch cases and if conditions. Because, here only attribute_name,
-> display_lang_code, display_lang and modifier are same. Apart from
-> these other properties are different either by name or data type.
-> 
-> Also, one advantage here is if any new type is added in future it will
-> be easier to create new sysfs_attr_group according to new type's
-> properties
-> 
-> We will certainly try and minimize some identical looking code
-> wherever possible and add inline comments/document the
-> differences more clearly in v3 which is incoming shortly.
-> 
->>>> +get_instance_id(enumeration);
->>>> +
->>>> +static ssize_t current_value_show(struct kobject *kobj, struct
->>> kobj_attribute *attr, char *buf)
->>>> +{
->>>> +	int instance_id;
->>>> +
->>>> +	if (!capable(CAP_SYS_ADMIN))
->>>> +		return -EPERM;
->>>> +	instance_id = get_enumeration_instance_id(kobj);
->>>
->>> If you unify the integer, string and enum code then this just becomes:
->>> get_std_instance_id(kobj)
->>>
-> 
-> For each type of attribute GUIDs are different and for each type
-> instance IDs start from zero. So if we populate them in single data
-> structure then instance IDs may overlap.
+> Since we maintained 4 different attribute groups under 1 kset, each time
+> respective attribute group will be removed. And once all groups are
+> removed, kset is deleted.
 
-Ah, I missed that, because of the switch-case in init_bios_attributes()
-I assumed it was only called once and all attributes were enumerated
-in a single loop.
+sysfs_remove_group() just does a kernfs_remove_by_name() for each
+attribute in the group.
 
-I see that init_bios_attributes() gets called once for each of
-ENUM, INT, STR and PO now. My mistake, sorry.
+Since the integer_, enumeration_ and string_ attr_group-s all
+have e.g. a current_value attribute that means that current_value
+will be removed 3 times and for the 2nd and 3th call
+kernfs_remove_by_name() will fail with -ENOENT.
 
-So you are right. Since the instance-ids overlap then my idea will not
-work and we need to keep separate foo_data arrays per type.
+Currently neither kernfs_remove_by_name() nor sysfs_remove_group() print
+an error message for this, but still it is not very clean.
 
-It might still be worth it to unify enum_data, string_data and
-integer_data into a single shared struct so that some of the
-sysfs getter functions can be shared. I will leave that up to you.
+Instead why not do this:
+
+int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
+                         struct kobject *attr_name_kobj)
+{
+         int retval = sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
+         int i, next_obj;
+
+         if (retval)
+                 goto out;
+
+         mutex_lock(&wmi_priv.mutex);
+	enumeration_data[instance_id].attr_name_kobj = attr_name_kobj;
+	/* ^^^^^^^^^^^^^^^^ This line is new ^^^^^^^^^^^^^^^^^^^^^^^^*/
+	...
+
+
+void exit_enum_attributes(void)
+{
+         int i;
+
+         for (i = 0; i < enumeration_instances_count; i++) {
+		if (enumeration_data[instance_id].attr_name_kobj)
+                         sysfs_remove_group(enumeration_data[instance_id].attr_name_kobj, &enumeration_attr_group);
+	}
+
+         kfree(enumeration_data);
+}
+
+
+That makes the teardown mirror the setup much more closely and as such is
+a cleaner solution IMHO.
 
 Regards,
 
