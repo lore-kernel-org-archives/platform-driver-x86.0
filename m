@@ -2,112 +2,95 @@ Return-Path: <SRS0=1Jx7=C6=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84DDC43463
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 07:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400EFC43463
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 08:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA8A20758
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 07:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB0820773
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 08:25:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qh1UuoMi"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="OK/pJIYu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgIUH4H (ORCPT
+        id S1726417AbgIUIZK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Sep 2020 03:56:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgIUH4H (ORCPT
+        Mon, 21 Sep 2020 04:25:10 -0400
+Received: from mail-41104.protonmail.ch ([185.70.41.104]:62392 "EHLO
+        mail-41104.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgIUIZK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Sep 2020 03:56:07 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF246C061755;
-        Mon, 21 Sep 2020 00:56:07 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t7so7016196pjd.3;
-        Mon, 21 Sep 2020 00:56:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T7+i07av2Kp0AYojRvT3bM7gQAzDtecfEwK/S1JJ4xw=;
-        b=Qh1UuoMiJnVW2fV9zmTR0PpnA3fM0ZE64dzx/H7jhi7uTmSwnoXvM/gSvp+Kt2gO0A
-         KXF/bGpNc94/tmMnFm/WVajwguTIvZLfY0g6PBLXoK1emfc9mhCgB05iYrKJQB1zqJLf
-         WHN/dcuQ+gp7a9tuwnGu+KdWgS0APZsy8P1WDzKlr4dN26/6ZIjW3taz1vJzy0tpy6dQ
-         lRaddMjS+DWofD1seys+6/RYWIoNMqDiqMdE/ZXAGunObo7qPfZ7F6EcaFaDaa82YRAw
-         DtMBktkHg7oR09X0CaIMIpSiopgEpxefrXNwRW+ukkIrWdM8TkBBSyiL6as3o09zxtlM
-         7jOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T7+i07av2Kp0AYojRvT3bM7gQAzDtecfEwK/S1JJ4xw=;
-        b=m9hpZ62BpBibqnLRhUyKWbI8/tZDecWE+b4yx037wMllQTlhgLVXTAbr6v+mVtWJ8/
-         ybbgCIbSOl64k6TDk24ZjZwDvQwjH+IjQMByF0vt3AlaXVax71X2ajbz1LZ/JXtKvGa1
-         IDuAoj3uG8t4+4NAeEyNtjSldbhKPbrE1Z/BvytaGIBfNqLmN7J4VBbs8r1hkA/eNR9m
-         6up5OltOAw+lw5EzgXAotFin7aKLcbjaTFV+jx0vqr1BoMrqkbAzBsKYjNVokROUiNH2
-         mrWnqGDD8Q+4A80TbcK4nD8H2BfJPf5avlrK+0ApGx7zLq/LRqaMYfRjRJ/fEOBaMJi8
-         AyoA==
-X-Gm-Message-State: AOAM533CsI+8Dwd25MtLcpwONcjrpC/660g84cMrhca4HSMjyUUQHQ6g
-        9/bdmln6NgZdh+0obpAkNOE03wMRMXuBeqKuz54=
-X-Google-Smtp-Source: ABdhPJx8XUpLVAaARP529JXm5TQso6onWukSFagB2XwrBqGkIHg5wLS2iOsQE/xZ9Fs/NQwe4veuN1flF9Jg+jo2vWY=
-X-Received: by 2002:a17:90b:fc4:: with SMTP id gd4mr24244021pjb.129.1600674967135;
- Mon, 21 Sep 2020 00:56:07 -0700 (PDT)
+        Mon, 21 Sep 2020 04:25:10 -0400
+X-Greylist: delayed 356 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Sep 2020 04:25:09 EDT
+Received: from mail-03.mail-europe.com (mail-03.mail-europe.com [91.134.188.129])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        by mail-41104.protonmail.ch (Postfix) with ESMTPS id F21502002EEE
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2020 08:19:11 +0000 (UTC)
+Authentication-Results: mail-41104.protonmail.ch;
+        dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="OK/pJIYu"
+Date:   Mon, 21 Sep 2020 08:18:59 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1600676348;
+        bh=uVyI41RUbUoXDnB7xStf3k4gfbKycqyuNuiWUI7O/+I=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=OK/pJIYuswrvh61FMIrMZpeNpUKH3Aio2tTGGH9RbSDWcTZkUeWOwdo55ql6ce6MA
+         dlIYQT61sT/ls8RpAOsSrcfi3Qx63fJ89FWVr1FOBerh7Ev9UcgARwdvrZgtG0VTmF
+         SFuZkSu8q5cpwted99oXjJCN3egUhpQ2QoIlJSy8=
+To:     Hans de Goede <hdegoede@redhat.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Alessandro Zarrilli <alessandro@zarrilli.net>,
+        Mark Gross <mgross@linux.intel.com>,
+        Matan Ziv-Av <matan@svgalib.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Subject: Re: LG laptop driver not working on recent models
+Message-ID: <GxGF1TZmiB_rQkmbSArqPGuGoD-nIHGe2pZpUHOuerXgAYR187jtfHMIx0X5cXufT542KGk-ZGZPdWjBuku5sw3k0IhTxkXjpjQK628VO2Q=@protonmail.com>
+In-Reply-To: <78578539-19c2-8915-91f8-8a82bafb5135@redhat.com>
+References: <CAJubAmEg_uXsWRqHXA2_L8i2AVU_ZLH19txYqgVpP5s+AwNzfA@mail.gmail.com> <CAHp75VdKkZ0Ra3FMvbfq2hJH7_KZ5S_XLCxmrgFOAMiGDe6AKQ@mail.gmail.com> <78578539-19c2-8915-91f8-8a82bafb5135@redhat.com>
 MIME-Version: 1.0
-References: <20200920203207.25696-1-lists@wildgooses.com>
-In-Reply-To: <20200920203207.25696-1-lists@wildgooses.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 21 Sep 2020 10:55:49 +0300
-Message-ID: <CAHp75Vd2uz-QrEFshUr=e719VBX2zYzvOhVC07BpHfvi0WDgOA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpio-amd-fch: Fix typo on define of AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
-To:     Ed Wildgoose <lists@wildgooses.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Eckert <fe@dev.tdt.de>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Sep 20, 2020 at 11:33 PM Ed Wildgoose <lists@wildgooses.com> wrote:
+Hi
+
+> [...]
 >
-> Schematics show that the GPIO number is 55 (not 59). Trivial typo.
-
-Does it still DEVSLP0? Perhaps you need to drop that part as well.
-
-...
-
->  #define APU2_GPIO_REG_LED3             AMD_FCH_GPIO_REG_GPIO59_DEVSLP1
->  #define APU2_GPIO_REG_MODESW           AMD_FCH_GPIO_REG_GPIO32_GE1
->  #define APU2_GPIO_REG_SIMSWAP          AMD_FCH_GPIO_REG_GPIO33_GE2
-> -#define APU2_GPIO_REG_MPCIE2           AMD_FCH_GPIO_REG_GPIO59_DEVSLP0
-> +#define APU2_GPIO_REG_MPCIE2           AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
->  #define APU2_GPIO_REG_MPCIE3           AMD_FCH_GPIO_REG_GPIO51
+> Assuming I have got this right, then now a days we have
+> a standard power_supply class sysfs attribute for this,
+> charge_start_threshold .
 >
->  /* Order in which the GPIO lines are defined in the register list */
-> diff --git a/include/linux/platform_data/gpio/gpio-amd-fch.h b/include/linux/platform_data/gpio/gpio-amd-fch.h
-> index 9e46678ed..255d51c9d 100644
-> --- a/include/linux/platform_data/gpio/gpio-amd-fch.h
-> +++ b/include/linux/platform_data/gpio/gpio-amd-fch.h
-> @@ -19,7 +19,7 @@
->  #define AMD_FCH_GPIO_REG_GPIO49                0x40
->  #define AMD_FCH_GPIO_REG_GPIO50                0x41
->  #define AMD_FCH_GPIO_REG_GPIO51                0x42
-> -#define AMD_FCH_GPIO_REG_GPIO59_DEVSLP0        0x43
-> +#define AMD_FCH_GPIO_REG_GPIO55_DEVSLP0        0x43
->  #define AMD_FCH_GPIO_REG_GPIO57                0x44
->  #define AMD_FCH_GPIO_REG_GPIO58                0x45
->  #define AMD_FCH_GPIO_REG_GPIO59_DEVSLP1        0x46
+> Or maybe I got it wrong and the battery_care_limit means
+> never charge above that value? Then the new standard
+> power_supply class sysfs attribute would be
+> charge_stop_threshold.
+> [...]
+
+A small note, as per Documentation/ABI/testing/sysfs-class-power, the attri=
+butes
+are charge_control_{start,end}_threshold. The charge_{start,stop}_threshold
+attributes have only ever been used in the thinkpad_acpi driver (as far as =
+I know).
+And it has been extended not so long ago to use the "new" attributes.
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+> [...]
+> See thinkpad_acpi for an example how to do this.
+> [...]
+
+In addition, the asus-wmi and huawei-wmi drivers could also serve as exampl=
+es.
+
+
+> [...]
+
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
