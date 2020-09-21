@@ -2,342 +2,634 @@ Return-Path: <SRS0=1Jx7=C6=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3984BC43465
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 15:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E23C43465
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 16:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C429E2085B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 15:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDCE20739
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 16:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="U20y4XZ6";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="KCPjtwF+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ME1Ww4vW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgIUP06 (ORCPT
+        id S1727958AbgIUQTE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Sep 2020 11:26:58 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:24048 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726991AbgIUP06 (ORCPT
+        Mon, 21 Sep 2020 12:19:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbgIUQTD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Sep 2020 11:26:58 -0400
-Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08LFFTeb027915;
-        Mon, 21 Sep 2020 11:26:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=6fKjFUenHRiaUTPferqX2ckTKUXHhlmPFYkLOyIf5n0=;
- b=U20y4XZ6UYjVF+IkzpWnb+yBfgeSWJByhWCxUz/WzosA27NBnCfz/JsDP1Q2+fJ5hybf
- A7XGch+XPxUaPN+jrjTSIgI6UdQCI2alSgHF4VPXvr3MXxPmsC8ULSNpX3KKrBuOaNF8
- ACL0ZTeKWvcKalNt7Bpyzj7dsWqro8J7AAESfw35rOgSOsS1Pzv3yIdTFaCVqFN96wIl
- 9nT3vVCxRG3bBF72YWYqbKA6iuQQl7pP+SxNHxnlyaQlSZMdGRLnFacoeWQjwc5ZQGkO
- ISM1b8F/GT7JRjVjjjKcVyBS582sIbbEBAsclMpMt12qWnOF5gbnzJDQ6FyqcK3lpxk2 Gw== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 33ncj5d133-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Sep 2020 11:26:48 -0400
-Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08LFDZte170341;
-        Mon, 21 Sep 2020 11:26:47 -0400
-Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2052.outbound.protection.outlook.com [104.47.38.52])
-        by mx0a-00154901.pphosted.com with ESMTP id 33nxxh2ghc-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Sep 2020 11:26:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iVPkMx6sxEMZIsy7jhXmuZIkaLxDiQWYfgntd0r7Z3wjj2Kkk2G4BAbtfXy/txoXXT11ab/7N8MDsnT9cAX++PiXscd/V8lyA5/ru/9BwkFg9Ppb3e6U1UFZDnC7LFbSw8Qbj2ZKRiya6LfE217gUywgRboRmbSoS+yXXxQat//ix5RK/+SBpwpmWvYSqiMVOrx+iBCnYAk7bQVKKAbaLJ7O96b0ojK0yaYkixmaf1whTveS8CGpiYO5MrPWUVv5QFc6elmvYGaIpgTMzmno/rnHFO6yiXpeen4FE3lfUvu2gVq2xtx2IJaavMEVvvXvAy0MGpCKze7tL2p3/gj4wA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6fKjFUenHRiaUTPferqX2ckTKUXHhlmPFYkLOyIf5n0=;
- b=Q6n+skzahgvddMmJPxAHv/Cul0gQ+6r2pBgNCiWlQqrfSb7DhKLFC5XiW9wC9oMmdpAcnVPuKnPqvtRhL2NiE6dAqDpVCA4fpfBGcUKy7Rd4IF1kGU+CJhQ9voBsIUschOkcEqyt60iGuQvgcZ/81JvWcd5i+dy2FZaXdjSGBml4GatHmboABckt9o4RONBsqFEwNbdFUBlJlP24JFRwIAKmOhtFqE+cA5lVs6At/4QbwBxTTvrmq77l1+1hKvbSJKMBsE7rwwj02vVupmFCPt3Nmpfp3ynRQBQikHakYXE303s01Cwny+BUTngAzoU/XYT9u8XH+vITbyjB4rABSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
- s=selector1-Dell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6fKjFUenHRiaUTPferqX2ckTKUXHhlmPFYkLOyIf5n0=;
- b=KCPjtwF+RY5N2rJlP/dLwrWHL275anijb/lmtKrqCbZXpZhY0ESCp+b7f1LnyFEHx+DA4sUEnQSXq/ZA0mdlMzPJIHcyAbyQ+VJSBxl8eYBuiKtxG115EcV7IvXMfJEIn+jvGYzmcYauIy7EDslVX73++yS5CqOhNjNOULzv87w=
-Received: from DM6PR19MB2636.namprd19.prod.outlook.com (2603:10b6:5:15f::15)
- by DM5PR1901MB2120.namprd19.prod.outlook.com (2603:10b6:4:a5::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.15; Mon, 21 Sep
- 2020 15:26:44 +0000
-Received: from DM6PR19MB2636.namprd19.prod.outlook.com
- ([fe80::a4b8:d5c9:29da:39b2]) by DM6PR19MB2636.namprd19.prod.outlook.com
- ([fe80::a4b8:d5c9:29da:39b2%4]) with mapi id 15.20.3391.011; Mon, 21 Sep 2020
- 15:26:44 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Divya Bharathi <divya27392@gmail.com>,
-        "dvhart@infradead.org" <dvhart@infradead.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
-        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>,
-        Richard Hughes <rhughes@redhat.com>,
-        Jared Dominguez <jaredz@redhat.com>
-Subject: RE: [PATCH] Introduce support for Systems Management Driver over WMI
- for Dell Systems
-Thread-Topic: [PATCH] Introduce support for Systems Management Driver over WMI
- for Dell Systems
-Thread-Index: AQHWZn4rqCTeVrGp2k+MCJMiO1QTGalTvXYAgBRkaN2AAGzIkIAEWlCAgABEH2CABgKtAIAAUMlA
-Date:   Mon, 21 Sep 2020 15:26:44 +0000
-Message-ID: <DM6PR19MB263615C1060108E5661AE615FA3A0@DM6PR19MB2636.namprd19.prod.outlook.com>
-References: <20200730143122.10237-1-divya_bharathi@dell.com>
- <d3de1d27-25ac-be43-54d8-dcbfffa31e1d@redhat.com>
- <DM6PR19MB26364970D0981212E811E1B0FA2E0@DM6PR19MB2636.namprd19.prod.outlook.com>
- <67ca316a-227f-80f6-ad22-7d08112b2584@redhat.com>
- <DM6PR19MB26368BB2B8C4D7CE58DF7C31FA230@DM6PR19MB2636.namprd19.prod.outlook.com>
- <5847917c-2c34-5d74-b5db-f33bb8fc9e13@redhat.com>
- <DM6PR19MB2636626A94385EDC7C0CACF9FA3E0@DM6PR19MB2636.namprd19.prod.outlook.com>
- <33666ec6-be47-2c33-d4c5-6b23b53f6185@redhat.com>
-In-Reply-To: <33666ec6-be47-2c33-d4c5-6b23b53f6185@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-09-21T15:26:36.6119721Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=467970d8-c968-4bf3-bc4a-24c90df3510d;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [76.251.167.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4f095c27-8a11-4040-f50a-08d85e42bf67
-x-ms-traffictypediagnostic: DM5PR1901MB2120:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR1901MB21203C4A20AC0B37AA9964E7FA3A0@DM5PR1901MB2120.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PsVE50SVVanu5NHhwhQEXOc+3EakCDj0XVWN3dG78M4S6ng/Zd2lCsRDEDlc52doNhVM9cuF5cJov+hOSPpR4dxND4KAovPZSaMyWnAzIf9nyi5cV8AyTix3pyjqBByAyJb2TcJR2M2xanc99lc4OdaN6/jhrn12Pa65EoVoWPmEOqnOHRoHXM9yQ/QhI4P/29Hucqt9c9PnmQuk0NZUyubbkOzPE/+WxiAX6vUtjiDCOSFmMF69UfP+ZJUZYre4MVBmHHcssR1O2i+ceByUzh/C3PvTcv0+1Ek7WoZuXDS6jMWwdTdTiN2+MSuQn8f+CKEGOkjU3xSBQzOqbHOPpC3b+nZ/NbqlZfu3kxfNk9JukqRcyNFZqiCdRWk+LRx2d3nvlt7mcdDVOQMp04MV0g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR19MB2636.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(366004)(396003)(376002)(346002)(39860400002)(2906002)(6506007)(55016002)(110136005)(54906003)(9686003)(83380400001)(7696005)(26005)(786003)(52536014)(316002)(30864003)(76116006)(71200400001)(66446008)(66476007)(186003)(66946007)(5660300002)(8936002)(86362001)(478600001)(66556008)(8676002)(64756008)(33656002)(4326008)(966005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: qt6QYOUEgAe/lIIzMe9ljGz5GWTJ8gUKNBupSn976HGeYsc6+g2GACGBd/Lrt0tY1+W2Tiw3xXsaDFpgKyTC4ygUMwuaKBK8rDRUfe4ZumGR+skBw0iAbZYQ4+0zwDZdp6peUEhJYR0ZHXifhuQlrLw2EIJuZnxtZXLWdDStl55vYWPWgTKBZZ0ls25U1HCp4JPWKK4FMCFD41vIFJufVNjIj8It7H4C148S1bpyKavGhs/9aMc2BWNxHn+ty5HZLou/Nbmhx4dxzpbCH2/ro4JCDrGLh6PyWFmFAzXAoAZgNDQpq5hUr77ITANsnbtOfiGaZUii4neutJH+PIo7TATpERnJJ1emgpCchzZR+btVEZll/S4Cu9/IE7007otC/0JyzYbbRYeK/u85LguJwnI/+8jHwVNUYgg5XDihCdrwYmvC/7KJ4xHpgihgxA1tkLvG2pQ9exNw+KaFDOaS2xtLMNERMJzMoJbPdgN8pyTQV1oFmMnDJfKQiRNuyuZw9ew8/6RsxccKzr2wQ5iffkLiCDwT+zTB6jvXtqGIeGc5OSnKtT49PYiWuMjPIDIv72c8jiNLP6mdkS1t35lkPnTYxjvPhmm9kaR1OlY0zLE0Og2aX/58SfBAQ/vOgFBS0F2AplEv25febi26FM2Ocg==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 21 Sep 2020 12:19:03 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77911C061755;
+        Mon, 21 Sep 2020 09:19:03 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id o16so15682945qkj.10;
+        Mon, 21 Sep 2020 09:19:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TaDr80GYFcZAoIpTA3OojJ23kD8OgMWUV14tApxnAM0=;
+        b=ME1Ww4vWvX5Y9FyAHHa52LnbtMd6gum3SrXIGxh1ipbQlFaw9P7DVmn/ke0j+YHqcP
+         GWFvDKlSBEknk05WfxwegF6OhAlR67cavk4Nl+SSU0Ne7drOaL+0rc45Wxhi1ezv+/Sc
+         j/JaV55a6z9ARAs5+xSLOnT8QImn1N4MAoBW0nXBKau+W9cGcO1KGhLvz/beHcBw9NSG
+         r47UTP5xkQO3OHT+7IzqEm5ecoldJNbJzrq79oIWE7Fd+PxgE+H/6adEsFF2opCIxqmr
+         b3z8uvATgBLGhFsH9y97dsIQwrKcpxwTLWp/qn+Dre3c6hU6FaZERkXz29wNDJ0GdTgF
+         YiSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=TaDr80GYFcZAoIpTA3OojJ23kD8OgMWUV14tApxnAM0=;
+        b=eOOP1uyno06f9UDgTCeRCuoAucUZuqXanARNwiMbF5ozOkNauALGmwFyahVk8ILMRD
+         zrAwtV2Kv5/h52b7hOZQ/N/I8NJhEQM6L15cJFr55bdIefnBzgmTmciLtUki21SV/Gu+
+         dvK4LcTjYpaxJdp7rTyNZvfv1rlF2w0sDZRCHNxfbAm/9YH2+B+zVEHiUhqYR0j6BorN
+         9tOAiEdyxh9dtkZvpWsOd57lLHR/yx5MjdFdrXp7pB3drg7YEZ/YunOZPxILYV+LdtST
+         BhXyQSrbq4NCls1AIllz7gfiXOVZD/QHXDeRN+SdgcbeDORHxj06ueiesa6ju7E0G8WJ
+         OOww==
+X-Gm-Message-State: AOAM532stO+YFbtkjFzQX37wKp8VQOFRVZ97XnZi89nLpjC0DlwoehTM
+        SFkTN4duiGh0fX0PD88EMreWAIx7GLU=
+X-Google-Smtp-Source: ABdhPJyJuwDAUIKAEys2wskNPAKM3FjUQ4ALQic4gO/HbOmW6tZI9OKbOgYmIPG0xX61Gn7b0M7gEA==
+X-Received: by 2002:a37:a189:: with SMTP id k131mr583351qke.34.1600705142341;
+        Mon, 21 Sep 2020 09:19:02 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id v28sm3025301qkv.72.2020.09.21.09.19.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Sep 2020 09:19:01 -0700 (PDT)
+Sender: Arvind Sankar <niveditas98@gmail.com>
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 21 Sep 2020 12:18:59 -0400
+To:     Lenny Szubowicz <lszubowi@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-security-module@vger.kernel.org, andy.shevchenko@gmail.com,
+        ardb@kernel.org, jmorris@namei.org, serge@hallyn.com,
+        keescook@chromium.org, zohar@linux.ibm.com, bp@alien8.de,
+        pjones@redhat.com, dhowells@redhat.com, prarit@redhat.com
+Subject: Re: [PATCH V2 1/3] efi: Support for MOK variable config table
+Message-ID: <20200921161859.GA544292@rani.riverdale.lan>
+References: <20200905013107.10457-1-lszubowi@redhat.com>
+ <20200905013107.10457-2-lszubowi@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR19MB2636.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f095c27-8a11-4040-f50a-08d85e42bf67
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Sep 2020 15:26:44.3469
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TgG/Bxh/EyJPAFT71fJMSY5r5RLIWGDUaG79OEuYOwFvy8Xmdac6wpeC4HIGZiAWy/8uxTYH4I5X8YF/3grEj3pGp0rIHAFQOjaW0BURrtU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1901MB2120
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-21_05:2020-09-21,2020-09-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 adultscore=0 malwarescore=0 spamscore=0 mlxlogscore=999
- mlxscore=0 suspectscore=0 phishscore=0 clxscore=1015 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009210111
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0
- malwarescore=0 spamscore=0 mlxlogscore=999 bulkscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009210111
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200905013107.10457-2-lszubowi@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-PiANCj4gV2VsbCBpZiBkaWZmZXJlbnQgc2NoZW1lcyBhcmUgc3VwcG9ydGVkIGFuZCBlYWNoIHNj
-aGVtZSBoYXMgaXRzIG93biB0eXBlLA0KPiB0aGVuIEkgd291bGQgZXhwZWN0IHRoZXJlIHRvIGJl
-IHNheSAvIGUuZy46DQo+IA0KPiAvc3lzL2NsYXNzL2Zpcm13YXJlLWF0dHJpYnV0ZXMvZGVsbC9h
-dXRoZW50aWNhdGlvbi9hZG1pbi1wYXNzd29yZA0KPiAod2l0aCBhIHR5cGUgb2YgInBhc3N3b3Jk
-IikgYW5kOg0KPiAvc3lzL2NsYXNzL2Zpcm13YXJlLWF0dHJpYnV0ZXMvZGVsbC9hdXRoZW50aWNh
-dGlvbi9hZG1pbi1ob3RwDQo+ICh3aXRoIGEgdHlwZSBvZiAiaG90cCIpDQo+IA0KPiBBbmQgdGhl
-biB0aGUgdXNlciAvIHVzZXJzcGFjZSBjYW4gY2hvb3NlIHdoaWNoIG9uZSB0byB1c2UsDQo+IEkg
-Z3Vlc3MgaWYgdGhlIGtlcm5lbCBrbm93cyB0aGF0IG9ubHkgaG90cCBoYXMgYmVlbiBzZXR1cCBh
-bmQNCj4gdGhlcmUgaXMgbm8gc3RhbmRhcmQgcGFzc3dvcmQgc2V0LCB0aGVuIGl0IGNvdWxkIGhp
-ZGUgdGhlDQo+IC9zeXMvY2xhc3MvZmlybXdhcmUtYXR0cmlidXRlcy9kZWxsL2F1dGhlbnRpY2F0
-aW9uL2FkbWluLXBhc3N3b3JkDQo+IHBhc3N3b3JkLg0KDQpTbyB5b3UncmUgcHJvcG9zaW5nIHRo
-ZSBmbG93IHRvIHVzZXJzcGFjZSB0aGF0IHdvdWxkIGxvb2sgbGlrZSB0aGlzOg0KDQpBdXRoZW50
-aWNhdGlvbiBpcyBvZmYNCi0tLS0NCiMgY2F0IC9zeXMvY2xhc3MvZmlybXdhcmUtYXR0cmlidXRl
-cy9kZWxsLXdtaS1zeXNtYW4vYXR0cmlidXRlcy9Ub3VjaHNjcmVlbi9pc19hdXRoZW50aWNhdGlv
-bl9uZWVkZWQNCjANCiMgZWNobyAiZW5hYmxlZCIgfCBzdWQgdGVlIC9zeXMvY2xhc3MvZmlybXdh
-cmUtYXR0cmlidXRlcy9kZWxsLXdtaS1zeXNtYW4vYXR0cmlidXRlcy9Ub3VjaHNjcmVlbi9jdXJy
-ZW50X3ZhbHVlDQoNCg0KDQpUdXJuaW5nIG9uIGFuZCB0aGluZ3MgdGhhdCBoYXBwZW4gdXNpbmcg
-YXV0aGVudGljYXRpb24gKGVycm9yIGV4YW1wbGVzIHRvbyk6DQotLS0tDQojIGNhdCAvc3lzL2Ns
-YXNzL2Zpcm13YXJlLWF0dHJpYnV0ZXMvZGVsbC13bWktc3lzbWFuL2F0dHJpYnV0ZXMvVG91Y2hz
-Y3JlZW4vaXNfYXV0aGVudGljYXRpb25fbmVlZGVkDQowDQojIGVjaG8gImZvb2JhcjEyMyIgfCBz
-dWRvIHRlZSAvc3lzL2NsYXNzL2Zpcm13YXJlLWF0dHJpYnV0ZXMvZGVsbC13bWktc3lzbWFuL2F1
-dGhlbnRpY2F0aW9uL0FkbWluL25ld19wYXNzd29yZA0KIyBjYXQgL3N5cy9jbGFzcy9maXJtd2Fy
-ZS1hdHRyaWJ1dGVzL2RlbGwtd21pLXN5c21hbi9hdHRyaWJ1dGVzL1RvdWNoc2NyZWVuL2lzX2F1
-dGhlbnRpY2F0aW9uX25lZWRlZA0KMQ0KIyBlY2hvICJlbmFibGVkIiB8IHN1ZCB0ZWUgL3N5cy9j
-bGFzcy9maXJtd2FyZS1hdHRyaWJ1dGVzL2RlbGwtd21pLXN5c21hbi9hdHRyaWJ1dGVzL1RvdWNo
-c2NyZWVuL2N1cnJlbnRfdmFsdWUNCi1FT1BOT1RTVVBQDQojIGVjaG8gImZvb2JhcjQ1NiIgfCBz
-dWRvIHRlZSAvc3lzL2NsYXNzL2Zpcm13YXJlLWF0dHJpYnV0ZXMvZGVsbC13bWktc3lzbWFuL2F1
-dGhlbnRpY2F0aW9uL0FkbWluL2N1cnJlbnRfcGFzc3dvcmQNCiMgZWNobyAiZW5hYmxlZCIgfCBz
-dWQgdGVlIC9zeXMvY2xhc3MvZmlybXdhcmUtYXR0cmlidXRlcy9kZWxsLXdtaS1zeXNtYW4vYXR0
-cmlidXRlcy9Ub3VjaHNjcmVlbi9jdXJyZW50X3ZhbHVlDQotRUFDQ0VTDQojIGVjaG8gImZvb2Jh
-cjEyMyIgfCBzdWRvIHRlZSAvc3lzL2NsYXNzL2Zpcm13YXJlLWF0dHJpYnV0ZXMvZGVsbC13bWkt
-c3lzbWFuL2F1dGhlbnRpY2F0aW9uL0FkbWluL2N1cnJlbnRfcGFzc3dvcmQNCiMgZWNobyAiZW5h
-YmxlZCIgfCBzdWQgdGVlIC9zeXMvY2xhc3MvZmlybXdhcmUtYXR0cmlidXRlcy9kZWxsLXdtaS1z
-eXNtYW4vYXR0cmlidXRlcy9Ub3VjaHNjcmVlbi9jdXJyZW50X3ZhbHVlDQojIGVjaG8gIiIgfCBz
-dWRvIHRlZSAvc3lzL2NsYXNzL2Zpcm13YXJlLWF0dHJpYnV0ZXMvZGVsbC13bWktc3lzbWFuL2F1
-dGhlbnRpY2F0aW9uL0FkbWluL2N1cnJlbnRfcGFzc3dvcmQNCiMgZWNobyAiZW5hYmxlZCIgfCBz
-dWQgdGVlIC9zeXMvY2xhc3MvZmlybXdhcmUtYXR0cmlidXRlcy9kZWxsLXdtaS1zeXNtYW4vYXR0
-cmlidXRlcy9Ub3VjaHNjcmVlbi9jdXJyZW50X3ZhbHVlDQotRU9QTk9UU1VQUA0KDQoNCj4gDQo+
-IFRCSCBJIHRoaW5rIGFsbCB0aGVzZSB0aGluZ3MgYXJlIChtb3N0bHkpIGVhc2lseSBzb2x2YWJs
-ZSBpZi93aGVuIHdlDQo+IGVuY291bnRlciB0aGVtLiBJIG1lYW4gaXQgaXMgZGVmaW5pdGVseSBn
-b29kIHRvIGtlZXAgdGhlc2Uga2luZCBvZiB0aGluZ3MNCj4gaW4gbWluZC4gQnV0IGF0IHNvbWUg
-cG9pbnQgd2UgbWlnaHQgZ2V0IGxvc3QgaW4gYWxsIHRoZSB3aGF0LWlmcyB3ZQ0KPiBjYW4gY29t
-ZSB1cCB3aXRoLg0KDQpJbiB0cnlpbmcgdG8gY29tZSB1cCB3aXRoIGEgZ2VuZXJpYyBpbnRlcmZh
-Y2UgdGhhdCBzY2FsZXMgdG8gZXZlcnlvbmUncyBuZWVkcw0KdGhlIHdoYXQtaWZzIGFyZSBjcml0
-aWNhbC4gIE1ha2luZyBhc3N1bXB0aW9ucyBvbiBob3cgYXV0aGVudGljYXRpb24gd29ya3MgbWVh
-bnMNCmZ1dHVyZSBhdXRoZW50aWNhdGlvbiBtZWNoYW5pc21zIHdpbGwgYmUgcGFpbmZ1bC4NCg0K
-PiANCj4gSWYgYSB2ZW5kb3IgY29tZXMgYWxvbmcgd2hlcmUgYXV0aGVudGljYXRpb24gaXMgbm90
-IG5lY2Vzc2FyeQ0KPiBmb3IgKmFsbCogYXR0cmlidXRlcywgdGhlbiB3ZSBjb3VsZCBhZGQgdGhl
-ICJpc19hdXRoZW50aWNhdGlvbl9yZXF1aXJlZCINCj4gYXMgYW4gb3B0aW9uYWwgc3lzZnMtYXR0
-cmlidXRlIGZvciB0aGUgZmlybXdhcmUtYXR0cmlidXRlcyBhbmQgc3RhdGUNCj4gaW4gdGhlIGRv
-Y3VtZW50YXRpb24gdGhhdCBpZiB0aGF0IGZpbGUgaXMgbGFja2luZyB0aGF0IG1lYW5zIHRoYXQN
-Cj4gYXV0aGVudGljYXRpb24gaXMgYWx3YXlzIHJlcXVpcmVkLiBUaGF0IHdheSB0aGUgRGVsbCBj
-b2RlIHdvdWxkIG5vdA0KPiBldmVuIGhhdmUgdG8gaGF2ZSB0aGUgImlzX2F1dGhlbnRpY2F0aW9u
-X3JlcXVpcmVkIiBzeXNmcy1hdHRyaWJ1dGUuDQoNCkJ1dCBpdCdzIG5vdCB0cnVlIG9uIERlbGwn
-cyBzeXN0ZW1zIGV2ZW4gcmlnaHQgbm93LiAgSWYgeW91IGRvbid0IGhhdmUNCmFuIEFkbWluIHBh
-c3N3b3JkIGNvbmZpZ3VyZWQgdGhlbiB5b3UgZG9uJ3QgbmVlZCBpdCBzZXQgZm9yIGFueSBhdHRy
-aWJ1dGUuDQpJZiB5b3UgZG8gaGF2ZSBvbmUgc2V0IHlvdSBuZWVkIHRoZW0gZm9yIGFsbC4gIEFu
-ZCBpZiB5b3UgbmVlZCB0byBrbm93IHRvIGxvb2sgZm9yDQovc3lzL2NsYXNzL2Zpcm13YXJlLWF0
-dHJpYnV0ZXMvZGVsbC13bWktc3lzbWFuL2F1dGhlbnRpY2F0aW9uL0FkbWluL2lzX3Bhc3N3b3Jk
-X3NldA0KdGhlbiB1c2Vyc3BhY2UgbmVlZHMgdG8ga25vdyB0byBkbyB0aGlzIGRpZmZlcmVudGx5
-IGZvciBEZWxsIGFuZCBzb21lb25lIGVsc2UuDQoNClNvIHlvdSBlaXRoZXIgbmVlZCB0byBoYXZl
-IGEgdG9wIGxldmVsIGlzX2F1dGhlbnRpY2F0aW9uX3JlcXVpcmVkDQpJRSAvc3lzL2NsYXNzL2Zp
-cm13YXJlLWF0dHJpYnV0ZXMvZGVsbC13bWktc3lzbWFuL2lzX2F1dGhlbnRpY2F0aW9uX3JlcXVp
-cmVkDQoNCk9yIGEgcGVyIGF0dHJpYnV0ZSBvbmUNCklFIC9zeXMvY2xhc3MvZmlybXdhcmUtYXR0
-cmlidXRlcy9kZWxsLXdtaS1zeXNtYW4vYXR0cmlidXRlcy9Ub3VjaHNjcmVlbi9pc19hdXRoZW50
-aWNhdGlvbl9yZXF1aXJlZA0KDQpBbmQgdGhpcyBkZWNpc2lvbiBjYW4ndCBiZSBwdXQgb2ZmIGJl
-Y2F1c2UgaXQgaGFzIGFuIGltcGxpY2F0aW9uIHRoYXQgYW5vdGhlcg0KdmVuZG9yIG1heSBjaG9v
-c2UgdG8gZG8gdGhlaXIgYXV0aGVudGljYXRpb24gZGlmZmVyZW50bHkgdGhhbiBEZWxsLg0KDQo+
-IA0KPiBTaW5jZSB3ZSBhbHNvIHNlZW0gdG8gaGF2ZSBzb21lIHRyb3VibGUgdG8gZ2V0IHRoZXNl
-IDIgcHJvcGVybHkgZG9jdW1lbnRlZA0KPiAoSSBoYXZlIG5vdCBsb29rZWQgYXQgdjMgeWV0KSwg
-SSdtIGZpbmUgd2l0aCBtYWtpbmcgdGhlbSBkZWxsIHNwZWNpZmljIGJ5DQo+IHByZWZpeGluZyB0
-aGVtDQo+IHdpdGggZGVsbC0uIEkgZ3Vlc3MgdGhhdCB0aGF0IHByb2JhYmx5IGV2ZW4gbWFrZXMg
-c2Vuc2UuDQoNClRoZXkncmUgZG9jdW1lbnRlZCBpbiB2My4gIFRoZSBtb21lbnQgdGhhdCB5b3Ug
-aGF2ZSBhICJEZWxsIHNwZWNpZmljIiBhdHRyaWJ1dGUNCndoYXQncyB0aGUgcG9pbnQgb2YgYSBj
-b21tb24gY2xhc3M/ICBZb3UncmUgZ29pbmcgdG8gZW5kIHVwIHdpdGggRGVsbCBleHByZXNzZXMN
-CmRlcGVuZGVuY2llcyB0aGlzIHdheSwgTGVub3ZvIGV4cHJlc3NlcyB0aGVtIHRoYXQgd2F5LCBh
-bmQgSFAgZXhwcmVzc2VzIHRoZW0gc29tZQ0Kb3RoZXIgd2F5IGFuZCB1c2Vyc3BhY2UgaXMgZ29p
-bmcgdG8gaGF2ZSB0byBzb3J0IG91dCB0aGUgZGlmZmVyZW5jZXMuDQoNClNvIGluIHVzZXJzcGFj
-ZSB5b3UgZW5kIHVwIHdpdGggbG9naWMgdGhhdCBpcyBzb21ldGhpbmcgbGlrZSB0aGlzOg0KMSkg
-KEdlbmVyaWMpIENoZWNrIGlmIGF1dGhlbnRpY2F0aW9uIGlzIHNldA0KMikgKERlbGwpIENoZWNr
-IGlmIHlvdSdyZSBydW5uaW5nIG9uIERlbGwncyBkcml2ZXIsIGludGVycHJldCB0aGlzIGRlcGVu
-ZGVuY3kgb3Igc2hvdyBhIG1lc3NhZ2UNCjMpIChMZW5vdm8pIENoZWNrIGlmIHlvdSdyZSBydW5u
-aW5nIG9uIExlbm92bydzIGRyaXZlciwgaW50ZXJwcmV0IHRoaXMgZGVwZW5kZW5jeSBvciBzaG93
-IGEgbWVzc2FnZQ0KNCkgKEhQKSBDaGVjayBpZiB5b3UncmUgcnVubmluZyBvbiBIUCdzIGRyaXZl
-ciwgaW50ZXJwcmV0IHRoaXMgZGVwZW5kZW5jeSBvciBzaG93IGEgbWVzc2FnZQ0KNSkgKEdlbmVy
-aWMpIENoZWNrIHdoYXQgYXV0aGVudGljYXRpb24gc2NoZW1lcyBhcmUgc3VwcG9ydGVkDQo2KSAo
-RGVsbCkgQXBwbHkgRGVsbCdzIGFkbWluIHBhc3N3b3JkIGF1dGhlbnRpY2F0aW9uIHNjaGVtZQ0K
-NykgKExlbm92byBFeGFtcGxlKSBBcHBseSBMZW5vdm8ncyBhZG1pbiBwYXNzd29yZCBhdXRoZW50
-aWNhdGlvbiBzY2hlbWUgb3IgdGhlaXIgVE9UUCBhdXRoZW50aWNhdGlvbiBzY2hlbWUNCjgpIChH
-ZW5lcmljKSB3cml0ZSB2YWx1ZSBpbnRvIGN1cnJlbnRfdmFsdWUNCjkpIChHZW5lcmljKSBEaXNh
-YmxlIGF1dGhlbnRpY2F0aW9uDQoNClNvIGlmIHVzZXJzcGFjZSBpcyBnb2luZyB0byBoYXZlIHRv
-IGJlIGRpZmZlcmVudCBhbnl3YXkgZm9yIGV2YWx1YXRpbmcgZGVwZW5kZW5jaWVzIGFuZCBhdXRo
-ZW50aWNhdGlvbiwgd2h5DQpnbyB0aHJvdWdoIHRoZSB0cm91YmxlIHRvIGZpdCBldmVyeW9uZSBp
-bnRvIHRoZSBzYW1lIGNsYXNzPw0KDQo+IA0KPiA+IExhc3RseSBJIHdhbnQgdG8gY2F1dGlvbiB0
-aGF0IGluZGl2aWR1YWwgZmlybXdhcmUgaXRlbXMgd2l0aCB0aGUgc2FtZSBuYW1lDQo+IG1pZ2h0
-IGhhdmUNCj4gPiBhIGRpZmZlcmVudCBtZWFuaW5nIGFjcm9zcyB2ZW5kb3JzLiAgSGVyZSBpcyBt
-eSBoeXBvdGhldGljYWwgZXhhbXBsZToNCj4gPg0KPiA+IERlbGwgaGFzIGFuIGF0dHJpYnV0ZSBj
-YWxsZWQgIkNhbWVyYSIgIFdpdGggVjMgaXQgcG9wdWxhdGVzIHVuZGVyOg0KPiA+IC9zeXMvZGV2
-aWNlcy9wbGF0Zm9ybS9kZWxsLXdtaS1zeXNtYW4vYXR0cmlidXRlcy9DYW1lcmENCj4gPg0KPiA+
-IFRoZSBkZXNjcmlwdGlvbiBzeXNmcyBmb3IgaXQgcmVhZHMgYXMgIkVuYWJsZSBDYW1lcmEiIGFu
-ZCBpdCdzIHBvc3NpYmxlDQo+IHZhbHVlcyBhcmUNCj4gPiAiRGlzYWJsZWQ7RW5hYmxlZDsiLiAg
-Rm9yIERlbGwgdGhpcyBpcyBwcmV0dHkgb2J2aW91c2x5IGl0IHR1cm5zIG9uIGFuZCBvZmYNCj4g
-dGhlIGNhbWVyYQ0KPiA+IGZ1bmN0aW9uYWxpdHkuDQo+ID4NCj4gPiBGb3IgYW5vdGhlciB2ZW5k
-b3IgdGhleSBtaWdodCBhY3R1YWxseSBub3Qgb2ZmZXIgdG8gZW5hYmxlL2Rpc2FibGUgdGhlDQo+
-IGNhbWVyYSBidXQgaW5zdGVhZA0KPiA+IFRvIGVuYWJsZSB0aGUgY29udHJvbCBvZiBhbiBlbGVj
-dHJvbWFnbmV0aWMgY2FtZXJhIHNodXR0ZXIgZnJvbSBzdWNoIGFuDQo+IGF0dHJpYnV0ZS4NCj4g
-PiBUaGVpciBhdHRyaWJ1dGUgY291bGQgc3RpbGwgYmUgY2FsbGVkICJDYW1lcmEiIGJ1dCB0aGUg
-ZGVzY3JpcHRpb24gbWlnaHQNCj4gcmVhZCBhcw0KPiA+ICJFbmFibGUgY2FtZXJhIHNodXR0ZXIg
-Y29udHJvbCIuICBGb3IgdGhlbSBpdCB3b3VsZCBzdGlsbCByZWFkIGFzDQo+ICJEaXNhYmxlZDtF
-bmFibGVkOyINCj4gPiBmb3IgcG9zc2libGUgdmFsdWVzIGJ1dCBoYXZlIGEgY29tcGxldGVseSBk
-aWZmZXJlbnQgbWVhbmluZyENCj4gPg0KPiA+IFRoZXJlIGlzIG5vIHN0YW5kYXJkIGZvciB0aGlz
-LCBhbmQgYWdhaW4gdXNlcnNwYWNlIHdpbGwgbmVlZCB0byBiYXNpY2FsbHkNCj4gbG9vayBhdA0K
-PiA+IHRoZSBkaXJlY3RvcnkgYW5kIHN0cnVjdHVyZSB0byBmaWd1cmUgb3V0IHdoYXQgdGhlIG1l
-YW5pbmcgYWN0dWFsbHkgaXMuDQo+IA0KPiBJIGNhbiBlbnZpc2lvbiBzaW1pbGFyIGlzc3VlcyBw
-b3BwaW5nIHVwIGJldHdlZW4gZGlmZmVyZW50IGdlbmVyYXRpb25zIC8NCj4gbW9kZWxzDQo+IG9m
-IERlbGwgaGFyZHdhcmUgZXZlbi4gDQoNCkRlbGwgaGFzIGFuIGludGVybmFsIGNvbW1pdHRlZSB0
-aGF0IG92ZXJzZWVzIHRoZSBhdHRyaWJ1dGUgcmVnaXN0cnkuICBOb3QgYWxsIHBsYXRmb3Jtcw0K
-d2lsbCBleHBvc2UgdGhlIHNhbWUgYXR0cmlidXRlcy4gIEFjcm9zcyBnZW5lcmF0aW9ucyBkaWZm
-ZXJlbnQgc2V0cyBvZiBhdHRyaWJ1dGVzIHdpbGwNCmJlIGV4cG9zZWQgYmFzZWQgdXBvbiB3aGF0
-IHRoZXkgZG8uDQoNClNvIHVzZXJzcGFjZSB3b3VsZCBiZSBhYmxlIHRvIGxvb2sgYXQgL3N5cy9k
-ZXZpY2VzL3BsYXRmb3JtL2RlbGwtd21pLXN5c21hbi9hdHRyaWJ1dGVzL0NhbWVyYQ0KYW5kIGtu
-b3cgaXQncyB0dXJuaW5nIG9uL29mZiBjYW1lcmEgb24gYSBEZWxsIHN5c3RlbS4NCg0KPlNwZWNp
-Znlpbmcgd2hhdCBjaGFuZ2luZyB0aGUgYXR0cmlidXRlcyBhY3R1YWxseSBkb2VzDQo+IGZhbGxz
-DQo+ICh3YXkpIG91dHNpZGUgb2YgdGhlIHNjb3BlIG9mIHRoZSBzeXNmcyBBQkkgSU1ITy4gVGhh
-dCB3aWxsIGFsd2F5cyBiZSB0aGUgY2FzZQ0KPiBvZiBwbGVhc2UgY29uc3VsdCB5b3VyIExhcHRv
-cCdzIC8gV29ya3N0YXRpb24ncyAvIFNlcnZlcidzIG1hbnVhbC4NCj4gVGhhdCBpcyBhY3R1YWxs
-eSBub3QgbXVjaCBkaWZmZXJlbnQgZnJvbSB0aGUgY3VycmVudCBidWlsdGluDQo+IGZpcm13YXJl
-IHNldHVwIHV0aWxpdHkgZXhwZXJpZW5jZSB3aGVyZSB0aGUgaGVscCB0ZXh0IGlzIG9mdGVuLA0K
-PiB3ZWxsLCBub3QgaGVscGZ1bC4NCj4gDQo+IEZvciBhbGwgSSBjYXJlIHRoZXJlIGlzIGFuIGVu
-dW0gY2FsbGVkICJIV3ZpcnQiIHdpdGggYSBkZXNjcmlwdGlvbiBvZg0KPiAiSGFyZHdhcmUgdmly
-dHVhbGl6YXRpb24gc3VwcG9ydCIgYW5kIHZhbHVlcyBvZiAiRW5hYmxlZCIgYW5kICJEaXNhYmxl
-ZCINCj4gd2hpY2ggY29udHJvbHMgc29tZXRoaW5nIHNvbWV3aGF0IG9yIGV2ZW4gdG90YWxseSBk
-aWZmZXJlbnQgZnJvbSB3aGF0IHRoZQ0KPiBuYW1lIGFuZCBkZXNjcmlwdGlvbiBzdWdnZXN0LiBU
-aGF0IHdvdWxkIGJlIGxlc3MgdGhlbiBpZGVhbCwgYnV0IG5vdCBhIHByb2JsZW0NCj4gZnJvbSB0
-aGUgcG92IG9mIHRoZSBzeXNmcyBBQkkgZm9yIGZpcm13YXJlLWF0dHJpYnV0ZXMuIEl0IHdvdWxk
-IGJlIGEgc2ltcGxlDQo+IGNhc2Ugb2YgdGhlIGdhcmJhZ2UgaW4gZ2FyYmFnZSBvdXQgcHJpbmNp
-cGxlLg0KPiANCj4gU28gdGhpcyBpcyBvbmUgcHJvYmxlbSB3aGljaCBJJ20gaGFwcHkgdG8gcHVu
-dCB0byB1c2Vyc3BhY2UgYW5kIEkgZ3Vlc3MgRGVsbA0KPiBtaWdodCBkbyBhIERlbGwgc3BlY2lm
-aWMgdXRpbGl0eSwgd2hpY2ggb25seSB3b3JrcyBvbmUgY2VydGFpbiBtb2RlbCBEZWxsJ3MsDQo+
-IHdoaWNoIGlzIGEgbG90IGZhbmNpZXIgdGhlbiB0aGUgYmFzaWMgc3lzZnMgZnVuY3Rpb25hbGl0
-eSBhbmQgZS5nLiBjb25zdW1lcw0KPiB0aGUgZGVsbC12YWx1ZV9tb2RpZmllciBhbmQgZGVsbC1t
-b2RpZmllciBzeXNmcy1hdHRyaWJ1cmVzLg0KDQpUaGUgZ29hbCBoZXJlIGlzIHRoYXQgYWxsIG9m
-IHRoZSBmdW5jdGlvbmFsaXR5IHRoYXQgd291bGQgb3RoZXJ3aXNlIGJlIGV4cHJlc3NlZA0KaW4g
-YSBwcm9wcmlldGFyeSB1dGlsaXR5IGNvdWxkIGFsc28gYmUgZXhwcmVzc2VkIGluIHN5c2ZzLiAg
-SGF2aW5nIHRvIGRlLWZlYXR1cmUNCnRoZSBzeXNmcyBpbnRlcmZhY2UgZm9yIHRoZSBwdXJwb3Nl
-IG9mIGZpdHRpbmcgaW50byB3aGF0J3MgZ2VuZXJpYyBhY3Jvc3MgdmVuZG9ycw0KZGVmZWF0cyB0
-aGF0IGdvYWwgYW5kIGlzIHdoeSBJIHRoaW5rIGl0IHNob3VsZCBiZSBhIERlbGwgaW50ZXJmYWNl
-IGluIHRoZSBmaXJzdA0KcGxhY2UuDQoNCj4gDQo+IFRoZSBwdXJwb3NlIGJlaGluZCBoYXZpbmcg
-YSB1bmlmaWVkIHVzZXJzcGFjZSBBQkkgaXMgdG8gZS5nLiBhbGxvdyBjb25maWd1cmluZw0KPiBm
-aXJtd2FyZSBzZXR0aW5ncyBmb3IgYSBmbGVldCBvZiBtYWNoaW5lcyBmcm9tOg0KPiANCj4gaHR0
-cHM6Ly93aWtpLmdub21lLm9yZy9Qcm9qZWN0cy9GbGVldENvbW1hbmRlcg0KPiANCj4gVXNpbmcg
-YSBnZW5lcmljIHBsdWdpbiB3aGljaCB3b3JrcyBhY3Jvc3MgZGlmZmVyZW50IHZlbmRvcnMuDQo+
-IA0KDQpDb25jZXB0dWFsbHkgdGhpcyBtYWtlcyBncmVhdCBzZW5zZSB1bnRpbCB5b3UgZGlnIGlu
-dG8gZGV0YWlscy4gIEluIGFkZGl0aW9uIHRvIHRoZQ0KdGhpbmdzIEkndmUgb3V0bGluZWQgYWJv
-dmUgaGVyZSdzIGEgZmV3IG1vcmUgcGxhY2VzIHRoYXQgbWlnaHQgYnJlYWs6DQoNCiogQXR0cmli
-dXRlIG5hbWluZyB3b24ndCBiZSB0aGUgc2FtZSBhY3Jvc3MgdmVuZG9ycy4gIFRvIG15IHBvaW50
-IHdpdGggQ2FtZXJhIGFib3ZlDQogIHdoYXQgaWYgTGVub3ZvIERPRVMgc3VwcG9ydCBhIGNhbWVy
-YSBjb250cm9sIGFuZCBjYWxscyB0aGVpciB2YWx1ZSBFbmFibGVDYW1lcmE/DQogIFlvdSBjb3Vs
-ZG4ndCBoYXZlIGEgc2luZ2xlIHNldHRpbmcgYWNyb3NzIHZlbmRvcnMgaW4geW91ciBmbGVldCBh
-bmQgbmVlZCB0byBjYXJyeQ0KICBzb21lIGxvZ2ljIGluIHlvdXIgcGx1Z2luIGFueXdheSB0byBz
-YXkgaWYgRGVsbDogQ2FtZXJhIGlmIExlbm92bzogRW5hYmxlQ2FtZXJhLg0KDQoqIHlvdSBjb3Vs
-ZCBydW4gaW50byBzaXR1YXRpb25zIHRoYXQgRGVsbCdzIGZpcm13YXJlIGFjY2VwdHMgY2VydGFp
-biByZXF1aXJlbWVudHMNCiAgZm9yIHBhc3N3b3JkIGxlbmd0aCBvciBjb21wbGV4aXR5IHRoYXQg
-YXJlbid0IHByZXNlbnQgaW4gYW5vdGhlciBmaXJtd2FyZSBzbyB5b3UNCiAgY2FuJ3QgdXNlIHRo
-ZSBzYW1lIHBhc3N3b3JkIGZvciB5b3VyIHdob2xlIGZsZWV0DQoNCj4gQW5kIG1heWJlIGhhdmUg
-YSBzaW1wbGUgdmVuZG9yLWFnbm9zdGljIHB5Z3RrMyBVSSB3aGljaCBhbGxvd3MgdXNlcnMgdG8N
-Cj4gcG9rZSBhdCB0aGluZ3MsIGV2ZW4gaWYgdGhleSBoYXZlIHRvIGZpZ3VyZSBvdXQgaW4gd2hp
-Y2ggb3JkZXIgdGhleSBuZWVkDQo+IHRvIGNoYW5nZSB0aGluZ3MgaW4gc29tZSBjYXNlcyAod2hp
-Y2ggYWdhaW4gaXMgYWN0dWFsbHkgbm90IHRoYXQNCj4gZGlmZmVyZW50IGZyb20gdGhlIGN1cnJl
-bnQgYnVpbHRpbiBmaXJtd2FyZSBzZXR1cCB1dGlsaXR5IGV4cGVyaWVuY2UNCj4gZm9yIGEgbG90
-IG9mIHZlbmRvcnMpLg0KPiANCj4gSSBndWVzcyBhIGNvdWxkIHdheSB0byBsb29rIGF0IHRoZSBn
-ZW5lcmljIHN5c2ZzIGZpcm13YXJlIGF0dHJpYnV0ZXMNCj4gY2xhc3MgSSdtIHByb3Bvc2luZyBp
-cyBsb29raW5nIGF0IGl0IGFzIGEgbG93ZXN0IGNvbW1vbiBkZW5vbWluYXRvcg0KPiBzb2x1dGlv
-bi4gV2l0aCB0aGUgYWRkaXRpb24gb2YgdmVuZG9yIHNwZWNpZmljIGV4dGVuc2lvbnMgc28gdGhh
-dA0KPiB2ZW5kb3JzIChlLmcuIERlbGwpIGFyZSBub3QgbGltaXRlZCB0byBvbmx5IG9mZmVyaW5n
-IGZ1bmN0aW9uYWxpdHkNCj4gb2ZmZXJlZCBieSB0aGUgZ2VuZXJpYywgc2hhcmVkIEFCSS4gRG9l
-cyB0aGF0IG1ha2Ugc2Vuc2UgPw0KPiANCj4gUmVnYXJkcywNCj4gDQoNCkkgcmVhbGx5IHRoaW5r
-IHRoYXQgdHJ5aW5nIHRvIGZpdCBhbGwgdGhlIHZlbmRvcnMgaW50byB0aGUgc2FtZSBpbnRlcmZh
-Y2UgaXMgZ29pbmcNCnRvIHN0aWZsZSBhcmVhcyBmb3IgaW5ub3ZhdGlvbiBpbiB0aGUgZmlybXdh
-cmUgYW5kIGtlcm5lbCBzcGFjZSBpbiB0aGUgbmFtZSBvZg0KInNpbXBsaWNpdHkiIHdoaWNoIHJl
-YWxseSBvbmx5IGdvZXMgYXMgZmFyIGFzIHRoZSBrZXJuZWwgc2lkZS4gIFVzZXJzcGFjZSBoYXMN
-CnRvIGNhcnJ5IGRlbHRhIGJldHdlZW4gdmVuZG9ycyBubyBtYXR0ZXIgd2hhdCwgc28gd2h5IGlu
-dHJvZHVjZSBhIExDRCB0aGVuPw0KDQpKdXN0IGFzIGVhc2lseSB3ZSBjb3VsZCBoYXZlOg0KL3N5
-cy9kZXZpY2VzL3BsYXRmb3JtL2RlbGwtd21pLXN5c21hbi9hdHRyaWJ1dGVzLw0KDQpXaGljaCB3
-b3JrcyA5MCUgdGhlIHNhbWUgYXM6DQovc3lzL2RldmljZXMvcGxhdGZvcm0vbGVub3ZvLXdtaS1z
-eXNtYW4vYXR0cmlidXRlcy8NCg0K
+On Fri, Sep 04, 2020 at 09:31:05PM -0400, Lenny Szubowicz wrote:
+> Because of system-specific EFI firmware limitations, EFI volatile
+> variables may not be capable of holding the required contents of
+> the Machine Owner Key (MOK) certificate store when the certificate
+> list grows above some size. Therefore, an EFI boot loader may pass
+> the MOK certs via a EFI configuration table created specifically for
+> this purpose to avoid this firmware limitation.
+> 
+> An EFI configuration table is a much more primitive mechanism
+> compared to EFI variables and is well suited for one-way passage
+> of static information from a pre-OS environment to the kernel.
+> 
+> This patch adds initial kernel support to recognize, parse,
+> and validate the EFI MOK configuration table, where named
+> entries contain the same data that would otherwise be provided
+> in similarly named EFI variables.
+> 
+> Additionally, this patch creates a sysfs binary file for each
+> EFI MOK configuration table entry found. These files are read-only
+> to root and are provided for use by user space utilities such as
+> mokutil.
+> 
+> A subsequent patch will load MOK certs into the trusted platform
+> key ring using this infrastructure.
+> 
+> Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
+> ---
+>  arch/x86/kernel/setup.c             |   1 +
+>  arch/x86/platform/efi/efi.c         |   3 +
+>  drivers/firmware/efi/Makefile       |   1 +
+>  drivers/firmware/efi/arm-init.c     |   1 +
+>  drivers/firmware/efi/efi.c          |   6 +
+>  drivers/firmware/efi/mokvar-table.c | 360 ++++++++++++++++++++++++++++
+>  include/linux/efi.h                 |  34 +++
+>  7 files changed, 406 insertions(+)
+>  create mode 100644 drivers/firmware/efi/mokvar-table.c
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 3511736fbc74..d41be0df72f8 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -1077,6 +1077,7 @@ void __init setup_arch(char **cmdline_p)
+>  	efi_fake_memmap();
+>  	efi_find_mirror();
+>  	efi_esrt_init();
+> +	efi_mokvar_table_init();
+>  
+>  	/*
+>  	 * The EFI specification says that boot service code won't be
+> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+> index d37ebe6e70d7..8a26e705cb06 100644
+> --- a/arch/x86/platform/efi/efi.c
+> +++ b/arch/x86/platform/efi/efi.c
+> @@ -90,6 +90,9 @@ static const unsigned long * const efi_tables[] = {
+>  	&efi.tpm_log,
+>  	&efi.tpm_final_log,
+>  	&efi_rng_seed,
+> +#ifdef CONFIG_LOAD_UEFI_KEYS
+> +	&efi.mokvar_table,
+> +#endif
+>  };
+>  
+>  u64 efi_setup;		/* efi setup_data physical address */
+> diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
+> index 7a216984552b..03964e2d27c5 100644
+> --- a/drivers/firmware/efi/Makefile
+> +++ b/drivers/firmware/efi/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_EFI_DEV_PATH_PARSER)	+= dev-path-parser.o
+>  obj-$(CONFIG_APPLE_PROPERTIES)		+= apple-properties.o
+>  obj-$(CONFIG_EFI_RCI2_TABLE)		+= rci2-table.o
+>  obj-$(CONFIG_EFI_EMBEDDED_FIRMWARE)	+= embedded-firmware.o
+> +obj-$(CONFIG_LOAD_UEFI_KEYS)		+= mokvar-table.o
+>  
+>  fake_map-y				+= fake_mem.o
+>  fake_map-$(CONFIG_X86)			+= x86_fake_mem.o
+> diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
+> index 71c445d20258..f55a92ff12c0 100644
+> --- a/drivers/firmware/efi/arm-init.c
+> +++ b/drivers/firmware/efi/arm-init.c
+> @@ -236,6 +236,7 @@ void __init efi_init(void)
+>  
+>  	reserve_regions();
+>  	efi_esrt_init();
+> +	efi_mokvar_table_init();
+>  
+>  	memblock_reserve(data.phys_map & PAGE_MASK,
+>  			 PAGE_ALIGN(data.size + (data.phys_map & ~PAGE_MASK)));
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 3aa07c3b5136..3d4daf215e19 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -43,6 +43,9 @@ struct efi __read_mostly efi = {
+>  	.esrt			= EFI_INVALID_TABLE_ADDR,
+>  	.tpm_log		= EFI_INVALID_TABLE_ADDR,
+>  	.tpm_final_log		= EFI_INVALID_TABLE_ADDR,
+> +#ifdef CONFIG_LOAD_UEFI_KEYS
+> +	.mokvar_table		= EFI_INVALID_TABLE_ADDR,
+> +#endif
+>  };
+>  EXPORT_SYMBOL(efi);
+>  
+> @@ -518,6 +521,9 @@ static const efi_config_table_type_t common_tables[] __initconst = {
+>  	{EFI_RT_PROPERTIES_TABLE_GUID,		&rt_prop,		"RTPROP"	},
+>  #ifdef CONFIG_EFI_RCI2_TABLE
+>  	{DELLEMC_EFI_RCI2_TABLE_GUID,		&rci2_table_phys			},
+> +#endif
+> +#ifdef CONFIG_LOAD_UEFI_KEYS
+> +	{LINUX_EFI_MOK_VARIABLE_TABLE_GUID,	&efi.mokvar_table,	"MOKvar"	},
+>  #endif
+>  	{},
+>  };
+> diff --git a/drivers/firmware/efi/mokvar-table.c b/drivers/firmware/efi/mokvar-table.c
+> new file mode 100644
+> index 000000000000..f12f1710f5d9
+> --- /dev/null
+> +++ b/drivers/firmware/efi/mokvar-table.c
+> @@ -0,0 +1,360 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * mokvar-table.c
+> + *
+> + * Copyright (c) 2020 Red Hat
+> + * Author: Lenny Szubowicz <lszubowi@redhat.com>
+> + *
+> + * This module contains the kernel support for the Linux EFI Machine
+> + * Owner Key (MOK) variable configuration table, which is identified by
+> + * the LINUX_EFI_MOK_VARIABLE_TABLE_GUID.
+> + *
+> + * This EFI configuration table provides a more robust alternative to
+> + * EFI volatile variables by which an EFI boot loader can pass the
+> + * contents of the Machine Owner Key (MOK) certificate stores to the
+> + * kernel during boot. If both the EFI MOK config table and corresponding
+> + * EFI MOK variables are present, the table should be considered as
+> + * more authoritative.
+> + *
+> + * This module includes code that validates and maps the EFI MOK table,
+> + * if it's presence was detected very early in boot.
+> + *
+> + * Kernel interface routines are provided to walk through all the
+> + * entries in the MOK config table or to search for a specific named
+> + * entry.
+> + *
+> + * The contents of the individual named MOK config table entries are
+> + * made available to user space via read-only sysfs binary files under:
+> + *
+> + * /sys/firmware/efi/mok-variables/
+> + *
+> + */
+> +#define pr_fmt(fmt) "mokvar: " fmt
+> +
+> +#include <linux/capability.h>
+> +#include <linux/efi.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/kobject.h>
+> +#include <linux/list.h>
+> +#include <linux/slab.h>
+> +
+> +/*
+> + * The LINUX_EFI_MOK_VARIABLE_TABLE_GUID config table is a packed
+> + * sequence of struct efi_mokvar_table_entry, one for each named
+> + * MOK variable. The sequence is terminated by an entry with a
+> + * completely NULL name and 0 data size.
+> + *
+> + * efi_mokvar_table_size is set to the computed size of the
+> + * MOK config table by efi_mokvar_table_init(). This will be
+> + * non-zero if and only if the table if present and has been
+> + * validated by efi_mokvar_table_init().
+> + */
+> +static size_t efi_mokvar_table_size;
+> +
+> +/*
+> + * efi_mokvar_table_va is the kernel virtual address at which the
+> + * EFI MOK config table has been mapped by efi_mokvar_sysfs_init().
+> + */
+> +static struct efi_mokvar_table_entry *efi_mokvar_table_va;
+> +
+> +/*
+> + * Each /sys/firmware/efi/mok-variables/ sysfs file is represented by
+> + * an instance of struct efi_mokvar_sysfs_attr on efi_mokvar_sysfs_list.
+> + * bin_attr.private points to the associated EFI MOK config table entry.
+> + *
+> + * This list is created during boot and then remains unchanged.
+> + * So no sychronization is currently required to walk the list.
+> + */
+> +struct efi_mokvar_sysfs_attr {
+> +	struct bin_attribute bin_attr;
+> +	struct list_head node;
+> +};
+> +
+> +static LIST_HEAD(efi_mokvar_sysfs_list);
+> +static struct kobject *mokvar_kobj;
+> +
+> +/*
+> + * efi_mokvar_table_init() - Early boot validation of EFI MOK config table
+> + *
+> + * If present, validate and compute the size of the EFI MOK variable
+> + * configuration table. This table may be provided by an EFI boot loader
+> + * as an alternative to ordinary EFI variables, due to platform-dependent
+> + * limitations. The memory occupied by this table is marked as reserved.
+> + *
+> + * This routine must be called before efi_free_boot_services() in order
+> + * to guarantee that it can mark the table as reserved.
+> + *
+> + * Implicit inputs:
+> + * efi.mokvar_table:	Physical address of EFI MOK variable config table
+> + *			or special value that indicates no such table.
+> + *
+> + * Implicit outputs:
+> + * efi_mokvar_table_size: Computed size of EFI MOK variable config table.
+> + *			The table is considered present and valid if this
+> + *			is non-zero.
+> + */
+> +void __init efi_mokvar_table_init(void)
+> +{
+> +	efi_memory_desc_t md;
+> +	u64 end_pa;
+> +	void *va = NULL;
+> +	size_t cur_offset = 0;
+> +	size_t offset_limit;
+> +	size_t map_size = 0;
+> +	size_t map_size_needed = 0;
+> +	size_t size;
+> +	struct efi_mokvar_table_entry *mokvar_entry;
+> +	int err = -EINVAL;
+> +
+> +	if (!efi_enabled(EFI_MEMMAP))
+> +		return;
+> +
+> +	if (efi.mokvar_table == EFI_INVALID_TABLE_ADDR)
+> +		return;
+> +	/*
+> +	 * The EFI MOK config table must fit within a single EFI memory
+> +	 * descriptor range.
+> +	 */
+> +	err = efi_mem_desc_lookup(efi.mokvar_table, &md);
+> +	if (err) {
+> +		pr_warn("EFI MOKvar config table is not within the EFI memory map\n");
+> +		return;
+> +	}
+> +	end_pa = efi_mem_desc_end(&md);
+> +	if (efi.mokvar_table >= end_pa) {
+> +		pr_err("EFI memory descriptor containing MOKvar config table is invalid\n");
+> +		return;
+> +	}
+
+efi_mem_desc_lookup() can't return success if efi.mokvar_table >= end_pa, 
+why check it again?
+
+> +	offset_limit = end_pa - efi.mokvar_table;
+> +	/*
+> +	 * Validate the MOK config table. Since there is no table header
+> +	 * from which we could get the total size of the MOK config table,
+> +	 * we compute the total size as we validate each variably sized
+> +	 * entry, remapping as necessary.
+> +	 */
+> +	while (cur_offset + sizeof(*mokvar_entry) <= offset_limit) {
+> +		mokvar_entry = va + cur_offset;
+> +		map_size_needed = cur_offset + sizeof(*mokvar_entry);
+> +		if (map_size_needed > map_size) {
+> +			if (va)
+> +				early_memunmap(va, map_size);
+> +			/*
+> +			 * Map a little more than the fixed size entry
+> +			 * header, anticipating some data. It's safe to
+> +			 * do so as long as we stay within current memory
+> +			 * descriptor.
+> +			 */
+> +			map_size = min(map_size_needed + 2*EFI_PAGE_SIZE,
+> +				       offset_limit);
+> +			va = early_memremap(efi.mokvar_table, map_size);
+
+Can't we just map the entire region from efi.mokvar_table to end_pa in
+one early_memremap call before the loop and avoid all the remapping
+logic?
+
+> +			if (!va) {
+> +				pr_err("Failed to map EFI MOKvar config table pa=0x%lx, size=%zu.\n",
+> +				       efi.mokvar_table, map_size);
+> +				return;
+> +			}
+> +			mokvar_entry = va + cur_offset;
+> +		}
+> +
+> +		/* Check for last sentinel entry */
+> +		if (mokvar_entry->name[0] == '\0') {
+> +			if (mokvar_entry->data_size != 0)
+> +				break;
+> +			err = 0;
+> +			break;
+> +		}
+> +
+> +		/* Sanity check that the name is null terminated */
+> +		size = strnlen(mokvar_entry->name,
+> +			       sizeof(mokvar_entry->name));
+> +		if (size >= sizeof(mokvar_entry->name))
+> +			break;
+> +
+> +		/* Advance to the next entry */
+> +		cur_offset = map_size_needed + mokvar_entry->data_size;
+> +	}
+> +
+> +	if (va)
+> +		early_memunmap(va, map_size);
+> +	if (err) {
+> +		pr_err("EFI MOKvar config table is not valid\n");
+> +		return;
+> +	}
+
+err will never be non-zero here: it was cleared when the
+efi_mem_desc_lookup() was done. I think the initialization of err to
+-EINVAL needs to be moved just prior to the loop.
+
+> +	efi_mem_reserve(efi.mokvar_table, map_size_needed);
+> +	efi_mokvar_table_size = map_size_needed;
+> +}
+> +
+> +/*
+> + * efi_mokvar_entry_next() - Get next entry in the EFI MOK config table
+> + *
+> + * mokvar_entry:	Pointer to current EFI MOK config table entry
+> + *			or null. Null indicates get first entry.
+> + *			Passed by reference. This is updated to the
+> + *			same value as the return value.
+> + *
+> + * Returns:		Pointer to next EFI MOK config table entry
+> + *			or null, if there are no more entries.
+> + *			Same value is returned in the mokvar_entry
+> + *			parameter.
+> + *
+> + * This routine depends on the EFI MOK config table being entirely
+> + * mapped with it's starting virtual address in efi_mokvar_table_va.
+> + */
+> +struct efi_mokvar_table_entry *efi_mokvar_entry_next(
+> +			struct efi_mokvar_table_entry **mokvar_entry)
+> +{
+> +	struct efi_mokvar_table_entry *mokvar_cur;
+> +	struct efi_mokvar_table_entry *mokvar_next;
+> +	size_t size_cur;
+> +
+> +	mokvar_cur = *mokvar_entry;
+> +	*mokvar_entry = NULL;
+> +
+> +	if (efi_mokvar_table_va == NULL)
+> +		return NULL;
+> +
+> +	if (mokvar_cur == NULL) {
+> +		mokvar_next = efi_mokvar_table_va;
+> +	} else {
+> +		if (mokvar_cur->name[0] == '\0')
+> +			return NULL;
+> +		size_cur = sizeof(*mokvar_cur) + mokvar_cur->data_size;
+> +		mokvar_next = (void *)mokvar_cur + size_cur;
+> +	}
+> +
+> +	if (mokvar_next->name[0] == '\0')
+> +		return NULL;
+> +
+> +	*mokvar_entry = mokvar_next;
+> +	return mokvar_next;
+> +}
+> +
+> +/*
+> + * efi_mokvar_entry_find() - Find EFI MOK config entry by name
+> + *
+> + * name:	Name of the entry to look for.
+> + *
+> + * Returns:	Pointer to EFI MOK config table entry if found;
+> + *		null otherwise.
+> + *
+> + * This routine depends on the EFI MOK config table being entirely
+> + * mapped with it's starting virtual address in efi_mokvar_table_va.
+> + */
+> +struct efi_mokvar_table_entry *efi_mokvar_entry_find(const char *name)
+> +{
+> +	struct efi_mokvar_table_entry *mokvar_entry = NULL;
+> +
+> +	while (efi_mokvar_entry_next(&mokvar_entry)) {
+> +		if (!strncmp(name, mokvar_entry->name,
+> +			     sizeof(mokvar_entry->name)))
+> +			return mokvar_entry;
+> +	}
+> +	return NULL;
+> +}
+> +
+> +/*
+> + * efi_mokvar_sysfs_read() - sysfs binary file read routine
+> + *
+> + * Returns:	Count of bytes read.
+> + *
+> + * Copy EFI MOK config table entry data for this mokvar sysfs binary file
+> + * to the supplied buffer, starting at the specified offset into mokvar table
+> + * entry data, for the specified count bytes. The copy is limited by the
+> + * amount of data in this mokvar config table entry.
+> + */
+> +static ssize_t efi_mokvar_sysfs_read(struct file *file, struct kobject *kobj,
+> +				 struct bin_attribute *bin_attr, char *buf,
+> +				 loff_t off, size_t count)
+> +{
+> +	struct efi_mokvar_table_entry *mokvar_entry = bin_attr->private;
+> +
+> +	if (!capable(CAP_SYS_ADMIN))
+> +		return 0;
+> +
+> +	if (off >= mokvar_entry->data_size)
+> +		return 0;
+> +	if (count >  mokvar_entry->data_size - off)
+> +		count = mokvar_entry->data_size - off;
+> +
+> +	memcpy(buf, mokvar_entry->data + off, count);
+> +	return count;
+> +}
+> +
+> +/*
+> + * efi_mokvar_sysfs_init() - Map EFI MOK config table and create sysfs
+> + *
+> + * Map the EFI MOK variable config table for run-time use by the kernel
+> + * and create the sysfs entries in /sys/firmware/efi/mok-variables/
+> + *
+> + * This routine just returns if a valid EFI MOK variable config table
+> + * was not found earlier during boot.
+> + *
+> + * This routine must be called during a "middle" initcall phase, i.e.
+> + * after efi_mokvar_table_init() but before UEFI certs are loaded
+> + * during late init.
+> + *
+> + * Implicit inputs:
+> + * efi.mokvar_table:	Physical address of EFI MOK variable config table
+> + *			or special value that indicates no such table.
+> + *
+> + * efi_mokvar_table_size: Computed size of EFI MOK variable config table.
+> + *			The table is considered present and valid if this
+> + *			is non-zero.
+> + *
+> + * Implicit outputs:
+> + * efi_mokvar_table_va:	Start virtual address of the EFI MOK config table.
+> + */
+> +static int __init efi_mokvar_sysfs_init(void)
+> +{
+> +	void *config_va;
+> +	struct efi_mokvar_table_entry *mokvar_entry = NULL;
+> +	struct efi_mokvar_sysfs_attr *mokvar_sysfs = NULL;
+> +	int err = 0;
+> +
+> +	if (efi_mokvar_table_size == 0)
+> +		return -ENOENT;
+> +
+> +	config_va = memremap(efi.mokvar_table, efi_mokvar_table_size,
+> +			     MEMREMAP_WB);
+> +	if (!config_va) {
+> +		pr_err("Failed to map EFI MOKvar config table\n");
+> +		return -ENOMEM;
+> +	}
+> +	efi_mokvar_table_va = config_va;
+> +
+> +	mokvar_kobj = kobject_create_and_add("mok-variables", efi_kobj);
+> +	if (!mokvar_kobj) {
+> +		pr_err("Failed to create EFI mok-variables sysfs entry\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	while (efi_mokvar_entry_next(&mokvar_entry)) {
+> +		mokvar_sysfs = kzalloc(sizeof(*mokvar_sysfs), GFP_KERNEL);
+> +		if (!mokvar_sysfs) {
+> +			err = -ENOMEM;
+> +			break;
+> +		}
+> +
+> +		sysfs_bin_attr_init(&mokvar_sysfs->bin_attr);
+> +		mokvar_sysfs->bin_attr.private = mokvar_entry;
+> +		mokvar_sysfs->bin_attr.attr.name = mokvar_entry->name;
+> +		mokvar_sysfs->bin_attr.attr.mode = 0400;
+> +		mokvar_sysfs->bin_attr.size = mokvar_entry->data_size;
+> +		mokvar_sysfs->bin_attr.read = efi_mokvar_sysfs_read;
+> +
+> +		err = sysfs_create_bin_file(mokvar_kobj,
+> +					   &mokvar_sysfs->bin_attr);
+> +		if (err)
+> +			break;
+> +
+> +		list_add_tail(&mokvar_sysfs->node, &efi_mokvar_sysfs_list);
+> +	}
+> +
+> +	if (err) {
+> +		pr_err("Failed to create some EFI mok-variables sysfs entries\n");
+> +		kfree(mokvar_sysfs);
+> +	}
+> +	return err;
+> +}
+> +device_initcall(efi_mokvar_sysfs_init);
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index 73db1ae04cef..4a2332f146eb 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -357,6 +357,7 @@ void efi_native_runtime_setup(void);
+>  #define LINUX_EFI_TPM_FINAL_LOG_GUID		EFI_GUID(0x1e2ed096, 0x30e2, 0x4254,  0xbd, 0x89, 0x86, 0x3b, 0xbe, 0xf8, 0x23, 0x25)
+>  #define LINUX_EFI_MEMRESERVE_TABLE_GUID		EFI_GUID(0x888eb0c6, 0x8ede, 0x4ff5,  0xa8, 0xf0, 0x9a, 0xee, 0x5c, 0xb9, 0x77, 0xc2)
+>  #define LINUX_EFI_INITRD_MEDIA_GUID		EFI_GUID(0x5568e427, 0x68fc, 0x4f3d,  0xac, 0x74, 0xca, 0x55, 0x52, 0x31, 0xcc, 0x68)
+> +#define LINUX_EFI_MOK_VARIABLE_TABLE_GUID	EFI_GUID(0xc451ed2b, 0x9694, 0x45d3,  0xba, 0xba, 0xed, 0x9f, 0x89, 0x88, 0xa3, 0x89)
+>  
+>  /* OEM GUIDs */
+>  #define DELLEMC_EFI_RCI2_TABLE_GUID		EFI_GUID(0x2d9f28a2, 0xa886, 0x456a,  0x97, 0xa8, 0xf1, 0x1e, 0xf2, 0x4f, 0xf4, 0x55)
+> @@ -546,6 +547,7 @@ extern struct efi {
+>  	unsigned long			esrt;			/* ESRT table */
+>  	unsigned long			tpm_log;		/* TPM2 Event Log table */
+>  	unsigned long			tpm_final_log;		/* TPM2 Final Events Log table */
+> +	unsigned long			mokvar_table;		/* MOK variable config table */
+>  
+>  	efi_get_time_t			*get_time;
+>  	efi_set_time_t			*set_time;
+> @@ -1252,4 +1254,36 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size);
+>  
+>  char *efi_systab_show_arch(char *str);
+>  
+> +/*
+> + * The LINUX_EFI_MOK_VARIABLE_TABLE_GUID config table can be provided
+> + * to the kernel by an EFI boot loader. The table contains a packed
+> + * sequence of these entries, one for each named MOK variable.
+> + * The sequence is terminated by an entry with a completely NULL
+> + * name and 0 data size.
+> + */
+> +struct efi_mokvar_table_entry {
+> +	char name[256];
+> +	u64 data_size;
+> +	u8 data[];
+> +} __attribute((packed));
+> +
+> +#ifdef CONFIG_LOAD_UEFI_KEYS
+> +extern void __init efi_mokvar_table_init(void);
+> +extern struct efi_mokvar_table_entry *efi_mokvar_entry_next(
+> +			struct efi_mokvar_table_entry **mokvar_entry);
+> +extern struct efi_mokvar_table_entry *efi_mokvar_entry_find(const char *name);
+> +#else
+> +static inline void efi_mokvar_table_init(void) { }
+> +static inline struct efi_mokvar_table_entry *efi_mokvar_entry_next(
+> +			struct efi_mokvar_table_entry **mokvar_entry)
+> +{
+> +	return NULL;
+> +}
+> +static inline struct efi_mokvar_table_entry *efi_mokvar_entry_find(
+> +			const char *name)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+> +
+>  #endif /* _LINUX_EFI_H */
+> -- 
+> 2.27.0
+> 
