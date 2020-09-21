@@ -2,165 +2,197 @@ Return-Path: <SRS0=1Jx7=C6=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C936C4346B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 16:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F86FC4347E
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 17:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F1B206FB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 16:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D95920B1F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 17:34:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDn64YZD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eT2I07jM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbgIUQzR (ORCPT
+        id S1727113AbgIUReE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Sep 2020 12:55:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35844 "EHLO
+        Mon, 21 Sep 2020 13:34:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727197AbgIUQzK (ORCPT
+        with ESMTP id S1726419AbgIUReE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Sep 2020 12:55:10 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7292C061755;
-        Mon, 21 Sep 2020 09:55:09 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id cv8so7764256qvb.12;
-        Mon, 21 Sep 2020 09:55:09 -0700 (PDT)
+        Mon, 21 Sep 2020 13:34:04 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E984C061755;
+        Mon, 21 Sep 2020 10:34:04 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id y13so16310684iow.4;
+        Mon, 21 Sep 2020 10:34:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=szNXVWJGAZwpx75f6+30VLnmCJsuz9HNHCal9KjzTxA=;
-        b=VDn64YZD7uGTR5IfNAzvRKx/fUPWDVeJhEkElc4Niv9OxBlyDFFaHR6z+35iqyj3/O
-         BliFZbaiZwYEvVGoadb6FBF+Sp/j6RBgiE8DpU8msmpdb7DnAnbKjJAHQa0pNNa9CuAC
-         nn4s4tg+qFp5BnNiFfBFeuAR/O1Ddk67uZfSFkp8VzhribC/Sh/YchpFuGySKm7mS8bG
-         naQ3A1BijQS8iGjPKaJYuL4uk+gyVIL0rjIN0mrlpuN+CYpKuApqV34JvZ1G8/CHZQrJ
-         x4rjWuwXbTLJrXnIk0AVLlUyHu9qs0XvCf/0R874bdGFmG2XBwlpL7eV4KNs0JJHtEsn
-         vVQg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bZxTQM+y7VCL30HjHBeKSPnidXAdXQgBZuNpKs1pbS8=;
+        b=eT2I07jM9PMeyjSl/Te6a5BL5oucfVWd7/hkhTLvZwRxrGvJD8bC1xmLDS76suwdSc
+         Y42cscC4DD+H8ZBIf+MP7A2iKQ2rZJAdSSVs25Exz+bTJ0I9punJG3/QpuCyr7hYZrbg
+         go5eyVVhZjAA2BVKgKx9WZGAlmxoKfK4ozXBRdCvYJyNVVbgq5pQxuYNiI8B1scmaqsz
+         R8w8H29Mwt91cgQH6HMMzmPITXATbXbZeayLh7zE6rMyF2Tty/9rhtsKPq6/BXzQa9sh
+         SpahehdegJ1qal2j5+g2hvcHo46ua/hVn8+dDHDeNkMCMweR94ZQV0rU3oaKbGpZ017M
+         5gig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=szNXVWJGAZwpx75f6+30VLnmCJsuz9HNHCal9KjzTxA=;
-        b=UU3bqRgZvmjykzefD4Xdl/I0tQs3vL2wGdtZ1VvlnABvn6pSCk2Ar8F0bq8pA2BSPR
-         +C9jesk8QfnsZ3FtJAQvc1CHHyrnMEKVK+zWkfMQsRD3W41JAuKELfntdSn77A5o0utn
-         Xwtq8lf2Qlww3191qvRoCUxdbIt5sUxFGhxUkVFjpGWPgYLYuAyJTyHtcSjBvzikuvWz
-         qsm87vk/+Yqy3d6k9/RllNjkCIbc73YOhsJk3jFjdtNr+y1QhiD7CP/MZXXsjhlrtOHr
-         dUi6yUpmD+tmPzMu7eENgr9eOycQpnl3cvala9bqwwUYkJsD+mhkjNncTcreOX/Za7wF
-         aXEg==
-X-Gm-Message-State: AOAM533hKqzyeb9PDx/rqnd9Z0aSP6rbB7h6hwsW77EEPTTToSy0TDVj
-        6DcboMtDZv7t8Fcxlj1tqo3qTm36UCc=
-X-Google-Smtp-Source: ABdhPJxWkRsh4KQ3MogZdppcRx9qC7pDE25loMBRP41MENhVQE3NQq8Gg69UfbxYDA2R1s75Y3Xlwg==
-X-Received: by 2002:a05:6214:8f2:: with SMTP id dr18mr884106qvb.49.1600707308876;
-        Mon, 21 Sep 2020 09:55:08 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id 8sm9353802qkc.100.2020.09.21.09.55.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Sep 2020 09:55:08 -0700 (PDT)
-Sender: Arvind Sankar <niveditas98@gmail.com>
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 21 Sep 2020 12:55:06 -0400
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Lenny Szubowicz <lszubowi@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-security-module@vger.kernel.org, andy.shevchenko@gmail.com,
-        James Morris <jmorris@namei.org>, serge@hallyn.com,
-        Kees Cook <keescook@chromium.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Jones <pjones@redhat.com>,
-        David Howells <dhowells@redhat.com>, prarit@redhat.com
-Subject: Re: [PATCH V2 1/3] efi: Support for MOK variable config table
-Message-ID: <20200921165506.GA549786@rani.riverdale.lan>
-References: <20200905013107.10457-1-lszubowi@redhat.com>
- <20200905013107.10457-2-lszubowi@redhat.com>
- <20200921161859.GA544292@rani.riverdale.lan>
- <CAMj1kXFV7LqsyHM8iM5yQwJX4tKbY=w9vfjERvjyabVDKcbJpA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bZxTQM+y7VCL30HjHBeKSPnidXAdXQgBZuNpKs1pbS8=;
+        b=BqCV3qTkSjkeEmO1+97TIBUDSfQajx51RiWw2gCdZdxi7cZQvBC51J37cPYf80WN7W
+         oOIjbYLU9fBpbRawsPznwKemR1CcSR7X8869bndEyjHXJJSH5l3wZIG6ncNmu0WvfetQ
+         ev8M8kqP0chVSrcHIgieQVmDgdxCc3h+9Bl0ih+gBhl16aR7+e5QKfP8EjQU8+LsxohZ
+         OGyKm2/DoTQoQCOFOib8tzvvEJIIu6gawNViGz3rz25+HW8XTCqD+WFRl5cFKlD0oncQ
+         i8T/UraJaUsdZCqPVD7OjTkKRI9gQOvrANDz+HLzuz+35fZmXMfGPRNkWCWhpI6D/JpM
+         IB6Q==
+X-Gm-Message-State: AOAM5303S/Nub8GgFMCQnEK4OMxNM0rp1SnbZkJGLKh8SlpN/Iru9YRX
+        l84g15xTyIvcmvZcKJKeFRQWfaLqJTpvqf91D74=
+X-Google-Smtp-Source: ABdhPJxAszQNtzT+y9jstowJPghZLDKpOPnpGa/9DYxZJluq3OIJp+7ThjmX/nVs++E7gVuyTPHwSPyKBWg0nRzs0Bc=
+X-Received: by 2002:a6b:7a41:: with SMTP id k1mr364011iop.187.1600709643569;
+ Mon, 21 Sep 2020 10:34:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXFV7LqsyHM8iM5yQwJX4tKbY=w9vfjERvjyabVDKcbJpA@mail.gmail.com>
+References: <20200911194549.12780-1-david.e.box@linux.intel.com>
+ <20200911194549.12780-4-david.e.box@linux.intel.com> <0ec64bdc-66fd-4be1-03cf-561a7c42de68@linux.intel.com>
+ <CAKgT0UdiXLhok1WOq9RoZKKi+f43xUoSBwX2LTYMpUUTU3HRwA@mail.gmail.com> <69a7e595-1b5c-bfb3-f3e6-16cf5fcc9999@linux.intel.com>
+In-Reply-To: <69a7e595-1b5c-bfb3-f3e6-16cf5fcc9999@linux.intel.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 21 Sep 2020 10:33:52 -0700
+Message-ID: <CAKgT0UfkV-Sofk9BO_KqnB83VEMcAqN_9p3BeQQp5Ew4oOCwRw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] platform/x86: Intel PMT Crashlog capability driver
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>, dvhart@infradead.org,
+        Andy Shevchenko <andy@infradead.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Sep 21, 2020 at 06:27:17PM +0200, Ard Biesheuvel wrote:
-> On Mon, 21 Sep 2020 at 18:19, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+On Mon, Sep 21, 2020 at 9:07 AM Alexey Budankov
+<alexey.budankov@linux.intel.com> wrote:
+>
+>
+> On 21.09.2020 16:36, Alexander Duyck wrote:
+> > On Sat, Sep 19, 2020 at 1:01 AM Alexey Budankov
+> > <alexey.budankov@linux.intel.com> wrote:
+> >>
+> >> Hi,
+> >>
+> >> Thanks for the patches.
+> >>
+> >> On 11.09.2020 22:45, David E. Box wrote:
+> >>> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >>>
+> >>> Add support for the Intel Platform Monitoring Technology crashlog
+> >>> interface.  This interface provides a few sysfs values to allow for
+> >>> controlling the crashlog telemetry interface as well as a character driver
+> >>> to allow for mapping the crashlog memory region so that it can be accessed
+> >>> after a crashlog has been recorded.
+> >>>
+> >>> This driver is meant to only support the server version of the crashlog
+> >>> which is identified as crash_type 1 with a version of zero. Currently no
+> >>> other types are supported.
+> >>>
+> >>> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >>> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> >>> ---
+> >>>  .../ABI/testing/sysfs-class-pmt_crashlog      |  66 ++
+> >>>  drivers/platform/x86/Kconfig                  |  10 +
+> >>>  drivers/platform/x86/Makefile                 |   1 +
+> >>>  drivers/platform/x86/intel_pmt_crashlog.c     | 588 ++++++++++++++++++
+> >>>  4 files changed, 665 insertions(+)
+> >>>  create mode 100644 Documentation/ABI/testing/sysfs-class-pmt_crashlog
+> >>>  create mode 100644 drivers/platform/x86/intel_pmt_crashlog.c
+> >>
+> >> <SNIP>
+> >>
+> >>> +
+> >>> +/*
+> >>> + * devfs
+> >>> + */
+> >>> +static int pmt_crashlog_open(struct inode *inode, struct file *filp)
+> >>> +{
+> >>> +     struct crashlog_entry *entry;
+> >>> +     struct pci_driver *pci_drv;
+> >>> +     struct pmt_crashlog_priv *priv;
+> >>> +
+> >>> +     if (!capable(CAP_SYS_ADMIN))
+> >>> +             return -EPERM;
+> >>
+> >> Will not this above still block access to /dev/crashlogX for admin_group users
+> >> in case root configured access e.g. similar to this:
+> >>
+> >> ls -alh /dev/
+> >> crw-rw----.  1 root admin_group      1,   9 Sep 15 18:28 crashlogX
+> >>
+> >> If yes then that capable() check is probably superfluous and
+> >> should be avoided in order not to block access to PMT data.
+> >>
+> >> Could you please clarify or comment?
+> >>
+> >> Thanks,
+> >> Alexei
 > >
-> > On Fri, Sep 04, 2020 at 09:31:05PM -0400, Lenny Szubowicz wrote:
-> > > +     /*
-> > > +      * The EFI MOK config table must fit within a single EFI memory
-> > > +      * descriptor range.
-> > > +      */
-> > > +     err = efi_mem_desc_lookup(efi.mokvar_table, &md);
-> > > +     if (err) {
-> > > +             pr_warn("EFI MOKvar config table is not within the EFI memory map\n");
-> > > +             return;
-> > > +     }
-> > > +     end_pa = efi_mem_desc_end(&md);
-> > > +     if (efi.mokvar_table >= end_pa) {
-> > > +             pr_err("EFI memory descriptor containing MOKvar config table is invalid\n");
-> > > +             return;
-> > > +     }
-> >
-> > efi_mem_desc_lookup() can't return success if efi.mokvar_table >= end_pa,
-> > why check it again?
-> >
-> > > +     offset_limit = end_pa - efi.mokvar_table;
-> > > +     /*
-> > > +      * Validate the MOK config table. Since there is no table header
-> > > +      * from which we could get the total size of the MOK config table,
-> > > +      * we compute the total size as we validate each variably sized
-> > > +      * entry, remapping as necessary.
-> > > +      */
-> > > +     while (cur_offset + sizeof(*mokvar_entry) <= offset_limit) {
-> > > +             mokvar_entry = va + cur_offset;
-> > > +             map_size_needed = cur_offset + sizeof(*mokvar_entry);
-> > > +             if (map_size_needed > map_size) {
-> > > +                     if (va)
-> > > +                             early_memunmap(va, map_size);
-> > > +                     /*
-> > > +                      * Map a little more than the fixed size entry
-> > > +                      * header, anticipating some data. It's safe to
-> > > +                      * do so as long as we stay within current memory
-> > > +                      * descriptor.
-> > > +                      */
-> > > +                     map_size = min(map_size_needed + 2*EFI_PAGE_SIZE,
-> > > +                                    offset_limit);
-> > > +                     va = early_memremap(efi.mokvar_table, map_size);
-> >
-> > Can't we just map the entire region from efi.mokvar_table to end_pa in
-> > one early_memremap call before the loop and avoid all the remapping
-> > logic?
-> >
-> 
-> I suppose that depends on whether there is a reasonable upper bound on
-> the size which is guaranteed to be mappable using early_memremap()
-> (e.g., 128 KB on 32-bit ARM, or 256 KB on other architectures)
+> > Actually this should probably be updated to "if (!perfmon_capable())"
+> > instead. The telemetry driver code originally had the CAP_SYS_ADMIN
+> > check and it probably makes more sense to limit this user-wise to the
+> > same users who have access to performon.
+>
+> Indeed, it is currently perfmon_capable() for performance part but it is unclear
+> if it should be the same for crashlog since it's more like a debugging thing.
+> It appears it all depends on usage models implemented in a user space tools e.g. Perf.
+>
+> However there is an important use case that is not covered
+> neither by perfmon_capable() nor by capable(CAP_SYS_ADMIN).
+>
+> It is access and usage of PMT features in cluster or cloud environments by
+> unprivileged users that don't have root credentials. The users however can run
+> software tools (Perf, VTune etc.) once installed and configured by root.
+>
+> Even though Perf tool can be configured to use use CAP_PERFMON [1] the tool binary
+> should still reside on a file system supporting xattr to convey capabilities
+> into processes implementing monitoring.
+>
+> Unfortunately NFSv3 which is quite popular to be used for storing and sharing
+> software tooling in large production systems doesn't support capabilities yet.
+>
+> Thus, capabilities approach still has limitation in HPC clusters and cloud environments
+> and for PMT support this limitation has a chance to be lifted if
+> suitable access control mechanism would be designed from the very beggining.
+>
+> Actually I tried to change group ownership of /dev and /sys directories and files, being root,
+> and it appeared that for dev file it is possible:
+> ls -alh /dev/
+> crw-rw----.  1 root admin_group      1,   9 Sep 15 18:28 telem<X>
+>
+> So if e.g. perf tool having CAP_PERFMON and configured like:
+>
+> -rwxr-x---.  1 root admin_group  24M Mar  5  2020 perf.cap
+>
+> would mmap /dev/telem<X> to provide uncore performance insights
+> to admin_group users only access control based on user/group/others ownership
+> would suffice without capabilities requirement.
+>
+> Still haven't had chance to verify it for memory mapped PMT dev files and
+> that is why I am asking you guys here.
+>
+> Alexei
+>
+> [1] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html#privileged-perf-users-groups
 
-Ah, sorry, I thought only the number of early mappings was limited, not
-the size as well. We could still just map the maximum possible
-(NR_FIX_BTMAPS * PAGE_SIZE), since it will fail anyway if the config
-table turns out to be bigger than that?
+We will have to see. There is a high likelihood this code will go away
+if we switch over to binary sysfs attributes for the data. I'm still
+working on the rewrite and hope to have something we can review as an
+RFC in the next few days.
 
-> 
-> 
-> > > +     if (va)
-> > > +             early_memunmap(va, map_size);
-> > > +     if (err) {
-> > > +             pr_err("EFI MOKvar config table is not valid\n");
-> > > +             return;
-> > > +     }
-> >
-> > err will never be non-zero here: it was cleared when the
-> > efi_mem_desc_lookup() was done. I think the initialization of err to
-> > -EINVAL needs to be moved just prior to the loop.
-> >
-> > > +     efi_mem_reserve(efi.mokvar_table, map_size_needed);
-> > > +     efi_mokvar_table_size = map_size_needed;
-> > > +}
+Thanks.
+
+- Alex
