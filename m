@@ -6,64 +6,65 @@ X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DFCC43464
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 13:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E0CC43464
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 13:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D529F218AC
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 13:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 283CA21D7A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 13:18:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i1JW3qyu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QoiX8t/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbgIUNRG (ORCPT
+        id S1726689AbgIUNSn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Sep 2020 09:17:06 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23196 "EHLO
+        Mon, 21 Sep 2020 09:18:43 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41577 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726353AbgIUNRF (ORCPT
+        by vger.kernel.org with ESMTP id S1726353AbgIUNSm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Sep 2020 09:17:05 -0400
+        Mon, 21 Sep 2020 09:18:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600694221;
+        s=mimecast20190719; t=1600694319;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
         bh=35I3qr6WLeCCn4WPkLuTptC2Ivu0yAxB872vFqkh5Dw=;
-        b=i1JW3qyuq4vv2gS/1itEl4CymQmPPEerOwWRl+nj+WjGw1fe05djvh07J8LG100OE+X79L
-        8qbxyINrL8mlXLaCPm8QbNyEuARrFFGV9cW9PZ48yE7Fl5/nmQUG/wb8sMYsfKQY/r8AJZ
-        RDm9Ammaq+PvSdIQsBZBSPaJAwy7AdU=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-582-mjfeaoUrO9CI0mx2sIW1zA-1; Mon, 21 Sep 2020 09:16:46 -0400
-X-MC-Unique: mjfeaoUrO9CI0mx2sIW1zA-1
-Received: by mail-ej1-f69.google.com with SMTP id ce9so4820529ejb.7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2020 06:16:45 -0700 (PDT)
+        b=QoiX8t/W1icbxMG/nLKR3SF1wXnsdg9+BghSusm/mGAODIO5zADplok0RSUim55VBVazKD
+        1civHMdlfYGN/l+2Riigp1VVzQw90ubwFi5ZvMjdH1TDmtAzi40SoDvl3bHBSM71/G8DiE
+        d8GoahgM0rqcfqrmqdYhDVFkApbgccU=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-344-vjeuBzvOP5OGS_IZ95iYtQ-1; Mon, 21 Sep 2020 09:18:37 -0400
+X-MC-Unique: vjeuBzvOP5OGS_IZ95iYtQ-1
+Received: by mail-ed1-f72.google.com with SMTP id r8so4566720edy.17
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2020 06:18:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
         bh=35I3qr6WLeCCn4WPkLuTptC2Ivu0yAxB872vFqkh5Dw=;
-        b=Hag4qg/7+e3JJenGCcyCaCQIUs5tILAbLUtuTS5TylfbGvOq/m7spkFMuWYuwuEWFL
-         G50E8YdWB8+wFV9oeAHvPQd9Aw78aYuJQR8vSTuDphxgAqPCEnZuZ5p3FGykxEqwMp5A
-         m+M4XBbsYpgHe1tMhXWU2SvY8gehaKb0a7l5PJ1cmRbEVeBBL9sdSntNdu/HR1l2xD/0
-         9OTutoKdvCTR+/0RHvsWC14A3QJkqsNNPFM7Ol8hFbUbkqhCRAZOSdQUAjIHpKwaklU+
-         GcH/dUMd1V0n+59xl875Ve6P0k4sIgFSpPO9G11Jk697H6vOKwKpukwJmAlN9mcA4Jey
-         mAzA==
-X-Gm-Message-State: AOAM530aLDjuvhjqLDFLsqDfsIHo+IJGMrIlPaEGGxRpXKjEzuti6xCo
-        WqUppBTKoZQJIGdxvEF8aMY5gZWel5Mr8phhkD9/SrFFusKEletkXUleGZtJaygC8NclQ9WEh0G
-        hU20COXSokQkQWeb5zLXvI6S4qeORTNiRgA==
-X-Received: by 2002:aa7:c3c8:: with SMTP id l8mr10057940edr.368.1600694204493;
-        Mon, 21 Sep 2020 06:16:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy17IBNrLBkPTJo6nPQUJamIfgcNi+sGIV5gacrqVunn6k+XauETmIOAIWonyMvFkoCHAahJA==
-X-Received: by 2002:aa7:c3c8:: with SMTP id l8mr10057893edr.368.1600694204038;
-        Mon, 21 Sep 2020 06:16:44 -0700 (PDT)
+        b=EpqeUa4MXrLQEX2S0DTZTlaaLxwd0ukzwWT038JYRglqkJGqBiO9QADY751SYeKQbs
+         OCa1ktpeB7CaSEx3wnMGGl3Ubzd10yaDor6lxKLP172TVuodWGLv4UrGMMH3GXmxIjUn
+         yGuquyPXEb4ODGa9u3nEfVNxsH5BPrDhIVW9siiuZmtvYtlbGIQzxVXfVHX+9BABkI84
+         4EVaou4Yv94vQvwk5Aj1cauV4EhB2XXQV2lFEPXpXqHyvRoM1e/MeeHOjuMokR1xo/Kb
+         HVEVCM/YSyCYcJqr0XCy70mPkTzes3a//0TQwUj0dKUWALeYiOeEMjOgC4U6jvFENx0k
+         IiPQ==
+X-Gm-Message-State: AOAM53313+VExeA/prgtUNcBN1wELf2fdbT1ExKDVYpcd9jXJnnO6ZNB
+        4bKEq7WzWmEYTEZgqirzKx0+MMHF6MXtHe5DZdVuOV7OCmYscDTq/YvTQBX2Bn77uh2gfsanYmz
+        qUcc/+QwKeYLiyCfmX6Mf0FWqE/JRnfBeCg==
+X-Received: by 2002:a17:907:40c1:: with SMTP id nv1mr51759794ejb.318.1600694316256;
+        Mon, 21 Sep 2020 06:18:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwRtkGueuz4hL5qdUjnxB0y/mdXCSRegEnE/f5KzfWGN4E5QxVyuFeU8/KWdTtTwyjchJs/Kg==
+X-Received: by 2002:a17:907:40c1:: with SMTP id nv1mr51759748ejb.318.1600694315776;
+        Mon, 21 Sep 2020 06:18:35 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id h18sm8643630edt.75.2020.09.21.06.16.43
+        by smtp.gmail.com with ESMTPSA id be2sm8589193edb.0.2020.09.21.06.18.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Sep 2020 06:16:43 -0700 (PDT)
+        Mon, 21 Sep 2020 06:18:35 -0700 (PDT)
+From:   Hans de Goede <hdegoede@redhat.com>
 Subject: Re: [PATCH 3/3] platform/x86: Intel PMT Crashlog capability driver
 To:     Alexander Duyck <alexander.duyck@gmail.com>
 Cc:     "David E. Box" <david.e.box@linux.intel.com>,
@@ -79,9 +80,8 @@ References: <20200911194549.12780-1-david.e.box@linux.intel.com>
  <CAKgT0UfM0534GZcKzgTeEa3nq2+FWHk4PfA593smGOLun4d97A@mail.gmail.com>
  <67f5816a-1307-da81-ff71-cea1f907b58b@redhat.com>
  <CAKgT0UdvuLuDRnE5nzOr6fWkC9TJVQNRa+kf1Pcb9mUxGMBXPw@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9025435b-c25c-1b31-fcea-2bc27946c754@redhat.com>
-Date:   Mon, 21 Sep 2020 15:16:42 +0200
+Message-ID: <e7abdcfe-174c-d8e2-c867-107801041742@redhat.com>
+Date:   Mon, 21 Sep 2020 15:18:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
