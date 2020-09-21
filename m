@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFF0C43465
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 10:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C38C43465
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 11:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9E820874
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 10:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2FA20BED
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 11:38:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHns3aMZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="avb5UUfD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgIUK5r (ORCPT
+        id S1726326AbgIULin (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Sep 2020 06:57:47 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39541 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726402AbgIUK5q (ORCPT
+        Mon, 21 Sep 2020 07:38:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40786 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726341AbgIULin (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Sep 2020 06:57:46 -0400
+        Mon, 21 Sep 2020 07:38:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600685863;
+        s=mimecast20190719; t=1600688319;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ozMNlIm+M+XDaiQXytzpgVC8ivYsZiXodOtq67f0/dk=;
-        b=BHns3aMZeO4NTHwSE5/xEDTprxmWRKjuLF2SHy8fnDIV6z1RToDLWIOvlbcCVN436JaH+t
-        PK5FnrCzJwDtNKfCRkqHJ3APmD67YiZeTNsbhm3JQh1WuDsrVvKvswzFLtpXiTiQpsnAOi
-        3tQXDFAypkv9hDcSeg0eDoW8zGMxeLU=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-341-pQ6vEQEnMT2XwikSAEPwXg-1; Mon, 21 Sep 2020 06:57:41 -0400
-X-MC-Unique: pQ6vEQEnMT2XwikSAEPwXg-1
-Received: by mail-ej1-f70.google.com with SMTP id lx11so4695324ejb.19
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2020 03:57:41 -0700 (PDT)
+        bh=zn1lPU7+pGxNSCHcaxBiQCWtBTFhFTfuMbRf8/5Fq90=;
+        b=avb5UUfD2dqSIseEIzpq904tP5uYn8DkAJZqpOFZjtSAXAcWhw6tKKGCnUc+nxIo2S7rEj
+        esOchpHl+IBsQqyz+T5MoqdzWB2AT1RkFrdut92AtXe027Oo1hV0AAFwNRSuP7ilvcnRyZ
+        qwIeLbeGFgpyF+nH0sg6ndf4y57THig=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-534-0hHW-M3cPCCgrELMtDAM8g-1; Mon, 21 Sep 2020 07:38:36 -0400
+X-MC-Unique: 0hHW-M3cPCCgrELMtDAM8g-1
+Received: by mail-ej1-f72.google.com with SMTP id gt18so4727935ejb.16
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2020 04:38:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ozMNlIm+M+XDaiQXytzpgVC8ivYsZiXodOtq67f0/dk=;
-        b=QwJpAnTlOQwmlS8LSYXZhDhGg0argg3S7MYwpqjs7/ZJ20SR+Eww8b9KvRiKw63v6L
-         sAQuSsOYcc+OjaxMSsSFbxVVPtotp88gOZlX5F0FE45ABL/AlxfACXTSSoL6tRfU3EuU
-         qopg0Fe+mrZziItNX0YFDgKzuihwR11ryOZAVuEorSgr0uzoiYzO6mBuUyOZ+7EspDub
-         jNDr5+tlPBXXo79Xd3wZ5FGC/+cj0gyQ+3wcy0ohAEiKvzgBGmc7npWfo8hG4yZcIfGs
-         KpxkblxoTTmM1HxZSTPk/5ihaYsWR629v+2ImXF61dBiJrxIpIvt/8KJCgN6PotovnAR
-         +26w==
-X-Gm-Message-State: AOAM530V/rUNZLIHwETgEp+X+c7Qc1Vvql4651L9m6Y6V9ezSEQFAPHl
-        raKz2VAdXiGczsACv+eSo5abPcEOGZ3ulX8PK1E9J7aQZ4o4crujla81WMCQ6++ryi8fngAgFeO
-        ArVFAQ4RXB99A/xXHZPHcfLKJIGrJaV7Cwg==
-X-Received: by 2002:a17:906:e918:: with SMTP id ju24mr47862624ejb.442.1600685860022;
-        Mon, 21 Sep 2020 03:57:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwOJPPqcnCEHx7/ET//Ts1zn5e0ZKbaXLJ5uD4pKcU7hg7BRf4E/da6zxKOrs5Kp8D4j+qj+g==
-X-Received: by 2002:a17:906:e918:: with SMTP id ju24mr47862603ejb.442.1600685859725;
-        Mon, 21 Sep 2020 03:57:39 -0700 (PDT)
+        bh=zn1lPU7+pGxNSCHcaxBiQCWtBTFhFTfuMbRf8/5Fq90=;
+        b=P/YPNHDz+BdjcoXewCx1T/gzS6j/jTRkv9Uti5ip4v/gPH7+7k4iNo1CSamAz2NgO/
+         25dABLQ7Y9QkAd8o/o4IeLIwNtgzqdfFDtxCeTbqI+0N1pGX+cA9iLTEUp1wU09yF+Ax
+         2Yy+3QJbFvXjRQWpOYtVZFf+LKL54z4tQT0nqttt2Kf/OTQ2pF9zcdBwZJHUOK7yRJJj
+         M/bsv528RzvPFL1JG8YKY+KMjZeSTwECKMaa43DmxzCSTWVaG0Yad/8oyMvvcDv3xkuD
+         q9jxw58tS01OvisN+aHOT2Jsj1mSRhvsOMhXGfcvGmKZ5Gri9nulc+hExYx1Gw4X5mLm
+         2v5Q==
+X-Gm-Message-State: AOAM530C417YJ7A4l6RSjx0tf/EPLrnVYgCaeqCrzfB6mJO7F/WEVLzd
+        vuG0JaL3UGrQgOFFOD1urTNmbcvEXwCCcPod27txCSRtJd6PZz6NPocsIXa1p3g8svYPhDo0Wlq
+        /XKK6GTjFG5fwBPGNwJP8rx1wXWC7a17XiA==
+X-Received: by 2002:a17:906:2985:: with SMTP id x5mr48524743eje.136.1600688314673;
+        Mon, 21 Sep 2020 04:38:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzR3SD95b/Yy6F+i0bcHiuJrrbA5WvLVYOzex1T6egBxTYxxrPUoq+G3islxaE/ozOQWjhdVA==
+X-Received: by 2002:a17:906:2985:: with SMTP id x5mr48524709eje.136.1600688314315;
+        Mon, 21 Sep 2020 04:38:34 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id v2sm8711414ejh.57.2020.09.21.03.57.38
+        by smtp.gmail.com with ESMTPSA id q1sm8643080ejy.37.2020.09.21.04.38.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Sep 2020 03:57:39 -0700 (PDT)
+        Mon, 21 Sep 2020 04:38:33 -0700 (PDT)
 Subject: Re: [PATCH v3] Introduce support for Systems Management Driver over
  WMI for Dell Systems
 To:     Divya Bharathi <divya27392@gmail.com>, dvhart@infradead.org
@@ -76,8 +76,8 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Prasanth KSR <prasanth.ksr@dell.com>
 References: <20200917065550.127400-1-divya_bharathi@dell.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <2795ca15-59b1-8435-14ef-6e0c1d532b22@redhat.com>
-Date:   Mon, 21 Sep 2020 12:57:38 +0200
+Message-ID: <001ba7fe-fb88-cbe3-c413-1c6973b9e786@redhat.com>
+Date:   Mon, 21 Sep 2020 13:38:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
@@ -91,15 +91,17 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-As usual, first a review of the userspace API.
+Ok code review this time. Still mainly focussing on the overal
+structure and not so much individual functions.
 
-Note the biggest pending issue with the userspace API is if
-we are going to keep this under /sys/devices/platform/dell-wmi-sysman/
-or if we are going to have it under:
+Note the code is starting to look good to me.
 
-/sys/class/firmware-attributes/dell-wmi-sysman/
-
-That is still being discussed in the v1 thread.
+One general remark, now that we are keeping the 1 file per
+type (int/enum/string) layout, there are quite a few files
+in this driver. I think it would be good to create a
+drivers/platform/x86/dell-wmi-sysman dir and put all the
+files there, so that it is easier to e.g. grep for something
+in all the files belonging to this driver.
 
 On 9/17/20 8:55 AM, Divya Bharathi wrote:
 > The Dell WMI Systems Management Driver provides a sysfs
@@ -185,219 +187,525 @@ On 9/17/20 8:55 AM, Divya Bharathi wrote:
 >   create mode 100644 drivers/platform/x86/dell-wmi-string-attributes.c
 >   create mode 100644 drivers/platform/x86/dell-wmi-sysman-attributes.c
 >   create mode 100644 drivers/platform/x86/dell-wmi-sysman-attributes.h
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dell-wmi-sysman b/Documentation/ABI/testing/sysfs-platform-dell-wmi-sysman
+
+<snip>
+
+> diff --git a/drivers/platform/x86/dell-wmi-enum-attributes.c b/drivers/platform/x86/dell-wmi-enum-attributes.c
 > new file mode 100644
-> index 000000000000..03398ac11121
+> index 000000000000..4598c4e27310
 > --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-dell-wmi-sysman
-> @@ -0,0 +1,175 @@
-> +What:		/sys/devices/platform/dell-wmi-sysman/attributes/
-> +Date:		December 2020
-> +KernelVersion:	5.10
-> +Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
-> +		Mario Limonciello <mario.limonciello@dell.com>,
-> +		Prasanth KSR <prasanth.ksr@dell.com>
-> +Description:
-> +		The Dell WMI Systems Management Driver provides a sysfs interface
-> +		for systems management software to enable BIOS configuration
-> +		capability on certain Dell systems. This directory exposes
-> +		interfaces for interacting with BIOS attributes.
+> +++ b/drivers/platform/x86/dell-wmi-enum-attributes.c
+> @@ -0,0 +1,208 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Functions corresponding to enumeration type attributes under BIOS Enumeration GUID for use
+> + * with dell-wmi-sysman
+> + *
+> + *  Copyright (c) 2020 Dell Inc.
+> + */
 > +
-> +		Attributes can accept a set of pre-defined valid values (enumeration)
-> +		or a range of numerical values (integer) or a string.
+> +#include "dell-wmi-sysman-attributes.h"
 > +
-> +		current_value:	A file that can be read to obtain the current
-> +		value of the <attr>
+> +/* kept variable names same as in sysfs file name for sysfs_show macro definition */
+> +struct enumeration_data {
+> +	char display_name_language_code[MAX_BUFF];
+> +	char attribute_name[MAX_BUFF];
+> +	char display_name[MAX_BUFF];
+> +	char default_value[MAX_BUFF];
+> +	char current_value[MAX_BUFF];
+> +	char modifier[MAX_BUFF];
+> +	int value_modifier_count;
+> +	char value_modifier[MAX_BUFF];
+> +	int possible_values_count;
+> +	char possible_values[MAX_BUFF];
+> +	char type[MAX_BUFF];
+> +};
 > +
-> +		This file can also be written to in order to update
-> +		the value of a <attr>
-> +
-> +		default_value:	A file that can be read to obtain the default
-> +		value of the <attr>
-> +
-> +		display_name:	A file that can be read to obtain a user friendly
-> +		description of the at <attr>
-> +
-> +		display_name_language_code:	A file that can be read to obtain
-> +		the IETF language tag corresponding to the "display_name" of the <attr>
-> +
-> +		modifier:	A file that can be read to obtain attribute-level
-> +		dependency rule. It says an attribute X will become read-only or
-> +		suppressed, if/if-not attribute Y is configured.
-> +
-> +		modifier rules can be in following format,
-> +		[ReadOnlyIf:<attribute>=<value>]
-> +		[ReadOnlyIfNot:<attribute>=<value>]
-> +		[SuppressIf:<attribute>=<value>]
-> +		[SuppressIfNot:<attribute>=<value>]
-> +
-> +		For example,
-> +		AutoOnFri/modifier has value,
-> +			[SuppressIfNot:AutoOn=SelectDays]
-> +		This means AutoOnFri will be supressed in BIOS setup if AutoOn
-> +		attribute is not "SelectDays" and its value will not be effective
-> +		through sysfs until this rule is met.
+> +static struct enumeration_data *enumeration_data;
+> +static int enumeration_instances_count;
 
-As discussed in the v1 thread, this is somewhat Dell specific and we make the
-sysfs interface generic and move this to /sys/class/firmware-attributes/dell-wmi-sysman/
-then this should probably be prefixed with dell- (and moved to a separate section
-of this file for vendor extensions to the generic part)
+Can we put these 2 static globals inside the wmi_priv
+data structure?  It does not matter much but I find it a bit
+cleaner to have all global state together in a single place.
+
+> +get_instance_id(enumeration);
+
+This macro will need to be adjusted a bit then, but I don't
+see any problem there, just put wmi_priv. in front of the
+type##_instances_count and type##_data[i].attribute_name.
 
 > +
-> +		"enumeration"-type specific properties:
+> +static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+> +{
+> +	int instance_id;
 > +
-> +		possible_values:	A file that can be read to obtain the possible
-> +		values of the <attr>. Values are separated using semi-colon.
+> +	if (!capable(CAP_SYS_ADMIN))
+> +		return -EPERM;
+> +	instance_id = get_enumeration_instance_id(kobj);
+> +	if (instance_id >= 0) {
+> +		union acpi_object *obj;
 > +
-> +		value_modifier:	A file that can be read to obtain value-level
-> +		dependency. This file is similar to modifier but here, an attribute's
-> +		current value will be forcefully changed based dependent attributes
-> +		value.
+> +		/* need to use specific instance_id and guid combination to get right data */
+> +		obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_ENUMERATION_ATTRIBUTE_GUID);
+> +		if (!obj)
+> +			return -AE_ERROR;
+> +		strncpy_attr(enumeration_data[instance_id].current_value,
+> +		       obj->package.elements[CURRENT_VAL].string.pointer);
+> +		kfree(obj);
+> +		return sprintf(buf, "%s\n", enumeration_data[instance_id].current_value);
+> +	}
+> +	return -EIO;
+> +}
 > +
-> +		value_modifier rules can be in following format,
-> +		<value>[ForceIf:<attribute>=<value>]
-> +		<value>[ForceIfNot:<attribute>=<value>]
+> +/**
+> + * validate_enumeration_input() - Validate input of current_value against possible values
+> + * @instance_id: The instance on which input is validated
+> + * @buf: Input value
+> + **/
+> +int validate_enumeration_input(int instance_id, const char *buf)
+> +{
+> +	char *options, *tmp, *p;
+> +	int ret = -EINVAL;
 > +
-> +		For example,
-> +		LegacyOrom/value_modifier has value,
-> +			Disabled[ForceIf:SecureBoot=Enabled]
-> +		This means LegacyOrom's current value will be forced to "Disabled"
-> +		in BIOS setup if SecureBoot is Enabled and its value will not be
-> +		effective through sysfs until this rule is met.
+> +	options = tmp = kstrdup((enumeration_data[instance_id].possible_values), GFP_KERNEL);
+> +	if (!options)
+> +		return -ENOMEM;
+> +
+> +	while ((p = strsep(&options, ";")) != NULL) {
+> +		if (!*p)
+> +			continue;
+> +		if (!strncasecmp(p, buf, strlen(p))) {
+> +			ret = 0;
+> +			break;
+> +		}
+> +	}
+> +
+> +	kfree(tmp);
+> +	return ret;
+> +}
+> +
+> +attribute_s_property_show(display_name_language_code, enumeration);
+> +static struct kobj_attribute displ_langcode =
+> +		__ATTR_RO(display_name_language_code);
+> +
+> +attribute_s_property_show(display_name, enumeration);
+> +struct kobj_attribute displ_name =
+> +		__ATTR_RO(display_name);
+> +
+> +attribute_s_property_show(default_value, enumeration);
+> +struct kobj_attribute default_val =
+> +		__ATTR_RO(default_value);
+> +
+> +attribute_property_store(current_value, enumeration);
+> +struct kobj_attribute current_val =
+> +		__ATTR_RW(current_value);
+> +
+> +attribute_s_property_show(modifier, enumeration);
+> +struct kobj_attribute modifier =
+> +		__ATTR_RO(modifier);
+> +
+> +attribute_s_property_show(value_modifier, enumeration);
+> +struct kobj_attribute value_modfr =
+> +		__ATTR_RO(value_modifier);
+> +
+> +attribute_s_property_show(possible_values, enumeration);
+> +struct kobj_attribute poss_val =
+> +		__ATTR_RO(possible_values);
+> +
+> +attribute_s_property_show(type, enumeration);
+> +struct kobj_attribute type =
+> +		__ATTR_RO(type);
+> +
+> +static struct attribute *enumeration_attrs[] = {
+> +	&displ_langcode.attr,
+> +	&displ_name.attr,
+> +	&default_val.attr,
+> +	&current_val.attr,
+> +	&modifier.attr,
+> +	&value_modfr.attr,
+> +	&poss_val.attr,
+> +	&type.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group enumeration_attr_group = {
+> +	.attrs = enumeration_attrs,
+> +};
+> +
+> +int alloc_enum_data(void)
+> +{
+> +	int ret = 0;
+> +
+> +	enumeration_instances_count = get_instance_count(DELL_WMI_BIOS_ENUMERATION_ATTRIBUTE_GUID);
+> +	enumeration_data = kzalloc((sizeof(struct enumeration_data) * enumeration_instances_count),
+> +					GFP_KERNEL);
 
-Are value_modifiers only valid for enums? If not this should be moved to
-the generic properties (or to the vendor extensions part)
+Please use kcalloc here, that will check that the
+(sizeof(struct enumeration_data) * enumeration_instances_count multiplication does not
+overflow. The same for all the other alloc_foo_data functions.
+
+> +	if (!enumeration_data)
+> +		ret = -ENOMEM;
+> +	return ret;
+> +}
+> +
+> +/**
+> + * populate_enum_data() - Populate all properties of an instance under enumeration attribute
+> + * @enumeration_obj: ACPI object with enumeration data
+> + * @instance_id: The instance to enumerate
+> + * @attr_name_kobj: The parent kernel object
+> + **/
+> +int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
+> +			struct kobject *attr_name_kobj)
+> +{
+> +	int retval = sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
+
+This needs to be moved to the end of this function, as soon as you
+call this, e.g. current_value_show() could be called, before the
+enumeration_data[instance_id].current_value buffer has been filled.
+
+The same goes for the other populate_foo() functions.
+
+> +	int i, next_obj;
+> +
+> +	if (retval)
+> +		goto out;
+> +
+> +	mutex_lock(&wmi_priv.mutex);
+
+It would be better to push this lock (and the unlock) up into init_dell_bios_attrib_wmi()
+this way we can ensure that none of the functions which take the lock can run
+before we are completely done with initializing and registering all
+the various sysfs attributes.
+
+This lock/unlock can then also be removed from the other populate_foo()
+functions.
+
+
+> +	strncpy_attr(enumeration_data[instance_id].attribute_name,
+> +		enumeration_obj[ATTR_NAME].string.pointer);
+> +	strncpy_attr(enumeration_data[instance_id].display_name_language_code,
+> +		enumeration_obj[DISPL_NAME_LANG_CODE].string.pointer);
+> +	strncpy_attr(enumeration_data[instance_id].display_name,
+> +		enumeration_obj[DISPLAY_NAME].string.pointer);
+> +	strncpy_attr(enumeration_data[instance_id].default_value,
+> +		enumeration_obj[DEFAULT_VAL].string.pointer);
+> +	strncpy_attr(enumeration_data[instance_id].current_value,
+> +		enumeration_obj[CURRENT_VAL].string.pointer);
+> +	strncpy_attr(enumeration_data[instance_id].modifier,
+> +		enumeration_obj[MODIFIER].string.pointer);
+> +
+> +	next_obj = MODIFIER + 1;
+> +
+> +	enumeration_data[instance_id].value_modifier_count =
+> +		(uintptr_t)enumeration_obj[next_obj].string.pointer;
+> +
+> +	for (i = 0; i < enumeration_data[instance_id].value_modifier_count; i++) {
+> +		strcat(enumeration_data[instance_id].value_modifier,
+> +			enumeration_obj[++next_obj].string.pointer);
+> +		strcat(enumeration_data[instance_id].value_modifier, ";");
+> +	}
+> +
+> +	enumeration_data[instance_id].possible_values_count =
+> +		(uintptr_t) enumeration_obj[++next_obj].string.pointer;
+> +
+> +	for (i = 0; i < enumeration_data[instance_id].possible_values_count; i++) {
+> +		strcat(enumeration_data[instance_id].possible_values,
+> +			enumeration_obj[++next_obj].string.pointer);
+> +		strcat(enumeration_data[instance_id].possible_values, ";");
+> +	}
+> +	strncpy_attr(enumeration_data[instance_id].type, "enumeration");
+> +	mutex_unlock(&wmi_priv.mutex);
+> +
+> +out:
+> +	return retval;
+> +}
+> +
+> +/**
+> + * exit_enum_attributes() - Clear all attribute data
+> + *
+> + * Clears all data allocated for this group of attributes
+> + **/
+> +void exit_enum_attributes(void)
+> +{
+> +	struct kobject *pos, *next;
+> +
+> +	list_for_each_entry_safe(pos, next, &wmi_priv.main_dir_kset->list, entry) {
+> +		/* this removes only enumeration atribute group under main_dir_kset */
+> +		sysfs_remove_group(pos, &enumeration_attr_group);
+> +	}
+> +	kfree(enumeration_data);
+> +}
+
+As mentioned in the v2 thread I would prefer for this to be done differently
+(for all exit_foo_attributes functions).
+
+<snip>
+
+> diff --git a/drivers/platform/x86/dell-wmi-passobj-attributes.c b/drivers/platform/x86/dell-wmi-passobj-attributes.c
+> new file mode 100644
+> index 000000000000..6884e6153dd6
+> --- /dev/null
+> +++ b/drivers/platform/x86/dell-wmi-passobj-attributes.c
+> @@ -0,0 +1,165 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Functions corresponding to password object type attributes under BIOS Password Object GUID for
+> + * use with dell-wmi-sysman
+> + *
+> + *  Copyright (c) 2020 Dell Inc.
+> + */
+> +
+> +#include "dell-wmi-sysman-attributes.h"
+> +
+> +enum po_properties {IS_PASS_SET = 1, MIN_PASS_LEN, MAX_PASS_LEN};
+> +
+> +/* kept variable names same as in sysfs file name for sysfs_show macro definition */
+> +struct po_data {
+> +	char attribute_name[MAX_BUFF];
+> +	int is_password_set;
+> +	int min_password_length;
+> +	int max_password_length;
+> +	char type[MAX_BUFF];
+> +};
+> +
+> +static struct po_data *po_data;
+> +static int po_instances_count;
+> +get_instance_id(po);
+> +
+> +static ssize_t is_password_set_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+> +{
+> +	int instance_id = get_po_instance_id(kobj);
+> +
+> +	if (instance_id >= 0) {
+> +		union acpi_object *obj;
+> +
+> +		/* need to use specific instance_id and guid combination to get right data */
+> +		obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_PASSOBJ_ATTRIBUTE_GUID);
+> +		if (!obj)
+> +			return -AE_ERROR;
+> +		po_data[instance_id].is_password_set =
+> +			(uintptr_t)obj->package.elements[IS_PASS_SET].string.pointer;
+> +		kfree(obj);
+> +		return sprintf(buf, "%d\n", po_data[instance_id].is_password_set);
+> +	}
+> +	return -EIO;
+> +}
+> +
+> +struct kobj_attribute po_is_pass_set =
+> +		__ATTR_RO(is_password_set);
+> +
+> +static ssize_t current_password_store(struct kobject *kobj,
+> +				      struct kobj_attribute *attr,
+> +				      const char *buf, size_t count)
+> +{
+> +	char *p = memchr(buf, '\n', count);
+> +	int ret;
+> +
+> +	if (p != NULL)
+> +		*p = '\0';
+> +	if (strlen(buf) > MAX_BUFF)
+> +		return -EINVAL;
+
+This check fails to take strlen(buf) == MAX_BUFF into account, in that
+case the strncpy below:
 
 > +
-> +		"integer"-type specific properties:
-> +
-> +		min_value:	A file that can be read to obtain the lower
-> +		bound value of the <attr>
-> +
-> +		max_value:	A file that can be read to obtain the upper
-> +		bound value of the <attr>
-> +
-> +		scalar_increment:	A file that can be read to obtain the
-> +		resolution of the incremental value this attribute accepts.
-> +
-> +		"string"-type specific properties:
-> +
-> +		max_length:	A file that can be read to obtain the maximum
-> +		length value of the <attr>
-> +
-> +		min_length:	A file that can be read to obtain the minimum
-> +		length value of the <attr>
-> +
-> +What:		/sys/devices/platform/dell-wmi-sysman/passwords/
-> +Date:		December 2020
-> +KernelVersion:	5.10
-> +Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
-> +		Mario Limonciello <mario.limonciello@dell.com>,
-> +		Prasanth KSR <prasanth.ksr@dell.com>
-> +
-> +		A BIOS Admin password and System Password can be set, reset or
-> +		cleared using these attributes. An "Admin" password is used for
-> +		preventing modification to the BIOS settings. A "System" password is
-> +		required to boot a machine.
-> +
-> +		is_password_set:	A file that can be read
-> +		to obtain flag to see if a password is set on <attr>
-> +
-> +		max_password_length:	A file that can be read to obtain the
-> +		maximum length of the Password
-> +
-> +		min_password_length:	A file that can be read to obtain the
-> +		minimum length of the Password
-> +
-> +		current_password: A write only value used for privileged access
-> +		such as setting attributes when a system or admin password is set
-> +		or resetting to a new password
-> +
-> +		new_password: A write only value that when used in tandem with
-> +		current_password will reset a system or admin password.
-> +
-> +		Note, password management is session specific. If Admin/System
-> +		password is set, same password must be writen into current_password
-> +		file (requied for pasword-validation) and must be cleared once the
-> +		session	is over. For example,
-> +			echo "password" > current_password
-> +			echo "disabled" > TouchScreen/current_value
-> +			echo "" > current_password
+> +	if (strcmp(kobj->name, "Admin") == 0)
+> +		strncpy(wmi_priv.current_admin_password, buf, (strlen(buf) + 1));
 
-So I know this was mentioned before already but one concern I have here
-is that there is a race where other users with write access to say TouchScreen/current_value
-may change it between the setting and the clearing of the current_password even if
-they don't have the password.
+Will write MAX_BUFF + 1 bytes to wmi_priv.current_admin_password !
 
-This is esp. relevant with containers. I'm not aware about all the intrinsics of
-sysfs and containers, at a minimum we need to check if it is possible to disallow
-all writes to the attributes when sysfs is mounted inside a container (so outside of the
-main filesystem namespace).
+Looking at the string handling in this driver in general,
+I am not really happy with it.
 
-If someone is reading along who happen to knows this, please enlighten me :)
+It seems that strncpy is used everywhere and strncpy is a horrible
+function, which sreally should never be used. The reason for this
+is that the source string having a length greater then the passed
+in buffer-length will result in the destination buffer not being
+0 terminated. Now sometimes that is a feature, but in that case
+you should probably use memcpy to make it clear that you expect
+the string to not be 0 terminated.
+
+In other cases using strlcpy is better since it guarantees 0
+termination (truncating the input to fit in the destination-buffer).
+
+Now I see that you try to correctly deal with strncpy-s nastiness
+everywhere, but please just don't use it all.
+Not using strncpy at all is much better.
+
+A lot of the strncpy usage is hidden in:
+
+strncpy_attr(char *dest, char *src)
+{
+         size_t len = strlen(src) + 1;
+
+         if (len > 1 && len < MAX_BUFF)
+                 strncpy(dest, src, len);
+}
+
+Why is there no warning printed when the source string
+is too long ? Now we just quietly throw away the
+data, which seems undesirable.
+
+Also wouldn't truncating the data to fit in MAX_BUFF be better?
+(honest question, I do not know which option is better)
+
+
+> +	if (strcmp(kobj->name, "System") == 0)
+> +		strncpy(wmi_priv.current_system_password, buf, (strlen(buf) + 1));
+> +	return ret ? ret : count;
+> +}
+> +
+> +struct kobj_attribute po_current_password =
+> +		__ATTR_WO(current_password);
+> +
+> +static ssize_t new_password_store(struct kobject *kobj,
+> +				  struct kobj_attribute *attr,
+> +				  const char *buf, size_t count)
+> +{
+> +	char *p = memchr(buf, '\n', count);
+> +	int ret;
+> +
+> +	if (p != NULL)
+> +		*p = '\0';
+> +	if (strlen(buf) > MAX_BUFF)
+> +		return -EINVAL;
+
+Same issue with the length check.
 
 > +
+> +	ret = set_new_password(kobj->name, buf);
+> +	return ret ? ret : count;
+> +}
 > +
-> +What:		/sys/devices/platform/dell-wmi-sysman/attributes/reset_bios
-> +Date:		December 2020
-> +KernelVersion:	5.10
-> +Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
-> +		Mario Limonciello <mario.limonciello@dell.com>,
-> +		Prasanth KSR <prasanth.ksr@dell.com>
-> +Description:
-> +		This attribute can be used to reset the BIOS Configuration.
-> +		Specifically, it tells which type of reset BIOS configuration is being
-> +		requested on the host.
+> +struct kobj_attribute po_new_password =
+> +		__ATTR_WO(new_password);
 > +
-> +		Reading from it returns a list of supported options encoded as:
+> +attribute_n_property_show(min_password_length, po);
+> +struct kobj_attribute po_min_pass_length =
+> +		__ATTR_RO(min_password_length);
 > +
-> +			'builtinsafe' (Built in safe configuration profile)
-> +			'lastknowngood' (Last known good saved configuration profile)
-> +			'factory' (Default factory settings configuration profile)
-> +			'custom' (Custom saved configuration profile)
+> +attribute_n_property_show(max_password_length, po);
+> +struct kobj_attribute po_max_pass_length =
+> +		__ATTR_RO(max_password_length);
 > +
-> +		The currently selected option is printed in square brackets as
-> +		shown below:
+> +attribute_s_property_show(type, po);
+> +struct kobj_attribute po_type =
+> +	__ATTR_RO(type);
 > +
-> +		# echo "factory" > sys/devices/platform/dell-wmi-sysman/attributes/reset_bios
+> +static struct attribute *po_attrs[] = {
+> +	&po_is_pass_set.attr,
+> +	&po_min_pass_length.attr,
+> +	&po_max_pass_length.attr,
+> +	&po_current_password.attr,
+> +	&po_new_password.attr,
+> +	&po_type.attr,
+> +	NULL,
+> +};
 > +
-> +		# cat sys/devices/platform/dell-wmi-sysman/attributes/reset_bios
-> +		# builtinsafe lastknowngood [factory] custom
+> +static const struct attribute_group po_attr_group = {
+> +	.attrs = po_attrs,
+> +};
 > +
-> +		Note that any changes to this attribute requires a reboot
-> +		for changes to take effect.
+> +int alloc_po_data(void)
+> +{
+> +	int ret = 0;
 > +
-> +What:		/sys/devices/platform/dell-wmi-sysman/attributes/pending_reboot
-> +Date:		December 2020
-> +KernelVersion:	5.10
-> +Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
-> +		Mario Limonciello <mario.limonciello@dell.com>,
-> +		Prasanth KSR <prasanth.ksr@dell.com>
-> +Description:
-> +		A read-only attribute reads 1 if a reboot is necessary to apply
-> +		pending BIOS attribute changes.
+> +	po_instances_count = get_instance_count(DELL_WMI_BIOS_PASSOBJ_ATTRIBUTE_GUID);
+> +	po_data = kzalloc((sizeof(struct po_data) * po_instances_count), GFP_KERNEL);
+> +	if (!po_data)
+> +		ret = -ENOMEM;
+> +	return ret;
+> +}
 > +
-> +			0:	All BIOS attributes setting are current
-> +			1:	A reboot is necessary to get pending BIOS attribute changes
-> +				applied
+> +/**
+> + * populate_po_data() - Populate all properties of an instance under password object attribute
+> + * @po_obj: ACPI object with password object data
+> + * @instance_id: The instance to enumerate
+> + * @attr_name_kobj: The parent kernel object
+> + **/
+> +int populate_po_data(union acpi_object *po_obj, int instance_id, struct kobject *attr_name_kobj)
+> +{
+> +	int retval = sysfs_create_group(attr_name_kobj, &po_attr_group);
 > +
+> +	if (retval)
+> +		goto out;
 > +
-> +		Note, userspace applications need to follow below steps for efficient
-> +		BIOS management,
-> +		1.	Check if admin password is set. If yes, follow session method for
-> +			password management as briefed under password section above.
-> +		2.	Before setting any attribute, check if it has any modifiers
-> +			or value_modifiers. If yes, incorporate them and then modify
-> +			attribute.
+> +	mutex_lock(&wmi_priv.mutex);
+> +	strncpy_attr(po_data[instance_id].attribute_name, po_obj[ATTR_NAME].string.pointer);
+> +	po_data[instance_id].is_password_set = (uintptr_t)po_obj[IS_PASS_SET].string.pointer;
+> +	po_data[instance_id].min_password_length = (uintptr_t)po_obj[MIN_PASS_LEN].string.pointer;
+> +	po_data[instance_id].max_password_length = (uintptr_t) po_obj[MAX_PASS_LEN].string.pointer;
+> +	strncpy_attr(po_data[instance_id].type, "password_object");
+> +	mutex_unlock(&wmi_priv.mutex);
+> +
+> +out:
+> +	return retval;
+> +}
+> +
+> +/**
+> + * exit_po_attributes() - Clear all attribute data
+> + *
+> + * Clears all data allocated for this group of attributes
+> + **/
+> +void exit_po_attributes(void)
+> +{
+> +	struct kobject *pos, *next;
+> +
+> +	list_for_each_entry_safe(pos, next, &wmi_priv.password_dir_kset->list, entry) {
+> +		/* this removes only enumeration atribute group under main_dir_kset */
+> +		sysfs_remove_group(pos, &po_attr_group);
+> +	}
+> +	kfree(po_data);
+> +}
+> diff --git a/drivers/platform/x86/dell-wmi-passwordattr-interface.c b/drivers/platform/x86/dell-wmi-passwordattr-interface.c
+> new file mode 100644
+> index 000000000000..bd19d6c15002
+> --- /dev/null
+> +++ b/drivers/platform/x86/dell-wmi-passwordattr-interface.c
+> @@ -0,0 +1,167 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Functions corresponding to SET password methods under BIOS attributes interface GUID
+> + *
+> + *  Copyright (c) 2020 Dell Inc.
+> + */
+> +
+> +#include <linux/nls.h>
+> +#include <linux/wmi.h>
+> +#include "dell-wmi-sysman-attributes.h"
+> +
+> +static int call_password_interface(struct wmi_device *wdev, char *in_args, size_t size)
+> +{
+> +	struct acpi_buffer output = {ACPI_ALLOCATE_BUFFER, NULL};
+> +	struct acpi_buffer input;
+> +	union acpi_object *obj;
+> +	acpi_status status;
+> +	int ret = -EIO;
+> +
+> +	input.length =  (acpi_size) size;
+> +	input.pointer = in_args;
+> +	status = wmidev_evaluate_method(wdev, 0, 1, &input, &output);
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +	obj = (union acpi_object *)output.pointer;
+> +	if (obj->type == ACPI_TYPE_INTEGER)
+> +		ret = obj->integer.value;
+> +
+> +	kfree(output.pointer);
+> +	/* let userland know it may need to check is_password_set again */
+> +	kobject_uevent(&wdev->dev.kobj, KOBJ_CHANGE);
 
-OK, so as also mentioned in the v1 thread, I would like to see the uevent disappear
-since it is somewhat of a heavy mechanism and not necessary when userspace specifically
-cares about a single sysfs attribute changing.
+Hmm, I see so there is more then one boolean for user-space to monitor.
 
-Instead we can allow userspace to use poll() for POLL_PRI on this file to be notified
-when it goes from 0 -> 1. See the v1 thread for some example code how to wake the
-poll() in this case.
+I guess that in that case udev change events might make sense.  That would
+also be easier to describe in the sysfs API, we can just say that if anything
+changes a udev change event is send.
+
+Note you should still make sure to only do the other kobject_uevent() call
+on the first change of pending_changes from 0 -> 1, after that it does not
+change, so there is no need to spam userspace with more uevents.
 
 Regards,
 
