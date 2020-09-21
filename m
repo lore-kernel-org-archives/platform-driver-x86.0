@@ -4,88 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4482EC43463
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 09:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15830C43463
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 10:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE1282158C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 09:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC41821D43
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 10:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HNoywDUI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WSJPoYND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgIUJiW (ORCPT
+        id S1726534AbgIUKDP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Sep 2020 05:38:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:33069 "EHLO
+        Mon, 21 Sep 2020 06:03:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28982 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726475AbgIUJiV (ORCPT
+        by vger.kernel.org with ESMTP id S1726444AbgIUKDL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Sep 2020 05:38:21 -0400
+        Mon, 21 Sep 2020 06:03:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600681099;
+        s=mimecast20190719; t=1600682588;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=YMueE7TUp93oQ7tBGEmbtQUpxk5L9SeW1/QycLtgmXo=;
-        b=HNoywDUIGn15Z7LCuXfvpkc9Kx/m3POdRp67EOqgvuLDbo8uvXvKvEie9llr48xLv3CB58
-        JaMHiyWjDug6WdDNznQS8gb0WXPwx+O7iOQ/+YUlfQb8FR06VsQFJEDPTKPLx6Bez9v6uT
-        vICunHI5nGt6Zvb5ojqxRttiUUCu5FI=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-38-E28Bak2GPounbSHuUfG5rQ-1; Mon, 21 Sep 2020 05:38:14 -0400
-X-MC-Unique: E28Bak2GPounbSHuUfG5rQ-1
-Received: by mail-ej1-f71.google.com with SMTP id f17so4647711ejq.5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2020 02:38:14 -0700 (PDT)
+        bh=O/zm5Y2Zo2/TPNP0q36DB3tiECpHWQ7DeNh07xXELbg=;
+        b=WSJPoYNDxJ9/Mt/v1BjzJ8aVXLNPPmt+W/Dly9bVLopW9WYoZLmKB4khqLmaGtQTbm484b
+        pC3OLqvfdmSqJABfpLryoef17QnWqM+992spylQOtybteuR1chOaNGIfpc+VPbO5zvtwn/
+        RhoA0vlAkST2X+2/9m5trbdHnPMLFN8=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-233-2wu2nGUpPcqZS7BmlTFwyw-1; Mon, 21 Sep 2020 06:02:58 -0400
+X-MC-Unique: 2wu2nGUpPcqZS7BmlTFwyw-1
+Received: by mail-ed1-f70.google.com with SMTP id f16so4417528edm.10
+        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Sep 2020 03:02:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=YMueE7TUp93oQ7tBGEmbtQUpxk5L9SeW1/QycLtgmXo=;
-        b=LVsQ1YzOICWAAhl5s0YMqkO1ZxjrJG2TiMF/Xh543BA6/2HBUq7JRxor8Pjn6pGjBc
-         fUNFmiN41q9N3QGabm5zVxlylimoc9UmtD8JtesWI6nAYX7tw9ujwI3LW0YlmOEGlavE
-         BoXoRjNrHmd6bxxJk93Rtp/iieZaoJeTDecQCtbFCBHyIGbU/ABlOSpMo0M4trLehBYW
-         DIh9zX6mlPb60Ly20YV7Mgge4ebHOxh728tTqe6uBrecheykVFw3pfvaFsyd9cXdsmbR
-         po0L+RNkBSxzFpmx59TW/5b4BSiVp014smrgprk16ty/l0MpX9FKVS97+r+P4H/+i8EM
-         f3Jw==
-X-Gm-Message-State: AOAM533fO0kQWxQ1pidrPiscXbBsbtfRPDIKqms6P1b/fIa/vKercE5e
-        ihH2I382RPj+FoQC6Fwu39V5CUctfvtw0GXfRWEkWTzJlp9Zm3CaqsZ9bToeJo7MJmwXthneQNR
-        wPEwZ9NpCxroPkNF5arKT4diD2MXOfzKiTg==
-X-Received: by 2002:a17:906:4e54:: with SMTP id g20mr50585144ejw.252.1600681092949;
-        Mon, 21 Sep 2020 02:38:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwJSZTXdBVWGqB2un9eeUK9ZWv92rLjbjiVwFl5amHpnBMSabLAay1iXxSoBq76KE4eSf8Hvw==
-X-Received: by 2002:a17:906:4e54:: with SMTP id g20mr50585133ejw.252.1600681092754;
-        Mon, 21 Sep 2020 02:38:12 -0700 (PDT)
+        bh=O/zm5Y2Zo2/TPNP0q36DB3tiECpHWQ7DeNh07xXELbg=;
+        b=PQu+LZzmxcEBwmqGVWz3Hj0Je7aNB0pE/oz0tKIy2OTDbEKt3i+kcu/F4u8KABA0q1
+         ZnjQ8ojLz8Gf5fhCWkqBgZNnWi5Ae0lC26PHGja+MvIuBGLdg7gDlC/3wW5dTNovhGlr
+         l7zZo6UvW6yJYYKsdPFHu3mCuA7Yo/SOD9XiMhr36OuGnG9bXJPPsxPl16BfE2B9rQhO
+         lq/mr8prHpcwX+BYoaDMAkBsJXMf1SHpEeRLfB78XUjQ3NvR4iE/HDZ8s8/yKQ2NukqC
+         DyIzQ58IE64gKjPB7MjQXHVSxGp9lSDxqwEDeyPpMUIPFjgmO74WZhS/fj9LuGh2X95T
+         D3aw==
+X-Gm-Message-State: AOAM532tymiiR5byC+YN/sCWh/ROm4wT0AbkkWO81elpZbAtm5s6AfXz
+        cXPyRdN+lPYgCftK2egzPTS3FsyOAV6ATW/ouhrOX0RN0fIVYgsysgbD5sIJfBhYKnLgLFtWuyc
+        iTnSP9LxPRj7UZTX8XAm/zpA+YcTavu9Shw==
+X-Received: by 2002:a17:907:417c:: with SMTP id oe20mr47540903ejb.322.1600682576387;
+        Mon, 21 Sep 2020 03:02:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzdFuJUzzRKmA4e1doelYwQsgNYphu2cvSOFKzY/YOaAPYs14pE6te3mxqLARcsvRUZrh2mdA==
+X-Received: by 2002:a17:907:417c:: with SMTP id oe20mr47540867ejb.322.1600682575968;
+        Mon, 21 Sep 2020 03:02:55 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id j15sm8509972ejs.5.2020.09.21.02.38.11
+        by smtp.gmail.com with ESMTPSA id y24sm8180387eds.35.2020.09.21.03.02.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Sep 2020 02:38:12 -0700 (PDT)
-Subject: Re: [PATCH v2] Introduce support for Systems Management Driver over
- WMI for Dell Systems
-To:     "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
-        "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        Mon, 21 Sep 2020 03:02:55 -0700 (PDT)
+Subject: Re: [PATCH] Introduce support for Systems Management Driver over WMI
+ for Dell Systems
+To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
         Divya Bharathi <divya27392@gmail.com>,
         "dvhart@infradead.org" <dvhart@infradead.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>
-References: <20200904142846.5356-1-divya_bharathi@dell.com>
- <aaf3b072-a109-4f69-67dd-bea3dc5fb023@redhat.com>
- <DM6PR19MB2636829402BC67EC1048E15FFA230@DM6PR19MB2636.namprd19.prod.outlook.com>
- <CY4PR19MB12544CE6AFD16E89E688ACCD85200@CY4PR19MB1254.namprd19.prod.outlook.com>
- <CY4PR19MB1254A26A233052B71ACC5ACA853E0@CY4PR19MB1254.namprd19.prod.outlook.com>
+        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
+        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>,
+        Richard Hughes <rhughes@redhat.com>,
+        Jared Dominguez <jaredz@redhat.com>
+References: <20200730143122.10237-1-divya_bharathi@dell.com>
+ <d3de1d27-25ac-be43-54d8-dcbfffa31e1d@redhat.com>
+ <DM6PR19MB26364970D0981212E811E1B0FA2E0@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <67ca316a-227f-80f6-ad22-7d08112b2584@redhat.com>
+ <DM6PR19MB26368BB2B8C4D7CE58DF7C31FA230@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <5847917c-2c34-5d74-b5db-f33bb8fc9e13@redhat.com>
+ <DM6PR19MB2636626A94385EDC7C0CACF9FA3E0@DM6PR19MB2636.namprd19.prod.outlook.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <a6dbd512-760a-bd01-28ab-7e82d18d03d8@redhat.com>
-Date:   Mon, 21 Sep 2020 11:38:11 +0200
+Message-ID: <33666ec6-be47-2c33-d4c5-6b23b53f6185@redhat.com>
+Date:   Mon, 21 Sep 2020 12:02:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CY4PR19MB1254A26A233052B71ACC5ACA853E0@CY4PR19MB1254.namprd19.prod.outlook.com>
+In-Reply-To: <DM6PR19MB2636626A94385EDC7C0CACF9FA3E0@DM6PR19MB2636.namprd19.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -95,89 +98,195 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/17/20 7:22 AM, Bharathi, Divya wrote:
-
-<snip>
-
->>>>> +
->>>>> +/**
->>>>> + * exit_enum_attributes() - Clear all attribute data
->>>>> + * @kset: The kset to free
->>>>> + *
->>>>> + * Clears all data allocated for this group of attributes  **/ void
->>>>> +exit_enum_attributes(struct kset *kset) {
->>>>> +	struct kobject *pos, *next;
->>>>> +
->>>>> +	mutex_lock(&kset_mutex);
->>>>> +	list_for_each_entry_safe(pos, next, &kset->list, entry) {
->>>>> +		sysfs_remove_group(pos, &enumeration_attr_group);
->>>>> +	}
->>>>> +	mutex_unlock(&kset_mutex);
->>>>> +	mutex_lock(&enum_mutex);
->>>>> +	kfree(enumeration_data);
->>>>> +	mutex_unlock(&enum_mutex);
->>>>> +}
->>>>
->>>> Since there is now only 1 kset for the main dir, you are now calling
->>>> sysfs_remove_group 4 times (for all the different times) on each entry
->>>> in the attributes dir. I guess this may fail silently, but it still is
->>>> not good. So this needs to be fixed.
->>>>
->>>> The remarks to this file also apply to the:
->>>>
->>>> drivers/platform/x86/dell-wmi-int-attributes.c
->>>> drivers/platform/x86/dell-wmi-string-attributes.c
->>>>
->>>> files.
->>>>
+On 9/17/20 6:18 PM, Limonciello, Mario wrote:
+>>> Those are very different flows to get to and change the same "types" of
+>> data.  By Dell's interface
+>>> being Dell specific we can guarantee that the documented flow works how it
+>> should.
+>>
+>> Documenting the flow could be part of the documentation for the
+>> different passwd types.
 > 
-> Since we maintained 4 different attribute groups under 1 kset, each time
-> respective attribute group will be removed. And once all groups are
-> removed, kset is deleted.
+> In the concept of a "generic" API I don't think the word "password" is futureproof
+> and it would need to be avoided.  I think a better term would be "authentication".
 
-sysfs_remove_group() just does a kernfs_remove_by_name() for each
-attribute in the group.
+Ack.
 
-Since the integer_, enumeration_ and string_ attr_group-s all
-have e.g. a current_value attribute that means that current_value
-will be removed 3 times and for the 2nd and 3th call
-kernfs_remove_by_name() will fail with -ENOENT.
+>> For how things currently work the User and
+>> Admin password attributed would have a type of "password", the hash
+>> example you gave will have a different type for its password attribute,
+>> e.g. "hotp" and not only the type could be different but also
+>> the sysfs-attributes, e.g. the "Admin" password-dir which has a "type"
+>> sysfs-atrribute which returns "htop" may not have a current_password
+>> attribute at all, instead it may would have a hash attribute, making
+>> it (more) clear that this one works differently.
+> 
+> In our definition `current_password` is intentionally not readable by userspace.
+> One process could be writing it (think obtaining it from an escrow service) and
+> another interacting with attributes, and their threat models might not match.
 
-Currently neither kernfs_remove_by_name() nor sysfs_remove_group() print
-an error message for this, but still it is not very clean.
+I completely agree that current_password should be write-only, I don't
+see that s a problem.
 
-Instead why not do this:
+> Furthermore - what's to say multiple authentication schemes might not be
+> simultaneously supported and this needs to be expressed?  This can be a difference
+> between OEM implementations.
 
-int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
-                         struct kobject *attr_name_kobj)
-{
-         int retval = sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
-         int i, next_obj;
+Well if different schemes are supported and each scheme has its own type,
+then I would expect there to be say / e.g.:
 
-         if (retval)
-                 goto out;
+/sys/class/firmware-attributes/dell/authentication/admin-password
+(with a type of "password") and:
+/sys/class/firmware-attributes/dell/authentication/admin-hotp
+(with a type of "hotp")
 
-         mutex_lock(&wmi_priv.mutex);
-	enumeration_data[instance_id].attr_name_kobj = attr_name_kobj;
-	/* ^^^^^^^^^^^^^^^^ This line is new ^^^^^^^^^^^^^^^^^^^^^^^^*/
-	...
+And then the user / userspace can choose which one to use,
+I guess if the kernel knows that only hotp has been setup and
+there is no standard password set, then it could hide the
+/sys/class/firmware-attributes/dell/authentication/admin-password
+password.
+
+TBH I think all these things are (mostly) easily solvable if/when we
+encounter them. I mean it is definitely good to keep these kind of things
+in mind. But at some point we might get lost in all the what-ifs we
+can come up with.
+
+>> This would mean that existing userspace software can not work with
+>> systems using the new "hotp" password atrributes, but that is
+>> unavoidable.
+> 
+>>
+>> I think that the current generic password flow will work well
+>> for other vendors too, they may need to not cache it in the
+>> kernel (instead sending it directly to the firmware once), but the basic
+>> concept of having to write the plain-text bios Admin password before
+>> being able to change protected settings seems like it is something which
+>> matches how most current BIOS-es work.  And needing a way to re-lock the
+>> settings also sounds like something which will be pretty common for most
+>> implementations.
+>>
+> 
+> OK so here is another place that I think vendors might have a different
+> implementation.  When you have a BIOS admin password set, Dell requires that
+> password to interact with any of these attributes.  Another vendor might
+> only require it only for certain attributes they deemed protected.
+> 
+> So again, Dell's flow might not scale to everyone else.
+> 
+> I do acknowledge this might be mitigatable by adding a sysfs file to every
+> attribute for Dell's implementation "is_authentication_required" that is always
+> 1 when admin password required and in another implementation an OEM might choose
+> to set that on a case by case basis.
+
+If a vendor comes along where authentication is not necessary
+for *all* attributes, then we could add the "is_authentication_required"
+as an optional sysfs-attribute for the firmware-attributes and state
+in the documentation that if that file is lacking that means that
+authentication is always required. That way the Dell code would not
+even have to have the "is_authentication_required" sysfs-attribute.
 
 
-void exit_enum_attributes(void)
-{
-         int i;
+>>>> We could even do something like we have for .desktop files
+>>>> fields, where we add something to the sysfs ABI documentation
+>>>> that vendors may add vendor specific types prefixed with X-<vendorname>.
+>>>>
+>>>> So all in all I believe that we can make using the proposed sysfs ABI
+>>>> a generic one work, and that this will be worth it to avoid having the
+>>>> issue of eventually having both a couple of vendor specific APIs +
+>>>> one grant unified generic API replacing those vendor-APIs
+>>>> (where we can never drop the vendor specific APIs because of
+>>>> backward compat. guarantees).
+>>>
+>>> I'm personally leaning on the right place to have a vendor agnostic view is
+>> "outside"
+>>> of the kernel in an userland library.  All the vendor drivers that change
+>> settings can
+>>> behave very similarly for the most part, but differences between vendor
+>> implementations
+>>> can be better expressed there.
+>>
+>> We have tried that before in several cases (that I'm aware of) and this never
+>> works out. Esp. not when the basic kernel interface is reasonable sane,
+>> then a lot of people / projects avoid the lib and just poke the kernel API
+>> directly. We have seen this e.g. with hwmon-class devices and with v4l devices
+>> and with backlight-class devices. Since I've seen this happen 3 times already
+>> I'm not a big believer in adding a userspace library to hide the vendor
+>> differences.
+>>
+>> Regards,
+>>
+>> Hans
+> 
+> Another area that comes to mind is Dell's value_modifier and modifier rules.  This
+> dependency logic is handled and expressed by the firmware.  You'll notice the Dell
+> driver only displays the information that came out of the firmware in sysfs and doesn't
+> do any processing in driver.
+> 
+> So by using Dell's format, another vendor's driver will need to follow Dell's
+> formatting and rule validation/generation which their firmware might not support and
+> they will be forced to implement Dell's schema in their kernel driver.
 
-         for (i = 0; i < enumeration_instances_count; i++) {
-		if (enumeration_data[instance_id].attr_name_kobj)
-                         sysfs_remove_group(enumeration_data[instance_id].attr_name_kobj, &enumeration_attr_group);
-	}
+Since we also seem to have some trouble to get these 2 properly documented
+(I have not looked at v3 yet), I'm fine with making them dell specific by prefixing them
+with dell-. I guess that that probably even makes sense.
 
-         kfree(enumeration_data);
-}
+> Lastly I want to caution that individual firmware items with the same name might have
+> a different meaning across vendors.  Here is my hypothetical example:
+> 
+> Dell has an attribute called "Camera"  With V3 it populates under:
+> /sys/devices/platform/dell-wmi-sysman/attributes/Camera
+> 
+> The description sysfs for it reads as "Enable Camera" and it's possible values are
+> "Disabled;Enabled;".  For Dell this is pretty obviously it turns on and off the camera
+> functionality.
+> 
+> For another vendor they might actually not offer to enable/disable the camera but instead
+> To enable the control of an electromagnetic camera shutter from such an attribute.
+> Their attribute could still be called "Camera" but the description might read as
+> "Enable camera shutter control".  For them it would still read as "Disabled;Enabled;"
+> for possible values but have a completely different meaning!
+> 
+> There is no standard for this, and again userspace will need to basically look at
+> the directory and structure to figure out what the meaning actually is.
 
+I can envision similar issues popping up between different generations / models
+of Dell hardware even. Specifying what changing the attributes actually does falls
+(way) outside of the scope of the sysfs ABI IMHO. That will always be the case
+of please consult your Laptop's / Workstation's / Server's manual.
+That is actually not much different from the current builtin
+firmware setup utility experience where the help text is often,
+well, not helpful.
 
-That makes the teardown mirror the setup much more closely and as such is
-a cleaner solution IMHO.
+For all I care there is an enum called "HWvirt" with a description of
+"Hardware virtualization support" and values of "Enabled" and "Disabled"
+which controls something somewhat or even totally different from what the
+name and description suggest. That would be less then ideal, but not a problem
+from the pov of the sysfs ABI for firmware-attributes. It would be a simple
+case of the garbage in garbage out principle.
+
+So this is one problem which I'm happy to punt to userspace and I guess Dell
+might do a Dell specific utility, which only works one certain model Dell's,
+which is a lot fancier then the basic sysfs functionality and e.g. consumes
+the dell-value_modifier and dell-modifier sysfs-attribures.
+
+The purpose behind having a unified userspace ABI is to e.g. allow configuring
+firmware settings for a fleet of machines from:
+
+https://wiki.gnome.org/Projects/FleetCommander
+
+Using a generic plugin which works across different vendors.
+
+And maybe have a simple vendor-agnostic pygtk3 UI which allows users to
+poke at things, even if they have to figure out in which order they need
+to change things in some cases (which again is actually not that
+different from the current builtin firmware setup utility experience
+for a lot of vendors).
+
+I guess a could way to look at the generic sysfs firmware attributes
+class I'm proposing is looking at it as a lowest common denominator
+solution. With the addition of vendor specific extensions so that
+vendors (e.g. Dell) are not limited to only offering functionality
+offered by the generic, shared ABI. Does that make sense ?
 
 Regards,
 
