@@ -2,211 +2,212 @@ Return-Path: <SRS0=i/bP=C7=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3680C2D0E2
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 10:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEBAC2D0E2
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 10:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59AAE208A9
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 10:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C4C2073A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 10:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/iwo2rC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SIlhVJlI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgIVKat (ORCPT
+        id S1726503AbgIVKn2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Sep 2020 06:30:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:25902 "EHLO
+        Tue, 22 Sep 2020 06:43:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38783 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726353AbgIVKas (ORCPT
+        by vger.kernel.org with ESMTP id S1726423AbgIVKn2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Sep 2020 06:30:48 -0400
+        Tue, 22 Sep 2020 06:43:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600770646;
+        s=mimecast20190719; t=1600771405;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ohOkzQNwxzOWnb277PMtmxGc7cw6FoKlE9qPXZZFmUw=;
-        b=W/iwo2rCeuodgPXdwhVqKwU4lrbAB4ioy+ZkC47NN+9IJ2eideKiUSNl1deW7esQvK526a
-        fJJj6nhU+83eZTFVcOPAiAVxWT5INJn2xoe14GkwpqauoAu44zveOcorxrv7bVQyBPaO5a
-        wQe0tWxamCKhtxx4GEwhUg76M6iFyJI=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-OhVJBIwiPAisZSv5uBNb0A-1; Tue, 22 Sep 2020 06:30:44 -0400
-X-MC-Unique: OhVJBIwiPAisZSv5uBNb0A-1
-Received: by mail-ed1-f72.google.com with SMTP id y21so5546627edu.23
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2020 03:30:44 -0700 (PDT)
+        bh=tt12pKYR26UHqN23lWySPLAioUputovQDTrs/r1QFlE=;
+        b=SIlhVJlINKwQPnpw4xiWGfcQKTlheEy05MHB2biF0FLGt8LYCMMLVufJyiyX6P2Jed/nFu
+        2WnzyiF1o4C5AQnzWTTYSzef9dxE4qnYHPn32IBdJY3dd3NYeZdoIBZjSHcT1YycshXCZr
+        fF494MRUvxs6yLGaOt7u/SE9+3bjlg4=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-241-ErzRRiL6PzGRBtdS8r6Bjw-1; Tue, 22 Sep 2020 06:43:14 -0400
+X-MC-Unique: ErzRRiL6PzGRBtdS8r6Bjw-1
+Received: by mail-ej1-f71.google.com with SMTP id lx11so6066849ejb.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2020 03:43:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ohOkzQNwxzOWnb277PMtmxGc7cw6FoKlE9qPXZZFmUw=;
-        b=q0M7MFNH+1H/Jy0RYCpB9rcqLgVpySuRqh8SiEBcgS4fYLpkwDEhuL9B/XP7UHFeQc
-         kM0TqfxM5NyTYKa9dJazFOIQqoBO1RISDKZpGn35ksnzM1KSJZ7Eh87O/loOtpdXfcQp
-         g45Dez+rX34e3adaiSEVqkXqJIx5AhlPnW1/DfLAT3aWEgzrGD09yeBqSIQtk+0g+B93
-         ws7bvQECYi6CcxQfBnBOG5oIaOTGW5x1v8S8GsQYPEmKSxTiB/el1cIG/OfOGSe3FCwH
-         aldQieIFT5fO1cqXxILNJ2P/XNxoBCJJtNnaF3TXkN7EsizY+PrU4ADEnTB/L7EhW+Vk
-         mH3w==
-X-Gm-Message-State: AOAM5300vCwYWt0Ij7RLULqqYjVYdZgcWkadyiJqJ07u9tvYairHiMoP
-        ppkIEKtPmJwf1RYiouqd8UXJ87p5slqdFLCkk2AVMBoca4KM1OuUuZpg/OOLtKqW7m30Ip+wi1r
-        PXanyIgx3V9YeIZnubtGp/+2I0lSP0ONVAQ==
-X-Received: by 2002:a17:907:9c3:: with SMTP id bx3mr4144662ejc.164.1600770642934;
-        Tue, 22 Sep 2020 03:30:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwHrQ2E4dYOEGsMTbu+OfvJZZbogpEU5NBjqN8szMMHY3EBOzu5JWWTPglbcllXIMnHtE5FHQ==
-X-Received: by 2002:a17:907:9c3:: with SMTP id bx3mr4144645ejc.164.1600770642666;
-        Tue, 22 Sep 2020 03:30:42 -0700 (PDT)
+        bh=tt12pKYR26UHqN23lWySPLAioUputovQDTrs/r1QFlE=;
+        b=hv4n3oF6Eu+tSQoefA0TRyeOq0B2e/aVy9z2dSMtp45Cxoepb6Zjq0dcbGFQlVOB9Z
+         zPDv0tkudAx0GmeQhPgRyux2UXQv8PGzGquKEaXuY6kyUkMez+7oj7OPmBnsZj1EBFx4
+         W9rFsmgHHRUGOZ4Ukw7e+XbVxMlxPXVnCxDi4g6Ezp8YlpF9BwFV/ehsZrWLY8D7qrTV
+         veEmYpFHgyKl3gmyQl+CrHDKzsbgdbmdEqqdcSxUVDuAkcLW44BK70jv9ViHscip+4uY
+         AUEwJM10e0YXskOz1wiX6cUdXzGNYZxkzhMnMT6U3sgl+RfgGLUfTvpWYnCxmuPHFu3C
+         En+A==
+X-Gm-Message-State: AOAM533S6FupVjsixoJQOA7MLdEf7sL4SuMTGOsTw6b/dWVTJ32QFljQ
+        EwJ+gwZdlkk+9bwzcKvxiXr3rIB7GbqFMHU5wFALKVZaZ6FGLy613jKDHJ/oIKIcPrm71olBD9C
+        T4uDg1OU6qNRhi4OKaFUk+4vSAAAjG0gvRw==
+X-Received: by 2002:a50:c8cd:: with SMTP id k13mr3258885edh.387.1600771393405;
+        Tue, 22 Sep 2020 03:43:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxQYkSIaynM1eaOVtPvx2fl++OnihJ+y7ouxwqeqAYcM80QsNSmyNaEEq3fYGUSId3ulLsN/w==
+X-Received: by 2002:a50:c8cd:: with SMTP id k13mr3258861edh.387.1600771393123;
+        Tue, 22 Sep 2020 03:43:13 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id m2sm10831355ejo.4.2020.09.22.03.30.41
+        by smtp.gmail.com with ESMTPSA id q10sm11043651eja.107.2020.09.22.03.43.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Sep 2020 03:30:41 -0700 (PDT)
+        Tue, 22 Sep 2020 03:43:12 -0700 (PDT)
 Subject: Re: [External] Re: RFC: offering a standardized (/sys/class)
  userspace API for selecting system/laptop performance-profiles
-To:     Mark Pearson <markpearson@lenovo.com>,
-        Benjamin Berg <bberg@redhat.com>,
+To:     Elia Devito <eliadevito@gmail.com>,
+        Mark Pearson <markpearson@lenovo.com>,
         Bastien Nocera <hadess@hadess.net>,
-        Elia Devito <eliadevito@gmail.com>,
-        Mark Pearson <mpearson@lenovo.com>
+        Mark Pearson <mpearson@lenovo.com>,
+        Benjamin Berg <bberg@redhat.com>
 Cc:     Jared Dominguez <jaredz@redhat.com>,
         platform-driver-x86@vger.kernel.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 References: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
- <21b6dffbbc6dbb14ebef3f078cc2497f9a872f57.camel@hadess.net>
- <b6332a4a-7606-2bd0-632b-f67b68d3dd1b@redhat.com>
- <9f01ce60a6b3319855f6a26b94af3e5fc6d2595e.camel@redhat.com>
- <6e0409e7-5bc2-4ca6-a0aa-725a9a91aa8d@redhat.com>
- <83694d5164a32d1ce6cdafb9cb73d731ca4b4a78.camel@redhat.com>
- <0577bc9b-aa9f-c4b6-bac6-64325d81eeff@lenovo.com>
- <c06f214d-ca9d-9ca3-236a-82a0bacfb582@redhat.com>
  <3ed9ac0a-2e24-7d3a-f264-c3bb03b846d9@lenovo.com>
+ <261328975238951d0412727220a1b7d915cebb99.camel@redhat.com>
+ <9766663.nUPlyArG6x@pce>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9d473bcb-9773-6ee6-d60c-e180e3bb8e0a@redhat.com>
-Date:   Tue, 22 Sep 2020 12:30:40 +0200
+Message-ID: <79735e10-6dfc-ffff-5b42-b78e19e24d9b@redhat.com>
+Date:   Tue, 22 Sep 2020 12:43:11 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <3ed9ac0a-2e24-7d3a-f264-c3bb03b846d9@lenovo.com>
+In-Reply-To: <9766663.nUPlyArG6x@pce>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/17/20 7:16 PM, Mark Pearson wrote:
+On 9/21/20 11:03 AM, Elia Devito wrote:
+> Hi all, sorry for response delay I'm very busy at work this period
+
+No problem.
+
+> A common interface is surely the best solution, especially because it allows
+> to standardize the user-space tools and maybe to integrate its with desktop,
+> like Bastien is doing with gnome-power-profiles-daemon or like the similar tool
+> plasma-pstate.
 > 
-> On 9/17/2020 1:03 PM, Hans de Goede wrote:
->> Hi Mark,
->>
->> On 9/17/20 6:58 PM, Mark Pearson wrote:
->>> On 9/17/2020 10:10 AM, Benjamin Berg wrote:
->>>> Hi,
->>>>
->>>> On Thu, 2020-09-17 at 15:54 +0200, Hans de Goede wrote:
->>>>> Hi,
->>>>>
->>>>> On 9/17/20 3:50 PM, Benjamin Berg wrote:
->>>>>> On Thu, 2020-09-17 at 14:51 +0200, Hans de Goede wrote:
->>>>>>>> Compared to the WIP lenovo-dytc "perfmode" driver, we're missing
->>>>>>>> something to advertise the unavailability of a profile, and the reason
->>>>>>>> for that unavailability.
->>>>>>>
->>>>>>> UGh, do we really need to export this though. We have the lap_mode thing
->>>>>>> already; and that is something which we will need for other reasons in
->>>>>>> the future too. Any UI for selecting performance modes can display a
->>>>>>> warning when lap_mode is true saying that: "The laptop has detected that it
->>>>>>> is sitting on someone's lap and that performance may be limited
->>>>>>> because of this." (feel free to improve the text).
->>>>>>
->>>>>> Well, for dytc_perfmode there are actually always the three states
->>>>>> L/M/H. It just happens that the kernel will write "H*" (was "M*" until
->>>>>> yesterday) when the performance mode is degraded due to lap detection.
->>>>>>
->>>>>> Think of dytc_perfmode as a profile that sets a number of things:
->>>>>>    * Thermal Limits
->>>>>>    * Fan Behaviour
->>>>>>    * possibly more
->>>>>>
->>>>>> While dytc_lapmode will only enforce a change to the thermal limit.
->>>>>> So "performance" (H) is technically a valid mode even when the lap is
->>>>>> detected.
->>>>>>
->>>>>>> I guess we could split the "value" attribute from my reply to Benjamin's
->>>>>>> email into "configured_value" (rw) and "actual_value" (rw) attributes.
->>>>>>> If we have the info we might as well export it I guess,.
->>>>>>
->>>>>> I consider the "*" purely a curtsey to users that read the attribute
->>>>>> directly using e.g. cat to help with the interpretation. It probably is
->>>>>> not interesting to userspace applications/daemons.
->>>>>
->>>>> So if there is a difference between M and H and H* then I think we should
->>>>> just do the KISS thing and only have a single value attribute and in the
->>>>> new interface handle the H* like H (p-p-d can still check the lap_mode
->>>>> attribute to differentiate the 2 if it wants to).
->>>>
->>>> I guess you are saying to drop "H*" and only have "L"/"M"/"H"? If so,
->>>> fine with me, but we probably need that input in reply to
->>>>    https://patchwork.kernel.org/patch/11730133/#23618881
->>>> then :)
->>>>
->>>> In principle it could be useful for userspace to know that performance
->>>> is or would be dramatically impacted. i.e. when dytc_lapmode is 1, then
->>>> you might want to say something like:
->>>>
->>>>    performance states >= 75 are impacted due to "lapmode"
->>>>
->>>> But, not sure if a kernel interface for that is useful or whether we
->>>> should just put that kind of knowledge into userspace.
->>>>
->>>> Benjamin
->>>>
->>> I don't have a strong opinion on this but the kernel driver is already knowledgeable about the quirks of what does and doesn't work on the system so it seems like a good place to have that logic.
->>>
->>> What if we have an API for "configured" and "actual" - and if they differ userspace knows it should figure out why (likely lapmode, but if the HW vendor adds a new setting related to "position of sun in the sky" or "how much money is in your account and can you afford the electricity bill?" that could be added too....)
->>
->> As I understand the problem with the configured and actual value/performance_level ideas is that if I understand things correctly that H* is not the same as M,
->> it behaves close-ish to M because of the lower thermal-limits from lapmode, but if I understood Benjamin correctly is is not exactly the same, so if we were
->> to advertise "M" in the actual_performance_level sysfs-attribute then that would not really be correct ?
->>
+> I think we should keep separate performance and thermal profiles thus leaving
+> the possibility of setting a thermal profile independently of the performance
+> profile and vice versa.
 > 
-> Just a small clarification - in our case High performance is only for deskmode. It drops to Medium in lapmode.
-> Medium mode is slightly different in power rating between lap and desk mode (e.g on X1Carbon 14.5W on lap, 15W on desk). I haven't really worried about this in my patch implementation - it's still "medium"
+> Hp implements up to 4 thermal profiles (apparently the same ones that implement
+> dell), my patch implements the first 3 profiles which are the ones supported by
+> my hardware.
 > 
-> Does that make it better or more confusing?
+> 1. HP Recommended -> fan stay off and start at low~medium speed when necessary
+> 2. Performance    -> fan stay off and start at medium~hight speed when
+> necessary
+> 3. Cool           -> fan stay off and start at medium~hight speed when
+> necessary
+> 4. Quiet          -> fan should stay off and start at very low speed if
+> necessary
+> 
+> for each profile the firmware set also a OEM variable to select DPTF profile
+> with the adeguate power limit.
+> 
+> combining these profiles with the performance profiles it is possible to obtain
+> the desired performance according to the needs of the moment
+> 
+> e.g.
+> 
+> For gaming purpose when the CPU and GPU share the thermal budget, in this case
+> the best solution is to set thermal profile to performance to maximize the heat
+> dissipation and the p-state profile to powersave, in this way during loadings
+> the cpu gain a performance boost that allow to reduce loading time, instead,
+> during gameplay the cpu performance will be limited in favor of the GPU
+> allowing the maximum framerate to be reached.
+> (feral had to handle it for its gamemode tool:
+> https://github.com/FeralInteractive/gamemode/pull/179)
+> 
+> Another opposed particular case could be thermal profile set to quiet and
+> p-state set to performance, usefull for example to maximizze cpu performance
+> in silent ambient room like a library, obviously for CPU-only intesive tasks
+> the best solution is to set either thermal and performance profile to
+> performance.
+> 
+> Basically there are infinite combinations that can be made to obtain the best
+> configuration for each situation, to allow this a common interface should offer
+> a possibility to:
+> 
+> - Define the list of thermal profiles separately from the performance ones
+> - Eventually define a list of on/off attributes (useful for lenovo lap_mode?)
+> - Provide a description of them
+> - Switching between thermal profiles regardless of the performance profile
+> 
+> A possible solution could be a "slider like" interface for performance level
+> and a list of thermal profile.
 
-I think that calling both medium is fair in this case.
+So I have been thinking about this and performance level and thermal profile
+are really inherently couple to each other. Telling the CPU it can use
+25W TPD instead of the default 15W, without also ramping up the cooling is
+just going to lead to a whole bunch of thermal throttling.
 
-The big question is, do we want to expose that even though the user configured
-a performance-profile of high, the user is only getting medium atm because of
-reasons?
+In a desktop machine with a discrete GPU it is sorta easy, in essence you have
+a GPU performance profile, controlling GPU TPD/turbo behavior and the GPU
+fans too match, and a CPU performance profile which likewise controls
+the CPU fan profile too match the CPU performance profile.
 
-Note I say "because of reasons" specifically, because things become even more
-complicated if we want to spell out the reasons in the sysfs interface too.
+With laptops with a discrete GPU things become harder because there is a
+single shared cooling mechanism. But there you could simply say that
+performance-profile = max(gpu-profile, cpu-profile).
 
-I mean high will give different results even when in desk mode, depending
-on if there is a cloth on the desk (bad) or if the table is a metal picknick
-table full of round holes to drain the rain (allowing more airflow to the
-bottom of the laptop) not to mention that the ambient temperature in which
-the laptop is used can probably vary from 15 to 35 degrees celcius.
+I mean telling the GPU and CPU that they can burn a gazillion watts and
+then telling the cooling setup to be as quiet as possible, is clearly
+not going to end well.
 
-IOW there can be many factors why high may not really lead to high turbo
-clocks; or why it leads to higher turbo clocks then normally expected...
+This all assumes that we have some nice way to tell the hardware about
+the 3 separate (gpu / cpu / cooling) profiles we want.
 
-I still have the feeling that it would be best to drop the UI requirement
-to show being in a degraded performance mode, because the performance
-with modern laptops is just very variable and dependent on many factors.
+But that is not always the case; and often when using a CPU with
+integrated GPU they are all tied together.
 
-If we drop that UI requirement; then there also is no need to advertise
-configured vs actual performance profile in the sysfs interface.
+So my proposal is to have a :
 
-Users who really want to know what is going on will get much more
-detailed and useful information when using something like turbostat
-(or a UI for that) anyways.
+/sys/class/performance-profile
+
+Underneath we can have one or more entries (performance-profile providers)
+each one with a performance_level file on the previously suggested 0-100 scale
+and a performance_mappings file listing the supported discrete values on that
+scale and some descriptions of those discrete values purely for informational
+purposes.
+
+Besides the performance_level and performance_mappings files I would also like
+to add a "type" sysfs attribute, which can have 1 of 3 values:
+"system", "cpu" and "gpu".
+
+So something like the thinkpad_acpi performance levels will be "system", and
+the intel_pstate driver could maybe also register itself here as a "cpu"
+type performance-profile provider.
+
+This will allow userspace (if / when it wants to) to do things like put the
+CPU in medium/balanced mode while telling the GPU to go full-throttle for when
+playing a game which is clearly GPU limited.
+
+This game scenario of course assumes that we then actually will have a
+performance-profile driver for both the CPU and the GPU.
+
+Note I'm still just brainstorming here, but I think that having the
+0-100 scale + the type thing should cover all the use-cases we want
+to cover.
+
+As always feedback or alternative API proposals are very much welcome.
 
 Regards,
 
