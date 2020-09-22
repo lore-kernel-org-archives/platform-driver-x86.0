@@ -2,214 +2,190 @@ Return-Path: <SRS0=i/bP=C7=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEBAC2D0E2
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 10:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C4CC4363D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 19:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28C4C2073A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 10:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546C12071A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 19:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SIlhVJlI"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="VdVkziW8";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="FepE8SPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgIVKn2 (ORCPT
+        id S1726614AbgIVTSk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Sep 2020 06:43:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38783 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726423AbgIVKn2 (ORCPT
+        Tue, 22 Sep 2020 15:18:40 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:59234 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726563AbgIVTSj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Sep 2020 06:43:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600771405;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tt12pKYR26UHqN23lWySPLAioUputovQDTrs/r1QFlE=;
-        b=SIlhVJlINKwQPnpw4xiWGfcQKTlheEy05MHB2biF0FLGt8LYCMMLVufJyiyX6P2Jed/nFu
-        2WnzyiF1o4C5AQnzWTTYSzef9dxE4qnYHPn32IBdJY3dd3NYeZdoIBZjSHcT1YycshXCZr
-        fF494MRUvxs6yLGaOt7u/SE9+3bjlg4=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-ErzRRiL6PzGRBtdS8r6Bjw-1; Tue, 22 Sep 2020 06:43:14 -0400
-X-MC-Unique: ErzRRiL6PzGRBtdS8r6Bjw-1
-Received: by mail-ej1-f71.google.com with SMTP id lx11so6066849ejb.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2020 03:43:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tt12pKYR26UHqN23lWySPLAioUputovQDTrs/r1QFlE=;
-        b=hv4n3oF6Eu+tSQoefA0TRyeOq0B2e/aVy9z2dSMtp45Cxoepb6Zjq0dcbGFQlVOB9Z
-         zPDv0tkudAx0GmeQhPgRyux2UXQv8PGzGquKEaXuY6kyUkMez+7oj7OPmBnsZj1EBFx4
-         W9rFsmgHHRUGOZ4Ukw7e+XbVxMlxPXVnCxDi4g6Ezp8YlpF9BwFV/ehsZrWLY8D7qrTV
-         veEmYpFHgyKl3gmyQl+CrHDKzsbgdbmdEqqdcSxUVDuAkcLW44BK70jv9ViHscip+4uY
-         AUEwJM10e0YXskOz1wiX6cUdXzGNYZxkzhMnMT6U3sgl+RfgGLUfTvpWYnCxmuPHFu3C
-         En+A==
-X-Gm-Message-State: AOAM533S6FupVjsixoJQOA7MLdEf7sL4SuMTGOsTw6b/dWVTJ32QFljQ
-        EwJ+gwZdlkk+9bwzcKvxiXr3rIB7GbqFMHU5wFALKVZaZ6FGLy613jKDHJ/oIKIcPrm71olBD9C
-        T4uDg1OU6qNRhi4OKaFUk+4vSAAAjG0gvRw==
-X-Received: by 2002:a50:c8cd:: with SMTP id k13mr3258885edh.387.1600771393405;
-        Tue, 22 Sep 2020 03:43:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxQYkSIaynM1eaOVtPvx2fl++OnihJ+y7ouxwqeqAYcM80QsNSmyNaEEq3fYGUSId3ulLsN/w==
-X-Received: by 2002:a50:c8cd:: with SMTP id k13mr3258861edh.387.1600771393123;
-        Tue, 22 Sep 2020 03:43:13 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id q10sm11043651eja.107.2020.09.22.03.43.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Sep 2020 03:43:12 -0700 (PDT)
-Subject: Re: [External] Re: RFC: offering a standardized (/sys/class)
- userspace API for selecting system/laptop performance-profiles
-To:     Elia Devito <eliadevito@gmail.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Benjamin Berg <bberg@redhat.com>
-Cc:     Jared Dominguez <jaredz@redhat.com>,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
- <3ed9ac0a-2e24-7d3a-f264-c3bb03b846d9@lenovo.com>
- <261328975238951d0412727220a1b7d915cebb99.camel@redhat.com>
- <9766663.nUPlyArG6x@pce>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <79735e10-6dfc-ffff-5b42-b78e19e24d9b@redhat.com>
-Date:   Tue, 22 Sep 2020 12:43:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <9766663.nUPlyArG6x@pce>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 22 Sep 2020 15:18:39 -0400
+X-Greylist: delayed 4530 seconds by postgrey-1.27 at vger.kernel.org; Tue, 22 Sep 2020 15:18:38 EDT
+Received: from pps.filterd (m0170392.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08MHsqA4027149;
+        Tue, 22 Sep 2020 14:02:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=YqXOoMHm73720qzMnyQE4t7TE3afBut8vfQAwPYeZZo=;
+ b=VdVkziW8kZ42FkeL6NI58e+AOwsDLwZQmyqbNukSBk7EgMq8op7xcgwRESuCEjjs5+IL
+ Hj1MjI54UTjuuP3ThLXPbzo4cV8aNSZYBBs1ER/PNrSEvXZUm5+qZGoD7YJyyezWI2X9
+ s9BzNDEOYKL+Hce5YNum4QKpdoyDnqoaokE2frokQHAs3hnI2vIxP//6pPMwNkXoPJxB
+ JwtUEEvFnw/97/yu9A6k26Pst3fiCNOfu3ZwGbUXwIKG9zohYod733KlVB45kYFT9lxR
+ OE/6c49Odr1FkOL8/8aMLyfvCvUFyFcZ6LThFyiQv/OAopVwns6qT8dOlkmR75Uqa5gf gA== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 33nd5da5ab-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 22 Sep 2020 14:02:57 -0400
+Received: from pps.filterd (m0144102.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08MHxXXP062567;
+        Tue, 22 Sep 2020 14:02:56 -0400
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
+        by mx0b-00154901.pphosted.com with ESMTP id 33qmj29w89-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Sep 2020 14:02:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X7HqWnswXdfgQd2vZdCtm8uiBaB2yygnFB/q9QfQQyO5MJnhs17WgZgo/yXYPH+GWyqhvD9Knd/vvLNVy7UNtXwNURUdaNKGjBdv7L+jpH4t9Myq42dhxjWib25joIvn0FVNmuI05nJenoSY6AG1rm4nZ/BS1+91MKh6x4Vi/sJIMSm9j36wWWED4H/k3oNrSwckFs1A+qhP6gdgBllk5O2D9HCtWOYEqVapzWpGUKe+u/WkB7lTNcqus2pIE/nS06ybGvfMSX89ptMuaC+YrfU4a5u/7SahRVh6tpKnSTdz13xHg1r+iEBXIVH/rY+003p5xuVzUP3YiVOkQ+FteA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YqXOoMHm73720qzMnyQE4t7TE3afBut8vfQAwPYeZZo=;
+ b=jHJla1KgklM4E5YbOGoOGhYkUEh2AXuxjZM5DCqkLc6D3TqeZJXoCHiNQzxDVDd77x/bwelMxR0DOmKuloDszI1gFfN86E9QJ9HMe96RrAd17vNNFhFgzVYAvEIrnsyT64J3WIku9xuNVNWgvFx3sztJs0qSNM8dKr8zGkZcdXFhYl6m0RkQ7PpzCSYuQDVS1J1z24I+mGIgKupPoMDKyZyP3OoWccnqpDcLlL8d5Z2Y0oWFf23lC4lL29nCfff9DpD9d+KUvrvp9l9o2/OIXFVK2B4tA/HJ3o+itkYdCXL092hRmP/hx8X7y3WzcP+OPbiwRirznX7SiLaUYOKa/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
+ dkim=pass header.d=dell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
+ s=selector1-Dell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YqXOoMHm73720qzMnyQE4t7TE3afBut8vfQAwPYeZZo=;
+ b=FepE8SPyzDvj8XmlNrw0OwC/CnnbwWgK53T7+ud4lEqaEtFrMzBu4XO3GqeSXE64Mmn0aU49PNfFrMoFB/Wm34FKLXue7YS7G4+yVI7PrzXpw9UphjZ+X2bjRGeKwVgrQtU/WhpWSga1svPLjg9GKa+H/OjPktzHvUh/H1JIJTQ=
+Received: from DM6PR19MB2636.namprd19.prod.outlook.com (2603:10b6:5:15f::15)
+ by DM6PR19MB3802.namprd19.prod.outlook.com (2603:10b6:5:247::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20; Tue, 22 Sep
+ 2020 18:02:54 +0000
+Received: from DM6PR19MB2636.namprd19.prod.outlook.com
+ ([fe80::a4b8:d5c9:29da:39b2]) by DM6PR19MB2636.namprd19.prod.outlook.com
+ ([fe80::a4b8:d5c9:29da:39b2%4]) with mapi id 15.20.3412.020; Tue, 22 Sep 2020
+ 18:02:54 +0000
+From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Divya Bharathi <divya27392@gmail.com>,
+        "dvhart@infradead.org" <dvhart@infradead.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
+        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>,
+        Richard Hughes <rhughes@redhat.com>,
+        Jared Dominguez <jaredz@redhat.com>
+Subject: RE: [PATCH] Introduce support for Systems Management Driver over WMI
+ for Dell Systems
+Thread-Topic: [PATCH] Introduce support for Systems Management Driver over WMI
+ for Dell Systems
+Thread-Index: AQHWZn4rqCTeVrGp2k+MCJMiO1QTGalTvXYAgBRkaN2AAGzIkIAEWlCAgABEH2CABgKtAIAAUMlAgAEvSoCAAATcgIAAkmEA
+Date:   Tue, 22 Sep 2020 18:02:54 +0000
+Message-ID: <DM6PR19MB263605096186885BF90680E3FA3B0@DM6PR19MB2636.namprd19.prod.outlook.com>
+References: <20200730143122.10237-1-divya_bharathi@dell.com>
+ <d3de1d27-25ac-be43-54d8-dcbfffa31e1d@redhat.com>
+ <DM6PR19MB26364970D0981212E811E1B0FA2E0@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <67ca316a-227f-80f6-ad22-7d08112b2584@redhat.com>
+ <DM6PR19MB26368BB2B8C4D7CE58DF7C31FA230@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <5847917c-2c34-5d74-b5db-f33bb8fc9e13@redhat.com>
+ <DM6PR19MB2636626A94385EDC7C0CACF9FA3E0@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <33666ec6-be47-2c33-d4c5-6b23b53f6185@redhat.com>
+ <DM6PR19MB263615C1060108E5661AE615FA3A0@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <52fb287e-e683-63bc-3641-90abd78c605a@redhat.com>
+ <01c6632a-4e21-dfc0-c5d8-42a7016bfa16@redhat.com>
+In-Reply-To: <01c6632a-4e21-dfc0-c5d8-42a7016bfa16@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-09-22T18:02:50.7306347Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=8cc7d4da-0e2b-453a-9ec4-2f7757e9b0c2;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=Dell.com;
+x-originating-ip: [76.251.167.31]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4dbb5eee-b9f0-40ab-3278-08d85f21baf1
+x-ms-traffictypediagnostic: DM6PR19MB3802:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR19MB3802669E39E2D8495A0E4A66FA3B0@DM6PR19MB3802.namprd19.prod.outlook.com>
+x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ek0J50PhVhyIRQ54T48kCqD/kdhILE+ymBEgSkZjjBLiMbtPahcEEAWMPAN1S5yQ8jOiky5ac64OLCWbmw1Eb356XhHE2FQD9LYZravsM9IrGxRZf6Wg9TixBl/zI2WXt+6fZcFGoR2gx7DQFCI/mTe8SjnZ7X2U1j7nxyKtMN2s6lVOFclKQ3OMPiWoAa2BFklZJJb5rmpaLTVZ8bmpCJg1t5rl+hzr3J6WP6IwepgRRCn2aoj9Cj38xvlNomY3l6eHVRP+i9LEAseeS68MesgWS881d2m6c+id+oeOtuXuChfZUoKtVxhViOuxJIhX+G1zWtncOCAGpVFzqRDroQdvb1OqiP6kdvwurQiJNTgLl2/8YXUCa+5Juf9ZrlIR
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR19MB2636.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(136003)(376002)(346002)(39860400002)(366004)(52536014)(8676002)(4326008)(6506007)(71200400001)(7696005)(26005)(54906003)(478600001)(186003)(786003)(316002)(110136005)(33656002)(2906002)(86362001)(5660300002)(83380400001)(9686003)(66946007)(8936002)(66446008)(64756008)(66556008)(55016002)(66476007)(76116006);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: YkNQ8qEAMl1XpO0kvRK8CgLHBAqAtYlWSQju1C5w9E+LvLJMoAUyUPQnWuRB6IDEk7qcKaGE44uZYV4r5NvO8FTiBXzVrunLbdprT2o/Dcx0rTkSXEFZBwMTW0Z1DZofHGcVkvgHTLB3RsVvSqCTOo/jg7F+0/Xe97cKMUlv9jdB6s9cBtsJwZKro28a3/XR/EuOU+VCFbYInJBt4+gMu8Sq4wew3hsi5eWcOn5a6eRAXqzKX44ujhBWTqPJxeh19hqjOJNT4Wsi0SDXsYhxBkhQesQgEj8s/to575ZrQdxl0v7XNJLpPpV4SPR2ybbnSURQua2bvkgknf/ukwnYjcsA0w4iyMM6muA5XVut1aEFtPYQfPeYHBR3z/5PaaS/ceAj6TzzIm9ssFO2agnwNqSQY2No80Yzwhlf8yHVadUSvTMtNXK2poSalFqLtfv0At72L9I236kwC7MB1H4RaE+rrOCcYEnJSmi3z3nHoLlnpgMWoXDAejaM0c+zYW+W1EaDEKwjvLaM6DK99bycaB99mQ29hmsp9Wj1YwnhQS0gPr1+gVDNStZ3y8Egc4DeRVWz1S/J5xOQ6c+a4nzPM76bCH/PgVtuF/1HUPhlzR8avWhieA+gWbL2KSpXUl1Zkk+3N+kxvaCL4cRj37AX4Q==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Dell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR19MB2636.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dbb5eee-b9f0-40ab-3278-08d85f21baf1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Sep 2020 18:02:54.6814
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +nPEqtbuBfB066S5oCECNzjce8iEhZEWQi9ypmKRlAD/E5cRiHsj8SHPPgZ9+zZlx/+PZ5kqke45ltta932SZEDcgBatUzsQS9Rb0Z55Va0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR19MB3802
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-22_17:2020-09-21,2020-09-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
+ impostorscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009220141
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ mlxscore=0 adultscore=0 bulkscore=0 phishscore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009220140
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 9/21/20 11:03 AM, Elia Devito wrote:
-> Hi all, sorry for response delay I'm very busy at work this period
-
-No problem.
-
-> A common interface is surely the best solution, especially because it allows
-> to standardize the user-space tools and maybe to integrate its with desktop,
-> like Bastien is doing with gnome-power-profiles-daemon or like the similar tool
-> plasma-pstate.
-> 
-> I think we should keep separate performance and thermal profiles thus leaving
-> the possibility of setting a thermal profile independently of the performance
-> profile and vice versa.
-> 
-> Hp implements up to 4 thermal profiles (apparently the same ones that implement
-> dell), my patch implements the first 3 profiles which are the ones supported by
-> my hardware.
-> 
-> 1. HP Recommended -> fan stay off and start at low~medium speed when necessary
-> 2. Performance    -> fan stay off and start at medium~hight speed when
-> necessary
-> 3. Cool           -> fan stay off and start at medium~hight speed when
-> necessary
-> 4. Quiet          -> fan should stay off and start at very low speed if
-> necessary
-> 
-> for each profile the firmware set also a OEM variable to select DPTF profile
-> with the adeguate power limit.
-> 
-> combining these profiles with the performance profiles it is possible to obtain
-> the desired performance according to the needs of the moment
-> 
-> e.g.
-> 
-> For gaming purpose when the CPU and GPU share the thermal budget, in this case
-> the best solution is to set thermal profile to performance to maximize the heat
-> dissipation and the p-state profile to powersave, in this way during loadings
-> the cpu gain a performance boost that allow to reduce loading time, instead,
-> during gameplay the cpu performance will be limited in favor of the GPU
-> allowing the maximum framerate to be reached.
-> (feral had to handle it for its gamemode tool:
-> https://github.com/FeralInteractive/gamemode/pull/179)
-> 
-> Another opposed particular case could be thermal profile set to quiet and
-> p-state set to performance, usefull for example to maximizze cpu performance
-> in silent ambient room like a library, obviously for CPU-only intesive tasks
-> the best solution is to set either thermal and performance profile to
-> performance.
-> 
-> Basically there are infinite combinations that can be made to obtain the best
-> configuration for each situation, to allow this a common interface should offer
-> a possibility to:
-> 
-> - Define the list of thermal profiles separately from the performance ones
-> - Eventually define a list of on/off attributes (useful for lenovo lap_mode?)
-> - Provide a description of them
-> - Switching between thermal profiles regardless of the performance profile
-> 
-> A possible solution could be a "slider like" interface for performance level
-> and a list of thermal profile.
-
-So I have been thinking about this and performance level and thermal profile
-are really inherently couple to each other. Telling the CPU it can use
-25W TPD instead of the default 15W, without also ramping up the cooling is
-just going to lead to a whole bunch of thermal throttling.
-
-In a desktop machine with a discrete GPU it is sorta easy, in essence you have
-a GPU performance profile, controlling GPU TPD/turbo behavior and the GPU
-fans too match, and a CPU performance profile which likewise controls
-the CPU fan profile too match the CPU performance profile.
-
-With laptops with a discrete GPU things become harder because there is a
-single shared cooling mechanism. But there you could simply say that
-performance-profile = max(gpu-profile, cpu-profile).
-
-I mean telling the GPU and CPU that they can burn a gazillion watts and
-then telling the cooling setup to be as quiet as possible, is clearly
-not going to end well.
-
-This all assumes that we have some nice way to tell the hardware about
-the 3 separate (gpu / cpu / cooling) profiles we want.
-
-But that is not always the case; and often when using a CPU with
-integrated GPU they are all tied together.
-
-So my proposal is to have a :
-
-/sys/class/performance-profile
-
-Underneath we can have one or more entries (performance-profile providers)
-each one with a performance_level file on the previously suggested 0-100 scale
-and a performance_mappings file listing the supported discrete values on that
-scale and some descriptions of those discrete values purely for informational
-purposes.
-
-Besides the performance_level and performance_mappings files I would also like
-to add a "type" sysfs attribute, which can have 1 of 3 values:
-"system", "cpu" and "gpu".
-
-So something like the thinkpad_acpi performance levels will be "system", and
-the intel_pstate driver could maybe also register itself here as a "cpu"
-type performance-profile provider.
-
-This will allow userspace (if / when it wants to) to do things like put the
-CPU in medium/balanced mode while telling the GPU to go full-throttle for when
-playing a game which is clearly GPU limited.
-
-This game scenario of course assumes that we then actually will have a
-performance-profile driver for both the CPU and the GPU.
-
-Note I'm still just brainstorming here, but I think that having the
-0-100 scale + the type thing should cover all the use-cases we want
-to cover.
-
-As always feedback or alternative API proposals are very much welcome.
-
-Regards,
-
-Hans
-
+PiBTbyBJJ3ZlIGJlZW4gdGhpbmtpbmcgbW9yZSBhYm91dCB0aGlzIGFuZCB0byBtZSB0aGlzIHdo
+b2xlIGFyZ3VtZW50DQo+IHNvdW5kcyBhIGxvdCBsaWtlIHdlIGp1c3Qgd2FudCB0byBoYXZlIG91
+ciBvd24gbGl0dGxlIGNvcm5lciB0bw0KPiBwbGF5IGluLCB3aXRob3V0IG5lZWRpbmcgdG8gd29y
+cnkgYWJvdXQgd2hhdCBvdGhlciB2ZW5kb3JzIGRvLg0KPiANCj4gQW5kIHRoZW4gTGVub3ZvLCBh
+bmQgSFAgYW5kIHdobyBrbm93cyBlbHNlIHdpbGwgYWxsIHdhbnQgdGhlIHNhbWUNCj4gYW5kIHdl
+IGFuZCB1cCB3aXRoIGF0IGxlYXN0IDUgZGlmZmVyZW50IGludGVyZmFjZXMuDQo+IA0KPiBJdCBp
+cyBiYWQgZW5vdWdoIHRoYXQgd2UgYWxyZWFkeSBoYXZlIHRvIGRlYWwgd2l0aCBoYXZpbmcgNSsN
+Cj4gZGlmZmVyZW50IGZpcm13YXJlIGludGVyZmFjZXMgZm9yIHRoaXMgYW5kIHdvcnNlIGV2ZW4g
+Zm9yIHNpbGx5DQo+IHRoaW5ncyBsaWtlIHNldHRpbmcgdGhlIGJyaWdodG5lc3MgbGV2ZWwgZm9y
+IHRoZSBrYmQgYmFja2xpZ2h0LA0KPiB3aGljaCBpcyBzdWNoIGEgdHJpdmlhbCB0aGluZyB0aGF0
+IHlvdSB3b3VsZCB0aGluayBQQyB2ZW5kb3JzDQo+IHNob3VsZCBiZSBhYmxlIHRvIHNpdCBkb3du
+IGFuZCBhZ3JlZSBvbiBhIHNpbmdsZSBBQ1BJIEFQSSBmb3IgaXQuDQo+IA0KPiBXZSBhcmUgTk9U
+IGdvaW5nIHRvIHRha2UgdGhpcyBsZXRzIGFsbCBkbyBvdXIgb3duIHRoaW5nIGFwcHJvYWNoIGFu
+ZA0KPiBhbHNvIGxldCB0aGlzIHRyaWNrbGUgdXAgaW4gdGhlIHN0YWNrIHRvIHRoZSBrZXJuZWwg
+PC0+IHVzZXJzcGFjZSBBUEkhDQo+IA0KPiBPbmUgb2YgdGhlIHRhc2tzIG9mIHRoZSBrZXJuZWwg
+aXMgdG8gYWN0IGFzIGEgSEFMIGFuZCB0aGlzIGNsZWFybHkNCj4gZmFsbHMgdW5kZXIgdGhhdC4g
+SW1hZ2luZSBpZiB1c2Vyc3BhY2UgY29kZSB3b3VsZCBuZWVkIHRvIHVzZSBkaWZmZXJlbnQNCj4g
+a2VybmVsIEFQSXMgZm9yIHN0b3JhZ2UvZmlsZXN5c3RlbSBhY2Nlc3NlcyBkZXBlbmRpbmcgb24g
+aWYgdGhleSB3ZXJlDQo+IHJ1bm5pbmcgb24gYSBEZWxsIG9yIGEgTGVub3ZvIG1hY2hpbmVzLiBP
+ciBoYXZpbmcgZGlmZmVyZW50IEFQSXMgdG8NCj4gYWNjZXNzIHRoZSBuZXR3b3JrIGRlcGVuZGlu
+ZyBvbiB0aGUgbWFjaGluZSB2ZW5kb3IuLi4NCj4gDQo+IFNvIEknbSBzb3JyeSwgYnV0IEknbSBk
+cmF3aW5nIGEgbGluZSBpbiB0aGUgc2FuZCBoZXJlLCB1bmxlc3MgeW91IGNhbg0KPiBjb21lIHVw
+IHdpdGggc29tZSByZWFsbHkgY29udmluY2luZyBORVcgYXJndW1lbnRzIHdoeSB0aGlzIG5lZWRz
+IHRvDQo+IGJlIGEgRGVsbCBzcGVjaWZpYyBpbnRlcmZhY2UsIHRoZSBEZWxsIGZpcm13YXJlLWF0
+dHJpYnV0ZXMgY29kZSBtdXN0DQo+IHVzZSBhIGdlbmVyaWMgc3lzZnMtQUJJL2NsYXNzIHRvIGdl
+dCBhY2NlcHRlZCB1cHN0cmVhbS4NCj4gDQo+IE5vdGUgdGhhdCBJIHRoaW5rIHRoZSBjdXJyZW50
+bHkgc3VnZ2VzdGVkIHByaXZhdGUgRGVsbCBBQkkgaXMgYWN0dWFsbHkNCj4gcHJldHR5IHN1aXRh
+YmxlIGZvciBzdWNoIGEgZ2VuZXJpYyBzeXNmcy1BQkkvY2xhc3MsIHNvIEknbSBub3QgYXNraW5n
+DQo+IHlvdSB0byBtYWtlIGEgbG90IG9mIGNoYW5nZXMgaGVyZS4NCj4gDQo+IFJlZ2FyZHMsDQo+
+IA0KPiBIYW5zDQoNCldlJ2xsIHRyeSB0aGlzIGZvciB0aGUgdjQgcGF0Y2ggc2VyaWVzLiANCg0K
