@@ -1,90 +1,147 @@
-Return-Path: <SRS0=1Jx7=C6=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=i/bP=C7=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6176BC4727C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 22:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B668C4363D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 03:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA7D23A60
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Sep 2020 22:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9B323A32
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 03:48:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wildgooses.com header.i=@wildgooses.com header.b="H3dySJfR"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="bnOaR2j9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgIUWR6 (ORCPT
+        id S1726898AbgIVDsP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Sep 2020 18:17:58 -0400
-Received: from mail1.nippynetworks.com ([91.220.24.129]:59122 "EHLO
-        mail1.nippynetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726457AbgIUWR6 (ORCPT
+        Mon, 21 Sep 2020 23:48:15 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:15498 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726818AbgIVDsP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Sep 2020 18:17:58 -0400
-Received: from macbookpro-ed.wildgooses.lan (unknown [212.69.38.73])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature ECDSA (P-256))
-        (No client certificate requested)
-        (Authenticated sender: ed@wildgooses.com)
-        by mail1.nippynetworks.com (Postfix) with ESMTPSA id 4BwJjH2PV3zTh56;
-        Mon, 21 Sep 2020 23:17:55 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wildgooses.com;
-        s=dkim; t=1600726676;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FW8VSKIvyxeWBPbuPFvBD+ezdTOAwO9l2dhOnE9RnDg=;
-        b=H3dySJfRCllaU4p4AvcexTteQ3Jambulzn/v1ogL3c/a7etWhop3XGKNKyMXVRab73AQpi
-        mw3SgNKWzVJBvwK5AKJ47Hp7jtBKYDqG+/pgdRptyeBG3N8kiCGdCrt5N1s9e+GQSCEahU
-        yzNWPBFWyOg2IftY6Mu7QwS1431ouzU=
-Subject: Re: [PATCH 1/2] x86: Remove led/gpio setup from pcengines platform
- driver
-To:     linux-kernel@vger.kernel.org
-Cc:     fe@dev.tdt.de, "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Mon, 21 Sep 2020 23:48:15 -0400
+X-Greylist: delayed 4950 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Sep 2020 23:48:14 EDT
+Received: from pps.filterd (m0134425.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08M2NwcI024796;
+        Tue, 22 Sep 2020 02:25:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : reply-to : references : mime-version : content-type
+ : in-reply-to; s=pps0720; bh=YhlXw8QcjdddmawFlgsEQRqTwEMEyQzgIm4huUErdIc=;
+ b=bnOaR2j9kDgMQs06jkwuTkSCw1fc+B1zMs1RKDrC8ByV+4+QA4UaoXR/G5Lb8ASRQNlc
+ t1fnUw5ZT0ZXorWmUz4EYEMmSsv6tl78Zi3ie2JCaM30/vqDxRA0hTPbzpAulzF3CUR0
+ 4cl8DuA3DzyBOI6o2BY3+s6RX37ITkyktd9QZJ3DD3H+oLgU8WG/vxLc0ynzkncmjuOp
+ opCSUfSRACYGYOkdkkowWgAcgJF3dsPmHVUqoO5S4C9frKa6nIVXP8S3pB83I4OTfYUQ
+ LlGKo/N1/EnTL43I30XEtJC59qf5W+CrU/YwRsf2qQJ+5LHkyQ5PEpejzZUxPUgkdEel fA== 
+Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
+        by mx0b-002e3701.pphosted.com with ESMTP id 33q53yh0va-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 22 Sep 2020 02:25:08 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g4t3426.houston.hpe.com (Postfix) with ESMTP id BC36759;
+        Tue, 22 Sep 2020 02:25:06 +0000 (UTC)
+Received: from hpe.com (ben.americas.hpqcorp.net [10.33.153.7])
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id E3C8548;
+        Tue, 22 Sep 2020 02:25:04 +0000 (UTC)
+Date:   Mon, 21 Sep 2020 21:25:04 -0500
+From:   Russ Anderson <rja@hpe.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mike Travis <mike.travis@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
         Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-References: <20200921215919.3072-1-lists@wildgooses.com>
-From:   Ed W <lists@wildgooses.com>
-Message-ID: <d4b2045c-769b-4998-64cc-682c01c105fb@wildgooses.com>
-Date:   Mon, 21 Sep 2020 23:17:54 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
- Gecko/20100101 Thunderbird/78.2.2
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jian Cai <caij2003@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 13/13] x86/platform/uv: Update Copyrights to conform
+ to HPE standards
+Message-ID: <20200922022504.unsi33w4njahh6pv@hpe.com>
+Reply-To: Russ Anderson <rja@hpe.com>
+References: <20200916192039.162934-1-mike.travis@hpe.com>
+ <20200916192039.162934-14-mike.travis@hpe.com>
+ <20200917075429.GB3333802@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20200921215919.3072-1-lists@wildgooses.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200917075429.GB3333802@kroah.com>
+User-Agent: NeoMutt/20170421 (1.8.2)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-22_03:2020-09-21,2020-09-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=778
+ malwarescore=0 priorityscore=1501 phishscore=0 impostorscore=0
+ clxscore=1011 suspectscore=2 bulkscore=0 adultscore=0 spamscore=0
+ mlxscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2009220018
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi, I've been adding support for the PC Engines APU5 board, which is a variant of the APU 2-4 boards
-with some nice features. The current platform driver for pcengines boards has some redundant
-features with regards to recent bios/firmware packages for the board as they now set the ACPI tables
-to indicate GPIOs for keys and leds. So I've submitted a patch to eliminate this. It could be argued
-that it's useful to support older firmware versions, but there is also a 'leds-apu' driver which a)
-probably ought to be marked deprecated with a view to removing it and b) implements the leds even on
-antique firmware versions.
+On Thu, Sep 17, 2020 at 09:54:29AM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Sep 16, 2020 at 02:20:39PM -0500, Mike Travis wrote:
+> > Add Copyrights to those files that have been updated for UV5 changes.
+> > 
+> > Signed-off-by: Mike Travis <mike.travis@hpe.com>
+> > ---
+> >  arch/x86/include/asm/uv/bios.h      | 1 +
+> >  arch/x86/include/asm/uv/uv_hub.h    | 1 +
+> >  arch/x86/include/asm/uv/uv_mmrs.h   | 1 +
+> >  arch/x86/kernel/apic/x2apic_uv_x.c  | 1 +
+> >  arch/x86/platform/uv/bios_uv.c      | 1 +
+> >  arch/x86/platform/uv/uv_nmi.c       | 1 +
+> >  arch/x86/platform/uv/uv_time.c      | 1 +
+> >  drivers/misc/sgi-gru/grufile.c      | 1 +
+> >  drivers/misc/sgi-xp/xp.h            | 1 +
+> >  drivers/misc/sgi-xp/xp_main.c       | 1 +
+> >  drivers/misc/sgi-xp/xp_uv.c         | 1 +
+> >  drivers/misc/sgi-xp/xpc_main.c      | 1 +
+> >  drivers/misc/sgi-xp/xpc_partition.c | 1 +
+> >  drivers/misc/sgi-xp/xpnet.c         | 1 +
+> >  14 files changed, 14 insertions(+)
+> > 
+> > diff --git a/arch/x86/include/asm/uv/bios.h b/arch/x86/include/asm/uv/bios.h
+> > index 97ac595ebc6a..08b3d810dfba 100644
+> > --- a/arch/x86/include/asm/uv/bios.h
+> > +++ b/arch/x86/include/asm/uv/bios.h
+> > @@ -5,6 +5,7 @@
+> >  /*
+> >   * UV BIOS layer definitions.
+> >   *
+> > + * (C) Copyright 2020 Hewlett Packard Enterprise Development LP
+> >   * Copyright (C) 2007-2017 Silicon Graphics, Inc. All rights reserved.
+> >   * Copyright (c) Russ Anderson <rja@sgi.com>
+> 
+> Gotta love the different ways of text here :(
+> 
+> Anyway, much better than before, thanks.
 
-In implementing the APU5 I changed some of the exported gpio names to make them more closely match
-functionality across all the boards. For example APU2 vs APU4 both support 2x LTE options, but in
-different mpcie slots and this affects the numbering of options, but not the sense of them (so I
-renamed them based on the intention of the option). This is particularly true on APU5 which supports
-3x LTE cards
+The HPE copyright text is different than the old SGI copyright text.
+We could update the SGI copyright line to be consistent, change
+"Copyright (C)" to "(C) Copyright", if that is desired.
 
+The HPE lawyers said the old SGI copyrights do not need to be
+updated as far as they are concerned, because HPE owns the SGI
+copyrights, but they can.  So the two lines could be combined to 
 
-Can I get some advice: It would be helpful if the kernel would export the GPIOs to user-space
-automatically since toggling SIM slots is fairly useful task in userspace. At least for me the gpio
-numbers seem to jump around depending on the order of module loading, so doing something involving
-/sys/class/gpio/export isn't obviously an easy process. Reviewing the fine documentation suggests
-that I need to use gpio_export() to achieve this, but I concede I'm really not clear how to
-implement this in the platform module as currently structured... Any tips please?
+  * (C) Copyright 2007-2017, 2020 Hewlett Packard Enterprise Development LP
 
-Thanks
+I will do whatever the lawyers and community want as far as format.
 
-Ed W
+For what it's worth, the rja@sgi.com email still works, as does rja@hpe.com.
 
+Thanks.
+-- 
+Russ Anderson,  SuperDome Flex Linux Kernel Group Manager
+HPE - Hewlett Packard Enterprise (formerly SGI)  rja@hpe.com
