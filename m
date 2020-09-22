@@ -7,64 +7,65 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A9DC2D0E2
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 09:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CA0C2D0E2
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 09:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF64D20715
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 09:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6272086A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Sep 2020 09:15:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g3u7mylb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OL0h0F7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgIVJCf (ORCPT
+        id S1726486AbgIVJPF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Sep 2020 05:02:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52588 "EHLO
+        Tue, 22 Sep 2020 05:15:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:33637 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726353AbgIVJCf (ORCPT
+        by vger.kernel.org with ESMTP id S1726341AbgIVJPE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Sep 2020 05:02:35 -0400
+        Tue, 22 Sep 2020 05:15:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600765352;
+        s=mimecast20190719; t=1600766102;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dzkLaWo/xyw4LcSvIgywgKEYti8KlfLpx60weJM3/RQ=;
-        b=g3u7mylbEMoDL9SLIcGiIW5TDQk8INF+aBxrHaQOdG65Pcw87EmZVrB1BaES+PQcsyiTJy
-        ZzAsfBOQuYiRVyIUMa1w8OpYzGlcohuSlR9JqE/bds/AVls4NzI+YRM6dlfVL/6ZJmbGN8
-        0HhhG/JVLoqPaIAY0VGZuq6GuimmuNM=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-TTLdXWp-NC-VpuY5FKe3rw-1; Tue, 22 Sep 2020 05:02:31 -0400
-X-MC-Unique: TTLdXWp-NC-VpuY5FKe3rw-1
-Received: by mail-ej1-f70.google.com with SMTP id md9so5955784ejb.8
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2020 02:02:29 -0700 (PDT)
+        bh=vn5swPQkcF9Fo/BaYOudv4sWPQMHmqAsZ8evmeA/deM=;
+        b=OL0h0F7waAgniTEQHGxc77ERS5+Ty9i/pIcZCYiX6GvfcLOfN/hEL9HzGSxM4QPnZsZh6m
+        flN4USpN3lsz7Y0qENeB/ZnJU6bPdIblRSUv5zPuJwDINotkQJ8B9n17fYPn8Pwco/fo5d
+        1X+TsUbPttnCJzpLaEl8i1Dr7rdrHZo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-158-EqmBXNuMMNypAkZeHePXoA-1; Tue, 22 Sep 2020 05:15:00 -0400
+X-MC-Unique: EqmBXNuMMNypAkZeHePXoA-1
+Received: by mail-ed1-f70.google.com with SMTP id c3so5522711eds.6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Sep 2020 02:15:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=dzkLaWo/xyw4LcSvIgywgKEYti8KlfLpx60weJM3/RQ=;
-        b=SVyO858Qpm7xpTnGmPti0DsYYfp3a8AHEoK4UEVdoo15vc4I4s9jUwQSWOVxJHZ5wY
-         3tfKuMHuG469j61xW5oYhxfzcQ82e0APnSCg4dUo0CgVC/8vQJfhZH4O6a/kU8YSCUDl
-         YE7A4iqcdYQIrjtFRL6f8/3VAaiyrmhZB+eyDc2AgEBfiCGHfzPtp6FBSGKnLo2rZ1pX
-         Dy3xbvya2j2m1C819ASyKChOZJJ03AHaJMRTotmwoPPXFqwZpV19Mwl5zkhenUEFK1Ik
-         aSihaviZ0Ojm6nXEs/gYeqfYj62X3IegO/D48VVXv+cXXEQaj7c+5BS8VM/xCMlj3S36
-         lECA==
-X-Gm-Message-State: AOAM5310qA8F5ceWfUhynRTfJBquWYekMdO+0SfmuyKwwEKrFD+Uo4x6
-        KaAJrPCHjnjrR5ZUr3CFQEajMJcV0DgvPTUjxoogVQw6/nq609sBt4Ha9OP50UKAeXRMXraYzGH
-        aXPdS37zNZrCDURsIwtK6uEGcfJeIIVt1fQ==
-X-Received: by 2002:a05:6402:1819:: with SMTP id g25mr2769587edy.292.1600765348508;
-        Tue, 22 Sep 2020 02:02:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwvEjLM2FKJLNuWfIEyBTNs48Cv92gS6hXgUVKhvYE34EXPjbHv315cFv9KDkZxXQj7t5D/aQ==
-X-Received: by 2002:a05:6402:1819:: with SMTP id g25mr2769558edy.292.1600765348162;
-        Tue, 22 Sep 2020 02:02:28 -0700 (PDT)
+        bh=vn5swPQkcF9Fo/BaYOudv4sWPQMHmqAsZ8evmeA/deM=;
+        b=BDvX1ELxel0qFmYsBmZJrhH8P2uUhn1PCgCbjTudJGHuYXF0TPuiDVS6a4/sXjfamy
+         DfZ7shPmuZifi6AXdzS0sao4pyEQjYOTDJUdBeddM4pZYQku/4ZOdNAbrLMuTSv1xkqw
+         Bt/Wo2HQBCAmo04ApLRsYpN3n2jP3MO3eLdDXC6m4dLlq8zPFWu+/9QU862AkA7clzzf
+         JF89+ySdEt5LpSt98BIV1im9JwakQxmhMswf202dE7Du+Uj6jQPbBwev0Vl2YBPvE0dr
+         7dCLV2rP0yDWDu4kHsgUwLKhdGpjyC4n6gswIosIZWQQFqXBImrJP4tP/N7GTDGavT0R
+         6eOA==
+X-Gm-Message-State: AOAM530OXGuGtM7ACxaw05Jij/H+2KM/9XlWsLuRLEiMjL0eSLtWDtSO
+        v2JMDtPu04YjX7fBvrRk4DXflmewttPx5GeNvjpppEGChV0K3GfbvEoXxIZs3tagorqUBl52krN
+        z0cITusrSPwxr/RXB94dp8uH4nnN3aZj+uQ==
+X-Received: by 2002:a17:906:6a82:: with SMTP id p2mr3845000ejr.3.1600766099307;
+        Tue, 22 Sep 2020 02:14:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzLjoUuboj2r5nHlkoVus2Xce/d/5hlty3awbCCle9Cr3FHzisa4L+4msUwAwmadkURqUazwg==
+X-Received: by 2002:a17:906:6a82:: with SMTP id p2mr3844985ejr.3.1600766099034;
+        Tue, 22 Sep 2020 02:14:59 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id q17sm10793786ejd.90.2020.09.22.02.02.27
+        by smtp.gmail.com with ESMTPSA id o23sm10965632eju.17.2020.09.22.02.14.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Sep 2020 02:02:27 -0700 (PDT)
+        Tue, 22 Sep 2020 02:14:58 -0700 (PDT)
 Subject: Re: [PATCH] Introduce support for Systems Management Driver over WMI
  for Dell Systems
+From:   Hans de Goede <hdegoede@redhat.com>
 To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
         Divya Bharathi <divya27392@gmail.com>,
         "dvhart@infradead.org" <dvhart@infradead.org>
@@ -84,198 +85,120 @@ References: <20200730143122.10237-1-divya_bharathi@dell.com>
  <DM6PR19MB2636626A94385EDC7C0CACF9FA3E0@DM6PR19MB2636.namprd19.prod.outlook.com>
  <33666ec6-be47-2c33-d4c5-6b23b53f6185@redhat.com>
  <DM6PR19MB263615C1060108E5661AE615FA3A0@DM6PR19MB2636.namprd19.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <a8bf92ca-641a-3006-9876-d57ffa47ecb5@redhat.com>
-Date:   Tue, 22 Sep 2020 11:02:27 +0200
+ <52fb287e-e683-63bc-3641-90abd78c605a@redhat.com>
+Message-ID: <01c6632a-4e21-dfc0-c5d8-42a7016bfa16@redhat.com>
+Date:   Tue, 22 Sep 2020 11:14:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <DM6PR19MB263615C1060108E5661AE615FA3A0@DM6PR19MB2636.namprd19.prod.outlook.com>
+In-Reply-To: <52fb287e-e683-63bc-3641-90abd78c605a@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/21/20 5:26 PM, Limonciello, Mario wrote:
+On 9/22/20 10:57 AM, Hans de Goede wrote:
+> Hi,
+> 
+> On 9/21/20 5:26 PM, Limonciello, Mario wrote:
+> 
+> <snip>
+> 
+> I will do another more detailed reply in another email, but I would like to focus
+> at the main pain point here, which is the using a generic sysfs-ABI/class vs using
+> a Dell specific sysfs-ABI.
+> 
+>>> I guess a could way to look at the generic sysfs firmware attributes
+>>> class I'm proposing is looking at it as a lowest common denominator
+>>> solution. With the addition of vendor specific extensions so that
+>>> vendors (e.g. Dell) are not limited to only offering functionality
+>>> offered by the generic, shared ABI. Does that make sense ?
+>>>
+>>> Regards,
+>>>
 >>
->> Well if different schemes are supported and each scheme has its own type,
->> then I would expect there to be say / e.g.:
+>> I really think that trying to fit all the vendors into the same interface is going
+>> to stifle areas for innovation in the firmware and kernel space in the name of
+>> "simplicity" which really only goes as far as the kernel side.  Userspace has
+>> to carry delta between vendors no matter what, so why introduce a LCD then?
 >>
->> /sys/class/firmware-attributes/dell/authentication/admin-password
->> (with a type of "password") and:
->> /sys/class/firmware-attributes/dell/authentication/admin-hotp
->> (with a type of "hotp")
+>> Just as easily we could have:
+>> /sys/devices/platform/dell-wmi-sysman/attributes/
 >>
->> And then the user / userspace can choose which one to use,
->> I guess if the kernel knows that only hotp has been setup and
->> there is no standard password set, then it could hide the
->> /sys/class/firmware-attributes/dell/authentication/admin-password
->> password.
+>> Which works 90% the same as:
+>> /sys/devices/platform/lenovo-wmi-sysman/attributes/
 > 
-> So you're proposing the flow to userspace that would look like this:
+> So the reason why I want a class interface for this is to allow say
+> FleetCommander to have a generic plugin implementing that 90%, so
+> no deps, only support plain admin-password authentication.
 > 
-> Authentication is off
-> ----
-> # cat /sys/class/firmware-attributes/dell-wmi-sysman/attributes/Touchscreen/is_authentication_needed
-> 0
-> # echo "enabled" | sud tee /sys/class/firmware-attributes/dell-wmi-sysman/attributes/Touchscreen/current_value
+> Allowing such a generic plugin requires 2 things:
 > 
+> 1) Ensuring that the 90% overlapping functionality offers a 100%
+> identical userspace ABI, thus a shared sysfs ABI definition
 > 
+> 2) That userspace has a generic way to enumerate devices/drivers
+> implementing this shared sysfs ABI, and we have a standard
+> mechanism for enumerating drivers which implement a standard ABI,
+> that is we make them register class devices under /sys/class/<abi-name>.
 > 
-> Turning on and things that happen using authentication (error examples too):
-> ----
-> # cat /sys/class/firmware-attributes/dell-wmi-sysman/attributes/Touchscreen/is_authentication_needed
-> 0
-> # echo "foobar123" | sudo tee /sys/class/firmware-attributes/dell-wmi-sysman/authentication/Admin/new_password
-> # cat /sys/class/firmware-attributes/dell-wmi-sysman/attributes/Touchscreen/is_authentication_needed
-> 1
-> # echo "enabled" | sud tee /sys/class/firmware-attributes/dell-wmi-sysman/attributes/Touchscreen/current_value
-> -EOPNOTSUPP
-
-Why would this be -EOPNOTSUPP and not just -EACCESS too ? To in the end both are access denials,
-no password being set is really just a variant of the wrong password being set.
-
-> # echo "foobar456" | sudo tee /sys/class/firmware-attributes/dell-wmi-sysman/authentication/Admin/current_password
-> # echo "enabled" | sud tee /sys/class/firmware-attributes/dell-wmi-sysman/attributes/Touchscreen/current_value
-> -EACCES
-> # echo "foobar123" | sudo tee /sys/class/firmware-attributes/dell-wmi-sysman/authentication/Admin/current_password
-> # echo "enabled" | sud tee /sys/class/firmware-attributes/dell-wmi-sysman/attributes/Touchscreen/current_value
-> # echo "" | sudo tee /sys/class/firmware-attributes/dell-wmi-sysman/authentication/Admin/current_password
-> # echo "enabled" | sud tee /sys/class/firmware-attributes/dell-wmi-sysman/attributes/Touchscreen/current_value
-> -EOPNOTSUPP
+> I have not heard any convincing arguments against why would
+> should not or can not have these 2 things. All I'm hearing is
+> a vague fear that this may "stifle areas for innovation in the firmware
+> and kernel space".
 > 
+> Honestly I have the feeling we are going in circles in this discussion
+> and I really do not understand why you are so dead set against having
+> a common sysfs ABI/class for this?
 > 
->>
->> TBH I think all these things are (mostly) easily solvable if/when we
->> encounter them. I mean it is definitely good to keep these kind of things
->> in mind. But at some point we might get lost in all the what-ifs we
->> can come up with.
+> In part of the snipped text you write "Having to de-feature the sysfs
+> interface", but I have not asked you to remove any features anywhere in
+> this thread!
 > 
-> In trying to come up with a generic interface that scales to everyone's needs
-> the what-ifs are critical.  Making assumptions on how authentication works means
-> future authentication mechanisms will be painful.
-
-The way I see it the authentication mechanism and the ABI for actually
-changing the settings are pretty much orthogonal. So we can add new
-authentication mechanisms without that impacting the
-ABI for actually changing the settings.
-
->> If a vendor comes along where authentication is not necessary
->> for *all* attributes, then we could add the "is_authentication_required"
->> as an optional sysfs-attribute for the firmware-attributes and state
->> in the documentation that if that file is lacking that means that
->> authentication is always required. That way the Dell code would not
->> even have to have the "is_authentication_required" sysfs-attribute.
+> So I really do not understand where this fear of not being able to
+> implement certain, possibly Dell specific, features comes from?
 > 
-> But it's not true on Dell's systems even right now.  If you don't have
-> an Admin password configured then you don't need it set for any attribute.
-> If you do have one set you need them for all.  And if you need to know to look for
-> /sys/class/firmware-attributes/dell-wmi-sysman/authentication/Admin/is_password_set
-> then userspace needs to know to do this differently for Dell and someone else.
+> You mentioned that the way the dependencies are expressed are
+> highly Dell specific, so I suggested allowing having vendor
+> extensions like dell-modifiers and dell-value_modifiers. The whole
+> idea behind allowing vendor-extensions is actually the exact
+> opposite of de-featuring the sysfs interface.
 
-You are mixing up authentication and authorization here.
 
-I guess that you are arguing for is an is_authorization_required
-attribute, which can return "none" and "admin" (for now).
+So I've been thinking more about this and to me this whole argument
+sounds a lot like we just want to have our own little corner to
+play in, without needing to worry about what other vendors do.
 
-When no Admin password is set, everyone automatically get admin
-level authority and in the Dell case (for now) all firmware-attributes
-require admin authorization.
+And then Lenovo, and HP and who knows else will all want the same
+and we and up with at least 5 different interfaces.
 
-Looking at it this way has the advantage that for the current Dell
-scenario the is_authorization_required sysfs-attribute would simply
-always return admin.
+It is bad enough that we already have to deal with having 5+
+different firmware interfaces for this and worse even for silly
+things like setting the brightness level for the kbd backlight,
+which is such a trivial thing that you would think PC vendors
+should be able to sit down and agree on a single ACPI API for it.
 
-Which is why I argued that we could omit it for now and add it as
-an optional attribute, defaulting to admin when not present, later.
+We are NOT going to take this lets all do our own thing approach and
+also let this trickle up in the stack to the kernel <-> userspace API!
 
-But if you want to we can certainly add it now and have it present
-from the get go.
+One of the tasks of the kernel is to act as a HAL and this clearly
+falls under that. Imagine if userspace code would need to use different
+kernel APIs for storage/filesystem accesses depending on if they were
+running on a Dell or a Lenovo machines. Or having different APIs to
+access the network depending on the machine vendor...
 
-> So you either need to have a top level is_authentication_required
-> IE /sys/class/firmware-attributes/dell-wmi-sysman/is_authentication_required
-> 
-> Or a per attribute one
-> IE /sys/class/firmware-attributes/dell-wmi-sysman/attributes/Touchscreen/is_authentication_required
+So I'm sorry, but I'm drawing a line in the sand here, unless you can
+come up with some really convincing NEW arguments why this needs to
+be a Dell specific interface, the Dell firmware-attributes code must
+use a generic sysfs-ABI/class to get accepted upstream.
 
-This obviously needs to be a per firmware-attribute setting, because in
-the future and/or with other vendors different attributes may require
-different levels of authorization.
-
-> And this decision can't be put off because it has an implication that another
-> vendor may choose to do their authentication differently than Dell.
-> 
->>
->> Since we also seem to have some trouble to get these 2 properly documented
->> (I have not looked at v3 yet), I'm fine with making them dell specific by
->> prefixing them
->> with dell-. I guess that that probably even makes sense.
-> 
-> They're documented in v3.  The moment that you have a "Dell specific" attribute
-> what's the point of a common class?  You're going to end up with Dell expresses
-> dependencies this way, Lenovo expresses them that way, and HP expresses them some
-> other way and userspace is going to have to sort out the differences.
-> 
-> So in userspace you end up with logic that is something like this:
-> 1) (Generic) Check if authentication is set
-> 2) (Dell) Check if you're running on Dell's driver, interpret this dependency or show a message
-> 3) (Lenovo) Check if you're running on Lenovo's driver, interpret this dependency or show a message
-> 4) (HP) Check if you're running on HP's driver, interpret this dependency or show a message
-> 5) (Generic) Check what authentication schemes are supported
-> 6) (Dell) Apply Dell's admin password authentication scheme
-> 7) (Lenovo Example) Apply Lenovo's admin password authentication scheme or their TOTP authentication scheme
-> 8) (Generic) write value into current_value
-> 9) (Generic) Disable authentication
-> 
-> So if userspace is going to have to be different anyway for evaluating dependencies and authentication, why
-> go through the trouble to fit everyone into the same class?
-
-Parsing the dependencies is not required for a functional userspace
-application. As I explicitly stated in my previous email in many
-existing builtin firmware setup UIs the dependencies are not even
-shown. As for the authentication for now having a straight forward
-admin + system/boot level passwords covers like 99% of the
-existing use-cases.  There is no need for separate Dell / Lenovo
-admin password schemes as you list above those will work identically
-from the sysfs interface pov.
-
-So having a common class interface will allow userspace apps which
-work with 99% of the systems currently out there (assuming they ever get
-a driver implementing the class).
-
-<snip>
-
->> Specifying what changing the attributes actually does
->> falls
->> (way) outside of the scope of the sysfs ABI IMHO. That will always be the case
->> of please consult your Laptop's / Workstation's / Server's manual.
->> That is actually not much different from the current builtin
->> firmware setup utility experience where the help text is often,
->> well, not helpful.
->>
->> For all I care there is an enum called "HWvirt" with a description of
->> "Hardware virtualization support" and values of "Enabled" and "Disabled"
->> which controls something somewhat or even totally different from what the
->> name and description suggest. That would be less then ideal, but not a problem
->> from the pov of the sysfs ABI for firmware-attributes. It would be a simple
->> case of the garbage in garbage out principle.
->>
->> So this is one problem which I'm happy to punt to userspace and I guess Dell
->> might do a Dell specific utility, which only works one certain model Dell's,
->> which is a lot fancier then the basic sysfs functionality and e.g. consumes
->> the dell-value_modifier and dell-modifier sysfs-attribures.
-> 
-> The goal here is that all of the functionality that would otherwise be expressed
-> in a proprietary utility could also be expressed in sysfs.  Having to de-feature
-> the sysfs interface for the purpose of fitting into what's generic across vendors
-> defeats that goal and is why I think it should be a Dell interface in the first
-> place.
-
-I have not asked you to de-feature the sysfs interface anywhere in this thread!
+Note that I think the currently suggested private Dell ABI is actually
+pretty suitable for such a generic sysfs-ABI/class, so I'm not asking
+you to make a lot of changes here.
 
 Regards,
 
