@@ -2,172 +2,151 @@ Return-Path: <SRS0=VZIW=DB=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAA7C4727D
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 19:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D29E9C4727F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 19:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54D4E23600
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 19:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7842C23600
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 19:17:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NevDrEEF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPfOOWs9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgIXTJs (ORCPT
+        id S1728750AbgIXTR0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Sep 2020 15:09:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:47486 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728217AbgIXTJs (ORCPT
+        Thu, 24 Sep 2020 15:17:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgIXTR0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Sep 2020 15:09:48 -0400
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600974586;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1xBZCyYKlE5WRUUtzWjHwjgmCmL0z091Bn3uVsUx0eo=;
-        b=NevDrEEF8pQjw21jntcX3nUp0XH0yHxojjlII3cEnBTYXDqsMDsmx/lnX3LG2ZXgWDp1oJ
-        VQXUOnBOWTUP8pMeOKLtLem+agsUVcaKmpBlW3xueK+CBQj6JG57lbgZHwkLC93dD66TP3
-        I3Hz97TUlTEGOKRizIkUE4hXOWVy32M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-106-V9gDJwwwM46Cw7RYWDdzCQ-1; Thu, 24 Sep 2020 15:09:42 -0400
-X-MC-Unique: V9gDJwwwM46Cw7RYWDdzCQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C569D425E6;
-        Thu, 24 Sep 2020 19:09:40 +0000 (UTC)
-Received: from [10.10.110.8] (unknown [10.10.110.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E87610013C1;
-        Thu, 24 Sep 2020 19:09:37 +0000 (UTC)
-Subject: Re: [PATCH V2 1/3] efi: Support for MOK variable config table
-To:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-security-module@vger.kernel.org, andy.shevchenko@gmail.com,
-        James Morris <jmorris@namei.org>, serge@hallyn.com,
-        Kees Cook <keescook@chromium.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Jones <pjones@redhat.com>,
-        David Howells <dhowells@redhat.com>, prarit@redhat.com
-References: <20200905013107.10457-1-lszubowi@redhat.com>
- <20200905013107.10457-2-lszubowi@redhat.com>
- <20200921161859.GA544292@rani.riverdale.lan>
- <CAMj1kXFV7LqsyHM8iM5yQwJX4tKbY=w9vfjERvjyabVDKcbJpA@mail.gmail.com>
- <20200921165506.GA549786@rani.riverdale.lan>
-From:   Lenny Szubowicz <lszubowi@redhat.com>
-Message-ID: <e01b3f50-20ee-0168-b6ee-4d3d2d4dc13f@redhat.com>
-Date:   Thu, 24 Sep 2020 15:09:36 -0400
+        Thu, 24 Sep 2020 15:17:26 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9D1EC0613CE;
+        Thu, 24 Sep 2020 12:17:25 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id p9so308466ejf.6;
+        Thu, 24 Sep 2020 12:17:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=h1VoA7OKiH+cdit4mm4O2zd0Tw6zM3Q4V6K1zdq9FWE=;
+        b=CPfOOWs9sDvMAKby1idWrCOP94Wyr+ZMxegjP9019mHptZ1gGqwxihutuHjfoMsuWu
+         d/g8DjzsuHvSaU2JLwKD9PW5qk6iR5B20duSy3I/sYFK5fV5k6INIqZbstC31auUO3uP
+         Q9p9SaNYOXcZVqOFLnyYAKNldtneJa9Bg8Bt41B37GSDOoWyndfZRPpBxstO3cY5LajU
+         0jsbMpsz8bSyM3rIkIw/+KRJsPB9J70BXDl+xWhju4N3KtAcyOYU3GlhztDKSMtGP/s+
+         yoxxClmg/MJpviOFAeFsEIf4Do/u3zuvTBAu5alIPzQD+G0SBeKsdROEs9Rsil8saU4l
+         iSZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=h1VoA7OKiH+cdit4mm4O2zd0Tw6zM3Q4V6K1zdq9FWE=;
+        b=cK9Z3Hq+wXoZozB1VQ1JN5AZ0mExxfCfko4HH3l2EnDlZsZka4S6QJv73bRCc5h+zN
+         KbRNfCGMNcY0V529KBE9w4Vu1Rl1aXg6UHZJ+27JTO9qPSvk7pRmX3kOHc1sB1al8Q88
+         ZvazaPks5mCbGWRAOfy0OgtcgWBw6r4CbffVKoCYfzNXD37CqtMdO0POklJovEtDXKJN
+         5xe71GEN5fxSr4M09q9LVAncgSMLm8WHQ2b51v/emsgbzrAD+Gl2LY93LxfOxHsWoN4E
+         ix41p43jk7gSvAngSdpVECVfNeWh+p2mvogHYAyRuQqyEipuDFunqpHct/F90Ym4Yumo
+         TYIw==
+X-Gm-Message-State: AOAM5337xELiBGgv+WDQDl26vHX4WfQmlv964yJM//C1QFbut8Ywbj9Q
+        3MeJ2snXME/043c4/qpBkUEC4tYCRMSXWw==
+X-Google-Smtp-Source: ABdhPJwrBKBnTVa5b20K8m+aWXTOHq2v5qNn3QFPotN7Ymaw7mYIIboiThbnKAsqnhDA59dy/kqcAQ==
+X-Received: by 2002:a17:906:d7ab:: with SMTP id pk11mr138078ejb.472.1600975043995;
+        Thu, 24 Sep 2020 12:17:23 -0700 (PDT)
+Received: from [192.168.2.202] (pd9e5a9d2.dip0.t-ipconnect.de. [217.229.169.210])
+        by smtp.gmail.com with ESMTPSA id z17sm68129edi.90.2020.09.24.12.17.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Sep 2020 12:17:23 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/9] Add support for Microsoft Surface System
+ Aggregator Module
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
+        Dorian Stoll <dorian.stoll@tmsp.io>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+References: <20200923151511.3842150-1-luzmaximilian@gmail.com>
+ <CAK8P3a3Qie_CP1dA-ERqyDv=EnaQQPnNbFYrGr3ySiY4mO0=Uw@mail.gmail.com>
+ <CAHp75Vfp86h38Rd-VEgER7ASADdmz5ymAkuHvD0Q6WPDqZBqHw@mail.gmail.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <95c2d02b-b8b1-59d9-1276-f2b1830fdac8@gmail.com>
+Date:   Thu, 24 Sep 2020 21:17:21 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20200921165506.GA549786@rani.riverdale.lan>
+In-Reply-To: <CAHp75Vfp86h38Rd-VEgER7ASADdmz5ymAkuHvD0Q6WPDqZBqHw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 9/21/20 12:55 PM, Arvind Sankar wrote:
-> On Mon, Sep 21, 2020 at 06:27:17PM +0200, Ard Biesheuvel wrote:
->> On Mon, 21 Sep 2020 at 18:19, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->>>
->>> On Fri, Sep 04, 2020 at 09:31:05PM -0400, Lenny Szubowicz wrote:
->>>> +     /*
->>>> +      * The EFI MOK config table must fit within a single EFI memory
->>>> +      * descriptor range.
->>>> +      */
->>>> +     err = efi_mem_desc_lookup(efi.mokvar_table, &md);
->>>> +     if (err) {
->>>> +             pr_warn("EFI MOKvar config table is not within the EFI memory map\n");
->>>> +             return;
->>>> +     }
->>>> +     end_pa = efi_mem_desc_end(&md);
->>>> +     if (efi.mokvar_table >= end_pa) {
->>>> +             pr_err("EFI memory descriptor containing MOKvar config table is invalid\n");
->>>> +             return;
->>>> +     }
->>>
->>> efi_mem_desc_lookup() can't return success if efi.mokvar_table >= end_pa,
->>> why check it again?
-
-I agree it's unnecessary and I see that Ard has addressed this in a patch.
-
->>>
->>>> +     offset_limit = end_pa - efi.mokvar_table;
->>>> +     /*
->>>> +      * Validate the MOK config table. Since there is no table header
->>>> +      * from which we could get the total size of the MOK config table,
->>>> +      * we compute the total size as we validate each variably sized
->>>> +      * entry, remapping as necessary.
->>>> +      */
->>>> +     while (cur_offset + sizeof(*mokvar_entry) <= offset_limit) {
->>>> +             mokvar_entry = va + cur_offset;
->>>> +             map_size_needed = cur_offset + sizeof(*mokvar_entry);
->>>> +             if (map_size_needed > map_size) {
->>>> +                     if (va)
->>>> +                             early_memunmap(va, map_size);
->>>> +                     /*
->>>> +                      * Map a little more than the fixed size entry
->>>> +                      * header, anticipating some data. It's safe to
->>>> +                      * do so as long as we stay within current memory
->>>> +                      * descriptor.
->>>> +                      */
->>>> +                     map_size = min(map_size_needed + 2*EFI_PAGE_SIZE,
->>>> +                                    offset_limit);
->>>> +                     va = early_memremap(efi.mokvar_table, map_size);
->>>
->>> Can't we just map the entire region from efi.mokvar_table to end_pa in
->>> one early_memremap call before the loop and avoid all the remapping
->>> logic?
->>>
+On 9/24/20 10:30 AM, Andy Shevchenko wrote:
+> On Wed, Sep 23, 2020 at 6:32 PM Arnd Bergmann <arnd@arndb.de> wrote:
 >>
->> I suppose that depends on whether there is a reasonable upper bound on
->> the size which is guaranteed to be mappable using early_memremap()
->> (e.g., 128 KB on 32-bit ARM, or 256 KB on other architectures)
-> 
-> Ah, sorry, I thought only the number of early mappings was limited, not
-> the size as well. We could still just map the maximum possible
-> (NR_FIX_BTMAPS * PAGE_SIZE), since it will fail anyway if the config
-> table turns out to be bigger than that?
-
-In practice, the loop will only do one or two mappings. That's because of
-two factors.
-
-First the code attempts to map a little more than it needs (2*EFI_PAGE_SIZE).
-Secondly, right now only one entry in the MOKvar config table might be quite
-large, i.e. the entry named MoKListRT. It's extremely likely that the header
-of MokListRT entry will be encountered on the first mapping. If that entry
-goes beyond what was originally mapped, then a second mapping will cover all
-the data in that large entry as well as the remaining small entries that might
-follow it.
-
-> 
->>
->>
->>>> +     if (va)
->>>> +             early_memunmap(va, map_size);
->>>> +     if (err) {
->>>> +             pr_err("EFI MOKvar config table is not valid\n");
->>>> +             return;
->>>> +     }
+>> On Wed, Sep 23, 2020 at 5:15 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
 >>>
->>> err will never be non-zero here: it was cleared when the
->>> efi_mem_desc_lookup() was done. I think the initialization of err to
->>> -EINVAL needs to be moved just prior to the loop.
+>>> Hello,
 >>>
->>>> +     efi_mem_reserve(efi.mokvar_table, map_size_needed);
->>>> +     efi_mokvar_table_size = map_size_needed;
->>>> +}
+>>> The Surface System Aggregator Module (we'll refer to it as Surface
+>>> Aggregator or SAM below) is an embedded controller (EC) found on various
+>>> Microsoft Surface devices. Specifically, all 4th and later generation
+>>> Surface devices, i.e. Surface Pro 4, Surface Book 1 and later, with the
+>>> exception of the Surface Go series and the Surface Duo. Notably, it
+>>> seems like this EC can also be found on the ARM-based Surface Pro X [1].
+>>
+>> I think this should go to drivers/platform/x86 or drivers/platform/surface/
+>> along with other laptop vendor specific code rather than drivers/misc/.
 > 
+> +1 here. drivers/platform/surface is a good place to start.
+> And you may begin with moving a few Surface drivers out of PDx86 to
+> the new folder.
 
+Perfect, thanks! I'll draft up a patch series over the weekend.
+
+A couple questions regarding structure and maintenance:
+
+  - Should I CC the platform-driver-x86 list on future submissions to
+    drivers/platform/surface? I.e. is this something you would want to
+    review if it doesn't touch the drivers/platform/x86 directory?
+
+  - How would you want the layout to be, specifically regarding to the
+    surface-aggregator stuff? My suggestion would be simply:
+
+    drivers/platform/surface/
+        surface_aggregator/
+            Kconfig
+            Makefile
+            core.c
+            controller.c
+            ... (all core stuff built into the surface_aggregator module)
+        Kconfig
+        Makefile
+        surface_aggregator_debugfs.c
+        surface_acpi_notify.c
+        surface_*.c        (any other surface platform driver as well
+                            as drivers dependent on surface_aggregator)
+
+  - Regarding future things like HID transport driver, battery/AC driver:
+    Submit them to drivers/platform/surface or to their respective
+    subsystem directories?
+
+Thanks,
+Max
