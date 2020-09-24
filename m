@@ -2,218 +2,204 @@ Return-Path: <SRS0=VZIW=DB=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0EFC4363D
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 11:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DF8C4727D
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 18:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6362F238A1
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 11:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C31F23600
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 18:59:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WWaCb9a0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNbA+UUY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727449AbgIXLso (ORCPT
+        id S1726899AbgIXS7P (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Sep 2020 07:48:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60231 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727443AbgIXLsl (ORCPT
+        Thu, 24 Sep 2020 14:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbgIXS7P (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Sep 2020 07:48:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600948119;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AB8JpAKbi2D36BPKPZyn0W43idPr3Duum7qG/S0J+/s=;
-        b=WWaCb9a03mTb/T9MEnWeYMvZpq5xbTHgDOb+vvY+lf8W4iwWl42WCk1ogUf6vH2cJuwtF5
-        FzFb7tBXKT2WaeEveefg+gi046jFYnK67uqeGXFurNmbjvCC1GSsh7mfRb7WQFtVGa/EWv
-        rSTTTdHq/JH8dUSoSig5//7S1CuWHgI=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-224-i31oZdZUPRCpucYfIYQgJw-1; Thu, 24 Sep 2020 07:48:35 -0400
-X-MC-Unique: i31oZdZUPRCpucYfIYQgJw-1
-Received: by mail-wr1-f69.google.com with SMTP id l17so1120794wrw.11
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2020 04:48:35 -0700 (PDT)
+        Thu, 24 Sep 2020 14:59:15 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A429EC0613CE;
+        Thu, 24 Sep 2020 11:59:14 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id u21so269162eja.2;
+        Thu, 24 Sep 2020 11:59:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lwAddsxqxEQpJ575NEew1KT3RdIFAHC55D7Q/Z0N/RY=;
+        b=GNbA+UUYnzYUWnF9AWZ7LbnzKoR2rTvoRCb/5g6P2OZ/vAeIwpeVeSyZVg1Zk5p0YX
+         LW26M0TaN6PWk/5eOX15xy7dwp04CN9vCRJeTgWlthrotX6RlpFbyQCm1KZT3FGNaJi2
+         /TMkFLssFuCCH4cNU2uItE15fgcD7ZTKxvsY1sT9QVyX9SUMBRBWuZscAckPgonU1aho
+         Sa8wpLkoVSbuPz/1UcipwaExcDJZ3edbe9JeUrn708GlY6qT1Z4rL61iuL2MvDQESzNX
+         67AJMVb6ktX4n5KklEq1eZV4nl7CEf0eJNF2ikR8G0QpVOabbYLEfH5sudK1f/35aE5q
+         UgzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=AB8JpAKbi2D36BPKPZyn0W43idPr3Duum7qG/S0J+/s=;
-        b=fGb2XW0ro5xdoIO9MZ2/lre90DaRvZ/Tsb65xYcILCPR2tn+ftfVbfix/QlBUpHN7Z
-         IU3tTTPFH+vJ3Ar1fqx0177MYh2dVAgZKo9IP945UnZtR3UYT4R7P8CMRBKWPKlNsBwT
-         0Mhn89odWuUbaPX11yBjBT/GUwAEwUJe8DKxhKsGKMGrR/N77WC4HOm+SegYf29sPcWV
-         FzgA4UJx7ha+YNLld3Z6fjLZdCsqnSgNOXr+fwIPxKBUkVb4MRd+CEFHuL8Q84LpJ4OU
-         sHThL9NNpRyKXqja5Vn5Ms1LGMpfofFA7QHe6lPNk1muft4BshyUEGsVNMdJGdrX36Ue
-         cA4g==
-X-Gm-Message-State: AOAM531UYkRnxa+qVdIkGbVb+pNOlIJVfemNaCEA7gb/gZjaepi8E8NJ
-        DnXoLP8ZYpfSPuJP/5yh6nDwyXtz/3bJj0PJSkSuHj10+LyQVPRQ8tkwWe0/HOtz6CPy4/HE0LB
-        lpUBBgt+CnIxLROHl6r+6aSMBoMYjIFyQCg==
-X-Received: by 2002:a1c:6445:: with SMTP id y66mr4590765wmb.12.1600948112967;
-        Thu, 24 Sep 2020 04:48:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJziKgh6lMEG4a8fLk6nevD4+cDsCn9TTKIOkh1Z+yTPj0cgo6pLbn1PA+7GG7v8j4jRuFIXWQ==
-X-Received: by 2002:a1c:6445:: with SMTP id y66mr4590735wmb.12.1600948112636;
-        Thu, 24 Sep 2020 04:48:32 -0700 (PDT)
-Received: from dhcp-64-164.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id i14sm3453876wro.96.2020.09.24.04.48.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2020 04:48:31 -0700 (PDT)
-Message-ID: <7bf7c4bca376fda533eb142614bbcd9bc190bbe7.camel@redhat.com>
-Subject: Re: [External] Re: RFC: offering a standardized (/sys/class)
- userspace API for selecting system/laptop performance-profiles
-From:   Benjamin Berg <bberg@redhat.com>
-To:     Elia Devito <eliadevito@gmail.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Mark Pearson <mpearson@lenovo.com>
-Cc:     Jared Dominguez <jaredz@redhat.com>,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Date:   Thu, 24 Sep 2020 13:48:27 +0200
-In-Reply-To: <9766663.nUPlyArG6x@pce>
-References: <bbe4ebef-0845-2719-ac9a-fbc9c7bcd7be@redhat.com>
-         <3ed9ac0a-2e24-7d3a-f264-c3bb03b846d9@lenovo.com>
-         <261328975238951d0412727220a1b7d915cebb99.camel@redhat.com>
-         <9766663.nUPlyArG6x@pce>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-oBenbtGnl1dPgy5OR6yS"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lwAddsxqxEQpJ575NEew1KT3RdIFAHC55D7Q/Z0N/RY=;
+        b=N6y8DeXEY5sk77S1iUCuVcC40psSziCbgJfMzLUFWH6kc6QfoPvPXPCTrXcVroL8Lm
+         Mq1NMumlLlJp+jsWqACopU7K9snmB6cpkbHXoSSp/2xZhgyvyT2gu+cd/DnS/tRj4hB3
+         e3+YQCQJI9Sti7lKGXpqaCv/zcEHy7YzEmh5yGmnc3IdsDXFAHIuWZzK1arHLzv28qXo
+         FJRrlcY5JeD/QEFfyPS5fyZHrk5NxtOu2IO1S1l2cfN3MUrj2mOZ/eIAlHBxx6vLluj1
+         tf+sekiwP9SDhe9k9lA/0HA6zACzqsxO5pCKF6U9CfJFHpSdK6GI8bruAfqZaPbCwd9i
+         qnqw==
+X-Gm-Message-State: AOAM531MGZ1+7uE2Wqo6OfN5xLxN/v7OHPH3iVL/i59eKbiEQUW+yCMU
+        i77JV6nWKYBc0SBTznriPEhWXGqI8qY=
+X-Google-Smtp-Source: ABdhPJxp9sqJiNEsPeTmvDrXg1hfXDZVxyTA8NSVZqJqnoM12q+h6hFsKp8vcVS+g/f/0JuHZBL5aA==
+X-Received: by 2002:a17:906:9245:: with SMTP id c5mr94400ejx.54.1600973952579;
+        Thu, 24 Sep 2020 11:59:12 -0700 (PDT)
+Received: from [192.168.2.202] (pd9e5a9d2.dip0.t-ipconnect.de. [217.229.169.210])
+        by smtp.gmail.com with ESMTPSA id lr14sm219977ejb.0.2020.09.24.11.59.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Sep 2020 11:59:11 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/9] Add support for Microsoft Surface System
+ Aggregator Module
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-serial@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
+        Dorian Stoll <dorian.stoll@tmsp.io>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+References: <20200923151511.3842150-1-luzmaximilian@gmail.com>
+ <CAK8P3a3Qie_CP1dA-ERqyDv=EnaQQPnNbFYrGr3ySiY4mO0=Uw@mail.gmail.com>
+ <dad42dce-15d0-245a-4d91-4733e54883a0@gmail.com>
+ <CAK8P3a2ryzmsrHHApT9O=dvsw+=z18Sjd4ygVxvFrrDetKA+rQ@mail.gmail.com>
+ <c4c1d999-9ab7-8988-906a-3cb6a70bc93d@gmail.com>
+ <CAK8P3a2XegsP71yvd8Ku08_k6ecQfkU+V+t+QnjQBrJKF2MwCg@mail.gmail.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <d07adfb3-9f79-c00a-cb70-e044aa0b19f8@gmail.com>
+Date:   Thu, 24 Sep 2020 20:59:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
+In-Reply-To: <CAK8P3a2XegsP71yvd8Ku08_k6ecQfkU+V+t+QnjQBrJKF2MwCg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On 9/24/20 10:26 AM, Arnd Bergmann wrote:
+> On Thu, Sep 24, 2020 at 1:28 AM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+>> On 9/23/20 9:43 PM, Arnd Bergmann wrote:
+>>> On Wed, Sep 23, 2020 at 5:43 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+>>>>
+>>>> On 9/23/20 5:30 PM, Arnd Bergmann wrote:
+>>>>> On Wed, Sep 23, 2020 at 5:15 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+>>>>>>
+>>>>>> Hello,
+>>>>>>
+>>>>>> The Surface System Aggregator Module (we'll refer to it as Surface
+>>>>>> Aggregator or SAM below) is an embedded controller (EC) found on various
+>>>>>> Microsoft Surface devices. Specifically, all 4th and later generation
+>>>>>> Surface devices, i.e. Surface Pro 4, Surface Book 1 and later, with the
+>>>>>> exception of the Surface Go series and the Surface Duo. Notably, it
+>>>>>> seems like this EC can also be found on the ARM-based Surface Pro X [1].
+>>>>>
+>>>>> I think this should go to drivers/platform/x86 or drivers/platform/surface/
+>>>>> along with other laptop vendor specific code rather than drivers/misc/.
+>>>>
+>>>> I initially had this under drivers/platform/x86. There are two main
+>>>> reasons I changed that: First, I think it's a bit too big for
+>>>> platform/x86 given that it basically introduces a new subsystem. At this
+>>>> point it's really less of "a couple of odd devices here and there" and
+>>>> more of a bus-type thing. Second, with the possibility of future support
+>>>> for ARM devices (Pro X, Pro X 2 which is rumored to come out soon), I
+>>>> thought that platform/x86 would not be a good fit.
+>>>
+>>> I don't see that as a strong reason against it. As you write yourself, the
+>>> driver won't work on the arm machines without major changes anyway,
+>>> and even if it does, it fits much better with the rest of it.
+>>
+>> Sorry, I should have written that a bit more clearly. I don't see any
+>> reason why these drivers would not work on an ARM device such as the Pro
+>> X right now, assuming that it boots via ACPI and the serial device it
+>> loads against is fully functional.
+> 
+> As I understand, the dialect of ACPI used on the snapdragon laptops
+> is not really compatible with the subset expected by the kernel, so
+> you'd be more likely to run those laptops with a device tree description
+> of the hardware instead (if at all).
+> 
+> Making the driver talk to the hardware directly instead of going through
+> AML likely requires more refactoring.
 
---=-oBenbtGnl1dPgy5OR6yS
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Oh, I did not know that! Thanks!
 
-On Mon, 2020-09-21 at 11:03 +0200, Elia Devito wrote:
-> [SNIP]
->=20
-> For gaming purpose when the CPU and GPU share the thermal budget, in this=
- case=20
-> the best solution is to set thermal profile to performance to maximize th=
-e heat=20
-> dissipation and the p-state profile to powersave, in this way during load=
-ings=20
-> the cpu gain a performance boost that allow to reduce loading time, inste=
-ad,=20
-> during gameplay the cpu performance will be limited in favor of the GPU=
-=20
-> allowing the maximum framerate to be reached.
-> (feral had to handle it for its gamemode tool:=20
-> https://github.com/FeralInteractive/gamemode/pull/179)
+>>>> I'd be happy to move this to platform/surface though, if that's
+>>>> considered a better fit and you're okay with me adding that. Would make
+>>>> sense given that there's already a platform/chrome, which, as far as I
+>>>> can tell, also seems to be mainly focused on EC support.
+>>>
+>>> Yes, I think the main question is how much overlap you see functionally
+>>> between this driver and the others in drivers/platform/x86.
+>>
+>> I think that the Pro X likely won't be the last ARM Surface device with
+>> a SAM EC. Further, the subsystem is going to grow, and platform/x86
+>> seems more like a collection of, if at all, loosely connected drivers,
+>> which might give off the wrong impression. In my mind, this is just a
+>> bit more comparable to platform/chrome than the rest of platform/x86. I
+>> don't think I'm really qualified to make the decision on that though,
+>> that's just my opinion.
+> 
+> I would ask the drivers/platform/x86 maintainers for an opinion here,
+> they are probably best qualified to make that decision.
+> 
+> I don't really mind either way, for me this is more about who is
+> responsible as a subsystem maintainer than whether these are
+> technically x86 or not.
 
-So I think that trying to put the CPU into a power-efficient state does
-make sense. But, it is also a more generic issue.
+I see, okay. I'll ask them and CC them on the next submission.
 
-It reminds me of the LPC talk
-  "Improving CPU energy efficiency during i/o bottlenecks"
-  https://youtu.be/hJa3YMgEu3M?t=3D8852
-The point is, that what we really want here is to run in the most power
-efficient state that gets the job done reliably[1]. It doesn't matter
-which exact state it is, all that matters is that applications are
-happy with regard to the latencies they see.
+>> Here's an overview of other drivers that I hopefully at some point get
+>> in good enough shape, which are part of this subsystem/dependent on the
+>> EC API introduced here:
+>>
+>> - A device registry / device hub for devices that are connected to the
+>>     EC but can't be detected via ACPI.
+>>
+>> - A dedicated battery driver for 7th generation devices (where the
+>>     battery isn't hanled via the ACPI shim).
+>>
+>> - A driver properly handling clipboard detachment on the Surface Books.
+>>
+>> - A driver for HID input/transport on the Surface Laptops and Surface
+>>     Book 3.
+>>
+>> - A driver for allowing users to set the performance/cooling mode via
+>>     sysfs.
+>>
+>> - Possibly a driver improving hot-plug handling of the discrete GPU in
+>>     the Surface Book base.
+> 
+> Note that drivers that connect to the bus typically don't live in the
+> same subdirectory as the driver that operates the bus. E.g. the
+> battery driver would go into drivers/power/supply and the input
+> would go into drivers/input/ or drivers/hid.
 
-In other words, I think the problem here really is power-optimizing
-long running tasks that wake up regularly but don't need that much CPU
-time overall.
+Right. I wonder if this also holds for devices that are directly
+dependent on a special platform though? It could make sense to have them
+under plaform/surface rather than in the individual subsystems as they
+are only ever going to be used on this platform. On the other hand, one
+could argue that having them in the subsystem directories is better for
+maintainability.
 
-> Another opposed particular case could be thermal profile set to quiet and
-> p-state set to performance, usefull for example to maximizze cpu performa=
-nce=20
-> in silent ambient room like a library, obviously for CPU-only intesive ta=
-sks=20
-> the best solution is to set either thermal and performance profile to=20
-> performance.
-
-Yeah, I have been wondering about that. If you need to meet a certain
-power budget (due to thermal limits), then you want to first increase
-the power efficiency before doing idle injection (i.e. intel_pstate vs.
-intel_powerclamp). But, it seems to me that RAPL already achieves the
-best possible behaviour without any need for further interaction. So
-setting "performance" in the library should result in a high peak
-performance if you have a "bursty" load while also giving optimal
-results for long running tasks.
-
-Benjamin
-
-[1] Of course, there are more complexities as to which job is actually
-relevant. It would for example make sense to inhibit/slow down
-background tasks to prevent them from cutting into the power budget of
-the running game. It isn't an easy problem, but should be solvable
-using cgroups.
-
-> Basically there are infinite combinations that can be made to obtain the =
-best=20
-> configuration for each situation, to allow this a common interface should=
- offer
-> a possibility to:
->=20
-> - Define the list of thermal profiles separately from the performance one=
-s
-> - Eventually define a list of on/off attributes (useful for lenovo lap_mo=
-de?)
-> - Provide a description of them
-> - Switching between thermal profiles regardless of the performance profil=
-e
->=20
-> A possible solution could be a "slider like" interface for performance le=
-vel
-> and a list of thermal profile.
->=20
-> On Thu, 2020-09-17 at 13:22 +0200, Hans de Goede wrote:
-> > Elia, Mark, I assume that both of you want to get your patches for this
-> > upstream sooner, rather then later. But I think we should put them on
-> > hold until we have an agreement on a shared userspace API for this.
-> >=20
->=20
-> I could maybe update the patch to expose the interface via debugfs like M=
-ark
-> wants to do with lenovo driver and make update later when a common interf=
-ace
-> will be fully defined.
->=20
-> I would prefer the patch to be merged (at lest the init function) because=
- it
-> fix the thermald behaviour whit default thermal profile on fresh boot.
->=20
-> In the next days I will update the patch and send it in other thread to=
-=20
-> discuss and evaluate a merge in two steps
->=20
-> Best Regards
-> Elia
->=20
->=20
->=20
-
---=-oBenbtGnl1dPgy5OR6yS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEED2NO4vMS33W8E4AFq6ZWhpmFY3AFAl9sh4sACgkQq6ZWhpmF
-Y3BmCA//ZHIV85AI+H6SMNZML82yLRLMincAG/U+VRjvVXbeVho6qJXUIc8pxb41
-bAXKMvQNKw0Jhev9R+n9c+AgB1sDCkG4uGJSVibo5psnFAggeSvHHXJqmRC4E9am
-mwCXKSTr95cwZiLHlqTB+1BdoTHy0ddHRcol04LpoJTetrsGqwAcE16qWtjBqDHI
-ZjReIKa5i3bkl1uNc19+iku8rBPmR6fuYOUjLIFlkI/0s1VTS60rH1FtV+HScaVO
-hNDrXxCgxfFMALVTx5oqF9EbKPAiWAL7QOXUg/wr7kgeC23w8HhdxqeVU4H+E2OY
-U9xlxLbOYBXQmPUW3AKrhPhCHzGOBG2bnBnYP2RldnbeTz5rqeR3vhCCAgaocqOk
-KpSa+JniMdAoYlMentEht3iu92Sn4Nbmzr0lLVqQvaNUNBKMGU4RyOeFVRt/xR93
-rQTMBU91kv2Ubp9xqLQomNdE9FcgELpw5x8hWFk0Xq5zIGF5XBNc1XVIuD5FVunh
-ZqNqx+dq1MkUB81TkNgq412aqoN7xEiqpa0TN0lkOe+XExhU/I2wn/SbGGMzHvor
-KSkJI/t7hDXDKfeMLajDxF2UgofupeOMji+HWel63QIfyd7/GSZkMONgSCYFwkOU
-4/r6ws6dPsVgOECQQ+7QIHjc0Gc0blO2Qv/5MofP7LEGhYP/15s=
-=zST/
------END PGP SIGNATURE-----
-
---=-oBenbtGnl1dPgy5OR6yS--
-
+Thanks,
+Max
