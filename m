@@ -2,175 +2,188 @@ Return-Path: <SRS0=VZIW=DB=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFC9C4346E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 08:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F30C2D0E2
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 08:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F242623600
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 08:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7681323787
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 08:39:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pt0lVXTT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgIXIjE (ORCPT
+        id S1727051AbgIXIjO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Sep 2020 04:39:04 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:52961 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbgIXIjE (ORCPT
+        Thu, 24 Sep 2020 04:39:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:50852 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727211AbgIXIjN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Sep 2020 04:39:04 -0400
-Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MnagF-1kl78t23NN-00jX68; Thu, 24 Sep 2020 10:26:22 +0200
-Received: by mail-qk1-f173.google.com with SMTP id v123so2487558qkd.9;
-        Thu, 24 Sep 2020 01:26:22 -0700 (PDT)
-X-Gm-Message-State: AOAM5322pE9d6oTUDb0fysgmklL1BUbMvIuxZ9lnKS8K5QjuEr2L1zxA
-        ZY6wqc9/NIN+1S7po4YSnt5cXvw80BmJT+EDKbE=
-X-Google-Smtp-Source: ABdhPJwdB4OckyypHDvhO1cGrqIWN2A9DDGKREeH56+z++Kes/ubhHRnkNRx8EJcehFdXXe5kRHJ6nndT91q+XgyvnE=
-X-Received: by 2002:a37:5d8:: with SMTP id 207mr3790606qkf.352.1600935980950;
- Thu, 24 Sep 2020 01:26:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200923151511.3842150-1-luzmaximilian@gmail.com>
- <CAK8P3a3Qie_CP1dA-ERqyDv=EnaQQPnNbFYrGr3ySiY4mO0=Uw@mail.gmail.com>
- <dad42dce-15d0-245a-4d91-4733e54883a0@gmail.com> <CAK8P3a2ryzmsrHHApT9O=dvsw+=z18Sjd4ygVxvFrrDetKA+rQ@mail.gmail.com>
- <c4c1d999-9ab7-8988-906a-3cb6a70bc93d@gmail.com>
-In-Reply-To: <c4c1d999-9ab7-8988-906a-3cb6a70bc93d@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 24 Sep 2020 10:26:04 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2XegsP71yvd8Ku08_k6ecQfkU+V+t+QnjQBrJKF2MwCg@mail.gmail.com>
-Message-ID: <CAK8P3a2XegsP71yvd8Ku08_k6ecQfkU+V+t+QnjQBrJKF2MwCg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/9] Add support for Microsoft Surface System
- Aggregator Module
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        =?UTF-8?Q?Bla=C5=BE_Hrastnik?= <blaz@mxxn.io>,
-        Dorian Stoll <dorian.stoll@tmsp.io>,
+        Thu, 24 Sep 2020 04:39:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600936751;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KumOR8QeFpvN+I1g8iTewl/hiL0N7ivhlLhAs34U1rU=;
+        b=Pt0lVXTTsyDj2dQsB0c/zD1z1/S4jYEQSuYPfiEorRJa2t8K3S0rdbI9u3ZoVrSnYzYGvR
+        Od6IuNh5WM2MDP9hTmAug0Lz4/mIHUSD95qYYP7CKg+Ma+f9akBA6O7DKY4h8iG/PDMcCF
+        pqF8PFxii9QlDGxfSmXm4ooBo2wUo/o=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-510-vOUXKJGHN8qTkrZ7ZCKG0A-1; Thu, 24 Sep 2020 04:39:09 -0400
+X-MC-Unique: vOUXKJGHN8qTkrZ7ZCKG0A-1
+Received: by mail-ej1-f71.google.com with SMTP id ml20so996747ejb.23
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2020 01:39:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KumOR8QeFpvN+I1g8iTewl/hiL0N7ivhlLhAs34U1rU=;
+        b=OM2K2VZr5qJskGsOUUD2Q+wMztDck+3aXKGb7etOhvJ5GBOenDREIMDpKcfMXaZrI0
+         hlvnF1MyG/NLjNDPjhYtIaNW+yxnxAvbj07T/4AOj8nPRysgNxuVpPFqHSYD9p5kMHGI
+         GeQ0VVch8taZWg6Bejl7AaOUOad6CCgUd5Zey11mAiEYCuQqto+wAFUGEwUsYi9bNYUE
+         OxUNvralkxKVJlocpxrGb1VBS0mGc0RHVnk06KgJc+TD15Sw4ZDZIRIaSDqUoCa9mbcH
+         AT3BXKqCBVDB/L9a4HcNCSqbiUXzG3UUYvLwEe1Sp/nbnBfyXLzv5jM7/sbplwntpaSx
+         51dA==
+X-Gm-Message-State: AOAM533YRLPLpQDN4eJ8h9X+n/JcwHqe0zhOB+7XM+kje3WRz4sf3eYD
+        B4Grj8oz0ZJXNCZ9h8qlB4tUFuO9EI8VDC0Dse4DUI4TVMtnmOK7f56OJw1Iyl1PjplpalKvX6P
+        p6mfR50U6tkqKZLO2OaOYIB5j7Q7rpS6Vag==
+X-Received: by 2002:a50:cdd1:: with SMTP id h17mr3559512edj.94.1600936748633;
+        Thu, 24 Sep 2020 01:39:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz0FG3insf68LUBIWKdkL26oIXhrpUN0qtuf9aUcmwya9Ul6/YFy1yJZ+Mi4BRr8wZg/1BYuQ==
+X-Received: by 2002:a50:cdd1:: with SMTP id h17mr3559489edj.94.1600936748397;
+        Thu, 24 Sep 2020 01:39:08 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id v22sm1818364ejj.23.2020.09.24.01.39.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Sep 2020 01:39:07 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: intel_pmc_core: do not create a static
+ struct device
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajneesh.bhardwaj@intel.com, vishwanath.somayaji@intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:7BSu+DCzcAsvcwNW/57TzlBcHkc7QtvslyE7xNAfuxWY1xVxCeo
- vYxOvSAWLJpqEbhKmF0hg3Zga739OBAzSlxeJjvBo6SAvF3uiO049eJfPxMTg+7HB8vNX3B
- SKMxP6K3DPKwdLJhWX3WkxgN1SFR8v8X9nWg/AGHbA4tKGlll5EFdWlxArAeraBkXGUYH0B
- 4qaWBHB0Oo/7g1ZZ+jkNA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/kuDggNYB1c=:hbxlsSxYvykMo0XJ0MmrKg
- I2fbeBZSoQt2plYZLhNC+fr3kjj/pzPBnfxHN9C5z3yC7g9DmDoqSKcRgur2piE+UK7kT5MIm
- SPbtzREEvFBZlvtDU3z4Kxlc0RgjIeXjtkXDPQWM83XgHlRfEVsVTPDAzPWVKzGsUaXiphSBL
- zI6Sc6x241+AEYgBMqq/ZH5609YW4h99t4wq6zxi8O0lmW3gl2Cuj5Kxw3NO3JHbTA5sTo88c
- J8vA3DSCTAAtWi+QthQcryPUbYfYAeG3f/7c73U+YZ0nFS8Q7ugN0HvdGg5j0wPCUdjMytA82
- Lm+bZIiS9AUF+zNzFjdLmYIdMft1lZG8jK6YJUssuxkicOnSuu58wBNDOztACeMjfQ2/KP6I+
- hPS1TVH76+MbhrfwxxF3Oz92wShVDFIJ4/m73hA8JDk0SWrHfiCbdBxJZTnau0EsYlL6FdWdf
- 5XxwwFp8WLGJKID9/FhE4cdZIWrPxnUBNYL2pVTHa6AWgPR2KTG0iIqhD83EUYSeEqOwNTZWj
- 7vm0J9eEGCkltmG3yYK/YGd9nJn7PuNxLzJNsHUcLeetM3zEHA+yD0fFGNWagRraFzLocMudN
- L2sSyV+Al2bvpqAxdEY6JQuhYlJPkZmz9pSvlKMeXm0jLIhYGZwTc4CdbCymhuxgGyC1omaWS
- QxiWt03Y2r/Txw7F0nI9Mb2nR2fRSGbC8mqybMOSXdZuIgsYsLFWVfPeQEhCaWYz+sx1HJh7p
- 3yv7uP3WEJg3p7uRg2nw07mHbdPg3dH9OrWd78OILwDvd+b+DdQ8s89eAD8rvE5p2Jm/aeDdI
- 2iedrEj4EWV5j0amrarp8jvWs9Ov+vf+9sG6880l5BFQuJ5Qc5H7ZLFVYTKbOu/kskDRFHuon
- U5qUspXKOkSppcce2XR0Wn2y0toumC6ATUAhR23POhwBZmywrAsPiYcXNni8tQ7bPrATDBT53
- OHgPOBBks6LF585o95sj125BJIy5Lp8XLHsycyxioHssqrv++IjRs
+        Rajat Jain <rajatja@google.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>
+References: <20200923184803.192265-1-gregkh@linuxfoundation.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <1fc9022c-6837-7aa3-489c-218db5434202@redhat.com>
+Date:   Thu, 24 Sep 2020 10:39:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200923184803.192265-1-gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 1:28 AM Maximilian Luz <luzmaximilian@gmail.com> wrote:
-> On 9/23/20 9:43 PM, Arnd Bergmann wrote:
-> > On Wed, Sep 23, 2020 at 5:43 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
-> >>
-> >> On 9/23/20 5:30 PM, Arnd Bergmann wrote:
-> >>> On Wed, Sep 23, 2020 at 5:15 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
-> >>>>
-> >>>> Hello,
-> >>>>
-> >>>> The Surface System Aggregator Module (we'll refer to it as Surface
-> >>>> Aggregator or SAM below) is an embedded controller (EC) found on various
-> >>>> Microsoft Surface devices. Specifically, all 4th and later generation
-> >>>> Surface devices, i.e. Surface Pro 4, Surface Book 1 and later, with the
-> >>>> exception of the Surface Go series and the Surface Duo. Notably, it
-> >>>> seems like this EC can also be found on the ARM-based Surface Pro X [1].
-> >>>
-> >>> I think this should go to drivers/platform/x86 or drivers/platform/surface/
-> >>> along with other laptop vendor specific code rather than drivers/misc/.
-> >>
-> >> I initially had this under drivers/platform/x86. There are two main
-> >> reasons I changed that: First, I think it's a bit too big for
-> >> platform/x86 given that it basically introduces a new subsystem. At this
-> >> point it's really less of "a couple of odd devices here and there" and
-> >> more of a bus-type thing. Second, with the possibility of future support
-> >> for ARM devices (Pro X, Pro X 2 which is rumored to come out soon), I
-> >> thought that platform/x86 would not be a good fit.
-> >
-> > I don't see that as a strong reason against it. As you write yourself, the
-> > driver won't work on the arm machines without major changes anyway,
-> > and even if it does, it fits much better with the rest of it.
->
-> Sorry, I should have written that a bit more clearly. I don't see any
-> reason why these drivers would not work on an ARM device such as the Pro
-> X right now, assuming that it boots via ACPI and the serial device it
-> loads against is fully functional.
+Hi,
 
-As I understand, the dialect of ACPI used on the snapdragon laptops
-is not really compatible with the subset expected by the kernel, so
-you'd be more likely to run those laptops with a device tree description
-of the hardware instead (if at all).
+On 9/23/20 8:48 PM, Greg Kroah-Hartman wrote:
+> A struct device is a dynamic structure, with reference counting.
+> "Tricking" the kernel to make a dynamic structure static, by working
+> around the driver core release detection logic, is not nice.
+> 
+> Because of this, this code has been used as an example for others on
+> "how to do things", which is just about the worst thing possible to have
+> happen.
+> 
+> Fix this all up by making the platform device dynamic and providing a
+> real release function.
+> 
+> Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+> Cc: Vishwanath Somayaji <vishwanath.somayaji@intel.com>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Andy Shevchenko <andy@infradead.org>
+> Cc: Rajat Jain <rajatja@google.com>
+> Cc: platform-driver-x86@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Reported-by: Maximilian Luz <luzmaximilian@gmail.com>
+> Fixes: b02f6a2ef0a1 ("platform/x86: intel_pmc_core: Attach using APCI HID "INT33A1"")
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Making the driver talk to the hardware directly instead of going through
-AML likely requires more refactoring.
+Patch looks good to me:
 
-> >> I'd be happy to move this to platform/surface though, if that's
-> >> considered a better fit and you're okay with me adding that. Would make
-> >> sense given that there's already a platform/chrome, which, as far as I
-> >> can tell, also seems to be mainly focused on EC support.
-> >
-> > Yes, I think the main question is how much overlap you see functionally
-> > between this driver and the others in drivers/platform/x86.
->
-> I think that the Pro X likely won't be the last ARM Surface device with
-> a SAM EC. Further, the subsystem is going to grow, and platform/x86
-> seems more like a collection of, if at all, loosely connected drivers,
-> which might give off the wrong impression. In my mind, this is just a
-> bit more comparable to platform/chrome than the rest of platform/x86. I
-> don't think I'm really qualified to make the decision on that though,
-> that's just my opinion.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-I would ask the drivers/platform/x86 maintainers for an opinion here,
-they are probably best qualified to make that decision.
+Regards,
 
-I don't really mind either way, for me this is more about who is
-responsible as a subsystem maintainer than whether these are
-technically x86 or not.
+Hans
 
-> Here's an overview of other drivers that I hopefully at some point get
-> in good enough shape, which are part of this subsystem/dependent on the
-> EC API introduced here:
->
-> - A device registry / device hub for devices that are connected to the
->    EC but can't be detected via ACPI.
->
-> - A dedicated battery driver for 7th generation devices (where the
->    battery isn't hanled via the ACPI shim).
->
-> - A driver properly handling clipboard detachment on the Surface Books.
->
-> - A driver for HID input/transport on the Surface Laptops and Surface
->    Book 3.
->
-> - A driver for allowing users to set the performance/cooling mode via
->    sysfs.
->
-> - Possibly a driver improving hot-plug handling of the discrete GPU in
->    the Surface Book base.
 
-Note that drivers that connect to the bus typically don't live in the
-same subdirectory as the driver that operates the bus. E.g. the
-battery driver would go into drivers/power/supply and the input
-would go into drivers/input/ or drivers/hid.
 
-    Arnd
+
+> ---
+>   drivers/platform/x86/intel_pmc_core_pltdrv.c | 26 +++++++++++++-------
+>   1 file changed, 17 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_pmc_core_pltdrv.c b/drivers/platform/x86/intel_pmc_core_pltdrv.c
+> index 731281855cc8..73797680b895 100644
+> --- a/drivers/platform/x86/intel_pmc_core_pltdrv.c
+> +++ b/drivers/platform/x86/intel_pmc_core_pltdrv.c
+> @@ -20,15 +20,10 @@
+>   
+>   static void intel_pmc_core_release(struct device *dev)
+>   {
+> -	/* Nothing to do. */
+> +	kfree(dev);
+>   }
+>   
+> -static struct platform_device pmc_core_device = {
+> -	.name = "intel_pmc_core",
+> -	.dev  = {
+> -		.release = intel_pmc_core_release,
+> -	},
+> -};
+> +static struct platform_device *pmc_core_device;
+>   
+>   /*
+>    * intel_pmc_core_platform_ids is the list of platforms where we want to
+> @@ -52,6 +47,8 @@ MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
+>   
+>   static int __init pmc_core_platform_init(void)
+>   {
+> +	int retval;
+> +
+>   	/* Skip creating the platform device if ACPI already has a device */
+>   	if (acpi_dev_present("INT33A1", NULL, -1))
+>   		return -ENODEV;
+> @@ -59,12 +56,23 @@ static int __init pmc_core_platform_init(void)
+>   	if (!x86_match_cpu(intel_pmc_core_platform_ids))
+>   		return -ENODEV;
+>   
+> -	return platform_device_register(&pmc_core_device);
+> +	pmc_core_device = kzalloc(sizeof(*pmc_core_device), GFP_KERNEL);
+> +	if (!pmc_core_device)
+> +		return -ENOMEM;
+> +
+> +	pmc_core_device->name = "intel_pmc_core";
+> +	pmc_core_device->dev.release = intel_pmc_core_release;
+> +
+> +	retval = platform_device_register(pmc_core_device);
+> +	if (retval)
+> +		kfree(pmc_core_device);
+> +
+> +	return retval;
+>   }
+>   
+>   static void __exit pmc_core_platform_exit(void)
+>   {
+> -	platform_device_unregister(&pmc_core_device);
+> +	platform_device_unregister(pmc_core_device);
+>   }
+>   
+>   module_init(pmc_core_platform_init);
+> 
+
