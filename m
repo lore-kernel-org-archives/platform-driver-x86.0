@@ -8,76 +8,76 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3643AC4346E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 08:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE20C4346E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 08:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDB23206FC
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 08:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6579B2137B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Sep 2020 08:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g0KUjsRk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dKTdvs74"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgIXIdf (ORCPT
+        id S1727193AbgIXIgy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Sep 2020 04:33:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:59383 "EHLO
+        Thu, 24 Sep 2020 04:36:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40569 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727229AbgIXIdf (ORCPT
+        by vger.kernel.org with ESMTP id S1727235AbgIXIgx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Sep 2020 04:33:35 -0400
+        Thu, 24 Sep 2020 04:36:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600936414;
+        s=mimecast20190719; t=1600936612;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oqKbRIjNEjPRUSfu2Q0g2a+chSYmgaNVGZ2ZdS94UeA=;
-        b=g0KUjsRk0+ct2Lb1Ed5taptHFBolod7MLN5UjbR7kWfYSD0EqoZE8DGYiSBNqeWiA7cpTh
-        cqIMgw9pFe/lTn5xOGFhoO3+yLrQPf/iU0frEp+ANg7xDV91hjS9eGjjqfcV4bXhbcu3IN
-        Lc/sqkRER1pPAOHFGyBpP7xP1P7PJyc=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-334-l9CXpgm1PCeo4vs10qT0KQ-1; Thu, 24 Sep 2020 04:33:32 -0400
-X-MC-Unique: l9CXpgm1PCeo4vs10qT0KQ-1
-Received: by mail-ej1-f72.google.com with SMTP id lx11so1006365ejb.19
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2020 01:33:31 -0700 (PDT)
+        bh=iZNeQQkWMSjSkwFoVtDuBZUk/FFdCatXApryDcsJ2zQ=;
+        b=dKTdvs74Zss/bG/UwO8h/D3IkiFavWeJjiu57JFBB6PWw4BcytK2rG7U/KMMejvbdQw650
+        Z0PIuP+BhlpGrFONS8CbQ7GM3/oI9kA1kynFmqeG+3PDW1xWYeqNnf6g6EhA3TM2eEqhWs
+        kcOCnvtYa/lYxE9siCCfQ9aBLhqmjiQ=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-595-4qmyFmtFMyWQabWaOucVEA-1; Thu, 24 Sep 2020 04:36:50 -0400
+X-MC-Unique: 4qmyFmtFMyWQabWaOucVEA-1
+Received: by mail-ed1-f69.google.com with SMTP id y15so916029edq.4
+        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Sep 2020 01:36:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=oqKbRIjNEjPRUSfu2Q0g2a+chSYmgaNVGZ2ZdS94UeA=;
-        b=Xv4w3x42zMdd/9eXdZqFzYTBN6z3YAqSKZ4agqmesKtG0o1AVFmZysRKa29pnANGeO
-         /HLnSO1IadwuW4UvFEPgZVKa417irvuIIg3DjG4TR8ptcP/OE0biWXQOUg24KWvNakrq
-         +DNrFupjI3SJUE47NaTiniw4+16phBK64eALO5Yjtma/satVvUqANwpdMnzhcLgX/kAm
-         9oQdneEacqAiBhTbY60TwrHD9wqDUZSTI4K3yiaL0Rnbuh7d20W5kjnsU35dlxY1jtGf
-         VZ28OB1zBcP2p+fM+UBvOKIJj4oTP9TfaBxFeYvtHeIijuSnWuGSpvHs9AH8h9mlU1Jw
-         13qw==
-X-Gm-Message-State: AOAM530LU+GLgLUTu9aVX+Y9H2Yw1jQzPXdsrMZaeP6AxIsErI3g+2Oj
-        YUMtC/Xp1IPaZiXOZr4DUopPdAIG3cjn1ILDyXVkJj3n+ZcPzCJMZUUwCJZW9t/hmPjl+jhfa1j
-        UWiseBq1DDSCbi+jVlJCE06AMsE/NWyD1GA==
-X-Received: by 2002:a17:906:4088:: with SMTP id u8mr3572582ejj.184.1600936410608;
-        Thu, 24 Sep 2020 01:33:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy1NyUh5kOix0ApAoJR7FD23ve4z3KSQfP9/rvWWgTfyQ88HKzY8dt6ChNA4MHjr2GHQmpLyw==
-X-Received: by 2002:a17:906:4088:: with SMTP id u8mr3572559ejj.184.1600936410324;
-        Thu, 24 Sep 2020 01:33:30 -0700 (PDT)
+        bh=iZNeQQkWMSjSkwFoVtDuBZUk/FFdCatXApryDcsJ2zQ=;
+        b=Fgn4phYR3GESV/aQTBRquue+b51qts34rhgXxn2E/SbYc1sexCy5PM82DYK5d1AS82
+         mk0TXdVRaxMk3UCfGb/WnAMqwVIg53EZm6CoG4ZNhvukiz7mKLta7i4yP1GvQBe4EMdF
+         Zq+lRcw8az6w2+1W4f3L8mAcW5lMt3a7aAgaGOuYkFpkdvttsoWOQPIXJ4jA6IONIyhq
+         zCDeMyDUG42kNpS0o1iuUC+dk/v5dbsjcy8tWC4/TCqBVJTMBmlTx5C/PsEuWe1EjLTa
+         zM07w78IoCPmKKu908DssOgw3I1GBbLCSIO0jXIqOZiySQw2YwtzY8L+rf6hSsnXP2M4
+         gTXQ==
+X-Gm-Message-State: AOAM531Qp05lJHYzF2LYc/ZNP3r49aIzsOcMkrVbONeuFf8kWGDUEriZ
+        knz/9b/xGJxyuOGmEJHuaMY9p9C8BTE4l6T2Goa62y70chZioxHJVVZsYwfKAOylE+z7F4cqhhc
+        z5L2W/dpESOoEmshTpEwWolOnEOl6tMFOVw==
+X-Received: by 2002:a17:906:4a19:: with SMTP id w25mr3307350eju.199.1600936609410;
+        Thu, 24 Sep 2020 01:36:49 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyjb0omZ31jPeREiR6W4l4xl9FwdMdhgPEFYHXwRPAp4qgP+ulhM2DY6kAgOiWVM/RvCjET3A==
+X-Received: by 2002:a17:906:4a19:: with SMTP id w25mr3307333eju.199.1600936609221;
+        Thu, 24 Sep 2020 01:36:49 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id j8sm1939690edp.58.2020.09.24.01.33.29
+        by smtp.gmail.com with ESMTPSA id dt8sm1625197ejc.113.2020.09.24.01.36.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Sep 2020 01:33:29 -0700 (PDT)
-Subject: Re: [PATCH platform-next 3/5] platform_data/mlxreg: Update module
- license
+        Thu, 24 Sep 2020 01:36:48 -0700 (PDT)
+Subject: Re: [PATCH platform-next 4/5] platform_data/mlxreg: Extend core
+ platform structure
 To:     Vadim Pasternak <vadimp@nvidia.com>, andy.shevchenko@gmail.com,
         dvhart@infradead.org
 Cc:     platform-driver-x86@vger.kernel.org
 References: <20200923172053.26296-1-vadimp@nvidia.com>
- <20200923172053.26296-4-vadimp@nvidia.com>
+ <20200923172053.26296-5-vadimp@nvidia.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <24c96660-d7dd-71e5-9e2e-6f1279dbb3d7@redhat.com>
-Date:   Thu, 24 Sep 2020 10:33:29 +0200
+Message-ID: <3de874a2-c26a-18ce-0d3f-1a852afcdb65@redhat.com>
+Date:   Thu, 24 Sep 2020 10:36:48 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200923172053.26296-4-vadimp@nvidia.com>
+In-Reply-To: <20200923172053.26296-5-vadimp@nvidia.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -88,7 +88,12 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 9/23/20 7:20 PM, Vadim Pasternak wrote:
-> Update license to SPDX-License.
+> Add 'capability' field to structure 'mlxreg_core_platform_data'.
+> The purpose of this filed to indicate  the actual number of the
+> components within the particular group. Such components could be,
+> for example the number of the FAN drawers. Some systems are equipped
+> with FAN drawers with one tachometer inside, others with FAN drawers
+> with several tachometers inside.
 > 
 > Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
 
@@ -102,51 +107,29 @@ Hans
 
 
 
-
 > ---
->   include/linux/platform_data/mlxreg.h | 32 ++------------------------------
->   1 file changed, 2 insertions(+), 30 deletions(-)
+>   include/linux/platform_data/mlxreg.h | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
 > diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
-> index 1af9c01563f9..0a727d405a7a 100644
+> index 0a727d405a7a..101333fe2b8d 100644
 > --- a/include/linux/platform_data/mlxreg.h
 > +++ b/include/linux/platform_data/mlxreg.h
-> @@ -1,34 +1,6 @@
-> +/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0 */
->   /*
-> - * Copyright (c) 2017 Mellanox Technologies. All rights reserved.
-> - * Copyright (c) 2017 Vadim Pasternak <vadimp@mellanox.com>
-> - *
-> - * Redistribution and use in source and binary forms, with or without
-> - * modification, are permitted provided that the following conditions are met:
-> - *
-> - * 1. Redistributions of source code must retain the above copyright
-> - *    notice, this list of conditions and the following disclaimer.
-> - * 2. Redistributions in binary form must reproduce the above copyright
-> - *    notice, this list of conditions and the following disclaimer in the
-> - *    documentation and/or other materials provided with the distribution.
-> - * 3. Neither the names of the copyright holders nor the names of its
-> - *    contributors may be used to endorse or promote products derived from
-> - *    this software without specific prior written permission.
-> - *
-> - * Alternatively, this software may be distributed under the terms of the
-> - * GNU General Public License ("GPL") version 2 as published by the Free
-> - * Software Foundation.
-> - *
-> - * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-> - * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-> - * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-> - * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-> - * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-> - * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-> - * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-> - * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-> - * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-> - * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-> - * POSSIBILITY OF SUCH DAMAGE.
-> + * Copyright (C) 2017-2020 Mellanox Technologies Ltd.
+> @@ -109,6 +109,7 @@ struct mlxreg_core_item {
+>    * @features: supported features of device;
+>    * @version: implementation version;
+>    * @identity: device identity name;
+> + * @capability: device capability register;
 >    */
+>   struct mlxreg_core_platform_data {
+>   	struct mlxreg_core_data *data;
+> @@ -117,6 +118,7 @@ struct mlxreg_core_platform_data {
+>   	u32 features;
+>   	u32 version;
+>   	char identity[MLXREG_CORE_LABEL_MAX_SIZE];
+> +	u32 capability;
+>   };
 >   
->   #ifndef __LINUX_PLATFORM_DATA_MLXREG_H
+>   /**
 > 
 
