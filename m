@@ -2,74 +2,80 @@ Return-Path: <SRS0=CVlQ=DC=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41C8C4727E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Sep 2020 18:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52A8C4727F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Sep 2020 18:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 984E62086A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Sep 2020 18:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5880E20878
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Sep 2020 18:38:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S72vHW+m"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="E0K+fcl8";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="SdzF6qj6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgIYSQ0 (ORCPT
+        id S1729726AbgIYSiC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 25 Sep 2020 14:16:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:47001 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729620AbgIYSQY (ORCPT
+        Fri, 25 Sep 2020 14:38:02 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:32598 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727201AbgIYSiC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 25 Sep 2020 14:16:24 -0400
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601057781;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/50R4KfOHV2OxWmPVluhVpFzhZUBcr333kJPSCxRhrI=;
-        b=S72vHW+macpJJO9W6uEqj6MWZk1G47IrjJuUjQlpAaShO2wkL0wJYL0979qzWzbgWohuX3
-        ClYVfGv8LUrDJf6RYy4BqM9NFknFjEUrnKdFdPa98HH2CRhvyjN89QS7BaJoMHWWdB6kdB
-        WkR4xBvfseTq6BDO7k6YPpkJcbeMNdg=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-206-2-WMv0h7P_CMVuee6PPKBw-1; Fri, 25 Sep 2020 14:16:04 -0400
-X-MC-Unique: 2-WMv0h7P_CMVuee6PPKBw-1
-Received: by mail-ej1-f72.google.com with SMTP id dc22so1306236ejb.21
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2020 11:16:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/50R4KfOHV2OxWmPVluhVpFzhZUBcr333kJPSCxRhrI=;
-        b=CEHsIJldowUk38n6LPmy5wwgLJ+k2NU3ov4/I5hBUC7olnUYv/E/+5XKmHNTWGnaXQ
-         34jC/TEVeVkWNwnpv4zmS/LFAl75iVsjq49CcI0OpyvTyv0qBhmwpQd8QSOMh+e6zXXa
-         xs2CJM9uql7iYmkgVA8O8wD4xKMBN07r/WOlvW8b0DCDE1gJtzCD//B1v3WYJ6tnyj+v
-         D2I2D2B4DSwME0iQ231Ldfyd7miCniaY4E16lDZFbf9O3wsOgUM2r/jxY95IDVLwl0u0
-         0+rZCax/Xpy/hW0FqlE16dhkoW75VEyGOWZRWQaNz7k0a4hviJsS6/9mOIFi/szcYdy3
-         xiSg==
-X-Gm-Message-State: AOAM532i4rcDQcICeh96SI1WM+ZcsvVUo6KIFgg++awe81ggzhqMS4RI
-        ImEa86Ox4u8TbPKZMNdufkACpSgJHB7Oms6F7ncyAgk+K1CAETXbEjlZ8jX4FG0gl0XuDSdvfFl
-        EKOMhtqjD6G6mQyKpG3xi0o3y+mcBsaHVeQ==
-X-Received: by 2002:a50:cd5e:: with SMTP id d30mr2643094edj.190.1601057762569;
-        Fri, 25 Sep 2020 11:16:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzbr4czrCZd/+U5/UipnwZN9VGdbE+lLriaq5pTMBF6qw+xOZlj1Z58+n0dYE1Ld+GMxD4q/A==
-X-Received: by 2002:a50:cd5e:: with SMTP id d30mr2643038edj.190.1601057761934;
-        Fri, 25 Sep 2020 11:16:01 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id la17sm2380237ejb.62.2020.09.25.11.16.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Sep 2020 11:16:01 -0700 (PDT)
-Subject: Re: [PATCH v4] Introduce support for Systems Management Driver over
- WMI for Dell Systems
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        Fri, 25 Sep 2020 14:38:02 -0400
+Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08PIT6Bf021493;
+        Fri, 25 Sep 2020 14:37:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=gCG/pZIF+IMufyFX7mb6WdVyZ8NGMpwUHAwq3YxcLQw=;
+ b=E0K+fcl8R04a3kab9mFSsn77+zECjMHU1Se3KZTp/zbQAV44u9vi8sx+Z1tfZO+k0Oi2
+ B1ZIzUJUnFH19XGm2N1ecSYe4IGTF7EON9KHeiISz1Ue9PjQvtkxRDtnkSmbqXw+R0mt
+ enJh3V7Cezv3Q4xq6Rx3iSicCJXVXpc/kLZUQHqknvKwZcf5Edp0RWmk8frnTStFJFb0
+ qMv8RkPsdRCQbe3uMvNy2FyGmPfP+od4V8XOBuZU1KGELf4lwd3qBPeibkBkqaA/N9IG
+ o/u9dYTD00uGFpzo6iVCYyj8XoGKuY8QmyKzAOBZPnNbT3q9jewlNDi8ymXCjofaJ9qR mA== 
+Received: from mx0b-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 33nd78f7r1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 25 Sep 2020 14:37:50 -0400
+Received: from pps.filterd (m0090350.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08PIaLNi141900;
+        Fri, 25 Sep 2020 14:37:49 -0400
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2100.outbound.protection.outlook.com [104.47.70.100])
+        by mx0b-00154901.pphosted.com with ESMTP id 33snyn80f2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Sep 2020 14:37:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FMEl3UeJT0YdHibP1Kcy4lCN8cTtJHZB2bRk6ObCX9CKkkn70x6OfEmm0bFkcOWEdIUN5TAdDvzkVcnjXZFyyw5p2iiDF0enfY9aR6g170bzqkn6igZJI750PP+RANRm5LVj6GqmhoWd2gTGvpfhm4qBYk4evEx1wmebeLB59dQ2Aszwg1hNKdO5syCVnlWMkVElFcKMSzm6zqMXedhoCg6TA0pAKhsQ1+bDhkttEbEfkRnRsJDTaiScOhTCbSeXHkijWd4o1aPFN0PQFxGJlLKv95IsL/eH3SqK2/4DzP827YL831tq8LweMdEQEOe0eaJ+iNKjVx6NQkxI4w4lAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gCG/pZIF+IMufyFX7mb6WdVyZ8NGMpwUHAwq3YxcLQw=;
+ b=LwX6I0XDH1bTwW00bF0UDc2ukjE2vDt0y+RK4rfgkSrc/ES5XxF6y51RhFlbVdJuO422II8HmJNKTlHGhy6lW77MONqrnjuI0lMnF7u2TkRvtuIhQRihIC3hRs/wpvW4gHAa5BEjL6xF8XCKNCdhMuDB8OmLURbqlbGg2y0xsgjuTR4y82G0ObyFcq4dZ3uFzfsyqBJXUsMannPYtkX4V+Z7D6FeJEnojmyceSNS7DjQemsFIPVCllhTdtJ9vAMBvkKNoJXRaNl2SFcVnUxG5q9NMBBgBul44rzhwEeYo6H5phsah7ElFtgxcJgJJLIuCpIpEIKN1mWR1NAOZknGAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
+ dkim=pass header.d=dell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
+ s=selector1-Dell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gCG/pZIF+IMufyFX7mb6WdVyZ8NGMpwUHAwq3YxcLQw=;
+ b=SdzF6qj6jEUR8VsYkdAED62p5KsMW19TmHYTpaUX6KhvryiGVKFg+8awio/Ztja7JH+/icgB/uvemDr8dJW+T92mHQKHznDoZiyZ6430/ISYGCbbMTgrYFoGRTle81fK3ONWn5S0VRKBLe+emSDo8TqUTM+CFXsLgXU5QBQ29Z4=
+Received: from DM6PR19MB2636.namprd19.prod.outlook.com (2603:10b6:5:15f::15)
+ by DM6PR19MB3738.namprd19.prod.outlook.com (2603:10b6:5:240::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20; Fri, 25 Sep
+ 2020 18:37:47 +0000
+Received: from DM6PR19MB2636.namprd19.prod.outlook.com
+ ([fe80::a4b8:d5c9:29da:39b2]) by DM6PR19MB2636.namprd19.prod.outlook.com
+ ([fe80::a4b8:d5c9:29da:39b2%4]) with mapi id 15.20.3412.025; Fri, 25 Sep 2020
+ 18:37:47 +0000
+From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
         Divya Bharathi <divya27392@gmail.com>,
         "dvhart@infradead.org" <dvhart@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+CC:     LKML <linux-kernel@vger.kernel.org>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
         "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
@@ -77,362 +83,277 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         mark gross <mgross@linux.intel.com>,
         "Ksr, Prasanth" <Prasanth.Ksr@dell.com>,
         Mark Pearson <mpearson@lenovo.com>
+Subject: RE: [PATCH v4] Introduce support for Systems Management Driver over
+ WMI for Dell Systems
+Thread-Topic: [PATCH v4] Introduce support for Systems Management Driver over
+ WMI for Dell Systems
+Thread-Index: AQHWkZ0PK+VpsB9MMUuqIU/IRJ73Bal5W80AgAAUplCAADwqAIAAAT0Q
+Date:   Fri, 25 Sep 2020 18:37:47 +0000
+Message-ID: <DM6PR19MB263641DF4B7442CEE31BEAB5FA360@DM6PR19MB2636.namprd19.prod.outlook.com>
 References: <20200923113015.110980-1-divya.bharathi@dell.com>
  <fc8315b6-a726-5c43-3858-b3201c2b525f@redhat.com>
  <DM6PR19MB2636AC4989C990760933AE39FA360@DM6PR19MB2636.namprd19.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <cb53d57f-212e-d74f-7842-dd74501fb53f@redhat.com>
-Date:   Fri, 25 Sep 2020 20:16:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <DM6PR19MB2636AC4989C990760933AE39FA360@DM6PR19MB2636.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ <cb53d57f-212e-d74f-7842-dd74501fb53f@redhat.com>
+In-Reply-To: <cb53d57f-212e-d74f-7842-dd74501fb53f@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-09-25T18:37:14.2718417Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=1f34cc86-71bd-454e-8717-169000b7b189;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=Dell.com;
+x-originating-ip: [76.251.167.31]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cdb7d5df-2191-4041-bd82-08d861821953
+x-ms-traffictypediagnostic: DM6PR19MB3738:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR19MB37381E4EC30996D48D9027E8FA360@DM6PR19MB3738.namprd19.prod.outlook.com>
+x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: B24QkTUDcHQqJzccGk117/62pLBG68i5kMOpMaSs8K3HUROdm6HMQf20aMZ9cFXzLum/zQB06CrLq7uG2zbwDxKjZSUZU4dHfOkarEBomPSY9FvGBdqLsjl36VBK+3Xd/b7ssXbmanfTgojKBN3dRv0Dz2avn0Nl9b29Hx9zlxYrC5/Bklgaal+aeYPpZ53GkOOruAk9rQrPPzstY2TNjZ+GK6Ic2PT5EDRy1A0pD8mMor1ykMV9NZa4UpFnOylG0y0tHQsf/7zIaWzQp2rXsj7CPZASGeIoiDyzUs4MiJ72Io9NSOwserF5LcRBjRi0jRglVl+loSlpESZd97ShJSy0iX9qA0KTQqi27VFnwk5K+i/EfKaigG4KcF+s+vkfGLRxQAlNq6J1jtWK9j24ByC3T3gp+5q8GrEYs0yHab7R94J8UqYEtp8Ffo8EPKBxWjpcsEyG91JrV/l407h+MQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR19MB2636.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39860400002)(376002)(346002)(396003)(366004)(2906002)(30864003)(6506007)(52536014)(7696005)(86362001)(26005)(64756008)(5660300002)(71200400001)(66946007)(9686003)(316002)(66446008)(76116006)(966005)(66556008)(54906003)(66476007)(478600001)(186003)(55016002)(8676002)(110136005)(33656002)(83380400001)(4326008)(8936002)(786003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: dLyNLymOAFLhu5eHBYUdVxOZd3p4hAsE4ZkPGgCpCDIGcM1trROag58F3FTrnfaUnikWG4h9EKW5lVXZsb59Hzoy4Alii1zpVojJdHdFOsNslYydEEl5v6GQknIWrOX2wM6q/OI9sGXP0JlHb3RO5O5cIduma/KptjJzTOs9RdJPbjixA5PuVGuLbp5YOuL0hwZpUPryaAWue1BOwTgxwt0dIE4pzQTVoEOGbcUgA+6Tt8IAxAetrNNu/Hm6WQoladg28nEDmHslwYkISWIy5EVj/QyLdKdMQNR+HnRHDiRrlRJRoZqv7eGjmQz3uT9BR5DNAfNFSEbS3nAevU4yyS9SSECISL04aZt4UtLDXwFKIKUFwsyrJVpEFxzdsr7HC0WUbLdS/rm0Ctbakku3oBrINkcnvdQ3b0Xj6xhMCjSVPZM4YuRbZbB+VtMNo0+LOv34Tk+NhpBttOLILXm7TMF+yyQ/6QOla62m4NGawxVzfFC7yP+fingvi343tTNfUZKn1PGCzV4xI8c7ZgIcVXRzv8enJ3/Y6avutR+FB9ZoCNcTgvWXSo3pD909B6B5ccnzX+WQ8bi5Khlgq38U6oH+uks2V8C7obCDnWRMTSEtDUeKPYjr6PuBycz8BlZRs7FBtnAZruD+3dXYePpyoA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Dell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR19MB2636.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cdb7d5df-2191-4041-bd82-08d861821953
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Sep 2020 18:37:47.0386
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bUKyksZwfzrs+Caw5wFTk+CF2AqyPKCiFpMlLska0R0FQQuly2aRobQcXlEEW6X8ObES8Nqzza/XVM0/342Y9QaYOi1dMadmt3krJknaRF0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR19MB3738
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-25_15:2020-09-24,2020-09-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ bulkscore=0 impostorscore=0 suspectscore=0 mlxlogscore=999 clxscore=1011
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009250130
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009250130
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 9/25/20 5:32 PM, Limonciello, Mario wrote:
-> So I do want to preface this response by mentioning that Dell's implementation
-> is based off the PLDM specification from the DMTF.
-> https://www.dmtf.org/sites/default/files/standards/documents/DSP0247_1.0.0.pdf
-> 
-> A lot of the nomenclature that has been already proposed to change followed
-> nomenclature previously used in the PLDM specification.  In the spirit of matching
-> that specification in the Linux implementation we may consider to change things
-> like proposed to be renamed min_value back to lower_bound, but that's up to your
-> decision.
-
-I really prefer min_value and max_value here, those have 2 advantages:
-
-1. min/max is used almost everywhere in the kernel/sysfs for things like this,
-    upper-/lower-bound feels a bit like archaic Enlish to me.
-
-2. The _value postfix makes it immediately clear that they are the bounds for
-    the current_value attribute.
-
-Also in case of the password sysfs inteface min/max_lenght is used, not
-e.g. password_length_lower_bound. So again using min/max seems more consistent.
-
->> This list seems to miss a "type" sysfs attribute, which tells which type
->> the firmware-attribute in question is. Sorry for not noticing that sooner.
-> 
-> Whoops :)
-> 
->>
->>> +
->>> +		current_value:	A file that can be read to obtain the current
->>> +		value of the <attr>
->>
->> Can you indent the continuation on the second line to align with the start
->> of the description on the first line please?, e.g.:
->>
->> 		current_value:	A file that can be read to obtain the current
->> 				value of the <attr>
->>
->> This goes for all the sysfs-attribute description texts.
->>
->>> +
->>> +		This file can also be written to in order to update
->>> +		the value of a <attr>
->>> +
->>> +		default_value:	A file that can be read to obtain the default
->>> +		value of the <attr>
->>> +
->>> +		display_name:	A file that can be read to obtain a user friendly
->>> +		description of the at <attr>
->>> +
->>> +		display_name_language_code:	A file that can be read to obtain
->>> +		the IETF language tag corresponding to the "display_name" of the
->> <attr>
->>> +
->>> +		"enumeration"-type specific properties:
->>> +
->>> +		possible_values: A file that can be read to obtain the possible
->>> +		values of the <attr>. Values are separated using semi-colon.
->>
->> As non-native English speaker I had to lookup semi-colon to make sure that
->> it indeed is ';' as I already sorta expected. So can we add "(';')" (without
->> the "") behind the semi-colon to make this easier to parse for non-native
->> English
->> speakers?
-> 
-> 
-> Some parts of the kernel documentation seem to use semi-colon (``;``) - example of
-> admin-guide/bootconfig.rst
-> 
-> and others just set semi-colon - example of admin-guide/device-mapper/dm-init.rst.
-> 
-> But I don't see a problem with this change.
-> 
->>
->>> +		"integer"-type specific properties:
->>> +
->>> +		min_value:	A file that can be read to obtain the lower
->>> +		bound value of the <attr>
->>> +
->>> +		max_value:	A file that can be read to obtain the upper
->>> +		bound value of the <attr>
->>> +
->>> +		scalar_increment:	A file that can be read to obtain the
->>> +		resolution of the incremental value this attribute accepts.
->>
->> Can we have an example here? I guess if for some reason only even/odd values
->> are allowed then this would contain "2" ?
-> 
-> Maybe adopting the PLDM description is better to explain it.
-> 
-> "The scalar value that is used for the increments to this integer"
->>
->>> +
->>> +		"string"-type specific properties:
->>> +
->>> +		max_length:	A file that can be read to obtain the maximum
->>> +		length value of the <attr>
->>> +
->>> +		min_length:	A file that can be read to obtain the minimum
->>> +		length value of the <attr>
->>
->> So I have been taking a look at a community written driven to allow changing
->> BIOS-settings / firmware-attributes on some Lenovo laptops:
->>
->> https://github.com/iksaif/thinkpad-wmi
->>
->> My main reason for doing so is to check if other vendors also support things
->> like "display_name", "default_value", etc.
->>
->> So for the normal attributes, it seems that for the Thinkpad WMI interface
->> they
->> are all enums and the do contain possible_values. So that is fine.
->>
->> But they do not have a separate display_name only a name-name, nor do they
->> have a default_value.
->>
->> So I think we should mark the display_name, display_name_language_code and
->> default_value sysfs-attributes optional, e.g. make the description look like
->> this:
->>
->> 		default_value:	An optional file that can be read to obtain the
->> 				default value of the <attr>
->>
-> 
-> At this point, why don't we just make a declaration at the top that all
-> attributes are optional?  If you want this to scale to non-BIOS implementations
-> of settings you couldn't know what they'll be able to offer and it sets
-> an expectation that userspace to need to look for every sysfs file exists rather
-> than just the vendor specific ones.
-
-Sure I would be happy to have it documented that all firmware-attributes sysfs-files
-are optional *except for type and current_value*. If you prefer that go for it.
-
-> 
-> +
->>> +		Drivers may emit a CHANGE uevent when a password is set or unset
->>> +		userspace may check it again.
->>
->> First of all some generic remarks:
->>
->> Currently the "Admin" and "System" names come directly from the Dell WMI
->> interface. I have 2 concerns with this:
->>
->> 1) What if we do get multiple authentication mechanisms for a single user,
->> e.g. both a type == "pasword" and type == "hotp" authentication. The way I
->> have
->> been thinking about that sofar, is that we then get 2 admin dirs under the
->> /sys/class/firmware-attributes/*/authentication dir, with a type attribute
->> per dir, following how we do the attributes. So we would get e.g. these 2
->> dirs:
->>
->> /sys/class/firmware-attributes/dell/authentication/admin-password
->> /sys/class/firmware-attributes/dell/authentication/admin-hotp
->>
->> For the admin user. If want to do it like this in the future we should
->> add some indirection between the WMI username and the dir which is created
->> now and create the Admin dir as admin-password starting now.
-> 
-> Yeah I think if HOTP is added to some vendor some day that's how it would work.
-> The indirection can be added at that time.  One way to do this is to add
-
-It seems you never finished your sentence here?
-
->> 2) The "Admin" name is clear enough, but the "System" name is somewhat
->> ambiguous and other vendors may call this differently, I think I have
->> at least seen it called the "User" password in some cases and Lenovo
->> seems to call it a power-on-password. I think that just calling it the
->> "boot" password makes sense. My main concern is that "System" is a bit
->> too vague. So then for now we would get:
->>
->> /sys/class/firmware-attributes/dell/authentication/admin-password
->> /sys/class/firmware-attributes/dell/authentication/boot-password
-> 
-> I want to be cognizant that vendors are going to call things differently
-> in their attributes and we want the specifications and/or whitepapers that
-> vendors use to refer to this to make sense to the system's administrator.
-> 
-> Dell uses the nomenclature "System" in all of it's documentation. If the Linux
-> implementation calls it "boot password" or "power on password" it will be
-> confusing to decode when someone see it.
-> 
-> Dell also has other terms used such as Master password and HDD password.
-> They're not exposed in this interface but these all might have a different
-> connotation across vendors.
-> 
-> So instead I would propose that within the folder the "type" attribute
-> correspond to something decodable.  So the name the vendor uses is the
-> folder and the type of password is within a sysfs file "type".
-> 
-> Proposed types:
-> * "bios-admin"
-> * "power-on"
-> 
-> Those two types can then be hardcoded by the implementation.
-
-If re-using the WMI names is important for you, then having a sysfs-attribute
-with some standardized value to say what is what inside the authentication-sub-dir
-is fine with me.
-
-Except that I would not call it type, when thinking about authentication-types
-I think about things like password / totp / hotp. Can we call the sysfs-attribute
-for this "role" instead ?
-
-> So a user would see the different authentication mechanisms available
-> by looking At the contents of /sys/class/firmware-attributes/*/authentication
-> and if they don't understand it's purpose they look at the type sysfs file.
-
-But one role can still have multiple mechanisms, so for Dell in the future
-we could have say:
-
-/sys/class/firmware-attributes/dell/authentication/Admin-password
-/sys/class/firmware-attributes/dell/authentication/Admin-hotp
-/sys/class/firmware-attributes/dell/authentication/System-password
-
-So although I'm fine with taking the role_name directly from WMI
-(combined with a roll attribute with standardized values) I think
-we still need to postfix a -password to it now, to allow room
-for adding say a -hotp mechanism for the same role_name in the
-future ?
-
-(I guess this also ties into your unanswered question from above.
-
->> The spec. should also specify that the part before the first '-' is the
->> username, and the part after it is the authentication type. E.g. the
->> docs for this could look something like this:
->>
->> 	Directories under /sys/class/firmware-attributes/*/authentication/
->> 	use the following directory-name pattern:
->> 	<username>-<authentication_method>
->>
->> 	Where username must be one of: "admin" or "boot":
-> 
-> Username is inappropriate in this context, especially since firmware doesn't
-> have a concept of multi-user.  It's a configurable permissions scheme to what
-> you are allowed to do in firmware.
-
-Ack, so as I asked above, what do you think of using "role" here instead?
-
-
->> 	admin	If any authentication_method is enabled for the admin user, then
->> 		authentication as the admin user is required to modify BIOS
->> settings.
->> 	boot	If any authentication_method is enabled for the admin user, then
->> 		authentication as the boot user is required to boot the machine.
->>
->> 	And where authentication_method must be "password". Note in the future
->> 	both more usernames and more authentication_method-s may be added.
->>
->> 	All authentication_methods must have the following sysfs-attributes:
->>
->> 	is_enabled:  This reads "1" if the authentication_method is enabled,
->> 		     and "0" if its disabled
->>
->> 	Any changes to authentication_methods will generate a change uevent,
->> 	upon receiving this event applications should recheck the authentication
->> 	settings such as the is_enabled flag.
->>
->> 	Password authentication_method specific sysfs-attributes:
->>
->> 	max_password_length: ... (continue with the old text)
->>
->> Note:
->>
->> 1) This is a proposal to make the authentication bits a bit more generic /
->>      future proof. This is very much open for discussion.
->>
->> 2) The new generic is_enabled sysfs-attribute replaces the
->> is_authentication_set flag
->>
->> ###
->>
->> So as with the actual firmware-attributes I have also been comparing the
->> authentication
->> bits for the Dell case with the community thinkpad_wmi code. And again things
->> are a pretty
->> good match already, including being able to query a minimum and maximin
->> password length.
->>
->> The only thing which is different, which I think would be good to add now, is
->> a password_encoding sysfs-attribute. The Lenovo password interface supports
->> 2 encodings, "ascii" and "scancodes". Although I wonder if scancodes still
->> works on modern UEFI based platforms.
->>
->> Since the Dell password code uses UTF8 to UTF16 translation routines, I guess
->> the encoding for the Dell password is UTF8 (at the sysfs level). So I would
->> like to propose
->> an extra password-authentication attribute like:
->>
->> 	password_encoding:  A file that can be read to obtain the encoding used
->> by
->> 			    the current_password and new_password attributes.
->> 			    The value returned should be one of: "utf8", "ascii".
->> 			    In some cases this may return a vendor-specific encoding
->> 			    like, e.g. "lenovo-scancodes".
->>
->> And for the Dell driver this would just be hardcoded to utf8.
-> 
-> I don't really believe that another vendor's implementation would be likely to
-> use scan codes for the input into the WMI method.
-
-I did not make that example up, Lenovo really as a scan-codes encoding for
-their password authentication mechanism, see:
-
-https://download.lenovo.com/pccbbs/mobiles_pdf/kbl-r_deploy_01.pdf
-
-> Think back to how this all works on Windows...
-
-<snip>
-
-> So if you had to manually convert to scancodes, that would not at all user friendly.
-
-It definitely is not user-friendly.
-
-Note when calling the Lenovo WMI functions you can specify in which encoding
-(ascii or scancodes) you are providing the data and all Lenovo's examples
-use the ascii encoding.  But there also is a bitfield with supported encodings
-and I guess some older firmware may only support the scancodes variant?
-
-It is all somewhat not nice, which is why I prefixed the scancodes encoding
-with lenovo- to make it clear that it is non-standard.
-
-But lets say all Lenovo models support the ascii encoding and we never expose
-the scancodes bit to userspace. Even then there still is the unicode (utf8
-in sysfs, utf16 at the WMI level for Dell) vs ascii issue and it would be nice
-if a UI for this could give an error when the user tries to use non ascii
-chars in a password for a vendor implementation...
-
-> I would much prefer that this attribute only be added if it's actually deemed
-> necessary.  Or to my point that all attributes can be considered optional, Dell's
-> implementation would just not offer it.
-
-I guess that would work (Dell not offering it). Which makes me realize that
-we should specify somewhere in the doc that all sysfs files which contain
-a string value, the encoding is UTF8 unless explicitly specified otherwise.
-(for that specific sysfs-attribute).
-
-Regards,
-
-Hans
-
+PiANCj4gSSByZWFsbHkgcHJlZmVyIG1pbl92YWx1ZSBhbmQgbWF4X3ZhbHVlIGhlcmUsIHRob3Nl
+IGhhdmUgMiBhZHZhbnRhZ2VzOg0KPiANCj4gMS4gbWluL21heCBpcyB1c2VkIGFsbW9zdCBldmVy
+eXdoZXJlIGluIHRoZSBrZXJuZWwvc3lzZnMgZm9yIHRoaW5ncyBsaWtlIHRoaXMsDQo+ICAgICB1
+cHBlci0vbG93ZXItYm91bmQgZmVlbHMgYSBiaXQgbGlrZSBhcmNoYWljIEVubGlzaCB0byBtZS4N
+Cj4gDQo+IDIuIFRoZSBfdmFsdWUgcG9zdGZpeCBtYWtlcyBpdCBpbW1lZGlhdGVseSBjbGVhciB0
+aGF0IHRoZXkgYXJlIHRoZSBib3VuZHMgZm9yDQo+ICAgICB0aGUgY3VycmVudF92YWx1ZSBhdHRy
+aWJ1dGUuDQo+IA0KPiBBbHNvIGluIGNhc2Ugb2YgdGhlIHBhc3N3b3JkIHN5c2ZzIGludGVmYWNl
+IG1pbi9tYXhfbGVuZ2h0IGlzIHVzZWQsIG5vdA0KPiBlLmcuIHBhc3N3b3JkX2xlbmd0aF9sb3dl
+cl9ib3VuZC4gU28gYWdhaW4gdXNpbmcgbWluL21heCBzZWVtcyBtb3JlDQo+IGNvbnNpc3RlbnQu
+DQoNCk9LLg0KDQo+IA0KPiBTdXJlIEkgd291bGQgYmUgaGFwcHkgdG8gaGF2ZSBpdCBkb2N1bWVu
+dGVkIHRoYXQgYWxsIGZpcm13YXJlLWF0dHJpYnV0ZXMNCj4gc3lzZnMtZmlsZXMNCj4gYXJlIG9w
+dGlvbmFsICpleGNlcHQgZm9yIHR5cGUgYW5kIGN1cnJlbnRfdmFsdWUqLiBJZiB5b3UgcHJlZmVy
+IHRoYXQgZ28gZm9yDQo+IGl0Lg0KDQpPSy4NCg0KPiANCj4gPg0KPiA+ICsNCj4gPj4+ICsJCURy
+aXZlcnMgbWF5IGVtaXQgYSBDSEFOR0UgdWV2ZW50IHdoZW4gYSBwYXNzd29yZCBpcyBzZXQgb3Ig
+dW5zZXQNCj4gPj4+ICsJCXVzZXJzcGFjZSBtYXkgY2hlY2sgaXQgYWdhaW4uDQo+ID4+DQo+ID4+
+IEZpcnN0IG9mIGFsbCBzb21lIGdlbmVyaWMgcmVtYXJrczoNCj4gPj4NCj4gPj4gQ3VycmVudGx5
+IHRoZSAiQWRtaW4iIGFuZCAiU3lzdGVtIiBuYW1lcyBjb21lIGRpcmVjdGx5IGZyb20gdGhlIERl
+bGwgV01JDQo+ID4+IGludGVyZmFjZS4gSSBoYXZlIDIgY29uY2VybnMgd2l0aCB0aGlzOg0KPiA+
+Pg0KPiA+PiAxKSBXaGF0IGlmIHdlIGRvIGdldCBtdWx0aXBsZSBhdXRoZW50aWNhdGlvbiBtZWNo
+YW5pc21zIGZvciBhIHNpbmdsZSB1c2VyLA0KPiA+PiBlLmcuIGJvdGggYSB0eXBlID09ICJwYXN3
+b3JkIiBhbmQgdHlwZSA9PSAiaG90cCIgYXV0aGVudGljYXRpb24uIFRoZSB3YXkgSQ0KPiA+PiBo
+YXZlDQo+ID4+IGJlZW4gdGhpbmtpbmcgYWJvdXQgdGhhdCBzb2ZhciwgaXMgdGhhdCB3ZSB0aGVu
+IGdldCAyIGFkbWluIGRpcnMgdW5kZXIgdGhlDQo+ID4+IC9zeXMvY2xhc3MvZmlybXdhcmUtYXR0
+cmlidXRlcy8qL2F1dGhlbnRpY2F0aW9uIGRpciwgd2l0aCBhIHR5cGUgYXR0cmlidXRlDQo+ID4+
+IHBlciBkaXIsIGZvbGxvd2luZyBob3cgd2UgZG8gdGhlIGF0dHJpYnV0ZXMuIFNvIHdlIHdvdWxk
+IGdldCBlLmcuIHRoZXNlIDINCj4gPj4gZGlyczoNCj4gPj4NCj4gPj4gL3N5cy9jbGFzcy9maXJt
+d2FyZS1hdHRyaWJ1dGVzL2RlbGwvYXV0aGVudGljYXRpb24vYWRtaW4tcGFzc3dvcmQNCj4gPj4g
+L3N5cy9jbGFzcy9maXJtd2FyZS1hdHRyaWJ1dGVzL2RlbGwvYXV0aGVudGljYXRpb24vYWRtaW4t
+aG90cA0KPiA+Pg0KPiA+PiBGb3IgdGhlIGFkbWluIHVzZXIuIElmIHdhbnQgdG8gZG8gaXQgbGlr
+ZSB0aGlzIGluIHRoZSBmdXR1cmUgd2Ugc2hvdWxkDQo+ID4+IGFkZCBzb21lIGluZGlyZWN0aW9u
+IGJldHdlZW4gdGhlIFdNSSB1c2VybmFtZSBhbmQgdGhlIGRpciB3aGljaCBpcyBjcmVhdGVkDQo+
+ID4+IG5vdyBhbmQgY3JlYXRlIHRoZSBBZG1pbiBkaXIgYXMgYWRtaW4tcGFzc3dvcmQgc3RhcnRp
+bmcgbm93Lg0KPiA+DQo+ID4gWWVhaCBJIHRoaW5rIGlmIEhPVFAgaXMgYWRkZWQgdG8gc29tZSB2
+ZW5kb3Igc29tZSBkYXkgdGhhdCdzIGhvdyBpdCB3b3VsZA0KPiB3b3JrLg0KPiA+IFRoZSBpbmRp
+cmVjdGlvbiBjYW4gYmUgYWRkZWQgYXQgdGhhdCB0aW1lLiAgT25lIHdheSB0byBkbyB0aGlzIGlz
+IHRvIGFkZA0KPiANCj4gSXQgc2VlbXMgeW91IG5ldmVyIGZpbmlzaGVkIHlvdXIgc2VudGVuY2Ug
+aGVyZT8NCg0KV2hvb3BzIC0geWVhaCBJIHdhcyBqdW1waW5nIGFyb3VuZCBpbiBteSByZXNwb25z
+ZSBhbmQgZm9yZ290IHRvIGZpbmlzaCBteSB0aG91Z2h0Lg0KDQpJIHdhcyBnb2luZyB0byBzdWdn
+ZXN0IHRoYXQgaWYgbmVjZXNzYXJ5IGEgY29tcGF0aWJsZSB3YXkgdG8gYWRkIHRoZXNlIHdvdWxk
+DQpiZSBzeW1saW5rcy4gIFNvIGlmIHRoZSBkaXJlY3RvcnkgcmlnaHQgbm93IHdhcyBBZG1pbiBh
+bmQgbGF0ZXIgd2FzIGhhZA0Kc3BsaXQgdG8gc29tZXRoaW5nIGxpa2UgQWRtaW5Ib3RwL0FkbWlu
+UGFzc3dvcmQNCmJ1dCB3YW50ZWQgdG8gZGlzY3JpbWluYXRlIGJldHdlZW4gdGhlIG9sZCBBZG1p
+biBpdCBjb3VsZCBiZSBBZG1pbi0+QWRtaW5QYXNzd29yZA0Kb3IgdmljZSB2ZXJzYS4NCg0KPiAN
+Cj4gPj4gMikgVGhlICJBZG1pbiIgbmFtZSBpcyBjbGVhciBlbm91Z2gsIGJ1dCB0aGUgIlN5c3Rl
+bSIgbmFtZSBpcyBzb21ld2hhdA0KPiA+PiBhbWJpZ3VvdXMgYW5kIG90aGVyIHZlbmRvcnMgbWF5
+IGNhbGwgdGhpcyBkaWZmZXJlbnRseSwgSSB0aGluayBJIGhhdmUNCj4gPj4gYXQgbGVhc3Qgc2Vl
+biBpdCBjYWxsZWQgdGhlICJVc2VyIiBwYXNzd29yZCBpbiBzb21lIGNhc2VzIGFuZCBMZW5vdm8N
+Cj4gPj4gc2VlbXMgdG8gY2FsbCBpdCBhIHBvd2VyLW9uLXBhc3N3b3JkLiBJIHRoaW5rIHRoYXQg
+anVzdCBjYWxsaW5nIGl0IHRoZQ0KPiA+PiAiYm9vdCIgcGFzc3dvcmQgbWFrZXMgc2Vuc2UuIE15
+IG1haW4gY29uY2VybiBpcyB0aGF0ICJTeXN0ZW0iIGlzIGEgYml0DQo+ID4+IHRvbyB2YWd1ZS4g
+U28gdGhlbiBmb3Igbm93IHdlIHdvdWxkIGdldDoNCj4gPj4NCj4gPj4gL3N5cy9jbGFzcy9maXJt
+d2FyZS1hdHRyaWJ1dGVzL2RlbGwvYXV0aGVudGljYXRpb24vYWRtaW4tcGFzc3dvcmQNCj4gPj4g
+L3N5cy9jbGFzcy9maXJtd2FyZS1hdHRyaWJ1dGVzL2RlbGwvYXV0aGVudGljYXRpb24vYm9vdC1w
+YXNzd29yZA0KPiA+DQo+ID4gSSB3YW50IHRvIGJlIGNvZ25pemFudCB0aGF0IHZlbmRvcnMgYXJl
+IGdvaW5nIHRvIGNhbGwgdGhpbmdzIGRpZmZlcmVudGx5DQo+ID4gaW4gdGhlaXIgYXR0cmlidXRl
+cyBhbmQgd2Ugd2FudCB0aGUgc3BlY2lmaWNhdGlvbnMgYW5kL29yIHdoaXRlcGFwZXJzIHRoYXQN
+Cj4gPiB2ZW5kb3JzIHVzZSB0byByZWZlciB0byB0aGlzIHRvIG1ha2Ugc2Vuc2UgdG8gdGhlIHN5
+c3RlbSdzIGFkbWluaXN0cmF0b3IuDQo+ID4NCj4gPiBEZWxsIHVzZXMgdGhlIG5vbWVuY2xhdHVy
+ZSAiU3lzdGVtIiBpbiBhbGwgb2YgaXQncyBkb2N1bWVudGF0aW9uLiBJZiB0aGUNCj4gTGludXgN
+Cj4gPiBpbXBsZW1lbnRhdGlvbiBjYWxscyBpdCAiYm9vdCBwYXNzd29yZCIgb3IgInBvd2VyIG9u
+IHBhc3N3b3JkIiBpdCB3aWxsIGJlDQo+ID4gY29uZnVzaW5nIHRvIGRlY29kZSB3aGVuIHNvbWVv
+bmUgc2VlIGl0Lg0KPiA+DQo+ID4gRGVsbCBhbHNvIGhhcyBvdGhlciB0ZXJtcyB1c2VkIHN1Y2gg
+YXMgTWFzdGVyIHBhc3N3b3JkIGFuZCBIREQgcGFzc3dvcmQuDQo+ID4gVGhleSdyZSBub3QgZXhw
+b3NlZCBpbiB0aGlzIGludGVyZmFjZSBidXQgdGhlc2UgYWxsIG1pZ2h0IGhhdmUgYSBkaWZmZXJl
+bnQNCj4gPiBjb25ub3RhdGlvbiBhY3Jvc3MgdmVuZG9ycy4NCj4gPg0KPiA+IFNvIGluc3RlYWQg
+SSB3b3VsZCBwcm9wb3NlIHRoYXQgd2l0aGluIHRoZSBmb2xkZXIgdGhlICJ0eXBlIiBhdHRyaWJ1
+dGUNCj4gPiBjb3JyZXNwb25kIHRvIHNvbWV0aGluZyBkZWNvZGFibGUuICBTbyB0aGUgbmFtZSB0
+aGUgdmVuZG9yIHVzZXMgaXMgdGhlDQo+ID4gZm9sZGVyIGFuZCB0aGUgdHlwZSBvZiBwYXNzd29y
+ZCBpcyB3aXRoaW4gYSBzeXNmcyBmaWxlICJ0eXBlIi4NCj4gPg0KPiA+IFByb3Bvc2VkIHR5cGVz
+Og0KPiA+ICogImJpb3MtYWRtaW4iDQo+ID4gKiAicG93ZXItb24iDQo+ID4NCj4gPiBUaG9zZSB0
+d28gdHlwZXMgY2FuIHRoZW4gYmUgaGFyZGNvZGVkIGJ5IHRoZSBpbXBsZW1lbnRhdGlvbi4NCj4g
+DQo+IElmIHJlLXVzaW5nIHRoZSBXTUkgbmFtZXMgaXMgaW1wb3J0YW50IGZvciB5b3UsIHRoZW4g
+aGF2aW5nIGEgc3lzZnMtYXR0cmlidXRlDQo+IHdpdGggc29tZSBzdGFuZGFyZGl6ZWQgdmFsdWUg
+dG8gc2F5IHdoYXQgaXMgd2hhdCBpbnNpZGUgdGhlIGF1dGhlbnRpY2F0aW9uLQ0KPiBzdWItZGly
+DQo+IGlzIGZpbmUgd2l0aCBtZS4NCj4gDQo+IEV4Y2VwdCB0aGF0IEkgd291bGQgbm90IGNhbGwg
+aXQgdHlwZSwgd2hlbiB0aGlua2luZyBhYm91dCBhdXRoZW50aWNhdGlvbi10eXBlcw0KPiBJIHRo
+aW5rIGFib3V0IHRoaW5ncyBsaWtlIHBhc3N3b3JkIC8gdG90cCAvIGhvdHAuIENhbiB3ZSBjYWxs
+IHRoZSBzeXNmcy0NCj4gYXR0cmlidXRlDQo+IGZvciB0aGlzICJyb2xlIiBpbnN0ZWFkID8NCg0K
+VGhhdCBzb3VuZHMgZ29vZCB0byBtZS4NCg0KPiANCj4gPiBTbyBhIHVzZXIgd291bGQgc2VlIHRo
+ZSBkaWZmZXJlbnQgYXV0aGVudGljYXRpb24gbWVjaGFuaXNtcyBhdmFpbGFibGUNCj4gPiBieSBs
+b29raW5nIEF0IHRoZSBjb250ZW50cyBvZiAvc3lzL2NsYXNzL2Zpcm13YXJlLQ0KPiBhdHRyaWJ1
+dGVzLyovYXV0aGVudGljYXRpb24NCj4gPiBhbmQgaWYgdGhleSBkb24ndCB1bmRlcnN0YW5kIGl0
+J3MgcHVycG9zZSB0aGV5IGxvb2sgYXQgdGhlIHR5cGUgc3lzZnMgZmlsZS4NCj4gDQo+IEJ1dCBv
+bmUgcm9sZSBjYW4gc3RpbGwgaGF2ZSBtdWx0aXBsZSBtZWNoYW5pc21zLCBzbyBmb3IgRGVsbCBp
+biB0aGUgZnV0dXJlDQo+IHdlIGNvdWxkIGhhdmUgc2F5Og0KPiANCj4gL3N5cy9jbGFzcy9maXJt
+d2FyZS1hdHRyaWJ1dGVzL2RlbGwvYXV0aGVudGljYXRpb24vQWRtaW4tcGFzc3dvcmQNCj4gL3N5
+cy9jbGFzcy9maXJtd2FyZS1hdHRyaWJ1dGVzL2RlbGwvYXV0aGVudGljYXRpb24vQWRtaW4taG90
+cA0KPiAvc3lzL2NsYXNzL2Zpcm13YXJlLWF0dHJpYnV0ZXMvZGVsbC9hdXRoZW50aWNhdGlvbi9T
+eXN0ZW0tcGFzc3dvcmQNCj4gDQo+IFNvIGFsdGhvdWdoIEknbSBmaW5lIHdpdGggdGFraW5nIHRo
+ZSByb2xlX25hbWUgZGlyZWN0bHkgZnJvbSBXTUkNCj4gKGNvbWJpbmVkIHdpdGggYSByb2xsIGF0
+dHJpYnV0ZSB3aXRoIHN0YW5kYXJkaXplZCB2YWx1ZXMpIEkgdGhpbmsNCj4gd2Ugc3RpbGwgbmVl
+ZCB0byBwb3N0Zml4IGEgLXBhc3N3b3JkIHRvIGl0IG5vdywgdG8gYWxsb3cgcm9vbQ0KPiBmb3Ig
+YWRkaW5nIHNheSBhIC1ob3RwIG1lY2hhbmlzbSBmb3IgdGhlIHNhbWUgcm9sZV9uYW1lIGluIHRo
+ZQ0KPiBmdXR1cmUgPw0KDQpDb3VsZCB0aGlzIGJlIGNhcHR1cmVkIGluIHRoZSByb2xlIGF0dHJp
+YnV0ZSBpbnN0ZWFkIHBlcmhhcHM/ICBTbyB0aGUgcm9sZQ0KYXR0cmlidXRlcyB2YWx1ZXMgY291
+bGQgaHlwb3RoZXRpY2FsbHkgYmU6DQpiaW9zLWFkbWluLXBhc3N3b3JkDQpwb3dlci1vbi1wYXNz
+d29yZA0KDQpBbmQgaWYgSE9UUCBpcyBhZGRlZCBzb21lIGRheSB0aGVzZSBjb3VsZCBiZSBhZGRl
+ZDoNCmJpb3MtYWRtaW4taG90cA0KcG93ZXItb24taG90cA0KDQo+IA0KPiAoSSBndWVzcyB0aGlz
+IGFsc28gdGllcyBpbnRvIHlvdXIgdW5hbnN3ZXJlZCBxdWVzdGlvbiBmcm9tIGFib3ZlLg0KPiAN
+Cj4gPj4gVGhlIHNwZWMuIHNob3VsZCBhbHNvIHNwZWNpZnkgdGhhdCB0aGUgcGFydCBiZWZvcmUg
+dGhlIGZpcnN0ICctJyBpcyB0aGUNCj4gPj4gdXNlcm5hbWUsIGFuZCB0aGUgcGFydCBhZnRlciBp
+dCBpcyB0aGUgYXV0aGVudGljYXRpb24gdHlwZS4gRS5nLiB0aGUNCj4gPj4gZG9jcyBmb3IgdGhp
+cyBjb3VsZCBsb29rIHNvbWV0aGluZyBsaWtlIHRoaXM6DQo+ID4+DQo+ID4+IAlEaXJlY3Rvcmll
+cyB1bmRlciAvc3lzL2NsYXNzL2Zpcm13YXJlLWF0dHJpYnV0ZXMvKi9hdXRoZW50aWNhdGlvbi8N
+Cj4gPj4gCXVzZSB0aGUgZm9sbG93aW5nIGRpcmVjdG9yeS1uYW1lIHBhdHRlcm46DQo+ID4+IAk8
+dXNlcm5hbWU+LTxhdXRoZW50aWNhdGlvbl9tZXRob2Q+DQo+ID4+DQo+ID4+IAlXaGVyZSB1c2Vy
+bmFtZSBtdXN0IGJlIG9uZSBvZjogImFkbWluIiBvciAiYm9vdCI6DQo+ID4NCj4gPiBVc2VybmFt
+ZSBpcyBpbmFwcHJvcHJpYXRlIGluIHRoaXMgY29udGV4dCwgZXNwZWNpYWxseSBzaW5jZSBmaXJt
+d2FyZSBkb2Vzbid0DQo+ID4gaGF2ZSBhIGNvbmNlcHQgb2YgbXVsdGktdXNlci4gIEl0J3MgYSBj
+b25maWd1cmFibGUgcGVybWlzc2lvbnMgc2NoZW1lIHRvDQo+IHdoYXQNCj4gPiB5b3UgYXJlIGFs
+bG93ZWQgdG8gZG8gaW4gZmlybXdhcmUuDQo+IA0KPiBBY2ssIHNvIGFzIEkgYXNrZWQgYWJvdmUs
+IHdoYXQgZG8geW91IHRoaW5rIG9mIHVzaW5nICJyb2xlIiBoZXJlIGluc3RlYWQ/DQo+IA0KDQor
+MQ0KDQo+IA0KPiA+PiAJYWRtaW4JSWYgYW55IGF1dGhlbnRpY2F0aW9uX21ldGhvZCBpcyBlbmFi
+bGVkIGZvciB0aGUgYWRtaW4gdXNlciwgdGhlbg0KPiA+PiAJCWF1dGhlbnRpY2F0aW9uIGFzIHRo
+ZSBhZG1pbiB1c2VyIGlzIHJlcXVpcmVkIHRvIG1vZGlmeSBCSU9TDQo+ID4+IHNldHRpbmdzLg0K
+PiA+PiAJYm9vdAlJZiBhbnkgYXV0aGVudGljYXRpb25fbWV0aG9kIGlzIGVuYWJsZWQgZm9yIHRo
+ZSBhZG1pbiB1c2VyLCB0aGVuDQo+ID4+IAkJYXV0aGVudGljYXRpb24gYXMgdGhlIGJvb3QgdXNl
+ciBpcyByZXF1aXJlZCB0byBib290IHRoZSBtYWNoaW5lLg0KPiA+Pg0KPiA+PiAJQW5kIHdoZXJl
+IGF1dGhlbnRpY2F0aW9uX21ldGhvZCBtdXN0IGJlICJwYXNzd29yZCIuIE5vdGUgaW4gdGhlIGZ1
+dHVyZQ0KPiA+PiAJYm90aCBtb3JlIHVzZXJuYW1lcyBhbmQgbW9yZSBhdXRoZW50aWNhdGlvbl9t
+ZXRob2QtcyBtYXkgYmUgYWRkZWQuDQo+ID4+DQo+ID4+IAlBbGwgYXV0aGVudGljYXRpb25fbWV0
+aG9kcyBtdXN0IGhhdmUgdGhlIGZvbGxvd2luZyBzeXNmcy1hdHRyaWJ1dGVzOg0KPiA+Pg0KPiA+
+PiAJaXNfZW5hYmxlZDogIFRoaXMgcmVhZHMgIjEiIGlmIHRoZSBhdXRoZW50aWNhdGlvbl9tZXRo
+b2QgaXMgZW5hYmxlZCwNCj4gPj4gCQkgICAgIGFuZCAiMCIgaWYgaXRzIGRpc2FibGVkDQo+ID4+
+DQo+ID4+IAlBbnkgY2hhbmdlcyB0byBhdXRoZW50aWNhdGlvbl9tZXRob2RzIHdpbGwgZ2VuZXJh
+dGUgYSBjaGFuZ2UgdWV2ZW50LA0KPiA+PiAJdXBvbiByZWNlaXZpbmcgdGhpcyBldmVudCBhcHBs
+aWNhdGlvbnMgc2hvdWxkIHJlY2hlY2sgdGhlIGF1dGhlbnRpY2F0aW9uDQo+ID4+IAlzZXR0aW5n
+cyBzdWNoIGFzIHRoZSBpc19lbmFibGVkIGZsYWcuDQo+ID4+DQo+ID4+IAlQYXNzd29yZCBhdXRo
+ZW50aWNhdGlvbl9tZXRob2Qgc3BlY2lmaWMgc3lzZnMtYXR0cmlidXRlczoNCj4gPj4NCj4gPj4g
+CW1heF9wYXNzd29yZF9sZW5ndGg6IC4uLiAoY29udGludWUgd2l0aCB0aGUgb2xkIHRleHQpDQo+
+ID4+DQo+ID4+IE5vdGU6DQo+ID4+DQo+ID4+IDEpIFRoaXMgaXMgYSBwcm9wb3NhbCB0byBtYWtl
+IHRoZSBhdXRoZW50aWNhdGlvbiBiaXRzIGEgYml0IG1vcmUgZ2VuZXJpYyAvDQo+ID4+ICAgICAg
+ZnV0dXJlIHByb29mLiBUaGlzIGlzIHZlcnkgbXVjaCBvcGVuIGZvciBkaXNjdXNzaW9uLg0KPiA+
+Pg0KPiA+PiAyKSBUaGUgbmV3IGdlbmVyaWMgaXNfZW5hYmxlZCBzeXNmcy1hdHRyaWJ1dGUgcmVw
+bGFjZXMgdGhlDQo+ID4+IGlzX2F1dGhlbnRpY2F0aW9uX3NldCBmbGFnDQo+ID4+DQo+ID4+ICMj
+Iw0KPiA+Pg0KPiA+PiBTbyBhcyB3aXRoIHRoZSBhY3R1YWwgZmlybXdhcmUtYXR0cmlidXRlcyBJ
+IGhhdmUgYWxzbyBiZWVuIGNvbXBhcmluZyB0aGUNCj4gPj4gYXV0aGVudGljYXRpb24NCj4gPj4g
+Yml0cyBmb3IgdGhlIERlbGwgY2FzZSB3aXRoIHRoZSBjb21tdW5pdHkgdGhpbmtwYWRfd21pIGNv
+ZGUuIEFuZCBhZ2Fpbg0KPiB0aGluZ3MNCj4gPj4gYXJlIGEgcHJldHR5DQo+ID4+IGdvb2QgbWF0
+Y2ggYWxyZWFkeSwgaW5jbHVkaW5nIGJlaW5nIGFibGUgdG8gcXVlcnkgYSBtaW5pbXVtIGFuZCBt
+YXhpbWluDQo+ID4+IHBhc3N3b3JkIGxlbmd0aC4NCj4gPj4NCj4gPj4gVGhlIG9ubHkgdGhpbmcg
+d2hpY2ggaXMgZGlmZmVyZW50LCB3aGljaCBJIHRoaW5rIHdvdWxkIGJlIGdvb2QgdG8gYWRkIG5v
+dywNCj4gaXMNCj4gPj4gYSBwYXNzd29yZF9lbmNvZGluZyBzeXNmcy1hdHRyaWJ1dGUuIFRoZSBM
+ZW5vdm8gcGFzc3dvcmQgaW50ZXJmYWNlIHN1cHBvcnRzDQo+ID4+IDIgZW5jb2RpbmdzLCAiYXNj
+aWkiIGFuZCAic2NhbmNvZGVzIi4gQWx0aG91Z2ggSSB3b25kZXIgaWYgc2NhbmNvZGVzIHN0aWxs
+DQo+ID4+IHdvcmtzIG9uIG1vZGVybiBVRUZJIGJhc2VkIHBsYXRmb3Jtcy4NCj4gPj4NCj4gPj4g
+U2luY2UgdGhlIERlbGwgcGFzc3dvcmQgY29kZSB1c2VzIFVURjggdG8gVVRGMTYgdHJhbnNsYXRp
+b24gcm91dGluZXMsIEkNCj4gZ3Vlc3MNCj4gPj4gdGhlIGVuY29kaW5nIGZvciB0aGUgRGVsbCBw
+YXNzd29yZCBpcyBVVEY4IChhdCB0aGUgc3lzZnMgbGV2ZWwpLiBTbyBJIHdvdWxkDQo+ID4+IGxp
+a2UgdG8gcHJvcG9zZQ0KPiA+PiBhbiBleHRyYSBwYXNzd29yZC1hdXRoZW50aWNhdGlvbiBhdHRy
+aWJ1dGUgbGlrZToNCj4gPj4NCj4gPj4gCXBhc3N3b3JkX2VuY29kaW5nOiAgQSBmaWxlIHRoYXQg
+Y2FuIGJlIHJlYWQgdG8gb2J0YWluIHRoZSBlbmNvZGluZyB1c2VkDQo+ID4+IGJ5DQo+ID4+IAkJ
+CSAgICB0aGUgY3VycmVudF9wYXNzd29yZCBhbmQgbmV3X3Bhc3N3b3JkIGF0dHJpYnV0ZXMuDQo+
+ID4+IAkJCSAgICBUaGUgdmFsdWUgcmV0dXJuZWQgc2hvdWxkIGJlIG9uZSBvZjogInV0ZjgiLCAi
+YXNjaWkiLg0KPiA+PiAJCQkgICAgSW4gc29tZSBjYXNlcyB0aGlzIG1heSByZXR1cm4gYSB2ZW5k
+b3Itc3BlY2lmaWMgZW5jb2RpbmcNCj4gPj4gCQkJICAgIGxpa2UsIGUuZy4gImxlbm92by1zY2Fu
+Y29kZXMiLg0KPiA+Pg0KPiA+PiBBbmQgZm9yIHRoZSBEZWxsIGRyaXZlciB0aGlzIHdvdWxkIGp1
+c3QgYmUgaGFyZGNvZGVkIHRvIHV0ZjguDQo+ID4NCj4gPiBJIGRvbid0IHJlYWxseSBiZWxpZXZl
+IHRoYXQgYW5vdGhlciB2ZW5kb3IncyBpbXBsZW1lbnRhdGlvbiB3b3VsZCBiZSBsaWtlbHkNCj4g
+dG8NCj4gPiB1c2Ugc2NhbiBjb2RlcyBmb3IgdGhlIGlucHV0IGludG8gdGhlIFdNSSBtZXRob2Qu
+DQo+IA0KPiBJIGRpZCBub3QgbWFrZSB0aGF0IGV4YW1wbGUgdXAsIExlbm92byByZWFsbHkgYXMg
+YSBzY2FuLWNvZGVzIGVuY29kaW5nIGZvcg0KPiB0aGVpciBwYXNzd29yZCBhdXRoZW50aWNhdGlv
+biBtZWNoYW5pc20sIHNlZToNCj4gDQo+IGh0dHBzOi8vZG93bmxvYWQubGVub3ZvLmNvbS9wY2Ni
+YnMvbW9iaWxlc19wZGYva2JsLXJfZGVwbG95XzAxLnBkZg0KPiANCj4gPiBUaGluayBiYWNrIHRv
+IGhvdyB0aGlzIGFsbCB3b3JrcyBvbiBXaW5kb3dzLi4uDQo+IA0KPiA8c25pcD4NCj4gDQo+ID4g
+U28gaWYgeW91IGhhZCB0byBtYW51YWxseSBjb252ZXJ0IHRvIHNjYW5jb2RlcywgdGhhdCB3b3Vs
+ZCBub3QgYXQgYWxsIHVzZXINCj4gZnJpZW5kbHkuDQo+IA0KPiBJdCBkZWZpbml0ZWx5IGlzIG5v
+dCB1c2VyLWZyaWVuZGx5Lg0KPiANCj4gTm90ZSB3aGVuIGNhbGxpbmcgdGhlIExlbm92byBXTUkg
+ZnVuY3Rpb25zIHlvdSBjYW4gc3BlY2lmeSBpbiB3aGljaCBlbmNvZGluZw0KPiAoYXNjaWkgb3Ig
+c2NhbmNvZGVzKSB5b3UgYXJlIHByb3ZpZGluZyB0aGUgZGF0YSBhbmQgYWxsIExlbm92bydzIGV4
+YW1wbGVzDQo+IHVzZSB0aGUgYXNjaWkgZW5jb2RpbmcuICBCdXQgdGhlcmUgYWxzbyBpcyBhIGJp
+dGZpZWxkIHdpdGggc3VwcG9ydGVkIGVuY29kaW5ncw0KPiBhbmQgSSBndWVzcyBzb21lIG9sZGVy
+IGZpcm13YXJlIG1heSBvbmx5IHN1cHBvcnQgdGhlIHNjYW5jb2RlcyB2YXJpYW50Pw0KPiANCj4g
+SXQgaXMgYWxsIHNvbWV3aGF0IG5vdCBuaWNlLCB3aGljaCBpcyB3aHkgSSBwcmVmaXhlZCB0aGUg
+c2NhbmNvZGVzIGVuY29kaW5nDQo+IHdpdGggbGVub3ZvLSB0byBtYWtlIGl0IGNsZWFyIHRoYXQg
+aXQgaXMgbm9uLXN0YW5kYXJkLg0KPiANCj4gQnV0IGxldHMgc2F5IGFsbCBMZW5vdm8gbW9kZWxz
+IHN1cHBvcnQgdGhlIGFzY2lpIGVuY29kaW5nIGFuZCB3ZSBuZXZlciBleHBvc2UNCj4gdGhlIHNj
+YW5jb2RlcyBiaXQgdG8gdXNlcnNwYWNlLiANCg0KVGhlIGRvY3VtZW50YXRpb24geW91IGxpbmtl
+ZCBkb2Vzbid0IHNlZW0gdG8gaW5kaWNhdGUgd2hlbiB0byB1c2Ugc2NhbmNvZGVzIG9yDQpBU0NJ
+SSB0byBtZSwgc28gSSBjYW4ndCBkcmF3IGFueSBjb25jbHVzaW9ucyBpZiBjZXJ0YWluIG1vZGVs
+cyBzdXBwb3J0IG9uZSBvcg0KdGhlIG90aGVyLg0KDQpJIHdvdWxkIHN1Z2dlc3QgeWVzIHBsZWFz
+ZSBkb24ndCBzdXBwb3J0IHNjYW5jb2RlcyBmcm9tIHRoZSBzeXNmcyBwZXJzcGVjdGl2ZSBmb3IN
+CmFub3RoZXIgdmVuZG9yJ3MgaW1wbGVtZW50YXRpb24uICBXZSBzaG91bGQgcHJvYmFibHkga2Vl
+cCBzeXNmcyBhcyB1dGY4IGFuZCBsZXQNCmFueSBjb252ZXJzaW9ucyBiZSBoaWRkZW4gaW4gdGhl
+IGtlcm5lbCBkcml2ZXIgaWYgbmVjZXNzYXJ5LiANCg0KPiBFdmVuIHRoZW4gdGhlcmUgc3RpbGwg
+aXMgdGhlIHVuaWNvZGUgKHV0ZjgNCj4gaW4gc3lzZnMsIHV0ZjE2IGF0IHRoZSBXTUkgbGV2ZWwg
+Zm9yIERlbGwpIHZzIGFzY2lpIGlzc3VlIGFuZCBpdCB3b3VsZCBiZSBuaWNlDQo+IGlmIGEgVUkg
+Zm9yIHRoaXMgY291bGQgZ2l2ZSBhbiBlcnJvciB3aGVuIHRoZSB1c2VyIHRyaWVzIHRvIHVzZSBu
+b24gYXNjaWkNCj4gY2hhcnMgaW4gYSBwYXNzd29yZCBmb3IgYSB2ZW5kb3IgaW1wbGVtZW50YXRp
+b24uLi4NCg0KSSB0aGluayB0aGF0IHRoZSBrZXJuZWwgZHJpdmVyIGNhbiBjZXJ0YWlubHkgcGFy
+c2UgYW5kIHByb3ZpZGUgLUVJTlZBTCBpbiB0aGlzDQpjb250ZXh0LiANCg0KPiANCj4gPiBJIHdv
+dWxkIG11Y2ggcHJlZmVyIHRoYXQgdGhpcyBhdHRyaWJ1dGUgb25seSBiZSBhZGRlZCBpZiBpdCdz
+IGFjdHVhbGx5DQo+IGRlZW1lZA0KPiA+IG5lY2Vzc2FyeS4gIE9yIHRvIG15IHBvaW50IHRoYXQg
+YWxsIGF0dHJpYnV0ZXMgY2FuIGJlIGNvbnNpZGVyZWQgb3B0aW9uYWwsDQo+IERlbGwncw0KPiA+
+IGltcGxlbWVudGF0aW9uIHdvdWxkIGp1c3Qgbm90IG9mZmVyIGl0Lg0KPiANCj4gSSBndWVzcyB0
+aGF0IHdvdWxkIHdvcmsgKERlbGwgbm90IG9mZmVyaW5nIGl0KS4gV2hpY2ggbWFrZXMgbWUgcmVh
+bGl6ZSB0aGF0DQo+IHdlIHNob3VsZCBzcGVjaWZ5IHNvbWV3aGVyZSBpbiB0aGUgZG9jIHRoYXQg
+YWxsIHN5c2ZzIGZpbGVzIHdoaWNoIGNvbnRhaW4NCj4gYSBzdHJpbmcgdmFsdWUsIHRoZSBlbmNv
+ZGluZyBpcyBVVEY4IHVubGVzcyBleHBsaWNpdGx5IHNwZWNpZmllZCBvdGhlcndpc2UuDQo+IChm
+b3IgdGhhdCBzcGVjaWZpYyBzeXNmcy1hdHRyaWJ1dGUpLg0KDQpZZWFoLiAgSSBndWVzcyB0aGUg
+dmVyeSB0b3Agd2hlcmUgd2Ugd2lsbCBtb2RpZnkgdG8gbWVudGlvbiB0aGF0IGFsbCBhdHRyaWJ1
+dGVzDQphcmUgb3B0aW9uYWwgd2UgY2FuIGFsc28gbWVudGlvbiB0aGF0IHRoZSBlbmNvZGluZyBp
+cyBVVEY4IHVubGVzcyBvdGhlcndpc2UNCnNwZWNpZmllZC4NCg0KQW5keSAtIA0KDQpCVFcgLSB3
+aXRoIHRoZSBtYWludGFpbmVyIGNoYW5nZSBpbiBwbGF0Zm9ybS14ODYgc2hvdWxkIERpdnlhIHN0
+b3AgQ0MgeW91IGFuZA0KRGFycmVuPw0KDQoNCg0KDQo=
