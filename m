@@ -2,180 +2,101 @@ Return-Path: <SRS0=CVlQ=DC=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA41C4363D
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Sep 2020 15:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE538C4363D
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Sep 2020 17:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9DA721D7A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Sep 2020 15:41:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBxFXPiM"
+	by mail.kernel.org (Postfix) with ESMTP id 7AD7521D42
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Sep 2020 17:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgIYPlr (ORCPT
+        id S1727324AbgIYR0u (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 25 Sep 2020 11:41:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728802AbgIYPlr (ORCPT
+        Fri, 25 Sep 2020 13:26:50 -0400
+Received: from mga17.intel.com ([192.55.52.151]:3512 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729640AbgIYR0u (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 25 Sep 2020 11:41:47 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21E40C0613CE;
-        Fri, 25 Sep 2020 08:41:47 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id t16so2946715edw.7;
-        Fri, 25 Sep 2020 08:41:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=F+5yHV+FxcRKrnedBNbOKTzuVXY9zUpRD9QVW+qIhF0=;
-        b=JBxFXPiMiDiS5nKIg3qxtqvYTiI4ocb8cxha/z1a0K3tm1x0+7BaxxjVyoEWdlgYJF
-         3ibIqkWkj6vkkl4xKZpFGB1Lx01wa5WVyJfhF+2YUXa5x9R1s8d4mVah0m3gprGEyxDT
-         pvuLEfMttB513LeydPhgovFFXNND7Ep1WnTghVEoxqc10xc3j3skNYMaV9ENiWvTKbTJ
-         eiSp0UTIWyS7tm+qaXdDOqLL2ymBbdbxsfPHcNwTL8gEbjfXuI4Skp8/G3vBF/bSbYJF
-         CIHDneT3rzfYCGXRyPmCRFnS0vXsch5FwDmZiObGhdDSA6ZjmWb/qeDgLE+q0AMkrkw/
-         leXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=F+5yHV+FxcRKrnedBNbOKTzuVXY9zUpRD9QVW+qIhF0=;
-        b=mtCnmPKmDKLclmiejAWG5c+QQgydKRZSMN92SA+dGTa5S6oYiXnJI95XOG/sDb7lJ5
-         rAd2gn/hRQ5kYmmZzpm80k3GESvVJuodX/YlO6iVwnKR02pd7TGKqnVatyCrlyF4j5pC
-         bgmZWVER3tykUnxFRyFh9NTbmrajxGOdhMFWXki2bL7wuyQyyjKkl08JqthPko/zD5K6
-         /x43zhvE6JkE2g+R+KWU6MAZ8sAJR1D2t6wMnxM2rMXJfS18cQ9UbHd7hpcn8Dyl8wDz
-         YQtLNFlrR9ZdAwpwTfIJ4/ILawKWr2XnqAppwrs04Bcm4V3GDqay9NZc57vme+3MD3M6
-         GIfQ==
-X-Gm-Message-State: AOAM531MCHR+O46e20sqRdyU+YnCIplWJNlAq4FQTIBYk3lY2D4bktRm
-        2WspSmEAG575nP+uSK6R72QeoYdZ8vkasw==
-X-Google-Smtp-Source: ABdhPJxMaDIA9K/WRwt+Hm7at0yFLJktmxHnHp9F6JDTRmWhsiFFaTxVr8f6lvaU0d8ubW82gxQ8Gw==
-X-Received: by 2002:aa7:dc0e:: with SMTP id b14mr1989973edu.17.1601048505404;
-        Fri, 25 Sep 2020 08:41:45 -0700 (PDT)
-Received: from [192.168.2.202] (pd9e5a5af.dip0.t-ipconnect.de. [217.229.165.175])
-        by smtp.gmail.com with ESMTPSA id y21sm2118250eju.46.2020.09.25.08.41.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Sep 2020 08:41:44 -0700 (PDT)
-Subject: Re: [RFC PATCH 0/9] Add support for Microsoft Surface System
- Aggregator Module
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
-        Dorian Stoll <dorian.stoll@tmsp.io>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-References: <20200923151511.3842150-1-luzmaximilian@gmail.com>
- <CAK8P3a3Qie_CP1dA-ERqyDv=EnaQQPnNbFYrGr3ySiY4mO0=Uw@mail.gmail.com>
- <CAHp75Vfp86h38Rd-VEgER7ASADdmz5ymAkuHvD0Q6WPDqZBqHw@mail.gmail.com>
- <95c2d02b-b8b1-59d9-1276-f2b1830fdac8@gmail.com>
- <CAHp75Vc6ohuT_Ga=p-n+gKaVhPWE2EEbkhx-EQO_vKEtgmswqA@mail.gmail.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <41fe48ea-5486-3d06-6fb8-0663e2c930b5@gmail.com>
-Date:   Fri, 25 Sep 2020 17:41:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Fri, 25 Sep 2020 13:26:50 -0400
+IronPort-SDR: zoF6RbIxbyGVwGnKNmfk4tIRJviFt4NdtDCnWc1wCIj8DKYpkZZ42XetzUkD7hqsiBR8p4weLv
+ Mk7TIHqfMqSg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9755"; a="141565414"
+X-IronPort-AV: E=Sophos;i="5.77,302,1596524400"; 
+   d="scan'208";a="141565414"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2020 07:48:35 -0700
+IronPort-SDR: QYEhwwYGnWdbVhhU2n3L3MtrvrZzS+ywnP7UW871ZdZo4bYZdLegYqju8wHljjcA31sGWxhn1M
+ qULrAnBRac8g==
+X-IronPort-AV: E=Sophos;i="5.77,302,1596524400"; 
+   d="scan'208";a="348419567"
+Received: from smtp.ostc.intel.com ([10.54.29.231])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2020 07:48:34 -0700
+Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
+        by smtp.ostc.intel.com (Postfix) with ESMTP id 8E9BE6369;
+        Fri, 25 Sep 2020 07:48:34 -0700 (PDT)
+Date:   Fri, 25 Sep 2020 07:48:34 -0700
+From:   mark gross <mgross@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Add Mark Gross and Hans de Goede as x86
+ platform drivers maintainers
+Message-ID: <20200925144834.GC71987@mtg-dev.jf.intel.com>
+Reply-To: mgross@linux.intel.com
+References: <20200925065812.3973-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vc6ohuT_Ga=p-n+gKaVhPWE2EEbkhx-EQO_vKEtgmswqA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200925065812.3973-1-hdegoede@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 9/25/20 4:58 PM, Andy Shevchenko wrote:
-> On Thu, Sep 24, 2020 at 10:17 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
->> On 9/24/20 10:30 AM, Andy Shevchenko wrote:
->>> On Wed, Sep 23, 2020 at 6:32 PM Arnd Bergmann <arnd@arndb.de> wrote:
->>>> On Wed, Sep 23, 2020 at 5:15 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+On Fri, Sep 25, 2020 at 08:58:12AM +0200, Hans de Goede wrote:
+> Darren Hart and Andy Shevchenko lately have not had enough time to
+> maintain the x86 platform drivers, dropping their status to:
+> "Odd Fixes".
 > 
-> ...
+> Mark Gross and Hans de Goede will take over maintainership of
+> the x86 platform drivers. Replace Darren and Andy's entries with
+> theirs and change the status to "Maintained".
 > 
->>>> I think this should go to drivers/platform/x86 or drivers/platform/surface/
->>>> along with other laptop vendor specific code rather than drivers/misc/.
->>>
->>> +1 here. drivers/platform/surface is a good place to start.
->>> And you may begin with moving a few Surface drivers out of PDx86 to
->>> the new folder.
->>
->> Perfect, thanks! I'll draft up a patch series over the weekend.
->>
->> A couple questions regarding structure and maintenance:
->>
->>    - Should I CC the platform-driver-x86 list on future submissions to
->>      drivers/platform/surface? I.e. is this something you would want to
->>      review if it doesn't touch the drivers/platform/x86 directory?
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Mark Gross <mgross@linux.intel.com>
+
+thanks!
+
+--mark
+
+> ---
+>  MAINTAINERS | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> Include PDx86 mailing list to the list of that. Current SURFACE*
-> drivers have per driver record in MAINTAINERS IIRC. So, update them as
-> well if needed.
-
-Will do.
-
->>    - How would you want the layout to be, specifically regarding to the
->>      surface-aggregator stuff? My suggestion would be simply:
->>
->>      drivers/platform/surface/
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ab6570bb2d14..1ff02b889f49 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -18894,10 +18894,10 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/mm
+>  F:	arch/x86/mm/
+>  
+>  X86 PLATFORM DRIVERS
+> -M:	Darren Hart <dvhart@infradead.org>
+> -M:	Andy Shevchenko <andy@infradead.org>
+> +M:	Hans de Goede <hdegoede@redhat.com>
+> +M:	Mark Gross <mgross@linux.intel.com>
+>  L:	platform-driver-x86@vger.kernel.org
+> -S:	Odd Fixes
+> +S:	Maintained
+>  T:	git git://git.infradead.org/linux-platform-drivers-x86.git
+>  F:	drivers/platform/olpc/
+>  F:	drivers/platform/x86/
+> -- 
+> 2.28.0
 > 
->>          surface_aggregator/
-> 
-> Don't repeat parts of the path, the aggregator is enough as a folder
-> name, but the driver of course should be in its own namespace
-> ('surface').
-
-Okay.
-
->>              Kconfig
->>              Makefile
->>              core.c
->>              controller.c
->>              ... (all core stuff built into the surface_aggregator module)
->>          Kconfig
->>          Makefile
-> 
->>          surface_aggregator_debugfs.c
-> 
-> (Not sure why it's not a part of aggregator folder)
-
-I kind of thought of the aggregator folder to contain only files that
-build the core module. surface_aggregator_debugfs is intended as
-separate module, to be loaded when needed. So I'd consider it a client
-driver to the aggregator in the same way that surface_acpi_notify is.
-
-Let me know if you still want me to move this into the aggregator folder
-though. Personally, I just feel that that might lead to a bit of
-confusion, specifically the idea that it's built into the core when it's
-not.
-
->>          surface_acpi_notify.c
->>          surface_*.c        (any other surface platform driver as well
->>                              as drivers dependent on surface_aggregator)
->>
->>    - Regarding future things like HID transport driver, battery/AC driver:
->>      Submit them to drivers/platform/surface or to their respective
->>      subsystem directories?
-> 
-> Respective subsystem _if_ it is a subsystem related driver and not
-> kinda board file. Use common sense and existing examples.
-
-Right, thank you!
-
-Regards,
-Max
