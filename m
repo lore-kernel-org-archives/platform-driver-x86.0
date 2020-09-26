@@ -2,130 +2,135 @@ Return-Path: <SRS0=5/WG=DD=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31E3C2D0A8
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Sep 2020 10:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F2BC4727F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Sep 2020 17:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4C6238E2
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Sep 2020 10:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5356F20789
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Sep 2020 17:17:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SWbsTCmp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u6SGGmZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbgIZKsK (ORCPT
+        id S1726305AbgIZRRv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 26 Sep 2020 06:48:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21997 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726409AbgIZKrm (ORCPT
+        Sat, 26 Sep 2020 13:17:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbgIZRRv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 26 Sep 2020 06:47:42 -0400
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601117260;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8ZIjURh9gEGj/A0gqHD3FD4qcsmY1BeCBDIYOYJ5HgE=;
-        b=SWbsTCmpVV4AUFu/bfIoF7z/FTwUfnZMy3d+bHy67qV1cXJjE8DteTZQglOpFfgFszrQcd
-        lwURxxv20Pc/cbAzlreebN6K/jus2ioVx51ajcQ2WI2x+vQ67FVkZpMAOGRUcSOLoy/vP4
-        7Q51eBycTyDRWlLNFmuddBsNHpLw2D8=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-34-Ve0W0-gWOgaz844PCIcvrQ-1; Sat, 26 Sep 2020 06:47:36 -0400
-X-MC-Unique: Ve0W0-gWOgaz844PCIcvrQ-1
-Received: by mail-ej1-f72.google.com with SMTP id ce9so1801420ejb.7
-        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2020 03:47:36 -0700 (PDT)
+        Sat, 26 Sep 2020 13:17:51 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D847BC0613CE;
+        Sat, 26 Sep 2020 10:17:50 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id u21so2851819eja.2;
+        Sat, 26 Sep 2020 10:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WG0sk5gJwIk5to3pVTC+CHGoKi541Yu4qsHVRvmfuGA=;
+        b=u6SGGmZT2Aw3JlmvK2NRx9niQND85bs6j6cgPYztlvRudRyeA0fJAaz0k8kRnc8DS0
+         NiD6F/I+2y40LNTZ2SXDuDylzdDjDptR+S11OP3MQ8uE4i95ktmzEh9dfridaaLcCMJA
+         H6LQiL4W9uQVJfN+qrBS9etaHxHtKVtHbhOMfoIxzuoOc5kRpJTCAzNneH0zWknAcHc+
+         Deyk9bFKBhqLavQrYgdy20c4zF612yPLzNnF6QuQYpz4K96r+QB29y2HX+i8Omfui3a6
+         V9BlwnF9DlfoKZeRxWspvdxW47aFuvYscxO3FvveOIdid2j8urbnSeAW2zAkdZLJoaJi
+         ng1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=8ZIjURh9gEGj/A0gqHD3FD4qcsmY1BeCBDIYOYJ5HgE=;
-        b=CnwmAVPVJVTk2WQu7XzCCfS2kSkqZC/sdkLdWejPTjUHI/gX6dmRwc8FYs8pInyyB4
-         B4VR2PR9YAosZZw8NO8J6kaFCaGF+V/YY72ZwjatfyNVZeprca/hMgrRjVt+abmwO60d
-         Pxjcmkkk2dPX5JCQrtU77U1Ryd9jiQOoKH+Vz1dC7jHr06M0Y6OJHBF0P0A0nd8MOh8R
-         rj2fYK8+iCaovSh6w8o2MNnXSpcybGtICQ92Cq3WJzYWGI3WfuBeQZN60r0CpRXL9xMx
-         6PM4iMRaPU/X94zOAzpQiSoEcUMnzpmTqcW27PgU4J5UQqZFMYzyxUpJ0Sgq/2dM0bKq
-         mEUg==
-X-Gm-Message-State: AOAM5312F8y0+/GbT9dYZbon9aKzsBgAMZxbARtARlZL5MHXOxRRl8z2
-        QSiqPwcycgD2oBbVgzyupRFRjhPDjsU4dOPzymhHBdTzBxoeIdsoxWdHgoxEb4K5QvtW05SSxI1
-        Vcg3qUfKjYZhYB41BOWK6UuxqEAQFrEC+dw==
-X-Received: by 2002:a50:cd5d:: with SMTP id d29mr6213437edj.318.1601117255356;
-        Sat, 26 Sep 2020 03:47:35 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx+TO2+4q7lfJenzxiKAyyVxeaY1ycN09RTuKv+bIvfPTGXz5NjNkL+7gKrlxZTcuAGT+5aRA==
-X-Received: by 2002:a50:cd5d:: with SMTP id d29mr6213410edj.318.1601117255089;
-        Sat, 26 Sep 2020 03:47:35 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id j15sm3893921ejs.5.2020.09.26.03.47.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Sep 2020 03:47:34 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: hp-wmi: Add support for home in HP OMEN
- laptops
-To:     Sid Sun <sid@sidsun.com>,
-        platform-driver-x86 <platform-driver-x86@vger.kernel.org>,
-        andy <andy@kernel.org>
-References: <174c79fb794.120dada4b39603.5369737602791060462@sidsun.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <cad5f2ab-e319-b6fd-360d-5beb62d6899f@redhat.com>
-Date:   Sat, 26 Sep 2020 12:47:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=WG0sk5gJwIk5to3pVTC+CHGoKi541Yu4qsHVRvmfuGA=;
+        b=KmffoiP7IA4nSx7AswBSnRncB0WqSTOEuEwf6KDQK/XdVd9yeWdlzklHne36m/QNXq
+         uoj71BJZep9yUEVLUI62dbIgl5M1ufFmZ5G64pViU/7ZmAnslmDHo2VFzSu3l1IyZsbW
+         674T4/JYf+IAB743GMjPclHMSYRST50DL5Qt+FRmUiVnicEBRfLN83xPCu4iJZbo+UAt
+         1jy44Kin9TcQti5oYY60xJNKxAtFtaB/eCGIg5hEv+KlxJnn0vUP21xKLREDRbB/ZCou
+         5wadtNnLgYJGQNkhFhf9ONgkIM6ynPK6LM8rfaMsqZ0z+9IAsdzOVxSRCT4W/XCnj91d
+         5Q7g==
+X-Gm-Message-State: AOAM532LRP71dG+7wxVt4CMzJkFQOXLQfnZLl8YrYpuA5IwIDo2ZH5H7
+        U47bkUb/d6XsSIrWXNZwVu93SCfc+jY=
+X-Google-Smtp-Source: ABdhPJyAM8YjMjt7Zj7pgJx+F4qQF7rl/yT21zRuRsX8EudchM2LPJSuhNdDnIvqiJavi6rkJW/ZAA==
+X-Received: by 2002:a17:906:4a8c:: with SMTP id x12mr8450691eju.271.1601140669108;
+        Sat, 26 Sep 2020 10:17:49 -0700 (PDT)
+Received: from xws.fritz.box (pd9e5ae20.dip0.t-ipconnect.de. [217.229.174.32])
+        by smtp.gmail.com with ESMTPSA id u13sm4625589ejn.82.2020.09.26.10.17.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Sep 2020 10:17:48 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
+        Stephen Just <stephenjust@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>, linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH 0/5] platform/surface: Create a platform subdirectory for Microsoft Surface devices
+Date:   Sat, 26 Sep 2020 19:17:09 +0200
+Message-Id: <20200926171714.721406-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <174c79fb794.120dada4b39603.5369737602791060462@sidsun.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+As has come up in the discussion around
 
-On 9/26/20 1:36 AM, Sid Sun wrote:
-> HP OMEN laptops have a key for OMEN Command Center where home key should be, which is not supported by current hp-wmi drivers, this patch addresses this, making use of the key as a dedicated home key
-> 
-> Without the patch in place, hp_wmi logs the following in dmesg:
-> - hp_wmi: Unknown key code - 0x21a5
-> 
-> Tested and developed on: OMEN by HP Laptop 15-ce0xx
-> 
-> Signed-off-by: Sidharth Soni (Sid Sun) <sid@sidsun.com>
+  [RFC PATCH] Add support for Microsoft Surface System Aggregator Module
 
-So after looking at:
+it may make sense to add a Microsoft Surface specific platform
+subdirectory. Andy has suggested drivers/platform/surface for that.
+This series follows said suggestion and creates that subdirectory, as
+well as moves Microsoft Surface related drivers over to it and updates
+their MAINTAINERS entries (if available) accordingly.
 
-http://s3.amazonaws.com/digitaltrends-uploads-prod/2017/09/HP-Omen-15-review-keyboard-2.jpg
+This series does not modify any existing driver code, symbols, or help
+text.
 
-I understand what you mean with "where home key should be". So I've been thinking
-a bit about what is the best thing to do here. Arguably mapping it to
-KEY_CONTROLPANEL would be more accurate. But I can completely understand how
-you just want to have a working "home" key; and it indeed is in the place
-where on HP laptop keyboards with a num-pad, you would expect the home key.
+Thanks,
+Max
 
-So lets just map it to KEY_HOME as you suggest:
+Link to discussion:
+  https://lore.kernel.org/lkml/CAHp75Vfp86h38Rd-VEgER7ASADdmz5ymAkuHvD0Q6WPDqZBqHw@mail.gmail.com/
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Regards,
+Maximilian Luz (5):
+  platform: Add Surface platform directory
+  platform/surface: Move Surface 3 WMI driver to platform/surface
+  platform/surface: Move Surface 3 Button driver to platform/surface
+  platform/surface: Move Surface 3 Power OpRegion driver to
+    platform/surface
+  platform/surface: Move Surface Pro 3 Button driver to platform/surface
 
-Hans
+ MAINTAINERS                                   | 10 +++-
+ drivers/platform/Kconfig                      |  2 +
+ drivers/platform/Makefile                     |  1 +
+ drivers/platform/surface/Kconfig              | 49 +++++++++++++++++++
+ drivers/platform/surface/Makefile             | 10 ++++
+ .../platform/{x86 => surface}/surface3-wmi.c  |  0
+ .../{x86 => surface}/surface3_button.c        |  0
+ .../{x86 => surface}/surface3_power.c         |  0
+ .../{x86 => surface}/surfacepro3_button.c     |  0
+ drivers/platform/x86/Kconfig                  | 31 ------------
+ drivers/platform/x86/Makefile                 |  6 ---
+ 11 files changed, 71 insertions(+), 38 deletions(-)
+ create mode 100644 drivers/platform/surface/Kconfig
+ create mode 100644 drivers/platform/surface/Makefile
+ rename drivers/platform/{x86 => surface}/surface3-wmi.c (100%)
+ rename drivers/platform/{x86 => surface}/surface3_button.c (100%)
+ rename drivers/platform/{x86 => surface}/surface3_power.c (100%)
+ rename drivers/platform/{x86 => surface}/surfacepro3_button.c (100%)
 
-
-> 
-> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> index 1762f335b..11cf8d1d6 100644
-> --- a/drivers/platform/x86/hp-wmi.c
-> +++ b/drivers/platform/x86/hp-wmi.c
-> @@ -149,6 +149,7 @@ static const struct key_entry hp_wmi_keymap[] = {
->          { KE_KEY, 0x2169, { KEY_ROTATE_DISPLAY } },
->          { KE_KEY, 0x216a, { KEY_SETUP } },
->          { KE_KEY, 0x231b, { KEY_HELP } },
-> +       { KE_KEY, 0x21a5, { KEY_HOME } },
->          { KE_END, 0 }
->   };
-> 
+--
+2.28.0
 
