@@ -2,163 +2,99 @@ Return-Path: <SRS0=5/WG=DD=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48F4C2D0A8
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Sep 2020 17:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A07D1C2D0A8
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Sep 2020 18:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1D420789
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Sep 2020 17:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D26A2080A
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Sep 2020 18:36:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMfC5d49"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nr6wRrYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbgIZRSJ (ORCPT
+        id S1726309AbgIZSgm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 26 Sep 2020 13:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48072 "EHLO
+        Sat, 26 Sep 2020 14:36:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729391AbgIZRR5 (ORCPT
+        with ESMTP id S1726244AbgIZSgl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 26 Sep 2020 13:17:57 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA1CC0613CE;
-        Sat, 26 Sep 2020 10:17:57 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id k14so5737544edo.1;
-        Sat, 26 Sep 2020 10:17:57 -0700 (PDT)
+        Sat, 26 Sep 2020 14:36:41 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C9DCC0613CE;
+        Sat, 26 Sep 2020 11:36:41 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id nw23so2978975ejb.4;
+        Sat, 26 Sep 2020 11:36:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NrliFGKLE6GsRxqqWvTJbatPN+Tvql6xRPWE2j+Cokk=;
-        b=XMfC5d49TiGXPiQ1XDNvwZz9OePbEvavNDucvB/yxUX6BrI+MuwTuytbKiZVkbAe3N
-         qlXtAbmPTUWXLbE3W4IwE0t7MAC0NWijv4VVEmOFKmTaTBb77fRqyFh2iClaA+4+CAMA
-         4sXFVQTYERHBnx58mODFu3vB+rfEA15mUw5IoQ3FfSeWGzDx9QS73wVX+60bjM3ARcnN
-         FdCkt1RtZr9gvxarvWw9UrRN8olAppO4jV7fqwV06wMoi3TBMnRncM5ra6DngiZXkdqO
-         NsuYW8+oeLlz35cGvA0kSaSiDWSMksBSIwUoeg5c2nkvGPxUsSrMoXVoIVHajHIOG+ZO
-         aCxg==
+        h=subject:cc:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=WDnJbrBWNQ1GugmB49qXnIh1j39vlYsXsMRH5FVMOGE=;
+        b=Nr6wRrYK0wJDsSfwIWT0TReTx26DLYS54KgwFYTb1tH9u7tGLnWMkcOJtKwjvCakuS
+         OrpDEMFI1FZvXMim2+7MjVOw8usGy1FgJFdkK9cqijh2lDpzMDYViWa4NHCL9MNgKG0R
+         Q6472YAOryArav1e9kgYojxT7e2xSlFQieY0fO/MAYoN6TgVBf8FIKMZCHh+Wb3YXRg6
+         yYrDXfv0T+h5/rgMdFjKrlB7zdapovqnGdpAgqNJb0GbUF2Vmgc1ucLcYBQcPyFA/Im7
+         IdmYV66DIMpIJlAY3FX6c4zD7Tgaa9k15ddhAd2IdaNfnafwUwriGOpETn8Baz2xzpNf
+         SGsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NrliFGKLE6GsRxqqWvTJbatPN+Tvql6xRPWE2j+Cokk=;
-        b=A2St/b2fwwR848ivy1UeEmlVWebjrwbrypl2YOEYTK33s9gFZf7TbJTal0HhA5zXdq
-         h4WuVyQfLcPz1PaNYEytAXTZ7GMoA7fQw3llPB263OIJ1aHcLDPfwTU87VNjzSCZ/51m
-         BL05QHM9glVLAaU1i1ttmzK0PTC17Tpcidbsxqc3l64vZcJeb21DDB/oJIiEGjLOSRn1
-         T4UT+gnx3jfwggOcwIIPy034rAcuixG4K6EWOjWiMuh41s3i9HqRjNOWCCSKvaG6vdUP
-         i27APbuZRG1fJy7oiKWsrCUS0PEuyD+rYEyc8K1mTwoBs2N4IR4ucPOfMva5MnzFt99i
-         Pzyw==
-X-Gm-Message-State: AOAM5321rQ8tgAtohW69PiDalmArOvSIo/nT869LM98yEqVziIqkGBJT
-        W0mUD63WYoydmweczfXa+s9AEggp7mc=
-X-Google-Smtp-Source: ABdhPJz5LPxzAHF7cwf2oZHDiDmVl6SS6F51tqmjfK7fhWOQA6szRLrBkT6ipWfhfYUHmg1daZ7k8w==
-X-Received: by 2002:a50:9d0a:: with SMTP id v10mr7414594ede.144.1601140675375;
-        Sat, 26 Sep 2020 10:17:55 -0700 (PDT)
-Received: from xws.fritz.box (pd9e5ae20.dip0.t-ipconnect.de. [217.229.174.32])
-        by smtp.gmail.com with ESMTPSA id u13sm4625589ejn.82.2020.09.26.10.17.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Sep 2020 10:17:54 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
+        h=x-gm-message-state:subject:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WDnJbrBWNQ1GugmB49qXnIh1j39vlYsXsMRH5FVMOGE=;
+        b=FWWDT8jbOq8A1Qz4Qt6cG7sy8WNjHFIpLy92b/6nsTkLXuu6bPst3LrvE7Evyan3Cu
+         xe+pxPPX1V+K9WsvyX841H9Gsj7wh29GiSP+e/U/4OoyJs6wAZ9Yxpm2d6jJWR7aT4Z7
+         WvGCWkBIG42Wv5cNkCO0hLjFgMJFDqdCct+2P6qo6N0dvXeUFLiGorUkvElmRwF9gvNU
+         kx7Z6nQw+/hbz4+Jc7MQNjIvOjl6kqsKbQSF3wuaK8WM4L928yHqrHratC0+Pme+h7BM
+         sLBJNWKLHiUsG4gEYDIFBDFwlkqQhe/e7fpOlMpAmT6EAaSCGwude4SbRVgCb/ukyQTv
+         OIhQ==
+X-Gm-Message-State: AOAM533BsqRjDFZpumk/6FbOupWttkcnLhcQ1UUplNx94IvVfoJjLkK4
+        cfMCDyVzkicV84X/jBhzr0kpabQOLm4=
+X-Google-Smtp-Source: ABdhPJzSmmzYNq6dts1SW8TCoIL/fLVgTMgK2xrx8XOKuwhp3uBJX5NwzNpcjW+sS6z44oPJLqInWQ==
+X-Received: by 2002:a17:906:ce30:: with SMTP id sd16mr8410852ejb.53.1601145398448;
+        Sat, 26 Sep 2020 11:36:38 -0700 (PDT)
+Received: from [192.168.2.202] (pd9e5ae20.dip0.t-ipconnect.de. [217.229.174.32])
+        by smtp.gmail.com with ESMTPSA id f21sm4915752edw.83.2020.09.26.11.36.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Sep 2020 11:36:37 -0700 (PDT)
+Subject: Re: [PATCH v3] platform/x86: Add Driver to set up lid GPEs on MS
+ Surface devices
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Gayatri Kammela <gayatri.kammela@intel.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
-        Stephen Just <stephenjust@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>, linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH 4/5] platform/surface: Move Surface 3 Power OpRegion driver to platform/surface
-Date:   Sat, 26 Sep 2020 19:17:13 +0200
-Message-Id: <20200926171714.721406-5-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200926171714.721406-1-luzmaximilian@gmail.com>
-References: <20200926171714.721406-1-luzmaximilian@gmail.com>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200917155559.1686146-1-luzmaximilian@gmail.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <095203ce-37ef-2a5f-4397-63632139c925@gmail.com>
+Date:   Sat, 26 Sep 2020 20:36:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200917155559.1686146-1-luzmaximilian@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Move the Surface 3 Power operation region driver from platform/x86 to
-the newly created platform/surface directory.
+I suggest delaying this patch until
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/platform/surface/Kconfig                   | 7 +++++++
- drivers/platform/surface/Makefile                  | 1 +
- drivers/platform/{x86 => surface}/surface3_power.c | 0
- drivers/platform/x86/Kconfig                       | 7 -------
- drivers/platform/x86/Makefile                      | 1 -
- 5 files changed, 8 insertions(+), 8 deletions(-)
- rename drivers/platform/{x86 => surface}/surface3_power.c (100%)
+   [PATCH] platform/surface: Create a platform subdirectory for Microsoft Surface devices
 
-diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
-index 22075ca451b0..2af26379804c 100644
---- a/drivers/platform/surface/Kconfig
-+++ b/drivers/platform/surface/Kconfig
-@@ -33,4 +33,11 @@ config SURFACE_3_BUTTON
- 	help
- 	  This driver handles the power/home/volume buttons on the Microsoft Surface 3 tablet.
- 
-+config SURFACE_3_POWER_OPREGION
-+	tristate "Surface 3 battery platform operation region support"
-+	depends on ACPI && I2C
-+	help
-+	  This driver provides support for ACPI operation
-+	  region of the Surface 3 battery platform driver.
-+
- endif # SURFACE_PLATFORM
-diff --git a/drivers/platform/surface/Makefile b/drivers/platform/surface/Makefile
-index 8588dc178245..4940d4db58b2 100644
---- a/drivers/platform/surface/Makefile
-+++ b/drivers/platform/surface/Makefile
-@@ -6,3 +6,4 @@
- 
- obj-$(CONFIG_SURFACE3_WMI)		+= surface3-wmi.o
- obj-$(CONFIG_SURFACE_3_BUTTON)		+= surface3_button.o
-+obj-$(CONFIG_SURFACE_3_POWER_OPREGION)	+= surface3_power.o
-diff --git a/drivers/platform/x86/surface3_power.c b/drivers/platform/surface/surface3_power.c
-similarity index 100%
-rename from drivers/platform/x86/surface3_power.c
-rename to drivers/platform/surface/surface3_power.c
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 33c178100efa..fbb9556fa688 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -869,13 +869,6 @@ config INTEL_VBTN
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called intel_vbtn.
- 
--config SURFACE_3_POWER_OPREGION
--	tristate "Surface 3 battery platform operation region support"
--	depends on ACPI && I2C
--	help
--	  This driver provides support for ACPI operation
--	  region of the Surface 3 battery platform driver.
--
- config SURFACE_PRO3_BUTTON
- 	tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3/4 tablet"
- 	depends on ACPI && INPUT
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 0fd70d5d2cf3..ffa31f57d9a2 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -82,7 +82,6 @@ obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
- obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
- 
- # Microsoft
--obj-$(CONFIG_SURFACE_3_POWER_OPREGION)	+= surface3_power.o
- obj-$(CONFIG_SURFACE_PRO3_BUTTON)	+= surfacepro3_button.o
- 
- # MSI
--- 
-2.28.0
+has been resolved. If accepted, I would then submit a v4 directly
+against the new platform/surface subdirectory.
 
+Regards,
+Max
