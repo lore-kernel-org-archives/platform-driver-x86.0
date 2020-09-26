@@ -1,274 +1,131 @@
-Return-Path: <SRS0=CVlQ=DC=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=5/WG=DD=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3139C4727E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Sep 2020 20:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31E3C2D0A8
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Sep 2020 10:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 864FE239D0
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Sep 2020 20:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4C6238E2
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Sep 2020 10:48:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="htyRnJHE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SWbsTCmp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbgIYUNH (ORCPT
+        id S1726849AbgIZKsK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 25 Sep 2020 16:13:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38758 "EHLO
+        Sat, 26 Sep 2020 06:48:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21997 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728646AbgIYULH (ORCPT
+        by vger.kernel.org with ESMTP id S1726409AbgIZKrm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 25 Sep 2020 16:11:07 -0400
+        Sat, 26 Sep 2020 06:47:42 -0400
 Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601064664;
+        s=mimecast20190719; t=1601117260;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ztp4baZQGLFiSERC0jFiTHiuuAoK78Oz0tRocIWkjFg=;
-        b=htyRnJHExlpvIm6JQGNrizbAY0vD0JEJTlyzINLWq4LqFqeJM7adb/0kAr8HZX/QOX1A7S
-        IHWo1UK1X0fCPhwiBiB6FESWNQBeQcskqt2xfH57YoFWeRHxdm6A1WzijuPEzPhGypBddC
-        YJ0VhKZqiPjERCD9uyxMyxob2Q1Bgik=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-591-wBVrUNm0NiCgeR8ES7h8YA-1; Fri, 25 Sep 2020 15:40:32 -0400
-X-MC-Unique: wBVrUNm0NiCgeR8ES7h8YA-1
-Received: by mail-ed1-f72.google.com with SMTP id n25so1582202edr.13
-        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Sep 2020 12:40:32 -0700 (PDT)
+        bh=8ZIjURh9gEGj/A0gqHD3FD4qcsmY1BeCBDIYOYJ5HgE=;
+        b=SWbsTCmpVV4AUFu/bfIoF7z/FTwUfnZMy3d+bHy67qV1cXJjE8DteTZQglOpFfgFszrQcd
+        lwURxxv20Pc/cbAzlreebN6K/jus2ioVx51ajcQ2WI2x+vQ67FVkZpMAOGRUcSOLoy/vP4
+        7Q51eBycTyDRWlLNFmuddBsNHpLw2D8=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-34-Ve0W0-gWOgaz844PCIcvrQ-1; Sat, 26 Sep 2020 06:47:36 -0400
+X-MC-Unique: Ve0W0-gWOgaz844PCIcvrQ-1
+Received: by mail-ej1-f72.google.com with SMTP id ce9so1801420ejb.7
+        for <platform-driver-x86@vger.kernel.org>; Sat, 26 Sep 2020 03:47:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ztp4baZQGLFiSERC0jFiTHiuuAoK78Oz0tRocIWkjFg=;
-        b=ebL0ZfaYMOfG7vBbuyZsYcs6iKkiATlXROq/WhnOWRQ5dd8LiRY97ToDAElw+cPfFf
-         AMe1+cO1D6lvyZQvTGOJaNRBSv3KNRgx1UgwWL5OydKc9Kj8YJ5sU65ZhVyuEqHTlnLw
-         dY/QPq/YswjRXjvgaNoguQ3bgKTIOikwi1caqr0Kiv0haxvTjNtzG3eJcCBgLN8NbwKi
-         bhkTb6fEcUt6mYvCEGZYiFBrgfnkfbiIq1YNenu1Zd9wWn5MnPKKdt237zlS13YTSpO3
-         Nd5fwBi+JA53tpFXdCm2jq1EyIIrjYoY9ZZPAOXc1AscX9ITbOoUCSYvN6Rfm/7k3iIV
-         TTyQ==
-X-Gm-Message-State: AOAM533UKaHK4GMJgoKXOIjLk6LW5pyZFBrAtFOs3jpfZfEvHpnIFnVf
-        v0bL/AbL132zHDlobVCaGU3hKnrlx7Df7VmyrKNc8opAV1SH74v+8eNlp19p5m/JFGrMazgepXy
-        VPSRul+h1+edRfb/yuFcXyGBtHr0js2vdJg==
-X-Received: by 2002:aa7:d30b:: with SMTP id p11mr3087023edq.80.1601062831455;
-        Fri, 25 Sep 2020 12:40:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzUTeKx8oOlxutBxVc5nMYaZQv73Cmwyu7nvKUK2nXUkz6ZqG83d6mmRymKXRZkDa8CPVcJOg==
-X-Received: by 2002:aa7:d30b:: with SMTP id p11mr3087009edq.80.1601062831122;
-        Fri, 25 Sep 2020 12:40:31 -0700 (PDT)
+        bh=8ZIjURh9gEGj/A0gqHD3FD4qcsmY1BeCBDIYOYJ5HgE=;
+        b=CnwmAVPVJVTk2WQu7XzCCfS2kSkqZC/sdkLdWejPTjUHI/gX6dmRwc8FYs8pInyyB4
+         B4VR2PR9YAosZZw8NO8J6kaFCaGF+V/YY72ZwjatfyNVZeprca/hMgrRjVt+abmwO60d
+         Pxjcmkkk2dPX5JCQrtU77U1Ryd9jiQOoKH+Vz1dC7jHr06M0Y6OJHBF0P0A0nd8MOh8R
+         rj2fYK8+iCaovSh6w8o2MNnXSpcybGtICQ92Cq3WJzYWGI3WfuBeQZN60r0CpRXL9xMx
+         6PM4iMRaPU/X94zOAzpQiSoEcUMnzpmTqcW27PgU4J5UQqZFMYzyxUpJ0Sgq/2dM0bKq
+         mEUg==
+X-Gm-Message-State: AOAM5312F8y0+/GbT9dYZbon9aKzsBgAMZxbARtARlZL5MHXOxRRl8z2
+        QSiqPwcycgD2oBbVgzyupRFRjhPDjsU4dOPzymhHBdTzBxoeIdsoxWdHgoxEb4K5QvtW05SSxI1
+        Vcg3qUfKjYZhYB41BOWK6UuxqEAQFrEC+dw==
+X-Received: by 2002:a50:cd5d:: with SMTP id d29mr6213437edj.318.1601117255356;
+        Sat, 26 Sep 2020 03:47:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx+TO2+4q7lfJenzxiKAyyVxeaY1ycN09RTuKv+bIvfPTGXz5NjNkL+7gKrlxZTcuAGT+5aRA==
+X-Received: by 2002:a50:cd5d:: with SMTP id d29mr6213410edj.318.1601117255089;
+        Sat, 26 Sep 2020 03:47:35 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id p17sm2492875ejw.125.2020.09.25.12.40.29
+        by smtp.gmail.com with ESMTPSA id j15sm3893921ejs.5.2020.09.26.03.47.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Sep 2020 12:40:30 -0700 (PDT)
-Subject: Re: [PATCH v4] Introduce support for Systems Management Driver over
- WMI for Dell Systems
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
-        Divya Bharathi <divya27392@gmail.com>,
-        "dvhart@infradead.org" <dvhart@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        mark gross <mgross@linux.intel.com>,
-        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>,
-        Mark Pearson <mpearson@lenovo.com>
-References: <20200923113015.110980-1-divya.bharathi@dell.com>
- <fc8315b6-a726-5c43-3858-b3201c2b525f@redhat.com>
- <DM6PR19MB2636AC4989C990760933AE39FA360@DM6PR19MB2636.namprd19.prod.outlook.com>
- <cb53d57f-212e-d74f-7842-dd74501fb53f@redhat.com>
- <DM6PR19MB263641DF4B7442CEE31BEAB5FA360@DM6PR19MB2636.namprd19.prod.outlook.com>
+        Sat, 26 Sep 2020 03:47:34 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: hp-wmi: Add support for home in HP OMEN
+ laptops
+To:     Sid Sun <sid@sidsun.com>,
+        platform-driver-x86 <platform-driver-x86@vger.kernel.org>,
+        andy <andy@kernel.org>
+References: <174c79fb794.120dada4b39603.5369737602791060462@sidsun.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <df6e2dc8-0906-0e1f-4aef-47f929b98647@redhat.com>
-Date:   Fri, 25 Sep 2020 21:40:29 +0200
+Message-ID: <cad5f2ab-e319-b6fd-360d-5beb62d6899f@redhat.com>
+Date:   Sat, 26 Sep 2020 12:47:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <DM6PR19MB263641DF4B7442CEE31BEAB5FA360@DM6PR19MB2636.namprd19.prod.outlook.com>
+In-Reply-To: <174c79fb794.120dada4b39603.5369737602791060462@sidsun.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/25/20 8:37 PM, Limonciello, Mario wrote:
-
-<snip>
-
->>> So a user would see the different authentication mechanisms available
->>> by looking At the contents of /sys/class/firmware-
->> attributes/*/authentication
->>> and if they don't understand it's purpose they look at the type sysfs file.
->>
->> But one role can still have multiple mechanisms, so for Dell in the future
->> we could have say:
->>
->> /sys/class/firmware-attributes/dell/authentication/Admin-password
->> /sys/class/firmware-attributes/dell/authentication/Admin-hotp
->> /sys/class/firmware-attributes/dell/authentication/System-password
->>
->> So although I'm fine with taking the role_name directly from WMI
->> (combined with a roll attribute with standardized values) I think
->> we still need to postfix a -password to it now, to allow room
->> for adding say a -hotp mechanism for the same role_name in the
->> future ?
+On 9/26/20 1:36 AM, Sid Sun wrote:
+> HP OMEN laptops have a key for OMEN Command Center where home key should be, which is not supported by current hp-wmi drivers, this patch addresses this, making use of the key as a dedicated home key
 > 
-> Could this be captured in the role attribute instead perhaps?  So the role
-> attributes values could hypothetically be:
-> bios-admin-password
-> power-on-password
+> Without the patch in place, hp_wmi logs the following in dmesg:
+> - hp_wmi: Unknown key code - 0x21a5
 > 
-> And if HOTP is added some day these could be added:
-> bios-admin-hotp
-> power-on-hotp
-
-I would rather have the auth-mechanism-type in a separate mechanism sysfs-file
-which could then contain e.g. "password" or "hotp".
-
-But that does not solve the bit which I'm worried about,
-what I'm worried about is a future scenario where there are multiple
-auth mechanisms for the Admin role, and assuming we use one dir per
-auth-mechanism then we would need 2 Admin sub-dirs which is not
-allowed of course.
-
-I assume that that is what the symlink suggestion you did:
-
- > I was going to suggest that if necessary a compatible way to add these would
- > be symlinks.  So if the directory right now was Admin and later was had
- > split to something like AdminHotp/AdminPassword
- > but wanted to discriminate between the old Admin it could be Admin->AdminPassword
- > or vice versa.
-
-Is meant to address. So for now we go with just Admin and then if
-the 2 auth-mechanisms for Admin at the same time scenario happens
-add the "-<mechanism>" suffix to the directory name at that point.
-Or I guess we could even add a ".%d" suffix for duplicates, since
-the mechanism info would already be in the separate mechanism
-sysfs file.  Then we can also avoid the symlink since we can just
-leave out the .%d suffix when the integer for %d is 0, there is
-precedence for that.
-
-So TL;DR: yes we could put the mechanism in a sysfs file too,
-in that case I would prefer to go with a separate file though,
-rather then concatenating it to the role and storing it in the
-role sysfs file.
-
-If we have both the role and mechanism (hardcoded to "password"
-for now) as sysfs-files in say a:
-
-/sys/class/firmware-attributes/dell/authentication/Admin
-
-Dir then indeed we will not need the "-password" suffix. And if
-we get more then one auth-mechanism for say the "Admin" role then
-we can just name the second subdir Admin.1, etc.
-
-So compared to the current sysfs API from the v4 patch that would
-mean adding the role ("admin", or "power-on") and mechanism
-(always "password" for now) sysfs files and otherwise no changes.
-
-Oh and can we rename the "is_authentication_set" sysfs file to "is_enabled"
-please?  Being set is well defined for a password, but not so much for possible
-other authentication-mechanisms.
-
-<snip>
-
->>>> ###
->>>>
->>>> So as with the actual firmware-attributes I have also been comparing the
->>>> authentication
->>>> bits for the Dell case with the community thinkpad_wmi code. And again
->> things
->>>> are a pretty
->>>> good match already, including being able to query a minimum and maximin
->>>> password length.
->>>>
->>>> The only thing which is different, which I think would be good to add now,
->> is
->>>> a password_encoding sysfs-attribute. The Lenovo password interface supports
->>>> 2 encodings, "ascii" and "scancodes". Although I wonder if scancodes still
->>>> works on modern UEFI based platforms.
->>>>
->>>> Since the Dell password code uses UTF8 to UTF16 translation routines, I
->> guess
->>>> the encoding for the Dell password is UTF8 (at the sysfs level). So I would
->>>> like to propose
->>>> an extra password-authentication attribute like:
->>>>
->>>> 	password_encoding:  A file that can be read to obtain the encoding used
->>>> by
->>>> 			    the current_password and new_password attributes.
->>>> 			    The value returned should be one of: "utf8", "ascii".
->>>> 			    In some cases this may return a vendor-specific encoding
->>>> 			    like, e.g. "lenovo-scancodes".
->>>>
->>>> And for the Dell driver this would just be hardcoded to utf8.
->>>
->>> I don't really believe that another vendor's implementation would be likely
->> to
->>> use scan codes for the input into the WMI method.
->>
->> I did not make that example up, Lenovo really as a scan-codes encoding for
->> their password authentication mechanism, see:
->>
->> https://download.lenovo.com/pccbbs/mobiles_pdf/kbl-r_deploy_01.pdf
->>
-
-<snip>
-
-> The documentation you linked doesn't seem to indicate when to use scancodes or
-> ASCII to me, so I can't draw any conclusions if certain models support one or
-> the other.
+> Tested and developed on: OMEN by HP Laptop 15-ce0xx
 > 
-> I would suggest yes please don't support scancodes from the sysfs perspective for
-> another vendor's implementation.  We should probably keep sysfs as utf8 and let
-> any conversions be hidden in the kernel driver if necessary.
+> Signed-off-by: Sidharth Soni (Sid Sun) <sid@sidsun.com>
 
-Doing the conversions in kernel is not really ideal, the kernels i18n support
-is very limited. But yes for utf8->ascii and utf8->utf16 we can do the conversion
-in kernel.
+So after looking at:
 
->> Even then there still is the unicode (utf8
->> in sysfs, utf16 at the WMI level for Dell) vs ascii issue and it would be nice
->> if a UI for this could give an error when the user tries to use non ascii
->> chars in a password for a vendor implementation...
-> 
-> I think that the kernel driver can certainly parse and provide -EINVAL in this
-> context.
+http://s3.amazonaws.com/digitaltrends-uploads-prod/2017/09/HP-Omen-15-review-keyboard-2.jpg
 
-True, but the advantage of having userspace know it needs to be ascii is
-that it can provide a much more sensible error message to the user when
-the user tries to use non ascii in the password.
+I understand what you mean with "where home key should be". So I've been thinking
+a bit about what is the best thing to do here. Arguably mapping it to
+KEY_CONTROLPANEL would be more accurate. But I can completely understand how
+you just want to have a working "home" key; and it indeed is in the place
+where on HP laptop keyboards with a num-pad, you would expect the home key.
 
-So I think that in the non utf8 case it would still be good to have
-a password_encoding file. With that said, as discussed this sysfs-file
-will be optional too, so for the "Systems Management Driver over WMI for Dell
-Systems" we can just leave it out and then revisit when we merge a driver
-which does not support utf8 for passwords.
+So lets just map it to KEY_HOME as you suggest:
 
->>> I would much prefer that this attribute only be added if it's actually
->> deemed
->>> necessary.  Or to my point that all attributes can be considered optional,
->> Dell's
->>> implementation would just not offer it.
->>
->> I guess that would work (Dell not offering it). Which makes me realize that
->> we should specify somewhere in the doc that all sysfs files which contain
->> a string value, the encoding is UTF8 unless explicitly specified otherwise.
->> (for that specific sysfs-attribute).
-> 
-> Yeah.  I guess the very top where we will modify to mention that all attributes
-> are optional we can also mention that the encoding is UTF8 unless otherwise
-> specified.
-
-Ack.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
 Hans
+
+
+> 
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index 1762f335b..11cf8d1d6 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -149,6 +149,7 @@ static const struct key_entry hp_wmi_keymap[] = {
+>          { KE_KEY, 0x2169, { KEY_ROTATE_DISPLAY } },
+>          { KE_KEY, 0x216a, { KEY_SETUP } },
+>          { KE_KEY, 0x231b, { KEY_HELP } },
+> +       { KE_KEY, 0x21a5, { KEY_HOME } },
+>          { KE_END, 0 }
+>   };
+> 
 
