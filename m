@@ -1,100 +1,120 @@
-Return-Path: <SRS0=5/WG=DD=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=uHPK=DF=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A07D1C2D0A8
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Sep 2020 18:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE76AC2D0A8
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Sep 2020 10:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D26A2080A
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Sep 2020 18:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F63B206F4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Sep 2020 10:33:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nr6wRrYK"
+	dkim=pass (1024-bit key) header.d=wildgooses.com header.i=@wildgooses.com header.b="RIKHkhT3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgIZSgm (ORCPT
+        id S1726526AbgI1Kd4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 26 Sep 2020 14:36:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgIZSgl (ORCPT
+        Mon, 28 Sep 2020 06:33:56 -0400
+Received: from mail1.nippynetworks.com ([91.220.24.129]:44424 "EHLO
+        mail1.nippynetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgI1Kdz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 26 Sep 2020 14:36:41 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C9DCC0613CE;
-        Sat, 26 Sep 2020 11:36:41 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id nw23so2978975ejb.4;
-        Sat, 26 Sep 2020 11:36:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:cc:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=WDnJbrBWNQ1GugmB49qXnIh1j39vlYsXsMRH5FVMOGE=;
-        b=Nr6wRrYK0wJDsSfwIWT0TReTx26DLYS54KgwFYTb1tH9u7tGLnWMkcOJtKwjvCakuS
-         OrpDEMFI1FZvXMim2+7MjVOw8usGy1FgJFdkK9cqijh2lDpzMDYViWa4NHCL9MNgKG0R
-         Q6472YAOryArav1e9kgYojxT7e2xSlFQieY0fO/MAYoN6TgVBf8FIKMZCHh+Wb3YXRg6
-         yYrDXfv0T+h5/rgMdFjKrlB7zdapovqnGdpAgqNJb0GbUF2Vmgc1ucLcYBQcPyFA/Im7
-         IdmYV66DIMpIJlAY3FX6c4zD7Tgaa9k15ddhAd2IdaNfnafwUwriGOpETn8Baz2xzpNf
-         SGsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WDnJbrBWNQ1GugmB49qXnIh1j39vlYsXsMRH5FVMOGE=;
-        b=FWWDT8jbOq8A1Qz4Qt6cG7sy8WNjHFIpLy92b/6nsTkLXuu6bPst3LrvE7Evyan3Cu
-         xe+pxPPX1V+K9WsvyX841H9Gsj7wh29GiSP+e/U/4OoyJs6wAZ9Yxpm2d6jJWR7aT4Z7
-         WvGCWkBIG42Wv5cNkCO0hLjFgMJFDqdCct+2P6qo6N0dvXeUFLiGorUkvElmRwF9gvNU
-         kx7Z6nQw+/hbz4+Jc7MQNjIvOjl6kqsKbQSF3wuaK8WM4L928yHqrHratC0+Pme+h7BM
-         sLBJNWKLHiUsG4gEYDIFBDFwlkqQhe/e7fpOlMpAmT6EAaSCGwude4SbRVgCb/ukyQTv
-         OIhQ==
-X-Gm-Message-State: AOAM533BsqRjDFZpumk/6FbOupWttkcnLhcQ1UUplNx94IvVfoJjLkK4
-        cfMCDyVzkicV84X/jBhzr0kpabQOLm4=
-X-Google-Smtp-Source: ABdhPJzSmmzYNq6dts1SW8TCoIL/fLVgTMgK2xrx8XOKuwhp3uBJX5NwzNpcjW+sS6z44oPJLqInWQ==
-X-Received: by 2002:a17:906:ce30:: with SMTP id sd16mr8410852ejb.53.1601145398448;
-        Sat, 26 Sep 2020 11:36:38 -0700 (PDT)
-Received: from [192.168.2.202] (pd9e5ae20.dip0.t-ipconnect.de. [217.229.174.32])
-        by smtp.gmail.com with ESMTPSA id f21sm4915752edw.83.2020.09.26.11.36.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Sep 2020 11:36:37 -0700 (PDT)
-Subject: Re: [PATCH v3] platform/x86: Add Driver to set up lid GPEs on MS
- Surface devices
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
+        Mon, 28 Sep 2020 06:33:55 -0400
+Received: from macbookpro-ed.wildgooses.lan (unknown [212.69.38.73])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature ECDSA (P-256))
+        (No client certificate requested)
+        (Authenticated sender: ed@wildgooses.com)
+        by mail1.nippynetworks.com (Postfix) with ESMTPSA id 4C0Jlb4LrLzTgQY;
+        Mon, 28 Sep 2020 11:33:47 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wildgooses.com;
+        s=dkim; t=1601289233;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eNzyi2kqeWuXtwvd5AimJlA3bj0sWl7vjhB/3D/gIKo=;
+        b=RIKHkhT3D9qx4osy+CySyCw+3zhmtmttduL6812je63zt2v6BjT8WCTDaJPjw0gIqCvnqk
+        33ojl8f9NT9QpVrr1oft6vVARSgdF4CcfXQH41Go8J6K8/VY8fP0Co2M6zWo+a4AMsOLx0
+        Ueh6CFOIPwMS2I+GnSjfcINAUcmacBo=
+Subject: Re: [PATCH] gpio: gpio-amd-fch: Fix typo on define of
+ AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
+From:   Ed W <lists@wildgooses.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200917155559.1686146-1-luzmaximilian@gmail.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <095203ce-37ef-2a5f-4397-63632139c925@gmail.com>
-Date:   Sat, 26 Sep 2020 20:36:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Mark Gross <mgross@linux.intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Eckert <fe@dev.tdt.de>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20200920203207.25696-1-lists@wildgooses.com>
+ <CAHp75Vd2uz-QrEFshUr=e719VBX2zYzvOhVC07BpHfvi0WDgOA@mail.gmail.com>
+ <deb07bad-2d84-723a-7237-2b625a3c4de8@wildgooses.com>
+Message-ID: <815ff3a6-8941-573d-36c0-36639f47dc04@wildgooses.com>
+Date:   Mon, 28 Sep 2020 11:33:46 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
+ Gecko/20100101 Thunderbird/78.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200917155559.1686146-1-luzmaximilian@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <deb07bad-2d84-723a-7237-2b625a3c4de8@wildgooses.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Content-Language: en-GB
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-I suggest delaying this patch until
-
-   [PATCH] platform/surface: Create a platform subdirectory for Microsoft Surface devices
-
-has been resolved. If accepted, I would then submit a v4 directly
-against the new platform/surface subdirectory.
-
-Regards,
-Max
+SGkKCkNvdWxkIEkgZ2V0IGEgZmluYWwgb3BpbmlvbiAob3Igc2lnbm9mZikgb24gdGhpcyBw
+YXRjaCBwbGVhc2U/CgpUaGUgc2lnbmlmaWNhbnQgdHlwbyBpcyB0aGUgcmVmZXJlbmNlIHRv
+ICI1OSIsIHdoZW4gdGhlIEdQSU8gaXMgYWN0dWFsbHkgNTUKCkFjY29yZGluZyB0byB0aGUg
+UENFbmdpbmVzIHNjaGVtYXRpYyB0aGUgbmFtZXMgb2YgdHdvIHNpbWlsYXIgR1BJT3MgYXJl
+CsKgwqDCoCBHNTkvREVWU0xQMQrCoMKgwqAgRzU1L0RFVlNMUAoKVGhlIG9yaWdpbmFsIGRl
+dmVsb3BlciBuYW1lZCB0aGUgc2Vjb25kIEdQSU8gd2l0aCBhIHRyYWlsaW5nIDAsIHdoaWNo
+IGRvZXNuJ3Qgc2VlbSB1bnJlYXNvbmFibGUsCmhlbmNlIEkganVzdCBjb3JyZWN0ZWQgdGhl
+IG5hbWUgdG86CsKgwqDCoCBBTURfRkNIX0dQSU9fUkVHX0dQSU81NV9ERVZTTFAwCkhvd2V2
+ZXIgYW5vdGhlciBhY2NlcHRhYmxlIG5hbWUgY291bGQgYmU6CsKgwqDCoCBBTURfRkNIX0dQ
+SU9fUkVHX0dQSU81NV9ERVZTTFAKCklmIEkgY291bGQgYXNrIGZvciBzb21lIGd1aWRhbmNl
+IGFuZCBpZiBuZWNlc3NhcnkgSSB3aWxsIHJlc3VibWl0IHRoaXMgcGF0Y2g/IEVucmljbywg
+ZG8geW91IGhhdmUgYW4Kb3Bpbmlvbj8KCkhvd2V2ZXIsIHBlcmhhcHMgaXQncyBhbHJlYWR5
+IGFjY2VwdGFibGUgYXMgaXM/CgpLaW5kIHJlZ2FyZHMKCkVkIFcKCgpPbiAyMS8wOS8yMDIw
+IDA5OjQwLCBFZCBXIHdyb3RlOgo+IE9uIDIxLzA5LzIwMjAgMDg6NTUsIEFuZHkgU2hldmNo
+ZW5rbyB3cm90ZToKPj4gT24gU3VuLCBTZXAgMjAsIDIwMjAgYXQgMTE6MzMgUE0gRWQgV2ls
+ZGdvb3NlIDxsaXN0c0B3aWxkZ29vc2VzLmNvbT4gd3JvdGU6Cj4+PiBTY2hlbWF0aWNzIHNo
+b3cgdGhhdCB0aGUgR1BJTyBudW1iZXIgaXMgNTUgKG5vdCA1OSkuIFRyaXZpYWwgdHlwby4K
+Pj4gRG9lcyBpdCBzdGlsbCBERVZTTFAwPyBQZXJoYXBzIHlvdSBuZWVkIHRvIGRyb3AgdGhh
+dCBwYXJ0IGFzIHdlbGwuCj4+Cj4+IC4uLgo+Cj4KPiBJbiB0aGUgUENFbmdpbmVzIHNjaGVt
+YXRpYyBpdCdzIGxhYmVsbGVkIGFzICJHNTUvREVWU0xQIiAobm8gMCkKPgo+IChJbiBjb250
+cmFzdCBHNTkgaXMgbGFiZWxsZWQgIkc1OS9ERVZTTFAxIikKPgo+IFdoYXQgaXMgdGhlIHF1
+b3J1bSBvcGluaW9uIG9uIG5hbWU/Cj4KPiBUaGFua3MKPgo+IEVkIFcKPgo+Cj4+Cj4+PiDC
+oCAjZGVmaW5lIEFQVTJfR1BJT19SRUdfTEVEM8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBB
+TURfRkNIX0dQSU9fUkVHX0dQSU81OV9ERVZTTFAxCj4+PiDCoCAjZGVmaW5lIEFQVTJfR1BJ
+T19SRUdfTU9ERVNXwqDCoMKgwqDCoMKgwqDCoMKgwqAgQU1EX0ZDSF9HUElPX1JFR19HUElP
+MzJfR0UxCj4+PiDCoCAjZGVmaW5lIEFQVTJfR1BJT19SRUdfU0lNU1dBUMKgwqDCoMKgwqDC
+oMKgwqDCoCBBTURfRkNIX0dQSU9fUkVHX0dQSU8zM19HRTIKPj4+IC0jZGVmaW5lIEFQVTJf
+R1BJT19SRUdfTVBDSUUywqDCoMKgwqDCoMKgwqDCoMKgwqAgQU1EX0ZDSF9HUElPX1JFR19H
+UElPNTlfREVWU0xQMAo+Pj4gKyNkZWZpbmUgQVBVMl9HUElPX1JFR19NUENJRTLCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBBTURfRkNIX0dQSU9fUkVHX0dQSU81NV9ERVZTTFAwCj4+PiDCoCAj
+ZGVmaW5lIEFQVTJfR1BJT19SRUdfTVBDSUUzwqDCoMKgwqDCoMKgwqDCoMKgwqAgQU1EX0ZD
+SF9HUElPX1JFR19HUElPNTEKPj4+Cj4+PiDCoCAvKiBPcmRlciBpbiB3aGljaCB0aGUgR1BJ
+TyBsaW5lcyBhcmUgZGVmaW5lZCBpbiB0aGUgcmVnaXN0ZXIgbGlzdCAqLwo+Pj4gZGlmZiAt
+LWdpdCBhL2luY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9ncGlvL2dwaW8tYW1kLWZjaC5o
+Cj4+PiBiL2luY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9ncGlvL2dwaW8tYW1kLWZjaC5o
+Cj4+PiBpbmRleCA5ZTQ2Njc4ZWQuLjI1NWQ1MWM5ZCAxMDA2NDQKPj4+IC0tLSBhL2luY2x1
+ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9ncGlvL2dwaW8tYW1kLWZjaC5oCj4+PiArKysgYi9p
+bmNsdWRlL2xpbnV4L3BsYXRmb3JtX2RhdGEvZ3Bpby9ncGlvLWFtZC1mY2guaAo+Pj4gQEAg
+LTE5LDcgKzE5LDcgQEAKPj4+IMKgICNkZWZpbmUgQU1EX0ZDSF9HUElPX1JFR19HUElPNDnC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMHg0MAo+Pj4gwqAgI2RlZmluZSBBTURf
+RkNIX0dQSU9fUkVHX0dQSU81MMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAweDQx
+Cj4+PiDCoCAjZGVmaW5lIEFNRF9GQ0hfR1BJT19SRUdfR1BJTzUxwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIDB4NDIKPj4+IC0jZGVmaW5lIEFNRF9GQ0hfR1BJT19SRUdfR1BJ
+TzU5X0RFVlNMUDDCoMKgwqDCoMKgwqDCoCAweDQzCj4+PiArI2RlZmluZSBBTURfRkNIX0dQ
+SU9fUkVHX0dQSU81NV9ERVZTTFAwwqDCoMKgwqDCoMKgwqAgMHg0Mwo+Pj4gwqAgI2RlZmlu
+ZSBBTURfRkNIX0dQSU9fUkVHX0dQSU81N8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCAweDQ0Cj4+PiDCoCAjZGVmaW5lIEFNRF9GQ0hfR1BJT19SRUdfR1BJTzU4wqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIDB4NDUKPj4+IMKgICNkZWZpbmUgQU1EX0ZDSF9HUElP
+X1JFR19HUElPNTlfREVWU0xQMcKgwqDCoMKgwqDCoMKgIDB4NDYKPj4KPgoK
