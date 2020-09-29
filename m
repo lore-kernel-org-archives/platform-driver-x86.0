@@ -7,83 +7,83 @@ X-Spam-Status: No, score=-4.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8A9C4CC61
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 20:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386EAC47427
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 20:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1942076B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 20:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5182072E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 20:47:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="Awushw2C";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="n1xOjArf"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="eYe1Eo7z";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="UbfT+1g2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgI2Uii (ORCPT
+        id S1728301AbgI2Uri (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Sep 2020 16:38:38 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:29622 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728201AbgI2UiD (ORCPT
+        Tue, 29 Sep 2020 16:47:38 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:35332 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726643AbgI2Urh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Sep 2020 16:38:03 -0400
-Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08TKVlq4006634;
-        Tue, 29 Sep 2020 16:37:52 -0400
+        Tue, 29 Sep 2020 16:47:37 -0400
+Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08TKgO3p010359;
+        Tue, 29 Sep 2020 16:47:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-transfer-encoding : mime-version; s=smtpout1;
- bh=XVS5Wpdp9edpmlIkbMemGHF8TGeH0X7f/nOBi99ift0=;
- b=Awushw2C3nOzTe+rdkSz8KX6/P1udwroNol7vByR0VYhPZy1zxIUH6NqkJHIDt+DNZsV
- dLeb61HNtdpLHEfwxHtPhxGa8rEU9G9rbCpoyRsmLjcDU7jA0kG0BGco4VONBMKHLx/d
- ZtDhh7/1RrhBQ2BpFU0mjrWRTVtwKWfZdRNZqwvtpxkF9iAiWAff07GhR541TAUB8H1t
- bWPsDOYR/f0b8eC6WVmqA9J60OI0buu5x0bq/pJTCZ2hj41NcDGFo8Gkix/sGvtW8vP2
- UIcbGhFgkMh3qicaFGchuSlLl+rwz4G6tdYbh5joc9Ndww9r0N9D+lYgRJe1N9sHCCHt bw== 
+ bh=YZXr6s92rbRfdpmLbnt4OTwtDTOr//IdRTqWsZIjWq4=;
+ b=eYe1Eo7zoiQ53HnxGxT59jun6xUT+qZJs+6UhUTrmYYNNIxkacBzGobG1XIbgQaaLl/3
+ zl+oonCHmHPgDbhnoRMwkl6u2g/SDh5IKIy7I9BMgBv+ch58JHvY5x9nYVudFIwbYdkf
+ mx2vFcSSptF6YndeVq8gdGThtHRa11ZwqxgcwOMP7H35y+cuZ6NeJryG9BUZUZUhoeb3
+ px9udiGEYoBy4fiNKoP2wpO3CiGpGKJy1m8fv+ulUR2BgbgDRpSuJ9iLyfaQXI31M358
+ d/P5kRvaoOacaTV22OuckyflcK+9RgdxoxhhWTg4YNqbswB06G6BOotAZz1w4j1NCIlV mQ== 
 Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 33t2ap2rjv-1
+        by mx0a-00154904.pphosted.com with ESMTP id 33t0sxjuda-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Sep 2020 16:37:52 -0400
-Received: from pps.filterd (m0142693.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08TKYZNH188138;
-        Tue, 29 Sep 2020 16:37:51 -0400
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2171.outbound.protection.outlook.com [104.47.55.171])
-        by mx0a-00154901.pphosted.com with ESMTP id 33v9hr2m41-1
+        Tue, 29 Sep 2020 16:47:29 -0400
+Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08TKiIPM080650;
+        Tue, 29 Sep 2020 16:47:29 -0400
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2172.outbound.protection.outlook.com [104.47.57.172])
+        by mx0a-00154901.pphosted.com with ESMTP id 33vaaq1vfq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Sep 2020 16:37:51 -0400
+        Tue, 29 Sep 2020 16:47:29 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f57ViDdMVCF+tB2pNcFnaBfEqO5TyuyT8xeyTcYCnjIEm+NqUVWRbe2haxPVHh5n+Jng96QVmf9yr9U+WkmuYUeld4kdZ3L8JKwkpm0/rWDV5ZEcDL37ysQN6qlyLHvLLd6Ru+7R25T7z6dTywBU2rOse0l+djn7+WRUgSImw+1DS4IDnpcj9Nu2S/mJdp22D8Mp+9vefrSAukqXH4lu7tsXP65pP2YFD1ubGo5wZOKyyKjG6b8TfFHkV8H8/0zITfYZcy+LhWBhCKDC/AR/8wxX6d2O0gKNC9EM1KJZZ6oYkYTzQh5TGKdMsFvoqwrEfyVpRjtM6xuCccKscR5Z+A==
+ b=D0dDN0zSDMCK9rgw5k3fUjOBHuDK+szmll7IzbnOYe03d/uzVD+LEmM00YSt/kWYuJbaFcWTJs8pXL4YTgSTuVr977AJQTzHB4ReVYaPWCXSbb0XPvkn38EN4q4H7qPJ4OGO4nJ5OiH8o5ItuoZuFtYa6H5MF7UXPLTyJc2DcMqTWnm0Y73Aftjbrg4oV3M0G3YT1t5ifjihmBAc/DH7tUzqSKQoYm8vbdE2z1X+70nZ7OJ//Q1ErrjuVNdnl9zs21yTNsjPX4uUklMMBB63H6PuyaQXXqXKFLynXdworrjr9N3GmmgIofr6IeyqMAjqU5q8gZnOUN8Amv7o5AgVSA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XVS5Wpdp9edpmlIkbMemGHF8TGeH0X7f/nOBi99ift0=;
- b=dlwNOaCWsukmqUIY+jvz7E6fNLxKauCQsmAi70MDS0aP2A1Cb5GN1BPdX11f+irXZmCVul9+Z5MIXyQj2a7p9iRNgMyt9Fut3OecvMFTOIZwQU5BG1/kinkfTlguT6kyE+xu0DwEJA8bq0T9U2Gzg2NJeT1pwGoH+AeKbPmEik7+DOrErkvMyyeyq4v+HPrPvEwmA3+meiDiWtl8BV7TDRX3lqWmTvrozbfR8oUCEqeo/4TpwtmVUKrIckLzgUIyfZI5Y6CfG9vJ9qPBC+iiYFvzLvsFBrhjne4EeTxQp/WbQ5C4xOze1X5qECCg5BHBtIwTiOOiaKSSl9c8ZZmACQ==
+ bh=YZXr6s92rbRfdpmLbnt4OTwtDTOr//IdRTqWsZIjWq4=;
+ b=TUXXZNPYswwbsgvI3oGMNwoD8FfsBGceTEI+J44OjCauR32roJzsyp9KCP+UgqU8C4zFYqicJifxK32iaU+qpxaNzePd8+SugqaLWOf9iNsLeynQKHP50Ry2+yvAxGk68R5B800ZS0qI4H6XzkYWHBFqWasbt84gf849aoprwdkKXfoyqgleO/yPqgbB7b35fBHLiUoRE+PXLuPG1EjUUM6qyxdnq5ZxEVMJ7ozXNu7fL3Kugr9YYnFWkeE9o6d4GTsmndKizbCvXvxoePU19FX2fonkcl92oufPEg66xUFHqOpPsukNTt0gEfxJ3VQIpCTbxmIxL5i0NSOTAWbThg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
  dkim=pass header.d=dell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
  s=selector1-Dell-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XVS5Wpdp9edpmlIkbMemGHF8TGeH0X7f/nOBi99ift0=;
- b=n1xOjArfThn9nqqcNyTJ4R50IK+8FgIlWiqth7JFla6FOE8JocZ+XejVXJsgTI7METkoVZRdK63xYpfA6eZ4Hkkme+PCqnHMFqOIJNR47bBVnBmz43A8/eSgLvI8XTTya8LbRVw5A2L8b/1BPApHnR89CcRRm3u+tNWRTZUrYaE=
+ bh=YZXr6s92rbRfdpmLbnt4OTwtDTOr//IdRTqWsZIjWq4=;
+ b=UbfT+1g2+yBDT+xgZ0p00wAS4fftcZ4jBW24Etg4O3IKgQXYhfGUaWvySHlHeyjuOLdbCHYkMyGCjB9Dml9GbZTnJ4K8Tk0g11G8/IlylnRQXvG7HsIR5OPcYTFDwB86cphJ/t3exvuqFdAL7iTBhdywFzltP60GrgQmu7I4gOM=
 Received: from DM6PR19MB2636.namprd19.prod.outlook.com (2603:10b6:5:15f::15)
- by DM6PR19MB3147.namprd19.prod.outlook.com (2603:10b6:5:195::16) with
+ by DS7PR19MB4488.namprd19.prod.outlook.com (2603:10b6:5:2c2::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.32; Tue, 29 Sep
- 2020 20:37:49 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.21; Tue, 29 Sep
+ 2020 20:47:26 +0000
 Received: from DM6PR19MB2636.namprd19.prod.outlook.com
  ([fe80::a4b8:d5c9:29da:39b2]) by DM6PR19MB2636.namprd19.prod.outlook.com
  ([fe80::a4b8:d5c9:29da:39b2%4]) with mapi id 15.20.3412.029; Tue, 29 Sep 2020
- 20:37:49 +0000
+ 20:47:26 +0000
 From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Hans de Goede <hdegoede@redhat.com>,
+To:     Hans de Goede <hdegoede@redhat.com>,
         =?iso-8859-2?Q?Barnab=E1s_P=F5cze?= <pobrn@protonmail.com>,
-        "platform-driver-x86@vger.kernel.org" 
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Takashi Iwai <tiwai@suse.de>
 Subject: RE: Keyboard regression by intel-vbtn
 Thread-Topic: Keyboard regression by intel-vbtn
-Thread-Index: AQHWlj1nM3jkeRr7qUSqdoVr/WDD66l/V1WAgAACMACAAAiVgIAABMgAgAAjUpSAAAiigIAAGG+wgAAqWICAAD300A==
-Date:   Tue, 29 Sep 2020 20:37:49 +0000
-Message-ID: <DM6PR19MB263687682E9CCA4B75B3DE78FA320@DM6PR19MB2636.namprd19.prod.outlook.com>
+Thread-Index: AQHWlj1nM3jkeRr7qUSqdoVr/WDD66l/V1WAgAACMACAAAiVgIAABMgAgAAjUpSAAAiigIAAGG+wgABpVeA=
+Date:   Tue, 29 Sep 2020 20:47:26 +0000
+Message-ID: <DM6PR19MB2636BD25C7C828D28CF27CC8FA320@DM6PR19MB2636.namprd19.prod.outlook.com>
 References: <s5hft71klxl.wl-tiwai@suse.de>
  <bedb9d1b-3cca-43e2-ee44-1aac0e09a605@redhat.com>
  <s5h8sctkk2b.wl-tiwai@suse.de>
@@ -92,8 +92,7 @@ References: <s5hft71klxl.wl-tiwai@suse.de>
  <DM6PR19MB2636C7C411E220565F39E741FA320@DM6PR19MB2636.namprd19.prod.outlook.com>
  <55e021b7-5e1b-986b-07ec-279398570e40@redhat.com>
  <DM6PR19MB2636FFC274423BB564A7532CFA320@DM6PR19MB2636.namprd19.prod.outlook.com>
- <20200929165325.GW3956970@smile.fi.intel.com>
-In-Reply-To: <20200929165325.GW3956970@smile.fi.intel.com>
+In-Reply-To: <DM6PR19MB2636FFC274423BB564A7532CFA320@DM6PR19MB2636.namprd19.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -101,26 +100,26 @@ X-MS-TNEF-Correlator:
 msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
  MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
  MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-09-29T20:37:45.4853338Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-09-29T14:21:56.7117850Z;
  MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
  MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
  Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=bbf35941-af41-47ca-aac0-bf23dbc8b190;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=ca234379-621d-4f4e-98a9-ed8fde90e046;
  MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=Dell.com;
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=Dell.com;
 x-originating-ip: [2600:1700:70:f700:4924:2a57:f653:596a]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5ef49b0c-b3db-42cc-1057-08d864b787fa
-x-ms-traffictypediagnostic: DM6PR19MB3147:
-x-microsoft-antispam-prvs: <DM6PR19MB31473D19D453F7592BE70771FA320@DM6PR19MB3147.namprd19.prod.outlook.com>
+x-ms-office365-filtering-correlation-id: 28dae1fa-6ec6-4360-3282-08d864b8dff2
+x-ms-traffictypediagnostic: DS7PR19MB4488:
+x-microsoft-antispam-prvs: <DS7PR19MB448863405382C863826998ADFA320@DS7PR19MB4488.namprd19.prod.outlook.com>
 x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ASGgSj5Ems6xQatQ7mJcRZOXelkCYm66li0MqJ8EebidjlwCVxTPMcXcZnQF6Yh7EwhAWSGaQuyCLYvGMGdHKJ+A0CgAOa/NWXM1pBY4jRGjX3Pjm4KgMfin+JdmTA5yKkB8E0/Kp9rcE4BsEPP+LD7ltD5VjznGo1BwI3vbNoSVK6UdsfZoS657VPVnNwvdJ568+4cm3lHxV+3+MkVi2faEKybeayCkVeTl+FuISEF6ml3RE3q2HJ2nqE60wXBID+VRMgXFqCYykdL46TVgG5ZUZoGJUBXXFlXaXpZeE2ewoQxNJFLfeGKAlS5NsQ0FHrjc/3/MP9O5Hiu5sHaVepvPsbq4otFjr8IgT5AhTSw9jsn5y6vqo4CrZjv/dsK+EPIFxIBPh3w3SZlk0GXEMw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR19MB2636.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(8936002)(4326008)(498600001)(7696005)(83380400001)(6506007)(5660300002)(52536014)(83080400001)(66476007)(66556008)(64756008)(66446008)(8676002)(76116006)(86362001)(2906002)(66946007)(33656002)(6916009)(966005)(55016002)(9686003)(186003)(71200400001)(54906003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: jz3V/zrBO2p7MvNjl7D7e1ssAMLF1AOyviGOqrwLgZqeEe407Rp5+uNfbGaBaD88Pxpzx6/rzB6yakHtDznVyBSSjZA5hahCSyVjlc1Z0sgyc0KGN5JSYBrL0nfJgVApHLFdT3o+et8ZdKpBawrgvj7voK5Vx4ttgTtmAT6v0Uc2RiVEZYjQ9Qjdxb0mZfSlqVCveceSFedo9k+PBiIsuNOyQZjaI2ojRTZngKjn6Qbp0ytRwzirJtmq+L3LRIlbfeNp0WLEhfmTbM2Xc4IvZbWj2+gB62hSjfB5TfwfUxb/Wiv/l974NrhXNpd5lXA6//H3bdhFk1Oaw8KN5BJmQF7/CYKaM5IE+/IndJ3sYCZMLkbi+ORfAp/i3IMJvCr3E916SmAoz9eRTLQ9RsQym12gjqJzC2partJXeFU06pDhgTUvhbHs6422BuMlilgD5luOB9NXEj8dlabAequ+i20hc7lkcyJkOAC4K/KiVxaLLOPaso+AbkIeu3Td5tHYKT0xlaU6dqeyhCb/OSeHGgGjOL9NDKPG6vGkXFX5EDdbC6RkSJGciVuT/KLRAJ5EfPPSivvk49s/lLuHOAwK1EMENaR8G+gYgNUS41C5L0g8awHszdOg10iws7VoOj22HSItBXA+n0wF0jdhE18SAhhbQwKgrcgRB/lrBwrz7HZM4NmmcSoz3nuZQFSSLQMRTY//6V26JZzRR/SXkbjqzQ==
+x-microsoft-antispam-message-info: Pkl/dM5Hihywi8ktHjjrFOotEJ8iWF40tEoT2AApjZ5X+e3yHlLJnsWfaP60rBP65N3iGYHYTfqkP36uXx7CKwOW+YpPLqJ6DrAQ6EQZev7CDE1MgEISHtHIV87ef6IUjuKH9iqaA2xTzFhapofjqYgRrQfdX1rQE0nmcSu9XQqNxxnAl/16OgBggw3iwkf2UWCb5vPgpwyBBmWAO+5TaC3crR7l0o1xSrTKryl02IF6ir7osovRkiRisubg8SPyGzzVuaaobGI0StWdMCyFWwd+wWavS3uiytQA9HkdC6oBAczq8xCpVi0+sWpMalqYXnUZIEB9jKWO26Jlot1IBpus7UMfOUnty1yUhMsnGrocdyD2GK2MR+5ev8P/8sX6vUunsmkwzRj9us1O6iRN63hH/K672FYni6uDM8vLPg39QSOieONImxu15toPsRd1cc5e0m+YToS7VhS+rmZMKw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR19MB2636.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(64756008)(66446008)(4326008)(8676002)(4744005)(66476007)(7696005)(83380400001)(54906003)(66556008)(66946007)(55016002)(8936002)(2940100002)(76116006)(52536014)(9686003)(110136005)(498600001)(186003)(5660300002)(86362001)(966005)(71200400001)(33656002)(6506007)(2906002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: mz0Lf/ljI8wIlmDf0hksNYfgVhL80LVTl7QIM2SLBIivkOH87Xatzt2ZcVbu83Ei0US6YbTZwnZ08zDhX91suAX34DVgcx/P6Bvj/ufFLECYKRWTsz/OF3m8DMmRbfvG2lBnenrBG6top/njyiJNx9JJFUFOHjEz1kvRQVRi8dHcqLGn6kEm5eH6pKKI3VD6QjBunhiBPZVnNBl2XlK2PaIWAsEy23tnwJCA80ejeRlKicJdrfa1MHP87OYJkaqJs6erK4nIEQbb8g6x3Whl+JLaVzStVppf3ZTtZaoJlGAROq66T6xlMp5KIq/ptPqon54MIfdsYP4aKKYVy4/mVREdKcHzKr8Uo6DOGMqsqDDW8tQw6cA8RNdqOp4api5D5DTeqQbNdlpSv9lNMUbYvhororKKTtEw0RVML42Ray7DAkZs0ca6ov3MOg7DnufAhLfLYd6taU/aSsUtAinijiNdpXtjsJYkE3UpSDt8vD67yDP+7Q78NW7Pc+Lr1KcVwIhpnl2RGbWIOBGSa2SNeM6MLJy4IaVr+3FUvrw6ThPFiZltp50JFXVhtxX0C/znoJL1gxIo178jPutyJ0FHiaTWrvK01XPS7f+mhwwUvtuShZ4TctQAaXz8loAyvXMQ9wYeveJ1V+GSduxGjP3tSSE6vpgyAskwBGLvDGPbqyPd0sWjUUBpqiSZAzKNCr4yGdK0SjvzZXPF5LfrC0/y1w==
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: quoted-printable
@@ -128,100 +127,38 @@ MIME-Version: 1.0
 X-OriginatorOrg: Dell.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR19MB2636.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ef49b0c-b3db-42cc-1057-08d864b787fa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Sep 2020 20:37:49.4591
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28dae1fa-6ec6-4360-3282-08d864b8dff2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Sep 2020 20:47:26.5287
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Mr0AGqcEiBFDn24JbhN4Zjs1RIraBVzAxJQxh32yKtaGTftzAdKsjXnNDO71N/Y+o+70zxnlGrz8yYdpyl49Ppm/VlS+veQ7zd4TDKumtQs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR19MB3147
+X-MS-Exchange-CrossTenant-userprincipalname: jlqrsWgt1oW/0iVNVcc9mGqqesANiYbkG1UO1WL3rvh4vGVC3Ej7tVJKqFVMwQZfdAVFNfEC7tUIPjMi8A4LB99NcDAM+Wud087MfqcDpbo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR19MB4488
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-09-29_14:2020-09-29,2020-09-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- suspectscore=0 clxscore=1015 bulkscore=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009290174
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- bulkscore=0 spamscore=0 malwarescore=0 suspectscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009290173
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ impostorscore=0 mlxlogscore=540 priorityscore=1501 clxscore=1015
+ suspectscore=0 adultscore=0 lowpriorityscore=0 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009290175
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=632 phishscore=0
+ suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009290175
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-> > > >> I'm afraid that the only answer which I have to these questions
-> > > >> is not helpful, but in my experience it is true: "firmware sucks".
-> > > >
-> > > > So FWIW there is a Dell 2-in-1 that has been conflated into this sa=
-me
-> issue.
-> > > > https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1822394
-> > >
-> > > That is what a somewhat old kernel (5.0.0) which I guess may
-> > > lack your fix to check the chassis-type.
-> > >
-> > > Interesting that this actually is a 2-in-1 though.
-> > >
-> > > Also interesting that according to the reporter this was
-> > > triggered by a BIOS update.
-> > >
-> > > If you by any chance can provide an acpidump with both the
-> > > 1.2.0 and 1.4.0 BIOS versions that would be very interesting.
-> >
-> > I requested on the Ubuntu bug for someone to provide these.
-> >
-> > > > Something that is confusing to me is that on the Windows side all t=
-hese
-> > > > machines use the same Intel driver for this infrastructure no matte=
-r the
-> > > > OEM.
-> > > > So they can't possibly be putting in quirk specific stuff in the dr=
-iver
-> side
-> > > > can they?
-> > > >
-> > > > It has to make you wonder if some baseline assumptions made in the
-> > > > driver early on around tablet mode support are completely false.
-> > >
-> > > I'm not saying your wrong. If you can get Intel to provide
-> > > us with some documentation, or Windows driver source code
-> > > for this, then that would be great.
-> > >
-> > > AFAICT the Linux driver currently is entirely based on
-> > > reverse engineering.
-> >
-> > That's correct it was originally reverse engineered.
-> >
-> > Andy,
-> >
-> > As there is no publicly available documentation, could you see if it wo=
-uld
-> it be
-> > possible to get someone internal to Intel to compare private documentat=
-ion
-> to the
-> > driver to see if something basic is missing or done wrong?
 >=20
-> I'm afraid that's all was designed solely for Windows and all information=
- is
-> not available to us in any form (basically somebody has to ask for WOS dr=
-iver
-> sources, and funny that as a customer your has more power to get this tha=
-n
-> mere
-> in-house Linux engineer as me).
+> I requested on the Ubuntu bug for someone to provide these.
 >=20
 
-I guess this comes back to why we have reverse engineered driver in the fir=
-st
-place.
+Joe Barnett was kind enough to share two ACPI dumps to compare.
+Not affected:
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1822394/+attachment/54=
+15318/+files/1.2.0.acpidump
 
-Even in this suggested case, such documentation is shared to partners under=
- NDA,
-and would need permission to be used in open source.
-
-As such an allowlist for this driver might be the best path forward given t=
-he=20
-quirky behavior that we have seen.
+Affected:
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1822394/+attachment/54=
+15405/+files/1.13.0.acpidump
