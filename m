@@ -1,162 +1,214 @@
-Return-Path: <SRS0=uHPK=DF=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=2mT5=DG=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0B4C2D0A8
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Sep 2020 11:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49E8C2D0A8
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 00:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FECE2100A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Sep 2020 11:46:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qL0R40R1"
+	by mail.kernel.org (Postfix) with ESMTP id 739CF20773
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 00:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgI1LqQ (ORCPT
+        id S1727110AbgI2Ax2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Sep 2020 07:46:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgI1LqP (ORCPT
+        Mon, 28 Sep 2020 20:53:28 -0400
+Received: from mga18.intel.com ([134.134.136.126]:2616 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726419AbgI2Ax1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Sep 2020 07:46:15 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFE55C061755;
-        Mon, 28 Sep 2020 04:46:15 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b124so734348pfg.13;
-        Mon, 28 Sep 2020 04:46:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zwMUcY3XkwfnX4NVH144ezfRaJEZAmC6LlLKw8bGZ/0=;
-        b=qL0R40R1HA602EvKkHEmXf7m4tvAZFldTIc1GF5GjGaILZ9rOwkQ/I2iO8MnXWgx0I
-         yhiAYRaD040/rpIuPM8UOeQkWh7pzR0jtEP/eTDnMEcbaut/MA1MxVWPuSKP4UEx5f9+
-         dHRx+5nr77YrIx1s4z5YRXPz/8+VDYwNuXI+PQp02/c5vA5KhqkOnvQhJzNE4mBdEGPL
-         wGUm5UMzS7W22UOBoQy2mtU9lsPHwh5u96uR0aYW7HCYRCWqc3W1DzMuYit6q3rJ/SVi
-         Y9jB2M38jp3EkO61YysrX8v1Jy8THQe3KwBVk+qbIxiaNK10kF17IFWeL43+7Xa4Jhrd
-         xOzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zwMUcY3XkwfnX4NVH144ezfRaJEZAmC6LlLKw8bGZ/0=;
-        b=PUekF+CkylkXUZh6MM/kM/1rfIrOT+TCylJZAAKCu2YH+hwuKaCOGzxzbbST++4pgI
-         ffgHJ57FvJviQa3ZcmuqWaEIYur1ChY4qv3bq7IOpfds0fdJcsDUaZoFd5vALbPE3s8e
-         XpPyC6IWPFr6kxZv8VHZcPPZNRKEcUMQ7zedouV/vJtldScDYlZK+5m+sJk82nNUUHcw
-         bVKy9iPYOiepuW207PYYfN2f9Ad67woVy4CtXV8StEIOQXIUUqKlPrfjlPlxHJ1aJJRA
-         9Ms0NJ0FS7LpodZx7bfaImEx8eHRg01+n/NAjGerrew4/pQtYKsiWioWfDwRAWZVKYSM
-         VnkA==
-X-Gm-Message-State: AOAM533hqagputjN49JzGSqPjou3WDO2p0Nl+Y1LoF8q0GYky3oM3rF0
-        hkgUZhn5CHYp1SVOajGHFR9xCBtI78nD0hSzzMI=
-X-Google-Smtp-Source: ABdhPJyUK9sQZdERJKWj0DrjCJzQEXyYhxrOw3onM62jepqc/OVjaSZ54eluYPtAuTIVOkjj9OpKTrmRm2nqMq0iQHk=
-X-Received: by 2002:a63:ec4c:: with SMTP id r12mr841807pgj.74.1601293575223;
- Mon, 28 Sep 2020 04:46:15 -0700 (PDT)
+        Mon, 28 Sep 2020 20:53:27 -0400
+IronPort-SDR: wcOYCPw48oebLgpg2xGY27ZpOAYoblx+ozOWd2g7yaUjsV+amYs6XzAIl9CHE/A9R4rHfEHiff
+ JVkxaCBe9Qcg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9758"; a="149864967"
+X-IronPort-AV: E=Sophos;i="5.77,316,1596524400"; 
+   d="scan'208";a="149864967"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2020 17:53:27 -0700
+IronPort-SDR: IgqG0fvGegMLjRUS9HJPua5OQ94QJS3fu7bpmNDAEaafaS0KrhGt4tWtfjOc7awSVhjUMObx4U
+ D31Sgltrmpwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,316,1596524400"; 
+   d="scan'208";a="350930834"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 28 Sep 2020 17:53:27 -0700
+Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
+        by linux.intel.com (Postfix) with ESMTP id 0B9DD5801CA;
+        Mon, 28 Sep 2020 17:53:27 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
+        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
+        alexander.h.duyck@linux.intel.com, hdegoede@redhat.com,
+        alexey.budankov@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH V6 0/5] Intel Platform Monitoring Technology
+Date:   Mon, 28 Sep 2020 17:53:15 -0700
+Message-Id: <20200929005320.14739-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200920203207.25696-1-lists@wildgooses.com> <CAHp75Vd2uz-QrEFshUr=e719VBX2zYzvOhVC07BpHfvi0WDgOA@mail.gmail.com>
- <deb07bad-2d84-723a-7237-2b625a3c4de8@wildgooses.com> <815ff3a6-8941-573d-36c0-36639f47dc04@wildgooses.com>
-In-Reply-To: <815ff3a6-8941-573d-36c0-36639f47dc04@wildgooses.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 28 Sep 2020 14:45:56 +0300
-Message-ID: <CAHp75Ve3APYLKzH9KvmTueEcTP-CZJS9MmLC+ZsHRT9brOxsEQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpio-amd-fch: Fix typo on define of AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
-To:     Ed W <lists@wildgooses.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Eckert <fe@dev.tdt.de>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Sep 28, 2020 at 1:33 PM Ed W <lists@wildgooses.com> wrote:
->
-> Hi
->
-> Could I get a final opinion (or signoff) on this patch please?
->
-> The significant typo is the reference to "59", when the GPIO is actually 55
->
-> According to the PCEngines schematic the names of two similar GPIOs are
->     G59/DEVSLP1
->     G55/DEVSLP
->
-> The original developer named the second GPIO with a trailing 0, which doesn't seem unreasonable,
-> hence I just corrected the name to:
->     AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
-> However another acceptable name could be:
->     AMD_FCH_GPIO_REG_GPIO55_DEVSLP
->
-> If I could ask for some guidance and if necessary I will resubmit this patch? Enrico, do you have an
-> opinion?
->
-> However, perhaps it's already acceptable as is?
+Intel Platform Monitoring Technology (PMT) is an architecture for
+enumerating and accessing hardware monitoring capabilities on a device.
+With customers increasingly asking for hardware telemetry, engineers not
+only have to figure out how to measure and collect data, but also how to
+deliver it and make it discoverable. The latter may be through some device
+specific method requiring device specific tools to collect the data. This
+in turn requires customers to manage a suite of different tools in order to
+collect the differing assortment of monitoring data on their systems.  Even
+when such information can be provided in kernel drivers, they may require
+constant maintenance to update register mappings as they change with
+firmware updates and new versions of hardware. PMT provides a solution for
+discovering and reading telemetry from a device through a hardware agnostic
+framework that allows for updates to systems without requiring patches to
+the kernel or software tools.
 
-It's being accepted, and will be sent later to Linus.
+PMT defines several capabilities to support collecting monitoring data from
+hardware. All are discoverable as separate instances of the PCIE Designated
+Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
+field uniquely identifies the capability. Each DVSEC also provides a BAR
+offset to a header that defines capability-specific attributes, including
+GUID, feature type, offset and length, as well as configuration settings
+where applicable. The GUID uniquely identifies the register space of any
+monitor data exposed by the capability. The GUID is associated with an XML
+file from the vendor that describes the mapping of the register space along
+with properties of the monitor data. This allows vendors to perform
+firmware updates that can change the mapping (e.g. add new metrics) without
+requiring any changes to drivers or software tools. The new mapping is
+confirmed by an updated GUID, read from the hardware, which software uses
+with a new XML.
 
->
-> Kind regards
->
-> Ed W
->
->
-> On 21/09/2020 09:40, Ed W wrote:
-> > On 21/09/2020 08:55, Andy Shevchenko wrote:
-> >> On Sun, Sep 20, 2020 at 11:33 PM Ed Wildgoose <lists@wildgooses.com> wrote:
-> >>> Schematics show that the GPIO number is 55 (not 59). Trivial typo.
-> >> Does it still DEVSLP0? Perhaps you need to drop that part as well.
-> >>
-> >> ...
-> >
-> >
-> > In the PCEngines schematic it's labelled as "G55/DEVSLP" (no 0)
-> >
-> > (In contrast G59 is labelled "G59/DEVSLP1")
-> >
-> > What is the quorum opinion on name?
-> >
-> > Thanks
-> >
-> > Ed W
-> >
-> >
-> >>
-> >>>   #define APU2_GPIO_REG_LED3             AMD_FCH_GPIO_REG_GPIO59_DEVSLP1
-> >>>   #define APU2_GPIO_REG_MODESW           AMD_FCH_GPIO_REG_GPIO32_GE1
-> >>>   #define APU2_GPIO_REG_SIMSWAP          AMD_FCH_GPIO_REG_GPIO33_GE2
-> >>> -#define APU2_GPIO_REG_MPCIE2           AMD_FCH_GPIO_REG_GPIO59_DEVSLP0
-> >>> +#define APU2_GPIO_REG_MPCIE2           AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
-> >>>   #define APU2_GPIO_REG_MPCIE3           AMD_FCH_GPIO_REG_GPIO51
-> >>>
-> >>>   /* Order in which the GPIO lines are defined in the register list */
-> >>> diff --git a/include/linux/platform_data/gpio/gpio-amd-fch.h
-> >>> b/include/linux/platform_data/gpio/gpio-amd-fch.h
-> >>> index 9e46678ed..255d51c9d 100644
-> >>> --- a/include/linux/platform_data/gpio/gpio-amd-fch.h
-> >>> +++ b/include/linux/platform_data/gpio/gpio-amd-fch.h
-> >>> @@ -19,7 +19,7 @@
-> >>>   #define AMD_FCH_GPIO_REG_GPIO49                0x40
-> >>>   #define AMD_FCH_GPIO_REG_GPIO50                0x41
-> >>>   #define AMD_FCH_GPIO_REG_GPIO51                0x42
-> >>> -#define AMD_FCH_GPIO_REG_GPIO59_DEVSLP0        0x43
-> >>> +#define AMD_FCH_GPIO_REG_GPIO55_DEVSLP0        0x43
-> >>>   #define AMD_FCH_GPIO_REG_GPIO57                0x44
-> >>>   #define AMD_FCH_GPIO_REG_GPIO58                0x45
-> >>>   #define AMD_FCH_GPIO_REG_GPIO59_DEVSLP1        0x46
-> >>
-> >
->
+The current capabilities defined by PMT are Telemetry, Watcher, and
+Crashlog.  The Telemetry capability provides access to a continuous block
+of read only data. The Watcher capability provides access to hardware
+sampling and tracing features. Crashlog provides access to device crash
+dumps.  While there is some relationship between capabilities (Watcher can
+be configured to sample from the Telemetry data set) each exists as stand
+alone features with no dependency on any other. The design therefore splits
+them into individual, capability specific drivers. MFD is used to create
+platform devices for each capability so that they may be managed by their
+own driver. The PMT architecture is (for the most part) agnostic to the
+type of device it can collect from. Devices nodes are consequently generic
+in naming, e.g. /dev/telem<n> and /dev/smplr<n>. Each capability driver
+creates a class to manage the list of devices supporting it.  Software can
+determine which devices support a PMT feature by searching through each
+device node entry in the sysfs class folder. It can additionally determine
+if a particular device supports a PMT feature by checking for a PMT class
+folder in the device folder.
 
+This patch set provides support for the PMT framework, along with support
+for Telemetry on Tiger Lake.
+
+Changes from V5:
+ 	- Add Alder Lake and the "Out of Band Managemenet Services
+	  Module (OOBMSM)" ids to the MFD driver. Transfered to this
+	  patch set.
+	- Use a single class for all PMT capabilities as suggested by
+	  Hans.
+	- Add binary attribute for telemetry driver to allow read
+	  syscall as suggested by Hans.
+	- Use the class file to hold attributes and other common code
+	  used by all PMT drivers.
+	- Add the crashlog driver to the patchset and add a mutex to
+	  protect access to the enable control and trigger files as
+	  suggested by Hans.
+
+https://lore.kernel.org/lkml/6e3738db-bfff-7fd2-65e6-bd0d126f9eaa@redhat.com/
+
+Changes from V4:
+	- Replace MFD with PMT in driver title
+	- Fix commit tags in chronological order
+	- Fix includes in alphabetical order
+	- Use 'raw' string instead of defines for device names
+	- Add an error message when returning an error code for
+	  unrecognized capability id
+	- Use dev_err instead of dev_warn for messages when returning
+	  an error
+	- Change while loop to call pci_find_next_ext_capability once
+	- Add missing continue in while loop
+	- Keep PCI platform defines using PCI_DEVICE_DATA magic tied to
+	  the pci_device_id table
+	- Comment and kernel message cleanup
+
+Changes from V3:
+	- Write out full acronym for DVSEC in PCI patch commit message and
+	  add 'Designated' to comments
+	- remove unused variable caught by kernel test robot <lkp@intel.com>
+	- Add required Co-developed-by signoffs, noted by Andy
+	- Allow access using new CAP_PERFMON capability as suggested by
+	  Alexey Bundankov
+	- Fix spacing in Kconfig, noted by Randy
+	- Other style changes and fixups suggested by Andy
+
+Changes from V2:
+	- In order to handle certain HW bugs from the telemetry capability
+	  driver, create a single platform device per capability instead of
+	  a device per entry. Add the entry data as device resources and
+	  let the capability driver manage them as a set allowing for
+	  cleaner HW bug resolution.
+	- Handle discovery table offset bug in intel_pmt.c
+	- Handle overlapping regions in intel_pmt_telemetry.c
+	- Add description of sysfs class to testing ABI.
+	- Don't check size and count until confirming support for the PMT
+	  capability to avoid bailing out when we need to skip it.
+	- Remove unneeded header file. Move code to the intel_pmt.c, the
+	  only place where it's needed.
+	- Remove now unused platform data.
+	- Add missing header files types.h, bits.h.
+	- Rename file name and build options from telem to telemetry.
+	- Code cleanup suggested by Andy S.
+	- x86 mailing list added.
+
+Changes from V1:
+	- In the telemetry driver, set the device in device_create() to
+	  the parent PCI device (the monitoring device) for clear
+	  association in sysfs. Was set before to the platform device
+	  created by the PCI parent.
+	- Move telem struct into driver and delete unneeded header file.
+	- Start telem device numbering from 0 instead of 1. 1 was used
+	  due to anticipated changes, no longer needed.
+	- Use helper macros suggested by Andy S.
+	- Rename class to pmt_telemetry, spelling out full name
+	- Move monitor device name defines to common header
+	- Coding style, spelling, and Makefile/MAINTAINERS ordering fixes
+
+Alexander Duyck (3):
+  platform/x86: Intel PMT class driver
+  platform/x86: Intel PMT Telemetry capability driver
+  platform/x86: Intel PMT Crashlog capability driver
+
+David E. Box (2):
+  PCI: Add defines for Designated Vendor-Specific Extended Capability
+  mfd: Intel Platform Monitoring Technology support
+
+ .../ABI/testing/sysfs-class-intel_pmt         | 119 ++++++
+ MAINTAINERS                                   |   6 +
+ drivers/mfd/Kconfig                           |  10 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/intel_pmt.c                       | 226 ++++++++++++
+ drivers/platform/x86/Kconfig                  |  25 ++
+ drivers/platform/x86/Makefile                 |   3 +
+ drivers/platform/x86/intel_pmt_class.c        | 295 +++++++++++++++
+ drivers/platform/x86/intel_pmt_class.h        |  58 +++
+ drivers/platform/x86/intel_pmt_crashlog.c     | 339 ++++++++++++++++++
+ drivers/platform/x86/intel_pmt_telemetry.c    | 158 ++++++++
+ include/uapi/linux/pci_regs.h                 |   5 +
+ 12 files changed, 1245 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-intel_pmt
+ create mode 100644 drivers/mfd/intel_pmt.c
+ create mode 100644 drivers/platform/x86/intel_pmt_class.c
+ create mode 100644 drivers/platform/x86/intel_pmt_class.h
+ create mode 100644 drivers/platform/x86/intel_pmt_crashlog.c
+ create mode 100644 drivers/platform/x86/intel_pmt_telemetry.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
+
