@@ -2,129 +2,213 @@ Return-Path: <SRS0=2mT5=DG=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFD1C4727D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 14:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69223C4727C
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 14:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6492065C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 14:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D581220739
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 14:27:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A3FSlLpf"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="CwxEUSAe";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="ejUi9TVr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgI2OT5 (ORCPT
+        id S1728378AbgI2O1C (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Sep 2020 10:19:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40180 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728208AbgI2OT5 (ORCPT
+        Tue, 29 Sep 2020 10:27:02 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:21924 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727543AbgI2O1C (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Sep 2020 10:19:57 -0400
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601389195;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GbOhA7dETznnU47oMu8iv09uBMBo+WyhN222/EBjUDU=;
-        b=A3FSlLpfN5SIKDER3ZA8gnLhZNs0NupkRB5P1A1OUreHvrccALyfKgMITyE9W9IkQyBira
-        KWIpGZJzoV+xJaRjb0vNcGTDofQDb5q79btnnSavQwGIsEnhdjIaUDogKboZ2l3YBaP7zK
-        vChBWnY8r/HZtiWDOqmD02zI4WfXlx0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-511--uh91ix6OJuhmYnJLxftdQ-1; Tue, 29 Sep 2020 10:19:52 -0400
-X-MC-Unique: -uh91ix6OJuhmYnJLxftdQ-1
-Received: by mail-ej1-f71.google.com with SMTP id fx20so1046407ejb.8
-        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2020 07:19:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GbOhA7dETznnU47oMu8iv09uBMBo+WyhN222/EBjUDU=;
-        b=foFG2kvHj+WFQxWXqONDaz79mECetqe0TfZqCOZeJDGy6wCJHYhXXHEwgTfB6aTzNJ
-         IHumXTvBWPtN5Q9GeEzQsGxyq9NX91fZgugWQbQOALT4tV6mCmtok5tK6rBxSk0wy3Zm
-         wG6he8vDOD/hwwxqpbN0I59i3vhI/A36UsvaVIr66hurc/f1OKV//c8KCHjHIXQElgwU
-         E00Apoc2389CuFUiXhslPHBHKRpNE6HleCaSkfYNZco3EvpdzB47r0jmKMhe2cMXcnhU
-         92uXxTiZXNT0Y5Oglj+tFwKseFGU9G0Fy3SGD3mviGiEMLyyhfUdG5hLVBCvbqTiAtP3
-         Whtg==
-X-Gm-Message-State: AOAM532AryUDt80+iJ8qQd+4VpNYIFwAvc3toq+gHQQNx14O4F3yHoen
-        3GMTXlGvCTlZYLGmw3wZ3xYJf+Gf50ftyZSGQ+ADuq0KVz7zWRMCzBeqtytsWlrZNEvi7nYAjbo
-        T51mpBFz/cta78HADMR7p8m1rMaWNhwJLEw==
-X-Received: by 2002:a17:907:207a:: with SMTP id qp26mr1919499ejb.387.1601389191214;
-        Tue, 29 Sep 2020 07:19:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyo/0aJL1kbHYrnJTiHqgJ1do9J781QCy88rCrihZ8UYlg1pzJravhuqfGHA4nTdFqJ3AhOmg==
-X-Received: by 2002:a17:907:207a:: with SMTP id qp26mr1919475ejb.387.1601389190973;
-        Tue, 29 Sep 2020 07:19:50 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id lc2sm2096497ejb.86.2020.09.29.07.19.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Sep 2020 07:19:48 -0700 (PDT)
-Subject: Re: Keyboard regression by intel-vbtn
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+        Tue, 29 Sep 2020 10:27:02 -0400
+Received: from pps.filterd (m0170396.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08TEMd0T003244;
+        Tue, 29 Sep 2020 10:25:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=AnIczJTqvLWHdl5/G638d/tFU82WquY+zijZQxmw3Qg=;
+ b=CwxEUSAeHrQj48sVnsC4zBeOu2nynQEYwk9BpiXdlpaxGo2vQmKEmDqQbaka2nUw0Fw8
+ JHw3jsMjc08+htaJDNk4ugZIV19Oy0iP8bcqZ9TIwDIMuBbBVTMNT/48AlwwsKhxCqCX
+ c99cmqC3+k0mJIJYzQrlhEE9JVTtZ6fLOJKpxo1OShzwGTnN8Z4edi/HSiN+Evv2NJHN
+ BTIfkInsi469OF7Sfz1QWKP6xstTSv3IrO7Bi9+0DhLZRDUMV75joDI+GGreCQ2Fdn2i
+ VhDDzzExibSPgnOIpYTFQHRJxyhSoE6fdwcBt3suskFQ0zjdQ2PE7A+N8i5FS6VZRdB3 7w== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 33t1fyh8eu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 29 Sep 2020 10:25:51 -0400
+Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08TEPGsw195891;
+        Tue, 29 Sep 2020 10:25:50 -0400
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2174.outbound.protection.outlook.com [104.47.56.174])
+        by mx0a-00154901.pphosted.com with ESMTP id 33v6ba09t6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Sep 2020 10:25:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LSsnsg6CjuteveeV2rqmuQzwTIbP/sLiyQaQWmdQQQfFz5Nl/USERMxXYoBGvEq0JETapmmbYebPzC+6S95C6zXQYbGdzMv21oVZlpGASJe5/wp59VgmEvW6tM7tQ/BHkmkxThcSZUnjYhVYX+vRzlgVPYL3mZ/L90gVAi1twScCwc8OB/KYJd6FyQ9j7006eQXLS9NmpQTmv7S2uYQP8jtDlNjJRNFoy7LZVdHZDFGv2FNUpKo5+THTX7OBxqCyU1srJIih+OdeF2u9qILCBFFZQgu5IKUCgO45ykyTFxf7AX4qO5OTQiYSNyThgMIYmx9tGtZx6iVES1vxpqtK+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AnIczJTqvLWHdl5/G638d/tFU82WquY+zijZQxmw3Qg=;
+ b=MSkWZl0WOlh8+n9Rzmo08qrQ5DZtHsUfh4UthANd7zBziy7Q8v8MCFNKIS/P5ewnxkIhaMr+dk0+FzQVXDQI6FkNqFC0zBAsTFnjf6uQKj2gmYtmO56eNTy6uD8L/uQ0qPMim8sZptmVBg3fHeUl+0ipZN1CWLNlpKusDd+2NHS5n2sTd4jh+wGR6RibTDIMn9+J3XGW4IiA5iASr4INT9LinDnOGNVigw6un4dSX2/j2oNL6yy6TqIE828U7o90j93IudwLVzQAithGTwFEp6rVPI8ApZeQfn3Dlky1WyGjykaoPC742zw1BGjESKwsMXW47Fw0+cv6PzGmSUH/Pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
+ dkim=pass header.d=dell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
+ s=selector1-Dell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AnIczJTqvLWHdl5/G638d/tFU82WquY+zijZQxmw3Qg=;
+ b=ejUi9TVr0nz4pQIzdHhNsc85EU7RL0h0eGvI09T2zajP5Jc9FbIlXWwe+ClInetbKNCJZUvz2VAH/iNvuz3l4HkpX+e5mPB0MkfBsdY3ZM512TXfWF19P1iR25Ve2xnWkY5WAmznGOQWm/TMxGkps3YMafuk1gydeFOAmSlXvN4=
+Received: from DM6PR19MB2636.namprd19.prod.outlook.com (2603:10b6:5:15f::15)
+ by DM5PR19MB0924.namprd19.prod.outlook.com (2603:10b6:3:34::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.24; Tue, 29 Sep
+ 2020 14:25:12 +0000
+Received: from DM6PR19MB2636.namprd19.prod.outlook.com
+ ([fe80::a4b8:d5c9:29da:39b2]) by DM6PR19MB2636.namprd19.prod.outlook.com
+ ([fe80::a4b8:d5c9:29da:39b2%4]) with mapi id 15.20.3412.029; Tue, 29 Sep 2020
+ 14:25:12 +0000
+From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        =?iso-8859-2?Q?Barnab=E1s_P=F5cze?= <pobrn@protonmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: RE: Keyboard regression by intel-vbtn
+Thread-Topic: Keyboard regression by intel-vbtn
+Thread-Index: AQHWlj1nM3jkeRr7qUSqdoVr/WDD66l/V1WAgAACMACAAAiVgIAABMgAgAAjUpSAAAiigIAAGG+w
+Date:   Tue, 29 Sep 2020 14:25:12 +0000
+Message-ID: <DM6PR19MB2636FFC274423BB564A7532CFA320@DM6PR19MB2636.namprd19.prod.outlook.com>
 References: <s5hft71klxl.wl-tiwai@suse.de>
  <bedb9d1b-3cca-43e2-ee44-1aac0e09a605@redhat.com>
-Message-ID: <d43d3049-64d5-1904-bea4-437956375d7a@redhat.com>
-Date:   Tue, 29 Sep 2020 16:19:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <bedb9d1b-3cca-43e2-ee44-1aac0e09a605@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ <s5h8sctkk2b.wl-tiwai@suse.de>
+ <-ICwwoAndae7T9i-Ymr7Nx9jnXVd7H54dnkMmCWUcApM1S0FUPplPWhg8DVXkphN0L4DoTy24robhTiBzMmSBKZRl-P8VEXIX5r6ttceA_8=@protonmail.com>
+ <8c3d8a56-541f-aafc-1be9-4d72d374effe@redhat.com>
+ <DM6PR19MB2636C7C411E220565F39E741FA320@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <55e021b7-5e1b-986b-07ec-279398570e40@redhat.com>
+In-Reply-To: <55e021b7-5e1b-986b-07ec-279398570e40@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-09-29T14:21:56.7117850Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=ca234379-621d-4f4e-98a9-ed8fde90e046;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=Dell.com;
+x-originating-ip: [76.251.167.31]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 62030ef3-f8eb-4d8d-54bc-08d8648379fa
+x-ms-traffictypediagnostic: DM5PR19MB0924:
+x-microsoft-antispam-prvs: <DM5PR19MB09243B361A9F885B8E6AA7B9FA320@DM5PR19MB0924.namprd19.prod.outlook.com>
+x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: KW3RyVdw3NXxCahwf6nZz5x0of3iIjwbaFpsP//N3nEdA0K90PmtbeobpPtJ7wXjhnJXAsKvfBXvvaF7+CrOWfwdH1G+AowUUsLx85cHE+jpvcETYNbRrEvUqB8qfScjU24peoyivE4Nr74Pveb8rP5Q6w1BvrTK1DfXnfFH56zl3MFo4asBoC0Je8Kvh+FV+Ejf7B66s0pE5HZT12zaY/0mAtfXPRilPGbPPSkM1u8gy3TDuHPgsGDAeMYL92jKsSKP9CyFhJ4orxdI6L5A0PP/nqBsLpy1I0qCqfh7BGhmnsr7Pv7GPXf0r1pobcvoCKKmZndntPwOHsdGJr6m9mbOJoWGkhMq8SKUxM8qo/gwkvF4Q8o+iM5hvMnsKLKX+SYtpEJ/YusO/lh+54XduMNFybDLYj3uAEB1UDaX5SZN23oXHkTW7GhLvqLSSxM8yEfwQ8XD4Mkhhu3KdiD9UA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR19MB2636.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39860400002)(366004)(376002)(396003)(346002)(26005)(7696005)(53546011)(9686003)(55016002)(186003)(86362001)(8676002)(8936002)(966005)(4326008)(2906002)(786003)(316002)(110136005)(478600001)(54906003)(6506007)(33656002)(83380400001)(52536014)(66446008)(64756008)(66556008)(66476007)(71200400001)(66574015)(76116006)(66946007)(5660300002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: EZzxqaXvmPttpN+zPLU+lJtm2OXcpusLMu8Pm6A+wfslaMTtblEQ4PlB6SLnKCkyqdkP1TamLQ2Z3bMvBAhoyJ6t38q0Ai/wlIsvqy4cm3oKmblhptmVAvh87lKCCcK1nzVENFeUI2luNWnOipA6E6AOTJ8Kmy4xo62+SFGLNNvU6SJdsaBUs5QpevO1XtbmtYT0tElz4Rkl6PQ7X2ZCQrm5SYrkAYTkBj2TV4xZUdt45bHFAghQk8GvfyOiRykNzjpGSGn51zb7UAEMFuJTa4itgn46idfcjwBObRjP6AoM63OTGJiQxXVw45rPVZ+MGeLqYvN2sY1kn24vDJWkqFhU9KHGfcwpGUOu7jcK9f0fimkre8o+hBYS497XMlyMbq67ChlH4Z6zfvNw4yoVZNoexw5cJf9jOqHAAbR+N7yAZEqkDD+KgKMgaMmiKys9HOTJZRNXN6pERhhjOuGqXZi7awfHC7KMe04JQr5xihQQdDfk9qtHkCNOq8jyRwWwwrGOv0AAQQ97g21+oQ9BoWFh2/Z6DzfgQ4CqOCJNtkDWiREiGznY7XlpNqiAWu5cTCDl4Cvjc/3gQQSSSIeoVWPKNT1yPcBnbequ5zYUIAXYFLDcSecYl3UKOXnO4KWr542a2dCZ074qSsg5Psydyg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Dell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR19MB2636.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62030ef3-f8eb-4d8d-54bc-08d8648379fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Sep 2020 14:25:12.1488
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: s8sVGBVvLsjk2/DK3NEMw+J11Vdiqp0Zz7NF23EX6GAmtdft98pFh6ceZesBIfNBsyohAoAwQsW+yyiK8f9kUA/erk1dcF1hq3l3AynbyDw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR19MB0924
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-29_07:2020-09-29,2020-09-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ bulkscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009290127
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 mlxlogscore=999 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009290128
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+> -----Original Message-----
+> From: Hans de Goede <hdegoede@redhat.com>
+> Sent: Tuesday, September 29, 2020 7:54
+> To: Limonciello, Mario; Barnab=E1s P=F5cze; Takashi Iwai
+> Cc: Andy Shevchenko; platform-driver-x86@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: Re: Keyboard regression by intel-vbtn
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> Hi,
+>=20
+> On 9/29/20 2:27 PM, Limonciello, Mario wrote:
+> >> I'm afraid that the only answer which I have to these questions
+> >> is not helpful, but in my experience it is true: "firmware sucks".
+> >
+> > So FWIW there is a Dell 2-in-1 that has been conflated into this same i=
+ssue.
+> > https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1822394
+>=20
+> That is what a somewhat old kernel (5.0.0) which I guess may
+> lack your fix to check the chassis-type.
+>=20
+> Interesting that this actually is a 2-in-1 though.
+>=20
+> Also interesting that according to the reporter this was
+> triggered by a BIOS update.
+>=20
+> If you by any chance can provide an acpidump with both the
+> 1.2.0 and 1.4.0 BIOS versions that would be very interesting.
 
-On 9/29/20 11:21 AM, Hans de Goede wrote:
+I requested on the Ubuntu bug for someone to provide these.
 
-<snip>
+>=20
+> > Something that is confusing to me is that on the Windows side all these
+> > machines use the same Intel driver for this infrastructure no matter th=
+e
+> > OEM.
+> > So they can't possibly be putting in quirk specific stuff in the driver=
+ side
+> > can they?
+> >
+> > It has to make you wonder if some baseline assumptions made in the
+> > driver early on around tablet mode support are completely false.
+>=20
+> I'm not saying your wrong. If you can get Intel to provide
+> us with some documentation, or Windows driver source code
+> for this, then that would be great.
+>=20
+> AFAICT the Linux driver currently is entirely based on
+> reverse engineering.
 
-> Since the problem of wrongly reporting SW_TABLET_MODE=1 in combination
-> with libinput, leads to a non-usable system. Where as OTOH many people will
-> not even notice when SW_TABLET_MODE is not being reported, I believe it
-> is best to move to a dmi based allow-list approach here, as we recently
-> did for SW_TABLET_MODE reporting by the asus-wmi driver. Allowing:
-> 
-> dmi chassis-types: 8 /* Portable */,  31 /* Convertible */, 32 /* Detachable */
-> and the HP Stream x360 11-p000nd which has working intel-vbtn SW_TABLET_MODE
-> support combined with a chassis-type of 10 /* Notebook */.
-> 
-> I will prepare a patch for this right away.
+That's correct it was originally reverse engineered.
 
-Quick status update on this, it is taking a bit longer then
-I was hoping for since I'm trying to make sure that I get
-things right this time.
+Andy,
 
-Checking the dmidecode-dumps database from:
-https://github.com/linuxhw/DMI
-
-It seems that a whole ton of Dell laptop models use 8 ("Portable") as
-chassis-type. Most of which are NOT 2-in-1s. So the new plan is to only
-put the 31 ("Convertible") and 32 ("Detachable") chassis-types on
-the whitelist. I do have 1 Dell 2-in-1, a Dell Venue 11 Pro 7130
-with the Portable chassis-type and a working tablet-mode-sw
-through intel-vbtn. So I will put that specific model on the
-allow-list separately.
-
-> Note this patch will effectively replace:
-> "platform/x86: intel-vbtn: Fix SW_TABLET_MODE always reporting 1 on the HP Pavilion 11 x360"
-> We will no longer need this workaround with the allow list and I believe
-> that it would be better to drop that one.
-> 
-> Andy can you drop that one from your review-andy branch please?
-
-Regards,
-
-Hans
+As there is no publicly available documentation, could you see if it would =
+it be
+possible to get someone internal to Intel to compare private documentation =
+to the
+driver to see if something basic is missing or done wrong?
 
