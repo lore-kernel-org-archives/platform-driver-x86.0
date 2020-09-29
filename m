@@ -2,130 +2,127 @@ Return-Path: <SRS0=2mT5=DG=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C56C4741F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 12:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFD1C4727D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 14:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFD62158C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 12:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6492065C
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 14:19:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G/nLZ0C/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A3FSlLpf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgI2Myf (ORCPT
+        id S1728668AbgI2OT5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Sep 2020 08:54:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36699 "EHLO
+        Tue, 29 Sep 2020 10:19:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40180 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728253AbgI2Mye (ORCPT
+        by vger.kernel.org with ESMTP id S1728208AbgI2OT5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Sep 2020 08:54:34 -0400
+        Tue, 29 Sep 2020 10:19:57 -0400
 Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601384073;
+        s=mimecast20190719; t=1601389195;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/euw2NTbhZNRcWonnu8YvB8q1SIMEfhGdmuOhO+OdUM=;
-        b=G/nLZ0C/UXuGVoJZ/yMRC6JU8f08F9H4dyv4ZrKEEAESfa69r3uFMSNVDfhpHepWXGzWMo
-        14wafb64HZmqpAPdwqntrHcWpE2Gi0TlYc3Z2QJAsot8x4EIZ64J3gt97ksknQHiHNXUuO
-        ldwlTeviG7H+gIFpl35zMkyWt4f5Cfo=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-441-wa3WFGUAPdG0FZMadsIRlg-1; Tue, 29 Sep 2020 08:54:28 -0400
-X-MC-Unique: wa3WFGUAPdG0FZMadsIRlg-1
-Received: by mail-ej1-f70.google.com with SMTP id hh10so1861891ejb.13
-        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2020 05:54:28 -0700 (PDT)
+        bh=GbOhA7dETznnU47oMu8iv09uBMBo+WyhN222/EBjUDU=;
+        b=A3FSlLpfN5SIKDER3ZA8gnLhZNs0NupkRB5P1A1OUreHvrccALyfKgMITyE9W9IkQyBira
+        KWIpGZJzoV+xJaRjb0vNcGTDofQDb5q79btnnSavQwGIsEnhdjIaUDogKboZ2l3YBaP7zK
+        vChBWnY8r/HZtiWDOqmD02zI4WfXlx0=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-511--uh91ix6OJuhmYnJLxftdQ-1; Tue, 29 Sep 2020 10:19:52 -0400
+X-MC-Unique: -uh91ix6OJuhmYnJLxftdQ-1
+Received: by mail-ej1-f71.google.com with SMTP id fx20so1046407ejb.8
+        for <platform-driver-x86@vger.kernel.org>; Tue, 29 Sep 2020 07:19:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=/euw2NTbhZNRcWonnu8YvB8q1SIMEfhGdmuOhO+OdUM=;
-        b=MX/mWvU7jmPQnvvhexwPouVgotob3czUx+ZI8dNdo1g7/1DV7diU3576xez+9bVLIE
-         cracZqVOtXLbMaUV1+L7GvvixS0gnkTqJIh3diDCbYA5FuGdCUn6fxBAeP7ZQjAk2pWa
-         hcvrrH2IxtKIKQIzukLWqtQts8xXdIjWl7vtv6vMKyqO5pXrZRvzrku+CSsKvdyUNvOH
-         eAIS42UPu+72AaGKBMbR8qoGBwUdfVI1Uc07sE9t+2ohPTl3xt7TBTtUaPqJINBiT9sY
-         f7oMmqi1wv8ena2Xl1/92Yupr7KmtEwGH3sO6TAGVV6okYKqGWMl6+9KaEf1RNtwki8K
-         9x/w==
-X-Gm-Message-State: AOAM533WdVcZclimuMwy/Y9jnk1omTN2qlfivtE6hOf/dzf7mPh6xpu8
-        UpCJit/a3pcn55O/Bv3LrlN4cY0DGHCqP0d5gNpxaGVkzpsVDDVp7Zxna+3FhnM8EeWYBkM7H1O
-        Z9MBiP3kpShao/pqlc941ICM8KNuEwmo23w==
-X-Received: by 2002:a17:907:40c1:: with SMTP id nv1mr3887115ejb.318.1601384067250;
-        Tue, 29 Sep 2020 05:54:27 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz6HEZ2mer/Q5NIMsWzHR0huSfLY3vDGmC202vgbVvdQsdoG6QdmtdLwmyG/nrqtBkr/X1GzA==
-X-Received: by 2002:a17:907:40c1:: with SMTP id nv1mr3887096ejb.318.1601384067073;
-        Tue, 29 Sep 2020 05:54:27 -0700 (PDT)
+        bh=GbOhA7dETznnU47oMu8iv09uBMBo+WyhN222/EBjUDU=;
+        b=foFG2kvHj+WFQxWXqONDaz79mECetqe0TfZqCOZeJDGy6wCJHYhXXHEwgTfB6aTzNJ
+         IHumXTvBWPtN5Q9GeEzQsGxyq9NX91fZgugWQbQOALT4tV6mCmtok5tK6rBxSk0wy3Zm
+         wG6he8vDOD/hwwxqpbN0I59i3vhI/A36UsvaVIr66hurc/f1OKV//c8KCHjHIXQElgwU
+         E00Apoc2389CuFUiXhslPHBHKRpNE6HleCaSkfYNZco3EvpdzB47r0jmKMhe2cMXcnhU
+         92uXxTiZXNT0Y5Oglj+tFwKseFGU9G0Fy3SGD3mviGiEMLyyhfUdG5hLVBCvbqTiAtP3
+         Whtg==
+X-Gm-Message-State: AOAM532AryUDt80+iJ8qQd+4VpNYIFwAvc3toq+gHQQNx14O4F3yHoen
+        3GMTXlGvCTlZYLGmw3wZ3xYJf+Gf50ftyZSGQ+ADuq0KVz7zWRMCzBeqtytsWlrZNEvi7nYAjbo
+        T51mpBFz/cta78HADMR7p8m1rMaWNhwJLEw==
+X-Received: by 2002:a17:907:207a:: with SMTP id qp26mr1919499ejb.387.1601389191214;
+        Tue, 29 Sep 2020 07:19:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyo/0aJL1kbHYrnJTiHqgJ1do9J781QCy88rCrihZ8UYlg1pzJravhuqfGHA4nTdFqJ3AhOmg==
+X-Received: by 2002:a17:907:207a:: with SMTP id qp26mr1919475ejb.387.1601389190973;
+        Tue, 29 Sep 2020 07:19:50 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id bc18sm5861651edb.66.2020.09.29.05.54.26
+        by smtp.gmail.com with ESMTPSA id lc2sm2096497ejb.86.2020.09.29.07.19.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Sep 2020 05:54:26 -0700 (PDT)
+        Tue, 29 Sep 2020 07:19:48 -0700 (PDT)
 Subject: Re: Keyboard regression by intel-vbtn
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        Takashi Iwai <tiwai@suse.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Takashi Iwai <tiwai@suse.de>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
 References: <s5hft71klxl.wl-tiwai@suse.de>
  <bedb9d1b-3cca-43e2-ee44-1aac0e09a605@redhat.com>
- <s5h8sctkk2b.wl-tiwai@suse.de>
- <-ICwwoAndae7T9i-Ymr7Nx9jnXVd7H54dnkMmCWUcApM1S0FUPplPWhg8DVXkphN0L4DoTy24robhTiBzMmSBKZRl-P8VEXIX5r6ttceA_8=@protonmail.com>
- <8c3d8a56-541f-aafc-1be9-4d72d374effe@redhat.com>
- <DM6PR19MB2636C7C411E220565F39E741FA320@DM6PR19MB2636.namprd19.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <55e021b7-5e1b-986b-07ec-279398570e40@redhat.com>
-Date:   Tue, 29 Sep 2020 14:54:25 +0200
+Message-ID: <d43d3049-64d5-1904-bea4-437956375d7a@redhat.com>
+Date:   Tue, 29 Sep 2020 16:19:47 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <DM6PR19MB2636C7C411E220565F39E741FA320@DM6PR19MB2636.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
+In-Reply-To: <bedb9d1b-3cca-43e2-ee44-1aac0e09a605@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 9/29/20 2:27 PM, Limonciello, Mario wrote:
->> I'm afraid that the only answer which I have to these questions
->> is not helpful, but in my experience it is true: "firmware sucks".
+On 9/29/20 11:21 AM, Hans de Goede wrote:
+
+<snip>
+
+> Since the problem of wrongly reporting SW_TABLET_MODE=1 in combination
+> with libinput, leads to a non-usable system. Where as OTOH many people will
+> not even notice when SW_TABLET_MODE is not being reported, I believe it
+> is best to move to a dmi based allow-list approach here, as we recently
+> did for SW_TABLET_MODE reporting by the asus-wmi driver. Allowing:
 > 
-> So FWIW there is a Dell 2-in-1 that has been conflated into this same issue.
-> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1822394
-
-That is what a somewhat old kernel (5.0.0) which I guess may
-lack your fix to check the chassis-type.
-
-Interesting that this actually is a 2-in-1 though.
-
-Also interesting that according to the reporter this was
-triggered by a BIOS update.
-
-If you by any chance can provide an acpidump with both the
-1.2.0 and 1.4.0 BIOS versions that would be very interesting.
-
-> Something that is confusing to me is that on the Windows side all these
-> machines use the same Intel driver for this infrastructure no matter the
-> OEM.
-> So they can't possibly be putting in quirk specific stuff in the driver side
-> can they?
+> dmi chassis-types: 8 /* Portable */,  31 /* Convertible */, 32 /* Detachable */
+> and the HP Stream x360 11-p000nd which has working intel-vbtn SW_TABLET_MODE
+> support combined with a chassis-type of 10 /* Notebook */.
 > 
-> It has to make you wonder if some baseline assumptions made in the
-> driver early on around tablet mode support are completely false.
+> I will prepare a patch for this right away.
 
-I'm not saying your wrong. If you can get Intel to provide
-us with some documentation, or Windows driver source code
-for this, then that would be great.
+Quick status update on this, it is taking a bit longer then
+I was hoping for since I'm trying to make sure that I get
+things right this time.
 
-AFAICT the Linux driver currently is entirely based on
-reverse engineering.
+Checking the dmidecode-dumps database from:
+https://github.com/linuxhw/DMI
+
+It seems that a whole ton of Dell laptop models use 8 ("Portable") as
+chassis-type. Most of which are NOT 2-in-1s. So the new plan is to only
+put the 31 ("Convertible") and 32 ("Detachable") chassis-types on
+the whitelist. I do have 1 Dell 2-in-1, a Dell Venue 11 Pro 7130
+with the Portable chassis-type and a working tablet-mode-sw
+through intel-vbtn. So I will put that specific model on the
+allow-list separately.
+
+> Note this patch will effectively replace:
+> "platform/x86: intel-vbtn: Fix SW_TABLET_MODE always reporting 1 on the HP Pavilion 11 x360"
+> We will no longer need this workaround with the allow list and I believe
+> that it would be better to drop that one.
+> 
+> Andy can you drop that one from your review-andy branch please?
 
 Regards,
 
