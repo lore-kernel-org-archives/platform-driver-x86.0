@@ -2,101 +2,108 @@ Return-Path: <SRS0=2mT5=DG=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C528CC4727C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 18:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE7AC4727C
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 19:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 544DD20936
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 18:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1422A20774
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Sep 2020 19:12:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ustwV+rQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgI2S06 (ORCPT
+        id S1728618AbgI2TMj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Sep 2020 14:26:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:36040 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727605AbgI2S05 (ORCPT
+        Tue, 29 Sep 2020 15:12:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728166AbgI2TMj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Sep 2020 14:26:57 -0400
-IronPort-SDR: XI/g0QNXxTxfJYXYcydUfzFDY+bcHPIviPLDWoQr0b6ACWeFKl0xexhxIcT06F8QuueJiQBN37
- fyNpE/mcaKkA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9759"; a="226408248"
-X-IronPort-AV: E=Sophos;i="5.77,319,1596524400"; 
-   d="scan'208";a="226408248"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2020 11:26:53 -0700
-IronPort-SDR: E3h5pjNUa2k+hsVPeVabMItukvnrZg0HsmZjP1N0nonohx9YakaAVFK/G4Ul0Iifd01TmF8eHt
- +7kEoHWx0L5A==
-X-IronPort-AV: E=Sophos;i="5.77,319,1596524400"; 
-   d="scan'208";a="293750018"
-Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2020 11:26:52 -0700
-Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
-        by smtp.ostc.intel.com (Postfix) with ESMTP id D8AAF6369;
-        Tue, 29 Sep 2020 11:26:50 -0700 (PDT)
-Date:   Tue, 29 Sep 2020 11:26:50 -0700
-From:   mark gross <mgross@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Add Mark Gross and Hans de Goede as x86
- platform drivers maintainers
-Message-ID: <20200929182650.GC19084@mtg-dev.jf.intel.com>
-Reply-To: mgross@linux.intel.com
-References: <20200925065812.3973-1-hdegoede@redhat.com>
+        Tue, 29 Sep 2020 15:12:39 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 635A0C061755;
+        Tue, 29 Sep 2020 12:12:39 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id y2so6063943ila.0;
+        Tue, 29 Sep 2020 12:12:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bcP6TY5iCwC4Aoa9hwj7YacP7g0fXCBXP6lot9lXg7I=;
+        b=ustwV+rQiU+AfTkh65OgnJDZzP9M8ZI1CxVfUb0JYxtghu8VHXN/6YLxMbxlRrB0B/
+         tZAefFPj4E8Hyjk+P/4kJk8pqDOR3+TwogijtIOyah5RMu8gdowuu2+VdY16xA+7Q64L
+         mtaKRWSTeXbP2AS4i7wtDcqk5yWknpoJpjl97g8brg4D/vKRO7LmXXSy2dvllE04Teim
+         0xQiDG54qhMCwCxvES0IkqlOHVL3eoNp53wYh2Nw1I2KNYjY0xwUFkjV2WvGYZMzP0iZ
+         otTBbfUMfCf+XJuzTTvdR/62MQpwLtn2fHMlKWGT/UYSX3Mtv1z/k3zpDoTI+EjAZIKR
+         12Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bcP6TY5iCwC4Aoa9hwj7YacP7g0fXCBXP6lot9lXg7I=;
+        b=rkHCUiwkt93L1Z9LK46Sh9wPykeT1kQeNHt052vLt2TFfna8FrJ9W0Cvz94qhBp8tZ
+         EyY2XdnT7fDk3fR58j52N4JPpD/tr1anfJ8v5nYHLW6zUw3LkRbYeQtN/IV1KicyfTKf
+         aT9vs5ykMviTvw9b/ssqT0A3PbM7+TVEtqq4XQaHUGRI0Y5ZOUnXmjqWxB5khPIOVHlR
+         JGTdEabct9Z/5iGwCH6bCmE+AbPcdkAoITkgHknn7EfP0VAKTl4/iRJtVnARRtCdobPY
+         WpRaus+khoe7HU46TCoL5xhJPXoTTBpYju47wUPnGxE7fqbpAjviyfhUnp+jbKaYKd1B
+         fbww==
+X-Gm-Message-State: AOAM531L6yzhH2GeM8nMte1DFOjJRvB+7VE2S6TdjQ7TXhGnVuZyNlJH
+        ue/2JN6vk780Sfquca22vIfgEBLwOcTz0szTi2ZzRmScUcOFpg==
+X-Google-Smtp-Source: ABdhPJwyk6blmfn5pIjP/C9X1CZaW/UNM30nRQNP087xNYHB9CF9KavT7Uci512Yl24zVZ7QO9jgJLndkrhCBBY5hiw=
+X-Received: by 2002:a92:1591:: with SMTP id 17mr4486385ilv.237.1601406758621;
+ Tue, 29 Sep 2020 12:12:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200925065812.3973-1-hdegoede@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200929005320.14739-1-david.e.box@linux.intel.com>
+ <20200929005320.14739-4-david.e.box@linux.intel.com> <d6d59aad-a946-d780-b2d2-9c187fd8303c@infradead.org>
+In-Reply-To: <d6d59aad-a946-d780-b2d2-9c187fd8303c@infradead.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 29 Sep 2020 12:12:27 -0700
+Message-ID: <CAKgT0Uc9LtFKnaHpzJhBLyeB_ycD74mb8wcaaO4KZBn+05Je5w@mail.gmail.com>
+Subject: Re: [PATCH V6 3/5] platform/x86: Intel PMT class driver
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>, dvhart@infradead.org,
+        Andy Shevchenko <andy@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Acked-by: Mark Gross <mgross@linux.intel.com>
+On Mon, Sep 28, 2020 at 6:24 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 9/28/20 5:53 PM, David E. Box wrote:
+> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> > index 40219bba6801..093c43b63f48 100644
+> > --- a/drivers/platform/x86/Kconfig
+> > +++ b/drivers/platform/x86/Kconfig
+> > @@ -1360,6 +1360,15 @@ config INTEL_PMC_CORE
+> >               - LTR Ignore
+> >               - MPHY/PLL gating status (Sunrisepoint PCH only)
+> >
+> > +config INTEL_PMT_CLASS
+> > +     tristate "Intel Platform Monitoring Technology (PMT) Class driver"
+> > +     help
+> > +       The Intel Platform Monitoring Technology (PMT) class driver provides
+> > +       the basic sysfs interface and file heirarchy uses by PMT devices.
+>
+>                                              hierarchy
+> No "heir" involved.
 
-sorry if this is a duplicate reply.
+Knowing me I probably had class inheritance on the mind at the time
+when I was writing it up and it was just a thinko.. :-)
 
---mark
+Thanks for the review feedback. I'll work with David to make sure we
+address the formatting/spelling issues in this patch and the crashlog
+patch.
 
-On Fri, Sep 25, 2020 at 08:58:12AM +0200, Hans de Goede wrote:
-> Darren Hart and Andy Shevchenko lately have not had enough time to
-> maintain the x86 platform drivers, dropping their status to:
-> "Odd Fixes".
-> 
-> Mark Gross and Hans de Goede will take over maintainership of
-> the x86 platform drivers. Replace Darren and Andy's entries with
-> theirs and change the status to "Maintained".
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  MAINTAINERS | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ab6570bb2d14..1ff02b889f49 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -18894,10 +18894,10 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/mm
->  F:	arch/x86/mm/
->  
->  X86 PLATFORM DRIVERS
-> -M:	Darren Hart <dvhart@infradead.org>
-> -M:	Andy Shevchenko <andy@infradead.org>
-> +M:	Hans de Goede <hdegoede@redhat.com>
-> +M:	Mark Gross <mgross@linux.intel.com>
->  L:	platform-driver-x86@vger.kernel.org
-> -S:	Odd Fixes
-> +S:	Maintained
->  T:	git git://git.infradead.org/linux-platform-drivers-x86.git
->  F:	drivers/platform/olpc/
->  F:	drivers/platform/x86/
-> -- 
-> 2.28.0
-> 
+- Alex
