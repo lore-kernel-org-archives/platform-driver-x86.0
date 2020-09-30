@@ -2,140 +2,98 @@ Return-Path: <SRS0=fgui=DH=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C298C4727F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Sep 2020 13:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EEAC4727E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Sep 2020 13:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB1C20754
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Sep 2020 13:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BD9206B2
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Sep 2020 13:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JwOi7ZDQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYVU4+CL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730327AbgI3N2g (ORCPT
+        id S1730315AbgI3Nzq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 30 Sep 2020 09:28:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52969 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730173AbgI3N2e (ORCPT
+        Wed, 30 Sep 2020 09:55:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbgI3Nzq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 30 Sep 2020 09:28:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601472512;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jwsmrlImp+czkMthhLY8nFtQJpZkIffNyd59jUo1WJM=;
-        b=JwOi7ZDQOgk8lNZWZ21Y8e31Wrhkawn2VlF8rALVahKoMjsALfGRhmhejjZ8jHx8OXf/yi
-        nYK2p9+Rwx2mjtyGtXLFEtGXE7HlhhCyp/YtTxZsjq0/VEbDRDUZlWuPtq/8U3DOeVt+GV
-        iiTVbSBPCkf1DUlQDBMwMYoSPG1A38A=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-129-GbVwW_OKOA-aUTOJmBKulA-1; Wed, 30 Sep 2020 09:28:26 -0400
-X-MC-Unique: GbVwW_OKOA-aUTOJmBKulA-1
-Received: by mail-ej1-f69.google.com with SMTP id w10so791300ejq.11
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Sep 2020 06:28:25 -0700 (PDT)
+        Wed, 30 Sep 2020 09:55:46 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E44EC061755;
+        Wed, 30 Sep 2020 06:55:46 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d23so1073268pll.7;
+        Wed, 30 Sep 2020 06:55:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lkmWkLx+50LSvUth/jRPI7AGPelcJcdIBHooAnh4UZ8=;
+        b=XYVU4+CLhfLRo8EjLEtD42r80dI9L6KQa2htg/QTFXcQh+W2Rij3VlUpT7HFoCroz2
+         AUZgEbVhrHpl84EKJpQ4bK/opkla+EdRUaw/Qd2gDzOeSsnxvZ66gbXvwuz5pRqwfsbU
+         f1pso8uznGXGBZiL4OQa+UOpwUI6dAV3cZLDHk9EF0np1/myYV2BJKuVjbNLdFEK97EP
+         jAAUiFAcdpA3JVepu7w13Qv35lt62etUiymR6VCIgGvEORvQJT2vbWVJwu1eqcDWrmMW
+         QSxDVbdcWPf30epnB9nAaMfHySTv/1KHH6isXWB6dYT2dsJ2eaLVhpQdgulC6e3EeiN3
+         AF7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jwsmrlImp+czkMthhLY8nFtQJpZkIffNyd59jUo1WJM=;
-        b=KynbTWTbeGwrLsP3KhudbpKxIXv8ZvIX18E1hzVCP8U8qzK5M3054KvNPdM02fCzih
-         Qel9luyjd2eoDmPZJxxQ8ilInUKvBL5K4t9j/yYraXEoYe7Fi57IULoA5AY9LjBFE2cH
-         1Ye7gIEw3r+XHutHwFkjjaYbjYeA1r9idXDtrnEUBP7Yc9mwrWxOZtBhnIbAwOD8hRKX
-         Suqs3AB5QaJvj+rq8X1nsnaHyzI3r6HD/OdaMavJbYxLA/jhIbC4olpx8YtY3qLeGffr
-         nz+cnVcbRJc3/9SBTIbreZC9YqPASJYlh1sdb3MqhIWMsjM18fkYiDNQehS3kL2Y8Awo
-         Ho+A==
-X-Gm-Message-State: AOAM530hKVzTK6n9BG8IQSXb4+UKXsy2vtEGkL94q4itPCVbLLI383RX
-        J/50L1VPc/FERaTqIkPapPZ/ZTo680aEYdfN/CdPwTWXiiX3xJKTZCE3lyMF99M2ouNN7hU8NHy
-        M6f568HHS4jjNTGFnDJRwNzTkwx/PyXSJUw==
-X-Received: by 2002:a17:907:70cb:: with SMTP id yk11mr2772004ejb.312.1601472504829;
-        Wed, 30 Sep 2020 06:28:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJymhuQX2sG+sxYzTgCQxPCAD4hXIxnUUvRY5D6DzKtz4gOpYp/UHbqMkil03xOmN+ZD4UvYrA==
-X-Received: by 2002:a17:907:70cb:: with SMTP id yk11mr2771992ejb.312.1601472504665;
-        Wed, 30 Sep 2020 06:28:24 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id p17sm1613919edw.10.2020.09.30.06.28.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Sep 2020 06:28:23 -0700 (PDT)
-Subject: Re: Keyboard regression by intel-vbtn
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.de>
-References: <s5hft71klxl.wl-tiwai@suse.de>
- <bedb9d1b-3cca-43e2-ee44-1aac0e09a605@redhat.com>
- <s5h8sctkk2b.wl-tiwai@suse.de>
- <-ICwwoAndae7T9i-Ymr7Nx9jnXVd7H54dnkMmCWUcApM1S0FUPplPWhg8DVXkphN0L4DoTy24robhTiBzMmSBKZRl-P8VEXIX5r6ttceA_8=@protonmail.com>
- <8c3d8a56-541f-aafc-1be9-4d72d374effe@redhat.com>
- <DM6PR19MB2636C7C411E220565F39E741FA320@DM6PR19MB2636.namprd19.prod.outlook.com>
- <55e021b7-5e1b-986b-07ec-279398570e40@redhat.com>
- <DM6PR19MB2636FFC274423BB564A7532CFA320@DM6PR19MB2636.namprd19.prod.outlook.com>
- <DM6PR19MB2636BD25C7C828D28CF27CC8FA320@DM6PR19MB2636.namprd19.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <fce9f346-5c02-0997-216a-14ab6c8b336d@redhat.com>
-Date:   Wed, 30 Sep 2020 15:28:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lkmWkLx+50LSvUth/jRPI7AGPelcJcdIBHooAnh4UZ8=;
+        b=mfkXLDd5Ptip49svb7EdBzfopdWCBj44JZIDSPui31zhHXrqi63WvFxPPm0TPRaSdi
+         JXHFYkSnkD5W1R2o7AR63/1advZUF/L8aJO9af0V+L7xNDSBb/Kztbgo2OmVKZox8EyV
+         zSzwhhWGpbAJrdUhYu/QitYPTY8E53ILb4AJRDpFBwLGeIJ6ehWcf4VhBoBcm9KXHzPN
+         Q80bSzFdEf8+TBeiWr5M2DYUubGqBb1/udWnYhJNsCs5Xxl4gSymTxg+ORkfu/tTZetA
+         e1R0AEkibEjeVnHJ9vLiybMZ5ncK8ezHSNB3gDFcgQnmT6fb+AROwtfLwD1xdN/4ZOxX
+         1Z8Q==
+X-Gm-Message-State: AOAM530k2RFS4AmNPfRioubtgtYOnNMPKGqANi7eTZSrc4tBetl9HEnc
+        uEWAC1bA+tXAt/4jBdo5YInsWKllM3WMnO8goR8=
+X-Google-Smtp-Source: ABdhPJxlkomiM9Fv0b2uYyfqXoAycR7ivW5AUzx/IzG/UXy64NwjVjsxIB3HJCY2IgFU9+TrWLFEdhbsctZWJnXvbC0=
+X-Received: by 2002:a17:90a:fd98:: with SMTP id cx24mr2577392pjb.181.1601474145833;
+ Wed, 30 Sep 2020 06:55:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <DM6PR19MB2636BD25C7C828D28CF27CC8FA320@DM6PR19MB2636.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200929082025.51446-1-aaron.ma@canonical.com>
+In-Reply-To: <20200929082025.51446-1-aaron.ma@canonical.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 30 Sep 2020 16:55:27 +0300
+Message-ID: <CAHp75Vf2eCDHuqdtrCXqg7FNiDoSg5BDmtXLJ7AMuF8He9qy=w@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: re-initialize acpi buffer
+ size when reuse
+To:     Aaron Ma <aaron.ma@canonical.com>
+Cc:     mapengyu@gmail.com,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Tue, Sep 29, 2020 at 11:20 AM Aaron Ma <aaron.ma@canonical.com> wrote:
+>
+> Evaluating acpi _BCL could be failed, then acpi buffer size will be set
 
-On 9/29/20 10:47 PM, Limonciello, Mario wrote:
->>
->> I requested on the Ubuntu bug for someone to provide these.
->>
-> 
-> Joe Barnett was kind enough to share two ACPI dumps to compare.
-> Not affected:
-> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1822394/+attachment/5415318/+files/1.2.0.acpidump
-> 
-> Affected:
-> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1822394/+attachment/5415405/+files/1.13.0.acpidump
+'could be failed' -> 'could fail'
 
-Thank you, I took a look at these (before completing my allow-list fix),
-but there is not really much which stands out. The only related thing which
-stands out is that the 1.13.0 dsdt.dsl has this new bit:
+> to 0. When reuse this acpi buffer, AE_BUFFER_OVERFLOW will be triggered.
+>
+> Re-initialize buffer size will make acpi evaluate successfully.
 
+acpi -> ACPI in all cases above.
 
-                             Case (0x08)
-                             {
-                                 Return (^^PCI0.LPCB.H_EC.VGBI.VGBS ())
-                             }
+Fixes tag, please?
 
-Inside the _DSM of the HIDD / INT33D5 device.
+> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
 
-             Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
-             {
-                 If ((Arg0 == ToUUID ("eeec56b3-4442-408f-a792-4edd4d758054")))
+Code is okay.
 
-
-What is interesting here is that the PCI0.LPCB.H_EC.VGBI.VGBS object/method
-does not actually exist the correct path is:
-
-^^PCI0.LPCB.ECDV.VGBI.VGBS
-
-So this does suggest that something around the VGBS handling changed
-(and since it points to a non existing ACPI object, possibly broke)
-in the newer BIOS version. But what exactly is going on on this XPS 2-in-1
-cannot really be derived from the acpidumps.
-
-Regards,
-
-Hans
-
+-- 
+With Best Regards,
+Andy Shevchenko
