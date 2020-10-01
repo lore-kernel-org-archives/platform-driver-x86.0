@@ -2,110 +2,140 @@ Return-Path: <SRS0=y5BS=DI=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C327BC4727E
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 15:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2B4C4727E
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 16:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62FB420575
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 15:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B6A208B6
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 16:01:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uiz+6SVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732331AbgJAPqA (ORCPT
+        id S1732415AbgJAQBT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Oct 2020 11:46:00 -0400
-Received: from smtprelay0027.hostedemail.com ([216.40.44.27]:46286 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731885AbgJAPqA (ORCPT
+        Thu, 1 Oct 2020 12:01:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732287AbgJAQBT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Oct 2020 11:46:00 -0400
-X-Greylist: delayed 373 seconds by postgrey-1.27 at vger.kernel.org; Thu, 01 Oct 2020 11:45:59 EDT
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave08.hostedemail.com (Postfix) with ESMTP id 32BBE1801BE47;
-        Thu,  1 Oct 2020 15:39:47 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 8956A1802912F;
-        Thu,  1 Oct 2020 15:39:45 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: flag54_230d6c72719c
-X-Filterd-Recvd-Size: 2832
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  1 Oct 2020 15:39:42 +0000 (UTC)
-Message-ID: <ee3f75c1555c927e05b78c1afca1ed5a3b2cd50f.camel@perches.com>
-Subject: Re: [PATCH v2][next] x86/uv/time: Replace one-element array and
- save heap space
-From:   Joe Perches <joe@perches.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
+        Thu, 1 Oct 2020 12:01:19 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C451EC0613D0;
+        Thu,  1 Oct 2020 09:01:17 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 197so4358607pge.8;
+        Thu, 01 Oct 2020 09:01:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/BT+mSaBhy+x60yncvZYPTuqegplR6LX7kQt6UIW6QY=;
+        b=uiz+6SVYOhHTocEk07NmkueAfxTx+uEgUcmr/tRlOPSy99Z4WVtmomMXinJOOVzJlw
+         U6yjFflYzGXiTAM7X7f4fwsK0/l5PLQA9q7p66i3OcSGGGrfwY7eE5gope/ZKRa7aiYb
+         ciaq9GdC9NcxGwdlAEMd2BUa7J4KhmM+Qe2c9AJl24N1I+GNw8Ifgl47ap64Y24TvxT2
+         uQsXbpUxCMF2dWEJ5QYNHWiyiEYtLWz82gOP2Ou2XMwfl/vr2qR+TrMNIVjOovHOmC8I
+         I6AdpJUBIqk1UfhjZUL8ywpxjDeFLf6HbOPwwaWDexo4JwQdKoOsQCzxtKrBVlG0k0nu
+         qFXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/BT+mSaBhy+x60yncvZYPTuqegplR6LX7kQt6UIW6QY=;
+        b=FFX7+ucfnZn04MtyTAIyPF/8vJITM6sfTKMXWZM0Gwi9o6jCAxEDpUjBC3wxilV2N5
+         PfGDmoyDInbDl3aqGwTsJeCjgK968ZS9ETerQHSnsmx5yMZ46B/3uGi9ZC5Eynz+a8Se
+         oLS8X2QEH31aV6Be+1TH4MU2XNwNnoezyhMQAqFh8q//x2cQQyT13Je56SdWShUT68KL
+         7YVU0oiojLkSpMhhNDZbjpaU8NRXaUsSoHlfpQNANI9UN/RkHd+b/CuLC9+olR6cG3Us
+         NAIf7x7SrlyIbLc4/jYBatv/cFPn0q6Oy/QG8O0J4sEbl6O+rcEguweD1i+ubUuevKUl
+         +ihA==
+X-Gm-Message-State: AOAM531U2VA9fvN6QimlpPdhdl7yJ1KcKoQHRLFi4064QPzmT4x1UNcl
+        V9mN0arRnmMdGvYkThK1czq5ep+S/Hq/uouGMxM=
+X-Google-Smtp-Source: ABdhPJzVMReb2G/hBmJ5iwEAzORaIOh+ApRwc+ssYpSff8yc93mXT/iCELWHcknEK9zsoAQZyDxwLEaDPGVoAVyZ3hE=
+X-Received: by 2002:a63:4c1d:: with SMTP id z29mr6847757pga.203.1601568077262;
+ Thu, 01 Oct 2020 09:01:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20201001014250.26987-1-david.e.box@linux.intel.com> <20201001014250.26987-5-david.e.box@linux.intel.com>
+In-Reply-To: <20201001014250.26987-5-david.e.box@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 1 Oct 2020 19:00:58 +0300
+Message-ID: <CAHp75VfcXbedZbbF3KATWYMR1SPXusuaU+vrkvM1zsRpYzDFiA@mail.gmail.com>
+Subject: Re: [PATCH V7 4/5] platform/x86: Intel PMT Telemetry capability driver
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
         Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org
-Date:   Thu, 01 Oct 2020 08:39:39 -0700
-In-Reply-To: <20201001145608.GA10204@embeddedor>
-References: <20201001145608.GA10204@embeddedor>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        alexey.budankov@linux.intel.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.4-0ubuntu1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 2020-10-01 at 09:56 -0500, Gustavo A. R. Silva wrote:
-> There is a regular need in the kernel to provide a way to declare having
-> a dynamically sized set of trailing elements in a structure. Kernel code
-> should always use “flexible array members”[1] for these cases. The older
-> style of one-element or zero-length arrays should no longer be used[2].
-> 
-> struct uv_rtc_timer_head contains a one-element array cpu[1].
-> 
-> Switch it to a flexible array and use the struct_size() helper to
-> calculate the allocation size. Also, save some heap space in the
-> process[3].
+On Thu, Oct 1, 2020 at 4:43 AM David E. Box <david.e.box@linux.intel.com> wrote:
+>
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>
+> PMT Telemetry is a capability of the Intel Platform Monitoring Technology.
+> The Telemetry capability provides access to device telemetry metrics that
+> provide hardware performance data to users from read-only register spaces.
+>
+> With this driver present the intel_pmt directory can be populated with
+> telem<x> devices. These devices will contain the standard intel_pmt sysfs
+> data and a "telem" binary sysfs attribute which can be used to access the
+> telemetry data.
 
-trivia:
+...
 
-> diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
-[]
-> @@ -148,9 +148,8 @@ static __init int uv_rtc_allocate_timers(void)
->  		struct uv_rtc_timer_head *head = blade_info[bid];
->  
->  		if (!head) {
-> -			head = kmalloc_node(sizeof(struct uv_rtc_timer_head) +
-> -				(uv_blade_nr_possible_cpus(bid) *
-> -					2 * sizeof(u64)),
-> +			head = kmalloc_node(struct_size(head, cpu,
-> +				uv_blade_nr_possible_cpus(bid)),
->  				GFP_KERNEL, nid);
->  			if (!head) {
->  				uv_rtc_deallocate_timers();
+> +static DEFINE_XARRAY_ALLOC(telem_array);
+> +static struct intel_pmt_namespace pmt_telem_ns = {
+> +       .name = "telem",
+> +       .xa = &telem_array
 
-Maybe save the value of uv_blade_nr_possible_cpus(bid)
-to reduce duplication and make the sizeof_struct more
-readable?
+Leave comma at the end.
 
-		if (!head) {
-			int ncpus = uv_blade_nr_possible_cpus(bid);
+> +};
+> +
+> +/*
+> + * driver initialization
+> + */
 
-			head = kmalloc_node(struct_size(head, cpu, ncpus),
-					    GFP_KERNEL, nid);
-			if (!head) {
-				uv_rtc_deallocate_timers();
-				return -ENOMEM;
-			}
-			spin_lock_init(&head->lock);
-			head->ncpus = ncpus;
-			head->next_cpu = -1;
-			blade_info[bid] = head;
-		}
+This is a useless comment.
 
+> +       size = offsetof(struct pmt_telem_priv, entry[pdev->num_resources]);
+> +       priv = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+
+Please, use struct_size() from overflow.h instead of custom approach.
+
+...
+
+> +static struct platform_driver pmt_telem_driver = {
+> +       .driver = {
+> +               .name   = TELEM_DEV_NAME,
+
+I'm not sure I have interpreted this:
+        - Use 'raw' string instead of defines for device names
+correctly. Can you elaborate?
+
+> +       },
+> +       .remove = pmt_telem_remove,
+> +       .probe  = pmt_telem_probe,
+> +};
+
+...
+
+> +MODULE_ALIAS("platform:" TELEM_DEV_NAME);
+
+Ditto.
+
+--
+With Best Regards,
+Andy Shevchenko
