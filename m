@@ -2,150 +2,124 @@ Return-Path: <SRS0=y5BS=DI=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CBEC4727C
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 09:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7B8C4727C
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 14:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3509321481
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 09:26:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fsGrM48L"
+	by mail.kernel.org (Postfix) with ESMTP id 7835821D24
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 14:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1601563827;
+	bh=t8pOQPAK1E1iVKSe7VQdeI0ZfBGmMSWbeGcL4rn3VQ0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=vVmv04Dw0lvZQrQLC1Lq2emuFoIfTkVM2eiC2K/KOJCynkDu/G4VCf0WZ4DqGUa7h
+	 2F7PrhbIbSZkjaQ88goBw8zuwWPQxuZytZo85WqEmY1kqoLP4KEHA0fhb9iAxAF/XJ
+	 Bv28TvuzRWZAQIbYNDh7zkErQX9ExdOSIWz7CLh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbgJAJ0n (ORCPT
+        id S1732298AbgJAOuY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Oct 2020 05:26:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25134 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731670AbgJAJ0m (ORCPT
+        Thu, 1 Oct 2020 10:50:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732020AbgJAOuY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Oct 2020 05:26:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601544401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Pq6Om9kKeW8tF3UBSbP0FuEgAGbZTYAFy9OO6raLYsg=;
-        b=fsGrM48LG+JMvsejNzLWn+oS1vaF4pC6/TGsizXqAARnhRrFBq8ry1YXhZm/xUmg/8VlNM
-        +9eWSQR+jYvLD+4WOUdMbQ1fdsvX2oV3/uYEebKNcaqGlvfU1LoBrmBs9QjTGVHaR//czt
-        pjUHZaipJ09TAFS33mtxhi9GgnamHDQ=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-77-Iboo4nJ8PO-kYxeTev8MYg-1; Thu, 01 Oct 2020 05:26:39 -0400
-X-MC-Unique: Iboo4nJ8PO-kYxeTev8MYg-1
-Received: by mail-ed1-f70.google.com with SMTP id j1so1933922edv.7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Oct 2020 02:26:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Pq6Om9kKeW8tF3UBSbP0FuEgAGbZTYAFy9OO6raLYsg=;
-        b=FGUIBKsmCyo3Z5JpC8CQU1xU0EHiIlnxLX4QN4Bc9t6OsPDF0dCxNIm7G6vF5Irk3k
-         QkAJVk3hL3oWzJ16NZ4pwSyVsrZpiYJY6fCbRK2S+/00/mJWAWLoKAs4nhUvCdaQBpPn
-         qB4mSzM8Ph0hA//GdUPc+zmL7xYUyyxDgXF00oH1sW/+1MGDXnr3bnc9OzVDyg4I9BFd
-         UnURBSZQFd35HXF3iwRVLYP+YFuMcwkivSGE8/KZaSFqnfSA6DLDw6UXxgnDXUQTKHFL
-         OnvTuMlMmXzLmK+HGq8MM5XS6DwkXsbdRA6hTvYuxPpGJK6pkpU/dIQuUxXTLG7v/kqo
-         2bxA==
-X-Gm-Message-State: AOAM530qCOPQahw5GHOROFcUo/sQutm28trqcqgwfCriYxrglnlkLkgx
-        qBetgJSBglraeB+hThTQSuPSRe1p03Z9nXBCVeCHWtNc+roImyeNCNWTkA/Daexgqv/+9MyRIQh
-        A8K9yrzVX6V44bR5oKE2uMT1w5d53cbkmHA==
-X-Received: by 2002:a05:6402:1bc2:: with SMTP id ch2mr7017749edb.60.1601544398468;
-        Thu, 01 Oct 2020 02:26:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyj4+xzrGe6BVztHE0oNVJ7K2CIjY46tbLNlUQfS1nCUvsDzagXYuzoM7P4leaeKSGwBKKLUw==
-X-Received: by 2002:a05:6402:1bc2:: with SMTP id ch2mr7017733edb.60.1601544398214;
-        Thu, 01 Oct 2020 02:26:38 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id r20sm2104227edw.51.2020.10.01.02.26.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Oct 2020 02:26:37 -0700 (PDT)
-Subject: Re: [PATCH v5] Introduce support for Systems Management Driver over
- WMI for Dell Systems
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        Divya Bharathi <divya27392@gmail.com>
-Cc:     "dvhart@infradead.org" <dvhart@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>
-References: <20200929025521.59573-1-divya.bharathi@dell.com>
- <20200930002319.GI19084@mtg-dev.jf.intel.com>
- <DM6PR19MB2636FB3D94EBA95B7CE0DE54FA330@DM6PR19MB2636.namprd19.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <42f8e710-38f7-6f80-9f4a-af68cd376538@redhat.com>
-Date:   Thu, 1 Oct 2020 11:26:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 1 Oct 2020 10:50:24 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57372207DE;
+        Thu,  1 Oct 2020 14:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601563823;
+        bh=t8pOQPAK1E1iVKSe7VQdeI0ZfBGmMSWbeGcL4rn3VQ0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gGUnxK0b49/8l/Ban0p0C38wTdm7W6PISlJuygjueQPbWtEPIqAAwuAvQb9tUuMfB
+         Lc/AH8TjKM9lM8FQRlHBrdvbwNUG3zSIAQaHAMlU+Ls0GijEe150gfUm4z7O0r0iA5
+         caldDvo0ksv9T0h4JmNunFORCh9CkV/UtXYo5EW4=
+Date:   Thu, 1 Oct 2020 09:56:08 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     x86@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2][next] x86/uv/time: Replace one-element array and save
+ heap space
+Message-ID: <20201001145608.GA10204@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <DM6PR19MB2636FB3D94EBA95B7CE0DE54FA330@DM6PR19MB2636.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+There is a regular need in the kernel to provide a way to declare having
+a dynamically sized set of trailing elements in a structure. Kernel code
+should always use “flexible array members”[1] for these cases. The older
+style of one-element or zero-length arrays should no longer be used[2].
 
-On 9/30/20 11:02 PM, Limonciello, Mario wrote:
->>> +		possible_values:	A file that can be read to obtain the possible
->>> +					values of the <attr>. Values are separated using
->>> +					semi-colon (``;``).
->> why not use set notation from math classes assuming intergers?  i.e.
->> (a, b)  all integers beween a and b but not including a or b (open set)
->> or
->> [a, b] all integerger betwen a and b including and b?  (closed set)
->>
->> Anyway its ambiguous if the the extremes are included in the set of possible
->> values as written.
->>
-> 
-> Enumeration attributes mean that there are fixed values, specifically not integers.
-> Integers are in the "integer" type and explained below.
-> 
-> An example value that would be seen here is possible_values:
-> 
-> Enabled;Disabled;
+struct uv_rtc_timer_head contains a one-element array cpu[1].
 
-That might not be the best example, because in that case arguably we
-could export it as a boolean type (except that the WMI interface does
-not give us boolean as an explicit / separate type).
+Switch it to a flexible array and use the struct_size() helper to
+calculate the allocation size. Also, save some heap space in the
+process[3].
 
-Mark these enum attributes are really like enums in C, so we
-have a fixed set of possible values which are described by
-strings, since using integers for it makes no sense from a human
-interaction pov. E.g. on the Lenovo X1C8 I have some attributes
-have the following possible value sets:
+[1] https://en.wikipedia.org/wiki/Flexible_array_member
+[2] https://www.kernel.org/doc/html/v5.9-rc1/process/deprecated.html#zero-length-and-one-element-arrays
+[3] https://lore.kernel.org/lkml/20200518190114.GA7757@embeddedor/
 
-                 Package (0x03)
-                 {
-                     "High",
-                     "Normal",
-                     "Silent"
-                 },
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Build-tested-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/5f75bc0a.rQcNS6620b2eA74S%25lkp@intel.com/
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Modify changelog text (Thomas).
+ - Add Reviewed-by and Build-tested-by tags.
+ - Add a public link to the build-test results.
 
-                 Package (0x02)
-                 {
-                     "LCD",
-                     "ExternalDisplay"
-                 },
+ arch/x86/platform/uv/uv_time.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-                 Package (0x02)
-                 {
-                     "Independent",
-                     "Synchronized"
-                 },
-
-I hope this helps clarify things.
-
-Regards,
-
-Hans
+diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
+index f82a1337a608..6c348c2d0def 100644
+--- a/arch/x86/platform/uv/uv_time.c
++++ b/arch/x86/platform/uv/uv_time.c
+@@ -52,7 +52,7 @@ struct uv_rtc_timer_head {
+ 	struct {
+ 		int	lcpu;		/* systemwide logical cpu number */
+ 		u64	expires;	/* next timer expiration for this cpu */
+-	} cpu[1];
++	} cpu[];
+ };
+ 
+ /*
+@@ -148,9 +148,8 @@ static __init int uv_rtc_allocate_timers(void)
+ 		struct uv_rtc_timer_head *head = blade_info[bid];
+ 
+ 		if (!head) {
+-			head = kmalloc_node(sizeof(struct uv_rtc_timer_head) +
+-				(uv_blade_nr_possible_cpus(bid) *
+-					2 * sizeof(u64)),
++			head = kmalloc_node(struct_size(head, cpu,
++				uv_blade_nr_possible_cpus(bid)),
+ 				GFP_KERNEL, nid);
+ 			if (!head) {
+ 				uv_rtc_deallocate_timers();
+-- 
+2.27.0
 
