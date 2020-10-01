@@ -2,153 +2,131 @@ Return-Path: <SRS0=y5BS=DI=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F53CC4727E
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 16:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62104C4727E
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 17:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E09E920872
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 16:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2551D2054F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 17:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7s40mmk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BV7v1qkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732342AbgJAQqi (ORCPT
+        id S1732903AbgJARoj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Oct 2020 12:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50894 "EHLO
+        Thu, 1 Oct 2020 13:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732274AbgJAQqi (ORCPT
+        with ESMTP id S1732096AbgJARoj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Oct 2020 12:46:38 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58F0AC0613D0;
-        Thu,  1 Oct 2020 09:46:38 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id q1so6781156ilt.6;
-        Thu, 01 Oct 2020 09:46:38 -0700 (PDT)
+        Thu, 1 Oct 2020 13:44:39 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45DC5C0613D0;
+        Thu,  1 Oct 2020 10:44:39 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 144so382443pfb.4;
+        Thu, 01 Oct 2020 10:44:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+1JUkO3QCGoe44LoRPf6LoiKyh+E2Tmq//NtAEjkplw=;
-        b=S7s40mmk6t0Wqt0W5AbDBwjYW3G/WTDn3hPKIrxoltDbGXZ9wQGaTKtR18YhifrQE+
-         zzGtLOgQqMBzq+SSxoPy+KKsWMokL+LDpQz2uiosRao0q101vpI+ziKKhkrtAxKmiKwO
-         OxW6pADOvnYf7vTZgENUy1kAfT0a7x7wdfNOMQ97cCHGLao7VXGyrgsW6DR/nkgSBjzw
-         xyQeFw+iiShhi9F/4Heh4BfDXjuygWe58ng5H4PHCzyVjWVT7y/ZVCZod+G3BlryFqKC
-         YiPDMkYzM8utJeLAxcIhpakGRbu8phkUbMhWFTEWvtygvijqUBqYDMVSnjMILVwcGnqO
-         KEEw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xwkaw38cgwHkNtoVtJK2JhdTeVpjV+AYAxG0kMKtMnI=;
+        b=BV7v1qkfQ2xRfiu8NpANEPoUbG97BoDOHD2KhaTguGsC2qxZ7V+Gg+u52jc8XTx5dH
+         NgRPDWBJbjMK+uxRg9Weux7CPLdIo8EZZRkmpvDHsPB9D8gtkAHWDUoV7Z7CawXtGkBg
+         ct35he9NGxcYsaI6NuvvwSSrQQYDbawVCsItv/2uEsLuMRLZnugHUfB9LnbO0PD3LuFG
+         nPm7QTqrJ9LG6ADc81EHDwn/y8cglED7qHsr0wMcmOkbnL+Z7IK5kg51hb6AR96Jt1Xa
+         AxUXwqanWOKoNIwMDUZO8JVjmPaMRsGk4K8CeXAdq+Bj6JukVzAbDLYwO2n3Y60mCAp0
+         2oNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+1JUkO3QCGoe44LoRPf6LoiKyh+E2Tmq//NtAEjkplw=;
-        b=ErdtS9Zc3qMevvUQuiZS0RNW6DTz3hVZJWoTOT/nxpa/7hYwEE8tRsEfZetTpc9dOJ
-         86YX+qhysokwrndhZ3CKVWNaIVkcm94UOPThj8PnxnWTMDVgH0kuBlu7JGqwSU3EWj/F
-         7kKMW/6nh8W1YBSm38OSEzKzCtTguW/o4ybP6UjAJph+sBzRKg3CX7QYgJveSGuTKpWk
-         iyK7sdO//p/v8P2G/T/b0Jf/rXxwb5MR7Ly4oWN9f0gNB3tQ9CxSlJp49wNUuAywgBm+
-         LdrVwgdP1khsrpqyz0TICEu8mJq/o4yfMksycyaBTCsUa49rdj45+IDAUd4oN1aRYBLu
-         Eptg==
-X-Gm-Message-State: AOAM531+M5oZ3iKtsRz2jXTYoFTzIL/r9Wv8NOPboW6YZJgjYI0UL3fC
-        T/ROyAyKWSYZZjM7ypuN9vPwH8FQIwNaNCYDi7U=
-X-Google-Smtp-Source: ABdhPJySkXGVvzlLtuibxEhmC5gJlHATz519uol0/U1KIrMD6UhO6+eVc4Eq5vC++e/Z1fshO/XSsoSe4JXQsfm0dlg=
-X-Received: by 2002:a92:950d:: with SMTP id y13mr3222543ilh.42.1601570797364;
- Thu, 01 Oct 2020 09:46:37 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xwkaw38cgwHkNtoVtJK2JhdTeVpjV+AYAxG0kMKtMnI=;
+        b=L+qJb+l5pHFVLHkp8QFB/uwCtO6n/TZ0PrPdkaeEOfvnKn77l1adqtf0FXUPIzR0+4
+         mqjd+D7keAoZVSrBf5L1UgL7wOkhF4VvW6FBvuXKaAziGz0/CCd19oP2HJTma2dhx3jh
+         Jb1Il517X4BE03jWtEYbr84soOatWmTF2YPI8Z3bxS7GF5xFznUW4BDyVLvJHdx+7V3q
+         2iUVjYe3k6mJSmxsxMFzTwZVsAEqVS6sJZ3rTtGc9WXtP5v0FqJ4czGYo4CKk4OQm5E2
+         LnGuPcciS3GsBbyZEJ9Rp2FyEsCWRFwgx3mZun368cDm3HbHlI+nmrVNc68p5SrPo2zh
+         UiUg==
+X-Gm-Message-State: AOAM531NKRbaqeDysFzRuQwmTVKB+VZ2pIdGulbNwaCUpa7u2zLACn9h
+        a+96OtHTWVDQHHJqNIzHY6w=
+X-Google-Smtp-Source: ABdhPJzlg9wioDaDQeFELxBiW6SWSo+AK0dG8aWp4yY632RVWNfS7tpzlqLDRpZ9Vd9fusarLXSf5Q==
+X-Received: by 2002:a62:19c4:0:b029:13e:d13d:a081 with SMTP id 187-20020a6219c40000b029013ed13da081mr3804867pfz.24.1601574278745;
+        Thu, 01 Oct 2020 10:44:38 -0700 (PDT)
+Received: from ubuntu-m3-large-x86 ([2604:1380:45e1:2200::1])
+        by smtp.gmail.com with ESMTPSA id o4sm7001277pfh.39.2020.10.01.10.44.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Oct 2020 10:44:38 -0700 (PDT)
+Date:   Thu, 1 Oct 2020 10:44:36 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Lenny Szubowicz <lszubowi@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-security-module@vger.kernel.org, andy.shevchenko@gmail.com,
+        ardb@kernel.org, jmorris@namei.org, serge@hallyn.com,
+        keescook@chromium.org, zohar@linux.ibm.com, bp@alien8.de,
+        pjones@redhat.com, dhowells@redhat.com, prarit@redhat.com
+Subject: Re: [PATCH V2 1/3] efi: Support for MOK variable config table
+Message-ID: <20201001174436.GA2622286@ubuntu-m3-large-x86>
+References: <20200905013107.10457-1-lszubowi@redhat.com>
+ <20200905013107.10457-2-lszubowi@redhat.com>
 MIME-Version: 1.0
-References: <20201001014250.26987-1-david.e.box@linux.intel.com>
- <20201001014250.26987-5-david.e.box@linux.intel.com> <CAHp75VfcXbedZbbF3KATWYMR1SPXusuaU+vrkvM1zsRpYzDFiA@mail.gmail.com>
-In-Reply-To: <CAHp75VfcXbedZbbF3KATWYMR1SPXusuaU+vrkvM1zsRpYzDFiA@mail.gmail.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 1 Oct 2020 09:46:26 -0700
-Message-ID: <CAKgT0UcJXEeC4ZNQ0vq6Q6gBQeUe9uaFDHoDNoTjL0eYWaYUEA@mail.gmail.com>
-Subject: Re: [PATCH V7 4/5] platform/x86: Intel PMT Telemetry capability driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200905013107.10457-2-lszubowi@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Oct 1, 2020 at 9:03 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, Oct 1, 2020 at 4:43 AM David E. Box <david.e.box@linux.intel.com> wrote:
-> >
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> >
-> > PMT Telemetry is a capability of the Intel Platform Monitoring Technology.
-> > The Telemetry capability provides access to device telemetry metrics that
-> > provide hardware performance data to users from read-only register spaces.
-> >
-> > With this driver present the intel_pmt directory can be populated with
-> > telem<x> devices. These devices will contain the standard intel_pmt sysfs
-> > data and a "telem" binary sysfs attribute which can be used to access the
-> > telemetry data.
->
-> ...
->
-> > +static DEFINE_XARRAY_ALLOC(telem_array);
-> > +static struct intel_pmt_namespace pmt_telem_ns = {
-> > +       .name = "telem",
-> > +       .xa = &telem_array
->
-> Leave comma at the end.
->
-> > +};
-> > +
-> > +/*
-> > + * driver initialization
-> > + */
->
-> This is a useless comment.
->
-> > +       size = offsetof(struct pmt_telem_priv, entry[pdev->num_resources]);
-> > +       priv = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
-> > +       if (!priv)
-> > +               return -ENOMEM;
->
-> Please, use struct_size() from overflow.h instead of custom approach.
->
-> ...
+On Fri, Sep 04, 2020 at 09:31:05PM -0400, Lenny Szubowicz wrote:
+> Because of system-specific EFI firmware limitations, EFI volatile
+> variables may not be capable of holding the required contents of
+> the Machine Owner Key (MOK) certificate store when the certificate
+> list grows above some size. Therefore, an EFI boot loader may pass
+> the MOK certs via a EFI configuration table created specifically for
+> this purpose to avoid this firmware limitation.
+> 
+> An EFI configuration table is a much more primitive mechanism
+> compared to EFI variables and is well suited for one-way passage
+> of static information from a pre-OS environment to the kernel.
+> 
+> This patch adds initial kernel support to recognize, parse,
+> and validate the EFI MOK configuration table, where named
+> entries contain the same data that would otherwise be provided
+> in similarly named EFI variables.
+> 
+> Additionally, this patch creates a sysfs binary file for each
+> EFI MOK configuration table entry found. These files are read-only
+> to root and are provided for use by user space utilities such as
+> mokutil.
+> 
+> A subsequent patch will load MOK certs into the trusted platform
+> key ring using this infrastructure.
+> 
+> Signed-off-by: Lenny Szubowicz <lszubowi@redhat.com>
 
-So all of the above make sense and can be fixed shortly and pushed as
-a v8 for both the telemetry and crashlog drivers.
+I have not seen this reported yet but this breaks arm allyesconfig and
+allmodconfig when CPU_LITTLE_ENDIAN is force selected (because CONFIG_EFI
+will actually be enabled):
 
-> > +static struct platform_driver pmt_telem_driver = {
-> > +       .driver = {
-> > +               .name   = TELEM_DEV_NAME,
->
-> I'm not sure I have interpreted this:
->         - Use 'raw' string instead of defines for device names
-> correctly. Can you elaborate?
+$ cat le.config
+CONFIG_CPU_BIG_ENDIAN=n
 
-Can you point me to a reference of that? I'm not sure what you are referring to.
+$ make -skj"$(nproc)" ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- KCONFIG_ALLCONFIG=le.config allyesconfig drivers/firmware/efi/mokvar-table.o
+drivers/firmware/efi/mokvar-table.c: In function 'efi_mokvar_table_init':
+drivers/firmware/efi/mokvar-table.c:139:5: error: implicit declaration of function 'early_memunmap' [-Werror=implicit-function-declaration]
+  139 |     early_memunmap(va, map_size);
+      |     ^~~~~~~~~~~~~~
+drivers/firmware/efi/mokvar-table.c:148:9: error: implicit declaration of function 'early_memremap' [-Werror=implicit-function-declaration]
+  148 |    va = early_memremap(efi.mokvar_table, map_size);
+      |         ^~~~~~~~~~~~~~
+drivers/firmware/efi/mokvar-table.c:148:7: warning: assignment to 'void *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+  148 |    va = early_memremap(efi.mokvar_table, map_size);
+      |       ^
+cc1: some warnings being treated as errors
+make[4]: *** [scripts/Makefile.build:283: drivers/firmware/efi/mokvar-table.o] Error 1
 
-> > +       },
-> > +       .remove = pmt_telem_remove,
-> > +       .probe  = pmt_telem_probe,
-> > +};
->
-> ...
->
-> > +MODULE_ALIAS("platform:" TELEM_DEV_NAME);
->
-> Ditto.
-
-This doesn't make sense to me. Are you saying we are expected to use
-"pmt_telemetry" everywhere instead of the define? It seems like that
-would be much more error prone. It seems like common practice to use
-DRV_NAME throughout a driver for these sort of things so if you are
-wanting us to rename it to that I am fine with that, but I am not sure
-getting rid of the use of a define makes sense.
+Cheers,
+Nathan
