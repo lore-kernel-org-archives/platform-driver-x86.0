@@ -2,155 +2,150 @@ Return-Path: <SRS0=y5BS=DI=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1249AC4727C
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 07:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CBEC4727C
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 09:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C414C2176B
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 07:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3509321481
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 09:26:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y9kN6bzX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fsGrM48L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731699AbgJAHzR (ORCPT
+        id S1731067AbgJAJ0n (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Oct 2020 03:55:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731697AbgJAHzO (ORCPT
+        Thu, 1 Oct 2020 05:26:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25134 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731670AbgJAJ0m (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Oct 2020 03:55:14 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5214FC0613D0
-        for <platform-driver-x86@vger.kernel.org>; Thu,  1 Oct 2020 00:55:13 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id v12so1963464wmh.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Oct 2020 00:55:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=nxchK35WzNClqTZsaQg5x4PMi7z26OOqbOLc2gLFY54=;
-        b=Y9kN6bzXfYnJtEnmJ0d9W1y9qoNRVuLyd0pJrpScGVCWKc2H6HTgNEGiNziQjnFGi4
-         W6NJJpy/mIbqaLAnEkm/Oh5qxZg+fCStul0PeHoiMOZWh5OVvuhadZcDOoXyrDBPmb2Z
-         qf2HSt3QcUUbFNsYWxwIh8xQdjmPrksQjHMnyX/dKe3mDUJTE9dHJt8OBQ/TUagUy93E
-         2LES+b6jYvAbHAtkJrQ64wsr1icfil/zacXERe2n+vbhH27Qx7VB+fbER5+GN0xId2+Y
-         I2Gxn0rijwePJaOkvi6Wv0saJknw6yYZJQF+fXZIOYu37qns3Pz8KBM6NQjOXS8etG1V
-         yxtg==
+        Thu, 1 Oct 2020 05:26:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1601544401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Pq6Om9kKeW8tF3UBSbP0FuEgAGbZTYAFy9OO6raLYsg=;
+        b=fsGrM48LG+JMvsejNzLWn+oS1vaF4pC6/TGsizXqAARnhRrFBq8ry1YXhZm/xUmg/8VlNM
+        +9eWSQR+jYvLD+4WOUdMbQ1fdsvX2oV3/uYEebKNcaqGlvfU1LoBrmBs9QjTGVHaR//czt
+        pjUHZaipJ09TAFS33mtxhi9GgnamHDQ=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-77-Iboo4nJ8PO-kYxeTev8MYg-1; Thu, 01 Oct 2020 05:26:39 -0400
+X-MC-Unique: Iboo4nJ8PO-kYxeTev8MYg-1
+Received: by mail-ed1-f70.google.com with SMTP id j1so1933922edv.7
+        for <platform-driver-x86@vger.kernel.org>; Thu, 01 Oct 2020 02:26:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=nxchK35WzNClqTZsaQg5x4PMi7z26OOqbOLc2gLFY54=;
-        b=ijArOhg/xp4EboohsdOQBkiHBGII6xv6EvGldjWGgy3OEpbLlxrTzpZfapHe6oDy5C
-         XmS7lTtkJDhfQWNh67wPD2YkVB83jXefG/M95IbNALpPwkA9XGxvPrJW33ZmEA2iFeto
-         XBfw9J7KXEzsa0mEP1TG6m5UsZqWHrX+xDCOpSB11RZiZLyA+CeswpWc1PePE8WDPI6t
-         sD//sf98okNsv73yErhsLZ5x5jtU9TGrUSjPUcPmDArzLbAFnRzAmyhVxAtJgBrNTwL3
-         +cV19SWnM6NGIGzIAzNgmMddftWQloZMvDm0yVsV3QFzGKpN/RqXvY0PJh0M1Vc9aM5v
-         Qv0A==
-X-Gm-Message-State: AOAM533cfafnMDH37AyJkf2lGPWPa6sSJocK3aPVh0mYJodbcYiuH96d
-        6MgxplG030Bfa+I+/gwxzjjDRw==
-X-Google-Smtp-Source: ABdhPJwaKf0kHIDcNB6uw/SrtqtjTjJBwBxCYFT1dCOJ5o7Fhad9e52Ro92vjcnUxd3g4SlDKWr3GQ==
-X-Received: by 2002:a1c:f208:: with SMTP id s8mr7319753wmc.85.1601538911977;
-        Thu, 01 Oct 2020 00:55:11 -0700 (PDT)
-Received: from dell ([91.110.221.236])
-        by smtp.gmail.com with ESMTPSA id t17sm7411493wrx.82.2020.10.01.00.55.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Oct 2020 00:55:11 -0700 (PDT)
-Date:   Thu, 1 Oct 2020 08:55:07 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     hdegoede@redhat.com, andriy.shevchenko@linux.intel.com,
-        dvhart@infradead.org, andy@infradead.org,
-        alexander.h.duyck@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/3] mfd: intel_pmt: Add OOBMSM device ID
-Message-ID: <20201001075507.GK6148@dell>
-References: <20200911194549.12780-1-david.e.box@linux.intel.com>
- <20200911194549.12780-2-david.e.box@linux.intel.com>
- <20200929095106.GG6148@dell>
- <e23b255493c78d80558b9226920b3c7d54d7c84f.camel@linux.intel.com>
- <20200930071250.GI6148@dell>
- <47276f4aacbf4ec3729e674a573a28cd6399cfd6.camel@linux.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Pq6Om9kKeW8tF3UBSbP0FuEgAGbZTYAFy9OO6raLYsg=;
+        b=FGUIBKsmCyo3Z5JpC8CQU1xU0EHiIlnxLX4QN4Bc9t6OsPDF0dCxNIm7G6vF5Irk3k
+         QkAJVk3hL3oWzJ16NZ4pwSyVsrZpiYJY6fCbRK2S+/00/mJWAWLoKAs4nhUvCdaQBpPn
+         qB4mSzM8Ph0hA//GdUPc+zmL7xYUyyxDgXF00oH1sW/+1MGDXnr3bnc9OzVDyg4I9BFd
+         UnURBSZQFd35HXF3iwRVLYP+YFuMcwkivSGE8/KZaSFqnfSA6DLDw6UXxgnDXUQTKHFL
+         OnvTuMlMmXzLmK+HGq8MM5XS6DwkXsbdRA6hTvYuxPpGJK6pkpU/dIQuUxXTLG7v/kqo
+         2bxA==
+X-Gm-Message-State: AOAM530qCOPQahw5GHOROFcUo/sQutm28trqcqgwfCriYxrglnlkLkgx
+        qBetgJSBglraeB+hThTQSuPSRe1p03Z9nXBCVeCHWtNc+roImyeNCNWTkA/Daexgqv/+9MyRIQh
+        A8K9yrzVX6V44bR5oKE2uMT1w5d53cbkmHA==
+X-Received: by 2002:a05:6402:1bc2:: with SMTP id ch2mr7017749edb.60.1601544398468;
+        Thu, 01 Oct 2020 02:26:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyj4+xzrGe6BVztHE0oNVJ7K2CIjY46tbLNlUQfS1nCUvsDzagXYuzoM7P4leaeKSGwBKKLUw==
+X-Received: by 2002:a05:6402:1bc2:: with SMTP id ch2mr7017733edb.60.1601544398214;
+        Thu, 01 Oct 2020 02:26:38 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id r20sm2104227edw.51.2020.10.01.02.26.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Oct 2020 02:26:37 -0700 (PDT)
+Subject: Re: [PATCH v5] Introduce support for Systems Management Driver over
+ WMI for Dell Systems
+To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        Divya Bharathi <divya27392@gmail.com>
+Cc:     "dvhart@infradead.org" <dvhart@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>
+References: <20200929025521.59573-1-divya.bharathi@dell.com>
+ <20200930002319.GI19084@mtg-dev.jf.intel.com>
+ <DM6PR19MB2636FB3D94EBA95B7CE0DE54FA330@DM6PR19MB2636.namprd19.prod.outlook.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <42f8e710-38f7-6f80-9f4a-af68cd376538@redhat.com>
+Date:   Thu, 1 Oct 2020 11:26:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <47276f4aacbf4ec3729e674a573a28cd6399cfd6.camel@linux.intel.com>
+In-Reply-To: <DM6PR19MB2636FB3D94EBA95B7CE0DE54FA330@DM6PR19MB2636.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 30 Sep 2020, David E. Box wrote:
+Hi,
 
-> On Wed, 2020-09-30 at 08:12 +0100, Lee Jones wrote:
-> > On Tue, 29 Sep 2020, David E. Box wrote:
-> > 
-> > > On Tue, 2020-09-29 at 10:51 +0100, Lee Jones wrote:
-> > > > On Fri, 11 Sep 2020, David E. Box wrote:
-> > > > 
-> > > > > Add Out of Band Management Services Module device ID to Intel
-> > > > > PMT
-> > > > > driver.
-> > > > > 
-> > > > > Signed-off-by: Alexander Duyck <
-> > > > > alexander.h.duyck@linux.intel.com>
-> > > > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > > > > ---
-> > > > >  drivers/mfd/intel_pmt.c | 4 ++++
-> > > > >  1 file changed, 4 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/mfd/intel_pmt.c b/drivers/mfd/intel_pmt.c
-> > > > > index 0e572b105101..8f9970ab3026 100644
-> > > > > --- a/drivers/mfd/intel_pmt.c
-> > > > > +++ b/drivers/mfd/intel_pmt.c
-> > > > > @@ -55,6 +55,8 @@ struct pmt_platform_info {
-> > > > >  	unsigned long quirks;
-> > > > >  };
-> > > > >  
-> > > > > +static const struct pmt_platform_info pmt_info;
-> > > > > +
-> > > > >  static const struct pmt_platform_info tgl_info = {
-> > > > >  	.quirks = PMT_QUIRK_NO_WATCHER | PMT_QUIRK_NO_CRASHLOG
-> > > > > |
-> > > > >  		  PMT_QUIRK_TABLE_SHIFT,
-> > > > > @@ -200,8 +202,10 @@ static void pmt_pci_remove(struct pci_dev
-> > > > > *pdev)
-> > > > >  	pm_runtime_get_sync(&pdev->dev);
-> > > > >  }
-> > > > >  
-> > > > > +#define PCI_DEVICE_ID_INTEL_PMT_OOBMSM	0x09a7
-> > > > >  #define PCI_DEVICE_ID_INTEL_PMT_TGL	0x9a0d
-> > > > >  static const struct pci_device_id pmt_pci_ids[] = {
-> > > > > +	{ PCI_DEVICE_DATA(INTEL, PMT_OOBMSM, &pmt_info) },
-> > > > 
-> > > > Why are you supplying an empty struct?
-> > > 
-> > > Because the OOBMSM device doesn't need code provided driver data,
-> > > but
-> > > info is dereferenced in several areas. We also use kmemdup to copy
-> > > driver_data under the assumption that it was provided. We could
-> > > allow
-> > > for NULL if driver_data is referenced directly.
-> > 
-> > Just check for NULL.  No need to create and send bogus data.
+On 9/30/20 11:02 PM, Limonciello, Mario wrote:
+>>> +		possible_values:	A file that can be read to obtain the possible
+>>> +					values of the <attr>. Values are separated using
+>>> +					semi-colon (``;``).
+>> why not use set notation from math classes assuming intergers?  i.e.
+>> (a, b)  all integers beween a and b but not including a or b (open set)
+>> or
+>> [a, b] all integerger betwen a and b including and b?  (closed set)
+>>
+>> Anyway its ambiguous if the the extremes are included in the set of possible
+>> values as written.
+>>
 > 
-> Sure. If you haven't already, please note that this patch was pulled
-> into the V6 series in the link below. You accepted V5 but Hans
-> suggested some late changes after reviewing the new crashlog driver in
-> this patchset. So rather than have separate patchsets with a
-> dependency, we bundled them all into the original. We'll make these
-> changes in V7 now.
+> Enumeration attributes mean that there are fixed values, specifically not integers.
+> Integers are in the "integer" type and explained below.
 > 
-> https://lore.kernel.org/patchwork/patch/1313166/
+> An example value that would be seen here is possible_values:
+> 
+> Enabled;Disabled;
 
-Sounds reasonable. 
+That might not be the best example, because in that case arguably we
+could export it as a boolean type (except that the WMI interface does
+not give us boolean as an explicit / separate type).
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Mark these enum attributes are really like enums in C, so we
+have a fixed set of possible values which are described by
+strings, since using integers for it makes no sense from a human
+interaction pov. E.g. on the Lenovo X1C8 I have some attributes
+have the following possible value sets:
+
+                 Package (0x03)
+                 {
+                     "High",
+                     "Normal",
+                     "Silent"
+                 },
+
+                 Package (0x02)
+                 {
+                     "LCD",
+                     "ExternalDisplay"
+                 },
+
+                 Package (0x02)
+                 {
+                     "Independent",
+                     "Synchronized"
+                 },
+
+I hope this helps clarify things.
+
+Regards,
+
+Hans
+
