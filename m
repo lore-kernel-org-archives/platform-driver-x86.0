@@ -1,184 +1,217 @@
-Return-Path: <SRS0=fgui=DH=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=y5BS=DI=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABA8C4363D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Sep 2020 21:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E5BC4363D
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 01:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5A6F2075F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Sep 2020 21:02:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="SvGVCm3l";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="MwVdOKYa"
+	by mail.kernel.org (Postfix) with ESMTP id 70FC721974
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 01:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730441AbgI3VCw (ORCPT
+        id S1726992AbgJABm7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 30 Sep 2020 17:02:52 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:38360 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725799AbgI3VCv (ORCPT
+        Wed, 30 Sep 2020 21:42:59 -0400
+Received: from mga01.intel.com ([192.55.52.88]:48414 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbgJABm6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 30 Sep 2020 17:02:51 -0400
-Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08UL26Kb018839;
-        Wed, 30 Sep 2020 17:02:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=fdx8C0g4YJhJ+Kh0jI3yEj+rF/5N61Is+haWyG4KC9Q=;
- b=SvGVCm3lLce2WMzrhMubNxkfNR6kVwyEre0ppYlwFxGLDT0vIEgoe9OCHagOe1klX7RN
- hO0o7jGP/1K/iVOYGPLdULRJzRqn4kgrR4D0CFJnJcg0nd5xtpvdIl75kgomO1lpnDz1
- yPN8SlxPxKSq2OfESgHt36ENC/CcfOrJ4NBBI1EDF/IvgnvG8o0k2wSzuDzz7Giq01X8
- v7C98iqa6F9wHplyez5jCEk97rUrYMgpWwuYUWhtntaYGEm3AIdhxL9busUSi4raDcki
- KRz0I7FRBulMX5eLHuJlBU/kAPU2fveVnx89DAQ6zT2Rb8WI4pfcQig4RcK9kd1yFxa0 aQ== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 33t2ap786g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 30 Sep 2020 17:02:41 -0400
-Received: from pps.filterd (m0090351.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08UL1CUM038378;
-        Wed, 30 Sep 2020 17:02:40 -0400
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2172.outbound.protection.outlook.com [104.47.57.172])
-        by mx0b-00154901.pphosted.com with ESMTP id 33vu746emd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Sep 2020 17:02:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EupnHuCVNR+csb3nh/zqNeocUmOK0zeamO5ya00sEjOnWm+vmDXpVEVieaMgIPFRCyvpksgzWot1AWB1FDyymIV3K4JceGGIUGNNJcaqo4KODm7WxrXAJi5r4aAh/KrVwOuzu8/kLNAPqsQ+Zda8B0JDVAQbUFSj3KPgOvJo2q93TYu1ICPRxs8awpDkg04rWkNMnqqk553cEE7ifYgkHXpl2YIhIF1TrQ/KLWsV5hP7mT2gOQ9/+yBdulvXqBUtOTyJDoTE3x5P5axk9L7kO9FQpCitrk2LD2CKAsoJf4CbA1q03P7WP1tdxJhYSMxkVkO2DIdXgnOBhCmaGa6ZFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fdx8C0g4YJhJ+Kh0jI3yEj+rF/5N61Is+haWyG4KC9Q=;
- b=Sg/DVkY9SjemMINH0hIDf5Mp/bb9fNH6WmNb0mV+ByMZ3cwKMh+e6YzmHES1mm0aFBeMJ/LG+bvzrzDHVtU/5a6Rdze1V+PxHOFMhPl/RcEknrsl5pDJ7SRtP1jxA95ZPsApU8DEF1+P7AH405n74wFA2s7f/fP65ygMixznFimfjmer7mSz7MkVB34hjfCckQR5WC98QLM48r4xfgy2I3+BSP3ml6pn64xYrJ6ke6DEs1huCQn5HVisTYEw6KY493mdfFOTKNjoP0Knq/2Kvn9svvLGyW5WmJ7kSno2TnKs9Qd/8oQbd1VDtjzD/Evs75z6kTpVFdVAUt4aXrXBtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
- s=selector1-Dell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fdx8C0g4YJhJ+Kh0jI3yEj+rF/5N61Is+haWyG4KC9Q=;
- b=MwVdOKYaJTbzCw2AuTZU6OIILnwUykMeB1MwukYxdJBoJ1+LxBm2d8YzedsL6OnS7L2d8vjSLHrg261Fe5kD8AA9Fiq1by/29ePa5rCOpn90IeZuIacvsoyGe4v15ICpQEgwvMWwGv9B5h0MH+JqDFRvTRoMm+rWMmvYZRTKKVU=
-Received: from DM6PR19MB2636.namprd19.prod.outlook.com (2603:10b6:5:15f::15)
- by DM5PR1901MB2182.namprd19.prod.outlook.com (2603:10b6:4:a1::35) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.32; Wed, 30 Sep
- 2020 21:02:39 +0000
-Received: from DM6PR19MB2636.namprd19.prod.outlook.com
- ([fe80::a4b8:d5c9:29da:39b2]) by DM6PR19MB2636.namprd19.prod.outlook.com
- ([fe80::a4b8:d5c9:29da:39b2%4]) with mapi id 15.20.3412.029; Wed, 30 Sep 2020
- 21:02:39 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
-To:     "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        Divya Bharathi <divya27392@gmail.com>
-CC:     "dvhart@infradead.org" <dvhart@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>
-Subject: RE: [PATCH v5] Introduce support for Systems Management Driver over
- WMI for Dell Systems
-Thread-Topic: [PATCH v5] Introduce support for Systems Management Driver over
- WMI for Dell Systems
-Thread-Index: AQHWlgw7aMsAV+e0GEu/dASzG9J9LamAU7KAgAFJLIA=
-Date:   Wed, 30 Sep 2020 21:02:38 +0000
-Message-ID: <DM6PR19MB2636FB3D94EBA95B7CE0DE54FA330@DM6PR19MB2636.namprd19.prod.outlook.com>
-References: <20200929025521.59573-1-divya.bharathi@dell.com>
- <20200930002319.GI19084@mtg-dev.jf.intel.com>
-In-Reply-To: <20200930002319.GI19084@mtg-dev.jf.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-09-30T21:02:30.6173758Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=1443f5ad-a40b-4209-98b5-c61b71632fe0;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [76.251.167.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 582f7106-6463-4adf-fb82-08d865842a2c
-x-ms-traffictypediagnostic: DM5PR1901MB2182:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR1901MB21821AF6135DCA0A4B986E32FA330@DM5PR1901MB2182.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PfD0/k2Bi+nqvobqq8z5zkupuXEmcgC2AN8B2mMKs4rrWWJY86zSpcDiSUAOzUysx0jjiFG20r6gv9K6I0gk/83ImeUzNGY5jNjF4tTPVX4uW9uTZ3uoqdULkfXIuHOtV6OFfPsyl2C4Qk2zLRzZQzGN5RGq63nAdmFp0ug4LdzXK7ZsdbO60Qqipc7z9+d8xnp742neaImqmR6yAz/QVNEqEsSfZi42RmdP3aUFBKejnxC7RYV7JUmPpDRWa9wP4YDF40JkkD36zPQ7Q/BdENWErx8a/qL1uWvACY4fqvpIrCotK8rEixDlwKgowr6V4TL0vTwwQNHpa2pb0v9Wjg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR19MB2636.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(396003)(136003)(366004)(39860400002)(9686003)(186003)(2906002)(76116006)(5660300002)(55016002)(26005)(110136005)(86362001)(7696005)(33656002)(52536014)(54906003)(83380400001)(71200400001)(6506007)(8936002)(66946007)(66446008)(4326008)(316002)(66476007)(8676002)(64756008)(786003)(66556008)(107886003)(478600001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: tiL/6FJsRDRUPR2ndKvN6D7T0ueH+Ny4JNZzNnYB8bGUa248mjqVRkZdagUgnjz1UztaSLfNIMXmzi9IMcGBA2biGaT+kCF9+opGxuk7Qu+vDu/NfCnd4MXk9c6waEi5Y7J1juyqTjfeXGgxjCSm9fzmMP5xM7yXCtjaRgtVIV4ssBG4j4VAwyLF/n/sspxtDXc17klFOpteePhB/vBqGDW/7ku8QFDD0H7cEO6HFLzrqoV6vRC3CLSBq1YSKgC7SAJbH7mbctv9UeFXp7zlQZsUFFix//+5NoRFyT7dEkbHOClCNszQMK2hJyS1xh6kku52lz7X0VIH5lVuFql8Ix03w0fWXoulDEGWoIwWR0ws6ZLtlp6xH3WLRL7digrck+H726CYfQ8okxFVDSRdB1o4LuatpPOE+P9BHnhBYEYVcCiaGR8UZhIKpTkRrUDlYnE2vzY8hRSsl98rnNUZPUQFBpEg8/aD0s1udxBvJVH7jRonMMvohocfRgZmhrfTW6uSg9cTxbFcoqx6Zci/0QHkdCtWGjJm5ntMWpuUjDrccKqZhN2CYyXdkKTKQvh48N/rOP8Ld/rvSRCz6R1vPlmzYe87K7GpsvUoGDc7rhRIF8Uvpst45PUwyGY6zZlTA/dg/k8Zwe4RxP1e15ZBjQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 30 Sep 2020 21:42:58 -0400
+IronPort-SDR: Kzcsi7+foGfA4K5WjE8eu254coPkWutjn0/+z2FLSI3q1LgusS+yORzXP8bjP+yNQHoNBmjNoc
+ a5LO2HcSUU2A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9760"; a="180750567"
+X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
+   d="scan'208";a="180750567"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2020 18:42:57 -0700
+IronPort-SDR: 2iCO1O3cKYOPSvHX5lCCr20AKEuY+36t+GqOQK5ka70UYLB3puAsrZFDYc9svSl0LkZpf1vMpX
+ V+zNZp9RCEAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
+   d="scan'208";a="500663442"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 30 Sep 2020 18:42:56 -0700
+Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
+        by linux.intel.com (Postfix) with ESMTP id BB34E58033E;
+        Wed, 30 Sep 2020 18:42:56 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
+        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
+        alexander.h.duyck@linux.intel.com, hdegoede@redhat.com,
+        alexey.budankov@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH V7 0/5] Intel Platform Monitoring Technology
+Date:   Wed, 30 Sep 2020 18:42:45 -0700
+Message-Id: <20201001014250.26987-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR19MB2636.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 582f7106-6463-4adf-fb82-08d865842a2c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2020 21:02:38.9115
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DLOd7eN9zNG/OO4tfHTdew+B/vuEyTOzXCuu90i6GSRQ5vHjjUL5Igqk049x6G6SN+ByYNvCx6r9zwUR0SAfwOhLhRDlzK6I5zDNf+wFeGI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1901MB2182
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-30_13:2020-09-30,2020-09-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- mlxscore=0 phishscore=0 impostorscore=0 clxscore=1015 malwarescore=0
- bulkscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009300170
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- bulkscore=0 spamscore=0 malwarescore=0 suspectscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009300171
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-> > +		possible_values:	A file that can be read to obtain the possible
-> > +					values of the <attr>. Values are separated using
-> > +					semi-colon (``;``).
-> why not use set notation from math classes assuming intergers?  i.e.
-> (a, b)  all integers beween a and b but not including a or b (open set)
-> or
-> [a, b] all integerger betwen a and b including and b?  (closed set)
->=20
-> Anyway its ambiguous if the the extremes are included in the set of possi=
-ble
-> values as written.
->=20
+Intel Platform Monitoring Technology (PMT) is an architecture for
+enumerating and accessing hardware monitoring capabilities on a device.
+With customers increasingly asking for hardware telemetry, engineers not
+only have to figure out how to measure and collect data, but also how to
+deliver it and make it discoverable. The latter may be through some device
+specific method requiring device specific tools to collect the data. This
+in turn requires customers to manage a suite of different tools in order to
+collect the differing assortment of monitoring data on their systems.  Even
+when such information can be provided in kernel drivers, they may require
+constant maintenance to update register mappings as they change with
+firmware updates and new versions of hardware. PMT provides a solution for
+discovering and reading telemetry from a device through a hardware agnostic
+framework that allows for updates to systems without requiring patches to
+the kernel or software tools.
 
-Enumeration attributes mean that there are fixed values, specifically not i=
-ntegers.
-Integers are in the "integer" type and explained below.
+PMT defines several capabilities to support collecting monitoring data from
+hardware. All are discoverable as separate instances of the PCIE Designated
+Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
+field uniquely identifies the capability. Each DVSEC also provides a BAR
+offset to a header that defines capability-specific attributes, including
+GUID, feature type, offset and length, as well as configuration settings
+where applicable. The GUID uniquely identifies the register space of any
+monitor data exposed by the capability. The GUID is associated with an XML
+file from the vendor that describes the mapping of the register space along
+with properties of the monitor data. This allows vendors to perform
+firmware updates that can change the mapping (e.g. add new metrics) without
+requiring any changes to drivers or software tools. The new mapping is
+confirmed by an updated GUID, read from the hardware, which software uses
+with a new XML.
 
-An example value that would be seen here is possible_values:
+The current capabilities defined by PMT are Telemetry, Watcher, and
+Crashlog.  The Telemetry capability provides access to a continuous block
+of read only data. The Watcher capability provides access to hardware
+sampling and tracing features. Crashlog provides access to device crash
+dumps.  While there is some relationship between capabilities (Watcher can
+be configured to sample from the Telemetry data set) each exists as stand
+alone features with no dependency on any other. The design therefore splits
+them into individual, capability specific drivers. MFD is used to create
+platform devices for each capability so that they may be managed by their
+own driver. The PMT architecture is (for the most part) agnostic to the
+type of device it can collect from. Software can determine which devices
+support a PMT feature by searching through each device node entry in the
+sysfs class folder. It can additionally determine if a particular device
+supports a PMT feature by checking for a PMT class folder in the device
+folder.
 
-Enabled;Disabled;
+This patch set provides support for the PMT framework, along with support
+for Telemetry on Tiger Lake.
 
-> > +
-> > +	security_area_size =3D calculate_security_buffer();
-> > +	buffer_size =3D security_area_size + integer_area_size;
-> > +	buffer =3D kzalloc(buffer_size, GFP_KERNEL);
-> > +	if (!buffer)
-> > +		return -ENOMEM;
-> if you hit this error return I think you will leak the wmi_priv.mutex loc=
-k.
-> I think this is a bug.
+Changes from V6:
+	- Use NULL for OOBMSM driver data instead of an empty struct.
+	  Rewrite the code to check for NULL driver_data.
+	- Fix spelling and formatting in Kconfig.
+	- Use MKDEV(0,0) to prevent unneeded device node from being
+	  created.
 
-Yes, thanks this is a great finding.
-Team will fix in v6 after we have Hans' feedback for v5.
+Changes from V5:
+	- Add Alder Lake and the "Out of Band Management Services
+	  Module (OOBMSM)" ids to the MFD driver. Transferred to this
+	  patch set.
+	- Use a single class for all PMT capabilities as suggested by
+	  Hans.
+	- Add binary attribute for telemetry driver to allow read
+	  syscall as suggested by Hans.
+	- Use the class file to hold attributes and other common code
+	  used by all PMT drivers.
+	- Add the crashlog driver to the patch set and add a mutex to
+	  protect access to the enable control and trigger files as
+	  suggested by Hans.
+
+Changes from V4:
+	- Replace MFD with PMT in driver title
+	- Fix commit tags in chronological order
+	- Fix includes in alphabetical order
+	- Use 'raw' string instead of defines for device names
+	- Add an error message when returning an error code for
+	  unrecognized capability id
+	- Use dev_err instead of dev_warn for messages when returning
+	  an error
+	- Change while loop to call pci_find_next_ext_capability once
+	- Add missing continue in while loop
+	- Keep PCI platform defines using PCI_DEVICE_DATA magic tied to
+	  the pci_device_id table
+	- Comment and kernel message cleanup
+
+Changes from V3:
+	- Write out full acronym for DVSEC in PCI patch commit message and
+	  add 'Designated' to comments
+	- remove unused variable caught by kernel test robot <lkp@intel.com>
+	- Add required Co-developed-by signoffs, noted by Andy
+	- Allow access using new CAP_PERFMON capability as suggested by
+	  Alexey Bundankov
+	- Fix spacing in Kconfig, noted by Randy
+	- Other style changes and fixups suggested by Andy
+
+Changes from V2:
+	- In order to handle certain HW bugs from the telemetry capability
+	  driver, create a single platform device per capability instead of
+	  a device per entry. Add the entry data as device resources and
+	  let the capability driver manage them as a set allowing for
+	  cleaner HW bug resolution.
+	- Handle discovery table offset bug in intel_pmt.c
+	- Handle overlapping regions in intel_pmt_telemetry.c
+	- Add description of sysfs class to testing ABI.
+	- Don't check size and count until confirming support for the PMT
+	  capability to avoid bailing out when we need to skip it.
+	- Remove unneeded header file. Move code to the intel_pmt.c, the
+	  only place where it's needed.
+	- Remove now unused platform data.
+	- Add missing header files types.h, bits.h.
+	- Rename file name and build options from telem to telemetry.
+	- Code cleanup suggested by Andy S.
+	- x86 mailing list added.
+
+Changes from V1:
+	- In the telemetry driver, set the device in device_create() to
+	  the parent PCI device (the monitoring device) for clear
+	  association in sysfs. Was set before to the platform device
+	  created by the PCI parent.
+	- Move telem struct into driver and delete unneeded header file.
+	- Start telem device numbering from 0 instead of 1. 1 was used
+	  due to anticipated changes, no longer needed.
+	- Use helper macros suggested by Andy S.
+	- Rename class to pmt_telemetry, spelling out full name
+	- Move monitor device name defines to common header
+	- Coding style, spelling, and Makefile/MAINTAINERS ordering fixes
+
+Alexander Duyck (3):
+  platform/x86: Intel PMT class driver
+  platform/x86: Intel PMT Telemetry capability driver
+  platform/x86: Intel PMT Crashlog capability driver
+
+David E. Box (2):
+  PCI: Add defines for Designated Vendor-Specific Extended Capability
+  mfd: Intel Platform Monitoring Technology support
+
+ .../ABI/testing/sysfs-class-intel_pmt         | 119 ++++++
+ MAINTAINERS                                   |   6 +
+ drivers/mfd/Kconfig                           |  10 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/intel_pmt.c                       | 225 ++++++++++++
+ drivers/platform/x86/Kconfig                  |  25 ++
+ drivers/platform/x86/Makefile                 |   3 +
+ drivers/platform/x86/intel_pmt_class.c        | 286 +++++++++++++++
+ drivers/platform/x86/intel_pmt_class.h        |  57 +++
+ drivers/platform/x86/intel_pmt_crashlog.c     | 339 ++++++++++++++++++
+ drivers/platform/x86/intel_pmt_telemetry.c    | 158 ++++++++
+ include/uapi/linux/pci_regs.h                 |   5 +
+ 12 files changed, 1234 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-intel_pmt
+ create mode 100644 drivers/mfd/intel_pmt.c
+ create mode 100644 drivers/platform/x86/intel_pmt_class.c
+ create mode 100644 drivers/platform/x86/intel_pmt_class.h
+ create mode 100644 drivers/platform/x86/intel_pmt_crashlog.c
+ create mode 100644 drivers/platform/x86/intel_pmt_telemetry.c
+
+-- 
+2.20.1
+
