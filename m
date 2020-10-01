@@ -2,127 +2,181 @@ Return-Path: <SRS0=y5BS=DI=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F8BC4727E
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 19:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5FCC4727E
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 19:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2E7208A9
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 19:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852D820759
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 19:15:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJDTNAVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732631AbgJATFC (ORCPT
+        id S1730118AbgJATP6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Oct 2020 15:05:02 -0400
-Received: from mga02.intel.com ([134.134.136.20]:39557 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbgJATFB (ORCPT
+        Thu, 1 Oct 2020 15:15:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729990AbgJATP5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Oct 2020 15:05:01 -0400
-IronPort-SDR: EqynEkvofLb+eFbncaaHxvBwWSgsm+g+pMvXK6U8ATyzuhUeZ5s20Va4O7VAPUtjoQ6u04BWnP
- vcSYwvOt+qZA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9761"; a="150448492"
-X-IronPort-AV: E=Sophos;i="5.77,324,1596524400"; 
-   d="scan'208";a="150448492"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2020 12:04:58 -0700
-IronPort-SDR: rEn4SKQb/Ibvs+CtetDaB/Vp5zFSx7cc+mDkQ3KcU0LzyIfgMGCcWRAERwqk4B7R+BHjriNqZI
- U44dk2k5YpvQ==
-X-IronPort-AV: E=Sophos;i="5.77,324,1596524400"; 
-   d="scan'208";a="385641450"
-Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2020 12:04:58 -0700
-Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
-        by smtp.ostc.intel.com (Postfix) with ESMTP id 9D16A6369;
-        Thu,  1 Oct 2020 12:04:58 -0700 (PDT)
-Date:   Thu, 1 Oct 2020 12:04:58 -0700
-From:   mark gross <mgross@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
-        Divya Bharathi <divya27392@gmail.com>,
-        "dvhart@infradead.org" <dvhart@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>
-Subject: Re: [PATCH v5] Introduce support for Systems Management Driver over
- WMI for Dell Systems
-Message-ID: <20201001190458.GC25055@mtg-dev.jf.intel.com>
-Reply-To: mgross@linux.intel.com
-References: <20200929025521.59573-1-divya.bharathi@dell.com>
- <20200930002319.GI19084@mtg-dev.jf.intel.com>
- <DM6PR19MB2636FB3D94EBA95B7CE0DE54FA330@DM6PR19MB2636.namprd19.prod.outlook.com>
- <42f8e710-38f7-6f80-9f4a-af68cd376538@redhat.com>
+        Thu, 1 Oct 2020 15:15:57 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA11C0613D0;
+        Thu,  1 Oct 2020 12:15:57 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id f15so7368604ilj.2;
+        Thu, 01 Oct 2020 12:15:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ykx0VFwBpOSHBUrfe0BcuppqQUC+bsqRCJaeyH9ESFI=;
+        b=lJDTNAVtfXW4dpX/glZXNoudEQ2UjlPhI+J4RBsIyB+yTfGCIJUYuxthMM/gXkFeqs
+         8Jobetyt/iwoDTmLhqn140BKV/0rqjsR72m6fX9X7QgbDz5xiyoESVj6gzvMWIoFFEX4
+         klRq4m6MdlsB/APoX2+PA8eH+/04k5GNSoO9DPrQiqAXTBQOO16+NH/mgmXp5G7Y+Y71
+         iKxCP3yrG0+8BCNTRxio46C297qeW0GbZUuL7VEywpRXJBRkw38x9bynG4OAN+A5PEm3
+         oOLoB4RQt5EXNFfWLK0ev7JsMJ2pai3M4Vgi5epjSJfYPDsVqNLUccwi00Jvnmet0bGI
+         jLfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ykx0VFwBpOSHBUrfe0BcuppqQUC+bsqRCJaeyH9ESFI=;
+        b=XRnNM7O2qg+iOptg9Zn6Xe5UnBA6fADAbPRroRqll+rQhgahZ+3K+WF85an5zxF3it
+         LE71mymf4loYeWn/wv6sP340gPbrwKCgEKZCiTcN7ZwvWAx6wykt5B3oPsSaJUI2q9Gu
+         6i3SX1iR6lv96QnTbjM5oKcF1Z6z9NsE/1PjQxdT/CnOQVPzgp6+zUBsagyjSRPfrOEO
+         Csb0xT9eMh+b+u/+N+Z6pWYo/zxYCTD50I9UTZLIpDkakAPIIemSEE7WNKMXeYo44LA1
+         xpEAp0KQq0WNE5nib51KDepwsgaE0rg8WvsT6/QVKmC0LHFh48BtAMF2rt8BsZASxDfy
+         n6SA==
+X-Gm-Message-State: AOAM530+l+BzUQK5OjleBW2yZb/uqpdSYvvraJ9hI8K255+KhiUU8Q9P
+        eQa+w038+IhnqzO0DMdC69RWGon/3Qb56/UGRtc=
+X-Google-Smtp-Source: ABdhPJxFJi5WSCLD+Qt6CIeP5jNGPGVedcVJlffgzPTE0dhx/wokQd56dVKG7pixc+H4Zw9OZKeVHwsqKyI6YKdfhwU=
+X-Received: by 2002:a92:950d:: with SMTP id y13mr3778828ilh.42.1601579756833;
+ Thu, 01 Oct 2020 12:15:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <42f8e710-38f7-6f80-9f4a-af68cd376538@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20201001014250.26987-1-david.e.box@linux.intel.com>
+ <20201001014250.26987-6-david.e.box@linux.intel.com> <CAHp75VcP58Ub=gmbRVy0TPJtntKvnQZoi3tOakxE0qsEqzGPVA@mail.gmail.com>
+ <CAKgT0Udk4ZdtAisB=edcUfnBqwNFtY8K54CF+9yEF6MZL1Th6Q@mail.gmail.com> <CAHp75VcfdHWCxMcHvEoO4yTGXooX=mbc-m2kOOuBmFn-FZ70DQ@mail.gmail.com>
+In-Reply-To: <CAHp75VcfdHWCxMcHvEoO4yTGXooX=mbc-m2kOOuBmFn-FZ70DQ@mail.gmail.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 1 Oct 2020 12:15:45 -0700
+Message-ID: <CAKgT0UdaYzOqtSi4+8GW1Y1pRWiOud1vRPhdMjpDZTS9goxe0g@mail.gmail.com>
+Subject: Re: [PATCH V7 5/5] platform/x86: Intel PMT Crashlog capability driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Oct 01, 2020 at 11:26:36AM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 9/30/20 11:02 PM, Limonciello, Mario wrote:
-> > > > +		possible_values:	A file that can be read to obtain the possible
-> > > > +					values of the <attr>. Values are separated using
-> > > > +					semi-colon (``;``).
-> > > why not use set notation from math classes assuming intergers?  i.e.
-> > > (a, b)  all integers beween a and b but not including a or b (open set)
-> > > or
-> > > [a, b] all integerger betwen a and b including and b?  (closed set)
-> > > 
-> > > Anyway its ambiguous if the the extremes are included in the set of possible
-> > > values as written.
-> > > 
-> > 
-> > Enumeration attributes mean that there are fixed values, specifically not integers.
-> > Integers are in the "integer" type and explained below.
-> > 
-> > An example value that would be seen here is possible_values:
-> > 
-> > Enabled;Disabled;
-> 
-> That might not be the best example, because in that case arguably we
-> could export it as a boolean type (except that the WMI interface does
-> not give us boolean as an explicit / separate type).
-> 
-> Mark these enum attributes are really like enums in C, so we
-> have a fixed set of possible values which are described by
-> strings, since using integers for it makes no sense from a human
-> interaction pov. E.g. on the Lenovo X1C8 I have some attributes
-> have the following possible value sets:
-> 
->                 Package (0x03)
->                 {
->                     "High",
->                     "Normal",
->                     "Silent"
->                 },
-> 
->                 Package (0x02)
->                 {
->                     "LCD",
->                     "ExternalDisplay"
->                 },
-> 
->                 Package (0x02)
->                 {
->                     "Independent",
->                     "Synchronized"
->                 },
-> 
-> I hope this helps clarify things.
-It does.  Please ignore my comment on this topic then.
+On Thu, Oct 1, 2020 at 11:47 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Oct 1, 2020 at 9:33 PM Alexander Duyck
+> <alexander.duyck@gmail.com> wrote:
+> > On Thu, Oct 1, 2020 at 9:37 AM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Thu, Oct 1, 2020 at 4:43 AM David E. Box <david.e.box@linux.intel.com> wrote:
+>
+> ...
+>
+> > Arguably not much. I'll drop the comment.
+> >
+> > > > +       control &= ~(CRASHLOG_FLAG_MASK | CRASHLOG_FLAG_DISABLE);
+> > >
+> > > How does the second constant play any role here?
+> >
+> > The "control" flags are bits 28-31, while the disable flag is bit 27
+> > if I recall.
+>
+> Okay, then it adds more confusion to the same comment here and there.
+> Good you are about to drop the comment.
+>
+> > Specifically bit 31 is read only, bit 28 will clear bit 31, bit 29
+> > will cause the crashlog to be generated and set bit 31, and bit 30 is
+> > just reserved 0.
+>
+> Can this be added as a comment somewhere in the code?
 
-thanks
+I'll do that with the definitions themselves.
 
---mark
+> ...
+>
+> > > > +       ret = intel_pmt_dev_create(entry, &pmt_crashlog_ns, parent);
+> > > > +       if (!ret)
+> > > > +               return 0;
+>
+> (2)
+>
+> > > > +
+> > > > +       dev_err(parent, "Failed to add crashlog controls\n");
+> > > > +       intel_pmt_dev_destroy(entry, &pmt_crashlog_ns);
+> > > > +
+> > > > +       return ret;
+> > >
+> > > Can we use traditional patterns?
+> > > if (ret) {
+> > >   ...
+> > > }
+> > > return ret;
+> >
+> > I can switch it if that is preferred.
+>
+> Yes, please. The (2) is really hard to parse (easy to miss ! part and
+> be confused by return 0 one).
+>
+> ...
+>
+> > > Are you going to duplicate this in each driver? Consider to refactor
+> > > to avoid duplication of a lot of code.
+> >
+> > So the issue lies in the complexity of pmt_telem_add_entry versus
+> > pmt_crashlog_add_entry. Specifically I end up needing disc_res and the
+> > discovery table when I go to create the controls for the crashlog
+> > device. Similarly we have a third device that we plan to add called a
+> > watcher which will require us to keep things split up like this so we
+> > thought it best to split it up this way.
+>
+> Could you revisit and think how this can be deduplicated. I see at
+> least one variant with a hooks (callbacks) which you supply depending
+> on the driver, but the for-loop is kept in one place.
 
+I'll see what I can do.
+
+> ...
+>
+> > > > +               .name   = DRV_NAME,
+> > >
+> > > > +MODULE_ALIAS("platform:" DRV_NAME);
+> > >
+> > > I'm not sure I have interpreted this:
+> > >         - Use 'raw' string instead of defines for device names
+> > > correctly. Can you elaborate?
+> >
+> > Again I am not sure what this is in reference to. If you can point me
+> > to some documentation somewhere I can take a look.
+>
+> Reference to your own changelog of this series!
+
+So the issue is we have two authors so it is a matter of keeping track
+of who is working on what.
+
+So apparently that was in reference to the MFD driver which was
+instantiating the devices using defines and there was only one spot
+where they were being used. The reason why I was confused is because
+the commit message had nothing to do with this patch and it I haven't
+really done any work on the MFD driver myself. The link to the 'raw'
+discussion can be found here:
+https://lore.kernel.org/lkml/20200728075859.GH1850026@dell/
