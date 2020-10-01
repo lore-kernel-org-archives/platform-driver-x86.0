@@ -6,101 +6,123 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F7EC47425
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 19:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F8BC4727E
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 19:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E82A221481
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 19:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2E7208A9
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Oct 2020 19:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730164AbgJATC6 (ORCPT
+        id S1732631AbgJATFC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Oct 2020 15:02:58 -0400
-Received: from mga01.intel.com ([192.55.52.88]:7595 "EHLO mga01.intel.com"
+        Thu, 1 Oct 2020 15:05:02 -0400
+Received: from mga02.intel.com ([134.134.136.20]:39557 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729418AbgJATC6 (ORCPT
+        id S1729047AbgJATFB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Oct 2020 15:02:58 -0400
-IronPort-SDR: PeV/f5p4683qYcXcxh5DC8YOoPbcYDxF600Dok6k5H13VNNFml3zwYP3cgdASTdM3D/wws3MwG
- e/Eayr+OSr4g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9761"; a="180964063"
+        Thu, 1 Oct 2020 15:05:01 -0400
+IronPort-SDR: EqynEkvofLb+eFbncaaHxvBwWSgsm+g+pMvXK6U8ATyzuhUeZ5s20Va4O7VAPUtjoQ6u04BWnP
+ vcSYwvOt+qZA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9761"; a="150448492"
 X-IronPort-AV: E=Sophos;i="5.77,324,1596524400"; 
-   d="scan'208";a="180964063"
+   d="scan'208";a="150448492"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2020 12:02:49 -0700
-IronPort-SDR: C9NctXOT66oclyLtKprSyoxrfyEYPwcBuZazqsTcebjyTpRQ1tcQEwx0eyO2lk1BmkLK3lBmx1
- 8/z9ucqKQY7A==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2020 12:04:58 -0700
+IronPort-SDR: rEn4SKQb/Ibvs+CtetDaB/Vp5zFSx7cc+mDkQ3KcU0LzyIfgMGCcWRAERwqk4B7R+BHjriNqZI
+ U44dk2k5YpvQ==
 X-IronPort-AV: E=Sophos;i="5.77,324,1596524400"; 
-   d="scan'208";a="313189207"
+   d="scan'208";a="385641450"
 Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2020 12:02:48 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2020 12:04:58 -0700
 Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
-        by smtp.ostc.intel.com (Postfix) with ESMTP id C10D46369;
-        Thu,  1 Oct 2020 12:02:48 -0700 (PDT)
-Date:   Thu, 1 Oct 2020 12:02:48 -0700
+        by smtp.ostc.intel.com (Postfix) with ESMTP id 9D16A6369;
+        Thu,  1 Oct 2020 12:04:58 -0700 (PDT)
+Date:   Thu, 1 Oct 2020 12:04:58 -0700
 From:   mark gross <mgross@linux.intel.com>
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>
-Cc:     Divya Bharathi <divya27392@gmail.com>,
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        Divya Bharathi <divya27392@gmail.com>,
         "dvhart@infradead.org" <dvhart@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
         "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
-        Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         "Ksr, Prasanth" <Prasanth.Ksr@dell.com>
 Subject: Re: [PATCH v5] Introduce support for Systems Management Driver over
  WMI for Dell Systems
-Message-ID: <20201001190248.GB25055@mtg-dev.jf.intel.com>
+Message-ID: <20201001190458.GC25055@mtg-dev.jf.intel.com>
 Reply-To: mgross@linux.intel.com
 References: <20200929025521.59573-1-divya.bharathi@dell.com>
  <20200930002319.GI19084@mtg-dev.jf.intel.com>
  <DM6PR19MB2636FB3D94EBA95B7CE0DE54FA330@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <42f8e710-38f7-6f80-9f4a-af68cd376538@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DM6PR19MB2636FB3D94EBA95B7CE0DE54FA330@DM6PR19MB2636.namprd19.prod.outlook.com>
+In-Reply-To: <42f8e710-38f7-6f80-9f4a-af68cd376538@redhat.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 09:02:38PM +0000, Limonciello, Mario wrote:
-> > > +		possible_values:	A file that can be read to obtain the possible
-> > > +					values of the <attr>. Values are separated using
-> > > +					semi-colon (``;``).
-> > why not use set notation from math classes assuming intergers?  i.e.
-> > (a, b)  all integers beween a and b but not including a or b (open set)
-> > or
-> > [a, b] all integerger betwen a and b including and b?  (closed set)
+On Thu, Oct 01, 2020 at 11:26:36AM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 9/30/20 11:02 PM, Limonciello, Mario wrote:
+> > > > +		possible_values:	A file that can be read to obtain the possible
+> > > > +					values of the <attr>. Values are separated using
+> > > > +					semi-colon (``;``).
+> > > why not use set notation from math classes assuming intergers?  i.e.
+> > > (a, b)  all integers beween a and b but not including a or b (open set)
+> > > or
+> > > [a, b] all integerger betwen a and b including and b?  (closed set)
+> > > 
+> > > Anyway its ambiguous if the the extremes are included in the set of possible
+> > > values as written.
+> > > 
 > > 
-> > Anyway its ambiguous if the the extremes are included in the set of possible
-> > values as written.
+> > Enumeration attributes mean that there are fixed values, specifically not integers.
+> > Integers are in the "integer" type and explained below.
 > > 
+> > An example value that would be seen here is possible_values:
+> > 
+> > Enabled;Disabled;
 > 
-> Enumeration attributes mean that there are fixed values, specifically not integers.
-> Integers are in the "integer" type and explained below.
+> That might not be the best example, because in that case arguably we
+> could export it as a boolean type (except that the WMI interface does
+> not give us boolean as an explicit / separate type).
 > 
-> An example value that would be seen here is possible_values:
+> Mark these enum attributes are really like enums in C, so we
+> have a fixed set of possible values which are described by
+> strings, since using integers for it makes no sense from a human
+> interaction pov. E.g. on the Lenovo X1C8 I have some attributes
+> have the following possible value sets:
 > 
-> Enabled;Disabled;
-I'm ok with this
+>                 Package (0x03)
+>                 {
+>                     "High",
+>                     "Normal",
+>                     "Silent"
+>                 },
+> 
+>                 Package (0x02)
+>                 {
+>                     "LCD",
+>                     "ExternalDisplay"
+>                 },
+> 
+>                 Package (0x02)
+>                 {
+>                     "Independent",
+>                     "Synchronized"
+>                 },
+> 
+> I hope this helps clarify things.
+It does.  Please ignore my comment on this topic then.
 
-> 
-> > > +
-> > > +	security_area_size = calculate_security_buffer();
-> > > +	buffer_size = security_area_size + integer_area_size;
-> > > +	buffer = kzalloc(buffer_size, GFP_KERNEL);
-> > > +	if (!buffer)
-> > > +		return -ENOMEM;
-> > if you hit this error return I think you will leak the wmi_priv.mutex lock.
-> > I think this is a bug.
-> 
-> Yes, thanks this is a great finding.
-> Team will fix in v6 after we have Hans' feedback for v5.
-Yay! It makes me feel useful to catch stuff like this.
-
-thanks!
+thanks
 
 --mark
+
