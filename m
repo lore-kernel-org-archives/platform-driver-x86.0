@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC643C4727E
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 00:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253D7C4727E
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 00:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADD3521481
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 00:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A7F2177B
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 00:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="mXpXJkdz"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="pHkHD0j6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgJBAYo (ORCPT
+        id S1728090AbgJBAZ1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Oct 2020 20:24:44 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:6900 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727053AbgJBAYo (ORCPT
+        Thu, 1 Oct 2020 20:25:27 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:49342 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727053AbgJBAZ1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Oct 2020 20:24:44 -0400
-Received: from pps.filterd (m0134425.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 092054ZC005626;
-        Fri, 2 Oct 2020 00:06:28 GMT
+        Thu, 1 Oct 2020 20:25:27 -0400
+Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 091NwPDK020704;
+        Fri, 2 Oct 2020 00:06:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pps0720;
- bh=4wSX3Q07/QzZpnEqGMY61fdXNEMXIjXkb9tZJKr7TVI=;
- b=mXpXJkdz8itqYy4r1pp3U2yodGje542tzub+JuXJ1HARKSPcWn7ZWFxIMyHQKLYn7vFI
- GjZ0Lx5gLcHFfLwc+2oNzUl5R17yvEVfRTEm0zWb3bwVOl6QhWk/0fz/kQQu0FLVnPGh
- GMHPLmzSOv05ty0TXTnnfHZsPIc90irmAX1QqzudBaS8nAJuNJxvCq1HdmhR5IfTJOqL
- ndsPCcz3HVVOGcsBKRUHoKXsIyBKeuUvRQSOFpCSKKuF1PIG10S0LGzNRZLaHlTnnGNt
- t1DvDvrSV1pMeOEWznp7Wb4uGbdgWL2KqA7zSC/2z4w8g1JY0YRHkkZCZP7RYFmNB1RR rw== 
-Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
-        by mx0b-002e3701.pphosted.com with ESMTP id 33vb2rnh8h-1
+ bh=Aoeqn22G440bnbanLomVbjrQ2aFrt/xX5RhLSdlV0dE=;
+ b=pHkHD0j6v2BAsZqRnssu+PhdFSg6fHHZnodRyBx3ltAk2QiGiCu+fvQ4Mwhr1rXLrMee
+ YyHLriZAhI8BGcQgjq/IoHb/JwFPkGXx0Og+x9/gxfYLBRpnN7tId6HW0MpQduGjvY4N
+ QlNFP7vHxVvsJKqHexqPaw1u37Fcv+xLhFMQDeHbmFos5OeycxGTSM7TVlV9kI4mRLee
+ uUARdgy7+F1xTn7/ceaJaPWnenUlYgMt2Zb5C9NfbQqa1jbRH03wbgfSAY/E26S+4If9
+ ogWluWBGy4oU1G0wmA6v8G8xIU5BNbEWX6nTlMXr788r4/PFksK1/jNNVZuuwaguuRyY DA== 
+Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
+        by mx0a-002e3701.pphosted.com with ESMTP id 33vtr168ae-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Oct 2020 00:06:28 +0000
+        Fri, 02 Oct 2020 00:06:31 +0000
 Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
-        by g2t2352.austin.hpe.com (Postfix) with ESMTP id 5779D85;
-        Fri,  2 Oct 2020 00:06:28 +0000 (UTC)
+        by g2t2354.austin.hpe.com (Postfix) with ESMTP id AD24DA8;
+        Fri,  2 Oct 2020 00:06:30 +0000 (UTC)
 Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 3F8323A;
-        Fri,  2 Oct 2020 00:06:27 +0000 (UTC)
+        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 91FC937;
+        Fri,  2 Oct 2020 00:06:29 +0000 (UTC)
 From:   Mike Travis <mike.travis@hpe.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -64,9 +64,9 @@ Cc:     Mike Travis <mike.travis@hpe.com>,
         Jian Cai <caij2003@gmail.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 08/13] x86/platform/uv: Adjust GAM MMR references affected by UV5 updates
-Date:   Thu,  1 Oct 2020 19:05:33 -0500
-Message-Id: <20201002000538.94424-9-mike.travis@hpe.com>
+Subject: [PATCH v3 10/13] x86/platform/uv: Update Node Present Counting
+Date:   Thu,  1 Oct 2020 19:05:35 -0500
+Message-Id: <20201002000538.94424-11-mike.travis@hpe.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20201002000538.94424-1-mike.travis@hpe.com>
 References: <20201002000538.94424-1-mike.travis@hpe.com>
@@ -75,66 +75,70 @@ Content-Transfer-Encoding: 8bit
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-10-01_10:2020-10-01,2020-10-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 impostorscore=0 phishscore=0 spamscore=0
- suspectscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=961 bulkscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ bulkscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0 spamscore=0
  clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2010010195
+ engine=8.12.0-2006250000 definitions=main-2010010194
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Make modifications to the GAM MMR mappings to accommodate changes for UV5.
+The changes in the UV5 arch shrunk the NODE PRESENT table to just 2x64
+entries (128 total) so are in to 64 bit MMRs instead of a depth of 64
+bits in an array.  Adjust references when counting up the nodes present.
 
 Signed-off-by: Mike Travis <mike.travis@hpe.com>
 Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
 Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- arch/x86/kernel/apic/x2apic_uv_x.c | 30 +++++++++++++++++++++++++-----
- 1 file changed, 25 insertions(+), 5 deletions(-)
+ arch/x86/kernel/apic/x2apic_uv_x.c | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
 diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-index 746a56466066..9f89c1e82df0 100644
+index 678001ff789d..0e40f4866bc3 100644
 --- a/arch/x86/kernel/apic/x2apic_uv_x.c
 +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -931,12 +931,32 @@ static __init void map_gru_high(int max_pnode)
- 
- static __init void map_mmr_high(int max_pnode)
+@@ -1441,20 +1441,32 @@ static int __init decode_uv_systab(void)
+ /* Set up physical blade translations from UVH_NODE_PRESENT_TABLE */
+ static __init void boot_init_possible_blades(struct uv_hub_info_s *hub_info)
  {
--	union uvh_rh_gam_mmr_overlay_config_u mmr;
--	int shift = UVH_RH_GAM_MMR_OVERLAY_CONFIG_BASE_SHFT;
-+	unsigned long base;
-+	int shift;
-+	bool enable;
-+
-+	if (UVH_RH10_GAM_MMR_OVERLAY_CONFIG) {
-+		union uvh_rh10_gam_mmr_overlay_config_u mmr;
-+
-+		mmr.v = uv_read_local_mmr(UVH_RH10_GAM_MMR_OVERLAY_CONFIG);
-+		enable = mmr.s.enable;
-+		base = mmr.s.base;
-+		shift = UVH_RH10_GAM_MMR_OVERLAY_CONFIG_BASE_SHFT;
-+	} else if (UVH_RH_GAM_MMR_OVERLAY_CONFIG) {
-+		union uvh_rh_gam_mmr_overlay_config_u mmr;
-+
-+		mmr.v = uv_read_local_mmr(UVH_RH_GAM_MMR_OVERLAY_CONFIG);
-+		enable = mmr.s.enable;
-+		base = mmr.s.base;
-+		shift = UVH_RH_GAM_MMR_OVERLAY_CONFIG_BASE_SHFT;
-+	} else {
-+		pr_err("UV:%s:RH_GAM_MMR_OVERLAY_CONFIG MMR undefined?\n",
-+			__func__);
-+		return;
-+	}
++	unsigned long np;
+ 	int i, uv_pb = 0;
  
--	mmr.v = uv_read_local_mmr(UVH_RH_GAM_MMR_OVERLAY_CONFIG);
--	if (mmr.s.enable)
--		map_high("MMR", mmr.s.base, shift, shift, max_pnode, map_uc);
-+	if (enable)
-+		map_high("MMR", base, shift, shift, max_pnode, map_uc);
- 	else
- 		pr_info("UV: MMR disabled\n");
+-	pr_info("UV: NODE_PRESENT_DEPTH = %d\n", UVH_NODE_PRESENT_TABLE_DEPTH);
+-	for (i = 0; i < UVH_NODE_PRESENT_TABLE_DEPTH; i++) {
+-		unsigned long np;
+-
+-		np = uv_read_local_mmr(UVH_NODE_PRESENT_TABLE + i * 8);
+-		if (np)
++	if (UVH_NODE_PRESENT_TABLE) {
++		pr_info("UV: NODE_PRESENT_DEPTH = %d\n",
++			UVH_NODE_PRESENT_TABLE_DEPTH);
++		for (i = 0; i < UVH_NODE_PRESENT_TABLE_DEPTH; i++) {
++			np = uv_read_local_mmr(UVH_NODE_PRESENT_TABLE + i * 8);
+ 			pr_info("UV: NODE_PRESENT(%d) = 0x%016lx\n", i, np);
+-
++			uv_pb += hweight64(np);
++		}
++	}
++	if (UVH_NODE_PRESENT_0) {
++		np = uv_read_local_mmr(UVH_NODE_PRESENT_0);
++		pr_info("UV: NODE_PRESENT_0 = 0x%016lx\n", np);
++		uv_pb += hweight64(np);
++	}
++	if (UVH_NODE_PRESENT_1) {
++		np = uv_read_local_mmr(UVH_NODE_PRESENT_1);
++		pr_info("UV: NODE_PRESENT_1 = 0x%016lx\n", np);
+ 		uv_pb += hweight64(np);
+ 	}
+ 	if (uv_possible_blades != uv_pb)
+ 		uv_possible_blades = uv_pb;
++
++	pr_info("UV: number nodes/possible blades %d\n", uv_pb);
  }
+ 
+ static void __init build_socket_tables(void)
 -- 
 2.21.0
 
