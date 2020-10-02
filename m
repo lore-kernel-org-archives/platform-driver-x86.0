@@ -2,439 +2,211 @@ Return-Path: <SRS0=yw7w=DJ=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2606FC47420
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 00:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C32EC4363D
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 14:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC43E2168B
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 00:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07BA420708
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 14:54:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="mB1usPNd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nN7DLpVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387511AbgJBAum (ORCPT
+        id S2387990AbgJBOyU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Oct 2020 20:50:42 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:55562 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733275AbgJBAul (ORCPT
+        Fri, 2 Oct 2020 10:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387919AbgJBOyU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Oct 2020 20:50:41 -0400
-Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 091NwA3M022550;
-        Fri, 2 Oct 2020 00:06:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pps0720;
- bh=m7aeqne0N9SS7fyciZeuZ8/JyjhFwbmuLiftC89UU3c=;
- b=mB1usPNdLBScxOlPxfPa+4ul6FYwPGbOsj1XEJiP+bu+nQKKH9LW5752FLYX46rWgc6M
- 5MjhDAxSD120m+q555p4sE1lT8ahsorsSWwe20VSEUIG+2TSz7GRE76GN5hiRYiDihrv
- 0frzMNGUXcPAu45U2jB2LUR7TuIGePB0fP25ipmd2H0LUqbsEi60WFHVVyX2ZaeMXnTH
- 1/7BJHDDTx1KyyFMeqkqCwi5efQ/Ucd0F0e2VKoyqxoQGroL8GQ1zu7b+WTBUz8KlA3F
- OOPR9dZ6LvsujvpRGzPq0BCQniqAQub7Kn4A+4v4Dj9lMwJEXA0yxEp3za2301DKMmZE BQ== 
-Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
-        by mx0b-002e3701.pphosted.com with ESMTP id 33w8mb8jx5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Oct 2020 00:06:26 +0000
-Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
-        by g2t2352.austin.hpe.com (Postfix) with ESMTP id 09E9DA1;
-        Fri,  2 Oct 2020 00:06:26 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id E79FE3A;
-        Fri,  2 Oct 2020 00:06:24 +0000 (UTC)
-From:   Mike Travis <mike.travis@hpe.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mike Travis <mike.travis@hpe.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Jian Cai <caij2003@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 06/13] x86/platform/uv: Add and Decode Arch Type in UVsystab
-Date:   Thu,  1 Oct 2020 19:05:31 -0500
-Message-Id: <20201002000538.94424-7-mike.travis@hpe.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20201002000538.94424-1-mike.travis@hpe.com>
-References: <20201002000538.94424-1-mike.travis@hpe.com>
+        Fri, 2 Oct 2020 10:54:20 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52768C0613D0
+        for <platform-driver-x86@vger.kernel.org>; Fri,  2 Oct 2020 07:54:20 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id q18so922184pgk.7
+        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Oct 2020 07:54:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CBUQBoNwK2IqioMfsl/sD8gWfhAHIOihfzF2P2GWXc8=;
+        b=nN7DLpVY4DaLqQyKsC9lYrF3XhBBC5b9V2sgIJA7yeHPrQHstBWgyFqtQ/89WjbxBJ
+         Cm0riJQ7woavw2kqSxZMAtGGYtaekLxUYz36JULIkiDQqmNr6G/CJVVGc8funBxvtruz
+         AMJeY8+MWgqiJVHo3iVxWTPICvgPkaCTJ3f4ZkRs28JPHKjKvL7qVX9Wz5MDzh5iRW60
+         HdF2f/3Z4PHNVwpMOF3q0j6MVFjFn+RWZjMhwHZSk6tynnznhW5rFhIZr6JIvGrQ0heB
+         gxuJQ7FXZfLneT0Fu8rfXi/oCKBMePvkhHUbHTk5af4LNGiuGfl7+s+kbGQnsjkiDrS+
+         ix1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CBUQBoNwK2IqioMfsl/sD8gWfhAHIOihfzF2P2GWXc8=;
+        b=e1k2a7RXOFK/dxqNLb856kOu8SFpVldKQHfVmcq6MyIVlF6/qCU9VbAVaeWeVnsx2D
+         UpJGVFX4Z0/e5tvfgy0dC2rxqgqIeXqE0ya3eI626pYzeb+89JUk9kQZFp8gAZegJM6D
+         hnVQ2h4etaulZn1XamBDq0g7ZmbYp735Exmk65DdbH6LL4h/CjswiniaHhYO9W2n9Rbo
+         p7a15+iMssFolVEqmAlCEaeF484MCpdo5GA+jdJIj6AgISJAChkebxuyabqSlF4ZDRd4
+         yNj1TIKL/5ROH86Niw5KwRQlANAJghd7vi4qd95hrnp11voDSVcFI12wGHdDqyx9QuD5
+         wB1g==
+X-Gm-Message-State: AOAM530UXNXAWUfYU1AsKC4nC2PpQSX4lr8FcIEbXIzXqZGG3HSgb2Sm
+        7MsdSNlyVebqO5fi/iIG92SREUj5Cwwj+zYxhZY=
+X-Google-Smtp-Source: ABdhPJxNnGhMUqL6JAWXCuDYj4QVeDWe8di0sX5g2qdggEtYNymohXg72io3JsinI9cJd4bmtS2/xQ3y67yK+UGGRu0=
+X-Received: by 2002:a63:ec4c:: with SMTP id r12mr2472789pgj.74.1601650459718;
+ Fri, 02 Oct 2020 07:54:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-10-01_10:2020-10-01,2020-10-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- mlxscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501
- malwarescore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2010010194
+References: <20200930131905.48924-1-hdegoede@redhat.com>
+In-Reply-To: <20200930131905.48924-1-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 2 Oct 2020 17:54:01 +0300
+Message-ID: <CAHp75VcoyvpvfpfpcNa_j4oTRQV2Cyue+RJ33AdYz+q8uyCFag@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: intel-vbtn: Switch to an allow-list for
+ SW_TABLET_MODE reporting
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Barnab1s PY1cze <pobrn@protonmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-A patch to add and process the UV Arch Type field in the UVsystab passed
-from UV BIOS to the kernel.  This allows the system to be recognized
-without relying on the OEM_ID which OEMs want to change.
+On Wed, Sep 30, 2020 at 4:19 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> 2 recent commits:
+> cfae58ed681c ("platform/x86: intel-vbtn: Only blacklist SW_TABLET_MODE
+> on the 9 / "Laptop" chasis-type")
+> 1fac39fd0316 ("platform/x86: intel-vbtn: Also handle tablet-mode switch on
+> "Detachable" and "Portable" chassis-types")
+>
+> Enabled reporting of SW_TABLET_MODE on more devices since the vbtn ACPI
+> interface is used by the firmware on some of those devices to report this.
+>
+> Testing has shown that unconditionally enabling SW_TABLET_MODE reporting
+> on all devices with a chassis type of 8 ("Portable") or 10 ("Notebook")
+> which support the VGBS method is a very bad idea.
+>
+> Many of these devices are normal laptops (non 2-in-1) models with a VGBS
+> which always returns 0, which we translate to SW_TABLET_MODE=1. This in
+> turn causes userspace (libinput) to suppress events from the builtin
+> keyboard and touchpad, making the laptop essentially unusable.
+>
+> Since the problem of wrongly reporting SW_TABLET_MODE=1 in combination
+> with libinput, leads to a non-usable system. Where as OTOH many people will
+> not even notice when SW_TABLET_MODE is not being reported, this commit
+> changes intel_vbtn_has_switches() to use a DMI based allow-list.
+>
+> The new DMI based allow-list matches on the 31 ("Convertible") and
+> 32 ("Detachable") chassis-types, as these clearly are 2-in-1s and
+> so far if they support the intel-vbtn ACPI interface they all have
+> properly working SW_TABLET_MODE reporting.
+>
+> Besides these 2 generic matches, it also contains model specific matches
+> for 2-in-1 models which use a different chassis-type and which are known
+> to have properly working SW_TABLET_MODE reporting.
+>
+> This has been tested on the following 2-in-1 devices:
+>
+> Dell Venue 11 Pro 7130 vPro
+> HP Pavilion X2 10-p002nd
+> HP Stream x360 Convertible PC 11
+> Medion E1239T
 
-Signed-off-by: Mike Travis <mike.travis@hpe.com>
-Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
----
- arch/x86/include/asm/uv/bios.h     |  16 +++-
- arch/x86/kernel/apic/x2apic_uv_x.c | 135 +++++++++++++++++++++++++----
- arch/x86/platform/uv/bios_uv.c     |  27 ++++--
- 3 files changed, 148 insertions(+), 30 deletions(-)
+I have reverted previous attempts and applied this one, but...
 
-diff --git a/arch/x86/include/asm/uv/bios.h b/arch/x86/include/asm/uv/bios.h
-index 70050d0136c3..97ac595ebc6a 100644
---- a/arch/x86/include/asm/uv/bios.h
-+++ b/arch/x86/include/asm/uv/bios.h
-@@ -5,8 +5,8 @@
- /*
-  * UV BIOS layer definitions.
-  *
-- *  Copyright (c) 2008-2009 Silicon Graphics, Inc.  All Rights Reserved.
-- *  Copyright (c) Russ Anderson <rja@sgi.com>
-+ * Copyright (C) 2007-2017 Silicon Graphics, Inc. All rights reserved.
-+ * Copyright (c) Russ Anderson <rja@sgi.com>
-  */
- 
- #include <linux/rtc.h>
-@@ -71,6 +71,11 @@ struct uv_gam_range_entry {
- 	u32	limit;		/* PA bits 56:26 (UV_GAM_RANGE_SHFT) */
- };
- 
-+#define	UV_AT_SIZE	8	/* 7 character arch type + NULL char */
-+struct uv_arch_type_entry {
-+	char	archtype[UV_AT_SIZE];
-+};
-+
- #define	UV_SYSTAB_SIG			"UVST"
- #define	UV_SYSTAB_VERSION_1		1	/* UV2/3 BIOS version */
- #define	UV_SYSTAB_VERSION_UV4		0x400	/* UV4 BIOS base version */
-@@ -79,10 +84,14 @@ struct uv_gam_range_entry {
- #define	UV_SYSTAB_VERSION_UV4_3		0x403	/* - GAM Range PXM Value */
- #define	UV_SYSTAB_VERSION_UV4_LATEST	UV_SYSTAB_VERSION_UV4_3
- 
-+#define	UV_SYSTAB_VERSION_UV5		0x500	/* UV5 GAM base version */
-+#define	UV_SYSTAB_VERSION_UV5_LATEST	UV_SYSTAB_VERSION_UV5
-+
- #define	UV_SYSTAB_TYPE_UNUSED		0	/* End of table (offset == 0) */
- #define	UV_SYSTAB_TYPE_GAM_PARAMS	1	/* GAM PARAM conversions */
- #define	UV_SYSTAB_TYPE_GAM_RNG_TBL	2	/* GAM entry table */
--#define	UV_SYSTAB_TYPE_MAX		3
-+#define	UV_SYSTAB_TYPE_ARCH_TYPE	3	/* UV arch type */
-+#define	UV_SYSTAB_TYPE_MAX		4
- 
- /*
-  * The UV system table describes specific firmware
-@@ -133,6 +142,7 @@ extern s64 uv_bios_reserved_page_pa(u64, u64 *, u64 *, u64 *);
- extern int uv_bios_set_legacy_vga_target(bool decode, int domain, int bus);
- 
- extern int uv_bios_init(void);
-+extern unsigned long get_uv_systab_phys(bool msg);
- 
- extern unsigned long sn_rtc_cycles_per_second;
- extern int uv_type;
-diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-index 4e055a01cc63..353825a0b327 100644
---- a/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -31,7 +31,8 @@ static u64			gru_start_paddr, gru_end_paddr;
- static union uvh_apicid		uvh_apicid;
- static int			uv_node_id;
- 
--/* Unpack OEM/TABLE ID's to be NULL terminated strings */
-+/* Unpack AT/OEM/TABLE ID's to be NULL terminated strings */
-+static u8 uv_archtype[UV_AT_SIZE];
- static u8 oem_id[ACPI_OEM_ID_SIZE + 1];
- static u8 oem_table_id[ACPI_OEM_TABLE_ID_SIZE + 1];
- 
-@@ -286,20 +287,104 @@ static void __init uv_stringify(int len, char *to, char *from)
- 	strncpy(to, from, len-1);
- }
- 
-+/* Find UV arch type entry in UVsystab */
-+static unsigned long __init early_find_archtype(struct uv_systab *st)
-+{
-+	int i;
-+
-+	for (i = 0; st->entry[i].type != UV_SYSTAB_TYPE_UNUSED; i++) {
-+		unsigned long ptr = st->entry[i].offset;
-+
-+		if (!ptr)
-+			continue;
-+		ptr += (unsigned long)st;
-+		if (st->entry[i].type == UV_SYSTAB_TYPE_ARCH_TYPE)
-+			return ptr;
-+	}
-+	return 0;
-+}
-+
-+/* Validate UV arch type field in UVsystab */
-+static int __init decode_arch_type(unsigned long ptr)
-+{
-+	struct uv_arch_type_entry *uv_ate = (struct uv_arch_type_entry *)ptr;
-+	int n = strlen(uv_ate->archtype);
-+
-+	if (n > 0 && n < sizeof(uv_ate->archtype)) {
-+		pr_info("UV: UVarchtype received from BIOS\n");
-+		uv_stringify(UV_AT_SIZE, uv_archtype, uv_ate->archtype);
-+		return 1;
-+	}
-+	return 0;
-+}
-+
-+/* Determine if UV arch type entry might exist in UVsystab */
-+static int __init early_get_arch_type(void)
-+{
-+	unsigned long uvst_physaddr, uvst_size, ptr;
-+	struct uv_systab *st;
-+	u32 rev;
-+	int ret;
-+
-+	uvst_physaddr = get_uv_systab_phys(0);
-+	if (!uvst_physaddr)
-+		return 0;
-+
-+	st = early_memremap_ro(uvst_physaddr, sizeof(struct uv_systab));
-+	if (!st) {
-+		pr_err("UV: Cannot access UVsystab, remap failed\n");
-+		return 0;
-+	}
-+
-+	rev = st->revision;
-+	if (rev < UV_SYSTAB_VERSION_UV5) {
-+		early_memunmap(st, sizeof(struct uv_systab));
-+		return 0;
-+	}
-+
-+	uvst_size = st->size;
-+	early_memunmap(st, sizeof(struct uv_systab));
-+	st = early_memremap_ro(uvst_physaddr, uvst_size);
-+	if (!st) {
-+		pr_err("UV: Cannot access UVarchtype, remap failed\n");
-+		return 0;
-+	}
-+
-+	ptr = early_find_archtype(st);
-+	if (!ptr) {
-+		early_memunmap(st, uvst_size);
-+		return 0;
-+	}
-+
-+	ret = decode_arch_type(ptr);
-+	early_memunmap(st, uvst_size);
-+	return ret;
-+}
-+
- static int __init uv_set_system_type(char *_oem_id)
- {
- 	int pnodeid;
- 
--	/* Save OEM ID */
-+	/* Save OEM_ID passed from ACPI MADT */
- 	uv_stringify(sizeof(oem_id), oem_id, _oem_id);
- 
--	/* Set hubless type if true */
--	if (strncmp(oem_id, "SGI", 3) != 0) {
--		if (strncmp(oem_id, "NSGI", 4) != 0)
-+	/* Check if BIOS sent us a UVarchtype */
-+	if (!early_get_arch_type())
-+
-+		/* If not use OEM ID for UVarchtype */
-+		uv_stringify(UV_AT_SIZE, uv_archtype, _oem_id);
-+
-+	/* Check if not hubbed */
-+	if (strncmp(uv_archtype, "SGI", 3) != 0) {
-+
-+		/* (Not hubbed), check if not hubless */
-+		if (strncmp(uv_archtype, "NSGI", 4) != 0)
-+
-+			/* (Not hubless), not a UV */
- 			return 0;
- 
- 		/* UV4 Hubless: CH */
--		if (strncmp(oem_id, "NSGI4", 5) == 0)
-+		if (strncmp(uv_archtype, "NSGI4", 5) == 0)
- 			uv_hubless_system = 0x11;
- 
- 		/* UV3 Hubless: UV300/MC990X w/o hub */
-@@ -318,10 +403,10 @@ static int __init uv_set_system_type(char *_oem_id)
- 
- 	/* Set hubbed type if true */
- 	uv_hub_info->hub_revision =
--		!strncmp(oem_id, "SGI5", 4) ? UV5_HUB_REVISION_BASE :
--		!strncmp(oem_id, "SGI4", 4) ? UV4_HUB_REVISION_BASE :
--		!strncmp(oem_id, "SGI3", 4) ? UV3_HUB_REVISION_BASE :
--		!strcmp(oem_id, "SGI2") ? UV2_HUB_REVISION_BASE : 0;
-+		!strncmp(uv_archtype, "SGI5", 4) ? UV5_HUB_REVISION_BASE :
-+		!strncmp(uv_archtype, "SGI4", 4) ? UV4_HUB_REVISION_BASE :
-+		!strncmp(uv_archtype, "SGI3", 4) ? UV3_HUB_REVISION_BASE :
-+		!strcmp(uv_archtype, "SGI2") ? UV2_HUB_REVISION_BASE : 0;
- 
- 	switch (uv_hub_info->hub_revision) {
- 	case UV5_HUB_REVISION_BASE:
-@@ -392,8 +477,7 @@ static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
- 	return 0;
- 
- badbios:
--	pr_err("UV: OEM_ID:%s OEM_TABLE_ID:%s\n", oem_id, oem_table_id);
--	pr_err("UV: Current UV Type or BIOS not supported\n");
-+	pr_err("UV: UVarchtype:%s not supported\n", uv_archtype);
- 	BUG();
- }
- 
-@@ -1186,6 +1270,7 @@ static void __init decode_gam_rng_tbl(unsigned long ptr)
- 	pr_info("UV: GRT: %d entries, sockets(min:%x,max:%x) pnodes(min:%x,max:%x)\n", index, _min_socket, _max_socket, _min_pnode, _max_pnode);
- }
- 
-+/* Walk through UVsystab decoding the fields */
- static int __init decode_uv_systab(void)
- {
- 	struct uv_systab *st;
-@@ -1215,7 +1300,8 @@ static int __init decode_uv_systab(void)
- 		if (!ptr)
- 			continue;
- 
--		ptr = ptr + (unsigned long)st;
-+		/* point to payload */
-+		ptr += (unsigned long)st;
- 
- 		switch (st->entry[i].type) {
- 		case UV_SYSTAB_TYPE_GAM_PARAMS:
-@@ -1225,6 +1311,15 @@ static int __init decode_uv_systab(void)
- 		case UV_SYSTAB_TYPE_GAM_RNG_TBL:
- 			decode_gam_rng_tbl(ptr);
- 			break;
-+
-+		case UV_SYSTAB_TYPE_ARCH_TYPE:
-+			/* already processed in early startup */
-+			break;
-+
-+		default:
-+			pr_err("UV:%s:Unrecognized UV_SYSTAB_TYPE:%d, skipped\n",
-+				__func__, st->entry[i].type);
-+			break;
- 		}
- 	}
- 	return 0;
-@@ -1265,7 +1360,7 @@ static void __init build_socket_tables(void)
- 			pr_info("UV: No UVsystab socket table, ignoring\n");
- 			return;
- 		}
--		pr_crit("UV: Error: UVsystab address translations not available!\n");
-+		pr_err("UV: Error: UVsystab address translations not available!\n");
- 		BUG();
- 	}
- 
-@@ -1391,9 +1486,9 @@ static int __maybe_unused proc_hubless_show(struct seq_file *file, void *data)
- 	return 0;
- }
- 
--static int __maybe_unused proc_oemid_show(struct seq_file *file, void *data)
-+static int __maybe_unused proc_archtype_show(struct seq_file *file, void *data)
- {
--	seq_printf(file, "%s/%s\n", oem_id, oem_table_id);
-+	seq_printf(file, "%s/%s\n", uv_archtype, oem_table_id);
- 	return 0;
- }
- 
-@@ -1402,7 +1497,7 @@ static __init void uv_setup_proc_files(int hubless)
- 	struct proc_dir_entry *pde;
- 
- 	pde = proc_mkdir(UV_PROC_NODE, NULL);
--	proc_create_single("oemid", 0, pde, proc_oemid_show);
-+	proc_create_single("archtype", 0, pde, proc_archtype_show);
- 	if (hubless)
- 		proc_create_single("hubless", 0, pde, proc_hubless_show);
- 	else
-@@ -1454,12 +1549,14 @@ static void __init uv_system_init_hub(void)
- 
- 	map_low_mmrs();
- 
--	/* Get uv_systab for decoding: */
-+	/* Get uv_systab for decoding, setup UV BIOS calls */
- 	uv_bios_init();
- 
- 	/* If there's an UVsystab problem then abort UV init: */
--	if (decode_uv_systab() < 0)
-+	if (decode_uv_systab() < 0) {
-+		pr_err("UV: Mangled UVsystab format\n");
- 		return;
-+	}
- 
- 	build_socket_tables();
- 	build_uv_gr_table();
-diff --git a/arch/x86/platform/uv/bios_uv.c b/arch/x86/platform/uv/bios_uv.c
-index a2f447dffea6..b148b4c8c2ec 100644
---- a/arch/x86/platform/uv/bios_uv.c
-+++ b/arch/x86/platform/uv/bios_uv.c
-@@ -2,8 +2,8 @@
- /*
-  * BIOS run time interface routines.
-  *
-- *  Copyright (c) 2008-2009 Silicon Graphics, Inc.  All Rights Reserved.
-- *  Copyright (c) Russ Anderson <rja@sgi.com>
-+ * Copyright (C) 2007-2017 Silicon Graphics, Inc. All rights reserved.
-+ * Copyright (c) Russ Anderson <rja@sgi.com>
-  */
- 
- #include <linux/efi.h>
-@@ -170,16 +170,27 @@ int uv_bios_set_legacy_vga_target(bool decode, int domain, int bus)
- 				(u64)decode, (u64)domain, (u64)bus, 0, 0);
- }
- 
--int uv_bios_init(void)
-+unsigned long get_uv_systab_phys(bool msg)
- {
--	uv_systab = NULL;
- 	if ((uv_systab_phys == EFI_INVALID_TABLE_ADDR) ||
- 	    !uv_systab_phys || efi_runtime_disabled()) {
--		pr_crit("UV: UVsystab: missing\n");
--		return -EEXIST;
-+		if (msg)
-+			pr_crit("UV: UVsystab: missing\n");
-+		return 0;
- 	}
-+	return uv_systab_phys;
-+}
-+
-+int uv_bios_init(void)
-+{
-+	unsigned long uv_systab_phys_addr;
-+
-+	uv_systab = NULL;
-+	uv_systab_phys_addr = get_uv_systab_phys(1);
-+	if (!uv_systab_phys_addr)
-+		return -EEXIST;
- 
--	uv_systab = ioremap(uv_systab_phys, sizeof(struct uv_systab));
-+	uv_systab = ioremap(uv_systab_phys_addr, sizeof(struct uv_systab));
- 	if (!uv_systab || strncmp(uv_systab->signature, UV_SYSTAB_SIG, 4)) {
- 		pr_err("UV: UVsystab: bad signature!\n");
- 		iounmap(uv_systab);
-@@ -191,7 +202,7 @@ int uv_bios_init(void)
- 		int size = uv_systab->size;
- 
- 		iounmap(uv_systab);
--		uv_systab = ioremap(uv_systab_phys, size);
-+		uv_systab = ioremap(uv_systab_phys_addr, size);
- 		if (!uv_systab) {
- 			pr_err("UV: UVsystab: ioremap(%d) failed!\n", size);
- 			return -EFAULT;
+> Fixes: cfae58ed681c ("platform/x86: intel-vbtn: Only blacklist SW_TABLET_MODE on the 9 / "Laptop" chasis-type")
+> BugLink: https://forum.manjaro.org/t/keyboard-and-touchpad-only-work-on-kernel-5-6/22668
+> BugLink: https://bugzilla.opensuse.org/show_bug.cgi?id=1175599
+
+> Cc: Barnab1s PY1cze <pobrn@protonmail.com>
+
+...seems like a broken name to me. I'll try to fix this.
+
+> Cc: Takashi Iwai <tiwai@suse.de>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/intel-vbtn.c | 52 +++++++++++++++++++++++++------
+>  1 file changed, 43 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+> index e85d8e58320c..f5901b0b07cd 100644
+> --- a/drivers/platform/x86/intel-vbtn.c
+> +++ b/drivers/platform/x86/intel-vbtn.c
+> @@ -167,20 +167,54 @@ static bool intel_vbtn_has_buttons(acpi_handle handle)
+>         return ACPI_SUCCESS(status);
+>  }
+>
+> +/*
+> + * There are several laptops (non 2-in-1) models out there which support VGBS,
+> + * but simply always return 0, which we translate to SW_TABLET_MODE=1. This in
+> + * turn causes userspace (libinput) to suppress events from the builtin
+> + * keyboard and touchpad, making the laptop essentially unusable.
+> + *
+> + * Since the problem of wrongly reporting SW_TABLET_MODE=1 in combination
+> + * with libinput, leads to a non-usable system. Where as OTOH many people will
+> + * not even notice when SW_TABLET_MODE is not being reported, a DMI based allow
+> + * list is used here. This list mainly matches on the chassis-type of 2-in-1s.
+> + *
+> + * There are also some 2-in-1s which use the intel-vbtn ACPI interface to report
+> + * SW_TABLET_MODE with a chassis-type of 8 ("Portable") or 10 ("Notebook"),
+> + * these are matched on a per model basis, since many normal laptops with a
+> + * possible broken VGBS ACPI-method also use these chassis-types.
+> + */
+> +static const struct dmi_system_id dmi_switches_allow_list[] = {
+> +       {
+> +               .matches = {
+> +                       DMI_EXACT_MATCH(DMI_CHASSIS_TYPE, "31" /* Convertible */),
+> +               },
+> +       },
+> +       {
+> +               .matches = {
+> +                       DMI_EXACT_MATCH(DMI_CHASSIS_TYPE, "32" /* Detachable */),
+> +               },
+> +       },
+> +       {
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7130"),
+> +               },
+> +       },
+> +       {
+> +               .matches = {
+> +                       DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
+> +                       DMI_MATCH(DMI_PRODUCT_NAME, "HP Stream x360 Convertible PC 11"),
+> +               },
+> +       },
+> +       {} /* Array terminator */
+> +};
+> +
+>  static bool intel_vbtn_has_switches(acpi_handle handle)
+>  {
+> -       const char *chassis_type = dmi_get_system_info(DMI_CHASSIS_TYPE);
+>         unsigned long long vgbs;
+>         acpi_status status;
+>
+> -       /*
+> -        * Some normal laptops have a VGBS method despite being non-convertible
+> -        * and their VGBS method always returns 0, causing detect_tablet_mode()
+> -        * to report SW_TABLET_MODE=1 to userspace, which causes issues.
+> -        * These laptops have a DMI chassis_type of 9 ("Laptop"), do not report
+> -        * switches on any devices with a DMI chassis_type of 9.
+> -        */
+> -       if (chassis_type && strcmp(chassis_type, "9") == 0)
+> +       if (!dmi_check_system(dmi_switches_allow_list))
+>                 return false;
+>
+>         status = acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+> --
+> 2.28.0
+>
+
+
 -- 
-2.21.0
-
+With Best Regards,
+Andy Shevchenko
