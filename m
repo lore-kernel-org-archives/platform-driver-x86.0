@@ -2,103 +2,158 @@ Return-Path: <SRS0=yw7w=DJ=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CF8C4363D
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 15:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B306C4363C
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 16:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCEE920708
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 15:07:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3GxLBlb"
+	by mail.kernel.org (Postfix) with ESMTP id 3909B20758
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 16:24:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1601655845;
+	bh=gK9I6rTPjXjfuHfuDJx8UXoHjLG/KaTqjZqvN9amTpo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E6CFS6cDARKZ/zBH/XCYSSMwM8iO6Hmmfteo+8UlQrgnbzvzIRb3aZ/ITwkWvUOTe
+	 RakoNsRNUYAXwRoYjJsjsAuMXb5OYC+OHVl1Np9ENXgLFs5I6tJ+22h41iWK0PfShN
+	 3QHZNCsWrvj7X4dpQIyOWvDYTFqRZaw5oQOYzLBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388116AbgJBPHu (ORCPT
+        id S2387919AbgJBQYB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Oct 2020 11:07:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388091AbgJBPHu (ORCPT
+        Fri, 2 Oct 2020 12:24:01 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43485 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgJBQYA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Oct 2020 11:07:50 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40091C0613D0
-        for <platform-driver-x86@vger.kernel.org>; Fri,  2 Oct 2020 08:07:50 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t7so1000138pjd.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 02 Oct 2020 08:07:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kEZYt5nz2N+kg/vJ6BVK3YBNmPgFi44cdlln9ovBgAs=;
-        b=a3GxLBlbiiVqATiSrOyXE5jMltyaqzPzHErhmmqnNrl2UTMy1u5yRB2LJh09Th5uL8
-         AcQKgMEK+fhuRYIfOBz1OuZ3QRoPohAp896KkJPoWwRLorVyMiZXfwPgDeq//9gVQNHz
-         TxPo/jHwqp6cNtkGrL967lxe0xW5SE837rWv6ZbXyghYSV3JrbBR1/1oPS58fAQ6C/HY
-         sGCyNgodWS1z1YOs/f2eWlW/R11r7u+f7rUec6lzCQ8ANXpCmBol5glonn5s9W/dHv6M
-         aEJ2xWW0K13PM6aXbOBjBMDYSHNk2NmQqqqhWwLd0QU040P+i6Aa1qbzSWsrkLFEv/t3
-         mu2Q==
+        Fri, 2 Oct 2020 12:24:00 -0400
+Received: by mail-ed1-f66.google.com with SMTP id dn5so2244793edb.10;
+        Fri, 02 Oct 2020 09:23:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kEZYt5nz2N+kg/vJ6BVK3YBNmPgFi44cdlln9ovBgAs=;
-        b=V8clXjOBSxoexi3Neu5nFY1PoD87ZqkD04552z+QqjJnhRdpG3X0UD+aACLMwY6C7E
-         wCNM0RoU4XPY6zcpYemuMWvngLLDvtCLpTS4PEWW24kLoGTd8sbhD6ksb5h9OQwojoty
-         Ou/nF4ODYpugL8rO4W0TV9WotyDZZ8wwj+1gzVd6Ob/Quu6sO4AIwSjP9WpFPPtDD6XO
-         UylNtJt9FkfwJyH9RFwCPiIlSHRo3+hQBPnjAOZD37/DIXqGvMmUWKjMGapMAxYKLW8b
-         QEpz0qKeUGH98dRyx8mDobG/m4z+zJTmT8lUYsp6asKTvds1+ianzYN8O1KahBtQg5ql
-         Jm6Q==
-X-Gm-Message-State: AOAM531cltkN2xDkd8+AXiNWXnoaPtI4mWoFkukm8hv8OgUN0JdjmuGs
-        cUYa//wrZUUZJsPAlzImTHxv6bRW4Hbw1NpclqE=
-X-Google-Smtp-Source: ABdhPJxQoHO7FIhLjN26H1D2Wqlyfg57Y32SCbUwDGRKD+c4AfPJWw+/nE4220emOAsYdIX727vEXKbyyTCX+air8+c=
-X-Received: by 2002:a17:90b:fc4:: with SMTP id gd4mr3306155pjb.129.1601651269755;
- Fri, 02 Oct 2020 08:07:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+MzJdC7AJYBNKP850flRQBqAg39526c7mEcoDXa1vc8=;
+        b=W6AYcQXSj6ucI27Iry7nUl8m0KcdwMhvYJ3h3OtGNItARH9rlTLv2szvaLrDzvQISu
+         O10V0pJNX5pcLteJqlLURROHmMrLQQbiXoLvaXKBRfeNr2RXdo6rT/hFNarMEjrgIXlD
+         dGUHGkeulcE+y698KGQsa9ZsTtgB/YiHUAicDbPqv0kMm+xSofeE+iF/VLJ/LHOtg22y
+         Ys/FkIj0RXlnV+/Ikwa3dkbt4vVNPhsOQMSBSUfnAjW2Dflj8cXxsKmJi7cKGVtOz/Jp
+         34HoRDbzmQrTHGVPH76D4T7qsx84zhyqpmD1BybxzRK2HmA3xZb1znsAjq87hmii9oe0
+         /oCg==
+X-Gm-Message-State: AOAM532Aqnd+tKaCxWlsyVLIQb613WpO6ANOhksefNlMAng6fmyYJLTv
+        2QOYhdtv95N4owtmVQyJp8w=
+X-Google-Smtp-Source: ABdhPJwX7D85xx3iEoq/pMeJv9+pxrsyzjqmdtd89l7+FvbLqYa2SJikvg/hGqBR4vKxrCoYrmqIbg==
+X-Received: by 2002:aa7:d15a:: with SMTP id r26mr3222326edo.181.1601655837011;
+        Fri, 02 Oct 2020 09:23:57 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.194])
+        by smtp.googlemail.com with ESMTPSA id i7sm1604495ejo.22.2020.10.02.09.23.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 02 Oct 2020 09:23:56 -0700 (PDT)
+Date:   Fri, 2 Oct 2020 18:23:53 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v3 01/27] Input: Simplify with dev_err_probe()
+Message-ID: <20201002162353.GA5870@kozik-lap>
+References: <20200827185829.30096-1-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20200930131905.48924-1-hdegoede@redhat.com> <CAHp75VcoyvpvfpfpcNa_j4oTRQV2Cyue+RJ33AdYz+q8uyCFag@mail.gmail.com>
- <_GDJXv2BrCsSZ77bLZXvXW2bz0MslNNwgXGiPib5cvCYWleijYXNMnTikDp3Lj1IP6bcQES3tC243dn_h6teAe0_3OVVeOotRtS60MB4WD8=@protonmail.com>
-In-Reply-To: <_GDJXv2BrCsSZ77bLZXvXW2bz0MslNNwgXGiPib5cvCYWleijYXNMnTikDp3Lj1IP6bcQES3tC243dn_h6teAe0_3OVVeOotRtS60MB4WD8=@protonmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 2 Oct 2020 18:07:31 +0300
-Message-ID: <CAHp75VdghsmeqtjvA6LqHxXQqvHcwm1ECjTvjDKe+3B8NrQKKQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: intel-vbtn: Switch to an allow-list for
- SW_TABLET_MODE reporting
-To:     =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Oct 2, 2020 at 6:01 PM Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.c=
-om> wrote:
-> > I have reverted previous attempts and applied this one, but...
-> >
-> > > Fixes: cfae58ed681c ("platform/x86: intel-vbtn: Only blacklist SW_TAB=
-LET_MODE on the 9 / "Laptop" chasis-type")
-> > > BugLink: https://forum.manjaro.org/t/keyboard-and-touchpad-only-work-=
-on-kernel-5-6/22668
-> > > BugLink: https://bugzilla.opensuse.org/show_bug.cgi?id=3D1175599
-> >
-> > > Cc: Barnab1s PY1cze pobrn@protonmail.com
-> >
-> > ...seems like a broken name to me. I'll try to fix this.
+On Thu, Aug 27, 2020 at 08:58:02PM +0200, Krzysztof Kozlowski wrote:
+> Hi,
+> 
+> Changes since v2:
+> 1. Add review tags,
+> 2. Fixes after review (see individual patches).
+> 3. Two new patches - 26 and 27.
+> 
+> 
 
-> Yes, it is. :-(
-> Maybe I shouldn't have used accented characters, sorry. I thought UTF-8
-> was reasonably well-supported in 2020.
+Hi Dmitry,
 
-Sorry for that. I agree that UTF-8 must be supported well. I think
-Hans can check what happened and act accordingly.
+Any comments here? Some of these nicely simplify the code or remove some
+lines.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Best regards,
+Krzysztof
+
+> Best regards,
+> Krzysztof
+> 
+> 
+> 
+> Krzysztof Kozlowski (27):
+>   Input: gpio_keys_polled - Simplify with dev_err_probe()
+>   Input: gpio-vibra - Simplify with dev_err_probe()
+>   Input: pwm-beeper - Simplify with dev_err_probe()
+>   Input: pwm-vibra - Simplify with dev_err_probe()
+>   Input: rotary_encoder - Simplify with dev_err_probe()
+>   Input: elan_i2c - Simplify with dev_err_probe()
+>   Input: bu21013_ts - Simplify with dev_err_probe()
+>   Input: bu21029_ts - Simplify with dev_err_probe()
+>   Input: chipone_icn8318 - Simplify with dev_err_probe()
+>   Input: cy8ctma140 - Simplify with dev_err_probe()
+>   Input: edf-ft5x06 - Simplify with dev_err_probe()
+>   Input: ektf2127 - Simplify with dev_err_probe()
+>   Input: elants_i2c - Simplify with dev_err_probe()
+>   Input: goodix - Simplify with dev_err_probe()
+>   Input: melfas_mip4 - Simplify with dev_err_probe()
+>   Input: pixcir_i2c_ts - Simplify with dev_err_probe()
+>   Input: raydium_i2c_ts - Simplify with dev_err_probe()
+>   Input: resistive-adc-touch - Simplify with dev_err_probe()
+>   Input: silead - Simplify with dev_err_probe()
+>   Input: sis_i2c - Simplify with dev_err_probe()
+>   Input: surface3_spi - Simplify with dev_err_probe()
+>   Input: sx8643 - Simplify with dev_err_probe()
+>   Input: bcm-keypad - Simplify with dev_err_probe()
+>   gpio: Add devm_fwnode_gpiod_get_optional() helpers
+>   Input: gpio_keys - Simplify with dev_err_probe()
+>   Input: bu21013_ts - Use local 'client->dev' variable in probe()
+>   Input: bu21029_ts - Use local 'client->dev' variable in probe()
+> 
+>  drivers/gpio/gpiolib-devres.c                 | 71 ++++++++++++++++++
+>  drivers/input/keyboard/bcm-keypad.c           | 14 ++--
+>  drivers/input/keyboard/gpio_keys.c            | 25 +++----
+>  drivers/input/keyboard/gpio_keys_polled.c     |  8 +--
+>  drivers/input/misc/gpio-vibra.c               | 20 ++----
+>  drivers/input/misc/pwm-beeper.c               | 19 ++---
+>  drivers/input/misc/pwm-vibra.c                | 20 ++----
+>  drivers/input/misc/rotary_encoder.c           |  8 +--
+>  drivers/input/mouse/elan_i2c_core.c           |  9 +--
+>  drivers/input/touchscreen/bu21013_ts.c        | 72 ++++++++-----------
+>  drivers/input/touchscreen/bu21029_ts.c        | 53 ++++++--------
+>  drivers/input/touchscreen/chipone_icn8318.c   |  8 +--
+>  drivers/input/touchscreen/cy8ctma140.c        |  8 +--
+>  drivers/input/touchscreen/edt-ft5x06.c        | 10 +--
+>  drivers/input/touchscreen/ektf2127.c          |  8 +--
+>  drivers/input/touchscreen/elants_i2c.c        | 22 ++----
+>  drivers/input/touchscreen/goodix.c            | 40 +++--------
+>  drivers/input/touchscreen/melfas_mip4.c       |  9 +--
+>  drivers/input/touchscreen/pixcir_i2c_ts.c     | 38 ++++------
+>  drivers/input/touchscreen/raydium_i2c_ts.c    | 30 +++-----
+>  .../input/touchscreen/resistive-adc-touch.c   |  8 +--
+>  drivers/input/touchscreen/silead.c            |  8 +--
+>  drivers/input/touchscreen/sis_i2c.c           | 20 ++----
+>  drivers/input/touchscreen/surface3_spi.c      | 13 +---
+>  drivers/input/touchscreen/sx8654.c            | 10 +--
+>  include/linux/gpio/consumer.h                 | 30 ++++++++
+>  26 files changed, 253 insertions(+), 328 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
