@@ -2,158 +2,74 @@ Return-Path: <SRS0=yw7w=DJ=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B306C4363C
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 16:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6786DC4363D
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 17:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3909B20758
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 16:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1601655845;
-	bh=gK9I6rTPjXjfuHfuDJx8UXoHjLG/KaTqjZqvN9amTpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E6CFS6cDARKZ/zBH/XCYSSMwM8iO6Hmmfteo+8UlQrgnbzvzIRb3aZ/ITwkWvUOTe
-	 RakoNsRNUYAXwRoYjJsjsAuMXb5OYC+OHVl1Np9ENXgLFs5I6tJ+22h41iWK0PfShN
-	 3QHZNCsWrvj7X4dpQIyOWvDYTFqRZaw5oQOYzLBo=
+	by mail.kernel.org (Postfix) with ESMTP id 38D96205ED
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Oct 2020 17:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387919AbgJBQYB (ORCPT
+        id S1726813AbgJBRJi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Oct 2020 12:24:01 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43485 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgJBQYA (ORCPT
+        Fri, 2 Oct 2020 13:09:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56630 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbgJBRJh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Oct 2020 12:24:00 -0400
-Received: by mail-ed1-f66.google.com with SMTP id dn5so2244793edb.10;
-        Fri, 02 Oct 2020 09:23:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+MzJdC7AJYBNKP850flRQBqAg39526c7mEcoDXa1vc8=;
-        b=W6AYcQXSj6ucI27Iry7nUl8m0KcdwMhvYJ3h3OtGNItARH9rlTLv2szvaLrDzvQISu
-         O10V0pJNX5pcLteJqlLURROHmMrLQQbiXoLvaXKBRfeNr2RXdo6rT/hFNarMEjrgIXlD
-         dGUHGkeulcE+y698KGQsa9ZsTtgB/YiHUAicDbPqv0kMm+xSofeE+iF/VLJ/LHOtg22y
-         Ys/FkIj0RXlnV+/Ikwa3dkbt4vVNPhsOQMSBSUfnAjW2Dflj8cXxsKmJi7cKGVtOz/Jp
-         34HoRDbzmQrTHGVPH76D4T7qsx84zhyqpmD1BybxzRK2HmA3xZb1znsAjq87hmii9oe0
-         /oCg==
-X-Gm-Message-State: AOAM532Aqnd+tKaCxWlsyVLIQb613WpO6ANOhksefNlMAng6fmyYJLTv
-        2QOYhdtv95N4owtmVQyJp8w=
-X-Google-Smtp-Source: ABdhPJwX7D85xx3iEoq/pMeJv9+pxrsyzjqmdtd89l7+FvbLqYa2SJikvg/hGqBR4vKxrCoYrmqIbg==
-X-Received: by 2002:aa7:d15a:: with SMTP id r26mr3222326edo.181.1601655837011;
-        Fri, 02 Oct 2020 09:23:57 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.194])
-        by smtp.googlemail.com with ESMTPSA id i7sm1604495ejo.22.2020.10.02.09.23.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 02 Oct 2020 09:23:56 -0700 (PDT)
-Date:   Fri, 2 Oct 2020 18:23:53 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v3 01/27] Input: Simplify with dev_err_probe()
-Message-ID: <20201002162353.GA5870@kozik-lap>
-References: <20200827185829.30096-1-krzk@kernel.org>
+        Fri, 2 Oct 2020 13:09:37 -0400
+Received: from [222.129.36.226] (helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <aaron.ma@canonical.com>)
+        id 1kOOYi-00038m-V4; Fri, 02 Oct 2020 17:09:29 +0000
+From:   Aaron Ma <aaron.ma@canonical.com>
+To:     aaron.ma@canonical.com, mapengyu@gmail.com, ibm-acpi@hmh.eng.br,
+        dvhart@infradead.org, andy@infradead.org,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/x86: thinkpad_acpi: re-initialize ACPI buffer size when reuse
+Date:   Sat,  3 Oct 2020 01:09:16 +0800
+Message-Id: <20201002170916.64328-1-aaron.ma@canonical.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200929082025.51446-1-aaron.ma@canonical.com>
+References: <20200929082025.51446-1-aaron.ma@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 08:58:02PM +0200, Krzysztof Kozlowski wrote:
-> Hi,
-> 
-> Changes since v2:
-> 1. Add review tags,
-> 2. Fixes after review (see individual patches).
-> 3. Two new patches - 26 and 27.
-> 
-> 
+Evaluating ACPI _BCL could fail, then ACPI buffer size will be set to 0.
+When reuse this ACPI buffer, AE_BUFFER_OVERFLOW will be triggered.
 
-Hi Dmitry,
+Re-initialize buffer size will make ACPI evaluate successfully.
 
-Any comments here? Some of these nicely simplify the code or remove some
-lines.
+Fixes: 46445b6b896fd ("thinkpad-acpi: fix handle locate for video and query of _BCL")
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 9c4df41687a3..477d63c49c04 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -6829,8 +6829,10 @@ static int __init tpacpi_query_bcl_levels(acpi_handle handle)
+ 	list_for_each_entry(child, &device->children, node) {
+ 		acpi_status status = acpi_evaluate_object(child->handle, "_BCL",
+ 							  NULL, &buffer);
+-		if (ACPI_FAILURE(status))
++		if (ACPI_FAILURE(status)) {
++			buffer.length = ACPI_ALLOCATE_BUFFER;
+ 			continue;
++		}
+ 
+ 		obj = (union acpi_object *)buffer.pointer;
+ 		if (!obj || (obj->type != ACPI_TYPE_PACKAGE)) {
+-- 
+2.28.0
 
-> Best regards,
-> Krzysztof
-> 
-> 
-> 
-> Krzysztof Kozlowski (27):
->   Input: gpio_keys_polled - Simplify with dev_err_probe()
->   Input: gpio-vibra - Simplify with dev_err_probe()
->   Input: pwm-beeper - Simplify with dev_err_probe()
->   Input: pwm-vibra - Simplify with dev_err_probe()
->   Input: rotary_encoder - Simplify with dev_err_probe()
->   Input: elan_i2c - Simplify with dev_err_probe()
->   Input: bu21013_ts - Simplify with dev_err_probe()
->   Input: bu21029_ts - Simplify with dev_err_probe()
->   Input: chipone_icn8318 - Simplify with dev_err_probe()
->   Input: cy8ctma140 - Simplify with dev_err_probe()
->   Input: edf-ft5x06 - Simplify with dev_err_probe()
->   Input: ektf2127 - Simplify with dev_err_probe()
->   Input: elants_i2c - Simplify with dev_err_probe()
->   Input: goodix - Simplify with dev_err_probe()
->   Input: melfas_mip4 - Simplify with dev_err_probe()
->   Input: pixcir_i2c_ts - Simplify with dev_err_probe()
->   Input: raydium_i2c_ts - Simplify with dev_err_probe()
->   Input: resistive-adc-touch - Simplify with dev_err_probe()
->   Input: silead - Simplify with dev_err_probe()
->   Input: sis_i2c - Simplify with dev_err_probe()
->   Input: surface3_spi - Simplify with dev_err_probe()
->   Input: sx8643 - Simplify with dev_err_probe()
->   Input: bcm-keypad - Simplify with dev_err_probe()
->   gpio: Add devm_fwnode_gpiod_get_optional() helpers
->   Input: gpio_keys - Simplify with dev_err_probe()
->   Input: bu21013_ts - Use local 'client->dev' variable in probe()
->   Input: bu21029_ts - Use local 'client->dev' variable in probe()
-> 
->  drivers/gpio/gpiolib-devres.c                 | 71 ++++++++++++++++++
->  drivers/input/keyboard/bcm-keypad.c           | 14 ++--
->  drivers/input/keyboard/gpio_keys.c            | 25 +++----
->  drivers/input/keyboard/gpio_keys_polled.c     |  8 +--
->  drivers/input/misc/gpio-vibra.c               | 20 ++----
->  drivers/input/misc/pwm-beeper.c               | 19 ++---
->  drivers/input/misc/pwm-vibra.c                | 20 ++----
->  drivers/input/misc/rotary_encoder.c           |  8 +--
->  drivers/input/mouse/elan_i2c_core.c           |  9 +--
->  drivers/input/touchscreen/bu21013_ts.c        | 72 ++++++++-----------
->  drivers/input/touchscreen/bu21029_ts.c        | 53 ++++++--------
->  drivers/input/touchscreen/chipone_icn8318.c   |  8 +--
->  drivers/input/touchscreen/cy8ctma140.c        |  8 +--
->  drivers/input/touchscreen/edt-ft5x06.c        | 10 +--
->  drivers/input/touchscreen/ektf2127.c          |  8 +--
->  drivers/input/touchscreen/elants_i2c.c        | 22 ++----
->  drivers/input/touchscreen/goodix.c            | 40 +++--------
->  drivers/input/touchscreen/melfas_mip4.c       |  9 +--
->  drivers/input/touchscreen/pixcir_i2c_ts.c     | 38 ++++------
->  drivers/input/touchscreen/raydium_i2c_ts.c    | 30 +++-----
->  .../input/touchscreen/resistive-adc-touch.c   |  8 +--
->  drivers/input/touchscreen/silead.c            |  8 +--
->  drivers/input/touchscreen/sis_i2c.c           | 20 ++----
->  drivers/input/touchscreen/surface3_spi.c      | 13 +---
->  drivers/input/touchscreen/sx8654.c            | 10 +--
->  include/linux/gpio/consumer.h                 | 30 ++++++++
->  26 files changed, 253 insertions(+), 328 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
