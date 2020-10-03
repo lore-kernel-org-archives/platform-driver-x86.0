@@ -2,229 +2,161 @@ Return-Path: <SRS0=eaFJ=DK=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB90AC47095
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  3 Oct 2020 01:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E25C41604
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  3 Oct 2020 11:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9458B20665
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  3 Oct 2020 01:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB94206F8
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  3 Oct 2020 11:52:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=malazdrewicz-com-ar.20150623.gappssmtp.com header.i=@malazdrewicz-com-ar.20150623.gappssmtp.com header.b="CHjtcHx+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725769AbgJCBba (ORCPT
+        id S1725772AbgJCLwJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Oct 2020 21:31:30 -0400
-Received: from mga12.intel.com ([192.55.52.136]:62297 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgJCBb3 (ORCPT
+        Sat, 3 Oct 2020 07:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbgJCLwJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Oct 2020 21:31:29 -0400
-IronPort-SDR: cfAg+KbsJ/GlqU7Ch2FGMg3aNQqAzg2L5AcbUVEciTRJA1m7LmubP+/NFzvKB7ISqUnw3ngIIn
- m9KFtVvnBZfQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9762"; a="142522104"
-X-IronPort-AV: E=Sophos;i="5.77,329,1596524400"; 
-   d="scan'208";a="142522104"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2020 18:31:27 -0700
-IronPort-SDR: xnaumRUfJGsPIGqfnH3u5sBv+A3VDbXI0fiEQIuxeMX3HfiG3JyUw6gDDmTIDCrCiARnYF/mG2
- PTcVnLJu+nmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,329,1596524400"; 
-   d="scan'208";a="458807402"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 02 Oct 2020 18:31:27 -0700
-Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id F213C580A89;
-        Fri,  2 Oct 2020 18:31:26 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
-        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        hdegoede@redhat.com, alexey.budankov@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH V8 0/5] Intel Platform Monitoring Technology
-Date:   Fri,  2 Oct 2020 18:31:18 -0700
-Message-Id: <20201003013123.20269-1-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 3 Oct 2020 07:52:09 -0400
+Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BEC3C0613D0
+        for <platform-driver-x86@vger.kernel.org>; Sat,  3 Oct 2020 04:52:09 -0700 (PDT)
+Received: by mail-qk1-x729.google.com with SMTP id c2so6266876qkf.10
+        for <platform-driver-x86@vger.kernel.org>; Sat, 03 Oct 2020 04:52:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=malazdrewicz-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=18Pwy6LERPKcJTlCFwviSLKlI1Wx/tWXunFr2Hk3i/4=;
+        b=CHjtcHx+k5OfszfrLGr4bUu4aO8Mr6LvBEibUWCVo9RExtQSM3oEFi1Fxt9xwyPZdY
+         7ZY2/6GpoS1KQ6RJaktIvj9+145ke8CH8ikF6fCNywqadTdwRv/aiNBfdEDHNG7uoxie
+         SL7l6BDyP/i0Cce8T06NuH6hEwmHrpGYn+8uI7S/gBvfIx4oCbNC2yHtrYQDVn8RzFkt
+         7ryXrYJzgYI2yLr7U7rOwqMzBdesshQphtIxq4dlCmnEGABZsnOWWjSEwi1HWoohndnu
+         mWJL30eB1b30EWWTFON1xSQubKcxDUGXvZHVRS5g3J8VNykskG0nZAcA0IoYJR0L7dE3
+         g+gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=18Pwy6LERPKcJTlCFwviSLKlI1Wx/tWXunFr2Hk3i/4=;
+        b=BPjohFXhaZJMc+dj6WIJhranYQt/dH8tbJAzxAKv+Cv2VHL5cSEt9cCCvu2t7Y8HFt
+         6PKI4IhIfCI4qvl7/cd12MoS4kXTmucq/2pOmUHMFRiOVyMUjkdAeP32YReYnJUQnAPZ
+         ojXLLgadM7RgYRdWTft5Dc/ZfaqEvfU0qGzO5qMcM8CTpuKsO96tWwYyp/RuER2OJ9xc
+         8A6pwek5MSeitGRZn0bnVNC8GmR1vH0hItAmWMb0raylerVZFfXwzzkwQ2Bdj55el19a
+         hlNMnsb05e+mdNZRp6+Lg9HIZHlX6rCqqbkuOgyfIoDyE3TyjvP/KShbQUvR5GrPRKyF
+         8T0Q==
+X-Gm-Message-State: AOAM533i89JAU3pUjqjNFmqcU9/QaLuwAyozalG7K1osjTL5oXR6pe8d
+        YYy9tnNyAezIXS7hW1IzJhETGw==
+X-Google-Smtp-Source: ABdhPJzmBC8b6oILqXb6VJYX7mMunM5SmcnfrvhO+toiYsFL/H6s/ccru/w/H63Mpg97JIotc5sLwg==
+X-Received: by 2002:a37:4a57:: with SMTP id x84mr5991061qka.17.1601725928171;
+        Sat, 03 Oct 2020 04:52:08 -0700 (PDT)
+Received: from area-51m-r2 ([24.224.201.0])
+        by smtp.gmail.com with ESMTPSA id t10sm3141010qkt.55.2020.10.03.04.52.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 Oct 2020 04:52:07 -0700 (PDT)
+Message-ID: <d17b7266b3bcc433477cf4f3b89e0b5cbf0126cb.camel@malazdrewicz.com.ar>
+Subject: [ PATCH: 1/1]  dell smbios driver : Consider Alienware a valid OEM
+ String
+From:   Gerardo Esteban Malazdrewicz <gerardo@malazdrewicz.com.ar>
+To:     Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Mario Limonciello <mario.limonciello@dell.com>
+Cc:     platform-driver-x86@vger.kernel.org
+Date:   Sat, 03 Oct 2020 08:52:06 -0300
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Intel Platform Monitoring Technology (PMT) is an architecture for
-enumerating and accessing hardware monitoring capabilities on a device.
-With customers increasingly asking for hardware telemetry, engineers not
-only have to figure out how to measure and collect data, but also how to
-deliver it and make it discoverable. The latter may be through some device
-specific method requiring device specific tools to collect the data. This
-in turn requires customers to manage a suite of different tools in order to
-collect the differing assortment of monitoring data on their systems.  Even
-when such information can be provided in kernel drivers, they may require
-constant maintenance to update register mappings as they change with
-firmware updates and new versions of hardware. PMT provides a solution for
-discovering and reading telemetry from a device through a hardware agnostic
-framework that allows for updates to systems without requiring patches to
-the kernel or software tools.
+From bda6b6db0d76186ff37ffce8ac836379447ef2bc Mon Sep 17 00:00:00 2001
+From: Gerardo Malazdrewicz <36243997+GerMalaz@users.noreply.github.com>
+Date: Sat, 3 Oct 2020 07:43:02 -0300
+Subject: [PATCH] dell-smbios-base: Consider Alienware a Dell system
 
-PMT defines several capabilities to support collecting monitoring data from
-hardware. All are discoverable as separate instances of the PCIE Designated
-Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
-field uniquely identifies the capability. Each DVSEC also provides a BAR
-offset to a header that defines capability-specific attributes, including
-GUID, feature type, offset and length, as well as configuration settings
-where applicable. The GUID uniquely identifies the register space of any
-monitor data exposed by the capability. The GUID is associated with an XML
-file from the vendor that describes the mapping of the register space along
-with properties of the monitor data. This allows vendors to perform
-firmware updates that can change the mapping (e.g. add new metrics) without
-requiring any changes to drivers or software tools. The new mapping is
-confirmed by an updated GUID, read from the hardware, which software uses
-with a new XML.
+Alienware has been a subsidiary of Dell since 2006.
 
-The current capabilities defined by PMT are Telemetry, Watcher, and
-Crashlog.  The Telemetry capability provides access to a continuous block
-of read only data. The Watcher capability provides access to hardware
-sampling and tracing features. Crashlog provides access to device crash
-dumps.  While there is some relationship between capabilities (Watcher can
-be configured to sample from the Telemetry data set) each exists as stand
-alone features with no dependency on any other. The design therefore splits
-them into individual, capability specific drivers. MFD is used to create
-platform devices for each capability so that they may be managed by their
-own driver. The PMT architecture is (for the most part) agnostic to the
-type of device it can collect from. Software can determine which devices
-support a PMT feature by searching through each device node entry in the
-sysfs class folder. It can additionally determine if a particular device
-supports a PMT feature by checking for a PMT class folder in the device
-folder.
+2020 Alienware laptop:
+$ sudo dmidecode | head -3
+# dmidecode 3.2
+Getting SMBIOS data from sysfs.
+SMBIOS 3.2.0 present.
+$ sudo dmidecode | grep -A 29 "OEM Strings"
+OEM Strings
+	String 1: Alienware
+	String 2: 1[099B]
+	String 3: 3[1.0]
+	String 4: 4[0001]
+	String 5: 5[0000]
+	String 6: 6[D0, D4, D8, DA, DE]
+	String 7: 7[]
+	String 8: 8[]
+	String 9: 9[]
+	String 10: 10[1.3.0]
+	String 11: 11[]
+	String 12: 12[]
+	String 13: 13[P38E002]
+	String 14: 14[0]
+	String 15: 15[0]
+	String 16: 16[0]
+	String 17: 17[0000000000000000]
+	String 18: 18[0]
+	String 19: 19[1]
+	String 20: 20[]
+	String 21: 21[]
+	String 22: <BAD INDEX>
+	String 23: <BAD INDEX>
+	String 24: <BAD INDEX>
+	String 25: <BAD INDEX>
+	String 26: <BAD INDEX>
+	String 27: <BAD INDEX>
+	String 28: <BAD INDEX>
 
-This patch set provides support for the PMT framework, along with support
-for Telemetry on Tiger Lake.
+2013 Alienware laptop:
+OEM Strings
+        String 1: Dell System
+        String 2: 1[05AA]
+        String 3: 14[2]
+        String 4: 15[0]
+        String 5: String5 for Original Equipment Manufacturer
 
-Changes from V7:
-Link: https://lore.kernel.org/lkml/20201001014250.26987-1-david.e.box@linux.intel.com/
+Don't know when the OEM String changed.
+Change tested in the 2020 laptop, loads dell_smbios without further
+issues.
 
- 	- Refactor to minimize code duplication by putting more setup code 
-	  in the common intel_pmt_dev_create(). 
-	- Add and use a function pointer to handle capability specific
-	  header decoding.
-	- Add comment on usage of early_client_pci_ids list and add
-	  Alder Lake PCI ID to the list.
-	- Remove unneeded check on the count variable in intel_pmt_read().
-	- Add missing header functions.
-	- Specify module names in Kconfig.
-	- Fix spelling errors across patch set.
+Thanks,
+        Gerardo
 
-Changes from V6:
-	- Use NULL for OOBMSM driver data instead of an empty struct.
-	  Rewrite the code to check for NULL driver_data.
-	- Fix spelling and formatting in Kconfig.
-	- Use MKDEV(0,0) to prevent unneeded device node from being
-	  created.
+Signed-off-by: Gerardo E. Malazdrewicz <gerardo@malazdrewicz.com.ar>
+---
+ drivers/platform/x86/dell-smbios-base.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Changes from V5:
-	- Add Alder Lake and the "Out of Band Management Services
-	  Module (OOBMSM)" ids to the MFD driver. Transferred to this
-	  patch set.
-	- Use a single class for all PMT capabilities as suggested by
-	  Hans.
-	- Add binary attribute for telemetry driver to allow read
-	  syscall as suggested by Hans.
-	- Use the class file to hold attributes and other common code
-	  used by all PMT drivers.
-	- Add the crashlog driver to the patch set and add a mutex to
-	  protect access to the enable control and trigger files as
-	  suggested by Hans.
+diff --git a/drivers/platform/x86/dell-smbios-base.c
+b/drivers/platform/x86/dell-smbios-base.c
+index 2e2cd565926aa..5ad6f7c105cf3 100644
+--- a/drivers/platform/x86/dell-smbios-base.c
++++ b/drivers/platform/x86/dell-smbios-base.c
+@@ -564,7 +564,8 @@ static int __init dell_smbios_init(void)
+ 	int ret, wmi, smm;
+ 
+ 	if (!dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Dell System",
+NULL) &&
+-	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com",
+NULL)) {
++	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "www.dell.com",
+NULL) &&
++	    !dmi_find_device(DMI_DEV_TYPE_OEM_STRING, "Alienware",
+NULL)) {
+ 		pr_err("Unable to run on non-Dell system\n");
+ 		return -ENODEV;
+ 	}
 
-Changes from V4:
-	- Replace MFD with PMT in driver title
-	- Fix commit tags in chronological order
-	- Fix includes in alphabetical order
-	- Use 'raw' string instead of defines for device names
-	- Add an error message when returning an error code for
-	  unrecognized capability id
-	- Use dev_err instead of dev_warn for messages when returning
-	  an error
-	- Change while loop to call pci_find_next_ext_capability once
-	- Add missing continue in while loop
-	- Keep PCI platform defines using PCI_DEVICE_DATA magic tied to
-	  the pci_device_id table
-	- Comment and kernel message cleanup
-
-Changes from V3:
-	- Write out full acronym for DVSEC in PCI patch commit message and
-	  add 'Designated' to comments
-	- remove unused variable caught by kernel test robot <lkp@intel.com>
-	- Add required Co-developed-by signoffs, noted by Andy
-	- Allow access using new CAP_PERFMON capability as suggested by
-	  Alexey Bundankov
-	- Fix spacing in Kconfig, noted by Randy
-	- Other style changes and fixups suggested by Andy
-
-Changes from V2:
-	- In order to handle certain HW bugs from the telemetry capability
-	  driver, create a single platform device per capability instead of
-	  a device per entry. Add the entry data as device resources and
-	  let the capability driver manage them as a set allowing for
-	  cleaner HW bug resolution.
-	- Handle discovery table offset bug in intel_pmt.c
-	- Handle overlapping regions in intel_pmt_telemetry.c
-	- Add description of sysfs class to testing ABI.
-	- Don't check size and count until confirming support for the PMT
-	  capability to avoid bailing out when we need to skip it.
-	- Remove unneeded header file. Move code to the intel_pmt.c, the
-	  only place where it's needed.
-	- Remove now unused platform data.
-	- Add missing header files types.h, bits.h.
-	- Rename file name and build options from telem to telemetry.
-	- Code cleanup suggested by Andy S.
-	- x86 mailing list added.
-
-Changes from V1:
-	- In the telemetry driver, set the device in device_create() to
-	  the parent PCI device (the monitoring device) for clear
-	  association in sysfs. Was set before to the platform device
-	  created by the PCI parent.
-	- Move telem struct into driver and delete unneeded header file.
-	- Start telem device numbering from 0 instead of 1. 1 was used
-	  due to anticipated changes, no longer needed.
-	- Use helper macros suggested by Andy S.
-	- Rename class to pmt_telemetry, spelling out full name
-	- Move monitor device name defines to common header
-	- Coding style, spelling, and Makefile/MAINTAINERS ordering fixes
-
-Alexander Duyck (3):
-  platform/x86: Intel PMT class driver
-  platform/x86: Intel PMT Telemetry capability driver
-  platform/x86: Intel PMT Crashlog capability driver
-
-David E. Box (2):
-  PCI: Add defines for Designated Vendor-Specific Extended Capability
-  mfd: Intel Platform Monitoring Technology support
-
- .../ABI/testing/sysfs-class-intel_pmt         | 119 +++++++
- MAINTAINERS                                   |   6 +
- drivers/mfd/Kconfig                           |  10 +
- drivers/mfd/Makefile                          |   1 +
- drivers/mfd/intel_pmt.c                       | 226 ++++++++++++
- drivers/platform/x86/Kconfig                  |  34 ++
- drivers/platform/x86/Makefile                 |   3 +
- drivers/platform/x86/intel_pmt_class.c        | 297 ++++++++++++++++
- drivers/platform/x86/intel_pmt_class.h        |  52 +++
- drivers/platform/x86/intel_pmt_crashlog.c     | 328 ++++++++++++++++++
- drivers/platform/x86/intel_pmt_telemetry.c    | 160 +++++++++
- include/uapi/linux/pci_regs.h                 |   5 +
- 12 files changed, 1241 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-intel_pmt
- create mode 100644 drivers/mfd/intel_pmt.c
- create mode 100644 drivers/platform/x86/intel_pmt_class.c
- create mode 100644 drivers/platform/x86/intel_pmt_class.h
- create mode 100644 drivers/platform/x86/intel_pmt_crashlog.c
- create mode 100644 drivers/platform/x86/intel_pmt_telemetry.c
-
--- 
-2.20.1
 
