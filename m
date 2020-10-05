@@ -2,135 +2,184 @@ Return-Path: <SRS0=eRQc=DM=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802C8C4363A
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Oct 2020 18:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06E2C4363A
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Oct 2020 20:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42D4420FC3
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Oct 2020 18:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B6E2177B
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Oct 2020 20:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s1FvaNLz"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="Csnx4YNo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbgJESKT (ORCPT
+        id S1728449AbgJEUkU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Oct 2020 14:10:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725960AbgJESKS (ORCPT
+        Mon, 5 Oct 2020 16:40:20 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:15736 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726935AbgJEUkT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Oct 2020 14:10:18 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B007C0613CE;
-        Mon,  5 Oct 2020 11:10:18 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id l126so7471534pfd.5;
-        Mon, 05 Oct 2020 11:10:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YoMIv66+/pcP+7tXkGyfiaP3wPkP8AZJOUeLQyrbhCo=;
-        b=s1FvaNLzk9ENAUF+dImr5G6uF3ttayAdr3ACaxBA/MFA6jo+FY6tDANTn01a3raqQD
-         9Dxru8Cv/VQ9HJfZkv490IkLOJ6zk4WjW2gdMjjjhdIMli3lmGNoaAbkEGAlRSVvmwQr
-         A22Oro0X+4/rXIkuQhY0A3e93DBSE2Ah8ihWqV9RiH94dSKJ+454v6WUhX8Qku/2fCB9
-         IaoYapNlRFdrGPIPkEkUsp4K4vTB4xNAJiQTFCGNXZ8MBzTqadDJn3b8pZVGKYK5XkxE
-         VlRsacm41HnJBo8cXHBiPeH7kiXkkYUa3KaUPA3FcwVcd1QgWybul8C3I51cWAxKKyth
-         kmvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YoMIv66+/pcP+7tXkGyfiaP3wPkP8AZJOUeLQyrbhCo=;
-        b=JKjH0w0r40GrEyehYAg6BsQSXjiEtwFJpO5vX9XHY4rx/1I89b4p/lmW12mG0qG62T
-         wTJVSnT+GhIW9E+2sEUsn8aVpIb4fBdJozwLppUTcbTpZJhHcMhKXUndIZt4spGWaRKU
-         Nyi5VysLpVa20PQ+qQVxXgqv7gwG45eon2Vh4QL10+lPGDXAad4z+C0Mt4gKj8DatVoj
-         R6WJ1OaELHcr6L+/efBS10QeMZ708jujnbIn+4eNTZRqHvQ0osxikJRCoDigoELH27Nk
-         jwYssDyqM7Dtd9Yet3QBeTHpqnPP79PeDqsxPVSBNOmRL1ogBH3bdj5v6PnI9nvCppX0
-         4f3Q==
-X-Gm-Message-State: AOAM530iomReTvihl2+cCcvo/V9UP7sitjMa8LRcZT1WKzELmQtdA5f+
-        t43uTEYJOiBNQgZl4FDV7HA=
-X-Google-Smtp-Source: ABdhPJyH4fsGnVblPJB5N4pgMwQJmZq67gBl5WqwS0SGCx7kk269VvXfguknhYlG7b9tInkRJJ8m+Q==
-X-Received: by 2002:a63:4945:: with SMTP id y5mr679607pgk.181.1601921417989;
-        Mon, 05 Oct 2020 11:10:17 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id v5sm550037pfu.151.2020.10.05.11.10.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Oct 2020 11:10:16 -0700 (PDT)
-Date:   Mon, 5 Oct 2020 11:10:14 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        kernel@collabora.com, Patrik Fimml <patrikf@chromium.org>
-Subject: Re: [PATCH v4 7/7] Input: Add "inhibited" property
-Message-ID: <20201005181014.GL1009802@dtor-ws>
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com>
- <20200608112211.12125-8-andrzej.p@collabora.com>
+        Mon, 5 Oct 2020 16:40:19 -0400
+Received: from pps.filterd (m0148664.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 095Ka4jT032753;
+        Mon, 5 Oct 2020 20:39:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pps0720;
+ bh=dSLllFpQfP9e6b7pjY9F7Db863NhII7MQZpc57rqh1U=;
+ b=Csnx4YNosiqwEFf4KEmO9XzfcvU8EbBkGWoTBEdeU1NLqZP7B6bIf0VFvLCWp2sE2pU/
+ NOsKPxvKX6StFpbzxV8dPZNBsDW3HF50Lncla66KCLmZz9t/VBeZgOHu2zFaJUueNQuO
+ bfS6Xor9R4pSr24YPLeDT5TUiK/XhqVHXFyU4qiRSVLleRnVD2pV4TUStGBtQqN6NosU
+ RKh+D4Lkr9iPgp0x1CT3qcGjhj8NsgpFkfalwczJe5bjg1nnWG8gvKWDJpA9KCWYozLM
+ ShwzJGGutEP+8ftyjrQIHwDmo+r6BrBoMakq30KVgVB2I36C9iWFu6gaowULXxMFMOWk bw== 
+Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
+        by mx0b-002e3701.pphosted.com with ESMTP id 33xgdvkaqx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 05 Oct 2020 20:39:46 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g4t3426.houston.hpe.com (Postfix) with ESMTP id 0F1054E;
+        Mon,  5 Oct 2020 20:39:46 +0000 (UTC)
+Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 4D66E4C;
+        Mon,  5 Oct 2020 20:39:44 +0000 (UTC)
+From:   Mike Travis <mike.travis@hpe.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mike Travis <mike.travis@hpe.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jian Cai <caij2003@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH v4 00/13] x86/platform/uv: Updates for UV5 Architecture
+Date:   Mon,  5 Oct 2020 15:39:16 -0500
+Message-Id: <20201005203929.148656-1-mike.travis@hpe.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608112211.12125-8-andrzej.p@collabora.com>
+Content-Transfer-Encoding: 8bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-10-05_15:2020-10-05,2020-10-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 mlxlogscore=565 impostorscore=0 spamscore=0 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2010050144
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andrzej,
 
-On Mon, Jun 08, 2020 at 01:22:11PM +0200, Andrzej Pietrasiewicz wrote:
-> @@ -284,8 +284,11 @@ static int input_get_disposition(struct input_dev *dev,
->  	case EV_KEY:
->  		if (is_event_supported(code, dev->keybit, KEY_MAX)) {
->  
-> -			/* auto-repeat bypasses state updates */
-> -			if (value == 2) {
-> +			/*
-> +			 * auto-repeat bypasses state updates but repeat
-> +			 * events are ignored if the key is not pressed
-> +			 */
-> +			if (value == 2 && test_bit(code, dev->key)) {
->  				disposition = INPUT_PASS_TO_HANDLERS;
->  				break;
->  			}
+Changes included in this patch set:
 
-Is this chunk really part of inhibit support? I'd think we cancel
-autorepeat timer when we are releasing a key, no?
+ * Add changes needed for new UV5 UV architecture.  Chief among the
+   changes are 52 bits of physical memory address and 57 bits of
+   virtual address space.
 
-Thanks.
+ * Remove the BAU TLB code cuurently being replaced by BAU APIC driver.
+
+ * Remove System Controller (monitoring) code
+
+ * Updated UV mmrs.h file removing UV1, adding UVY class, optimizing
+   the arch selection of the MMR address/field, and trimming down MMR
+   selection list reducing number of MMRs being defined.
+
+ * Process UV ArchType in UV BIOS generated UVsystab allowing OEMs to
+   use OEM_ID for their own purposes.
+
+ * Update various mapping functions (MMIOH, MMR, GRU) to accommodate
+   UV5 differences.
+
+ * Update node present counting for change in MMRs.
+
+ * Update TSC sync check of BIOS sync status.
+
+ * Update NMI handler for UV5 MMR changes.
+
+ * Update copyrights to conform to HPE standards.
+
+
+This is version 4 with these changes since version 3: 
+
+ * Fixed coding errors reported by kernel test robot <lkp@intel.com>
+
+ - In [PATCH 04/13] x86/platform/uv: Update UV MMRs for UV5
+     Remove pnodeid return from early_get_pnodeid() as it was only used by UV1.
+     Remove read node_id in uv_init_hub_info() as it was no longer relevant.
+
+ - In [PATCH v3 07/13] x86/platform/uv: Update MMIOH references based on new UV5 MMRs.
+     Make calc_mmioh_map() a static function.
+
+
+This is version 3 with these changes since version 2: 
+
+ * Changes made to .gitconfig so no internal (unreachable) systems
+   are referenced.
+
+
+This is version 2 with these changes since version 1: 
+
+ * Added diffstats to p-intro.
+
+ * Updated Copyrights to be in one file and only include the year
+   the code was modified.
+
+ * Updated to use git format-patch to construct patch email and 
+   git send-email to send the patches.
+
+
+Mike Travis (13):
+  x86/platform/uv: Remove UV BAU TLB Shootdown Handler
+  x86/platform/uv: Remove SCIR MMR references for UVY systems.
+  x86/platform/uv: Adjust references in UV kernel modules
+  x86/platform/uv: Update UV MMRs for UV5
+  x86/platform/uv: Add UV5 direct references
+  x86/platform/uv: Add and Decode Arch Type in UVsystab
+  x86/platform/uv: Update MMIOH references based on new UV5 MMRs.
+  x86/platform/uv: Adjust GAM MMR references affected by UV5 updates
+  x86/platform/uv: Update UV5 MMR references in UV GRU
+  x86/platform/uv: Update Node Present Counting
+  x86/platform/uv: Update UV5 TSC Checking
+  x86/platform/uv: Update for UV5 NMI MMR changes
+  x86/platform/uv: Update Copyrights to conform to HPE standards
+
+ arch/x86/include/asm/idtentry.h     |    4 -
+ arch/x86/include/asm/uv/bios.h      |   17 +-
+ arch/x86/include/asm/uv/uv.h        |    4 +-
+ arch/x86/include/asm/uv/uv_bau.h    |  755 ---
+ arch/x86/include/asm/uv/uv_hub.h    |  165 +-
+ arch/x86/include/asm/uv/uv_mmrs.h   | 7646 ++++++++++++++-------------
+ arch/x86/kernel/apic/x2apic_uv_x.c  |  822 +--
+ arch/x86/kernel/idt.c               |    3 -
+ arch/x86/mm/tlb.c                   |   24 -
+ arch/x86/platform/uv/Makefile       |    2 +-
+ arch/x86/platform/uv/bios_uv.c      |   28 +-
+ arch/x86/platform/uv/tlb_uv.c       | 2097 --------
+ arch/x86/platform/uv/uv_nmi.c       |   65 +-
+ arch/x86/platform/uv/uv_time.c      |   11 +-
+ drivers/misc/sgi-gru/grufile.c      |    3 +-
+ drivers/misc/sgi-xp/xp.h            |    9 +-
+ drivers/misc/sgi-xp/xp_main.c       |    5 +-
+ drivers/misc/sgi-xp/xp_uv.c         |    7 +-
+ drivers/misc/sgi-xp/xpc_main.c      |    7 +-
+ drivers/misc/sgi-xp/xpc_partition.c |    3 +-
+ drivers/misc/sgi-xp/xpnet.c         |    3 +-
+ 21 files changed, 4797 insertions(+), 6883 deletions(-)
+ delete mode 100644 arch/x86/include/asm/uv/uv_bau.h
+ delete mode 100644 arch/x86/platform/uv/tlb_uv.c
 
 -- 
-Dmitry
+2.21.0
+
