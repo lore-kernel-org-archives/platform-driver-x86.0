@@ -2,143 +2,142 @@ Return-Path: <SRS0=eRQc=DM=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B0DC4363A
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Oct 2020 14:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F54C4363A
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Oct 2020 16:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE68220757
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Oct 2020 14:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08168206CB
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Oct 2020 16:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="aTfwPVgH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5ImITkH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725932AbgJEOT1 (ORCPT
+        id S1727284AbgJEQDb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Oct 2020 10:19:27 -0400
-Received: from mail-41103.protonmail.ch ([185.70.41.103]:59920 "EHLO
-        mail-41103.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbgJEOTW (ORCPT
+        Mon, 5 Oct 2020 12:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgJEQDb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Oct 2020 10:19:22 -0400
-Received: from mail-02.mail-europe.com (mail-02.mail-europe.com [51.89.119.103])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        by mail-41103.protonmail.ch (Postfix) with ESMTPS id C19CF203178B;
-        Mon,  5 Oct 2020 14:19:19 +0000 (UTC)
-Authentication-Results: mail-41103.protonmail.ch;
-        dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="aTfwPVgH"
-Date:   Mon, 05 Oct 2020 14:19:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1601907556;
-        bh=uxAbSn5iuW7/MieJ/5dseSbv7CZpwyQpt5rGrKEUIbI=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=aTfwPVgH+B9AibxU1wj/5tQ/JGcdsBDYi5o7DlUYLmBe3ucy24ssGQ2Vip9E79drh
-         y6PY0wOsGOrqQZjEPIF6x4MXlp/kHlI1vfsSNDpTUOIZolTjIWU3qYZRToIl63gbbY
-         3CR7oaGJ7Bh0dfF/f/2dH8trNijKyZ/W3O0tK0gQ=
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mon, 5 Oct 2020 12:03:31 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38483C0613CE;
+        Mon,  5 Oct 2020 09:03:31 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id lw21so8768920ejb.6;
+        Mon, 05 Oct 2020 09:03:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=42Qi3VO7NRTej5cplCYyboZcnsHY1nA6NBWFFEr6V6o=;
+        b=C5ImITkHcQClAxKYORGt+pq3Ng8N5cfnsM4CFI3hNOLqKZmEY52SnJTkETILT1MCFF
+         osg+spGp/3H/KRzN7huMtDCZ6OyAZorEepwrytDB465uZXMbgSkHiNf6T5gxUJdpN34s
+         SKJNCKWfcOm9qS1KpN0WLbg3/CDk2yNttFT+1/PWKuQOJwD0kt7MExTIEB8DDomqlSw0
+         0WBZI+Zpx3SDzyHJO9XK/q5+kbMmuGvCumEx+Qfu5Px/GQsJNoax9Cdz+N7jhbDn+oQF
+         4QNaGyIzPOUrBmFcFECmf/g2AOMcp3931kgpUefQLmLCmfJ83hzUZf6mOFCvWD54qf3G
+         G38g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=42Qi3VO7NRTej5cplCYyboZcnsHY1nA6NBWFFEr6V6o=;
+        b=Gte5azU3/tNnjbAnwYC6ImzgVDUQKOYqP+RKxz697JNcxJZseqqkACYg+m41CughkA
+         eP7nAU2yhLEyKLOhEwjN+RVOnalG+ZESf+7BhPpyTJEOqleA2BAmQTNFy6DpYrW8vf/f
+         OXaPMy2NoyxVSvvltY2IROXnuq9T8nUnMogjFmyn+RM2I0gqxF7ed01QDIf8i0bI6Nny
+         KPy6OozFT5/MA0lB4oWYRYfZpeyjos/fmgpgKg4DB2svN+YLP43NAKd6Io9MwFCW0zxC
+         FQsTCQO7sNy7F+jl50sshGz2QoFY+ywtwC/23bJ8c1dGxfyQfLn12ExyckhLhnoXOv3I
+         e9Dw==
+X-Gm-Message-State: AOAM530QegbSzdtfo0yChZEeVNj9I0+oKyQxTqw6XWZ8MYkbS5lYa7D0
+        XAbf9EvCEHOa+yFFKK8Bi3OB3nsnIIA=
+X-Google-Smtp-Source: ABdhPJzdii5+nDaWOuWdn9Kli3u/1DCwnzQ+KVpyDo7YOFh6TIv0d0/kJJjPLQ5kenNavIEdT+bULA==
+X-Received: by 2002:a17:907:40bb:: with SMTP id nu19mr417461ejb.246.1601913809416;
+        Mon, 05 Oct 2020 09:03:29 -0700 (PDT)
+Received: from xws.fritz.box (pd9e5a952.dip0.t-ipconnect.de. [217.229.169.82])
+        by smtp.gmail.com with ESMTPSA id y3sm51788ejk.92.2020.10.05.09.03.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Oct 2020 09:03:28 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Elia Devito <eliadevito@gmail.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Benjamin Berg <bberg@redhat.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Pearson <markpearson@lenovo.com>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: RE: [RFC] Documentation: Add documentation for new performance_profile sysfs class
-Message-ID: <Mz2G7glm3yMTniKA6SHM011dDkTFF4_otICrMQfVLheopX8JMGSupPleyjyK8OY0tyUazu09nX7XhleBVdl4ozTCWXCPGyvV58Qc-UUTvig=@protonmail.com>
-In-Reply-To: <DM6PR19MB263669227D122BB7699951E6FA0C0@DM6PR19MB2636.namprd19.prod.outlook.com>
-References: <20201003131938.9426-1-hdegoede@redhat.com> <20201003131938.9426-2-hdegoede@redhat.com> <DM6PR19MB263669227D122BB7699951E6FA0C0@DM6PR19MB2636.namprd19.prod.outlook.com>
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
+        Stephen Just <stephenjust@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>, linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH v2 0/5] platform/surface: Create a platform subdirectory for Microsoft Surface devices
+Date:   Mon,  5 Oct 2020 18:03:02 +0200
+Message-Id: <20201005160307.39201-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+As has come up in the discussion around
 
+  [RFC PATCH] Add support for Microsoft Surface System Aggregator Module
 
-2020. okt=C3=B3ber 5., h=C3=A9tf=C5=91 14:58 keltez=C3=A9ssel, Limonciello,=
- Mario =C3=ADrta:
-> > On modern systems CPU/GPU/... performance is often dynamically configur=
-able
-> > in the form of e.g. variable clock-speeds and TPD. The performance is o=
-ften
-> > automatically adjusted to the load by some automatic-mechanism (which m=
-ay
-> > very well live outside the kernel).
-> > These auto performance-adjustment mechanisms often can be configured wi=
-th
-> > one of several performance-profiles, with either a bias towards low-pow=
-er
-> > consumption (and cool and quiet) or towards performance (and higher pow=
-er
-> > consumption and thermals).
-> > Introduce a new performance_profile class/sysfs API which offers a gene=
-ric
-> > API for selecting the performance-profile of these automatic-mechanisms=
-.
->
-> If introducing an API for this - let me ask the question, why even let ea=
-ch
-> driver offer a class interface and userspace need to change "each" driver=
-'s
-> performance setting?
->
-> I would think that you could just offer something kernel-wide like
-> /sys/power/performance-profile
->
-> Userspace can read and write to a single file. All drivers can get notifi=
-ed
-> on this sysfs file changing.
->
+it may make sense to add a Microsoft Surface specific platform
+subdirectory. Andy has suggested drivers/platform/surface for that.
+This series follows said suggestion and creates that subdirectory, as
+well as moves Microsoft Surface related drivers over to it and updates
+their MAINTAINERS entries (if available) accordingly.
 
-That makes sense, in my opinion, from the regular user's perspective:
-one switch to rule them all, no fuss. However, I don't think that scales we=
-ll.
-What if the hypothetical users wants to run a CPU-heavy workload, and thus =
-wants
-to put the GPU into "low-power" mode and the CPU into "performance" mode? W=
-hat if
-the users wants to put one GPU into "low-power" mode, but the other one int=
-o
-"performance"? With the current specification, the user's needs could be ea=
-sily
-satisfied. I don't see how that's possible with a single switch. Nonetheles=
-s, I think
-that a single global switch *in addition* to the class devices could possib=
-ly
-simplify the userspace-kernel interaction for most users.
-
-
-> The systems that react in firmware (such as the two that prompted
-> this discussion) can change at that time. It leaves the possibility for a
-> more open kernel implementation that can do the same thing though too by
-> directly modifying device registers instead of ACPI devices.
->
-
-Excuse my ignorance, but I don't really see why this interface would be tie=
-d to
-ACPI devices? Why is it not possible to write a driver that implements this=
- interface
-and directly modifies device registers? Am I missing something obvious here=
-?
-
-
-> [...]
-
+This series does not modify any existing driver code, symbols, or help
+text.
 
 Thanks,
-Barnab=C3=A1s P=C5=91cze
+Max
+
+Link to discussion:
+  https://lore.kernel.org/lkml/CAHp75Vfp86h38Rd-VEgER7ASADdmz5ymAkuHvD0Q6WPDqZBqHw@mail.gmail.com/
+
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+Changes in v2:
+ - Rebase onto linux-platform-drivers-x86/for-next to incorporate
+   changes in Maintainer file.
+
+For more details regarding changes, refer to the individual patches.
+
+Maximilian Luz (5):
+  platform: Add Surface platform directory
+  platform/surface: Move Surface 3 WMI driver to platform/surface
+  platform/surface: Move Surface 3 Button driver to platform/surface
+  platform/surface: Move Surface 3 Power OpRegion driver to
+    platform/surface
+  platform/surface: Move Surface Pro 3 Button driver to platform/surface
+
+ MAINTAINERS                                   |  3 +-
+ drivers/platform/Kconfig                      |  2 +
+ drivers/platform/Makefile                     |  1 +
+ drivers/platform/surface/Kconfig              | 49 +++++++++++++++++++
+ drivers/platform/surface/Makefile             | 10 ++++
+ .../platform/{x86 => surface}/surface3-wmi.c  |  0
+ .../{x86 => surface}/surface3_button.c        |  0
+ .../{x86 => surface}/surface3_power.c         |  0
+ .../{x86 => surface}/surfacepro3_button.c     |  0
+ drivers/platform/x86/Kconfig                  | 31 ------------
+ drivers/platform/x86/Makefile                 |  6 ---
+ 11 files changed, 64 insertions(+), 38 deletions(-)
+ create mode 100644 drivers/platform/surface/Kconfig
+ create mode 100644 drivers/platform/surface/Makefile
+ rename drivers/platform/{x86 => surface}/surface3-wmi.c (100%)
+ rename drivers/platform/{x86 => surface}/surface3_button.c (100%)
+ rename drivers/platform/{x86 => surface}/surface3_power.c (100%)
+ rename drivers/platform/{x86 => surface}/surfacepro3_button.c (100%)
+
+-- 
+2.28.0
+
