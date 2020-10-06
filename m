@@ -2,129 +2,98 @@ Return-Path: <SRS0=8/nu=DN=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE2EC4363D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 13:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24584C4363D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 14:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA3120782
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 13:16:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b40i88cR"
+	by mail.kernel.org (Postfix) with ESMTP id D67CF20760
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 14:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgJFNQ1 (ORCPT
+        id S1726012AbgJFODe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Oct 2020 09:16:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:46156 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725939AbgJFNQ1 (ORCPT
+        Tue, 6 Oct 2020 10:03:34 -0400
+Received: from mga14.intel.com ([192.55.52.115]:16137 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725902AbgJFODd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Oct 2020 09:16:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601990186;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PdBabuZSKWTI/6jyRf+C+MjUr6DspUBK5sRTKQrXqpo=;
-        b=b40i88cRgsA2F//q/Q+RyYfbhl+1VWP1062sVVneUzPyW0M5UvJ3X9Zz02IOgJENSvSyZW
-        A1Wk3g6b7o3pTNZE09mwooc4LfF2ETwmN9hE0s1vA7h1c9cFQTEjCgeeA1BQTEJnbOdxd+
-        DH+8/X8jQj61W1HM9B6awtVilc3QlEI=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-492-kGvEiVjWMUSgYYuLK7Fi4A-1; Tue, 06 Oct 2020 09:16:23 -0400
-X-MC-Unique: kGvEiVjWMUSgYYuLK7Fi4A-1
-Received: by mail-ed1-f72.google.com with SMTP id u24so3410251edv.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Oct 2020 06:16:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PdBabuZSKWTI/6jyRf+C+MjUr6DspUBK5sRTKQrXqpo=;
-        b=bMvQZLjUxIgp11KwZxGWwnfnyLYk58gQY2+aeSqwWJ4WgajK9Q+xwRVEORRZ5eDUMI
-         cYyNvVCiqTuEeRtFocEjAjw/iGyobEcal3WLNHLx60fm3Uf+BQdmoIVYCtbknw5w5J0+
-         UmrnG42muBB2fWxXsVSubXe8JbTZI229zpLRfuGucHaT2lZEz5lJhYOlxYtlgvKO2wxk
-         /uPgBMN4f4+ThS0yLdueYWExhOMP/c7zUHHl/lqFyVGORWibW4M8goC4txkYNBK4jP9u
-         RtIESnI6dAduklWFdppXiHyczZqudaflGSA6IAJtBvq0WGAV7v2Hr4gwwPyAr9UIonvp
-         NIbQ==
-X-Gm-Message-State: AOAM532pqO+dMzIE9YvcAisuaof3TDqr6Pc9m9Ot/h0zot32V3yjmqaB
-        9Us+9ofosbaLKa+21ok1x+s/1Vyy4CKBPXIFRB2KzPRnBK8Ctpsnck/aTwdDtfbsfO3BjTIe6Cg
-        +fuHw2/Dp+fKvbio4asnly0SJLT6Ae9U0PA==
-X-Received: by 2002:a17:906:b858:: with SMTP id ga24mr5093870ejb.378.1601990179372;
-        Tue, 06 Oct 2020 06:16:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwH0uhqBzdvqWsKVyURtWWKV4ojXHOxPufl+ghlNRFlIs0BHg5naqns3d0IlkNpxq03ZgLKLQ==
-X-Received: by 2002:a17:906:b858:: with SMTP id ga24mr5093673ejb.378.1601990177277;
-        Tue, 06 Oct 2020 06:16:17 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id o12sm2123829ejb.36.2020.10.06.06.16.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Oct 2020 06:16:16 -0700 (PDT)
-Subject: Re: intel_vbtn dead keyboard bug on Acer Aspire E5-511G
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?B?0JjQs9C+0YDRjA==?= <igooor7@gmail.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <CALBXvcZR8mR83Zxy-vu2MBt2uhT+chFyrXPZ1t0xNDPBmD4A1A@mail.gmail.com>
- <20201006101610.GF4077@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f7671652-0534-dd10-7c00-2d55132a1802@redhat.com>
-Date:   Tue, 6 Oct 2020 15:16:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20201006101610.GF4077@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 6 Oct 2020 10:03:33 -0400
+IronPort-SDR: q/G1EA0HSdhZD/qmbIgR9ZBj1bFtla6Rmt7wcjiXHQjRLsze1fLgzRnZNT/DHqFx+d8K8GriMT
+ MgQPAA+d5EEg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9765"; a="163730117"
+X-IronPort-AV: E=Sophos;i="5.77,343,1596524400"; 
+   d="scan'208";a="163730117"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2020 07:02:22 -0700
+IronPort-SDR: gVKguJfQTO84CL+3TSlK2eBmmX1SEX2cpEvlFaYG63rPVx923U9txte0hT9FBlfEmhU9azH2fj
+ rVvf8b0z4rKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,343,1596524400"; 
+   d="scan'208";a="517230188"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga006.fm.intel.com with ESMTP; 06 Oct 2020 07:02:22 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 6 Oct 2020 07:02:21 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 6 Oct 2020 07:02:21 -0700
+Received: from orsmsx610.amr.corp.intel.com ([10.22.229.23]) by
+ ORSMSX610.amr.corp.intel.com ([10.22.229.23]) with mapi id 15.01.1713.004;
+ Tue, 6 Oct 2020 07:02:21 -0700
+From:   "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+To:     "andy@infradead.org" <andy@infradead.org>,
+        "prarit@redhat.com" <prarit@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "srinivas.pandruvada@linux.intel.com" 
+        <srinivas.pandruvada@linux.intel.com>,
+        "dvhart@infradead.org" <dvhart@infradead.org>
+Subject: [GIT PULL]: tools/power/x86/intel-speed-select second pull request
+ for 5.10-rc1
+Thread-Topic: [GIT PULL]: tools/power/x86/intel-speed-select second pull
+ request for 5.10-rc1
+Thread-Index: AQHWm+lPtxB4hk5bGUiTyjOd3Vf7bg==
+Date:   Tue, 6 Oct 2020 14:02:21 +0000
+Message-ID: <02c960a0ab75672007527e167b89b986ec5f9441.camel@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+x-originating-ip: [10.1.200.100]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4474D2D99D81D84EB201C12528437983@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Igor,
-
-On 10/6/20 12:16 PM, Andy Shevchenko wrote:
-> +Cc: mailing list and maintainers
-> 
-> On Mon, Oct 05, 2020 at 05:59:40PM +0300, Ð˜Ð³Ð¾Ñ€ÑŒ wrote:
->> Good time of day!
->> Sorry for bothering you, I found a strange bug in "intel_vbtn" kernel
->> module which makes the keyboard non-responding.
->> Reproducible 100% starting from kernel 5.4.0-45 and till 5.8.0-20.
->> Everything works fine on 5.4.0-42 or on Windows 10
->>
->> As a workaround I blacklisted the intel_vbtn module and everything works
->> fine. Seems like it somehow relative to tablet mode detection patch.
->>
->> I did research and found out that this bug is affecting Acer Aspire E5-511G
->> laptops and some HP model(s).
->> Here it is: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1894017
->>
->> Looking forward to hearing something from you.
->> Thanks for your attention!
-
-Thank you for your bug report.
-
-This should be fixed by this upstream commit, which landed in Linus' tree a couple of hours ago:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/platform/x86?id=8169bd3e6e193497cab781acddcff8fde5d0c416
-
-Igor, if you do:
-
-cat /sys/class/dmi/id/chassis_type
-
-On your laptop, and the output is NOT "31" or "32" then this
-fix should work for you.
-
-If the output actually is "31" or "32 (which I do not expect),
-then please let me know, because then we need a different fix.
-
-I've also added this comment to the launchpad bug.
-
-Regards,
-
-Hans
-
+VGhlIGZvbGxvd2luZyBjaGFuZ2VzIHNpbmNlIGNvbW1pdA0KNzIwZWY3M2QxYTIzOWUzM2MzYWQ4
+ZmFjMzU2YjliMTM0OGU2OGFhZjoNCg0KICBwbGF0Zm9ybS94ODY6IHRoaW5rcGFkX2FjcGk6IHJl
+LWluaXRpYWxpemUgQUNQSSBidWZmZXIgc2l6ZSB3aGVuDQpyZXVzZSAoMjAyMC0xMC0wNSAxMjoy
+MDo0MiArMDMwMCkNCg0KYXJlIGF2YWlsYWJsZSBpbiB0aGUgR2l0IHJlcG9zaXRvcnkgYXQ6DQoN
+CiAgaHR0cHM6Ly9naXRodWIuY29tL3NwYW5kcnV2YWRhL2xpbnV4LWtlcm5lbC5naXQgZm9yLW5l
+eHQNCg0KZm9yIHlvdSB0byBmZXRjaCBjaGFuZ2VzIHVwIHRvDQoxZmU0NTg2MTdhZjQ1Zjc5MjZj
+ZTMzOGI3YWNjZWM1YzBmZWExZjVjOg0KDQogIHRvb2xzL3Bvd2VyL3g4Ni9pbnRlbC1zcGVlZC1z
+ZWxlY3Q6IFVwZGF0ZSB2ZXJzaW9uIGZvciB2NS4xMCAoMjAyMC0NCjEwLTA2IDA2OjUwOjQ5IC0w
+NzAwKQ0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tDQpKb25hdGhhbiBEb21hbiAoMSk6DQogICAgICB0b29scy9wb3dlci94
+ODYvaW50ZWwtc3BlZWQtc2VsZWN0OiBGaXggbWlzc2luZyBiYXNlLWZyZXEgY29yZQ0KSURzDQoN
+ClNyaW5pdmFzIFBhbmRydXZhZGEgKDEpOg0KICAgICAgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNw
+ZWVkLXNlbGVjdDogVXBkYXRlIHZlcnNpb24gZm9yIHY1LjEwDQoNCiB0b29scy9wb3dlci94ODYv
+aW50ZWwtc3BlZWQtc2VsZWN0L2lzc3QtY29uZmlnLmMgfCAyMyArKysrKysrKysrKysrLS0tDQot
+LS0tLS0tDQogdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdC9pc3N0LWNvcmUuYyAg
+IHwgIDggKysrKy0tLS0NCiB0b29scy9wb3dlci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0L2lzc3Qu
+aCAgICAgICAgfCAgMiArLQ0KIDMgZmlsZXMgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKSwgMTUg
+ZGVsZXRpb25zKC0pDQo=
