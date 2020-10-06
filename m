@@ -2,85 +2,133 @@ Return-Path: <SRS0=8/nu=DN=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF24C41604
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 10:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E4FC4727D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 13:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF954206B5
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 10:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 390DC2075A
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 13:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725942AbgJFKPJ (ORCPT
+        id S1726319AbgJFNEe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Oct 2020 06:15:09 -0400
-Received: from mga17.intel.com ([192.55.52.151]:6991 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgJFKPJ (ORCPT
+        Tue, 6 Oct 2020 09:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725891AbgJFNEd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Oct 2020 06:15:09 -0400
-IronPort-SDR: FqNpHRLYD9OZPef4VvKTK3Wo+AH+M2iGZEu6xAHN4F6rldhvBS2a4LQm2/whGKH2ay14s+yTHr
- i8UjE8FuSV+A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9765"; a="144342450"
-X-IronPort-AV: E=Sophos;i="5.77,342,1596524400"; 
-   d="scan'208";a="144342450"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2020 03:15:08 -0700
-IronPort-SDR: J+HRS8jJ/c6Xmc7CQmdQpfpPyD+Hy1ZagQtOQOw31pOMhG2Y4m0JEjvsySxQ7IgWD2oPUj/4Hn
- XlVDsQWikdTw==
-X-IronPort-AV: E=Sophos;i="5.77,342,1596524400"; 
-   d="scan'208";a="315560543"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2020 03:15:06 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kPk0w-0004Ud-5R; Tue, 06 Oct 2020 13:16:10 +0300
-Date:   Tue, 6 Oct 2020 13:16:10 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     =?utf-8?B?0JjQs9C+0YDRjA==?= <igooor7@gmail.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     platform-driver-x86@vger.kernel.org
-Subject: Re: intel_vbtn dead keyboard bug on Acer Aspire E5-511G
-Message-ID: <20201006101610.GF4077@smile.fi.intel.com>
-References: <CALBXvcZR8mR83Zxy-vu2MBt2uhT+chFyrXPZ1t0xNDPBmD4A1A@mail.gmail.com>
+        Tue, 6 Oct 2020 09:04:33 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A849C061755;
+        Tue,  6 Oct 2020 06:04:33 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrzej.p)
+        with ESMTPSA id 7ECB0299E5B
+Subject: Re: [PATCH v4 7/7] Input: Add "inhibited" property
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ferruh Yigit <fery@cypress.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        kernel@collabora.com, Patrik Fimml <patrikf@chromium.org>
+References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+ <20200608112211.12125-1-andrzej.p@collabora.com>
+ <20200608112211.12125-8-andrzej.p@collabora.com>
+ <20201005181014.GL1009802@dtor-ws>
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Message-ID: <ac4eeab7-8333-b96b-707b-eb2d6d0d8139@collabora.com>
+Date:   Tue, 6 Oct 2020 15:04:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20201005181014.GL1009802@dtor-ws>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALBXvcZR8mR83Zxy-vu2MBt2uhT+chFyrXPZ1t0xNDPBmD4A1A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-+Cc: mailing list and maintainers
+Hi Dmitry,
 
-On Mon, Oct 05, 2020 at 05:59:40PM +0300, Игорь wrote:
-> Good time of day!
-> Sorry for bothering you, I found a strange bug in "intel_vbtn" kernel
-> module which makes the keyboard non-responding.
-> Reproducible 100% starting from kernel 5.4.0-45 and till 5.8.0-20.
-> Everything works fine on 5.4.0-42 or on Windows 10
+W dniu 05.10.2020 o 20:10, Dmitry Torokhov pisze:
+> Hi Andrzej,
 > 
-> As a workaround I blacklisted the intel_vbtn module and everything works
-> fine. Seems like it somehow relative to tablet mode detection patch.
+> On Mon, Jun 08, 2020 at 01:22:11PM +0200, Andrzej Pietrasiewicz wrote:
+>> @@ -284,8 +284,11 @@ static int input_get_disposition(struct input_dev *dev,
+>>   	case EV_KEY:
+>>   		if (is_event_supported(code, dev->keybit, KEY_MAX)) {
+>>   
+>> -			/* auto-repeat bypasses state updates */
+>> -			if (value == 2) {
+>> +			/*
+>> +			 * auto-repeat bypasses state updates but repeat
+>> +			 * events are ignored if the key is not pressed
+>> +			 */
+>> +			if (value == 2 && test_bit(code, dev->key)) {
+>>   				disposition = INPUT_PASS_TO_HANDLERS;
+>>   				break;
+>>   			}
 > 
-> I did research and found out that this bug is affecting Acer Aspire E5-511G
-> laptops and some HP model(s).
-> Here it is: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1894017
+> Is this chunk really part of inhibit support? I'd think we cancel
+> autorepeat timer when we are releasing a key, no?
 > 
-> Looking forward to hearing something from you.
-> Thanks for your attention!
-> 
-> Best regards
-> Igor
 
--- 
-With Best Regards,
-Andy Shevchenko
+When I look at it now it seems to me the chunk might be redundant.
+But let me explain what I had in mind when adding it.
 
+It is a matter of what we do with input events generated while a
+device is inhibited. If ->open()/->close() are not provided by the
+driver then inhibiting amounts to merely ignoring input events from
+a device while it remains active. What else can you do if the driver
+does not provide a method to prepare the device for generating events/
+to stop generating events?
 
+In this special case a user might trigger a repeated event while the
+device is inhibited, then the user keeps holding the key down and the
+device is uninhibited. Do we pass anything to handlers then?
+
+In my opinion we should not. Such an event is "illegal" in a sense that it
+was generated at a time when nobody wanted any events from the device.
+Hence the test to let only those auto-repeat events through for which
+a key is actually pressed.
+
+However, what I see now is that if a device is inhibited, no key
+will ever reach neither the "1" nor "2" state because of the "if"
+in the very beginning of input_handle_event().
+
+Regards,
+
+Andrzej
