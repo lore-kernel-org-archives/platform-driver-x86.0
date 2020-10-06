@@ -2,99 +2,119 @@ Return-Path: <SRS0=8/nu=DN=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA266C46466
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 15:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADD9C4363D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 22:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3D4206DD
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 15:20:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Zy3ldkWx"
+	by mail.kernel.org (Postfix) with ESMTP id 03998208C7
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 22:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726123AbgJFPUL (ORCPT
+        id S1727133AbgJFWp4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Oct 2020 11:20:11 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52592 "EHLO mail.skyhub.de"
+        Tue, 6 Oct 2020 18:45:56 -0400
+Received: from mga03.intel.com ([134.134.136.65]:41676 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbgJFPUL (ORCPT
+        id S1726566AbgJFWp4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Oct 2020 11:20:11 -0400
-Received: from zn.tnic (p200300ec2f0d6300cee9f1eb6b8e192c.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6300:cee9:f1eb:6b8e:192c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B4A9C1EC0409;
-        Tue,  6 Oct 2020 17:20:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1601997609;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=22QKkbrJeWzTsKksHS4vbicwGczWEiJUoAabXc4dnIs=;
-        b=Zy3ldkWx7X1LsBXSp91c+MDSPY7Gf53Jeaibgm/IoRGiRa7QMPoye1vfR9XxtveaVHNnm5
-        4QK0F04Sb/VHf1nOPq5Hw8ZQ6XlltpN2KDZVg6q8+K4hEgyVK3wfSX53RdYs1pZDXhKFFQ
-        5ilOejPs+fGjfCF175tVW5Pma9SJhoM=
-Date:   Tue, 6 Oct 2020 17:19:59 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel test robot <lkp@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Jian Cai <caij2003@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4 06/13] x86/platform/uv: Add and Decode Arch Type in
- UVsystab
-Message-ID: <20201006151959.GF27700@zn.tnic>
-References: <20201005203929.148656-1-mike.travis@hpe.com>
- <20201005203929.148656-7-mike.travis@hpe.com>
- <20201005212135.GL21151@zn.tnic>
- <d2c7d3d8-3863-f15f-7ec6-ae41cf8b2657@hpe.com>
+        Tue, 6 Oct 2020 18:45:56 -0400
+IronPort-SDR: lG3QvKkW+57SpBwyTwYMNSCflG/0qZdLJ4b2HV4uKE+YXjzLeILbNg/PVTCKlDIC6/z8286+Ta
+ kR/bcwPIgjpw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9766"; a="164797539"
+X-IronPort-AV: E=Sophos;i="5.77,343,1596524400"; 
+   d="scan'208";a="164797539"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2020 15:45:54 -0700
+IronPort-SDR: W4s6uVAMv/wWjKImtrYsHBUxSulbo23oKS3gGpZqeT1emkKgexwZOlRQaUgNtmfkZ7C5HeSM2k
+ ZGknGaqObfRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,343,1596524400"; 
+   d="scan'208";a="461044940"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 06 Oct 2020 15:45:54 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id 2679C580782;
+        Tue,  6 Oct 2020 15:45:54 -0700 (PDT)
+Message-ID: <b75c3ff53dbe26ee0c6825e8d1f5f10489a5722c.camel@linux.intel.com>
+Subject: Re: [PATCH V8 1/5] PCI: Add defines for Designated Vendor-Specific
+ Extended Capability
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     lee.jones@linaro.org, dvhart@infradead.org, andy@infradead.org,
+        bhelgaas@google.com, hdegoede@redhat.com,
+        alexey.budankov@linux.intel.com,
+        Andy Shevchenko <andy.shevchenko@gmail.com>, rjw@rjwysocki.net
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Date:   Tue, 06 Oct 2020 15:45:54 -0700
+In-Reply-To: <20201003013123.20269-2-david.e.box@linux.intel.com>
+References: <20201003013123.20269-1-david.e.box@linux.intel.com>
+         <20201003013123.20269-2-david.e.box@linux.intel.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <d2c7d3d8-3863-f15f-7ec6-ae41cf8b2657@hpe.com>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 05, 2020 at 02:35:58PM -0700, Mike Travis wrote:
-> 
-> 
-> On 10/5/2020 2:21 PM, Borislav Petkov wrote:
-> > On Mon, Oct 05, 2020 at 03:39:22PM -0500, Mike Travis wrote:
-> > > A patch to add and process the UV Arch Type field in the UVsystab passed
-> > > from UV BIOS to the kernel.
-> > 
-> > What does that mean?
-> > 
-> 
-> There have been recent cases where OEM's want to use the OEM_ID in the ACPI
-> tables to brand their own product.  The UV BIOS used that field to tell the
-> Linux kernel which UV arch the running system is.  The Arch Type in the
-> UVsystab (also created by UV BIOS) now carries that field in systems that
-> support it.
+Hi Bjorn,
 
-I am unclear on the whole patch passing from UV BIOS to the kernel. Are
-you talking about a kernel patch here? If so, commit ID is? Or what kind
-of patch are you talking about?
+This patch has been acked and unchanged for weeks. Is it possible to
+get this pulled into next? We have SIOV and CXL related work that is
+using these definitions. Thanks.
 
--- 
-Regards/Gruss,
-    Boris.
+David
 
-https://people.kernel.org/tglx/notes-about-netiquette
+On Fri, 2020-10-02 at 18:31 -0700, David E. Box wrote:
+> Add PCIe Designated Vendor-Specific Extended Capability (DVSEC) and
+> defines
+> for the header offsets. Defined in PCIe r5.0, sec 7.9.6.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> ---
+>  include/uapi/linux/pci_regs.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/include/uapi/linux/pci_regs.h
+> b/include/uapi/linux/pci_regs.h
+> index f9701410d3b5..beafeee39e44 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -720,6 +720,7 @@
+>  #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port
+> Containment */
+>  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+>  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement
+> */
+> +#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific 
+> */
+>  #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+>  #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer
+> 16.0 GT/s */
+>  #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
+> @@ -1062,6 +1063,10 @@
+>  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /*
+> LTR_L1.2_THRESHOLD_Scale */
+>  #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register
+> */
+>  
+> +/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
+> +#define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-
+> Specific Header1 */
+> +#define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-
+> Specific Header2 */
+> +
+>  /* Data Link Feature */
+>  #define PCI_DLF_CAP		0x04	/* Capabilities Register */
+>  #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link
+> Feature Exchange Enable */
+
