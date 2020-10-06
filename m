@@ -2,98 +2,122 @@ Return-Path: <SRS0=8/nu=DN=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24584C4363D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 14:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26593C4727E
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 14:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D67CF20760
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 14:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D603320760
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 14:05:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCfQn8E3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726012AbgJFODe (ORCPT
+        id S1726917AbgJFOFu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Oct 2020 10:03:34 -0400
-Received: from mga14.intel.com ([192.55.52.115]:16137 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725902AbgJFODd (ORCPT
+        Tue, 6 Oct 2020 10:05:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgJFOFr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Oct 2020 10:03:33 -0400
-IronPort-SDR: q/G1EA0HSdhZD/qmbIgR9ZBj1bFtla6Rmt7wcjiXHQjRLsze1fLgzRnZNT/DHqFx+d8K8GriMT
- MgQPAA+d5EEg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9765"; a="163730117"
-X-IronPort-AV: E=Sophos;i="5.77,343,1596524400"; 
-   d="scan'208";a="163730117"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2020 07:02:22 -0700
-IronPort-SDR: gVKguJfQTO84CL+3TSlK2eBmmX1SEX2cpEvlFaYG63rPVx923U9txte0hT9FBlfEmhU9azH2fj
- rVvf8b0z4rKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,343,1596524400"; 
-   d="scan'208";a="517230188"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Oct 2020 07:02:22 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 6 Oct 2020 07:02:21 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 6 Oct 2020 07:02:21 -0700
-Received: from orsmsx610.amr.corp.intel.com ([10.22.229.23]) by
- ORSMSX610.amr.corp.intel.com ([10.22.229.23]) with mapi id 15.01.1713.004;
- Tue, 6 Oct 2020 07:02:21 -0700
-From:   "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
-To:     "andy@infradead.org" <andy@infradead.org>,
+        Tue, 6 Oct 2020 10:05:47 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65EF5C061755
+        for <platform-driver-x86@vger.kernel.org>; Tue,  6 Oct 2020 07:05:45 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id w21so9084428pfc.7
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Oct 2020 07:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ShlnRKiI6sGR/pasI+6hck+9GvzMfOTxiM3NpAoCEkI=;
+        b=HCfQn8E30qDWgx1nnJVwAyplJqCKGgsHS2c3vSlMvUf7BRxKay+sLdYhlFBV5BynIs
+         M9tsU6u1rHZwyNqjStsD5l7U2CCTgDlFWXjecAPyu6uPm05yyGUK+eo1PCNXNCErkQck
+         K2ogQUz7OlYQkPrbv8gGhjbGJoxnMIMv0ScqlPRGoJDBJx/1Wi4zepZ4tgJIYbIZMbtq
+         Ni7lWpcGjxZvz4YrhdAsa6iE1xT4Wpw9L+R/Pqhes6NYw6mf4dmcxJpyMoOioFmIWNjA
+         tz7kqhp54e0VtdE6kD7PkY1/ZDNFWqKPSa+MhOAZb63LWB6sD/qX8bc61SIGajtq66Bv
+         FaUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ShlnRKiI6sGR/pasI+6hck+9GvzMfOTxiM3NpAoCEkI=;
+        b=SB83N0y5MNBwrkmbN/ME8DNIx1UjZZ8NS0J6XNuDSzUlupaRyXen6QuBPtVdzEC7z2
+         sJxpmPcQruvewQ/J8H50ElCOw3s/T3+nJyvFRX3XvdQ4/UQ35xr7NxA3Vcz/oijz35RV
+         gKoNYQCs2RprXRDQb8L410yVTNMWQyIvEcrkwhMMxFQPl8pO1HacGaoGNuEfhTRPnlSP
+         httPB4WdaNuod5PAZrg+hY6CwsQUZ6dmvpqcHEV81O3Jue00OOvvMd806cpI2LtUCVor
+         lzGwHq1DrqC7eYnBZl11nn+3Y+ZEU7IkZcwlmgL699TE7Y2bDjEEwB4HanB0IHZNVYEB
+         X/rA==
+X-Gm-Message-State: AOAM532HfY46kR8bTbRTdf1mJTVuGcdLYFhQeW0vFX3XaAEFH4picLfT
+        WwYTqBWkN0PjqEy2oDF8Twcw30aiKI1KKdRCnLQ=
+X-Google-Smtp-Source: ABdhPJxsl0MamibSViNmMll93tiLs59oN9oZ/GuzuheNTh/rY7+LJk5YvFYtw6GfOmD+cp263+0OilRCEcQTtwWuWv8=
+X-Received: by 2002:a65:47c2:: with SMTP id f2mr4229967pgs.4.1601993144725;
+ Tue, 06 Oct 2020 07:05:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <02c960a0ab75672007527e167b89b986ec5f9441.camel@intel.com>
+In-Reply-To: <02c960a0ab75672007527e167b89b986ec5f9441.camel@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 6 Oct 2020 17:06:34 +0300
+Message-ID: <CAHp75Vc_GszASbRSiEGiLxLFmhsoLE9mNbpQkxYdsLDT8_rCmA@mail.gmail.com>
+Subject: Re: [GIT PULL]: tools/power/x86/intel-speed-select second pull
+ request for 5.10-rc1
+To:     "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+Cc:     "andy@infradead.org" <andy@infradead.org>,
         "prarit@redhat.com" <prarit@redhat.com>,
         "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
         "mgross@linux.intel.com" <mgross@linux.intel.com>,
         "srinivas.pandruvada@linux.intel.com" 
         <srinivas.pandruvada@linux.intel.com>,
         "dvhart@infradead.org" <dvhart@infradead.org>
-Subject: [GIT PULL]: tools/power/x86/intel-speed-select second pull request
- for 5.10-rc1
-Thread-Topic: [GIT PULL]: tools/power/x86/intel-speed-select second pull
- request for 5.10-rc1
-Thread-Index: AQHWm+lPtxB4hk5bGUiTyjOd3Vf7bg==
-Date:   Tue, 6 Oct 2020 14:02:21 +0000
-Message-ID: <02c960a0ab75672007527e167b89b986ec5f9441.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-x-originating-ip: [10.1.200.100]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4474D2D99D81D84EB201C12528437983@intel.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-VGhlIGZvbGxvd2luZyBjaGFuZ2VzIHNpbmNlIGNvbW1pdA0KNzIwZWY3M2QxYTIzOWUzM2MzYWQ4
-ZmFjMzU2YjliMTM0OGU2OGFhZjoNCg0KICBwbGF0Zm9ybS94ODY6IHRoaW5rcGFkX2FjcGk6IHJl
-LWluaXRpYWxpemUgQUNQSSBidWZmZXIgc2l6ZSB3aGVuDQpyZXVzZSAoMjAyMC0xMC0wNSAxMjoy
-MDo0MiArMDMwMCkNCg0KYXJlIGF2YWlsYWJsZSBpbiB0aGUgR2l0IHJlcG9zaXRvcnkgYXQ6DQoN
-CiAgaHR0cHM6Ly9naXRodWIuY29tL3NwYW5kcnV2YWRhL2xpbnV4LWtlcm5lbC5naXQgZm9yLW5l
-eHQNCg0KZm9yIHlvdSB0byBmZXRjaCBjaGFuZ2VzIHVwIHRvDQoxZmU0NTg2MTdhZjQ1Zjc5MjZj
-ZTMzOGI3YWNjZWM1YzBmZWExZjVjOg0KDQogIHRvb2xzL3Bvd2VyL3g4Ni9pbnRlbC1zcGVlZC1z
-ZWxlY3Q6IFVwZGF0ZSB2ZXJzaW9uIGZvciB2NS4xMCAoMjAyMC0NCjEwLTA2IDA2OjUwOjQ5IC0w
-NzAwKQ0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQpKb25hdGhhbiBEb21hbiAoMSk6DQogICAgICB0b29scy9wb3dlci94
-ODYvaW50ZWwtc3BlZWQtc2VsZWN0OiBGaXggbWlzc2luZyBiYXNlLWZyZXEgY29yZQ0KSURzDQoN
-ClNyaW5pdmFzIFBhbmRydXZhZGEgKDEpOg0KICAgICAgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNw
-ZWVkLXNlbGVjdDogVXBkYXRlIHZlcnNpb24gZm9yIHY1LjEwDQoNCiB0b29scy9wb3dlci94ODYv
-aW50ZWwtc3BlZWQtc2VsZWN0L2lzc3QtY29uZmlnLmMgfCAyMyArKysrKysrKysrKysrLS0tDQot
-LS0tLS0tDQogdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdC9pc3N0LWNvcmUuYyAg
-IHwgIDggKysrKy0tLS0NCiB0b29scy9wb3dlci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0L2lzc3Qu
-aCAgICAgICAgfCAgMiArLQ0KIDMgZmlsZXMgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKSwgMTUg
-ZGVsZXRpb25zKC0pDQo=
+On Tue, Oct 6, 2020 at 5:04 PM Pandruvada, Srinivas
+<srinivas.pandruvada@intel.com> wrote:
+>
+> The following changes since commit
+> 720ef73d1a239e33c3ad8fac356b9b1348e68aaf:
+>
+>   platform/x86: thinkpad_acpi: re-initialize ACPI buffer size when
+> reuse (2020-10-05 12:20:42 +0300)
+>
+> are available in the Git repository at:
+>
+>   https://github.com/spandruvada/linux-kernel.git for-next
+>
+> for you to fetch changes up to
+> 1fe458617af45f7926ce338b7accec5c0fea1f5c:
+>
+>   tools/power/x86/intel-speed-select: Update version for v5.10 (2020-
+> 10-06 06:50:49 -0700)
+
+Hans, Mark, just to inform you that we agreed a few cycles ago that
+Srinivas sends PRs against ISST tools.
+Please, pull it into for-next!
+
+> ----------------------------------------------------------------
+> Jonathan Doman (1):
+>       tools/power/x86/intel-speed-select: Fix missing base-freq core
+> IDs
+>
+> Srinivas Pandruvada (1):
+>       tools/power/x86/intel-speed-select: Update version for v5.10
+>
+>  tools/power/x86/intel-speed-select/isst-config.c | 23 +++++++++++++---
+> -------
+>  tools/power/x86/intel-speed-select/isst-core.c   |  8 ++++----
+>  tools/power/x86/intel-speed-select/isst.h        |  2 +-
+>  3 files changed, 18 insertions(+), 15 deletions(-)
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
