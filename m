@@ -2,51 +2,52 @@ Return-Path: <SRS0=8/nu=DN=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C060C4363D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 22:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944FEC41604
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 22:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02E39208C7
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 22:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B74820BED
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 22:47:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727712AbgJFWrT (ORCPT
+        id S1726566AbgJFWrZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Oct 2020 18:47:19 -0400
+        Tue, 6 Oct 2020 18:47:25 -0400
 Received: from mga06.intel.com ([134.134.136.31]:58474 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbgJFWrS (ORCPT
+        id S1726771AbgJFWrS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Tue, 6 Oct 2020 18:47:18 -0400
-IronPort-SDR: wNCz154szjNVDKiQUQ9CIT7mDF7e7evG8TbdzgaaPK51Mh91wcEMj4IiKdUZYkMYAbfp+P3Kl8
- 5+tbb4M5m2Hg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9766"; a="226322927"
+IronPort-SDR: 5VV/tE81a+UyBRolGtnxlOzYp47nWIwC1upwooVkC2g8YBKX5qnFh0Cyo0lFxmdkaphXvrY6k3
+ WwQQBNp694GA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9766"; a="226322925"
 X-IronPort-AV: E=Sophos;i="5.77,343,1596524400"; 
-   d="scan'208";a="226322927"
+   d="scan'208";a="226322925"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2020 15:47:17 -0700
-IronPort-SDR: 3sidEY//M1dtiOu8MwKCSJwQvIYBKzUQuw5FUioIVu1prv3BENgdxh4DCixZ3tMSOPtkMxlrpZ
- pIL2Ke30rKgw==
+IronPort-SDR: h8LUdMvKCoU946GVttFz5YaG+eatJicmT6jQ6orrNMZnwLmEZIjFG5o4XZ1TwhJydV1cRdbj5u
+ 05/CazjyFnDg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,343,1596524400"; 
-   d="scan'208";a="388105342"
+   d="scan'208";a="388105338"
 Received: from linux.intel.com ([10.54.29.200])
   by orsmga001.jf.intel.com with ESMTP; 06 Oct 2020 15:47:17 -0700
 Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id 39EF358087A;
+        by linux.intel.com (Postfix) with ESMTP id 197B7580867;
         Tue,  6 Oct 2020 15:47:17 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     dvhart@infradead.org, andy@infradead.org, gayatri.kammela@intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David E . Box" <david.e.box@linux.intel.com>
-Subject: [PATCH 3/3] platform/x86: intel_pmc_core: Fix the slp_s0 counter displayed value
-Date:   Tue,  6 Oct 2020 15:47:02 -0700
-Message-Id: <20201006224702.12697-4-david.e.box@linux.intel.com>
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 1/3] platform/x86: pmc_core: Use descriptive names for LPM registers
+Date:   Tue,  6 Oct 2020 15:47:00 -0700
+Message-Id: <20201006224702.12697-2-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20201006224702.12697-1-david.e.box@linux.intel.com>
 References: <20201006224702.12697-1-david.e.box@linux.intel.com>
@@ -56,112 +57,93 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Gayatri Kammela <gayatri.kammela@intel.com>
+TigerLake Lower Power Mode (LPM) registers are grouped by functionality
+but were given simple enumerated names in the code (lpm0, lpm1, ...).
+Instead, give the register blocks names that describe their usage.
 
-slp_s0 counter value displayed via debugfs interface is calculated by
-multiplying the granularity for crystal oscillator tick as 100us with
-the value read from using slp_s0 offset. But the granularity of the tick
-varies from platform to platform and it needs to be fixed.
-
-Hence, specify granularity of the tick for each platform, so that the
-value of the slp_s0 counter is accurate.
-
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/platform/x86/intel_pmc_core.c | 10 +++++++---
- drivers/platform/x86/intel_pmc_core.h |  5 ++++-
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index cf4006e08c69..122eb53eb595 100644
+index 338ea5222555..ed9fdf7c8928 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -154,6 +154,7 @@ static const struct pmc_reg_map spt_reg_map = {
- 	.ltr_show_sts = spt_ltr_show_map,
- 	.msr_sts = msr_map,
- 	.slp_s0_offset = SPT_PMC_SLP_S0_RES_COUNTER_OFFSET,
-+	.slp_s0_res_counter_step = SPT_PMC_SLP_S0_RES_COUNTER_STEP,
- 	.ltr_ignore_offset = SPT_PMC_LTR_IGNORE_OFFSET,
- 	.regmap_length = SPT_PMC_MMIO_REG_LEN,
- 	.ppfear0_offset = SPT_PMC_XRAM_PPFEAR0A,
-@@ -380,6 +381,7 @@ static const struct pmc_bit_map cnp_ltr_show_map[] = {
- static const struct pmc_reg_map cnp_reg_map = {
- 	.pfear_sts = ext_cnp_pfear_map,
- 	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
-+	.slp_s0_res_counter_step = SPT_PMC_SLP_S0_RES_COUNTER_STEP,
- 	.slps0_dbg_maps = cnp_slps0_dbg_maps,
- 	.ltr_show_sts = cnp_ltr_show_map,
- 	.msr_sts = msr_map,
-@@ -396,6 +398,7 @@ static const struct pmc_reg_map cnp_reg_map = {
- static const struct pmc_reg_map icl_reg_map = {
- 	.pfear_sts = ext_icl_pfear_map,
- 	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
-+	.slp_s0_res_counter_step = ICL_PMC_SLP_S0_RES_COUNTER_STEP,
- 	.slps0_dbg_maps = cnp_slps0_dbg_maps,
- 	.ltr_show_sts = cnp_ltr_show_map,
- 	.msr_sts = msr_map,
-@@ -558,6 +561,7 @@ static const struct pmc_bit_map *tgl_lpm_maps[] = {
- static const struct pmc_reg_map tgl_reg_map = {
- 	.pfear_sts = ext_tgl_pfear_map,
- 	.slp_s0_offset = CNP_PMC_SLP_S0_RES_COUNTER_OFFSET,
-+	.slp_s0_res_counter_step = TGL_PMC_SLP_S0_RES_COUNTER_STEP,
- 	.ltr_show_sts = cnp_ltr_show_map,
- 	.msr_sts = msr_map,
- 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
-@@ -586,9 +590,9 @@ static inline void pmc_core_reg_write(struct pmc_dev *pmcdev, int reg_offset,
- 	writel(val, pmcdev->regbase + reg_offset);
- }
+@@ -409,7 +409,7 @@ static const struct pmc_reg_map icl_reg_map = {
+ 	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
+ };
  
--static inline u64 pmc_core_adjust_slp_s0_step(u32 value)
-+static inline u64 pmc_core_adjust_slp_s0_step(struct pmc_dev *pmcdev, u32 value)
- {
--	return (u64)value * SPT_PMC_SLP_S0_RES_COUNTER_STEP;
-+	return (u64)value * pmcdev->map->slp_s0_res_counter_step;
- }
+-static const struct pmc_bit_map tgl_lpm0_map[] = {
++static const struct pmc_bit_map tgl_clocksource_status_map[] = {
+ 	{"USB2PLL_OFF_STS",			BIT(18)},
+ 	{"PCIe/USB3.1_Gen2PLL_OFF_STS",		BIT(19)},
+ 	{"PCIe_Gen3PLL_OFF_STS",		BIT(20)},
+@@ -425,7 +425,7 @@ static const struct pmc_bit_map tgl_lpm0_map[] = {
+ 	{}
+ };
  
- static int pmc_core_dev_state_get(void *data, u64 *val)
-@@ -598,7 +602,7 @@ static int pmc_core_dev_state_get(void *data, u64 *val)
- 	u32 value;
+-static const struct pmc_bit_map tgl_lpm1_map[] = {
++static const struct pmc_bit_map tgl_power_gating_status_map[] = {
+ 	{"SPI_PG_STS",				BIT(2)},
+ 	{"xHCI_PG_STS",				BIT(3)},
+ 	{"PCIe_Ctrller_A_PG_STS",		BIT(4)},
+@@ -453,7 +453,7 @@ static const struct pmc_bit_map tgl_lpm1_map[] = {
+ 	{}
+ };
  
- 	value = pmc_core_reg_read(pmcdev, map->slp_s0_offset);
--	*val = pmc_core_adjust_slp_s0_step(value);
-+	*val = pmc_core_adjust_slp_s0_step(pmcdev, value);
+-static const struct pmc_bit_map tgl_lpm2_map[] = {
++static const struct pmc_bit_map tgl_d3_status_map[] = {
+ 	{"ADSP_D3_STS",				BIT(0)},
+ 	{"SATA_D3_STS",				BIT(1)},
+ 	{"xHCI0_D3_STS",			BIT(2)},
+@@ -468,7 +468,7 @@ static const struct pmc_bit_map tgl_lpm2_map[] = {
+ 	{}
+ };
  
- 	return 0;
- }
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 5eae55d80226..f33cd2c34835 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -30,7 +30,7 @@
- #define SPT_PMC_MPHY_CORE_STS_1			0x1142
- #define SPT_PMC_MPHY_COM_STS_0			0x1155
- #define SPT_PMC_MMIO_REG_LEN			0x1000
--#define SPT_PMC_SLP_S0_RES_COUNTER_STEP		0x64
-+#define SPT_PMC_SLP_S0_RES_COUNTER_STEP		0x68
- #define PMC_BASE_ADDR_MASK			~(SPT_PMC_MMIO_REG_LEN - 1)
- #define MTPMC_MASK				0xffff0000
- #define PPFEAR_MAX_NUM_ENTRIES			12
-@@ -185,8 +185,10 @@ enum ppfear_regs {
- #define ICL_PPFEAR_NUM_ENTRIES			9
- #define ICL_NUM_IP_IGN_ALLOWED			20
- #define ICL_PMC_LTR_WIGIG			0x1BFC
-+#define ICL_PMC_SLP_S0_RES_COUNTER_STEP		0x64
+-static const struct pmc_bit_map tgl_lpm3_map[] = {
++static const struct pmc_bit_map tgl_vnn_req_status_map[] = {
+ 	{"GPIO_COM0_VNN_REQ_STS",		BIT(1)},
+ 	{"GPIO_COM1_VNN_REQ_STS",		BIT(2)},
+ 	{"GPIO_COM2_VNN_REQ_STS",		BIT(3)},
+@@ -493,7 +493,7 @@ static const struct pmc_bit_map tgl_lpm3_map[] = {
+ 	{}
+ };
  
- #define TGL_NUM_IP_IGN_ALLOWED			22
-+#define TGL_PMC_SLP_S0_RES_COUNTER_STEP		0x7A
+-static const struct pmc_bit_map tgl_lpm4_map[] = {
++static const struct pmc_bit_map tgl_vnn_misc_status_map[] = {
+ 	{"CPU_C10_REQ_STS_0",			BIT(0)},
+ 	{"PCIe_LPM_En_REQ_STS_3",		BIT(3)},
+ 	{"ITH_REQ_STS_5",			BIT(5)},
+@@ -509,7 +509,7 @@ static const struct pmc_bit_map tgl_lpm4_map[] = {
+ 	{}
+ };
  
- /*
-  * Tigerlake Power Management Controller register offsets
-@@ -245,6 +247,7 @@ struct pmc_reg_map {
- 	const struct pmc_bit_map *msr_sts;
- 	const struct pmc_bit_map **lpm_sts;
- 	const u32 slp_s0_offset;
-+	const int slp_s0_res_counter_step;
- 	const u32 ltr_ignore_offset;
- 	const int regmap_length;
- 	const u32 ppfear0_offset;
+-static const struct pmc_bit_map tgl_lpm5_map[] = {
++static const struct pmc_bit_map tgl_signal_status_map[] = {
+ 	{"LSX_Wake0_En_STS",			BIT(0)},
+ 	{"LSX_Wake0_Pol_STS",			BIT(1)},
+ 	{"LSX_Wake1_En_STS",			BIT(2)},
+@@ -546,12 +546,12 @@ static const struct pmc_bit_map tgl_lpm5_map[] = {
+ };
+ 
+ static const struct pmc_bit_map *tgl_lpm_maps[] = {
+-	tgl_lpm0_map,
+-	tgl_lpm1_map,
+-	tgl_lpm2_map,
+-	tgl_lpm3_map,
+-	tgl_lpm4_map,
+-	tgl_lpm5_map,
++	tgl_clocksource_status_map,
++	tgl_power_gating_status_map,
++	tgl_d3_status_map,
++	tgl_vnn_req_status_map,
++	tgl_vnn_misc_status_map,
++	tgl_signal_status_map,
+ 	NULL
+ };
+ 
 -- 
 2.20.1
 
