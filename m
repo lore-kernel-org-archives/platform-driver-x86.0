@@ -2,122 +2,99 @@ Return-Path: <SRS0=8/nu=DN=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26593C4727E
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 14:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA266C46466
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 15:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D603320760
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 14:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3D4206DD
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 15:20:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCfQn8E3"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Zy3ldkWx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgJFOFu (ORCPT
+        id S1726123AbgJFPUL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Oct 2020 10:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgJFOFr (ORCPT
+        Tue, 6 Oct 2020 11:20:11 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52592 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbgJFPUL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Oct 2020 10:05:47 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65EF5C061755
-        for <platform-driver-x86@vger.kernel.org>; Tue,  6 Oct 2020 07:05:45 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id w21so9084428pfc.7
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Oct 2020 07:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ShlnRKiI6sGR/pasI+6hck+9GvzMfOTxiM3NpAoCEkI=;
-        b=HCfQn8E30qDWgx1nnJVwAyplJqCKGgsHS2c3vSlMvUf7BRxKay+sLdYhlFBV5BynIs
-         M9tsU6u1rHZwyNqjStsD5l7U2CCTgDlFWXjecAPyu6uPm05yyGUK+eo1PCNXNCErkQck
-         K2ogQUz7OlYQkPrbv8gGhjbGJoxnMIMv0ScqlPRGoJDBJx/1Wi4zepZ4tgJIYbIZMbtq
-         Ni7lWpcGjxZvz4YrhdAsa6iE1xT4Wpw9L+R/Pqhes6NYw6mf4dmcxJpyMoOioFmIWNjA
-         tz7kqhp54e0VtdE6kD7PkY1/ZDNFWqKPSa+MhOAZb63LWB6sD/qX8bc61SIGajtq66Bv
-         FaUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ShlnRKiI6sGR/pasI+6hck+9GvzMfOTxiM3NpAoCEkI=;
-        b=SB83N0y5MNBwrkmbN/ME8DNIx1UjZZ8NS0J6XNuDSzUlupaRyXen6QuBPtVdzEC7z2
-         sJxpmPcQruvewQ/J8H50ElCOw3s/T3+nJyvFRX3XvdQ4/UQ35xr7NxA3Vcz/oijz35RV
-         gKoNYQCs2RprXRDQb8L410yVTNMWQyIvEcrkwhMMxFQPl8pO1HacGaoGNuEfhTRPnlSP
-         httPB4WdaNuod5PAZrg+hY6CwsQUZ6dmvpqcHEV81O3Jue00OOvvMd806cpI2LtUCVor
-         lzGwHq1DrqC7eYnBZl11nn+3Y+ZEU7IkZcwlmgL699TE7Y2bDjEEwB4HanB0IHZNVYEB
-         X/rA==
-X-Gm-Message-State: AOAM532HfY46kR8bTbRTdf1mJTVuGcdLYFhQeW0vFX3XaAEFH4picLfT
-        WwYTqBWkN0PjqEy2oDF8Twcw30aiKI1KKdRCnLQ=
-X-Google-Smtp-Source: ABdhPJxsl0MamibSViNmMll93tiLs59oN9oZ/GuzuheNTh/rY7+LJk5YvFYtw6GfOmD+cp263+0OilRCEcQTtwWuWv8=
-X-Received: by 2002:a65:47c2:: with SMTP id f2mr4229967pgs.4.1601993144725;
- Tue, 06 Oct 2020 07:05:44 -0700 (PDT)
+        Tue, 6 Oct 2020 11:20:11 -0400
+Received: from zn.tnic (p200300ec2f0d6300cee9f1eb6b8e192c.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6300:cee9:f1eb:6b8e:192c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B4A9C1EC0409;
+        Tue,  6 Oct 2020 17:20:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1601997609;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=22QKkbrJeWzTsKksHS4vbicwGczWEiJUoAabXc4dnIs=;
+        b=Zy3ldkWx7X1LsBXSp91c+MDSPY7Gf53Jeaibgm/IoRGiRa7QMPoye1vfR9XxtveaVHNnm5
+        4QK0F04Sb/VHf1nOPq5Hw8ZQ6XlltpN2KDZVg6q8+K4hEgyVK3wfSX53RdYs1pZDXhKFFQ
+        5ilOejPs+fGjfCF175tVW5Pma9SJhoM=
+Date:   Tue, 6 Oct 2020 17:19:59 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Mike Travis <mike.travis@hpe.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel test robot <lkp@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jian Cai <caij2003@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 06/13] x86/platform/uv: Add and Decode Arch Type in
+ UVsystab
+Message-ID: <20201006151959.GF27700@zn.tnic>
+References: <20201005203929.148656-1-mike.travis@hpe.com>
+ <20201005203929.148656-7-mike.travis@hpe.com>
+ <20201005212135.GL21151@zn.tnic>
+ <d2c7d3d8-3863-f15f-7ec6-ae41cf8b2657@hpe.com>
 MIME-Version: 1.0
-References: <02c960a0ab75672007527e167b89b986ec5f9441.camel@intel.com>
-In-Reply-To: <02c960a0ab75672007527e167b89b986ec5f9441.camel@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 6 Oct 2020 17:06:34 +0300
-Message-ID: <CAHp75Vc_GszASbRSiEGiLxLFmhsoLE9mNbpQkxYdsLDT8_rCmA@mail.gmail.com>
-Subject: Re: [GIT PULL]: tools/power/x86/intel-speed-select second pull
- request for 5.10-rc1
-To:     "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
-Cc:     "andy@infradead.org" <andy@infradead.org>,
-        "prarit@redhat.com" <prarit@redhat.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "srinivas.pandruvada@linux.intel.com" 
-        <srinivas.pandruvada@linux.intel.com>,
-        "dvhart@infradead.org" <dvhart@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d2c7d3d8-3863-f15f-7ec6-ae41cf8b2657@hpe.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Oct 6, 2020 at 5:04 PM Pandruvada, Srinivas
-<srinivas.pandruvada@intel.com> wrote:
->
-> The following changes since commit
-> 720ef73d1a239e33c3ad8fac356b9b1348e68aaf:
->
->   platform/x86: thinkpad_acpi: re-initialize ACPI buffer size when
-> reuse (2020-10-05 12:20:42 +0300)
->
-> are available in the Git repository at:
->
->   https://github.com/spandruvada/linux-kernel.git for-next
->
-> for you to fetch changes up to
-> 1fe458617af45f7926ce338b7accec5c0fea1f5c:
->
->   tools/power/x86/intel-speed-select: Update version for v5.10 (2020-
-> 10-06 06:50:49 -0700)
+On Mon, Oct 05, 2020 at 02:35:58PM -0700, Mike Travis wrote:
+> 
+> 
+> On 10/5/2020 2:21 PM, Borislav Petkov wrote:
+> > On Mon, Oct 05, 2020 at 03:39:22PM -0500, Mike Travis wrote:
+> > > A patch to add and process the UV Arch Type field in the UVsystab passed
+> > > from UV BIOS to the kernel.
+> > 
+> > What does that mean?
+> > 
+> 
+> There have been recent cases where OEM's want to use the OEM_ID in the ACPI
+> tables to brand their own product.  The UV BIOS used that field to tell the
+> Linux kernel which UV arch the running system is.  The Arch Type in the
+> UVsystab (also created by UV BIOS) now carries that field in systems that
+> support it.
 
-Hans, Mark, just to inform you that we agreed a few cycles ago that
-Srinivas sends PRs against ISST tools.
-Please, pull it into for-next!
-
-> ----------------------------------------------------------------
-> Jonathan Doman (1):
->       tools/power/x86/intel-speed-select: Fix missing base-freq core
-> IDs
->
-> Srinivas Pandruvada (1):
->       tools/power/x86/intel-speed-select: Update version for v5.10
->
->  tools/power/x86/intel-speed-select/isst-config.c | 23 +++++++++++++---
-> -------
->  tools/power/x86/intel-speed-select/isst-core.c   |  8 ++++----
->  tools/power/x86/intel-speed-select/isst.h        |  2 +-
->  3 files changed, 18 insertions(+), 15 deletions(-)
-
-
+I am unclear on the whole patch passing from UV BIOS to the kernel. Are
+you talking about a kernel patch here? If so, commit ID is? Or what kind
+of patch are you talking about?
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
