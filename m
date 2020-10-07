@@ -7,86 +7,78 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789ECC4363D
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 12:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16196C4363D
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 12:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1715C206E5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 12:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0491207EA
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 12:12:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oPHaFA+Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fl4hpCsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbgJGMLx (ORCPT
+        id S1727591AbgJGMMb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Oct 2020 08:11:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38522 "EHLO
+        Wed, 7 Oct 2020 08:12:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727591AbgJGMLx (ORCPT
+        with ESMTP id S1727253AbgJGMMa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Oct 2020 08:11:53 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 128BCC061755;
-        Wed,  7 Oct 2020 05:11:53 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t23so2727575pji.0;
-        Wed, 07 Oct 2020 05:11:52 -0700 (PDT)
+        Wed, 7 Oct 2020 08:12:30 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C70CC061755;
+        Wed,  7 Oct 2020 05:12:30 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d6so885104plo.13;
+        Wed, 07 Oct 2020 05:12:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=M1sZMTj1z8WWAiutDAamKfkKSRHz+5FYZvwSDHX5MtA=;
-        b=oPHaFA+YLSHnaICvsrlsvQtpanVzndTElHkuk2LQ3y524GBCXYDhnSVWjqQrv5Gjgi
-         OcQ0oc4b1B16uASt4NexAMV7RXc8ZH7cxpCkxoOXgmbXBWVML3uAT4nGiB2U9FyseEwc
-         1OpPTEB/OWWUCGXjmvjxQQ1ZIkYjzPZOwu4h7x3aOVLPbaqoot3yoTK1BKOgyQooMx5S
-         9Npev39M+KdMHO9Pze0j9o7pr35XjWrI6NQ50p4coUnBt85Vwm4SiBQxiwirj3lRvV29
-         3hvWT5D237eyVu1R/OHaVcdhGh3IS54OL9/vJvZeXNou2TuQELJysNG9jlrOMB89lxsf
-         DPag==
+        bh=/XaZlHDNH/DSELiM8FQZNAJ3/IW+tUlDn4zzRGRnH5E=;
+        b=Fl4hpCsAEngY8IJGeqjY3EKl6MJbBmYK0z33+89yl6/WeooBLy+UV6dFHLtuYyEFQf
+         2K6+lobQcWzRm8Y/T/HbMgwuEwFY1TAD7lxga7kfOHTsMWxT7xwhJdEOFeOj56YT2TUN
+         jvjwNPuk4kM8ws4iTY1eKtmsaJJO2ewe5pfQ2vW/7101npJpdxNfRFCa8PK+LTzaqRzF
+         RKlaNW4nIqFhcpQVHo3mLQQm8Z7YfG4P0Y/yCsb+GyvEiwjJIz4OxYjHHPDdeOpFkEtB
+         ff/EZd1pOYB5WajN1sgbS1y4S8t/mXtRng6xXFp62TqlsY6NDr8OkMEUVImtk2/2DpOz
+         sMpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=M1sZMTj1z8WWAiutDAamKfkKSRHz+5FYZvwSDHX5MtA=;
-        b=eQ48KG/PGr+P9O5VLe7leauBJjiT7TlM/9leIp/4VeFm71ZmxP98zfImnmF2+Wm8AL
-         4s8Ki95/bVIuDBV/1dPNp7CiG3sstsnhLYox1qVABaOSpX5zjg5NSHrs+ZXUtKWDSdIl
-         +WuAby0jgcneokWo/mlT7kBo4VCXklti7yllg6bKFqs3ToF8jnZJ87nEoUVn+1WsLDkI
-         eG1cxMf4zy22klefoTD3pyGagcos5B3KNOgisUdUZkr6Lr4qZs8p+tYFbWQTnG2Xtcu4
-         rLHtST0KgIhmIFX3/ypX1PSxpWc7yN71lRyLprjcbyN6FxqhCVh2rvbirc7skfVxLNij
-         8X8Q==
-X-Gm-Message-State: AOAM532YWIysuha5zJFMUThlWLnj3G90TG15TOFVXUhR1RlfyBjceyYv
-        EUuL+wSjn0OpTbAWbTc1vGY8gvoudr4AVUt1PXufhuRn3LPgwA==
-X-Google-Smtp-Source: ABdhPJy+DLEsp4m18nWyTpGlKlTUJWwja+pUAPzURu8adjBO163pOP+0d/D5OkAoRmyjEDZmbLZ/piavh55f7H3GysE=
-X-Received: by 2002:a17:90a:fb92:: with SMTP id cp18mr2713556pjb.228.1602072712530;
- Wed, 07 Oct 2020 05:11:52 -0700 (PDT)
+        bh=/XaZlHDNH/DSELiM8FQZNAJ3/IW+tUlDn4zzRGRnH5E=;
+        b=YQ3w1F69jKAMbafLvBuns++WcjEGZ625cn88eOLwCuXnfqEQgQV2LAk2VsH4t9xvKH
+         Eo3ZzvRrgTmaA8pqXM21j6czRWRJ4oAl/BM4Xy9t+7UiDaijkLAmhe9yqjB+hS5+dDop
+         eSKfWdc6BInfF156EeOK9Nnfxjb+YCoo7DYpMXJ8sxzD0FuFtj7dzM6wjwGOsAZbfAQW
+         YUzDaUcbrflIR59dPQyBTqSM/Kvz4Vpfmd0CCT+sz4P619eHlt7dg5pdiPAL8jO6pNym
+         Ps54rrlCFb6/AeqL7xpwbo6QiX8Nxxsy69hw1B1HIcfU9+aJ2EYQwHrVPNFgyGiIswST
+         iQEw==
+X-Gm-Message-State: AOAM532nyzCRhJJRR03QGQR7Sh1kCXIbioZxkxTf2tKgHonrTE8HBa3O
+        GhzbFW3Lmycq/0jcBp3PoBxgvMmADVzGG3M+OhE=
+X-Google-Smtp-Source: ABdhPJxvGc6tR2mwP+Ya40OEpjEHY+M1J09weAEkl/PrK23yB2bwBxq6HK+JaK2jsK8ZohS/JS/UfecmuIiEYLnS4do=
+X-Received: by 2002:a17:902:ea8c:b029:d2:8abd:c8de with SMTP id
+ x12-20020a170902ea8cb02900d28abdc8demr2677302plb.21.1602072749621; Wed, 07
+ Oct 2020 05:12:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201006224702.12697-1-david.e.box@linux.intel.com>
-In-Reply-To: <20201006224702.12697-1-david.e.box@linux.intel.com>
+References: <20201007035108.31078-1-david.e.box@linux.intel.com>
+In-Reply-To: <20201007035108.31078-1-david.e.box@linux.intel.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 7 Oct 2020 15:12:41 +0300
-Message-ID: <CAHp75VeT4NwaZ851FHqpdFH=JeTwteVJdUPemHBtMJS-s_R15Q@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Tiger Lake PMC core driver fixes
+Date:   Wed, 7 Oct 2020 15:13:19 +0300
+Message-ID: <CAHp75Vd8byvCZw6Ls4uqGVQ77Cd2bZRK0GJKVfHtdeQE5ET-Cw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] pmc_core: Add RocketLake and other changes
 To:     "David E. Box" <david.e.box@linux.intel.com>,
         Mark Gross <mgross@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
+Cc:     irenic.rajneesh@gmail.com, "Box, David E" <david.e.box@intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
         Gayatri Kammela <gayatri.kammela@intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Oct 7, 2020 at 1:47 AM David E. Box <david.e.box@linux.intel.com> wrote:
+On Wed, Oct 7, 2020 at 6:51 AM David E. Box <david.e.box@linux.intel.com> wrote:
 >
-> This patch set adds several critical fixes for intel_pmc_core driver.
->
-> Patch 1: Uses descriptive register names for the TigerLake low power
->          mode registers. Not critical, but was requested in review of
->          Patch 2.
->
-> Patch 2: Fixes the register mapping to the correct IPs in the power
->          gating status register for TigerLake.
->
-> Patch 3: Fixes the slps0 residency multiplier to use the correct, platform
->          specific values.
+> Add RocketLake platform support and other driver maintainance.
 
 Hans, Mark, this series has been internally reviewed and tested on
 affected hardware, I think it's ready to go for v5.10.
@@ -95,17 +87,17 @@ Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 David, I'm not a maintainer anymore here.
 
+> Gayatri Kammela (4):
+>   platform/x86: intel_pmc_core: Clean up: Remove the duplicate comments
+>     and reorganize
+>   platform/x86: intel_pmc_core: Add Intel RocketLake (RKL) support
+>   platform/x86: intel_pmc_core: fix: Replace dev_dbg macro with
+>     dev_info()
+>   MAINTAINERS: Update maintainers for pmc_core driver
 >
-> David E. Box (1):
->   platform/x86: pmc_core: Use descriptive names for LPM registers
->
-> Gayatri Kammela (2):
->   platform/x86: intel_pmc_core: Fix TigerLake power gating status map
->   platform/x86: intel_pmc_core: Fix the slp_s0 counter displayed value
->
->  drivers/platform/x86/intel_pmc_core.c | 82 ++++++++++++++-------------
->  drivers/platform/x86/intel_pmc_core.h |  5 +-
->  2 files changed, 47 insertions(+), 40 deletions(-)
+>  MAINTAINERS                           |  4 +--
+>  drivers/platform/x86/intel_pmc_core.c | 39 ++++++++++++++++-----------
+>  2 files changed, 26 insertions(+), 17 deletions(-)
 >
 > --
 > 2.20.1
