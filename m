@@ -2,113 +2,116 @@ Return-Path: <SRS0=isCl=DO=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8DFC4363C
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 11:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789ECC4363D
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 12:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A11020782
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 11:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1715C206E5
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 12:11:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oPHaFA+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgJGLvz (ORCPT
+        id S1727702AbgJGMLx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Oct 2020 07:51:55 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:53787 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbgJGLvz (ORCPT
+        Wed, 7 Oct 2020 08:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727591AbgJGMLx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Oct 2020 07:51:55 -0400
-Received: from [192.168.0.28] (lns-bzn-39-82-255-60-242.adsl.proxad.net [82.255.60.242])
-        (Authenticated sender: hadess@hadess.net)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 3A8A3100012;
-        Wed,  7 Oct 2020 11:51:47 +0000 (UTC)
-Message-ID: <85a36eb58cb9774f1907582dfc75295ed847200c.camel@hadess.net>
-Subject: Re: [RFC] Documentation: Add documentation for new
- performance_profile sysfs class
-From:   Bastien Nocera <hadess@hadess.net>
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     Mark Pearson <mpearson@lenovo.com>,
-        Elia Devito <eliadevito@gmail.com>,
-        Benjamin Berg <bberg@redhat.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Pearson <markpearson@lenovo.com>
-Date:   Wed, 07 Oct 2020 13:51:47 +0200
-In-Reply-To: <DM6PR19MB263669227D122BB7699951E6FA0C0@DM6PR19MB2636.namprd19.prod.outlook.com>
-References: <20201003131938.9426-1-hdegoede@redhat.com>
-         <20201003131938.9426-2-hdegoede@redhat.com>
-         <DM6PR19MB263669227D122BB7699951E6FA0C0@DM6PR19MB2636.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.0 (3.38.0-1.fc33) 
+        Wed, 7 Oct 2020 08:11:53 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 128BCC061755;
+        Wed,  7 Oct 2020 05:11:53 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t23so2727575pji.0;
+        Wed, 07 Oct 2020 05:11:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M1sZMTj1z8WWAiutDAamKfkKSRHz+5FYZvwSDHX5MtA=;
+        b=oPHaFA+YLSHnaICvsrlsvQtpanVzndTElHkuk2LQ3y524GBCXYDhnSVWjqQrv5Gjgi
+         OcQ0oc4b1B16uASt4NexAMV7RXc8ZH7cxpCkxoOXgmbXBWVML3uAT4nGiB2U9FyseEwc
+         1OpPTEB/OWWUCGXjmvjxQQ1ZIkYjzPZOwu4h7x3aOVLPbaqoot3yoTK1BKOgyQooMx5S
+         9Npev39M+KdMHO9Pze0j9o7pr35XjWrI6NQ50p4coUnBt85Vwm4SiBQxiwirj3lRvV29
+         3hvWT5D237eyVu1R/OHaVcdhGh3IS54OL9/vJvZeXNou2TuQELJysNG9jlrOMB89lxsf
+         DPag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M1sZMTj1z8WWAiutDAamKfkKSRHz+5FYZvwSDHX5MtA=;
+        b=eQ48KG/PGr+P9O5VLe7leauBJjiT7TlM/9leIp/4VeFm71ZmxP98zfImnmF2+Wm8AL
+         4s8Ki95/bVIuDBV/1dPNp7CiG3sstsnhLYox1qVABaOSpX5zjg5NSHrs+ZXUtKWDSdIl
+         +WuAby0jgcneokWo/mlT7kBo4VCXklti7yllg6bKFqs3ToF8jnZJ87nEoUVn+1WsLDkI
+         eG1cxMf4zy22klefoTD3pyGagcos5B3KNOgisUdUZkr6Lr4qZs8p+tYFbWQTnG2Xtcu4
+         rLHtST0KgIhmIFX3/ypX1PSxpWc7yN71lRyLprjcbyN6FxqhCVh2rvbirc7skfVxLNij
+         8X8Q==
+X-Gm-Message-State: AOAM532YWIysuha5zJFMUThlWLnj3G90TG15TOFVXUhR1RlfyBjceyYv
+        EUuL+wSjn0OpTbAWbTc1vGY8gvoudr4AVUt1PXufhuRn3LPgwA==
+X-Google-Smtp-Source: ABdhPJy+DLEsp4m18nWyTpGlKlTUJWwja+pUAPzURu8adjBO163pOP+0d/D5OkAoRmyjEDZmbLZ/piavh55f7H3GysE=
+X-Received: by 2002:a17:90a:fb92:: with SMTP id cp18mr2713556pjb.228.1602072712530;
+ Wed, 07 Oct 2020 05:11:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201006224702.12697-1-david.e.box@linux.intel.com>
+In-Reply-To: <20201006224702.12697-1-david.e.box@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 7 Oct 2020 15:12:41 +0300
+Message-ID: <CAHp75VeT4NwaZ851FHqpdFH=JeTwteVJdUPemHBtMJS-s_R15Q@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Tiger Lake PMC core driver fixes
+To:     "David E. Box" <david.e.box@linux.intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2020-10-05 at 12:58 +0000, Limonciello, Mario wrote:
-> > On modern systems CPU/GPU/... performance is often dynamically
-> > configurable
-> > in the form of e.g. variable clock-speeds and TPD. The performance
-> > is often
-> > automatically adjusted to the load by some automatic-mechanism
-> > (which may
-> > very well live outside the kernel).
-> > 
-> > These auto performance-adjustment mechanisms often can be
-> > configured with
-> > one of several performance-profiles, with either a bias towards
-> > low-power
-> > consumption (and cool and quiet) or towards performance (and higher
-> > power
-> > consumption and thermals).
-> > 
-> > Introduce a new performance_profile class/sysfs API which offers a
-> > generic
-> > API for selecting the performance-profile of these automatic-
-> > mechanisms.
-> > 
-> 
-> If introducing an API for this - let me ask the question, why even let each
-> driver offer a class interface and userspace need to change "each" driver's
-> performance setting?
-> 
-> I would think that you could just offer something kernel-wide like
-> /sys/power/performance-profile
-> 
-> Userspace can read and write to a single file.  All drivers can get notified
-> on this sysfs file changing.
-> 
-> The systems that react in firmware (such as the two that prompted
-> this discussion) can change at that time.  It leaves the possibility for a
-> more open kernel implementation that can do the same thing though too by
-> directly modifying device registers instead of ACPI devices.
+On Wed, Oct 7, 2020 at 1:47 AM David E. Box <david.e.box@linux.intel.com> wrote:
+>
+> This patch set adds several critical fixes for intel_pmc_core driver.
+>
+> Patch 1: Uses descriptive register names for the TigerLake low power
+>          mode registers. Not critical, but was requested in review of
+>          Patch 2.
+>
+> Patch 2: Fixes the register mapping to the correct IPs in the power
+>          gating status register for TigerLake.
+>
+> Patch 3: Fixes the slps0 residency multiplier to use the correct, platform
+>          specific values.
 
-The problem, as I've mentioned in previous discussions we had about
-this, is that, as you've seen in replies to this mail, this would
-suddenly be making the kernel apply policy.
+Hans, Mark, this series has been internally reviewed and tested on
+affected hardware, I think it's ready to go for v5.10.
 
-There's going to be pushback as soon as policy is enacted in the
-kernel, and you take away the different knobs for individual components
-(or you can control them centrally as well as individually). As much as
-I hate the quantity of knobs[1], I don't think that trying to reduce
-the number of knobs in the kernel is a good use of our time, and easier
-to enact, coordinated with design targets, in user-space.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Unless you can think of a way to implement this kernel wide setting
-without adding one more exponent on the number of possibilities for the
-testing matrix, I'll +1 Hans' original API.
+David, I'm not a maintainer anymore here.
 
-Cheers
+>
+> David E. Box (1):
+>   platform/x86: pmc_core: Use descriptive names for LPM registers
+>
+> Gayatri Kammela (2):
+>   platform/x86: intel_pmc_core: Fix TigerLake power gating status map
+>   platform/x86: intel_pmc_core: Fix the slp_s0 counter displayed value
+>
+>  drivers/platform/x86/intel_pmc_core.c | 82 ++++++++++++++-------------
+>  drivers/platform/x86/intel_pmc_core.h |  5 +-
+>  2 files changed, 47 insertions(+), 40 deletions(-)
+>
+> --
+> 2.20.1
+>
 
-[1]: https://ometer.com/preferences.html
 
+-- 
+With Best Regards,
+Andy Shevchenko
