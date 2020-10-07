@@ -2,97 +2,113 @@ Return-Path: <SRS0=isCl=DO=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9312DC4363C
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 07:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8DFC4363C
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 11:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2045D20870
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 07:06:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="n+yaaTII"
+	by mail.kernel.org (Postfix) with ESMTP id 0A11020782
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 11:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgJGHGB (ORCPT
+        id S1728003AbgJGLvz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Oct 2020 03:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgJGHGB (ORCPT
+        Wed, 7 Oct 2020 07:51:55 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:53787 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbgJGLvz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Oct 2020 03:06:01 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A72C061755;
-        Wed,  7 Oct 2020 00:06:01 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f09100038f1dcf76f93be60.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:1000:38f1:dcf7:6f93:be60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EEED61EC0179;
-        Wed,  7 Oct 2020 09:05:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1602054360;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=yZDyNP77hsct54DZTaJkrgnVKJowqZv7UpNytj1Chz4=;
-        b=n+yaaTIIbkKkW4ySNQ4w+amA1sb64Az4/abVzFpthv4pgVsaY5ACP0gkAzcBO5hXHDmbKo
-        janq8MXfijs/MYwqBLoCy5qecWYuib9sXB/j4ffbF3fz9WmFWMLyZleFO0sCjzG7S8kb35
-        8gKgR2j8BXWEgfHXO6IOf8/7mTQipj0=
-Date:   Wed, 7 Oct 2020 09:05:56 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel test robot <lkp@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
+        Wed, 7 Oct 2020 07:51:55 -0400
+Received: from [192.168.0.28] (lns-bzn-39-82-255-60-242.adsl.proxad.net [82.255.60.242])
+        (Authenticated sender: hadess@hadess.net)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 3A8A3100012;
+        Wed,  7 Oct 2020 11:51:47 +0000 (UTC)
+Message-ID: <85a36eb58cb9774f1907582dfc75295ed847200c.camel@hadess.net>
+Subject: Re: [RFC] Documentation: Add documentation for new
+ performance_profile sysfs class
+From:   Bastien Nocera <hadess@hadess.net>
+To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Jian Cai <caij2003@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4 06/13] x86/platform/uv: Add and Decode Arch Type in
- UVsystab
-Message-ID: <20201007070556.GD5607@zn.tnic>
-References: <20201005203929.148656-1-mike.travis@hpe.com>
- <20201005203929.148656-7-mike.travis@hpe.com>
- <20201005212135.GL21151@zn.tnic>
- <d2c7d3d8-3863-f15f-7ec6-ae41cf8b2657@hpe.com>
- <20201006151959.GF27700@zn.tnic>
- <ee51449f-22b1-1074-19c1-b1b5a51fed64@hpe.com>
+        Mark Gross <mgross@linux.intel.com>
+Cc:     Mark Pearson <mpearson@lenovo.com>,
+        Elia Devito <eliadevito@gmail.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Pearson <markpearson@lenovo.com>
+Date:   Wed, 07 Oct 2020 13:51:47 +0200
+In-Reply-To: <DM6PR19MB263669227D122BB7699951E6FA0C0@DM6PR19MB2636.namprd19.prod.outlook.com>
+References: <20201003131938.9426-1-hdegoede@redhat.com>
+         <20201003131938.9426-2-hdegoede@redhat.com>
+         <DM6PR19MB263669227D122BB7699951E6FA0C0@DM6PR19MB2636.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.0 (3.38.0-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ee51449f-22b1-1074-19c1-b1b5a51fed64@hpe.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Oct 06, 2020 at 06:21:14PM -0700, Mike Travis wrote:
-> When the UV BIOS starts the kernel it passes the UVsystab info struct to the
-> kernel
+On Mon, 2020-10-05 at 12:58 +0000, Limonciello, Mario wrote:
+> > On modern systems CPU/GPU/... performance is often dynamically
+> > configurable
+> > in the form of e.g. variable clock-speeds and TPD. The performance
+> > is often
+> > automatically adjusted to the load by some automatic-mechanism
+> > (which may
+> > very well live outside the kernel).
+> > 
+> > These auto performance-adjustment mechanisms often can be
+> > configured with
+> > one of several performance-profiles, with either a bias towards
+> > low-power
+> > consumption (and cool and quiet) or towards performance (and higher
+> > power
+> > consumption and thermals).
+> > 
+> > Introduce a new performance_profile class/sysfs API which offers a
+> > generic
+> > API for selecting the performance-profile of these automatic-
+> > mechanisms.
+> > 
+> 
+> If introducing an API for this - let me ask the question, why even let each
+> driver offer a class interface and userspace need to change "each" driver's
+> performance setting?
+> 
+> I would think that you could just offer something kernel-wide like
+> /sys/power/performance-profile
+> 
+> Userspace can read and write to a single file.  All drivers can get notified
+> on this sysfs file changing.
+> 
+> The systems that react in firmware (such as the two that prompted
+> this discussion) can change at that time.  It leaves the possibility for a
+> more open kernel implementation that can do the same thing though too by
+> directly modifying device registers instead of ACPI devices.
 
-Oh wow, *now* I get it. There is no "patch" being passed - your initial
-commit message simply states that this is a patch to add and process...
+The problem, as I've mentioned in previous discussions we had about
+this, is that, as you've seen in replies to this mail, this would
+suddenly be making the kernel apply policy.
 
-Yeah, as already mentioned, saying that this is a patch in the same
-patch's commit message is tautological and, as we just saw, really
-confusing. So pls refrain from doing that. I'll use this explanation in
-the commit message as it is more clear.
+There's going to be pushback as soon as policy is enacted in the
+kernel, and you take away the different knobs for individual components
+(or you can control them centrally as well as individually). As much as
+I hate the quantity of knobs[1], I don't think that trying to reduce
+the number of knobs in the kernel is a good use of our time, and easier
+to enact, coordinated with design targets, in user-space.
 
-Thx.
+Unless you can think of a way to implement this kernel wide setting
+without adding one more exponent on the number of possibilities for the
+testing matrix, I'll +1 Hans' original API.
 
--- 
-Regards/Gruss,
-    Boris.
+Cheers
 
-https://people.kernel.org/tglx/notes-about-netiquette
+[1]: https://ometer.com/preferences.html
+
