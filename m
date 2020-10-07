@@ -2,173 +2,129 @@ Return-Path: <SRS0=isCl=DO=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E62DC4727E
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 01:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FA0C4363D
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 01:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2F2C2080A
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 01:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58CBD20659
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 01:21:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZ5McIJk"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="IS7kIkt6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgJGBMz (ORCPT
+        id S1726337AbgJGBVc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Oct 2020 21:12:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgJGBMy (ORCPT
+        Tue, 6 Oct 2020 21:21:32 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:29018 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725996AbgJGBVb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Oct 2020 21:12:54 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF8F2C061755;
-        Tue,  6 Oct 2020 18:12:54 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ds1so213522pjb.5;
-        Tue, 06 Oct 2020 18:12:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=mhoMukFtXUDnoxYBeSc1gCnHDJjh2RBWkCrpacxBvgc=;
-        b=BZ5McIJk7M9QpLpb5KoCQkdxJYiPrNQhgs5cl4vLLWytK5VF9kyh4DJe1g7PqgOdHJ
-         vi9SNcnbS6RVeKxhRm1gfXYW/1MobIU3emLb+keannjof0F62HLir3wvH+3R+JnKfDDw
-         hUuIq3r2W7hYuJwomu2PHIw9cHJh2bCarSSmPf2vcxlwhVYPy1B59pQCZh88VJfxM+SH
-         P3U1OKhTrqq3QQBPtMpZx/3RzdSMWOBjkBQktmI99bmH+2SMTqoB4KKC16f0DxyVah5V
-         LrrH+r9brZLGlfmZ2vd2w1S9l0EWtUIDgohzA1Ws4rcazlyeai7Bzg+4oBQf9+qgFD1f
-         D10A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mhoMukFtXUDnoxYBeSc1gCnHDJjh2RBWkCrpacxBvgc=;
-        b=tS0Ml+Y0Dw5j/SRwEKUylvVONA0aagIP22QfpHoSXqFa8exJjA/tqhzLKB8yU9wct1
-         uYocjmb0NrgxGzIt5B6ymksQzt9M2YT22LUJ6MzZK8tUzE4xexOiWtDKgoHbgs/ImV2c
-         cuLiB0qoM/e6mLec82qEARigL5Q/t8om6XLMgYdSd79Uho4bKKt4GPgivgY01YypHxHq
-         20W3bNbKPla4VKtYgu3D1MYMFG50Ktg5G9aHRPCaX015QBvwdGFA0RMftu0ldlkTIrTU
-         sGh2imjbHZL5r0TwHXglLQGqWc2001aPQuMamSb0ZeF4c/YVtXb6n8KQj1BQPKjsGpsb
-         BsBQ==
-X-Gm-Message-State: AOAM533lTQL+SB9+qiMJ8Rlk6VQ2zDJElYD9jHKylAvSU3yedmxTbAjP
-        8oKY4HvzTy7UsrJ9vtOxzek=
-X-Google-Smtp-Source: ABdhPJy4dLisQACUERV0GxDAYvpdj82oBH4eI0zaGWCX8W7avrgYWVStQLex6A0apJQoB8lnZYPvuA==
-X-Received: by 2002:a17:90a:1a02:: with SMTP id 2mr708050pjk.201.1602033174099;
-        Tue, 06 Oct 2020 18:12:54 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id f17sm412371pgd.86.2020.10.06.18.12.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Oct 2020 18:12:53 -0700 (PDT)
-Date:   Tue, 6 Oct 2020 18:12:49 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        kernel@collabora.com, Patrik Fimml <patrikf@chromium.org>
-Subject: Re: [PATCH v4 7/7] Input: Add "inhibited" property
-Message-ID: <20201007011249.GS1009802@dtor-ws>
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com>
- <20200608112211.12125-8-andrzej.p@collabora.com>
- <20201005181014.GL1009802@dtor-ws>
- <ac4eeab7-8333-b96b-707b-eb2d6d0d8139@collabora.com>
- <20201007011102.GR1009802@dtor-ws>
+        Tue, 6 Oct 2020 21:21:31 -0400
+Received: from pps.filterd (m0134425.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0971FYMx002841;
+        Wed, 7 Oct 2020 01:21:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pps0720;
+ bh=/zpvpQBMo/f3GdTerzEYdyceizkLUV976JwIcMUSvAE=;
+ b=IS7kIkt6HsPjb3f8023w68tbjpEyzwdY4cugKXrJXB0Rq9tpYI9V7eTKDAwXRfLPXRyL
+ sf9jOR8yvXqLvy3Hcnv2nZ1DzFUv3PA0Uw2fl7Gcc16BqZICwm47T35Xo6zrdTKOz4+/
+ mblNwKhpZT3pVdu+ZqiLocIiziwiVLHHQW3T54FJyHjjYWF0+RUL1TtK6BmHxtrAMqgJ
+ 9ilFIwW31ED/r6/NOaMoWXZFnA1lOjJSBrNtlTmV8STBUkaH2rIMcwWF+v3g8lDz1spt
+ V050Z1lLptW9KBScGBOQCZu56sxeaOfq7PwgrqB0yKhC6PYajdxHSd7wO2nNvbd08eNd 9g== 
+Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
+        by mx0b-002e3701.pphosted.com with ESMTP id 33xjkpeb07-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Oct 2020 01:21:18 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g4t3425.houston.hpe.com (Postfix) with ESMTP id D9B4892;
+        Wed,  7 Oct 2020 01:21:16 +0000 (UTC)
+Received: from [16.99.129.196] (unknown [16.99.129.196])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id E1EE54B;
+        Wed,  7 Oct 2020 01:21:14 +0000 (UTC)
+Subject: Re: [PATCH v4 06/13] x86/platform/uv: Add and Decode Arch Type in
+ UVsystab
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel test robot <lkp@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jian Cai <caij2003@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20201005203929.148656-1-mike.travis@hpe.com>
+ <20201005203929.148656-7-mike.travis@hpe.com>
+ <20201005212135.GL21151@zn.tnic>
+ <d2c7d3d8-3863-f15f-7ec6-ae41cf8b2657@hpe.com>
+ <20201006151959.GF27700@zn.tnic>
+From:   Mike Travis <mike.travis@hpe.com>
+Message-ID: <ee51449f-22b1-1074-19c1-b1b5a51fed64@hpe.com>
+Date:   Tue, 6 Oct 2020 18:21:14 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201007011102.GR1009802@dtor-ws>
+In-Reply-To: <20201006151959.GF27700@zn.tnic>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-10-06_15:2020-10-06,2020-10-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 phishscore=0 clxscore=1015 mlxlogscore=999
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2010070005
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Oct 06, 2020 at 06:11:02PM -0700, Dmitry Torokhov wrote:
-> On Tue, Oct 06, 2020 at 03:04:28PM +0200, Andrzej Pietrasiewicz wrote:
-> > Hi Dmitry,
-> > 
-> > W dniu 05.10.2020 o 20:10, Dmitry Torokhov pisze:
-> > > Hi Andrzej,
-> > > 
-> > > On Mon, Jun 08, 2020 at 01:22:11PM +0200, Andrzej Pietrasiewicz wrote:
-> > > > @@ -284,8 +284,11 @@ static int input_get_disposition(struct input_dev *dev,
-> > > >   	case EV_KEY:
-> > > >   		if (is_event_supported(code, dev->keybit, KEY_MAX)) {
-> > > > -			/* auto-repeat bypasses state updates */
-> > > > -			if (value == 2) {
-> > > > +			/*
-> > > > +			 * auto-repeat bypasses state updates but repeat
-> > > > +			 * events are ignored if the key is not pressed
-> > > > +			 */
-> > > > +			if (value == 2 && test_bit(code, dev->key)) {
-> > > >   				disposition = INPUT_PASS_TO_HANDLERS;
-> > > >   				break;
-> > > >   			}
-> > > 
-> > > Is this chunk really part of inhibit support? I'd think we cancel
-> > > autorepeat timer when we are releasing a key, no?
-> > > 
-> > 
-> > When I look at it now it seems to me the chunk might be redundant.
-> > But let me explain what I had in mind when adding it.
-> > 
-> > It is a matter of what we do with input events generated while a
-> > device is inhibited. If ->open()/->close() are not provided by the
-> > driver then inhibiting amounts to merely ignoring input events from
-> > a device while it remains active. What else can you do if the driver
-> > does not provide a method to prepare the device for generating events/
-> > to stop generating events?
-> > 
-> > In this special case a user might trigger a repeated event while the
-> > device is inhibited, then the user keeps holding the key down and the
-> > device is uninhibited. Do we pass anything to handlers then?
-> > 
-> > In my opinion we should not. Such an event is "illegal" in a sense that it
-> > was generated at a time when nobody wanted any events from the device.
-> > Hence the test to let only those auto-repeat events through for which
-> > a key is actually pressed.
-> > 
-> > However, what I see now is that if a device is inhibited, no key
-> > will ever reach neither the "1" nor "2" state because of the "if"
-> > in the very beginning of input_handle_event().
+
+
+On 10/6/2020 8:19 AM, Borislav Petkov wrote:
+> On Mon, Oct 05, 2020 at 02:35:58PM -0700, Mike Travis wrote:
+>>
+>>
+>> On 10/5/2020 2:21 PM, Borislav Petkov wrote:
+>>> On Mon, Oct 05, 2020 at 03:39:22PM -0500, Mike Travis wrote:
+>>>> A patch to add and process the UV Arch Type field in the UVsystab passed
+>>>> from UV BIOS to the kernel.
+>>>
+>>> What does that mean?
+>>>
+>>
+>> There have been recent cases where OEM's want to use the OEM_ID in the ACPI
+>> tables to brand their own product.  The UV BIOS used that field to tell the
+>> Linux kernel which UV arch the running system is.  The Arch Type in the
+>> UVsystab (also created by UV BIOS) now carries that field in systems that
+>> support it.
 > 
-> OK, then let's drop it for now. We can revisit if we see that a problem.
+> I am unclear on the whole patch passing from UV BIOS to the kernel. Are
+> you talking about a kernel patch here? If so, commit ID is? Or what kind
+> of patch are you talking about?
+> 
 
-And by that I mean that I will drop it myself, no need to resend. I will
-be applying this shortly.
+When the UV BIOS starts the kernel it passes the UVsystab info struct to 
+the kernel which contains information elements more specific than ACPI, 
+and generally pertinent only to the MMR's.  These are read only fields 
+so information is passed one way only.  A new field starting with UV5 is 
+the UV architecture type so the ACPI OEM_ID field can be used for other 
+purposes going forward.  The UV Arch Type selects the entirety of the 
+MMRs available, with their addresses and fields defined in uv_mmrs.h.
 
-Thanks.
-
--- 
-Dmitry
+Thanks,
+Mike
