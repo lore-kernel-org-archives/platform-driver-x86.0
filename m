@@ -1,149 +1,123 @@
-Return-Path: <SRS0=8/nu=DN=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=isCl=DO=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944FEC41604
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 22:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2878DC4363D
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 00:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B74820BED
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Oct 2020 22:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D899E2063A
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 00:51:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1602031884;
+	bh=i8I4wCGU4c5vQJVMhh90gjLnO/BjDbzPHoYO2I3rz+Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=jA8ANwBvJe0Oz/Hb36Pgge3VmIq0lNc8q9msDdrbMdeHEOX3C2sbOeQm+nEgxNzkQ
+	 12Tic9icLEZWKl0369uVClZuN7P7IW8Q8TfHJHJfJL3YtJBIdtGBBkhSLQIzDhiVyM
+	 gY0FrzavvS7LBxAHCGvxdCbeeOzDsMjnjm4DzmMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbgJFWrZ (ORCPT
+        id S1726851AbgJGAvV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Oct 2020 18:47:25 -0400
-Received: from mga06.intel.com ([134.134.136.31]:58474 "EHLO mga06.intel.com"
+        Tue, 6 Oct 2020 20:51:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbgJFWrS (ORCPT
+        id S1726779AbgJGAvV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Oct 2020 18:47:18 -0400
-IronPort-SDR: 5VV/tE81a+UyBRolGtnxlOzYp47nWIwC1upwooVkC2g8YBKX5qnFh0Cyo0lFxmdkaphXvrY6k3
- WwQQBNp694GA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9766"; a="226322925"
-X-IronPort-AV: E=Sophos;i="5.77,343,1596524400"; 
-   d="scan'208";a="226322925"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2020 15:47:17 -0700
-IronPort-SDR: h8LUdMvKCoU946GVttFz5YaG+eatJicmT6jQ6orrNMZnwLmEZIjFG5o4XZ1TwhJydV1cRdbj5u
- 05/CazjyFnDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,343,1596524400"; 
-   d="scan'208";a="388105338"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 06 Oct 2020 15:47:17 -0700
-Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id 197B7580867;
-        Tue,  6 Oct 2020 15:47:17 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     dvhart@infradead.org, andy@infradead.org, gayatri.kammela@intel.com
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 1/3] platform/x86: pmc_core: Use descriptive names for LPM registers
-Date:   Tue,  6 Oct 2020 15:47:00 -0700
-Message-Id: <20201006224702.12697-2-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20201006224702.12697-1-david.e.box@linux.intel.com>
-References: <20201006224702.12697-1-david.e.box@linux.intel.com>
+        Tue, 6 Oct 2020 20:51:21 -0400
+Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E63C2078E;
+        Wed,  7 Oct 2020 00:51:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602031880;
+        bh=i8I4wCGU4c5vQJVMhh90gjLnO/BjDbzPHoYO2I3rz+Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=OUgBiL8D4O68b1nQY4R/mN4/qMpwpG01E9VVwcBt+QZYPpTtu87bP7WC0XadViHzh
+         AbHBI9A6ss6lwF/OI/gvMdVdLMp4xYTZKGFJD011IKhRR9GkGn2WeGiXwm7FNPq43U
+         aMfDjensh0hWhIBx9VrRi1R9RnxFuj0Cy+GApKPA=
+Date:   Tue, 6 Oct 2020 19:51:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     lee.jones@linaro.org, dvhart@infradead.org, andy@infradead.org,
+        bhelgaas@google.com, hdegoede@redhat.com,
+        alexey.budankov@linux.intel.com,
+        Andy Shevchenko <andy.shevchenko@gmail.com>, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH V8 1/5] PCI: Add defines for Designated Vendor-Specific
+ Extended Capability
+Message-ID: <20201007005118.GA3230211@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b75c3ff53dbe26ee0c6825e8d1f5f10489a5722c.camel@linux.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-TigerLake Lower Power Mode (LPM) registers are grouped by functionality
-but were given simple enumerated names in the code (lpm0, lpm1, ...).
-Instead, give the register blocks names that describe their usage.
+On Tue, Oct 06, 2020 at 03:45:54PM -0700, David E. Box wrote:
+> Hi Bjorn,
+> 
+> This patch has been acked and unchanged for weeks. Is it possible to
+> get this pulled into next? We have SIOV and CXL related work that is
+> using these definitions. Thanks.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/platform/x86/intel_pmc_core.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+I acked it because I expected you to merge it along with the rest of
+the series.
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 338ea5222555..ed9fdf7c8928 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -409,7 +409,7 @@ static const struct pmc_reg_map icl_reg_map = {
- 	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
- };
- 
--static const struct pmc_bit_map tgl_lpm0_map[] = {
-+static const struct pmc_bit_map tgl_clocksource_status_map[] = {
- 	{"USB2PLL_OFF_STS",			BIT(18)},
- 	{"PCIe/USB3.1_Gen2PLL_OFF_STS",		BIT(19)},
- 	{"PCIe_Gen3PLL_OFF_STS",		BIT(20)},
-@@ -425,7 +425,7 @@ static const struct pmc_bit_map tgl_lpm0_map[] = {
- 	{}
- };
- 
--static const struct pmc_bit_map tgl_lpm1_map[] = {
-+static const struct pmc_bit_map tgl_power_gating_status_map[] = {
- 	{"SPI_PG_STS",				BIT(2)},
- 	{"xHCI_PG_STS",				BIT(3)},
- 	{"PCIe_Ctrller_A_PG_STS",		BIT(4)},
-@@ -453,7 +453,7 @@ static const struct pmc_bit_map tgl_lpm1_map[] = {
- 	{}
- };
- 
--static const struct pmc_bit_map tgl_lpm2_map[] = {
-+static const struct pmc_bit_map tgl_d3_status_map[] = {
- 	{"ADSP_D3_STS",				BIT(0)},
- 	{"SATA_D3_STS",				BIT(1)},
- 	{"xHCI0_D3_STS",			BIT(2)},
-@@ -468,7 +468,7 @@ static const struct pmc_bit_map tgl_lpm2_map[] = {
- 	{}
- };
- 
--static const struct pmc_bit_map tgl_lpm3_map[] = {
-+static const struct pmc_bit_map tgl_vnn_req_status_map[] = {
- 	{"GPIO_COM0_VNN_REQ_STS",		BIT(1)},
- 	{"GPIO_COM1_VNN_REQ_STS",		BIT(2)},
- 	{"GPIO_COM2_VNN_REQ_STS",		BIT(3)},
-@@ -493,7 +493,7 @@ static const struct pmc_bit_map tgl_lpm3_map[] = {
- 	{}
- };
- 
--static const struct pmc_bit_map tgl_lpm4_map[] = {
-+static const struct pmc_bit_map tgl_vnn_misc_status_map[] = {
- 	{"CPU_C10_REQ_STS_0",			BIT(0)},
- 	{"PCIe_LPM_En_REQ_STS_3",		BIT(3)},
- 	{"ITH_REQ_STS_5",			BIT(5)},
-@@ -509,7 +509,7 @@ static const struct pmc_bit_map tgl_lpm4_map[] = {
- 	{}
- };
- 
--static const struct pmc_bit_map tgl_lpm5_map[] = {
-+static const struct pmc_bit_map tgl_signal_status_map[] = {
- 	{"LSX_Wake0_En_STS",			BIT(0)},
- 	{"LSX_Wake0_Pol_STS",			BIT(1)},
- 	{"LSX_Wake1_En_STS",			BIT(2)},
-@@ -546,12 +546,12 @@ static const struct pmc_bit_map tgl_lpm5_map[] = {
- };
- 
- static const struct pmc_bit_map *tgl_lpm_maps[] = {
--	tgl_lpm0_map,
--	tgl_lpm1_map,
--	tgl_lpm2_map,
--	tgl_lpm3_map,
--	tgl_lpm4_map,
--	tgl_lpm5_map,
-+	tgl_clocksource_status_map,
-+	tgl_power_gating_status_map,
-+	tgl_d3_status_map,
-+	tgl_vnn_req_status_map,
-+	tgl_vnn_misc_status_map,
-+	tgl_signal_status_map,
- 	NULL
- };
- 
--- 
-2.20.1
+I guess I could merge this patch via the PCI tree if you really want,
+but that ends up being a hassle because we have to worry about which
+order things get merged to Linus' tree.  Better if the whole series is
+merged via the same tree.
 
+> On Fri, 2020-10-02 at 18:31 -0700, David E. Box wrote:
+> > Add PCIe Designated Vendor-Specific Extended Capability (DVSEC) and
+> > defines
+> > for the header offsets. Defined in PCIe r5.0, sec 7.9.6.
+> > 
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > ---
+> >  include/uapi/linux/pci_regs.h | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/include/uapi/linux/pci_regs.h
+> > b/include/uapi/linux/pci_regs.h
+> > index f9701410d3b5..beafeee39e44 100644
+> > --- a/include/uapi/linux/pci_regs.h
+> > +++ b/include/uapi/linux/pci_regs.h
+> > @@ -720,6 +720,7 @@
+> >  #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port
+> > Containment */
+> >  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+> >  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement
+> > */
+> > +#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific 
+> > */
+> >  #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+> >  #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer
+> > 16.0 GT/s */
+> >  #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
+> > @@ -1062,6 +1063,10 @@
+> >  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /*
+> > LTR_L1.2_THRESHOLD_Scale */
+> >  #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register
+> > */
+> >  
+> > +/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
+> > +#define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-
+> > Specific Header1 */
+> > +#define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-
+> > Specific Header2 */
+> > +
+> >  /* Data Link Feature */
+> >  #define PCI_DLF_CAP		0x04	/* Capabilities Register */
+> >  #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link
+> > Feature Exchange Enable */
+> 
