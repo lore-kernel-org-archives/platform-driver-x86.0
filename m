@@ -2,77 +2,147 @@ Return-Path: <SRS0=isCl=DO=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD97C41604
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 16:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7658EC41604
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 16:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A36C02087D
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 16:21:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="HrKVLNaS"
+	by mail.kernel.org (Postfix) with ESMTP id 355ED2064E
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 16:35:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbgJGQVZ (ORCPT
+        id S1727278AbgJGQfI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Oct 2020 12:21:25 -0400
-Received: from mail-41104.protonmail.ch ([185.70.41.104]:21770 "EHLO
-        mail-41104.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727413AbgJGQVZ (ORCPT
+        Wed, 7 Oct 2020 12:35:08 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:52163 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbgJGQfI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Oct 2020 12:21:25 -0400
-Received: from mail-02.mail-europe.com (mail-02.mail-europe.com [51.89.119.103])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        by mail-41104.protonmail.ch (Postfix) with ESMTPS id 5CCDB20090E5
-        for <platform-driver-x86@vger.kernel.org>; Wed,  7 Oct 2020 16:21:23 +0000 (UTC)
-Authentication-Results: mail-41104.protonmail.ch;
-        dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="HrKVLNaS"
-Date:   Wed, 07 Oct 2020 16:21:16 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1602087680;
-        bh=sklXRSR4DchLmeZEc2eD8zFfXahwNu0zPXFsGRi9IRc=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=HrKVLNaSyH7IE7ar+lWwH/fuO6RzAmzHXTHUoZppCD8n2rSkvD8LJxEOkD2GE2ezi
-         7aUtFicC2dOg68vk4m7k/SNNdSyNl4qZZKz639YKFWp36k/WGwz5J8K8fJeTrKEiGY
-         PAgp73kCGa0/QqxHewLeZTz65MhfDE5w5uQHhptk=
-To:     Hans de Goede <hdegoede@redhat.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Elia Devito <eliadevito@gmail.com>,
-        Mark Gross <mgross@linux.intel.com>,
+        Wed, 7 Oct 2020 12:35:08 -0400
+X-Originating-IP: 82.255.60.242
+Received: from [192.168.0.28] (lns-bzn-39-82-255-60-242.adsl.proxad.net [82.255.60.242])
+        (Authenticated sender: hadess@hadess.net)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 7D1DB240011;
+        Wed,  7 Oct 2020 16:34:56 +0000 (UTC)
+Message-ID: <c73ffad8fd6bff8ff20d91930b097bff82be1c8f.camel@hadess.net>
+Subject: Re: [RFC] Documentation: Add documentation for new
+ performance_profile sysfs class
+From:   Bastien Nocera <hadess@hadess.net>
+To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Darren Hart <dvhart@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH v2] platform/x86: hp-wmi: add support for thermal policy
-Message-ID: <zm1oBveg0S9L-MagzWnleGj5ZfQg8cV95Ugbzz6WZbnv-nzpF8_9Fghwj8P8V-ZAmVF6kRBWF-blVcOFirhSN3xxmE_8cOUycONWZMJP5xE=@protonmail.com>
-In-Reply-To: <5d60709b-e3cb-685f-2b3e-07381b9855e5@redhat.com>
-References: <20200917214957.GD29136@mtg-dev.jf.intel.com> <20201004211305.11628-1-eliadevito@gmail.com> <CAHp75VfbK226a-SsNj=Bnpfc3wWyT9K_D4XzAMOu9of1_g+8-A@mail.gmail.com> <5d60709b-e3cb-685f-2b3e-07381b9855e5@redhat.com>
+        Andy Shevchenko <andy@infradead.org>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     Mark Pearson <mpearson@lenovo.com>,
+        Elia Devito <eliadevito@gmail.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Pearson <markpearson@lenovo.com>
+Date:   Wed, 07 Oct 2020 18:34:55 +0200
+In-Reply-To: <DM6PR19MB26364E6AA2F51981F592CE58FA0A0@DM6PR19MB2636.namprd19.prod.outlook.com>
+References: <20201003131938.9426-1-hdegoede@redhat.com>
+         <20201003131938.9426-2-hdegoede@redhat.com>
+         <DM6PR19MB263669227D122BB7699951E6FA0C0@DM6PR19MB2636.namprd19.prod.outlook.com>
+         <85a36eb58cb9774f1907582dfc75295ed847200c.camel@hadess.net>
+         <DM6PR19MB26364E6AA2F51981F592CE58FA0A0@DM6PR19MB2636.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.0 (3.38.0-1.fc33) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+On Wed, 2020-10-07 at 15:58 +0000, Limonciello, Mario wrote:
+>  
+> > On Mon, 2020-10-05 at 12:58 +0000, Limonciello, Mario wrote:
+> > > > On modern systems CPU/GPU/... performance is often dynamically
+> > > > configurable
+> > > > in the form of e.g. variable clock-speeds and TPD. The
+> > > > performance
+> > > > is often
+> > > > automatically adjusted to the load by some automatic-mechanism
+> > > > (which may
+> > > > very well live outside the kernel).
+> > > > 
+> > > > These auto performance-adjustment mechanisms often can be
+> > > > configured with
+> > > > one of several performance-profiles, with either a bias towards
+> > > > low-power
+> > > > consumption (and cool and quiet) or towards performance (and
+> > > > higher
+> > > > power
+> > > > consumption and thermals).
+> > > > 
+> > > > Introduce a new performance_profile class/sysfs API which
+> > > > offers a
+> > > > generic
+> > > > API for selecting the performance-profile of these automatic-
+> > > > mechanisms.
+> > > > 
+> > > 
+> > > If introducing an API for this - let me ask the question, why
+> > > even let each
+> > > driver offer a class interface and userspace need to change
+> > > "each" driver's
+> > > performance setting?
+> > > 
+> > > I would think that you could just offer something kernel-wide
+> > > like
+> > > /sys/power/performance-profile
+> > > 
+> > > Userspace can read and write to a single file.  All drivers can
+> > > get notified
+> > > on this sysfs file changing.
+> > > 
+> > > The systems that react in firmware (such as the two that prompted
+> > > this discussion) can change at that time.  It leaves the
+> > > possibility for a
+> > > more open kernel implementation that can do the same thing though
+> > > too by
+> > > directly modifying device registers instead of ACPI devices.
+> > 
+> > The problem, as I've mentioned in previous discussions we had about
+> > this, is that, as you've seen in replies to this mail, this would
+> > suddenly be making the kernel apply policy.
+> > 
+> > There's going to be pushback as soon as policy is enacted in the
+> > kernel, and you take away the different knobs for individual
+> > components
+> > (or you can control them centrally as well as individually). As
+> > much as
+> > I hate the quantity of knobs[1], I don't think that trying to
+> > reduce
+> > the number of knobs in the kernel is a good use of our time, and
+> > easier
+> > to enact, coordinated with design targets, in user-space.
+> > 
+> > Unless you can think of a way to implement this kernel wide setting
+> > without adding one more exponent on the number of possibilities for
+> > the
+> > testing matrix, I'll +1 Hans' original API.
+> > 
+> Actually I offered two proposals in my reply.  So are you NAKing
+> both?
 
-2020. okt=C3=B3ber 7., szerda 16:02 keltez=C3=A9ssel, Hans de Goede =C3=
-=ADrta:
-> [...]
-> Elia, Thank you for your patch, I've applied this patch to me review-hans=
- branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x8=
-6.git/log/?h=3Dreview-hans
-> [...]
+No, this is only about the first portion of the email, which I quoted.
+And I'm not NAK'ing it, but I don't see how it can work without being
+antithetical to what kernel "users" expect, or what the folks consuming
+those interfaces (presumably us both) would expect to be able to test
+and maintain.
 
-I don't know if the problem is on my end, but opening that url
-results in an "Invalid branch: review-hans" error.
+> The other one suggested to use the same firmware attributes class
+> being
+> introduced by the new Dell driver ( 
+> https://patchwork.kernel.org/patch/11818343/)
+> since this is actually a knob to a specific firmware setting.
 
+This seemed to me like an implementation detail (eg. the same metadata
+is being exported, but in a different way), and I don't feel strongly
+about it either way.
 
-Thanks,
-Barnab=C3=A1s P=C5=91cze
