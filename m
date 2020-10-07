@@ -2,122 +2,168 @@ Return-Path: <SRS0=isCl=DO=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2878DC4363D
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 00:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A071C4727E
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 01:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D899E2063A
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 00:51:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1602031884;
-	bh=i8I4wCGU4c5vQJVMhh90gjLnO/BjDbzPHoYO2I3rz+Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=jA8ANwBvJe0Oz/Hb36Pgge3VmIq0lNc8q9msDdrbMdeHEOX3C2sbOeQm+nEgxNzkQ
-	 12Tic9icLEZWKl0369uVClZuN7P7IW8Q8TfHJHJfJL3YtJBIdtGBBkhSLQIzDhiVyM
-	 gY0FrzavvS7LBxAHCGvxdCbeeOzDsMjnjm4DzmMQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0F53521582
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 01:11:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S5qiUfGn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgJGAvV (ORCPT
+        id S1726749AbgJGBLJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Oct 2020 20:51:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726779AbgJGAvV (ORCPT
+        Tue, 6 Oct 2020 21:11:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbgJGBLI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Oct 2020 20:51:21 -0400
-Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E63C2078E;
-        Wed,  7 Oct 2020 00:51:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602031880;
-        bh=i8I4wCGU4c5vQJVMhh90gjLnO/BjDbzPHoYO2I3rz+Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=OUgBiL8D4O68b1nQY4R/mN4/qMpwpG01E9VVwcBt+QZYPpTtu87bP7WC0XadViHzh
-         AbHBI9A6ss6lwF/OI/gvMdVdLMp4xYTZKGFJD011IKhRR9GkGn2WeGiXwm7FNPq43U
-         aMfDjensh0hWhIBx9VrRi1R9RnxFuj0Cy+GApKPA=
-Date:   Tue, 6 Oct 2020 19:51:18 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     lee.jones@linaro.org, dvhart@infradead.org, andy@infradead.org,
-        bhelgaas@google.com, hdegoede@redhat.com,
-        alexey.budankov@linux.intel.com,
-        Andy Shevchenko <andy.shevchenko@gmail.com>, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH V8 1/5] PCI: Add defines for Designated Vendor-Specific
- Extended Capability
-Message-ID: <20201007005118.GA3230211@bjorn-Precision-5520>
+        Tue, 6 Oct 2020 21:11:08 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 182D3C061755;
+        Tue,  6 Oct 2020 18:11:08 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id 34so306625pgo.13;
+        Tue, 06 Oct 2020 18:11:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=6fZCLYVp6vJOGJ9UOukLRU5lx5R2NISCZkWVL54zOGg=;
+        b=S5qiUfGndIGUy172Th8X9wui1g/KqnJ8Yz9sLsLNl6YQAUDRK5o7EcFi+xf0zez4lU
+         NIXSdgW3vrt0s+GUQUGbX7OxXqwbkWXD8m+33T0GyZeAvoW74hyWXw6rRstZY5gebvPs
+         ToVQFWRd27he3+qYh1jDNPmGoO4cRbwezUjcdzkhN2PE9k4bNM8+siHYH9dVL+LVs/rA
+         WtSwbSGfCrU+7r3dpVt4XalVIcZDhg5JLS/EJsSHAJVlSgJMg9IZUNRkbGA0Zqb9Gmgi
+         gr9smdR0mAVR4vuPF1ehlmGsMQ1hU3sk75bTMYGwRjIzT4yKn9xchLknf4gNlQxMAG8X
+         CDWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=6fZCLYVp6vJOGJ9UOukLRU5lx5R2NISCZkWVL54zOGg=;
+        b=NRJBBL84dy/vFskQh6N+FmrHJTRmS6dXqTjv0xXUHsthQc00BMd3rR3WrpDkWQgEjd
+         1Ufq/zoDW8uirqOIU0696t2XEH1FtSiP0qhIwKz9pxGjnqJ3oqej/Z0dqp4MelLxplIG
+         ivUWyuPUZeyPxCcFsrQVi1JaPDmEbLkpN/Y7lU2xJD09bc7mD8a+pqFeRu7scbalTNwH
+         nnLnseei7epQNamy2ZTMs1Eb24epgGOQ/yvaRPMXRox+B9QZe8CSG7B1+3qJEWbroznI
+         D4hHWT8CpoNUzwgGnxmEJljVKlrtcDKXcWnu5vb2RR0Dv9Bq87pGPVN4ps9s0oi+zXWT
+         +t6Q==
+X-Gm-Message-State: AOAM530iixnC8ILBFNpWlamdGr104qGcGy1QJN1XHB4LmlqdID4uI00m
+        6PrqSbl2ZxhS+mPZQHMM8F4=
+X-Google-Smtp-Source: ABdhPJyFRAe5gj4f3wME1Oj9xM2fApavjlXPSPwqMqBxecHV3dRBe4ft3JSqvU8nMvLBeX2kdb6ivA==
+X-Received: by 2002:aa7:94a4:0:b029:151:d786:d5c2 with SMTP id a4-20020aa794a40000b0290151d786d5c2mr737596pfl.50.1602033067539;
+        Tue, 06 Oct 2020 18:11:07 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id w187sm453006pfb.93.2020.10.06.18.11.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Oct 2020 18:11:06 -0700 (PDT)
+Date:   Tue, 6 Oct 2020 18:11:02 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ferruh Yigit <fery@cypress.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        kernel@collabora.com, Patrik Fimml <patrikf@chromium.org>
+Subject: Re: [PATCH v4 7/7] Input: Add "inhibited" property
+Message-ID: <20201007011102.GR1009802@dtor-ws>
+References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+ <20200608112211.12125-1-andrzej.p@collabora.com>
+ <20200608112211.12125-8-andrzej.p@collabora.com>
+ <20201005181014.GL1009802@dtor-ws>
+ <ac4eeab7-8333-b96b-707b-eb2d6d0d8139@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <b75c3ff53dbe26ee0c6825e8d1f5f10489a5722c.camel@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ac4eeab7-8333-b96b-707b-eb2d6d0d8139@collabora.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Oct 06, 2020 at 03:45:54PM -0700, David E. Box wrote:
-> Hi Bjorn,
+On Tue, Oct 06, 2020 at 03:04:28PM +0200, Andrzej Pietrasiewicz wrote:
+> Hi Dmitry,
 > 
-> This patch has been acked and unchanged for weeks. Is it possible to
-> get this pulled into next? We have SIOV and CXL related work that is
-> using these definitions. Thanks.
-
-I acked it because I expected you to merge it along with the rest of
-the series.
-
-I guess I could merge this patch via the PCI tree if you really want,
-but that ends up being a hassle because we have to worry about which
-order things get merged to Linus' tree.  Better if the whole series is
-merged via the same tree.
-
-> On Fri, 2020-10-02 at 18:31 -0700, David E. Box wrote:
-> > Add PCIe Designated Vendor-Specific Extended Capability (DVSEC) and
-> > defines
-> > for the header offsets. Defined in PCIe r5.0, sec 7.9.6.
+> W dniu 05.10.2020 o 20:10, Dmitry Torokhov pisze:
+> > Hi Andrzej,
 > > 
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > ---
-> >  include/uapi/linux/pci_regs.h | 5 +++++
-> >  1 file changed, 5 insertions(+)
+> > On Mon, Jun 08, 2020 at 01:22:11PM +0200, Andrzej Pietrasiewicz wrote:
+> > > @@ -284,8 +284,11 @@ static int input_get_disposition(struct input_dev *dev,
+> > >   	case EV_KEY:
+> > >   		if (is_event_supported(code, dev->keybit, KEY_MAX)) {
+> > > -			/* auto-repeat bypasses state updates */
+> > > -			if (value == 2) {
+> > > +			/*
+> > > +			 * auto-repeat bypasses state updates but repeat
+> > > +			 * events are ignored if the key is not pressed
+> > > +			 */
+> > > +			if (value == 2 && test_bit(code, dev->key)) {
+> > >   				disposition = INPUT_PASS_TO_HANDLERS;
+> > >   				break;
+> > >   			}
 > > 
-> > diff --git a/include/uapi/linux/pci_regs.h
-> > b/include/uapi/linux/pci_regs.h
-> > index f9701410d3b5..beafeee39e44 100644
-> > --- a/include/uapi/linux/pci_regs.h
-> > +++ b/include/uapi/linux/pci_regs.h
-> > @@ -720,6 +720,7 @@
-> >  #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port
-> > Containment */
-> >  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
-> >  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement
-> > */
-> > +#define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific 
-> > */
-> >  #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
-> >  #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer
-> > 16.0 GT/s */
-> >  #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
-> > @@ -1062,6 +1063,10 @@
-> >  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /*
-> > LTR_L1.2_THRESHOLD_Scale */
-> >  #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register
-> > */
-> >  
-> > +/* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
-> > +#define PCI_DVSEC_HEADER1		0x4 /* Designated Vendor-
-> > Specific Header1 */
-> > +#define PCI_DVSEC_HEADER2		0x8 /* Designated Vendor-
-> > Specific Header2 */
-> > +
-> >  /* Data Link Feature */
-> >  #define PCI_DLF_CAP		0x04	/* Capabilities Register */
-> >  #define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link
-> > Feature Exchange Enable */
+> > Is this chunk really part of inhibit support? I'd think we cancel
+> > autorepeat timer when we are releasing a key, no?
+> > 
 > 
+> When I look at it now it seems to me the chunk might be redundant.
+> But let me explain what I had in mind when adding it.
+> 
+> It is a matter of what we do with input events generated while a
+> device is inhibited. If ->open()/->close() are not provided by the
+> driver then inhibiting amounts to merely ignoring input events from
+> a device while it remains active. What else can you do if the driver
+> does not provide a method to prepare the device for generating events/
+> to stop generating events?
+> 
+> In this special case a user might trigger a repeated event while the
+> device is inhibited, then the user keeps holding the key down and the
+> device is uninhibited. Do we pass anything to handlers then?
+> 
+> In my opinion we should not. Such an event is "illegal" in a sense that it
+> was generated at a time when nobody wanted any events from the device.
+> Hence the test to let only those auto-repeat events through for which
+> a key is actually pressed.
+> 
+> However, what I see now is that if a device is inhibited, no key
+> will ever reach neither the "1" nor "2" state because of the "if"
+> in the very beginning of input_handle_event().
+
+OK, then let's drop it for now. We can revisit if we see that a problem.
+
+Thanks.
+
+-- 
+Dmitry
