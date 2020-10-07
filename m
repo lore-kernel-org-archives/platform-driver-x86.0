@@ -2,122 +2,97 @@ Return-Path: <SRS0=isCl=DO=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64CAC4727F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 06:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9312DC4363C
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 07:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38AD92083B
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 06:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2045D20870
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Oct 2020 07:06:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JwqsHdhV"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="n+yaaTII"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgJGG55 (ORCPT
+        id S1727083AbgJGHGB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Oct 2020 02:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46532 "EHLO
+        Wed, 7 Oct 2020 03:06:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgJGG55 (ORCPT
+        with ESMTP id S1726041AbgJGHGB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Oct 2020 02:57:57 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C54FC0613D2
-        for <platform-driver-x86@vger.kernel.org>; Tue,  6 Oct 2020 23:57:55 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f21so1128327wml.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Oct 2020 23:57:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=RvBs0NtTAlv1X8xK9DK+JUwuX3FHUjdEnezntOoMEhA=;
-        b=JwqsHdhVrikUVbP0FWDt07MtnZYB96hY71/Y68TVyo1SQGK/zTc/DNxqV/dMEa43sg
-         3QThoq2ZuHl6TB+oa06cxhQ8FmXnQ0PxtbavNFPBPR+z+0Po5Vx4wRUePTdSh8ZkJX9I
-         sTHowo/fiEPo359XnMKIJdw2Jvf1IugLpTZNwD2YakusslSi5YO+OCZBqFQR6kYq10Nr
-         cPOwDM20Mz+3agmGmuj7yTCin1kuiHws8iVF9SI+pKVltmPzGlTujXiDZFYH+XWXXKZo
-         VdbPN8FNCeDGBdqfoMki5kQ7VCNRck35KMyLY3fyU9QRKm+dzgT33EXKUogZDUn9bRyA
-         To+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=RvBs0NtTAlv1X8xK9DK+JUwuX3FHUjdEnezntOoMEhA=;
-        b=JIimgU4qIDDVDUa781CeOaMgydG+LcQkCaVQOhNrxOl7CeR0oP5MYClaPogih/e8ia
-         oI7QvtjiyHtjrp4YQt58d5KRSllGRgFiz9/qha6ksZAl6LoeOc5HN4bJleHRhp3SS12i
-         xWj8222UlM766SmVrFE9SEA6q6M/9TosnCBEjkm3pqhqwfkPJC/nExeVHJFdV7uoCr1c
-         QeBic56YrgAp0thRyT9iBaJjNZkwNMMVPgOixUhjw8s6ia+EwiIi4XGjFC0ktIbulcvM
-         gBJAEsNY6doajRI3nQiSyWxs6WQAvecw1tIVy2r8J2P77Yob0Mi/FSS1gRxgiW6XjeSe
-         1Nqg==
-X-Gm-Message-State: AOAM5319rSDASXQEMoLvBd92RydU15VnuwJq3ZVtGuIMRyXr+YDluYgA
-        loT5FEMhUxCei26iltiLCEQnTg==
-X-Google-Smtp-Source: ABdhPJyh6b3ua7kPCSvwZfZ/YfLpCWrAPpOCrD+jrkhwaT4WP7jgf0le8jwzj9Kr0Q6KhQTU/8JMzA==
-X-Received: by 2002:a1c:49c2:: with SMTP id w185mr1599561wma.70.1602053874162;
-        Tue, 06 Oct 2020 23:57:54 -0700 (PDT)
-Received: from dell ([91.110.221.236])
-        by smtp.gmail.com with ESMTPSA id g4sm1505929wrm.18.2020.10.06.23.57.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Oct 2020 23:57:53 -0700 (PDT)
-Date:   Wed, 7 Oct 2020 07:57:51 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        hdegoede@redhat.com, alexey.budankov@linux.intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH V8 2/5] mfd: Intel Platform Monitoring Technology support
-Message-ID: <20201007065751.GA1763265@dell>
-References: <20201003013123.20269-1-david.e.box@linux.intel.com>
- <20201003013123.20269-3-david.e.box@linux.intel.com>
+        Wed, 7 Oct 2020 03:06:01 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A72C061755;
+        Wed,  7 Oct 2020 00:06:01 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f09100038f1dcf76f93be60.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:1000:38f1:dcf7:6f93:be60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EEED61EC0179;
+        Wed,  7 Oct 2020 09:05:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1602054360;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=yZDyNP77hsct54DZTaJkrgnVKJowqZv7UpNytj1Chz4=;
+        b=n+yaaTIIbkKkW4ySNQ4w+amA1sb64Az4/abVzFpthv4pgVsaY5ACP0gkAzcBO5hXHDmbKo
+        janq8MXfijs/MYwqBLoCy5qecWYuib9sXB/j4ffbF3fz9WmFWMLyZleFO0sCjzG7S8kb35
+        8gKgR2j8BXWEgfHXO6IOf8/7mTQipj0=
+Date:   Wed, 7 Oct 2020 09:05:56 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Mike Travis <mike.travis@hpe.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel test robot <lkp@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Jian Cai <caij2003@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 06/13] x86/platform/uv: Add and Decode Arch Type in
+ UVsystab
+Message-ID: <20201007070556.GD5607@zn.tnic>
+References: <20201005203929.148656-1-mike.travis@hpe.com>
+ <20201005203929.148656-7-mike.travis@hpe.com>
+ <20201005212135.GL21151@zn.tnic>
+ <d2c7d3d8-3863-f15f-7ec6-ae41cf8b2657@hpe.com>
+ <20201006151959.GF27700@zn.tnic>
+ <ee51449f-22b1-1074-19c1-b1b5a51fed64@hpe.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201003013123.20269-3-david.e.box@linux.intel.com>
+In-Reply-To: <ee51449f-22b1-1074-19c1-b1b5a51fed64@hpe.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 02 Oct 2020, David E. Box wrote:
+On Tue, Oct 06, 2020 at 06:21:14PM -0700, Mike Travis wrote:
+> When the UV BIOS starts the kernel it passes the UVsystab info struct to the
+> kernel
 
-> Intel Platform Monitoring Technology (PMT) is an architecture for
-> enumerating and accessing hardware monitoring facilities. PMT supports
-> multiple types of monitoring capabilities. This driver creates platform
-> devices for each type so that they may be managed by capability specific
-> drivers (to be introduced). Capabilities are discovered using PCIe DVSEC
-> ids. Support is included for the 3 current capability types, Telemetry,
-> Watcher, and Crashlog. The features are available on new Intel platforms
-> starting from Tiger Lake for which support is added. This patch adds
-> support for Tiger Lake (TGL), Alder Lake (ADL), and Out-of-Band Management
-> Services Module (OOBMSM).
-> 
-> Also add a quirk mechanism for several early hardware differences and bugs.
-> For Tiger Lake and Alder Lake, do not support Watcher and Crashlog
-> capabilities since they will not be compatible with future product. Also,
-> fix use a quirk to fix the discovery table offset.
-> 
-> Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
->  MAINTAINERS             |   5 +
->  drivers/mfd/Kconfig     |  10 ++
->  drivers/mfd/Makefile    |   1 +
->  drivers/mfd/intel_pmt.c | 226 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 242 insertions(+)
->  create mode 100644 drivers/mfd/intel_pmt.c
+Oh wow, *now* I get it. There is no "patch" being passed - your initial
+commit message simply states that this is a patch to add and process...
 
-I Acked this back in August.
+Yeah, as already mentioned, saying that this is a patch in the same
+patch's commit message is tautological and, as we just saw, really
+confusing. So pls refrain from doing that. I'll use this explanation in
+the commit message as it is more clear.
 
-Any reason why you didn't carry it forward?
+Thx.
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
