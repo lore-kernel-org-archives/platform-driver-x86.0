@@ -2,68 +2,66 @@ Return-Path: <SRS0=7IVD=DP=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83B2C4363A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Oct 2020 14:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D743C04EBE
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Oct 2020 14:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB2A21789
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Oct 2020 14:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1D621924
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Oct 2020 14:53:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lY68qoXZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ucE2HXFT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730655AbgJHOwK (ORCPT
+        id S1730685AbgJHOxZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Oct 2020 10:52:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60130 "EHLO
+        Thu, 8 Oct 2020 10:53:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729833AbgJHOwK (ORCPT
+        with ESMTP id S1729833AbgJHOxY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Oct 2020 10:52:10 -0400
+        Thu, 8 Oct 2020 10:53:24 -0400
 Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57BDFC061755;
-        Thu,  8 Oct 2020 07:52:10 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id b26so4207175pff.3;
-        Thu, 08 Oct 2020 07:52:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CFDC061755;
+        Thu,  8 Oct 2020 07:53:24 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id g10so4200113pfc.8;
+        Thu, 08 Oct 2020 07:53:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SYh7aWK4xIgcsuY1+FJJjva+eJ1k1GLi/gSRWTHUeCM=;
-        b=lY68qoXZoea7DaLmCvM8oHJ6+uklyANHT2wmYcbOzL0L8+EGHspmX/YlaHdJ6631df
-         i1VN3oXOXebUBrmo0k8ZLh3TCQocAYLu5NfYw4vDhe6dGvYEQzqtoq4Oz3Pq5T+PMnhu
-         DV7SPaCtHUy8IzY1ZiOF0hroveWvz+Pm2I3/K245K526t4LhoH4Zwd1zqh5MFYEU9D2T
-         di5oakXnuASpmX0ZpjqDkjzFWRLqueLMsKm77tFLw05vZJVJHNAMnRrO8YA/d8nlzSCT
-         mJn4S5pZ7iWAApb+LaDRWYS3T9kD7aIflBP8mcXl8nV0+fjo7LHe+b9W4J7PHWbRjlLd
-         L2rw==
+        bh=Ha0d5CLuHhVVoYjJQruOkutfT7+02DFIs5Gu0a061nE=;
+        b=ucE2HXFTBzt2xCH+lw/zkhvBygbUz6gMTAx/aZ1kStXt8D4D9oXH+LNPa3EvEwQdgl
+         je6OhGCPH5du0dpl32RB4U9XxYn3iLOjpdM4KnTa1ELXGJlSEkFuvvB8/08nSh+MnrN9
+         dcxuu3FEfscqo1I7qKL+SR2EcQ6wVvOf72HvxATlbxzQZ2q5zMS5zUfJIXks/vrhzvgC
+         iM3M10tZQcK+EWpSE/DqfO+VI138W6PYhs8FFQ2kM0w80HGqQMXTz74PBEE48s/uSgE/
+         QmDR0FZO8Lgj5KBaCtX0NnWprmy3Exs6ezLNxZ0zDDd6+TP8Q/pEMYt1LgBLdXrSShqV
+         8o8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SYh7aWK4xIgcsuY1+FJJjva+eJ1k1GLi/gSRWTHUeCM=;
-        b=aSjGkU+/avGf2iGzzbvRDuLZKWqlrKAsVhgtVWQXZ14pByvsKbnIYozO+DT7Ky1j8i
-         5vB3qRlYjNgTYC2FFBLbxw0AGLHYytRRRrFshGMSlSd1Vsv30yrYLobxDYJz7esK+NrB
-         0dxUBHRc+pscMo+hBO9MHeNwHRC3/g/M3puHssuURxoK6cdY/9rnXDvcl7X203NS2/9H
-         C/Rn/hRUQ3JDnPBMvJDWly4JR8orXRgKgT+pDvJGvp870Myebf/xH0UiiQJNJc1lSWRf
-         jmRp7Ijri/bvUtOH3O3xIIFcmSHrAPQqjWOS8idJFpvFq5rIa4kNqL9QFFsgsmtmqgIo
-         95HQ==
-X-Gm-Message-State: AOAM531p7WGdCrk47KwclDKwWuFOpowC7pg7DoVeHvwpCVL1G3cs2LTN
-        mByuRT3+H0au3wqshJUDlSnZ95DCucVo+HnrdhaluHI0Wo0GhCr/
-X-Google-Smtp-Source: ABdhPJzfj6+Va3YRM5LtE93jDVpdMBlQa0rDrqpIpTpApWkQwJTUr9fyLEk9IVCTX1LzCQsThx92GvK0dYgrvpvt+LQ=
-X-Received: by 2002:aa7:81d5:0:b029:142:2501:39fa with SMTP id
- c21-20020aa781d50000b0290142250139famr8041946pfn.73.1602168729817; Thu, 08
- Oct 2020 07:52:09 -0700 (PDT)
+        bh=Ha0d5CLuHhVVoYjJQruOkutfT7+02DFIs5Gu0a061nE=;
+        b=o5R92ffQa9MpZrVmsaPrOGaWmJJ/6Inp8p7MimLzPwseywUbEDX9EoRjIOn97DNnt3
+         mFF1kbDEsJfaaz3bsz8HOAS4EihAT/KPsupItchF0v8/tzZ5KsADqaTMF16P2e0QEaRw
+         itYjEkyP1A+GZjODJYrqo0wJ9Xm6XcfcjcbQ2wJeGFmaWuXTuT4qYP86eiK2etIm71qt
+         4jNsb65Si4EdJ4DeijQQQgsR2ZFgymp60hhblip2/yc80oA+eIXSZpQQly6FhIs67//C
+         PudsQnZTatF2UcX0usRFWMKxqH+8kfsxTA3Z5l4GNh0YOMkf1a7f3L11Nvl4i0+fyptQ
+         AsQw==
+X-Gm-Message-State: AOAM53294bTtMLRUkHoo4jI3RchU3fMMBCHor+3MoVQmFJ3t2Gt2l20b
+        Py/6W3rnt+5YCODoEnZDUaHAD7KdrIdP03/SoOo=
+X-Google-Smtp-Source: ABdhPJzH0YUIt357lYfLm+tps99aiJ+RrH5f2bg8DC16qMOhR4eBjpysHxmP4fb31EFv9NUmVS9L+7Wm+8/v6XDmJcQ=
+X-Received: by 2002:a17:90a:fb92:: with SMTP id cp18mr9009139pjb.228.1602168804458;
+ Thu, 08 Oct 2020 07:53:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201008143455.340599-1-luzmaximilian@gmail.com> <20201008143455.340599-2-luzmaximilian@gmail.com>
-In-Reply-To: <20201008143455.340599-2-luzmaximilian@gmail.com>
+References: <20201008143455.340599-1-luzmaximilian@gmail.com> <20201008143455.340599-3-luzmaximilian@gmail.com>
+In-Reply-To: <20201008143455.340599-3-luzmaximilian@gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 8 Oct 2020 17:52:59 +0300
-Message-ID: <CAHp75Vd61qnLMUbted_ohqEtMdVFbqKhKf3kKh0ombAwhf8dCA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] platform: Add Surface platform directory
+Date:   Thu, 8 Oct 2020 17:54:14 +0300
+Message-ID: <CAHp75VfPaGqb=yCpi_2f8SNzrj+0pd-r5VqAEgRgMCiJJB6D0w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/5] platform/surface: Move Surface 3 WMI driver to platform/surface
 To:     Maximilian Luz <luzmaximilian@gmail.com>
 Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
         Darren Hart <dvhart@infradead.org>,
@@ -85,67 +83,14 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 On Thu, Oct 8, 2020 at 5:35 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
 >
-> It may make sense to split the Microsoft Surface hardware platform
-> drivers out to a separate subdirectory, since some of it may be shared
-> between ARM and x86 in the future (regarding devices like the Surface
-> Pro X).
->
-> Further, newer Surface devices will require additional platform drivers
-> for fundamental support (mostly regarding their embedded controller),
-> which may also warrant this split from a size perspective.
->
-> This commit introduces a new platform/surface subdirectory for the
-> Surface device family, with subsequent commits moving existing Surface
-> drivers over from platform/x86.
->
-> A new MAINTAINERS entry is added for this directory. Patches to files in
-> this directory will be taken up by the platform-drivers-x86 team (i.e.
-> Hans de Goede and Mark Gross) after they have been reviewed by
-> Maximilian Luz.
+> Move the Surface 3 WMI driver from platform/x86 to the newly created
+> platform/surface directory.
 
-Thanks for the patch, my minor comments below.
+> -# place Microsoft Surface platform drivers here
 
-...
+> -# place Microsoft Surface platform drivers here
 
-> +MICROSOFT SURFACE PLATFORM DRIVERS
-
-(1)
-
-> +M:     Hans de Goede <hdegoede@redhat.com>
-> +M:     Mark Gross <mgross@linux.intel.com>
-> +M:     Maximilian Luz <luzmaximilian@gmail.com>
-> +L:     platform-driver-x86@vger.kernel.org
-> +S:     Maintained
-
-> +T:     git git://git.infradead.org/linux-platform-drivers-x86.git
-
-It's now on kernel.org.
-git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git
-
-> +F:     drivers/platform/surface/
-
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_MIPS)              += mips/
->  obj-$(CONFIG_OLPC_EC)          += olpc/
->  obj-$(CONFIG_GOLDFISH)         += goldfish/
->  obj-$(CONFIG_CHROME_PLATFORMS) += chrome/
-> +obj-$(CONFIG_SURFACE_PLATFORM) += surface/
-
-(2)
-
-> +menuconfig SURFACE_PLATFORM
-
-(3a)
-
-> +if SURFACE_PLATFORM
-
-(3b)
-
-> +endif # SURFACE_PLATFORM
-
-(3c)
-
-I think in (1), (2) and (3) it makes sense to mimic Chrome, i.e. use
-plural: PLATFORMS.
+Not sure if we need these comments in the first place.
 
 -- 
 With Best Regards,
