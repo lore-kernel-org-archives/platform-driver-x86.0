@@ -2,67 +2,70 @@ Return-Path: <SRS0=7IVD=DP=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BD0C4363A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Oct 2020 14:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F268C4363A
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Oct 2020 14:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73F0F217BA
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Oct 2020 14:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD962184D
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Oct 2020 14:20:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gg5S4v6W"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MvaIXp1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbgJHOFl (ORCPT
+        id S1730353AbgJHOUI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Oct 2020 10:05:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729840AbgJHOFk (ORCPT
+        Thu, 8 Oct 2020 10:20:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45113 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730482AbgJHOUI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Oct 2020 10:05:40 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87407C061755;
-        Thu,  8 Oct 2020 07:05:40 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id h24so8278567ejg.9;
-        Thu, 08 Oct 2020 07:05:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kPpNp7HQz7UHlrpDvLUJLo4PAvXZ3Nb4CdHDpoCaGGg=;
-        b=Gg5S4v6W4SNBKOtE0DRe00bJbqQKBlNkL1AiFmnshg453TbDlkl3jzDB665kpyeCn+
-         GQde6shP6e4dmLgIvaW58HJE9WcgRTyUrmACYz9aM/T3whDoe3yFAQh++ryuNRKmZS3f
-         a5uwIvwZHQc8e55VcQGzyOORcNfP7n0VKv8c6FHxrcskh+hx0SXqoZTCIJQ+PJxEntC9
-         ftdrQoVFr89KiD7ZiuvZeMRmhKqYJPxdN7syMGKxITiMa3TsSUi05nyzH5P7tc+zA5nh
-         E9jS1YG26FrfeBX0yzbsfRUPqL83H4uqTk4L//J/Q6qNrUA9HOhs7YYltmA+Xf1l6CrX
-         u4/w==
+        Thu, 8 Oct 2020 10:20:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1602166806;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=28gyQXNpF1DN/ygNYXtmZFhoYYiRhK+HkImKGmUzg8Q=;
+        b=MvaIXp1NckNuMY7K5GIhmBjp8AJ8e4mq6WfBn3Ln7rXx/Bvlvrwol+EWnLQJC/ncfr1YdN
+        ZLr6gwT16HQ/VSDPdCaDHNpJrZuSzkv9xig5YbtyZng1anSRgav7BNczWye0yebKBndrP4
+        uHw0Fy8uq0de6/EyoQXdeC8ZRZcW2lU=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251-BSoaXGOYM7a4marZ-IK1og-1; Thu, 08 Oct 2020 10:20:05 -0400
+X-MC-Unique: BSoaXGOYM7a4marZ-IK1og-1
+Received: by mail-ed1-f71.google.com with SMTP id j6so2245425edl.21
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Oct 2020 07:20:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=kPpNp7HQz7UHlrpDvLUJLo4PAvXZ3Nb4CdHDpoCaGGg=;
-        b=ArRcc0vOC0rVXPrzqfMgUHlLkJjj43/8Ydtl03RR2idIYp/sB9A69DkRPDDrJoexYi
-         FbKEsfj94oxo3tTdaYW10TGSnEbspoeuk/xP3wcZkaKwIFsHTX/Yw0VMNqFiTjMhbcG2
-         PT5fs1qAcX0z42Ds4OJ7LkaIAAjcE/y6FHYsJ8UPmaou0fnJb/IDh0+Q9QbucEV3SDnT
-         BmOH4hzYf2KOqYD4xvAFfP1kpaiDOan+2/mWb+FzfibRVQ8NeUPSdkm4JrrGI+lKFtWE
-         FnmjaQ9KARXMH4SiAGP0HEZAvyv5gc22oGeZkUDfiKHPBoL/TkPs2ZWK1xFzg4k1bqyx
-         n2Pg==
-X-Gm-Message-State: AOAM5319SF9Labuu7lyof1w/+djx34O5u6gS2Fal3SXuiNv/mXMPrBCg
-        CTU3sqV+XV1lOW4TCDF86qSyHImytSo=
-X-Google-Smtp-Source: ABdhPJzm3xf5HqWAQ69Q+Cim+f5cHME6E0emdTSV4HCZqqohLnM6ELLVXPpVSfWC3El6jKNnIhyFBQ==
-X-Received: by 2002:a17:906:7e47:: with SMTP id z7mr8771478ejr.418.1602165938706;
-        Thu, 08 Oct 2020 07:05:38 -0700 (PDT)
-Received: from [192.168.2.202] (pd9e5a9e4.dip0.t-ipconnect.de. [217.229.169.228])
-        by smtp.gmail.com with ESMTPSA id f4sm3995848edm.76.2020.10.08.07.05.36
+        bh=28gyQXNpF1DN/ygNYXtmZFhoYYiRhK+HkImKGmUzg8Q=;
+        b=Z1RHIDez8OORa45He2kk8A7Wn8QPwYLV3TA0j5TsNpzKtCm7YQ8s6XA1IAE6GclIsa
+         c7QufLQAo3lSCv+9phh9MZBdczhhgbUkm80Bpb6Y5pAhsBtkk3ro0bAaDtQns0W6I5il
+         SxP3nMcUUhRJxHHvaoQ/fPX9o6HC32Vbc1dq7RO6Jy0/g8C0OcglFq9R4Z7HqOlFIiXC
+         lDPo5Y1/83Ul0Ga8e0wgzgkTtvktDkrXtQDx53RrsSW58PyyqsI1GW6rgU3an/mSLLhp
+         xuBIftxlUFFp3GDORJRjBu8oZL7I1NCb/pzHBEgLtitej7RXfGp4XVUVe6da/whqMZFG
+         xlYA==
+X-Gm-Message-State: AOAM530zMVwt4p6S1xSyWDayoJ/AdMQ6cgGH89CjzthQKaPyZlpvgu/2
+        KXCGci4RxCPu1cX7dAFHaOmeWshCBNUmaAWMf517e+5wA0y7THITheZ5Tv/FRkV2ZVuzsCWY9P5
+        gUU3GYdSvTKMoZe1GPQj2Q9QgnHaiJl6QVg==
+X-Received: by 2002:aa7:cd98:: with SMTP id x24mr9016822edv.237.1602166803853;
+        Thu, 08 Oct 2020 07:20:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxxzFAf6/LrvEIPJQafA407xL21ruZvhDdt9yl4HgGg5gpcaswQVQnwdH87ON/AX90hBn4Wtg==
+X-Received: by 2002:aa7:cd98:: with SMTP id x24mr9016793edv.237.1602166803590;
+        Thu, 08 Oct 2020 07:20:03 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id h12sm4043238eds.22.2020.10.08.07.20.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Oct 2020 07:05:37 -0700 (PDT)
+        Thu, 08 Oct 2020 07:20:02 -0700 (PDT)
 Subject: Re: [PATCH v2 0/5] platform/surface: Create a platform subdirectory
  for Microsoft Surface devices
-To:     Hans de Goede <hdegoede@redhat.com>,
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
         platform-driver-x86@vger.kernel.org
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -78,14 +81,13 @@ Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
 References: <20201005160307.39201-1-luzmaximilian@gmail.com>
  <a82e3aff-801d-d116-bbf4-91f3981f713b@redhat.com>
  <deb1c682-5843-61b1-173b-a70ef51e85f2@gmail.com>
- <389f3a38-83ca-dfcd-476a-61b1d33751bb@redhat.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <9c9b1122-ca6c-6c90-8bb8-d0bdb792d04f@gmail.com>
-Date:   Thu, 8 Oct 2020 16:05:36 +0200
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <4b77d470-0a73-ae3d-1364-7f6e9a01885c@redhat.com>
+Date:   Thu, 8 Oct 2020 16:20:02 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <389f3a38-83ca-dfcd-476a-61b1d33751bb@redhat.com>
+In-Reply-To: <deb1c682-5843-61b1-173b-a70ef51e85f2@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -93,66 +95,69 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 10/8/20 3:38 PM, Hans de Goede wrote:
-> Hi,
-> 
-> On 10/8/20 2:32 PM, Maximilian Luz wrote:
->> On 10/8/20 1:44 PM, Hans de Goede wrote:
->>> Hi Maximilian,
->>>
->>> On 10/5/20 6:03 PM, Maximilian Luz wrote:
->>>> As has come up in the discussion around
->>>>
->>>>    [RFC PATCH] Add support for Microsoft Surface System Aggregator Module
->>>>
->>>> it may make sense to add a Microsoft Surface specific platform
->>>> subdirectory. Andy has suggested drivers/platform/surface for that.
->>>> This series follows said suggestion and creates that subdirectory, as
->>>> well as moves Microsoft Surface related drivers over to it and updates
->>>> their MAINTAINERS entries (if available) accordingly.
->>>>
->>>> This series does not modify any existing driver code, symbols, or help
->>>> text.
->>>
->>> In case you do not know I'm taking over from any as
->>> drivers/platform/x86 maintainer.
->>>
->>> I'm fine with the concept of this series, but who is going to maintain
->>> this new drivers/platform/surface directory ?
->>>
->>> Ah I see that the first patch answers that question and the plan
->>> is to keep this part of the pdx86 maintainership.
->>>
->>> I would prefer for the new dir to have its own
->>> MAINTAINERS entry if I'm honest, I would like to try and
->>> split maintainership for the surface stuff as follows:
->>>
->>> 1. Who will review (and add their Reviewed-by or ask for improvements
->>>     or nack) patches to files in this dir?
->>>
->>> 2. Who will gather approved patches apply them to a for-next branch
->>>     and send them out to Linus during the merge Window?
->>>
->>> I can pick up 2. but I could really use some help with 1. So I
->>> was thinking having a separate MAINTAINERS entry for the new
->>> dir with you (Maximilian) (and me and Mark Gross) listed as
->>> MAINTAINERS; and then I'm hoping that you can do the review
->>> of surface related patches. At least those which you have not
->>> written yourself.
->>>
->>> How does that sound ?
->>
->> Sounds good, I'd be happy to help review and approve any Surface related
->> patches. However, I think it would be beneficial if you and Mark still
->> have a final look (and say) over the ones I've reviewed and accepted (if
->> that's not already a given). I feel like I may lack a bit of experience
->> for this job and might miss some things.
-> 
-> Since Mark or I will be merging the patches we will indeed still take
-> a look at them, but it helps if someone else has already done a review
-> first.
+Hi,
 
-Perfect, thank you! I'll take on 1) then.
+On 10/8/20 2:32 PM, Maximilian Luz wrote:
+> On 10/8/20 1:44 PM, Hans de Goede wrote:
+>> Hi Maximilian,
+>>
+>> On 10/5/20 6:03 PM, Maximilian Luz wrote:
+>>> As has come up in the discussion around
+>>>
+>>>    [RFC PATCH] Add support for Microsoft Surface System Aggregator Module
+>>>
+>>> it may make sense to add a Microsoft Surface specific platform
+>>> subdirectory. Andy has suggested drivers/platform/surface for that.
+>>> This series follows said suggestion and creates that subdirectory, as
+>>> well as moves Microsoft Surface related drivers over to it and updates
+>>> their MAINTAINERS entries (if available) accordingly.
+>>>
+>>> This series does not modify any existing driver code, symbols, or help
+>>> text.
+>>
+>> In case you do not know I'm taking over from any as
+>> drivers/platform/x86 maintainer.
+>>
+>> I'm fine with the concept of this series, but who is going to maintain
+>> this new drivers/platform/surface directory ?
+>>
+>> Ah I see that the first patch answers that question and the plan
+>> is to keep this part of the pdx86 maintainership.
+>>
+>> I would prefer for the new dir to have its own
+>> MAINTAINERS entry if I'm honest, I would like to try and
+>> split maintainership for the surface stuff as follows:
+>>
+>> 1. Who will review (and add their Reviewed-by or ask for improvements
+>>     or nack) patches to files in this dir?
+>>
+>> 2. Who will gather approved patches apply them to a for-next branch
+>>     and send them out to Linus during the merge Window?
+>>
+>> I can pick up 2. but I could really use some help with 1. So I
+>> was thinking having a separate MAINTAINERS entry for the new
+>> dir with you (Maximilian) (and me and Mark Gross) listed as
+>> MAINTAINERS; and then I'm hoping that you can do the review
+>> of surface related patches. At least those which you have not
+>> written yourself.
+>>
+>> How does that sound ?
+> 
+> Sounds good, I'd be happy to help review and approve any Surface related
+> patches. However, I think it would be beneficial if you and Mark still
+> have a final look (and say) over the ones I've reviewed and accepted (if
+> that's not already a given). I feel like I may lack a bit of experience
+> for this job and might miss some things.
+
+Since Mark or I will be merging the patches we will indeed still take
+a look at them, but it helps if someone else has already done a review
+first.
+
+> I'll add the MAINTAINERS entry and send a v3 later today, if that's OK.
+
+That sounds good, thanks.
 
 Regards,
-Max
+
+Hans
+
